@@ -68,22 +68,37 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 ## 4. 目标架构
 
-```
-schema / IR (YAML, JSON)
-        │ normalize
-        ▼
-┌────────────────────────── kernel ──────────────────────────┐
-│ scope（数据域/数据链）  expr（表达式/模板/过滤器）           │
-│ api（请求管线/缓存/联动） actions（事件/动作/目标注册表）    │
-│ form（值/校验/提交）     data（CRUD/表格容器 store）         │
-│ renderer（契约/注册/错误边界） plugins（扩展点）             │
-└────────────────────────────────────────────────────────────┘
-        │ provide / inject
-        ▼
-renderers (Vue + shadcn-vue)  ──  editor / playground
-        │
-        ▼
-env（fetcher / notify / confirm / locale / theme / debug）
+```mermaid
+flowchart TB
+  schema["schema / IR<br/>YAML, JSON"] -->|normalize| kernel
+
+  subgraph kernel["kernel"]
+    direction TB
+    subgraph k1[" "]
+      direction LR
+      scope["scope<br/>数据域 / 数据链"]
+      expr["expr<br/>表达式 / 模板 / 过滤器"]
+    end
+    subgraph k2[" "]
+      direction LR
+      api["api<br/>请求管线 / 缓存 / 联动"]
+      actions["actions<br/>事件 / 动作 / 目标注册表"]
+    end
+    subgraph k3[" "]
+      direction LR
+      form["form<br/>值 / 校验 / 提交"]
+      data["data<br/>CRUD / 表格容器 store"]
+    end
+    subgraph k4[" "]
+      direction LR
+      renderer["renderer<br/>契约 / 注册 / 错误边界"]
+      plugins["plugins<br/>扩展点"]
+    end
+  end
+
+  kernel -->|provide / inject| renderers["renderers<br/>Vue + shadcn-vue"]
+  renderers --- playground["editor / playground"]
+  renderers --> env["env<br/>fetcher / notify / confirm<br/>locale / theme / debug"]
 ```
 
 依赖规则：
