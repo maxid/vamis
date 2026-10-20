@@ -2,6 +2,7 @@
 
 - 日期：2026-10-20
 - 状态：第一期已按此实施；最新同步与覆盖数字见 [2026-10-20-amis-sync-status.md](./2026-10-20-amis-sync-status.md)
+- 语义设计增补：数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 设计见 [2026-10-20-vamis-runtime-semantics-design.md](./2026-10-20-vamis-runtime-semantics-design.md)
 - 源项目：百度 Amis 6.13.0（`/Users/maxid/Develop/IdeaProjects/github/amis`）
 - IR 来源：xdmp LCDP IR（`megre/xdmp/docs/superpowers/specs/2026-10-17-lcdp-ir-kernel-design.md`）
 

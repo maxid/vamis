@@ -12,6 +12,12 @@
 
 完整状态、实现深度分级与下一阶段清单见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)。覆盖数字可用 `pnpm status -- --amis ../amis` 复算。
 
+## 设计文档
+
+- [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)：YAML 作者态、`UiPage` 信封、渲染管线。
+- [运行时语义设计](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md)：基于 amis 文档对齐数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 增补与路线图。
+- [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
+
 ## 怎么跑
 
 需要 Node 20+ 与 pnpm。
