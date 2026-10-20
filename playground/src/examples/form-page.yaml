@@ -1,0 +1,29 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: form-page
+  description: 表单页面
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 表单页面
+  subTitle: 从 Amis examples/components/Page/Form.jsx 转出的黄金样例
+  body:
+    - type: form
+      mode: horizontal
+      api: /api/mock2/form/saveForm
+      body:
+        - label: Name
+          type: input-text
+          name: name
+          required: true
+        - label: Email
+          type: input-email
+          placeholder: 请输入邮箱地址
+          name: email
+        - type: switch
+          name: vip
+          label: VIP
+        - type: unknown-chart
+          title: 未知类型应占位

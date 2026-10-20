@@ -1,0 +1,19 @@
+{
+  "name": "varmis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Vue 3 复刻的 Amis 风格 JSON/YAML 低代码运行时，Schema 作者态为 YAML，信封对齐 xdmp LCDP IR。",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @varmis/playground dev",
+    "build": "pnpm --filter @varmis/playground build",
+    "preview": "pnpm --filter @varmis/playground preview",
+    "test": "pnpm --filter @varmis/core test",
+    "typecheck": "pnpm --filter @varmis/playground typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.3"
+}

@@ -1,0 +1,62 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: crud-page
+  description: 查询表格与弹窗编辑
+  businessTerms:
+    - device
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 设备清单
+  body:
+    - type: crud
+      name: deviceCrud
+      api: /api/mock2/sample
+      perPage: 5
+      filter:
+        title: 条件搜索
+        body:
+          - type: input-text
+            name: keywords
+            label: 关键字
+            placeholder: 名称包含
+      columns:
+        - name: id
+          label: ID
+        - name: name
+          label: 名称
+        - name: status
+          label: 状态
+        - type: operation
+          label: 操作
+          buttons:
+            - type: button
+              label: 编辑
+              actionType: dialog
+              dialog:
+                title: 编辑
+                body:
+                  type: form
+                  api: /api/mock2/sample
+                  body:
+                    - type: hidden
+                      name: id
+                    - type: input-text
+                      name: name
+                      label: 名称
+                      required: true
+                    - type: select
+                      name: status
+                      label: 状态
+                      options:
+                        - label: 在线
+                          value: online
+                        - label: 离线
+                          value: offline
+            - type: button
+              label: 删除
+              actionType: ajax
+              confirmText: 确认删除这条记录？
+              api: "delete:/api/mock2/sample/${id}"
