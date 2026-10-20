@@ -54,7 +54,7 @@ const range = computed({
           :min="min"
           :max="max"
           :step="step"
-          class="w-full"
+          class="w-full accent-primary"
           :disabled="disabled"
           @input="range = { ...range, start: Number(($event.target as HTMLInputElement).value) }"
         />
@@ -67,7 +67,7 @@ const range = computed({
           :min="min"
           :max="max"
           :step="step"
-          class="w-full"
+          class="w-full accent-primary"
           :disabled="disabled"
           @input="range = { ...range, end: Number(($event.target as HTMLInputElement).value) }"
         />
@@ -81,7 +81,7 @@ const range = computed({
         :min="min"
         :max="max"
         :step="step"
-        class="w-full"
+        class="w-full accent-primary"
         :disabled="disabled"
         @input="single = Number(($event.target as HTMLInputElement).value)"
       />

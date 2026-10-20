@@ -33,8 +33,14 @@ export function defaultDatePattern(type?: string) {
   return 'YYYY-MM-DD'
 }
 
+import { filterTpl } from '@vamis/core'
+
 export function readValue(schema: { value?: unknown; name?: string }, data: Record<string, any>) {
-  if (schema.value != null && schema.value !== '') return schema.value
-  if (schema.name) return data?.[schema.name]
-  return undefined
+  const value =
+    schema.value != null && schema.value !== ''
+      ? schema.value
+      : schema.name
+        ? data?.[schema.name]
+        : undefined
+  return typeof value === 'string' ? filterTpl(value, data) : value
 }

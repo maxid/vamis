@@ -259,14 +259,14 @@ function normalizeToIr() {
       <ScrollArea class="h-48 border-b">
         <div class="space-y-3 p-2">
           <div v-for="group in paletteGroups" :key="group.title">
-            <p class="mb-1 px-1 font-mono text-[10px] tracking-wider text-muted-foreground">{{ group.title }}</p>
+            <p class="mb-1 px-1 font-mono text-[10px] tracking-wider text-sidebar-foreground/60">{{ group.title }}</p>
             <div class="flex flex-wrap gap-1">
               <button
                 v-for="item in group.items"
                 :key="item.type"
                 type="button"
                 draggable="true"
-                class="rounded-md border bg-background px-2 py-1 text-[11px] hover:border-primary"
+                class="cursor-pointer rounded-md border border-sidebar-border bg-sidebar-accent/50 px-2 py-1 text-[11px] text-sidebar-foreground hover:border-sidebar-primary hover:bg-sidebar-accent focus-visible:ring-sidebar-primary outline-none focus-visible:ring-2"
                 @click="onPaletteClick(item.type)"
                 @dragstart="onPaletteDragStart($event, item.type)"
               >
