@@ -1,0 +1,78 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: amis-semantic
+  description: Amis 语义加深
+spec:
+  type: page
+  title: Amis 语义加深
+  toolbar:
+    - type: button
+      label: 需确认
+      confirmText: 确定执行？
+      actionType: toast
+      msg: 已确认
+  body:
+    - type: form
+      title: 横排 + addOn
+      mode: horizontal
+      wrapWithPanel: true
+      body:
+        - type: input-text
+          name: keyword
+          label: 关键字
+          prefix: 搜
+          suffix: 台
+          addOn:
+            type: button
+            label: 搜索
+            actionType: toast
+            msg: 搜索
+        - type: json-editor
+          name: payload
+          label: JSON
+        - type: native-date
+          name: day
+          label: 原生日期
+    - type: flex
+      items:
+        - type: flex-item
+          body:
+            type: tpl
+            tpl: 左列
+        - type: flex-item
+          body:
+            type: tpl
+            tpl: 右列
+    - type: list
+      source: ${items}
+      listItem:
+        type: list-item
+        title: ${name}
+        subTitle: ${status}
+        actions:
+          - type: button
+            label: 查看
+            actionType: toast
+            msg: ${name}
+      data:
+        items:
+          - name: 泵房-A
+            status: online
+          - name: 阀门-B
+            status: offline
+    - type: table
+      source: ${rows}
+      columns:
+        - type: cell
+          name: name
+          label: 名称
+        - type: field
+          name: status
+          label: 状态
+      data:
+        rows:
+          - name: A
+            status: online
+          - name: B
+            status: offline

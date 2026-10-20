@@ -13,12 +13,14 @@ const error = computed(() =>
   props.schema.name ? form?.store.errors[props.schema.name] : '',
 )
 const required = computed(() => !!props.schema.required)
+const layout = computed(() => props.schema.mode || form?.mode || 'normal')
+const horizontal = computed(() => layout.value === 'horizontal' || layout.value === 'inline')
 </script>
 
 <template>
   <div
     class="grid gap-1.5 py-1.5"
-    :class="schema.mode === 'inline' ? 'sm:grid-cols-[9rem_1fr] sm:items-center' : ''"
+    :class="horizontal ? 'sm:grid-cols-[9rem_1fr] sm:items-center' : ''"
     :data-name="schema.name"
   >
     <Label v-if="schema.label !== false && schema.label != null" class="text-foreground">

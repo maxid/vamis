@@ -4,6 +4,7 @@ import type { PlainObject } from '@vamis/core'
 
 export interface FormContext {
   store: NodeState
+  mode?: string
   getValue: (name: string) => unknown
   setValue: (name: string, value: unknown) => void
   submit: () => Promise<void>

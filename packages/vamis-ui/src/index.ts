@@ -65,3 +65,9 @@ export {
   SheetTitle,
   SheetTrigger,
 } from './ui/sheet'
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip'

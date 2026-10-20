@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { asArray, filterTpl, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any>; items?: Record<string, any>[] }>()
 const rows = computed(() => {
@@ -15,18 +15,18 @@ const rows = computed(() => {
   if (Array.isArray(props.data?.rows)) return props.data.rows
   return asArray(props.schema.list || props.schema.items)
 })
-const item = computed(() => (props.schema.listItem || {}) as SchemaObject)
+const item = computed(() => (props.schema.listItem || { type: 'list-item' }) as SchemaObject)
 </script>
 
 <template>
-  <ul class="divide-y rounded-md border">
-    <li v-for="(row, i) in rows" :key="i" class="px-3 py-2">
-      <p class="text-sm font-medium">{{ filterTpl(item.title || '${title}', row) }}</p>
-      <p v-if="item.subTitle || item.desc" class="text-xs text-muted-foreground">
-        {{ filterTpl(item.subTitle || item.desc, row) }}
-      </p>
+  <ul class="space-y-2">
+    <li v-for="(row, i) in rows" :key="i">
+      <SchemaRenderer
+        :schema="{ type: 'list-item', ...item, title: item.title || '${title}', subTitle: item.subTitle || item.desc }"
+        :extra-data="row"
+      />
     </li>
-    <li v-if="!rows.length" class="px-3 py-6 text-center text-xs text-muted-foreground">
+    <li v-if="!rows.length" class="rounded-md border px-3 py-6 text-center text-xs text-muted-foreground">
       {{ schema.placeholder || '暂无列表数据' }}
     </li>
   </ul>

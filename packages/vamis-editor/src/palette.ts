@@ -74,6 +74,19 @@ export const paletteGroups: PaletteGroup[] = [
       { type: 'crud', label: 'CRUD', snippet: { type: 'crud', name: 'list', api: '/api/mock2/sample', columns: [{ name: 'id', label: 'ID' }, { name: 'name', label: '名称' }] } },
       { type: 'each', label: '循环', snippet: { type: 'each', source: '${items}', items: { type: 'tpl', tpl: '${name}' } } },
       { type: 'search-box', label: '搜索', snippet: { type: 'search-box', name: 'keywords', placeholder: '搜索' } },
+      { type: 'dropdown-button', label: '下拉按钮', snippet: { type: 'dropdown-button', label: '更多', buttons: [{ type: 'button', label: '编辑' }] } },
+      { type: 'remark', label: '备注', snippet: { type: 'remark', content: '说明' } },
+    ],
+  },
+  {
+    title: 'Amis 补齐',
+    items: [
+      { type: 'property', label: '属性表', snippet: { type: 'property', title: '属性', items: [{ label: '名称', content: '示例' }] } },
+      { type: 'input-rating', label: '评分', snippet: { type: 'input-rating', name: 'score', label: '评分' } },
+      { type: 'button-group-select', label: '按钮组选择', snippet: { type: 'button-group-select', name: 'level', label: '级别', options: [{ label: '低', value: 'low' }, { label: '高', value: 'high' }] } },
+      { type: 'input-city', label: '城市', snippet: { type: 'input-city', name: 'city', label: '城市' } },
+      { type: 'uuid', label: 'UUID', snippet: { type: 'uuid', name: 'uid', label: 'UUID' } },
+      { type: 'list-select', label: '列表选择', snippet: { type: 'list-select', name: 'item', label: '列表', options: ['A', 'B'] } },
     ],
   },
 ]

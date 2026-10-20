@@ -2,7 +2,7 @@
 
 用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者格式是 **YAML**；信封对齐 **xdmp LCDP IR**（`apiVersion: lcdp.ir/v1`）。
 
-第一期：可运行渲染器 + playground + 可视化编辑器骨架。不是 Amis 全量组件搬迁，也不是像素级 `cxd` 还原。
+按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 xdmp IR 不变。
 
 ## 怎么跑
 

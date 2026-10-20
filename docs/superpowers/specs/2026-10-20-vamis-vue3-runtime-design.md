@@ -60,8 +60,8 @@ zip: "012"
 
 ## 3. 运行时
 
-Vue 3 + Pinia hub（仿 MST 节点树）+ `amis-formula@6.13.0`。UI 原语来自 shadcn-vue（reka-ui），不追 cxd 像素。
+Vue 3 + Pinia hub（仿 MST 节点树）+ `amis-formula@6.13.0`。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语，不追 cxd 像素，也不改 YAML/IR 信封。
 
 ## 4. 非目标（第一期）
 
-完整 amis-editor、crud2/table2、wizard/combo、office/pdf/chart、MST、像素级 cxd。
+完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE/Monaco 全家桶。Amis type 继续补齐。

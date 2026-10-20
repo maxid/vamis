@@ -320,7 +320,7 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
-    <div v-if="store.total > store.perPage" class="flex justify-end gap-2">
+    <div v-if="schema.alwaysShowPagination || store.total > store.perPage" class="flex justify-end gap-2">
       <Button type="button" size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
         上一页
       </Button>

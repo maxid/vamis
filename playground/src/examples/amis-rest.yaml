@@ -1,0 +1,162 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: amis-rest
+  description: Amis 补齐控件
+spec:
+  type: page
+  title: Amis 补齐控件
+  data:
+    now: "2026-10-20T10:30:00"
+    pwd: secret
+    tags:
+      - 在线
+      - 重点
+    log: |
+      启动
+      同步完成
+    tasks:
+      - title: 巡检
+        status: success
+      - title: 告警
+        status: pending
+    words: 这段说明文字超过限制时可以展开查看后面的内容。
+  body:
+    - type: remark
+      content: 这是 remark，悬停查看
+    - type: dropdown-button
+      label: 更多操作
+      buttons:
+        - type: button
+          label: 编辑
+          actionType: toast
+          msg: 编辑
+        - type: button
+          label: 删除
+          actionType: toast
+          msg: 删除
+    - type: property
+      title: 设备属性
+      column: 2
+      items:
+        - label: 名称
+          content: 泵房-A
+        - label: 状态
+          content: online
+    - type: flex
+      items:
+        - type: date
+          value: ${now}
+        - type: datetime
+          value: ${now}
+        - type: number
+          value: 12345
+        - type: password
+          name: pwd
+        - type: color
+          value: "#ef4444"
+    - type: tag
+      name: tags
+    - type: words
+      name: words
+      limit: 12
+    - type: log
+      name: log
+    - type: tasks
+      name: tasks
+    - type: shape
+      shapeType: circle
+    - type: table-view
+      trs:
+        - tds:
+            - body:
+                type: tpl
+                tpl: 单元格 A
+            - body:
+                type: tpl
+                tpl: 单元格 B
+    - type: form
+      title: 补齐表单项
+      body:
+        - type: radio
+          name: agreed
+          label: 单选
+          option: 同意
+        - type: button-group-select
+          name: level
+          label: 按钮组选择
+          options:
+            - label: 低
+              value: low
+            - label: 高
+              value: high
+        - type: input-rating
+          name: score
+          label: 评分
+        - type: uuid
+          name: uid
+          label: UUID
+        - type: input-time-range
+          name: slot
+          label: 时段
+        - type: input-city
+          name: city
+          label: 城市
+        - type: input-rating
+          name: stars
+          label: 星级
+        - type: list-select
+          name: device
+          label: 列表选择
+          options:
+            - 泵
+            - 阀
+        - type: icon-picker
+          name: icon
+          label: 图标
+        - type: input-verification-code
+          name: code
+          label: 验证码
+        - type: matrix-checkboxes
+          name: matrix
+          label: 矩阵
+          columns:
+            - 早
+            - 晚
+          rows:
+            - 工作日
+            - 周末
+        - type: input-repeat
+          name: repeat
+          label: 重复
+        - type: location-picker
+          name: loc
+          label: 位置
+        - type: users-select
+          name: owner
+          label: 负责人
+        - type: formula
+          name: total
+          label: 公式
+          formula: "1+2"
+        - type: json-schema
+          name: extra
+          label: JSON Schema
+          schema:
+            properties:
+              enabled:
+                type: boolean
+                title: 启用
+              remark:
+                type: string
+                title: 备注
+        - type: input-signature
+          name: sign
+          label: 签名
+        - type: transfer-picker
+          name: picked
+          label: 弹层穿梭
+          options:
+            - 甲
+            - 乙
+            - 丙

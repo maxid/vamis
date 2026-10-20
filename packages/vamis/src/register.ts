@@ -66,6 +66,7 @@ import './extras/form'
 import './extras/layout'
 import './extras/display'
 import './extras/crud'
+import './extras/rest'
 
 registerRenderer({ type: 'page', component: Page })
 registerRenderer({ type: 'tpl', alias: ['html', 'plain'], component: Tpl })
@@ -111,7 +112,7 @@ registerRenderer({ type: 'search-box', component: SearchBox })
 
 registerRenderer({
   type: 'input-text',
-  alias: ['input-email', 'input-password', 'input-url', 'text'],
+  alias: ['input-email', 'input-password', 'input-url', 'text', 'native-date', 'native-time', 'native-number'],
   component: InputText,
   isFormItem: true,
 })

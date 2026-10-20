@@ -14,7 +14,7 @@ import {
   validateValue,
   type SchemaObject,
 } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@vamis/ui'
 import { provideForm } from '../formContext'
 import { registerWizardValidate } from '../wizardGate'
 
@@ -138,7 +138,15 @@ const formApi = {
   validate,
 }
 
-provideForm({ store, getValue, setValue, submit, reset, setError })
+provideForm({
+  store,
+  mode: String(props.schema.mode || 'normal'),
+  getValue,
+  setValue,
+  submit,
+  reset,
+  setError,
+})
 provideFormApi(formApi)
 scoped?.register(formApi)
 registerWizardValidate(validate)
@@ -158,20 +166,43 @@ onBeforeUnmount(() => {
     :class="schema.mode === 'horizontal' ? 'max-w-3xl' : 'max-w-xl'"
     @submit.prevent="submit"
   >
-    <h2 v-if="schema.title" class="mb-3 text-base font-semibold">{{ schema.title }}</h2>
-    <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
-    <div class="flex gap-2 pt-3">
-      <template v-if="hasCustomActions">
-        <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
-      </template>
-      <template v-else>
-        <Button type="submit" :disabled="store.saving">
-          {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
-        </Button>
-        <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
-          重置
-        </Button>
-      </template>
-    </div>
+    <Card v-if="schema.wrapWithPanel !== false">
+      <CardHeader v-if="schema.title">
+        <CardTitle class="text-base">{{ schema.title }}</CardTitle>
+      </CardHeader>
+      <CardContent class="space-y-1">
+        <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+        <div class="flex gap-2 pt-3">
+          <template v-if="hasCustomActions">
+            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+          </template>
+          <template v-else>
+            <Button type="submit" :disabled="store.saving">
+              {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+            </Button>
+            <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+              重置
+            </Button>
+          </template>
+        </div>
+      </CardContent>
+    </Card>
+    <template v-else>
+      <h2 v-if="schema.title" class="mb-3 text-base font-semibold">{{ schema.title }}</h2>
+      <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+      <div class="flex gap-2 pt-3">
+        <template v-if="hasCustomActions">
+          <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+        </template>
+        <template v-else>
+          <Button type="submit" :disabled="store.saving">
+            {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+          </Button>
+          <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+            重置
+          </Button>
+        </template>
+      </div>
+    </template>
   </form>
 </template>

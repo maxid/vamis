@@ -28,7 +28,27 @@ registerRenderer({ type: 'input-sub-form', component: InputSubForm, isFormItem: 
 registerRenderer({ type: 'input-array', component: InputArray, isFormItem: true })
 registerRenderer({ type: 'input-kv', component: InputKv, isFormItem: true })
 registerRenderer({ type: 'input-rich-text', component: InputRichText, isFormItem: true })
-registerRenderer({ type: 'editor', component: Editor, isFormItem: true })
+registerRenderer({
+  type: 'editor',
+  alias: [
+    'javascript-editor',
+    'json-editor',
+    'html-editor',
+    'css-editor',
+    'typescript-editor',
+    'markdown-editor',
+    'yaml-editor',
+    'xml-editor',
+    'sql-editor',
+    'python-editor',
+    'java-editor',
+    'php-editor',
+    'go-editor',
+    'plaintext-editor',
+  ],
+  component: Editor,
+  isFormItem: true,
+})
 registerRenderer({ type: 'condition-builder', component: ConditionBuilder, isFormItem: true })
 registerRenderer({ type: 'input-month', component: DatePart, isFormItem: true })
 registerRenderer({ type: 'input-quarter', component: DatePart, isFormItem: true })
