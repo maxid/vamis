@@ -1,7 +1,7 @@
 # vamis Vue3 运行时与 IR 对齐设计
 
 - 日期：2026-10-20
-- 状态：第一期已按此实施
+- 状态：第一期已按此实施；最新同步与覆盖数字见 [2026-10-20-amis-sync-status.md](./2026-10-20-amis-sync-status.md)
 - 源项目：百度 Amis 6.13.0（`/Users/maxid/Develop/IdeaProjects/github/amis`）
 - IR 来源：xdmp LCDP IR（`megre/xdmp/docs/superpowers/specs/2026-10-17-lcdp-ir-kernel-design.md`）
 

@@ -4,6 +4,14 @@
 
 按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 xdmp IR 不变。
 
+## 当前状态（2026-10-20）
+
+- amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
+- `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有 27 个错误待清。
+- amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0，本轮无需搬运新组件。
+
+完整状态、实现深度分级与下一阶段清单见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)。覆盖数字可用 `pnpm status -- --amis ../amis` 复算。
+
 ## 怎么跑
 
 需要 Node 20+ 与 pnpm。
@@ -52,6 +60,8 @@ spec:
 - `playground/src/examples/form-page.yaml` — 从 Amis `examples/components/Page/Form.jsx` 转出
 - `playground/src/examples/amis-form.json` — 原始 JSON，Playground 里点「Amis JSON → YAML」
 - `playground/src/examples/crud-page.yaml` — 查询表 + 表格 + 弹窗编辑
+
+`playground/src/examples/` 下共 14 个样例，另含向导、组合录入、选择器、展示、布局、事件、校验、Amis REST 等。
 
 ## 与 xdmp 的对接点
 
