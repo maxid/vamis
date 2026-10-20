@@ -117,6 +117,8 @@
 
 ## 6. 下一阶段建议（按性价比）
 
+> 运行时语义与实现顺序见 [语义设计](2026-10-20-vamis-runtime-semantics-design.md)；本节只列同步动作。
+
 1. **补齐 8 个遗漏**：3 个别名是一行改动；`cascader-select` 复用 `NestedSelect`；`js-editor` / `ts-editor` 复用 `editor`；`card-item-field` / `cell-field` 并进 `cell`。
 2. **清 typecheck**：先加 `@types/node` 消掉 11 个，再修 16 个模板窄化；之后把 `pnpm test + typecheck + build` 组合成提交门禁。
 3. **补深度而不是补数量**：
