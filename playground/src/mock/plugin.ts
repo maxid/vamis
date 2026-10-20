@@ -29,7 +29,7 @@ function send(res: any, data: unknown) {
 
 export function mockApiPlugin(): Plugin {
   return {
-    name: 'varmis-mock-api',
+    name: 'vamis-mock-api',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url || ''
@@ -48,15 +48,50 @@ export function mockApiPlugin(): Plugin {
           const keywords = String(query.keywords || '').trim()
           const page = Number(query.page || 1)
           const perPage = Number(query.perPage || 10)
+          const orderBy = String(query.orderBy || '')
+          const orderDir = String(query.orderDir || 'asc')
           const filtered = keywords
             ? rows.filter((row) => row.name.includes(keywords))
-            : rows
+            : [...rows]
+          if (orderBy === 'id' || orderBy === 'name' || orderBy === 'status') {
+            filtered.sort((a, b) => {
+              const left = a[orderBy as keyof Row]
+              const right = b[orderBy as keyof Row]
+              const cmp = left === right ? 0 : left > right ? 1 : -1
+              return orderDir === 'desc' ? -cmp : cmp
+            })
+          }
           const start = (page - 1) * perPage
           return send(res, {
             status: 0,
             data: {
               items: filtered.slice(start, start + perPage),
               total: filtered.length,
+            },
+          })
+        }
+
+        if (pathname === '/api/mock2/options') {
+          return send(res, {
+            status: 0,
+            data: {
+              options: [
+                { label: '在线', value: 'online' },
+                { label: '离线', value: 'offline' },
+                { label: '维修', value: 'repair' },
+              ],
+            },
+          })
+        }
+
+        if (pathname === '/api/mock2/chart/chart1') {
+          return send(res, {
+            status: 0,
+            data: {
+              title: { text: '远程图表' },
+              xAxis: { type: 'category', data: ['A', 'B', 'C'] },
+              yAxis: { type: 'value' },
+              series: [{ type: 'bar', data: [4, 7, 2] }],
             },
           })
         }

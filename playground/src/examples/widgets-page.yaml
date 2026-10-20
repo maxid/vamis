@@ -1,0 +1,127 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: widgets-page
+  description: 展示类控件黄金样例
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 展示控件
+  subTitle: 对齐 Amis image/nav/progress/status/mapping/chart 等常见结构
+  data:
+    status: online
+    progress: 72
+    cards:
+      - name: 泵房-A
+        status: online
+      - name: 闸门-B
+        status: offline
+  body:
+    - type: breadcrumb
+      items:
+        - label: 首页
+          href: /
+        - label: 展示控件
+    - type: nav
+      stacked: false
+      links:
+        - label: Playground
+          to: /
+          active: true
+        - label: 编辑器
+          to: /editor
+    - type: button-toolbar
+      buttons:
+        - type: button
+          label: Toast
+          actionType: toast
+          msg: 工具条按钮
+        - type: button
+          label: 打开对话框
+          actionType: dialog
+          dialog:
+            title: 说明
+            body:
+              type: tpl
+              tpl: button-toolbar 已独立实现
+    - type: flex
+      items:
+        - type: image
+          src: https://placehold.co/160x90/png
+          title: 示意图
+        - type: avatar
+          text: VA
+        - type: icon
+          icon: fa fa-bolt
+        - type: link
+          href: https://baidu.github.io/amis
+          body: Amis 文档
+        - type: spinner
+          tip: 同步中
+    - type: images
+      options:
+        - https://placehold.co/80x80/png?text=A
+        - https://placehold.co/80x80/png?text=B
+    - type: collapse-group
+      body:
+        - type: collapse
+          title: 状态与进度
+          body:
+            - type: progress
+              name: progress
+            - type: status
+              name: status
+            - type: mapping
+              name: status
+              map:
+                online: 在线
+                offline: 离线
+                "*": 其他
+        - type: collapse
+          title: 步骤
+          body:
+            - type: steps
+              value: 1
+              steps:
+                - title: 接入
+                - title: 校验
+                - title: 完成
+    - type: cards
+      source: "${cards}"
+      card:
+        header:
+          title: "${name}"
+        body:
+          - type: status
+            name: status
+    - type: list
+      source: "${cards}"
+      listItem:
+        title: "${name}"
+        subTitle: "${status}"
+    - type: pagination
+      total: 4
+      value: 1
+    - type: chart
+      config:
+        title:
+          text: 设备在线
+        tooltip: {}
+        xAxis:
+          type: category
+          data:
+            - 泵房
+            - 闸门
+            - 风机
+        yAxis:
+          type: value
+        series:
+          - type: bar
+            data:
+              - 12
+              - 8
+              - 15
+    - type: search-box
+      name: keywords
+      placeholder: 搜索关键字

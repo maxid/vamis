@@ -1,5 +1,5 @@
 {
-  "name": "@varmis/playground",
+  "name": "@vamis/playground",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -12,11 +12,11 @@
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/ibm-plex-sans": "^5.2.8",
-    "@varmis/core": "workspace:*",
-    "@varmis/editor": "workspace:*",
-    "@varmis/ui": "workspace:*",
+    "@vamis/core": "workspace:*",
+    "@vamis/editor": "workspace:*",
+    "@vamis/ui": "workspace:*",
     "pinia": "^3.0.0",
-    "varmis": "workspace:*",
+    "vamis": "workspace:*",
     "vue": "^3.5.22",
     "vue-router": "^4.5.0",
     "vue-sonner": "^2.0.9"

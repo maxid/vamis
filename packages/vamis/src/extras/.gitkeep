@@ -1,0 +1,1 @@
+# Extra renderer modules (*.ts) are auto-loaded by register.ts via import.meta.glob.

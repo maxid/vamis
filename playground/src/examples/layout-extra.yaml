@@ -1,0 +1,200 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: layout-extra
+  description: 布局与导航补齐
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 布局与导航
+  subTitle: app / hbox / vbox / grid-2d / portlet / switch-container / tooltip-wrapper
+  data:
+    env: prod
+    rows:
+      - engine: Trident
+        version: "7"
+      - engine: Gecko
+        version: "1.8"
+      - engine: Webkit
+        version: "522"
+      - engine: Presto
+        version: "2.1"
+    navs:
+      - icon: fa fa-home
+        text: 概览
+      - icon: fa fa-bolt
+        text: 设备
+      - icon: fa fa-chart
+        text: 曲线
+      - icon: fa fa-cog
+        text: 设置
+  body:
+    - type: app
+      brandName: 泵站监控
+      pages:
+        - label: 概览
+          isDefaultPage: true
+          schema:
+            type: tpl
+            tpl: 当前为概览页
+        - label: 设备
+          children:
+            - label: 列表
+              schema:
+                type: tpl
+                tpl: 设备列表页
+            - label: 详情
+              schema:
+                type: tpl
+                tpl: 设备详情页
+    - type: panel
+      title: hbox / vbox / grid-2d
+      body:
+        - type: hbox
+          gap: sm
+          align: between
+          columns:
+            - type: tpl
+              tpl: 左栏
+            - type: tpl
+              tpl: 中栏
+            - width: 8rem
+              body:
+                type: tpl
+                tpl: 定宽右栏
+        - type: vbox
+          rows:
+            - type: tpl
+              tpl: 第一行
+            - type: tpl
+              tpl: 第二行
+        - type: grid-2d
+          cols: 12
+          gap: 8
+          rowHeight: 56
+          grids:
+            - x: 1
+              y: 1
+              w: 6
+              h: 1
+              type: tpl
+              tpl: "[1] x=1 w=6"
+            - x: 7
+              y: 1
+              w: 6
+              h: 1
+              type: tpl
+              tpl: "[2] x=7 w=6"
+            - x: 1
+              y: 2
+              w: 4
+              h: 2
+              type: tpl
+              tpl: "[3] h=2"
+            - x: 5
+              y: 2
+              w: 8
+              h: 1
+              type: tpl
+              tpl: "[4] 余下"
+    - type: portlet
+      description: 固定工具条 + 页签工具条
+      toolbar:
+        - type: button
+          label: 固定操作
+          actionType: toast
+          msg: portlet 固定按钮
+      tabs:
+        - title: 实时
+          tab: 实时工况
+          toolbar:
+            - type: button
+              label: 刷新
+              actionType: toast
+              msg: 刷新实时
+        - title: 历史
+          body:
+            type: tpl
+            tpl: 历史记录
+    - type: switch-container
+      items:
+        - title: 生产
+          visibleOn: "${env === 'prod'}"
+          body:
+            type: alert
+            title: 生产环境
+            body: switch-container 命中 prod
+        - title: 其它
+          visibleOn: "${env !== 'prod'}"
+          body:
+            type: alert
+            title: 其它环境
+            body: 默认回落
+    - type: hbox
+      gap: md
+      columns:
+        - type: tooltip-wrapper
+          title: 提示标题
+          content: 悬停查看说明
+          body:
+            type: tpl
+            tpl: 悬停我（tooltip-wrapper）
+        - type: tooltip
+          content: tooltip 别名，语义对齐 wrapper 包一层 body
+          inline: true
+          body:
+            type: tpl
+            tpl: 悬停我（tooltip）
+        - type: wrapper
+          body:
+            type: tpl
+            tpl: wrapper 仅包裹内容
+    - type: timeline
+      items:
+        - time: 2019-02-07
+          title: 数据开发
+          detail: 接入测点
+          color: "#ffb200"
+        - time: 2019-02-08
+          title: 管理中心
+          detail: 完成巡检
+          color: success
+        - time: 2019-02-09
+          title: 一键部署
+          detail: 发布到生产
+          color: warning
+    - type: anchor-nav
+      links:
+        - title: 基本信息
+          href: basic
+          body:
+            type: tpl
+            tpl: 基本信息区块
+        - title: 运行参数
+          href: runtime
+          body:
+            type: tpl
+            tpl: 运行参数区块
+        - title: 告警
+          href: alarm
+          body:
+            type: tpl
+            tpl: 告警区块
+    - type: grid-nav
+      source: "${navs}"
+      columnNum: 4
+      center: true
+      border: true
+    - type: pagination-wrapper
+      inputName: rows
+      outputName: rows
+      perPage: 2
+      position: bottom
+      showPageInput: true
+      body:
+        - type: each
+          source: rows
+          items:
+            type: tpl
+            tpl: "${engine} / ${version}"

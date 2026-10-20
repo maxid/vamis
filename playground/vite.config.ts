@@ -13,10 +13,10 @@ export default defineConfig({
   plugins: [vue(), tailwindcss(), mockApiPlugin()],
   resolve: {
     alias: [
-      { find: '@varmis/ui', replacement: pkg('varmis-ui') },
-      { find: '@varmis/core', replacement: pkg('varmis-core') },
-      { find: '@varmis/editor', replacement: pkg('varmis-editor') },
-      { find: 'varmis', replacement: path.join(pkg('varmis'), 'index.ts') },
+      { find: '@vamis/ui', replacement: pkg('vamis-ui') },
+      { find: '@vamis/core', replacement: pkg('vamis-core') },
+      { find: '@vamis/editor', replacement: pkg('vamis-editor') },
+      { find: 'vamis', replacement: path.join(pkg('vamis'), 'index.ts') },
     ],
   },
   server: {

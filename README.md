@@ -1,4 +1,4 @@
-# varmis
+# vamis
 
 用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者格式是 **YAML**；信封对齐 **xdmp LCDP IR**（`apiVersion: lcdp.ir/v1`）。
 
@@ -32,7 +32,7 @@ xdmp 低代码的唯一真源是 IR 信封（见 `megre/xdmp` 的 `docs/superpow
 
 ```yaml
 apiVersion: lcdp.ir/v1
-kind: UiPage          # varmis 扩展；xdmp 已有 TableDef/FormDef/PageDef…
+kind: UiPage          # vamis 扩展；xdmp 已有 TableDef/FormDef/PageDef…
 metadata:
   name: form-page
   description: 表单页面
@@ -44,7 +44,7 @@ spec:
 
 - **YAML** 是作者态。
 - **JSON**（Amis 页面）经 `jsonToIr()` 包成 `kind: UiPage`，再 `yamlFromIr()` 写出。
-- 运行时 `VarmisRoot` 先 normalize 成 IR，再 `compileIrToWidget()` 得到 widget 树。
+- 运行时 `VamisRoot` 先 normalize 成 IR，再 `compileIrToWidget()` 得到 widget 树。
 - 未知 `type` / 未实现的 `kind` 显示占位，不崩。
 
 黄金样例：
@@ -58,19 +58,19 @@ spec:
 | 点 | 做法 |
 |----|------|
 | 信封 | 同 `apiVersion` / `kind` / `metadata` / `spec` |
-| `UiPage` | varmis 扩展 kind，承载 widget 树；将来可挂到 `PageDef.spec.schema` 或 `pageKind: SCHEMA` |
+| `UiPage` | vamis 扩展 kind，承载 widget 树；将来可挂到 `PageDef.spec.schema` 或 `pageKind: SCHEMA` |
 | `FormDef` / `TableDef` | 已能编译成 form / crud 预览 |
 | 存储 | 不实现 `lcdp_ir_def`；xdmp 后端把 `UiPage` 注册成 `LcdpIrKind` 即可收纳 |
 
-细节：`docs/superpowers/specs/2026-10-20-varmis-vue3-runtime-design.md`
+细节：`docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md`
 
 ## 包结构
 
 ```
-packages/varmis-core     工厂、IR、公式、Pinia hub、SchemaRenderer
-packages/varmis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
-packages/varmis          P0 渲染器注册表
-packages/varmis-editor   树 + 属性 + YAML + 预览
+packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer
+packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
+packages/vamis          P0 渲染器注册表
+packages/vamis-editor   树 + 属性 + YAML + 预览
 playground               Vite 演示与 mock API
 ```
 

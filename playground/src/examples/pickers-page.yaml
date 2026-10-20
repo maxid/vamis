@@ -1,0 +1,77 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: pickers-page
+  description: 穿梭器与树选择
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 选择器
+  subTitle: 来自 examples/components/Form/Transfer.jsx 与 Tree.jsx 的精简结构
+  body:
+    - type: form
+      title: 人员与组织
+      api: /api/mock2/form/saveForm
+      body:
+        - type: select
+          name: remote
+          label: 远程下拉
+          source: /api/mock2/options
+          multiple: true
+        - type: transfer
+          name: transfer1
+          label: 穿梭器
+          options:
+            - label: 诸葛亮
+              value: zhugeliang
+            - label: 曹操
+              value: caocao
+            - label: 李白
+              value: libai
+            - label: 韩信
+              value: hanxin
+        - type: nested-select
+          name: region
+          label: 级联地区
+          options:
+            - label: 华东
+              children:
+                - label: 上海
+                  value: sh
+                - label: 杭州
+                  value: hz
+            - label: 华北
+              children:
+                - label: 北京
+                  value: bj
+        - type: tree-select
+          name: owner
+          label: 树选择
+          options:
+            - label: 运维
+              children:
+                - label: 白班
+                  value: day
+                - label: 夜班
+                  value: night
+        - type: input-tree
+          name: dept
+          label: 部门树
+          multiple: true
+          searchable: true
+          options:
+            - label: 研发
+              children:
+                - label: 前端
+                  value: fe
+                - label: 后端
+                  value: be
+            - label: 产品
+              value: pm
+        - type: input-file
+          name: file
+          label: 附件
+        - type: input-image
+          name: photo
+          label: 头像

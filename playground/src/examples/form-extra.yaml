@@ -1,0 +1,154 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: form-extra
+  description: 表单扩展控件
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 表单扩展控件
+  subTitle: picker / tag / color / range / 布局 / 级联 / 子表单 / 条件 / 年月季
+  body:
+    - type: form
+      name: extraForm
+      mode: horizontal
+      api: /api/mock2/form/saveForm
+      body:
+        - type: picker
+          name: owner
+          label: 负责人
+          required: true
+          multiple: true
+          options:
+            - label: 张三
+              value: zhang
+            - label: 李四
+              value: li
+            - label: 王五
+              value: wang
+        - type: input-tag
+          name: tags
+          label: 标签
+          options:
+            - frontend
+            - backend
+            - ops
+        - type: input-color
+          name: theme
+          label: 主题色
+        - type: input-range
+          name: score
+          label: 评分
+          min: 0
+          max: 100
+          step: 5
+          unit: 分
+        - type: fieldset
+          title: 联系方式
+          collapsable: true
+          collapsed: false
+          body:
+            - type: group
+              body:
+                - type: input-text
+                  name: city
+                  label: 城市
+                - type: input-text
+                  name: phone
+                  label: 电话
+            - type: input-group
+              name: account
+              label: 账号
+              body:
+                - type: input-text
+                  name: prefix
+                  placeholder: 前缀
+                - type: input-text
+                  name: accountNo
+                  placeholder: 账号
+        - type: chained-select
+          name: region
+          label: 地区
+          options:
+            - label: 浙江
+              value: zj
+              children:
+                - label: 杭州
+                  value: hz
+                  children:
+                    - label: 西湖
+                      value: xh
+                - label: 宁波
+                  value: nb
+            - label: 江苏
+              value: js
+              children:
+                - label: 南京
+                  value: nj
+        - type: input-sub-form
+          name: contacts
+          label: 联系人
+          multiple: true
+          labelField: name
+          form:
+            body:
+              - type: input-text
+                name: name
+                label: 姓名
+              - type: input-text
+                name: title
+                label: 职务
+        - type: input-array
+          name: aliases
+          label: 别名
+          items:
+            type: input-text
+            name: item
+            placeholder: 别名
+        - type: input-kv
+          name: extras
+          label: 扩展字段
+        - type: input-rich-text
+          name: intro
+          label: 简介
+        - type: editor
+          name: snippet
+          label: 代码片段
+          language: json
+        - type: condition-builder
+          name: filter
+          label: 筛选条件
+          fields:
+            - label: 状态
+              name: status
+              type: select
+              options:
+                - label: 启用
+                  value: enabled
+                - label: 停用
+                  value: disabled
+            - label: 年龄
+              name: age
+              type: number
+            - label: 姓名
+              name: name
+              type: text
+        - type: input-month
+          name: month
+          label: 月份
+        - type: input-quarter
+          name: quarter
+          label: 季度
+        - type: input-year
+          name: year
+          label: 年份
+        - type: input-month-range
+          name: monthRange
+          label: 月份区间
+        - type: input-quarter-range
+          name: quarterRange
+          label: 季度区间
+        - type: input-year-range
+          name: yearRange
+          label: 年份区间

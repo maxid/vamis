@@ -12,12 +12,12 @@
     "types": ["vite/client"],
     "noEmit": true,
     "paths": {
-      "@varmis/core": ["../packages/varmis-core/src/index.ts"],
-      "@varmis/core/*": ["../packages/varmis-core/src/*"],
-      "@varmis/ui": ["../packages/varmis-ui/src/index.ts"],
-      "@varmis/ui/*": ["../packages/varmis-ui/src/*"],
-      "@varmis/editor": ["../packages/varmis-editor/src/index.ts"],
-      "varmis": ["../packages/varmis/src/index.ts"]
+      "@vamis/core": ["../packages/vamis-core/src/index.ts"],
+      "@vamis/core/*": ["../packages/vamis-core/src/*"],
+      "@vamis/ui": ["../packages/vamis-ui/src/index.ts"],
+      "@vamis/ui/*": ["../packages/vamis-ui/src/*"],
+      "@vamis/editor": ["../packages/vamis-editor/src/index.ts"],
+      "vamis": ["../packages/vamis/src/index.ts"]
     }
   },
   "include": ["src", "../packages"]

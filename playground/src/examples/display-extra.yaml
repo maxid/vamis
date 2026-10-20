@@ -1,0 +1,118 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: display-extra
+  description: 展示/富媒体 extras：video/audio/iframe/carousel/slider/markdown/code/json/qrcode/barcode/calendar/sparkline 与 office/pdf 占位
+  labels:
+    source: amis
+    lane: display
+spec:
+  type: page
+  title: 展示与富媒体
+  subTitle: extras/display 独立注册，不改核心 register
+  data:
+    qrText: vamis
+    spark:
+      - 3
+      - 5
+      - 2
+      - 4
+      - 1
+      - 8
+      - 3
+      - 7
+    payload:
+      pump: A-12
+      online: true
+      tags:
+        - 水位
+        - 闸门
+  body:
+    - type: panel
+      title: 媒体
+      body:
+        - type: video
+          src: https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4
+          poster: https://placehold.co/320x180/png?text=video
+        - type: audio
+          src: https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3
+        - type: iframe
+          src: https://example.com
+          height: 220
+        - type: carousel
+          width: 480
+          height: 200
+          auto: true
+          interval: 4000
+          loop: true
+          options:
+            - image: https://placehold.co/480x200/png?text=A
+              title: 泵房
+            - image: https://placehold.co/480x200/png?text=B
+              title: 闸门
+            - html: "<div style=\"text-align:center;line-height:200px;\">自定义 HTML 页</div>"
+        - type: slider
+          bodyWidth: "60%"
+          left:
+            type: tpl
+            tpl: 左侧栏
+          body:
+            type: tpl
+            tpl: 中间主内容
+          right:
+            type: tpl
+            tpl: 右侧栏
+    - type: panel
+      title: 文本
+      body:
+        - type: markdown
+          value: |
+            # Markdown
+            支持 **加粗**、`code` 与 [链接](https://example.com)
+            - 列表一项
+            - 列表二项
+        - type: code
+          language: yaml
+          value: |
+            type: page
+            title: demo
+        - type: json
+          source: "${payload}"
+          levelExpand: 1
+          displayDataTypes: true
+          enableClipboard: true
+    - type: panel
+      title: 码与趋势
+      body:
+        - type: flex
+          items:
+            - type: qrcode
+              value: "${qrText}"
+              codeSize: 128
+              level: M
+            - type: qr-code
+              value: https://example.com
+              codeSize: 96
+            - type: barcode
+              value: VAMIS-2026
+              height: 64
+            - type: sparkline
+              name: spark
+              width: 160
+              height: 36
+        - type: calendar
+          value: "2021-12-11"
+          schedules:
+            - startTime: "2021-12-11 05:14:00"
+              endTime: "2021-12-11 06:14:00"
+              content: 设备巡检
+            - startTime: "2021-12-21 05:14:00"
+              endTime: "2021-12-22 05:14:00"
+              content: 闸门检修
+    - type: panel
+      title: 文档预览占位
+      body:
+        - type: office-viewer
+          src: https://example.com/files/report.docx
+        - type: pdf-viewer
+          src: https://example.com/files/manual.pdf

@@ -1,0 +1,116 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: crud-extra
+  description: operation / column-toggler / table2 / crud2 / 批量勾选
+  businessTerms:
+    - device
+  labels:
+    source: amis
+spec:
+  type: page
+  title: CRUD 进阶
+  data:
+    rows:
+      - id: 1
+        name: 泵房-A
+        status: online
+      - id: 2
+        name: 闸门-B
+        status: offline
+      - id: 3
+        name: 传感器-C
+        status: online
+  body:
+    - type: crud
+      name: bulkCrud
+      api: /api/mock2/sample
+      perPage: 5
+      selectable: true
+      primaryField: id
+      headerToolbar:
+        - type: search-box
+          name: keywords
+          placeholder: 搜名称
+      bulkActions:
+        - type: button
+          label: 批量提交 ids
+          level: primary
+          actionType: ajax
+          confirmText: 确认提交选中项？
+          api: post:/api/mock2/form/saveForm
+      columns:
+        - name: id
+          label: ID
+        - name: name
+          label: 名称
+        - name: status
+          label: 状态
+        - type: operation
+          label: 操作
+          buttons:
+            - type: button
+              label: 查看
+              actionType: toast
+              msg: "id=${id}"
+    - type: table2
+      title: 本地 table2
+      source: $rows
+      perPage: 2
+      columnsTogglable: true
+      selectable: true
+      primaryField: id
+      columns:
+        - name: id
+          title: ID
+          sorter: true
+        - name: name
+          title: 名称
+        - name: status
+          title: 状态
+          toggled: false
+        - type: operation
+          title: 操作
+          toggable: false
+          buttons:
+            - type: button
+              label: 详情
+              actionType: toast
+              msg: "${name}"
+    - type: crud2
+      name: deviceCrud2
+      api: /api/mock2/sample
+      perPage: 5
+      selectable: true
+      primaryField: id
+      headerToolbar:
+        - type: search-box
+          name: keywords
+          placeholder: 关键字
+        - type: column-toggler
+        - type: reload
+      bulkActions:
+        - type: button
+          label: 批量 ajax
+          actionType: ajax
+          api: post:/api/mock2/form/saveForm
+          confirmText: "将提交 ids=${ids}"
+      columns:
+        - name: id
+          title: ID
+          sorter: true
+        - name: name
+          title: 名称
+        - name: status
+          title: 状态
+      footerToolbar:
+        - type: pagination
+    - type: crud2
+      name: cardCrud2
+      mode: cards
+      api: /api/mock2/sample
+      perPage: 4
+      card:
+        header:
+          title: "${name}"
+          subTitle: "${status}"
