@@ -52,7 +52,11 @@ function onDrop(event: DragEvent, path: string) {
         @dragover="onDragOver"
         @drop="onDrop($event, node.path)"
       >
-        <Badge variant="outline" class="font-mono text-[10px]">{{ node.type }}</Badge>
+        <Badge
+          variant="outline"
+          class="border-sidebar-border bg-sidebar-accent/40 font-mono text-[10px] text-sidebar-foreground/80"
+          >{{ node.type }}</Badge
+        >
         <span class="truncate">{{ node.label }}</span>
       </button>
       <SchemaTreeNav
