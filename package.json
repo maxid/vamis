@@ -9,7 +9,8 @@
     "build": "pnpm --filter @vamis/playground build",
     "preview": "pnpm --filter @vamis/playground preview",
     "test": "pnpm --filter @vamis/core test",
-    "typecheck": "pnpm --filter @vamis/playground typecheck"
+    "typecheck": "pnpm --filter @vamis/playground typecheck",
+    "status": "node scripts/amis-parity.mjs"
   },
   "engines": {
     "node": ">=20"
