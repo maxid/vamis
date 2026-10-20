@@ -1,0 +1,59 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: combo-form
+  description: 组合字段与可编辑表格
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 巡检清单
+  body:
+    - type: alert
+      title: Combo / input-table
+      body: 来自 Amis 表单组合录入的常见后台形态
+    - type: form
+      name: inspectForm
+      api: /api/mock2/form/saveForm
+      body:
+        - type: input-text
+          name: title
+          label: 标题
+          required: true
+        - type: combo
+          name: points
+          label: 测点
+          multiple: true
+          items:
+            - type: input-text
+              name: code
+              label: 编码
+            - type: select
+              name: level
+              label: 等级
+              options:
+                - label: 高
+                  value: high
+                - label: 低
+                  value: low
+        - type: input-table
+          name: tasks
+          label: 任务
+          columns:
+            - type: input-text
+              name: name
+              label: 任务名
+            - type: input-number
+              name: hours
+              label: 工时
+        - type: tabs
+          tabs:
+            - title: 说明
+              body:
+                - type: tpl
+                  tpl: 提交后走 mock saveForm
+            - title: 备注
+              body:
+                - type: textarea
+                  name: remark
+                  label: 备注

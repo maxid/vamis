@@ -1,7 +1,9 @@
 import './register'
 
+export { default as VarmisRoot } from './VarmisApp.vue'
+export { default as OverlayHost } from './OverlayHost.vue'
+
 export {
-  VarmisRoot,
   SchemaRenderer,
   registerRenderer,
   resolveRenderer,

@@ -4,6 +4,9 @@ import { VarmisRoot, jsonToIr, parseSchemaText, yamlFromIr } from 'varmis'
 import { Alert, AlertDescription, AlertTitle, Badge, Button, Textarea } from '@varmis/ui'
 import formPage from '../examples/form-page.yaml?raw'
 import crudPage from '../examples/crud-page.yaml?raw'
+import wizardPage from '../examples/wizard-page.yaml?raw'
+import comboForm from '../examples/combo-form.yaml?raw'
+import eventsPage from '../examples/events-page.yaml?raw'
 import amisForm from '../examples/amis-form.json?raw'
 
 const source = ref(formPage)
@@ -46,6 +49,9 @@ function fromAmisJson() {
       <div class="flex flex-wrap gap-2 border-b p-2">
         <Button size="sm" variant="secondary" @click="load(formPage)">黄金表单</Button>
         <Button size="sm" variant="secondary" @click="load(crudPage)">CRUD</Button>
+        <Button size="sm" variant="secondary" @click="load(wizardPage)">向导</Button>
+        <Button size="sm" variant="secondary" @click="load(comboForm)">组合录入</Button>
+        <Button size="sm" variant="secondary" @click="load(eventsPage)">事件/筛选</Button>
         <Button size="sm" variant="outline" @click="fromAmisJson">Amis JSON → YAML</Button>
       </div>
       <Textarea

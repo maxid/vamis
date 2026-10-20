@@ -5,7 +5,10 @@ import {
   asArray,
   createStoreId,
   normalizeApi,
+  provideFormApi,
+  runOnEvent,
   useEnv,
+  useOverlay,
   useRendererHub,
   useScoped,
   type SchemaObject,
@@ -21,6 +24,7 @@ const props = defineProps<{
 const env = useEnv()
 const hub = useRendererHub()
 const scoped = useScoped()
+const overlay = useOverlay()
 const store = hub.add({
   id: createStoreId('form'),
   type: 'form',
@@ -77,6 +81,13 @@ async function submit() {
     } else {
       env.notify('success', '已提交（未配置 api）')
     }
+    await runOnEvent(props.schema, 'submit', {
+      env,
+      data: { ...props.data, ...store.data },
+      scoped,
+      overlay,
+      form: formApi,
+    })
     return
   }
   store.saving = true
@@ -87,8 +98,15 @@ async function submit() {
     }
     env.notify('success', payload.msg || '保存成功')
     if (props.schema.reload) {
-      await scoped?.reload(props.schema.reload)
+      await scoped?.reload(props.schema.reload, store.data)
     }
+    await runOnEvent(props.schema, 'submit', {
+      env,
+      data: { ...props.data, ...store.data },
+      scoped,
+      overlay,
+      form: formApi,
+    })
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '提交失败')
   } finally {
@@ -98,6 +116,9 @@ async function submit() {
 
 const formApi = {
   name: props.schema.name,
+  getValue,
+  setValue,
+  reset,
   reload: async () => {
     if (!props.schema.initApi) return
     store.fetching = true
@@ -114,6 +135,7 @@ const formApi = {
 }
 
 provideForm({ store, getValue, setValue, submit, reset, setError })
+provideFormApi(formApi)
 scoped?.register(formApi)
 
 onMounted(() => {
@@ -141,7 +163,7 @@ onBeforeUnmount(() => {
         <Button type="submit" :disabled="store.saving">
           {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
         </Button>
-        <Button v-if="schema.resetAfterSubmit !== false" type="button" variant="outline" @click="reset">
+        <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
           重置
         </Button>
       </template>

@@ -1,0 +1,60 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: wizard-page
+  description: 向导分步表单
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 设备接入向导
+  subTitle: 对齐 Amis Wizard 常见结构，步骤切换不依赖 cxd
+  body:
+    - type: wizard
+      steps:
+        - title: 基本信息
+          body:
+            - type: form
+              name: step1
+              reset: false
+              body:
+                - type: input-text
+                  name: name
+                  label: 设备名
+                  required: true
+                - type: nested-select
+                  name: region
+                  label: 区域
+                  options:
+                    - label: 华东
+                      children:
+                        - label: 上海
+                          value: sh
+                        - label: 杭州
+                          value: hz
+                    - label: 华北
+                      children:
+                        - label: 北京
+                          value: bj
+        - title: 运行窗口
+          body:
+            - type: form
+              name: step2
+              reset: false
+              body:
+                - type: input-datetime
+                  name: onlineAt
+                  label: 上线时间
+                - type: input-date-range
+                  name: window
+                  label: 巡检区间
+                - type: tree-select
+                  name: owner
+                  label: 负责人组
+                  options:
+                    - label: 运维
+                      children:
+                        - label: 白班
+                          value: day
+                        - label: 夜班
+                          value: night

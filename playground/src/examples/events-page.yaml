@@ -1,0 +1,88 @@
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: events-page
+  description: onEvent 动作与 CRUD 筛选联动
+  labels:
+    source: amis
+spec:
+  type: page
+  title: 事件与列表
+  data:
+    items:
+      - name: 泵房-A
+      - name: 闸门-B
+  body:
+    - type: panel
+      title: onEvent
+      body:
+        - type: form
+          name: greetForm
+          reset: false
+          body:
+            - type: input-text
+              name: name
+              label: 名称
+              placeholder: 填姓名后点动作
+            - type: button-group
+              buttons:
+                - type: button
+                  label: Toast
+                  onEvent:
+                    click:
+                      actions:
+                        - actionType: toast
+                          msg: 你好 ${name}
+                - type: button
+                  label: 写入默认名
+                  onEvent:
+                    click:
+                      actions:
+                        - actionType: setValue
+                          value:
+                            name: Ada
+                - type: button
+                  label: 打开抽屉
+                  actionType: drawer
+                  drawer:
+                    title: 快捷说明
+                    body:
+                      type: tpl
+                      tpl: 抽屉来自 actionType=drawer
+                - type: button
+                  label: 刷新列表
+                  onEvent:
+                    click:
+                      actions:
+                        - actionType: reload
+                          target: eventCrud
+        - type: each
+          source: items
+          items:
+            type: tpl
+            tpl: '• ${name}'
+        - type: divider
+        - type: wrapper
+          body:
+            - type: button
+              label: Ajax 探测
+              actionType: ajax
+              api: /api/mock2/form/saveForm
+    - type: crud
+      name: eventCrud
+      api: /api/mock2/sample
+      perPage: 5
+      filter:
+        title: 筛选
+        body:
+          - type: input-text
+            name: keywords
+            label: 关键字
+            placeholder: 名称包含
+      columns:
+        - name: id
+          label: ID
+        - name: name
+          label: 名称
+        - name: status
+          label: 状态

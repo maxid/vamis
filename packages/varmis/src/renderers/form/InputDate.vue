@@ -11,10 +11,16 @@ const value = computed({
   get: () => (props.schema.name ? form?.getValue(props.schema.name) : '') ?? '',
   set: (v) => props.schema.name && form?.setValue(props.schema.name, v),
 })
+const inputType = computed(() => {
+  const type = props.schema.type
+  if (type === 'input-datetime') return 'datetime-local'
+  if (type === 'input-time') return 'time'
+  return 'date'
+})
 </script>
 
 <template>
   <FormItem :schema="schema">
-    <Input v-model="value" type="date" :disabled="disabled" class="w-full" />
+    <Input v-model="value" :type="inputType" :disabled="disabled" class="w-full" />
   </FormItem>
 </template>

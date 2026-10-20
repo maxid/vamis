@@ -7,14 +7,27 @@ import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
-const options = computed(() => {
-  const raw = props.schema.options || []
-  return raw.map((item: any) =>
-    typeof item === 'object'
-      ? { label: item.label ?? item.name, value: String(item.value ?? item.id ?? item.label) }
-      : { label: String(item), value: String(item) },
-  )
-})
+function flattenOptions(raw: any[], prefix = ''): { label: string; value: string }[] {
+  const out: { label: string; value: string }[] = []
+  for (const item of raw || []) {
+    if (item == null) continue
+    if (typeof item !== 'object') {
+      out.push({ label: `${prefix}${item}`, value: String(item) })
+      continue
+    }
+    const label = `${prefix}${item.label ?? item.name ?? item.value ?? ''}`
+    const value = String(item.value ?? item.id ?? item.label ?? '')
+    if (Array.isArray(item.children) && item.children.length) {
+      if (item.value != null && item.selectable !== false) out.push({ label, value })
+      out.push(...flattenOptions(item.children, `${prefix}— `))
+    } else {
+      out.push({ label, value })
+    }
+  }
+  return out
+}
+
+const options = computed(() => flattenOptions(props.schema.options || []))
 const value = computed({
   get: () => {
     const current = props.schema.name ? form?.getValue(props.schema.name) : ''

@@ -4,6 +4,7 @@ import { compileIrToWidget, jsonToIr } from './ir'
 import { createDefaultEnv } from './env'
 import { provideEnv, provideData, ParentStoreIdKey } from './context'
 import { provideScoped } from './scoped'
+import { provideOverlay } from './overlay'
 import { useRendererHub, createStoreId } from './store/hub'
 import SchemaRenderer from './SchemaRenderer.vue'
 import type { PlainObject, RendererEnv, SchemaNode } from './types'
@@ -32,6 +33,7 @@ const data = computed(() => ({
 }))
 provideData(data)
 provideScoped()
+provideOverlay()
 
 const widget = computed<SchemaNode>(() => compileIrToWidget(jsonToIr(props.schema)))
 </script>
@@ -39,5 +41,6 @@ const widget = computed<SchemaNode>(() => compileIrToWidget(jsonToIr(props.schem
 <template>
   <div class="varmis-root text-sm text-foreground" data-api-version="lcdp.ir/v1">
     <SchemaRenderer :schema="widget" />
+    <slot />
   </div>
 </template>

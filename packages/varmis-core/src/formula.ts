@@ -52,3 +52,13 @@ export function isDisabled(schema: PlainObject, data: PlainObject = {}): boolean
   }
   return false
 }
+
+export function resolveValue(expr: unknown, data: PlainObject = {}): unknown {
+  if (expr == null || typeof expr !== 'string') return expr
+  if (expr.startsWith('${') && expr.endsWith('}') && expr.indexOf('${', 1) === -1) {
+    return evalFormula(expr.slice(2, -1), data)
+  }
+  if (expr.includes('${')) return filterTpl(expr, data)
+  if (Object.prototype.hasOwnProperty.call(data, expr)) return data[expr]
+  return expr
+}

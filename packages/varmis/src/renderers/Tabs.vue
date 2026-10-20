@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, type SchemaObject } from '@varmis/core'
+import { SchemaRenderer, asArray, type SchemaObject } from '@varmis/core'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@varmis/ui'
 
 const props = defineProps<{ schema: SchemaObject }>()
@@ -25,7 +25,7 @@ const defaultValue = computed(() => String(tabs.value[0]?.key || tabs.value[0]?.
       :value="String(tab.key || tab.title || i)"
       class="pt-3"
     >
-      <SchemaRenderer :schema="tab.body || tab" />
+      <SchemaRenderer v-for="(node, j) in asArray(tab.body)" :key="j" :schema="node" />
     </TabsContent>
   </Tabs>
 </template>

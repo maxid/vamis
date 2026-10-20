@@ -50,11 +50,21 @@ function listData(payloadData: any): { items: any[]; total: number } {
   return { items, total: Number(payloadData?.total ?? items.length) }
 }
 
+function sanitizeQuery(extra: Record<string, any>) {
+  const next: Record<string, any> = {}
+  for (const [key, value] of Object.entries(extra)) {
+    if (key === 'page' || key === 'perPage') continue
+    next[key] = value
+  }
+  return next
+}
+
 async function reload(extra: Record<string, any> = {}) {
   if (!props.schema.api) return
   store.fetching = true
-  store.query = { ...store.query, ...extra }
-  if (Object.keys(extra).length) store.page = 1
+  const queryPatch = sanitizeQuery(extra)
+  store.query = { ...store.query, ...queryPatch }
+  if (Object.keys(queryPatch).length) store.page = 1
   try {
     const query = { ...store.query, page: store.page, perPage: store.perPage }
     const payload = await env.fetcher(normalizeApi(props.schema.api, query), query)
@@ -108,7 +118,14 @@ onBeforeUnmount(() => {
   <div class="space-y-4">
     <div v-if="filterSchema" class="rounded-md border bg-card p-4">
       <SchemaRenderer
-        :schema="{ ...filterSchema, type: filterSchema.type || 'form', api: undefined, reload: schema.name }"
+        :schema="{
+          ...filterSchema,
+          type: filterSchema.type || 'form',
+          api: undefined,
+          reload: schema.name,
+          submitText: filterSchema.submitText || '搜索',
+          resetAfterSubmit: false,
+        }"
       />
     </div>
     <div class="flex items-center justify-between gap-2">
@@ -119,6 +136,7 @@ onBeforeUnmount(() => {
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="node" />
         <Button
           v-if="schema.api && !headerToolbar.length"
+          type="button"
           size="sm"
           @click="openDialog({ title: '新增', body: { type: 'form', api: schema.api, body: columns.filter(c => c.name && c.type !== 'operation').map(c => ({ type: 'input-text', name: c.name, label: c.label })) } })"
         >
@@ -145,6 +163,7 @@ onBeforeUnmount(() => {
                 <Button
                   v-for="(btn, bi) in asArray(col.buttons || col.body)"
                   :key="bi"
+                  type="button"
                   size="sm"
                   variant="ghost"
                   @click="runColumnAction(btn as SchemaObject, row)"
@@ -159,10 +178,11 @@ onBeforeUnmount(() => {
       </TableBody>
     </Table>
     <div v-if="store.total > store.perPage" class="flex justify-end gap-2">
-      <Button size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
+      <Button type="button" size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
         上一页
       </Button>
       <Button
+        type="button"
         size="sm"
         variant="outline"
         :disabled="store.page * store.perPage >= store.total"

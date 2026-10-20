@@ -39,8 +39,8 @@ export function mockApiPlugin(): Plugin {
         const query = Object.fromEntries(new URLSearchParams(queryString || ''))
         const method = (req.method || 'GET').toUpperCase()
 
-        if (pathname === '/api/mock2/form/saveForm' && method === 'POST') {
-          const body = await readBody(req)
+        if (pathname === '/api/mock2/form/saveForm') {
+          const body = method === 'GET' ? query : await readBody(req)
           return send(res, { status: 0, msg: '保存成功', data: body })
         }
 

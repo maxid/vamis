@@ -55,3 +55,13 @@ export { ScrollArea, ScrollBar } from './ui/scroll-area'
 export { Alert, AlertDescription, AlertTitle } from './ui/alert'
 export { Toaster } from './ui/sonner'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from './ui/sheet'
