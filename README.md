@@ -61,7 +61,7 @@ spec:
 - `playground/src/examples/amis-form.json` — 原始 JSON，Playground 里点「Amis JSON → YAML」
 - `playground/src/examples/crud-page.yaml` — 查询表 + 表格 + 弹窗编辑
 
-`playground/src/examples/` 下共 14 个样例，另含向导、组合录入、选择器、展示、布局、事件、校验、Amis REST 等。
+`playground/src/examples/` 下共 14 个 YAML 样例，另含向导、组合录入、选择器、展示、布局、事件、校验、Amis REST 等。
 
 ## 与 xdmp 的对接点
 
