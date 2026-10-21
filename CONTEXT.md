@@ -1,6 +1,6 @@
 # 项目领域上下文 (CONTEXT)
 
-> vamis：Vue 3 低代码运行时。本文档是术语表与**进度真源**；任务结束必须回写「当前进度」和「后续计划」。
+> Vamis：Vue 3 低代码运行时。本文档是术语表与**进度真源**；任务结束必须回写「当前进度」和「后续计划」。
 
 ## 文档定位
 
@@ -29,12 +29,12 @@
 
 | 术语 | 定义 |
 |------|------|
-| **Amis** | 百度 JSON 低代码引擎（6.13.0）。vamis 对齐其 **schema 语义**，不复制 React/MST/cxd |
+| **Amis** | 百度 JSON 低代码引擎（6.13.0）。Vamis 对齐其 **schema 语义**，不复制 React/MST/cxd |
 | **type** | Schema 节点种类（`page` / `form` / `crud`…）。侧栏 155 项见组件 TODO |
 | **已注册 ≠ 语义完成** | `registerRenderer` 有调用只说明能 resolve；进度看文档主路径 |
-| **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 xdmp LCDP IR 同形 |
-| **UiPage** | vamis 扩展 kind，`spec` 里放 Amis widget 树 |
-| **FormDef / TableDef** | xdmp 已有 kind；可编译成 form / crud 预览 |
+| **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 LCDP IR 同形 |
+| **UiPage** | Vamis 扩展 kind，`spec` 里放 Amis widget 树 |
+| **FormDef / TableDef** | LCDP IR 已有 kind；可编译成 form / crud 预览 |
 | **YAML 1.2 Core** | 作者态字面量：bool/null/数字不加引号；`yes`/`On`/`012` 当字符串 |
 | **Scope / 数据链** | 数据域 + `__super`；设计 D1，尚未落地 |
 | **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm` |
@@ -53,14 +53,15 @@
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
 | 视觉 | 盒子数字对齐 cxd；配色独立 | 控件宽档 `size`、表格 cell padding、`m-t-xs` 阶尚未吃满 |
-| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；GitHub Pages 发同一份静态包 |
+| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`，可编辑即时预览 |
 | 测试 | `pnpm test` 37 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
-- Playground 可发 GitHub Pages：`VITE_BASE=/<repo>/`、SPA `404.html`、生产环境拦截 `/api/mock2`（无后端）。首次需在仓库 Settings → Pages 选 GitHub Actions。
+- 文档产品名统一为 **Vamis**；IR 只写 LCDP IR / `lcdp.ir/v1`，不再写外部平台名。
+- Playground `pnpm build` 全静态导出：每个文档/组件路径一份 `index.html`，可发 GitHub Pages（`VITE_BASE=/<repo>/`）；`/api/mock2` 打进前端 JS。首次需 Settings → Pages 选 GitHub Actions。
 - Playground `/` 与 `/docs` 共用同一外壳：`max-w-[1800px]`、相同左右 padding、主栏 `flex-1` 撑满；文档不再套 `max-w-3xl` 把内容栏收窄。
 - 锁定商业对齐口径：配色可自生成；cxd **盒子系统**（2px 阶、32/24/98/40）写入 token 与样式 spec；横排 label 从 120px 改回 98px。
 - 文档 ` ```schema ` 对齐 Amis Play mini：同一 `VamisRoot` 真跑 + 侧栏改 YAML 即时预览；介绍页换成打 `/api/mock2/sample` 的 CRUD（筛选/批量/删除/重置）。

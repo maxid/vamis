@@ -1,4 +1,4 @@
-/** Amis 文档侧栏结构（路径对齐 zh-CN，正文为 vamis 原创）。 */
+/** Amis 文档侧栏结构（路径对齐 zh-CN，正文为 Vamis 原创）。 */
 
 export const startNav = [
   { text: '介绍', link: '/' },

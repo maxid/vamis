@@ -27,4 +27,4 @@ body:
 
 ## 过滤器
 
-Amis 支持 `${name|raw}`、`${date|date:YYYY-MM-DD}` 等。vamis **D2** 要把过滤器和模板默认转义收口到同一层。现在部分过滤器能跑，不要假设和官网 1:1。
+Amis 支持 `${name|raw}`、`${date|date:YYYY-MM-DD}` 等。Vamis **D2** 要把过滤器和模板默认转义收口到同一层。现在部分过滤器能跑，不要假设和官网 1:1。

@@ -1,4 +1,4 @@
-# vamis P0 Runtime Implementation Plan
+# Vamis P0 Runtime Implementation Plan
 
 > **For agentic workers:** This plan was executed in the same session after IR investigation. Do not re-litigate stack choices.
 

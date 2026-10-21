@@ -4,7 +4,7 @@ import { parseYaml, stringifyYaml } from './yaml'
 export const IR_API_VERSION = 'lcdp.ir/v1'
 
 /**
- * xdmp LCDP IR kinds (from lcdp.ir/v1) plus vamis extension `UiPage`.
+ * LCDP IR kinds (from lcdp.ir/v1) plus Vamis extension `UiPage`.
  * UiPage holds an Amis-compatible widget tree in spec; it is the extension
  * point for later embedding into PageDef (pageKind: SCHEMA).
  */

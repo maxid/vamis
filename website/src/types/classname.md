@@ -4,7 +4,7 @@ title: ClassName
 
 # ClassName
 
-`className` 在 Amis 里可以是字符串、对象或表达式。vamis 当前当 **字符串** 用，并交给 Tailwind。
+`className` 在 Amis 里可以是字符串、对象或表达式。Vamis 当前当 **字符串** 用，并交给 Tailwind。
 
 ```yaml
 type: tpl

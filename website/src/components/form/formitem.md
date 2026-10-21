@@ -6,7 +6,7 @@ title: FormItem 表单项通用
 
 FormItem 不是独立 `type`，而是所有表单项共享的一层：标签、必填星号、错误、描述。
 
-vamis 把这层收在表单渲染器里，字段仍然用各自的 `type`（`input-text`、`select`…）。
+Vamis 把这层收在表单渲染器里，字段仍然用各自的 `type`（`input-text`、`select`…）。
 
 | 属性 | 说明 |
 |------|------|

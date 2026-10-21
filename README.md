@@ -1,8 +1,8 @@
-# vamis
+# Vamis
 
-用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者格式是 **YAML**；信封对齐 **xdmp LCDP IR**（`apiVersion: lcdp.ir/v1`）。
+用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者格式是 **YAML**；信封对齐 **LCDP IR**（`apiVersion: lcdp.ir/v1`）。
 
-按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 xdmp IR 不变。
+按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 LCDP IR 不变。
 
 ## 当前状态（2026-10-21）
 
@@ -58,7 +58,7 @@ Playground（`/` 示例 + `/docs` + `/components` + `/editor`）可静态发布�
 
 第一次需要在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。之后推 `main` 或手动跑 workflow `Deploy playground to GitHub Pages`。
 
-Pages 没有后端：`/api/mock2` 在生产构建里由浏览器拦截，语义与本地 Vite 中间件相同。项目站带仓库名前缀，构建时 `VITE_BASE=/vamis/`。
+`pnpm build` 产出全静态目录：每个文档/组件路由都有一份 `index.html`，无 Node 服务。`/api/mock2` 打进前端 JS。项目站带仓库名前缀，构建时 `VITE_BASE=/vamis/`。
 
 本地按 Pages 路径预览：
 
@@ -69,11 +69,11 @@ VITE_BASE=/vamis/ pnpm preview   # http://127.0.0.1:4173/vamis/
 
 ## YAML 与 IR 的关系
 
-xdmp 低代码的唯一真源是 IR 信封（见 `megre/xdmp` 的 `docs/superpowers/specs/2026-10-17-lcdp-ir-kernel-design.md`）：
+低代码的唯一真源是 IR 信封：
 
 ```yaml
 apiVersion: lcdp.ir/v1
-kind: UiPage          # vamis 扩展；xdmp 已有 TableDef/FormDef/PageDef…
+kind: UiPage          # Vamis 扩展；LCDP IR 已有 TableDef/FormDef/PageDef…
 metadata:
   name: form-page
   description: 表单页面
@@ -96,14 +96,14 @@ spec:
 
 `playground/src/examples/` 下共 14 个 YAML 样例，另含向导、组合录入、选择器、展示、布局、事件、校验、Amis REST 等。
 
-## 与 xdmp 的对接点
+## 与 LCDP IR 的对接点
 
 | 点 | 做法 |
 |----|------|
 | 信封 | 同 `apiVersion` / `kind` / `metadata` / `spec` |
-| `UiPage` | vamis 扩展 kind，承载 widget 树；将来可挂到 `PageDef.spec.schema` 或 `pageKind: SCHEMA` |
+| `UiPage` | Vamis 扩展 kind，承载 widget 树；将来可挂到 `PageDef.spec.schema` 或 `pageKind: SCHEMA` |
 | `FormDef` / `TableDef` | 已能编译成 form / crud 预览 |
-| 存储 | 不实现 `lcdp_ir_def`；xdmp 后端把 `UiPage` 注册成 `LcdpIrKind` 即可收纳 |
+| 存储 | 不实现 `lcdp_ir_def`；宿主把 `UiPage` 注册成 `LcdpIrKind` 即可收纳 |
 
 细节：`docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md`
 

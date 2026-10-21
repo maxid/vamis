@@ -4,7 +4,7 @@ title: 样式
 
 # 样式
 
-vamis 的视觉目标是 **Amis 后台的信息密度**，不是云舍像素。实现上：
+Vamis 的视觉目标是 **Amis 后台的信息密度**，不是云舍像素。实现上：
 
 - 一套 CSS 变量（`--background`、`--primary`、`--control-h`、状态色）
 - 组件用 `variant`，禁止第二套 `cxd-` 前缀

@@ -1,4 +1,4 @@
-# vamis 主题：Amis 样式系统 → shadcn token
+# Vamis 主题：Amis 样式系统 → shadcn token
 
 - 日期：2026-10-21
 - 状态：落地中（视觉基线 v1）
@@ -16,7 +16,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | 语义变量 | 把 token 接到组件 | `_properties.scss`：`--primary`、`--Form-input-height`、`--Table-*` |
 | 页面覆盖 | `page.cssVars` | `{ "--primary": "#CD3632" }` |
 | 辅助类 | 精简版 Tailwind：`m:` / `pc:`、`hover:` | `helper.css`，与主题文件分离 |
-| 选择器前缀 | `.cxd-Button` 等 | **vamis 不复刻** |
+| 选择器前缀 | `.cxd-Button` 等 | **Vamis 不复刻** |
 
 ### 1.1 主题差异
 
@@ -40,7 +40,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | 表格 | 表头浅底、行 hover、选中底、1px 分割 | 后台扫描密度 |
 | 面板 | Page 标题在外，Form/CRUD 自己成 panel | 避免「卡套卡」 |
 
-辅助类只是可选覆盖（`border-solid`、`rounded-xl`、`m:text-red-500`）。vamis 用 Tailwind 本体覆盖，不引入 `helper.css`。
+辅助类只是可选覆盖（`border-solid`、`rounded-xl`、`m:text-red-500`）。Vamis 用 Tailwind 本体覆盖，不引入 `helper.css`。
 
 ## 2. 映射到 shadcn 哲学
 

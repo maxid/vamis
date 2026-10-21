@@ -19,14 +19,14 @@ const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
 
 export default defineConfig({
   srcDir: 'src',
-  title: 'vamis',
+  title: 'Vamis',
   description: 'Vue 3 低代码运行时：YAML 作者态，对齐 Amis schema 语义',
   lang: 'zh-CN',
   lastUpdated: true,
   ignoreDeadLinks: true,
   themeConfig: {
     logo: undefined,
-    siteTitle: 'vamis',
+    siteTitle: 'Vamis',
     nav: [
       { text: '开始', items: startNav },
       { text: '概念', items: conceptNav },

@@ -1,7 +1,7 @@
-# vamis × amis 同步状态
+# Vamis × amis 同步状态
 
 - 同步时间：2026-10-20
-- vamis 基线：`c3396b0`（`main`，与 `origin/main` 一致）
+- Vamis 基线：`c3396b0`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18，与 `origin/master` 一致）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`/Users/maxid/Develop/IdeaProjects/github/amis`
@@ -22,10 +22,10 @@
 | amis `origin/master` | `43a33ee06`（`git ls-remote` 校验一致） |
 | amis 包版本 | 6.13.0 |
 | npm `amis@latest` | 6.13.0（gitHead `37d23b4`，落后于本机 master） |
-| npm `amis-formula@latest` | 6.13.0，与 vamis 的 pin 一致 |
-| vamis 依赖 pin | `amis-formula@6.13.0` |
+| npm `amis-formula@latest` | 6.13.0，与 Vamis 的 pin 一致 |
+| Vamis 依赖 pin | `amis-formula@6.13.0` |
 
-结论：vamis 以 amis master 源码为参考基线（比 npm 发布包多出若干未发版修复），版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
+结论：Vamis 以 amis master 源码为参考基线（比 npm 发布包多出若干未发版修复），版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
 
 ## 2. 仓库健康
 
@@ -51,7 +51,7 @@
 统计口径（`scripts/amis-parity.mjs`）：
 
 - amis：扫描 `packages/amis/src` 与 `packages/amis-core/src`，取 `@Renderer` / `@FormItem` / `@OptionsControl` / `@Control` 装饰器或函数调用里的 `type` 与 `alias`；`test` 正则注册（`static`、`diff-editor`）折算为 type。
-- vamis：扫描 `packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer({ type, alias })`。
+- Vamis：扫描 `packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer({ type, alias })`。
 - 只比较 type **字符串**，不衡量属性、事件、数据行为等实现深度。
 
 | 指标 | 数值 |
@@ -59,17 +59,17 @@
 | amis type 名 | 176 |
 | amis 独有别名 | 13（另有 2 个别名与 type 同名） |
 | amis 去重合计 | **189** |
-| vamis 注册 type | 159（`register.ts` 61、`extras` 98） |
-| vamis 别名 | 43 |
-| vamis 合计 | **202** |
+| Vamis 注册 type | 159（`register.ts` 61、`extras` 98） |
+| Vamis 别名 | 43 |
+| Vamis 合计 | **202** |
 | 交集 | **181** |
 | 覆盖率 | **181 / 189 = 95.8%** |
 | 遗漏 | 8（5 个 type + 3 个别名） |
-| vamis 扩展 | 21 |
+| Vamis 扩展 | 21 |
 
 ### 3.1 遗漏明细（8）
 
-| type | amis 出处 | vamis 现状 / 建议 |
+| type | amis 出处 | Vamis 现状 / 建议 |
 |------|-----------|-------------------|
 | `cascader-select` | `Form/NestedSelect.tsx:1118` | `NestedSelect` 已实现多列级联，按变体注册即可 |
 | `card-item-field` | `Card.tsx:859` | 并入 `cell` 别名（与 `list-item-field` 同类） |
@@ -80,12 +80,12 @@
 | `navigation` | `minimal.ts:748`，别名 → `nav` | `nav` 已有，补 alias |
 | `pager` | `minimal.ts:100`，别名 → `pagination` | `pagination` 已有，补 alias |
 
-### 3.2 vamis 扩展（21）
+### 3.2 Vamis 扩展（21）
 
 - 编辑器族（15）：`editor`、`css-editor`、`go-editor`、`html-editor`、`java-editor`、`javascript-editor`、`json-editor`、`markdown-editor`、`php-editor`、`plaintext-editor`、`python-editor`、`sql-editor`、`typescript-editor`、`xml-editor`、`yaml-editor`。
 - 兼容/补齐（6）：`columns-toggler`、`static-json`、`static-table`、`table-cell`、`tooltip`、`fieldSet`。
 
-这些是 vamis 为常用写法补的别名或额外 type，不属于与 amis 的差异。
+这些是 Vamis 为常用写法补的别名或额外 type，不属于与 amis 的差异。
 
 ## 4. 实现深度（人工评估）
 

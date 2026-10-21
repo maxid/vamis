@@ -1,4 +1,4 @@
-# vamis 样式系统（Amis 水标 × shadcn 哲学）
+# Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-21
 - 状态：落地（token / 密度 / 状态色 / 高频控件；不改 YAML 语义）
@@ -18,14 +18,14 @@ Amis 的样式不是一套设计系统原语，而是**巨型主题 CSS 包 + �
 
 ### 1.1 主题包（cxd / antd / ang / dark）
 
-| 主题 | class 前缀 `$ns` | 观感 | 对 vamis |
+| 主题 | class 前缀 `$ns` | 观感 | 对 Vamis |
 |------|------------------|------|----------|
 | `cxd`（默认，云舍） | `cxd-` | 品牌蓝 `#2468f2`、中性灰阶 11 档、圆角 4px、控件 32px | **只学密度与层次**，不搬前缀与蓝按钮皮肤 |
 | `antd` | `antd-` | Ant 红/金/绿、主色更靠 `#1677ff` 系 | 不做成命名主题包（D12 P1 `registerTheme`） |
 | `ang` | `a-` | 偏紫链接触色 `#7266ba`，其余结构同套变量 | 同上 |
 | `dark` | `dark-` | 中性色阶整体翻转，品牌仍偏蓝 | 对应 shadcn `.dark`，同一套语义名 |
 
-四个主题是同一套 SCSS 组件，换的是 `:root` 里 `--colors-*` 色板和 `$ns`。vamis 不复制这套包，只用 CSS 变量 + `.dark`。
+四个主题是同一套 SCSS 组件，换的是 `:root` 里 `--colors-*` 色板和 `$ns`。Vamis 不复制这套包，只用 CSS 变量 + `.dark`。
 
 ### 1.2 CSS 变量分层
 
@@ -37,7 +37,7 @@ Amis 变量有三层：
 
 文档公开的常用变量（`style/css-vars.md`）是语义层。组件层在 `_properties.scss` / `_components.scss` 里有数百个。`page.cssVars` 可在运行时覆盖（不支持 IE11）。
 
-vamis 落地原则：语义层对照 shadcn token；组件层**折叠**进少数扩展 token（密度、表单、表格），不保留 `Form-` / `Table-` 前缀作为公共 API。
+Vamis 落地原则：语义层对照 shadcn token；组件层**折叠**进少数扩展 token（密度、表单、表格），不保留 `Form-` / `Table-` 前缀作为公共 API。
 
 ### 1.3 尺寸密度、间距、圆角、阴影
 
@@ -86,7 +86,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-这些解析属于运行时 D12 P1（`resolveClassName`），本轮不做。作者现在仍可传普通 Tailwind 字符串，因为 vamis 已用真 Tailwind。
+这些解析属于运行时 D12 P1（`resolveClassName`），本轮不做。作者现在仍可传普通 Tailwind 字符串，因为 Vamis 已用真 Tailwind。
 
 ## 2. shadcn 落地原则
 
@@ -101,7 +101,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 
 ### 3.1 直接对应 shadcn 语义 token
 
-| Amis | shadcn / vamis | 用法 |
+| Amis | shadcn / Vamis | 用法 |
 |------|----------------|------|
 | `--body-bg` | `--background` | 画布（略灰） |
 | `--background`（表格等白底） | `--card` / `--popover` | 面板 |
@@ -138,7 +138,7 @@ shadcn 默认**没有**后台密度、四态状态色（只有 destructive）、
 | `--table-row-h` | **40px** | 52px | `--TableCell-height` |
 | `--success-bg` 等 Toast 底 | 浅语义色 | 暗色下调饱和 | Toast 四态 |
 
-密度开关：`data-density="compact"` **就是 cxd 默认盒子**（商业 YAML 按这档排版）。`"comfortable"` 是 vamis 加的触控档，不参与 Amis 页面对齐。写在 `html` 上，所有 `h-[var(--control-h)]` 一起变。
+密度开关：`data-density="compact"` **就是 cxd 默认盒子**（商业 YAML 按这档排版）。`"comfortable"` 是 Vamis 加的触控档，不参与 Amis 页面对齐。写在 `html` 上，所有 `h-[var(--control-h)]` 一起变。
 
 ### 3.3 盒子系统（必须与 cxd 同值）
 
@@ -146,7 +146,7 @@ shadcn 默认**没有**后台密度、四态状态色（只有 destructive）、
 
 cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/14/16px`。
 
-| 角色 | cxd 变量 | 锁定值 | vamis token |
+| 角色 | cxd 变量 | 锁定值 | Vamis token |
 |------|----------|--------|-------------|
 | 间距阶 | `--gap-xs/sm/base/md/lg/xl` | 4 / 8 / 12 / 16 / 20 / 24 | 同名 |
 | 控件高 | `--Form-input-height` = base-16 | **32** | `--control-h` |
