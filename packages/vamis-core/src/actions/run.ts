@@ -28,14 +28,15 @@ function actionData(action: ActionSchema, ctx: ActionContext): PlainObject {
   return { ...ctx.data, ...extra, ...args }
 }
 
-/** D4 子集：公式可读 `event.context.nativeEvent.type`，完整事件对象尚未落地。 */
-export function withNativeEvent(data: PlainObject, nativeEvent: { type: string }): PlainObject {
+/** D4 子集：`event.data` + `event.context.nativeEvent.type`。完整事件对象尚未落地。 */
+export function withNativeEvent(data: PlainObject, nativeEvent?: { type: string }): PlainObject {
+  const rest = { ...data }
+  delete rest.event
   return {
-    ...data,
+    ...rest,
     event: {
-      context: {
-        nativeEvent: { type: nativeEvent.type },
-      },
+      data: rest,
+      context: nativeEvent ? { nativeEvent: { type: nativeEvent.type } } : {},
     },
   }
 }
@@ -94,7 +95,15 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
       break
     }
     case 'reload': {
-      await ctx.scoped?.reload(action.target || action.componentId || action.args?.target, data)
+      const extra =
+        action.data && typeof action.data === 'object' && !Array.isArray(action.data)
+          ? (action.data as PlainObject)
+          : undefined
+      await ctx.scoped?.reload(
+        action.target || action.componentId || action.args?.target,
+        extra,
+        action.dataMergeMode === 'override',
+      )
       break
     }
     case 'dialog': {
@@ -137,9 +146,10 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     action.args?.value ??
     (action.args && !action.args.value ? action.args : undefined)
   const target = action.componentId || action.target
+  const replace = action.dataMergeMode === 'override'
   const assign = (values: PlainObject) => {
     if (target) {
-      ctx.scoped?.getComponentByName(target)?.setData?.(values)
+      ctx.scoped?.getComponentByName(target)?.setData?.(values, replace)
       return
     }
     if (ctx.form?.setData) {

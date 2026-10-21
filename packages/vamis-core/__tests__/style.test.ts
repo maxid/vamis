@@ -8,6 +8,7 @@ import {
   jsonToIr,
 } from '../src/ir'
 import {
+  buildCssBlock,
   controlWidthForSize,
   resolveClassName,
   resolveCssVars,
@@ -162,5 +163,18 @@ describe('Amis width helpers', () => {
     const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
     expect(form).toContain('class="w-full min-w-0"')
     expect(form).not.toContain('max-w-3xl')
+  })
+})
+
+describe('buildCssBlock', () => {
+  it('turns Amis page.css objects into CSS text', () => {
+    const css = buildCssBlock({ '.myClass': { color: 'blue' } })
+    expect(css).toContain('.myClass')
+    expect(css).toContain('color: blue')
+  })
+
+  it('drops unsafe selectors and values', () => {
+    expect(buildCssBlock({ '.x</style>': { color: 'red' } })).toBe('')
+    expect(buildCssBlock({ '.x': { color: 'red; } body { display:none' } })).toBe('')
   })
 })

@@ -158,6 +158,40 @@ export function controlWidthForSize(size?: unknown): string | undefined {
   return CONTROL_WIDTH[size]
 }
 
+function isUnsafeCss(value: string): boolean {
+  return /<\/|@import|expression\s*\(/i.test(value)
+}
+
+/** Amis `page.css` 对象 → CSS 文本。挂到 Page 上，卸载时一起带走。 */
+export function buildCssBlock(rules: unknown): string {
+  if (!rules || typeof rules !== 'object' || Array.isArray(rules)) return ''
+  let css = ''
+  for (const [selector, declaration] of Object.entries(rules as Record<string, unknown>)) {
+    if (!selector || isUnsafeCss(selector) || !declaration || typeof declaration !== 'object' || Array.isArray(declaration)) {
+      continue
+    }
+    let body = ''
+    for (const [property, raw] of Object.entries(declaration as Record<string, unknown>)) {
+      if (!property || isUnsafeCss(property)) continue
+      if (typeof raw === 'string') {
+        if (isUnsafeCss(raw) || raw.includes(';')) continue
+        body += `  ${property}: ${raw};\n`
+      } else if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        let inner = ''
+        for (const [nested, nestedVal] of Object.entries(raw as Record<string, unknown>)) {
+          if (typeof nestedVal !== 'string' || isUnsafeCss(nested) || isUnsafeCss(nestedVal) || nestedVal.includes(';')) {
+            continue
+          }
+          inner += ` ${nested}:${nestedVal};`
+        }
+        if (inner) body += `  ${property} {${inner}}\n`
+      }
+    }
+    if (body) css += `\n${selector} {\n${body}}\n`
+  }
+  return css
+}
+
 export function mergeCssVars(
   ...layers: Array<Record<string, string> | null | undefined>
 ): Record<string, string> {
