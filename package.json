@@ -2,7 +2,7 @@
   "name": "vamis",
   "private": true,
   "version": "0.1.0",
-  "description": "Vue 3 复刻的 Amis 风格 JSON/YAML 低代码运行时，Schema 作者态为 YAML，信封对齐 xdmp LCDP IR。",
+  "description": "Vue 3 复刻的 Amis 风格 JSON/YAML 低代码运行时，Schema 作者态为 YAML，信封对齐 LCDP IR。",
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @vamis/playground dev",

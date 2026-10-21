@@ -9,7 +9,7 @@ outline: deep
 能打分；半星/自定义字符未齐
 :::
 
-`input-rating` 对齐 Amis 同名 schema。vamis 用 **YAML 1.2 Core** 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`input-rating` 对齐 Amis 同名 schema。Vamis 用 **YAML 1.2 Core** 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
 

@@ -9,7 +9,7 @@ outline: deep
 12 栅格 span 可用；缺响应式 `xs/sm` 全套
 :::
 
-`grid` 对齐 Amis 同名 schema。vamis 用 **YAML 1.2 Core** 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`grid` 对齐 Amis 同名 schema。Vamis 用 **YAML 1.2 Core** 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
 
 属于侧栏分类 **布局**。对照进度以仓库组件 P0 TODO 为准。
 
@@ -36,7 +36,7 @@ body:
 | 属性 | 说明 |
 |------|------|
 | `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
+| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
 | `visibleOn` / `hiddenOn` | 显隐表达式 |
 | `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
 | `data` | 静态数据，当前多与父级浅合并 |

@@ -4,7 +4,7 @@ title: 快速开始
 
 # 快速开始
 
-vamis 跑在 Vue 3 + Vite 里。没有独立的 UMD SDK；把 YAML（或 JSON）交给 `VamisRoot` 即可。
+Vamis 跑在 Vue 3 + Vite 里。没有独立的 UMD SDK；把 YAML（或 JSON）交给 `VamisRoot` 即可。
 
 ## 安装
 
@@ -60,7 +60,7 @@ body:
       - type: input-text
         name: name
         label: 名称
-        value: vamis
+        value: Vamis
         required: true
 ```
 

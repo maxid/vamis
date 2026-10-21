@@ -1,4 +1,4 @@
-# vamis 在线文档
+# Vamis 在线文档
 
 - 日期：2026-10-21
 - 状态：部分落地（与 Playground 同应用、同端口）
@@ -19,7 +19,7 @@
 - fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。
-- GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。生产构建 `VITE_BASE=/<repo>/`，复制 `index.html` → `404.html` 做 SPA 回退；`/api/mock2` 走浏览器拦截（无 Vite 中间件）。
+- GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
 
 ## 怎么跑
 

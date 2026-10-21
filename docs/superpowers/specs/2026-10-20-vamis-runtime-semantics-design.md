@@ -1,4 +1,4 @@
-# vamis 运行时语义设计（amis 文档对齐）
+# Vamis 运行时语义设计（amis 文档对齐）
 
 - 日期：2026-10-20
 - 状态：设计增补（v0.2 语义基线，待实现；落地进度见 [CONTEXT.md](../../../CONTEXT.md)）
@@ -12,7 +12,7 @@
 
 ## 0. 摘要
 
-amis 文档真正定义的不是“组件清单”，而是一套**运行时语义**：数据域与数据链、表达式、API 管线、事件动作、表单值模型、组件契约。vamis 现在有 95.8% 的 type 覆盖，但这些语义大多是简化版。本设计把差距归纳为 12 条决策：
+amis 文档真正定义的不是“组件清单”，而是一套**运行时语义**：数据域与数据链、表达式、API 管线、事件动作、表单值模型、组件契约。Vamis 现在有 95.8% 的 type 覆盖，但这些语义大多是简化版。本设计把差距归纳为 12 条决策：
 
 | # | 决策 | 优先级 |
 |---|------|--------|
@@ -31,7 +31,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 ## 1. amis 文档地图
 
-| 文档 | 定义的语义 | 对 vamis 的约束 |
+| 文档 | 定义的语义 | 对 Vamis 的约束 |
 |------|-----------|-----------------|
 | `concepts/schema.md`、`types/schemanode.md` | `type` + 属性 + 树；`visible/hidden/visibleOn/hiddenOn` 对所有节点生效 | Schema 归一化必须是所有渲染器的公共前置 |
 | `concepts/datascope-and-datachain.md` | 数据域、数据链、`__super`、URL 参数、`__prev/__changeReason`、`trackExpression` | 数据作用域不能是“每节点复制” |
@@ -61,7 +61,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 ## 3. 设计原则
 
-1. **Schema 兼容优先**：amis 字段名与语义不改写；vamis 扩展只能以新字段/新 kind 形式出现。
+1. **Schema 兼容优先**：amis 字段名与语义不改写；Vamis 扩展只能以新字段/新 kind 形式出现。
 2. **数据可序列化**：YAML/JSON 是唯一作者态。函数只能以“表达式字符串 / 函数体字符串 / 已注册名字”进入，禁止隐式 `eval`。
 3. **安全默认**：模板默认转义；`|raw` 显式开启 HTML；`new Function` 只在受信任模式（`env.trusted`）可用。
 4. **Vue 惯用法**：用 `provide/inject`、`computed`、`shallowReactive` 实现作用域；不模拟 MST，也不引入第二套响应式。
@@ -427,7 +427,7 @@ export function usePlugin(plugin: VamisPlugin): void
 ## 15. IR 与 YAML 作者态
 
 - 保持 `UiPage` 信封；`spec` 原样承载 amis widget 树，不因语义增强改信封。
-- `PageDef`：有 `spec.schema` 时透传；固定壳（LIST/TREE_LIST）继续占位，等 xdmp 侧 kind 稳定。
+- `PageDef`：有 `spec.schema` 时透传；固定壳（LIST/TREE_LIST）继续占位，等 LCDP IR 侧 kind 稳定。
 - 函数写法：
   - 公式：`"${ARRAYMAP(items, item => item.name)}"`；
   - 函数体：块标量 `dataFilter: |`；
@@ -437,7 +437,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 ## 16. 差距矩阵
 
-| 能力 | amis | vamis 现状 | 决策 | 阶段 |
+| 能力 | amis | Vamis 现状 | 决策 | 阶段 |
 |------|------|-----------|------|------|
 | 数据域/链 | 显式作用域 + `__super` + URL | 每节点复制父数据 | D1 | P0 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |

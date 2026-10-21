@@ -11,7 +11,7 @@
 
 ## 项目概述
 
-**vamis** 用 Vue 3 复刻百度 Amis 的 JSON 低代码运行时。作者态是 **YAML 1.2 Core**；信封对齐 xdmp LCDP IR（`apiVersion: lcdp.ir/v1`）。按 Amis **组件 type / schema 语义** 搬运；UI 原语是 **shadcn-vue**（reka-ui + CSS 变量），不搬 `cxd-`、不追像素级 cxd。
+**Vamis** 用 Vue 3 复刻百度 Amis 的 JSON 低代码运行时。作者态是 **YAML 1.2 Core**；信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）。按 Amis **组件 type / schema 语义** 搬运；UI 原语是 **shadcn-vue**（reka-ui + CSS 变量），不搬 `cxd-`、不追像素级 cxd。
 
 **技术栈**：Vue 3.5 + TypeScript + Vite + pnpm workspace + Pinia + Tailwind + shadcn-vue + `amis-formula@6.13.0`。
 

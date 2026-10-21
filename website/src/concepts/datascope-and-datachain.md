@@ -4,7 +4,7 @@ title: 数据域与数据链
 
 # 数据域与数据链
 
-Amis 里每个能取数的容器（`page` / `service` / `form` / `crud` / `dialog`）有自己的数据域，子节点通过 `__super` 链回父域。vamis 设计里这是 **kernel D1**，**尚未落地**。
+Amis 里每个能取数的容器（`page` / `service` / `form` / `crud` / `dialog`）有自己的数据域，子节点通过 `__super` 链回父域。Vamis 设计里这是 **kernel D1**，**尚未落地**。
 
 当前实现：多数节点把父 `data` 浅拷贝进自己。表达式能读到顶层字段，但：
 

@@ -4,7 +4,7 @@ title: 配置与 Schema
 
 # 配置与 Schema
 
-一份 vamis 页面是一棵 **widget 树**。每个节点至少有 `type`，其余字段跟 Amis 同名。
+一份 Vamis 页面是一棵 **widget 树**。每个节点至少有 `type`，其余字段跟 Amis 同名。
 
 ```schema
 type: page

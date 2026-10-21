@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 对齐 amis 与 vamis 的渲染器 type 覆盖。
+ * 对齐 amis 与 Vamis 的渲染器 type 覆盖。
  *
  * 用法：
  *   pnpm status -- --amis ../amis
@@ -9,7 +9,7 @@
  *   - amis：packages/amis/src 与 packages/amis-core/src 下所有
  *     @Renderer/@FormItem/@OptionsControl/@Control 装饰器或函数调用里的
  *     type / alias；test 正则注册（如 static、diff-editor）也会折算成 type。
- *   - vamis：packages/vamis/src/register.ts 与 extras/*.ts 里的
+ *   - Vamis：packages/vamis/src/register.ts 与 extras/*.ts 里的
  *     registerRenderer({ type, alias })。
  *
  * 只比较 type 字符串，不代表属性/行为深度对齐。
@@ -161,18 +161,18 @@ if (asJson) {
 }
 
 const line = (name, value) => `| ${name} | ${value} |`
-console.log(`# amis × vamis type 覆盖（${report.generatedAt}）`)
+console.log(`# amis × Vamis type 覆盖（${report.generatedAt}）`)
 console.log('')
 console.log('| 项 | 值 |')
 console.log('|----|----|')
 console.log(line('amis 路径', amisRoot))
 console.log(line('amis 版本', amisVersion))
 if (report.amis.head) console.log(line('amis HEAD', `${report.amis.head} (${report.amis.date}, ${report.amis.branch})`))
-if (report.vamis.head) console.log(line('vamis HEAD', `${report.vamis.head} (${report.vamis.date}, ${report.vamis.branch})`))
+if (report.vamis.head) console.log(line('Vamis HEAD', `${report.vamis.head} (${report.vamis.date}, ${report.vamis.branch})`))
 console.log(line('amis type 名 / 独有别名 / 合计', `${amis.types.size} / ${amisAliasOnly} / ${amisAll.size}`))
-console.log(line('vamis 注册 type / 独有别名 / 合计', `${vamis.types.size} / ${vamisAliasOnly} / ${vamisAll.size}`))
+console.log(line('Vamis 注册 type / 独有别名 / 合计', `${vamis.types.size} / ${vamisAliasOnly} / ${vamisAll.size}`))
 console.log(line('交集 / 覆盖率', `${intersect.length} / ${(report.coverageRatio * 100).toFixed(1)}%`))
-console.log(line('遗漏 / vamis 扩展', `${missing.length} / ${extra.length}`))
+console.log(line('遗漏 / Vamis 扩展', `${missing.length} / ${extra.length}`))
 console.log('')
 if (amis.aliases.size !== amisAliasOnly) {
   console.log(`> amis 另有 ${amis.aliases.size - amisAliasOnly} 个别名与 type 同名，已计入 type 名。`)
@@ -188,7 +188,7 @@ for (const type of missing) {
   console.log(`| \`${type}\` | \`${source}\` | ${note} |`)
 }
 console.log('')
-console.log(`## vamis 扩展（${extra.length}）`)
+console.log(`## Vamis 扩展（${extra.length}）`)
 console.log('')
 console.log(extra.map((type) => `\`${type}\``).join('、'))
 console.log('')

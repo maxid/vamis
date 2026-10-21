@@ -4,9 +4,9 @@ title: 样式系统
 
 # 样式系统
 
-Amis 用主题包（cxd / antd / dark）+ helper.css。vamis **不搬这些文件**。对照表：
+Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文件**。对照表：
 
-| Amis | vamis |
+| Amis | Vamis |
 |------|--------|
 | `--body-bg` | `--background` |
 | `--primary` | `--primary` |
