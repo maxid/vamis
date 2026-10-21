@@ -21,7 +21,7 @@ const horizontal = computed(() => layout.value === 'horizontal' || layout.value 
   <div
     class="grid"
     :class="horizontal
-      ? 'mb-[var(--form-item-gap)] last:mb-0 sm:grid-cols-[var(--form-label-width)_minmax(0,1fr)] sm:items-start sm:gap-x-3'
+      ? 'mb-[var(--form-item-gap)] last:mb-0 sm:grid-cols-[var(--form-label-width)_minmax(0,1fr)] sm:items-start sm:gap-x-[var(--form-label-gap)]'
       : 'mb-[var(--form-item-gap)] last:mb-0 gap-1.5'"
     :data-name="schema.name"
   >

@@ -39,7 +39,7 @@
 | **Scope / 数据链** | 数据域 + `__super`；设计 D1，尚未落地 |
 | **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm` |
 | **onEvent** | 组件事件到动作注册表；设计 D4，现为精简 switch |
-| **shadcn token** | `--background` / `--primary` / `--control-h` 等；对齐 Amis 后台密度（14px / 32px 控件），不引入 `cxd-` |
+| **shadcn token** | 颜色独立；**盒子对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），不引入 `cxd-` |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（Monaco、地图、Office 预览等） |
 
@@ -52,14 +52,17 @@
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
-| 视觉 | shadcn token 对齐密度/状态色 | 缺 `m:`/`pc:` className（D12 P1） |
-| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173，顶栏对齐 Amis |
+| 视觉 | 盒子数字对齐 cxd；配色独立 | 控件宽档 `size`、表格 cell padding、`m-t-xs` 阶尚未吃满 |
+| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；GitHub Pages 发同一份静态包 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`，可编辑即时预览 |
 | 测试 | `pnpm test` 37 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- Playground 可发 GitHub Pages：`VITE_BASE=/<repo>/`、SPA `404.html`、生产环境拦截 `/api/mock2`（无后端）。首次需在仓库 Settings → Pages 选 GitHub Actions。
+- Playground `/` 与 `/docs` 共用同一外壳：`max-w-[1800px]`、相同左右 padding、主栏 `flex-1` 撑满；文档不再套 `max-w-3xl` 把内容栏收窄。
+- 锁定商业对齐口径：配色可自生成；cxd **盒子系统**（2px 阶、32/24/98/40）写入 token 与样式 spec；横排 label 从 120px 改回 98px。
 - 文档 ` ```schema ` 对齐 Amis Play mini：同一 `VamisRoot` 真跑 + 侧栏改 YAML 即时预览；介绍页换成打 `/api/mock2/sample` 的 CRUD（筛选/批量/删除/重置）。
 - 文档并入 Playground：`pnpm dev` 的 5173 同时提供文档 / 组件 / 示例，顶栏对齐 Amis；Markdown 仍在 `website/src`。
 - 增加 `AGENTS.md`、`CONTEXT.md`、`CLAUDE.md` 与项目规则 `.cursor/rules/update-progress.mdc`：每完成一项任务必须回写进度/完成状态，并写下后续计划。
@@ -71,11 +74,12 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
-2. **P0 kernel D2 表达式过滤器**：`${name|raw}` / `|json` 走同一 `expr` 层，模板默认转义。
-3. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
-4. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target。
-5. 组件语义：在 kernel 挡住变少后，按 TODO 把 ≥50% 的项往 80%+ 推（先 form 主路径、crud filter 作用域）。
-6. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
+1. **盒子吃满**：FormItem `size` 落到 `--form-control-width-*`；Table 用 `--table-cell-px` / `--table-row-h`；辅助类 `m-t-xs` 映射 `--gap-*`（仍 D12）。
+2. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
+3. **P0 kernel D2 表达式过滤器**：`${name|raw}` / `|json` 走同一 `expr` 层，模板默认转义。
+4. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
+5. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target。
+6. 组件语义：在 kernel 挡住变少后，按 TODO 把 ≥50% 的项往 80%+ 推（先 form 主路径、crud filter 作用域）。
+7. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
 
-非本阶段：office/pdf 真实预览、Monaco/TinyMCE、像素级 cxd、MST、完整 amis-editor。
+非本阶段：office/pdf 真实预览、Monaco/TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

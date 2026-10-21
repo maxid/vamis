@@ -19,6 +19,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 - [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
 - [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
 - 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/docs（与示例同一应用）
+- GitHub Pages：https://maxid.github.io/vamis/（推 `main` 后由 Actions 发布）
 
 ## 设计文档
 
@@ -49,6 +50,21 @@ pnpm dev          # 示例 / 文档 / 组件，http://127.0.0.1:5173
 
 ```bash
 pnpm test
+```
+
+## GitHub Pages
+
+Playground（`/` 示例 + `/docs` + `/components` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
+
+第一次需要在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。之后推 `main` 或手动跑 workflow `Deploy playground to GitHub Pages`。
+
+Pages 没有后端：`/api/mock2` 在生产构建里由浏览器拦截，语义与本地 Vite 中间件相同。项目站带仓库名前缀，构建时 `VITE_BASE=/vamis/`。
+
+本地按 Pages 路径预览：
+
+```bash
+VITE_BASE=/vamis/ pnpm build
+VITE_BASE=/vamis/ pnpm preview   # http://127.0.0.1:4173/vamis/
 ```
 
 ## YAML 与 IR 的关系

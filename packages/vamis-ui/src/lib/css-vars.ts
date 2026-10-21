@@ -11,7 +11,17 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   "--Form-input-height": "--control-h",
   "--Form-item-gap": "--form-item-gap",
   "--Form--horizontal-label-widthBase": "--form-label-width",
+  "--Form--horizontal-label-widthXs": "--form-label-width-xs",
+  "--Form--horizontal-label-widthSm": "--form-label-width-sm",
+  "--Form--horizontal-label-widthMd": "--form-label-width-md",
+  "--Form--horizontal-label-widthLg": "--form-label-width-lg",
+  "--Form-control-widthXs": "--form-control-width-xs",
+  "--Form-control-widthSm": "--form-control-width-sm",
+  "--Form-control-widthBase": "--form-control-width",
+  "--Form-control-widthMd": "--form-control-width-md",
+  "--Form-control-widthLg": "--form-control-width-lg",
   "--TableCell-height": "--table-row-h",
+  "--Page-body-padding": "--page-body-padding",
 }
 
 export function resolveCssVars(

@@ -2,7 +2,7 @@
 
 - 日期：2026-10-21
 - 状态：落地中（视觉基线 v1）
-- 范围：token、密度、按钮/表单/表格/卡片/对话框；不含像素级抄 cxd、不含 `cxd-` 类名
+- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子数字对齐 cxd**；配色独立；不含 `cxd-` 类名
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
 
 ## 1. Amis 样式系统要点
@@ -69,7 +69,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `level: link` | `link` |
 | `page.cssVars` | 写到页面根 style；别名映射到 shadcn 名 |
 | `m:` / `pc:` | Tailwind `max-md:` / `md:`（P1 再接 `className` 解析） |
-| `.cxd-Form` 等 | **禁止** |
+| `.cxd-Form` 等 | **禁止**（盒子走 token，不走 BEM） |
 
 组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。
 

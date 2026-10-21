@@ -2,8 +2,11 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { router } from './router'
+import { installMockFetch } from './mock/install'
 import './style.css'
 import 'vamis'
+
+if (import.meta.env.PROD) installMockFetch()
 
 document.documentElement.dataset.density ||= 'compact'
 

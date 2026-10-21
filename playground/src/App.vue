@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button, Toaster } from '@vamis/ui'
 
 const route = useRoute()
-const isChromePage = computed(
-  () => route.path.startsWith('/docs') || route.path.startsWith('/components'),
-)
 
 function navClass(prefix: string, exact = false) {
   const active = exact ? route.path === prefix : route.path === prefix || route.path.startsWith(`${prefix}/`)
@@ -38,9 +35,9 @@ watch([dark, density], () => {
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col bg-background text-foreground">
+  <div class="flex h-screen flex-col overflow-hidden bg-background text-foreground">
     <header class="shrink-0 border-b bg-card">
-      <div class="mx-auto flex max-w-[1800px] flex-wrap items-center justify-between gap-3 px-6 py-3">
+      <div class="mx-auto flex w-full max-w-[1800px] flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div>
           <p class="font-mono text-[11px] tracking-[0.22em] text-primary">VAMIS / lcdp.ir/v1</p>
           <h1 class="text-lg font-semibold tracking-tight">YAML 即页面</h1>
@@ -98,11 +95,10 @@ watch([dark, density], () => {
         </div>
       </div>
     </header>
-    <main
-      class="mx-auto w-full flex-1"
-      :class="isChromePage ? 'max-w-[1800px] min-h-0 px-4 py-3' : 'max-w-[1800px] px-6 py-5'"
-    >
-      <RouterView />
+    <main class="mx-auto flex min-h-0 w-full max-w-[1800px] flex-1 flex-col px-4 py-3">
+      <RouterView v-slot="{ Component }">
+        <component :is="Component" class="min-h-0 flex-1" />
+      </RouterView>
     </main>
     <Toaster position="top-right" />
   </div>

@@ -4,7 +4,7 @@ import EditorView from './views/EditorView.vue'
 import DocView from './views/DocView.vue'
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior() {
     return { top: 0 }
   },
