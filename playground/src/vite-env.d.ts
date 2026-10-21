@@ -15,3 +15,21 @@ declare module '*.json?raw' {
   const content: string
   export default content
 }
+
+declare module '*.md' {
+  const content: string
+  export default content
+}
+
+declare module '../../../website/nav.mjs' {
+  export const startNav: { text: string; link: string }[]
+  export const conceptNav: { text: string; link: string }[]
+  export const styleNav: { text: string; link: string }[]
+  export const typeNav: { text: string; link: string }[]
+  export const extendNav: { text: string; link: string }[]
+  export const componentNav: {
+    text: string
+    collapsed?: boolean
+    items: { text: string; link: string }[]
+  }[]
+}

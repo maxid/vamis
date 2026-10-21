@@ -71,7 +71,7 @@ export const paletteGroups: PaletteGroup[] = [
       { type: 'button', label: '按钮', snippet: { type: 'button', label: '按钮', actionType: 'toast', msg: '已点击' } },
       { type: 'button-group', label: '按钮组', snippet: { type: 'button-group', buttons: [{ type: 'button', label: 'A' }, { type: 'button', label: 'B' }] } },
       { type: 'button-toolbar', label: '工具条', snippet: { type: 'button-toolbar', buttons: [{ type: 'button', label: '保存' }, { type: 'button', label: '取消' }] } },
-      { type: 'crud', label: 'CRUD', snippet: { type: 'crud', name: 'list', api: '/api/mock2/sample', columns: [{ name: 'id', label: 'ID' }, { name: 'name', label: '名称' }] } },
+      { type: 'crud', label: 'CRUD', snippet: { type: 'crud', name: 'list', api: '/api/mock2/sample', columns: [{ name: 'id', label: 'ID' }, { name: 'engine', label: '渲染引擎' }, { name: 'browser', label: 'Browser' }] } },
       { type: 'each', label: '循环', snippet: { type: 'each', source: '${items}', items: { type: 'tpl', tpl: '${name}' } } },
       { type: 'search-box', label: '搜索', snippet: { type: 'search-box', name: 'keywords', placeholder: '搜索' } },
       { type: 'dropdown-button', label: '下拉按钮', snippet: { type: 'dropdown-button', label: '更多', buttons: [{ type: 'button', label: '编辑' }] } },

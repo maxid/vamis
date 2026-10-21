@@ -31,7 +31,7 @@ const store = hub.add({
   id: createStoreId('form'),
   type: 'form',
   name: props.schema.name,
-  data: { ...(props.schema.data || {}) },
+  data: { ...(props.data || {}), ...(props.schema.data || {}) },
 })
 
 const body = computed(() => asArray(props.schema.body || props.schema.controls))
@@ -68,7 +68,7 @@ function validate(): boolean {
 }
 
 function reset() {
-  store.data = { ...(props.schema.data || {}) }
+  store.data = { ...(props.data || {}), ...(props.schema.data || {}) }
   store.errors = {}
 }
 

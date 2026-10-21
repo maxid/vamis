@@ -21,14 +21,16 @@ spec:
           - type: input-text
             name: keywords
             label: 关键字
-            placeholder: 名称包含
+            placeholder: 引擎或浏览器包含
       columns:
         - name: id
           label: ID
-        - name: name
-          label: 名称
-        - name: status
-          label: 状态
+        - name: engine
+          label: 渲染引擎
+        - name: browser
+          label: Browser
+        - name: grade
+          label: 等级
         - type: operation
           label: 操作
           buttons:
@@ -44,17 +46,22 @@ spec:
                     - type: hidden
                       name: id
                     - type: input-text
-                      name: name
-                      label: 名称
+                      name: engine
+                      label: 渲染引擎
                       required: true
+                    - type: input-text
+                      name: browser
+                      label: Browser
                     - type: select
-                      name: status
-                      label: 状态
+                      name: grade
+                      label: 等级
                       options:
-                        - label: 在线
-                          value: online
-                        - label: 离线
-                          value: offline
+                        - label: A
+                          value: A
+                        - label: C
+                          value: C
+                        - label: X
+                          value: X
             - type: button
               label: 删除
               actionType: ajax

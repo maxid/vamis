@@ -18,6 +18,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 - [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
 - [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
+- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/docs（与示例同一应用）
 
 ## 设计文档
 
@@ -26,6 +27,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
 - [主题映射](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)：Amis 后台水标 × shadcn token。
+- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（`/docs`、`/components`）。
 
 ## 怎么跑
 
@@ -33,14 +35,14 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev          # 示例 / 文档 / 组件，http://127.0.0.1:5173
 ```
-
-浏览器打开 http://127.0.0.1:5173
 
 | 路由 | 做什么 |
 |------|--------|
-| `/` | Playground：左侧贴 YAML，右侧实时渲染。可加载黄金表单、CRUD，或把 Amis JSON 转成 YAML |
+| `/` | 示例：分类树 + 预览 + IR |
+| `/docs` | 文档（开始 / 概念 / 样式 / 类型 / 扩展） |
+| `/components` | 组件文档（侧栏对齐 Amis，YAML 实时预览） |
 | `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + YAML |
 
 跑核心测试：
@@ -96,7 +98,8 @@ packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer
 packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
 packages/vamis          P0 渲染器注册表
 packages/vamis-editor   树 + 属性 + YAML + 预览
-playground               Vite 演示与 mock API
+playground               示例 / 文档 / 组件（5173）
+website                  文档 Markdown；可选 VitePress 静态导出
 ```
 
 公式层使用 `amis-formula@6.13.0`（MIT）。Amis 概念与 Schema 兼容性遵循 Apache-2.0，见 `NOTICE`。

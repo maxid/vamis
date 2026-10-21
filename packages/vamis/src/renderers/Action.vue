@@ -33,10 +33,6 @@ const variant = computed(() => levelToVariant(props.schema.level, actionType.val
 const size = computed(() => sizeToButtonSize(props.schema.size))
 
 async function onClick() {
-  if (props.schema.confirmText) {
-    const ok = await env.confirm(String(props.schema.confirmText), label.value)
-    if (!ok) return
-  }
   loading.value = true
   const ctx = { env, data: props.data, scoped, overlay, form }
   try {
