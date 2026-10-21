@@ -25,6 +25,7 @@
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。布局手写页：`page`、`container`（生成器跳过）。
 - GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
 - 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 跑 `/sdk/hello.html`，同源 `sdk.js`）。
+- 文档 / 组件页右侧有「内容」TOC（对齐 Amis `Doc-toc`）：从 markdown `h2`–`h4` 抽锚点，点击平滑滚动、滚动高亮当前项；`lg` 以下隐藏；没有标题时不占栏。不搬 `cxd-` / `Doc-toc` 类名。TOC 栏无左边框，与正文同一卡片。正文 / 侧栏 / TOC 滚动条默认隐藏，滚动时才显示。
 
 ## 怎么跑
 
