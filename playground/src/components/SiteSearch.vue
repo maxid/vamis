@@ -56,7 +56,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
 <template>
   <button
     type="button"
-    class="inline-flex h-[var(--control-h-sm)] items-center gap-2 rounded-md border bg-background px-2.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground sm:min-w-48 sm:justify-between"
+    class="inline-flex h-[var(--control-h)] items-center gap-2 rounded-md border bg-background px-2.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground sm:min-w-52 sm:justify-between"
     aria-label="全站搜索"
     @click="open = true"
   >
@@ -67,7 +67,15 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
       </svg>
       <span class="hidden sm:inline">搜索文档 / 组件 / 示例</span>
     </span>
-    <kbd class="pointer-events-none hidden rounded border bg-muted px-1 font-mono text-[10px] sm:inline">⌘K</kbd>
+    <kbd
+      class="pointer-events-none hidden h-5 select-none items-center gap-0.5 rounded border bg-muted px-1.5 font-sans text-xs font-medium leading-none sm:inline-flex"
+      title="⌘K"
+    >
+      <svg class="size-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 4v8a2 2 0 1 0 2-2H4a2 2 0 1 0 2 2V4a2 2 0 1 0-2 2h8a2 2 0 1 0-2-2" />
+      </svg>
+      <span>K</span>
+    </kbd>
   </button>
   <Dialog :open="open" @update:open="open = $event">
     <DialogContent class="gap-0 overflow-hidden p-0 sm:max-w-lg" :show-close-button="false">
