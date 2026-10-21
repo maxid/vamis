@@ -1,0 +1,63 @@
+import { exampleLeaves } from '../catalog'
+import { componentGroups, docsGroups } from '../docs/sidebar'
+
+export type SearchHit = {
+  href: string
+  title: string
+  group: string
+  keywords: string
+}
+
+export function buildSearchIndex(): SearchHit[] {
+  const hits: SearchHit[] = [
+    { href: '/docs', title: '介绍', group: '文档', keywords: '介绍 文档 开始' },
+    { href: '/components', title: '组件介绍', group: '组件', keywords: '组件介绍' },
+    { href: '/', title: '示例', group: '页面', keywords: '示例 playground 预览' },
+    { href: '/editor', title: '编辑器', group: '页面', keywords: '编辑器 yaml 可视化' },
+  ]
+  for (const group of docsGroups) {
+    for (const item of group.items) {
+      hits.push({
+        href: item.link,
+        title: item.text,
+        group: `文档 · ${group.text}`,
+        keywords: `${item.text} ${item.link} ${group.text}`,
+      })
+    }
+  }
+  for (const group of componentGroups) {
+    for (const item of group.items) {
+      hits.push({
+        href: item.link,
+        title: item.text,
+        group: `组件 · ${group.text}`,
+        keywords: `${item.text} ${item.link} ${group.text}`,
+      })
+    }
+  }
+  for (const leaf of exampleLeaves) {
+    hits.push({
+      href: `/?example=${encodeURIComponent(leaf.id)}`,
+      title: leaf.label,
+      group: '示例',
+      keywords: leaf.searchable,
+    })
+  }
+  return hits
+}
+
+export function searchHits(query: string, limit = 24): SearchHit[] {
+  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  const index = buildSearchIndex()
+  if (!tokens.length) return index.slice(0, 12)
+  const scored = index
+    .map((hit) => {
+      const hay = `${hit.title} ${hit.group} ${hit.keywords} ${hit.href}`.toLowerCase()
+      if (!tokens.every((token) => hay.includes(token))) return null
+      const titleHit = tokens.every((token) => hit.title.toLowerCase().includes(token))
+      return { hit, score: titleHit ? 0 : 1 }
+    })
+    .filter((row): row is { hit: SearchHit; score: number } => row != null)
+    .sort((a, b) => a.score - b.score || a.hit.title.localeCompare(b.hit.title, 'zh'))
+  return scored.slice(0, limit).map((row) => row.hit)
+}
