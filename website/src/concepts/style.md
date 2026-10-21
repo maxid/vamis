@@ -4,6 +4,10 @@ title: 样式
 
 # 样式
 
+::: info 实现进度 65% · 进行中
+token / helper / `className` / FormItem `size` / 默认自适应已接。`xxxClassName`、`registerTheme` 仍是 D12 P1。
+:::
+
 Vamis 的视觉目标是 **Amis 后台的信息密度**，不是云舍像素。实现上：
 
 - 一套 CSS 变量（`--background`、`--primary`、`--control-h`、`--gap-*`、状态色）

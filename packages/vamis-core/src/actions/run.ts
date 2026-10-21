@@ -1,5 +1,5 @@
 import type { ActionSchema, PlainObject, RendererEnv, SchemaObject } from '../types'
-import { normalizeApi } from '../utils/api'
+import { apiMessage, requestApi } from '../utils/api'
 import { evalExpression, filterTpl } from '../formula'
 import type { ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
@@ -126,12 +126,14 @@ function registerBuiltinActions() {
   registerAction('ajax', async (action, ctx) => {
     if (!action.api) return
     const data = actionData(action, ctx)
-    const payload = await ctx.env.fetcher(normalizeApi(action.api, data), data)
-    if (payload.status !== 0 && payload.status !== 200) {
-      throw new Error(payload.msg || '请求失败')
+    const result = await requestApi(action.api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
+    if (result.skipped) return
+    if (!result.ok) {
+      throw new Error(apiMessage(action.api, result.payload, 'failed'))
     }
     const success =
-      (action.messages && (action.messages as PlainObject).success) || payload.msg || '完成'
+      (action.messages && (action.messages as PlainObject).success) ||
+      apiMessage(action.api, result.payload, 'success')
     ctx.env.notify('success', String(success))
     if (action.reload) await ctx.scoped?.reload(String(action.reload), data)
   })

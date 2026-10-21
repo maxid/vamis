@@ -4,17 +4,20 @@ title: 联动
 
 # 联动
 
+::: warning 实现进度 45% · 进行中
+`visibleOn` / `hiddenOn` / `disabledOn` 能用；select `source` 已接 url / `trackExpression` 自动刷新。D5 动态 target、D6 路径值仍缺。
+:::
+
 联动是「A 变了，B 跟着变」：`visibleOn`、选项 `source`、级联 `select`、CRUD 的 `filter`。
 
 当前能用的主路径：
 
 - `visibleOn` / `hiddenOn` / `disabledOn` 表达式
-- 表单项改值触发重渲染（依赖浅合并的 data，不是 Scope）
+- 表单项改值走 Scope；select `source` 支持 url / `trackExpression` 自动刷新
 
 被挡住的：
 
 - 动态 `target` 刷新指定组件（D5）
-- 选项 `source` 随其它字段重拉（D3）
 - 表单路径值 `xxx.yyy`（D6）
 
 ```schema

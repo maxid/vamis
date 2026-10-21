@@ -2,10 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, provide, ref } from 'vue'
 import {
   SchemaRenderer,
+  apiMessage,
   asArray,
   createStoreId,
   filterTpl,
-  normalizeApi,
+  requestApi,
   useEnv,
   useRendererHub,
   useScoped,
@@ -84,8 +85,10 @@ async function reload(extra: Record<string, any> = {}) {
       orderBy: store.query.orderBy,
       orderDir: store.query.orderDir,
     }
-    const payload = await env.fetcher(normalizeApi(props.schema.api, query), query)
-    const { items, total } = parseListPayload(payload.data)
+    const result = await requestApi(props.schema.api, { env, data: query, reason: 'reload' }, { autoAppend: true })
+    if (result.skipped) return
+    if (!result.ok) throw new Error(result.payload.msg || '加载失败')
+    const { items, total } = parseListPayload(result.data)
     store.items = items
     store.total = total
     if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []
@@ -133,8 +136,10 @@ async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
   if (actionType === 'ajax' && button.api) {
     if (button.confirmText && !(await env.confirm(button.confirmText))) return
     try {
-      const payload = await env.fetcher(normalizeApi(button.api, row), row)
-      env.notify('success', payload.msg || '完成')
+      const result = await requestApi(button.api, { env, data: row, reason: 'action' }, { autoAppend: true })
+      if (result.skipped) return
+      if (!result.ok) throw new Error(apiMessage(button.api, result.payload, 'failed'))
+      env.notify('success', apiMessage(button.api, result.payload, 'success'))
       await reload()
     } catch (error) {
       env.notify('error', error instanceof Error ? error.message : '失败')

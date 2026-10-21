@@ -133,6 +133,44 @@ export function handleMockApi(input: {
     return { status: 0, msg: '保存成功', data }
   }
 
+  if (pathname === '/api/mock2/form/initData') {
+    const tpl = String(query.tpl || body.tpl || 'tpl1')
+    const now = new Date()
+    const names: Record<string, { name: string; author: string }> = {
+      tpl1: { name: 'Amis Renderer', author: 'fex' },
+      tpl2: { name: 'Vamis Runtime', author: 'vamis' },
+      tpl3: { name: 'LCDP IR', author: 'lcdp' },
+    }
+    const picked = names[tpl] || names.tpl1
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        ...picked,
+        tpl,
+        date: now.toISOString(),
+      },
+    }
+  }
+
+  if (pathname === '/api/mock2/options/level2') {
+    const a = String(query.a || body.a || '')
+    const byA: Record<string, { label: string; value: string }[]> = {
+      '1': [
+        { label: '选项 A-1', value: 'a1' },
+        { label: '选项 A-2', value: 'a2' },
+      ],
+      '2': [
+        { label: '选项 B-1', value: 'b1' },
+        { label: '选项 B-2', value: 'b2' },
+      ],
+      '3': [
+        { label: '选项 C-1', value: 'c1' },
+      ],
+    }
+    return { status: 0, data: { options: byA[a] || [] } }
+  }
+
   if (pathname === '/api/mock2/options') {
     return {
       status: 0,

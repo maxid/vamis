@@ -9,7 +9,9 @@ import {
   Checkbox,
 } from '@vamis/ui'
 import {
-  normalizeApi,
+  apiTrackKey,
+  isEffectiveApi,
+  requestApi,
   useData,
   useEnv,
   type SchemaObject,
@@ -39,17 +41,23 @@ const options = computed(() => {
   return flattenOptions(local)
 })
 
+function isVariableSource(source: unknown): source is string {
+  return typeof source === 'string' && source.includes('$') && !source.includes('/') && !/^[a-z]+:/i.test(source)
+}
+
 async function loadSource() {
   const source = props.schema.source
   if (!source) return
-  if (typeof source === 'string' && source.includes('$')) {
+  if (isVariableSource(source)) {
     const key = source.replace(/^\$\{?|\}$/g, '')
     remote.value = normalizeOptions(data.value[key])
     return
   }
+  if (!isEffectiveApi(source as any, data.value)) return
   try {
-    const payload = await env.fetcher(normalizeApi(source as any, data.value), data.value)
-    const list = (payload.data as any)?.options || (payload.data as any)?.items || payload.data
+    const result = await requestApi(source as any, { env, data: data.value, reason: 'init' }, { autoAppend: true })
+    if (result.skipped || !result.ok) return
+    const list = result.data?.options || result.data?.items || result.data
     remote.value = normalizeOptions(list)
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '选项加载失败')
@@ -58,6 +66,12 @@ async function loadSource() {
 
 onMounted(loadSource)
 watch(() => props.schema.source, loadSource)
+watch(
+  () => apiTrackKey(props.schema.source, data.value),
+  (key, prev) => {
+    if (prev != null && key !== prev) void loadSource()
+  },
+)
 
 const selected = computed({
   get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', multiple.value, joinValues.value),

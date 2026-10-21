@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { normalizeApi, useEnv, type SchemaObject } from '@vamis/core'
+import { requestApi, useEnv, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
@@ -12,8 +12,8 @@ onMounted(async () => {
   let option = props.schema.config || props.schema.chart
   if (!option && props.schema.api) {
     try {
-      const payload = await env.fetcher(normalizeApi(props.schema.api, props.data), props.data)
-      option = (payload.data as any)?.config || payload.data
+      const result = await requestApi(props.schema.api, { env, data: props.data, reason: 'init' })
+      option = result.data?.config || result.data
     } catch (error) {
       missing.value = error instanceof Error ? error.message : 'chart api 加载失败'
       return

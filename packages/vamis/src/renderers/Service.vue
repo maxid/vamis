@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
   asArray,
+  apiTrackKey,
   createStoreId,
-  normalizeApi,
+  mergeApiData,
+  requestApi,
   useEnv,
   useRendererHub,
   useScoped,
@@ -33,8 +35,11 @@ async function reload() {
   if (!api) return
   store.fetching = true
   try {
-    const payload = await env.fetcher(normalizeApi(api, props.data), props.data)
-    Object.assign(store.data, payload.data || {})
+    const result = await requestApi(api, { env, data: { ...props.data, ...store.data }, reason: 'reload' })
+    if (!result.skipped && result.ok) mergeApiData(store.data, result)
+    else if (!result.skipped && !result.ok) {
+      env.notify('error', result.payload.msg || '加载失败')
+    }
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '加载失败')
   } finally {
@@ -49,6 +54,12 @@ const api = {
 }
 scoped?.register(api)
 onMounted(reload)
+watch(
+  () => apiTrackKey(props.schema.api || props.schema.schemaApi, { ...props.data, ...store.data }),
+  (key, prev) => {
+    if (prev != null && key && key !== prev) void reload()
+  },
+)
 onBeforeUnmount(() => {
   scoped?.unregister(api)
   hub.remove(store.id)

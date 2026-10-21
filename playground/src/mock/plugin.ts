@@ -5,9 +5,11 @@ async function readBody(req: any): Promise<any> {
   const chunks: Buffer[] = []
   for await (const chunk of req) chunks.push(chunk as Buffer)
   if (!chunks.length) return {}
+  const text = Buffer.concat(chunks).toString('utf8')
   try {
-    return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+    return JSON.parse(text)
   } catch {
+    if (text.includes('=')) return Object.fromEntries(new URLSearchParams(text))
     return {}
   }
 }

@@ -5,7 +5,7 @@ outline: deep
 
 # Page 页面
 
-::: info 实现进度 95% · 已完成
+::: tip 实现进度 95% · 已完成
 文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。`pullRefresh` 明确未接（Amis 仅移动端）。
 :::
 

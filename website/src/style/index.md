@@ -4,6 +4,10 @@ title: 样式系统
 
 # 样式系统
 
+::: info 实现进度 65% · 进行中
+token 对照、helper 间距/宽度、默认自适应已接。`xxxClassName` / `registerTheme` 仍是 D12 P1。
+:::
+
 Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文件**。对照表：
 
 | Amis | Vamis |

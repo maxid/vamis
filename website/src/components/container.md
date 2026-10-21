@@ -5,7 +5,7 @@ outline: deep
 
 # Container 容器
 
-::: info 实现进度 100% · 已完成
+::: tip 实现进度 100% · 已完成
 文档主路径已对齐：`body` / `style` / `wrapperComponent` / `wrapperBody` / `bodyClassName`，以及 `click` / `mouseenter` / `mouseleave`（完整事件对象：`event.data` / `__rendererData` / `preventDefault` / `stopPropagation`）。Container 不建独立数据域，沿用父 Scope。无对外组件动作。`draggable` 未做（编辑器能力，不是运行时主路径）。
 :::
 

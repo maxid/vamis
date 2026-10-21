@@ -39,16 +39,16 @@
 | **FormDef / TableDef** | LCDP IR 已有 kind；可编译成 form / crud 预览 |
 | **作者态** | YAML 与 JSON 并列，不强制 YAML。对象 / JSON 字符串 / YAML 字符串 / IR 信封都进同一运行时 |
 | **YAML 1.2 Core** | YAML 字面量：bool/null/数字不加引号；`yes`/`On`/`012` 当字符串。不约束 JSON |
-| **Scope / 数据链** | 数据域 + `__super`；设计 D1，尚未落地 |
-| **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm` |
-| **onEvent** | 组件事件到动作注册表；设计 D4，现为精简 switch |
+| **Scope / 数据链** | 数据域 + `__super`；D1 P0 已接，`trackExpression` 去抖仍属 D9 |
+| **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm`；`trusted` 才跑 adaptor 字符串 |
+| **onEvent** | 组件事件到动作注册表；D4 P0 已接 |
 | **shadcn token** | 颜色独立；**盒子对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），不引入 `cxd-` |
 | **默认自适应** | 特定组件铺满容器是默认，不必写 `size`/`w-full`。`size`/`className` 只是收窄或覆盖 |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（Monaco、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-10-21）
+## 当前进度（2026-10-22）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -56,16 +56,18 @@
 |----|------|------|
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 61%；`page` 已完成 95% / `container` 已完成 100%；未开始：`popOver` 属性、`badge` 属性 |
-| kernel D1–D8 | D1 / D4 P0 已落地 | Scope + URL 种子 + 事件对象/动作注册表；D2/D3/D5–D8 仍卡住 form/crud/action 等 |
+| kernel D1–D8 | D1 / D3 / D4 P0 已落地 | Scope + `requestApi` 管线 + 事件对象/动作注册表；D2/D5–D8 仍卡住 form 路径值、联动、过滤器等 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 仍抛未实现，等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 84 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
+| 测试 | 源码用例 formula 188 + core 102 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；写入 `.cursor/rules/doc-progress.mdc`。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。
+- kernel D3 API 管线 P0：`requestApi`（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / GET `api.data` / `dataType` / GraphQL）。form / page / crud / service / select / ajax 已接；page/form/service/select 支持 url / `trackExpression` 自动刷新。文档 [API](website/src/types/api.md) 对标 Amis `types/api`。字符串 adaptor 仅 `env.trusted`（Playground 默认开）。
 - Remark 默认改为方形（对齐 Amis 未写 `shape`）；`shape: circle` 才是圆。问号色 `muted-foreground/55`，hover 仍走 warning。
 - Remark 问号改用 Amis 同款 SVG（12×12 viewBox，基线 y=10.5，铺满 16px 圆），不再用过小的描边图标。
 - 修 Page `remark`：没有副标题时会画两个问号；图标改成圆形徽标（hover 走 warning），不再用幽灵按钮上的裸 `?`。
@@ -108,9 +110,8 @@
 
 1. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。form/service/crud 的 overlay 还要切到 Scope.merge。
 2. **P0 kernel D5 联动**：动态 target / 多目标 / 数据携带；SDK `getComponentByName` / `doAction` 跟着来。
-3. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；`|json` / `|default` 已接。还要把 `|date` 等其余运行时过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。
-4. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
-5. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
-6. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
+3. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；`|json` / `|default` / `|first` 已接。还要把 `|date` 等其余运行时过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。
+4. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
+5. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
 
 非本阶段：office/pdf 真实预览、Monaco/TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

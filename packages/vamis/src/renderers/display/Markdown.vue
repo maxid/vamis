@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { normalizeApi, useEnv, type SchemaObject } from '@vamis/core'
+import { requestApi, useEnv, type SchemaObject } from '@vamis/core'
 import { renderMarkdown } from './markdown'
 import { readText } from './prop'
 
@@ -20,8 +20,8 @@ async function load() {
     return
   }
   try {
-    const payload = await env.fetcher(normalizeApi(props.schema.src, props.data), props.data)
-    const body = payload.data
+    const result = await requestApi(props.schema.src, { env, data: props.data, reason: 'init' })
+    const body = result.data
     remote.value = typeof body === 'string' ? body : body?.md || body?.markdown || body?.content || JSON.stringify(body)
   } catch (error) {
     remote.value = error instanceof Error ? error.message : 'markdown 加载失败'

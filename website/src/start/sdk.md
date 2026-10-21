@@ -4,6 +4,10 @@ title: JS SDK
 
 # JS SDK
 
+::: info 实现进度 80% · 进行中
+P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` 已落地。`getComponentByName` / `doAction` 仍抛未实现，等 D5。
+:::
+
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
 
 构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。Vue 工程请走 [快速开始](/start/getting-started)。

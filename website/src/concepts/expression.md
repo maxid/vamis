@@ -4,13 +4,17 @@ title: 表达式
 
 # 表达式
 
+::: info 实现进度 55% · 进行中
+公式引擎已在 `@vamis/formula`；`${}` / `visibleOn` / `sendOn` / `trackExpression` 能跑。D2 未齐：运行时过滤器不全，模板默认仍是 `raw`。
+:::
+
 公式引擎是仓内的 `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。配置里常见：
 
 | 写法 | 用途 |
 |------|------|
 | `${name}` | 插值 |
 | `visibleOn` / `hiddenOn` / `disabledOn` | 显隐、禁用 |
-| `sendOn` | 是否发请求（D3，未齐） |
+| `sendOn` | 是否发请求（D3，已接） |
 | `trackExpression` | 重新拉取的依赖 |
 
 ```schema

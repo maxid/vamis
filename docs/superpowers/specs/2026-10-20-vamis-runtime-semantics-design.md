@@ -1,7 +1,7 @@
 # Vamis 运行时语义设计（amis 文档对齐）
 
 - 日期：2026-10-20
-- 状态：部分落地（D1 Scope P0、D4 事件对象与动作注册表 P0 已接；其余 D2/D3/D5–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
+- 状态：部分落地（D1 Scope、D3 API 管线、D4 事件对象 P0 已接；其余 D2/D5–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
 - 范围：数据域、表达式/模板、API、事件动作、表单、CRUD、渲染器契约、扩展、主题/i18n、诊断、IR
 - 参考：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
 - 关联：
@@ -19,7 +19,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 |---|------|--------|
 | D1 | 用显式 `Scope` 对象替代“每个节点复制父数据”，只让声明过的容器新建数据域，补 `__super` / URL 参数 / 动态取值 | P0 |
 | D2 | 表达式、模板、过滤器统一到一个 `expr` 层；模板默认转义，`\|raw` 才输出 HTML | P0 |
-| D3 | API 统一为可组合管线：normalize → adaptor → sendOn → cache → fetch → payload → responseData → merge/replace | P0 |
+| D3 | API 统一为可组合管线：normalize → adaptor → sendOn → cache → fetch → payload → responseData → merge/replace | P0 已落地 |
 | D4 | 事件统一为 `dispatch(event, payload)` + 事件对象；动作走注册表与控制流，不再写死在 switch 里 | P0 |
 | D5 | 组件间联动用组件注册表 + 动态 target，支持多目标、数据合并、reload/setValue/setState/doAction | P0 |
 | D6 | 表单值支持路径（`a.b[0].c`），提交返回数据合并进表单域，校验走可注册规则 | P0 |
@@ -49,7 +49,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 |------|-----------|----------|
 | Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点不再复制；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；form/service/crud 的 overlay 尚未全部改走 Scope.merge |
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `resolveValue`，引擎是仓内 `@vamis/formula` | `${name\|raw}` / `${name\|html}` 已走 parser；Amis 运行时补的 `|date`/`|json` 未齐；模板默认仍是 `raw`，未做 HTML 转义策略 |
-| API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | 无 `sendOn`/`cache`/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/自动刷新；GET 忽略 `api.data` |
+| API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
 | Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
 | Linkage | `ScopedContext.reload(name)`、`setValue` 按 `componentId/target` 查组件 | target 不支持动态名/多目标/数据合并；无 `target?a=${a}`；接口不随变量自动刷新 |
 | Form | 表单 store、`initApi`、`validate/submit/reset`、submit 事件 | 扁平 `name`；提交返回不合并；校验规则内嵌；无 `validateOnChange`/`requiredOn`/`clearValueOnHidden`；嵌套表单项不参与校验 |
@@ -449,8 +449,8 @@ export function usePlugin(plugin: VamisPlugin): void
 | 模板过滤器 | `\|raw`/`\|json` 等 | 不支持 | D2 | P0 |
 | HTML 安全 | 默认转义 + raw | 全量 `v-html` | D2 | P0 |
 | API 基础 | method/url/data/headers | 已有 | 补 GET data | P0 |
-| API 高级 | sendOn/cache/adaptor/responseData | 无 | D3 | P0/P1 |
-| 接口自动刷新 | 依赖跟踪 | 无 | D9 | P1 |
+| API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
+| 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source` 已按 url / `trackExpression` 刷新；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
 | 组件联动 | 动态 target/多目标/数据合并 | 仅按 name 刷新 | D5 | P0 |
