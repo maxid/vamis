@@ -207,7 +207,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `property` | Property 属性表 | 进行中 | 50% | 能出 label/content | P0 |
 | `qrcode` | QRCode 二维码 | 进行中 | 45% | 已注册 | P0 |
 | `barcode` | BarCode 条形码 | 进行中 | 45% | 已注册 | P0 |
-| `remark` | Remark 标记 | 进行中 | 55% | 能出说明 | P0 |
+| `remark` | Remark 标记 | 进行中 | 70% | 圆形问号徽标 + tooltip；缺自定义 icon / 移动端弹层 | P0 |
 | `search-box` | SearchBox 搜索框 | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | 进行中 | 55% | 能映射状态 | P0 |

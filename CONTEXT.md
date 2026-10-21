@@ -66,6 +66,9 @@
 
 **最近交付**
 
+- Remark 默认改为方形（对齐 Amis 未写 `shape`）；`shape: circle` 才是圆。问号色 `muted-foreground/55`，hover 仍走 warning。
+- Remark 问号改用 Amis 同款 SVG（12×12 viewBox，基线 y=10.5，铺满 16px 圆），不再用过小的描边图标。
+- 修 Page `remark`：没有副标题时会画两个问号；图标改成圆形徽标（hover 走 warning），不再用幽灵按钮上的裸 `?`。
 - kernel D1 Scope + D4 事件对象 P0：显式数据域（`__super` / URL query / 容器才建子域）、`VamisEvent`（`preventDefault` / `stopPropagation` / `setData` / `__rendererData`）、动作改注册表。Page / Container 文档主路径因此标已完成（page 95%，container 100%）。
 - 文档页滚动条默认隐藏、滚动时才显示；右侧 TOC 去掉 aside 左边框，和正文连成一块。
 - 站点文档右侧加「内容」TOC（对齐 Amis `Doc-toc`）：markdown `h2`–`h4` 补锚点，点击平滑滚动、滚动高亮；`lg` 以下隐藏；没标题不占栏。覆盖 `/`、`/docs/*`、`/components/*`。

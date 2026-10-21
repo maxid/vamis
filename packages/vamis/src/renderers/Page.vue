@@ -75,8 +75,13 @@ const subTitleText = computed(() =>
 )
 const remarkSchema = computed<SchemaObject | null>(() => {
   const remark = props.schema.remark
-  if (typeof remark === 'string' && remark) return { type: 'remark', content: remark }
-  if (isNodeObject(remark)) return remark.type ? remark : { type: 'remark', ...remark }
+  const placement = props.schema.remarkPlacement || 'bottom'
+  if (typeof remark === 'string' && remark) {
+    return { type: 'remark', content: remark, placement }
+  }
+  if (isNodeObject(remark)) {
+    return remark.type ? { placement, ...remark } : { type: 'remark', placement, ...remark }
+  }
   return null
 })
 const cssText = computed(() => buildCssBlock(props.schema.css))
@@ -274,9 +279,6 @@ onBeforeUnmount(() => {
               <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" />
               <template v-else>{{ subTitleText }}</template>
             </p>
-            <div v-else-if="remarkSchema" class="mt-1">
-              <Remark :schema="remarkSchema" :data="viewData" />
-            </div>
           </div>
           <div v-if="toolbar.length" class="flex flex-wrap gap-2" :class="toolbarClass">
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
