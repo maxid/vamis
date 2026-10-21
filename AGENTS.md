@@ -13,12 +13,13 @@
 
 **Vamis** 用 Vue 3 复刻百度 Amis 的 JSON 低代码运行时。作者态同时支持 **YAML 1.2 Core** 与 **JSON**（不强制 YAML）；信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）。按 Amis **组件 type / schema 语义** 搬运；UI 原语是 **shadcn-vue**（reka-ui + CSS 变量），不搬 `cxd-`、不追像素级 cxd。
 
-**技术栈**：Vue 3.5 + TypeScript + Vite + pnpm workspace + Pinia + Tailwind + shadcn-vue + `amis-formula@6.13.0`。
+**技术栈**：Vue 3.5 + TypeScript + Vite + pnpm workspace + Pinia + Tailwind + shadcn-vue + `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。
 
 ## 项目结构
 
 ```
-packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer、env
+packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer、env
+packages/vamis-formula  表达式 / 过滤器 / 内置函数（从 amis-formula 6.13.0 搬运）
 packages/vamis-ui       shadcn-vue 原语与主题 token
 packages/vamis          渲染器注册表（register.ts + extras/*.ts）
 packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / Schema）
@@ -36,7 +37,7 @@ docs/superpowers/       specs / plans
 pnpm install
 pnpm dev          # 示例 / 文档 / 组件，默认 http://127.0.0.1:5173
 pnpm docs         # 同上（文档不另起端口）
-pnpm test         # @vamis/core + @vamis/sdk vitest
+pnpm test         # @vamis/formula + @vamis/core + @vamis/sdk vitest
 pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
 pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # 目前仍有既有 vue-tsc 错误，暂不作提交门禁

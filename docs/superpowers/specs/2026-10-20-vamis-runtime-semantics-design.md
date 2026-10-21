@@ -48,7 +48,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
 | Scope | `SchemaRenderer` 每个节点 `{...parent, ...schema.data, ...extraData}` 后 `provideData`；`ScopedContext` 可按 name 注册/刷新 | 无 `__super`、无 URL 种子、无 `trackExpression`、无 `__prev/__changeReason`；`isolateScope` 声明了但没生效 |
-| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `resolveValue`，基于 amis-formula | 过滤器链不可用（`${name\|raw}` 被当位运算）；模板全量 `v-html`；无 HTML 转义策略 |
+| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `resolveValue`，引擎是仓内 `@vamis/formula` | `${name\|raw}` / `${name\|html}` 已走 parser；Amis 运行时补的 `|date`/`|json` 未齐；模板默认仍是 `raw`，未做 HTML 转义策略 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | 无 `sendOn`/`cache`/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/自动刷新；GET 忽略 `api.data` |
 | Actions | `runActions` 十余种：ajax/toast/setValue/reload/dialog/drawer/close/submit/reset/link | 无事件对象/`__rendererData`；无条件/循环/并行/`ignoreError`/`outputVar`；无广播/自定义动作；无动作日志 |
 | Linkage | `ScopedContext.reload(name)`、`setValue` 按 `componentId/target` 查组件 | target 不支持动态名/多目标/数据合并；无 `target?a=${a}`；接口不随变量自动刷新 |

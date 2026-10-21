@@ -25,9 +25,9 @@ importers:
 
   packages/vamis-core:
     dependencies:
-      amis-formula:
-        specifier: 6.13.0
-        version: 6.13.0
+      '@vamis/formula':
+        specifier: workspace:*
+        version: link:../vamis-formula
       pinia:
         specifier: ^3.0.0
         version: 3.0.4(typescript@5.9.3)(vue@3.5.44(typescript@5.9.3))
@@ -65,6 +65,28 @@ importers:
       yaml:
         specifier: ^2.8.1
         version: 2.9.1
+
+  packages/vamis-formula:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.18.1
+      moment:
+        specifier: ^2.30.1
+        version: 2.31.0
+    devDependencies:
+      '@types/lodash':
+        specifier: ^4.17.20
+        version: 4.17.26
+      moment-timezone:
+        specifier: ^0.5.48
+        version: 0.5.48
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.7(@types/node@26.6.5)(happy-dom@20.14.6)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
 
   packages/vamis-sdk:
     dependencies:
@@ -994,6 +1016,9 @@ packages:
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
 
+  '@types/lodash@4.17.26':
+    resolution: {integrity: sha512-48NWfiY6oNcKOh47Z4h+sIvwcQR91h6KPhaYKgeMIrkT2jV82Gy90SErj60vW8jQbeMSOSbhIv3bZ7JoqPPVhA==}
+
   '@types/markdown-it@14.2.0':
     resolution: {integrity: sha512-NoQ2yGlLWj4wpxMs+TYmRKk3thDrQ97agr7sFqfLsAlvoS8SNQuTrlObhFqG9iugdTtgOE9jpJ6FNM4ZGsa5xQ==}
 
@@ -1197,9 +1222,6 @@ packages:
 
   alien-signals@3.2.1:
     resolution: {integrity: sha512-I8FjmltrfnDFoZedi5CG8DghVYNhzb/Ijluz7tCSJH0xpd0484Kowhbb1XDYOxfJpU1p5wnM2X54dA+IfGyD1g==}
-
-  amis-formula@6.13.0:
-    resolution: {integrity: sha512-KoapL+V94Qy5olTEJpSffyngyNBhW9jJkjZogJXbHw7yVdQY2EmJ6mfkFdPsHri/DmNLlAfE2xJtT2kLFnvrnQ==}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -1487,6 +1509,9 @@ packages:
 
   mitt@3.0.1:
     resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
+  moment-timezone@0.5.48:
+    resolution: {integrity: sha512-f22b8LV1gbTO2ms2j2z13MuPogNoh5UzxL3nzNAYKGraILnbGc9NEE6dyiiiLv46DGRb8A4kg8UKWLjPthxBHw==}
 
   moment@2.31.0:
     resolution: {integrity: sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==}
@@ -2448,6 +2473,8 @@ snapshots:
 
   '@types/linkify-it@5.0.0': {}
 
+  '@types/lodash@4.17.26': {}
+
   '@types/markdown-it@14.2.0':
     dependencies:
       '@types/linkify-it': 5.0.0
@@ -2695,12 +2722,6 @@ snapshots:
       '@algolia/requester-node-http': 5.60.0
 
   alien-signals@3.2.1: {}
-
-  amis-formula@6.13.0:
-    dependencies:
-      lodash: 4.18.1
-      moment: 2.31.0
-      tslib: 2.8.1
 
   argparse@2.0.1: {}
 
@@ -3001,6 +3022,10 @@ snapshots:
   minisearch@7.2.0: {}
 
   mitt@3.0.1: {}
+
+  moment-timezone@0.5.48:
+    dependencies:
+      moment: 2.31.0
 
   moment@2.31.0: {}
 

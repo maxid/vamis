@@ -108,6 +108,8 @@ describe('factory', () => {
 describe('formula', () => {
   it('filters templates', () => {
     expect(filterTpl('hi ${name}', { name: 'Ada' })).toBe('hi Ada')
+    expect(filterTpl('${name|raw}', { name: '<b>Ada</b>' })).toBe('<b>Ada</b>')
+    expect(filterTpl('${name|html}', { name: '<b>Ada</b>' })).toBe('&lt;b&gt;Ada&lt;&#x2F;b&gt;')
   })
 
   it('evaluates visibleOn', () => {

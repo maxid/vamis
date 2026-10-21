@@ -71,6 +71,7 @@ export default defineConfig({
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },
       { find: '@vamis/core', replacement: pkg('vamis-core') },
+      { find: '@vamis/formula', replacement: pkg('vamis-formula') },
       { find: '@vamis/editor', replacement: pkg('vamis-editor') },
       { find: 'vamis', replacement: path.join(pkg('vamis'), 'index.ts') },
     ],

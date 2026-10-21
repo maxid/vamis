@@ -6,7 +6,7 @@
 
 **Architecture:** pnpm workspace packages (`@vamis/core`, `@vamis/ui`, `vamis`, `@vamis/editor`, playground). Schema YAML uses `lcdp.ir/v1` + `kind: UiPage`. Pinia hub stores form/crud nodes.
 
-**Tech Stack:** Vue 3.5, Vite, TypeScript, Tailwind v4, shadcn-vue/reka-ui, Pinia, Vue Router, yaml, amis-formula 6.13.0
+**Tech Stack:** Vue 3.5, Vite, TypeScript, Tailwind v4, shadcn-vue/reka-ui, Pinia, Vue Router, yaml, @vamis/formula（amis-formula 6.13.0）
 
 ---
 

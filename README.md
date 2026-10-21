@@ -114,7 +114,8 @@ spec:
 ## 包结构
 
 ```
-packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer
+packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer
+packages/vamis-formula  表达式 / 过滤器 / 内置函数（amis-formula 6.13.0 MIT）
 packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
 packages/vamis          P0 渲染器注册表
 packages/vamis-editor   树 + 属性 + YAML + 预览
@@ -123,7 +124,7 @@ playground               示例 / 文档 / 组件（5173）
 website                  文档 Markdown；可选 VitePress 静态导出
 ```
 
-公式层使用 `amis-formula@6.13.0`（MIT）。Amis 概念与 Schema 兼容性遵循 Apache-2.0，见 `NOTICE`。
+公式层在 `@vamis/formula`，从 `amis-formula@6.13.0`（MIT）搬运。Amis 概念与 Schema 兼容性遵循 Apache-2.0，见 `NOTICE`。
 
 ## 许可
 

@@ -18,7 +18,8 @@
 
 | 模块 | 路径 | 职责 |
 |------|------|------|
-| `@vamis/core` | `packages/vamis-core` | `registerRenderer`、IR、公式、Pinia hub、Scope/env/动作（契约仍在补） |
+| `@vamis/core` | `packages/vamis-core` | `registerRenderer`、IR、公式封装、Pinia hub、Scope/env/动作（契约仍在补） |
+| `@vamis/formula` | `packages/vamis-formula` | 表达式 / 过滤器 / 内置函数（从 amis-formula 6.13.0 搬运） |
 | `@vamis/ui` | `packages/vamis-ui` | shadcn-vue 原语与 CSS 变量（密度、状态色） |
 | `vamis` | `packages/vamis` | Amis type 渲染器；`register.ts` + `extras/*.ts` |
 | `@vamis/editor` | `packages/vamis-editor` | 树 / 画布 / 属性 / YAML |
@@ -61,10 +62,11 @@
 | JS SDK | P0 已落地 | `vamis.embed`；`pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步 |
-| 测试 | `pnpm test` core 64 + sdk 12 过 | `typecheck` 仍有既有错误 |
+| 测试 | `pnpm test` formula 185 + core 64 + sdk 12 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- 公式引擎搬进仓内 `@vamis/formula`（amis-formula 6.13.0 MIT）；`filterTpl` 走 parser，`${name|raw}` / `${name|html}` 可用。不再依赖 npm `amis-formula`。
 - 文档「编辑 Schema」做成 YAML / JSON 两个 Tab，`syncAuthoringText` 双向实时同步；解析失败时对侧与预览停在上一份有效 schema。
 - 布局对标起步：并行 `page` 70%、`container` 78%（仍进行中）。Page 接 initApi overlay / interval / aside / reload；Container 接 wrapperComponent / wrapperBody / 指针事件。文档手写活示例。
 - 准则落地「作者态不强制 YAML」：YAML 与 JSON 并列；`parseSchemaText` / SDK / 编辑器都收；文档生成器与组件页去掉「不是 JSON」；Playground 源码可格式化为 YAML 或 JSON。
@@ -93,7 +95,7 @@
 1. **布局组件对标 Amis（进行中）**：先并行 `page` + `container`（文档/示例/属性/事件）。被 D1/D4 挡住的不标已完成。下一对：`flex` + `grid`。
 2. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
 3. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
-4. **P0 kernel D2 表达式过滤器**：`${name|raw}` / `|json` 走同一 `expr` 层，模板默认转义。
+4. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；还要把 Amis 运行时那批 `|date` / `|json` 过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。
 5. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
 6. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target（SDK `doAction` / `getComponentByName` 跟着来）。
 7. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
