@@ -37,9 +37,12 @@ Vamis 不取代 TableDef/FormDef，而是增加扩展 kind：
 
 ## 2. 作者格式
 
-- 正式作者态：**YAML 1.2 Core Schema**（`packages/vamis-core/src/yaml.ts`）
-- Amis JSON：`jsonToIr()` 包成 `UiPage` 再 `yamlFromIr()`
-- 运行时输入：IR 文档或裸 `{type: page}`，Root 一律先 normalize
+作者态**同时支持 YAML 与 JSON**，不强制 YAML。解析后进同一棵 schema / IR。
+
+- YAML 1.2 Core（`packages/vamis-core/src/yaml.ts`）与 JSON 都是一等输入
+- `parseSchemaText`：以 `{` / `[` 开头走 `JSON.parse`，否则走 YAML
+- 对象、JSON 字符串、YAML 字符串、IR 信封：`VamisRoot` / `vamis.embed` 都收
+- 编辑器可以把源码格式化成 YAML 或 JSON；字段名不改写
 
 YAML「标准数据类型」只指语法层标量，不指业务字段的 jdbc/Java 类型：
 

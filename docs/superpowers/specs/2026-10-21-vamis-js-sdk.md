@@ -14,7 +14,7 @@ Amis 有两条入口：**JS SDK**（任意页面）和 **React**。Vamis 对等�
 
 商业页经常不是 Vue 工程：后台模板、jQuery、其它框架、甚至静态 HTML。Amis 能 `sdk.js` + `amis.embed('#root', schema)` 直接挂。Vamis 若只提供 npm + Vue，这些宿主嵌不进去。
 
-SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 IIFE，对外只暴露 `embed` / 注册表。内部仍是 `VamisRoot`。YAML / IR / shadcn token / 禁止 `cxd-` / D12（schema 不进函数）全部不变。
+SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 IIFE，对外只暴露 `embed` / 注册表。内部仍是 `VamisRoot`。YAML / JSON / IR / shadcn token / 禁止 `cxd-` / D12（schema 不进函数）全部不变。
 
 ## 2. 产物
 
@@ -51,7 +51,7 @@ SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 I
 `schema` 可以是：
 
 - 裸 widget（`{ type: 'page', ... }`，与 Amis JSON 同形）
-- YAML 字符串（SDK 内 `parseSchemaText`）
+- JSON 字符串或 YAML 字符串（SDK 内 `parseSchemaText`）
 - IR 信封（`apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`）
 
 ## 4. API
@@ -149,7 +149,7 @@ flowchart LR
 
 1. `pnpm` 能打出 `sdk.js` + `sdk.css`。
 2. 一份无构建工具的 `hello.html`：外链两文件后 `vamis.embed('#root', schema)` 能渲染 page / form / 按钮。
-3. schema 支持 JSON 对象、YAML 字符串、`UiPage` IR。
+3. schema 支持 JSON 对象、JSON 字符串、YAML 字符串、`UiPage` IR。
 4. `updateSchema` / `updateProps` / `unmount` 可用。
 5. 不传 `env.fetcher` 时，内置 fetch 能打 `/api/mock2` 同类接口（或宿主 CORS 允许的 URL）。
 6. 文档「快速开始」同时写 Vue 与 JS SDK；SDK 示例必须是真 HTML，不是截图。

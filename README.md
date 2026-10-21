@@ -1,13 +1,15 @@
 # Vamis
 
-用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者格式是 **YAML**；信封对齐 **LCDP IR**（`apiVersion: lcdp.ir/v1`）。
+用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者态同时支持 **YAML** 与 **JSON**；信封对齐 **LCDP IR**（`apiVersion: lcdp.ir/v1`）。
 
-按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 LCDP IR 不变。
+按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。作者态和对齐 LCDP IR 不变。
 
 ## 当前状态（2026-10-21）
 
 - 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
 - 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
+- **默认自适应**：page / form / 表单控件不写 `size` 就吃满容器；`size` / `className` 只是收窄。
+- **作者态**：YAML 与 JSON 并列，不强制 YAML。
 - amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
 - 组件语义（侧栏 155）：已完成 0 / 进行中 153 / 未开始 2，平均 47%。
 - `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
@@ -69,7 +71,7 @@ VITE_BASE=/vamis/ pnpm build
 VITE_BASE=/vamis/ pnpm preview   # http://127.0.0.1:4173/vamis/
 ```
 
-## YAML 与 IR 的关系
+## 作者态与 IR 的关系
 
 低代码的唯一真源是 IR 信封：
 
@@ -85,15 +87,15 @@ spec:
   body: [...]
 ```
 
-- **YAML** 是作者态。
-- **JSON**（Amis 页面）经 `jsonToIr()` 包成 `kind: UiPage`，再 `yamlFromIr()` 写出。
+- **YAML** 与 **JSON** 都是作者态，不强制某一种。`parseSchemaText` 以 `{` / `[` 开头走 JSON，否则走 YAML。
+- 裸 widget 或 IR 信封都可以；`jsonToIr()` 把裸树包成 `kind: UiPage`。
 - 运行时 `VamisRoot` 先 normalize 成 IR，再 `compileIrToWidget()` 得到 widget 树。
 - 未知 `type` / 未实现的 `kind` 显示占位，不崩。
 
 黄金样例：
 
 - `playground/src/examples/form-page.yaml` — 从 Amis `examples/components/Page/Form.jsx` 转出
-- `playground/src/examples/amis-form.json` — 原始 JSON，Playground 里点「Amis JSON → YAML」
+- `playground/src/examples/amis-form.json` — 原始 JSON；Playground 源码 Tab 可在 YAML / JSON 间格式化
 - `playground/src/examples/crud-page.yaml` — 查询表 + 表格 + 弹窗编辑
 
 `playground/src/examples/` 下共 14 个 YAML 样例，另含向导、组合录入、选择器、展示、布局、事件、校验、Amis REST 等。

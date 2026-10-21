@@ -27,7 +27,7 @@ body:
 
 ## 书写规则
 
-- 作者态默认 YAML 1.2 Core。
+- 作者态同时支持 YAML 与 JSON，不强制某一种。YAML 字面量用 1.2 Core。
 - 扩展只加新字段或新 IR `kind`，不把 `type: form` 改成别的名字。
 - 子节点可以是字符串（当成 `tpl`）、对象或数组，见 [SchemaNode](/types/schemanode)。
 

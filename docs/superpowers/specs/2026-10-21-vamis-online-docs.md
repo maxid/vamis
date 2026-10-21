@@ -17,7 +17,8 @@
 | 搜索 | ⌘K | 文档 / 组件 / 示例索引；示例跳 `/?example=` |
 | GitHub | 外链 | https://github.com/maxid/vamis |
 
-- 作者态 YAML；` ```schema ` 在页面内交给 `VamisRoot` 真跑（可编辑即时预览），对齐 Amis `MdRenderer` + Play mini，不是截图。
+- 作者态 YAML 与 JSON 并列；` ```schema ` 在页面内交给 `VamisRoot` 真跑（可编辑即时预览），对齐 Amis `MdRenderer` + Play mini，不是截图。围栏可以是 YAML 或 JSON。
+- **默认自适应**：文档主路径示例不要先写 `size: full` / `w-full`。先给无 size 的表单，再给可选收窄。
 - fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。

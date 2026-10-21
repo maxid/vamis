@@ -19,7 +19,7 @@ const justify = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-3" :class="[justify, schema.direction === 'column' ? 'flex-col' : 'flex-row']">
+  <div class="flex w-full min-w-0 flex-wrap gap-3" :class="[justify, schema.direction === 'column' ? 'flex-col' : 'flex-row']">
     <SchemaRenderer v-for="(node, i) in items" :key="i" :schema="node" />
   </div>
 </template>

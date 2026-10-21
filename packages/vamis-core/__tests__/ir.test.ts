@@ -3,6 +3,7 @@ import {
   compileIrToWidget,
   IR_API_VERSION,
   jsonToIr,
+  parseSchemaText,
   parseToIr,
   yamlFromIr,
 } from '../src/ir'
@@ -29,6 +30,14 @@ describe('IR envelope', () => {
     const ir = parseToIr(yaml)
     expect(ir.kind).toBe('UiPage')
     expect(compileIrToWidget(ir).type).toBe('page')
+  })
+
+  it('treats YAML and JSON strings as equal authoring input', () => {
+    const yaml = parseSchemaText('type: page\ntitle: Hello\n')
+    const json = parseSchemaText('{"type":"page","title":"Hello"}')
+    expect(yaml).toEqual({ type: 'page', title: 'Hello' })
+    expect(json).toEqual({ type: 'page', title: 'Hello' })
+    expect(parseToIr(JSON.stringify(json)).kind).toBe('UiPage')
   })
 
   it('compiles FormDef fields to form widgets', () => {

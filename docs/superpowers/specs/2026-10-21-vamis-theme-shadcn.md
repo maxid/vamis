@@ -44,7 +44,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 
 ## 2. 映射到 shadcn 哲学
 
-原则：**一套 CSS 变量，组件用 variant，不造第二套 `cxd-` 前缀。**
+原则：**一套 CSS 变量，组件用 variant，不造第二套 `cxd-` 前缀。** 另一条：**默认自适应**——布局容器和表单控件不写 `size`/`className` 就吃满槽位，配置只用来收窄。
 
 | Amis | shadcn-vue / vamis-ui |
 |---|---|
@@ -68,7 +68,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `level: success/warning/info` | 同名 variant |
 | `level: link` | `link` |
 | `page.cssVars` | 写到页面根 style；别名映射到 shadcn 名 |
-| `m:` / `pc:` | Tailwind `max-md:` / `md:`（P1 再接 `className` 解析） |
+| `m:` / `pc:` | 已接到间距 + 宽度 helper（&lt;768 / ≥768）；作者也可写 Tailwind `max-md:` / `md:` |
 | `.cxd-Form` 等 | **禁止**（盒子走 token，不走 BEM） |
 
 组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。Playground 顶栏色点改 `html[data-accent]` 的 `--accent-h`，从而带动 `--primary` / `--ring`；成功/警告/危险仍是固定语义色。

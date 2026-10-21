@@ -58,7 +58,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Extension | `registerRenderer` | 无 action/filter/validator/locale/theme 注册；无插件生命周期 |
 | Theme/i18n | Tailwind + shadcn token | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText/`registerTheme` |
 | Diagnostics | `Placeholder` | 无 debug 开关、无动作日志、无 schema path 报错 |
-| IR/YAML | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与函数字符串的约定未写入设计 |
+| IR/作者态 | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与 JSON 都是一等输入 |
 
 ## 3. 设计原则
 
@@ -410,9 +410,10 @@ export function usePlugin(plugin: VamisPlugin): void
 
 ## 13. 主题、响应式与多语言（D12 相关）
 
-- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
+- **默认自适应**：page / form / crud / 未写 `size` 的表单控件吃满布局槽，作者不必先写 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。见 [样式系统](./2026-10-21-vamis-style-system.md) §0。
+- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs`、宽度 `w-full` / `w-1/2` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
 - 主题：沿用 Tailwind/shadcn token；`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
-- 响应式：`m:` / `pc:` 前缀由 `env.mobile`（或容器断点）决定；不引入第二套断点系统。
+- 响应式：`m:` / `pc:` 前缀走 CSS 媒体查询（&lt;768 / ≥768），作用在间距和宽度 helper；表单 `size` 档位断点是 576px（对齐 Amis form SCSS）。不引入 Tailwind 五档作为作者态。
 - i18n：
   - `env.locale` + `registerLocale` 负责内置文案；
   - schema 级语言覆盖（`en-US: { label: 'Name' }`）在 normalize 时按 locale 合并；
@@ -426,7 +427,9 @@ export function usePlugin(plugin: VamisPlugin): void
 - 校验/请求/动作错误统一 `env.notify('error', ...)`，同时保留结构化错误。
 - 预留 `env.tracker`：页面/组件曝光与动作埋点（P2，对齐 amis tracker）。
 
-## 15. IR 与 YAML 作者态
+## 15. IR 与作者态
+
+作者态同时支持 YAML 与 JSON，不强制 YAML。`parseSchemaText` 以 `{` / `[` 开头走 JSON，否则走 YAML；对象与 IR 信封直接进运行时。
 
 - 保持 `UiPage` 信封；`spec` 原样承载 amis widget 树，不因语义增强改信封。
 - `PageDef`：有 `spec.schema` 时透传；固定壳（LIST/TREE_LIST）继续占位，等 LCDP IR 侧 kind 稳定。

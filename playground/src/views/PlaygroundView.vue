@@ -71,12 +71,10 @@ watch(
   { immediate: true },
 )
 
-function formatSource() {
+function formatSource(kind: 'yaml' | 'json') {
   try {
-    const text = source.value.trim()
-    const value =
-      text.startsWith('{') || text.startsWith('[') ? JSON.parse(text) : parseSchemaText(text)
-    source.value = yamlFromIr(jsonToIr(value))
+    const ir = jsonToIr(parseSchemaText(source.value))
+    source.value = kind === 'json' ? `${JSON.stringify(ir, null, 2)}\n` : yamlFromIr(ir)
     error.value = ''
   } catch (err) {
     error.value = err instanceof Error ? err.message : String(err)
@@ -136,7 +134,10 @@ function formatSource() {
         <TabsContent value="ir" class="mt-0 flex min-h-0 flex-1 flex-col overflow-hidden">
           <div class="flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2">
             <p class="truncate text-xs text-muted-foreground">{{ selectedLabel }}</p>
-            <Button size="xs" variant="outline" @click="formatSource">JSON → YAML</Button>
+            <div class="flex gap-1">
+              <Button size="xs" variant="outline" @click="formatSource('yaml')">YAML</Button>
+              <Button size="xs" variant="outline" @click="formatSource('json')">JSON</Button>
+            </div>
           </div>
           <Textarea
             v-model="source"

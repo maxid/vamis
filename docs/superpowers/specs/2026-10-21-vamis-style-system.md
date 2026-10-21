@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-21
-- 状态：落地（token / 密度 / 盒子辅助类 / FormItem size / Table cell / IR `metadata.style`；`xxxClassName` 与 `registerTheme` 仍 P1）
+- 状态：落地（**默认自适应** / token / 密度 / 盒子辅助类 / 宽度 helper / FormItem size 含 full / Table cell / IR `metadata.style`；`xxxClassName` 与 `registerTheme` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
@@ -11,6 +11,18 @@
   - 在线文档 `http://localhost:8888/zh-CN/style/index` 本轮不可达，以本地文档与源码为准
 
 水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**盒子数字对齐 cxd**（商业 YAML 才能套），配色独立。不搬 `cxd-` class，不编译 Amis SCSS。
+
+## 0. 准则：默认自适应
+
+Amis 特定组件的自适应样式是**默认行为**，作者不必先配宽度。Vamis 同样：最简 YAML 就应在容器里铺满、随容器伸缩。这是降低使用难度和认识心智的产品原则，不是可选优化。
+
+- **默认 = 吃满布局槽。** page / form / crud / table / grid / flex / container / 未写 `size` 的表单控件随父级走，`max-width: 100%`。
+- **配置是例外。** `size: xs|sm|md|lg` 才钉死档位；`size: full` 只在默认吃不满时显式拉满（inline / 多列剩余）；`className: w-1/2`、`m:` / `pc:` 才是覆盖。
+- **文档主路径先给无 size 的表单。** 禁止教「先写 `size: full` 或 `w-full` 才能用」。
+- **渲染器禁止写死作者没要的上限。** 例如 form 上的 `max-w-3xl`。Dialog 等浮层可以有默认尺寸（对齐 Amis dialog `size`）。
+- **按钮、徽标、纯文本不要被拉成 100% 宽。** 只约束布局容器和表单控件槽。
+
+落地：FormItem 未写 `size` 时挂 `vamis-control--fluid`；Form / CRUD / Flex / Grid / Container / Wrapper 默认 `w-full min-w-0`。规则文件：`.cursor/rules/adaptive-default.mdc`。
 
 ## 1. Amis 样式系统（结论）
 
@@ -83,10 +95,10 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 对象 + 表达式：`className: { "text-danger": "${status == 1}" }`
 - 3.5+ 模板类名：`text-${status == 1 ? 'danger' : 'success'}`
 - 辅助类是精简 Tailwind：`m-l-xs`、`rounded-xl`、`shadow-lg`、`flex`；状态前缀 `hover:` / `focus:` / `active:` / `disabled:`
-- 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）
+- 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）；宽度 helper `w-full` / `w-1/2` 同样带这两档
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `m:` `pc:`（仅 gap 辅助类）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
+`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `m:` `pc:`（间距 + 宽度）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
 
 ## 2. shadcn 落地原则
 
@@ -163,7 +175,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 | 正文字号 | `--fontSizeBase` = fonts-size-7 | **14** | `text-sm` |
 | Page 内边距 | `--Page-body-padding` = gap-base | 12 | `--page-body-padding` |
 
-`page.cssVars` 写 cxd 名时，经 `resolveCssVars` 映到上表。`size: xs\|sm\|md\|lg` 必须落到控件宽度档，不是只改字号。
+`page.cssVars` 写 cxd 名时，经 `resolveCssVars` 映到上表。未写 `size` 时控件吃满值列（`vamis-control--fluid`）。`size: xs\|sm\|md\|lg` 才落到控件宽度档（≥576px 才钉死，始终 `max-width: 100%`）；`size: full` 与默认铺满同效果，留给 inline / 多列剩余。
 
 辅助类 `m-t-md` / `p-l-xs` 的 xs…xl 也是这套 gap，不是 Tailwind `m-1` 的另一套阶。解析仍是 D12，但阶必须先锁死。
 
@@ -205,7 +217,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 ### 4.3 表单 / 表格
 
-- `FormItem`：`mode: horizontal|inline` 时 label 右对齐、宽 `--form-label-width`、色 `muted-foreground`；必填 `*` 为 `destructive`
+- `FormItem`：`mode: horizontal|inline` 时桌面 label 右对齐、宽 `--form-label-width`；窄屏 label ~28%；色 `muted-foreground`；必填 `*` 为 `destructive`；未写 `size` 即铺满值列
 - 控件高一律 `--control-h`（Input / Select / Button / native select / Static 行）
 - Table 原语：容器 `border bg-card`；表头 `bg-muted/50`；行高 `--table-row-h`
 
@@ -215,6 +227,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 2. 暂时必须用原生元素时（季度 `<select>`、文件区），套 `vamis-native-select` / `vamis-file-drop`，高度仍吃 `--control-h`。
 3. Page 是画布，不再套一层 Card；Form 的 `wrapWithPanel` 才是面板。避免双卡片。
 4. `page.cssVars` 经 `resolveCssVars` 映射到 shadcn 名（`--text-color` → `--foreground` 等）。对象 `className` / `m:`/`pc:` 仍 P1。
+5. **默认自适应。** 禁止给 page/form/crud/table 写死 `max-w-3xl` 等作者没要的上限；铺满是默认，`size`/`className` 才是收窄。
 
 ## 6. Playground
 
@@ -233,6 +246,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 5. **反馈**：Dialog 标题+关闭+token 间距；Toast 四态着色。
 6. **壳**：Playground 与 Editor 同源 token；画布灰、面板白。
 7. **主题**：`.dark` 对比足够；紧凑/舒适切换时控件高度一起变；无 `cxd-` class。
+8. **默认自适应**：无 `size` 的横排表单控件吃满值列；form 自身吃满 page，不靠 `w-full` / `size: full`。
 
 未纳入本轮：`xxxClassName` 子节点、antd/ang 命名主题、`registerTheme`（D12 P1）。
 
@@ -240,8 +254,9 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 - `packages/vamis-ui/src/styles.css`：语义色 + 密度 token + `.vamis-native-select` / `.vamis-file-drop` / range
 - `packages/vamis-ui/src/helpers.css`：`m-t-xs` / `p-l-md` 等走 `--gap-*`；`m:` / `pc:` 媒体查询
+- `packages/vamis-ui/src/helpers-width.css`：Amis `w-*` / `min-w-*` / `max-w-*`，含 `m:` / `pc:`
 - 原语：Button / Input / Select / Table / Tabs / Slider / Sonner 吃 token；Table cell `px` 用 `--table-cell-px`
-- 渲染器：FormItem `size` → `--form-control-width-*`；Page body 用 `--page-body-padding`
+- 渲染器：未写 `size` 挂 `vamis-control--fluid`；`size` xs–lg ≥576px 钉 `--form-control-width-*`，`full` 始终 100%；Form 去掉 `max-w-3xl`；Page body 用 `--page-body-padding`
 - 内核：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；`SchemaRenderer` 挂 id/className/style
 - IR：`metadata.style.cssVars` / `density` / `className`，`jsonToIr` 从 page.cssVars 提升，compile 时合并
 - Playground：浅色/深色、紧凑/舒适；VamisRoot 不再写死 `data-density=compact`

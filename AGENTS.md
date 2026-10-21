@@ -11,7 +11,7 @@
 
 ## 项目概述
 
-**Vamis** 用 Vue 3 复刻百度 Amis 的 JSON 低代码运行时。作者态是 **YAML 1.2 Core**；信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）。按 Amis **组件 type / schema 语义** 搬运；UI 原语是 **shadcn-vue**（reka-ui + CSS 变量），不搬 `cxd-`、不追像素级 cxd。
+**Vamis** 用 Vue 3 复刻百度 Amis 的 JSON 低代码运行时。作者态同时支持 **YAML 1.2 Core** 与 **JSON**（不强制 YAML）；信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）。按 Amis **组件 type / schema 语义** 搬运；UI 原语是 **shadcn-vue**（reka-ui + CSS 变量），不搬 `cxd-`、不追像素级 cxd。
 
 **技术栈**：Vue 3.5 + TypeScript + Vite + pnpm workspace + Pinia + Tailwind + shadcn-vue + `amis-formula@6.13.0`。
 
@@ -21,7 +21,7 @@
 packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer、env
 packages/vamis-ui       shadcn-vue 原语与主题 token
 packages/vamis          渲染器注册表（register.ts + extras/*.ts）
-packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / YAML）
+packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / Schema）
 packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              示例 + 文档 + 组件文档（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
@@ -48,10 +48,11 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 ## 架构约定
 
 - Schema 字段名与 Amis 语义不改写；扩展只加新字段或新 IR `kind`。
-- YAML 是唯一作者态；函数只能以表达式字符串 / 已注册名进入，禁止隐式 `eval`。
+- 作者态同时支持 YAML 与 JSON，禁止写成 YAML 唯一；函数只能以表达式字符串 / 已注册名进入，禁止隐式 `eval`。详见 `.cursor/rules/authoring-format.mdc`。
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - UI 走 `@vamis/ui` token 与 `variant`（`level: primary` → `variant="default"`），不要写第二套主题 class。
+- **默认自适应**。page / form / crud / table / 未写 `size` 的表单控件吃满布局槽，不必先配 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。禁止给这些容器写死 `max-w-3xl`。详见 `.cursor/rules/adaptive-default.mdc`。
 - **已注册 ≠ 语义完成**。进度看文档主路径，不是 `registerRenderer` 有没有调用。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
 

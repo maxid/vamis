@@ -41,7 +41,7 @@ export default defineConfig({
     search: { provider: 'local' },
     socialLinks: [{ icon: 'github', link: 'https://github.com/maxid/vamis' }],
     footer: {
-      message: '对齐 Amis 组件语义 · UI 使用 shadcn-vue token · 作者态 YAML 1.2 Core',
+      message: '对齐 Amis 组件语义 · UI 使用 shadcn-vue token · 作者态 YAML / JSON',
       copyright: 'Apache-2.0',
     },
     docFooter: { prev: '上一页', next: '下一页' },

@@ -18,6 +18,8 @@ Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文�
 
 水标：14px 字、32px 控件、4px 圆角、状态色能分开。字体 IBM Plex。
 
+**默认自适应**：page / form / 表单控件不写 `size`、不写 `w-full` 就吃满布局槽。`size: sm` 这类才是可选收窄。
+
 页面级覆盖可以写在 widget 的 `cssVars`，也可以写在 IR `metadata.style`（编译时合并进 page）。
 
 ```schema
@@ -27,18 +29,22 @@ cssVars:
 body:
   - type: tpl
     className: m-t-xs text-muted-foreground
-    tpl: 辅助类 m-t-xs 用的是 --gap-xs（4px），不是另一套间距。
+    tpl: 下面第一行没写 size，默认铺满。辅助类 m-t-xs 用的是 --gap-xs（4px）。
   - type: form
     mode: horizontal
     body:
       - type: input-text
+        name: fill
+        label: 默认
+        description: "不写 size：吃满值列，随容器伸缩"
+      - type: input-text
         name: short
-        label: 短框
+        label: 可选短框
         size: sm
-        description: "size sm maps to --form-control-width-sm (160px)"
+        description: "size sm 才钉 --form-control-width-sm（160px，≥576px）"
       - type: input-text
         name: long
-        label: 长框
+        label: 可选长框
         size: lg
   - type: button
     label: 被 cssVars 染色

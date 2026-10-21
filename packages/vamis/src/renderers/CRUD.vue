@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <div class="w-full min-w-0 space-y-3">
     <SchemaRenderer
       v-if="filterSchema"
       :schema="{

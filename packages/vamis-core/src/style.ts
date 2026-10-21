@@ -46,6 +46,14 @@ const CONTROL_WIDTH: Record<string, string> = {
   sm: 'var(--form-control-width-sm)',
   md: 'var(--form-control-width-md)',
   lg: 'var(--form-control-width-lg)',
+  full: '100%',
+}
+
+export const CONTROL_SIZE_NAMES = ['xs', 'sm', 'md', 'lg', 'full'] as const
+export type ControlSizeName = (typeof CONTROL_SIZE_NAMES)[number]
+
+export function isControlSize(size?: unknown): size is ControlSizeName {
+  return typeof size === 'string' && size in CONTROL_WIDTH
 }
 
 function truthy(value: unknown): boolean {

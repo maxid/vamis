@@ -9,7 +9,7 @@ Vamis 有两种用法，和 Amis 一样：
 - [JS SDK](/start/sdk)：任意 HTML 外链 `sdk.js`，`vamis.embed('#root', schema)`
 - [Vue 3](#vue)：工程里用 `<VamisRoot :schema="..." />`
 
-作者态是 YAML 1.2 Core（JSON / IR 也能进）。两条入口走同一套渲染器，不是两套运行时。
+作者态同时支持 YAML 与 JSON（IR 信封也能进）。两条入口走同一套渲染器，不是两套运行时。
 
 两条现在都能跑。JS SDK 先 `pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`。
 
@@ -39,7 +39,7 @@ const app = createApp({
     const schema = {
       type: 'page',
       title: 'Hello',
-      body: '来自 YAML 的页面',
+      body: '来自 schema 的页面',
     }
     return { schema }
   },
@@ -68,9 +68,9 @@ app.mount('#app')
 </script>
 ```
 
-## 作者态：YAML
+## 作者态：YAML 或 JSON
 
-推荐把页面写成 YAML 1.2 Core，再 `parseSchemaText`。下面这块是文档里的真运行时，不是静态代码：
+两种写法同等有效，都交给 `parseSchemaText`（以 `{` / `[` 开头当 JSON）。下面是文档里的真运行时：
 
 ```schema
 type: page
@@ -88,12 +88,24 @@ body:
         required: true
 ```
 
-```ts
-import { parseSchemaText, VamisRoot } from 'vamis'
-const schema = parseSchemaText(yamlText)
+同一份用 JSON：
+
+```schema
+{
+  "type": "page",
+  "title": "Hello JSON",
+  "body": [
+    { "type": "tpl", "tpl": "JSON 作者态，和 YAML 进同一运行时" }
+  ]
+}
 ```
 
-也可以直接喂 Amis JSON。`jsonToIr()` 会包上信封：
+```ts
+import { parseSchemaText, VamisRoot } from 'vamis'
+const schema = parseSchemaText(text) // YAML 或 JSON 字符串
+```
+
+也可以直接喂对象。`jsonToIr()` 会包上信封：
 
 ```yaml
 apiVersion: lcdp.ir/v1
