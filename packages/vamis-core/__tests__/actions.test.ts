@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { runAction, runOnEvent } from '../src/actions/run'
+import { runAction, runOnEvent, withNativeEvent } from '../src/actions/run'
 import type { ActionContext } from '../src/actions/run'
 import { ScopedContext } from '../src/scoped'
 
@@ -70,5 +70,49 @@ describe('onEvent actions', () => {
       context,
     )
     expect(openDialog).toHaveBeenCalled()
+  })
+
+  it('interpolates nativeEvent.type from the D4 event subset', async () => {
+    const context = ctx({
+      data: withNativeEvent({ name: 'Ada' }, { type: 'click' }),
+    })
+    await runOnEvent(
+      {
+        type: 'container',
+        onEvent: {
+          click: {
+            actions: [{ actionType: 'toast', args: { msgType: 'info', msg: '${event.context.nativeEvent.type}' } }],
+          },
+        },
+      },
+      'click',
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'click')
+  })
+
+  it('runs mouseenter the same way as click', async () => {
+    const context = ctx({
+      data: withNativeEvent({}, { type: 'mouseenter' }),
+    })
+    await runOnEvent(
+      {
+        type: 'container',
+        onEvent: {
+          mouseenter: {
+            actions: [{ actionType: 'toast', args: { msg: '${event.context.nativeEvent.type}' } }],
+          },
+        },
+      },
+      'mouseenter',
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'mouseenter')
+  })
+
+  it('toast reads Amis args.msgType as level', async () => {
+    const context = ctx()
+    await runAction({ actionType: 'toast', args: { msgType: 'warning', msg: 'careful' } }, context)
+    expect(context.env.notify).toHaveBeenCalledWith('warning', 'careful')
   })
 })

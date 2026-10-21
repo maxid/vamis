@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 0 / 15 | 15 | 0 | 56% | 12 |
+| 布局 | 0 / 15 | 15 | 0 | 58% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 43% | 7 |
 | 数据输入 | 0 / 72 | 72 | 0 | 46% | 37 |
 | 数据展示 | 0 / 44 | 44 | 0 | 46% | 25 |
@@ -45,14 +45,14 @@
 
 ---
 
-## 布局（0/15，均 56%）
+## 布局（0/15，均 58%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `page` | Page 页面 | 进行中 | 55% | 主路径可用；`initApi` 直接写进 props.data，无 Scope 自域 / URL 种子（D1） | P0 |
-| `container` | Container 容器 | 进行中 | 60% | 能包 children；缺 `style` 对象、`wrapperBody` 等 | P0 |
+| `page` | Page 页面 | 进行中 | 70% | `initApi` overlay + initFetch/interval/aside/reload 已接；缺 D1 Scope/URL 种子、D4 事件对象、pullRefresh、css 块、Remark 图标 | P0 |
+| `container` | Container 容器 | 进行中 | 78% | 主路径 body/style/wrapperComponent/wrapperBody/bodyClassName 与 click/mouseenter/mouseleave 可用；D4 仅 nativeEvent.type，无 editor 拖拽 | P0 |
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
 | `flex` | Flex 布局 | 进行中 | 60% | `justify`/`direction` 可用；缺 `alignItems`、子项 `flex` | P0 |

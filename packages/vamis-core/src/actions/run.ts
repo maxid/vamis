@@ -28,6 +28,18 @@ function actionData(action: ActionSchema, ctx: ActionContext): PlainObject {
   return { ...ctx.data, ...extra, ...args }
 }
 
+/** D4 子集：公式可读 `event.context.nativeEvent.type`，完整事件对象尚未落地。 */
+export function withNativeEvent(data: PlainObject, nativeEvent: { type: string }): PlainObject {
+  return {
+    ...data,
+    event: {
+      context: {
+        nativeEvent: { type: nativeEvent.type },
+      },
+    },
+  }
+}
+
 export async function runOnEvent(
   schema: SchemaObject | undefined,
   eventName: string,
@@ -68,7 +80,11 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
       break
     }
     case 'toast': {
-      const level = (action.level || action.args?.level || 'info') as 'info' | 'success' | 'warning' | 'error'
+      const level = (action.level || action.args?.level || action.args?.msgType || 'info') as
+        | 'info'
+        | 'success'
+        | 'warning'
+        | 'error'
       const msg = filterTpl(action.msg || action.message || action.args?.msg || '提示', data)
       ctx.env.notify(level, msg)
       break
