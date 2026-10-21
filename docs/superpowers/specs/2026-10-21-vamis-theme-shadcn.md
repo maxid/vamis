@@ -71,7 +71,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `m:` / `pc:` | Tailwind `max-md:` / `md:`（P1 再接 `className` 解析） |
 | `.cxd-Form` 等 | **禁止**（盒子走 token，不走 BEM） |
 
-组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。
+组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。Playground 顶栏色点改 `html[data-accent]` 的 `--accent-h`，从而带动 `--primary` / `--ring`；成功/警告/危险仍是固定语义色。
 
 ## 3. 视觉方向（后台产品水标）
 

@@ -12,24 +12,43 @@ function navClass(prefix: string, exact = false) {
 
 const THEME_KEY = 'vamis-theme'
 const DENSITY_KEY = 'vamis-density'
+const ACCENT_KEY = 'vamis-accent'
+
+type Accent = 'blue' | 'green' | 'amber' | 'sky' | 'rose'
+
+const accents: { id: Accent; label: string; color: string }[] = [
+  { id: 'blue', label: '墨蓝', color: 'oklch(0.49 0.16 258)' },
+  { id: 'green', label: '翠绿', color: 'oklch(0.52 0.14 145)' },
+  { id: 'amber', label: '琥珀', color: 'oklch(0.7 0.15 65)' },
+  { id: 'sky', label: '青空', color: 'oklch(0.55 0.11 230)' },
+  { id: 'rose', label: '玫红', color: 'oklch(0.57 0.2 27)' },
+]
 
 const dark = ref(false)
 const density = ref<'compact' | 'comfortable'>('compact')
+const accent = ref<Accent>('blue')
+
+function parseAccent(value: string | null): Accent {
+  return accents.some((item) => item.id === value) ? (value as Accent) : 'blue'
+}
 
 function applyChrome() {
   document.documentElement.classList.toggle('dark', dark.value)
   document.documentElement.dataset.density = density.value
+  document.documentElement.dataset.accent = accent.value
 }
 
 onMounted(() => {
   dark.value = localStorage.getItem(THEME_KEY) === 'dark'
   density.value = localStorage.getItem(DENSITY_KEY) === 'comfortable' ? 'comfortable' : 'compact'
+  accent.value = parseAccent(localStorage.getItem(ACCENT_KEY))
   applyChrome()
 })
 
-watch([dark, density], () => {
+watch([dark, density, accent], () => {
   localStorage.setItem(THEME_KEY, dark.value ? 'dark' : 'light')
   localStorage.setItem(DENSITY_KEY, density.value)
+  localStorage.setItem(ACCENT_KEY, accent.value)
   applyChrome()
 })
 </script>
@@ -43,12 +62,24 @@ watch([dark, density], () => {
           <h1 class="text-lg font-semibold tracking-tight">YAML 即页面</h1>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <div class="hidden items-center gap-1 sm:flex" aria-hidden="true" title="主题色板">
-            <span class="size-2.5 rounded-full bg-primary" />
-            <span class="size-2.5 rounded-full bg-success" />
-            <span class="size-2.5 rounded-full bg-warning" />
-            <span class="size-2.5 rounded-full bg-info" />
-            <span class="size-2.5 rounded-full bg-destructive" />
+          <div class="flex items-center gap-0.5" role="radiogroup" aria-label="主题色">
+            <button
+              v-for="item in accents"
+              :key="item.id"
+              type="button"
+              role="radio"
+              class="flex size-5 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              :aria-label="item.label"
+              :aria-checked="accent === item.id"
+              :title="item.label"
+              @click="accent = item.id"
+            >
+              <span
+                class="size-2.5 rounded-full transition"
+                :class="accent === item.id ? 'ring-2 ring-foreground ring-offset-1 ring-offset-card' : ''"
+                :style="{ background: item.color }"
+              />
+            </button>
           </div>
           <div class="flex rounded-md border p-0.5">
             <Button
