@@ -9,6 +9,7 @@
   - 当前实现状态：`docs/superpowers/specs/2026-10-20-amis-sync-status.md`
   - 组件 P0 TODO（amis 文档侧栏分类）：`docs/superpowers/specs/2026-10-20-vamis-component-todo.md`
   - 主题映射（Amis 样式 → shadcn token）：`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`、`docs/superpowers/specs/2026-10-21-vamis-style-system.md`
+  - JS SDK（任意 HTML 嵌入）：`docs/superpowers/specs/2026-10-21-vamis-js-sdk.md`
 
 ## 0. 摘要
 
@@ -26,7 +27,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | D8 | 调试能力内建：`env.debug`、动作日志、未知 type 带 schema path 报告 | P0 |
 | D9 | 接口联动与 `trackExpression` 用依赖收集实现自动刷新 | P1 |
 | D10 | CRUD 语义补齐：filter 独立作用域、`loadDataOnce`、`syncLocation`、`quickEdit`、`matchFunc` | P1 |
-| D11 | 插件化：renderer/action/filter/validator/locale/theme 都可注册 | P1 |
+| D11 | 插件化：renderer/action/filter/validator/locale/theme 都可注册；**JS SDK `embed` 是必须的产品入口** | P0（SDK 外壳）/ P1（注册表补齐） |
 | D12 | YAML 保持纯数据：函数只以字符串/注册表进入，不引入 YAML tag，不默认执行任意 JS | 全局约束 |
 
 ## 1. amis 文档地图
@@ -55,7 +56,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑 | 无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`/`autoGenerateFilter`；filter 只是提交到 query 的内嵌表单 |
 | Renderer | `registerRenderer({type, alias, component, isFormItem, isolateScope})`；props 只有 `schema/data/disabled` | 无 `dispatch/api/reload`、无 `test/weight`、无错误边界、未知 type 只有占位 |
 | Extension | `registerRenderer` | 无 action/filter/validator/locale/theme 注册；无插件生命周期 |
-| Theme/i18n | Tailwind + shadcn token | 无 `className` 对象/表达式、无 `cssVars`、无 locale/replaceText |
+| Theme/i18n | Tailwind + shadcn token | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText/`registerTheme` |
 | Diagnostics | `Placeholder` | 无 debug 开关、无动作日志、无 schema path 报错 |
 | IR/YAML | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与函数字符串的约定未写入设计 |
 
@@ -401,15 +402,16 @@ export function usePlugin(plugin: VamisPlugin): void
 ```
 
 - 内置能力也用插件注册，保证第三方扩展与内置同权。
-- 自定义组件 = `registerRenderer` + Vue 组件；不再需要额外的 SDK 层。
+- 自定义组件 = `registerRenderer` + Vue 组件。任意 HTML 宿主走 **JS SDK**（`vamis.embed`），内部仍是 `VamisRoot`，不是第二套渲染器。契约见 [JS SDK](./2026-10-21-vamis-js-sdk.md)。
+- schema 仍然不能带 JS 函数（D12）；SDK 的 `env.fetcher` 等是宿主回调，允许。
 - 函数注册表（filter/validator/formatter）是“可序列化 schema”的推荐扩展方式。
 - 编辑器插件（P2）：渲染器定义同时供 runtime 与 editor 使用，编辑态插件通过 `onActive/onInsert/onUpdate/onMove/onDelete/onBuildPanels/onBuildContextMenus/onDndAccept` 扩展，不把编辑器逻辑写进渲染器。
 - 版本化：`schema.version` 预留给未来不兼容字段迁移；当前不引入。
 
 ## 13. 主题、响应式与多语言（D12 相关）
 
-- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`。
-- 主题：沿用 Tailwind/shadcn token；`env.theme` + `page.cssVars` 映射到根节点 CSS 变量；`registerTheme` 提供命名主题。视觉基线与 Amis→shadcn 对照见 [样式系统](./2026-10-21-vamis-style-system.md)：不造 `cxd-` 前缀，状态色/密度走 token 与 variant。`className` 对象/表达式与 `m:`/`pc:` 仍是 D12 P1。
+- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
+- 主题：沿用 Tailwind/shadcn token；`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
 - 响应式：`m:` / `pc:` 前缀由 `env.mobile`（或容器断点）决定；不引入第二套断点系统。
 - i18n：
   - `env.locale` + `registerLocale` 负责内置文案；
@@ -457,14 +459,16 @@ export function usePlugin(plugin: VamisPlugin): void
 | CRUD 高级 | loadDataOnce/syncLocation/quickEdit | 无 | D10 | P1 |
 | 渲染器 API | dispatch/reload/doAction | 只有 props | D7 | P0 |
 | 扩展注册 | action/filter/validator/locale | 只有 renderer | D11 | P1 |
-| className/主题 | 对象 + 表达式 + CSS 变量 | 直接透传，无对象/表达式求值，无 `cssVars`/主题注册 | D12 | P1 |
+| JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 已落地；`getComponentByName` / `doAction` 未实现 | D11 | P0 外壳完成 / P1 随 kernel |
+| className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` 已接；无 `registerTheme` / locale / `xxxClassName` | D12 | 进行中 |
 | i18n | locale/replaceText/覆盖 | 无 | D12 | P1 |
 | 诊断 | debug/日志/tracker | 无 | D8 | P0/P2 |
 
 ## 17. 路线图
 
-### P0（语义骨架，1~2 周）
+### P0（语义骨架 + 嵌入入口）
 
+0. **JS SDK**（P0 已落地）：`packages/vamis-sdk` 打出 `sdk.js` + `sdk.css`；`vamis.embed` 支持 JSON / YAML / IR；`updateSchema` / `updateProps` / `unmount`；默认 fetch。P1：`getComponentByName` / `doAction`。见 [JS SDK](./2026-10-21-vamis-js-sdk.md)。
 1. `scope/`：Scope、`__super`、URL 种子、scope 配置、`__prev/__changeReason` 基础。
 2. `expr/`：过滤器链、模板转义、`evalValue/evalTemplate/evalCondition` 统一入口。
 3. `api/`：`requestApi` 管线、`sendOn`、`responseData`、`replaceData`、`messages`、返回格式兼容。
@@ -481,8 +485,8 @@ export function usePlugin(plugin: VamisPlugin): void
 - 动作：循环/switch/parallel/broadcast/`outputVar`/组件 setState。
 - 表单：异步校验、服务端校验、`validateOnChange`、`requiredOn`、`clearValueOnHidden`、嵌套表单校验。
 - CRUD：`loadDataOnce`、`syncLocation`、`quickEdit`、`matchFunc`、`autoGenerateFilter`、`footerToolbar`。
-- 扩展：插件 API、filter/validator/action 注册。
-- 主题/i18n：`className` 解析、`cssVars`、locale 覆盖、`replaceText`、`m:`/`pc:`。
+- 扩展：插件 API、filter/validator/action 注册；SDK `getComponentByName` / `doAction`。
+- 主题/i18n：`xxxClassName` 子节点、locale 覆盖、`replaceText`、`registerTheme`。
 - 错误边界与诊断面板。
 
 ### P2（非核心）

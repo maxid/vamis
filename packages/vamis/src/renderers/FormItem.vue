@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Label } from '@vamis/ui'
-import type { SchemaObject } from '@vamis/core'
+import { controlWidthForSize, type SchemaObject } from '@vamis/core'
 import { useForm } from '../formContext'
 
 const props = defineProps<{
@@ -15,6 +15,7 @@ const error = computed(() =>
 const required = computed(() => !!props.schema.required)
 const layout = computed(() => props.schema.mode || form?.mode || 'normal')
 const horizontal = computed(() => layout.value === 'horizontal' || layout.value === 'inline')
+const controlWidth = computed(() => controlWidthForSize(props.schema.size))
 </script>
 
 <template>
@@ -35,9 +36,14 @@ const horizontal = computed(() => layout.value === 'horizontal' || layout.value 
       {{ schema.label }}
     </Label>
     <div class="min-w-0">
-      <slot />
-      <p v-if="error" class="mt-1 text-xs text-destructive">{{ error }}</p>
-      <p v-else-if="schema.description" class="mt-1 text-xs text-muted-foreground">
+      <div
+        class="min-w-0"
+        :style="controlWidth ? { width: controlWidth, maxWidth: '100%' } : undefined"
+      >
+        <slot />
+      </div>
+      <p v-if="error" class="m-t-xs text-xs text-destructive">{{ error }}</p>
+      <p v-else-if="schema.description" class="m-t-xs text-xs text-muted-foreground">
         {{ schema.description }}
       </p>
     </div>

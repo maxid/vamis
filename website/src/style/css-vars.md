@@ -19,4 +19,4 @@ title: CSS 变量
 | `--control-h` | 控件高度 |
 | `--radius` | 默认 0.25rem |
 
-`page.cssVars` 写到页面根 style。别名会映射到 shadcn 名（例如 Amis `--primary`）。实现见 `@vamis/ui` 的 `resolveCssVars`。
+`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。Amis 盒子名会映射到 Vamis token（`--Form-input-height` → `--control-h`，`--TableCell-paddingX` → `--table-cell-px`）。实现见 `@vamis/core` 的 `resolveCssVars`。

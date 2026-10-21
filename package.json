@@ -8,9 +8,10 @@
     "dev": "pnpm --filter @vamis/playground dev",
     "docs": "pnpm --filter @vamis/playground dev",
     "docs:build": "pnpm --filter @vamis/docs gen && pnpm --filter @vamis/docs build",
-    "build": "pnpm --filter @vamis/playground build",
+    "sdk:build": "pnpm --filter @vamis/sdk build",
+    "build": "pnpm --filter @vamis/sdk build && pnpm --filter @vamis/playground build",
     "preview": "pnpm --filter @vamis/playground preview",
-    "test": "pnpm --filter @vamis/core test",
+    "test": "pnpm --filter @vamis/core test && pnpm --filter @vamis/sdk test",
     "typecheck": "pnpm --filter @vamis/playground typecheck",
     "status": "node scripts/amis-parity.mjs"
   },

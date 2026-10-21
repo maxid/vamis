@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
+import { resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
 import { provideData, useData, useEnv } from './context'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
@@ -64,6 +65,19 @@ const editorDrop = computed(
   () => !!editor && editorPath.value != null && editor.dropPath?.value === editorPath.value,
 )
 const canDrag = computed(() => !!editor && !!editorPath.value)
+const nodeClass = computed(() => resolveClassName(normalized.value?.className, data.value))
+const nodeStyle = computed(() => ({
+  ...resolveCssVars(
+    normalized.value?.cssVars && typeof normalized.value.cssVars === 'object'
+      ? (normalized.value.cssVars as Record<string, string>)
+      : undefined,
+  ),
+  ...resolveInlineStyle(normalized.value?.style, data.value),
+}))
+const nodeId = computed(() => {
+  const id = normalized.value?.id
+  return typeof id === 'string' && id ? id : undefined
+})
 
 function onEditorDragStart(event: DragEvent) {
   if (!canDrag.value || editorPath.value == null) return
@@ -93,9 +107,11 @@ async function onHostClick() {
 <template>
   <div
     v-if="visible && normalized"
+    :id="nodeId"
     :data-editor-path="editorPath"
     :draggable="canDrag"
-    :class="
+    :class="[
+      nodeClass,
       editor && editorPath != null
         ? [
             'relative',
@@ -103,8 +119,9 @@ async function onHostClick() {
             editorSelected ? 'rounded-sm ring-2 ring-primary ring-offset-1' : 'rounded-sm hover:ring-1 hover:ring-primary/40',
             editorDrop ? 'ring-2 ring-dashed ring-primary' : '',
           ]
-        : ''
-    "
+        : '',
+    ]"
+    :style="nodeStyle"
     @dragstart="onEditorDragStart"
   >
     <button

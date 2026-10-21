@@ -6,9 +6,11 @@ title: 样式
 
 Vamis 的视觉目标是 **Amis 后台的信息密度**，不是云舍像素。实现上：
 
-- 一套 CSS 变量（`--background`、`--primary`、`--control-h`、状态色）
+- 一套 CSS 变量（`--background`、`--primary`、`--control-h`、`--gap-*`、状态色）
 - 组件用 `variant`，禁止第二套 `cxd-` 前缀
-- 密度 `data-density="compact|comfortable"`，默认 compact（32px 控件）
+- 密度 `data-density="compact|comfortable"`，默认跟页面 html；IR `metadata.style.density` 可覆盖这一棵树
+- `className` 由内核解析（字符串 / 对象 / 模板 / `m-t-xs` / `m:` `pc:`）
+- 表单项 `size: xs|sm|md|lg` 落到 `--form-control-width-*`
 
 页面覆盖：
 
@@ -22,4 +24,20 @@ body:
     level: primary
 ```
 
-`className` 目前当普通 class 用。Amis 的 `m:` / `pc:` 响应式前缀是 P1（D12），见 [样式系统](/style/)。
+IR 信封也可以带样式，不改 `spec` 里的 widget 树：
+
+```yaml
+apiVersion: lcdp.ir/v1
+kind: UiPage
+metadata:
+  name: themed
+  style:
+    cssVars:
+      --primary: "#1d4ed8"
+    density: compact
+spec:
+  type: page
+  body:
+    - type: tpl
+      tpl: metadata.style 会合并进 page
+```

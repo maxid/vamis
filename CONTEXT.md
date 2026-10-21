@@ -8,7 +8,7 @@
 |---------|------|------|
 | 术语与进度 | 本文件 | 领域语言、模块层次、当前进度、下一步 |
 | AI 工作指引 | [AGENTS.md](AGENTS.md) | 命令、约定、收工回写；`CLAUDE.md` 只指向它 |
-| 规格 | `docs/superpowers/specs/` | 运行时 / 语义 / 组件 TODO / 主题 / 在线文档 |
+| 规格 | `docs/superpowers/specs/` | 运行时 / 语义 / 组件 TODO / 主题 / 在线文档 / JS SDK |
 | 计划 | `docs/superpowers/plans/` | 可执行任务清单 |
 | 在线文档 | `website/src` + playground 路由 | 与示例同端口；进度仍以本文件为准 |
 
@@ -24,6 +24,7 @@
 | `@vamis/editor` | `packages/vamis-editor` | 树 / 画布 / 属性 / YAML |
 | playground | `playground` | 示例（`/`）+ 文档（`/docs`）+ 组件文档（`/components`） |
 | 文档正文 | `website/src` | Markdown 真源；playground 在 5173 渲染 |
+| `@vamis/sdk` | `packages/vamis-sdk` | JS SDK：`sdk.js` + `vamis.embed`；P0 已落地 |
 
 ## 术语表
 
@@ -42,6 +43,7 @@
 | **shadcn token** | 颜色独立；**盒子对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），不引入 `cxd-` |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（Monaco、地图、Office 预览等） |
+| **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
 ## 当前进度（2026-10-21）
 
@@ -52,14 +54,18 @@
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
-| 视觉 | 盒子数字对齐 cxd；配色独立 | 控件宽档 `size`、表格 cell padding、`m-t-xs` 阶尚未吃满 |
+| 视觉 | 盒子数字对齐 cxd；配色独立 | token + `m-t-xs` 辅助类 + FormItem `size` + Table cell 已吃满；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
+| JS SDK | P0 已落地 | `vamis.embed`；`pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`，可编辑即时预览 |
-| 测试 | `pnpm test` 37 过 | `typecheck` 仍有既有错误 |
+| 测试 | `pnpm test` core 50 + sdk 12 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- JS SDK P0 落地：`packages/vamis-sdk` 打出 `sdk.js` / `sdk.css`；`vamis.embed` 支持 JSON / YAML / IR，以及 `updateSchema` / `updateProps` / `unmount`；无构建页 `hello.html` 与文档 iframe `/sdk/hello.html`。
+- 规格锁定必须支持 JS SDK：任意 HTML `vamis.embed(container, schema, props?, env?)`，与 Vue `VamisRoot` 同一内核；不搬 `amisRequire` / `cxd.css`。
+- 样式内核落地：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；IR `metadata.style`（cssVars / density / className）；FormItem `size` 吃控件宽档；Table 吃 `--table-cell-px`；`m-t-xs` 等辅助类走 `--gap-*`。
 - Playground 顶栏加上全站搜索（⌘K，覆盖文档 / 组件 / 示例）和 GitHub 仓库图标链接。
 - Playground 顶栏色点可切换主题色（墨蓝 / 翠绿 / 琥珀 / 青空 / 玫红），只改 `--primary` 色相，状态色不动；写入 `localStorage`。
 - 文档产品名统一为 **Vamis**；IR 只写 LCDP IR / `lcdp.ir/v1`，不再写外部平台名。
@@ -77,11 +83,11 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **盒子吃满**：FormItem `size` 落到 `--form-control-width-*`；Table 用 `--table-cell-px` / `--table-row-h`；辅助类 `m-t-xs` 映射 `--gap-*`（仍 D12）。
-2. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
+1. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
+2. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
 3. **P0 kernel D2 表达式过滤器**：`${name|raw}` / `|json` 走同一 `expr` 层，模板默认转义。
 4. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
-5. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target。
+5. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target（SDK `doAction` / `getComponentByName` 跟着来）。
 6. 组件语义：在 kernel 挡住变少后，按 TODO 把 ≥50% 的项往 80%+ 推（先 form 主路径、crud filter 作用域）。
 7. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
 

@@ -27,9 +27,46 @@ function staticSite(): Plugin {
   }
 }
 
+function serveSdk(): Plugin {
+  const dir = path.join(repo, 'packages', 'vamis-sdk', 'dist')
+  const types: Record<string, string> = {
+    '.js': 'text/javascript; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.map': 'application/json; charset=utf-8',
+  }
+  return {
+    name: 'vamis-sdk-assets',
+    configureServer(server) {
+      server.middlewares.use('/sdk', (req, res, next) => {
+        const url = (req.url || '/').split('?')[0]
+        const file = !url || url === '/' ? 'hello.html' : url.replace(/^\//, '')
+        const full = path.normalize(path.join(dir, file))
+        if (!full.startsWith(dir) || !fs.existsSync(full) || fs.statSync(full).isDirectory()) {
+          next()
+          return
+        }
+        res.setHeader('Content-Type', types[path.extname(full)] || 'application/octet-stream')
+        fs.createReadStream(full).pipe(res)
+      })
+    },
+    closeBundle() {
+      if (!fs.existsSync(path.join(dir, 'sdk.js'))) {
+        console.warn('[vamis-sdk-assets] packages/vamis-sdk/dist/sdk.js missing; run pnpm --filter @vamis/sdk build')
+        return
+      }
+      const dest = path.join(playground, 'dist', 'sdk')
+      fs.mkdirSync(dest, { recursive: true })
+      for (const file of fs.readdirSync(dir)) {
+        fs.copyFileSync(path.join(dir, file), path.join(dest, file))
+      }
+    },
+  }
+}
+
 export default defineConfig({
   base: process.env.VITE_BASE || '/',
-  plugins: [vue(), tailwindcss(), mockApiPlugin(), staticSite()],
+  plugins: [vue(), tailwindcss(), mockApiPlugin(), serveSdk(), staticSite()],
   resolve: {
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },

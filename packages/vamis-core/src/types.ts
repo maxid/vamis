@@ -13,6 +13,9 @@ export interface SchemaObject extends PlainObject {
   title?: string
   label?: string
   className?: string | Record<string, boolean | string>
+  style?: string | Record<string, string>
+  cssVars?: Record<string, string>
+  density?: 'compact' | 'comfortable'
   body?: SchemaCollection
   visible?: boolean
   visibleOn?: string

@@ -3,6 +3,7 @@
 export const startNav = [
   { text: '介绍', link: '/' },
   { text: '快速开始', link: '/start/getting-started' },
+  { text: 'JS SDK', link: '/start/sdk' },
   { text: '常见问题', link: '/start/faq' },
 ]
 

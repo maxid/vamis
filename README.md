@@ -7,6 +7,7 @@
 ## 当前状态（2026-10-21）
 
 - 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
+- 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
 - amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
 - 组件语义（侧栏 155）：已完成 0 / 进行中 153 / 未开始 2，平均 47%。
 - `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
@@ -23,7 +24,8 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 ## 设计文档
 
-- [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)：YAML 作者态、`UiPage` 信封、渲染管线。
+- [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)：YAML 作者态、`UiPage` 信封、渲染管线、Vue / JS SDK 双入口。
+- [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)：`vamis.embed`，对齐 Amis SDK 用法。
 - [运行时语义设计](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md)：基于 amis 文档对齐数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 增补与路线图。
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
@@ -114,6 +116,7 @@ packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer
 packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
 packages/vamis          P0 渲染器注册表
 packages/vamis-editor   树 + 属性 + YAML + 预览
+packages/vamis-sdk      JS SDK（`sdk.js` / `vamis.embed`）
 playground               示例 / 文档 / 组件（5173）
 website                  文档 Markdown；可选 VitePress 静态导出
 ```

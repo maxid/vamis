@@ -21,7 +21,10 @@ export function buildSearchIndex(): SearchHit[] {
         href: item.link,
         title: item.text,
         group: `文档 · ${group.text}`,
-        keywords: `${item.text} ${item.link} ${group.text}`,
+        keywords:
+          item.link.includes('/start/sdk')
+            ? `${item.text} ${item.link} ${group.text} embed sdk.js amis.embed vamis.embed`
+            : `${item.text} ${item.link} ${group.text}`,
       })
     }
   }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { SchemaRenderer, asArray, useEnv, type SchemaObject } from '@vamis/core'
-import { resolveCssVars } from '@vamis/ui'
+import { SchemaRenderer, asArray, resolveCssVars, useEnv, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -48,7 +47,7 @@ onMounted(async () => {
       </div>
     </header>
     <div class="grid w-full min-w-0 gap-4" :class="aside.length ? 'lg:grid-cols-[minmax(0,1fr)_16rem]' : ''">
-      <div class="w-full min-w-0 space-y-3">
+      <div class="w-full min-w-0 space-y-3 p-[var(--page-body-padding)]">
         <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
       </div>
       <aside v-if="aside.length" class="space-y-3">
