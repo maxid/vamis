@@ -68,7 +68,7 @@ import './extras/display'
 import './extras/crud'
 import './extras/rest'
 
-registerRenderer({ type: 'page', component: Page })
+registerRenderer({ type: 'page', component: Page, scope: 'self' })
 registerRenderer({ type: 'tpl', alias: ['html', 'plain'], component: Tpl })
 registerRenderer({ type: 'container', component: Container })
 registerRenderer({ type: 'wrapper', component: Wrapper })

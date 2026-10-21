@@ -55,17 +55,18 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
-| 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 59%；`page` 85% / `container` 82%；未开始：`popOver` 属性、`badge` 属性 |
-| kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 61%；`page` 已完成 95% / `container` 已完成 100%；未开始：`popOver` 属性、`badge` 属性 |
+| kernel D1–D8 | D1 / D4 P0 已落地 | Scope + URL 种子 + 事件对象/动作注册表；D2/D3/D5–D8 仍卡住 form/crud/action 等 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 仍抛未实现，等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 72 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 188 + core 84 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- kernel D1 Scope + D4 事件对象 P0：显式数据域（`__super` / URL query / 容器才建子域）、`VamisEvent`（`preventDefault` / `stopPropagation` / `setData` / `__rendererData`）、动作改注册表。Page / Container 文档主路径因此标已完成（page 95%，container 100%）。
 - 文档页滚动条默认隐藏、滚动时才显示；右侧 TOC 去掉 aside 左边框，和正文连成一块。
 - 站点文档右侧加「内容」TOC（对齐 Amis `Doc-toc`）：markdown `h2`–`h4` 补锚点，点击平滑滚动、滚动高亮；`lg` 以下隐藏；没标题不占栏。覆盖 `/`、`/docs/*`、`/components/*`。
 - Page / Container 对标 Amis 文档：补齐示例与属性表、事件表、动作表。Page 接 `css` 块、remark 图标、`reload`/`setValue` 的 `dataMergeMode: override`、`event.data`；公式层加 `|json` / `|default` 与 `this.xxx`。仍被 D1/D4 挡住，不能标已完成。
@@ -102,12 +103,11 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **布局组件对标 Amis（进行中）**：`page` 85%、`container` 82%，仍被 D1/D4 挡住不能标已完成。下一对：`flex` + `grid`（同样补文档示例与三张表）。
-2. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
-3. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
-4. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；`|json` / `|default` 已接。还要把 `|date` 等其余运行时过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。
-5. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
-6. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target（SDK `doAction` / `getComponentByName` 跟着来）。
-7. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
+1. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。form/service/crud 的 overlay 还要切到 Scope.merge。
+2. **P0 kernel D5 联动**：动态 target / 多目标 / 数据携带；SDK `getComponentByName` / `doAction` 跟着来。
+3. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；`|json` / `|default` 已接。还要把 `|date` 等其余运行时过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。
+4. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
+5. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
+6. 清 `pnpm typecheck` 既有错误，再考虑进 CI。
 
 非本阶段：office/pdf 真实预览、Monaco/TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

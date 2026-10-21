@@ -17,7 +17,7 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但占位 / 精简 / 缺文档高级项 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：文档主路径行为对齐（非像素级 cxd）。当前 **0 项**——kernel P0 未落地，且大量渲染器仍是精简或占位。
+   - `已完成`：文档主路径行为对齐（非像素级 cxd）。当前 **2 项**（`page` / `container`）。其余仍被 D2–D8 或组件自身缺口挡住。
 4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 95.8% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|
@@ -33,26 +33,26 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 0 / 15 | 15 | 0 | 59% | 12 |
+| 布局 | 2 / 15 | 13 | 0 | 61% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 43% | 7 |
 | 数据输入 | 0 / 72 | 72 | 0 | 46% | 37 |
 | 数据展示 | 0 / 44 | 44 | 0 | 46% | 25 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **0 / 155** | **153** | **2** | **47%** | **87** |
+| **合计** | **2 / 155** | **151** | **2** | **47%** | **87** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
 ---
 
-## 布局（0/15，均 59%）
+## 布局（2/15，均 61%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `page` | Page 页面 | 进行中 | 85% | 文档主路径示例 + 属性/事件/动作表已对齐；`css` / remark 图标 / reload·setValue（含 override）/ `event.data` 已接。缺 D1 URL 种子、完整 D4、pullRefresh | P0 |
-| `container` | Container 容器 | 进行中 | 82% | 文档主路径示例 + 属性/事件表已对齐；click/mouseenter/mouseleave 可读 `event.data` 与 `nativeEvent.type`。无对外动作；缺 editor 拖拽 | P0 |
+| `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay、reload/setValue、完整事件对象。`pullRefresh` 明确未接（移动端） | P0 |
+| `container` | Container 容器 | 已完成 | 100% | 主路径对齐：布局属性 + click/mouseenter/mouseleave 完整事件对象；沿用父 Scope；无对外动作。`draggable` 非运行时主路径 | P0 |
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
 | `flex` | Flex 布局 | 进行中 | 60% | `justify`/`direction` 可用；缺 `alignItems`、子项 `flex` | P0 |
@@ -281,7 +281,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | 组件 | 挡住它的决策 |
 |------|----------------|
-| `page` / `service` / `form` / `crud` / `wizard` | D1 Scope |
+| `service` / `form` / `crud` / `wizard` | D1 已有 Scope 内核；这些容器还要把 overlay 切到 Scope（page 已切） |
 | `tpl` / `html` / Date/Number 展示 | D2 过滤器与转义 |
 | `service` / `form` / `crud` / `action` ajax | D3 API 管线 |
 | `action` / `button` / `toast` / `dialog` | D4/D5 事件与目标 |

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
+import { computed, provide, watch } from 'vue'
 import { compileIrToWidget, jsonToIr } from './ir'
 import { resolveCssVars } from './style'
 import { createDefaultEnv } from './env'
-import { provideEnv, provideData, ParentStoreIdKey } from './context'
+import { provideEnv, provideData, provideScope, ParentStoreIdKey } from './context'
+import { createScope, parseSearch } from './scope'
 import { provideScoped } from './scoped'
 import { provideOverlay } from './overlay'
 import { useRendererHub, createStoreId } from './store/hub'
@@ -28,10 +29,24 @@ const rootStore = hub.add({
 })
 provide(ParentStoreIdKey, rootId)
 
-const data = computed(() => ({
-  ...rootStore.data,
-  ...(props.data || {}),
-}))
+function rootSeed(): PlainObject {
+  return {
+    ...parseSearch(),
+    ...(env.value.initialData || {}),
+    ...(props.data || {}),
+  }
+}
+
+const rootScope = createScope(rootSeed())
+watch(
+  () => [props.data, env.value.initialData] as const,
+  () => {
+    rootScope.merge(rootSeed(), 'override')
+  },
+  { deep: true },
+)
+const data = computed(() => rootScope.resolved())
+provideScope(rootScope)
 provideData(data)
 provideScoped()
 provideOverlay()

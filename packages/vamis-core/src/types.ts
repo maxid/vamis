@@ -57,6 +57,8 @@ export interface RendererConfig {
   component: Component
   isFormItem?: boolean
   isolateScope?: boolean
+  /** D1：inherit 沿用父域；self 建子域仍可向上查；isolate 不向上查 */
+  scope?: 'inherit' | 'self' | 'isolate'
 }
 
 export interface RendererEnv {
@@ -67,6 +69,8 @@ export interface RendererEnv {
   confirm: (msg: string, title?: string) => Promise<boolean>
   session?: string
   theme?: string
+  initialData?: PlainObject
+  debug?: boolean
 }
 
 export interface RenderContextValue {

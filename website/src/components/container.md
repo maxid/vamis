@@ -5,8 +5,8 @@ outline: deep
 
 # Container 容器
 
-::: info 实现进度 82% · 进行中
-主路径：`body` / `style` / `wrapperComponent` / `wrapperBody` / `bodyClassName` 与 `click` / `mouseenter` / `mouseleave`（含 `event.data` 与 `nativeEvent.type`）。编辑器拖拽未做。
+::: info 实现进度 100% · 已完成
+文档主路径已对齐：`body` / `style` / `wrapperComponent` / `wrapperBody` / `bodyClassName`，以及 `click` / `mouseenter` / `mouseleave`（完整事件对象：`event.data` / `__rendererData` / `preventDefault` / `stopPropagation`）。Container 不建独立数据域，沿用父 Scope。无对外组件动作。`draggable` 未做（编辑器能力，不是运行时主路径）。
 :::
 
 Container 用来渲染其它组件。对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
@@ -122,7 +122,7 @@ body: 这里是容器内容区
           "actionType": "toast",
           "args": {
             "msgType": "info",
-            "msg": "${event.context.nativeEvent.type}"
+            "msg": "${event.context.nativeEvent.type} / ${__rendererData|json}"
           }
         }
       ]
@@ -185,4 +185,5 @@ Container **不对外暴露** `reload` / `setValue` 这类组件动作（对齐 
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 没有 cxd 的 `Container` / `Container-body` 默认内边距；需要留白请写 `className` / `bodyClassName` / `style`。
 - `wrapperComponent` 做了标签白名单，未知值不会渲染成任意 HTML 标签。
-- `draggable` / `draggableConfig` 未实现。
+- `draggable` / `draggableConfig` 未实现（编辑器拖拽，不是运行时主路径）。
+- 事件动作的循环 / 并行 / 广播仍是 D4 P1，不影响本页 click 主路径。
