@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { VamisRoot, parseSchemaText } from 'vamis'
 import { applySchemaScope } from '../../../../playground/src/docs/schema-scope'
+import SchemaSourceEditor from '../../../../playground/src/components/SchemaSourceEditor.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -22,6 +23,7 @@ function decodeSource(raw: string) {
 
 const draft = ref(decodeSource(props.yaml))
 const lastGood = ref<unknown>({})
+const editError = ref('')
 
 watch(
   () => props.yaml,
@@ -53,17 +55,23 @@ const schemaKey = computed(() => {
 })
 
 const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
+const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.value.error : ''))
 </script>
 
 <template>
   <div class="vamis-preview not-prose" data-density="compact">
-    <div v-if="!parsed.ok" class="vamis-preview__error">{{ parsed.error }}</div>
+    <div v-if="banner" class="vamis-preview__error">{{ banner }}</div>
     <div class="vamis-preview__canvas" :style="{ minHeight: `${minHeight}px` }">
       <VamisRoot :key="schemaKey" :schema="parsed.value" />
     </div>
     <details class="vamis-preview__source" open>
-      <summary>YAML（可改，即时预览）</summary>
-      <textarea v-model="draft" spellcheck="false" class="vamis-preview__editor" />
+      <summary>编辑 Schema（YAML / JSON）</summary>
+      <SchemaSourceEditor
+        class="px-4 pb-4"
+        :source="draft"
+        @update:source="draft = $event"
+        @error="editError = $event"
+      />
     </details>
   </div>
 </template>

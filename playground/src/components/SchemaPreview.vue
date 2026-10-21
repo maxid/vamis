@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { VamisRoot, parseSchemaText } from 'vamis'
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from '@vamis/ui'
 import { applySchemaScope } from '../docs/schema-scope'
+import SchemaSourceEditor from './SchemaSourceEditor.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -16,6 +17,7 @@ const props = withDefaults(
 const draft = ref(props.yaml.trim())
 const editing = ref(false)
 const lastGood = ref<unknown>({})
+const editError = ref('')
 
 watch(
   () => props.yaml,
@@ -47,6 +49,7 @@ const schemaKey = computed(() => {
 })
 
 const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
+const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.value.error : ''))
 </script>
 
 <template>
@@ -61,26 +64,28 @@ const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
       >
         编辑 Schema
       </Button>
-      <div v-if="!parsed.ok" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
-        {{ parsed.error }}
+      <div v-if="banner && !editing" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
+        {{ banner }}
       </div>
       <div class="bg-background p-5 pr-24" :style="{ minHeight: `${minHeight}px` }">
         <VamisRoot :key="schemaKey" :schema="parsed.value" />
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">
-      <SheetContent side="right" class="w-full sm:max-w-xl">
+      <SheetContent side="right" class="flex h-full w-full flex-col sm:max-w-xl">
         <SheetHeader>
           <SheetTitle>编辑 Schema（改完即时预览）</SheetTitle>
         </SheetHeader>
-        <p class="px-4 text-xs text-muted-foreground">
-          这段会交给同一个 VamisRoot 运行时，不是截图。YAML 与 JSON 都是一等作者态。
-        </p>
-        <textarea
-          v-model="draft"
-          spellcheck="false"
-          class="mx-4 mb-4 min-h-[28rem] flex-1 resize-none rounded-md border bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        />
+        <div v-if="banner" class="mx-4 rounded-md bg-destructive/10 px-3 py-2 font-mono text-xs text-destructive">
+          {{ banner }}
+        </div>
+        <div class="mx-4 mb-4 flex min-h-0 flex-1 flex-col">
+          <SchemaSourceEditor
+            :source="draft"
+            @update:source="draft = $event"
+            @error="editError = $event"
+          />
+        </div>
       </SheetContent>
     </Sheet>
   </div>

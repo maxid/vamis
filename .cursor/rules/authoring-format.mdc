@@ -11,6 +11,7 @@ Vamis **不强制 YAML**。YAML 1.2 Core 和 JSON 都是一等作者态，解析
 
 - 入口同时收：对象、JSON 字符串、YAML 字符串、IR 信封。`parseSchemaText` / `parseToIr` / `vamis.embed` / `VamisRoot` 都走这条。
 - 文档主路径可以继续用 YAML 举例（好读），但必须写明 JSON 同等有效，并至少在快速开始给一份 JSON 活示例。
+- 文档 **编辑 Schema** 必须是 YAML / JSON **两个 Tab**；改一边立刻同步另一边（`syncAuthoringText`）。解析失败时保留对侧上次有效文本，预览停在上一份能跑的 schema。
 - YAML 字面量仍按 1.2 Core：`yes` / `On` / `012` 当字符串。这只约束 YAML，不否定 JSON。
 
 ## 禁止
@@ -18,3 +19,4 @@ Vamis **不强制 YAML**。YAML 1.2 Core 和 JSON 都是一等作者态，解析
 - 把 YAML 写成唯一作者态。
 - 组件页、FAQ、生成器里写「作者态是 YAML，不是 JSON」。
 - 编辑器 / 文档预览把「贴 JSON」当成二类导入或错误路径。
+- 文档「编辑 Schema」做成单框只收 YAML，或两个 Tab 却不同步。
