@@ -1,5 +1,24 @@
 import type { ApiObject, Payload, PlainObject, SchemaApi } from '../types'
-import { filterTpl } from '../formula'
+import { evalExpression, filterTpl } from '../formula'
+
+/** Amis `isEffectiveApi`：有 url、未被 initFetch/initFetchOn/sendOn 关掉才发请求。 */
+export function isEffectiveApi(
+  api?: SchemaApi | false | null,
+  data: PlainObject = {},
+  initFetch?: boolean,
+  initFetchOn?: string,
+): api is SchemaApi {
+  if (!api) return false
+  if (initFetch === false) return false
+  if (initFetchOn && !evalExpression(initFetchOn, data)) return false
+  if (typeof api === 'string') return api.length > 0
+  if (typeof api === 'object' && api.url) {
+    const sendOn = (api as ApiObject & { sendOn?: string }).sendOn
+    if (typeof sendOn === 'string' && !evalExpression(sendOn, data)) return false
+    return true
+  }
+  return false
+}
 
 export function normalizeApi(api: SchemaApi, data: PlainObject = {}): ApiObject {
   if (typeof api === 'string') {

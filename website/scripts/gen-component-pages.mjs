@@ -53,6 +53,8 @@ const HANDWRITTEN = new Set([
   '/components/form/formitem',
   '/components/form/control',
   '/components/form/options',
+  '/components/page',
+  '/components/container',
 ])
 
 function parseTodo(text) {

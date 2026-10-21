@@ -115,6 +115,18 @@ export function handleMockApi(input: {
   const query = input.query || {}
   const body = input.body || {}
 
+  if (pathname === '/api/mock2/page/initData') {
+    const now = new Date()
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        date: now.toLocaleString(),
+        time: now.getTime(),
+      },
+    }
+  }
+
   if (pathname === '/api/mock2/form/saveForm') {
     const data = method === 'GET' ? query : body
     return { status: 0, msg: '保存成功', data }

@@ -7,7 +7,7 @@ import { provideData, useData, useEnv } from './context'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
 import { useFormApi } from './form-api'
-import { runOnEvent } from './actions/run'
+import { runOnEvent, withNativeEvent } from './actions/run'
 import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
 import Placeholder from './Placeholder.vue'
 import type { SchemaNode, SchemaObject } from './types'
@@ -47,11 +47,12 @@ const disabled = computed(() =>
   normalized.value ? isDisabled(normalized.value, data.value) : false,
 )
 const renderer = computed(() => resolveRenderer(normalized.value?.type))
-const wrapClick = computed(() => {
+function shouldHandleHostEvent(eventName: string): boolean {
   const schema = normalized.value
-  if (!schema?.onEvent?.click) return false
-  return !SELF_CLICK_TYPES.has(schema.type || '')
-})
+  if (!schema?.onEvent?.[eventName]) return false
+  if (eventName === 'click' && SELF_CLICK_TYPES.has(schema.type || '')) return false
+  return true
+}
 const editor = useEditorSelection()
 const editorPath = computed(() => {
   const schema = normalized.value
@@ -92,11 +93,11 @@ function onEditorDragStart(event: DragEvent) {
   editor?.select(editorPath.value)
 }
 
-async function onHostClick() {
-  if (!normalized.value) return
-  await runOnEvent(normalized.value, 'click', {
+async function onHostEvent(event: Event, eventName: string) {
+  if (!normalized.value || !shouldHandleHostEvent(eventName)) return
+  await runOnEvent(normalized.value, eventName, {
     env,
-    data: data.value,
+    data: withNativeEvent(data.value, event),
     scoped,
     overlay,
     form,
@@ -122,6 +123,9 @@ async function onHostClick() {
         : '',
     ]"
     :style="nodeStyle"
+    @click="onHostEvent($event, 'click')"
+    @mouseenter="onHostEvent($event, 'mouseenter')"
+    @mouseleave="onHostEvent($event, 'mouseleave')"
     @dragstart="onEditorDragStart"
   >
     <button
@@ -135,19 +139,9 @@ async function onHostClick() {
     >
       ⋮
     </button>
-    <div v-if="wrapClick" @click="onHostClick">
-      <component
-        :is="renderer.component"
-        v-if="renderer"
-        :schema="normalized"
-        :data="data"
-        :disabled="disabled"
-      />
-      <Placeholder v-else :schema="normalized" />
-    </div>
     <component
       :is="renderer.component"
-      v-else-if="renderer"
+      v-if="renderer"
       :schema="normalized"
       :data="data"
       :disabled="disabled"
