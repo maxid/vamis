@@ -65,7 +65,7 @@ zip: "012"
 
 ## 3. 运行时
 
-Vue 3 + Pinia hub（仿 MST 节点树）+ `amis-formula@6.13.0`。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语，不追 cxd 像素，也不改 YAML/IR 信封。
+Vue 3 + Pinia hub（仿 MST 节点树）+ `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语，不追 cxd 像素，也不改 YAML/IR 信封。
 
 对外两条入口，同一内核：
 

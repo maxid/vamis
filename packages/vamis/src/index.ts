@@ -20,4 +20,8 @@ export {
   IR_API_VERSION,
   createDefaultEnv,
   useRendererHub,
+  evaluate,
+  parse as parseFormula,
+  registerFilter,
+  registerFunction,
 } from '@vamis/core'

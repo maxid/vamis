@@ -22,8 +22,8 @@
 | amis `origin/master` | `43a33ee06`（`git ls-remote` 校验一致） |
 | amis 包版本 | 6.13.0 |
 | npm `amis@latest` | 6.13.0（gitHead `37d23b4`，落后于本机 master） |
-| npm `amis-formula@latest` | 6.13.0，与 Vamis 的 pin 一致 |
-| Vamis 依赖 pin | `amis-formula@6.13.0` |
+| npm `amis-formula@latest` | 6.13.0 |
+| Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运 |
 
 结论：Vamis 以 amis master 源码为参考基线（比 npm 发布包多出若干未发版修复），版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
 
