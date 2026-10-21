@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   SchemaRenderer,
+  apiTrackKey,
   asArray,
   buildCssBlock,
   createVamisEvent,
@@ -9,7 +10,7 @@ import {
   eventEvalData,
   filterTpl,
   isEffectiveApi,
-  normalizeApi,
+  requestApi,
   resolveClassName,
   resolveCssVars,
   runOnEvent,
@@ -141,10 +142,11 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
   fetching = true
   clearTimer()
   try {
-    const payload = await env.fetcher(normalizeApi(initApi, viewData.value), viewData.value)
-    const ok = payload.status === 0 || payload.status === 200
-    if (ok && payload.data && typeof payload.data === 'object') {
-      scope.value?.merge(payload.data as PlainObject)
+    const result = await requestApi(initApi, { env, data: viewData.value, reason: 'init' })
+    const payload = result.payload
+    const ok = !result.skipped && result.ok
+    if (ok && result.data && typeof result.data === 'object') {
+      scope.value?.merge(result.data as PlainObject, result.replaceData ? 'override' : 'merge')
     }
     const eventData: PlainObject = {
       ...viewData.value,
@@ -232,6 +234,12 @@ onMounted(async () => {
   await runOnEvent(props.schema, 'init', eventCtx(viewData.value, 'init'))
   await fetchInit({ initial: true })
 })
+watch(
+  () => apiTrackKey(props.schema.initApi, viewData.value),
+  (key, prev) => {
+    if (prev != null && key && key !== prev) void fetchInit()
+  },
+)
 
 onBeforeUnmount(() => {
   mounted = false

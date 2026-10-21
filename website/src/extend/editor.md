@@ -4,7 +4,11 @@ title: 编辑器
 
 # 编辑器
 
-`@vamis/editor` 是可视化骨架：组件树、画布预览、属性面板、YAML。不是 amis-editor，没有插件市场。
+::: warning 实现进度 35% · 进行中
+可视化骨架：树 / 画布点选拖拽 / 属性 / Schema。不是 amis-editor，没有插件市场。
+:::
+
+`@vamis/editor` 是可视化骨架：组件树、画布预览、属性面板、YAML 与 JSON。不是 amis-editor，没有插件市场。
 
 本地：`pnpm dev` 后打开 `/editor`。
 

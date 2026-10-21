@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
+  apiMessage,
+  apiTrackKey,
   asArray,
   createStoreId,
-  normalizeApi,
+  mergeApiData,
   provideFormApi,
+  requestApi,
   runOnEvent,
   useEnv,
   useOverlay,
@@ -95,11 +98,16 @@ async function submit() {
   }
   store.saving = true
   try {
-    const payload = await env.fetcher(normalizeApi(api, store.data), store.data)
-    if (payload.status !== 0 && payload.status !== 200) {
-      throw new Error(payload.msg || '提交失败')
+    const result = await requestApi(api, { env, data: store.data, reason: 'submit' }, {
+      defaultMethod: 'post',
+      autoAppend: true,
+    })
+    if (result.skipped) return
+    if (!result.ok) {
+      throw new Error(apiMessage(api, result.payload, 'failed'))
     }
-    env.notify('success', payload.msg || '保存成功')
+    mergeApiData(store.data, result)
+    env.notify('success', apiMessage(api, result.payload, 'success'))
     if (props.schema.reload) {
       await scoped?.reload(props.schema.reload, store.data)
     }
@@ -126,8 +134,11 @@ const formApi = {
     if (!props.schema.initApi) return
     store.fetching = true
     try {
-      const payload = await env.fetcher(normalizeApi(props.schema.initApi, props.data), props.data)
-      Object.assign(store.data, payload.data || {})
+      const result = await requestApi(props.schema.initApi, { env, data: { ...props.data, ...store.data }, reason: 'init' })
+      if (!result.skipped && result.ok) mergeApiData(store.data, result)
+      else if (!result.skipped && !result.ok) {
+        env.notify('error', apiMessage(props.schema.initApi, result.payload, 'failed'))
+      }
     } finally {
       store.fetching = false
     }
@@ -154,6 +165,12 @@ registerWizardValidate(validate)
 onMounted(() => {
   formApi.reload()
 })
+watch(
+  () => apiTrackKey(props.schema.initApi, { ...props.data, ...store.data }),
+  (key, prev) => {
+    if (prev != null && key && key !== prev) void formApi.reload()
+  },
+)
 onBeforeUnmount(() => {
   scoped?.unregister(formApi)
   hub.remove(store.id)

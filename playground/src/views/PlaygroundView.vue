@@ -97,7 +97,7 @@ function formatSource(kind: 'yaml' | 'json') {
           <AlertTitle>无法解析</AlertTitle>
           <AlertDescription class="font-mono text-xs">{{ error }}</AlertDescription>
         </Alert>
-        <VamisRoot v-else-if="parsed" :schema="parsed" />
+        <VamisRoot v-else-if="parsed" :schema="parsed" :env="{ trusted: true }" />
       </div>
     </section>
 

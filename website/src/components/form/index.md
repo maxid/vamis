@@ -5,7 +5,7 @@ title: Form 表单
 # Form 表单
 
 ::: info 实现进度 50% · 进行中
-能绑值提交；缺路径值 D6、完整校验反馈、API 管线 D3。
+initApi / validate / submit 走 `requestApi`；扁平 `name`、提交不合并、嵌套不递归校验（D6）。
 :::
 
 `type: form` 是数据输入的根。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。
@@ -40,7 +40,7 @@ body:
 | `title` | 面板标题 |
 | `mode` | `normal` / `horizontal` / `inline` |
 | `api` | 提交接口 |
-| `initApi` | 初始化拉数（D3 未齐） |
+| `initApi` | 初始化拉数（走 `requestApi`） |
 | `body` | 表单项列表 |
 | `actions` | 底栏按钮，默认带提交 |
 | `wrapWithPanel` | 是否带面板 |

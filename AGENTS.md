@@ -54,7 +54,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 - 状态用 Pinia hub，不引入 MST。
 - UI 走 `@vamis/ui` token 与 `variant`（`level: primary` → `variant="default"`），不要写第二套主题 class。
 - **默认自适应**。page / form / crud / table / 未写 `size` 的表单控件吃满布局槽，不必先配 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。禁止给这些容器写死 `max-w-3xl`。详见 `.cursor/rules/adaptive-default.mdc`。
-- **已注册 ≠ 语义完成**。进度看文档主路径，不是 `registerRenderer` 有没有调用。
+- **已注册 ≠ 语义完成**。进度看文档主路径，不是 `registerRenderer` 有没有调用。对外文档页（组件 / 类型 / 概念 / 开始 / 样式 / 扩展）标题下必须有 `::: 实现进度 x% · 状态`，与组件页同一套。详见 `.cursor/rules/doc-progress.mdc`。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
 
 ## 关键文档

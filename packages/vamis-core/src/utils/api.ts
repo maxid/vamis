@@ -1,5 +1,131 @@
-import type { ApiObject, Payload, PlainObject, SchemaApi } from '../types'
+import type {
+  ApiObject,
+  Payload,
+  PlainObject,
+  RendererEnv,
+  RequestAdaptor,
+  ResponseAdaptor,
+  SchemaApi,
+} from '../types'
 import { evalExpression, filterTpl } from '../formula'
+import { createObject } from '../context'
+import { dataMapping } from './data-mapping'
+
+export interface ApiContext {
+  env: RendererEnv
+  data: PlainObject
+  reason?: 'init' | 'submit' | 'reload' | 'action'
+}
+
+export interface ApiResult {
+  skipped: boolean
+  ok: boolean
+  payload: Payload
+  data: any
+  replaceData: boolean
+}
+
+export interface RequestApiOptions {
+  defaultMethod?: ApiObject['method']
+  autoAppend?: boolean
+}
+
+type CacheEntry = { expires: number; result: ApiResult }
+
+const apiCache = new Map<string, CacheEntry>()
+const fnCache = new Map<string, Function>()
+
+function isPlainObject(value: unknown): value is PlainObject {
+  return !!value && typeof value === 'object' && !Array.isArray(value)
+}
+
+function compileFn(body: string, args: string[]): Function | null {
+  const key = `${args.join(',')}|${body}`
+  const cached = fnCache.get(key)
+  if (cached) return cached
+  try {
+    const fn = new Function(...args, body)
+    fnCache.set(key, fn)
+    return fn
+  } catch {
+    return null
+  }
+}
+
+async function runRequestAdaptor(
+  adaptor: ApiObject['requestAdaptor'],
+  api: ApiObject,
+  data: PlainObject,
+  trusted?: boolean,
+): Promise<ApiObject> {
+  if (!adaptor) return api
+  if (typeof adaptor === 'function') return (await adaptor(api, data)) || api
+  if (typeof adaptor === 'string' && trusted) {
+    const fn = compileFn(adaptor, ['api', 'context']) as RequestAdaptor | null
+    if (fn) return (await fn(api, data)) || api
+  }
+  return api
+}
+
+async function runResponseAdaptor(
+  adaptor: ApiObject['adaptor'],
+  payload: any,
+  api: ApiObject,
+  data: PlainObject,
+  trusted?: boolean,
+): Promise<any> {
+  if (!adaptor) return payload
+  const response = { data: payload }
+  if (typeof adaptor === 'function') return await adaptor(payload, response, api, data)
+  if (typeof adaptor === 'string' && trusted) {
+    const fn = compileFn(adaptor, ['payload', 'response', 'api', 'context']) as ResponseAdaptor | null
+    if (fn) return await fn(payload, response, api, data)
+  }
+  return payload
+}
+
+function appendQuery(url: string, query: PlainObject): string {
+  const parts: string[] = []
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null) continue
+    parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+  }
+  if (!parts.length) return url
+  return `${url}${url.includes('?') ? '&' : '?'}${parts.join('&')}`
+}
+
+function hasFile(value: unknown): boolean {
+  if (typeof File !== 'undefined' && value instanceof File) return true
+  if (typeof Blob !== 'undefined' && value instanceof Blob) return true
+  if (Array.isArray(value)) return value.some(hasFile)
+  if (isPlainObject(value)) return Object.values(value).some(hasFile)
+  return false
+}
+
+function toFormBody(data: PlainObject, dataType: ApiObject['dataType']): BodyInit {
+  if (dataType === 'form') {
+    const params = new URLSearchParams()
+    for (const [key, value] of Object.entries(data)) {
+      if (value === undefined || value === null) continue
+      params.set(key, String(value))
+    }
+    return params.toString()
+  }
+  const form = new FormData()
+  for (const [key, value] of Object.entries(data)) {
+    if (value === undefined || value === null) continue
+    if (typeof File !== 'undefined' && value instanceof File) form.append(key, value)
+    else if (typeof Blob !== 'undefined' && value instanceof Blob) form.append(key, value)
+    else form.append(key, String(value))
+  }
+  return form
+}
+
+export function normalizeApiResponseData(data: any): PlainObject {
+  if (typeof data === 'undefined') return {}
+  if (isPlainObject(data)) return data
+  return { [Array.isArray(data) ? 'items' : 'result']: data }
+}
 
 /** Amis `isEffectiveApi`：有 url、未被 initFetch/initFetchOn/sendOn 关掉才发请求。 */
 export function isEffectiveApi(
@@ -13,69 +139,217 @@ export function isEffectiveApi(
   if (initFetchOn && !evalExpression(initFetchOn, data)) return false
   if (typeof api === 'string') return api.length > 0
   if (typeof api === 'object' && api.url) {
-    const sendOn = (api as ApiObject & { sendOn?: string }).sendOn
-    if (typeof sendOn === 'string' && !evalExpression(sendOn, data)) return false
+    if (typeof api.sendOn === 'string' && !evalExpression(api.sendOn, data)) return false
     return true
   }
   return false
 }
 
-export function normalizeApi(api: SchemaApi, data: PlainObject = {}): ApiObject {
+export function normalizeApi(
+  api: SchemaApi,
+  data: PlainObject = {},
+  defaultMethod: ApiObject['method'] = 'get',
+): ApiObject {
   if (typeof api === 'string') {
-    const match = /^(get|post|put|patch|delete):/i.exec(api)
+    const match = /^(get|post|put|patch|delete|jsonp|js):/i.exec(api)
     if (match) {
       return {
         method: match[1].toLowerCase() as ApiObject['method'],
         url: filterTpl(api.slice(match[0].length), data),
       }
     }
-    return { method: 'get', url: filterTpl(api, data) }
+    return { method: defaultMethod, url: filterTpl(api, data) }
   }
   return {
     ...api,
-    method: api.method || 'get',
+    method: api.method || defaultMethod,
     url: filterTpl(api.url, data),
+    headers: api.headers ? dataMapping(api.headers, data, false) : api.headers,
   }
 }
 
 export function normalizePayload(raw: unknown): Payload {
-  if (raw && typeof raw === 'object') {
-    const body = raw as PlainObject
-    if (typeof body.status === 'number') {
-      return {
-        status: body.status,
-        msg: body.msg || body.message,
-        data: body.data,
-      }
-    }
-    if (Array.isArray(body.items) || Array.isArray(body.rows) || Array.isArray(body.list)) {
-      return { status: 0, data: body }
+  if (!raw || typeof raw !== 'object') {
+    return { status: 0, ok: true, data: raw }
+  }
+  const body = { ...(raw as PlainObject) }
+
+  if (Object.prototype.hasOwnProperty.call(body, 'errorCode')) {
+    body.status = body.errorCode
+    body.msg = body.errorMessage || body.errorMsg || body.msg
+  } else if (Object.prototype.hasOwnProperty.call(body, 'errno')) {
+    body.status = body.errno
+    body.msg = body.errmsg || body.errstr || body.msg
+  } else if (isPlainObject(body.error) && Object.prototype.hasOwnProperty.call(body.error, 'code')) {
+    body.status = body.error.code
+    body.msg = body.error.message
+  } else if (Object.prototype.hasOwnProperty.call(body, 'error') && typeof body.error !== 'object') {
+    body.status = body.error
+    body.msg = body.errmsg || body.msg
+  }
+
+  if (typeof body.status === 'number') {
+    return {
+      status: body.status,
+      msg: body.msg || body.message,
+      data: body.data,
+      ok: body.status === 0,
+      msgTimeout: body.msgTimeout,
+      errors: body.errors,
     }
   }
-  return { status: 0, data: raw }
+  if (Array.isArray(body.items) || Array.isArray(body.rows) || Array.isArray(body.list)) {
+    return { status: 0, ok: true, data: body }
+  }
+  return { status: 0, ok: true, data: body }
+}
+
+function cacheKey(api: ApiObject): string {
+  return `${api.method || 'get'}:${api.url}:${JSON.stringify(api.data ?? null)}`
+}
+
+/** 拉取类接口自动刷新的跟踪值。对象形式配了 `data` 则默认不跟踪 url（Amis 同款）。 */
+export function apiTrackKey(api: SchemaApi | undefined, data: PlainObject = {}): string {
+  if (!api) return ''
+  const obj: ApiObject = typeof api === 'string' ? { url: api } : api
+  if (obj.autoRefresh === false) return ''
+  if (obj.trackExpression) return String(filterTpl(obj.trackExpression, data) ?? '')
+  if (typeof api !== 'string' && obj.data && typeof obj.data === 'object') return ''
+  return filterTpl(obj.url, data)
+}
+
+export function mergeApiData(target: PlainObject, result: ApiResult): void {
+  if (result.skipped || result.data == null || typeof result.data !== 'object' || Array.isArray(result.data)) {
+    return
+  }
+  if (result.replaceData) {
+    for (const key of Object.keys(target)) delete target[key]
+  }
+  Object.assign(target, result.data)
+}
+
+export async function requestApi(
+  api: SchemaApi | false | null | undefined,
+  ctx: ApiContext,
+  options: RequestApiOptions = {},
+): Promise<ApiResult> {
+  const empty: ApiResult = {
+    skipped: true,
+    ok: true,
+    payload: { status: 0, ok: true, data: {} },
+    data: undefined,
+    replaceData: false,
+  }
+  if (!isEffectiveApi(api, ctx.data)) return empty
+
+  let built = normalizeApi(api, ctx.data, options.defaultMethod)
+  const convertKeyToPath = built.convertKeyToPath
+
+  if (built.data && typeof built.data === 'object') {
+    built.data = dataMapping(built.data, ctx.data, convertKeyToPath)
+  } else if (options.autoAppend && (ctx.data && Object.keys(ctx.data).length)) {
+    built.data = { ...ctx.data }
+  }
+
+  if (built.graphql) {
+    built.data = {
+      query: built.graphql,
+      variables: isPlainObject(built.data) ? built.data : {},
+    }
+  }
+
+  const method = (built.method || 'get').toLowerCase()
+  if (isPlainObject(built.data) && (method === 'get' || method === 'jsonp')) {
+    built.query = built.data
+    built.url = appendQuery(built.url, built.data)
+  }
+
+  built = await runRequestAdaptor(built.requestAdaptor, built, ctx.data, ctx.env.trusted)
+  built.context = ctx.data
+
+  if (built.mockResponse) {
+    const raw = built.mockResponse?.data ?? built.mockResponse
+    return finalize(raw, built, ctx)
+  }
+
+  if (typeof built.cache === 'number' && built.cache > 0) {
+    const key = cacheKey(built)
+    const hit = apiCache.get(key)
+    if (hit && hit.expires > Date.now()) return hit.result
+    const result = await fetchAndFinalize(built, ctx)
+    apiCache.set(key, { expires: Date.now() + built.cache, result })
+    return result
+  }
+
+  return fetchAndFinalize(built, ctx)
+}
+
+async function fetchAndFinalize(api: ApiObject, ctx: ApiContext): Promise<ApiResult> {
+  const raw = await ctx.env.fetcher(api, isPlainObject(api.data) ? api.data : ctx.data)
+  return finalize(raw, api, ctx)
+}
+
+async function finalize(raw: unknown, api: ApiObject, ctx: ApiContext): Promise<ApiResult> {
+  const adapted = await runResponseAdaptor(api.adaptor, raw, api, ctx.data, ctx.env.trusted)
+  const payload = normalizePayload(adapted)
+  if (api.responseData && (payload.ok || payload.data != null)) {
+    payload.data = dataMapping(
+      api.responseData,
+      createObject({ api }, normalizeApiResponseData(payload.data)),
+      api.convertKeyToPath,
+    )
+  }
+  return {
+    skipped: false,
+    ok: payload.ok !== false && (payload.status === 0 || payload.status === 200),
+    payload,
+    data: payload.data,
+    replaceData: !!api.replaceData,
+  }
+}
+
+export function apiMessage(api: SchemaApi | undefined, payload: Payload, kind: 'success' | 'failed'): string {
+  const obj = api && typeof api === 'object' ? api : undefined
+  const custom = obj?.messages?.[kind]
+  if (custom) return filterTpl(custom, (payload.data as PlainObject) || {})
+  return payload.msg || (kind === 'success' ? '保存成功' : '请求失败')
 }
 
 export async function defaultFetcher(api: ApiObject, data?: PlainObject): Promise<Payload> {
   const method = (api.method || 'get').toUpperCase()
-  const isGet = method === 'GET'
-  const url = new URL(api.url, window.location.origin)
-  let body: string | undefined
+  const isGet = method === 'GET' || method === 'HEAD'
+  const url = new URL(api.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
+  let body: BodyInit | undefined
+  const headers: Record<string, string> = { ...(api.headers || {}) }
+  const payloadData = isPlainObject(api.data) ? api.data : data
+
   if (isGet) {
-    Object.entries(data || {}).forEach(([key, value]) => {
-      if (value == null || value === '') return
-      url.searchParams.set(key, String(value))
-    })
-  } else {
-    body = JSON.stringify({ ...(api.data || {}), ...(data || {}) })
+    if (payloadData) {
+      Object.entries(payloadData).forEach(([key, value]) => {
+        if (value == null) return
+        if (!url.searchParams.has(key)) url.searchParams.set(key, String(value))
+      })
+    }
+  } else if (payloadData) {
+    const dataType = api.dataType || (hasFile(payloadData) ? 'form-data' : 'json')
+    if (dataType === 'form' || dataType === 'form-data') {
+      body = toFormBody(payloadData, dataType)
+      if (dataType === 'form' && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+      }
+    } else {
+      if (!headers['Content-Type']) headers['Content-Type'] = 'application/json'
+      body = JSON.stringify(payloadData)
+    }
   }
-  const response = await fetch(url.toString(), {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(api.headers || {}),
-    },
-    body,
-  })
+
+  if (api.responseType === 'blob') {
+    const response = await fetch(url.toString(), { method, headers, body })
+    const blob = await response.blob()
+    return { status: 0, ok: true, data: blob }
+  }
+
+  const response = await fetch(url.toString(), { method, headers, body })
   const json = await response.json().catch(() => ({}))
   return normalizePayload(json)
 }

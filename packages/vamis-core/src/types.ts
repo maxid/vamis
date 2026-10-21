@@ -38,17 +38,49 @@ export interface ActionSchema extends SchemaObject {
 
 export type SchemaApi = string | ApiObject
 
+export type RequestAdaptor = (
+  api: ApiObject,
+  context: PlainObject,
+) => ApiObject | Promise<ApiObject>
+
+export type ResponseAdaptor = (
+  payload: any,
+  response: any,
+  api: ApiObject,
+  context: PlainObject,
+) => any
+
 export interface ApiObject {
   method?: 'get' | 'post' | 'put' | 'patch' | 'delete'
   url: string
-  data?: PlainObject
+  data?: PlainObject | string
   headers?: Record<string, string>
+  dataType?: 'json' | 'form' | 'form-data'
+  responseType?: 'json' | 'blob' | 'text'
+  sendOn?: string
+  cache?: number
+  requestAdaptor?: string | RequestAdaptor
+  adaptor?: string | ResponseAdaptor
+  responseData?: PlainObject
+  replaceData?: boolean
+  convertKeyToPath?: boolean
+  autoRefresh?: boolean
+  trackExpression?: string
+  qsOptions?: PlainObject | string
+  graphql?: string
+  mockResponse?: any
+  messages?: { success?: string; failed?: string }
+  query?: PlainObject
+  context?: PlainObject
 }
 
 export interface Payload {
   status: number
   msg?: string
   data?: any
+  ok?: boolean
+  msgTimeout?: number
+  errors?: any
 }
 
 export interface RendererConfig {
@@ -71,6 +103,8 @@ export interface RendererEnv {
   theme?: string
   initialData?: PlainObject
   debug?: boolean
+  /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */
+  trusted?: boolean
 }
 
 export interface RenderContextValue {

@@ -4,6 +4,10 @@ title: ClassName
 
 # ClassName
 
+::: info 实现进度 70% · 进行中
+`resolveClassName` 已接字符串 / 对象 / 模板 / `m-t-xs` / `w-*` / `m:` `pc:`。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。
+:::
+
 `className` 支持字符串、对象和模板。内核 `resolveClassName` 在 `SchemaRenderer` 上统一落地。布局容器和表单控件**默认已经铺满**，不必为了宽度先写 `w-full`；`className` 只在要覆盖（半宽、间距、状态色）时写。
 
 ```yaml

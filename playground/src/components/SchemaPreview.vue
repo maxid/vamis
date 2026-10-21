@@ -68,7 +68,7 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
         {{ banner }}
       </div>
       <div class="bg-background p-5 pr-24" :style="{ minHeight: `${minHeight}px` }">
-        <VamisRoot :key="schemaKey" :schema="parsed.value" />
+        <VamisRoot :key="schemaKey" :schema="parsed.value" :env="{ trusted: true }" />
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">

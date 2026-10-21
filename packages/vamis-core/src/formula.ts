@@ -35,6 +35,11 @@ registerFilter('default', (input: unknown, fallback = '') => {
   return input
 })
 
+registerFilter('first', (input: unknown) => {
+  if (Array.isArray(input)) return input[0]
+  return input
+})
+
 export function evalFormula(expression: string, data: PlainObject = {}): unknown {
   try {
     return evaluate(expression, formulaData(data), { evalMode: true, defaultFilter: 'raw' })

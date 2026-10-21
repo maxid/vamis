@@ -4,7 +4,7 @@ import {
   SchemaRenderer,
   asArray,
   createStoreId,
-  normalizeApi,
+  requestApi,
   useEnv,
   useRendererHub,
   useScoped,
@@ -85,8 +85,10 @@ async function reload(extra: Record<string, any> = {}) {
       orderBy: store.query.orderBy,
       orderDir: store.query.orderDir,
     }
-    const payload = await env.fetcher(normalizeApi(props.schema.api, query), query)
-    const { items, total } = parseListPayload(payload.data)
+    const result = await requestApi(props.schema.api, { env, data: query, reason: 'reload' }, { autoAppend: true })
+    if (result.skipped) return
+    if (!result.ok) throw new Error(result.payload.msg || '加载失败')
+    const { items, total } = parseListPayload(result.data)
     store.items = items
     store.total = total
     if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []

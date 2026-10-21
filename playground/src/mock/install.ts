@@ -28,8 +28,10 @@ export function installMockFetch() {
       try {
         body = JSON.parse(raw)
       } catch {
-        body = {}
+        body = raw.includes('=') ? Object.fromEntries(new URLSearchParams(raw)) : {}
       }
+    } else if (typeof FormData !== 'undefined' && raw instanceof FormData) {
+      body = Object.fromEntries(raw.entries())
     }
 
     const payload = handleMockApi({

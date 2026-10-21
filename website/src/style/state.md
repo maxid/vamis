@@ -4,6 +4,10 @@ title: 状态
 
 # 状态
 
+::: info 实现进度 60% · 进行中
+`--success` / `--warning` / `--info` / `--destructive` 与按钮 `level` 已对照。组件级状态皮肤（`status` type）仍走各自渲染器进度。
+:::
+
 后台要能一眼分开成功、警告、信息、错误。token 补齐了 `--success` / `--warning` / `--info`，不只靠 `--destructive`。
 
 | 语义 | 按钮 level | token |

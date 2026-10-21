@@ -4,6 +4,10 @@ title: CSS 变量
 
 # CSS 变量
 
+::: info 实现进度 60% · 进行中
+`:root` / `.dark` 与 IR `cssVars` 能改画布、主色、控件高。完整 Amis 变量表未一一对照。
+:::
+
 主题切暗色 = 换 `:root` / `.dark` 变量，不是换 class 前缀。
 
 常用 token：

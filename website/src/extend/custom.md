@@ -4,6 +4,10 @@ title: 自定义组件
 
 # 自定义组件
 
+::: warning 实现进度 40% · 进行中
+`registerRenderer` 可用。插件市场、完整 D7 注册信息（`test` / `weight` / `isolateScope`）未齐。
+:::
+
 用 `registerRenderer` 注册 Vue 组件。渲染器只吃 `schema` / `data` / `env`。
 
 ```ts
