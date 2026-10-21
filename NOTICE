@@ -9,9 +9,10 @@ Baidu Amis (https://github.com/baidu/amis), licensed under the Apache License 2.
   Licensed under the Apache License, Version 2.0
   https://github.com/baidu/amis/blob/master/LICENSE
 
-Expression evaluation is adapted from amis-formula 6.13.0
-(https://github.com/aisuda/amis-tpl), licensed under the MIT License.
-The in-tree copy lives in packages/vamis-formula.
+Expression evaluation in packages/vamis-formula is adapted from
+amis-formula 6.13.0 (https://github.com/aisuda/amis-tpl), MIT.
+Original engine source: Copyright (c) 2021 百度智能云爱速搭.
+Vamis packaging and later edits: Copyright 2026 Vamis contributors.
 
 UI primitives are adapted from shadcn-vue (https://github.com/unovue/shadcn-vue),
 licensed under the MIT License.

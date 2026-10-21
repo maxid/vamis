@@ -1,6 +1,23 @@
+@vamis/formula contains two layers of copyright.
+
+1. Lexer / parser / evaluator / filters / builtin functions
+   were copied from amis-formula 6.13.0
+   (https://github.com/aisuda/amis-tpl).
+   Copyright (c) 2021 百度智能云爱速搭
+   Licensed under the MIT License (full text below).
+   That copyright notice must be preserved.
+
+2. Vamis packaging (package.json, README, vitest harness, test setup)
+   and subsequent modifications in this directory.
+   Copyright 2026 Vamis contributors
+   Also MIT, same terms as below.
+
+---
+
 MIT License
 
 Copyright (c) 2021 百度智能云爱速搭
+Copyright 2026 Vamis contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
