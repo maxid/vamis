@@ -1,9 +1,11 @@
-import { computed, inject, provide, type ComputedRef, type InjectionKey, type Ref } from 'vue'
+import { computed, inject, provide, unref, type ComputedRef, type InjectionKey, type MaybeRef, type Ref } from 'vue'
+import type { Scope } from './scope'
 import type { PlainObject, RendererEnv, SchemaCollection, SchemaNode } from './types'
 
 export const EnvKey: InjectionKey<RendererEnv> = Symbol('vamis-env')
 export const DataKey: InjectionKey<ComputedRef<PlainObject> | Ref<PlainObject>> =
   Symbol('vamis-data')
+export const ScopeKey: InjectionKey<MaybeRef<Scope | undefined>> = Symbol('vamis-scope')
 export const PathKey: InjectionKey<string> = Symbol('vamis-path')
 export const ParentStoreIdKey: InjectionKey<string> = Symbol('vamis-parent-store')
 
@@ -27,6 +29,15 @@ export function useData(): ComputedRef<PlainObject> {
     return computed(() => ({}))
   }
   return computed(() => data.value)
+}
+
+export function provideScope(scope: MaybeRef<Scope | undefined>) {
+  provide(ScopeKey, scope)
+}
+
+export function useScope(): ComputedRef<Scope | undefined> {
+  const scope = inject(ScopeKey, undefined)
+  return computed(() => unref(scope))
 }
 
 export function asArray(node?: SchemaCollection | null): SchemaNode[] {

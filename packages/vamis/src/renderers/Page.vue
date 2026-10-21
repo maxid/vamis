@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   SchemaRenderer,
   asArray,
   buildCssBlock,
+  createVamisEvent,
   evalExpression,
+  eventEvalData,
   filterTpl,
   isEffectiveApi,
   normalizeApi,
@@ -13,8 +15,8 @@ import {
   runOnEvent,
   useEnv,
   useOverlay,
+  useScope,
   useScoped,
-  withNativeEvent,
   type PlainObject,
   type SchemaApi,
   type SchemaObject,
@@ -32,8 +34,8 @@ const props = defineProps<{
 
 const env = useEnv()
 const scoped = useScoped()
+const scope = useScope()
 const overlayHost = useOverlay()
-const localData = reactive<Record<string, any>>({})
 const asideWidth = ref(DEFAULT_ASIDE_WIDTH)
 
 const body = computed(() => asArray(props.schema.body || props.schema.children))
@@ -50,8 +52,7 @@ const asideMaxWidth = computed(() => {
   const n = Number(props.schema.asideMaxWidth)
   return Number.isFinite(n) && n > 0 ? n : DEFAULT_ASIDE_MAX
 })
-const pageData = computed(() => ({ ...localData }))
-const viewData = computed(() => ({ ...props.data, ...localData }))
+const viewData = computed(() => scope.value?.resolved() ?? { ...props.data })
 const cssVars = computed(() =>
   resolveCssVars(props.schema.cssVars as Record<string, string> | undefined),
 )
@@ -85,23 +86,20 @@ function isNodeObject(value: unknown): value is SchemaObject {
 }
 
 function eventCtx(data: PlainObject, nativeType?: string) {
+  const event = createVamisEvent(nativeType || '', data, nativeType ? { type: nativeType } : undefined)
   return {
     env,
-    data: withNativeEvent(data, nativeType ? { type: nativeType } : undefined),
+    data: eventEvalData(data, event),
     scoped,
     overlay: overlayHost,
+    scope: scope.value,
+    event,
   }
-}
-
-function replaceLocal(values: PlainObject) {
-  for (const key of Object.keys(localData)) delete localData[key]
-  Object.assign(localData, values)
 }
 
 function setData(values: PlainObject, replace = false) {
   if (!values || typeof values !== 'object' || Array.isArray(values)) return
-  if (replace) replaceLocal(values)
-  else Object.assign(localData, values)
+  scope.value?.merge(values, replace ? 'override' : 'merge')
 }
 
 let mounted = false
@@ -141,7 +139,7 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
     const payload = await env.fetcher(normalizeApi(initApi, viewData.value), viewData.value)
     const ok = payload.status === 0 || payload.status === 200
     if (ok && payload.data && typeof payload.data === 'object') {
-      Object.assign(localData, payload.data)
+      scope.value?.merge(payload.data as PlainObject)
     }
     const eventData: PlainObject = {
       ...viewData.value,
@@ -178,10 +176,10 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
 }
 
 async function reload(extra?: PlainObject, replace = false) {
-  if (replace) {
-    replaceLocal(extra && typeof extra === 'object' ? extra : {})
-  } else if (extra && typeof extra === 'object') {
-    Object.assign(localData, extra)
+  if (extra && typeof extra === 'object') {
+    scope.value?.merge(extra, replace ? 'override' : 'merge')
+  } else if (replace) {
+    scope.value?.merge({}, 'override')
   }
   await fetchInit()
 }
@@ -189,7 +187,7 @@ async function reload(extra?: PlainObject, replace = false) {
 const pageApi = {
   name: String(props.schema.id || props.schema.name || ''),
   reload,
-  getData: () => ({ ...props.data, ...localData }),
+  getData: () => scope.value?.resolved() ?? { ...props.data },
   setData,
 }
 
@@ -248,7 +246,7 @@ onBeforeUnmount(() => {
         :class="[asideSticky ? 'sticky top-0 self-start' : '', asideClass]"
         :style="{ width: `${asideWidth}px` }"
       >
-        <SchemaRenderer v-for="(node, i) in aside" :key="'a' + i" :schema="node" :extra-data="pageData" />
+        <SchemaRenderer v-for="(node, i) in aside" :key="'a' + i" :schema="node" />
         <div
           v-if="schema.asideResizor"
           class="absolute right-0 top-0 z-10 h-full w-1 cursor-col-resize bg-border hover:bg-primary"
@@ -264,7 +262,7 @@ onBeforeUnmount(() => {
         >
           <div class="min-w-0">
             <h1 v-if="schema.title" class="flex flex-wrap items-center gap-1 text-pretty font-sans text-xl font-semibold tracking-tight">
-              <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" :extra-data="pageData" />
+              <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" />
               <template v-else>{{ titleText }}</template>
               <Remark
                 v-if="remarkSchema"
@@ -273,7 +271,7 @@ onBeforeUnmount(() => {
               />
             </h1>
             <p v-if="schema.subTitle" class="mt-1 text-sm text-muted-foreground">
-              <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" :extra-data="pageData" />
+              <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" />
               <template v-else>{{ subTitleText }}</template>
             </p>
             <div v-else-if="remarkSchema" class="mt-1">
@@ -281,11 +279,11 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div v-if="toolbar.length" class="flex flex-wrap gap-2" :class="toolbarClass">
-            <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" :extra-data="pageData" />
+            <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
         </header>
         <div class="w-full min-w-0 space-y-3 p-[var(--page-body-padding)]" :class="bodyClass">
-          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="pageData" />
+          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>
       </div>
 
@@ -300,7 +298,7 @@ onBeforeUnmount(() => {
           class="absolute left-0 top-0 z-10 h-full w-1 cursor-col-resize bg-border hover:bg-primary"
           @mousedown="onResizeDown"
         />
-        <SchemaRenderer v-for="(node, i) in aside" :key="'ar' + i" :schema="node" :extra-data="pageData" />
+        <SchemaRenderer v-for="(node, i) in aside" :key="'ar' + i" :schema="node" />
       </aside>
     </div>
   </section>

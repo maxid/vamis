@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 import { resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
-import { provideData, useData, useEnv } from './context'
+import { provideData, provideScope, useData, useEnv, useScope } from './context'
+import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
 import { useFormApi } from './form-api'
-import { runOnEvent, withNativeEvent } from './actions/run'
+import { createVamisEvent, eventEvalData, runOnEvent } from './actions/run'
 import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
 import Placeholder from './Placeholder.vue'
 import type { SchemaNode, SchemaObject } from './types'
@@ -20,20 +21,11 @@ const props = defineProps<{
 }>()
 
 const parentData = useData()
+const parentScope = useScope()
 const env = useEnv()
 const scoped = useScoped()
 const overlay = useOverlay()
 const form = useFormApi()
-const schemaData = computed(() => {
-  const schema = props.schema
-  if (schema && typeof schema === 'object' && !Array.isArray(schema) && schema.data && typeof schema.data === 'object') {
-    return schema.data as Record<string, unknown>
-  }
-  return {}
-})
-const data = computed(() => ({ ...parentData.value, ...schemaData.value, ...(props.extraData || {}) }))
-provideData(data)
-
 const normalized = computed<SchemaObject | null>(() => {
   const schema = props.schema
   if (schema == null || schema === false) return null
@@ -41,12 +33,61 @@ const normalized = computed<SchemaObject | null>(() => {
   if (typeof schema !== 'object') return { type: 'tpl', tpl: String(schema) }
   return schema as SchemaObject
 })
+const renderer = computed(() => resolveRenderer(normalized.value?.type))
+const schemaData = computed(() => {
+  const schema = normalized.value
+  if (schema?.data && typeof schema.data === 'object') {
+    return schema.data as Record<string, unknown>
+  }
+  return {}
+})
+const overlayInit = computed(() => ({
+  ...schemaData.value,
+  ...(props.extraData || {}),
+}))
+const hasOverlay = computed(() => Object.keys(overlayInit.value).length > 0)
+const scopeMode = computed<'inherit' | 'self' | 'isolate'>(() => {
+  const def = renderer.value
+  if (def?.scope) return def.scope
+  if (def?.isolateScope) return 'self'
+  return 'inherit'
+})
+const needsChildScope = computed(() => scopeMode.value !== 'inherit' || hasOverlay.value)
+const childScope = shallowRef<Scope | null>(null)
+watch(
+  () => [needsChildScope.value, scopeMode.value, props.schema] as const,
+  () => {
+    if (!needsChildScope.value) {
+      childScope.value = null
+      return
+    }
+    childScope.value = createScope(
+      overlayInit.value,
+      scopeMode.value === 'isolate' ? undefined : parentScope.value,
+      { isolate: scopeMode.value === 'isolate' },
+    )
+  },
+  { immediate: true },
+)
+watch(
+  () => props.extraData,
+  (val) => {
+    if (!childScope.value || !val || typeof val !== 'object') return
+    childScope.value.merge({ ...val })
+  },
+  { deep: true },
+)
+const currentScope = computed(() => childScope.value ?? parentScope.value)
+provideScope(currentScope)
+const data = computed(
+  () => currentScope.value?.resolved() ?? { ...parentData.value, ...schemaData.value, ...(props.extraData || {}) },
+)
+provideData(data)
 
 const visible = computed(() => (normalized.value ? isVisible(normalized.value, data.value) : false))
 const disabled = computed(() =>
   normalized.value ? isDisabled(normalized.value, data.value) : false,
 )
-const renderer = computed(() => resolveRenderer(normalized.value?.type))
 function shouldHandleHostEvent(eventName: string): boolean {
   const schema = normalized.value
   if (!schema?.onEvent?.[eventName]) return false
@@ -93,15 +134,20 @@ function onEditorDragStart(event: DragEvent) {
   editor?.select(editorPath.value)
 }
 
-async function onHostEvent(event: Event, eventName: string) {
+async function onHostEvent(native: Event, eventName: string) {
   if (!normalized.value || !shouldHandleHostEvent(eventName)) return
+  const event = createVamisEvent(eventName, data.value, native)
   await runOnEvent(normalized.value, eventName, {
     env,
-    data: withNativeEvent(data.value, event),
+    data: eventEvalData(data.value, event),
     scoped,
     overlay,
     form,
+    scope: currentScope.value,
+    event,
   })
+  if (event.prevented) native.preventDefault()
+  if (event.stopped) native.stopPropagation()
 }
 </script>
 

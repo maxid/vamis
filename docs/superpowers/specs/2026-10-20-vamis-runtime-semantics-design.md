@@ -1,7 +1,7 @@
 # Vamis 运行时语义设计（amis 文档对齐）
 
 - 日期：2026-10-20
-- 状态：设计增补（v0.2 语义基线，待实现；落地进度见 [CONTEXT.md](../../../CONTEXT.md)）
+- 状态：部分落地（D1 Scope P0、D4 事件对象与动作注册表 P0 已接；其余 D2/D3/D5–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
 - 范围：数据域、表达式/模板、API、事件动作、表单、CRUD、渲染器契约、扩展、主题/i18n、诊断、IR
 - 参考：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
 - 关联：
@@ -47,10 +47,10 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
-| Scope | `SchemaRenderer` 每个节点 `{...parent, ...schema.data, ...extraData}` 后 `provideData`；`ScopedContext` 可按 name 注册/刷新 | 无 `__super`、无 URL 种子、无 `trackExpression`、无 `__prev/__changeReason`；`isolateScope` 声明了但没生效 |
+| Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点不再复制；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；form/service/crud 的 overlay 尚未全部改走 Scope.merge |
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `resolveValue`，引擎是仓内 `@vamis/formula` | `${name\|raw}` / `${name\|html}` 已走 parser；Amis 运行时补的 `|date`/`|json` 未齐；模板默认仍是 `raw`，未做 HTML 转义策略 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | 无 `sendOn`/`cache`/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/自动刷新；GET 忽略 `api.data` |
-| Actions | `runActions` 十余种：ajax/toast/setValue/reload/dialog/drawer/close/submit/reset/link | 无事件对象/`__rendererData`；无条件/循环/并行/`ignoreError`/`outputVar`；无广播/自定义动作；无动作日志 |
+| Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
 | Linkage | `ScopedContext.reload(name)`、`setValue` 按 `componentId/target` 查组件 | target 不支持动态名/多目标/数据合并；无 `target?a=${a}`；接口不随变量自动刷新 |
 | Form | 表单 store、`initApi`、`validate/submit/reset`、submit 事件 | 扁平 `name`；提交返回不合并；校验规则内嵌；无 `validateOnChange`/`requiredOn`/`clearValueOnHidden`；嵌套表单项不参与校验 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑 | 无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`/`autoGenerateFilter`；filter 只是提交到 query 的内嵌表单 |
@@ -444,14 +444,14 @@ export function usePlugin(plugin: VamisPlugin): void
 
 | 能力 | amis | Vamis 现状 | 决策 | 阶段 |
 |------|------|-----------|------|------|
-| 数据域/链 | 显式作用域 + `__super` + URL | 每节点复制父数据 | D1 | P0 |
+| 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；`trackExpression` 未做 | D1 | P0 骨架完成 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |
 | 模板过滤器 | `\|raw`/`\|json` 等 | 不支持 | D2 | P0 |
 | HTML 安全 | 默认转义 + raw | 全量 `v-html` | D2 | P0 |
 | API 基础 | method/url/data/headers | 已有 | 补 GET data | P0 |
 | API 高级 | sendOn/cache/adaptor/responseData | 无 | D3 | P0/P1 |
 | 接口自动刷新 | 依赖跟踪 | 无 | D9 | P1 |
-| 事件上下文 | `event.data`/`__rendererData` | 无 | D4 | P0 |
+| 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
 | 组件联动 | 动态 target/多目标/数据合并 | 仅按 name 刷新 | D5 | P0 |
 | 广播/自定义动作 | 有 | 无 | D4 | P1 |

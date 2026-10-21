@@ -4,6 +4,13 @@ import { evalExpression, filterTpl } from '../formula'
 import type { ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
+import type { Scope } from '../scope'
+import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
+import { getAction, registerAction } from './registry'
+
+export type { VamisEvent } from './event'
+export { createVamisEvent, eventEvalData } from './event'
+export { registerAction, getAction, unregisterAction } from './registry'
 
 export interface ActionContext {
   env: RendererEnv
@@ -11,6 +18,8 @@ export interface ActionContext {
   scoped?: ScopedContext
   overlay?: OverlayApi
   form?: FormApiLike
+  scope?: Scope
+  event?: VamisEvent
 }
 
 function asActions(value: unknown): ActionSchema[] {
@@ -28,17 +37,17 @@ function actionData(action: ActionSchema, ctx: ActionContext): PlainObject {
   return { ...ctx.data, ...extra, ...args }
 }
 
-/** D4 子集：`event.data` + `event.context.nativeEvent.type`。完整事件对象尚未落地。 */
+function truthyFlag(value: unknown, data: PlainObject): boolean {
+  if (value === true) return true
+  if (value === false || value == null || value === '') return false
+  if (typeof value === 'string') return evalExpression(value, data)
+  return Boolean(value)
+}
+
+/** D4：`event` + `__rendererData`。无 native 时仍带空 context。 */
 export function withNativeEvent(data: PlainObject, nativeEvent?: { type: string }): PlainObject {
-  const rest = { ...data }
-  delete rest.event
-  return {
-    ...rest,
-    event: {
-      data: rest,
-      context: nativeEvent ? { nativeEvent: { type: nativeEvent.type } } : {},
-    },
-  }
+  const event = createVamisEvent(nativeEvent?.type || '', data, nativeEvent)
+  return eventEvalData(data, event)
 }
 
 export async function runOnEvent(
@@ -54,6 +63,7 @@ export async function runOnEvent(
 export async function runActions(actions: ActionSchema[] | undefined, ctx: ActionContext): Promise<void> {
   if (!actions?.length) return
   for (const action of actions) {
+    if (ctx.event?.stopped) break
     await runAction(action, ctx)
   }
 }
@@ -61,83 +71,19 @@ export async function runActions(actions: ActionSchema[] | undefined, ctx: Actio
 export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<void> {
   const data = actionData(action, ctx)
   if (typeof action.expression === 'string' && !evalExpression(action.expression, data)) return
-  if (typeof action.stopPropagation === 'boolean' && action.stopPropagation === false) {
-    /* keep going */
-  }
   if (action.confirmText && !(await ctx.env.confirm(filterTpl(action.confirmText, data)))) return
 
-  const type = action.actionType || (action.type === 'submit' ? 'submit' : action.type === 'reset' ? 'reset' : '')
-  switch (type) {
-    case 'ajax': {
-      if (!action.api) return
-      const payload = await ctx.env.fetcher(normalizeApi(action.api, data), data)
-      if (payload.status !== 0 && payload.status !== 200) {
-        throw new Error(payload.msg || '请求失败')
-      }
-      const success =
-        (action.messages && (action.messages as PlainObject).success) || payload.msg || '完成'
-      ctx.env.notify('success', String(success))
-      if (action.reload) await ctx.scoped?.reload(String(action.reload), data)
-      break
-    }
-    case 'toast': {
-      const level = (action.level || action.args?.level || action.args?.msgType || 'info') as
-        | 'info'
-        | 'success'
-        | 'warning'
-        | 'error'
-      const msg = filterTpl(action.msg || action.message || action.args?.msg || '提示', data)
-      ctx.env.notify(level, msg)
-      break
-    }
-    case 'setValue': {
-      applySetValue(action, data, ctx)
-      break
-    }
-    case 'reload': {
-      const extra =
-        action.data && typeof action.data === 'object' && !Array.isArray(action.data)
-          ? (action.data as PlainObject)
-          : undefined
-      await ctx.scoped?.reload(
-        action.target || action.componentId || action.args?.target,
-        extra,
-        action.dataMergeMode === 'override',
-      )
-      break
-    }
-    case 'dialog': {
-      const dialog = (action.dialog || action.args?.dialog || action) as SchemaObject
-      ctx.overlay?.openDialog(dialog, data)
-      break
-    }
-    case 'drawer': {
-      const drawer = (action.drawer || action.args?.drawer || action) as SchemaObject
-      ctx.overlay?.openDrawer(drawer, data)
-      break
-    }
-    case 'closeDialog':
-    case 'closeDrawer':
-    case 'cancel': {
-      ctx.overlay?.close()
-      break
-    }
-    case 'submit': {
-      await ctx.form?.submit?.()
-      break
-    }
-    case 'reset': {
-      ctx.form?.reset?.()
-      break
-    }
-    case 'link':
-    case 'url': {
-      ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data))
-      break
-    }
-    default:
-      break
+  const type =
+    action.actionType || (action.type === 'submit' ? 'submit' : action.type === 'reset' ? 'reset' : '')
+  const handler = getAction(type)
+  try {
+    if (handler) await handler(action, ctx)
+  } catch (error) {
+    if (!action.ignoreError) throw error
   }
+
+  if (truthyFlag(action.preventDefault, data)) ctx.event?.preventDefault()
+  if (truthyFlag(action.stopPropagation, data)) ctx.event?.stopPropagation()
 }
 
 function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionContext) {
@@ -158,7 +104,9 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     }
     if (ctx.form?.setValue) {
       Object.entries(values).forEach(([key, value]) => ctx.form?.setValue?.(key, value))
+      return
     }
+    ctx.scope?.merge(values, replace ? 'override' : 'merge')
   }
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
     assign(raw as PlainObject)
@@ -168,3 +116,126 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     assign({ [action.name]: raw })
   }
 }
+
+let builtins = false
+
+function registerBuiltinActions() {
+  if (builtins) return
+  builtins = true
+
+  registerAction('ajax', async (action, ctx) => {
+    if (!action.api) return
+    const data = actionData(action, ctx)
+    const payload = await ctx.env.fetcher(normalizeApi(action.api, data), data)
+    if (payload.status !== 0 && payload.status !== 200) {
+      throw new Error(payload.msg || '请求失败')
+    }
+    const success =
+      (action.messages && (action.messages as PlainObject).success) || payload.msg || '完成'
+    ctx.env.notify('success', String(success))
+    if (action.reload) await ctx.scoped?.reload(String(action.reload), data)
+  })
+
+  registerAction('toast', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const level = (action.level || action.args?.level || action.args?.msgType || 'info') as
+      | 'info'
+      | 'success'
+      | 'warning'
+      | 'error'
+    const msg = filterTpl(action.msg || action.message || action.args?.msg || '提示', data)
+    ctx.env.notify(level, msg)
+  })
+
+  registerAction('alert', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    ctx.env.alert(filterTpl(action.msg || action.message || action.args?.msg || '', data), action.title)
+  })
+
+  registerAction('confirm', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const ok = await ctx.env.confirm(filterTpl(action.msg || action.confirmText || '', data), action.title)
+    if (!ok) ctx.event?.stopPropagation()
+  })
+
+  registerAction('setValue', async (action, ctx) => {
+    applySetValue(action, actionData(action, ctx), ctx)
+  })
+  registerAction('setData', async (action, ctx) => {
+    applySetValue(action, actionData(action, ctx), ctx)
+  })
+
+  registerAction('reload', async (action, ctx) => {
+    const extra =
+      action.data && typeof action.data === 'object' && !Array.isArray(action.data)
+        ? (action.data as PlainObject)
+        : undefined
+    await ctx.scoped?.reload(
+      action.target || action.componentId || action.args?.target,
+      extra,
+      action.dataMergeMode === 'override',
+    )
+  })
+
+  registerAction('dialog', async (action, ctx) => {
+    const dialog = (action.dialog || action.args?.dialog || action) as SchemaObject
+    ctx.overlay?.openDialog(dialog, actionData(action, ctx))
+  })
+
+  registerAction('drawer', async (action, ctx) => {
+    const drawer = (action.drawer || action.args?.drawer || action) as SchemaObject
+    ctx.overlay?.openDrawer(drawer, actionData(action, ctx))
+  })
+
+  registerAction('closeDialog', async (_action, ctx) => {
+    ctx.overlay?.close()
+  })
+  registerAction('closeDrawer', async (_action, ctx) => {
+    ctx.overlay?.close()
+  })
+  registerAction('cancel', async (_action, ctx) => {
+    ctx.overlay?.close()
+  })
+  registerAction('close', async (_action, ctx) => {
+    ctx.overlay?.close()
+  })
+
+  registerAction('submit', async (_action, ctx) => {
+    await ctx.form?.submit?.()
+  })
+  registerAction('reset', async (_action, ctx) => {
+    ctx.form?.reset?.()
+  })
+
+  registerAction('link', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data))
+  })
+  registerAction('url', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data))
+  })
+
+  registerAction('copy', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const text = filterTpl(action.copy || action.content || action.args?.content || '', data)
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+    }
+  })
+
+  registerAction('wait', async (action) => {
+    const ms = Number(action.args?.timeMs ?? action.time ?? 0)
+    if (!Number.isFinite(ms) || ms <= 0) return
+    await new Promise((resolve) => setTimeout(resolve, ms))
+  })
+
+  registerAction('preventDefault', async (_action, ctx) => {
+    ctx.event?.preventDefault()
+  })
+  registerAction('stop', async (_action, ctx) => {
+    ctx.event?.stopPropagation()
+  })
+}
+
+registerBuiltinActions()

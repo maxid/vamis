@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import {
+  createVamisEvent,
+  eventEvalData,
   runAction,
   runOnEvent,
   useEnv,
   useFormApi,
   useOverlay,
+  useScope,
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
@@ -19,6 +22,7 @@ const props = defineProps<{
 
 const env = useEnv()
 const scoped = useScoped()
+const scope = useScope()
 const overlay = useOverlay()
 const form = useFormApi()
 const loading = ref(false)
@@ -34,10 +38,21 @@ const size = computed(() => sizeToButtonSize(props.schema.size))
 
 async function onClick() {
   loading.value = true
-  const ctx = { env, data: props.data, scoped, overlay, form }
+  const event = createVamisEvent('click', props.data, { type: 'click' })
+  const ctx = {
+    env,
+    data: eventEvalData(props.data, event),
+    scoped,
+    overlay,
+    form,
+    scope: scope.value,
+    event,
+  }
   try {
-    await runAction({ ...props.schema, actionType: actionType.value }, ctx)
     await runOnEvent(props.schema, 'click', ctx)
+    if (!event.prevented) {
+      await runAction({ ...props.schema, actionType: actionType.value }, ctx)
+    }
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '操作失败')
   } finally {

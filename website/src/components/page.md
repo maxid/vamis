@@ -5,8 +5,8 @@ outline: deep
 
 # Page 页面
 
-::: info 实现进度 85% · 进行中
-`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` 块、remark 图标、`event.data` 子集已接。缺 D1 URL 种子、完整 D4 事件对象、`pullRefresh`。
+::: info 实现进度 95% · 已完成
+文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。`pullRefresh` 明确未接（Amis 仅移动端）。
 :::
 
 `page` 是页面入口容器，对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
@@ -24,6 +24,20 @@ outline: deep
   "type": "page",
   "title": "标题",
   "body": "Hello World!"
+}
+```
+
+## 数据域
+
+Page 会新建一层数据域（D1）。根 Scope 先吃地址栏 query（`?word=myquery` → `${word}`），再合并 `env.initialData` / 入参 `data`；本页 `data` 与 `initApi` 返回盖在上面。子节点沿数据链向上找，`${__super.word}` 读上一层。
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "tpl",
+    "tpl": "URL word=${word|default:'(无)'}。地址栏加上 ?word=myquery 后刷新即可看到。"
+  }
 }
 ```
 
@@ -258,12 +272,12 @@ Amis 的 `pullRefresh` 仅移动端。**Vamis 未接**，配置会被忽略，�
 | `silentPolling` | `boolean` | `false` | 轮询失败时不 notify |
 | `stopAutoRefreshWhen` | [表达式](/concepts/expression) | | 为真则停止轮询 |
 | `pullRefresh` | `object` | `{disabled: true}` | **Vamis 未接**（Amis 仅移动端） |
-| `data` | `object` | | 静态数据，与父级浅合并。无独立 Scope / URL 种子（D1） |
+| `data` | `object` | | 静态数据，写入本页 Scope，覆盖父级与 URL 同名键 |
 | `onEvent` | `object` | | 见事件表 |
 
 ## 事件表
 
-可以用 `onEvent` 监听，再配 `actions`。公式可读 `${字段}`、`${event.data.字段}`；完整事件对象（`preventDefault` 等）仍是 D4。
+可以用 `onEvent` 监听，再配 `actions`。公式可读 `${字段}`、`${event.data.字段}`、`${__rendererData}`。动作上的 `preventDefault` / `stopPropagation` / `ignoreError` 已生效；`event.setData()` 会改后续动作看到的 `event.data`。
 
 | 事件名称 | 事件参数 | 说明 |
 |----------|----------|------|
@@ -469,6 +483,6 @@ Amis 的 `pullRefresh` 仅移动端。**Vamis 未接**，配置会被忽略，�
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）没有 URL 查询种子；完整事件对象（D4）只有 `event.data` 与 `nativeEvent.type`。
-- `pullRefresh` 未做。`silentPolling` 不控制加载动画。
+- `pullRefresh` 未做（Amis 仅移动端）。`silentPolling` 不控制加载动画。
+- 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
 - `css` 挂在 Page 节点上，不写 `document.head`。
