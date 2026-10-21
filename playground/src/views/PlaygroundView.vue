@@ -58,7 +58,7 @@ function formatSource() {
 </script>
 
 <template>
-  <div class="grid h-[calc(100vh-7.5rem)] min-h-[70vh] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,32rem)]">
+  <div class="grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,32rem)]">
     <section class="flex min-h-0 flex-col overflow-hidden rounded-lg border bg-muted/40">
       <div class="flex shrink-0 items-center justify-between gap-2 border-b bg-card px-4 py-2">
         <div class="min-w-0">

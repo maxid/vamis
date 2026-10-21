@@ -36,7 +36,7 @@ pnpm install
 pnpm dev          # 示例 / 文档 / 组件，默认 http://127.0.0.1:5173
 pnpm docs         # 同上（文档不另起端口）
 pnpm test         # @vamis/core vitest
-pnpm build        # playground 生产构建
+pnpm build        # playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # 目前仍有既有 vue-tsc 错误，暂不作提交门禁
 pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 ```

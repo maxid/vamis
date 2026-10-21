@@ -26,7 +26,7 @@ function onClick(event: MouseEvent) {
 </script>
 
 <template>
-  <div class="grid h-[calc(100vh-5.75rem)] min-h-0 grid-cols-[16rem_minmax(0,1fr)] gap-0 overflow-hidden rounded-lg border bg-card">
+  <div class="grid min-h-0 flex-1 grid-cols-[16rem_minmax(0,1fr)] overflow-hidden rounded-lg border bg-card">
     <aside class="min-h-0 overflow-hidden border-r p-3">
       <DocSidebar :groups="groups" />
     </aside>
@@ -36,12 +36,11 @@ function onClick(event: MouseEvent) {
         <template v-for="(block, i) in parsed.blocks" :key="i">
           <SchemaPreview
             v-if="block.kind === 'schema'"
-            class="max-w-5xl"
             :yaml="block.yaml"
             :scope="block.scope"
             :height="block.height"
           />
-          <div v-else class="doc-prose max-w-3xl" v-html="block.html" />
+          <div v-else class="doc-prose" v-html="block.html" />
         </template>
       </template>
     </article>

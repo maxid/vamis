@@ -10,7 +10,7 @@
   - Amis 源码：`packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
   - 在线文档 `http://localhost:8888/zh-CN/style/index` 本轮不可达，以本地文档与源码为准
 
-水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。不搬 `cxd-` class，不编译 Amis SCSS。目标是观感完成度达到或超过 Amis 后台，而不是长得像云舍。
+水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**盒子数字对齐 cxd**（商业 YAML 才能套），配色独立。不搬 `cxd-` class，不编译 Amis SCSS。
 
 ## 1. Amis 样式系统（结论）
 
@@ -131,24 +131,52 @@ shadcn 默认**没有**后台密度、四态状态色（只有 destructive）、
 | `--success` / `--success-foreground` | 绿 | 同名、略提亮 | `--success` |
 | `--warning` / `--warning-foreground` | 琥珀 | 同名 | `--warning` |
 | `--info` / `--info-foreground` | 蓝 | 同名 | `--info` |
-| `--control-h` | 2rem（32px） | 2.25rem | `--Form-input-height` |
-| `--control-h-sm` / `--control-h-lg` | 1.75 / 2.25rem | 2 / 2.75rem | Button size |
-| `--form-item-gap` | 1.5rem（24px） | 1.75rem | `--Form-item-gap` |
-| `--form-label-width` | 7.5rem | 8.5rem | 横排 label 宽 |
-| `--table-row-h` | 2.5rem（40px） | 3.25rem | `--TableCell-height` |
+| `--control-h` | **32px** | 36px | `--Form-input-height` |
+| `--control-h-sm` / `--control-h-lg` | 28 / 36px | 32 / 44px | Button size |
+| `--form-item-gap` | **24px** | 28px | `--Form-item-gap` |
+| `--form-label-width` | **98px** | 136px | `--Form--horizontal-label-widthBase` |
+| `--table-row-h` | **40px** | 52px | `--TableCell-height` |
 | `--success-bg` 等 Toast 底 | 浅语义色 | 暗色下调饱和 | Toast 四态 |
 
-密度开关：`data-density="compact"`（默认，后台） / `"comfortable"`（演示 / 触控）。写在 `html` 上，所有 `h-[var(--control-h)]` 一起变。
+密度开关：`data-density="compact"` **就是 cxd 默认盒子**（商业 YAML 按这档排版）。`"comfortable"` 是 vamis 加的触控档，不参与 Amis 页面对齐。写在 `html` 上，所有 `h-[var(--control-h)]` 一起变。
 
-### 3.3 明确不搬
+### 3.3 盒子系统（必须与 cxd 同值）
+
+商业页能直接吃 Amis YAML，靠的是格子，不是品牌色。`html` 根字号保持 **16px**（与 Amis `px2rem` 同基），下列数字用 **px 写死**，禁止再改成「大约」。
+
+cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/14/16px`。
+
+| 角色 | cxd 变量 | 锁定值 | vamis token |
+|------|----------|--------|-------------|
+| 间距阶 | `--gap-xs/sm/base/md/lg/xl` | 4 / 8 / 12 / 16 / 20 / 24 | 同名 |
+| 控件高 | `--Form-input-height` = base-16 | **32** | `--control-h` |
+| 控件左右 padding | `--Form-input-paddingX` = size-6 | 10 | `--control-px` |
+| 表单项间距 | `--Form-item-gap` = base-12 | **24** | `--form-item-gap` |
+| 横排 label 宽 | `--Form--horizontal-label-widthBase` = base-49 | **98** | `--form-label-width` |
+| 横排 label 档 | Xs/Sm/Md/Lg | 50 / 70 / 136 / 200 | `--form-label-width-*` |
+| 横排 label 与控件间隙 | `--Form--horizontal-label-gap` = base-8 | 16 | `--form-label-gap` |
+| 控件宽度档 | `--Form-control-widthXs…Lg` | 80 / 160 / 200 / 240 / 320 | `--form-control-width-*` |
+| 表格行高 | `--TableCell-height` | **40**（small 33 / large 61） | `--table-row-h` |
+| 单元格左右 padding | `--TableCell-paddingX` = size-6 | 10 | `--table-cell-px` |
+| 圆角 | `--borderRadius` = radius-3 | **4** | `--radius` |
+| 边框 | `--borderWidth` | 1 | 1px |
+| 正文字号 | `--fontSizeBase` = fonts-size-7 | **14** | `text-sm` |
+| Page 内边距 | `--Page-body-padding` = gap-base | 12 | `--page-body-padding` |
+
+`page.cssVars` 写 cxd 名时，经 `resolveCssVars` 映到上表。`size: xs\|sm\|md\|lg` 必须落到控件宽度档，不是只改字号。
+
+辅助类 `m-t-md` / `p-l-xs` 的 xs…xl 也是这套 gap，不是 Tailwind `m-1` 的另一套阶。解析仍是 D12，但阶必须先锁死。
+
+### 3.4 明确不搬
 
 | Amis | 为什么不搬 |
 |------|------------|
 | `$ns: cxd-` 及所有 BEM | shadcn 用 `data-slot` + utility |
-| `--Form-*` / `--Table-*` / `--Button--*` 数百变量 | 折叠进上面的扩展 token + cva variants |
+| `--Form-*` / `--Table-*` / `--Button--*` 里**非盒子**的颜色/阴影私有项 | 颜色独立生成；盒子已在 3.3 抽出 |
 | 主题 CSS 包 cxd/antd/ang/dark | `.dark` + 未来 `registerTheme` |
-| 辅助类 `m:` / `pc:` | 真 Tailwind；解析仍是 D12 P1 |
-| 像素级抄 SCSS mixin | 组件用 variants |
+| 云舍蓝 `#2468f2` | 配色可另起 |
+| 辅助类文件 helper.css | 真 Tailwind；`m:`/`pc:` 与 `m-t-xs` 名字仍按 cxd 语义解析（D12） |
+| SCSS mixin / 选择器结构 | 组件用 variants |
 
 ## 4. 组件 variants 映射
 
@@ -196,9 +224,9 @@ shadcn 默认**没有**后台密度、四态状态色（只有 destructive）、
 
 ## 7. 验收标准
 
-主路径（Playground 黄金表单、CRUD、编辑器）目测即可，不要求像素对齐 cxd。
+主路径对照 cxd **盒子数字**（32 / 24 / 98 / 40），配色不要求像云舍。
 
-1. **密度**：正文 14px；输入/按钮约 32px（compact）；表单行间距约 24px；表格行可扫，表头浅底。
+1. **密度**：正文 14px；输入/按钮 **32px**；表单项间距 **24px**；横排 label **98px**；表格行 **40px**；表头浅底。
 2. **横排表单**：label 右对齐、固定宽、必填 `*` 为 destructive；placeholder 是 muted。
 3. **状态**：成功/警告/信息/错误能分开（toast、badge、alert、按钮 level）。
 4. **控件**：range / file / 下拉不是未修饰原生控件。

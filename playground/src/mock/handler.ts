@@ -1,0 +1,202 @@
+import { cloneRows, createSampleRows, type SampleRow } from './sample'
+
+export type MockPayload = {
+  status: number
+  msg?: string
+  data?: unknown
+}
+
+let sampleRows: SampleRow[] = createSampleRows()
+
+function filterSample(query: Record<string, string>): SampleRow[] {
+  const keywords = String(query.keywords || '').trim().toLowerCase()
+  const engine = String(query.engine || '').trim().toLowerCase()
+  const platform = String(query.platform || '').trim().toLowerCase()
+  const grade = String(query.grade || '').trim()
+  const id = String(query.id || '').trim()
+  let browser = String(query.browser || '').trim().toLowerCase()
+  if (browser === 'ie') browser = 'internet explorer'
+  if (browser === 'aol') browser = 'aol'
+
+  let rows = cloneRows(sampleRows)
+  if (id) rows = rows.filter((row) => String(row.id) === id)
+  if (keywords) {
+    rows = rows.filter((row) => JSON.stringify(row).toLowerCase().includes(keywords))
+  }
+  if (engine) rows = rows.filter((row) => row.engine.toLowerCase().includes(engine))
+  if (browser) rows = rows.filter((row) => row.browser.toLowerCase().includes(browser))
+  if (platform) rows = rows.filter((row) => row.platform.toLowerCase().includes(platform))
+  if (grade) rows = rows.filter((row) => row.grade === grade)
+
+  const orderBy = String(query.orderBy || '')
+  const orderDir = String(query.orderDir || 'asc')
+  const sortable = new Set(['id', 'engine', 'browser', 'platform', 'version', 'grade', 'name', 'status'])
+  if (sortable.has(orderBy)) {
+    const direction = orderDir === 'desc' ? -1 : 1
+    rows.sort((a, b) => {
+      const left = String(a[orderBy as keyof SampleRow] ?? '')
+      const right = String(b[orderBy as keyof SampleRow] ?? '')
+      if (/^\d+(\.\d+)?$/.test(left) && /^\d+(\.\d+)?$/.test(right)) {
+        return (Number(left) - Number(right)) * direction
+      }
+      return left.localeCompare(right) * direction
+    })
+  }
+  return rows
+}
+
+function listPayload(rows: SampleRow[], query: Record<string, string>): MockPayload {
+  const page = Number(query.page || 1)
+  const perPage = Number(query.perPage || 10)
+  const start = Math.max(0, (page - 1) * perPage)
+  const items = perPage > 0 ? rows.slice(start, start + perPage) : rows
+  return {
+    status: 0,
+    msg: 'ok',
+    data: {
+      items,
+      rows: items,
+      total: rows.length,
+      count: rows.length,
+    },
+  }
+}
+
+function idsFrom(pathname: string, body: Record<string, any> = {}): string[] {
+  if (body.ids != null && String(body.ids).trim()) {
+    return String(body.ids)
+      .split(',')
+      .map((id) => id.trim())
+      .filter(Boolean)
+  }
+  const tail = pathname.split('/').pop() || ''
+  return tail
+    .split(',')
+    .map((id) => id.trim())
+    .filter((id) => id && id !== 'sample')
+}
+
+function applyPatch(id: string, patch: Record<string, any>): boolean {
+  const index = sampleRows.findIndex((row) => String(row.id) === String(id))
+  if (index < 0) return false
+  const next = { ...sampleRows[index], ...patch, id: sampleRows[index].id }
+  if (patch.engine && !patch.name) next.name = String(patch.engine)
+  if (patch.grade && !patch.status) {
+    next.status = patch.grade === 'A' ? 'online' : patch.grade === 'C' ? 'offline' : 'repair'
+  }
+  sampleRows[index] = next
+  return true
+}
+
+function decorateFromBody(body: Record<string, any>, id: number): SampleRow {
+  const engine = String(body.engine || body.name || `item-${id}`)
+  const grade = String(body.grade || 'A')
+  return {
+    id,
+    engine,
+    browser: String(body.browser || '-'),
+    platform: String(body.platform || '-'),
+    version: String(body.version || '-'),
+    grade,
+    name: String(body.name || engine),
+    status: String(body.status || (grade === 'A' ? 'online' : 'offline')),
+  }
+}
+
+/** 与 dev 中间件同一套 `/api/mock2` 语义；Pages 上没有后端，走这份纯函数。 */
+export function handleMockApi(input: {
+  method: string
+  pathname: string
+  query?: Record<string, string>
+  body?: Record<string, any>
+}): MockPayload {
+  const method = (input.method || 'GET').toUpperCase()
+  const pathname = (input.pathname || '').split('?')[0]
+  const query = input.query || {}
+  const body = input.body || {}
+
+  if (pathname === '/api/mock2/form/saveForm') {
+    const data = method === 'GET' ? query : body
+    return { status: 0, msg: '保存成功', data }
+  }
+
+  if (pathname === '/api/mock2/options') {
+    return {
+      status: 0,
+      data: {
+        options: [
+          { label: '在线', value: 'online' },
+          { label: '离线', value: 'offline' },
+          { label: '维修', value: 'repair' },
+        ],
+      },
+    }
+  }
+
+  if (pathname === '/api/mock2/chart/chart1') {
+    return {
+      status: 0,
+      data: {
+        title: { text: '远程图表' },
+        xAxis: { type: 'category', data: ['A', 'B', 'C'] },
+        yAxis: { type: 'value' },
+        series: [{ type: 'bar', data: [4, 7, 2] }],
+      },
+    }
+  }
+
+  if (pathname === '/api/mock2/sample/reset') {
+    sampleRows = createSampleRows()
+    return { status: 0, msg: '测试数据已重置', data: { total: sampleRows.length } }
+  }
+
+  if (pathname === '/api/mock2/sample/bulkUpdate' || pathname === '/api/mock2/sample/bulkUpdate2') {
+    const ids = idsFrom(pathname, body)
+    const patch = { ...body }
+    delete patch.ids
+    delete patch.rowsDiff
+    const ok = ids.every((id: string, index: number) => {
+      const rowPatch = Array.isArray(body.rowsDiff) ? body.rowsDiff[index] || patch : patch
+      return applyPatch(id, rowPatch)
+    })
+    if (!ok) return { status: 404, msg: '保存失败，数据可能已被删除！' }
+    return { status: 0, msg: '保存成功' }
+  }
+
+  if (pathname === '/api/mock2/sample' && method === 'GET') {
+    return listPayload(filterSample(query), query)
+  }
+
+  if (pathname === '/api/mock2/sample' && (method === 'POST' || method === 'PUT')) {
+    if (body.id) {
+      if (!applyPatch(String(body.id), body)) {
+        return { status: 404, msg: '保存失败，数据可能已被删除！' }
+      }
+    } else {
+      const id = Math.max(0, ...sampleRows.map((row) => row.id)) + 1
+      sampleRows.push(decorateFromBody(body, id))
+    }
+    return { status: 0, msg: '保存成功', data: body }
+  }
+
+  if (pathname.startsWith('/api/mock2/sample/') && method === 'DELETE') {
+    const ids = idsFrom(pathname)
+    const ok = ids.every((id) => {
+      const index = sampleRows.findIndex((row) => String(row.id) === String(id))
+      if (index < 0) return false
+      sampleRows.splice(index, 1)
+      return true
+    })
+    if (!ok) return { status: 404, msg: '删除失败，数据可能已被删除！' }
+    return { status: 0, msg: '删除成功' }
+  }
+
+  if (pathname.startsWith('/api/mock2/sample/') && (method === 'POST' || method === 'PUT')) {
+    const ids = idsFrom(pathname, body)
+    const ok = ids.every((id) => applyPatch(id, body))
+    if (!ok) return { status: 404, msg: '保存失败，数据可能已被删除！' }
+    return { status: 0, msg: '保存成功' }
+  }
+
+  return { status: 404, msg: `未实现的 mock：${method} ${pathname}` }
+}

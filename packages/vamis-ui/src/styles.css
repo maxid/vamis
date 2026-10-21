@@ -47,6 +47,12 @@
   --color-code-foreground: var(--code-foreground);
   --spacing-form-gap: var(--form-item-gap);
   --spacing-form-label: var(--form-label-width);
+  --spacing-gap-xs: var(--gap-xs);
+  --spacing-gap-sm: var(--gap-sm);
+  --spacing-gap-base: var(--gap-base);
+  --spacing-gap-md: var(--gap-md);
+  --spacing-gap-lg: var(--gap-lg);
+  --spacing-gap-xl: var(--gap-xl);
   --height-control: var(--control-h);
   --height-control-sm: var(--control-h-sm);
   --height-control-lg: var(--control-h-lg);
@@ -54,9 +60,9 @@
 }
 
 /*
-  Admin console tokens. Density and hierarchy come from Amis cxd
-  (14px type, 32px controls, 4px radius, status colors). The skin is
-  shadcn semantics + IBM Plex — not cxd- classes, not pixel SCSS.
+  Box metrics copy cxd (16px root): 2px ladder, 32px control, 24px form
+  gap, 98px horizontal label, 40px table row. Color is independent.
+  No .cxd- classes, no Amis SCSS.
 */
 :root {
   color-scheme: light;
@@ -97,12 +103,33 @@
   --code: oklch(0.22 0.03 258);
   --code-foreground: oklch(0.88 0.03 250);
 
-  --control-h: 2rem;
-  --control-h-sm: 1.75rem;
-  --control-h-lg: 2.25rem;
-  --form-item-gap: 1.5rem;
-  --form-label-width: 7.5rem;
-  --table-row-h: 2.5rem;
+  --gap-xs: 4px;
+  --gap-sm: 8px;
+  --gap-base: 12px;
+  --gap-md: 16px;
+  --gap-lg: 20px;
+  --gap-xl: 24px;
+  --control-h: 32px;
+  --control-h-sm: 28px;
+  --control-h-lg: 36px;
+  --control-px: 10px;
+  --form-item-gap: 24px;
+  --form-label-width: 98px;
+  --form-label-gap: 16px;
+  --form-label-width-xs: 50px;
+  --form-label-width-sm: 70px;
+  --form-label-width-md: 136px;
+  --form-label-width-lg: 200px;
+  --form-control-width-xs: 80px;
+  --form-control-width-sm: 160px;
+  --form-control-width: 200px;
+  --form-control-width-md: 240px;
+  --form-control-width-lg: 320px;
+  --table-row-h: 40px;
+  --table-row-h-sm: 33px;
+  --table-row-h-lg: 61px;
+  --table-cell-px: 10px;
+  --page-body-padding: 12px;
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -115,21 +142,21 @@
 }
 
 [data-density="compact"] {
-  --control-h: 2rem;
-  --control-h-sm: 1.75rem;
-  --control-h-lg: 2.25rem;
-  --form-item-gap: 1.5rem;
-  --form-label-width: 7.5rem;
-  --table-row-h: 2.5rem;
+  --control-h: 32px;
+  --control-h-sm: 28px;
+  --control-h-lg: 36px;
+  --form-item-gap: 24px;
+  --form-label-width: 98px;
+  --table-row-h: 40px;
 }
 
 [data-density="comfortable"] {
-  --control-h: 2.25rem;
-  --control-h-sm: 2rem;
-  --control-h-lg: 2.75rem;
-  --form-item-gap: 1.75rem;
-  --form-label-width: 8.5rem;
-  --table-row-h: 3.25rem;
+  --control-h: 36px;
+  --control-h-sm: 32px;
+  --control-h-lg: 44px;
+  --form-item-gap: 28px;
+  --form-label-width: 136px;
+  --table-row-h: 52px;
 }
 
 .dark {
