@@ -4,15 +4,17 @@
 
 按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。作者态和对齐 LCDP IR 不变。
 
-## 当前状态（2026-10-21）
+## 当前状态（2026-10-22）
 
 - 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
 - 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
 - **默认自适应**：page / form / 表单控件不写 `size` 就吃满容器；`size` / `className` 只是收窄。
 - **作者态**：YAML 与 JSON 并列，不强制 YAML。
+- **在线文档**：组件 / 类型 / 概念 / 开始 / 样式 / 扩展页标题下显示「实现进度 · 完成状态」（已注册 ≠ 语义完成）。目录页（介绍、组件介绍）除外。
+- kernel D1 Scope、D3 API 管线、D4 事件对象 P0 已落地。
 - amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
-- 组件语义（侧栏 155）：已完成 0 / 进行中 153 / 未开始 2，平均 47%。
-- `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
+- 组件语义（侧栏 155）：已完成 **2**（`page` 95% / `container` 100%）/ 进行中 151 / 未开始 2，平均 **47%**。
+- `pnpm test`：formula 188 + core 102 + sdk 12；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
 - amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) 与 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。
@@ -21,7 +23,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 - [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
 - [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
-- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/（首页即文档，与示例同一应用）
+- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/（首页即文档，与示例同一应用；文档页标题下有实现进度）
 - GitHub Pages：https://maxid.github.io/vamis/（推 `main` 后由 Actions 发布）
 
 ## 设计文档
@@ -32,7 +34,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
 - [主题映射](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)：Amis 后台水标 × shadcn token。
-- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（首页 `/`、`/components`）。
+- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（首页 `/`、`/components`）；文档页标题下「实现进度 · 状态」。
 
 ## 怎么跑
 
@@ -45,10 +47,10 @@ pnpm dev          # 示例 / 文档 / 组件，http://127.0.0.1:5173
 
 | 路由 | 做什么 |
 |------|--------|
-| `/` | 文档首页（开始 / 概念 / 样式 / 类型 / 扩展） |
-| `/components` | 组件文档（侧栏对齐 Amis，YAML 实时预览） |
-| `/examples` | 示例：分类树 + 预览 + IR |
-| `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + YAML |
+| `/` | 文档首页（开始 / 概念 / 样式 / 类型 / 扩展；标题下显示实现进度） |
+| `/components` | 组件文档（侧栏对齐 Amis，YAML / JSON 实时预览，标题下显示实现进度） |
+| `/examples` | 示例：分类树 + 预览 + Schema |
+| `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + Schema |
 
 跑核心测试：
 
@@ -118,7 +120,7 @@ packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer
 packages/vamis-formula  表达式 / 过滤器 / 内置函数（amis-formula 6.13.0 MIT）
 packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…）
 packages/vamis          P0 渲染器注册表
-packages/vamis-editor   树 + 属性 + YAML + 预览
+packages/vamis-editor   树 + 属性 + Schema + 预览
 packages/vamis-sdk      JS SDK（`sdk.js` / `vamis.embed`）
 playground               示例 / 文档 / 组件（5173）
 website                  文档 Markdown；可选 VitePress 静态导出

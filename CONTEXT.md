@@ -66,7 +66,7 @@
 
 **最近交付**
 
-- 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；写入 `.cursor/rules/doc-progress.mdc`。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。
+- 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；写入 `.cursor/rules/doc-progress.mdc`，并同步 [README.md](README.md) 当前状态。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。
 - kernel D3 API 管线 P0：`requestApi`（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / GET `api.data` / `dataType` / GraphQL）。form / page / crud / service / select / ajax 已接；page/form/service/select 支持 url / `trackExpression` 自动刷新。文档 [API](website/src/types/api.md) 对标 Amis `types/api`。字符串 adaptor 仅 `env.trusted`（Playground 默认开）。
 - Remark 默认改为方形（对齐 Amis 未写 `shape`）；`shape: circle` 才是圆。问号色 `muted-foreground/55`，hover 仍走 warning。
 - Remark 问号改用 Amis 同款 SVG（12×12 viewBox，基线 y=10.5，铺满 16px 圆），不再用过小的描边图标。
