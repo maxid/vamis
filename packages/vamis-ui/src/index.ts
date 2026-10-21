@@ -1,8 +1,10 @@
 export { cn } from './lib/utils'
+export { resolveCssVars } from './lib/css-vars'
 
-export { Button, buttonVariants } from './ui/button'
+export { Button, buttonVariants, levelToVariant, sizeToButtonSize } from './ui/button'
 export type { ButtonVariants } from './ui/button'
 export { Input } from './ui/input'
+export { Slider } from './ui/slider'
 export { Textarea } from './ui/textarea'
 export { Label } from './ui/label'
 export { Checkbox } from './ui/checkbox'
@@ -52,7 +54,7 @@ export {
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { Separator } from './ui/separator'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
-export { Alert, AlertDescription, AlertTitle } from './ui/alert'
+export { Alert, AlertDescription, AlertTitle, levelToAlertVariant } from './ui/alert'
 export { Toaster } from './ui/sonner'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
 export {

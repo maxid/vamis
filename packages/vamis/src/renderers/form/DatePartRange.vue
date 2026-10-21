@@ -52,7 +52,7 @@ const endQuarter = computed({
           @update:model-value="startQuarter = { ...startQuarter, year: String($event) }"
         />
         <select
-          class="h-9 flex-1 rounded-md border bg-transparent px-2 text-sm"
+          class="vamis-native-select flex-1"
           :value="startQuarter.quarter"
           :disabled="disabled"
           @change="startQuarter = { ...startQuarter, quarter: ($event.target as HTMLSelectElement).value }"
@@ -77,7 +77,7 @@ const endQuarter = computed({
           @update:model-value="endQuarter = { ...endQuarter, year: String($event) }"
         />
         <select
-          class="h-9 flex-1 rounded-md border bg-transparent px-2 text-sm"
+          class="vamis-native-select flex-1"
           :value="endQuarter.quarter"
           :disabled="disabled"
           @change="endQuarter = { ...endQuarter, quarter: ($event.target as HTMLSelectElement).value }"

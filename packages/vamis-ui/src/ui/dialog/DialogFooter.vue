@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<{
     <slot />
     <DialogClose v-if="showCloseButton" as-child>
       <Button variant="outline">
-        Close
+        关闭
       </Button>
     </DialogClose>
   </div>

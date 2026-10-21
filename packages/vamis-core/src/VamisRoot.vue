@@ -39,7 +39,7 @@ const widget = computed<SchemaNode>(() => compileIrToWidget(jsonToIr(props.schem
 </script>
 
 <template>
-  <div class="vamis-root text-sm text-foreground" data-api-version="lcdp.ir/v1">
+  <div class="vamis-root w-full text-sm text-foreground" data-api-version="lcdp.ir/v1" data-density="compact">
     <SchemaRenderer :schema="widget" />
     <slot />
   </div>

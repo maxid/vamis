@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, levelToVariant } from '@vamis/ui'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const open = ref(false)
@@ -12,7 +12,7 @@ const buttons = computed(() => asArray(props.schema.buttons || props.schema.body
   <div class="relative inline-block">
     <Button
       type="button"
-      :variant="schema.level === 'primary' ? 'default' : 'outline'"
+      :variant="levelToVariant(schema.level)"
       :disabled="disabled"
       @click="open = !open"
     >

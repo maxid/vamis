@@ -16,6 +16,18 @@ const props = defineProps<ToasterProps>()
       '--normal-text': 'var(--popover-foreground)',
       '--normal-border': 'var(--border)',
       '--border-radius': 'var(--radius)',
+      '--success-bg': 'var(--success-bg)',
+      '--success-text': 'var(--success)',
+      '--success-border': 'var(--success-border)',
+      '--error-bg': 'var(--error-bg)',
+      '--error-text': 'var(--destructive)',
+      '--error-border': 'var(--error-border)',
+      '--warning-bg': 'var(--warning-bg)',
+      '--warning-text': 'var(--warning-foreground)',
+      '--warning-border': 'var(--warning-border)',
+      '--info-bg': 'var(--info-bg)',
+      '--info-text': 'var(--info)',
+      '--info-border': 'var(--info-border)',
     }"
     v-bind="props"
   >

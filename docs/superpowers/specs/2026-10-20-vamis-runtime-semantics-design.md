@@ -8,6 +8,7 @@
   - 运行时与 IR 基础设计：`docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md`
   - 当前实现状态：`docs/superpowers/specs/2026-10-20-amis-sync-status.md`
   - 组件 P0 TODO（amis 文档侧栏分类）：`docs/superpowers/specs/2026-10-20-vamis-component-todo.md`
+  - 主题映射（Amis 样式 → shadcn token）：`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`、`docs/superpowers/specs/2026-10-21-vamis-style-system.md`
 
 ## 0. 摘要
 
@@ -408,7 +409,7 @@ export function usePlugin(plugin: VamisPlugin): void
 ## 13. 主题、响应式与多语言（D12 相关）
 
 - `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`。
-- 主题：沿用 Tailwind/shadcn token；`env.theme` + `page.cssVars` 映射到根节点 CSS 变量；`registerTheme` 提供命名主题。
+- 主题：沿用 Tailwind/shadcn token；`env.theme` + `page.cssVars` 映射到根节点 CSS 变量；`registerTheme` 提供命名主题。视觉基线与 Amis→shadcn 对照见 [样式系统](./2026-10-21-vamis-style-system.md)：不造 `cxd-` 前缀，状态色/密度走 token 与 variant。`className` 对象/表达式与 `m:`/`pc:` 仍是 D12 P1。
 - 响应式：`m:` / `pc:` 前缀由 `env.mobile`（或容器断点）决定；不引入第二套断点系统。
 - i18n：
   - `env.locale` + `registerLocale` 负责内置文案；

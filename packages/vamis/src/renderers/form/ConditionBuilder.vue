@@ -72,7 +72,7 @@ function setConjunction(conjunction: 'and' | 'or') {
       </div>
       <div v-for="(rule, i) in value.children" :key="i" class="flex flex-wrap items-center gap-2">
         <select
-          class="h-9 rounded-md border bg-transparent px-2 text-sm"
+          class="vamis-native-select"
           :value="rule.field"
           :disabled="disabled"
           @change="patchRule(i, { field: ($event.target as HTMLSelectElement).value, value: '' })"
@@ -81,7 +81,7 @@ function setConjunction(conjunction: 'and' | 'or') {
           <option v-for="field in fields" :key="field.name" :value="field.name">{{ field.label }}</option>
         </select>
         <select
-          class="h-9 rounded-md border bg-transparent px-2 text-sm"
+          class="vamis-native-select"
           :value="rule.op"
           :disabled="disabled"
           @change="patchRule(i, { op: ($event.target as HTMLSelectElement).value })"
@@ -90,7 +90,7 @@ function setConjunction(conjunction: 'and' | 'or') {
         </select>
         <select
           v-if="needsValue(rule.op) && fieldOptions(rule.field).length"
-          class="h-9 min-w-28 rounded-md border bg-transparent px-2 text-sm"
+          class="vamis-native-select min-w-28"
           :value="String(rule.value ?? '')"
           :disabled="disabled"
           @change="patchRule(i, { value: ($event.target as HTMLSelectElement).value })"

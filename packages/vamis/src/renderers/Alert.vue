@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { Alert, AlertDescription, AlertTitle } from '@vamis/ui'
+import { Alert, AlertDescription, AlertTitle, levelToAlertVariant } from '@vamis/ui'
 
 const props = defineProps<{ schema: SchemaObject }>()
 const body = computed(() => asArray(props.schema.body))
-const variant = computed(() =>
-  props.schema.level === 'danger' || props.schema.level === 'error' ? 'destructive' : 'default',
-)
+const variant = computed(() => levelToAlertVariant(props.schema.level))
 </script>
 
 <template>

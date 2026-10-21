@@ -9,7 +9,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, levelToVariant, sizeToButtonSize } from '@vamis/ui'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -29,13 +29,8 @@ const actionType = computed(
     props.schema.actionType ||
     (props.schema.type === 'submit' ? 'submit' : props.schema.type === 'reset' ? 'reset' : 'button'),
 )
-const variant = computed(() =>
-  props.schema.level === 'primary' || actionType.value === 'submit'
-    ? 'default'
-    : props.schema.level === 'danger'
-      ? 'destructive'
-      : 'outline',
-)
+const variant = computed(() => levelToVariant(props.schema.level, actionType.value))
+const size = computed(() => sizeToButtonSize(props.schema.size))
 
 async function onClick() {
   if (props.schema.confirmText) {
@@ -56,7 +51,7 @@ async function onClick() {
 </script>
 
 <template>
-  <Button :variant="variant as any" :disabled="disabled || loading" type="button" @click="onClick">
+  <Button :variant="variant" :size="size" :disabled="disabled || loading" type="button" @click="onClick">
     {{ loading ? '处理中…' : label }}
   </Button>
 </template>
