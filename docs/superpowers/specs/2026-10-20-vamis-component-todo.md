@@ -173,7 +173,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `crud` | CRUD 增删改查 | 进行中 | 50% | api/分页/filter/排序/批量/弹窗编辑有；无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10，设计标 P1，组件仍 P0） | P0 |
+| `crud` | CRUD 增删改查 | 进行中 | 55% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
 | `table` | Table 表格 | 进行中 | 50% | 能渲染列；无独立数据域、无 `popOver`/`quickEdit` | P0 |
 | `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 40% | 已注册，合并单元格/布局模式精简 | P0 |

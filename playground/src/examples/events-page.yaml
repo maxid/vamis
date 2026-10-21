@@ -78,11 +78,11 @@ spec:
           - type: input-text
             name: keywords
             label: 关键字
-            placeholder: 名称包含
+            placeholder: 引擎或浏览器包含
       columns:
         - name: id
           label: ID
-        - name: name
-          label: 名称
-        - name: status
-          label: 状态
+        - name: engine
+          label: 渲染引擎
+        - name: browser
+          label: Browser

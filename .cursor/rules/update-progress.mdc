@@ -16,6 +16,7 @@ alwaysApply: true
 2. 若动了渲染器 / type：[组件 P0 TODO](../../docs/superpowers/specs/2026-10-20-vamis-component-todo.md) 的该行 **状态、进度、原因**，以及文首分类汇总。不要改侧栏分类。
 3. 若增减 type/alias：[同步状态](../../docs/superpowers/specs/2026-10-20-amis-sync-status.md) 的覆盖数字。
 4. 若改了某份 spec 的范围：更新该文档状态行（草案 / 进行中 / 部分落地 / 已完成）。
+5. 若动了对外文档站点：更新 [在线文档 spec](../../docs/superpowers/specs/2026-10-21-vamis-online-docs.md)；组件页进度仍以组件 TODO 为准，生成器 `website/scripts/gen-component-pages.mjs` 会读它。
 
 ## 口径
 

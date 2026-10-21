@@ -22,7 +22,8 @@ packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer、env
 packages/vamis-ui       shadcn-vue 原语与主题 token
 packages/vamis          渲染器注册表（register.ts + extras/*.ts）
 packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / YAML）
-playground              Vite 演示：分类树 + 预览 + IR Tab
+playground              示例 + 文档 + 组件文档（同一 Vite，5173）
+website                 文档 Markdown 真源（可选 VitePress 静态导出）
 docs/superpowers/       specs / plans
 ```
 
@@ -32,7 +33,8 @@ docs/superpowers/       specs / plans
 
 ```bash
 pnpm install
-pnpm dev          # playground，默认 http://127.0.0.1:5173
+pnpm dev          # 示例 / 文档 / 组件，默认 http://127.0.0.1:5173
+pnpm docs         # 同上（文档不另起端口）
 pnpm test         # @vamis/core vitest
 pnpm build        # playground 生产构建
 pnpm typecheck    # 目前仍有既有 vue-tsc 错误，暂不作提交门禁
@@ -59,6 +61,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 | [运行时语义](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md) | D1–D12 kernel 决策 |
 | [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) | type 覆盖率（与语义进度分开） |
 | [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md) | Amis 水标 × shadcn token |
+| [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md) | 与 Playground 同端口的文档结构 |
 
 ## 任务开始与结束（强制）
 

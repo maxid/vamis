@@ -8,8 +8,9 @@
 |---------|------|------|
 | 术语与进度 | 本文件 | 领域语言、模块层次、当前进度、下一步 |
 | AI 工作指引 | [AGENTS.md](AGENTS.md) | 命令、约定、收工回写；`CLAUDE.md` 只指向它 |
-| 规格 | `docs/superpowers/specs/` | 运行时 / 语义 / 组件 TODO / 主题 |
+| 规格 | `docs/superpowers/specs/` | 运行时 / 语义 / 组件 TODO / 主题 / 在线文档 |
 | 计划 | `docs/superpowers/plans/` | 可执行任务清单 |
+| 在线文档 | `website/src` + playground 路由 | 与示例同端口；进度仍以本文件为准 |
 
 > **图表**：优先 mermaid。
 
@@ -21,7 +22,8 @@
 | `@vamis/ui` | `packages/vamis-ui` | shadcn-vue 原语与 CSS 变量（密度、状态色） |
 | `vamis` | `packages/vamis` | Amis type 渲染器；`register.ts` + `extras/*.ts` |
 | `@vamis/editor` | `packages/vamis-editor` | 树 / 画布 / 属性 / YAML |
-| playground | `playground` | 分类树 + 预览 + IR Tab |
+| playground | `playground` | 示例（`/`）+ 文档（`/docs`）+ 组件文档（`/components`） |
+| 文档正文 | `website/src` | Markdown 真源；playground 在 5173 渲染 |
 
 ## 术语表
 
@@ -51,12 +53,15 @@
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
 | 视觉 | shadcn token 对齐密度/状态色 | 缺 `m:`/`pc:` className（D12 P1） |
-| Playground | 右 Tab：组件树 / 示例树 / IR 源码 | 可点树驱动预览 |
+| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173，顶栏对齐 Amis |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
+| 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`，可编辑即时预览 |
 | 测试 | `pnpm test` 37 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- 文档 ` ```schema ` 对齐 Amis Play mini：同一 `VamisRoot` 真跑 + 侧栏改 YAML 即时预览；介绍页换成打 `/api/mock2/sample` 的 CRUD（筛选/批量/删除/重置）。
+- 文档并入 Playground：`pnpm dev` 的 5173 同时提供文档 / 组件 / 示例，顶栏对齐 Amis；Markdown 仍在 `website/src`。
 - 增加 `AGENTS.md`、`CONTEXT.md`、`CLAUDE.md` 与项目规则 `.cursor/rules/update-progress.mdc`：每完成一项任务必须回写进度/完成状态，并写下后续计划。
 - 组件 P0 TODO 按 amis 文档侧栏分类落地。
 - Playground 改为分类树 + 组件/示例/IR 三 Tab。
@@ -66,7 +71,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。
+1. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
 2. **P0 kernel D2 表达式过滤器**：`${name|raw}` / `|json` 走同一 `expr` 层，模板默认转义。
 3. **P0 kernel D3 API 管线**：`sendOn` / adaptor / `responseData` / `replaceData`，form/crud 先接。
 4. **P0 kernel D4/D5**：事件对象 + 动作注册表 + 动态 target。

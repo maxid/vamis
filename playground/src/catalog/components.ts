@@ -682,7 +682,8 @@ const DISPLAY: ComponentDef[] = [
       perPage: 5,
       columns: [
         { name: 'id', label: 'ID' },
-        { name: 'name', label: '名称' },
+        { name: 'engine', label: '渲染引擎' },
+        { name: 'browser', label: 'Browser' },
       ],
     },
   },

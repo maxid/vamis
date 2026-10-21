@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@vamis/ui'
-import { CrudHostKey, selectedIdsOf } from './data/crudHost'
+import { asToolbarSchema, CrudHostKey, parseListPayload, selectedIdsOf } from './data/crudHost'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -53,10 +53,12 @@ const selectable = computed(
   () => props.schema.selectable === true || bulkActions.value.length > 0,
 )
 
-function listData(payloadData: any): { items: any[]; total: number } {
-  if (Array.isArray(payloadData)) return { items: payloadData, total: payloadData.length }
-  const items = payloadData?.items || payloadData?.rows || payloadData?.list || []
-  return { items, total: Number(payloadData?.total ?? items.length) }
+function toolbarNode(node: unknown): SchemaObject {
+  const next = asToolbarSchema(node)
+  if ((next.actionType === 'ajax' || next.actionType === 'dialog') && !next.reload && props.schema.name) {
+    return { ...next, reload: props.schema.name }
+  }
+  return next
 }
 
 function sanitizeQuery(extra: Record<string, any>) {
@@ -83,7 +85,7 @@ async function reload(extra: Record<string, any> = {}) {
       orderDir: store.query.orderDir,
     }
     const payload = await env.fetcher(normalizeApi(props.schema.api, query), query)
-    const { items, total } = listData(payload.data)
+    const { items, total } = parseListPayload(payload.data)
     store.items = items
     store.total = total
     if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []
@@ -259,7 +261,7 @@ onBeforeUnmount(() => {
         {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
       </p>
       <div class="flex flex-wrap items-center gap-2">
-        <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="node" />
+        <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
         <span v-if="selectable" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"

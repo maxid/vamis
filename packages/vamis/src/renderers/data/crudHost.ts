@@ -66,7 +66,7 @@ export function provideCrudHost(api: CrudHostApi) {
 export function parseListPayload(payloadData: any): { items: any[]; total: number } {
   if (Array.isArray(payloadData)) return { items: payloadData, total: payloadData.length }
   const items = payloadData?.items || payloadData?.rows || payloadData?.list || []
-  return { items, total: Number(payloadData?.total ?? items.length) }
+  return { items, total: Number(payloadData?.total ?? payloadData?.count ?? items.length) }
 }
 
 export function resolveTableSource(

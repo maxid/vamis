@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @vamis/playground dev",
+    "docs": "pnpm --filter @vamis/playground dev",
+    "docs:build": "pnpm --filter @vamis/docs gen && pnpm --filter @vamis/docs build",
     "build": "pnpm --filter @vamis/playground build",
     "preview": "pnpm --filter @vamis/playground preview",
     "test": "pnpm --filter @vamis/core test",

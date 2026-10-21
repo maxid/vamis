@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button, Toaster } from '@vamis/ui'
+
+const route = useRoute()
+const isChromePage = computed(
+  () => route.path.startsWith('/docs') || route.path.startsWith('/components'),
+)
+
+function navClass(prefix: string, exact = false) {
+  const active = exact ? route.path === prefix : route.path === prefix || route.path.startsWith(`${prefix}/`)
+  return active ? 'bg-primary text-primary-foreground hover:bg-primary' : ''
+}
 
 const THEME_KEY = 'vamis-theme'
 const DENSITY_KEY = 'vamis-density'
@@ -28,8 +38,8 @@ watch([dark, density], () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground">
-    <header class="border-b bg-card">
+  <div class="flex min-h-screen flex-col bg-background text-foreground">
+    <header class="shrink-0 border-b bg-card">
       <div class="mx-auto flex max-w-[1800px] flex-wrap items-center justify-between gap-3 px-6 py-3">
         <div>
           <p class="font-mono text-[11px] tracking-[0.22em] text-primary">VAMIS / lcdp.ir/v1</p>
@@ -64,17 +74,23 @@ watch([dark, density], () => {
             <Button size="xs" :variant="dark ? 'default' : 'ghost'" @click="dark = true">深色</Button>
           </div>
           <nav class="flex gap-2 text-sm">
+            <RouterLink to="/docs" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/docs')">
+              文档
+            </RouterLink>
             <RouterLink
-              to="/"
+              to="/components"
               class="rounded-md px-3 py-1.5 hover:bg-accent"
-              active-class="bg-primary text-primary-foreground hover:bg-primary"
+              :class="navClass('/components')"
             >
-              Playground
+              组件
+            </RouterLink>
+            <RouterLink to="/" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/', true)">
+              示例
             </RouterLink>
             <RouterLink
               to="/editor"
               class="rounded-md px-3 py-1.5 hover:bg-accent"
-              active-class="bg-primary text-primary-foreground hover:bg-primary"
+              :class="navClass('/editor', true)"
             >
               编辑器
             </RouterLink>
@@ -82,7 +98,10 @@ watch([dark, density], () => {
         </div>
       </div>
     </header>
-    <main class="mx-auto max-w-[1800px] px-6 py-5">
+    <main
+      class="mx-auto w-full flex-1"
+      :class="isChromePage ? 'max-w-[1800px] min-h-0 px-4 py-3' : 'max-w-[1800px] px-6 py-5'"
+    >
       <RouterView />
     </main>
     <Toaster position="top-right" />
