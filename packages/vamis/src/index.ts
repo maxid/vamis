@@ -10,6 +10,8 @@ export {
   getRenderers,
   parseToIr,
   parseSchemaText,
+  formatSchemaAs,
+  syncAuthoringText,
   jsonToIr,
   yamlFromIr,
   yamlFromUnknown,

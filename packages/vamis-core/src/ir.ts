@@ -123,6 +123,25 @@ export function parseSchemaText(text: string): unknown {
   return parseYaml(trimmed)
 }
 
+export function formatSchemaAs(value: unknown, kind: 'yaml' | 'json'): string {
+  if (kind === 'json') return `${JSON.stringify(value ?? {}, null, 2)}\n`
+  return stringifyYaml(value ?? {})
+}
+
+/** Keep the edited side as typed; rebuild the other side from the parsed object. */
+export function syncAuthoringText(
+  from: 'yaml' | 'json',
+  text: string,
+): { yaml: string; json: string; value: unknown } {
+  const trimmed = text.trim()
+  const value = from === 'json' ? JSON.parse(trimmed || '{}') : parseSchemaText(trimmed)
+  return {
+    value,
+    yaml: from === 'yaml' ? text : stringifyYaml(value),
+    json: from === 'json' ? text : formatSchemaAs(value, 'json'),
+  }
+}
+
 export function parseToIr(text: string): IrDocument {
   return jsonToIr(parseSchemaText(text))
 }

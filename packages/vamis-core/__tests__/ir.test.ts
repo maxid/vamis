@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   compileIrToWidget,
+  formatSchemaAs,
   IR_API_VERSION,
   jsonToIr,
   parseSchemaText,
   parseToIr,
+  syncAuthoringText,
   yamlFromIr,
 } from '../src/ir'
 import { registerRenderer, resolveRenderer, unRegisterRenderer } from '../src/factory'
@@ -38,6 +40,23 @@ describe('IR envelope', () => {
     expect(yaml).toEqual({ type: 'page', title: 'Hello' })
     expect(json).toEqual({ type: 'page', title: 'Hello' })
     expect(parseToIr(JSON.stringify(json)).kind).toBe('UiPage')
+  })
+
+  it('syncs YAML and JSON drafts from the same object', () => {
+    const widget = { type: 'page', title: 'Hello' }
+    const fromYaml = syncAuthoringText('yaml', 'type: page\ntitle: Hello\n# keep comment\n')
+    expect(fromYaml.value).toEqual(widget)
+    expect(fromYaml.yaml).toContain('# keep comment')
+    expect(JSON.parse(fromYaml.json)).toEqual(widget)
+    const fromJson = syncAuthoringText('json', '{\n  "type": "page",\n  "title": "Hello"\n}\n')
+    expect(fromJson.value).toEqual(widget)
+    expect(fromJson.json).toContain('"type": "page"')
+    expect(parseSchemaText(fromJson.yaml)).toEqual(widget)
+    expect(parseSchemaText(formatSchemaAs(widget, 'json'))).toEqual(widget)
+  })
+
+  it('throws when JSON draft is invalid and does not invent YAML', () => {
+    expect(() => syncAuthoringText('json', '{')).toThrow()
   })
 
   it('compiles FormDef fields to form widgets', () => {
