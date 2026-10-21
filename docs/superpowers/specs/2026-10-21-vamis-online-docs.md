@@ -11,7 +11,7 @@
 | 顶栏 | 路由 | 内容 |
 |------|------|------|
 | 文档 | `/` | 开始（含 JS SDK）、概念、样式、类型、扩展；`/docs` 重定向到首页 |
-| 组件 | `/components` | 侧栏 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
+| 组件 | `/components` | 侧栏首位「组件介绍」（不进布局分组）+ 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
 | 示例 | `/examples` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
 | 搜索 | ⌘K | 文档 / 组件 / 示例索引；示例跳 `/examples?example=` |

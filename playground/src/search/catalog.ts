@@ -29,7 +29,18 @@ export function buildSearchIndex(): SearchHit[] {
     }
   }
   for (const group of componentGroups) {
-    for (const item of group.items) {
+    if (group.link && !group.items?.length) {
+      if (hits.some((hit) => hit.href === group.link)) continue
+      hits.push({
+        href: group.link,
+        title: group.text,
+        group: '组件',
+        keywords: `${group.text} ${group.link}`,
+      })
+      continue
+    }
+    for (const item of group.items || []) {
+      if (hits.some((hit) => hit.href === item.link)) continue
       hits.push({
         href: item.link,
         title: item.text,

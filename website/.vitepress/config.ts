@@ -7,6 +7,7 @@ import {
   componentNav,
   conceptNav,
   extendNav,
+  isCompGroup,
   sidebar,
   startNav,
   styleNav,
@@ -31,7 +32,14 @@ export default defineConfig({
       { text: '开始', items: startNav },
       { text: '概念', items: conceptNav },
       { text: '样式', items: styleNav },
-      { text: '组件', items: componentNav.map((g) => ({ text: g.text, link: g.items[0].link })) },
+      {
+        text: '组件',
+        items: componentNav.map((entry) =>
+          isCompGroup(entry)
+            ? { text: entry.text, link: entry.items[0].link }
+            : { text: entry.text, link: entry.link },
+        ),
+      },
       { text: '类型', items: typeNav },
       { text: '扩展', items: extendNav },
       { text: 'Playground', link: 'http://127.0.0.1:5173' },
