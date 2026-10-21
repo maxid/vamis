@@ -15,6 +15,8 @@ const value = computed({
 
 <template>
   <FormItem :schema="schema">
-    <Switch :model-value="value" :disabled="disabled" @update:model-value="value = $event" />
+    <div class="flex min-h-8 items-center">
+      <Switch :model-value="value" :disabled="disabled" @update:model-value="value = $event" />
+    </div>
   </FormItem>
 </template>

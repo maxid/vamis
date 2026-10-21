@@ -9,7 +9,7 @@ const body = computed(() => asArray(props.schema.body))
 
 <template>
   <Card>
-    <CardHeader v-if="schema.title">
+    <CardHeader v-if="schema.title" class="border-b">
       <CardTitle>{{ schema.title }}</CardTitle>
     </CardHeader>
     <CardContent class="space-y-3">

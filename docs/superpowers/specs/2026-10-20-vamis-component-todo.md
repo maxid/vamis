@@ -4,6 +4,7 @@
 - 状态：对照清单（随实现更新进度，不改分类）
 - 优先级：**全部 P0**
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
+- 视觉口径：[样式系统（Amis 水标 × shadcn）](./2026-10-21-vamis-style-system.md) — 渲染器走 token / Button·Input·Table·Card variants，不搬 `cxd-`
 - 覆盖数字（只比 type 名）：[同步状态](./2026-10-20-amis-sync-status.md)
 - 文档侧栏：`amis-r/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`/Users/maxid/Develop/IdeaProjects/github/amis-r/docs/zh-CN/components`

@@ -59,15 +59,15 @@ function formatSource() {
 
 <template>
   <div class="grid h-[calc(100vh-7.5rem)] min-h-[70vh] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,32rem)]">
-    <section class="flex min-h-0 flex-col overflow-hidden rounded-lg border bg-background">
-      <div class="flex shrink-0 items-center justify-between gap-2 border-b px-4 py-2">
-        <div>
-          <p class="font-mono text-[10px] tracking-[0.2em] text-primary">RUNTIME</p>
-          <h2 class="text-sm font-medium">{{ selectedLabel }}</h2>
+    <section class="flex min-h-0 flex-col overflow-hidden rounded-lg border bg-muted/40">
+      <div class="flex shrink-0 items-center justify-between gap-2 border-b bg-card px-4 py-2">
+        <div class="min-w-0">
+          <p class="text-[11px] text-muted-foreground">预览</p>
+          <h2 class="truncate text-sm font-medium">{{ selectedLabel }}</h2>
         </div>
         <Badge variant="outline">lcdp.ir/v1</Badge>
       </div>
-      <div class="min-h-0 flex-1 overflow-auto p-4">
+      <div class="min-h-0 flex-1 overflow-auto bg-background p-5">
         <Alert v-if="error" variant="destructive">
           <AlertTitle>无法解析</AlertTitle>
           <AlertDescription class="font-mono text-xs">{{ error }}</AlertDescription>

@@ -60,7 +60,7 @@ const quarter = computed({
         @update:model-value="quarter = { ...quarter, year: String($event) }"
       />
       <select
-        class="h-9 flex-1 rounded-md border bg-transparent px-2 text-sm"
+        class="vamis-native-select flex-1"
         :value="quarter.quarter"
         :disabled="disabled"
         @change="quarter = { ...quarter, quarter: ($event.target as HTMLSelectElement).value }"

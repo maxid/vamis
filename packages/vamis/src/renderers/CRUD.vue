@@ -99,6 +99,21 @@ function openDialog(schema: SchemaObject) {
   dialogOpen.value = true
 }
 
+function asDialogBody(schema: SchemaObject | null) {
+  const body = schema?.body || schema
+  if (body && typeof body === 'object' && !Array.isArray(body) && (body as SchemaObject).type === 'form') {
+    return { ...(body as SchemaObject), wrapWithPanel: false }
+  }
+  return body
+}
+
+function operationClass(btn: SchemaObject) {
+  const destructive = btn.level === 'danger' || !!btn.confirmText
+  return destructive
+    ? 'text-destructive hover:bg-destructive/10 hover:text-destructive'
+    : 'text-primary hover:bg-primary/10'
+}
+
 async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
   const actionType = button.actionType
   if (actionType === 'toast') {
@@ -154,7 +169,7 @@ function exportCsv() {
 }
 
 function sortMark(col: SchemaObject) {
-  if (store.query.orderBy !== col.name) return ''
+  if (!col.name || store.query.orderBy !== col.name) return ''
   return store.query.orderDir === 'desc' ? ' ↓' : ' ↑'
 }
 
@@ -226,26 +241,26 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-4">
-    <div v-if="filterSchema" class="rounded-md border bg-card p-4">
-      <SchemaRenderer
-        :schema="{
-          ...filterSchema,
-          type: filterSchema.type || 'form',
-          api: undefined,
-          reload: schema.name,
-          submitText: filterSchema.submitText || '搜索',
-          resetAfterSubmit: false,
-        }"
-      />
-    </div>
+  <div class="space-y-3">
+    <SchemaRenderer
+      v-if="filterSchema"
+      :schema="{
+        ...filterSchema,
+        type: filterSchema.type || 'form',
+        mode: filterSchema.mode || 'horizontal',
+        api: undefined,
+        reload: schema.name,
+        submitText: filterSchema.submitText || '搜索',
+        resetAfterSubmit: false,
+      }"
+    />
     <div class="flex items-center justify-between gap-2">
-      <p class="font-mono text-xs text-muted-foreground">
-        {{ store.fetching ? '同步中' : `${store.total} 条` }}
+      <p class="text-xs text-muted-foreground tabular-nums">
+        {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
       </p>
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="node" />
-        <span v-if="selectable" class="text-xs text-muted-foreground">已选 {{ store.selectedItems.length }}</span>
+        <span v-if="selectable" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"
           :key="'bulk-' + i"
@@ -284,11 +299,15 @@ onBeforeUnmount(() => {
       </TableHeader>
       <TableBody>
         <TableRow v-if="!store.items.length">
-          <TableCell :colspan="Math.max(columns.length, 1) + (selectable ? 1 : 0)" class="py-8 text-center text-muted-foreground">
+          <TableCell :colspan="Math.max(columns.length, 1) + (selectable ? 1 : 0)" class="py-10 text-center text-muted-foreground">
             暂无数据
           </TableCell>
         </TableRow>
-        <TableRow v-for="row in store.items" :key="row.id ?? JSON.stringify(row)">
+        <TableRow
+          v-for="row in store.items"
+          :key="row.id ?? JSON.stringify(row)"
+          :data-state="isSelected(row) ? 'selected' : undefined"
+        >
           <TableCell v-if="selectable">
             <Checkbox
               :model-value="isSelected(row)"
@@ -297,13 +316,14 @@ onBeforeUnmount(() => {
           </TableCell>
           <TableCell v-for="col in columns" :key="col.name || col.label">
             <template v-if="col.type === 'operation'">
-              <div class="flex gap-2">
+              <div class="flex gap-1">
                 <Button
                   v-for="(btn, bi) in asArray(col.buttons || col.body)"
                   :key="bi"
                   type="button"
                   size="sm"
                   variant="ghost"
+                  :class="operationClass(btn as SchemaObject)"
                   @click="runColumnAction(btn as SchemaObject, row)"
                 >
                   {{ (btn as SchemaObject).label }}
@@ -320,7 +340,7 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
-    <div v-if="schema.alwaysShowPagination || store.total > store.perPage" class="flex justify-end gap-2">
+    <div v-if="schema.alwaysShowPagination || store.total > store.perPage" class="flex items-center justify-end gap-2">
       <Button type="button" size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
         上一页
       </Button>
@@ -339,7 +359,7 @@ onBeforeUnmount(() => {
         <DialogHeader>
           <DialogTitle>{{ dialogSchema?.title || '编辑' }}</DialogTitle>
         </DialogHeader>
-        <SchemaRenderer v-if="dialogSchema" :schema="dialogSchema.body || dialogSchema" :extra-data="dialogSchema.data" />
+        <SchemaRenderer v-if="dialogSchema" :schema="asDialogBody(dialogSchema)" :extra-data="dialogSchema.data" />
       </DialogContent>
     </Dialog>
   </div>

@@ -172,21 +172,21 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="space-y-4">
-    <div v-if="filterSchema" class="rounded-md border bg-card p-4">
-      <SchemaRenderer
-        :schema="{
-          ...filterSchema,
-          type: filterSchema.type || 'form',
-          api: undefined,
-          reload: schema.name,
-          submitText: filterSchema.submitText || '搜索',
-          resetAfterSubmit: false,
-        }"
-      />
-    </div>
+    <SchemaRenderer
+      v-if="filterSchema"
+      :schema="{
+        ...filterSchema,
+        type: filterSchema.type || 'form',
+        mode: filterSchema.mode || 'horizontal',
+        api: undefined,
+        reload: schema.name,
+        submitText: filterSchema.submitText || '搜索',
+        resetAfterSubmit: false,
+      }"
+    />
     <div class="flex items-center justify-between gap-2">
-      <p class="font-mono text-xs text-muted-foreground">
-        {{ store.fetching ? '同步中' : `${store.total} 条` }}
+      <p class="text-xs text-muted-foreground tabular-nums">
+        {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
         <span v-if="selectable"> · 已选 {{ store.selectedItems.length }}</span>
       </p>
       <div class="flex flex-wrap items-center gap-2">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Input } from '@vamis/ui'
+import { Input, Slider } from '@vamis/ui'
 import { readRangeValue, type SchemaObject } from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
@@ -45,45 +45,39 @@ const range = computed({
 
 <template>
   <FormItem :schema="schema">
-    <div v-if="multiple" class="space-y-2">
-      <div class="flex items-center gap-2 text-sm">
-        <span class="w-10 text-muted-foreground">{{ range.start }}</span>
-        <input
-          :value="range.start"
-          type="range"
+    <div v-if="multiple" class="space-y-3">
+      <div class="flex items-center gap-3 text-sm">
+        <span class="w-10 tabular-nums text-muted-foreground">{{ range.start }}</span>
+        <Slider
+          :model-value="range.start"
           :min="min"
           :max="max"
           :step="step"
-          class="w-full accent-primary"
           :disabled="disabled"
-          @input="range = { ...range, start: Number(($event.target as HTMLInputElement).value) }"
+          @update:model-value="range = { ...range, start: $event }"
         />
       </div>
-      <div class="flex items-center gap-2 text-sm">
-        <span class="w-10 text-muted-foreground">{{ range.end }}</span>
-        <input
-          :value="range.end"
-          type="range"
+      <div class="flex items-center gap-3 text-sm">
+        <span class="w-10 tabular-nums text-muted-foreground">{{ range.end }}</span>
+        <Slider
+          :model-value="range.end"
           :min="min"
           :max="max"
           :step="step"
-          class="w-full accent-primary"
           :disabled="disabled"
-          @input="range = { ...range, end: Number(($event.target as HTMLInputElement).value) }"
+          @update:model-value="range = { ...range, end: $event }"
         />
       </div>
       <p class="text-xs text-muted-foreground">{{ range.start }}{{ schema.unit || '' }} ~ {{ range.end }}{{ schema.unit || '' }}</p>
     </div>
     <div v-else class="flex items-center gap-3">
-      <input
-        :value="single"
-        type="range"
+      <Slider
+        :model-value="single"
         :min="min"
         :max="max"
         :step="step"
-        class="w-full accent-primary"
         :disabled="disabled"
-        @input="single = Number(($event.target as HTMLInputElement).value)"
+        @update:model-value="single = $event"
       />
       <Input
         :model-value="single"

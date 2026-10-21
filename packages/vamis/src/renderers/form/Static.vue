@@ -15,6 +15,6 @@ const text = computed(() => {
 
 <template>
   <FormItem :schema="schema">
-    <p class="min-h-9 py-2">{{ text }}</p>
+    <p class="flex min-h-[var(--control-h)] items-center text-sm">{{ text }}</p>
   </FormItem>
 </template>

@@ -5,6 +5,8 @@ import { router } from './router'
 import './style.css'
 import 'vamis'
 
+document.documentElement.dataset.density ||= 'compact'
+
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
