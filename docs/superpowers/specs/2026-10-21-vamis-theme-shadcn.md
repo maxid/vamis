@@ -1,7 +1,7 @@
 # Vamis 主题：Amis 样式系统 → shadcn token
 
 - 日期：2026-10-21
-- 状态：落地中（视觉基线 v1）
+- 状态：落地（token / 盒子辅助类 / IR metadata.style；`registerTheme` 仍 P1）
 - 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子数字对齐 cxd**；配色独立；不含 `cxd-` 类名
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
 

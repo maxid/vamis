@@ -23,7 +23,7 @@ body:
 1. **裸 widget**：`{ type: page, body: [...] }`，和 Amis 页面 JSON 同构。
 2. **IR 信封**：`apiVersion` + `kind: UiPage` + `metadata` + `spec`。`spec` 就是那棵 widget 树。
 
-`VamisRoot` 两种都收。未知 `type` 显示占位，不崩。
+`VamisRoot` 和 JS SDK `vamis.embed` 两种都收。未知 `type` 显示占位，不崩。
 
 ## 书写规则
 

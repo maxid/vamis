@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, provide } from 'vue'
 import { compileIrToWidget, jsonToIr } from './ir'
+import { resolveCssVars } from './style'
 import { createDefaultEnv } from './env'
 import { provideEnv, provideData, ParentStoreIdKey } from './context'
 import { provideScoped } from './scoped'
@@ -35,11 +36,19 @@ provideData(data)
 provideScoped()
 provideOverlay()
 
-const widget = computed<SchemaNode>(() => compileIrToWidget(jsonToIr(props.schema)))
+const ir = computed(() => jsonToIr(props.schema))
+const widget = computed<SchemaNode>(() => compileIrToWidget(ir.value))
+const density = computed(() => ir.value.metadata.style?.density)
+const rootVars = computed(() => resolveCssVars(ir.value.metadata.style?.cssVars))
 </script>
 
 <template>
-  <div class="vamis-root w-full text-sm text-foreground" data-api-version="lcdp.ir/v1" data-density="compact">
+  <div
+    class="vamis-root w-full text-sm text-foreground"
+    data-api-version="lcdp.ir/v1"
+    :data-density="density"
+    :style="rootVars"
+  >
     <SchemaRenderer :schema="widget" />
     <slot />
   </div>

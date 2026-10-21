@@ -10,7 +10,7 @@
 
 | 顶栏 | 路由 | 内容 |
 |------|------|------|
-| 文档 | `/docs` | 开始、概念、样式、类型、扩展 |
+| 文档 | `/docs` | 开始（含 JS SDK）、概念、样式、类型、扩展 |
 | 组件 | `/components` | 侧栏 155 项 + 实时 YAML |
 | 示例 | `/` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
@@ -22,6 +22,7 @@
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。
 - GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
+- 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 跑 `/sdk/hello.html`，同源 `sdk.js`）。
 
 ## 怎么跑
 
@@ -32,4 +33,4 @@ pnpm --filter @vamis/docs gen   # 按 nav + TODO 重生组件页
 VITE_BASE=/vamis/ pnpm build && VITE_BASE=/vamis/ pnpm preview   # 模拟 GitHub Pages 路径
 ```
 
-手写页（介绍、Form 总览、FormItem/Control/Options）不要被生成器覆盖。
+手写页（介绍、快速开始、JS SDK、Form 总览、FormItem/Control/Options）不要被生成器覆盖。

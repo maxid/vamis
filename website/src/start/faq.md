@@ -16,9 +16,13 @@ YAML 是作者态，注释和多行模板更舒服。运行时先解析成对象
 
 不是。`registerRenderer` 只说明 type 能 resolve。进度看每篇组件页的实现百分比，以及仓库根目录 `CONTEXT.md`。kernel D1–D8（数据域、表达式过滤器、API 管线、事件对象等）未落地前，大量组件停在「进行中」。
 
+## 有没有 JS SDK？能像 Amis 那样 `embed` 吗？
+
+有。任意 HTML 用 `vamis.embed(container, schema)`，对齐 `amis.embed`。产物：`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`。见 [JS SDK](/start/sdk)。Vue 工程继续用 `VamisRoot`。两条入口同一内核，没有 `amisRequire`，也不搬 `cxd.css`。
+
 ## 可以写 JavaScript 函数进 schema 吗？
 
-不可以。函数只能以表达式字符串或已注册动作名进入，禁止隐式 `eval`。
+不可以。函数只能以表达式字符串或已注册动作名进入，禁止隐式 `eval`。SDK 的 `env.fetcher` 等是宿主回调，允许。
 
 ## 主题能换成云舍吗？
 

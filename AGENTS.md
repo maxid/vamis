@@ -22,6 +22,7 @@ packages/vamis-core     工厂、IR、公式、Pinia hub、SchemaRenderer、env
 packages/vamis-ui       shadcn-vue 原语与主题 token
 packages/vamis          渲染器注册表（register.ts + extras/*.ts）
 packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / YAML）
+packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              示例 + 文档 + 组件文档（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
 docs/superpowers/       specs / plans
@@ -35,8 +36,9 @@ docs/superpowers/       specs / plans
 pnpm install
 pnpm dev          # 示例 / 文档 / 组件，默认 http://127.0.0.1:5173
 pnpm docs         # 同上（文档不另起端口）
-pnpm test         # @vamis/core vitest
-pnpm build        # playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
+pnpm test         # @vamis/core + @vamis/sdk vitest
+pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
+pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # 目前仍有既有 vue-tsc 错误，暂不作提交门禁
 pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 ```
@@ -51,6 +53,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 - 状态用 Pinia hub，不引入 MST。
 - UI 走 `@vamis/ui` token 与 `variant`（`level: primary` → `variant="default"`），不要写第二套主题 class。
 - **已注册 ≠ 语义完成**。进度看文档主路径，不是 `registerRenderer` 有没有调用。
+- 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
 
 ## 关键文档
 
@@ -62,6 +65,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 | [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) | type 覆盖率（与语义进度分开） |
 | [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md) | Amis 水标 × shadcn token |
 | [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md) | 与 Playground 同端口的文档结构 |
+| [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md) | 任意 HTML `vamis.embed`；与 `VamisRoot` 同一内核 |
 
 ## 任务开始与结束（强制）
 

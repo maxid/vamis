@@ -4,9 +4,16 @@ title: 快速开始
 
 # 快速开始
 
-Vamis 跑在 Vue 3 + Vite 里。没有独立的 UMD SDK；把 YAML（或 JSON）交给 `VamisRoot` 即可。
+Vamis 有两种用法，和 Amis 一样：
 
-## 安装
+- [JS SDK](/start/sdk)：任意 HTML 外链 `sdk.js`，`vamis.embed('#root', schema)`
+- [Vue 3](#vue)：工程里用 `<VamisRoot :schema="..." />`
+
+作者态是 YAML 1.2 Core（JSON / IR 也能进）。两条入口走同一套渲染器，不是两套运行时。
+
+两条现在都能跑。JS SDK 先 `pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`。
+
+## Vue
 
 仓库是 pnpm workspace：
 
@@ -43,6 +50,23 @@ app.mount('#app')
 ```
 
 必须挂 Pinia：内部状态 hub 用它，不引入 MST。
+
+## JS SDK
+
+无 npm、无 Vite 的页面用 SDK。见 [JS SDK](/start/sdk)。外链 `sdk.js` / `sdk.css`：
+
+```html
+<link rel="stylesheet" href="sdk.css" />
+<div id="root"></div>
+<script src="sdk.js"></script>
+<script>
+  vamis.embed('#root', {
+    type: 'page',
+    title: '表单页面',
+    body: { type: 'tpl', tpl: 'Hello' },
+  })
+</script>
+```
 
 ## 作者态：YAML
 
@@ -101,10 +125,11 @@ const env = createDefaultEnv({
 <VamisRoot :schema="schema" :data="{ name: '操作员' }" :env="env" />
 ```
 
-文档和 Playground 的 `/api/mock2/*` 是本地 mock，方便演示 form / crud。
+文档和 Playground 的 `/api/mock2/*` 是本地 mock，方便演示 form / crud。SDK 落地后不传 `env.fetcher` 时会用内置 `window.fetch`。
 
 ## 下一步
 
+- [JS SDK](/start/sdk)
 - [配置与 Schema](/concepts/schema)
 - [Form 表单](/components/form/)
 - [CRUD](/components/crud)

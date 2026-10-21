@@ -1,0 +1,14 @@
+@import "@vamis/ui/styles.css";
+@import "vue-sonner/style.css";
+
+@source "../../vamis/**/*.{vue,ts}";
+@source "../../vamis-core/**/*.{vue,ts}";
+@source "../../vamis-ui/**/*.{vue,ts}";
+@source "./**/*.{vue,ts}";
+
+.vamis-sdk {
+  width: 100%;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}

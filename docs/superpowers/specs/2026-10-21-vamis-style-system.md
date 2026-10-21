@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-21
-- 状态：落地（token / 密度 / 状态色 / 高频控件；不改 YAML 语义）
+- 状态：落地（token / 密度 / 盒子辅助类 / FormItem size / Table cell / IR `metadata.style`；`xxxClassName` 与 `registerTheme` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
@@ -86,7 +86,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-这些解析属于运行时 D12 P1（`resolveClassName`），本轮不做。作者现在仍可传普通 Tailwind 字符串，因为 Vamis 已用真 Tailwind。
+`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `m:` `pc:`（仅 gap 辅助类）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
 
 ## 2. shadcn 落地原则
 
@@ -234,12 +234,14 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 6. **壳**：Playground 与 Editor 同源 token；画布灰、面板白。
 7. **主题**：`.dark` 对比足够；紧凑/舒适切换时控件高度一起变；无 `cxd-` class。
 
-未纳入本轮：`className` 对象/表达式、`m:`/`pc:`、antd/ang 命名主题、`registerTheme`（D12 P1）。
+未纳入本轮：`xxxClassName` 子节点、antd/ang 命名主题、`registerTheme`（D12 P1）。
 
 ## 8. 本轮落地清单
 
 - `packages/vamis-ui/src/styles.css`：语义色 + 密度 token + `.vamis-native-select` / `.vamis-file-drop` / range
-- 原语：Button / Input / Select / Table / Tabs / Slider / Sonner 吃 token
-- 渲染器：FormItem、Form、InputFile、InputRange、Status、DatePart、ConditionBuilder、Avatar
-- Playground：浅色/深色、紧凑/舒适
-- `resolveCssVars` 增加表单/表格高度别名
+- `packages/vamis-ui/src/helpers.css`：`m-t-xs` / `p-l-md` 等走 `--gap-*`；`m:` / `pc:` 媒体查询
+- 原语：Button / Input / Select / Table / Tabs / Slider / Sonner 吃 token；Table cell `px` 用 `--table-cell-px`
+- 渲染器：FormItem `size` → `--form-control-width-*`；Page body 用 `--page-body-padding`
+- 内核：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；`SchemaRenderer` 挂 id/className/style
+- IR：`metadata.style.cssVars` / `density` / `className`，`jsonToIr` 从 page.cssVars 提升，compile 时合并
+- Playground：浅色/深色、紧凑/舒适；VamisRoot 不再写死 `data-density=compact`

@@ -1,8 +1,9 @@
 # Vamis Vue3 运行时与 IR 对齐设计
 
 - 日期：2026-10-20
-- 状态：第一期已按此实施；最新同步与覆盖数字见 [2026-10-20-amis-sync-status.md](./2026-10-20-amis-sync-status.md)
+- 状态：第一期已按此实施；**JS SDK P0 已落地**（见 [JS SDK](./2026-10-21-vamis-js-sdk.md)）
 - 语义设计增补：数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 设计见 [2026-10-20-vamis-runtime-semantics-design.md](./2026-10-20-vamis-runtime-semantics-design.md)
+- 嵌入入口：Vue 组件 `VamisRoot` + JS SDK `vamis.embed`
 - 源项目：百度 Amis 6.13.0（`/Users/maxid/Develop/IdeaProjects/github/amis`）
 - IR 来源：LCDP IR（`apiVersion: lcdp.ir/v1`）
 
@@ -63,6 +64,15 @@ zip: "012"
 
 Vue 3 + Pinia hub（仿 MST 节点树）+ `amis-formula@6.13.0`。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语，不追 cxd 像素，也不改 YAML/IR 信封。
 
+对外两条入口，同一内核：
+
+| 入口 | 宿主 | API |
+|------|------|-----|
+| Vue 组件 | Vue 3 + Pinia 工程 | `<VamisRoot :schema />` |
+| JS SDK | 任意 HTML | `vamis.embed('#root', schema, props?, env?)` |
+
+SDK 把 Vue/Pinia/渲染器打进 IIFE（`sdk.js` + `sdk.css`），**不是**第二套渲染器。契约见 [JS SDK](./2026-10-21-vamis-js-sdk.md)。
+
 ## 4. 非目标（第一期）
 
-完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE/Monaco 全家桶。Amis type 继续补齐。
+完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE/Monaco 全家桶、Amis `amisRequire` AMD、IE11。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。**

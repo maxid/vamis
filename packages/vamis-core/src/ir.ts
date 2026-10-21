@@ -23,12 +23,23 @@ export const LCDP_IR_KINDS = [
 export type LcdpIrKind = (typeof LCDP_IR_KINDS)[number]
 export type VamisIrKind = LcdpIrKind | 'UiPage'
 
+export type IrDensity = 'compact' | 'comfortable'
+
+/** Page-level visual overrides on the IR envelope. Spec still holds the widget tree. */
+export interface IrStyleMeta {
+  cssVars?: Record<string, string>
+  className?: string
+  theme?: string
+  density?: IrDensity
+}
+
 export interface IrMetadata {
   name: string
   description?: string
   businessTerms?: string[]
   useCases?: string[]
   labels?: Record<string, string>
+  style?: IrStyleMeta
 }
 
 export interface IrDocument<T = unknown> {
@@ -78,6 +89,15 @@ export function jsonToIr(input: unknown): IrDocument {
       ? schema
       : { type: 'page', body: schema as unknown as SchemaObject }
 
+  const cssVars =
+    widget.cssVars && typeof widget.cssVars === 'object'
+      ? (widget.cssVars as Record<string, string>)
+      : undefined
+  const density =
+    widget.density === 'comfortable' || widget.density === 'compact'
+      ? (widget.density as IrDensity)
+      : undefined
+
   return {
     apiVersion: IR_API_VERSION,
     kind: 'UiPage',
@@ -88,6 +108,7 @@ export function jsonToIr(input: unknown): IrDocument {
         source: 'amis',
         vamisKind: String(widget.type || 'page'),
       },
+      style: cssVars || density ? { cssVars, density } : undefined,
     },
     spec: widget,
   }
@@ -182,16 +203,31 @@ function compileTableDef(doc: IrDocument): SchemaObject {
  * Compile an IR document into an Amis-compatible widget tree.
  * Unknown kinds become a visible placeholder page instead of crashing.
  */
+function applyIrStyle(widget: SchemaObject, style?: IrStyleMeta): SchemaObject {
+  if (!style) return widget
+  const next: SchemaObject = { ...widget }
+  if (style.cssVars) {
+    next.cssVars = { ...style.cssVars, ...(widget.cssVars as Record<string, string> | undefined) }
+  }
+  if (style.className) {
+    const existing = typeof widget.className === 'string' ? widget.className : ''
+    next.className = [style.className, existing].filter(Boolean).join(' ')
+  }
+  if (style.density) next.density = style.density
+  if (style.theme) next.theme = style.theme
+  return next
+}
+
 export function compileIrToWidget(doc: IrDocument): SchemaObject {
   const spec = (doc.spec || {}) as PlainObject
 
   if (doc.kind === 'UiPage') {
-    if (spec.type) return spec as SchemaObject
-    return { type: 'page', body: spec as SchemaObject }
+    const widget = spec.type ? (spec as SchemaObject) : { type: 'page', body: spec as SchemaObject }
+    return applyIrStyle(widget, doc.metadata.style)
   }
 
-  if (doc.kind === 'FormDef') return compileFormDef(doc)
-  if (doc.kind === 'TableDef') return compileTableDef(doc)
+  if (doc.kind === 'FormDef') return applyIrStyle(compileFormDef(doc), doc.metadata.style)
+  if (doc.kind === 'TableDef') return applyIrStyle(compileTableDef(doc), doc.metadata.style)
 
   if (doc.kind === 'PageDef') {
     if (spec.schema) return spec.schema as SchemaObject

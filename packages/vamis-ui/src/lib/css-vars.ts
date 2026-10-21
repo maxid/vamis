@@ -10,6 +10,7 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   "--link-color": "--primary",
   "--Form-input-height": "--control-h",
   "--Form-item-gap": "--form-item-gap",
+  "--Form-input-paddingX": "--control-px",
   "--Form--horizontal-label-widthBase": "--form-label-width",
   "--Form--horizontal-label-widthXs": "--form-label-width-xs",
   "--Form--horizontal-label-widthSm": "--form-label-width-sm",
@@ -21,6 +22,9 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   "--Form-control-widthMd": "--form-control-width-md",
   "--Form-control-widthLg": "--form-control-width-lg",
   "--TableCell-height": "--table-row-h",
+  "--TableCell-height-small": "--table-row-h-sm",
+  "--TableCell-height-large": "--table-row-h-lg",
+  "--TableCell-paddingX": "--table-cell-px",
   "--Page-body-padding": "--page-body-padding",
 }
 
