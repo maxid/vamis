@@ -7,6 +7,7 @@
 - 关联：
   - 运行时与 IR 基础设计：`docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md`
   - 当前实现状态：`docs/superpowers/specs/2026-10-20-amis-sync-status.md`
+  - 组件 P0 TODO（amis 文档侧栏分类）：`docs/superpowers/specs/2026-10-20-vamis-component-todo.md`
 
 ## 0. 摘要
 
@@ -543,3 +544,11 @@ export function usePlugin(plugin: VamisPlugin): void
 10. `dynamic target`：`target: "form2?name=${name}"` 数据合并刷新。
 
 以上样例进入 `playground/src/examples/`，并作为回归用例保留。
+
+## 23. 组件对齐 TODO
+
+组件按 amis 中文文档侧栏分类（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他），不另起分类。
+
+逐 type 的完成状态、进度和原因见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)。
+
+口径与本文一致：**已注册 ≠ 语义完成**；占位与精简实现单独标注；该清单内优先级全部 P0。当前 155 项已完成 0、进行中 153、未开始 2（`popOver` / `badge` 属性），平均进度 47%。type 名称覆盖率仍只记在同步状态里。
