@@ -77,7 +77,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 
 - 对象：YAML 生成的后台页（表单 / CRUD / 弹窗）。
 - 受众：操作员填表、扫表、改一行数据。
-- 签名：IBM Plex + 32px 控件节奏。主色用墨蓝（不是抄 `#2468f2`，也不是安全橙）。
+- 签名：Amis 系统字体栈（`--fonts-base-family`）+ 32px 控件节奏。不嵌入 webfont / 商用字体文件。主色用墨蓝（不是抄 `#2468f2`，也不是安全橙）。
 - 不做：奶油衬线、酸绿暗色、报纸细线；不做第二套主题 class。
 
 light / dark 都写完整 semantic token。`color-scheme` 跟主题走。

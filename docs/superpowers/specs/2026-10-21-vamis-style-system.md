@@ -107,7 +107,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 3. 缺的原语拷进 `packages/vamis-ui`（本轮补 `Slider`；Tooltip 已有）。渲染器组合它们。
 4. 亮暗主题同一套语义名。
 5. 禁止 `cxd-`，禁止引入 Amis SCSS。
-6. 身份：IBM Plex 控制台。密度学 Amis，皮用 ink 语义色，不搬运云舍 `#2468f2` 像素。
+6. 身份：Amis `--fonts-base-family` 系统栈（不嵌入 webfont）。密度学 Amis，皮用 ink 语义色，不搬运云舍 `#2468f2` 像素。
 
 ## 3. Token 对照：哪些直接映射，哪些要扩展
 
@@ -126,8 +126,8 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 | `--borderRadius` 4px | `--radius: 0.25rem` | 控件圆角 |
 | `--link-color` | `--primary`（或未来 `--link`） | 链接 |
 | `--fontSizeBase` 14px | `text-sm` + body `font-sans` | 正文字号 |
-| `--fontFamilyBase` | `--font-sans`（IBM Plex Sans） | 签名字体 |
-| `--fontFamilyMonospace` | `--font-mono`（IBM Plex Mono） | IR / 代码 |
+| `--fontFamilyBase` / `--fonts-base-family` | `--font-sans`（系统栈：PingFang / 微软雅黑 / -apple-system） | 正文字体，不嵌入 webfont |
+| `--fontFamilyMonospace` | `--font-mono`（SFMono / Menlo / Consolas） | IR / 代码 |
 | Layout aside 深底 | `--sidebar*` | Playground 色板、编辑器侧栏 |
 | 浮层阴影 | `shadow-lg` on Dialog | 对话框 |
 | 输入轻阴影 | `shadow-xs` on Input/Button outline | 控件 |
