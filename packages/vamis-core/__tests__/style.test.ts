@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   compileIrToWidget,
@@ -40,6 +43,10 @@ describe('resolveClassName', () => {
   it('keeps m: / pc: prefixes for helper CSS', () => {
     expect(resolveClassName('m:m-t-md pc:m-t-xl', {})).toBe('m:m-t-md pc:m-t-xl')
   })
+
+  it('keeps Amis width helpers including m: / pc: and fractions', () => {
+    expect(resolveClassName('w-full pc:w-1/2 m:w-full', {})).toBe('w-full pc:w-1/2 m:w-full')
+  })
 })
 
 describe('resolveInlineStyle', () => {
@@ -81,12 +88,12 @@ describe('resolveCssVars', () => {
 })
 
 describe('controlWidthForSize', () => {
-  it('maps xs…lg onto form control width tokens', () => {
+  it('maps xs…lg onto form control width tokens and full to 100%', () => {
     expect(controlWidthForSize('xs')).toBe('var(--form-control-width-xs)')
     expect(controlWidthForSize('sm')).toBe('var(--form-control-width-sm)')
     expect(controlWidthForSize('md')).toBe('var(--form-control-width-md)')
     expect(controlWidthForSize('lg')).toBe('var(--form-control-width-lg)')
-    expect(controlWidthForSize('full')).toBeUndefined()
+    expect(controlWidthForSize('full')).toBe('100%')
     expect(controlWidthForSize(undefined)).toBeUndefined()
   })
 })
@@ -116,5 +123,34 @@ describe('IR metadata.style', () => {
     expect(widget.cssVars?.['--primary']).toBe('#111')
     expect(widget.className).toBe('m-t-md')
     expect(widget.density).toBe('comfortable')
+  })
+})
+
+describe('Amis width helpers', () => {
+  it('ships w-* / m: / pc: matching helper.css Width', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/helpers-width.css'), 'utf8')
+    expect(css).toContain('.w-full { width: 100%; }')
+    expect(css).toContain('.m\\:w-full { width: 100%; }')
+    expect(css).toContain('.pc\\:w-1\\/2 { width: 50%; }')
+    expect(css).toContain('@media (max-width: 767px)')
+    expect(css).toContain('@media (min-width: 768px)')
+  })
+
+  it('pins form control sizes only from the sm breakpoint', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain('@media (min-width: 576px)')
+    expect(css).toContain('.vamis-control--fluid')
+    expect(css).toContain('.vamis-control--full')
+    expect(css).toContain('.vamis-control--sm')
+    expect(css).toContain('grid-template-columns: 28% minmax(0, 1fr)')
+  })
+
+  it('keeps Form filling its slot by default without a max-width cap', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    expect(form).toContain('class="w-full min-w-0"')
+    expect(form).not.toContain('max-w-3xl')
   })
 })

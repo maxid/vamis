@@ -59,7 +59,7 @@ const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
         class="absolute right-3 top-3 z-10"
         @click="editing = true"
       >
-        编辑 YAML
+        编辑 Schema
       </Button>
       <div v-if="!parsed.ok" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
         {{ parsed.error }}
@@ -71,10 +71,10 @@ const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
     <Sheet :open="editing" @update:open="editing = $event">
       <SheetContent side="right" class="w-full sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle>编辑 YAML（改完即时预览）</SheetTitle>
+          <SheetTitle>编辑 Schema（改完即时预览）</SheetTitle>
         </SheetHeader>
         <p class="px-4 text-xs text-muted-foreground">
-          这段会交给同一个 VamisRoot 运行时，不是截图。作者态是 YAML 1.2 Core，也可以贴 JSON。
+          这段会交给同一个 VamisRoot 运行时，不是截图。YAML 与 JSON 都是一等作者态。
         </p>
         <textarea
           v-model="draft"

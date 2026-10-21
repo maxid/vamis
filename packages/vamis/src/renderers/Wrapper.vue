@@ -7,7 +7,7 @@ const body = computed(() => asArray(props.schema.body))
 </script>
 
 <template>
-  <div :class="schema.className || 'space-y-3'">
+  <div class="w-full min-w-0" :class="schema.className || 'space-y-3'">
     <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
   </div>
 </template>

@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
 
 <template>
   <form
-    class="w-full max-w-3xl"
+    class="w-full min-w-0"
     @submit.prevent="submit"
   >
     <Card v-if="schema.wrapWithPanel !== false" class="w-full">

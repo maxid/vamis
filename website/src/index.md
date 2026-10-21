@@ -4,9 +4,9 @@ title: 介绍
 
 # 介绍
 
-Vamis 用 Vue 3 复刻 Amis 的低代码运行时。作者态是 **YAML 1.2 Core**，组件 type 对齐 Amis schema 语义，UI 走 shadcn-vue。
+Vamis 用 Vue 3 复刻 Amis 的低代码运行时。作者态同时支持 **YAML** 与 **JSON**，组件 type 对齐 Amis schema 语义，UI 走 shadcn-vue。
 
-和 Amis 官网一样：文档里的 schema 围栏不是截图，会交给同一个 VamisRoot 跑。下面这张表打的是 `/api/mock2/sample`，可以筛选、排序、勾选批量、删行、重置数据。右上角 **编辑 YAML** 改完立刻重渲染。
+和 Amis 官网一样：文档里的 schema 围栏不是截图，会交给同一个 VamisRoot 跑。下面这张表打的是 `/api/mock2/sample`，可以筛选、排序、勾选批量、删行、重置数据。右上角 **编辑 Schema** 可改 YAML 或 JSON，改完立刻重渲染。
 
 ```schema: height=520
 type: page

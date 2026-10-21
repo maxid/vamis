@@ -9,7 +9,7 @@ const columns = computed(() => asArray(props.schema.columns || props.schema.body
 </script>
 
 <template>
-  <div class="grid gap-3 md:grid-cols-12">
+  <div class="grid w-full min-w-0 gap-3 md:grid-cols-12">
     <div
       v-for="(col, i) in columns"
       :key="i"

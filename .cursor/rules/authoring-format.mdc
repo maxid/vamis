@@ -1,0 +1,20 @@
+---
+description: 作者态同时支持 YAML 与 JSON，禁止写成 YAML 唯一
+alwaysApply: true
+---
+
+# 作者态：YAML 与 JSON 并列
+
+Vamis **不强制 YAML**。YAML 1.2 Core 和 JSON 都是一等作者态，解析后进同一棵 schema / IR。文档、UI 文案、生成器禁止写「作者态是 YAML，不是 JSON」。
+
+## 必须
+
+- 入口同时收：对象、JSON 字符串、YAML 字符串、IR 信封。`parseSchemaText` / `parseToIr` / `vamis.embed` / `VamisRoot` 都走这条。
+- 文档主路径可以继续用 YAML 举例（好读），但必须写明 JSON 同等有效，并至少在快速开始给一份 JSON 活示例。
+- YAML 字面量仍按 1.2 Core：`yes` / `On` / `012` 当字符串。这只约束 YAML，不否定 JSON。
+
+## 禁止
+
+- 把 YAML 写成唯一作者态。
+- 组件页、FAQ、生成器里写「作者态是 YAML，不是 JSON」。
+- 编辑器 / 文档预览把「贴 JSON」当成二类导入或错误路径。

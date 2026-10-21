@@ -33,7 +33,7 @@ title: JS SDK
 </script>
 ```
 
-`schema` 可以是裸 widget（`{ type: 'page', ... }`）、YAML 字符串，或 IR 信封（`apiVersion: lcdp.ir/v1`）。
+`schema` 可以是裸 widget（`{ type: 'page', ... }`）、JSON 字符串、YAML 字符串，或 IR 信封（`apiVersion: lcdp.ir/v1`）。
 
 ## API
 

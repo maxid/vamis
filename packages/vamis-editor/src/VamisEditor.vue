@@ -310,7 +310,7 @@ function normalizeToIr() {
           @drop="onCanvasDrop"
         >
           <Alert v-if="parseError" variant="destructive">
-            <AlertTitle>YAML 无法解析</AlertTitle>
+            <AlertTitle>无法解析</AlertTitle>
             <AlertDescription class="font-mono text-xs">{{ parseError }}</AlertDescription>
           </Alert>
           <VamisRoot v-else-if="previewIr" :schema="previewIr" />
@@ -321,7 +321,7 @@ function normalizeToIr() {
     <aside class="flex w-80 shrink-0 flex-col border-l">
       <div class="border-b px-3 py-2">
         <p class="font-mono text-[10px] tracking-[0.2em] text-primary">SOURCE</p>
-        <h2 class="text-sm font-medium">YAML · 属性</h2>
+        <h2 class="text-sm font-medium">Schema · 属性</h2>
       </div>
       <div class="space-y-3 border-b p-3">
         <div class="flex gap-1">

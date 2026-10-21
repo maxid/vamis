@@ -1,0 +1,22 @@
+---
+description: 组件默认自适应布局；铺满容器是默认，不是作者必须配置的字段
+alwaysApply: true
+---
+
+# 默认自适应（降低心智负担）
+
+Amis 特定组件的自适应样式是**默认行为**，不需要先写 `size` / `className` / `w-full`。Vamis 同样：作者写最简 YAML 就应在容器里铺满、随容器伸缩。
+
+## 必须
+
+- **默认 = 吃满布局槽**。page / form / crud / table / grid / flex / container / 表单项控件（未写 `size`）随父级宽度走，`max-width: 100%`，窄了就缩。
+- **配置是例外**。`size: xs|sm|md|lg` 才钉死档位；`size: full` 只在默认吃不满时显式拉满（如 inline / 多列）；`className: w-1/2`、`m:` / `pc:` 才是覆盖。
+- 文档和示例的主路径**不要**教「先写 `size: full` 或 `w-full` 才能用」。先给无 size 的表单，再给可选收窄。
+- 渲染器禁止给 page/form/crud/table 写死 `max-w-3xl` 这类作者没要的上限。Dialog 等浮层可以有默认尺寸（对齐 Amis dialog `size`），用 schema `size` 覆盖。
+- 按钮、徽标、纯文本不要被这条规则拉成 100% 宽；只约束**布局容器和表单控件槽**。
+
+## 禁止
+
+- 把「铺满」做成作者必须记住的开关。
+- 在渲染器里为了 Playground 好看而收窄整页表单。
+- 新组件默认宽度写成固定 px（除非对齐 Amis 该 type 的 `size` 档，且未写 size 时仍自适应）。

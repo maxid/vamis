@@ -36,11 +36,13 @@
 | **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 LCDP IR 同形 |
 | **UiPage** | Vamis 扩展 kind，`spec` 里放 Amis widget 树 |
 | **FormDef / TableDef** | LCDP IR 已有 kind；可编译成 form / crud 预览 |
-| **YAML 1.2 Core** | 作者态字面量：bool/null/数字不加引号；`yes`/`On`/`012` 当字符串 |
+| **作者态** | YAML 与 JSON 并列，不强制 YAML。对象 / JSON 字符串 / YAML 字符串 / IR 信封都进同一运行时 |
+| **YAML 1.2 Core** | YAML 字面量：bool/null/数字不加引号；`yes`/`On`/`012` 当字符串。不约束 JSON |
 | **Scope / 数据链** | 数据域 + `__super`；设计 D1，尚未落地 |
 | **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm` |
 | **onEvent** | 组件事件到动作注册表；设计 D4，现为精简 switch |
 | **shadcn token** | 颜色独立；**盒子对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），不引入 `cxd-` |
+| **默认自适应** | 特定组件铺满容器是默认，不必写 `size`/`w-full`。`size`/`className` 只是收窄或覆盖 |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（Monaco、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
@@ -54,15 +56,18 @@
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
-| 视觉 | 盒子数字对齐 cxd；配色独立 | token + `m-t-xs` 辅助类 + FormItem `size` + Table cell 已吃满；`xxxClassName` / `registerTheme` 仍 P1 |
+| 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 已落地 | `vamis.embed`；`pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`，可编辑即时预览 |
-| 测试 | `pnpm test` core 50 + sdk 12 过 | `typecheck` 仍有既有错误 |
+| 测试 | `pnpm test` core 55 + sdk 12 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- 准则落地「作者态不强制 YAML」：YAML 与 JSON 并列；`parseSchemaText` / SDK / 编辑器都收；文档生成器与组件页去掉「不是 JSON」；Playground 源码可格式化为 YAML 或 JSON。
+- 准则落地「默认自适应」：特定组件铺满容器不必写 `size`/`w-full`；Form 去掉 `max-w-3xl`；未写 size 挂 `vamis-control--fluid`；写入 AGENTS / 样式 spec §0 / `.cursor/rules/adaptive-default.mdc`；文档主路径先给无 size 表单。
+- 样式宽度对标 Amis：`size: full` 占满；xs–lg 仅 ≥576px 钉死且 `max-width: 100%`；helper `w-*`/`min-w-*`/`max-w-*` 带 `m:`/`pc:`；横排窄屏 label 约 28%。
 - JS SDK P0 落地：`packages/vamis-sdk` 打出 `sdk.js` / `sdk.css`；`vamis.embed` 支持 JSON / YAML / IR，以及 `updateSchema` / `updateProps` / `unmount`；无构建页 `hello.html` 与文档 iframe `/sdk/hello.html`。
 - 规格锁定必须支持 JS SDK：任意 HTML `vamis.embed(container, schema, props?, env?)`，与 Vue `VamisRoot` 同一内核；不搬 `amisRequire` / `cxd.css`。
 - 样式内核落地：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；IR `metadata.style`（cssVars / density / className）；FormItem `size` 吃控件宽档；Table 吃 `--table-cell-px`；`m-t-xs` 等辅助类走 `--gap-*`。

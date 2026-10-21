@@ -8,9 +8,9 @@ title: 常见问题
 
 对齐 **组件 type 与 schema 语义**（6.13.0）。不是 React/MST 的移植，也不复刻 `cxd-` 皮肤。UI 原语是 shadcn-vue。
 
-## 为什么用 YAML 而不是 JSON？
+## 作者态必须用 YAML 吗？
 
-YAML 是作者态，注释和多行模板更舒服。运行时先解析成对象，再进 IR。JSON 仍然能导入。字面量按 **YAML 1.2 Core**：不要把 `yes` / `On` / `012` 当成布尔或八进制。
+不必。**YAML 与 JSON 都是一等作者态**，`parseSchemaText` / `VamisRoot` / `vamis.embed` 都收。YAML 注释和多行模板更舒服；JSON 更方便从 Amis 直接搬。写 YAML 时字面量按 **1.2 Core**：不要把 `yes` / `On` / `012` 当成布尔或八进制。
 
 ## 已注册是不是就能当 Amis 用？
 
@@ -23,6 +23,10 @@ YAML 是作者态，注释和多行模板更舒服。运行时先解析成对象
 ## 可以写 JavaScript 函数进 schema 吗？
 
 不可以。函数只能以表达式字符串或已注册动作名进入，禁止隐式 `eval`。SDK 的 `env.fetcher` 等是宿主回调，允许。
+
+## 表单控件要不要写 `size: full` 或 `w-full` 才能铺满？
+
+不用。page / form / 表单控件**默认吃满布局槽**，跟 Amis 一样，这是降低心智负担的准则。`size: xs|sm|md|lg` 才是可选收窄；`className` 只在要覆盖时写。
 
 ## 主题能换成云舍吗？
 

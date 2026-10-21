@@ -63,7 +63,7 @@ watch([dark, density, accent], () => {
         <div class="flex min-w-0 items-center gap-4">
           <div>
             <p class="font-mono text-[11px] tracking-[0.22em] text-primary">VAMIS / lcdp.ir/v1</p>
-            <h1 class="text-lg font-semibold tracking-tight">YAML 即页面</h1>
+            <h1 class="text-lg font-semibold tracking-tight">Schema 即页面</h1>
           </div>
           <SiteSearch />
         </div>
