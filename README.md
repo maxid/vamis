@@ -4,19 +4,28 @@
 
 按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。YAML 作者态和对齐 xdmp IR 不变。
 
-## 当前状态（2026-10-20）
+## 当前状态（2026-10-21）
 
+- 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
 - amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
-- `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有 27 个错误待清。
-- amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0，本轮无需搬运新组件。
+- 组件语义（侧栏 155）：已完成 0 / 进行中 153 / 未开始 2，平均 47%。
+- `pnpm test` 37/37 通过；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
+- amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
-完整状态、实现深度分级与下一阶段清单见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)。覆盖数字可用 `pnpm status -- --amis ../amis` 复算。
+type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) 与 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。
+
+## 给 AI / 协作者
+
+- [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
+- [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
 
 ## 设计文档
 
 - [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)：YAML 作者态、`UiPage` 信封、渲染管线。
 - [运行时语义设计](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md)：基于 amis 文档对齐数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 增补与路线图。
+- [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
+- [主题映射](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)：Amis 后台水标 × shadcn token。
 
 ## 怎么跑
 

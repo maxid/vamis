@@ -1,7 +1,7 @@
 # vamis 运行时语义设计（amis 文档对齐）
 
 - 日期：2026-10-20
-- 状态：设计增补（v0.2 语义基线，待实现）
+- 状态：设计增补（v0.2 语义基线，待实现；落地进度见 [CONTEXT.md](../../../CONTEXT.md)）
 - 范围：数据域、表达式/模板、API、事件动作、表单、CRUD、渲染器契约、扩展、主题/i18n、诊断、IR
 - 参考：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
 - 关联：
