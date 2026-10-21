@@ -2,11 +2,70 @@ import MarkdownIt from 'markdown-it'
 import { playgroundHref } from './pages'
 import { parseSchemaFenceMeta } from './schema-scope'
 
-const md = new MarkdownIt({ html: true, linkify: true, breaks: false })
+export type TocItem = {
+  id: string
+  text: string
+  level: number
+}
 
 export type DocBlock =
   | { kind: 'html'; html: string }
   | { kind: 'schema'; yaml: string; scope?: string; height?: number }
+
+type TocState = {
+  items: TocItem[]
+  seen: Map<string, number>
+}
+
+const tocState: TocState = { items: [], seen: new Map() }
+
+const md = new MarkdownIt({ html: true, linkify: true, breaks: false })
+
+md.core.ruler.after('inline', 'vamis-heading-anchors', (state) => {
+  const tokens = state.tokens
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i]
+    if (token.type !== 'heading_open') continue
+    const level = Number(token.tag.slice(1))
+    if (level < 2 || level > 4) continue
+    const inline = tokens[i + 1]
+    if (!inline || inline.type !== 'inline') continue
+    const text = headingText(inline).trim()
+    if (!text) continue
+    const id = uniqueHeadingId(text, tocState.seen)
+    token.attrSet('id', id)
+    tocState.items.push({ id, text, level })
+  }
+})
+
+/** Align Amis md-parser: keep CJK / word chars, turn the rest into `-`. */
+export function slugifyHeading(text: string): string {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[^\u4e00-\u9fa5_a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function headingText(inline: { children: { type: string; content: string }[] | null; content: string }): string {
+  if (!inline.children?.length) return inline.content
+  return inline.children
+    .filter((child) => child.type === 'text' || child.type === 'code_inline')
+    .map((child) => child.content)
+    .join('')
+}
+
+function uniqueHeadingId(text: string, seen: Map<string, number>): string {
+  const base = slugifyHeading(text) || 'section'
+  const count = (seen.get(base) ?? 0) + 1
+  seen.set(base, count)
+  return count === 1 ? base : `${base}-${count}`
+}
+
+function resetToc() {
+  tocState.items = []
+  tocState.seen = new Map()
+}
 
 export function parseFrontmatter(raw: string): { title: string; body: string } {
   let title = ''
@@ -37,8 +96,9 @@ function calloutHtml(level: string, title: string, body: string): string {
   }${inner}</div>`
 }
 
-export function parseDoc(raw: string): { title: string; blocks: DocBlock[] } {
+export function parseDoc(raw: string): { title: string; blocks: DocBlock[]; toc: TocItem[] } {
   const { title, body } = parseFrontmatter(raw)
+  resetToc()
   const blocks: DocBlock[] = []
   const tokenRe =
     /^```schema([^\n]*)\n([\s\S]*?)^```|::: ?(info|tip|warning|danger)[^\n]*\n([\s\S]*?):::/gm
@@ -68,5 +128,5 @@ export function parseDoc(raw: string): { title: string; blocks: DocBlock[] } {
   }
   const tail = body.slice(last)
   if (tail.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(tail)) })
-  return { title, blocks }
+  return { title, blocks, toc: tocState.items }
 }

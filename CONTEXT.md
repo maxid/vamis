@@ -61,11 +61,13 @@
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 仍抛未实现，等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步 |
+| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
 | 测试 | 源码用例 formula 188 + core 72 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 文档页滚动条默认隐藏、滚动时才显示；右侧 TOC 去掉 aside 左边框，和正文连成一块。
+- 站点文档右侧加「内容」TOC（对齐 Amis `Doc-toc`）：markdown `h2`–`h4` 补锚点，点击平滑滚动、滚动高亮；`lg` 以下隐藏；没标题不占栏。覆盖 `/`、`/docs/*`、`/components/*`。
 - Page / Container 对标 Amis 文档：补齐示例与属性表、事件表、动作表。Page 接 `css` 块、remark 图标、`reload`/`setValue` 的 `dataMergeMode: override`、`event.data`；公式层加 `|json` / `|default` 与 `this.xxx`。仍被 D1/D4 挡住，不能标已完成。
 - 组件侧栏把「组件介绍」挪到分组外第一项，不再挂在「布局」里。
 - 正文字体改用 Amis `--fonts-base-family` 系统栈（PingFang / 微软雅黑 / -apple-system），等宽对齐 `--fontFamilyMonospace`；去掉 `@fontsource/ibm-plex-*`，不在产物里打包字体文件。`cssVars` 的 `--fonts-base-family` / `--fontFamilyBase` 会映到 `--font-sans`。
