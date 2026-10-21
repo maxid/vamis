@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { VamisRoot, jsonToIr, parseSchemaText, yamlFromIr } from 'vamis'
 import {
   Alert,
@@ -16,11 +17,15 @@ import {
 import CatalogTree from '../components/CatalogTree.vue'
 import {
   componentGroups,
+  componentLeaves,
   defaultExample,
   exampleGroups,
+  exampleLeaves,
   type CatalogLeaf,
 } from '../catalog'
 
+const route = useRoute()
+const router = useRouter()
 const tab = ref('examples')
 const source = ref(defaultExample?.yaml || '')
 const selectedId = ref(defaultExample?.id || '')
@@ -38,11 +43,33 @@ const parsed = computed(() => {
   }
 })
 
-function onSelect(leaf: CatalogLeaf) {
+function applyLeaf(leaf: CatalogLeaf) {
   selectedId.value = leaf.id
   selectedLabel.value = leaf.label
   source.value = leaf.yaml
+  tab.value = leaf.kind === 'component' ? 'components' : 'examples'
 }
+
+function onSelect(leaf: CatalogLeaf) {
+  applyLeaf(leaf)
+  if (route.query.example !== leaf.id) {
+    void router.replace({ query: { example: leaf.id } })
+  }
+}
+
+function leafById(id: string) {
+  return exampleLeaves.find((item) => item.id === id) || componentLeaves.find((item) => item.id === id)
+}
+
+watch(
+  () => route.query.example,
+  (id) => {
+    if (typeof id !== 'string' || !id) return
+    const leaf = leafById(id)
+    if (leaf && leaf.id !== selectedId.value) applyLeaf(leaf)
+  },
+  { immediate: true },
+)
 
 function formatSource() {
   try {
