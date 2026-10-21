@@ -9,9 +9,19 @@ export const router = createRouter({
     return { top: 0 }
   },
   routes: [
-    { path: '/', name: 'examples', component: PlaygroundView },
+    {
+      path: '/',
+      name: 'home',
+      component: DocView,
+      beforeEnter(to) {
+        if (typeof to.query.example === 'string' && to.query.example) {
+          return { path: '/examples', query: to.query }
+        }
+      },
+    },
+    { path: '/examples', name: 'examples', component: PlaygroundView },
     { path: '/editor', name: 'editor', component: EditorView },
-    { path: '/docs', name: 'docs', component: DocView },
+    { path: '/docs', redirect: '/' },
     { path: '/docs/:path(.*)*', name: 'docs-page', component: DocView },
     { path: '/components', name: 'components', component: DocView },
     { path: '/components/:path(.*)*', name: 'component-page', component: DocView },

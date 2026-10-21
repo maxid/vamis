@@ -107,7 +107,7 @@ function formatSource(kind: 'yaml' | 'json') {
           <TabsList class="grid h-8 w-full grid-cols-3">
             <TabsTrigger value="components">组件</TabsTrigger>
             <TabsTrigger value="examples">示例</TabsTrigger>
-            <TabsTrigger value="ir">IR 源码</TabsTrigger>
+            <TabsTrigger value="ir">Schema</TabsTrigger>
           </TabsList>
         </div>
 

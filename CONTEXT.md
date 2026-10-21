@@ -23,7 +23,7 @@
 | `@vamis/ui` | `packages/vamis-ui` | shadcn-vue 原语与 CSS 变量（密度、状态色） |
 | `vamis` | `packages/vamis` | Amis type 渲染器；`register.ts` + `extras/*.ts` |
 | `@vamis/editor` | `packages/vamis-editor` | 树 / 画布 / 属性 / YAML |
-| playground | `playground` | 示例（`/`）+ 文档（`/docs`）+ 组件文档（`/components`） |
+| playground | `playground` | 文档（`/`）+ 组件（`/components`）+ 示例（`/examples`） |
 | 文档正文 | `website/src` | Markdown 真源；playground 在 5173 渲染 |
 | `@vamis/sdk` | `packages/vamis-sdk` | JS SDK：`sdk.js` + `vamis.embed`；P0 已落地 |
 
@@ -58,14 +58,17 @@
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 58%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
-| Playground | `/` 示例 + `/docs` 文档 + `/components` 组件 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
+| Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 已落地 | `vamis.embed`；`pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | `pnpm dev` → `/docs`；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步 |
+| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步 |
 | 测试 | `pnpm test` formula 185 + core 64 + sdk 12 过 | `typecheck` 仍有既有错误 |
 
 **最近交付**
 
+- 示例页右侧第三个 Tab 文案由「IR 源码」改为「Schema」。
+- 对外文档去掉「围栏不是截图 / 真跑 / 编辑 Tab」这类站点说明，只留项目本身的内容。
+- 站点首页改为文档：`/` 打开介绍页，示例挪到 `/examples`，旧 `/docs` 重定向到 `/`。
 - 公式引擎搬进仓内 `@vamis/formula`（amis-formula 6.13.0 MIT）；`filterTpl` 走 parser，`${name|raw}` / `${name|html}` 可用。不再依赖 npm `amis-formula`。
 - 文档「编辑 Schema」做成 YAML / JSON 两个 Tab，`syncAuthoringText` 双向实时同步；解析失败时对侧与预览停在上一份有效 schema。
 - 布局对标起步：并行 `page` 70%、`container` 78%（仍进行中）。Page 接 initApi overlay / interval / aside / reload；Container 接 wrapperComponent / wrapperBody / 指针事件。文档手写活示例。

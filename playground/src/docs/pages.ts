@@ -13,7 +13,7 @@ for (const [key, raw] of Object.entries(files)) {
 
 export function resolveDoc(pathname: string): { rel: string; raw: string } | null {
   let rel = pathname.replace(/\/+$/, '') || '/'
-  if (rel === '/docs') rel = '/index'
+  if (rel === '/' || rel === '/docs') rel = '/index'
   else if (rel.startsWith('/docs/')) rel = rel.slice('/docs'.length)
   if (!rel.startsWith('/')) rel = `/${rel}`
   const candidates = [`${rel}.md`, `${rel}/index.md`, `${rel}.md`.replace(/\.md$/, '/index.md')]
@@ -31,7 +31,14 @@ function trimSlash(link: string): string {
 
 export function playgroundHref(link: string): string {
   if (!link || link.startsWith('http') || link.startsWith('#')) return link
-  if (link.startsWith('/components') || link.startsWith('/docs') || link.startsWith('/editor')) return trimSlash(link)
-  if (link === '/') return '/docs'
+  if (
+    link.startsWith('/components') ||
+    link.startsWith('/docs') ||
+    link.startsWith('/editor') ||
+    link.startsWith('/examples')
+  ) {
+    return trimSlash(link)
+  }
+  if (link === '/') return '/'
   return trimSlash(`/docs${link}`)
 }

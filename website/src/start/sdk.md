@@ -8,7 +8,7 @@ title: JS SDK
 
 构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。Vue 工程请走 [快速开始](/start/getting-started)。
 
-下面 iframe 跑的是打包后的 `sdk.js`，不是文档里的 `VamisRoot`。
+下面 iframe 跑打包后的 `sdk.js`：
 
 <iframe src="../../sdk/hello.html" title="Vamis JS SDK hello" style="width:100%;height:420px;border:1px solid var(--border, #e5e7eb);border-radius:8px;background:var(--card, #fff)"></iframe>
 

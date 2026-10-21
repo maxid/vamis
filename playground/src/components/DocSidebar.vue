@@ -44,7 +44,7 @@ function isOpen(name: string) {
 }
 
 function isActive(link: string) {
-  if (link === '/docs') return route.path === '/docs'
+  if (link === '/' || link === '/docs') return route.path === '/' || route.path === '/docs'
   return route.path === link || route.path === `${link}/`
 }
 </script>

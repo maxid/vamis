@@ -19,10 +19,8 @@ Vamis 有两种用法，和 Amis 一样：
 
 ```bash
 pnpm install
-pnpm dev          # 同一应用：示例 / 文档 / 组件 / 编辑器，http://127.0.0.1:5173
+pnpm dev          # 同一应用：文档（首页）/ 组件 / 示例 / 编辑器，http://127.0.0.1:5173
 ```
-
-顶栏 **文档** 打开 `/docs`，**组件** 打开 `/components`，**示例** 是 Playground。和 Amis 一样，不必另起端口。
 
 在自己的 Vue 应用里引用 workspace 包（或之后发布的 npm 名）：
 
@@ -70,7 +68,7 @@ app.mount('#app')
 
 ## 作者态：YAML 或 JSON
 
-两种写法同等有效，都交给 `parseSchemaText`（以 `{` / `[` 开头当 JSON）。下面是文档里的真运行时：
+两种写法同等有效，都交给 `parseSchemaText`（以 `{` / `[` 开头当 JSON）。
 
 ```schema
 type: page

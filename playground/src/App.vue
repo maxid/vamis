@@ -13,6 +13,12 @@ function navClass(prefix: string, exact = false) {
   return active ? 'bg-primary text-primary-foreground hover:bg-primary' : ''
 }
 
+function docsNavClass() {
+  const path = route.path
+  const active = path === '/' || path === '/docs' || path.startsWith('/docs/')
+  return active ? 'bg-primary text-primary-foreground hover:bg-primary' : ''
+}
+
 const THEME_KEY = 'vamis-theme'
 const DENSITY_KEY = 'vamis-density'
 const ACCENT_KEY = 'vamis-accent'
@@ -108,7 +114,7 @@ watch([dark, density, accent], () => {
             <Button size="xs" :variant="dark ? 'default' : 'ghost'" @click="dark = true">深色</Button>
           </div>
           <nav class="flex gap-2 text-sm">
-            <RouterLink to="/docs" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/docs')">
+            <RouterLink to="/" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="docsNavClass()">
               文档
             </RouterLink>
             <RouterLink
@@ -118,7 +124,7 @@ watch([dark, density, accent], () => {
             >
               组件
             </RouterLink>
-            <RouterLink to="/" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/', true)">
+            <RouterLink to="/examples" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/examples')">
               示例
             </RouterLink>
             <RouterLink
