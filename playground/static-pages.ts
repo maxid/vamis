@@ -15,13 +15,13 @@ export function routeFromMarkdown(websiteSrc: string, file: string): string {
   let rel = file.slice(websiteSrc.length).replaceAll('\\', '/')
   if (!rel.startsWith('/')) rel = `/${rel}`
   rel = rel.replace(/\.md$/, '').replace(/\/index$/, '') || '/'
-  if (rel === '/') return '/docs'
+  if (rel === '/') return '/'
   if (rel === '/components' || rel.startsWith('/components/')) return rel
   return `/docs${rel}`
 }
 
 export function collectPlaygroundRoutes(websiteSrc: string): string[] {
-  const routes = new Set<string>(['/', '/editor', '/docs', '/components'])
+  const routes = new Set<string>(['/', '/editor', '/docs', '/components', '/examples'])
   for (const file of walkMarkdown(websiteSrc)) {
     routes.add(routeFromMarkdown(websiteSrc, file))
   }

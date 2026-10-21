@@ -10,11 +10,11 @@
 
 | 顶栏 | 路由 | 内容 |
 |------|------|------|
-| 文档 | `/docs` | 开始（含 JS SDK）、概念、样式、类型、扩展 |
+| 文档 | `/` | 开始（含 JS SDK）、概念、样式、类型、扩展；`/docs` 重定向到首页 |
 | 组件 | `/components` | 侧栏 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
-| 示例 | `/` | Playground 分类树 + 预览 |
+| 示例 | `/examples` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
-| 搜索 | ⌘K | 文档 / 组件 / 示例索引；示例跳 `/?example=` |
+| 搜索 | ⌘K | 文档 / 组件 / 示例索引；示例跳 `/examples?example=` |
 | GitHub | 外链 | https://github.com/maxid/vamis |
 
 - 作者态 YAML 与 JSON 并列；` ```schema ` 在页面内交给 `VamisRoot` 真跑（可编辑即时预览），对齐 Amis `MdRenderer` + Play mini，不是截图。围栏可以是 YAML 或 JSON。

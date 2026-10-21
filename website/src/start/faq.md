@@ -10,7 +10,7 @@ title: 常见问题
 
 ## 作者态必须用 YAML 吗？
 
-不必。**YAML 与 JSON 都是一等作者态**，`parseSchemaText` / `VamisRoot` / `vamis.embed` 都收。文档右上角 **编辑 Schema** 是两个 Tab，改 YAML 或 JSON 都会即时同步到另一边。YAML 注释和多行模板更舒服；JSON 更方便从 Amis 直接搬。写 YAML 时字面量按 **1.2 Core**：不要把 `yes` / `On` / `012` 当成布尔或八进制。
+不必。**YAML 与 JSON 都是一等作者态**，`parseSchemaText` / `VamisRoot` / `vamis.embed` 都收。YAML 注释和多行模板更舒服；JSON 更方便从 Amis 直接搬。写 YAML 时字面量按 **1.2 Core**：不要把 `yes` / `On` / `012` 当成布尔或八进制。
 
 ## 已注册是不是就能当 Amis 用？
 

@@ -21,7 +21,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 - [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
 - [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
-- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/docs（与示例同一应用）
+- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/（首页即文档，与示例同一应用）
 - GitHub Pages：https://maxid.github.io/vamis/（推 `main` 后由 Actions 发布）
 
 ## 设计文档
@@ -32,7 +32,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
 - [主题映射](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)：Amis 后台水标 × shadcn token。
-- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（`/docs`、`/components`）。
+- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（首页 `/`、`/components`）。
 
 ## 怎么跑
 
@@ -45,9 +45,9 @@ pnpm dev          # 示例 / 文档 / 组件，http://127.0.0.1:5173
 
 | 路由 | 做什么 |
 |------|--------|
-| `/` | 示例：分类树 + 预览 + IR |
-| `/docs` | 文档（开始 / 概念 / 样式 / 类型 / 扩展） |
+| `/` | 文档首页（开始 / 概念 / 样式 / 类型 / 扩展） |
 | `/components` | 组件文档（侧栏对齐 Amis，YAML 实时预览） |
+| `/examples` | 示例：分类树 + 预览 + IR |
 | `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + YAML |
 
 跑核心测试：
@@ -58,7 +58,7 @@ pnpm test
 
 ## GitHub Pages
 
-Playground（`/` 示例 + `/docs` + `/components` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
+Playground（`/` 文档 + `/components` + `/examples` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
 
 第一次需要在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。之后推 `main` 或手动跑 workflow `Deploy playground to GitHub Pages`。
 

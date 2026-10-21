@@ -6,7 +6,7 @@ title: 介绍
 
 Vamis 用 Vue 3 复刻 Amis 的低代码运行时。作者态同时支持 **YAML** 与 **JSON**，组件 type 对齐 Amis schema 语义，UI 走 shadcn-vue。
 
-和 Amis 官网一样：文档里的 schema 围栏不是截图，会交给同一个 VamisRoot 跑。下面这张表打的是 `/api/mock2/sample`，可以筛选、排序、勾选批量、删行、重置数据。右上角 **编辑 Schema** 分 YAML / JSON 两个 Tab，改一边另一边马上跟上。
+下面这份 CRUD 打 `/api/mock2/sample`，可以筛选、排序、勾选批量、删行、重置数据。
 
 ```schema: height=520
 type: page
@@ -90,22 +90,11 @@ body:
           api: "delete:/api/mock2/sample/${id}"
 ```
 
-能力还没对齐 Amis 的部分（列冻结、拖拽排序、导出 Excel、`autoGenerateFilter`、数据域 D1）会缺，但请求、表格、筛选、弹窗走的是真运行时，不是假数据贴图。
+尚未对齐：列冻结、拖拽排序、导出 Excel、`autoGenerateFilter`、数据域 D1。
 
-## 文档怎么读
-
-`pnpm dev` 打开后，文档 / 组件 / 示例在同一个应用：
-
-| 顶栏 | 路由 |
-|------|------|
-| 文档 | `/docs` |
-| 组件 | `/components` |
-| 示例 | `/` |
-| 编辑器 | `/editor` |
+## 下一步
 
 - [快速开始](/start/getting-started)
 - [JS SDK](/start/sdk)
 - [组件文档](/components/)
 - [配置与 Schema](/concepts/schema)
-
-正文是 Vamis 自己的说明。每篇组件页会标明 **实现进度**——已注册不等于语义完成。

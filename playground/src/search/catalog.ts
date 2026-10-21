@@ -10,9 +10,9 @@ export type SearchHit = {
 
 export function buildSearchIndex(): SearchHit[] {
   const hits: SearchHit[] = [
-    { href: '/docs', title: '介绍', group: '文档', keywords: '介绍 文档 开始' },
+    { href: '/', title: '介绍', group: '文档', keywords: '介绍 文档 开始 首页' },
     { href: '/components', title: '组件介绍', group: '组件', keywords: '组件介绍' },
-    { href: '/', title: '示例', group: '页面', keywords: '示例 playground 预览' },
+    { href: '/examples', title: '示例', group: '页面', keywords: '示例 playground 预览' },
     { href: '/editor', title: '编辑器', group: '页面', keywords: '编辑器 yaml 可视化' },
   ]
   for (const group of docsGroups) {
@@ -40,7 +40,7 @@ export function buildSearchIndex(): SearchHit[] {
   }
   for (const leaf of exampleLeaves) {
     hits.push({
-      href: `/?example=${encodeURIComponent(leaf.id)}`,
+      href: `/examples?example=${encodeURIComponent(leaf.id)}`,
       title: leaf.label,
       group: '示例',
       keywords: leaf.searchable,
