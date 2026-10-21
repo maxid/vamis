@@ -6,8 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--fonts-base-family);
+  --font-mono: var(--fontFamilyMonospace);
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.5);
@@ -70,6 +70,15 @@
   color-scheme: light;
   --accent-h: 258;
   --radius: 0.25rem;
+  /* Amis --fonts-base-family（fonts.css 系统栈）。不嵌入 webfont / 商用字体文件。 */
+  --fonts-base-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
+    "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
+    "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
+    SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+  --fontFamilyBase: var(--fonts-base-family);
+  --fontFamilyMonospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   --background: oklch(0.97 0.008 250);
   --foreground: oklch(0.24 0.035 258);
   --card: oklch(0.995 0.003 250);

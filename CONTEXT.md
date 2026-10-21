@@ -57,15 +57,17 @@
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
 | 组件语义（侧栏 155） | 已完成 **0** / 进行中 153 / 未开始 2，平均 **47%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 58%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | 未落地 | 卡住绝大多数「进行中」组件升到已完成 |
-| 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
+| 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
-| JS SDK | P0 已落地 | `vamis.embed`；`pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 等 D4/D5 |
+| JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 仍抛未实现，等 D4/D5 |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步 |
-| 测试 | `pnpm test` formula 185 + core 64 + sdk 12 过 | `typecheck` 仍有既有错误 |
+| 测试 | 源码用例 formula 188 + core 64 + sdk 12 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 正文字体改用 Amis `--fonts-base-family` 系统栈（PingFang / 微软雅黑 / -apple-system），等宽对齐 `--fontFamilyMonospace`；去掉 `@fontsource/ibm-plex-*`，不在产物里打包字体文件。`cssVars` 的 `--fonts-base-family` / `--fontFamilyBase` 会映到 `--font-sans`。
+- 同步项目状态：`pnpm status -- --amis /Users/maxid/Develop/IdeaProjects/github/amis` 覆盖仍 181 / 189（95.8%）；amis master 仍停在 `43a33ee06`；同步文档基线改到 Vamis `f7aa2bb`。
 - `@vamis/formula` 版权写成双声明：引擎原文仍是百度智能云爱速搭（MIT），包装与后续改动归 Vamis。
 - 示例页右侧第三个 Tab 文案由「IR 源码」改为「Schema」。
 - 对外文档去掉「围栏不是截图 / 真跑 / 编辑 Tab」这类站点说明，只留项目本身的内容。
@@ -96,7 +98,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **布局组件对标 Amis（进行中）**：先并行 `page` + `container`（文档/示例/属性/事件）。被 D1/D4 挡住的不标已完成。下一对：`flex` + `grid`。
+1. **布局组件对标 Amis（进行中）**：`page` 70%、`container` 78%，仍被 D1/D4 挡住不能标已完成。下一对：`flex` + `grid`。
 2. **P0 kernel D1 Scope**：显式数据域 + `__super`，先让 `page` / `service` / `form` / `crud` 不再每节点浅拷贝父数据。文档高级示例依赖它。
 3. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
 4. **P0 kernel D2 表达式过滤器**：引擎已在 `@vamis/formula`；还要把 Amis 运行时那批 `|date` / `|json` 过滤器搬过来，模板默认转义（`|raw` 才出 HTML）。

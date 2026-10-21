@@ -85,6 +85,16 @@ describe('resolveCssVars', () => {
     expect(out['--table-cell-px']).toBe('10px')
     expect(out['--Form-input-height']).toBe('32px')
   })
+
+  it('aliases Amis font family vars onto --font-sans / --font-mono', () => {
+    const out = resolveCssVars({
+      '--fonts-base-family': 'Georgia, serif',
+      '--fontFamilyMonospace': 'Courier, monospace',
+    })
+    expect(out['--font-sans']).toBe('Georgia, serif')
+    expect(out['--font-mono']).toBe('Courier, monospace')
+    expect(out['--fonts-base-family']).toBe('Georgia, serif')
+  })
 })
 
 describe('controlWidthForSize', () => {

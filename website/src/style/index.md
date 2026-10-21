@@ -16,7 +16,7 @@ Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文�
 | `level: primary` | `variant="default"` |
 | `.cxd-Button` | 禁止 |
 
-水标：14px 字、32px 控件、4px 圆角、状态色能分开。字体 IBM Plex。
+水标：14px 字、32px 控件、4px 圆角、状态色能分开。字体走 Amis `--fonts-base-family` 系统栈，不嵌入 webfont。
 
 **默认自适应**：page / form / 表单控件不写 `size`、不写 `w-full` 就吃满布局槽。`size: sm` 这类才是可选收窄。
 

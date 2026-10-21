@@ -10,8 +10,6 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@fontsource/ibm-plex-mono": "^5.2.7",
-    "@fontsource/ibm-plex-sans": "^5.2.8",
     "@vamis/core": "workspace:*",
     "@vamis/editor": "workspace:*",
     "@vamis/ui": "workspace:*",

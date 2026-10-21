@@ -160,12 +160,6 @@ importers:
 
   playground:
     dependencies:
-      '@fontsource/ibm-plex-mono':
-        specifier: ^5.2.7
-        version: 5.3.0
-      '@fontsource/ibm-plex-sans':
-        specifier: ^5.2.8
-        version: 5.3.0
       '@vamis/core':
         specifier: workspace:*
         version: link:../packages/vamis-core
@@ -240,12 +234,6 @@ importers:
         specifier: ^2.0.9
         version: 2.0.9
     devDependencies:
-      '@fontsource/ibm-plex-mono':
-        specifier: ^5.2.7
-        version: 5.3.0
-      '@fontsource/ibm-plex-sans':
-        specifier: ^5.2.8
-        version: 5.3.0
       '@tailwindcss/vite':
         specifier: ^4.1.14
         version: 4.3.3(vite@7.3.7(@types/node@26.6.5)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1))
@@ -684,12 +672,6 @@ packages:
     resolution: {integrity: sha512-043dyEKD9TDSfz080YH2vobubgg+NIo/9Fw4RAl7sEMpD8Am1DNrrSTl/GpMBjyGHoD/FbJY2QLawY+HSQsEIA==}
     peerDependencies:
       vue: '>=3.3.0'
-
-  '@fontsource/ibm-plex-mono@5.3.0':
-    resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
-
-  '@fontsource/ibm-plex-sans@5.3.0':
-    resolution: {integrity: sha512-CbE4CbbEEZJX860XyUiRpsksXIQR8Rp2XDva2VO53NJox9tVNtusrysd2x5YkUEY3ErQ66W1IiiQL8/wihhw5w==}
 
   '@iconify-json/simple-icons@1.2.100':
     resolution: {integrity: sha512-536pN2RCEQyy5bYwzayrs4e9egr8cmtVcbdSHLaQl/ULUsihzn1eZ0+Hhn50zgz9cbEotiynKsKQSEjFJ7qKmw==}
@@ -2217,10 +2199,6 @@ snapshots:
       '@floating-ui/dom': 1.8.0
       '@floating-ui/utils': 0.2.12
       vue: 3.5.44(typescript@5.9.3)
-
-  '@fontsource/ibm-plex-mono@5.3.0': {}
-
-  '@fontsource/ibm-plex-sans@5.3.0': {}
 
   '@iconify-json/simple-icons@1.2.100':
     dependencies:
