@@ -66,6 +66,7 @@
 
 **最近交付**
 
+- 组件侧栏把「组件介绍」挪到分组外第一项，不再挂在「布局」里。
 - 正文字体改用 Amis `--fonts-base-family` 系统栈（PingFang / 微软雅黑 / -apple-system），等宽对齐 `--fontFamilyMonospace`；去掉 `@fontsource/ibm-plex-*`，不在产物里打包字体文件。`cssVars` 的 `--fonts-base-family` / `--fontFamilyBase` 会映到 `--font-sans`。
 - 同步项目状态：`pnpm status -- --amis /Users/maxid/Develop/IdeaProjects/github/amis` 覆盖仍 181 / 189（95.8%）；amis master 仍停在 `43a33ee06`；同步文档基线改到 Vamis `f7aa2bb`。
 - `@vamis/formula` 版权写成双声明：引擎原文仍是百度智能云爱速搭（MIT），包装与后续改动归 Vamis。

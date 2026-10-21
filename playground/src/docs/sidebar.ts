@@ -2,6 +2,7 @@ import {
   componentNav,
   conceptNav,
   extendNav,
+  isCompGroup,
   startNav,
   styleNav,
   typeNav,
@@ -16,7 +17,9 @@ export interface SideLink {
 export interface SideGroup {
   text: string
   collapsed?: boolean
-  items: SideLink[]
+  items?: SideLink[]
+  /** Ungrouped top-level link (e.g. 组件介绍). */
+  link?: string
 }
 
 function mapItems(items: { text: string; link: string }[]): SideLink[] {
@@ -31,11 +34,11 @@ export const docsGroups: SideGroup[] = [
   { text: '扩展', collapsed: true, items: mapItems(extendNav) },
 ]
 
-export const componentGroups: SideGroup[] = componentNav.map((group) => ({
-  text: group.text,
-  collapsed: true,
-  items: mapItems(group.items),
-}))
+export const componentGroups: SideGroup[] = componentNav.map((entry) =>
+  isCompGroup(entry)
+    ? { text: entry.text, collapsed: true, items: mapItems(entry.items) }
+    : { text: entry.text, link: playgroundHref(entry.link) },
+)
 
 export function groupsForPath(path: string): SideGroup[] {
   return path === '/components' || path.startsWith('/components/') ? componentGroups : docsGroups

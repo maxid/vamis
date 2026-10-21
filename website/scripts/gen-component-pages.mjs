@@ -424,6 +424,7 @@ function ensureDir(file) {
 
 let written = 0
 for (const group of componentNav) {
+  if (!group.items) continue
   for (const item of group.items) {
     if (HANDWRITTEN.has(item.link) || item.role === 'docs' && !item.type) continue
     if (!item.type && item.role === 'docs') continue

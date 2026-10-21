@@ -42,15 +42,24 @@ export const extendNav = [
 /**
  * @typedef {{ text: string, link: string, type?: string, role?: 'root'|'form'|'item'|'widget'|'docs' }} CompItem
  * @typedef {{ text: string, collapsed?: boolean, items: CompItem[] }} CompGroup
+ * @typedef {CompGroup | CompItem} CompNavEntry
  */
 
-/** @type {CompGroup[]} */
+/**
+ * @param {CompNavEntry} entry
+ * @returns {entry is CompGroup}
+ */
+export function isCompGroup(entry) {
+  return Array.isArray(entry.items)
+}
+
+/** @type {CompNavEntry[]} */
 export const componentNav = [
+  { text: '组件介绍', link: '/components/', role: 'docs' },
   {
     text: '布局',
     collapsed: true,
     items: [
-      { text: '组件介绍', link: '/components/', role: 'docs' },
       { text: 'Page 页面', link: '/components/page', type: 'page', role: 'root' },
       { text: 'Container 容器', link: '/components/container', type: 'container' },
       { text: 'Collapse 折叠器', link: '/components/collapse', type: 'collapse-group' },
