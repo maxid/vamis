@@ -1,4 +1,4 @@
-import { evaluate } from '@vamis/formula'
+import { evaluate, registerFilter } from '@vamis/formula'
 import type { PlainObject } from './types'
 
 export {
@@ -16,9 +16,28 @@ export {
   extendsFilters,
 } from '@vamis/formula'
 
+/** Amis 表达式里 `this.xxx` 指向当前数据域。 */
+function formulaData(data: PlainObject = {}): PlainObject {
+  if (!data || typeof data !== 'object') return { this: data }
+  return { ...data, this: data }
+}
+
+registerFilter('json', (input: unknown) => {
+  try {
+    return JSON.stringify(input ?? null)
+  } catch {
+    return ''
+  }
+})
+
+registerFilter('default', (input: unknown, fallback = '') => {
+  if (input == null || input === '') return fallback
+  return input
+})
+
 export function evalFormula(expression: string, data: PlainObject = {}): unknown {
   try {
-    return evaluate(expression, data, { evalMode: true, defaultFilter: 'raw' })
+    return evaluate(expression, formulaData(data), { evalMode: true, defaultFilter: 'raw' })
   } catch {
     return undefined
   }
@@ -41,7 +60,7 @@ export function filterTpl(tpl: unknown, data: PlainObject = {}): string {
   if (typeof tpl !== 'string') return String(tpl)
   if (!tpl.includes('${')) return tpl
   try {
-    const value = evaluate(tpl, data, { evalMode: false, defaultFilter: 'raw' })
+    const value = evaluate(tpl, formulaData(data), { evalMode: false, defaultFilter: 'raw' })
     return value == null ? '' : String(value)
   } catch {
     return tpl
@@ -72,7 +91,7 @@ export function resolveValue(expr: unknown, data: PlainObject = {}): unknown {
   if (expr == null || typeof expr !== 'string') return expr
   if (expr.startsWith('${') && expr.endsWith('}') && expr.indexOf('${', 1) === -1) {
     try {
-      return evaluate(expr, data, { evalMode: false, defaultFilter: 'raw' })
+      return evaluate(expr, formulaData(data), { evalMode: false, defaultFilter: 'raw' })
     } catch {
       return evalFormula(expr.slice(2, -1), data)
     }

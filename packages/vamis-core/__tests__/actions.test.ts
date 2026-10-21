@@ -37,7 +37,43 @@ describe('onEvent actions', () => {
     scoped.register({ name: 'list', reload })
     const context = ctx({ scoped })
     await runAction({ actionType: 'reload', target: 'list' }, context)
-    expect(reload).toHaveBeenCalled()
+    expect(reload).toHaveBeenCalledWith(undefined, false)
+  })
+
+  it('reload sends action.data only and honors dataMergeMode', async () => {
+    const reload = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'page_reload_2', reload })
+    const context = ctx({ scoped })
+    await runAction(
+      { actionType: 'reload', componentId: 'page_reload_2', data: { age: 18 }, dataMergeMode: 'override' },
+      context,
+    )
+    expect(reload).toHaveBeenCalledWith({ age: 18 }, true)
+  })
+
+  it('setValue override writes through scoped setData', async () => {
+    const setData = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'page02', setData })
+    const context = ctx({ scoped })
+    await runAction(
+      {
+        actionType: 'setValue',
+        componentId: 'page02',
+        args: { value: { date: '2023-05-01' } },
+        dataMergeMode: 'override',
+      },
+      context,
+    )
+    expect(setData).toHaveBeenCalledWith({ date: '2023-05-01' }, true)
+  })
+
+  it('exposes event.data for inited-style payloads', () => {
+    const payload = withNativeEvent({ responseData: { date: 'now' }, date: 'now' }, { type: 'inited' })
+    expect(payload.event.data.responseData).toEqual({ date: 'now' })
+    expect(payload.event.context.nativeEvent.type).toBe('inited')
+    expect(payload.date).toBe('now')
   })
 
   it('ajax posts then notifies', async () => {
@@ -89,6 +125,25 @@ describe('onEvent actions', () => {
       context,
     )
     expect(context.env.notify).toHaveBeenCalledWith('info', 'click')
+  })
+
+  it('interpolates event.data fields from the D4 subset', async () => {
+    const context = ctx({
+      data: withNativeEvent({ responseData: { date: 'x' } }, { type: 'inited' }),
+    })
+    await runOnEvent(
+      {
+        type: 'page',
+        onEvent: {
+          inited: {
+            actions: [{ actionType: 'toast', args: { msgType: 'info', msg: '${event.data.responseData|json}' } }],
+          },
+        },
+      },
+      'inited',
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', '{"date":"x"}')
   })
 
   it('runs mouseenter the same way as click', async () => {

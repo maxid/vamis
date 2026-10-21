@@ -110,6 +110,15 @@ describe('formula', () => {
     expect(filterTpl('hi ${name}', { name: 'Ada' })).toBe('hi Ada')
     expect(filterTpl('${name|raw}', { name: '<b>Ada</b>' })).toBe('<b>Ada</b>')
     expect(filterTpl('${name|html}', { name: '<b>Ada</b>' })).toBe('&lt;b&gt;Ada&lt;&#x2F;b&gt;')
+    expect(filterTpl("${age|default:'-'}", {})).toBe('-')
+    expect(filterTpl('${event.data.responseData|json}', { event: { data: { responseData: { date: '1' } } } })).toBe(
+      '{"date":"1"}',
+    )
+  })
+
+  it('resolves this.xxx like Amis expressions', () => {
+    expect(evalExpression('this.time % 5', { time: 10 })).toBe(false)
+    expect(evalExpression('this.time % 5', { time: 11 })).toBe(true)
   })
 
   it('evaluates visibleOn', () => {

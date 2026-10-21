@@ -121,6 +121,7 @@ export function handleMockApi(input: {
       status: 0,
       msg: 'ok',
       data: {
+        title: '页面标题',
         date: now.toLocaleString(),
         time: now.getTime(),
       },

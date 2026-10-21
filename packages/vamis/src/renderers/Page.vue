@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import {
   SchemaRenderer,
   asArray,
+  buildCssBlock,
   evalExpression,
   filterTpl,
   isEffectiveApi,
@@ -13,10 +14,12 @@ import {
   useEnv,
   useOverlay,
   useScoped,
+  withNativeEvent,
   type PlainObject,
   type SchemaApi,
   type SchemaObject,
 } from '@vamis/core'
+import Remark from './rest/Remark.vue'
 
 const DEFAULT_ASIDE_MIN = 160
 const DEFAULT_ASIDE_MAX = 400
@@ -69,21 +72,36 @@ const titleText = computed(() =>
 const subTitleText = computed(() =>
   typeof props.schema.subTitle === 'string' ? filterTpl(props.schema.subTitle, viewData.value) : '',
 )
-const remarkText = computed(() =>
-  typeof props.schema.remark === 'string' ? filterTpl(props.schema.remark, viewData.value) : '',
-)
+const remarkSchema = computed<SchemaObject | null>(() => {
+  const remark = props.schema.remark
+  if (typeof remark === 'string' && remark) return { type: 'remark', content: remark }
+  if (isNodeObject(remark)) return remark.type ? remark : { type: 'remark', ...remark }
+  return null
+})
+const cssText = computed(() => buildCssBlock(props.schema.css))
 
 function isNodeObject(value: unknown): value is SchemaObject {
   return !!value && typeof value === 'object' && !Array.isArray(value)
 }
 
-function eventCtx(data: PlainObject) {
-  return { env, data, scoped, overlay: overlayHost }
+function eventCtx(data: PlainObject, nativeType?: string) {
+  return {
+    env,
+    data: withNativeEvent(data, nativeType ? { type: nativeType } : undefined),
+    scoped,
+    overlay: overlayHost,
+  }
 }
 
-function setData(values: PlainObject) {
-  if (!values || typeof values !== 'object' || Array.isArray(values)) return
+function replaceLocal(values: PlainObject) {
+  for (const key of Object.keys(localData)) delete localData[key]
   Object.assign(localData, values)
+}
+
+function setData(values: PlainObject, replace = false) {
+  if (!values || typeof values !== 'object' || Array.isArray(values)) return
+  if (replace) replaceLocal(values)
+  else Object.assign(localData, values)
 }
 
 let mounted = false
@@ -132,7 +150,7 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
       responseStatus: payload.status ?? (ok ? 0 : 1),
       responseMsg: payload.msg || '',
     }
-    await runOnEvent(props.schema, 'inited', eventCtx(eventData))
+    await runOnEvent(props.schema, 'inited', eventCtx(eventData, 'inited'))
     if (ok) {
       schedulePoll()
     } else if (!options.silent) {
@@ -143,12 +161,15 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
     await runOnEvent(
       props.schema,
       'inited',
-      eventCtx({
-        ...viewData.value,
-        responseData: {},
-        responseStatus: 1,
-        responseMsg: msg,
-      }),
+      eventCtx(
+        {
+          ...viewData.value,
+          responseData: {},
+          responseStatus: 1,
+          responseMsg: msg,
+        },
+        'inited',
+      ),
     )
     if (!options.silent) env.notify('error', msg)
   } finally {
@@ -156,8 +177,12 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
   }
 }
 
-async function reload(extra?: PlainObject) {
-  if (extra && typeof extra === 'object') Object.assign(localData, extra)
+async function reload(extra?: PlainObject, replace = false) {
+  if (replace) {
+    replaceLocal(extra && typeof extra === 'object' ? extra : {})
+  } else if (extra && typeof extra === 'object') {
+    Object.assign(localData, extra)
+  }
   await fetchInit()
 }
 
@@ -201,7 +226,7 @@ onMounted(async () => {
   const min = asideMinWidth.value
   const max = Math.max(min, asideMaxWidth.value)
   asideWidth.value = Math.min(Math.max(DEFAULT_ASIDE_WIDTH, min), max)
-  await runOnEvent(props.schema, 'init', eventCtx(viewData.value))
+  await runOnEvent(props.schema, 'init', eventCtx(viewData.value, 'init'))
   await fetchInit({ initial: true })
 })
 
@@ -215,6 +240,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="w-full min-w-0 space-y-4" :style="cssVars">
+    <component :is="'style'" v-if="cssText">{{ cssText }}</component>
     <div class="flex w-full min-w-0 gap-4">
       <aside
         v-if="hasAside && asideOnLeft"
@@ -237,19 +263,21 @@ onBeforeUnmount(() => {
           :class="headerClass"
         >
           <div class="min-w-0">
-            <h1 v-if="schema.title" class="text-pretty font-sans text-xl font-semibold tracking-tight">
+            <h1 v-if="schema.title" class="flex flex-wrap items-center gap-1 text-pretty font-sans text-xl font-semibold tracking-tight">
               <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" :extra-data="pageData" />
               <template v-else>{{ titleText }}</template>
+              <Remark
+                v-if="remarkSchema"
+                :schema="remarkSchema"
+                :data="viewData"
+              />
             </h1>
             <p v-if="schema.subTitle" class="mt-1 text-sm text-muted-foreground">
               <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" :extra-data="pageData" />
               <template v-else>{{ subTitleText }}</template>
             </p>
-            <p v-if="schema.remark && !isNodeObject(schema.remark)" class="mt-1 text-sm text-muted-foreground">
-              {{ remarkText }}
-            </p>
-            <div v-else-if="isNodeObject(schema.remark)" class="mt-1">
-              <SchemaRenderer :schema="schema.remark" :extra-data="pageData" />
+            <div v-else-if="remarkSchema" class="mt-1">
+              <Remark :schema="remarkSchema" :data="viewData" />
             </div>
           </div>
           <div v-if="toolbar.length" class="flex flex-wrap gap-2" :class="toolbarClass">

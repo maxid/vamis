@@ -3,9 +3,9 @@ import type { PlainObject } from './types'
 
 export interface ScopedComponent {
   name?: string
-  reload?: (extra?: PlainObject) => Promise<void> | void
+  reload?: (extra?: PlainObject, replace?: boolean) => Promise<void> | void
   getData?: () => PlainObject
-  setData?: (values: PlainObject) => void
+  setData?: (values: PlainObject, replace?: boolean) => void
   submit?: () => Promise<void> | void
 }
 
@@ -31,13 +31,13 @@ export class ScopedContext {
     return this.parent?.getComponentByName(name)
   }
 
-  async reload(name?: string, extra?: PlainObject) {
+  async reload(name?: string, extra?: PlainObject, replace = false) {
     if (!name) {
-      await Promise.all(this.components.map((item) => item.reload?.(extra)))
+      await Promise.all(this.components.map((item) => item.reload?.(extra, replace)))
       return
     }
     const target = this.getComponentByName(name)
-    await target?.reload?.(extra)
+    await target?.reload?.(extra, replace)
   }
 }
 

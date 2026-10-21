@@ -33,6 +33,7 @@ export interface ActionSchema extends SchemaObject {
   url?: string
   link?: string
   confirmText?: string
+  dataMergeMode?: 'merge' | 'override'
 }
 
 export type SchemaApi = string | ApiObject
