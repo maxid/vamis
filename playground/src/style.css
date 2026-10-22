@@ -60,6 +60,13 @@
   font-size: 0.75rem;
   line-height: 1.55;
 }
+.doc-code .vamis-code--pre {
+  background: var(--muted);
+  border-radius: 0.5rem;
+}
+.doc-code .vamis-code--dark {
+  background-color: #1e1e1e;
+}
 .doc-prose pre code {
   padding: 0;
   background: transparent;

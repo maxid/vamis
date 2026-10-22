@@ -4,6 +4,7 @@ import { h } from 'vue'
 import { Toaster } from '@vamis/ui'
 import 'vamis'
 import SchemaPreview from './components/SchemaPreview.vue'
+import CodeFence from './components/CodeFence.vue'
 import './style.css'
 import type { Theme } from 'vitepress'
 
@@ -17,5 +18,6 @@ export default {
   enhanceApp({ app }) {
     app.use(createPinia())
     app.component('SchemaPreview', SchemaPreview)
+    app.component('CodeFence', CodeFence)
   },
 } satisfies Theme

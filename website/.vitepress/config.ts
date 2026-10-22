@@ -72,7 +72,8 @@ export default defineConfig({
             .join(' ')
           return `<SchemaPreview yaml="${encodeURIComponent(token.content)}" ${extra} />\n`
         }
-        return defaultFence ? defaultFence(tokens, idx, options, env, slf) : ''
+        const lang = info.split(/\s+/, 1)[0] || 'plaintext'
+        return `<CodeFence language="${lang}" code="${encodeURIComponent(token.content)}" />\n`
       }
     },
   },
