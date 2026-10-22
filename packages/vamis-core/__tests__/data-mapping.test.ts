@@ -27,4 +27,39 @@ describe('dataMapping', () => {
   it('omits undefined mapped values', () => {
     expect(dataMapping({ keep: '${a}', drop: '${missing}' }, { a: 1 })).toEqual({ keep: 1 })
   })
+
+  it('extracts fields from an array when the only key starts with $', () => {
+    expect(
+      dataMapping(
+        {
+          items: {
+            $table: {
+              a: '${a}',
+              c: '${c}',
+            },
+          },
+        },
+        {
+          table: [
+            { a: 'a1', b: 'b1', c: 'c1' },
+            { a: 'a2', b: 'b2', c: 'c2' },
+          ],
+        },
+      ),
+    ).toEqual({
+      items: [
+        { a: 'a1', c: 'c1' },
+        { a: 'a2', c: 'c2' },
+      ],
+    })
+  })
+
+  it('spreads a nested object when & is a template', () => {
+    expect(
+      dataMapping(
+        { name: '${name}', '&': '${c}' },
+        { name: 'Ada', c: { e: '3', f: '4' } },
+      ),
+    ).toEqual({ name: 'Ada', e: '3', f: '4' })
+  })
 })
