@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- Pages CI：`monaco-editor` 只装在 `packages/vamis` 后，SDK 测试找不到根目录 CSS。Vite 别名改指向 `packages/vamis/node_modules/monaco-editor`。
 - 为全部已注册组件补上智能感知自述（属性 / 事件 / 动作）。`registerRenderer` 按 type 自动并入；同名 `size`（dialog / editor / 表单项）与 `options`（select / editor）走当前节点。可在「编辑 Schema」里换 type 核对。
 - Schema 智能感知改为组件自述：`registerRenderer({ name, description, schema, isFormItem, alias })` 注册即补全 / 悬停，不必再另维护一份平行目录。`isFormItem` 自动带表单项字段，别名共用同一套说明。
 - 悬停 `"type": "form"` 不再套 Editor 的 `json-editor` 别名说明：`type` 键/值都展示当前节点的组件文档（Form 表单）。
