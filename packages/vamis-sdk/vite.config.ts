@@ -33,7 +33,7 @@ export default defineConfig({
       { find: 'vamis', replacement: path.join(pkg('vamis'), 'index.ts') },
       {
         find: 'monaco-editor/min/vs/editor/editor.main.css',
-        replacement: path.join(repo, 'node_modules/monaco-editor/min/vs/editor/editor.main.css'),
+        replacement: path.join(repo, 'packages/vamis/node_modules/monaco-editor/min/vs/editor/editor.main.css'),
       },
     ],
   },
