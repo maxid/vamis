@@ -1,4 +1,14 @@
-import { registerSchemaTypeDoc, resolveSchemaTypeDoc } from './schema-completions'
+import { registerSchemaTypeDoc, resolveSchemaTypeDoc, unregisterSchemaTypeDoc } from './schema-completions'
+import {
+  TYPE_CATALOGS,
+  markFormItemType,
+  mergeTypeCatalogs,
+  normalizeRendererSchema,
+  registerSchemaTypeCatalog,
+  registerTypeAlias,
+  unregisterSchemaTypeCatalog,
+  unregisterTypeAlias,
+} from './schema-type-catalog'
 import type { RendererConfig, SchemaObject } from './types'
 
 const renderers: RendererConfig[] = []
@@ -18,17 +28,46 @@ export function rendererScopeMode(def?: RendererConfig | null): 'inherit' | 'sel
   return 'inherit'
 }
 
-function publishRendererDoc(renderer: RendererConfig) {
-  if (!renderer.name && !renderer.description) return
-  const base = resolveSchemaTypeDoc(renderer.type)
+/** 注册即写入 schema 智能感知。低码应用不必再另维护一份目录。 */
+export function publishRendererIntellisense(renderer: RendererConfig) {
+  const type = renderer.type.toLowerCase()
+  const base = resolveSchemaTypeDoc(type)
+  const category = renderer.schema?.category || base.category || '扩展'
   const doc = {
     title: renderer.name || base.title,
-    category: base.category || '扩展',
+    category,
     description: renderer.description || base.description,
     detail: base.detail,
   }
-  registerSchemaTypeDoc(renderer.type, doc)
-  for (const alias of renderer.alias || []) registerSchemaTypeDoc(alias.toLowerCase(), doc)
+  registerSchemaTypeDoc(type, doc)
+  const catalog = mergeTypeCatalogs(
+    TYPE_CATALOGS[type],
+    normalizeRendererSchema(renderer.schema, renderer.isFormItem),
+    { formItem: renderer.isFormItem || renderer.schema?.formItem || TYPE_CATALOGS[type]?.formItem },
+  )
+  registerSchemaTypeCatalog(type, catalog)
+  if (catalog.formItem) markFormItemType(type, true)
+  for (const alias of renderer.alias || []) {
+    const key = alias.toLowerCase()
+    registerTypeAlias(key, type)
+    registerSchemaTypeDoc(key, doc)
+    registerSchemaTypeCatalog(key, catalog)
+    if (catalog.formItem) markFormItemType(key, true)
+  }
+}
+
+function forgetRendererIntellisense(renderer: RendererConfig) {
+  const type = renderer.type.toLowerCase()
+  unregisterSchemaTypeCatalog(type)
+  unregisterSchemaTypeDoc(type)
+  markFormItemType(type, false)
+  for (const alias of renderer.alias || []) {
+    const key = alias.toLowerCase()
+    unregisterSchemaTypeCatalog(key)
+    unregisterSchemaTypeDoc(key)
+    unregisterTypeAlias(key)
+    markFormItemType(key, false)
+  }
 }
 
 export function registerRenderer(config: RendererConfig): RendererConfig {
@@ -37,7 +76,7 @@ export function registerRenderer(config: RendererConfig): RendererConfig {
   const exists = byType.get(type)
   if (exists) {
     Object.assign(exists, renderer)
-    publishRendererDoc(exists)
+    publishRendererIntellisense(exists)
     return exists
   }
   insertByWeight(renderer)
@@ -45,7 +84,7 @@ export function registerRenderer(config: RendererConfig): RendererConfig {
   for (const alias of renderer.alias || []) {
     byType.set(alias.toLowerCase(), { ...renderer, type: alias.toLowerCase() })
   }
-  publishRendererDoc(renderer)
+  publishRendererIntellisense(renderer)
   return renderer
 }
 
@@ -57,6 +96,7 @@ export function unRegisterRenderer(type: string) {
   for (const alias of renderer.alias || []) byType.delete(alias.toLowerCase())
   const idx = renderers.findIndex((item) => item.type === renderer.type)
   if (idx >= 0) renderers.splice(idx, 1)
+  forgetRendererIntellisense(renderer)
 }
 
 export function resolveRenderer(type?: string, schema?: SchemaObject): RendererConfig | null {

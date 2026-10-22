@@ -17,5 +17,6 @@ export {
   registerSchemaIntellisense,
   registerSchemaTypeDoc,
   registerSchemaPropertyDoc,
+  registerSchemaTypeCatalog,
   mountFormEditor,
 } from 'vamis'

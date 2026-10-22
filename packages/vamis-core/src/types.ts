@@ -89,6 +89,24 @@ export interface Payload {
 
 export type RendererTest = RegExp | ((path: string, schema?: SchemaObject) => boolean)
 
+/** `registerRenderer({ schema })` 字段说明。字符串当作 description。 */
+export type SchemaFieldInput = string | {
+  title?: string
+  description: string
+  category?: string
+  detail?: string
+}
+
+/** 组件自述。写在 `registerRenderer` 上即进入 schema 智能感知，不必另维护一份目录。 */
+export interface RendererSchema {
+  category?: string
+  formItem?: boolean
+  slots?: string[]
+  properties?: Record<string, SchemaFieldInput>
+  events?: Record<string, SchemaFieldInput>
+  actions?: Record<string, SchemaFieldInput>
+}
+
 export interface RendererConfig {
   type: string
   alias?: string[]
@@ -104,6 +122,8 @@ export interface RendererConfig {
   name?: string
   /** 感知补全 / 悬停用的文档说明。也可事后 `registerSchemaTypeDoc` */
   description?: string
+  /** 属性 / 事件 / 动作自述。`isFormItem` 自动带上表单项通用字段。 */
+  schema?: RendererSchema
 }
 
 export interface RendererEnv {
