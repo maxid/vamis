@@ -18,9 +18,9 @@
 | GitHub | 外链 | https://github.com/maxid/vamis |
 
 - 作者态 YAML 与 JSON 并列；` ```schema ` 在页面内交给 `VamisRoot` 真跑（可编辑即时预览），对齐 Amis `MdRenderer` + Play mini，不是截图。围栏可以是 YAML 或 JSON。
-- 文档 **编辑 Schema** 是 YAML / JSON 两个 Tab，改一边立刻同步另一边；解析失败时对侧与预览停在上一份有效 schema。
+- 文档 **编辑 Schema** 是 YAML / JSON 两个 Tab，改一边立刻同步另一边；解析失败时对侧与预览停在上一份有效 schema。编辑器用表单项 `editor`（`yaml-editor` / `json-editor`），`hideButtons` + `intellisense: schema`。
 - **默认自适应**：文档主路径示例不要先写 `size: full` / `w-full`。先给无 size 的表单，再给可选收窄。
-- fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。
+- fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。`editor` 已接 `hideButtons` / `intellisense: schema` / `size: full`；文档编辑 Schema 用该组件而不是 textarea。
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。手写页：`page`、`container`、`form`、`chart`、`code`、`editor`、`diff-editor`（生成器跳过）。Form / Chart 已按 Amis 补属性表 / 事件表 / 动作表。`code` 只读 monaco 展示，不收 `options`。`editor` / `diff-editor` 接同一宿主，`options` 写在 Editor 文档。Editor 文档基本用法用 `value`；`placeholder` 跟行号对齐，感知框不被外框裁切。
 - 所有文档页（组件 / 类型 / 概念 / 开始 / 样式 / 扩展）标题正下方显示 `::: 实现进度 x% · 状态`；目录页（介绍、组件介绍）除外。口径见 `.cursor/rules/doc-progress.mdc`。「配置与组件」含内核 `LazyComponent` 用法（不是 schema type）。

@@ -47,7 +47,15 @@ const body = computed(() => asArray(props.schema.body || props.schema.controls))
 const actions = computed(() => asArray(props.schema.actions))
 const actionsDefined = computed(() => Array.isArray(props.schema.actions))
 const hasCustomActions = computed(() => actionsDefined.value && actions.value.length > 0)
-const showActionBar = computed(() => (actionsDefined.value ? actions.value.length > 0 : true))
+function schemaHidesButtons(node: unknown): boolean {
+  return !!node && typeof node === 'object' && !Array.isArray(node) && (node as SchemaObject).hideButtons === true
+}
+const showActionBar = computed(() => {
+  if (actionsDefined.value) return actions.value.length > 0
+  const items = body.value.filter((node) => node && typeof node === 'object')
+  if (items.length > 0 && items.every(schemaHidesButtons)) return false
+  return true
+})
 const wrapWithPanel = computed(() => props.schema.wrapWithPanel !== false)
 const lazyLoad = computed(() => props.schema.lazyLoad === true)
 const panelClass = computed(() =>

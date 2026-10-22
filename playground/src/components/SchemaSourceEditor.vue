@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { syncAuthoringText } from 'vamis'
+import { computed, ref, watch } from 'vue'
+import { VamisRoot } from '@vamis/core'
+import { Editor, syncAuthoringText } from 'vamis'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@vamis/ui'
 
 const props = defineProps<{
@@ -16,6 +17,13 @@ const tab = ref<'yaml' | 'json'>('yaml')
 const yamlText = ref('')
 const jsonText = ref('')
 let fromSelf = false
+
+const SCHEMA_EDITOR_OPTIONS = {
+  wordWrap: 'on',
+  formatOnType: false,
+  formatOnPaste: false,
+  minimap: { enabled: false },
+} as const
 
 function looksJson(text: string) {
   const trimmed = text.trim()
@@ -73,31 +81,45 @@ function commit(kind: 'yaml' | 'json', text: string) {
     emit('error', err instanceof Error ? err.message : String(err))
   }
 }
+
+function editorSchema(kind: 'yaml' | 'json', text: string) {
+  return {
+    type: kind === 'json' ? 'json-editor' : 'yaml-editor',
+    language: kind,
+    value: text,
+    size: 'full',
+    hideButtons: true,
+    intellisense: 'schema' as const,
+    options: SCHEMA_EDITOR_OPTIONS,
+  }
+}
+
+const yamlSchema = computed(() => editorSchema('yaml', yamlText.value))
+const jsonSchema = computed(() => editorSchema('json', jsonText.value))
+const hostSchema = { type: 'tpl', tpl: '', hidden: true }
 </script>
 
 <template>
-  <Tabs v-model="tab" class="flex min-h-0 flex-1 flex-col gap-2">
-    <TabsList class="w-full grid grid-cols-2">
-      <TabsTrigger value="yaml">YAML</TabsTrigger>
-      <TabsTrigger value="json">JSON</TabsTrigger>
-    </TabsList>
-    <TabsContent value="yaml" force-mount class="mt-0 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
-      <textarea
-        :value="yamlText"
-        spellcheck="false"
-        aria-label="YAML"
-        class="min-h-[28rem] flex-1 resize-none rounded-md border bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        @input="commit('yaml', ($event.target as HTMLTextAreaElement).value)"
-      />
-    </TabsContent>
-    <TabsContent value="json" force-mount class="mt-0 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
-      <textarea
-        :value="jsonText"
-        spellcheck="false"
-        aria-label="JSON"
-        class="min-h-[28rem] flex-1 resize-none rounded-md border bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        @input="commit('json', ($event.target as HTMLTextAreaElement).value)"
-      />
-    </TabsContent>
-  </Tabs>
+  <VamisRoot :schema="hostSchema" class="flex min-h-0 flex-1 flex-col">
+    <Tabs v-model="tab" class="flex min-h-0 flex-1 flex-col gap-2">
+      <TabsList class="w-full grid grid-cols-2">
+        <TabsTrigger value="yaml">YAML</TabsTrigger>
+        <TabsTrigger value="json">JSON</TabsTrigger>
+      </TabsList>
+      <TabsContent value="yaml" force-mount class="mt-0 flex min-h-[28rem] flex-1 flex-col data-[state=inactive]:hidden">
+        <Editor
+          class="h-full min-h-[28rem] flex-1"
+          :schema="yamlSchema"
+          @change="commit('yaml', $event)"
+        />
+      </TabsContent>
+      <TabsContent value="json" force-mount class="mt-0 flex min-h-[28rem] flex-1 flex-col data-[state=inactive]:hidden">
+        <Editor
+          class="h-full min-h-[28rem] flex-1"
+          :schema="jsonSchema"
+          @change="commit('json', $event)"
+        />
+      </TabsContent>
+    </Tabs>
+  </VamisRoot>
 </template>

@@ -264,7 +264,8 @@ export const EDITOR_HEIGHT: Record<string, number> = {
   xxl: 500,
 }
 
-export function editorHeight(size?: unknown): number {
+export function editorHeight(size?: unknown): number | string {
+  if (size === 'full') return '100%'
   if (typeof size === 'string' && size in EDITOR_HEIGHT) return EDITOR_HEIGHT[size]
   return EDITOR_HEIGHT.md
 }
@@ -355,23 +356,49 @@ export function syncEditorPlaceholder(
   el.style.lineHeight = `${editor.getOption(monaco.editor.EditorOption.lineHeight)}px`
 }
 
+export type EditorIntellisense = boolean | 'schema'
+
 export type MountFormEditorOpts = {
   value: string
   language: string
   theme: string
   readOnly: boolean
   extra?: Record<string, unknown>
+  intellisense?: EditorIntellisense
+}
+
+function intellisenseExtra(flag: EditorIntellisense | undefined): Record<string, unknown> {
+  if (flag === false) {
+    return {
+      quickSuggestions: false,
+      suggestOnTriggerCharacters: false,
+      parameterHints: { enabled: false },
+      wordBasedSuggestions: 'off',
+      hover: { enabled: false },
+      snippetSuggestions: 'none',
+    }
+  }
+  return {}
 }
 
 export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts) {
   const monaco = await loadMonaco()
   const theme = applyEditorTheme(monaco, opts.theme)
   const overflowHost = monacoOverflowHost(opts.theme)
+  const language = opts.language || 'javascript'
+  const schemaAware =
+    opts.intellisense === 'schema' && (language === 'json' || language === 'yaml')
+  let model: Monaco.editor.ITextModel | undefined
+  if (schemaAware) {
+    const { nextSchemaModelUri, registerSchemaIntellisense } = await import('./schema-intellisense')
+    registerSchemaIntellisense(monaco)
+    model = monaco.editor.createModel(opts.value ?? '', language, nextSchemaModelUri(monaco, language))
+  }
   const editor = monaco.editor.create(el, {
-    value: opts.value ?? '',
-    language: opts.language || 'javascript',
+    ...(model ? { model } : { value: opts.value ?? '', language }),
     theme,
     ...FORM_EDITOR_DEFAULTS,
+    ...intellisenseExtra(opts.intellisense),
     ...(opts.extra || {}),
     readOnly: opts.readOnly,
     fixedOverflowWidgets: true,
@@ -389,6 +416,7 @@ export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts
     editor,
     dispose() {
       editor.dispose()
+      model?.dispose()
     },
   }
 }
