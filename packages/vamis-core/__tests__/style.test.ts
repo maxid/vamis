@@ -307,6 +307,9 @@ describe('Amis width helpers', () => {
     const codeDoc = readFileSync(resolve(here, '../../../website/src/components/code.md'), 'utf8')
     expect(codeDoc).toContain('value: |')
     expect(codeDoc).not.toContain('\\n  let schema')
+    expect(codeDoc).toContain('### options（Monaco 编辑器配置）')
+    expect(codeDoc).toContain('[options 说明](#options-monaco-编辑器配置)')
+    expect(codeDoc).toContain('IStandaloneEditorConstructionOptions')
   })
 
   it('lets panelClassName mb-0 override the default panel margin', () => {

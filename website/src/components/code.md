@@ -6,7 +6,7 @@ outline: deep
 # Code 代码高亮
 
 ::: info 实现进度 92% · 进行中
-文档主路径已对齐。展示用只读 Monaco 编辑器：无编辑光标（对齐 Amis colorize）；行号 / 折叠 / 感知默认关，`wordWrap` 默认开。多行 `value` 用 YAML `|`。`customLang` monarch 挂在 inherit 共享主题上，滚动回来高亮不会被 `setTheme` 冲掉。表单 `editor` / `diff-editor` 仍待接同一实例。
+文档主路径已对齐。展示用只读 Monaco 编辑器：无编辑光标（对齐 Amis colorize）；行号 / 折叠 / 感知默认关，`wordWrap` 默认开。`options` 参数说明已写入。多行 `value` 用 YAML `|`。`customLang` monarch 挂在 inherit 共享主题上，滚动回来高亮不会被 `setTheme` 冲掉。表单 `editor` / `diff-editor` 仍待接同一实例。
 :::
 
 用代码高亮显示一段文本。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
@@ -204,14 +204,66 @@ body:
 | `maxHeight` | `string` \| `number` | | 最大高度，超出滚动 |
 | `lineNumbers` | `boolean` \| `'on'` \| `'off'` \| `'relative'` | `off` | 行号，默认关 |
 | `folding` | `boolean` | `false` | 代码折叠，默认关 |
-| `options` | `object` | | 传给 `monaco.editor.create` 的额外项。悬停 / 补全等感知默认关，在此打开 |
+| `options` | `object` | | 传给 Monaco 的额外项，见 [options 说明](#options-monaco-编辑器配置) |
 | `customLang` | `object` | | 自定义词法 |
 | `wrapperComponent` | `string` | | 展示壳已是编辑器容器，本字段忽略 |
+
+### options（Monaco 编辑器配置）
+
+`options` 原样传给 `monaco.editor.create`，类型是 Monaco 的 [`IStandaloneEditorConstructionOptions`](https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html) / [`IEditorOptions`](https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IEditorOptions.html)。没有单独做成 schema 字段的能力（悬停、补全、minimap 等）都走这里。
+
+和一等字段的分工：
+
+- 行号、折叠、折行、tab、主题用 `lineNumbers` / `folding` / `wordWrap` / `tabSize` / `editorTheme`，不要塞进 `options`
+- `options` **后合并**，同名键会盖掉一等字段和下面的内置默认
+- `code` 始终只读展示。不要用 `options` 把 `readOnly` 关掉；可编辑请用表单项 `editor`
+
+内置默认（均可被 `options` 覆盖）：
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `hover` | `{ enabled: false }` | 悬停提示（类型 / 文档） |
+| `quickSuggestions` | `false` | 输入时补全 |
+| `suggestOnTriggerCharacters` | `false` | `.` `(` 等触发补全 |
+| `parameterHints` | `{ enabled: false }` | 参数提示 |
+| `minimap` | `{ enabled: false }` | 右侧缩略图 |
+| `contextmenu` | `false` | 右键菜单 |
+| `links` | `false` | 可点击 URL |
+| `matchBrackets` | `'never'` | 括号高亮 |
+| `renderLineHighlight` | `'none'` | 当前行高亮 |
+| `guides` | 全关 | 缩进 / 括号参考线 |
+| `fontSize` | `13` | 字号 |
+| `lineHeight` | `20` | 行高 |
+| `padding` | `{ top: 8, bottom: 8 }` | 上下内边距 |
+| `cursorWidth` | `0` | 编辑光标宽度。展示态再叠 CSS 藏 caret，对齐 Amis colorize |
+| `scrollbar.horizontal` | 折行时 `hidden`，否则 `visible` | 横向滚动条 |
+
+不要改 `automaticLayout`：高度由组件按内容计算。完整键名以 Monaco 文档为准。
+
+下面打开行号、折叠，并用 `options` 打开悬停与补全：
+
+```schema: scope="body"
+type: code
+language: javascript
+lineNumbers: true
+folding: true
+options:
+  hover:
+    enabled: true
+  quickSuggestions: true
+  suggestOnTriggerCharacters: true
+  parameterHints:
+    enabled: true
+value: |
+  function hello(name) {
+    console.log(name);
+  }
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。多行 `value` 用 `|`；从 JSON 同步过来时 `stringifyYaml` 也会写成块标量。
-- Amis `code` 只用 `colorize` 出 HTML，点击没有编辑光标。Vamis 用只读 `monaco.editor.create`，同样藏光标、不聚焦、不高亮当前行。行号、折叠、悬停与补全默认关（`lineNumbers` / `folding` / `options` 可打开）。
+- Amis `code` 只用 `colorize` 出 HTML，点击没有编辑光标。Vamis 用只读 `monaco.editor.create`，同样藏光标、不聚焦、不高亮当前行。行号、折叠用一等字段；悬停 / 补全等走 [`options`](#options-monaco-编辑器配置)。
 - `customLang` 的 token 规则 inherit 进共享 `vs` / `vs-dark`，不再 `defineTheme(inherit: false)`，避免滚动后其它块高亮被冲掉。
 - Amis 文档「主题及 tab」示例把字段写成 `tagSize`，源码与属性表是 `tabSize`。Vamis 只认 `tabSize`。
 - `className: b-a` 边框 helper 未接，示例改用 `border`。

@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- `code` 文档把 `options（Monaco 编辑器配置）` 放到属性表后、作为其子章节；属性表「options 说明」链到该节。行号 / 折叠仍是一等字段，感知走 `options`。
 - `code` 对齐 Amis：点击不出现编辑光标、不聚焦、不高亮当前行（只读展示，不是编辑器）。行号 / 折叠 / 感知仍默认关。
 - `code` 默认关掉行号、折叠、悬停与补全；`lineNumbers` / `folding` / `options` 才打开。修好 `wordWrap`：编辑器 `min-w-0` 并按容器宽度两遍 layout，不再被长行撑开导致折行失效。
 - `code` 文档多行 `value` 改成 YAML `|` 块标量；`stringifyYaml` 含换行的字符串不再打成 `"...\n..."`，编辑 Schema 的 YAML Tab 与文档同源。
