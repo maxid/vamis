@@ -37,4 +37,10 @@ export {
   yamlCompletionsForLine,
   jsonCompletionsForLine,
   schemaHoverForLine,
+  schemaCompletionsAt,
+  schemaHoverAt,
+  catalogFor,
+  registerSchemaFieldDoc,
+  registerSchemaTypeCatalog,
+  publishRendererIntellisense,
 } from '@vamis/core'

@@ -56,17 +56,21 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 80%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + 模板转义/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 149 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 188 + core 159 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 为全部已注册组件补上智能感知自述（属性 / 事件 / 动作）。`registerRenderer` 按 type 自动并入；同名 `size`（dialog / editor / 表单项）与 `options`（select / editor）走当前节点。可在「编辑 Schema」里换 type 核对。
+- Schema 智能感知改为组件自述：`registerRenderer({ name, description, schema, isFormItem, alias })` 注册即补全 / 悬停，不必再另维护一份平行目录。`isFormItem` 自动带表单项字段，别名共用同一套说明。
+- 悬停 `"type": "form"` 不再套 Editor 的 `json-editor` 别名说明：`type` 键/值都展示当前节点的组件文档（Form 表单）。
+- Schema 智能感知改为**组件树**：用 YAML/JSON AST 定位封装节点的 `type`，JSON Schema 用 `$defs` + `if/then` 分支（对齐 monaco-editor）。同名 `size` / `options` / `change` / `setValue` 走该组件自己的属性/事件/动作说明，不再用扁平目录串文档。
 - Schema YAML/JSON 智能感知收进包：`@vamis/core` 持有 type/字段文档目录，`vamis` 导出 `registerSchemaIntellisense` / `mountFormEditor`。补全和悬停带文档级说明；低码应用写 `intellisense: schema` 或自行挂 Monaco 即可复用。站点「编辑 Schema」只消费，不自建目录。
 - 文档「编辑 Schema」侧栏不能直接挂 `Editor.vue`：缺 `VamisRoot` 的 env 时 `useEnv()` 抛错，Sheet 只剩空白遮罩。现包一层 `VamisRoot`，Editor 无 env 时回退 `createDefaultEnv`。
 - Editor 增加 `hideButtons`（藏全屏按钮；表单 body 全开时也不画默认提交/重置）、`size: full`、`intellisense: schema`（YAML/JSON 按已注册 type 与常见字段补全）。文档「编辑 Schema」从 textarea 换成该组件。
@@ -138,7 +142,7 @@
 2. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
-5. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。然后清 `pnpm typecheck`。
-6. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。
+5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
+6. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。然后清 `pnpm typecheck`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

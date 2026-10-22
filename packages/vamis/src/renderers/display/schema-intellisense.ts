@@ -1,11 +1,9 @@
 import {
   componentJsonSchema,
-  jsonCompletionsForLine,
-  yamlCompletionsForLine,
   getRenderers,
-  registerSchemaTypeDoc,
-  resolveSchemaTypeDoc,
-  schemaHoverForLine,
+  publishRendererIntellisense,
+  schemaCompletionsAt,
+  schemaHoverAt,
   type SchemaCompletion,
 } from '@vamis/core'
 import type * as Monaco from 'monaco-editor'
@@ -27,18 +25,7 @@ export function rendererTypeNames(): string[] {
 }
 
 function hydrateRendererDocs() {
-  for (const renderer of getRenderers()) {
-    if (!renderer.name && !renderer.description) continue
-    const base = resolveSchemaTypeDoc(renderer.type)
-    const doc = {
-      title: renderer.name || base.title,
-      category: base.category || '扩展',
-      description: renderer.description || base.description,
-      detail: base.detail,
-    }
-    registerSchemaTypeDoc(renderer.type, doc)
-    for (const alias of renderer.alias || []) registerSchemaTypeDoc(alias, doc)
-  }
+  for (const renderer of getRenderers()) publishRendererIntellisense(renderer)
 }
 
 export function nextSchemaModelUri(monaco: MonacoNS, language: string) {
@@ -72,17 +59,6 @@ function applyJsonSchema(monaco: MonacoNS) {
   })
 }
 
-function tokenAt(model: Monaco.editor.ITextModel, position: Monaco.Position): string {
-  const line = model.getLineContent(position.lineNumber)
-  const col = Math.min(Math.max(position.column - 1, 0), line.length)
-  const isWord = (ch: string | undefined) => !!ch && /[A-Za-z0-9_-]/.test(ch)
-  let start = col
-  let end = col
-  while (start > 0 && isWord(line[start - 1])) start -= 1
-  while (end < line.length && isWord(line[end])) end += 1
-  return line.slice(start, end)
-}
-
 function toCompletionItem(
   monaco: MonacoNS,
   item: SchemaCompletion,
@@ -94,7 +70,11 @@ function toCompletionItem(
     kind:
       item.kind === 'type'
         ? monaco.languages.CompletionItemKind.Enum
-        : monaco.languages.CompletionItemKind.Property,
+        : item.kind === 'event'
+          ? monaco.languages.CompletionItemKind.Event
+          : item.kind === 'action'
+            ? monaco.languages.CompletionItemKind.Method
+            : monaco.languages.CompletionItemKind.Property,
     insertText: item.label,
     range,
     sortText: String(index).padStart(4, '0'),
@@ -117,14 +97,11 @@ export function registerSchemaIntellisense(monaco: MonacoNS) {
     position,
   ) => {
     if (!isSchemaModel(model)) return { suggestions: [] }
-    hydrateRendererDocs()
-    const until = model.getLineContent(position.lineNumber).slice(0, position.column - 1)
-    const types = rendererTypeNames()
-    const items =
-      model.getLanguageId() === 'json'
-        ? jsonCompletionsForLine(until, types)
-        : yamlCompletionsForLine(until, types)
-    const prefix = until.match(/[A-Za-z0-9_-]*$/)?.[0] ?? ''
+    const offset = model.getOffsetAt(position)
+    const text = model.getValue()
+    const language = model.getLanguageId() === 'json' ? 'json' : 'yaml'
+    const items = schemaCompletionsAt(text, offset, language, rendererTypeNames())
+    const prefix = text.slice(0, offset).match(/[A-Za-z0-9_-]*$/)?.[0] ?? ''
     const range = {
       startLineNumber: position.lineNumber,
       endLineNumber: position.lineNumber,
@@ -137,10 +114,8 @@ export function registerSchemaIntellisense(monaco: MonacoNS) {
   }
   const provideHover: Monaco.languages.HoverProvider['provideHover'] = (model, position) => {
     if (!isSchemaModel(model)) return null
-    hydrateRendererDocs()
     const language = model.getLanguageId() === 'json' ? 'json' : 'yaml'
-    const word = tokenAt(model, position)
-    const hover = schemaHoverForLine(model.getLineContent(position.lineNumber), word, language)
+    const hover = schemaHoverAt(model.getValue(), model.getOffsetAt(position), language)
     if (!hover) return null
     return {
       contents: [{ value: hover.documentation, isTrusted: true }],
