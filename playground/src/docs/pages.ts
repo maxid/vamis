@@ -4,11 +4,25 @@ const files = import.meta.glob('../../../website/src/**/*.md', {
   eager: true,
 }) as Record<string, string>
 
+const formulaFiles = import.meta.glob('../../../packages/vamis-formula/src/doc.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+const formulaHandbook = Object.values(formulaFiles)[0] || ''
+
 const byRel = new Map<string, string>()
 for (const [key, raw] of Object.entries(files)) {
   const i = key.indexOf('/website/src/')
   if (i < 0) continue
   byRel.set(key.slice(i + '/website/src'.length), raw)
+}
+
+/** Amis `!!!include(amis-formula/lib/doc.md)!!!` — 手册真源是仓内 `@vamis/formula`。 */
+export function expandDocIncludes(raw: string): string {
+  if (!raw.includes('!!!include(@vamis/formula)!!!')) return raw
+  return raw.replaceAll('!!!include(@vamis/formula)!!!', formulaHandbook)
 }
 
 export function resolveDoc(pathname: string): { rel: string; raw: string } | null {
@@ -19,7 +33,7 @@ export function resolveDoc(pathname: string): { rel: string; raw: string } | nul
   const candidates = [`${rel}.md`, `${rel}/index.md`, `${rel}.md`.replace(/\.md$/, '/index.md')]
   for (const candidate of candidates) {
     const raw = byRel.get(candidate)
-    if (raw != null) return { rel: candidate, raw }
+    if (raw != null) return { rel: candidate, raw: expandDocIncludes(raw) }
   }
   return null
 }

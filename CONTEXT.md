@@ -62,11 +62,12 @@
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | 概念页「模板」**95% 已完成**（`tpl` 按 Amis 渲染 HTML；不实现 lodash `<% %>`）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
+| 在线文档 | 已并入 playground | 概念页「模板」**95% 已完成**、「表达式」**90% 已完成**（`${}` / 公式 / 函数手册；旧 JS 仅兼容）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
 | 测试 | 源码用例 formula 188 + core 165 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 概念页「表达式」对标 Amis 同名页：**90% 已完成**。使用场景、`${}` 语法、公式 / `ARRAYMAP` 箭头函数、函数手册（include `@vamis/formula` `doc.md`）均可跑。旧版纯 JS 仅兼容，不写入新示例（D2）。表达式诊断仍属 D8。
 - 模板 HTML 岛：`.vamis-html` 只挂在 tpl/html 的 `v-html` 上，补回 `h1`–`h6` / `p` / `ul` / `ol` / `a` / 表格。不打 `vamis-root`，不改 `button`/`input`，shadcn 控件不受影响。
 - `each` 去掉竖排壳，tpl 默认 inline。换行对齐 Amis：`inline: false` 独占一行，模板里 `<br>` 硬换行。`tpl`/`html` **85%**，`each` **70%**。
 - JS SDK 文档 iframe 改为站点根路径 `/sdk/hello.html` 并加上 `VITE_BASE`。Pages 上相对 `../../sdk/hello.html` 会落到 `/docs/sdk/hello.html`，被当成文档 404。SDK 未构建时 iframe 提示先 `pnpm --filter @vamis/sdk build`，不再套 SPA「没有这份文档」。
