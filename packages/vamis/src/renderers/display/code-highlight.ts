@@ -1,4 +1,5 @@
 import type * as Monaco from 'monaco-editor'
+import './monaco-host.css'
 
 export type CodeToken = {
   regex: string
@@ -298,6 +299,60 @@ const FORM_EDITOR_DEFAULTS = {
   minimap: { enabled: false },
   scrollbar: { alwaysConsumeMouseWheel: false },
   automaticLayout: true,
+  fixedOverflowWidgets: true,
+}
+
+const OVERFLOW_HOST_ID = 'vamis-monaco-overflow'
+
+function monacoBaseTheme(theme: string): 'vs' | 'vs-dark' | 'hc-black' {
+  if (theme.includes('dark')) return 'vs-dark'
+  if (theme.includes('hc')) return 'hc-black'
+  return 'vs'
+}
+
+export function monacoOverflowHost(theme: string): HTMLElement | undefined {
+  if (typeof document === 'undefined') return undefined
+  let host = document.getElementById(OVERFLOW_HOST_ID)
+  if (!host) {
+    host = document.createElement('div')
+    host.id = OVERFLOW_HOST_ID
+    host.className = 'vamis-monaco-overflow monaco-editor'
+    host.setAttribute('aria-hidden', 'true')
+    document.body.appendChild(host)
+  }
+  host.classList.remove('vs', 'vs-dark', 'hc-black')
+  host.classList.add(monacoBaseTheme(theme))
+  return host
+}
+
+export function syncOverflowHostTheme(
+  editor: Monaco.editor.IStandaloneCodeEditor | Monaco.editor.IDiffEditor,
+  theme: string,
+) {
+  const host = monacoOverflowHost(theme)
+  if (!host) return
+  const node =
+    'getModifiedEditor' in editor ? editor.getModifiedEditor().getDomNode() : editor.getDomNode()
+  if (!node) return
+  const cs = getComputedStyle(node)
+  for (const prop of Array.from(cs)) {
+    if (prop.startsWith('--vscode-')) host.style.setProperty(prop, cs.getPropertyValue(prop))
+  }
+}
+
+export function syncEditorPlaceholder(
+  monaco: MonacoNS,
+  editor: Monaco.editor.IStandaloneCodeEditor,
+  el: HTMLElement | null,
+) {
+  if (!el) return
+  const info = editor.getLayoutInfo()
+  el.style.left = `${info.contentLeft}px`
+  el.style.width = `${Math.max(0, info.contentWidth - info.verticalScrollbarWidth)}px`
+  el.style.top = `${editor.getTopForLineNumber(1)}px`
+  el.style.fontFamily = editor.getOption(monaco.editor.EditorOption.fontFamily)
+  el.style.fontSize = `${editor.getOption(monaco.editor.EditorOption.fontSize)}px`
+  el.style.lineHeight = `${editor.getOption(monaco.editor.EditorOption.lineHeight)}px`
 }
 
 export type MountFormEditorOpts = {
@@ -311,6 +366,7 @@ export type MountFormEditorOpts = {
 export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts) {
   const monaco = await loadMonaco()
   const theme = applyEditorTheme(monaco, opts.theme)
+  const overflowHost = monacoOverflowHost(opts.theme)
   const editor = monaco.editor.create(el, {
     value: opts.value ?? '',
     language: opts.language || 'javascript',
@@ -318,7 +374,10 @@ export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts
     ...FORM_EDITOR_DEFAULTS,
     ...(opts.extra || {}),
     readOnly: opts.readOnly,
+    fixedOverflowWidgets: true,
+    overflowWidgetsDomNode: overflowHost,
   })
+  syncOverflowHostTheme(editor, opts.theme)
   monaco.languages.json?.jsonDefaults.setDiagnosticsOptions({
     enableSchemaRequest: true,
     validate: true,
@@ -347,6 +406,7 @@ export async function mountDiffEditor(el: HTMLElement, opts: MountDiffEditorOpts
   const monaco = await loadMonaco()
   const theme = applyEditorTheme(monaco, opts.theme)
   const language = opts.language || 'javascript'
+  const overflowHost = monacoOverflowHost(opts.theme)
   const editor = monaco.editor.createDiffEditor(el, {
     ...FORM_EDITOR_DEFAULTS,
     automaticLayout: true,
@@ -355,7 +415,10 @@ export async function mountDiffEditor(el: HTMLElement, opts: MountDiffEditorOpts
     ...(opts.extra || {}),
     readOnly: opts.readOnly,
     theme,
+    fixedOverflowWidgets: true,
+    overflowWidgetsDomNode: overflowHost,
   })
+  syncOverflowHostTheme(editor, opts.theme)
   const original = monaco.editor.createModel(opts.original ?? '', language)
   const modified = monaco.editor.createModel(opts.modified ?? '', language)
   editor.setModel({ original, modified })

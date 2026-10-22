@@ -6,7 +6,7 @@ outline: deep
 # Editor 代码编辑器
 
 ::: info 实现进度 70% · 进行中
-主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度）/ `allowFullscreen` / 占位。`placeholder` 是空值灰色浮层，不是高亮。`change` / `focus` / `blur` 已发。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
+主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度）/ `allowFullscreen` / 占位。`placeholder` 跟行号对齐。感知框挂带主题的 overflow 宿主（有背景、不被裁切）。全屏 Teleport 到 `body`。`change` / `focus` / `blur` 已发。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
 :::
 
 用于代码编辑。富文本请用 [RichText](/components/form/input-rich-text)。只读高亮请用 [Code](/components/code)。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据输入**。
@@ -28,7 +28,7 @@ body:
 
 ## 占位
 
-无值时 `placeholder` 显示灰色提示，不是语法高亮后的代码。
+无值时 `placeholder` 画在内容区第一行，字体 / 行高跟行号对齐；不是语法高亮，也不是页面浮层的 `text-sm`。
 
 ```schema: scope="body"
 type: form
@@ -104,7 +104,7 @@ body:
 | `size` | `string` | `md` | 编辑器**高度**：`sm` / `md` / `lg` / `xl` / `xxl`。不是表单项宽度档 |
 | `allowFullscreen` | `boolean` | `false` | 是否显示全屏开关。Amis 源码 defaultProps 为 `true`，文档表为 `false`；Vamis 跟文档，要显式打开 |
 | `options` | `object` | | 传给 Monaco 的额外项，见 [options 说明](#options-monaco-编辑器配置)。不能用它设 `readOnly` |
-| `placeholder` | `string` | | 无值时的占位 |
+| `placeholder` | `string` | | 无值时的占位，跟 Monaco 第一行对齐 |
 | `editorTheme` | `string` | | `vs` / `vs-dark`。未写时随文档浅色 / 深色 |
 
 ### options（Monaco 编辑器配置）
@@ -120,6 +120,7 @@ body:
 | `selectOnLineNumbers` | `true` | 点行号选中该行 |
 | `scrollBeyondLastLine` | `false` | 最后一行后再滚 |
 | `automaticLayout` | `true` | 随容器改尺寸 |
+| `fixedOverflowWidgets` | `true` | 感知 / 悬停框 `position: fixed`，挂到带 Monaco 主题的 overflow 宿主 |
 | `formatOnType` / `formatOnPaste` | `true` | 输入 / 粘贴时格式化 |
 
 ```schema: scope="body"
