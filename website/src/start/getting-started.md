@@ -144,7 +144,7 @@ const env = createDefaultEnv({
 ## 下一步
 
 - [JS SDK](/start/sdk)
-- [配置与 Schema](/concepts/schema)
+- [配置与组件](/concepts/schema)
 - [Form 表单](/components/form/)
 - [CRUD](/components/crud)
 - [样式系统](/style/)

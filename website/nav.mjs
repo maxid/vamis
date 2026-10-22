@@ -8,7 +8,7 @@ export const startNav = [
 ]
 
 export const conceptNav = [
-  { text: '配置与 Schema', link: '/concepts/schema' },
+  { text: '配置与组件', link: '/concepts/schema' },
   { text: '数据域与数据链', link: '/concepts/datascope-and-datachain' },
   { text: '模板', link: '/concepts/template' },
   { text: '表达式', link: '/concepts/expression' },
