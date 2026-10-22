@@ -55,8 +55,8 @@
 
 | 面 | 状态 | 说明 |
 |----|------|------|
-| type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
+| type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 70%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + 模板转义/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
@@ -67,7 +67,8 @@
 
 **最近交付**
 
-- `code` 文档把 `options（Monaco 编辑器配置）` 放到属性表后、作为其子章节；属性表「options 说明」链到该节。行号 / 折叠仍是一等字段，感知走 `options`。
+- Editor 语法高亮：表单项 `value` 回填进表单域（有 `name` 时不再丢掉 schema 初值）；文档基本用法改用 `value`，`placeholder` 单独成「占位」节（灰色浮层不是 token 高亮）。
+- `code` 不再收 `options`（展示组件）；表单项 `editor` / `diff-editor` 接到同一套 Monaco 宿主，`options` 写在 Editor 文档。补齐 `js-editor` / `ts-editor` 及语言族别名。
 - `code` 对齐 Amis：点击不出现编辑光标、不聚焦、不高亮当前行（只读展示，不是编辑器）。行号 / 折叠 / 感知仍默认关。
 - `code` 默认关掉行号、折叠、悬停与补全；`lineNumbers` / `folding` / `options` 才打开。修好 `wordWrap`：编辑器 `min-w-0` 并按容器宽度两遍 layout，不再被长行撑开导致折行失效。
 - `code` 文档多行 `value` 改成 YAML `|` 块标量；`stringifyYaml` 含换行的字符串不再打成 `"...\n..."`，编辑 Schema 的 YAML Tab 与文档同源。
@@ -131,8 +132,8 @@
 1. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、提交返回合并进表单域。挡住联动剩余项和几乎全部表单项。数据域页里「表单项写到 page 域」也卡在这里。
 2. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
-4. **Monaco `editor` / `diff-editor`**：复用 Code 已加载的 monaco 实例，替换当前 textarea。
-5. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
-6. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。然后清 `pnpm typecheck`。
+4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
+5. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。然后清 `pnpm typecheck`。
+6. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

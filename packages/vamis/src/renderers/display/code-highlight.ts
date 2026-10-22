@@ -135,7 +135,6 @@ export type MountCodeEditorOpts = {
   lineNumbers: 'on' | 'off' | 'relative'
   folding: boolean
   maxHeight?: number
-  extra?: Record<string, unknown>
 }
 
 export function editorChrome(opts: { lineNumbers: 'on' | 'off' | 'relative'; folding: boolean }) {
@@ -203,7 +202,6 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
       horizontalScrollbarSize: 8,
       horizontal: opts.wordWrap ? 'hidden' : 'visible',
     },
-    ...(opts.extra || {}),
   })
 
   const textarea = el.querySelector('textarea.inputarea') as HTMLTextAreaElement | null
@@ -252,6 +250,124 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
       focusSub.dispose()
       widgetSub.dispose()
       sub.dispose()
+      editor.dispose()
+    },
+  }
+}
+
+export const EDITOR_HEIGHT: Record<string, number> = {
+  sm: 100,
+  md: 250,
+  lg: 300,
+  xl: 400,
+  xxl: 500,
+}
+
+export function editorHeight(size?: unknown): number {
+  if (typeof size === 'string' && size in EDITOR_HEIGHT) return EDITOR_HEIGHT[size]
+  return EDITOR_HEIGHT.md
+}
+
+export function normalizeEditorValue(value: unknown, language?: string): string {
+  let next: unknown = value
+  if (next && typeof next !== 'string') {
+    try {
+      next = JSON.stringify(next, null, 2)
+    } catch {
+      next = String(next)
+    }
+  }
+  let text = next == null ? '' : String(next)
+  if (language === 'json' && text) {
+    try {
+      text = JSON.stringify(JSON.parse(text), null, 2)
+    } catch {
+      /* keep raw */
+    }
+  }
+  return text
+}
+
+const FORM_EDITOR_DEFAULTS = {
+  autoIndent: 'advanced' as const,
+  formatOnType: true,
+  formatOnPaste: true,
+  selectOnLineNumbers: true,
+  scrollBeyondLastLine: false,
+  folding: true,
+  minimap: { enabled: false },
+  scrollbar: { alwaysConsumeMouseWheel: false },
+  automaticLayout: true,
+}
+
+export type MountFormEditorOpts = {
+  value: string
+  language: string
+  theme: string
+  readOnly: boolean
+  extra?: Record<string, unknown>
+}
+
+export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts) {
+  const monaco = await loadMonaco()
+  const theme = applyEditorTheme(monaco, opts.theme)
+  const editor = monaco.editor.create(el, {
+    value: opts.value ?? '',
+    language: opts.language || 'javascript',
+    theme,
+    ...FORM_EDITOR_DEFAULTS,
+    ...(opts.extra || {}),
+    readOnly: opts.readOnly,
+  })
+  monaco.languages.json?.jsonDefaults.setDiagnosticsOptions({
+    enableSchemaRequest: true,
+    validate: true,
+    allowComments: true,
+    ...monaco.languages.json?.jsonDefaults.diagnosticsOptions,
+  })
+  return {
+    monaco,
+    editor,
+    dispose() {
+      editor.dispose()
+    },
+  }
+}
+
+export type MountDiffEditorOpts = {
+  original: string
+  modified: string
+  language: string
+  theme: string
+  readOnly: boolean
+  extra?: Record<string, unknown>
+}
+
+export async function mountDiffEditor(el: HTMLElement, opts: MountDiffEditorOpts) {
+  const monaco = await loadMonaco()
+  const theme = applyEditorTheme(monaco, opts.theme)
+  const language = opts.language || 'javascript'
+  const editor = monaco.editor.createDiffEditor(el, {
+    ...FORM_EDITOR_DEFAULTS,
+    automaticLayout: true,
+    originalEditable: false,
+    renderSideBySide: true,
+    ...(opts.extra || {}),
+    readOnly: opts.readOnly,
+    theme,
+  })
+  const original = monaco.editor.createModel(opts.original ?? '', language)
+  const modified = monaco.editor.createModel(opts.modified ?? '', language)
+  editor.setModel({ original, modified })
+  return {
+    monaco,
+    editor,
+    original,
+    modified,
+    dispose() {
+      editor.setModel(null)
+      original.dispose()
+      modified.dispose()
       editor.dispose()
     },
   }
