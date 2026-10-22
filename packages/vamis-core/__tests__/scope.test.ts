@@ -37,7 +37,7 @@ describe('Scope', () => {
     expect(child.get('n')).toBe(3)
     expect(parent.get('n')).toBe(1)
     expect(child.resolved().__prev).toEqual({ n: 2 })
-    expect(child.resolved().__changeReason).toBe('action')
+    expect(child.resolved().__changeReason).toEqual({ type: 'action' })
   })
 
   it('merge overlays own keys; override replaces the layer', () => {

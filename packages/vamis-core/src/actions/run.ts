@@ -137,6 +137,10 @@ function registerBuiltinActions() {
       (action.messages && (action.messages as PlainObject).success) ||
       apiMessage(action.api, result.payload, 'success')
     ctx.env.notify('success', String(success))
+    if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+      if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
+      else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')
+    }
     if (action.reload) await ctx.scoped?.reload(String(action.reload), data)
   })
 

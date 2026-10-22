@@ -214,6 +214,14 @@ describe('Amis width helpers', () => {
     expect(form).toContain(':is="wrapTag"')
   })
 
+  it('only creates a child Scope for self/isolate renderers, not inherit data overlays', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const sr = readFileSync(resolve(here, '../src/SchemaRenderer.vue'), 'utf8')
+    expect(sr).toContain("scopeMode.value !== 'inherit'")
+    expect(sr).not.toContain('hasOverlay.value')
+    expect(sr).toContain("!key.startsWith('__')")
+  })
+
   it('lets panelClassName mb-0 override the default panel margin', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')

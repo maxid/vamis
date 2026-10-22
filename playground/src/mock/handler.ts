@@ -130,7 +130,7 @@ export function handleMockApi(input: {
 
   if (pathname === '/api/mock2/form/saveForm') {
     const data = method === 'GET' ? query : body
-    return { status: 0, msg: '保存成功', data }
+    return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
   }
 
   if (pathname === '/api/mock2/form/initData') {
