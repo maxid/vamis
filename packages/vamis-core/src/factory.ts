@@ -1,3 +1,4 @@
+import { registerSchemaTypeDoc, resolveSchemaTypeDoc } from './schema-completions'
 import type { RendererConfig, SchemaObject } from './types'
 
 const renderers: RendererConfig[] = []
@@ -17,12 +18,26 @@ export function rendererScopeMode(def?: RendererConfig | null): 'inherit' | 'sel
   return 'inherit'
 }
 
+function publishRendererDoc(renderer: RendererConfig) {
+  if (!renderer.name && !renderer.description) return
+  const base = resolveSchemaTypeDoc(renderer.type)
+  const doc = {
+    title: renderer.name || base.title,
+    category: base.category || '扩展',
+    description: renderer.description || base.description,
+    detail: base.detail,
+  }
+  registerSchemaTypeDoc(renderer.type, doc)
+  for (const alias of renderer.alias || []) registerSchemaTypeDoc(alias.toLowerCase(), doc)
+}
+
 export function registerRenderer(config: RendererConfig): RendererConfig {
   const type = config.type.toLowerCase()
   const renderer: RendererConfig = { ...config, type, weight: config.weight ?? 0 }
   const exists = byType.get(type)
   if (exists) {
     Object.assign(exists, renderer)
+    publishRendererDoc(exists)
     return exists
   }
   insertByWeight(renderer)
@@ -30,6 +45,7 @@ export function registerRenderer(config: RendererConfig): RendererConfig {
   for (const alias of renderer.alias || []) {
     byType.set(alias.toLowerCase(), { ...renderer, type: alias.toLowerCase() })
   }
+  publishRendererDoc(renderer)
   return renderer
 }
 

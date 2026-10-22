@@ -14,4 +14,8 @@ export {
   yamlFromUnknown,
   jsonToIr,
   parseToIr,
+  registerSchemaIntellisense,
+  registerSchemaTypeDoc,
+  registerSchemaPropertyDoc,
+  mountFormEditor,
 } from 'vamis'

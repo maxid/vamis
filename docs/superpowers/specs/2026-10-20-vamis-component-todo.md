@@ -118,7 +118,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-kvs` | InputKVS 键值对象 | 进行中 | 45% | 结构精简 | P0 |
 | `input-formula` | InputFormula 公式编辑器 | 进行中 | 30% | **精简**：复用 Formula，无公式编辑器 UI | P0 |
 | `diff-editor` | DiffEditor 对比编辑器 | 进行中 | 65% | Monaco Diff：左侧 `diffValue` 只读，右侧绑 `name`；`options` / 事件已接。动作仍缺 D7 | P0 |
-| `editor` | Editor 代码编辑器 | 进行中 | 78% | Monaco 编辑器：`hideButtons` 藏按钮区、`size: full`、`intellisense: schema`（YAML/JSON 按组件 schema 补全）。文档「编辑 Schema」已换成本组件。`editorDidMount` 未接；动作仍缺 D7 | P0 |
+| `editor` | Editor 代码编辑器 | 进行中 | 80% | Monaco 编辑器：`hideButtons`、`size: full`、`intellisense: schema`（包内 type/字段目录 + 文档级补全/悬停，`registerSchemaIntellisense` 可复用）。文档「编辑 Schema」只消费该能力。`editorDidMount` 未接；动作仍缺 D7 | P0 |
 | `fieldset` | FieldSet 表单项集合 | 进行中 | 55% | 能分组折叠 | P0 |
 | `input-excel` | InputExcel Excel 解析 | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | 进行中 | 40% | 能选文件；receiver/分片/自动上传未齐 | P0 |

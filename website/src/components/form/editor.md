@@ -5,8 +5,8 @@ outline: deep
 
 # Editor 代码编辑器
 
-::: info 实现进度 78% · 进行中
-主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度，含 `full`）/ `allowFullscreen` / `hideButtons` / `intellisense` / 占位。文档「编辑 Schema」已换成本组件，YAML/JSON 走 `intellisense: schema`。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
+::: info 实现进度 80% · 进行中
+主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度，含 `full`）/ `allowFullscreen` / `hideButtons` / `intellisense: schema`（包内目录 + 文档级补全/悬停，低码应用可复用）。文档「编辑 Schema」只消费该能力。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
 :::
 
 用于代码编辑。富文本请用 [RichText](/components/form/input-rich-text)。只读高亮请用 [Code](/components/code)。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据输入**。
@@ -114,7 +114,14 @@ body:
 
 ## Schema 代码感知
 
-`intellisense` 控制补全 / 悬停。默认 `true` 走语言自带（JSON 有 worker）。`false` 关掉。`schema` 按 Vamis 组件 schema 识别：`type` 补已注册组件名，常见字段（`body` / `name` / `label` …）可补全。YAML 与 JSON 都有效。文档编辑 Schema 已打开此项。
+`intellisense` 控制补全 / 悬停。默认 `true` 走语言自带（JSON 有 worker）。`false` 关掉。
+
+`schema` 是 **包内能力**，不是文档站点特有：目录在 `@vamis/core`（`SCHEMA_TYPE_DOCS` / `SCHEMA_PROPERTY_DOCS`），Monaco 挂载在 `vamis` 的 `registerSchemaIntellisense`。低码应用两种用法：
+
+1. schema 写 `intellisense: schema`（`yaml-editor` / `json-editor` 或 `language: yaml|json`），Editor 自动挂上。
+2. 自管 Monaco 时 `import { registerSchemaIntellisense } from 'vamis'`，对 yaml/json 模型调用一次。
+
+补全和悬停带**文档级说明**：组件 type 给标题 + 分类 + 导语；字段给属性表式说明。自定义 type 用 `registerRenderer({ name, description })` 或 `registerSchemaTypeDoc`。不要把网站 Markdown 当目录源。YAML 与 JSON 都有效。
 
 ```schema: scope="body"
 type: form
@@ -142,7 +149,7 @@ body:
 | `size` | `string` | `md` | 编辑器**高度**：`sm` / `md` / `lg` / `xl` / `xxl` / `full`（吃满父级高度）。不是表单项宽度档 |
 | `allowFullscreen` | `boolean` | `false` | 是否显示全屏开关。Amis 源码 defaultProps 为 `true`，文档表为 `false`；Vamis 跟文档，要显式打开 |
 | `hideButtons` | `boolean` | `false` | 隐藏按钮区：不画全屏开关；作为表单唯一（或全部）项时也不画默认提交 / 重置 |
-| `intellisense` | `boolean \| 'schema'` | `true` | 代码感知。`false` 关闭；`schema` 按 Vamis 组件 schema 补全 YAML / JSON 的 `type` 与字段 |
+| `intellisense` | `boolean \| 'schema'` | `true` | 代码感知。`false` 关闭；`schema` 按包内组件目录补全 YAML / JSON 的 `type` 与字段，并展示文档说明 |
 | `options` | `object` | | 传给 Monaco 的额外项，见 [options 说明](#options-monaco-编辑器配置)。不能用它设 `readOnly` |
 | `placeholder` | `string` | | 无值时的占位，跟 Monaco 第一行对齐 |
 | `editorTheme` | `string` | | `vs` / `vs-dark`。未写时随文档浅色 / 深色 |
@@ -213,7 +220,7 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 展示组件是 `code`，编辑器是 `editor`。`code` 不收 `options`。
-- 文档「编辑 Schema」用本组件（`yaml-editor` / `json-editor` + `hideButtons` + `intellisense: schema`），不是 textarea。
+- 文档「编辑 Schema」用本组件（`yaml-editor` / `json-editor` + `hideButtons` + `intellisense: schema`），不是 textarea。感知目录在包内，站点只消费。
 - `editorDidMount` 未接：Amis 允许函数或字符串 `new Function`；Vamis 禁止隐式 `eval`。
 - 动作 `clear` / `reset` / `focus` / 针对本组件的 `setValue` 仍缺 D7。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
