@@ -265,6 +265,12 @@ describe('Amis width helpers', () => {
     expect(form).toContain(':default-visible="!lazyLoad"')
     expect(chart).toContain('unMountOnHidden')
     expect(chart).toContain('placeholder="..."')
+    const schemaDoc = readFileSync(resolve(here, '../../../website/src/concepts/schema.md'), 'utf8')
+    const nav = readFileSync(resolve(here, '../../../website/nav.mjs'), 'utf8')
+    expect(schemaDoc).toContain('## LazyComponent')
+    expect(schemaDoc).toContain('defaultVisible')
+    expect(schemaDoc).toContain('lazyLoad')
+    expect(nav).not.toContain("link: '/extend/lazy'")
   })
 
   it('lets panelClassName mb-0 override the default panel margin', () => {

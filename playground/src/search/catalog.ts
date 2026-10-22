@@ -24,7 +24,9 @@ export function buildSearchIndex(): SearchHit[] {
         keywords:
           item.link.includes('/start/sdk')
             ? `${item.text} ${item.link} ${group.text} embed sdk.js amis.embed vamis.embed`
-            : `${item.text} ${item.link} ${group.text}`,
+            : item.link.includes('/concepts/schema')
+              ? `${item.text} ${item.link} ${group.text} LazyComponent lazyLoad unMountOnHidden 懒加载 可视 initApi Schema`
+              : `${item.text} ${item.link} ${group.text}`,
       })
     }
   }

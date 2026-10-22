@@ -33,7 +33,7 @@ title: 数据域与数据链
 }
 ```
 
-接口按 `{ status, msg, data }` 返回。`Page` 会把 `data` 写进当前数据域，`${date}` 从数据域取值。
+接口按 `{ status, msg, data }` 返回。`Page` 会把 `data` 写进当前数据域，`${date}` 从数据域取值。文档里这个 Play 进视口才请求，是外包的 [LazyComponent](/concepts/schema#lazycomponent)，不是 Page 内核在等可见。
 
 > 下一节是 [模板](/concepts/template)。`body` 字符串本身支持模板；很多组件的文本属性也一样。
 

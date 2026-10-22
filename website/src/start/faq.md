@@ -24,6 +24,10 @@ title: 常见问题
 
 有。任意 HTML 用 `vamis.embed(container, schema)`，对齐 `amis.embed`。产物：`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`。见 [JS SDK](/start/sdk)。Vue 工程继续用 `VamisRoot`。两条入口同一内核，没有 `amisRequire`，也不搬 `cxd.css`。
 
+## 为什么文档示例滚到可见才打 initApi？
+
+文档 ` ```schema ` 外包了 [LazyComponent](/concepts/schema#lazycomponent)（对齐 Amis `MdRenderer`）。Page **没有**「可见才 initApi」开关；请求仍在组件挂载时发。自己嵌入要同样效果，用 Vue 包一层，或给 Form 写 `lazyLoad: true`（只延迟绘制）。
+
 ## 可以写 JavaScript 函数进 schema 吗？
 
 不可以。函数只能以表达式字符串或已注册动作名进入，禁止隐式 `eval`。SDK 的 `env.fetcher` 等是宿主回调，允许。
