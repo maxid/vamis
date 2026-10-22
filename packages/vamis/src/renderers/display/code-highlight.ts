@@ -18,14 +18,7 @@ export type CustomLang = {
 type MonacoNS = typeof Monaco
 
 let monacoLoading: Promise<MonacoNS> | null = null
-
-export function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
+const extraRulesByLang = new Map<string, Monaco.editor.ITokenThemeRule[]>()
 
 function hexColor(value?: string): string | undefined {
   if (!value) return undefined
@@ -71,20 +64,40 @@ function ensureJsonMonarch(monaco: MonacoNS) {
   })
 }
 
+function extraRules(): Monaco.editor.ITokenThemeRule[] {
+  return [...extraRulesByLang.values()].flat()
+}
+
+function syncSharedTheme(monaco: MonacoNS) {
+  const rules = extraRules()
+  monaco.editor.defineTheme('vamis-vs', { base: 'vs', inherit: true, rules, colors: {} })
+  monaco.editor.defineTheme('vamis-vs-dark', { base: 'vs-dark', inherit: true, rules, colors: {} })
+  monaco.editor.defineTheme('vamis-hc-black', { base: 'hc-black', inherit: true, rules, colors: {} })
+}
+
+export function applyEditorTheme(monaco: MonacoNS, editorTheme: string): string {
+  syncSharedTheme(monaco)
+  const id =
+    editorTheme === 'vs-dark' ? 'vamis-vs-dark' : editorTheme === 'hc-black' ? 'vamis-hc-black' : 'vamis-vs'
+  monaco.editor.setTheme(id)
+  return id
+}
+
 export async function loadMonaco(): Promise<MonacoNS> {
   if (!monacoLoading) {
     monacoLoading = (async () => {
       await setupMonacoEnvironment()
       const monaco = await import('monaco-editor')
-      // monaco 0.57 的 json 只在 worker 语言服务里挂 tokenizer，colorize 等不到。
+      await import('monaco-editor/min/vs/editor/editor.main.css')
       ensureJsonMonarch(monaco)
+      syncSharedTheme(monaco)
       return monaco
     })()
   }
   return monacoLoading
 }
 
-/** Amis customLang：注册 monarch tokenizer，主题名用 language name。 */
+/** Amis customLang：注册 monarch。主题 inherit 共享 vs，避免 setTheme 冲掉同页其它块。 */
 export function registerCustomLang(monaco: MonacoNS, lang?: CustomLang): string | undefined {
   if (!lang?.name || !Array.isArray(lang.tokens) || !lang.tokens.length) return undefined
   const langName = lang.name
@@ -107,32 +120,110 @@ export function registerCustomLang(monaco: MonacoNS, lang?: CustomLang): string 
   monaco.languages.setMonarchTokensProvider(langName, {
     tokenizer: { root: tokenizers },
   })
-  monaco.editor.defineTheme(langName, {
-    base: 'vs',
-    inherit: false,
-    rules,
-    colors: lang.colors && typeof lang.colors === 'object' ? lang.colors : {},
-  })
+  extraRulesByLang.set(langName, rules)
+  syncSharedTheme(monaco)
   return langName
 }
 
-export async function colorize(
-  source: string,
-  language = 'plaintext',
-  tabSize = 4,
-  customLang?: CustomLang,
-  editorTheme = 'vs',
-): Promise<string> {
-  const text = source ?? ''
-  if (typeof window === 'undefined') return escapeHtml(text)
-  try {
-    const monaco = await loadMonaco()
-    const customTheme = registerCustomLang(monaco, customLang)
-    const lang = customLang?.name || language || 'plaintext'
-    const theme = customTheme || editorTheme || 'vs'
-    monaco.editor.setTheme(theme)
-    return await monaco.editor.colorize(text, lang, { tabSize })
-  } catch {
-    return escapeHtml(text)
+export type MountCodeEditorOpts = {
+  source: string
+  language: string
+  tabSize: number
+  wordWrap: boolean
+  theme: string
+  customLang?: CustomLang
+  lineNumbers: 'on' | 'off' | 'relative'
+  folding: boolean
+  maxHeight?: number
+  extra?: Record<string, unknown>
+}
+
+export function editorChrome(opts: { lineNumbers: 'on' | 'off' | 'relative'; folding: boolean }) {
+  return {
+    lineNumbers: opts.lineNumbers,
+    folding: opts.folding,
+    foldingStrategy: 'auto' as const,
+    showFoldingControls: (opts.folding ? 'mouseover' : 'never') as 'mouseover' | 'never',
+    glyphMargin: false,
+    lineDecorationsWidth: opts.folding ? 12 : 0,
+    lineNumbersMinChars: opts.lineNumbers === 'off' ? 0 : 3,
+  }
+}
+
+export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts) {
+  const monaco = await loadMonaco()
+  registerCustomLang(monaco, opts.customLang)
+  const theme = applyEditorTheme(monaco, opts.theme)
+  const language = opts.customLang?.name || opts.language || 'plaintext'
+  const editor = monaco.editor.create(el, {
+    value: opts.source ?? '',
+    language,
+    theme,
+    readOnly: true,
+    domReadOnly: true,
+    ...editorChrome(opts),
+    minimap: { enabled: false },
+    scrollBeyondLastLine: false,
+    automaticLayout: false,
+    wordWrap: opts.wordWrap ? 'on' : 'off',
+    wrappingStrategy: 'advanced',
+    tabSize: opts.tabSize,
+    renderLineHighlight: 'none',
+    overviewRulerLanes: 0,
+    hideCursorInOverviewRuler: true,
+    overviewRulerBorder: false,
+    quickSuggestions: false,
+    suggestOnTriggerCharacters: false,
+    snippetSuggestions: 'none',
+    wordBasedSuggestions: 'off',
+    parameterHints: { enabled: false },
+    hover: { enabled: false },
+    occurrencesHighlight: 'off',
+    renderValidationDecorations: 'off',
+    contextmenu: false,
+    links: false,
+    fontSize: 13,
+    lineHeight: 20,
+    padding: { top: 8, bottom: 8 },
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+      verticalScrollbarSize: 8,
+      horizontalScrollbarSize: 8,
+      horizontal: opts.wordWrap ? 'hidden' : 'visible',
+    },
+    ...(opts.extra || {}),
+  })
+
+  let fitting = false
+  const fit = () => {
+    if (fitting) return
+    fitting = true
+    try {
+      const width = Math.max(1, el.clientWidth)
+      editor.layout({ width, height: Math.max(24, editor.getLayoutInfo().height || 24) })
+      const wrapOff = editor.getRawOptions().wordWrap === 'off'
+      const content = editor.getContentHeight() + (wrapOff ? editor.getLayoutInfo().horizontalScrollbarHeight || 0 : 0)
+      const height = opts.maxHeight ? Math.min(content, opts.maxHeight) : content
+      const next = Math.max(24, height)
+      el.style.height = `${next}px`
+      editor.layout({ width, height: next })
+    } finally {
+      fitting = false
+    }
+  }
+  const sub = editor.onDidContentSizeChange(fit)
+  const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => fit())
+  ro?.observe(el)
+  fit()
+
+  return {
+    monaco,
+    editor,
+    fit,
+    dispose() {
+      ro?.disconnect()
+      sub.dispose()
+      editor.dispose()
+    },
   }
 }

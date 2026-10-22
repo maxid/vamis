@@ -77,7 +77,7 @@ html {
 .doc-code {
   margin: 1rem 0 1.5rem;
 }
-.doc-code .vamis-code--pre {
+.doc-code .vamis-code--editor {
   background: var(--muted);
   border-radius: 0.5rem;
 }

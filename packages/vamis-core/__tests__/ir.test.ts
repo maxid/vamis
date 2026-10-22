@@ -55,6 +55,17 @@ describe('IR envelope', () => {
     expect(parseSchemaText(formatSchemaAs(widget, 'json'))).toEqual(widget)
   })
 
+  it('syncs JSON multiline strings into YAML block scalars', () => {
+    const fromJson = syncAuthoringText(
+      'json',
+      '{\n  "type": "code",\n  "language": "javascript",\n  "value": "function hello() {\\n  return 1;\\n}"\n}\n',
+    )
+    expect(fromJson.yaml).toMatch(/^value: \|-?$/m)
+    expect(fromJson.yaml).toContain('function hello() {')
+    expect(fromJson.yaml).not.toContain('\\n')
+    expect((fromJson.value as { value: string }).value).toBe('function hello() {\n  return 1;\n}')
+  })
+
   it('throws when JSON draft is invalid and does not invent YAML', () => {
     expect(() => syncAuthoringText('json', '{')).toThrow()
   })

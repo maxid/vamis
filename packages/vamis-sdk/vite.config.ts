@@ -31,7 +31,14 @@ export default defineConfig({
       { find: '@vamis/core', replacement: pkg('vamis-core') },
       { find: '@vamis/formula', replacement: pkg('vamis-formula') },
       { find: 'vamis', replacement: path.join(pkg('vamis'), 'index.ts') },
+      {
+        find: 'monaco-editor/min/vs/editor/editor.main.css',
+        replacement: path.join(repo, 'node_modules/monaco-editor/min/vs/editor/editor.main.css'),
+      },
     ],
+  },
+  worker: {
+    format: 'es',
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),

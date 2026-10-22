@@ -20,6 +20,26 @@ describe('YAML 1.2 Core dump/load', () => {
     expect(yaml).not.toMatch(/perPage: ["']5["']/)
   })
 
+  it('dumps multiline strings as literal block scalars', () => {
+    const value = `(function () {
+  let schema = {
+    type: 'page',
+    title: '表单页面'
+  };
+  console.log(schema);
+})();`
+    const yaml = stringifyYaml({
+      type: 'code',
+      language: 'javascript',
+      value,
+    })
+    expect(yaml).toMatch(/^value: \|-?$/m)
+    expect(yaml).toContain("type: 'page'")
+    expect(yaml).not.toContain('\\n')
+    const parsed = parseYaml(yaml) as { value: string }
+    expect(parsed.value).toBe(value)
+  })
+
   it('quotes strings that look like booleans, numbers, or contain colon', () => {
     const yaml = stringifyYaml({
       flag: 'true',

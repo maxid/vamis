@@ -437,7 +437,7 @@ export function usePlugin(plugin: VamisPlugin): void
   - 公式：`"${ARRAYMAP(items, item => item.name)}"`；
   - 函数体：块标量 `dataFilter: |`；
   - 不引入 YAML `!js` tag（JSON 无法表达，破坏双态）。
-- 模板/表达式含 `: `、`#` 或对象字面量时必须加引号；`stringifyYaml` 已自动处理。
+- 模板/表达式含 `: `、`#` 或对象字面量时必须加引号；`stringifyYaml` 已自动处理。含换行的字符串写成 `|` / `|-` 块标量，不再打成 `"...\n..."`。
 - 保证 JSON ↔ YAML ↔ IR 往返不丢字段、不执行代码。
 
 ## 16. 差距矩阵
@@ -535,7 +535,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | 字符串函数带来的 RCE/XSS | 默认关闭；`env.trusted` 白名单；模板默认转义；CSP 文档化 |
 | Schema 语义漂移 | 用 amis 文档示例做黄金用例；差距矩阵随实现更新 |
 | 组件团队各自实现请求/联动 | 渲染器禁止直接 fetch；统一 `requestApi` 与 `dispatch` |
-| YAML 引号/块标量踩坑 | `stringifyYaml` 自动加引号；文档给出正反例；往返测试 |
+| YAML 引号/块标量踩坑 | `stringifyYaml` 自动加引号；多行走 `\|`；文档给出正反例；往返测试 |
 | 兼容旧 schema | 归一化层保留未知字段；`test/weight` 兜底；未知 type 不崩 |
 
 ## 22. 验收样例（来自 amis 文档）

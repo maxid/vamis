@@ -21,6 +21,7 @@ export function parseYaml(text: string): unknown {
 /**
  * Dump with YAML 1.2 Core scalars:
  * - booleans/null/int/float stay unquoted
+ * - multiline strings use literal block scalars (`|` / `|-`)
  * - strings that look like YAML 1.1 bools, numbers, or contain `:` / `#` are quoted
  */
 export function stringifyYaml(value: unknown): string {
@@ -29,14 +30,17 @@ export function stringifyYaml(value: unknown): string {
     Scalar(_key, node) {
       if (!isScalar(node) || typeof node.value !== 'string') return
       const text = node.value
+      if (text.includes('\n')) {
+        node.type = 'BLOCK_LITERAL'
+        return
+      }
       if (
         YAML_1_1_BOOL.test(text) ||
         CORE_KEYWORD.test(text) ||
         LOOKS_LIKE_NUMBER.test(text) ||
         CORE_SPECIAL.test(text) ||
         text.includes(':') ||
-        text.includes('#') ||
-        text.includes('\n')
+        text.includes('#')
       ) {
         node.type = 'QUOTE_DOUBLE'
       }
