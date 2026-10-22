@@ -40,6 +40,15 @@ describe('onEvent actions', () => {
     expect(reload).toHaveBeenCalledWith(undefined, false)
   })
 
+  it('reload resolves a dynamic target and query payload', async () => {
+    const reload = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'list', reload })
+    const context = ctx({ scoped, data: { who: 'list', q: 7 } })
+    await runAction({ actionType: 'reload', target: '${who}?q=${q}' }, context)
+    expect(reload).toHaveBeenCalledWith({ q: 7 }, false)
+  })
+
   it('reload sends action.data only and honors dataMergeMode', async () => {
     const reload = vi.fn()
     const scoped = new ScopedContext()

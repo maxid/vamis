@@ -48,6 +48,10 @@ describe('resolveClassName', () => {
   it('keeps Amis width helpers including m: / pc: and fractions', () => {
     expect(resolveClassName('w-full pc:w-1/2 m:w-full', {})).toBe('w-full pc:w-1/2 m:w-full')
   })
+
+  it('keeps Amis height helpers including m: / pc: and fractions', () => {
+    expect(resolveClassName('h-full pc:h-1/2 m:min-h-full', {})).toBe('h-full pc:h-1/2 m:min-h-full')
+  })
 })
 
 describe('resolveInlineStyle', () => {
@@ -146,6 +150,16 @@ describe('Amis width helpers', () => {
     expect(css).toContain('.pc\\:w-1\\/2 { width: 50%; }')
     expect(css).toContain('@media (max-width: 767px)')
     expect(css).toContain('@media (min-width: 768px)')
+  })
+
+  it('ships h-* / m: / pc: matching helper.css Height', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/helpers-height.css'), 'utf8')
+    expect(css).toContain('.h-full { height: 100%; }')
+    expect(css).toContain('.min-h-full { min-height: 100%; }')
+    expect(css).toContain('.m\\:h-full { height: 100%; }')
+    expect(css).toContain('.pc\\:h-1\\/2 { height: 50%; }')
+    expect(css).toContain('.vamis-node.h-full')
   })
 
   it('pins form control sizes only from the sm breakpoint', () => {

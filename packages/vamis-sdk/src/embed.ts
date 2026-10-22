@@ -1,16 +1,18 @@
-import { createApp, h, nextTick, reactive } from 'vue'
+import { createApp, h, nextTick, reactive, ref } from 'vue'
 import { createPinia } from 'pinia'
 import { Toaster } from '@vamis/ui'
 import {
   VamisRoot,
   createDefaultEnv,
   parseSchemaText,
+  runActions,
   type ApiObject,
   type Payload,
   type PlainObject,
   type RendererConfig,
   type RendererEnv,
 } from 'vamis'
+import type { ActionSchema, ScopedContext } from '@vamis/core'
 
 export type EmbedProps = {
   data?: PlainObject
@@ -86,6 +88,7 @@ export function embed(
     data: { ...(props?.data || {}) } as PlainObject,
     env: makeEnv(env),
   })
+  const rootRef = ref<{ scoped?: ScopedContext } | null>(null)
 
   const app = createApp({
     name: 'VamisEmbed',
@@ -93,6 +96,7 @@ export function embed(
       return () =>
         h('div', { class: 'vamis-sdk' }, [
           h(VamisRoot, {
+            ref: rootRef,
             schema: state.schema,
             data: state.data,
             env: state.env,
@@ -107,6 +111,20 @@ export function embed(
   let alive = true
   function assertAlive() {
     if (!alive) throw new Error('vamis.embed: instance already unmounted')
+  }
+
+  function rootScoped(): ScopedContext | undefined {
+    return rootRef.value?.scoped
+  }
+
+  function asActions(value: unknown): ActionSchema[] {
+    if (!value) return []
+    if (Array.isArray(value)) return value as ActionSchema[]
+    if (typeof value === 'object' && Array.isArray((value as { actions?: ActionSchema[] }).actions)) {
+      return (value as { actions: ActionSchema[] }).actions
+    }
+    if (typeof value === 'object') return [value as ActionSchema]
+    return []
   }
 
   return {
@@ -126,11 +144,17 @@ export function embed(
       app.unmount()
       created?.remove()
     },
-    getComponentByName(_name: string) {
-      throw new Error('vamis.getComponentByName: 尚未实现（等待 D5 组件注册表）')
+    getComponentByName(name: string) {
+      assertAlive()
+      return rootScoped()?.getComponentByName(name)
     },
-    async doAction(_actions: unknown, _ctx?: PlainObject) {
-      throw new Error('vamis.doAction: 尚未实现（等待 D4 动作注册表）')
+    async doAction(actions: unknown, ctx?: PlainObject) {
+      assertAlive()
+      await runActions(asActions(actions), {
+        env: state.env,
+        data: { ...state.data, ...(ctx || {}) },
+        scoped: rootScoped(),
+      })
     },
   }
 }

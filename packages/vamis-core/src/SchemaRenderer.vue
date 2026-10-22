@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, shallowRef, watch } from 'vue'
-import { resolveRenderer } from './factory'
+import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
 import { provideData, provideScope, useData, useEnv, useScope } from './context'
@@ -33,7 +33,7 @@ const normalized = computed<SchemaObject | null>(() => {
   if (typeof schema !== 'object') return { type: 'tpl', tpl: String(schema) }
   return schema as SchemaObject
 })
-const renderer = computed(() => resolveRenderer(normalized.value?.type))
+const renderer = computed(() => resolveRenderer(normalized.value?.type, normalized.value || undefined))
 const schemaData = computed(() => {
   const schema = normalized.value
   if (schema?.data && typeof schema.data === 'object') {
@@ -46,12 +46,7 @@ const overlayInit = computed(() => ({
   ...(props.extraData || {}),
 }))
 const hasOverlay = computed(() => Object.keys(overlayInit.value).length > 0)
-const scopeMode = computed<'inherit' | 'self' | 'isolate'>(() => {
-  const def = renderer.value
-  if (def?.scope) return def.scope
-  if (def?.isolateScope) return 'self'
-  return 'inherit'
-})
+const scopeMode = computed<'inherit' | 'self' | 'isolate'>(() => rendererScopeMode(renderer.value))
 const needsChildScope = computed(() => scopeMode.value !== 'inherit' || hasOverlay.value)
 const childScope = shallowRef<Scope | null>(null)
 watch(
@@ -158,6 +153,7 @@ async function onHostEvent(native: Event, eventName: string) {
     :data-editor-path="editorPath"
     :draggable="canDrag"
     :class="[
+      'vamis-node',
       nodeClass,
       editor && editorPath != null
         ? [

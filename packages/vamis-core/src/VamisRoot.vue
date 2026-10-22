@@ -48,8 +48,10 @@ watch(
 const data = computed(() => rootScope.resolved())
 provideScope(rootScope)
 provideData(data)
-provideScoped()
+const scoped = provideScoped()
 provideOverlay()
+
+defineExpose({ scoped })
 
 const ir = computed(() => jsonToIr(props.schema))
 const widget = computed<SchemaNode>(() => compileIrToWidget(ir.value))

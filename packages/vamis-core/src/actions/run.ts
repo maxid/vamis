@@ -1,7 +1,7 @@
 import type { ActionSchema, PlainObject, RendererEnv, SchemaObject } from '../types'
 import { apiMessage, requestApi } from '../utils/api'
 import { evalExpression, filterTpl } from '../formula'
-import type { ScopedContext } from '../scoped'
+import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
 import type { Scope } from '../scope'
@@ -95,7 +95,9 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
   const replace = action.dataMergeMode === 'override'
   const assign = (values: PlainObject) => {
     if (target) {
-      ctx.scoped?.getComponentByName(target)?.setData?.(values, replace)
+      for (const item of resolveTargets(target, data)) {
+        ctx.scoped?.getComponentByName(item.name)?.setData?.(values, replace)
+      }
       return
     }
     if (ctx.form?.setData) {
@@ -168,6 +170,7 @@ function registerBuiltinActions() {
   })
 
   registerAction('reload', async (action, ctx) => {
+    const data = actionData(action, ctx)
     const extra =
       action.data && typeof action.data === 'object' && !Array.isArray(action.data)
         ? (action.data as PlainObject)
@@ -176,6 +179,7 @@ function registerBuiltinActions() {
       action.target || action.componentId || action.args?.target,
       extra,
       action.dataMergeMode === 'override',
+      data,
     )
   })
 

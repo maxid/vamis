@@ -1,7 +1,7 @@
 # Vamis 运行时语义设计（amis 文档对齐）
 
 - 日期：2026-10-20
-- 状态：部分落地（D1 Scope、D3 API 管线、D4 事件对象 P0 已接；其余 D2/D5–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
+- 状态：部分落地（D1 Scope、D2 模板转义/P0 过滤器、D3 API 管线、D4 事件对象、D5 动态 target P0 已接；其余 D6–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
 - 范围：数据域、表达式/模板、API、事件动作、表单、CRUD、渲染器契约、扩展、主题/i18n、诊断、IR
 - 参考：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
 - 关联：
@@ -18,12 +18,12 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | # | 决策 | 优先级 |
 |---|------|--------|
 | D1 | 用显式 `Scope` 对象替代“每个节点复制父数据”，只让声明过的容器新建数据域，补 `__super` / URL 参数 / 动态取值 | P0 |
-| D2 | 表达式、模板、过滤器统一到一个 `expr` 层；模板默认转义，`\|raw` 才输出 HTML | P0 |
+| D2 | 表达式、模板、过滤器统一到一个 `expr` 层；模板默认转义，`\|raw` 才输出 HTML | P0 已落地 |
 | D3 | API 统一为可组合管线：normalize → adaptor → sendOn → cache → fetch → payload → responseData → merge/replace | P0 已落地 |
 | D4 | 事件统一为 `dispatch(event, payload)` + 事件对象；动作走注册表与控制流，不再写死在 switch 里 | P0 |
-| D5 | 组件间联动用组件注册表 + 动态 target，支持多目标、数据合并、reload/setValue/setState/doAction | P0 |
+| D5 | 组件间联动用组件注册表 + 动态 target，支持多目标、数据合并、reload/setValue/setState/doAction | P0 已落地 |
 | D6 | 表单值支持路径（`a.b[0].c`），提交返回数据合并进表单域，校验走可注册规则 | P0 |
-| D7 | 渲染器契约固定为 `schema/data/env/api`，注册信息包含 `scope/test/weight`，`isolateScope` 真正生效 | P0 |
+| D7 | 渲染器契约固定为 `schema/data/env/api`，注册信息包含 `scope/test/weight`，`isolateScope` 真正生效 | P0 部分落地 |
 | D8 | 调试能力内建：`env.debug`、动作日志、未知 type 带 schema path 报告 | P0 |
 | D9 | 接口联动与 `trackExpression` 用依赖收集实现自动刷新 | P1 |
 | D10 | CRUD 语义补齐：filter 独立作用域、`loadDataOnce`、`syncLocation`、`quickEdit`、`matchFunc` | P1 |
@@ -48,13 +48,13 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
 | Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点不再复制；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；form/service/crud 的 overlay 尚未全部改走 Scope.merge |
-| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `resolveValue`，引擎是仓内 `@vamis/formula` | `${name\|raw}` / `${name\|html}` 已走 parser；Amis 运行时补的 `|date`/`|json` 未齐；模板默认仍是 `raw`，未做 HTML 转义策略 |
+| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 默认文本节点，`\|raw` 才 `v-html`；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
 | Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
-| Linkage | `ScopedContext.reload(name)`、`setValue` 按 `componentId/target` 查组件 | target 不支持动态名/多目标/数据合并；无 `target?a=${a}`；接口不随变量自动刷新 |
+| Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口随变量自动刷新仍属 D9；表单路径值仍等 D6 |
 | Form | 表单 store、`initApi`、`validate/submit/reset`、submit 事件 | 扁平 `name`；提交返回不合并；校验规则内嵌；无 `validateOnChange`/`requiredOn`/`clearValueOnHidden`；嵌套表单项不参与校验 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑 | 无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`/`autoGenerateFilter`；filter 只是提交到 query 的内嵌表单 |
-| Renderer | `registerRenderer({type, alias, component, isFormItem, isolateScope})`；props 只有 `schema/data/disabled` | 无 `dispatch/api/reload`、无 `test/weight`、无错误边界、未知 type 只有占位 |
+| Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无 `dispatch/api/reload`、无错误边界；未知 type 仍占位 |
 | Extension | `registerRenderer` | 无 action/filter/validator/locale/theme 注册；无插件生命周期 |
 | Theme/i18n | Tailwind + shadcn token | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText/`registerTheme` |
 | Diagnostics | `Placeholder` | 无 debug 开关、无动作日志、无 schema path 报错 |
@@ -411,7 +411,7 @@ export function usePlugin(plugin: VamisPlugin): void
 ## 13. 主题、响应式与多语言（D12 相关）
 
 - **默认自适应**：page / form / crud / 未写 `size` 的表单控件吃满布局槽，作者不必先写 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。见 [样式系统](./2026-10-21-vamis-style-system.md) §0。
-- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs`、宽度 `w-full` / `w-1/2` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
+- `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs`、宽度 `w-*`、高度 `h-full` / `h-1/2` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
 - 主题：沿用 Tailwind/shadcn token；`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
 - 响应式：`m:` / `pc:` 前缀走 CSS 媒体查询（&lt;768 / ≥768），作用在间距和宽度 helper；表单 `size` 档位断点是 576px（对齐 Amis form SCSS）。不引入 Tailwind 五档作为作者态。
 - i18n：
@@ -446,21 +446,21 @@ export function usePlugin(plugin: VamisPlugin): void
 |------|------|-----------|------|------|
 | 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；`trackExpression` 未做 | D1 | P0 骨架完成 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |
-| 模板过滤器 | `\|raw`/`\|json` 等 | 不支持 | D2 | P0 |
-| HTML 安全 | 默认转义 + raw | 全量 `v-html` | D2 | P0 |
+| 模板过滤器 | `\|raw`/`\|json` 等 | P0 过滤器已接；`map`/`bytes` 等仍 P1 | D2 | P0 完成 |
+| HTML 安全 | 默认转义 + raw | Tpl 默认文本节点；`\|raw` / `type: html` 才 `v-html` | D2 | P0 完成 |
 | API 基础 | method/url/data/headers | 已有 | 补 GET data | P0 |
 | API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
 | 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source` 已按 url / `trackExpression` 刷新；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
-| 组件联动 | 动态 target/多目标/数据合并 | 仅按 name 刷新 | D5 | P0 |
+| 组件联动 | 动态 target/多目标/数据合并 | `resolveTargets` 已接；SDK `getComponentByName`/`doAction` 可用 | D5 | P0 完成 |
 | 广播/自定义动作 | 有 | 无 | D4 | P1 |
 | 表单值路径 | `a.b[0]` | 平铺 key | D6 | P0 |
 | 提交合并 | payload.data 入表单域 | 不合并 | D6 | P0 |
 | 表单校验 | 规则注册/异步/服务端 | 内嵌规则 | D6 | P0/P1 |
 | 隐藏清值 | clearValueOnHidden | 无 | D6 | P1 |
 | CRUD 高级 | loadDataOnce/syncLocation/quickEdit | 无 | D10 | P1 |
-| 渲染器 API | dispatch/reload/doAction | 只有 props | D7 | P0 |
+| 渲染器 API | dispatch/reload/doAction | `test`/`weight`/`isolateScope` 已接；仍无注入 dispatch | D7 | P0 部分 |
 | 扩展注册 | action/filter/validator/locale | 只有 renderer | D11 | P1 |
 | JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 已落地；`getComponentByName` / `doAction` 未实现 | D11 | P0 外壳完成 / P1 随 kernel |
 | className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` 已接；无 `registerTheme` / locale / `xxxClassName` | D12 | 进行中 |

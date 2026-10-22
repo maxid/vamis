@@ -4,8 +4,8 @@ title: 自定义组件
 
 # 自定义组件
 
-::: warning 实现进度 40% · 进行中
-`registerRenderer` 可用。插件市场、完整 D7 注册信息（`test` / `weight` / `isolateScope`）未齐。
+::: info 实现进度 55% · 进行中
+`registerRenderer` 可用，D7 的 `test` / `weight` / `isolateScope` 已接。插件市场、错误边界仍缺。
 :::
 
 用 `registerRenderer` 注册 Vue 组件。渲染器只吃 `schema` / `data` / `env`。
@@ -16,6 +16,9 @@ import { registerRenderer } from '@vamis/core'
 
 registerRenderer({
   type: 'hello',
+  test: /^hello-/,
+  weight: 0,
+  isolateScope: false,
   component: defineComponent({
     props: { schema: { type: Object, required: true } },
     setup(props) {

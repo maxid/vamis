@@ -1,5 +1,6 @@
-import { evaluate, registerFilter } from '@vamis/formula'
+import { evaluate } from '@vamis/formula'
 import type { PlainObject } from './types'
+import './filters'
 
 export {
   evaluate,
@@ -16,29 +17,28 @@ export {
   extendsFilters,
 } from '@vamis/formula'
 
+export interface TemplateResult {
+  text: string
+  html?: string
+  usedFilters: string[]
+}
+
 /** Amis 表达式里 `this.xxx` 指向当前数据域。 */
 function formulaData(data: PlainObject = {}): PlainObject {
   if (!data || typeof data !== 'object') return { this: data }
   return { ...data, this: data }
 }
 
-registerFilter('json', (input: unknown) => {
-  try {
-    return JSON.stringify(input ?? null)
-  } catch {
-    return ''
+function collectTplFilters(tpl: string): string[] {
+  const names: string[] = []
+  const chunks = tpl.match(/\$\{[\s\S]*?\}/g) || []
+  for (const chunk of chunks) {
+    const re = /\|([A-Za-z_]\w*)/g
+    let match: RegExpExecArray | null
+    while ((match = re.exec(chunk))) names.push(match[1])
   }
-})
-
-registerFilter('default', (input: unknown, fallback = '') => {
-  if (input == null || input === '') return fallback
-  return input
-})
-
-registerFilter('first', (input: unknown) => {
-  if (Array.isArray(input)) return input[0]
-  return input
-})
+  return names
+}
 
 export function evalFormula(expression: string, data: PlainObject = {}): unknown {
   try {
@@ -60,16 +60,26 @@ export function evalExpression(expression: string | undefined, data: PlainObject
   }
 }
 
-export function filterTpl(tpl: unknown, data: PlainObject = {}): string {
+export function filterTpl(tpl: unknown, data: PlainObject = {}, defaultFilter = 'raw'): string {
   if (tpl == null) return ''
   if (typeof tpl !== 'string') return String(tpl)
   if (!tpl.includes('${')) return tpl
   try {
-    const value = evaluate(tpl, formulaData(data), { evalMode: false, defaultFilter: 'raw' })
+    const value = evaluate(tpl, formulaData(data), { evalMode: false, defaultFilter })
     return value == null ? '' : String(value)
   } catch {
     return tpl
   }
+}
+
+/** D2：Tpl 默认文本节点；`|raw` 才带 html。 */
+export function evalTemplate(tpl: unknown, data: PlainObject = {}, options?: { asHtml?: boolean }): TemplateResult {
+  if (tpl == null) return { text: '', usedFilters: [] }
+  const source = typeof tpl === 'string' ? tpl : String(tpl)
+  const usedFilters = collectTplFilters(source)
+  const asHtml = Boolean(options?.asHtml) || usedFilters.includes('raw')
+  const text = filterTpl(source, data, asHtml ? 'html' : 'raw')
+  return asHtml ? { text, html: text, usedFilters } : { text, usedFilters }
 }
 
 export function isVisible(schema: PlainObject, data: PlainObject = {}): boolean {

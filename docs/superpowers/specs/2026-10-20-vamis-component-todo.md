@@ -33,19 +33,19 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 61% | 12 |
+| 布局 | 2 / 15 | 13 | 0 | 62% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 43% | 7 |
 | 数据输入 | 0 / 72 | 72 | 0 | 46% | 37 |
-| 数据展示 | 0 / 44 | 44 | 0 | 46% | 25 |
+| 数据展示 | 0 / 44 | 44 | 0 | 48% | 27 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **47%** | **87** |
+| **合计** | **2 / 155** | **151** | **2** | **48%** | **89** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
 ---
 
-## 布局（2/15，均 61%）
+## 布局（2/15，均 62%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -56,12 +56,12 @@
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
 | `flex` | Flex 布局 | 进行中 | 60% | `justify`/`direction` 可用；缺 `alignItems`、子项 `flex` | P0 |
-| `grid` | Grid 水平分栏 | 进行中 | 60% | 12 栅格 span 可用；缺响应式 `xs/sm` 全套 | P0 |
+| `grid` | Grid 水平分栏 | 进行中 | 65% | 12 栅格 span 可用，列等高靠 `className: h-full`；缺响应式 `xs/sm` 全套 | P0 |
 | `grid-2d` | Grid 2D 布局 | 进行中 | 45% | 已注册，二维格子精简 | P0 |
 | `hbox` | HBox 布局 | 进行中 | 50% | 已注册；列宽/垂直对齐未对齐文档 | P0 |
 | `pagination` | Pagination 分页 | 进行中 | 55% | 页码可用；缺 `layout` 插槽、完整 `mode` | P0 |
 | `pagination-wrapper` | PaginationWrapper 分页容器 | 进行中 | 50% | 已注册；与数据域分页契约未对齐（D10） | P0 |
-| `panel` | Panel 面板 | 进行中 | 60% | title/body 可用；缺 `actions` 语义细节 | P0 |
+| `panel` | Panel 面板 | 进行中 | 65% | title/body 可用，`h-full` 吃满父槽；缺 `actions` 语义细节 | P0 |
 | `tabs` | Tabs 选项卡 | 进行中 | 60% | 切 tab 可用；缺 `source` 动态、`mountOnEnter` | P0 |
 | `wrapper` | Wrapper 包裹容器 | 进行中 | 65% | 能包一层；size/style 未齐 | P0 |
 | `portlet` | Portlet 门户栏目 | 进行中 | 45% | 已注册，工具栏/拖拽精简 | P0 |
@@ -184,9 +184,9 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `chart` | Chart 图表 | 进行中 | 40% | 有 `config`/`api` 时动态加载 echarts；无库则占位 | P0 |
 | `code` | Code 代码高亮 | 进行中 | 45% | 已注册，高亮引擎精简 | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
-| `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 50% | StaticValue 展示，格式过滤器未齐（D2） | P0 |
+| `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 55% | 能循环；placeholder/index 未齐 | P0 |
-| `html` | Html | 进行中 | 35% | `tpl` 别名；全量 `v-html`，无默认转义（D2） | P0 |
+| `html` | Html | 进行中 | 60% | `tpl` 别名；type html 仍按 HTML 输出，插值默认转义（D2） | P0 |
 | `icon` | Icon 图标 | 进行中 | 60% | 能出图标；iconfont/vendor 未齐 | P0 |
 | `iframe` | iFrame | 进行中 | 55% | 能嵌页 | P0 |
 | `image` | Image 图片 | 进行中 | 55% | 能显示；放大/图集未齐 | P0 |
@@ -197,7 +197,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `list` | List 列表 | 进行中 | 50% | 能列条目 | P0 |
 | `log` | Log 实时日志 | 进行中 | 25% | **精简**：静态分行，无轮询/ANSI | P0 |
 | `mapping` | Mapping 映射 | 进行中 | 55% | 能 map 取值 | P0 |
-| `number` | Number 展示 | 进行中 | 50% | StaticValue；千分位/精度过滤器未齐 | P0 |
+| `number` | Number 展示 | 进行中 | 60% | StaticValue；number / percent 过滤器已接，组件自身精度档未齐 | P0 |
 | `markdown` | Markdown 渲染 | 进行中 | 45% | 已注册，渲染库精简 | P0 |
 | `office-viewer` | OfficeViewer Word 渲染 | 进行中 | 10% | **占位**：ViewerStub「未接入预览」（设计非目标） | P0 |
 | `office-viewer` | OfficeViewer Excel 渲染 | 进行中 | 10% | **占位**：同一 type + `excelOptions`，同样未接入 | P0 |
@@ -211,7 +211,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `search-box` | SearchBox 搜索框 | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | 进行中 | 55% | 能映射状态 | P0 |
-| `tpl` | Tpl 模板 | 进行中 | 40% | 能插值；全量 `v-html`，`\|raw`/`\|json` 过滤器不可用（D2） | P0 |
+| `tpl` | Tpl 模板 | 进行中 | 70% | D2 P0：默认文本节点，raw 才 HTML；P0 过滤器可用。其余 Amis 过滤器仍 P1 | P0 |
 | `tag` | Tag 标签 | 进行中 | 55% | 能展示标签 | P0 |
 | `video` | Video 视频 | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | 进行中 | 50% | 能列节点 | P0 |
@@ -282,7 +282,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | 组件 | 挡住它的决策 |
 |------|----------------|
 | `service` / `form` / `crud` / `wizard` | D1 已有 Scope 内核；这些容器还要把 overlay 切到 Scope（page 已切） |
-| `tpl` / `html` / Date/Number 展示 | D2 过滤器与转义 |
+| `tpl` / `html` / Date/Number 展示 | D2 P0 已接；其余过滤器仍 P1 |
 | `service` / `form` / `crud` / `action` ajax | D3 API 管线 |
 | `action` / `button` / `toast` / `dialog` | D4/D5 事件与目标 |
 | 所有表单项 + FormItem/Options | D6 路径值与校验 |

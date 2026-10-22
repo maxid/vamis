@@ -24,4 +24,5 @@ export {
   parse as parseFormula,
   registerFilter,
   registerFunction,
+  runActions,
 } from '@vamis/core'

@@ -4,8 +4,8 @@ title: 快速开始
 
 # 快速开始
 
-::: tip 实现进度 90% · 已完成
-Vue `VamisRoot` 与 JS SDK `vamis.embed` 两条入口都能跑；YAML / JSON / IR 并列。SDK `getComponentByName` / `doAction` 仍未实现。
+::: tip 实现进度 95% · 已完成
+Vue `VamisRoot` 与 JS SDK `vamis.embed` 两条入口都能跑；YAML / JSON / IR 并列。`getComponentByName` / `doAction` 已接（D5）。
 :::
 
 Vamis 有两种用法，和 Amis 一样：

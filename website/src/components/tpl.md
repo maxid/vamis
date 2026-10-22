@@ -5,8 +5,8 @@ outline: deep
 
 # Tpl 模板
 
-::: warning 实现进度 — · 进行中
-已按 type 注册；文档主路径仍在补齐。
+::: info 实现进度 70% · 进行中
+D2 P0：默认文本节点，raw 才 HTML；P0 过滤器可用。其余 Amis 过滤器仍 P1
 :::
 
 `tpl` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

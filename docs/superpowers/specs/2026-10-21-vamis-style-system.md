@@ -98,7 +98,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）；宽度 helper `w-full` / `w-1/2` 同样带这两档
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `m:` `pc:`（间距 + 宽度）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
+`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `h-*` / `m:` `pc:`（间距 + 宽度 + 高度）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
 
 ## 2. shadcn 落地原则
 
@@ -255,6 +255,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 - `packages/vamis-ui/src/styles.css`：语义色 + 密度 token + `.vamis-native-select` / `.vamis-file-drop` / range
 - `packages/vamis-ui/src/helpers.css`：`m-t-xs` / `p-l-md` 等走 `--gap-*`；`m:` / `pc:` 媒体查询
 - `packages/vamis-ui/src/helpers-width.css`：Amis `w-*` / `min-w-*` / `max-w-*`，含 `m:` / `pc:`
+- `packages/vamis-ui/src/helpers-height.css`：Amis `h-*` / `min-h-*` / `max-h-*`，含 `m:` / `pc:`；`vamis-node.h-full` 把内层渲染器根也拉满
 - 原语：Button / Input / Select / Table / Tabs / Slider / Sonner 吃 token；Table cell `px` 用 `--table-cell-px`
 - 渲染器：未写 `size` 挂 `vamis-control--fluid`；`size` xs–lg ≥576px 钉 `--form-control-width-*`，`full` 始终 100%；Form 去掉 `max-w-3xl`；Page body 用 `--page-body-padding`
 - 内核：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；`SchemaRenderer` 挂 id/className/style
