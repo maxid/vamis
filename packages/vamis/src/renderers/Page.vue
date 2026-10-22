@@ -2,8 +2,8 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   SchemaRenderer,
-  apiTrackKey,
   asArray,
+  isApiOutdated,
   buildCssBlock,
   createVamisEvent,
   evalExpression,
@@ -246,9 +246,22 @@ onMounted(async () => {
   await fetchInit({ initial: true })
 })
 watch(
-  () => apiTrackKey(props.schema.initApi, viewData.value),
-  (key, prev) => {
-    if (prev != null && key && key !== prev) void fetchInit()
+  () => [props.schema.initApi, viewData.value] as const,
+  (curr, prev) => {
+    if (!prev) return
+    const initFetch = props.schema.initFetch
+    const initFetchOn = props.schema.initFetchOn
+    const becameFetchable =
+      typeof initFetchOn === 'string' &&
+      initFetch !== false &&
+      !isEffectiveApi(curr[0], prev[1], initFetch, initFetchOn) &&
+      isEffectiveApi(curr[0], curr[1], initFetch, initFetchOn)
+    if (
+      becameFetchable ||
+      (initFetch !== false && isApiOutdated(prev[0], curr[0], prev[1], curr[1]))
+    ) {
+      void fetchInit()
+    }
   },
 )
 

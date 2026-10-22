@@ -5,8 +5,8 @@ outline: deep
 
 # API
 
-::: tip 实现进度 90% · 已完成
-kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。P1：`qsOptions`、全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
+::: tip 实现进度 92% · 已完成
+kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。P1：`qsOptions`、全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
 :::
 
 接口配置与 Amis 同形：字符串或对象。所有数据请求走同一条 D3 管线 `requestApi`（normalize → sendOn → requestAdaptor → cache → fetch → payload → adaptor → responseData），由 `env.fetcher` 发出。渲染器禁止自己 `fetch`。
@@ -93,7 +93,7 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 
 对象 key 带路径（`a.b`、`c[d]`）默认转成嵌套对象。不想转就设 `convertKeyToPath: false`。
 
-没写 `data` 时，form 提交会带上全部表单项（`autoAppend`）。
+没写 `data` 时，form **提交**会带上全部表单项（`autoAppend`）。**GET `initApi` 默认不把当前数据域拼进 query**（对齐 Amis `buildApi`）：地址写成 `/api/mock2/page/initData` 就只请求这个地址，不会带上 `__super` / `__prev` 或页面其它字段。只有显式写了 `api.data`、`forceAppendDataToQuery`，或 CRUD 这类 `autoAppend` 且 url 不含 `$` 时，才会把字段接到 query。
 
 ### 数据体格式 dataType
 
@@ -304,7 +304,7 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 
 ## 自动刷新
 
-拉取类接口（form `initApi`、select `source`、service `api`、page `initApi`）默认会盯 url 里的 `${var}`。变量变了会再请求一次。
+拉取类接口（page / form `initApi`、service `api`、select `source`、crud `api`、chart `api`、markdown `src`）对齐 Amis `isApiOutdated`：**url 里没有 `$` 时只在初始化拉一次**，数据域变了不会重拉。url / `trackExpression` 含 `${var}` 且插值结果变了，才会再请求。要定时重拉用组件自己的 `interval`，或显式 `reload`，不要指望 initApi 随数据更新自动轮询。
 
 ```schema: scope="body"
 {
@@ -419,4 +419,4 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 | mockResponse | 适配器里拦截真实请求 | 对象 |
 | convertKeyToPath | 映射 key 是否转路径，默认 true | 布尔 |
 
-P1 未齐：`qsOptions` 细项、全局 `addApiRequestAdaptor`、blob 附件头的完整下载动作。自动刷新目前接在 page / form `initApi`、service、select `source`。
+P1 未齐：`qsOptions` 细项、全局 `addApiRequestAdaptor`、blob 附件头的完整下载动作。自动刷新已接 page / form `initApi`、service、select `source`、crud / crud2 `api`、chart `api`、markdown `src`。wizard / mapping / nav / log / tasks / app 的远程接口尚未接入，不走这条生命周期。

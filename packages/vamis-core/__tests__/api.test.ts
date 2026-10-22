@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { isEffectiveApi, normalizeApi, normalizePayload, requestApi, apiTrackKey } from '../src/utils/api'
+import { isEffectiveApi, normalizeApi, normalizePayload, requestApi, apiTrackKey, isApiOutdated } from '../src/utils/api'
 import type { RendererEnv } from '../src/types'
 
 function env(fetcher: RendererEnv['fetcher'], extra: Partial<RendererEnv> = {}): RendererEnv {
@@ -93,6 +93,39 @@ describe('requestApi', () => {
     )
     expect(result.ok).toBe(true)
     expect(fetcher.mock.calls[0][0].url).toContain('q=hi')
+  })
+
+  it('does not append the data domain to GET initApi when autoAppend is off', async () => {
+    const fetcher = vi.fn(async (api) => ({ status: 0, data: { url: api.url } }))
+    await requestApi('/api/mock2/page/initData', {
+      env: env(fetcher),
+      data: {
+        date: 'now',
+        __super: { word: 'myquery' },
+        __prev: { date: 'old' },
+        __changeReason: { type: 'api' },
+      },
+    })
+    expect(fetcher.mock.calls[0][0].url).toBe('/api/mock2/page/initData')
+  })
+
+  it('autoAppend GET only when the url has no $ and strips __ keys', async () => {
+    const fetcher = vi.fn(async (api) => ({ status: 0, data: { url: api.url } }))
+    await requestApi(
+      '/api/x',
+      { env: env(fetcher), data: { q: '1', __super: { a: 1 } } },
+      { autoAppend: true },
+    )
+    expect(fetcher.mock.calls[0][0].url).toBe('/api/x?q=1')
+
+    fetcher.mockClear()
+    await requestApi(
+      '/api/x?tpl=${tpl}',
+      { env: env(fetcher), data: { tpl: 'a', extra: 'nope' } },
+      { autoAppend: true },
+    )
+    expect(fetcher.mock.calls[0][0].url).toBe('/api/x?tpl=a')
+    expect(fetcher.mock.calls[0][0].url).not.toContain('extra=')
   })
 
   it('maps responseData with & flatten', async () => {
@@ -192,5 +225,42 @@ describe('apiTrackKey', () => {
     expect(apiTrackKey({ url: '/api/x', data: { tpl: '${tpl}' } }, { tpl: 'c' })).toBe('')
     expect(apiTrackKey({ url: '/api/x?tpl=${tpl}', autoRefresh: false }, { tpl: 'd' })).toBe('')
     expect(apiTrackKey({ url: '/api/x', trackExpression: '${a}' }, { a: 2 })).toBe('2')
+  })
+})
+
+describe('isApiOutdated', () => {
+  it('does not refetch initApi when the url has no $ even if data changed', () => {
+    expect(isApiOutdated('/api/mock2/page/initData', '/api/mock2/page/initData', {}, { date: 'now' })).toBe(false)
+    expect(
+      isApiOutdated(
+        { url: '/api/mock2/page/initData' },
+        { url: '/api/mock2/page/initData' },
+        { date: 'a' },
+        { date: 'b' },
+      ),
+    ).toBe(false)
+  })
+
+  it('refetches when a url template or trackExpression actually changed', () => {
+    expect(isApiOutdated('/api/x?tpl=${tpl}', '/api/x?tpl=${tpl}', { tpl: 'a' }, { tpl: 'b' })).toBe(true)
+    expect(isApiOutdated('/api/x?tpl=${tpl}', '/api/x?tpl=${tpl}', { tpl: 'a' }, { tpl: 'a' })).toBe(false)
+    expect(isApiOutdated({ url: '/api/x', trackExpression: '${a}' }, { url: '/api/x', trackExpression: '${a}' }, { a: 1 }, { a: 2 })).toBe(true)
+  })
+
+  it('refetches when the api first appears or the url itself changes', () => {
+    expect(isApiOutdated(undefined, '/api/x', {}, {})).toBe(true)
+    expect(isApiOutdated('/api/a', '/api/b', {}, {})).toBe(true)
+    expect(isApiOutdated('/api/x?tpl=${tpl}', '/api/x?tpl=${tpl}', { tpl: 'a' }, { tpl: 'b' })).toBe(true)
+  })
+
+  it('honors autoRefresh false', () => {
+    expect(
+      isApiOutdated(
+        { url: '/api/x?tpl=${tpl}', autoRefresh: false },
+        { url: '/api/x?tpl=${tpl}', autoRefresh: false },
+        { tpl: 'a' },
+        { tpl: 'b' },
+      ),
+    ).toBe(false)
   })
 })

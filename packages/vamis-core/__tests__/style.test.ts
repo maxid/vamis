@@ -220,6 +220,34 @@ describe('Amis width helpers', () => {
     expect(sr).toContain("scopeMode.value !== 'inherit'")
     expect(sr).not.toContain('hasOverlay.value')
     expect(sr).toContain("!key.startsWith('__')")
+    expect(sr).toContain('[needsChildScope.value, scopeMode.value]')
+    expect(sr).not.toContain('props.schema] as const')
+  })
+
+  it('refetches remote apis with isApiOutdated like Amis, not on every data change', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    const service = readFileSync(resolve(here, '../../vamis/src/renderers/Service.vue'), 'utf8')
+    const select = readFileSync(resolve(here, '../../vamis/src/renderers/form/Select.vue'), 'utf8')
+    const markdown = readFileSync(resolve(here, '../../vamis/src/renderers/display/Markdown.vue'), 'utf8')
+    const chart = readFileSync(resolve(here, '../../vamis/src/renderers/Chart.vue'), 'utf8')
+    const crud = readFileSync(resolve(here, '../../vamis/src/renderers/CRUD.vue'), 'utf8')
+    const crud2 = readFileSync(resolve(here, '../../vamis/src/renderers/data/CRUD2.vue'), 'utf8')
+    for (const src of [page, form, service, select, markdown, chart, crud, crud2]) {
+      expect(src).toContain('isApiOutdated')
+      expect(src).not.toContain('apiTrackKey')
+    }
+    expect(select).not.toContain('watch(() => props.schema.source, loadSource)')
+    expect(markdown).not.toContain("watch(() => props.schema.src, load)")
+  })
+
+  it('keeps doc playground alive when body templates change, and mounts when visible', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const preview = readFileSync(resolve(here, '../../../playground/src/components/SchemaPreview.vue'), 'utf8')
+    expect(preview).toContain('LazyInView')
+    expect(preview).not.toContain('schemaKey')
+    expect(preview).not.toContain(':key="schemaKey"')
   })
 
   it('lets panelClassName mb-0 override the default panel margin', () => {

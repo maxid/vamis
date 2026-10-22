@@ -9,7 +9,7 @@ import {
   Checkbox,
 } from '@vamis/ui'
 import {
-  apiTrackKey,
+  isApiOutdated,
   isEffectiveApi,
   requestApi,
   useData,
@@ -55,7 +55,7 @@ async function loadSource() {
   }
   if (!isEffectiveApi(source as any, data.value)) return
   try {
-    const result = await requestApi(source as any, { env, data: data.value, reason: 'init' }, { autoAppend: true })
+    const result = await requestApi(source as any, { env, data: data.value, reason: 'init' })
     if (result.skipped || !result.ok) return
     const list = result.data?.options || result.data?.items || result.data
     remote.value = normalizeOptions(list)
@@ -65,11 +65,11 @@ async function loadSource() {
 }
 
 onMounted(loadSource)
-watch(() => props.schema.source, loadSource)
 watch(
-  () => apiTrackKey(props.schema.source, data.value),
-  (key, prev) => {
-    if (prev != null && key !== prev) void loadSource()
+  () => [props.schema.source, data.value] as const,
+  (curr, prev) => {
+    if (!prev) return
+    if (isApiOutdated(prev[0] as any, curr[0] as any, prev[1], curr[1])) void loadSource()
   },
 )
 

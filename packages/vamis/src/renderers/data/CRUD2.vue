@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
   asArray,
   createStoreId,
+  isApiOutdated,
   requestApi,
   useEnv,
   useRendererHub,
@@ -166,6 +167,13 @@ function bulkSchema(btn: SchemaObject): SchemaObject {
 const crudApi = { name: props.schema.name, reload }
 scoped?.register(crudApi)
 onMounted(() => reload())
+watch(
+  () => [props.schema.api, props.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    if (isApiOutdated(prev[0], curr[0], prev[1], curr[1])) void reload()
+  },
+)
 onBeforeUnmount(() => {
   scoped?.unregister(crudApi)
   hub.remove(store.id)

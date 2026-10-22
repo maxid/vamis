@@ -63,10 +63,12 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 130 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 188 + core 138 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- GET `initApi` 不再把数据域拼进 query（原先会带 `__super=[object Object]`）。对齐 Amis `buildApi`：无 `api.data` / `autoAppend` 时 URL 保持原样。文档预览去掉 `:key=schemaJSON`（改 body 模板不再重挂、不再重拉）；外包 `LazyInView` 对齐 Amis 文档 `LazyComponent`（进视口才挂载）。这是文档源码行为，不是 Vue vs React。Page 内核仍是挂载时拉一次。
+- 对齐 Amis 远程接口生命周期：补 `isApiOutdated`。page/form `initApi`、service `api`、select `source`、crud/crud2 `api`、chart `api`、markdown `src` 在 url 不含 `$` 时只在挂载拉一次，数据更新不再重拉。`interval` 和显式 `reload` 仍会重拉。SchemaRenderer 不再因 schema 引用变化重建 Scope。wizard / mapping / nav / log / tasks / app 远程接口尚未接入。
 - 对标 Amis「数据域与数据链」：概念页按同名文档改写活示例。原 90% 已完成偏高，降为 **70% 进行中**。inherit 节点不再因 `data` 建域；service 数据链遮蔽修好；表单提交 merge `id`；`static-tpl` 别名；`extra-data` 不再盖 `__prev` / `__changeReason`；`ajax` 记 `api`。`trackExpression` / CRUD filter 独立域 / 表单项写 page 域仍缺。
 - 概念页「配置与 Schema」更名为 **配置与组件**（对齐 Amis 侧栏，路径仍是 `/concepts/schema`），并保留两种外形、书写规则、渲染管线（`parseSchemaText` → `jsonToIr` → `compileIrToWidget` → `SchemaRenderer`）。
 - 组装容器写成项目规则 `.cursor/rules/assembly-containers.mdc`（alwaysApply）：Page 壳用 `div`；Form 顶层 `<form>`、嵌套降 `div`；禁止 landmark 标签与嵌套 HTML `<form>`。已写入 AGENTS / CONTEXT 术语。

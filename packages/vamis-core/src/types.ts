@@ -72,6 +72,10 @@ export interface ApiObject {
   messages?: { success?: string; failed?: string }
   query?: PlainObject
   context?: PlainObject
+  /** GET 时是否把 data 拼进 query，默认 true */
+  attachDataToQuery?: boolean
+  /** 即使 url 含 `$` 也把当前域拼进 query */
+  forceAppendDataToQuery?: boolean
 }
 
 export interface Payload {

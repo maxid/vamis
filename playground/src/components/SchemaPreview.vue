@@ -4,6 +4,7 @@ import { VamisRoot, parseSchemaText } from 'vamis'
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from '@vamis/ui'
 import { applySchemaScope } from '../docs/schema-scope'
 import SchemaSourceEditor from './SchemaSourceEditor.vue'
+import LazyInView from './LazyInView.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -40,14 +41,6 @@ const parsed = computed(() => {
   }
 })
 
-const schemaKey = computed(() => {
-  try {
-    return JSON.stringify(parsed.value.value)
-  } catch {
-    return draft.value
-  }
-})
-
 const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
 const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.value.error : ''))
 </script>
@@ -68,7 +61,9 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
         {{ banner }}
       </div>
       <div class="bg-background p-5 pr-24" :style="{ minHeight: `${minHeight}px` }">
-        <VamisRoot :key="schemaKey" :schema="parsed.value" :env="{ trusted: true }" />
+        <LazyInView>
+          <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
+        </LazyInView>
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">
