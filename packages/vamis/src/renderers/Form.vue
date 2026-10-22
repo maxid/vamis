@@ -18,6 +18,7 @@ import {
   useRendererHub,
   useScope,
   useScoped,
+  provideScoped,
   validateValue,
   type ChangeReason,
   type SchemaObject,
@@ -33,7 +34,8 @@ const props = defineProps<{
 
 const env = useEnv()
 const hub = useRendererHub()
-const scoped = useScoped()
+const parentScoped = useScoped()
+const scoped = provideScoped(parentScoped)
 const overlay = useOverlay()
 const scope = useScope()
 const store = hub.add({
@@ -133,10 +135,22 @@ async function submit() {
     env.notify('error', '请检查表单')
     return
   }
+  const target = typeof props.schema.target === 'string' ? props.schema.target.trim() : ''
+  if (target) {
+    await scoped.reload(target, store.data)
+    await runOnEvent(props.schema, 'submit', {
+      env,
+      data: { ...props.data, ...store.data },
+      scoped,
+      overlay,
+      form: formApi,
+    })
+    return
+  }
   const api = props.schema.api
   if (!api) {
     if (props.schema.reload) {
-      await scoped?.reload(props.schema.reload, store.data)
+      await scoped.reload(props.schema.reload, store.data)
     } else {
       env.notify('success', '已提交（未配置 api）')
     }
@@ -165,7 +179,7 @@ async function submit() {
     }
     env.notify('success', apiMessage(api, result.payload, 'success'))
     if (props.schema.reload) {
-      await scoped?.reload(props.schema.reload, store.data)
+      await scoped.reload(props.schema.reload, store.data)
     }
     await runOnEvent(props.schema, 'submit', {
       env,
@@ -183,6 +197,7 @@ async function submit() {
 
 const formApi = {
   name: String(props.schema.id || props.schema.name || ''),
+  context: scoped,
   getValue,
   setValue,
   reset,
@@ -231,7 +246,7 @@ provideForm({
   setError,
 })
 provideFormApi(formApi)
-scoped?.register(formApi)
+parentScoped?.register(formApi)
 registerWizardValidate(validate)
 
 onMounted(() => {
@@ -249,7 +264,7 @@ watch(
   },
 )
 onBeforeUnmount(() => {
-  scoped?.unregister(formApi)
+  parentScoped?.unregister(formApi)
   hub.remove(store.id)
 })
 </script>
@@ -275,7 +290,7 @@ onBeforeUnmount(() => {
         </CardContent>
         <CardFooter v-if="showActionBar" class="vamis-form-actions w-full justify-end border-t">
           <template v-if="hasCustomActions">
-            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
           <template v-else>
             <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
@@ -294,7 +309,7 @@ onBeforeUnmount(() => {
         </div>
         <div v-if="showActionBar" class="vamis-form-actions flex w-full justify-end gap-2 pt-3">
           <template v-if="hasCustomActions">
-            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
           <template v-else>
             <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">

@@ -5,8 +5,8 @@ outline: deep
 
 # CRUD 增删改查
 
-::: info 实现进度 55% · 进行中
-文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10）
+::: info 实现进度 58% · 进行中
+文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10）
 :::
 
 `crud` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

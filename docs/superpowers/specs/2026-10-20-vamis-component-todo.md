@@ -80,7 +80,7 @@
 | `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 60% | 静态 items 可用；缺下拉/动态 source | P0 |
 | `custom` | Custom 自定义组件 | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 50% | 能展开按钮；缺 `overlayPlacement` 等 | P0 |
-| `service` | Service 功能型容器 | 进行中 | 55% | 独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新。`schemaApi` 未单独拉 schema；`dataProvider` 未接 | P0 |
+| `service` | Service 功能型容器 | 进行中 | 58% | 独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新；`name` 支持 `${id}` 动态名。`schemaApi` 未单独拉 schema；`dataProvider` 未接 | P0 |
 | `nav` | Nav 导航 | 进行中 | 50% | 链接列表可用；缺 overflow/缩起/搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 45% | 已注册，滚动联动精简 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 50% | 能出 tip；触发/主题未齐 | P0 |
@@ -94,7 +94,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `form` | Form 表单 | 进行中 | 58% | 文档已补属性表 / 事件表 / 动作表。`lazyLoad` 默认关；事件只接 `submit`；动作 `reload`/`setValue`/`submit`/`reset` 可用。扁平 `name`、提交不合并、嵌套不递归校验（D6） | P0 |
+| `form` | Form 表单 | 进行中 | 62% | 文档已补属性表 / 事件表 / 动作表。`target` 提交发给具名组件；返回 `data` 合并进表单域。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6 | P0 |
 | （契约） | FormItem 表单项通用 | 进行中 | 40% | 有 label/required/error 壳；缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
 | `control` | Control 表单项包裹 | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |
@@ -144,7 +144,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-range` | InputRange 滑块 | 进行中 | 50% | 能滑；双滑块/刻度未齐 | P0 |
 | `input-repeat` | InputRepeat 重复频率 | 进行中 | 40% | 已注册，选项精简 | P0 |
 | `input-rich-text` | InputRichText 富文本 | 进行中 | 25% | **精简**：多行文本，未接 TinyMCE/Froala（设计非目标） | P0 |
-| `select` | Select 下拉框 | 进行中 | 55% | 能选；检索/无限滚动/多选细节未齐 | P0 |
+| `select` | Select 下拉框 | 进行中 | 60% | 能选；`source` 按 `isApiOutdated` 刷新，可被 `reload` 点名（`form.select`）。检索/无限滚动/多选细节未齐 | P0 |
 | `input-sub-form` | InputSubForm 子表单 | 进行中 | 45% | 能嵌表单；弹层/多选未齐 | P0 |
 | `switch` | Switch 开关 | 进行中 | 65% | 能切换；`trueValue` 未齐 | P0 |
 | `static` | Static 静态展示 | 进行中 | 55% | 能展示；`popOver`/`quickEdit` 无 | P0 |
@@ -173,7 +173,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `crud` | CRUD 增删改查 | 进行中 | 55% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
+| `crud` | CRUD 增删改查 | 进行中 | 58% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
 | `table` | Table 表格 | 进行中 | 50% | 能渲染列；无独立数据域、无 `popOver`/`quickEdit` | P0 |
 | `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 40% | 已注册，合并单元格/布局模式精简 | P0 |

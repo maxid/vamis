@@ -51,8 +51,8 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
 | Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
-| Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口随变量自动刷新仍属 D9；表单路径值仍等 D6 |
-| Form | 表单 store、`initApi`、`validate/submit/reset`、submit 事件 | 扁平 `name`；提交返回不合并；校验规则内嵌；无 `validateOnChange`/`requiredOn`/`clearValueOnHidden`；嵌套表单项不参与校验 |
+| Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；点号 `form.select`；Form `target`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口去抖仍属 D9；`clearValueOnHidden` 仍等 D6 |
+| Form | 表单 store、`initApi`、`validate/submit/reset`、submit 事件；提交返回 `data` 合并进表单域；`target` 发给具名组件 | 扁平 `name`；校验规则内嵌；无 `validateOnChange`/`requiredOn`/`clearValueOnHidden`；嵌套表单项不参与校验 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑 | 无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`/`autoGenerateFilter`；filter 只是提交到 query 的内嵌表单 |
 | Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无 `dispatch/api/reload`、无错误边界；未知 type 仍占位 |
 | Extension | `registerRenderer` | 无 action/filter/validator/locale/theme 注册；无插件生命周期 |
@@ -453,10 +453,10 @@ export function usePlugin(plugin: VamisPlugin): void
 | 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source`、crud/chart/markdown 已按 Amis `isApiOutdated`（无 `$` 只初始化拉一次）；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
-| 组件联动 | 动态 target/多目标/数据合并 | `resolveTargets` 已接；SDK `getComponentByName`/`doAction` 可用 | D5 | P0 完成 |
+| 组件联动 | 动态 target/多目标/数据合并 | `resolveTargets` + 点号 `form.select` + Form `target` 已接；SDK `getComponentByName`/`doAction` 可用 | D5 | P0 完成 |
 | 广播/自定义动作 | 有 | 无 | D4 | P1 |
 | 表单值路径 | `a.b[0]` | 平铺 key | D6 | P0 |
-| 提交合并 | payload.data 入表单域 | 不合并 | D6 | P0 |
+| 提交合并 | payload.data 入表单域 | `mergeApiData` 已写入表单域 | D3/D6 | P0 完成 |
 | 表单校验 | 规则注册/异步/服务端 | 内嵌规则 | D6 | P0/P1 |
 | 隐藏清值 | clearValueOnHidden | 无 | D6 | P1 |
 | CRUD 高级 | loadDataOnce/syncLocation/quickEdit | 无 | D10 | P1 |

@@ -34,10 +34,13 @@ export function installMockFetch() {
       body = Object.fromEntries(raw.entries())
     }
 
+    const query = Object.fromEntries(url.searchParams)
+    const wait = Number(query.waitSeconds || 0)
+    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait * 1000))
     const payload = handleMockApi({
       method,
       pathname: url.pathname,
-      query: Object.fromEntries(url.searchParams),
+      query,
       body,
     })
     return new Response(JSON.stringify(payload), {

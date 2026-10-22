@@ -36,4 +36,16 @@ describe('D5 scoped.reload', () => {
     expect(a).toHaveBeenCalledWith({ q: 1 }, false)
     expect(b).toHaveBeenCalledWith({ q: 1 }, false)
   })
+
+  it('resolves dotted names through a child scoped context', async () => {
+    const page = new ScopedContext()
+    const form = new ScopedContext(page)
+    const reload = vi.fn()
+    const formApi = { name: 'my_form', context: form }
+    page.register(formApi)
+    form.register({ name: 'select', reload })
+    expect(page.getComponentByName('my_form.select')).toMatchObject({ name: 'select' })
+    await page.reload('my_form.select')
+    expect(reload).toHaveBeenCalled()
+  })
 })

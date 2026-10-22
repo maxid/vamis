@@ -120,6 +120,13 @@ function operationClass(btn: SchemaObject) {
     : 'text-primary hover:bg-primary/10'
 }
 
+function withDialogReload(body: unknown, reloadTarget: unknown, row: Record<string, any>) {
+  if (!reloadTarget || !body || typeof body !== 'object' || Array.isArray(body)) return body
+  const node = body as SchemaObject
+  if (node.type !== 'form' || node.reload) return body
+  return { ...node, reload: filterTpl(String(reloadTarget), row) }
+}
+
 async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
   const actionType = button.actionType
   if (actionType === 'toast') {
@@ -127,9 +134,10 @@ async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
     return
   }
   if (actionType === 'dialog' || button.dialog) {
+    const dialog = button.dialog || {}
     openDialog({
-      ...button.dialog,
-      body: button.dialog?.body || button.dialog,
+      ...dialog,
+      body: withDialogReload(dialog.body || dialog, button.reload, row),
       data: row,
     })
     return
@@ -257,6 +265,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="w-full min-w-0 space-y-3">
+    <h2 v-if="schema.title" class="text-sm font-medium">{{ schema.title }}</h2>
     <SchemaRenderer
       v-if="filterSchema"
       :schema="{
@@ -284,7 +293,7 @@ onBeforeUnmount(() => {
         />
         <Button type="button" size="sm" variant="outline" @click="exportCsv">导出 CSV</Button>
         <Button
-          v-if="schema.api && !headerToolbar.length"
+          v-if="schema.api && schema.headerToolbar == null"
           type="button"
           size="sm"
           @click="openDialog({ title: '新增', body: { type: 'form', api: schema.api, body: columns.filter(c => c.name && c.type !== 'operation').map(c => ({ type: 'input-text', name: c.name, label: c.label })) } })"

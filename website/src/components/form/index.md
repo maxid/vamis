@@ -5,8 +5,8 @@ outline: deep
 
 # Form 表单
 
-::: info 实现进度 58% · 进行中
-initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。`lazyLoad` 默认关。属性表 / 事件表 / 动作表已按 Amis 列出：事件目前只接了 `submit`；动作 `reload` / `setValue` / `submit` / `reset` 可用。扁平 `name`、提交不合并、嵌套不递归校验（D6）。
+::: info 实现进度 62% · 进行中
+initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。`target` 提交发给具名组件；返回 `data` 合并进表单域。`lazyLoad` 默认关。事件目前只接了 `submit`；动作 `reload` / `setValue` / `submit` / `reset` 可用。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6。
 :::
 
 `type: form` 是数据输入的根。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。
@@ -77,6 +77,7 @@ body:
 | `reset` | `boolean` | `true` | 默认底栏是否带重置 |
 | `data` | `object` | | 写入本表单 Scope |
 | `reload` | `string` | | 提交成功后刷新目标 `name` |
+| `target` | `string` | | 提交后把数据发给该 `name` 的组件并刷新。支持动态名和 `name?a=${a}` |
 | `messages` | `object` | | 走 `requestApi` 的成功/失败文案 |
 | `onEvent` | `object` | | 见事件表 |
 | `horizontal` / `labelAlign` / `labelWidth` | | | **未齐**（横排宽走 CSS 变量） |
