@@ -56,17 +56,19 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
-| kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + 模板转义/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
+| kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 159 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 在线文档 | 已并入 playground | 概念页「模板」**95% 已完成**（`tpl` 按 Amis 渲染 HTML；不实现 lodash `<% %>`）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
+| 测试 | 源码用例 formula 188 + core 165 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 模板 HTML 岛：`.vamis-html` 只挂在 tpl/html 的 `v-html` 上，补回 `h1`–`h6` / `p` / `ul` / `ol` / `a` / 表格。不打 `vamis-root`，不改 `button`/`input`，shadcn 控件不受影响。
+- `each` 去掉竖排壳，tpl 默认 inline。换行对齐 Amis：`inline: false` 独占一行，模板里 `<br>` 硬换行。`tpl`/`html` **85%**，`each` **70%**。
 - JS SDK 文档 iframe 改为站点根路径 `/sdk/hello.html` 并加上 `VITE_BASE`。Pages 上相对 `../../sdk/hello.html` 会落到 `/docs/sdk/hello.html`，被当成文档 404。SDK 未构建时 iframe 提示先 `pnpm --filter @vamis/sdk build`，不再套 SPA「没有这份文档」。
 - Pages 构建：SDK `dist/assets` 是目录（Monaco worker），playground 用 `copyFileSync` 会 EISDIR。改为 `fs.cpSync(..., { recursive: true })`。
 - Pages CI：`monaco-editor` 只装在 `packages/vamis` 后，SDK 测试找不到根目录 CSS。Vite 别名改指向 `packages/vamis/node_modules/monaco-editor`。

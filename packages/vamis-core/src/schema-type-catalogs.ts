@@ -173,9 +173,11 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     },
   },
   tpl: fields('Tpl', {
-    tpl: '模板文本。默认转义；|raw 才输出 HTML。',
-    html: '同 tpl。建议用 type: html。',
-    text: '纯文本。',
+    tpl: '模板。标签会渲染；插值默认转义，|raw 才插入 HTML。',
+    html: '同 tpl。',
+    text: '纯文本，整段转义。',
+    inline: '默认 true（跟在同一行）。false 时块级，独占一行。',
+    wrapperComponent: '外层标签，div 或 span。',
   }),
   code: fields('Code', {
     value: '只读代码文本。',
@@ -425,6 +427,9 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     items: '每一项的 schema。',
     body: '同 items。',
     placeholder: '空数组占位。',
+    itemKeyName: '成员在数据域里的键名，默认 item。',
+    indexKeyName: '序号键名，默认 index。',
+    inline: 'true 时 each 本身也 inline，可跟在一段文本后面。',
   }, { slots: ['items', 'body'] }),
   image: fields('Image', {
     src: '图片地址。',

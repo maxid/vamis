@@ -36,7 +36,7 @@
 | 布局 | 2 / 15 | 13 | 0 | 62% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
-| 数据展示 | 0 / 44 | 44 | 0 | 49% | 28 |
+| 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
 | **合计** | **2 / 155** | **151** | **2** | **48%** | **93** |
@@ -185,8 +185,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
-| `each` | Each 循环渲染器 | 进行中 | 55% | 能循环；placeholder/index 未齐 | P0 |
-| `html` | Html | 进行中 | 60% | `tpl` 别名；type html 仍按 HTML 输出，插值默认转义（D2） | P0 |
+| `each` | Each 循环渲染器 | 进行中 | 70% | 不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength | P0 |
+| `html` | Html | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine / badge | P0 |
 | `icon` | Icon 图标 | 进行中 | 60% | 能出图标；iconfont/vendor 未齐 | P0 |
 | `iframe` | iFrame | 进行中 | 55% | 能嵌页 | P0 |
 | `image` | Image 图片 | 进行中 | 55% | 能显示；放大/图集未齐 | P0 |
@@ -211,7 +211,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `search-box` | SearchBox 搜索框 | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | 进行中 | 55% | 能映射状态 | P0 |
-| `tpl` | Tpl 模板 | 进行中 | 70% | D2 P0：默认文本节点，raw 才 HTML；P0 过滤器可用。其余 Amis 过滤器仍 P1 | P0 |
+| `tpl` | Tpl 模板 | 进行中 | 85% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。P0 过滤器可用。缺 maxLine / badge；其余过滤器仍 P1 | P0 |
 | `tag` | Tag 标签 | 进行中 | 55% | 能展示标签 | P0 |
 | `video` | Video 视频 | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | 进行中 | 50% | 能列节点 | P0 |

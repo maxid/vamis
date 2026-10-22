@@ -5,8 +5,8 @@ outline: deep
 
 # Service 功能型容器
 
-::: warning 实现进度 45% · 进行中
-能拉 api 合并数据；无 `__super` / `sendOn` / 依赖刷新（D1/D3/D9）
+::: info 实现进度 55% · 进行中
+独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新。`schemaApi` 未单独拉 schema；`dataProvider` 未接
 :::
 
 `service` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

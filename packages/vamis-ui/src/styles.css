@@ -355,6 +355,105 @@
     width: 100%;
     max-width: 100%;
   }
+
+  /*
+    HTML island for tpl / html v-html hosts only.
+
+    Tailwind Preflight zeros margin/padding on *, flattens h1–h6, strips
+    list markers, and makes links inherit color/decoration. Amis keeps
+    normalize + UA metrics. Restore document tags here so <h1>/<ul>/<a>
+    look like HTML.
+
+    Do not attach .vamis-html to .vamis-root / Page / Form — shadcn Button
+    and Input would inherit these rules. Do not restyle button/input/select
+    inside the island. :where() stays below author className utilities.
+  */
+  .vamis-html :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--foreground);
+  }
+  .vamis-html :where(h1) {
+    font-size: 2em;
+    margin: 0.67em 0;
+  }
+  .vamis-html :where(h2) {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+  }
+  .vamis-html :where(h3) {
+    font-size: 1.17em;
+    margin: 1em 0;
+  }
+  .vamis-html :where(h4) {
+    font-size: 1em;
+    margin: 1.33em 0;
+  }
+  .vamis-html :where(h5) {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+  }
+  .vamis-html :where(h6) {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+  }
+  .vamis-html :where(p) {
+    margin: 1em 0;
+  }
+  .vamis-html :where(ul) {
+    list-style: disc;
+    margin: 1em 0;
+    padding-left: 1.5em;
+  }
+  .vamis-html :where(ol) {
+    list-style: decimal;
+    margin: 1em 0;
+    padding-left: 1.5em;
+  }
+  .vamis-html :where(li) {
+    margin: 0.25em 0;
+  }
+  .vamis-html :where(a) {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .vamis-html :where(blockquote) {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 2px solid var(--border);
+    color: var(--muted-foreground);
+  }
+  .vamis-html :where(hr) {
+    margin: 1em 0;
+    border-top-width: 1px;
+    border-color: var(--border);
+  }
+  .vamis-html :where(table) {
+    margin: 1em 0;
+    border-collapse: collapse;
+  }
+  .vamis-html :where(th, td) {
+    border: 1px solid var(--border);
+    padding: 0.25em 0.5em;
+  }
+  .vamis-html :where(th) {
+    font-weight: 600;
+  }
+  .vamis-html :where(pre) {
+    margin: 1em 0;
+    overflow: auto;
+    padding: 0.75em 1em;
+    border-radius: var(--radius);
+    background: var(--muted);
+    font-size: 0.875em;
+  }
+  .vamis-html :where(:not(pre) > code) {
+    padding: 0.1em 0.35em;
+    border-radius: calc(var(--radius) * 0.5);
+    background: var(--muted);
+    font-size: 0.875em;
+  }
 }
 
 @media (min-width: 576px) {

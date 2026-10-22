@@ -11,6 +11,7 @@ import {
   buildCssBlock,
   controlWidthForSize,
   fillsLayoutSlot,
+  isInlineSchema,
   resolveClassName,
   resolveCssVars,
   resolveInlineStyle,
@@ -175,6 +176,34 @@ describe('Amis width helpers', () => {
     expect(css).toContain('.vamis-control--full')
     expect(css).toContain('.vamis-control--sm')
     expect(css).toContain('grid-template-columns: 28% minmax(0, 1fr)')
+  })
+
+  it('restores document tags inside tpl/html after Preflight, not on shadcn hosts', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain('.vamis-html :where(h1)')
+    expect(css).toContain('font-size: 2em')
+    expect(css).toContain('.vamis-html :where(h6)')
+    expect(css).toContain('.vamis-html :where(p)')
+    expect(css).toContain('.vamis-html :where(ul)')
+    expect(css).toContain('list-style: disc')
+    expect(css).toContain('.vamis-html :where(a)')
+    expect(css).not.toContain('.vamis-root :where(h1)')
+    expect(css).not.toContain('.vamis-html :where(button)')
+    expect(css).not.toContain('.vamis-html :where(input)')
+    expect(css).not.toContain('.vamis-html button')
+    expect(css).not.toContain('.vamis-html input')
+    const tpl = readFileSync(resolve(here, '../../vamis/src/renderers/Tpl.vue'), 'utf8')
+    const custom = readFileSync(resolve(here, '../../vamis/src/renderers/rest/Custom.vue'), 'utf8')
+    const root = readFileSync(resolve(here, '../src/VamisRoot.vue'), 'utf8')
+    const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
+    const button = readFileSync(resolve(here, '../../vamis-ui/src/ui/button/Button.vue'), 'utf8')
+    expect(tpl).toContain('vamis-html')
+    expect(tpl).toContain('v-html')
+    expect(custom).toContain('vamis-html')
+    expect(root).not.toContain('vamis-html')
+    expect(page).not.toContain('vamis-html')
+    expect(button).not.toContain('vamis-html')
   })
 
   it('keeps Form filling its slot by default without a max-width cap', () => {
@@ -436,6 +465,16 @@ describe('fillsLayoutSlot', () => {
     expect(fillsLayoutSlot('panel')).toBe(true)
     expect(fillsLayoutSlot('button')).toBe(false)
     expect(fillsLayoutSlot('action')).toBe(false)
+  })
+})
+
+describe('isInlineSchema', () => {
+  it('treats tpl/html as inline unless inline: false', () => {
+    expect(isInlineSchema({ type: 'tpl' })).toBe(true)
+    expect(isInlineSchema({ type: 'html' })).toBe(true)
+    expect(isInlineSchema({ type: 'tpl', inline: false })).toBe(false)
+    expect(isInlineSchema({ type: 'each' })).toBe(false)
+    expect(isInlineSchema({ type: 'each', inline: true })).toBe(true)
   })
 })
 

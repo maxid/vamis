@@ -15,6 +15,10 @@ const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
 function staticSite(): Plugin {
   return {
     name: 'vamis-static-pages',
+    configureServer(server) {
+      // website/src 在 playground 根目录外；不加入 watcher 时 glob ?raw 不会随 md 失效。
+      server.watcher.add(websiteSrc)
+    },
     closeBundle() {
       const dist = path.join(playground, 'dist')
       const index = path.join(dist, 'index.html')

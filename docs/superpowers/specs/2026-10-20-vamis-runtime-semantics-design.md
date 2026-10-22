@@ -48,7 +48,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
 | Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；其余 Amis 列表容器尚未全部 `scope: self` |
-| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 默认文本节点，`\|raw` 才 `v-html`；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
+| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
 | Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
 | Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口随变量自动刷新仍属 D9；表单路径值仍等 D6 |
@@ -176,7 +176,7 @@ export interface TemplateResult {
 
 - 过滤器注册表：`raw`、`json`、`date`、`datetime`、`number`、`percent`、`default`、`truncate`、`html`（转义辅助）。
 - 解析顺序：`${expr|filter:arg|filter2}` → 先求值 expr，再依次应用过滤器；不再把 `|` 交给公式解析器。
-- 模板默认转义；`Tpl` 组件只有 `raw`/`html` 过滤器命中时才 `v-html`，否则用文本节点。
+- 插值默认转义（对齐 Amis tokenize `| html`）。`Tpl`/`html` 始终 `v-html`，所以模板里的静态标签会生效；`${name|raw}` 才把变量当 HTML 插入。`text` 字段整段当纯文本。URL / `jumpTo` 仍走 `filterTpl` 原文。
 - 显式决策：**不实现 lodash template**（`<% %>`）。原因：需要 JS 执行、XSS 面大，且与“YAML 纯数据”冲突；需要逻辑时用公式与动作。
 - 纯 JS 表达式（`data.xxx === 1`）保留兼容入口，但文档与示例统一用 `${}`；`this.xxx` 形式不作为长期契约。
 - 错误策略：表达式异常 -> `env.debug` 时抛出带路径的错误；生产返回 `undefined` 并记一条诊断。
@@ -447,7 +447,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；`trackExpression` 未做 | D1 | P0 骨架完成 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |
 | 模板过滤器 | `\|raw`/`\|json` 等 | P0 过滤器已接；`map`/`bytes` 等仍 P1 | D2 | P0 完成 |
-| HTML 安全 | 默认转义 + raw | Tpl 默认文本节点；`\|raw` / `type: html` 才 `v-html` | D2 | P0 完成 |
+| HTML 安全 | 默认转义 + raw | Tpl 始终 HTML 插入；插值默认转义，`\|raw` 不转义 | D2 | P0 完成 |
 | API 基础 | method/url/data/headers | 已有 | 补 GET data | P0 |
 | API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
 | 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source`、crud/chart/markdown 已按 Amis `isApiOutdated`（无 `$` 只初始化拉一次）；未做 Scope.track 去抖 | D9 | P0 部分 |

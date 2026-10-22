@@ -5,8 +5,8 @@ outline: deep
 
 # Html
 
-::: info 实现进度 60% · 进行中
-`tpl` 别名；type html 仍按 HTML 输出，插值默认转义（D2）
+::: info 实现进度 85% · 进行中
+`tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine / badge
 :::
 
 `html` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

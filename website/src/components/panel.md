@@ -5,8 +5,8 @@ outline: deep
 
 # Panel 面板
 
-::: info 实现进度 60% · 进行中
-title/body 可用；缺 `actions` 语义细节
+::: info 实现进度 65% · 进行中
+title/body 可用，`h-full` 吃满父槽；缺 `actions` 语义细节
 :::
 
 `panel` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

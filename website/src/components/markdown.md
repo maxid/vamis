@@ -6,7 +6,7 @@ outline: deep
 # Markdown 渲染
 
 ::: warning 实现进度 45% · 进行中
-已注册，渲染库精简
+已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简
 :::
 
 `markdown` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
