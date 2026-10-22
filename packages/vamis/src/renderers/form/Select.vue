@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   Select,
   SelectContent,
@@ -14,6 +14,7 @@ import {
   requestApi,
   useData,
   useEnv,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import { useForm } from '../../formContext'
@@ -30,6 +31,7 @@ import {
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
 const env = useEnv()
+const scoped = useScoped()
 const data = useData()
 const remote = ref<OptionItem[]>([])
 
@@ -72,6 +74,15 @@ watch(
     if (isApiOutdated(prev[0] as any, curr[0] as any, prev[1], curr[1])) void loadSource()
   },
 )
+
+const selectApi = {
+  get name() {
+    return String(props.schema.name || props.schema.id || '')
+  },
+  reload: loadSource,
+}
+scoped?.register(selectApi)
+onBeforeUnmount(() => scoped?.unregister(selectApi))
 
 const selected = computed({
   get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', multiple.value, joinValues.value),

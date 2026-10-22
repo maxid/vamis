@@ -133,6 +133,25 @@ export function handleMockApi(input: {
     return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
   }
 
+  if (pathname === '/api/mock2/form/getOptions') {
+    const size = Number(query.size || body.size || 0)
+    const options =
+      size > 0
+        ? Array.from({ length: Math.ceil(size) }, (_, index) => ({
+            label: `Option ${index}`,
+            value: String(index),
+          }))
+        : [
+            { label: 'Option A', value: 'a' },
+            { label: 'Option B', value: 'b' },
+            { label: 'Option C', value: 'c' },
+            { label: 'Option D', value: 'd' },
+            { label: 'Option E', value: 'e' },
+            { label: 'Option F', value: 'f' },
+          ]
+    return { status: 0, msg: 'ok', data: { options } }
+  }
+
   if (pathname === '/api/mock2/form/initData') {
     const tpl = String(query.tpl || body.tpl || 'tpl1')
     const now = new Date()
@@ -212,6 +231,13 @@ export function handleMockApi(input: {
     })
     if (!ok) return { status: 404, msg: '保存失败，数据可能已被删除！' }
     return { status: 0, msg: '保存成功' }
+  }
+
+  if (pathname.startsWith('/api/mock2/sample/') && method === 'GET') {
+    const id = pathname.split('/').pop() || ''
+    const row = sampleRows.find((item) => String(item.id) === String(id))
+    if (!row) return { status: 404, msg: '未找到数据' }
+    return { status: 0, msg: 'ok', data: row }
   }
 
   if (pathname === '/api/mock2/sample' && method === 'GET') {

@@ -86,6 +86,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
       wrapWithPanel: doc('wrapWithPanel', 'Form', 'false 时不包 Panel。'),
       mode: doc('mode', 'Form', 'normal / horizontal / inline。'),
       submitText: doc('submitText', 'Form', '默认提交按钮文案。'),
+      target: doc('target', 'Form', '提交后把数据发给该 name 的组件并刷新。支持动态名和 name?a=${a}。'),
       debug: doc('debug', 'Form', 'true 时在表单下展示当前数据。'),
       redirect: doc('redirect', 'Form', '提交成功跳转。'),
       messages: doc('messages', 'Form', '成功/失败提示文案。'),
@@ -195,6 +196,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }, { slots: ['tabs', 'tab'] }),
   crud: fields('CRUD', {
     api: '列表接口。',
+    title: '列表标题。',
     filter: '筛选表单。',
     columns: '列定义。',
     headerToolbar: '顶栏工具。',

@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
   asArray,
+  filterTpl,
   isApiOutdated,
   createStoreId,
   mergeApiData,
@@ -61,7 +62,9 @@ async function reload(extra?: Record<string, any>, replace = false) {
 }
 
 const api = {
-  name: props.schema.name,
+  get name() {
+    return filterTpl(String(props.schema.name || props.schema.id || ''), { ...props.data, ...store.data })
+  },
   reload,
   getData: () => ({ ...store.data }),
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { evalTemplate, filterTpl } from '../src/formula'
+import { evalExpression, evalTemplate, filterTpl } from '../src/formula'
 
 describe('D2 template string main path', () => {
   it('leaves plain text unchanged', () => {
@@ -115,5 +115,17 @@ describe('D2 expression main path', () => {
     expect(filterTpl('${AVG(1, 2, 3, 4)}', {})).toBe('2.5')
     expect(filterTpl("${IF(score > 80, '优秀', '继续努力')}", { score: 81 })).toBe('优秀')
     expect(filterTpl('${ARRAYMAP(arr, item => item * 2)}', { arr: [1, 2, 3] })).toBe('2,4,6')
+  })
+})
+
+describe('evalExpression visibleOn', () => {
+  it('treats missing fields as undefined without typeof', () => {
+    expect(evalExpression('${id !== undefined}', {})).toBe(false)
+    expect(evalExpression('${id !== undefined}', { id: 1 })).toBe(true)
+  })
+
+  it('does not parse JS typeof as a unary operator', () => {
+    expect(evalExpression("${typeof id !== 'undefined'}", { id: 1 })).toBe(false)
+    expect(evalExpression("typeof data.id !== 'undefined'", { id: 1 })).toBe(false)
   })
 })

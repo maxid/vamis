@@ -5,6 +5,8 @@ import { dataMapping } from './utils/data-mapping'
 
 export interface ScopedComponent {
   name?: string
+  /** 子组件注册表。`my_form.select` 这类点号路径会走进来。 */
+  context?: ScopedContext
   reload?: (extra?: PlainObject, replace?: boolean) => Promise<void> | void
   getData?: () => PlainObject
   setData?: (values: PlainObject, replace?: boolean) => void
@@ -94,9 +96,24 @@ export class ScopedContext {
   }
 
   getComponentByName(name: string): ScopedComponent | undefined {
+    if (name.includes('.')) {
+      const paths = name.split('.').filter(Boolean)
+      let scope: ScopedContext | undefined = this
+      let result: ScopedComponent | undefined
+      for (let i = 0; i < paths.length; i++) {
+        result = scope?.findBySimpleName(paths[i])
+        if (!result) return undefined
+        if (i < paths.length - 1) scope = result.context
+      }
+      return result
+    }
+    return this.findBySimpleName(name)
+  }
+
+  findBySimpleName(name: string): ScopedComponent | undefined {
     const local = this.components.find((item) => item.name === name)
     if (local) return local
-    return this.parent?.getComponentByName(name)
+    return this.parent?.findBySimpleName(name)
   }
 
   async reload(target?: string, extra?: PlainObject, replace = false, data?: PlainObject) {

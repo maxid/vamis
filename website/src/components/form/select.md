@@ -5,8 +5,8 @@ outline: deep
 
 # Select 下拉框
 
-::: info 实现进度 55% · 进行中
-能选；检索/无限滚动/多选细节未齐
+::: info 实现进度 60% · 进行中
+能选；`source` 按 `isApiOutdated` 刷新，可被 `reload` 点名（`form.select`）。检索/无限滚动/多选细节未齐
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
