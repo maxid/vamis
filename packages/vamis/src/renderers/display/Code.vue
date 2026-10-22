@@ -82,12 +82,6 @@ const maxHeight = computed(() => {
   const n = Number.parseFloat(px)
   return Number.isFinite(n) && n > 0 ? n : undefined
 })
-const extra = computed(() => {
-  const raw = props.schema.options
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined
-  return raw as Record<string, unknown>
-})
-
 async function mount() {
   const el = host.value
   if (!el || disposed) return
@@ -102,7 +96,6 @@ async function mount() {
     lineNumbers: lineNumbers.value,
     folding: folding.value,
     maxHeight: maxHeight.value,
-    extra: extra.value,
   })
   if (disposed) {
     session.dispose()
@@ -110,7 +103,7 @@ async function mount() {
   }
 }
 
-watch([source, language, tabSize, wordWrap, customLang, lineNumbers, folding, extra], () => {
+watch([source, language, tabSize, wordWrap, customLang, lineNumbers, folding], () => {
   const current = session
   if (!current) return
   const model = current.editor.getModel()
@@ -129,7 +122,6 @@ watch([source, language, tabSize, wordWrap, customLang, lineNumbers, folding, ex
         horizontal: wordWrap.value ? 'hidden' : 'visible',
       },
       ...editorChrome({ lineNumbers: lineNumbers.value, folding: folding.value }),
-      ...(extra.value || {}),
     })
   }
   current.fit()

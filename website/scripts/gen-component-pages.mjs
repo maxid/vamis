@@ -57,6 +57,8 @@ const HANDWRITTEN = new Set([
   '/components/container',
   '/components/chart',
   '/components/code',
+  '/components/form/editor',
+  '/components/form/diff-editor',
 ])
 
 function parseTodo(text) {

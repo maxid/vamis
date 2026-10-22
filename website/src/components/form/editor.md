@@ -5,46 +5,173 @@ outline: deep
 
 # Editor 代码编辑器
 
-::: warning 实现进度 25% · 进行中
-**精简**：等宽文本框，未接 Monaco；`js-editor`/`ts-editor` 仍未注册
+::: info 实现进度 70% · 进行中
+主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度）/ `allowFullscreen` / 占位。`placeholder` 是空值灰色浮层，不是高亮。`change` / `focus` / `blur` 已发。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
 :::
 
-`editor` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
-
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+用于代码编辑。富文本请用 [RichText](/components/form/input-rich-text)。只读高亮请用 [Code](/components/code)。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据输入**。
 
 ## 基本用法
 
-```schema
-type: page
-title: editor
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
 body:
-  - type: form
-    title: editor
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: editor
-        name: editor
-        label: editor
+  - type: editor
+    name: editor
+    label: 编辑器
+    value: |
+      function hello() {
+        console.log('hello world')
+      }
 ```
 
-## 常用属性
+## 占位
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+无值时 `placeholder` 显示灰色提示，不是语法高亮后的代码。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: editor
+    name: editor
+    label: 编辑器
+    placeholder: |
+      function hello() {
+        console.log('hello world')
+      }
+```
+
+## 支持的语言
+
+`language` 指定高亮语言，默认 `javascript`，支持 `${xxx}`。也可以写成 `json-editor` 这种 `xxx-editor`（含 `js-editor` / `ts-editor`）。
+
+`bat`、`c`、`coffeescript`、`cpp`、`csharp`、`css`、`dockerfile`、`fsharp`、`go`、`handlebars`、`html`、`ini`、`java`、`javascript`、`json`、`less`、`lua`、`markdown`、`msdax`、`objective-c`、`php`、`plaintext`、`postiats`、`powershell`、`pug`、`python`、`r`、`razor`、`ruby`、`sb`、`scss`、`shell`、`sol`、`sql`、`swift`、`typescript`、`vb`、`xml`、`yaml`
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: json-editor
+    name: editor
+    label: JSON 编辑器
+    value: |
+      {
+        "hello": "vamis"
+      }
+```
+
+## 只读模式
+
+用 `disabled: true`，不要靠 `options.readOnly`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: json-editor
+    name: editor
+    disabled: true
+    label: JSON 编辑器
+    value: |
+      {
+        "hello": "vamis"
+      }
+```
+
+## 全屏模式
+
+`allowFullscreen: true` 显示全屏开关。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: editor
+    name: editor
+    label: 支持全屏
+    allowFullscreen: true
+```
+
+## 属性表
+
+除 [FormItem](/components/form/formitem) 通用配置外：
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `language` | `string` | `javascript` | 高亮语言，支持 `${xxx}` |
+| `size` | `string` | `md` | 编辑器**高度**：`sm` / `md` / `lg` / `xl` / `xxl`。不是表单项宽度档 |
+| `allowFullscreen` | `boolean` | `false` | 是否显示全屏开关。Amis 源码 defaultProps 为 `true`，文档表为 `false`；Vamis 跟文档，要显式打开 |
+| `options` | `object` | | 传给 Monaco 的额外项，见 [options 说明](#options-monaco-编辑器配置)。不能用它设 `readOnly` |
+| `placeholder` | `string` | | 无值时的占位 |
+| `editorTheme` | `string` | | `vs` / `vs-dark`。未写时随文档浅色 / 深色 |
+
+### options（Monaco 编辑器配置）
+
+`options` 原样传给 `monaco.editor.create`，类型是 [`IStandaloneEditorConstructionOptions`](https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html) / [`IEditorOptions`](https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IEditorOptions.html)。后合并；同名键盖掉内置默认。`readOnly` 始终跟 `disabled`，不能在 `options` 里改。
+
+内置默认（对齐 Amis）：
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `folding` | `true` | 代码折叠 |
+| `minimap` | `{ enabled: false }` | 右侧缩略图 |
+| `selectOnLineNumbers` | `true` | 点行号选中该行 |
+| `scrollBeyondLastLine` | `false` | 最后一行后再滚 |
+| `automaticLayout` | `true` | 随容器改尺寸 |
+| `formatOnType` / `formatOnPaste` | `true` | 输入 / 粘贴时格式化 |
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: editor
+    name: editor
+    label: 编辑器
+    options:
+      lineNumbers: off
+```
+
+## 事件表
+
+可以用 `onEvent` 监听，再配 `actions`。公式可读 `${字段}`、`${event.data.字段}`。详见 [事件动作](/concepts/event-action)。
+
+| 事件名称 | 事件参数 | 说明 |
+|----------|----------|------|
+| `change` | `[name]: string` | 代码变化 |
+| `focus` | `[name]: string` | 获得焦点 |
+| `blur` | `[name]: string` | 失去焦点 |
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - type: editor
+    name: editor
+    label: 编辑器
+    onEvent:
+      change:
+        actions:
+          - actionType: toast
+            args:
+              msgType: info
+              msg: "change ${event.data.editor}"
+```
+
+## 动作表
+
+| 动作名称 | 动作配置 | 说明 |
+|----------|----------|------|
+| `clear` | | **未齐**（D7：表单项未注册 `doAction`） |
+| `reset` | | **未齐** |
+| `focus` | | **未齐** |
+| `setValue` | `value: string` | **未齐**（打到表单 `name` 可以改值，`componentId` 指本编辑器不生效） |
 
 ## 和 Amis 文档的差异
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
+- 展示组件是 `code`，编辑器是 `editor`。`code` 不收 `options`。
+- `editorDidMount` 未接：Amis 允许函数或字符串 `new Function`；Vamis 禁止隐式 `eval`。
+- 动作 `clear` / `reset` / `focus` / 针对本组件的 `setValue` 仍缺 D7。
+- 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。

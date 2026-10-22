@@ -35,11 +35,11 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 62% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
-| 数据输入 | 0 / 72 | 72 | 0 | 46% | 37 |
+| 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 49% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **48%** | **91** |
+| **合计** | **2 / 155** | **151** | **2** | **48%** | **93** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
@@ -88,7 +88,7 @@
 
 ---
 
-## 数据输入（0/72，均 46%）
+## 数据输入（0/72，均 47%）
 
 Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表单项（D6），必须进清单。
 
@@ -117,8 +117,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-kv` | InputKV 键值对 | 进行中 | 50% | 能增删 KV | P0 |
 | `input-kvs` | InputKVS 键值对象 | 进行中 | 45% | 结构精简 | P0 |
 | `input-formula` | InputFormula 公式编辑器 | 进行中 | 30% | **精简**：复用 Formula，无公式编辑器 UI | P0 |
-| `diff-editor` | DiffEditor 对比编辑器 | 进行中 | 25% | **精简**：左右 textarea，未接 Monaco | P0 |
-| `editor` | Editor 代码编辑器 | 进行中 | 25% | **精简**：等宽文本框，未接 Monaco；`js-editor`/`ts-editor` 仍未注册 | P0 |
+| `diff-editor` | DiffEditor 对比编辑器 | 进行中 | 65% | Monaco Diff：左侧 `diffValue` 只读，右侧绑 `name`；`options` / 事件已接。动作仍缺 D7 | P0 |
+| `editor` | Editor 代码编辑器 | 进行中 | 70% | Monaco 编辑器：语言族别名（含 `js-editor`/`ts-editor`）、表单项 `value` 回填、`options`、`size` 高度、`allowFullscreen`。`placeholder` 不是高亮。`editorDidMount` 未接；动作仍缺 D7 | P0 |
 | `fieldset` | FieldSet 表单项集合 | 进行中 | 55% | 能分组折叠 | P0 |
 | `input-excel` | InputExcel Excel 解析 | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | 进行中 | 40% | 能选文件；receiver/分片/自动上传未齐 | P0 |
@@ -182,7 +182,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
-| `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。文档属性表下有 `options（Monaco 编辑器配置）` 子章节。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|`。`editor` / `diff-editor` 仍未接 | P0 |
+| `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 55% | 能循环；placeholder/index 未齐 | P0 |
@@ -269,9 +269,9 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `tooltip` | 功能 | `tooltip-wrapper` 别名 | 50% |
 | `fieldSet` | 数据输入 | `fieldset` 别名 | 55% |
 | `tags` | 数据展示 | `tag` 别名 | 55% |
-| editor 语言族（`javascript-editor` 等 14 个） | 数据输入 | 全部指向精简 Editor | 25% |
+| editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`） | 70% |
 
-同步状态里尚未注册的 8 个（不在侧栏，但影响别名对齐）：`cascader-select`、`js-editor`、`ts-editor`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav、`pager`→pagination。补注册成本低，语义仍跟宿主组件走。
+同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav、`pager`→pagination。`js-editor` / `ts-editor` 已并入 `editor` 别名。
 
 ---
 
