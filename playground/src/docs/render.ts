@@ -1,5 +1,4 @@
 import MarkdownIt from 'markdown-it'
-import { colorizeSync } from 'vamis'
 import { playgroundHref } from './pages'
 import { parseSchemaFenceMeta } from './schema-scope'
 
@@ -25,9 +24,6 @@ const md = new MarkdownIt({
   html: true,
   linkify: true,
   breaks: false,
-  highlight(code, lang) {
-    return colorizeSync(code, lang || 'plaintext')
-  },
 })
 
 md.core.ruler.after('inline', 'vamis-heading-anchors', (state) => {

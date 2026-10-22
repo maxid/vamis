@@ -494,7 +494,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 ### P2（非核心）
 
-- 自定义 JS 动作、GraphQL、tracker、移动端专用 UI、富文本/Monaco、office/pdf 真实预览、编辑器插件体系。
+- 自定义 JS 动作、GraphQL、tracker、移动端专用 UI、富文本 TinyMCE、office/pdf 真实预览、编辑器插件体系。
 
 ## 18. 文档歧义与取舍
 
@@ -524,7 +524,7 @@ export function usePlugin(plugin: VamisPlugin): void
 - 像素级复刻 cxd，或复制 amis 的 React/MST 实现。
 - 支持 lodash template（`<% %>`）或默认执行任意 JS。
 - 与 amis 内部组件 API 一一对应（只保证 schema 语义与常用属性）。
-- office/pdf 真实渲染、Monaco/TinyMCE 全家桶、完整编辑器生态。
+- office/pdf 真实渲染、TinyMCE 全家桶、完整编辑器生态。
 - 在 P0/P1 阶段做移动端原生组件与埋点平台。
 
 ## 21. 风险与对策

@@ -78,4 +78,4 @@ SDK 把 Vue/Pinia/渲染器打进 IIFE（`sdk.js` + `sdk.css`），**不是**第
 
 ## 4. 非目标（第一期）
 
-完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE/Monaco 全家桶、Amis `amisRequire` AMD、IE11。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。**
+完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE 全家桶、Amis `amisRequire` AMD、IE11。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。** Monaco：`code` 走 `colorize`；`editor` / `diff-editor` 本阶段待接。
