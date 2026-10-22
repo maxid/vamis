@@ -6,14 +6,14 @@ outline: deep
 # Page 页面
 
 ::: tip 实现进度 95% · 已完成
-文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。`pullRefresh` 明确未接（Amis 仅移动端）。
+文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。根 / header / aside 用 `div` 组装（对齐 Amis）。`pullRefresh` 明确未接（Amis 仅移动端）。
 :::
 
 `page` 是页面入口容器，对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
 
 属于侧栏分类 **布局**。对照进度以仓库组件 P0 TODO 为准。
 
-默认铺满布局槽（`w-full min-w-0`），不必先写 `size` / `w-full`。作者态 YAML 与 JSON 同等有效。
+默认铺满布局槽（`w-full min-w-0`），不必先写 `size` / `w-full`。作者态 YAML 与 JSON 同等有效。根、工具栏区、侧栏都是 `div`（对齐 Amis），避免宿主给 `header` / `aside` 写的全局样式漏进来；页面标题仍用 `h1`。
 
 ## 基本用法
 

@@ -1,0 +1,25 @@
+---
+description: schema 组装容器用 div（对齐 Amis）；Form 仅顶层用 form，嵌套降为 div
+alwaysApply: true
+---
+
+# 组装容器：div 优先，避免宿主 landmark 泄漏
+
+Amis 布局壳几乎全是 `div`。Vamis **schema 渲染的组装容器同样用 `div`**，不要为「语义化」改成 `header` / `aside` / `section`。作者 `className` 打在 SchemaRenderer 外层 **`div.vamis-node`**，不依赖 landmark 标签。
+
+本条约束 **widget 树**，不约束 Playground / 编辑器外壳，也不改 `type: nav` 的 `<nav>`。
+
+## 必须
+
+- **Page 壳是 `div`**：根、工具栏区（header）、侧栏（aside）都是 `div`。标题可用 `h1`。不要加 `role="banner"` / `role="complementary"` 去补 landmark。
+- **Form 顶层 `<form>`，嵌套默认 `div`**。先 `useForm()` 再 `provideForm()`；有父 form 就降级。`wrapperComponent` 只认 `form` / `div`。
+- **嵌套 form 当 `div` 时**：默认提交按钮 `type="button"`（禁止 `type="submit"`，会提交祖先 form）；输入框 Enter 要 `preventDefault` + `stopPropagation` 后走本表单 `submit()`。自定义 `type: submit` 按钮已是 `type="button"` + `runAction`，保持即可。
+- **Container** 默认 `div`；`wrapperComponent` 走现有白名单（`div/section/article/main/header/footer/aside/nav/pre/span`），这是作者覆盖，不是 Page 默认。
+- 新布局渲染器（flex / grid / panel / wrapper / tabs / wizard 等）默认也用 `div`，除非 Amis 该 type 就是别的标签，或作者写了 `wrapperComponent`。
+
+## 禁止
+
+- 在 Page（或同类布局壳）里用 `<header>` / `<aside>` / `<section>` 当组装容器。宿主全局 `header {}` / `aside {}` 会漏进 embed。
+- 输出嵌套 HTML `<form>`（非法，且提交/Enter 会打到外层）。
+- 为了无障碍给组装壳加 landmark `role`（一页多个 banner 更糟）。
+- 把 SchemaRenderer 外层改成非 `div`，或靠 landmark 标签承接 `className`。

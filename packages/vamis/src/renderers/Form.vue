@@ -19,7 +19,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
-import { provideForm } from '../formContext'
+import { provideForm, useForm } from '../formContext'
 import { registerWizardValidate } from '../wizardGate'
 
 const props = defineProps<{
@@ -51,6 +51,33 @@ const panelClass = computed(() =>
   ),
 )
 const isInline = computed(() => String(props.schema.mode || '') === 'inline')
+const parentForm = useForm()
+const wrapTag = computed(() => {
+  const raw = props.schema.wrapperComponent
+  if (typeof raw === 'string') {
+    const name = raw.trim().toLowerCase()
+    if (name === 'form' || name === 'div') return name
+  }
+  return parentForm ? 'div' : 'form'
+})
+const nativeForm = computed(() => wrapTag.value === 'form')
+const submitButtonType = computed(() => (nativeForm.value ? 'submit' : 'button'))
+
+function onNestedEnter(event: KeyboardEvent) {
+  if (nativeForm.value) return
+  const el = event.target as HTMLElement | null
+  if (!el) return
+  const tag = el.tagName
+  if (tag === 'TEXTAREA' || el.isContentEditable) return
+  if (tag !== 'INPUT' && tag !== 'SELECT') return
+  event.preventDefault()
+  event.stopPropagation()
+  void submit()
+}
+
+function onDefaultSubmitClick() {
+  if (!nativeForm.value) void submit()
+}
 
 function getValue(name: string) {
   return store.data[name]
@@ -195,10 +222,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <form
+  <component
+    :is="wrapTag"
     class="w-full min-w-0"
     :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
     @submit.prevent="submit"
+    @keydown.enter="onNestedEnter"
   >
     <Card
       v-if="wrapWithPanel"
@@ -215,7 +244,7 @@ onBeforeUnmount(() => {
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>
         <template v-else>
-          <Button type="submit" :disabled="store.saving">
+          <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
             {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
           </Button>
           <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
@@ -234,7 +263,7 @@ onBeforeUnmount(() => {
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>
         <template v-else>
-          <Button type="submit" :disabled="store.saving">
+          <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
             {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
           </Button>
           <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
@@ -243,5 +272,5 @@ onBeforeUnmount(() => {
         </template>
       </div>
     </template>
-  </form>
+  </component>
 </template>

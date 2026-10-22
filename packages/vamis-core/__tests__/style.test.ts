@@ -195,6 +195,25 @@ describe('Amis width helpers', () => {
     expect(page).not.toContain('mb-4')
   })
 
+  it('assembles page chrome with div like Amis, not landmark tags', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
+    expect(page).not.toMatch(/<(section|header|aside)\b/)
+    expect(page).toContain('<h1')
+  })
+
+  it('degrades nested form wrappers to div and keeps wrapperComponent', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    expect(form).toContain('const parentForm = useForm()')
+    expect(form).toContain('wrapperComponent')
+    expect(form).toContain('wrapTag')
+    expect(form).toContain("return parentForm ? 'div' : 'form'")
+    expect(form).toContain('onNestedEnter')
+    expect(form).toContain('submitButtonType')
+    expect(form).toContain(':is="wrapTag"')
+  })
+
   it('lets panelClassName mb-0 override the default panel margin', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
