@@ -39,7 +39,9 @@ const store = hub.add({
 
 const body = computed(() => asArray(props.schema.body || props.schema.controls))
 const actions = computed(() => asArray(props.schema.actions))
-const hasCustomActions = computed(() => actions.value.length > 0)
+const actionsDefined = computed(() => Array.isArray(props.schema.actions))
+const hasCustomActions = computed(() => actionsDefined.value && actions.value.length > 0)
+const showActionBar = computed(() => (actionsDefined.value ? actions.value.length > 0 : true))
 
 function getValue(name: string) {
   return store.data[name]
@@ -130,7 +132,13 @@ const formApi = {
   getValue,
   setValue,
   reset,
-  reload: async () => {
+  reload: async (extra?: Record<string, any>, replace = false) => {
+    if (extra && typeof extra === 'object') {
+      if (replace) {
+        for (const key of Object.keys(store.data)) delete store.data[key]
+      }
+      Object.assign(store.data, extra)
+    }
     if (!props.schema.initApi) return
     store.fetching = true
     try {
@@ -189,7 +197,7 @@ onBeforeUnmount(() => {
       <CardContent class="space-y-0">
         <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
       </CardContent>
-      <CardFooter class="border-t">
+      <CardFooter v-if="showActionBar" class="border-t">
         <template v-if="hasCustomActions">
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>
@@ -206,7 +214,7 @@ onBeforeUnmount(() => {
     <template v-else>
       <h2 v-if="schema.title" class="mb-3 text-sm font-medium">{{ schema.title }}</h2>
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
-      <div class="flex gap-2 pt-3">
+      <div v-if="showActionBar" class="flex gap-2 pt-3">
         <template v-if="hasCustomActions">
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>

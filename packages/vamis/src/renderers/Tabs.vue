@@ -16,7 +16,7 @@ const defaultValue = computed(() => String(tabs.value[0]?.key || tabs.value[0]?.
         :key="tab.key || i"
         :value="String(tab.key || tab.title || i)"
       >
-        {{ tab.title || tab.tab || `Tab ${i + 1}` }}
+        {{ tab.title || `Tab ${i + 1}` }}
       </TabsTrigger>
     </TabsList>
     <TabsContent
@@ -25,7 +25,7 @@ const defaultValue = computed(() => String(tabs.value[0]?.key || tabs.value[0]?.
       :value="String(tab.key || tab.title || i)"
       class="pt-3"
     >
-      <SchemaRenderer v-for="(node, j) in asArray(tab.body)" :key="j" :schema="node" />
+      <SchemaRenderer v-for="(node, j) in asArray(tab.body ?? tab.tab)" :key="j" :schema="node" />
     </TabsContent>
   </Tabs>
 </template>

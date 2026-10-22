@@ -4,8 +4,8 @@ title: 样式系统
 
 # 样式系统
 
-::: info 实现进度 65% · 进行中
-token 对照、helper 间距/宽度、默认自适应已接。`xxxClassName` / `registerTheme` 仍是 D12 P1。
+::: info 实现进度 70% · 进行中
+token 对照、helper 间距/宽度/高度、默认自适应已接。`xxxClassName` / `registerTheme` 仍是 D12 P1。
 :::
 
 Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文件**。对照表：
@@ -17,6 +17,7 @@ Amis 用主题包（cxd / antd / dark）+ helper.css。Vamis **不搬这些文�
 | `--Form-input-height` 32px | `--control-h` |
 | `--gap-xs…xl` 4/8/12/16/20/24 | 同名 token |
 | `m-t-xs` / `p-l-md` | 同一套 gap 辅助类 |
+| `w-full` / `h-full` | 同一套宽高辅助类（含 `m:` / `pc:`） |
 | `level: primary` | `variant="default"` |
 | `.cxd-Button` | 禁止 |
 

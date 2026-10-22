@@ -6,20 +6,33 @@ const props = defineProps<{
   schema: SchemaObject
 }>()
 const columns = computed(() => asArray(props.schema.columns || props.schema.body))
+function colSpan(col: SchemaObject) {
+  const explicit = Number(col.md ?? col.span)
+  if (Number.isFinite(explicit) && explicit > 0) return Math.min(12, explicit)
+  return Math.max(1, Math.floor(12 / Math.max(1, columns.value.length)))
+}
+function isColumnComponent(col: unknown): col is SchemaObject {
+  const type = (col as SchemaObject | undefined)?.type
+  return typeof type === 'string' && type !== 'grid-column'
+}
+function columnNodes(col: unknown) {
+  if (isColumnComponent(col)) return [col]
+  return asArray((col as SchemaObject)?.body || col)
+}
 </script>
 
 <template>
-  <div class="grid w-full min-w-0 gap-3 md:grid-cols-12">
+  <div class="grid w-full min-w-0 items-stretch gap-3 md:grid-cols-12">
     <div
       v-for="(col, i) in columns"
       :key="i"
-      class="min-w-0"
-      :style="{ gridColumn: `span ${Math.min(12, Number((col as any).md || (col as any).span || 12))} / span ${Math.min(12, Number((col as any).md || (col as any).span || 12))}` }"
+      class="flex min-h-0 min-w-0 flex-col"
+      :style="{ gridColumn: `span ${colSpan(col as SchemaObject)} / span ${colSpan(col as SchemaObject)}` }"
     >
       <SchemaRenderer
-        v-for="(node, j) in asArray((col as any).body || col)"
+        v-for="(node, j) in columnNodes(col)"
         :key="j"
-        :schema="typeof col === 'object' && (col as any).type && (col as any).type !== 'grid-column' ? col : node"
+        :schema="node"
       />
     </div>
   </div>

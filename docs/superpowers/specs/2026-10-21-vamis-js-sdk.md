@@ -1,7 +1,7 @@
 # Vamis JS SDK
 
 - 日期：2026-10-21
-- 状态：部分落地（P0：`sdk.js` / `embed` / `hello.html`；P1：`getComponentByName` / `doAction` 等 kernel）
+- 状态：部分落地（P0：`sdk.js` / `embed` / `hello.html` / `getComponentByName` / `doAction`；P1：`registerTheme` / locale）
 - 范围：任意 HTML 页面用 `<script>` 嵌入运行时，对齐 Amis `amis.embed` 的用法，不复制 React/AMD/`cxd-`
 - 关联：
   - [运行时与 IR](./2026-10-20-vamis-vue3-runtime-design.md)
@@ -156,8 +156,6 @@ flowchart LR
 
 **P1（随 kernel）**
 
-- `getComponentByName`（D5）
-- `doAction`（D4）
 - `registerAction` / `registerFilter` / `registerTheme`（D11）
 - `locale` / `replaceText`（D12 余项）
 
@@ -165,4 +163,4 @@ flowchart LR
 
 P0 已落地：`packages/vamis-sdk` 打出 `sdk.js` + `sdk.css` + `hello.html`；`vamis.embed` 支持 JSON / YAML / IR；`updateSchema` / `updateProps` / `unmount`；文档 `/start/sdk` 用 iframe 跑真 HTML。Playground `/sdk/hello.html` 同源提供。
 
-仍缺（P1）：`getComponentByName`（D5）、`doAction`（D4）、`registerAction` / `registerTheme`、locale。`sdk.js` 体积偏大（含 echarts），后续可按需拆 chunk，但不改 `embed` 契约。
+P0 续：`getComponentByName` / `doAction` 已接到根 ScopedContext。仍缺（P1）：`registerAction` / `registerTheme`、locale。`sdk.js` 体积偏大（含 echarts），后续可按需拆 chunk，但不改 `embed` 契约。

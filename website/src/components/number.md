@@ -5,8 +5,8 @@ outline: deep
 
 # Number 展示
 
-::: info 实现进度 50% · 进行中
-StaticValue；千分位/精度过滤器未齐
+::: info 实现进度 60% · 进行中
+StaticValue；number / percent 过滤器已接，组件自身精度档未齐
 :::
 
 `number` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

@@ -7,4 +7,4 @@ import CRUD2 from '../renderers/data/CRUD2.vue'
 registerRenderer({ type: 'operation', component: Operation })
 registerRenderer({ type: 'column-toggler', alias: ['columns-toggler'], component: ColumnToggler })
 registerRenderer({ type: 'table2', component: Table2 })
-registerRenderer({ type: 'crud2', component: CRUD2, isolateScope: true })
+registerRenderer({ type: 'crud2', component: CRUD2, scope: 'self' })

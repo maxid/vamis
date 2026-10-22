@@ -30,7 +30,13 @@ const store = hub.add({
 
 const body = computed(() => asArray(props.schema.body || store.data.body))
 
-async function reload() {
+async function reload(extra?: Record<string, any>, replace = false) {
+  if (extra && typeof extra === 'object') {
+    if (replace) {
+      for (const key of Object.keys(store.data)) delete store.data[key]
+    }
+    Object.assign(store.data, extra)
+  }
   const api = props.schema.api || props.schema.schemaApi
   if (!api) return
   store.fetching = true

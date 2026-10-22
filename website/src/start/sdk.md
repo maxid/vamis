@@ -4,8 +4,8 @@ title: JS SDK
 
 # JS SDK
 
-::: info 实现进度 80% · 进行中
-P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` 已落地。`getComponentByName` / `doAction` 仍抛未实现，等 D5。
+::: tip 实现进度 90% · 已完成
+P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByName` / `doAction` 已落地。`registerTheme` / locale 仍 P1。
 :::
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
@@ -52,8 +52,8 @@ vamis.embed(container, schema, props?, env?) → VamisScoped
 | `updateProps(props)` | 改 `data` / `context` / `locale`，不重挂应用 |
 | `updateSchema(schema, props?)` | 换整页 schema |
 | `unmount()` | 卸 Vue app |
-| `getComponentByName(name)` | 依赖 D5；未落地前会标明未实现 |
-| `doAction(actions, ctx?)` | 依赖 D4；未落地前会标明未实现 |
+| `getComponentByName(name)` | 按 `name` / `id` 取已注册组件；找不到返回 `undefined` |
+| `doAction(actions, ctx?)` | 跑动作列表（`toast` / `reload` / `setValue` 等） |
 
 全局辅助：`vamis.registerRenderer`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。
 

@@ -1,5 +1,5 @@
 import { nextTick } from 'vue'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { embed, normalizeEmbedSchema } from '../src/embed'
 import { IR_API_VERSION } from '@vamis/core'
 import 'vamis'
@@ -117,9 +117,23 @@ describe('embed', () => {
     expect(host.textContent).not.toContain('Bye')
   })
 
-  it('getComponentByName and doAction wait on kernel D4/D5', async () => {
-    const { scoped } = mount({ type: 'page', body: 'x' })
-    expect(() => scoped.getComponentByName('foo')).toThrow(/尚未实现/)
-    await expect(scoped.doAction({ actionType: 'reload' })).rejects.toThrow(/尚未实现/)
+  it('getComponentByName finds a named page', async () => {
+    const { scoped } = mount({ type: 'page', name: 'main', body: 'hello' })
+    await nextTick()
+    expect(scoped.getComponentByName('missing')).toBeUndefined()
+    const page = scoped.getComponentByName('main') as { reload?: () => void; getData?: () => unknown }
+    expect(page?.getData?.()).toBeTruthy()
+    expect(typeof page?.reload).toBe('function')
+  })
+
+  it('doAction runs a toast through env.notify', async () => {
+    const notify = vi.fn()
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const scoped = embed(host, { type: 'page', body: 'x' }, undefined, { notify })
+    mounts.push(scoped)
+    await nextTick()
+    await scoped.doAction({ actionType: 'toast', msg: 'hi ${name}' }, { name: 'Ada' })
+    expect(notify).toHaveBeenCalledWith('info', 'hi Ada')
   })
 })

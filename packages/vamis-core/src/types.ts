@@ -83,6 +83,8 @@ export interface Payload {
   errors?: any
 }
 
+export type RendererTest = RegExp | ((path: string, schema?: SchemaObject) => boolean)
+
 export interface RendererConfig {
   type: string
   alias?: string[]
@@ -91,6 +93,9 @@ export interface RendererConfig {
   isolateScope?: boolean
   /** D1：inherit 沿用父域；self 建子域仍可向上查；isolate 不向上查 */
   scope?: 'inherit' | 'self' | 'isolate'
+  /** 无精确 type 时的兜底匹配；与 Amis 一样 weight 越低越先命中 */
+  test?: RendererTest
+  weight?: number
 }
 
 export interface RendererEnv {

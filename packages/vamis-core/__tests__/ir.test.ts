@@ -9,7 +9,7 @@ import {
   syncAuthoringText,
   yamlFromIr,
 } from '../src/ir'
-import { registerRenderer, resolveRenderer, unRegisterRenderer } from '../src/factory'
+import { registerRenderer, rendererScopeMode, resolveRenderer, unRegisterRenderer } from '../src/factory'
 import { evalExpression, filterTpl, isVisible } from '../src/formula'
 
 describe('IR envelope', () => {
@@ -102,6 +102,24 @@ describe('factory', () => {
 
   it('returns null for unknown types', () => {
     expect(resolveRenderer('definitely-missing-xyz')).toBeNull()
+  })
+
+  it('falls back to test regex and prefers lower weight', () => {
+    const hi = { name: 'Hi' } as any
+    const lo = { name: 'Lo' } as any
+    registerRenderer({ type: 'fb-hi', component: hi, test: /^static-/, weight: 10 })
+    registerRenderer({ type: 'fb-lo', component: lo, test: /^static-/, weight: 1 })
+    expect(resolveRenderer('static-xyz')?.component).toBe(lo)
+    unRegisterRenderer('fb-hi')
+    unRegisterRenderer('fb-lo')
+  })
+
+  it('maps isolateScope to isolate unless scope is set', () => {
+    expect(rendererScopeMode({ type: 'x', component: {}, isolateScope: true })).toBe('isolate')
+    expect(rendererScopeMode({ type: 'x', component: {}, isolateScope: true, scope: 'self' })).toBe(
+      'self',
+    )
+    expect(rendererScopeMode({ type: 'x', component: {} })).toBe('inherit')
   })
 })
 

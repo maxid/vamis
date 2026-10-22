@@ -5,8 +5,8 @@ outline: deep
 
 # Remark 标记
 
-::: info 实现进度 55% · 进行中
-能出说明
+::: info 实现进度 70% · 进行中
+圆形问号徽标 + tooltip；缺自定义 icon / 移动端弹层
 :::
 
 `remark` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
