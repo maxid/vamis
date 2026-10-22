@@ -9,6 +9,7 @@ import {
   requestApi,
   useEnv,
   useRendererHub,
+  useScope,
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
@@ -21,11 +22,12 @@ const props = defineProps<{
 const env = useEnv()
 const hub = useRendererHub()
 const scoped = useScoped()
+const scope = useScope()
 const store = hub.add({
   id: createStoreId('service'),
   type: 'service',
   name: props.schema.name,
-  data: { ...props.data },
+  data: { ...((props.schema.data && typeof props.schema.data === 'object' ? props.schema.data : {}) as Record<string, any>) },
 })
 
 const body = computed(() => asArray(props.schema.body || store.data.body))
@@ -42,7 +44,12 @@ async function reload(extra?: Record<string, any>, replace = false) {
   store.fetching = true
   try {
     const result = await requestApi(api, { env, data: { ...props.data, ...store.data }, reason: 'reload' })
-    if (!result.skipped && result.ok) mergeApiData(store.data, result)
+    if (!result.skipped && result.ok) {
+      mergeApiData(store.data, result)
+      if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+        scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
+      }
+    }
     else if (!result.skipped && !result.ok) {
       env.notify('error', result.payload.msg || '加载失败')
     }

@@ -129,7 +129,7 @@ registerRenderer({ type: 'checkboxes', component: Checkboxes, isFormItem: true }
 registerRenderer({ type: 'radios', component: Radios, isFormItem: true })
 registerRenderer({ type: 'switch', component: Switch, isFormItem: true })
 registerRenderer({ type: 'hidden', component: Hidden, isFormItem: true })
-registerRenderer({ type: 'static', component: Static, isFormItem: true })
+registerRenderer({ type: 'static', alias: ['static-tpl'], component: Static, isFormItem: true })
 registerRenderer({
   type: 'input-date',
   alias: ['input-datetime', 'input-time'],

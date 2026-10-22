@@ -8,7 +8,7 @@ export interface Scope {
   readonly data: PlainObject
   get(path: string): unknown
   set(path: string, value: unknown, reason?: ChangeReason): void
-  merge(values: PlainObject, mode?: 'merge' | 'override'): void
+  merge(values: PlainObject, mode?: 'merge' | 'override', reason?: ChangeReason): void
   superData(): PlainObject
   resolved(): PlainObject
 }
@@ -85,9 +85,9 @@ export function createScope(
       changeReason = reason
       setByPath(own, path, value)
     },
-    merge(values: PlainObject, mode: 'merge' | 'override' = 'merge') {
+    merge(values: PlainObject, mode: 'merge' | 'override' = 'merge', reason: ChangeReason = 'action') {
       prev = { ...own }
-      changeReason = 'action'
+      changeReason = reason
       if (mode === 'override') {
         for (const key of Object.keys(own)) delete own[key]
       }
@@ -105,7 +105,7 @@ export function createScope(
         ...own,
         __super: superData,
         __prev: prev,
-        __changeReason: changeReason,
+        __changeReason: { type: changeReason },
       }
     },
   }

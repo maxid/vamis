@@ -47,7 +47,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
-| Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点不再复制；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；form/service/crud 的 overlay 尚未全部改走 Scope.merge |
+| Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；其余 Amis 列表容器尚未全部 `scope: self` |
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 默认文本节点，`\|raw` 才 `v-html`；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
 | Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |

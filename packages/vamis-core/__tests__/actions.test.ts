@@ -92,6 +92,22 @@ describe('onEvent actions', () => {
     expect(context.env.notify).toHaveBeenCalledWith('success', 'ok')
   })
 
+  it('ajax merges the payload into the form with api reason', async () => {
+    const setData = vi.fn()
+    const context = ctx({
+      form: { setData },
+      env: {
+        fetcher: vi.fn(async () => ({ status: 0, msg: 'ok', data: { name: 'vamis-demo' } })),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+    })
+    await runAction({ actionType: 'ajax', api: '/api/mock2/form/saveForm' }, context)
+    expect(setData).toHaveBeenCalledWith({ name: 'vamis-demo' }, false, 'api')
+  })
+
   it('opens dialog overlay from onEvent click', async () => {
     const openDialog = vi.fn()
     const context = ctx({

@@ -14,8 +14,10 @@ import {
   useEnv,
   useOverlay,
   useRendererHub,
+  useScope,
   useScoped,
   validateValue,
+  type ChangeReason,
   type SchemaObject,
 } from '@vamis/core'
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
@@ -31,6 +33,7 @@ const env = useEnv()
 const hub = useRendererHub()
 const scoped = useScoped()
 const overlay = useOverlay()
+const scope = useScope()
 const store = hub.add({
   id: createStoreId('form'),
   type: 'form',
@@ -85,6 +88,7 @@ function getValue(name: string) {
 
 function setValue(name: string, value: unknown) {
   store.data[name] = value
+  scope.value?.set(name, value, 'input')
   if (store.errors[name]) delete store.errors[name]
 }
 
@@ -145,6 +149,9 @@ async function submit() {
       throw new Error(apiMessage(api, result.payload, 'failed'))
     }
     mergeApiData(store.data, result)
+    if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+      scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
+    }
     env.notify('success', apiMessage(api, result.payload, 'success'))
     if (props.schema.reload) {
       await scoped?.reload(props.schema.reload, store.data)
@@ -164,7 +171,7 @@ async function submit() {
 }
 
 const formApi = {
-  name: props.schema.name,
+  name: String(props.schema.id || props.schema.name || ''),
   getValue,
   setValue,
   reset,
@@ -179,8 +186,12 @@ const formApi = {
     store.fetching = true
     try {
       const result = await requestApi(props.schema.initApi, { env, data: { ...props.data, ...store.data }, reason: 'init' })
-      if (!result.skipped && result.ok) mergeApiData(store.data, result)
-      else if (!result.skipped && !result.ok) {
+      if (!result.skipped && result.ok) {
+        mergeApiData(store.data, result)
+        if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+          scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
+        }
+      } else if (!result.skipped && !result.ok) {
         env.notify('error', apiMessage(props.schema.initApi, result.payload, 'failed'))
       }
     } finally {
@@ -188,7 +199,13 @@ const formApi = {
     }
   },
   getData: () => ({ ...store.data }),
-  setData: (values: Record<string, any>) => Object.assign(store.data, values),
+  setData: (values: Record<string, any>, replace = false, reason: ChangeReason = 'action') => {
+    if (replace) {
+      for (const key of Object.keys(store.data)) delete store.data[key]
+    }
+    Object.assign(store.data, values)
+    scope.value?.merge(values, replace ? 'override' : 'merge', reason)
+  },
   submit,
   validate,
 }

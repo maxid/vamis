@@ -45,9 +45,8 @@ const overlayInit = computed(() => ({
   ...schemaData.value,
   ...(props.extraData || {}),
 }))
-const hasOverlay = computed(() => Object.keys(overlayInit.value).length > 0)
 const scopeMode = computed<'inherit' | 'self' | 'isolate'>(() => rendererScopeMode(renderer.value))
-const needsChildScope = computed(() => scopeMode.value !== 'inherit' || hasOverlay.value)
+const needsChildScope = computed(() => scopeMode.value !== 'inherit')
 const childScope = shallowRef<Scope | null>(null)
 watch(
   () => [needsChildScope.value, scopeMode.value, props.schema] as const,
@@ -74,9 +73,17 @@ watch(
 )
 const currentScope = computed(() => childScope.value ?? parentScope.value)
 provideScope(currentScope)
-const data = computed(
-  () => currentScope.value?.resolved() ?? { ...parentData.value, ...schemaData.value, ...(props.extraData || {}) },
-)
+const data = computed(() => {
+  const extra = props.extraData || {}
+  const overlay: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(extra)) {
+    if (!key.startsWith('__')) overlay[key] = value
+  }
+  return {
+    ...(currentScope.value?.resolved() ?? parentData.value),
+    ...overlay,
+  }
+})
 provideData(data)
 
 const visible = computed(() => (normalized.value ? isVisible(normalized.value, data.value) : false))

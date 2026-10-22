@@ -1,7 +1,7 @@
 # Vamis 在线文档
 
 - 日期：2026-10-22
-- 状态：部分落地（与 Playground 同应用、同端口）。`types/api` 已按 D3 管线对齐；概念页模板/表达式（D2）、联动（D5）、配置与组件（对标 Amis 同名页，含渲染管线与 wrapWithPanel toolbar 100%）、ClassName 高度 helper `h-full`、Page 组装容器用 div、嵌套 Form 降为 div、JS SDK `getComponentByName`/`doAction` 已按 P0 回写。
+- 状态：部分落地（与 Playground 同应用、同端口）。`types/api` 已按 D3 管线对齐；概念页模板/表达式（D2）、联动（D5）、配置与组件、数据域与数据链（对标 Amis 同名页，进度 70% 进行中，`__prev`/`__changeReason` 已可演示）、ClassName 高度 helper `h-full`、Page 组装容器用 div、嵌套 Form 降为 div、JS SDK `getComponentByName`/`doAction` 已按 P0 回写。
 - 范围：正文在 `website/src/`；运行时由 playground 在 5173 挂载。目录对齐 Amis zh-CN 侧栏；不拷贝 Amis 原文
 
 ## 口径
