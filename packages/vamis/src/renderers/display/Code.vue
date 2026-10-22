@@ -172,6 +172,14 @@ const boxStyle = computed(() => {
   min-width: 0;
   max-width: 100%;
 }
+.vamis-code--editor :deep(.cursor),
+.vamis-code--editor :deep(.cursors-layer) {
+  display: none !important;
+}
+.vamis-code--editor :deep(textarea.inputarea) {
+  pointer-events: none;
+  caret-color: transparent;
+}
 .vamis-code--dark {
   background-color: #1e1e1e;
 }

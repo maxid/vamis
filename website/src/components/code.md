@@ -6,7 +6,7 @@ outline: deep
 # Code 代码高亮
 
 ::: info 实现进度 92% · 进行中
-文档主路径已对齐。展示用只读 Monaco 编辑器；行号 / 折叠 / 感知默认关，`wordWrap` 默认开。多行 `value` 用 YAML `|`。`customLang` monarch 挂在 inherit 共享主题上，滚动回来高亮不会被 `setTheme` 冲掉。表单 `editor` / `diff-editor` 仍待接同一实例。
+文档主路径已对齐。展示用只读 Monaco 编辑器：无编辑光标（对齐 Amis colorize）；行号 / 折叠 / 感知默认关，`wordWrap` 默认开。多行 `value` 用 YAML `|`。`customLang` monarch 挂在 inherit 共享主题上，滚动回来高亮不会被 `setTheme` 冲掉。表单 `editor` / `diff-editor` 仍待接同一实例。
 :::
 
 用代码高亮显示一段文本。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
@@ -211,7 +211,7 @@ body:
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。多行 `value` 用 `|`；从 JSON 同步过来时 `stringifyYaml` 也会写成块标量。
-- Amis `code` 只用 `colorize` 出 HTML。Vamis 用只读 `monaco.editor.create`。行号、折叠、悬停与补全默认关（`lineNumbers` / `folding` / `options` 可打开）。
+- Amis `code` 只用 `colorize` 出 HTML，点击没有编辑光标。Vamis 用只读 `monaco.editor.create`，同样藏光标、不聚焦、不高亮当前行。行号、折叠、悬停与补全默认关（`lineNumbers` / `folding` / `options` 可打开）。
 - `customLang` 的 token 规则 inherit 进共享 `vs` / `vs-dark`，不再 `defineTheme(inherit: false)`，避免滚动后其它块高亮被冲掉。
 - Amis 文档「主题及 tab」示例把字段写成 `tagSize`，源码与属性表是 `tabSize`。Vamis 只认 `tabSize`。
 - `className: b-a` 边框 helper 未接，示例改用 `border`。

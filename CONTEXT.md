@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- `code` 对齐 Amis：点击不出现编辑光标、不聚焦、不高亮当前行（只读展示，不是编辑器）。行号 / 折叠 / 感知仍默认关。
 - `code` 默认关掉行号、折叠、悬停与补全；`lineNumbers` / `folding` / `options` 才打开。修好 `wordWrap`：编辑器 `min-w-0` 并按容器宽度两遍 layout，不再被长行撑开导致折行失效。
 - `code` 文档多行 `value` 改成 YAML `|` 块标量；`stringifyYaml` 含换行的字符串不再打成 `"...\n..."`，编辑 Schema 的 YAML Tab 与文档同源。
 - `code` 改为只读 Monaco 编辑器。`customLang` 规则 inherit 进共享主题，滚动回来高亮不再被全局 `setTheme` 冲掉。文档围栏进视口才挂载。`editor` / `diff-editor` 仍待接同一实例。
