@@ -56,10 +56,7 @@ function serveSdk(): Plugin {
         return
       }
       const dest = path.join(playground, 'dist', 'sdk')
-      fs.mkdirSync(dest, { recursive: true })
-      for (const file of fs.readdirSync(dir)) {
-        fs.copyFileSync(path.join(dir, file), path.join(dest, file))
-      }
+      fs.cpSync(dir, dest, { recursive: true })
     },
   }
 }
