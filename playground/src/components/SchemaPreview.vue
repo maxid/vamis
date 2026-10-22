@@ -66,7 +66,7 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">
-      <SheetContent side="right" class="flex h-full w-full flex-col sm:max-w-xl">
+      <SheetContent side="right" class="flex h-full w-full flex-col sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>编辑 Schema（改完即时预览）</SheetTitle>
         </SheetHeader>

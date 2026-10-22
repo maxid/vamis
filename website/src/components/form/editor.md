@@ -5,8 +5,8 @@ outline: deep
 
 # Editor 代码编辑器
 
-::: info 实现进度 70% · 进行中
-主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度）/ `allowFullscreen` / 占位。`placeholder` 跟行号对齐。感知框挂带主题的 overflow 宿主（有背景、不被裁切）。全屏 Teleport 到 `body`。`change` / `focus` / `blur` 已发。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
+::: info 实现进度 78% · 进行中
+主路径已接 Monaco：语言 / 表单项 `value` 回填 / `options` / `disabled` / `size`（高度，含 `full`）/ `allowFullscreen` / `hideButtons` / `intellisense` / 占位。文档「编辑 Schema」已换成本组件，YAML/JSON 走 `intellisense: schema`。`editorDidMount` 未接（禁止隐式 `eval`）。组件动作 `clear` / `reset` / `focus` / `setValue` 打到表单项自身仍缺 D7。
 :::
 
 用于代码编辑。富文本请用 [RichText](/components/form/input-rich-text)。只读高亮请用 [Code](/components/code)。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据输入**。
@@ -82,7 +82,7 @@ body:
 
 ## 全屏模式
 
-`allowFullscreen: true` 显示全屏开关。
+`allowFullscreen: true` 显示全屏开关。`hideButtons: true` 时不显示。
 
 ```schema: scope="body"
 type: form
@@ -94,6 +94,44 @@ body:
     allowFullscreen: true
 ```
 
+## 隐藏按钮区
+
+`hideButtons: true` 藏掉编辑器工具按钮（全屏）。若它是表单 body 里**每一项**都开了的配置，默认的提交 / 重置也不画（仍可用 `actions: []` 显式关掉）。文档「编辑 Schema」用的就是这个开关，避免侧栏里再套一层表单按钮。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: editor
+    name: editor
+    label: 无按钮区
+    hideButtons: true
+    value: |
+      function hello() {
+        console.log('hello world')
+      }
+```
+
+## Schema 代码感知
+
+`intellisense` 控制补全 / 悬停。默认 `true` 走语言自带（JSON 有 worker）。`false` 关掉。`schema` 按 Vamis 组件 schema 识别：`type` 补已注册组件名，常见字段（`body` / `name` / `label` …）可补全。YAML 与 JSON 都有效。文档编辑 Schema 已打开此项。
+
+```schema: scope="body"
+type: form
+body:
+  - type: yaml-editor
+    name: schema
+    label: Schema
+    hideButtons: true
+    intellisense: schema
+    size: lg
+    value: |
+      type: page
+      body:
+        - type: tpl
+          tpl: Hello
+```
+
 ## 属性表
 
 除 [FormItem](/components/form/formitem) 通用配置外：
@@ -101,8 +139,10 @@ body:
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `language` | `string` | `javascript` | 高亮语言，支持 `${xxx}` |
-| `size` | `string` | `md` | 编辑器**高度**：`sm` / `md` / `lg` / `xl` / `xxl`。不是表单项宽度档 |
+| `size` | `string` | `md` | 编辑器**高度**：`sm` / `md` / `lg` / `xl` / `xxl` / `full`（吃满父级高度）。不是表单项宽度档 |
 | `allowFullscreen` | `boolean` | `false` | 是否显示全屏开关。Amis 源码 defaultProps 为 `true`，文档表为 `false`；Vamis 跟文档，要显式打开 |
+| `hideButtons` | `boolean` | `false` | 隐藏按钮区：不画全屏开关；作为表单唯一（或全部）项时也不画默认提交 / 重置 |
+| `intellisense` | `boolean \| 'schema'` | `true` | 代码感知。`false` 关闭；`schema` 按 Vamis 组件 schema 补全 YAML / JSON 的 `type` 与字段 |
 | `options` | `object` | | 传给 Monaco 的额外项，见 [options 说明](#options-monaco-编辑器配置)。不能用它设 `readOnly` |
 | `placeholder` | `string` | | 无值时的占位，跟 Monaco 第一行对齐 |
 | `editorTheme` | `string` | | `vs` / `vs-dark`。未写时随文档浅色 / 深色 |
@@ -173,6 +213,7 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 展示组件是 `code`，编辑器是 `editor`。`code` 不收 `options`。
+- 文档「编辑 Schema」用本组件（`yaml-editor` / `json-editor` + `hideButtons` + `intellisense: schema`），不是 textarea。
 - `editorDidMount` 未接：Amis 允许函数或字符串 `new Function`；Vamis 禁止隐式 `eval`。
 - 动作 `clear` / `reset` / `focus` / 针对本组件的 `setValue` 仍缺 D7。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。

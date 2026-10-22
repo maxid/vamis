@@ -118,7 +118,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-kvs` | InputKVS 键值对象 | 进行中 | 45% | 结构精简 | P0 |
 | `input-formula` | InputFormula 公式编辑器 | 进行中 | 30% | **精简**：复用 Formula，无公式编辑器 UI | P0 |
 | `diff-editor` | DiffEditor 对比编辑器 | 进行中 | 65% | Monaco Diff：左侧 `diffValue` 只读，右侧绑 `name`；`options` / 事件已接。动作仍缺 D7 | P0 |
-| `editor` | Editor 代码编辑器 | 进行中 | 70% | Monaco 编辑器：语言族别名（含 `js-editor`/`ts-editor`）、表单项 `value` 回填、`options`、`size` 高度、全屏 Teleport。`placeholder` 跟行号对齐；感知框带主题背景、不被外框裁切。`editorDidMount` 未接；动作仍缺 D7 | P0 |
+| `editor` | Editor 代码编辑器 | 进行中 | 78% | Monaco 编辑器：`hideButtons` 藏按钮区、`size: full`、`intellisense: schema`（YAML/JSON 按组件 schema 补全）。文档「编辑 Schema」已换成本组件。`editorDidMount` 未接；动作仍缺 D7 | P0 |
 | `fieldset` | FieldSet 表单项集合 | 进行中 | 55% | 能分组折叠 | P0 |
 | `input-excel` | InputExcel Excel 解析 | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | 进行中 | 40% | 能选文件；receiver/分片/自动上传未齐 | P0 |
@@ -269,7 +269,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `tooltip` | 功能 | `tooltip-wrapper` 别名 | 50% |
 | `fieldSet` | 数据输入 | `fieldset` 别名 | 55% |
 | `tags` | 数据展示 | `tag` 别名 | 55% |
-| editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`） | 70% |
+| editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`）；`yaml-editor`/`json-editor` 可开 schema 感知 | 78% |
 
 同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav、`pager`→pagination。`js-editor` / `ts-editor` 已并入 `editor` 别名。
 

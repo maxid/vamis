@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
+  EnvKey,
+  createDefaultEnv,
   createVamisEvent,
   eventEvalData,
   resolveValue,
   runOnEvent,
-  useEnv,
   useFormApi,
   useOverlay,
   useScope,
@@ -30,8 +31,14 @@ const props = defineProps<{
   disabled?: boolean
 }>()
 
+const emit = defineEmits<{
+  change: [string]
+  focus: [string]
+  blur: [string]
+}>()
+
 const form = useForm()
-const env = useEnv()
+const env = inject(EnvKey, null) ?? createDefaultEnv()
 const scoped = useScoped()
 const scope = useScope()
 const overlay = useOverlay()
@@ -111,9 +118,21 @@ const editorTheme = computed(() => {
   return darkDoc.value ? 'vs-dark' : 'vs'
 })
 const height = computed(() => editorHeight(props.schema.size))
-const allowFullscreen = computed(() => props.schema.allowFullscreen === true)
+const fillParent = computed(() => props.schema.size === 'full')
+const hideButtons = computed(() => props.schema.hideButtons === true)
+const intellisense = computed(() => {
+  const raw = props.schema.intellisense
+  if (raw === false || raw === true || raw === 'schema') return raw
+  return true
+})
+const allowFullscreen = computed(() => props.schema.allowFullscreen === true && !hideButtons.value)
 const placeholder = computed(() => String(props.schema.placeholder || ''))
 const empty = computed(() => !value.value)
+const heightStyle = computed(() => {
+  if (fullscreen.value || fillParent.value) return undefined
+  const next = height.value
+  return { height: typeof next === 'number' ? `${next}px` : next }
+})
 
 async function emitEvent(name: string, next: string) {
   const payload = {
@@ -150,6 +169,7 @@ async function mount() {
     theme: editorTheme.value,
     readOnly: !!props.disabled,
     extra: extra.value,
+    intellisense: intellisense.value,
   })
   if (disposed) {
     session.dispose()
@@ -163,15 +183,20 @@ async function mount() {
     if (applying || !session) return
     const next = session.editor.getValue()
     if (props.schema.name) form?.setValue(props.schema.name, next)
+    emit('change', next)
     void emitEvent('change', next)
   })
   session.editor.onDidFocusEditorWidget(() => {
     focused.value = true
-    void emitEvent('focus', session?.editor.getValue() || value.value)
+    const next = session?.editor.getValue() || value.value
+    emit('focus', next)
+    void emitEvent('focus', next)
   })
   session.editor.onDidBlurEditorWidget(() => {
     focused.value = false
-    void emitEvent('blur', session?.editor.getValue() || value.value)
+    const next = session?.editor.getValue() || value.value
+    emit('blur', next)
+    void emitEvent('blur', next)
   })
 }
 
@@ -185,10 +210,18 @@ watch(value, (next) => {
   }
 })
 
-watch([language, extra, () => props.disabled], () => {
+watch([language, intellisense], () => {
   if (!session) return
+  if (intellisense.value === 'schema') {
+    void mount()
+    return
+  }
   const model = session.editor.getModel()
   if (model) session.monaco.editor.setModelLanguage(model, language.value)
+})
+
+watch([extra, () => props.disabled], () => {
+  if (!session) return
   session.editor.updateOptions({
     ...(extra.value || {}),
     readOnly: !!props.disabled,
@@ -216,15 +249,19 @@ watch(fullscreen, async () => {
 </script>
 
 <template>
-  <FormItem :schema="itemSchema">
+  <component
+    :is="hideButtons ? 'div' : FormItem"
+    v-bind="hideButtons ? { class: fillParent ? 'h-full w-full min-w-0' : 'w-full min-w-0' } : { schema: itemSchema }"
+  >
     <Teleport to="body" :disabled="!fullscreen">
       <div
         class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border bg-background"
         :class="{
           'ring-1 ring-ring': focused,
           'vamis-monaco--fullscreen': fullscreen,
+          'h-full min-h-0': fullscreen || fillParent,
         }"
-        :style="fullscreen ? undefined : { height: `${height}px` }"
+        :style="heightStyle"
       >
         <button
           v-if="allowFullscreen"
@@ -242,5 +279,5 @@ watch(fullscreen, async () => {
         <div ref="host" class="h-full w-full min-w-0" />
       </div>
     </Teleport>
-  </FormItem>
+  </component>
 </template>

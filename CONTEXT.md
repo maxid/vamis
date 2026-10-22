@@ -56,17 +56,19 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 70%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 92%；`editor` 78%；`diff-editor` 65%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + 模板转义/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 140 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 188 + core 146 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 文档「编辑 Schema」侧栏不能直接挂 `Editor.vue`：缺 `VamisRoot` 的 env 时 `useEnv()` 抛错，Sheet 只剩空白遮罩。现包一层 `VamisRoot`，Editor 无 env 时回退 `createDefaultEnv`。
+- Editor 增加 `hideButtons`（藏全屏按钮；表单 body 全开时也不画默认提交/重置）、`size: full`、`intellisense: schema`（YAML/JSON 按已注册 type 与常见字段补全）。文档「编辑 Schema」从 textarea 换成该组件。
 - Editor 感知框挂带 `--vscode-*` 主题的 overflow 宿主（不再直接挂 `body`，背景回来了）；全屏 Teleport 到 `body`，不被 Play 卡片 `overflow-hidden` 裁住。
 - Editor 占位跟 Monaco 行号对齐（不再用 `text-sm` / `top-2` 页面样式）；感知框 `fixedOverflowWidgets` + 外框 `overflow: visible`，不再被圆角框裁切。
 - Editor 语法高亮：表单项 `value` 回填进表单域（有 `name` 时不再丢掉 schema 初值）；文档基本用法改用 `value`，`placeholder` 单独成「占位」节（灰色浮层不是 token 高亮）。
