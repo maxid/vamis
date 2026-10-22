@@ -55,6 +55,7 @@ const HANDWRITTEN = new Set([
   '/components/form/options',
   '/components/page',
   '/components/container',
+  '/components/chart',
 ])
 
 function parseTodo(text) {

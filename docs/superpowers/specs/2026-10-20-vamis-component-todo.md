@@ -94,7 +94,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `form` | Form 表单 | 进行中 | 58% | wrapWithPanel 面板吃满上级；嵌套 form 默认 `div`；`lazyLoad` 走内核 LazyComponent（默认关，只延迟绘制）；initApi 仍是 Form `onMounted`。扁平 `name`、提交不合并、嵌套不递归校验（D6） | P0 |
+| `form` | Form 表单 | 进行中 | 58% | 文档已补属性表 / 事件表 / 动作表。`lazyLoad` 默认关；事件只接 `submit`；动作 `reload`/`setValue`/`submit`/`reset` 可用。扁平 `name`、提交不合并、嵌套不递归校验（D6） | P0 |
 | （契约） | FormItem 表单项通用 | 进行中 | 40% | 有 label/required/error 壳；缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
 | `control` | Control 表单项包裹 | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |
@@ -181,7 +181,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `card` | Card 卡片 | 进行中 | 50% | 能展示字段；媒体/操作区未齐 | P0 |
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
-| `chart` | Chart 图表 | 进行中 | 45% | 有 `config`/`api` 时动态加载 echarts；画布走内核 LazyComponent（`unMountOnHidden` 默认 false）；`api` 按 `isApiOutdated` 刷新。无 `mapURL` / `source` 变量；无库则占位 | P0 |
+| `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
 | `code` | Code 代码高亮 | 进行中 | 45% | 已注册，高亮引擎精简 | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
