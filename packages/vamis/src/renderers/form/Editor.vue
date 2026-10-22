@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   createVamisEvent,
   eventEvalData,
@@ -17,8 +17,11 @@ import FormItem from '../FormItem.vue'
 import {
   applyEditorTheme,
   editorHeight,
+  monacoOverflowHost,
   mountFormEditor,
   normalizeEditorValue,
+  syncEditorPlaceholder,
+  syncOverflowHostTheme,
 } from '../display/code-highlight'
 
 const props = defineProps<{
@@ -35,11 +38,13 @@ const overlay = useOverlay()
 const formApi = useFormApi()
 
 const host = ref<HTMLElement | null>(null)
+const placeholderEl = ref<HTMLElement | null>(null)
 const darkDoc = ref(false)
 const focused = ref(false)
 const fullscreen = ref(false)
 let mo: MutationObserver | undefined
 let session: Awaited<ReturnType<typeof mountFormEditor>> | null = null
+let layoutSub: { dispose: () => void } | undefined
 let disposed = false
 let applying = false
 
@@ -65,6 +70,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   disposed = true
   mo?.disconnect()
+  layoutSub?.dispose()
+  layoutSub = undefined
   session?.dispose()
   session = null
 })
@@ -126,9 +133,16 @@ async function emitEvent(name: string, next: string) {
   })
 }
 
+function syncPlaceholder() {
+  if (!session) return
+  syncEditorPlaceholder(session.monaco, session.editor, placeholderEl.value)
+}
+
 async function mount() {
   const el = host.value
   if (!el || disposed) return
+  layoutSub?.dispose()
+  layoutSub = undefined
   session?.dispose()
   session = await mountFormEditor(el, {
     value: value.value,
@@ -142,6 +156,9 @@ async function mount() {
     session = null
     return
   }
+  layoutSub = session.editor.onDidLayoutChange(syncPlaceholder)
+  await nextTick()
+  syncPlaceholder()
   session.editor.onDidChangeModelContent(() => {
     if (applying || !session) return
     const next = session.editor.getValue()
@@ -175,42 +192,55 @@ watch([language, extra, () => props.disabled], () => {
   session.editor.updateOptions({
     ...(extra.value || {}),
     readOnly: !!props.disabled,
+    fixedOverflowWidgets: true,
+    overflowWidgetsDomNode: monacoOverflowHost(editorTheme.value),
   })
+  syncPlaceholder()
+})
+
+watch([placeholder, empty], async () => {
+  await nextTick()
+  syncPlaceholder()
 })
 
 watch(editorTheme, (theme) => {
   if (!session) return
   applyEditorTheme(session.monaco, theme)
+  syncOverflowHostTheme(session.editor, theme)
 })
 
-watch(fullscreen, () => {
+watch(fullscreen, async () => {
+  await nextTick()
   session?.editor.layout()
 })
 </script>
 
 <template>
   <FormItem :schema="itemSchema">
-    <div
-      class="vamis-monaco relative w-full min-w-0 overflow-hidden rounded-md border bg-background"
-      :class="{
-        'ring-1 ring-ring': focused,
-        'fixed inset-0 z-50 rounded-none': fullscreen,
-      }"
-      :style="fullscreen ? undefined : { height: `${height}px` }"
-    >
-      <button
-        v-if="allowFullscreen"
-        type="button"
-        class="absolute right-2 top-1 z-10 text-xs text-muted-foreground hover:text-foreground"
-        @click="fullscreen = !fullscreen"
+    <Teleport to="body" :disabled="!fullscreen">
+      <div
+        class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border bg-background"
+        :class="{
+          'ring-1 ring-ring': focused,
+          'vamis-monaco--fullscreen': fullscreen,
+        }"
+        :style="fullscreen ? undefined : { height: `${height}px` }"
       >
-        {{ fullscreen ? '退出全屏' : '全屏' }}
-      </button>
-      <span
-        v-if="placeholder && empty"
-        class="pointer-events-none absolute left-16 top-2 z-10 whitespace-pre-wrap text-sm text-muted-foreground"
-      >{{ placeholder }}</span>
-      <div ref="host" class="h-full w-full min-w-0" />
-    </div>
+        <button
+          v-if="allowFullscreen"
+          type="button"
+          class="absolute right-2 top-1 z-20 text-xs text-muted-foreground hover:text-foreground"
+          @click="fullscreen = !fullscreen"
+        >
+          {{ fullscreen ? '退出全屏' : '全屏' }}
+        </button>
+        <span
+          v-if="placeholder && empty"
+          ref="placeholderEl"
+          class="vamis-monaco-placeholder"
+        >{{ placeholder }}</span>
+        <div ref="host" class="h-full w-full min-w-0" />
+      </div>
+    </Teleport>
   </FormItem>
 </template>

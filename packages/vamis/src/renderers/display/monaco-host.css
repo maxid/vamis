@@ -1,0 +1,84 @@
+/* Isolate Monaco from page / Tailwind font and keep overflow widgets above the frame. */
+.vamis-monaco {
+  overflow: visible;
+}
+
+.vamis-monaco .monaco-editor,
+.vamis-monaco .monaco-editor .overflow-guard,
+.vamis-code--editor .monaco-editor,
+.vamis-code--editor .monaco-editor .overflow-guard {
+  border-radius: inherit;
+}
+
+.vamis-monaco .monaco-editor .view-lines,
+.vamis-monaco .monaco-editor .view-line,
+.vamis-monaco .monaco-editor .view-line span,
+.vamis-monaco .monaco-editor .margin-view-overlays,
+.vamis-monaco .monaco-editor .line-numbers,
+.vamis-code--editor .monaco-editor .view-lines,
+.vamis-code--editor .monaco-editor .view-line,
+.vamis-code--editor .monaco-editor .view-line span,
+.vamis-code--editor .monaco-editor .margin-view-overlays,
+.vamis-code--editor .monaco-editor .line-numbers {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.vamis-monaco-overflow.monaco-editor {
+  position: absolute;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  background-color: transparent !important;
+  pointer-events: none;
+  z-index: 2147483646;
+}
+
+.vamis-monaco-overflow .editor-widget,
+.vamis-monaco-overflow .suggest-widget,
+.vamis-monaco-overflow .monaco-hover,
+.vamis-monaco-overflow .parameter-hints-widget {
+  pointer-events: auto;
+}
+
+.vamis-monaco-overflow .suggest-widget {
+  background-color: var(--vscode-editorSuggestWidget-background, var(--popover, #fff));
+  color: var(--vscode-editorSuggestWidget-foreground, var(--popover-foreground));
+  border: 1px solid var(--vscode-editorSuggestWidget-border, var(--border));
+  box-shadow: 0 2px 8px rgb(0 0 0 / 16%);
+}
+
+.vamis-monaco-overflow .monaco-hover {
+  background-color: var(--vscode-editorHoverWidget-background, var(--popover, #fff));
+  color: var(--vscode-editorHoverWidget-foreground, var(--popover-foreground));
+  border: 1px solid var(--vscode-editorHoverWidget-border, var(--border));
+}
+
+.vamis-monaco--fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483630 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: var(--background);
+}
+
+.vamis-monaco-placeholder {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--muted-foreground);
+  background: transparent;
+}

@@ -67,6 +67,8 @@
 
 **最近交付**
 
+- Editor 感知框挂带 `--vscode-*` 主题的 overflow 宿主（不再直接挂 `body`，背景回来了）；全屏 Teleport 到 `body`，不被 Play 卡片 `overflow-hidden` 裁住。
+- Editor 占位跟 Monaco 行号对齐（不再用 `text-sm` / `top-2` 页面样式）；感知框 `fixedOverflowWidgets` + 外框 `overflow: visible`，不再被圆角框裁切。
 - Editor 语法高亮：表单项 `value` 回填进表单域（有 `name` 时不再丢掉 schema 初值）；文档基本用法改用 `value`，`placeholder` 单独成「占位」节（灰色浮层不是 token 高亮）。
 - `code` 不再收 `options`（展示组件）；表单项 `editor` / `diff-editor` 接到同一套 Monaco 宿主，`options` 写在 Editor 文档。补齐 `js-editor` / `ts-editor` 及语言族别名。
 - `code` 对齐 Amis：点击不出现编辑光标、不聚焦、不高亮当前行（只读展示，不是编辑器）。行号 / 折叠 / 感知仍默认关。

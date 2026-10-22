@@ -18,8 +18,10 @@ import FormItem from '../FormItem.vue'
 import {
   applyEditorTheme,
   editorHeight,
+  monacoOverflowHost,
   mountDiffEditor,
   normalizeEditorValue,
+  syncOverflowHostTheme,
 } from '../display/code-highlight'
 
 const props = defineProps<{
@@ -180,19 +182,22 @@ watch([language, extra, () => props.disabled], () => {
     ...(extra.value || {}),
     readOnly: !!props.disabled,
     originalEditable: false,
+    fixedOverflowWidgets: true,
+    overflowWidgetsDomNode: monacoOverflowHost(editorTheme.value),
   })
 })
 
 watch(editorTheme, (theme) => {
   if (!session) return
   applyEditorTheme(session.monaco, theme)
+  syncOverflowHostTheme(session.editor, theme)
 })
 </script>
 
 <template>
   <FormItem :schema="itemSchema">
     <div
-      class="vamis-monaco relative w-full min-w-0 overflow-hidden rounded-md border bg-background"
+      class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border bg-background"
       :class="{ 'ring-1 ring-ring': focused }"
       :style="{ height: `${height}px` }"
     >
