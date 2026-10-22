@@ -169,9 +169,21 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     wrappingStrategy: 'advanced',
     tabSize: opts.tabSize,
     renderLineHighlight: 'none',
+    renderLineHighlightOnlyWhenFocus: true,
     overviewRulerLanes: 0,
     hideCursorInOverviewRuler: true,
     overviewRulerBorder: false,
+    cursorWidth: 0,
+    mouseStyle: 'text',
+    matchBrackets: 'never',
+    selectionHighlight: false,
+    guides: {
+      indentation: false,
+      highlightActiveIndentation: false,
+      bracketPairs: false,
+      bracketPairsHorizontal: false,
+      highlightActiveBracketPair: false,
+    },
     quickSuggestions: false,
     suggestOnTriggerCharacters: false,
     snippetSuggestions: 'none',
@@ -193,6 +205,21 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     },
     ...(opts.extra || {}),
   })
+
+  const textarea = el.querySelector('textarea.inputarea') as HTMLTextAreaElement | null
+  if (textarea) {
+    textarea.tabIndex = -1
+    textarea.setAttribute('aria-hidden', 'true')
+    textarea.style.pointerEvents = 'none'
+    textarea.style.caretColor = 'transparent'
+  }
+  const blurCaret = () => {
+    textarea?.blur()
+    const active = el.ownerDocument.activeElement
+    if (active instanceof HTMLElement && el.contains(active)) active.blur()
+  }
+  const focusSub = editor.onDidFocusEditorText(blurCaret)
+  const widgetSub = editor.onDidFocusEditorWidget(blurCaret)
 
   let fitting = false
   const fit = () => {
@@ -222,6 +249,8 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     fit,
     dispose() {
       ro?.disconnect()
+      focusSub.dispose()
+      widgetSub.dispose()
       sub.dispose()
       editor.dispose()
     },
