@@ -2,7 +2,7 @@
 import { computed, shallowRef, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
-import { resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
+import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
 import { provideData, provideScope, useData, useEnv, useScope } from './context'
 import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
@@ -154,6 +154,7 @@ async function onHostEvent(native: Event, eventName: string) {
     :draggable="canDrag"
     :class="[
       'vamis-node',
+      fillsLayoutSlot(normalized.type) ? 'w-full min-w-0' : '',
       nodeClass,
       editor && editorPath != null
         ? [

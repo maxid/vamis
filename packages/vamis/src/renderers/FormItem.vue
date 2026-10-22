@@ -14,20 +14,26 @@ const error = computed(() =>
 )
 const required = computed(() => !!props.schema.required)
 const layout = computed(() => props.schema.mode || form?.mode || 'normal')
-const horizontal = computed(() => layout.value === 'horizontal' || layout.value === 'inline')
+const inline = computed(() => layout.value === 'inline')
+const horizontal = computed(() => layout.value === 'horizontal')
+const itemLayoutClass = computed(() => {
+  if (inline.value) return 'vamis-form-item--inline'
+  if (horizontal.value) return 'vamis-form-item--horizontal'
+  return 'vamis-form-item--normal'
+})
 const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema.size : ''))
 </script>
 
 <template>
   <div
     class="vamis-form-item"
-    :class="horizontal ? 'vamis-form-item--horizontal' : 'vamis-form-item--normal'"
+    :class="itemLayoutClass"
     :data-name="schema.name"
   >
     <Label
       v-if="schema.label !== false && schema.label != null"
       class="vamis-form-item__label"
-      :class="horizontal ? 'font-normal text-muted-foreground' : 'text-foreground'"
+      :class="horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground'"
     >
       <span v-if="required" class="mr-0.5 text-destructive">*</span>
       {{ schema.label }}

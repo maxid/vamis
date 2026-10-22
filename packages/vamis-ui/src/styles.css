@@ -143,6 +143,8 @@
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
   --page-body-padding: 12px;
+  /* cxd --Panel-marginBottom (sizes-base-10 = 20px) */
+  --panel-margin-bottom: var(--gap-lg);
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -321,6 +323,32 @@
   .vamis-form-item--horizontal .vamis-form-item__label {
     justify-content: flex-start;
     text-align: left;
+  }
+  .vamis-form-panel {
+    width: 100%;
+    min-width: 0;
+  }
+  .vamis-form-actions {
+    width: 100%;
+  }
+  .vamis-form-item--inline {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    gap: var(--gap-sm);
+    margin-right: var(--form-item-gap);
+    margin-bottom: calc(var(--form-item-gap) / 2);
+  }
+  .vamis-form-item--inline:last-child {
+    margin-right: 0;
+  }
+  .vamis-form-item--inline .vamis-form-item__label {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+  .vamis-form-item--inline .vamis-control--fluid {
+    width: auto;
+    max-width: 100%;
   }
   .vamis-control--fluid,
   .vamis-control--full {

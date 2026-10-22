@@ -253,7 +253,8 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 ## 8. 本轮落地清单
 
 - `packages/vamis-ui/src/styles.css`：语义色 + 密度 token + `.vamis-native-select` / `.vamis-file-drop` / range
-- `packages/vamis-ui/src/helpers.css`：`m-t-xs` / `p-l-md` 等走 `--gap-*`；`m:` / `pc:` 媒体查询
+- `packages/vamis-ui/src/helpers.css`：`m-t-xs` / `p-l-md` 等走 `--gap-*`；`m:` / `pc:` 媒体查询；`mb-0` 对齐 Amis `panelClassName`
+- Form `wrapWithPanel`：`.vamis-form-panel` 宽 100%、下边距 `--panel-margin-bottom`（cxd 20px）；Page 无标题时 toolbar 为块级 100%，不再把 form 收成 flex 内容宽
 - `packages/vamis-ui/src/helpers-width.css`：Amis `w-*` / `min-w-*` / `max-w-*`，含 `m:` / `pc:`
 - `packages/vamis-ui/src/helpers-height.css`：Amis `h-*` / `min-h-*` / `max-h-*`，含 `m:` / `pc:`；`vamis-node.h-full` 把内层渲染器根也拉满
 - 原语：Button / Input / Select / Table / Tabs / Slider / Sonner 吃 token；Table cell `px` 用 `--table-cell-px`

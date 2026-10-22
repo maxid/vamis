@@ -83,7 +83,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 
 ## 提交说明
 
-本轮改过文件时，在回复末尾提供 commit message，未要求提交则不要执行 `git commit`。标题：`<type>(<scope>): <说明>`（`feat` / `fix` / `docs` / `test` / `refactor` / `chore` / `style`）。正文 1–2 句写为什么改；禁止 Co-authored-by。
+本轮改过文件时，在回复末尾提供 commit message，未要求提交则不要执行 `git commit`。标题：`<type>(<scope>): <说明>`（`feat` / `fix` / `docs` / `test` / `refactor` / `chore` / `style`）。**说明优先中文**，与现有 `git log` 一致。正文 1–2 句写为什么改；禁止 Co-authored-by。
 
 ## 安全
 

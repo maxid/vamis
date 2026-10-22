@@ -9,6 +9,7 @@ import {
   mergeApiData,
   provideFormApi,
   requestApi,
+  resolveClassName,
   runOnEvent,
   useEnv,
   useOverlay,
@@ -17,7 +18,7 @@ import {
   validateValue,
   type SchemaObject,
 } from '@vamis/core'
-import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle } from '@vamis/ui'
+import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
 import { provideForm } from '../formContext'
 import { registerWizardValidate } from '../wizardGate'
 
@@ -42,6 +43,14 @@ const actions = computed(() => asArray(props.schema.actions))
 const actionsDefined = computed(() => Array.isArray(props.schema.actions))
 const hasCustomActions = computed(() => actionsDefined.value && actions.value.length > 0)
 const showActionBar = computed(() => (actionsDefined.value ? actions.value.length > 0 : true))
+const wrapWithPanel = computed(() => props.schema.wrapWithPanel !== false)
+const panelClass = computed(() =>
+  cn(
+    'vamis-form-panel w-full min-w-0 mb-[var(--panel-margin-bottom)]',
+    resolveClassName(props.schema.panelClassName, props.data),
+  ),
+)
+const isInline = computed(() => String(props.schema.mode || '') === 'inline')
 
 function getValue(name: string) {
   return store.data[name]
@@ -188,16 +197,20 @@ onBeforeUnmount(() => {
 <template>
   <form
     class="w-full min-w-0"
+    :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
     @submit.prevent="submit"
   >
-    <Card v-if="schema.wrapWithPanel !== false" class="w-full">
+    <Card
+      v-if="wrapWithPanel"
+      :class="panelClass"
+    >
       <CardHeader v-if="schema.title" class="border-b">
         <CardTitle>{{ schema.title }}</CardTitle>
       </CardHeader>
-      <CardContent class="space-y-0">
+      <CardContent :class="isInline ? 'flex flex-wrap items-end' : 'space-y-0'">
         <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
       </CardContent>
-      <CardFooter v-if="showActionBar" class="border-t">
+      <CardFooter v-if="showActionBar" class="vamis-form-actions w-full justify-end border-t">
         <template v-if="hasCustomActions">
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>
@@ -213,8 +226,10 @@ onBeforeUnmount(() => {
     </Card>
     <template v-else>
       <h2 v-if="schema.title" class="mb-3 text-sm font-medium">{{ schema.title }}</h2>
-      <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
-      <div v-if="showActionBar" class="flex gap-2 pt-3">
+      <div :class="isInline ? 'flex flex-wrap items-end' : ''">
+        <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+      </div>
+      <div v-if="showActionBar" class="vamis-form-actions flex w-full justify-end gap-2 pt-3">
         <template v-if="hasCustomActions">
           <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
         </template>

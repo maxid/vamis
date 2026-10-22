@@ -51,7 +51,7 @@
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay、reload/setValue、完整事件对象。`pullRefresh` 明确未接（移动端） | P0 |
+| `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级。`pullRefresh` 明确未接（移动端） | P0 |
 | `container` | Container 容器 | 已完成 | 100% | 主路径对齐：布局属性 + click/mouseenter/mouseleave 完整事件对象；沿用父 Scope；无对外动作。`draggable` 非运行时主路径 | P0 |
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
@@ -94,7 +94,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `form` | Form 表单 | 进行中 | 50% | initApi / validate / submit 主路径有；扁平 `name`、提交不合并、嵌套不递归校验（D6） | P0 |
+| `form` | Form 表单 | 进行中 | 55% | wrapWithPanel 面板吃满上级（toolbar 100%）；initApi / validate / submit 主路径有；扁平 `name`、提交不合并、嵌套不递归校验（D6） | P0 |
 | （契约） | FormItem 表单项通用 | 进行中 | 40% | 有 label/required/error 壳；缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
 | `control` | Control 表单项包裹 | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |

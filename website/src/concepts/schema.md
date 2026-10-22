@@ -93,15 +93,18 @@ body: Hello World!
 
 ## 通过树形来实现布局
 
-下面这个页面就是树拼出来的，大体结构：
+下面这个页面就是通过树形组合出来的，大体结构是这样：
 
 ```
 Page
   ├── Toolbar
-  │    └─ Form
-  ├── Grid
-  │    ├─ Panel → Tabs → Chart
-  │    └─ Panel → Chart
+  │  └─ Form 顶部表单项
+  ├── Grid // 用于水平布局
+  │  ├─ Panel
+  │  │  └─ Tabs
+  │  │    └─ Chart
+  │  └─ Panel
+  │     └─ Chart
   └── CRUD
 ```
 
@@ -110,7 +113,7 @@ Page
   "type": "page",
   "toolbar": [{
     "type": "form",
-    "wrapWithPanel": false,
+    "panelClassName": "mb-0",
     "title": "",
     "body": [{
       "type": "select",

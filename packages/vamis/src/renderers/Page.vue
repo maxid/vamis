@@ -22,6 +22,7 @@ import {
   type SchemaApi,
   type SchemaObject,
 } from '@vamis/core'
+import { cn } from '@vamis/ui'
 import Remark from './rest/Remark.vue'
 
 const DEFAULT_ASIDE_MIN = 160
@@ -57,17 +58,27 @@ const viewData = computed(() => scope.value?.resolved() ?? { ...props.data })
 const cssVars = computed(() =>
   resolveCssVars(props.schema.cssVars as Record<string, string> | undefined),
 )
+const hasTitleBlock = computed(
+  () => !!(props.schema.title || props.schema.subTitle || props.schema.remark),
+)
+const hasHeader = computed(() => hasTitleBlock.value || toolbar.value.length > 0)
 const headerClass = computed(() =>
-  resolveClassName(props.schema.headerClassName, viewData.value),
+  cn(
+    hasTitleBlock.value && toolbar.value.length
+      ? 'mb-0 flex w-full min-w-0 items-center justify-between gap-4'
+      : 'mb-0 w-full min-w-0',
+    resolveClassName(props.schema.headerClassName, viewData.value),
+  ),
 )
 const toolbarClass = computed(() =>
-  resolveClassName(props.schema.toolbarClassName, viewData.value),
+  cn(
+    'min-w-0',
+    hasTitleBlock.value ? 'flex flex-1 flex-wrap items-center justify-end gap-2' : 'w-full',
+    resolveClassName(props.schema.toolbarClassName, viewData.value),
+  ),
 )
 const bodyClass = computed(() => resolveClassName(props.schema.bodyClassName, viewData.value))
 const asideClass = computed(() => resolveClassName(props.schema.asideClassName, viewData.value))
-const hasHeader = computed(
-  () => !!(props.schema.title || props.schema.subTitle || props.schema.remark || toolbar.value.length),
-)
 const titleText = computed(() =>
   typeof props.schema.title === 'string' ? filterTpl(props.schema.title, viewData.value) : '',
 )
@@ -270,10 +281,9 @@ onBeforeUnmount(() => {
       <div class="flex min-w-0 flex-1 flex-col">
         <header
           v-if="hasHeader"
-          class="mb-4 flex items-end justify-between gap-4"
           :class="headerClass"
         >
-          <div class="min-w-0">
+          <div v-if="hasTitleBlock" class="min-w-0" :class="toolbar.length ? 'flex-1' : ''">
             <h1 v-if="schema.title" class="flex flex-wrap items-center gap-1 text-pretty font-sans text-xl font-semibold tracking-tight">
               <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" />
               <template v-else>{{ titleText }}</template>
@@ -288,7 +298,10 @@ onBeforeUnmount(() => {
               <template v-else>{{ subTitleText }}</template>
             </p>
           </div>
-          <div v-if="toolbar.length" class="flex flex-wrap gap-2" :class="toolbarClass">
+          <div
+            v-if="toolbar.length"
+            :class="toolbarClass"
+          >
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
         </header>
