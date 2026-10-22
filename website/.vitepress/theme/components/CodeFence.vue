@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Code } from 'vamis'
+import { Code, LazyComponent } from 'vamis'
 
 const props = defineProps<{
   language?: string
@@ -24,6 +24,8 @@ const schema = computed(() => ({
 
 <template>
   <div class="doc-code">
-    <Code :schema="schema" :data="{}" />
+    <LazyComponent placeholder="加载代码…">
+      <Code :schema="schema" :data="{}" />
+    </LazyComponent>
   </div>
 </template>

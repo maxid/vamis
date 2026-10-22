@@ -182,7 +182,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
-| `code` | Code 代码高亮 | 进行中 | 90% | 文档主路径已对齐；高亮动态加载 monaco `colorize`（对齐 Amis）。文档围栏复用同一组件。`editor` / `diff-editor` 仍未接编辑器 | P0 |
+| `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 编辑器；行号/折叠/感知默认关；wordWrap 按容器宽度折行。customLang inherit 共享主题，滚动不丢高亮。文档 YAML 多行 `value` 用 `\|`。`editor` / `diff-editor` 仍未接 | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 55% | 能循环；placeholder/index 未齐 | P0 |

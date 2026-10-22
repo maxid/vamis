@@ -60,7 +60,7 @@
   font-size: 0.75rem;
   line-height: 1.55;
 }
-.doc-code .vamis-code--pre {
+.doc-code .vamis-code--editor {
   background: var(--muted);
   border-radius: 0.5rem;
 }
