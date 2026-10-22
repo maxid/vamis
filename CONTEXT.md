@@ -56,7 +56,7 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 181 / 189（95.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`code` 80%；`tpl` 70%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + 模板转义/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
 | Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- 对标 Amis `code`：`language` / `name` / `value`、`tabSize`、`wordWrap`、`maxHeight`、`editorTheme`、`customLang`、`wrapperComponent`。高亮走 highlight.js（Monaco 非本阶段）。在线文档普通围栏代码块复用同一 `Code` 组件。
 - `LazyComponent` 用法写进 [配置与组件](website/src/concepts/schema.md)，不另开扩展页。默认行为、Vue 包法、Form `lazyLoad` / Chart `unMountOnHidden`、文档 Play 可见才挂。不是 schema type，也没有全局「等可见才 initApi」开关。
 - 文档 SPA 切页对齐 Amis MdRenderer：`DocView` 按 `route.path` 销毁并重建 Play/`LazyComponent`，切页前正文 `scrollTop` 归零。菜单在「配置与组件」和「数据域与数据链」之间切换时，离屏 `initApi` 不再沿用上一页的可见状态立刻发出。
 - Form / Chart 文档补齐属性表、事件表、动作表（对齐 Amis 三套表；未接线标明）。`lazyLoad` / `unMountOnHidden` 写进属性表（Amis 源码有、官方文档未列）。内核 `LazyComponent` 默认 `defaultVisible: false`、`unMountOnHidden: false`。没有全局「等进视口才 initApi」开关。

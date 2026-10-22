@@ -22,7 +22,7 @@
 - **默认自适应**：文档主路径示例不要先写 `size: full` / `w-full`。先给无 size 的表单，再给可选收窄。
 - fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。
-- 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。手写页：`page`、`container`、`form`、`chart`（生成器跳过）。Form / Chart 已按 Amis 补属性表 / 事件表 / 动作表。
+- 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。手写页：`page`、`container`、`form`、`chart`、`code`（生成器跳过）。Form / Chart 已按 Amis 补属性表 / 事件表 / 动作表。`code` 文档主路径已对齐；普通 ` ``` ` 围栏走同一 Code 组件。
 - 所有文档页（组件 / 类型 / 概念 / 开始 / 样式 / 扩展）标题正下方显示 `::: 实现进度 x% · 状态`；目录页（介绍、组件介绍）除外。口径见 `.cursor/rules/doc-progress.mdc`。「配置与组件」含内核 `LazyComponent` 用法（不是 schema type）。
 - GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
 - 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 跑 `/sdk/hello.html`，同源 `sdk.js`）。

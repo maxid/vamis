@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it'
+import { colorizeSync } from 'vamis'
 import { playgroundHref } from './pages'
 import { parseSchemaFenceMeta } from './schema-scope'
 
@@ -11,6 +12,7 @@ export type TocItem = {
 export type DocBlock =
   | { kind: 'html'; html: string }
   | { kind: 'schema'; yaml: string; scope?: string; height?: number }
+  | { kind: 'code'; language: string; value: string }
 
 type TocState = {
   items: TocItem[]
@@ -19,7 +21,14 @@ type TocState = {
 
 const tocState: TocState = { items: [], seen: new Map() }
 
-const md = new MarkdownIt({ html: true, linkify: true, breaks: false })
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  breaks: false,
+  highlight(code, lang) {
+    return colorizeSync(code, lang || 'plaintext')
+  },
+})
 
 md.core.ruler.after('inline', 'vamis-heading-anchors', (state) => {
   const tokens = state.tokens
@@ -101,27 +110,30 @@ export function parseDoc(raw: string): { title: string; blocks: DocBlock[]; toc:
   resetToc()
   const blocks: DocBlock[] = []
   const tokenRe =
-    /^```schema([^\n]*)\n([\s\S]*?)^```|::: ?(info|tip|warning|danger)[^\n]*\n([\s\S]*?):::/gm
+    /^```schema([^\n]*)\n([\s\S]*?)^```|^```([^\n]*)\n([\s\S]*?)^```|::: ?(info|tip|warning|danger)[^\n]*\n([\s\S]*?):::/gm
   let last = 0
   let match: RegExpExecArray | null
   while ((match = tokenRe.exec(body))) {
     const before = body.slice(last, match.index)
     if (before.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(before)) })
-    if (match[2] != null) {
+    if (match[0].startsWith('```schema')) {
       const meta = parseSchemaFenceMeta(match[1] || '')
       blocks.push({
         kind: 'schema',
-        yaml: match[2].trim(),
+        yaml: (match[2] || '').trim(),
         scope: meta.scope,
         height: meta.height,
       })
+    } else if (match[0].startsWith('```')) {
+      const language = (match[3] || '').trim().split(/\s+/, 1)[0] || 'plaintext'
+      blocks.push({ kind: 'code', language, value: match[4] ?? '' })
     } else {
       const fence = match[0]
       const firstLine = fence.split('\n', 1)[0].replace(/^:::\s*/, '').trim()
       const [level, ...rest] = firstLine.split(/\s+/)
       blocks.push({
         kind: 'html',
-        html: calloutHtml(level || 'info', rest.join(' '), match[4] || ''),
+        html: calloutHtml(level || 'info', rest.join(' '), match[6] || ''),
       })
     }
     last = match.index + match[0].length

@@ -36,10 +36,10 @@
 | 布局 | 2 / 15 | 13 | 0 | 62% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 46% | 37 |
-| 数据展示 | 0 / 44 | 44 | 0 | 48% | 27 |
+| 数据展示 | 0 / 44 | 44 | 0 | 49% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **48%** | **90** |
+| **合计** | **2 / 155** | **151** | **2** | **48%** | **91** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
@@ -169,7 +169,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 数据展示（0/44，均 46%）
+## 数据展示（0/44，均 49%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
@@ -182,7 +182,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
-| `code` | Code 代码高亮 | 进行中 | 45% | 已注册，高亮引擎精简 | P0 |
+| `code` | Code 代码高亮 | 进行中 | 80% | 文档主路径已对齐（language/name/value/tabSize/wordWrap/maxHeight/editorTheme/customLang）。高亮走 highlight.js，不是 monaco colorize。文档围栏代码块复用同一组件 | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 55% | 能循环；placeholder/index 未齐 | P0 |

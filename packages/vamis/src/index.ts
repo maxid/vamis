@@ -2,6 +2,8 @@ import './register'
 
 export { default as VamisRoot } from './VamisApp.vue'
 export { default as OverlayHost } from './OverlayHost.vue'
+export { default as Code } from './renderers/display/Code.vue'
+export { colorizeSync } from './renderers/display/code-highlight'
 
 export {
   SchemaRenderer,

@@ -73,3 +73,14 @@ html {
   font-size: 13px;
   font-family: var(--vp-font-family-mono);
 }
+
+.doc-code {
+  margin: 1rem 0 1.5rem;
+}
+.doc-code .vamis-code--pre {
+  background: var(--muted);
+  border-radius: 0.5rem;
+}
+.doc-code .vamis-code--dark {
+  background-color: #1e1e1e;
+}

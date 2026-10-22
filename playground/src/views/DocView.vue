@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SchemaPreview from '../components/SchemaPreview.vue'
+import DocCode from '../components/DocCode.vue'
 import DocSidebar from '../components/DocSidebar.vue'
 import DocToc from '../components/DocToc.vue'
 import { resolveDoc } from '../docs/pages'
@@ -168,6 +169,11 @@ function onClick(event: MouseEvent) {
             :yaml="block.yaml"
             :scope="block.scope"
             :height="block.height"
+          />
+          <DocCode
+            v-else-if="block.kind === 'code'"
+            :language="block.language"
+            :value="block.value"
           />
           <div v-else class="doc-prose" v-html="block.html" />
         </template>

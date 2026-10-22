@@ -271,6 +271,17 @@ describe('Amis width helpers', () => {
     expect(schemaDoc).toContain('defaultVisible')
     expect(schemaDoc).toContain('lazyLoad')
     expect(nav).not.toContain("link: '/extend/lazy'")
+    const code = readFileSync(resolve(here, '../../vamis/src/renderers/display/Code.vue'), 'utf8')
+    const highlight = readFileSync(resolve(here, '../../vamis/src/renderers/display/code-highlight.ts'), 'utf8')
+    const render = readFileSync(resolve(here, '../../../playground/src/docs/render.ts'), 'utf8')
+    expect(code).toContain('colorizeSync')
+    expect(code).toContain('customLang')
+    expect(code).toContain('editorTheme')
+    expect(code).not.toContain('Badge')
+    expect(highlight).toContain('colorizeCustom')
+    expect(docView).toContain('DocCode')
+    expect(render).toContain("kind: 'code'")
+    expect(render).toContain('colorizeSync')
   })
 
   it('lets panelClassName mb-0 override the default panel margin', () => {
