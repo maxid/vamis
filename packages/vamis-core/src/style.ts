@@ -10,6 +10,8 @@ const CLASS_ALIASES: Record<string, string> = {
   'text-error': 'text-destructive',
   'bg-danger': 'bg-destructive',
   'border-danger': 'border-destructive',
+  'm-b-none': 'mb-0',
+  'm-none': 'm-0',
 }
 
 const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
@@ -42,6 +44,7 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   '--TableCell-height-large': '--table-row-h-lg',
   '--TableCell-paddingX': '--table-cell-px',
   '--Page-body-padding': '--page-body-padding',
+  '--Panel-marginBottom': '--panel-margin-bottom',
 }
 
 const CONTROL_WIDTH: Record<string, string> = {
@@ -54,6 +57,31 @@ const CONTROL_WIDTH: Record<string, string> = {
 
 export const CONTROL_SIZE_NAMES = ['xs', 'sm', 'md', 'lg', 'full'] as const
 export type ControlSizeName = (typeof CONTROL_SIZE_NAMES)[number]
+
+/** Layout containers and form shells fill the parent slot (cxd block 100%). Buttons stay content-sized. */
+const LAYOUT_SLOT_TYPES = new Set([
+  'page',
+  'form',
+  'crud',
+  'crud2',
+  'service',
+  'grid',
+  'flex',
+  'hbox',
+  'panel',
+  'container',
+  'wrapper',
+  'wizard',
+  'tabs',
+  'table',
+  'cards',
+  'list',
+  'chart',
+])
+
+export function fillsLayoutSlot(type?: string): boolean {
+  return !!type && LAYOUT_SLOT_TYPES.has(type.toLowerCase())
+}
 
 export function isControlSize(size?: unknown): size is ControlSizeName {
   return typeof size === 'string' && size in CONTROL_WIDTH

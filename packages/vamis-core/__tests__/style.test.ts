@@ -10,6 +10,7 @@ import {
 import {
   buildCssBlock,
   controlWidthForSize,
+  fillsLayoutSlot,
   resolveClassName,
   resolveCssVars,
   resolveInlineStyle,
@@ -22,6 +23,10 @@ describe('resolveClassName', () => {
 
   it('keeps Amis gap helpers so CSS tokens apply', () => {
     expect(resolveClassName('m-t-xs p-l-md', {})).toBe('m-t-xs p-l-md')
+  })
+
+  it('maps m-b-none to mb-0 so it can override panel margin', () => {
+    expect(resolveClassName('m-b-none', {})).toBe('mb-0')
   })
 
   it('maps text-danger to the destructive token class', () => {
@@ -176,7 +181,40 @@ describe('Amis width helpers', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
     expect(form).toContain('class="w-full min-w-0"')
+    expect(form).toContain('vamis-form-panel')
+    expect(form).toContain('panelClassName')
+    expect(form).toContain('vamis-form-actions')
     expect(form).not.toContain('max-w-3xl')
+  })
+
+  it('makes page toolbar a full-width slot when there is no title', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
+    expect(page).toContain('hasTitleBlock')
+    expect(page).toContain("'mb-0 w-full min-w-0'")
+    expect(page).not.toContain('mb-4')
+  })
+
+  it('lets panelClassName mb-0 override the default panel margin', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    expect(form).toContain('mb-[var(--panel-margin-bottom)]')
+    expect(form).toContain('schema.panelClassName')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/helpers.css'), 'utf8')
+    expect(css).toContain('.mb-0 { margin-bottom: 0; }')
+    const theme = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(theme).toContain('--panel-margin-bottom')
+    expect(theme).toContain('.vamis-form-panel')
+    expect(theme).not.toMatch(/\.vamis-form-panel \{[^}]*margin-bottom/)
+  })
+})
+
+describe('fillsLayoutSlot', () => {
+  it('marks form/panel/page as filling the parent and leaves buttons content-sized', () => {
+    expect(fillsLayoutSlot('form')).toBe(true)
+    expect(fillsLayoutSlot('panel')).toBe(true)
+    expect(fillsLayoutSlot('button')).toBe(false)
+    expect(fillsLayoutSlot('action')).toBe(false)
   })
 })
 
