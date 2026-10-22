@@ -261,10 +261,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="w-full min-w-0 space-y-4" :style="cssVars">
+  <div class="w-full min-w-0 space-y-4" :style="cssVars">
     <component :is="'style'" v-if="cssText">{{ cssText }}</component>
     <div class="flex w-full min-w-0 gap-4">
-      <aside
+      <div
         v-if="hasAside && asideOnLeft"
         class="relative min-w-0 shrink-0 space-y-3"
         :class="[asideSticky ? 'sticky top-0 self-start' : '', asideClass]"
@@ -276,10 +276,10 @@ onBeforeUnmount(() => {
           class="absolute right-0 top-0 z-10 h-full w-1 cursor-col-resize bg-border hover:bg-primary"
           @mousedown="onResizeDown"
         />
-      </aside>
+      </div>
 
       <div class="flex min-w-0 flex-1 flex-col">
-        <header
+        <div
           v-if="hasHeader"
           :class="headerClass"
         >
@@ -304,13 +304,13 @@ onBeforeUnmount(() => {
           >
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
-        </header>
+        </div>
         <div class="w-full min-w-0 space-y-3 p-[var(--page-body-padding)]" :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>
       </div>
 
-      <aside
+      <div
         v-if="hasAside && !asideOnLeft"
         class="relative min-w-0 shrink-0 space-y-3"
         :class="[asideSticky ? 'sticky top-0 self-start' : '', asideClass]"
@@ -322,7 +322,7 @@ onBeforeUnmount(() => {
           @mousedown="onResizeDown"
         />
         <SchemaRenderer v-for="(node, i) in aside" :key="'ar' + i" :schema="node" />
-      </aside>
+      </div>
     </div>
-  </section>
+  </div>
 </template>

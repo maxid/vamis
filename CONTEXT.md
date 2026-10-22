@@ -44,6 +44,7 @@
 | **onEvent** | 组件事件到动作注册表；D4 P0 已接 |
 | **shadcn token** | 颜色独立；**盒子对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），不引入 `cxd-` |
 | **默认自适应** | 特定组件铺满容器是默认，不必写 `size`/`w-full`。`size`/`className` 只是收窄或覆盖 |
+| **组装容器** | schema 布局壳用 `div`（对齐 Amis），不用 `header`/`aside`/`section`；Form 仅顶层用 `<form>`，嵌套降为 `div`。规则：`.cursor/rules/assembly-containers.mdc` |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（Monaco、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
@@ -62,10 +63,12 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | `pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 126 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 188 + core 128 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
 
 **最近交付**
 
+- 组装容器写成项目规则 `.cursor/rules/assembly-containers.mdc`（alwaysApply）：Page 壳用 `div`；Form 顶层 `<form>`、嵌套降 `div`；禁止 landmark 标签与嵌套 HTML `<form>`。已写入 AGENTS / CONTEXT 术语。
+- Page 根 / header / aside 改回 `div` 组装（对齐 Amis，避免宿主 landmark 样式泄漏）；标题仍用 `h1`。Form 套在另一个 form 里默认 `div`，`wrapperComponent` 可覆盖；嵌套时默认提交按钮是 `type="button"`，Enter 不冒泡提交祖先表单。
 - Page header/toolbar 默认 `mb-0`（对齐 Amis，不再写死 `mb-4`）。Form `panelClassName` 走 `cn()` 覆盖默认 `mb-[var(--panel-margin-bottom)]`，`mb-0` 会真正清掉下边距。
 - 配置与 Schema「通过树形来实现布局」的树改回与 Amis 同形：Toolbar → Form、Grid 下两列 Panel（Tabs → Chart / Chart）、CRUD，不再把 Panel 链压成一行箭头。
 - 补 Amis 高度 helper：`className: h-full` / `min-h-full` / `h-1/2` 与 `m:` `pc:` 写入 `helpers-height.css`。SchemaRenderer 用 `vamis-node.h-full` 把内层根拉满；Grid 列 `items-stretch`，Panel 吃满父槽。配置与 Schema 布局示例两列 panel 已写回 `h-full`。
