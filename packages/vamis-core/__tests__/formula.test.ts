@@ -94,3 +94,26 @@ describe('D2 runtime filters', () => {
     expect(filterTpl("${age|default:'-'}", {})).toBe('-')
   })
 })
+
+describe('D2 expression main path', () => {
+  it('reads members, index expressions and computed keys', () => {
+    const data = { a: 1, key: 'y', obj: { x: 2, y: 3 }, arr: [1, 2, 3] }
+    expect(filterTpl('${a + 1}', data)).toBe('2')
+    expect(filterTpl('${obj.x}', data)).toBe('2')
+    expect(filterTpl("${obj['x']}", data)).toBe('2')
+    expect(filterTpl('${obj[key]}', data)).toBe('3')
+    expect(filterTpl('${arr[0]}', data)).toBe('1')
+    expect(filterTpl('${arr[a]}', data)).toBe('2')
+    expect(filterTpl('${arr[a + 1]}', data)).toBe('3')
+  })
+
+  it('reads a variable whose name contains dots via backslash escape', () => {
+    expect(filterTpl('${com\\.xxx\\.xx}', { 'com.xxx.xx': 'abc' })).toBe('abc')
+  })
+
+  it('runs formula functions and single-expression arrows', () => {
+    expect(filterTpl('${AVG(1, 2, 3, 4)}', {})).toBe('2.5')
+    expect(filterTpl("${IF(score > 80, '优秀', '继续努力')}", { score: 81 })).toBe('优秀')
+    expect(filterTpl('${ARRAYMAP(arr, item => item * 2)}', { arr: [1, 2, 3] })).toBe('2,4,6')
+  })
+})
