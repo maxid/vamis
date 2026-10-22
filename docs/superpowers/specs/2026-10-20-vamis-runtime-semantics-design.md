@@ -450,7 +450,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | HTML 安全 | 默认转义 + raw | Tpl 默认文本节点；`\|raw` / `type: html` 才 `v-html` | D2 | P0 完成 |
 | API 基础 | method/url/data/headers | 已有 | 补 GET data | P0 |
 | API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
-| 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source` 已按 url / `trackExpression` 刷新；未做 Scope.track 去抖 | D9 | P0 部分 |
+| 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source`、crud/chart/markdown 已按 Amis `isApiOutdated`（无 `$` 只初始化拉一次）；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
 | 组件联动 | 动态 target/多目标/数据合并 | `resolveTargets` 已接；SDK `getComponentByName`/`doAction` 可用 | D5 | P0 完成 |

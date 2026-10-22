@@ -88,10 +88,34 @@ function appendQuery(url: string, query: PlainObject): string {
   const parts: string[] = []
   for (const [key, value] of Object.entries(query)) {
     if (value === undefined || value === null) continue
+    if (typeof value === 'object') continue
     parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
   }
   if (!parts.length) return url
   return `${url}${url.includes('?') ? '&' : '?'}${parts.join('&')}`
+}
+
+/** 发给接口的数据不要带 Scope 内部字段，否则会变成 `__super=[object Object]`。 */
+function omitInternal(data: PlainObject): PlainObject {
+  const out: PlainObject = {}
+  for (const [key, value] of Object.entries(data)) {
+    if (key.startsWith('__')) continue
+    out[key] = value
+  }
+  return out
+}
+
+function rawUrlOf(api: SchemaApi): string {
+  if (typeof api === 'string') {
+    const trimmed = api.trim()
+    const match = /^(get|post|put|patch|delete|jsonp|js):/i.exec(trimmed)
+    return match ? trimmed.slice(match[0].length).trim() : trimmed
+  }
+  return typeof api.url === 'string' ? api.url.trim() : ''
+}
+
+function hasCustomData(api: SchemaApi): boolean {
+  return typeof api === 'object' && !!api.data
 }
 
 function hasFile(value: unknown): boolean {
@@ -218,6 +242,62 @@ export function apiTrackKey(api: SchemaApi | undefined, data: PlainObject = {}):
   return filterTpl(obj.url, data)
 }
 
+/** 对齐 Amis `normalizeApi`：只拆 method 前缀，不插值。 */
+function rawApi(api: SchemaApi | false | null | undefined): ApiObject | undefined {
+  if (!api) return undefined
+  if (typeof api === 'string') {
+    const trimmed = api.trim()
+    if (!trimmed) return undefined
+    const match = /^(get|post|put|patch|delete|jsonp|js):/i.exec(trimmed)
+    if (match) {
+      return {
+        method: match[1].toLowerCase() as ApiObject['method'],
+        url: trimmed.slice(match[0].length).trim(),
+      }
+    }
+    return { method: 'get', url: trimmed }
+  }
+  return {
+    ...api,
+    url: typeof api.url === 'string' ? api.url.trim() : api.url,
+  }
+}
+
+export function isValidApi(url?: string): boolean {
+  if (!url || typeof url !== 'string') return false
+  const idx = url.indexOf('://')
+  if (idx >= 0 && idx + 3 === url.length) return false
+  return url.length > 0
+}
+
+/**
+ * 对齐 Amis `isApiOutdated`：initApi / source 默认只在初始化拉一次。
+ * 数据变了不会重拉，除非 url / trackExpression 含 `$` 且插值结果变了，或接口本身换了。
+ */
+export function isApiOutdated(
+  prevApi: SchemaApi | false | null | undefined,
+  nextApi: SchemaApi | false | null | undefined,
+  prevData: PlainObject = {},
+  nextData: PlainObject = {},
+): boolean {
+  if (!nextApi) return false
+  if (prevApi === undefined || prevApi === null) return true
+  const next = rawApi(nextApi)
+  const prev = rawApi(prevApi)
+  if (!next) return false
+  if (next.autoRefresh === false) return false
+  if ((prev && prev.url !== next.url) || !prev) {
+    return !!(isValidApi(next.url) && (!next.sendOn || evalExpression(next.sendOn, nextData)))
+  }
+  const trackExpression = next.trackExpression ?? next.url
+  if (typeof trackExpression !== 'string' || !trackExpression.includes('$')) return false
+  const modified =
+    next.trackExpression || prev.trackExpression
+      ? filterTpl(prev.trackExpression || '', prevData) !== filterTpl(next.trackExpression || '', nextData)
+      : filterTpl(prev.url, prevData) !== filterTpl(next.url, nextData)
+  return !!(modified && isValidApi(next.url) && (!next.sendOn || evalExpression(next.sendOn, nextData)))
+}
+
 export function mergeApiData(target: PlainObject, result: ApiResult): void {
   if (result.skipped || result.data == null || typeof result.data !== 'object' || Array.isArray(result.data)) {
     return
@@ -244,11 +324,18 @@ export async function requestApi(
 
   let built = normalizeApi(api, ctx.data, options.defaultMethod)
   const convertKeyToPath = built.convertKeyToPath
+  const customData = hasCustomData(api)
+  const method = (built.method || 'get').toLowerCase()
+  const payload = omitInternal(ctx.data)
 
-  if (built.data && typeof built.data === 'object') {
+  if (customData && built.data && typeof built.data === 'object') {
     built.data = dataMapping(built.data, ctx.data, convertKeyToPath)
-  } else if (options.autoAppend && (ctx.data && Object.keys(ctx.data).length)) {
-    built.data = { ...ctx.data }
+  } else if (
+    (method === 'post' || method === 'put' || method === 'patch') &&
+    options.autoAppend &&
+    Object.keys(payload).length
+  ) {
+    built.data = payload
   }
 
   if (built.graphql) {
@@ -258,10 +345,19 @@ export async function requestApi(
     }
   }
 
-  const method = (built.method || 'get').toLowerCase()
-  if (isPlainObject(built.data) && (method === 'get' || method === 'jsonp')) {
-    built.query = built.data
-    built.url = appendQuery(built.url, built.data)
+  if (method === 'get' || method === 'jsonp' || method === 'js') {
+    const raw = rawUrlOf(api)
+    if (
+      !customData &&
+      ((raw.indexOf('$') < 0 && options.autoAppend) || built.forceAppendDataToQuery)
+    ) {
+      built.data = payload
+    }
+    if (isPlainObject(built.data) && built.attachDataToQuery !== false) {
+      built.query = { ...(built.query || {}), ...built.data }
+      built.url = appendQuery(built.url, built.data)
+      delete built.data
+    }
   }
 
   built = await runRequestAdaptor(built.requestAdaptor, built, ctx.data, ctx.env.trusted)
@@ -321,16 +417,9 @@ export async function defaultFetcher(api: ApiObject, data?: PlainObject): Promis
   const url = new URL(api.url, typeof window !== 'undefined' ? window.location.origin : 'http://localhost')
   let body: BodyInit | undefined
   const headers: Record<string, string> = { ...(api.headers || {}) }
-  const payloadData = isPlainObject(api.data) ? api.data : data
+  const payloadData = isPlainObject(api.data) ? api.data : isGet ? undefined : data
 
-  if (isGet) {
-    if (payloadData) {
-      Object.entries(payloadData).forEach(([key, value]) => {
-        if (value == null) return
-        if (!url.searchParams.has(key)) url.searchParams.set(key, String(value))
-      })
-    }
-  } else if (payloadData) {
+  if (!isGet && payloadData) {
     const dataType = api.dataType || (hasFile(payloadData) ? 'form-data' : 'json')
     if (dataType === 'form' || dataType === 'form-data') {
       body = toFormBody(payloadData, dataType)

@@ -3,8 +3,9 @@ import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
   apiMessage,
-  apiTrackKey,
   asArray,
+  isApiOutdated,
+  isEffectiveApi,
   createStoreId,
   mergeApiData,
   provideFormApi,
@@ -182,7 +183,7 @@ const formApi = {
       }
       Object.assign(store.data, extra)
     }
-    if (!props.schema.initApi) return
+    if (!isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data })) return
     store.fetching = true
     try {
       const result = await requestApi(props.schema.initApi, { env, data: { ...props.data, ...store.data }, reason: 'init' })
@@ -224,12 +225,17 @@ scoped?.register(formApi)
 registerWizardValidate(validate)
 
 onMounted(() => {
-  formApi.reload()
+  if (isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data }, props.schema.initFetch, props.schema.initFetchOn)) {
+    void formApi.reload()
+  }
 })
 watch(
-  () => apiTrackKey(props.schema.initApi, { ...props.data, ...store.data }),
-  (key, prev) => {
-    if (prev != null && key && key !== prev) void formApi.reload()
+  () => [props.schema.initApi, props.data, store.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    const prevData = { ...(prev[1] || {}), ...(prev[2] || {}) }
+    const currData = { ...(curr[1] || {}), ...(curr[2] || {}) }
+    if (isApiOutdated(prev[0], curr[0], prevData, currData)) void formApi.reload()
   },
 )
 onBeforeUnmount(() => {

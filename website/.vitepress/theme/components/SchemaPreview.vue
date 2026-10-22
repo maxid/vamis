@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { VamisRoot, parseSchemaText } from 'vamis'
 import { applySchemaScope } from '../../../../playground/src/docs/schema-scope'
 import SchemaSourceEditor from '../../../../playground/src/components/SchemaSourceEditor.vue'
+import LazyInView from '../../../../playground/src/components/LazyInView.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -46,14 +47,6 @@ const parsed = computed(() => {
   }
 })
 
-const schemaKey = computed(() => {
-  try {
-    return JSON.stringify(parsed.value.value)
-  } catch {
-    return draft.value
-  }
-})
-
 const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
 const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.value.error : ''))
 </script>
@@ -62,7 +55,9 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
   <div class="vamis-preview not-prose" data-density="compact">
     <div v-if="banner" class="vamis-preview__error">{{ banner }}</div>
     <div class="vamis-preview__canvas" :style="{ minHeight: `${minHeight}px` }">
-      <VamisRoot :key="schemaKey" :schema="parsed.value" />
+      <LazyInView>
+        <VamisRoot :schema="parsed.value" />
+      </LazyInView>
     </div>
     <details class="vamis-preview__source" open>
       <summary>编辑 Schema（YAML / JSON）</summary>

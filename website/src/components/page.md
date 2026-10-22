@@ -89,7 +89,7 @@ Page 默认分成内容区（`body`）、侧边栏（`aside`）和工具栏（`t
 
 ## 页面初始化请求
 
-配置 `initApi` 后，Page 会在挂载时请求接口，把返回的 `data` 放进本页 overlay，子节点用 `${date}` 就能读到。默认会拉（`initFetch` 为 true）；可用 `initFetch: false` 或 `initFetchOn` 表达式关掉首次请求。
+配置 `initApi` 后，Page **挂载时拉一次**，把返回的 `data` 放进本页 overlay，子节点用 `${date}` 就能读到。地址里没有 `$` 时，后续数据变化不会重拉（对齐 Amis）。GET 默认**不**把当前数据域拼进 query（`/api/mock2/page/initData` 就只请求这个地址）。默认会拉（`initFetch` 为 true）；可用 `initFetch: false` 或 `initFetchOn` 表达式关掉首次请求。要重复拉：配 `interval`，或显式 `reload`。
 
 ```schema
 {

@@ -49,7 +49,7 @@ const scopeMode = computed<'inherit' | 'self' | 'isolate'>(() => rendererScopeMo
 const needsChildScope = computed(() => scopeMode.value !== 'inherit')
 const childScope = shallowRef<Scope | null>(null)
 watch(
-  () => [needsChildScope.value, scopeMode.value, props.schema] as const,
+  () => [needsChildScope.value, scopeMode.value] as const,
   () => {
     if (!needsChildScope.value) {
       childScope.value = null

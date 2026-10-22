@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
   asArray,
-  apiTrackKey,
+  isApiOutdated,
   createStoreId,
   mergeApiData,
   requestApi,
@@ -68,9 +68,12 @@ const api = {
 scoped?.register(api)
 onMounted(reload)
 watch(
-  () => apiTrackKey(props.schema.api || props.schema.schemaApi, { ...props.data, ...store.data }),
-  (key, prev) => {
-    if (prev != null && key && key !== prev) void reload()
+  () => [props.schema.api || props.schema.schemaApi, props.data, store.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    const prevData = { ...(prev[1] || {}), ...(prev[2] || {}) }
+    const currData = { ...(curr[1] || {}), ...(curr[2] || {}) }
+    if (isApiOutdated(prev[0], curr[0], prevData, currData)) void reload()
   },
 )
 onBeforeUnmount(() => {

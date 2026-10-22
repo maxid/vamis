@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { requestApi, useEnv, type SchemaObject } from '@vamis/core'
+import { isApiOutdated, requestApi, useEnv, type SchemaObject } from '@vamis/core'
 import { renderMarkdown } from './markdown'
 import { readText } from './prop'
 
@@ -29,7 +29,13 @@ async function load() {
 }
 
 onMounted(load)
-watch(() => props.schema.src, load)
+watch(
+  () => [props.schema.src, props.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    if (isApiOutdated(prev[0] as any, curr[0] as any, prev[1], curr[1])) void load()
+  },
+)
 </script>
 
 <template>

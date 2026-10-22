@@ -51,7 +51,7 @@
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。`pullRefresh` 明确未接（移动端） | P0 |
+| `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay（GET 不把数据域拼进 query）、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。`pullRefresh` 明确未接（移动端） | P0 |
 | `container` | Container 容器 | 已完成 | 100% | 主路径对齐：布局属性 + click/mouseenter/mouseleave 完整事件对象；沿用父 Scope；无对外动作。`draggable` 非运行时主路径 | P0 |
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
@@ -80,7 +80,7 @@
 | `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 60% | 静态 items 可用；缺下拉/动态 source | P0 |
 | `custom` | Custom 自定义组件 | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 50% | 能展开按钮；缺 `overlayPlacement` 等 | P0 |
-| `service` | Service 功能型容器 | 进行中 | 55% | 独立 Scope + `data` 遮蔽父域；能拉 api 合并。缺 `sendOn` 细节 / `trackExpression` 刷新（D9） | P0 |
+| `service` | Service 功能型容器 | 进行中 | 55% | 独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新。`schemaApi` 未单独拉 schema；`dataProvider` 未接 | P0 |
 | `nav` | Nav 导航 | 进行中 | 50% | 链接列表可用；缺 overflow/缩起/搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 45% | 已注册，滚动联动精简 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 50% | 能出 tip；触发/主题未齐 | P0 |
@@ -173,7 +173,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `crud` | CRUD 增删改查 | 进行中 | 55% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
+| `crud` | CRUD 增删改查 | 进行中 | 55% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
 | `table` | Table 表格 | 进行中 | 50% | 能渲染列；无独立数据域、无 `popOver`/`quickEdit` | P0 |
 | `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 40% | 已注册，合并单元格/布局模式精简 | P0 |
@@ -181,7 +181,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `card` | Card 卡片 | 进行中 | 50% | 能展示字段；媒体/操作区未齐 | P0 |
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
-| `chart` | Chart 图表 | 进行中 | 40% | 有 `config`/`api` 时动态加载 echarts；无库则占位 | P0 |
+| `chart` | Chart 图表 | 进行中 | 40% | 有 `config`/`api` 时动态加载 echarts；`api` 按 `isApiOutdated` 刷新。无 `mapURL` / `source` 变量；无库则占位 | P0 |
 | `code` | Code 代码高亮 | 进行中 | 45% | 已注册，高亮引擎精简 | P0 |
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
@@ -198,7 +198,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `log` | Log 实时日志 | 进行中 | 25% | **精简**：静态分行，无轮询/ANSI | P0 |
 | `mapping` | Mapping 映射 | 进行中 | 55% | 能 map 取值 | P0 |
 | `number` | Number 展示 | 进行中 | 60% | StaticValue；number / percent 过滤器已接，组件自身精度档未齐 | P0 |
-| `markdown` | Markdown 渲染 | 进行中 | 45% | 已注册，渲染库精简 | P0 |
+| `markdown` | Markdown 渲染 | 进行中 | 45% | 已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简 | P0 |
 | `office-viewer` | OfficeViewer Word 渲染 | 进行中 | 10% | **占位**：ViewerStub「未接入预览」（设计非目标） | P0 |
 | `office-viewer` | OfficeViewer Excel 渲染 | 进行中 | 10% | **占位**：同一 type + `excelOptions`，同样未接入 | P0 |
 | `pdf-viewer` | PDFViewer 渲染 | 进行中 | 10% | **占位**：ViewerStub | P0 |
