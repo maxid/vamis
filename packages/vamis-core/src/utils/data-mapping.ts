@@ -1,4 +1,5 @@
 import type { PlainObject } from '../types'
+import { createObject } from '../context'
 import { resolveValue } from '../formula'
 
 function isPlainObject(value: unknown): value is PlainObject {
@@ -22,7 +23,7 @@ function setPath(target: PlainObject, key: string, value: unknown, convertKeyToP
   cursor[parts[parts.length - 1]] = value
 }
 
-/** Amis `dataMapping`：`api.data` / `responseData` / `&: $$` 展开。 */
+/** Amis `dataMapping`：`api.data` / `responseData` / `&: $$` 展开 / `$rows` 数组提取。 */
 export function dataMapping(
   to: unknown,
   from: PlainObject = {},
@@ -33,6 +34,20 @@ export function dataMapping(
   if (!isPlainObject(to)) return to
 
   const keys = Object.keys(to)
+  if (keys.length === 1 && keys[0].startsWith('$') && isPlainObject(to[keys[0]])) {
+    const sourceKey = keys[0].slice(1)
+    const left = sourceKey ? from[sourceKey] : from
+    const arr = Array.isArray(left) ? left : []
+    const mapping = to[keys[0]]
+    return arr.map((raw) =>
+      dataMapping(
+        mapping,
+        createObject(from, isPlainObject(raw) ? { item: raw, ...raw } : { item: raw }),
+        convertKeyToPath,
+      ),
+    )
+  }
+
   let ret: any = {}
 
   const amp = keys.indexOf('&')

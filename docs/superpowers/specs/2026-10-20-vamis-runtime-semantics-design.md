@@ -229,7 +229,7 @@ export async function requestApi(api: SchemaApi, ctx: ApiContext): Promise<Paylo
 5. `env.fetcher`。
 6. `normalizePayload` 兼容 amis 返回格式；错误消息进 `msg`。
 7. `adaptor`（响应适配）。
-8. `responseData` 数据映射，支持 `{"&": "$$"}` 展开。
+8. `responseData` 数据映射，支持 `{"&": "$$"}` 展开、`$rows` 数组提取。
 9. 返回 `{payload, data, replaceData}`，由调用方合并到 Scope 或 FormStore。
 10. `messages` + `notify` 统一提示；`responseType: blob` 交给下载动作。
 
