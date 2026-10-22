@@ -5,8 +5,8 @@ outline: deep
 
 # Grid 水平分栏
 
-::: info 实现进度 60% · 进行中
-12 栅格 span 可用；缺响应式 `xs/sm` 全套
+::: info 实现进度 65% · 进行中
+12 栅格 span 可用，列等高靠 `className: h-full`；缺响应式 `xs/sm` 全套
 :::
 
 `grid` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

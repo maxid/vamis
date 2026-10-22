@@ -5,25 +5,23 @@ outline: deep
 
 # CRUD 增删改查
 
-::: info 实现进度 50% · 进行中
-api/分页/filter/排序/批量/弹窗编辑有；无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10，设计标 P1，组件仍 P0）
+::: info 实现进度 55% · 进行中
+文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10）
 :::
 
 `crud` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。下面示例打 `/api/mock2/sample`，和介绍页同一套 mock。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema: height=420
+```schema
 type: page
 title: crud
 body:
   - type: crud
-    name: sample
     syncLocation: false
     api: /api/mock2/sample
-    perPage: 8
     headerToolbar:
       - type: button
         label: 新增
@@ -34,31 +32,18 @@ body:
           body:
             type: form
             api: /api/mock2/sample
-            reload: sample
             body:
               - type: input-text
-                name: engine
-                label: 渲染引擎
-              - type: input-text
-                name: browser
-                label: Browser
+                name: name
+                label: 名称
     columns:
       - name: id
         label: ID
-      - name: engine
-        label: 渲染引擎
-      - name: browser
-        label: Browser
-      - name: grade
-        label: 等级
-      - type: operation
-        label: 操作
-        buttons:
-          - type: button
-            label: 删除
-            actionType: ajax
-            confirmText: 确认删除？
-            api: "delete:/api/mock2/sample/${id}"
+      - name: name
+        label: 名称
+        searchable: true
+      - name: status
+        label: 状态
 ```
 
 ## 常用属性

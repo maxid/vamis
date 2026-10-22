@@ -83,6 +83,16 @@ export function fillsLayoutSlot(type?: string): boolean {
   return !!type && LAYOUT_SLOT_TYPES.has(type.toLowerCase())
 }
 
+/** Amis Tpl 默认 inline（span）。block 外层会把 each 的 item 竖起来。 */
+const INLINE_SCHEMA_TYPES = new Set(['tpl', 'html', 'plain'])
+
+export function isInlineSchema(schema?: { type?: string; inline?: unknown } | null): boolean {
+  if (!schema) return false
+  if (schema.inline === false) return false
+  if (schema.inline === true) return true
+  return INLINE_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
+}
+
 export function isControlSize(size?: unknown): size is ControlSizeName {
   return typeof size === 'string' && size in CONTROL_WIDTH
 }

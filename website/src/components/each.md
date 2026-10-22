@@ -5,8 +5,8 @@ outline: deep
 
 # Each 循环渲染器
 
-::: info 实现进度 55% · 进行中
-能循环；placeholder/index 未齐
+::: info 实现进度 70% · 进行中
+不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength
 :::
 
 `each` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。

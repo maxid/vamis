@@ -72,7 +72,7 @@ export function filterTpl(tpl: unknown, data: PlainObject = {}, defaultFilter = 
   }
 }
 
-/** D2：Tpl 默认文本节点；`|raw` 才带 html。 */
+/** D2：插值默认 `|html` 转义；`asHtml` 时保留模板里的静态标签（对齐 Amis Tpl innerHTML）。 */
 export function evalTemplate(tpl: unknown, data: PlainObject = {}, options?: { asHtml?: boolean }): TemplateResult {
   if (tpl == null) return { text: '', usedFilters: [] }
   const source = typeof tpl === 'string' ? tpl : String(tpl)

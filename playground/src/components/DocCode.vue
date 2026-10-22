@@ -10,14 +10,15 @@ const props = defineProps<{
 const schema = computed(() => ({
   type: 'code',
   language: props.language || 'plaintext',
-  value: props.value,
+  name: '__doc',
 }))
 </script>
 
 <template>
   <div class="doc-code my-5">
     <LazyComponent placeholder="加载代码…">
-      <Code :schema="schema" :data="{}" />
+      <!-- 走 name + data，避免文档围栏里的 `${}` 被 Code 当模板求值 -->
+      <Code :schema="schema" :data="{ __doc: props.value }" />
     </LazyComponent>
   </div>
 </template>

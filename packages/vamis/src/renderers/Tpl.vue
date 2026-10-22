@@ -7,15 +7,25 @@ const props = defineProps<{
   data: Record<string, any>
 }>()
 
+const tag = computed(() => {
+  const wrap = props.schema.wrapperComponent
+  if (wrap === 'div' || wrap === 'span') return wrap
+  return props.schema.inline === false ? 'div' : 'span'
+})
+
 const rendered = computed(() => {
-  const source = props.schema.tpl ?? props.schema.html ?? props.schema.text ?? ''
-  const forceHtml =
-    props.schema.type === 'html' || (!props.schema.tpl && props.schema.html != null)
-  return evalTemplate(source, props.data, { asHtml: forceHtml })
+  if (props.schema.raw != null && props.schema.raw !== '') {
+    const raw = String(props.schema.raw)
+    return { text: raw, html: raw, usedFilters: [] as string[] }
+  }
+  const source = props.schema.html ?? props.schema.tpl ?? props.schema.text ?? ''
+  const textOnly =
+    props.schema.html == null && props.schema.tpl == null && props.schema.text != null
+  return evalTemplate(source, props.data, { asHtml: !textOnly })
 })
 </script>
 
 <template>
-  <div v-if="rendered.html != null" class="leading-relaxed" v-html="rendered.html" />
-  <div v-else class="leading-relaxed">{{ rendered.text }}</div>
+  <component :is="tag" v-if="rendered.html != null" class="vamis-html leading-relaxed" v-html="rendered.html" />
+  <component :is="tag" v-else class="vamis-html leading-relaxed">{{ rendered.text }}</component>
 </template>

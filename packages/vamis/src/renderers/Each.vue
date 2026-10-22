@@ -8,27 +8,40 @@ const props = defineProps<{
 }>()
 
 const list = computed(() => {
-  const resolved = resolveValue(props.schema.source, props.data)
-  return Array.isArray(resolved) ? resolved : []
+  const resolved = resolveValue(props.schema.source ?? props.schema.name, props.data)
+  if (Array.isArray(resolved)) return resolved
+  if (resolved && typeof resolved === 'object') {
+    return Object.entries(resolved as Record<string, unknown>).map(([key, value]) => ({ key, value }))
+  }
+  return []
 })
 const itemSchema = computed(() => props.schema.items || props.schema.body || { type: 'tpl', tpl: '${item}' })
+const placeholder = computed(() => {
+  const raw = props.schema.placeholder
+  return typeof raw === 'string' ? raw : ''
+})
 
 function rowData(item: unknown, index: number) {
-  if (item && typeof item === 'object' && !Array.isArray(item)) {
-    return { ...(item as Record<string, unknown>), index }
+  const itemKey = String(props.schema.itemKeyName || 'item')
+  const indexKey = String(props.schema.indexKeyName || 'index')
+  const rec =
+    item && typeof item === 'object' && !Array.isArray(item) ? { ...(item as Record<string, unknown>) } : {}
+  return {
+    ...rec,
+    [itemKey]: item,
+    [indexKey]: index,
   }
-  return { item, index }
 }
 </script>
 
 <template>
-  <div class="space-y-2">
-    <p v-if="!list.length" class="text-xs text-muted-foreground">暂无循环数据</p>
+  <template v-if="list.length">
     <SchemaRenderer
       v-for="(item, i) in list"
       :key="i"
       :schema="itemSchema"
       :extra-data="rowData(item, i)"
     />
-  </div>
+  </template>
+  <span v-else-if="placeholder" class="text-muted-foreground">{{ placeholder }}</span>
 </template>
