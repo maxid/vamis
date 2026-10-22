@@ -19,8 +19,5 @@
     "node": ">=20"
   },
   "license": "Apache-2.0",
-  "packageManager": "pnpm@10.33.3",
-  "dependencies": {
-    "highlight.js": "^11.12.0"
-  }
+  "packageManager": "pnpm@10.33.3"
 }

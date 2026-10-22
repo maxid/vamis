@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { resolveValue, type SchemaObject } from '@vamis/core'
-import { colorizeSync, type CustomLang } from './code-highlight'
+import { colorize, escapeHtml, type CustomLang } from './code-highlight'
 import { cssSize, readText } from './prop'
 
 const WRAPPERS = new Set(['pre', 'code', 'div', 'span'])
@@ -55,7 +55,19 @@ const tag = computed(() => {
   if (WRAPPERS.has(raw)) return raw
   return isMultiLine.value ? 'pre' : 'code'
 })
-const html = computed(() => colorizeSync(source.value, language.value, tabSize.value, customLang.value))
+const html = ref('')
+let colorizeGen = 0
+
+watch(
+  [source, language, tabSize, customLang, editorTheme],
+  async () => {
+    const gen = ++colorizeGen
+    html.value = escapeHtml(source.value)
+    const colored = await colorize(source.value, language.value, tabSize.value, customLang.value, editorTheme.value)
+    if (gen === colorizeGen) html.value = colored
+  },
+  { immediate: true },
+)
 const boxStyle = computed(() => {
   const style: Record<string, string> = {}
   const extra = props.schema.style
@@ -97,50 +109,9 @@ const boxClass = computed(() =>
 .vamis-code--pre {
   padding: 0.75rem 1rem;
 }
-.vamis-code :deep(.hljs-keyword),
-.vamis-code :deep(.hljs-selector-tag) {
-  color: #d73a49;
-}
-.vamis-code :deep(.hljs-attr) {
-  color: #005cc5;
-}
-.vamis-code :deep(.hljs-string) {
-  color: #032f62;
-}
-.vamis-code :deep(.hljs-number),
-.vamis-code :deep(.hljs-literal) {
-  color: #005cc5;
-}
-.vamis-code :deep(.hljs-comment) {
-  color: #6a737d;
-}
-.vamis-code :deep(.hljs-title),
-.vamis-code :deep(.hljs-title.function_) {
-  color: #6f42c1;
-}
 .vamis-code--dark {
   background-color: #1e1e1e;
   color: #d4d4d4;
   border-radius: var(--radius, 0.5rem);
-}
-.vamis-code--dark :deep(.hljs-keyword),
-.vamis-code--dark :deep(.hljs-selector-tag),
-.vamis-code--dark :deep(.hljs-literal) {
-  color: #569cd6;
-}
-.vamis-code--dark :deep(.hljs-string),
-.vamis-code--dark :deep(.hljs-attr) {
-  color: #ce9178;
-}
-.vamis-code--dark :deep(.hljs-number),
-.vamis-code--dark :deep(.hljs-built_in) {
-  color: #b5cea8;
-}
-.vamis-code--dark :deep(.hljs-comment) {
-  color: #6a9955;
-}
-.vamis-code--dark :deep(.hljs-title),
-.vamis-code--dark :deep(.hljs-title.function_) {
-  color: #dcdcaa;
 }
 </style>

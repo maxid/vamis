@@ -5,8 +5,8 @@ outline: deep
 
 # Code 代码高亮
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`language` / `name` / `value`、`tabSize`、`wordWrap`、`maxHeight`、`editorTheme`、`customLang`、`wrapperComponent`。高亮走 highlight.js（Monaco 非本阶段）；Amis 用 monaco `colorize`。
+::: info 实现进度 90% · 进行中
+文档主路径已对齐：`language` / `name` / `value`、`tabSize`、`wordWrap`、`maxHeight`、`editorTheme`、`customLang`、`wrapperComponent`。高亮走 monaco `colorize`（动态加载，对齐 Amis）。`editor` / `diff-editor` 完整编辑器仍待接同一实例。
 :::
 
 用代码高亮显示一段文本。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
@@ -174,7 +174,8 @@ outline: deep
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 高亮引擎是 highlight.js，不是 monaco-editor（Monaco 非本阶段）。内置语言列表以 highlight.js 为准；`msdax` / `postiats` / `pug` / `r` / `razor` / `sb` / `sol` 会按纯文本显示。
+- 高亮引擎与 Amis 相同：动态 `import('monaco-editor')` 后走 `editor.colorize`。`customLang` 注册 monarch tokenizer。同页多块 `setTheme` 会互相影响（monaco#338，Amis 同源）。
 - Amis 文档「主题及 tab」示例把字段写成 `tagSize`，源码与属性表是 `tabSize`。Vamis 只认 `tabSize`。
 - `className: b-a` 边框 helper 未接，示例改用 `border`。
+- `editor` / `diff-editor` 仍是 textarea，尚未挂完整 Monaco 编辑器。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。

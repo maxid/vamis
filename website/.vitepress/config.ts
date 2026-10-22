@@ -88,6 +88,12 @@ export default defineConfig({
         { find: 'vamis', replacement: path.join(pkg('vamis'), 'index.ts') },
       ],
     },
+    worker: {
+      format: 'es',
+    },
+    optimizeDeps: {
+      include: ['monaco-editor'],
+    },
     server: {
       port: 5176,
       fs: { allow: [repo] },
