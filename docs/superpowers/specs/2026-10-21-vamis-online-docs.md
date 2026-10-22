@@ -1,7 +1,7 @@
 # Vamis 在线文档
 
 - 日期：2026-10-22
-- 状态：部分落地（与 Playground 同应用、同端口）。`types/api` 已按 D3 管线对齐（`isApiOutdated`：无 `$` 的 initApi 只初始化拉一次；GET 不把数据域拼进 query；page/form/service/select/crud/chart/markdown 已接）。文档 ` ```schema ` 预览复用内核 `LazyComponent`（对齐 Amis `MdRenderer`：默认 `defaultVisible=false`，进视口才挂载；改 body 不重挂）。概念页模板/表达式（D2）、联动（D5）、配置与组件、数据域与数据链（对标 Amis 同名页，进度 70% 进行中，`__prev`/`__changeReason` 已可演示）、ClassName 高度 helper `h-full`、Page 组装容器用 div、嵌套 Form 降为 div、JS SDK `getComponentByName`/`doAction` 已按 P0 回写。
+- 状态：部分落地（与 Playground 同应用、同端口）。`types/api` 已按 D3 管线对齐（`isApiOutdated`：无 `$` 的 initApi 只初始化拉一次；GET 不把数据域拼进 query；page/form/service/select/crud/chart/markdown 已接）。文档 ` ```schema ` 预览复用内核 `LazyComponent`（对齐 Amis `MdRenderer`：默认 `defaultVisible=false`，进视口才挂载；改 body 不重挂；SPA 切页按路径重建 Play，不沿用上一页 `visible`）。概念页模板/表达式（D2）、联动（D5）、配置与组件、数据域与数据链（对标 Amis 同名页，进度 70% 进行中，`__prev`/`__changeReason` 已可演示）、ClassName 高度 helper `h-full`、Page 组装容器用 div、嵌套 Form 降为 div、JS SDK `getComponentByName`/`doAction` 已按 P0 回写。
 - 范围：正文在 `website/src/`；运行时由 playground 在 5173 挂载。目录对齐 Amis zh-CN 侧栏；不拷贝 Amis 原文
 
 ## 口径
