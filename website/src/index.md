@@ -97,4 +97,4 @@ body:
 - [快速开始](/start/getting-started)
 - [JS SDK](/start/sdk)
 - [组件文档](/components/)
-- [配置与 Schema](/concepts/schema)
+- [配置与组件](/concepts/schema)

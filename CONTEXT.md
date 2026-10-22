@@ -67,12 +67,13 @@
 
 **最近交付**
 
+- 概念页「配置与 Schema」更名为 **配置与组件**（对齐 Amis 侧栏，路径仍是 `/concepts/schema`），并保留两种外形、书写规则、渲染管线（`parseSchemaText` → `jsonToIr` → `compileIrToWidget` → `SchemaRenderer`）。
 - 组装容器写成项目规则 `.cursor/rules/assembly-containers.mdc`（alwaysApply）：Page 壳用 `div`；Form 顶层 `<form>`、嵌套降 `div`；禁止 landmark 标签与嵌套 HTML `<form>`。已写入 AGENTS / CONTEXT 术语。
 - Page 根 / header / aside 改回 `div` 组装（对齐 Amis，避免宿主 landmark 样式泄漏）；标题仍用 `h1`。Form 套在另一个 form 里默认 `div`，`wrapperComponent` 可覆盖；嵌套时默认提交按钮是 `type="button"`，Enter 不冒泡提交祖先表单。
 - Page header/toolbar 默认 `mb-0`（对齐 Amis，不再写死 `mb-4`）。Form `panelClassName` 走 `cn()` 覆盖默认 `mb-[var(--panel-margin-bottom)]`，`mb-0` 会真正清掉下边距。
-- 配置与 Schema「通过树形来实现布局」的树改回与 Amis 同形：Toolbar → Form、Grid 下两列 Panel（Tabs → Chart / Chart）、CRUD，不再把 Panel 链压成一行箭头。
-- 补 Amis 高度 helper：`className: h-full` / `min-h-full` / `h-1/2` 与 `m:` `pc:` 写入 `helpers-height.css`。SchemaRenderer 用 `vamis-node.h-full` 把内层根拉满；Grid 列 `items-stretch`，Panel 吃满父槽。配置与 Schema 布局示例两列 panel 已写回 `h-full`。
-- 对标 Amis「配置与组件」收口 [配置与 Schema](website/src/concepts/schema.md)：`type` + 属性、组件树、`page` 唯一顶级、树形布局活示例。D7 注册信息 `test` / `weight` / `isolateScope` 已接；`form`/`service`/`crud` 用 `scope: 'self'` 保数据链。Tabs 认 `tab` 内容，Grid 未写 span 时均分，Form `actions: []` 不再画出默认提交。
+- 配置与组件「通过树形来实现布局」的树改回与 Amis 同形：Toolbar → Form、Grid 下两列 Panel（Tabs → Chart / Chart）、CRUD，不再把 Panel 链压成一行箭头。
+- 补 Amis 高度 helper：`className: h-full` / `min-h-full` / `h-1/2` 与 `m:` `pc:` 写入 `helpers-height.css`。SchemaRenderer 用 `vamis-node.h-full` 把内层根拉满；Grid 列 `items-stretch`，Panel 吃满父槽。配置与组件布局示例两列 panel 已写回 `h-full`。
+- 对标 Amis「配置与组件」收口 [配置与组件](website/src/concepts/schema.md)：`type` + 属性、组件树、`page` 唯一顶级、树形布局活示例。D7 注册信息 `test` / `weight` / `isolateScope` 已接；`form`/`service`/`crud` 用 `scope: 'self'` 保数据链。Tabs 认 `tab` 内容，Grid 未写 span 时均分，Form `actions: []` 不再画出默认提交。
 - 按文档导航收口 kernel：D2 模板默认文本节点（`|raw` / `type: html` 才 `v-html`），P0 过滤器 `date`/`datetime`/`number`/`percent`/`truncate`/`json`/`default`；D5 动态 `target` / 多目标 / `name?a=${a}`，SDK `getComponentByName` / `doAction` 可调用。Tpl / Html / Date / Number 文档进度随之上调。
 - 顶栏搜索快捷键 ⌘K 从 10px 等宽字改成 12px Command 图标 + 12px K。
 - 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；写入 `.cursor/rules/doc-progress.mdc`，并同步 [README.md](README.md) 当前状态。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。

@@ -1,11 +1,11 @@
 ---
-title: 配置与 Schema
+title: 配置与组件
 ---
 
-# 配置与 Schema
+# 配置与组件
 
 ::: tip 实现进度 95% · 已完成
-文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON 与 YAML 同等有效。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
+文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
 :::
 
 一份 Vamis 页面是一棵 **widget 树**。节点靠 `type` 选渲染器，其余字段名与 Amis 相同。作者态 **JSON 与 YAML 并列**，解析后进同一运行时。
@@ -197,4 +197,26 @@ Page
 }
 ```
 
+## 两种外形
+
+1. **裸 widget**：`{ type: page, body: [...] }`，和 Amis 页面 JSON 同构。
+2. **IR 信封**：`apiVersion` + `kind: UiPage` + `metadata` + `spec`。`spec` 就是那棵 widget 树。
+
+`VamisRoot` 和 JS SDK `vamis.embed` 两种都收。未知 `type` 显示占位，不崩。
+
+## 书写规则
+
+- 作者态同时支持 YAML 与 JSON，不强制某一种。YAML 字面量用 1.2 Core。
+- 扩展只加新字段或新 IR `kind`，不把 `type: form` 改成别的名字。
+- 子节点可以是字符串（当成 `tpl`）、对象或数组，见 [SchemaNode](/types/schemanode)。
+
+## 渲染管线
+
+`parseSchemaText` → `jsonToIr` → `compileIrToWidget` → `SchemaRenderer` 按 `type` 查注册表。playground 的 Vite 根在 `playground/`，渲染器要在 `packages/vamis/src/register.ts` **显式 import**，不能靠 glob。
+
 所有节点还共享显隐：`visible` / `hidden` / `visibleOn` / `hiddenOn`，由 `SchemaRenderer` 在进组件之前统一处理，不是每个 type 自己判断。
+
+```
+YAML / JSON / 对象  →  parseSchemaText  ─┐
+IR 信封            ─────────────────────┴→  jsonToIr → compileIrToWidget → SchemaRenderer → type 注册表
+```
