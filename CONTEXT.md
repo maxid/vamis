@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- `LazyComponent` 用法写进 [配置与组件](website/src/concepts/schema.md)，不另开扩展页。默认行为、Vue 包法、Form `lazyLoad` / Chart `unMountOnHidden`、文档 Play 可见才挂。不是 schema type，也没有全局「等可见才 initApi」开关。
 - 文档 SPA 切页对齐 Amis MdRenderer：`DocView` 按 `route.path` 销毁并重建 Play/`LazyComponent`，切页前正文 `scrollTop` 归零。菜单在「配置与组件」和「数据域与数据链」之间切换时，离屏 `initApi` 不再沿用上一页的可见状态立刻发出。
 - Form / Chart 文档补齐属性表、事件表、动作表（对齐 Amis 三套表；未接线标明）。`lazyLoad` / `unMountOnHidden` 写进属性表（Amis 源码有、官方文档未列）。内核 `LazyComponent` 默认 `defaultVisible: false`、`unMountOnHidden: false`。没有全局「等进视口才 initApi」开关。
 - 对齐 Amis 远程接口生命周期：补 `isApiOutdated`。page/form `initApi`、service `api`、select `source`、crud/crud2 `api`、chart `api`、markdown `src` 在 url 不含 `$` 时只在挂载拉一次，数据更新不再重拉。`interval` 和显式 `reload` 仍会重拉。SchemaRenderer 不再因 schema 引用变化重建 Scope。wizard / mapping / nav / log / tasks / app 远程接口尚未接入。

@@ -38,7 +38,7 @@ body:
 
 ## lazyLoad
 
-Amis 源码有 `lazyLoad`，官方文档属性表未列。默认 `false`。为 `true` 时用内核 `LazyComponent` 等进视口再画整棵表单（面板也算）；**`initApi` 仍在 Form 挂载时发**，不跟视口走。没有全局「等可见才拉数」开关。
+Amis 源码有 `lazyLoad`，官方文档属性表未列。默认 `false`。为 `true` 时用内核 [LazyComponent](/concepts/schema#lazycomponent) 等进视口再画整棵表单（面板也算）；**`initApi` 仍在 Form 挂载时发**，不跟视口走。没有全局「等可见才拉数」开关。
 
 ```schema
 type: form

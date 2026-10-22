@@ -60,7 +60,7 @@ body:
 | `onEvent` | `object` | | 见事件表 |
 | `visibleOn` / `hiddenOn` | `string` | | 显隐表达式 |
 
-画布始终包一层内核 `LazyComponent`（对齐 Amis Chart）。默认进视口才初始化 echarts；`unMountOnHidden: true` 才在滚出时拆掉画布。Chart 的 `api` 仍在组件挂载时发，不跟画布可见性走。
+画布始终包一层内核 [LazyComponent](/concepts/schema#lazycomponent)（对齐 Amis Chart）。默认进视口才初始化 echarts；`unMountOnHidden: true` 才在滚出时拆掉画布。Chart 的 `api` 仍在组件挂载时发，不跟画布可见性走。
 
 ## 事件表
 

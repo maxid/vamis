@@ -5,7 +5,7 @@ title: 配置与组件
 # 配置与组件
 
 ::: tip 实现进度 95% · 已完成
-文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
+文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。`LazyComponent` 用法写在本页。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
 :::
 
 一份 Vamis 页面是一棵 **widget 树**。节点靠 `type` 选渲染器，其余字段名与 Amis 相同。作者态 **JSON 与 YAML 并列**，解析后进同一运行时。
@@ -220,3 +220,58 @@ Page
 YAML / JSON / 对象  →  parseSchemaText  ─┐
 IR 信封            ─────────────────────┴→  jsonToIr → compileIrToWidget → SchemaRenderer → type 注册表
 ```
+
+## LazyComponent
+
+`LazyComponent` **不是** schema `type`。它是 `@vamis/core` / `vamis` 导出的 Vue 组件，对齐 `amis-core/LazyComponent`：进视口才渲染默认槽，一旦可见就保持。这一层管挂载时机，不改 schema 字段名。
+
+没有全局「等可见才打 `initApi`」开关。Page / Form 的 `initApi` 仍在组件 `onMounted` 时发出。文档 ` ```schema ` 外包了这一层（placeholder `加载中，请稍后。。。`，对齐 Amis `MdRenderer`），所以示例看起来像滚到才请求：
+
+```schema
+{
+  "type": "page",
+  "initApi": "/api/mock2/page/initData",
+  "body": "date is ${date}"
+}
+```
+
+切文档页会按路径销毁并重建 Play，不沿用上一页的 `visible`。侧栏改 body 模板不重挂，不会重打 `initApi`。
+
+宿主预览、自定义重组件同样包一层。JSON / YAML / 对象都能进 `VamisRoot`。JS SDK `vamis.embed` **不会**自动包；非 Vue 宿主要同样效果，自己对容器做可见性判断。
+
+```vue
+<script setup lang="ts">
+import { VamisRoot, LazyComponent } from 'vamis'
+
+const schema = {
+  type: 'page',
+  initApi: '/api/mock2/page/initData',
+  body: 'date is ${date}',
+}
+</script>
+
+<template>
+  <LazyComponent placeholder="加载中，请稍后。。。">
+    <VamisRoot :schema="schema" />
+  </LazyComponent>
+</template>
+```
+
+| 属性 | 默认 | 含义 |
+|------|------|------|
+| `defaultVisible` | `false` | 未进视口不挂默认槽 |
+| `unMountOnHidden` | `false` | 滚出后不卸载；`true` 才拆掉再进再挂 |
+| `partialVisibility` | `true` | 露出一点就算可见 |
+| `placeholder` | `Loading...` | 未可见时的占位 |
+| `className` | | 传感器外层 class |
+
+观察根是最近的 overflow 祖先（文档正文 `article` 也是），不是 `window`。`defaultVisible: true` 且未开 `unMountOnHidden` 时跳过传感器，立刻挂槽。
+
+作者可见的 schema 开关只有两条（Amis 源码有、官方属性表未列）：
+
+| 字段 | 组件 | 默认 | 作用 |
+|------|------|------|------|
+| `lazyLoad` | [Form](/components/form/) | `false` | `true` 时整棵表单（含面板）进视口再画。`initApi` 仍随 Form 挂载发出 |
+| `unMountOnHidden` | [Chart](/components/chart) | `false` | Chart 画布始终包一层；为 `true` 时滚出卸载 echarts。`api` 仍随 Chart 挂载发出 |
+
+重组件也可以自己包，见 [自定义组件](/extend/custom)。Vue 用默认槽，没有 Amis 的 `getComponent`；异步拆包用 `defineAsyncComponent`。

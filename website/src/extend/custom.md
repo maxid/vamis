@@ -33,6 +33,6 @@ type: hello
 text: 自定义节点
 ```
 
-不要在组件里 `fetch`。需要请求就走 `env.fetcher`，或包在 `service` 里。
+不要在组件里 `fetch`。需要请求就走 `env.fetcher`，或包在 `service` 里。重组件（图表、编辑器）可以包一层 [LazyComponent](/concepts/schema#lazycomponent)，默认进视口再挂。
 
 JS SDK 宿主用同一套注册表：`vamis.registerRenderer({ type, component })`。不要把函数写进 YAML。非 Vue 页面也可以用已有 `custom` 的 `onMount` 往 DOM 插节点。不提供 `amisRequire('react')`。
