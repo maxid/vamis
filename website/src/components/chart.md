@@ -5,8 +5,8 @@ outline: deep
 
 # Chart 图表
 
-::: warning 实现进度 40% · 进行中
-有 `config`/`api` 时动态加载 echarts；无库则占位
+::: warning 实现进度 45% · 进行中
+有 `config`/`api` 时动态加载 echarts；画布走内核 LazyComponent（`unMountOnHidden` 默认 false）；无库则占位
 :::
 
 `chart` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
@@ -32,6 +32,7 @@ body:
 | `visibleOn` / `hiddenOn` | 显隐表达式 |
 | `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
 | `data` | 静态数据，当前多与父级浅合并 |
+| `unMountOnHidden` | 默认 `false`。为 `true` 时滚出视口卸载画布（对齐 Amis Chart） |
 
 ## 和 Amis 文档的差异
 

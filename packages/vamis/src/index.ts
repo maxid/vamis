@@ -5,6 +5,7 @@ export { default as OverlayHost } from './OverlayHost.vue'
 
 export {
   SchemaRenderer,
+  LazyComponent,
   registerRenderer,
   resolveRenderer,
   getRenderers,

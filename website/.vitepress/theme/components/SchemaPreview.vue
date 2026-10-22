@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { VamisRoot, parseSchemaText } from 'vamis'
+import { VamisRoot, LazyComponent, parseSchemaText } from 'vamis'
 import { applySchemaScope } from '../../../../playground/src/docs/schema-scope'
 import SchemaSourceEditor from '../../../../playground/src/components/SchemaSourceEditor.vue'
-import LazyInView from '../../../../playground/src/components/LazyInView.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -55,9 +54,9 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
   <div class="vamis-preview not-prose" data-density="compact">
     <div v-if="banner" class="vamis-preview__error">{{ banner }}</div>
     <div class="vamis-preview__canvas" :style="{ minHeight: `${minHeight}px` }">
-      <LazyInView>
+      <LazyComponent placeholder="加载中，请稍后。。。">
         <VamisRoot :schema="parsed.value" />
-      </LazyInView>
+      </LazyComponent>
     </div>
     <details class="vamis-preview__source" open>
       <summary>编辑 Schema（YAML / JSON）</summary>

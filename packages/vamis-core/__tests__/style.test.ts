@@ -245,9 +245,21 @@ describe('Amis width helpers', () => {
   it('keeps doc playground alive when body templates change, and mounts when visible', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const preview = readFileSync(resolve(here, '../../../playground/src/components/SchemaPreview.vue'), 'utf8')
-    expect(preview).toContain('LazyInView')
+    const lazy = readFileSync(resolve(here, '../src/LazyComponent.vue'), 'utf8')
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    const chart = readFileSync(resolve(here, '../../vamis/src/renderers/Chart.vue'), 'utf8')
+    expect(preview).toContain('LazyComponent')
+    expect(preview).not.toContain('LazyInView')
     expect(preview).not.toContain('schemaKey')
     expect(preview).not.toContain(':key="schemaKey"')
+    expect(lazy).toContain('defaultVisible: false')
+    expect(lazy).toContain('unMountOnHidden: false')
+    expect(lazy).toContain('partialVisibility: true')
+    expect(lazy).not.toContain('rootMargin')
+    expect(form).toContain('schema.lazyLoad')
+    expect(form).toContain(':default-visible="!lazyLoad"')
+    expect(chart).toContain('unMountOnHidden')
+    expect(chart).toContain('placeholder="..."')
   })
 
   it('lets panelClassName mb-0 override the default panel margin', () => {

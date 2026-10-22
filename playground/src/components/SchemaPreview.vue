@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { VamisRoot, parseSchemaText } from 'vamis'
+import { VamisRoot, LazyComponent, parseSchemaText } from 'vamis'
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from '@vamis/ui'
 import { applySchemaScope } from '../docs/schema-scope'
 import SchemaSourceEditor from './SchemaSourceEditor.vue'
-import LazyInView from './LazyInView.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -61,9 +60,9 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
         {{ banner }}
       </div>
       <div class="bg-background p-5 pr-24" :style="{ minHeight: `${minHeight}px` }">
-        <LazyInView>
+        <LazyComponent placeholder="加载中，请稍后。。。">
           <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
-        </LazyInView>
+        </LazyComponent>
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">
