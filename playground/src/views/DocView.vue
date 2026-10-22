@@ -100,6 +100,16 @@ onBeforeUnmount(() => {
   stopScroll?.()
 })
 
+// 切页先把正文滚回顶，再挂新的 LazyComponent；否则会沿用上一页 scrollTop，
+// 把还没进视口的 Play 当成可见，立刻打 initApi（Amis 每页新建 root，没有这个问题）。
+watch(
+  () => route.path,
+  () => {
+    articleEl.value?.scrollTo({ top: 0 })
+  },
+  { flush: 'pre' },
+)
+
 watch(
   () => [route.path, parsed.value, articleEl.value] as const,
   async () => {
@@ -152,7 +162,7 @@ function onClick(event: MouseEvent) {
     >
       <p v-if="!parsed" class="text-sm text-muted-foreground">没有这份文档：{{ route.path }}</p>
       <template v-else>
-        <template v-for="(block, i) in parsed.blocks" :key="i">
+        <template v-for="(block, i) in parsed.blocks" :key="`${route.path}:${i}`">
           <SchemaPreview
             v-if="block.kind === 'schema'"
             :yaml="block.yaml"
