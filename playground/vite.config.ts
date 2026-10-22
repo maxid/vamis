@@ -27,6 +27,20 @@ function staticSite(): Plugin {
   }
 }
 
+const SDK_MISSING_HTML = `<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>SDK 未构建</title>
+  </head>
+  <body style="font:14px/1.5 system-ui;padding:24px;color:#334155">
+    <p>没有 SDK 产物，iframe 无法演示。请先运行：</p>
+    <pre style="background:#f1f5f9;padding:12px;border-radius:8px">pnpm --filter @vamis/sdk build</pre>
+    <p>完整站点构建用 <code>pnpm build</code>，会先打 SDK 再拷到 <code>/sdk/hello.html</code>。</p>
+  </body>
+</html>
+`
+
 function serveSdk(): Plugin {
   const dir = path.join(repo, 'packages', 'vamis-sdk', 'dist')
   const types: Record<string, string> = {
@@ -43,6 +57,12 @@ function serveSdk(): Plugin {
         const file = !url || url === '/' ? 'hello.html' : url.replace(/^\//, '')
         const full = path.normalize(path.join(dir, file))
         if (!full.startsWith(dir) || !fs.existsSync(full) || fs.statSync(full).isDirectory()) {
+          if (file.endsWith('.html') || file === 'hello.html' || !file) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'text/html; charset=utf-8')
+            res.end(SDK_MISSING_HTML)
+            return
+          }
           next()
           return
         }
@@ -51,12 +71,14 @@ function serveSdk(): Plugin {
       })
     },
     closeBundle() {
-      if (!fs.existsSync(path.join(dir, 'sdk.js'))) {
-        console.warn('[vamis-sdk-assets] packages/vamis-sdk/dist/sdk.js missing; run pnpm --filter @vamis/sdk build')
+      const dest = path.join(playground, 'dist', 'sdk')
+      if (fs.existsSync(path.join(dir, 'sdk.js'))) {
+        fs.cpSync(dir, dest, { recursive: true })
         return
       }
-      const dest = path.join(playground, 'dist', 'sdk')
-      fs.cpSync(dir, dest, { recursive: true })
+      console.warn('[vamis-sdk-assets] packages/vamis-sdk/dist/sdk.js missing; run pnpm --filter @vamis/sdk build')
+      fs.mkdirSync(dest, { recursive: true })
+      fs.writeFileSync(path.join(dest, 'hello.html'), SDK_MISSING_HTML)
     },
   }
 }
