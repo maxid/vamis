@@ -25,7 +25,7 @@
 - 组件页进度来自 P0 TODO。已注册 ≠ 语义完成。手写页：`page`、`container`、`form`、`chart`、`code`、`editor`、`diff-editor`（生成器跳过）。Form / Chart 已按 Amis 补属性表 / 事件表 / 动作表。`code` 只读 monaco 展示，不收 `options`。`editor` / `diff-editor` 接同一宿主，`options` 写在 Editor 文档。Editor 文档基本用法用 `value`；`placeholder` 跟行号对齐，感知框不被外框裁切。
 - 所有文档页（组件 / 类型 / 概念 / 开始 / 样式 / 扩展）标题正下方显示 `::: 实现进度 x% · 状态`；目录页（介绍、组件介绍）除外。口径见 `.cursor/rules/doc-progress.mdc`。「配置与组件」含内核 `LazyComponent` 用法（不是 schema type）。
 - GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
-- 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 跑 `/sdk/hello.html`，同源 `sdk.js`）。
+- 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 用站点根路径 `/sdk/hello.html`，渲染时加 `VITE_BASE`；禁止 `../../sdk/hello.html`，Pages 的 `sdk/index.html` 目录会解析成 `/docs/sdk/hello.html`）。
 - 文档 / 组件页右侧有「内容」TOC（对齐 Amis `Doc-toc`）：从 markdown `h2`–`h4` 抽锚点，点击平滑滚动、滚动高亮当前项；`lg` 以下隐藏；没有标题时不占栏。不搬 `cxd-` / `Doc-toc` 类名。TOC 栏无左边框，与正文同一卡片。正文 / 侧栏 / TOC 滚动条默认隐藏，滚动时才显示。
 
 ## 怎么跑

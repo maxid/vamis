@@ -29,13 +29,22 @@ function trimSlash(link: string): string {
   return link.replace(/\/+$/, '') || '/'
 }
 
+/** 站点根路径加上 Vite `base`（GitHub Pages 是 `/vamis/`）。相对路径不动。 */
+export function withBase(url: string, base = import.meta.env.BASE_URL || '/'): string {
+  if (!url || /^(https?:|data:|blob:|mailto:|#|\/\/)/i.test(url)) return url
+  if (!url.startsWith('/')) return url
+  const prefix = base.endsWith('/') ? base : `${base}/`
+  return `${prefix}${url.slice(1)}`
+}
+
 export function playgroundHref(link: string): string {
   if (!link || link.startsWith('http') || link.startsWith('#')) return link
   if (
     link.startsWith('/components') ||
     link.startsWith('/docs') ||
     link.startsWith('/editor') ||
-    link.startsWith('/examples')
+    link.startsWith('/examples') ||
+    link.startsWith('/sdk')
   ) {
     return trimSlash(link)
   }

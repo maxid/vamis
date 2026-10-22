@@ -67,6 +67,7 @@
 
 **最近交付**
 
+- JS SDK 文档 iframe 改为站点根路径 `/sdk/hello.html` 并加上 `VITE_BASE`。Pages 上相对 `../../sdk/hello.html` 会落到 `/docs/sdk/hello.html`，被当成文档 404。SDK 未构建时 iframe 提示先 `pnpm --filter @vamis/sdk build`，不再套 SPA「没有这份文档」。
 - Pages 构建：SDK `dist/assets` 是目录（Monaco worker），playground 用 `copyFileSync` 会 EISDIR。改为 `fs.cpSync(..., { recursive: true })`。
 - Pages CI：`monaco-editor` 只装在 `packages/vamis` 后，SDK 测试找不到根目录 CSS。Vite 别名改指向 `packages/vamis/node_modules/monaco-editor`。
 - 为全部已注册组件补上智能感知自述（属性 / 事件 / 动作）。`registerRenderer` 按 type 自动并入；同名 `size`（dialog / editor / 表单项）与 `options`（select / editor）走当前节点。可在「编辑 Schema」里换 type 核对。
