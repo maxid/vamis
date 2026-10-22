@@ -100,6 +100,10 @@ export interface RendererConfig {
   /** 无精确 type 时的兜底匹配；与 Amis 一样 weight 越低越先命中 */
   test?: RendererTest
   weight?: number
+  /** 感知补全 / 悬停用的显示名。低码应用注册自定义 type 时写入 */
+  name?: string
+  /** 感知补全 / 悬停用的文档说明。也可事后 `registerSchemaTypeDoc` */
+  description?: string
 }
 
 export interface RendererEnv {
