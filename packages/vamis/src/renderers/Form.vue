@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import {
   SchemaRenderer,
+  LazyComponent,
   apiMessage,
   asArray,
   isApiOutdated,
@@ -48,6 +49,7 @@ const actionsDefined = computed(() => Array.isArray(props.schema.actions))
 const hasCustomActions = computed(() => actionsDefined.value && actions.value.length > 0)
 const showActionBar = computed(() => (actionsDefined.value ? actions.value.length > 0 : true))
 const wrapWithPanel = computed(() => props.schema.wrapWithPanel !== false)
+const lazyLoad = computed(() => props.schema.lazyLoad === true)
 const panelClass = computed(() =>
   cn(
     'vamis-form-panel w-full min-w-0 mb-[var(--panel-margin-bottom)]',
@@ -245,55 +247,57 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <component
-    :is="wrapTag"
-    class="w-full min-w-0"
-    :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
-    @submit.prevent="submit"
-    @keydown.enter="onNestedEnter"
-  >
-    <Card
-      v-if="wrapWithPanel"
-      :class="panelClass"
+  <LazyComponent :default-visible="!lazyLoad">
+    <component
+      :is="wrapTag"
+      class="w-full min-w-0"
+      :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
+      @submit.prevent="submit"
+      @keydown.enter="onNestedEnter"
     >
-      <CardHeader v-if="schema.title" class="border-b">
-        <CardTitle>{{ schema.title }}</CardTitle>
-      </CardHeader>
-      <CardContent :class="isInline ? 'flex flex-wrap items-end' : 'space-y-0'">
-        <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
-      </CardContent>
-      <CardFooter v-if="showActionBar" class="vamis-form-actions w-full justify-end border-t">
-        <template v-if="hasCustomActions">
-          <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
-        </template>
-        <template v-else>
-          <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
-            {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
-          </Button>
-          <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
-            重置
-          </Button>
-        </template>
-      </CardFooter>
-    </Card>
-    <template v-else>
-      <h2 v-if="schema.title" class="mb-3 text-sm font-medium">{{ schema.title }}</h2>
-      <div :class="isInline ? 'flex flex-wrap items-end' : ''">
-        <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
-      </div>
-      <div v-if="showActionBar" class="vamis-form-actions flex w-full justify-end gap-2 pt-3">
-        <template v-if="hasCustomActions">
-          <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
-        </template>
-        <template v-else>
-          <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
-            {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
-          </Button>
-          <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
-            重置
-          </Button>
-        </template>
-      </div>
-    </template>
-  </component>
+      <Card
+        v-if="wrapWithPanel"
+        :class="panelClass"
+      >
+        <CardHeader v-if="schema.title" class="border-b">
+          <CardTitle>{{ schema.title }}</CardTitle>
+        </CardHeader>
+        <CardContent :class="isInline ? 'flex flex-wrap items-end' : 'space-y-0'">
+          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+        </CardContent>
+        <CardFooter v-if="showActionBar" class="vamis-form-actions w-full justify-end border-t">
+          <template v-if="hasCustomActions">
+            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+          </template>
+          <template v-else>
+            <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
+              {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+            </Button>
+            <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+              重置
+            </Button>
+          </template>
+        </CardFooter>
+      </Card>
+      <template v-else>
+        <h2 v-if="schema.title" class="mb-3 text-sm font-medium">{{ schema.title }}</h2>
+        <div :class="isInline ? 'flex flex-wrap items-end' : ''">
+          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+        </div>
+        <div v-if="showActionBar" class="vamis-form-actions flex w-full justify-end gap-2 pt-3">
+          <template v-if="hasCustomActions">
+            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" />
+          </template>
+          <template v-else>
+            <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
+              {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+            </Button>
+            <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+              重置
+            </Button>
+          </template>
+        </div>
+      </template>
+    </component>
+  </LazyComponent>
 </template>

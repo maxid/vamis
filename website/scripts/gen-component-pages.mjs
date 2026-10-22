@@ -360,6 +360,13 @@ function propsTable(role) {
 | \`data\` | 静态数据，当前多与父级浅合并 |`
 }
 
+function extraProps(type) {
+  if (type === 'chart') {
+    return `\n| \`unMountOnHidden\` | 默认 \`false\`。为 \`true\` 时滚出视口卸载画布（对齐 Amis Chart） |`
+  }
+  return ''
+}
+
 function lookupTodo(type) {
   if (!type) return null
   if (todo[type]) return todo[type]
@@ -408,7 +415,7 @@ ${yaml}
 
 ## 常用属性
 
-${propsTable(role)}
+${propsTable(role)}${extraProps(type)}
 
 ## 和 Amis 文档的差异
 

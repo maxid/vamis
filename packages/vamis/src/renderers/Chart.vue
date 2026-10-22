@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { isApiOutdated, requestApi, useEnv, type SchemaObject } from '@vamis/core'
+import { isApiOutdated, LazyComponent, requestApi, useEnv, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
@@ -18,12 +18,16 @@ async function fetchOption() {
   return option
 }
 
+let lastOption: unknown
+
 async function applyOption(option: unknown) {
+  lastOption = option
   if (!option || typeof option !== 'object') {
     missing.value = 'chart 需要 spec.config 或 spec.api 返回 ECharts option，当前未配置。'
     return
   }
   missing.value = ''
+  if (!el.value) return
   if (chart) {
     chart.setOption(option)
     return
@@ -42,12 +46,25 @@ async function applyOption(option: unknown) {
   }
 }
 
-onMounted(async () => {
+async function loadChart() {
   try {
     await applyOption(await fetchOption())
   } catch (error) {
     missing.value = error instanceof Error ? error.message : 'chart api 加载失败'
   }
+}
+
+onMounted(() => {
+  void loadChart()
+})
+watch(el, (node) => {
+  if (!node) {
+    chart?.dispose()
+    chart = null
+    return
+  }
+  if (lastOption !== undefined) void applyOption(lastOption)
+  else void loadChart()
 })
 
 watch(
@@ -81,6 +98,12 @@ onBeforeUnmount(() => {
     <div v-if="missing" class="rounded-md border border-dashed px-3 py-6 text-sm text-muted-foreground">
       {{ missing }}
     </div>
-    <div v-show="!missing" ref="el" class="h-64 w-full" />
+    <LazyComponent
+      v-else
+      :un-mount-on-hidden="schema.unMountOnHidden === true"
+      placeholder="..."
+    >
+      <div ref="el" class="h-64 w-full" />
+    </LazyComponent>
   </div>
 </template>
