@@ -6,8 +6,8 @@ title: Align Items
 
 # Align Items
 
-::: info 实现进度 55% · 进行中
-Playground 已 `@source` 文档 markdown，这些类名可在本页示例里跑。未写入 `helpers.css`；SDK 里 schema 动态 class 仍依赖源码扫描。`m:` / `pc:` 只接到间距和宽高。
+::: info 实现进度 50% · 进行中
+布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）已写入 `helpers-palette.css`。`hover:` / `focus:` / 全量 `m:` `pc:` 色盘仍缺，所以不能标已完成。
 :::
 
 交叉轴对齐。竖排居中常用 `items-center`。
@@ -37,4 +37,4 @@ body:
 | `items-baseline` | `align-items: baseline` |
 | `items-stretch` | `align-items: stretch` |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。

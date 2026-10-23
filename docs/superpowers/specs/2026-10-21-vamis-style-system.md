@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-23
-- 状态：落地（**默认自适应** / token / 密度 / 盒子辅助类 / 宽度 helper / FormItem size 含 full / Table cell / IR `metadata.style`；对外文档顶栏「样式」`/style` 已对齐 Amis CssDocs 目录；`xxxClassName` 与 `registerTheme` 仍 P1）
+- 状态：部分落地（目录已齐；`/style` 活示例按视觉对标，进度按观感不是按「有 helper」。表单默认标题/只提交/灰标题栏已接；调色盘 helper 进 SDK。hover 全矩阵、`registerTheme`、其余 `xxxClassName` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
@@ -98,7 +98,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）；宽度 helper `w-full` / `w-1/2` 同样带这两档
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `h-*` / `m:` `pc:`（间距 + 宽度 + 高度）。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
+`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `h-*` / 布局 helper / `m:` `pc:`（间距、宽高、display/flex、语义色）。Page / Form / FormItem / Container / Panel 的 `xxxClassName` 已打到子节点；其余组件与 `registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
 
 ## 2. shadcn 落地原则
 

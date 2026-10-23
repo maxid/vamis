@@ -22,6 +22,8 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   '--borderColor': '--border',
   '--borderRadius': '--radius',
   '--danger': '--destructive',
+  '--primary-onHover': '--primary-hover',
+  '--primary-onActive': '--primary-active',
   '--link-color': '--primary',
   '--fonts-base-family': '--font-sans',
   '--fontFamilyBase': '--font-sans',

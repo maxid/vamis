@@ -5,8 +5,8 @@ outline: deep
 
 # Form 表单
 
-::: info 实现进度 62% · 进行中
-initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。`target` 提交发给具名组件；返回 `data` 合并进表单域。`lazyLoad` 默认关。事件目前只接了 `submit`；动作 `reload` / `setValue` / `submit` / `reset` 可用。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6。
+::: info 实现进度 68% · 进行中
+initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。默认标题「表单」、只画提交、标题栏灰底，对齐 Amis 面板壳。`panelClassName` / `headerClassName` / `titleClassName` / `bodyClassName` / `actionsClassName` 已接到对应区域。`target` 提交发给具名组件；返回 `data` 合并进表单域。`lazyLoad` 默认关。事件目前只接了 `submit`；动作 `reload` / `setValue` / `submit` / `reset` 可用。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6。
 :::
 
 `type: form` 是数据输入的根。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。
@@ -61,20 +61,24 @@ body:
 | `type` | `string` | `"form"` | 指定为 Form |
 | `name` / `id` | `string` | | 给其它组件发 `reload` / `setValue` 用 |
 | `mode` | `string` | `"normal"` | `normal` / `horizontal` / `inline` |
-| `title` | `string` | | 面板标题 |
+| `title` | `string` / `false` | `"表单"` | 面板标题。`false` 或 `""` 隐藏 |
 | `submitText` | `string` | `"提交"` | 默认提交按钮文案 |
 | `className` | `string` | | 外层 class |
 | `body` | [SchemaNode](/types/schemanode) | | 表单项列表；也认 `controls` |
 | `actions` | [SchemaNode](/types/schemanode)[] | | 底栏按钮。不写则画默认提交；`[]` 不画 |
 | `wrapWithPanel` | `boolean` | `true` | 是否带面板 |
 | `panelClassName` | `string` | | 面板 class，可覆盖默认下边距 |
+| `headerClassName` | `string` | | 标题栏 class |
+| `titleClassName` | `string` | | 标题文字 class |
+| `bodyClassName` | `string` | | 表单项区域 class |
+| `actionsClassName` | `string` | | 底栏按钮区 class |
 | `lazyLoad` | `boolean` | `false` | 进视口再绘制。Amis 源码有、文档未列 |
 | `wrapperComponent` | `"form"` / `"div"` | 顶层 `form`，嵌套 `div` | 非法 HTML 不能 `<form>` 套 `<form>` |
 | `api` | [API](/types/api) | | 提交接口，默认 method `post` |
 | `initApi` | [API](/types/api) | | 初始化拉数。无 `$` 时只挂载拉一次 |
 | `initFetch` | `boolean` | `true` | 是否首次拉取 |
 | `initFetchOn` | [表达式](/concepts/expression) | | 是否首次拉取 |
-| `reset` | `boolean` | `true` | 默认底栏是否带重置 |
+| `reset` | `boolean` | `false` | `true` 时默认底栏带重置。不写则只画提交 |
 | `data` | `object` | | 写入本表单 Scope |
 | `reload` | `string` | | 提交成功后刷新目标 `name` |
 | `target` | `string` | | 提交后把数据发给该 `name` 的组件并刷新。支持动态名和 `name?a=${a}` |

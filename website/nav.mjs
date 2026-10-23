@@ -120,6 +120,7 @@ export const styleNav = [
       { text: 'Vertical Alignment', link: '/style/typography/vertical-align' },
       { text: 'Whitespace', link: '/style/typography/whitespace' },
       { text: 'Word Break', link: '/style/typography/word-break' },
+      { text: 'Text Overflow', link: '/style/typography/text-overflow' },
     ],
   },
   {

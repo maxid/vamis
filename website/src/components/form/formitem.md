@@ -4,8 +4,8 @@ title: FormItem 表单项通用
 
 # FormItem 表单项通用
 
-::: warning 实现进度 40% · 进行中
-有 label / required / error 壳；缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`（D6）。
+::: warning 实现进度 48% · 进行中
+有 label / required / error 壳，以及 `labelClassName` / `inputClassName` / `descriptionClassName`。缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`（D6）。
 :::
 
 FormItem 不是独立 `type`，而是所有表单项共享的一层：标签、必填星号、错误、描述。
@@ -18,6 +18,9 @@ Vamis 把这层收在表单渲染器里，字段仍然用各自的 `type`（`inp
 | `label` | 标签，可 `false` 隐藏 |
 | `required` | 必填 |
 | `desc` / `description` | 说明 |
+| `labelClassName` | 标签 class，走 `resolveClassName` |
+| `inputClassName` | 控件槽 class |
+| `descriptionClassName` | 说明文字 class |
 | `validateOnChange` | 未完全对齐 |
 | `validations` | 部分规则能跑 |
 
@@ -34,4 +37,8 @@ Vamis 把这层收在表单渲染器里，字段仍然用各自的 `type`（`inp
   name: code
   label: 短码
   size: sm
+  labelClassName: text-primary
+  inputClassName: border-primary
+  descriptionClassName: text-info
+  description: 标签主色、控件槽描边、说明信息色
 ```

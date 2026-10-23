@@ -4,8 +4,8 @@ title: 样式
 
 # 样式
 
-::: info 实现进度 70% · 进行中
-token / helper（含 `w-*` / `h-full`）/ `className` / FormItem `size` / 默认自适应已接。`xxxClassName`、`registerTheme` 仍是 D12 P1。
+::: warning 实现进度 45% · 进行中
+token / helper（间距、宽高、布局、调色盘）/ `className` / FormItem `size` / 默认自适应已接。`/style` 活示例按观感对标 Amis 面板壳，还不是像素级。`registerTheme` 与 hover 全矩阵仍是 D12 P1。
 :::
 
 Vamis 的视觉目标是 **Amis 后台的信息密度**，并把 cxd 的盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。不搬 `cxd-` 前缀。实现上：

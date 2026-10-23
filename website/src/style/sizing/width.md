@@ -133,4 +133,4 @@ body:
 | `max-w-max` | `max-width: max-content;` |
 | `max-w-prose` | `max-width: 65ch;` |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。

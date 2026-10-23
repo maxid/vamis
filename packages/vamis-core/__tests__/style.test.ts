@@ -97,6 +97,16 @@ describe('resolveCssVars', () => {
     expect(out['--Form-input-height']).toBe('32px')
   })
 
+  it('aliases Amis primary hover vars onto --primary-hover / --primary-active', () => {
+    const out = resolveCssVars({
+      '--primary-onHover': '#F23F3A',
+      '--primary-onActive': '#BB312D',
+    })
+    expect(out['--primary-hover']).toBe('#F23F3A')
+    expect(out['--primary-active']).toBe('#BB312D')
+    expect(out['--primary-onHover']).toBe('#F23F3A')
+  })
+
   it('aliases Amis font family vars onto --font-sans / --font-mono', () => {
     const out = resolveCssVars({
       '--fonts-base-family': 'Georgia, serif',
@@ -457,6 +467,33 @@ describe('Amis width helpers', () => {
     expect(theme).toContain('.vamis-form-panel')
     expect(theme).not.toMatch(/\.vamis-form-panel \{[^}]*margin-bottom/)
   })
+
+  it('wires Form / FormItem / Panel xxxClassName onto child regions', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
+    const item = readFileSync(resolve(here, '../../vamis/src/renderers/FormItem.vue'), 'utf8')
+    const panel = readFileSync(resolve(here, '../../vamis/src/renderers/Panel.vue'), 'utf8')
+    expect(form).toContain('schema.headerClassName')
+    expect(form).toContain('schema.titleClassName')
+    expect(form).toContain('schema.bodyClassName')
+    expect(form).toContain('schema.actionsClassName')
+    expect(form).toContain("wrapWithPanel.value ? '表单' : ''")
+    expect(form).toContain('schema.reset === true')
+    expect(form).toContain('bg-muted')
+    expect(item).toContain('schema.labelClassName')
+    expect(item).toContain('schema.className')
+    expect(item).toContain('schema.inputClassName')
+    expect(item).toContain('schema.descriptionClassName')
+    expect(panel).toContain('schema.headerClassName')
+    expect(panel).toContain('schema.bodyClassName')
+  })
+
+  it('does not force space-y-3 when Container bodyClassName is set', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const container = readFileSync(resolve(here, '../../vamis/src/renderers/Container.vue'), 'utf8')
+    expect(container).toContain("return extra || 'space-y-3'")
+    expect(container).not.toContain('space-y-3 ${extra}')
+  })
 })
 
 describe('fillsLayoutSlot', () => {
@@ -492,9 +529,27 @@ describe('style docs surface', () => {
     expect(nav).toContain("text: '快速开始'")
     expect(nav).toContain("link: '/style/layout/display'")
     expect(nav).toContain("link: '/style/spacing/margin'")
+    expect(nav).toContain("link: '/style/typography/text-overflow'")
     expect(nav).toContain("text: '辅助类-响应式设计'")
     expect(index).toContain('# 快速开始')
-    expect(index).toContain('实现进度')
+    expect(index).toContain('实现进度 45%')
+    expect(index).toContain('--primary-onHover')
+    expect(index).not.toContain('主按钮')
+    expect(index).toContain('className: text-green-700')
+    expect(index).not.toContain('labelClassName: text-green-700')
+    const theme = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(theme).toContain('@custom-variant m')
+    expect(theme).toContain('helpers-utility.css')
+    expect(theme).toContain('helpers-palette.css')
+    const util = readFileSync(resolve(here, '../../vamis-ui/src/helpers-utility.css'), 'utf8')
+    expect(util).toContain('.flex { display: flex; }')
+    expect(util).toContain('.m\\:text-red-500')
+    expect(util).toContain('.pc\\:flex')
+    const palette = readFileSync(resolve(here, '../../vamis-ui/src/helpers-palette.css'), 'utf8')
+    expect(palette).toContain('.text-green-700 { color: #047857; }')
+    expect(palette).toContain('.bg-blue-100 { background-color: #dbeafe; }')
+    expect(palette).toContain('.border-red-500 { border-color: #ef4444; }')
+    expect(palette).toContain('.text-danger { color: var(--destructive); }')
   })
 
   it('ships a markdown page for every styleNav link', () => {

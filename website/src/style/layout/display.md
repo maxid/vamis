@@ -6,8 +6,8 @@ title: Display
 
 # Display
 
-::: info 实现进度 55% · 进行中
-Playground 已 `@source` 文档 markdown，这些类名可在本页示例里跑。未写入 `helpers.css`；SDK 里 schema 动态 class 仍依赖源码扫描。`m:` / `pc:` 只接到间距和宽高。
+::: info 实现进度 50% · 进行中
+布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）已写入 `helpers-palette.css`。`hover:` / `focus:` / 全量 `m:` `pc:` 色盘仍缺，所以不能标已完成。
 :::
 
 `className` 改单个节点的 `display`。Vamis 的 `className` 打在 SchemaRenderer 外层 `div.vamis-node`；要让**子节点**成为 flex/grid item，写在容器的 `bodyClassName` 上。隐藏节点用 `hidden`（`tpl` 要 `inline: false`，否则默认 `inline` 会盖掉）；业务显隐仍优先 `visible` / `hidden` / `visibleOn`。
@@ -19,10 +19,13 @@ body:
     bodyClassName: flex gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-primary text-primary-foreground p-sm rounded-md
         tpl: flex
       - type: tpl
         className: bg-muted p-sm rounded-md
+        tpl: item
+      - type: tpl
+        className: bg-success text-success-foreground p-sm rounded-md
         tpl: item
   - type: tpl
     inline: false
@@ -45,6 +48,12 @@ body:
 | `hidden` | `display: none` |
 | `table` | `display: table` |
 | `table-cell` | `display: table-cell` |
+| `table-row` | `display: table-row` |
+| `table-column` | `display: table-column` |
+| `table-column-group` | `display: table-column-group` |
+| `table-header-group` | `display: table-header-group` |
+| `table-footer-group` | `display: table-footer-group` |
+| `table-row-group` | `display: table-row-group` |
 | `flow-root` | `display: flow-root` |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。

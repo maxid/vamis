@@ -4,8 +4,8 @@ title: CSS 变量
 
 # CSS 变量
 
-::: info 实现进度 65% · 进行中
-`:root` / `.dark`、`page.cssVars` 与 IR `cssVars` 能改画布、主色、控件高、间距。Amis 盒子名会映射到 Vamis token。完整 Amis 变量表未一一对照；`registerTheme` 仍是 D12 P1。
+::: info 实现进度 60% · 进行中
+`:root` / `.dark`、`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。Amis 盒子名会映射到 Vamis token。完整 Amis 变量表未一一对照；`registerTheme` 仍是 D12 P1。表单面板壳已对齐默认标题，但 `--text-color` 主要改标签/正文，不是整份 cxd 变量表。
 :::
 
 主题切暗色 = 换 `:root` / `.dark` 变量，不是换 class 前缀。`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。实现见 `@vamis/core` 的 `resolveCssVars`。
@@ -17,6 +17,7 @@ title: CSS 变量
 | `--background` / `--foreground` | 画布与正文 |
 | `--card` / `--card-foreground` | 面板 |
 | `--primary` / `--primary-foreground` | 主色、主按钮。顶栏 5 色点改 `--accent-h`：云舍蓝（默认）/ 翠绿 / 琥珀 / 青空 / 玫红 |
+| `--primary-hover` / `--primary-active` | 主按钮悬停 / 按下。Amis `--primary-onHover` / `--primary-onActive` 会映射过来 |
 | `--secondary` / `--muted` | 次要底 |
 | `--destructive` | 危险（Amis `danger`） |
 | `--success` / `--warning` / `--info` | 状态色 |
@@ -39,7 +40,10 @@ Amis 名会映射过来：`--body-bg` → `--background`，`--text-color` → `-
 ```schema
 type: page
 cssVars:
-  --primary: "#1d4ed8"
+  --text-color: "#CD3632"
+  --primary: "#CD3632"
+  --primary-onHover: "#F23F3A"
+  --primary-onActive: "#BB312D"
   --control-h: "36px"
   --radius: "0.5rem"
 body:

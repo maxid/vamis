@@ -119,6 +119,9 @@ export const FORM_ITEM_PROPS: Record<string, SchemaDoc> = {
   placeholder: doc('placeholder', '表单', '空值占位。'),
   size: doc('size', '表单', '表单项**宽度**档：xs / sm / md / lg / full。未写则吃满布局槽。'),
   mode: doc('mode', '表单', '布局：normal / horizontal / inline。'),
+  labelClassName: doc('labelClassName', '表单', '标签 class，走 resolveClassName。'),
+  inputClassName: doc('inputClassName', '表单', '控件槽 class，走 resolveClassName。'),
+  descriptionClassName: doc('descriptionClassName', '表单', '说明文字 class，走 resolveClassName。'),
   validations: doc('validations', '表单', '校验规则。'),
   validateOnChange: doc('validateOnChange', '表单', '变化时是否校验。'),
 }

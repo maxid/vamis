@@ -7,36 +7,142 @@ title: Background Color
 # Background Color
 
 ::: info 实现进度 55% · 进行中
-Playground 已 `@source` 文档 markdown，这些类名可在本页示例里跑。未写入 `helpers.css`；SDK 里 schema 动态 class 仍依赖源码扫描。`m:` / `pc:` 只接到间距和宽高。
+语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。仍缺 hover/active/focus/disabled 与设备前缀全矩阵。
 :::
 
-优先用语义色 `bg-background` / `bg-card` / `bg-muted` / `bg-primary`。调色盘色如 `bg-blue-100` 可作点缀。
+优先用语义色 `bg-muted` / `bg-primary`。调色盘如 `bg-blue-100` 与 Amis helper 同档 hex，SDK 也能用。
 
 ```schema
 type: page
 body:
-  - type: tpl
-    className: bg-muted p-sm rounded-md
-    tpl: muted
-  - type: tpl
-    className: bg-primary text-primary-foreground p-sm rounded-md m-t-sm
-    tpl: primary
-  - type: tpl
-    className: bg-blue-100 text-blue-800 p-sm rounded-md m-t-sm
-    tpl: bg-blue-100
+  - type: container
+    bodyClassName: flex flex-wrap gap-2
+    body:
+      - type: tpl
+        className: bg-muted p-sm rounded-md
+        tpl: muted
+      - type: tpl
+        className: bg-primary text-primary-foreground p-sm rounded-md
+        tpl: primary
+      - type: tpl
+        className: bg-success text-success-foreground p-sm rounded-md
+        tpl: success
+      - type: tpl
+        className: bg-warning text-warning-foreground p-sm rounded-md
+        tpl: warning
+      - type: tpl
+        className: bg-danger text-primary-foreground p-sm rounded-md
+        tpl: danger
+      - type: tpl
+        className: bg-blue-100 text-blue-800 p-sm rounded-md
+        tpl: bg-blue-100
 ```
 
 ## 类名
 
-| Class | Properties |
-| --- | --- |
-| `bg-background` | `画布` |
-| `bg-card` | `面板` |
-| `bg-muted` | `弱底` |
-| `bg-primary` | `主色` |
-| `bg-destructive` | `危险` |
-| `bg-transparent` | `透明` |
-| `bg-blue-100` | `调色盘` |
-| `bg-white` | `白` |
+| Class | Properties | 示例效果 |
+| --- | --- | --- |
+| `bg-transparent` | `background: transparent` | <span class="inline-block h-6 w-24 rounded-sm border border-dashed border-border bg-transparent"></span> |
+| `bg-current` | `background: currentColor` | <span class="inline-block h-6 w-24 rounded-sm bg-current"></span> |
+| `bg-black` | `background: #000` | <span class="inline-block h-6 w-24 rounded-sm bg-black"></span> |
+| `bg-white` | `background: #fff` | <span class="inline-block h-6 w-24 rounded-sm border border-border bg-white"></span> |
+| `bg-primary` | `background: var(--primary)` | <span class="inline-block h-6 w-24 rounded-sm bg-primary"></span> |
+| `bg-success` | `background: var(--success)` | <span class="inline-block h-6 w-24 rounded-sm bg-success"></span> |
+| `bg-info` | `background: var(--info)` | <span class="inline-block h-6 w-24 rounded-sm bg-info"></span> |
+| `bg-warning` | `background: var(--warning)` | <span class="inline-block h-6 w-24 rounded-sm bg-warning"></span> |
+| `bg-danger` | `background: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm bg-danger"></span> |
+| `bg-destructive` | `background: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm bg-destructive"></span> |
+| `bg-muted` | `background: var(--muted)` | <span class="inline-block h-6 w-24 rounded-sm border border-border bg-muted"></span> |
+| `bg-card` | `background: var(--card)` | <span class="inline-block h-6 w-24 rounded-sm border border-border bg-card"></span> |
+| `bg-gray-50` | `background: #f9fafb` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-50"></span> |
+| `bg-gray-100` | `background: #f3f4f6` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-100"></span> |
+| `bg-gray-200` | `background: #e5e7eb` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-200"></span> |
+| `bg-gray-300` | `background: #d1d5db` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-300"></span> |
+| `bg-gray-400` | `background: #9ca3af` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-400"></span> |
+| `bg-gray-500` | `background: #6b7280` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-500"></span> |
+| `bg-gray-600` | `background: #4b5563` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-600"></span> |
+| `bg-gray-700` | `background: #374151` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-700"></span> |
+| `bg-gray-800` | `background: #1f2937` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-800"></span> |
+| `bg-gray-900` | `background: #111827` | <span class="inline-block h-6 w-24 rounded-sm bg-gray-900"></span> |
+| `bg-red-50` | `background: #fef2f2` | <span class="inline-block h-6 w-24 rounded-sm bg-red-50"></span> |
+| `bg-red-100` | `background: #fee2e2` | <span class="inline-block h-6 w-24 rounded-sm bg-red-100"></span> |
+| `bg-red-200` | `background: #fecaca` | <span class="inline-block h-6 w-24 rounded-sm bg-red-200"></span> |
+| `bg-red-300` | `background: #fca5a5` | <span class="inline-block h-6 w-24 rounded-sm bg-red-300"></span> |
+| `bg-red-400` | `background: #f87171` | <span class="inline-block h-6 w-24 rounded-sm bg-red-400"></span> |
+| `bg-red-500` | `background: #ef4444` | <span class="inline-block h-6 w-24 rounded-sm bg-red-500"></span> |
+| `bg-red-600` | `background: #dc2626` | <span class="inline-block h-6 w-24 rounded-sm bg-red-600"></span> |
+| `bg-red-700` | `background: #b91c1c` | <span class="inline-block h-6 w-24 rounded-sm bg-red-700"></span> |
+| `bg-red-800` | `background: #991b1b` | <span class="inline-block h-6 w-24 rounded-sm bg-red-800"></span> |
+| `bg-red-900` | `background: #7f1d1d` | <span class="inline-block h-6 w-24 rounded-sm bg-red-900"></span> |
+| `bg-yellow-50` | `background: #fffbeb` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-50"></span> |
+| `bg-yellow-100` | `background: #fef3c7` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-100"></span> |
+| `bg-yellow-200` | `background: #fde68a` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-200"></span> |
+| `bg-yellow-300` | `background: #fcd34d` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-300"></span> |
+| `bg-yellow-400` | `background: #fbbf24` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-400"></span> |
+| `bg-yellow-500` | `background: #f59e0b` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-500"></span> |
+| `bg-yellow-600` | `background: #d97706` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-600"></span> |
+| `bg-yellow-700` | `background: #b45309` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-700"></span> |
+| `bg-yellow-800` | `background: #92400e` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-800"></span> |
+| `bg-yellow-900` | `background: #78350f` | <span class="inline-block h-6 w-24 rounded-sm bg-yellow-900"></span> |
+| `bg-green-50` | `background: #ecfdf5` | <span class="inline-block h-6 w-24 rounded-sm bg-green-50"></span> |
+| `bg-green-100` | `background: #d1fae5` | <span class="inline-block h-6 w-24 rounded-sm bg-green-100"></span> |
+| `bg-green-200` | `background: #a7f3d0` | <span class="inline-block h-6 w-24 rounded-sm bg-green-200"></span> |
+| `bg-green-300` | `background: #6ee7b7` | <span class="inline-block h-6 w-24 rounded-sm bg-green-300"></span> |
+| `bg-green-400` | `background: #34d399` | <span class="inline-block h-6 w-24 rounded-sm bg-green-400"></span> |
+| `bg-green-500` | `background: #10b981` | <span class="inline-block h-6 w-24 rounded-sm bg-green-500"></span> |
+| `bg-green-600` | `background: #059669` | <span class="inline-block h-6 w-24 rounded-sm bg-green-600"></span> |
+| `bg-green-700` | `background: #047857` | <span class="inline-block h-6 w-24 rounded-sm bg-green-700"></span> |
+| `bg-green-800` | `background: #065f46` | <span class="inline-block h-6 w-24 rounded-sm bg-green-800"></span> |
+| `bg-green-900` | `background: #064e3b` | <span class="inline-block h-6 w-24 rounded-sm bg-green-900"></span> |
+| `bg-blue-50` | `background: #eff6ff` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-50"></span> |
+| `bg-blue-100` | `background: #dbeafe` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-100"></span> |
+| `bg-blue-200` | `background: #bfdbfe` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-200"></span> |
+| `bg-blue-300` | `background: #93c5fd` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-300"></span> |
+| `bg-blue-400` | `background: #60a5fa` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-400"></span> |
+| `bg-blue-500` | `background: #3b82f6` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-500"></span> |
+| `bg-blue-600` | `background: #2563eb` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-600"></span> |
+| `bg-blue-700` | `background: #1d4ed8` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-700"></span> |
+| `bg-blue-800` | `background: #1e40af` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-800"></span> |
+| `bg-blue-900` | `background: #1e3a8a` | <span class="inline-block h-6 w-24 rounded-sm bg-blue-900"></span> |
+| `bg-cyan-50` | `background: #ecfeff` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-50"></span> |
+| `bg-cyan-100` | `background: #cffafe` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-100"></span> |
+| `bg-cyan-200` | `background: #a5f3fc` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-200"></span> |
+| `bg-cyan-300` | `background: #67e8f9` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-300"></span> |
+| `bg-cyan-400` | `background: #22d3ee` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-400"></span> |
+| `bg-cyan-500` | `background: #06b6d4` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-500"></span> |
+| `bg-cyan-600` | `background: #0891b2` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-600"></span> |
+| `bg-cyan-700` | `background: #0e7490` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-700"></span> |
+| `bg-cyan-800` | `background: #155e75` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-800"></span> |
+| `bg-cyan-900` | `background: #164e63` | <span class="inline-block h-6 w-24 rounded-sm bg-cyan-900"></span> |
+| `bg-indigo-50` | `background: #eef2ff` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-50"></span> |
+| `bg-indigo-100` | `background: #e0e7ff` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-100"></span> |
+| `bg-indigo-200` | `background: #c7d2fe` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-200"></span> |
+| `bg-indigo-300` | `background: #a5b4fc` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-300"></span> |
+| `bg-indigo-400` | `background: #818cf8` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-400"></span> |
+| `bg-indigo-500` | `background: #6366f1` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-500"></span> |
+| `bg-indigo-600` | `background: #4f46e5` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-600"></span> |
+| `bg-indigo-700` | `background: #4338ca` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-700"></span> |
+| `bg-indigo-800` | `background: #3730a3` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-800"></span> |
+| `bg-indigo-900` | `background: #312e81` | <span class="inline-block h-6 w-24 rounded-sm bg-indigo-900"></span> |
+| `bg-purple-50` | `background: #f5f3ff` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-50"></span> |
+| `bg-purple-100` | `background: #ede9fe` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-100"></span> |
+| `bg-purple-200` | `background: #ddd6fe` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-200"></span> |
+| `bg-purple-300` | `background: #c4b5fd` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-300"></span> |
+| `bg-purple-400` | `background: #a78bfa` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-400"></span> |
+| `bg-purple-500` | `background: #8b5cf6` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-500"></span> |
+| `bg-purple-600` | `background: #7c3aed` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-600"></span> |
+| `bg-purple-700` | `background: #6d28d9` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-700"></span> |
+| `bg-purple-800` | `background: #5b21b6` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-800"></span> |
+| `bg-purple-900` | `background: #4c1d95` | <span class="inline-block h-6 w-24 rounded-sm bg-purple-900"></span> |
+| `bg-pink-50` | `background: #fdf2f8` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-50"></span> |
+| `bg-pink-100` | `background: #fce7f3` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-100"></span> |
+| `bg-pink-200` | `background: #fbcfe8` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-200"></span> |
+| `bg-pink-300` | `background: #f9a8d4` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-300"></span> |
+| `bg-pink-400` | `background: #f472b6` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-400"></span> |
+| `bg-pink-500` | `background: #ec4899` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-500"></span> |
+| `bg-pink-600` | `background: #db2777` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-600"></span> |
+| `bg-pink-700` | `background: #be185d` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-700"></span> |
+| `bg-pink-800` | `background: #9d174d` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-800"></span> |
+| `bg-pink-900` | `background: #831843` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-900"></span> |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
