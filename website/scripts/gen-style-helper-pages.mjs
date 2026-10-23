@@ -1599,6 +1599,66 @@ function flexDirectionExtra() {
   ].join('\n')
 }
 
+function flexWrapChip(fill, label) {
+  return `<div class="w-16 h-16 shrink-0 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function flexWrapStage(wrapClass, indent = '') {
+  return [
+    `<div class="flex ${wrapClass} gap-2 w-56 overflow-hidden ${DEMO_STAGE} p-sm rounded-md">`,
+    `  ${flexWrapChip('bg-blue-200', '1')}`,
+    `  ${flexWrapChip(DEMO_FILL, '2')}`,
+    `  ${flexWrapChip('bg-green-200', '3')}`,
+    `  ${flexWrapChip('bg-blue-200', '4')}`,
+    `  ${flexWrapChip(DEMO_FILL, '5')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function flexWrapExtra() {
+  return [
+    '## flex-wrap',
+    '',
+    '放不下就折到下一行。舞台 `w-56` = 224px，内宽 208px（`p-sm` 左右各 8px），盒子 64×64 且 `shrink-0`，缝 `gap-2` = 8px，正好三枚一行；4、5 落到第二行。',
+    '',
+    displaySchema(flexWrapStage('flex-wrap')),
+    '',
+    '## flex-wrap-reverse',
+    '',
+    '同样换行，交叉轴反向：后折的 4、5 在上，1-2-3 在下。',
+    '',
+    displaySchema(flexWrapStage('flex-wrap-reverse')),
+    '',
+    '## flex-nowrap',
+    '',
+    '单行不折。五枚合计 352px，超出内宽的部分被 `overflow-hidden` 裁掉。CSS 默认就是 nowrap，本类把行为钉死。',
+    '',
+    displaySchema(flexWrapStage('flex-nowrap')),
+    '',
+    '## 组合',
+    '',
+    '同一组 1-5：换行、反向换行、不换行。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...flexWrapStage('flex-wrap', '  '),
+      ...flexWrapStage('flex-wrap-reverse', '  '),
+      ...flexWrapStage('flex-nowrap', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-nowrap` 单行裁切；桌面（≥768px）`pc:flex-wrap` 三枚一行。',
+    '',
+    displaySchema(flexWrapStage('m:flex-nowrap pc:flex-wrap')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。伸缩见 [Flex](/style/flex/flex)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -1946,30 +2006,25 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex Wrap',
-    'flex/wrap',
-    '控制 flex 子项是否换行。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: flex flex-wrap gap-2
-    body:
-      - type: tpl
-        className: w-40 ${DEMO_FILL} p-sm rounded-md
-        tpl: 一
-      - type: tpl
-        className: w-40 ${DEMO_FILL} p-sm rounded-md
-        tpl: 二
-      - type: tpl
-        className: w-40 ${DEMO_FILL} p-sm rounded-md
-        tpl: 三`,
-    [
+  {
+    title: 'Flex Wrap',
+    slug: 'flex/wrap',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex Wrap：`flex-wrap` / `flex-wrap-reverse` / `flex-nowrap` 落在同一元素的 `flex-wrap`。独立样例 + 三向组合；`m:` / `pc:`（含 reverse / nowrap）已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '控制主轴上子项是否换行。要先有 `display: flex`（见 [Display](/style/layout/display)）。`flex-nowrap` 单行（也是 CSS 默认）；`flex-wrap` 放不下就折到下一行；`flex-wrap-reverse` 折到上一行（交叉轴反向）。数字 1-5 是 DOM 顺序。舞台钉死 `w-56`（224px）。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把换行类打在内层 flex 容器上。',
+    rows: [
       ['flex-wrap', 'flex-wrap: wrap'],
       ['flex-wrap-reverse', 'flex-wrap: wrap-reverse'],
       ['flex-nowrap', 'flex-wrap: nowrap'],
     ],
-  ),
+    extra: flexWrapExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex',
     'flex/flex',

@@ -339,6 +339,8 @@
   .m\:flex-col-reverse { flex-direction: column-reverse; }
   .m\:flex-row-reverse { flex-direction: row-reverse; }
   .m\:flex-wrap { flex-wrap: wrap; }
+  .m\:flex-wrap-reverse { flex-wrap: wrap-reverse; }
+  .m\:flex-nowrap { flex-wrap: nowrap; }
   .m\:text-left { text-align: left; }
   .m\:text-center { text-align: center; }
   .m\:text-right { text-align: right; }
@@ -409,6 +411,8 @@
   .pc\:flex-col-reverse { flex-direction: column-reverse; }
   .pc\:flex-row-reverse { flex-direction: row-reverse; }
   .pc\:flex-wrap { flex-wrap: wrap; }
+  .pc\:flex-wrap-reverse { flex-wrap: wrap-reverse; }
+  .pc\:flex-nowrap { flex-wrap: nowrap; }
   .pc\:text-left { text-align: left; }
   .pc\:text-center { text-align: center; }
   .pc\:text-right { text-align: right; }
