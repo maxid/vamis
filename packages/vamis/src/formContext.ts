@@ -25,3 +25,10 @@ export function useForm(): FormContext | undefined {
 export function useFormData(): PlainObject {
   return useForm()?.store.data || {}
 }
+
+/** 表单控件 v-model：未知值收成 Input / Textarea 能吃的标量。 */
+export function controlInputValue(raw: unknown): string | number {
+  if (typeof raw === 'number' && Number.isFinite(raw)) return raw
+  if (raw == null) return ''
+  return String(raw)
+}

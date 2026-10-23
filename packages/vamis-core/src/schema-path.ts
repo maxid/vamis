@@ -152,14 +152,14 @@ export function getNodeAt(root: SchemaObject, path: string): SchemaObject {
   if (!path) return root
   let current: SchemaNode = root
   for (const segment of parsePath(path)) {
-    if (!current || typeof current === 'string') {
+    if (!current || typeof current !== 'object') {
       throw new Error(`invalid schema path: ${path}`)
     }
     const collection = asArray((current as SchemaObject)[segment.key])
     current = collection[segment.index]
   }
   if (current == null) throw new Error(`missing node at ${path}`)
-  if (typeof current === 'string') return { type: 'tpl', tpl: current }
+  if (typeof current !== 'object') return { type: 'tpl', tpl: String(current) }
   return current
 }
 

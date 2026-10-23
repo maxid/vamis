@@ -44,3 +44,11 @@ export {
   registerSchemaTypeCatalog,
   publishRendererIntellisense,
 } from '@vamis/core'
+
+export type {
+  ApiObject,
+  Payload,
+  PlainObject,
+  RendererConfig,
+  RendererEnv,
+} from '@vamis/core'

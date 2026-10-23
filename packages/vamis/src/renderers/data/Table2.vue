@@ -191,7 +191,7 @@ function cellIsRenderer(col: SchemaObject) {
           </TableCell>
           <TableCell v-for="(col, ci) in visibleColumns" :key="colKey(col, ci)">
             <SchemaRenderer v-if="cellIsRenderer(col)" :schema="col" :extra-data="row" />
-            <span v-else>{{ row[col.name] ?? '' }}</span>
+            <span v-else>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
           </TableCell>
         </TableRow>
       </TableBody>

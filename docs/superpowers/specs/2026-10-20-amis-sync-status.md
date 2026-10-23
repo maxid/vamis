@@ -29,20 +29,12 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 188 + core 64 + sdk 12。本轮未在完整 workspace 链接上复跑全绿 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 175 + sdk 13 |
 | 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
-| 类型检查 | `pnpm typecheck` | 仍有既有 vue-tsc 错误，暂不作提交门禁 |
+| 类型检查 | `pnpm typecheck` | 已通过（playground `vue-tsc --noEmit`） |
 | 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |
 
-### typecheck 错误分布（上次记录 27，本轮未重跑）
-
-| 类别 | 数量 | 位置 |
-|------|------|------|
-| 缺 `@types/node` | 11 | `playground/src/mock/plugin.ts`（Buffer / IncomingMessage，5 个）；`vamis-core` 两个测试里的 `node:fs` / `node:path` / `node:url`（6 个） |
-| 模板 / 类型窄化 | 16 | `SchemaRenderer.vue`、`FormItem.vue`、`CRUD.vue`、`Table.vue`、`data/Table2.vue`；表单侧 `Checkbox`、`Editor`、`InputArray`、`InputDate`、`InputGroup`、`InputNumber`、`InputRichText`、`InputTable`、`InputText`、`Radios`、`Textarea` |
-
-窄化错误以 `TS2322`（`{}` 传给 `string | number`）、`TS2538`（用 `undefined` 做索引）、`TS2367`（字符串与布尔比较）为主。
-结论：`dev` / `build` 可用；`typecheck` 需要清理后才能进 CI。
+结论：`dev` / `build` / `typecheck` 可用；`typecheck` 可进 CI。
 
 ## 3. amis type 覆盖
 
@@ -118,7 +110,7 @@
 > 运行时语义与实现顺序见 [语义设计](2026-10-20-vamis-runtime-semantics-design.md)；本节只列同步动作。
 
 1. **补齐 8 个遗漏**：3 个别名是一行改动；`cascader-select` 复用 `NestedSelect`；`js-editor` / `ts-editor` 复用 `editor`；`card-item-field` / `cell-field` 并进 `cell`。
-2. **清 typecheck**：先加 `@types/node` 消掉 11 个，再修 16 个模板窄化；之后把 `pnpm test + typecheck + build` 组合成提交门禁。
+2. **提交门禁**：`pnpm typecheck` 已清零；可以把 `pnpm test + typecheck + build` 组合成 CI。
 3. **补深度而不是补数量**：
    - CRUD：`loadDataOnce`、`quickEdit`、`syncLocation`；
    - 表单：`combo` / `input-table` 的子表单 `api`、更多校验规则；

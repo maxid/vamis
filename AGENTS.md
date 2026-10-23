@@ -40,7 +40,7 @@ pnpm docs         # 同上（文档不另起端口）
 pnpm test         # @vamis/formula + @vamis/core + @vamis/sdk vitest
 pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
 pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
-pnpm typecheck    # 目前仍有既有 vue-tsc 错误，暂不作提交门禁
+pnpm typecheck    # vue-tsc 无错误
 pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 ```
 

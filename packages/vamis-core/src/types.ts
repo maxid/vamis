@@ -4,14 +4,16 @@ export type PlainObject = Record<string, any>
 
 export type SchemaCollection = SchemaNode | SchemaNode[]
 
-export type SchemaNode = string | SchemaObject
+/** YAML/JSON 子节点可以是字符串、数字、布尔；`false` 表示不渲染。 */
+export type SchemaNode = string | number | boolean | SchemaObject
 
 export interface SchemaObject extends PlainObject {
   type?: string
   name?: string
   id?: string
   title?: string
-  label?: string
+  /** Amis 表单项：`false` 隐藏 label。 */
+  label?: string | false
   className?: string | Record<string, boolean | string>
   style?: string | Record<string, string>
   cssVars?: Record<string, string>
@@ -127,7 +129,8 @@ export interface RendererConfig {
 }
 
 export interface RendererEnv {
-  fetcher: (api: ApiObject, data?: PlainObject) => Promise<Payload>
+  /** 返回原始响应体；`requestApi` 再 `normalizePayload`。 */
+  fetcher: (api: ApiObject, data?: PlainObject) => Promise<unknown>
   notify: (type: 'info' | 'success' | 'warning' | 'error', msg: string) => void
   jumpTo: (to: string) => void
   alert: (msg: string, title?: string) => void

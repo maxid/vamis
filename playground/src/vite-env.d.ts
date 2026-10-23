@@ -20,18 +20,3 @@ declare module '*.md' {
   const content: string
   export default content
 }
-
-declare module '../../../website/nav.mjs' {
-  export const startNav: { text: string; link: string }[]
-  export const conceptNav: { text: string; link: string }[]
-  export const styleNav: { text: string; link: string }[]
-  export const typeNav: { text: string; link: string }[]
-  export const extendNav: { text: string; link: string }[]
-  export function isCompGroup(entry: {
-    items?: { text: string; link: string }[]
-  }): entry is { text: string; collapsed?: boolean; items: { text: string; link: string }[] }
-  export const componentNav: Array<
-    | { text: string; link: string; role?: string }
-    | { text: string; collapsed?: boolean; items: { text: string; link: string }[] }
-  >
-}

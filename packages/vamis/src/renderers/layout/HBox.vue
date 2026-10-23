@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { cssSize, layoutNodes } from './utils'
+import { cssSize, layoutNodes, styleObject } from './utils'
 
 const props = defineProps<{ schema: SchemaObject }>()
 const columns = computed(() => asArray(props.schema.columns || props.schema.body) as SchemaObject[])
@@ -44,7 +44,7 @@ function colStyle(col: SchemaObject) {
     width,
     height: cssSize(col.height),
     flex: width ? '0 0 auto' : '1 1 0%',
-    ...(col.style || {}),
+    ...styleObject(col.style),
   }
 }
 

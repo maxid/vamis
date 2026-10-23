@@ -16,7 +16,7 @@ export function buildSearchIndex(): SearchHit[] {
     { href: '/editor', title: '编辑器', group: '页面', keywords: '编辑器 yaml 可视化' },
   ]
   for (const group of docsGroups) {
-    for (const item of group.items) {
+    for (const item of group.items ?? []) {
       hits.push({
         href: item.link,
         title: item.text,

@@ -17,7 +17,7 @@ import {EvaluatorOptions, FilterContext, FilterMap, FunctionMap} from './types';
 import {FormulaEvalError} from './error';
 
 export class Evaluator {
-  readonly filters: FilterMap;
+  readonly filters: FilterMap = {};
   readonly functions: FunctionMap = {};
   readonly context: {
     [propName: string]: any;
@@ -119,23 +119,19 @@ export class Evaluator {
         throw new Error(`filter \`${filter.name}\` not exists.`);
       }
       context.filter = filter;
-      input = fn.apply(
-        context,
-        [input].concat(
-          filter.args.map((item: any) => {
-            if (item?.type === 'mixed') {
-              return item.body
-                .map((item: any) =>
-                  typeof item === 'string' ? item : this.evalute(item)
-                )
-                .join('');
-            } else if (item.type) {
-              return this.evalute(item);
-            }
-            return item;
-          })
-        )
-      );
+      const args = filter.args.map((item: any) => {
+        if (item?.type === 'mixed') {
+          return item.body
+            .map((item: any) =>
+              typeof item === 'string' ? item : this.evalute(item)
+            )
+            .join('');
+        } else if (item.type) {
+          return this.evalute(item);
+        }
+        return item;
+      });
+      input = fn.call(context, input, ...args);
     }
     return input;
   }
@@ -1144,7 +1140,7 @@ export class Evaluator {
    * @returns {number[]} 长度集合
    */
   fnLENGTH(...args: any[]) {
-    return this.fnLEN.apply(this, args);
+    return this.fnLEN(args[0]);
   }
 
   /**

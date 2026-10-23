@@ -189,7 +189,7 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     snippetSuggestions: 'none',
     wordBasedSuggestions: 'off',
     parameterHints: { enabled: false },
-    hover: { enabled: false },
+    hover: { enabled: 'off' },
     occurrencesHighlight: 'off',
     renderValidationDecorations: 'off',
     contextmenu: false,
@@ -374,7 +374,7 @@ function intellisenseExtra(flag: EditorIntellisense | undefined): Record<string,
       suggestOnTriggerCharacters: false,
       parameterHints: { enabled: false },
       wordBasedSuggestions: 'off',
-      hover: { enabled: false },
+      hover: { enabled: 'off' },
       snippetSuggestions: 'none',
     }
   }
@@ -405,11 +405,12 @@ export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts
     overflowWidgetsDomNode: overflowHost,
   })
   syncOverflowHostTheme(editor, opts.theme)
-  monaco.languages.json?.jsonDefaults.setDiagnosticsOptions({
+  const jsonDefaults = monaco.json?.jsonDefaults
+  jsonDefaults?.setDiagnosticsOptions({
     enableSchemaRequest: true,
     validate: true,
     allowComments: true,
-    ...monaco.languages.json?.jsonDefaults.diagnosticsOptions,
+    ...jsonDefaults.diagnosticsOptions,
   })
   return {
     monaco,

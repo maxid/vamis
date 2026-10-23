@@ -63,10 +63,11 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 概念页「模板」**95% 已完成**、「表达式」**90% 已完成**、「数据映射」**90% 已完成**、「联动」**90% 已完成**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 188 + core 175 + sdk 13 | `typecheck` 仍有既有错误；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 185 + core 175 + sdk 13 | `pnpm typecheck` 已通过；渲染器无组件级测试 |
 
 **最近交付**
 
+- 清掉 `pnpm typecheck`：playground tsconfig 排除测试文件、补 `nav.d.mts`，并收窄 SchemaNode / 表单项 `label` / fetcher / Monaco 0.57 类型。`vue-tsc --noEmit` 现为 0 错误。
 - 概念页「联动」对标 Amis 同名页：**90% 已完成**。`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、点号 `form.select`、逗号多目标、动态 `target` / `name` 已在 5173 核对。提交回写显隐用 `${id !== undefined}`（公式没有 `typeof`）。`clearValueOnHidden` 仍等 D6。
 - 概念页「数据映射」对标 Amis 同名页：**90% 已完成**。模板字符串 / 链式取值 / `api.data` / `&` 展开 / `$table` 数组提取 / namespace / P0 过滤器均可跑。`dataMapping` 补上 `$rows` 提取。其余过滤器仍 P1。
 - 概念页「表达式」对标 Amis 同名页：**90% 已完成**。使用场景、`${}` 语法、公式 / `ARRAYMAP` 箭头函数、函数手册（include `@vamis/formula` `doc.md`）均可跑。旧版纯 JS 仅兼容，不写入新示例（D2）。表达式诊断仍属 D8。
@@ -151,6 +152,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。然后清 `pnpm typecheck`。
+6. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
 
 非本阶段：office/pdf 真实预览、TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。
