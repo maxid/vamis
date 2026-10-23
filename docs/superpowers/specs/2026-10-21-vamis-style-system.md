@@ -10,7 +10,7 @@
   - Amis 源码：`packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
   - 在线文档：Amis `http://localhost:8888/zh-CN/style/index`；Vamis Playground `/style`
 
-水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**盒子数字对齐 cxd**（商业 YAML 才能套），配色独立。不搬 `cxd-` class，不编译 Amis SCSS。
+水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**不搬 `cxd-` 前缀、不编译 Amis SCSS**；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue token、`cva` variants 与 Tailwind utility。配色走语义 token，不必钉死云舍蓝。规则：`.cursor/rules/cxd-transcribe.mdc`。
 
 ## 0. 准则：默认自适应
 
@@ -32,12 +32,12 @@ Amis 的样式不是一套设计系统原语，而是**巨型主题 CSS 包 + �
 
 | 主题 | class 前缀 `$ns` | 观感 | 对 Vamis |
 |------|------------------|------|----------|
-| `cxd`（默认，云舍） | `cxd-` | 品牌蓝 `#2468f2`、中性灰阶 11 档、圆角 4px、控件 32px | **只学密度与层次**，不搬前缀与蓝按钮皮肤 |
+| `cxd`（默认，云舍） | `cxd-` | 品牌蓝 `#2468f2`、中性灰阶 11 档、圆角 4px、控件 32px | **前缀不搬**；盒子 / 密度 / 交互尽量像素级转写。主色走 `--primary`，不必钉死云舍蓝 |
 | `antd` | `antd-` | Ant 红/金/绿、主色更靠 `#1677ff` 系 | 不做成命名主题包（D12 P1 `registerTheme`） |
 | `ang` | `a-` | 偏紫链接触色 `#7266ba`，其余结构同套变量 | 同上 |
 | `dark` | `dark-` | 中性色阶整体翻转，品牌仍偏蓝 | 对应 shadcn `.dark`，同一套语义名 |
 
-四个主题是同一套 SCSS 组件，换的是 `:root` 里 `--colors-*` 色板和 `$ns`。Vamis 不复制这套包，只用 CSS 变量 + `.dark`。
+四个主题是同一套 SCSS 组件，换的是 `:root` 里 `--colors-*` 色板和 `$ns`。Vamis **不复制这套 SCSS 包**（也不输出 `$ns` 前缀），cxd 能力落到 CSS 变量 + `.dark` + Tailwind。
 
 ### 1.2 CSS 变量分层
 
@@ -106,8 +106,8 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 2. 变体用 `cva`，不写主题包、不写 `cxd-Button--primary`。
 3. 缺的原语拷进 `packages/vamis-ui`（本轮补 `Slider`；Tooltip 已有）。渲染器组合它们。
 4. 亮暗主题同一套语义名。
-5. 禁止 `cxd-`，禁止引入 Amis SCSS。
-6. 身份：Amis `--fonts-base-family` 系统栈（不嵌入 webfont）。密度学 Amis，皮用 ink 语义色，不搬运云舍 `#2468f2` 像素。
+5. 禁止输出 `cxd-` 前缀，禁止引入 Amis SCSS。cxd 能力尽量像素级落到 token / utility / variants。
+6. 身份：Amis `--fonts-base-family` 系统栈（不嵌入 webfont）。密度与盒子对齐 cxd；主色走 shadcn 语义 token，需要对齐云舍蓝时用 `cssVars` / `--primary`。
 
 ## 3. Token 对照：哪些直接映射，哪些要扩展
 
@@ -179,16 +179,18 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 辅助类 `m-t-md` / `p-l-xs` 的 xs…xl 也是这套 gap，不是 Tailwind `m-1` 的另一套阶。解析仍是 D12，但阶必须先锁死。
 
-### 3.4 明确不搬
+### 3.4 明确不搬（前缀与包，不是能力）
 
-| Amis | 为什么不搬 |
+下面这些是 **实现载体**，不搬进产物。对应 **能力** 仍要转写，见上表与 §2。
+
+| 不搬的载体 | 转写到 |
 |------|------------|
-| `$ns: cxd-` 及所有 BEM | shadcn 用 `data-slot` + utility |
-| `--Form-*` / `--Table-*` / `--Button--*` 里**非盒子**的颜色/阴影私有项 | 颜色独立生成；盒子已在 3.3 抽出 |
-| 主题 CSS 包 cxd/antd/ang/dark | `.dark` + 未来 `registerTheme` |
-| 云舍蓝 `#2468f2` | 配色可另起 |
-| 辅助类文件 helper.css | 真 Tailwind；`m:`/`pc:` 与 `m-t-xs` 名字仍按 cxd 语义解析（D12） |
-| SCSS mixin / 选择器结构 | 组件用 variants |
+| `$ns: cxd-` 及所有 BEM | shadcn `data-slot` + utility + token |
+| 主题 CSS 包 cxd/antd/ang/dark | `:root` / `.dark` + 未来 `registerTheme` |
+| `--Form-*` / `--Table-*` / `--Button--*` 里颜色/阴影私有项 | 语义 token（`--primary` / `--destructive` / `--success`…）；盒子已在 3.3 抽出 |
+| 云舍蓝 `#2468f2` 作为唯一默认主色 | `--primary`；可用 `cssVars` 对齐 |
+| 辅助类文件 helper.css 整包 | Tailwind + `@vamis/ui` 的 `m-t-xs` / `w-*` / `h-*`；`m:`/`pc:` 按 cxd 语义 |
+| SCSS mixin / 选择器结构 | `cva` variants |
 
 ## 4. 组件 variants 映射
 
@@ -237,7 +239,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 ## 7. 验收标准
 
-主路径对照 cxd **盒子数字**（32 / 24 / 98 / 40），配色不要求像云舍。
+主路径对照 cxd **盒子数字**（32 / 24 / 98 / 40）以及同等交互密度；配色走语义 token，不要求默认就是云舍蓝。
 
 1. **密度**：正文 14px；输入/按钮 **32px**；表单项间距 **24px**；横排 label **98px**；表格行 **40px**；表头浅底。
 2. **横排表单**：label 右对齐、固定宽、必填 `*` 为 destructive；placeholder 是 muted。
@@ -245,7 +247,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 4. **控件**：range / file / 下拉不是未修饰原生控件。
 5. **反馈**：Dialog 标题+关闭+token 间距；Toast 四态着色。
 6. **壳**：Playground 与 Editor 同源 token；画布灰、面板白。
-7. **主题**：`.dark` 对比足够；紧凑/舒适切换时控件高度一起变；无 `cxd-` class。
+7. **主题**：`.dark` 对比足够；紧凑/舒适切换时控件高度一起变；产物无 `cxd-` 前缀。
 8. **默认自适应**：无 `size` 的横排表单控件吃满值列；form 自身吃满 page，不靠 `w-full` / `size: full`。
 
 未纳入本轮：`xxxClassName` 子节点、antd/ang 命名主题、`registerTheme`（D12 P1）。

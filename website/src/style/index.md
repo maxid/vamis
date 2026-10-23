@@ -5,14 +5,14 @@ title: 快速开始
 # 快速开始
 
 ::: info 实现进度 70% · 进行中
-`cssVars`、`className`、间距 / 宽高 helper、`wrapper` 的 `style`、默认自适应已接。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。不搬 `cxd-` / 主题 SCSS。
+`cssVars`、`className`、间距 / 宽高 helper、`wrapper` 的 `style`、默认自适应已接。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。不搬 `cxd-` 前缀 / 不编译主题 SCSS；能力转写到 token 与 Tailwind。
 :::
 
 Vamis 改观感有四条路，对齐 Amis 的用法，实现换成 shadcn token：
 
 1. **CSS 变量**：`page.cssVars`（或 IR `metadata.style.cssVars`）改一整页的主色、控件高、间距。
 2. **辅助 class**：节点写 `className`。间距 / 宽高走 `@vamis/ui` 的 helper（`m-t-xs`、`w-1/2`）；布局 / 颜色 / 圆角走 Tailwind 工具类。
-3. **不要自己编译主题 CSS**。Amis 的 `scss/themes/cxd.scss` 这条路 Vamis 不做，也不搬 `cxd-` 前缀。
+3. **不要自己编译主题 CSS**。Amis 的 `scss/themes/cxd.scss` 和 `.cxd-*` 前缀 Vamis 不搬；同等盒子、密度、交互尽量像素级落到 token / Tailwind。
 4. **`wrapper` 写内嵌 `style`**：只动这一块，不进主题。
 
 YAML 与 JSON 同等有效。下面用 YAML 举例。

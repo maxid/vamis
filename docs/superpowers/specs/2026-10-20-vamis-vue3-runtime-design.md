@@ -65,7 +65,7 @@ zip: "012"
 
 ## 3. 运行时
 
-Vue 3 + Pinia hub（仿 MST 节点树）+ `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语，不追 cxd 像素，也不改 YAML/IR 信封。
+Vue 3 + Pinia hub（仿 MST 节点树）+ `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。继续按 Amis 的 `type` 注册渲染器；每个渲染器封装 shadcn-vue（reka-ui）原语。不搬 `cxd-` 前缀，cxd 能力尽量像素级转写；不改 YAML/IR 信封。
 
 对外两条入口，同一内核：
 
@@ -78,4 +78,4 @@ SDK 把 Vue/Pinia/渲染器打进 IIFE（`sdk.js` + `sdk.css`），**不是**第
 
 ## 4. 非目标（第一期）
 
-完整像素级 cxd、MST、office/pdf 真实预览、TinyMCE 全家桶、Amis `amisRequire` AMD、IE11。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。** Monaco：`code` 走 `colorize`；`editor` / `diff-editor` 本阶段待接。
+`.cxd-*` 前缀 / Amis 主题 SCSS 包、MST、office/pdf 真实预览、TinyMCE 全家桶、Amis `amisRequire` AMD、IE11。cxd 能力转写到 shadcn-vue / Tailwind 属于目标。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。** Monaco：`code` 走 `colorize`；`editor` / `diff-editor` 本阶段待接。

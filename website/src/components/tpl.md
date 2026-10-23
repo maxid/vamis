@@ -9,7 +9,7 @@ outline: deep
 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。P0 过滤器可用。缺 maxLine / badge；其余过滤器仍 P1
 :::
 
-`tpl` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`tpl` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
 

@@ -20,7 +20,7 @@ title: 组件介绍
 1. **实现进度**（标题正下方；来自组件 P0 TODO，已注册 ≠ 已完成）
 2. **可运行的 YAML / JSON**（` ```schema ` 代码块会实时渲染）
 3. **常用属性**
-4. 与 Amis 的差异（YAML、IR、未落地的 kernel）
+4. 与 Amis 的差异（YAML、IR、未落地的 kernel）。视觉不搬 `cxd-` 前缀，能力尽量像素级落到 shadcn-vue / Tailwind
 
 类型 / 概念 / 开始 / 样式 / 扩展页同样在标题下显示实现进度和完成状态。
 

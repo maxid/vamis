@@ -9,7 +9,7 @@ outline: deep
 文档主路径已对齐：`body` / `style` / `wrapperComponent` / `wrapperBody` / `bodyClassName`，以及 `click` / `mouseenter` / `mouseleave`（完整事件对象：`event.data` / `__rendererData` / `preventDefault` / `stopPropagation`）。Container 不建独立数据域，沿用父 Scope。无对外组件动作。`draggable` 未做（编辑器能力，不是运行时主路径）。
 :::
 
-Container 用来渲染其它组件。对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+Container 用来渲染其它组件。对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **布局**。对照进度以仓库组件 P0 TODO 为准。
 

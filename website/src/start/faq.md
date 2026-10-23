@@ -5,12 +5,12 @@ title: 常见问题
 # 常见问题
 
 ::: tip 实现进度 90% · 已完成
-口径文档：YAML/JSON 并列、已注册 ≠ 已完成、默认自适应、不搬 cxd。随实现更新，不是运行时功能页。
+口径文档：YAML/JSON 并列、已注册 ≠ 已完成、默认自适应、不搬 `cxd-` 前缀（能力转写到 shadcn-vue / Tailwind）。随实现更新，不是运行时功能页。
 :::
 
 ## 和 Amis 是什么关系？
 
-对齐 **组件 type 与 schema 语义**（6.13.0）。不是 React/MST 的移植，也不复刻 `cxd-` 皮肤。UI 原语是 shadcn-vue。
+对齐 **组件 type 与 schema 语义**（6.13.0）。不是 React/MST 的移植。不搬 `cxd-` 前缀；cxd 的盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。
 
 ## 作者态必须用 YAML 吗？
 
@@ -22,7 +22,7 @@ title: 常见问题
 
 ## 有没有 JS SDK？能像 Amis 那样 `embed` 吗？
 
-有。任意 HTML 用 `vamis.embed(container, schema)`，对齐 `amis.embed`。产物：`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`。见 [JS SDK](/start/sdk)。Vue 工程继续用 `VamisRoot`。两条入口同一内核，没有 `amisRequire`，也不搬 `cxd.css`。
+有。任意 HTML 用 `vamis.embed(container, schema)`，对齐 `amis.embed`。产物：`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`。见 [JS SDK](/start/sdk)。Vue 工程继续用 `VamisRoot`。两条入口同一内核，没有 `amisRequire`，也不单独引入 `cxd.css`（能力打进 `sdk.css`）。
 
 ## 为什么文档示例滚到可见才打 initApi？
 
@@ -38,7 +38,7 @@ title: 常见问题
 
 ## 主题能换成云舍吗？
 
-不能、也不会。皮肤是 shadcn token + `variant`。`level: primary` 映射到 `variant="default"`。页面级覆盖用 `page.cssVars`。
+没有 `theme: cxd` 去换 `.cxd-` 前缀。皮肤是 shadcn token + `variant`；cxd 的盒子和密度尽量像素级转写。`level: primary` 映射到 `variant="default"`。主色用 `page.cssVars` 或顶栏色点改，不必钉死云舍蓝。
 
 ## typecheck 过了吗？
 

@@ -2,7 +2,7 @@
 
 - 日期：2026-10-21
 - 状态：落地（token / 盒子辅助类 / IR metadata.style；`registerTheme` 仍 P1）
-- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子数字对齐 cxd**；配色独立；不含 `cxd-` 类名
+- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；配色走语义 token；不搬 `cxd-` 前缀
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
 
 ## 1. Amis 样式系统要点
@@ -16,7 +16,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | 语义变量 | 把 token 接到组件 | `_properties.scss`：`--primary`、`--Form-input-height`、`--Table-*` |
 | 页面覆盖 | `page.cssVars` | `{ "--primary": "#CD3632" }` |
 | 辅助类 | 精简版 Tailwind：`m:` / `pc:`、`hover:` | `helper.css`，与主题文件分离 |
-| 选择器前缀 | `.cxd-Button` 等 | **Vamis 不复刻** |
+| 选择器前缀 | `.cxd-Button` 等 | **不搬前缀**；能力落到 token / variants / utility |
 
 ### 1.1 主题差异
 
@@ -69,7 +69,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `level: link` | `link` |
 | `page.cssVars` | 写到页面根 style；别名映射到 shadcn 名 |
 | `m:` / `pc:` | 已接到间距 + 宽度 helper（&lt;768 / ≥768）；作者也可写 Tailwind `max-md:` / `md:` |
-| `.cxd-Form` 等 | **禁止**（盒子走 token，不走 BEM） |
+| `.cxd-Form` 等 | **禁止前缀**（盒子走 token，不走 BEM） |
 
 组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。Playground 顶栏色点改 `html[data-accent]` 的 `--accent-h`，从而带动 `--primary` / `--ring`；成功/警告/危险仍是固定语义色。
 

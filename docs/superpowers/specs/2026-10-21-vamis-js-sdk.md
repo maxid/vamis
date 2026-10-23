@@ -2,7 +2,7 @@
 
 - 日期：2026-10-21
 - 状态：部分落地（P0：`sdk.js` / `embed` / `hello.html` / `getComponentByName` / `doAction`；P1：`registerTheme` / locale）
-- 范围：任意 HTML 页面用 `<script>` 嵌入运行时，对齐 Amis `amis.embed` 的用法，不复制 React/AMD/`cxd-`
+- 范围：任意 HTML 页面用 `<script>` 嵌入运行时，对齐 Amis `amis.embed` 的用法，不复制 React/AMD，不搬 `cxd-` 前缀（能力打进 `sdk.css` 的 token / Tailwind）
 - 关联：
   - [运行时与 IR](./2026-10-20-vamis-vue3-runtime-design.md)
   - [运行时语义](./2026-10-20-vamis-runtime-semantics-design.md) D11 / D12
@@ -14,7 +14,7 @@ Amis 有两条入口：**JS SDK**（任意页面）和 **React**。Vamis 对等�
 
 商业页经常不是 Vue 工程：后台模板、jQuery、其它框架、甚至静态 HTML。Amis 能 `sdk.js` + `amis.embed('#root', schema)` 直接挂。Vamis 若只提供 npm + Vue，这些宿主嵌不进去。
 
-SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 IIFE，对外只暴露 `embed` / 注册表。内部仍是 `VamisRoot`。YAML / JSON / IR / shadcn token / 禁止 `cxd-` / D12（schema 不进函数）全部不变。
+SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 IIFE，对外只暴露 `embed` / 注册表。内部仍是 `VamisRoot`。YAML / JSON / IR / shadcn token / 不搬 `cxd-` 前缀（能力转写） / D12（schema 不进函数）全部不变。
 
 ## 2. 产物
 

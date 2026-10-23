@@ -2,12 +2,13 @@
 
 用 Vue 3 复刻 [百度 Amis](https://github.com/baidu/amis) 的 JSON 低代码运行时。作者态同时支持 **YAML** 与 **JSON**；信封对齐 **LCDP IR**（`apiVersion: lcdp.ir/v1`）。
 
-按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue**，不追像素级 `cxd`。作者态和对齐 LCDP IR 不变。
+按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue / Tailwind**。不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。作者态和对齐 LCDP IR 不变。
 
 ## 当前状态（2026-10-22）
 
 - 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
 - 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
+- **cxd 转写**：不搬 `cxd-` 前缀；盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。
 - **默认自适应**：page / form / 表单控件不写 `size` 就吃满容器；`size` / `className` 只是收窄。
 - **组装容器**：schema 布局壳用 `div`（对齐 Amis）；Form 顶层 `<form>`，嵌套默认 `div`。见 `.cursor/rules/assembly-containers.mdc`。
 - **作者态**：YAML 与 JSON 并列，不强制 YAML。

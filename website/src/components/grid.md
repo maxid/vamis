@@ -9,7 +9,7 @@ outline: deep
 12 栅格 span 可用，列等高靠 `className: h-full`；缺响应式 `xs/sm` 全套
 :::
 
-`grid` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`grid` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **布局**。对照进度以仓库组件 P0 TODO 为准。
 
