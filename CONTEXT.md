@@ -60,7 +60,7 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / **`flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺其余 Flex 逐页核、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / **`flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Grid 逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- `/style/flex/order` 对标 Amis Flex Order：`order-1`…`order-12` / `order-first` / `order-last` 独立活示例 + 三行组合；补 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style/flex/shrink` 对标 Amis Flex Shrink：`flex-shrink` / `flex-shrink-0` 独立活示例 + 三行组合；补 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style/flex/grow` 对标 Amis Flex Grow：`flex-grow` / `flex-grow-0` 独立活示例 + 三行组合；补 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style/flex/flex` 对标 Amis Flex：`flex-1` / `flex-auto` / `flex-initial` / `flex-none` 独立活示例 + 四行组合；补 `m:` / `pc:`。本页 **90% 已完成**。
@@ -184,6 +185,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Order、色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Grid Template Columns、色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
