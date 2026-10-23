@@ -2215,6 +2215,84 @@ function gridRowStartEndExtra() {
   ].join('\n')
 }
 
+function gridFlowChip(extraClass, fill, label) {
+  const pinH = extraClass && extraClass.includes('row-span') ? '' : 'h-16'
+  const cls = [extraClass, pinH, fill, 'flex items-center justify-center text-sm rounded-md']
+    .filter(Boolean)
+    .join(' ')
+  return `<div class="${cls}">${label}</div>`
+}
+
+function gridFlowStage(flowClass, items, extraGrid, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="grid ${extraGrid} ${flowClass} gap-2 w-80 ${DEMO_STAGE} p-sm rounded-md">`,
+    ...items.map((it, i) => `  ${gridFlowChip(it.cls, fills[i % 3], it.label)}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridAutoFlowExtra() {
+  const five = [1, 2, 3, 4, 5].map((n) => ({ cls: '', label: String(n) }))
+  const rowDense = [
+    { cls: 'col-span-2', label: '跨2' },
+    { cls: 'col-span-2', label: '跨2' },
+    { cls: '', label: '填' },
+  ]
+  const colDense = [
+    { cls: 'row-span-2', label: '跨2' },
+    { cls: 'row-span-2', label: '跨2' },
+    { cls: '', label: '填' },
+  ]
+  const rowColGrid = 'grid-cols-3 grid-rows-2'
+  return [
+    '## grid-flow-row',
+    '',
+    '按行填：先从左到右，再下一行。舞台 `grid-cols-3 grid-rows-2`、`w-80`，内宽 304px，每列 96px。五枚：第一行 1 2 3，第二行 4 5。',
+    '',
+    displaySchema(gridFlowStage('grid-flow-row', five, rowColGrid)),
+    '',
+    '## grid-flow-col',
+    '',
+    '按列填：先从上到下，再下一列。同一 3×2 格子：第一列 1 2，第二列 3 4，第三列 5。',
+    '',
+    displaySchema(gridFlowStage('grid-flow-col', five, rowColGrid)),
+    '',
+    '## grid-flow-row-dense',
+    '',
+    '行向 + 稠密。前两枚 `col-span-2` 会在第一行留下一列空洞；`dense` 把第三枚填进这个洞，而不是挤到下一行。',
+    '',
+    displaySchema(gridFlowStage('grid-flow-row-dense', rowDense, 'grid-cols-3')),
+    '',
+    '## grid-flow-col-dense',
+    '',
+    '列向 + 稠密。前两枚 `row-span-2` 会在第一列留下一行空洞；`dense` 把第三枚填进这个洞。舞台 `grid-rows-3 grid-cols-2 h-80`，内高 304px，每行 96px；跨 2 高 200px，填在第 3 行（上缘 216px）。',
+    '',
+    displaySchema(gridFlowStage('grid-flow-col-dense', colDense, 'grid-rows-3 grid-cols-2 h-80')),
+    '',
+    '## 组合',
+    '',
+    '同一组五枚：按行填、按列填。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...gridFlowStage('grid-flow-row', five, rowColGrid, '  '),
+      ...gridFlowStage('grid-flow-col', five, rowColGrid, '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:grid-flow-row` 按行；桌面（≥768px）`pc:grid-flow-col` 按列，第二枚在第一枚正下方。',
+    '',
+    displaySchema(gridFlowStage('m:grid-flow-row pc:grid-flow-col', five, rowColGrid)),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。列模板见 [Grid Template Columns](/style/grid/columns)，行模板见 [Grid Template Rows](/style/grid/rows)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2771,23 +2849,26 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Grid Auto Flow',
-    'grid/auto-flow',
-    '自动摆放方向。`grid-flow-col` 按列填。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-flow-col auto-cols-fr h-16 gap-2
-    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">A</span><span class="${DEMO_FILL} p-sm rounded-md">B</span><span class="${DEMO_FILL} p-sm rounded-md">C</span>'`,
-    [
+  {
+    title: 'Grid Auto Flow',
+    slug: 'grid/auto-flow',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Grid Auto Flow：`grid-flow-row` / `col` / `row-dense` / `col-dense` 落在同一元素的 `grid-auto-flow`。独立样例 + 行列组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `grid-flow-dense`。',
+    tableFirst: true,
+    intro:
+      '自动摆放怎么走。父级先写 `display: grid` 和列/行模板。`grid-flow-row` 先填行（默认）；`grid-flow-col` 先填列。带 `dense` 的会回头填空洞。舞台钉死 `w-80`（320px），三列时每列 96px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 flow 类打在内层 grid 上。',
+    rows: [
       ['grid-flow-row', 'grid-auto-flow: row'],
       ['grid-flow-col', 'grid-auto-flow: column'],
-      ['grid-flow-dense', 'grid-auto-flow: dense'],
       ['grid-flow-row-dense', 'grid-auto-flow: row dense'],
       ['grid-flow-col-dense', 'grid-auto-flow: column dense'],
     ],
-  ),
+    extra: gridAutoFlowExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Grid Auto Columns',
     'grid/auto-columns',

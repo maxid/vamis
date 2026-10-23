@@ -224,6 +224,8 @@
   .grid-flow-row { grid-auto-flow: row; }
   .grid-flow-col { grid-auto-flow: column; }
   .grid-flow-dense { grid-auto-flow: dense; }
+  .grid-flow-row-dense { grid-auto-flow: row dense; }
+  .grid-flow-col-dense { grid-auto-flow: column dense; }
   .gap-0 { gap: 0; }
   .gap-1 { gap: 0.25rem; }
   .gap-2 { gap: 0.5rem; }
@@ -614,6 +616,10 @@
   .m\:row-end-12 { grid-row-end: 12; }
   .m\:row-end-13 { grid-row-end: 13; }
   .m\:row-end-auto { grid-row-end: auto; }
+  .m\:grid-flow-row { grid-auto-flow: row; }
+  .m\:grid-flow-col { grid-auto-flow: column; }
+  .m\:grid-flow-row-dense { grid-auto-flow: row dense; }
+  .m\:grid-flow-col-dense { grid-auto-flow: column dense; }
 }
 
 @media (min-width: 768px) {
@@ -812,6 +818,10 @@
   .pc\:row-end-12 { grid-row-end: 12; }
   .pc\:row-end-13 { grid-row-end: 13; }
   .pc\:row-end-auto { grid-row-end: auto; }
+  .pc\:grid-flow-row { grid-auto-flow: row; }
+  .pc\:grid-flow-col { grid-auto-flow: column; }
+  .pc\:grid-flow-row-dense { grid-auto-flow: row dense; }
+  .pc\:grid-flow-col-dense { grid-auto-flow: column dense; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
