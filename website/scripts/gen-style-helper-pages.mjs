@@ -1951,6 +1951,103 @@ function gridColumnsExtra() {
   ].join('\n')
 }
 
+function gridSpanChip(extraClass, fill, label) {
+  const cls = [extraClass, 'h-16', fill, 'flex items-center justify-center text-sm rounded-md']
+    .filter(Boolean)
+    .join(' ')
+  return `<div class="${cls}">${label}</div>`
+}
+
+function gridSpanStage(items, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="grid grid-cols-4 gap-2 w-80 ${DEMO_STAGE} p-sm rounded-md">`,
+    ...items.map((it, i) => `  ${gridSpanChip(it.cls, fills[i % 3], it.label)}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridColumnStartEndExtra() {
+  const span2 = [
+    { cls: 'col-span-2', label: '跨2' },
+    { cls: '', label: '3' },
+    { cls: '', label: '4' },
+  ]
+  const span3 = [
+    { cls: 'col-span-3', label: '跨3' },
+    { cls: '', label: '4' },
+  ]
+  const spanFull = [
+    { cls: 'col-span-full', label: '满' },
+    { cls: '', label: '1' },
+    { cls: '', label: '2' },
+  ]
+  const start2 = [
+    { cls: 'col-start-2', label: '起2' },
+    { cls: '', label: '后' },
+  ]
+  const end4 = [{ cls: 'col-end-4', label: '止4' }]
+  const responsive = [
+    { cls: 'm:col-span-4 pc:col-span-2', label: '跨' },
+    { cls: '', label: '3' },
+    { cls: '', label: '4' },
+  ]
+  return [
+    '## col-span-2',
+    '',
+    '父级 `grid-cols-4`、舞台 `w-80`。内宽 304px，缝 8px，每列 70px。`col-span-2` 跨两列 = 70 + 8 + 70 = 148px。后面两枚各占 1 列。',
+    '',
+    displaySchema(gridSpanStage(span2)),
+    '',
+    '## col-span-3',
+    '',
+    '跨三列 = 70 × 3 + 8 × 2 = 226px。余下一列 70px。',
+    '',
+    displaySchema(gridSpanStage(span3)),
+    '',
+    '## col-span-full',
+    '',
+    '`grid-column: 1 / -1`，铺满整行 304px。后面两枚换到下一行，各 70px。',
+    '',
+    displaySchema(gridSpanStage(spanFull)),
+    '',
+    '## col-start-2',
+    '',
+    '`grid-column-start: 2`，默认跨 1 列。第一枚从第 2 列起（左缘 86px），宽 70px。第二枚自动流到第 3 列。',
+    '',
+    displaySchema(gridSpanStage(start2)),
+    '',
+    '## col-end-4',
+    '',
+    '`grid-column-end: 4`，默认跨 1 列，落在第 3 列（线 3–4）。左缘 164px，宽 70px。',
+    '',
+    displaySchema(gridSpanStage(end4)),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：跨 2、跨 3、铺满、从第 2 列起。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...gridSpanStage(span2, '  '),
+      ...gridSpanStage(span3, '  '),
+      ...gridSpanStage(spanFull, '  '),
+      ...gridSpanStage(start2, '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第一枚 `m:col-span-4` 铺满 304px；桌面（≥768px）`pc:col-span-2` 跨两列 148px。',
+    '',
+    displaySchema(gridSpanStage(responsive)),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。列模板见 [Grid Template Columns](/style/grid/columns)，跨行见 [Grid Row Start / End](/style/grid/row-start-end)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2418,25 +2515,40 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Grid Column Start / End',
-    'grid/column-start-end',
-    '子项跨列。`col-span-2` 占两列。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-cols-4 gap-2
-    tpl: '<span class="col-span-2 ${DEMO_FILL} p-sm rounded-md">span 2</span><span class="${DEMO_FILL} p-sm rounded-md">3</span><span class="${DEMO_FILL} p-sm rounded-md">4</span>'`,
-    [
+  {
+    title: 'Grid Column Start / End',
+    slug: 'grid/column-start-end',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Grid Column Start / End：`col-span-*` / `col-start-*` / `col-end-*` 落在同一元素的 `grid-column` / `grid-column-start` / `grid-column-end`。独立样例 + 组合；`col-span-11` 与 Amis 一样是 `span 11 / span 1`；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '子项怎么占列、从哪条线起止。父级先写 `display: grid` 和列模板（见 [Grid Template Columns](/style/grid/columns)）。`col-span-*` 跨 N 列；`col-span-full` 从 1 到 -1 铺满；`col-start-*` / `col-end-*` 钉在网格线上（4 列网格的线是 1–5）。舞台钉死 `w-80` + `grid-cols-4`，每列 70px。`col-span-11` 与 Amis helper 一样写成 `span 11 / span 1`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把跨列类打在子项上。',
+    rows: [
       ['col-auto', 'grid-column: auto'],
-      ['col-span-1', '跨 1 列'],
-      ['col-span-2', '跨 2 列'],
-      ['col-span-3', '跨 3 列'],
+      ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => [
+        `col-span-${n}`,
+        `grid-column: span ${n} / span ${n}`,
+      ]),
+      ['col-span-11', 'grid-column: span 11 / span 1'],
+      ['col-span-12', 'grid-column: span 12 / span 12'],
       ['col-span-full', 'grid-column: 1 / -1'],
-      ['col-start-1', 'grid-column-start: 1'],
-      ['col-end-3', 'grid-column-end: 3'],
+      ...Array.from({ length: 13 }, (_, i) => [
+        `col-start-${i + 1}`,
+        `grid-column-start: ${i + 1}`,
+      ]),
+      ['col-start-auto', 'grid-column-start: auto'],
+      ...Array.from({ length: 13 }, (_, i) => [
+        `col-end-${i + 1}`,
+        `grid-column-end: ${i + 1}`,
+      ]),
+      ['col-end-auto', 'grid-column-end: auto'],
     ],
-  ),
+    extra: gridColumnStartEndExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Grid Template Rows',
     'grid/rows',
