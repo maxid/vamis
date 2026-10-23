@@ -95,6 +95,8 @@
   .flex-none { flex: none; }
   .grow { flex-grow: 1; }
   .grow-0 { flex-grow: 0; }
+  .flex-grow { flex-grow: 1; }
+  .flex-grow-0 { flex-grow: 0; }
   .shrink { flex-shrink: 1; }
   .shrink-0 { flex-shrink: 0; }
   .order-first { order: -9999; }
@@ -345,6 +347,8 @@
   .m\:flex-auto { flex: 1 1 auto; }
   .m\:flex-initial { flex: 0 1 auto; }
   .m\:flex-none { flex: none; }
+  .m\:flex-grow { flex-grow: 1; }
+  .m\:flex-grow-0 { flex-grow: 0; }
   .m\:text-left { text-align: left; }
   .m\:text-center { text-align: center; }
   .m\:text-right { text-align: right; }
@@ -421,6 +425,8 @@
   .pc\:flex-auto { flex: 1 1 auto; }
   .pc\:flex-initial { flex: 0 1 auto; }
   .pc\:flex-none { flex: none; }
+  .pc\:flex-grow { flex-grow: 1; }
+  .pc\:flex-grow-0 { flex-grow: 0; }
   .pc\:text-left { text-align: left; }
   .pc\:text-center { text-align: center; }
   .pc\:text-right { text-align: right; }

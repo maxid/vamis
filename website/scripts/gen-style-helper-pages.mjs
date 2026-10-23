@@ -1728,6 +1728,44 @@ function flexFlexExtra() {
   ].join('\n')
 }
 
+function flexGrowExtra() {
+  return [
+    '## flex-grow',
+    '',
+    '`flex-grow: 1`。shrink / basis 不动。舞台 `w-80` = 320px，内宽 304px，缝 `gap-2` = 8px。左枚 `flex-grow-0 w-16` 钉死 64px，右枚吃掉剩余 232px。',
+    '',
+    displaySchema(flexFlexRow('flex-grow-0', 'flex-grow', '钉', '吃剩余', 'w-16')),
+    '',
+    '## flex-grow-0',
+    '',
+    '`flex-grow: 0`。不增长（也是 CSS 默认）。两枚都停在内容宽，右边留出灰底。',
+    '',
+    displaySchema(flexFlexPair('flex-grow-0')),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：钉死 + 吃剩余、两边都增长、两边都不增长。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...flexFlexRow('flex-grow-0', 'flex-grow', '钉', '吃剩余', 'w-16', '', '  '),
+      ...flexFlexPair('flex-grow', '  '),
+      ...flexFlexPair('flex-grow-0', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-grow-0` 按内容宽；桌面（≥768px）`pc:flex-grow` 吃剩余。',
+    '',
+    displaySchema(flexFlexRow('flex-grow-0', 'm:flex-grow-0 pc:flex-grow', '钉', '吃剩余', 'w-16')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。简写见 [Flex](/style/flex/flex)，收缩见 [Flex Shrink](/style/flex/shrink)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2114,20 +2152,24 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex Grow',
-    'flex/grow',
-    '只改 grow，不改 shrink / basis。',
-    `type: page
-body:
-  - type: tpl
-    className: flex gap-2
-    tpl: '<span class="grow ${DEMO_FILL} p-sm rounded-md">grow</span><span class="grow-0 ${DEMO_FILL} p-sm rounded-md">grow-0</span>'`,
-    [
-      ['grow', 'flex-grow: 1'],
-      ['grow-0', 'flex-grow: 0'],
+  {
+    title: 'Flex Grow',
+    slug: 'flex/grow',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex Grow：`flex-grow` / `flex-grow-0` 落在同一元素的 `flex-grow`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '只改子项的 `flex-grow`，不改 shrink / basis。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。`flex-grow` 为 1，从内容宽起吃剩余；`flex-grow-0` 为 0，不增长（也是 CSS 默认）。Amis 类名带 `flex-` 前缀，不是 Tailwind 的 `grow`。舞台钉死 `w-80`（320px）。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 grow 类打在子项上。',
+    rows: [
+      ['flex-grow', 'flex-grow: 1'],
+      ['flex-grow-0', 'flex-grow: 0'],
     ],
-  ),
+    extra: flexGrowExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex Shrink',
     'flex/shrink',
