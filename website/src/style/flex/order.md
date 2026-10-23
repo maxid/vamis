@@ -6,37 +6,187 @@ title: Flex Order
 
 # Flex Order
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Flex Order：`order-1`…`order-12` / `order-first` / `order-last` 落在同一元素的 `order`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-不改 schema 顺序，只改视觉顺序。
+只改子项的 `order`，不改 schema / DOM 顺序。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。没写时是 CSS 默认 0；`order-1`…`order-12` 越大越靠后；`order-first` 为 -9999 拉到最前；`order-last` 为 9999 推到最后。同值仍按 DOM。Amis 没有 `order-none`（那是 Tailwind 的 0，helper 留作别名）。数字 1-3 是 DOM 顺序。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 order 类打在子项上。
+
+## 类名
+
+| Class | Properties |
+| --- | --- |
+| `order-1` | `order: 1` |
+| `order-2` | `order: 2` |
+| `order-3` | `order: 3` |
+| `order-4` | `order: 4` |
+| `order-5` | `order: 5` |
+| `order-6` | `order: 6` |
+| `order-7` | `order: 7` |
+| `order-8` | `order: 8` |
+| `order-9` | `order: 9` |
+| `order-10` | `order: 10` |
+| `order-11` | `order: 11` |
+| `order-12` | `order: 12` |
+| `order-first` | `order: -9999` |
+| `order-last` | `order: 9999` |
+
+## order-1
+
+`order-1`…`order-12` 是正整数。盒子 64×64，缝 `gap-2` = 8px。数字 1-3 是 DOM 顺序：1 写 `order-3`、2 写 `order-1`、3 写 `order-2`，视觉从左到右变成 2、3、1。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: flex gap-2
-    tpl: |
-      <span class="order-3 bg-yellow-200 p-sm rounded-md">A order-3</span><span class="order-1 bg-yellow-200 p-sm rounded-md">B order-1</span><span class="order-2 bg-yellow-200 p-sm rounded-md">C order-2</span>
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="order-3 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="order-1 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="order-2 w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
 ```
 
 ```schema: scope="body"
 type: code
 language: html
 value: |-
-  <span class="order-3 bg-yellow-200 p-sm rounded-md">A order-3</span><span class="order-1 bg-yellow-200 p-sm rounded-md">B order-1</span><span class="order-2 bg-yellow-200 p-sm rounded-md">C order-2</span>
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="order-3 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="order-1 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="order-2 w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
 ```
 
-## 类名
+## order-first
 
-| Class | Properties |
-| --- | --- |
-| `order-first` | `order: -9999` |
-| `order-last` | `order: 9999` |
-| `order-none` | `order: 0` |
-| `order-1` | `order: 1` |
-| `order-2` | `order: 2` |
-| `order-3` | `order: 3` |
+`order: -9999`。第三枚拉到最前；没写 order 的两枚仍是 0，按 DOM 排在后面。视觉 3、1、2。
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="order-first w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="order-first w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## order-last
+
+`order: 9999`。第一枚推到最后。视觉 2、3、1。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="order-last w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="order-last w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组 1-2-3：数字档重排、最后一枚提前、第一枚置后。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="order-3 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="order-1 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="order-2 w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="order-first w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="order-last w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="order-3 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="order-1 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="order-2 w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="order-first w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="order-last w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第二枚 `m:order-last` 在末尾；桌面（≥768px）`pc:order-first` 拉到最前。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="m:order-last pc:order-first w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="m:order-last pc:order-first w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。方向见 [Flex Direction](/style/flex/direction)，换行见 [Flex Wrap](/style/flex/wrap)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

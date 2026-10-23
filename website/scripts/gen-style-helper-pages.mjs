@@ -1821,6 +1821,66 @@ function flexShrinkExtra() {
   ].join('\n')
 }
 
+function flexOrderChip(orderClass, fill, label) {
+  const cls = [orderClass, 'w-16 h-16', fill, 'flex items-center justify-center text-sm rounded-md']
+    .filter(Boolean)
+    .join(' ')
+  return `<div class="${cls}">${label}</div>`
+}
+
+function flexOrderStage(orderClasses, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="flex gap-2 ${DEMO_STAGE} p-sm rounded-md">`,
+    ...orderClasses.map((cls, i) => `  ${flexOrderChip(cls, fills[i], String(i + 1))}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function flexOrderExtra() {
+  return [
+    '## order-1',
+    '',
+    '`order-1`…`order-12` 是正整数。盒子 64×64，缝 `gap-2` = 8px。数字 1-3 是 DOM 顺序：1 写 `order-3`、2 写 `order-1`、3 写 `order-2`，视觉从左到右变成 2、3、1。',
+    '',
+    displaySchema(flexOrderStage(['order-3', 'order-1', 'order-2'])),
+    '',
+    '## order-first',
+    '',
+    '`order: -9999`。第三枚拉到最前；没写 order 的两枚仍是 0，按 DOM 排在后面。视觉 3、1、2。',
+    '',
+    displaySchema(flexOrderStage(['', '', 'order-first'])),
+    '',
+    '## order-last',
+    '',
+    '`order: 9999`。第一枚推到最后。视觉 2、3、1。',
+    '',
+    displaySchema(flexOrderStage(['order-last', '', ''])),
+    '',
+    '## 组合',
+    '',
+    '同一组 1-2-3：数字档重排、最后一枚提前、第一枚置后。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...flexOrderStage(['order-3', 'order-1', 'order-2'], '  '),
+      ...flexOrderStage(['', '', 'order-first'], '  '),
+      ...flexOrderStage(['order-last', '', ''], '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第二枚 `m:order-last` 在末尾；桌面（≥768px）`pc:order-first` 拉到最前。',
+    '',
+    displaySchema(flexOrderStage(['', 'm:order-last pc:order-first', ''])),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。方向见 [Flex Direction](/style/flex/direction)，换行见 [Flex Wrap](/style/flex/wrap)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2243,24 +2303,25 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex Order',
-    'flex/order',
-    '不改 schema 顺序，只改视觉顺序。',
-    `type: page
-body:
-  - type: tpl
-    className: flex gap-2
-    tpl: '<span class="order-3 ${DEMO_FILL} p-sm rounded-md">A order-3</span><span class="order-1 ${DEMO_FILL} p-sm rounded-md">B order-1</span><span class="order-2 ${DEMO_FILL} p-sm rounded-md">C order-2</span>'`,
-    [
+  {
+    title: 'Flex Order',
+    slug: 'flex/order',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex Order：`order-1`…`order-12` / `order-first` / `order-last` 落在同一元素的 `order`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '只改子项的 `order`，不改 schema / DOM 顺序。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。没写时是 CSS 默认 0；`order-1`…`order-12` 越大越靠后；`order-first` 为 -9999 拉到最前；`order-last` 为 9999 推到最后。同值仍按 DOM。Amis 没有 `order-none`（那是 Tailwind 的 0，helper 留作别名）。数字 1-3 是 DOM 顺序。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 order 类打在子项上。',
+    rows: [
+      ...Array.from({ length: 12 }, (_, i) => [`order-${i + 1}`, `order: ${i + 1}`]),
       ['order-first', 'order: -9999'],
       ['order-last', 'order: 9999'],
-      ['order-none', 'order: 0'],
-      ['order-1', 'order: 1'],
-      ['order-2', 'order: 2'],
-      ['order-3', 'order: 3'],
     ],
-  ),
+    extra: flexOrderExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Grid Template Columns',
     'grid/columns',
