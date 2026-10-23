@@ -7,21 +7,10 @@ title: Width
 # Width
 
 ::: tip 实现进度 90% · 已完成
-`helpers-width.css` 已打进 playground 与 SDK，含 `w-*` / `min-w-*` / `max-w-*` 和 `m:` / `pc:`。布局容器默认已铺满，不必先写 `w-full`。
+活示例对标 Amis Width：`w-*` / `min-w-*` / `max-w-*` 落在同一元素的 `width` / `min-width` / `max-width`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`w-none` / `w-18` / `w-1x` 已对齐；`w-16` = 64px，`w-1/2` 在 `w-80` 舞台里 160px。
 :::
 
-宽度辅助类与 Amis helper 同名。**默认自适应**：page / form / 未写 `size` 的控件已经吃满布局槽，`w-full` 只在默认吃不满时才需要。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: w-1/2 bg-yellow-200 p-sm rounded-md
-    tpl: 半宽
-  - type: tpl
-    className: w-full pc:w-1/2 m:w-full bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: 手机拉满，桌面一半
-```
+盒子有多宽。档位是 Tailwind spacing（`w-16` = 4rem = 64px）加上分数 / `full` / `screen` / `min` / `max`。`w-none` / `w-18` / `w-1x`（1em）是 Amis 多出来的。分数相对含块：舞台钉死 `w-80`（320px）时 `w-1/2` = 160px。**默认自适应**：page / form 已经吃满布局槽，不必先写 `w-full`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 width 类打在内层黄盒子上。
 
 ## 类名
 
@@ -133,4 +122,338 @@ body:
 | `max-w-max` | `max-width: max-content;` |
 | `max-w-prose` | `max-width: 65ch;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## w-0
+
+`width: 0`。黄盒子宽 **0**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-0</div>
+  </div>
+```
+
+## w-px
+
+`width: 0.0625rem` = **1px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-px h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-px</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-px h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-px</div>
+  </div>
+```
+
+## w-none
+
+Amis 多出来的档，与 `w-0` 一样是 `width: 0`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-none h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-none h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-none</div>
+  </div>
+```
+
+## w-16
+
+`width: 4rem` = **64px**。后面样例里的 `w-16` 都是这一档。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-16</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-16</div>
+  </div>
+```
+
+## w-18
+
+Amis 多出来的档：`width: 4.5rem` = **72px**。Tailwind 默认没有 `w-18`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-18 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-18</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-18 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-18</div>
+  </div>
+```
+
+## w-32
+
+`width: 8rem` = **128px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-32</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-32</div>
+  </div>
+```
+
+## w-auto
+
+`width: auto`。跟着内容走，不是钉死 rem。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-auto h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">auto</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-auto h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">auto</div>
+  </div>
+```
+
+## w-1x
+
+Amis 多出来的档：`width: 1em`。钉 `text-base`（1rem = 16px）时宽 **16px**；`w-2x` / `w-3x` 是 2em / 3em。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-1x h-16 text-base bg-yellow-200 flex items-center justify-center rounded-md">1x</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-1x h-16 text-base bg-yellow-200 flex items-center justify-center rounded-md">1x</div>
+  </div>
+```
+
+## w-1/2
+
+`width: 50%`。舞台钉死 `w-80` = 320px，黄盒子 **160px**。分数相对含块，不是 vis 视口。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="w-80 bg-gray-200 rounded-md shrink-0">
+    <div class="w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-1/2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="w-80 bg-gray-200 rounded-md shrink-0">
+    <div class="w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-1/2</div>
+  </div>
+```
+
+## w-full
+
+`width: 100%`。同一座 `w-80` 舞台里黄盒子 **320px**。page / form 默认已经吃满布局槽，不必先写 `w-full`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="w-80 bg-gray-200 rounded-md shrink-0">
+    <div class="w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="w-80 bg-gray-200 rounded-md shrink-0">
+    <div class="w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-full</div>
+  </div>
+```
+
+## min-w-xs
+
+`min-width: 20rem` = **320px**。内容再短也撑到 320。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="min-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">min-w-xs</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="min-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">min-w-xs</div>
+  </div>
+```
+
+## max-w-xs
+
+`max-width: 20rem` = **320px**。叠 `w-96`（384px）时被卡住，用宽 **320px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-96 max-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-w-xs</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-96 max-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-w-xs</div>
+  </div>
+```
+
+## 组合
+
+同一组：`w-16`、`w-32`、`w-1/2`、`w-full`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-16</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-32</div>
+    </div>
+    <div class="w-80 bg-gray-200 rounded-md shrink-0">
+      <div class="w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">1/2</div>
+    </div>
+    <div class="w-80 bg-gray-200 rounded-md shrink-0">
+      <div class="w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">full</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-16</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">w-32</div>
+    </div>
+    <div class="w-80 bg-gray-200 rounded-md shrink-0">
+      <div class="w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">1/2</div>
+    </div>
+    <div class="w-80 bg-gray-200 rounded-md shrink-0">
+      <div class="w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">full</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:w-16` 宽 64px；桌面（≥768px）`pc:w-32` 宽 **128px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="m:w-16 pc:w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="m:w-16 pc:w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。高度见 [Height](/style/sizing/height)。`w-screen` 是 `100vw`，不在活示例里铺满视口。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

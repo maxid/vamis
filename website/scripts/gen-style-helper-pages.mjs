@@ -2907,6 +2907,238 @@ function spaceBetweenExtra() {
   ].join('\n')
 }
 
+function widthBox(wClass, label = wClass, extra = 'h-16', textClass = 'text-sm') {
+  const textPart = textClass ? ` ${textClass}` : ''
+  return [
+    `<div class="inline-flex ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  <div class="${wClass} ${extra} ${DEMO_FILL} flex items-center justify-center${textPart} rounded-md">${label}</div>`,
+    '</div>',
+  ]
+}
+
+function widthPct(wClass, label = wClass) {
+  return [
+    `<div class="w-80 ${DEMO_STAGE} rounded-md shrink-0">`,
+    `  <div class="${wClass} h-16 ${DEMO_FILL} flex items-center justify-center text-sm rounded-md">${label}</div>`,
+    '</div>',
+  ]
+}
+
+function widthExtra() {
+  return [
+    '## w-0',
+    '',
+    '`width: 0`。黄盒子宽 **0**。',
+    '',
+    displaySchema(widthBox('w-0')),
+    '',
+    '## w-px',
+    '',
+    '`width: 0.0625rem` = **1px**。',
+    '',
+    displaySchema(widthBox('w-px')),
+    '',
+    '## w-none',
+    '',
+    'Amis 多出来的档，与 `w-0` 一样是 `width: 0`。',
+    '',
+    displaySchema(widthBox('w-none')),
+    '',
+    '## w-16',
+    '',
+    '`width: 4rem` = **64px**。后面样例里的 `w-16` 都是这一档。',
+    '',
+    displaySchema(widthBox('w-16')),
+    '',
+    '## w-18',
+    '',
+    'Amis 多出来的档：`width: 4.5rem` = **72px**。Tailwind 默认没有 `w-18`。',
+    '',
+    displaySchema(widthBox('w-18')),
+    '',
+    '## w-32',
+    '',
+    '`width: 8rem` = **128px**。',
+    '',
+    displaySchema(widthBox('w-32')),
+    '',
+    '## w-auto',
+    '',
+    '`width: auto`。跟着内容走，不是钉死 rem。',
+    '',
+    displaySchema(widthBox('w-auto', 'auto')),
+    '',
+    '## w-1x',
+    '',
+    'Amis 多出来的档：`width: 1em`。钉 `text-base`（1rem = 16px）时宽 **16px**；`w-2x` / `w-3x` 是 2em / 3em。',
+    '',
+    displaySchema(widthBox('w-1x', '1x', 'h-16 text-base', '')),
+    '',
+    '## w-1/2',
+    '',
+    '`width: 50%`。舞台钉死 `w-80` = 320px，黄盒子 **160px**。分数相对含块，不是 vis 视口。',
+    '',
+    displaySchema(widthPct('w-1/2')),
+    '',
+    '## w-full',
+    '',
+    '`width: 100%`。同一座 `w-80` 舞台里黄盒子 **320px**。page / form 默认已经吃满布局槽，不必先写 `w-full`。',
+    '',
+    displaySchema(widthPct('w-full')),
+    '',
+    '## min-w-xs',
+    '',
+    '`min-width: 20rem` = **320px**。内容再短也撑到 320。',
+    '',
+    displaySchema(widthBox('min-w-xs', 'min-w-xs')),
+    '',
+    '## max-w-xs',
+    '',
+    '`max-width: 20rem` = **320px**。叠 `w-96`（384px）时被卡住，用宽 **320px**。',
+    '',
+    displaySchema(widthBox('w-96 max-w-xs', 'max-w-xs')),
+    '',
+    '## 组合',
+    '',
+    '同一组：`w-16`、`w-32`、`w-1/2`、`w-full`。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...widthBox('w-16', 'w-16').map((l) => `  ${l}`),
+      ...widthBox('w-32', 'w-32').map((l) => `  ${l}`),
+      ...widthPct('w-1/2', '1/2').map((l) => `  ${l}`),
+      ...widthPct('w-full', 'full').map((l) => `  ${l}`),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:w-16` 宽 64px；桌面（≥768px）`pc:w-32` 宽 **128px**。',
+    '',
+    displaySchema(widthBox('m:w-16 pc:w-32', 'm / pc')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。高度见 [Height](/style/sizing/height)。`w-screen` 是 `100vw`，不在活示例里铺满视口。',
+  ].join('\n')
+}
+
+function heightBox(hClass, label = hClass, extra = 'w-32') {
+  return [
+    `<div class="inline-flex ${DEMO_STAGE} p-sm rounded-md shrink-0 items-end">`,
+    `  <div class="${hClass} ${extra} ${DEMO_FILL} flex items-center justify-center text-sm rounded-md">${label}</div>`,
+    '</div>',
+  ]
+}
+
+function heightPct(hClass, label = hClass) {
+  return [
+    `<div class="h-32 w-32 ${DEMO_STAGE} rounded-md shrink-0">`,
+    `  <div class="${hClass} ${DEMO_FILL} flex items-center justify-center text-sm rounded-md">${label}</div>`,
+    '</div>',
+  ]
+}
+
+function heightExtra() {
+  return [
+    '## h-0',
+    '',
+    '`height: 0`。黄盒子高 **0**。',
+    '',
+    displaySchema(heightBox('h-0')),
+    '',
+    '## h-px',
+    '',
+    '`height: 0.0625rem` = **1px**。',
+    '',
+    displaySchema(heightBox('h-px')),
+    '',
+    '## h-none',
+    '',
+    'Amis 多出来的档，与 `h-0` 一样是 `height: 0`。',
+    '',
+    displaySchema(heightBox('h-none')),
+    '',
+    '## h-16',
+    '',
+    '`height: 4rem` = **64px**。',
+    '',
+    displaySchema(heightBox('h-16')),
+    '',
+    '## h-18',
+    '',
+    'Amis 多出来的档：`height: 4.5rem` = **72px**。',
+    '',
+    displaySchema(heightBox('h-18')),
+    '',
+    '## h-32',
+    '',
+    '`height: 8rem` = **128px**。下面百分数样例的舞台也用这一档。',
+    '',
+    displaySchema(heightBox('h-32')),
+    '',
+    '## h-auto',
+    '',
+    '`height: auto`。跟着内容走。',
+    '',
+    displaySchema(heightBox('h-auto', 'auto')),
+    '',
+    '## h-1/2',
+    '',
+    '`height: 50%`。舞台钉死 `h-32` = 128px，黄盒子 **64px**。',
+    '',
+    displaySchema(heightPct('h-1/2')),
+    '',
+    '## h-full',
+    '',
+    '`height: 100%`。同一座 `h-32` 舞台里黄盒子 **128px**。作者把 `h-full` 写在 schema `className` 上时，`.vamis-node.h-full` 还会把内层根拉满（本页 HTML 岛打在内层，只核这一条 `height: 100%`）。',
+    '',
+    displaySchema(heightPct('h-full')),
+    '',
+    '## min-h-full',
+    '',
+    '`min-height: 100%`。舞台 128px，内容再矮也至少 **128px**。',
+    '',
+    displaySchema(heightPct('min-h-full')),
+    '',
+    '## max-h-16',
+    '',
+    '`max-height: 4rem` = **64px**。叠 `h-32`（128px）时被卡住，用高 **64px**。',
+    '',
+    displaySchema(heightBox('h-32 max-h-16', 'max-h-16')),
+    '',
+    '## max-h-none',
+    '',
+    'Amis 这一档不是 CSS `none`：`$spacing` 的 `none` 是 0，所以 `max-height: 0`。叠 `h-32` 时高被卡成 **0**。',
+    '',
+    displaySchema(heightBox('h-32 max-h-none', 'none')),
+    '',
+    '## 组合',
+    '',
+    '同一组：`h-16`、`h-32`、`h-1/2`、`h-full`、`max-h-16`。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-end">',
+      ...heightBox('h-16', 'h-16').map((l) => `  ${l}`),
+      ...heightBox('h-32', 'h-32').map((l) => `  ${l}`),
+      ...heightPct('h-1/2', '1/2').map((l) => `  ${l}`),
+      ...heightPct('h-full', 'full').map((l) => `  ${l}`),
+      ...heightBox('h-32 max-h-16', 'max-h-16').map((l) => `  ${l}`),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:h-16` 高 64px；桌面（≥768px）`pc:h-32` 高 **128px**。',
+    '',
+    displaySchema(heightBox('m:h-16 pc:h-32', 'm / pc')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。宽度见 [Width](/style/sizing/width)。`h-screen` 是 `100vh`。',
+  ].join('\n')
+}
+
 function justifyContentChip(fill, label) {
   return `<div class="w-16 h-16 shrink-0 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
 }
@@ -3617,34 +3849,30 @@ const pages = [
     slug: 'sizing/width',
     pct: 90,
     status: '已完成',
-    reason: '`helpers-width.css` 已打进 playground 与 SDK，含 `w-*` / `min-w-*` / `max-w-*` 和 `m:` / `pc:`。布局容器默认已铺满，不必先写 `w-full`。',
-    intro: '宽度辅助类与 Amis helper 同名。**默认自适应**：page / form / 未写 `size` 的控件已经吃满布局槽，`w-full` 只在默认吃不满时才需要。',
-    example: `type: page
-body:
-  - type: tpl
-    className: w-1/2 ${DEMO_FILL} p-sm rounded-md
-    tpl: 半宽
-  - type: tpl
-    className: w-full pc:w-1/2 m:w-full ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: 手机拉满，桌面一半`,
+    reason:
+      '活示例对标 Amis Width：`w-*` / `min-w-*` / `max-w-*` 落在同一元素的 `width` / `min-width` / `max-width`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`w-none` / `w-18` / `w-1x` 已对齐；`w-16` = 64px，`w-1/2` 在 `w-80` 舞台里 160px。',
+    tableFirst: true,
+    intro:
+      '盒子有多宽。档位是 Tailwind spacing（`w-16` = 4rem = 64px）加上分数 / `full` / `screen` / `min` / `max`。`w-none` / `w-18` / `w-1x`（1em）是 Amis 多出来的。分数相对含块：舞台钉死 `w-80`（320px）时 `w-1/2` = 160px。**默认自适应**：page / form 已经吃满布局槽，不必先写 `w-full`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 width 类打在内层黄盒子上。',
     rows: widthRows,
+    extra: widthExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
   {
     title: 'Height',
     slug: 'sizing/height',
     pct: 90,
     status: '已完成',
-    reason: '`helpers-height.css` 已打进 playground 与 SDK。`h-full` 会把 `vamis-node` 内层根拉满。可用 `m:` / `pc:`。',
-    intro: '`h-full` 是 `height: 100%`。用在 Grid 列里的 panel 上可以把两列卡片拉齐。',
-    example: `type: page
-body:
-  - type: tpl
-    className: h-16 ${DEMO_FILL} p-sm rounded-md
-    tpl: 固定高度
-  - type: tpl
-    className: min-h-full ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: 至少吃满父槽`,
+    reason:
+      '活示例对标 Amis Height：`h-*` / `min-h-*` / `max-h-*` 落在同一元素的 `height` / `min-height` / `max-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`h-none` / `h-18` 已对齐；`max-h-none` 与 Amis 一样是 `max-height: 0`。',
+    tableFirst: true,
+    intro:
+      '盒子有多高。档位与 Width 同一套 rem，加上分数 / `full` / `screen`。没有 `h-1x`。百分数相对含块：舞台钉死 `h-32`（128px）时 `h-1/2` = 64px、`h-full` = 128px。Amis `max-h-none` 是 `max-height: 0`（`$spacing` 的 none 是 0），不是 CSS `none`。作者 `className: h-full` 打在 schema 上时 `.vamis-node.h-full` 还会把内层根拉满。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 height 类打在内层黄盒子上。',
     rows: heightRows,
+    extra: heightExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
   {
     title: 'Space Between',
