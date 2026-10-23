@@ -6,33 +6,184 @@ title: Border Style
 
 # Border Style
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Border Style：`border-solid` / `dashed` / `dotted` / `double` / `none` 落在同一元素的 `border-style`。独立样例 + 组合；补 `border-double` 与 `m:` / `pc:`。
 :::
 
-线型。实线是默认。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: border border-solid border-border p-sm rounded-md
-    tpl: solid
-  - type: tpl
-    className: border border-dashed border-border p-sm rounded-md m-t-sm
-    tpl: dashed
-  - type: tpl
-    className: border border-dotted border-border p-sm rounded-md m-t-sm
-    tpl: dotted
-```
+线型。实线不是默认——要先写 `border-solid` 才画得出来。`double` 需要够宽（本页用 `border-8`）才看得出双线。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `border-solid` | `solid` |
-| `border-dashed` | `dashed` |
-| `border-dotted` | `dotted` |
-| `border-none` | `none` |
+| `border-solid` | `border-style: solid;` |
+| `border-dashed` | `border-style: dashed;` |
+| `border-dotted` | `border-style: dotted;` |
+| `border-double` | `border-style: double;` |
+| `border-none` | `border-style: none;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## border-solid
+
+`border-style: solid`。Amis 默认不给 `border-*` 宽度类带上 solid，所以这条是看见线的开关。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-solid box-border flex items-center justify-center text-xs">solid</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-solid box-border flex items-center justify-center text-xs">solid</div>
+  </div>
+```
+
+## border-dashed
+
+`border-style: dashed`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-dashed box-border flex items-center justify-center text-xs">dashed</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-dashed box-border flex items-center justify-center text-xs">dashed</div>
+  </div>
+```
+
+## border-dotted
+
+`border-style: dotted`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-dotted box-border flex items-center justify-center text-xs">dotted</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-dotted box-border flex items-center justify-center text-xs">dotted</div>
+  </div>
+```
+
+## border-double
+
+`border-style: double`。线要够宽才看得出双线，所以用 `border-8`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 border-double box-border flex items-center justify-center text-xs">double</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 border-double box-border flex items-center justify-center text-xs">double</div>
+  </div>
+```
+
+## border-none
+
+`border-style: none`。宽度还在，但看不见线。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-none box-border flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-none box-border flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+## 组合
+
+同一组：`solid`、`dashed`、`dotted`、`double`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-solid box-border flex items-center justify-center text-xs">solid</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-dashed box-border flex items-center justify-center text-xs">dashed</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-dotted box-border flex items-center justify-center text-xs">dotted</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-8 border-double box-border flex items-center justify-center text-xs">double</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-solid box-border flex items-center justify-center text-xs">solid</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-dashed box-border flex items-center justify-center text-xs">dashed</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-4 border-dotted box-border flex items-center justify-center text-xs">dotted</div>
+    <div class="w-16 h-16 bg-yellow-200 border-gray-700 border-8 border-double box-border flex items-center justify-center text-xs">double</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:border-dashed`；桌面 `pc:border-solid`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 m:border-dashed pc:border-solid box-border flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 m:border-dashed pc:border-solid box-border flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

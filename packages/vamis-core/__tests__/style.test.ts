@@ -574,6 +574,8 @@ describe('style docs surface', () => {
     expect(theme).toContain('helpers-gap.css')
     expect(theme).toContain('helpers-spacing.css')
     expect(theme).toContain('helpers-typography.css')
+    expect(theme).toContain('helpers-border.css')
+    expect(theme).toContain('helpers-effect.css')
     expect(theme).toContain('helpers-palette.css')
     const util = readFileSync(resolve(here, '../../vamis-ui/src/helpers-utility.css'), 'utf8')
     expect(util).toMatch(/@layer components\s*\{/)
@@ -1522,7 +1524,83 @@ describe('style docs surface', () => {
     expect(palette).toContain('.m\\:hover\\:bg-blue-500:hover { background-color: #3b82f6; }')
     expect(util).toContain('.Button {')
     expect(util).toContain('display: inline-flex')
-    expect(util).toContain('.rounded-xl { border-radius: 0.75rem; }')
+    const borderCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-border.css'), 'utf8')
+    expect(borderCss).toContain('.rounded { border-radius: 0.25rem; }')
+    expect(borderCss).toContain('.rounded-md { border-radius: 0.375rem; }')
+    expect(borderCss).toContain('.rounded-xl { border-radius: 0.75rem; }')
+    expect(borderCss).toContain('.rounded-t-lg { border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }')
+    expect(borderCss).toContain('.border { border-width: 1px; }')
+    expect(borderCss).toContain('.border-8 { border-width: 8px; }')
+    expect(borderCss).toContain('.border-t-4 { border-top-width: 4px; }')
+    expect(borderCss).toContain('.border-double { border-style: double; }')
+    expect(borderCss).toContain('.pc\\:rounded-full { border-radius: 9999px; }')
+    expect(borderCss).toContain('.m\\:border-2 { border-width: 2px; }')
+    expect(borderCss).not.toContain('.rounded-md { border-radius: var(--radius); }')
+    const effectCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-effect.css'), 'utf8')
+    expect(effectCss).toContain(
+      '.shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }',
+    )
+    expect(effectCss).toContain(
+      '.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }',
+    )
+    expect(effectCss).toContain('.shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }')
+    expect(effectCss).toContain('.hover\\:shadow-sm:hover {')
+    expect(effectCss).toContain('.opacity-5 { opacity: 0.05; }')
+    expect(effectCss).toContain('.opacity-95 { opacity: 0.95; }')
+    expect(effectCss).toContain('.pc\\:opacity-100 { opacity: 1; }')
+    expect(effectCss).toContain('.m\\:shadow-none { box-shadow: none; }')
+    const radiusDoc = readFileSync(
+      resolve(here, '../../../website/src/style/border/border-radius.md'),
+      'utf8',
+    )
+    expect(radiusDoc).toContain('实现进度 90%')
+    expect(radiusDoc).toContain('## rounded-md')
+    expect(radiusDoc).toContain('## rounded-t-lg')
+    expect(radiusDoc).toContain('pc:rounded-full')
+    expect(radiusDoc).toContain('| `rounded-3xl` |')
+    expect(radiusDoc).not.toContain('实现进度 50%')
+    const borderWidthDoc = readFileSync(
+      resolve(here, '../../../website/src/style/border/border-width.md'),
+      'utf8',
+    )
+    expect(borderWidthDoc).toContain('实现进度 90%')
+    expect(borderWidthDoc).toContain('## border-8')
+    expect(borderWidthDoc).toContain('## border-t-4')
+    expect(borderWidthDoc).toContain('pc:border-8')
+    expect(borderWidthDoc).toContain('| `border-8` |')
+    const borderStyleDoc = readFileSync(
+      resolve(here, '../../../website/src/style/border/border-style.md'),
+      'utf8',
+    )
+    expect(borderStyleDoc).toContain('实现进度 90%')
+    expect(borderStyleDoc).toContain('## border-double')
+    expect(borderStyleDoc).toContain('| `border-double` |')
+    const shadowDoc = readFileSync(
+      resolve(here, '../../../website/src/style/effect/box-shadow.md'),
+      'utf8',
+    )
+    expect(shadowDoc).toContain('实现进度 90%')
+    expect(shadowDoc).toContain('## shadow-inner')
+    expect(shadowDoc).toContain('## shadow-2xl')
+    expect(shadowDoc).toContain('pc:shadow-lg')
+    const opacityDoc = readFileSync(
+      resolve(here, '../../../website/src/style/effect/opacity.md'),
+      'utf8',
+    )
+    expect(opacityDoc).toContain('实现进度 90%')
+    expect(opacityDoc).toContain('## opacity-5')
+    expect(opacityDoc).toContain('## opacity-95')
+    expect(opacityDoc).toContain('| `opacity-5` |')
+    expect(opacityDoc).toContain('pc:opacity-100')
+    const bgDoc = readFileSync(
+      resolve(here, '../../../website/src/style/background/background-color.md'),
+      'utf8',
+    )
+    expect(bgDoc).toContain('## bg-none')
+    expect(bgDoc).toContain('| `bg-none` |')
+    const paletteCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-palette.css'), 'utf8')
+    expect(paletteCss).toContain('.bg-none { background: none !important; }')
+    expect(paletteCss).toContain('.bg-secondary { background-color: var(--secondary); }')
     expect(theme).toContain('.vamis-html :where(button)')
     expect(theme).toContain('border-style: outset')
     const state = readFileSync(resolve(here, '../../../website/src/style/state.md'), 'utf8')

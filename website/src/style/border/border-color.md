@@ -10,21 +10,7 @@ title: Border Color
 语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。状态前缀与 `m:` / `pc:` 已进 CSS，见 [辅助类-状态样式](/style/state)。
 :::
 
-边框色。配合 `border` 使用。调色盘与 Amis helper 同档。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: border border-border p-sm rounded-md
-    tpl: border-border
-  - type: tpl
-    className: border border-primary p-sm rounded-md m-t-sm
-    tpl: border-primary
-  - type: tpl
-    className: border-2 border-blue-500 p-sm rounded-md m-t-sm
-    tpl: border-blue-500
-```
+边框色。要看见线还得 `border` / `border-4` + `border-solid`。语义色走 token；调色盘与 Amis helper 同档 hex。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
@@ -32,7 +18,8 @@ body:
 | --- | --- | --- |
 | `border-border` | `border-color: var(--border)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-border"></span> |
 | `border-input` | `border-color: var(--input)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-input"></span> |
-| `border-primary` | `border-color: var(--primary)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-primary"></span> |
+| `border-primary` | `border-color: var(--primary)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-solid border-primary"></span> |
+| `border-secondary` | `border-color: var(--secondary)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-solid border-secondary"></span> |
 | `border-success` | `border-color: var(--success)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-success"></span> |
 | `border-danger` | `border-color: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-danger"></span> |
 | `border-destructive` | `border-color: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-destructive"></span> |
@@ -127,4 +114,146 @@ body:
 | `border-pink-800` | `border-color: #9d174d` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-800"></span> |
 | `border-pink-900` | `border-color: #831843` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-900"></span> |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## border-primary
+
+语义主色：`border-color: var(--primary)`。要看见线还得 `border` / `border-4` + `border-solid`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-primary bg-yellow-200 flex items-center justify-center text-xs">primary</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-primary bg-yellow-200 flex items-center justify-center text-xs">primary</div>
+  </div>
+```
+
+## border-danger
+
+`border-color: var(--destructive)`。Amis 叫 `border-danger`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-danger bg-yellow-200 flex items-center justify-center text-xs">danger</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-danger bg-yellow-200 flex items-center justify-center text-xs">danger</div>
+  </div>
+```
+
+## border-gray-700
+
+调色盘与 Amis helper 同档 hex：`#374151`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-gray-700 bg-yellow-200 flex items-center justify-center text-xs">gray-700</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-gray-700 bg-yellow-200 flex items-center justify-center text-xs">gray-700</div>
+  </div>
+```
+
+## border-blue-500
+
+`#3b82f6`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+## 组合
+
+语义色 + 两档调色盘。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-primary bg-yellow-200 flex items-center justify-center text-xs">primary</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-danger bg-yellow-200 flex items-center justify-center text-xs">danger</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-gray-700 bg-yellow-200 flex items-center justify-center text-xs">gray-700</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-primary bg-yellow-200 flex items-center justify-center text-xs">primary</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-danger bg-yellow-200 flex items-center justify-center text-xs">danger</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-gray-700 bg-yellow-200 flex items-center justify-center text-xs">gray-700</div>
+    <div class="h-10 w-24 rounded-sm border-4 border-solid border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+## 响应式设计
+
+语义色和调色盘都接了 `m:` / `pc:`，见 [辅助类-响应式设计](/style/responsive-design)。桌面 `pc:border-blue-500`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid m:border-gray-700 pc:border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border-4 border-solid m:border-gray-700 pc:border-blue-500 bg-yellow-200 flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+调色盘的 `hover:` / `focus:` / `active:` / `disabled:` 已进 SDK，见 [辅助类-状态样式](/style/state)。本页表只列默认态，完整 hex 核还在色盘表。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

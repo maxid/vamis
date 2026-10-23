@@ -6,34 +6,250 @@ title: Border Width
 
 # Border Width
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Border Width：`border` = 1px、`border-4` = 4px，只设 width。独立样例 + 组合；补 `border-8` / `border-t-4` 与 `m:` / `pc:`。
 :::
 
-先写 `border` 才看得到线，再叠加色和样式。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: border border-border p-sm rounded-md
-    tpl: border
-  - type: tpl
-    className: border-2 border-primary p-sm rounded-md m-t-sm
-    tpl: border-2
-```
+边框宽度。Amis 这些类**不设** `border-style`。要看见线还得叠 `border-solid`（`.vamis-html` 里 Preflight 的 solid 被关掉了）。单边类只改那一条边。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `border` | `1px 四边` |
-| `border-0` | `0` |
-| `border-2` | `2px` |
-| `border-4` | `4px` |
-| `border-t` | `上边` |
-| `border-b` | `下边` |
-| `border-l` | `左边` |
-| `border-r` | `右边` |
+| `border` | `border-width: 1px;` |
+| `border-t` | `border-top-width: 1px;` |
+| `border-r` | `border-right-width: 1px;` |
+| `border-b` | `border-bottom-width: 1px;` |
+| `border-l` | `border-left-width: 1px;` |
+| `border-0` | `border-width: 0px;` |
+| `border-t-0` | `border-top-width: 0px;` |
+| `border-r-0` | `border-right-width: 0px;` |
+| `border-b-0` | `border-bottom-width: 0px;` |
+| `border-l-0` | `border-left-width: 0px;` |
+| `border-2` | `border-width: 2px;` |
+| `border-t-2` | `border-top-width: 2px;` |
+| `border-r-2` | `border-right-width: 2px;` |
+| `border-b-2` | `border-bottom-width: 2px;` |
+| `border-l-2` | `border-left-width: 2px;` |
+| `border-4` | `border-width: 4px;` |
+| `border-t-4` | `border-top-width: 4px;` |
+| `border-r-4` | `border-right-width: 4px;` |
+| `border-b-4` | `border-bottom-width: 4px;` |
+| `border-l-4` | `border-left-width: 4px;` |
+| `border-8` | `border-width: 8px;` |
+| `border-t-8` | `border-top-width: 8px;` |
+| `border-r-8` | `border-right-width: 8px;` |
+| `border-b-8` | `border-bottom-width: 8px;` |
+| `border-l-8` | `border-left-width: 8px;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## border
+
+`border-width: 1px`。Amis 这条只设宽度，要看见线还得叠 `border-solid`（`.vamis-html` 里 Preflight 的 solid 被关掉了）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border box-border flex items-center justify-center text-xs">border</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border box-border flex items-center justify-center text-xs">border</div>
+  </div>
+```
+
+## border-0
+
+`border-width: 0`。叠在 `border-4` 上会清掉线。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-0 box-border flex items-center justify-center text-xs">border-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 border-0 box-border flex items-center justify-center text-xs">border-0</div>
+  </div>
+```
+
+## border-2
+
+`border-width: 2px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-2 box-border flex items-center justify-center text-xs">border-2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-2 box-border flex items-center justify-center text-xs">border-2</div>
+  </div>
+```
+
+## border-4
+
+`border-width: 4px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 box-border flex items-center justify-center text-xs">border-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 box-border flex items-center justify-center text-xs">border-4</div>
+  </div>
+```
+
+## border-8
+
+`border-width: 8px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 box-border flex items-center justify-center text-xs">border-8</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 box-border flex items-center justify-center text-xs">border-8</div>
+  </div>
+```
+
+## border-t-4
+
+只加粗上边：`border-top-width: 4px`。其它边还是 0，除非再写 `border`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-t-4 box-border flex items-center justify-center text-xs">border-t-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-t-4 box-border flex items-center justify-center text-xs">border-t-4</div>
+  </div>
+```
+
+## border-l-8
+
+`border-left-width: 8px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-l-8 box-border flex items-center justify-center text-xs">border-l-8</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-l-8 box-border flex items-center justify-center text-xs">border-l-8</div>
+  </div>
+```
+
+## 组合
+
+同一组：`border`、`border-2`、`border-4`、`border-8`、`border-t-4`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border box-border flex items-center justify-center text-xs">1</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-2 box-border flex items-center justify-center text-xs">2</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 box-border flex items-center justify-center text-xs">4</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 box-border flex items-center justify-center text-xs">8</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-t-4 box-border flex items-center justify-center text-xs">t-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border box-border flex items-center justify-center text-xs">1</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-2 box-border flex items-center justify-center text-xs">2</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-4 box-border flex items-center justify-center text-xs">4</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-8 box-border flex items-center justify-center text-xs">8</div>
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 border-t-4 box-border flex items-center justify-center text-xs">t-4</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:border-2`；桌面 `pc:border-8`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 m:border-2 pc:border-8 box-border flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 border-solid border-gray-700 m:border-2 pc:border-8 box-border flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

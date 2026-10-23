@@ -6,34 +6,238 @@ title: Opacity
 
 # Opacity
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Opacity：`opacity-0`…`100` 落在同一元素的 `opacity`。独立样例 + 组合；补 `opacity-5` / `10` / `20` / `30` / `40` / `60` / `70` / `80` / `90` / `95` 与 `m:` / `pc:`。不支持状态前缀。
 :::
 
-透明度。禁用态优先 schema `disabled`，不要只靠 `opacity-50`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: opacity-100
-    tpl: 100%
-  - type: tpl
-    className: opacity-50
-    tpl: 50%
-  - type: tpl
-    className: opacity-25
-    tpl: 25%
-```
+透明度。禁用态优先 schema `disabled`，不要只靠 `opacity-50`。Amis 档位是 0/5/10/20/25… 不是每 5 一档全开。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `opacity-0` | `0` |
-| `opacity-25` | `0.25` |
-| `opacity-50` | `0.5` |
-| `opacity-75` | `0.75` |
-| `opacity-100` | `1` |
+| `opacity-0` | `opacity: 0;` |
+| `opacity-5` | `opacity: 0.05;` |
+| `opacity-10` | `opacity: 0.1;` |
+| `opacity-20` | `opacity: 0.2;` |
+| `opacity-25` | `opacity: 0.25;` |
+| `opacity-30` | `opacity: 0.3;` |
+| `opacity-40` | `opacity: 0.4;` |
+| `opacity-50` | `opacity: 0.5;` |
+| `opacity-60` | `opacity: 0.6;` |
+| `opacity-70` | `opacity: 0.7;` |
+| `opacity-75` | `opacity: 0.75;` |
+| `opacity-80` | `opacity: 0.8;` |
+| `opacity-90` | `opacity: 0.9;` |
+| `opacity-95` | `opacity: 0.95;` |
+| `opacity-100` | `opacity: 1;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## opacity-0
+
+`opacity: 0`。盒子还占位，只是全透明。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-0 flex items-center justify-center text-xs">opacity-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-0 flex items-center justify-center text-xs">opacity-0</div>
+  </div>
+```
+
+## opacity-5
+
+Amis 多出来的档：`0.05`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-5 flex items-center justify-center text-xs">opacity-5</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-5 flex items-center justify-center text-xs">opacity-5</div>
+  </div>
+```
+
+## opacity-25
+
+`opacity: 0.25`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-25 flex items-center justify-center text-xs">opacity-25</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-25 flex items-center justify-center text-xs">opacity-25</div>
+  </div>
+```
+
+## opacity-50
+
+`opacity: 0.5`。禁用态优先 schema `disabled`，不要只靠这一条。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-50 flex items-center justify-center text-xs">opacity-50</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-50 flex items-center justify-center text-xs">opacity-50</div>
+  </div>
+```
+
+## opacity-75
+
+`opacity: 0.75`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-75 flex items-center justify-center text-xs">opacity-75</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-75 flex items-center justify-center text-xs">opacity-75</div>
+  </div>
+```
+
+## opacity-95
+
+Amis 多出来的档：`0.95`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-95 flex items-center justify-center text-xs">opacity-95</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-95 flex items-center justify-center text-xs">opacity-95</div>
+  </div>
+```
+
+## opacity-100
+
+`opacity: 1`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-100 flex items-center justify-center text-xs">opacity-100</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 opacity-100 flex items-center justify-center text-xs">opacity-100</div>
+  </div>
+```
+
+## 组合
+
+同一组：`opacity-25`、`opacity-50`、`opacity-75`、`opacity-100`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 opacity-25 flex items-center justify-center text-xs">25</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-50 flex items-center justify-center text-xs">50</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-75 flex items-center justify-center text-xs">75</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-100 flex items-center justify-center text-xs">100</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 opacity-25 flex items-center justify-center text-xs">25</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-50 flex items-center justify-center text-xs">50</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-75 flex items-center justify-center text-xs">75</div>
+    <div class="w-16 h-16 bg-yellow-200 opacity-100 flex items-center justify-center text-xs">100</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:opacity-50`；桌面 `pc:opacity-100`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 m:opacity-50 pc:opacity-100 flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 m:opacity-50 pc:opacity-100 flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
