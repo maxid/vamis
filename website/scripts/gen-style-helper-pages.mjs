@@ -2358,6 +2358,71 @@ function gridAutoColumnsExtra() {
   ].join('\n')
 }
 
+function gridAutoRowsChip(fill, label) {
+  return `<div class="p-sm ${fill} text-sm rounded-md">${label}</div>`
+}
+
+function gridAutoRowsStage(rowsClass, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  const labels = ['短', '比较长的<br>一项', 'supercalifragilistic']
+  return [
+    `<div class="grid grid-cols-1 ${rowsClass} gap-2 w-80 h-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    ...labels.map((label, i) => `  ${gridAutoRowsChip(fills[i], label)}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridAutoRowsExtra() {
+  return [
+    '## auto-rows-auto',
+    '',
+    '`grid-auto-rows: auto`。默认按行填，`grid-cols-1` 造三行隐式行，舞台 `h-80` 内高 304px。本页内容 max-content 36 / 56 / 36 合计 128px，剩余 160px 三行各摊约 53px：高 89 / 109 / 89。',
+    '',
+    displaySchema(gridAutoRowsStage('auto-rows-auto')),
+    '',
+    '## auto-rows-min',
+    '',
+    '`grid-auto-rows: min-content`。行高跟内容下限走：36 / 56 / 36（中间一枚两行）。列宽钉死 304px 时与 max 相同，舞台底部留白。',
+    '',
+    displaySchema(gridAutoRowsStage('auto-rows-min')),
+    '',
+    '## auto-rows-max',
+    '',
+    '`grid-auto-rows: max-content`。行高跟内容上限走，不摊剩余高度：36 / 56 / 36，底部留白。',
+    '',
+    displaySchema(gridAutoRowsStage('auto-rows-max')),
+    '',
+    '## auto-rows-fr',
+    '',
+    '`grid-auto-rows: minmax(0, 1fr)`。三行均分剩余空间：(304 − 16) / 3 = **96px**。内容可以被挤进这一行。',
+    '',
+    displaySchema(gridAutoRowsStage('auto-rows-fr')),
+    '',
+    '## 组合',
+    '',
+    '同一组三枚：auto、min、max、fr。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...gridAutoRowsStage('auto-rows-auto', '  '),
+      ...gridAutoRowsStage('auto-rows-min', '  '),
+      ...gridAutoRowsStage('auto-rows-max', '  '),
+      ...gridAutoRowsStage('auto-rows-fr', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:auto-rows-max` 按内容上限；桌面（≥768px）`pc:auto-rows-fr` 三行均分 96px。',
+    '',
+    displaySchema(gridAutoRowsStage('m:auto-rows-max pc:auto-rows-fr')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。隐式列宽见 [Grid Auto Columns](/style/grid/auto-columns)，行模板见 [Grid Template Rows](/style/grid/rows)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2954,22 +3019,26 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Grid Auto Rows',
-    'grid/auto-rows',
-    '隐式行高。',
-    `type: page
-body:
-  - type: tpl
-    className: grid auto-rows-min gap-2
-    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">一行</span><span class="${DEMO_FILL} p-sm rounded-md">另一行</span>'`,
-    [
+  {
+    title: 'Grid Auto Rows',
+    slug: 'grid/auto-rows',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Grid Auto Rows：`auto-rows-auto` / `min` / `max` / `fr` 落在同一元素的 `grid-auto-rows`。独立样例 + 四档组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`auto-rows-fr` 三行均分 96px。',
+    tableFirst: true,
+    intro:
+      '隐式行有多高。父级先写 `display: grid`，不写行模板时多出来的行走 `grid-auto-rows`。`auto` 跟内容，有剩余会摊开；`min` / `max` 是内容下限 / 上限；`fr` 是 `minmax(0, 1fr)` 均分。舞台钉死 `h-80`（320px），`fr` 时每行 96px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 auto-rows 类打在内层 grid 上。',
+    rows: [
       ['auto-rows-auto', 'grid-auto-rows: auto'],
       ['auto-rows-min', 'grid-auto-rows: min-content'],
       ['auto-rows-max', 'grid-auto-rows: max-content'],
       ['auto-rows-fr', 'grid-auto-rows: minmax(0, 1fr)'],
     ],
-  ),
+    extra: gridAutoRowsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Gap',
     'grid/gap',

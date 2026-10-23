@@ -230,6 +230,10 @@
   .auto-cols-min { grid-auto-columns: min-content; }
   .auto-cols-max { grid-auto-columns: max-content; }
   .auto-cols-fr { grid-auto-columns: minmax(0, 1fr); }
+  .auto-rows-auto { grid-auto-rows: auto; }
+  .auto-rows-min { grid-auto-rows: min-content; }
+  .auto-rows-max { grid-auto-rows: max-content; }
+  .auto-rows-fr { grid-auto-rows: minmax(0, 1fr); }
   .gap-0 { gap: 0; }
   .gap-1 { gap: 0.25rem; }
   .gap-2 { gap: 0.5rem; }
@@ -628,6 +632,10 @@
   .m\:auto-cols-min { grid-auto-columns: min-content; }
   .m\:auto-cols-max { grid-auto-columns: max-content; }
   .m\:auto-cols-fr { grid-auto-columns: minmax(0, 1fr); }
+  .m\:auto-rows-auto { grid-auto-rows: auto; }
+  .m\:auto-rows-min { grid-auto-rows: min-content; }
+  .m\:auto-rows-max { grid-auto-rows: max-content; }
+  .m\:auto-rows-fr { grid-auto-rows: minmax(0, 1fr); }
 }
 
 @media (min-width: 768px) {
@@ -834,6 +842,10 @@
   .pc\:auto-cols-min { grid-auto-columns: min-content; }
   .pc\:auto-cols-max { grid-auto-columns: max-content; }
   .pc\:auto-cols-fr { grid-auto-columns: minmax(0, 1fr); }
+  .pc\:auto-rows-auto { grid-auto-rows: auto; }
+  .pc\:auto-rows-min { grid-auto-rows: min-content; }
+  .pc\:auto-rows-max { grid-auto-rows: max-content; }
+  .pc\:auto-rows-fr { grid-auto-rows: minmax(0, 1fr); }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
