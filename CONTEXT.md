@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- 修文档 Markdown 列表序号：Preflight 清掉 `ol/ul` 的 `list-style`，`.doc-prose` 还原 `decimal` / `disc` 和左内边距；嵌套、引用、分割线一并补上。
 - 修站点内容区滚动时 html/body 滚动条闪现：`scrollIntoView` 改为只滚文章/TOC 容器；`html,body,#app` 锁 `overflow:hidden`；Monaco overflow 宿主改为 `position:fixed`，避免撑高文档。
 - 修 Monaco hex 色块被 inherit 拉高：token 仍 `line-height: inherit`，色块 `.colorpicker-color-decoration` 排除 inherit、写回 Monaco 的 `line-height:.8em`。重新打开 `colorDecorators`，色块可点出色板。
 - `/style/state` 对标 Amis 状态页：**90% 已完成**。`hover:` / `active:`（含 `.is-active`）/ `focus:` / `disabled:` / `group-hover:` / `pc:hover:` / `m:hover:` 写入 `helpers-palette.css`；HTML 岛还原 UA button；`class="Button"` 只转写壳，不搬 `cxd-Button`。
