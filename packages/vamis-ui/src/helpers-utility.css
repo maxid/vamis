@@ -135,8 +135,43 @@
   .col-span-2 { grid-column: span 2 / span 2; }
   .col-span-3 { grid-column: span 3 / span 3; }
   .col-span-4 { grid-column: span 4 / span 4; }
+  .col-span-5 { grid-column: span 5 / span 5; }
   .col-span-6 { grid-column: span 6 / span 6; }
+  .col-span-7 { grid-column: span 7 / span 7; }
+  .col-span-8 { grid-column: span 8 / span 8; }
+  .col-span-9 { grid-column: span 9 / span 9; }
+  .col-span-10 { grid-column: span 10 / span 10; }
+  .col-span-11 { grid-column: span 11 / span 1; }
   .col-span-12 { grid-column: span 12 / span 12; }
+  .col-span-full { grid-column: 1 / -1; }
+  .col-start-1 { grid-column-start: 1; }
+  .col-start-2 { grid-column-start: 2; }
+  .col-start-3 { grid-column-start: 3; }
+  .col-start-4 { grid-column-start: 4; }
+  .col-start-5 { grid-column-start: 5; }
+  .col-start-6 { grid-column-start: 6; }
+  .col-start-7 { grid-column-start: 7; }
+  .col-start-8 { grid-column-start: 8; }
+  .col-start-9 { grid-column-start: 9; }
+  .col-start-10 { grid-column-start: 10; }
+  .col-start-11 { grid-column-start: 11; }
+  .col-start-12 { grid-column-start: 12; }
+  .col-start-13 { grid-column-start: 13; }
+  .col-start-auto { grid-column-start: auto; }
+  .col-end-1 { grid-column-end: 1; }
+  .col-end-2 { grid-column-end: 2; }
+  .col-end-3 { grid-column-end: 3; }
+  .col-end-4 { grid-column-end: 4; }
+  .col-end-5 { grid-column-end: 5; }
+  .col-end-6 { grid-column-end: 6; }
+  .col-end-7 { grid-column-end: 7; }
+  .col-end-8 { grid-column-end: 8; }
+  .col-end-9 { grid-column-end: 9; }
+  .col-end-10 { grid-column-end: 10; }
+  .col-end-11 { grid-column-end: 11; }
+  .col-end-12 { grid-column-end: 12; }
+  .col-end-13 { grid-column-end: 13; }
+  .col-end-auto { grid-column-end: auto; }
   .grid-rows-1 { grid-template-rows: repeat(1, minmax(0, 1fr)); }
   .grid-rows-2 { grid-template-rows: repeat(2, minmax(0, 1fr)); }
   .grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
@@ -442,6 +477,48 @@
   .m\:grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)); }
   .m\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .m\:grid-cols-none { grid-template-columns: none; }
+  .m\:col-auto { grid-column: auto; }
+  .m\:col-span-1 { grid-column: span 1 / span 1; }
+  .m\:col-span-2 { grid-column: span 2 / span 2; }
+  .m\:col-span-3 { grid-column: span 3 / span 3; }
+  .m\:col-span-4 { grid-column: span 4 / span 4; }
+  .m\:col-span-5 { grid-column: span 5 / span 5; }
+  .m\:col-span-6 { grid-column: span 6 / span 6; }
+  .m\:col-span-7 { grid-column: span 7 / span 7; }
+  .m\:col-span-8 { grid-column: span 8 / span 8; }
+  .m\:col-span-9 { grid-column: span 9 / span 9; }
+  .m\:col-span-10 { grid-column: span 10 / span 10; }
+  .m\:col-span-11 { grid-column: span 11 / span 1; }
+  .m\:col-span-12 { grid-column: span 12 / span 12; }
+  .m\:col-span-full { grid-column: 1 / -1; }
+  .m\:col-start-1 { grid-column-start: 1; }
+  .m\:col-start-2 { grid-column-start: 2; }
+  .m\:col-start-3 { grid-column-start: 3; }
+  .m\:col-start-4 { grid-column-start: 4; }
+  .m\:col-start-5 { grid-column-start: 5; }
+  .m\:col-start-6 { grid-column-start: 6; }
+  .m\:col-start-7 { grid-column-start: 7; }
+  .m\:col-start-8 { grid-column-start: 8; }
+  .m\:col-start-9 { grid-column-start: 9; }
+  .m\:col-start-10 { grid-column-start: 10; }
+  .m\:col-start-11 { grid-column-start: 11; }
+  .m\:col-start-12 { grid-column-start: 12; }
+  .m\:col-start-13 { grid-column-start: 13; }
+  .m\:col-start-auto { grid-column-start: auto; }
+  .m\:col-end-1 { grid-column-end: 1; }
+  .m\:col-end-2 { grid-column-end: 2; }
+  .m\:col-end-3 { grid-column-end: 3; }
+  .m\:col-end-4 { grid-column-end: 4; }
+  .m\:col-end-5 { grid-column-end: 5; }
+  .m\:col-end-6 { grid-column-end: 6; }
+  .m\:col-end-7 { grid-column-end: 7; }
+  .m\:col-end-8 { grid-column-end: 8; }
+  .m\:col-end-9 { grid-column-end: 9; }
+  .m\:col-end-10 { grid-column-end: 10; }
+  .m\:col-end-11 { grid-column-end: 11; }
+  .m\:col-end-12 { grid-column-end: 12; }
+  .m\:col-end-13 { grid-column-end: 13; }
+  .m\:col-end-auto { grid-column-end: auto; }
 }
 
 @media (min-width: 768px) {
@@ -549,6 +626,48 @@
   .pc\:grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)); }
   .pc\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .pc\:grid-cols-none { grid-template-columns: none; }
+  .pc\:col-auto { grid-column: auto; }
+  .pc\:col-span-1 { grid-column: span 1 / span 1; }
+  .pc\:col-span-2 { grid-column: span 2 / span 2; }
+  .pc\:col-span-3 { grid-column: span 3 / span 3; }
+  .pc\:col-span-4 { grid-column: span 4 / span 4; }
+  .pc\:col-span-5 { grid-column: span 5 / span 5; }
+  .pc\:col-span-6 { grid-column: span 6 / span 6; }
+  .pc\:col-span-7 { grid-column: span 7 / span 7; }
+  .pc\:col-span-8 { grid-column: span 8 / span 8; }
+  .pc\:col-span-9 { grid-column: span 9 / span 9; }
+  .pc\:col-span-10 { grid-column: span 10 / span 10; }
+  .pc\:col-span-11 { grid-column: span 11 / span 1; }
+  .pc\:col-span-12 { grid-column: span 12 / span 12; }
+  .pc\:col-span-full { grid-column: 1 / -1; }
+  .pc\:col-start-1 { grid-column-start: 1; }
+  .pc\:col-start-2 { grid-column-start: 2; }
+  .pc\:col-start-3 { grid-column-start: 3; }
+  .pc\:col-start-4 { grid-column-start: 4; }
+  .pc\:col-start-5 { grid-column-start: 5; }
+  .pc\:col-start-6 { grid-column-start: 6; }
+  .pc\:col-start-7 { grid-column-start: 7; }
+  .pc\:col-start-8 { grid-column-start: 8; }
+  .pc\:col-start-9 { grid-column-start: 9; }
+  .pc\:col-start-10 { grid-column-start: 10; }
+  .pc\:col-start-11 { grid-column-start: 11; }
+  .pc\:col-start-12 { grid-column-start: 12; }
+  .pc\:col-start-13 { grid-column-start: 13; }
+  .pc\:col-start-auto { grid-column-start: auto; }
+  .pc\:col-end-1 { grid-column-end: 1; }
+  .pc\:col-end-2 { grid-column-end: 2; }
+  .pc\:col-end-3 { grid-column-end: 3; }
+  .pc\:col-end-4 { grid-column-end: 4; }
+  .pc\:col-end-5 { grid-column-end: 5; }
+  .pc\:col-end-6 { grid-column-end: 6; }
+  .pc\:col-end-7 { grid-column-end: 7; }
+  .pc\:col-end-8 { grid-column-end: 8; }
+  .pc\:col-end-9 { grid-column-end: 9; }
+  .pc\:col-end-10 { grid-column-end: 10; }
+  .pc\:col-end-11 { grid-column-end: 11; }
+  .pc\:col-end-12 { grid-column-end: 12; }
+  .pc\:col-end-13 { grid-column-end: 13; }
+  .pc\:col-end-auto { grid-column-end: auto; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
@@ -583,4 +702,7 @@
 
   /* Amis helper grid-cols-7 is repeat(6). Beat Tailwind's repeat(7). */
   .grid-cols-7 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+
+  /* Amis helper col-span-11 is span 11 / span 1. Beat Tailwind's span 11 / span 11. */
+  .col-span-11 { grid-column: span 11 / span 1; }
 }
