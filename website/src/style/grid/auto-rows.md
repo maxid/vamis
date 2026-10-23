@@ -6,27 +6,11 @@ title: Grid Auto Rows
 
 # Grid Auto Rows
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Grid Auto Rows：`auto-rows-auto` / `min` / `max` / `fr` 落在同一元素的 `grid-auto-rows`。独立样例 + 四档组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`auto-rows-fr` 三行均分 96px。
 :::
 
-隐式行高。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: grid auto-rows-min gap-2
-    tpl: |
-      <span class="bg-yellow-200 p-sm rounded-md">一行</span><span class="bg-yellow-200 p-sm rounded-md">另一行</span>
-```
-
-```schema: scope="body"
-type: code
-language: html
-value: |-
-  <span class="bg-yellow-200 p-sm rounded-md">一行</span><span class="bg-yellow-200 p-sm rounded-md">另一行</span>
-```
+隐式行有多高。父级先写 `display: grid`，不写行模板时多出来的行走 `grid-auto-rows`。`auto` 跟内容，有剩余会摊开；`min` / `max` 是内容下限 / 上限；`fr` 是 `minmax(0, 1fr)` 均分。舞台钉死 `h-80`（320px），`fr` 时每行 96px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 auto-rows 类打在内层 grid 上。
 
 ## 类名
 
@@ -37,4 +21,234 @@ value: |-
 | `auto-rows-max` | `grid-auto-rows: max-content` |
 | `auto-rows-fr` | `grid-auto-rows: minmax(0, 1fr)` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## auto-rows-auto
+
+`grid-auto-rows: auto`。默认按行填，`grid-cols-1` 造三行隐式行，舞台 `h-80` 内高 304px。本页内容 max-content 36 / 56 / 36 合计 128px，剩余 160px 三行各摊约 53px：高 89 / 109 / 89。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 auto-rows-auto gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 auto-rows-auto gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+## auto-rows-min
+
+`grid-auto-rows: min-content`。行高跟内容下限走：36 / 56 / 36（中间一枚两行）。列宽钉死 304px 时与 max 相同，舞台底部留白。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 auto-rows-min gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 auto-rows-min gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+## auto-rows-max
+
+`grid-auto-rows: max-content`。行高跟内容上限走，不摊剩余高度：36 / 56 / 36，底部留白。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 auto-rows-max gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 auto-rows-max gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+## auto-rows-fr
+
+`grid-auto-rows: minmax(0, 1fr)`。三行均分剩余空间：(304 − 16) / 3 = **96px**。内容可以被挤进这一行。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+## 组合
+
+同一组三枚：auto、min、max、fr。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-1 auto-rows-auto gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-min gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-max gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-1 auto-rows-auto gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-min gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-max gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+    <div class="grid grid-cols-1 auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+      <div class="p-sm bg-yellow-200 text-sm rounded-md">
+        比较长的<br>一项
+      </div>
+      <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:auto-rows-max` 按内容上限；桌面（≥768px）`pc:auto-rows-fr` 三行均分 96px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 m:auto-rows-max pc:auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 m:auto-rows-max pc:auto-rows-fr gap-2 w-80 h-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="p-sm bg-blue-200 text-sm rounded-md">短</div>
+    <div class="p-sm bg-yellow-200 text-sm rounded-md">
+      比较长的<br>一项
+    </div>
+    <div class="p-sm bg-green-200 text-sm rounded-md">supercalifragilistic</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。隐式列宽见 [Grid Auto Columns](/style/grid/auto-columns)，行模板见 [Grid Template Rows](/style/grid/rows)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
