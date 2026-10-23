@@ -80,6 +80,7 @@
   .z-30 { z-index: 30; }
   .z-40 { z-index: 40; }
   .z-50 { z-index: 50; }
+  .z-auto { z-index: auto; }
 
   .flex-row { flex-direction: row; }
   .flex-row-reverse { flex-direction: row-reverse; }
@@ -371,6 +372,13 @@
   .m\:sticky { position: sticky; }
   .m\:visible { visibility: visible; }
   .m\:invisible { visibility: hidden; }
+  .m\:z-0 { z-index: 0; }
+  .m\:z-10 { z-index: 10; }
+  .m\:z-20 { z-index: 20; }
+  .m\:z-30 { z-index: 30; }
+  .m\:z-40 { z-index: 40; }
+  .m\:z-50 { z-index: 50; }
+  .m\:z-auto { z-index: auto; }
   .m\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -432,6 +440,13 @@
   .pc\:sticky { position: sticky; }
   .pc\:visible { visibility: visible; }
   .pc\:invisible { visibility: hidden; }
+  .pc\:z-0 { z-index: 0; }
+  .pc\:z-10 { z-index: 10; }
+  .pc\:z-20 { z-index: 20; }
+  .pc\:z-30 { z-index: 30; }
+  .pc\:z-40 { z-index: 40; }
+  .pc\:z-50 { z-index: 50; }
+  .pc\:z-auto { z-index: auto; }
   .pc\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 

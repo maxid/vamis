@@ -60,7 +60,7 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / **`state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Flex 逐页核、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / **`z-index` / `state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Flex 逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
@@ -69,6 +69,8 @@
 
 **最近交付**
 
+- `/style` 活示例下 HTML 源码围栏改为 `value: |-`，去掉 Code 展示末尾多出来的空行。
+- `/style/layout/z-index` 对标 Amis Z-Index：`z-0`…`z-50` / `z-auto` 独立活示例 + 五卡叠层组合；补 `z-auto` 与 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style` 每个含 HTML 的活示例下附已格式化源码：复用 `type: code` / `language: html`（Code 组件）；`tpl: |` 也改成多行缩进。inline / inline-block 相邻节点不拆行，避免空白缝。
 - `/style/layout/visibility` 对标 Amis Visibility：`visible` / `invisible` 独立活示例 + 与 `hidden` 占位对比；`m:` / `pc:` 已进 helper，不支持状态前缀。本页 **90% 已完成**。
 - `/style/layout/top-right-bottom-left` 对标 Amis：`top|right|bottom|left|inset|inset-x|inset-y` 独立活示例 + 含块边/角组合；档位写入 `helpers-inset.css`（含负值 / auto / 分数 / `m:` / `pc:`）。本页 **90% 已完成**。
@@ -177,6 +179,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Z-Index / Flex / 色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Flex / 色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
