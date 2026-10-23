@@ -1766,6 +1766,61 @@ function flexGrowExtra() {
   ].join('\n')
 }
 
+function flexShrinkItem(flexClass, fill, label) {
+  return `<div class="${flexClass} w-32 h-16 ${fill} flex items-center justify-center text-sm p-sm rounded-md whitespace-nowrap">${label}</div>`
+}
+
+function flexShrinkRow(leftClass, rightClass, leftLabel, rightLabel, indent = '') {
+  return [
+    `<div class="flex gap-2 w-56 overflow-hidden ${DEMO_STAGE} p-sm rounded-md">`,
+    `  ${flexShrinkItem(leftClass, 'bg-blue-200', leftLabel)}`,
+    `  ${flexShrinkItem(rightClass, DEMO_FILL, rightLabel)}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function flexShrinkPair(itemClass, indent = '') {
+  return flexShrinkRow(itemClass, itemClass, '短', '长文案', indent)
+}
+
+function flexShrinkExtra() {
+  return [
+    '## flex-shrink',
+    '',
+    '`flex-shrink: 1`。grow / basis 不动。舞台 `w-56` = 224px，内宽 208px，缝 `gap-2` = 8px，两枚都是 `w-32`（128px）放不下。左枚 `flex-shrink-0` 钉死 128px，右枚被挤到 72px。',
+    '',
+    displaySchema(flexShrinkRow('flex-shrink-0', 'flex-shrink', '不缩', '可缩')),
+    '',
+    '## flex-shrink-0',
+    '',
+    '`flex-shrink: 0`。不收缩。两枚都钉死 128px，合计超出内宽，`overflow-hidden` 裁掉右枚一部分。',
+    '',
+    displaySchema(flexShrinkPair('flex-shrink-0')),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：钉死 + 挤扁、两边都挤（各 100px）、两边都不挤（裁切）。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...flexShrinkRow('flex-shrink-0', 'flex-shrink', '不缩', '可缩', '  '),
+      ...flexShrinkPair('flex-shrink', '  '),
+      ...flexShrinkPair('flex-shrink-0', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-shrink-0` 不挤；桌面（≥768px）`pc:flex-shrink` 右枚挤到 72px。',
+    '',
+    displaySchema(flexShrinkRow('flex-shrink-0', 'm:flex-shrink-0 pc:flex-shrink', '不缩', '可缩')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。简写见 [Flex](/style/flex/flex)，增长见 [Flex Grow](/style/flex/grow)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2170,20 +2225,24 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex Shrink',
-    'flex/shrink',
-    '窄容器里要不要被挤扁。',
-    `type: page
-body:
-  - type: tpl
-    className: flex w-48 gap-2
-    tpl: '<span class="shrink-0 ${DEMO_FILL} p-sm rounded-md">不缩</span><span class="shrink ${DEMO_FILL} p-sm rounded-md">可缩可缩可缩</span>'`,
-    [
-      ['shrink', 'flex-shrink: 1'],
-      ['shrink-0', 'flex-shrink: 0'],
+  {
+    title: 'Flex Shrink',
+    slug: 'flex/shrink',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex Shrink：`flex-shrink` / `flex-shrink-0` 落在同一元素的 `flex-shrink`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '只改子项的 `flex-shrink`，不改 grow / basis。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。`flex-shrink` 为 1，窄了就挤（也是 CSS 默认）；`flex-shrink-0` 为 0，不挤。Amis 类名带 `flex-` 前缀，不是 Tailwind 的 `shrink`。舞台钉死 `w-56`（224px），盒子 `w-32`（128px）故意放不下。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 shrink 类打在子项上。',
+    rows: [
+      ['flex-shrink', 'flex-shrink: 1'],
+      ['flex-shrink-0', 'flex-shrink: 0'],
     ],
-  ),
+    extra: flexShrinkExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex Order',
     'flex/order',
