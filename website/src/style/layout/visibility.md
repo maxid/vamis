@@ -6,21 +6,11 @@ title: Visibility
 
 # Visibility
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Visibility：`visible` / `invisible` 落在同一元素的 `visibility`。独立样例 + 与 `hidden` 占位对比；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-`invisible` 仍占位；`hidden` 才从布局拿走。业务显隐优先 schema `visible` / `hidden`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: invisible
-    tpl: 占位但看不见
-  - type: tpl
-    tpl: 下一行
-```
+显示与隐藏。`invisible` 仍占位；`hidden`（见 [Display](/style/layout/display)）才从布局拿走。组件显隐优先写 schema `visible` / `hidden`，不必先靠 class。
 
 ## 类名
 
@@ -29,4 +19,59 @@ body:
 | `visible` | `visibility: visible` |
 | `invisible` | `visibility: hidden` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## visible
+
+默认。`visibility: visible`，盒子照常画、照常占位。三个 `w-24`（96px）并排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 visible bg-blue-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-yellow-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-green-200 p-sm rounded-md">visible</div></div>
+```
+
+## invisible
+
+看不见，但**还占着位置**。中间盒子 `visibility: hidden`，左右仍隔开中间那 96px（三盒总宽 288px）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+```
+
+## 组合
+
+`invisible` 占位；`hidden`（`display: none`，见 [Display](/style/layout/display)）从布局拿走。第二行中间没了，左右贴在一起。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+```
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="w-24 hidden bg-yellow-200 p-sm rounded-md">hidden</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:visible` 看见；窄屏 `m:invisible` 看不见但仍占位。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 m:invisible pc:visible bg-yellow-200 p-sm rounded-md">m:invisible pc:visible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

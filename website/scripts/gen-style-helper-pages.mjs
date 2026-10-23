@@ -1152,6 +1152,79 @@ function clearExtra() {
   ].join('\n')
 }
 
+function visChip(extraClass, label) {
+  const display = extraClass.split(/\s+/).includes('hidden') ? '' : 'inline-block'
+  return displayChip([display, 'w-24', extraClass].filter(Boolean).join(' '), label)
+}
+
+function visRow(chips) {
+  return `<div class="${DEMO_STAGE} p-sm rounded-md">${chips.join('')}</div>`
+}
+
+function visibilityExtra() {
+  return [
+    '## visible',
+    '',
+    '默认。`visibility: visible`，盒子照常画、照常占位。三个 `w-24`（96px）并排。',
+    '',
+    displaySchema([
+      visRow([
+        visChip('visible bg-blue-200', 'visible'),
+        visChip(`visible ${DEMO_FILL}`, 'visible'),
+        visChip('visible bg-green-200', 'visible'),
+      ]),
+    ]),
+    '',
+    '## invisible',
+    '',
+    '看不见，但**还占着位置**。中间盒子 `visibility: hidden`，左右仍隔开中间那 96px（三盒总宽 288px）。',
+    '',
+    displaySchema([
+      visRow([
+        visChip('bg-blue-200', '左'),
+        visChip(`invisible ${DEMO_FILL}`, 'invisible'),
+        visChip('bg-green-200', '右'),
+      ]),
+    ]),
+    '',
+    '## 组合',
+    '',
+    '`invisible` 占位；`hidden`（`display: none`，见 [Display](/style/layout/display)）从布局拿走。第二行中间没了，左右贴在一起。',
+    '',
+    displaySchema([
+      visRow([
+        visChip('bg-blue-200', '左'),
+        visChip(`invisible ${DEMO_FILL}`, 'invisible'),
+        visChip('bg-green-200', '右'),
+      ]),
+    ]),
+    '',
+    displaySchema([
+      visRow([
+        visChip('bg-blue-200', '左'),
+        visChip(`hidden ${DEMO_FILL}`, 'hidden'),
+        visChip('bg-green-200', '右'),
+      ]),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:visible` 看见；窄屏 `m:invisible` 看不见但仍占位。',
+    '',
+    displaySchema([
+      visRow([
+        visChip('bg-blue-200', '左'),
+        visChip(`m:invisible pc:visible ${DEMO_FILL}`, 'm:invisible pc:visible'),
+        visChip('bg-green-200', '右'),
+      ]),
+    ]),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -1438,22 +1511,24 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Visibility',
-    'layout/visibility',
-    '`invisible` 仍占位；`hidden` 才从布局拿走。业务显隐优先 schema `visible` / `hidden`。',
-    `type: page
-body:
-  - type: tpl
-    className: invisible
-    tpl: 占位但看不见
-  - type: tpl
-    tpl: 下一行`,
-    [
+  {
+    title: 'Visibility',
+    slug: 'layout/visibility',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Visibility：`visible` / `invisible` 落在同一元素的 `visibility`。独立样例 + 与 `hidden` 占位对比；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '显示与隐藏。`invisible` 仍占位；`hidden`（见 [Display](/style/layout/display)）才从布局拿走。组件显隐优先写 schema `visible` / `hidden`，不必先靠 class。',
+    rows: [
       ['visible', 'visibility: visible'],
       ['invisible', 'visibility: hidden'],
     ],
-  ),
+    extra: visibilityExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Z-Index',
     'layout/z-index',
