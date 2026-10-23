@@ -6,39 +6,254 @@ title: Grid Template Columns
 
 # Grid Template Columns
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Grid Template Columns：`grid-cols-1`…`12` / `grid-cols-none` 落在同一元素的 `grid-template-columns`。独立样例 + 四行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-父节点写 `grid`，再用 `grid-cols-*`。复杂分栏也可以用 `type: grid`。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: grid grid-cols-3 gap-2
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "1"
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "2"
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "3"
-```
+父级先写 `display: grid`（见 [Display](/style/layout/display)），再用 `grid-cols-*` 定列数。公式是 `repeat(N, minmax(0, 1fr))`，列均分、能收到 0。`grid-cols-none` 清掉显式轨道。舞台钉死 `w-80`（320px）。`grid-cols-7` 与 Amis helper 一样写成 6 列。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把列类打在内层 grid 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `grid-cols-1` | `1 列` |
-| `grid-cols-2` | `2 列` |
-| `grid-cols-3` | `3 列` |
-| `grid-cols-4` | `4 列` |
-| `grid-cols-6` | `6 列` |
-| `grid-cols-12` | `12 列` |
+| `grid-cols-1` | `grid-template-columns: repeat(1, minmax(0, 1fr))` |
+| `grid-cols-2` | `grid-template-columns: repeat(2, minmax(0, 1fr))` |
+| `grid-cols-3` | `grid-template-columns: repeat(3, minmax(0, 1fr))` |
+| `grid-cols-4` | `grid-template-columns: repeat(4, minmax(0, 1fr))` |
+| `grid-cols-5` | `grid-template-columns: repeat(5, minmax(0, 1fr))` |
+| `grid-cols-6` | `grid-template-columns: repeat(6, minmax(0, 1fr))` |
+| `grid-cols-7` | `grid-template-columns: repeat(6, minmax(0, 1fr))` |
+| `grid-cols-8` | `grid-template-columns: repeat(8, minmax(0, 1fr))` |
+| `grid-cols-9` | `grid-template-columns: repeat(9, minmax(0, 1fr))` |
+| `grid-cols-10` | `grid-template-columns: repeat(10, minmax(0, 1fr))` |
+| `grid-cols-11` | `grid-template-columns: repeat(11, minmax(0, 1fr))` |
+| `grid-cols-12` | `grid-template-columns: repeat(12, minmax(0, 1fr))` |
 | `grid-cols-none` | `grid-template-columns: none` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## grid-cols-1
+
+`repeat(1, minmax(0, 1fr))`。舞台 `w-80` = 320px，内宽 304px。两枚叠成两行，各 304px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-1 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-1 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## grid-cols-2
+
+两列均分。缝 `gap-2` = 8px，每列 (304 − 8) / 2 = 148px。四枚排成 2×2。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## grid-cols-3
+
+三列。每列 (304 − 16) / 3 = 96px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-3 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-3 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## grid-cols-4
+
+四列。每列 (304 − 24) / 4 = 70px。`grid-cols-5`…`12` 同一公式；`grid-cols-7` 与 Amis 一样写成 6 列。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## grid-cols-none
+
+`grid-template-columns: none`。没有显式轨道，默认一列 auto；定宽舞台里仍被 stretch 拉满，宽与 `grid-cols-1` 一样。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-none gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-none gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组舞台：1 列、2 列、3 列、4 列。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="grid grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="grid grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:grid-cols-2` 两列 148px；桌面（≥768px）`pc:grid-cols-4` 四列 70px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid m:grid-cols-2 pc:grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid m:grid-cols-2 pc:grid-cols-4 gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。跨列见 [Grid Column Start / End](/style/grid/column-start-end)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
