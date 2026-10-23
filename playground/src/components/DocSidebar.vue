@@ -19,7 +19,7 @@ function isFlat(group: SideGroup) {
 function linkMatches(link: string, path: string, allowPrefix: boolean) {
   if (path === link || path === `${link}/`) return true
   if (!allowPrefix) return false
-  if (link === '/' || link === '/components') return false
+  if (link === '/' || link === '/components' || link === '/style') return false
   return path.startsWith(`${link}/`)
 }
 

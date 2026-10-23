@@ -55,6 +55,7 @@ export function playgroundHref(link: string): string {
   if (!link || link.startsWith('http') || link.startsWith('#')) return link
   if (
     link.startsWith('/components') ||
+    link.startsWith('/style') ||
     link.startsWith('/docs') ||
     link.startsWith('/editor') ||
     link.startsWith('/examples') ||

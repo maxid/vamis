@@ -147,4 +147,4 @@ const env = createDefaultEnv({
 - [配置与组件](/concepts/schema)
 - [Form 表单](/components/form/)
 - [CRUD](/components/crud)
-- [样式系统](/style/)
+- [样式](/style/)

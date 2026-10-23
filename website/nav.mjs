@@ -15,15 +15,138 @@ export const conceptNav = [
   { text: '表达式', link: '/concepts/expression' },
   { text: '联动', link: '/concepts/linkage' },
   { text: '事件动作', link: '/concepts/event-action' },
-  { text: 'Action 动作', link: '/concepts/action' },
+  { text: '行为', link: '/concepts/action' },
   { text: '样式', link: '/concepts/style' },
 ]
 
-export const styleNav = [
-  { text: '样式系统', link: '/style/' },
+export const styleStartNav = [
+  { text: '快速开始', link: '/style/' },
   { text: 'CSS 变量', link: '/style/css-vars' },
-  { text: '响应式', link: '/style/responsive-design' },
-  { text: '状态', link: '/style/state' },
+  { text: '辅助类-响应式设计', link: '/style/responsive-design' },
+  { text: '辅助类-状态样式', link: '/style/state' },
+]
+
+/** 对齐 Amis `examples/components/CssDocs.tsx` 的样式侧栏；正文为 Vamis 原创。 */
+export const styleNav = [
+  { text: '开始', items: styleStartNav },
+  {
+    text: 'Layout',
+    collapsed: true,
+    items: [
+      { text: 'Box Sizing', link: '/style/layout/box-sizing' },
+      { text: 'Display', link: '/style/layout/display' },
+      { text: 'Floats', link: '/style/layout/float' },
+      { text: 'Clear', link: '/style/layout/clear' },
+      { text: 'Overflow', link: '/style/layout/overflow' },
+      { text: 'Position', link: '/style/layout/position' },
+      { text: 'Top / Right / Bottom / Left', link: '/style/layout/top-right-bottom-left' },
+      { text: 'Visibility', link: '/style/layout/visibility' },
+      { text: 'Z-Index', link: '/style/layout/z-index' },
+    ],
+  },
+  {
+    text: 'Flexbox',
+    collapsed: true,
+    items: [
+      { text: 'Flex Direction', link: '/style/flex/direction' },
+      { text: 'Flex Wrap', link: '/style/flex/wrap' },
+      { text: 'Flex', link: '/style/flex/flex' },
+      { text: 'Flex Grow', link: '/style/flex/grow' },
+      { text: 'Flex Shrink', link: '/style/flex/shrink' },
+      { text: 'Flex Order', link: '/style/flex/order' },
+    ],
+  },
+  {
+    text: 'Grid',
+    collapsed: true,
+    items: [
+      { text: 'Grid Template Columns', link: '/style/grid/columns' },
+      { text: 'Grid Column Start / End', link: '/style/grid/column-start-end' },
+      { text: 'Grid Template Rows', link: '/style/grid/rows' },
+      { text: 'Grid Row Start / End', link: '/style/grid/row-start-end' },
+      { text: 'Grid Auto Flow', link: '/style/grid/auto-flow' },
+      { text: 'Grid Auto Columns', link: '/style/grid/auto-columns' },
+      { text: 'Grid Auto Rows', link: '/style/grid/auto-rows' },
+      { text: 'Gap', link: '/style/grid/gap' },
+    ],
+  },
+  {
+    text: 'Box Alignment',
+    collapsed: true,
+    items: [
+      { text: 'Justify Content', link: '/style/box-alignment/justify-content' },
+      { text: 'Justify Items', link: '/style/box-alignment/justify-items' },
+      { text: 'Justify Self', link: '/style/box-alignment/justify-self' },
+      { text: 'Align Content', link: '/style/box-alignment/align-content' },
+      { text: 'Align Items', link: '/style/box-alignment/align-items' },
+      { text: 'Align Self', link: '/style/box-alignment/align-self' },
+      { text: 'Place Content', link: '/style/box-alignment/place-content' },
+      { text: 'Place Items', link: '/style/box-alignment/place-items' },
+      { text: 'Place Self', link: '/style/box-alignment/place-self' },
+    ],
+  },
+  {
+    text: 'Spacing',
+    collapsed: true,
+    items: [
+      { text: 'Padding', link: '/style/spacing/padding' },
+      { text: 'Margin', link: '/style/spacing/margin' },
+      { text: 'Space Between', link: '/style/spacing/space-between' },
+    ],
+  },
+  {
+    text: 'Sizing',
+    collapsed: true,
+    items: [
+      { text: 'Width', link: '/style/sizing/width' },
+      { text: 'Height', link: '/style/sizing/height' },
+    ],
+  },
+  {
+    text: 'Typography',
+    collapsed: true,
+    items: [
+      { text: 'Font Family', link: '/style/typography/font-family' },
+      { text: 'Font Size', link: '/style/typography/font-size' },
+      { text: 'Font style', link: '/style/typography/font-style' },
+      { text: 'Font Weight', link: '/style/typography/font-weight' },
+      { text: 'Letter Spacing', link: '/style/typography/letter-spacing' },
+      { text: 'Line Height', link: '/style/typography/line-height' },
+      { text: 'List Style Type', link: '/style/typography/list-style-type' },
+      { text: 'Text Alignment', link: '/style/typography/text-align' },
+      { text: 'Text Color', link: '/style/typography/text-color' },
+      { text: 'Text Decoration', link: '/style/typography/text-decoration' },
+      { text: 'Text Transform', link: '/style/typography/text-transform' },
+      { text: 'Vertical Alignment', link: '/style/typography/vertical-align' },
+      { text: 'Whitespace', link: '/style/typography/whitespace' },
+      { text: 'Word Break', link: '/style/typography/word-break' },
+    ],
+  },
+  {
+    text: 'Backgrounds',
+    collapsed: true,
+    items: [
+      { text: 'Background Color', link: '/style/background/background-color' },
+    ],
+  },
+  {
+    text: 'BORDERS',
+    collapsed: true,
+    items: [
+      { text: 'Border Radius', link: '/style/border/border-radius' },
+      { text: 'Border Width', link: '/style/border/border-width' },
+      { text: 'Border Color', link: '/style/border/border-color' },
+      { text: 'Border Style', link: '/style/border/border-style' },
+    ],
+  },
+  {
+    text: 'Effect',
+    collapsed: true,
+    items: [
+      { text: 'Box Shadow', link: '/style/effect/box-shadow' },
+      { text: 'Opacity', link: '/style/effect/opacity' },
+    ],
+  },
 ]
 
 export const typeNav = [
@@ -253,7 +376,7 @@ export function sidebar() {
   return {
     '/start/': [{ text: '开始', items: startNav }],
     '/concepts/': [{ text: '概念', items: conceptNav }],
-    '/style/': [{ text: '样式', items: styleNav }],
+    '/style/': styleNav,
     '/components/': componentNav,
     '/types/': [{ text: '类型', items: typeNav }],
     '/extend/': [{ text: '扩展', items: extendNav }],

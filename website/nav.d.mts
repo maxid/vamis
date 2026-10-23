@@ -1,6 +1,6 @@
 export const startNav: { text: string; link: string }[]
 export const conceptNav: { text: string; link: string }[]
-export const styleNav: { text: string; link: string }[]
+export const styleStartNav: { text: string; link: string }[]
 export const typeNav: { text: string; link: string }[]
 export const extendNav: { text: string; link: string }[]
 
@@ -21,4 +21,5 @@ export type CompNavEntry = CompGroup | CompItem
 
 export function isCompGroup(entry: CompNavEntry): entry is CompGroup
 
+export const styleNav: CompNavEntry[]
 export const componentNav: CompNavEntry[]

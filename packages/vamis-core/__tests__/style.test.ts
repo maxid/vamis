@@ -478,6 +478,39 @@ describe('isInlineSchema', () => {
   })
 })
 
+describe('style docs surface', () => {
+  it('exposes 样式 as a first-class playground section aligned with Amis', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const app = readFileSync(resolve(here, '../../../playground/src/App.vue'), 'utf8')
+    const router = readFileSync(resolve(here, '../../../playground/src/router.ts'), 'utf8')
+    const nav = readFileSync(resolve(here, '../../../website/nav.mjs'), 'utf8')
+    const index = readFileSync(resolve(here, '../../../website/src/style/index.md'), 'utf8')
+    expect(app).toContain('to="/style"')
+    expect(app).toContain("navClass('/style')")
+    expect(router).toContain("path: '/style'")
+    expect(router).toContain("redirect: '/style/'")
+    expect(nav).toContain("text: '快速开始'")
+    expect(nav).toContain("link: '/style/layout/display'")
+    expect(nav).toContain("link: '/style/spacing/margin'")
+    expect(nav).toContain("text: '辅助类-响应式设计'")
+    expect(index).toContain('# 快速开始')
+    expect(index).toContain('实现进度')
+  })
+
+  it('ships a markdown page for every styleNav link', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const nav = readFileSync(resolve(here, '../../../website/nav.mjs'), 'utf8')
+    const links = [...nav.matchAll(/link: '(\/style[^']*)'/g)].map((row) => row[1])
+    expect(links.length).toBeGreaterThan(40)
+    const src = resolve(here, '../../../website/src')
+    for (const link of links) {
+      const rel = link.replace(/\/+$/, '') || '/style'
+      const file = rel === '/style' ? `${src}/style/index.md` : `${src}${rel}.md`
+      expect(readFileSync(file, 'utf8'), file).toContain('实现进度')
+    }
+  })
+})
+
 describe('buildCssBlock', () => {
   it('turns Amis page.css objects into CSS text', () => {
     const css = buildCssBlock({ '.myClass': { color: 'blue' } })

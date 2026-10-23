@@ -10,7 +10,6 @@ import {
   isCompGroup,
   sidebar,
   startNav,
-  styleNav,
   typeNav,
 } from '../nav.mjs'
 
@@ -31,7 +30,7 @@ export default defineConfig({
     nav: [
       { text: '开始', items: startNav },
       { text: '概念', items: conceptNav },
-      { text: '样式', items: styleNav },
+      { text: '样式', link: '/style/' },
       {
         text: '组件',
         items: componentNav.map((entry) =>

@@ -15,7 +15,10 @@ function navClass(prefix: string, exact = false) {
 
 function docsNavClass() {
   const path = route.path
-  const active = path === '/' || path === '/docs' || path.startsWith('/docs/')
+  const active =
+    path === '/' ||
+    path === '/docs' ||
+    (path.startsWith('/docs/') && !path.startsWith('/docs/style'))
   return active ? 'bg-primary text-primary-foreground hover:bg-primary' : ''
 }
 
@@ -123,6 +126,9 @@ watch([dark, density, accent], () => {
               :class="navClass('/components')"
             >
               组件
+            </RouterLink>
+            <RouterLink to="/style" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/style')">
+              样式
             </RouterLink>
             <RouterLink to="/examples" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="navClass('/examples')">
               示例
