@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- 修 `/style/layout/float` 图下多空一行：`tpl` 不再套 `leading-relaxed`（1.625 → 22.75px），行高回到与 Amis 一致的 21px，绕排只空一行。
 - 修文档 Markdown 列表序号：Preflight 清掉 `ol/ul` 的 `list-style`，`.doc-prose` 还原 `decimal` / `disc` 和左内边距；嵌套、引用、分割线一并补上。
 - 修站点内容区滚动时 html/body 滚动条闪现：`scrollIntoView` 改为只滚文章/TOC 容器；`html,body,#app` 锁 `overflow:hidden`；Monaco overflow 宿主改为 `position:fixed`，避免撑高文档。
 - 修 Monaco hex 色块被 inherit 拉高：token 仍 `line-height: inherit`，色块 `.colorpicker-color-decoration` 排除 inherit、写回 Monaco 的 `line-height:.8em`。重新打开 `colorDecorators`，色块可点出色板。

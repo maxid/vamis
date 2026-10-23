@@ -211,6 +211,7 @@ describe('Amis width helpers', () => {
     const button = readFileSync(resolve(here, '../../vamis-ui/src/ui/button/Button.vue'), 'utf8')
     expect(tpl).toContain('vamis-html')
     expect(tpl).toContain('v-html')
+    expect(tpl).not.toContain('leading-relaxed')
     expect(custom).toContain('vamis-html')
     expect(root).not.toContain('vamis-html')
     expect(page).not.toContain('vamis-html')
