@@ -38,7 +38,7 @@ title: 常见问题
 
 ## 主题能换成云舍吗？
 
-没有 `theme: cxd` 去换 `.cxd-` 前缀。皮肤是 shadcn token + `variant`；cxd 的盒子和密度尽量像素级转写。`level: primary` 映射到 `variant="default"`。主色用 `page.cssVars` 或顶栏色点改，不必钉死云舍蓝。
+没有 `theme: cxd` 去换 `.cxd-` 前缀。皮肤是 shadcn token + `variant`；cxd 的盒子和密度尽量像素级转写。`level: primary` 映射到 `variant="default"`。主色走 `--primary`：顶栏 5 色点是云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，**云舍蓝是其中一种（默认）**；也可用 `page.cssVars` 覆盖。
 
 ## typecheck 过了吗？
 

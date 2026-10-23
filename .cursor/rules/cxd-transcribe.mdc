@@ -12,9 +12,10 @@ alwaysApply: true
 - **不输出** `.cxd-Button`、`.cxd-Form` 这类 BEM，也不编译 / 引入 `cxd.css`、`scss/themes/cxd.scss`。
 - **能力转写**：cxd 的盒子（32/24/98/40）、密度、helper 语义、状态、交互尽量像素级落到 `@vamis/ui` token、`cva` variants、Tailwind utility。
 - 文档和注释写成「不搬前缀 / 转写能力」，禁止写成「不追像素级 cxd」「不复刻 cxd 皮肤」「只学密度」。
+- **主色走 `--primary`**。当前 5 种主题色：云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红（顶栏 `data-accent`）。**云舍蓝只是其中一种**（默认色点），不是唯一主色，也不是禁用色。作者还可用 `cssVars` 覆盖。
 
 ## 禁止
 
 - 把「不搬 `cxd-`」理解成视觉可以随便做、或故意不做像素对齐。
 - 为了像 Amis 而把 `$ns: cxd-` 打进产物。
-- 配色钉死云舍蓝 `#2468f2` 当唯一主色（走 shadcn 语义 token；需要对齐时用 `cssVars` / `--primary`）。
+- 把云舍蓝写成禁止色，或写成唯一允许的主色。
