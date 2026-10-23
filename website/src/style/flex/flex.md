@@ -6,25 +6,11 @@ title: Flex
 
 # Flex
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Flex：`flex-1` / `flex-auto` / `flex-initial` / `flex-none` 落在同一元素的 `flex`。独立样例 + 四行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-`flex-1` 吃剩余空间，`flex-none` 按内容宽。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex gap-2
-    body:
-      - type: tpl
-        className: flex-none bg-yellow-200 p-sm rounded-md
-        tpl: 固定
-      - type: tpl
-        className: flex-1 bg-primary text-primary-foreground p-sm rounded-md
-        tpl: 吃剩余
-```
+子项怎么吃剩余空间。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。`flex-1` 从 0 起均分；`flex-auto` 从内容宽起再均分剩余；`flex-initial` 按内容、可缩不长（也是 CSS 默认）；`flex-none` 按内容、不缩不长。舞台钉死 `w-80`（320px）。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 flex 类打在子项上。
 
 ## 类名
 
@@ -35,4 +21,180 @@ body:
 | `flex-initial` | `flex: 0 1 auto` |
 | `flex-none` | `flex: none` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## flex-1
+
+`flex: 1 1 0%`。basis 从 0 起，剩余均分。舞台 `w-80` = 320px，内宽 304px，缝 `gap-2` = 8px，两枚各 148px。左右文案长短不同，宽度仍相等。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+## flex-auto
+
+`flex: 1 1 auto`。basis 是内容宽，再均分剩余。长文案那枚更宽。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-auto h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-auto h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-auto h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-auto h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+## flex-initial
+
+`flex: 0 1 auto`。不增长（CSS 默认）。两枚都停在内容宽，右边留出灰底。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-initial h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-initial h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-initial h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-initial h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+## flex-none
+
+`flex: none`（`0 0 auto`）。左枚 `w-16` 钉死 64px，右枚 `flex-1` 吃掉剩余 232px。不增长也不收缩。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-none w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-none w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
+```
+
+## 组合
+
+同一组舞台：均分、按内容再分、不增长、钉死 + 吃剩余。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-auto h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-auto h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-initial h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-initial h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-none w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+      <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-auto h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-auto h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-initial h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-initial h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-none w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+      <div class="flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-none` 按内容宽；桌面（≥768px）`pc:flex-1` 均分。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="m:flex-none pc:flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="m:flex-none pc:flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="m:flex-none pc:flex-1 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="m:flex-none pc:flex-1 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。只改增长 / 收缩见 [Flex Grow](/style/flex/grow)、[Flex Shrink](/style/flex/shrink)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

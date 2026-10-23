@@ -341,6 +341,10 @@
   .m\:flex-wrap { flex-wrap: wrap; }
   .m\:flex-wrap-reverse { flex-wrap: wrap-reverse; }
   .m\:flex-nowrap { flex-wrap: nowrap; }
+  .m\:flex-1 { flex: 1 1 0%; }
+  .m\:flex-auto { flex: 1 1 auto; }
+  .m\:flex-initial { flex: 0 1 auto; }
+  .m\:flex-none { flex: none; }
   .m\:text-left { text-align: left; }
   .m\:text-center { text-align: center; }
   .m\:text-right { text-align: right; }
@@ -413,6 +417,10 @@
   .pc\:flex-wrap { flex-wrap: wrap; }
   .pc\:flex-wrap-reverse { flex-wrap: wrap-reverse; }
   .pc\:flex-nowrap { flex-wrap: nowrap; }
+  .pc\:flex-1 { flex: 1 1 0%; }
+  .pc\:flex-auto { flex: 1 1 auto; }
+  .pc\:flex-initial { flex: 0 1 auto; }
+  .pc\:flex-none { flex: none; }
   .pc\:text-left { text-align: left; }
   .pc\:text-center { text-align: center; }
   .pc\:text-right { text-align: right; }

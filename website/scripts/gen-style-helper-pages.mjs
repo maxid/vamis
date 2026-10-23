@@ -1659,6 +1659,75 @@ function flexWrapExtra() {
   ].join('\n')
 }
 
+function flexFlexItem(flexClass, fill, label, extra = '') {
+  const extraPart = extra ? ` ${extra}` : ''
+  return `<div class="${flexClass}${extraPart} h-16 ${fill} flex items-center justify-center text-sm p-sm rounded-md">${label}</div>`
+}
+
+function flexFlexRow(leftClass, rightClass, leftLabel, rightLabel, leftExtra = '', rightExtra = '', indent = '') {
+  return [
+    `<div class="flex gap-2 w-80 overflow-hidden ${DEMO_STAGE} p-sm rounded-md">`,
+    `  ${flexFlexItem(leftClass, 'bg-blue-200', leftLabel, leftExtra)}`,
+    `  ${flexFlexItem(rightClass, DEMO_FILL, rightLabel, rightExtra)}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function flexFlexPair(itemClass, indent = '') {
+  return flexFlexRow(itemClass, itemClass, '短', '长文案', '', '', indent)
+}
+
+function flexFlexExtra() {
+  return [
+    '## flex-1',
+    '',
+    '`flex: 1 1 0%`。basis 从 0 起，剩余均分。舞台 `w-80` = 320px，内宽 304px，缝 `gap-2` = 8px，两枚各 148px。左右文案长短不同，宽度仍相等。',
+    '',
+    displaySchema(flexFlexPair('flex-1')),
+    '',
+    '## flex-auto',
+    '',
+    '`flex: 1 1 auto`。basis 是内容宽，再均分剩余。长文案那枚更宽。',
+    '',
+    displaySchema(flexFlexPair('flex-auto')),
+    '',
+    '## flex-initial',
+    '',
+    '`flex: 0 1 auto`。不增长（CSS 默认）。两枚都停在内容宽，右边留出灰底。',
+    '',
+    displaySchema(flexFlexPair('flex-initial')),
+    '',
+    '## flex-none',
+    '',
+    '`flex: none`（`0 0 auto`）。左枚 `w-16` 钉死 64px，右枚 `flex-1` 吃掉剩余 232px。不增长也不收缩。',
+    '',
+    displaySchema(flexFlexRow('flex-none', 'flex-1', '钉', '吃剩余', 'w-16')),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：均分、按内容再分、不增长、钉死 + 吃剩余。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...flexFlexPair('flex-1', '  '),
+      ...flexFlexPair('flex-auto', '  '),
+      ...flexFlexPair('flex-initial', '  '),
+      ...flexFlexRow('flex-none', 'flex-1', '钉', '吃剩余', 'w-16', '', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-none` 按内容宽；桌面（≥768px）`pc:flex-1` 均分。',
+    '',
+    displaySchema(flexFlexPair('m:flex-none pc:flex-1')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。只改增长 / 收缩见 [Flex Grow](/style/flex/grow)、[Flex Shrink](/style/flex/shrink)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2025,28 +2094,26 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex',
-    'flex/flex',
-    '`flex-1` 吃剩余空间，`flex-none` 按内容宽。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: flex gap-2
-    body:
-      - type: tpl
-        className: flex-none ${DEMO_FILL} p-sm rounded-md
-        tpl: 固定
-      - type: tpl
-        className: flex-1 bg-primary text-primary-foreground p-sm rounded-md
-        tpl: 吃剩余`,
-    [
+  {
+    title: 'Flex',
+    slug: 'flex/flex',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex：`flex-1` / `flex-auto` / `flex-initial` / `flex-none` 落在同一元素的 `flex`。独立样例 + 四行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '子项怎么吃剩余空间。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。`flex-1` 从 0 起均分；`flex-auto` 从内容宽起再均分剩余；`flex-initial` 按内容、可缩不长（也是 CSS 默认）；`flex-none` 按内容、不缩不长。舞台钉死 `w-80`（320px）。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 flex 类打在子项上。',
+    rows: [
       ['flex-1', 'flex: 1 1 0%'],
       ['flex-auto', 'flex: 1 1 auto'],
       ['flex-initial', 'flex: 0 1 auto'],
       ['flex-none', 'flex: none'],
     ],
-  ),
+    extra: flexFlexExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex Grow',
     'flex/grow',
