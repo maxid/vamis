@@ -61,7 +61,9 @@
 }
 
 .vamis-monaco-overflow.monaco-editor {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 0 !important;
   height: 0 !important;
   overflow: visible !important;

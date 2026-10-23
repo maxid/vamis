@@ -66,7 +66,7 @@ watch([dark, density, accent], () => {
 </script>
 
 <template>
-  <div class="flex h-screen flex-col overflow-hidden bg-background text-foreground">
+  <div class="flex h-full flex-col overflow-hidden bg-background text-foreground">
     <header class="shrink-0 border-b bg-card">
       <div class="mx-auto flex w-full max-w-[1800px] flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div class="flex min-w-0 items-center gap-4">
