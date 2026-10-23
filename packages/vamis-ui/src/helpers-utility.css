@@ -175,6 +175,10 @@
   .grid-rows-1 { grid-template-rows: repeat(1, minmax(0, 1fr)); }
   .grid-rows-2 { grid-template-rows: repeat(2, minmax(0, 1fr)); }
   .grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  .grid-rows-4 { grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
+  .grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
+  .grid-rows-none { grid-template-rows: none; }
   .grid-flow-row { grid-auto-flow: row; }
   .grid-flow-col { grid-auto-flow: column; }
   .grid-flow-dense { grid-auto-flow: dense; }
@@ -519,6 +523,13 @@
   .m\:col-end-12 { grid-column-end: 12; }
   .m\:col-end-13 { grid-column-end: 13; }
   .m\:col-end-auto { grid-column-end: auto; }
+  .m\:grid-rows-1 { grid-template-rows: repeat(1, minmax(0, 1fr)); }
+  .m\:grid-rows-2 { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .m\:grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  .m\:grid-rows-4 { grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .m\:grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
+  .m\:grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
+  .m\:grid-rows-none { grid-template-rows: none; }
 }
 
 @media (min-width: 768px) {
@@ -668,6 +679,13 @@
   .pc\:col-end-12 { grid-column-end: 12; }
   .pc\:col-end-13 { grid-column-end: 13; }
   .pc\:col-end-auto { grid-column-end: auto; }
+  .pc\:grid-rows-1 { grid-template-rows: repeat(1, minmax(0, 1fr)); }
+  .pc\:grid-rows-2 { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .pc\:grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  .pc\:grid-rows-4 { grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .pc\:grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
+  .pc\:grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
+  .pc\:grid-rows-none { grid-template-rows: none; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts

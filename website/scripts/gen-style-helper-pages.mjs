@@ -2048,6 +2048,76 @@ function gridColumnStartEndExtra() {
   ].join('\n')
 }
 
+function gridRowChip(fill, label) {
+  return `<div class="${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function gridRowStage(rowsClass, count, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="grid ${rowsClass} grid-cols-1 gap-2 w-32 h-80 shrink-0 ${DEMO_STAGE} p-sm rounded-md">`,
+    ...Array.from({ length: count }, (_, i) => `  ${gridRowChip(fills[i % 3], String(i + 1))}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridRowsExtra() {
+  return [
+    '## grid-rows-1',
+    '',
+    '`repeat(1, minmax(0, 1fr))`。舞台 `h-80` = 320px，内高 304px。一枚吃满 304px。',
+    '',
+    displaySchema(gridRowStage('grid-rows-1', 1)),
+    '',
+    '## grid-rows-2',
+    '',
+    '两行均分。缝 `gap-2` = 8px，每行 (304 − 8) / 2 = 148px。',
+    '',
+    displaySchema(gridRowStage('grid-rows-2', 2)),
+    '',
+    '## grid-rows-3',
+    '',
+    '三行。每行 (304 − 16) / 3 = 96px。',
+    '',
+    displaySchema(gridRowStage('grid-rows-3', 3)),
+    '',
+    '## grid-rows-4',
+    '',
+    '四行。每行 (304 − 24) / 4 = 70px。`grid-rows-5`、`grid-rows-6` 同一公式。',
+    '',
+    displaySchema(gridRowStage('grid-rows-4', 4)),
+    '',
+    '## grid-rows-none',
+    '',
+    '`grid-template-rows: none`。没有显式轨道，默认 auto 行；定高舞台里仍被 stretch 拉满，高与 `grid-rows-1` 一样。',
+    '',
+    displaySchema(gridRowStage('grid-rows-none', 1)),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：1 行、2 行、3 行、4 行。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...gridRowStage('grid-rows-1', 1, '  '),
+      ...gridRowStage('grid-rows-2', 2, '  '),
+      ...gridRowStage('grid-rows-3', 3, '  '),
+      ...gridRowStage('grid-rows-4', 4, '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:grid-rows-2` 两行 148px；桌面（≥768px）`pc:grid-rows-4` 四行 70px。',
+    '',
+    displaySchema(gridRowStage('m:grid-rows-2 pc:grid-rows-4', 4)),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。列模板见 [Grid Template Columns](/style/grid/columns)，跨行见 [Grid Row Start / End](/style/grid/row-start-end)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2549,23 +2619,27 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Grid Template Rows',
-    'grid/rows',
-    '行模板。高度不够时配合 `h-*`。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-rows-2 grid-cols-2 h-32 gap-2
-    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">1</span><span class="${DEMO_FILL} p-sm rounded-md">2</span><span class="${DEMO_FILL} p-sm rounded-md">3</span><span class="${DEMO_FILL} p-sm rounded-md">4</span>'`,
-    [
-      ['grid-rows-1', '1 行'],
-      ['grid-rows-2', '2 行'],
-      ['grid-rows-3', '3 行'],
-      ['grid-rows-4', '4 行'],
+  {
+    title: 'Grid Template Rows',
+    slug: 'grid/rows',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Grid Template Rows：`grid-rows-1`…`6` / `grid-rows-none` 落在同一元素的 `grid-template-rows`。独立样例 + 四列组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '父级先写 `display: grid`（见 [Display](/style/layout/display)），再用 `grid-rows-*` 定行数。公式是 `repeat(N, minmax(0, 1fr))`，行均分、能收到 0。`grid-rows-none` 清掉显式轨道。舞台钉死 `h-80`（320px）。Amis 只到 `grid-rows-6`，没有 7–12。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把行类打在内层 grid 上。',
+    rows: [
+      ...[1, 2, 3, 4, 5, 6].map((n) => [
+        `grid-rows-${n}`,
+        `grid-template-rows: repeat(${n}, minmax(0, 1fr))`,
+      ]),
       ['grid-rows-none', 'grid-template-rows: none'],
     ],
-  ),
+    extra: gridRowsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Grid Row Start / End',
     'grid/row-start-end',
