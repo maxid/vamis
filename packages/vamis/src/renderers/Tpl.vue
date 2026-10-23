@@ -26,6 +26,6 @@ const rendered = computed(() => {
 </script>
 
 <template>
-  <component :is="tag" v-if="rendered.html != null" class="vamis-html leading-relaxed" v-html="rendered.html" />
-  <component :is="tag" v-else class="vamis-html leading-relaxed">{{ rendered.text }}</component>
+  <component :is="tag" v-if="rendered.html != null" class="vamis-html" v-html="rendered.html" />
+  <component :is="tag" v-else class="vamis-html">{{ rendered.text }}</component>
 </template>
