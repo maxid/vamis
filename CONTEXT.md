@@ -33,6 +33,7 @@
 |------|------|
 | **Amis** | 百度 JSON 低代码引擎（6.13.0）。Vamis 对齐其 **schema 语义**，不复制 React/MST |
 | **cxd 转写** | 不搬 `.cxd-*` 前缀和 Amis 主题 SCSS。cxd 的盒子、密度、helper、交互尽量像素级落到 shadcn-vue token、`cva` variants、Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/cxd-transcribe.mdc` |
+| **样式行为精度** | `/style` 活示例对标 Amis **计算样式与盒模型**：同一 class 落在同一元素、同一属性、同一值。范本 `space-x-6` = 后盒 `margin-left: 24px`，不是 Tailwind 前盒 `margin-inline-end`。禁止同名 utility 两套叠加。规则：`.cursor/rules/style-behavior-parity.mdc` |
 | **type** | Schema 节点种类（`page` / `form` / `crud`…）。侧栏 155 项见组件 TODO |
 | **已注册 ≠ 语义完成** | `registerRenderer` 有调用只说明能 resolve；进度看文档主路径 |
 | **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 LCDP IR 同形 |
@@ -59,7 +60,7 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写**：不搬前缀；盒子/密度/交互尽量像素级落到 shadcn-vue / Tailwind；**默认自适应** | `/style` 按观感计，首页 **45%**（不是 80%）。表单默认标题「表单」、只画提交、标题栏灰底；调色盘 helper 进 SDK。仍缺 hover 全矩阵、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` 已按盒模型对齐（后盒 `margin-left: 24px`）。其余 helper 页按同一口径逐页核。仍缺 hover 全矩阵、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
@@ -68,6 +69,9 @@
 
 **最近交付**
 
+- 样式对标口径升到 **行为精度**：后续 `/style` 按计算样式/盒模型对齐（同一元素、同一属性、同一值），写入规则 `.cursor/rules/style-behavior-parity.mdc`。范本仍是 `space-x-6` → 后盒 `margin-left: 24px`。
+- 修两处回归：`space-x-6` 对齐 Amis（第二个盒子 `margin-left: 24px`），并清掉 Tailwind v4 写在第一个盒子上的 `margin-inline-end`，避免 24+24 叠成 48px。`.hidden` 改放到 `@layer components`，不再压过 `lg:block`，文档 TOC 回来。
+- `/style/layout/box-sizing` 对标 Amis 同名页：左右 `box-border` 128px / `box-content` 160px。HTML 岛内去掉 Preflight 默认 `border-style:solid`，`border-4` 未配 `border-solid` 时不画边（不再多一圈蓝边）。本页 **90% 已完成**。
 - 按观感下调 `/style` 进度（首页 80%→**45%**）。对标 Amis 活示例：Form 默认标题「表单」、默认只画提交、标题栏灰底；`className: text-green-700` 落到标签；调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）写入 `helpers-palette.css`，文档表按完整色阶生成。
 - 对标 Amis `/style`：布局 / 语义色 helper 打进 `helpers-utility.css`（SDK 也能用）；`m:`/`pc:` 接到 display/flex/语义色，并加 Tailwind `@custom-variant`。颜色 / 背景 / 边框表补「示例效果」列。`cssVars` 对齐 `--primary-onHover`。Form / FormItem / Panel 接 `xxxClassName`；Container 写了 `bodyClassName` 不再强加 `space-y-3`。
 - 更正「配色钉死云舍蓝」：云舍蓝只是顶栏 5 种主题色之一（云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，默认色点），不是唯一主色、也不是禁用色。顶栏色点文案「墨蓝」改为「云舍蓝」。
@@ -158,6 +162,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`/style` 首页活示例已按 Amis 面板壳对齐（仍 45%）。下一刀是 hover/focus/disabled 与设备前缀全矩阵、Panel 像素级（heading padding / footer）、其余组件 `xxxClassName`、`registerTheme`。不挡组件语义。
+6. **样式收尾（D12 余项）**：对标口径已钉死为计算样式/盒模型（`.cursor/rules/style-behavior-parity.mdc`）。下一刀按该口径逐页核 helper 用法图（Display / Flex / 色盘 / Space Between…），禁止只对截图；以及 hover 全矩阵、Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

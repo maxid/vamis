@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-23
-- 状态：部分落地（目录已齐；`/style` 活示例按视觉对标，进度按观感不是按「有 helper」。表单默认标题/只提交/灰标题栏已接；调色盘 helper 进 SDK。hover 全矩阵、`registerTheme`、其余 `xxxClassName` 仍 P1）
+- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` 已按该口径对齐。hover 全矩阵、`registerTheme`、其余 `xxxClassName` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
@@ -23,6 +23,15 @@ Amis 特定组件的自适应样式是**默认行为**，作者不必先配宽�
 - **按钮、徽标、纯文本不要被拉成 100% 宽。** 只约束布局容器和表单控件槽。
 
 落地：FormItem 未写 `size` 时挂 `vamis-control--fluid`；Form / CRUD / Flex / Grid / Container / Wrapper 默认 `w-full min-w-0`。规则文件：`.cursor/rules/adaptive-default.mdc`。
+
+## 0.1 准则：helper 行为精度
+
+`className` helper 与 `/style` 活示例对标 Amis 时，精度是 **计算样式 + 盒模型**，不是截图「看起来差不多」。
+
+- 同一条 class 必须落在 **同一个元素、同一条属性、同一个计算值**。范本：`space-x-6` = 第二个盒子 `margin-left: 24px`（Amis helper `~` 兄弟选择器），不是 Tailwind v4 第一个盒子的 `margin-inline-end`。
+- 先读 Amis `packages/amis-ui/scss/helper` 的选择器，再写 `@vamis/ui` CSS。Playground 会扫描文档生成同名 Tailwind 规则；语义不同时清掉 TW 那侧，禁止两套叠加（缝加倍、边多一圈）。
+- 收工核宽高 / margin / padding / border / `box-sizing` / 相邻缝宽。未对齐盒模型不得标文档「已完成」。
+- 规则：`.cursor/rules/style-behavior-parity.mdc`。
 
 ## 1. Amis 样式系统（结论）
 

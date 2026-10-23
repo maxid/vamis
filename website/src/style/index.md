@@ -5,7 +5,7 @@ title: 快速开始
 # 快速开始
 
 ::: warning 实现进度 45% · 进行中
-表单面板默认标题「表单」、只画提交、标题栏灰底，已对齐 Amis `/style` 活示例。调色盘 helper 进了 SDK。仍缺 hover/focus 全矩阵、`registerTheme`、其余组件 `xxxClassName`；视觉还不是像素级 cxd 面板。
+表单面板默认标题「表单」、只画提交、标题栏灰底，已对齐 Amis `/style` 活示例。调色盘 helper 进了 SDK。后续 helper 页按计算样式/盒模型对标（同一 class、同一元素、同一属性），不是截图近似。仍缺 hover/focus 全矩阵、`registerTheme`、其余组件 `xxxClassName`。
 :::
 
 Vamis 改观感有四条路，对齐 Amis 的用法，实现换成 shadcn token：
