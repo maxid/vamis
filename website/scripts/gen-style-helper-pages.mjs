@@ -730,6 +730,7 @@ function writePage({
 const helpersCss = fs.readFileSync(path.join(uiSrc, 'helpers.css'), 'utf8')
 const widthCss = fs.readFileSync(path.join(uiSrc, 'helpers-width.css'), 'utf8')
 const heightCss = fs.readFileSync(path.join(uiSrc, 'helpers-height.css'), 'utf8')
+const gapCss = fs.readFileSync(path.join(uiSrc, 'helpers-gap.css'), 'utf8')
 
 const marginRows = parseUtilityClasses(helpersCss, (name) => {
   if (name.startsWith('min-') || name.startsWith('max-')) return false
@@ -746,6 +747,9 @@ const widthRows = parseUtilityClasses(widthCss, (name) =>
 )
 const heightRows = parseUtilityClasses(heightCss, (name) =>
   name.startsWith('h-') || name.startsWith('min-h-') || name.startsWith('max-h-'),
+)
+const gapRows = parseUtilityClasses(gapCss, (name) =>
+  /^(gap|gap-x|gap-y)(-|$)/.test(name),
 )
 
 const tw = (title, slug, intro, example, rows) => ({
@@ -2423,6 +2427,82 @@ function gridAutoRowsExtra() {
   ].join('\n')
 }
 
+function gapChip(fill, label) {
+  return `<div class="h-16 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function gapStage(gapClass, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200', 'bg-blue-200']
+  return [
+    `<div class="grid grid-cols-2 ${gapClass} w-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    ...[1, 2, 3, 4].map((n, i) => `  ${gapChip(fills[i], String(n))}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridGapExtra() {
+  return [
+    '## gap-0',
+    '',
+    '`gap: 0`。舞台 `grid-cols-2 w-80`，内宽 304px。两列各 152px，第二枚 left 160px；第二行 top 72px（贴着第一行）。',
+    '',
+    displaySchema(gapStage('gap-0')),
+    '',
+    '## gap-2',
+    '',
+    '`gap: 0.5rem` = **8px**。列宽 (304 − 8) / 2 = 148px。第二枚 left 164px；第二行 top 80px。',
+    '',
+    displaySchema(gapStage('gap-2')),
+    '',
+    '## gap-4',
+    '',
+    '`gap: 1rem` = **16px**。列宽 144px。第二枚 left 168px；第二行 top 88px。',
+    '',
+    displaySchema(gapStage('gap-4')),
+    '',
+    '## gap-6',
+    '',
+    '`gap: 1.5rem` = **24px**。列宽 140px。第二枚 left 172px；第二行 top 96px。',
+    '',
+    displaySchema(gapStage('gap-6')),
+    '',
+    '## gap-x-8',
+    '',
+    '`column-gap: 2rem` = **32px**，行缝仍是 0。列宽 136px。第二枚 left 176px；第二行 top 72px。',
+    '',
+    displaySchema(gapStage('gap-x-8')),
+    '',
+    '## gap-y-4',
+    '',
+    '`row-gap: 1rem` = **16px**，列缝仍是 0。列宽 152px。第二枚 left 160px；第二行 top 88px。',
+    '',
+    displaySchema(gapStage('gap-y-4')),
+    '',
+    '## 组合',
+    '',
+    '同一组四枚：`gap-0`、`gap-2`、`gap-x-8`、`gap-y-4`。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...gapStage('gap-0', '  '),
+      ...gapStage('gap-2', '  '),
+      ...gapStage('gap-x-8', '  '),
+      ...gapStage('gap-y-4', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:gap-2` 缝 8px；桌面（≥768px）`pc:gap-6` 缝 24px，第二行 top 96px。',
+    '',
+    displaySchema(gapStage('m:gap-2 pc:gap-6')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。兄弟 margin 缝见 [Space Between](/style/spacing/space-between)；cxd 阶 `--gap-xs…xl` 见 [Padding](/style/spacing/padding) / [Margin](/style/spacing/margin)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -3039,48 +3119,21 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Gap',
-    'grid/gap',
-    'Grid / Flex 沟槽。这是 Tailwind spacing，不是 `--gap-xs`。Amis 间距辅助类见 [Padding](/style/spacing/padding) / [Margin](/style/spacing/margin)。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: flex gap-4
-    body:
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "1"
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "2"
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "3"
-  - type: container
-    className: m-t-sm
-    bodyClassName: grid grid-cols-2 gap-x-8 gap-y-2
-    body:
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: a
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: b
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: c
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: d`,
-    [
-      ['gap-1', 'gap: 0.25rem'],
-      ['gap-2', 'gap: 0.5rem'],
-      ['gap-4', 'gap: 1rem'],
-      ['gap-x-4', 'column-gap: 1rem'],
-      ['gap-y-2', 'row-gap: 0.5rem'],
-    ],
-  ),
+  {
+    title: 'Gap',
+    slug: 'grid/gap',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Gap：`gap-*` / `gap-x-*` / `gap-y-*` 落在同一元素的 `gap` / `column-gap` / `row-gap`（Tailwind spacing，不是 `--gap-xs`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`gap-2` 缝 8px，`gap-6` 缝 24px。',
+    tableFirst: true,
+    intro:
+      '格子之间的缝。写在 `display: grid` 或 `flex` 的容器上，不是子项 margin。`gap` 行列一起；`gap-x` 只列缝、`gap-y` 只行缝。档位是 Tailwind spacing（`gap-2` = 8px），不是 cxd `--gap-xs…xl`。舞台钉死 `w-80`（320px），两列时用相邻盒子的 left / top 对缝。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 gap 类打在内层 grid 上。',
+    rows: gapRows,
+    extra: gridGapExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Justify Content',
     'box-alignment/justify-content',
