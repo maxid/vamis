@@ -6,27 +6,11 @@ title: Grid Auto Flow
 
 # Grid Auto Flow
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Grid Auto Flow：`grid-flow-row` / `col` / `row-dense` / `col-dense` 落在同一元素的 `grid-auto-flow`。独立样例 + 行列组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `grid-flow-dense`。
 :::
 
-自动摆放方向。`grid-flow-col` 按列填。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: grid grid-flow-col auto-cols-fr h-16 gap-2
-    tpl: |
-      <span class="bg-yellow-200 p-sm rounded-md">A</span><span class="bg-yellow-200 p-sm rounded-md">B</span><span class="bg-yellow-200 p-sm rounded-md">C</span>
-```
-
-```schema: scope="body"
-type: code
-language: html
-value: |-
-  <span class="bg-yellow-200 p-sm rounded-md">A</span><span class="bg-yellow-200 p-sm rounded-md">B</span><span class="bg-yellow-200 p-sm rounded-md">C</span>
-```
+自动摆放怎么走。父级先写 `display: grid` 和列/行模板。`grid-flow-row` 先填行（默认）；`grid-flow-col` 先填列。带 `dense` 的会回头填空洞。舞台钉死 `w-80`（320px），三列时每列 96px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 flow 类打在内层 grid 上。
 
 ## 类名
 
@@ -34,8 +18,201 @@ value: |-
 | --- | --- |
 | `grid-flow-row` | `grid-auto-flow: row` |
 | `grid-flow-col` | `grid-auto-flow: column` |
-| `grid-flow-dense` | `grid-auto-flow: dense` |
 | `grid-flow-row-dense` | `grid-auto-flow: row dense` |
 | `grid-flow-col-dense` | `grid-auto-flow: column dense` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## grid-flow-row
+
+按行填：先从左到右，再下一行。舞台 `grid-cols-3 grid-rows-2`、`w-80`，内宽 304px，每列 96px。五枚：第一行 1 2 3，第二行 4 5。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-3 grid-rows-2 grid-flow-row gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-3 grid-rows-2 grid-flow-row gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+## grid-flow-col
+
+按列填：先从上到下，再下一列。同一 3×2 格子：第一列 1 2，第二列 3 4，第三列 5。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-3 grid-rows-2 grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-3 grid-rows-2 grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+## grid-flow-row-dense
+
+行向 + 稠密。前两枚 `col-span-2` 会在第一行留下一列空洞；`dense` 把第三枚填进这个洞，而不是挤到下一行。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-3 grid-flow-row-dense gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="col-span-2 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="col-span-2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">填</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-3 grid-flow-row-dense gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="col-span-2 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="col-span-2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">填</div>
+  </div>
+```
+
+## grid-flow-col-dense
+
+列向 + 稠密。前两枚 `row-span-2` 会在第一列留下一行空洞；`dense` 把第三枚填进这个洞。舞台 `grid-rows-3 grid-cols-2 h-80`，内高 304px，每行 96px；跨 2 高 200px，填在第 3 行（上缘 216px）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-rows-3 grid-cols-2 h-80 grid-flow-col-dense gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="row-span-2 bg-blue-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="row-span-2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">填</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-rows-3 grid-cols-2 h-80 grid-flow-col-dense gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="row-span-2 bg-blue-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="row-span-2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">跨2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">填</div>
+  </div>
+```
+
+## 组合
+
+同一组五枚：按行填、按列填。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-3 grid-rows-2 grid-flow-row gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+    </div>
+    <div class="grid grid-cols-3 grid-rows-2 grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-3 grid-rows-2 grid-flow-row gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+    </div>
+    <div class="grid grid-cols-3 grid-rows-2 grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:grid-flow-row` 按行；桌面（≥768px）`pc:grid-flow-col` 按列，第二枚在第一枚正下方。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-3 grid-rows-2 m:grid-flow-row pc:grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-3 grid-rows-2 m:grid-flow-row pc:grid-flow-col gap-2 w-80 bg-gray-200 p-sm rounded-md">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">5</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。列模板见 [Grid Template Columns](/style/grid/columns)，行模板见 [Grid Template Rows](/style/grid/rows)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
