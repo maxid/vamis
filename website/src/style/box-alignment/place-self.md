@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: grid grid-cols-2 h-24 bg-gray-200 rounded-md
-    tpl: '<span class="place-self-center bg-card p-sm rounded-md">自己居中</span><span class="bg-card p-sm rounded-md">默认</span>'
+    tpl: |
+      <span class="place-self-center bg-card p-sm rounded-md">自己居中</span><span class="bg-card p-sm rounded-md">默认</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="place-self-center bg-card p-sm rounded-md">自己居中</span><span class="bg-card p-sm rounded-md">默认</span>
 ```
 
 ## 类名

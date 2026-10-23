@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: grid grid-cols-4 gap-2
-    tpl: '<span class="col-span-2 bg-yellow-200 p-sm rounded-md">span 2</span><span class="bg-yellow-200 p-sm rounded-md">3</span><span class="bg-yellow-200 p-sm rounded-md">4</span>'
+    tpl: |
+      <span class="col-span-2 bg-yellow-200 p-sm rounded-md">span 2</span><span class="bg-yellow-200 p-sm rounded-md">3</span><span class="bg-yellow-200 p-sm rounded-md">4</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="col-span-2 bg-yellow-200 p-sm rounded-md">span 2</span><span class="bg-yellow-200 p-sm rounded-md">3</span><span class="bg-yellow-200 p-sm rounded-md">4</span>
 ```
 
 ## 类名

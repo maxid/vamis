@@ -27,7 +27,18 @@ title: Visibility
 type: tpl
 inline: false
 tpl: |
-  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 visible bg-blue-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-yellow-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-green-200 p-sm rounded-md">visible</div></div>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 visible bg-blue-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-yellow-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-green-200 p-sm rounded-md">visible</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 visible bg-blue-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-yellow-200 p-sm rounded-md">visible</div><div class="inline-block w-24 visible bg-green-200 p-sm rounded-md">visible</div>
+  </div>
 ```
 
 ## invisible
@@ -38,7 +49,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
 ```
 
 ## 组合
@@ -49,14 +71,40 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 invisible bg-yellow-200 p-sm rounded-md">invisible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
 ```
 
 ```schema
 type: tpl
 inline: false
 tpl: |
-  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="w-24 hidden bg-yellow-200 p-sm rounded-md">hidden</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div>
+    <div class="w-24 hidden bg-yellow-200 p-sm rounded-md">hidden</div>
+    <div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div>
+    <div class="w-24 hidden bg-yellow-200 p-sm rounded-md">hidden</div>
+    <div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
 ```
 
 ## 响应式设计
@@ -67,7 +115,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="bg-gray-200 p-sm rounded-md"><div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 m:invisible pc:visible bg-yellow-200 p-sm rounded-md">m:invisible pc:visible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div></div>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 m:invisible pc:visible bg-yellow-200 p-sm rounded-md">m:invisible pc:visible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">左</div><div class="inline-block w-24 m:invisible pc:visible bg-yellow-200 p-sm rounded-md">m:invisible pc:visible</div><div class="inline-block w-24 bg-green-200 p-sm rounded-md">右</div>
+  </div>
 ```
 
 ## 状态前缀

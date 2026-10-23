@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: flex items-start h-20 bg-gray-200 p-sm rounded-md gap-2
-    tpl: '<span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>'
+    tpl: |
+      <span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>
 ```
 
 ## 类名

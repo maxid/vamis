@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: flex flex-wrap content-between h-32 bg-gray-200 p-sm rounded-md
-    tpl: '<span class="w-1/2 bg-card p-xs rounded-md">1</span><span class="w-1/2 bg-card p-xs rounded-md">2</span><span class="w-1/2 bg-card p-xs rounded-md">3</span>'
+    tpl: |
+      <span class="w-1/2 bg-card p-xs rounded-md">1</span><span class="w-1/2 bg-card p-xs rounded-md">2</span><span class="w-1/2 bg-card p-xs rounded-md">3</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="w-1/2 bg-card p-xs rounded-md">1</span><span class="w-1/2 bg-card p-xs rounded-md">2</span><span class="w-1/2 bg-card p-xs rounded-md">3</span>
 ```
 
 ## 类名

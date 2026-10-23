@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: flex gap-2
-    tpl: '<span class="grow bg-yellow-200 p-sm rounded-md">grow</span><span class="grow-0 bg-yellow-200 p-sm rounded-md">grow-0</span>'
+    tpl: |
+      <span class="grow bg-yellow-200 p-sm rounded-md">grow</span><span class="grow-0 bg-yellow-200 p-sm rounded-md">grow-0</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="grow bg-yellow-200 p-sm rounded-md">grow</span><span class="grow-0 bg-yellow-200 p-sm rounded-md">grow-0</span>
 ```
 
 ## 类名

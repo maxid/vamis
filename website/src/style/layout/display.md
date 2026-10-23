@@ -47,6 +47,14 @@ tpl: |
   <div class="block w-24 bg-yellow-200 p-sm rounded-md">block</div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="block w-24 bg-blue-200 p-sm rounded-md">block</div>
+  <div class="block w-24 bg-yellow-200 p-sm rounded-md">block</div>
+```
+
 ## inline-block
 
 可以并排，宽高仍生效。两个节点之间不要换行，否则空白会挤出缝。
@@ -58,6 +66,13 @@ tpl: |
   <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">inline-block</div><div class="inline-block w-24 bg-yellow-200 p-sm rounded-md">inline-block</div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">inline-block</div><div class="inline-block w-24 bg-yellow-200 p-sm rounded-md">inline-block</div>
+```
+
 ## inline
 
 跟文字同一行。宽高不生效，只随内容伸缩。
@@ -66,7 +81,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-yellow-200 p-sm rounded-md">inline</span>后</p>
+  <p>
+    前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-yellow-200 p-sm rounded-md">inline</span>后
+  </p>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <p>
+    前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-yellow-200 p-sm rounded-md">inline</span>后
+  </p>
 ```
 
 ## flex
@@ -84,6 +110,17 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="bg-yellow-200 p-sm rounded-md">B</div>
+    <div class="bg-green-200 p-sm rounded-md">C</div>
+  </div>
+```
+
 ## inline-flex
 
 还是 flex，但盒子本身跟文字并排。
@@ -92,7 +129,22 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  前<div class="inline-flex gap-2"><div class="bg-blue-200 p-sm rounded-md">A</div><div class="bg-yellow-200 p-sm rounded-md">B</div></div>后
+  前<div class="inline-flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="bg-yellow-200 p-sm rounded-md">B</div>
+  </div>
+  后
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  前<div class="inline-flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="bg-yellow-200 p-sm rounded-md">B</div>
+  </div>
+  后
 ```
 
 ## grid
@@ -111,6 +163,18 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-2 w-48">
+    <div class="bg-blue-200 p-sm rounded-md">1</div>
+    <div class="bg-yellow-200 p-sm rounded-md">2</div>
+    <div class="bg-green-200 p-sm rounded-md">3</div>
+    <div class="bg-yellow-200 p-sm rounded-md">4</div>
+  </div>
+```
+
 ## inline-grid
 
 grid 盒子跟文字并排。
@@ -119,7 +183,22 @@ grid 盒子跟文字并排。
 type: tpl
 inline: false
 tpl: |
-  前<div class="inline-grid grid-cols-2 gap-2"><div class="bg-blue-200 p-sm rounded-md">1</div><div class="bg-yellow-200 p-sm rounded-md">2</div></div>后
+  前<div class="inline-grid grid-cols-2 gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">1</div>
+    <div class="bg-yellow-200 p-sm rounded-md">2</div>
+  </div>
+  后
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  前<div class="inline-grid grid-cols-2 gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">1</div>
+    <div class="bg-yellow-200 p-sm rounded-md">2</div>
+  </div>
+  后
 ```
 
 ## contents
@@ -130,6 +209,19 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="contents">
+      <div class="bg-yellow-200 p-sm rounded-md">B</div>
+      <div class="bg-green-200 p-sm rounded-md">C</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="flex gap-2">
     <div class="bg-blue-200 p-sm rounded-md">A</div>
     <div class="contents">
@@ -152,6 +244,15 @@ tpl: |
   <div class="block w-24 bg-green-200 p-sm rounded-md">可见</div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="block w-24 bg-blue-200 p-sm rounded-md">可见</div>
+  <div class="hidden w-24 bg-yellow-200 p-sm rounded-md">隐藏</div>
+  <div class="block w-24 bg-green-200 p-sm rounded-md">可见</div>
+```
+
 ## flow-root
 
 开一个 BFC，把里面的 float 包进自己的高度。
@@ -166,6 +267,16 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flow-root bg-gray-200 p-sm rounded-md">
+    <div class="float-left w-24 h-16 bg-blue-200 p-sm rounded-md">浮</div>
+    <p>父级有高度，文字绕开左浮。</p>
+  </div>
+```
+
 ## table
 
 最简一行两格。子节点是 `table-row` / `table-cell`。
@@ -174,6 +285,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="table">
+    <div class="table-row">
+      <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
+      <div class="table-cell bg-yellow-200 p-sm rounded-md">B</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="table">
     <div class="table-row">
       <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
@@ -216,6 +339,36 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="table">
+    <div class="table-column-group">
+      <div class="table-column w-24"></div>
+      <div class="table-column w-32"></div>
+    </div>
+    <div class="table-header-group">
+      <div class="table-row">
+        <div class="table-cell bg-yellow-200 p-sm rounded-md">列1</div>
+        <div class="table-cell bg-yellow-200 p-sm rounded-md">列2</div>
+      </div>
+    </div>
+    <div class="table-row-group">
+      <div class="table-row">
+        <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
+        <div class="table-cell bg-blue-200 p-sm rounded-md">B</div>
+      </div>
+    </div>
+    <div class="table-footer-group">
+      <div class="table-row">
+        <div class="table-cell bg-green-200 p-sm rounded-md">脚1</div>
+        <div class="table-cell bg-green-200 p-sm rounded-md">脚2</div>
+      </div>
+    </div>
+  </div>
+```
+
 ## 响应式设计
 
 支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:block` 显示、`pc:hidden` 隐藏。
@@ -224,6 +377,14 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="hidden pc:block bg-blue-200 p-sm rounded-md">pc 可见</div>
+  <div class="block pc:hidden bg-yellow-200 p-sm rounded-md">手机可见</div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="hidden pc:block bg-blue-200 p-sm rounded-md">pc 可见</div>
   <div class="block pc:hidden bg-yellow-200 p-sm rounded-md">手机可见</div>
 ```

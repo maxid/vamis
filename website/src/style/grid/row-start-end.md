@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: grid grid-cols-2 grid-rows-2 h-32 gap-2
-    tpl: '<span class="row-span-2 bg-yellow-200 p-sm rounded-md">跨两行</span><span class="bg-yellow-200 p-sm rounded-md">右上</span><span class="bg-yellow-200 p-sm rounded-md">右下</span>'
+    tpl: |
+      <span class="row-span-2 bg-yellow-200 p-sm rounded-md">跨两行</span><span class="bg-yellow-200 p-sm rounded-md">右上</span><span class="bg-yellow-200 p-sm rounded-md">右下</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="row-span-2 bg-yellow-200 p-sm rounded-md">跨两行</span><span class="bg-yellow-200 p-sm rounded-md">右上</span><span class="bg-yellow-200 p-sm rounded-md">右下</span>
 ```
 
 ## 类名

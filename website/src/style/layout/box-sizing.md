@@ -37,4 +37,18 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-6">
+    <div class="box-border h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+    <div class="box-content h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+  </div>
+```
+
 本页与 Amis 一样：不支持 `m:` / `pc:` 和状态前缀。其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
