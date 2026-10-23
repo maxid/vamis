@@ -6,53 +6,394 @@ title: Gap
 
 # Gap
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Gap：`gap-*` / `gap-x-*` / `gap-y-*` 落在同一元素的 `gap` / `column-gap` / `row-gap`（Tailwind spacing，不是 `--gap-xs`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`gap-2` 缝 8px，`gap-6` 缝 24px。
 :::
 
-Grid / Flex 沟槽。这是 Tailwind spacing，不是 `--gap-xs`。Amis 间距辅助类见 [Padding](/style/spacing/padding) / [Margin](/style/spacing/margin)。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex gap-4
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "1"
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "2"
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: "3"
-  - type: container
-    className: m-t-sm
-    bodyClassName: grid grid-cols-2 gap-x-8 gap-y-2
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: a
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: b
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: c
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: d
-```
+格子之间的缝。写在 `display: grid` 或 `flex` 的容器上，不是子项 margin。`gap` 行列一起；`gap-x` 只列缝、`gap-y` 只行缝。档位是 Tailwind spacing（`gap-2` = 8px），不是 cxd `--gap-xs…xl`。舞台钉死 `w-80`（320px），两列时用相邻盒子的 left / top 对缝。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 gap 类打在内层 grid 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `gap-1` | `gap: 0.25rem` |
-| `gap-2` | `gap: 0.5rem` |
-| `gap-4` | `gap: 1rem` |
-| `gap-x-4` | `column-gap: 1rem` |
-| `gap-y-2` | `row-gap: 0.5rem` |
+| `gap-px` | `gap: 0.0625rem;` |
+| `gap-x-px` | `column-gap: 0.0625rem;` |
+| `gap-y-px` | `row-gap: 0.0625rem;` |
+| `gap-0` | `gap: 0;` |
+| `gap-x-0` | `column-gap: 0;` |
+| `gap-y-0` | `row-gap: 0;` |
+| `gap-none` | `gap: 0;` |
+| `gap-x-none` | `column-gap: 0;` |
+| `gap-y-none` | `row-gap: 0;` |
+| `gap-0.5` | `gap: 0.125rem;` |
+| `gap-x-0.5` | `column-gap: 0.125rem;` |
+| `gap-y-0.5` | `row-gap: 0.125rem;` |
+| `gap-1` | `gap: 0.25rem;` |
+| `gap-x-1` | `column-gap: 0.25rem;` |
+| `gap-y-1` | `row-gap: 0.25rem;` |
+| `gap-1.5` | `gap: 0.375rem;` |
+| `gap-x-1.5` | `column-gap: 0.375rem;` |
+| `gap-y-1.5` | `row-gap: 0.375rem;` |
+| `gap-2` | `gap: 0.5rem;` |
+| `gap-x-2` | `column-gap: 0.5rem;` |
+| `gap-y-2` | `row-gap: 0.5rem;` |
+| `gap-2.5` | `gap: 0.625rem;` |
+| `gap-x-2.5` | `column-gap: 0.625rem;` |
+| `gap-y-2.5` | `row-gap: 0.625rem;` |
+| `gap-3` | `gap: 0.75rem;` |
+| `gap-x-3` | `column-gap: 0.75rem;` |
+| `gap-y-3` | `row-gap: 0.75rem;` |
+| `gap-3.5` | `gap: 0.875rem;` |
+| `gap-x-3.5` | `column-gap: 0.875rem;` |
+| `gap-y-3.5` | `row-gap: 0.875rem;` |
+| `gap-4` | `gap: 1rem;` |
+| `gap-x-4` | `column-gap: 1rem;` |
+| `gap-y-4` | `row-gap: 1rem;` |
+| `gap-5` | `gap: 1.25rem;` |
+| `gap-x-5` | `column-gap: 1.25rem;` |
+| `gap-y-5` | `row-gap: 1.25rem;` |
+| `gap-6` | `gap: 1.5rem;` |
+| `gap-x-6` | `column-gap: 1.5rem;` |
+| `gap-y-6` | `row-gap: 1.5rem;` |
+| `gap-7` | `gap: 1.75rem;` |
+| `gap-x-7` | `column-gap: 1.75rem;` |
+| `gap-y-7` | `row-gap: 1.75rem;` |
+| `gap-8` | `gap: 2rem;` |
+| `gap-x-8` | `column-gap: 2rem;` |
+| `gap-y-8` | `row-gap: 2rem;` |
+| `gap-9` | `gap: 2.25rem;` |
+| `gap-x-9` | `column-gap: 2.25rem;` |
+| `gap-y-9` | `row-gap: 2.25rem;` |
+| `gap-10` | `gap: 2.5rem;` |
+| `gap-x-10` | `column-gap: 2.5rem;` |
+| `gap-y-10` | `row-gap: 2.5rem;` |
+| `gap-11` | `gap: 2.75rem;` |
+| `gap-x-11` | `column-gap: 2.75rem;` |
+| `gap-y-11` | `row-gap: 2.75rem;` |
+| `gap-12` | `gap: 3rem;` |
+| `gap-x-12` | `column-gap: 3rem;` |
+| `gap-y-12` | `row-gap: 3rem;` |
+| `gap-14` | `gap: 3.5rem;` |
+| `gap-x-14` | `column-gap: 3.5rem;` |
+| `gap-y-14` | `row-gap: 3.5rem;` |
+| `gap-16` | `gap: 4rem;` |
+| `gap-x-16` | `column-gap: 4rem;` |
+| `gap-y-16` | `row-gap: 4rem;` |
+| `gap-18` | `gap: 4.5rem;` |
+| `gap-x-18` | `column-gap: 4.5rem;` |
+| `gap-y-18` | `row-gap: 4.5rem;` |
+| `gap-20` | `gap: 5rem;` |
+| `gap-x-20` | `column-gap: 5rem;` |
+| `gap-y-20` | `row-gap: 5rem;` |
+| `gap-24` | `gap: 6rem;` |
+| `gap-x-24` | `column-gap: 6rem;` |
+| `gap-y-24` | `row-gap: 6rem;` |
+| `gap-28` | `gap: 7rem;` |
+| `gap-x-28` | `column-gap: 7rem;` |
+| `gap-y-28` | `row-gap: 7rem;` |
+| `gap-32` | `gap: 8rem;` |
+| `gap-x-32` | `column-gap: 8rem;` |
+| `gap-y-32` | `row-gap: 8rem;` |
+| `gap-36` | `gap: 9rem;` |
+| `gap-x-36` | `column-gap: 9rem;` |
+| `gap-y-36` | `row-gap: 9rem;` |
+| `gap-40` | `gap: 10rem;` |
+| `gap-x-40` | `column-gap: 10rem;` |
+| `gap-y-40` | `row-gap: 10rem;` |
+| `gap-44` | `gap: 11rem;` |
+| `gap-x-44` | `column-gap: 11rem;` |
+| `gap-y-44` | `row-gap: 11rem;` |
+| `gap-48` | `gap: 12rem;` |
+| `gap-x-48` | `column-gap: 12rem;` |
+| `gap-y-48` | `row-gap: 12rem;` |
+| `gap-52` | `gap: 13rem;` |
+| `gap-x-52` | `column-gap: 13rem;` |
+| `gap-y-52` | `row-gap: 13rem;` |
+| `gap-56` | `gap: 14rem;` |
+| `gap-x-56` | `column-gap: 14rem;` |
+| `gap-y-56` | `row-gap: 14rem;` |
+| `gap-60` | `gap: 15rem;` |
+| `gap-x-60` | `column-gap: 15rem;` |
+| `gap-y-60` | `row-gap: 15rem;` |
+| `gap-64` | `gap: 16rem;` |
+| `gap-x-64` | `column-gap: 16rem;` |
+| `gap-y-64` | `row-gap: 16rem;` |
+| `gap-72` | `gap: 18rem;` |
+| `gap-x-72` | `column-gap: 18rem;` |
+| `gap-y-72` | `row-gap: 18rem;` |
+| `gap-80` | `gap: 20rem;` |
+| `gap-x-80` | `column-gap: 20rem;` |
+| `gap-y-80` | `row-gap: 20rem;` |
+| `gap-96` | `gap: 24rem;` |
+| `gap-x-96` | `column-gap: 24rem;` |
+| `gap-y-96` | `row-gap: 24rem;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## gap-0
+
+`gap: 0`。舞台 `grid-cols-2 w-80`，内宽 304px。两列各 152px，第二枚 left 160px；第二行 top 72px（贴着第一行）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## gap-2
+
+`gap: 0.5rem` = **8px**。列宽 (304 − 8) / 2 = 148px。第二枚 left 164px；第二行 top 80px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## gap-4
+
+`gap: 1rem` = **16px**。列宽 144px。第二枚 left 168px；第二行 top 88px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## gap-6
+
+`gap: 1.5rem` = **24px**。列宽 140px。第二枚 left 172px；第二行 top 96px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## gap-x-8
+
+`column-gap: 2rem` = **32px**，行缝仍是 0。列宽 136px。第二枚 left 176px；第二行 top 72px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-x-8 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-x-8 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## gap-y-4
+
+`row-gap: 1rem` = **16px**，列缝仍是 0。列宽 152px。第二枚 left 160px；第二行 top 88px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-y-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 gap-y-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## 组合
+
+同一组四枚：`gap-0`、`gap-2`、`gap-x-8`、`gap-y-4`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-2 gap-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-x-8 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-y-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-2 gap-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-x-8 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+    <div class="grid grid-cols-2 gap-y-4 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+      <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:gap-2` 缝 8px；桌面（≥768px）`pc:gap-6` 缝 24px，第二行 top 96px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 m:gap-2 pc:gap-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 m:gap-2 pc:gap-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    <div class="h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">4</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。兄弟 margin 缝见 [Space Between](/style/spacing/space-between)；cxd 阶 `--gap-xs…xl` 见 [Padding](/style/spacing/padding) / [Margin](/style/spacing/margin)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
