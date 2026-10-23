@@ -369,6 +369,8 @@
   .m\:absolute { position: absolute; }
   .m\:fixed { position: fixed; }
   .m\:sticky { position: sticky; }
+  .m\:visible { visibility: visible; }
+  .m\:invisible { visibility: hidden; }
   .m\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -428,6 +430,8 @@
   .pc\:absolute { position: absolute; }
   .pc\:fixed { position: fixed; }
   .pc\:sticky { position: sticky; }
+  .pc\:visible { visibility: visible; }
+  .pc\:invisible { visibility: hidden; }
   .pc\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
