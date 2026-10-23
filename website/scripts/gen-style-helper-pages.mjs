@@ -2503,6 +2503,84 @@ function gridGapExtra() {
   ].join('\n')
 }
 
+function justifyContentChip(fill, label) {
+  return `<div class="w-16 h-16 shrink-0 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function justifyContentStage(justifyClass, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="flex ${justifyClass} w-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    ...[1, 2, 3].map((n, i) => `  ${justifyContentChip(fills[i], String(n))}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function justifyContentExtra() {
+  return [
+    '## justify-start',
+    '',
+    '`justify-content: flex-start`。舞台 `flex w-80`，内宽 304px。三枚 `w-16` 各 64px，合计 192px，剩余 112px 全在右边。left 8 / 72 / 136。',
+    '',
+    displaySchema(justifyContentStage('justify-start')),
+    '',
+    '## justify-end',
+    '',
+    '`justify-content: flex-end`。剩余挤到左边。left 120 / 184 / 248。',
+    '',
+    displaySchema(justifyContentStage('justify-end')),
+    '',
+    '## justify-center',
+    '',
+    '`justify-content: center`。两边各摊 56px。left 64 / 128 / 192。',
+    '',
+    displaySchema(justifyContentStage('justify-center')),
+    '',
+    '## justify-between',
+    '',
+    '`justify-content: space-between`。首尾贴边，中间两缝均分 112px = 各 56px。left 8 / 128 / 248。',
+    '',
+    displaySchema(justifyContentStage('justify-between')),
+    '',
+    '## justify-around',
+    '',
+    '`justify-content: space-around`。每枚左右等分剩余：两端各 112/6 ≈ 18.67px，中间缝 37.33px。left 约 27 / 128 / 229。',
+    '',
+    displaySchema(justifyContentStage('justify-around')),
+    '',
+    '## justify-evenly',
+    '',
+    '`justify-content: space-evenly`。四段空隙均分 112/4 = 28px。left 36 / 128 / 220。',
+    '',
+    displaySchema(justifyContentStage('justify-evenly')),
+    '',
+    '## 组合',
+    '',
+    '同一组三枚：start、end、center、between、around、evenly。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...justifyContentStage('justify-start', '  '),
+      ...justifyContentStage('justify-end', '  '),
+      ...justifyContentStage('justify-center', '  '),
+      ...justifyContentStage('justify-between', '  '),
+      ...justifyContentStage('justify-around', '  '),
+      ...justifyContentStage('justify-evenly', '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:justify-start` 靠左；桌面（≥768px）`pc:justify-end` 靠右，第一枚 left 120px。',
+    '',
+    displaySchema(justifyContentStage('m:justify-start pc:justify-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。交叉轴见 [Align Items](/style/box-alignment/align-items)；格子内水平对齐见 [Justify Items](/style/box-alignment/justify-items)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -3134,23 +3212,17 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Justify Content',
-    'box-alignment/justify-content',
-    '主轴对齐（flex / grid）。',
-    `type: page
-body:
-  - type: container
-    className: ${DEMO_FILL} p-sm rounded-md
-    bodyClassName: flex justify-between
-    body:
-      - type: tpl
-        className: bg-card p-xs rounded-md
-        tpl: 左
-      - type: tpl
-        className: bg-card p-xs rounded-md
-        tpl: 右`,
-    [
+  {
+    title: 'Justify Content',
+    slug: 'box-alignment/justify-content',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Justify Content：`justify-start` / `end` / `center` / `between` / `around` / `evenly` 落在同一元素的 `justify-content`（`flex-start` / `flex-end`，不是 Tailwind `start` / `end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '主轴对齐。写在 `display: flex` 或 `grid` 的容器上，管这一排（或一列）怎么把剩余空间摊开。Amis 只有六档：`start` / `end` / `center` / `between` / `around` / `evenly`，值是 `flex-start` / `flex-end`，不是逻辑值 `start` / `end`。舞台钉死 `w-80`（320px），三枚 `w-16`（64px），用各枚 left 对剩余空间。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 justify 类打在内层 flex 上。',
+    rows: [
       ['justify-start', 'justify-content: flex-start'],
       ['justify-end', 'justify-content: flex-end'],
       ['justify-center', 'justify-content: center'],
@@ -3158,7 +3230,10 @@ body:
       ['justify-around', 'justify-content: space-around'],
       ['justify-evenly', 'justify-content: space-evenly'],
     ],
-  ),
+    extra: justifyContentExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Justify Items',
     'box-alignment/justify-items',

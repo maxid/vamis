@@ -239,12 +239,6 @@
   .gap-md { gap: var(--gap-md); }
   .gap-lg { gap: var(--gap-lg); }
 
-  .justify-start { justify-content: flex-start; }
-  .justify-end { justify-content: flex-end; }
-  .justify-center { justify-content: center; }
-  .justify-between { justify-content: space-between; }
-  .justify-around { justify-content: space-around; }
-  .justify-evenly { justify-content: space-evenly; }
   .justify-items-start { justify-items: start; }
   .justify-items-end { justify-items: end; }
   .justify-items-center { justify-items: center; }
@@ -630,6 +624,12 @@
   .m\:auto-rows-min { grid-auto-rows: min-content; }
   .m\:auto-rows-max { grid-auto-rows: max-content; }
   .m\:auto-rows-fr { grid-auto-rows: minmax(0, 1fr); }
+  .m\:justify-start { justify-content: flex-start; }
+  .m\:justify-end { justify-content: flex-end; }
+  .m\:justify-center { justify-content: center; }
+  .m\:justify-between { justify-content: space-between; }
+  .m\:justify-around { justify-content: space-around; }
+  .m\:justify-evenly { justify-content: space-evenly; }
 }
 
 @media (min-width: 768px) {
@@ -840,6 +840,12 @@
   .pc\:auto-rows-min { grid-auto-rows: min-content; }
   .pc\:auto-rows-max { grid-auto-rows: max-content; }
   .pc\:auto-rows-fr { grid-auto-rows: minmax(0, 1fr); }
+  .pc\:justify-start { justify-content: flex-start; }
+  .pc\:justify-end { justify-content: flex-end; }
+  .pc\:justify-center { justify-content: center; }
+  .pc\:justify-between { justify-content: space-between; }
+  .pc\:justify-around { justify-content: space-around; }
+  .pc\:justify-evenly { justify-content: space-evenly; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
@@ -880,4 +886,12 @@
 
   /* Amis helper row-span-11 is span 11 / span 1. Beat Tailwind's span 11 / span 11. */
   .row-span-11 { grid-row: span 11 / span 1; }
+
+  /* Amis Justify Content: flex-start / flex-end, not Tailwind v4 start / end. */
+  .justify-start { justify-content: flex-start; }
+  .justify-end { justify-content: flex-end; }
+  .justify-center { justify-content: center; }
+  .justify-between { justify-content: space-between; }
+  .justify-around { justify-content: space-around; }
+  .justify-evenly { justify-content: space-evenly; }
 }

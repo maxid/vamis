@@ -6,26 +6,11 @@ title: Justify Content
 
 # Justify Content
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Justify Content：`justify-start` / `end` / `center` / `between` / `around` / `evenly` 落在同一元素的 `justify-content`（`flex-start` / `flex-end`，不是 Tailwind `start` / `end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-主轴对齐（flex / grid）。
-
-```schema
-type: page
-body:
-  - type: container
-    className: bg-yellow-200 p-sm rounded-md
-    bodyClassName: flex justify-between
-    body:
-      - type: tpl
-        className: bg-card p-xs rounded-md
-        tpl: 左
-      - type: tpl
-        className: bg-card p-xs rounded-md
-        tpl: 右
-```
+主轴对齐。写在 `display: flex` 或 `grid` 的容器上，管这一排（或一列）怎么把剩余空间摊开。Amis 只有六档：`start` / `end` / `center` / `between` / `around` / `evenly`，值是 `flex-start` / `flex-end`，不是逻辑值 `start` / `end`。舞台钉死 `w-80`（320px），三枚 `w-16`（64px），用各枚 left 对剩余空间。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 justify 类打在内层 flex 上。
 
 ## 类名
 
@@ -38,4 +23,270 @@ body:
 | `justify-around` | `justify-content: space-around` |
 | `justify-evenly` | `justify-content: space-evenly` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## justify-start
+
+`justify-content: flex-start`。舞台 `flex w-80`，内宽 304px。三枚 `w-16` 各 64px，合计 192px，剩余 112px 全在右边。left 8 / 72 / 136。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## justify-end
+
+`justify-content: flex-end`。剩余挤到左边。left 120 / 184 / 248。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## justify-center
+
+`justify-content: center`。两边各摊 56px。left 64 / 128 / 192。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## justify-between
+
+`justify-content: space-between`。首尾贴边，中间两缝均分 112px = 各 56px。left 8 / 128 / 248。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-between w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-between w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## justify-around
+
+`justify-content: space-around`。每枚左右等分剩余：两端各 112/6 ≈ 18.67px，中间缝 37.33px。left 约 27 / 128 / 229。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-around w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-around w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## justify-evenly
+
+`justify-content: space-evenly`。四段空隙均分 112/4 = 28px。left 36 / 128 / 220。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex justify-evenly w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex justify-evenly w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组三枚：start、end、center、between、around、evenly。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex justify-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-between w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-around w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-evenly w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex justify-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-between w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-around w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex justify-evenly w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:justify-start` 靠左；桌面（≥768px）`pc:justify-end` 靠右，第一枚 left 120px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex m:justify-start pc:justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex m:justify-start pc:justify-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。交叉轴见 [Align Items](/style/box-alignment/align-items)；格子内水平对齐见 [Justify Items](/style/box-alignment/justify-items)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
