@@ -6,32 +6,241 @@ title: Top / Right / Bottom / Left
 
 # Top / Right / Bottom / Left
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Top / Right / Bottom / Left：`top|right|bottom|left|inset|inset-x|inset-y` 落在同一元素、同一计算值。独立样例 + 含块边/角组合；档位与 Amis `$inset` 同表；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-配合 `relative` / `absolute` 钉位置。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: relative h-24 bg-gray-200 rounded-md
-    tpl: '<span class="absolute inset-x-2 bottom-2 bg-card p-xs rounded-md">inset-x + bottom</span>'
-```
+写当前盒子的 `top` / `right` / `bottom` / `left`。要先有定位：`relative` / `absolute` / `fixed` / `sticky`（见 [Position](/style/layout/position)）。`inset` 四边一起；`inset-x` 左右，`inset-y` 上下。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
+| `inset-0` | `top/right/bottom/left: 0` |
+| `-inset-0` | `top/right/bottom/left: 0` |
+| `inset-y-0` | `top/bottom: 0` |
+| `inset-x-0` | `left/right: 0` |
+| `-inset-y-0` | `top/bottom: 0` |
+| `-inset-x-0` | `left/right: 0` |
 | `top-0` | `top: 0` |
 | `right-0` | `right: 0` |
 | `bottom-0` | `bottom: 0` |
 | `left-0` | `left: 0` |
-| `inset-0` | `inset: 0` |
-| `inset-x-0` | `left/right: 0` |
-| `inset-y-0` | `top/bottom: 0` |
-| `top-2` | `top: 0.5rem` |
-| `right-2` | `right: 0.5rem` |
+| `-top-0` | `top: 0` |
+| `-right-0` | `right: 0` |
+| `-bottom-0` | `bottom: 0` |
+| `-left-0` | `left: 0` |
+| `inset-0.5` | `top/right/bottom/left: 0.125rem` |
+| `-inset-0.5` | `top/right/bottom/left: -0.125rem` |
+| `inset-y-0.5` | `top/bottom: 0.125rem` |
+| `inset-x-0.5` | `left/right: 0.125rem` |
+| `-inset-y-0.5` | `top/bottom: -0.125rem` |
+| `-inset-x-0.5` | `left/right: -0.125rem` |
+| `top-0.5` | `top: 0.125rem` |
+| `right-0.5` | `right: 0.125rem` |
+| `bottom-0.5` | `bottom: 0.125rem` |
+| `left-0.5` | `left: 0.125rem` |
+| `-top-0.5` | `top: -0.125rem` |
+| `-right-0.5` | `right: -0.125rem` |
+| `-bottom-0.5` | `bottom: -0.125rem` |
+| `-left-0.5` | `left: -0.125rem` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+其余档位按这张表套 `{top|right|bottom|left|inset|inset-x|inset-y}-*`，负值加 `-` 前缀（`auto` 没有负档）。
+
+| 尺寸 | 值 |
+| --- | --- |
+| `px` | `0.0625rem` |
+| `0` | `0` |
+| `none` | `0` |
+| `0.5` | `0.125rem` |
+| `1` | `0.25rem` |
+| `1.5` | `0.375rem` |
+| `2` | `0.5rem` |
+| `2.5` | `0.625rem` |
+| `3` | `0.75rem` |
+| `3.5` | `0.875rem` |
+| `4` | `1rem` |
+| `5` | `1.25rem` |
+| `6` | `1.5rem` |
+| `7` | `1.75rem` |
+| `8` | `2rem` |
+| `9` | `2.25rem` |
+| `10` | `2.5rem` |
+| `11` | `2.75rem` |
+| `12` | `3rem` |
+| `14` | `3.5rem` |
+| `16` | `4rem` |
+| `18` | `4.5rem` |
+| `20` | `5rem` |
+| `24` | `6rem` |
+| `28` | `7rem` |
+| `32` | `8rem` |
+| `36` | `9rem` |
+| `40` | `10rem` |
+| `44` | `11rem` |
+| `48` | `12rem` |
+| `52` | `13rem` |
+| `56` | `14rem` |
+| `60` | `15rem` |
+| `64` | `16rem` |
+| `72` | `18rem` |
+| `80` | `20rem` |
+| `96` | `24rem` |
+| `auto` | `auto` |
+| `1/2` | `50%` |
+| `1/3` | `33.333333%` |
+| `2/3` | `66.666667%` |
+| `1/4` | `25%` |
+| `2/4` | `50%` |
+| `3/4` | `75%` |
+| `full` | `100%` |
+
+## top-0
+
+`absolute` + `inset-x-0 top-0`：顶边和左右都是 0，横铺含块顶边。含块 128×128，条子高 64px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-0</div></div>
+```
+
+## right-0
+
+`inset-y-0 right-0`：上下和右边都是 0，竖铺含块右边。条子宽 64px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">right-0</div></div>
+```
+
+## bottom-0
+
+`inset-x-0 bottom-0`：横铺含块底边。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">bottom-0</div></div>
+```
+
+## left-0
+
+`inset-y-0 left-0`：竖铺含块左边。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">left-0</div></div>
+```
+
+## inset-0
+
+四边都是 0，铺满含块。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-0</div></div>
+```
+
+## inset-x-0
+
+只写左右 0。再加 `top-0 h-16` 才能看见一条贴顶的横带。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-x-0</div></div>
+```
+
+## inset-y-0
+
+只写上下 0。再加 `left-0 w-16` 是贴左的竖带。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-y-0</div></div>
+```
+
+## top-2
+
+非零档。`top-2 left-2` = 0.5rem（8px），盒子离开含块左上角。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-2 left-2 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-2</div></div>
+```
+
+## -top-2
+
+负值。`top: -0.5rem`，往含块外面探出 8px。外层 `p-sm` 给探出的部分留空，避免被 Play 卡片裁掉。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="p-sm">
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute -top-2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-top-2</div></div>
+  </div>
+```
+
+## top-1/2
+
+`top: 50%`。含块高 128px，顶边落到 64px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-1/2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-1/2</div></div>
+```
+
+## 组合
+
+`relative` 含块 128×128：横铺顶/底、竖铺左/右、铺满、四角各钉一块。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4">
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">顶</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">底</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">满</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左上</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右上</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右下</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左下</div></div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏钉左下；桌面（≥768px）钉右上。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div></div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

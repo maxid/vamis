@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-23
-- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`registerTheme`、其余 `xxxClassName` 仍 P1）
+- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`registerTheme`、其余 `xxxClassName` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)

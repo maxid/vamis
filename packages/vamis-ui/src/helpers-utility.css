@@ -72,15 +72,6 @@
   .absolute { position: absolute; }
   .fixed { position: fixed; }
   .sticky { position: sticky; }
-  .top-0 { top: 0; }
-  .right-0 { right: 0; }
-  .bottom-0 { bottom: 0; }
-  .left-0 { left: 0; }
-  .top-2 { top: 0.5rem; }
-  .right-2 { right: 0.5rem; }
-  .bottom-2 { bottom: 0.5rem; }
-  .left-2 { left: 0.5rem; }
-  .inset-0 { inset: 0; }
   .visible { visibility: visible; }
   .invisible { visibility: hidden; }
   .z-0 { z-index: 0; }
@@ -378,6 +369,7 @@
   .m\:absolute { position: absolute; }
   .m\:fixed { position: fixed; }
   .m\:sticky { position: sticky; }
+  .m\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 768px) {
@@ -436,6 +428,7 @@
   .pc\:absolute { position: absolute; }
   .pc\:fixed { position: fixed; }
   .pc\:sticky { position: sticky; }
+  .pc\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
