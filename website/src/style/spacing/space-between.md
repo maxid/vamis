@@ -6,37 +6,389 @@ title: Space Between
 
 # Space Between
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Space Between：`space-x-*` / `space-y-*` 落在**后续兄弟**的 `margin-left` / `margin-top`（不是 Tailwind v4 的 `margin-inline-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`space-x-6` 第二枚 margin-left 24px。
 :::
 
-子项之间的空隙用 `space-x-*` / `space-y-*`（Tailwind）。间距档位与 `m-t-xs` 的 `--gap-*` 不是同一套。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex space-x-4
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 甲
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 乙
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 丙
-```
+子项之间的缝，写在父级上。Amis 用后续兄弟选择器 `~` 给**第二个及以后**加 `margin-left`（横）或 `margin-top`（竖），第一枚是 0。不是 Tailwind v4 那种打在 `:not(:last-child)` 上的 `margin-inline-end`。档位与 Padding 同一套 rem，`space-x-none` / `space-x-18` 是 Amis 多出来的。`space-x-reverse` 把缝翻到另一侧。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 space 类打在内层 flex 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `space-x-1` | `子项水平间隔 0.25rem` |
-| `space-x-2` | `子项水平间隔 0.5rem` |
-| `space-x-4` | `子项水平间隔 1rem` |
-| `space-y-2` | `子项垂直间隔 0.5rem` |
-| `space-x-reverse` | `反转 space-x 方向` |
+| `space-x-px` | `margin-left: 0.0625rem` |
+| `space-x-0` | `margin-left: 0` |
+| `space-x-none` | `margin-left: 0` |
+| `space-x-0.5` | `margin-left: 0.125rem` |
+| `space-x-1` | `margin-left: 0.25rem` |
+| `space-x-1.5` | `margin-left: 0.375rem` |
+| `space-x-2` | `margin-left: 0.5rem` |
+| `space-x-2.5` | `margin-left: 0.625rem` |
+| `space-x-3` | `margin-left: 0.75rem` |
+| `space-x-3.5` | `margin-left: 0.875rem` |
+| `space-x-4` | `margin-left: 1rem` |
+| `space-x-5` | `margin-left: 1.25rem` |
+| `space-x-6` | `margin-left: 1.5rem` |
+| `space-x-7` | `margin-left: 1.75rem` |
+| `space-x-8` | `margin-left: 2rem` |
+| `space-x-9` | `margin-left: 2.25rem` |
+| `space-x-10` | `margin-left: 2.5rem` |
+| `space-x-11` | `margin-left: 2.75rem` |
+| `space-x-12` | `margin-left: 3rem` |
+| `space-x-14` | `margin-left: 3.5rem` |
+| `space-x-16` | `margin-left: 4rem` |
+| `space-x-18` | `margin-left: 4.5rem` |
+| `space-x-20` | `margin-left: 5rem` |
+| `space-x-24` | `margin-left: 6rem` |
+| `space-x-28` | `margin-left: 7rem` |
+| `space-x-32` | `margin-left: 8rem` |
+| `space-x-36` | `margin-left: 9rem` |
+| `space-x-40` | `margin-left: 10rem` |
+| `space-x-44` | `margin-left: 11rem` |
+| `space-x-48` | `margin-left: 12rem` |
+| `space-x-52` | `margin-left: 13rem` |
+| `space-x-56` | `margin-left: 14rem` |
+| `space-x-60` | `margin-left: 15rem` |
+| `space-x-64` | `margin-left: 16rem` |
+| `space-x-72` | `margin-left: 18rem` |
+| `space-x-80` | `margin-left: 20rem` |
+| `space-x-96` | `margin-left: 24rem` |
+| `space-x-reverse` | `后续兄弟改用 margin-right（须同时写 space-x-*）` |
+| `space-y-px` | `margin-top: 0.0625rem` |
+| `space-y-0` | `margin-top: 0` |
+| `space-y-none` | `margin-top: 0` |
+| `space-y-0.5` | `margin-top: 0.125rem` |
+| `space-y-1` | `margin-top: 0.25rem` |
+| `space-y-1.5` | `margin-top: 0.375rem` |
+| `space-y-2` | `margin-top: 0.5rem` |
+| `space-y-2.5` | `margin-top: 0.625rem` |
+| `space-y-3` | `margin-top: 0.75rem` |
+| `space-y-3.5` | `margin-top: 0.875rem` |
+| `space-y-4` | `margin-top: 1rem` |
+| `space-y-5` | `margin-top: 1.25rem` |
+| `space-y-6` | `margin-top: 1.5rem` |
+| `space-y-7` | `margin-top: 1.75rem` |
+| `space-y-8` | `margin-top: 2rem` |
+| `space-y-9` | `margin-top: 2.25rem` |
+| `space-y-10` | `margin-top: 2.5rem` |
+| `space-y-11` | `margin-top: 2.75rem` |
+| `space-y-12` | `margin-top: 3rem` |
+| `space-y-14` | `margin-top: 3.5rem` |
+| `space-y-16` | `margin-top: 4rem` |
+| `space-y-18` | `margin-top: 4.5rem` |
+| `space-y-20` | `margin-top: 5rem` |
+| `space-y-24` | `margin-top: 6rem` |
+| `space-y-28` | `margin-top: 7rem` |
+| `space-y-32` | `margin-top: 8rem` |
+| `space-y-36` | `margin-top: 9rem` |
+| `space-y-40` | `margin-top: 10rem` |
+| `space-y-44` | `margin-top: 11rem` |
+| `space-y-48` | `margin-top: 12rem` |
+| `space-y-52` | `margin-top: 13rem` |
+| `space-y-56` | `margin-top: 14rem` |
+| `space-y-60` | `margin-top: 15rem` |
+| `space-y-64` | `margin-top: 16rem` |
+| `space-y-72` | `margin-top: 18rem` |
+| `space-y-80` | `margin-top: 20rem` |
+| `space-y-96` | `margin-top: 24rem` |
+| `space-y-reverse` | `后续兄弟改用 margin-bottom（须同时写 space-y-*）` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## space-x-0
+
+后续兄弟 `margin-left: 0`。三枚 `w-16` 紧挨，第二枚 left **72px**（8 + 64）。第一枚没有这条 margin。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-x-2
+
+后续兄弟 `margin-left: 0.5rem` = **8px**。第二枚 left 80。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-x-6
+
+后续兄弟 `margin-left: 1.5rem` = **24px**。不是 Tailwind v4 的 `margin-inline-end` 打在第一枚上。第二枚 left **96px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-x-18
+
+Amis 多出来的档：后续兄弟 `margin-left: 4.5rem` = **72px**。第二枚 left **144px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-18 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-18 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-x-reverse
+
+与 `space-x-6` 同写：后续兄弟改成 `margin-right: 24px`，`margin-left` 清 0。第一、二枚紧挨（第二枚 left 72）；缝跑到每枚右边。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-6 space-x-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex space-x-6 space-x-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-y-2
+
+竖排。后续兄弟 `margin-top: 8px`。第二枚 top **80px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col space-y-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col space-y-2 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-y-6
+
+后续兄弟 `margin-top: 24px`。第二枚 top **96px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col space-y-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col space-y-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## space-y-reverse
+
+与 `space-y-6` 同写：后续兄弟改成 `margin-bottom: 24px`，`margin-top` 清 0。第一、二枚紧挨（第二枚 top 72）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col space-y-6 space-y-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col space-y-6 space-y-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组三枚：`space-x-0`、`space-x-6`、`space-x-reverse`、`space-y-6`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex space-x-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex space-x-6 space-x-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex flex-col space-y-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex space-x-0 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex space-x-6 space-x-reverse w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex flex-col space-y-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:space-x-2` 第二枚 margin-left 8px；桌面（≥768px）`pc:space-x-6` 第二枚 **margin-left 24px**（left 96）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex m:space-x-2 pc:space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex m:space-x-2 pc:space-x-6 w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。格子缝见 [Gap](/style/grid/gap)；单盒子外边距见 [Margin](/style/spacing/margin)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

@@ -12,7 +12,7 @@
 |------|------|------|
 | 文档 | `/` | 开始（含 JS SDK）、概念、类型、扩展；`/docs` 重定向到首页 |
 | 组件 | `/components` | 侧栏首位「组件介绍」（不进布局分组）+ 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
-| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` + Flex 的 `direction` / `wrap` / `flex` / `grow` / `shrink` / `order` + Grid 的 `columns` / `column-start-end` / `rows` / `row-start-end` / `auto-flow` / `auto-columns` / `auto-rows` / `gap` + Box Alignment 全 9 页 **90%**。旧 `/docs/style` 重定向到这里 |
+| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` + Flex 的 `direction` / `wrap` / `flex` / `grow` / `shrink` / `order` + Grid 的 `columns` / `column-start-end` / `rows` / `row-start-end` / `auto-flow` / `auto-columns` / `auto-rows` / `gap` + Box Alignment 全 9 页 + Spacing 全 3 页 **90%**。旧 `/docs/style` 重定向到这里 |
 | 示例 | `/examples` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
 | 搜索 | ⌘K | 文档 / 组件 / 样式 / 示例索引；示例跳 `/examples?example=` |

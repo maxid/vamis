@@ -572,6 +572,7 @@ describe('style docs surface', () => {
     expect(theme).toContain('@custom-variant m')
     expect(theme).toContain('helpers-utility.css')
     expect(theme).toContain('helpers-gap.css')
+    expect(theme).toContain('helpers-spacing.css')
     expect(theme).toContain('helpers-palette.css')
     const util = readFileSync(resolve(here, '../../vamis-ui/src/helpers-utility.css'), 'utf8')
     expect(util).toMatch(/@layer components\s*\{/)
@@ -790,10 +791,36 @@ describe('style docs surface', () => {
     expect(util).toContain('.pc\\:order-last { order: 9999; }')
     expect(util).toContain('.m\\:order-12 { order: 12; }')
     expect(util).toContain('.m\\:order-last { order: 9999; }')
-    expect(util).toContain('.space-x-6 > :not([hidden]) ~ :not([hidden]) { margin-left: 1.5rem; }')
-    expect(util).toContain('.space-x-6 > :not(:last-child)')
-    expect(util).toMatch(/\.space-x-6 > :not\(:last-child\)[\s\S]*margin-inline-end: 0/)
-    expect(util).not.toContain(':where(.space-x-6 > :not(:last-child))')
+    const spacingCss = readFileSync(
+      resolve(here, '../../vamis-ui/src/helpers-spacing.css'),
+      'utf8',
+    )
+    expect(spacingCss).toContain('.p-4 { padding: 1rem; }')
+    expect(spacingCss).toContain('.p-none { padding: 0; }')
+    expect(spacingCss).toContain('.p-18 { padding: 4.5rem; }')
+    expect(spacingCss).toContain('.px-4 { padding-left: 1rem; padding-right: 1rem; }')
+    expect(spacingCss).toContain('.m-4 { margin: 1rem; }')
+    expect(spacingCss).toContain('.m-none { margin: 0; }')
+    expect(spacingCss).toContain('.m-18 { margin: 4.5rem; }')
+    expect(spacingCss).toContain('.-m-4 { margin: -1rem; }')
+    expect(spacingCss).toContain('.mx-auto { margin-left: auto; margin-right: auto; }')
+    expect(spacingCss).toContain('.pc\\:p-8 { padding: 2rem; }')
+    expect(spacingCss).toContain('.m\\:p-2 { padding: 0.5rem; }')
+    expect(spacingCss).toContain('.pc\\:m-8 { margin: 2rem; }')
+    expect(spacingCss).toContain('.m\\:m-2 { margin: 0.5rem; }')
+    expect(spacingCss).toContain(
+      '.space-x-6 > :not([hidden]) ~ :not([hidden]) { margin-left: 1.5rem; }',
+    )
+    expect(spacingCss).toContain('.space-x-6 > :not(:last-child)')
+    expect(spacingCss).toMatch(
+      /\.space-x-6 > :not\(:last-child\)[\s\S]*margin-inline-end: 0/,
+    )
+    expect(spacingCss).toContain('.space-x-18 > :not([hidden]) ~ :not([hidden]) { margin-left: 4.5rem; }')
+    expect(spacingCss).toContain(
+      '.space-x-6.space-x-reverse > :not([hidden]) ~ :not([hidden]) { margin-left: 0; margin-right: 1.5rem; }',
+    )
+    expect(spacingCss).toContain('.pc\\:space-x-6 > :not([hidden]) ~ :not([hidden]) { margin-left: 1.5rem; }')
+    expect(spacingCss).not.toContain(':where(.space-x-6 > :not(:last-child))')
     const boxSizing = readFileSync(
       resolve(here, '../../../website/src/style/layout/box-sizing.md'),
       'utf8',
@@ -1277,6 +1304,53 @@ describe('style docs surface', () => {
     expect(placeSelf).toContain('pc:place-self-end')
     expect(placeSelf).toContain('type: code')
     expect(placeSelf).not.toContain('实现进度 50%')
+    const paddingDoc = readFileSync(
+      resolve(here, '../../../website/src/style/spacing/padding.md'),
+      'utf8',
+    )
+    expect(paddingDoc).toContain('实现进度 90%')
+    expect(paddingDoc).toContain('## p-0')
+    expect(paddingDoc).toContain('## p-4')
+    expect(paddingDoc).toContain('## p-18')
+    expect(paddingDoc).toContain('## px-4')
+    expect(paddingDoc).toContain('## pt-4')
+    expect(paddingDoc).toContain('## 组合')
+    expect(paddingDoc).toContain('pc:p-8')
+    expect(paddingDoc).toContain('m:p-2')
+    expect(paddingDoc).toContain('| `p-18` |')
+    expect(paddingDoc).toContain('| `p-none` |')
+    expect(paddingDoc).toContain('type: code')
+    expect(paddingDoc).not.toContain('实现进度 50%')
+    expect(paddingDoc).not.toContain('| `p-md` |')
+    expect(paddingDoc).not.toContain('--gap-md')
+    const marginDoc = readFileSync(
+      resolve(here, '../../../website/src/style/spacing/margin.md'),
+      'utf8',
+    )
+    expect(marginDoc).toContain('实现进度 90%')
+    expect(marginDoc).toContain('## m-4')
+    expect(marginDoc).toContain('## -m-4')
+    expect(marginDoc).toContain('## mx-auto')
+    expect(marginDoc).toContain('## m-18')
+    expect(marginDoc).toContain('pc:m-8')
+    expect(marginDoc).toContain('| `m-18` |')
+    expect(marginDoc).toContain('| `-m-4` |')
+    expect(marginDoc).toContain('type: code')
+    expect(marginDoc).not.toContain('实现进度 50%')
+    expect(marginDoc).not.toContain('| `m-t-xs` |')
+    const spaceDoc = readFileSync(
+      resolve(here, '../../../website/src/style/spacing/space-between.md'),
+      'utf8',
+    )
+    expect(spaceDoc).toContain('实现进度 90%')
+    expect(spaceDoc).toContain('## space-x-6')
+    expect(spaceDoc).toContain('## space-x-reverse')
+    expect(spaceDoc).toContain('## space-y-6')
+    expect(spaceDoc).toContain('pc:space-x-6')
+    expect(spaceDoc).toContain('| `space-x-6` |')
+    expect(spaceDoc).toContain('| `space-x-18` |')
+    expect(spaceDoc).toContain('type: code')
+    expect(spaceDoc).not.toContain('实现进度 50%')
     const insetCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-inset.css'), 'utf8')
     expect(insetCss).toContain('.top-0 { top: 0; }')
     expect(insetCss).toContain('.top-2 { top: 0.5rem; }')

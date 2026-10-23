@@ -394,6 +394,6 @@ value: |-
 
 ## 状态前缀
 
-本页与 Amis 一样：不支持[「状态前缀」](/style/state)。兄弟 margin 缝见 [Space Between](/style/spacing/space-between)；cxd 阶 `--gap-xs…xl` 见 [Padding](/style/spacing/padding) / [Margin](/style/spacing/margin)。
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。兄弟 margin 缝见 [Space Between](/style/spacing/space-between)。组件密度阶 `p-sm` / `m-t-xs`（`--gap-xs…xl`）在 `helpers.css`，与本页 helper 档位不是一套。
 
 其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
