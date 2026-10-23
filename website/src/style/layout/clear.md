@@ -31,7 +31,7 @@ inline: false
 tpl: |
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
-    <div class="clear-left bg-muted p-sm rounded-md">clear-left</div>
+    <div class="clear-left bg-yellow-200 p-sm rounded-md">clear-left</div>
   </div>
 ```
 
@@ -45,7 +45,7 @@ inline: false
 tpl: |
   <div class="flow-root">
     <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
-    <div class="clear-right bg-muted p-sm rounded-md">clear-right</div>
+    <div class="clear-right bg-yellow-200 p-sm rounded-md">clear-right</div>
   </div>
 ```
 
@@ -60,7 +60,7 @@ tpl: |
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
     <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
-    <div class="clear-both bg-muted p-sm rounded-md">clear-both</div>
+    <div class="clear-both bg-yellow-200 p-sm rounded-md">clear-both</div>
   </div>
 ```
 
@@ -74,7 +74,7 @@ inline: false
 tpl: |
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
-    <div class="w-24 h-16 float-left clear-none bg-muted p-sm rounded-md">clear-none</div>
+    <div class="w-24 h-16 float-left clear-none bg-yellow-200 p-sm rounded-md">clear-none</div>
   </div>
 ```
 
@@ -89,7 +89,7 @@ tpl: |
   <div class="flow-root">
     <div class="w-24 float-left h-16 bg-blue-200 p-sm rounded-md">左短</div>
     <div class="w-24 float-right h-32 bg-green-200 p-sm rounded-md">右高</div>
-    <div class="clear-left bg-muted p-sm rounded-md">clear-left 只躲左</div>
+    <div class="clear-left bg-yellow-200 p-sm rounded-md">clear-left 只躲左</div>
   </div>
 ```
 
@@ -100,7 +100,7 @@ tpl: |
   <div class="flow-root">
     <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
     <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
-    <div class="clear-right bg-muted p-sm rounded-md">clear-right 只躲右</div>
+    <div class="clear-right bg-yellow-200 p-sm rounded-md">clear-right 只躲右</div>
   </div>
 ```
 
@@ -111,7 +111,7 @@ tpl: |
   <div class="flow-root">
     <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
     <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
-    <div class="clear-both bg-muted p-sm rounded-md">clear-both 两边让开</div>
+    <div class="clear-both bg-yellow-200 p-sm rounded-md">clear-both 两边让开</div>
   </div>
 ```
 
@@ -125,7 +125,7 @@ inline: false
 tpl: |
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
-    <div class="m:clear-none pc:clear-left bg-muted p-sm rounded-md">m:clear-none pc:clear-left</div>
+    <div class="m:clear-none pc:clear-left bg-yellow-200 p-sm rounded-md">m:clear-none pc:clear-left</div>
   </div>
 ```
 

@@ -16,10 +16,10 @@ title: Width
 type: page
 body:
   - type: tpl
-    className: w-1/2 bg-muted p-sm rounded-md
+    className: w-1/2 bg-yellow-200 p-sm rounded-md
     tpl: 半宽
   - type: tpl
-    className: w-full pc:w-1/2 m:w-full bg-muted p-sm rounded-md m-t-sm
+    className: w-full pc:w-1/2 m:w-full bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: 手机拉满，桌面一半
 ```
 

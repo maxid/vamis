@@ -19,13 +19,13 @@ body:
     bodyClassName: flex space-x-4
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 甲
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 乙
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 丙
 ```
 

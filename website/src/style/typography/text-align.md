@@ -16,13 +16,13 @@ title: Text Alignment
 type: page
 body:
   - type: tpl
-    className: text-left bg-muted p-sm rounded-md
+    className: text-left bg-yellow-200 p-sm rounded-md
     tpl: 左
   - type: tpl
-    className: text-center bg-muted p-sm rounded-md m-t-sm
+    className: text-center bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: 中
   - type: tpl
-    className: text-right bg-muted p-sm rounded-md m-t-sm
+    className: text-right bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: 右
 ```
 

@@ -19,13 +19,13 @@ body:
     bodyClassName: grid grid-cols-3 gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "1"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "2"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "3"
 ```
 

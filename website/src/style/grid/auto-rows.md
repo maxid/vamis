@@ -17,7 +17,7 @@ type: page
 body:
   - type: tpl
     className: grid auto-rows-min gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">一行</span><span class="bg-muted p-sm rounded-md">另一行</span>'
+    tpl: '<span class="bg-yellow-200 p-sm rounded-md">一行</span><span class="bg-yellow-200 p-sm rounded-md">另一行</span>'
 ```
 
 ## 类名

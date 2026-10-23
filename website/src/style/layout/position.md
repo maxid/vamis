@@ -6,28 +6,120 @@ title: Position
 
 # Position
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Position：`static` / `fixed` / `absolute` / `relative` / `sticky` 落在同一元素的 `position`。独立样例 + 相对含块四角组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-定位方式。配合 Top / Right / Bottom / Left 使用。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: relative h-24 bg-muted rounded-md
-    tpl: '<span class="absolute right-2 top-2 bg-primary text-primary-foreground p-xs rounded-md">角标</span>相对定位容器'
-```
+改当前节点的 `position`。偏移用 [Top / Right / Bottom / Left](/style/layout/top-right-bottom-left) 的 `top-0` / `right-2` 等。`absolute` 相对最近定位祖先；`fixed` 相对视口（祖先有 transform 时除外）；`sticky` 在滚动容器里吸顶。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
 | `static` | `position: static` |
-| `relative` | `position: relative` |
-| `absolute` | `position: absolute` |
 | `fixed` | `position: fixed` |
+| `absolute` | `position: absolute` |
+| `relative` | `position: relative` |
 | `sticky` | `position: sticky` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## static
+
+默认。写了 `top-0 right-0` 也不偏移，仍在文档流里。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 static top-0 right-0 bg-blue-200 p-sm rounded-md">static</div>
+  </div>
+```
+
+## relative
+
+相对自己原来的位置偏移，仍占文档流。`top-2 left-2` = 8px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 relative top-2 left-2 bg-blue-200 p-sm rounded-md">relative</div>
+  </div>
+```
+
+## absolute
+
+脱离文档流，相对最近的 `relative` / `absolute` / `fixed` / `sticky` 祖先。`top-0 right-0` 钉在右上角。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 absolute top-0 right-0 bg-blue-200 p-sm rounded-md">absolute</div>
+  </div>
+```
+
+## sticky
+
+在滚动容器里滚到 `top-0` 就吸住。下面几块用来把容器撑出滚动。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-32 overflow-auto rounded-md bg-gray-200">
+    <div class="w-24 h-16 sticky top-0 bg-blue-200 p-sm rounded-md">sticky</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">1</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">2</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">3</div>
+  </div>
+```
+
+## fixed
+
+相对视口。祖先有 `transform` 时改为相对该祖先。预览里用 `translateZ(0)` 把钉子留在卡片内，避免盖住整页。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md" style="transform: translateZ(0)">
+    <div class="w-24 h-16 fixed bottom-0 left-0 bg-blue-200 p-sm rounded-md">fixed</div>
+  </div>
+```
+
+## 组合
+
+`relative` 当含块：`absolute top-0 left-0` 左上、`absolute bottom-0 right-0` 右下；中间一块仍在文档流。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 absolute top-0 left-0 bg-blue-200 p-sm rounded-md">左上</div>
+    <div class="w-24 h-16 absolute bottom-0 right-0 bg-green-200 p-sm rounded-md">右下</div>
+    <div class="h-16 w-48 bg-yellow-200 p-sm rounded-md">在流里</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:absolute` 钉右上；窄屏仍是 `static`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 static pc:absolute top-0 right-0 bg-blue-200 p-sm rounded-md">pc:absolute</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。偏移 helper 见 [Top / Right / Bottom / Left](/style/layout/top-right-bottom-left)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

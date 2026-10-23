@@ -19,7 +19,7 @@ body:
     bodyClassName: flex gap-2
     body:
       - type: tpl
-        className: flex-none bg-muted p-sm rounded-md
+        className: flex-none bg-yellow-200 p-sm rounded-md
         tpl: 固定
       - type: tpl
         className: flex-1 bg-primary text-primary-foreground p-sm rounded-md

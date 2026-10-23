@@ -19,13 +19,13 @@ body:
     bodyClassName: flex flex-wrap gap-2
     body:
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 bg-yellow-200 p-sm rounded-md
         tpl: 一
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 bg-yellow-200 p-sm rounded-md
         tpl: 二
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 bg-yellow-200 p-sm rounded-md
         tpl: 三
 ```
 

@@ -16,7 +16,7 @@ title: Justify Content
 type: page
 body:
   - type: container
-    className: bg-muted p-sm rounded-md
+    className: bg-yellow-200 p-sm rounded-md
     bodyClassName: flex justify-between
     body:
       - type: tpl

@@ -16,10 +16,10 @@ title: Whitespace
 type: page
 body:
   - type: tpl
-    className: whitespace-nowrap bg-muted p-sm rounded-md w-24 overflow-hidden
+    className: whitespace-nowrap bg-yellow-200 p-sm rounded-md w-24 overflow-hidden
     tpl: 这一行不会折
   - type: tpl
-    className: whitespace-pre-wrap bg-muted p-sm rounded-md m-t-sm
+    className: whitespace-pre-wrap bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: "第一行\n第二行"
 ```
 

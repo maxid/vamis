@@ -16,7 +16,7 @@ title: Top / Right / Bottom / Left
 type: page
 body:
   - type: tpl
-    className: relative h-24 bg-muted rounded-md
+    className: relative h-24 bg-gray-200 rounded-md
     tpl: '<span class="absolute inset-x-2 bottom-2 bg-card p-xs rounded-md">inset-x + bottom</span>'
 ```
 

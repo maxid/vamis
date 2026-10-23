@@ -422,6 +422,10 @@ function displayChip(extraClass, label) {
   return `<div class="${extraClass} p-sm rounded-md">${label}</div>`
 }
 
+/** Play card is near-white; `--muted` is too close. Yellow = chip/bar, gray-200 = stage. */
+const DEMO_FILL = 'bg-yellow-200'
+const DEMO_STAGE = 'bg-gray-200'
+
 function displayExtra() {
   return [
     '## block',
@@ -430,7 +434,7 @@ function displayExtra() {
     '',
     displaySchema([
       displayChip('block w-24 bg-blue-200', 'block'),
-      displayChip('block w-24 bg-muted', 'block'),
+      displayChip(`block w-24 ${DEMO_FILL}`, 'block'),
     ]),
     '',
     '## inline-block',
@@ -438,7 +442,7 @@ function displayExtra() {
     '可以并排，宽高仍生效。两个节点之间不要换行，否则空白会挤出缝。',
     '',
     displaySchema([
-      `${displayChip('inline-block w-24 bg-blue-200', 'inline-block')}${displayChip('inline-block w-24 bg-muted', 'inline-block')}`,
+      `${displayChip('inline-block w-24 bg-blue-200', 'inline-block')}${displayChip(`inline-block w-24 ${DEMO_FILL}`, 'inline-block')}`,
     ]),
     '',
     '## inline',
@@ -446,7 +450,7 @@ function displayExtra() {
     '跟文字同一行。宽高不生效，只随内容伸缩。',
     '',
     displaySchema([
-      `<p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-muted p-sm rounded-md">inline</span>后</p>`,
+      `<p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline ${DEMO_FILL} p-sm rounded-md">inline</span>后</p>`,
     ]),
     '',
     '## flex',
@@ -456,7 +460,7 @@ function displayExtra() {
     displaySchema([
       '<div class="flex gap-2">',
       `  ${displayChip('bg-blue-200', 'A')}`,
-      `  ${displayChip('bg-muted', 'B')}`,
+      `  ${displayChip(DEMO_FILL, 'B')}`,
       `  ${displayChip('bg-green-200', 'C')}`,
       '</div>',
     ]),
@@ -466,7 +470,7 @@ function displayExtra() {
     '还是 flex，但盒子本身跟文字并排。',
     '',
     displaySchema([
-      `前<div class="inline-flex gap-2">${displayChip('bg-blue-200', 'A')}${displayChip('bg-muted', 'B')}</div>后`,
+      `前<div class="inline-flex gap-2">${displayChip('bg-blue-200', 'A')}${displayChip(DEMO_FILL, 'B')}</div>后`,
     ]),
     '',
     '## grid',
@@ -476,9 +480,9 @@ function displayExtra() {
     displaySchema([
       '<div class="grid grid-cols-2 gap-2 w-48">',
       `  ${displayChip('bg-blue-200', '1')}`,
-      `  ${displayChip('bg-muted', '2')}`,
+      `  ${displayChip(DEMO_FILL, '2')}`,
       `  ${displayChip('bg-green-200', '3')}`,
-      `  ${displayChip('bg-muted', '4')}`,
+      `  ${displayChip(DEMO_FILL, '4')}`,
       '</div>',
     ]),
     '',
@@ -487,7 +491,7 @@ function displayExtra() {
     'grid 盒子跟文字并排。',
     '',
     displaySchema([
-      `前<div class="inline-grid grid-cols-2 gap-2">${displayChip('bg-blue-200', '1')}${displayChip('bg-muted', '2')}</div>后`,
+      `前<div class="inline-grid grid-cols-2 gap-2">${displayChip('bg-blue-200', '1')}${displayChip(DEMO_FILL, '2')}</div>后`,
     ]),
     '',
     '## contents',
@@ -498,7 +502,7 @@ function displayExtra() {
       '<div class="flex gap-2">',
       `  ${displayChip('bg-blue-200', 'A')}`,
       '  <div class="contents">',
-      `    ${displayChip('bg-muted', 'B')}`,
+      `    ${displayChip(DEMO_FILL, 'B')}`,
       `    ${displayChip('bg-green-200', 'C')}`,
       '  </div>',
       '</div>',
@@ -510,7 +514,7 @@ function displayExtra() {
     '',
     displaySchema([
       displayChip('block w-24 bg-blue-200', '可见'),
-      displayChip('hidden w-24 bg-muted', '隐藏'),
+      displayChip(`hidden w-24 ${DEMO_FILL}`, '隐藏'),
       displayChip('block w-24 bg-green-200', '可见'),
     ]),
     '',
@@ -519,7 +523,7 @@ function displayExtra() {
     '开一个 BFC，把里面的 float 包进自己的高度。',
     '',
     displaySchema([
-      '<div class="flow-root bg-muted p-sm rounded-md">',
+      `<div class="flow-root ${DEMO_STAGE} p-sm rounded-md">`,
       `  ${displayChip('float-left w-24 h-16 bg-blue-200', '浮')}`,
       '  <p>父级有高度，文字绕开左浮。</p>',
       '</div>',
@@ -533,7 +537,7 @@ function displayExtra() {
       '<div class="table">',
       '  <div class="table-row">',
       `    ${displayChip('table-cell bg-blue-200', 'A')}`,
-      `    ${displayChip('table-cell bg-muted', 'B')}`,
+      `    ${displayChip(`table-cell ${DEMO_FILL}`, 'B')}`,
       '  </div>',
       '</div>',
     ]),
@@ -550,8 +554,8 @@ function displayExtra() {
       '  </div>',
       '  <div class="table-header-group">',
       '    <div class="table-row">',
-      `      ${displayChip('table-cell bg-muted', '列1')}`,
-      `      ${displayChip('table-cell bg-muted', '列2')}`,
+      `      ${displayChip(`table-cell ${DEMO_FILL}`, '列1')}`,
+      `      ${displayChip(`table-cell ${DEMO_FILL}`, '列2')}`,
       '    </div>',
       '  </div>',
       '  <div class="table-row-group">',
@@ -575,7 +579,7 @@ function displayExtra() {
     '',
     displaySchema([
       displayChip('hidden pc:block bg-blue-200', 'pc 可见'),
-      displayChip('block pc:hidden bg-muted', '手机可见'),
+      displayChip(`block pc:hidden ${DEMO_FILL}`, '手机可见'),
     ]),
     '',
     '## 状态前缀',
@@ -585,7 +589,7 @@ function displayExtra() {
 }
 
 function overflowFrame(overflowClass, innerClass, label, wrapClass = '') {
-  const frame = `<div class="${overflowClass} h-16 w-48 bg-muted p-sm rounded-md"><div class="${innerClass} bg-blue-200 p-sm rounded-md">${label}</div></div>`
+  const frame = `<div class="${overflowClass} h-16 w-48 ${DEMO_STAGE} p-sm rounded-md"><div class="${innerClass} bg-blue-200 p-sm rounded-md">${label}</div></div>`
   return wrapClass ? `<div class="${wrapClass}">${frame}</div>` : frame
 }
 
@@ -693,7 +697,12 @@ function overflowExtra() {
 }
 
 function positionChip(extraClass, label) {
-  return `<div class="${extraClass} w-24 h-16 p-sm rounded-md">${label}</div>`
+  const hasW = /\bw-\S+/.test(extraClass)
+  const hasH = /\bh-\d+\b/.test(extraClass)
+  const cls = [hasW ? null : 'w-24', hasH ? null : 'h-16', extraClass, 'p-sm rounded-md']
+    .filter(Boolean)
+    .join(' ')
+  return `<div class="${cls}">${label}</div>`
 }
 
 function positionExtra() {
@@ -703,7 +712,7 @@ function positionExtra() {
     '默认。写了 `top-0 right-0` 也不偏移，仍在文档流里。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md">`,
       `  ${positionChip('static top-0 right-0 bg-blue-200', 'static')}`,
       '</div>',
     ]),
@@ -713,7 +722,7 @@ function positionExtra() {
     '相对自己原来的位置偏移，仍占文档流。`top-2 left-2` = 8px。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md">`,
       `  ${positionChip('relative top-2 left-2 bg-blue-200', 'relative')}`,
       '</div>',
     ]),
@@ -723,7 +732,7 @@ function positionExtra() {
     '脱离文档流，相对最近的 `relative` / `absolute` / `fixed` / `sticky` 祖先。`top-0 right-0` 钉在右上角。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md">`,
       `  ${positionChip('absolute top-0 right-0 bg-blue-200', 'absolute')}`,
       '</div>',
     ]),
@@ -733,7 +742,7 @@ function positionExtra() {
     '在滚动容器里滚到 `top-0` 就吸住。下面几块用来把容器撑出滚动。',
     '',
     displaySchema([
-      '<div class="h-32 overflow-auto rounded-md bg-muted">',
+      `<div class="h-32 overflow-auto rounded-md ${DEMO_STAGE}">`,
       `  ${positionChip('sticky top-0 bg-blue-200', 'sticky')}`,
       `  ${positionChip('h-16 bg-green-200', '1')}`,
       `  ${positionChip('h-16 bg-green-200', '2')}`,
@@ -746,7 +755,7 @@ function positionExtra() {
     '相对视口。祖先有 `transform` 时改为相对该祖先。预览里用 `translateZ(0)` 把钉子留在卡片内，避免盖住整页。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md" style="transform: translateZ(0)">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md" style="transform: translateZ(0)">`,
       `  ${positionChip('fixed bottom-0 left-0 bg-blue-200', 'fixed')}`,
       '</div>',
     ]),
@@ -756,10 +765,10 @@ function positionExtra() {
     '`relative` 当含块：`absolute top-0 left-0` 左上、`absolute bottom-0 right-0` 右下；中间一块仍在文档流。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md">`,
       `  ${positionChip('absolute top-0 left-0 bg-blue-200', '左上')}`,
       `  ${positionChip('absolute bottom-0 right-0 bg-green-200', '右下')}`,
-      `  ${positionChip('bg-yellow-200', '在流里')}`,
+      `  ${positionChip('w-48 bg-yellow-200', '在流里')}`,
       '</div>',
     ]),
     '',
@@ -768,7 +777,7 @@ function positionExtra() {
     '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:absolute` 钉右上；窄屏仍是 `static`。',
     '',
     displaySchema([
-      '<div class="relative h-32 bg-muted rounded-md">',
+      `<div class="relative h-32 ${DEMO_STAGE} rounded-md">`,
       `  ${positionChip('static pc:absolute top-0 right-0 bg-blue-200', 'pc:absolute')}`,
       '</div>',
     ]),
@@ -824,7 +833,7 @@ function clearExtra() {
     '',
     clearSchema([
       floatChip('float-left bg-blue-200', 'float-left'),
-      clearBar('clear-left bg-muted', 'clear-left'),
+      clearBar(`clear-left ${DEMO_FILL}`, 'clear-left'),
     ]),
     '',
     '## clear-right',
@@ -833,7 +842,7 @@ function clearExtra() {
     '',
     clearSchema([
       floatChip('float-right bg-green-200', 'float-right'),
-      clearBar('clear-right bg-muted', 'clear-right'),
+      clearBar(`clear-right ${DEMO_FILL}`, 'clear-right'),
     ]),
     '',
     '## clear-both',
@@ -843,7 +852,7 @@ function clearExtra() {
     clearSchema([
       floatChip('float-left bg-blue-200', 'float-left'),
       floatChip('float-right bg-green-200', 'float-right'),
-      clearBar('clear-both bg-muted', 'clear-both'),
+      clearBar(`clear-both ${DEMO_FILL}`, 'clear-both'),
     ]),
     '',
     '## clear-none',
@@ -852,7 +861,7 @@ function clearExtra() {
     '',
     clearSchema([
       floatChip('float-left bg-blue-200', 'float-left'),
-      floatChip('float-left clear-none bg-muted', 'clear-none'),
+      floatChip(`float-left clear-none ${DEMO_FILL}`, 'clear-none'),
     ]),
     '',
     '## 组合',
@@ -862,19 +871,19 @@ function clearExtra() {
     clearSchema([
       floatChip('float-left h-16 bg-blue-200', '左短'),
       floatChip('float-right h-32 bg-green-200', '右高'),
-      clearBar('clear-left bg-muted', 'clear-left 只躲左'),
+      clearBar(`clear-left ${DEMO_FILL}`, 'clear-left 只躲左'),
     ]),
     '',
     clearSchema([
       floatChip('float-left h-32 bg-blue-200', '左高'),
       floatChip('float-right h-16 bg-green-200', '右短'),
-      clearBar('clear-right bg-muted', 'clear-right 只躲右'),
+      clearBar(`clear-right ${DEMO_FILL}`, 'clear-right 只躲右'),
     ]),
     '',
     clearSchema([
       floatChip('float-left h-32 bg-blue-200', '左高'),
       floatChip('float-right h-16 bg-green-200', '右短'),
-      clearBar('clear-both bg-muted', 'clear-both 两边让开'),
+      clearBar(`clear-both ${DEMO_FILL}`, 'clear-both 两边让开'),
     ]),
     '',
     '## 响应式设计',
@@ -883,7 +892,7 @@ function clearExtra() {
     '',
     clearSchema([
       floatChip('float-left bg-blue-200', 'float-left'),
-      clearBar('m:clear-none pc:clear-left bg-muted', 'm:clear-none pc:clear-left'),
+      clearBar(`m:clear-none pc:clear-left ${DEMO_FILL}`, 'm:clear-none pc:clear-left'),
     ]),
     '',
     '## 状态前缀',
@@ -929,10 +938,10 @@ const pages = [
     example: `type: page
 body:
   - type: tpl
-    className: p-md bg-muted rounded-md
+    className: p-md ${DEMO_FILL} rounded-md
     tpl: p-md 是 --gap-md（16px）
   - type: tpl
-    className: p-t-xs p-x-lg bg-muted rounded-md m-t-sm
+    className: p-t-xs p-x-lg ${DEMO_FILL} rounded-md m-t-sm
     tpl: 上 4px，左右 20px`,
     rows: paddingRows,
   },
@@ -963,10 +972,10 @@ body:
     example: `type: page
 body:
   - type: tpl
-    className: w-1/2 bg-muted p-sm rounded-md
+    className: w-1/2 ${DEMO_FILL} p-sm rounded-md
     tpl: 半宽
   - type: tpl
-    className: w-full pc:w-1/2 m:w-full bg-muted p-sm rounded-md m-t-sm
+    className: w-full pc:w-1/2 m:w-full ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: 手机拉满，桌面一半`,
     rows: widthRows,
   },
@@ -980,10 +989,10 @@ body:
     example: `type: page
 body:
   - type: tpl
-    className: h-16 bg-muted p-sm rounded-md
+    className: h-16 ${DEMO_FILL} p-sm rounded-md
     tpl: 固定高度
   - type: tpl
-    className: min-h-full bg-muted p-sm rounded-md m-t-sm
+    className: min-h-full ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: 至少吃满父槽`,
     rows: heightRows,
   },
@@ -997,13 +1006,13 @@ body:
     bodyClassName: flex space-x-4
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 甲
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 乙
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 丙`,
     [
       ['space-x-1', '子项水平间隔 0.25rem'],
@@ -1170,7 +1179,7 @@ tpl: |
     `type: page
 body:
   - type: tpl
-    className: relative h-24 bg-muted rounded-md
+    className: relative h-24 ${DEMO_STAGE} rounded-md
     tpl: '<span class="absolute inset-x-2 bottom-2 bg-card p-xs rounded-md">inset-x + bottom</span>'`,
     [
       ['top-0', 'top: 0'],
@@ -1208,7 +1217,7 @@ body:
 body:
   - type: tpl
     className: relative
-    tpl: '<span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-muted p-sm rounded-md">z-0</span>'`,
+    tpl: '<span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 ${DEMO_FILL} p-sm rounded-md">z-0</span>'`,
     [
       ['z-0', 'z-index: 0'],
       ['z-10', 'z-index: 10'],
@@ -1229,20 +1238,20 @@ body:
     bodyClassName: flex flex-col gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 上
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 下
   - type: container
     className: m-t-sm
     bodyClassName: flex flex-row-reverse gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 甲
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: 乙`,
     [
       ['flex-row', 'flex-direction: row'],
@@ -1261,13 +1270,13 @@ body:
     bodyClassName: flex flex-wrap gap-2
     body:
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 ${DEMO_FILL} p-sm rounded-md
         tpl: 一
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 ${DEMO_FILL} p-sm rounded-md
         tpl: 二
       - type: tpl
-        className: w-40 bg-muted p-sm rounded-md
+        className: w-40 ${DEMO_FILL} p-sm rounded-md
         tpl: 三`,
     [
       ['flex-wrap', 'flex-wrap: wrap'],
@@ -1285,7 +1294,7 @@ body:
     bodyClassName: flex gap-2
     body:
       - type: tpl
-        className: flex-none bg-muted p-sm rounded-md
+        className: flex-none ${DEMO_FILL} p-sm rounded-md
         tpl: 固定
       - type: tpl
         className: flex-1 bg-primary text-primary-foreground p-sm rounded-md
@@ -1305,7 +1314,7 @@ body:
 body:
   - type: tpl
     className: flex gap-2
-    tpl: '<span class="grow bg-muted p-sm rounded-md">grow</span><span class="grow-0 bg-muted p-sm rounded-md">grow-0</span>'`,
+    tpl: '<span class="grow ${DEMO_FILL} p-sm rounded-md">grow</span><span class="grow-0 ${DEMO_FILL} p-sm rounded-md">grow-0</span>'`,
     [
       ['grow', 'flex-grow: 1'],
       ['grow-0', 'flex-grow: 0'],
@@ -1319,7 +1328,7 @@ body:
 body:
   - type: tpl
     className: flex w-48 gap-2
-    tpl: '<span class="shrink-0 bg-muted p-sm rounded-md">不缩</span><span class="shrink bg-muted p-sm rounded-md">可缩可缩可缩</span>'`,
+    tpl: '<span class="shrink-0 ${DEMO_FILL} p-sm rounded-md">不缩</span><span class="shrink ${DEMO_FILL} p-sm rounded-md">可缩可缩可缩</span>'`,
     [
       ['shrink', 'flex-shrink: 1'],
       ['shrink-0', 'flex-shrink: 0'],
@@ -1333,7 +1342,7 @@ body:
 body:
   - type: tpl
     className: flex gap-2
-    tpl: '<span class="order-3 bg-muted p-sm rounded-md">A order-3</span><span class="order-1 bg-muted p-sm rounded-md">B order-1</span><span class="order-2 bg-muted p-sm rounded-md">C order-2</span>'`,
+    tpl: '<span class="order-3 ${DEMO_FILL} p-sm rounded-md">A order-3</span><span class="order-1 ${DEMO_FILL} p-sm rounded-md">B order-1</span><span class="order-2 ${DEMO_FILL} p-sm rounded-md">C order-2</span>'`,
     [
       ['order-first', 'order: -9999'],
       ['order-last', 'order: 9999'],
@@ -1353,13 +1362,13 @@ body:
     bodyClassName: grid grid-cols-3 gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "1"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "2"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "3"`,
     [
       ['grid-cols-1', '1 列'],
@@ -1379,7 +1388,7 @@ body:
 body:
   - type: tpl
     className: grid grid-cols-4 gap-2
-    tpl: '<span class="col-span-2 bg-muted p-sm rounded-md">span 2</span><span class="bg-muted p-sm rounded-md">3</span><span class="bg-muted p-sm rounded-md">4</span>'`,
+    tpl: '<span class="col-span-2 ${DEMO_FILL} p-sm rounded-md">span 2</span><span class="${DEMO_FILL} p-sm rounded-md">3</span><span class="${DEMO_FILL} p-sm rounded-md">4</span>'`,
     [
       ['col-auto', 'grid-column: auto'],
       ['col-span-1', '跨 1 列'],
@@ -1398,7 +1407,7 @@ body:
 body:
   - type: tpl
     className: grid grid-rows-2 grid-cols-2 h-32 gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">1</span><span class="bg-muted p-sm rounded-md">2</span><span class="bg-muted p-sm rounded-md">3</span><span class="bg-muted p-sm rounded-md">4</span>'`,
+    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">1</span><span class="${DEMO_FILL} p-sm rounded-md">2</span><span class="${DEMO_FILL} p-sm rounded-md">3</span><span class="${DEMO_FILL} p-sm rounded-md">4</span>'`,
     [
       ['grid-rows-1', '1 行'],
       ['grid-rows-2', '2 行'],
@@ -1415,7 +1424,7 @@ body:
 body:
   - type: tpl
     className: grid grid-cols-2 grid-rows-2 h-32 gap-2
-    tpl: '<span class="row-span-2 bg-muted p-sm rounded-md">跨两行</span><span class="bg-muted p-sm rounded-md">右上</span><span class="bg-muted p-sm rounded-md">右下</span>'`,
+    tpl: '<span class="row-span-2 ${DEMO_FILL} p-sm rounded-md">跨两行</span><span class="${DEMO_FILL} p-sm rounded-md">右上</span><span class="${DEMO_FILL} p-sm rounded-md">右下</span>'`,
     [
       ['row-auto', 'grid-row: auto'],
       ['row-span-1', '跨 1 行'],
@@ -1433,7 +1442,7 @@ body:
 body:
   - type: tpl
     className: grid grid-flow-col auto-cols-fr h-16 gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">A</span><span class="bg-muted p-sm rounded-md">B</span><span class="bg-muted p-sm rounded-md">C</span>'`,
+    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">A</span><span class="${DEMO_FILL} p-sm rounded-md">B</span><span class="${DEMO_FILL} p-sm rounded-md">C</span>'`,
     [
       ['grid-flow-row', 'grid-auto-flow: row'],
       ['grid-flow-col', 'grid-auto-flow: column'],
@@ -1450,7 +1459,7 @@ body:
 body:
   - type: tpl
     className: grid grid-flow-col auto-cols-max gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">短</span><span class="bg-muted p-sm rounded-md">比较长的一项</span>'`,
+    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">短</span><span class="${DEMO_FILL} p-sm rounded-md">比较长的一项</span>'`,
     [
       ['auto-cols-auto', 'grid-auto-columns: auto'],
       ['auto-cols-min', 'grid-auto-columns: min-content'],
@@ -1466,7 +1475,7 @@ body:
 body:
   - type: tpl
     className: grid auto-rows-min gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">一行</span><span class="bg-muted p-sm rounded-md">另一行</span>'`,
+    tpl: '<span class="${DEMO_FILL} p-sm rounded-md">一行</span><span class="${DEMO_FILL} p-sm rounded-md">另一行</span>'`,
     [
       ['auto-rows-auto', 'grid-auto-rows: auto'],
       ['auto-rows-min', 'grid-auto-rows: min-content'],
@@ -1484,29 +1493,29 @@ body:
     bodyClassName: flex gap-4
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "1"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "2"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: "3"
   - type: container
     className: m-t-sm
     bodyClassName: grid grid-cols-2 gap-x-8 gap-y-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: a
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: b
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: c
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: ${DEMO_FILL} p-sm rounded-md
         tpl: d`,
     [
       ['gap-1', 'gap: 0.25rem'],
@@ -1523,7 +1532,7 @@ body:
     `type: page
 body:
   - type: container
-    className: bg-muted p-sm rounded-md
+    className: ${DEMO_FILL} p-sm rounded-md
     bodyClassName: flex justify-between
     body:
       - type: tpl
@@ -1548,7 +1557,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: grid grid-cols-2 justify-items-center bg-muted p-sm rounded-md gap-2
+    className: grid grid-cols-2 justify-items-center ${DEMO_STAGE} p-sm rounded-md gap-2
     tpl: '<span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>'`,
     [
       ['justify-items-start', 'justify-items: start'],
@@ -1564,7 +1573,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: grid grid-cols-2 bg-muted p-sm rounded-md
+    className: grid grid-cols-2 ${DEMO_STAGE} p-sm rounded-md
     tpl: '<span class="justify-self-end bg-card p-xs rounded-md">靠右</span><span class="bg-card p-xs rounded-md">默认</span>'`,
     [
       ['justify-self-auto', 'justify-self: auto'],
@@ -1581,7 +1590,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: flex flex-wrap content-between h-32 bg-muted p-sm rounded-md
+    className: flex flex-wrap content-between h-32 ${DEMO_STAGE} p-sm rounded-md
     tpl: '<span class="w-1/2 bg-card p-xs rounded-md">1</span><span class="w-1/2 bg-card p-xs rounded-md">2</span><span class="w-1/2 bg-card p-xs rounded-md">3</span>'`,
     [
       ['content-start', 'align-content: flex-start'],
@@ -1599,7 +1608,7 @@ body:
     `type: page
 body:
   - type: container
-    className: h-20 bg-muted p-sm rounded-md
+    className: h-20 ${DEMO_STAGE} p-sm rounded-md
     bodyClassName: flex items-center gap-2
     body:
       - type: tpl
@@ -1623,7 +1632,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: flex items-start h-20 bg-muted p-sm rounded-md gap-2
+    className: flex items-start h-20 ${DEMO_STAGE} p-sm rounded-md gap-2
     tpl: '<span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>'`,
     [
       ['self-auto', 'align-self: auto'],
@@ -1640,7 +1649,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: grid h-24 place-content-center bg-muted rounded-md
+    className: grid h-24 place-content-center ${DEMO_STAGE} rounded-md
     tpl: '<span class="bg-card p-sm rounded-md">居中</span>'`,
     [
       ['place-content-center', 'place-content: center'],
@@ -1657,7 +1666,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: grid h-24 place-items-center bg-muted rounded-md
+    className: grid h-24 place-items-center ${DEMO_STAGE} rounded-md
     tpl: '<span class="bg-card p-sm rounded-md">单元格居中</span>'`,
     [
       ['place-items-center', 'place-items: center'],
@@ -1673,7 +1682,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: grid grid-cols-2 h-24 bg-muted rounded-md
+    className: grid grid-cols-2 h-24 ${DEMO_STAGE} rounded-md
     tpl: '<span class="place-self-center bg-card p-sm rounded-md">自己居中</span><span class="bg-card p-sm rounded-md">默认</span>'`,
     [
       ['place-self-auto', 'place-self: auto'],
@@ -1834,13 +1843,13 @@ body:
     `type: page
 body:
   - type: tpl
-    className: text-left bg-muted p-sm rounded-md
+    className: text-left ${DEMO_FILL} p-sm rounded-md
     tpl: 左
   - type: tpl
-    className: text-center bg-muted p-sm rounded-md m-t-sm
+    className: text-center ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: 中
   - type: tpl
-    className: text-right bg-muted p-sm rounded-md m-t-sm
+    className: text-right ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: 右`,
     [
       ['text-left', 'text-align: left'],
@@ -1936,7 +1945,7 @@ body:
     `type: page
 body:
   - type: tpl
-    tpl: '<span class="inline-block h-8 bg-muted">高</span> <span class="align-top">top</span> <span class="align-middle">middle</span> <span class="align-bottom">bottom</span>'`,
+    tpl: '<span class="inline-block h-8 ${DEMO_FILL}">高</span> <span class="align-top">top</span> <span class="align-middle">middle</span> <span class="align-bottom">bottom</span>'`,
     [
       ['align-baseline', 'vertical-align: baseline'],
       ['align-top', 'vertical-align: top'],
@@ -1953,10 +1962,10 @@ body:
     `type: page
 body:
   - type: tpl
-    className: whitespace-nowrap bg-muted p-sm rounded-md w-24 overflow-hidden
+    className: whitespace-nowrap ${DEMO_FILL} p-sm rounded-md w-24 overflow-hidden
     tpl: 这一行不会折
   - type: tpl
-    className: whitespace-pre-wrap bg-muted p-sm rounded-md m-t-sm
+    className: whitespace-pre-wrap ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: "第一行\\n第二行"`,
     [
       ['whitespace-normal', 'white-space: normal'],
@@ -1973,7 +1982,7 @@ body:
     `type: page
 body:
   - type: tpl
-    className: break-all w-24 bg-muted p-sm rounded-md
+    className: break-all w-24 ${DEMO_FILL} p-sm rounded-md
     tpl: supercalifragilisticexpialidocious`,
     [
       ['break-normal', 'overflow-wrap: normal; word-break: normal'],
@@ -2021,13 +2030,13 @@ body:
     `type: page
 body:
   - type: tpl
-    className: rounded-md bg-muted p-sm
+    className: rounded-md ${DEMO_FILL} p-sm
     tpl: rounded-md
   - type: tpl
-    className: rounded-xl bg-muted p-sm m-t-sm
+    className: rounded-xl ${DEMO_FILL} p-sm m-t-sm
     tpl: rounded-xl
   - type: tpl
-    className: rounded-full bg-muted p-sm m-t-sm w-24 text-center
+    className: rounded-full ${DEMO_FILL} p-sm m-t-sm w-24 text-center
     tpl: rounded-full`,
     [
       ['rounded-none', '0'],
@@ -2130,10 +2139,10 @@ body:
     `type: page
 body:
   - type: tpl
-    className: truncate w-40 bg-muted p-sm rounded-md
+    className: truncate w-40 ${DEMO_FILL} p-sm rounded-md
     tpl: 这段文字很长很长很长很长，超出就被截成省略号
   - type: tpl
-    className: overflow-hidden text-clip whitespace-nowrap w-40 bg-muted p-sm rounded-md m-t-sm
+    className: overflow-hidden text-clip whitespace-nowrap w-40 ${DEMO_FILL} p-sm rounded-md m-t-sm
     tpl: 这段文字很长很长很长很长，超出直接裁掉`,
     [
       ['truncate', 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap'],

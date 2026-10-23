@@ -44,7 +44,7 @@ type: tpl
 inline: false
 tpl: |
   <div class="block w-24 bg-blue-200 p-sm rounded-md">block</div>
-  <div class="block w-24 bg-muted p-sm rounded-md">block</div>
+  <div class="block w-24 bg-yellow-200 p-sm rounded-md">block</div>
 ```
 
 ## inline-block
@@ -55,7 +55,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">inline-block</div><div class="inline-block w-24 bg-muted p-sm rounded-md">inline-block</div>
+  <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">inline-block</div><div class="inline-block w-24 bg-yellow-200 p-sm rounded-md">inline-block</div>
 ```
 
 ## inline
@@ -66,7 +66,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-muted p-sm rounded-md">inline</span>后</p>
+  <p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-yellow-200 p-sm rounded-md">inline</span>后</p>
 ```
 
 ## flex
@@ -79,7 +79,7 @@ inline: false
 tpl: |
   <div class="flex gap-2">
     <div class="bg-blue-200 p-sm rounded-md">A</div>
-    <div class="bg-muted p-sm rounded-md">B</div>
+    <div class="bg-yellow-200 p-sm rounded-md">B</div>
     <div class="bg-green-200 p-sm rounded-md">C</div>
   </div>
 ```
@@ -92,7 +92,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  前<div class="inline-flex gap-2"><div class="bg-blue-200 p-sm rounded-md">A</div><div class="bg-muted p-sm rounded-md">B</div></div>后
+  前<div class="inline-flex gap-2"><div class="bg-blue-200 p-sm rounded-md">A</div><div class="bg-yellow-200 p-sm rounded-md">B</div></div>后
 ```
 
 ## grid
@@ -105,9 +105,9 @@ inline: false
 tpl: |
   <div class="grid grid-cols-2 gap-2 w-48">
     <div class="bg-blue-200 p-sm rounded-md">1</div>
-    <div class="bg-muted p-sm rounded-md">2</div>
+    <div class="bg-yellow-200 p-sm rounded-md">2</div>
     <div class="bg-green-200 p-sm rounded-md">3</div>
-    <div class="bg-muted p-sm rounded-md">4</div>
+    <div class="bg-yellow-200 p-sm rounded-md">4</div>
   </div>
 ```
 
@@ -119,7 +119,7 @@ grid 盒子跟文字并排。
 type: tpl
 inline: false
 tpl: |
-  前<div class="inline-grid grid-cols-2 gap-2"><div class="bg-blue-200 p-sm rounded-md">1</div><div class="bg-muted p-sm rounded-md">2</div></div>后
+  前<div class="inline-grid grid-cols-2 gap-2"><div class="bg-blue-200 p-sm rounded-md">1</div><div class="bg-yellow-200 p-sm rounded-md">2</div></div>后
 ```
 
 ## contents
@@ -133,7 +133,7 @@ tpl: |
   <div class="flex gap-2">
     <div class="bg-blue-200 p-sm rounded-md">A</div>
     <div class="contents">
-      <div class="bg-muted p-sm rounded-md">B</div>
+      <div class="bg-yellow-200 p-sm rounded-md">B</div>
       <div class="bg-green-200 p-sm rounded-md">C</div>
     </div>
   </div>
@@ -148,7 +148,7 @@ type: tpl
 inline: false
 tpl: |
   <div class="block w-24 bg-blue-200 p-sm rounded-md">可见</div>
-  <div class="hidden w-24 bg-muted p-sm rounded-md">隐藏</div>
+  <div class="hidden w-24 bg-yellow-200 p-sm rounded-md">隐藏</div>
   <div class="block w-24 bg-green-200 p-sm rounded-md">可见</div>
 ```
 
@@ -160,7 +160,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="flow-root bg-muted p-sm rounded-md">
+  <div class="flow-root bg-gray-200 p-sm rounded-md">
     <div class="float-left w-24 h-16 bg-blue-200 p-sm rounded-md">浮</div>
     <p>父级有高度，文字绕开左浮。</p>
   </div>
@@ -177,7 +177,7 @@ tpl: |
   <div class="table">
     <div class="table-row">
       <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
-      <div class="table-cell bg-muted p-sm rounded-md">B</div>
+      <div class="table-cell bg-yellow-200 p-sm rounded-md">B</div>
     </div>
   </div>
 ```
@@ -197,8 +197,8 @@ tpl: |
     </div>
     <div class="table-header-group">
       <div class="table-row">
-        <div class="table-cell bg-muted p-sm rounded-md">列1</div>
-        <div class="table-cell bg-muted p-sm rounded-md">列2</div>
+        <div class="table-cell bg-yellow-200 p-sm rounded-md">列1</div>
+        <div class="table-cell bg-yellow-200 p-sm rounded-md">列2</div>
       </div>
     </div>
     <div class="table-row-group">
@@ -225,7 +225,7 @@ type: tpl
 inline: false
 tpl: |
   <div class="hidden pc:block bg-blue-200 p-sm rounded-md">pc 可见</div>
-  <div class="block pc:hidden bg-muted p-sm rounded-md">手机可见</div>
+  <div class="block pc:hidden bg-yellow-200 p-sm rounded-md">手机可见</div>
 ```
 
 ## 状态前缀
