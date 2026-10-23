@@ -17,7 +17,12 @@ function isColumnComponent(col: unknown): col is SchemaObject {
 }
 function columnNodes(col: unknown) {
   if (isColumnComponent(col)) return [col]
-  return asArray((col as SchemaObject)?.body || col)
+  if (col && typeof col === 'object') {
+    const body = (col as SchemaObject).body
+    if (body != null) return asArray(body)
+  }
+  if (col == null) return []
+  return asArray(col as SchemaObject['body'])
 }
 </script>
 

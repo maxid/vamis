@@ -18,7 +18,6 @@ import FormItem from '../FormItem.vue'
 import {
   applyEditorTheme,
   editorHeight,
-  monacoOverflowHost,
   mountDiffEditor,
   normalizeEditorValue,
   syncOverflowHostTheme,
@@ -183,7 +182,6 @@ watch([language, extra, () => props.disabled], () => {
     readOnly: !!props.disabled,
     originalEditable: false,
     fixedOverflowWidgets: true,
-    overflowWidgetsDomNode: monacoOverflowHost(editorTheme.value),
   })
 })
 

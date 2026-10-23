@@ -15,7 +15,7 @@
 - kernel D1 Scope、D3 API 管线、D4 事件对象 P0 已落地。
 - amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
 - 组件语义（侧栏 155）：已完成 **2**（`page` 95% / `container` 100%）/ 进行中 151 / 未开始 2，平均 **47%**。
-- `pnpm test`：formula 188 + core 102 + sdk 12；`pnpm build` 通过；`pnpm typecheck` 仍有既有错误待清。
+- `pnpm test`：formula 185 + core 175 + sdk 13；`pnpm build` 通过；`pnpm typecheck` 已通过。
 - amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) 与 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。

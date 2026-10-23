@@ -11,7 +11,7 @@ const form = useForm()
 const item = computed(() => {
   const raw = asArray(props.schema.items || props.schema.item)
   const first = (raw[0] && typeof raw[0] === 'object' ? raw[0] : { type: 'input-text', name: 'item' }) as SchemaObject
-  return { ...first, name: first.name || 'item', label: false }
+  return { ...first, name: first.name || 'item', label: false as const }
 })
 const fieldName = computed(() => String(item.value.name || 'item'))
 const flat = computed(() => props.schema.flat !== false)

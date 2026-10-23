@@ -20,5 +20,11 @@
       "vamis": ["../packages/vamis/src/index.ts"]
     }
   },
-  "include": ["src", "../packages"]
+  "include": ["src", "../packages", "../website/nav.d.mts"],
+  "exclude": [
+    "**/node_modules",
+    "../packages/**/__tests__",
+    "../packages/**/*.test.ts",
+    "../packages/**/*.spec.ts"
+  ]
 }

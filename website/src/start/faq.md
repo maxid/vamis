@@ -40,6 +40,6 @@ title: 常见问题
 
 不能、也不会。皮肤是 shadcn token + `variant`。`level: primary` 映射到 `variant="default"`。页面级覆盖用 `page.cssVars`。
 
-## typecheck 为什么还有错误？
+## typecheck 过了吗？
 
-`pnpm typecheck` 仍有既有 vue-tsc 问题，暂不作提交门禁。`pnpm test` 应保持通过。
+过了。`pnpm typecheck`（playground `vue-tsc --noEmit`）已清零。`pnpm test` 应保持通过。

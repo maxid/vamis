@@ -39,10 +39,10 @@ export function isSchemaModel(model: Monaco.editor.ITextModel) {
 }
 
 function applyJsonSchema(monaco: MonacoNS) {
-  const json = monaco.languages.json?.jsonDefaults
+  const json = monaco.json?.jsonDefaults
   if (!json) return
   const prev = json.diagnosticsOptions || {}
-  const rest = (prev.schemas || []).filter((item) => item.uri !== VAMIS_SCHEMA_JSON_URI)
+  const rest = (prev.schemas || []).filter((item: { uri: string }) => item.uri !== VAMIS_SCHEMA_JSON_URI)
   json.setDiagnosticsOptions({
     ...prev,
     validate: true,

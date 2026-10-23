@@ -20,6 +20,13 @@ export function cssSize(value: unknown): string | undefined {
   return String(value)
 }
 
+export function styleObject(style: unknown): Record<string, string> {
+  if (style && typeof style === 'object' && !Array.isArray(style)) {
+    return style as Record<string, string>
+  }
+  return {}
+}
+
 export function resolveItems(
   schema: SchemaObject,
   data: Record<string, any>,

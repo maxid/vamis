@@ -7,10 +7,10 @@ const props = defineProps<{ schema: SchemaObject }>()
 const ACTION_TYPES = new Set(['action', 'button', 'submit', 'reset'])
 const body = computed(() =>
   asArray(props.schema.body || props.schema.controls).map((node) => {
-    if (!node || typeof node === 'string') return { type: 'tpl', tpl: String(node), label: false }
+    if (!node || typeof node === 'string') return { type: 'tpl', tpl: String(node), label: false as const }
     const item = node as SchemaObject
     if (ACTION_TYPES.has(String(item.type))) return item
-    return { ...item, label: false }
+    return { ...item, label: false as const }
   }),
 )
 </script>

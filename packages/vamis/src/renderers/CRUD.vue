@@ -313,7 +313,7 @@ onBeforeUnmount(() => {
           </TableHead>
           <TableHead
             v-for="col in columns"
-            :key="col.name || col.label"
+            :key="`${col.name || col.label || ''}`"
             :class="col.name && col.sortable !== false && col.type !== 'operation' ? 'cursor-pointer select-none' : ''"
             @click="toggleSort(col)"
           >
@@ -338,7 +338,7 @@ onBeforeUnmount(() => {
               @update:model-value="toggleRow(row, $event === true)"
             />
           </TableCell>
-          <TableCell v-for="col in columns" :key="col.name || col.label">
+          <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
             <template v-if="col.type === 'operation'">
               <div class="flex gap-1">
                 <Button
@@ -359,7 +359,7 @@ onBeforeUnmount(() => {
               :schema="col"
               :extra-data="row"
             />
-            <span v-else>{{ row[col.name] ?? '' }}</span>
+            <span v-else>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
           </TableCell>
         </TableRow>
       </TableBody>

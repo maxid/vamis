@@ -19,7 +19,7 @@ const value = computed({
     const current = props.schema.name ? form?.getValue(props.schema.name) : undefined
     return current == null ? undefined : String(current)
   },
-  set: (v) => {
+  set: (v: unknown) => {
     if (!props.schema.name) return
     const match = options.value.find((opt: { value: unknown }) => String(opt.value) === String(v))
     form?.setValue(props.schema.name, match ? match.value : v)

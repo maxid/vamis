@@ -33,7 +33,7 @@ const rows = computed<Record<string, any>[]>(() => {
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead v-for="col in columns" :key="col.name || col.label">
+        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`">
           {{ col.label || col.name }}
         </TableHead>
       </TableRow>
@@ -45,13 +45,13 @@ const rows = computed<Record<string, any>[]>(() => {
         </TableCell>
       </TableRow>
       <TableRow v-for="(row, i) in rows" :key="row.id ?? i">
-        <TableCell v-for="col in columns" :key="col.name || col.label">
+        <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
           <SchemaRenderer
             v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
             :schema="col"
             :extra-data="row"
           />
-          <span v-else>{{ row[col.name] ?? '' }}</span>
+          <span v-else>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
         </TableCell>
       </TableRow>
     </TableBody>

@@ -32,6 +32,10 @@ function remove(index: number) {
 function persistCurrent() {
   persist(rows.value.map((row) => ({ ...row })))
 }
+
+function cellSchema(col: SchemaObject): SchemaObject {
+  return { ...col, label: false }
+}
 </script>
 
 <template>
@@ -40,15 +44,15 @@ function persistCurrent() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead v-for="col in columns" :key="col.name || col.label">{{ col.label || col.name }}</TableHead>
+            <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`">{{ col.label || col.name }}</TableHead>
             <TableHead class="w-20" />
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-for="(row, i) in rows" :key="i">
-            <TableCell v-for="col in columns" :key="col.name || col.label">
+            <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
               <NestedFormScope :row="row" :persist="persistCurrent">
-                <SchemaRenderer :schema="{ ...col, label: false }" />
+                <SchemaRenderer :schema="cellSchema(col)" />
               </NestedFormScope>
             </TableCell>
             <TableCell>

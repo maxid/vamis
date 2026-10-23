@@ -323,7 +323,7 @@ describe('Amis width helpers', () => {
     expect(highlight).toContain('editor.create')
     expect(highlight).toContain('inherit: true')
     expect(highlight).toContain('quickSuggestions: false')
-    expect(highlight).toContain('hover: { enabled: false }')
+    expect(highlight).toContain("hover: { enabled: 'off' }")
     expect(highlight).toContain('cursorWidth: 0')
     expect(highlight).toContain("matchBrackets: 'never'")
     expect(highlight).toContain('mountFormEditor')

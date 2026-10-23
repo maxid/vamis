@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { cssSize, layoutNodes } from './utils'
+import { cssSize, layoutNodes, styleObject } from './utils'
 
 const justifySelfMap: Record<string, string> = {
   left: 'start',
@@ -43,7 +43,7 @@ const gridStyle = computed(() => {
     rowGap: cssSize(gapRow) || gapRow,
     gridTemplateColumns: templateColumns.join(' '),
     gridTemplateRows: templateRows.join(' '),
-    ...(props.schema.style || {}),
+    ...styleObject(props.schema.style),
   }
 })
 
