@@ -4,8 +4,8 @@ title: 快速开始
 
 # 快速开始
 
-::: info 实现进度 70% · 进行中
-`cssVars`、`className`、间距 / 宽高 helper、`wrapper` 的 `style`、默认自适应已接。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。不搬 `cxd-` 前缀 / 不编译主题 SCSS；能力转写到 token 与 Tailwind。
+::: warning 实现进度 45% · 进行中
+表单面板默认标题「表单」、只画提交、标题栏灰底，已对齐 Amis `/style` 活示例。调色盘 helper 进了 SDK。仍缺 hover/focus 全矩阵、`registerTheme`、其余组件 `xxxClassName`；视觉还不是像素级 cxd 面板。
 :::
 
 Vamis 改观感有四条路，对齐 Amis 的用法，实现换成 shadcn token：
@@ -24,8 +24,10 @@ YAML 与 JSON 同等有效。下面用 YAML 举例。
 ```schema
 type: page
 cssVars:
+  --text-color: "#CD3632"
   --primary: "#CD3632"
-  --primary-foreground: "#ffffff"
+  --primary-onHover: "#F23F3A"
+  --primary-onActive: "#BB312D"
 body:
   type: form
   body:
@@ -35,20 +37,15 @@ body:
     - type: input-password
       label: 密码
       name: password
-    - type: button
-      label: 主按钮
-      level: primary
 ```
 
 ## 辅助 class
 
-SDK 与 Playground 都打了 `@vamis/ui/styles.css`：里面有间距 / 宽高 helper，也 `import` 了 Tailwind。Playground 会扫描本文档 markdown，所以下面这些类名在本页能跑。
-
-大多数节点都有 `className`。表单壳还可以写 `panelClassName`：
+SDK 与 Playground 都打了 `@vamis/ui/styles.css`（间距 / 宽高 / 布局 / 调色盘 helper）。大多数节点都有 `className`。表单壳还可以写 `panelClassName`：
 
 ```schema: scope="body"
 type: form
-panelClassName: border border-blue-500 rounded-xl shadow-lg
+panelClassName: border-solid border-2 border-blue-500 rounded-xl shadow-lg
 body:
   - type: input-text
     className: text-green-700
@@ -67,7 +64,7 @@ body:
 - `rounded-xl` 设圆角
 - `text-xl` / `font-medium` 设字号字重
 
-左侧目录是辅助类清单。间距和宽高与 Amis helper 同名；其余类名走 Tailwind。
+左侧目录是辅助类清单。间距、宽高、调色盘与 Amis helper 同名；语义色走 token。
 
 ## wrapper 内嵌 style
 

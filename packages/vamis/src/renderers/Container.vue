@@ -36,7 +36,7 @@ const tag = computed(() => {
 const wrapBody = computed(() => props.schema.wrapperBody !== false)
 const bodyClass = computed(() => {
   const extra = resolveClassName(props.schema.bodyClassName, data.value)
-  return extra ? `space-y-3 ${extra}` : 'space-y-3'
+  return extra || 'space-y-3'
 })
 </script>
 

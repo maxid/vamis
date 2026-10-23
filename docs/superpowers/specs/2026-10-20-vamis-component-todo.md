@@ -94,8 +94,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `form` | Form 表单 | 进行中 | 62% | 文档已补属性表 / 事件表 / 动作表。`target` 提交发给具名组件；返回 `data` 合并进表单域。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6 | P0 |
-| （契约） | FormItem 表单项通用 | 进行中 | 40% | 有 label/required/error 壳；缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
+| `form` | Form 表单 | 进行中 | 68% | 默认标题「表单」、只画提交、标题栏灰底对齐 Amis 面板壳。`panelClassName` 等 xxxClassName 已接。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6 | P0 |
+| （契约） | FormItem 表单项通用 | 进行中 | 48% | 有 label/required/error 壳，以及 `labelClassName` / `inputClassName` / `descriptionClassName`。缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
 | `control` | Control 表单项包裹 | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |
 | `input-array` | InputArray 数组输入框 | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |

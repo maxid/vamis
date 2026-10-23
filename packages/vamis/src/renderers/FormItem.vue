@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Label } from '@vamis/ui'
-import { isControlSize, type SchemaObject } from '@vamis/core'
+import { Label, cn } from '@vamis/ui'
+import { isControlSize, resolveClassName, type SchemaObject } from '@vamis/core'
 import { useForm } from '../formContext'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
 }>()
 
 const form = useForm()
+const itemData = computed(() => form?.store.data ?? {})
 const error = computed(() =>
   props.schema.name ? form?.store.errors[props.schema.name] : '',
 )
@@ -22,6 +23,16 @@ const itemLayoutClass = computed(() => {
   return 'vamis-form-item--normal'
 })
 const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema.size : ''))
+const labelClass = computed(() =>
+  cn(
+    resolveClassName(props.schema.className, itemData.value),
+    resolveClassName(props.schema.labelClassName, itemData.value),
+  ),
+)
+const inputClass = computed(() => resolveClassName(props.schema.inputClassName, itemData.value))
+const descriptionClass = computed(() =>
+  resolveClassName(props.schema.descriptionClassName, itemData.value),
+)
 </script>
 
 <template>
@@ -33,7 +44,7 @@ const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema
     <Label
       v-if="schema.label !== false && schema.label != null"
       class="vamis-form-item__label"
-      :class="horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground'"
+      :class="cn(horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground', labelClass)"
     >
       <span v-if="required" class="mr-0.5 text-destructive">*</span>
       {{ schema.label }}
@@ -41,12 +52,16 @@ const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema
     <div class="vamis-form-item__value min-w-0">
       <div
         class="min-w-0"
-        :class="sizeName ? `vamis-control--${sizeName}` : 'vamis-control--fluid'"
+        :class="cn(sizeName ? `vamis-control--${sizeName}` : 'vamis-control--fluid', inputClass)"
       >
         <slot />
       </div>
       <p v-if="error" class="m-t-xs text-xs text-destructive">{{ error }}</p>
-      <p v-else-if="schema.description" class="m-t-xs text-xs text-muted-foreground">
+      <p
+        v-else-if="schema.description"
+        class="m-t-xs text-xs text-muted-foreground"
+        :class="descriptionClass"
+      >
         {{ schema.description }}
       </p>
     </div>

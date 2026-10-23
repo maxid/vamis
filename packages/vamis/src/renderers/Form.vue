@@ -60,13 +60,36 @@ const showActionBar = computed(() => {
 })
 const wrapWithPanel = computed(() => props.schema.wrapWithPanel !== false)
 const lazyLoad = computed(() => props.schema.lazyLoad === true)
+const isInline = computed(() => String(props.schema.mode || '') === 'inline')
+const panelTitle = computed(() => {
+  const title = props.schema.title
+  if (title === false || title === '') return ''
+  if (title == null) return wrapWithPanel.value ? '表单' : ''
+  return String(title)
+})
+const showReset = computed(() => props.schema.reset === true)
 const panelClass = computed(() =>
   cn(
-    'vamis-form-panel w-full min-w-0 mb-[var(--panel-margin-bottom)]',
+    'vamis-form-panel w-full min-w-0 mb-[var(--panel-margin-bottom)] overflow-hidden shadow-none',
     resolveClassName(props.schema.panelClassName, props.data),
   ),
 )
-const isInline = computed(() => String(props.schema.mode || '') === 'inline')
+const headerClass = computed(() =>
+  cn('border-b bg-muted', resolveClassName(props.schema.headerClassName, props.data)),
+)
+const titleClass = computed(() => resolveClassName(props.schema.titleClassName, props.data))
+const bodyClass = computed(() =>
+  cn(
+    isInline.value ? 'flex flex-wrap items-end' : 'space-y-0',
+    resolveClassName(props.schema.bodyClassName, props.data),
+  ),
+)
+const actionsClass = computed(() =>
+  cn(
+    'vamis-form-actions w-full justify-end border-t',
+    resolveClassName(props.schema.actionsClassName, props.data),
+  ),
+)
 const parentForm = useForm()
 const wrapTag = computed(() => {
   const raw = props.schema.wrapperComponent
@@ -282,13 +305,13 @@ onBeforeUnmount(() => {
         v-if="wrapWithPanel"
         :class="panelClass"
       >
-        <CardHeader v-if="schema.title" class="border-b">
-          <CardTitle>{{ schema.title }}</CardTitle>
+        <CardHeader v-if="panelTitle" :class="headerClass">
+          <CardTitle :class="titleClass">{{ panelTitle }}</CardTitle>
         </CardHeader>
-        <CardContent :class="isInline ? 'flex flex-wrap items-end' : 'space-y-0'">
+        <CardContent :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
         </CardContent>
-        <CardFooter v-if="showActionBar" class="vamis-form-actions w-full justify-end border-t">
+        <CardFooter v-if="showActionBar" :class="actionsClass">
           <template v-if="hasCustomActions">
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
@@ -296,18 +319,18 @@ onBeforeUnmount(() => {
             <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
               {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
             </Button>
-            <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+            <Button v-if="showReset" type="button" variant="outline" @click="reset">
               重置
             </Button>
           </template>
         </CardFooter>
       </Card>
       <template v-else>
-        <h2 v-if="schema.title" class="mb-3 text-sm font-medium">{{ schema.title }}</h2>
-        <div :class="isInline ? 'flex flex-wrap items-end' : ''">
+        <h2 v-if="panelTitle" class="mb-3 text-sm font-medium">{{ panelTitle }}</h2>
+        <div :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
         </div>
-        <div v-if="showActionBar" class="vamis-form-actions flex w-full justify-end gap-2 pt-3">
+        <div v-if="showActionBar" :class="cn(actionsClass, 'flex gap-2 border-t-0 pt-3')">
           <template v-if="hasCustomActions">
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
@@ -315,7 +338,7 @@ onBeforeUnmount(() => {
             <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
               {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
             </Button>
-            <Button v-if="schema.reset !== false" type="button" variant="outline" @click="reset">
+            <Button v-if="showReset" type="button" variant="outline" @click="reset">
               重置
             </Button>
           </template>

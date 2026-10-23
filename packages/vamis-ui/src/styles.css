@@ -3,8 +3,12 @@
 @import "./helpers.css";
 @import "./helpers-width.css";
 @import "./helpers-height.css";
+@import "./helpers-utility.css";
+@import "./helpers-palette.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant m (@media (max-width: 767px));
+@custom-variant pc (@media (min-width: 768px));
 
 @theme inline {
   --font-sans: var(--fonts-base-family);
@@ -88,6 +92,8 @@
   --popover-foreground: oklch(0.24 0.035 258);
   --primary: oklch(0.49 0.16 var(--accent-h));
   --primary-foreground: oklch(0.99 0.01 var(--accent-h));
+  --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
+  --primary-active: color-mix(in oklch, var(--primary) 82%, black);
   --secondary: oklch(0.945 0.01 250);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 250);
@@ -200,6 +206,8 @@
   --popover-foreground: oklch(0.93 0.015 250);
   --primary: oklch(0.7 0.13 var(--accent-h));
   --primary-foreground: oklch(0.2 0.03 var(--accent-h));
+  --primary-hover: color-mix(in oklch, var(--primary) 88%, white);
+  --primary-active: color-mix(in oklch, var(--primary) 78%, white);
   --secondary: oklch(0.3 0.025 258);
   --secondary-foreground: oklch(0.93 0.015 250);
   --muted: oklch(0.3 0.025 258);

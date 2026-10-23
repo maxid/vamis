@@ -4,8 +4,8 @@ title: ClassName
 
 # ClassName
 
-::: info 实现进度 75% · 进行中
-`resolveClassName` 已接字符串 / 对象 / 模板 / `m-t-xs` / `w-*` / `h-*` / `m:` `pc:`。`xxxClassName` 打到子节点、`registerTheme` 仍是 D12 P1。
+::: info 实现进度 70% · 进行中
+`resolveClassName` 已接字符串 / 对象 / 模板 / `m-t-xs` / `w-*` / `h-*` / 布局 helper / `m:` `pc:`。表单项 `className` 会落到标签（对齐 Amis `/style` 的 `text-green-700`）。Page / Form / FormItem / Container / Panel 的常用 `xxxClassName` 已打到子节点。其余组件、hover 前缀全矩阵与 `registerTheme` 仍是 D12 P1。
 :::
 
 `className` 支持字符串、对象和模板。内核 `resolveClassName` 在 `SchemaRenderer` 上统一落地。布局容器和表单控件**默认已经铺满宽度**，不必为了宽度先写 `w-full`；`className` 只在要覆盖（半宽、等高、间距、状态色）时写。
@@ -40,7 +40,19 @@ body:
     tpl: 当前状态 ${status}
 ```
 
-`text-danger` 会映到 `text-destructive`。`m:` / `pc:` 前缀作用在间距、宽度和高度辅助类上（`m-t-xs`、`w-full` / `w-1/2`、`h-full`，手机 &lt;768px / 桌面 ≥768px）。主题色请改 token 或 `cssVars`。完整辅助类清单在顶栏 [样式](/style/)。
+`text-danger` 会映到 `text-destructive`。`m:` / `pc:` 前缀作用在间距、宽高、display / flex、语义色上（手机 &lt;768px / 桌面 ≥768px）。Playground 里其它 Tailwind 类也可加这对前缀。
+
+打到子节点的 `xxxClassName`（本轮已接）：
+
+| 组件 | 字段 |
+|------|------|
+| Page | `headerClassName` / `toolbarClassName` / `bodyClassName` / `asideClassName` |
+| Form | `panelClassName` / `headerClassName` / `titleClassName` / `bodyClassName` / `actionsClassName` |
+| FormItem | `labelClassName` / `inputClassName` / `descriptionClassName` |
+| Container | `bodyClassName` |
+| Panel | `headerClassName` / `bodyClassName` |
+
+`className` 仍打在 SchemaRenderer 外层 `div.vamis-node`。完整辅助类清单在顶栏 [样式](/style/)。
 
 ```schema: height=280
 type: grid

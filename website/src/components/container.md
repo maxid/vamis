@@ -63,7 +63,7 @@ body: 这里是容器内容区
 
 ### wrapperBody 与 bodyClassName
 
-`wrapperBody` 默认 `true`：内容再包一层 div，这层吃 `bodyClassName`。设成 `false` 则子节点直接挂到容器标签下。Amis 源码有此字段，文档属性表未列。
+`wrapperBody` 默认 `true`：内容再包一层 div，这层吃 `bodyClassName`。设成 `false` 则子节点直接挂到容器标签下。Amis 源码有此字段，文档属性表未列。未写 `bodyClassName` 时内容区默认 `space-y-3`；写了就完全按你的 class（flex / grid 不会被默认竖距挤乱）。
 
 ```schema: scope="body"
 {

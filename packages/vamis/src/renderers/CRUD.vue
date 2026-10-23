@@ -272,6 +272,7 @@ onBeforeUnmount(() => {
         ...filterSchema,
         type: filterSchema.type || 'form',
         mode: filterSchema.mode || 'horizontal',
+        wrapWithPanel: filterSchema.wrapWithPanel === true,
         api: undefined,
         reload: schema.name,
         submitText: filterSchema.submitText || '搜索',

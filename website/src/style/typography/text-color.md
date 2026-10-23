@@ -7,40 +7,149 @@ title: Text Color
 # Text Color
 
 ::: info 实现进度 55% · 进行中
-Playground 已 `@source` 文档 markdown，这些类名可在本页示例里跑。未写入 `helpers.css`；SDK 里 schema 动态 class 仍依赖源码扫描。`m:` / `pc:` 只接到间距和宽高。
+语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。仍缺 hover/active/focus/disabled 与设备前缀全矩阵。
 :::
 
-优先用主题语义色（`text-foreground` / `text-muted-foreground` / `text-primary` / `text-destructive`）。Amis `text-danger` 会映射成 `text-destructive`。
+优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` 等），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。
 
 ```schema
 type: page
 body:
-  - type: tpl
-    className: text-foreground
-    tpl: 正文
-  - type: tpl
-    className: text-muted-foreground
-    tpl: 次要
-  - type: tpl
-    className: text-primary
-    tpl: 主色
-  - type: tpl
-    className: text-destructive
-    tpl: 危险
+  - type: container
+    bodyClassName: flex flex-wrap gap-3
+    body:
+      - type: tpl
+        className: text-foreground
+        tpl: 正文
+      - type: tpl
+        className: text-muted-foreground
+        tpl: 次要
+      - type: tpl
+        className: text-primary
+        tpl: 主色
+      - type: tpl
+        className: text-success
+        tpl: 成功
+      - type: tpl
+        className: text-warning
+        tpl: 警告
+      - type: tpl
+        className: text-info
+        tpl: 信息
+      - type: tpl
+        className: text-danger
+        tpl: 危险
+      - type: tpl
+        className: text-green-700
+        tpl: green-700
 ```
 
 ## 类名
 
-| Class | Properties |
-| --- | --- |
-| `text-foreground` | `正文` |
-| `text-muted-foreground` | `次要文字` |
-| `text-primary` | `主色` |
-| `text-destructive` | `危险（Amis danger）` |
-| `text-success` | `成功` |
-| `text-warning` | `警告` |
-| `text-info` | `信息` |
-| `text-blue-500` | `调色盘蓝` |
-| `text-red-500` | `调色盘红` |
+| Class | Properties | 示例效果 |
+| --- | --- | --- |
+| `text-transparent` | `color: transparent` | <span class="text-transparent font-medium">AaBbCc</span> |
+| `text-current` | `color: currentColor` | <span class="text-current font-medium">AaBbCc</span> |
+| `text-black` | `color: #000` | <span class="text-black font-medium">AaBbCc</span> |
+| `text-white` | `color: #fff` | <span class="rounded-sm bg-foreground px-1 text-white font-medium">AaBbCc</span> |
+| `text-primary` | `color: var(--primary)` | <span class="text-primary font-medium">AaBbCc</span> |
+| `text-secondary` | `color: var(--secondary-foreground)` | <span class="text-secondary font-medium">AaBbCc</span> |
+| `text-success` | `color: var(--success)` | <span class="text-success font-medium">AaBbCc</span> |
+| `text-info` | `color: var(--info)` | <span class="text-info font-medium">AaBbCc</span> |
+| `text-warning` | `color: var(--warning)` | <span class="text-warning font-medium">AaBbCc</span> |
+| `text-danger` | `color: var(--destructive)；Amis `text-danger`` | <span class="text-danger font-medium">AaBbCc</span> |
+| `text-destructive` | `color: var(--destructive)` | <span class="text-destructive font-medium">AaBbCc</span> |
+| `text-foreground` | `color: var(--foreground)` | <span class="text-foreground font-medium">AaBbCc</span> |
+| `text-muted-foreground` | `color: var(--muted-foreground)` | <span class="text-muted-foreground font-medium">AaBbCc</span> |
+| `text-gray-50` | `color: #f9fafb` | <span class="text-gray-50 font-medium">AaBbCc</span> |
+| `text-gray-100` | `color: #f3f4f6` | <span class="text-gray-100 font-medium">AaBbCc</span> |
+| `text-gray-200` | `color: #e5e7eb` | <span class="text-gray-200 font-medium">AaBbCc</span> |
+| `text-gray-300` | `color: #d1d5db` | <span class="text-gray-300 font-medium">AaBbCc</span> |
+| `text-gray-400` | `color: #9ca3af` | <span class="text-gray-400 font-medium">AaBbCc</span> |
+| `text-gray-500` | `color: #6b7280` | <span class="text-gray-500 font-medium">AaBbCc</span> |
+| `text-gray-600` | `color: #4b5563` | <span class="text-gray-600 font-medium">AaBbCc</span> |
+| `text-gray-700` | `color: #374151` | <span class="text-gray-700 font-medium">AaBbCc</span> |
+| `text-gray-800` | `color: #1f2937` | <span class="text-gray-800 font-medium">AaBbCc</span> |
+| `text-gray-900` | `color: #111827` | <span class="text-gray-900 font-medium">AaBbCc</span> |
+| `text-red-50` | `color: #fef2f2` | <span class="text-red-50 font-medium">AaBbCc</span> |
+| `text-red-100` | `color: #fee2e2` | <span class="text-red-100 font-medium">AaBbCc</span> |
+| `text-red-200` | `color: #fecaca` | <span class="text-red-200 font-medium">AaBbCc</span> |
+| `text-red-300` | `color: #fca5a5` | <span class="text-red-300 font-medium">AaBbCc</span> |
+| `text-red-400` | `color: #f87171` | <span class="text-red-400 font-medium">AaBbCc</span> |
+| `text-red-500` | `color: #ef4444` | <span class="text-red-500 font-medium">AaBbCc</span> |
+| `text-red-600` | `color: #dc2626` | <span class="text-red-600 font-medium">AaBbCc</span> |
+| `text-red-700` | `color: #b91c1c` | <span class="text-red-700 font-medium">AaBbCc</span> |
+| `text-red-800` | `color: #991b1b` | <span class="text-red-800 font-medium">AaBbCc</span> |
+| `text-red-900` | `color: #7f1d1d` | <span class="text-red-900 font-medium">AaBbCc</span> |
+| `text-yellow-50` | `color: #fffbeb` | <span class="text-yellow-50 font-medium">AaBbCc</span> |
+| `text-yellow-100` | `color: #fef3c7` | <span class="text-yellow-100 font-medium">AaBbCc</span> |
+| `text-yellow-200` | `color: #fde68a` | <span class="text-yellow-200 font-medium">AaBbCc</span> |
+| `text-yellow-300` | `color: #fcd34d` | <span class="text-yellow-300 font-medium">AaBbCc</span> |
+| `text-yellow-400` | `color: #fbbf24` | <span class="text-yellow-400 font-medium">AaBbCc</span> |
+| `text-yellow-500` | `color: #f59e0b` | <span class="text-yellow-500 font-medium">AaBbCc</span> |
+| `text-yellow-600` | `color: #d97706` | <span class="text-yellow-600 font-medium">AaBbCc</span> |
+| `text-yellow-700` | `color: #b45309` | <span class="text-yellow-700 font-medium">AaBbCc</span> |
+| `text-yellow-800` | `color: #92400e` | <span class="text-yellow-800 font-medium">AaBbCc</span> |
+| `text-yellow-900` | `color: #78350f` | <span class="text-yellow-900 font-medium">AaBbCc</span> |
+| `text-green-50` | `color: #ecfdf5` | <span class="text-green-50 font-medium">AaBbCc</span> |
+| `text-green-100` | `color: #d1fae5` | <span class="text-green-100 font-medium">AaBbCc</span> |
+| `text-green-200` | `color: #a7f3d0` | <span class="text-green-200 font-medium">AaBbCc</span> |
+| `text-green-300` | `color: #6ee7b7` | <span class="text-green-300 font-medium">AaBbCc</span> |
+| `text-green-400` | `color: #34d399` | <span class="text-green-400 font-medium">AaBbCc</span> |
+| `text-green-500` | `color: #10b981` | <span class="text-green-500 font-medium">AaBbCc</span> |
+| `text-green-600` | `color: #059669` | <span class="text-green-600 font-medium">AaBbCc</span> |
+| `text-green-700` | `color: #047857` | <span class="text-green-700 font-medium">AaBbCc</span> |
+| `text-green-800` | `color: #065f46` | <span class="text-green-800 font-medium">AaBbCc</span> |
+| `text-green-900` | `color: #064e3b` | <span class="text-green-900 font-medium">AaBbCc</span> |
+| `text-blue-50` | `color: #eff6ff` | <span class="text-blue-50 font-medium">AaBbCc</span> |
+| `text-blue-100` | `color: #dbeafe` | <span class="text-blue-100 font-medium">AaBbCc</span> |
+| `text-blue-200` | `color: #bfdbfe` | <span class="text-blue-200 font-medium">AaBbCc</span> |
+| `text-blue-300` | `color: #93c5fd` | <span class="text-blue-300 font-medium">AaBbCc</span> |
+| `text-blue-400` | `color: #60a5fa` | <span class="text-blue-400 font-medium">AaBbCc</span> |
+| `text-blue-500` | `color: #3b82f6` | <span class="text-blue-500 font-medium">AaBbCc</span> |
+| `text-blue-600` | `color: #2563eb` | <span class="text-blue-600 font-medium">AaBbCc</span> |
+| `text-blue-700` | `color: #1d4ed8` | <span class="text-blue-700 font-medium">AaBbCc</span> |
+| `text-blue-800` | `color: #1e40af` | <span class="text-blue-800 font-medium">AaBbCc</span> |
+| `text-blue-900` | `color: #1e3a8a` | <span class="text-blue-900 font-medium">AaBbCc</span> |
+| `text-cyan-50` | `color: #ecfeff` | <span class="text-cyan-50 font-medium">AaBbCc</span> |
+| `text-cyan-100` | `color: #cffafe` | <span class="text-cyan-100 font-medium">AaBbCc</span> |
+| `text-cyan-200` | `color: #a5f3fc` | <span class="text-cyan-200 font-medium">AaBbCc</span> |
+| `text-cyan-300` | `color: #67e8f9` | <span class="text-cyan-300 font-medium">AaBbCc</span> |
+| `text-cyan-400` | `color: #22d3ee` | <span class="text-cyan-400 font-medium">AaBbCc</span> |
+| `text-cyan-500` | `color: #06b6d4` | <span class="text-cyan-500 font-medium">AaBbCc</span> |
+| `text-cyan-600` | `color: #0891b2` | <span class="text-cyan-600 font-medium">AaBbCc</span> |
+| `text-cyan-700` | `color: #0e7490` | <span class="text-cyan-700 font-medium">AaBbCc</span> |
+| `text-cyan-800` | `color: #155e75` | <span class="text-cyan-800 font-medium">AaBbCc</span> |
+| `text-cyan-900` | `color: #164e63` | <span class="text-cyan-900 font-medium">AaBbCc</span> |
+| `text-indigo-50` | `color: #eef2ff` | <span class="text-indigo-50 font-medium">AaBbCc</span> |
+| `text-indigo-100` | `color: #e0e7ff` | <span class="text-indigo-100 font-medium">AaBbCc</span> |
+| `text-indigo-200` | `color: #c7d2fe` | <span class="text-indigo-200 font-medium">AaBbCc</span> |
+| `text-indigo-300` | `color: #a5b4fc` | <span class="text-indigo-300 font-medium">AaBbCc</span> |
+| `text-indigo-400` | `color: #818cf8` | <span class="text-indigo-400 font-medium">AaBbCc</span> |
+| `text-indigo-500` | `color: #6366f1` | <span class="text-indigo-500 font-medium">AaBbCc</span> |
+| `text-indigo-600` | `color: #4f46e5` | <span class="text-indigo-600 font-medium">AaBbCc</span> |
+| `text-indigo-700` | `color: #4338ca` | <span class="text-indigo-700 font-medium">AaBbCc</span> |
+| `text-indigo-800` | `color: #3730a3` | <span class="text-indigo-800 font-medium">AaBbCc</span> |
+| `text-indigo-900` | `color: #312e81` | <span class="text-indigo-900 font-medium">AaBbCc</span> |
+| `text-purple-50` | `color: #f5f3ff` | <span class="text-purple-50 font-medium">AaBbCc</span> |
+| `text-purple-100` | `color: #ede9fe` | <span class="text-purple-100 font-medium">AaBbCc</span> |
+| `text-purple-200` | `color: #ddd6fe` | <span class="text-purple-200 font-medium">AaBbCc</span> |
+| `text-purple-300` | `color: #c4b5fd` | <span class="text-purple-300 font-medium">AaBbCc</span> |
+| `text-purple-400` | `color: #a78bfa` | <span class="text-purple-400 font-medium">AaBbCc</span> |
+| `text-purple-500` | `color: #8b5cf6` | <span class="text-purple-500 font-medium">AaBbCc</span> |
+| `text-purple-600` | `color: #7c3aed` | <span class="text-purple-600 font-medium">AaBbCc</span> |
+| `text-purple-700` | `color: #6d28d9` | <span class="text-purple-700 font-medium">AaBbCc</span> |
+| `text-purple-800` | `color: #5b21b6` | <span class="text-purple-800 font-medium">AaBbCc</span> |
+| `text-purple-900` | `color: #4c1d95` | <span class="text-purple-900 font-medium">AaBbCc</span> |
+| `text-pink-50` | `color: #fdf2f8` | <span class="text-pink-50 font-medium">AaBbCc</span> |
+| `text-pink-100` | `color: #fce7f3` | <span class="text-pink-100 font-medium">AaBbCc</span> |
+| `text-pink-200` | `color: #fbcfe8` | <span class="text-pink-200 font-medium">AaBbCc</span> |
+| `text-pink-300` | `color: #f9a8d4` | <span class="text-pink-300 font-medium">AaBbCc</span> |
+| `text-pink-400` | `color: #f472b6` | <span class="text-pink-400 font-medium">AaBbCc</span> |
+| `text-pink-500` | `color: #ec4899` | <span class="text-pink-500 font-medium">AaBbCc</span> |
+| `text-pink-600` | `color: #db2777` | <span class="text-pink-600 font-medium">AaBbCc</span> |
+| `text-pink-700` | `color: #be185d` | <span class="text-pink-700 font-medium">AaBbCc</span> |
+| `text-pink-800` | `color: #9d174d` | <span class="text-pink-800 font-medium">AaBbCc</span> |
+| `text-pink-900` | `color: #831843` | <span class="text-pink-900 font-medium">AaBbCc</span> |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。

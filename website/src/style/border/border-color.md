@@ -7,10 +7,10 @@ title: Border Color
 # Border Color
 
 ::: info 实现进度 55% · 进行中
-Playground 已 `@source` 文档 markdown，这些类名可在本页示例里跑。未写入 `helpers.css`；SDK 里 schema 动态 class 仍依赖源码扫描。`m:` / `pc:` 只接到间距和宽高。
+语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。仍缺 hover/active/focus/disabled 与设备前缀全矩阵。
 :::
 
-边框色。配合 `border` 使用。
+边框色。配合 `border` 使用。调色盘与 Amis helper 同档。
 
 ```schema
 type: page
@@ -28,12 +28,103 @@ body:
 
 ## 类名
 
-| Class | Properties |
-| --- | --- |
-| `border-border` | `默认线色` |
-| `border-input` | `输入框线` |
-| `border-primary` | `主色` |
-| `border-destructive` | `危险` |
-| `border-blue-500` | `调色盘` |
+| Class | Properties | 示例效果 |
+| --- | --- | --- |
+| `border-border` | `border-color: var(--border)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-border"></span> |
+| `border-input` | `border-color: var(--input)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-input"></span> |
+| `border-primary` | `border-color: var(--primary)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-primary"></span> |
+| `border-success` | `border-color: var(--success)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-success"></span> |
+| `border-danger` | `border-color: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-danger"></span> |
+| `border-destructive` | `border-color: var(--destructive)` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-destructive"></span> |
+| `border-gray-50` | `border-color: #f9fafb` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-50"></span> |
+| `border-gray-100` | `border-color: #f3f4f6` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-100"></span> |
+| `border-gray-200` | `border-color: #e5e7eb` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-200"></span> |
+| `border-gray-300` | `border-color: #d1d5db` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-300"></span> |
+| `border-gray-400` | `border-color: #9ca3af` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-400"></span> |
+| `border-gray-500` | `border-color: #6b7280` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-500"></span> |
+| `border-gray-600` | `border-color: #4b5563` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-600"></span> |
+| `border-gray-700` | `border-color: #374151` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-700"></span> |
+| `border-gray-800` | `border-color: #1f2937` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-800"></span> |
+| `border-gray-900` | `border-color: #111827` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-gray-900"></span> |
+| `border-red-50` | `border-color: #fef2f2` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-50"></span> |
+| `border-red-100` | `border-color: #fee2e2` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-100"></span> |
+| `border-red-200` | `border-color: #fecaca` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-200"></span> |
+| `border-red-300` | `border-color: #fca5a5` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-300"></span> |
+| `border-red-400` | `border-color: #f87171` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-400"></span> |
+| `border-red-500` | `border-color: #ef4444` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-500"></span> |
+| `border-red-600` | `border-color: #dc2626` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-600"></span> |
+| `border-red-700` | `border-color: #b91c1c` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-700"></span> |
+| `border-red-800` | `border-color: #991b1b` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-800"></span> |
+| `border-red-900` | `border-color: #7f1d1d` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-red-900"></span> |
+| `border-yellow-50` | `border-color: #fffbeb` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-50"></span> |
+| `border-yellow-100` | `border-color: #fef3c7` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-100"></span> |
+| `border-yellow-200` | `border-color: #fde68a` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-200"></span> |
+| `border-yellow-300` | `border-color: #fcd34d` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-300"></span> |
+| `border-yellow-400` | `border-color: #fbbf24` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-400"></span> |
+| `border-yellow-500` | `border-color: #f59e0b` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-500"></span> |
+| `border-yellow-600` | `border-color: #d97706` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-600"></span> |
+| `border-yellow-700` | `border-color: #b45309` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-700"></span> |
+| `border-yellow-800` | `border-color: #92400e` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-800"></span> |
+| `border-yellow-900` | `border-color: #78350f` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-yellow-900"></span> |
+| `border-green-50` | `border-color: #ecfdf5` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-50"></span> |
+| `border-green-100` | `border-color: #d1fae5` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-100"></span> |
+| `border-green-200` | `border-color: #a7f3d0` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-200"></span> |
+| `border-green-300` | `border-color: #6ee7b7` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-300"></span> |
+| `border-green-400` | `border-color: #34d399` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-400"></span> |
+| `border-green-500` | `border-color: #10b981` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-500"></span> |
+| `border-green-600` | `border-color: #059669` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-600"></span> |
+| `border-green-700` | `border-color: #047857` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-700"></span> |
+| `border-green-800` | `border-color: #065f46` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-800"></span> |
+| `border-green-900` | `border-color: #064e3b` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-green-900"></span> |
+| `border-blue-50` | `border-color: #eff6ff` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-50"></span> |
+| `border-blue-100` | `border-color: #dbeafe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-100"></span> |
+| `border-blue-200` | `border-color: #bfdbfe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-200"></span> |
+| `border-blue-300` | `border-color: #93c5fd` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-300"></span> |
+| `border-blue-400` | `border-color: #60a5fa` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-400"></span> |
+| `border-blue-500` | `border-color: #3b82f6` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-500"></span> |
+| `border-blue-600` | `border-color: #2563eb` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-600"></span> |
+| `border-blue-700` | `border-color: #1d4ed8` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-700"></span> |
+| `border-blue-800` | `border-color: #1e40af` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-800"></span> |
+| `border-blue-900` | `border-color: #1e3a8a` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-blue-900"></span> |
+| `border-cyan-50` | `border-color: #ecfeff` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-50"></span> |
+| `border-cyan-100` | `border-color: #cffafe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-100"></span> |
+| `border-cyan-200` | `border-color: #a5f3fc` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-200"></span> |
+| `border-cyan-300` | `border-color: #67e8f9` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-300"></span> |
+| `border-cyan-400` | `border-color: #22d3ee` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-400"></span> |
+| `border-cyan-500` | `border-color: #06b6d4` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-500"></span> |
+| `border-cyan-600` | `border-color: #0891b2` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-600"></span> |
+| `border-cyan-700` | `border-color: #0e7490` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-700"></span> |
+| `border-cyan-800` | `border-color: #155e75` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-800"></span> |
+| `border-cyan-900` | `border-color: #164e63` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-cyan-900"></span> |
+| `border-indigo-50` | `border-color: #eef2ff` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-50"></span> |
+| `border-indigo-100` | `border-color: #e0e7ff` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-100"></span> |
+| `border-indigo-200` | `border-color: #c7d2fe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-200"></span> |
+| `border-indigo-300` | `border-color: #a5b4fc` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-300"></span> |
+| `border-indigo-400` | `border-color: #818cf8` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-400"></span> |
+| `border-indigo-500` | `border-color: #6366f1` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-500"></span> |
+| `border-indigo-600` | `border-color: #4f46e5` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-600"></span> |
+| `border-indigo-700` | `border-color: #4338ca` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-700"></span> |
+| `border-indigo-800` | `border-color: #3730a3` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-800"></span> |
+| `border-indigo-900` | `border-color: #312e81` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-indigo-900"></span> |
+| `border-purple-50` | `border-color: #f5f3ff` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-50"></span> |
+| `border-purple-100` | `border-color: #ede9fe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-100"></span> |
+| `border-purple-200` | `border-color: #ddd6fe` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-200"></span> |
+| `border-purple-300` | `border-color: #c4b5fd` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-300"></span> |
+| `border-purple-400` | `border-color: #a78bfa` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-400"></span> |
+| `border-purple-500` | `border-color: #8b5cf6` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-500"></span> |
+| `border-purple-600` | `border-color: #7c3aed` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-600"></span> |
+| `border-purple-700` | `border-color: #6d28d9` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-700"></span> |
+| `border-purple-800` | `border-color: #5b21b6` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-800"></span> |
+| `border-purple-900` | `border-color: #4c1d95` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-purple-900"></span> |
+| `border-pink-50` | `border-color: #fdf2f8` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-50"></span> |
+| `border-pink-100` | `border-color: #fce7f3` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-100"></span> |
+| `border-pink-200` | `border-color: #fbcfe8` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-200"></span> |
+| `border-pink-300` | `border-color: #f9a8d4` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-300"></span> |
+| `border-pink-400` | `border-color: #f472b6` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-400"></span> |
+| `border-pink-500` | `border-color: #ec4899` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-500"></span> |
+| `border-pink-600` | `border-color: #db2777` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-600"></span> |
+| `border-pink-700` | `border-color: #be185d` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-700"></span> |
+| `border-pink-800` | `border-color: #9d174d` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-800"></span> |
+| `border-pink-900` | `border-color: #831843` | <span class="inline-block h-6 w-24 rounded-sm border-2 border-pink-900"></span> |
 
-响应式：`m:` / `pc:` 目前只接到间距和宽高辅助类。其它类请用 Tailwind 断点（`max-md:` / `md:`）。状态前缀见 [辅助类-状态样式](/style/state)。
+响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
