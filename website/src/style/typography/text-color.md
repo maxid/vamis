@@ -7,7 +7,7 @@ title: Text Color
 # Text Color
 
 ::: info 实现进度 55% · 进行中
-语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。仍缺 hover/active/focus/disabled 与设备前缀全矩阵。
+语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。状态前缀与 `m:` / `pc:` 已进 CSS，见 [辅助类-状态样式](/style/state)。
 :::
 
 优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` 等），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。

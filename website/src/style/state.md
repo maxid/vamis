@@ -4,74 +4,90 @@ title: 辅助类-状态样式
 
 # 辅助类-状态样式
 
-::: info 实现进度 60% · 进行中
-Tailwind 状态前缀 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` 在 Playground 文档示例里可用。`--success` / `--warning` / `--info` / `--destructive` 与按钮 `level` 已对照。组件级 `status` type 仍走各自渲染器进度。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis `/style/state`：`hover:` / `active:`（含 `.is-active`）/ `focus:` / `disabled:` / `group-hover:`，以及 `pc:hover:` / `m:hover:`。色值走 Amis helper 色阶（`text-light` `#f8f9fa`、`bg-pink-400` `#f472b6`）。HTML 岛内 `<button class="Button">` 还原 UA 边框，不搬 `cxd-Button`。
 :::
 
-除了默认态，还可以给悬停、按下、聚焦、禁用写不同的 class。前缀加在类名前面：`hover:bg-primary`。
+除了默认态，还可以给悬停、选中、聚焦、禁用写不同的 class。前缀加在类名前面，例如 `hover:bg-pink-500`。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: inline-block rounded-xl px-3 py-1.5 bg-pink-400 text-white hover:bg-pink-500 active:bg-pink-600
-    tpl: 悬停 / 按下会变深
-  - type: button
-    className: m-l-sm
-    label: 禁用
-    disabled: true
-    level: primary
+type: tpl
+inline: false
+tpl: |
+  <button class="Button rounded-xl text-light bg-pink-400 border-pink-600 hover:bg-pink-500 hover:border-pink-800 active:bg-pink-600 active:border-pink-900">按钮示例</button>
+  <button class="Button m-l-16 rounded-xl text-light bg-pink-500 border-pink-800 hover:bg-pink-500 hover:border-pink-800">悬停态</button>
+  <button class="Button m-l-xs rounded-xl text-light bg-pink-600 border-pink-900 hover:bg-pink-600 hover:border-pink-900">按下态</button>
+  <button class="Button m-l-xs rounded-xl text-light disabled:text-dark disabled:bg-pink-200 disabled:border-pink-400" disabled>禁用态</button>
 ```
 
 ## Hover
 
-`hover:` 在鼠标悬停时启用。
+在类名前面加 `hover:`，鼠标悬停时启用。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: text-blue-500 hover:text-red-500
-    tpl: 默认蓝，悬停红
+type: tpl
+inline: false
+tpl: |
+  <button class="Button text-blue-500 hover:text-red-500">蓝色按钮，hover 红色</button>
 ```
 
 ## Group-Hover
 
-容器加 `group`，子节点用 `group-hover:`：
+悬停容器时改子节点，分两步：
+
+1. 容器加 `group`。
+2. 子节点加 `group-hover:` 前缀。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: group p-4 border border-solid border-border hover:bg-muted
-    tpl: '<span class="group-hover:text-destructive">整体悬停变红</span>　<span class="group-hover:text-success">整体悬停变绿</span>'
+type: tpl
+inline: false
+tpl: |
+  <div class="group p-4 border border-solid border-dark hover:bg-dark">
+    <p class="group-hover:text-red-500">整体hover 红色</p>
+    <p class="group-hover:text-green-500">整体hover 绿色</p>
+  </div>
 ```
 
-## Focus / Active / Disabled
+## Focus
 
-- `focus:`：聚焦（输入框、按钮）
-- `active:`：按下
-- `disabled:`：元素带 `disabled` 时。表单项优先写 schema `disabled`，不要只靠 class
+聚焦时用 `focus:`。
 
 ```schema
-type: page
-body:
-  - type: input-text
-    name: focusDemo
-    label: 聚焦
-    className: focus:border-primary
-  - type: button
-    label: 不可用
-    disabled: true
-    className: disabled:opacity-50
+type: tpl
+inline: false
+tpl: |
+  <button class="Button text-blue-500 focus:border-dark focus:text-red-500">蓝色按钮，focus 红色</button>
 ```
 
-按钮语义色仍走 `level`，不必用状态前缀去模拟：
+## Active
 
-| 语义 | 按钮 level | token |
-|------|------------|--------|
-| 主操作 | `primary` | `--primary` |
-| 危险 | `danger` | `--destructive` |
-| 成功 | `success` | `--success` |
-| 警告 | `warning` | `--warning` |
-| 信息 | `info` | `--info` |
+选中态用 `active:`。Amis 会同时认 `:active` 和 class `is-active`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <button class="Button text-blue-500 active:border-dark active:text-red-500 is-active">蓝色按钮，active 红色</button>
+```
+
+## Disabled
+
+禁用态用 `disabled:`。同时认 `:disabled` 和 class `is-disabled`。表单项优先写 schema `disabled`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <button disabled class="Button text-blue-500 disabled:border-dark disabled:text-red-500">蓝色按钮，disabled 红色</button>
+```
+
+## 结合响应式设计一起？
+
+先加设备前缀，再加状态前缀。如 `pc:hover:bg-pink-500`、`m:hover:bg-blue-500`。把窗口缩到 &lt;768px 再看手机档。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <button class="Button rounded-xl text-light pc:bg-pink-400 pc:border-pink-600 pc:hover:bg-pink-500 pc:hover:border-pink-800 m:bg-blue-400 m:border-blue-600 m:hover:bg-blue-500 m:hover:border-blue-800">按钮示例</button>
+```

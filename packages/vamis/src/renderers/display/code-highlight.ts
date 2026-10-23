@@ -155,6 +155,7 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
   registerCustomLang(monaco, opts.customLang)
   const theme = applyEditorTheme(monaco, opts.theme)
   const language = opts.customLang?.name || opts.language || 'plaintext'
+  const overflowHost = monacoOverflowHost(opts.theme)
   const editor = monaco.editor.create(el, {
     value: opts.source ?? '',
     language,
@@ -162,6 +163,8 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     readOnly: true,
     domReadOnly: true,
     ...editorChrome(opts),
+    fixedOverflowWidgets: true,
+    overflowWidgetsDomNode: overflowHost,
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
     automaticLayout: false,
@@ -190,6 +193,8 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
     wordBasedSuggestions: 'off',
     parameterHints: { enabled: false },
     hover: { enabled: 'off' },
+    colorDecorators: true,
+    colorDecoratorsActivatedOn: 'click',
     occurrencesHighlight: 'off',
     renderValidationDecorations: 'off',
     contextmenu: false,
@@ -204,6 +209,7 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
       horizontal: opts.wordWrap ? 'hidden' : 'visible',
     },
   })
+  syncOverflowHostTheme(editor, opts.theme)
 
   const textarea = el.querySelector('textarea.inputarea') as HTMLTextAreaElement | null
   if (textarea) {
@@ -240,6 +246,8 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
   const sub = editor.onDidContentSizeChange(fit)
   const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => fit())
   ro?.observe(el)
+  syncMonacoHostTypo(monaco, editor)
+  const typoSub = editor.onDidChangeConfiguration(() => syncMonacoHostTypo(monaco, editor))
   fit()
 
   return {
@@ -250,6 +258,7 @@ export async function mountCodeEditor(el: HTMLElement, opts: MountCodeEditorOpts
       ro?.disconnect()
       focusSub.dispose()
       widgetSub.dispose()
+      typoSub.dispose()
       sub.dispose()
       editor.dispose()
     },
@@ -356,6 +365,47 @@ export function syncEditorPlaceholder(
   el.style.lineHeight = `${editor.getOption(monaco.editor.EditorOption.lineHeight)}px`
 }
 
+/** Close the inherit chain at the Monaco host so inner `line-height: inherit`
+ *  reads the editor's px, not doc-prose / Preflight. */
+export function syncMonacoHostTypo(
+  monaco: MonacoNS,
+  editor: Monaco.editor.IStandaloneCodeEditor | Monaco.editor.IDiffEditor,
+) {
+  const nodes: HTMLElement[] = []
+  if ('getModifiedEditor' in editor) {
+    const original = editor.getOriginalEditor().getDomNode()
+    const modified = editor.getModifiedEditor().getDomNode()
+    if (original) nodes.push(original)
+    if (modified) nodes.push(modified)
+  } else {
+    const node = editor.getDomNode()
+    if (node) nodes.push(node)
+  }
+  const sample = nodes[0]
+  if (!sample) return
+  const standalone =
+    'getModifiedEditor' in editor ? editor.getModifiedEditor() : editor
+  const fontSize = standalone.getOption(monaco.editor.EditorOption.fontSize)
+  const lineHeight = standalone.getOption(monaco.editor.EditorOption.lineHeight)
+  const fontFamily = standalone.getOption(monaco.editor.EditorOption.fontFamily)
+  const fontWeight = String(standalone.getOption(monaco.editor.EditorOption.fontWeight) || 'normal')
+  const apply = (el: HTMLElement | null) => {
+    if (!el) return
+    el.style.setProperty('--vscode-editor-font-size', `${fontSize}px`)
+    el.style.setProperty('--vscode-editor-line-height', `${lineHeight}px`)
+    el.style.setProperty('--vscode-editor-font-family', fontFamily)
+    el.style.fontSize = `${fontSize}px`
+    el.style.lineHeight = `${lineHeight}px`
+    el.style.fontFamily = fontFamily
+    el.style.fontWeight = fontWeight
+    el.style.letterSpacing = 'normal'
+  }
+  for (const node of nodes) {
+    apply(node)
+    apply(node.closest('.vamis-monaco, .vamis-code--editor'))
+  }
+}
+
 export type EditorIntellisense = boolean | 'schema'
 
 export type MountFormEditorOpts = {
@@ -405,6 +455,8 @@ export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts
     overflowWidgetsDomNode: overflowHost,
   })
   syncOverflowHostTheme(editor, opts.theme)
+  syncMonacoHostTypo(monaco, editor)
+  const typoSub = editor.onDidChangeConfiguration(() => syncMonacoHostTypo(monaco, editor))
   const jsonDefaults = monaco.json?.jsonDefaults
   jsonDefaults?.setDiagnosticsOptions({
     enableSchemaRequest: true,
@@ -416,6 +468,7 @@ export async function mountFormEditor(el: HTMLElement, opts: MountFormEditorOpts
     monaco,
     editor,
     dispose() {
+      typoSub.dispose()
       editor.dispose()
       model?.dispose()
     },
@@ -451,12 +504,18 @@ export async function mountDiffEditor(el: HTMLElement, opts: MountDiffEditorOpts
   const original = monaco.editor.createModel(opts.original ?? '', language)
   const modified = monaco.editor.createModel(opts.modified ?? '', language)
   editor.setModel({ original, modified })
+  syncMonacoHostTypo(monaco, editor)
+  const typoSubs = [
+    editor.getOriginalEditor().onDidChangeConfiguration(() => syncMonacoHostTypo(monaco, editor)),
+    editor.getModifiedEditor().onDidChangeConfiguration(() => syncMonacoHostTypo(monaco, editor)),
+  ]
   return {
     monaco,
     editor,
     original,
     modified,
     dispose() {
+      typoSubs.forEach((sub) => sub.dispose())
       editor.setModel(null)
       original.dispose()
       modified.dispose()

@@ -25,7 +25,7 @@
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.5);
-  --radius-xl: calc(var(--radius) * 2);
+  --radius-xl: 0.75rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -421,6 +421,22 @@
   }
   .vamis-html :where(p) {
     margin: 1em 0;
+  }
+  /* Preflight 清掉 button 的 UA 边框/内边距。Amis 样式页的 <button class="Button">
+     仍走 UA（2px outset + 1px 6px），helper 只改颜色。岛内还原，不碰 shadcn Button。 */
+  .vamis-html :where(button) {
+    --tw-border-style: outset;
+    appearance: auto;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: #000;
+    background-color: transparent;
+    line-height: 1.15;
+    cursor: pointer;
+  }
+  .vamis-html :where(button:disabled) {
+    cursor: not-allowed;
   }
   .vamis-html :where(ul) {
     list-style: disc;
