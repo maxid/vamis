@@ -7,6 +7,7 @@
 @import "./helpers-utility.css";
 @import "./helpers-gap.css";
 @import "./helpers-spacing.css";
+@import "./helpers-typography.css";
 @import "./helpers-palette.css";
 
 @custom-variant dark (&:is(.dark *));

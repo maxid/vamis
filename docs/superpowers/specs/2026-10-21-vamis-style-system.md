@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-23
-- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全页 / Spacing 全页 / Sizing 全页 / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`registerTheme`、其余 `xxxClassName` 仍 P1）
+- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全页 / Spacing 全页 / Sizing 全页 / Typography（除 `text-color`） / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`registerTheme`、其余 `xxxClassName` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
@@ -136,8 +136,8 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 | `--borderRadius` 4px | `--radius: 0.25rem` | 控件圆角 |
 | `--link-color` | `--primary`（或未来 `--link`） | 链接 |
 | `--fontSizeBase` 14px | `text-sm` + body `font-sans` | 正文字号 |
-| `--fontFamilyBase` / `--fonts-base-family` | `--font-sans`（系统栈：PingFang / 微软雅黑 / -apple-system） | 正文字体，不嵌入 webfont |
-| `--fontFamilyMonospace` | `--font-mono`（SFMono / Menlo / Consolas） | IR / 代码 |
+| `--fontFamilyBase` / `--fonts-base-family` | `--font-sans` token（系统栈：PingFang / 微软雅黑 / -apple-system）；html/body 默认走它 | 正文字体，不嵌入 webfont。helper `.font-sans` 是 Amis `_font-family.scss` 硬编码栈（`ui-sans-serif, system-ui, …`），不是这个 token |
+| `--fontFamilyMonospace` | `--font-mono` token（SFMono / Menlo / Consolas） | IR / 代码。helper `.font-mono` 是 Amis 等宽硬编码栈（`ui-monospace, SFMono-Regular, …`） |
 | Layout aside 深底 | `--sidebar*` | Playground 色板、编辑器侧栏 |
 | 浮层阴影 | `shadow-lg` on Dialog | 对话框 |
 | 输入轻阴影 | `shadow-xs` on Input/Button outline | 控件 |

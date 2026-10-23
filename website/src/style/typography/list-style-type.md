@@ -6,51 +6,242 @@ title: List Style Type
 
 # List Style Type
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis List Style：`list-none` / `disc` / `decimal` 改 `list-style-type`，`list-inside` / `outside` 改 `list-style-position`。独立样例 + 组合；`m:` / `pc:` 已进 helper。
 :::
 
-列表标记。`type: tpl` 里写 HTML 列表时才会看到。
+列表标记。类打在 `<ul>` / `<ol>` 上，不是 `li`。外面圆点要留 `pl-5` 才看得到。`type: tpl` 里写 HTML 列表才会生效。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在列表上。
+
+## 类名
+
+| Class | Properties |
+| --- | --- |
+| `list-none` | `list-style-type: none;` |
+| `list-disc` | `list-style-type: disc;` |
+| `list-decimal` | `list-style-type: decimal;` |
+| `list-inside` | `list-style-position: inside;` |
+| `list-outside` | `list-style-position: outside;` |
+
+## list-none
+
+`list-style-type: none`。标记拿掉。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: list-disc pl-5
-    tpl: |
-      <ul>
-        <li>圆点</li>
-        <li>两项</li>
-      </ul>
-  - type: tpl
-    className: list-decimal pl-5 m-t-sm
-    tpl: |
-      <ol>
-        <li>数字</li>
-        <li>两项</li>
-      </ol>
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-none pl-5">
+      <li>没有圆点</li>
+      <li>两项</li>
+    </ul>
+  </div>
 ```
 
 ```schema: scope="body"
 type: code
 language: html
 value: |-
-  <ul>
-    <li>圆点</li>
-    <li>两项</li>
-  </ul>
-  <ol>
-    <li>数字</li>
-    <li>两项</li>
-  </ol>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-none pl-5">
+      <li>没有圆点</li>
+      <li>两项</li>
+    </ul>
+  </div>
 ```
 
-## 类名
+## list-disc
 
-| Class | Properties |
-| --- | --- |
-| `list-none` | `list-style-type: none` |
-| `list-disc` | `list-style-type: disc` |
-| `list-decimal` | `list-style-type: decimal` |
+`list-style-type: disc`。外面圆点，要留 `pl-5` 才看得到。
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc pl-5">
+      <li>圆点</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc pl-5">
+      <li>圆点</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+## list-decimal
+
+`list-style-type: decimal`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ol class="list-decimal pl-5">
+      <li>数字</li>
+      <li>两项</li>
+    </ol>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ol class="list-decimal pl-5">
+      <li>数字</li>
+      <li>两项</li>
+    </ol>
+  </div>
+```
+
+## list-inside
+
+`list-style-position: inside`。标记走进内容盒。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc list-inside pl-5">
+      <li>inside 标记在行内</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc list-inside pl-5">
+      <li>inside 标记在行内</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+## list-outside
+
+`list-style-position: outside`。默认档，标记在盒子外。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc list-outside pl-5">
+      <li>outside 标记在外面</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="list-disc list-outside pl-5">
+      <li>outside 标记在外面</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+## 组合
+
+同一组：`list-disc`、`list-decimal`、`list-inside`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ul class="list-disc pl-5">
+        <li>disc</li>
+      </ul>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ol class="list-decimal pl-5">
+        <li>decimal</li>
+      </ol>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ul class="list-disc list-inside pl-5">
+        <li>inside</li>
+      </ul>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ul class="list-disc pl-5">
+        <li>disc</li>
+      </ul>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ol class="list-decimal pl-5">
+        <li>decimal</li>
+      </ol>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <ul class="list-disc list-inside pl-5">
+        <li>inside</li>
+      </ul>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:list-none`；桌面 `pc:list-disc`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="m:list-none pc:list-disc pl-5">
+      <li>m:list-none pc:list-disc</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <ul class="m:list-none pc:list-disc pl-5">
+      <li>m:list-none pc:list-disc</li>
+      <li>两项</li>
+    </ul>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
