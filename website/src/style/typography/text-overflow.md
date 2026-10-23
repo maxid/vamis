@@ -6,30 +6,148 @@ title: Text Overflow
 
 # Text Overflow
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Text Overflow：`truncate` / `overflow-ellipsis` / `overflow-clip` 落在同一元素的 `text-overflow`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `text-clip`。
 :::
 
-单行截断用 `truncate`（hidden + nowrap + ellipsis）。只要省略号时用 `text-ellipsis` / `overflow-ellipsis`，并自己配 `overflow-hidden`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: truncate w-40 bg-yellow-200 p-sm rounded-md
-    tpl: 这段文字很长很长很长很长，超出就被截成省略号
-  - type: tpl
-    className: overflow-hidden text-clip whitespace-nowrap w-40 bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: 这段文字很长很长很长很长，超出直接裁掉
-```
+单行超出怎么切。`truncate` 一条类搞定 hidden + nowrap + ellipsis。只要省略号时用 Amis 的 `overflow-ellipsis`（不是 `text-ellipsis`），并自己配 `overflow-hidden` 和 `white-space-nowrap`。裁切用 `overflow-clip`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `truncate` | `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` |
-| `text-ellipsis` | `text-overflow: ellipsis` |
-| `overflow-ellipsis` | `text-overflow: ellipsis（Amis 同名）` |
-| `text-clip` | `text-overflow: clip` |
+| `truncate` | `overflow: hidden; text-overflow: ellipsis; white-space: nowrap;` |
+| `overflow-ellipsis` | `text-overflow: ellipsis;` |
+| `overflow-clip` | `text-overflow: clip;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## truncate
+
+`overflow: hidden; text-overflow: ellipsis; white-space: nowrap`。一条类搞定单行省略。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="truncate">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="truncate">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+## overflow-ellipsis
+
+Amis 类名是 `overflow-ellipsis`，只设 `text-overflow: ellipsis`。还要自己配 `overflow-hidden` 和 `white-space-nowrap`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden overflow-ellipsis white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden overflow-ellipsis white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+## overflow-clip
+
+Amis 类名是 `overflow-clip`（不是 `text-clip`）：`text-overflow: clip`，超出直接裁，没有省略号。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden overflow-clip white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden overflow-clip white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+## 组合
+
+同一组：`truncate`、`overflow-ellipsis`、`overflow-clip`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="truncate">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="overflow-hidden overflow-ellipsis white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="overflow-hidden overflow-clip white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="truncate">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="overflow-hidden overflow-ellipsis white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md w-40">
+      <p class="overflow-hidden overflow-clip white-space-nowrap">这段文字很长很长很长很长，超出就被截掉</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:overflow-clip`；桌面 `pc:truncate`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden white-space-nowrap m:overflow-clip pc:truncate">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-40">
+    <p class="overflow-hidden white-space-nowrap m:overflow-clip pc:truncate">这段文字很长很长很长很长，超出就被截掉</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

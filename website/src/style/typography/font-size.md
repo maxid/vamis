@@ -6,36 +6,268 @@ title: Font Size
 
 # Font Size
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。档位是 Amis `$fontSizes`（`text-lg` = 20px），不是 Tailwind v3。
 :::
 
-字号。默认正文约 14px（水标）。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: text-xs
-    tpl: text-xs
-  - type: tpl
-    className: text-sm
-    tpl: text-sm
-  - type: tpl
-    className: text-xl
-    tpl: text-xl
-```
+字号。Amis `text-md` = 18px，`text-lg` = **20px**，`text-xl` = **24px**——比 Tailwind v3 各大一档。每条还带行高（`text-xs` 的 line-height 是 16px）。默认正文 `text-sm` = 14px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `text-xs` | `0.75rem` |
-| `text-sm` | `0.875rem` |
-| `text-base` | `1rem` |
-| `text-lg` | `1.125rem` |
-| `text-xl` | `1.25rem` |
-| `text-2xl` | `1.5rem` |
-| `text-3xl` | `1.875rem` |
+| `text-xs` | `font-size: 0.75rem; line-height: 1rem;` |
+| `text-sm` | `font-size: 0.875rem; line-height: 1.25rem;` |
+| `text-base` | `font-size: 1rem; line-height: 1.5rem;` |
+| `text-md` | `font-size: 1.125rem; line-height: 1.75rem;` |
+| `text-lg` | `font-size: 1.25rem; line-height: 1.75rem;` |
+| `text-xl` | `font-size: 1.5rem; line-height: 2rem;` |
+| `text-2xl` | `font-size: 1.875rem; line-height: 2.25rem;` |
+| `text-3xl` | `font-size: 2.25rem; line-height: 2.5rem;` |
+| `text-4xl` | `font-size: 3rem; line-height: 1;` |
+| `text-5xl` | `font-size: 3.75rem; line-height: 1;` |
+| `text-6xl` | `font-size: 4.5rem; line-height: 1;` |
+| `text-7xl` | `font-size: 6rem; line-height: 1;` |
+| `text-8xl` | `font-size: 8rem; line-height: 1;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## text-xs
+
+`font-size: 0.75rem` = **12px**，`line-height: 1rem` = **16px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-xs">text-xs</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-xs">text-xs</p>
+  </div>
+```
+
+## text-sm
+
+`font-size: 0.875rem` = **14px**，`line-height: 1.25rem` = **20px**。文档默认正文也是这一档。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-sm">text-sm</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-sm">text-sm</p>
+  </div>
+```
+
+## text-base
+
+`font-size: 1rem` = **16px**，`line-height: 1.5rem` = **24px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-base">text-base</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-base">text-base</p>
+  </div>
+```
+
+## text-md
+
+Amis 多出来的档：`font-size: 1.125rem` = **18px**，`line-height: 1.75rem` = **28px**。这是 Tailwind 的 `text-lg`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-md">text-md</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-md">text-md</p>
+  </div>
+```
+
+## text-lg
+
+Amis：`font-size: 1.25rem` = **20px**，`line-height: 1.75rem` = **28px**。不是 Tailwind v3 的 1.125rem。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-lg">text-lg</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-lg">text-lg</p>
+  </div>
+```
+
+## text-xl
+
+Amis：`font-size: 1.5rem` = **24px**，`line-height: 2rem` = **32px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-xl">text-xl</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-xl">text-xl</p>
+  </div>
+```
+
+## text-2xl
+
+Amis：`font-size: 1.875rem` = **30px**，`line-height: 2.25rem` = **36px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-2xl">text-2xl</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-2xl">text-2xl</p>
+  </div>
+```
+
+## text-3xl
+
+Amis：`font-size: 2.25rem` = **36px**，`line-height: 2.5rem` = **40px**。`text-4xl`～`text-8xl` 见表，不在活示例里铺满。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-3xl">text-3xl</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-3xl">text-3xl</p>
+  </div>
+```
+
+## 组合
+
+同一组：`text-xs`、`text-md`、`text-xl`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-xs">xs 12px</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-md">md 18px</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-xl">xl 24px</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-xs">xs 12px</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-md">md 18px</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-xl">xl 24px</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:text-sm` 14px；桌面（≥768px）`pc:text-xl` **24px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-sm pc:text-xl">m:text-sm pc:text-xl</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-sm pc:text-xl">m:text-sm pc:text-xl</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

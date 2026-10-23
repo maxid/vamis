@@ -6,29 +6,130 @@ title: Font Family
 
 # Font Family
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Font Family：`font-sans` / `serif` / `mono` 落在同一元素的 `font-family`，字栈与 Amis helper 硬编码一致。独立样例 + 组合。本页与 Amis 一样没有 `m:` / `pc:`，不支持状态前缀。
 :::
 
-默认正文字体走 Amis `--fonts-base-family` 系统栈（`--font-sans`）。等宽走 `--font-mono`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: font-sans
-    tpl: 系统黑体 / 苹方
-  - type: tpl
-    className: font-mono m-t-sm
-    tpl: 等宽 font-mono
-```
+用哪套字。三条类都是 Amis helper 硬编码栈，不是 `--font-sans` token。page / body 默认仍走 `--fonts-base-family`（中文系统栈）；写了 `font-sans` 才换成 `ui-sans-serif, system-ui, …`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `font-sans` | `font-family: var(--font-sans)` |
-| `font-serif` | `衬线` |
-| `font-mono` | `font-family: var(--font-mono)` |
+| `font-sans` | `font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";` |
+| `font-serif` | `font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;` |
+| `font-mono` | `font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## font-sans
+
+Amis helper 硬编码栈：`ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`。page / body 默认仍走 `--fonts-base-family`（中文系统栈）；只有写了 `font-sans` 才换成这条。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-sans">The quick brown fox · 系统黑体 font-sans</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-sans">The quick brown fox · 系统黑体 font-sans</p>
+  </div>
+```
+
+## font-serif
+
+Amis 衬线栈：`ui-serif, Georgia, Cambria, "Times New Roman", Times, serif`。中文落到后面的 serif。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-serif">The quick brown fox · font-serif</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-serif">The quick brown fox · font-serif</p>
+  </div>
+```
+
+## font-mono
+
+Amis 等宽栈：`ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`。不是 `var(--font-mono)`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-mono">const x = 1; font-mono</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-mono">const x = 1; font-mono</p>
+  </div>
+```
+
+## 组合
+
+同一组：`font-sans`、`font-serif`、`font-mono`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-sans">sans</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-serif">serif</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-mono">mono</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-sans">sans</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-serif">serif</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-mono">mono</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+本页与 Amis 一样：没有 `m:` / `pc:` 设备前缀。
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

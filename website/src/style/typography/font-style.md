@@ -6,28 +6,119 @@ title: Font style
 
 # Font style
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Font Style：`italic` / `not-italic` 落在同一元素的 `font-style`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-斜体。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: italic
-    tpl: italic
-  - type: tpl
-    className: not-italic
-    tpl: not-italic
-```
+斜体。两档。`not-italic` 用来盖掉 `italic`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `italic` | `font-style: italic` |
-| `not-italic` | `font-style: normal` |
+| `italic` | `font-style: italic;` |
+| `not-italic` | `font-style: normal;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## italic
+
+`font-style: italic`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="italic">italic 斜体</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="italic">italic 斜体</p>
+  </div>
+```
+
+## not-italic
+
+`font-style: normal`。用来盖掉斜体。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="italic not-italic">not-italic 把 italic 盖掉</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="italic not-italic">not-italic 把 italic 盖掉</p>
+  </div>
+```
+
+## 组合
+
+同一组：`italic`、`not-italic`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="italic">italic</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="not-italic">not-italic</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="italic">italic</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="not-italic">not-italic</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:not-italic`；桌面 `pc:italic`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:not-italic pc:italic">m:not-italic pc:italic</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:not-italic pc:italic">m:not-italic pc:italic</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

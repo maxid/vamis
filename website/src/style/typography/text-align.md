@@ -6,33 +6,171 @@ title: Text Alignment
 
 # Text Alignment
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Text Align：`text-left` / `center` / `right` / `justify` 落在同一元素的 `text-align`。独立样例 + 组合；`m:` / `pc:` 已进 helper。
 :::
 
-文本对齐。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: text-left bg-yellow-200 p-sm rounded-md
-    tpl: 左
-  - type: tpl
-    className: text-center bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: 中
-  - type: tpl
-    className: text-right bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: 右
-```
+文本对齐。四档。`text-justify` 两端对齐，最后一行仍靠左。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `text-left` | `text-align: left` |
-| `text-center` | `text-align: center` |
-| `text-right` | `text-align: right` |
-| `text-justify` | `text-align: justify` |
+| `text-left` | `text-align: left;` |
+| `text-center` | `text-align: center;` |
+| `text-right` | `text-align: right;` |
+| `text-justify` | `text-align: justify;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## text-left
+
+`text-align: left`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-left w-64">text-left 左对齐</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-left w-64">text-left 左对齐</p>
+  </div>
+```
+
+## text-center
+
+`text-align: center`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-center w-64">text-center 居中</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-center w-64">text-center 居中</p>
+  </div>
+```
+
+## text-right
+
+`text-align: right`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-right w-64">text-right 右对齐</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-right w-64">text-right 右对齐</p>
+  </div>
+```
+
+## text-justify
+
+`text-align: justify`。两端对齐，最后一行仍靠左。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-justify w-64">text-justify 这一段足够长，用来看两端对齐：左右边缘齐，中间把空格拉开。</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-justify w-64">text-justify 这一段足够长，用来看两端对齐：左右边缘齐，中间把空格拉开。</p>
+  </div>
+```
+
+## 组合
+
+同一组：`text-left`、`text-center`、`text-right`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-left w-64">left</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-center w-64">center</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-right w-64">right</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-left w-64">left</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-center w-64">center</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="text-right w-64">right</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:text-left`；桌面 `pc:text-right`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-left pc:text-right w-64">m:text-left pc:text-right</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-left pc:text-right w-64">m:text-left pc:text-right</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

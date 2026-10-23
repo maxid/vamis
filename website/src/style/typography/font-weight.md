@@ -6,35 +6,242 @@ title: Font Weight
 
 # Font Weight
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Font Weight：`font-thin`～`font-black` 落在同一元素的 `font-weight`。独立样例 + 组合；补 `extralight` / `extrabold` / `black` 与 `m:` / `pc:`。
 :::
 
-字重。标题常用 `font-semibold`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: font-light
-    tpl: light
-  - type: tpl
-    className: font-medium
-    tpl: medium
-  - type: tpl
-    className: font-bold
-    tpl: bold
-```
+字重。Amis 九档 100～900。系统中文黑体常常没有 thin / black 对应字形，计算 `font-weight` 仍是那个数字。标题常用 `font-semibold`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `font-thin` | `100` |
-| `font-light` | `300` |
-| `font-normal` | `400` |
-| `font-medium` | `500` |
-| `font-semibold` | `600` |
-| `font-bold` | `700` |
+| `font-thin` | `font-weight: 100;` |
+| `font-extralight` | `font-weight: 200;` |
+| `font-light` | `font-weight: 300;` |
+| `font-normal` | `font-weight: 400;` |
+| `font-medium` | `font-weight: 500;` |
+| `font-semibold` | `font-weight: 600;` |
+| `font-bold` | `font-weight: 700;` |
+| `font-extrabold` | `font-weight: 800;` |
+| `font-black` | `font-weight: 900;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## font-thin
+
+`font-weight: 100`。系统中文黑体常常没有这一档，计算值仍是 100。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-thin">font-thin</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-thin">font-thin</p>
+  </div>
+```
+
+## font-light
+
+`font-weight: 300`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-light">font-light</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-light">font-light</p>
+  </div>
+```
+
+## font-normal
+
+`font-weight: 400`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-normal">font-normal</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-normal">font-normal</p>
+  </div>
+```
+
+## font-medium
+
+`font-weight: 500`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-medium">font-medium</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-medium">font-medium</p>
+  </div>
+```
+
+## font-semibold
+
+`font-weight: 600`。标题常用。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-semibold">font-semibold</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-semibold">font-semibold</p>
+  </div>
+```
+
+## font-bold
+
+`font-weight: 700`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-bold">font-bold</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-bold">font-bold</p>
+  </div>
+```
+
+## font-black
+
+`font-weight: 900`。`font-extralight` = 200、`font-extrabold` = 800 见表。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-black">font-black</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="font-black">font-black</p>
+  </div>
+```
+
+## 组合
+
+同一组：`font-light`、`font-medium`、`font-bold`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-light">light 300</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-medium">medium 500</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-bold">bold 700</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-light">light 300</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-medium">medium 500</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="font-bold">bold 700</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:font-normal`；桌面 `pc:font-bold` **700**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:font-normal pc:font-bold">m:font-normal pc:font-bold</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:font-normal pc:font-bold">m:font-normal pc:font-bold</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

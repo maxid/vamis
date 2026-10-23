@@ -6,36 +6,201 @@ title: Vertical Alignment
 
 # Vertical Alignment
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Vertical Align：`align-*` 落在同一元素的 `vertical-align`。独立样例 + 组合；补 `align-text-top` / `align-text-bottom` 与 `m:` / `pc:`。
 :::
 
-行内或表格单元格垂直对齐。
+行内垂直对齐。旁边钉一枚 `h-8` 黄盒子当参照。只对 `inline` / `inline-block` / 表格单元格有效。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<span>` 上。
+
+## 类名
+
+| Class | Properties |
+| --- | --- |
+| `align-baseline` | `vertical-align: baseline;` |
+| `align-top` | `vertical-align: top;` |
+| `align-middle` | `vertical-align: middle;` |
+| `align-bottom` | `vertical-align: bottom;` |
+| `align-text-top` | `vertical-align: text-top;` |
+| `align-text-bottom` | `vertical-align: text-bottom;` |
+
+## align-baseline
+
+`vertical-align: baseline`。跟旁边黄盒子的文字基线对齐。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    tpl: |
-      <span class="inline-block h-8 bg-yellow-200">高</span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-baseline">baseline</span>
+  </div>
 ```
 
 ```schema: scope="body"
 type: code
 language: html
 value: |-
-  <span class="inline-block h-8 bg-yellow-200">高</span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-baseline">baseline</span>
+  </div>
 ```
 
-## 类名
+## align-top
 
-| Class | Properties |
-| --- | --- |
-| `align-baseline` | `vertical-align: baseline` |
-| `align-top` | `vertical-align: top` |
-| `align-middle` | `vertical-align: middle` |
-| `align-bottom` | `vertical-align: bottom` |
-| `align-text-top` | `vertical-align: text-top` |
-| `align-text-bottom` | `vertical-align: text-bottom` |
+`vertical-align: top`。
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-top">top</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-top">top</span>
+  </div>
+```
+
+## align-middle
+
+`vertical-align: middle`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-middle">middle</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-middle">middle</span>
+  </div>
+```
+
+## align-bottom
+
+`vertical-align: bottom`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-bottom">bottom</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-bottom">bottom</span>
+  </div>
+```
+
+## align-text-top
+
+`vertical-align: text-top`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-text-top">text-top</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-text-top">text-top</span>
+  </div>
+```
+
+## align-text-bottom
+
+`vertical-align: text-bottom`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-text-bottom">text-bottom</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-text-bottom">text-bottom</span>
+  </div>
+```
+
+## 组合
+
+同一行：`align-top`、`align-middle`、`align-bottom`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:align-top`；桌面 `pc:align-bottom`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="m:align-top pc:align-bottom">m / pc</span>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <span class="inline-block h-8 w-8 bg-yellow-200 rounded-md"></span><span class="m:align-top pc:align-bottom">m / pc</span>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

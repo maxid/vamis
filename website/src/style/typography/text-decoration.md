@@ -6,33 +6,148 @@ title: Text Decoration
 
 # Text Decoration
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Text Decoration：`underline` / `line-through` / `no-underline` 用简写 `text-decoration`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `overline`。
 :::
 
-下划线 / 删除线。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: underline
-    tpl: underline
-  - type: tpl
-    className: line-through
-    tpl: line-through
-  - type: tpl
-    className: no-underline
-    tpl: no-underline
-```
+下划线 / 删除线。Amis 用 `text-decoration` 简写，不是 Tailwind 的 `text-decoration-line`。没有 `overline`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `underline` | `text-decoration: underline` |
-| `overline` | `text-decoration: overline` |
-| `line-through` | `text-decoration: line-through` |
-| `no-underline` | `text-decoration: none` |
+| `underline` | `text-decoration: underline;` |
+| `line-through` | `text-decoration: line-through;` |
+| `no-underline` | `text-decoration: none;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## underline
+
+Amis 用简写 `text-decoration: underline`（不是 `text-decoration-line`）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="underline">underline</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="underline">underline</p>
+  </div>
+```
+
+## line-through
+
+`text-decoration: line-through`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="line-through">line-through</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="line-through">line-through</p>
+  </div>
+```
+
+## no-underline
+
+`text-decoration: none`。叠在 `underline` 上会盖掉线。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="underline no-underline">underline + no-underline</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="underline no-underline">underline + no-underline</p>
+  </div>
+```
+
+## 组合
+
+同一组：`underline`、`line-through`、`no-underline`。Amis 没有 `overline`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="underline">underline</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="line-through">line-through</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="no-underline">no-underline</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="underline">underline</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="line-through">line-through</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="no-underline">no-underline</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:no-underline`；桌面 `pc:underline`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:no-underline pc:underline">m:no-underline pc:underline</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:no-underline pc:underline">m:no-underline pc:underline</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

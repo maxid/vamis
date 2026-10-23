@@ -390,6 +390,149 @@ function writeSpacingCss() {
   fs.writeFileSync(path.join(uiSrc, 'helpers-spacing.css'), `${lines.join('\n')}\n`)
 }
 
+/** Amis helper typography. Font-size ladder is Amis $fontSizes (text-lg = 1.25rem), not TW v3. */
+const FONT_SIZES = [
+  ['xs', '0.75rem', '1rem'],
+  ['sm', '0.875rem', '1.25rem'],
+  ['base', '1rem', '1.5rem'],
+  ['md', '1.125rem', '1.75rem'],
+  ['lg', '1.25rem', '1.75rem'],
+  ['xl', '1.5rem', '2rem'],
+  ['2xl', '1.875rem', '2.25rem'],
+  ['3xl', '2.25rem', '2.5rem'],
+  ['4xl', '3rem', '1'],
+  ['5xl', '3.75rem', '1'],
+  ['6xl', '4.5rem', '1'],
+  ['7xl', '6rem', '1'],
+  ['8xl', '8rem', '1'],
+]
+
+const FONT_WEIGHTS = [
+  ['thin', '100'],
+  ['extralight', '200'],
+  ['light', '300'],
+  ['normal', '400'],
+  ['medium', '500'],
+  ['semibold', '600'],
+  ['bold', '700'],
+  ['extrabold', '800'],
+  ['black', '900'],
+]
+
+const TRACKINGS = [
+  ['tighter', '-0.05em'],
+  ['tight', '-0.025em'],
+  ['normal', '0em'],
+  ['wide', 'normal'],
+  ['wider', '0.05em'],
+  ['widest', '0.1em'],
+]
+
+const LEADINGS = [
+  ['3', '0.75rem'],
+  ['4', '1rem'],
+  ['5', '1.25rem'],
+  ['6', '1.5rem'],
+  ['7', '1.75rem'],
+  ['8', '2rem'],
+  ['9', '2.25rem'],
+  ['10', '2.5rem'],
+  ['none', '1'],
+  ['tight', '1.25'],
+  ['snug', '1.375'],
+  ['normal', '1.5'],
+  ['relaxed', '1.625'],
+  ['loose', '2'],
+]
+
+const FONT_SANS =
+  'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+const FONT_SERIF = 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+const FONT_MONO =
+  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+
+const TYPO_RULES = [
+  ['font-sans', `font-family: ${FONT_SANS};`, { noDevice: true }],
+  ['font-serif', `font-family: ${FONT_SERIF};`, { noDevice: true }],
+  ['font-mono', `font-family: ${FONT_MONO};`, { noDevice: true }],
+  ...FONT_SIZES.map(([name, size, lh]) => [
+    `text-${name}`,
+    `font-size: ${size}; line-height: ${lh};`,
+  ]),
+  ['italic', 'font-style: italic;'],
+  ['not-italic', 'font-style: normal;'],
+  ...FONT_WEIGHTS.map(([name, value]) => [`font-${name}`, `font-weight: ${value};`]),
+  ...TRACKINGS.map(([name, value]) => [`tracking-${name}`, `letter-spacing: ${value};`]),
+  ...LEADINGS.map(([name, value]) => [`leading-${name}`, `line-height: ${value};`]),
+  ['list-none', 'list-style-type: none;'],
+  ['list-disc', 'list-style-type: disc;'],
+  ['list-decimal', 'list-style-type: decimal;'],
+  ['list-inside', 'list-style-position: inside;'],
+  ['list-outside', 'list-style-position: outside;'],
+  ['text-left', 'text-align: left;'],
+  ['text-center', 'text-align: center;'],
+  ['text-right', 'text-align: right;'],
+  ['text-justify', 'text-align: justify;'],
+  ['underline', 'text-decoration: underline;'],
+  ['line-through', 'text-decoration: line-through;'],
+  ['no-underline', 'text-decoration: none;'],
+  ['uppercase', 'text-transform: uppercase;'],
+  ['lowercase', 'text-transform: lowercase;'],
+  ['capitalize', 'text-transform: capitalize;'],
+  ['normal-case', 'text-transform: none;'],
+  ['align-baseline', 'vertical-align: baseline;'],
+  ['align-top', 'vertical-align: top;'],
+  ['align-middle', 'vertical-align: middle;'],
+  ['align-bottom', 'vertical-align: bottom;'],
+  ['align-text-top', 'vertical-align: text-top;'],
+  ['align-text-bottom', 'vertical-align: text-bottom;'],
+  ['white-space-normal', 'white-space: normal;'],
+  ['white-space-nowrap', 'white-space: nowrap;'],
+  ['white-space-pre', 'white-space: pre;'],
+  ['white-space-pre-line', 'white-space: pre-line;'],
+  ['white-space-pre-wrap', 'white-space: pre-wrap;'],
+  ['whitespace-normal', 'white-space: normal;'],
+  ['whitespace-nowrap', 'white-space: nowrap;'],
+  ['whitespace-pre', 'white-space: pre;'],
+  ['whitespace-pre-line', 'white-space: pre-line;'],
+  ['whitespace-pre-wrap', 'white-space: pre-wrap;'],
+  ['break-normal', 'overflow-wrap: normal; word-break: normal;'],
+  ['break-words', 'overflow-wrap: break-word;'],
+  ['break-all', 'word-break: break-all;'],
+  ['truncate', 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'],
+  ['overflow-ellipsis', 'text-overflow: ellipsis;'],
+  ['overflow-clip', 'text-overflow: clip;'],
+  ['text-ellipsis', 'text-overflow: ellipsis;'],
+  ['text-clip', 'text-overflow: clip;'],
+]
+
+function emitTypoBlock(lines, device = '') {
+  for (const [name, decl, flags] of TYPO_RULES) {
+    if (device && flags?.noDevice) continue
+    lines.push(`  ${cssEscapeClass(`${device}${name}`)} { ${decl} }`)
+  }
+}
+
+function writeTypographyCss() {
+  const lines = [
+    '/* Amis helper typography. Font-size is $fontSizes (text-lg = 1.25rem), not TW v3.',
+    '   font-sans/serif/mono are Amis hardcoded stacks, not --font-sans token.',
+    '   white-space-* is the Amis class; whitespace-* kept as alias.',
+    '   tracking-wide: Amis wrote 0.025 (invalid); computed is normal. Override TW 0.025em.',
+    '   Generated by website/scripts/gen-style-helper-pages.mjs */',
+    '@layer utilities {',
+  ]
+  emitTypoBlock(lines)
+  lines.push('}')
+  lines.push('@media (max-width: 767px) {')
+  emitTypoBlock(lines, 'm:')
+  lines.push('}')
+  lines.push('@media (min-width: 768px) {')
+  emitTypoBlock(lines, 'pc:')
+  lines.push('}')
+  fs.writeFileSync(path.join(uiSrc, 'helpers-typography.css'), `${lines.join('\n')}\n`)
+}
+
 function insetDocRows() {
   const rows = []
   for (const size of ['0', '0.5']) {
@@ -503,6 +646,7 @@ function paletteBorderRows() {
 writePaletteCss()
 writeInsetCss()
 writeSpacingCss()
+writeTypographyCss()
 
 function banner(pct, status, reason) {
   const callout =
@@ -819,6 +963,7 @@ const widthCss = fs.readFileSync(path.join(uiSrc, 'helpers-width.css'), 'utf8')
 const heightCss = fs.readFileSync(path.join(uiSrc, 'helpers-height.css'), 'utf8')
 const gapCss = fs.readFileSync(path.join(uiSrc, 'helpers-gap.css'), 'utf8')
 const spacingCss = fs.readFileSync(path.join(uiSrc, 'helpers-spacing.css'), 'utf8')
+const typoCss = fs.readFileSync(path.join(uiSrc, 'helpers-typography.css'), 'utf8')
 
 const paddingRows = parseUtilityClasses(spacingCss, (name) =>
   /^(p|px|py|pt|pr|pb|pl)-/.test(name),
@@ -840,6 +985,34 @@ const heightRows = parseUtilityClasses(heightCss, (name) =>
 )
 const gapRows = parseUtilityClasses(gapCss, (name) =>
   /^(gap|gap-x|gap-y)(-|$)/.test(name),
+)
+const fontFamilyRows = parseUtilityClasses(typoCss, (name) =>
+  /^(font-sans|font-serif|font-mono)$/.test(name),
+)
+const fontSizeRows = parseUtilityClasses(typoCss, (name) =>
+  /^text-(xs|sm|base|md|lg|xl|[2-8]xl)$/.test(name),
+)
+const fontStyleRows = parseUtilityClasses(typoCss, (name) => /^(italic|not-italic)$/.test(name))
+const fontWeightRows = parseUtilityClasses(typoCss, (name) =>
+  /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/.test(name),
+)
+const letterSpacingRows = parseUtilityClasses(typoCss, (name) => name.startsWith('tracking-'))
+const lineHeightRows = parseUtilityClasses(typoCss, (name) => name.startsWith('leading-'))
+const listStyleRows = parseUtilityClasses(typoCss, (name) => name.startsWith('list-'))
+const textAlignRows = parseUtilityClasses(typoCss, (name) =>
+  /^text-(left|center|right|justify)$/.test(name),
+)
+const textDecorationRows = parseUtilityClasses(typoCss, (name) =>
+  /^(underline|line-through|no-underline)$/.test(name),
+)
+const textTransformRows = parseUtilityClasses(typoCss, (name) =>
+  /^(uppercase|lowercase|capitalize|normal-case)$/.test(name),
+)
+const verticalAlignRows = parseUtilityClasses(typoCss, (name) => name.startsWith('align-'))
+const whitespaceRows = parseUtilityClasses(typoCss, (name) => name.startsWith('white-space-'))
+const wordBreakRows = parseUtilityClasses(typoCss, (name) => name.startsWith('break-'))
+const textOverflowRows = parseUtilityClasses(typoCss, (name) =>
+  /^(truncate|overflow-ellipsis|overflow-clip)$/.test(name),
 )
 
 const tw = (title, slug, intro, example, rows) => ({
@@ -3139,6 +3312,749 @@ function heightExtra() {
   ].join('\n')
 }
 
+const TYPE_FOOTER =
+  '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。'
+const TYPE_NO_HOVER =
+  '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。'
+
+function typeStage(inner) {
+  return [`<div class="${DEMO_STAGE} p-sm rounded-md">`, ...inner.map((l) => `  ${l}`), '</div>']
+}
+
+function typeP(cls, text = cls) {
+  return typeStage([`<p class="${cls}">${text}</p>`])
+}
+
+function typeExtra({ samples, combo, responsive, noDevice = false, stateNote }) {
+  const parts = []
+  for (const { heading, copy, html } of samples) {
+    parts.push(`## ${heading}`, '', copy, '', displaySchema(html), '')
+  }
+  if (combo) {
+    parts.push('## 组合', '', combo.copy, '', displaySchema(combo.html), '')
+  }
+  if (noDevice) {
+    parts.push('## 响应式设计', '', '本页与 Amis 一样：没有 `m:` / `pc:` 设备前缀。', '')
+  } else {
+    parts.push(
+      '## 响应式设计',
+      '',
+      `支持通过添加设备前缀 \`m:\` 或者 \`pc:\` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。${responsive.copy}`,
+      '',
+      displaySchema(responsive.html),
+      '',
+    )
+  }
+  parts.push('## 状态前缀', '', stateNote ?? TYPE_NO_HOVER)
+  return parts.join('\n')
+}
+
+function fontFamilyExtra() {
+  return typeExtra({
+    noDevice: true,
+    samples: [
+      {
+        heading: 'font-sans',
+        copy: `Amis helper 硬编码栈：\`${FONT_SANS}\`。page / body 默认仍走 \`--fonts-base-family\`（中文系统栈）；只有写了 \`font-sans\` 才换成这条。`,
+        html: typeP('font-sans', 'The quick brown fox · 系统黑体 font-sans'),
+      },
+      {
+        heading: 'font-serif',
+        copy: `Amis 衬线栈：\`${FONT_SERIF}\`。中文落到后面的 serif。`,
+        html: typeP('font-serif', 'The quick brown fox · font-serif'),
+      },
+      {
+        heading: 'font-mono',
+        copy: `Amis 等宽栈：\`${FONT_MONO}\`。不是 \`var(--font-mono)\`。`,
+        html: typeP('font-mono', 'const x = 1; font-mono'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`font-sans`、`font-serif`、`font-mono`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-sans">sans</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-serif">serif</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-mono">mono</p></div>`,
+        '</div>',
+      ],
+    },
+  })
+}
+
+function fontSizeExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'text-xs',
+        copy: '`font-size: 0.75rem` = **12px**，`line-height: 1rem` = **16px**。',
+        html: typeP('text-xs'),
+      },
+      {
+        heading: 'text-sm',
+        copy: '`font-size: 0.875rem` = **14px**，`line-height: 1.25rem` = **20px**。文档默认正文也是这一档。',
+        html: typeP('text-sm'),
+      },
+      {
+        heading: 'text-base',
+        copy: '`font-size: 1rem` = **16px**，`line-height: 1.5rem` = **24px**。',
+        html: typeP('text-base'),
+      },
+      {
+        heading: 'text-md',
+        copy: 'Amis 多出来的档：`font-size: 1.125rem` = **18px**，`line-height: 1.75rem` = **28px**。这是 Tailwind 的 `text-lg`。',
+        html: typeP('text-md'),
+      },
+      {
+        heading: 'text-lg',
+        copy: 'Amis：`font-size: 1.25rem` = **20px**，`line-height: 1.75rem` = **28px**。不是 Tailwind v3 的 1.125rem。',
+        html: typeP('text-lg'),
+      },
+      {
+        heading: 'text-xl',
+        copy: 'Amis：`font-size: 1.5rem` = **24px**，`line-height: 2rem` = **32px**。',
+        html: typeP('text-xl'),
+      },
+      {
+        heading: 'text-2xl',
+        copy: 'Amis：`font-size: 1.875rem` = **30px**，`line-height: 2.25rem` = **36px**。',
+        html: typeP('text-2xl'),
+      },
+      {
+        heading: 'text-3xl',
+        copy: 'Amis：`font-size: 2.25rem` = **36px**，`line-height: 2.5rem` = **40px**。`text-4xl`～`text-8xl` 见表，不在活示例里铺满。',
+        html: typeP('text-3xl'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`text-xs`、`text-md`、`text-xl`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-xs">xs 12px</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-md">md 18px</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-xl">xl 24px</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:text-sm` 14px；桌面（≥768px）`pc:text-xl` **24px**。',
+      html: typeP('m:text-sm pc:text-xl', 'm:text-sm pc:text-xl'),
+    },
+  })
+}
+
+function fontStyleExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'italic',
+        copy: '`font-style: italic`。',
+        html: typeP('italic', 'italic 斜体'),
+      },
+      {
+        heading: 'not-italic',
+        copy: '`font-style: normal`。用来盖掉斜体。',
+        html: typeP('italic not-italic', 'not-italic 把 italic 盖掉'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`italic`、`not-italic`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="italic">italic</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="not-italic">not-italic</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:not-italic`；桌面 `pc:italic`。',
+      html: typeP('m:not-italic pc:italic', 'm:not-italic pc:italic'),
+    },
+  })
+}
+
+function fontWeightExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'font-thin',
+        copy: '`font-weight: 100`。系统中文黑体常常没有这一档，计算值仍是 100。',
+        html: typeP('font-thin'),
+      },
+      {
+        heading: 'font-light',
+        copy: '`font-weight: 300`。',
+        html: typeP('font-light'),
+      },
+      {
+        heading: 'font-normal',
+        copy: '`font-weight: 400`。',
+        html: typeP('font-normal'),
+      },
+      {
+        heading: 'font-medium',
+        copy: '`font-weight: 500`。',
+        html: typeP('font-medium'),
+      },
+      {
+        heading: 'font-semibold',
+        copy: '`font-weight: 600`。标题常用。',
+        html: typeP('font-semibold'),
+      },
+      {
+        heading: 'font-bold',
+        copy: '`font-weight: 700`。',
+        html: typeP('font-bold'),
+      },
+      {
+        heading: 'font-black',
+        copy: '`font-weight: 900`。`font-extralight` = 200、`font-extrabold` = 800 见表。',
+        html: typeP('font-black'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`font-light`、`font-medium`、`font-bold`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-light">light 300</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-medium">medium 500</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="font-bold">bold 700</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:font-normal`；桌面 `pc:font-bold` **700**。',
+      html: typeP('m:font-normal pc:font-bold', 'm:font-normal pc:font-bold'),
+    },
+  })
+}
+
+function letterSpacingExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'tracking-tighter',
+        copy: '`letter-spacing: -0.05em`。钉 `text-base`（16px）时 **−0.8px**。',
+        html: typeP('tracking-tighter text-base', 'tracking-tighter'),
+      },
+      {
+        heading: 'tracking-tight',
+        copy: '`letter-spacing: -0.025em` = **−0.4px**（16px 字）。',
+        html: typeP('tracking-tight text-base', 'tracking-tight'),
+      },
+      {
+        heading: 'tracking-normal',
+        copy: '`letter-spacing: 0em`。',
+        html: typeP('tracking-normal text-base', 'tracking-normal'),
+      },
+      {
+        heading: 'tracking-wide',
+        copy: 'Amis 写成 `letter-spacing: 0.025`（漏了 em）。计算值是 **normal**；这里写成 `normal` 盖掉 Tailwind 的 `0.025em`（否则会变成 0.4px）。',
+        html: typeP('tracking-wide text-base', 'tracking-wide'),
+      },
+      {
+        heading: 'tracking-wider',
+        copy: '`letter-spacing: 0.05em` = **0.8px**（16px 字）。',
+        html: typeP('tracking-wider text-base', 'tracking-wider'),
+      },
+      {
+        heading: 'tracking-widest',
+        copy: '`letter-spacing: 0.1em` = **1.6px**（16px 字）。',
+        html: typeP('tracking-widest text-base', 'tracking-widest'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`tracking-tight`、`tracking-normal`、`tracking-widest`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="tracking-tight text-base">tight</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="tracking-normal text-base">normal</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="tracking-widest text-base">widest</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:tracking-normal`；桌面 `pc:tracking-widest`。',
+      html: typeP('m:tracking-normal pc:tracking-widest text-base', 'm / pc tracking'),
+    },
+  })
+}
+
+function lineHeightExtra() {
+  const block = (cls, label) =>
+    typeStage([`<p class="${cls} w-64">第一行 ${label}<br/>第二行 ${label}</p>`])
+  return typeExtra({
+    samples: [
+      {
+        heading: 'leading-none',
+        copy: '`line-height: 1`。钉 `text-base`（16px）时行高 **16px**。',
+        html: block('leading-none text-base', 'none'),
+      },
+      {
+        heading: 'leading-tight',
+        copy: '`line-height: 1.25` = **20px**（16px 字）。',
+        html: block('leading-tight text-base', 'tight'),
+      },
+      {
+        heading: 'leading-normal',
+        copy: '`line-height: 1.5` = **24px**。',
+        html: block('leading-normal text-base', 'normal'),
+      },
+      {
+        heading: 'leading-loose',
+        copy: '`line-height: 2` = **32px**。',
+        html: block('leading-loose text-base', 'loose'),
+      },
+      {
+        heading: 'leading-6',
+        copy: '绝对档：`line-height: 1.5rem` = **24px**，不跟字号走。',
+        html: block('leading-6 text-base', 'leading-6'),
+      },
+      {
+        heading: 'leading-10',
+        copy: '`line-height: 2.5rem` = **40px**。`leading-3`～`leading-9` 见表。',
+        html: block('leading-10 text-base', 'leading-10'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`leading-none`、`leading-normal`、`leading-loose`。',
+      html: [
+        '<div class="flex flex-wrap gap-4 items-start">',
+        ...block('leading-none text-base', 'none').map((l) => `  ${l}`),
+        ...block('leading-normal text-base', 'normal').map((l) => `  ${l}`),
+        ...block('leading-loose text-base', 'loose').map((l) => `  ${l}`),
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:leading-none` 16px；桌面 `pc:leading-loose` **32px**。',
+      html: block('m:leading-none pc:leading-loose text-base', 'm / pc'),
+    },
+  })
+}
+
+function listStyleExtra() {
+  const list = (cls, tag, items) =>
+    typeStage([
+      `<${tag} class="${cls} pl-5">`,
+      ...items.map((t) => `  <li>${t}</li>`),
+      `</${tag}>`,
+    ])
+  return typeExtra({
+    samples: [
+      {
+        heading: 'list-none',
+        copy: '`list-style-type: none`。标记拿掉。',
+        html: list('list-none', 'ul', ['没有圆点', '两项']),
+      },
+      {
+        heading: 'list-disc',
+        copy: '`list-style-type: disc`。外面圆点，要留 `pl-5` 才看得到。',
+        html: list('list-disc', 'ul', ['圆点', '两项']),
+      },
+      {
+        heading: 'list-decimal',
+        copy: '`list-style-type: decimal`。',
+        html: list('list-decimal', 'ol', ['数字', '两项']),
+      },
+      {
+        heading: 'list-inside',
+        copy: '`list-style-position: inside`。标记走进内容盒。',
+        html: list('list-disc list-inside', 'ul', ['inside 标记在行内', '两项']),
+      },
+      {
+        heading: 'list-outside',
+        copy: '`list-style-position: outside`。默认档，标记在盒子外。',
+        html: list('list-disc list-outside', 'ul', ['outside 标记在外面', '两项']),
+      },
+    ],
+    combo: {
+      copy: '同一组：`list-disc`、`list-decimal`、`list-inside`。',
+      html: [
+        '<div class="flex flex-wrap gap-4 items-start">',
+        ...list('list-disc', 'ul', ['disc']).map((l) => `  ${l}`),
+        ...list('list-decimal', 'ol', ['decimal']).map((l) => `  ${l}`),
+        ...list('list-disc list-inside', 'ul', ['inside']).map((l) => `  ${l}`),
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:list-none`；桌面 `pc:list-disc`。',
+      html: list('m:list-none pc:list-disc', 'ul', ['m:list-none pc:list-disc', '两项']),
+    },
+  })
+}
+
+function textAlignExtra() {
+  const box = (cls, text) =>
+    typeStage([`<p class="${cls} w-64">${text}</p>`])
+  return typeExtra({
+    samples: [
+      {
+        heading: 'text-left',
+        copy: '`text-align: left`。',
+        html: box('text-left', 'text-left 左对齐'),
+      },
+      {
+        heading: 'text-center',
+        copy: '`text-align: center`。',
+        html: box('text-center', 'text-center 居中'),
+      },
+      {
+        heading: 'text-right',
+        copy: '`text-align: right`。',
+        html: box('text-right', 'text-right 右对齐'),
+      },
+      {
+        heading: 'text-justify',
+        copy: '`text-align: justify`。两端对齐，最后一行仍靠左。',
+        html: box(
+          'text-justify',
+          'text-justify 这一段足够长，用来看两端对齐：左右边缘齐，中间把空格拉开。',
+        ),
+      },
+    ],
+    combo: {
+      copy: '同一组：`text-left`、`text-center`、`text-right`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-left w-64">left</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-center w-64">center</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-right w-64">right</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:text-left`；桌面 `pc:text-right`。',
+      html: box('m:text-left pc:text-right', 'm:text-left pc:text-right'),
+    },
+  })
+}
+
+function textColorExtra() {
+  const chip = (cls, label) =>
+    `<p class="${cls}">${label}</p>`
+  return [
+    '## text-primary',
+    '',
+    '语义主色：`color: var(--primary)`。顶栏换色点会跟着走。',
+    '',
+    displaySchema(typeStage([chip('text-primary', 'text-primary')])),
+    '',
+    '## text-success',
+    '',
+    '`color: var(--success)`。',
+    '',
+    displaySchema(typeStage([chip('text-success', 'text-success')])),
+    '',
+    '## text-danger',
+    '',
+    '`color: var(--destructive)`。Amis 叫 `text-danger`，token 落到 destructive。',
+    '',
+    displaySchema(typeStage([chip('text-danger', 'text-danger')])),
+    '',
+    '## text-green-700',
+    '',
+    '调色盘与 Amis helper 同档 hex：`#047857`。完整色阶见表。',
+    '',
+    displaySchema(typeStage([chip('text-green-700', 'text-green-700')])),
+    '',
+    '## 组合',
+    '',
+    '语义色 + 一档调色盘。',
+    '',
+    displaySchema([
+      `<div class="${DEMO_STAGE} p-sm rounded-md flex flex-wrap gap-3">`,
+      '  <p class="text-foreground">正文</p>',
+      '  <p class="text-primary">主色</p>',
+      '  <p class="text-success">成功</p>',
+      '  <p class="text-danger">危险</p>',
+      '  <p class="text-green-700">green-700</p>',
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '语义色和调色盘都接了 `m:` / `pc:`，见 [辅助类-响应式设计](/style/responsive-design)。桌面 `pc:text-primary`。',
+    '',
+    displaySchema(typeStage([chip('m:text-foreground pc:text-primary', 'm / pc')])),
+    '',
+    '## 状态前缀',
+    '',
+    '调色盘的 `hover:` / `focus:` / `active:` / `disabled:` 已进 SDK，见 [辅助类-状态样式](/style/state)。本页表只列默认态，完整 hex 核还在色盘表。',
+  ].join('\n')
+}
+
+function textDecorationExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'underline',
+        copy: 'Amis 用简写 `text-decoration: underline`（不是 `text-decoration-line`）。',
+        html: typeP('underline'),
+      },
+      {
+        heading: 'line-through',
+        copy: '`text-decoration: line-through`。',
+        html: typeP('line-through'),
+      },
+      {
+        heading: 'no-underline',
+        copy: '`text-decoration: none`。叠在 `underline` 上会盖掉线。',
+        html: typeP('underline no-underline', 'underline + no-underline'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`underline`、`line-through`、`no-underline`。Amis 没有 `overline`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="underline">underline</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="line-through">line-through</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="no-underline">no-underline</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:no-underline`；桌面 `pc:underline`。',
+      html: typeP('m:no-underline pc:underline', 'm:no-underline pc:underline'),
+    },
+  })
+}
+
+function textTransformExtra() {
+  return typeExtra({
+    samples: [
+      {
+        heading: 'uppercase',
+        copy: '`text-transform: uppercase`。中文无效果。',
+        html: typeP('uppercase', 'uppercase Demo'),
+      },
+      {
+        heading: 'lowercase',
+        copy: '`text-transform: lowercase`。',
+        html: typeP('lowercase', 'LOWERCASE Demo'),
+      },
+      {
+        heading: 'capitalize',
+        copy: '`text-transform: capitalize`。每个词首字母大写。',
+        html: typeP('capitalize', 'capitalize demo text'),
+      },
+      {
+        heading: 'normal-case',
+        copy: '`text-transform: none`。盖掉变换。',
+        html: typeP('uppercase normal-case', 'uppercase + normal-case'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`uppercase`、`lowercase`、`capitalize`。',
+      html: [
+        '<div class="space-y-2">',
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="uppercase">uppercase demo</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="lowercase">LOWERCASE DEMO</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="capitalize">capitalize demo</p></div>`,
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:normal-case`；桌面 `pc:uppercase`。',
+      html: typeP('m:normal-case pc:uppercase', 'm:normal-case pc:uppercase'),
+    },
+  })
+}
+
+function verticalAlignExtra() {
+  const row = (cls, label) =>
+    typeStage([
+      `<span class="inline-block h-8 w-8 ${DEMO_FILL} rounded-md"></span>`,
+      `<span class="${cls}">${label}</span>`,
+    ])
+  return typeExtra({
+    samples: [
+      {
+        heading: 'align-baseline',
+        copy: '`vertical-align: baseline`。跟旁边黄盒子的文字基线对齐。',
+        html: row('align-baseline', 'baseline'),
+      },
+      {
+        heading: 'align-top',
+        copy: '`vertical-align: top`。',
+        html: row('align-top', 'top'),
+      },
+      {
+        heading: 'align-middle',
+        copy: '`vertical-align: middle`。',
+        html: row('align-middle', 'middle'),
+      },
+      {
+        heading: 'align-bottom',
+        copy: '`vertical-align: bottom`。',
+        html: row('align-bottom', 'bottom'),
+      },
+      {
+        heading: 'align-text-top',
+        copy: '`vertical-align: text-top`。',
+        html: row('align-text-top', 'text-top'),
+      },
+      {
+        heading: 'align-text-bottom',
+        copy: '`vertical-align: text-bottom`。',
+        html: row('align-text-bottom', 'text-bottom'),
+      },
+    ],
+    combo: {
+      copy: '同一行：`align-top`、`align-middle`、`align-bottom`。',
+      html: typeStage([
+        `<span class="inline-block h-8 w-8 ${DEMO_FILL} rounded-md"></span>`,
+        '<span class="align-top">top</span>',
+        '<span class="align-middle">middle</span>',
+        '<span class="align-bottom">bottom</span>',
+      ]),
+    },
+    responsive: {
+      copy: '窄屏 `m:align-top`；桌面 `pc:align-bottom`。',
+      html: row('m:align-top pc:align-bottom', 'm / pc'),
+    },
+  })
+}
+
+function whitespaceExtra() {
+  const nowrap = (cls) => [
+    `<div class="${DEMO_STAGE} p-sm rounded-md w-24 overflow-hidden">`,
+    `  <p class="${cls}">这一行不会折这一行不会折</p>`,
+    '</div>',
+  ]
+  const pre = (cls) =>
+    typeStage([
+      `<p class="${cls}">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>`,
+    ])
+  return typeExtra({
+    samples: [
+      {
+        heading: 'white-space-normal',
+        copy: 'Amis 类名是 `white-space-*`（中间有连字符），不是 Tailwind 的 `whitespace-*`。`white-space: normal`，空格折叠、自动折行。',
+        html: nowrap('white-space-normal'),
+      },
+      {
+        heading: 'white-space-nowrap',
+        copy: '`white-space: nowrap`。不折行，舞台 `w-24` + `overflow-hidden` 会裁掉。',
+        html: nowrap('white-space-nowrap'),
+      },
+      {
+        heading: 'white-space-pre',
+        copy: '`white-space: pre`。保留空格和换行，不自动折。',
+        html: pre('white-space-pre'),
+      },
+      {
+        heading: 'white-space-pre-line',
+        copy: '`white-space: pre-line`。保留换行，空格仍折叠。',
+        html: pre('white-space-pre-line'),
+      },
+      {
+        heading: 'white-space-pre-wrap',
+        copy: '`white-space: pre-wrap`。保留空格和换行，必要时折行。',
+        html: pre('white-space-pre-wrap'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`white-space-nowrap`、`white-space-pre`。',
+      html: [
+        '<div class="flex flex-wrap gap-4 items-start">',
+        ...nowrap('white-space-nowrap').map((l) => `  ${l}`),
+        ...pre('white-space-pre').map((l) => `  ${l}`),
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:white-space-normal` 会折行；桌面 `pc:white-space-nowrap` 不折。',
+      html: nowrap('m:white-space-normal pc:white-space-nowrap'),
+    },
+  })
+}
+
+function wordBreakExtra() {
+  const word = 'supercalifragilisticexpialidocious'
+  const box = (cls) => [
+    `<div class="${DEMO_STAGE} p-sm rounded-md w-24">`,
+    `  <p class="${cls}">${word}</p>`,
+    '</div>',
+  ]
+  return typeExtra({
+    samples: [
+      {
+        heading: 'break-normal',
+        copy: '`overflow-wrap: normal; word-break: normal`。长单词不拆，撑出盒子。',
+        html: box('break-normal'),
+      },
+      {
+        heading: 'break-words',
+        copy: '`overflow-wrap: break-word`。实在放不下才拆。',
+        html: box('break-words'),
+      },
+      {
+        heading: 'break-all',
+        copy: '`word-break: break-all`。任意字符都可拆。',
+        html: box('break-all'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`break-normal`、`break-words`、`break-all`。',
+      html: [
+        '<div class="flex flex-wrap gap-4 items-start">',
+        ...box('break-normal').map((l) => `  ${l}`),
+        ...box('break-words').map((l) => `  ${l}`),
+        ...box('break-all').map((l) => `  ${l}`),
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:break-all`；桌面 `pc:break-normal`。',
+      html: box('m:break-all pc:break-normal'),
+    },
+  })
+}
+
+function textOverflowExtra() {
+  const long = '这段文字很长很长很长很长，超出就被截掉'
+  const box = (cls) => [
+    `<div class="${DEMO_STAGE} p-sm rounded-md w-40">`,
+    `  <p class="${cls}">${long}</p>`,
+    '</div>',
+  ]
+  return typeExtra({
+    samples: [
+      {
+        heading: 'truncate',
+        copy: '`overflow: hidden; text-overflow: ellipsis; white-space: nowrap`。一条类搞定单行省略。',
+        html: box('truncate'),
+      },
+      {
+        heading: 'overflow-ellipsis',
+        copy: 'Amis 类名是 `overflow-ellipsis`，只设 `text-overflow: ellipsis`。还要自己配 `overflow-hidden` 和 `white-space-nowrap`。',
+        html: box('overflow-hidden overflow-ellipsis white-space-nowrap'),
+      },
+      {
+        heading: 'overflow-clip',
+        copy: 'Amis 类名是 `overflow-clip`（不是 `text-clip`）：`text-overflow: clip`，超出直接裁，没有省略号。',
+        html: box('overflow-hidden overflow-clip white-space-nowrap'),
+      },
+    ],
+    combo: {
+      copy: '同一组：`truncate`、`overflow-ellipsis`、`overflow-clip`。',
+      html: [
+        '<div class="space-y-2">',
+        ...box('truncate').map((l) => `  ${l}`),
+        ...box('overflow-hidden overflow-ellipsis white-space-nowrap').map((l) => `  ${l}`),
+        ...box('overflow-hidden overflow-clip white-space-nowrap').map((l) => `  ${l}`),
+        '</div>',
+      ],
+    },
+    responsive: {
+      copy: '窄屏 `m:overflow-clip`；桌面 `pc:truncate`。',
+      html: box('overflow-hidden white-space-nowrap m:overflow-clip pc:truncate'),
+    },
+  })
+}
+
 function justifyContentChip(fill, label) {
   return `<div class="w-16 h-16 shrink-0 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
 }
@@ -4592,304 +5508,201 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Font Family',
-    'typography/font-family',
-    '默认正文字体走 Amis `--fonts-base-family` 系统栈（`--font-sans`）。等宽走 `--font-mono`。',
-    `type: page
-body:
-  - type: tpl
-    className: font-sans
-    tpl: 系统黑体 / 苹方
-  - type: tpl
-    className: font-mono m-t-sm
-    tpl: 等宽 font-mono`,
-    [
-      ['font-sans', 'font-family: var(--font-sans)'],
-      ['font-serif', '衬线'],
-      ['font-mono', 'font-family: var(--font-mono)'],
-    ],
-  ),
-  tw(
-    'Font Size',
-    'typography/font-size',
-    '字号。默认正文约 14px（水标）。',
-    `type: page
-body:
-  - type: tpl
-    className: text-xs
-    tpl: text-xs
-  - type: tpl
-    className: text-sm
-    tpl: text-sm
-  - type: tpl
-    className: text-xl
-    tpl: text-xl`,
-    [
-      ['text-xs', '0.75rem'],
-      ['text-sm', '0.875rem'],
-      ['text-base', '1rem'],
-      ['text-lg', '1.125rem'],
-      ['text-xl', '1.25rem'],
-      ['text-2xl', '1.5rem'],
-      ['text-3xl', '1.875rem'],
-    ],
-  ),
-  tw(
-    'Font style',
-    'typography/font-style',
-    '斜体。',
-    `type: page
-body:
-  - type: tpl
-    className: italic
-    tpl: italic
-  - type: tpl
-    className: not-italic
-    tpl: not-italic`,
-    [
-      ['italic', 'font-style: italic'],
-      ['not-italic', 'font-style: normal'],
-    ],
-  ),
-  tw(
-    'Font Weight',
-    'typography/font-weight',
-    '字重。标题常用 `font-semibold`。',
-    `type: page
-body:
-  - type: tpl
-    className: font-light
-    tpl: light
-  - type: tpl
-    className: font-medium
-    tpl: medium
-  - type: tpl
-    className: font-bold
-    tpl: bold`,
-    [
-      ['font-thin', '100'],
-      ['font-light', '300'],
-      ['font-normal', '400'],
-      ['font-medium', '500'],
-      ['font-semibold', '600'],
-      ['font-bold', '700'],
-    ],
-  ),
-  tw(
-    'Letter Spacing',
-    'typography/letter-spacing',
-    '字距。',
-    `type: page
-body:
-  - type: tpl
-    className: tracking-tight
-    tpl: tracking-tight
-  - type: tpl
-    className: tracking-widest
-    tpl: tracking-widest`,
-    [
-      ['tracking-tighter', '-0.05em'],
-      ['tracking-tight', '-0.025em'],
-      ['tracking-normal', '0em'],
-      ['tracking-wide', '0.025em'],
-      ['tracking-wider', '0.05em'],
-      ['tracking-widest', '0.1em'],
-    ],
-  ),
-  tw(
-    'Line Height',
-    'typography/line-height',
-    '行高。',
-    `type: page
-body:
-  - type: tpl
-    className: leading-tight
-    tpl: "第一行\\n第二行（紧）"
-  - type: tpl
-    className: leading-loose m-t-sm
-    tpl: "第一行\\n第二行（松）"`,
-    [
-      ['leading-none', '1'],
-      ['leading-tight', '1.25'],
-      ['leading-snug', '1.375'],
-      ['leading-normal', '1.5'],
-      ['leading-relaxed', '1.625'],
-      ['leading-loose', '2'],
-    ],
-  ),
-  tw(
-    'List Style Type',
-    'typography/list-style-type',
-    '列表标记。`type: tpl` 里写 HTML 列表时才会看到。',
-    `type: page
-body:
-  - type: tpl
-    className: list-disc pl-5
-    tpl: '<ul><li>圆点</li><li>两项</li></ul>'
-  - type: tpl
-    className: list-decimal pl-5 m-t-sm
-    tpl: '<ol><li>数字</li><li>两项</li></ol>'`,
-    [
-      ['list-none', 'list-style-type: none'],
-      ['list-disc', 'list-style-type: disc'],
-      ['list-decimal', 'list-style-type: decimal'],
-    ],
-  ),
-  tw(
-    'Text Alignment',
-    'typography/text-align',
-    '文本对齐。',
-    `type: page
-body:
-  - type: tpl
-    className: text-left ${DEMO_FILL} p-sm rounded-md
-    tpl: 左
-  - type: tpl
-    className: text-center ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: 中
-  - type: tpl
-    className: text-right ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: 右`,
-    [
-      ['text-left', 'text-align: left'],
-      ['text-center', 'text-align: center'],
-      ['text-right', 'text-align: right'],
-      ['text-justify', 'text-align: justify'],
-    ],
-  ),
+  {
+    title: 'Font Family',
+    slug: 'typography/font-family',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Font Family：`font-sans` / `serif` / `mono` 落在同一元素的 `font-family`，字栈与 Amis helper 硬编码一致。独立样例 + 组合。本页与 Amis 一样没有 `m:` / `pc:`，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '用哪套字。三条类都是 Amis helper 硬编码栈，不是 `--font-sans` token。page / body 默认仍走 `--fonts-base-family`（中文系统栈）；写了 `font-sans` 才换成 `ui-sans-serif, system-ui, …`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: fontFamilyRows,
+    extra: fontFamilyExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Font Size',
+    slug: 'typography/font-size',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。档位是 Amis `$fontSizes`（`text-lg` = 20px），不是 Tailwind v3。',
+    tableFirst: true,
+    intro:
+      '字号。Amis `text-md` = 18px，`text-lg` = **20px**，`text-xl` = **24px**——比 Tailwind v3 各大一档。每条还带行高（`text-xs` 的 line-height 是 16px）。默认正文 `text-sm` = 14px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: fontSizeRows,
+    extra: fontSizeExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Font style',
+    slug: 'typography/font-style',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Font Style：`italic` / `not-italic` 落在同一元素的 `font-style`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '斜体。两档。`not-italic` 用来盖掉 `italic`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: fontStyleRows,
+    extra: fontStyleExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Font Weight',
+    slug: 'typography/font-weight',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Font Weight：`font-thin`～`font-black` 落在同一元素的 `font-weight`。独立样例 + 组合；补 `extralight` / `extrabold` / `black` 与 `m:` / `pc:`。',
+    tableFirst: true,
+    intro:
+      '字重。Amis 九档 100～900。系统中文黑体常常没有 thin / black 对应字形，计算 `font-weight` 仍是那个数字。标题常用 `font-semibold`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: fontWeightRows,
+    extra: fontWeightExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Letter Spacing',
+    slug: 'typography/letter-spacing',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Letter Spacing：`tracking-*` 落在同一元素的 `letter-spacing`。独立样例 + 组合；`m:` / `pc:` 已进 helper。`tracking-wide` 计算值是 `normal`（Amis 写成无效的 `0.025`）。',
+    tableFirst: true,
+    intro:
+      '字距。em 相对字号：钉 `text-base`（16px）时 `tracking-tight` = **−0.4px**、`tracking-widest` = **1.6px**。Amis `tracking-wide` 写成 `0.025` 漏了单位，计算值是 **normal**；Vamis 写成 `normal` 盖掉 Tailwind 的 `0.025em`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: letterSpacingRows,
+    extra: letterSpacingExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Line Height',
+    slug: 'typography/line-height',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Line Height：`leading-*` 落在同一元素的 `line-height`。独立样例 + 组合；补 `leading-3`～`leading-10` 与 `m:` / `pc:`。',
+    tableFirst: true,
+    intro:
+      '行高。相对档（`leading-none` = 1）跟字号走；绝对档（`leading-6` = 1.5rem = 24px）不跟字号走。钉 `text-base` 时 `leading-loose` = **32px**。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: lineHeightRows,
+    extra: lineHeightExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'List Style Type',
+    slug: 'typography/list-style-type',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis List Style：`list-none` / `disc` / `decimal` 改 `list-style-type`，`list-inside` / `outside` 改 `list-style-position`。独立样例 + 组合；`m:` / `pc:` 已进 helper。',
+    tableFirst: true,
+    intro:
+      '列表标记。类打在 `<ul>` / `<ol>` 上，不是 `li`。外面圆点要留 `pl-5` 才看得到。`type: tpl` 里写 HTML 列表才会生效。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在列表上。',
+    rows: listStyleRows,
+    extra: listStyleExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Text Alignment',
+    slug: 'typography/text-align',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Text Align：`text-left` / `center` / `right` / `justify` 落在同一元素的 `text-align`。独立样例 + 组合；`m:` / `pc:` 已进 helper。',
+    tableFirst: true,
+    intro:
+      '文本对齐。四档。`text-justify` 两端对齐，最后一行仍靠左。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: textAlignRows,
+    extra: textAlignExtra(),
+    footer: TYPE_FOOTER,
+  },
   {
     title: 'Text Color',
     slug: 'typography/text-color',
     pct: 55,
     status: '进行中',
     reason: COLOR_REASON,
+    tableFirst: true,
     intro:
-      '优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` 等），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。',
-    example: `type: page
-body:
-  - type: container
-    bodyClassName: flex flex-wrap gap-3
-    body:
-      - type: tpl
-        className: text-foreground
-        tpl: 正文
-      - type: tpl
-        className: text-muted-foreground
-        tpl: 次要
-      - type: tpl
-        className: text-primary
-        tpl: 主色
-      - type: tpl
-        className: text-success
-        tpl: 成功
-      - type: tpl
-        className: text-warning
-        tpl: 警告
-      - type: tpl
-        className: text-info
-        tpl: 信息
-      - type: tpl
-        className: text-danger
-        tpl: 危险
-      - type: tpl
-        className: text-green-700
-        tpl: green-700`,
+      '优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` = `#047857`），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。完整色阶见表；逐档核还在色盘表。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
     rows: paletteTextRows(),
+    extra: textColorExtra(),
+    footer: TYPE_FOOTER,
   },
-  tw(
-    'Text Decoration',
-    'typography/text-decoration',
-    '下划线 / 删除线。',
-    `type: page
-body:
-  - type: tpl
-    className: underline
-    tpl: underline
-  - type: tpl
-    className: line-through
-    tpl: line-through
-  - type: tpl
-    className: no-underline
-    tpl: no-underline`,
-    [
-      ['underline', 'text-decoration: underline'],
-      ['overline', 'text-decoration: overline'],
-      ['line-through', 'text-decoration: line-through'],
-      ['no-underline', 'text-decoration: none'],
-    ],
-  ),
-  tw(
-    'Text Transform',
-    'typography/text-transform',
-    '大小写变换。中文无效果。',
-    `type: page
-body:
-  - type: tpl
-    className: uppercase
-    tpl: uppercase demo
-  - type: tpl
-    className: capitalize
-    tpl: capitalize demo`,
-    [
-      ['uppercase', 'text-transform: uppercase'],
-      ['lowercase', 'text-transform: lowercase'],
-      ['capitalize', 'text-transform: capitalize'],
-      ['normal-case', 'text-transform: none'],
-    ],
-  ),
-  tw(
-    'Vertical Alignment',
-    'typography/vertical-align',
-    '行内或表格单元格垂直对齐。',
-    `type: page
-body:
-  - type: tpl
-    tpl: '<span class="inline-block h-8 ${DEMO_FILL}">高</span> <span class="align-top">top</span> <span class="align-middle">middle</span> <span class="align-bottom">bottom</span>'`,
-    [
-      ['align-baseline', 'vertical-align: baseline'],
-      ['align-top', 'vertical-align: top'],
-      ['align-middle', 'vertical-align: middle'],
-      ['align-bottom', 'vertical-align: bottom'],
-      ['align-text-top', 'vertical-align: text-top'],
-      ['align-text-bottom', 'vertical-align: text-bottom'],
-    ],
-  ),
-  tw(
-    'Whitespace',
-    'typography/whitespace',
-    '空白折叠。`whitespace-pre` 保留换行。',
-    `type: page
-body:
-  - type: tpl
-    className: whitespace-nowrap ${DEMO_FILL} p-sm rounded-md w-24 overflow-hidden
-    tpl: 这一行不会折
-  - type: tpl
-    className: whitespace-pre-wrap ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: "第一行\\n第二行"`,
-    [
-      ['whitespace-normal', 'white-space: normal'],
-      ['whitespace-nowrap', 'white-space: nowrap'],
-      ['whitespace-pre', 'white-space: pre'],
-      ['whitespace-pre-line', 'white-space: pre-line'],
-      ['whitespace-pre-wrap', 'white-space: pre-wrap'],
-    ],
-  ),
-  tw(
-    'Word Break',
-    'typography/word-break',
-    '长单词怎么断行。',
-    `type: page
-body:
-  - type: tpl
-    className: break-all w-24 ${DEMO_FILL} p-sm rounded-md
-    tpl: supercalifragilisticexpialidocious`,
-    [
-      ['break-normal', 'overflow-wrap: normal; word-break: normal'],
-      ['break-words', 'overflow-wrap: break-word'],
-      ['break-all', 'word-break: break-all'],
-    ],
-  ),
+  {
+    title: 'Text Decoration',
+    slug: 'typography/text-decoration',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Text Decoration：`underline` / `line-through` / `no-underline` 用简写 `text-decoration`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `overline`。',
+    tableFirst: true,
+    intro:
+      '下划线 / 删除线。Amis 用 `text-decoration` 简写，不是 Tailwind 的 `text-decoration-line`。没有 `overline`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: textDecorationRows,
+    extra: textDecorationExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Text Transform',
+    slug: 'typography/text-transform',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Text Transform：`uppercase` / `lowercase` / `capitalize` / `normal-case` 落在同一元素的 `text-transform`。独立样例 + 组合；`m:` / `pc:` 已进 helper。',
+    tableFirst: true,
+    intro:
+      '大小写变换。中文无效果。`normal-case` 用来盖掉变换。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: textTransformRows,
+    extra: textTransformExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Vertical Alignment',
+    slug: 'typography/vertical-align',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Vertical Align：`align-*` 落在同一元素的 `vertical-align`。独立样例 + 组合；补 `align-text-top` / `align-text-bottom` 与 `m:` / `pc:`。',
+    tableFirst: true,
+    intro:
+      '行内垂直对齐。旁边钉一枚 `h-8` 黄盒子当参照。只对 `inline` / `inline-block` / 表格单元格有效。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<span>` 上。',
+    rows: verticalAlignRows,
+    extra: verticalAlignExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Whitespace',
+    slug: 'typography/whitespace',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Whitespace：类名是 `white-space-*`（中间有连字符）。独立样例 + 组合；`m:` / `pc:` 已进 helper。Tailwind `whitespace-*` 只当别名。',
+    tableFirst: true,
+    intro:
+      '空白怎么折叠。Amis 类名是 `white-space-nowrap`，不是 Tailwind 的 `whitespace-nowrap`。`pre` 保留空格和换行；`pre-line` 只保留换行。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: whitespaceRows,
+    extra: whitespaceExtra(),
+    footer: TYPE_FOOTER,
+  },
+  {
+    title: 'Word Break',
+    slug: 'typography/word-break',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Word Break：`break-normal` / `words` / `all` 落在同一元素的 `overflow-wrap` / `word-break`。独立样例 + 组合；`m:` / `pc:` 已进 helper。',
+    tableFirst: true,
+    intro:
+      '长单词怎么断行。舞台钉死 `w-24`。`break-normal` 不拆、撑出盒子；`break-all` 任意字符都可拆。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: wordBreakRows,
+    extra: wordBreakExtra(),
+    footer: TYPE_FOOTER,
+  },
   {
     title: 'Background Color',
     slug: 'background/background-color',
@@ -5032,25 +5845,20 @@ body:
       ['shadow-none', '无'],
     ],
   ),
-  tw(
-    'Text Overflow',
-    'typography/text-overflow',
-    '单行截断用 `truncate`（hidden + nowrap + ellipsis）。只要省略号时用 `text-ellipsis` / `overflow-ellipsis`，并自己配 `overflow-hidden`。',
-    `type: page
-body:
-  - type: tpl
-    className: truncate w-40 ${DEMO_FILL} p-sm rounded-md
-    tpl: 这段文字很长很长很长很长，超出就被截成省略号
-  - type: tpl
-    className: overflow-hidden text-clip whitespace-nowrap w-40 ${DEMO_FILL} p-sm rounded-md m-t-sm
-    tpl: 这段文字很长很长很长很长，超出直接裁掉`,
-    [
-      ['truncate', 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap'],
-      ['text-ellipsis', 'text-overflow: ellipsis'],
-      ['overflow-ellipsis', 'text-overflow: ellipsis（Amis 同名）'],
-      ['text-clip', 'text-overflow: clip'],
-    ],
-  ),
+  {
+    title: 'Text Overflow',
+    slug: 'typography/text-overflow',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Text Overflow：`truncate` / `overflow-ellipsis` / `overflow-clip` 落在同一元素的 `text-overflow`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `text-clip`。',
+    tableFirst: true,
+    intro:
+      '单行超出怎么切。`truncate` 一条类搞定 hidden + nowrap + ellipsis。只要省略号时用 Amis 的 `overflow-ellipsis`（不是 `text-ellipsis`），并自己配 `overflow-hidden` 和 `white-space-nowrap`。裁切用 `overflow-clip`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+    rows: textOverflowRows,
+    extra: textOverflowExtra(),
+    footer: TYPE_FOOTER,
+  },
   tw(
     'Opacity',
     'effect/opacity',

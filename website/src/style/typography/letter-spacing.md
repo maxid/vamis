@@ -6,32 +6,217 @@ title: Letter Spacing
 
 # Letter Spacing
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Letter Spacing：`tracking-*` 落在同一元素的 `letter-spacing`。独立样例 + 组合；`m:` / `pc:` 已进 helper。`tracking-wide` 计算值是 `normal`（Amis 写成无效的 `0.025`）。
 :::
 
-字距。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: tracking-tight
-    tpl: tracking-tight
-  - type: tpl
-    className: tracking-widest
-    tpl: tracking-widest
-```
+字距。em 相对字号：钉 `text-base`（16px）时 `tracking-tight` = **−0.4px**、`tracking-widest` = **1.6px**。Amis `tracking-wide` 写成 `0.025` 漏了单位，计算值是 **normal**；Vamis 写成 `normal` 盖掉 Tailwind 的 `0.025em`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `tracking-tighter` | `-0.05em` |
-| `tracking-tight` | `-0.025em` |
-| `tracking-normal` | `0em` |
-| `tracking-wide` | `0.025em` |
-| `tracking-wider` | `0.05em` |
-| `tracking-widest` | `0.1em` |
+| `tracking-tighter` | `letter-spacing: -0.05em;` |
+| `tracking-tight` | `letter-spacing: -0.025em;` |
+| `tracking-normal` | `letter-spacing: 0em;` |
+| `tracking-wide` | `letter-spacing: normal;` |
+| `tracking-wider` | `letter-spacing: 0.05em;` |
+| `tracking-widest` | `letter-spacing: 0.1em;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## tracking-tighter
+
+`letter-spacing: -0.05em`。钉 `text-base`（16px）时 **−0.8px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-tighter text-base">tracking-tighter</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-tighter text-base">tracking-tighter</p>
+  </div>
+```
+
+## tracking-tight
+
+`letter-spacing: -0.025em` = **−0.4px**（16px 字）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-tight text-base">tracking-tight</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-tight text-base">tracking-tight</p>
+  </div>
+```
+
+## tracking-normal
+
+`letter-spacing: 0em`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-normal text-base">tracking-normal</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-normal text-base">tracking-normal</p>
+  </div>
+```
+
+## tracking-wide
+
+Amis 写成 `letter-spacing: 0.025`（漏了 em）。计算值是 **normal**；这里写成 `normal` 盖掉 Tailwind 的 `0.025em`（否则会变成 0.4px）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-wide text-base">tracking-wide</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-wide text-base">tracking-wide</p>
+  </div>
+```
+
+## tracking-wider
+
+`letter-spacing: 0.05em` = **0.8px**（16px 字）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-wider text-base">tracking-wider</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-wider text-base">tracking-wider</p>
+  </div>
+```
+
+## tracking-widest
+
+`letter-spacing: 0.1em` = **1.6px**（16px 字）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-widest text-base">tracking-widest</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="tracking-widest text-base">tracking-widest</p>
+  </div>
+```
+
+## 组合
+
+同一组：`tracking-tight`、`tracking-normal`、`tracking-widest`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-tight text-base">tight</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-normal text-base">normal</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-widest text-base">widest</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-tight text-base">tight</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-normal text-base">normal</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="tracking-widest text-base">widest</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:tracking-normal`；桌面 `pc:tracking-widest`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:tracking-normal pc:tracking-widest text-base">m / pc tracking</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:tracking-normal pc:tracking-widest text-base">m / pc tracking</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

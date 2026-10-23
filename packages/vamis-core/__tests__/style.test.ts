@@ -573,6 +573,7 @@ describe('style docs surface', () => {
     expect(theme).toContain('helpers-utility.css')
     expect(theme).toContain('helpers-gap.css')
     expect(theme).toContain('helpers-spacing.css')
+    expect(theme).toContain('helpers-typography.css')
     expect(theme).toContain('helpers-palette.css')
     const util = readFileSync(resolve(here, '../../vamis-ui/src/helpers-utility.css'), 'utf8')
     expect(util).toMatch(/@layer components\s*\{/)
@@ -1386,6 +1387,88 @@ describe('style docs surface', () => {
     expect(heightDoc).toContain('type: code')
     expect(heightDoc).not.toContain('实现进度 50%')
     expect(heightDoc).not.toContain('| `h-1x` |')
+    const typoCss = readFileSync(
+      resolve(here, '../../vamis-ui/src/helpers-typography.css'),
+      'utf8',
+    )
+    expect(typoCss).toContain('.text-md { font-size: 1.125rem; line-height: 1.75rem; }')
+    expect(typoCss).toContain('.text-lg { font-size: 1.25rem; line-height: 1.75rem; }')
+    expect(typoCss).toContain('.text-xl { font-size: 1.5rem; line-height: 2rem; }')
+    expect(typoCss).toContain(
+      '.font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }',
+    )
+    expect(typoCss).toContain(
+      '.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }',
+    )
+    expect(typoCss).not.toContain('.font-sans { font-family: var(--font-sans); }')
+    expect(typoCss).not.toContain('.font-mono { font-family: var(--font-mono); }')
+    expect(typoCss).toContain('.font-serif {')
+    expect(typoCss).toContain('.font-extrabold { font-weight: 800; }')
+    expect(typoCss).toContain('.tracking-wide { letter-spacing: normal; }')
+    expect(typoCss).toContain('.leading-3 { line-height: 0.75rem; }')
+    expect(typoCss).toContain('.list-inside { list-style-position: inside; }')
+    expect(typoCss).toContain('.white-space-nowrap { white-space: nowrap; }')
+    expect(typoCss).toContain('.overflow-clip { text-overflow: clip; }')
+    expect(typoCss).toContain('.align-text-top { vertical-align: text-top; }')
+    expect(typoCss).toContain('.pc\\:text-xl { font-size: 1.5rem; line-height: 2rem; }')
+    expect(typoCss).toContain('.m\\:white-space-nowrap { white-space: nowrap; }')
+    expect(typoCss).not.toContain('.pc\\:font-sans')
+    const fontSizeDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/font-size.md'),
+      'utf8',
+    )
+    expect(fontSizeDoc).toContain('实现进度 90%')
+    expect(fontSizeDoc).toContain('## text-md')
+    expect(fontSizeDoc).toContain('## text-lg')
+    expect(fontSizeDoc).toContain('pc:text-xl')
+    expect(fontSizeDoc).toContain('| `text-8xl` |')
+    expect(fontSizeDoc).toContain('type: code')
+    expect(fontSizeDoc).not.toContain('实现进度 50%')
+    const whitespaceDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/whitespace.md'),
+      'utf8',
+    )
+    expect(whitespaceDoc).toContain('实现进度 90%')
+    expect(whitespaceDoc).toContain('## white-space-nowrap')
+    expect(whitespaceDoc).toContain('pc:white-space-nowrap')
+    expect(whitespaceDoc).toContain('| `white-space-pre` |')
+    expect(whitespaceDoc).not.toContain('| `whitespace-nowrap` |')
+    expect(whitespaceDoc).not.toContain('实现进度 50%')
+    const overflowDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/text-overflow.md'),
+      'utf8',
+    )
+    expect(overflowDoc).toContain('实现进度 90%')
+    expect(overflowDoc).toContain('## overflow-clip')
+    expect(overflowDoc).toContain('## overflow-ellipsis')
+    expect(overflowDoc).toContain('| `overflow-clip` |')
+    expect(overflowDoc).not.toContain('| `text-clip` |')
+    expect(overflowDoc).not.toContain('实现进度 50%')
+    const fontFamilyDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/font-family.md'),
+      'utf8',
+    )
+    expect(fontFamilyDoc).toContain('实现进度 90%')
+    expect(fontFamilyDoc).toContain('## font-serif')
+    expect(fontFamilyDoc).toContain('ui-sans-serif')
+    expect(fontFamilyDoc).toContain('ui-monospace')
+    expect(fontFamilyDoc).toContain('没有 `m:` / `pc:`')
+    expect(fontFamilyDoc).not.toContain('var(--font-sans)')
+    expect(fontFamilyDoc).not.toContain('转写到主题 token')
+    const letterDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/letter-spacing.md'),
+      'utf8',
+    )
+    expect(letterDoc).toContain('实现进度 90%')
+    expect(letterDoc).toContain('## tracking-wide')
+    expect(letterDoc).toContain('0.025')
+    const listDoc = readFileSync(
+      resolve(here, '../../../website/src/style/typography/list-style-type.md'),
+      'utf8',
+    )
+    expect(listDoc).toContain('实现进度 90%')
+    expect(listDoc).toContain('## list-inside')
+    expect(listDoc).toContain('| `list-outside` |')
     const insetCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-inset.css'), 'utf8')
     expect(insetCss).toContain('.top-0 { top: 0; }')
     expect(insetCss).toContain('.top-2 { top: 0.5rem; }')

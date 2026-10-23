@@ -6,30 +6,171 @@ title: Text Transform
 
 # Text Transform
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Text Transform：`uppercase` / `lowercase` / `capitalize` / `normal-case` 落在同一元素的 `text-transform`。独立样例 + 组合；`m:` / `pc:` 已进 helper。
 :::
 
-大小写变换。中文无效果。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: uppercase
-    tpl: uppercase demo
-  - type: tpl
-    className: capitalize
-    tpl: capitalize demo
-```
+大小写变换。中文无效果。`normal-case` 用来盖掉变换。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `uppercase` | `text-transform: uppercase` |
-| `lowercase` | `text-transform: lowercase` |
-| `capitalize` | `text-transform: capitalize` |
-| `normal-case` | `text-transform: none` |
+| `uppercase` | `text-transform: uppercase;` |
+| `lowercase` | `text-transform: lowercase;` |
+| `capitalize` | `text-transform: capitalize;` |
+| `normal-case` | `text-transform: none;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## uppercase
+
+`text-transform: uppercase`。中文无效果。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="uppercase">uppercase Demo</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="uppercase">uppercase Demo</p>
+  </div>
+```
+
+## lowercase
+
+`text-transform: lowercase`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="lowercase">LOWERCASE Demo</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="lowercase">LOWERCASE Demo</p>
+  </div>
+```
+
+## capitalize
+
+`text-transform: capitalize`。每个词首字母大写。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="capitalize">capitalize demo text</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="capitalize">capitalize demo text</p>
+  </div>
+```
+
+## normal-case
+
+`text-transform: none`。盖掉变换。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="uppercase normal-case">uppercase + normal-case</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="uppercase normal-case">uppercase + normal-case</p>
+  </div>
+```
+
+## 组合
+
+同一组：`uppercase`、`lowercase`、`capitalize`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="uppercase">uppercase demo</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="lowercase">LOWERCASE DEMO</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="capitalize">capitalize demo</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="space-y-2">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="uppercase">uppercase demo</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="lowercase">LOWERCASE DEMO</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="capitalize">capitalize demo</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:normal-case`；桌面 `pc:uppercase`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:normal-case pc:uppercase">m:normal-case pc:uppercase</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:normal-case pc:uppercase">m:normal-case pc:uppercase</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

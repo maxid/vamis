@@ -6,32 +6,265 @@ title: Line Height
 
 # Line Height
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Line Height：`leading-*` 落在同一元素的 `line-height`。独立样例 + 组合；补 `leading-3`～`leading-10` 与 `m:` / `pc:`。
 :::
 
-行高。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: leading-tight
-    tpl: "第一行\n第二行（紧）"
-  - type: tpl
-    className: leading-loose m-t-sm
-    tpl: "第一行\n第二行（松）"
-```
+行高。相对档（`leading-none` = 1）跟字号走；绝对档（`leading-6` = 1.5rem = 24px）不跟字号走。钉 `text-base` 时 `leading-loose` = **32px**。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `leading-none` | `1` |
-| `leading-tight` | `1.25` |
-| `leading-snug` | `1.375` |
-| `leading-normal` | `1.5` |
-| `leading-relaxed` | `1.625` |
-| `leading-loose` | `2` |
+| `leading-3` | `line-height: 0.75rem;` |
+| `leading-4` | `line-height: 1rem;` |
+| `leading-5` | `line-height: 1.25rem;` |
+| `leading-6` | `line-height: 1.5rem;` |
+| `leading-7` | `line-height: 1.75rem;` |
+| `leading-8` | `line-height: 2rem;` |
+| `leading-9` | `line-height: 2.25rem;` |
+| `leading-10` | `line-height: 2.5rem;` |
+| `leading-none` | `line-height: 1;` |
+| `leading-tight` | `line-height: 1.25;` |
+| `leading-snug` | `line-height: 1.375;` |
+| `leading-normal` | `line-height: 1.5;` |
+| `leading-relaxed` | `line-height: 1.625;` |
+| `leading-loose` | `line-height: 2;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## leading-none
+
+`line-height: 1`。钉 `text-base`（16px）时行高 **16px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-none text-base w-64">
+      第一行 none<br/>第二行 none
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-none text-base w-64">
+      第一行 none<br/>第二行 none
+    </p>
+  </div>
+```
+
+## leading-tight
+
+`line-height: 1.25` = **20px**（16px 字）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-tight text-base w-64">
+      第一行 tight<br/>第二行 tight
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-tight text-base w-64">
+      第一行 tight<br/>第二行 tight
+    </p>
+  </div>
+```
+
+## leading-normal
+
+`line-height: 1.5` = **24px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-normal text-base w-64">
+      第一行 normal<br/>第二行 normal
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-normal text-base w-64">
+      第一行 normal<br/>第二行 normal
+    </p>
+  </div>
+```
+
+## leading-loose
+
+`line-height: 2` = **32px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-loose text-base w-64">
+      第一行 loose<br/>第二行 loose
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-loose text-base w-64">
+      第一行 loose<br/>第二行 loose
+    </p>
+  </div>
+```
+
+## leading-6
+
+绝对档：`line-height: 1.5rem` = **24px**，不跟字号走。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-6 text-base w-64">
+      第一行 leading-6<br/>第二行 leading-6
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-6 text-base w-64">
+      第一行 leading-6<br/>第二行 leading-6
+    </p>
+  </div>
+```
+
+## leading-10
+
+`line-height: 2.5rem` = **40px**。`leading-3`～`leading-9` 见表。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-10 text-base w-64">
+      第一行 leading-10<br/>第二行 leading-10
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="leading-10 text-base w-64">
+      第一行 leading-10<br/>第二行 leading-10
+    </p>
+  </div>
+```
+
+## 组合
+
+同一组：`leading-none`、`leading-normal`、`leading-loose`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-none text-base w-64">
+        第一行 none<br/>第二行 none
+      </p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-normal text-base w-64">
+        第一行 normal<br/>第二行 normal
+      </p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-loose text-base w-64">
+        第一行 loose<br/>第二行 loose
+      </p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-none text-base w-64">
+        第一行 none<br/>第二行 none
+      </p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-normal text-base w-64">
+        第一行 normal<br/>第二行 normal
+      </p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="leading-loose text-base w-64">
+        第一行 loose<br/>第二行 loose
+      </p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:leading-none` 16px；桌面 `pc:leading-loose` **32px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:leading-none pc:leading-loose text-base w-64">
+      第一行 m / pc<br/>第二行 m / pc
+    </p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:leading-none pc:leading-loose text-base w-64">
+      第一行 m / pc<br/>第二行 m / pc
+    </p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

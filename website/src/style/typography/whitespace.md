@@ -6,31 +6,188 @@ title: Whitespace
 
 # Whitespace
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Whitespace：类名是 `white-space-*`（中间有连字符）。独立样例 + 组合；`m:` / `pc:` 已进 helper。Tailwind `whitespace-*` 只当别名。
 :::
 
-空白折叠。`whitespace-pre` 保留换行。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: whitespace-nowrap bg-yellow-200 p-sm rounded-md w-24 overflow-hidden
-    tpl: 这一行不会折
-  - type: tpl
-    className: whitespace-pre-wrap bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: "第一行\n第二行"
-```
+空白怎么折叠。Amis 类名是 `white-space-nowrap`，不是 Tailwind 的 `whitespace-nowrap`。`pre` 保留空格和换行；`pre-line` 只保留换行。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `whitespace-normal` | `white-space: normal` |
-| `whitespace-nowrap` | `white-space: nowrap` |
-| `whitespace-pre` | `white-space: pre` |
-| `whitespace-pre-line` | `white-space: pre-line` |
-| `whitespace-pre-wrap` | `white-space: pre-wrap` |
+| `white-space-normal` | `white-space: normal;` |
+| `white-space-nowrap` | `white-space: nowrap;` |
+| `white-space-pre` | `white-space: pre;` |
+| `white-space-pre-line` | `white-space: pre-line;` |
+| `white-space-pre-wrap` | `white-space: pre-wrap;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## white-space-normal
+
+Amis 类名是 `white-space-*`（中间有连字符），不是 Tailwind 的 `whitespace-*`。`white-space: normal`，空格折叠、自动折行。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="white-space-normal">这一行不会折这一行不会折</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="white-space-normal">这一行不会折这一行不会折</p>
+  </div>
+```
+
+## white-space-nowrap
+
+`white-space: nowrap`。不折行，舞台 `w-24` + `overflow-hidden` 会裁掉。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="white-space-nowrap">这一行不会折这一行不会折</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="white-space-nowrap">这一行不会折这一行不会折</p>
+  </div>
+```
+
+## white-space-pre
+
+`white-space: pre`。保留空格和换行，不自动折。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+## white-space-pre-line
+
+`white-space: pre-line`。保留换行，空格仍折叠。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre-line">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre-line">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+## white-space-pre-wrap
+
+`white-space: pre-wrap`。保留空格和换行，必要时折行。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre-wrap">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="white-space-pre-wrap">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+  </div>
+```
+
+## 组合
+
+同一组：`white-space-nowrap`、`white-space-pre`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+      <p class="white-space-nowrap">这一行不会折这一行不会折</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="white-space-pre">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+      <p class="white-space-nowrap">这一行不会折这一行不会折</p>
+    </div>
+    <div class="bg-gray-200 p-sm rounded-md">
+      <p class="white-space-pre">一行&nbsp;&nbsp;两个空格&#10;换行还在</p>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:white-space-normal` 会折行；桌面 `pc:white-space-nowrap` 不折。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="m:white-space-normal pc:white-space-nowrap">这一行不会折这一行不会折</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md w-24 overflow-hidden">
+    <p class="m:white-space-normal pc:white-space-nowrap">这一行不会折这一行不会折</p>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

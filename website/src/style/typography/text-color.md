@@ -10,39 +10,7 @@ title: Text Color
 语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。状态前缀与 `m:` / `pc:` 已进 CSS，见 [辅助类-状态样式](/style/state)。
 :::
 
-优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` 等），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex flex-wrap gap-3
-    body:
-      - type: tpl
-        className: text-foreground
-        tpl: 正文
-      - type: tpl
-        className: text-muted-foreground
-        tpl: 次要
-      - type: tpl
-        className: text-primary
-        tpl: 主色
-      - type: tpl
-        className: text-success
-        tpl: 成功
-      - type: tpl
-        className: text-warning
-        tpl: 警告
-      - type: tpl
-        className: text-info
-        tpl: 信息
-      - type: tpl
-        className: text-danger
-        tpl: 危险
-      - type: tpl
-        className: text-green-700
-        tpl: green-700
-```
+优先用主题语义色（`text-primary` / `text-success` / `text-danger`）。调色盘与 Amis helper 同档 hex（`text-green-700` = `#047857`），SDK 也能用。`text-danger` 同时保留类名，并映射到 `text-destructive`。完整色阶见表；逐档核还在色盘表。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
@@ -152,4 +120,148 @@ body:
 | `text-pink-800` | `color: #9d174d` | <span class="text-pink-800 font-medium">AaBbCc</span> |
 | `text-pink-900` | `color: #831843` | <span class="text-pink-900 font-medium">AaBbCc</span> |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## text-primary
+
+语义主色：`color: var(--primary)`。顶栏换色点会跟着走。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-primary">text-primary</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-primary">text-primary</p>
+  </div>
+```
+
+## text-success
+
+`color: var(--success)`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-success">text-success</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-success">text-success</p>
+  </div>
+```
+
+## text-danger
+
+`color: var(--destructive)`。Amis 叫 `text-danger`，token 落到 destructive。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-danger">text-danger</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-danger">text-danger</p>
+  </div>
+```
+
+## text-green-700
+
+调色盘与 Amis helper 同档 hex：`#047857`。完整色阶见表。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-green-700">text-green-700</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="text-green-700">text-green-700</p>
+  </div>
+```
+
+## 组合
+
+语义色 + 一档调色盘。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <p class="text-foreground">正文</p>
+    <p class="text-primary">主色</p>
+    <p class="text-success">成功</p>
+    <p class="text-danger">危险</p>
+    <p class="text-green-700">green-700</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <p class="text-foreground">正文</p>
+    <p class="text-primary">主色</p>
+    <p class="text-success">成功</p>
+    <p class="text-danger">危险</p>
+    <p class="text-green-700">green-700</p>
+  </div>
+```
+
+## 响应式设计
+
+语义色和调色盘都接了 `m:` / `pc:`，见 [辅助类-响应式设计](/style/responsive-design)。桌面 `pc:text-primary`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-foreground pc:text-primary">m / pc</p>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <p class="m:text-foreground pc:text-primary">m / pc</p>
+  </div>
+```
+
+## 状态前缀
+
+调色盘的 `hover:` / `focus:` / `active:` / `disabled:` 已进 SDK，见 [辅助类-状态样式](/style/state)。本页表只列默认态，完整 hex 核还在色盘表。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
