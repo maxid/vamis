@@ -157,12 +157,18 @@ function registerBuiltinActions() {
 
   registerAction('alert', async (action, ctx) => {
     const data = actionData(action, ctx)
-    ctx.env.alert(filterTpl(action.msg || action.message || action.args?.msg || '', data), action.title)
+    ctx.env.alert(
+      filterTpl(action.msg || action.message || action.args?.msg || '', data),
+      typeof action.title === 'string' ? action.title : undefined,
+    )
   })
 
   registerAction('confirm', async (action, ctx) => {
     const data = actionData(action, ctx)
-    const ok = await ctx.env.confirm(filterTpl(action.msg || action.confirmText || '', data), action.title)
+    const ok = await ctx.env.confirm(
+      filterTpl(action.msg || action.confirmText || '', data),
+      typeof action.title === 'string' ? action.title : undefined,
+    )
     if (!ok) ctx.event?.stopPropagation()
   })
 

@@ -11,7 +11,8 @@ export interface SchemaObject extends PlainObject {
   type?: string
   name?: string
   id?: string
-  title?: string
+  /** Amis 表单/面板：`false` 隐藏标题；对象走子渲染器。 */
+  title?: string | false | SchemaObject
   /** Amis 表单项：`false` 隐藏 label。 */
   label?: string | false
   className?: string | Record<string, boolean | string>

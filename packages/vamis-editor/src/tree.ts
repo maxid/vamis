@@ -11,7 +11,9 @@ export interface SchemaTreeNode {
 }
 
 function labelOf(schema: SchemaObject): string {
-  return schema.title || schema.label || schema.name || schema.type || 'node'
+  if (typeof schema.title === 'string' && schema.title) return schema.title
+  if (typeof schema.label === 'string' && schema.label) return schema.label
+  return schema.name || schema.type || 'node'
 }
 
 function walk(schema: SchemaNode, path: string): SchemaTreeNode | null {
