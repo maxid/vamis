@@ -7,87 +7,879 @@ title: Margin
 # Margin
 
 ::: tip 实现进度 90% · 已完成
-`helpers.css` 已打进 playground 与 SDK。档位走 `--gap-xs…xl`，可用 `m:` / `pc:`。
+活示例对标 Amis Margin：`m-*` / `mx` / `my` / `mt` / `mr` / `mb` / `ml` 与负值 / `auto` 落在同一元素的 `margin-*`（Tailwind rem 档，不是 `--gap-xs`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`m-none` / `m-18` 已补齐。
 :::
 
-`className` 写这些类改外边距。`m-t-xs` 这种 Amis 写法与 `mt-0` 都可用。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: m-t-xs
-    tpl: 上边距 --gap-xs（4px）
-  - type: tpl
-    className: m-t-lg
-    tpl: 上边距 --gap-lg（20px）
-```
+盒子外边距。档位是 Tailwind spacing（`m-4` = 1rem = 16px），不是 cxd `--gap-xs…xl`。负值加 `-` 前缀（`-m-4`）；`m-auto` / `mx-auto` 吃剩余空间。舞台 `p-6` = 24px，用黄盒子 left / top 和计算 `margin-*` 对。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 margin 类打在内层黄盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
+| `m-px` | `margin: 0.0625rem;` |
+| `mx-px` | `margin-left: 0.0625rem; margin-right: 0.0625rem;` |
+| `my-px` | `margin-top: 0.0625rem; margin-bottom: 0.0625rem;` |
+| `mt-px` | `margin-top: 0.0625rem;` |
+| `mr-px` | `margin-right: 0.0625rem;` |
+| `mb-px` | `margin-bottom: 0.0625rem;` |
+| `ml-px` | `margin-left: 0.0625rem;` |
 | `m-0` | `margin: 0;` |
-| `mb-0` | `margin-bottom: 0;` |
-| `mt-0` | `margin-top: 0;` |
-| `ml-0` | `margin-left: 0;` |
-| `mr-0` | `margin-right: 0;` |
 | `mx-0` | `margin-left: 0; margin-right: 0;` |
 | `my-0` | `margin-top: 0; margin-bottom: 0;` |
+| `mt-0` | `margin-top: 0;` |
+| `mr-0` | `margin-right: 0;` |
+| `mb-0` | `margin-bottom: 0;` |
+| `ml-0` | `margin-left: 0;` |
 | `m-none` | `margin: 0;` |
-| `m-xs` | `margin: var(--gap-xs);` |
-| `m-sm` | `margin: var(--gap-sm);` |
-| `m-base` | `margin: var(--gap-base);` |
-| `m-md` | `margin: var(--gap-md);` |
-| `m-lg` | `margin: var(--gap-lg);` |
-| `m-xl` | `margin: var(--gap-xl);` |
-| `m-t-none` | `margin-top: 0;` |
-| `m-t-xs` | `margin-top: var(--gap-xs);` |
-| `m-t-sm` | `margin-top: var(--gap-sm);` |
-| `m-t` | `margin-top: var(--gap-base);` |
-| `m-t-base` | `margin-top: var(--gap-base);` |
-| `m-t-md` | `margin-top: var(--gap-md);` |
-| `m-t-lg` | `margin-top: var(--gap-lg);` |
-| `m-t-xl` | `margin-top: var(--gap-xl);` |
-| `m-b-none` | `margin-bottom: 0;` |
-| `m-b-xs` | `margin-bottom: var(--gap-xs);` |
-| `m-b-sm` | `margin-bottom: var(--gap-sm);` |
-| `m-b` | `margin-bottom: var(--gap-base);` |
-| `m-b-base` | `margin-bottom: var(--gap-base);` |
-| `m-b-md` | `margin-bottom: var(--gap-md);` |
-| `m-b-lg` | `margin-bottom: var(--gap-lg);` |
-| `m-b-xl` | `margin-bottom: var(--gap-xl);` |
-| `m-l-none` | `margin-left: 0;` |
-| `m-l-xs` | `margin-left: var(--gap-xs);` |
-| `m-l-sm` | `margin-left: var(--gap-sm);` |
-| `m-l` | `margin-left: var(--gap-base);` |
-| `m-l-base` | `margin-left: var(--gap-base);` |
-| `m-l-md` | `margin-left: var(--gap-md);` |
-| `m-l-lg` | `margin-left: var(--gap-lg);` |
-| `m-l-xl` | `margin-left: var(--gap-xl);` |
-| `m-r-none` | `margin-right: 0;` |
-| `m-r-xs` | `margin-right: var(--gap-xs);` |
-| `m-r-sm` | `margin-right: var(--gap-sm);` |
-| `m-r` | `margin-right: var(--gap-base);` |
-| `m-r-base` | `margin-right: var(--gap-base);` |
-| `m-r-md` | `margin-right: var(--gap-md);` |
-| `m-r-lg` | `margin-right: var(--gap-lg);` |
-| `m-r-xl` | `margin-right: var(--gap-xl);` |
-| `m-x-none` | `margin-left: 0; margin-right: 0;` |
-| `m-x-xs` | `margin-left: var(--gap-xs); margin-right: var(--gap-xs);` |
-| `m-x-sm` | `margin-left: var(--gap-sm); margin-right: var(--gap-sm);` |
-| `m-x` | `margin-left: var(--gap-base); margin-right: var(--gap-base);` |
-| `m-x-base` | `margin-left: var(--gap-base); margin-right: var(--gap-base);` |
-| `m-x-md` | `margin-left: var(--gap-md); margin-right: var(--gap-md);` |
-| `m-x-lg` | `margin-left: var(--gap-lg); margin-right: var(--gap-lg);` |
-| `m-x-xl` | `margin-left: var(--gap-xl); margin-right: var(--gap-xl);` |
-| `m-y-none` | `margin-top: 0; margin-bottom: 0;` |
-| `m-y-xs` | `margin-top: var(--gap-xs); margin-bottom: var(--gap-xs);` |
-| `m-y-sm` | `margin-top: var(--gap-sm); margin-bottom: var(--gap-sm);` |
-| `m-y` | `margin-top: var(--gap-base); margin-bottom: var(--gap-base);` |
-| `m-y-base` | `margin-top: var(--gap-base); margin-bottom: var(--gap-base);` |
-| `m-y-md` | `margin-top: var(--gap-md); margin-bottom: var(--gap-md);` |
-| `m-y-lg` | `margin-top: var(--gap-lg); margin-bottom: var(--gap-lg);` |
-| `m-y-xl` | `margin-top: var(--gap-xl); margin-bottom: var(--gap-xl);` |
+| `mx-none` | `margin-left: 0; margin-right: 0;` |
+| `my-none` | `margin-top: 0; margin-bottom: 0;` |
+| `mt-none` | `margin-top: 0;` |
+| `mr-none` | `margin-right: 0;` |
+| `mb-none` | `margin-bottom: 0;` |
+| `ml-none` | `margin-left: 0;` |
+| `m-0.5` | `margin: 0.125rem;` |
+| `mx-0.5` | `margin-left: 0.125rem; margin-right: 0.125rem;` |
+| `my-0.5` | `margin-top: 0.125rem; margin-bottom: 0.125rem;` |
+| `mt-0.5` | `margin-top: 0.125rem;` |
+| `mr-0.5` | `margin-right: 0.125rem;` |
+| `mb-0.5` | `margin-bottom: 0.125rem;` |
+| `ml-0.5` | `margin-left: 0.125rem;` |
+| `m-1` | `margin: 0.25rem;` |
+| `mx-1` | `margin-left: 0.25rem; margin-right: 0.25rem;` |
+| `my-1` | `margin-top: 0.25rem; margin-bottom: 0.25rem;` |
+| `mt-1` | `margin-top: 0.25rem;` |
+| `mr-1` | `margin-right: 0.25rem;` |
+| `mb-1` | `margin-bottom: 0.25rem;` |
+| `ml-1` | `margin-left: 0.25rem;` |
+| `m-1.5` | `margin: 0.375rem;` |
+| `mx-1.5` | `margin-left: 0.375rem; margin-right: 0.375rem;` |
+| `my-1.5` | `margin-top: 0.375rem; margin-bottom: 0.375rem;` |
+| `mt-1.5` | `margin-top: 0.375rem;` |
+| `mr-1.5` | `margin-right: 0.375rem;` |
+| `mb-1.5` | `margin-bottom: 0.375rem;` |
+| `ml-1.5` | `margin-left: 0.375rem;` |
+| `m-2` | `margin: 0.5rem;` |
+| `mx-2` | `margin-left: 0.5rem; margin-right: 0.5rem;` |
+| `my-2` | `margin-top: 0.5rem; margin-bottom: 0.5rem;` |
+| `mt-2` | `margin-top: 0.5rem;` |
+| `mr-2` | `margin-right: 0.5rem;` |
+| `mb-2` | `margin-bottom: 0.5rem;` |
+| `ml-2` | `margin-left: 0.5rem;` |
+| `m-2.5` | `margin: 0.625rem;` |
+| `mx-2.5` | `margin-left: 0.625rem; margin-right: 0.625rem;` |
+| `my-2.5` | `margin-top: 0.625rem; margin-bottom: 0.625rem;` |
+| `mt-2.5` | `margin-top: 0.625rem;` |
+| `mr-2.5` | `margin-right: 0.625rem;` |
+| `mb-2.5` | `margin-bottom: 0.625rem;` |
+| `ml-2.5` | `margin-left: 0.625rem;` |
+| `m-3` | `margin: 0.75rem;` |
+| `mx-3` | `margin-left: 0.75rem; margin-right: 0.75rem;` |
+| `my-3` | `margin-top: 0.75rem; margin-bottom: 0.75rem;` |
+| `mt-3` | `margin-top: 0.75rem;` |
+| `mr-3` | `margin-right: 0.75rem;` |
+| `mb-3` | `margin-bottom: 0.75rem;` |
+| `ml-3` | `margin-left: 0.75rem;` |
+| `m-3.5` | `margin: 0.875rem;` |
+| `mx-3.5` | `margin-left: 0.875rem; margin-right: 0.875rem;` |
+| `my-3.5` | `margin-top: 0.875rem; margin-bottom: 0.875rem;` |
+| `mt-3.5` | `margin-top: 0.875rem;` |
+| `mr-3.5` | `margin-right: 0.875rem;` |
+| `mb-3.5` | `margin-bottom: 0.875rem;` |
+| `ml-3.5` | `margin-left: 0.875rem;` |
+| `m-4` | `margin: 1rem;` |
+| `mx-4` | `margin-left: 1rem; margin-right: 1rem;` |
+| `my-4` | `margin-top: 1rem; margin-bottom: 1rem;` |
+| `mt-4` | `margin-top: 1rem;` |
+| `mr-4` | `margin-right: 1rem;` |
+| `mb-4` | `margin-bottom: 1rem;` |
+| `ml-4` | `margin-left: 1rem;` |
+| `m-5` | `margin: 1.25rem;` |
+| `mx-5` | `margin-left: 1.25rem; margin-right: 1.25rem;` |
+| `my-5` | `margin-top: 1.25rem; margin-bottom: 1.25rem;` |
+| `mt-5` | `margin-top: 1.25rem;` |
+| `mr-5` | `margin-right: 1.25rem;` |
+| `mb-5` | `margin-bottom: 1.25rem;` |
+| `ml-5` | `margin-left: 1.25rem;` |
+| `m-6` | `margin: 1.5rem;` |
+| `mx-6` | `margin-left: 1.5rem; margin-right: 1.5rem;` |
+| `my-6` | `margin-top: 1.5rem; margin-bottom: 1.5rem;` |
+| `mt-6` | `margin-top: 1.5rem;` |
+| `mr-6` | `margin-right: 1.5rem;` |
+| `mb-6` | `margin-bottom: 1.5rem;` |
+| `ml-6` | `margin-left: 1.5rem;` |
+| `m-7` | `margin: 1.75rem;` |
+| `mx-7` | `margin-left: 1.75rem; margin-right: 1.75rem;` |
+| `my-7` | `margin-top: 1.75rem; margin-bottom: 1.75rem;` |
+| `mt-7` | `margin-top: 1.75rem;` |
+| `mr-7` | `margin-right: 1.75rem;` |
+| `mb-7` | `margin-bottom: 1.75rem;` |
+| `ml-7` | `margin-left: 1.75rem;` |
+| `m-8` | `margin: 2rem;` |
+| `mx-8` | `margin-left: 2rem; margin-right: 2rem;` |
+| `my-8` | `margin-top: 2rem; margin-bottom: 2rem;` |
+| `mt-8` | `margin-top: 2rem;` |
+| `mr-8` | `margin-right: 2rem;` |
+| `mb-8` | `margin-bottom: 2rem;` |
+| `ml-8` | `margin-left: 2rem;` |
+| `m-9` | `margin: 2.25rem;` |
+| `mx-9` | `margin-left: 2.25rem; margin-right: 2.25rem;` |
+| `my-9` | `margin-top: 2.25rem; margin-bottom: 2.25rem;` |
+| `mt-9` | `margin-top: 2.25rem;` |
+| `mr-9` | `margin-right: 2.25rem;` |
+| `mb-9` | `margin-bottom: 2.25rem;` |
+| `ml-9` | `margin-left: 2.25rem;` |
+| `m-10` | `margin: 2.5rem;` |
+| `mx-10` | `margin-left: 2.5rem; margin-right: 2.5rem;` |
+| `my-10` | `margin-top: 2.5rem; margin-bottom: 2.5rem;` |
+| `mt-10` | `margin-top: 2.5rem;` |
+| `mr-10` | `margin-right: 2.5rem;` |
+| `mb-10` | `margin-bottom: 2.5rem;` |
+| `ml-10` | `margin-left: 2.5rem;` |
+| `m-11` | `margin: 2.75rem;` |
+| `mx-11` | `margin-left: 2.75rem; margin-right: 2.75rem;` |
+| `my-11` | `margin-top: 2.75rem; margin-bottom: 2.75rem;` |
+| `mt-11` | `margin-top: 2.75rem;` |
+| `mr-11` | `margin-right: 2.75rem;` |
+| `mb-11` | `margin-bottom: 2.75rem;` |
+| `ml-11` | `margin-left: 2.75rem;` |
+| `m-12` | `margin: 3rem;` |
+| `mx-12` | `margin-left: 3rem; margin-right: 3rem;` |
+| `my-12` | `margin-top: 3rem; margin-bottom: 3rem;` |
+| `mt-12` | `margin-top: 3rem;` |
+| `mr-12` | `margin-right: 3rem;` |
+| `mb-12` | `margin-bottom: 3rem;` |
+| `ml-12` | `margin-left: 3rem;` |
+| `m-14` | `margin: 3.5rem;` |
+| `mx-14` | `margin-left: 3.5rem; margin-right: 3.5rem;` |
+| `my-14` | `margin-top: 3.5rem; margin-bottom: 3.5rem;` |
+| `mt-14` | `margin-top: 3.5rem;` |
+| `mr-14` | `margin-right: 3.5rem;` |
+| `mb-14` | `margin-bottom: 3.5rem;` |
+| `ml-14` | `margin-left: 3.5rem;` |
+| `m-16` | `margin: 4rem;` |
+| `mx-16` | `margin-left: 4rem; margin-right: 4rem;` |
+| `my-16` | `margin-top: 4rem; margin-bottom: 4rem;` |
+| `mt-16` | `margin-top: 4rem;` |
+| `mr-16` | `margin-right: 4rem;` |
+| `mb-16` | `margin-bottom: 4rem;` |
+| `ml-16` | `margin-left: 4rem;` |
+| `m-18` | `margin: 4.5rem;` |
+| `mx-18` | `margin-left: 4.5rem; margin-right: 4.5rem;` |
+| `my-18` | `margin-top: 4.5rem; margin-bottom: 4.5rem;` |
+| `mt-18` | `margin-top: 4.5rem;` |
+| `mr-18` | `margin-right: 4.5rem;` |
+| `mb-18` | `margin-bottom: 4.5rem;` |
+| `ml-18` | `margin-left: 4.5rem;` |
+| `m-20` | `margin: 5rem;` |
+| `mx-20` | `margin-left: 5rem; margin-right: 5rem;` |
+| `my-20` | `margin-top: 5rem; margin-bottom: 5rem;` |
+| `mt-20` | `margin-top: 5rem;` |
+| `mr-20` | `margin-right: 5rem;` |
+| `mb-20` | `margin-bottom: 5rem;` |
+| `ml-20` | `margin-left: 5rem;` |
+| `m-24` | `margin: 6rem;` |
+| `mx-24` | `margin-left: 6rem; margin-right: 6rem;` |
+| `my-24` | `margin-top: 6rem; margin-bottom: 6rem;` |
+| `mt-24` | `margin-top: 6rem;` |
+| `mr-24` | `margin-right: 6rem;` |
+| `mb-24` | `margin-bottom: 6rem;` |
+| `ml-24` | `margin-left: 6rem;` |
+| `m-28` | `margin: 7rem;` |
+| `mx-28` | `margin-left: 7rem; margin-right: 7rem;` |
+| `my-28` | `margin-top: 7rem; margin-bottom: 7rem;` |
+| `mt-28` | `margin-top: 7rem;` |
+| `mr-28` | `margin-right: 7rem;` |
+| `mb-28` | `margin-bottom: 7rem;` |
+| `ml-28` | `margin-left: 7rem;` |
+| `m-32` | `margin: 8rem;` |
+| `mx-32` | `margin-left: 8rem; margin-right: 8rem;` |
+| `my-32` | `margin-top: 8rem; margin-bottom: 8rem;` |
+| `mt-32` | `margin-top: 8rem;` |
+| `mr-32` | `margin-right: 8rem;` |
+| `mb-32` | `margin-bottom: 8rem;` |
+| `ml-32` | `margin-left: 8rem;` |
+| `m-36` | `margin: 9rem;` |
+| `mx-36` | `margin-left: 9rem; margin-right: 9rem;` |
+| `my-36` | `margin-top: 9rem; margin-bottom: 9rem;` |
+| `mt-36` | `margin-top: 9rem;` |
+| `mr-36` | `margin-right: 9rem;` |
+| `mb-36` | `margin-bottom: 9rem;` |
+| `ml-36` | `margin-left: 9rem;` |
+| `m-40` | `margin: 10rem;` |
+| `mx-40` | `margin-left: 10rem; margin-right: 10rem;` |
+| `my-40` | `margin-top: 10rem; margin-bottom: 10rem;` |
+| `mt-40` | `margin-top: 10rem;` |
+| `mr-40` | `margin-right: 10rem;` |
+| `mb-40` | `margin-bottom: 10rem;` |
+| `ml-40` | `margin-left: 10rem;` |
+| `m-44` | `margin: 11rem;` |
+| `mx-44` | `margin-left: 11rem; margin-right: 11rem;` |
+| `my-44` | `margin-top: 11rem; margin-bottom: 11rem;` |
+| `mt-44` | `margin-top: 11rem;` |
+| `mr-44` | `margin-right: 11rem;` |
+| `mb-44` | `margin-bottom: 11rem;` |
+| `ml-44` | `margin-left: 11rem;` |
+| `m-48` | `margin: 12rem;` |
+| `mx-48` | `margin-left: 12rem; margin-right: 12rem;` |
+| `my-48` | `margin-top: 12rem; margin-bottom: 12rem;` |
+| `mt-48` | `margin-top: 12rem;` |
+| `mr-48` | `margin-right: 12rem;` |
+| `mb-48` | `margin-bottom: 12rem;` |
+| `ml-48` | `margin-left: 12rem;` |
+| `m-52` | `margin: 13rem;` |
+| `mx-52` | `margin-left: 13rem; margin-right: 13rem;` |
+| `my-52` | `margin-top: 13rem; margin-bottom: 13rem;` |
+| `mt-52` | `margin-top: 13rem;` |
+| `mr-52` | `margin-right: 13rem;` |
+| `mb-52` | `margin-bottom: 13rem;` |
+| `ml-52` | `margin-left: 13rem;` |
+| `m-56` | `margin: 14rem;` |
+| `mx-56` | `margin-left: 14rem; margin-right: 14rem;` |
+| `my-56` | `margin-top: 14rem; margin-bottom: 14rem;` |
+| `mt-56` | `margin-top: 14rem;` |
+| `mr-56` | `margin-right: 14rem;` |
+| `mb-56` | `margin-bottom: 14rem;` |
+| `ml-56` | `margin-left: 14rem;` |
+| `m-60` | `margin: 15rem;` |
+| `mx-60` | `margin-left: 15rem; margin-right: 15rem;` |
+| `my-60` | `margin-top: 15rem; margin-bottom: 15rem;` |
+| `mt-60` | `margin-top: 15rem;` |
+| `mr-60` | `margin-right: 15rem;` |
+| `mb-60` | `margin-bottom: 15rem;` |
+| `ml-60` | `margin-left: 15rem;` |
+| `m-64` | `margin: 16rem;` |
+| `mx-64` | `margin-left: 16rem; margin-right: 16rem;` |
+| `my-64` | `margin-top: 16rem; margin-bottom: 16rem;` |
+| `mt-64` | `margin-top: 16rem;` |
+| `mr-64` | `margin-right: 16rem;` |
+| `mb-64` | `margin-bottom: 16rem;` |
+| `ml-64` | `margin-left: 16rem;` |
+| `m-72` | `margin: 18rem;` |
+| `mx-72` | `margin-left: 18rem; margin-right: 18rem;` |
+| `my-72` | `margin-top: 18rem; margin-bottom: 18rem;` |
+| `mt-72` | `margin-top: 18rem;` |
+| `mr-72` | `margin-right: 18rem;` |
+| `mb-72` | `margin-bottom: 18rem;` |
+| `ml-72` | `margin-left: 18rem;` |
+| `m-80` | `margin: 20rem;` |
+| `mx-80` | `margin-left: 20rem; margin-right: 20rem;` |
+| `my-80` | `margin-top: 20rem; margin-bottom: 20rem;` |
+| `mt-80` | `margin-top: 20rem;` |
+| `mr-80` | `margin-right: 20rem;` |
+| `mb-80` | `margin-bottom: 20rem;` |
+| `ml-80` | `margin-left: 20rem;` |
+| `m-96` | `margin: 24rem;` |
+| `mx-96` | `margin-left: 24rem; margin-right: 24rem;` |
+| `my-96` | `margin-top: 24rem; margin-bottom: 24rem;` |
+| `mt-96` | `margin-top: 24rem;` |
+| `mr-96` | `margin-right: 24rem;` |
+| `mb-96` | `margin-bottom: 24rem;` |
+| `ml-96` | `margin-left: 24rem;` |
+| `-m-px` | `margin: -0.0625rem;` |
+| `-mx-px` | `margin-left: -0.0625rem; margin-right: -0.0625rem;` |
+| `-my-px` | `margin-top: -0.0625rem; margin-bottom: -0.0625rem;` |
+| `-mt-px` | `margin-top: -0.0625rem;` |
+| `-mr-px` | `margin-right: -0.0625rem;` |
+| `-mb-px` | `margin-bottom: -0.0625rem;` |
+| `-ml-px` | `margin-left: -0.0625rem;` |
+| `-m-0` | `margin: 0;` |
+| `-mx-0` | `margin-left: 0; margin-right: 0;` |
+| `-my-0` | `margin-top: 0; margin-bottom: 0;` |
+| `-mt-0` | `margin-top: 0;` |
+| `-mr-0` | `margin-right: 0;` |
+| `-mb-0` | `margin-bottom: 0;` |
+| `-ml-0` | `margin-left: 0;` |
+| `-m-none` | `margin: 0;` |
+| `-mx-none` | `margin-left: 0; margin-right: 0;` |
+| `-my-none` | `margin-top: 0; margin-bottom: 0;` |
+| `-mt-none` | `margin-top: 0;` |
+| `-mr-none` | `margin-right: 0;` |
+| `-mb-none` | `margin-bottom: 0;` |
+| `-ml-none` | `margin-left: 0;` |
+| `-m-0.5` | `margin: -0.125rem;` |
+| `-mx-0.5` | `margin-left: -0.125rem; margin-right: -0.125rem;` |
+| `-my-0.5` | `margin-top: -0.125rem; margin-bottom: -0.125rem;` |
+| `-mt-0.5` | `margin-top: -0.125rem;` |
+| `-mr-0.5` | `margin-right: -0.125rem;` |
+| `-mb-0.5` | `margin-bottom: -0.125rem;` |
+| `-ml-0.5` | `margin-left: -0.125rem;` |
+| `-m-1` | `margin: -0.25rem;` |
+| `-mx-1` | `margin-left: -0.25rem; margin-right: -0.25rem;` |
+| `-my-1` | `margin-top: -0.25rem; margin-bottom: -0.25rem;` |
+| `-mt-1` | `margin-top: -0.25rem;` |
+| `-mr-1` | `margin-right: -0.25rem;` |
+| `-mb-1` | `margin-bottom: -0.25rem;` |
+| `-ml-1` | `margin-left: -0.25rem;` |
+| `-m-1.5` | `margin: -0.375rem;` |
+| `-mx-1.5` | `margin-left: -0.375rem; margin-right: -0.375rem;` |
+| `-my-1.5` | `margin-top: -0.375rem; margin-bottom: -0.375rem;` |
+| `-mt-1.5` | `margin-top: -0.375rem;` |
+| `-mr-1.5` | `margin-right: -0.375rem;` |
+| `-mb-1.5` | `margin-bottom: -0.375rem;` |
+| `-ml-1.5` | `margin-left: -0.375rem;` |
+| `-m-2` | `margin: -0.5rem;` |
+| `-mx-2` | `margin-left: -0.5rem; margin-right: -0.5rem;` |
+| `-my-2` | `margin-top: -0.5rem; margin-bottom: -0.5rem;` |
+| `-mt-2` | `margin-top: -0.5rem;` |
+| `-mr-2` | `margin-right: -0.5rem;` |
+| `-mb-2` | `margin-bottom: -0.5rem;` |
+| `-ml-2` | `margin-left: -0.5rem;` |
+| `-m-2.5` | `margin: -0.625rem;` |
+| `-mx-2.5` | `margin-left: -0.625rem; margin-right: -0.625rem;` |
+| `-my-2.5` | `margin-top: -0.625rem; margin-bottom: -0.625rem;` |
+| `-mt-2.5` | `margin-top: -0.625rem;` |
+| `-mr-2.5` | `margin-right: -0.625rem;` |
+| `-mb-2.5` | `margin-bottom: -0.625rem;` |
+| `-ml-2.5` | `margin-left: -0.625rem;` |
+| `-m-3` | `margin: -0.75rem;` |
+| `-mx-3` | `margin-left: -0.75rem; margin-right: -0.75rem;` |
+| `-my-3` | `margin-top: -0.75rem; margin-bottom: -0.75rem;` |
+| `-mt-3` | `margin-top: -0.75rem;` |
+| `-mr-3` | `margin-right: -0.75rem;` |
+| `-mb-3` | `margin-bottom: -0.75rem;` |
+| `-ml-3` | `margin-left: -0.75rem;` |
+| `-m-3.5` | `margin: -0.875rem;` |
+| `-mx-3.5` | `margin-left: -0.875rem; margin-right: -0.875rem;` |
+| `-my-3.5` | `margin-top: -0.875rem; margin-bottom: -0.875rem;` |
+| `-mt-3.5` | `margin-top: -0.875rem;` |
+| `-mr-3.5` | `margin-right: -0.875rem;` |
+| `-mb-3.5` | `margin-bottom: -0.875rem;` |
+| `-ml-3.5` | `margin-left: -0.875rem;` |
+| `-m-4` | `margin: -1rem;` |
+| `-mx-4` | `margin-left: -1rem; margin-right: -1rem;` |
+| `-my-4` | `margin-top: -1rem; margin-bottom: -1rem;` |
+| `-mt-4` | `margin-top: -1rem;` |
+| `-mr-4` | `margin-right: -1rem;` |
+| `-mb-4` | `margin-bottom: -1rem;` |
+| `-ml-4` | `margin-left: -1rem;` |
+| `-m-5` | `margin: -1.25rem;` |
+| `-mx-5` | `margin-left: -1.25rem; margin-right: -1.25rem;` |
+| `-my-5` | `margin-top: -1.25rem; margin-bottom: -1.25rem;` |
+| `-mt-5` | `margin-top: -1.25rem;` |
+| `-mr-5` | `margin-right: -1.25rem;` |
+| `-mb-5` | `margin-bottom: -1.25rem;` |
+| `-ml-5` | `margin-left: -1.25rem;` |
+| `-m-6` | `margin: -1.5rem;` |
+| `-mx-6` | `margin-left: -1.5rem; margin-right: -1.5rem;` |
+| `-my-6` | `margin-top: -1.5rem; margin-bottom: -1.5rem;` |
+| `-mt-6` | `margin-top: -1.5rem;` |
+| `-mr-6` | `margin-right: -1.5rem;` |
+| `-mb-6` | `margin-bottom: -1.5rem;` |
+| `-ml-6` | `margin-left: -1.5rem;` |
+| `-m-7` | `margin: -1.75rem;` |
+| `-mx-7` | `margin-left: -1.75rem; margin-right: -1.75rem;` |
+| `-my-7` | `margin-top: -1.75rem; margin-bottom: -1.75rem;` |
+| `-mt-7` | `margin-top: -1.75rem;` |
+| `-mr-7` | `margin-right: -1.75rem;` |
+| `-mb-7` | `margin-bottom: -1.75rem;` |
+| `-ml-7` | `margin-left: -1.75rem;` |
+| `-m-8` | `margin: -2rem;` |
+| `-mx-8` | `margin-left: -2rem; margin-right: -2rem;` |
+| `-my-8` | `margin-top: -2rem; margin-bottom: -2rem;` |
+| `-mt-8` | `margin-top: -2rem;` |
+| `-mr-8` | `margin-right: -2rem;` |
+| `-mb-8` | `margin-bottom: -2rem;` |
+| `-ml-8` | `margin-left: -2rem;` |
+| `-m-9` | `margin: -2.25rem;` |
+| `-mx-9` | `margin-left: -2.25rem; margin-right: -2.25rem;` |
+| `-my-9` | `margin-top: -2.25rem; margin-bottom: -2.25rem;` |
+| `-mt-9` | `margin-top: -2.25rem;` |
+| `-mr-9` | `margin-right: -2.25rem;` |
+| `-mb-9` | `margin-bottom: -2.25rem;` |
+| `-ml-9` | `margin-left: -2.25rem;` |
+| `-m-10` | `margin: -2.5rem;` |
+| `-mx-10` | `margin-left: -2.5rem; margin-right: -2.5rem;` |
+| `-my-10` | `margin-top: -2.5rem; margin-bottom: -2.5rem;` |
+| `-mt-10` | `margin-top: -2.5rem;` |
+| `-mr-10` | `margin-right: -2.5rem;` |
+| `-mb-10` | `margin-bottom: -2.5rem;` |
+| `-ml-10` | `margin-left: -2.5rem;` |
+| `-m-11` | `margin: -2.75rem;` |
+| `-mx-11` | `margin-left: -2.75rem; margin-right: -2.75rem;` |
+| `-my-11` | `margin-top: -2.75rem; margin-bottom: -2.75rem;` |
+| `-mt-11` | `margin-top: -2.75rem;` |
+| `-mr-11` | `margin-right: -2.75rem;` |
+| `-mb-11` | `margin-bottom: -2.75rem;` |
+| `-ml-11` | `margin-left: -2.75rem;` |
+| `-m-12` | `margin: -3rem;` |
+| `-mx-12` | `margin-left: -3rem; margin-right: -3rem;` |
+| `-my-12` | `margin-top: -3rem; margin-bottom: -3rem;` |
+| `-mt-12` | `margin-top: -3rem;` |
+| `-mr-12` | `margin-right: -3rem;` |
+| `-mb-12` | `margin-bottom: -3rem;` |
+| `-ml-12` | `margin-left: -3rem;` |
+| `-m-14` | `margin: -3.5rem;` |
+| `-mx-14` | `margin-left: -3.5rem; margin-right: -3.5rem;` |
+| `-my-14` | `margin-top: -3.5rem; margin-bottom: -3.5rem;` |
+| `-mt-14` | `margin-top: -3.5rem;` |
+| `-mr-14` | `margin-right: -3.5rem;` |
+| `-mb-14` | `margin-bottom: -3.5rem;` |
+| `-ml-14` | `margin-left: -3.5rem;` |
+| `-m-16` | `margin: -4rem;` |
+| `-mx-16` | `margin-left: -4rem; margin-right: -4rem;` |
+| `-my-16` | `margin-top: -4rem; margin-bottom: -4rem;` |
+| `-mt-16` | `margin-top: -4rem;` |
+| `-mr-16` | `margin-right: -4rem;` |
+| `-mb-16` | `margin-bottom: -4rem;` |
+| `-ml-16` | `margin-left: -4rem;` |
+| `-m-18` | `margin: -4.5rem;` |
+| `-mx-18` | `margin-left: -4.5rem; margin-right: -4.5rem;` |
+| `-my-18` | `margin-top: -4.5rem; margin-bottom: -4.5rem;` |
+| `-mt-18` | `margin-top: -4.5rem;` |
+| `-mr-18` | `margin-right: -4.5rem;` |
+| `-mb-18` | `margin-bottom: -4.5rem;` |
+| `-ml-18` | `margin-left: -4.5rem;` |
+| `-m-20` | `margin: -5rem;` |
+| `-mx-20` | `margin-left: -5rem; margin-right: -5rem;` |
+| `-my-20` | `margin-top: -5rem; margin-bottom: -5rem;` |
+| `-mt-20` | `margin-top: -5rem;` |
+| `-mr-20` | `margin-right: -5rem;` |
+| `-mb-20` | `margin-bottom: -5rem;` |
+| `-ml-20` | `margin-left: -5rem;` |
+| `-m-24` | `margin: -6rem;` |
+| `-mx-24` | `margin-left: -6rem; margin-right: -6rem;` |
+| `-my-24` | `margin-top: -6rem; margin-bottom: -6rem;` |
+| `-mt-24` | `margin-top: -6rem;` |
+| `-mr-24` | `margin-right: -6rem;` |
+| `-mb-24` | `margin-bottom: -6rem;` |
+| `-ml-24` | `margin-left: -6rem;` |
+| `-m-28` | `margin: -7rem;` |
+| `-mx-28` | `margin-left: -7rem; margin-right: -7rem;` |
+| `-my-28` | `margin-top: -7rem; margin-bottom: -7rem;` |
+| `-mt-28` | `margin-top: -7rem;` |
+| `-mr-28` | `margin-right: -7rem;` |
+| `-mb-28` | `margin-bottom: -7rem;` |
+| `-ml-28` | `margin-left: -7rem;` |
+| `-m-32` | `margin: -8rem;` |
+| `-mx-32` | `margin-left: -8rem; margin-right: -8rem;` |
+| `-my-32` | `margin-top: -8rem; margin-bottom: -8rem;` |
+| `-mt-32` | `margin-top: -8rem;` |
+| `-mr-32` | `margin-right: -8rem;` |
+| `-mb-32` | `margin-bottom: -8rem;` |
+| `-ml-32` | `margin-left: -8rem;` |
+| `-m-36` | `margin: -9rem;` |
+| `-mx-36` | `margin-left: -9rem; margin-right: -9rem;` |
+| `-my-36` | `margin-top: -9rem; margin-bottom: -9rem;` |
+| `-mt-36` | `margin-top: -9rem;` |
+| `-mr-36` | `margin-right: -9rem;` |
+| `-mb-36` | `margin-bottom: -9rem;` |
+| `-ml-36` | `margin-left: -9rem;` |
+| `-m-40` | `margin: -10rem;` |
+| `-mx-40` | `margin-left: -10rem; margin-right: -10rem;` |
+| `-my-40` | `margin-top: -10rem; margin-bottom: -10rem;` |
+| `-mt-40` | `margin-top: -10rem;` |
+| `-mr-40` | `margin-right: -10rem;` |
+| `-mb-40` | `margin-bottom: -10rem;` |
+| `-ml-40` | `margin-left: -10rem;` |
+| `-m-44` | `margin: -11rem;` |
+| `-mx-44` | `margin-left: -11rem; margin-right: -11rem;` |
+| `-my-44` | `margin-top: -11rem; margin-bottom: -11rem;` |
+| `-mt-44` | `margin-top: -11rem;` |
+| `-mr-44` | `margin-right: -11rem;` |
+| `-mb-44` | `margin-bottom: -11rem;` |
+| `-ml-44` | `margin-left: -11rem;` |
+| `-m-48` | `margin: -12rem;` |
+| `-mx-48` | `margin-left: -12rem; margin-right: -12rem;` |
+| `-my-48` | `margin-top: -12rem; margin-bottom: -12rem;` |
+| `-mt-48` | `margin-top: -12rem;` |
+| `-mr-48` | `margin-right: -12rem;` |
+| `-mb-48` | `margin-bottom: -12rem;` |
+| `-ml-48` | `margin-left: -12rem;` |
+| `-m-52` | `margin: -13rem;` |
+| `-mx-52` | `margin-left: -13rem; margin-right: -13rem;` |
+| `-my-52` | `margin-top: -13rem; margin-bottom: -13rem;` |
+| `-mt-52` | `margin-top: -13rem;` |
+| `-mr-52` | `margin-right: -13rem;` |
+| `-mb-52` | `margin-bottom: -13rem;` |
+| `-ml-52` | `margin-left: -13rem;` |
+| `-m-56` | `margin: -14rem;` |
+| `-mx-56` | `margin-left: -14rem; margin-right: -14rem;` |
+| `-my-56` | `margin-top: -14rem; margin-bottom: -14rem;` |
+| `-mt-56` | `margin-top: -14rem;` |
+| `-mr-56` | `margin-right: -14rem;` |
+| `-mb-56` | `margin-bottom: -14rem;` |
+| `-ml-56` | `margin-left: -14rem;` |
+| `-m-60` | `margin: -15rem;` |
+| `-mx-60` | `margin-left: -15rem; margin-right: -15rem;` |
+| `-my-60` | `margin-top: -15rem; margin-bottom: -15rem;` |
+| `-mt-60` | `margin-top: -15rem;` |
+| `-mr-60` | `margin-right: -15rem;` |
+| `-mb-60` | `margin-bottom: -15rem;` |
+| `-ml-60` | `margin-left: -15rem;` |
+| `-m-64` | `margin: -16rem;` |
+| `-mx-64` | `margin-left: -16rem; margin-right: -16rem;` |
+| `-my-64` | `margin-top: -16rem; margin-bottom: -16rem;` |
+| `-mt-64` | `margin-top: -16rem;` |
+| `-mr-64` | `margin-right: -16rem;` |
+| `-mb-64` | `margin-bottom: -16rem;` |
+| `-ml-64` | `margin-left: -16rem;` |
+| `-m-72` | `margin: -18rem;` |
+| `-mx-72` | `margin-left: -18rem; margin-right: -18rem;` |
+| `-my-72` | `margin-top: -18rem; margin-bottom: -18rem;` |
+| `-mt-72` | `margin-top: -18rem;` |
+| `-mr-72` | `margin-right: -18rem;` |
+| `-mb-72` | `margin-bottom: -18rem;` |
+| `-ml-72` | `margin-left: -18rem;` |
+| `-m-80` | `margin: -20rem;` |
+| `-mx-80` | `margin-left: -20rem; margin-right: -20rem;` |
+| `-my-80` | `margin-top: -20rem; margin-bottom: -20rem;` |
+| `-mt-80` | `margin-top: -20rem;` |
+| `-mr-80` | `margin-right: -20rem;` |
+| `-mb-80` | `margin-bottom: -20rem;` |
+| `-ml-80` | `margin-left: -20rem;` |
+| `-m-96` | `margin: -24rem;` |
+| `-mx-96` | `margin-left: -24rem; margin-right: -24rem;` |
+| `-my-96` | `margin-top: -24rem; margin-bottom: -24rem;` |
+| `-mt-96` | `margin-top: -24rem;` |
+| `-mr-96` | `margin-right: -24rem;` |
+| `-mb-96` | `margin-bottom: -24rem;` |
+| `-ml-96` | `margin-left: -24rem;` |
+| `m-auto` | `margin: auto;` |
+| `mx-auto` | `margin-left: auto; margin-right: auto;` |
+| `my-auto` | `margin-top: auto; margin-bottom: auto;` |
+| `mt-auto` | `margin-top: auto;` |
+| `mr-auto` | `margin-right: auto;` |
+| `mb-auto` | `margin-bottom: auto;` |
+| `ml-auto` | `margin-left: auto;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## m-0
+
+`margin: 0`。舞台 `p-6` = 24px，黄盒子 left / top 都是 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-0</div>
+  </div>
+```
+
+## m-4
+
+`margin: 1rem` = **16px**。黄盒子 left / top = 24 + 16 = **40px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-4</div>
+  </div>
+```
+
+## m-none
+
+Amis 多出来的档，与 `m-0` 一样是 `margin: 0`。left / top 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-none w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-none w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-none</div>
+  </div>
+```
+
+## m-18
+
+Amis 多出来的档：`margin: 4.5rem` = **72px**。left / top = 24 + 72 = **96px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-18 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-18</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m-18 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-18</div>
+  </div>
+```
+
+## -m-4
+
+负值。`margin: -1rem`，往舞台 padding 里缩 16px。left / top = 24 − 16 = **8px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-m-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-m-4</div>
+  </div>
+```
+
+## mx-4
+
+只改左右：`margin-left` / `margin-right: 16px`。left 40，top 仍是 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-4</div>
+  </div>
+```
+
+## my-4
+
+只改上下：`margin-top` / `margin-bottom: 16px`。top 40，left 仍是 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="my-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">my-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="my-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">my-4</div>
+  </div>
+```
+
+## mt-4
+
+只改 `margin-top: 16px`。top 40，left 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mt-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mt-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mt-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mt-4</div>
+  </div>
+```
+
+## mr-4
+
+只改 `margin-right: 16px`。right 侧多 16px 缝，left / top 仍是 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mr-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mr-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mr-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mr-4</div>
+  </div>
+```
+
+## mb-4
+
+只改 `margin-bottom: 16px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mb-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mb-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="mb-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mb-4</div>
+  </div>
+```
+
+## ml-4
+
+只改 `margin-left: 16px`。left 40，top 24。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">ml-4</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">ml-4</div>
+  </div>
+```
+
+## mx-auto
+
+`margin-left` / `margin-right: auto`。舞台钉死 `w-80`（320px）`p-sm` 内 304px，盒子 `w-16` = 64px，左右各摊 120px。left **128px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 mx-auto bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-auto</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 mx-auto bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-auto</div>
+  </div>
+```
+
+## 组合
+
+同一组：`m-0`、`m-4`、`-m-4`、`mx-4`、`ml-4`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-0</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-m-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">ml-4</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-0</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-m-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">mx-4</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+      <div class="ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">ml-4</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:m-2` 四边 8px（left 32）；桌面（≥768px）`pc:m-8` 四边 **32px**（left 56）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m:m-2 pc:m-8 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-6 rounded-md shrink-0">
+    <div class="m:m-2 pc:m-8 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。内边距见 [Padding](/style/spacing/padding)；兄弟缝见 [Space Between](/style/spacing/space-between)。组件密度阶 `m-t-xs`（`--gap-xs…xl`）在 `helpers.css`，与本页不是一套。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
