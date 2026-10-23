@@ -71,7 +71,7 @@ Playground 和文档站点继续走 ESM，不必改成 SDK。
 ## 明确不搬
 
 - 没有 `amisRequire` AMD，只有 `window.vamis`
-- 没有 `cxd.css` / `antd.css` 换肤包，皮肤是 shadcn token
+- 没有单独的 `cxd.css` / `antd.css` 换肤包；皮肤是 shadcn token，cxd 能力打进 `sdk.css`
 - 不支持 IE
 - 自定义组件走 Vue 组件或已有 `custom` DOM，不把 React 打进 SDK
 - `embed` 不会自动包 [LazyComponent](/concepts/schema#lazycomponent)；要进视口再挂，用 Vue 入口自己包一层

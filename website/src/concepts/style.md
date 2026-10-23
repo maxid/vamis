@@ -8,10 +8,10 @@ title: 样式
 token / helper（含 `w-*` / `h-full`）/ `className` / FormItem `size` / 默认自适应已接。`xxxClassName`、`registerTheme` 仍是 D12 P1。
 :::
 
-Vamis 的视觉目标是 **Amis 后台的信息密度**，不是云舍像素。实现上：
+Vamis 的视觉目标是 **Amis 后台的信息密度**，并把 cxd 的盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。不搬 `cxd-` 前缀。实现上：
 
 - 一套 CSS 变量（`--background`、`--primary`、`--control-h`、`--gap-*`、状态色）
-- 组件用 `variant`，禁止第二套 `cxd-` 前缀
+- 组件用 `variant`，禁止第二套 `cxd-` 前缀；能力走 token / utility
 - 密度 `data-density="compact|comfortable"`，默认跟页面 html；IR `metadata.style.density` 可覆盖这一棵树
 - **默认自适应**：page / form / 未写 `size` 的表单控件吃满容器，不必先配 `w-full` / `size: full`
 - `className` 由内核解析（字符串 / 对象 / 模板 / `m-t-xs` / `w-full` / `h-full` / `m:` `pc:`），只在需要覆盖时写。完整辅助类见顶栏 [样式](/style/)

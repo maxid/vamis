@@ -4,7 +4,7 @@
 - 状态：对照清单（随实现更新进度，不改分类）
 - 优先级：**全部 P0**
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
-- 视觉口径：[样式系统（Amis 水标 × shadcn）](./2026-10-21-vamis-style-system.md) — 渲染器走 token / Button·Input·Table·Card variants，不搬 `cxd-`
+- 视觉口径：[样式系统（Amis 水标 × shadcn）](./2026-10-21-vamis-style-system.md) — 渲染器走 token / Button·Input·Table·Card variants；不搬 `cxd-` 前缀，能力尽量像素级转写
 - 覆盖数字（只比 type 名）：[同步状态](./2026-10-20-amis-sync-status.md)
 - 文档侧栏：`amis-r/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`/Users/maxid/Develop/IdeaProjects/github/amis-r/docs/zh-CN/components`
@@ -17,7 +17,7 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但占位 / 精简 / 缺文档高级项 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：文档主路径行为对齐（非像素级 cxd）。当前 **2 项**（`page` / `container`）。其余仍被 D2–D8 或组件自身缺口挡住。
+   - `已完成`：文档主路径行为对齐；视觉以 shadcn-vue / Tailwind 尽量像素级转写 cxd 能力（不搬前缀）。当前 **2 项**（`page` / `container`）。其余仍被 D2–D8 或组件自身缺口挡住。
 4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 95.8% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|

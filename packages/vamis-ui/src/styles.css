@@ -63,9 +63,9 @@
 }
 
 /*
-  Box metrics copy cxd (16px root): 2px ladder, 32px control, 24px form
-  gap, 98px horizontal label, 40px table row. Color is independent.
-  No .cxd- classes, no Amis SCSS.
+  Box metrics transcribed from cxd (16px root): 2px ladder, 32px control,
+  24px form gap, 98px horizontal label, 40px table row.
+  No .cxd- prefix, no Amis SCSS; capabilities live in tokens / Tailwind.
 */
 :root {
   color-scheme: light;

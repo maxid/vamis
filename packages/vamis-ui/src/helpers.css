@@ -1,4 +1,4 @@
-/* Amis helper spacing, values from the cxd gap ladder. No .cxd- classes. */
+/* Amis helper spacing transcribed from the cxd gap ladder. No .cxd- prefix. */
 @layer utilities {
   .m-0 { margin: 0; }
   .mb-0 { margin-bottom: 0; }

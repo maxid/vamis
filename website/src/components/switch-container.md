@@ -9,7 +9,7 @@ outline: deep
 按 `visibleOn` 取首个状态；外观/事件未齐。侧栏未收录，docs 有独立页
 :::
 
-`switch-container` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`switch-container` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **布局**。对照进度以仓库组件 P0 TODO 为准。
 

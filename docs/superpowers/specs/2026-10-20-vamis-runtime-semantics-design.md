@@ -412,7 +412,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 - **默认自适应**：page / form / crud / 未写 `size` 的表单控件吃满布局槽，作者不必先写 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。见 [样式系统](./2026-10-21-vamis-style-system.md) §0。
 - `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs`、宽度 `w-*`、高度 `h-full` / `h-1/2` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
-- 主题：沿用 Tailwind/shadcn token；`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
+- 主题：沿用 Tailwind/shadcn token；不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
 - 响应式：`m:` / `pc:` 前缀走 CSS 媒体查询（&lt;768 / ≥768），作用在间距和宽度 helper；表单 `size` 档位断点是 576px（对齐 Amis form SCSS）。不引入 Tailwind 五档作为作者态。
 - i18n：
   - `env.locale` + `registerLocale` 负责内置文案；
@@ -521,7 +521,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 ## 20. 非目标
 
-- 像素级复刻 cxd，或复制 amis 的 React/MST 实现。
+- 输出 `.cxd-*` 前缀或编译 Amis 主题 SCSS；复制 amis 的 React/MST 实现。cxd 能力应尽量像素级转写到 shadcn-vue / Tailwind，这是目标不是非目标。
 - 支持 lodash template（`<% %>`）或默认执行任意 JS。
 - 与 amis 内部组件 API 一一对应（只保证 schema 语义与常用属性）。
 - office/pdf 真实渲染、TinyMCE 全家桶、完整编辑器生态。

@@ -9,7 +9,7 @@ outline: deep
 能转圈；缺 overlay/size/show
 :::
 
-`spinner` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue token，不使用 `cxd-` 类名。
+`spinner` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **反馈**。对照进度以仓库组件 P0 TODO 为准。
 
