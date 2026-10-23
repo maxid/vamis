@@ -6,22 +6,11 @@ title: Box Sizing
 
 # Box Sizing
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）已写入 `helpers-palette.css`。`hover:` / `focus:` / 全量 `m:` `pc:` 色盘仍缺，所以不能标已完成。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis：左侧 `box-border` 128px，右侧 `box-content` 128 + padding 32 = 160px。`border-4` 未配 `border-solid` 时不画边、不占尺寸（Amis helper 同款）。本页不支持响应式 / 状态前缀。
 :::
 
-`box-border` / `box-content` 改盒模型。布局容器默认已是 border-box。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: box-border w-40 p-md bg-muted
-    tpl: 宽含 padding
-  - type: tpl
-    className: box-content w-40 p-md bg-muted m-t-sm
-    tpl: 宽不含 padding
-```
+Box Sizing 相关样式，主要区别在于设置宽高的时候，是否包含了 padding 和 border 的大小。
 
 ## 类名
 
@@ -30,4 +19,22 @@ body:
 | `box-border` | `box-sizing: border-box` |
 | `box-content` | `box-sizing: content-box` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## 用法
+
+比如这个例子：左侧是 box-border 类型，整体高宽 128px。而右侧只是内容区域是 128px + 边框(2 * 4px) + padding （2 * 16px） 一共160px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-6">
+    <div class="box-border h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+    <div class="box-content h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+  </div>
+```
+
+本页与 Amis 一样：不支持 `m:` / `pc:` 和状态前缀。其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

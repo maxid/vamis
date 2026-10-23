@@ -259,9 +259,30 @@ function table(rows) {
   return lines.join('\n')
 }
 
-function writePage({ slug, title, pct, status, reason, intro, example, rows, extra = '' }) {
+function writePage({
+  slug,
+  title,
+  pct,
+  status,
+  reason,
+  intro,
+  example,
+  rows,
+  extra = '',
+  tableFirst = false,
+  usage = '',
+  footer,
+}) {
   const dir = path.join(outRoot, path.dirname(slug))
   fs.mkdirSync(dir, { recursive: true })
+  const exampleFence = example
+    ? ['```schema', example.trim(), '```']
+    : []
+  const tableBlock = rows?.length ? ['## 类名', '', table(rows)] : []
+  const usageBlock = usage ? ['## 用法', '', usage.trim()] : []
+  const middle = tableFirst
+    ? [...tableBlock, '', ...usageBlock, '', ...exampleFence]
+    : [...exampleFence, '', ...tableBlock]
   const body = [
     '---',
     `title: ${title}`,
@@ -275,16 +296,12 @@ function writePage({ slug, title, pct, status, reason, intro, example, rows, ext
     '',
     intro.trim(),
     '',
-    '```schema',
-    example.trim(),
-    '```',
-    '',
-    rows?.length ? '## 类名\n' : '',
-    rows?.length ? table(rows) : '',
+    ...middle,
     '',
     extra.trim(),
     '',
-    '响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。',
+    footer ??
+      '响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。',
     '',
   ]
     .filter((line, i, arr) => !(line === '' && arr[i - 1] === ''))
@@ -419,23 +436,36 @@ body:
       ['space-x-reverse', '反转 space-x 方向'],
     ],
   ),
-  tw(
-    'Box Sizing',
-    'layout/box-sizing',
-    '`box-border` / `box-content` 改盒模型。布局容器默认已是 border-box。',
-    `type: page
-body:
-  - type: tpl
-    className: box-border w-40 p-md bg-muted
-    tpl: 宽含 padding
-  - type: tpl
-    className: box-content w-40 p-md bg-muted m-t-sm
-    tpl: 宽不含 padding`,
-    [
+  {
+    title: 'Box Sizing',
+    slug: 'layout/box-sizing',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis：左侧 `box-border` 128px，右侧 `box-content` 128 + padding 32 = 160px。`border-4` 未配 `border-solid` 时不画边、不占尺寸（Amis helper 同款）。本页不支持响应式 / 状态前缀。',
+    tableFirst: true,
+    intro:
+      'Box Sizing 相关样式，主要区别在于设置宽高的时候，是否包含了 padding 和 border 的大小。',
+    usage:
+      '比如这个例子：左侧是 box-border 类型，整体高宽 128px。而右侧只是内容区域是 128px + 边框(2 * 4px) + padding （2 * 16px） 一共160px。',
+    example: `type: tpl
+inline: false
+tpl: |
+  <div class="flex space-x-6">
+    <div class="box-border h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+    <div class="box-content h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">
+      <div class="h-full w-full bg-red-400"></div>
+    </div>
+  </div>`,
+    rows: [
       ['box-border', 'box-sizing: border-box'],
       ['box-content', 'box-sizing: content-box'],
     ],
-  ),
+    footer:
+      '本页与 Amis 一样：不支持 `m:` / `pc:` 和状态前缀。其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Display',
     'layout/display',

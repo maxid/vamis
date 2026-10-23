@@ -52,7 +52,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 - 作者态同时支持 YAML 与 JSON，禁止写成 YAML 唯一；函数只能以表达式字符串 / 已注册名进入，禁止隐式 `eval`。详见 `.cursor/rules/authoring-format.mdc`。
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
-- UI 走 `@vamis/ui` token 与 `variant`（`level: primary` → `variant="default"`），不要写第二套 `cxd-` 前缀。cxd 能力尽量像素级落到 token / Tailwind。详见 `.cursor/rules/cxd-transcribe.mdc`。
+- UI 走 `@vamis/ui` token 与 `variant`（`level: primary` → `variant="default"`），不要写第二套 `cxd-` 前缀。cxd 能力尽量像素级落到 token / Tailwind。详见 `.cursor/rules/cxd-transcribe.mdc`。`/style` 与 `className` helper 对标 **计算样式 / 盒模型**（同一元素、同一属性、同一值），不是截图像不像。详见 `.cursor/rules/style-behavior-parity.mdc`。
 - **默认自适应**。page / form / crud / table / 未写 `size` 的表单控件吃满布局槽，不必先配 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。禁止给这些容器写死 `max-w-3xl`。详见 `.cursor/rules/adaptive-default.mdc`。
 - **组装容器用 div**。Page 根 / 工具栏 / 侧栏是 `div`，不用 `header`/`aside`/`section`。Form 顶层 `<form>`，套在另一个 form 里默认 `div`（提交按钮不要 `type="submit"`）。`wrapperComponent` 才是作者覆盖。详见 `.cursor/rules/assembly-containers.mdc`。
 - **已注册 ≠ 语义完成**。进度看文档主路径，不是 `registerRenderer` 有没有调用。对外文档页（组件 / 类型 / 概念 / 开始 / 样式 / 扩展）标题下必须有 `::: 实现进度 x% · 状态`，与组件页同一套。详见 `.cursor/rules/doc-progress.mdc`。

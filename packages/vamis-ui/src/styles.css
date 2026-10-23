@@ -10,6 +10,15 @@
 @custom-variant m (@media (max-width: 767px));
 @custom-variant pc (@media (min-width: 768px));
 
+@layer base {
+  /* Undo Tailwind `* { --tw-border-style: solid }`. Amis helper only paints a
+     border when `border-solid` is also present. */
+  .vamis-html,
+  .vamis-html :where(*) {
+    --tw-border-style: none;
+  }
+}
+
 @theme inline {
   --font-sans: var(--fonts-base-family);
   --font-mono: var(--fontFamilyMonospace);
@@ -375,6 +384,11 @@
     Do not attach .vamis-html to .vamis-root / Page / Form — shadcn Button
     and Input would inherit these rules. Do not restyle button/input/select
     inside the island. :where() stays below author className utilities.
+
+    Tailwind Preflight sets border-style:solid on *. Amis helper.css does not:
+    `border-4` only sets width, so it does not paint unless `border-solid` is
+    also present. Reset inside the HTML island so tpl/html demos match Amis.
+    Utilities like `.border-solid` still win (@layer utilities > base).
   */
   .vamis-html :where(h1, h2, h3, h4, h5, h6) {
     font-weight: 600;
@@ -434,8 +448,7 @@
   }
   .vamis-html :where(hr) {
     margin: 1em 0;
-    border-top-width: 1px;
-    border-color: var(--border);
+    border-top: 1px solid var(--border);
   }
   .vamis-html :where(table) {
     margin: 1em 0;
