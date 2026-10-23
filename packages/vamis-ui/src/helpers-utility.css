@@ -333,6 +333,10 @@
   .m\:float-left { float: left; }
   .m\:float-right { float: right; }
   .m\:float-none { float: none; }
+  .m\:clear-left { clear: left; }
+  .m\:clear-right { clear: right; }
+  .m\:clear-both { clear: both; }
+  .m\:clear-none { clear: none; }
 }
 
 @media (min-width: 768px) {
@@ -357,6 +361,10 @@
   .pc\:float-left { float: left; }
   .pc\:float-right { float: right; }
   .pc\:float-none { float: none; }
+  .pc\:clear-left { clear: left; }
+  .pc\:clear-right { clear: right; }
+  .pc\:clear-both { clear: both; }
+  .pc\:clear-none { clear: none; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
