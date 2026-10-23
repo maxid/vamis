@@ -179,6 +179,48 @@
   .grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
   .grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
   .grid-rows-none { grid-template-rows: none; }
+  .row-auto { grid-row: auto; }
+  .row-span-1 { grid-row: span 1 / span 1; }
+  .row-span-2 { grid-row: span 2 / span 2; }
+  .row-span-3 { grid-row: span 3 / span 3; }
+  .row-span-4 { grid-row: span 4 / span 4; }
+  .row-span-5 { grid-row: span 5 / span 5; }
+  .row-span-6 { grid-row: span 6 / span 6; }
+  .row-span-7 { grid-row: span 7 / span 7; }
+  .row-span-8 { grid-row: span 8 / span 8; }
+  .row-span-9 { grid-row: span 9 / span 9; }
+  .row-span-10 { grid-row: span 10 / span 10; }
+  .row-span-11 { grid-row: span 11 / span 1; }
+  .row-span-12 { grid-row: span 12 / span 12; }
+  .row-span-full { grid-row: 1 / -1; }
+  .row-start-1 { grid-row-start: 1; }
+  .row-start-2 { grid-row-start: 2; }
+  .row-start-3 { grid-row-start: 3; }
+  .row-start-4 { grid-row-start: 4; }
+  .row-start-5 { grid-row-start: 5; }
+  .row-start-6 { grid-row-start: 6; }
+  .row-start-7 { grid-row-start: 7; }
+  .row-start-8 { grid-row-start: 8; }
+  .row-start-9 { grid-row-start: 9; }
+  .row-start-10 { grid-row-start: 10; }
+  .row-start-11 { grid-row-start: 11; }
+  .row-start-12 { grid-row-start: 12; }
+  .row-start-13 { grid-row-start: 13; }
+  .row-start-auto { grid-row-start: auto; }
+  .row-end-1 { grid-row-end: 1; }
+  .row-end-2 { grid-row-end: 2; }
+  .row-end-3 { grid-row-end: 3; }
+  .row-end-4 { grid-row-end: 4; }
+  .row-end-5 { grid-row-end: 5; }
+  .row-end-6 { grid-row-end: 6; }
+  .row-end-7 { grid-row-end: 7; }
+  .row-end-8 { grid-row-end: 8; }
+  .row-end-9 { grid-row-end: 9; }
+  .row-end-10 { grid-row-end: 10; }
+  .row-end-11 { grid-row-end: 11; }
+  .row-end-12 { grid-row-end: 12; }
+  .row-end-13 { grid-row-end: 13; }
+  .row-end-auto { grid-row-end: auto; }
   .grid-flow-row { grid-auto-flow: row; }
   .grid-flow-col { grid-auto-flow: column; }
   .grid-flow-dense { grid-auto-flow: dense; }
@@ -530,6 +572,48 @@
   .m\:grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
   .m\:grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
   .m\:grid-rows-none { grid-template-rows: none; }
+  .m\:row-auto { grid-row: auto; }
+  .m\:row-span-1 { grid-row: span 1 / span 1; }
+  .m\:row-span-2 { grid-row: span 2 / span 2; }
+  .m\:row-span-3 { grid-row: span 3 / span 3; }
+  .m\:row-span-4 { grid-row: span 4 / span 4; }
+  .m\:row-span-5 { grid-row: span 5 / span 5; }
+  .m\:row-span-6 { grid-row: span 6 / span 6; }
+  .m\:row-span-7 { grid-row: span 7 / span 7; }
+  .m\:row-span-8 { grid-row: span 8 / span 8; }
+  .m\:row-span-9 { grid-row: span 9 / span 9; }
+  .m\:row-span-10 { grid-row: span 10 / span 10; }
+  .m\:row-span-11 { grid-row: span 11 / span 1; }
+  .m\:row-span-12 { grid-row: span 12 / span 12; }
+  .m\:row-span-full { grid-row: 1 / -1; }
+  .m\:row-start-1 { grid-row-start: 1; }
+  .m\:row-start-2 { grid-row-start: 2; }
+  .m\:row-start-3 { grid-row-start: 3; }
+  .m\:row-start-4 { grid-row-start: 4; }
+  .m\:row-start-5 { grid-row-start: 5; }
+  .m\:row-start-6 { grid-row-start: 6; }
+  .m\:row-start-7 { grid-row-start: 7; }
+  .m\:row-start-8 { grid-row-start: 8; }
+  .m\:row-start-9 { grid-row-start: 9; }
+  .m\:row-start-10 { grid-row-start: 10; }
+  .m\:row-start-11 { grid-row-start: 11; }
+  .m\:row-start-12 { grid-row-start: 12; }
+  .m\:row-start-13 { grid-row-start: 13; }
+  .m\:row-start-auto { grid-row-start: auto; }
+  .m\:row-end-1 { grid-row-end: 1; }
+  .m\:row-end-2 { grid-row-end: 2; }
+  .m\:row-end-3 { grid-row-end: 3; }
+  .m\:row-end-4 { grid-row-end: 4; }
+  .m\:row-end-5 { grid-row-end: 5; }
+  .m\:row-end-6 { grid-row-end: 6; }
+  .m\:row-end-7 { grid-row-end: 7; }
+  .m\:row-end-8 { grid-row-end: 8; }
+  .m\:row-end-9 { grid-row-end: 9; }
+  .m\:row-end-10 { grid-row-end: 10; }
+  .m\:row-end-11 { grid-row-end: 11; }
+  .m\:row-end-12 { grid-row-end: 12; }
+  .m\:row-end-13 { grid-row-end: 13; }
+  .m\:row-end-auto { grid-row-end: auto; }
 }
 
 @media (min-width: 768px) {
@@ -686,6 +770,48 @@
   .pc\:grid-rows-5 { grid-template-rows: repeat(5, minmax(0, 1fr)); }
   .pc\:grid-rows-6 { grid-template-rows: repeat(6, minmax(0, 1fr)); }
   .pc\:grid-rows-none { grid-template-rows: none; }
+  .pc\:row-auto { grid-row: auto; }
+  .pc\:row-span-1 { grid-row: span 1 / span 1; }
+  .pc\:row-span-2 { grid-row: span 2 / span 2; }
+  .pc\:row-span-3 { grid-row: span 3 / span 3; }
+  .pc\:row-span-4 { grid-row: span 4 / span 4; }
+  .pc\:row-span-5 { grid-row: span 5 / span 5; }
+  .pc\:row-span-6 { grid-row: span 6 / span 6; }
+  .pc\:row-span-7 { grid-row: span 7 / span 7; }
+  .pc\:row-span-8 { grid-row: span 8 / span 8; }
+  .pc\:row-span-9 { grid-row: span 9 / span 9; }
+  .pc\:row-span-10 { grid-row: span 10 / span 10; }
+  .pc\:row-span-11 { grid-row: span 11 / span 1; }
+  .pc\:row-span-12 { grid-row: span 12 / span 12; }
+  .pc\:row-span-full { grid-row: 1 / -1; }
+  .pc\:row-start-1 { grid-row-start: 1; }
+  .pc\:row-start-2 { grid-row-start: 2; }
+  .pc\:row-start-3 { grid-row-start: 3; }
+  .pc\:row-start-4 { grid-row-start: 4; }
+  .pc\:row-start-5 { grid-row-start: 5; }
+  .pc\:row-start-6 { grid-row-start: 6; }
+  .pc\:row-start-7 { grid-row-start: 7; }
+  .pc\:row-start-8 { grid-row-start: 8; }
+  .pc\:row-start-9 { grid-row-start: 9; }
+  .pc\:row-start-10 { grid-row-start: 10; }
+  .pc\:row-start-11 { grid-row-start: 11; }
+  .pc\:row-start-12 { grid-row-start: 12; }
+  .pc\:row-start-13 { grid-row-start: 13; }
+  .pc\:row-start-auto { grid-row-start: auto; }
+  .pc\:row-end-1 { grid-row-end: 1; }
+  .pc\:row-end-2 { grid-row-end: 2; }
+  .pc\:row-end-3 { grid-row-end: 3; }
+  .pc\:row-end-4 { grid-row-end: 4; }
+  .pc\:row-end-5 { grid-row-end: 5; }
+  .pc\:row-end-6 { grid-row-end: 6; }
+  .pc\:row-end-7 { grid-row-end: 7; }
+  .pc\:row-end-8 { grid-row-end: 8; }
+  .pc\:row-end-9 { grid-row-end: 9; }
+  .pc\:row-end-10 { grid-row-end: 10; }
+  .pc\:row-end-11 { grid-row-end: 11; }
+  .pc\:row-end-12 { grid-row-end: 12; }
+  .pc\:row-end-13 { grid-row-end: 13; }
+  .pc\:row-end-auto { grid-row-end: auto; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
@@ -723,4 +849,7 @@
 
   /* Amis helper col-span-11 is span 11 / span 1. Beat Tailwind's span 11 / span 11. */
   .col-span-11 { grid-column: span 11 / span 1; }
+
+  /* Amis helper row-span-11 is span 11 / span 1. Beat Tailwind's span 11 / span 11. */
+  .row-span-11 { grid-row: span 11 / span 1; }
 }
