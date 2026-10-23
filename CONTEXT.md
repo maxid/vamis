@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- 修 `pnpm typecheck`：`SchemaObject.title` 对齐 Amis（`false` 隐藏 / 对象走子渲染器），顺带收紧 alert/confirm、编辑器树、iframe 的字符串用法。
 - `/style/grid/gap` 对标 Amis Gap：`gap-*` / `gap-x-*` / `gap-y-*` 独立活示例 + 组合；档位是 Tailwind spacing（`gap-2` = 8px），不是 `--gap-xs`；补 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style/grid/auto-rows` 对标 Amis Grid Auto Rows：`auto-rows-auto` / `min` / `max` / `fr` 独立活示例 + 四档组合；`auto-rows-fr` 三行均分 96px；补 `m:` / `pc:`。本页 **90% 已完成**。
 - `/style/grid/auto-columns` 对标 Amis Grid Auto Columns：`auto-cols-auto` / `min` / `max` / `fr` 独立活示例 + 四档组合；`auto-cols-fr` 三列均分 96px；补 `m:` / `pc:`。本页 **90% 已完成**。

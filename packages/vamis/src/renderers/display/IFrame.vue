@@ -13,6 +13,9 @@ const safe = computed(() => {
 })
 const width = computed(() => cssSize(props.schema.width, '100%'))
 const height = computed(() => cssSize(props.schema.height, '360px'))
+const iframeTitle = computed(
+  () => (typeof props.schema.title === 'string' && props.schema.title) || props.schema.name || 'iframe',
+)
 </script>
 
 <template>
@@ -22,7 +25,7 @@ const height = computed(() => cssSize(props.schema.height, '360px'))
       class="w-full rounded-md border bg-background"
       :src="src"
       :name="schema.name"
-      :title="schema.title || schema.name || 'iframe'"
+      :title="iframeTitle"
       :width="width"
       :height="height"
       :style="{ width, height, minHeight: '160px' }"
