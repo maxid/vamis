@@ -686,6 +686,28 @@ describe('style docs surface', () => {
     expect(util).toContain('.justify-evenly { justify-content: space-evenly; }')
     expect(util).toContain('.pc\\:justify-end { justify-content: flex-end; }')
     expect(util).toContain('.m\\:justify-start { justify-content: flex-start; }')
+    expect(util).toContain('.justify-items-auto { justify-items: auto; }')
+    expect(util).toContain('.justify-items-start { justify-items: start; }')
+    expect(util).toContain('.pc\\:justify-items-end { justify-items: end; }')
+    expect(util).toContain('.m\\:justify-items-start { justify-items: start; }')
+    expect(util).toContain('.justify-self-center { justify-self: center; }')
+    expect(util).toContain('.pc\\:justify-self-end { justify-self: end; }')
+    expect(util).toContain('.content-start { align-content: flex-start; }')
+    expect(util).toContain('.content-end { align-content: flex-end; }')
+    expect(util).toContain('.pc\\:content-end { align-content: flex-end; }')
+    expect(util).toContain('.m\\:content-start { align-content: flex-start; }')
+    expect(util).toContain('.items-start { align-items: flex-start; }')
+    expect(util).toContain('.items-baseline { align-items: baseline; }')
+    expect(util).toContain('.pc\\:items-end { align-items: flex-end; }')
+    expect(util).toContain('.self-start { align-self: flex-start; }')
+    expect(util).toContain('.pc\\:self-end { align-self: flex-end; }')
+    expect(util).toContain('.place-content-around { place-content: space-around; }')
+    expect(util).toContain('.place-content-evenly { place-content: space-evenly; }')
+    expect(util).toContain('.pc\\:place-content-end { place-content: end; }')
+    expect(util).toContain('.place-items-auto { place-items: auto; }')
+    expect(util).toContain('.pc\\:place-items-end { place-items: end; }')
+    expect(util).toContain('.place-self-center { place-self: center; }')
+    expect(util).toContain('.pc\\:place-self-end { place-self: end; }')
     const gapCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-gap.css'), 'utf8')
     expect(gapCss).toContain('.gap-2 { gap: 0.5rem; }')
     expect(gapCss).toContain('.gap-6 { gap: 1.5rem; }')
@@ -1164,6 +1186,97 @@ describe('style docs surface', () => {
     expect(justifyContent).not.toContain('| `justify-normal` |')
     expect(justifyContent).not.toContain('| `justify-stretch` |')
     expect(justifyContent).not.toContain('实现进度 50%')
+    const justifyItems = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/justify-items.md'),
+      'utf8',
+    )
+    expect(justifyItems).toContain('实现进度 90%')
+    expect(justifyItems).toContain('## justify-items-auto')
+    expect(justifyItems).toContain('## justify-items-start')
+    expect(justifyItems).toContain('## justify-items-end')
+    expect(justifyItems).toContain('## justify-items-center')
+    expect(justifyItems).toContain('## justify-items-stretch')
+    expect(justifyItems).toContain('pc:justify-items-end')
+    expect(justifyItems).toContain('| `justify-items-auto` |')
+    expect(justifyItems).toContain('type: code')
+    expect(justifyItems).not.toContain('实现进度 50%')
+    const justifySelf = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/justify-self.md'),
+      'utf8',
+    )
+    expect(justifySelf).toContain('实现进度 90%')
+    expect(justifySelf).toContain('## justify-self-auto')
+    expect(justifySelf).toContain('## justify-self-end')
+    expect(justifySelf).toContain('pc:justify-self-end')
+    expect(justifySelf).toContain('type: code')
+    expect(justifySelf).not.toContain('实现进度 50%')
+    const alignContent = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/align-content.md'),
+      'utf8',
+    )
+    expect(alignContent).toContain('实现进度 90%')
+    expect(alignContent).toContain('## content-start')
+    expect(alignContent).toContain('## content-evenly')
+    expect(alignContent).toContain('pc:content-end')
+    expect(alignContent).not.toContain('| `content-stretch` |')
+    expect(alignContent).toContain('type: code')
+    expect(alignContent).not.toContain('实现进度 50%')
+    const alignItems = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/align-items.md'),
+      'utf8',
+    )
+    expect(alignItems).toContain('实现进度 90%')
+    expect(alignItems).toContain('## items-start')
+    expect(alignItems).toContain('## items-baseline')
+    expect(alignItems).toContain('## items-stretch')
+    expect(alignItems).toContain('pc:items-end')
+    expect(alignItems).toContain('type: code')
+    expect(alignItems).not.toContain('实现进度 50%')
+    const alignSelf = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/align-self.md'),
+      'utf8',
+    )
+    expect(alignSelf).toContain('实现进度 90%')
+    expect(alignSelf).toContain('## self-auto')
+    expect(alignSelf).toContain('## self-end')
+    expect(alignSelf).toContain('pc:self-end')
+    expect(alignSelf).not.toContain('| `self-baseline` |')
+    expect(alignSelf).toContain('type: code')
+    expect(alignSelf).not.toContain('实现进度 50%')
+    const placeContent = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/place-content.md'),
+      'utf8',
+    )
+    expect(placeContent).toContain('实现进度 90%')
+    expect(placeContent).toContain('## place-content-start')
+    expect(placeContent).toContain('## place-content-around')
+    expect(placeContent).toContain('## place-content-evenly')
+    expect(placeContent).toContain('## place-content-stretch')
+    expect(placeContent).toContain('pc:place-content-end')
+    expect(placeContent).toContain('| `place-content-around` |')
+    expect(placeContent).toContain('type: code')
+    expect(placeContent).not.toContain('实现进度 50%')
+    const placeItems = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/place-items.md'),
+      'utf8',
+    )
+    expect(placeItems).toContain('实现进度 90%')
+    expect(placeItems).toContain('## place-items-auto')
+    expect(placeItems).toContain('## place-items-stretch')
+    expect(placeItems).toContain('pc:place-items-end')
+    expect(placeItems).toContain('| `place-items-auto` |')
+    expect(placeItems).toContain('type: code')
+    expect(placeItems).not.toContain('实现进度 50%')
+    const placeSelf = readFileSync(
+      resolve(here, '../../../website/src/style/box-alignment/place-self.md'),
+      'utf8',
+    )
+    expect(placeSelf).toContain('实现进度 90%')
+    expect(placeSelf).toContain('## place-self-auto')
+    expect(placeSelf).toContain('## place-self-center')
+    expect(placeSelf).toContain('pc:place-self-end')
+    expect(placeSelf).toContain('type: code')
+    expect(placeSelf).not.toContain('实现进度 50%')
     const insetCss = readFileSync(resolve(here, '../../vamis-ui/src/helpers-inset.css'), 'utf8')
     expect(insetCss).toContain('.top-0 { top: 0; }')
     expect(insetCss).toContain('.top-2 { top: 0.5rem; }')

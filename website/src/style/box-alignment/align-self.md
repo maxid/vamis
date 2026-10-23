@@ -6,27 +6,11 @@ title: Align Self
 
 # Align Self
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Align Self：`self-auto` / `start` / `end` / `center` / `stretch` 落在同一子项的 `align-self`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `self-baseline`。
 :::
 
-单个子项覆盖 `items-*`。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: flex items-start h-20 bg-gray-200 p-sm rounded-md gap-2
-    tpl: |
-      <span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>
-```
-
-```schema: scope="body"
-type: code
-language: html
-value: |-
-  <span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>
-```
+单个子项覆盖 `align-items`。类打在子项上。Amis 五档，没有 `self-baseline`。舞台 `flex items-stretch h-32`，只动第一枚的 top / 高。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 self 类打在第一枚上。
 
 ## 类名
 
@@ -38,4 +22,234 @@ value: |-
 | `self-center` | `align-self: center` |
 | `self-stretch` | `align-self: stretch` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## self-auto
+
+`align-self: auto`。跟父级 `items-stretch`：第一枚高 112px，top 8。后两枚未写 self，同样拉满。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-auto w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-auto w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## self-start
+
+`align-self: flex-start`。只改第一枚，钉死 64px 贴顶，top 8。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-start w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-start w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## self-end
+
+`align-self: flex-end`。第一枚贴底，top 56。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## self-center
+
+`align-self: center`。第一枚交叉轴居中，top 32。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-center w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-center w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## self-stretch
+
+`align-self: stretch`。第一枚拉满 112px，top 8。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-stretch w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="self-stretch w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组：第一枚分别 auto / start / end / center / stretch。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-auto w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-start w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-center w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-stretch w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-auto w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-start w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-center w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="self-stretch w-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第一枚 `m:self-start` 贴顶；桌面（≥768px）`pc:self-end` 贴底，top 56px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="m:self-start pc:self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex items-stretch w-80 h-32 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="m:self-start pc:self-end w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 shrink-0 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。Amis 没有 `self-baseline`。整行交叉轴见 [Align Items](/style/box-alignment/align-items)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

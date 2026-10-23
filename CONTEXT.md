@@ -60,15 +60,16 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / **`flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / `justify-content` / `state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺其余 Box Alignment / Spacing 逐页核、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / **`flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全 9 页 / `state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Spacing 逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式」**90% 已完成**、「数据映射」**90% 已完成**、「联动」**90% 已完成**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 175 + sdk 13 | `pnpm typecheck` 已通过；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 185 + core 180 + sdk 13 | `pnpm typecheck` 已通过；渲染器无组件级测试 |
 
 **最近交付**
 
+- `/style/box-alignment` 余 8 页对标 Amis：Justify Items / Self、Align Content / Items / Self、Place Content / Items / Self 独立活示例 + 组合；补 `justify-items-auto` / `place-items-auto` / `place-content-around|evenly` 与 `m:` / `pc:`。各页 **90% 已完成**。
 - `/style/box-alignment/justify-content` 对标 Amis Justify Content：`justify-start` / `end` / `center` / `between` / `around` / `evenly` 独立活示例 + 组合；值是 `flex-start` / `flex-end`；补 `m:` / `pc:`。本页 **90% 已完成**。
 - 修 `pnpm typecheck`：`SchemaObject.title` 对齐 Amis（`false` 隐藏 / 对象走子渲染器），顺带收紧 alert/confirm、编辑器树、iframe 的字符串用法。
 - `/style/grid/gap` 对标 Amis Gap：`gap-*` / `gap-x-*` / `gap-y-*` 独立活示例 + 组合；档位是 Tailwind spacing（`gap-2` = 8px），不是 `--gap-xs`；补 `m:` / `pc:`。本页 **90% 已完成**。
@@ -195,6 +196,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / `justify-content` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Justify Items、色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Padding / Margin / Space Between、色盘表；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

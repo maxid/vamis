@@ -6,35 +6,228 @@ title: Justify Items
 
 # Justify Items
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Justify Items：`justify-items-auto` / `start` / `end` / `center` / `stretch` 落在同一元素的 `justify-items`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。auto 与 stretch 格宽 152px。
 :::
 
-Grid 单元格内水平对齐。
+Grid 单元格内水平对齐。写在 `display: grid` 的容器上，管每一格里的东西靠左还是拉满。Amis 五档：`auto` / `start` / `end` / `center` / `stretch`，值是逻辑 `start` / `end`。舞台钉死 `w-80`（320px）两列，每格 152px，用盒子 left / 宽对格。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 grid 上。
+
+## 类名
+
+| Class | Properties |
+| --- | --- |
+| `justify-items-auto` | `justify-items: auto` |
+| `justify-items-start` | `justify-items: start` |
+| `justify-items-end` | `justify-items: end` |
+| `justify-items-center` | `justify-items: center` |
+| `justify-items-stretch` | `justify-items: stretch` |
+
+## justify-items-auto
+
+`justify-items: auto`。Grid 里等同默认 stretch（计算值 `normal`）：舞台 `grid-cols-2 w-80`，内宽 304px，每格 152px。两枚被拉满，宽 152，left 8 / 160。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: grid grid-cols-2 justify-items-center bg-gray-200 p-sm rounded-md gap-2
-    tpl: |
-      <span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 justify-items-auto w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
 ```
 
 ```schema: scope="body"
 type: code
 language: html
 value: |-
-  <span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>
+  <div class="grid grid-cols-2 justify-items-auto w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
 ```
 
-## 类名
+## justify-items-start
 
-| Class | Properties |
-| --- | --- |
-| `justify-items-start` | `justify-items: start` |
-| `justify-items-end` | `justify-items: end` |
-| `justify-items-center` | `justify-items: center` |
-| `justify-items-stretch` | `justify-items: stretch` |
+`justify-items: start`。格子钉死 `w-16` = 64px，靠格左。left 8 / 160。
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 justify-items-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 justify-items-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## justify-items-end
+
+`justify-items: end`。靠格右。left 96 / 248。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## justify-items-center
+
+`justify-items: center`。格内水平居中。left 52 / 204。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 justify-items-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 justify-items-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## justify-items-stretch
+
+`justify-items: stretch`。与 auto 一样拉满格宽 152px。left 8 / 160。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 justify-items-stretch w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 justify-items-stretch w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## 组合
+
+同一组两枚：auto、start、end、center、stretch。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-2 justify-items-auto w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-stretch w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="grid grid-cols-2 justify-items-auto w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-start w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-center w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+    <div class="grid grid-cols-2 justify-items-stretch w-80 bg-gray-200 p-sm rounded-md shrink-0">
+      <div class="h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:justify-items-start` 靠格左；桌面（≥768px）`pc:justify-items-end` 靠格右，第一枚 left 96px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 m:justify-items-start pc:justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="grid grid-cols-2 m:justify-items-start pc:justify-items-end w-80 bg-gray-200 p-sm rounded-md shrink-0">
+    <div class="w-16 h-16 shrink-0 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 shrink-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。单格覆盖见 [Justify Self](/style/box-alignment/justify-self)；主轴分布见 [Justify Content](/style/box-alignment/justify-content)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
