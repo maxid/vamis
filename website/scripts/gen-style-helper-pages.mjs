@@ -1534,6 +1534,71 @@ function zIndexExtra() {
   ].join('\n')
 }
 
+function flexDirChip(fill, label) {
+  return `<div class="w-16 h-16 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function flexDirStage(dirClass, indent = '', displayClass = 'flex') {
+  return [
+    `<div class="${displayClass} ${dirClass} gap-2 ${DEMO_STAGE} p-sm rounded-md">`,
+    `  ${flexDirChip('bg-blue-200', '1')}`,
+    `  ${flexDirChip(DEMO_FILL, '2')}`,
+    `  ${flexDirChip('bg-green-200', '3')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function flexDirectionExtra() {
+  return [
+    '## flex-row',
+    '',
+    '主轴从左到右。DOM 顺序 1-2-3，1 在左。盒子 64×64，缝 `gap-2` = 8px。',
+    '',
+    displaySchema(flexDirStage('flex-row')),
+    '',
+    '## flex-row-reverse',
+    '',
+    '主轴仍水平，原点在右边。1 在右，3 在左。',
+    '',
+    displaySchema(flexDirStage('flex-row-reverse')),
+    '',
+    '## flex-col',
+    '',
+    '主轴从上到下。1 在上，3 在下。竖缝同样是 `gap-2` = 8px。',
+    '',
+    displaySchema(flexDirStage('flex-col')),
+    '',
+    '## flex-col-reverse',
+    '',
+    '主轴竖直，原点在下边。1 在下，3 在上。',
+    '',
+    displaySchema(flexDirStage('flex-col-reverse')),
+    '',
+    '## 组合',
+    '',
+    '同一组 1-2-3：横排、横排反向、竖排、竖排反向。',
+    '',
+    displaySchema([
+      '<div class="flex flex-wrap gap-4 items-start">',
+      ...flexDirStage('flex-row', '  ', 'inline-flex'),
+      ...flexDirStage('flex-row-reverse', '  ', 'inline-flex'),
+      ...flexDirStage('flex-col', '  ', 'inline-flex'),
+      ...flexDirStage('flex-col-reverse', '  ', 'inline-flex'),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-col` 竖排；桌面（≥768px）`pc:flex-row` 横排。',
+    '',
+    displaySchema(flexDirStage('m:flex-col pc:flex-row')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。换行见 [Flex Wrap](/style/flex/wrap)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -1861,38 +1926,26 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Flex Direction',
-    'flex/direction',
-    '父节点先写 `flex`，再用方向类。复杂布局也可以直接用 `type: flex`。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: flex flex-col gap-2
-    body:
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: 上
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: 下
-  - type: container
-    className: m-t-sm
-    bodyClassName: flex flex-row-reverse gap-2
-    body:
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: 甲
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: 乙`,
-    [
+  {
+    title: 'Flex Direction',
+    slug: 'flex/direction',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Flex Direction：`flex-row` / `flex-row-reverse` / `flex-col` / `flex-col-reverse` 落在同一元素的 `flex-direction`。独立样例 + 四向组合；`m:` / `pc:`（含 reverse）已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '改主轴方向。要先有 `display: flex`（见 [Display](/style/layout/display)）。`flex-row` 从左到右；`flex-row-reverse` 从右到左；`flex-col` 从上到下；`flex-col-reverse` 从下到上。数字 1-2-3 是 DOM 顺序。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把方向类打在内层 flex 容器上。',
+    rows: [
       ['flex-row', 'flex-direction: row'],
       ['flex-row-reverse', 'flex-direction: row-reverse'],
       ['flex-col', 'flex-direction: column'],
       ['flex-col-reverse', 'flex-direction: column-reverse'],
     ],
-  ),
+    extra: flexDirectionExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex Wrap',
     'flex/wrap',

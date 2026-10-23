@@ -6,35 +6,11 @@ title: Flex Direction
 
 # Flex Direction
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Flex Direction：`flex-row` / `flex-row-reverse` / `flex-col` / `flex-col-reverse` 落在同一元素的 `flex-direction`。独立样例 + 四向组合；`m:` / `pc:`（含 reverse）已进 helper，不支持状态前缀。
 :::
 
-父节点先写 `flex`，再用方向类。复杂布局也可以直接用 `type: flex`。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex flex-col gap-2
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 上
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 下
-  - type: container
-    className: m-t-sm
-    bodyClassName: flex flex-row-reverse gap-2
-    body:
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 甲
-      - type: tpl
-        className: bg-yellow-200 p-sm rounded-md
-        tpl: 乙
-```
+改主轴方向。要先有 `display: flex`（见 [Display](/style/layout/display)）。`flex-row` 从左到右；`flex-row-reverse` 从右到左；`flex-col` 从上到下；`flex-col-reverse` 从下到上。数字 1-2-3 是 DOM 顺序。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把方向类打在内层 flex 容器上。
 
 ## 类名
 
@@ -45,4 +21,198 @@ body:
 | `flex-col` | `flex-direction: column` |
 | `flex-col-reverse` | `flex-direction: column-reverse` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## flex-row
+
+主轴从左到右。DOM 顺序 1-2-3，1 在左。盒子 64×64，缝 `gap-2` = 8px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-row gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-row gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## flex-row-reverse
+
+主轴仍水平，原点在右边。1 在右，3 在左。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-row-reverse gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-row-reverse gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## flex-col
+
+主轴从上到下。1 在上，3 在下。竖缝同样是 `gap-2` = 8px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## flex-col-reverse
+
+主轴竖直，原点在下边。1 在下，3 在上。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col-reverse gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col-reverse gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 组合
+
+同一组 1-2-3：横排、横排反向、竖排、竖排反向。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex flex-row gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-row-reverse gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-col gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-col-reverse gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-start">
+    <div class="inline-flex flex-row gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-row-reverse gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-col gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+    <div class="inline-flex flex-col-reverse gap-2 bg-gray-200 p-sm rounded-md">
+      <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+      <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+      <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-col` 竖排；桌面（≥768px）`pc:flex-row` 横排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex m:flex-col pc:flex-row gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex m:flex-col pc:flex-row gap-2 bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">1</div>
+    <div class="w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">2</div>
+    <div class="w-16 h-16 bg-green-200 flex items-center justify-center text-sm rounded-md">3</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。换行见 [Flex Wrap](/style/flex/wrap)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
