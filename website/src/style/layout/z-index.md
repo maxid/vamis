@@ -6,27 +6,11 @@ title: Z-Index
 
 # Z-Index
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Z-Index：`z-0`…`z-50` / `z-auto` 落在同一元素的 `z-index`。独立样例 + 五卡叠层组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-叠层顺序。浮层（dialog / drawer）有自己的默认 z，不必在页面节点上堆。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: relative
-    tpl: |
-      <span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-yellow-200 p-sm rounded-md">z-0</span>
-```
-
-```schema: scope="body"
-type: code
-language: html
-value: |-
-  <span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-yellow-200 p-sm rounded-md">z-0</span>
-```
+叠层顺序。只对定位盒子生效（`relative` / `absolute` / `fixed` / `sticky`，见 [Position](/style/layout/position)）。数字越大越在上面；`auto` 低于任何正 z。浮层（dialog / drawer）有自己的默认 z，不必在页面节点上堆。
 
 ## 类名
 
@@ -40,4 +24,230 @@ value: |-
 | `z-50` | `z-index: 50` |
 | `z-auto` | `z-index: auto` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## z-0
+
+`z-index: 0`。左边先画、右边后画并叠上来。后盒 `z-10` 仍盖住先画的 `z-0`。含块 192×96，盒子 96×64，后盒 `left-8 top-6`（32px / 24px）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-0 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-0 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+## z-10
+
+`z-index: 10`。先画的 `z-10` 盖住后画的 `z-0`，不是后画的赢。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-10 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="absolute left-8 top-6 z-0 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-10 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="absolute left-8 top-6 z-0 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+  </div>
+```
+
+## z-20
+
+`z-index: 20`。盖住后画的 `z-10`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-20 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-20 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+## z-30
+
+`z-index: 30`。盖住后画的 `z-20`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-30 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+    <div class="absolute left-8 top-6 z-20 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-30 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+    <div class="absolute left-8 top-6 z-20 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+  </div>
+```
+
+## z-40
+
+`z-index: 40`。盖住后画的 `z-30`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-40 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+    <div class="absolute left-8 top-6 z-30 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-40 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+    <div class="absolute left-8 top-6 z-30 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+  </div>
+```
+
+## z-50
+
+`z-index: 50`。本页最高档，盖住后画的 `z-40`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-50 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-50</div>
+    <div class="absolute left-8 top-6 z-40 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-50 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-50</div>
+    <div class="absolute left-8 top-6 z-40 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+  </div>
+```
+
+## z-auto
+
+`z-index: auto`。正 z 高于 auto：后画的 `z-10` 盖住先画的 `z-auto`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-auto w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-auto</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-auto w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-auto</div>
+    <div class="absolute left-8 top-6 z-10 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+  </div>
+```
+
+## 组合
+
+五张 `relative` 卡从 `z-40` 叠到 `z-0`。后卡用负 `left` 往回拉、`top` 往下错，数字越大越在上面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex relative h-32">
+    <div class="relative z-40 w-20 h-20 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+    <div class="relative z-30 w-20 h-20 -left-6 top-2 bg-green-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+    <div class="relative z-20 w-20 h-20 -left-12 top-4 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+    <div class="relative z-10 w-20 h-20 -left-18 top-6 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="relative z-0 w-20 h-20 -left-24 top-8 bg-green-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex relative h-32">
+    <div class="relative z-40 w-20 h-20 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-40</div>
+    <div class="relative z-30 w-20 h-20 -left-6 top-2 bg-green-200 flex items-center justify-center text-sm rounded-md">z-30</div>
+    <div class="relative z-20 w-20 h-20 -left-12 top-4 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-20</div>
+    <div class="relative z-10 w-20 h-20 -left-18 top-6 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="relative z-0 w-20 h-20 -left-24 top-8 bg-green-200 flex items-center justify-center text-sm rounded-md">z-0</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）后盒 `pc:z-50` 盖住；窄屏 `m:z-0` 压在 `z-10` 下面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-10 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="absolute left-8 top-6 m:z-0 pc:z-50 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">m:z-0 pc:z-50</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-24 w-48 bg-gray-200 rounded-md">
+    <div class="absolute left-0 top-2 z-10 w-24 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">z-10</div>
+    <div class="absolute left-8 top-6 m:z-0 pc:z-50 w-24 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md">m:z-0 pc:z-50</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

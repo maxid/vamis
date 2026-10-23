@@ -559,7 +559,7 @@ function htmlCodeFence(html) {
     .split('\n')
     .map((line) => `  ${line}`)
     .join('\n')
-  return ['```schema: scope="body"', 'type: code', 'language: html', 'value: |', indented, '```'].join('\n')
+  return ['```schema: scope="body"', 'type: code', 'language: html', 'value: |-', indented, '```'].join('\n')
 }
 
 function rewriteSchemaTpls(yaml) {
@@ -646,7 +646,12 @@ function attachHtmlSourceToMarkdown(md) {
     out += md.slice(last, fence.start)
     const yaml = fence.yaml.replace(/^\n+|\n+$/g, '')
     if (firstSchemaType(yaml) === 'code') {
-      out += fence.full
+      if (/^\s*language:\s*html\s*$/m.test(yaml)) {
+        const fixed = yaml.replace(/^([ \t]*value:[ \t]*)\|[+-]?[ \t]*$/m, '$1|-')
+        out += `\`\`\`schema${fence.meta}\n${fixed}\n\`\`\``
+      } else {
+        out += fence.full
+      }
       last = fence.end
       continue
     }
@@ -1446,6 +1451,89 @@ function visibilityExtra() {
   ].join('\n')
 }
 
+function zCard(zClass, posClass, fill, label) {
+  return `<div class="absolute ${posClass} ${zClass} w-24 h-16 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function zPair(leftClass, leftLabel, rightClass, rightLabel, rightFill = 'bg-blue-200') {
+  return [
+    `<div class="relative h-24 w-48 ${DEMO_STAGE} rounded-md">`,
+    `  ${zCard(leftClass, 'left-0 top-2', DEMO_FILL, leftLabel)}`,
+    `  ${zCard(rightClass, 'left-8 top-6', rightFill, rightLabel)}`,
+    '</div>',
+  ]
+}
+
+function zIndexExtra() {
+  return [
+    '## z-0',
+    '',
+    '`z-index: 0`。左边先画、右边后画并叠上来。后盒 `z-10` 仍盖住先画的 `z-0`。含块 192×96，盒子 96×64，后盒 `left-8 top-6`（32px / 24px）。',
+    '',
+    displaySchema(zPair('z-0', 'z-0', 'z-10', 'z-10')),
+    '',
+    '## z-10',
+    '',
+    '`z-index: 10`。先画的 `z-10` 盖住后画的 `z-0`，不是后画的赢。',
+    '',
+    displaySchema(zPair('z-10', 'z-10', 'z-0', 'z-0')),
+    '',
+    '## z-20',
+    '',
+    '`z-index: 20`。盖住后画的 `z-10`。',
+    '',
+    displaySchema(zPair('z-20', 'z-20', 'z-10', 'z-10')),
+    '',
+    '## z-30',
+    '',
+    '`z-index: 30`。盖住后画的 `z-20`。',
+    '',
+    displaySchema(zPair('z-30', 'z-30', 'z-20', 'z-20')),
+    '',
+    '## z-40',
+    '',
+    '`z-index: 40`。盖住后画的 `z-30`。',
+    '',
+    displaySchema(zPair('z-40', 'z-40', 'z-30', 'z-30')),
+    '',
+    '## z-50',
+    '',
+    '`z-index: 50`。本页最高档，盖住后画的 `z-40`。',
+    '',
+    displaySchema(zPair('z-50', 'z-50', 'z-40', 'z-40')),
+    '',
+    '## z-auto',
+    '',
+    '`z-index: auto`。正 z 高于 auto：后画的 `z-10` 盖住先画的 `z-auto`。',
+    '',
+    displaySchema(zPair('z-auto', 'z-auto', 'z-10', 'z-10')),
+    '',
+    '## 组合',
+    '',
+    '五张 `relative` 卡从 `z-40` 叠到 `z-0`。后卡用负 `left` 往回拉、`top` 往下错，数字越大越在上面。',
+    '',
+    displaySchema([
+      `<div class="flex relative h-32">`,
+      `  <div class="relative z-40 w-20 h-20 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-40</div>`,
+      `  <div class="relative z-30 w-20 h-20 -left-6 top-2 bg-green-200 flex items-center justify-center text-sm rounded-md">z-30</div>`,
+      `  <div class="relative z-20 w-20 h-20 -left-12 top-4 ${DEMO_FILL} flex items-center justify-center text-sm rounded-md">z-20</div>`,
+      `  <div class="relative z-10 w-20 h-20 -left-18 top-6 bg-blue-200 flex items-center justify-center text-sm rounded-md">z-10</div>`,
+      `  <div class="relative z-0 w-20 h-20 -left-24 top-8 bg-green-200 flex items-center justify-center text-sm rounded-md">z-0</div>`,
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）后盒 `pc:z-50` 盖住；窄屏 `m:z-0` 压在 `z-10` 下面。',
+    '',
+    displaySchema(zPair('z-10', 'z-10', 'm:z-0 pc:z-50', 'm:z-0 pc:z-50')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -1750,16 +1838,17 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Z-Index',
-    'layout/z-index',
-    '叠层顺序。浮层（dialog / drawer）有自己的默认 z，不必在页面节点上堆。',
-    `type: page
-body:
-  - type: tpl
-    className: relative
-    tpl: '<span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 ${DEMO_FILL} p-sm rounded-md">z-0</span>'`,
-    [
+  {
+    title: 'Z-Index',
+    slug: 'layout/z-index',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Z-Index：`z-0`…`z-50` / `z-auto` 落在同一元素的 `z-index`。独立样例 + 五卡叠层组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '叠层顺序。只对定位盒子生效（`relative` / `absolute` / `fixed` / `sticky`，见 [Position](/style/layout/position)）。数字越大越在上面；`auto` 低于任何正 z。浮层（dialog / drawer）有自己的默认 z，不必在页面节点上堆。',
+    rows: [
       ['z-0', 'z-index: 0'],
       ['z-10', 'z-index: 10'],
       ['z-20', 'z-index: 20'],
@@ -1768,7 +1857,10 @@ body:
       ['z-50', 'z-index: 50'],
       ['z-auto', 'z-index: auto'],
     ],
-  ),
+    extra: zIndexExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Flex Direction',
     'flex/direction',
