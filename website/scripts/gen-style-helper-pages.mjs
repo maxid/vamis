@@ -1881,6 +1881,76 @@ function flexOrderExtra() {
   ].join('\n')
 }
 
+function gridColChip(fill, label) {
+  return `<div class="h-16 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function gridColStage(colsClass, count, indent = '') {
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200']
+  return [
+    `<div class="grid ${colsClass} gap-2 w-80 ${DEMO_STAGE} p-sm rounded-md">`,
+    ...Array.from({ length: count }, (_, i) => `  ${gridColChip(fills[i % 3], String(i + 1))}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function gridColumnsExtra() {
+  return [
+    '## grid-cols-1',
+    '',
+    '`repeat(1, minmax(0, 1fr))`。舞台 `w-80` = 320px，内宽 304px。两枚叠成两行，各 304px。',
+    '',
+    displaySchema(gridColStage('grid-cols-1', 2)),
+    '',
+    '## grid-cols-2',
+    '',
+    '两列均分。缝 `gap-2` = 8px，每列 (304 − 8) / 2 = 148px。四枚排成 2×2。',
+    '',
+    displaySchema(gridColStage('grid-cols-2', 4)),
+    '',
+    '## grid-cols-3',
+    '',
+    '三列。每列 (304 − 16) / 3 = 96px。',
+    '',
+    displaySchema(gridColStage('grid-cols-3', 3)),
+    '',
+    '## grid-cols-4',
+    '',
+    '四列。每列 (304 − 24) / 4 = 70px。`grid-cols-5`…`12` 同一公式；`grid-cols-7` 与 Amis 一样写成 6 列。',
+    '',
+    displaySchema(gridColStage('grid-cols-4', 4)),
+    '',
+    '## grid-cols-none',
+    '',
+    '`grid-template-columns: none`。没有显式轨道，默认一列 auto；定宽舞台里仍被 stretch 拉满，宽与 `grid-cols-1` 一样。',
+    '',
+    displaySchema(gridColStage('grid-cols-none', 3)),
+    '',
+    '## 组合',
+    '',
+    '同一组舞台：1 列、2 列、3 列、4 列。',
+    '',
+    displaySchema([
+      '<div class="flex flex-col gap-4">',
+      ...gridColStage('grid-cols-1', 2, '  '),
+      ...gridColStage('grid-cols-2', 4, '  '),
+      ...gridColStage('grid-cols-3', 3, '  '),
+      ...gridColStage('grid-cols-4', 4, '  '),
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:grid-cols-2` 两列 148px；桌面（≥768px）`pc:grid-cols-4` 四列 70px。',
+    '',
+    displaySchema(gridColStage('m:grid-cols-2 pc:grid-cols-4', 4)),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。跨列见 [Grid Column Start / End](/style/grid/column-start-end)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -2322,34 +2392,32 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Grid Template Columns',
-    'grid/columns',
-    '父节点写 `grid`，再用 `grid-cols-*`。复杂分栏也可以用 `type: grid`。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: grid grid-cols-3 gap-2
-    body:
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "1"
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "2"
-      - type: tpl
-        className: ${DEMO_FILL} p-sm rounded-md
-        tpl: "3"`,
-    [
-      ['grid-cols-1', '1 列'],
-      ['grid-cols-2', '2 列'],
-      ['grid-cols-3', '3 列'],
-      ['grid-cols-4', '4 列'],
-      ['grid-cols-6', '6 列'],
-      ['grid-cols-12', '12 列'],
+  {
+    title: 'Grid Template Columns',
+    slug: 'grid/columns',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Grid Template Columns：`grid-cols-1`…`12` / `grid-cols-none` 落在同一元素的 `grid-template-columns`。独立样例 + 四行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '父级先写 `display: grid`（见 [Display](/style/layout/display)），再用 `grid-cols-*` 定列数。公式是 `repeat(N, minmax(0, 1fr))`，列均分、能收到 0。`grid-cols-none` 清掉显式轨道。舞台钉死 `w-80`（320px）。`grid-cols-7` 与 Amis helper 一样写成 6 列。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把列类打在内层 grid 上。',
+    rows: [
+      ...[1, 2, 3, 4, 5, 6].map((n) => [
+        `grid-cols-${n}`,
+        `grid-template-columns: repeat(${n}, minmax(0, 1fr))`,
+      ]),
+      ['grid-cols-7', 'grid-template-columns: repeat(6, minmax(0, 1fr))'],
+      ...[8, 9, 10, 11, 12].map((n) => [
+        `grid-cols-${n}`,
+        `grid-template-columns: repeat(${n}, minmax(0, 1fr))`,
+      ]),
       ['grid-cols-none', 'grid-template-columns: none'],
     ],
-  ),
+    extra: gridColumnsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Grid Column Start / End',
     'grid/column-start-end',
