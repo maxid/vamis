@@ -1,5 +1,14 @@
 @import "@vamis/ui/styles.css";
 
+/* 站点只有栏内滚动。禁止 html/body 出现滚动条，否则内容区一滚
+   窗口跟着闪（scrollIntoView / 溢出层撑高文档）。 */
+html,
+body,
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
 @source "../../packages/**/*.{vue,ts}";
 @source "../../website/src/**/*.md";
 @source "./**/*.{vue,ts}";

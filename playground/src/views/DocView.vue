@@ -49,6 +49,28 @@ function headingOffset(el: HTMLElement, root: HTMLElement): number {
   return el.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop
 }
 
+/** 只滚指定容器，避免 Element.scrollIntoView 把 html/body 一起滚出滚动条。 */
+function scrollWithin(
+  scroller: HTMLElement,
+  target: HTMLElement,
+  block: 'start' | 'nearest',
+  smooth = false,
+) {
+  const sRect = scroller.getBoundingClientRect()
+  const tRect = target.getBoundingClientRect()
+  const marginTop = Number.parseFloat(getComputedStyle(target).scrollMarginTop) || 0
+  let delta = 0
+  if (block === 'start') {
+    delta = tRect.top - sRect.top - marginTop
+  } else if (tRect.top < sRect.top + marginTop) {
+    delta = tRect.top - sRect.top - marginTop
+  } else if (tRect.bottom > sRect.bottom) {
+    delta = tRect.bottom - sRect.bottom
+  }
+  if (Math.abs(delta) < 1) return
+  scroller.scrollTo({ top: scroller.scrollTop + delta, behavior: smooth ? 'smooth' : 'instant' })
+}
+
 function syncActiveFromScroll() {
   if (lockActive) return
   const root = articleEl.value
@@ -64,7 +86,10 @@ function syncActiveFromScroll() {
   }
   activeId.value = current
   const active = tocEl.value?.querySelector(`[data-toc-id="${current}"]`)
-  active?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  if (active instanceof HTMLElement) {
+    const tocScroller = active.closest('ul')
+    if (tocScroller instanceof HTMLElement) scrollWithin(tocScroller, active, 'nearest')
+  }
 }
 
 function scrollToId(id: string, smooth = true) {
@@ -73,7 +98,8 @@ function scrollToId(id: string, smooth = true) {
   activeId.value = id
   lockActive = true
   window.clearTimeout(lockTimer)
-  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'start' })
+  const root = articleEl.value
+  if (root) scrollWithin(root, el, 'start', smooth)
   const url = `${window.location.pathname}${window.location.search}#${encodeURIComponent(id)}`
   history.replaceState(history.state, '', url)
   lockTimer = window.setTimeout(() => {
