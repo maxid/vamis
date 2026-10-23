@@ -17,10 +17,32 @@ type: page
 body:
   - type: tpl
     className: list-disc pl-5
-    tpl: '<ul><li>圆点</li><li>两项</li></ul>'
+    tpl: |
+      <ul>
+        <li>圆点</li>
+        <li>两项</li>
+      </ul>
   - type: tpl
     className: list-decimal pl-5 m-t-sm
-    tpl: '<ol><li>数字</li><li>两项</li></ol>'
+    tpl: |
+      <ol>
+        <li>数字</li>
+        <li>两项</li>
+      </ol>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <ul>
+    <li>圆点</li>
+    <li>两项</li>
+  </ul>
+  <ol>
+    <li>数字</li>
+    <li>两项</li>
+  </ol>
 ```
 
 ## 类名

@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: relative
-    tpl: '<span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-yellow-200 p-sm rounded-md">z-0</span>'
+    tpl: |
+      <span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-yellow-200 p-sm rounded-md">z-0</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="relative z-10 bg-primary text-primary-foreground p-sm rounded-md">z-10</span><span class="relative -ml-4 z-0 bg-yellow-200 p-sm rounded-md">z-0</span>
 ```
 
 ## 类名

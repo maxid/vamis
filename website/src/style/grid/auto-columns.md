@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: grid grid-flow-col auto-cols-max gap-2
-    tpl: '<span class="bg-yellow-200 p-sm rounded-md">短</span><span class="bg-yellow-200 p-sm rounded-md">比较长的一项</span>'
+    tpl: |
+      <span class="bg-yellow-200 p-sm rounded-md">短</span><span class="bg-yellow-200 p-sm rounded-md">比较长的一项</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="bg-yellow-200 p-sm rounded-md">短</span><span class="bg-yellow-200 p-sm rounded-md">比较长的一项</span>
 ```
 
 ## 类名

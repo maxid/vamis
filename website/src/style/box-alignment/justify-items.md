@@ -17,7 +17,15 @@ type: page
 body:
   - type: tpl
     className: grid grid-cols-2 justify-items-center bg-gray-200 p-sm rounded-md gap-2
-    tpl: '<span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>'
+    tpl: |
+      <span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>
 ```
 
 ## 类名

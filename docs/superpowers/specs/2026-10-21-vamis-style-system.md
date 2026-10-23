@@ -31,6 +31,7 @@ Amis 特定组件的自适应样式是**默认行为**，作者不必先配宽�
 - 同一条 class 必须落在 **同一个元素、同一条属性、同一个计算值**。范本：`space-x-6` = 第二个盒子 `margin-left: 24px`（Amis helper `~` 兄弟选择器），不是 Tailwind v4 第一个盒子的 `margin-inline-end`。
 - 先读 Amis `packages/amis-ui/scss/helper` 的选择器，再写 `@vamis/ui` CSS。Playground 会扫描文档生成同名 Tailwind 规则；语义不同时清掉 TW 那侧，禁止两套叠加（缝加倍、边多一圈）。
 - 收工核宽高 / margin / padding / border / `box-sizing` / 相邻缝宽。未对齐盒模型不得标文档「已完成」。
+- `/style` 含 HTML 的活示例下附同一段已缩进源码（`type: code` / `language: html`）。inline / inline-block 相邻节点不拆行。
 - 规则：`.cursor/rules/style-behavior-parity.mdc`。
 
 ## 1. Amis 样式系统（结论）

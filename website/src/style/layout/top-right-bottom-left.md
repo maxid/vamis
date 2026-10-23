@@ -103,7 +103,18 @@ title: Top / Right / Bottom / Left
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-0</div>
+  </div>
 ```
 
 ## right-0
@@ -114,7 +125,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">right-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">right-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">right-0</div>
+  </div>
 ```
 
 ## bottom-0
@@ -125,7 +147,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">bottom-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">bottom-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">bottom-0</div>
+  </div>
 ```
 
 ## left-0
@@ -136,7 +169,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">left-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">left-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">left-0</div>
+  </div>
 ```
 
 ## inset-0
@@ -147,7 +191,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-0</div>
+  </div>
 ```
 
 ## inset-x-0
@@ -158,7 +213,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-x-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-x-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-x-0</div>
+  </div>
 ```
 
 ## inset-y-0
@@ -169,7 +235,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-y-0</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-y-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">inset-y-0</div>
+  </div>
 ```
 
 ## top-2
@@ -180,7 +257,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-2 left-2 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-2</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute top-2 left-2 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute top-2 left-2 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-2</div>
+  </div>
 ```
 
 ## -top-2
@@ -192,7 +280,20 @@ type: tpl
 inline: false
 tpl: |
   <div class="p-sm">
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute -top-2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-top-2</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute -top-2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-top-2</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="p-sm">
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute -top-2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">-top-2</div>
+    </div>
   </div>
 ```
 
@@ -204,7 +305,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-1/2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-1/2</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute top-1/2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-1/2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute top-1/2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">top-1/2</div>
+  </div>
 ```
 
 ## 组合
@@ -216,15 +328,68 @@ type: tpl
 inline: false
 tpl: |
   <div class="flex flex-wrap gap-4">
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">顶</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">底</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">满</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左上</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右上</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右下</div></div>
-    <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左下</div></div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">顶</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">底</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">满</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左上</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右上</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右下</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左下</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4">
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">顶</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">底</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md">满</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左上</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右上</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">右下</div>
+    </div>
+    <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+      <div class="absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">左下</div>
+    </div>
   </div>
 ```
 
@@ -236,7 +401,18 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="relative h-32 w-32 bg-gray-200 rounded-md"><div class="absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div></div>
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 w-32 bg-gray-200 rounded-md">
+    <div class="absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
 ```
 
 ## 状态前缀

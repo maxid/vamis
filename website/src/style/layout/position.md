@@ -35,6 +35,15 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 static top-0 right-0 bg-blue-200 p-sm rounded-md">static</div>
+  </div>
+```
+
 ## relative
 
 相对自己原来的位置偏移，仍占文档流。`top-2 left-2` = 8px。
@@ -48,6 +57,15 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 relative top-2 left-2 bg-blue-200 p-sm rounded-md">relative</div>
+  </div>
+```
+
 ## absolute
 
 脱离文档流，相对最近的 `relative` / `absolute` / `fixed` / `sticky` 祖先。`top-0 right-0` 钉在右上角。
@@ -56,6 +74,15 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 absolute top-0 right-0 bg-blue-200 p-sm rounded-md">absolute</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="relative h-32 bg-gray-200 rounded-md">
     <div class="w-24 h-16 absolute top-0 right-0 bg-blue-200 p-sm rounded-md">absolute</div>
   </div>
@@ -77,6 +104,18 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="h-32 overflow-auto rounded-md bg-gray-200">
+    <div class="w-24 h-16 sticky top-0 bg-blue-200 p-sm rounded-md">sticky</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">1</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">2</div>
+    <div class="w-24 h-16 bg-green-200 p-sm rounded-md">3</div>
+  </div>
+```
+
 ## fixed
 
 相对视口。祖先有 `transform` 时改为相对该祖先。预览里用 `translateZ(0)` 把钉子留在卡片内，避免盖住整页。
@@ -85,6 +124,15 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md" style="transform: translateZ(0)">
+    <div class="w-24 h-16 fixed bottom-0 left-0 bg-blue-200 p-sm rounded-md">fixed</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="relative h-32 bg-gray-200 rounded-md" style="transform: translateZ(0)">
     <div class="w-24 h-16 fixed bottom-0 left-0 bg-blue-200 p-sm rounded-md">fixed</div>
   </div>
@@ -105,6 +153,17 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 absolute top-0 left-0 bg-blue-200 p-sm rounded-md">左上</div>
+    <div class="w-24 h-16 absolute bottom-0 right-0 bg-green-200 p-sm rounded-md">右下</div>
+    <div class="h-16 w-48 bg-yellow-200 p-sm rounded-md">在流里</div>
+  </div>
+```
+
 ## 响应式设计
 
 支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:absolute` 钉右上；窄屏仍是 `static`。
@@ -113,6 +172,15 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="relative h-32 bg-gray-200 rounded-md">
+    <div class="w-24 h-16 static pc:absolute top-0 right-0 bg-blue-200 p-sm rounded-md">pc:absolute</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="relative h-32 bg-gray-200 rounded-md">
     <div class="w-24 h-16 static pc:absolute top-0 right-0 bg-blue-200 p-sm rounded-md">pc:absolute</div>
   </div>

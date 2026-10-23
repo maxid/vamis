@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- `/style` 每个含 HTML 的活示例下附已格式化源码：复用 `type: code` / `language: html`（Code 组件）；`tpl: |` 也改成多行缩进。inline / inline-block 相邻节点不拆行，避免空白缝。
 - `/style/layout/visibility` 对标 Amis Visibility：`visible` / `invisible` 独立活示例 + 与 `hidden` 占位对比；`m:` / `pc:` 已进 helper，不支持状态前缀。本页 **90% 已完成**。
 - `/style/layout/top-right-bottom-left` 对标 Amis：`top|right|bottom|left|inset|inset-x|inset-y` 独立活示例 + 含块边/角组合；档位写入 `helpers-inset.css`（含负值 / auto / 分数 / `m:` / `pc:`）。本页 **90% 已完成**。
 - 修 `/style` 活示例灰条贴卡片：`--muted` 与 `--card` 过近，填充改 `bg-yellow-200`、舞台改 `bg-gray-200`；语义色页仍演示 `bg-muted`。盒模型 class 未改。

@@ -16,7 +16,15 @@ title: Vertical Alignment
 type: page
 body:
   - type: tpl
-    tpl: '<span class="inline-block h-8 bg-yellow-200">高</span> <span class="align-top">top</span> <span class="align-middle">middle</span> <span class="align-bottom">bottom</span>'
+    tpl: |
+      <span class="inline-block h-8 bg-yellow-200">高</span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <span class="inline-block h-8 bg-yellow-200">高</span><span class="align-top">top</span><span class="align-middle">middle</span><span class="align-bottom">bottom</span>
 ```
 
 ## 类名

@@ -451,6 +451,226 @@ function table(rows) {
   return lines.join('\n')
 }
 
+const HTML_VOID = /^(?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i
+
+function formatHtml(raw) {
+  const src = String(raw).trim()
+  if (!src) return src
+  const tokens = []
+  const re = /<!--[\s\S]*?-->|<\/?[A-Za-z][A-Za-z0-9:-]*\b[^>]*>|[^<]+/g
+  let m
+  while ((m = re.exec(src))) {
+    const tok = m[0]
+    if (/^[^<]/.test(tok)) {
+      const text = tok.replace(/\s+/g, ' ').trim()
+      if (text) tokens.push(text)
+      continue
+    }
+    tokens.push(tok)
+  }
+  const lines = []
+  let depth = 0
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i]
+    const close = /^<\/([A-Za-z][A-Za-z0-9:-]*)/.exec(tok)
+    const open = /^<([A-Za-z][A-Za-z0-9:-]*)/.exec(tok)
+    const comment = tok.startsWith('<!--')
+    const self =
+      comment ||
+      tok.endsWith('/>') ||
+      Boolean(open && HTML_VOID.test(open[1]))
+    const next = tokens[i + 1]
+    const nextClose = next && /^<\/([A-Za-z][A-Za-z0-9:-]*)/.exec(next)
+    if (close) depth = Math.max(0, depth - 1)
+    const pad = '  '.repeat(depth)
+    if (open && !close && !self && nextClose && nextClose[1] === open[1]) {
+      lines.push(`${pad}${tok}${next}`)
+      i += 1
+      continue
+    }
+    const text = next && !next.startsWith('<') ? next : ''
+    const afterText = text ? tokens[i + 2] : ''
+    const textClose = afterText && /^<\/([A-Za-z][A-Za-z0-9:-]*)/.exec(afterText)
+    if (
+      open &&
+      !close &&
+      !self &&
+      text &&
+      textClose &&
+      textClose[1] === open[1] &&
+      !text.includes('\n') &&
+      text.length < 120
+    ) {
+      lines.push(`${pad}${tok}${text}${afterText}`)
+      i += 2
+      continue
+    }
+    lines.push(`${pad}${tok}`)
+    if (open && !close && !self) depth += 1
+  }
+  return compactInlineLines(lines.join('\n'))
+}
+
+function isInlineLeafLine(line) {
+  const t = line.trim()
+  if (!t) return false
+  if (!t.startsWith('<')) return true
+  if (/^<(?:span|a|img|br|i|b|em|strong|code|small|u|label)\b/i.test(t)) return true
+  return /<([A-Za-z][\w:-]*)\b[^>]*\bclass="[^"]*\binline(?:-block|-flex|-grid)?\b[^"]*"/.test(t)
+}
+
+function compactInlineLines(pretty) {
+  const out = []
+  for (const line of pretty.split('\n')) {
+    const prev = out[out.length - 1]
+    if (prev != null) {
+      const indentPrev = /^[ \t]*/.exec(prev)[0]
+      const indentLine = /^[ \t]*/.exec(line)[0]
+      if (indentPrev === indentLine && isInlineLeafLine(prev) && isInlineLeafLine(line)) {
+        out[out.length - 1] = prev.replace(/\s+$/, '') + line.trim()
+        continue
+      }
+    }
+    out.push(line)
+  }
+  return out.join('\n')
+}
+
+function parseYamlQuoted(raw) {
+  const s = String(raw).trim()
+  if (!s) return ''
+  if (s.startsWith("'") && s.endsWith("'")) return s.slice(1, -1).replace(/''/g, "'")
+  if (s.startsWith('"') && s.endsWith('"')) {
+    try {
+      return JSON.parse(s)
+    } catch {
+      return s.slice(1, -1)
+    }
+  }
+  return s
+}
+
+function looksLikeHtml(text) {
+  return /<[A-Za-z]/.test(text)
+}
+
+function htmlCodeFence(html) {
+  const indented = html
+    .split('\n')
+    .map((line) => `  ${line}`)
+    .join('\n')
+  return ['```schema: scope="body"', 'type: code', 'language: html', 'value: |', indented, '```'].join('\n')
+}
+
+function rewriteSchemaTpls(yaml) {
+  const lines = yaml.replace(/\n$/, '').split('\n')
+  const htmlParts = []
+  const out = []
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const block = /^([ \t]*)tpl:[ \t]*\|[+-]?[ \t]*$/.exec(line)
+    if (block) {
+      const indent = block[1]
+      const raw = []
+      let j = i + 1
+      for (; j < lines.length; j++) {
+        const next = lines[j]
+        if (next.trim() === '') {
+          raw.push(next)
+          continue
+        }
+        const nextIndent = /^[ \t]*/.exec(next)[0]
+        if (nextIndent.length <= indent.length) break
+        raw.push(next)
+      }
+      while (raw.length && raw[raw.length - 1].trim() === '') raw.pop()
+      const indents = raw.filter((l) => l.trim()).map((l) => /^[ \t]*/.exec(l)[0].length)
+      const strip = indents.length ? Math.min(...indents) : indent.length + 2
+      const text = raw.map((l) => l.slice(Math.min(strip, l.length))).join('\n')
+      if (looksLikeHtml(text)) {
+        const pretty = formatHtml(text)
+        htmlParts.push(pretty)
+        const pad = `${indent}  `
+        out.push(`${indent}tpl: |`)
+        for (const pl of pretty.split('\n')) out.push(pad + pl)
+      } else {
+        out.push(line)
+        out.push(...raw)
+      }
+      i = j - 1
+      continue
+    }
+    const quoted = /^([ \t]*)tpl:[ \t]*(.+)$/.exec(line)
+    if (quoted && !/\|[+-]?[ \t]*$/.test(line)) {
+      const indent = quoted[1]
+      const text = parseYamlQuoted(quoted[2])
+      if (looksLikeHtml(text)) {
+        const pretty = formatHtml(text)
+        htmlParts.push(pretty)
+        const pad = `${indent}  `
+        out.push(`${indent}tpl: |`)
+        for (const pl of pretty.split('\n')) out.push(pad + pl)
+        continue
+      }
+    }
+    out.push(line)
+  }
+  if (!htmlParts.length) return null
+  return { yaml: out.join('\n'), html: htmlParts.join('\n') }
+}
+
+function firstSchemaType(yaml) {
+  const m = /^\s*type:\s*(\S+)/m.exec(yaml)
+  return m ? m[1] : ''
+}
+
+function attachHtmlSourceToMarkdown(md) {
+  if (!md) return md
+  const fenceRe = /```schema([^\n]*)\n([\s\S]*?)```/g
+  const fences = []
+  let m
+  while ((m = fenceRe.exec(md))) {
+    fences.push({
+      start: m.index,
+      end: m.index + m[0].length,
+      meta: m[1],
+      yaml: m[2],
+      full: m[0],
+    })
+  }
+  if (!fences.length) return md
+  let out = ''
+  let last = 0
+  for (let i = 0; i < fences.length; i++) {
+    const fence = fences[i]
+    out += md.slice(last, fence.start)
+    const yaml = fence.yaml.replace(/^\n+|\n+$/g, '')
+    if (firstSchemaType(yaml) === 'code') {
+      out += fence.full
+      last = fence.end
+      continue
+    }
+    const rewritten = rewriteSchemaTpls(yaml)
+    if (!rewritten) {
+      out += fence.full
+      last = fence.end
+      continue
+    }
+    out += `\`\`\`schema${fence.meta}\n${rewritten.yaml}\n\`\`\``
+    const next = fences[i + 1]
+    const nextIsHtmlCode =
+      next &&
+      firstSchemaType(next.yaml) === 'code' &&
+      /^\s*language:\s*html\s*$/m.test(next.yaml)
+    if (!nextIsHtmlCode) {
+      out += `\n\n${htmlCodeFence(rewritten.html)}`
+    }
+    last = fence.end
+  }
+  out += md.slice(last)
+  return out
+}
+
 function writePage({
   slug,
   title,
@@ -468,10 +688,11 @@ function writePage({
   const dir = path.join(outRoot, path.dirname(slug))
   fs.mkdirSync(dir, { recursive: true })
   const exampleFence = example
-    ? ['```schema', example.trim(), '```']
+    ? attachHtmlSourceToMarkdown(`\`\`\`schema\n${example.trim()}\n\`\`\``).split('\n')
     : []
   const tableBlock = rows?.length ? ['## 类名', '', table(rows)] : []
   const usageBlock = usage ? ['## 用法', '', usage.trim()] : []
+  extra = attachHtmlSourceToMarkdown(extra)
   const middle = tableFirst
     ? [...tableBlock, '', ...usageBlock, '', ...exampleFence]
     : [...exampleFence, '', ...tableBlock]
@@ -2497,4 +2718,29 @@ body:
 ]
 
 for (const page of pages) writePage(page)
-console.log(`wrote ${pages.length} style helper pages under website/src/style`)
+
+function walkMd(dir, acc = []) {
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name)
+    const st = fs.statSync(full)
+    if (st.isDirectory()) walkMd(full, acc)
+    else if (name.endsWith('.md')) acc.push(full)
+  }
+  return acc
+}
+
+let handwritten = 0
+for (const file of walkMd(outRoot)) {
+  const raw = fs.readFileSync(file, 'utf8')
+  if (raw.includes('generated by website/scripts/gen-style-helper-pages.mjs')) continue
+  const next = attachHtmlSourceToMarkdown(raw)
+  if (next !== raw) {
+    fs.writeFileSync(file, next.endsWith('\n') ? next : `${next}\n`)
+    handwritten += 1
+  }
+}
+
+console.log(
+  `wrote ${pages.length} style helper pages under website/src/style` +
+    (handwritten ? ` (+ ${handwritten} handwritten tpl source)` : ''),
+)

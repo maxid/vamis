@@ -35,6 +35,16 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="clear-left bg-yellow-200 p-sm rounded-md">clear-left</div>
+  </div>
+```
+
 ## clear-right
 
 前面有右浮时，当前盒子到右浮下面。
@@ -43,6 +53,16 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
+    <div class="clear-right bg-yellow-200 p-sm rounded-md">clear-right</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="flow-root">
     <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
     <div class="clear-right bg-yellow-200 p-sm rounded-md">clear-right</div>
@@ -64,6 +84,17 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
+    <div class="clear-both bg-yellow-200 p-sm rounded-md">clear-both</div>
+  </div>
+```
+
 ## clear-none
 
 默认。两个左浮可以并排；后面那个写 `clear-none` 也不会被挤下去。
@@ -72,6 +103,16 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="w-24 h-16 float-left clear-none bg-yellow-200 p-sm rounded-md">clear-none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
     <div class="w-24 h-16 float-left clear-none bg-yellow-200 p-sm rounded-md">clear-none</div>
@@ -93,10 +134,32 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flow-root">
+    <div class="w-24 float-left h-16 bg-blue-200 p-sm rounded-md">左短</div>
+    <div class="w-24 float-right h-32 bg-green-200 p-sm rounded-md">右高</div>
+    <div class="clear-left bg-yellow-200 p-sm rounded-md">clear-left 只躲左</div>
+  </div>
+```
+
 ```schema
 type: tpl
 inline: false
 tpl: |
+  <div class="flow-root">
+    <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
+    <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
+    <div class="clear-right bg-yellow-200 p-sm rounded-md">clear-right 只躲右</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="flow-root">
     <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
     <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
@@ -115,6 +178,17 @@ tpl: |
   </div>
 ```
 
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flow-root">
+    <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
+    <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
+    <div class="clear-both bg-yellow-200 p-sm rounded-md">clear-both 两边让开</div>
+  </div>
+```
+
 ## 响应式设计
 
 支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:clear-left` 清左浮；窄屏 `m:clear-none` 仍并排。
@@ -123,6 +197,16 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="m:clear-none pc:clear-left bg-yellow-200 p-sm rounded-md">m:clear-none pc:clear-left</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
   <div class="flow-root">
     <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
     <div class="m:clear-none pc:clear-left bg-yellow-200 p-sm rounded-md">m:clear-none pc:clear-left</div>

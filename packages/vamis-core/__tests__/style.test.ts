@@ -638,6 +638,11 @@ describe('style docs surface', () => {
     expect(boxSizing).toContain('一共160px')
     expect(boxSizing).toContain('box-border h-32 w-32 p-4')
     expect(boxSizing).toContain('box-content h-32 w-32 p-4')
+    expect(boxSizing).toContain('type: code')
+    expect(boxSizing).toContain('language: html')
+    expect(boxSizing).toMatch(
+      /tpl: \|\n {2}<div class="flex space-x-6">\n {4}<div class="box-border h-32 w-32 p-4 border-4 border-blue-400 bg-blue-200 rounded-md">\n {6}<div class="h-full w-full bg-red-400"><\/div>/,
+    )
     const floats = readFileSync(resolve(here, '../../../website/src/style/layout/float.md'), 'utf8')
     expect(floats).toContain('实现进度 90%')
     expect(floats).toContain('## 左浮')
@@ -775,6 +780,8 @@ describe('style docs surface', () => {
     expect(inset).toContain('## 组合')
     expect(inset).toContain('pc:top-0')
     expect(inset).toContain('m:bottom-0')
+    expect(inset).toContain('type: code')
+    expect(inset).toContain('language: html')
     expect(inset).toContain('| `inset-0` |')
     expect(inset).toContain('| `inset-x-0` |')
     expect(theme).toContain('helpers-inset.css')
@@ -813,6 +820,11 @@ describe('style docs surface', () => {
     expect(state).toContain('is-active')
     expect(state).toContain('pc:hover:bg-pink-500')
     expect(state).toContain('m:hover:bg-blue-500')
+    expect(state).toContain('type: code')
+    expect(state).toContain('language: html')
+    expect(state).toMatch(
+      /tpl: \|\n {2}<div class="group p-4 border border-solid border-dark hover:bg-dark">\n {4}<p class="group-hover:text-red-500">整体hover 红色<\/p>/,
+    )
   })
 
   it('ships a markdown page for every styleNav link', () => {
