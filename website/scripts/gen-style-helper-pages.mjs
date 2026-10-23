@@ -419,6 +419,107 @@ function floatSchema(floatClass) {
   ].join('\n')
 }
 
+function floatChip(extraClass, label) {
+  const hasHeight = /\bh-\d+\b/.test(extraClass)
+  const cls = ['w-24', hasHeight ? null : 'h-16', extraClass, 'p-sm rounded-md']
+    .filter(Boolean)
+    .join(' ')
+  return `<div class="${cls}">${label}</div>`
+}
+
+function clearBar(extraClass, label) {
+  return `<div class="${extraClass} p-sm rounded-md">${label}</div>`
+}
+
+function clearSchema(inner) {
+  return [
+    '```schema',
+    'type: tpl',
+    'inline: false',
+    'tpl: |',
+    '  <div class="flow-root">',
+    ...inner.map((line) => `    ${line}`),
+    '  </div>',
+    '```',
+  ].join('\n')
+}
+
+function clearExtra() {
+  return [
+    '## clear-left',
+    '',
+    '前面有左浮时，当前盒子上边缘必须到左浮**下面**，不能并排。',
+    '',
+    clearSchema([
+      floatChip('float-left bg-blue-200', 'float-left'),
+      clearBar('clear-left bg-muted', 'clear-left'),
+    ]),
+    '',
+    '## clear-right',
+    '',
+    '前面有右浮时，当前盒子到右浮下面。',
+    '',
+    clearSchema([
+      floatChip('float-right bg-green-200', 'float-right'),
+      clearBar('clear-right bg-muted', 'clear-right'),
+    ]),
+    '',
+    '## clear-both',
+    '',
+    '左右浮都躲开，上边缘到两边浮动盒子下面。',
+    '',
+    clearSchema([
+      floatChip('float-left bg-blue-200', 'float-left'),
+      floatChip('float-right bg-green-200', 'float-right'),
+      clearBar('clear-both bg-muted', 'clear-both'),
+    ]),
+    '',
+    '## clear-none',
+    '',
+    '默认。两个左浮可以并排；后面那个写 `clear-none` 也不会被挤下去。',
+    '',
+    clearSchema([
+      floatChip('float-left bg-blue-200', 'float-left'),
+      floatChip('float-left clear-none bg-muted', 'clear-none'),
+    ]),
+    '',
+    '## 组合',
+    '',
+    '左右都浮、高度不同：`clear-left` 只躲开左浮，条带顶边可以对着更高的右浮；`clear-right` 相反；`clear-both` 两边都让开。父级 `flow-root` 把浮动包进自己的高度。',
+    '',
+    clearSchema([
+      floatChip('float-left h-16 bg-blue-200', '左短'),
+      floatChip('float-right h-32 bg-green-200', '右高'),
+      clearBar('clear-left bg-muted', 'clear-left 只躲左'),
+    ]),
+    '',
+    clearSchema([
+      floatChip('float-left h-32 bg-blue-200', '左高'),
+      floatChip('float-right h-16 bg-green-200', '右短'),
+      clearBar('clear-right bg-muted', 'clear-right 只躲右'),
+    ]),
+    '',
+    clearSchema([
+      floatChip('float-left h-32 bg-blue-200', '左高'),
+      floatChip('float-right h-16 bg-green-200', '右短'),
+      clearBar('clear-both bg-muted', 'clear-both 两边让开'),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:clear-left` 清左浮；窄屏 `m:clear-none` 仍并排。',
+    '',
+    clearSchema([
+      floatChip('float-left bg-blue-200', 'float-left'),
+      clearBar('m:clear-none pc:clear-left bg-muted', 'm:clear-none pc:clear-left'),
+    ]),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -631,25 +732,25 @@ body:
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Clear',
-    'layout/clear',
-    '清掉前面的 float。',
-    `type: page
-body:
-  - type: tpl
-    className: float-left bg-muted p-sm rounded-md
-    tpl: 左
-  - type: tpl
-    className: clear-left bg-muted p-sm rounded-md
-    tpl: 清左浮动`,
-    [
-      ['clear-left', 'clear: left'],
+  {
+    title: 'Clear',
+    slug: 'layout/clear',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Clear：`clear-left|right|both|none` 落在同一元素的 `clear`。四条独立样例 + 左右浮不同高组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro: '清掉前面的 float。当前盒子的上边缘不能挨着指定方向的浮动盒子，必须换到它下面。',
+    rows: [
       ['clear-right', 'clear: right'],
-      ['clear-both', 'clear: both'],
+      ['clear-left', 'clear: left'],
       ['clear-none', 'clear: none'],
+      ['clear-both', 'clear: both'],
     ],
-  ),
+    extra: clearExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Overflow',
     'layout/overflow',

@@ -6,30 +6,131 @@ title: Clear
 
 # Clear
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Clear：`clear-left|right|both|none` 落在同一元素的 `clear`。四条独立样例 + 左右浮不同高组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-清掉前面的 float。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: float-left bg-muted p-sm rounded-md
-    tpl: 左
-  - type: tpl
-    className: clear-left bg-muted p-sm rounded-md
-    tpl: 清左浮动
-```
+清掉前面的 float。当前盒子的上边缘不能挨着指定方向的浮动盒子，必须换到它下面。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `clear-left` | `clear: left` |
 | `clear-right` | `clear: right` |
-| `clear-both` | `clear: both` |
+| `clear-left` | `clear: left` |
 | `clear-none` | `clear: none` |
+| `clear-both` | `clear: both` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## clear-left
+
+前面有左浮时，当前盒子上边缘必须到左浮**下面**，不能并排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="clear-left bg-muted p-sm rounded-md">clear-left</div>
+  </div>
+```
+
+## clear-right
+
+前面有右浮时，当前盒子到右浮下面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
+    <div class="clear-right bg-muted p-sm rounded-md">clear-right</div>
+  </div>
+```
+
+## clear-both
+
+左右浮都躲开，上边缘到两边浮动盒子下面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="w-24 h-16 float-right bg-green-200 p-sm rounded-md">float-right</div>
+    <div class="clear-both bg-muted p-sm rounded-md">clear-both</div>
+  </div>
+```
+
+## clear-none
+
+默认。两个左浮可以并排；后面那个写 `clear-none` 也不会被挤下去。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="w-24 h-16 float-left clear-none bg-muted p-sm rounded-md">clear-none</div>
+  </div>
+```
+
+## 组合
+
+左右都浮、高度不同：`clear-left` 只躲开左浮，条带顶边可以对着更高的右浮；`clear-right` 相反；`clear-both` 两边都让开。父级 `flow-root` 把浮动包进自己的高度。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 float-left h-16 bg-blue-200 p-sm rounded-md">左短</div>
+    <div class="w-24 float-right h-32 bg-green-200 p-sm rounded-md">右高</div>
+    <div class="clear-left bg-muted p-sm rounded-md">clear-left 只躲左</div>
+  </div>
+```
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
+    <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
+    <div class="clear-right bg-muted p-sm rounded-md">clear-right 只躲右</div>
+  </div>
+```
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 float-left h-32 bg-blue-200 p-sm rounded-md">左高</div>
+    <div class="w-24 float-right h-16 bg-green-200 p-sm rounded-md">右短</div>
+    <div class="clear-both bg-muted p-sm rounded-md">clear-both 两边让开</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:clear-left` 清左浮；窄屏 `m:clear-none` 仍并排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root">
+    <div class="w-24 h-16 float-left bg-blue-200 p-sm rounded-md">float-left</div>
+    <div class="m:clear-none pc:clear-left bg-muted p-sm rounded-md">m:clear-none pc:clear-left</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
