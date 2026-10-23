@@ -3,6 +3,29 @@
   overflow: visible;
 }
 
+/* Inherit root. Inner tokens use `inherit` so Tailwind/Preflight on
+   `span` / `*` cannot stamp page metrics. These properties MUST be set
+   on the host, otherwise inherit walks to doc-prose (line-height 1.7).
+   JS copies the editor's computed fontSize / lineHeight onto
+   `--vscode-editor-*` after mount. */
+.vamis-monaco,
+.vamis-code--editor {
+  font-family: var(--vscode-editor-font-family, var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace));
+  font-size: var(--vscode-editor-font-size, 13px);
+  line-height: var(--vscode-editor-line-height, 20px);
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+.vamis-monaco .monaco-editor,
+.vamis-code--editor .monaco-editor {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
 .vamis-monaco .monaco-editor,
 .vamis-monaco .monaco-editor .overflow-guard,
 .vamis-code--editor .monaco-editor,
@@ -12,12 +35,12 @@
 
 .vamis-monaco .monaco-editor .view-lines,
 .vamis-monaco .monaco-editor .view-line,
-.vamis-monaco .monaco-editor .view-line span,
+.vamis-monaco .monaco-editor .view-line span:not(.colorpicker-color-decoration),
 .vamis-monaco .monaco-editor .margin-view-overlays,
 .vamis-monaco .monaco-editor .line-numbers,
 .vamis-code--editor .monaco-editor .view-lines,
 .vamis-code--editor .monaco-editor .view-line,
-.vamis-code--editor .monaco-editor .view-line span,
+.vamis-code--editor .monaco-editor .view-line span:not(.colorpicker-color-decoration),
 .vamis-code--editor .monaco-editor .margin-view-overlays,
 .vamis-code--editor .monaco-editor .line-numbers {
   font-family: inherit;
@@ -26,6 +49,15 @@
   font-style: inherit;
   line-height: inherit;
   letter-spacing: inherit;
+}
+
+/* Monaco 色块是 inline-block + line-height:.8em。token 的 inherit
+   不能压过这条，否则色块被拉成行高 20px，看起来像盖住 hex。 */
+.vamis-monaco .monaco-editor .view-line span.colorpicker-color-decoration,
+.vamis-code--editor .monaco-editor .view-line span.colorpicker-color-decoration {
+  line-height: 0.8em;
+  height: 0.8em;
+  display: inline-block;
 }
 
 .vamis-monaco-overflow.monaco-editor {
@@ -41,7 +73,9 @@
 .vamis-monaco-overflow .editor-widget,
 .vamis-monaco-overflow .suggest-widget,
 .vamis-monaco-overflow .monaco-hover,
-.vamis-monaco-overflow .parameter-hints-widget {
+.vamis-monaco-overflow .parameter-hints-widget,
+.vamis-monaco-overflow .colorpicker-widget,
+.vamis-monaco-overflow .standalone-colorpicker-widget {
   pointer-events: auto;
 }
 

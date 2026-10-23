@@ -7,7 +7,7 @@ title: Flex Order
 # Flex Order
 
 ::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）已写入 `helpers-palette.css`。`hover:` / `focus:` / 全量 `m:` `pc:` 色盘仍缺，所以不能标已完成。
+布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
 :::
 
 不改 schema 顺序，只改视觉顺序。

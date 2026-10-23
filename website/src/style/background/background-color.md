@@ -7,7 +7,7 @@ title: Background Color
 # Background Color
 
 ::: info 实现进度 55% · 进行中
-语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。仍缺 hover/active/focus/disabled 与设备前缀全矩阵。
+语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。状态前缀与 `m:` / `pc:` 已进 CSS，见 [辅助类-状态样式](/style/state)。
 :::
 
 优先用语义色 `bg-muted` / `bg-primary`。调色盘如 `bg-blue-100` 与 Amis helper 同档 hex，SDK 也能用。
