@@ -2581,6 +2581,576 @@ function justifyContentExtra() {
   ].join('\n')
 }
 
+function boxChip(fill, label, extra = 'w-16 h-16') {
+  return `<div class="${extra} shrink-0 ${fill} flex items-center justify-center text-sm rounded-md">${label}</div>`
+}
+
+function comboWrap(stages) {
+  return displaySchema(['<div class="flex flex-wrap gap-4 items-start">', ...stages, '</div>'])
+}
+
+function justifyItemsStage(cls, stretch = false, indent = '') {
+  const size = stretch ? 'h-16' : 'w-16 h-16'
+  return [
+    `<div class="grid grid-cols-2 ${cls} w-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', size)}`,
+    `  ${boxChip(DEMO_FILL, '2', size)}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function justifyItemsExtra() {
+  return [
+    '## justify-items-auto',
+    '',
+    '`justify-items: auto`。Grid 里等同默认 stretch（计算值 `normal`）：舞台 `grid-cols-2 w-80`，内宽 304px，每格 152px。两枚被拉满，宽 152，left 8 / 160。',
+    '',
+    displaySchema(justifyItemsStage('justify-items-auto', true)),
+    '',
+    '## justify-items-start',
+    '',
+    '`justify-items: start`。格子钉死 `w-16` = 64px，靠格左。left 8 / 160。',
+    '',
+    displaySchema(justifyItemsStage('justify-items-start')),
+    '',
+    '## justify-items-end',
+    '',
+    '`justify-items: end`。靠格右。left 96 / 248。',
+    '',
+    displaySchema(justifyItemsStage('justify-items-end')),
+    '',
+    '## justify-items-center',
+    '',
+    '`justify-items: center`。格内水平居中。left 52 / 204。',
+    '',
+    displaySchema(justifyItemsStage('justify-items-center')),
+    '',
+    '## justify-items-stretch',
+    '',
+    '`justify-items: stretch`。与 auto 一样拉满格宽 152px。left 8 / 160。',
+    '',
+    displaySchema(justifyItemsStage('justify-items-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组两枚：auto、start、end、center、stretch。',
+    '',
+    comboWrap([
+      ...justifyItemsStage('justify-items-auto', true, '  '),
+      ...justifyItemsStage('justify-items-start', false, '  '),
+      ...justifyItemsStage('justify-items-end', false, '  '),
+      ...justifyItemsStage('justify-items-center', false, '  '),
+      ...justifyItemsStage('justify-items-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:justify-items-start` 靠格左；桌面（≥768px）`pc:justify-items-end` 靠格右，第一枚 left 96px。',
+    '',
+    displaySchema(justifyItemsStage('m:justify-items-start pc:justify-items-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。单格覆盖见 [Justify Self](/style/box-alignment/justify-self)；主轴分布见 [Justify Content](/style/box-alignment/justify-content)。',
+  ].join('\n')
+}
+
+function justifySelfStage(selfClass, stretch = false, indent = '') {
+  const size = stretch ? 'h-16' : 'w-16 h-16'
+  return [
+    `<div class="grid grid-cols-2 w-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', `${selfClass} ${size}`)}`,
+    `  ${boxChip(DEMO_FILL, '2', 'h-16')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function justifySelfExtra() {
+  return [
+    '## justify-self-auto',
+    '',
+    '`justify-self: auto`。跟父级默认 stretch：第一枚宽 152px，left 8。第二枚未写 self，同样拉满。',
+    '',
+    displaySchema(justifySelfStage('justify-self-auto', true)),
+    '',
+    '## justify-self-start',
+    '',
+    '`justify-self: start`。只改第一枚，钉死 64px 靠格左，left 8。第二枚仍 stretch 152px。',
+    '',
+    displaySchema(justifySelfStage('justify-self-start')),
+    '',
+    '## justify-self-end',
+    '',
+    '`justify-self: end`。第一枚靠格右，left 96。',
+    '',
+    displaySchema(justifySelfStage('justify-self-end')),
+    '',
+    '## justify-self-center',
+    '',
+    '`justify-self: center`。第一枚格内居中，left 52。',
+    '',
+    displaySchema(justifySelfStage('justify-self-center')),
+    '',
+    '## justify-self-stretch',
+    '',
+    '`justify-self: stretch`。第一枚拉满格宽 152px，left 8。',
+    '',
+    displaySchema(justifySelfStage('justify-self-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组：第一枚分别 auto / start / end / center / stretch，第二枚保持默认。',
+    '',
+    comboWrap([
+      ...justifySelfStage('justify-self-auto', true, '  '),
+      ...justifySelfStage('justify-self-start', false, '  '),
+      ...justifySelfStage('justify-self-end', false, '  '),
+      ...justifySelfStage('justify-self-center', false, '  '),
+      ...justifySelfStage('justify-self-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第一枚 `m:justify-self-start` 靠左；桌面（≥768px）`pc:justify-self-end` 靠右，left 96px。',
+    '',
+    displaySchema(justifySelfStage('m:justify-self-start pc:justify-self-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。整列格子见 [Justify Items](/style/box-alignment/justify-items)。',
+  ].join('\n')
+}
+
+function alignContentStage(cls, indent = '') {
+  return [
+    `<div class="flex flex-wrap ${cls} w-80 h-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', 'w-full h-16')}`,
+    `  ${boxChip(DEMO_FILL, '2', 'w-full h-16')}`,
+    `  ${boxChip('bg-green-200', '3', 'w-full h-16')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function alignContentExtra() {
+  return [
+    '## content-start',
+    '',
+    '`align-content: flex-start`。舞台 `flex flex-wrap h-80 w-80`，内高 304px。三枚 `h-16` 各 64px，合计 192px，剩余 112px 全在下边。top 8 / 72 / 136。',
+    '',
+    displaySchema(alignContentStage('content-start')),
+    '',
+    '## content-end',
+    '',
+    '`align-content: flex-end`。剩余挤到上边。top 120 / 184 / 248。',
+    '',
+    displaySchema(alignContentStage('content-end')),
+    '',
+    '## content-center',
+    '',
+    '`align-content: center`。上下各摊 56px。top 64 / 128 / 192。',
+    '',
+    displaySchema(alignContentStage('content-center')),
+    '',
+    '## content-between',
+    '',
+    '`align-content: space-between`。首尾贴边，中间两缝各 56px。top 8 / 128 / 248。',
+    '',
+    displaySchema(alignContentStage('content-between')),
+    '',
+    '## content-around',
+    '',
+    '`align-content: space-around`。两端各 112/6 ≈ 18.67px，中间缝 37.33px。top 约 27 / 128 / 229。',
+    '',
+    displaySchema(alignContentStage('content-around')),
+    '',
+    '## content-evenly',
+    '',
+    '`align-content: space-evenly`。四段空隙均分 28px。top 36 / 128 / 220。',
+    '',
+    displaySchema(alignContentStage('content-evenly')),
+    '',
+    '## 组合',
+    '',
+    '同一组三枚：start、end、center、between、around、evenly。',
+    '',
+    comboWrap([
+      ...alignContentStage('content-start', '  '),
+      ...alignContentStage('content-end', '  '),
+      ...alignContentStage('content-center', '  '),
+      ...alignContentStage('content-between', '  '),
+      ...alignContentStage('content-around', '  '),
+      ...alignContentStage('content-evenly', '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:content-start` 靠上；桌面（≥768px）`pc:content-end` 靠下，第一枚 top 120px。',
+    '',
+    displaySchema(alignContentStage('m:content-start pc:content-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。Amis 没有 `content-stretch`。单行交叉轴见 [Align Items](/style/box-alignment/align-items)。',
+  ].join('\n')
+}
+
+function alignItemsStage(cls, stretch = false, indent = '') {
+  const size = stretch ? 'w-16' : 'w-16 h-16'
+  return [
+    `<div class="flex ${cls} w-80 h-32 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', size)}`,
+    `  ${boxChip(DEMO_FILL, '2', size)}`,
+    `  ${boxChip('bg-green-200', '3', size)}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function alignItemsBaselineStage(indent = '') {
+  return [
+    `<div class="flex items-baseline w-80 h-32 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  <div class="text-xs bg-blue-200 p-sm rounded-md">xs</div>`,
+    `  <div class="text-2xl ${DEMO_FILL} p-sm rounded-md">2xl</div>`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function alignItemsExtra() {
+  return [
+    '## items-start',
+    '',
+    '`align-items: flex-start`。舞台 `flex h-32 w-80`，内高 112px。三枚 `h-16` = 64px 贴顶。top 8。',
+    '',
+    displaySchema(alignItemsStage('items-start')),
+    '',
+    '## items-end',
+    '',
+    '`align-items: flex-end`。贴底。top 56。',
+    '',
+    displaySchema(alignItemsStage('items-end')),
+    '',
+    '## items-center',
+    '',
+    '`align-items: center`。交叉轴居中。top 32。',
+    '',
+    displaySchema(alignItemsStage('items-center')),
+    '',
+    '## items-baseline',
+    '',
+    '`align-items: baseline`。不同字号的文字基线对齐：`text-xs` 与 `text-2xl` 坐在同一条线上。',
+    '',
+    displaySchema(alignItemsBaselineStage()),
+    '',
+    '## items-stretch',
+    '',
+    '`align-items: stretch`。不写高度时拉满交叉轴，高 112px，top 8。',
+    '',
+    displaySchema(alignItemsStage('items-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组：start、end、center、baseline、stretch。',
+    '',
+    comboWrap([
+      ...alignItemsStage('items-start', false, '  '),
+      ...alignItemsStage('items-end', false, '  '),
+      ...alignItemsStage('items-center', false, '  '),
+      ...alignItemsBaselineStage('  '),
+      ...alignItemsStage('items-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:items-start` 贴顶；桌面（≥768px）`pc:items-end` 贴底，top 56px。',
+    '',
+    displaySchema(alignItemsStage('m:items-start pc:items-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。单枚覆盖见 [Align Self](/style/box-alignment/align-self)；多行分布见 [Align Content](/style/box-alignment/align-content)。',
+  ].join('\n')
+}
+
+function alignSelfStage(selfClass, stretch = false, indent = '') {
+  const size = stretch ? 'w-16' : 'w-16 h-16'
+  return [
+    `<div class="flex items-stretch w-80 h-32 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', `${selfClass} ${size}`)}`,
+    `  ${boxChip(DEMO_FILL, '2', 'w-16')}`,
+    `  ${boxChip('bg-green-200', '3', 'w-16')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function alignSelfExtra() {
+  return [
+    '## self-auto',
+    '',
+    '`align-self: auto`。跟父级 `items-stretch`：第一枚高 112px，top 8。后两枚未写 self，同样拉满。',
+    '',
+    displaySchema(alignSelfStage('self-auto', true)),
+    '',
+    '## self-start',
+    '',
+    '`align-self: flex-start`。只改第一枚，钉死 64px 贴顶，top 8。',
+    '',
+    displaySchema(alignSelfStage('self-start')),
+    '',
+    '## self-end',
+    '',
+    '`align-self: flex-end`。第一枚贴底，top 56。',
+    '',
+    displaySchema(alignSelfStage('self-end')),
+    '',
+    '## self-center',
+    '',
+    '`align-self: center`。第一枚交叉轴居中，top 32。',
+    '',
+    displaySchema(alignSelfStage('self-center')),
+    '',
+    '## self-stretch',
+    '',
+    '`align-self: stretch`。第一枚拉满 112px，top 8。',
+    '',
+    displaySchema(alignSelfStage('self-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组：第一枚分别 auto / start / end / center / stretch。',
+    '',
+    comboWrap([
+      ...alignSelfStage('self-auto', true, '  '),
+      ...alignSelfStage('self-start', false, '  '),
+      ...alignSelfStage('self-end', false, '  '),
+      ...alignSelfStage('self-center', false, '  '),
+      ...alignSelfStage('self-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第一枚 `m:self-start` 贴顶；桌面（≥768px）`pc:self-end` 贴底，top 56px。',
+    '',
+    displaySchema(alignSelfStage('m:self-start pc:self-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。Amis 没有 `self-baseline`。整行交叉轴见 [Align Items](/style/box-alignment/align-items)。',
+  ].join('\n')
+}
+
+function placeContentStage(cls, stretch = false, indent = '') {
+  const size = stretch ? 'w-32' : 'w-32 h-32'
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200', 'bg-blue-200']
+  return [
+    `<div class="flex flex-wrap ${cls} w-80 h-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    ...[1, 2, 3, 4].map((n, i) => `  ${boxChip(fills[i], String(n), size)}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function placeContentExtra() {
+  return [
+    '## place-content-start',
+    '',
+    '`place-content: start`。同时设交叉轴和主轴。舞台 `flex flex-wrap w-80 h-80`，四枚 `w-32 h-32` = 128px，一行两枚（256px），每轴剩余 48px 全在右下。第一枚 left 8 top 8。',
+    '',
+    displaySchema(placeContentStage('place-content-start')),
+    '',
+    '## place-content-end',
+    '',
+    '`place-content: end`。团在右下。第一枚 left 56 top 56。',
+    '',
+    displaySchema(placeContentStage('place-content-end')),
+    '',
+    '## place-content-center',
+    '',
+    '`place-content: center`。两边各摊 24px。第一枚 left 32 top 32。',
+    '',
+    displaySchema(placeContentStage('place-content-center')),
+    '',
+    '## place-content-between',
+    '',
+    '`place-content: space-between`。首尾贴边。第一枚 left 8 top 8；对角 left 184 top 184。',
+    '',
+    displaySchema(placeContentStage('place-content-between')),
+    '',
+    '## place-content-around',
+    '',
+    '`place-content: space-around`。两端各 48/4 = 12px，中间缝 24px。第一枚 left 20 top 20。',
+    '',
+    displaySchema(placeContentStage('place-content-around')),
+    '',
+    '## place-content-evenly',
+    '',
+    '`place-content: space-evenly`。三段空隙均分 48/3 = 16px。第一枚 left 24 top 24。',
+    '',
+    displaySchema(placeContentStage('place-content-evenly')),
+    '',
+    '## place-content-stretch',
+    '',
+    '`place-content: stretch`。两行均分剩余高度：行高 128+24 = 152px。不钉高度的盒子被拉满 152px。',
+    '',
+    displaySchema(placeContentStage('place-content-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组四枚：start、end、center、between、around、evenly、stretch。',
+    '',
+    comboWrap([
+      ...placeContentStage('place-content-start', false, '  '),
+      ...placeContentStage('place-content-end', false, '  '),
+      ...placeContentStage('place-content-center', false, '  '),
+      ...placeContentStage('place-content-between', false, '  '),
+      ...placeContentStage('place-content-around', false, '  '),
+      ...placeContentStage('place-content-evenly', false, '  '),
+      ...placeContentStage('place-content-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:place-content-start` 靠左上；桌面（≥768px）`pc:place-content-end` 靠右下，第一枚 left 56px。',
+    '',
+    displaySchema(placeContentStage('m:place-content-start pc:place-content-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。拆开写见 [Align Content](/style/box-alignment/align-content) / [Justify Content](/style/box-alignment/justify-content)。',
+  ].join('\n')
+}
+
+function placeItemsStage(cls, stretch = false, indent = '') {
+  const size = stretch ? '' : 'w-16 h-16'
+  const fills = ['bg-blue-200', DEMO_FILL, 'bg-green-200', 'bg-blue-200']
+  return [
+    `<div class="grid grid-cols-2 grid-rows-2 ${cls} w-80 h-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    ...[1, 2, 3, 4].map((n, i) => `  ${boxChip(fills[i], String(n), size || 'min-w-0')}`),
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function placeItemsExtra() {
+  return [
+    '## place-items-auto',
+    '',
+    '`place-items: auto`。Grid 里等同 stretch：舞台 `grid-cols-2 grid-rows-2 w-80 h-80`，每格 152×152。四枚被拉满，第一枚 left 8 top 8、宽高 152。',
+    '',
+    displaySchema(placeItemsStage('place-items-auto', true)),
+    '',
+    '## place-items-start',
+    '',
+    '`place-items: start`。格子钉死 64×64，靠格左上。第一枚 left 8 top 8。',
+    '',
+    displaySchema(placeItemsStage('place-items-start')),
+    '',
+    '## place-items-end',
+    '',
+    '`place-items: end`。靠格右下。第一枚 left 96 top 96。',
+    '',
+    displaySchema(placeItemsStage('place-items-end')),
+    '',
+    '## place-items-center',
+    '',
+    '`place-items: center`。格内居中。第一枚 left 52 top 52。',
+    '',
+    displaySchema(placeItemsStage('place-items-center')),
+    '',
+    '## place-items-stretch',
+    '',
+    '`place-items: stretch`。与 auto 一样拉满 152×152。第一枚 left 8 top 8。',
+    '',
+    displaySchema(placeItemsStage('place-items-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组四枚：auto、start、end、center、stretch。',
+    '',
+    comboWrap([
+      ...placeItemsStage('place-items-auto', true, '  '),
+      ...placeItemsStage('place-items-start', false, '  '),
+      ...placeItemsStage('place-items-end', false, '  '),
+      ...placeItemsStage('place-items-center', false, '  '),
+      ...placeItemsStage('place-items-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:place-items-start` 靠左上；桌面（≥768px）`pc:place-items-end` 靠右下，第一枚 left 96px。',
+    '',
+    displaySchema(placeItemsStage('m:place-items-start pc:place-items-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。单格覆盖见 [Place Self](/style/box-alignment/place-self)。',
+  ].join('\n')
+}
+
+function placeSelfStage(selfClass, stretch = false, indent = '') {
+  const size = stretch ? 'min-w-0' : 'w-16 h-16'
+  return [
+    `<div class="grid grid-cols-2 grid-rows-2 w-80 h-80 ${DEMO_STAGE} p-sm rounded-md shrink-0">`,
+    `  ${boxChip('bg-blue-200', '1', `${selfClass} ${size}`)}`,
+    `  ${boxChip(DEMO_FILL, '2', 'min-w-0')}`,
+    `  ${boxChip('bg-green-200', '3', 'min-w-0')}`,
+    `  ${boxChip('bg-blue-200', '4', 'min-w-0')}`,
+    '</div>',
+  ].map((line) => `${indent}${line}`)
+}
+
+function placeSelfExtra() {
+  return [
+    '## place-self-auto',
+    '',
+    '`place-self: auto`。跟父级默认 stretch：第一枚 152×152，left 8 top 8。其余三枚未写 self，同样拉满。',
+    '',
+    displaySchema(placeSelfStage('place-self-auto', true)),
+    '',
+    '## place-self-start',
+    '',
+    '`place-self: start`。只改第一枚，钉死 64×64 靠格左上，left 8 top 8。',
+    '',
+    displaySchema(placeSelfStage('place-self-start')),
+    '',
+    '## place-self-end',
+    '',
+    '`place-self: end`。第一枚靠格右下，left 96 top 96。',
+    '',
+    displaySchema(placeSelfStage('place-self-end')),
+    '',
+    '## place-self-center',
+    '',
+    '`place-self: center`。第一枚格内居中，left 52 top 52。',
+    '',
+    displaySchema(placeSelfStage('place-self-center')),
+    '',
+    '## place-self-stretch',
+    '',
+    '`place-self: stretch`。第一枚拉满 152×152，left 8 top 8。',
+    '',
+    displaySchema(placeSelfStage('place-self-stretch', true)),
+    '',
+    '## 组合',
+    '',
+    '同一组：第一枚分别 auto / start / end / center / stretch。',
+    '',
+    comboWrap([
+      ...placeSelfStage('place-self-auto', true, '  '),
+      ...placeSelfStage('place-self-start', false, '  '),
+      ...placeSelfStage('place-self-end', false, '  '),
+      ...placeSelfStage('place-self-center', false, '  '),
+      ...placeSelfStage('place-self-stretch', true, '  '),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏第一枚 `m:place-self-start` 靠左上；桌面（≥768px）`pc:place-self-end` 靠右下，left 96px。',
+    '',
+    displaySchema(placeSelfStage('m:place-self-start pc:place-self-end')),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。整表格子见 [Place Items](/style/box-alignment/place-items)。',
+  ].join('\n')
+}
+
 function floatExtra() {
   return [
     '## 左浮',
@@ -3234,49 +3804,59 @@ tpl: |
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Justify Items',
-    'box-alignment/justify-items',
-    'Grid 单元格内水平对齐。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-cols-2 justify-items-center ${DEMO_STAGE} p-sm rounded-md gap-2
-    tpl: '<span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>'`,
-    [
+  {
+    title: 'Justify Items',
+    slug: 'box-alignment/justify-items',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Justify Items：`justify-items-auto` / `start` / `end` / `center` / `stretch` 落在同一元素的 `justify-items`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。auto 与 stretch 格宽 152px。',
+    tableFirst: true,
+    intro:
+      'Grid 单元格内水平对齐。写在 `display: grid` 的容器上，管每一格里的东西靠左还是拉满。Amis 五档：`auto` / `start` / `end` / `center` / `stretch`，值是逻辑 `start` / `end`。舞台钉死 `w-80`（320px）两列，每格 152px，用盒子 left / 宽对格。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 grid 上。',
+    rows: [
+      ['justify-items-auto', 'justify-items: auto'],
       ['justify-items-start', 'justify-items: start'],
       ['justify-items-end', 'justify-items: end'],
       ['justify-items-center', 'justify-items: center'],
       ['justify-items-stretch', 'justify-items: stretch'],
     ],
-  ),
-  tw(
-    'Justify Self',
-    'box-alignment/justify-self',
-    '单个 Grid 子项水平对齐。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-cols-2 ${DEMO_STAGE} p-sm rounded-md
-    tpl: '<span class="justify-self-end bg-card p-xs rounded-md">靠右</span><span class="bg-card p-xs rounded-md">默认</span>'`,
-    [
+    extra: justifyItemsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Justify Self',
+    slug: 'box-alignment/justify-self',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Justify Self：`justify-self-auto` / `start` / `end` / `center` / `stretch` 落在同一子项的 `justify-self`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。只改第一枚，第二枚保持 stretch。',
+    tableFirst: true,
+    intro:
+      '单个 Grid 子项覆盖 `justify-items`。类打在子项上，不是容器。Amis 五档与 Justify Items 同值。舞台两列 `w-80`，只动第一枚的 left / 宽。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 self 类打在第一枚上。',
+    rows: [
       ['justify-self-auto', 'justify-self: auto'],
       ['justify-self-start', 'justify-self: start'],
       ['justify-self-end', 'justify-self: end'],
       ['justify-self-center', 'justify-self: center'],
       ['justify-self-stretch', 'justify-self: stretch'],
     ],
-  ),
-  tw(
-    'Align Content',
-    'box-alignment/align-content',
-    '多行 flex / grid 的交叉轴分布。',
-    `type: page
-body:
-  - type: tpl
-    className: flex flex-wrap content-between h-32 ${DEMO_STAGE} p-sm rounded-md
-    tpl: '<span class="w-1/2 bg-card p-xs rounded-md">1</span><span class="w-1/2 bg-card p-xs rounded-md">2</span><span class="w-1/2 bg-card p-xs rounded-md">3</span>'`,
-    [
+    extra: justifySelfExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Align Content',
+    slug: 'box-alignment/align-content',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Align Content：`content-start` / `end` / `center` / `between` / `around` / `evenly` 落在同一元素的 `align-content`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `content-stretch`。',
+    tableFirst: true,
+    intro:
+      '多行 flex / grid 的交叉轴怎么摊剩余高度。写在容器上。Amis 六档，值是 `flex-start` / `flex-end`，没有 `content-stretch`。舞台钉死 `h-80`（320px），三枚 `h-16` 合计 192px，剩余 112px 用各枚 top 对。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 content 类打在内层 flex 上。',
+    rows: [
       ['content-start', 'align-content: flex-start'],
       ['content-end', 'align-content: flex-end'],
       ['content-center', 'align-content: center'],
@@ -3284,98 +3864,117 @@ body:
       ['content-around', 'align-content: space-around'],
       ['content-evenly', 'align-content: space-evenly'],
     ],
-  ),
-  tw(
-    'Align Items',
-    'box-alignment/align-items',
-    '交叉轴对齐。竖排居中常用 `items-center`。',
-    `type: page
-body:
-  - type: container
-    className: h-20 ${DEMO_STAGE} p-sm rounded-md
-    bodyClassName: flex items-center gap-2
-    body:
-      - type: tpl
-        className: bg-card p-xs rounded-md
-        tpl: 短
-      - type: tpl
-        className: bg-card p-md rounded-md
-        tpl: 更高`,
-    [
+    extra: alignContentExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Align Items',
+    slug: 'box-alignment/align-items',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Align Items：`items-start` / `end` / `center` / `baseline` / `stretch` 落在同一元素的 `align-items`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。stretch 高 112px。',
+    tableFirst: true,
+    intro:
+      '单行（或单列）交叉轴对齐。写在 `display: flex` 或 `grid` 的容器上。Amis 五档，值是 `flex-start` / `flex-end`。舞台钉死 `h-32`（128px），内高 112px，用各枚 top / 高对。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 items 类打在内层 flex 上。',
+    rows: [
       ['items-start', 'align-items: flex-start'],
       ['items-end', 'align-items: flex-end'],
       ['items-center', 'align-items: center'],
       ['items-baseline', 'align-items: baseline'],
       ['items-stretch', 'align-items: stretch'],
     ],
-  ),
-  tw(
-    'Align Self',
-    'box-alignment/align-self',
-    '单个子项覆盖 `items-*`。',
-    `type: page
-body:
-  - type: tpl
-    className: flex items-start h-20 ${DEMO_STAGE} p-sm rounded-md gap-2
-    tpl: '<span class="bg-card p-xs rounded-md">上</span><span class="self-end bg-card p-xs rounded-md">下</span>'`,
-    [
+    extra: alignItemsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Align Self',
+    slug: 'box-alignment/align-self',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Align Self：`self-auto` / `start` / `end` / `center` / `stretch` 落在同一子项的 `align-self`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `self-baseline`。',
+    tableFirst: true,
+    intro:
+      '单个子项覆盖 `align-items`。类打在子项上。Amis 五档，没有 `self-baseline`。舞台 `flex items-stretch h-32`，只动第一枚的 top / 高。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 self 类打在第一枚上。',
+    rows: [
       ['self-auto', 'align-self: auto'],
       ['self-start', 'align-self: flex-start'],
       ['self-end', 'align-self: flex-end'],
       ['self-center', 'align-self: center'],
       ['self-stretch', 'align-self: stretch'],
     ],
-  ),
-  tw(
-    'Place Content',
-    'box-alignment/place-content',
-    '同时设 `align-content` 与 `justify-content`。',
-    `type: page
-body:
-  - type: tpl
-    className: grid h-24 place-content-center ${DEMO_STAGE} rounded-md
-    tpl: '<span class="bg-card p-sm rounded-md">居中</span>'`,
-    [
+    extra: alignSelfExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Place Content',
+    slug: 'box-alignment/place-content',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Place Content：`place-content-start` / `end` / `center` / `between` / `around` / `evenly` / `stretch` 落在同一元素的 `place-content`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。around / evenly 已补齐。',
+    tableFirst: true,
+    intro:
+      '同时设 `align-content` 与 `justify-content`。Amis 七档，值是逻辑 `start` / `end`（不是 flex-*）。舞台钉死 `w-80 h-80`（内 304×304），四枚 `w-32 h-32`（128×128）flex 换行成 2×2，每轴剩余 48px，用第一枚 left / top 对。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 place-content 类打在内层 flex 上。',
+    rows: [
       ['place-content-center', 'place-content: center'],
       ['place-content-start', 'place-content: start'],
       ['place-content-end', 'place-content: end'],
       ['place-content-between', 'place-content: space-between'],
+      ['place-content-around', 'place-content: space-around'],
+      ['place-content-evenly', 'place-content: space-evenly'],
       ['place-content-stretch', 'place-content: stretch'],
     ],
-  ),
-  tw(
-    'Place Items',
-    'box-alignment/place-items',
-    '同时设 `align-items` 与 `justify-items`。',
-    `type: page
-body:
-  - type: tpl
-    className: grid h-24 place-items-center ${DEMO_STAGE} rounded-md
-    tpl: '<span class="bg-card p-sm rounded-md">单元格居中</span>'`,
-    [
-      ['place-items-center', 'place-items: center'],
+    extra: placeContentExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Place Items',
+    slug: 'box-alignment/place-items',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Place Items：`place-items-auto` / `start` / `end` / `center` / `stretch` 落在同一元素的 `place-items`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。auto 已补齐，stretch 格 152×152。',
+    tableFirst: true,
+    intro:
+      '同时设 `align-items` 与 `justify-items`。写在 grid 容器上，管每一格里的东西。Amis 五档含 `auto`。舞台钉死 `w-80 h-80` 四格各 152×152，用第一枚 left / top / 宽高对。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 place-items 类打在内层 grid 上。',
+    rows: [
+      ['place-items-auto', 'place-items: auto'],
       ['place-items-start', 'place-items: start'],
       ['place-items-end', 'place-items: end'],
+      ['place-items-center', 'place-items: center'],
       ['place-items-stretch', 'place-items: stretch'],
     ],
-  ),
-  tw(
-    'Place Self',
-    'box-alignment/place-self',
-    '单个子项同时改交叉轴和主轴。',
-    `type: page
-body:
-  - type: tpl
-    className: grid grid-cols-2 h-24 ${DEMO_STAGE} rounded-md
-    tpl: '<span class="place-self-center bg-card p-sm rounded-md">自己居中</span><span class="bg-card p-sm rounded-md">默认</span>'`,
-    [
+    extra: placeItemsExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Place Self',
+    slug: 'box-alignment/place-self',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Place Self：`place-self-auto` / `start` / `end` / `center` / `stretch` 落在同一子项的 `place-self`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。只改第一枚。',
+    tableFirst: true,
+    intro:
+      '单个子项同时改交叉轴和主轴，覆盖 `place-items`。类打在子项上。Amis 五档。舞台四格 `w-80 h-80`，只动第一枚的 left / top / 宽高。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 place-self 类打在第一枚上。',
+    rows: [
       ['place-self-auto', 'place-self: auto'],
       ['place-self-start', 'place-self: start'],
       ['place-self-end', 'place-self: end'],
       ['place-self-center', 'place-self: center'],
       ['place-self-stretch', 'place-self: stretch'],
     ],
-  ),
+    extra: placeSelfExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Font Family',
     'typography/font-family',
