@@ -36,6 +36,7 @@
   .contents { display: contents; }
   .hidden { display: none; }
   .table { display: table; }
+  .table-caption { display: table-caption; }
   .table-cell { display: table-cell; }
   .table-column { display: table-column; }
   .table-column-group { display: table-column-group; }
@@ -59,6 +60,12 @@
   .overflow-scroll { overflow: scroll; }
   .overflow-x-auto { overflow-x: auto; }
   .overflow-y-auto { overflow-y: auto; }
+  .overflow-x-hidden { overflow-x: hidden; }
+  .overflow-y-hidden { overflow-y: hidden; }
+  .overflow-x-visible { overflow-x: visible; }
+  .overflow-y-visible { overflow-y: visible; }
+  .overflow-x-scroll { overflow-x: scroll; }
+  .overflow-y-scroll { overflow-y: scroll; }
 
   .static { position: static; }
   .relative { position: relative; }
@@ -69,6 +76,10 @@
   .right-0 { right: 0; }
   .bottom-0 { bottom: 0; }
   .left-0 { left: 0; }
+  .top-2 { top: 0.5rem; }
+  .right-2 { right: 0.5rem; }
+  .bottom-2 { bottom: 0.5rem; }
+  .left-2 { left: 0.5rem; }
   .inset-0 { inset: 0; }
   .visible { visibility: visible; }
   .invisible { visibility: hidden; }
@@ -316,7 +327,20 @@
   .m\:inline { display: inline; }
   .m\:inline-block { display: inline-block; }
   .m\:flex { display: flex; }
+  .m\:inline-flex { display: inline-flex; }
   .m\:grid { display: grid; }
+  .m\:inline-grid { display: inline-grid; }
+  .m\:contents { display: contents; }
+  .m\:flow-root { display: flow-root; }
+  .m\:table { display: table; }
+  .m\:table-caption { display: table-caption; }
+  .m\:table-cell { display: table-cell; }
+  .m\:table-column { display: table-column; }
+  .m\:table-column-group { display: table-column-group; }
+  .m\:table-header-group { display: table-header-group; }
+  .m\:table-footer-group { display: table-footer-group; }
+  .m\:table-row-group { display: table-row-group; }
+  .m\:table-row { display: table-row; }
   .m\:hidden { display: none; }
   .m\:flex-col { flex-direction: column; }
   .m\:flex-row { flex-direction: row; }
@@ -337,6 +361,23 @@
   .m\:clear-right { clear: right; }
   .m\:clear-both { clear: both; }
   .m\:clear-none { clear: none; }
+  .m\:overflow-auto { overflow: auto; }
+  .m\:overflow-hidden { overflow: hidden; }
+  .m\:overflow-visible { overflow: visible; }
+  .m\:overflow-scroll { overflow: scroll; }
+  .m\:overflow-x-auto { overflow-x: auto; }
+  .m\:overflow-y-auto { overflow-y: auto; }
+  .m\:overflow-x-hidden { overflow-x: hidden; }
+  .m\:overflow-y-hidden { overflow-y: hidden; }
+  .m\:overflow-x-visible { overflow-x: visible; }
+  .m\:overflow-y-visible { overflow-y: visible; }
+  .m\:overflow-x-scroll { overflow-x: scroll; }
+  .m\:overflow-y-scroll { overflow-y: scroll; }
+  .m\:static { position: static; }
+  .m\:relative { position: relative; }
+  .m\:absolute { position: absolute; }
+  .m\:fixed { position: fixed; }
+  .m\:sticky { position: sticky; }
 }
 
 @media (min-width: 768px) {
@@ -344,7 +385,20 @@
   .pc\:inline { display: inline; }
   .pc\:inline-block { display: inline-block; }
   .pc\:flex { display: flex; }
+  .pc\:inline-flex { display: inline-flex; }
   .pc\:grid { display: grid; }
+  .pc\:inline-grid { display: inline-grid; }
+  .pc\:contents { display: contents; }
+  .pc\:flow-root { display: flow-root; }
+  .pc\:table { display: table; }
+  .pc\:table-caption { display: table-caption; }
+  .pc\:table-cell { display: table-cell; }
+  .pc\:table-column { display: table-column; }
+  .pc\:table-column-group { display: table-column-group; }
+  .pc\:table-header-group { display: table-header-group; }
+  .pc\:table-footer-group { display: table-footer-group; }
+  .pc\:table-row-group { display: table-row-group; }
+  .pc\:table-row { display: table-row; }
   .pc\:hidden { display: none; }
   .pc\:flex-col { flex-direction: column; }
   .pc\:flex-row { flex-direction: row; }
@@ -365,6 +419,23 @@
   .pc\:clear-right { clear: right; }
   .pc\:clear-both { clear: both; }
   .pc\:clear-none { clear: none; }
+  .pc\:overflow-auto { overflow: auto; }
+  .pc\:overflow-hidden { overflow: hidden; }
+  .pc\:overflow-visible { overflow: visible; }
+  .pc\:overflow-scroll { overflow: scroll; }
+  .pc\:overflow-x-auto { overflow-x: auto; }
+  .pc\:overflow-y-auto { overflow-y: auto; }
+  .pc\:overflow-x-hidden { overflow-x: hidden; }
+  .pc\:overflow-y-hidden { overflow-y: hidden; }
+  .pc\:overflow-x-visible { overflow-x: visible; }
+  .pc\:overflow-y-visible { overflow-y: visible; }
+  .pc\:overflow-x-scroll { overflow-x: scroll; }
+  .pc\:overflow-y-scroll { overflow-y: scroll; }
+  .pc\:static { position: static; }
+  .pc\:relative { position: relative; }
+  .pc\:absolute { position: absolute; }
+  .pc\:fixed { position: fixed; }
+  .pc\:sticky { position: sticky; }
 }
 
 /* Amis space-*: margin-left on the next sibling. Tailwind v4 puts
