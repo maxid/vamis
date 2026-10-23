@@ -23,7 +23,7 @@
 | `@vamis/ui` | `packages/vamis-ui` | shadcn-vue 原语与 CSS 变量（密度、状态色） |
 | `vamis` | `packages/vamis` | Amis type 渲染器；`register.ts` + `extras/*.ts` |
 | `@vamis/editor` | `packages/vamis-editor` | 树 / 画布 / 属性 / YAML |
-| playground | `playground` | 文档（`/`）+ 组件（`/components`）+ 示例（`/examples`） |
+| playground | `playground` | 文档（`/`）+ 组件（`/components`）+ 样式（`/style`）+ 示例（`/examples`） |
 | 文档正文 | `website/src` | Markdown 真源；playground 在 5173 渲染 |
 | `@vamis/sdk` | `packages/vamis-sdk` | JS SDK：`sdk.js` + `vamis.embed`；P0 已落地 |
 
@@ -59,14 +59,15 @@
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 62%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | 盒子数字对齐 cxd；配色独立；**默认自适应** | 字体走 Amis `--fonts-base-family` 系统栈（不嵌入 IBM Plex）；未写 `size` 即铺满；token + `m-t-xs` + `w-*`/`h-*`/`m:`/`pc:` + FormItem `size`（含 full，≥576px 钉档）+ Table cell；`xxxClassName` / `registerTheme` 仍 P1 |
-| Playground | `/` 文档 + `/components` 组件 + `/examples` 示例 | 同一 5173；`pnpm build` 全静态 HTML，可发 GitHub Pages |
+| Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
-| 在线文档 | 已并入 playground | 概念页「模板」**95% 已完成**、「表达式」**90% 已完成**、「数据映射」**90% 已完成**、「联动」**90% 已完成**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
+| 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式」**90% 已完成**、「数据映射」**90% 已完成**、「联动」**90% 已完成**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
 | 测试 | 源码用例 formula 185 + core 175 + sdk 13 | `pnpm typecheck` 已通过；渲染器无组件级测试 |
 
 **最近交付**
 
+- 顶栏补「样式」入口（文档 \| 组件 \| **样式** \| 示例 \| 编辑器），路由 `/style` 一等，侧栏对齐 Amis CssDocs。开始四页按 Amis 结构改写；辅助类目录（Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography / Backgrounds / Borders / Effect）用生成器写出，不拷贝 Amis helper.md。旧 `/docs/style` 重定向到 `/style`。
 - 清掉 `pnpm typecheck`：playground tsconfig 排除测试文件、补 `nav.d.mts`，并收窄 SchemaNode / 表单项 `label` / fetcher / Monaco 0.57 类型。`vue-tsc --noEmit` 现为 0 错误。
 - 概念页「联动」对标 Amis 同名页：**90% 已完成**。`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、点号 `form.select`、逗号多目标、动态 `target` / `name` 已在 5173 核对。提交回写显隐用 `${id !== undefined}`（公式没有 `typeof`）。`clearValueOnHidden` 仍等 D6。
 - 概念页「数据映射」对标 Amis 同名页：**90% 已完成**。模板字符串 / 链式取值 / `api.data` / `&` 展开 / `$table` 数组提取 / namespace / P0 过滤器均可跑。`dataMapping` 补上 `$rows` 提取。其余过滤器仍 P1。
@@ -152,6 +153,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`xxxClassName` 打到子节点；`registerTheme`；locale / `replaceText`。不挡组件语义。
+6. **样式收尾（D12 余项）**：顶栏 `/style` 已落地。下一刀是 `xxxClassName` 打到子节点、`registerTheme`，以及 Tailwind `m:`/`pc:` 前缀（目前只接到间距和宽高）。locale / `replaceText`。不挡组件语义。
 
 非本阶段：office/pdf 真实预览、TinyMCE、`.cxd-` 类名/云舍蓝、MST、完整 amis-editor。

@@ -1,6 +1,7 @@
 @import "@vamis/ui/styles.css";
 
 @source "../../packages/**/*.{vue,ts}";
+@source "../../website/src/**/*.md";
 @source "./**/*.{vue,ts}";
 
 .doc-prose h1 {

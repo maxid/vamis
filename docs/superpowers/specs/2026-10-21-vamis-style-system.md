@@ -1,14 +1,14 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
-- 日期：2026-10-21
-- 状态：落地（**默认自适应** / token / 密度 / 盒子辅助类 / 宽度 helper / FormItem size 含 full / Table cell / IR `metadata.style`；`xxxClassName` 与 `registerTheme` 仍 P1）
+- 日期：2026-10-23
+- 状态：落地（**默认自适应** / token / 密度 / 盒子辅助类 / 宽度 helper / FormItem size 含 full / Table cell / IR `metadata.style`；对外文档顶栏「样式」`/style` 已对齐 Amis CssDocs 目录；`xxxClassName` 与 `registerTheme` 仍 P1）
 - 关联：
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
 - 参考：
   - Amis 文档：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN/style`（`index` / `css-vars` / `state` / `responsive-design`）、`types/classname.md`
   - Amis 源码：`packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
-  - 在线文档 `http://localhost:8888/zh-CN/style/index` 本轮不可达，以本地文档与源码为准
+  - 在线文档：Amis `http://localhost:8888/zh-CN/style/index`；Vamis Playground `/style`
 
 水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**盒子数字对齐 cxd**（商业 YAML 才能套），配色独立。不搬 `cxd-` class，不编译 Amis SCSS。
 

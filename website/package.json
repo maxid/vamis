@@ -7,7 +7,8 @@
     "dev": "vitepress dev",
     "build": "node scripts/gen-component-pages.mjs && vitepress build",
     "preview": "vitepress preview",
-    "gen": "node scripts/gen-component-pages.mjs"
+    "gen": "node scripts/gen-component-pages.mjs",
+    "gen:style": "node scripts/gen-style-helper-pages.mjs"
   },
   "dependencies": {
     "@vamis/core": "workspace:*",

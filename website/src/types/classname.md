@@ -40,7 +40,7 @@ body:
     tpl: 当前状态 ${status}
 ```
 
-`text-danger` 会映到 `text-destructive`。`m:` / `pc:` 前缀作用在间距、宽度和高度辅助类上（`m-t-xs`、`w-full` / `w-1/2`、`h-full`，手机 &lt;768px / 桌面 ≥768px）。主题色请改 token 或 `cssVars`。
+`text-danger` 会映到 `text-destructive`。`m:` / `pc:` 前缀作用在间距、宽度和高度辅助类上（`m-t-xs`、`w-full` / `w-1/2`、`h-full`，手机 &lt;768px / 桌面 ≥768px）。主题色请改 token 或 `cssVars`。完整辅助类清单在顶栏 [样式](/style/)。
 
 ```schema: height=280
 type: grid

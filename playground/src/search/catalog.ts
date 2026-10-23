@@ -1,5 +1,5 @@
 import { exampleLeaves } from '../catalog'
-import { componentGroups, docsGroups } from '../docs/sidebar'
+import { componentGroups, docsGroups, styleGroups } from '../docs/sidebar'
 
 export type SearchHit = {
   href: string
@@ -12,6 +12,7 @@ export function buildSearchIndex(): SearchHit[] {
   const hits: SearchHit[] = [
     { href: '/', title: '介绍', group: '文档', keywords: '介绍 文档 开始 首页' },
     { href: '/components', title: '组件介绍', group: '组件', keywords: '组件介绍' },
+    { href: '/style', title: '样式', group: '样式', keywords: '样式 辅助类 className helper cssVars' },
     { href: '/examples', title: '示例', group: '页面', keywords: '示例 playground 预览' },
     { href: '/editor', title: '编辑器', group: '页面', keywords: '编辑器 yaml 可视化' },
   ]
@@ -27,6 +28,17 @@ export function buildSearchIndex(): SearchHit[] {
             : item.link.includes('/concepts/schema')
               ? `${item.text} ${item.link} ${group.text} LazyComponent lazyLoad unMountOnHidden 懒加载 可视 initApi Schema`
               : `${item.text} ${item.link} ${group.text}`,
+      })
+    }
+  }
+  for (const group of styleGroups) {
+    for (const item of group.items ?? []) {
+      if (hits.some((hit) => hit.href === item.link)) continue
+      hits.push({
+        href: item.link,
+        title: item.text,
+        group: `样式 · ${group.text}`,
+        keywords: `${item.text} ${item.link} ${group.text} className helper 辅助类`,
       })
     }
   }

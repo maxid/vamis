@@ -35,7 +35,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)：按文档侧栏的状态与进度（已注册 ≠ 语义完成）。
 - [amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)：type 覆盖、上游对齐、实现深度分级。
 - [主题映射](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)：Amis 后台水标 × shadcn token。
-- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（首页 `/`、`/components`）；文档页标题下「实现进度 · 状态」。
+- [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)：与 Playground 同应用（首页 `/`、`/components`、`/style`）；文档页标题下「实现进度 · 状态」。
 
 ## 怎么跑
 
@@ -43,13 +43,14 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 ```bash
 pnpm install
-pnpm dev          # 示例 / 文档 / 组件，http://127.0.0.1:5173
+pnpm dev          # 文档 / 组件 / 样式 / 示例，http://127.0.0.1:5173
 ```
 
 | 路由 | 做什么 |
 |------|--------|
-| `/` | 文档首页（开始 / 概念 / 样式 / 类型 / 扩展；标题下显示实现进度） |
+| `/` | 文档首页（开始 / 概念 / 类型 / 扩展；标题下显示实现进度） |
 | `/components` | 组件文档（侧栏对齐 Amis，YAML / JSON 实时预览，标题下显示实现进度） |
+| `/style` | 样式（对齐 Amis 顶栏：快速开始 / CSS 变量 / 辅助类目录） |
 | `/examples` | 示例：分类树 + 预览 + Schema |
 | `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + Schema |
 
@@ -61,7 +62,7 @@ pnpm test
 
 ## GitHub Pages
 
-Playground（`/` 文档 + `/components` + `/examples` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
+Playground（`/` 文档 + `/components` + `/style` + `/examples` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
 
 第一次需要在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。之后推 `main` 或手动跑 workflow `Deploy playground to GitHub Pages`。
 
@@ -123,7 +124,7 @@ packages/vamis-ui       shadcn-vue 原语（Button/Input/Select/Dialog/Table…�
 packages/vamis          P0 渲染器注册表
 packages/vamis-editor   树 + 属性 + Schema + 预览
 packages/vamis-sdk      JS SDK（`sdk.js` / `vamis.embed`）
-playground               示例 / 文档 / 组件（5173）
+playground               文档 / 组件 / 样式 / 示例（5173）
 website                  文档 Markdown；可选 VitePress 静态导出
 ```
 

@@ -22,8 +22,18 @@ export const router = createRouter({
     { path: '/examples', name: 'examples', component: PlaygroundView },
     { path: '/editor', name: 'editor', component: EditorView },
     { path: '/docs', redirect: '/' },
+    { path: '/docs/style', redirect: '/style/' },
+    {
+      path: '/docs/style/:path(.*)*',
+      redirect: (to) => {
+        const rest = ([] as string[]).concat((to.params.path as string | string[]) || []).filter(Boolean).join('/')
+        return rest ? `/style/${rest}` : '/style/'
+      },
+    },
     { path: '/docs/:path(.*)*', name: 'docs-page', component: DocView },
     { path: '/components', name: 'components', component: DocView },
     { path: '/components/:path(.*)*', name: 'component-page', component: DocView },
+    { path: '/style', name: 'style', component: DocView },
+    { path: '/style/:path(.*)*', name: 'style-page', component: DocView },
   ],
 })
