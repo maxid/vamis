@@ -407,6 +407,378 @@ const FLOAT_IMG =
     '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="180" height="180" fill="#94a3b8"/></svg>',
   )
 
+function displaySchema(lines) {
+  return [
+    '```schema',
+    'type: tpl',
+    'inline: false',
+    'tpl: |',
+    ...lines.map((line) => `  ${line}`),
+    '```',
+  ].join('\n')
+}
+
+function displayChip(extraClass, label) {
+  return `<div class="${extraClass} p-sm rounded-md">${label}</div>`
+}
+
+function displayExtra() {
+  return [
+    '## block',
+    '',
+    '独占一行。后面的盒子顶边落到它下面。',
+    '',
+    displaySchema([
+      displayChip('block w-24 bg-blue-200', 'block'),
+      displayChip('block w-24 bg-muted', 'block'),
+    ]),
+    '',
+    '## inline-block',
+    '',
+    '可以并排，宽高仍生效。两个节点之间不要换行，否则空白会挤出缝。',
+    '',
+    displaySchema([
+      `${displayChip('inline-block w-24 bg-blue-200', 'inline-block')}${displayChip('inline-block w-24 bg-muted', 'inline-block')}`,
+    ]),
+    '',
+    '## inline',
+    '',
+    '跟文字同一行。宽高不生效，只随内容伸缩。',
+    '',
+    displaySchema([
+      `<p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-muted p-sm rounded-md">inline</span>后</p>`,
+    ]),
+    '',
+    '## flex',
+    '',
+    '子节点排成一行。缝是 `gap-2` = 8px。',
+    '',
+    displaySchema([
+      '<div class="flex gap-2">',
+      `  ${displayChip('bg-blue-200', 'A')}`,
+      `  ${displayChip('bg-muted', 'B')}`,
+      `  ${displayChip('bg-green-200', 'C')}`,
+      '</div>',
+    ]),
+    '',
+    '## inline-flex',
+    '',
+    '还是 flex，但盒子本身跟文字并排。',
+    '',
+    displaySchema([
+      `前<div class="inline-flex gap-2">${displayChip('bg-blue-200', 'A')}${displayChip('bg-muted', 'B')}</div>后`,
+    ]),
+    '',
+    '## grid',
+    '',
+    '`grid-cols-2` 两列。四个格子 2×2。',
+    '',
+    displaySchema([
+      '<div class="grid grid-cols-2 gap-2 w-48">',
+      `  ${displayChip('bg-blue-200', '1')}`,
+      `  ${displayChip('bg-muted', '2')}`,
+      `  ${displayChip('bg-green-200', '3')}`,
+      `  ${displayChip('bg-muted', '4')}`,
+      '</div>',
+    ]),
+    '',
+    '## inline-grid',
+    '',
+    'grid 盒子跟文字并排。',
+    '',
+    displaySchema([
+      `前<div class="inline-grid grid-cols-2 gap-2">${displayChip('bg-blue-200', '1')}${displayChip('bg-muted', '2')}</div>后`,
+    ]),
+    '',
+    '## contents',
+    '',
+    '自己从盒模型里消失，子节点升成父级的直接孩子。下面 B、C 和 A 一样都是 flex item。',
+    '',
+    displaySchema([
+      '<div class="flex gap-2">',
+      `  ${displayChip('bg-blue-200', 'A')}`,
+      '  <div class="contents">',
+      `    ${displayChip('bg-muted', 'B')}`,
+      `    ${displayChip('bg-green-200', 'C')}`,
+      '  </div>',
+      '</div>',
+    ]),
+    '',
+    '## hidden',
+    '',
+    '`display: none`，不占布局。业务显隐仍优先 schema `visible` / `visibleOn`。',
+    '',
+    displaySchema([
+      displayChip('block w-24 bg-blue-200', '可见'),
+      displayChip('hidden w-24 bg-muted', '隐藏'),
+      displayChip('block w-24 bg-green-200', '可见'),
+    ]),
+    '',
+    '## flow-root',
+    '',
+    '开一个 BFC，把里面的 float 包进自己的高度。',
+    '',
+    displaySchema([
+      '<div class="flow-root bg-muted p-sm rounded-md">',
+      `  ${displayChip('float-left w-24 h-16 bg-blue-200', '浮')}`,
+      '  <p>父级有高度，文字绕开左浮。</p>',
+      '</div>',
+    ]),
+    '',
+    '## table',
+    '',
+    '最简一行两格。子节点是 `table-row` / `table-cell`。',
+    '',
+    displaySchema([
+      '<div class="table">',
+      '  <div class="table-row">',
+      `    ${displayChip('table-cell bg-blue-200', 'A')}`,
+      `    ${displayChip('table-cell bg-muted', 'B')}`,
+      '  </div>',
+      '</div>',
+    ]),
+    '',
+    '## 组合',
+    '',
+    '`table-column-group` / `table-column` 钉列宽（`w-24` 96px、`w-32` 128px），表头 / 表体 / 表脚用对应的 `*-group`。',
+    '',
+    displaySchema([
+      '<div class="table">',
+      '  <div class="table-column-group">',
+      '    <div class="table-column w-24"></div>',
+      '    <div class="table-column w-32"></div>',
+      '  </div>',
+      '  <div class="table-header-group">',
+      '    <div class="table-row">',
+      `      ${displayChip('table-cell bg-muted', '列1')}`,
+      `      ${displayChip('table-cell bg-muted', '列2')}`,
+      '    </div>',
+      '  </div>',
+      '  <div class="table-row-group">',
+      '    <div class="table-row">',
+      `      ${displayChip('table-cell bg-blue-200', 'A')}`,
+      `      ${displayChip('table-cell bg-blue-200', 'B')}`,
+      '    </div>',
+      '  </div>',
+      '  <div class="table-footer-group">',
+      '    <div class="table-row">',
+      `      ${displayChip('table-cell bg-green-200', '脚1')}`,
+      `      ${displayChip('table-cell bg-green-200', '脚2')}`,
+      '    </div>',
+      '  </div>',
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:block` 显示、`pc:hidden` 隐藏。',
+    '',
+    displaySchema([
+      displayChip('hidden pc:block bg-blue-200', 'pc 可见'),
+      displayChip('block pc:hidden bg-muted', '手机可见'),
+    ]),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。',
+  ].join('\n')
+}
+
+function overflowFrame(overflowClass, innerClass, label, wrapClass = '') {
+  const frame = `<div class="${overflowClass} h-16 w-48 bg-muted p-sm rounded-md"><div class="${innerClass} bg-blue-200 p-sm rounded-md">${label}</div></div>`
+  return wrapClass ? `<div class="${wrapClass}">${frame}</div>` : frame
+}
+
+function overflowExtra() {
+  const xy = 'w-64 h-24'
+  const xOnly = 'w-64 h-8'
+  const yOnly = 'w-24 h-32'
+  return [
+    '## overflow-auto',
+    '',
+    '超出才出滚动条。盒子钉死 `h-16 w-48`（64×192），里面是 `w-64 h-24`（256×96）。',
+    '',
+    displaySchema([overflowFrame('overflow-auto', xy, 'overflow-auto')]),
+    '',
+    '## overflow-hidden',
+    '',
+    '超出裁掉，没有滚动条。',
+    '',
+    displaySchema([overflowFrame('overflow-hidden', xy, 'overflow-hidden')]),
+    '',
+    '## overflow-visible',
+    '',
+    '默认。超出画在盒子外面。',
+    '',
+    displaySchema([overflowFrame('overflow-visible', xy, 'overflow-visible', 'h-32')]),
+    '',
+    '## overflow-scroll',
+    '',
+    '两条轴都预留滚动条（即使没超出也会占位）。',
+    '',
+    displaySchema([overflowFrame('overflow-scroll', xy, 'overflow-scroll')]),
+    '',
+    '## overflow-x-auto',
+    '',
+    '只处理横向。里面 `w-64 h-8`，高度装得下。',
+    '',
+    displaySchema([overflowFrame('overflow-x-auto', xOnly, 'overflow-x-auto')]),
+    '',
+    '## overflow-y-auto',
+    '',
+    '只处理纵向。里面 `w-24 h-32`，宽度装得下。',
+    '',
+    displaySchema([overflowFrame('overflow-y-auto', yOnly, 'overflow-y-auto')]),
+    '',
+    '## overflow-x-hidden',
+    '',
+    '横向裁掉。CSS 规定另一轴若仍是 `visible`，计算值会变成 `auto`。',
+    '',
+    displaySchema([overflowFrame('overflow-x-hidden', xOnly, 'overflow-x-hidden')]),
+    '',
+    '## overflow-y-hidden',
+    '',
+    '纵向裁掉。另一轴同理会算成 `auto`。',
+    '',
+    displaySchema([overflowFrame('overflow-y-hidden', yOnly, 'overflow-y-hidden')]),
+    '',
+    '## overflow-x-visible',
+    '',
+    '横向溢出画在外面。两轴都是 `visible` 时，计算值保持 `visible`。',
+    '',
+    displaySchema([overflowFrame('overflow-x-visible', xOnly, 'overflow-x-visible')]),
+    '',
+    '## overflow-y-visible',
+    '',
+    '纵向溢出画在外面。',
+    '',
+    displaySchema([overflowFrame('overflow-y-visible', yOnly, 'overflow-y-visible', 'h-40')]),
+    '',
+    '## overflow-x-scroll',
+    '',
+    '横向始终留滚动条。',
+    '',
+    displaySchema([overflowFrame('overflow-x-scroll', xOnly, 'overflow-x-scroll')]),
+    '',
+    '## overflow-y-scroll',
+    '',
+    '纵向始终留滚动条。',
+    '',
+    displaySchema([overflowFrame('overflow-y-scroll', yOnly, 'overflow-y-scroll')]),
+    '',
+    '## 组合',
+    '',
+    '`overflow-x-auto overflow-y-hidden`：横可滚、竖裁掉。反过来 `overflow-x-hidden overflow-y-auto`。两轴都写死，就不会触发「另一轴 visible 变成 auto」。',
+    '',
+    displaySchema([
+      overflowFrame('overflow-x-auto overflow-y-hidden', xy, '横滚竖裁'),
+    ]),
+    '',
+    displaySchema([
+      overflowFrame('overflow-x-hidden overflow-y-auto', xy, '横裁竖滚'),
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:overflow-hidden` 裁掉；窄屏 `overflow-visible`。',
+    '',
+    displaySchema([
+      overflowFrame('overflow-visible pc:overflow-hidden', xy, 'pc 裁掉'),
+    ]),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。',
+  ].join('\n')
+}
+
+function positionChip(extraClass, label) {
+  return `<div class="${extraClass} w-24 h-16 p-sm rounded-md">${label}</div>`
+}
+
+function positionExtra() {
+  return [
+    '## static',
+    '',
+    '默认。写了 `top-0 right-0` 也不偏移，仍在文档流里。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md">',
+      `  ${positionChip('static top-0 right-0 bg-blue-200', 'static')}`,
+      '</div>',
+    ]),
+    '',
+    '## relative',
+    '',
+    '相对自己原来的位置偏移，仍占文档流。`top-2 left-2` = 8px。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md">',
+      `  ${positionChip('relative top-2 left-2 bg-blue-200', 'relative')}`,
+      '</div>',
+    ]),
+    '',
+    '## absolute',
+    '',
+    '脱离文档流，相对最近的 `relative` / `absolute` / `fixed` / `sticky` 祖先。`top-0 right-0` 钉在右上角。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md">',
+      `  ${positionChip('absolute top-0 right-0 bg-blue-200', 'absolute')}`,
+      '</div>',
+    ]),
+    '',
+    '## sticky',
+    '',
+    '在滚动容器里滚到 `top-0` 就吸住。下面几块用来把容器撑出滚动。',
+    '',
+    displaySchema([
+      '<div class="h-32 overflow-auto rounded-md bg-muted">',
+      `  ${positionChip('sticky top-0 bg-blue-200', 'sticky')}`,
+      `  ${positionChip('h-16 bg-green-200', '1')}`,
+      `  ${positionChip('h-16 bg-green-200', '2')}`,
+      `  ${positionChip('h-16 bg-green-200', '3')}`,
+      '</div>',
+    ]),
+    '',
+    '## fixed',
+    '',
+    '相对视口。祖先有 `transform` 时改为相对该祖先。预览里用 `translateZ(0)` 把钉子留在卡片内，避免盖住整页。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md" style="transform: translateZ(0)">',
+      `  ${positionChip('fixed bottom-0 left-0 bg-blue-200', 'fixed')}`,
+      '</div>',
+    ]),
+    '',
+    '## 组合',
+    '',
+    '`relative` 当含块：`absolute top-0 left-0` 左上、`absolute bottom-0 right-0` 右下；中间一块仍在文档流。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md">',
+      `  ${positionChip('absolute top-0 left-0 bg-blue-200', '左上')}`,
+      `  ${positionChip('absolute bottom-0 right-0 bg-green-200', '右下')}`,
+      `  ${positionChip('bg-yellow-200', '在流里')}`,
+      '</div>',
+    ]),
+    '',
+    '## 响应式设计',
+    '',
+    '支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:absolute` 钉右上；窄屏仍是 `static`。',
+    '',
+    displaySchema([
+      '<div class="relative h-32 bg-muted rounded-md">',
+      `  ${positionChip('static pc:absolute top-0 right-0 bg-blue-200', 'pc:absolute')}`,
+      '</div>',
+    ]),
+    '',
+    '## 状态前缀',
+    '',
+    '本页与 Amis 一样：不支持[「状态前缀」](/style/state)。偏移 helper 见 [Top / Right / Bottom / Left](/style/layout/top-right-bottom-left)。',
+  ].join('\n')
+}
+
 function floatSchema(floatClass) {
   return [
     '```schema',
@@ -671,49 +1043,40 @@ tpl: |
     footer:
       '本页与 Amis 一样：不支持 `m:` / `pc:` 和状态前缀。其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Display',
-    'layout/display',
-    '`className` 改单个节点的 `display`。Vamis 的 `className` 打在 SchemaRenderer 外层 `div.vamis-node`；要让**子节点**成为 flex/grid item，写在容器的 `bodyClassName` 上。隐藏节点用 `hidden`（`tpl` 要 `inline: false`，否则默认 `inline` 会盖掉）；业务显隐仍优先 `visible` / `hidden` / `visibleOn`。',
-    `type: page
-body:
-  - type: container
-    bodyClassName: flex gap-2
-    body:
-      - type: tpl
-        className: bg-primary text-primary-foreground p-sm rounded-md
-        tpl: flex
-      - type: tpl
-        className: bg-muted p-sm rounded-md
-        tpl: item
-      - type: tpl
-        className: bg-success text-success-foreground p-sm rounded-md
-        tpl: item
-  - type: tpl
-    inline: false
-    className: hidden
-    tpl: 看不见`,
-    [
+  {
+    title: 'Display',
+    slug: 'layout/display',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Display：各 `display` 落在同一元素、同一计算值。独立样例覆盖 block / inline / flex / grid / contents / hidden / flow-root / table；table-* 组合钉列宽；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '改当前节点的 `display`。Vamis schema `className` 打在外层 `div.vamis-node`；要让子节点成为 flex/grid item，写容器的 `bodyClassName`，或像本页一样用 HTML 岛把 class 打在内层节点上。',
+    rows: [
       ['block', 'display: block'],
       ['inline-block', 'display: inline-block'],
       ['inline', 'display: inline'],
       ['flex', 'display: flex'],
       ['inline-flex', 'display: inline-flex'],
+      ['table', 'display: table'],
+      ['table-cell', 'display: table-cell'],
+      ['table-column', 'display: table-column'],
+      ['table-column-group', 'display: table-column-group'],
+      ['table-footer-group', 'display: table-footer-group'],
+      ['table-header-group', 'display: table-header-group'],
+      ['table-row-group', 'display: table-row-group'],
+      ['table-row', 'display: table-row'],
+      ['flow-root', 'display: flow-root'],
       ['grid', 'display: grid'],
       ['inline-grid', 'display: inline-grid'],
       ['contents', 'display: contents'],
       ['hidden', 'display: none'],
-      ['table', 'display: table'],
-      ['table-cell', 'display: table-cell'],
-      ['table-row', 'display: table-row'],
-      ['table-column', 'display: table-column'],
-      ['table-column-group', 'display: table-column-group'],
-      ['table-header-group', 'display: table-header-group'],
-      ['table-footer-group', 'display: table-footer-group'],
-      ['table-row-group', 'display: table-row-group'],
-      ['flow-root', 'display: flow-root'],
     ],
-  ),
+    extra: displayExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   {
     title: 'Floats',
     slug: 'layout/float',
@@ -751,44 +1114,55 @@ body:
     footer:
       '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
   },
-  tw(
-    'Overflow',
-    'layout/overflow',
-    '裁切或滚动溢出内容。',
-    `type: page
-body:
-  - type: tpl
-    className: h-16 w-48 overflow-hidden bg-muted p-sm rounded-md
-    tpl: 这段文字很长很长很长很长很长很长很长很长，会被裁掉。
-  - type: tpl
-    className: h-16 w-48 overflow-auto bg-muted p-sm rounded-md m-t-sm
-    tpl: 这段文字很长很长很长很长很长很长很长很长，可以滚动。`,
-    [
+  {
+    title: 'Overflow',
+    slug: 'layout/overflow',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Overflow：12 条 `overflow` / `overflow-x|y` 落在同一元素、同一计算值。独立样例 + 横滚竖裁组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '内容超出时裁掉还是滚动。盒子钉 `h-16 w-48`（64×192），里面更大的色块用来看溢出。单轴只写 `overflow-x` / `overflow-y` 时，另一轴若仍是 `visible`，计算值会变成 `auto`（CSS 规定，Amis 同样）。',
+    rows: [
       ['overflow-auto', 'overflow: auto'],
       ['overflow-hidden', 'overflow: hidden'],
       ['overflow-visible', 'overflow: visible'],
       ['overflow-scroll', 'overflow: scroll'],
       ['overflow-x-auto', 'overflow-x: auto'],
       ['overflow-y-auto', 'overflow-y: auto'],
+      ['overflow-x-hidden', 'overflow-x: hidden'],
+      ['overflow-y-hidden', 'overflow-y: hidden'],
+      ['overflow-x-visible', 'overflow-x: visible'],
+      ['overflow-y-visible', 'overflow-y: visible'],
+      ['overflow-x-scroll', 'overflow-x: scroll'],
+      ['overflow-y-scroll', 'overflow-y: scroll'],
     ],
-  ),
-  tw(
-    'Position',
-    'layout/position',
-    '定位方式。配合 Top / Right / Bottom / Left 使用。',
-    `type: page
-body:
-  - type: tpl
-    className: relative h-24 bg-muted rounded-md
-    tpl: '<span class="absolute right-2 top-2 bg-primary text-primary-foreground p-xs rounded-md">角标</span>相对定位容器'`,
-    [
+    extra: overflowExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
+  {
+    title: 'Position',
+    slug: 'layout/position',
+    pct: 90,
+    status: '已完成',
+    reason:
+      '活示例对标 Amis Position：`static` / `fixed` / `absolute` / `relative` / `sticky` 落在同一元素的 `position`。独立样例 + 相对含块四角组合；`m:` / `pc:` 已进 helper，不支持状态前缀。',
+    tableFirst: true,
+    intro:
+      '改当前节点的 `position`。偏移用 [Top / Right / Bottom / Left](/style/layout/top-right-bottom-left) 的 `top-0` / `right-2` 等。`absolute` 相对最近定位祖先；`fixed` 相对视口（祖先有 transform 时除外）；`sticky` 在滚动容器里吸顶。',
+    rows: [
       ['static', 'position: static'],
-      ['relative', 'position: relative'],
-      ['absolute', 'position: absolute'],
       ['fixed', 'position: fixed'],
+      ['absolute', 'position: absolute'],
+      ['relative', 'position: relative'],
       ['sticky', 'position: sticky'],
     ],
-  ),
+    extra: positionExtra(),
+    footer:
+      '其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。',
+  },
   tw(
     'Top / Right / Bottom / Left',
     'layout/top-right-bottom-left',

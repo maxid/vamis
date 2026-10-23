@@ -6,22 +6,11 @@ title: Overflow
 
 # Overflow
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Overflow：12 条 `overflow` / `overflow-x|y` 落在同一元素、同一计算值。独立样例 + 横滚竖裁组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-裁切或滚动溢出内容。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: h-16 w-48 overflow-hidden bg-muted p-sm rounded-md
-    tpl: 这段文字很长很长很长很长很长很长很长很长，会被裁掉。
-  - type: tpl
-    className: h-16 w-48 overflow-auto bg-muted p-sm rounded-md m-t-sm
-    tpl: 这段文字很长很长很长很长很长很长很长很长，可以滚动。
-```
+内容超出时裁掉还是滚动。盒子钉 `h-16 w-48`（64×192），里面更大的色块用来看溢出。单轴只写 `overflow-x` / `overflow-y` 时，另一轴若仍是 `visible`，计算值会变成 `auto`（CSS 规定，Amis 同样）。
 
 ## 类名
 
@@ -33,5 +22,176 @@ body:
 | `overflow-scroll` | `overflow: scroll` |
 | `overflow-x-auto` | `overflow-x: auto` |
 | `overflow-y-auto` | `overflow-y: auto` |
+| `overflow-x-hidden` | `overflow-x: hidden` |
+| `overflow-y-hidden` | `overflow-y: hidden` |
+| `overflow-x-visible` | `overflow-x: visible` |
+| `overflow-y-visible` | `overflow-y: visible` |
+| `overflow-x-scroll` | `overflow-x: scroll` |
+| `overflow-y-scroll` | `overflow-y: scroll` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## overflow-auto
+
+超出才出滚动条。盒子钉死 `h-16 w-48`（64×192），里面是 `w-64 h-24`（256×96）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-auto</div></div>
+```
+
+## overflow-hidden
+
+超出裁掉，没有滚动条。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-hidden</div></div>
+```
+
+## overflow-visible
+
+默认。超出画在盒子外面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-32"><div class="overflow-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-visible</div></div></div>
+```
+
+## overflow-scroll
+
+两条轴都预留滚动条（即使没超出也会占位）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-scroll</div></div>
+```
+
+## overflow-x-auto
+
+只处理横向。里面 `w-64 h-8`，高度装得下。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-auto</div></div>
+```
+
+## overflow-y-auto
+
+只处理纵向。里面 `w-24 h-32`，宽度装得下。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-y-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-auto</div></div>
+```
+
+## overflow-x-hidden
+
+横向裁掉。CSS 规定另一轴若仍是 `visible`，计算值会变成 `auto`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-hidden</div></div>
+```
+
+## overflow-y-hidden
+
+纵向裁掉。另一轴同理会算成 `auto`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-y-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-hidden</div></div>
+```
+
+## overflow-x-visible
+
+横向溢出画在外面。两轴都是 `visible` 时，计算值保持 `visible`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-visible</div></div>
+```
+
+## overflow-y-visible
+
+纵向溢出画在外面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-40"><div class="overflow-y-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-visible</div></div></div>
+```
+
+## overflow-x-scroll
+
+横向始终留滚动条。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-scroll</div></div>
+```
+
+## overflow-y-scroll
+
+纵向始终留滚动条。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-y-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-scroll</div></div>
+```
+
+## 组合
+
+`overflow-x-auto overflow-y-hidden`：横可滚、竖裁掉。反过来 `overflow-x-hidden overflow-y-auto`。两轴都写死，就不会触发「另一轴 visible 变成 auto」。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-auto overflow-y-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横滚竖裁</div></div>
+```
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-x-hidden overflow-y-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横裁竖滚</div></div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:overflow-hidden` 裁掉；窄屏 `overflow-visible`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="overflow-visible pc:overflow-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">pc 裁掉</div></div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

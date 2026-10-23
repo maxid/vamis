@@ -60,7 +60,7 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `float` / `clear` / **`state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Display/Flex 逐页核、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `float` / `clear` / **`state` 90%** 已按盒模型对齐。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺 Flex 逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
@@ -69,6 +69,8 @@
 
 **最近交付**
 
+- `/style/layout/overflow` 对标 Amis Overflow：12 条 `overflow` / `overflow-x|y` 独立活示例 + 横滚竖裁组合；补齐 hidden/visible/scroll 单轴和 `m:` / `pc:`。本页 **90% 已完成**。
+- `/style/layout/display` 对标 Amis Display：block / inline / flex / grid / contents / hidden / flow-root / table 独立活示例 + table-* 列宽组合；`m:` / `pc:` 补齐 Amis 那套 display。本页 **90% 已完成**。
 - `/style/layout/clear` 对标 Amis Clear：`clear-left|right|both|none` 独立活示例 + 左右浮不同高组合；`m:` / `pc:` 已进 helper。盒模型为同一元素上的 `clear`。本页 **90% 已完成**。
 - 修 `/style/layout/float` 图下多空一行：`tpl` 不再套 `leading-relaxed`（1.625 → 22.75px），行高回到与 Amis 一致的 21px，绕排只空一行。
 - 修文档 Markdown 列表序号：Preflight 清掉 `ol/ul` 的 `list-style`，`.doc-prose` 还原 `decimal` / `disc` 和左内边距；嵌套、引用、分割线一并补上。
@@ -170,6 +172,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：`box-sizing` / `float` / `clear` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Display / Flex / 色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **样式收尾（D12 余项）**：`box-sizing` / `display` / `overflow` / `float` / `clear` / `state` 已按盒模型对齐。下一刀按同一口径逐页核 Flex / Position / 色盘表 / Space Between…；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

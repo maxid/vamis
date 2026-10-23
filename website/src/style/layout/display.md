@@ -6,32 +6,11 @@ title: Display
 
 # Display
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Display：各 `display` 落在同一元素、同一计算值。独立样例覆盖 block / inline / flex / grid / contents / hidden / flow-root / table；table-* 组合钉列宽；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-`className` 改单个节点的 `display`。Vamis 的 `className` 打在 SchemaRenderer 外层 `div.vamis-node`；要让**子节点**成为 flex/grid item，写在容器的 `bodyClassName` 上。隐藏节点用 `hidden`（`tpl` 要 `inline: false`，否则默认 `inline` 会盖掉）；业务显隐仍优先 `visible` / `hidden` / `visibleOn`。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex gap-2
-    body:
-      - type: tpl
-        className: bg-primary text-primary-foreground p-sm rounded-md
-        tpl: flex
-      - type: tpl
-        className: bg-muted p-sm rounded-md
-        tpl: item
-      - type: tpl
-        className: bg-success text-success-foreground p-sm rounded-md
-        tpl: item
-  - type: tpl
-    inline: false
-    className: hidden
-    tpl: 看不见
-```
+改当前节点的 `display`。Vamis schema `className` 打在外层 `div.vamis-node`；要让子节点成为 flex/grid item，写容器的 `bodyClassName`，或像本页一样用 HTML 岛把 class 打在内层节点上。
 
 ## 类名
 
@@ -42,18 +21,215 @@ body:
 | `inline` | `display: inline` |
 | `flex` | `display: flex` |
 | `inline-flex` | `display: inline-flex` |
+| `table` | `display: table` |
+| `table-cell` | `display: table-cell` |
+| `table-column` | `display: table-column` |
+| `table-column-group` | `display: table-column-group` |
+| `table-footer-group` | `display: table-footer-group` |
+| `table-header-group` | `display: table-header-group` |
+| `table-row-group` | `display: table-row-group` |
+| `table-row` | `display: table-row` |
+| `flow-root` | `display: flow-root` |
 | `grid` | `display: grid` |
 | `inline-grid` | `display: inline-grid` |
 | `contents` | `display: contents` |
 | `hidden` | `display: none` |
-| `table` | `display: table` |
-| `table-cell` | `display: table-cell` |
-| `table-row` | `display: table-row` |
-| `table-column` | `display: table-column` |
-| `table-column-group` | `display: table-column-group` |
-| `table-header-group` | `display: table-header-group` |
-| `table-footer-group` | `display: table-footer-group` |
-| `table-row-group` | `display: table-row-group` |
-| `flow-root` | `display: flow-root` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## block
+
+独占一行。后面的盒子顶边落到它下面。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="block w-24 bg-blue-200 p-sm rounded-md">block</div>
+  <div class="block w-24 bg-muted p-sm rounded-md">block</div>
+```
+
+## inline-block
+
+可以并排，宽高仍生效。两个节点之间不要换行，否则空白会挤出缝。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-block w-24 bg-blue-200 p-sm rounded-md">inline-block</div><div class="inline-block w-24 bg-muted p-sm rounded-md">inline-block</div>
+```
+
+## inline
+
+跟文字同一行。宽高不生效，只随内容伸缩。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <p>前<span class="inline bg-blue-200 p-sm rounded-md">inline</span><span class="inline bg-muted p-sm rounded-md">inline</span>后</p>
+```
+
+## flex
+
+子节点排成一行。缝是 `gap-2` = 8px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="bg-muted p-sm rounded-md">B</div>
+    <div class="bg-green-200 p-sm rounded-md">C</div>
+  </div>
+```
+
+## inline-flex
+
+还是 flex，但盒子本身跟文字并排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  前<div class="inline-flex gap-2"><div class="bg-blue-200 p-sm rounded-md">A</div><div class="bg-muted p-sm rounded-md">B</div></div>后
+```
+
+## grid
+
+`grid-cols-2` 两列。四个格子 2×2。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="grid grid-cols-2 gap-2 w-48">
+    <div class="bg-blue-200 p-sm rounded-md">1</div>
+    <div class="bg-muted p-sm rounded-md">2</div>
+    <div class="bg-green-200 p-sm rounded-md">3</div>
+    <div class="bg-muted p-sm rounded-md">4</div>
+  </div>
+```
+
+## inline-grid
+
+grid 盒子跟文字并排。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  前<div class="inline-grid grid-cols-2 gap-2"><div class="bg-blue-200 p-sm rounded-md">1</div><div class="bg-muted p-sm rounded-md">2</div></div>后
+```
+
+## contents
+
+自己从盒模型里消失，子节点升成父级的直接孩子。下面 B、C 和 A 一样都是 flex item。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2">
+    <div class="bg-blue-200 p-sm rounded-md">A</div>
+    <div class="contents">
+      <div class="bg-muted p-sm rounded-md">B</div>
+      <div class="bg-green-200 p-sm rounded-md">C</div>
+    </div>
+  </div>
+```
+
+## hidden
+
+`display: none`，不占布局。业务显隐仍优先 schema `visible` / `visibleOn`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="block w-24 bg-blue-200 p-sm rounded-md">可见</div>
+  <div class="hidden w-24 bg-muted p-sm rounded-md">隐藏</div>
+  <div class="block w-24 bg-green-200 p-sm rounded-md">可见</div>
+```
+
+## flow-root
+
+开一个 BFC，把里面的 float 包进自己的高度。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flow-root bg-muted p-sm rounded-md">
+    <div class="float-left w-24 h-16 bg-blue-200 p-sm rounded-md">浮</div>
+    <p>父级有高度，文字绕开左浮。</p>
+  </div>
+```
+
+## table
+
+最简一行两格。子节点是 `table-row` / `table-cell`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="table">
+    <div class="table-row">
+      <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
+      <div class="table-cell bg-muted p-sm rounded-md">B</div>
+    </div>
+  </div>
+```
+
+## 组合
+
+`table-column-group` / `table-column` 钉列宽（`w-24` 96px、`w-32` 128px），表头 / 表体 / 表脚用对应的 `*-group`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="table">
+    <div class="table-column-group">
+      <div class="table-column w-24"></div>
+      <div class="table-column w-32"></div>
+    </div>
+    <div class="table-header-group">
+      <div class="table-row">
+        <div class="table-cell bg-muted p-sm rounded-md">列1</div>
+        <div class="table-cell bg-muted p-sm rounded-md">列2</div>
+      </div>
+    </div>
+    <div class="table-row-group">
+      <div class="table-row">
+        <div class="table-cell bg-blue-200 p-sm rounded-md">A</div>
+        <div class="table-cell bg-blue-200 p-sm rounded-md">B</div>
+      </div>
+    </div>
+    <div class="table-footer-group">
+      <div class="table-row">
+        <div class="table-cell bg-green-200 p-sm rounded-md">脚1</div>
+        <div class="table-cell bg-green-200 p-sm rounded-md">脚2</div>
+      </div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。桌面（≥768px）`pc:block` 显示、`pc:hidden` 隐藏。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="hidden pc:block bg-blue-200 p-sm rounded-md">pc 可见</div>
+  <div class="block pc:hidden bg-muted p-sm rounded-md">手机可见</div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
