@@ -6,35 +6,350 @@ title: Border Radius
 
 # Border Radius
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Border Radius：`rounded` = 4px、`rounded-md` = 6px，落在同一元素的 `border-radius`。独立样例 + 组合；`m:` / `pc:` 已进 helper。不支持状态前缀。
 :::
 
-圆角。默认水标约 4px（`--radius`）。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: rounded-md bg-yellow-200 p-sm
-    tpl: rounded-md
-  - type: tpl
-    className: rounded-xl bg-yellow-200 p-sm m-t-sm
-    tpl: rounded-xl
-  - type: tpl
-    className: rounded-full bg-yellow-200 p-sm m-t-sm w-24 text-center
-    tpl: rounded-full
-```
+圆角档位是 Amis helper rem。`rounded`（无后缀）是 **4px**，和 `--radius` 水标同一档；`rounded-md` 是 **6px**，不是 token。组件默认圆角仍走 `--radius`；写了 helper 类才换成这一档。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `rounded-none` | `0` |
-| `rounded-sm` | `小` |
-| `rounded-md` | `默认档` |
-| `rounded-lg` | `较大` |
-| `rounded-xl` | `更大` |
-| `rounded-full` | `胶囊 / 圆` |
+| `rounded-none` | `border-radius: 0px;` |
+| `rounded-t-none` | `border-top-left-radius: 0px; border-top-right-radius: 0px;` |
+| `rounded-r-none` | `border-top-right-radius: 0px; border-bottom-right-radius: 0px;` |
+| `rounded-b-none` | `border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;` |
+| `rounded-l-none` | `border-top-left-radius: 0px; border-bottom-left-radius: 0px;` |
+| `rounded-tl-none` | `border-top-left-radius: 0px;` |
+| `rounded-tr-none` | `border-top-right-radius: 0px;` |
+| `rounded-br-none` | `border-bottom-right-radius: 0px;` |
+| `rounded-bl-none` | `border-bottom-left-radius: 0px;` |
+| `rounded-sm` | `border-radius: 0.125rem;` |
+| `rounded-t-sm` | `border-top-left-radius: 0.125rem; border-top-right-radius: 0.125rem;` |
+| `rounded-r-sm` | `border-top-right-radius: 0.125rem; border-bottom-right-radius: 0.125rem;` |
+| `rounded-b-sm` | `border-bottom-right-radius: 0.125rem; border-bottom-left-radius: 0.125rem;` |
+| `rounded-l-sm` | `border-top-left-radius: 0.125rem; border-bottom-left-radius: 0.125rem;` |
+| `rounded-tl-sm` | `border-top-left-radius: 0.125rem;` |
+| `rounded-tr-sm` | `border-top-right-radius: 0.125rem;` |
+| `rounded-br-sm` | `border-bottom-right-radius: 0.125rem;` |
+| `rounded-bl-sm` | `border-bottom-left-radius: 0.125rem;` |
+| `rounded` | `border-radius: 0.25rem;` |
+| `rounded-t` | `border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;` |
+| `rounded-r` | `border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem;` |
+| `rounded-b` | `border-bottom-right-radius: 0.25rem; border-bottom-left-radius: 0.25rem;` |
+| `rounded-l` | `border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem;` |
+| `rounded-tl` | `border-top-left-radius: 0.25rem;` |
+| `rounded-tr` | `border-top-right-radius: 0.25rem;` |
+| `rounded-br` | `border-bottom-right-radius: 0.25rem;` |
+| `rounded-bl` | `border-bottom-left-radius: 0.25rem;` |
+| `rounded-md` | `border-radius: 0.375rem;` |
+| `rounded-t-md` | `border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem;` |
+| `rounded-r-md` | `border-top-right-radius: 0.375rem; border-bottom-right-radius: 0.375rem;` |
+| `rounded-b-md` | `border-bottom-right-radius: 0.375rem; border-bottom-left-radius: 0.375rem;` |
+| `rounded-l-md` | `border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;` |
+| `rounded-tl-md` | `border-top-left-radius: 0.375rem;` |
+| `rounded-tr-md` | `border-top-right-radius: 0.375rem;` |
+| `rounded-br-md` | `border-bottom-right-radius: 0.375rem;` |
+| `rounded-bl-md` | `border-bottom-left-radius: 0.375rem;` |
+| `rounded-lg` | `border-radius: 0.5rem;` |
+| `rounded-t-lg` | `border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;` |
+| `rounded-r-lg` | `border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;` |
+| `rounded-b-lg` | `border-bottom-right-radius: 0.5rem; border-bottom-left-radius: 0.5rem;` |
+| `rounded-l-lg` | `border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;` |
+| `rounded-tl-lg` | `border-top-left-radius: 0.5rem;` |
+| `rounded-tr-lg` | `border-top-right-radius: 0.5rem;` |
+| `rounded-br-lg` | `border-bottom-right-radius: 0.5rem;` |
+| `rounded-bl-lg` | `border-bottom-left-radius: 0.5rem;` |
+| `rounded-xl` | `border-radius: 0.75rem;` |
+| `rounded-t-xl` | `border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;` |
+| `rounded-r-xl` | `border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem;` |
+| `rounded-b-xl` | `border-bottom-right-radius: 0.75rem; border-bottom-left-radius: 0.75rem;` |
+| `rounded-l-xl` | `border-top-left-radius: 0.75rem; border-bottom-left-radius: 0.75rem;` |
+| `rounded-tl-xl` | `border-top-left-radius: 0.75rem;` |
+| `rounded-tr-xl` | `border-top-right-radius: 0.75rem;` |
+| `rounded-br-xl` | `border-bottom-right-radius: 0.75rem;` |
+| `rounded-bl-xl` | `border-bottom-left-radius: 0.75rem;` |
+| `rounded-2xl` | `border-radius: 1rem;` |
+| `rounded-t-2xl` | `border-top-left-radius: 1rem; border-top-right-radius: 1rem;` |
+| `rounded-r-2xl` | `border-top-right-radius: 1rem; border-bottom-right-radius: 1rem;` |
+| `rounded-b-2xl` | `border-bottom-right-radius: 1rem; border-bottom-left-radius: 1rem;` |
+| `rounded-l-2xl` | `border-top-left-radius: 1rem; border-bottom-left-radius: 1rem;` |
+| `rounded-tl-2xl` | `border-top-left-radius: 1rem;` |
+| `rounded-tr-2xl` | `border-top-right-radius: 1rem;` |
+| `rounded-br-2xl` | `border-bottom-right-radius: 1rem;` |
+| `rounded-bl-2xl` | `border-bottom-left-radius: 1rem;` |
+| `rounded-3xl` | `border-radius: 1.5rem;` |
+| `rounded-t-3xl` | `border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;` |
+| `rounded-r-3xl` | `border-top-right-radius: 1.5rem; border-bottom-right-radius: 1.5rem;` |
+| `rounded-b-3xl` | `border-bottom-right-radius: 1.5rem; border-bottom-left-radius: 1.5rem;` |
+| `rounded-l-3xl` | `border-top-left-radius: 1.5rem; border-bottom-left-radius: 1.5rem;` |
+| `rounded-tl-3xl` | `border-top-left-radius: 1.5rem;` |
+| `rounded-tr-3xl` | `border-top-right-radius: 1.5rem;` |
+| `rounded-br-3xl` | `border-bottom-right-radius: 1.5rem;` |
+| `rounded-bl-3xl` | `border-bottom-left-radius: 1.5rem;` |
+| `rounded-full` | `border-radius: 9999px;` |
+| `rounded-t-full` | `border-top-left-radius: 9999px; border-top-right-radius: 9999px;` |
+| `rounded-r-full` | `border-top-right-radius: 9999px; border-bottom-right-radius: 9999px;` |
+| `rounded-b-full` | `border-bottom-right-radius: 9999px; border-bottom-left-radius: 9999px;` |
+| `rounded-l-full` | `border-top-left-radius: 9999px; border-bottom-left-radius: 9999px;` |
+| `rounded-tl-full` | `border-top-left-radius: 9999px;` |
+| `rounded-tr-full` | `border-top-right-radius: 9999px;` |
+| `rounded-br-full` | `border-bottom-right-radius: 9999px;` |
+| `rounded-bl-full` | `border-bottom-left-radius: 9999px;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## rounded-none
+
+`border-radius: 0`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-none flex items-center justify-center text-xs">rounded-none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-none flex items-center justify-center text-xs">rounded-none</div>
+  </div>
+```
+
+## rounded-sm
+
+`border-radius: 0.125rem` = **2px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-sm flex items-center justify-center text-xs">rounded-sm</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-sm flex items-center justify-center text-xs">rounded-sm</div>
+  </div>
+```
+
+## rounded
+
+Amis 无后缀档：`border-radius: 0.25rem` = **4px**，和 `--radius` 水标同一档。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded flex items-center justify-center text-xs">rounded</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded flex items-center justify-center text-xs">rounded</div>
+  </div>
+```
+
+## rounded-md
+
+Amis helper 是 `0.375rem` = **6px**，不是 `--radius`（4px）。组件默认圆角仍走 token；写了这类才换成 6px。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-md flex items-center justify-center text-xs">rounded-md</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-md flex items-center justify-center text-xs">rounded-md</div>
+  </div>
+```
+
+## rounded-lg
+
+`border-radius: 0.5rem` = **8px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-lg flex items-center justify-center text-xs">rounded-lg</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-lg flex items-center justify-center text-xs">rounded-lg</div>
+  </div>
+```
+
+## rounded-xl
+
+`border-radius: 0.75rem` = **12px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-xl flex items-center justify-center text-xs">rounded-xl</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-xl flex items-center justify-center text-xs">rounded-xl</div>
+  </div>
+```
+
+## rounded-full
+
+`border-radius: 9999px`。正方形会收成圆。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center text-xs">rounded-full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center text-xs">rounded-full</div>
+  </div>
+```
+
+## rounded-t-lg
+
+只圆上沿：`border-top-left-radius` / `border-top-right-radius` 都是 **8px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-t-lg flex items-center justify-center text-xs">rounded-t-lg</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-t-lg flex items-center justify-center text-xs">rounded-t-lg</div>
+  </div>
+```
+
+## rounded-tl-full
+
+只圆左上角 `9999px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-tl-full flex items-center justify-center text-xs">rounded-tl-full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 rounded-tl-full flex items-center justify-center text-xs">rounded-tl-full</div>
+  </div>
+```
+
+## 组合
+
+同一组：`rounded-none`、`rounded`、`rounded-md`、`rounded-xl`、`rounded-full`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 rounded-none flex items-center justify-center text-xs">none</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded flex items-center justify-center text-xs">rounded</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-md flex items-center justify-center text-xs">md</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-xl flex items-center justify-center text-xs">xl</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center text-xs">full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="w-16 h-16 bg-yellow-200 rounded-none flex items-center justify-center text-xs">none</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded flex items-center justify-center text-xs">rounded</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-md flex items-center justify-center text-xs">md</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-xl flex items-center justify-center text-xs">xl</div>
+    <div class="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center text-xs">full</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:rounded-none`；桌面（≥768px）`pc:rounded-full`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 m:rounded-none pc:rounded-full flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-16 h-16 bg-yellow-200 m:rounded-none pc:rounded-full flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。helper 源码写了 `// hover ?` 但没有做。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

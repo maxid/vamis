@@ -28,7 +28,7 @@ pnpm dev          # 同一应用：文档（首页）/ 组件 / 示例 / 编辑�
 
 在自己的 Vue 应用里引用 workspace 包（或之后发布的 npm 名）：
 
-```ts
+```typescript
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { VamisRoot } from 'vamis'
@@ -102,7 +102,7 @@ body:
 }
 ```
 
-```ts
+```typescript
 import { parseSchemaText, VamisRoot } from 'vamis'
 const schema = parseSchemaText(text) // YAML 或 JSON 字符串
 ```
@@ -126,7 +126,7 @@ spec:
 
 请求、跳转、提示都走 `env`，渲染器禁止自己 `fetch`：
 
-```ts
+```typescript
 import { createDefaultEnv } from '@vamis/core'
 
 const env = createDefaultEnv({

@@ -20,7 +20,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <TooltipContent
       data-slot="tooltip-content"
       v-bind="{ ...$attrs, ...forwarded }"
-      :class="cn('bg-foreground text-background z-50 w-fit rounded-md px-3 py-1.5 text-xs', props.class)"
+      :class="cn('bg-foreground text-background z-50 w-fit rounded px-3 py-1.5 text-xs', props.class)"
     >
       <slot />
       <TooltipArrow class="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px]" />

@@ -6,31 +6,253 @@ title: Box Shadow
 
 # Box Shadow
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Box Shadow：`shadow` / `md` / `lg` 的层数和 alpha 与 helper 一致（不是 TW v4）。独立样例 + 组合；补 `shadow-xl` / `2xl` / `inner` 与 `m:` / `pc:`。Amis 做了 hover 矩阵。
 :::
 
-投影。卡片不要默认加很重的阴影。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: shadow-sm bg-card p-sm rounded-md
-    tpl: shadow-sm
-  - type: tpl
-    className: shadow-lg bg-card p-sm rounded-md m-t-sm
-    tpl: shadow-lg
-```
+投影。卡片不要默认加很重的阴影。Amis `shadow-lg` 第二层是 `-2px` / `0.05`，不是 Tailwind v4 的 `-4px` / `0.1`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
-| `shadow-sm` | `轻` |
-| `shadow` | `默认` |
-| `shadow-md` | `中` |
-| `shadow-lg` | `重` |
-| `shadow-none` | `无` |
+| `shadow-sm` | `box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);` |
+| `shadow` | `box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);` |
+| `shadow-md` | `box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);` |
+| `shadow-lg` | `box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);` |
+| `shadow-xl` | `box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);` |
+| `shadow-2xl` | `box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);` |
+| `shadow-inner` | `box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);` |
+| `shadow-none` | `box-shadow: none;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## shadow-sm
+
+Amis：`0 1px 2px 0 rgba(0, 0, 0, 0.05)`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-sm flex items-center justify-center text-xs">shadow-sm</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-sm flex items-center justify-center text-xs">shadow-sm</div>
+  </div>
+```
+
+## shadow
+
+无后缀档。第二层是 `0 1px 2px 0` / `0.06`，不是 Tailwind v4 的 `-1px` / `0.1`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow flex items-center justify-center text-xs">shadow</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow flex items-center justify-center text-xs">shadow</div>
+  </div>
+```
+
+## shadow-md
+
+第二层 spread 是 `-1px`、alpha `0.06`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-md flex items-center justify-center text-xs">shadow-md</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-md flex items-center justify-center text-xs">shadow-md</div>
+  </div>
+```
+
+## shadow-lg
+
+第二层是 `-2px` / `0.05`，不是 TW v4 的 `-4px` / `0.1`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-lg flex items-center justify-center text-xs">shadow-lg</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-lg flex items-center justify-center text-xs">shadow-lg</div>
+  </div>
+```
+
+## shadow-xl
+
+`0 20px 25px -5px` + `0 10px 10px -5px`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-xl flex items-center justify-center text-xs">shadow-xl</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-xl flex items-center justify-center text-xs">shadow-xl</div>
+  </div>
+```
+
+## shadow-2xl
+
+`0 25px 50px -12px rgba(0, 0, 0, 0.25)`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-2xl flex items-center justify-center text-xs">shadow-2xl</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-2xl flex items-center justify-center text-xs">shadow-2xl</div>
+  </div>
+```
+
+## shadow-inner
+
+`inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-inner flex items-center justify-center text-xs">shadow-inner</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-inner flex items-center justify-center text-xs">shadow-inner</div>
+  </div>
+```
+
+## shadow-none
+
+`box-shadow: none`。叠在 `shadow-lg` 上会清掉投影。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-lg shadow-none flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white shadow-lg shadow-none flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+## 组合
+
+同一组：`shadow-sm`、`shadow`、`shadow-md`、`shadow-lg`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-4">
+    <div class="w-24 h-12 bg-white shadow-sm flex items-center justify-center text-xs">sm</div>
+    <div class="w-24 h-12 bg-white shadow flex items-center justify-center text-xs">shadow</div>
+    <div class="w-24 h-12 bg-white shadow-md flex items-center justify-center text-xs">md</div>
+    <div class="w-24 h-12 bg-white shadow-lg flex items-center justify-center text-xs">lg</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-4">
+    <div class="w-24 h-12 bg-white shadow-sm flex items-center justify-center text-xs">sm</div>
+    <div class="w-24 h-12 bg-white shadow flex items-center justify-center text-xs">shadow</div>
+    <div class="w-24 h-12 bg-white shadow-md flex items-center justify-center text-xs">md</div>
+    <div class="w-24 h-12 bg-white shadow-lg flex items-center justify-center text-xs">lg</div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:shadow-none`；桌面 `pc:shadow-lg`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white m:shadow-none pc:shadow-lg flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="w-28 h-12 bg-white m:shadow-none pc:shadow-lg flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+Amis Box Shadow 做了 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:`，见 [辅助类-状态样式](/style/state)。本页活示例核默认态。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。

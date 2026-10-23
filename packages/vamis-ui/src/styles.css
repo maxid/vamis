@@ -8,6 +8,8 @@
 @import "./helpers-gap.css";
 @import "./helpers-spacing.css";
 @import "./helpers-typography.css";
+@import "./helpers-border.css";
+@import "./helpers-effect.css";
 @import "./helpers-palette.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -273,14 +275,14 @@
 @layer components {
   .vamis-native-select {
     height: var(--control-h);
-    @apply min-w-0 rounded-md border border-input bg-card px-2.5 text-sm shadow-xs outline-none;
+    @apply min-w-0 rounded border border-input bg-card px-2.5 text-sm shadow-xs outline-none;
     @apply focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .vamis-file-drop {
     min-height: calc(var(--control-h) * 2.5);
-    @apply flex cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed border-input bg-muted/40 px-4 py-4 text-center text-sm;
+    @apply flex cursor-pointer flex-col items-center justify-center gap-1 rounded border border-dashed border-input bg-muted/40 px-4 py-4 text-center text-sm;
     @apply hover:border-ring hover:bg-muted/70;
     @apply has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
   }

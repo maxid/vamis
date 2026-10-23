@@ -60,7 +60,7 @@
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
 | 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 62%；`page` 已完成 95% / `container` 已完成 100%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
-| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **45%**。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / **`flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全 9 页 / Spacing 全 3 页 / Sizing 全 2 页 / Typography 14 页 / `state` 90%** 已按盒模型对齐。`text-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
+| 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- `/style` Background / Border / Effect：`rounded-md` = 6px（不是 `--radius`）、`border-8` / `border-double`、Amis `shadow-lg` 第二层 `-2px`/`0.05`、补 `opacity-5`…`95` 与 `bg-none`。Radius / Width / Style / Shadow / Opacity **90%**；`background-color` / `border-color` 仍 **55%**（色盘表）。
 - `/style/typography/font-family`：`font-sans` / `serif` / `mono` 改回 Amis helper 硬编码字栈（不再走 `--font-sans` token）。page / body 默认仍是 `--fonts-base-family`。
 - `/style/typography` 14 页对标 Amis：字号走 `$fontSizes`（`text-lg` = 20px，不是 TW v3）；空白类名是 `white-space-*`；`tracking-wide` 计算值是 `normal`；补 `text-md` / `leading-3`～`10` / `list-inside` / `overflow-clip` 与 `m:` / `pc:`。`text-color` 仍 **55%**（色盘表）。其余 **90% 已完成**。
 - `/style/sizing` 两页对标 Amis：Width / Height 独立活示例 + 组合；`w-16` = 64px、`w-1/2` 在 `w-80` 舞台 160px、`h-full` 在 `h-32` 舞台 128px；`max-h-none` 与 Amis 一样是 `max-height: 0`。各页 **90% 已完成**。
@@ -200,6 +201,6 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除 `text-color`） / `state` 已按盒模型对齐。下一刀按同一口径逐页核色盘表（含 Text Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。下一刀按同一口径逐页核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

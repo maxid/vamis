@@ -10,43 +10,19 @@ title: Background Color
 语义色走 token；调色盘 hex 与 Amis helper 同档，SDK 也能用。表是完整色阶，不是只列 500。状态前缀与 `m:` / `pc:` 已进 CSS，见 [辅助类-状态样式](/style/state)。
 :::
 
-优先用语义色 `bg-muted` / `bg-primary`。调色盘如 `bg-blue-100` 与 Amis helper 同档 hex，SDK 也能用。
-
-```schema
-type: page
-body:
-  - type: container
-    bodyClassName: flex flex-wrap gap-2
-    body:
-      - type: tpl
-        className: bg-muted p-sm rounded-md
-        tpl: muted
-      - type: tpl
-        className: bg-primary text-primary-foreground p-sm rounded-md
-        tpl: primary
-      - type: tpl
-        className: bg-success text-success-foreground p-sm rounded-md
-        tpl: success
-      - type: tpl
-        className: bg-warning text-warning-foreground p-sm rounded-md
-        tpl: warning
-      - type: tpl
-        className: bg-danger text-primary-foreground p-sm rounded-md
-        tpl: danger
-      - type: tpl
-        className: bg-blue-100 text-blue-800 p-sm rounded-md
-        tpl: bg-blue-100
-```
+背景色。优先用语义色 `bg-muted` / `bg-primary`（走 token）。调色盘如 `bg-blue-500` 与 Amis helper 同档 hex。`bg-none` 是 `background: none !important`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层盒子上。
 
 ## 类名
 
 | Class | Properties | 示例效果 |
 | --- | --- | --- |
+| `bg-none` | `background: none !important` | <span class="inline-block h-6 w-24 rounded-sm border border-dashed border-border bg-none"></span> |
 | `bg-transparent` | `background: transparent` | <span class="inline-block h-6 w-24 rounded-sm border border-dashed border-border bg-transparent"></span> |
 | `bg-current` | `background: currentColor` | <span class="inline-block h-6 w-24 rounded-sm bg-current"></span> |
 | `bg-black` | `background: #000` | <span class="inline-block h-6 w-24 rounded-sm bg-black"></span> |
 | `bg-white` | `background: #fff` | <span class="inline-block h-6 w-24 rounded-sm border border-border bg-white"></span> |
 | `bg-primary` | `background: var(--primary)` | <span class="inline-block h-6 w-24 rounded-sm bg-primary"></span> |
+| `bg-secondary` | `background: var(--secondary)` | <span class="inline-block h-6 w-24 rounded-sm bg-secondary"></span> |
 | `bg-success` | `background: var(--success)` | <span class="inline-block h-6 w-24 rounded-sm bg-success"></span> |
 | `bg-info` | `background: var(--info)` | <span class="inline-block h-6 w-24 rounded-sm bg-info"></span> |
 | `bg-warning` | `background: var(--warning)` | <span class="inline-block h-6 w-24 rounded-sm bg-warning"></span> |
@@ -145,4 +121,190 @@ body:
 | `bg-pink-800` | `background: #9d174d` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-800"></span> |
 | `bg-pink-900` | `background: #831843` | <span class="inline-block h-6 w-24 rounded-sm bg-pink-900"></span> |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## bg-none
+
+Amis 多出来的档：`background: none !important`。连 `background-image` 一起清掉。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-none flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-none flex items-center justify-center text-xs">none</div>
+  </div>
+```
+
+## bg-transparent
+
+`background-color: transparent`。舞台灰还能透出来。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-transparent flex items-center justify-center text-xs">transparent</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-transparent flex items-center justify-center text-xs">transparent</div>
+  </div>
+```
+
+## bg-black
+
+调色盘硬编码 `#000`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-black text-white flex items-center justify-center text-xs">black</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-black text-white flex items-center justify-center text-xs">black</div>
+  </div>
+```
+
+## bg-primary
+
+语义主色：`background-color: var(--primary)`。顶栏换色点会跟着走。Amis helper 表里写的是 `#007bff`，Vamis 语义色走 token。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-primary text-primary-foreground flex items-center justify-center text-xs">primary</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-primary text-primary-foreground flex items-center justify-center text-xs">primary</div>
+  </div>
+```
+
+## bg-gray-200
+
+调色盘与 Amis helper 同档 hex：`#e5e7eb`。完整色阶见表。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-gray-200 flex items-center justify-center text-xs">gray-200</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-gray-200 flex items-center justify-center text-xs">gray-200</div>
+  </div>
+```
+
+## bg-blue-500
+
+`#3b82f6`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-blue-500 text-white flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-blue-500 text-white flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+## 组合
+
+语义色 + 两档调色盘。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-muted flex items-center justify-center text-xs">muted</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-primary text-primary-foreground flex items-center justify-center text-xs">primary</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-gray-200 flex items-center justify-center text-xs">gray-200</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-blue-500 text-white flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md flex flex-wrap gap-3">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-muted flex items-center justify-center text-xs">muted</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-primary text-primary-foreground flex items-center justify-center text-xs">primary</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-gray-200 flex items-center justify-center text-xs">gray-200</div>
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 bg-blue-500 text-white flex items-center justify-center text-xs">blue-500</div>
+  </div>
+```
+
+## 响应式设计
+
+语义色和调色盘都接了 `m:` / `pc:`，见 [辅助类-响应式设计](/style/responsive-design)。桌面 `pc:bg-blue-500`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 m:bg-gray-200 pc:bg-blue-500 text-white flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="bg-gray-200 p-sm rounded-md">
+    <div class="h-10 w-24 rounded-sm border border-dashed border-gray-400 m:bg-gray-200 pc:bg-blue-500 text-white flex items-center justify-center text-xs">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+调色盘的 `hover:` / `focus:` / `active:` / `disabled:` 已进 SDK，见 [辅助类-状态样式](/style/state)。本页表只列默认态，完整 hex 核还在色盘表。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
