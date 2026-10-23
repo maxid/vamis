@@ -44,8 +44,45 @@ body,
   font-size: 0.875rem;
   line-height: 1.7;
 }
-.doc-prose li {
+/* Preflight 把 ol/ul 的 list-style / padding 清掉。文档 Markdown 要还原。 */
+.doc-prose ul {
+  list-style: disc;
+  padding-left: 1.5em;
+}
+.doc-prose ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+}
+.doc-prose ul ul {
+  list-style: circle;
   margin: 0.25rem 0;
+}
+.doc-prose ul ul ul {
+  list-style: square;
+}
+.doc-prose ol ol {
+  list-style: lower-alpha;
+  margin: 0.25rem 0;
+}
+.doc-prose ol ol ol {
+  list-style: lower-roman;
+}
+.doc-prose li {
+  display: list-item;
+  margin: 0.25rem 0;
+}
+.doc-prose li > p {
+  margin: 0.25rem 0;
+}
+.doc-prose blockquote {
+  margin: 0.75rem 0;
+  padding-left: 1em;
+  border-left: 2px solid var(--border);
+  color: var(--muted-foreground);
+}
+.doc-prose hr {
+  margin: 1rem 0;
+  border-top: 1px solid var(--border);
 }
 .doc-prose a {
   color: var(--primary);
