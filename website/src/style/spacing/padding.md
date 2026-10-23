@@ -16,10 +16,10 @@ title: Padding
 type: page
 body:
   - type: tpl
-    className: p-md bg-muted rounded-md
+    className: p-md bg-yellow-200 rounded-md
     tpl: p-md 是 --gap-md（16px）
   - type: tpl
-    className: p-t-xs p-x-lg bg-muted rounded-md m-t-sm
+    className: p-t-xs p-x-lg bg-yellow-200 rounded-md m-t-sm
     tpl: 上 4px，左右 20px
 ```
 

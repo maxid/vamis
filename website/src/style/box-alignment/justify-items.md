@@ -16,7 +16,7 @@ Grid 单元格内水平对齐。
 type: page
 body:
   - type: tpl
-    className: grid grid-cols-2 justify-items-center bg-muted p-sm rounded-md gap-2
+    className: grid grid-cols-2 justify-items-center bg-gray-200 p-sm rounded-md gap-2
     tpl: '<span class="bg-card p-xs rounded-md">中</span><span class="bg-card p-xs rounded-md">中</span>'
 ```
 

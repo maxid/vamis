@@ -16,7 +16,7 @@ title: Justify Self
 type: page
 body:
   - type: tpl
-    className: grid grid-cols-2 bg-muted p-sm rounded-md
+    className: grid grid-cols-2 bg-gray-200 p-sm rounded-md
     tpl: '<span class="justify-self-end bg-card p-xs rounded-md">靠右</span><span class="bg-card p-xs rounded-md">默认</span>'
 ```
 

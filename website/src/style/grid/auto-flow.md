@@ -17,7 +17,7 @@ type: page
 body:
   - type: tpl
     className: grid grid-flow-col auto-cols-fr h-16 gap-2
-    tpl: '<span class="bg-muted p-sm rounded-md">A</span><span class="bg-muted p-sm rounded-md">B</span><span class="bg-muted p-sm rounded-md">C</span>'
+    tpl: '<span class="bg-yellow-200 p-sm rounded-md">A</span><span class="bg-yellow-200 p-sm rounded-md">B</span><span class="bg-yellow-200 p-sm rounded-md">C</span>'
 ```
 
 ## 类名

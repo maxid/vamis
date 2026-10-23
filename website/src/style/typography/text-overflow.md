@@ -16,10 +16,10 @@ title: Text Overflow
 type: page
 body:
   - type: tpl
-    className: truncate w-40 bg-muted p-sm rounded-md
+    className: truncate w-40 bg-yellow-200 p-sm rounded-md
     tpl: 这段文字很长很长很长很长，超出就被截成省略号
   - type: tpl
-    className: overflow-hidden text-clip whitespace-nowrap w-40 bg-muted p-sm rounded-md m-t-sm
+    className: overflow-hidden text-clip whitespace-nowrap w-40 bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: 这段文字很长很长很长很长，超出直接裁掉
 ```
 

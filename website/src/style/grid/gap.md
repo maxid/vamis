@@ -19,29 +19,29 @@ body:
     bodyClassName: flex gap-4
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "1"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "2"
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: "3"
   - type: container
     className: m-t-sm
     bodyClassName: grid grid-cols-2 gap-x-8 gap-y-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: a
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: b
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: c
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: d
 ```
 

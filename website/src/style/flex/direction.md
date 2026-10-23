@@ -19,20 +19,20 @@ body:
     bodyClassName: flex flex-col gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 上
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 下
   - type: container
     className: m-t-sm
     bodyClassName: flex flex-row-reverse gap-2
     body:
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 甲
       - type: tpl
-        className: bg-muted p-sm rounded-md
+        className: bg-yellow-200 p-sm rounded-md
         tpl: 乙
 ```
 

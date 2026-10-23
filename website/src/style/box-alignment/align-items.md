@@ -16,7 +16,7 @@ title: Align Items
 type: page
 body:
   - type: container
-    className: h-20 bg-muted p-sm rounded-md
+    className: h-20 bg-gray-200 p-sm rounded-md
     bodyClassName: flex items-center gap-2
     body:
       - type: tpl

@@ -17,7 +17,7 @@ type: page
 body:
   - type: tpl
     className: flex w-48 gap-2
-    tpl: '<span class="shrink-0 bg-muted p-sm rounded-md">不缩</span><span class="shrink bg-muted p-sm rounded-md">可缩可缩可缩</span>'
+    tpl: '<span class="shrink-0 bg-yellow-200 p-sm rounded-md">不缩</span><span class="shrink bg-yellow-200 p-sm rounded-md">可缩可缩可缩</span>'
 ```
 
 ## 类名

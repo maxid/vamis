@@ -17,7 +17,7 @@ type: page
 body:
   - type: tpl
     className: flex gap-2
-    tpl: '<span class="order-3 bg-muted p-sm rounded-md">A order-3</span><span class="order-1 bg-muted p-sm rounded-md">B order-1</span><span class="order-2 bg-muted p-sm rounded-md">C order-2</span>'
+    tpl: '<span class="order-3 bg-yellow-200 p-sm rounded-md">A order-3</span><span class="order-1 bg-yellow-200 p-sm rounded-md">B order-1</span><span class="order-2 bg-yellow-200 p-sm rounded-md">C order-2</span>'
 ```
 
 ## 类名

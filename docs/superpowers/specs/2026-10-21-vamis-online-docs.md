@@ -12,7 +12,7 @@
 |------|------|------|
 | 文档 | `/` | 开始（含 JS SDK）、概念、类型、扩展；`/docs` 重定向到首页 |
 | 组件 | `/components` | 侧栏首位「组件介绍」（不进布局分组）+ 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
-| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `float` / `clear` **90%**。旧 `/docs/style` 重定向到这里 |
+| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `position` / `float` / `clear` **90%**。旧 `/docs/style` 重定向到这里 |
 | 示例 | `/examples` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
 | 搜索 | ⌘K | 文档 / 组件 / 样式 / 示例索引；示例跳 `/examples?example=` |
@@ -28,7 +28,7 @@
 - GitHub Pages 发布同一套 playground：https://maxid.github.io/vamis/ 。`pnpm build` 按 md 路由写出 `path/index.html`（全静态，无 Node）；`VITE_BASE=/<repo>/`；`/api/mock2` 打进前端 JS。
 - 嵌入分两条写：Vue `VamisRoot`；JS SDK `vamis.embed`（`/start/sdk` iframe 用站点根路径 `/sdk/hello.html`，渲染时加 `VITE_BASE`；禁止 `../../sdk/hello.html`，Pages 的 `sdk/index.html` 目录会解析成 `/docs/sdk/hello.html`）。
 - 文档 / 组件 / 样式页右侧有「内容」TOC（对齐 Amis `Doc-toc` 能力）：从 markdown `h2`–`h4` 抽锚点，点击平滑滚动、滚动高亮当前项；`lg` 以下隐藏；没有标题时不占栏。不搬 `cxd-` / `Doc-toc` 类名。TOC 栏无左边框，与正文同一卡片。正文 / 侧栏 / TOC 滚动条默认隐藏，滚动时才显示。
-- `/style` 活示例对标 Amis **计算样式 / 盒模型**（同一 class、同一元素、同一属性、同一值），不是截图像不像。口径：`.cursor/rules/style-behavior-parity.mdc`。
+- `/style` 活示例对标 Amis **计算样式 / 盒模型**（同一 class、同一元素、同一属性、同一值），不是截图像不像。口径：`.cursor/rules/style-behavior-parity.mdc`。芯片/条带用 `bg-yellow-200`、舞台用 `bg-gray-200`，避免 `--muted` 贴 `--card`；语义色页仍演示 `bg-muted`。
 
 ## 怎么跑
 

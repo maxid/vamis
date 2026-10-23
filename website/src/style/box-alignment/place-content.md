@@ -16,7 +16,7 @@ title: Place Content
 type: page
 body:
   - type: tpl
-    className: grid h-24 place-content-center bg-muted rounded-md
+    className: grid h-24 place-content-center bg-gray-200 rounded-md
     tpl: '<span class="bg-card p-sm rounded-md">居中</span>'
 ```
 

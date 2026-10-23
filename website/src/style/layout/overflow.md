@@ -37,7 +37,7 @@ title: Overflow
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-auto</div></div>
+  <div class="overflow-auto h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-auto</div></div>
 ```
 
 ## overflow-hidden
@@ -48,7 +48,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-hidden</div></div>
+  <div class="overflow-hidden h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-hidden</div></div>
 ```
 
 ## overflow-visible
@@ -59,7 +59,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="h-32"><div class="overflow-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-visible</div></div></div>
+  <div class="h-32"><div class="overflow-visible h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-visible</div></div></div>
 ```
 
 ## overflow-scroll
@@ -70,7 +70,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-scroll</div></div>
+  <div class="overflow-scroll h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">overflow-scroll</div></div>
 ```
 
 ## overflow-x-auto
@@ -81,7 +81,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-auto</div></div>
+  <div class="overflow-x-auto h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-auto</div></div>
 ```
 
 ## overflow-y-auto
@@ -92,7 +92,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-y-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-auto</div></div>
+  <div class="overflow-y-auto h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-auto</div></div>
 ```
 
 ## overflow-x-hidden
@@ -103,7 +103,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-hidden</div></div>
+  <div class="overflow-x-hidden h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-hidden</div></div>
 ```
 
 ## overflow-y-hidden
@@ -114,7 +114,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-y-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-hidden</div></div>
+  <div class="overflow-y-hidden h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-hidden</div></div>
 ```
 
 ## overflow-x-visible
@@ -125,7 +125,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-visible</div></div>
+  <div class="overflow-x-visible h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-visible</div></div>
 ```
 
 ## overflow-y-visible
@@ -136,7 +136,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="h-40"><div class="overflow-y-visible h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-visible</div></div></div>
+  <div class="h-40"><div class="overflow-y-visible h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-visible</div></div></div>
 ```
 
 ## overflow-x-scroll
@@ -147,7 +147,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-scroll</div></div>
+  <div class="overflow-x-scroll h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-8 bg-blue-200 p-sm rounded-md">overflow-x-scroll</div></div>
 ```
 
 ## overflow-y-scroll
@@ -158,7 +158,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-y-scroll h-16 w-48 bg-muted p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-scroll</div></div>
+  <div class="overflow-y-scroll h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-24 h-32 bg-blue-200 p-sm rounded-md">overflow-y-scroll</div></div>
 ```
 
 ## 组合
@@ -169,14 +169,14 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-auto overflow-y-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横滚竖裁</div></div>
+  <div class="overflow-x-auto overflow-y-hidden h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横滚竖裁</div></div>
 ```
 
 ```schema
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-x-hidden overflow-y-auto h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横裁竖滚</div></div>
+  <div class="overflow-x-hidden overflow-y-auto h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">横裁竖滚</div></div>
 ```
 
 ## 响应式设计
@@ -187,7 +187,7 @@ tpl: |
 type: tpl
 inline: false
 tpl: |
-  <div class="overflow-visible pc:overflow-hidden h-16 w-48 bg-muted p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">pc 裁掉</div></div>
+  <div class="overflow-visible pc:overflow-hidden h-16 w-48 bg-gray-200 p-sm rounded-md"><div class="w-64 h-24 bg-blue-200 p-sm rounded-md">pc 裁掉</div></div>
 ```
 
 ## 状态前缀

@@ -16,10 +16,10 @@ title: Height
 type: page
 body:
   - type: tpl
-    className: h-16 bg-muted p-sm rounded-md
+    className: h-16 bg-yellow-200 p-sm rounded-md
     tpl: 固定高度
   - type: tpl
-    className: min-h-full bg-muted p-sm rounded-md m-t-sm
+    className: min-h-full bg-yellow-200 p-sm rounded-md m-t-sm
     tpl: 至少吃满父槽
 ```
 

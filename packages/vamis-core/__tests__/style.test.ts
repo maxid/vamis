@@ -703,6 +703,23 @@ describe('style docs surface', () => {
     expect(overflow).toContain('pc:overflow-hidden')
     expect(overflow).toContain('| `overflow-x-scroll` |')
     expect(overflow).toContain('| `overflow-y-scroll` |')
+    const position = readFileSync(
+      resolve(here, '../../../website/src/style/layout/position.md'),
+      'utf8',
+    )
+    expect(position).toContain('实现进度 90%')
+    expect(position).toContain('## static')
+    expect(position).toContain('## relative')
+    expect(position).toContain('## absolute')
+    expect(position).toContain('## sticky')
+    expect(position).toContain('## fixed')
+    expect(position).toContain('## 组合')
+    expect(position).toContain('pc:absolute')
+    expect(position).toContain('top-2 left-2')
+    expect(position).toContain('translateZ(0)')
+    expect(position).toContain('| `static` |')
+    expect(position).toContain('| `fixed` |')
+    expect(position).toContain('| `sticky` |')
     expect(theme).toContain('.vamis-html :where(*)')
     expect(theme).toContain('--tw-border-style: none')
     const palette = readFileSync(resolve(here, '../../vamis-ui/src/helpers-palette.css'), 'utf8')

@@ -16,7 +16,7 @@ title: Word Break
 type: page
 body:
   - type: tpl
-    className: break-all w-24 bg-muted p-sm rounded-md
+    className: break-all w-24 bg-yellow-200 p-sm rounded-md
     tpl: supercalifragilisticexpialidocious
 ```
 

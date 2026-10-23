@@ -16,13 +16,13 @@ title: Border Radius
 type: page
 body:
   - type: tpl
-    className: rounded-md bg-muted p-sm
+    className: rounded-md bg-yellow-200 p-sm
     tpl: rounded-md
   - type: tpl
-    className: rounded-xl bg-muted p-sm m-t-sm
+    className: rounded-xl bg-yellow-200 p-sm m-t-sm
     tpl: rounded-xl
   - type: tpl
-    className: rounded-full bg-muted p-sm m-t-sm w-24 text-center
+    className: rounded-full bg-yellow-200 p-sm m-t-sm w-24 text-center
     tpl: rounded-full
 ```
 
