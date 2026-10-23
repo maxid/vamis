@@ -6,33 +6,137 @@ title: Flex Grow
 
 # Flex Grow
 
-::: info 实现进度 50% · 进行中
-布局 / 字号 / 语义色 helper 已进 SDK。调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）与 `hover:` / `focus:` / `active:` / `disabled:` / `group-hover:` / `m:` / `pc:` 已写入 `helpers-palette.css`。本页类名表仍只列默认态。
+::: tip 实现进度 90% · 已完成
+活示例对标 Amis Flex Grow：`flex-grow` / `flex-grow-0` 落在同一元素的 `flex-grow`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 
-只改 grow，不改 shrink / basis。
+只改子项的 `flex-grow`，不改 shrink / basis。要先有父级 `display: flex`（见 [Display](/style/layout/display)）。`flex-grow` 为 1，从内容宽起吃剩余；`flex-grow-0` 为 0，不增长（也是 CSS 默认）。Amis 类名带 `flex-` 前缀，不是 Tailwind 的 `grow`。舞台钉死 `w-80`（320px）。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 grow 类打在子项上。
+
+## 类名
+
+| Class | Properties |
+| --- | --- |
+| `flex-grow` | `flex-grow: 1` |
+| `flex-grow-0` | `flex-grow: 0` |
+
+## flex-grow
+
+`flex-grow: 1`。shrink / basis 不动。舞台 `w-80` = 320px，内宽 304px，缝 `gap-2` = 8px。左枚 `flex-grow-0 w-16` 钉死 64px，右枚吃掉剩余 232px。
 
 ```schema
-type: page
-body:
-  - type: tpl
-    className: flex gap-2
-    tpl: |
-      <span class="grow bg-yellow-200 p-sm rounded-md">grow</span><span class="grow-0 bg-yellow-200 p-sm rounded-md">grow-0</span>
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
 ```
 
 ```schema: scope="body"
 type: code
 language: html
 value: |-
-  <span class="grow bg-yellow-200 p-sm rounded-md">grow</span><span class="grow-0 bg-yellow-200 p-sm rounded-md">grow-0</span>
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
 ```
 
-## 类名
+## flex-grow-0
 
-| Class | Properties |
-| --- | --- |
-| `grow` | `flex-grow: 1` |
-| `grow-0` | `flex-grow: 0` |
+`flex-grow: 0`。不增长（也是 CSS 默认）。两枚都停在内容宽，右边留出灰底。
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-grow-0 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+    <div class="flex-grow-0 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+  </div>
+```
+
+## 组合
+
+同一组舞台：钉死 + 吃剩余、两边都增长、两边都不增长。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+      <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow-0 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-grow-0 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+      <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+    <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+      <div class="flex-grow-0 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">短</div>
+      <div class="flex-grow-0 h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">长文案</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:flex-grow-0` 按内容宽；桌面（≥768px）`pc:flex-grow` 吃剩余。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="m:flex-grow-0 pc:flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex gap-2 w-80 overflow-hidden bg-gray-200 p-sm rounded-md">
+    <div class="flex-grow-0 w-16 h-16 bg-blue-200 flex items-center justify-center text-sm p-sm rounded-md">钉</div>
+    <div class="m:flex-grow-0 pc:flex-grow h-16 bg-yellow-200 flex items-center justify-center text-sm p-sm rounded-md">吃剩余</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。简写见 [Flex](/style/flex/flex)，收缩见 [Flex Shrink](/style/flex/shrink)。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
