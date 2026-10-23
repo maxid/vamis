@@ -29,7 +29,7 @@ const ACCENT_KEY = 'vamis-accent'
 type Accent = 'blue' | 'green' | 'amber' | 'sky' | 'rose'
 
 const accents: { id: Accent; label: string; color: string }[] = [
-  { id: 'blue', label: '墨蓝', color: 'oklch(0.49 0.16 258)' },
+  { id: 'blue', label: '云舍蓝', color: 'oklch(0.49 0.16 258)' },
   { id: 'green', label: '翠绿', color: 'oklch(0.52 0.14 145)' },
   { id: 'amber', label: '琥珀', color: 'oklch(0.7 0.15 65)' },
   { id: 'sky', label: '青空', color: 'oklch(0.55 0.11 230)' },

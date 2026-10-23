@@ -16,7 +16,7 @@ title: CSS 变量
 |------|------|
 | `--background` / `--foreground` | 画布与正文 |
 | `--card` / `--card-foreground` | 面板 |
-| `--primary` / `--primary-foreground` | 主色、主按钮 |
+| `--primary` / `--primary-foreground` | 主色、主按钮。顶栏 5 色点改 `--accent-h`：云舍蓝（默认）/ 翠绿 / 琥珀 / 青空 / 玫红 |
 | `--secondary` / `--muted` | 次要底 |
 | `--destructive` | 危险（Amis `danger`） |
 | `--success` / `--warning` / `--info` | 状态色 |

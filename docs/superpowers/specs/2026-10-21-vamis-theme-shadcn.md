@@ -2,7 +2,7 @@
 
 - 日期：2026-10-21
 - 状态：落地（token / 盒子辅助类 / IR metadata.style；`registerTheme` 仍 P1）
-- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；配色走语义 token；不搬 `cxd-` 前缀
+- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；主色走 `--primary`（云舍蓝是顶栏 5 色之一）；不搬 `cxd-` 前缀
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
 
 ## 1. Amis 样式系统要点
@@ -77,7 +77,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 
 - 对象：YAML 生成的后台页（表单 / CRUD / 弹窗）。
 - 受众：操作员填表、扫表、改一行数据。
-- 签名：Amis 系统字体栈（`--fonts-base-family`）+ 32px 控件节奏。不嵌入 webfont / 商用字体文件。主色用墨蓝（不是抄 `#2468f2`，也不是安全橙）。
+- 签名：Amis 系统字体栈（`--fonts-base-family`）+ 32px 控件节奏。不嵌入 webfont / 商用字体文件。主色默认云舍蓝（顶栏 5 色之一：云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红），走 `--primary`。
 - 不做：奶油衬线、酸绿暗色、报纸细线；不做第二套主题 class。
 
 light / dark 都写完整 semantic token。`color-scheme` 跟主题走。

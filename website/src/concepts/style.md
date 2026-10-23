@@ -10,7 +10,7 @@ token / helper（含 `w-*` / `h-full`）/ `className` / FormItem `size` / 默认
 
 Vamis 的视觉目标是 **Amis 后台的信息密度**，并把 cxd 的盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。不搬 `cxd-` 前缀。实现上：
 
-- 一套 CSS 变量（`--background`、`--primary`、`--control-h`、`--gap-*`、状态色）
+- 一套 CSS 变量（`--background`、`--primary`、`--control-h`、`--gap-*`、状态色）。主色走 `--primary`；顶栏 5 色是云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，云舍蓝是默认色点
 - 组件用 `variant`，禁止第二套 `cxd-` 前缀；能力走 token / utility
 - 密度 `data-density="compact|comfortable"`，默认跟页面 html；IR `metadata.style.density` 可覆盖这一棵树
 - **默认自适应**：page / form / 未写 `size` 的表单控件吃满容器，不必先配 `w-full` / `size: full`

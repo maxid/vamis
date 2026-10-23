@@ -32,7 +32,7 @@
 | 术语 | 定义 |
 |------|------|
 | **Amis** | 百度 JSON 低代码引擎（6.13.0）。Vamis 对齐其 **schema 语义**，不复制 React/MST |
-| **cxd 转写** | 不搬 `.cxd-*` 前缀和 Amis 主题 SCSS。cxd 的盒子、密度、helper、交互尽量像素级落到 shadcn-vue token、`cva` variants、Tailwind utility。配色走语义 token，不必钉死云舍蓝。规则：`.cursor/rules/cxd-transcribe.mdc` |
+| **cxd 转写** | 不搬 `.cxd-*` 前缀和 Amis 主题 SCSS。cxd 的盒子、密度、helper、交互尽量像素级落到 shadcn-vue token、`cva` variants、Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/cxd-transcribe.mdc` |
 | **type** | Schema 节点种类（`page` / `form` / `crud`…）。侧栏 155 项见组件 TODO |
 | **已注册 ≠ 语义完成** | `registerRenderer` 有调用只说明能 resolve；进度看文档主路径 |
 | **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 LCDP IR 同形 |
@@ -68,6 +68,7 @@
 
 **最近交付**
 
+- 更正「配色钉死云舍蓝」：云舍蓝只是顶栏 5 种主题色之一（云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，默认色点），不是唯一主色、也不是禁用色。顶栏色点文案「墨蓝」改为「云舍蓝」。
 - 更正「不搬 cxd-」口径：只禁止 `.cxd-*` 前缀和主题 SCSS；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue / Tailwind。写入术语 **cxd 转写**、规则 `.cursor/rules/cxd-transcribe.mdc`，并改掉 AGENTS / README / 样式 spec / 组件页模板里「不追像素」「只学密度」的旧说法。
 - 顶栏补「样式」入口（文档 \| 组件 \| **样式** \| 示例 \| 编辑器），路由 `/style` 一等，侧栏对齐 Amis CssDocs。开始四页按 Amis 结构改写；辅助类目录（Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography / Backgrounds / Borders / Effect）用生成器写出，不拷贝 Amis helper.md。旧 `/docs/style` 重定向到 `/style`。
 - 清掉 `pnpm typecheck`：playground tsconfig 排除测试文件、补 `nav.d.mts`，并收窄 SchemaNode / 表单项 `label` / fetcher / Monaco 0.57 类型。`vue-tsc --noEmit` 现为 0 错误。
@@ -134,7 +135,7 @@
 - 规格锁定必须支持 JS SDK：任意 HTML `vamis.embed(container, schema, props?, env?)`，与 Vue `VamisRoot` 同一内核；不搬 `amisRequire` / 不单独引入 `cxd.css`（能力打进 `sdk.css` 的 token / Tailwind）。
 - 样式内核落地：`resolveClassName` / `resolveInlineStyle` / `resolveCssVars`；IR `metadata.style`（cssVars / density / className）；FormItem `size` 吃控件宽档；Table 吃 `--table-cell-px`；`m-t-xs` 等辅助类走 `--gap-*`。
 - Playground 顶栏加上全站搜索（⌘K，覆盖文档 / 组件 / 示例）和 GitHub 仓库图标链接。
-- Playground 顶栏色点可切换主题色（墨蓝 / 翠绿 / 琥珀 / 青空 / 玫红），只改 `--primary` 色相，状态色不动；写入 `localStorage`。
+- Playground 顶栏色点可切换主题色（云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红），只改 `--primary` 色相，状态色不动；写入 `localStorage`。云舍蓝是其中一种（默认）。
 - 文档产品名统一为 **Vamis**；IR 只写 LCDP IR / `lcdp.ir/v1`，不再写外部平台名。
 - Playground `pnpm build` 全静态导出：每个文档/组件路径一份 `index.html`，可发 GitHub Pages（`VITE_BASE=/<repo>/`）；`/api/mock2` 打进前端 JS。首次需 Settings → Pages 选 GitHub Actions。
 - Playground `/` 与 `/docs` 共用同一外壳：`max-w-[1800px]`、相同左右 padding、主栏 `flex-1` 撑满；文档不再套 `max-w-3xl` 把内容栏收窄。
