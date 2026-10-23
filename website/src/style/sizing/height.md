@@ -7,21 +7,10 @@ title: Height
 # Height
 
 ::: tip 实现进度 90% · 已完成
-`helpers-height.css` 已打进 playground 与 SDK。`h-full` 会把 `vamis-node` 内层根拉满。可用 `m:` / `pc:`。
+活示例对标 Amis Height：`h-*` / `min-h-*` / `max-h-*` 落在同一元素的 `height` / `min-height` / `max-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`h-none` / `h-18` 已对齐；`max-h-none` 与 Amis 一样是 `max-height: 0`。
 :::
 
-`h-full` 是 `height: 100%`。用在 Grid 列里的 panel 上可以把两列卡片拉齐。
-
-```schema
-type: page
-body:
-  - type: tpl
-    className: h-16 bg-yellow-200 p-sm rounded-md
-    tpl: 固定高度
-  - type: tpl
-    className: min-h-full bg-yellow-200 p-sm rounded-md m-t-sm
-    tpl: 至少吃满父槽
-```
+盒子有多高。档位与 Width 同一套 rem，加上分数 / `full` / `screen`。没有 `h-1x`。百分数相对含块：舞台钉死 `h-32`（128px）时 `h-1/2` = 64px、`h-full` = 128px。Amis `max-h-none` 是 `max-height: 0`（`$spacing` 的 none 是 0），不是 CSS `none`。作者 `className: h-full` 打在 schema 上时 `.vamis-node.h-full` 还会把内层根拉满。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把 height 类打在内层黄盒子上。
 
 ## 类名
 
@@ -125,4 +114,344 @@ body:
 | `max-h-full` | `max-height: 100%;` |
 | `max-h-screen` | `max-height: 100vh;` |
 
-响应式：`m:` / `pc:` 已接到间距、宽高、display / flex、语义色。状态前缀见 [辅助类-状态样式](/style/state)。
+## h-0
+
+`height: 0`。黄盒子高 **0**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-0 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-0</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-0 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-0</div>
+  </div>
+```
+
+## h-px
+
+`height: 0.0625rem` = **1px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-px w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-px</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-px w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-px</div>
+  </div>
+```
+
+## h-none
+
+Amis 多出来的档，与 `h-0` 一样是 `height: 0`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-none</div>
+  </div>
+```
+
+## h-16
+
+`height: 4rem` = **64px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-16</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-16</div>
+  </div>
+```
+
+## h-18
+
+Amis 多出来的档：`height: 4.5rem` = **72px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-18 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-18</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-18 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-18</div>
+  </div>
+```
+
+## h-32
+
+`height: 8rem` = **128px**。下面百分数样例的舞台也用这一档。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-32</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-32</div>
+  </div>
+```
+
+## h-auto
+
+`height: auto`。跟着内容走。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-auto w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">auto</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-auto w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">auto</div>
+  </div>
+```
+
+## h-1/2
+
+`height: 50%`。舞台钉死 `h-32` = 128px，黄盒子 **64px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-1/2</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-1/2</div>
+  </div>
+```
+
+## h-full
+
+`height: 100%`。同一座 `h-32` 舞台里黄盒子 **128px**。作者把 `h-full` 写在 schema `className` 上时，`.vamis-node.h-full` 还会把内层根拉满（本页 HTML 岛打在内层，只核这一条 `height: 100%`）。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-full</div>
+  </div>
+```
+
+## min-h-full
+
+`min-height: 100%`。舞台 128px，内容再矮也至少 **128px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="min-h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">min-h-full</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+    <div class="min-h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">min-h-full</div>
+  </div>
+```
+
+## max-h-16
+
+`max-height: 4rem` = **64px**。叠 `h-32`（128px）时被卡住，用高 **64px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-h-16</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-h-16</div>
+  </div>
+```
+
+## max-h-none
+
+Amis 这一档不是 CSS `none`：`$spacing` 的 `none` 是 0，所以 `max-height: 0`。叠 `h-32` 时高被卡成 **0**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 max-h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">none</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="h-32 max-h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">none</div>
+  </div>
+```
+
+## 组合
+
+同一组：`h-16`、`h-32`、`h-1/2`、`h-full`、`max-h-16`。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="flex flex-wrap gap-4 items-end">
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-16</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-32</div>
+    </div>
+    <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+      <div class="h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">1/2</div>
+    </div>
+    <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+      <div class="h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">full</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-h-16</div>
+    </div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="flex flex-wrap gap-4 items-end">
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-16</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">h-32</div>
+    </div>
+    <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+      <div class="h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md">1/2</div>
+    </div>
+    <div class="h-32 w-32 bg-gray-200 rounded-md shrink-0">
+      <div class="h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md">full</div>
+    </div>
+    <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+      <div class="h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">max-h-16</div>
+    </div>
+  </div>
+```
+
+## 响应式设计
+
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:h-16` 高 64px；桌面（≥768px）`pc:h-32` 高 **128px**。
+
+```schema
+type: tpl
+inline: false
+tpl: |
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="m:h-16 pc:h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+```schema: scope="body"
+type: code
+language: html
+value: |-
+  <div class="inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end">
+    <div class="m:h-16 pc:h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md">m / pc</div>
+  </div>
+```
+
+## 状态前缀
+
+本页与 Amis 一样：不支持[「状态前缀」](/style/state)。宽度见 [Width](/style/sizing/width)。`h-screen` 是 `100vh`。
+
+其它 helper 见 [辅助类-响应式设计](/style/responsive-design)、[辅助类-状态样式](/style/state)。
