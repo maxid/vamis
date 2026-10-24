@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 补 `TYPE_CATALOGS.popover`：侧栏文档 type 不是独立渲染器，但补全目录要有自述，否则 `schema-completions` 报缺 catalog。
 - 功能：`popOver` 80%（不是独立 type；挂 static / table 列 / tpl / list·cards；字符串精简写法、`trigger` click、`showIcon` 放大镜、`popOverEnableOn`、`mode` dialog/drawer）。对照 **8/8**。目录 **958**。下一刀 **其他** web-component / amis 占位，或回头补 badge/action。
 - 其他：`audio` 80%（inline 默认 true、controls / rates、时间 0:00）、`wizard` 80%（steps、上一步/下一步/完成、`startStep` 字符串、mode）。对照 audio **7/7**、wizard **9/9**。目录 **951**。
 - 其他：`avatar` 80%（src > text > icon、shape/size/fit/gap、badge 数字或 `{mode,text}`）、`tasks` 80%（status 0–5、列名、上线/重试）、`badge` 属性 40%（挂在 avatar）。对照 avatar **13/13**、tasks **7/7**、badge **3/3**。目录 **936**。
