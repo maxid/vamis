@@ -21,7 +21,11 @@ describe('onEvent actions', () => {
   it('runs toast with interpolated msg', async () => {
     const context = ctx()
     await runAction({ actionType: 'toast', msg: 'hi ${name}' }, context)
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'hi Ada')
+    expect(context.env.notify).toHaveBeenCalledWith(
+      'info',
+      'hi Ada',
+      expect.objectContaining({ position: 'top-center', timeout: 4000 }),
+    )
   })
 
   it('setValue writes into the form', async () => {
@@ -149,7 +153,7 @@ describe('onEvent actions', () => {
       'click',
       context,
     )
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'click')
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'click', expect.any(Object))
   })
 
   it('interpolates event.data fields from the D4 subset', async () => {
@@ -168,7 +172,7 @@ describe('onEvent actions', () => {
       'inited',
       context,
     )
-    expect(context.env.notify).toHaveBeenCalledWith('info', '{"date":"x"}')
+    expect(context.env.notify).toHaveBeenCalledWith('info', '{"date":"x"}', expect.any(Object))
   })
 
   it('runs mouseenter the same way as click', async () => {
@@ -187,13 +191,47 @@ describe('onEvent actions', () => {
       'mouseenter',
       context,
     )
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'mouseenter')
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'mouseenter', expect.any(Object))
   })
 
   it('toast reads Amis args.msgType as level', async () => {
     const context = ctx()
     await runAction({ actionType: 'toast', args: { msgType: 'warning', msg: 'careful' } }, context)
-    expect(context.env.notify).toHaveBeenCalledWith('warning', 'careful')
+    expect(context.env.notify).toHaveBeenCalledWith(
+      'warning',
+      'careful',
+      expect.objectContaining({ timeout: 4000, closeButton: false, showIcon: true }),
+    )
+  })
+
+  it('toast.items each call env.notify with conf', async () => {
+    const context = ctx()
+    await runAction(
+      {
+        actionType: 'toast',
+        toast: {
+          position: 'bottom-center',
+          items: [
+            { body: '轻提示内容' },
+            { body: '成功', level: 'success', timeout: 1000 },
+          ],
+        },
+      },
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledTimes(2)
+    expect(context.env.notify).toHaveBeenNthCalledWith(
+      1,
+      'info',
+      '轻提示内容',
+      expect.objectContaining({ position: 'bottom-center', timeout: 4000, closeButton: false }),
+    )
+    expect(context.env.notify).toHaveBeenNthCalledWith(
+      2,
+      'success',
+      '成功',
+      expect.objectContaining({ timeout: 1000, position: 'bottom-center' }),
+    )
   })
 
   it('passes confirmTitle to env.confirm', async () => {

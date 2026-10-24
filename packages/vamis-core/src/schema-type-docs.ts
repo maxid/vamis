@@ -219,7 +219,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   dialog: doc('Dialog 对话框', '反馈', '弹层对话框。'),
   drawer: doc('Drawer 抽屉', '反馈', '侧边抽屉。'),
   spinner: doc('Spinner 加载中', '反馈', '加载指示。'),
-  toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，不是独立页面 type。'),
+  toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
   avatar: doc('Avatar 头像', '其他', '头像图或文字。'),
   audio: doc('Audio 音频', '其他', '音频播放。'),

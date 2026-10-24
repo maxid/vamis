@@ -129,10 +129,21 @@ export interface RendererConfig {
   schema?: RendererSchema
 }
 
+export type NotifyType = 'info' | 'success' | 'warning' | 'error'
+
+export type NotifyConf = {
+  title?: string
+  position?: string
+  timeout?: number
+  closeButton?: boolean
+  showIcon?: boolean
+  allowHtml?: boolean
+}
+
 export interface RendererEnv {
   /** 返回原始响应体；`requestApi` 再 `normalizePayload`。 */
   fetcher: (api: ApiObject, data?: PlainObject) => Promise<unknown>
-  notify: (type: 'info' | 'success' | 'warning' | 'error', msg: string) => void
+  notify: (type: NotifyType, msg: string, conf?: NotifyConf) => void
   jumpTo: (to: string) => void
   alert: (msg: string, title?: string) => void
   confirm: (msg: string, title?: string) => Promise<boolean>

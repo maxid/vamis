@@ -159,6 +159,6 @@ describe('embed', () => {
     mounts.push(scoped)
     await nextTick()
     await scoped.doAction({ actionType: 'toast', msg: 'hi ${name}' }, { name: 'Ada' })
-    expect(notify).toHaveBeenCalledWith('info', 'hi Ada')
+    expect(notify).toHaveBeenCalledWith('info', 'hi Ada', expect.any(Object))
   })
 })

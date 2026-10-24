@@ -14359,21 +14359,519 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "Toast",
-          "actionType": "toast",
-          "toast": {
-            "items": [
-              {
-                "body": "已保存",
-                "level": "success"
-              }
-            ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是轻提示。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-1",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "button",
+            "label": "弹出提示",
+            "actionType": "toast",
+            "toast": {
+              "items": [
+                {
+                  "body": "轻提示内容"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "label": "弹出提示乙",
+            "actionType": "toast",
+            "toast": {
+              "items": [
+                {
+                  "body": "轻提示内容乙"
+                }
+              ]
+            }
           }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-2",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "button",
+            "label": "弹出提示 YAML",
+            "actionType": "toast",
+            "toast": {
+              "items": [
+                {
+                  "body": "轻提示内容 YAML"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "label": "弹出提示乙 YAML",
+            "actionType": "toast",
+            "toast": {
+              "items": [
+                {
+                  "body": "轻提示内容乙 YAML"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-3",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "底部弹出",
+        "actionType": "toast",
+        "toast": {
+          "position": "bottom-center",
+          "items": [
+            {
+              "body": "底部提示"
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-4",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "底部弹出 YAML",
+        "actionType": "toast",
+        "toast": {
+          "position": "bottom-center",
+          "items": [
+            {
+              "body": "底部提示 YAML"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "无关闭按钮",
+        "actionType": "toast",
+        "toast": {
+          "closeButton": false,
+          "items": [
+            {
+              "body": "没有关闭按钮"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "无图标提示",
+        "actionType": "toast",
+        "toast": {
+          "showIcon": false,
+          "items": [
+            {
+              "body": "没有图标"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "一秒关掉",
+        "actionType": "toast",
+        "toast": {
+          "timeout": 1000,
+          "items": [
+            {
+              "body": "一秒后关掉"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-8",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "带标题提示",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "title": "标题",
+              "body": "带标题的内容"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-9",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "带标题提示 YAML",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "title": "标题 YAML",
+              "body": "带标题的内容 YAML"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-10",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "四种类型",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "普通消息提示",
+              "level": "info"
+            },
+            {
+              "body": "成功消息提示",
+              "level": "success"
+            },
+            {
+              "body": "错误消息提示",
+              "level": "error"
+            },
+            {
+              "body": "警告消息提示",
+              "level": "warning"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-11",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "多位置提示",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "左上方提示",
+              "position": "top-left"
+            },
+            {
+              "body": "上方提示",
+              "position": "top-center"
+            },
+            {
+              "body": "右上方提示",
+              "position": "top-right"
+            },
+            {
+              "body": "左下方提示",
+              "position": "bottom-left"
+            },
+            {
+              "body": "下方提示",
+              "position": "bottom-center"
+            },
+            {
+              "body": "右下方提示",
+              "position": "bottom-right"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-12",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "关闭按钮对比",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "展示关闭按钮",
+              "closeButton": true
+            },
+            {
+              "body": "不展示关闭按钮",
+              "closeButton": false
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-13",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "超时对比",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "持续1秒",
+              "timeout": 1000
+            },
+            {
+              "body": "持续3秒",
+              "timeout": 3000
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-14",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "HTML 提示",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "<strong>Hello</strong> <span>world</span>"
+            }
+          ]
+        }
+      }
     },
     "measure": {
       "type": "tree"
