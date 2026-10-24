@@ -7,6 +7,8 @@ import { applySchemaScope, parseSchemaFenceMeta } from '../compare/scope.mjs'
 import { harvestMarkdown } from '../compare/harvest.mjs'
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
+import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
+import { loadCatalog } from '../compare/catalog.mjs'
 
 describe('applySchemaScope', () => {
   it('wraps body fragments in page', () => {
@@ -141,5 +143,55 @@ describe('p0Cases', () => {
     expect(ids).toContain('helper-m-l')
     expect(ids).toContain('helper-m-l-xs')
     expect(p0Cases.every((row) => row.schema && row.measure)).toBe(true)
+  })
+})
+
+describe('nav-group', () => {
+  it('maps Amis-aligned paths to 文档 / 组件 / 样式', () => {
+    expect(groupFromPath('website/src/style/grid/auto-columns.md')).toMatchObject({
+      bucket: 'style',
+      section: 'Grid',
+      page: 'Grid Auto Columns',
+      extra: false,
+      group: '样式 / Grid',
+    })
+    expect(groupFromPath('website/src/concepts/schema.md')).toMatchObject({
+      bucket: 'docs',
+      section: '概念',
+      extra: false,
+      group: '文档 / 概念',
+    })
+    expect(groupFromPath('website/src/components/button.md')).toMatchObject({
+      bucket: 'components',
+      section: '功能',
+      extra: false,
+      group: '组件 / 功能',
+    })
+  })
+
+  it('keeps Vamis extras that Amis nav does not have', () => {
+    expect(groupFromPath('website/src/style/unknown/extra.md')).toMatchObject({
+      bucket: 'style',
+      extra: true,
+      group: '样式 / unknown',
+    })
+  })
+
+  it('maps P0 helpers to 样式 / Spacing and form to 组件', () => {
+    expect(groupP0('helper-m-l')).toMatchObject({ bucket: 'style', section: 'Spacing', extra: false })
+    expect(groupP0('form-default')).toMatchObject({ bucket: 'components', section: '数据输入' })
+    expect(decorateCase({ id: 'helper-m-l', layer: 'p0', title: 'className: m-l', schema: {}, measure: {} }).group).toBe(
+      '样式 / Spacing',
+    )
+  })
+
+  it('loadCatalog groups default cases by Amis nav buckets', () => {
+    const cases = loadCatalog()
+    expect(cases.some((row) => row.bucket === 'docs')).toBe(true)
+    expect(cases.some((row) => row.bucket === 'components')).toBe(true)
+    expect(cases.some((row) => row.bucket === 'style')).toBe(true)
+    const grid = loadCatalog({ bucket: 'style', section: 'Grid' })
+    expect(grid.length).toBeGreaterThan(0)
+    expect(grid.every((row) => row.group === '样式 / Grid')).toBe(true)
   })
 })

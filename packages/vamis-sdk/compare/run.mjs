@@ -13,10 +13,14 @@ function parseArgs(argv) {
   const p0 = argv.includes('--p0')
   const amisDocs = argv.includes('--all')
   const amisFlag = argv.indexOf('--amis')
+  const bucketFlag = argv.indexOf('--bucket')
+  const sectionFlag = argv.indexOf('--section')
   return {
     p0,
     docs: !p0,
     amisDocs,
+    bucket: bucketFlag >= 0 ? argv[bucketFlag + 1] : '',
+    section: sectionFlag >= 0 ? argv[sectionFlag + 1] : '',
     amisSdk: amisFlag >= 0 ? argv[amisFlag + 1] : process.env.AMIS_SDK || 'https://unpkg.com/amis@6.13.0/sdk',
   }
 }
@@ -90,7 +94,12 @@ export async function runCompare(argv = process.argv.slice(2)) {
   if (!fs.existsSync(path.join(dist, 'sdk.js'))) {
     throw new Error('缺少 packages/vamis-sdk/dist/sdk.js，先跑 pnpm sdk:build')
   }
-  const { cases, count } = buildCases({ docs: options.docs, amisDocs: options.amisDocs })
+  const { cases, count } = buildCases({
+    docs: options.docs,
+    amisDocs: options.amisDocs,
+    bucket: options.bucket,
+    section: options.section,
+  })
   const list = options.p0 ? cases.filter((row) => row.layer === 'p0') : cases
   fs.copyFileSync(path.join(sdk, 'embed-case.html'), path.join(dist, 'embed-case.html'))
   fs.copyFileSync(path.join(sdk, 'compare.html'), path.join(dist, 'compare.html'))
@@ -116,6 +125,9 @@ export async function runCompare(argv = process.argv.slice(2)) {
       rows.push({
         id: item.id,
         group: item.group,
+        bucket: item.bucket,
+        section: item.section,
+        extra: item.extra,
         layer: item.layer,
         title: item.title,
         amis: { error: amis.error || null, measure: amis.measure },

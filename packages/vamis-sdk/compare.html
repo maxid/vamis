@@ -35,6 +35,26 @@
         align-items: center;
         gap: 12px;
       }
+      .buckets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .buckets button {
+        font: inherit;
+        font-size: 13px;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        padding: 4px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        color: #334155;
+      }
+      .buckets button.active {
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
+      }
       .editor {
         margin: 0 16px 12px;
         background: #fff;
@@ -181,11 +201,17 @@
     <header>
       <h1>同一份 schema：Amis SDK vs Vamis SDK</h1>
       <p>
-        两边都走 JS SDK（<code>amis.embed</code> / <code>vamis.embed</code>），量的是真实按钮盒子，不是文档站截图。Amis SDK 默认
+        两边都走 JS SDK（<code>amis.embed</code> / <code>vamis.embed</code>），用例按 Amis 侧栏分 <strong>文档 / 组件 / 样式</strong>。Vamis 可以比 Amis 多（尤其是样式），多出来的条目标 <code>+</code>。Amis SDK 默认
         <code>unpkg.com/amis@6.13.0</code>。编辑 Schema 是 YAML / JSON 两个 Tab，改一边立刻同步；解析失败时对侧与预览停在上一份能跑的
         schema。
       </p>
       <div class="toolbar">
+        <div class="buckets" id="buckets">
+          <button type="button" data-bucket="" class="active">全部</button>
+          <button type="button" data-bucket="docs">文档</button>
+          <button type="button" data-bucket="components">组件</button>
+          <button type="button" data-bucket="style">样式</button>
+        </div>
         <label>
           用例
           <select id="case"></select>
@@ -296,25 +322,56 @@
         const params = new URLSearchParams(location.search)
         const amisSdk = params.get('amisSdk') || ''
         const yamlSchema = window.jsyaml ? window.jsyaml.CORE_SCHEMA : undefined
-        const groups = {}
-        ;(window.VAMIS_COMPARE_CASES || []).forEach(function (row) {
-          const group = row.group || 'other'
-          if (!groups[group]) groups[group] = []
-          groups[group].push(row)
-        })
-        Object.keys(groups).forEach(function (group) {
-          const og = document.createElement('optgroup')
-          og.label = group + '（' + groups[group].length + '）'
-          groups[group].forEach(function (row) {
-            const opt = document.createElement('option')
-            opt.value = row.id
-            opt.textContent = row.title
-            og.appendChild(opt)
+        let bucketFilter = params.get('bucket') || ''
+        function allCases() {
+          return window.VAMIS_COMPARE_CASES || []
+        }
+        function fillSelect(keepId) {
+          const rows = allCases().filter(function (row) {
+            return !bucketFilter || row.bucket === bucketFilter
           })
-          select.appendChild(og)
+          const groups = {}
+          const order = []
+          rows.forEach(function (row) {
+            const group = row.group || 'other'
+            if (!groups[group]) {
+              groups[group] = []
+              order.push(group)
+            }
+            groups[group].push(row)
+          })
+          select.innerHTML = ''
+          order.forEach(function (group) {
+            const og = document.createElement('optgroup')
+            og.label = group + '（' + groups[group].length + '）'
+            groups[group].forEach(function (row) {
+              const opt = document.createElement('option')
+              opt.value = row.id
+              opt.textContent = (row.extra ? '+ ' : '') + row.title
+              og.appendChild(opt)
+            })
+            select.appendChild(og)
+          })
+          const want = keepId || params.get('case')
+          if (want && rows.some(function (row) { return row.id === want })) select.value = want
+        }
+        fillSelect()
+        document.getElementById('buckets').querySelectorAll('button').forEach(function (btn) {
+          if ((btn.getAttribute('data-bucket') || '') === bucketFilter) btn.classList.add('active')
+          else btn.classList.remove('active')
+          btn.addEventListener('click', function () {
+            bucketFilter = btn.getAttribute('data-bucket') || ''
+            document.getElementById('buckets').querySelectorAll('button').forEach(function (other) {
+              other.classList.toggle('active', other === btn)
+            })
+            const url = new URL(location.href)
+            if (bucketFilter) url.searchParams.set('bucket', bucketFilter)
+            else url.searchParams.delete('bucket')
+            history.replaceState(null, '', url)
+            fillSelect(select.value)
+            applyCase()
+          })
         })
-        const initial = params.get('case')
-        if (initial) select.value = initial
 
         let kind = 'yaml'
         let yamlText = ''

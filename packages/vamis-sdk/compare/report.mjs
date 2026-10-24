@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { summarizeReport } from './score.mjs'
 import { SCOPE, summarizeFindings } from './classify.mjs'
+import { BUCKETS } from './nav-group.mjs'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -15,6 +16,9 @@ export function writeReport(rows, options = {}) {
     rows: rows.map((row) => ({
       id: row.id,
       group: row.group,
+      bucket: row.bucket,
+      section: row.section,
+      extra: row.extra,
       layer: row.layer,
       title: row.title,
       pass: row.parity?.pass,
@@ -61,7 +65,7 @@ export function writeReport(rows, options = {}) {
     '',
     `- 日期：${generatedAt.slice(0, 10)}`,
     `- 状态：自动生成。\`pnpm compare\` 用同一份 schema 跑 \`amis.embed\` / \`vamis.embed\`，判定是 **Vamis 是否对齐 Amis 实测**。`,
-    `- 合计 **${summary.total}** · 通过 **${summary.passed}** · 失败 **${summary.failed}**（P0 ${p0Failed.length}）`,
+    `- 合计 **${summary.total}** · 通过 **${summary.passed}** · 失败 **${summary.failed}**（P0 ${p0Failed.length}）· Vamis 多出 extra **${summary.extra || 0}**`,
     '',
     '## 问题分类',
     '',
@@ -74,13 +78,29 @@ export function writeReport(rows, options = {}) {
     ...scopeSection('global'),
     ...scopeSection('helper'),
     ...scopeSection('component'),
+    '## 文档结构（对标 Amis：文档 / 组件 / 样式）',
+    '',
+    '| 面 | 合计 | 失败 |',
+    '|----|------|------|',
+    ...BUCKETS.map((item) => {
+      const stat = summary.byBucket?.[item.id] || { total: 0, failed: 0 }
+      return `| ${item.label} | ${stat.total} | ${stat.failed} |`
+    }),
+    '',
+    'Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。',
+    '',
     '## 分组',
     '',
     '| 组 | 合计 | 失败 |',
     '|----|------|------|',
-    ...Object.entries(summary.byGroup).map(
-      ([group, stat]) => `| ${group} | ${stat.total} | ${stat.failed} |`,
-    ),
+    ...Object.entries(summary.byGroup)
+      .sort(([a], [b]) => {
+        const rank = { 文档: 0, 组件: 1, 样式: 2 }
+        const ra = rank[a.split(' / ')[0]] ?? 9
+        const rb = rank[b.split(' / ')[0]] ?? 9
+        return ra - rb || a.localeCompare(b, 'zh-CN')
+      })
+      .map(([group, stat]) => `| ${group} | ${stat.total} | ${stat.failed} |`),
     '',
     '## P0 失败（驱动下一刀）',
     '',
@@ -91,7 +111,7 @@ export function writeReport(rows, options = {}) {
     ...(smokeFailed.length ? smokeFailed.slice(0, 20).map(failLine) : ['- 无失败。']),
     ...(smokeFailed.length > 20 ? [`- …其余 ${smokeFailed.length - 20} 条见 \`compare/last-report.json\``] : []),
     '',
-    '下一刀按问题分类：先全局 token / 默认字体，再补缺档 helper，最后改组件默认外观。`pnpm compare:p0` 是盒模型门禁。',
+    '迭代：按 Amis 侧栏逐项实现 → `pnpm compare --bucket 样式 --section Spacing`（或 `compare:p0`）→ 评审报告 → 下一页。Vamis 样式可以比 Amis 多。`pnpm compare:p0` 是盒模型门禁。',
     '',
   ].join('\n')
   const mdPath = path.join(repo, 'docs/superpowers/specs/2026-10-24-sdk-compare-report.md')
