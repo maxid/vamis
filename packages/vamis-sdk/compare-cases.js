@@ -6096,32 +6096,194 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "grid",
       "body": [
         {
           "type": "grid",
           "columns": [
             {
-              "md": 6,
+              "columnClassName": "bg-green-300",
               "body": [
                 {
-                  "type": "tpl",
-                  "tpl": "左栏 span 6"
+                  "type": "plain",
+                  "text": "第一栏"
                 }
               ]
             },
             {
-              "md": 6,
+              "columnClassName": "bg-blue-300",
               "body": [
                 {
-                  "type": "tpl",
-                  "tpl": "右栏 span 6"
+                  "type": "plain",
+                  "text": "第二栏"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "className": "m-t",
+          "columns": [
+            {
+              "columnClassName": "bg-green-300",
+              "body": [
+                {
+                  "type": "plain",
+                  "text": "第一栏"
+                }
+              ]
+            },
+            {
+              "columnClassName": "bg-blue-300",
+              "body": [
+                {
+                  "type": "plain",
+                  "text": "第二栏"
+                }
+              ]
+            },
+            {
+              "columnClassName": "bg-red-300",
+              "body": [
+                {
+                  "type": "plain",
+                  "text": "第三栏"
                 }
               ]
             }
           ]
         }
       ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 水平分栏",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 水平分栏 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid",
+        "columns": [
+          {
+            "columnClassName": "bg-green-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "第一栏"
+              }
+            ]
+          },
+          {
+            "columnClassName": "bg-blue-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "第二栏"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 水平分栏",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 水平分栏 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid",
+        "columns": [
+          {
+            "md": 3,
+            "columnClassName": "bg-green-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "md: 3"
+              }
+            ]
+          },
+          {
+            "md": 9,
+            "columnClassName": "bg-blue-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "md: 9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 水平分栏",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 水平分栏 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid",
+        "gap": "md",
+        "align": "center",
+        "valign": "middle",
+        "columns": [
+          {
+            "md": 4,
+            "columnClassName": "bg-green-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "左"
+              }
+            ]
+          },
+          {
+            "md": 4,
+            "columnClassName": "bg-blue-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "右"
+              }
+            ]
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

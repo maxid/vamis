@@ -238,9 +238,11 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     mobile: '窄屏（<768）覆盖的字段，例如 direction: column。',
   }, { slots: ['items', 'body'] }),
   grid: fields('Grid', {
-    columns: '列定义。未写 span 时均分。',
+    columns: '列定义。未写 md/xs/sm/lg 时均分。',
     body: '同 columns 的简写列表。',
-    gap: '列间距。',
+    gap: '列间距：xs / sm / base / none / md / lg。',
+    align: '水平对齐：left / right / center / between。',
+    valign: '垂直对齐：top / middle / bottom / between。',
   }, { slots: ['columns', 'body'] }),
   wrapper: fields('Wrapper', {
     body: '包裹的内容。',
