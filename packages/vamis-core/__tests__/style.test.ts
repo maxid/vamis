@@ -562,6 +562,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'action' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'submit' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'badge' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'avatar' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')

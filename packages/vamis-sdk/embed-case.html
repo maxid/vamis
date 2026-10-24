@@ -307,6 +307,12 @@
             const buttons = document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
             if (buttons.length === 1) return buttons[0]
           }
+          if (node.type === 'avatar') {
+            return document.querySelector('[data-vamis-avatar], .cxd-Avatar')
+          }
+          if (node.type === 'tasks') {
+            return document.querySelector('[data-vamis-tasks], .cxd-Table-content')
+          }
           return null
         }
 
@@ -384,6 +390,10 @@
           }
           if (node.name && formData && node.name in formData) return formData[node.name]
           const el = findNodeEl(node)
+          if (el && (node.type === 'avatar' || node.type === 'tasks')) {
+            const text = (el.textContent || '').replace(/\s+/g, ' ').trim()
+            if (text) return text
+          }
           const fromDom = readInputValue(el)
           if (fromDom !== undefined) return fromDom
           return node.schemaValue

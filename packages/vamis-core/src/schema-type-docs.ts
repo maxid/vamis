@@ -221,9 +221,9 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   spinner: doc('Spinner 加载中', '反馈', '加载指示。show / size / overlay / tip / delay；有 body 时当容器。'),
   toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
-  avatar: doc('Avatar 头像', '其他', '头像图或文字。'),
+  avatar: doc('Avatar 头像', '其他', 'src > text > icon。shape / size / fit / gap / badge。'),
   audio: doc('Audio 音频', '其他', '音频播放。'),
-  tasks: doc('Tasks 任务操作集合', '其他', '一组任务及状态。'),
+  tasks: doc('Tasks 任务操作集合', '其他', 'items 的 status 0–5、列名、上线/重试。'),
   wizard: doc('Wizard 向导', '其他', '分步向导。'),
   'web-component': doc('Web Component', '其他', '渲染自定义元素 tag。'),
   amis: doc('amis 渲染器', '其他', '嵌套渲染另一份 schema。'),
