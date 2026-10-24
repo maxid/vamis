@@ -1,5 +1,5 @@
 import type { PlainObject } from './types'
-import { evalExpression, filterTpl } from './formula'
+import { evalExpression, filterTpl, resolveValue } from './formula'
 
 const GAP_HELPER =
   /^(m|p)(?:-(t|b|l|r|x|y))?(?:-(none|xxs|xs|sm|base|md|lg|xl|xxl))?$/
@@ -209,8 +209,13 @@ export function resolveInlineStyle(
 ): Record<string, string> {
   if (!input) return {}
   if (typeof input === 'string') {
+    const resolved = resolveValue(input, data)
+    if (resolved && typeof resolved === 'object' && !Array.isArray(resolved)) {
+      return resolveInlineStyle(resolved, data)
+    }
+    const css = resolved == null || resolved === false ? input : String(resolved)
     const out: Record<string, string> = {}
-    for (const part of input.split(';')) {
+    for (const part of css.split(';')) {
       const idx = part.indexOf(':')
       if (idx < 0) continue
       const prop = part.slice(0, idx).trim()
