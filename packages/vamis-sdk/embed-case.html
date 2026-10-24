@@ -23,21 +23,23 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="./compare-cases.js"></script>
     <script>
       (function () {
         const params = new URLSearchParams(location.search)
         const engine = params.get('engine') || 'vamis'
-        const caseId = params.get('case') || 'style-two-buttons'
         const amisSdk = params.get('amisSdk') || 'https://unpkg.com/amis@6.13.0/sdk'
-        const item = (window.VAMIS_COMPARE_CASES || []).find(function (row) {
-          return row.id === caseId
-        })
+        let ready = false
+        let pending = null
+        let scoped = null
+        let runId = 0
 
-        function fail(message) {
+        function failBoot(message) {
           document.getElementById('root').innerHTML = '<p class="err"></p>'
           document.querySelector('.err').textContent = message
-          parent.postMessage({ type: 'vamis-compare', engine: engine, caseId: caseId, error: message }, '*')
+          parent.postMessage(
+            { type: 'vamis-compare', engine: engine, runId: runId, error: message },
+            '*',
+          )
         }
 
         function loadCss(href) {
@@ -66,20 +68,33 @@
         }
 
         function measure(labels) {
-          const wanted = labels || ['按钮1', '按钮2']
-          const nodes = []
+          const wanted = labels || []
           const all = document.querySelectorAll('button, a')
-          for (let i = 0; i < all.length; i++) {
-            const text = (all[i].textContent || '').trim()
-            if (wanted.indexOf(text) >= 0) nodes.push(all[i])
+          const nodes = []
+          if (wanted.length >= 2) {
+            for (let i = 0; i < all.length; i++) {
+              const text = (all[i].textContent || '').trim()
+              if (wanted.indexOf(text) >= 0) nodes.push(all[i])
+            }
+          } else {
+            for (let i = 0; i < all.length && nodes.length < 2; i++) {
+              const text = (all[i].textContent || '').trim()
+              if (text) nodes.push(all[i])
+            }
           }
-          const a = nodes.find(function (n) {
-            return n.textContent.trim() === wanted[0]
-          })
-          const b = nodes.find(function (n) {
-            return n.textContent.trim() === wanted[1]
-          })
-          if (!a || !b) return { error: '找不到 ' + wanted.join(' / ') }
+          const a =
+            wanted.length >= 2
+              ? nodes.find(function (n) {
+                  return n.textContent.trim() === wanted[0]
+                })
+              : nodes[0]
+          const b =
+            wanted.length >= 2
+              ? nodes.find(function (n) {
+                  return n.textContent.trim() === wanted[1]
+                })
+              : nodes[1]
+          if (!a || !b) return { error: '找不到可量的两个按钮' }
           const ra = a.getBoundingClientRect()
           const rb = b.getBoundingClientRect()
           return {
@@ -114,42 +129,97 @@
           })
         }
 
-        function report(result) {
+        function report(payload) {
           parent.postMessage(
             {
               type: 'vamis-compare',
               engine: engine,
-              caseId: caseId,
-              measure: result,
-              error: result.error || null,
+              runId: payload.runId,
+              measure: payload.measure || null,
+              error: payload.error || null,
             },
             '*',
           )
         }
 
-        async function boot() {
-          if (!item) {
-            fail('unknown case ' + caseId)
+        function unmountPrev() {
+          if (scoped && typeof scoped.unmount === 'function') {
+            try {
+              scoped.unmount()
+            } catch (_err) {
+              /* ignore */
+            }
+          }
+          scoped = null
+          document.getElementById('root').innerHTML = ''
+        }
+
+        function run(data) {
+          runId = data.runId || 0
+          const schema = data.schema
+          const labels = data.labels || []
+          if (!schema || typeof schema !== 'object') {
+            report({ runId: runId, error: 'schema 无效' })
             return
           }
+          unmountPrev()
+          try {
+            if (engine === 'amis') {
+              const embed = window.amisRequire('amis/embed').embed
+              scoped = embed('#root', schema)
+            } else {
+              scoped = window.vamis.embed('#root', schema)
+            }
+          } catch (err) {
+            report({ runId: runId, error: String(err && err.message ? err.message : err) })
+            return
+          }
+          const started = runId
+          waitForMeasure(labels, 8000).then(
+            function (result) {
+              if (started !== runId) return
+              report({ runId: started, measure: result })
+            },
+            function (err) {
+              if (started !== runId) return
+              report({
+                runId: started,
+                error: String(err && err.message ? err.message : err),
+              })
+            },
+          )
+        }
+
+        window.addEventListener('message', function (event) {
+          const data = event.data
+          if (!data || data.type !== 'vamis-compare-run') return
+          if (!ready) {
+            pending = data
+            return
+          }
+          run(data)
+        })
+
+        async function boot() {
           if (engine === 'amis') {
             await loadCss(amisSdk.replace(/\/?$/, '/') + 'sdk.css')
             await loadCss(amisSdk.replace(/\/?$/, '/') + 'helper.css')
             await loadScript(amisSdk.replace(/\/?$/, '/') + 'sdk.js')
-            const embed = window.amisRequire('amis/embed').embed
-            embed('#root', item.schema)
           } else {
             await loadCss('./sdk.css')
             await loadScript('./sdk.js')
-            window.vamis.embed('#root', item.schema)
           }
-          waitForMeasure(item.labels, 8000).then(report, function (err) {
-            fail(String(err && err.message ? err.message : err))
-          })
+          ready = true
+          parent.postMessage({ type: 'vamis-compare-ready', engine: engine }, '*')
+          if (pending) {
+            const next = pending
+            pending = null
+            run(next)
+          }
         }
 
         boot().catch(function (err) {
-          fail(String(err && err.message ? err.message : err))
+          failBoot(String(err && err.message ? err.message : err))
         })
       })()
     </script>

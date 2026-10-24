@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- SDK 对照页 `/sdk/compare.html` 提供 **编辑 Schema**：YAML / JSON 两个 Tab，改一边立刻同步；解析失败时对侧与预览停在上一份能跑的 schema。改完把同一份对象 postMessage 给已挂好的 `amis.embed` / `vamis.embed`，不重载 SDK。
 - SDK 根 `.vamis-sdk` 去掉 `background: var(--background)`。`--background` 是略灰的 shadcn 画布（`oklch(0.97)`），Amis embed / `.cxd-Page` 是白底；涂在 SDK 根上会在白 iframe 里多出一块灰框。画布仍由宿主 html/body 决定。
 - SDK 对照已能量到真实盒子：`/sdk/compare.html` 同一份 schema 左右 `amis.embed`（unpkg `amis@6.13.0`）与 `vamis.embed`。默认两按钮两边都同一行、缝 0px；`className: m-l` 两边都同一行，但 Amis **15px**、Vamis **12px**（`--gap-base`）。Amis iframe 改为等到按钮出现再量，不再被 unpkg 慢加载误报「找不到」。
 - Page 内容区去掉 `space-y-3`；`button` / `action` 的 `div.vamis-node` 改为 `inline-block`，两个按钮默认并排（对齐 Amis「样式」基本使用），`className: m-l` 才能拉开缝。
