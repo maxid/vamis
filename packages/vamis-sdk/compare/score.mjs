@@ -137,12 +137,18 @@ export function summarizeReport(rows) {
   const passed = rows.filter((row) => row.parity?.pass).length
   const failed = total - passed
   const byGroup = {}
+  const byBucket = {}
   for (const row of rows) {
     const group = row.group || 'other'
     if (!byGroup[group]) byGroup[group] = { total: 0, failed: 0 }
     byGroup[group].total += 1
     if (!row.parity?.pass) byGroup[group].failed += 1
+    const bucket = row.bucket || 'docs'
+    if (!byBucket[bucket]) byBucket[bucket] = { total: 0, failed: 0 }
+    byBucket[bucket].total += 1
+    if (!row.parity?.pass) byBucket[bucket].failed += 1
   }
+  const extra = rows.filter((row) => row.extra).length
   const next = rows
     .filter((row) => !row.parity?.pass)
     .slice(0, 8)
@@ -152,5 +158,5 @@ export function summarizeReport(rows) {
         .join('；')
       return `- \`${row.id}\` ${row.title}${diff ? `（${diff}）` : row.parity?.reason ? `（${row.parity.reason}）` : ''}`
     })
-  return { total, passed, failed, byGroup, next }
+  return { total, passed, failed, extra, byGroup, byBucket, next }
 }

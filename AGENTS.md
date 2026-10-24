@@ -39,7 +39,8 @@ pnpm dev          # 文档（首页）/ 组件 / 示例，默认 http://127.0.0.
 pnpm docs         # 同上（文档不另起端口）
 pnpm test         # @vamis/formula + @vamis/core + @vamis/sdk vitest
 pnpm compare:p0   # Amis vs Vamis SDK 盒模型对照（Playwright；失败 exit 1）
-pnpm compare      # 对照 + 文档 schema 收割 smoke；`--all` 再加 Amis 组件文档
+pnpm compare      # 对照 + 文档 schema 收割 smoke；用例按 Amis 侧栏 文档/组件/样式
+                  # `--bucket 样式 --section Spacing` 切一片；`--all` 再加 Amis 组件文档
 pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
 pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # vue-tsc 无错误

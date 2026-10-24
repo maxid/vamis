@@ -2,7 +2,7 @@
 
 - 日期：2026-10-24
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。
-- 合计 **793** · 通过 **785** · 失败 **8**（P0 8）
+- 合计 **793** · 通过 **785** · 失败 **8**（P0 8）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -52,17 +52,39 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - Button 默认字重：Amis 400，Vamis shadcn font-medium=500。改 button cva，不要改全局。
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
 
+## 文档结构（对标 Amis：文档 / 组件 / 样式）
+
+| 面 | 合计 | 失败 |
+|----|------|------|
+| 文档 | 127 | 0 |
+| 组件 | 195 | 0 |
+| 样式 | 471 | 8 |
+
+Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
+
 ## 分组
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| p0-layout | 4 | 1 |
-| p0-helper | 10 | 7 |
-| docs-concepts | 85 | 0 |
-| docs-start | 2 | 0 |
-| amis-concepts | 40 | 0 |
-| docs-style | 460 | 0 |
-| docs-components | 192 | 0 |
+| 文档 / 概念 | 125 | 0 |
+| 文档 / 开始 | 2 | 0 |
+| 组件 / 布局 | 36 | 0 |
+| 组件 / 反馈 | 5 | 0 |
+| 组件 / 功能 | 14 | 0 |
+| 组件 / 其他 | 7 | 0 |
+| 组件 / 数据输入 | 87 | 0 |
+| 组件 / 数据展示 | 46 | 0 |
+| 样式 / 开始 | 13 | 0 |
+| 样式 / Backgrounds | 8 | 0 |
+| 样式 / BORDERS | 33 | 0 |
+| 样式 / Box Alignment | 67 | 0 |
+| 样式 / Effect | 19 | 0 |
+| 样式 / Flexbox | 30 | 0 |
+| 样式 / Grid | 54 | 0 |
+| 样式 / Layout | 72 | 0 |
+| 样式 / Sizing | 28 | 0 |
+| 样式 / Spacing | 49 | 8 |
+| 样式 / Typography | 98 | 0 |
 
 ## P0 失败（驱动下一刀）
 
@@ -79,4 +101,4 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无失败。
 
-下一刀按问题分类：先全局 token / 默认字体，再补缺档 helper，最后改组件默认外观。`pnpm compare:p0` 是盒模型门禁。
+迭代：按 Amis 侧栏逐项实现 → `pnpm compare --bucket 样式 --section Spacing`（或 `compare:p0`）→ 评审报告 → 下一页。Vamis 样式可以比 Amis 多。`pnpm compare:p0` 是盒模型门禁。

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { harvestMarkdown } from './harvest.mjs'
 import { p0Cases } from './p0-cases.mjs'
+import { compareNav, decorateCase, parseBucketArg } from './nav-group.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repo = path.resolve(here, '../../..')
@@ -14,38 +15,53 @@ function exists(dir) {
 export function loadCatalog(options = {}) {
   const docs = options.docs !== false
   const amisDocs = options.amisDocs === true
-  const cases = [...p0Cases]
+  const bucket = parseBucketArg(options.bucket)
+  const section = options.section ? String(options.section).trim() : ''
+  const cases = p0Cases.map((row) => decorateCase({ ...row, origin: 'p0' }))
   const sources = [
-    { dir: path.join(repo, 'website/src/concepts'), group: 'docs-concepts' },
-    { dir: path.join(repo, 'website/src/start'), group: 'docs-start' },
-    { dir: path.join(repo, '../amis/docs/zh-CN/concepts'), group: 'amis-concepts' },
+    { dir: path.join(repo, 'website/src/start'), origin: 'vamis' },
+    { dir: path.join(repo, 'website/src/concepts'), origin: 'vamis' },
+    { dir: path.join(repo, 'website/src/types'), origin: 'vamis' },
+    { dir: path.join(repo, 'website/src/extend'), origin: 'vamis' },
+    { dir: path.join(repo, '../amis/docs/zh-CN/concepts'), origin: 'amis' },
+    { dir: path.join(repo, '../amis/docs/zh-CN/start'), origin: 'amis' },
   ]
   if (docs) {
     sources.push(
-      { dir: path.join(repo, 'website/src/style'), group: 'docs-style' },
-      { dir: path.join(repo, 'website/src/components'), group: 'docs-components' },
+      { dir: path.join(repo, 'website/src/style'), origin: 'vamis' },
+      { dir: path.join(repo, 'website/src/components'), origin: 'vamis' },
     )
   }
   if (amisDocs) {
-    sources.push({ dir: path.join(repo, '../amis/docs/zh-CN/components'), group: 'amis-components' })
+    sources.push({ dir: path.join(repo, '../amis/docs/zh-CN/components'), origin: 'amis' })
   }
   const seen = new Set(cases.map((row) => JSON.stringify(row.schema)))
   for (const source of sources) {
     if (!exists(source.dir)) continue
-    for (const row of harvestMarkdown(source.dir, { group: source.group, relFrom: repo })) {
+    for (const row of harvestMarkdown(source.dir, { relFrom: repo })) {
       const key = JSON.stringify(row.schema)
       if (seen.has(key)) continue
       seen.add(key)
-      cases.push(row)
+      cases.push(decorateCase({ ...row, origin: source.origin }))
     }
   }
-  return cases
+  cases.sort(compareNav)
+  return cases.filter((row) => {
+    if (bucket && row.bucket !== bucket) return false
+    if (section && row.section !== section) return false
+    return true
+  })
 }
 
 export function toBrowserScript(cases) {
   const payload = cases.map((row) => ({
     id: row.id,
     group: row.group,
+    bucket: row.bucket,
+    section: row.section,
+    page: row.page,
+    extra: row.extra,
+    origin: row.origin,
     layer: row.layer || 'docs',
     title: row.title,
     expect: row.expect || '',
