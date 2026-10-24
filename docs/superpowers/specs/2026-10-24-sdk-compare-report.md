@@ -9,20 +9,25 @@
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 4 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 8 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
 | 组件 | 4 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（4）
+### 全局（8）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-hbox-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-hbox-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-hbox-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-hbox-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-pagination-0` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-pagination-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-pagination-1` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-pagination-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-pagination-2` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-pagination-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-pagination-3` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-pagination-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
 
 整改：
+- html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 - Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
 
 ### 样式 helper（0）
@@ -35,10 +40,10 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-hbox-0` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-hbox-1` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-hbox-2` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-hbox-3` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-pagination-0` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-pagination-1` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-pagination-2` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-pagination-3` lineHeight: Amis `21px` / Vamis `32px`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。

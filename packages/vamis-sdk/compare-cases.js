@@ -6782,12 +6782,113 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "pagination",
-      "body": [
-        {
-          "type": "pagination"
-        }
-      ]
+      "body": {
+        "type": "pagination",
+        "layout": "total,perPage,pager,go",
+        "mode": "normal",
+        "activePage": 2,
+        "lastPage": 99999,
+        "total": 999,
+        "perPage": 10,
+        "maxButtons": 7,
+        "showPerPage": true,
+        "perPageAvailable": [
+          10,
+          20,
+          50,
+          100
+        ],
+        "showPageInput": true,
+        "disabled": false
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-pagination-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Pagination 分页",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Pagination 分页 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "pagination",
+        "layout": "total,perPage,pager,go",
+        "activePage": 2,
+        "total": 999,
+        "perPage": 10,
+        "maxButtons": 7,
+        "showPerPage": true,
+        "showPageInput": true
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-pagination-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Pagination 分页",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Pagination 分页 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "pagination",
+        "layout": "total,perPage,pager,go",
+        "mode": "normal",
+        "activePage": 1,
+        "total": 999,
+        "perPage": 10,
+        "maxButtons": 7,
+        "showPerPage": true,
+        "perPageAvailable": [
+          10,
+          20,
+          50,
+          100
+        ],
+        "showPageInput": true,
+        "size": "sm"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-pagination-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Pagination 分页",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Pagination 分页 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "pagination",
+        "mode": "simple",
+        "activePage": 2,
+        "hasNext": true
+      }
     },
     "measure": {
       "type": "tree"
