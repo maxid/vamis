@@ -46,11 +46,75 @@ export function loadCatalog(options = {}) {
     }
   }
   cases.sort(compareNav)
-  return cases.filter((row) => {
-    if (bucket && row.bucket !== bucket) return false
-    if (section && row.section !== section) return false
-    return true
-  })
+  return cases.filter((row) => matchCatalog(row, { bucket, section, page: options.page, id: options.id, type: options.type }))
+}
+
+/** 组件「自身」：page 名 / 文件名 / 完整 id，不误伤 dropdown-button 这类邻居。 */
+export function matchSelf(row, query) {
+  const raw = String(query || '').trim()
+  if (!raw) return true
+  if (String(row.id) === raw) return true
+  const q = raw.toLowerCase()
+  const page = String(row.page || '').toLowerCase()
+  if (page === q || page.startsWith(`${q} `)) return true
+  const source = String(row.source || '').replace(/\\/g, '/')
+  const base = (source.split('/').pop() || '').replace(/\.md$/i, '').toLowerCase()
+  if (base === q) return true
+  const path = source.replace(/^website\/src/i, '').replace(/\.md$/i, '').toLowerCase()
+  if (path.endsWith(`/${q}`) || path.endsWith(`/${q}/index`)) return true
+  return String(row.id).toLowerCase() === q
+}
+
+function schemaHasType(node, type) {
+  if (!node || typeof node !== 'object') return false
+  if (Array.isArray(node)) return node.some((item) => schemaHasType(item, type))
+  if (String(node.type || '').toLowerCase() === type) return true
+  return ['body', 'columns', 'items', 'controls', 'buttons', 'actions'].some((key) => schemaHasType(node[key], type))
+}
+
+export function matchCatalog(row, options = {}) {
+  const bucket = parseBucketArg(options.bucket)
+  const section = options.section
+  const page = options.page
+  const id = options.id
+  const type = options.type ? String(options.type).trim().toLowerCase() : ''
+  if (bucket && row.bucket !== bucket) return false
+  if (section && row.section !== section) return false
+  if (id && String(row.id) !== String(id)) return false
+  if (page && !matchSelf(row, page)) return false
+  if (type && !schemaHasType(row.schema, type) && !matchSelf(row, type)) return false
+  return true
+}
+
+/** 全局修完全量；组件/ helper 修完只跑自身。 */
+export function rerunCommands(rows = []) {
+  const failed = rows.filter((row) => !row.parity?.pass)
+  const scopes = new Set()
+  for (const row of failed) {
+    for (const issue of row.findings || []) {
+      if (issue.scope) scopes.add(issue.scope)
+    }
+  }
+  const commands = []
+  if (scopes.has('global')) {
+    commands.push({ scope: 'global', cmd: 'pnpm compare', note: '全局修完必须重跑全部用例' })
+  }
+  const seen = new Set()
+  for (const row of failed) {
+    const issues = row.findings || []
+    const local = issues.some((issue) => issue.scope === 'component' || issue.scope === 'helper')
+    if (!local) continue
+    const key = row.page || row.id
+    if (seen.has(key)) continue
+    seen.add(key)
+    const arg = row.page || row.id
+    commands.push({
+      scope: issues.some((issue) => issue.scope === 'component') ? 'component' : 'helper',
+      cmd: `pnpm compare --page ${JSON.stringify(String(arg).split(' ')[0].toLowerCase())}`,
+      note: `只重跑「${row.page || row.id}」自身`,
+    })
+  }
+  return commands
 }
 
 export function toBrowserScript(cases) {

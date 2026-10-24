@@ -3,25 +3,31 @@ import http from 'node:http'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCases } from './build-cases.mjs'
+import { matchCatalog, rerunCommands } from './catalog.mjs'
 import { collectFontDiffs, scoreCase } from './score.mjs'
 import { attachFindings } from './classify.mjs'
 import { writeReport } from './report.mjs'
 
 const sdk = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
+function flagValue(argv, name) {
+  const index = argv.indexOf(name)
+  return index >= 0 ? argv[index + 1] : ''
+}
+
 function parseArgs(argv) {
   const p0 = argv.includes('--p0')
   const amisDocs = argv.includes('--all')
-  const amisFlag = argv.indexOf('--amis')
-  const bucketFlag = argv.indexOf('--bucket')
-  const sectionFlag = argv.indexOf('--section')
   return {
     p0,
     docs: !p0,
     amisDocs,
-    bucket: bucketFlag >= 0 ? argv[bucketFlag + 1] : '',
-    section: sectionFlag >= 0 ? argv[sectionFlag + 1] : '',
-    amisSdk: amisFlag >= 0 ? argv[amisFlag + 1] : process.env.AMIS_SDK || 'https://unpkg.com/amis@6.13.0/sdk',
+    bucket: flagValue(argv, '--bucket'),
+    section: flagValue(argv, '--section'),
+    page: flagValue(argv, '--page'),
+    id: flagValue(argv, '--id'),
+    type: flagValue(argv, '--type'),
+    amisSdk: flagValue(argv, '--amis') || process.env.AMIS_SDK || 'https://unpkg.com/amis@6.13.0/sdk',
   }
 }
 
@@ -97,10 +103,14 @@ export async function runCompare(argv = process.argv.slice(2)) {
   const { cases, count } = buildCases({
     docs: options.docs,
     amisDocs: options.amisDocs,
-    bucket: options.bucket,
-    section: options.section,
   })
-  const list = options.p0 ? cases.filter((row) => row.layer === 'p0') : cases
+  const list = cases.filter((row) => {
+    if (options.p0 && row.layer !== 'p0') return false
+    return matchCatalog(row, options)
+  })
+  if (!list.length) {
+    throw new Error('没有匹配的对照用例（检查 --page / --bucket / --section / --id）')
+  }
   fs.copyFileSync(path.join(sdk, 'embed-case.html'), path.join(dist, 'embed-case.html'))
   fs.copyFileSync(path.join(sdk, 'compare.html'), path.join(dist, 'compare.html'))
   const { server, origin } = await startStatic(dist)
@@ -141,6 +151,11 @@ export async function runCompare(argv = process.argv.slice(2)) {
     console.log(
       `compare ${list.length}/${count} · pass ${written.summary.passed} · fail ${written.summary.failed} · p0-fail ${p0Failed} → ${written.mdPath}`,
     )
+    const rerun = rerunCommands(rows)
+    if (rerun.length) {
+      console.log('重跑：全局修完 pnpm compare；组件修完只跑自身 --page')
+      for (const item of rerun) console.log(`  ${item.cmd}  # ${item.note}`)
+    }
     if (p0Failed) process.exitCode = 1
     return { ...written, rows }
   } finally {
