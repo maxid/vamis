@@ -19,7 +19,7 @@ Vamis 和 Amis 一样：绝大多数观感用 **className 辅助类** 就能调�
 
 ## 基本使用
 
-两个按钮默认会挨在一起（同一份 schema 用 JS SDK 对照 Amis：[/sdk/compare.html](/sdk/compare.html)）：
+两个按钮默认会挨在一起（同一份 schema 用 JS SDK 对照 Amis：[/sdk/compare.html](/sdk/compare.html)，页内可 YAML / JSON 编辑）：
 
 ```schema: scope="body"
 - type: button
