@@ -4830,34 +4830,460 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "collapse-group",
-      "body": [
-        {
-          "type": "collapse-group",
-          "body": [
-            {
-              "type": "collapse",
-              "title": "第一节",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          },
+          {
+            "type": "collapse",
+            "key": "3",
+            "header": "标题3",
+            "body": "这里是内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "accordion": true,
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          },
+          {
+            "type": "collapse",
+            "key": "3",
+            "header": "标题3",
+            "body": "这里是内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "expandIcon": {
+          "type": "icon",
+          "icon": "caret-right"
+        },
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "expandIconPosition": "right",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": {
+              "type": "collapse-group",
+              "activeKey": [
+                "1"
+              ],
               "body": [
                 {
-                  "type": "tpl",
-                  "tpl": "折叠内容 A"
-                }
-              ]
-            },
-            {
-              "type": "collapse",
-              "title": "第二节",
-              "body": [
-                {
-                  "type": "tpl",
-                  "tpl": "折叠内容 B"
+                  "type": "collapse",
+                  "key": "1",
+                  "header": "嵌套面板标题",
+                  "body": "嵌套面板内容"
                 }
               ]
             }
-          ]
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-6",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "disabled": true,
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-7",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "showArrow": false,
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-8",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "switch",
+            "name": "enableFieldSetStyle",
+            "label": "切换展示方式",
+            "mode": "horizontal",
+            "value": true
+          },
+          {
+            "type": "collapse-group",
+            "activeKey": [
+              "1"
+            ],
+            "enableFieldSetStyle": "${enableFieldSetStyle}",
+            "body": [
+              {
+                "type": "collapse",
+                "key": "1",
+                "header": "标题1",
+                "body": "这里是内容1"
+              },
+              {
+                "type": "collapse",
+                "key": "2",
+                "header": "标题2",
+                "body": "这里是内容2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-9",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse-group",
+        "activeKey": [
+          "1"
+        ],
+        "body": [
+          {
+            "type": "collapse",
+            "key": "1",
+            "header": "标题1",
+            "body": "这里是内容1"
+          },
+          {
+            "type": "collapse",
+            "key": "2",
+            "header": "标题2",
+            "body": "这里是内容2"
+          }
+        ],
+        "onEvent": {
+          "change": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "activeKeys: ${event.data.activeKeys|json}, collapseId: ${event.data.collapseId}, collapsed: ${event.data.collapsed}"
+                }
+              }
+            ]
+          }
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-collapse-10",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Collapse 折叠器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Collapse 折叠器 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "collapse",
+        "header": "标题",
+        "body": "内容",
+        "onEvent": {
+          "change": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "collapsed: ${event.data.collapsed}"
+                }
+              }
+            ]
+          }
+        }
+      }
     },
     "measure": {
       "type": "tree"
@@ -4876,10 +5302,134 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "divider",
+      "body": {
+        "type": "divider"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-divider-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Divider 分割线",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Divider 分割线 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
       "body": [
         {
-          "type": "divider"
+          "type": "divider",
+          "lineStyle": "solid"
+        },
+        {
+          "type": "divider",
+          "lineStyle": "dashed"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-divider-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Divider 分割线",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Divider 分割线 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "divider",
+          "title": "Text",
+          "titlePosition": "left"
+        },
+        {
+          "type": "divider",
+          "title": "Text",
+          "titlePosition": "center"
+        },
+        {
+          "type": "divider",
+          "title": "Text",
+          "titlePosition": "right"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-divider-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Divider 分割线",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Divider 分割线 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "items": [
+          {
+            "type": "tpl",
+            "tpl": "左侧"
+          },
+          {
+            "type": "divider",
+            "direction": "vertical"
+          },
+          {
+            "type": "tpl",
+            "tpl": "右侧"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-divider-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Divider 分割线",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Divider 分割线 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "divider",
+          "color": "#2468f2"
+        },
+        {
+          "type": "divider",
+          "rotate": 8,
+          "title": "斜线"
         }
       ]
     },

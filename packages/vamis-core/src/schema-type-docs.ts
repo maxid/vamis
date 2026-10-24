@@ -13,8 +13,8 @@ function doc(title: string, category: string, description: string, detail?: stri
 export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   page: doc('Page 页面', '布局', '唯一推荐的顶级容器。独立数据域，可配 initApi、aside、toolbar。'),
   container: doc('Container 容器', '布局', '布局容器，默认沿用父 Scope。可用 wrapperComponent 覆盖根标签。'),
-  collapse: doc('Collapse 折叠器', '布局', '可展开/折叠的内容区。'),
-  'collapse-group': doc('CollapseGroup 折叠组', '布局', '多个折叠器的组合，可做手风琴。'),
+  collapse: doc('Collapse 折叠器', '布局', '可展开/折叠的内容区。独立使用默认折叠；在 group 里用 key 对应 activeKey。'),
+  'collapse-group': doc('CollapseGroup 折叠组', '布局', '多个折叠器的组合。activeKey 指定展开项，accordion 为手风琴。'),
   divider: doc('Divider 分割线', '布局', '内容分割线。'),
   flex: doc('Flex 布局', '布局', '弹性布局。justify / direction 控制主轴。'),
   grid: doc('Grid 水平分栏', '布局', '12 栅格分栏，列可用 span。'),

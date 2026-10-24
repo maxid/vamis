@@ -106,14 +106,15 @@ export function isInlineSchema(schema?: { type?: string; inline?: unknown } | nu
   return INLINE_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
 }
 
-export function isInlineBlockSchema(schema?: { type?: string; inline?: unknown } | null): boolean {
+export function isInlineBlockSchema(schema?: { type?: string; inline?: unknown; direction?: unknown } | null): boolean {
   if (!schema) return false
   if (schema.inline === false) return false
+  if (String(schema.type || '').toLowerCase() === 'divider' && schema.direction === 'vertical') return true
   return INLINE_BLOCK_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
 }
 
 /** SchemaRenderer 外层 `div.vamis-node` 的 display class。 */
-export function schemaNodeDisplayClass(schema?: { type?: string; inline?: unknown } | null): string {
+export function schemaNodeDisplayClass(schema?: { type?: string; inline?: unknown; direction?: unknown } | null): string {
   if (isInlineBlockSchema(schema)) return 'inline-block'
   if (isInlineSchema(schema)) return 'inline'
   return ''
