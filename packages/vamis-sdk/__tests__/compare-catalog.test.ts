@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { p0Cases } from '../compare/p0-cases.mjs'
 import { applySchemaScope, parseSchemaFenceMeta } from '../compare/scope.mjs'
-import { harvestMarkdown } from '../compare/harvest.mjs'
+import { harvestMarkdown, harvestSource, isRenderableSchema } from '../compare/harvest.mjs'
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
@@ -47,6 +47,53 @@ describe('harvestMarkdown', () => {
       { type: 'page', body: { type: 'button', label: '按钮2' } },
     ])
     expect(rows.every((row) => row.measure.type === 'smoke')).toBe(true)
+  })
+
+  it('skips empty fences, inline ```schema in prose, and code samples', () => {
+    const rows = harvestSource(
+      [
+        '文档 ` ```schema ` 外包了这一层：',
+        '',
+        '```schema',
+        '',
+        '```',
+        '',
+        '```schema',
+        'type: page',
+        'body: Hello',
+        '```',
+        '',
+        '```schema',
+        'type: page',
+        'title: hbox',
+        'body:',
+        '  - type: hbox',
+        '```',
+        '',
+        '```schema',
+        'type: code',
+        'language: html',
+        'value: skip',
+        '```',
+      ].join('\n'),
+      'website/src/concepts/schema.md',
+    )
+    expect(rows.map((row) => row.schema)).toEqual([{ type: 'page', body: 'Hello' }])
+  })
+})
+
+describe('isRenderableSchema', () => {
+  it('rejects empty objects and layout shells with no children', () => {
+    expect(isRenderableSchema({})).toBe(false)
+    expect(isRenderableSchema({ type: 'page', title: 'hbox', body: [{ type: 'hbox' }] })).toBe(false)
+    expect(isRenderableSchema({ type: 'page', body: [{ type: 'chart' }] })).toBe(false)
+    expect(isRenderableSchema({ type: 'page', body: 'Hello' })).toBe(true)
+    expect(
+      isRenderableSchema({
+        type: 'page',
+        body: [{ type: 'crud', api: '/x', columns: [{ name: 'id', label: 'ID' }] }],
+      }),
+    ).toBe(true)
   })
 })
 
@@ -230,6 +277,16 @@ describe('nav-group', () => {
     const grid = loadCatalog({ bucket: 'style', section: 'Grid' })
     expect(grid.length).toBeGreaterThan(0)
     expect(grid.every((row) => row.group === '样式 / Grid')).toBe(true)
+  })
+
+  it('does not mix Amis docs into default groups or keep empty/duplicate titles', () => {
+    const cases = loadCatalog()
+    expect(cases.every((row) => row.origin !== 'amis')).toBe(true)
+    expect(cases.every((row) => isRenderableSchema(row.schema))).toBe(true)
+    const titles = cases.map((row) => `${row.group}|${row.title}`)
+    expect(titles.length).toBe(new Set(titles).size)
+    const mapping = cases.filter((row) => row.page === '数据映射').map((row) => row.title)
+    expect(mapping).toEqual(mapping.map((_, i) => `数据映射 #${i + 1}`))
   })
 
   it('component cases use schema-tree measure instead of smoke', () => {

@@ -64,37 +64,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-start-faq-0",
-    "group": "文档 / 开始",
-    "bucket": "docs",
-    "section": "开始",
-    "page": "常见问题",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "常见问题 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "log": "line 1\nline 2"
-      },
-      "body": {
-        "type": "container",
-        "style": {
-          "white-space": "pre"
-        },
-        "body": {
-          "type": "tpl",
-          "tpl": "${log}"
-        }
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "src-concepts-schema-0",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -349,267 +318,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-schema-4",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "配置与组件",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "配置与组件 #5",
-    "expect": "",
-    "schema": {},
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-schema-2",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "配置与组件",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "配置与组件 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "Hello World!"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "form",
-          "body": [
-            {
-              "type": "input-text",
-              "name": "name",
-              "label": "姓名"
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-schema-3",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "配置与组件",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "配置与组件 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "toolbar": [
-        {
-          "type": "form",
-          "panelClassName": "mb-0",
-          "title": "",
-          "body": [
-            {
-              "type": "select",
-              "label": "区域",
-              "name": "businessLineId",
-              "selectFirst": true,
-              "mode": "inline",
-              "options": [
-                "北京",
-                "上海"
-              ],
-              "checkAll": false
-            },
-            {
-              "label": "时间范围",
-              "type": "input-date-range",
-              "name": "dateRange",
-              "inline": true,
-              "value": "-1month,+0month",
-              "inputFormat": "YYYY-MM-DD",
-              "format": "YYYY-MM-DD",
-              "closeOnSelect": true,
-              "clearable": false
-            }
-          ],
-          "actions": [],
-          "mode": "inline",
-          "target": "mainPage",
-          "submitOnChange": true,
-          "submitOnInit": true
-        }
-      ],
-      "body": [
-        {
-          "type": "grid",
-          "columns": [
-            {
-              "type": "panel",
-              "className": "h-full",
-              "body": {
-                "type": "tabs",
-                "tabs": [
-                  {
-                    "title": "消费趋势",
-                    "tab": [
-                      {
-                        "type": "chart",
-                        "config": {
-                          "title": {
-                            "text": "消费趋势"
-                          },
-                          "tooltip": {},
-                          "xAxis": {
-                            "type": "category",
-                            "boundaryGap": false,
-                            "data": [
-                              "一月",
-                              "二月",
-                              "三月",
-                              "四月",
-                              "五月",
-                              "六月"
-                            ]
-                          },
-                          "yAxis": {},
-                          "series": [
-                            {
-                              "name": "销量",
-                              "type": "line",
-                              "areaStyle": {
-                                "color": {
-                                  "type": "linear",
-                                  "x": 0,
-                                  "y": 0,
-                                  "x2": 0,
-                                  "y2": 1,
-                                  "colorStops": [
-                                    {
-                                      "offset": 0,
-                                      "color": "rgba(84, 112, 197, 1)"
-                                    },
-                                    {
-                                      "offset": 1,
-                                      "color": "rgba(84, 112, 197, 0)"
-                                    }
-                                  ],
-                                  "global": false
-                                }
-                              },
-                              "data": [
-                                5,
-                                20,
-                                36,
-                                10,
-                                10,
-                                20
-                              ]
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "title": "账户余额",
-                    "tab": "0"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "panel",
-              "className": "h-full",
-              "body": [
-                {
-                  "type": "chart",
-                  "config": {
-                    "title": {
-                      "text": "使用资源占比"
-                    },
-                    "series": [
-                      {
-                        "type": "pie",
-                        "data": [
-                          {
-                            "name": "BOS",
-                            "value": 70
-                          },
-                          {
-                            "name": "CDN",
-                            "value": 68
-                          },
-                          {
-                            "name": "BCC",
-                            "value": 48
-                          },
-                          {
-                            "name": "DCC",
-                            "value": 40
-                          },
-                          {
-                            "name": "RDS",
-                            "value": 32
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "crud",
-          "className": "m-t-sm",
-          "api": "/api/mock2/sample",
-          "columns": [
-            {
-              "name": "id",
-              "label": "ID"
-            },
-            {
-              "name": "engine",
-              "label": "Rendering engine"
-            },
-            {
-              "name": "browser",
-              "label": "Browser"
-            },
-            {
-              "name": "platform",
-              "label": "Platform(s)"
-            },
-            {
-              "name": "version",
-              "label": "Engine version"
-            },
-            {
-              "name": "grade",
-              "label": "CSS grade"
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "src-concepts-datascope-and-datachain-0",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -643,78 +351,6 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": "Hello ${text}"
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-datascope-and-datachain-10",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据域与数据链",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据域与数据链 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "id": "form_data",
-        "data": {
-          "name": "vamis"
-        },
-        "actions": [
-          {
-            "type": "button",
-            "label": "接口获取",
-            "actionType": "ajax",
-            "api": {
-              "method": "get",
-              "url": "/api/mock2/form/saveForm",
-              "mockResponse": {
-                "status": 200,
-                "data": {
-                  "name": "vamis-demo"
-                }
-              }
-            }
-          },
-          {
-            "type": "button",
-            "label": "设置值",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "setValue",
-                    "componentId": "form_data",
-                    "args": {
-                      "value": {
-                        "name": "vamis-demo2"
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        ],
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名"
-          },
-          {
-            "type": "tpl",
-            "tpl": "当前值：${name}；修改前：${__prev.name}；原因：${__changeReason|json}"
-          }
-        ]
-      }
     },
     "measure": {
       "type": "smoke"
@@ -970,87 +606,72 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-datascope-and-datachain-2",
+    "id": "src-concepts-datascope-and-datachain-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据域与数据链",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #3",
+    "title": "数据域与数据链 #11",
     "expect": "",
     "schema": {
-      "data": {
-        "text": "World!"
-      },
       "type": "page",
-      "body": "Hello ${text}"
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-datascope-and-datachain-6",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据域与数据链",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据域与数据链 #7",
-    "expect": "",
-    "schema": {
-      "data": {
-        "text": "World!",
-        "name": "amis"
-      },
-      "type": "page",
-      "body": "Hello ${text}, my name is ${name}."
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-datascope-and-datachain-8",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据域与数据链",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据域与数据链 #9",
-    "expect": "",
-    "schema": {
-      "data": {
-        "name": "amis"
-      },
-      "type": "page",
-      "body": [
-        {
-          "label": "请修改输入框",
-          "type": "input-text",
-          "name": "name"
+      "body": {
+        "type": "form",
+        "id": "form_data",
+        "data": {
+          "name": "vamis"
         },
-        {
-          "type": "switch",
-          "label": "同步更新",
-          "name": "syncSwitch"
-        },
-        {
-          "type": "crud",
-          "filter": {
-            "trackExpression": "${syncSwitch ? name : ''}",
-            "body": [
-              "my name is ${name}"
-            ]
+        "actions": [
+          {
+            "type": "button",
+            "label": "接口获取",
+            "actionType": "ajax",
+            "api": {
+              "method": "get",
+              "url": "/api/mock2/form/saveForm",
+              "mockResponse": {
+                "status": 200,
+                "data": {
+                  "name": "vamis-demo"
+                }
+              }
+            }
+          },
+          {
+            "type": "button",
+            "label": "设置值",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "setValue",
+                    "componentId": "form_data",
+                    "args": {
+                      "value": {
+                        "name": "vamis-demo2"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
           }
-        }
-      ]
+        ],
+        "body": [
+          {
+            "type": "input-text",
+            "name": "name",
+            "label": "姓名"
+          },
+          {
+            "type": "tpl",
+            "tpl": "当前值：${name}；修改前：${__prev.name}；原因：${__changeReason|json}"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "smoke"
@@ -1335,89 +956,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-template-0",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "模板",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "模板 #1",
-    "expect": "",
-    "schema": {
-      "data": {
-        "text": "World!"
-      },
-      "type": "page",
-      "body": "<h1>Hello</h1> <span>${text}</span>"
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-template-1",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "模板",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "模板 #2",
-    "expect": "",
-    "schema": {
-      "data": {
-        "text": "<b>World!</b>"
-      },
-      "type": "page",
-      "body": "<h1>Hello</h1> <span>${text|raw}</span>"
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-template-2",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "模板",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "模板 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "user": "no one",
-        "items": [
-          "A",
-          "B",
-          "C"
-        ]
-      },
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "User: <%- data.user %>"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "<% if (data.items && data.items.length) { %>Array: <% data.items.forEach(function(item) { %> <span class='label label-default'><%- item %></span> <% });} %>"
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "src-concepts-data-mapping-0",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -1468,271 +1006,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-data-mapping-10",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "info": {
-          "name": "rick",
-          "company": "baidu"
-        }
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "my info is ${info|json}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-11",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "now": 1586865590
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "now is ${now|date}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-12",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "now": 1586865590000
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "毫秒 ${now|date:LLL:x}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-13",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "now": 1586865590
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "now is ${now|date:YYYY-MM-DD}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-14",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #15",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "now": "2020/4/14 19:59:50"
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "now is ${now|date:LLL:YYYY/MM/DD HH\\:mm\\:ss}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-15",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #16",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "price": 233333333
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "price is ${price|number}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-16",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #17",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "value": 0.8232343
-      },
-      "body": [
-        {
-          "type": "tpl",
-          "inline": false,
-          "tpl": "value is ${value|percent}"
-        },
-        {
-          "type": "tpl",
-          "inline": false,
-          "tpl": "value is ${value|percent:2}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-17",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #18",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "text": "这是一段非常长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长的文字"
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "text is ${text|truncate:10}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-18",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #19",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "value": ""
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "value is ${value|default:-}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-19",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #20",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "array": [
-          "a",
-          "b",
-          "c"
-        ]
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "first element is ${array|first}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "src-concepts-data-mapping-2",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -1755,35 +1028,6 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "tpl",
         "tpl": "my name is ${name}, I work for ${company.name}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-data-mapping-20",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "数据映射 #21",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "array": [
-          "a",
-          "b",
-          "c"
-        ]
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "${array|first|default:-}"
       }
     },
     "measure": {
@@ -2105,33 +1349,27 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-1",
+    "id": "src-concepts-data-mapping-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "数据映射 #2",
+    "title": "数据映射 #11",
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "info": {
+          "name": "rick",
+          "company": "baidu"
+        }
+      },
       "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          },
-          {
-            "name": "email",
-            "type": "input-text",
-            "label": "邮箱："
-          }
-        ]
+        "type": "tpl",
+        "tpl": "my info is ${info|json}"
       }
     },
     "measure": {
@@ -2139,91 +1377,124 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-12",
+    "id": "src-concepts-data-mapping-11",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "数据映射 #13",
+    "title": "数据映射 #12",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": "上个月第一天是：${_|now|dateModify:subtract:1:month|dateModify:startOf:month|date:YYYY-MM-DD HH\\:mm\\:ss}"
+      "data": {
+        "now": 1586865590
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "now is ${now|date}"
+      }
     },
     "measure": {
       "type": "smoke"
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-13",
+    "id": "src-concepts-data-mapping-12",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据映射 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "now": 1586865590000
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "毫秒 ${now|date:LLL:x}"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-data-mapping-13",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据映射",
+    "extra": false,
+    "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #14",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
-        "oldDate": "2021-10-01"
+        "now": 1586865590
       },
-      "body": "${oldDate|fromNow}"
+      "body": {
+        "type": "tpl",
+        "tpl": "now is ${now|date:YYYY-MM-DD}"
+      }
     },
     "measure": {
       "type": "smoke"
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-14",
+    "id": "src-concepts-data-mapping-14",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #15",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
-        "oldDate": 1586865590
+        "now": "2020/4/14 19:59:50"
       },
-      "body": "${oldDate|fromNow:X}"
+      "body": {
+        "type": "tpl",
+        "tpl": "now is ${now|date:LLL:YYYY/MM/DD HH\\:mm\\:ss}"
+      }
     },
     "measure": {
       "type": "smoke"
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-15",
+    "id": "src-concepts-data-mapping-15",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #16",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
-        "array": [
-          "a",
-          "b",
-          "c"
-        ]
+        "price": 233333333
       },
       "body": {
         "type": "tpl",
-        "tpl": "array is ${array|join}"
+        "tpl": "price is ${price|number}"
       }
     },
     "measure": {
@@ -2231,19 +1502,102 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-16",
+    "id": "src-concepts-data-mapping-16",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #17",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
+        "value": 0.8232343
+      },
+      "body": [
+        {
+          "type": "tpl",
+          "inline": false,
+          "tpl": "value is ${value|percent}"
+        },
+        {
+          "type": "tpl",
+          "inline": false,
+          "tpl": "value is ${value|percent:2}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-data-mapping-17",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据映射",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据映射 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "text": "这是一段非常长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长的文字"
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "text is ${text|truncate:10}"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-data-mapping-18",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据映射",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据映射 #19",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "value": ""
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "value is ${value|default:-}"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-data-mapping-19",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据映射",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据映射 #20",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
         "array": [
           "a",
           "b",
@@ -2252,7 +1606,7 @@ window.VAMIS_COMPARE_CASES = [
       },
       "body": {
         "type": "tpl",
-        "tpl": "array is ${array|join:''}"
+        "tpl": "first element is ${array|first}"
       }
     },
     "measure": {
@@ -2260,548 +1614,28 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-data-mapping-17",
+    "id": "src-concepts-data-mapping-20",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "数据映射",
     "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #18",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "row": {
-          "a": "A",
-          "b": "B",
-          "c": "C"
-        }
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "row is: ${row|objectToArray|json}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-18",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #19",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "row": {
-          "a": "A",
-          "b": "B",
-          "c": "C"
-        }
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "row is: ${row|objectToArray:key:val|json}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-19",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #20",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "xxx": 10,
-        "yyy": 2
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "${xxx|plus:yyy}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-2",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": {
-          "method": "post",
-          "url": "/api/mock2/form/saveForm",
-          "data": {
-            "userName": "${name}",
-            "userEmail": "${email}"
-          }
-        },
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          },
-          {
-            "name": "email",
-            "type": "input-text",
-            "label": "邮箱："
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-20",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #21",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
-        "time1": 2,
-        "time2": 67,
-        "time3": 1111111
-      },
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "time1 is ${time1|duration}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "time2 is ${time2|duration}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "time3 is ${time3|duration}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-21",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #22",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "bytes1": 2333,
-        "bytes2": 2333333,
-        "bytes3": 2333333333
-      },
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "bytes1 is ${bytes1|bytes}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "bytes2 is ${bytes2|bytes}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "bytes3 is ${bytes3|bytes}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-22",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #23",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "bytes1": 2333,
-        "bytes2": 2333333,
-        "bytes3": 2333333333
-      },
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "bytes1 is ${bytes1|bytes:1024}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "bytes2 is ${bytes2|bytes:1024}"
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "tpl",
-          "tpl": "bytes3 is ${bytes3|bytes:1024}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-23",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #24",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "text": "World"
+        "array": [
+          "a",
+          "b",
+          "c"
+        ]
       },
       "body": {
         "type": "tpl",
-        "tpl": "Hello ${text|substring:0:2}"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-24",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #25",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "mode": "horizontal",
-        "api": {
-          "method": "post",
-          "url": "/api/mock2/form/saveForm",
-          "data": {
-            "test": "${combo2|pick:text|map:toInt|map:date:LLL:x}"
-          }
-        },
-        "body": [
-          {
-            "type": "combo",
-            "name": "combo2",
-            "label": "Combo 多选展示",
-            "multiple": true,
-            "value": [
-              {
-                "text": "1586865590000"
-              },
-              {
-                "text": "2696865590000"
-              }
-            ],
-            "items": [
-              {
-                "name": "text",
-                "type": "text"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-3",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "data": {
-          "a": "1",
-          "b": "2",
-          "c": {
-            "e": "3",
-            "f": "4",
-            "g": "5"
-          }
-        },
-        "api": {
-          "url": "/api/mock2/form/saveForm",
-          "method": "post",
-          "data": {
-            "name": "${name}",
-            "email": "${email}",
-            "e": "${c.e}",
-            "f": "${c.f}",
-            "g": "${c.g}"
-          }
-        },
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          },
-          {
-            "name": "email",
-            "type": "input-text",
-            "label": "邮箱："
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-4",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "data": {
-          "a": "1",
-          "b": "2",
-          "c": {
-            "e": "3",
-            "f": "4",
-            "g": "5"
-          }
-        },
-        "api": {
-          "url": "/api/mock2/form/saveForm",
-          "method": "post",
-          "data": {
-            "name": "${name}",
-            "email": "${email}",
-            "&": "${c}"
-          }
-        },
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          },
-          {
-            "name": "email",
-            "type": "input-text",
-            "label": "邮箱："
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-5",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": {
-          "method": "post",
-          "url": "/api/mock2/form/saveForm",
-          "data": {
-            "items": {
-              "$table": {
-                "a": "${a}",
-                "c": "${c}"
-              }
-            }
-          }
-        },
-        "body": [
-          {
-            "type": "input-table",
-            "name": "table",
-            "label": "table",
-            "columns": [
-              {
-                "label": "A",
-                "name": "a"
-              },
-              {
-                "label": "B",
-                "name": "b"
-              },
-              {
-                "label": "C",
-                "name": "c"
-              }
-            ],
-            "value": [
-              {
-                "a": "a1",
-                "b": "b1",
-                "c": "c1"
-              },
-              {
-                "a": "a2",
-                "b": "b2",
-                "c": "c2"
-              },
-              {
-                "a": "a3",
-                "b": "b3",
-                "c": "c3"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-6",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": "当前页面标题为：<span class='label label-info'>${window:document[title]}</span>"
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-data-mapping-9",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "数据映射",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "数据映射 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "info": "{\"name\": \"rick\", \"company\": \"baidu\"}"
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "my info is ${info|toJson}"
+        "tpl": "${array|first|default:-}"
       }
     },
     "measure": {
@@ -3088,142 +1922,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-expression-0",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "表达式",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "表达式 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "a": 1,
-        "key": "y",
-        "obj": {
-          "x": 2,
-          "y": 3
-        },
-        "arr": [
-          1,
-          2,
-          3
-        ]
-      },
-      "body": [
-        "a is ${a} <br />",
-        "a + 1 is ${a + 1} <br />",
-        "obj.x is ${obj.x} <br />",
-        "obj['x'] is ${obj['x']} <br />",
-        "obj[key] is ${obj[key]} <br />",
-        "arr[0] is ${arr[0]} <br />",
-        "arr[a] is ${arr[a]} <br />",
-        "arr[a + 1] is ${arr[a + 1]} <br />"
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-expression-1",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "表达式",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "表达式 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "a": "",
-        "语文成绩": 81
-      },
-      "body": [
-        "1, 2, 3, 4 的平均数位 ${ AVG(1, 2, 3, 4)}",
-        "当前成绩：${IF(语文成绩 > 80, '优秀', '继续努力')}"
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-expression-2",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "表达式",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "表达式 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": [
-        {
-          "type": "form",
-          "wrapWithPanel": false,
-          "data": {
-            "val": 3.5
-          },
-          "body": [
-            {
-              "type": "static",
-              "label": "IF(true, 2, 3)",
-              "tpl": "${IF(true, 2, 3)}"
-            },
-            {
-              "type": "static",
-              "label": "MAX(1, -1, 2, 3, 5, -9)",
-              "tpl": "${MAX(1, -1, 2, 3, 5, -9)}"
-            },
-            {
-              "type": "static",
-              "label": "ROUND(3.5)",
-              "tpl": "${ROUND(3.5)}"
-            },
-            {
-              "type": "static",
-              "label": "ROUND(val)",
-              "tpl": "${ROUND(val)}"
-            },
-            {
-              "type": "static",
-              "label": "AVG(4, 6, 10, 10, 10)",
-              "tpl": "${AVG(4, 6, 10, 10, 10)}"
-            },
-            {
-              "type": "static",
-              "label": "UPPERMONEY(7682.01)",
-              "tpl": "${UPPERMONEY(7682.01)}"
-            },
-            {
-              "type": "static",
-              "label": "TIMESTAMP(DATE(2021, 11, 21, 0, 0, 0), 'x')",
-              "tpl": "${TIMESTAMP(DATE(2021, 11, 21, 0, 0, 0), 'x')}"
-            },
-            {
-              "type": "static",
-              "label": "DATETOSTR(NOW(), 'YYYY-MM-DD')",
-              "tpl": "${DATETOSTR(NOW(), 'YYYY-MM-DD')}"
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "src-concepts-linkage-0",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -3320,71 +2018,6 @@ window.VAMIS_COMPARE_CASES = [
             "size": "sm",
             "source": "/api/mock2/options/level2?a=${a}",
             "description": "切换「选项1」会重新拉取「选项2」的 source"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-linkage-10",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "联动 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "crud",
-        "api": "/api/mock2/sample",
-        "headerToolbar": [],
-        "columns": [
-          {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "type": "service",
-            "name": "my-servce-${id}",
-            "api": "/api/mock2/sample/${id}",
-            "label": "Service",
-            "body": {
-              "type": "tpl",
-              "tpl": "${browser}"
-            }
-          },
-          {
-            "type": "operation",
-            "label": "操作",
-            "buttons": [
-              {
-                "type": "button",
-                "label": "编辑",
-                "actionType": "dialog",
-                "reload": "my-servce-${id}",
-                "dialog": {
-                  "title": "编辑",
-                  "body": {
-                    "type": "form",
-                    "api": "/api/mock2/sample/${id}",
-                    "body": [
-                      {
-                        "type": "input-text",
-                        "name": "browser",
-                        "label": "Browser"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
           }
         ]
       }
@@ -3908,399 +2541,65 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-linkage-1",
+    "id": "src-concepts-linkage-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "联动",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #2",
+    "title": "联动 #11",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "title": "",
-        "type": "form",
-        "mode": "horizontal",
-        "body": [
+        "type": "crud",
+        "api": "/api/mock2/sample",
+        "headerToolbar": [],
+        "columns": [
           {
-            "label": "选项1",
-            "type": "radios",
-            "name": "a",
-            "inline": true,
-            "options": [
-              {
-                "label": "选项A",
-                "value": 1
-              },
-              {
-                "label": "选项B",
-                "value": 2
-              },
-              {
-                "label": "选项C",
-                "value": 3
-              }
-            ]
+            "name": "id",
+            "label": "ID"
           },
           {
-            "label": "选项2",
-            "type": "select",
-            "size": "sm",
-            "name": "b",
-            "source": "/api/mock2/options/level2?a=${a}",
-            "description": "切换<code>选项1</code>的值，会触发<code>选项2</code>的<code>source</code> 接口重新拉取"
-          }
-        ],
-        "actions": []
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-2",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "title": "",
-        "type": "form",
-        "mode": "horizontal",
-        "body": [
-          {
-            "label": "选项1",
-            "type": "radios",
-            "name": "a",
-            "inline": true,
-            "options": [
-              {
-                "label": "选项A",
-                "value": 1
-              },
-              {
-                "label": "选项B",
-                "value": 2
-              },
-              {
-                "label": "选项C",
-                "value": 3
-              }
-            ]
-          },
-          {
-            "label": "选项2",
-            "type": "select",
-            "size": "sm",
-            "name": "b",
-            "source": {
-              "method": "get",
-              "url": "/api/mock2/options/level2?a=${a}",
-              "sendOn": "this.a === 2"
-            },
-            "description": "只有<code>选项1</code>选择<code>B</code>的时候，才触发<code>选项2</code>的<code>source</code>接口重新拉取"
-          }
-        ],
-        "actions": []
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-3",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "name": "my_form",
-        "body": [
-          {
-            "type": "input-text",
-            "name": "keyword",
-            "addOn": {
-              "label": "搜索",
-              "type": "button",
-              "actionType": "reload",
-              "target": "my_form.select"
+            "type": "service",
+            "name": "my-servce-${id}",
+            "api": "/api/mock2/sample/${id}",
+            "label": "Service",
+            "body": {
+              "type": "tpl",
+              "tpl": "${browser}"
             }
           },
           {
-            "type": "select",
-            "name": "select",
-            "label": "Select",
-            "source": {
-              "method": "get",
-              "url": "/api/mock2/form/getOptions?waitSeconds=1",
-              "data": {
-                "a": "${keyword}"
+            "type": "operation",
+            "label": "操作",
+            "buttons": [
+              {
+                "type": "button",
+                "label": "编辑",
+                "actionType": "dialog",
+                "reload": "my-servce-${id}",
+                "dialog": {
+                  "title": "编辑",
+                  "body": {
+                    "type": "form",
+                    "api": "/api/mock2/sample/${id}",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "browser",
+                        "label": "Browser"
+                      }
+                    ]
+                  }
+                }
               }
-            }
+            ]
           }
         ]
       }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-4",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "title": "查询用户 ID",
-        "body": [
-          {
-            "type": "input-group",
-            "name": "input-group",
-            "body": [
-              {
-                "type": "input-text",
-                "name": "name",
-                "label": "姓名"
-              },
-              {
-                "type": "submit",
-                "label": "查询",
-                "level": "primary"
-              }
-            ]
-          },
-          {
-            "type": "static",
-            "name": "id",
-            "visibleOn": "typeof data.id !== 'undefined'",
-            "label": "返回 ID"
-          }
-        ],
-        "actions": []
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-5",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": [
-        {
-          "title": "查询条件",
-          "type": "form",
-          "body": [
-            {
-              "type": "input-text",
-              "name": "keywords",
-              "label": "关键字："
-            }
-          ],
-          "submitText": "搜索"
-        },
-        {
-          "type": "crud",
-          "api": "/api/mock2/sample",
-          "columns": [
-            {
-              "name": "id",
-              "label": "ID"
-            },
-            {
-              "name": "engine",
-              "label": "Rendering engine"
-            },
-            {
-              "name": "browser",
-              "label": "Browser"
-            },
-            {
-              "name": "platform",
-              "label": "Platform(s)"
-            },
-            {
-              "name": "version",
-              "label": "Engine version"
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-6",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": [
-        {
-          "title": "查询条件",
-          "type": "form",
-          "target": "my_crud",
-          "body": [
-            {
-              "type": "input-text",
-              "name": "keywords",
-              "label": "关键字："
-            }
-          ],
-          "submitText": "搜索"
-        },
-        {
-          "type": "crud",
-          "name": "my_crud",
-          "api": "/api/mock2/sample",
-          "columns": [
-            {
-              "name": "id",
-              "label": "ID"
-            },
-            {
-              "name": "engine",
-              "label": "Rendering engine"
-            },
-            {
-              "name": "browser",
-              "label": "Browser"
-            },
-            {
-              "name": "platform",
-              "label": "Platform(s)"
-            },
-            {
-              "name": "version",
-              "label": "Engine version"
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "zh-CN-concepts-linkage-7",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "联动",
-    "extra": false,
-    "origin": "amis",
-    "layer": "docs",
-    "title": "联动 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": [
-        {
-          "type": "form",
-          "title": "form1",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "label": "Name",
-              "type": "input-text",
-              "name": "name"
-            },
-            {
-              "label": "Email",
-              "type": "input-text",
-              "name": "email"
-            },
-            {
-              "label": "Company",
-              "type": "input-text",
-              "name": "company"
-            }
-          ],
-          "actions": [
-            {
-              "type": "action",
-              "actionType": "reload",
-              "label": "发送到 form2",
-              "target": "form2?name=${name}&email=${email}"
-            }
-          ]
-        },
-        {
-          "type": "form",
-          "title": "form2",
-          "name": "form2",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "label": "MyName",
-              "type": "input-text",
-              "name": "name"
-            },
-            {
-              "label": "MyEmail",
-              "type": "input-text",
-              "name": "email"
-            },
-            {
-              "label": "Company",
-              "type": "input-text",
-              "name": "company"
-            }
-          ]
-        }
-      ]
     },
     "measure": {
       "type": "smoke"
@@ -4389,100 +2688,6 @@ window.VAMIS_COMPARE_CASES = [
                 "args": {
                   "msgType": "info",
                   "msg": "派发点击事件"
-                }
-              }
-            ]
-          }
-        }
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-event-action-10",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "事件动作",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "事件动作 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "data": {
-          "ok": false
-        },
-        "body": [
-          {
-            "type": "switch",
-            "name": "ok",
-            "label": "允许提示"
-          },
-          {
-            "type": "button",
-            "label": "尝试提示",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "toast",
-                    "expression": "${ok}",
-                    "args": {
-                      "msg": "开关打开才会看到"
-                    }
-                  },
-                  {
-                    "actionType": "toast",
-                    "args": {
-                      "msg": "这条总会弹出"
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-concepts-event-action-11",
-    "group": "文档 / 概念",
-    "bucket": "docs",
-    "section": "概念",
-    "page": "事件动作",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "事件动作 #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "等一秒再提示",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "wait",
-                "args": {
-                  "timeMs": 1000
-                }
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "1 秒到了"
                 }
               }
             ]
@@ -4860,133 +3065,94 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "zh-CN-concepts-event-action-0",
+    "id": "src-concepts-event-action-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "事件动作",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "事件动作 #1",
+    "title": "事件动作 #11",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "尝试点击、鼠标移入/移出",
-          "level": "primary",
-          "onEvent": {
-            "click": {
-              "actions": [
-                {
-                  "actionType": "toast",
-                  "args": {
-                    "msgType": "info",
-                    "msg": "派发点击事件"
+      "body": {
+        "type": "form",
+        "data": {
+          "ok": false
+        },
+        "body": [
+          {
+            "type": "switch",
+            "name": "ok",
+            "label": "允许提示"
+          },
+          {
+            "type": "button",
+            "label": "尝试提示",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "expression": "${ok}",
+                    "args": {
+                      "msg": "开关打开才会看到"
+                    }
+                  },
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "这条总会弹出"
+                    }
                   }
-                }
-              ]
-            },
-            "mouseenter": {
-              "actions": [
-                {
-                  "actionType": "toast",
-                  "args": {
-                    "msgType": "info",
-                    "msg": "派发鼠标移入事件"
-                  }
-                }
-              ]
-            },
-            "mouseleave": {
-              "actions": [
-                {
-                  "actionType": "toast",
-                  "args": {
-                    "msgType": "info",
-                    "msg": "派发鼠标移出事件"
-                  }
-                }
-              ]
+                ]
+              }
             }
           }
-        }
-      ]
+        ]
+      }
     },
     "measure": {
       "type": "smoke"
     }
   },
   {
-    "id": "zh-CN-concepts-event-action-1",
+    "id": "src-concepts-event-action-11",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
     "page": "事件动作",
     "extra": false,
-    "origin": "amis",
+    "origin": "vamis",
     "layer": "docs",
-    "title": "事件动作 #2",
+    "title": "事件动作 #12",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "刷新Service数据",
-          "level": "primary",
-          "className": "mb-2",
-          "onEvent": {
-            "click": {
-              "actions": [
-                {
-                  "componentId": "service_reload",
-                  "actionType": "reload",
-                  "outputVar": "service1"
-                },
-                {
-                  "actionType": "toast",
-                  "args": {
-                    "msgType": "info",
-                    "msg": "service 的数据返回为： ${service1|json}"
-                  }
-                },
-                {
-                  "componentId": "service_reload2",
-                  "actionType": "reload",
-                  "data": {
-                    "date": "${service1.date}"
-                  }
+      "body": {
+        "type": "button",
+        "label": "等一秒再提示",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "wait",
+                "args": {
+                  "timeMs": 1000
                 }
-              ]
-            }
+              },
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "1 秒到了"
+                }
+              }
+            ]
           }
-        },
-        {
-          "type": "service",
-          "api": {
-            "method": "get",
-            "url": "/api/mock2/form/initData",
-            "trackExpression": "none"
-          },
-          "body": [],
-          "initFetch": false,
-          "id": "service_reload"
-        },
-        {
-          "type": "service",
-          "api": {
-            "method": "get",
-            "url": "/api/mock2/form/initData?date=${date}",
-            "trackExpression": "none"
-          },
-          "body": [],
-          "initFetch": false,
-          "id": "service_reload2"
         }
-      ]
+      }
     },
     "measure": {
       "type": "smoke"
@@ -5125,7 +3291,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #2",
+    "title": "样式 #1",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5164,7 +3330,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #3",
+    "title": "样式 #2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5202,7 +3368,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #4",
+    "title": "样式 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5243,7 +3409,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #5",
+    "title": "样式 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5320,100 +3486,6 @@ window.VAMIS_COMPARE_CASES = [
           "data": {
             "&": "$$"
           }
-        },
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          },
-          {
-            "name": "email",
-            "type": "input-email",
-            "label": "邮箱："
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-types-api-10",
-    "group": "文档 / 类型",
-    "bucket": "docs",
-    "section": "类型",
-    "page": "API",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "API #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "mode": "horizontal",
-        "body": [
-          {
-            "label": "选项1",
-            "type": "radios",
-            "name": "a",
-            "inline": true,
-            "options": [
-              {
-                "label": "选项A",
-                "value": 1
-              },
-              {
-                "label": "选项B",
-                "value": 2
-              },
-              {
-                "label": "选项C",
-                "value": 3
-              }
-            ]
-          },
-          {
-            "label": "选项2",
-            "type": "select",
-            "name": "b",
-            "source": {
-              "method": "get",
-              "url": "/api/mock2/options/level2?a=${a}",
-              "trackExpression": "${a}"
-            },
-            "description": "切换选项1 会重新拉选项2"
-          }
-        ],
-        "actions": []
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-types-api-11",
-    "group": "文档 / 类型",
-    "bucket": "docs",
-    "section": "类型",
-    "page": "API",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "API #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": {
-          "method": "post",
-          "url": "/api/mock2/form/saveForm",
-          "graphql": "mutation AddUser($name: String, $email: String) { insert_user(object: { name: $name, email: $email }) { name email } }"
         },
         "body": [
           {
@@ -5783,6 +3855,100 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-types-api-10",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "API",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "API #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "body": [
+          {
+            "label": "选项1",
+            "type": "radios",
+            "name": "a",
+            "inline": true,
+            "options": [
+              {
+                "label": "选项A",
+                "value": 1
+              },
+              {
+                "label": "选项B",
+                "value": 2
+              },
+              {
+                "label": "选项C",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "label": "选项2",
+            "type": "select",
+            "name": "b",
+            "source": {
+              "method": "get",
+              "url": "/api/mock2/options/level2?a=${a}",
+              "trackExpression": "${a}"
+            },
+            "description": "切换选项1 会重新拉选项2"
+          }
+        ],
+        "actions": []
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-api-11",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "API",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "API #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": {
+          "method": "post",
+          "url": "/api/mock2/form/saveForm",
+          "graphql": "mutation AddUser($name: String, $email: String) { insert_user(object: { name: $name, email: $email }) { name email } }"
+        },
+        "body": [
+          {
+            "type": "input-text",
+            "name": "name",
+            "label": "姓名："
+          },
+          {
+            "name": "email",
+            "type": "input-email",
+            "label": "邮箱："
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
     "id": "src-types-classname-0",
     "group": "文档 / 类型",
     "bucket": "docs",
@@ -5944,6 +4110,242 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "tpl": "URL word=${word|default:'(无)'}。地址栏加上 ?word=myquery 后刷新即可看到。"
       }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "name",
+            "label": "姓名："
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "aside": [
+        {
+          "type": "tpl",
+          "tpl": "这是侧边栏部分"
+        }
+      ],
+      "toolbar": [
+        {
+          "type": "tpl",
+          "tpl": "这是工具栏部分"
+        }
+      ],
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "这是内容区"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "initApi": "/api/mock2/page/initData",
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "当前时间是：${date}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "initApi": "/api/mock2/page/initData",
+      "interval": 3000,
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "当前时间是：${date}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-6",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "initApi": "/api/mock2/page/initData",
+      "stopAutoRefreshWhen": "this.time % 5",
+      "interval": 3000,
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "当前时间戳是：${date}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-7",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "cssVars": {
+        "--text-color": "#108cee"
+      },
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本框",
+            "name": "text"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-8",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "css": {
+        ".myClass": {
+          "color": "blue"
+        }
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "文本",
+        "className": "myClass"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-page-9",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Page 页面",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Page 页面 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "asideResizor": true,
+      "asideMinWidth": 150,
+      "asideMaxWidth": 400,
+      "aside": [
+        {
+          "type": "tpl",
+          "tpl": "这是侧边栏部分"
+        }
+      ],
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "这是内容区"
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -6201,242 +4603,6 @@ window.VAMIS_COMPARE_CASES = [
         {
           "type": "tpl",
           "tpl": "标题：${title|default:'-'} 当前时间是：${date}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名："
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-3",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "aside": [
-        {
-          "type": "tpl",
-          "tpl": "这是侧边栏部分"
-        }
-      ],
-      "toolbar": [
-        {
-          "type": "tpl",
-          "tpl": "这是工具栏部分"
-        }
-      ],
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "这是内容区"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-4",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "initApi": "/api/mock2/page/initData",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "当前时间是：${date}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-5",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "initApi": "/api/mock2/page/initData",
-      "interval": 3000,
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "当前时间是：${date}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-6",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "initApi": "/api/mock2/page/initData",
-      "stopAutoRefreshWhen": "this.time % 5",
-      "interval": 3000,
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "当前时间戳是：${date}"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-7",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "cssVars": {
-        "--text-color": "#108cee"
-      },
-      "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "body": [
-          {
-            "type": "input-text",
-            "label": "文本框",
-            "name": "text"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-8",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "css": {
-        ".myClass": {
-          "color": "blue"
-        }
-      },
-      "body": {
-        "type": "tpl",
-        "tpl": "文本",
-        "className": "myClass"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-page-9",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Page 页面",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Page 页面 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "asideResizor": true,
-      "asideMinWidth": 150,
-      "asideMaxWidth": 400,
-      "aside": [
-        {
-          "type": "tpl",
-          "tpl": "这是侧边栏部分"
-        }
-      ],
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "这是内容区"
         }
       ]
     },
@@ -6805,54 +4971,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-grid-2d-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Grid 2D 布局",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Grid 2D 布局 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "grid-2d",
-      "body": [
-        {
-          "type": "grid-2d"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-hbox-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "HBox 布局",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "HBox 布局 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "hbox",
-      "body": [
-        {
-          "type": "hbox"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-pagination-0",
     "group": "组件 / 布局",
     "bucket": "components",
@@ -6869,54 +4987,6 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "pagination"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-pagination-wrapper-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "PaginationWrapper 分页容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PaginationWrapper 分页容器 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "pagination-wrapper",
-      "body": [
-        {
-          "type": "pagination-wrapper"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-panel-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Panel 面板",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Panel 面板 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "panel",
-      "body": [
-        {
-          "type": "panel"
         }
       ]
     },
@@ -6969,78 +5039,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-wrapper-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Wrapper 包裹容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wrapper 包裹容器 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "wrapper",
-      "body": [
-        {
-          "type": "wrapper"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-portlet-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Portlet 门户栏目",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Portlet 门户栏目 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "portlet",
-      "body": [
-        {
-          "type": "portlet"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-switch-container-0",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "switch-container",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "switch-container #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "switch-container",
-      "body": [
-        {
-          "type": "switch-container"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-action-0",
     "group": "组件 / 功能",
     "bucket": "components",
@@ -7062,27 +5060,6 @@ window.VAMIS_COMPARE_CASES = [
           "msg": "Action 已点击"
         }
       ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-app-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "App 多页应用",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "App 多页应用 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "app"
-      }
     },
     "measure": {
       "type": "tree"
@@ -7184,30 +5161,6 @@ window.VAMIS_COMPARE_CASES = [
     ]
   },
   {
-    "id": "src-components-button-group-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "ButtonGroup 按钮组",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "ButtonGroup 按钮组 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "button-group",
-      "body": [
-        {
-          "type": "button-group"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-breadcrumb-0",
     "group": "组件 / 功能",
     "bucket": "components",
@@ -7224,54 +5177,6 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "breadcrumb"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-custom-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Custom 自定义组件",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Custom 自定义组件 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "custom",
-      "body": [
-        {
-          "type": "custom"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dropdown-button-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "DropDownButton 下拉按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "DropDownButton 下拉按钮 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "dropdown-button",
-      "body": [
-        {
-          "type": "dropdown-button"
         }
       ]
     },
@@ -7338,54 +5243,6 @@ window.VAMIS_COMPARE_CASES = [
               "to": "/devices"
             }
           ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-anchor-nav-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "AnchorNav 锚点导航",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "AnchorNav 锚点导航 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "anchor-nav",
-      "body": [
-        {
-          "type": "anchor-nav"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tooltip-0",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "TooltipWrapper 文字提示容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "tooltip-wrapper",
-      "body": [
-        {
-          "type": "tooltip-wrapper"
         }
       ]
     },
@@ -7468,6 +5325,34 @@ window.VAMIS_COMPARE_CASES = [
                 "value": "offline"
               }
             ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "form-default",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Form 表单",
+    "extra": false,
+    "origin": "p0",
+    "layer": "p0",
+    "title": "默认 Form",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "name",
+            "label": "姓名"
           }
         ]
       }
@@ -7698,34 +5583,6 @@ window.VAMIS_COMPARE_CASES = [
                 ]
               }
             }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "form-default",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Form 表单",
-    "extra": false,
-    "origin": "p0",
-    "layer": "p0",
-    "title": "默认 Form",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名"
           }
         ]
       }
@@ -8537,37 +6394,6 @@ window.VAMIS_COMPARE_CASES = [
             "name": "diff",
             "label": "Diff-Editor",
             "diffValue": "hello world",
-            "value": "hello"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-diff-editor-1",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "DiffEditor 对比编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "DiffEditor 对比编辑器 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "diff-editor",
-            "name": "diff",
-            "label": "Diff-Editor",
-            "diffValue": "hello world",
             "value": "hello",
             "disabledOn": "this.isDisabled"
           },
@@ -8575,328 +6401,6 @@ window.VAMIS_COMPARE_CASES = [
             "type": "switch",
             "name": "isDisabled",
             "label": "是否禁用"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-diff-editor-2",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "DiffEditor 对比编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "DiffEditor 对比编辑器 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "data": {
-          "value1": "hello world",
-          "value2": "hello wrold"
-        },
-        "body": [
-          {
-            "type": "diff-editor",
-            "name": "value2",
-            "label": "Diff-Editor",
-            "diffValue": "${value1}"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-0",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "编辑器",
-            "value": "function hello() {\n  console.log('hello world')\n}\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-1",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "编辑器",
-            "placeholder": "function hello() {\n  console.log('hello world')\n}\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-2",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "json-editor",
-            "name": "editor",
-            "label": "JSON 编辑器",
-            "value": "{\n  \"hello\": \"vamis\"\n}\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-3",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "json-editor",
-            "name": "editor",
-            "disabled": true,
-            "label": "JSON 编辑器",
-            "value": "{\n  \"hello\": \"vamis\"\n}\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-4",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "支持全屏",
-            "allowFullscreen": true
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-5",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "无按钮区",
-            "hideButtons": true,
-            "value": "function hello() {\n  console.log('hello world')\n}\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-6",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "body": [
-          {
-            "type": "yaml-editor",
-            "name": "schema",
-            "label": "Schema",
-            "hideButtons": true,
-            "intellisense": "schema",
-            "size": "lg",
-            "value": "type: page\nbody:\n  - type: tpl\n    tpl: Hello\n"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-7",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "api": "/api/mock2/form/saveForm",
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "编辑器",
-            "options": {
-              "lineNumbers": "off"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "components-form-editor-8",
-    "group": "组件 / 数据输入",
-    "bucket": "components",
-    "section": "数据输入",
-    "page": "Editor 代码编辑器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Editor 代码编辑器 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "debug": true,
-        "body": [
-          {
-            "type": "editor",
-            "name": "editor",
-            "label": "编辑器",
-            "onEvent": {
-              "change": {
-                "actions": [
-                  {
-                    "actionType": "toast",
-                    "args": {
-                      "msgType": "info",
-                      "msg": "change ${event.data.editor}"
-                    }
-                  }
-                ]
-              }
-            }
           }
         ]
       }
@@ -10842,30 +8346,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table2-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table2 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table2 表格 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "table2",
-      "body": [
-        {
-          "type": "table2"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-table-view-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -10938,42 +8418,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-cards-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Cards 卡片组",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Cards 卡片组 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "cards",
-      "data": {
-        "items": [
-          {
-            "name": "泵房-A",
-            "status": "online"
-          },
-          {
-            "name": "闸门-B",
-            "status": "offline"
-          }
-        ]
-      },
-      "body": [
-        {
-          "type": "cards"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-carousel-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -10992,131 +8436,6 @@ window.VAMIS_COMPARE_CASES = [
           "type": "carousel"
         }
       ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-chart-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Chart 图表",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Chart 图表 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "chart",
-      "body": [
-        {
-          "type": "chart",
-          "api": "/api/mock2/chart/chart1"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-code-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Code 代码高亮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Code 代码高亮 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "lang": "javascript"
-      },
-      "body": {
-        "type": "code",
-        "language": "${lang}",
-        "value": "function hello() {\n  console.log('vamis');\n}\n"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-code-1",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Code 代码高亮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Code 代码高亮 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "sourcecode": "<div>html</div>"
-      },
-      "body": {
-        "type": "code",
-        "language": "html",
-        "name": "sourcecode"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-code-2",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Code 代码高亮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Code 代码高亮 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "code",
-        "customLang": {
-          "name": "myLog",
-          "tokens": [
-            {
-              "name": "custom-error",
-              "regex": "\\[error.*",
-              "color": "#ff0000",
-              "fontStyle": "bold"
-            },
-            {
-              "name": "custom-notice",
-              "regex": "\\[notice.*",
-              "color": "#FFA500"
-            },
-            {
-              "name": "custom-info",
-              "regex": "\\[info.*",
-              "color": "#808080"
-            },
-            {
-              "name": "custom-date",
-              "regex": "\\[[a-zA-Z 0-9:]+\\]",
-              "color": "#008800"
-            }
-          ]
-        },
-        "value": "[Sun Mar 7 16:02:00 2021] [notice] Apache/1.3.29 (Unix) configured -- resuming normal operations\n[Sun Mar 7 16:02:00 2021] [info] Server built: Feb 27 2021 13:56:37\n[Sun Mar 7 16:02:00 2021] [notice] Accept mutex: sysvsem (Default: sysvsem)\n[Sun Mar 7 17:21:44 2021] [info] [client xx.xx.xx.xx] (104)Connection reset by peer: client stopped connection\n[Sun Mar 7 17:23:53 2021] statistics: Use of uninitialized value in concatenation (.) or string at /home/httpd line 528.\n[Sun Mar 7 17:27:37 2021] [error] [client xx.xx.xx.xx] File does not exist: /home/httpd/twiki/view/Main/WebHome\n"
-      }
     },
     "measure": {
       "type": "tree"
@@ -11255,30 +8574,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-iframe-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "iFrame",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "iFrame #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "iframe",
-      "body": [
-        {
-          "type": "iframe"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-image-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -11399,66 +8694,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "List 列表",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "List 列表 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "list",
-      "data": {
-        "items": [
-          {
-            "name": "泵房-A",
-            "status": "online"
-          },
-          {
-            "name": "闸门-B",
-            "status": "offline"
-          }
-        ]
-      },
-      "body": [
-        {
-          "type": "list"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-log-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Log 实时日志",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Log 实时日志 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "log",
-      "body": [
-        {
-          "type": "log"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-mapping-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -11523,78 +8758,6 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "markdown"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-office-viewer-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "OfficeViewer Word",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "OfficeViewer Word #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "office-viewer",
-      "body": [
-        {
-          "type": "office-viewer"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-office-viewer-excel-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "OfficeViewer Excel",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "OfficeViewer Excel #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "office-viewer-excel",
-      "body": [
-        {
-          "type": "office-viewer-excel"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-pdf-viewer-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "PDFViewer",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PDFViewer #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "pdf-viewer",
-      "body": [
-        {
-          "type": "pdf-viewer"
         }
       ]
     },
@@ -11868,30 +9031,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-video-0",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Video 视频",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Video 视频 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "video",
-      "body": [
-        {
-          "type": "video"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-timeline-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -12149,30 +9288,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-audio-0",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Audio 音频",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Audio 音频 #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "audio",
-      "body": [
-        {
-          "type": "audio"
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
     "id": "src-components-tasks-0",
     "group": "组件 / 其他",
     "bucket": "components",
@@ -12269,30 +9384,6 @@ window.VAMIS_COMPARE_CASES = [
               ]
             }
           ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-web-component-0",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Web Component",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Web Component #1",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "title": "web-component",
-      "body": [
-        {
-          "type": "web-component"
         }
       ]
     },
@@ -12762,75 +9853,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-layout-display-10",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Display",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Display #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"table\">\n  <div class=\"table-row\">\n    <div class=\"table-cell bg-blue-200 p-sm rounded-md\">A</div>\n    <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">B</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-display-11",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Display",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Display #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"table\">\n  <div class=\"table-column-group\">\n    <div class=\"table-column w-24\"></div>\n    <div class=\"table-column w-32\"></div>\n  </div>\n  <div class=\"table-header-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">列1</div>\n      <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">列2</div>\n    </div>\n  </div>\n  <div class=\"table-row-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-blue-200 p-sm rounded-md\">A</div>\n      <div class=\"table-cell bg-blue-200 p-sm rounded-md\">B</div>\n    </div>\n  </div>\n  <div class=\"table-footer-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-green-200 p-sm rounded-md\">脚1</div>\n      <div class=\"table-cell bg-green-200 p-sm rounded-md\">脚2</div>\n    </div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-display-12",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Display",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Display #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"hidden pc:block bg-blue-200 p-sm rounded-md\">pc 可见</div>\n<div class=\"block pc:hidden bg-yellow-200 p-sm rounded-md\">手机可见</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-layout-display-2",
     "group": "样式 / Layout",
     "bucket": "style",
@@ -13008,6 +10030,75 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"flow-root bg-gray-200 p-sm rounded-md\">\n  <div class=\"float-left w-24 h-16 bg-blue-200 p-sm rounded-md\">浮</div>\n  <p>父级有高度，文字绕开左浮。</p>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-display-10",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Display",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Display #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"table\">\n  <div class=\"table-row\">\n    <div class=\"table-cell bg-blue-200 p-sm rounded-md\">A</div>\n    <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">B</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-display-11",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Display",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Display #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"table\">\n  <div class=\"table-column-group\">\n    <div class=\"table-column w-24\"></div>\n    <div class=\"table-column w-32\"></div>\n  </div>\n  <div class=\"table-header-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">列1</div>\n      <div class=\"table-cell bg-yellow-200 p-sm rounded-md\">列2</div>\n    </div>\n  </div>\n  <div class=\"table-row-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-blue-200 p-sm rounded-md\">A</div>\n      <div class=\"table-cell bg-blue-200 p-sm rounded-md\">B</div>\n    </div>\n  </div>\n  <div class=\"table-footer-group\">\n    <div class=\"table-row\">\n      <div class=\"table-cell bg-green-200 p-sm rounded-md\">脚1</div>\n      <div class=\"table-cell bg-green-200 p-sm rounded-md\">脚2</div>\n    </div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-display-12",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Display",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Display #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"hidden pc:block bg-blue-200 p-sm rounded-md\">pc 可见</div>\n<div class=\"block pc:hidden bg-yellow-200 p-sm rounded-md\">手机可见</div>\n"
       }
     },
     "measure": {
@@ -13314,121 +10405,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-layout-overflow-10",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Overflow",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Overflow #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"overflow-x-scroll h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-8 bg-blue-200 p-sm rounded-md\">overflow-x-scroll</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-overflow-11",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Overflow",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Overflow #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"overflow-y-scroll h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-24 h-32 bg-blue-200 p-sm rounded-md\">overflow-y-scroll</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-overflow-12",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Overflow",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Overflow #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"overflow-x-auto overflow-y-hidden h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">横滚竖裁</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-overflow-13",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Overflow",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Overflow #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"overflow-x-hidden overflow-y-auto h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">横裁竖滚</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-overflow-14",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Overflow",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Overflow #15",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"overflow-visible pc:overflow-hidden h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">pc 裁掉</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-layout-overflow-2",
     "group": "样式 / Layout",
     "bucket": "style",
@@ -13606,6 +10582,121 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"h-40\">\n  <div class=\"overflow-y-visible h-16 w-48 bg-gray-200 p-sm rounded-md\">\n    <div class=\"w-24 h-32 bg-blue-200 p-sm rounded-md\">overflow-y-visible</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-overflow-10",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Overflow",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Overflow #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"overflow-x-scroll h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-8 bg-blue-200 p-sm rounded-md\">overflow-x-scroll</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-overflow-11",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Overflow",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Overflow #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"overflow-y-scroll h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-24 h-32 bg-blue-200 p-sm rounded-md\">overflow-y-scroll</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-overflow-12",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Overflow",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Overflow #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"overflow-x-auto overflow-y-hidden h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">横滚竖裁</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-overflow-13",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Overflow",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Overflow #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"overflow-x-hidden overflow-y-auto h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">横裁竖滚</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-overflow-14",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Overflow",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Overflow #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"overflow-visible pc:overflow-hidden h-16 w-48 bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-64 h-24 bg-blue-200 p-sm rounded-md\">pc 裁掉</div>\n</div>\n"
       }
     },
     "measure": {
@@ -13820,52 +10911,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-layout-top-right-bottom-left-10",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Top / Right / Bottom / Left",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Top / Right / Bottom / Left #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"flex flex-wrap gap-4\">\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">顶</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">底</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">满</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左上</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右上</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右下</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左下</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-layout-top-right-bottom-left-11",
-    "group": "样式 / Layout",
-    "bucket": "style",
-    "section": "Layout",
-    "page": "Top / Right / Bottom / Left",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Top / Right / Bottom / Left #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n  <div class=\"absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-layout-top-right-bottom-left-2",
     "group": "样式 / Layout",
     "bucket": "style",
@@ -14043,6 +11088,52 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n  <div class=\"absolute top-1/2 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">top-1/2</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-top-right-bottom-left-10",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Top / Right / Bottom / Left",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Top / Right / Bottom / Left #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"flex flex-wrap gap-4\">\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-x-0 top-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">顶</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-y-0 right-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-x-0 bottom-0 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">底</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-y-0 left-0 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute inset-0 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">满</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute left-0 top-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左上</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute top-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右上</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute bottom-0 right-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">右下</div>\n  </div>\n  <div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n    <div class=\"absolute bottom-0 left-0 h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">左下</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-layout-top-right-bottom-left-11",
+    "group": "样式 / Layout",
+    "bucket": "style",
+    "section": "Layout",
+    "page": "Top / Right / Bottom / Left",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Top / Right / Bottom / Left #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"relative h-32 w-32 bg-gray-200 rounded-md\">\n  <div class=\"absolute m:top-auto m:right-auto m:bottom-0 m:left-0 pc:top-0 pc:right-0 pc:bottom-auto pc:left-auto h-16 w-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
       }
     },
     "measure": {
@@ -17868,98 +14959,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-spacing-padding-10",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Padding",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Padding #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"pb-4 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pb-4</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-padding-11",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Padding",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Padding #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"pl-4 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pl-4</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-padding-12",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Padding",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Padding #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-0 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-0</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-2 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-2</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"px-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">px-4</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"pt-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pt-4</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-4</div>\n    </div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-padding-13",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Padding",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Padding #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"m:p-2 pc:p-8 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-spacing-padding-2",
     "group": "样式 / Spacing",
     "bucket": "style",
@@ -18137,6 +15136,98 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"pr-4 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pr-4</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-padding-10",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Padding",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Padding #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"pb-4 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pb-4</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-padding-11",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Padding",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Padding #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"pl-4 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pl-4</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-padding-12",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Padding",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Padding #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-0 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-0</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-2 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-2</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"px-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">px-4</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"pt-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">pt-4</div>\n    </div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"p-4 bg-yellow-200 rounded-md\">\n      <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">p-4</div>\n    </div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-padding-13",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Padding",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Padding #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"m:p-2 pc:p-8 bg-yellow-200 rounded-md\">\n    <div class=\"w-16 h-16 bg-blue-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n  </div>\n</div>\n"
       }
     },
     "measure": {
@@ -18590,6 +15681,53 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "style-two-buttons-ml",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Margin",
+    "extra": false,
+    "origin": "p0",
+    "layer": "p0",
+    "title": "第二个按钮 className: m-l 拉开缝",
+    "expect": "Amis `.m-l` 为 15px",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "按钮1",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "Hello World!"
+          }
+        },
+        {
+          "type": "button",
+          "label": "按钮2",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "Hello World!"
+          },
+          "className": "m-l"
+        }
+      ]
+    },
+    "measure": {
+      "type": "pair",
+      "labels": [
+        "按钮1",
+        "按钮2"
+      ]
+    },
+    "labels": [
+      "按钮1",
+      "按钮2"
+    ]
+  },
+  {
     "id": "style-spacing-margin-1",
     "group": "样式 / Spacing",
     "bucket": "style",
@@ -18606,98 +15744,6 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n  <div class=\"m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m-4</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-margin-10",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Margin",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Margin #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n  <div class=\"ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">ml-4</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-margin-11",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Margin",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Margin #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"w-80 bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"w-16 h-16 mx-auto bg-yellow-200 flex items-center justify-center text-sm rounded-md\">mx-auto</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-margin-12",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Margin",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Margin #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m-0</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">-m-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">mx-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">ml-4</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-spacing-margin-13",
-    "group": "样式 / Spacing",
-    "bucket": "style",
-    "section": "Spacing",
-    "page": "Margin",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Margin #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n  <div class=\"m:m-2 pc:m-8 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
       }
     },
     "measure": {
@@ -18889,51 +15935,96 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-two-buttons-ml",
+    "id": "style-spacing-margin-10",
     "group": "样式 / Spacing",
     "bucket": "style",
     "section": "Spacing",
     "page": "Margin",
     "extra": false,
-    "origin": "p0",
-    "layer": "p0",
-    "title": "第二个按钮 className: m-l 拉开缝",
-    "expect": "Amis `.m-l` 为 15px",
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Margin #11",
+    "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "按钮1",
-          "actionType": "dialog",
-          "dialog": {
-            "title": "弹框",
-            "body": "Hello World!"
-          }
-        },
-        {
-          "type": "button",
-          "label": "按钮2",
-          "actionType": "dialog",
-          "dialog": {
-            "title": "弹框",
-            "body": "Hello World!"
-          },
-          "className": "m-l"
-        }
-      ]
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n  <div class=\"ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">ml-4</div>\n</div>\n"
+      }
     },
     "measure": {
-      "type": "pair",
-      "labels": [
-        "按钮1",
-        "按钮2"
-      ]
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-margin-11",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Margin",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Margin #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"w-80 bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"w-16 h-16 mx-auto bg-yellow-200 flex items-center justify-center text-sm rounded-md\">mx-auto</div>\n</div>\n"
+      }
     },
-    "labels": [
-      "按钮1",
-      "按钮2"
-    ]
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-margin-12",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Margin",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Margin #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"m-0 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m-0</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"-m-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">-m-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"mx-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">mx-4</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n    <div class=\"ml-4 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">ml-4</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-spacing-margin-13",
+    "group": "样式 / Spacing",
+    "bucket": "style",
+    "section": "Spacing",
+    "page": "Margin",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Margin #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-6 rounded-md shrink-0\">\n  <div class=\"m:m-2 pc:m-8 w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
   },
   {
     "id": "helper-space-x-6",
@@ -19239,98 +16330,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-sizing-width-10",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Width",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Width #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"min-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">min-w-xs</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-width-11",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Width",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Width #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"w-96 max-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-w-xs</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-width-12",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Width",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Width #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">w-16</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">w-32</div>\n  </div>\n  <div class=\"w-80 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">1/2</div>\n  </div>\n  <div class=\"w-80 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">full</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-width-13",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Width",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Width #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"m:w-16 pc:w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-sizing-width-2",
     "group": "样式 / Sizing",
     "bucket": "style",
@@ -19515,6 +16514,98 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "style-sizing-width-10",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Width",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Width #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"min-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">min-w-xs</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-width-11",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Width",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Width #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"w-96 max-w-xs h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-w-xs</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-width-12",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Width",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Width #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"flex flex-wrap gap-4 items-start\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"w-16 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">w-16</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n    <div class=\"w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">w-32</div>\n  </div>\n  <div class=\"w-80 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"w-1/2 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">1/2</div>\n  </div>\n  <div class=\"w-80 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"w-full h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">full</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-width-13",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Width",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Width #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0\">\n  <div class=\"m:w-16 pc:w-32 h-16 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
     "id": "style-sizing-height-0",
     "group": "样式 / Sizing",
     "bucket": "style",
@@ -19554,98 +16645,6 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"h-px w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">h-px</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-height-10",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Height",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Height #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-h-16</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-height-11",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Height",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Height #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"h-32 max-h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">none</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-height-12",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Height",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Height #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"flex flex-wrap gap-4 items-end\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">h-16</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">h-32</div>\n  </div>\n  <div class=\"h-32 w-32 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">1/2</div>\n  </div>\n  <div class=\"h-32 w-32 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md\">full</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-h-16</div>\n  </div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "style-sizing-height-13",
-    "group": "样式 / Sizing",
-    "bucket": "style",
-    "section": "Sizing",
-    "page": "Height",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Height #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"m:h-16 pc:h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
       }
     },
     "measure": {
@@ -19830,6 +16829,98 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"h-32 w-32 bg-gray-200 rounded-md shrink-0\">\n  <div class=\"min-h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md\">min-h-full</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-height-10",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Height",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Height #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-h-16</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-height-11",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Height",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Height #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"h-32 max-h-none w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">none</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-height-12",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Height",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Height #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"flex flex-wrap gap-4 items-end\">\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">h-16</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">h-32</div>\n  </div>\n  <div class=\"h-32 w-32 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"h-1/2 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">1/2</div>\n  </div>\n  <div class=\"h-32 w-32 bg-gray-200 rounded-md shrink-0\">\n    <div class=\"h-full bg-yellow-200 flex items-center justify-center text-sm rounded-md\">full</div>\n  </div>\n  <div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n    <div class=\"h-32 max-h-16 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">max-h-16</div>\n  </div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-sizing-height-13",
+    "group": "样式 / Sizing",
+    "bucket": "style",
+    "section": "Sizing",
+    "page": "Height",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Height #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"inline-flex bg-gray-200 p-sm rounded-md shrink-0 items-end\">\n  <div class=\"m:h-16 pc:h-32 w-32 bg-yellow-200 flex items-center justify-center text-sm rounded-md\">m / pc</div>\n</div>\n"
       }
     },
     "measure": {
@@ -22321,29 +19412,6 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "style-border-border-radius-10",
-    "group": "样式 / BORDERS",
-    "bucket": "style",
-    "section": "BORDERS",
-    "page": "Border Radius",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Border Radius #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<div class=\"bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-16 h-16 bg-yellow-200 m:rounded-none pc:rounded-full flex items-center justify-center text-xs\">m / pc</div>\n</div>\n"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
     "id": "style-border-border-radius-2",
     "group": "样式 / BORDERS",
     "bucket": "style",
@@ -22521,6 +19589,29 @@ window.VAMIS_COMPARE_CASES = [
         "type": "tpl",
         "inline": false,
         "tpl": "<div class=\"bg-gray-200 p-sm rounded-md flex flex-wrap gap-3\">\n  <div class=\"w-16 h-16 bg-yellow-200 rounded-none flex items-center justify-center text-xs\">none</div>\n  <div class=\"w-16 h-16 bg-yellow-200 rounded flex items-center justify-center text-xs\">rounded</div>\n  <div class=\"w-16 h-16 bg-yellow-200 rounded-md flex items-center justify-center text-xs\">md</div>\n  <div class=\"w-16 h-16 bg-yellow-200 rounded-xl flex items-center justify-center text-xs\">xl</div>\n  <div class=\"w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center text-xs\">full</div>\n</div>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "style-border-border-radius-10",
+    "group": "样式 / BORDERS",
+    "bucket": "style",
+    "section": "BORDERS",
+    "page": "Border Radius",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Border Radius #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<div class=\"bg-gray-200 p-sm rounded-md\">\n  <div class=\"w-16 h-16 bg-yellow-200 m:rounded-none pc:rounded-full flex items-center justify-center text-xs\">m / pc</div>\n</div>\n"
       }
     },
     "measure": {

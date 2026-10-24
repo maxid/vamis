@@ -225,7 +225,7 @@ IR 信封            ───────────────────�
 
 `LazyComponent` **不是** schema `type`。它是 `@vamis/core` / `vamis` 导出的 Vue 组件，对齐 `amis-core/LazyComponent`：进视口才渲染默认槽，一旦可见就保持。这一层管挂载时机，不改 schema 字段名。
 
-没有全局「等可见才打 `initApi`」开关。Page / Form 的 `initApi` 仍在组件 `onMounted` 时发出。文档 ` ```schema ` 外包了这一层（placeholder `加载中，请稍后。。。`，对齐 Amis `MdRenderer`），所以示例看起来像滚到才请求：
+没有全局「等可见才打 `initApi`」开关。Page / Form 的 `initApi` 仍在组件 `onMounted` 时发出。文档 schema 代码块外包了这一层（placeholder `加载中，请稍后。。。`，对齐 Amis `MdRenderer`），所以示例看起来像滚到才请求：
 
 ```schema
 {
