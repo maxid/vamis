@@ -52,10 +52,30 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
     '常用：items、source、separator、labelMaxLength、dropdown。',
   ),
   custom: doc('Custom 自定义组件', '功能', '自定义节点。不要在 schema 里写可执行函数。'),
-  'dropdown-button': doc('DropDownButton 下拉按钮', '功能', '点击展开更多按钮。'),
-  service: doc('Service 功能型容器', '功能', '独立数据域，用 api 拉数。schemaApi 可拉子 schema。'),
-  nav: doc('Nav 导航', '功能', '导航链接列表。'),
-  'anchor-nav': doc('AnchorNav 锚点导航', '功能', '页内锚点导航，滚动联动。'),
+  'dropdown-button': doc(
+    'DropDownButton 下拉按钮',
+    '功能',
+    '点击或悬停展开更多按钮。buttons 可分组。',
+    '常用：buttons、trigger、closeOnClick、hideCaret、defaultIsOpened。',
+  ),
+  service: doc(
+    'Service 功能型容器',
+    '功能',
+    '独立数据域。api 拉数；schemaApi 把返回 data 当子 schema。',
+    '常用：api、schemaApi、body、data、initFetch。',
+  ),
+  nav: doc(
+    'Nav 导航',
+    '功能',
+    '链接列表。默认 stacked；source 动态；children 多级。',
+    '常用：links、stacked、source、unfolded。',
+  ),
+  'anchor-nav': doc(
+    'AnchorNav 锚点导航',
+    '功能',
+    '页内锚点。direction 横竖；active 用 href 或索引。',
+    '常用：links、direction、active。',
+  ),
   'tooltip-wrapper': doc('TooltipWrapper 文字提示容器', '功能', '悬停或点击出 tip。'),
 
   form: doc(

@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   SchemaRenderer,
   asArray,
+  createStoreId,
   filterTpl,
   isApiOutdated,
-  createStoreId,
   mergeApiData,
   requestApi,
+  serviceRemoteSchema,
   useEnv,
   useRendererHub,
   useScope,
   useScoped,
+  type SchemaApi,
+  type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
 
@@ -28,10 +31,37 @@ const store = hub.add({
   id: createStoreId('service'),
   type: 'service',
   name: props.schema.name,
-  data: { ...((props.schema.data && typeof props.schema.data === 'object' ? props.schema.data : {}) as Record<string, any>) },
+  data: {
+    ...((props.schema.data && typeof props.schema.data === 'object' ? props.schema.data : {}) as Record<string, any>),
+  },
+})
+const remoteSchema = ref<SchemaNode[]>([])
+
+const body = computed(() => {
+  if (remoteSchema.value.length) return remoteSchema.value
+  return asArray(props.schema.body || store.data.body)
 })
 
-const body = computed(() => asArray(props.schema.body || store.data.body))
+async function fetchOne(api: SchemaApi | undefined, reason: 'init' | 'reload') {
+  if (!api) return null
+  store.fetching = true
+  try {
+    const result = await requestApi(api, {
+      env,
+      data: { ...props.data, ...store.data },
+      reason,
+    })
+    if (!result.skipped && !result.ok) {
+      env.notify('error', result.payload.msg || '加载失败')
+    }
+    return result
+  } catch (error) {
+    env.notify('error', error instanceof Error ? error.message : '加载失败')
+    return null
+  } finally {
+    store.fetching = false
+  }
+}
 
 async function reload(extra?: Record<string, any>, replace = false) {
   if (extra && typeof extra === 'object') {
@@ -40,24 +70,20 @@ async function reload(extra?: Record<string, any>, replace = false) {
     }
     Object.assign(store.data, extra)
   }
-  const api = props.schema.api || props.schema.schemaApi
-  if (!api) return
-  store.fetching = true
-  try {
-    const result = await requestApi(api, { env, data: { ...props.data, ...store.data }, reason: 'reload' })
-    if (!result.skipped && result.ok) {
+  if (props.schema.api) {
+    const result = await fetchOne(props.schema.api, 'reload')
+    if (result && !result.skipped && result.ok) {
       mergeApiData(store.data, result)
       if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
         scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
       }
     }
-    else if (!result.skipped && !result.ok) {
-      env.notify('error', result.payload.msg || '加载失败')
+  }
+  if (props.schema.schemaApi) {
+    const result = await fetchOne(props.schema.schemaApi, 'reload')
+    if (result && !result.skipped && result.ok) {
+      remoteSchema.value = serviceRemoteSchema(result.data)
     }
-  } catch (error) {
-    env.notify('error', error instanceof Error ? error.message : '加载失败')
-  } finally {
-    store.fetching = false
   }
 }
 
@@ -69,14 +95,19 @@ const api = {
   getData: () => ({ ...store.data }),
 }
 scoped?.register(api)
-onMounted(reload)
+onMounted(() => {
+  if (props.schema.initFetch === false) return
+  void reload()
+})
 watch(
-  () => [props.schema.api || props.schema.schemaApi, props.data, store.data] as const,
+  () => [props.schema.api, props.schema.schemaApi, props.data, store.data] as const,
   (curr, prev) => {
     if (!prev) return
-    const prevData = { ...(prev[1] || {}), ...(prev[2] || {}) }
-    const currData = { ...(curr[1] || {}), ...(curr[2] || {}) }
-    if (isApiOutdated(prev[0], curr[0], prevData, currData)) void reload()
+    const prevData = { ...(prev[2] || {}), ...(prev[3] || {}) }
+    const currData = { ...(curr[2] || {}), ...(curr[3] || {}) }
+    const apiOut = isApiOutdated(prev[0], curr[0], prevData, currData)
+    const schemaOut = isApiOutdated(prev[1], curr[1], prevData, currData)
+    if (apiOut || schemaOut) void reload()
   },
 )
 onBeforeUnmount(() => {
@@ -86,7 +117,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <div data-vamis-service class="w-full min-w-0 space-y-3">
     <p v-if="store.fetching" class="text-xs text-muted-foreground">加载中…</p>
     <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
   </div>

@@ -9275,6 +9275,206 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-dropdown-button-0",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是下拉按钮。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dropdown-button-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "dropdown-button",
+        "label": "下拉菜单",
+        "buttons": [
+          {
+            "label": "下拉项甲",
+            "disabled": true
+          },
+          {
+            "label": "下拉项乙"
+          },
+          {
+            "label": "下拉项丙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dropdown-button-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "dropdown-button",
+        "label": "下拉菜单 YAML",
+        "buttons": [
+          {
+            "label": "下拉项甲 YAML",
+            "disabled": true
+          },
+          {
+            "label": "下拉项乙 YAML"
+          },
+          {
+            "label": "下拉项丙 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dropdown-button-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "dropdown-button",
+        "label": "分组菜单",
+        "buttons": [
+          {
+            "label": "RD",
+            "children": [
+              {
+                "label": "前端FE"
+              },
+              {
+                "label": "后端RD"
+              }
+            ]
+          },
+          {
+            "label": "QA",
+            "children": [
+              {
+                "label": "测试QA"
+              },
+              {
+                "type": "divider"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dropdown-button-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "dropdown-button",
+        "label": "点项即关",
+        "closeOnClick": true,
+        "closeOnOutside": true,
+        "buttons": [
+          {
+            "label": "关闭甲"
+          },
+          {
+            "label": "关闭乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dropdown-button-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "DropDownButton 下拉按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "DropDownButton 下拉按钮 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "dropdown-button",
+        "label": "更多",
+        "hideCaret": true,
+        "tooltip": "提示",
+        "buttons": [
+          {
+            "label": "图标项甲"
+          },
+          {
+            "label": "图标项乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-service-0",
     "group": "组件 / 功能",
     "bucket": "components",
@@ -9287,19 +9487,83 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "service",
-      "body": [
-        {
-          "type": "service",
-          "api": "/api/mock2/sample",
-          "body": [
+      "body": {
+        "type": "service",
+        "data": {
+          "title": "Test Page Component",
+          "date": "2017-10-13"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "${title} · 现在是：${date}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "title": "Test Page YAML",
+          "date": "2017-10-14"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "${title} · 现在是：${date}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "rows": [
             {
-              "type": "tpl",
-              "tpl": "共 ${total} 条"
+              "engine": "Trident",
+              "version": "4"
+            },
+            {
+              "engine": "Gecko",
+              "version": "1.9"
             }
           ]
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "首行 ${rows[0].engine}"
         }
-      ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -9318,23 +9582,387 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "nav",
-      "body": [
-        {
-          "type": "nav",
-          "stacked": true,
-          "links": [
-            {
-              "label": "概览",
-              "to": "/overview"
-            },
-            {
-              "label": "设备",
-              "to": "/devices"
+      "body": {
+        "type": "nav",
+        "stacked": true,
+        "className": "w-md",
+        "links": [
+          {
+            "label": "导航甲",
+            "to": "?to=nav1",
+            "active": true
+          },
+          {
+            "label": "导航乙",
+            "to": "?to=nav2"
+          },
+          {
+            "label": "导航丙",
+            "to": "?to=nav3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-nav-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Nav 导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Nav 导航 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "nav",
+        "stacked": true,
+        "className": "w-md",
+        "links": [
+          {
+            "label": "导航甲 YAML",
+            "to": "?to=nav1",
+            "active": true
+          },
+          {
+            "label": "导航乙 YAML",
+            "to": "?to=nav2"
+          },
+          {
+            "label": "导航丙 YAML",
+            "to": "?to=nav3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-nav-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Nav 导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Nav 导航 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "nav",
+        "stacked": true,
+        "links": [
+          {
+            "label": "Nav 1",
+            "to": "?to=n1",
+            "active": true
+          },
+          {
+            "label": "Nav 2",
+            "unfolded": true,
+            "children": [
+              {
+                "label": "Nav 2-1",
+                "children": [
+                  {
+                    "label": "Nav 2-1-1",
+                    "to": "?to=n211"
+                  }
+                ]
+              },
+              {
+                "label": "Nav 2-2",
+                "to": "?to=n22"
+              }
+            ]
+          },
+          {
+            "label": "Nav 3",
+            "to": "?to=n3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-nav-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Nav 导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Nav 导航 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "nav",
+        "stacked": false,
+        "links": [
+          {
+            "label": "横甲",
+            "to": "?to=h1"
+          },
+          {
+            "label": "横乙",
+            "to": "?to=h2"
+          },
+          {
+            "label": "横丙",
+            "to": "?to=h3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-anchor-nav-0",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "AnchorNav 锚点导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "AnchorNav 锚点导航 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "anchor-nav",
+        "links": [
+          {
+            "title": "基本信息",
+            "body": {
+              "type": "tpl",
+              "tpl": "基本信息内容"
             }
-          ]
-        }
-      ]
+          },
+          {
+            "title": "工作信息",
+            "children": [
+              {
+                "title": "工作信息-1",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "工作信息子内容"
+                }
+              }
+            ],
+            "body": {
+              "type": "tpl",
+              "tpl": "工作信息内容"
+            }
+          },
+          {
+            "title": "兴趣爱好",
+            "body": {
+              "type": "tpl",
+              "tpl": "兴趣爱好内容"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-anchor-nav-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "AnchorNav 锚点导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "AnchorNav 锚点导航 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "anchor-nav",
+        "links": [
+          {
+            "title": "基本信息 YAML",
+            "body": {
+              "type": "tpl",
+              "tpl": "基本信息内容 YAML"
+            }
+          },
+          {
+            "title": "工作信息 YAML",
+            "body": {
+              "type": "tpl",
+              "tpl": "工作信息内容 YAML"
+            }
+          },
+          {
+            "title": "兴趣爱好 YAML",
+            "body": {
+              "type": "tpl",
+              "tpl": "兴趣爱好内容 YAML"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-anchor-nav-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "AnchorNav 锚点导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "AnchorNav 锚点导航 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "anchor-nav",
+        "direction": "horizontal",
+        "links": [
+          {
+            "title": "水平甲",
+            "body": {
+              "type": "tpl",
+              "tpl": "水平甲内容"
+            }
+          },
+          {
+            "title": "水平乙",
+            "body": {
+              "type": "tpl",
+              "tpl": "水平乙内容"
+            }
+          },
+          {
+            "title": "水平丙",
+            "body": {
+              "type": "tpl",
+              "tpl": "水平丙内容"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-anchor-nav-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "AnchorNav 锚点导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "AnchorNav 锚点导航 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "anchor-nav",
+        "active": "work",
+        "links": [
+          {
+            "title": "基本信息",
+            "href": "base",
+            "body": {
+              "type": "tpl",
+              "tpl": "定位基本"
+            }
+          },
+          {
+            "title": "工作信息",
+            "href": "work",
+            "body": {
+              "type": "tpl",
+              "tpl": "定位工作"
+            }
+          },
+          {
+            "title": "兴趣爱好",
+            "href": "interest",
+            "body": {
+              "type": "tpl",
+              "tpl": "定位兴趣"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-anchor-nav-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "AnchorNav 锚点导航",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "AnchorNav 锚点导航 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "anchor-nav",
+        "active": 1,
+        "links": [
+          {
+            "title": "索引零",
+            "body": {
+              "type": "tpl",
+              "tpl": "索引零内容"
+            }
+          },
+          {
+            "title": "索引一",
+            "body": {
+              "type": "tpl",
+              "tpl": "索引一内容"
+            }
+          },
+          {
+            "title": "索引二",
+            "body": {
+              "type": "tpl",
+              "tpl": "索引二内容"
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

@@ -34,12 +34,12 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 11 | 1 | 57% | 9 |
+| 功能 | 0 / 12 | 11 | 1 | 66% | 10 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **50%** | **96** |
+| **合计** | **2 / 155** | **151** | **2** | **51%** | **97** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
@@ -69,7 +69,7 @@
 
 ---
 
-## 功能（0/12，均 57%）
+## 功能（0/12，均 66%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
@@ -79,10 +79,10 @@
 | `button-group` | ButtonGroup 按钮组 | 进行中 | 85% | 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`。缺 `btnActiveLevel`、圆角拼缝 | P0 |
 | `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层、fa 字体 | P0 |
 | `custom` | Custom 自定义组件 | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
-| `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 50% | 能展开按钮；缺 `overlayPlacement` 等 | P0 |
-| `service` | Service 功能型容器 | 进行中 | 58% | 独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新；`name` 支持 `${id}` 动态名。`schemaApi` 未单独拉 schema；`dataProvider` 未接 | P0 |
-| `nav` | Nav 导航 | 进行中 | 50% | 链接列表可用；缺 overflow/缩起/搜索 | P0 |
-| `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 45% | 已注册，滚动联动精简 | P0 |
+| `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 80% | 文档主路径已对齐：`buttons` 分组、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret`、`defaultIsOpened`。三角走 CSS 不进按钮文本。缺弹出容器选择器 | P0 |
+| `service` | Service 功能型容器 | 进行中 | 75% | 文档主路径已对齐：独立 Scope、静态 `data`、`api` 刷新、`schemaApi` 当子 schema、`initFetch: false`、`reload`。缺 `dataProvider` / 轮询 | P0 |
+| `nav` | Nav 导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
+| `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 50% | 能出 tip；触发/主题未齐 | P0 |
 | （属性 `popOver`） | PopOver 弹出提示 | **未开始** | 0% | 不是独立 type；table/list/static/cards 字段均未实现 `popOver` | P0 |
 

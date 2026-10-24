@@ -5,35 +5,112 @@ outline: deep
 
 # AnchorNav 锚点导航
 
-::: warning 实现进度 45% · 进行中
-已注册，滚动联动精简
+::: info 实现进度 80% · 进行中
+文档主路径已对齐：`links[].title` / `body`、垂直方向 `children` 展平、`direction: horizontal`、`active` 用 href 或索引。缺滚动监听自动高亮、区域默认 `className` 皮肤。
 :::
 
-`anchor-nav` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+锚点导航容器：左侧（或顶部）点一项，内容区滚到对应块。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **功能**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **功能**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。默认吃满布局槽宽度。组装壳是 `div`。
+
+`className` / `style` 打在宿主 `div.vamis-node`。
 
 ## 基本用法
 
-```schema
-type: page
-title: anchor-nav
-body:
-  - type: anchor-nav
+活示例用短文本，避免整页大表单。垂直方向 `children` 会展平进导航。
+
+```schema: scope="body"
+{
+  "type": "anchor-nav",
+  "links": [
+    { "title": "基本信息", "body": { "type": "tpl", "tpl": "基本信息内容" } },
+    {
+      "title": "工作信息",
+      "children": [{ "title": "工作信息-1", "body": { "type": "tpl", "tpl": "工作信息子内容" } }],
+      "body": { "type": "tpl", "tpl": "工作信息内容" }
+    },
+    { "title": "兴趣爱好", "body": { "type": "tpl", "tpl": "兴趣爱好内容" } }
+  ]
+}
 ```
 
-## 常用属性
+```schema: scope="body"
+type: anchor-nav
+links:
+  - title: 基本信息 YAML
+    body:
+      type: tpl
+      tpl: 基本信息内容 YAML
+  - title: 工作信息 YAML
+    body:
+      type: tpl
+      tpl: 工作信息内容 YAML
+  - title: 兴趣爱好 YAML
+    body:
+      type: tpl
+      tpl: 兴趣爱好内容 YAML
+```
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+## 水平导航
+
+```schema: scope="body"
+{
+  "type": "anchor-nav",
+  "direction": "horizontal",
+  "links": [
+    { "title": "水平甲", "body": { "type": "tpl", "tpl": "水平甲内容" } },
+    { "title": "水平乙", "body": { "type": "tpl", "tpl": "水平乙内容" } },
+    { "title": "水平丙", "body": { "type": "tpl", "tpl": "水平丙内容" } }
+  ]
+}
+```
+
+## 默认定位到某个区域
+
+`active` 可以是 `href`，或从 0 起的索引（该项不要配 href）。
+
+```schema: scope="body"
+{
+  "type": "anchor-nav",
+  "active": "work",
+  "links": [
+    { "title": "基本信息", "href": "base", "body": { "type": "tpl", "tpl": "定位基本" } },
+    { "title": "工作信息", "href": "work", "body": { "type": "tpl", "tpl": "定位工作" } },
+    { "title": "兴趣爱好", "href": "interest", "body": { "type": "tpl", "tpl": "定位兴趣" } }
+  ]
+}
+```
+
+```schema: scope="body"
+{
+  "type": "anchor-nav",
+  "active": 1,
+  "links": [
+    { "title": "索引零", "body": { "type": "tpl", "tpl": "索引零内容" } },
+    { "title": "索引一", "body": { "type": "tpl", "tpl": "索引一内容" } },
+    { "title": "索引二", "body": { "type": "tpl", "tpl": "索引二内容" } }
+  ]
+}
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| type | `string` | `"anchor-nav"` | 指定为 AnchorNav |
+| className | `string` | | 打在宿主 |
+| linkClassName | `string` | | 导航区 class |
+| sectionClassName | `string` | | 内容区 class |
+| links | `Array` | | 锚点列表 |
+| direction | `string` | `"vertical"` | vertical / horizontal |
+| active | `string` / `number` | | href 或索引 |
+| links[].title | `string` | | 标题 |
+| links[].href | `string` | | 区域标识 |
+| links[].body | Schema | | 内容 |
+| links[].children | `Array` | | 垂直方向子锚点 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 组装壳是 `div`。未做滚动过程中自动改 `active`。
