@@ -54,6 +54,30 @@ describe('embed', () => {
     expect(document.body.querySelector('.vamis-sdk')).toBeTruthy()
   })
 
+  it('keeps two page-body buttons as inline-block siblings (Amis style 基本使用)', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: [
+        { type: 'button', label: '按钮1', actionType: 'dialog', dialog: { title: '弹框', body: 'Hello World!' } },
+        {
+          type: 'button',
+          label: '按钮2',
+          className: 'm-l',
+          actionType: 'dialog',
+          dialog: { title: '弹框', body: 'Hello World!' },
+        },
+      ],
+    })
+    await nextTick()
+    const wraps = [...host.querySelectorAll('button')]
+      .filter((btn) => /^按钮[12]$/.test((btn.textContent || '').trim()))
+      .map((btn) => btn.closest('.vamis-node'))
+    expect(wraps).toHaveLength(2)
+    expect(wraps[0]?.classList.contains('inline-block')).toBe(true)
+    expect(wraps[1]?.classList.contains('inline-block')).toBe(true)
+    expect(wraps[1]?.className.split(/\s+/)).toContain('m-l')
+  })
+
   it('renders page / tpl / button from a JSON schema', async () => {
     const { host } = mount({
       type: 'page',

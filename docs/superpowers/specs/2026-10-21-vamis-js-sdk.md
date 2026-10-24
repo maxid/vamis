@@ -161,6 +161,6 @@ flowchart LR
 
 ## 9. 当前缺口
 
-P0 已落地：`packages/vamis-sdk` 打出 `sdk.js` + `sdk.css` + `hello.html`；`vamis.embed` 支持 JSON / YAML / IR；`updateSchema` / `updateProps` / `unmount`；文档 `/start/sdk` 用 iframe 跑真 HTML。Playground `/sdk/hello.html` 同源提供。
+P0 已落地：`packages/vamis-sdk` 打出 `sdk.js` + `sdk.css` + `hello.html`；`vamis.embed` 支持 JSON / YAML / IR；`updateSchema` / `updateProps` / `unmount`；文档 `/start/sdk` 用 iframe 跑真 HTML。Playground `/sdk/hello.html` 同源提供。对照页 `/sdk/compare.html` 用**同一份 schema** 左右挂 `amis.embed`（unpkg `amis@6.13.0`）和 `vamis.embed`，量真实按钮盒子。已核：默认两按钮两边同一行、缝 0px；`m-l` 两边同一行，Amis 15px / Vamis 12px（helper 阶未对齐）。embed-case 等到按钮出现再量，避免 unpkg 慢加载误报。
 
 P0 续：`getComponentByName` / `doAction` 已接到根 ScopedContext。仍缺（P1）：`registerAction` / `registerTheme`、locale。`sdk.js` 体积偏大（含 echarts），后续可按需拆 chunk，但不改 `embed` 契约。

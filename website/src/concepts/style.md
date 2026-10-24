@@ -19,7 +19,7 @@ Vamis 和 Amis 一样：绝大多数观感用 **className 辅助类** 就能调�
 
 ## 基本使用
 
-两个按钮默认会挨在一起：
+两个按钮默认会挨在一起（同一份 schema 用 JS SDK 对照 Amis：[/sdk/compare.html](/sdk/compare.html)）：
 
 ```schema: scope="body"
 - type: button
@@ -36,7 +36,7 @@ Vamis 和 Amis 一样：绝大多数观感用 **className 辅助类** 就能调�
     body: Hello World!
 ```
 
-按钮支持 `className`。查阅 [外边距](/style/spacing/margin) 可知 `m-l` 是 `margin-left: var(--gap-base)`（15px 这一档）。给第二个按钮加上就能拉开缝：
+按钮支持 `className`。Amis `.m-l` 是硬编码 `margin-left: 15px`。Vamis 目前走 `var(--gap-base)`（12px），同一份 schema 在 [SDK 对照页](/sdk/compare.html?case=style-two-buttons-ml) 能量出这条差。给第二个按钮加上就能拉开缝：
 
 ```schema: scope="body"
 - type: button
