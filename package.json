@@ -14,6 +14,7 @@
     "test": "pnpm --filter @vamis/formula test && pnpm --filter @vamis/core test && pnpm --filter @vamis/sdk test",
     "compare": "node scripts/sdk-compare.mjs",
     "compare:p0": "node scripts/sdk-compare.mjs --p0",
+    "compare:mobile": "node scripts/sdk-compare.mjs --mobile",
     "typecheck": "pnpm --filter @vamis/playground typecheck",
     "status": "node scripts/amis-parity.mjs"
   },

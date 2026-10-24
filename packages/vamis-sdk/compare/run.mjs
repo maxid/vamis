@@ -3,7 +3,7 @@ import http from 'node:http'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCases } from './build-cases.mjs'
-import { matchCatalog, rerunCommands } from './catalog.mjs'
+import { matchCatalog, parseViewportArg, rerunCommands, VIEWPORT } from './catalog.mjs'
 import { collectFontDiffs, scoreCase } from './score.mjs'
 import { attachFindings } from './classify.mjs'
 import { writeReport } from './report.mjs'
@@ -26,6 +26,7 @@ function parseArgs(argv) {
     page: flagValue(argv, '--page'),
     id: flagValue(argv, '--id'),
     type: flagValue(argv, '--type'),
+    mobile: parseViewportArg(flagValue(argv, '--viewport') || (argv.includes('--mobile') ? 'mobile' : '')) === 'mobile',
     amisSdk: flagValue(argv, '--amis') || process.env.AMIS_SDK || 'https://unpkg.com/amis@6.13.0/sdk',
   }
 }
@@ -116,7 +117,8 @@ export async function runCompare(argv = process.argv.slice(2)) {
   try {
     const { chromium } = await import('playwright')
     browser = await chromium.launch({ headless: true })
-    const context = await browser.newContext({ viewport: { width: 1100, height: 800 } })
+    const vp = options.mobile ? VIEWPORT.mobile : VIEWPORT.desktop
+    const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } })
     const amisPage = await context.newPage()
     const vamisPage = await context.newPage()
     const amisUrl = `${origin}/embed-case.html?engine=amis&amisSdk=${encodeURIComponent(options.amisSdk)}`
@@ -144,14 +146,18 @@ export async function runCompare(argv = process.argv.slice(2)) {
         findings: attachFindings(item, [...(parity.diffs || []), ...collectFontDiffs(amis, vamis)]),
       })
     }
-    const written = writeReport(rows)
+    const written = writeReport(rows, { mobile: options.mobile })
     const p0Failed = rows.filter((row) => row.layer === 'p0' && !row.parity?.pass).length
     console.log(
-      `compare ${list.length}/${count} · pass ${written.summary.passed} · fail ${written.summary.failed} · p0-fail ${p0Failed} → ${written.mdPath}`,
+      `compare ${options.mobile ? 'mobile' : 'desktop'} ${list.length}/${count} · pass ${written.summary.passed} · fail ${written.summary.failed} · p0-fail ${p0Failed} → ${written.mdPath}`,
     )
-    const rerun = rerunCommands(rows)
+    const rerun = rerunCommands(rows, { mobile: options.mobile })
     if (rerun.length) {
-      console.log('重跑：全局修完 pnpm compare；组件修完只跑自身 --page')
+      console.log(
+        options.mobile
+          ? '重跑：全局修完 pnpm compare --mobile；组件修完只跑自身 --page … --mobile'
+          : '重跑：全局修完 pnpm compare；组件修完只跑自身 --page',
+      )
       for (const item of rerun) console.log(`  ${item.cmd}  # ${item.note}`)
     }
     if (p0Failed) process.exitCode = 1

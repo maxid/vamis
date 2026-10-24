@@ -10,7 +10,7 @@ P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByN
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
 
-构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。和 Amis 对同一份 schema 时打开 [`/sdk/compare.html`](/sdk/compare.html)（`amis.embed` 与 `vamis.embed` 各一栏；Amis 侧并行拉官方 `sdk.css` / `helper.css` / `iconfont.css`；用例按 Amis 侧栏 **文档 / 组件 / 样式**；**组件**按 schema 树结点对值 / name / 动作，不是整页 smoke；结果表按用例量测类型换列；**编辑 Schema** YAML / JSON 双 Tab）。命令：`pnpm compare:p0` / `pnpm compare`（全局修完必须全量）/ `pnpm compare --page button`（组件修完只跑自身），报告见仓库 `docs/superpowers/specs/2026-10-24-sdk-compare-report.md`。Vue 工程请走 [快速开始](/start/getting-started)。
+构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。和 Amis 对同一份 schema 时打开 [`/sdk/compare.html`](/sdk/compare.html)（`amis.embed` 与 `vamis.embed` 各一栏；Amis 侧并行拉官方 `sdk.css` / `helper.css` / `iconfont.css`；视口可切桌面（≥768）/ 移动（375）；用例按 Amis 侧栏 **文档 / 组件 / 样式**；**组件**按 schema 树结点对值 / name / 动作，不是整页 smoke；结果表按用例量测类型换列；**编辑 Schema** YAML / JSON 双 Tab）。命令：`pnpm compare:p0` / `pnpm compare`（全局修完必须全量）/ `pnpm compare --page button`（组件修完只跑自身）/ `pnpm compare --mobile`（375px 窄屏），报告见仓库 `docs/superpowers/specs/2026-10-24-sdk-compare-report.md`。Vue 工程请走 [快速开始](/start/getting-started)。
 
 下面 iframe 跑打包后的 `sdk.js`：
 
