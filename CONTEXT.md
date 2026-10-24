@@ -11,6 +11,7 @@
 | 规格 | `docs/superpowers/specs/` | 运行时 / 语义 / 组件 TODO / 主题 / 在线文档 / JS SDK |
 | 计划 | `docs/superpowers/plans/` | 可执行任务清单 |
 | 在线文档 | `website/src` + playground 路由 | 与示例同端口；进度仍以本文件为准 |
+| 对标查阅 | `.cursor/rules/amis-lookup.mdc` | Amis 仓相对位置（默认 `../amis`）；文档 / 样式 / 核心 / 组件怎么查 |
 
 > **图表**：优先 mermaid。
 
@@ -51,7 +52,7 @@
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-10-23）
+## 当前进度（2026-10-24）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -69,6 +70,7 @@
 
 **最近交付**
 
+- 规则补上 Amis 对照仓相对位置（默认同级 `../amis`，不写本机绝对路径）以及文档 / 样式 / 核心 / 组件怎么查：`.cursor/rules/amis-lookup.mdc`。
 - 项目规则按域合并：站点 → `.cursor/rules/site.mdc`，样式 → `style.mdc`，组件 → `component.mdc`。收工清单仍是 `update-progress.mdc`。
 - `/style` Background / Border / Effect：`rounded-md` = 6px（不是 `--radius`）、`border-8` / `border-double`、Amis `shadow-lg` 第二层 `-2px`/`0.05`、补 `opacity-5`…`95` 与 `bg-none`。Radius / Width / Style / Shadow / Opacity **90%**；`background-color` / `border-color` 仍 **55%**（色盘表）。
 - `/style/typography/font-family`：`font-sans` / `serif` / `mono` 改回 Amis helper 硬编码字栈（不再走 `--font-sans` token）。page / body 默认仍是 `--fonts-base-family`。
@@ -166,7 +168,7 @@
 - Page / Container 对标 Amis 文档：补齐示例与属性表、事件表、动作表。Page 接 `css` 块、remark 图标、`reload`/`setValue` 的 `dataMergeMode: override`、`event.data`；公式层加 `|json` / `|default` 与 `this.xxx`。仍被 D1/D4 挡住，不能标已完成。
 - 组件侧栏把「组件介绍」挪到分组外第一项，不再挂在「布局」里。
 - 正文字体改用 Amis `--fonts-base-family` 系统栈（PingFang / 微软雅黑 / -apple-system），等宽对齐 `--fontFamilyMonospace`；去掉 `@fontsource/ibm-plex-*`，不在产物里打包字体文件。`cssVars` 的 `--fonts-base-family` / `--fontFamilyBase` 会映到 `--font-sans`。
-- 同步项目状态：`pnpm status -- --amis /Users/maxid/Develop/IdeaProjects/github/amis` 覆盖仍 181 / 189（95.8%）；amis master 仍停在 `43a33ee06`；同步文档基线改到 Vamis `f7aa2bb`。
+- 同步项目状态：`pnpm status -- --amis ../amis` 覆盖仍 181 / 189（95.8%）；amis master 仍停在 `43a33ee06`；同步文档基线改到 Vamis `f7aa2bb`。
 - `@vamis/formula` 版权写成双声明：引擎原文仍是百度智能云爱速搭（MIT），包装与后续改动归 Vamis。
 - 示例页右侧第三个 Tab 文案由「IR 源码」改为「Schema」。
 - 对外文档去掉「围栏不是截图 / 真跑 / 编辑 Tab」这类站点说明，只留项目本身的内容。

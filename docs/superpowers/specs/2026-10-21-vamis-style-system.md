@@ -6,9 +6,10 @@
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
 - 参考：
-  - Amis 文档：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN/style`（`index` / `css-vars` / `state` / `responsive-design`）、`types/classname.md`
-  - Amis 源码：`packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
+  - Amis 文档：`../amis/docs/zh-CN/style`（`index` / `css-vars` / `state` / `responsive-design`）、`types/classname.md`
+  - Amis 源码：`../amis/packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
   - 在线文档：Amis `http://localhost:8888/zh-CN/style/index`；Vamis Playground `/style`
+  - 查阅约定：`.cursor/rules/amis-lookup.mdc`
 
 水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**不搬 `cxd-` 前缀、不编译 Amis SCSS**；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue token、`cva` variants 与 Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/style.mdc`。
 

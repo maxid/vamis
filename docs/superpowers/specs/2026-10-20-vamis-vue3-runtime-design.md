@@ -4,7 +4,7 @@
 - 状态：第一期已按此实施；**JS SDK P0 已落地**（见 [JS SDK](./2026-10-21-vamis-js-sdk.md)）
 - 语义设计增补：数据域、表达式、API、事件动作、表单、CRUD 的 v0.2 设计见 [2026-10-20-vamis-runtime-semantics-design.md](./2026-10-20-vamis-runtime-semantics-design.md)
 - 嵌入入口：Vue 组件 `VamisRoot` + JS SDK `vamis.embed`
-- 源项目：百度 Amis 6.13.0（`/Users/maxid/Develop/IdeaProjects/github/amis`）
+- 源项目：百度 Amis 6.13.0（同级 `../amis`）
 - IR 来源：LCDP IR（`apiVersion: lcdp.ir/v1`）
 
 ## 1. LCDP IR 结论
