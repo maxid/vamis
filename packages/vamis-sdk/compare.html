@@ -285,6 +285,15 @@
               })
               .concat(fonts, [{ key: 'pass', label: '判定' }])
           }
+          if (type === 'tree') {
+            return [
+              { key: 'nodes', label: '结点' },
+              { key: 'rendered', label: '画出' },
+              { key: 'value', label: '值' },
+              { key: 'named', label: 'name 可寻址' },
+              { key: 'actions', label: '动作探测' },
+            ].concat(fonts, [{ key: 'pass', label: '判定' }])
+          }
           return [{ key: 'status', label: '状态' }, { key: 'text', label: '摘要' }].concat(fonts, [
             { key: 'pass', label: '判定' },
           ])
@@ -293,6 +302,7 @@
           const type = measureKind(measure)
           if (type === 'pair') return '量测：盒模型（同一行 / 缝）'
           if (type === 'style') return '量测：计算样式'
+          if (type === 'tree') return '量测：schema 树结点（画出 / 值 / name / 事件动作）'
           return '量测：渲染 smoke（两边都能画出即过）'
         }
         function px(value) {
@@ -313,6 +323,61 @@
             const ag = px(a.gap)
             const bg = px(b.gap)
             if (ag == null || bg == null || Math.abs(ag - bg) > 1) diffs.push({ prop: 'gap', amis: a.gap, vamis: b.gap })
+            return { pass: diffs.length === 0, diffs: diffs }
+          }
+          if (type === 'tree') {
+            const aMap = {}
+            const bMap = {}
+            ;(a.tree || []).forEach(function (node) {
+              aMap[node.path] = node
+            })
+            ;(b.tree || []).forEach(function (node) {
+              bMap[node.path] = node
+            })
+            const paths = {}
+            Object.keys(aMap).concat(Object.keys(bMap)).forEach(function (path) {
+              paths[path] = true
+            })
+            function emptyVal(value) {
+              if (value == null || value === '') return true
+              if (Array.isArray(value) && !value.length) return true
+              return false
+            }
+            function dumpVal(value) {
+              if (emptyVal(value)) return ''
+              if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value)
+              try {
+                return JSON.stringify(value)
+              } catch (_err) {
+                return String(value)
+              }
+            }
+            Object.keys(paths).forEach(function (path) {
+              const left = aMap[path]
+              const right = bMap[path]
+              if (!left || !right) {
+                diffs.push({ prop: path + '.node', amis: left ? left.type : '缺', vamis: right ? right.type : '缺' })
+                return
+              }
+              if (Boolean(left.rendered) !== Boolean(right.rendered)) {
+                diffs.push({ prop: path + '.rendered', amis: Boolean(left.rendered), vamis: Boolean(right.rendered) })
+              }
+              if ((left.name || right.name) && Boolean(left.named) !== Boolean(right.named)) {
+                diffs.push({ prop: path + '.named', amis: Boolean(left.named), vamis: Boolean(right.named) })
+              }
+              if (left.type !== 'uuid' && dumpVal(left.value) !== dumpVal(right.value)) {
+                diffs.push({ prop: path + '.value', amis: dumpVal(left.value), vamis: dumpVal(right.value) })
+              }
+              if (left.effect || right.effect) {
+                if (Boolean(left.effect && left.effect.dialog) !== Boolean(right.effect && right.effect.dialog)) {
+                  diffs.push({
+                    prop: path + '.dialog',
+                    amis: Boolean(left.effect && left.effect.dialog),
+                    vamis: Boolean(right.effect && right.effect.dialog),
+                  })
+                }
+              }
+            })
           }
           return { pass: diffs.length === 0, diffs: diffs }
         }
@@ -579,6 +644,27 @@
           }
           if (key === 'status') return { text: m.smoke ? '已渲染' : '已量测', cls: 'ok' }
           if (key === 'text') return { text: m.text || '—', cls: '' }
+          if (key === 'nodes' || key === 'rendered' || key === 'value' || key === 'named' || key === 'actions') {
+            const tree = m.tree || []
+            const nodes = tree.length
+            const drawn = tree.filter(function (node) {
+              return node.rendered
+            }).length
+            const named = tree.filter(function (node) {
+              return node.named
+            }).length
+            const valued = tree.filter(function (node) {
+              return node.value != null && node.value !== ''
+            }).length
+            const probed = tree.filter(function (node) {
+              return node.effect
+            }).length
+            if (key === 'nodes') return { text: String(nodes), cls: nodes ? 'ok' : 'bad' }
+            if (key === 'rendered') return { text: drawn + '/' + nodes, cls: drawn === nodes && nodes ? 'ok' : 'bad' }
+            if (key === 'value') return { text: String(valued), cls: '' }
+            if (key === 'named') return { text: named + '/' + nodes, cls: '' }
+            return { text: String(probed), cls: '' }
+          }
           if (key === 'fontSize') return { text: font.fontSize || '—', cls: '' }
           if (key === 'lineHeight') return { text: font.lineHeight || '—', cls: '' }
           if (key === 'fontFamily') {
@@ -714,6 +800,13 @@
             return 'component'
           }
           if (prop === 'sameRow') return 'component'
+          if (
+            /\.(value|valueAfter|rendered|named|dialog|toast|node|type)$/.test(prop) ||
+            prop.indexOf('/body/') >= 0 ||
+            prop.indexOf('page/') === 0
+          ) {
+            return 'component'
+          }
           return 'helper'
         }
 
@@ -739,6 +832,18 @@
           }
           if (scope === 'component' && prop === 'lineHeight') {
             return '控件行高跟该 type 默认走，不要改 html 行高。'
+          }
+          if (prop.slice(-6) === '.value' || prop.slice(-11) === '.valueAfter') {
+            return '运行时值应对齐 Amis：schema.value / 表单域 / 控件当前值。'
+          }
+          if (prop.slice(-6) === '.named') {
+            return '有 name 的结点应能 getComponentByName。Vamis 要在该 type 注册 Scoped。'
+          }
+          if (prop.slice(-9) === '.rendered' || prop.slice(-5) === '.node') {
+            return 'schema 树该结点要能在 DOM 里定位（name / label）。'
+          }
+          if (prop.slice(-7) === '.dialog' || prop.slice(-6) === '.toast') {
+            return '点一下后动作效果应对齐 Amis（dialog / toast / setValue）。'
           }
           return SCOPE[scope] ? SCOPE[scope].hint : ''
         }

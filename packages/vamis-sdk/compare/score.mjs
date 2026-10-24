@@ -1,3 +1,5 @@
+import { scoreTree } from './schema-tree.mjs'
+
 export function measureKind(measure) {
   return measure?.type || 'smoke'
 }
@@ -26,6 +28,17 @@ export function resultColumns(measure) {
     const props = measure.props || ['marginLeft', 'display']
     return [...props.map((prop) => ({ key: `style:${prop}`, label: prop })), ...fonts, { key: 'pass', label: '判定' }]
   }
+  if (type === 'tree') {
+    return [
+      { key: 'nodes', label: '结点' },
+      { key: 'rendered', label: '画出' },
+      { key: 'value', label: '值' },
+      { key: 'named', label: 'name 可寻址' },
+      { key: 'actions', label: '动作探测' },
+      ...fonts,
+      { key: 'pass', label: '判定' },
+    ]
+  }
   return [
     { key: 'status', label: '状态' },
     { key: 'text', label: '摘要' },
@@ -38,6 +51,7 @@ export function measureLabel(measure) {
   const type = measureKind(measure)
   if (type === 'pair') return '量测：盒模型（同一行 / 缝）'
   if (type === 'style') return `量测：计算样式（${(measure.props || []).join(', ') || 'style'}）`
+  if (type === 'tree') return '量测：schema 树结点（画出 / 值 / name / 事件动作）'
   return '量测：渲染 smoke（两边都能画出即过）'
 }
 
@@ -103,6 +117,7 @@ export function scoreCase(item, amis, vamis) {
 
   const a = amis?.measure || {}
   const b = vamis?.measure || {}
+  if (kind === 'tree') return scoreTree(a.tree || [], b.tree || [])
   const diffs = []
 
   if (kind === 'pair') {

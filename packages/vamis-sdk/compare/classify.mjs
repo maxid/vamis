@@ -103,6 +103,13 @@ export function classifyIssue(diff, item) {
   }
 
   if (prop === 'sameRow') return 'component'
+  if (
+    /\.(value|valueAfter|rendered|named|dialog|toast|node|type)$/.test(prop) ||
+    prop.startsWith('page/') ||
+    prop.includes('/body/')
+  ) {
+    return 'component'
+  }
   return 'helper'
 }
 
@@ -127,6 +134,18 @@ export function adviseIssue(diff, item, scope) {
   }
   if (scope === 'component' && prop === 'lineHeight') {
     return '控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。'
+  }
+  if (prop.endsWith('.value') || prop.endsWith('.valueAfter')) {
+    return '运行时值应对齐 Amis：schema.value / 表单域 / 控件当前值，不要只看能不能画出。'
+  }
+  if (prop.endsWith('.named')) {
+    return '有 name 的结点应能 getComponentByName。Vamis 要在该 type 注册 Scoped。'
+  }
+  if (prop.endsWith('.rendered') || prop.endsWith('.node')) {
+    return 'schema 树该结点要能在 DOM 里定位（name / label）。'
+  }
+  if (prop.endsWith('.dialog') || prop.endsWith('.toast')) {
+    return '点一下后动作效果应对齐 Amis（dialog / toast / setValue）。'
   }
   return SCOPE[scope]?.hint || ''
 }

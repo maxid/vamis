@@ -32,6 +32,7 @@ export type VamisScoped = {
   updateSchema(schema: unknown, props?: EmbedProps): void
   unmount(): void
   getComponentByName(name: string): unknown
+  getComponents(): unknown[]
   doAction(actions: unknown, ctx?: PlainObject): Promise<void>
 }
 
@@ -147,6 +148,10 @@ export function embed(
     getComponentByName(name: string) {
       assertAlive()
       return rootScoped()?.getComponentByName(name)
+    },
+    getComponents() {
+      assertAlive()
+      return rootScoped()?.components || []
     },
     async doAction(actions: unknown, ctx?: PlainObject) {
       assertAlive()

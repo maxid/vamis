@@ -148,6 +148,10 @@ export function decorateCase(row) {
   const nav = row.source ? groupFromPath(row.source) : groupP0(row.id)
   const hash = row.layer === 'p0' ? '' : (String(row.title || '').match(/#\d+/) || [''])[0]
   const title = row.layer === 'p0' ? row.title : `${nav.page}${hash ? ` ${hash}` : ''}`
+  const measure =
+    nav.bucket === 'components' && (!row.measure || row.measure.type === 'smoke')
+      ? { type: 'tree' }
+      : row.measure
   return {
     ...row,
     bucket: nav.bucket,
@@ -157,6 +161,7 @@ export function decorateCase(row) {
     group: nav.group,
     order: nav.order,
     title: title || row.title,
+    measure,
   }
 }
 

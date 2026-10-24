@@ -9,6 +9,7 @@ import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
 import { loadCatalog } from '../compare/catalog.mjs'
+import { scoreTree, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
 describe('applySchemaScope', () => {
   it('wraps body fragments in page', () => {
@@ -64,6 +65,19 @@ describe('scoreCase', () => {
     const result = scoreCase({ measure: { type: 'smoke' } }, { measure: { smoke: true } }, { error: 'boom' })
     expect(result.pass).toBe(false)
   })
+
+  it('tree fails when a node value does not match Amis', () => {
+    const item = { measure: { type: 'tree' } }
+    const tree = (value: unknown, named: boolean) => [
+      { path: 'page/body/0:input-text', type: 'input-text', name: 'name', rendered: true, named, value },
+    ]
+    const result = scoreCase(item, { measure: { tree: tree('Ada', true) } }, { measure: { tree: tree('', false) } })
+    expect(result.pass).toBe(false)
+    expect(result.diffs.map((row) => row.prop)).toEqual([
+      'page/body/0:input-text.named',
+      'page/body/0:input-text.value',
+    ])
+  })
 })
 
 describe('resultColumns', () => {
@@ -78,6 +92,21 @@ describe('resultColumns', () => {
       'pass',
     ])
     expect(measureLabel({ type: 'pair' })).toContain('盒模型')
+  })
+
+  it('uses tree columns for component cases', () => {
+    expect(resultColumns({ type: 'tree' }).map((col) => col.key)).toEqual([
+      'nodes',
+      'rendered',
+      'value',
+      'named',
+      'actions',
+      'fontSize',
+      'lineHeight',
+      'fontFamily',
+      'pass',
+    ])
+    expect(measureLabel({ type: 'tree' })).toContain('结点')
   })
 
   it('uses status columns for smoke cases', () => {
@@ -193,5 +222,88 @@ describe('nav-group', () => {
     const grid = loadCatalog({ bucket: 'style', section: 'Grid' })
     expect(grid.length).toBeGreaterThan(0)
     expect(grid.every((row) => row.group === '样式 / Grid')).toBe(true)
+  })
+
+  it('component cases use schema-tree measure instead of smoke', () => {
+    const form = decorateCase({
+      id: 'form-default',
+      layer: 'p0',
+      title: '默认 Form',
+      schema: { type: 'page', body: { type: 'form', body: [{ type: 'input-text', name: 'name' }] } },
+      measure: { type: 'smoke' },
+    })
+    expect(form.bucket).toBe('components')
+    expect(form.measure.type).toBe('tree')
+    const helpers = decorateCase({
+      id: 'helper-m-l',
+      layer: 'p0',
+      title: 'className: m-l',
+      schema: {},
+      measure: { type: 'pair' },
+    })
+    expect(helpers.measure.type).toBe('pair')
+  })
+})
+
+describe('schema-tree', () => {
+  const schema = {
+    type: 'page',
+    body: {
+      type: 'form',
+      body: [
+        { type: 'input-text', name: 'name', label: '姓名', value: 'Ada' },
+        {
+          type: 'button',
+          label: '开',
+          actionType: 'dialog',
+          dialog: { title: 'Hi' },
+        },
+      ],
+    },
+  }
+
+  it('walks schema nodes with stable paths and actions', () => {
+    const nodes = walkSchemaTree(schema)
+    expect(nodes.map((row) => row.path)).toEqual([
+      'page',
+      'page/body/0:form',
+      'page/body/0:form/body/0:input-text',
+      'page/body/0:form/body/1:button',
+    ])
+    const input = nodes.find((row) => row.type === 'input-text')
+    expect(input).toMatchObject({ name: 'name', schemaValue: 'Ada' })
+    const button = nodes.find((row) => row.type === 'button')
+    expect(button?.actions).toContain('dialog')
+  })
+
+  it('scores runtime value / rendered / named / dialog per node', () => {
+    expect(valuesEqual('', undefined)).toBe(true)
+    const amis = [
+      { path: 'page/body/0:form/body/0:input-text', type: 'input-text', name: 'name', rendered: true, named: true, value: 'Ada' },
+      {
+        path: 'page/body/0:form/body/1:button',
+        type: 'button',
+        rendered: true,
+        effect: { dialog: true },
+      },
+    ]
+    const aligned = scoreTree(amis, amis)
+    expect(aligned.pass).toBe(true)
+    const vamis = [
+      { path: 'page/body/0:form/body/0:input-text', type: 'input-text', name: 'name', rendered: true, named: false, value: '' },
+      {
+        path: 'page/body/0:form/body/1:button',
+        type: 'button',
+        rendered: true,
+        effect: { dialog: false },
+      },
+    ]
+    const result = scoreTree(amis, vamis)
+    expect(result.pass).toBe(false)
+    expect(result.diffs.map((item) => item.prop)).toEqual([
+      'page/body/0:form/body/0:input-text.named',
+      'page/body/0:form/body/0:input-text.value',
+      'page/body/0:form/body/1:button.dialog',
+    ])
   })
 })
