@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 77% | 13 |
+| 布局 | 2 / 15 | 13 | 0 | 79% | 13 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
@@ -45,7 +45,7 @@
 
 ---
 
-## 布局（2/15，均 77%）
+## 布局（2/15，均 79%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -60,7 +60,7 @@
 | `grid-2d` | Grid 2D 布局 | 进行中 | 90% | 文档主路径已对齐：`x/y/w/h`、`cols`、列宽/行高、`height: auto`、`gap` / `gapRow`、`align` / `valign`。缺格子 `themeCss` | P0 |
 | `hbox` | HBox 布局 | 进行中 | 90% | 文档主路径已对齐：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `pagination` | Pagination 分页 | 进行中 | 90% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`。缺 `themeCss`、移动端 `mobileUI` | P0 |
-| `pagination-wrapper` | PaginationWrapper 分页容器 | 进行中 | 50% | 已注册；与数据域分页契约未对齐（D10） | P0 |
+| `pagination-wrapper` | PaginationWrapper 分页容器 | 进行中 | 90% | 文档主路径已对齐：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
 | `panel` | Panel 面板 | 进行中 | 65% | title/body 可用，`h-full` 吃满父槽；缺 `actions` 语义细节 | P0 |
 | `tabs` | Tabs 选项卡 | 进行中 | 60% | 切 tab 可用；缺 `source` 动态、`mountOnEnter` | P0 |
 | `wrapper` | Wrapper 包裹容器 | 进行中 | 65% | 能包一层；size/style 未齐 | P0 |
@@ -286,6 +286,6 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `service` / `form` / `crud` / `action` ajax | D3 API 管线 |
 | `action` / `button` / `toast` / `dialog` | D4/D5 事件与目标 |
 | 所有表单项 + FormItem/Options | D6 路径值与校验 |
-| `crud` / `table` / `pagination-wrapper` | D10（设计标 P1，本清单仍 P0） |
+| `crud` / `table` | D10（设计标 P1，本清单仍 P0）。`pagination-wrapper` 客户端切片已对齐，不挡文档主路径 |
 
 更新规则：改渲染器深度时只改本文件的状态/进度/原因；不要改侧栏分类。覆盖率数字仍只写在 [同步状态](./2026-10-20-amis-sync-status.md)。任务结束还必须回写 [CONTEXT.md](../../../CONTEXT.md) 的进度与后续计划（见 `AGENTS.md` / `.cursor/rules/update-progress.mdc`）。组件约定见 `.cursor/rules/component.mdc`。

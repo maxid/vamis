@@ -31,6 +31,7 @@ export const LAYOUT_TYPES = new Set([
   'hbox',
   'vbox',
   'flex',
+  'pagination-wrapper',
   'panel',
   'collapse',
   'collapse-group',

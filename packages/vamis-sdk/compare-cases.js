@@ -6895,6 +6895,113 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-pagination-wrapper-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "PaginationWrapper 分页容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PaginationWrapper 分页容器 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "rows": [
+          {
+            "engine": "Trident",
+            "version": "7"
+          },
+          {
+            "engine": "Gecko",
+            "version": "1.8"
+          },
+          {
+            "engine": "Webkit",
+            "version": "522"
+          },
+          {
+            "engine": "Presto",
+            "version": "2.1"
+          }
+        ]
+      },
+      "body": {
+        "type": "pagination-wrapper",
+        "inputName": "rows",
+        "outputName": "rows",
+        "perPage": 2,
+        "body": {
+          "type": "table",
+          "title": "分页表格",
+          "source": "${rows}",
+          "columns": [
+            {
+              "name": "engine",
+              "label": "Engine"
+            },
+            {
+              "name": "version",
+              "label": "Version"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-pagination-wrapper-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "PaginationWrapper 分页容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PaginationWrapper 分页容器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "label": "甲"
+          },
+          {
+            "label": "乙"
+          },
+          {
+            "label": "丙"
+          },
+          {
+            "label": "丁"
+          }
+        ]
+      },
+      "body": {
+        "type": "pagination-wrapper",
+        "perPage": 2,
+        "position": "bottom",
+        "showPageInput": true,
+        "body": {
+          "type": "each",
+          "name": "items",
+          "items": {
+            "type": "tpl",
+            "tpl": "<p>${label}</p>"
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-tabs-0",
     "group": "组件 / 布局",
     "bucket": "components",
