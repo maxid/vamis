@@ -175,6 +175,9 @@ describe('all registered type catalogs', () => {
     expect(at('type: input-text\nad', 'ad').completions.find((item) => item.label === 'addOn')?.documentation).toMatch(
       /附加/,
     )
+    expect(at('type: popover\npo', 'po').completions.find((item) => item.label === 'popOver')?.documentation).toMatch(
+      /弹出/,
+    )
   })
 
   it('every documented type has a catalog (or alias of one)', () => {
