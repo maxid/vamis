@@ -899,7 +899,7 @@ const FEEDBACK: ComponentDef[] = [
 ]
 
 const OTHER: ComponentDef[] = [
-  { type: 'avatar', label: 'Avatar 头像', snippet: { type: 'avatar', text: 'VA' } },
+  { type: 'avatar', label: 'Avatar 头像', snippet: { type: 'avatar', src: 'https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg' } },
   { type: 'audio', label: 'Audio 音频', snippet: { type: 'audio', src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' } },
   {
     type: 'tasks',

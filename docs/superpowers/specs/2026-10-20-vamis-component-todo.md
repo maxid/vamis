@@ -38,10 +38,10 @@
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 61% | 5 |
+| 其他 | 0 / 7 | 7 | 0 | 63% | 5 |
 | **合计** | **2 / 155** | **153** | **0** | **53%** | **102** |
 
-侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` / `badge` 80%；`popOver` 属性 80%。
+侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` 90%，`audio` / `tasks` / `wizard` / `badge` 80%；`popOver` 属性 80%。
 
 ---
 
@@ -232,11 +232,11 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 61%）
+## 其他（0/7，均 63%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `avatar` | Avatar 头像 | 进行中 | 80% | 文档主路径已对齐：src > text > icon、shape circle/square/rounded、size 空=40 / small 32 / large 48、fit cover、gap、badge（走 BadgeHost）。缺 fa、onError | P0 |
+| `avatar` | Avatar 头像 | 进行中 | 90% | 文档主路径已对齐：src 真图 > text > icon（默认 fa fa-user）、$var 降级、shape/size/fit、gap 像素缩放、onError（trusted）、draggable、badge 含 ribbon。对照 **13/13**。其它 fa-* 需宿主字体 | P0 |
 | `audio` | Audio 音频 | 进行中 | 80% | 文档主路径已对齐：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
 | `tasks` | Tasks 任务操作集合 | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
 | `badge` | Badge 角标 | 进行中 | 80% | 不是独立 type。已挂 avatar / action / tpl / link / icon；mode 默认 dot、text 0 隐藏、overflowCount、visibleOn、ribbon。缺 cxd 斜条像素、animation 同帧 | P0 |
