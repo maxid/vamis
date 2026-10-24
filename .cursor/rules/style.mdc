@@ -18,7 +18,7 @@ alwaysApply: true
 
 ## 行为精度（计算样式 / 盒模型）
 
-`/style` 与 `className` 对标 Amis 时，精度以 **计算样式 + 盒模型** 为准，不以截图为准。对照 `http://localhost:8888/zh-CN/style/…` 与 Amis helper SCSS。
+`/style` 与 `className` 对标 Amis 时，精度以 **计算样式 + 盒模型** 为准，不以截图为准。对照仓位置、文档站与 helper SCSS 怎么查见 `.cursor/rules/amis-lookup.mdc`。
 
 - **同一条 class，落在同一个元素、同一条属性、同一个计算值。** 先读 Amis 选择器再写 CSS
 - 范本：`space-x-6` 是后续兄弟 `~` 的 `margin-left: 24px`，不是 TW v4 的 `:not(:last-child)` + `margin-inline-end`

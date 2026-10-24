@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 组件
 
-合并自原 `assembly-containers`、`adaptive-default`。约束 widget 树 / 渲染器，不约束 Playground / 编辑器外壳。
+合并自原 `assembly-containers`、`adaptive-default`。约束 widget 树 / 渲染器，不约束 Playground / 编辑器外壳。Amis 组件文档与 `renderers` 源码怎么查见 `.cursor/rules/amis-lookup.mdc`。
 
 ## 组装容器：div 优先
 

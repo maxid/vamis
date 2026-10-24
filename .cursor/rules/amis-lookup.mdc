@@ -1,0 +1,36 @@
+---
+description: Amis 对照仓相对本仓库的位置；如何查阅对标文档、样式、核心与组件源码
+alwaysApply: true
+---
+
+# 对标 Amis：仓位置与查阅
+
+## 仓位置
+
+Amis（`baidu/amis`，对齐 **6.13.0**）默认是本仓库的**同级目录** `../amis`。一律写相对路径，禁止本机绝对路径。覆盖复算：`pnpm status -- --amis ../amis`；仓不在默认位置时把参数换成实际相对路径。不要把 Amis 源码整仓复制进本仓库。
+
+下面路径均相对 `../amis`。先读文档主路径，再读源码；`/style` 对计算样式 / 盒模型，不是截图。
+
+## 文档
+
+- Markdown：`docs/zh-CN/`（`components/`、`concepts/`、`types/`、`style/`、`start/`、`extend/`）
+- 侧栏：组件 `examples/components/Components.tsx`；样式 `examples/components/CssDocs.tsx`
+- 在线：Amis 文档站默认 `http://localhost:8888/zh-CN/…`（仓内 `npm start`，vite `port: 8888`）；Vamis 同路径在 `http://127.0.0.1:5173/…`（`/zh-CN/style/layout/visibility` → `/style/layout/visibility`，组件 `/components/<type>`）
+- 本仓进度：`CONTEXT.md`、组件 P0 TODO。**已注册 ≠ 已完成**
+
+## 样式
+
+- Helper 真源：`packages/amis-ui/scss/helper/`（layout / flex / grid / …）。不少 `/style` 页没有独立 md，页文在 SCSS 顶上的 `/*!markdown`
+- 主题 SCSS **只读、不搬** `.cxd-` 前缀：`packages/amis-ui/scss/themes/`、`_properties.scss`、`_components.scss`
+- Vamis 落点：`packages/vamis-ui`（token / helper CSS）；活示例 `website/src/style/`
+
+## 核心与组件
+
+| 层 | Amis | Vamis |
+|----|------|-------|
+| 核心 | `packages/amis-core/src`（`factory` / `env` / `Scoped` / `store` / `utils/api`·`tpl`·`dataMapping`·`renderer-event`） | `packages/vamis-core` |
+| 组件 | `packages/amis/src/renderers`（表单项在 `Form/`） | `packages/vamis/src/renderers`；注册 `register.ts` + `extras/*.ts` |
+| 公式 | `packages/amis-formula` | `packages/vamis-formula` |
+| UI 原语 | `packages/amis-ui`（不搬 cxd class） | `packages/vamis-ui`（shadcn-vue） |
+
+查组件：先 `docs/zh-CN/components/<type>.md`（表单项在 `form/`），再打开对应 `renderers/*.tsx`，对照 Vamis 同名 Vue 与 `registerRenderer`。

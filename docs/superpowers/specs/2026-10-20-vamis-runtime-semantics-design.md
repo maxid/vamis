@@ -3,7 +3,7 @@
 - 日期：2026-10-20
 - 状态：部分落地（D1 Scope、D2 模板转义/P0 过滤器、D3 API 管线、D4 事件对象、D5 动态 target P0 已接；其余 D6–D8 见 [CONTEXT.md](../../../CONTEXT.md)）
 - 范围：数据域、表达式/模板、API、事件动作、表单、CRUD、渲染器契约、扩展、主题/i18n、诊断、IR
-- 参考：`/Users/maxid/Develop/IdeaProjects/github/amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
+- 参考：`../amis/docs/zh-CN`（amis 6.13.0 / master `43a33ee06`）
 - 关联：
   - 运行时与 IR 基础设计：`docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md`
   - 当前实现状态：`docs/superpowers/specs/2026-10-20-amis-sync-status.md`

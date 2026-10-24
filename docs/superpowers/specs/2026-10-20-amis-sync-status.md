@@ -4,7 +4,7 @@
 - Vamis 基线：`f7aa2bb`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
-- amis 本地路径：`/Users/maxid/Develop/IdeaProjects/github/amis`
+- amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
 - 覆盖数字可复现：`pnpm status -- --amis ../amis`（详见文末）
 
 ## 结论

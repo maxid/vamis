@@ -41,10 +41,10 @@ pnpm test         # @vamis/formula + @vamis/core + @vamis/sdk vitest
 pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
 pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # vue-tsc 无错误
-pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
+pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 ../amis）
 ```
 
-对照源码：`/Users/maxid/Develop/IdeaProjects/github/amis`（6.13.0）。组件文档分类：`amis-r/docs/zh-CN` 与 `docs/superpowers/specs/2026-10-20-vamis-component-todo.md`。
+对照源码：默认 `../amis`（6.13.0）。怎么查文档 / 样式 / 核心 / 组件见 `.cursor/rules/amis-lookup.mdc`。组件进度见 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。
 
 ## 架构约定
 
@@ -52,7 +52,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（amis 仓需在旁）
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
-- 站点 / 样式 / 组件约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`。任务收工见 `update-progress.mdc`。
+- 站点 / 样式 / 组件约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。任务收工见 `update-progress.mdc`。
 
 ## 关键文档
 
