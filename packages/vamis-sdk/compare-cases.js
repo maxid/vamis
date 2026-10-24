@@ -5450,27 +5450,634 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "flex",
+      "body": {
+        "type": "flex",
+        "items": [
+          {
+            "style": {
+              "backgroundColor": "#1A5CFF",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          },
+          {
+            "style": {
+              "backgroundColor": "#46C93A",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          },
+          {
+            "style": {
+              "backgroundColor": "#FF4757",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-flex-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Flex 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Flex 布局 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "items": [
+          {
+            "type": "tpl",
+            "tpl": "左",
+            "style": {
+              "backgroundColor": "#1A5CFF",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            }
+          },
+          {
+            "type": "tpl",
+            "tpl": "中",
+            "style": {
+              "backgroundColor": "#46C93A",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            }
+          },
+          {
+            "type": "tpl",
+            "tpl": "右",
+            "style": {
+              "backgroundColor": "#FF4757",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-flex-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Flex 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Flex 布局 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
       "body": [
+        "center",
+        {
+          "type": "flex",
+          "justify": "center",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "flex-start",
+        {
+          "type": "flex",
+          "justify": "flex-start",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "flex-end",
+        {
+          "type": "flex",
+          "justify": "flex-end",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "space-around",
+        {
+          "type": "flex",
+          "justify": "space-around",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "space-between",
         {
           "type": "flex",
           "justify": "space-between",
           "items": [
             {
               "type": "tpl",
-              "tpl": "左"
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
             },
             {
               "type": "tpl",
-              "tpl": "中"
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
             },
             {
               "type": "tpl",
-              "tpl": "右"
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "space-evenly",
+        {
+          "type": "flex",
+          "justify": "space-evenly",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
             }
           ]
         }
       ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-flex-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Flex 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Flex 布局 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        "center",
+        {
+          "type": "flex",
+          "alignItems": "center",
+          "style": {
+            "height": 60,
+            "backgroundColor": "#fff"
+          },
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "divider"
+        },
+        "flex-start",
+        {
+          "type": "flex",
+          "alignItems": "flex-start",
+          "style": {
+            "height": 60,
+            "backgroundColor": "#fff"
+          },
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "divider"
+        },
+        "flex-end",
+        {
+          "type": "flex",
+          "alignItems": "flex-end",
+          "style": {
+            "height": 60,
+            "backgroundColor": "#fff"
+          },
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-flex-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Flex 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Flex 布局 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        "direction: row",
+        {
+          "type": "flex",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        },
+        "direction: column",
+        {
+          "type": "flex",
+          "direction": "column",
+          "items": [
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#1A5CFF",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#46C93A",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "",
+              "style": {
+                "backgroundColor": "#FF4757",
+                "width": 100,
+                "height": 30,
+                "margin": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-flex-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Flex 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Flex 布局 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "mobile": {
+          "direction": "column"
+        },
+        "items": [
+          {
+            "style": {
+              "backgroundColor": "#1A5CFF",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          },
+          {
+            "style": {
+              "backgroundColor": "#46C93A",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          },
+          {
+            "style": {
+              "backgroundColor": "#FF4757",
+              "width": 100,
+              "height": 50,
+              "margin": 5
+            },
+            "type": "tpl",
+            "tpl": ""
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
