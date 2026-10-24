@@ -14231,15 +14231,459 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "alert",
-      "body": [
-        {
-          "type": "alert",
-          "title": "提示",
-          "level": "info",
-          "body": "说明文字"
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是提示条。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-1",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "body": "提示类文案甲"
+          },
+          {
+            "type": "alert",
+            "level": "info",
+            "title": "提示类标题甲",
+            "body": "提示类文案甲有标题"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "body": "成功类文案甲"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "title": "成功类标题甲",
+            "body": "成功类文案甲有标题"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "body": "警告类文案甲"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "title": "警告类标题甲",
+            "body": "警告类文案甲有标题"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "body": "危险类文案甲"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "title": "危险类标题甲",
+            "body": "危险类文案甲有标题"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-2",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "body": "提示类文案乙"
+          },
+          {
+            "type": "alert",
+            "level": "info",
+            "title": "提示类标题乙",
+            "body": "提示类文案乙有标题"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "body": "成功类文案乙"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "title": "成功类标题乙",
+            "body": "成功类文案乙有标题"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "body": "警告类文案乙"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "title": "警告类标题乙",
+            "body": "警告类文案乙有标题"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "body": "危险类文案乙"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "title": "危险类标题乙",
+            "body": "危险类文案乙有标题"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-3",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "showIcon": true,
+            "body": "提示类图标甲"
+          },
+          {
+            "type": "alert",
+            "level": "info",
+            "showIcon": true,
+            "title": "提示类图标标题甲",
+            "body": "提示类图标甲有标题"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "showIcon": true,
+            "body": "成功类图标甲"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "showIcon": true,
+            "body": "警告类图标甲"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "showIcon": true,
+            "body": "危险类图标甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-4",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "showIcon": true,
+            "body": "提示类图标乙"
+          },
+          {
+            "type": "alert",
+            "level": "info",
+            "showIcon": true,
+            "title": "提示类图标标题乙",
+            "body": "提示类图标乙有标题"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "showIcon": true,
+            "body": "成功类图标乙"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "showIcon": true,
+            "body": "警告类图标乙"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "showIcon": true,
+            "body": "危险类图标乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "alert",
+        "data": {
+          "statusJia": 1
+        },
+        "level": "${IFS(statusJia===1, 'danger', statusJia===2, 'warning')}",
+        "body": "表达式级别甲"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "alert",
+        "data": {
+          "statusYi": 1
+        },
+        "level": "${IFS(statusYi===1, 'danger', statusYi===2, 'warning')}",
+        "body": "表达式级别乙"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "showCloseButton": true,
+            "showIcon": true,
+            "body": "可关闭提示甲"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "showCloseButton": true,
+            "showIcon": true,
+            "title": "可关闭标题甲",
+            "body": "可关闭提示甲有标题"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-8",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "showCloseButton": true,
+            "showIcon": true,
+            "body": "可关闭提示乙"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "showCloseButton": true,
+            "showIcon": true,
+            "title": "可关闭标题乙",
+            "body": "可关闭提示乙有标题"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-9",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "alert",
+        "level": "success",
+        "showIcon": true,
+        "showCloseButton": true,
+        "title": "操作标题甲",
+        "body": "创建成功甲",
+        "actions": [
+          {
+            "type": "button",
+            "label": "查看详情甲",
+            "size": "xs",
+            "level": "link"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-alert-10",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Alert 提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Alert 提示 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "alert",
+        "level": "info",
+        "showIcon": true,
+        "showCloseButton": true,
+        "body": "创建成功乙",
+        "actions": {
+          "type": "flex",
+          "justify": "flex-start",
+          "alignItems": "flex-start",
+          "direction": "column",
+          "items": [
+            {
+              "type": "button",
+              "label": "详情乙",
+              "size": "xs",
+              "level": "primary"
+            },
+            {
+              "type": "button",
+              "label": "关闭乙",
+              "size": "xs",
+              "level": "danger"
+            }
+          ]
         }
-      ]
+      }
     },
     "measure": {
       "type": "tree"
