@@ -54,6 +54,7 @@ pnpm dev          # 文档 / 组件 / 样式 / 示例，http://127.0.0.1:5173
 | `/style` | 样式（对齐 Amis 顶栏：快速开始 / CSS 变量 / 辅助类目录） |
 | `/examples` | 示例：分类树 + 预览 + Schema |
 | `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + Schema |
+| `/sdk/compare.html` | Amis / Vamis SDK 对照（顶栏「对照」；页内可返回首页） |
 
 跑核心测试：
 

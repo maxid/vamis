@@ -3,8 +3,10 @@ import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button, Toaster } from '@vamis/ui'
 import SiteSearch from './components/SiteSearch.vue'
+import { withBase } from './docs/pages'
 
 const GITHUB_REPO = 'https://github.com/maxid/vamis'
+const compareHref = withBase('/sdk/compare.html')
 
 const route = useRoute()
 
@@ -140,6 +142,7 @@ watch([dark, density, accent], () => {
             >
               编辑器
             </RouterLink>
+            <a :href="compareHref" class="rounded-md px-3 py-1.5 hover:bg-accent">对照</a>
           </nav>
           <Button
             as="a"
