@@ -89,6 +89,38 @@
           return [all[0], all[1]]
         }
 
+        function parseFamilies(value) {
+          return String(value || '')
+            .split(',')
+            .map(function (item) {
+              return item.trim().replace(/^["']|["']$/g, '')
+            })
+            .filter(Boolean)
+        }
+
+        function resolveUsed(el, cs) {
+          const families = parseFamilies(cs.fontFamily)
+          if (!families.length) return ''
+          if (families.length === 1) return families[0]
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          if (!ctx) return families[0]
+          const sample = ((el.textContent || '') + 'mmmmmmmmmmlli汉字')
+            .replace(/\s+/g, '')
+            .slice(0, 32)
+          function width(fontSpec) {
+            ctx.font = [cs.fontStyle, cs.fontWeight, cs.fontSize, fontSpec].join(' ')
+            return ctx.measureText(sample).width
+          }
+          const full = width(cs.fontFamily)
+          for (let i = 0; i < families.length; i++) {
+            const name = families[i]
+            const quoted = /[^a-zA-Z0-9-]/.test(name) ? '"' + name + '"' : name
+            if (Math.abs(width(quoted) - full) < 0.5) return name
+          }
+          return families[0]
+        }
+
         function readFont(el) {
           if (!el) return null
           const cs = getComputedStyle(el)
@@ -97,29 +129,35 @@
             fontSize: cs.fontSize,
             fontWeight: cs.fontWeight,
             lineHeight: cs.lineHeight,
+            used: resolveUsed(el, cs),
           }
         }
 
-        function smokeTarget() {
-          const root = document.getElementById('root')
+        function textTarget(root) {
           if (!root) return null
-          return (
-            root.querySelector('button') ||
-            root.querySelector('a, label, input, textarea, select') ||
-            root.querySelector('.cxd-Page, .vamis-page, .vamis-node') ||
-            root.firstElementChild
-          )
+          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode: function (node) {
+              if (!node.nodeValue || !String(node.nodeValue).trim()) return NodeFilter.FILTER_REJECT
+              const parent = node.parentElement
+              if (!parent || parent.closest('.err')) return NodeFilter.FILTER_REJECT
+              return NodeFilter.FILTER_ACCEPT
+            },
+          })
+          const text = walker.nextNode()
+          return (text && text.parentElement) || root.firstElementChild
         }
 
         function measure(spec) {
           const kind = (spec && spec.type) || 'pair'
+          const rootFont = readFont(document.body)
           if (kind === 'smoke') {
             const root = document.getElementById('root')
             if (!root || !root.childElementCount) return { error: '未渲染' }
             return {
               smoke: true,
               text: (root.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80),
-              font: readFont(smokeTarget()),
+              font: readFont(textTarget(root)),
+              rootFont: rootFont,
             }
           }
           const pair = pairNodes(spec)
@@ -140,6 +178,7 @@
             bMarginLeft: cs.marginLeft,
             style: style,
             font: readFont(a),
+            rootFont: rootFont,
           }
         }
 

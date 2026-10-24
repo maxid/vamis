@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 对照页字体量测改读正文节点 + 实际 used face（canvas 解析栈），并对照 `body` 字体。指定栈都是 `-apple-system` 时不再漏掉 Amis html `PingFang SC` 或 `text-sm` 12px vs 14px；smoke 有字体差时判定为「字体差」，不挡 Playwright 文档 smoke。
 - GitHub Pages 上对照页可用：`pnpm build` 把 `compare.html` / `embed-case.html` / `compare-cases.js` 拷进 `/sdk/`；文档链接带 `VITE_BASE` 并整页跳，避免 SPA 吃掉静态 HTML。Amis 栏仍依赖 unpkg。
 - 对照页结果表补上字体信息：字号 / 行高 / 字体栈（hover 看完整 family）。字体差异标红并写进备注，不挡盒模型 / smoke 判定。
 - 对照页结果表按用例 `measure` 换列：盒模型显示同一行/缝/盒子，smoke 显示状态/摘要；判定也跟当前用例走。
