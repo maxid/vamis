@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import { playgroundHref, withBase } from './pages'
+import { docHref, withBase } from './pages'
 import { parseSchemaFenceMeta } from './schema-scope'
 
 export type TocItem = {
@@ -91,7 +91,7 @@ export function parseFrontmatter(raw: string): { title: string; body: string } {
 
 function rewriteHtml(html: string): string {
   return html
-    .replace(/href="([^"]+)"/g, (_all, href: string) => `href="${playgroundHref(href)}"`)
+    .replace(/href="([^"]+)"/g, (_all, href: string) => `href="${docHref(href)}"`)
     .replace(/src="([^"]+)"/g, (_all, src: string) => `src="${withBase(src)}"`)
 }
 

@@ -51,6 +51,13 @@ export function withBase(url: string, base = import.meta.env.BASE_URL || '/'): s
   return `${prefix}${url.slice(1)}`
 }
 
+/** SDK 静态页（`/sdk/compare.html`）不是 Vue 路由。 */
+export function isStaticAssetHref(href: string): boolean {
+  if (!href || /^(https?:|data:|blob:|mailto:|#|\/\/)/i.test(href)) return false
+  const path = href.split(/[?#]/)[0] || ''
+  return /(?:^|\/)sdk\//.test(path)
+}
+
 export function playgroundHref(link: string): string {
   if (!link || link.startsWith('http') || link.startsWith('#')) return link
   if (
@@ -65,4 +72,11 @@ export function playgroundHref(link: string): string {
   }
   if (link === '/') return '/'
   return trimSlash(`/docs${link}`)
+}
+
+/** 文档 `<a href>`：SDK 静态页要带 Vite base，否则 GitHub Pages 会跳到站点根外。 */
+export function docHref(link: string, base = import.meta.env.BASE_URL || '/'): string {
+  const next = playgroundHref(link)
+  if (isStaticAssetHref(next)) return withBase(next, base)
+  return next
 }

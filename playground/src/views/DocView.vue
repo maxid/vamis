@@ -5,7 +5,7 @@ import SchemaPreview from '../components/SchemaPreview.vue'
 import DocCode from '../components/DocCode.vue'
 import DocSidebar from '../components/DocSidebar.vue'
 import DocToc from '../components/DocToc.vue'
-import { resolveDoc } from '../docs/pages'
+import { isStaticAssetHref, resolveDoc } from '../docs/pages'
 import { parseDoc } from '../docs/render'
 import { groupsForPath } from '../docs/sidebar'
 
@@ -168,6 +168,7 @@ function onClick(event: MouseEvent) {
     return
   }
   if (href.startsWith('http') || href.startsWith('mailto:')) return
+  if (isStaticAssetHref(href)) return
   event.preventDefault()
   router.push(href)
 }
