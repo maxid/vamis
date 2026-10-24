@@ -34,12 +34,12 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 11 | 1 | 47% | 8 |
+| 功能 | 0 / 12 | 11 | 1 | 57% | 9 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **49%** | **95** |
+| **合计** | **2 / 155** | **151** | **2** | **50%** | **96** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
@@ -69,15 +69,15 @@
 
 ---
 
-## 功能（0/12，均 47%）
+## 功能（0/12，均 57%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `action` | Action 行为按钮 | 进行中 | 85% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、URL `icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / email。缺倒计时、快捷键、fa 图标、Action 当容器、`download` / `saveAs`、控制流 | P0 |
-| `app` | App 多页应用 | 进行中 | 35% | 能切 pages；路由/`keepPageHistory` 精简 | P0 |
-| `button` | Button 按钮 | 进行中 | 55% | `action` 别名，同一渲染器 | P0 |
-| `button-group` | ButtonGroup 按钮组 | 进行中 | 60% | 能排按钮；缺 `vertical`/`tiled` 细节 | P0 |
-| `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 60% | 静态 items 可用；缺下拉/动态 source | P0 |
+| `app` | App 多页应用 | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
+| `button` | Button 按钮 | 进行中 | 85% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`；复杂行为见 Action | P0 |
+| `button-group` | ButtonGroup 按钮组 | 进行中 | 85% | 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`。缺 `btnActiveLevel`、圆角拼缝 | P0 |
+| `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层、fa 字体 | P0 |
 | `custom` | Custom 自定义组件 | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 50% | 能展开按钮；缺 `overlayPlacement` 等 | P0 |
 | `service` | Service 功能型容器 | 进行中 | 58% | 独立 Scope + `data` 遮蔽父域；`api` 按 `isApiOutdated` 刷新；`name` 支持 `${id}` 动态名。`schemaApi` 未单独拉 schema；`dataProvider` 未接 | P0 |

@@ -3,33 +3,26 @@
 - 日期：2026-10-24
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **22** · 通过 **22** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **6** · 通过 **6** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 22 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 6 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 43 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 11 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（22）
+### 全局（6）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-action-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-6` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-7` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-8` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-9` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-10` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-action-11` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- …其余 10 条见 last-report.json
+- `src-components-button-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-button-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-button-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-button-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-button-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-button-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
 
 整改：
 - Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
@@ -40,23 +33,21 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（43）
+### 组件（11）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-action-0` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-action-1` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-action-1` fontWeight: Amis `400` / Vamis `500`
-- `src-components-action-2` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-action-2` fontWeight: Amis `400` / Vamis `500`
-- `src-components-action-3` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-action-3` fontWeight: Amis `400` / Vamis `500`
-- `src-components-action-4` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-action-4` fontWeight: Amis `400` / Vamis `500`
-- `src-components-action-5` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-action-5` fontWeight: Amis `400` / Vamis `500`
-- `src-components-action-6` lineHeight: Amis `21px` / Vamis `20px`
-- …其余 31 条见 last-report.json
+- `src-components-button-0` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-button-1` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-button-1` fontWeight: Amis `400` / Vamis `500`
+- `src-components-button-2` lineHeight: Amis `18px` / Vamis `16px`
+- `src-components-button-2` fontWeight: Amis `400` / Vamis `500`
+- `src-components-button-3` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-button-3` fontWeight: Amis `400` / Vamis `500`
+- `src-components-button-4` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-button-4` fontWeight: Amis `400` / Vamis `500`
+- `src-components-button-5` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-button-5` fontWeight: Amis `400` / Vamis `500`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -67,7 +58,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 22 | 0 |
+| 组件 | 6 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -76,7 +67,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 功能 | 22 | 0 |
+| 组件 / 功能 | 6 | 0 |
 
 ## P0 失败（驱动下一刀）
 

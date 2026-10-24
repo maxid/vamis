@@ -8537,6 +8537,131 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-app-0",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "App 多页应用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "App 多页应用 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "app",
+        "brandName": "应用名称",
+        "pages": [
+          {
+            "label": "分组1",
+            "children": [
+              {
+                "label": "页面A",
+                "url": "/pageA",
+                "schema": {
+                  "type": "page",
+                  "body": "Page A"
+                }
+              },
+              {
+                "label": "页面B",
+                "url": "/pageB",
+                "schema": {
+                  "type": "page",
+                  "body": "Page B"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-app-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "App 多页应用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "App 多页应用 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "app",
+        "brandName": "应用名称 YAML",
+        "pages": [
+          {
+            "label": "分组1",
+            "children": [
+              {
+                "label": "页面A YAML",
+                "url": "/pageA",
+                "schema": {
+                  "type": "page",
+                  "body": "Page A YAML"
+                }
+              },
+              {
+                "label": "页面B YAML",
+                "url": "/pageB",
+                "schema": {
+                  "type": "page",
+                  "body": "Page B YAML"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-app-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "App 多页应用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "App 多页应用 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "app",
+        "brandName": "带页脚",
+        "footer": {
+          "type": "tpl",
+          "tpl": "页脚文案"
+        },
+        "pages": [
+          {
+            "label": "首页",
+            "schema": {
+              "type": "page",
+              "body": "主内容"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "button-level-primary",
     "group": "组件 / 功能",
     "bucket": "components",
@@ -8572,14 +8697,10 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "button",
-      "body": [
-        {
-          "type": "button",
-          "label": "主要按钮",
-          "level": "primary"
-        }
-      ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是按钮尺寸与主题。"
+      }
     },
     "measure": {
       "type": "tree"
@@ -8632,6 +8753,322 @@ window.VAMIS_COMPARE_CASES = [
     ]
   },
   {
+    "id": "src-components-button-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "按钮页默认"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "按钮页小",
+        "size": "sm"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "按钮页主要",
+        "level": "primary"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "按钮页危险",
+        "level": "danger"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "按钮页块级",
+        "level": "primary",
+        "block": true
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-0",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是按钮组。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-group",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "按钮甲"
+          },
+          {
+            "type": "button",
+            "label": "按钮乙"
+          },
+          {
+            "type": "button",
+            "label": "普通按钮"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-group",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "按钮甲 YAML"
+          },
+          {
+            "type": "button",
+            "label": "按钮乙 YAML"
+          },
+          {
+            "type": "button",
+            "label": "普通按钮 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-group",
+        "vertical": true,
+        "buttons": [
+          {
+            "type": "button",
+            "label": "按钮1"
+          },
+          {
+            "type": "button",
+            "label": "按钮2"
+          },
+          {
+            "type": "button",
+            "label": "按钮3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-group",
+        "tiled": true,
+        "buttons": [
+          {
+            "type": "button",
+            "label": "平铺1"
+          },
+          {
+            "type": "button",
+            "label": "平铺2"
+          },
+          {
+            "type": "button",
+            "label": "平铺3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-group-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "ButtonGroup 按钮组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ButtonGroup 按钮组 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-group",
+        "btnLevel": "light",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "浅色1"
+          },
+          {
+            "type": "button",
+            "label": "浅色2"
+          },
+          {
+            "type": "button",
+            "label": "覆盖",
+            "level": "primary"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-breadcrumb-0",
     "group": "组件 / 功能",
     "bucket": "components",
@@ -8644,12 +9081,194 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "breadcrumb",
-      "body": [
-        {
-          "type": "breadcrumb"
-        }
-      ]
+      "body": {
+        "type": "breadcrumb",
+        "items": [
+          {
+            "label": "首页"
+          },
+          {
+            "label": "上级页面"
+          },
+          {
+            "label": "当前页面"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-breadcrumb-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Breadcrumb 面包屑",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Breadcrumb 面包屑 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "breadcrumb",
+        "items": [
+          {
+            "label": "首页 YAML"
+          },
+          {
+            "label": "上级页面 YAML"
+          },
+          {
+            "label": "当前页面 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-breadcrumb-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Breadcrumb 面包屑",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Breadcrumb 面包屑 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "breadcrumb": [
+          {
+            "label": "首页"
+          },
+          {
+            "label": "上级页面"
+          },
+          {
+            "label": "当前页面动态"
+          }
+        ]
+      },
+      "body": {
+        "type": "breadcrumb",
+        "source": "${breadcrumb}"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-breadcrumb-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Breadcrumb 面包屑",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Breadcrumb 面包屑 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "breadcrumb",
+        "separator": "/",
+        "separatorClassName": "text-black",
+        "items": [
+          {
+            "label": "首页"
+          },
+          {
+            "label": "上级页面"
+          },
+          {
+            "label": "当前页面斜杠"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-breadcrumb-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Breadcrumb 面包屑",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Breadcrumb 面包屑 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "breadcrumb",
+        "items": [
+          {
+            "label": "首页"
+          },
+          {
+            "label": "上级页面",
+            "dropdown": [
+              {
+                "label": "选项一"
+              },
+              {
+                "label": "选项二"
+              }
+            ]
+          },
+          {
+            "label": "当前页面下拉"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-breadcrumb-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Breadcrumb 面包屑",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Breadcrumb 面包屑 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "breadcrumb",
+        "labelMaxLength": 16,
+        "items": [
+          {
+            "label": "首页"
+          },
+          {
+            "label": "上级页面上级页面上级页面上级页面上级页面"
+          },
+          {
+            "label": "当前页面截断"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
