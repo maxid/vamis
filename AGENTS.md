@@ -57,8 +57,8 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
-- 对照重跑：全局类问题修完必须 `pnpm compare` 全量；组件级修完只跑自身 `pnpm compare --page <type>`。动到窄屏 / `m:` / 移动端表单再跑 `pnpm compare --mobile`（375px，Amis `<768` 断点）。
-- 站点 / 样式 / 组件约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。任务收工见 `update-progress.mdc`。
+- 对照重跑：`compare-cases.js` / `dist/sdk.js` **不进 git**。改完组件必须本机更新对照，换机器不会自动带上。改运行时先 `pnpm sdk:build`；再 `pnpm compare --page <type>`（内部重收割完整目录）。全局 token/字体才 `pnpm compare` 全量。动到窄屏 / `m:` 再 `--mobile`。规则：`.cursor/rules/compare.mdc`。
+- 站点 / 样式 / 组件 / 对照约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`、`compare.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。任务收工见 `update-progress.mdc`。
 
 ## 关键文档
 
@@ -80,7 +80,8 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 
 1. 回写完成状态与进度（禁止代码已合入仍写「未开始」，禁止未做写成「已完成」）。
 2. 规划并写下一条后续计划（下一刀做什么、为何、卡在哪）。
-3. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
+3. 若动了渲染器 / 活示例 / 样式 helper：先按需 `pnpm sdk:build`，再 `pnpm compare --page <type>`。对照产物不进 git，不跑这一步对照页不会更新。见 `.cursor/rules/compare.mdc`。
+4. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
 
 未合入的项保持原状态并注明阻塞。不要 git commit / push，除非用户当轮明确要求。
 

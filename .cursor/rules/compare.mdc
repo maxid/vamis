@@ -1,0 +1,33 @@
+---
+description: 改完组件必须更新对照：sdk:build + 收割 compare-cases + --page
+alwaysApply: true
+---
+
+# 对照（SDK compare）
+
+对照页 `/sdk/compare.html` **不读 git 里的现成目录**。`packages/vamis-sdk/compare-cases.js` 和 `dist/sdk.js` 都 gitignore。换机器、新会话、只 `pnpm dev` **不会**带上本轮组件改动。别的电脑改完组件，对照不会自己更新。
+
+## 收工必须做
+
+改了下面任一，**声称完成前**必须更新对照（不要等用户提醒）：
+
+| 改了什么 | 先 | 再 |
+|----------|----|----|
+| 渲染器 / `@vamis/core` / `@vamis/ui` / SDK | `pnpm sdk:build` | `pnpm compare --page <type>` |
+| `website/src` 活示例（` ```schema `） | 已有 `dist/sdk.js` 可跳过 build | `pnpm compare --page <type>` |
+| 全局 token / 默认字体 / helper 行为 | `pnpm sdk:build` | `pnpm compare` 全量 |
+| 窄屏 / `m:` / 移动端表单 | 同上 | 再加 `--mobile` |
+
+`pnpm compare` 会从 `website/src` **重收割完整目录**写入 `compare-cases.js`（并拷进 dist），再按 `--page` / `--bucket` 过滤 Playwright。不要手改 `compare-cases.js`。一批组件串行 `--page a && --page b`。
+
+运行时改了却只跑 `--page`、不 `sdk:build`：对照页仍是旧内核。只改 md 却不跑 compare：对照下拉仍是上一份收割。
+
+## 禁止
+
+- 改完组件文档或渲染器就标完成，对照页还停在上一份收割 / 上一份 `sdk.js`
+- 为对照去重改甲/乙文案（见 `.cursor/rules/site.mdc`）
+- 把 `compare-cases.js` 提交进 git
+
+## 回写
+
+`CONTEXT.md`「测试」写目录条数；该页 pass/fail 写「最近交付」。

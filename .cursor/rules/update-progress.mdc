@@ -18,6 +18,7 @@ alwaysApply: true
 4. 若改了某份 spec 的范围：更新该文档状态行（草案 / 进行中 / 部分落地 / 已完成）。
 5. 若动了对外文档站点：更新 [在线文档 spec](../../docs/superpowers/specs/2026-10-21-vamis-online-docs.md)；组件页进度仍以组件 TODO 为准，生成器 `website/scripts/gen-component-pages.mjs` 会读它。
 6. 对外文档页标题下的 **实现进度 / 完成状态** banner。组件页走生成器；手写页手改。格式见 `.cursor/rules/site.mdc`。
+7. 若动了渲染器 / 组件文档活示例 / 样式 helper：**必须更新对照**（`compare-cases.js` 与 `dist/sdk.js` 不进 git，换机器不会自动带上）。改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`；全局才全量。口径见 `.cursor/rules/compare.mdc`。不跑对照不得声称完成。
 
 ## 口径
 
