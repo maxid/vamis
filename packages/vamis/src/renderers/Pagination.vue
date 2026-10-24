@@ -29,6 +29,9 @@ import {
 import { useForm } from '../formContext'
 
 const props = defineProps<{ schema: SchemaObject }>()
+const emit = defineEmits<{
+  pageChange: [page: number, perPage?: number, dir?: string]
+}>()
 const data = useData()
 const env = useEnv()
 const scoped = useScoped()
@@ -108,6 +111,7 @@ async function emitChange(nextPage: number, nextPerPage = perPage.value, dir?: s
   page.value = next
   perPage.value = nextPerPage
   if (props.schema.name) form?.setValue(props.schema.name, next)
+  emit('pageChange', next, nextPerPage, dir)
 }
 
 function onPrev() {
