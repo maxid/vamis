@@ -58,6 +58,7 @@ const HANDWRITTEN = new Set([
   '/components/collapse',
   '/components/divider',
   '/components/flex',
+  '/components/grid',
   '/components/chart',
   '/components/code',
   '/components/form/editor',

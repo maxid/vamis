@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 67% | 12 |
+| 布局 | 2 / 15 | 13 | 0 | 69% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
@@ -45,7 +45,7 @@
 
 ---
 
-## 布局（2/15，均 67%）
+## 布局（2/15，均 69%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -56,7 +56,7 @@
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 85% | 文档主路径已对齐：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。缺 `mountOnEnter`、`expand`·`collapse` 动作、FieldSet 像素级 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 90% | 文档主路径已对齐：`lineStyle` / `direction` / `color` / `rotate` / `title` / `titlePosition`。缺 `themeCss`、窄屏 `scaleY(0.5)` | P0 |
 | `flex` | Flex 布局 | 进行中 | 90% | 文档主路径已对齐：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、整树 `envOverwrite` | P0 |
-| `grid` | Grid 水平分栏 | 进行中 | 65% | 12 栅格 span 可用，列等高靠 `className: h-full`；缺响应式 `xs/sm` 全套 | P0 |
+| `grid` | Grid 水平分栏 | 进行中 | 90% | 文档主路径已对齐：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `grid-2d` | Grid 2D 布局 | 进行中 | 45% | 已注册，二维格子精简 | P0 |
 | `hbox` | HBox 布局 | 进行中 | 50% | 已注册；列宽/垂直对齐未对齐文档 | P0 |
 | `pagination` | Pagination 分页 | 进行中 | 55% | 页码可用；缺 `layout` 插槽、完整 `mode` | P0 |
