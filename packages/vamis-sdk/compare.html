@@ -435,6 +435,14 @@
           return (payload && payload.measure && payload.measure.font) || {}
         }
 
+        function rootFontOf(payload) {
+          return (payload && payload.measure && payload.measure.rootFont) || {}
+        }
+
+        function faceName(font) {
+          return font.used || firstFamily(font.fontFamily)
+        }
+
         function cellValue(engine, key, payload) {
           if (payload.error) {
             if (key === 'status' || key === 'sameRow' || key === 'pass') {
@@ -458,12 +466,18 @@
           if (key === 'fontSize') return { text: font.fontSize || '—', cls: '' }
           if (key === 'lineHeight') return { text: font.lineHeight || '—', cls: '' }
           if (key === 'fontFamily') {
-            const family = font.fontFamily
+            const used = faceName(font)
+            const root = rootFontOf(payload)
+            const rootUsed = faceName(root)
             const weight = font.fontWeight
+            const label = used ? (weight ? weight + ' · ' + used : used) : '—'
+            const extra = rootUsed && used && rootUsed.toLowerCase() !== used.toLowerCase() ? ' · body ' + rootUsed : ''
             return {
-              text: family ? (weight ? weight + ' · ' + shortFamily(family) : shortFamily(family)) : '—',
+              text: label + extra,
               cls: 'font-cell',
-              title: family || '',
+              title: [used && 'used: ' + used, rootUsed && 'body: ' + rootUsed, font.fontFamily]
+                .filter(Boolean)
+                .join('\n'),
             }
           }
           if (key.indexOf('style:') === 0) {
@@ -477,6 +491,8 @@
         function collectFontDiffs(amis, vamis) {
           const a = fontOf(amis)
           const b = fontOf(vamis)
+          const ar = rootFontOf(amis)
+          const br = rootFontOf(vamis)
           const diffs = []
           function add(prop, left, right, numeric) {
             if (numeric) {
@@ -487,14 +503,15 @@
                 return
               }
             }
-            if (String(left || '') !== String(right || '')) diffs.push({ prop: prop, amis: left, vamis: right })
+            if (String(left || '').toLowerCase() !== String(right || '').toLowerCase()) {
+              diffs.push({ prop: prop, amis: left, vamis: right })
+            }
           }
           add('fontSize', a.fontSize, b.fontSize, true)
           add('lineHeight', a.lineHeight, b.lineHeight, true)
           add('fontWeight', a.fontWeight, b.fontWeight, false)
-          if (firstFamily(a.fontFamily) !== firstFamily(b.fontFamily)) {
-            diffs.push({ prop: 'fontFamily', amis: a.fontFamily, vamis: b.fontFamily })
-          }
+          add('fontFamily', faceName(a), faceName(b), false)
+          add('bodyFont', faceName(ar), faceName(br), false)
           return diffs
         }
 
@@ -507,9 +524,18 @@
           }
           const result = scoreCase(item(), got.amis, got.vamis)
           const kind = (item().measure && item().measure.type) || 'smoke'
+          const fontDiffs = collectFontDiffs(got.amis, got.vamis)
           if (kind === 'smoke') {
-            setCell(cellId('amis', 'pass'), result.pass ? '渲染' : '失败', result.pass ? 'ok' : 'bad')
-            setCell(cellId('vamis', 'pass'), result.pass ? '渲染' : '失败', result.pass ? 'ok' : 'bad')
+            if (!result.pass) {
+              setCell(cellId('amis', 'pass'), '失败', 'bad')
+              setCell(cellId('vamis', 'pass'), '失败', 'bad')
+            } else if (fontDiffs.length) {
+              setCell(cellId('amis', 'pass'), '对照', 'ok')
+              setCell(cellId('vamis', 'pass'), '字体差', 'bad')
+            } else {
+              setCell(cellId('amis', 'pass'), '渲染', 'ok')
+              setCell(cellId('vamis', 'pass'), '渲染', 'ok')
+            }
           } else {
             setCell(cellId('amis', 'pass'), '对照', got.amis.error ? 'bad' : 'ok')
             setCell(
@@ -518,9 +544,9 @@
               result.pass ? 'ok' : 'bad',
             )
           }
-          const fontDiffs = collectFontDiffs(got.amis, got.vamis)
           fontDiffs.forEach(function (diff) {
-            const key = diff.prop === 'fontWeight' ? 'fontFamily' : diff.prop
+            const key =
+              diff.prop === 'fontWeight' || diff.prop === 'bodyFont' ? 'fontFamily' : diff.prop
             const el = document.getElementById(cellId('vamis', key))
             if (el) el.classList.add('bad')
           })
