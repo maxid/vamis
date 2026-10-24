@@ -12,7 +12,7 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'layout-bottom': () => h(Toaster),
+      'layout-bottom': () => h(Toaster, { position: 'top-center' }),
     })
   },
   enhanceApp({ app }) {

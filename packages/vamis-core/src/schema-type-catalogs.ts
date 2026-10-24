@@ -184,6 +184,8 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
       confirmTitle: doc('confirmTitle', 'Action', '确认框标题。'),
       tooltip: doc('tooltip', 'Action', '目前落到原生 title。'),
       title: doc('title', 'Action', '无 tooltip 时的原生 title。'),
+      toast: doc('toast', 'Action', 'actionType: toast 时的配置：items / position / timeout / closeButton / showIcon。'),
+      msg: doc('msg', 'Action', 'toast 无 items 时的文案；也可用 args.msg。'),
     },
     events: {
       click: doc('click', 'Action 事件', '点击按钮。按钮自己处理，宿主不再派一次。'),
@@ -532,10 +534,14 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }, { slots: ['body'] }),
   toast: fields('Toast', {
     items: '轻提示列表。通常用 actionType: toast，很少单独当页面 type。',
-    position: '弹出位置。',
-    timeout: '自动关闭毫秒。',
+    position: '弹出位置，默认 top-center。可用 top-right / top-center / top-left / bottom-center / bottom-left / bottom-right / center。',
+    timeout: '自动关闭毫秒。默认 4000，error 6000。',
+    closeButton: '是否显示关闭按钮，默认 false。',
+    showIcon: '是否显示图标，默认 true。',
     level: 'info / success / warning / error。',
-    body: '文案。',
+    body: '文案。可用模板。',
+    title: '标题。',
+    allowHtml: 'body 是否当 HTML，默认 true。',
   }),
   each: fields('Each', {
     name: '数组字段名。',

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const toast = Object.assign(vi.fn(), {
   success: vi.fn(),
@@ -14,6 +14,13 @@ vi.mock('vue-sonner', () => ({ toast }))
 const here = dirname(fileURLToPath(import.meta.url))
 
 describe('env.notify / toast', () => {
+  beforeEach(() => {
+    toast.mockClear()
+    toast.success.mockClear()
+    toast.warning.mockClear()
+    toast.error.mockClear()
+  })
+
   it('routes info/success/warning/error to vue-sonner', async () => {
     const { createDefaultEnv } = await import('../src/env')
     const env = createDefaultEnv()
@@ -21,10 +28,30 @@ describe('env.notify / toast', () => {
     env.notify('success', 'saved')
     env.notify('warning', 'careful')
     env.notify('error', 'boom')
-    expect(toast).toHaveBeenCalledWith('hello')
-    expect(toast.success).toHaveBeenCalledWith('saved')
-    expect(toast.warning).toHaveBeenCalledWith('careful')
-    expect(toast.error).toHaveBeenCalledWith('boom')
+    expect(toast).toHaveBeenCalledWith('hello', expect.any(Object))
+    expect(toast.success).toHaveBeenCalledWith('saved', expect.any(Object))
+    expect(toast.warning).toHaveBeenCalledWith('careful', expect.any(Object))
+    expect(toast.error).toHaveBeenCalledWith('boom', expect.any(Object))
+  })
+
+  it('forwards timeout closeButton position title to vue-sonner', async () => {
+    const { createDefaultEnv } = await import('../src/env')
+    const env = createDefaultEnv()
+    env.notify('success', 'saved', {
+      timeout: 1000,
+      closeButton: true,
+      position: 'bottom-left',
+      title: '标题',
+    })
+    expect(toast.success).toHaveBeenCalledWith(
+      'saved',
+      expect.objectContaining({
+        duration: 1000,
+        closeButton: true,
+        position: 'bottom-left',
+        description: '标题',
+      }),
+    )
   })
 
   it('Toaster ships vue-sonner stylesheet so toasts are visible', () => {

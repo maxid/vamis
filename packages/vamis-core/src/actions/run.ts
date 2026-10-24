@@ -6,6 +6,7 @@ import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
 import type { Scope } from '../scope'
 import { actionMailto } from '../utils/action'
+import { toastNotices, toastNotifyConf } from '../utils/toast'
 import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
 import { getAction, registerAction } from './registry'
 
@@ -150,13 +151,9 @@ function registerBuiltinActions() {
 
   registerAction('toast', async (action, ctx) => {
     const data = actionData(action, ctx)
-    const level = (action.level || action.args?.level || action.args?.msgType || 'info') as
-      | 'info'
-      | 'success'
-      | 'warning'
-      | 'error'
-    const msg = filterTpl(action.msg || action.message || action.args?.msg || '提示', data)
-    ctx.env.notify(level, msg)
+    for (const notice of toastNotices(action, data)) {
+      ctx.env.notify(notice.level, notice.body || notice.title || '提示', toastNotifyConf(notice))
+    }
   })
 
   registerAction('alert', async (action, ctx) => {

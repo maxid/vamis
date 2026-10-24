@@ -168,6 +168,6 @@ watch([dark, density, accent], () => {
         <component :is="Component" class="min-h-0 flex-1" />
       </RouterView>
     </main>
-    <Toaster position="top-right" />
+    <Toaster position="top-center" :offset="72" />
   </div>
 </template>

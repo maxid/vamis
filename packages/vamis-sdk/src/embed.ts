@@ -102,7 +102,7 @@ export function embed(
             data: state.data,
             env: state.env,
           }),
-          h(Toaster, { position: (env?.toastPosition as 'top-right') || 'top-right' }),
+          h(Toaster, { position: (env?.toastPosition as 'top-center') || 'top-center' }),
         ])
     },
   })

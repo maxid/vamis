@@ -50,7 +50,7 @@ describe('VamisEvent', () => {
     expect(event.prevented).toBe(true)
     expect(event.stopped).toBe(true)
     expect(context.env.notify).toHaveBeenCalledTimes(1)
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'first')
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'first', expect.any(Object))
   })
 
   it('ignoreError keeps the chain going after a failed ajax', async () => {
@@ -63,7 +63,7 @@ describe('VamisEvent', () => {
       ],
       context,
     )
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'after')
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'after', expect.any(Object))
   })
 
   it('exposes __rendererData to onEvent formulas', async () => {
@@ -82,6 +82,6 @@ describe('VamisEvent', () => {
       'click',
       context,
     )
-    expect(context.env.notify).toHaveBeenCalledWith('info', 'dev')
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'dev', expect.any(Object))
   })
 })
