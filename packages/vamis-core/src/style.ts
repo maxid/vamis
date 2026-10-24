@@ -114,6 +114,7 @@ export function isInlineBlockSchema(schema?: { type?: string; inline?: unknown; 
   if (!schema) return false
   if (schema.inline === false) return false
   if (String(schema.type || '').toLowerCase() === 'divider' && schema.direction === 'vertical') return true
+  if (schema.inline === true && String(schema.type || '').toLowerCase() === 'tooltip-wrapper') return true
   return INLINE_BLOCK_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
 }
 

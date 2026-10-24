@@ -76,7 +76,12 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
     '页内锚点。direction 横竖；active 用 href 或索引。',
     '常用：links、direction、active。',
   ),
-  'tooltip-wrapper': doc('TooltipWrapper 文字提示容器', '功能', '悬停或点击出 tip。'),
+  'tooltip-wrapper': doc(
+    'TooltipWrapper 文字提示容器',
+    '功能',
+    '悬停或点击出 tip。trigger / placement / tooltipTheme / offset / inline。',
+    '常用：content、title、trigger、placement、tooltipTheme、inline。',
+  ),
 
   form: doc(
     'Form 表单',

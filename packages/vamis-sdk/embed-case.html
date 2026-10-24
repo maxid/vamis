@@ -8,12 +8,16 @@
       html,
       body {
         margin: 0;
+        height: 100%;
+        min-height: 100%;
         background: #fff;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
       #root {
         padding: 12px;
-        min-height: 80px;
+        min-height: 100%;
+        box-sizing: border-box;
       }
       .err {
         color: #b91c1c;
@@ -542,7 +546,7 @@
           if (!root) return 80
           const viewport = window.innerHeight
           let bottom = 0
-          const nodes = [root].concat(Array.prototype.slice.call(root.querySelectorAll('*')))
+          const nodes = [root].concat(Array.prototype.slice.call(document.body.querySelectorAll('*')))
           for (let i = 0; i < nodes.length; i++) {
             const el = nodes[i]
             const cs = getComputedStyle(el)
@@ -687,6 +691,14 @@
 
         if (typeof ResizeObserver === 'function') {
           new ResizeObserver(scheduleSize).observe(document.getElementById('root'))
+        }
+        if (typeof MutationObserver === 'function') {
+          new MutationObserver(scheduleSize).observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class', 'style', 'hidden'],
+          })
         }
         window.addEventListener('load', scheduleSize)
 
