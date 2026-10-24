@@ -195,4 +195,34 @@ describe('onEvent actions', () => {
     await runAction({ actionType: 'toast', args: { msgType: 'warning', msg: 'careful' } }, context)
     expect(context.env.notify).toHaveBeenCalledWith('warning', 'careful')
   })
+
+  it('passes confirmTitle to env.confirm', async () => {
+    const context = ctx()
+    await runAction(
+      {
+        actionType: 'ajax',
+        api: '/api/mock2/form/saveForm',
+        confirmText: '确认要发出这个请求？',
+        confirmTitle: '炸弹',
+      },
+      context,
+    )
+    expect(context.env.confirm).toHaveBeenCalledWith('确认要发出这个请求？', '炸弹')
+  })
+
+  it('opens a mailto link for email actions', async () => {
+    const context = ctx()
+    await runAction(
+      {
+        actionType: 'email',
+        to: 'amis@baidu.com',
+        subject: '这是邮件主题',
+        body: '这是邮件正文',
+      },
+      context,
+    )
+    expect(context.env.jumpTo).toHaveBeenCalledWith(
+      'mailto:amis@baidu.com?subject=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E4%B8%BB%E9%A2%98&body=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E6%AD%A3%E6%96%87',
+    )
+  })
 })

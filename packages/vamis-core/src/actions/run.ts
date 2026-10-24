@@ -5,6 +5,7 @@ import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
 import type { Scope } from '../scope'
+import { actionMailto } from '../utils/action'
 import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
 import { getAction, registerAction } from './registry'
 
@@ -71,7 +72,10 @@ export async function runActions(actions: ActionSchema[] | undefined, ctx: Actio
 export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<void> {
   const data = actionData(action, ctx)
   if (typeof action.expression === 'string' && !evalExpression(action.expression, data)) return
-  if (action.confirmText && !(await ctx.env.confirm(filterTpl(action.confirmText, data)))) return
+  if (action.confirmText) {
+    const title = typeof action.confirmTitle === 'string' ? filterTpl(action.confirmTitle, data) : undefined
+    if (!(await ctx.env.confirm(filterTpl(action.confirmText, data), title))) return
+  }
 
   const type =
     action.actionType || (action.type === 'submit' ? 'submit' : action.type === 'reset' ? 'reset' : '')
@@ -238,6 +242,10 @@ function registerBuiltinActions() {
     if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text)
     }
+  })
+
+  registerAction('email', async (action, ctx) => {
+    ctx.env.jumpTo(actionMailto(action, actionData(action, ctx)))
   })
 
   registerAction('wait', async (action) => {

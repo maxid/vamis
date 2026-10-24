@@ -34,7 +34,7 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
+| 功能 | 0 / 12 | 11 | 1 | 47% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
@@ -69,11 +69,11 @@
 
 ---
 
-## 功能（0/12，均 43%）
+## 功能（0/12，均 47%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `action` | Action 行为按钮 | 进行中 | 55% | ajax/toast/dialog 等 P0 动作有；无事件对象 / `__rendererData` / 控制流（D4） | P0 |
+| `action` | Action 行为按钮 | 进行中 | 85% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、URL `icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / email。缺倒计时、快捷键、fa 图标、Action 当容器、`download` / `saveAs`、控制流 | P0 |
 | `app` | App 多页应用 | 进行中 | 35% | 能切 pages；路由/`keepPageHistory` 精简 | P0 |
 | `button` | Button 按钮 | 进行中 | 55% | `action` 别名，同一渲染器 | P0 |
 | `button-group` | ButtonGroup 按钮组 | 进行中 | 60% | 能排按钮；缺 `vertical`/`tiled` 细节 | P0 |
