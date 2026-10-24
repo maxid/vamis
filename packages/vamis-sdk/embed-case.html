@@ -319,6 +319,9 @@
           if (node.type === 'wizard') {
             return document.querySelector('[data-vamis-wizard], .cxd-Wizard')
           }
+          if (node.type === 'popover' || node.popOver) {
+            return document.querySelector('[data-vamis-popover], .cxd-Field-popOverBtn, .cxd-PopOverAble')
+          }
           return null
         }
 

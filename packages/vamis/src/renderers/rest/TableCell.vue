@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { filterTpl, SchemaRenderer, type SchemaObject } from '@vamis/core'
+import PopOverHost from '../PopOverHost.vue'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const text = computed(() => {
@@ -12,6 +13,8 @@ const text = computed(() => {
 </script>
 
 <template>
-  <SchemaRenderer v-if="schema.body" :schema="schema.body" />
-  <span v-else>{{ text }}</span>
+  <PopOverHost :schema="schema" :data="data">
+    <SchemaRenderer v-if="schema.body" :schema="schema.body" />
+    <span v-else>{{ text }}</span>
+  </PopOverHost>
 </template>

@@ -34,14 +34,14 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 11 | 1 | 78% | 10 |
+| 功能 | 0 / 12 | 12 | 0 | 76% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 56% | 4 |
-| **合计** | **2 / 155** | **152** | **1** | **52%** | **100** |
+| **合计** | **2 / 155** | **153** | **0** | **53%** | **101** |
 
-未开始只剩功能类 `popOver` 属性。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` 80%，`badge` 属性 40%。
+侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` 80%，`badge` 属性 40%；`popOver` 属性 80%。
 
 ---
 
@@ -69,7 +69,7 @@
 
 ---
 
-## 功能（0/12，均 78%）
+## 功能（0/12，均 76%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
@@ -84,7 +84,7 @@
 | `nav` | Nav 导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 80% | 文档主路径已对齐：`content` / `title`、`trigger` hover/click/focus、`placement`、`tooltipTheme`、`offset`、`showArrow`、`inline`、`wrapperComponent`。缺浮层动画 | P0 |
-| （属性 `popOver`） | PopOver 弹出提示 | **未开始** | 0% | 不是独立 type；table/list/static/cards 字段均未实现 `popOver` | P0 |
+| `popOver` | PopOver 弹出提示 | 进行中 | 80% | 不是独立 type。文档主路径已对齐：static / table 列 / tpl / list·cards 字段；字符串精简写法、`trigger` 默认 click、`showIcon` 默认 true、`popOverEnableOn`、`mode` dialog/drawer。缺 crud 远程列、`textOverflow` 省略自动弹出、浮层像素 | P0 |
 
 ---
 
@@ -147,7 +147,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `select` | Select 下拉框 | 进行中 | 60% | 能选；`source` 按 `isApiOutdated` 刷新，可被 `reload` 点名（`form.select`）。检索/无限滚动/多选细节未齐 | P0 |
 | `input-sub-form` | InputSubForm 子表单 | 进行中 | 45% | 能嵌表单；弹层/多选未齐 | P0 |
 | `switch` | Switch 开关 | 进行中 | 65% | 能切换；`trueValue` 未齐 | P0 |
-| `static` | Static 静态展示 | 进行中 | 55% | 能展示；`popOver`/`quickEdit` 无 | P0 |
+| `static` | Static 静态展示 | 进行中 | 65% | 能展示；`popOver` 已接（字符串 / 对象 / 放大镜）。`quickEdit` 无 | P0 |
 | `input-table` | InputTable 表格 | 进行中 | 45% | 能行内编辑；子 api、增删校验未齐 | P0 |
 | `input-tag` | InputTag 标签选择器 | 进行中 | 50% | 能回车加标签 | P0 |
 | `input-text` | InputText 输入框 | 进行中 | 60% | 主路径可用；`addOn`/清值/计数未齐 | P0 |
@@ -174,7 +174,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `crud` | CRUD 增删改查 | 进行中 | 58% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
-| `table` | Table 表格 | 进行中 | 50% | 能渲染列；无独立数据域、无 `popOver`/`quickEdit` | P0 |
+| `table` | Table 表格 | 进行中 | 55% | 能渲染列；列 `popOver` / `popOverEnableOn` 已接。无独立数据域、无 `quickEdit` | P0 |
 | `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 40% | 已注册，合并单元格/布局模式精简 | P0 |
 | `calendar` | Calendar 日历日程 | 进行中 | 40% | 已注册，日程数据精简 | P0 |

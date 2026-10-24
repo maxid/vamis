@@ -10379,19 +10379,290 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "popover",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "悬停查看",
-          "popOver": {
-            "body": {
-              "type": "tpl",
-              "tpl": "PopOver 尚未作为独立 type 落地，当前走宿主属性。"
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
+          {
+            "name": "static",
+            "type": "static",
+            "label": "静态甲",
+            "value": "值甲",
+            "popOver": "弹出甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
+          {
+            "name": "static",
+            "type": "static",
+            "label": "静态乙",
+            "value": "值乙",
+            "popOver": "弹出乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "engine": "引擎甲",
+            "id": 1
+          }
+        ]
+      },
+      "body": {
+        "type": "table",
+        "source": "${items}",
+        "columns": [
+          {
+            "name": "engine",
+            "label": "列甲",
+            "popOver": "列弹出甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "engine": "引擎乙",
+            "id": 1
+          }
+        ]
+      },
+      "body": {
+        "type": "table",
+        "source": "${items}",
+        "columns": [
+          {
+            "name": "engine",
+            "label": "列乙",
+            "popOver": "列弹出乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
+          {
+            "type": "static",
+            "name": "hover",
+            "label": "悬停甲",
+            "value": "截断甲",
+            "popOver": {
+              "trigger": "hover",
+              "position": "left-top",
+              "showIcon": false,
+              "title": "标题甲",
+              "body": "全文甲"
             }
           }
-        }
-      ]
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
+          {
+            "type": "static",
+            "name": "hover",
+            "label": "悬停乙",
+            "value": "截断乙",
+            "popOver": {
+              "trigger": "hover",
+              "position": "left-top",
+              "showIcon": false,
+              "title": "标题乙",
+              "body": "全文乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-6",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "id": 1,
+            "engine": "启用甲"
+          },
+          {
+            "id": 2,
+            "engine": "关闭甲"
+          }
+        ]
+      },
+      "body": {
+        "type": "table",
+        "source": "${items}",
+        "columns": [
+          {
+            "name": "engine",
+            "label": "条件甲",
+            "popOver": {
+              "body": "${engine}"
+            },
+            "popOverEnableOn": "this.id == 1"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-popover-7",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "PopOver 弹出提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "PopOver 弹出提示 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "id": 1,
+            "engine": "启用乙"
+          },
+          {
+            "id": 2,
+            "engine": "关闭乙"
+          }
+        ]
+      },
+      "body": {
+        "type": "table",
+        "source": "${items}",
+        "columns": [
+          {
+            "name": "engine",
+            "label": "条件乙",
+            "popOver": {
+              "body": "${engine}"
+            },
+            "popOverEnableOn": "this.id == 1"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

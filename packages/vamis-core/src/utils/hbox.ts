@@ -58,5 +58,6 @@ export function hboxColumnBody(col: unknown): SchemaNode[] {
   const rec = col as SchemaObject
   if (rec.body != null) return toArray(rec.body)
   if (typeof rec.type === 'string' && rec.type !== 'hbox-column') return [rec]
+  if (rec.name != null || rec.label != null || rec.popOver) return [{ type: 'field', ...rec }]
   return []
 }

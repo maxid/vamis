@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { evalTemplate, type SchemaObject } from '@vamis/core'
+import PopOverHost from './PopOverHost.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -26,6 +27,8 @@ const rendered = computed(() => {
 </script>
 
 <template>
-  <component :is="tag" v-if="rendered.html != null" class="vamis-html" v-html="rendered.html" />
-  <component :is="tag" v-else class="vamis-html">{{ rendered.text }}</component>
+  <PopOverHost :schema="schema" :data="data">
+    <component :is="tag" v-if="rendered.html != null" class="vamis-html" v-html="rendered.html" />
+    <component :is="tag" v-else class="vamis-html">{{ rendered.text }}</component>
+  </PopOverHost>
 </template>

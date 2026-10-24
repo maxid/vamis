@@ -199,6 +199,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     text: '纯文本，整段转义。',
     inline: '默认 true（跟在同一行）。false 时块级，独占一行。',
     wrapperComponent: '外层标签，div 或 span。',
+    popOver: '弹出详情。字符串精简写法，或 {body,title,trigger,showIcon}。',
   }),
   code: fields('Code', {
     value: '只读代码文本。',
@@ -245,7 +246,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     actions: { reload: '重拉列表。', setValue: '写入列表数据。' },
   }),
   table: fields('Table', {
-    columns: '列定义。',
+    columns: '列定义。列可配 popOver / popOverEnableOn。',
     source: '数据源。表达式或数组。',
   }, { slots: ['columns'] }),
   flex: fields('Flex', {
@@ -1078,7 +1079,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     tpl: '展示模板。',
     value: '静态值。',
     quickEdit: '快捷编辑配置。',
-    popOver: '悬浮详情。未齐。',
+    popOver: '弹出详情。字符串精简写法，或 {body,title,trigger,showIcon,mode}。',
     copyable: '可复制。',
   }, { formItem: true }),
   'input-date': fields('InputDate', {
