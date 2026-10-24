@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 对照差异按 **全局 / 样式 helper / 组件** 分类汇总（对照页 + 报告），并带整改建议。全局先动 token / sdk 根，helper 补缺档，组件只改该 type。
 - 对照页字体量测改读正文节点 + 实际 used face（canvas 解析栈），并对照 `body` 字体。指定栈都是 `-apple-system` 时不再漏掉 Amis html `PingFang SC` 或 `text-sm` 12px vs 14px；smoke 有字体差时判定为「字体差」，不挡 Playwright 文档 smoke。
 - GitHub Pages 上对照页可用：`pnpm build` 把 `compare.html` / `embed-case.html` / `compare-cases.js` 拷进 `/sdk/`；文档链接带 `VITE_BASE` 并整页跳，避免 SPA 吃掉静态 HTML。Amis 栏仍依赖 unpkg。
 - 对照页结果表补上字体信息：字号 / 行高 / 字体栈（hover 看完整 family）。字体差异标红并写进备注，不挡盒模型 / smoke 判定。
@@ -214,7 +215,7 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **按 SDK 对照报告修 compact helper 阶（当前 P0 8 败）**：Amis 5/10/15/20/30/40/50，Vamis 走 `--gap-*` 4/8/12/16/20/24；`m-l-xxl` / `m-l-n` 未实现（缝 0）。改完跑 `pnpm compare:p0`，报告归零再收文档 smoke。真源：[对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。
+6. **按对照问题分类整改**：先 **全局**（`--gap-*` 阶 5/10/15/20/30/40/50；html/body 默认中文栈对齐 Amis PingFang SC），再 **缺档 helper**（`m-l-xxl` / `m-l-n`；`text-sm` 对标实测 12px），最后 **组件**（Button `font-medium` 500→400）。对照页与报告已按这三类汇总。真源：[对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。
 7. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。再核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

@@ -6,6 +6,7 @@ import { p0Cases } from '../compare/p0-cases.mjs'
 import { applySchemaScope, parseSchemaFenceMeta } from '../compare/scope.mjs'
 import { harvestMarkdown } from '../compare/harvest.mjs'
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
+import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 
 describe('applySchemaScope', () => {
   it('wraps body fragments in page', () => {
@@ -98,6 +99,37 @@ describe('resultColumns', () => {
       'fontFamily',
       'pass',
     ])
+  })
+})
+
+describe('classifyIssue', () => {
+  it('treats compact m-l ladder as global token scale', () => {
+    const item = p0Cases.find((row) => row.id === 'helper-m-l')
+    expect(classifyIssue({ prop: 'gap', amis: 15, vamis: 12 }, item)).toBe('global')
+    expect(adviseIssue({ prop: 'gap', amis: 15, vamis: 12 }, item, 'global')).toContain('--gap-')
+  })
+
+  it('treats missing m-l-xxl as helper', () => {
+    const item = p0Cases.find((row) => row.id === 'helper-m-l-xxl')
+    expect(classifyIssue({ prop: 'gap', amis: 50, vamis: 0 }, item)).toBe('helper')
+  })
+
+  it('treats body font as global and text-sm size as helper', () => {
+    expect(classifyIssue({ prop: 'bodyFont', amis: 'PingFang SC', vamis: 'Helvetica Neue' }, { schema: {} })).toBe(
+      'global',
+    )
+    const tpl = {
+      schema: {
+        type: 'page',
+        body: { type: 'tpl', tpl: '<div class="text-sm">短</div>' },
+      },
+    }
+    expect(classifyIssue({ prop: 'fontSize', amis: '12px', vamis: '14px' }, tpl)).toBe('helper')
+  })
+
+  it('treats button font-weight as component', () => {
+    const item = p0Cases.find((row) => row.id === 'style-two-buttons')
+    expect(classifyIssue({ prop: 'fontWeight', amis: '400', vamis: '500' }, item)).toBe('component')
   })
 })
 

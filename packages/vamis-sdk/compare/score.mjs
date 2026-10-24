@@ -51,6 +51,46 @@ function pushDiff(diffs, prop, amis, vamis) {
   diffs.push({ prop, amis, vamis })
 }
 
+function firstFamily(value) {
+  if (!value) return ''
+  return String(value)
+    .split(',')[0]
+    .trim()
+    .replace(/^["']|["']$/g, '')
+}
+
+function faceName(font = {}) {
+  return font.used || firstFamily(font.fontFamily)
+}
+
+/** 字体差不挡 smoke / P0 盒模型，但要进问题分类。 */
+export function collectFontDiffs(amis, vamis) {
+  const a = amis?.measure?.font || {}
+  const b = vamis?.measure?.font || {}
+  const ar = amis?.measure?.rootFont || {}
+  const br = vamis?.measure?.rootFont || {}
+  const diffs = []
+  function add(prop, left, right, numeric) {
+    if (numeric) {
+      const ln = PX(left)
+      const rn = PX(right)
+      if (ln != null && rn != null) {
+        if (Math.abs(ln - rn) > 0.5) pushDiff(diffs, prop, left, right)
+        return
+      }
+    }
+    if (String(left || '').toLowerCase() !== String(right || '').toLowerCase()) {
+      pushDiff(diffs, prop, left, right)
+    }
+  }
+  add('fontSize', a.fontSize, b.fontSize, true)
+  add('lineHeight', a.lineHeight, b.lineHeight, true)
+  add('fontWeight', a.fontWeight, b.fontWeight, false)
+  add('fontFamily', faceName(a), faceName(b), false)
+  add('bodyFont', faceName(ar), faceName(br), false)
+  return diffs
+}
+
 export function scoreCase(item, amis, vamis) {
   if (vamis?.error) {
     return { pass: false, reason: `vamis: ${vamis.error}`, diffs: [] }

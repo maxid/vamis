@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { summarizeReport } from './score.mjs'
+import { SCOPE, summarizeFindings } from './classify.mjs'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -19,6 +20,7 @@ export function writeReport(rows, options = {}) {
       pass: row.parity?.pass,
       reason: row.parity?.reason,
       diffs: row.parity?.diffs,
+      findings: row.findings,
       amis: row.amis,
       vamis: row.vamis,
     })),
@@ -31,12 +33,28 @@ export function writeReport(rows, options = {}) {
   const failed = rows.filter((row) => !row.parity?.pass)
   const p0Failed = failed.filter((row) => row.layer === 'p0')
   const smokeFailed = failed.filter((row) => row.layer !== 'p0')
+  const classified = summarizeFindings(rows)
   function failLine(row) {
     const extra =
       (row.parity?.diffs || [])
         .map((item) => `${item.prop}: Amis \`${item.amis}\` / Vamis \`${item.vamis}\``)
         .join('；') || row.parity?.reason || ''
     return `- \`${row.id}\` ${row.title}${extra ? ` — ${extra}` : ''}`
+  }
+  function issueLine(issue) {
+    return `- \`${issue.id}\` ${issue.prop}: Amis \`${issue.amis}\` / Vamis \`${issue.vamis}\``
+  }
+  function scopeSection(key) {
+    const bucket = classified[key]
+    const head = [
+      `### ${bucket.label}（${bucket.count}）`,
+      '',
+      bucket.hint,
+      '',
+    ]
+    if (!bucket.count) return [...head, '- 无。', '']
+    const advice = bucket.advice.length ? ['整改：', ...bucket.advice.map((line) => `- ${line}`), ''] : []
+    return [...head, ...bucket.items.slice(0, 12).map(issueLine), ...(bucket.count > 12 ? [`- …其余 ${bucket.count - 12} 条见 last-report.json`] : []), '', ...advice]
   }
   const md = [
     '# SDK 对照报告',
@@ -45,6 +63,17 @@ export function writeReport(rows, options = {}) {
     `- 状态：自动生成。\`pnpm compare\` 用同一份 schema 跑 \`amis.embed\` / \`vamis.embed\`，判定是 **Vamis 是否对齐 Amis 实测**。`,
     `- 合计 **${summary.total}** · 通过 **${summary.passed}** · 失败 **${summary.failed}**（P0 ${p0Failed.length}）`,
     '',
+    '## 问题分类',
+    '',
+    '| 范围 | 条数 | 怎么改 |',
+    '|------|------|--------|',
+    `| ${SCOPE.global.label} | ${classified.global.count} | ${SCOPE.global.hint} |`,
+    `| ${SCOPE.helper.label} | ${classified.helper.count} | ${SCOPE.helper.hint} |`,
+    `| ${SCOPE.component.label} | ${classified.component.count} | ${SCOPE.component.hint} |`,
+    '',
+    ...scopeSection('global'),
+    ...scopeSection('helper'),
+    ...scopeSection('component'),
     '## 分组',
     '',
     '| 组 | 合计 | 失败 |',
@@ -62,7 +91,7 @@ export function writeReport(rows, options = {}) {
     ...(smokeFailed.length ? smokeFailed.slice(0, 20).map(failLine) : ['- 无失败。']),
     ...(smokeFailed.length > 20 ? [`- …其余 ${smokeFailed.length - 20} 条见 \`compare/last-report.json\``] : []),
     '',
-    '下一刀优先修 P0 helper 阶。报告覆盖 `CONTEXT.md`「后续计划」里的对照项。`pnpm compare:p0` 是盒模型门禁。',
+    '下一刀按问题分类：先全局 token / 默认字体，再补缺档 helper，最后改组件默认外观。`pnpm compare:p0` 是盒模型门禁。',
     '',
   ].join('\n')
   const mdPath = path.join(repo, 'docs/superpowers/specs/2026-10-24-sdk-compare-report.md')

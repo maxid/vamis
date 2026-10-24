@@ -3,7 +3,8 @@ import http from 'node:http'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCases } from './build-cases.mjs'
-import { scoreCase } from './score.mjs'
+import { collectFontDiffs, scoreCase } from './score.mjs'
+import { attachFindings } from './classify.mjs'
 import { writeReport } from './report.mjs'
 
 const sdk = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -111,6 +112,7 @@ export async function runCompare(argv = process.argv.slice(2)) {
       const runId = i + 1
       process.stdout.write(`[${runId}/${list.length}] ${item.id}\n`)
       const [amis, vamis] = await Promise.all([runOnPage(amisPage, item, runId), runOnPage(vamisPage, item, runId)])
+      const parity = scoreCase(item, amis, vamis)
       rows.push({
         id: item.id,
         group: item.group,
@@ -118,7 +120,8 @@ export async function runCompare(argv = process.argv.slice(2)) {
         title: item.title,
         amis: { error: amis.error || null, measure: amis.measure },
         vamis: { error: vamis.error || null, measure: vamis.measure },
-        parity: scoreCase(item, amis, vamis),
+        parity,
+        findings: attachFindings(item, [...(parity.diffs || []), ...collectFontDiffs(amis, vamis)]),
       })
     }
     const written = writeReport(rows)
