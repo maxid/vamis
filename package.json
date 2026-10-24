@@ -12,6 +12,8 @@
     "build": "pnpm --filter @vamis/sdk build && pnpm --filter @vamis/playground build",
     "preview": "pnpm --filter @vamis/playground preview",
     "test": "pnpm --filter @vamis/formula test && pnpm --filter @vamis/core test && pnpm --filter @vamis/sdk test",
+    "compare": "node scripts/sdk-compare.mjs",
+    "compare:p0": "node scripts/sdk-compare.mjs --p0",
     "typecheck": "pnpm --filter @vamis/playground typecheck",
     "status": "node scripts/amis-parity.mjs"
   },

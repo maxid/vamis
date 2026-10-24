@@ -10,7 +10,7 @@ P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByN
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
 
-构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。和 Amis 对同一份 schema 时打开 [`/sdk/compare.html`](/sdk/compare.html)（`amis.embed` 与 `vamis.embed` 各一栏，量真实按钮盒子；**编辑 Schema** 为 YAML / JSON 双 Tab，改一边立刻同步）。Vue 工程请走 [快速开始](/start/getting-started)。
+构建：`pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`（`sdk.js` + `sdk.css` + `hello.html`）。Playground 在 `/sdk/hello.html` 提供同一份无构建示例。和 Amis 对同一份 schema 时打开 [`/sdk/compare.html`](/sdk/compare.html)（`amis.embed` 与 `vamis.embed` 各一栏；结果表按用例量测类型换列，并附字号 / 行高 / 字体；**编辑 Schema** YAML / JSON 双 Tab；下拉是 P0 + 文档收割用例）。命令：`pnpm compare:p0`（盒模型门禁）/ `pnpm compare`（含文档 smoke），报告见仓库 `docs/superpowers/specs/2026-10-24-sdk-compare-report.md`。Vue 工程请走 [快速开始](/start/getting-started)。
 
 下面 iframe 跑打包后的 `sdk.js`：
 

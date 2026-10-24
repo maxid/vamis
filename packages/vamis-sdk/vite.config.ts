@@ -21,6 +21,12 @@ function copySdkStatic(): Plugin {
         const from = path.join(sdk, file)
         if (fs.existsSync(from)) fs.copyFileSync(from, path.join(dest, file))
       }
+      const score = path.join(sdk, 'compare', 'score.mjs')
+      if (fs.existsSync(score)) {
+        const dir = path.join(dest, 'compare')
+        fs.mkdirSync(dir, { recursive: true })
+        fs.copyFileSync(score, path.join(dir, 'score.mjs'))
+      }
     },
   }
 }

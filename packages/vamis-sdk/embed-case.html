@@ -67,42 +67,79 @@
           })
         }
 
-        function measure(labels) {
-          const wanted = labels || []
+        function findByLabel(label) {
           const all = document.querySelectorAll('button, a')
-          const nodes = []
-          if (wanted.length >= 2) {
-            for (let i = 0; i < all.length; i++) {
-              const text = (all[i].textContent || '').trim()
-              if (wanted.indexOf(text) >= 0) nodes.push(all[i])
-            }
-          } else {
-            for (let i = 0; i < all.length && nodes.length < 2; i++) {
-              const text = (all[i].textContent || '').trim()
-              if (text) nodes.push(all[i])
+          for (let i = 0; i < all.length; i++) {
+            if ((all[i].textContent || '').trim() === label) return all[i]
+          }
+          return null
+        }
+
+        function pairNodes(spec) {
+          if (spec && spec.selectors && spec.selectors.length >= 2) {
+            return [document.querySelector(spec.selectors[0]), document.querySelector(spec.selectors[1])]
+          }
+          const wanted = (spec && spec.labels) || []
+          if (wanted.length >= 2) return [findByLabel(wanted[0]), findByLabel(wanted[1])]
+          const all = []
+          const nodes = document.querySelectorAll('button, a, [data-box]')
+          for (let i = 0; i < nodes.length && all.length < 2; i++) {
+            if ((nodes[i].textContent || '').trim() || nodes[i].hasAttribute('data-box')) all.push(nodes[i])
+          }
+          return [all[0], all[1]]
+        }
+
+        function readFont(el) {
+          if (!el) return null
+          const cs = getComputedStyle(el)
+          return {
+            fontFamily: cs.fontFamily,
+            fontSize: cs.fontSize,
+            fontWeight: cs.fontWeight,
+            lineHeight: cs.lineHeight,
+          }
+        }
+
+        function smokeTarget() {
+          const root = document.getElementById('root')
+          if (!root) return null
+          return (
+            root.querySelector('button') ||
+            root.querySelector('a, label, input, textarea, select') ||
+            root.querySelector('.cxd-Page, .vamis-page, .vamis-node') ||
+            root.firstElementChild
+          )
+        }
+
+        function measure(spec) {
+          const kind = (spec && spec.type) || 'pair'
+          if (kind === 'smoke') {
+            const root = document.getElementById('root')
+            if (!root || !root.childElementCount) return { error: '未渲染' }
+            return {
+              smoke: true,
+              text: (root.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80),
+              font: readFont(smokeTarget()),
             }
           }
-          const a =
-            wanted.length >= 2
-              ? nodes.find(function (n) {
-                  return n.textContent.trim() === wanted[0]
-                })
-              : nodes[0]
-          const b =
-            wanted.length >= 2
-              ? nodes.find(function (n) {
-                  return n.textContent.trim() === wanted[1]
-                })
-              : nodes[1]
-          if (!a || !b) return { error: '找不到可量的两个按钮' }
+          const pair = pairNodes(spec)
+          const a = pair[0]
+          const b = pair[1]
+          if (!a || !b) return { error: '找不到可量的两个节点' }
           const ra = a.getBoundingClientRect()
           const rb = b.getBoundingClientRect()
+          const cs = getComputedStyle(b)
+          const style = {}
+          const props = (spec && spec.props) || ['marginLeft', 'display']
+          for (let i = 0; i < props.length; i++) style[props[i]] = cs[props[i]]
           return {
             a: { top: round(ra.top), left: round(ra.left), width: round(ra.width), height: round(ra.height) },
             b: { top: round(rb.top), left: round(rb.left), width: round(rb.width), height: round(rb.height) },
             sameRow: Math.abs(ra.top - rb.top) <= 2,
             gap: round(rb.left - (ra.left + ra.width)),
-            bMarginLeft: getComputedStyle(b).marginLeft,
+            bMarginLeft: cs.marginLeft,
+            style: style,
+            font: readFont(a),
           }
         }
 
@@ -110,11 +147,11 @@
           return Math.round(n * 10) / 10
         }
 
-        function waitForMeasure(labels, timeout) {
+        function waitForMeasure(spec, timeout) {
           return new Promise(function (resolve, reject) {
             const start = Date.now()
             function tick() {
-              const result = measure(labels)
+              const result = measure(spec)
               if (!result.error) {
                 resolve(result)
                 return
@@ -130,16 +167,15 @@
         }
 
         function report(payload) {
-          parent.postMessage(
-            {
-              type: 'vamis-compare',
-              engine: engine,
-              runId: payload.runId,
-              measure: payload.measure || null,
-              error: payload.error || null,
-            },
-            '*',
-          )
+          const message = {
+            type: 'vamis-compare',
+            engine: engine,
+            runId: payload.runId,
+            measure: payload.measure || null,
+            error: payload.error || null,
+          }
+          window.__vamisCompareLast = message
+          parent.postMessage(message, '*')
         }
 
         function unmountPrev() {
@@ -157,7 +193,7 @@
         function run(data) {
           runId = data.runId || 0
           const schema = data.schema
-          const labels = data.labels || []
+          const spec = data.measure || { type: 'pair', labels: data.labels || [] }
           if (!schema || typeof schema !== 'object') {
             report({ runId: runId, error: 'schema 无效' })
             return
@@ -175,7 +211,7 @@
             return
           }
           const started = runId
-          waitForMeasure(labels, 8000).then(
+          waitForMeasure(spec, spec.type === 'smoke' ? 4000 : 8000).then(
             function (result) {
               if (started !== runId) return
               report({ runId: started, measure: result })
@@ -210,6 +246,7 @@
             await loadScript('./sdk.js')
           }
           ready = true
+          window.__vamisCompareReady = true
           parent.postMessage({ type: 'vamis-compare-ready', engine: engine }, '*')
           if (pending) {
             const next = pending

@@ -146,6 +146,12 @@
       .bad {
         color: #b91c1c;
       }
+      .font-cell {
+        max-width: 22em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     </style>
   </head>
   <body>
@@ -186,37 +192,74 @@
         <iframe id="vamis" title="Vamis SDK"></iframe>
       </section>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>同一行</th>
-          <th>缝 gap</th>
-          <th>第二颗 top/left/宽</th>
-          <th>判定</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Amis</td>
-          <td id="amis-row">…</td>
-          <td id="amis-gap">…</td>
-          <td id="amis-box">…</td>
-          <td id="amis-pass">…</td>
-        </tr>
-        <tr>
-          <td>Vamis</td>
-          <td id="vamis-row">…</td>
-          <td id="vamis-gap">…</td>
-          <td id="vamis-box">…</td>
-          <td id="vamis-pass">…</td>
-        </tr>
-      </tbody>
+    <table id="result">
+      <thead></thead>
+      <tbody></tbody>
     </table>
+    <p id="diff-note" class="parse-err" style="padding: 0 16px 16px"></p>
     <script src="https://unpkg.com/js-yaml@4.1.1/dist/js-yaml.min.js"></script>
     <script src="./compare-cases.js"></script>
     <script>
-      (function () {
+      ;(function () {
+        function measureKind(measure) {
+          return (measure && measure.type) || 'smoke'
+        }
+        function fontColumns() {
+          return [
+            { key: 'fontSize', label: '字号' },
+            { key: 'lineHeight', label: '行高' },
+            { key: 'fontFamily', label: '字体' },
+          ]
+        }
+        function resultColumns(measure) {
+          const type = measureKind(measure)
+          const fonts = fontColumns()
+          if (type === 'pair') {
+            return [
+              { key: 'sameRow', label: '同一行' },
+              { key: 'gap', label: '缝 gap' },
+              { key: 'box', label: '第二颗 top / left / 宽' },
+            ].concat(fonts, [{ key: 'pass', label: '判定' }])
+          }
+          if (type === 'style') {
+            const props = (measure && measure.props) || ['marginLeft', 'display']
+            return props
+              .map(function (prop) {
+                return { key: 'style:' + prop, label: prop }
+              })
+              .concat(fonts, [{ key: 'pass', label: '判定' }])
+          }
+          return [{ key: 'status', label: '状态' }, { key: 'text', label: '摘要' }].concat(fonts, [
+            { key: 'pass', label: '判定' },
+          ])
+        }
+        function measureLabel(measure) {
+          const type = measureKind(measure)
+          if (type === 'pair') return '量测：盒模型（同一行 / 缝）'
+          if (type === 'style') return '量测：计算样式'
+          return '量测：渲染 smoke（两边都能画出即过）'
+        }
+        function px(value) {
+          if (typeof value === 'number' && isFinite(value)) return value
+          const n = parseFloat(String(value || ''))
+          return isFinite(n) ? n : null
+        }
+        function scoreCase(row, amis, vamis) {
+          if (vamis && vamis.error) return { pass: false, reason: 'vamis: ' + vamis.error, diffs: [] }
+          if (amis && amis.error) return { pass: false, reason: 'amis: ' + amis.error, diffs: [] }
+          const type = measureKind(row && row.measure)
+          if (type === 'smoke') return { pass: true, diffs: [] }
+          const a = (amis && amis.measure) || {}
+          const b = (vamis && vamis.measure) || {}
+          const diffs = []
+          if (type === 'pair') {
+            if (Boolean(a.sameRow) !== Boolean(b.sameRow)) diffs.push({ prop: 'sameRow', amis: a.sameRow, vamis: b.sameRow })
+            const ag = px(a.gap)
+            const bg = px(b.gap)
+            if (ag == null || bg == null || Math.abs(ag - bg) > 1) diffs.push({ prop: 'gap', amis: a.gap, vamis: b.gap })
+          }
+          return { pass: diffs.length === 0, diffs: diffs }
+        }
         const select = document.getElementById('case')
         const source = document.getElementById('source')
         const parseErr = document.getElementById('parse-err')
@@ -226,11 +269,22 @@
         const params = new URLSearchParams(location.search)
         const amisSdk = params.get('amisSdk') || ''
         const yamlSchema = window.jsyaml ? window.jsyaml.CORE_SCHEMA : undefined
+        const groups = {}
         ;(window.VAMIS_COMPARE_CASES || []).forEach(function (row) {
-          const opt = document.createElement('option')
-          opt.value = row.id
-          opt.textContent = row.title
-          select.appendChild(opt)
+          const group = row.group || 'other'
+          if (!groups[group]) groups[group] = []
+          groups[group].push(row)
+        })
+        Object.keys(groups).forEach(function (group) {
+          const og = document.createElement('optgroup')
+          og.label = group + '（' + groups[group].length + '）'
+          groups[group].forEach(function (row) {
+            const opt = document.createElement('option')
+            opt.value = row.id
+            opt.textContent = row.title
+            og.appendChild(opt)
+          })
+          select.appendChild(og)
         })
         const initial = params.get('case')
         if (initial) select.value = initial
@@ -310,44 +364,201 @@
           return './embed-case.html?' + q.toString()
         }
 
-        function setCell(id, text, cls) {
+        function cellId(engine, key) {
+          return engine + '-' + String(key).replace(/[^a-zA-Z0-9]+/g, '-')
+        }
+
+        function activeMeasure() {
+          const row = item()
+          if (!row) return { type: 'smoke' }
+          if (!dirty) return row.measure || { type: 'smoke' }
+          if (row.measure && row.measure.type === 'pair') {
+            return { type: 'pair', labels: collectLabels(lastGood), selectors: row.measure.selectors }
+          }
+          return row.measure || { type: 'smoke' }
+        }
+
+        function layoutTable() {
+          const cols = resultColumns(activeMeasure())
+          const table = document.getElementById('result')
+          const head = ['<tr><th></th>']
+          cols.forEach(function (col) {
+            head.push('<th>' + col.label + '</th>')
+          })
+          head.push('</tr>')
+          table.querySelector('thead').innerHTML = head.join('')
+          table.querySelector('tbody').innerHTML = ['amis', 'vamis']
+            .map(function (engine) {
+              const name = engine === 'amis' ? 'Amis' : 'Vamis'
+              const cells = cols
+                .map(function (col) {
+                  return '<td id="' + cellId(engine, col.key) + '">…</td>'
+                })
+                .join('')
+              return '<tr><td>' + name + '</td>' + cells + '</tr>'
+            })
+            .join('')
+          document.getElementById('diff-note').textContent = ''
+        }
+
+        function setCell(id, text, cls, title) {
           const el = document.getElementById(id)
+          if (!el) return
           el.textContent = text
           el.className = cls || ''
+          if (title) el.setAttribute('title', title)
+          else el.removeAttribute('title')
+        }
+
+        function shortFamily(value) {
+          if (!value) return '—'
+          const parts = String(value)
+            .split(',')
+            .map(function (item) {
+              return item.trim().replace(/^["']|["']$/g, '')
+            })
+            .filter(Boolean)
+          const shown = parts.slice(0, 2).join(', ')
+          return parts.length > 2 ? shown + '…' : shown
+        }
+
+        function firstFamily(value) {
+          if (!value) return ''
+          return String(value)
+            .split(',')[0]
+            .trim()
+            .replace(/^["']|["']$/g, '')
+            .toLowerCase()
+        }
+
+        function fontOf(payload) {
+          return (payload && payload.measure && payload.measure.font) || {}
+        }
+
+        function cellValue(engine, key, payload) {
+          if (payload.error) {
+            if (key === 'status' || key === 'sameRow' || key === 'pass') {
+              return { text: payload.error, cls: 'bad' }
+            }
+            if (key === 'text') return { text: '—', cls: '' }
+            return { text: '—', cls: '' }
+          }
+          const m = payload.measure || {}
+          const font = m.font || {}
+          if (key === 'sameRow') return { text: m.sameRow ? '是' : '否', cls: m.sameRow ? 'ok' : 'bad' }
+          if (key === 'gap') return { text: String(m.gap) + 'px', cls: '' }
+          if (key === 'box') {
+            return {
+              text: m.b ? m.b.top + ' / ' + m.b.left + ' / ' + m.b.width : '—',
+              cls: '',
+            }
+          }
+          if (key === 'status') return { text: m.smoke ? '已渲染' : '已量测', cls: 'ok' }
+          if (key === 'text') return { text: m.text || '—', cls: '' }
+          if (key === 'fontSize') return { text: font.fontSize || '—', cls: '' }
+          if (key === 'lineHeight') return { text: font.lineHeight || '—', cls: '' }
+          if (key === 'fontFamily') {
+            const family = font.fontFamily
+            const weight = font.fontWeight
+            return {
+              text: family ? (weight ? weight + ' · ' + shortFamily(family) : shortFamily(family)) : '—',
+              cls: 'font-cell',
+              title: family || '',
+            }
+          }
+          if (key.indexOf('style:') === 0) {
+            const prop = key.slice(6)
+            return { text: (m.style && m.style[prop]) || '—', cls: '' }
+          }
+          if (key === 'pass') return { text: '…', cls: '' }
+          return { text: '—', cls: '' }
+        }
+
+        function collectFontDiffs(amis, vamis) {
+          const a = fontOf(amis)
+          const b = fontOf(vamis)
+          const diffs = []
+          function add(prop, left, right, numeric) {
+            if (numeric) {
+              const ln = px(left)
+              const rn = px(right)
+              if (ln != null && rn != null) {
+                if (Math.abs(ln - rn) > 0.5) diffs.push({ prop: prop, amis: left, vamis: right })
+                return
+              }
+            }
+            if (String(left || '') !== String(right || '')) diffs.push({ prop: prop, amis: left, vamis: right })
+          }
+          add('fontSize', a.fontSize, b.fontSize, true)
+          add('lineHeight', a.lineHeight, b.lineHeight, true)
+          add('fontWeight', a.fontWeight, b.fontWeight, false)
+          if (firstFamily(a.fontFamily) !== firstFamily(b.fontFamily)) {
+            diffs.push({ prop: 'fontFamily', amis: a.fontFamily, vamis: b.fontFamily })
+          }
+          return diffs
+        }
+
+        function scoreParity() {
+          if (!got.amis || !got.vamis) return
+          if (dirty) {
+            setCell(cellId('amis', 'pass'), '自编')
+            setCell(cellId('vamis', 'pass'), '自编')
+            return
+          }
+          const result = scoreCase(item(), got.amis, got.vamis)
+          const kind = (item().measure && item().measure.type) || 'smoke'
+          if (kind === 'smoke') {
+            setCell(cellId('amis', 'pass'), result.pass ? '渲染' : '失败', result.pass ? 'ok' : 'bad')
+            setCell(cellId('vamis', 'pass'), result.pass ? '渲染' : '失败', result.pass ? 'ok' : 'bad')
+          } else {
+            setCell(cellId('amis', 'pass'), '对照', got.amis.error ? 'bad' : 'ok')
+            setCell(
+              cellId('vamis', 'pass'),
+              result.pass ? '对齐' : '不对齐',
+              result.pass ? 'ok' : 'bad',
+            )
+          }
+          const fontDiffs = collectFontDiffs(got.amis, got.vamis)
+          fontDiffs.forEach(function (diff) {
+            const key = diff.prop === 'fontWeight' ? 'fontFamily' : diff.prop
+            const el = document.getElementById(cellId('vamis', key))
+            if (el) el.classList.add('bad')
+          })
+          const geometry = (result.diffs || [])
+            .map(function (diff) {
+              return diff.prop + ': Amis ' + diff.amis + ' / Vamis ' + diff.vamis
+            })
+            .join('；')
+          const fonts = fontDiffs
+            .map(function (diff) {
+              return diff.prop + ': Amis ' + diff.amis + ' / Vamis ' + diff.vamis
+            })
+            .join('；')
+          const note = [geometry, fonts, result.reason].filter(Boolean).join('；')
+          document.getElementById('diff-note').textContent = note
         }
 
         function paint(engine, payload) {
           if (payload.runId != null && payload.runId !== runId) return
           got[engine] = payload
-          const prefix = engine
-          if (payload.error || !payload.measure) {
-            setCell(prefix + '-row', payload.error || '未量到', 'bad')
-            setCell(prefix + '-gap', '—')
-            setCell(prefix + '-box', '—')
-            setCell(prefix + '-pass', dirty ? '自编' : '失败', payload.error ? 'bad' : '')
-            return
-          }
-          const m = payload.measure
-          setCell(prefix + '-row', m.sameRow ? '是' : '否', m.sameRow ? 'ok' : 'bad')
-          setCell(prefix + '-gap', String(m.gap) + 'px')
-          setCell(prefix + '-box', m.b.top + ' / ' + m.b.left + ' / ' + m.b.width)
-          if (dirty) {
-            setCell(prefix + '-pass', '自编')
-            return
-          }
-          const ok = item().pass(m)
-          setCell(prefix + '-pass', ok ? '通过' : '失败', ok ? 'ok' : 'bad')
+          resultColumns(activeMeasure()).forEach(function (col) {
+            const value = cellValue(engine, col.key, payload)
+            setCell(cellId(engine, col.key), value.text, value.cls, value.title)
+          })
+          scoreParity()
         }
 
         function sendTo(engine) {
           const frame = document.getElementById(engine)
           if (!ready[engine] || !frame.contentWindow || !lastGood) return
+          const measure = activeMeasure()
           frame.contentWindow.postMessage(
             {
               type: 'vamis-compare-run',
               runId: runId,
               schema: lastGood,
-              labels: collectLabels(lastGood),
+              measure: measure,
+              labels: measure.labels || collectLabels(lastGood),
               caseId: select.value,
             },
             '*',
@@ -356,13 +567,10 @@
 
         function sendRun() {
           runId += 1
-          ;['amis', 'vamis'].forEach(function (engine) {
-            setCell(engine + '-row', '…')
-            setCell(engine + '-gap', '…')
-            setCell(engine + '-box', '…')
-            setCell(engine + '-pass', '…')
-            sendTo(engine)
-          })
+          got.amis = null
+          got.vamis = null
+          layoutTable()
+          ;['amis', 'vamis'].forEach(sendTo)
         }
 
         function applyCase(resetEditor) {
@@ -374,7 +582,13 @@
           jsonText = JSON.stringify(lastGood, null, 2) + '\n'
           if (resetEditor !== false) source.value = kind === 'yaml' ? yamlText : jsonText
           parseErr.textContent = ''
-          document.getElementById('expect').textContent = '期望：' + row.expect
+          const type = (row.measure && row.measure.type) || 'smoke'
+          const hint = row.expect
+            ? '期望：' + row.expect
+            : type === 'smoke'
+              ? '期望：两边都能渲染'
+              : '期望：Vamis 对齐 Amis 实测'
+          document.getElementById('expect').textContent = measureLabel(row.measure) + ' · ' + hint
           const next = new URL(location.href)
           next.searchParams.set('case', select.value)
           history.replaceState(null, '', next)
