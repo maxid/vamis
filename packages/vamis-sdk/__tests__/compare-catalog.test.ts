@@ -8,7 +8,7 @@ import { harvestMarkdown } from '../compare/harvest.mjs'
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
-import { loadCatalog } from '../compare/catalog.mjs'
+import { loadCatalog, matchSelf, rerunCommands } from '../compare/catalog.mjs'
 import { scoreTree, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
 describe('applySchemaScope', () => {
@@ -305,5 +305,46 @@ describe('schema-tree', () => {
       'page/body/0:form/body/0:input-text.value',
       'page/body/0:form/body/1:button.dialog',
     ])
+  })
+})
+
+describe('rerun slice', () => {
+  it('matches a component page without neighbors', () => {
+    expect(
+      matchSelf(
+        { page: 'Button 按钮', id: 'src-components-button-0', source: 'website/src/components/button.md' },
+        'button',
+      ),
+    ).toBe(true)
+    expect(
+      matchSelf(
+        {
+          page: 'DropDownButton 下拉按钮',
+          id: 'src-components-dropdown-button-0',
+          source: 'website/src/components/dropdown-button.md',
+        },
+        'button',
+      ),
+    ).toBe(false)
+  })
+
+  it('loadCatalog --page button stays on Button 自身', () => {
+    const cases = loadCatalog({ page: 'button' })
+    expect(cases.length).toBeGreaterThan(0)
+    expect(cases.every((row) => matchSelf(row, 'button'))).toBe(true)
+    expect(cases.some((row) => /dropdown/i.test(String(row.id)))).toBe(false)
+  })
+
+  it('rerunCommands asks for full compare after global fixes', () => {
+    const cmds = rerunCommands([
+      {
+        parity: { pass: false },
+        page: 'Button 按钮',
+        id: 'src-components-button-0',
+        findings: [{ scope: 'global' }, { scope: 'component' }],
+      },
+    ])
+    expect(cmds.some((item) => item.cmd === 'pnpm compare')).toBe(true)
+    expect(cmds.some((item) => item.cmd.includes('--page'))).toBe(true)
   })
 })

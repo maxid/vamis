@@ -66,10 +66,11 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 180 + sdk 38 | `pnpm typecheck` 已通过；SDK 对照目录 **809**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。样式 P0 盒模型门禁未跑本轮。 |
+| 测试 | 源码用例 formula 185 + core 180 + sdk 41 | `pnpm typecheck` 已通过；SDK 对照目录 **809**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。全局修完全量重跑，组件修完 `--page`。 |
 
 **最近交付**
 
+- 对照重跑口径：**全局**修完必须 `pnpm compare` 全量；**组件**修完只跑自身 `pnpm compare --page button`（或 `--id`）。报告会列出建议命令。
 - 组件对照改为 **schema 树结点级**：每个 type 结点对画出、运行时 value、`getComponentByName`、以及点过之后 dialog / toast / setValue。不再把「整页能画出」当成组件通过。`vamis.embed` 补 `getComponents()`。
 - 对照页左右 iframe 按内容撑开高度（两边取较高的一侧），内页 `overflow: hidden`，尽量不出滚动条；切用例会先收回到最小高度再长高。
 - 对照用例按 Amis 文档侧栏分成 **文档 / 组件 / 样式**（`website/nav.mjs`）。Vamis 可以比 Amis 多（尤其是样式），多出来的页标 extra、对照页下拉前缀 `+`。`pnpm compare --bucket 样式 --section Spacing` 切一片跑；对照页有文档/组件/样式筛选。迭代回路：完成一侧栏项 → 跑该片对照 → 评审报告 → 下一页。
@@ -218,7 +219,7 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **对照迭代（按 Amis 侧栏逐项，等人评审后再动下一片）**：组件用树结点报告评审（值 / name 注册 / dialog 动作）。样式下一刀仍是 **Spacing**（P0 `m-l*` 阶）。做完跑 `pnpm compare --bucket 组件 --section 功能` 或 `--bucket 样式 --section Spacing`。真源：[对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。
+6. **对照迭代（按 Amis 侧栏逐项，等人评审后再动下一片）**：全局修完全量 `pnpm compare`；组件修完只跑自身 `--page`。组件用树结点报告评审。样式下一刀仍是 **Spacing**。真源：[对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。
 7. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。再核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

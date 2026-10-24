@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { summarizeReport } from './score.mjs'
 import { SCOPE, summarizeFindings } from './classify.mjs'
 import { BUCKETS } from './nav-group.mjs'
+import { rerunCommands } from './catalog.mjs'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 
@@ -111,7 +112,17 @@ export function writeReport(rows, options = {}) {
     ...(smokeFailed.length ? smokeFailed.slice(0, 20).map(failLine) : ['- 无失败。']),
     ...(smokeFailed.length > 20 ? [`- …其余 ${smokeFailed.length - 20} 条见 \`compare/last-report.json\``] : []),
     '',
-    '迭代：组件看树结点（值 / name / 动作），样式看盒模型。`pnpm compare --bucket 组件 --section 功能` 或 `--bucket 样式 --section Spacing`。`pnpm compare:p0` 是盒模型门禁。',
+    '## 重跑口径',
+    '',
+    '- **全局**修完：必须 `pnpm compare` 重跑全部用例（token / 默认字体会影响每一页）。',
+    '- **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。',
+    '- **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。',
+    '',
+    ...(function () {
+      const cmds = rerunCommands(rows)
+      return cmds.length ? cmds.map((item) => `- \`${item.cmd}\` — ${item.note}`) : ['- 本轮无失败切片。']
+    })(),
+    '',
     '',
   ].join('\n')
   const mdPath = path.join(repo, 'docs/superpowers/specs/2026-10-24-sdk-compare-report.md')
