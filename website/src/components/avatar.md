@@ -146,7 +146,7 @@ body:
 
 ## 角标
 
-`badge` 可以是数字，或 `{ mode, text, position }`。`mode` 默认 `text`，也认 `dot`。
+`badge` 可以是数字（当 `mode: text`），或 `{ mode, text, position }`。对象默认 `mode: dot`。活示例见 [Badge 角标](./badge)。
 
 ```schema: scope="body"
 {

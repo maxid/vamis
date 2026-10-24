@@ -21,6 +21,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, levelToVariant, sizeToButtonSize } from '@vamis/ui'
+import BadgeHost from './BadgeHost.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -74,19 +75,21 @@ async function onClick() {
 </script>
 
 <template>
-  <Button
-    :variant="variant"
-    :size="size"
-    :disabled="disabled || loading"
-    type="button"
-    :title="tooltip || undefined"
-    :class="block ? 'w-full' : undefined"
-    @click="onClick"
-  >
-    <img v-if="iconSrc" :src="iconSrc" alt="" class="size-4" />
-    <span v-else-if="iconClass" :class="iconClass" aria-hidden="true" />
-    <template v-if="showLabel">{{ loading ? '处理中…' : label }}</template>
-    <img v-if="rightSrc" :src="rightSrc" alt="" class="size-4" />
-    <span v-else-if="rightClass" :class="rightClass" aria-hidden="true" />
-  </Button>
+  <BadgeHost :schema="schema" :data="data">
+    <Button
+      :variant="variant"
+      :size="size"
+      :disabled="disabled || loading"
+      type="button"
+      :title="tooltip || undefined"
+      :class="block ? 'w-full' : undefined"
+      @click="onClick"
+    >
+      <img v-if="iconSrc" :src="iconSrc" alt="" class="size-4" />
+      <span v-else-if="iconClass" :class="iconClass" aria-hidden="true" />
+      <template v-if="showLabel">{{ loading ? '处理中…' : label }}</template>
+      <img v-if="rightSrc" :src="rightSrc" alt="" class="size-4" />
+      <span v-else-if="rightClass" :class="rightClass" aria-hidden="true" />
+    </Button>
+  </BadgeHost>
 </template>

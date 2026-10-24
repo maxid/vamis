@@ -38,10 +38,10 @@
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 56% | 4 |
-| **合计** | **2 / 155** | **153** | **0** | **53%** | **101** |
+| 其他 | 0 / 7 | 7 | 0 | 61% | 5 |
+| **合计** | **2 / 155** | **153** | **0** | **53%** | **102** |
 
-侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` 80%，`badge` 属性 40%；`popOver` 属性 80%。
+侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` / `badge` 80%；`popOver` 属性 80%。
 
 ---
 
@@ -186,7 +186,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `color` | Color 颜色 | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 70% | 不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength | P0 |
-| `html` | Html | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine / badge | P0 |
+| `html` | Html | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine；其余过滤器仍 P1 | P0 |
 | `icon` | Icon 图标 | 进行中 | 60% | 能出图标；iconfont/vendor 未齐 | P0 |
 | `iframe` | iFrame | 进行中 | 55% | 能嵌页 | P0 |
 | `image` | Image 图片 | 进行中 | 55% | 能显示；放大/图集未齐 | P0 |
@@ -211,7 +211,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `search-box` | SearchBox 搜索框 | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | 进行中 | 55% | 能映射状态 | P0 |
-| `tpl` | Tpl 模板 | 进行中 | 85% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。P0 过滤器可用。缺 maxLine / badge；其余过滤器仍 P1 | P0 |
+| `tpl` | Tpl 模板 | 进行中 | 85% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。P0 过滤器可用。badge 已接。缺 maxLine；其余过滤器仍 P1 | P0 |
 | `tag` | Tag 标签 | 进行中 | 55% | 能展示标签 | P0 |
 | `video` | Video 视频 | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | 进行中 | 50% | 能列节点 | P0 |
@@ -232,14 +232,14 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 56%）
+## 其他（0/7，均 61%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `avatar` | Avatar 头像 | 进行中 | 80% | 文档主路径已对齐：src > text > icon、shape circle/square/rounded、size 空=40 / small 32 / large 48、fit cover、gap、badge。缺 fa、onError、ribbon | P0 |
+| `avatar` | Avatar 头像 | 进行中 | 80% | 文档主路径已对齐：src > text > icon、shape circle/square/rounded、size 空=40 / small 32 / large 48、fit cover、gap、badge（走 BadgeHost）。缺 fa、onError | P0 |
 | `audio` | Audio 音频 | 进行中 | 80% | 文档主路径已对齐：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
 | `tasks` | Tasks 任务操作集合 | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
-| （属性 `badge`） | Badge 角标 | 进行中 | 40% | 不是独立 type；avatar 已接数字 / `{mode:text\|dot,text,position}`。action / tpl / ribbon 未齐 | P0 |
+| `badge` | Badge 角标 | 进行中 | 80% | 不是独立 type。已挂 avatar / action / tpl / link / icon；mode 默认 dot、text 0 隐藏、overflowCount、visibleOn、ribbon。缺 cxd 斜条像素、animation 同帧 | P0 |
 | `wizard` | Wizard 向导 | 进行中 | 80% | 文档主路径已对齐：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
 | `web-component` | Web Component | 进行中 | 15% | **占位**：只渲染 tag + props | P0 |
 | `amis` | amis 渲染器 | 进行中 | 15% | **占位**：只嵌内层 schema | P0 |

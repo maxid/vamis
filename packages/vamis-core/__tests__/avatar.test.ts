@@ -50,6 +50,6 @@ describe('avatar badge', () => {
     expect(badgeText({ badge: 3 })).toBe('3')
     expect(badgeText({ badge: { mode: 'text', text: 10 } })).toBe('10')
     expect(badgeMode({ badge: { mode: 'dot' } })).toBe('dot')
-    expect(badgeMode({ badge: { text: 1 } })).toBe('text')
+    expect(badgeMode({ badge: { text: 1 } })).toBe('dot')
   })
 })

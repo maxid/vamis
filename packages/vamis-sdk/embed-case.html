@@ -322,6 +322,9 @@
           if (node.type === 'popover' || node.popOver) {
             return document.querySelector('[data-vamis-popover], .cxd-Field-popOverBtn, .cxd-PopOverAble')
           }
+          if (node.badge) {
+            return document.querySelector('[data-vamis-badge], .cxd-Badge-text, .cxd-Badge-dot, .cxd-Badge-ribbon')
+          }
           return null
         }
 
@@ -452,6 +455,22 @@
         function sleep(ms) {
           return new Promise(function (resolve) {
             setTimeout(resolve, ms)
+          })
+        }
+
+        function waitForText(timeout) {
+          return new Promise(function (resolve) {
+            const start = Date.now()
+            function tick() {
+              const root = document.getElementById('root')
+              const text = root && (root.innerText || '').replace(/\s+/g, ' ').trim()
+              if (text || Date.now() - start > timeout) {
+                resolve()
+                return
+              }
+              setTimeout(tick, 50)
+            }
+            tick()
           })
         }
 
@@ -660,7 +679,7 @@
           const pendingMeasure =
             spec.type === 'tree'
               ? waitForMeasure({ type: 'smoke' }, 8000).then(function () {
-                  return sleep(200).then(function () {
+                  return waitForText(1500).then(function () {
                     return snapshotTree(schema)
                   })
                 })
