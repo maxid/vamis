@@ -3,7 +3,8 @@ import path from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { applySchemaScope, parseSchemaFenceMeta, parseSchemaText } from './scope.mjs'
 
-const FENCE_RE = /```schema([^\n]*)\n([\s\S]*?)```/g
+/** 只认行首围栏，避免正文里写「```schema」被收成空用例。 */
+const FENCE_RE = /^```schema([^\n]*)\r?\n([\s\S]*?)^```/gm
 const SKIP_TYPES = new Set([
   'code',
   'editor',
@@ -25,6 +26,56 @@ const SKIP_TYPES = new Set([
   'video',
 ])
 
+const LAYOUT_NEEDS_CHILDREN = new Set([
+  'page',
+  'container',
+  'wrapper',
+  'hbox',
+  'grid',
+  'grid-2d',
+  'flex',
+  'panel',
+  'form',
+  'tabs',
+  'wizard',
+  'button-group',
+  'app',
+  'service',
+  'crud',
+  'portlet',
+  'switch-container',
+  'pagination-wrapper',
+  'tooltip-wrapper',
+  'table',
+  'table2',
+  'cards',
+  'list',
+  'nav',
+  'anchor-nav',
+  'dropdown-button',
+  'button-toolbar',
+])
+
+const CHILD_KEYS = [
+  'body',
+  'columns',
+  'items',
+  'controls',
+  'buttons',
+  'actions',
+  'steps',
+  'tabs',
+  'links',
+  'spec',
+  'tab',
+  'toolbar',
+  'header',
+  'aside',
+  'footer',
+]
+
+const TEXT_KEYS = ['tpl', 'html', 'value', 'label', 'text', 'msg', 'title']
+
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -36,13 +87,43 @@ function walk(dir, out = []) {
   return out
 }
 
-function rootType(node) {
-  if (!node || typeof node !== 'object') return ''
-  if (Array.isArray(node)) return rootType(node[0])
-  if (node.type) return String(node.type)
-  if (node.spec) return rootType(node.spec)
-  if (node.body) return rootType(node.body)
-  return ''
+export function isRenderableSchema(node) {
+  let hasText = false
+  let hasField = false
+  const types = []
+  walkSchema(node, (hit) => {
+    if (hit.text) hasText = true
+    if (hit.field) hasField = true
+    if (hit.type) types.push(hit.type)
+  })
+  if (hasText || hasField) return true
+  const visible = types.filter((type) => !SKIP_TYPES.has(type))
+  if (!visible.length) return false
+  return !visible.every((type) => LAYOUT_NEEDS_CHILDREN.has(type))
+}
+
+function walkSchema(node, visit) {
+  if (node == null) return
+  if (typeof node === 'string' || typeof node === 'number') {
+    if (String(node).trim()) visit({ text: true })
+    return
+  }
+  if (Array.isArray(node)) {
+    node.forEach((item) => walkSchema(item, visit))
+    return
+  }
+  if (typeof node !== 'object') return
+  const type = String(node.type || '').toLowerCase()
+  if (type) visit({ type })
+  if (SKIP_TYPES.has(type)) return
+  if (!type && (node.name || node.label)) visit({ field: true })
+  for (const key of TEXT_KEYS) {
+    if (typeof node[key] === 'string' && node[key].trim() && key !== 'title') visit({ text: true })
+  }
+  if (typeof node.title === 'string' && node.title.trim() && type && type !== 'page' && type !== 'form') {
+    visit({ text: true })
+  }
+  for (const key of CHILD_KEYS) walkSchema(node[key], visit)
 }
 
 function slug(file, index) {
@@ -58,6 +139,53 @@ function slug(file, index) {
   return `${base}-${index}`
 }
 
+function parseFence(body) {
+  return parseSchemaText(body, (text) => parseYaml(text, { prettyErrors: true, schema: 'core', version: '1.2' }))
+}
+
+function schemaNeedsPage(node) {
+  if (!node || typeof node !== 'object') return true
+  if (Array.isArray(node)) return true
+  if (node.type === 'page' || node.apiVersion) return false
+  return true
+}
+
+export function harvestSource(source, rel, options = {}) {
+  const group = options.group || 'docs'
+  const seen = options.seen || new Set()
+  const rows = []
+  let index = 0
+  for (const match of String(source || '').matchAll(FENCE_RE)) {
+    let parsed
+    try {
+      parsed = parseFence(match[2])
+    } catch {
+      continue
+    }
+    if (!parsed || typeof parsed !== 'object' || (parsed && !Array.isArray(parsed) && Object.keys(parsed).length === 0)) {
+      continue
+    }
+    const meta = parseSchemaFenceMeta(match[1] || '')
+    const schema = applySchemaScope(parsed, meta.scope || (schemaNeedsPage(parsed) ? 'body' : undefined))
+    if (!isRenderableSchema(schema)) continue
+    const key = JSON.stringify(schema)
+    if (seen.has(key)) continue
+    seen.add(key)
+    rows.push({
+      id: slug(rel, index),
+      group,
+      title: `${rel} #${index + 1}`,
+      source: rel,
+      layer: 'docs',
+      index,
+      schema,
+      measure: { type: 'smoke' },
+    })
+    index += 1
+  }
+  return rows
+}
+
 export function harvestMarkdown(dir, options = {}) {
   const group = options.group || 'docs'
   const relFrom = options.relFrom || dir
@@ -66,42 +194,8 @@ export function harvestMarkdown(dir, options = {}) {
   const seen = new Set()
   for (const file of files) {
     const source = fs.readFileSync(file, 'utf8')
-    let index = 0
-    for (const match of source.matchAll(FENCE_RE)) {
-      const meta = parseSchemaFenceMeta(match[1] || '')
-      let parsed
-      try {
-        parsed = parseSchemaText(match[2], (text) =>
-          parseYaml(text, { prettyErrors: true, schema: 'core', version: '1.2' }),
-        )
-      } catch {
-        continue
-      }
-      const type = rootType(parsed)
-      if (SKIP_TYPES.has(type)) continue
-      const schema = applySchemaScope(parsed, meta.scope || (schemaNeedsPage(parsed) ? 'body' : undefined))
-      const key = JSON.stringify(schema)
-      if (seen.has(key)) continue
-      seen.add(key)
-      const rel = path.relative(relFrom, file).replace(/\\/g, '/')
-      rows.push({
-        id: slug(rel, index),
-        group,
-        title: `${rel} #${index + 1}`,
-        source: rel,
-        layer: 'docs',
-        schema,
-        measure: { type: 'smoke' },
-      })
-      index += 1
-    }
+    const rel = path.relative(relFrom, file).replace(/\\/g, '/')
+    rows.push(...harvestSource(source, rel, { group, seen }))
   }
   return rows
-}
-
-function schemaNeedsPage(node) {
-  if (!node || typeof node !== 'object') return true
-  if (Array.isArray(node)) return true
-  if (node.type === 'page' || node.apiVersion) return false
-  return true
 }

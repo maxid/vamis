@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { harvestMarkdown } from './harvest.mjs'
 import { p0Cases } from './p0-cases.mjs'
-import { compareNav, decorateCase, parseBucketArg } from './nav-group.mjs'
+import { compareNav, decorateCase, numberPageTitles, parseBucketArg, pathToLink } from './nav-group.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repo = path.resolve(here, '../../..')
@@ -17,14 +17,12 @@ export function loadCatalog(options = {}) {
   const amisDocs = options.amisDocs === true
   const bucket = parseBucketArg(options.bucket)
   const section = options.section ? String(options.section).trim() : ''
-  const cases = p0Cases.map((row) => decorateCase({ ...row, origin: 'p0' }))
+  const cases = p0Cases.map((row) => decorateCase({ ...row, origin: 'p0', index: 0 }))
   const sources = [
     { dir: path.join(repo, 'website/src/start'), origin: 'vamis' },
     { dir: path.join(repo, 'website/src/concepts'), origin: 'vamis' },
     { dir: path.join(repo, 'website/src/types'), origin: 'vamis' },
     { dir: path.join(repo, 'website/src/extend'), origin: 'vamis' },
-    { dir: path.join(repo, '../amis/docs/zh-CN/concepts'), origin: 'amis' },
-    { dir: path.join(repo, '../amis/docs/zh-CN/start'), origin: 'amis' },
   ]
   if (docs) {
     sources.push(
@@ -33,20 +31,30 @@ export function loadCatalog(options = {}) {
     )
   }
   if (amisDocs) {
-    sources.push({ dir: path.join(repo, '../amis/docs/zh-CN/components'), origin: 'amis' })
+    sources.push(
+      { dir: path.join(repo, '../amis/docs/zh-CN/start'), origin: 'amis' },
+      { dir: path.join(repo, '../amis/docs/zh-CN/concepts'), origin: 'amis' },
+      { dir: path.join(repo, '../amis/docs/zh-CN/components'), origin: 'amis' },
+    )
   }
   const seen = new Set(cases.map((row) => JSON.stringify(row.schema)))
+  const seenLinks = new Set()
   for (const source of sources) {
     if (!exists(source.dir)) continue
     for (const row of harvestMarkdown(source.dir, { relFrom: repo })) {
+      const link = pathToLink(row.source)
+      if (source.origin === 'amis' && seenLinks.has(link)) continue
       const key = JSON.stringify(row.schema)
       if (seen.has(key)) continue
       seen.add(key)
+      seenLinks.add(link)
       cases.push(decorateCase({ ...row, origin: source.origin }))
     }
   }
   cases.sort(compareNav)
-  return cases.filter((row) => matchCatalog(row, { bucket, section, page: options.page, id: options.id, type: options.type }))
+  return numberPageTitles(cases).filter((row) =>
+    matchCatalog(row, { bucket, section, page: options.page, id: options.id, type: options.type }),
+  )
 }
 
 /** Amis `media-breakpoint-down(sm)` 是 <768px。对照桌面钉 ≥768，移动钉 375。 */

@@ -171,7 +171,22 @@ export function compareNav(a, b) {
   if (da) return da
   const oa = (a.order ?? 9999) - (b.order ?? 9999)
   if (oa) return oa
+  const pa = String(a.page || '').localeCompare(String(b.page || ''))
+  if (pa) return pa
+  const ia = (a.index ?? 0) - (b.index ?? 0)
+  if (ia) return ia
   return String(a.id || '').localeCompare(String(b.id || ''))
+}
+
+export function numberPageTitles(cases) {
+  const n = new Map()
+  return cases.map((row) => {
+    if (row.layer === 'p0') return row
+    const key = `${row.bucket}\0${row.page}`
+    const i = (n.get(key) || 0) + 1
+    n.set(key, i)
+    return { ...row, title: `${row.page} #${i}` }
+  })
 }
 
 export function parseBucketArg(value) {
