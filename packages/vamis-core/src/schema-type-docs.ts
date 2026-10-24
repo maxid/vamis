@@ -218,7 +218,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   alert: doc('Alert 提示', '反馈', '警告/信息条。level 控制语义色。'),
   dialog: doc('Dialog 对话框', '反馈', '弹层对话框。'),
   drawer: doc('Drawer 抽屉', '反馈', '侧边抽屉。'),
-  spinner: doc('Spinner 加载中', '反馈', '加载指示。'),
+  spinner: doc('Spinner 加载中', '反馈', '加载指示。show / size / overlay / tip / delay；有 body 时当容器。'),
   toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
   avatar: doc('Avatar 头像', '其他', '头像图或文字。'),

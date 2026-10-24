@@ -110,16 +110,27 @@ export function isInlineSchema(schema?: { type?: string; inline?: unknown } | nu
   return INLINE_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
 }
 
-export function isInlineBlockSchema(schema?: { type?: string; inline?: unknown; direction?: unknown } | null): boolean {
+type SchemaDisplayNode = {
+  type?: string
+  inline?: unknown
+  direction?: unknown
+  body?: unknown
+} | null
+
+export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
   if (!schema) return false
   if (schema.inline === false) return false
-  if (String(schema.type || '').toLowerCase() === 'divider' && schema.direction === 'vertical') return true
-  if (schema.inline === true && String(schema.type || '').toLowerCase() === 'tooltip-wrapper') return true
-  return INLINE_BLOCK_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
+  const type = String(schema.type || '').toLowerCase()
+  if (type === 'divider' && schema.direction === 'vertical') return true
+  if (schema.inline === true && type === 'tooltip-wrapper') return true
+  if (type === 'spinner') {
+    return schema.body == null || schema.body === false || schema.body === ''
+  }
+  return INLINE_BLOCK_SCHEMA_TYPES.has(type)
 }
 
 /** SchemaRenderer 外层 `div.vamis-node` 的 display class。 */
-export function schemaNodeDisplayClass(schema?: { type?: string; inline?: unknown; direction?: unknown } | null): string {
+export function schemaNodeDisplayClass(schema?: SchemaDisplayNode): string {
   if (isInlineBlockSchema(schema)) return 'inline-block'
   if (isInlineSchema(schema)) return 'inline'
   return ''
