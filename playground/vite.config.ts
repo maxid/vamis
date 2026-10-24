@@ -51,6 +51,7 @@ function serveSdk(): Plugin {
   const dir = path.join(repo, 'packages', 'vamis-sdk', 'dist')
   const types: Record<string, string> = {
     '.js': 'text/javascript; charset=utf-8',
+    '.mjs': 'text/javascript; charset=utf-8',
     '.css': 'text/css; charset=utf-8',
     '.html': 'text/html; charset=utf-8',
     '.map': 'application/json; charset=utf-8',

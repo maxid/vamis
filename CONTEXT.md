@@ -63,14 +63,17 @@
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏对齐 Amis（文档 \| 组件 \| 样式 \| 示例 \| 编辑器）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
-| JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext |
+| JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `doAction` 已接到根 ScopedContext。对照：`pnpm compare:p0` / `pnpm compare`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 180 + sdk 13 | `pnpm typecheck` 已通过；渲染器无组件级测试 |
+| 测试 | 源码用例 formula 185 + core 180 + sdk 22 | `pnpm typecheck` 已通过；SDK 对照 **793** 条（785 过 / 8 败，失败全是 P0 helper 阶）；渲染器无组件级测试 |
 
 **最近交付**
 
-- SDK 对照页 `/sdk/compare.html` 提供 **编辑 Schema**：YAML / JSON 两个 Tab，改一边立刻同步；解析失败时对侧与预览停在上一份能跑的 schema。改完把同一份对象 postMessage 给已挂好的 `amis.embed` / `vamis.embed`，不重载 SDK。
+- 对照页结果表补上字体信息：字号 / 行高 / 字体栈（hover 看完整 family）。字体差异标红并写进备注，不挡盒模型 / smoke 判定。
+- 对照页结果表按用例 `measure` 换列：盒模型显示同一行/缝/盒子，smoke 显示状态/摘要；判定也跟当前用例走。
+- SDK 对照自动化：`pnpm compare:p0` / `pnpm compare` 用 Playwright 对同一份 schema 跑 `amis.embed` / `vamis.embed`，写 [对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。本轮全量 **793**（P0 14 + 文档收割 779）**785 过 / 8 败**；文档 smoke 全过，失败全是 compact helper 阶（`m-l-sm` 10 vs 8，`m-l` 15 vs 12，`m-l-xxl` / `m-l-n` 未实现）。`--all` 再加 Amis 组件文档。判定是 Vamis 对齐 Amis **实测**。
+- SDK 对照页 `/sdk/compare.html` 提供 **编辑 Schema**：YAML / JSON 两个 Tab，改一边立刻同步；解析失败时对侧与预览停在上一份能跑的 schema。改完把同一份对象 postMessage 给已挂好的 `amis.embed` / `vamis.embed`，不重载 SDK。用例下拉按组列出全部收割 case。
 - SDK 根 `.vamis-sdk` 去掉 `background: var(--background)`。`--background` 是略灰的 shadcn 画布（`oklch(0.97)`），Amis embed / `.cxd-Page` 是白底；涂在 SDK 根上会在白 iframe 里多出一块灰框。画布仍由宿主 html/body 决定。
 - SDK 对照已能量到真实盒子：`/sdk/compare.html` 同一份 schema 左右 `amis.embed`（unpkg `amis@6.13.0`）与 `vamis.embed`。默认两按钮两边都同一行、缝 0px；`className: m-l` 两边都同一行，但 Amis **15px**、Vamis **12px**（`--gap-base`）。Amis iframe 改为等到按钮出现再量，不再被 unpkg 慢加载误报「找不到」。
 - Page 内容区去掉 `space-y-3`；`button` / `action` 的 `div.vamis-node` 改为 `inline-block`，两个按钮默认并排（对齐 Amis「样式」基本使用），`className: m-l` 才能拉开缝。
@@ -209,7 +212,7 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **`m-l` 等 compact helper 对上 Amis 计算值**：SDK 对照已量出 `.m-l` Amis 15px / Vamis 12px。Amis `_utilities.scss` 是 5/10/15/20/30/50，Vamis `--gap-*` 是 4/8/12/16/20/24。下一刀把 helper 阶改到 Amis 实值（不要用 shadcn 4px 阶去近似），再用对照页卡死 15px。
+6. **按 SDK 对照报告修 compact helper 阶（当前 P0 8 败）**：Amis 5/10/15/20/30/40/50，Vamis 走 `--gap-*` 4/8/12/16/20/24；`m-l-xxl` / `m-l-n` 未实现（缝 0）。改完跑 `pnpm compare:p0`，报告归零再收文档 smoke。真源：[对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。
 7. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。再核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
