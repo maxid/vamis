@@ -100,7 +100,9 @@ function schemaHasType(node, type) {
   if (!node || typeof node !== 'object') return false
   if (Array.isArray(node)) return node.some((item) => schemaHasType(item, type))
   if (String(node.type || '').toLowerCase() === type) return true
-  return ['body', 'columns', 'items', 'controls', 'buttons', 'actions'].some((key) => schemaHasType(node[key], type))
+  return ['body', 'columns', 'items', 'grids', 'controls', 'buttons', 'actions'].some((key) =>
+    schemaHasType(node[key], type),
+  )
 }
 
 export function matchCatalog(row, options = {}) {

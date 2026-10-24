@@ -59,18 +59,18 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 183 / 189（96.8%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `js-editor` / `ts-editor` 及语言族别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **48%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 69%；`page` 已完成 95% / `container` 已完成 100%；`collapse` 85%；`divider` / `flex` / `grid` 90%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **49%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 74%；`page` 已完成 95% / `container` 已完成 100%；`collapse` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` 90%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 227 + sdk 46 | `pnpm typecheck` 已通过；SDK 对照目录 **750**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 245 + sdk 46 | `pnpm typecheck` 已通过；SDK 对照目录 **760**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
-- 对照全局（字体 / token）先放下，按 Amis 侧栏做组件：`grid` 主路径对齐 12 栏 flex 均分、`md`/`xs`/`sm`/`lg`、`gap`、`align` / `valign`。文档 **90% 进行中**。`flex` / `divider` / `collapse` 已对齐主路径。
+- 对照全局（字体 / token）先放下，按 Amis 侧栏做组件：`hbox` 主路径对齐列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`。文档 **90% 进行中**。`grid-2d` / `grid` / `flex` / `divider` / `collapse` 已对齐主路径。收割补上 `grids`，对照目录 **760**。
 - 顶栏加 **对照** 入口（整页跳 `/sdk/compare.html`，带 `VITE_BASE`）；对照页标题右侧 **返回首页**。
 - 对照下拉去掉重复和空用例：默认只收 Vamis 文档（不再混入 Amis `zh-CN/concepts`）；行首 ```schema 才收割，空 `{}` / 无子节点布局壳 / `type: code` 丢掉。同页标题按顺序 `#1…#n`。目录 **728**。
 - 对照视口分 **桌面 / 移动**：按钮在 iframe 栏上方。桌面 iframe ≥768 排再缩进半栏；移动钉 375（Amis `sm` 窄屏表单）。URL `?vp=mobile`。Playwright `pnpm compare --mobile` / `pnpm compare:mobile`。全局修完桌面全量；动到 `m:` / 窄屏表单再跑移动端。
@@ -220,7 +220,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **Grid 2D**，然后 HBox。组件修完只跑 `pnpm compare --page <type>`。
+1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **Pagination**，然后 PaginationWrapper。组件修完只跑 `pnpm compare --page <type>`。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

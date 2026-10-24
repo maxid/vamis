@@ -60,6 +60,7 @@ const CHILD_KEYS = [
   'body',
   'columns',
   'items',
+  'grids',
   'controls',
   'buttons',
   'actions',
