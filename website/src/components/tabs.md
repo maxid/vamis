@@ -17,31 +17,15 @@ outline: deep
 
 默认按 `tabs` 成员数生成选项卡。内容写在 `tab` 或 `body`。
 
-```schema: scope="body"
-{
-    "type": "tabs",
-    "tabs": [
-        {
-            "title": "Tab 1",
-            "tab": "Content 1"
-        },
-        {
-            "title": "Tab 2",
-            "tab": "Content 2"
-        }
-    ]
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: tabs
 tabs:
   - title: Tab 1
-    tab: Content 1 YAML
+    tab: Content 1
   - title: Tab 2
-    tab: Content 2 YAML
+    tab: Content 2
 ```
 
 根据数据动态生成时，再配 `source`：模板会按数组重复，`${a}` / `${b}` 取当前项。

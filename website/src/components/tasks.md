@@ -18,37 +18,18 @@ outline: deep
 ## 基本用法
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是任务列表。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "tasks",
-  "name": "tasksJia",
-  "items": [
-    { "label": "hive 任务甲", "key": "hive-a", "status": 4, "remark": "日志甲" },
-    { "label": "小流量甲", "key": "partial-a", "status": 4 },
-    { "label": "全量甲", "key": "full-a", "status": 4 }
-  ]
-}
-```
-
-```schema: scope="body"
 type: tasks
-name: tasksYi
+name: tasks
 items:
-  - label: hive 任务乙
-    key: hive-b
+  - label: hive 任务
+    key: hive
     status: 4
-    remark: 日志乙
-  - label: 小流量乙
-    key: partial-b
+    remark: 日志
+  - label: 小流量
+    key: partial
     status: 4
-  - label: 全量乙
-    key: full-b
+  - label: 全量
+    key: full
     status: 4
 ```
 
@@ -57,78 +38,47 @@ items:
 六个状态都会画出对应文案。就绪有「上线」，可重试有「重试」。
 
 ```schema: scope="body"
-{
-  "type": "tasks",
-  "name": "tasksStatusJia",
-  "items": [
-    { "label": "未开始甲", "key": "s0-a", "status": 0 },
-    { "label": "就绪甲", "key": "s1-a", "status": 1 },
-    { "label": "进行中甲", "key": "s2-a", "status": 2 },
-    { "label": "出错甲", "key": "s3-a", "status": 3, "remark": "不可重试甲" },
-    { "label": "已完成甲", "key": "s4-a", "status": 4 },
-    { "label": "可重试甲", "key": "s5-a", "status": 5, "remark": "可重试备注甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: tasks
-name: tasksStatusYi
+name: tasksStatus
 items:
-  - label: 未开始乙
-    key: s0-b
+  - label: 未开始
+    key: s0
     status: 0
-  - label: 就绪乙
-    key: s1-b
+  - label: 就绪
+    key: s1
     status: 1
-  - label: 进行中乙
-    key: s2-b
+  - label: 进行中
+    key: s2
     status: 2
-  - label: 出错乙
-    key: s3-b
+  - label: 出错
+    key: s3
     status: 3
-    remark: 不可重试乙
-  - label: 已完成乙
-    key: s4-b
+    remark: 不可重试
+  - label: 已完成
+    key: s4
     status: 4
-  - label: 可重试乙
-    key: s5-b
+  - label: 可重试
+    key: s5
     status: 5
-    remark: 可重试备注乙
+    remark: 可重试
 ```
 
 ## 列名
 
 ```schema: scope="body"
-{
-  "type": "tasks",
-  "name": "tasksColsJia",
-  "taskNameLabel": "名称甲",
-  "statusLabel": "进度甲",
-  "remarkLabel": "说明甲",
-  "operationLabel": "动作甲",
-  "btnText": "发布甲",
-  "retryBtnText": "再试甲",
-  "items": [
-    { "label": "列表示例甲", "key": "col-a", "status": 1, "remark": "列备注甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: tasks
-name: tasksColsYi
-taskNameLabel: 名称乙
-statusLabel: 进度乙
-remarkLabel: 说明乙
-operationLabel: 动作乙
-btnText: 发布乙
-retryBtnText: 再试乙
+name: tasksCols
+taskNameLabel: 任务名称
+statusLabel: 状态
+remarkLabel: 备注说明
+operationLabel: 操作
+btnText: 上线
+retryBtnText: 重试
 items:
-  - label: 列表示例乙
-    key: col-b
+  - label: hive 任务
+    key: col
     status: 5
-    remark: 列备注乙
+    remark: 日志
 ```
 
 ## 属性表

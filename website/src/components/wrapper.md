@@ -17,19 +17,11 @@ outline: deep
 
 `className: b` 是 Amis 文档里用来加淡边框、让容器看得见的写法。
 
-```schema: scope="body"
-{
-    "type": "wrapper",
-    "body": "内容",
-    "className": "b"
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: wrapper
-body: 内容 YAML
+body: 内容
 className: b
 ```
 

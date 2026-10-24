@@ -20,35 +20,20 @@ outline: deep
 活示例用短文本，避免整页大表单。垂直方向 `children` 会展平进导航。
 
 ```schema: scope="body"
-{
-  "type": "anchor-nav",
-  "links": [
-    { "title": "基本信息", "body": { "type": "tpl", "tpl": "基本信息内容" } },
-    {
-      "title": "工作信息",
-      "children": [{ "title": "工作信息-1", "body": { "type": "tpl", "tpl": "工作信息子内容" } }],
-      "body": { "type": "tpl", "tpl": "工作信息内容" }
-    },
-    { "title": "兴趣爱好", "body": { "type": "tpl", "tpl": "兴趣爱好内容" } }
-  ]
-}
-```
-
-```schema: scope="body"
 type: anchor-nav
 links:
-  - title: 基本信息 YAML
+  - title: 基本信息
     body:
       type: tpl
-      tpl: 基本信息内容 YAML
-  - title: 工作信息 YAML
+      tpl: 基本信息内容
+  - title: 工作信息
     body:
       type: tpl
-      tpl: 工作信息内容 YAML
-  - title: 兴趣爱好 YAML
+      tpl: 工作信息内容
+  - title: 兴趣爱好
     body:
       type: tpl
-      tpl: 兴趣爱好内容 YAML
+      tpl: 兴趣爱好内容
 ```
 
 ## 水平导航
@@ -58,9 +43,9 @@ links:
   "type": "anchor-nav",
   "direction": "horizontal",
   "links": [
-    { "title": "水平甲", "body": { "type": "tpl", "tpl": "水平甲内容" } },
-    { "title": "水平乙", "body": { "type": "tpl", "tpl": "水平乙内容" } },
-    { "title": "水平丙", "body": { "type": "tpl", "tpl": "水平丙内容" } }
+    { "title": "基本信息", "body": { "type": "tpl", "tpl": "水平内容" } },
+    { "title": "工作信息", "body": { "type": "tpl", "tpl": "水平内容" } },
+    { "title": "兴趣爱好", "body": { "type": "tpl", "tpl": "水平内容" } }
   ]
 }
 ```

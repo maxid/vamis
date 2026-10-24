@@ -20,73 +20,45 @@ outline: deep
 头像和按钮都可以挂。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "text": "角甲", "badge": { "mode": "text", "text": 10 } },
-    { "type": "action", "label": "钮甲", "badge": { "mode": "text", "text": 15 } }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
-    text: 角乙
+    text: AM
     badge:
       mode: text
       text: 10
   - type: action
-    label: 钮乙
+    label: 按钮
     badge:
       mode: text
-      text: 16
+      text: 15
 ```
 
 模板、链接同样吃 `badge`。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "tpl", "tpl": "模版甲", "badge": { "mode": "text", "text": 25 } },
-    { "type": "link", "body": "链接甲", "href": "https://example.com", "badge": { "mode": "dot" } }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: tpl
-    tpl: 模版乙
+    tpl: Hello ${text}
     badge:
       mode: text
-      text: 26
+      text: 25
   - type: link
-    body: 链接乙
+    body: 链接
     href: https://example.com
     badge:
-      mode: dot
+      position: top-right
 ```
 
 图标同样吃 `badge`。
 
 ```schema: scope="body"
-{
-  "type": "icon",
-  "icon": "star",
-  "badge": { "mode": "text", "text": 5 }
-}
-```
-
-```schema: scope="body"
 type: icon
-icon: heart
+icon: cloud
+className: text-info text-xl
 badge:
-  mode: text
-  text: 6
+  position: top-left
 ```
 
 ## 显示文字或数值
@@ -94,36 +66,25 @@ badge:
 `mode: text`。数值为零时不显示。数字简写 `badge: 3` 也走 text。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "text": "数甲", "badge": { "mode": "text", "text": 10 } },
-    { "type": "avatar", "text": "零甲", "className": "m-l", "badge": { "mode": "text", "text": 0 } },
-    { "type": "avatar", "text": "新甲", "className": "m-l", "badge": { "mode": "text", "text": "new甲" } }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
-    text: 数乙
+    text: AM
     badge:
       mode: text
       text: 10
   - type: avatar
-    text: 零乙
+    text: AM
     className: m-l
     badge:
       mode: text
       text: 0
   - type: avatar
-    text: 新乙
+    text: AM
     className: m-l
     badge:
       mode: text
-      text: new乙
+      text: new
 ```
 
 ## 丝带
@@ -131,19 +92,11 @@ body:
 `mode: ribbon`。
 
 ```schema: scope="body"
-{
-  "type": "action",
-  "label": "热甲",
-  "badge": { "mode": "ribbon", "text": "HOT甲" }
-}
-```
-
-```schema: scope="body"
 type: action
-label: 热乙
+label: 按钮
 badge:
   mode: ribbon
-  text: HOT乙
+  text: HOT
 ```
 
 ## 封顶值
@@ -151,21 +104,10 @@ badge:
 超过 `overflowCount` 显示 `N+`，默认 99。
 
 ```schema
-{
-  "type": "page",
-  "body": {
-    "type": "avatar",
-    "text": "帽甲",
-    "badge": { "mode": "text", "text": 10, "overflowCount": 9 }
-  }
-}
-```
-
-```schema
 type: page
 body:
   type: avatar
-  text: 帽乙
+  text: AM
   badge:
     mode: text
     text: 10
@@ -177,26 +119,15 @@ body:
 字符串表达式当显隐；对象里也可以写 `visibleOn`。
 
 ```schema
-{
-  "type": "page",
-  "data": { "myData": 10 },
-  "body": [
-    { "type": "avatar", "text": "显甲", "badge": "this.myData > 1" },
-    { "type": "avatar", "text": "隐甲", "className": "m-l", "badge": { "visibleOn": "this.myData > 10", "mode": "text", "text": 1 } }
-  ]
-}
-```
-
-```schema
 type: page
 data:
   myData: 10
 body:
   - type: avatar
-    text: 显乙
+    text: AM
     badge: this.myData > 1
   - type: avatar
-    text: 隐乙
+    text: AM
     className: m-l
     badge:
       visibleOn: this.myData > 10

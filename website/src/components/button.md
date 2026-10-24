@@ -45,13 +45,6 @@ JSON 同等有效：
 ## 尺寸与主题
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是按钮尺寸与主题。"
-}
-```
-
-```schema: scope="body"
 { "type": "button", "label": "按钮页默认" }
 ```
 

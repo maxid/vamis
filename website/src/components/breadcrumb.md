@@ -32,22 +32,11 @@ items:
 活示例不配外链：
 
 ```schema: scope="body"
-{
-  "type": "breadcrumb",
-  "items": [
-    { "label": "首页" },
-    { "label": "上级页面" },
-    { "label": "当前页面" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: breadcrumb
 items:
-  - label: 首页 YAML
-  - label: 上级页面 YAML
-  - label: 当前页面 YAML
+  - label: 首页
+  - label: 上级页面
+  - label: 当前页面
 ```
 
 ## 动态数据

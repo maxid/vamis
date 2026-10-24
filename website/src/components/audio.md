@@ -18,37 +18,12 @@ outline: deep
 ## 基本使用
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是音频甲。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "audio"
-}
-```
-
-```schema: scope="body"
-type: tpl
-tpl: 下面是音频乙。
-```
-
-```schema: scope="body"
 type: audio
 ```
 
 ## 倍速
 
 `rates` 有值才画出倍速。默认显示当前 `x1.0`。
-
-```schema: scope="body"
-{
-  "type": "audio",
-  "rates": [1, 1.5, 2]
-}
-```
 
 ```schema: scope="body"
 type: audio
@@ -62,13 +37,6 @@ rates:
 `controls` 可裁模块。
 
 ```schema: scope="body"
-{
-  "type": "audio",
-  "controls": ["time"]
-}
-```
-
-```schema: scope="body"
 type: audio
 controls:
   - time
@@ -77,13 +45,6 @@ controls:
 ## 块级
 
 `inline` 默认 true。设成 false 时拉成一行吃满槽。
-
-```schema: scope="body"
-{
-  "type": "audio",
-  "inline": false
-}
-```
 
 ```schema: scope="body"
 type: audio

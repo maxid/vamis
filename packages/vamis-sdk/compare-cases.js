@@ -4847,12 +4847,6 @@ window.VAMIS_COMPARE_CASES = [
             "key": "2",
             "header": "标题2",
             "body": "这里是内容2"
-          },
-          {
-            "type": "collapse",
-            "key": "3",
-            "header": "标题3",
-            "body": "这里是内容3"
           }
         ]
       }
@@ -4871,44 +4865,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "collapse-group",
-        "activeKey": [
-          "1"
-        ],
-        "body": [
-          {
-            "type": "collapse",
-            "key": "1",
-            "header": "标题1",
-            "body": "这里是内容1"
-          },
-          {
-            "type": "collapse",
-            "key": "2",
-            "header": "标题2",
-            "body": "这里是内容2"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-collapse-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Collapse 折叠器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Collapse 折叠器 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4945,7 +4901,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-3",
+    "id": "src-components-collapse-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -4953,7 +4909,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #4",
+    "title": "Collapse 折叠器 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4987,7 +4943,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-4",
+    "id": "src-components-collapse-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -4995,7 +4951,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #5",
+    "title": "Collapse 折叠器 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5026,7 +4982,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-5",
+    "id": "src-components-collapse-4",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5034,7 +4990,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #6",
+    "title": "Collapse 折叠器 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5077,7 +5033,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-6",
+    "id": "src-components-collapse-5",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5085,7 +5041,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #7",
+    "title": "Collapse 折叠器 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5116,7 +5072,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-7",
+    "id": "src-components-collapse-6",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5124,7 +5080,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #8",
+    "title": "Collapse 折叠器 #7",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5152,7 +5108,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-8",
+    "id": "src-components-collapse-7",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5160,7 +5116,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #9",
+    "title": "Collapse 折叠器 #8",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5203,7 +5159,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-9",
+    "id": "src-components-collapse-8",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5211,7 +5167,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #10",
+    "title": "Collapse 折叠器 #9",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5254,7 +5210,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-collapse-10",
+    "id": "src-components-collapse-9",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5262,7 +5218,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Collapse 折叠器 #11",
+    "title": "Collapse 折叠器 #10",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5454,59 +5410,6 @@ window.VAMIS_COMPARE_CASES = [
         "type": "flex",
         "items": [
           {
-            "style": {
-              "backgroundColor": "#1A5CFF",
-              "width": 100,
-              "height": 50,
-              "margin": 5
-            },
-            "type": "tpl",
-            "tpl": ""
-          },
-          {
-            "style": {
-              "backgroundColor": "#46C93A",
-              "width": 100,
-              "height": 50,
-              "margin": 5
-            },
-            "type": "tpl",
-            "tpl": ""
-          },
-          {
-            "style": {
-              "backgroundColor": "#FF4757",
-              "width": 100,
-              "height": 50,
-              "margin": 5
-            },
-            "type": "tpl",
-            "tpl": ""
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-flex-1",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Flex 布局",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Flex 布局 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "items": [
-          {
             "type": "tpl",
             "tpl": "左",
             "style": {
@@ -5544,7 +5447,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-flex-2",
+    "id": "src-components-flex-1",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5552,7 +5455,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Flex 布局 #3",
+    "title": "Flex 布局 #2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5786,7 +5689,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-flex-3",
+    "id": "src-components-flex-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5794,7 +5697,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Flex 布局 #4",
+    "title": "Flex 布局 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5935,7 +5838,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-flex-4",
+    "id": "src-components-flex-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -5943,7 +5846,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Flex 布局 #5",
+    "title": "Flex 布局 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6028,7 +5931,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-flex-5",
+    "id": "src-components-flex-4",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -6036,7 +5939,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Flex 布局 #6",
+    "title": "Flex 布局 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6322,24 +6225,6 @@ window.VAMIS_COMPARE_CASES = [
             "gridClassName": "bg-blue-300",
             "type": "tpl",
             "tpl": "[grid-2] x:7 y:1 h:1 w:6"
-          },
-          {
-            "x": 1,
-            "y": 2,
-            "h": 2,
-            "w": 4,
-            "gridClassName": "bg-red-300",
-            "type": "tpl",
-            "tpl": "[grid-3] x:1 y:2 h:2 w:4"
-          },
-          {
-            "x": 5,
-            "y": 2,
-            "h": 1,
-            "w": 8,
-            "gridClassName": "bg-purple-300",
-            "type": "tpl",
-            "tpl": "[grid-4] x:5 y:2 h:1 w:8"
           }
         ]
       }
@@ -6358,47 +6243,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "grid-2d",
-        "grids": [
-          {
-            "x": 1,
-            "y": 1,
-            "h": 1,
-            "w": 6,
-            "gridClassName": "bg-green-300",
-            "type": "tpl",
-            "tpl": "[grid-1] x:1 y:1 h:1 w:6"
-          },
-          {
-            "x": 7,
-            "y": 1,
-            "h": 1,
-            "w": 6,
-            "gridClassName": "bg-blue-300",
-            "type": "tpl",
-            "tpl": "[grid-2] x:7 y:1 h:1 w:6"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-grid-2d-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Grid 2D 布局",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Grid 2D 布局 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6453,7 +6297,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-grid-2d-3",
+    "id": "src-components-grid-2d-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -6461,7 +6305,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Grid 2D 布局 #4",
+    "title": "Grid 2D 布局 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6487,7 +6331,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-grid-2d-4",
+    "id": "src-components-grid-2d-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -6495,7 +6339,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Grid 2D 布局 #5",
+    "title": "Grid 2D 布局 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6548,7 +6392,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-grid-2d-5",
+    "id": "src-components-grid-2d-4",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -6556,7 +6400,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Grid 2D 布局 #6",
+    "title": "Grid 2D 布局 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6969,16 +6813,16 @@ window.VAMIS_COMPARE_CASES = [
       "data": {
         "items": [
           {
-            "label": "甲"
+            "label": "条目1"
           },
           {
-            "label": "乙"
+            "label": "条目2"
           },
           {
-            "label": "丙"
+            "label": "条目3"
           },
           {
-            "label": "丁"
+            "label": "条目4"
           }
         ]
       },
@@ -7040,29 +6884,6 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "panel",
         "title": "面板标题",
-        "body": "面板内容 YAML"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-panel-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Panel 面板",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Panel 面板 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "panel",
-        "title": "面板标题",
         "body": "面板内容",
         "actions": [
           {
@@ -7081,7 +6902,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-panel-3",
+    "id": "src-components-panel-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7089,7 +6910,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Panel 面板 #4",
+    "title": "Panel 面板 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7158,37 +6979,6 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tabs",
-        "tabs": [
-          {
-            "title": "Tab 1",
-            "tab": "Content 1 YAML"
-          },
-          {
-            "title": "Tab 2",
-            "tab": "Content 2 YAML"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
       "data": {
         "arr": [
           {
@@ -7222,7 +7012,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-3",
+    "id": "src-components-tabs-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7230,7 +7020,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #4",
+    "title": "Tabs 选项卡 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7254,7 +7044,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-4",
+    "id": "src-components-tabs-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7262,7 +7052,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #5",
+    "title": "Tabs 选项卡 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7288,7 +7078,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-5",
+    "id": "src-components-tabs-4",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7296,7 +7086,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #6",
+    "title": "Tabs 选项卡 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7320,7 +7110,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-6",
+    "id": "src-components-tabs-5",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7328,7 +7118,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #7",
+    "title": "Tabs 选项卡 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7356,7 +7146,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-7",
+    "id": "src-components-tabs-6",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7364,7 +7154,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #8",
+    "title": "Tabs 选项卡 #7",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7423,29 +7213,6 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "wrapper",
-        "body": "内容 YAML",
-        "className": "b"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wrapper-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Wrapper 包裹容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wrapper 包裹容器 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
       "data": {
         "style": {
           "color": "#aaa"
@@ -7465,7 +7232,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-wrapper-3",
+    "id": "src-components-wrapper-2",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7473,7 +7240,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Wrapper 包裹容器 #4",
+    "title": "Wrapper 包裹容器 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7497,7 +7264,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-wrapper-4",
+    "id": "src-components-wrapper-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7505,7 +7272,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Wrapper 包裹容器 #5",
+    "title": "Wrapper 包裹容器 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7614,20 +7381,13 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "text": "这是一段描述信息 YAML"
-      },
       "body": {
         "type": "portlet",
-        "description": "${text}",
+        "hideHeader": true,
         "tabs": [
           {
-            "title": "标题",
-            "tab": "Content 1 YAML"
-          },
-          {
-            "title": "标题2",
-            "tab": "Content 2 YAML"
+            "title": "Tab 1",
+            "tab": "Content 1"
           }
         ]
       }
@@ -7651,11 +7411,13 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "portlet",
-        "hideHeader": true,
+        "style": {
+          "borderColor": "#333"
+        },
         "tabs": [
           {
             "title": "Tab 1",
-            "tab": "Content 1"
+            "tab": "Content 1 style"
           }
         ]
       }
@@ -7679,13 +7441,11 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "portlet",
-        "style": {
-          "borderColor": "#333"
-        },
+        "divider": false,
         "tabs": [
           {
-            "title": "Tab 1",
-            "tab": "Content 1 style"
+            "title": "标题",
+            "tab": "Content 1 nodiv"
           }
         ]
       }
@@ -7704,34 +7464,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "portlet",
-        "divider": false,
-        "tabs": [
-          {
-            "title": "标题",
-            "tab": "Content 1 nodiv"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-portlet-5",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Portlet 门户栏目",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Portlet 门户栏目 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7764,7 +7496,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-portlet-6",
+    "id": "src-components-portlet-5",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7772,7 +7504,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Portlet 门户栏目 #7",
+    "title": "Portlet 门户栏目 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7821,7 +7553,7 @@ window.VAMIS_COMPARE_CASES = [
         "title": "",
         "wrapWithPanel": false,
         "data": {
-          "state": "a"
+          "state": "b"
         },
         "body": [
           {
@@ -7840,7 +7572,7 @@ window.VAMIS_COMPARE_CASES = [
               }
             ],
             "multiple": false,
-            "value": "a"
+            "value": "b"
           },
           {
             "type": "switch-container",
@@ -7850,7 +7582,7 @@ window.VAMIS_COMPARE_CASES = [
                 "body": [
                   {
                     "type": "tpl",
-                    "tpl": "状态内容1",
+                    "tpl": "状态内容 1",
                     "inline": false
                   }
                 ],
@@ -7861,7 +7593,7 @@ window.VAMIS_COMPARE_CASES = [
                 "body": [
                   {
                     "type": "tpl",
-                    "tpl": "状态内容2",
+                    "tpl": "状态内容 2",
                     "inline": false
                   }
                 ],
@@ -7891,80 +7623,6 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "form",
-        "title": "",
-        "wrapWithPanel": false,
-        "data": {
-          "state": "b"
-        },
-        "body": [
-          {
-            "type": "button-group-select",
-            "name": "state",
-            "label": "切换状态 YAML",
-            "inline": false,
-            "options": [
-              {
-                "label": "选项1",
-                "value": "a"
-              },
-              {
-                "label": "选项2",
-                "value": "b"
-              }
-            ],
-            "multiple": false,
-            "value": "b"
-          },
-          {
-            "type": "switch-container",
-            "items": [
-              {
-                "title": "状态1",
-                "body": [
-                  {
-                    "type": "tpl",
-                    "tpl": "状态内容 YAML 1",
-                    "inline": false
-                  }
-                ],
-                "visibleOn": "${state == \"a\"}"
-              },
-              {
-                "title": "状态2",
-                "body": [
-                  {
-                    "type": "tpl",
-                    "tpl": "状态内容 YAML 2",
-                    "inline": false
-                  }
-                ],
-                "visibleOn": "${state == \"b\"}"
-              }
-            ]
-          }
-        ],
-        "actions": []
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-switch-container-2",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "switch-container",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "switch-container #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
         "type": "switch-container",
         "style": {
           "backgroundColor": "#C4C4C4"
@@ -7975,43 +7633,7 @@ window.VAMIS_COMPARE_CASES = [
             "body": [
               {
                 "type": "tpl",
-                "tpl": "状态内容1",
-                "inline": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-switch-container-3",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "switch-container",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "switch-container #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "switch-container",
-        "style": {
-          "backgroundColor": "#C4C4C4"
-        },
-        "items": [
-          {
-            "title": "状态1",
-            "body": [
-              {
-                "type": "tpl",
-                "tpl": "状态内容 YAML",
+                "tpl": "状态内容",
                 "inline": false
               }
             ]
@@ -8037,8 +7659,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是不同尺寸的按钮。"
+        "type": "button",
+        "label": "默认档"
       }
     },
     "measure": {
@@ -8060,7 +7682,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "默认档"
+        "label": "极小",
+        "size": "xs"
       }
     },
     "measure": {
@@ -8082,8 +7705,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "极小",
-        "size": "xs"
+        "label": "小",
+        "size": "sm"
       }
     },
     "measure": {
@@ -8105,8 +7728,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "小",
-        "size": "sm"
+        "label": "中等",
+        "size": "md"
       }
     },
     "measure": {
@@ -8128,8 +7751,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "中等",
-        "size": "md"
+        "label": "大",
+        "size": "lg"
       }
     },
     "measure": {
@@ -8151,8 +7774,7 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "大",
-        "size": "lg"
+        "label": "默认"
       }
     },
     "measure": {
@@ -8174,7 +7796,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "默认"
+        "label": "主要",
+        "level": "primary"
       }
     },
     "measure": {
@@ -8196,8 +7819,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "主要 YAML",
-        "level": "primary"
+        "label": "次要",
+        "level": "secondary"
       }
     },
     "measure": {
@@ -8219,8 +7842,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "次要",
-        "level": "secondary"
+        "label": "信息",
+        "level": "info"
       }
     },
     "measure": {
@@ -8242,8 +7865,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "信息",
-        "level": "info"
+        "label": "成功",
+        "level": "success"
       }
     },
     "measure": {
@@ -8265,8 +7888,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "成功",
-        "level": "success"
+        "label": "警告",
+        "level": "warning"
       }
     },
     "measure": {
@@ -8288,8 +7911,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "警告",
-        "level": "warning"
+        "label": "危险",
+        "level": "danger"
       }
     },
     "measure": {
@@ -8311,8 +7934,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "危险",
-        "level": "danger"
+        "label": "浅色",
+        "level": "light"
       }
     },
     "measure": {
@@ -8334,8 +7957,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "浅色",
-        "level": "light"
+        "label": "深色",
+        "level": "dark"
       }
     },
     "measure": {
@@ -8357,8 +7980,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "深色",
-        "level": "dark"
+        "label": "链接",
+        "level": "link"
       }
     },
     "measure": {
@@ -8379,9 +8002,9 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "label": "带图标",
         "type": "button",
-        "label": "链接",
-        "level": "link"
+        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
       }
     },
     "measure": {
@@ -8402,9 +8025,13 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "带图标",
+        "label": "Drawer Form",
         "type": "button",
-        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+        "actionType": "drawer",
+        "drawer": {
+          "title": "表单设置",
+          "body": "抽屉内容"
+        }
       }
     },
     "measure": {
@@ -8425,108 +8052,7 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "带图标 YAML",
-        "type": "button",
-        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-action-18",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Action 行为按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Action 行为按钮 #19",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "label": "Drawer Form",
-        "type": "button",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "表单设置",
-          "body": "抽屉内容"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-action-19",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Action 行为按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Action 行为按钮 #20",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "label": "Drawer Form YAML",
-        "type": "button",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "表单设置 YAML",
-          "body": "抽屉内容 YAML"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-action-20",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Action 行为按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Action 行为按钮 #21",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
         "label": "复制一段文本",
-        "type": "button",
-        "actionType": "copy",
-        "content": "http://www.baidu.com"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-action-21",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Action 行为按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Action 行为按钮 #22",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "label": "复制一段文本 YAML",
         "type": "button",
         "actionType": "copy",
         "content": "https://example.com/vamis"
@@ -8596,51 +8122,6 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "app",
-        "brandName": "应用名称 YAML",
-        "pages": [
-          {
-            "label": "分组1",
-            "children": [
-              {
-                "label": "页面A YAML",
-                "url": "/pageA",
-                "schema": {
-                  "type": "page",
-                  "body": "Page A YAML"
-                }
-              },
-              {
-                "label": "页面B YAML",
-                "url": "/pageB",
-                "schema": {
-                  "type": "page",
-                  "body": "Page B YAML"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-app-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "App 多页应用",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "App 多页应用 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "app",
         "brandName": "带页脚",
         "footer": {
           "type": "tpl",
@@ -8698,8 +8179,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是按钮尺寸与主题。"
+        "type": "button",
+        "label": "按钮页默认"
       }
     },
     "measure": {
@@ -8767,7 +8248,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "按钮页默认"
+        "label": "按钮页小",
+        "size": "sm"
       }
     },
     "measure": {
@@ -8789,8 +8271,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "按钮页小",
-        "size": "sm"
+        "label": "按钮页主要",
+        "level": "primary"
       }
     },
     "measure": {
@@ -8812,8 +8294,8 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "按钮页主要",
-        "level": "primary"
+        "label": "按钮页危险",
+        "level": "danger"
       }
     },
     "measure": {
@@ -8830,29 +8312,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "按钮页危险",
-        "level": "danger"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-button-5",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Button 按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Button 按钮 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8881,8 +8340,21 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是按钮组。"
+        "type": "button-group",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "Button"
+          },
+          {
+            "type": "button",
+            "label": "按钮2"
+          },
+          {
+            "type": "button",
+            "label": "普通按钮"
+          }
+        ]
       }
     },
     "measure": {
@@ -8899,76 +8371,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroup 按钮组 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-group",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "按钮甲"
-          },
-          {
-            "type": "button",
-            "label": "按钮乙"
-          },
-          {
-            "type": "button",
-            "label": "普通按钮"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-button-group-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "ButtonGroup 按钮组",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "ButtonGroup 按钮组 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-group",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "按钮甲 YAML"
-          },
-          {
-            "type": "button",
-            "label": "按钮乙 YAML"
-          },
-          {
-            "type": "button",
-            "label": "普通按钮 YAML"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-button-group-3",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "ButtonGroup 按钮组",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "ButtonGroup 按钮组 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8996,7 +8398,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-button-group-4",
+    "id": "src-components-button-group-2",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9004,7 +8406,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "ButtonGroup 按钮组 #5",
+    "title": "ButtonGroup 按钮组 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9032,7 +8434,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-button-group-5",
+    "id": "src-components-button-group-3",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9040,7 +8442,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "ButtonGroup 按钮组 #6",
+    "title": "ButtonGroup 按钮组 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9113,38 +8515,6 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "breadcrumb",
-        "items": [
-          {
-            "label": "首页 YAML"
-          },
-          {
-            "label": "上级页面 YAML"
-          },
-          {
-            "label": "当前页面 YAML"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-breadcrumb-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Breadcrumb 面包屑",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Breadcrumb 面包屑 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
       "data": {
         "breadcrumb": [
           {
@@ -9168,7 +8538,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-breadcrumb-3",
+    "id": "src-components-breadcrumb-2",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9176,7 +8546,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Breadcrumb 面包屑 #4",
+    "title": "Breadcrumb 面包屑 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9202,7 +8572,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-breadcrumb-4",
+    "id": "src-components-breadcrumb-3",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9210,7 +8580,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Breadcrumb 面包屑 #5",
+    "title": "Breadcrumb 面包屑 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9242,7 +8612,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-breadcrumb-5",
+    "id": "src-components-breadcrumb-4",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9250,7 +8620,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Breadcrumb 面包屑 #6",
+    "title": "Breadcrumb 面包屑 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9288,8 +8658,20 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是下拉按钮。"
+        "type": "dropdown-button",
+        "label": "下拉菜单",
+        "buttons": [
+          {
+            "label": "按钮1",
+            "disabled": true
+          },
+          {
+            "label": "按钮2"
+          },
+          {
+            "label": "按钮3"
+          }
+        ]
       }
     },
     "measure": {
@@ -9306,74 +8688,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DropDownButton 下拉按钮 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "dropdown-button",
-        "label": "下拉菜单",
-        "buttons": [
-          {
-            "label": "下拉项甲",
-            "disabled": true
-          },
-          {
-            "label": "下拉项乙"
-          },
-          {
-            "label": "下拉项丙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dropdown-button-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "DropDownButton 下拉按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "DropDownButton 下拉按钮 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "dropdown-button",
-        "label": "下拉菜单 YAML",
-        "buttons": [
-          {
-            "label": "下拉项甲 YAML",
-            "disabled": true
-          },
-          {
-            "label": "下拉项乙 YAML"
-          },
-          {
-            "label": "下拉项丙 YAML"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dropdown-button-3",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "DropDownButton 下拉按钮",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "DropDownButton 下拉按钮 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9411,7 +8725,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-dropdown-button-4",
+    "id": "src-components-dropdown-button-2",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9419,21 +8733,25 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "DropDownButton 下拉按钮 #5",
+    "title": "DropDownButton 下拉按钮 #3",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
         "type": "dropdown-button",
-        "label": "点项即关",
+        "label": "下拉菜单",
         "closeOnClick": true,
         "closeOnOutside": true,
         "buttons": [
           {
-            "label": "关闭甲"
+            "label": "按钮1",
+            "disabled": true
           },
           {
-            "label": "关闭乙"
+            "label": "按钮2"
+          },
+          {
+            "label": "按钮3"
           }
         ]
       }
@@ -9443,7 +8761,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-dropdown-button-5",
+    "id": "src-components-dropdown-button-3",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9451,7 +8769,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "DropDownButton 下拉按钮 #6",
+    "title": "DropDownButton 下拉按钮 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9462,10 +8780,10 @@ window.VAMIS_COMPARE_CASES = [
         "tooltip": "提示",
         "buttons": [
           {
-            "label": "图标项甲"
+            "label": "按钮1"
           },
           {
-            "label": "图标项乙"
+            "label": "按钮2"
           }
         ]
       }
@@ -9490,8 +8808,8 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "service",
         "data": {
-          "title": "Test Page Component",
-          "date": "2017-10-13"
+          "title": "Test Page",
+          "date": "2017-10-14"
         },
         "body": {
           "type": "tpl",
@@ -9513,35 +8831,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "service",
-        "data": {
-          "title": "Test Page YAML",
-          "date": "2017-10-14"
-        },
-        "body": {
-          "type": "tpl",
-          "tpl": "${title} · 现在是：${date}"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-service-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Service 功能型容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Service 功能型容器 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9588,16 +8877,16 @@ window.VAMIS_COMPARE_CASES = [
         "className": "w-md",
         "links": [
           {
-            "label": "导航甲",
+            "label": "Nav 1",
             "to": "?to=nav1",
             "active": true
           },
           {
-            "label": "导航乙",
+            "label": "Nav 2",
             "to": "?to=nav2"
           },
           {
-            "label": "导航丙",
+            "label": "Nav 3",
             "to": "?to=nav3"
           }
         ]
@@ -9617,44 +8906,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Nav 导航 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "nav",
-        "stacked": true,
-        "className": "w-md",
-        "links": [
-          {
-            "label": "导航甲 YAML",
-            "to": "?to=nav1",
-            "active": true
-          },
-          {
-            "label": "导航乙 YAML",
-            "to": "?to=nav2"
-          },
-          {
-            "label": "导航丙 YAML",
-            "to": "?to=nav3"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-nav-2",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "Nav 导航",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Nav 导航 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9698,7 +8949,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-nav-3",
+    "id": "src-components-nav-2",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9706,7 +8957,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Nav 导航 #4",
+    "title": "Nav 导航 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9715,15 +8966,15 @@ window.VAMIS_COMPARE_CASES = [
         "stacked": false,
         "links": [
           {
-            "label": "横甲",
+            "label": "Nav 1",
             "to": "?to=h1"
           },
           {
-            "label": "横乙",
+            "label": "Nav 2",
             "to": "?to=h2"
           },
           {
-            "label": "横丙",
+            "label": "Nav 3",
             "to": "?to=h3"
           }
         ]
@@ -9758,15 +9009,6 @@ window.VAMIS_COMPARE_CASES = [
           },
           {
             "title": "工作信息",
-            "children": [
-              {
-                "title": "工作信息-1",
-                "body": {
-                  "type": "tpl",
-                  "tpl": "工作信息子内容"
-                }
-              }
-            ],
             "body": {
               "type": "tpl",
               "tpl": "工作信息内容"
@@ -9801,26 +9043,27 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "anchor-nav",
+        "direction": "horizontal",
         "links": [
           {
-            "title": "基本信息 YAML",
+            "title": "基本信息",
             "body": {
               "type": "tpl",
-              "tpl": "基本信息内容 YAML"
+              "tpl": "水平内容"
             }
           },
           {
-            "title": "工作信息 YAML",
+            "title": "工作信息",
             "body": {
               "type": "tpl",
-              "tpl": "工作信息内容 YAML"
+              "tpl": "水平内容"
             }
           },
           {
-            "title": "兴趣爱好 YAML",
+            "title": "兴趣爱好",
             "body": {
               "type": "tpl",
-              "tpl": "兴趣爱好内容 YAML"
+              "tpl": "水平内容"
             }
           }
         ]
@@ -9840,51 +9083,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "AnchorNav 锚点导航 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "anchor-nav",
-        "direction": "horizontal",
-        "links": [
-          {
-            "title": "水平甲",
-            "body": {
-              "type": "tpl",
-              "tpl": "水平甲内容"
-            }
-          },
-          {
-            "title": "水平乙",
-            "body": {
-              "type": "tpl",
-              "tpl": "水平乙内容"
-            }
-          },
-          {
-            "title": "水平丙",
-            "body": {
-              "type": "tpl",
-              "tpl": "水平丙内容"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-anchor-nav-3",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "AnchorNav 锚点导航",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "AnchorNav 锚点导航 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9924,7 +9122,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-anchor-nav-4",
+    "id": "src-components-anchor-nav-3",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -9932,7 +9130,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "AnchorNav 锚点导航 #5",
+    "title": "AnchorNav 锚点导航 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9982,28 +9180,6 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是文字提示。"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tooltip-1",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "TooltipWrapper 文字提示容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
         "type": "flex",
         "justify": "space-around",
         "alignItems": "center",
@@ -10028,7 +9204,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-2",
+    "id": "src-components-tooltip-1",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10036,44 +9212,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #3",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "space-around",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "tooltip-wrapper",
-            "content": "提示文字 YAML",
-            "body": "hover 激活提示 YAML"
-          },
-          {
-            "type": "tooltip-wrapper",
-            "title": "标题 YAML",
-            "content": "提示文字 YAML",
-            "trigger": "click",
-            "body": "click 激活提示 YAML"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tooltip-3",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "TooltipWrapper 文字提示容器",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #4",
+    "title": "TooltipWrapper 文字提示容器 #2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10099,7 +9238,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-4",
+    "id": "src-components-tooltip-2",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10107,7 +9246,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #5",
+    "title": "TooltipWrapper 文字提示容器 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10148,7 +9287,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-5",
+    "id": "src-components-tooltip-3",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10156,7 +9295,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #6",
+    "title": "TooltipWrapper 文字提示容器 #4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10177,7 +9316,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-6",
+    "id": "src-components-tooltip-4",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10185,7 +9324,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #7",
+    "title": "TooltipWrapper 文字提示容器 #5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10203,7 +9342,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-7",
+    "id": "src-components-tooltip-5",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10211,7 +9350,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #8",
+    "title": "TooltipWrapper 文字提示容器 #6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10244,7 +9383,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-8",
+    "id": "src-components-tooltip-6",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10252,7 +9391,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #9",
+    "title": "TooltipWrapper 文字提示容器 #7",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10273,7 +9412,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-9",
+    "id": "src-components-tooltip-7",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10281,24 +9420,24 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #10",
+    "title": "TooltipWrapper 文字提示容器 #8",
     "expect": "",
     "schema": {
       "type": "page",
       "body": [
         {
           "type": "tooltip-wrapper",
-          "content": "内联提示甲",
+          "content": "内联提示",
           "inline": true,
           "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-          "body": "内联容器甲"
+          "body": "内联容器"
         },
         {
           "type": "tooltip-wrapper",
-          "content": "内联提示乙",
+          "content": "内联提示",
           "inline": true,
           "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-          "body": "内联容器乙"
+          "body": "块级提示"
         },
         {
           "type": "tooltip-wrapper",
@@ -10313,7 +9452,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-10",
+    "id": "src-components-tooltip-8",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10321,7 +9460,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #11",
+    "title": "TooltipWrapper 文字提示容器 #9",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10343,7 +9482,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tooltip-11",
+    "id": "src-components-tooltip-9",
     "group": "组件 / 功能",
     "bucket": "components",
     "section": "功能",
@@ -10351,7 +9490,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "TooltipWrapper 文字提示容器 #12",
+    "title": "TooltipWrapper 文字提示容器 #10",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10387,9 +9526,9 @@ window.VAMIS_COMPARE_CASES = [
           {
             "name": "static",
             "type": "static",
-            "label": "静态甲",
-            "value": "值甲",
-            "popOver": "弹出甲"
+            "label": "静态展示",
+            "value": "static",
+            "popOver": "弹出内容"
           }
         ]
       }
@@ -10411,17 +9550,22 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "actions": [],
-        "body": [
+      "data": {
+        "items": [
           {
-            "name": "static",
-            "type": "static",
-            "label": "静态乙",
-            "value": "值乙",
-            "popOver": "弹出乙"
+            "engine": "Trident",
+            "id": 1
+          }
+        ]
+      },
+      "body": {
+        "type": "table",
+        "source": "${items}",
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine",
+            "popOver": "弹出内容"
           }
         ]
       }
@@ -10443,22 +9587,23 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "items": [
-          {
-            "engine": "引擎甲",
-            "id": 1
-          }
-        ]
-      },
       "body": {
-        "type": "table",
-        "source": "${items}",
-        "columns": [
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
           {
-            "name": "engine",
-            "label": "列甲",
-            "popOver": "列弹出甲"
+            "type": "static",
+            "name": "hover",
+            "label": "静态展示",
+            "value": "static",
+            "popOver": {
+              "trigger": "hover",
+              "position": "left-top",
+              "showIcon": false,
+              "title": "标题",
+              "body": "弹出内容"
+            }
           }
         ]
       }
@@ -10483,125 +9628,12 @@ window.VAMIS_COMPARE_CASES = [
       "data": {
         "items": [
           {
-            "engine": "引擎乙",
-            "id": 1
-          }
-        ]
-      },
-      "body": {
-        "type": "table",
-        "source": "${items}",
-        "columns": [
-          {
-            "name": "engine",
-            "label": "列乙",
-            "popOver": "列弹出乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-popover-4",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "PopOver 弹出提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PopOver 弹出提示 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "actions": [],
-        "body": [
-          {
-            "type": "static",
-            "name": "hover",
-            "label": "悬停甲",
-            "value": "截断甲",
-            "popOver": {
-              "trigger": "hover",
-              "position": "left-top",
-              "showIcon": false,
-              "title": "标题甲",
-              "body": "全文甲"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-popover-5",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "PopOver 弹出提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PopOver 弹出提示 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "actions": [],
-        "body": [
-          {
-            "type": "static",
-            "name": "hover",
-            "label": "悬停乙",
-            "value": "截断乙",
-            "popOver": {
-              "trigger": "hover",
-              "position": "left-top",
-              "showIcon": false,
-              "title": "标题乙",
-              "body": "全文乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-popover-6",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "PopOver 弹出提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PopOver 弹出提示 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "items": [
-          {
             "id": 1,
-            "engine": "启用甲"
+            "engine": "Trident"
           },
           {
             "id": 2,
-            "engine": "关闭甲"
+            "engine": "Gecko"
           }
         ]
       },
@@ -10611,51 +9643,7 @@ window.VAMIS_COMPARE_CASES = [
         "columns": [
           {
             "name": "engine",
-            "label": "条件甲",
-            "popOver": {
-              "body": "${engine}"
-            },
-            "popOverEnableOn": "this.id == 1"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-popover-7",
-    "group": "组件 / 功能",
-    "bucket": "components",
-    "section": "功能",
-    "page": "PopOver 弹出提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "PopOver 弹出提示 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "items": [
-          {
-            "id": 1,
-            "engine": "启用乙"
-          },
-          {
-            "id": 2,
-            "engine": "关闭乙"
-          }
-        ]
-      },
-      "body": {
-        "type": "table",
-        "source": "${items}",
-        "columns": [
-          {
-            "name": "engine",
-            "label": "条件乙",
+            "label": "Engine",
             "popOver": {
               "body": "${engine}"
             },
@@ -14503,8 +13491,53 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是提示条。"
+        "type": "container",
+        "body": [
+          {
+            "type": "alert",
+            "level": "info",
+            "body": "提示类文案"
+          },
+          {
+            "type": "alert",
+            "level": "info",
+            "title": "提示类标题",
+            "body": "提示类文案"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "body": "成功类文案"
+          },
+          {
+            "type": "alert",
+            "level": "success",
+            "title": "成功类标题",
+            "body": "成功类文案"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "body": "警告类文案"
+          },
+          {
+            "type": "alert",
+            "level": "warning",
+            "title": "警告类标题",
+            "body": "警告类文案"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "body": "危险类文案"
+          },
+          {
+            "type": "alert",
+            "level": "danger",
+            "title": "危险类标题",
+            "body": "危险类文案"
+          }
+        ]
       }
     },
     "measure": {
@@ -14530,46 +13563,33 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "alert",
             "level": "info",
-            "body": "提示类文案甲"
+            "showIcon": true,
+            "body": "提示类文案"
           },
           {
             "type": "alert",
             "level": "info",
-            "title": "提示类标题甲",
-            "body": "提示类文案甲有标题"
+            "showIcon": true,
+            "title": "提示类标题",
+            "body": "提示类文案"
           },
           {
             "type": "alert",
             "level": "success",
-            "body": "成功类文案甲"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "title": "成功类标题甲",
-            "body": "成功类文案甲有标题"
+            "showIcon": true,
+            "body": "成功类文案"
           },
           {
             "type": "alert",
             "level": "warning",
-            "body": "警告类文案甲"
-          },
-          {
-            "type": "alert",
-            "level": "warning",
-            "title": "警告类标题甲",
-            "body": "警告类文案甲有标题"
+            "showIcon": true,
+            "body": "警告类文案"
           },
           {
             "type": "alert",
             "level": "danger",
-            "body": "危险类文案甲"
-          },
-          {
-            "type": "alert",
-            "level": "danger",
-            "title": "危险类标题甲",
-            "body": "危险类文案甲有标题"
+            "showIcon": true,
+            "body": "危险类文案"
           }
         ]
       }
@@ -14592,53 +13612,12 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "alert",
-            "level": "info",
-            "body": "提示类文案乙"
-          },
-          {
-            "type": "alert",
-            "level": "info",
-            "title": "提示类标题乙",
-            "body": "提示类文案乙有标题"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "body": "成功类文案乙"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "title": "成功类标题乙",
-            "body": "成功类文案乙有标题"
-          },
-          {
-            "type": "alert",
-            "level": "warning",
-            "body": "警告类文案乙"
-          },
-          {
-            "type": "alert",
-            "level": "warning",
-            "title": "警告类标题乙",
-            "body": "警告类文案乙有标题"
-          },
-          {
-            "type": "alert",
-            "level": "danger",
-            "body": "危险类文案乙"
-          },
-          {
-            "type": "alert",
-            "level": "danger",
-            "title": "危险类标题乙",
-            "body": "危险类文案乙有标题"
-          }
-        ]
+        "type": "alert",
+        "data": {
+          "status": 1
+        },
+        "level": "${IFS(status===1, 'danger', status===2, 'warning')}",
+        "body": "这是内容区"
       }
     },
     "measure": {
@@ -14664,33 +13643,17 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "alert",
             "level": "info",
+            "showCloseButton": true,
             "showIcon": true,
-            "body": "提示类图标甲"
-          },
-          {
-            "type": "alert",
-            "level": "info",
-            "showIcon": true,
-            "title": "提示类图标标题甲",
-            "body": "提示类图标甲有标题"
+            "body": "显示关闭按钮的提示"
           },
           {
             "type": "alert",
             "level": "success",
+            "showCloseButton": true,
             "showIcon": true,
-            "body": "成功类图标甲"
-          },
-          {
-            "type": "alert",
-            "level": "warning",
-            "showIcon": true,
-            "body": "警告类图标甲"
-          },
-          {
-            "type": "alert",
-            "level": "danger",
-            "showIcon": true,
-            "body": "危险类图标甲"
+            "title": "可关闭提示",
+            "body": "显示关闭按钮的提示"
           }
         ]
       }
@@ -14713,38 +13676,18 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "container",
-        "body": [
+        "type": "alert",
+        "level": "success",
+        "showIcon": true,
+        "showCloseButton": true,
+        "title": "操作标题",
+        "body": "创建成功",
+        "actions": [
           {
-            "type": "alert",
-            "level": "info",
-            "showIcon": true,
-            "body": "提示类图标乙"
-          },
-          {
-            "type": "alert",
-            "level": "info",
-            "showIcon": true,
-            "title": "提示类图标标题乙",
-            "body": "提示类图标乙有标题"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "showIcon": true,
-            "body": "成功类图标乙"
-          },
-          {
-            "type": "alert",
-            "level": "warning",
-            "showIcon": true,
-            "body": "警告类图标乙"
-          },
-          {
-            "type": "alert",
-            "level": "danger",
-            "showIcon": true,
-            "body": "危险类图标乙"
+            "type": "button",
+            "label": "查看详情",
+            "size": "xs",
+            "level": "link"
           }
         ]
       }
@@ -14768,172 +13711,10 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "alert",
-        "data": {
-          "statusJia": 1
-        },
-        "level": "${IFS(statusJia===1, 'danger', statusJia===2, 'warning')}",
-        "body": "表达式级别甲"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-alert-6",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Alert 提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Alert 提示 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "alert",
-        "data": {
-          "statusYi": 1
-        },
-        "level": "${IFS(statusYi===1, 'danger', statusYi===2, 'warning')}",
-        "body": "表达式级别乙"
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-alert-7",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Alert 提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Alert 提示 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "alert",
-            "level": "info",
-            "showCloseButton": true,
-            "showIcon": true,
-            "body": "可关闭提示甲"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "showCloseButton": true,
-            "showIcon": true,
-            "title": "可关闭标题甲",
-            "body": "可关闭提示甲有标题"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-alert-8",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Alert 提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Alert 提示 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "alert",
-            "level": "info",
-            "showCloseButton": true,
-            "showIcon": true,
-            "body": "可关闭提示乙"
-          },
-          {
-            "type": "alert",
-            "level": "success",
-            "showCloseButton": true,
-            "showIcon": true,
-            "title": "可关闭标题乙",
-            "body": "可关闭提示乙有标题"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-alert-9",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Alert 提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Alert 提示 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "alert",
-        "level": "success",
-        "showIcon": true,
-        "showCloseButton": true,
-        "title": "操作标题甲",
-        "body": "创建成功甲",
-        "actions": [
-          {
-            "type": "button",
-            "label": "查看详情甲",
-            "size": "xs",
-            "level": "link"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-alert-10",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Alert 提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Alert 提示 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "alert",
         "level": "info",
         "showIcon": true,
         "showCloseButton": true,
-        "body": "创建成功乙",
+        "body": "创建成功",
         "actions": {
           "type": "flex",
           "justify": "flex-start",
@@ -14942,13 +13723,13 @@ window.VAMIS_COMPARE_CASES = [
           "items": [
             {
               "type": "button",
-              "label": "详情乙",
+              "label": "详情",
               "size": "xs",
               "level": "primary"
             },
             {
               "type": "button",
-              "label": "关闭乙",
+              "label": "关闭",
               "size": "xs",
               "level": "danger"
             }
@@ -14974,8 +13755,13 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面用按钮打开对话框。"
+        "label": "点击弹框",
+        "type": "button",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "弹框标题",
+          "body": "这是一个弹框"
+        }
       }
     },
     "measure": {
@@ -14996,13 +13782,38 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "点开对话框甲",
-        "type": "button",
-        "actionType": "dialog",
-        "dialog": {
-          "title": "对话框标题甲",
-          "body": "这是一个对话框甲"
-        }
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "较小的弹框",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "sm",
+              "title": "提示",
+              "body": "这是个简单的弹框"
+            }
+          },
+          {
+            "type": "button",
+            "label": "标准弹框",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "这是个简单的弹框"
+            }
+          },
+          {
+            "type": "button",
+            "label": "占满屏幕的弹框",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "full",
+              "title": "全屏弹框",
+              "body": "弹框尽可能占满，内容部分滚动。"
+            }
+          }
+        ]
       }
     },
     "measure": {
@@ -15023,12 +13834,37 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "点开对话框乙",
         "type": "button",
+        "label": "多级弹框",
         "actionType": "dialog",
         "dialog": {
-          "title": "对话框标题乙",
-          "body": "这是一个对话框乙"
+          "title": "提示",
+          "body": "这是个简单的弹框",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "确认",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "dialog",
+              "label": "再弹一个",
+              "dialog": {
+                "title": "弹框中的弹框",
+                "body": "如果你想，可以继续弹下去",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "关闭",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
         }
       }
     },
@@ -15054,61 +13890,29 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "较小对话框甲",
+            "label": "无底部按钮",
             "actionType": "dialog",
             "dialog": {
-              "size": "sm",
-              "title": "较小标题甲",
-              "body": "较小对话框正文甲"
+              "title": "提示",
+              "actions": [],
+              "body": "没有底部按钮"
             }
           },
           {
             "type": "button",
-            "label": "标准对话框甲",
+            "label": "只有确认",
             "actionType": "dialog",
             "dialog": {
-              "title": "标准标题甲",
-              "body": "标准对话框正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "中等对话框甲",
-            "actionType": "dialog",
-            "dialog": {
-              "size": "md",
-              "title": "中等标题甲",
-              "body": "中等对话框正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "较大对话框甲",
-            "actionType": "dialog",
-            "dialog": {
-              "size": "lg",
-              "title": "较大标题甲",
-              "body": "较大对话框正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "很大对话框甲",
-            "actionType": "dialog",
-            "dialog": {
-              "size": "xl",
-              "title": "很大标题甲",
-              "body": "很大对话框正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "全屏对话框甲",
-            "actionType": "dialog",
-            "dialog": {
-              "size": "full",
-              "title": "全屏标题甲",
-              "body": "全屏对话框正文甲"
+              "title": "提示",
+              "actions": [
+                {
+                  "type": "button",
+                  "actionType": "confirm",
+                  "label": "确认",
+                  "primary": true
+                }
+              ],
+              "body": "只有一个确认按钮"
             }
           }
         ]
@@ -15136,321 +13940,21 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "较小对话框乙",
+            "label": "无右上关闭",
             "actionType": "dialog",
             "dialog": {
-              "size": "sm",
-              "title": "较小标题乙",
-              "body": "较小对话框正文乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "标准对话框乙",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "标准标题乙",
-              "body": "标准对话框正文乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "全屏对话框乙",
-            "actionType": "dialog",
-            "dialog": {
-              "size": "full",
-              "title": "全屏标题乙",
-              "body": "全屏对话框正文乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-5",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "多级对话框甲",
-        "actionType": "dialog",
-        "dialog": {
-          "title": "外层对话框甲",
-          "body": "外层对话框正文甲",
-          "actions": [
-            {
-              "type": "button",
-              "actionType": "confirm",
-              "label": "关上外层甲",
-              "primary": true
-            },
-            {
-              "type": "button",
-              "actionType": "dialog",
-              "label": "再弹一层甲",
-              "dialog": {
-                "title": "内层对话框甲",
-                "body": "内层对话框正文甲",
-                "actions": [
-                  {
-                    "type": "button",
-                    "actionType": "confirm",
-                    "label": "不弹了甲",
-                    "primary": true
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-6",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "多级对话框乙",
-        "actionType": "dialog",
-        "dialog": {
-          "title": "外层对话框乙",
-          "body": "外层对话框正文乙",
-          "actions": [
-            {
-              "type": "button",
-              "actionType": "confirm",
-              "label": "关上外层乙",
-              "primary": true
-            },
-            {
-              "type": "button",
-              "actionType": "dialog",
-              "label": "再弹一层乙",
-              "dialog": {
-                "title": "内层对话框乙",
-                "body": "内层对话框正文乙",
-                "actions": [
-                  {
-                    "type": "button",
-                    "actionType": "confirm",
-                    "label": "不弹了乙",
-                    "primary": true
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-7",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无底部按钮甲",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "无底栏标题甲",
-              "actions": [],
-              "body": "无底部按钮的对话框甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "只有确认甲",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "单按钮标题甲",
-              "actions": [
-                {
-                  "type": "button",
-                  "actionType": "confirm",
-                  "label": "好的甲",
-                  "primary": true
-                }
-              ],
-              "body": "只有一个确认的对话框甲"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-8",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无底部按钮乙",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "无底栏标题乙",
-              "actions": [],
-              "body": "无底部按钮的对话框乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "只有确认乙",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "单按钮标题乙",
-              "actions": [
-                {
-                  "type": "button",
-                  "actionType": "confirm",
-                  "label": "好的乙",
-                  "primary": true
-                }
-              ],
-              "body": "只有一个确认的对话框乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-9",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无右上关闭甲",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "无右上标题甲",
-              "body": "没有右上角关闭的对话框甲",
+              "title": "提示",
+              "body": "没有右上角关闭",
               "showCloseButton": false
             }
           },
           {
             "type": "button",
-            "label": "Esc与点遮罩甲",
+            "label": "Esc 与点遮罩",
             "actionType": "dialog",
             "dialog": {
-              "title": "可点遮罩标题甲",
-              "body": "Esc 或点遮罩可关甲",
-              "closeOnEsc": true,
-              "closeOnOutside": true
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-dialog-10",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Dialog 对话框",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Dialog 对话框 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无右上关闭乙",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "无右上标题乙",
-              "body": "没有右上角关闭的对话框乙",
-              "showCloseButton": false
-            }
-          },
-          {
-            "type": "button",
-            "label": "Esc与点遮罩乙",
-            "actionType": "dialog",
-            "dialog": {
-              "title": "可点遮罩标题乙",
-              "body": "Esc 或点遮罩可关乙",
+              "title": "提示",
+              "body": "Esc 或点遮罩可关闭",
               "closeOnEsc": true,
               "closeOnOutside": true
             }
@@ -15476,8 +13980,13 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面用按钮打开抽屉。"
+        "label": "弹出",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "抽屉标题",
+          "body": "这是一个抽屉"
+        }
       }
     },
     "measure": {
@@ -15498,13 +14007,49 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "点开抽屉甲",
-        "type": "button",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "抽屉标题甲",
-          "body": "这是一个抽屉甲"
-        }
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "左侧",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "left",
+              "title": "提示",
+              "body": "从左侧弹出"
+            }
+          },
+          {
+            "type": "button",
+            "label": "右侧",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "right",
+              "title": "提示",
+              "body": "从右侧弹出"
+            }
+          },
+          {
+            "type": "button",
+            "label": "顶部",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "top",
+              "title": "提示",
+              "body": "从顶部弹出"
+            }
+          },
+          {
+            "type": "button",
+            "label": "底部",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "bottom",
+              "title": "提示",
+              "body": "从底部弹出"
+            }
+          }
+        ]
       }
     },
     "measure": {
@@ -15525,13 +14070,29 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "点开抽屉乙",
-        "type": "button",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "抽屉标题乙",
-          "body": "这是一个抽屉乙"
-        }
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "极小",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "xs",
+              "title": "提示",
+              "body": "这是个简单的抽屉"
+            }
+          },
+          {
+            "type": "button",
+            "label": "较大",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "lg",
+              "title": "提示",
+              "body": "这是个简单的抽屉"
+            }
+          }
+        ]
       }
     },
     "measure": {
@@ -15556,42 +14117,24 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "左侧抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "left",
-              "title": "左侧标题甲",
-              "body": "从左侧弹出的抽屉甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "右侧抽屉甲",
+            "label": "自定义宽度",
             "actionType": "drawer",
             "drawer": {
               "position": "right",
-              "title": "右侧标题甲",
-              "body": "从右侧弹出的抽屉甲"
+              "width": 300,
+              "title": "提示",
+              "body": "自定义宽度"
             }
           },
           {
             "type": "button",
-            "label": "顶部抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "top",
-              "title": "顶部标题甲",
-              "body": "从顶部弹出的抽屉甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "底部抽屉甲",
+            "label": "自定义高度",
             "actionType": "drawer",
             "drawer": {
               "position": "bottom",
-              "title": "底部标题甲",
-              "body": "从底部弹出的抽屉甲"
+              "height": 240,
+              "title": "提示",
+              "body": "自定义高度"
             }
           }
         ]
@@ -15615,49 +14158,38 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "左侧抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "left",
-              "title": "左侧标题乙",
-              "body": "从左侧弹出的抽屉乙"
+        "type": "button",
+        "label": "多级抽屉",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "提示",
+          "body": "这是个简单的抽屉",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "关上提示",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "drawer",
+              "label": "再弹一个",
+              "drawer": {
+                "title": "抽屉中的抽屉",
+                "body": "如果你想，可以继续弹下去",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "关闭",
+                    "primary": true
+                  }
+                ]
+              }
             }
-          },
-          {
-            "type": "button",
-            "label": "右侧抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "right",
-              "title": "右侧标题乙",
-              "body": "从右侧弹出的抽屉乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "顶部抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "top",
-              "title": "顶部标题乙",
-              "body": "从顶部弹出的抽屉乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "底部抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "bottom",
-              "title": "底部标题乙",
-              "body": "从底部弹出的抽屉乙"
-            }
-          }
-        ]
+          ]
+        }
       }
     },
     "measure": {
@@ -15682,385 +14214,21 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "极小抽屉甲",
+            "label": "无右上关闭",
             "actionType": "drawer",
             "drawer": {
-              "size": "xs",
-              "title": "极小标题甲",
-              "body": "极小抽屉正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "小抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "sm",
-              "title": "小标题甲",
-              "body": "小抽屉正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "中抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "md",
-              "title": "中标题甲",
-              "body": "中抽屉正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "大抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "lg",
-              "title": "大标题甲",
-              "body": "大抽屉正文甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "很大抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "xl",
-              "title": "很大标题甲",
-              "body": "很大抽屉正文甲"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-6",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "极小抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "xs",
-              "title": "极小标题乙",
-              "body": "极小抽屉正文乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "大抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "size": "lg",
-              "title": "大标题乙",
-              "body": "大抽屉正文乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-7",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "自定义宽度甲",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "right",
-              "width": 300,
-              "title": "宽 300 甲",
-              "body": "自定义 300px 宽的抽屉甲"
-            }
-          },
-          {
-            "type": "button",
-            "label": "自定义高度甲",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "bottom",
-              "height": 240,
-              "title": "高 240 甲",
-              "body": "自定义 240px 高的抽屉甲"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-8",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "自定义宽度乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "right",
-              "width": 300,
-              "title": "宽 300 乙",
-              "body": "自定义 300px 宽的抽屉乙"
-            }
-          },
-          {
-            "type": "button",
-            "label": "自定义高度乙",
-            "actionType": "drawer",
-            "drawer": {
-              "position": "bottom",
-              "height": 240,
-              "title": "高 240 乙",
-              "body": "自定义 240px 高的抽屉乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-9",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "多级抽屉甲",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "外层抽屉甲",
-          "body": "外层抽屉正文甲",
-          "actions": [
-            {
-              "type": "button",
-              "actionType": "confirm",
-              "label": "关上外层抽屉甲",
-              "primary": true
-            },
-            {
-              "type": "button",
-              "actionType": "drawer",
-              "label": "再弹一层抽屉甲",
-              "drawer": {
-                "title": "内层抽屉甲",
-                "body": "内层抽屉正文甲",
-                "actions": [
-                  {
-                    "type": "button",
-                    "actionType": "confirm",
-                    "label": "不弹抽屉了甲",
-                    "primary": true
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-10",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "多级抽屉乙",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "外层抽屉乙",
-          "body": "外层抽屉正文乙",
-          "actions": [
-            {
-              "type": "button",
-              "actionType": "confirm",
-              "label": "关上外层抽屉乙",
-              "primary": true
-            },
-            {
-              "type": "button",
-              "actionType": "drawer",
-              "label": "再弹一层抽屉乙",
-              "drawer": {
-                "title": "内层抽屉乙",
-                "body": "内层抽屉正文乙",
-                "actions": [
-                  {
-                    "type": "button",
-                    "actionType": "confirm",
-                    "label": "不弹抽屉了乙",
-                    "primary": true
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-11",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无右上抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "title": "无右上抽屉标题甲",
-              "body": "没有右上角关闭的抽屉甲",
+              "title": "无右上抽屉标题",
+              "body": "没有右上角关闭",
               "showCloseButton": false
             }
           },
           {
             "type": "button",
-            "label": "无蒙层抽屉甲",
+            "label": "无蒙层",
             "actionType": "drawer",
             "drawer": {
-              "title": "无蒙层标题甲",
-              "body": "没有蒙层的抽屉甲",
-              "overlay": false
-            }
-          },
-          {
-            "type": "button",
-            "label": "点遮罩关抽屉甲",
-            "actionType": "drawer",
-            "drawer": {
-              "title": "点遮罩标题甲",
-              "body": "点外面或 Esc 可关甲",
-              "closeOnEsc": true,
-              "closeOnOutside": true
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-drawer-12",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Drawer 抽屉",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Drawer 抽屉 #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button-toolbar",
-        "buttons": [
-          {
-            "type": "button",
-            "label": "无右上抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "title": "无右上抽屉标题乙",
-              "body": "没有右上角关闭的抽屉乙",
-              "showCloseButton": false
-            }
-          },
-          {
-            "type": "button",
-            "label": "无蒙层抽屉乙",
-            "actionType": "drawer",
-            "drawer": {
-              "title": "无蒙层标题乙",
-              "body": "没有蒙层的抽屉乙",
+              "title": "提示",
+              "body": "没有蒙层",
               "overlay": false
             }
           }
@@ -16085,8 +14253,21 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是加载指示。"
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中"
+          },
+          {
+            "type": "spinner",
+            "show": false,
+            "tip": "已隐藏"
+          }
+        ]
       }
     },
     "measure": {
@@ -16107,19 +14288,19 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
+        "type": "form",
+        "wrapWithPanel": false,
+        "body": [
           {
-            "type": "spinner",
-            "show": true,
-            "tip": "显示中甲"
+            "type": "switch",
+            "name": "loading",
+            "label": "显示加载",
+            "value": true
           },
           {
             "type": "spinner",
-            "show": false,
-            "tip": "隐藏了甲"
+            "showOn": "${loading}",
+            "tip": "加载中"
           }
         ]
       }
@@ -16149,12 +14330,19 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "spinner",
             "show": true,
-            "tip": "显示中乙"
+            "size": "sm",
+            "className": "mr-4"
           },
           {
             "type": "spinner",
-            "show": false,
-            "tip": "隐藏了乙"
+            "show": true,
+            "size": "",
+            "className": "mr-4"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "size": "lg"
           }
         ]
       }
@@ -16177,19 +14365,33 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "body": [
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
           {
-            "type": "switch",
-            "name": "loadingJia",
-            "label": "显示加载甲",
-            "value": true
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中",
+            "tipPlacement": "bottom"
           },
           {
             "type": "spinner",
-            "showOn": "${loadingJia}",
-            "tip": "按开关甲"
+            "show": true,
+            "tip": "加载中",
+            "tipPlacement": "right"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中",
+            "tipPlacement": "top"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中",
+            "tipPlacement": "left"
           }
         ]
       }
@@ -16212,257 +14414,13 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "body": [
-          {
-            "type": "switch",
-            "name": "loadingYi",
-            "label": "显示加载乙",
-            "value": true
-          },
-          {
-            "type": "spinner",
-            "showOn": "${loadingYi}",
-            "tip": "按开关乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-5",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "spinner",
-            "show": true,
-            "size": "sm"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "size": ""
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "size": "lg"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-6",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "spinner",
-            "show": true,
-            "size": "sm",
-            "tip": "小号乙"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "size": "",
-            "tip": "默认号乙"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "size": "lg",
-            "tip": "大号乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-7",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中甲",
-            "tipPlacement": "bottom"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中甲右",
-            "tipPlacement": "right"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中甲上",
-            "tipPlacement": "top"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中甲左",
-            "tipPlacement": "left"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-8",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中乙",
-            "tipPlacement": "bottom"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中乙右",
-            "tipPlacement": "right"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中乙上",
-            "tipPlacement": "top"
-          },
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中乙左",
-            "tipPlacement": "left"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-9",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
         "type": "spinner",
         "show": true,
         "overlay": true,
-        "tip": "提交中甲",
+        "tip": "加载中",
         "body": {
           "type": "tpl",
-          "tpl": "容器内容甲：姓名、邮箱"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-10",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "spinner",
-        "show": true,
-        "overlay": true,
-        "tip": "提交中乙",
-        "body": {
-          "type": "tpl",
-          "tpl": "容器内容乙：姓名、邮箱"
+          "tpl": "姓名、邮箱"
         }
       }
     },
@@ -16484,8 +14442,16 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是轻提示。"
+        "type": "button",
+        "label": "弹出提示",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "body": "轻提示内容"
+            }
+          ]
+        }
       }
     },
     "measure": {
@@ -16506,35 +14472,17 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "button",
-            "label": "弹出提示",
-            "actionType": "toast",
-            "toast": {
-              "items": [
-                {
-                  "body": "轻提示内容"
-                }
-              ]
+        "type": "button",
+        "label": "底部弹出",
+        "actionType": "toast",
+        "toast": {
+          "position": "bottom-center",
+          "items": [
+            {
+              "body": "底部提示"
             }
-          },
-          {
-            "type": "button",
-            "label": "弹出提示乙",
-            "actionType": "toast",
-            "toast": {
-              "items": [
-                {
-                  "body": "轻提示内容乙"
-                }
-              ]
-            }
-          }
-        ]
+          ]
+        }
       }
     },
     "measure": {
@@ -16555,35 +14503,17 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "button",
-            "label": "弹出提示 YAML",
-            "actionType": "toast",
-            "toast": {
-              "items": [
-                {
-                  "body": "轻提示内容 YAML"
-                }
-              ]
+        "type": "button",
+        "label": "无关闭按钮",
+        "actionType": "toast",
+        "toast": {
+          "closeButton": false,
+          "items": [
+            {
+              "body": "没有关闭按钮"
             }
-          },
-          {
-            "type": "button",
-            "label": "弹出提示乙 YAML",
-            "actionType": "toast",
-            "toast": {
-              "items": [
-                {
-                  "body": "轻提示内容乙 YAML"
-                }
-              ]
-            }
-          }
-        ]
+          ]
+        }
       }
     },
     "measure": {
@@ -16605,13 +14535,13 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "底部弹出",
+        "label": "无图标提示",
         "actionType": "toast",
         "toast": {
-          "position": "bottom-center",
+          "showIcon": false,
           "items": [
             {
-              "body": "底部提示"
+              "body": "没有图标"
             }
           ]
         }
@@ -16636,13 +14566,13 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "底部弹出 YAML",
+        "label": "一秒关掉",
         "actionType": "toast",
         "toast": {
-          "position": "bottom-center",
+          "timeout": 1000,
           "items": [
             {
-              "body": "底部提示 YAML"
+              "body": "一秒后关掉"
             }
           ]
         }
@@ -16667,13 +14597,13 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "button",
-        "label": "无关闭按钮",
+        "label": "带标题提示",
         "actionType": "toast",
         "toast": {
-          "closeButton": false,
           "items": [
             {
-              "body": "没有关闭按钮"
+              "title": "标题",
+              "body": "带标题的内容"
             }
           ]
         }
@@ -16693,130 +14623,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "无图标提示",
-        "actionType": "toast",
-        "toast": {
-          "showIcon": false,
-          "items": [
-            {
-              "body": "没有图标"
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-toast-7",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Toast 轻提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Toast 轻提示 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "一秒关掉",
-        "actionType": "toast",
-        "toast": {
-          "timeout": 1000,
-          "items": [
-            {
-              "body": "一秒后关掉"
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-toast-8",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Toast 轻提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Toast 轻提示 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "带标题提示",
-        "actionType": "toast",
-        "toast": {
-          "items": [
-            {
-              "title": "标题",
-              "body": "带标题的内容"
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-toast-9",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Toast 轻提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Toast 轻提示 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "button",
-        "label": "带标题提示 YAML",
-        "actionType": "toast",
-        "toast": {
-          "items": [
-            {
-              "title": "标题 YAML",
-              "body": "带标题的内容 YAML"
-            }
-          ]
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-toast-10",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Toast 轻提示",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Toast 轻提示 #11",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16851,7 +14657,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-toast-11",
+    "id": "src-components-toast-7",
     "group": "组件 / 反馈",
     "bucket": "components",
     "section": "反馈",
@@ -16859,7 +14665,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Toast 轻提示 #12",
+    "title": "Toast 轻提示 #8",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16902,7 +14708,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-toast-12",
+    "id": "src-components-toast-8",
     "group": "组件 / 反馈",
     "bucket": "components",
     "section": "反馈",
@@ -16910,7 +14716,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Toast 轻提示 #13",
+    "title": "Toast 轻提示 #9",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16937,7 +14743,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-toast-13",
+    "id": "src-components-toast-9",
     "group": "组件 / 反馈",
     "bucket": "components",
     "section": "反馈",
@@ -16945,7 +14751,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Toast 轻提示 #14",
+    "title": "Toast 轻提示 #10",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16972,7 +14778,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-toast-14",
+    "id": "src-components-toast-10",
     "group": "组件 / 反馈",
     "bucket": "components",
     "section": "反馈",
@@ -16980,7 +14786,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Toast 轻提示 #15",
+    "title": "Toast 轻提示 #11",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17015,8 +14821,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是头像。"
+        "type": "avatar",
+        "text": "AM"
       }
     },
     "measure": {
@@ -17037,8 +14843,17 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "avatar",
-        "text": "甲A"
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "AM"
+          },
+          {
+            "type": "avatar",
+            "text": "ejson"
+          }
+        ]
       }
     },
     "measure": {
@@ -17059,8 +14874,24 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "avatar",
-        "text": "乙A"
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "shape": "square",
+            "text": "AM"
+          },
+          {
+            "type": "avatar",
+            "shape": "rounded",
+            "text": "AM"
+          },
+          {
+            "type": "avatar",
+            "shape": "circle",
+            "text": "AM"
+          }
+        ]
       }
     },
     "measure": {
@@ -17085,11 +14916,18 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "avatar",
-            "text": "甲AM"
+            "size": "large",
+            "text": "AM"
           },
           {
             "type": "avatar",
-            "text": "甲长文字"
+            "size": "small",
+            "text": "AM"
+          },
+          {
+            "type": "avatar",
+            "size": 60,
+            "text": "AM"
           }
         ]
       }
@@ -17116,11 +14954,13 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "avatar",
-            "text": "乙AM"
+            "fit": "cover",
+            "text": "AM"
           },
           {
             "type": "avatar",
-            "text": "乙长文字"
+            "fit": "contain",
+            "text": "AM"
           }
         ]
       }
@@ -17147,235 +14987,7 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "avatar",
-            "shape": "square",
-            "text": "甲方"
-          },
-          {
-            "type": "avatar",
-            "shape": "rounded",
-            "text": "甲圆"
-          },
-          {
-            "type": "avatar",
-            "shape": "circle",
-            "text": "甲圆圈"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-6",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "shape": "square",
-            "text": "乙方"
-          },
-          {
-            "type": "avatar",
-            "shape": "rounded",
-            "text": "乙圆"
-          },
-          {
-            "type": "avatar",
-            "shape": "circle",
-            "text": "乙圆圈"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-7",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "size": "large",
-            "text": "甲大"
-          },
-          {
-            "type": "avatar",
-            "size": "default",
-            "text": "甲默"
-          },
-          {
-            "type": "avatar",
-            "size": "small",
-            "text": "甲小"
-          },
-          {
-            "type": "avatar",
-            "size": 60,
-            "text": "甲60"
-          },
-          {
-            "type": "avatar",
-            "size": 20,
-            "text": "甲20"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-8",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "size": "large",
-            "text": "乙大"
-          },
-          {
-            "type": "avatar",
-            "size": "small",
-            "text": "乙小"
-          },
-          {
-            "type": "avatar",
-            "size": 60,
-            "text": "乙60"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-9",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "fit": "cover",
-            "text": "甲cover"
-          },
-          {
-            "type": "avatar",
-            "fit": "contain",
-            "text": "甲contain"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-10",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "fit": "cover",
-            "text": "乙cover"
-          },
-          {
-            "type": "avatar",
-            "fit": "contain",
-            "text": "乙contain"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-11",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "甲角",
+            "text": "AM",
             "badge": {
               "mode": "text",
               "text": 10
@@ -17383,57 +14995,14 @@ window.VAMIS_COMPARE_CASES = [
           },
           {
             "type": "avatar",
-            "text": "甲点",
+            "text": "AM",
             "badge": {
               "mode": "dot"
             }
           },
           {
             "type": "avatar",
-            "text": "甲数",
-            "badge": 3
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-avatar-12",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Avatar 头像",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Avatar 头像 #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "乙角",
-            "badge": {
-              "mode": "text",
-              "text": 10
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "乙点",
-            "badge": {
-              "mode": "dot"
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "乙数",
+            "text": "AM",
             "badge": 3
           }
         ]
@@ -17457,8 +15026,7 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是音频甲。"
+        "type": "audio"
       }
     },
     "measure": {
@@ -17479,7 +15047,11 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "audio"
+        "type": "audio",
+        "rates": [
+          1.5,
+          2
+        ]
       }
     },
     "measure": {
@@ -17500,8 +15072,10 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是音频乙。"
+        "type": "audio",
+        "controls": [
+          "time"
+        ]
       }
     },
     "measure": {
@@ -17518,81 +15092,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Audio 音频 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "audio",
-        "rates": [
-          1,
-          1.5,
-          2
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-audio-4",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Audio 音频",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Audio 音频 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "audio",
-        "rates": [
-          1.5,
-          2
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-audio-5",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Audio 音频",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Audio 音频 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "audio",
-        "controls": [
-          "time"
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-audio-6",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Audio 音频",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Audio 音频 #7",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17619,8 +15118,26 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是任务列表。"
+        "type": "tasks",
+        "name": "tasks",
+        "items": [
+          {
+            "label": "hive 任务",
+            "key": "hive",
+            "status": 4,
+            "remark": "日志"
+          },
+          {
+            "label": "小流量",
+            "key": "partial",
+            "status": 4
+          },
+          {
+            "label": "全量",
+            "key": "full",
+            "status": 4
+          }
+        ]
       }
     },
     "measure": {
@@ -17642,23 +15159,39 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "tasks",
-        "name": "tasksJia",
+        "name": "tasksStatus",
         "items": [
           {
-            "label": "hive 任务甲",
-            "key": "hive-a",
-            "status": 4,
-            "remark": "日志甲"
+            "label": "未开始",
+            "key": "s0",
+            "status": 0
           },
           {
-            "label": "小流量甲",
-            "key": "partial-a",
+            "label": "就绪",
+            "key": "s1",
+            "status": 1
+          },
+          {
+            "label": "进行中",
+            "key": "s2",
+            "status": 2
+          },
+          {
+            "label": "出错",
+            "key": "s3",
+            "status": 3,
+            "remark": "不可重试"
+          },
+          {
+            "label": "已完成",
+            "key": "s4",
             "status": 4
           },
           {
-            "label": "全量甲",
-            "key": "full-a",
-            "status": 4
+            "label": "可重试",
+            "key": "s5",
+            "status": 5,
+            "remark": "可重试"
           }
         ]
       }
@@ -17682,207 +15215,19 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "tasks",
-        "name": "tasksYi",
+        "name": "tasksCols",
+        "taskNameLabel": "任务名称",
+        "statusLabel": "状态",
+        "remarkLabel": "备注说明",
+        "operationLabel": "操作",
+        "btnText": "上线",
+        "retryBtnText": "重试",
         "items": [
           {
-            "label": "hive 任务乙",
-            "key": "hive-b",
-            "status": 4,
-            "remark": "日志乙"
-          },
-          {
-            "label": "小流量乙",
-            "key": "partial-b",
-            "status": 4
-          },
-          {
-            "label": "全量乙",
-            "key": "full-b",
-            "status": 4
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tasks-3",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Tasks 任务操作集合",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tasks 任务操作集合 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tasks",
-        "name": "tasksStatusJia",
-        "items": [
-          {
-            "label": "未开始甲",
-            "key": "s0-a",
-            "status": 0
-          },
-          {
-            "label": "就绪甲",
-            "key": "s1-a",
-            "status": 1
-          },
-          {
-            "label": "进行中甲",
-            "key": "s2-a",
-            "status": 2
-          },
-          {
-            "label": "出错甲",
-            "key": "s3-a",
-            "status": 3,
-            "remark": "不可重试甲"
-          },
-          {
-            "label": "已完成甲",
-            "key": "s4-a",
-            "status": 4
-          },
-          {
-            "label": "可重试甲",
-            "key": "s5-a",
+            "label": "hive 任务",
+            "key": "col",
             "status": 5,
-            "remark": "可重试备注甲"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tasks-4",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Tasks 任务操作集合",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tasks 任务操作集合 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tasks",
-        "name": "tasksStatusYi",
-        "items": [
-          {
-            "label": "未开始乙",
-            "key": "s0-b",
-            "status": 0
-          },
-          {
-            "label": "就绪乙",
-            "key": "s1-b",
-            "status": 1
-          },
-          {
-            "label": "进行中乙",
-            "key": "s2-b",
-            "status": 2
-          },
-          {
-            "label": "出错乙",
-            "key": "s3-b",
-            "status": 3,
-            "remark": "不可重试乙"
-          },
-          {
-            "label": "已完成乙",
-            "key": "s4-b",
-            "status": 4
-          },
-          {
-            "label": "可重试乙",
-            "key": "s5-b",
-            "status": 5,
-            "remark": "可重试备注乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tasks-5",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Tasks 任务操作集合",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tasks 任务操作集合 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tasks",
-        "name": "tasksColsJia",
-        "taskNameLabel": "名称甲",
-        "statusLabel": "进度甲",
-        "remarkLabel": "说明甲",
-        "operationLabel": "动作甲",
-        "btnText": "发布甲",
-        "retryBtnText": "再试甲",
-        "items": [
-          {
-            "label": "列表示例甲",
-            "key": "col-a",
-            "status": 1,
-            "remark": "列备注甲"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tasks-6",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Tasks 任务操作集合",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tasks 任务操作集合 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tasks",
-        "name": "tasksColsYi",
-        "taskNameLabel": "名称乙",
-        "statusLabel": "进度乙",
-        "remarkLabel": "说明乙",
-        "operationLabel": "动作乙",
-        "btnText": "发布乙",
-        "retryBtnText": "再试乙",
-        "items": [
-          {
-            "label": "列表示例乙",
-            "key": "col-b",
-            "status": 5,
-            "remark": "列备注乙"
+            "remark": "日志"
           }
         ]
       }
@@ -17909,7 +15254,7 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "avatar",
-            "text": "角甲",
+            "text": "AM",
             "badge": {
               "mode": "text",
               "text": 10
@@ -17917,7 +15262,7 @@ window.VAMIS_COMPARE_CASES = [
           },
           {
             "type": "action",
-            "label": "钮甲",
+            "label": "按钮",
             "badge": {
               "mode": "text",
               "text": 15
@@ -17947,19 +15292,19 @@ window.VAMIS_COMPARE_CASES = [
         "type": "container",
         "body": [
           {
-            "type": "avatar",
-            "text": "角乙",
+            "type": "tpl",
+            "tpl": "Hello ${text}",
             "badge": {
               "mode": "text",
-              "text": 10
+              "text": 25
             }
           },
           {
-            "type": "action",
-            "label": "钮乙",
+            "type": "link",
+            "body": "链接",
+            "href": "https://example.com",
             "badge": {
-              "mode": "text",
-              "text": 16
+              "position": "top-right"
             }
           }
         ]
@@ -17983,25 +15328,12 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "tpl",
-            "tpl": "模版甲",
-            "badge": {
-              "mode": "text",
-              "text": 25
-            }
-          },
-          {
-            "type": "link",
-            "body": "链接甲",
-            "href": "https://example.com",
-            "badge": {
-              "mode": "dot"
-            }
-          }
-        ]
+        "type": "icon",
+        "icon": "cloud",
+        "className": "text-info text-xl",
+        "badge": {
+          "position": "top-left"
+        }
       }
     },
     "measure": {
@@ -18025,19 +15357,29 @@ window.VAMIS_COMPARE_CASES = [
         "type": "container",
         "body": [
           {
-            "type": "tpl",
-            "tpl": "模版乙",
+            "type": "avatar",
+            "text": "AM",
             "badge": {
               "mode": "text",
-              "text": 26
+              "text": 10
             }
           },
           {
-            "type": "link",
-            "body": "链接乙",
-            "href": "https://example.com",
+            "type": "avatar",
+            "text": "AM",
+            "className": "m-l",
             "badge": {
-              "mode": "dot"
+              "mode": "text",
+              "text": 0
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "AM",
+            "className": "m-l",
+            "badge": {
+              "mode": "text",
+              "text": "new"
             }
           }
         ]
@@ -18061,11 +15403,11 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "icon",
-        "icon": "star",
+        "type": "action",
+        "label": "按钮",
         "badge": {
-          "mode": "text",
-          "text": 5
+          "mode": "ribbon",
+          "text": "HOT"
         }
       }
     },
@@ -18087,11 +15429,12 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "icon",
-        "icon": "heart",
+        "type": "avatar",
+        "text": "AM",
         "badge": {
           "mode": "text",
-          "text": 6
+          "text": 10,
+          "overflowCount": 9
         }
       }
     },
@@ -18112,260 +15455,18 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "数甲",
-            "badge": {
-              "mode": "text",
-              "text": 10
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "零甲",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": 0
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "新甲",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": "new甲"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-7",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "数乙",
-            "badge": {
-              "mode": "text",
-              "text": 10
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "零乙",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": 0
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "新乙",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": "new乙"
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-8",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "action",
-        "label": "热甲",
-        "badge": {
-          "mode": "ribbon",
-          "text": "HOT甲"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-9",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #10",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "action",
-        "label": "热乙",
-        "badge": {
-          "mode": "ribbon",
-          "text": "HOT乙"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-10",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #11",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "avatar",
-        "text": "帽甲",
-        "badge": {
-          "mode": "text",
-          "text": 10,
-          "overflowCount": 9
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-11",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #12",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "avatar",
-        "text": "帽乙",
-        "badge": {
-          "mode": "text",
-          "text": 10,
-          "overflowCount": 9
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-12",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #13",
-    "expect": "",
-    "schema": {
-      "type": "page",
       "data": {
         "myData": 10
       },
       "body": [
         {
           "type": "avatar",
-          "text": "显甲",
+          "text": "AM",
           "badge": "this.myData > 1"
         },
         {
           "type": "avatar",
-          "text": "隐甲",
-          "className": "m-l",
-          "badge": {
-            "visibleOn": "this.myData > 10",
-            "mode": "text",
-            "text": 1
-          }
-        }
-      ]
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-badge-13",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Badge 角标",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Badge 角标 #14",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "myData": 10
-      },
-      "body": [
-        {
-          "type": "avatar",
-          "text": "显乙",
-          "badge": "this.myData > 1"
-        },
-        {
-          "type": "avatar",
-          "text": "隐乙",
+          "text": "AM",
           "className": "m-l",
           "badge": {
             "visibleOn": "this.myData > 10",
@@ -18393,8 +15494,21 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "tpl",
-        "tpl": "下面是向导甲。"
+        "type": "wizard",
+        "steps": [
+          {
+            "title": "第一步",
+            "body": "这是第一步"
+          },
+          {
+            "title": "Step 2",
+            "body": "这是第二步"
+          },
+          {
+            "title": "Step 3",
+            "body": "这是最后一步了"
+          }
+        ]
       }
     },
     "measure": {
@@ -18416,14 +15530,19 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "wizard",
+        "startStep": "2",
         "steps": [
           {
-            "title": "第一步甲",
-            "body": "内容甲一"
+            "title": "第一步",
+            "body": "这是第一步"
           },
           {
-            "title": "第二步甲",
-            "body": "内容甲二"
+            "title": "Step 2",
+            "body": "这是第二步"
+          },
+          {
+            "title": "Step 3",
+            "body": "这是最后一步了"
           }
         ]
       }
@@ -18447,14 +15566,21 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "wizard",
+        "actionPrevLabel": "上一步",
+        "actionNextLabel": "下一步",
+        "actionFinishLabel": "完成",
         "steps": [
           {
-            "title": "第一步乙",
-            "body": "内容乙一"
+            "title": "第一步",
+            "body": "这是第一步"
           },
           {
-            "title": "第二步乙",
-            "body": "内容乙二"
+            "title": "Step 2",
+            "body": "这是第二步"
+          },
+          {
+            "title": "Step 3",
+            "body": "这是最后一步了"
           }
         ]
       }
@@ -18478,179 +15604,19 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "wizard",
-        "startStep": "2",
-        "steps": [
-          {
-            "title": "起步甲1",
-            "body": "隐藏甲"
-          },
-          {
-            "title": "起步甲2",
-            "body": "可见甲"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wizard-4",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Wizard 向导",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wizard 向导 #5",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "wizard",
-        "startStep": "2",
-        "steps": [
-          {
-            "title": "起步乙1",
-            "body": "隐藏乙"
-          },
-          {
-            "title": "起步乙2",
-            "body": "可见乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wizard-5",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Wizard 向导",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wizard 向导 #6",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "wizard",
-        "actionPrevLabel": "回甲",
-        "actionNextLabel": "去甲",
-        "actionFinishLabel": "完甲",
-        "steps": [
-          {
-            "title": "文案甲1",
-            "body": "文案内容甲"
-          },
-          {
-            "title": "文案甲2",
-            "body": "文案结尾甲"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wizard-6",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Wizard 向导",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wizard 向导 #7",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "wizard",
-        "actionPrevLabel": "回乙",
-        "actionNextLabel": "去乙",
-        "actionFinishLabel": "完乙",
-        "steps": [
-          {
-            "title": "文案乙1",
-            "body": "文案内容乙"
-          },
-          {
-            "title": "文案乙2",
-            "body": "文案结尾乙"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wizard-7",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Wizard 向导",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wizard 向导 #8",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "wizard",
         "mode": "vertical",
         "steps": [
           {
-            "title": "竖甲1",
-            "body": "竖内容甲"
+            "title": "第一步",
+            "body": "这是第一步"
           },
           {
-            "title": "竖甲2",
-            "body": "竖结尾甲"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-wizard-8",
-    "group": "组件 / 其他",
-    "bucket": "components",
-    "section": "其他",
-    "page": "Wizard 向导",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Wizard 向导 #9",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "wizard",
-        "mode": "vertical",
-        "steps": [
-          {
-            "title": "竖乙1",
-            "body": "竖内容乙"
+            "title": "Step 2",
+            "body": "这是第二步"
           },
           {
-            "title": "竖乙2",
-            "body": "竖结尾乙"
+            "title": "Step 3",
+            "body": "这是最后一步了"
           }
         ]
       }

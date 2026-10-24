@@ -66,10 +66,12 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 351 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **969**。本批：`badge` 14/14。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 351 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **886**。本批：活示例文案对标 Amis，去掉甲/乙唯一后缀。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- 文档活示例文案对标 Amis 主路径（按钮 / Nav 1 / 提示类文案 / HOT / 第一步·Step 2·Step 3），去掉残留的甲/乙/丙唯一后缀。对照目录仍 **886**：badge **7/7**、dropdown-button **4/4**、wizard **4/4**、nav **3/3**、pagination-wrapper **2/2**、button-group **4/4**、tasks **3/3**、spinner **5/5**。
+- 文档活示例：每个语义示例只留一份 schema 围栏，去掉 JSON/YAML 甲乙孪生（对照解析后本就会去重）。切格式走「编辑 Schema」双 Tab。目录 **969 → 886**。`badge` 对照 **7/7**。
 - 补 `TYPE_CATALOGS.popover`：侧栏文档 type 不是独立渲染器，但补全目录要有自述，否则 `schema-completions` 报缺 catalog。
 - 其他：`badge` 80%（不是独立 type；挂 avatar / action / tpl / link / icon；mode 默认 dot、`text: 0` 隐藏、overflowCount、visibleOn、ribbon）。对照 **14/14**。目录 **969**。下一刀 **其他** web-component / amis 占位。
 - 功能：`popOver` 80%（不是独立 type；挂 static / table 列 / tpl / list·cards；字符串精简写法、`trigger` click、`showIcon` 放大镜、`popOverEnableOn`、`mode` dialog/drawer）。对照 **8/8**。目录 **958**。

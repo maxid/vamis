@@ -15,41 +15,7 @@ outline: deep
 
 ## 基本用法
 
-```schema: scope="body"
-{
-  "type": "flex",
-  "items": [{
-      "style": {
-          "backgroundColor": "#1A5CFF",
-          "width": 100,
-          "height": 50,
-          "margin": 5
-      },
-      "type": "tpl",
-      "tpl": ""
-  }, {
-      "style": {
-          "backgroundColor": "#46C93A",
-          "width": 100,
-          "height": 50,
-          "margin": 5
-      },
-      "type": "tpl",
-      "tpl": ""
-  }, {
-      "style": {
-          "backgroundColor": "#FF4757",
-          "width": 100,
-          "height": 50,
-          "margin": 5
-      },
-      "type": "tpl",
-      "tpl": ""
-  }]
-}
-```
-
-`items` 里每一个都可以是其它 type。同一段也可以写成 YAML：
+`items` 里每一个都可以是其它 type。点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: flex

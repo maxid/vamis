@@ -19,54 +19,24 @@ outline: deep
 
 类型定义为 `app`，通过 `pages` 定义页面，支持层级，支持内嵌 `schema`。数组第一层通常是分组（只配 `label` + `children`），真正的页面从第二层开始。
 
-```schema
-{
-  "type": "app",
-  "brandName": "应用名称",
-  "pages": [
-    {
-      "label": "分组1",
-      "children": [
-        {
-          "label": "页面A",
-          "url": "/pageA",
-          "schema": {
-            "type": "page",
-            "body": "Page A"
-          }
-        },
-        {
-          "label": "页面B",
-          "url": "/pageB",
-          "schema": {
-            "type": "page",
-            "body": "Page B"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-同一段也可以写成 YAML（文案不同，对照不跳过）：
+点「编辑 Schema」可切 JSON。
 
 ```schema
 type: app
-brandName: 应用名称 YAML
+brandName: 应用名称
 pages:
   - label: 分组1
     children:
-      - label: 页面A YAML
+      - label: 页面A
         url: /pageA
         schema:
           type: page
-          body: Page A YAML
-      - label: 页面B YAML
+          body: Page A
+      - label: 页面B
         url: /pageB
         schema:
           type: page
-          body: Page B YAML
+          body: Page B
 ```
 
 相对路径会拼父级：父级 `url` 为 `/parent`、子级为 `pageA` 时，命中路径是 `/parent/pageA`。以 `/` 打头则不拼接。

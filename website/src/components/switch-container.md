@@ -21,66 +21,7 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 
 用表单项改 `state`，容器只显示首个命中项。表单 `data.state` 给出初值（控件上的 `value` 在 Vamis 还不会写进表单域）。没有命中项时不渲染内容。
 
-```schema: scope="body"
-{
-  "type": "form",
-  "title": "",
-  "wrapWithPanel": false,
-  "data": {
-    "state": "a"
-  },
-  "body": [
-    {
-      "type": "button-group-select",
-      "name": "state",
-      "label": "切换状态",
-      "inline": false,
-      "options": [
-        {
-          "label": "选项1",
-          "value": "a"
-        },
-        {
-          "label": "选项2",
-          "value": "b"
-        }
-      ],
-      "multiple": false,
-      "value": "a"
-    },
-    {
-      "type": "switch-container",
-      "items": [
-        {
-          "title": "状态1",
-          "body": [
-            {
-              "type": "tpl",
-              "tpl": "状态内容1",
-              "inline": false
-            }
-          ],
-          "visibleOn": "${state == \"a\"}"
-        },
-        {
-          "title": "状态2",
-          "body": [
-            {
-              "type": "tpl",
-              "tpl": "状态内容2",
-              "inline": false
-            }
-          ],
-          "visibleOn": "${state == \"b\"}"
-        }
-      ]
-    }
-  ],
-  "actions": []
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: form
@@ -91,7 +32,7 @@ data:
 body:
   - type: button-group-select
     name: state
-    label: 切换状态 YAML
+    label: 切换状态
     inline: false
     options:
       - label: 选项1
@@ -105,13 +46,13 @@ body:
       - title: 状态1
         body:
           - type: tpl
-            tpl: 状态内容 YAML 1
+            tpl: 状态内容 1
             inline: false
         visibleOn: '${state == "a"}'
       - title: 状态2
         body:
           - type: tpl
-            tpl: 状态内容 YAML 2
+            tpl: 状态内容 2
             inline: false
         visibleOn: '${state == "b"}'
 actions: []
@@ -122,27 +63,6 @@ actions: []
 对象写内联样式，属性名是驼峰：`backgroundColor`，不是 `background-color`。没有 `visibleOn` 时第一项默认可见。
 
 ```schema: scope="body"
-{
-  "type": "switch-container",
-  "style": {
-    "backgroundColor": "#C4C4C4"
-  },
-  "items": [
-    {
-      "title": "状态1",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "状态内容1",
-          "inline": false
-        }
-      ]
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: switch-container
 style:
   backgroundColor: "#C4C4C4"
@@ -150,7 +70,7 @@ items:
   - title: 状态1
     body:
       - type: tpl
-        tpl: 状态内容 YAML
+        tpl: 状态内容
         inline: false
 ```
 

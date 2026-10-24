@@ -15,43 +15,20 @@ outline: deep
 
 ## 基本用法
 
-```schema
-{
-    "type": "page",
-    "data": {
-        "text": "这是一段描述信息"
-    },
-    "body": {
-        "type": "portlet",
-        "description": "${text}",
-        "tabs": [
-            {
-                "title": "标题",
-                "tab": "Content 1"
-            },
-            {
-                "title": "标题2",
-                "tab": "Content 2"
-            }
-        ]
-    }
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema
 type: page
 data:
-  text: 这是一段描述信息 YAML
+  text: 这是一段描述信息
 body:
   type: portlet
   description: ${text}
   tabs:
     - title: 标题
-      tab: Content 1 YAML
+      tab: Content 1
     - title: 标题2
-      tab: Content 2 YAML
+      tab: Content 2
 ```
 
 ## 隐藏头部

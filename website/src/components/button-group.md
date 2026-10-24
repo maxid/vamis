@@ -41,32 +41,14 @@ buttons:
 活示例只用普通按钮：
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是按钮组。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "button-group",
-  "buttons": [
-    { "type": "button", "label": "按钮甲" },
-    { "type": "button", "label": "按钮乙" },
-    { "type": "button", "label": "普通按钮" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-group
 buttons:
   - type: button
-    label: 按钮甲 YAML
+    label: Button
   - type: button
-    label: 按钮乙 YAML
+    label: 按钮2
   - type: button
-    label: 普通按钮 YAML
+    label: 普通按钮
 ```
 
 ## 垂直模式
