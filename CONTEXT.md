@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- SDK 根 `.vamis-sdk` 去掉 `background: var(--background)`。`--background` 是略灰的 shadcn 画布（`oklch(0.97)`），Amis embed / `.cxd-Page` 是白底；涂在 SDK 根上会在白 iframe 里多出一块灰框。画布仍由宿主 html/body 决定。
 - SDK 对照已能量到真实盒子：`/sdk/compare.html` 同一份 schema 左右 `amis.embed`（unpkg `amis@6.13.0`）与 `vamis.embed`。默认两按钮两边都同一行、缝 0px；`className: m-l` 两边都同一行，但 Amis **15px**、Vamis **12px**（`--gap-base`）。Amis iframe 改为等到按钮出现再量，不再被 unpkg 慢加载误报「找不到」。
 - Page 内容区去掉 `space-y-3`；`button` / `action` 的 `div.vamis-node` 改为 `inline-block`，两个按钮默认并排（对齐 Amis「样式」基本使用），`className: m-l` 才能拉开缝。
 - 概念组未完成页对标 Amis 同名文档补活示例：「事件动作」**85% 进行中**（`onEvent` / 常用动作 / 事件对象 / `preventDefault` / `stopPropagation` / `ignoreError` / `expression`；控制流与广播仍缺）、「行为」**80% 进行中**（`type: action` 主路径；`clickAction` 未接）、「样式」**75% 进行中**（`className` / `cssVars` / `size` / 指向 `/style`）、「数据域与数据链」**75% 进行中**（补「发生了什么」与 `__super` 活示例；D6 / D9 / D10 仍挡）。

@@ -9,6 +9,6 @@
 .vamis-sdk {
   width: 100%;
   color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  /* Embed 不另涂画布：Amis 根是白底，宿主 html/body 透出来。`--background` 是略灰的 shadcn token，涂在这里会变成一块灰框。 */
+  font-family: var(--fonts-base-family, ui-sans-serif, system-ui, sans-serif);
 }
