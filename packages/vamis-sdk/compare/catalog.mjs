@@ -49,6 +49,29 @@ export function loadCatalog(options = {}) {
   return cases.filter((row) => matchCatalog(row, { bucket, section, page: options.page, id: options.id, type: options.type }))
 }
 
+/** Amis `media-breakpoint-down(sm)` 是 <768px。对照桌面钉 ≥768，移动钉 375。 */
+export const VIEWPORT = {
+  desktop: { width: 1100, height: 800, layout: 768 },
+  mobile: { width: 375, height: 812, layout: 375 },
+}
+
+export function parseViewportArg(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  if (raw === 'mobile' || raw === 'm' || raw === '1' || raw === 'true') return 'mobile'
+  return 'desktop'
+}
+
+export function iframeLayoutWidth(mode, paneW) {
+  if (mode === 'mobile') return VIEWPORT.mobile.layout
+  return Math.max(VIEWPORT.desktop.layout, paneW || VIEWPORT.desktop.layout)
+}
+
+export function iframeScale(mode, paneW, layoutW) {
+  if (!paneW || !layoutW) return 1
+  if (mode === 'mobile') return paneW < layoutW ? paneW / layoutW : 1
+  return paneW / layoutW
+}
+
 /** 组件「自身」：page 名 / 文件名 / 完整 id，不误伤 dropdown-button 这类邻居。 */
 export function matchSelf(row, query) {
   const raw = String(query || '').trim()
@@ -87,7 +110,8 @@ export function matchCatalog(row, options = {}) {
 }
 
 /** 全局修完全量；组件/ helper 修完只跑自身。 */
-export function rerunCommands(rows = []) {
+export function rerunCommands(rows = [], options = {}) {
+  const suffix = options.mobile ? ' --mobile' : ''
   const failed = rows.filter((row) => !row.parity?.pass)
   const scopes = new Set()
   for (const row of failed) {
@@ -97,7 +121,11 @@ export function rerunCommands(rows = []) {
   }
   const commands = []
   if (scopes.has('global')) {
-    commands.push({ scope: 'global', cmd: 'pnpm compare', note: '全局修完必须重跑全部用例' })
+    commands.push({
+      scope: 'global',
+      cmd: `pnpm compare${suffix}`,
+      note: options.mobile ? '全局修完必须重跑全部移动端用例' : '全局修完必须重跑全部用例',
+    })
   }
   const seen = new Set()
   for (const row of failed) {
@@ -110,7 +138,7 @@ export function rerunCommands(rows = []) {
     const arg = row.page || row.id
     commands.push({
       scope: issues.some((issue) => issue.scope === 'component') ? 'component' : 'helper',
-      cmd: `pnpm compare --page ${JSON.stringify(String(arg).split(' ')[0].toLowerCase())}`,
+      cmd: `pnpm compare --page ${JSON.stringify(String(arg).split(' ')[0].toLowerCase())}${suffix}`,
       note: `只重跑「${row.page || row.id}」自身`,
     })
   }

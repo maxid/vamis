@@ -42,6 +42,7 @@ pnpm compare:p0   # Amis vs Vamis SDK 盒模型对照（Playwright；失败 exit
 pnpm compare      # 对照 + 文档 schema 收割；用例按 Amis 侧栏 文档/组件/样式
                   # 全局修完必须全量重跑；组件修完只跑自身：`--page button`
                   # `--bucket 组件 --section 功能` 切一组；`--id` 单条
+                  # `--mobile` / `pnpm compare:mobile` 按 375px 跑 Amis 窄屏表单
 pnpm sdk:build    # 打 JS SDK：packages/vamis-sdk/dist/sdk.js
 pnpm build        # SDK + playground 生产构建（GitHub Pages：VITE_BASE=/<repo>/）
 pnpm typecheck    # vue-tsc 无错误
@@ -56,7 +57,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
-- 对照重跑：全局类问题修完必须 `pnpm compare` 全量；组件级修完只跑自身 `pnpm compare --page <type>`。
+- 对照重跑：全局类问题修完必须 `pnpm compare` 全量；组件级修完只跑自身 `pnpm compare --page <type>`。动到窄屏 / `m:` / 移动端表单再跑 `pnpm compare --mobile`（375px，Amis `<768` 断点）。
 - 站点 / 样式 / 组件约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。任务收工见 `update-progress.mdc`。
 
 ## 关键文档

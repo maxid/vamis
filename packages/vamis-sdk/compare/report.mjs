@@ -65,7 +65,8 @@ export function writeReport(rows, options = {}) {
     '# SDK 对照报告',
     '',
     `- 日期：${generatedAt.slice(0, 10)}`,
-    `- 状态：自动生成。\`pnpm compare\` 用同一份 schema 跑 \`amis.embed\` / \`vamis.embed\`，判定是 **Vamis 是否对齐 Amis 实测**。`,
+    `- 视口：${options.mobile ? '移动 375×812（Amis <768 表单）' : '桌面 1100×800'}`,
+    `- 状态：自动生成。\`pnpm compare\` 用同一份 schema 跑 \`amis.embed\` / \`vamis.embed\`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 \`--mobile\`。`,
     `- 合计 **${summary.total}** · 通过 **${summary.passed}** · 失败 **${summary.failed}**（P0 ${p0Failed.length}）· Vamis 多出 extra **${summary.extra || 0}**`,
     '',
     '## 问题分类',
@@ -114,12 +115,12 @@ export function writeReport(rows, options = {}) {
     '',
     '## 重跑口径',
     '',
-    '- **全局**修完：必须 `pnpm compare` 重跑全部用例（token / 默认字体会影响每一页）。',
-    '- **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。',
+    '- **全局**修完：必须 `pnpm compare` 重跑全部用例（token / 默认字体会影响每一页）。动到 `m:` / 窄屏表单再加 `pnpm compare --mobile`。',
+    '- **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。',
     '- **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。',
     '',
     ...(function () {
-      const cmds = rerunCommands(rows)
+      const cmds = rerunCommands(rows, { mobile: options.mobile })
       return cmds.length ? cmds.map((item) => `- \`${item.cmd}\` — ${item.note}`) : ['- 本轮无失败切片。']
     })(),
     '',

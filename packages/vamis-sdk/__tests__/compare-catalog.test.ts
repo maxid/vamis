@@ -8,7 +8,14 @@ import { harvestMarkdown } from '../compare/harvest.mjs'
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
-import { loadCatalog, matchSelf, rerunCommands } from '../compare/catalog.mjs'
+import {
+  iframeLayoutWidth,
+  iframeScale,
+  loadCatalog,
+  matchSelf,
+  parseViewportArg,
+  rerunCommands,
+} from '../compare/catalog.mjs'
 import { scoreTree, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
 describe('applySchemaScope', () => {
@@ -347,5 +354,30 @@ describe('rerun slice', () => {
     ])
     expect(cmds.some((item) => item.cmd === 'pnpm compare')).toBe(true)
     expect(cmds.some((item) => item.cmd.includes('--page'))).toBe(true)
+  })
+
+  it('rerunCommands keeps --mobile on the same viewport', () => {
+    const cmds = rerunCommands(
+      [
+        {
+          parity: { pass: false },
+          page: 'Form 表单',
+          id: 'form-default',
+          findings: [{ scope: 'global' }],
+        },
+      ],
+      { mobile: true },
+    )
+    expect(cmds.some((item) => item.cmd === 'pnpm compare --mobile')).toBe(true)
+  })
+
+  it('iframe layout is 768 desktop / 375 mobile', () => {
+    expect(parseViewportArg('mobile')).toBe('mobile')
+    expect(parseViewportArg('')).toBe('desktop')
+    expect(iframeLayoutWidth('desktop', 500)).toBe(768)
+    expect(iframeLayoutWidth('desktop', 900)).toBe(900)
+    expect(iframeLayoutWidth('mobile', 500)).toBe(375)
+    expect(iframeScale('mobile', 500, 375)).toBe(1)
+    expect(iframeScale('desktop', 500, 768)).toBeCloseTo(500 / 768)
   })
 })
