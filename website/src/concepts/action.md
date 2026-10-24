@@ -74,7 +74,8 @@ dialog:
 | `setValue` / `setData` | 改目标组件数据域 | 已接 |
 | `submit` / `reset` | 提交 / 重置当前表单 | 已接 |
 | `wait` | 等待毫秒再继续 | 已接 |
-| `goBack` / `refresh` / `print` / `email` | 浏览器其它能力 | 未接 |
+| `email` | 拼 `mailto:` | 已接 |
+| `goBack` / `refresh` / `print` | 浏览器其它能力 | 未接 |
 | 控制流 `switch` / `loop` / `parallel` | 逻辑编排 | 未接 |
 
 ```schema: scope="body"

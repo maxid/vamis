@@ -29,7 +29,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   portlet: doc('Portlet 门户栏目', '布局', '带边框的栏目。tabs 同 Tabs；toolbar / description / hideHeader / divider。'),
   'switch-container': doc('switch-container 状态容器', '布局', '按 visibleOn 取第一个可见状态；最多显示一种。style / click 与 Container 同类。'),
 
-  action: doc('Action 行为按钮', '功能', '触发动作：ajax、dialog、toast、link 等。button / submit / reset 是别名。'),
+  action: doc('Action 行为按钮', '功能', '触发动作：ajax / dialog / drawer / toast / copy / link / email。button / submit / reset 是别名。'),
   button: doc('Button 按钮', '功能', 'action 的别名，同一渲染器。'),
   submit: doc('Submit 提交按钮', '功能', 'action 别名，默认提交所在表单。'),
   reset: doc('Reset 重置按钮', '功能', 'action 别名，重置所在表单。'),

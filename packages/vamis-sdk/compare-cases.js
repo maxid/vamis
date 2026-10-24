@@ -8036,15 +8036,501 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "action",
-      "body": [
-        {
-          "type": "action",
-          "label": "弹出提示",
-          "actionType": "toast",
-          "msg": "Action 已点击"
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是不同尺寸的按钮。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "默认档"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "极小",
+        "size": "xs"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "小",
+        "size": "sm"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "中等",
+        "size": "md"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "大",
+        "size": "lg"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-6",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "默认"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-7",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "主要 YAML",
+        "level": "primary"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-8",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "次要",
+        "level": "secondary"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-9",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "信息",
+        "level": "info"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-10",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "成功",
+        "level": "success"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-11",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "警告",
+        "level": "warning"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-12",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "危险",
+        "level": "danger"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-13",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "浅色",
+        "level": "light"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-14",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "深色",
+        "level": "dark"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-15",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #16",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "链接",
+        "level": "link"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-16",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #17",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "带图标",
+        "type": "button",
+        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-17",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "带图标 YAML",
+        "type": "button",
+        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-18",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #19",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "Drawer Form",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "表单设置",
+          "body": "抽屉内容"
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-19",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #20",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "Drawer Form YAML",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "表单设置 YAML",
+          "body": "抽屉内容 YAML"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-20",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #21",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "复制一段文本",
+        "type": "button",
+        "actionType": "copy",
+        "content": "http://www.baidu.com"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-21",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #22",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "复制一段文本 YAML",
+        "type": "button",
+        "actionType": "copy",
+        "content": "https://example.com/vamis"
+      }
     },
     "measure": {
       "type": "tree"
