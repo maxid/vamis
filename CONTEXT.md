@@ -59,17 +59,18 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **51%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 78%；反馈均 68%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` 80%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **51%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 78%；反馈均 80%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 327 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **894**。本批：`alert` 11/11。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 336 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **916**。本批：`dialog` 11/11、`drawer` 13/13。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- `dialog` / `drawer` 主路径 80%：`actionType` 打开 overlay、`size` / `position`、默认取消+确认、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、嵌套压栈。对照 dialog **11/11**、drawer **13/13**。目录 **916**。下一刀 **其他**（avatar 等）。
 - `alert` 主路径 80%：`level` 默认 info、`title` / `body`、`showIcon` / `showCloseButton` 默认 false、`actions`、表达式 `level`。对照 **11/11**。目录 **894**。下一刀 **Dialog / Drawer**。
 - `spinner` 主路径 80%：`show` / `showOn`、`size` sm|lg|空（16/48/32px）、`overlay` 源码默认 false、`tip` / `tipPlacement`、`delay`、`body` 容器。裸 spinner `inline-block`。对照 **11/11**。目录 **884**。
 - `toast` 主路径 80%：`actionType: toast` 吃 `toast.items` / `position` / `timeout` / `closeButton` / `showIcon` / `allowHtml`，默认 `top-center`。对照 **15/15**。目录 **874**。
@@ -234,7 +235,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **Dialog / Drawer**（overlay 能开，尺寸/模态/确认未齐）。一批做完再 `pnpm sdk:build` + `pnpm compare --page …`。
+1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **其他**（`avatar` 等）。反馈五件已 80%。一批做完再 `pnpm sdk:build` + `pnpm compare --page …`。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

@@ -14702,26 +14702,490 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "打开对话框",
-          "actionType": "dialog",
-          "dialog": {
-            "title": "编辑",
-            "body": {
-              "type": "form",
-              "body": [
-                {
-                  "type": "input-text",
-                  "name": "name",
-                  "label": "名称"
-                }
-              ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面用按钮打开对话框。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-1",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "点开对话框甲",
+        "type": "button",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "对话框标题甲",
+          "body": "这是一个对话框甲"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-2",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "点开对话框乙",
+        "type": "button",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "对话框标题乙",
+          "body": "这是一个对话框乙"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-3",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "较小对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "sm",
+              "title": "较小标题甲",
+              "body": "较小对话框正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "标准对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "标准标题甲",
+              "body": "标准对话框正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "中等对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "md",
+              "title": "中等标题甲",
+              "body": "中等对话框正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "较大对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "lg",
+              "title": "较大标题甲",
+              "body": "较大对话框正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "很大对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "xl",
+              "title": "很大标题甲",
+              "body": "很大对话框正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "全屏对话框甲",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "full",
+              "title": "全屏标题甲",
+              "body": "全屏对话框正文甲"
             }
           }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-4",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "较小对话框乙",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "sm",
+              "title": "较小标题乙",
+              "body": "较小对话框正文乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "标准对话框乙",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "标准标题乙",
+              "body": "标准对话框正文乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "全屏对话框乙",
+            "actionType": "dialog",
+            "dialog": {
+              "size": "full",
+              "title": "全屏标题乙",
+              "body": "全屏对话框正文乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "多级对话框甲",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "外层对话框甲",
+          "body": "外层对话框正文甲",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "关上外层甲",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "dialog",
+              "label": "再弹一层甲",
+              "dialog": {
+                "title": "内层对话框甲",
+                "body": "内层对话框正文甲",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹了甲",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "多级对话框乙",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "外层对话框乙",
+          "body": "外层对话框正文乙",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "关上外层乙",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "dialog",
+              "label": "再弹一层乙",
+              "dialog": {
+                "title": "内层对话框乙",
+                "body": "内层对话框正文乙",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹了乙",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无底部按钮甲",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "无底栏标题甲",
+              "actions": [],
+              "body": "无底部按钮的对话框甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "只有确认甲",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "单按钮标题甲",
+              "actions": [
+                {
+                  "type": "button",
+                  "actionType": "confirm",
+                  "label": "好的甲",
+                  "primary": true
+                }
+              ],
+              "body": "只有一个确认的对话框甲"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-8",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无底部按钮乙",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "无底栏标题乙",
+              "actions": [],
+              "body": "无底部按钮的对话框乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "只有确认乙",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "单按钮标题乙",
+              "actions": [
+                {
+                  "type": "button",
+                  "actionType": "confirm",
+                  "label": "好的乙",
+                  "primary": true
+                }
+              ],
+              "body": "只有一个确认的对话框乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-9",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无右上关闭甲",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "无右上标题甲",
+              "body": "没有右上角关闭的对话框甲",
+              "showCloseButton": false
+            }
+          },
+          {
+            "type": "button",
+            "label": "Esc与点遮罩甲",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "可点遮罩标题甲",
+              "body": "Esc 或点遮罩可关甲",
+              "closeOnEsc": true,
+              "closeOnOutside": true
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-10",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无右上关闭乙",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "无右上标题乙",
+              "body": "没有右上角关闭的对话框乙",
+              "showCloseButton": false
+            }
+          },
+          {
+            "type": "button",
+            "label": "Esc与点遮罩乙",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "可点遮罩标题乙",
+              "body": "Esc 或点遮罩可关乙",
+              "closeOnEsc": true,
+              "closeOnOutside": true
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -14740,27 +15204,597 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "button",
-          "label": "打开抽屉",
-          "actionType": "drawer",
-          "drawer": {
-            "title": "详情",
-            "body": {
-              "type": "form",
-              "body": [
-                {
-                  "type": "static",
-                  "name": "name",
-                  "label": "名称",
-                  "value": "泵房-A"
-                }
-              ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面用按钮打开抽屉。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-1",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "点开抽屉甲",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "抽屉标题甲",
+          "body": "这是一个抽屉甲"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-2",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "点开抽屉乙",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "抽屉标题乙",
+          "body": "这是一个抽屉乙"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-3",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "左侧抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "left",
+              "title": "左侧标题甲",
+              "body": "从左侧弹出的抽屉甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "右侧抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "right",
+              "title": "右侧标题甲",
+              "body": "从右侧弹出的抽屉甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "顶部抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "top",
+              "title": "顶部标题甲",
+              "body": "从顶部弹出的抽屉甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "底部抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "bottom",
+              "title": "底部标题甲",
+              "body": "从底部弹出的抽屉甲"
             }
           }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-4",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "左侧抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "left",
+              "title": "左侧标题乙",
+              "body": "从左侧弹出的抽屉乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "右侧抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "right",
+              "title": "右侧标题乙",
+              "body": "从右侧弹出的抽屉乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "顶部抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "top",
+              "title": "顶部标题乙",
+              "body": "从顶部弹出的抽屉乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "底部抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "bottom",
+              "title": "底部标题乙",
+              "body": "从底部弹出的抽屉乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "极小抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "xs",
+              "title": "极小标题甲",
+              "body": "极小抽屉正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "小抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "sm",
+              "title": "小标题甲",
+              "body": "小抽屉正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "中抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "md",
+              "title": "中标题甲",
+              "body": "中抽屉正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "大抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "lg",
+              "title": "大标题甲",
+              "body": "大抽屉正文甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "很大抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "xl",
+              "title": "很大标题甲",
+              "body": "很大抽屉正文甲"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "极小抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "xs",
+              "title": "极小标题乙",
+              "body": "极小抽屉正文乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "大抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "size": "lg",
+              "title": "大标题乙",
+              "body": "大抽屉正文乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "自定义宽度甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "right",
+              "width": 300,
+              "title": "宽 300 甲",
+              "body": "自定义 300px 宽的抽屉甲"
+            }
+          },
+          {
+            "type": "button",
+            "label": "自定义高度甲",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "bottom",
+              "height": 240,
+              "title": "高 240 甲",
+              "body": "自定义 240px 高的抽屉甲"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-8",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "自定义宽度乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "right",
+              "width": 300,
+              "title": "宽 300 乙",
+              "body": "自定义 300px 宽的抽屉乙"
+            }
+          },
+          {
+            "type": "button",
+            "label": "自定义高度乙",
+            "actionType": "drawer",
+            "drawer": {
+              "position": "bottom",
+              "height": 240,
+              "title": "高 240 乙",
+              "body": "自定义 240px 高的抽屉乙"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-9",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "多级抽屉甲",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "外层抽屉甲",
+          "body": "外层抽屉正文甲",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "关上外层抽屉甲",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "drawer",
+              "label": "再弹一层抽屉甲",
+              "drawer": {
+                "title": "内层抽屉甲",
+                "body": "内层抽屉正文甲",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹抽屉了甲",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-10",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "多级抽屉乙",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "外层抽屉乙",
+          "body": "外层抽屉正文乙",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "关上外层抽屉乙",
+              "primary": true
+            },
+            {
+              "type": "button",
+              "actionType": "drawer",
+              "label": "再弹一层抽屉乙",
+              "drawer": {
+                "title": "内层抽屉乙",
+                "body": "内层抽屉正文乙",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹抽屉了乙",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-11",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无右上抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "title": "无右上抽屉标题甲",
+              "body": "没有右上角关闭的抽屉甲",
+              "showCloseButton": false
+            }
+          },
+          {
+            "type": "button",
+            "label": "无蒙层抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "title": "无蒙层标题甲",
+              "body": "没有蒙层的抽屉甲",
+              "overlay": false
+            }
+          },
+          {
+            "type": "button",
+            "label": "点遮罩关抽屉甲",
+            "actionType": "drawer",
+            "drawer": {
+              "title": "点遮罩标题甲",
+              "body": "点外面或 Esc 可关甲",
+              "closeOnEsc": true,
+              "closeOnOutside": true
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-12",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "无右上抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "title": "无右上抽屉标题乙",
+              "body": "没有右上角关闭的抽屉乙",
+              "showCloseButton": false
+            }
+          },
+          {
+            "type": "button",
+            "label": "无蒙层抽屉乙",
+            "actionType": "drawer",
+            "drawer": {
+              "title": "无蒙层标题乙",
+              "body": "没有蒙层的抽屉乙",
+              "overlay": false
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
