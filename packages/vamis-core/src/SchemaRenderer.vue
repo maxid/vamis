@@ -2,7 +2,7 @@
 import { computed, shallowRef, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
-import { fillsLayoutSlot, isInlineSchema, resolveClassName, resolveCssVars, resolveInlineStyle } from './style'
+import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
 import { provideData, provideScope, useData, useEnv, useScope } from './context'
 import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
@@ -162,7 +162,7 @@ async function onHostEvent(native: Event, eventName: string) {
     :class="[
       'vamis-node',
       fillsLayoutSlot(normalized.type) ? 'w-full min-w-0' : '',
-      isInlineSchema(normalized) ? 'inline' : '',
+      schemaNodeDisplayClass(normalized),
       nodeClass,
       editor && editorPath != null
         ? [

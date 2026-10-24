@@ -318,7 +318,7 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
         </div>
-        <div class="w-full min-w-0 space-y-3 p-[var(--page-body-padding)]" :class="bodyClass">
+        <div class="w-full min-w-0 p-[var(--page-body-padding)]" :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>
       </div>
