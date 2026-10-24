@@ -227,7 +227,12 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   spinner: doc('Spinner 加载中', '反馈', '加载指示。show / size / overlay / tip / delay；有 body 时当容器。'),
   toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
-  avatar: doc('Avatar 头像', '其他', 'src > text > icon。shape / size / fit / gap / badge。'),
+  avatar: doc(
+    'Avatar 头像',
+    '其他',
+    'src > text > icon（默认 fa fa-user）。shape / size / fit / gap 缩放 / onError / badge。',
+    '常用：src、text、icon、shape、size、fit、gap、onError、badge。',
+  ),
   badge: doc(
     'Badge 角标',
     '其他',

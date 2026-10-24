@@ -14822,7 +14822,7 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "avatar",
-        "text": "AM"
+        "src": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
       }
     },
     "measure": {
@@ -14843,17 +14843,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "AM"
-          },
-          {
-            "type": "avatar",
-            "text": "ejson"
-          }
-        ]
+        "type": "avatar",
+        "text": "AM"
       }
     },
     "measure": {
@@ -14874,24 +14865,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "shape": "square",
-            "text": "AM"
-          },
-          {
-            "type": "avatar",
-            "shape": "rounded",
-            "text": "AM"
-          },
-          {
-            "type": "avatar",
-            "shape": "circle",
-            "text": "AM"
-          }
-        ]
+        "type": "avatar",
+        "icon": "fa fa-user"
       }
     },
     "measure": {
@@ -14911,26 +14886,27 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "size": "large",
-            "text": "AM"
-          },
-          {
-            "type": "avatar",
-            "size": "small",
-            "text": "AM"
-          },
-          {
-            "type": "avatar",
-            "size": 60,
-            "text": "AM"
-          }
-        ]
-      }
+      "data": {
+        "myAvatar": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+      },
+      "body": [
+        {
+          "type": "avatar",
+          "icon": "fa fa-user",
+          "src": "$myAvatar"
+        },
+        {
+          "type": "avatar",
+          "icon": "fa fa-user",
+          "src": "$other"
+        },
+        {
+          "type": "avatar",
+          "src": "$other",
+          "icon": "fa fa-user",
+          "text": "avatar"
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -14951,16 +14927,20 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
         "body": [
           {
             "type": "avatar",
-            "fit": "cover",
+            "shape": "square",
             "text": "AM"
           },
           {
             "type": "avatar",
-            "fit": "contain",
-            "text": "AM"
+            "shape": "rounded",
+            "text": "AM",
+            "style": {
+              "marginLeft": "10px"
+            }
           }
         ]
       }
@@ -14984,6 +14964,229 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
+        "body": [
+          {
+            "type": "avatar",
+            "size": "large",
+            "icon": "fa fa-user"
+          },
+          {
+            "type": "avatar",
+            "size": "default",
+            "icon": "fa fa-user"
+          },
+          {
+            "type": "avatar",
+            "size": "small",
+            "icon": "fa fa-user"
+          },
+          {
+            "type": "avatar",
+            "size": 60,
+            "src": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+          },
+          {
+            "type": "avatar",
+            "src": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+          },
+          {
+            "type": "avatar",
+            "size": 20,
+            "src": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-6",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "ejson",
+            "gap": 2
+          },
+          {
+            "type": "avatar",
+            "text": "ejson",
+            "gap": 7
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-7",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
+        "body": [
+          {
+            "type": "avatar",
+            "fit": "cover",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg"
+          },
+          {
+            "type": "avatar",
+            "fit": "fill",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg"
+          },
+          {
+            "type": "avatar",
+            "fit": "contain",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg"
+          },
+          {
+            "type": "avatar",
+            "fit": "none",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg"
+          },
+          {
+            "type": "avatar",
+            "fit": "scale-down",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-8",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
+        "body": [
+          {
+            "type": "avatar",
+            "fit": "cover",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg",
+            "draggable": false
+          },
+          {
+            "type": "avatar",
+            "fit": "cover",
+            "src": "https://suda.cdn.bcebos.com/images/amis/plumeria.jpeg",
+            "draggable": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-9",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "avatar",
+        "src": "empty",
+        "text": "avatar",
+        "onError": "return true;"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-10",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "avatar",
+        "text": "AM",
+        "style": {
+          "background": "#DB3E35",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-11",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "bodyClassName": "flex flex-wrap items-center",
         "body": [
           {
             "type": "avatar",
@@ -14996,6 +15199,7 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "avatar",
             "text": "AM",
+            "className": "m-l",
             "badge": {
               "mode": "dot"
             }
@@ -15003,9 +15207,53 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "avatar",
             "text": "AM",
+            "className": "m-l",
             "badge": 3
+          },
+          {
+            "type": "avatar",
+            "text": "AM",
+            "className": "m-l",
+            "badge": {
+              "mode": "ribbon",
+              "text": "HOT"
+            }
           }
         ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-12",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "avatar",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
       }
     },
     "measure": {

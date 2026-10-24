@@ -666,7 +666,9 @@
               const embed = window.amisRequire('amis/embed').embed
               scoped = embed('#root', schema)
             } else {
-              scoped = window.vamis.embed('#root', schema)
+              // 对照吃文档 schema：adaptor / onError / custom 字符串函数体与 Playground 一样要 env.trusted。
+              // SDK 默认仍关（D：new Function 仅受信任模式）；这里只开对照页。
+              scoped = window.vamis.embed('#root', schema, {}, { trusted: true })
             }
           } catch (err) {
             report({ runId: runId, error: String(err && err.message ? err.message : err) })
