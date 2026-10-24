@@ -5,38 +5,243 @@ outline: deep
 
 # Alert 提示
 
-::: info 实现进度 60% · 进行中
-title/body/level 可用；可关闭/操作未齐
+::: info 实现进度 80% · 进行中
+文档主路径已对齐：`level` info/success/warning/danger（默认 info）、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert。
 :::
 
-`alert` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+用来做文字特殊提示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **反馈**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **反馈**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-## 基本用法
+`className` / `style` 打在宿主 `div.vamis-node`。`showIcon` / `showCloseButton` 源码默认 **false**。
 
-```schema
-type: page
-title: alert
-body:
-  - type: alert
-    title: 提示
-    level: info
-    body: 说明文字
+## 基本使用
+
+`level` 支持 `info`、`success`、`warning`、`danger`。
+
+```schema: scope="body"
+{
+  "type": "tpl",
+  "tpl": "下面是提示条。"
+}
 ```
 
-## 常用属性
+```schema: scope="body"
+{
+  "type": "container",
+  "body": [
+    { "type": "alert", "level": "info", "body": "提示类文案甲" },
+    { "type": "alert", "level": "info", "title": "提示类标题甲", "body": "提示类文案甲有标题" },
+    { "type": "alert", "level": "success", "body": "成功类文案甲" },
+    { "type": "alert", "level": "success", "title": "成功类标题甲", "body": "成功类文案甲有标题" },
+    { "type": "alert", "level": "warning", "body": "警告类文案甲" },
+    { "type": "alert", "level": "warning", "title": "警告类标题甲", "body": "警告类文案甲有标题" },
+    { "type": "alert", "level": "danger", "body": "危险类文案甲" },
+    { "type": "alert", "level": "danger", "title": "危险类标题甲", "body": "危险类文案甲有标题" }
+  ]
+}
+```
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+```schema: scope="body"
+type: container
+body:
+  - type: alert
+    level: info
+    body: 提示类文案乙
+  - type: alert
+    level: info
+    title: 提示类标题乙
+    body: 提示类文案乙有标题
+  - type: alert
+    level: success
+    body: 成功类文案乙
+  - type: alert
+    level: success
+    title: 成功类标题乙
+    body: 成功类文案乙有标题
+  - type: alert
+    level: warning
+    body: 警告类文案乙
+  - type: alert
+    level: warning
+    title: 警告类标题乙
+    body: 警告类文案乙有标题
+  - type: alert
+    level: danger
+    body: 危险类文案乙
+  - type: alert
+    level: danger
+    title: 危险类标题乙
+    body: 危险类文案乙有标题
+```
+
+## 图标
+
+`showIcon: true` 才画左侧图标。没写 `icon` 时按 `level` 用默认图标。含 `/` 的 `icon` 当图片 URL；内置名 / fa 未接。
+
+```schema: scope="body"
+{
+  "type": "container",
+  "body": [
+    { "type": "alert", "level": "info", "showIcon": true, "body": "提示类图标甲" },
+    { "type": "alert", "level": "info", "showIcon": true, "title": "提示类图标标题甲", "body": "提示类图标甲有标题" },
+    { "type": "alert", "level": "success", "showIcon": true, "body": "成功类图标甲" },
+    { "type": "alert", "level": "warning", "showIcon": true, "body": "警告类图标甲" },
+    { "type": "alert", "level": "danger", "showIcon": true, "body": "危险类图标甲" }
+  ]
+}
+```
+
+```schema: scope="body"
+type: container
+body:
+  - type: alert
+    level: info
+    showIcon: true
+    body: 提示类图标乙
+  - type: alert
+    level: info
+    showIcon: true
+    title: 提示类图标标题乙
+    body: 提示类图标乙有标题
+  - type: alert
+    level: success
+    showIcon: true
+    body: 成功类图标乙
+  - type: alert
+    level: warning
+    showIcon: true
+    body: 警告类图标乙
+  - type: alert
+    level: danger
+    showIcon: true
+    body: 危险类图标乙
+```
+
+## level 支持表达式
+
+`level` / `showIcon` / `icon` 都可以写表达式。
+
+```schema: scope="body"
+{
+  "type": "alert",
+  "data": { "statusJia": 1 },
+  "level": "${IFS(statusJia===1, 'danger', statusJia===2, 'warning')}",
+  "body": "表达式级别甲"
+}
+```
+
+```schema: scope="body"
+type: alert
+data:
+  statusYi: 1
+level: "${IFS(statusYi===1, 'danger', statusYi===2, 'warning')}"
+body: 表达式级别乙
+```
+
+## 显示关闭按钮
+
+`showCloseButton: true` 在右上角出关闭。点了只藏这一条，不会卸掉整页。
+
+```schema: scope="body"
+{
+  "type": "container",
+  "body": [
+    {
+      "type": "alert",
+      "level": "info",
+      "showCloseButton": true,
+      "showIcon": true,
+      "body": "可关闭提示甲"
+    },
+    {
+      "type": "alert",
+      "level": "success",
+      "showCloseButton": true,
+      "showIcon": true,
+      "title": "可关闭标题甲",
+      "body": "可关闭提示甲有标题"
+    }
+  ]
+}
+```
+
+```schema: scope="body"
+type: container
+body:
+  - type: alert
+    level: info
+    showCloseButton: true
+    showIcon: true
+    body: 可关闭提示乙
+  - type: alert
+    level: success
+    showCloseButton: true
+    showIcon: true
+    title: 可关闭标题乙
+    body: 可关闭提示乙有标题
+```
+
+对照时不要去点关闭（树结点对的是提示条还在不在）。
+
+## 操作区域
+
+`actions` 可以是按钮数组，或单个 schema（比如 flex）。
+
+```schema: scope="body"
+{
+  "type": "alert",
+  "level": "success",
+  "showIcon": true,
+  "showCloseButton": true,
+  "title": "操作标题甲",
+  "body": "创建成功甲",
+  "actions": [
+    { "type": "button", "label": "查看详情甲", "size": "xs", "level": "link" }
+  ]
+}
+```
+
+```schema: scope="body"
+type: alert
+level: info
+showIcon: true
+showCloseButton: true
+body: 创建成功乙
+actions:
+  type: flex
+  justify: flex-start
+  alignItems: flex-start
+  direction: column
+  items:
+    - type: button
+      label: 详情乙
+      size: xs
+      level: primary
+    - type: button
+      label: 关闭乙
+      size: xs
+      level: danger
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `type` | `string` | `"alert"` | 指定为 alert 渲染器 |
+| `title` | `string` | | 标题，可模板 |
+| `body` | `SchemaNode` | | 内容。也认 `msg` / `tpl` |
+| `level` | `string` | `info` | `info` / `success` / `warning` / `danger`。可表达式 |
+| `showIcon` | `boolean` | `false` | 是否显示图标。可表达式 |
+| `icon` | `string` | | 含 `/` 当图片 URL |
+| `iconClassName` | `string` | | 打在图标上 |
+| `showCloseButton` | `boolean` | `false` | 是否显示关闭按钮 |
+| `closeButtonClassName` | `string` | | 打在关闭按钮上 |
+| `actions` | `SchemaNode` | | 操作区 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 不接 fa / 内置 icon 名；关闭只做本地隐藏，不派发独立 close 事件。
+- 视觉走 shadcn Alert token，不是 cxd Alert 皮肤。

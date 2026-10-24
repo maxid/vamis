@@ -9,28 +9,31 @@
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 11 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 20 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
 | 组件 | 11 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（11）
+### 全局（20）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-spinner-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-6` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-7` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-spinner-8` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-spinner-9` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-spinner-10` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-alert-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-alert-1` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-alert-1` bodyFont: Amis `Times` / Vamis `-apple-system`
+- `src-components-alert-2` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-alert-2` bodyFont: Amis `Times` / Vamis `-apple-system`
+- `src-components-alert-3` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-alert-3` bodyFont: Amis `Times` / Vamis `-apple-system`
+- `src-components-alert-4` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-alert-4` bodyFont: Amis `Times` / Vamis `-apple-system`
+- `src-components-alert-5` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-alert-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-alert-6` fontSize: Amis `12px` / Vamis `14px`
+- …其余 8 条见 last-report.json
 
 整改：
 - Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
+- html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 ### 样式 helper（0）
 
@@ -42,17 +45,17 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-spinner-0` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-spinner-1` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-2` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-3` lineHeight: Amis `21px` / Vamis `14px`
-- `src-components-spinner-4` lineHeight: Amis `21px` / Vamis `14px`
-- `src-components-spinner-5` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-spinner-6` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-7` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-8` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-9` lineHeight: Amis `18px` / Vamis `16px`
-- `src-components-spinner-10` lineHeight: Amis `18px` / Vamis `16px`
+- `src-components-alert-0` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-alert-1` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-2` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-3` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-4` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-5` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-6` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-7` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-8` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-alert-9` lineHeight: Amis `22px` / Vamis `20px`
+- `src-components-alert-10` lineHeight: Amis `24px` / Vamis `20px`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。

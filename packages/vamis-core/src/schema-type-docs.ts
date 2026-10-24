@@ -215,7 +215,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   shape: doc('Shape 形状', '数据展示', '几何形状。'),
   slider: doc('Slider 滑动条', '数据展示', '展示型滑条。'),
 
-  alert: doc('Alert 提示', '反馈', '警告/信息条。level 控制语义色。'),
+  alert: doc('Alert 提示', '反馈', '提示条。level / title / body、showIcon、showCloseButton、actions。'),
   dialog: doc('Dialog 对话框', '反馈', '弹层对话框。'),
   drawer: doc('Drawer 抽屉', '反馈', '侧边抽屉。'),
   spinner: doc('Spinner 加载中', '反馈', '加载指示。show / size / overlay / tip / delay；有 body 时当容器。'),

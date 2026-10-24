@@ -37,11 +37,11 @@
 | 功能 | 0 / 12 | 11 | 1 | 78% | 10 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
-| 反馈 | 0 / 5 | 5 | 0 | 64% | 5 |
+| 反馈 | 0 / 5 | 5 | 0 | 68% | 5 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
 | **合计** | **2 / 155** | **151** | **2** | **51%** | **98** |
 
-未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast / Spinner 文档主路径已齐 80%。
+未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast / Spinner / Alert 文档主路径已齐 80%。
 
 ---
 
@@ -220,11 +220,11 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（0/5，均 64%）
+## 反馈（0/5，均 68%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `alert` | Alert 提示 | 进行中 | 60% | title/body/level 可用；可关闭/操作未齐 | P0 |
+| `alert` | Alert 提示 | 进行中 | 80% | 文档主路径已对齐：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
 | `dialog` | Dialog 对话框 | 进行中 | 50% | overlay 能开；内嵌只是 Card，尺寸/模态/确认未齐 | P0 |
 | `drawer` | Drawer 抽屉 | 进行中 | 50% | 同 dialog | P0 |
 | `spinner` | Spinner 加载中 | 进行中 | 80% | 文档主路径已对齐：`show` / `showOn`、`size` sm|lg|空、`overlay`（源码默认 false）、`tip` / `tipPlacement`、`delay`、`body` 容器。缺 hex SVG、fa / 内置 icon 名、父子 loading 互斥、`loadingConfig` | P0 |
