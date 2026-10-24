@@ -111,7 +111,7 @@ export function writeReport(rows, options = {}) {
     ...(smokeFailed.length ? smokeFailed.slice(0, 20).map(failLine) : ['- 无失败。']),
     ...(smokeFailed.length > 20 ? [`- …其余 ${smokeFailed.length - 20} 条见 \`compare/last-report.json\``] : []),
     '',
-    '迭代：按 Amis 侧栏逐项实现 → `pnpm compare --bucket 样式 --section Spacing`（或 `compare:p0`）→ 评审报告 → 下一页。Vamis 样式可以比 Amis 多。`pnpm compare:p0` 是盒模型门禁。',
+    '迭代：组件看树结点（值 / name / 动作），样式看盒模型。`pnpm compare --bucket 组件 --section 功能` 或 `--bucket 样式 --section Spacing`。`pnpm compare:p0` 是盒模型门禁。',
     '',
   ].join('\n')
   const mdPath = path.join(repo, 'docs/superpowers/specs/2026-10-24-sdk-compare-report.md')

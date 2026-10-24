@@ -148,6 +148,7 @@ describe('embed', () => {
     const page = scoped.getComponentByName('main') as { reload?: () => void; getData?: () => unknown }
     expect(page?.getData?.()).toBeTruthy()
     expect(typeof page?.reload).toBe('function')
+    expect(scoped.getComponents().length).toBeGreaterThan(0)
   })
 
   it('doAction runs a toast through env.notify', async () => {

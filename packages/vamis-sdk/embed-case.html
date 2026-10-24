@@ -69,9 +69,12 @@
         }
 
         function findByLabel(label) {
-          const all = document.querySelectorAll('button, a')
+          const wanted = String(label || '').replace(/\s+/g, ' ').trim()
+          if (!wanted) return null
+          const all = document.querySelectorAll('button, a, [role="button"], .cxd-Button, .cxd-Action')
           for (let i = 0; i < all.length; i++) {
-            if ((all[i].textContent || '').trim() === label) return all[i]
+            const text = (all[i].textContent || '').replace(/\s+/g, ' ').trim()
+            if (text === wanted) return all[i]
           }
           return null
         }
@@ -146,6 +149,305 @@
           })
           const text = walker.nextNode()
           return (text && text.parentElement) || root.firstElementChild
+        }
+
+        var TREE_CHILD_KEYS = [
+          'aside',
+          'header',
+          'toolbar',
+          'headerToolbar',
+          'body',
+          'controls',
+          'columns',
+          'items',
+          'tabs',
+          'filter',
+          'footer',
+          'footerToolbar',
+          'buttons',
+          'actions',
+          'bulkActions',
+          'itemActions',
+        ]
+        var TREE_LAYOUT = {
+          page: 1,
+          container: 1,
+          wrapper: 1,
+          service: 1,
+          form: 1,
+          grid: 1,
+          hbox: 1,
+          vbox: 1,
+          flex: 1,
+          panel: 1,
+          collapse: 1,
+          'collapse-group': 1,
+          tabs: 1,
+          tab: 1,
+          fieldset: 1,
+          group: 1,
+          card: 1,
+          portlet: 1,
+          'switch-container': 1,
+          wizard: 1,
+          each: 1,
+        }
+        var SKIP_PROBE = { ajax: 1, link: 1, url: 1, email: 1, download: 1, copy: 1, reload: 1, submit: 1 }
+
+        function isSchemaNode(value) {
+          return !!(value && typeof value === 'object' && !Array.isArray(value) && typeof value.type === 'string')
+        }
+
+        function collectNodeActions(node) {
+          const out = []
+          if (typeof node.actionType === 'string') out.push(node.actionType)
+          if (node.action && typeof node.action.actionType === 'string') out.push(node.action.actionType)
+          const events = node.onEvent && typeof node.onEvent === 'object' ? node.onEvent : {}
+          Object.keys(events).forEach(function (event) {
+            const list = events[event] && events[event].actions
+            const actions = Array.isArray(list) ? list : list ? [list] : []
+            actions.forEach(function (action) {
+              if (action && typeof action.actionType === 'string') out.push(event + ':' + action.actionType)
+            })
+          })
+          return out
+        }
+
+        function walkSchemaTree(schema) {
+          const out = []
+          function visit(node, path) {
+            if (!isSchemaNode(node) || out.length >= 80) return
+            const name = node.name != null && node.name !== '' ? String(node.name) : ''
+            const actions = collectNodeActions(node)
+            const events = node.onEvent && typeof node.onEvent === 'object' ? Object.keys(node.onEvent) : []
+            out.push({
+              path: path,
+              type: node.type,
+              name: name,
+              id: node.id != null && node.id !== '' ? String(node.id) : '',
+              label: node.label != null ? String(node.label) : '',
+              schemaValue: node.value !== undefined ? node.value : node.defaultValue,
+              events: events,
+              actions: actions,
+              probe: actions.some(function (item) {
+                const action = item.indexOf(':') >= 0 ? item.split(':').pop() : item
+                return !SKIP_PROBE[action]
+              }),
+            })
+            TREE_CHILD_KEYS.forEach(function (key) {
+              const child = node[key]
+              if (child == null) return
+              const list = Array.isArray(child) ? child : [child]
+              list.forEach(function (item, index) {
+                if (isSchemaNode(item)) visit(item, path + '/' + key + '/' + index + ':' + item.type)
+              })
+            })
+          }
+          const root = schema && schema.apiVersion && schema.spec ? schema.spec : schema
+          if (Array.isArray(root)) {
+            root.forEach(function (item, index) {
+              if (isSchemaNode(item)) visit(item, index + ':' + item.type)
+            })
+          } else if (isSchemaNode(root)) visit(root, root.type)
+          return out
+        }
+
+        function cssEscapeName(name) {
+          if (window.CSS && CSS.escape) return CSS.escape(name)
+          return String(name).replace(/"/g, '\\"')
+        }
+
+        function findNodeEl(node) {
+          if (node.name) {
+            const named = document.querySelector('[name="' + cssEscapeName(node.name) + '"]')
+            if (named) return named
+          }
+          if (node.id) {
+            const byId = document.getElementById(node.id)
+            if (byId) return byId
+          }
+          if (node.label) {
+            const byLabel = findByLabel(node.label)
+            if (byLabel) return byLabel
+          }
+          if (node.type === 'button' || node.type === 'action' || node.type === 'submit' || node.type === 'reset') {
+            const buttons = document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
+            if (buttons.length === 1) return buttons[0]
+          }
+          return null
+        }
+
+        function readInputValue(el) {
+          if (!el) return undefined
+          const tag = (el.tagName || '').toLowerCase()
+          const type = (el.type || '').toLowerCase()
+          if (type === 'checkbox' || type === 'radio') return el.checked
+          if (tag === 'select' && el.multiple) {
+            return Array.prototype.map.call(el.selectedOptions || [], function (opt) {
+              return opt.value
+            })
+          }
+          if ('value' in el && tag !== 'button') return el.value
+          return (el.textContent || '').trim() || undefined
+        }
+
+        function collectFormData() {
+          const data = {}
+          function absorb(bag) {
+            if (!bag || typeof bag !== 'object' || Array.isArray(bag)) return
+            Object.keys(bag).forEach(function (key) {
+              if (key.charAt(0) === '_') return
+              if (data[key] === undefined) data[key] = bag[key]
+            })
+          }
+          const list =
+            (scoped && typeof scoped.getComponents === 'function' && scoped.getComponents()) ||
+            (scoped && scoped.components) ||
+            []
+          for (let i = 0; i < list.length; i++) {
+            const comp = list[i]
+            if (!comp) continue
+            if (typeof comp.getData === 'function') {
+              try {
+                absorb(comp.getData())
+              } catch (_err) {}
+            }
+            if (comp.props && comp.props.data) absorb(comp.props.data)
+            if (comp.props && comp.props.store && comp.props.store.data) absorb(comp.props.store.data)
+            if (comp.props && 'value' in comp.props && comp.props.name) {
+              data[comp.props.name] = comp.props.value
+            }
+          }
+          return data
+        }
+
+        function readComponent(node) {
+          if (!scoped || !node.name || typeof scoped.getComponentByName !== 'function') return null
+          try {
+            return scoped.getComponentByName(node.name) || null
+          } catch (_err) {
+            return null
+          }
+        }
+
+        function readNodeValue(node, formData) {
+          const comp = readComponent(node)
+          if (comp) {
+            if (typeof comp.getValue === 'function') {
+              try {
+                return comp.getValue()
+              } catch (_err) {}
+            }
+            if (typeof comp.getData === 'function') {
+              try {
+                const bag = comp.getData()
+                if (node.name && bag && typeof bag === 'object' && node.name in bag) return bag[node.name]
+                if (bag && typeof bag === 'object' && !Array.isArray(bag) && Object.keys(bag).length && !node.name) {
+                  return bag
+                }
+              } catch (_err) {}
+            }
+            if (comp.props && 'value' in comp.props) return comp.props.value
+          }
+          if (node.name && formData && node.name in formData) return formData[node.name]
+          const el = findNodeEl(node)
+          const fromDom = readInputValue(el)
+          if (fromDom !== undefined) return fromDom
+          return node.schemaValue
+        }
+
+        function nodeRendered(node) {
+          if (TREE_LAYOUT[node.type]) {
+            const root = document.getElementById('root')
+            return !!(root && root.childElementCount)
+          }
+          return !!findNodeEl(node)
+        }
+
+        function dialogOpen() {
+          return !!(
+            document.querySelector('[role="dialog"]') ||
+            document.querySelector('[data-slot="dialog-content"]') ||
+            document.querySelector('.cxd-Modal') ||
+            document.querySelector('.cxd-Dialog')
+          )
+        }
+
+        function toastOpen() {
+          return !!(
+            document.querySelector('[data-sonner-toast]') ||
+            document.querySelector('[data-sonner-toaster]') ||
+            document.querySelector('.cxd-Toast') ||
+            document.querySelector('.cxd-Notification') ||
+            document.querySelector('.cxd-Alert') ||
+            document.querySelector('[data-state="open"][data-slot="toast"]')
+          )
+        }
+
+        function closeDialog() {
+          const close =
+            document.querySelector('[role="dialog"] button') ||
+            document.querySelector('[data-slot="dialog-content"] button') ||
+            document.querySelector('.cxd-Modal-close') ||
+            document.querySelector('.cxd-Dialog-close')
+          if (close) close.click()
+        }
+
+        function sleep(ms) {
+          return new Promise(function (resolve) {
+            setTimeout(resolve, ms)
+          })
+        }
+
+        async function probeTree(nodes) {
+          let used = 0
+          for (let i = 0; i < nodes.length && used < 4; i++) {
+            const node = nodes[i]
+            if (!node.probe) continue
+            const actions = node.actions || []
+            const wantsDialog = actions.some(function (item) {
+              return item === 'dialog' || item.indexOf(':dialog') >= 0
+            })
+            const wantsToast = actions.some(function (item) {
+              return item === 'toast' || item.indexOf(':toast') >= 0
+            })
+            const wantsSetValue = actions.some(function (item) {
+              return item === 'setValue' || item.indexOf(':setValue') >= 0
+            })
+            if (!wantsDialog && !wantsToast && !wantsSetValue) continue
+            const el = findNodeEl(node)
+            if (!el || typeof el.click !== 'function') continue
+            used += 1
+            el.click()
+            await sleep(280)
+            node.effect = { dialog: dialogOpen(), toast: toastOpen() }
+            if (wantsSetValue) node.valueAfter = readNodeValue(node, collectFormData())
+            if (node.effect.dialog) {
+              closeDialog()
+              await sleep(120)
+            }
+          }
+        }
+
+        async function snapshotTree(schema) {
+          const root = document.getElementById('root')
+          if (!root || !root.childElementCount) return { error: '未渲染' }
+          const nodes = walkSchemaTree(schema)
+          const formData = collectFormData()
+          nodes.forEach(function (node) {
+            const comp = readComponent(node)
+            node.named = !!comp
+            node.rendered = nodeRendered(node)
+            node.value = readNodeValue(node, formData)
+          })
+          await probeTree(nodes)
+          return {
+            tree: nodes,
+            smoke: true,
+            text: (root.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80),
+            font: readFont(textTarget(root)),
+            rootFont: readFont(document.body),
+          }
         }
 
         function measure(spec) {
@@ -294,9 +596,21 @@
           scheduleSize()
           setTimeout(scheduleSize, 80)
           setTimeout(scheduleSize, 320)
-          waitForMeasure(spec, spec.type === 'smoke' ? 4000 : 8000).then(
+          const pendingMeasure =
+            spec.type === 'tree'
+              ? waitForMeasure({ type: 'smoke' }, 8000).then(function () {
+                  return sleep(200).then(function () {
+                    return snapshotTree(schema)
+                  })
+                })
+              : waitForMeasure(spec, spec.type === 'smoke' ? 4000 : 8000)
+          pendingMeasure.then(
             function (result) {
               if (started !== runId) return
+              if (result && result.error) {
+                report({ runId: started, error: result.error })
+                return
+              }
               report({ runId: started, measure: result })
             },
             function (err) {
