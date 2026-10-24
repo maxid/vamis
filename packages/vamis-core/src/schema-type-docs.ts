@@ -23,7 +23,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   vbox: doc('VBox 布局', '布局', '垂直盒子分栏。'),
   pagination: doc('Pagination 分页', '布局', '页码。layout / mode / size，change 事件带 page。'),
   'pagination-wrapper': doc('PaginationWrapper 分页容器', '布局', '把 inputName 列表切片到 outputName，内嵌 pagination。'),
-  panel: doc('Panel 面板', '布局', '带标题/内容的面板，可用 className: h-full 吃满父槽。'),
+  panel: doc('Panel 面板', '布局', '标题/内容/底部按钮。affixFooter 贴底，className: h-full 可拉高。'),
   tabs: doc('Tabs 选项卡', '布局', '选项卡。子项用 tabs[].tab 作为内容。'),
   wrapper: doc('Wrapper 包裹容器', '布局', '包一层容器，可改 size/style。'),
   portlet: doc('Portlet 门户栏目', '布局', '门户栏目，可配工具栏。'),

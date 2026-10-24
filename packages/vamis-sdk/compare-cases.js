@@ -7002,6 +7002,119 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-panel-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Panel 面板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Panel 面板 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "panel",
+        "title": "面板标题",
+        "body": "面板内容"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-panel-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Panel 面板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Panel 面板 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "panel",
+        "title": "面板标题",
+        "body": "面板内容 YAML"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-panel-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Panel 面板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Panel 面板 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "panel",
+        "title": "面板标题",
+        "body": "面板内容",
+        "actions": [
+          {
+            "type": "button",
+            "label": "按钮 1"
+          },
+          {
+            "type": "button",
+            "label": "按钮 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-panel-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Panel 面板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Panel 面板 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "panel",
+        "title": "面板标题",
+        "body": "面板内容，底部按钮会贴底。",
+        "affixFooter": true,
+        "actions": [
+          {
+            "type": "button",
+            "label": "确定"
+          },
+          {
+            "type": "button",
+            "label": "取消"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-tabs-0",
     "group": "组件 / 布局",
     "bucket": "components",
