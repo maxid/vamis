@@ -269,6 +269,7 @@ content: https://example.com/vamis
 | content / copy | `string` | | 复制文本 |
 | reload | `string` | | 动作结束后刷新目标 `name` |
 | onEvent | `object` | | 见事件表 |
+| badge | `number` / 对象 | | 角标。活示例见 [Badge 角标](./badge) |
 
 ## 事件表
 
