@@ -38,10 +38,10 @@
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 46% | 3 |
-| **合计** | **2 / 155** | **152** | **1** | **52%** | **99** |
+| 其他 | 0 / 7 | 7 | 0 | 56% | 4 |
+| **合计** | **2 / 155** | **152** | **1** | **52%** | **100** |
 
-未开始只剩功能类 `popOver` 属性。反馈五件已 80%；其他类 `avatar` / `tasks` 80%，`badge` 属性 40%（挂在 avatar）。
+未开始只剩功能类 `popOver` 属性。反馈五件已 80%；其他类 `avatar` / `audio` / `tasks` / `wizard` 80%，`badge` 属性 40%。
 
 ---
 
@@ -232,15 +232,15 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 46%）
+## 其他（0/7，均 56%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `avatar` | Avatar 头像 | 进行中 | 80% | 文档主路径已对齐：src > text > icon、shape circle/square/rounded、size 空=40 / small 32 / large 48、fit cover、gap、badge。缺 fa、onError、ribbon | P0 |
-| `audio` | Audio 音频 | 进行中 | 45% | 已注册 | P0 |
+| `audio` | Audio 音频 | 进行中 | 80% | 文档主路径已对齐：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
 | `tasks` | Tasks 任务操作集合 | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
 | （属性 `badge`） | Badge 角标 | 进行中 | 40% | 不是独立 type；avatar 已接数字 / `{mode:text\|dot,text,position}`。action / tpl / ribbon 未齐 | P0 |
-| `wizard` | Wizard 向导 | 进行中 | 50% | 能分步；数据域/校验衔接未齐 | P0 |
+| `wizard` | Wizard 向导 | 进行中 | 80% | 文档主路径已对齐：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
 | `web-component` | Web Component | 进行中 | 15% | **占位**：只渲染 tag + props | P0 |
 | `amis` | amis 渲染器 | 进行中 | 15% | **占位**：只嵌内层 schema | P0 |
 
