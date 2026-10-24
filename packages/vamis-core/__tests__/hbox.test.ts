@@ -64,4 +64,10 @@ describe('hboxColumnBody', () => {
   it('keeps string columns for SchemaRenderer', () => {
     expect(hboxColumnBody('Col B')).toEqual(['Col B'])
   })
+
+  it('treats nameless-type columns with popOver as field', () => {
+    expect(hboxColumnBody({ name: 'engine', label: 'Engine', popOver: '全文甲' })).toEqual([
+      { type: 'field', name: 'engine', label: 'Engine', popOver: '全文甲' },
+    ])
+  })
 })

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SchemaRenderer, type SchemaObject } from '@vamis/core'
+import PopOverHost from './PopOverHost.vue'
 import {
   Table,
   TableBody,
@@ -51,7 +52,9 @@ const rows = computed<Record<string, any>[]>(() => {
             :schema="col"
             :extra-data="row"
           />
-          <span v-else>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
+          <PopOverHost v-else :schema="col" :data="row">
+            <span>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
+          </PopOverHost>
         </TableCell>
       </TableRow>
     </TableBody>

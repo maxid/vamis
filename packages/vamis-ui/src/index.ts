@@ -67,6 +67,7 @@ export {
   Volume2Icon,
   VolumeXIcon,
   XIcon,
+  ZoomInIcon,
 } from '@lucide/vue'
 export { Toaster } from './ui/sonner'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'

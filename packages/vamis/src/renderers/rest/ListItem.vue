@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, filterTpl, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, asArray, filterTpl, popOverFieldSchema, type SchemaObject } from '@vamis/core'
 import { Card, CardContent } from '@vamis/ui'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
@@ -17,7 +17,7 @@ const subTitle = computed(() => filterTpl(props.schema.subTitle || props.schema.
         <p class="text-sm font-medium">{{ title || '列表项' }}</p>
         <p v-if="subTitle" class="text-xs text-muted-foreground">{{ subTitle }}</p>
         <div v-if="body.length" class="space-y-1 pt-1">
-          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
+          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="popOverFieldSchema(node)" />
         </div>
       </div>
       <div v-if="actions.length" class="flex shrink-0 gap-1">

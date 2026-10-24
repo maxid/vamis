@@ -82,6 +82,12 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
     '悬停或点击出 tip。trigger / placement / tooltipTheme / offset / inline。',
     '常用：content、title、trigger、placement、tooltipTheme、inline。',
   ),
+  popover: doc(
+    'PopOver 弹出提示',
+    '功能',
+    '不是独立 type。挂在 static / table 列 / list / cards；字符串精简写法、trigger click、showIcon 默认 true。',
+    '常用：popOver、trigger、showIcon、title、body、position、popOverEnableOn、mode。',
+  ),
 
   form: doc(
     'Form 表单',
