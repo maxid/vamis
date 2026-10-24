@@ -228,11 +228,14 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     source: '数据源。表达式或数组。',
   }, { slots: ['columns'] }),
   flex: fields('Flex', {
-    justify: '主轴对齐：start / flex-end / center / space-between / space-around。',
-    direction: '主轴方向：row / column。',
-    alignItems: '交叉轴对齐。Vamis 尚未接。',
+    justify: '主轴对齐，默认 center。start / flex-start / center / end / flex-end / space-around / space-between / space-evenly。',
+    alignItems: '交叉轴对齐，默认 stretch。',
+    alignContent: '多行交叉轴分布，默认 center。',
+    direction: '主轴方向：row / column / row-reverse / column-reverse，默认 row。',
     items: '子节点列表。',
     body: '同 items。',
+    style: '容器自定义样式。',
+    mobile: '窄屏（<768）覆盖的字段，例如 direction: column。',
   }, { slots: ['items', 'body'] }),
   grid: fields('Grid', {
     columns: '列定义。未写 span 时均分。',

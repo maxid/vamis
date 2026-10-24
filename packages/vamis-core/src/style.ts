@@ -178,6 +178,31 @@ function camelCssProp(prop: string): string {
   return prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
 }
 
+/** React/Amis 对数字 style 不加单位的属性。其余长度数字补 px。 */
+const UNITLESS_STYLE_PROPS = new Set([
+  'animationIterationCount',
+  'aspectRatio',
+  'flex',
+  'flexGrow',
+  'flexShrink',
+  'fontWeight',
+  'lineHeight',
+  'opacity',
+  'order',
+  'zIndex',
+  'zoom',
+  'scale',
+  'rotate',
+])
+
+function cssStyleValue(key: string, value: unknown, data: PlainObject): string {
+  if (typeof value === 'number') {
+    if (UNITLESS_STYLE_PROPS.has(key) || value === 0) return String(value)
+    return `${value}px`
+  }
+  return filterTpl(String(value), data)
+}
+
 export function resolveInlineStyle(
   input: unknown,
   data: PlainObject = {},
@@ -198,7 +223,7 @@ export function resolveInlineStyle(
   const out: Record<string, string> = {}
   for (const [key, value] of Object.entries(input as Record<string, unknown>)) {
     if (value == null || value === false) continue
-    const text = filterTpl(String(value), data)
+    const text = cssStyleValue(key, value, data)
     if (text) out[key] = text
   }
   return out

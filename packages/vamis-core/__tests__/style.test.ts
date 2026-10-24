@@ -81,6 +81,22 @@ describe('resolveInlineStyle', () => {
       color: 'oklch(0.5 0.1 20)',
     })
   })
+
+  it('appends px to unitless length numbers like React/Amis style', () => {
+    expect(resolveInlineStyle({ width: 100, height: 50, margin: 5 }, {})).toEqual({
+      width: '100px',
+      height: '50px',
+      margin: '5px',
+    })
+  })
+
+  it('does not append px to unitless CSS numbers', () => {
+    expect(resolveInlineStyle({ zIndex: 2, opacity: 0.5, flexGrow: 1 }, {})).toEqual({
+      zIndex: '2',
+      opacity: '0.5',
+      flexGrow: '1',
+    })
+  })
 })
 
 describe('resolveCssVars', () => {
