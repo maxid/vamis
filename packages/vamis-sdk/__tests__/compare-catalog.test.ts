@@ -9,6 +9,10 @@ import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
 import {
+  FRAME_HEIGHT,
+  clampFrameHeight,
+  compareFrameSize,
+  frameOverflows,
   iframeLayoutWidth,
   iframeScale,
   loadCatalog,
@@ -457,5 +461,36 @@ describe('rerun slice', () => {
     expect(iframeLayoutWidth('mobile', 500)).toBe(375)
     expect(iframeScale('mobile', 500, 375)).toBe(1)
     expect(iframeScale('desktop', 500, 768)).toBeCloseTo(500 / 768)
+  })
+
+  it('clamps compare iframe height between min and max', () => {
+    expect(clampFrameHeight(80)).toBe(FRAME_HEIGHT.min)
+    expect(clampFrameHeight(500)).toBe(500)
+    expect(clampFrameHeight(4000)).toBe(FRAME_HEIGHT.max)
+    expect(frameOverflows(500)).toBe(false)
+    expect(frameOverflows(1200)).toBe(true)
+  })
+
+  it('keeps compare preview visual height in min/max after scale', () => {
+    expect(compareFrameSize(80, 1)).toEqual({
+      visual: FRAME_HEIGHT.min,
+      iframe: FRAME_HEIGHT.min,
+      overflow: false,
+    })
+    expect(compareFrameSize(500, 1)).toEqual({ visual: 500, iframe: 500, overflow: false })
+    expect(compareFrameSize(4000, 1)).toEqual({
+      visual: FRAME_HEIGHT.max,
+      iframe: FRAME_HEIGHT.max,
+      overflow: true,
+    })
+    const scale = 500 / 768
+    const short = compareFrameSize(80, scale)
+    expect(short.visual).toBe(FRAME_HEIGHT.min)
+    expect(short.iframe).toBe(Math.ceil(FRAME_HEIGHT.min / scale))
+    expect(short.overflow).toBe(false)
+    const tall = compareFrameSize(2000, scale)
+    expect(tall.visual).toBe(FRAME_HEIGHT.max)
+    expect(tall.iframe).toBe(Math.ceil(FRAME_HEIGHT.max / scale))
+    expect(tall.overflow).toBe(true)
   })
 })

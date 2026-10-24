@@ -77,6 +77,7 @@ const HANDWRITTEN = new Set([
   '/components/service',
   '/components/nav',
   '/components/anchor-nav',
+  '/components/tooltip',
   '/components/chart',
   '/components/code',
   '/components/form/editor',

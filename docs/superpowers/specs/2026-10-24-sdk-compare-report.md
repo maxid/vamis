@@ -3,32 +3,35 @@
 - 日期：2026-10-24
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **5** · 通过 **5** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **12** · 通过 **12** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 8 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 12 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 5 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 12 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（8）
+### 全局（12）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-anchor-nav-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-anchor-nav-1` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-anchor-nav-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-anchor-nav-2` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-anchor-nav-3` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-anchor-nav-3` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-anchor-nav-4` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-anchor-nav-4` bodyFont: Amis `Times` / Vamis `-apple-system`
+- `src-components-tooltip-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-6` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-7` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-8` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-9` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-10` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-tooltip-11` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
 
 整改：
 - Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
-- html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 ### 样式 helper（0）
 
@@ -36,15 +39,22 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（5）
+### 组件（12）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-anchor-nav-0` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-anchor-nav-1` lineHeight: Amis `32px` / Vamis `20px`
-- `src-components-anchor-nav-2` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-anchor-nav-3` lineHeight: Amis `32px` / Vamis `20px`
-- `src-components-anchor-nav-4` lineHeight: Amis `32px` / Vamis `20px`
+- `src-components-tooltip-0` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-1` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-2` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-3` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-4` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-5` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-6` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-7` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-8` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-9` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-10` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-tooltip-11` lineHeight: Amis `21px` / Vamis `20px`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -54,7 +64,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 5 | 0 |
+| 组件 | 12 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -63,7 +73,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 功能 | 5 | 0 |
+| 组件 / 功能 | 12 | 0 |
 
 ## P0 失败（驱动下一刀）
 

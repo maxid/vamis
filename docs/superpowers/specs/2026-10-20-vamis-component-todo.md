@@ -34,7 +34,7 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 11 | 1 | 66% | 10 |
+| 功能 | 0 / 12 | 11 | 1 | 78% | 10 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
@@ -69,7 +69,7 @@
 
 ---
 
-## 功能（0/12，均 66%）
+## 功能（0/12，均 78%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
@@ -83,7 +83,7 @@
 | `service` | Service 功能型容器 | 进行中 | 75% | 文档主路径已对齐：独立 Scope、静态 `data`、`api` 刷新、`schemaApi` 当子 schema、`initFetch: false`、`reload`。缺 `dataProvider` / 轮询 | P0 |
 | `nav` | Nav 导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
-| `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 50% | 能出 tip；触发/主题未齐 | P0 |
+| `tooltip-wrapper` | TooltipWrapper 文字提示容器 | 进行中 | 80% | 文档主路径已对齐：`content` / `title`、`trigger` hover/click/focus、`placement`、`tooltipTheme`、`offset`、`showArrow`、`inline`、`wrapperComponent`。缺浮层动画 | P0 |
 | （属性 `popOver`） | PopOver 弹出提示 | **未开始** | 0% | 不是独立 type；table/list/static/cards 字段均未实现 `popOver` | P0 |
 
 ---

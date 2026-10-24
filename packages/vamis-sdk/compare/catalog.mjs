@@ -80,6 +80,34 @@ export function iframeScale(mode, paneW, layoutW) {
   return paneW / layoutW
 }
 
+/** 对照预览区可视高度：按内容自适应，夹 min/max。半栏缩进后仍保证屏幕上至少 min。 */
+export const FRAME_HEIGHT = { min: 360, max: 800 }
+
+export function clampFrameHeight(value) {
+  const n = Math.ceil(Number(value) || 0)
+  if (!Number.isFinite(n) || n < FRAME_HEIGHT.min) return FRAME_HEIGHT.min
+  if (n > FRAME_HEIGHT.max) return FRAME_HEIGHT.max
+  return n
+}
+
+export function frameOverflows(value) {
+  return Math.ceil(Number(value) || 0) > FRAME_HEIGHT.max
+}
+
+/**
+ * 内容高度（iframe 内部 px）→ 可视高度（缩放后）与 iframe 布局高度。
+ * 下拉/浮层是 absolute，撑不开内容；min 按**屏幕上**的像素夹，避免半栏 scale 后只剩 200 多。
+ */
+export function compareFrameSize(contentHeight, scale = 1) {
+  const rawScale = Number(scale)
+  const s = Number.isFinite(rawScale) && rawScale > 0 ? rawScale : 1
+  const content = Math.max(0, Math.ceil(Number(contentHeight) || 0))
+  const visualContent = Math.ceil(content * s)
+  const visual = clampFrameHeight(visualContent)
+  const iframe = Math.ceil(visual / s)
+  return { visual, iframe, overflow: content > iframe }
+}
+
 /** 组件「自身」：page 名 / 文件名 / 完整 id，不误伤 dropdown-button 这类邻居。 */
 export function matchSelf(row, query) {
   const raw = String(query || '').trim()

@@ -9969,6 +9969,404 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-tooltip-0",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是文字提示。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-1",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "space-around",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "tooltip-wrapper",
+            "content": "提示文字",
+            "body": "hover 激活提示"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "title": "标题",
+            "content": "提示文字",
+            "trigger": "click",
+            "body": "click 激活提示"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "space-around",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "tooltip-wrapper",
+            "content": "提示文字 YAML",
+            "body": "hover 激活提示 YAML"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "title": "标题 YAML",
+            "content": "提示文字 YAML",
+            "trigger": "click",
+            "body": "click 激活提示 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "删除提示",
+        "inline": true,
+        "body": [
+          {
+            "type": "tpl",
+            "tpl": "删除"
+          },
+          {
+            "type": "tpl",
+            "className": "ml-1",
+            "tpl": "×"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "space-around",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "tooltip-wrapper",
+            "content": "上提示",
+            "placement": "top",
+            "body": "上"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "content": "左提示",
+            "placement": "left",
+            "body": "左"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "content": "右提示",
+            "placement": "right",
+            "body": "右"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "content": "下提示",
+            "placement": "bottom",
+            "body": "下"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "title": "偏移标题",
+        "content": "向右 10px 向上 20px",
+        "offset": [
+          10,
+          -20
+        ],
+        "inline": true,
+        "body": "带偏移的提示"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-6",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "title": "无箭头标题",
+        "content": "没有箭头",
+        "showArrow": false,
+        "inline": true,
+        "body": "没有箭头的提示"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-7",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "tooltip-wrapper",
+            "title": "浅色标题",
+            "content": "浅色提示",
+            "inline": true,
+            "className": "mr-2",
+            "body": "light 主题提示"
+          },
+          {
+            "type": "tooltip-wrapper",
+            "title": "深色标题",
+            "content": "深色提示",
+            "inline": true,
+            "tooltipTheme": "dark",
+            "body": "dark 主题提示"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-8",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "${tip}",
+        "data": {
+          "tip": "从数据域来的提示"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "${tip}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-9",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "content": "内联提示甲",
+          "inline": true,
+          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
+          "body": "内联容器甲"
+        },
+        {
+          "type": "tooltip-wrapper",
+          "content": "内联提示乙",
+          "inline": true,
+          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
+          "body": "内联容器乙"
+        },
+        {
+          "type": "tooltip-wrapper",
+          "content": "块级提示",
+          "className": "p-1 mt-3 border-2 border-solid border-green-400",
+          "body": "非内联容器"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-10",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "加粗浮层",
+        "inline": true,
+        "style": {
+          "fontStyle": "italic"
+        },
+        "tooltipStyle": {
+          "fontWeight": "bold"
+        },
+        "body": "一段斜体文案"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-11",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "代码提示",
+        "wrapperComponent": "pre",
+        "body": "function Hello() {\n  return 1\n}"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-popover-0",
     "group": "组件 / 功能",
     "bucket": "components",

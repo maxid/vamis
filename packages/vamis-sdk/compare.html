@@ -222,7 +222,7 @@
       .frame-wrap {
         overflow: hidden;
         width: 100%;
-        min-height: 80px;
+        min-height: 360px;
       }
       .frame-wrap.vp-mobile {
         display: flex;
@@ -232,10 +232,10 @@
       .frame-wrap iframe {
         display: block;
         width: 768px;
-        min-height: 80px;
-        height: 80px;
+        min-height: 360px;
+        height: 360px;
         border: 0;
-        overflow: hidden;
+        overflow: auto;
         background: #fff;
         transform-origin: top left;
       }
@@ -305,7 +305,7 @@
       <p>
         两边都走 JS SDK（<code>amis.embed</code> / <code>vamis.embed</code>），用例按 Amis 侧栏分 <strong>文档 / 组件 / 样式</strong>。Vamis 可以比 Amis 多（尤其是样式），多出来的条目标 <code>+</code>。Amis SDK 默认
         <code>unpkg.com/amis@6.13.0</code>，iframe 并行拉官方 <code>sdk.css</code> / <code>helper.css</code> / <code>iconfont.css</code>。视口分 <strong>桌面</strong>（≥768，半栏窄时缩进）和 <strong>移动</strong>（375，Amis 窄屏表单）。编辑 Schema 是 YAML / JSON 两个 Tab，改一边立刻同步；解析失败时对侧与预览停在上一份能跑的
-        schema。
+        schema。预览 iframe 按内容自适应高度，<strong>屏幕上</strong>夹在 <strong>360–800px</strong>（半栏缩进后仍保证 360；下拉/浮层是 absolute，不能只靠内容撑开）；超过 800 内页滚动。
       </p>
       <div class="toolbar">
         <div class="buckets" id="buckets">
@@ -607,8 +607,8 @@
             if (vpMode === 'mobile') url.searchParams.set('vp', 'mobile')
             else url.searchParams.delete('vp')
             history.replaceState(null, '', url)
-            frameH.amis = 80
-            frameH.vamis = 80
+            frameH.amis = FRAME_H.min
+            frameH.vamis = FRAME_H.min
             applyFrameHeights()
             applyCase(false)
           })
@@ -621,9 +621,26 @@
         let dirty = false
         let runId = 0
         let debounce = null
+        const FRAME_H = { min: 360, max: 800 }
         const ready = { amis: false, vamis: false }
         const got = { amis: null, vamis: null }
-        const frameH = { amis: 80, vamis: 80 }
+        const frameH = { amis: FRAME_H.min, vamis: FRAME_H.min }
+
+        function clampFrameHeight(value) {
+          const n = Math.ceil(Number(value) || 0)
+          if (!Number.isFinite(n) || n < FRAME_H.min) return FRAME_H.min
+          if (n > FRAME_H.max) return FRAME_H.max
+          return n
+        }
+
+        function compareFrameSize(contentHeight, scale) {
+          const rawScale = Number(scale)
+          const s = Number.isFinite(rawScale) && rawScale > 0 ? rawScale : 1
+          const content = Math.max(0, Math.ceil(Number(contentHeight) || 0))
+          const visual = clampFrameHeight(Math.ceil(content * s))
+          const iframe = Math.ceil(visual / s)
+          return { visual: visual, iframe: iframe, overflow: content > iframe }
+        }
 
         function readDocHeight(engine) {
           try {
@@ -641,26 +658,25 @@
         const DESKTOP_MIN = 768
         const MOBILE_W = 375
         function applyFrameHeights() {
-          const used = Math.max(
-            80,
-            frameH.amis || 80,
-            frameH.vamis || 80,
+          const content = Math.max(
+            frameH.amis || 0,
+            frameH.vamis || 0,
             readDocHeight('amis'),
             readDocHeight('vamis'),
           )
-          const capped = Math.min(used, 4000)
           ;['amis', 'vamis'].forEach(function (id) {
             const iframe = document.getElementById(id)
             const wrap = document.getElementById(id + '-wrap')
             const paneW = wrap ? wrap.clientWidth : 0
             const layoutW = vpMode === 'mobile' ? MOBILE_W : Math.max(DESKTOP_MIN, paneW || DESKTOP_MIN)
             const scale = !paneW ? 1 : vpMode === 'mobile' ? (paneW < layoutW ? paneW / layoutW : 1) : paneW / layoutW
+            const size = compareFrameSize(content, scale)
             iframe.style.width = layoutW + 'px'
-            iframe.style.height = capped + 'px'
+            iframe.style.height = size.iframe + 'px'
             iframe.style.transform = scale === 1 ? 'none' : 'scale(' + scale + ')'
             if (wrap) {
               wrap.classList.toggle('vp-mobile', vpMode === 'mobile')
-              wrap.style.height = Math.max(80, Math.ceil(capped * scale)) + 'px'
+              wrap.style.height = size.visual + 'px'
             }
           })
         }
@@ -1183,8 +1199,8 @@
           runId += 1
           got.amis = null
           got.vamis = null
-          frameH.amis = 80
-          frameH.vamis = 80
+          frameH.amis = FRAME_H.min
+          frameH.vamis = FRAME_H.min
           applyFrameHeights()
           layoutTable()
           ;['amis', 'vamis'].forEach(sendTo)
@@ -1258,8 +1274,8 @@
           }
           if (data.type === 'vamis-compare-size' && (data.engine === 'amis' || data.engine === 'vamis')) {
             const height = Number(data.height)
-            if (!Number.isFinite(height)) return
-            frameH[data.engine] = Math.max(80, Math.min(Math.ceil(height), 4000))
+            if (!Number.isFinite(height) || height < 0) return
+            frameH[data.engine] = Math.ceil(height)
             applyFrameHeights()
           }
         })
