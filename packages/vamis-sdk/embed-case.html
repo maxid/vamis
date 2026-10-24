@@ -401,7 +401,10 @@
           return !!(
             document.querySelector('[role="dialog"]') ||
             document.querySelector('[data-slot="dialog-content"]') ||
+            document.querySelector('[data-slot="sheet-content"]') ||
+            document.querySelector('[data-vamis-overlay]') ||
             document.querySelector('.cxd-Modal') ||
+            document.querySelector('.cxd-Drawer') ||
             document.querySelector('.cxd-Dialog')
           )
         }
@@ -409,19 +412,20 @@
         function toastOpen() {
           return !!(
             document.querySelector('[data-sonner-toast]') ||
-            document.querySelector('[data-sonner-toaster]') ||
             document.querySelector('.cxd-Toast') ||
             document.querySelector('.cxd-Notification') ||
-            document.querySelector('.cxd-Alert') ||
             document.querySelector('[data-state="open"][data-slot="toast"]')
           )
         }
 
         function closeDialog() {
           const close =
+            document.querySelector('[data-vamis-overlay] button') ||
             document.querySelector('[role="dialog"] button') ||
             document.querySelector('[data-slot="dialog-content"] button') ||
+            document.querySelector('[data-slot="sheet-content"] button') ||
             document.querySelector('.cxd-Modal-close') ||
+            document.querySelector('.cxd-Drawer-close') ||
             document.querySelector('.cxd-Dialog-close')
           if (close) close.click()
         }
@@ -439,7 +443,12 @@
             if (!node.probe) continue
             const actions = node.actions || []
             const wantsDialog = actions.some(function (item) {
-              return item === 'dialog' || item.indexOf(':dialog') >= 0
+              return (
+                item === 'dialog' ||
+                item === 'drawer' ||
+                item.indexOf(':dialog') >= 0 ||
+                item.indexOf(':drawer') >= 0
+              )
             })
             const wantsToast = actions.some(function (item) {
               return item === 'toast' || item.indexOf(':toast') >= 0

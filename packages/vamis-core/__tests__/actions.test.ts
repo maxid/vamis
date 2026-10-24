@@ -137,6 +137,31 @@ describe('onEvent actions', () => {
     expect(openDialog).toHaveBeenCalled()
   })
 
+  it('confirm closes the open dialog instead of env.confirm', async () => {
+    const closeDialog = vi.fn()
+    const confirm = vi.fn(async () => true)
+    const context = ctx({
+      env: {
+        fetcher: vi.fn(async () => ({ status: 0, msg: 'ok', data: {} })),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm,
+      },
+      overlay: {
+        state: { dialog: { title: 'X' }, drawer: null, data: {} },
+        openDialog: vi.fn(),
+        openDrawer: vi.fn(),
+        closeDialog,
+        closeDrawer: vi.fn(),
+        close: vi.fn(),
+      },
+    })
+    await runAction({ actionType: 'confirm' }, context)
+    expect(closeDialog).toHaveBeenCalled()
+    expect(confirm).not.toHaveBeenCalled()
+  })
+
   it('interpolates nativeEvent.type from the D4 event subset', async () => {
     const context = ctx({
       data: withNativeEvent({ name: 'Ada' }, { type: 'click' }),

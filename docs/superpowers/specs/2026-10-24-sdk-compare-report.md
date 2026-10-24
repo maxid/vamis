@@ -3,37 +3,36 @@
 - 日期：2026-10-24
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **11** · 通过 **11** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **13** · 通过 **13** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 20 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 13 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 11 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 25 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（20）
+### 全局（13）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-alert-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-alert-1` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-alert-1` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-alert-2` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-alert-2` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-alert-3` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-alert-3` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-alert-4` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-alert-4` bodyFont: Amis `Times` / Vamis `-apple-system`
-- `src-components-alert-5` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-alert-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-alert-6` fontSize: Amis `12px` / Vamis `14px`
-- …其余 8 条见 last-report.json
+- `src-components-drawer-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-6` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-7` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-8` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-9` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-10` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
+- `src-components-drawer-11` bodyFont: Amis `Times` / Vamis `-apple-system`
+- …其余 1 条见 last-report.json
 
 整改：
 - Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
-- html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 ### 样式 helper（0）
 
@@ -41,31 +40,34 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（11）
+### 组件（25）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-alert-0` lineHeight: Amis `21px` / Vamis `20px`
-- `src-components-alert-1` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-2` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-3` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-4` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-5` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-6` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-7` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-8` lineHeight: Amis `24px` / Vamis `20px`
-- `src-components-alert-9` lineHeight: Amis `22px` / Vamis `20px`
-- `src-components-alert-10` lineHeight: Amis `24px` / Vamis `20px`
+- `src-components-drawer-0` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-1` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-1` fontWeight: Amis `400` / Vamis `500`
+- `src-components-drawer-2` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-2` fontWeight: Amis `400` / Vamis `500`
+- `src-components-drawer-3` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-3` fontWeight: Amis `400` / Vamis `500`
+- `src-components-drawer-4` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-4` fontWeight: Amis `400` / Vamis `500`
+- `src-components-drawer-5` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-drawer-5` fontWeight: Amis `400` / Vamis `500`
+- `src-components-drawer-6` lineHeight: Amis `21px` / Vamis `20px`
+- …其余 13 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
+- Button 默认字重：Amis 400，Vamis shadcn font-medium=500。改 button cva，不要改全局。
 
 ## 文档结构（对标 Amis：文档 / 组件 / 样式）
 
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 11 | 0 |
+| 组件 | 13 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -74,7 +76,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 反馈 | 11 | 0 |
+| 组件 / 反馈 | 13 | 0 |
 
 ## P0 失败（驱动下一刀）
 

@@ -18,34 +18,51 @@ export interface OverlayApi {
 
 export const OverlayKey: InjectionKey<OverlayApi> = Symbol('vamis-overlay')
 
-export function provideOverlay(): OverlayApi {
+export function createOverlay(): OverlayApi {
+  const dialogs: SchemaObject[] = []
+  const drawers: SchemaObject[] = []
   const state = reactive<OverlayState>({
     dialog: null,
     drawer: null,
     data: {},
   })
-  const api: OverlayApi = {
+
+  function sync() {
+    state.dialog = dialogs.at(-1) ?? null
+    state.drawer = drawers.at(-1) ?? null
+  }
+
+  return {
     state,
     openDialog(schema, data = {}) {
-      state.dialog = schema
-      state.data = data
+      dialogs.push(schema)
+      state.data = { ...state.data, ...data }
+      sync()
     },
     openDrawer(schema, data = {}) {
-      state.drawer = schema
-      state.data = data
+      drawers.push(schema)
+      state.data = { ...state.data, ...data }
+      sync()
     },
     closeDialog() {
-      state.dialog = null
+      dialogs.pop()
+      sync()
     },
     closeDrawer() {
-      state.drawer = null
+      drawers.pop()
+      sync()
     },
     close() {
-      state.dialog = null
-      state.drawer = null
+      dialogs.length = 0
+      drawers.length = 0
       state.data = {}
+      sync()
     },
   }
+}
+
+export function provideOverlay(): OverlayApi {
+  const api = createOverlay()
   provide(OverlayKey, api)
   return api
 }

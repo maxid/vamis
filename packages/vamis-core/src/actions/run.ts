@@ -165,6 +165,14 @@ function registerBuiltinActions() {
   })
 
   registerAction('confirm', async (action, ctx) => {
+    if (ctx.overlay?.state.dialog) {
+      ctx.overlay.closeDialog()
+      return
+    }
+    if (ctx.overlay?.state.drawer) {
+      ctx.overlay.closeDrawer()
+      return
+    }
     const data = actionData(action, ctx)
     const ok = await ctx.env.confirm(
       filterTpl(action.msg || action.confirmText || '', data),
@@ -205,16 +213,18 @@ function registerBuiltinActions() {
   })
 
   registerAction('closeDialog', async (_action, ctx) => {
-    ctx.overlay?.close()
+    ctx.overlay?.closeDialog()
   })
   registerAction('closeDrawer', async (_action, ctx) => {
-    ctx.overlay?.close()
+    ctx.overlay?.closeDrawer()
   })
   registerAction('cancel', async (_action, ctx) => {
-    ctx.overlay?.close()
+    if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
+    else ctx.overlay?.closeDrawer()
   })
   registerAction('close', async (_action, ctx) => {
-    ctx.overlay?.close()
+    if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
+    else ctx.overlay?.closeDrawer()
   })
 
   registerAction('submit', async (_action, ctx) => {

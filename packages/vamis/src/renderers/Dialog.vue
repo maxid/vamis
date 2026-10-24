@@ -1,19 +1,34 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { Card, CardContent, CardHeader, CardTitle } from '@vamis/ui'
+import {
+  SchemaRenderer,
+  dialogActions,
+  dialogBody,
+  dialogSizeClass,
+  dialogTitle,
+  overlayFrameStyle,
+  type SchemaObject,
+} from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject }>()
-const body = computed(() => asArray(props.schema.body))
+const title = computed(() => dialogTitle(props.schema))
+const body = computed(() => dialogBody(props.schema))
+const actions = computed(() => dialogActions(props.schema))
 </script>
 
 <template>
-  <Card>
-    <CardHeader>
-      <CardTitle>{{ schema.title || '对话框' }}</CardTitle>
-    </CardHeader>
-    <CardContent class="space-y-3">
+  <div
+    data-vamis-dialog-inline
+    class="rounded-lg border bg-card p-5 shadow-sm"
+    :class="dialogSizeClass(schema)"
+    :style="overlayFrameStyle(schema, 'dialog')"
+  >
+    <div v-if="title" class="mb-3 font-medium">{{ title }}</div>
+    <div class="space-y-3">
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
-    </CardContent>
-  </Card>
+    </div>
+    <div v-if="actions.length" class="mt-4 flex flex-wrap justify-end gap-2">
+      <SchemaRenderer v-for="(node, i) in actions" :key="i" :schema="node" />
+    </div>
+  </div>
 </template>
