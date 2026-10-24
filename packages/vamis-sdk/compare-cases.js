@@ -7388,6 +7388,185 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-wrapper-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Wrapper 包裹容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wrapper 包裹容器 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wrapper",
+        "body": "内容",
+        "className": "b"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wrapper-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Wrapper 包裹容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wrapper 包裹容器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wrapper",
+        "body": "内容 YAML",
+        "className": "b"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wrapper-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Wrapper 包裹容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wrapper 包裹容器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "style": {
+          "color": "#aaa"
+        }
+      },
+      "body": [
+        {
+          "type": "wrapper",
+          "body": "内容",
+          "className": "b",
+          "style": "${style}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wrapper-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Wrapper 包裹容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wrapper 包裹容器 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "color": "#aaa"
+      },
+      "body": [
+        {
+          "type": "wrapper",
+          "body": "内容字号",
+          "className": "b",
+          "style": {
+            "color": "${color}",
+            "fontSize": "30px"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wrapper-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Wrapper 包裹容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wrapper 包裹容器 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "wrapper",
+          "body": "默认内边距",
+          "className": "b"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "wrapper",
+          "body": "极小的内边距",
+          "size": "xs",
+          "className": "b"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "wrapper",
+          "body": "小的内边距",
+          "size": "sm",
+          "className": "b"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "wrapper",
+          "body": "中等的内边距",
+          "size": "md",
+          "className": "b"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "wrapper",
+          "body": "大的内边距",
+          "size": "lg",
+          "className": "b"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "wrapper",
+          "body": "无内边距",
+          "size": "none",
+          "className": "b"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-action-0",
     "group": "组件 / 功能",
     "bucket": "components",

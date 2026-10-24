@@ -97,6 +97,12 @@ describe('resolveInlineStyle', () => {
       flexGrow: '1',
     })
   })
+
+  it('resolves a style expression that returns an object like Amis buildStyle', () => {
+    expect(resolveInlineStyle('${style}', { style: { color: '#aaa' } })).toEqual({
+      color: '#aaa',
+    })
+  })
 })
 
 describe('resolveCssVars', () => {

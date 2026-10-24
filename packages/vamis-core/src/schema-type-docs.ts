@@ -25,7 +25,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   'pagination-wrapper': doc('PaginationWrapper 分页容器', '布局', '把 inputName 列表切片到 outputName，内嵌 pagination。'),
   panel: doc('Panel 面板', '布局', '标题/内容/底部按钮。affixFooter 贴底，className: h-full 可拉高。'),
   tabs: doc('Tabs 选项卡', '布局', '选项卡。tabs[].body 或 tab；source 重复模板；activeKey 用 hash 或索引。'),
-  wrapper: doc('Wrapper 包裹容器', '布局', '包一层容器，可改 size/style。'),
+  wrapper: doc('Wrapper 包裹容器', '布局', '薄容器。默认 size md 内边距；none 无垫；style 可写对象或 ${style}。'),
   portlet: doc('Portlet 门户栏目', '布局', '门户栏目，可配工具栏。'),
   'switch-container': doc('switch-container 状态容器', '布局', '按 visibleOn 取第一个可见状态节点。'),
 

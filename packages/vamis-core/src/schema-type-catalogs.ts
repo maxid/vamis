@@ -258,8 +258,9 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }, { slots: ['columns', 'body'] }),
   wrapper: fields('Wrapper', {
     body: '包裹的内容。',
-    size: '可选收窄档。未写则吃满布局槽，不是表单项宽度。',
-    wrap: '是否再包一层。',
+    size: '内边距档：xs / sm / md / lg / xl / none。默认 md。',
+    style: '内联样式。对象或 ${style} 表达式（可返回对象）。',
+    wrap: '是否再包一层，默认 true。false 只渲染 body。',
   }, { slots: ['body'] }),
   panel: fields('Panel', {
     title: '面板标题。字符串走模板；false 隐藏。有 header 时不渲染 title。',
