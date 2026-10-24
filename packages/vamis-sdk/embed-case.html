@@ -313,6 +313,12 @@
           if (node.type === 'tasks') {
             return document.querySelector('[data-vamis-tasks], .cxd-Table-content')
           }
+          if (node.type === 'audio') {
+            return document.querySelector('[data-vamis-audio], .cxd-Audio')
+          }
+          if (node.type === 'wizard') {
+            return document.querySelector('[data-vamis-wizard], .cxd-Wizard')
+          }
           return null
         }
 
@@ -390,7 +396,7 @@
           }
           if (node.name && formData && node.name in formData) return formData[node.name]
           const el = findNodeEl(node)
-          if (el && (node.type === 'avatar' || node.type === 'tasks')) {
+          if (el && (node.type === 'avatar' || node.type === 'tasks' || node.type === 'audio' || node.type === 'wizard')) {
             const text = (el.textContent || '').replace(/\s+/g, ' ').trim()
             if (text) return text
           }

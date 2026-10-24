@@ -22,7 +22,6 @@ const SKIP_TYPES = new Set([
   'log',
   'custom',
   'web-component',
-  'audio',
   'video',
 ])
 

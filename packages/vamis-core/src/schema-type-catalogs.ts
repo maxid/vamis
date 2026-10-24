@@ -689,9 +689,11 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }),
   audio: fields('Audio', {
     src: '音频地址。',
-    autoPlay: '自动播放。',
-    loop: '循环。',
-    inline: '行内播放器。',
+    autoPlay: '自动播放，默认 false。',
+    loop: '循环，默认 false。',
+    inline: '行内播放器，默认 true。',
+    rates: '倍速列表，如 [1, 1.5, 2]。',
+    controls: 'rates / play / time / process / volume。',
   }),
   iframe: fields('IFrame', {
     src: '嵌入地址。',
@@ -896,10 +898,13 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }, { slots: ['items'] }),
   wizard: fields('Wizard', {
     steps: '步骤。每步是带 title/body 的 schema。',
-    startStep: '起始步。',
+    startStep: '起始步，从 1 计。',
     initApi: '初始化。',
     api: '最后提交。',
-    mode: 'vertical / horizontal。',
+    mode: 'horizontal / vertical，默认 horizontal。',
+    actionPrevLabel: '上一步文案。',
+    actionNextLabel: '下一步文案。',
+    actionNextSaveLabel: '保存并下一步文案。',
     actionFinishLabel: '完成按钮文案。',
   }, { slots: ['steps'], events: { stepChange: '切步。', finished: '完成。' }, actions: { next: '下一步。', prev: '上一步。', 'goto-step': '跳到指定步。' } }),
   'list-item': fields('ListItem', {

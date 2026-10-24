@@ -17173,6 +17173,168 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-audio-0",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是音频甲。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "audio"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是音频乙。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-3",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "audio",
+        "rates": [
+          1,
+          1.5,
+          2
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-4",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "audio",
+        "rates": [
+          1.5,
+          2
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-5",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "audio",
+        "controls": [
+          "time"
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-audio-6",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Audio 音频",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Audio 音频 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "audio",
+        "inline": false
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-tasks-0",
     "group": "组件 / 其他",
     "bucket": "components",
@@ -17569,33 +17731,268 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "wizard",
-      "body": [
-        {
-          "type": "wizard",
-          "steps": [
-            {
-              "title": "步骤 1",
-              "body": [
-                {
-                  "type": "input-text",
-                  "name": "name",
-                  "label": "名称"
-                }
-              ]
-            },
-            {
-              "title": "步骤 2",
-              "body": [
-                {
-                  "type": "tpl",
-                  "tpl": "确认提交"
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是向导甲。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "steps": [
+          {
+            "title": "第一步甲",
+            "body": "内容甲一"
+          },
+          {
+            "title": "第二步甲",
+            "body": "内容甲二"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "steps": [
+          {
+            "title": "第一步乙",
+            "body": "内容乙一"
+          },
+          {
+            "title": "第二步乙",
+            "body": "内容乙二"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-3",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "startStep": "2",
+        "steps": [
+          {
+            "title": "起步甲1",
+            "body": "隐藏甲"
+          },
+          {
+            "title": "起步甲2",
+            "body": "可见甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-4",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "startStep": "2",
+        "steps": [
+          {
+            "title": "起步乙1",
+            "body": "隐藏乙"
+          },
+          {
+            "title": "起步乙2",
+            "body": "可见乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-5",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "actionPrevLabel": "回甲",
+        "actionNextLabel": "去甲",
+        "actionFinishLabel": "完甲",
+        "steps": [
+          {
+            "title": "文案甲1",
+            "body": "文案内容甲"
+          },
+          {
+            "title": "文案甲2",
+            "body": "文案结尾甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-6",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "actionPrevLabel": "回乙",
+        "actionNextLabel": "去乙",
+        "actionFinishLabel": "完乙",
+        "steps": [
+          {
+            "title": "文案乙1",
+            "body": "文案内容乙"
+          },
+          {
+            "title": "文案乙2",
+            "body": "文案结尾乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-7",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "mode": "vertical",
+        "steps": [
+          {
+            "title": "竖甲1",
+            "body": "竖内容甲"
+          },
+          {
+            "title": "竖甲2",
+            "body": "竖结尾甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-wizard-8",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Wizard 向导",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Wizard 向导 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "wizard",
+        "mode": "vertical",
+        "steps": [
+          {
+            "title": "竖乙1",
+            "body": "竖内容乙"
+          },
+          {
+            "title": "竖乙2",
+            "body": "竖结尾乙"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

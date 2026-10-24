@@ -55,7 +55,19 @@ export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { Separator } from './ui/separator'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
 export { Alert, AlertDescription, AlertTitle, levelToAlertVariant } from './ui/alert'
-export { CircleCheckIcon, CircleUserRoundIcon, InfoIcon, OctagonXIcon, TriangleAlertIcon, XIcon } from '@lucide/vue'
+export {
+  Check,
+  CircleCheckIcon,
+  CircleUserRoundIcon,
+  InfoIcon,
+  OctagonXIcon,
+  PauseIcon,
+  PlayIcon,
+  TriangleAlertIcon,
+  Volume2Icon,
+  VolumeXIcon,
+  XIcon,
+} from '@lucide/vue'
 export { Toaster } from './ui/sonner'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
 export {

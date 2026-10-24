@@ -222,9 +222,9 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
   avatar: doc('Avatar 头像', '其他', 'src > text > icon。shape / size / fit / gap / badge。'),
-  audio: doc('Audio 音频', '其他', '音频播放。'),
+  audio: doc('Audio 音频', '其他', 'inline 默认 true。controls / rates / 时间 0:00。'),
   tasks: doc('Tasks 任务操作集合', '其他', 'items 的 status 0–5、列名、上线/重试。'),
-  wizard: doc('Wizard 向导', '其他', '分步向导。'),
+  wizard: doc('Wizard 向导', '其他', 'steps / startStep / 上一步下一步完成。mode horizontal。'),
   'web-component': doc('Web Component', '其他', '渲染自定义元素 tag。'),
   amis: doc('amis 渲染器', '其他', '嵌套渲染另一份 schema。'),
   password: doc('Password 密码展示', '数据展示', '只读掩码密码。'),
