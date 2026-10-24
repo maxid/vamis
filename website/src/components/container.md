@@ -21,14 +21,7 @@ Container 用来渲染其它组件。对齐 Amis 同名 schema。Vamis 用 YAML 
 
 `body` 是 [SchemaNode](/types/schemanode)：字符串、对象或数组都可以。字符串会当成 `tpl`。
 
-```schema: scope="body"
-{
-  "type": "container",
-  "body": "这里是容器内容区"
-}
-```
-
-同一段也可以写成 YAML，运行时等价：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: container

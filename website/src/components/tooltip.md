@@ -20,47 +20,18 @@ outline: deep
 `title` 给浮层加标题。`trigger: click` 要点一下才出。
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是文字提示。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "flex",
-  "justify": "space-around",
-  "alignItems": "center",
-  "items": [
-    {
-      "type": "tooltip-wrapper",
-      "content": "提示文字",
-      "body": "hover 激活提示"
-    },
-    {
-      "type": "tooltip-wrapper",
-      "title": "标题",
-      "content": "提示文字",
-      "trigger": "click",
-      "body": "click 激活提示"
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: flex
 justify: space-around
 alignItems: center
 items:
   - type: tooltip-wrapper
-    content: 提示文字 YAML
-    body: hover 激活提示 YAML
+    content: 提示文字
+    body: hover 激活提示
   - type: tooltip-wrapper
-    title: 标题 YAML
-    content: 提示文字 YAML
+    title: 标题
+    content: 提示文字
     trigger: click
-    body: click 激活提示 YAML
+    body: click 激活提示
 ```
 
 `body` 可以是多个子节点：
@@ -193,17 +164,17 @@ body: 延迟 1s 展示
 [
   {
     "type": "tooltip-wrapper",
-    "content": "内联提示甲",
+    "content": "内联提示",
     "inline": true,
     "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-    "body": "内联容器甲"
+    "body": "内联容器"
   },
   {
     "type": "tooltip-wrapper",
-    "content": "内联提示乙",
+    "content": "内联提示",
     "inline": true,
     "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-    "body": "内联容器乙"
+    "body": "块级提示"
   },
   {
     "type": "tooltip-wrapper",

@@ -17,34 +17,7 @@ outline: deep
 
 ## 基本用法
 
-```schema: scope="body"
-{
-  "type": "collapse-group",
-  "activeKey": ["1"],
-  "body": [
-    {
-      "type": "collapse",
-      "key": "1",
-      "header": "标题1",
-      "body": "这里是内容1"
-    },
-    {
-      "type": "collapse",
-      "key": "2",
-      "header": "标题2",
-      "body": "这里是内容2"
-    },
-    {
-      "type": "collapse",
-      "key": "3",
-      "header": "标题3",
-      "body": "这里是内容3"
-    }
-  ]
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: collapse-group

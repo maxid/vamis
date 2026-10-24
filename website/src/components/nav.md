@@ -20,29 +20,16 @@ outline: deep
 对照不跑外链。活示例用站内 hash：
 
 ```schema: scope="body"
-{
-  "type": "nav",
-  "stacked": true,
-  "className": "w-md",
-  "links": [
-    { "label": "导航甲", "to": "?to=nav1", "active": true },
-    { "label": "导航乙", "to": "?to=nav2" },
-    { "label": "导航丙", "to": "?to=nav3" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: nav
 stacked: true
 className: w-md
 links:
-  - label: 导航甲 YAML
+  - label: Nav 1
     to: "?to=nav1"
     active: true
-  - label: 导航乙 YAML
+  - label: Nav 2
     to: "?to=nav2"
-  - label: 导航丙 YAML
+  - label: Nav 3
     to: "?to=nav3"
 ```
 
@@ -81,9 +68,9 @@ links:
   "type": "nav",
   "stacked": false,
   "links": [
-    { "label": "横甲", "to": "?to=h1" },
-    { "label": "横乙", "to": "?to=h2" },
-    { "label": "横丙", "to": "?to=h3" }
+    { "label": "Nav 1", "to": "?to=h1" },
+    { "label": "Nav 2", "to": "?to=h2" },
+    { "label": "Nav 3", "to": "?to=h3" }
   ]
 }
 ```
@@ -99,8 +86,8 @@ links:
   "type": "page",
   "data": {
     "nav": [
-      { "label": "动态甲", "to": "?to=d1" },
-      { "label": "动态乙", "to": "?to=d2" }
+      { "label": "Nav 1", "to": "?to=d1" },
+      { "label": "Nav 2", "to": "?to=d2" }
     ]
   },
   "body": {

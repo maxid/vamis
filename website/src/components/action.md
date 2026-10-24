@@ -48,13 +48,6 @@ JSON 同等有效：
 
 `size`：`xs` / `sm` / `md` / `lg`。未写时是默认高度。
 
-```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是不同尺寸的按钮。"
-}
-```
-
 尺寸用活示例各画一颗按钮：
 
 ```schema: scope="body"
@@ -86,7 +79,7 @@ JSON 同等有效：
 ```
 
 ```schema: scope="body"
-{ "type": "button", "label": "主要 YAML", "level": "primary" }
+{ "type": "button", "label": "主要", "level": "primary" }
 ```
 
 ```schema: scope="body"
@@ -126,15 +119,7 @@ JSON 同等有效：
 `icon` 含 `/` 或 `http` 时当图片。fontawesome 类名（`fa fa-plus`）未接图标字体，只保留 class。`label: ""` 可以只显示图标。
 
 ```schema: scope="body"
-{
-  "label": "带图标",
-  "type": "button",
-  "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
-}
-```
-
-```schema: scope="body"
-label: 带图标 YAML
+label: 带图标
 type: button
 icon: https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg
 ```
@@ -208,39 +193,18 @@ dialog:
 ## 抽屉
 
 ```schema: scope="body"
-{
-  "label": "Drawer Form",
-  "type": "button",
-  "actionType": "drawer",
-  "drawer": {
-    "title": "表单设置",
-    "body": "抽屉内容"
-  }
-}
-```
-
-```schema: scope="body"
-label: Drawer Form YAML
+label: Drawer Form
 type: button
 actionType: drawer
 drawer:
-  title: 表单设置 YAML
-  body: 抽屉内容 YAML
+  title: 表单设置
+  body: 抽屉内容
 ```
 
 ## 复制文本
 
 ```schema: scope="body"
-{
-  "label": "复制一段文本",
-  "type": "button",
-  "actionType": "copy",
-  "content": "http://www.baidu.com"
-}
-```
-
-```schema: scope="body"
-label: 复制一段文本 YAML
+label: 复制一段文本
 type: button
 actionType: copy
 content: https://example.com/vamis

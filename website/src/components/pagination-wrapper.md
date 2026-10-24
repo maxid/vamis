@@ -17,36 +17,7 @@ outline: deep
 
 输入 / 输出字段名都是 `rows`，每页 2 条。子表 `source: ${rows}` 拿到的是当前页。
 
-```schema
-{
-  "type": "page",
-  "data": {
-    "rows": [
-      { "engine": "Trident", "version": "7" },
-      { "engine": "Gecko", "version": "1.8" },
-      { "engine": "Webkit", "version": "522" },
-      { "engine": "Presto", "version": "2.1" }
-    ]
-  },
-  "body": {
-    "type": "pagination-wrapper",
-    "inputName": "rows",
-    "outputName": "rows",
-    "perPage": 2,
-    "body": {
-      "type": "table",
-      "title": "分页表格",
-      "source": "${rows}",
-      "columns": [
-        { "name": "engine", "label": "Engine" },
-        { "name": "version", "label": "Version" }
-      ]
-    }
-  }
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema
 type: page
@@ -86,10 +57,10 @@ Amis 文档里常见写法是外层 `service` 拉 `/api/mock2/crud/table`，再�
 type: page
 data:
   items:
-    - label: 甲
-    - label: 乙
-    - label: 丙
-    - label: 丁
+    - label: 条目1
+    - label: 条目2
+    - label: 条目3
+    - label: 条目4
 body:
   type: pagination-wrapper
   perPage: 2

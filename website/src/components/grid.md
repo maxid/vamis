@@ -78,7 +78,7 @@ outline: deep
 ]
 ```
 
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: grid

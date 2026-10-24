@@ -22,23 +22,9 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 对照不跑远程 `api`（避免 Amis / Vamis 两套 mock 对不齐）。静态 `data` 同样进本域：
 
 ```schema: scope="body"
-{
-  "type": "service",
-  "data": {
-    "title": "Test Page Component",
-    "date": "2017-10-13"
-  },
-  "body": {
-    "type": "tpl",
-    "tpl": "${title} · 现在是：${date}"
-  }
-}
-```
-
-```schema: scope="body"
 type: service
 data:
-  title: Test Page YAML
+  title: Test Page
   date: 2017-10-14
 body:
   type: tpl

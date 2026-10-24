@@ -15,13 +15,7 @@ outline: deep
 
 ## 基本用法
 
-```schema: scope="body"
-{
-  "type": "divider"
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: divider

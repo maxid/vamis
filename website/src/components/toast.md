@@ -18,55 +18,12 @@ outline: deep
 ## 基本用法
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是轻提示。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "flex",
-  "justify": "flex-start",
-  "alignItems": "center",
-  "items": [
-    {
-      "type": "button",
-      "label": "弹出提示",
-      "actionType": "toast",
-      "toast": {
-        "items": [{ "body": "轻提示内容" }]
-      }
-    },
-    {
-      "type": "button",
-      "label": "弹出提示乙",
-      "actionType": "toast",
-      "toast": {
-        "items": [{ "body": "轻提示内容乙" }]
-      }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
-type: flex
-justify: flex-start
-alignItems: center
-items:
-  - type: button
-    label: 弹出提示 YAML
-    actionType: toast
-    toast:
-      items:
-        - body: 轻提示内容 YAML
-  - type: button
-    label: 弹出提示乙 YAML
-    actionType: toast
-    toast:
-      items:
-        - body: 轻提示内容乙 YAML
+type: button
+label: 弹出提示
+actionType: toast
+toast:
+  items:
+    - body: 轻提示内容
 ```
 
 事件动作也可以写 `args.msg` / `args.msgType`，不必包 `toast.items`。
@@ -76,25 +33,13 @@ items:
 默认 `top-center`。可用 `top-right` / `top-center` / `top-left` / `bottom-center` / `bottom-left` / `bottom-right` / `center`（`center` 目前落到 `top-center`）。
 
 ```schema: scope="body"
-{
-  "type": "button",
-  "label": "底部弹出",
-  "actionType": "toast",
-  "toast": {
-    "position": "bottom-center",
-    "items": [{ "body": "底部提示" }]
-  }
-}
-```
-
-```schema: scope="body"
 type: button
-label: 底部弹出 YAML
+label: 底部弹出
 actionType: toast
 toast:
   position: bottom-center
   items:
-    - body: 底部提示 YAML
+    - body: 底部提示
 ```
 
 ## 不展示关闭按钮
@@ -146,24 +91,13 @@ toast:
 ## 带标题的提示
 
 ```schema: scope="body"
-{
-  "type": "button",
-  "label": "带标题提示",
-  "actionType": "toast",
-  "toast": {
-    "items": [{ "title": "标题", "body": "带标题的内容" }]
-  }
-}
-```
-
-```schema: scope="body"
 type: button
-label: 带标题提示 YAML
+label: 带标题提示
 actionType: toast
 toast:
   items:
-    - title: 标题 YAML
-      body: 带标题的内容 YAML
+    - title: 标题
+      body: 带标题的内容
 ```
 
 ## 提示单独设置不同的类型

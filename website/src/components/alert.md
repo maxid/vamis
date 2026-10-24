@@ -20,59 +20,36 @@ outline: deep
 `level` 支持 `info`、`success`、`warning`、`danger`。
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是提示条。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "alert", "level": "info", "body": "提示类文案甲" },
-    { "type": "alert", "level": "info", "title": "提示类标题甲", "body": "提示类文案甲有标题" },
-    { "type": "alert", "level": "success", "body": "成功类文案甲" },
-    { "type": "alert", "level": "success", "title": "成功类标题甲", "body": "成功类文案甲有标题" },
-    { "type": "alert", "level": "warning", "body": "警告类文案甲" },
-    { "type": "alert", "level": "warning", "title": "警告类标题甲", "body": "警告类文案甲有标题" },
-    { "type": "alert", "level": "danger", "body": "危险类文案甲" },
-    { "type": "alert", "level": "danger", "title": "危险类标题甲", "body": "危险类文案甲有标题" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: alert
     level: info
-    body: 提示类文案乙
+    body: 提示类文案
   - type: alert
     level: info
-    title: 提示类标题乙
-    body: 提示类文案乙有标题
+    title: 提示类标题
+    body: 提示类文案
   - type: alert
     level: success
-    body: 成功类文案乙
+    body: 成功类文案
   - type: alert
     level: success
-    title: 成功类标题乙
-    body: 成功类文案乙有标题
+    title: 成功类标题
+    body: 成功类文案
   - type: alert
     level: warning
-    body: 警告类文案乙
+    body: 警告类文案
   - type: alert
     level: warning
-    title: 警告类标题乙
-    body: 警告类文案乙有标题
+    title: 警告类标题
+    body: 警告类文案
   - type: alert
     level: danger
-    body: 危险类文案乙
+    body: 危险类文案
   - type: alert
     level: danger
-    title: 危险类标题乙
-    body: 危险类文案乙有标题
+    title: 危险类标题
+    body: 危险类文案
 ```
 
 ## 图标
@@ -80,42 +57,29 @@ body:
 `showIcon: true` 才画左侧图标。没写 `icon` 时按 `level` 用默认图标。含 `/` 的 `icon` 当图片 URL；内置名 / fa 未接。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "alert", "level": "info", "showIcon": true, "body": "提示类图标甲" },
-    { "type": "alert", "level": "info", "showIcon": true, "title": "提示类图标标题甲", "body": "提示类图标甲有标题" },
-    { "type": "alert", "level": "success", "showIcon": true, "body": "成功类图标甲" },
-    { "type": "alert", "level": "warning", "showIcon": true, "body": "警告类图标甲" },
-    { "type": "alert", "level": "danger", "showIcon": true, "body": "危险类图标甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: alert
     level: info
     showIcon: true
-    body: 提示类图标乙
+    body: 提示类文案
   - type: alert
     level: info
     showIcon: true
-    title: 提示类图标标题乙
-    body: 提示类图标乙有标题
+    title: 提示类标题
+    body: 提示类文案
   - type: alert
     level: success
     showIcon: true
-    body: 成功类图标乙
+    body: 成功类文案
   - type: alert
     level: warning
     showIcon: true
-    body: 警告类图标乙
+    body: 警告类文案
   - type: alert
     level: danger
     showIcon: true
-    body: 危险类图标乙
+    body: 危险类文案
 ```
 
 ## level 支持表达式
@@ -123,48 +87,16 @@ body:
 `level` / `showIcon` / `icon` 都可以写表达式。
 
 ```schema: scope="body"
-{
-  "type": "alert",
-  "data": { "statusJia": 1 },
-  "level": "${IFS(statusJia===1, 'danger', statusJia===2, 'warning')}",
-  "body": "表达式级别甲"
-}
-```
-
-```schema: scope="body"
 type: alert
 data:
-  statusYi: 1
-level: "${IFS(statusYi===1, 'danger', statusYi===2, 'warning')}"
-body: 表达式级别乙
+  status: 1
+level: "${IFS(status===1, 'danger', status===2, 'warning')}"
+body: 这是内容区
 ```
 
 ## 显示关闭按钮
 
 `showCloseButton: true` 在右上角出关闭。点了只藏这一条，不会卸掉整页。
-
-```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    {
-      "type": "alert",
-      "level": "info",
-      "showCloseButton": true,
-      "showIcon": true,
-      "body": "可关闭提示甲"
-    },
-    {
-      "type": "alert",
-      "level": "success",
-      "showCloseButton": true,
-      "showIcon": true,
-      "title": "可关闭标题甲",
-      "body": "可关闭提示甲有标题"
-    }
-  ]
-}
-```
 
 ```schema: scope="body"
 type: container
@@ -173,13 +105,13 @@ body:
     level: info
     showCloseButton: true
     showIcon: true
-    body: 可关闭提示乙
+    body: 显示关闭按钮的提示
   - type: alert
     level: success
     showCloseButton: true
     showIcon: true
-    title: 可关闭标题乙
-    body: 可关闭提示乙有标题
+    title: 可关闭提示
+    body: 显示关闭按钮的提示
 ```
 
 对照时不要去点关闭（树结点对的是提示条还在不在）。
@@ -194,20 +126,22 @@ body:
   "level": "success",
   "showIcon": true,
   "showCloseButton": true,
-  "title": "操作标题甲",
-  "body": "创建成功甲",
+  "title": "操作标题",
+  "body": "创建成功",
   "actions": [
-    { "type": "button", "label": "查看详情甲", "size": "xs", "level": "link" }
+    { "type": "button", "label": "查看详情", "size": "xs", "level": "link" }
   ]
 }
 ```
+
+也可以把 `actions` 写成单个 schema（比如 flex）：
 
 ```schema: scope="body"
 type: alert
 level: info
 showIcon: true
 showCloseButton: true
-body: 创建成功乙
+body: 创建成功
 actions:
   type: flex
   justify: flex-start
@@ -215,11 +149,11 @@ actions:
   direction: column
   items:
     - type: button
-      label: 详情乙
+      label: 详情
       size: xs
       level: primary
     - type: button
-      label: 关闭乙
+      label: 关闭
       size: xs
       level: danger
 ```

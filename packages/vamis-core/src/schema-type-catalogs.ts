@@ -696,16 +696,6 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     className: '角标 class。',
     style: '角标自定义样式。',
   }),
-  popover: fields('PopOver', {
-    popOver: '弹出详情。字符串精简写法，或 {body,title,trigger,showIcon}。',
-    trigger: 'click / hover，默认 click。',
-    showIcon: '是否显示放大镜，默认 true。',
-    title: '弹出层标题。',
-    body: '弹出层内容。',
-    position: '弹出位置。',
-    popOverEnableOn: '是否启用弹出。',
-    mode: 'dialog / drawer / popOver。',
-  }),
   steps: fields('Steps', {
     steps: '步骤数组。',
     value: '当前步骤。',

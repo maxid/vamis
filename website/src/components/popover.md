@@ -27,99 +27,37 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 表单 `static` 即可，不必先写 CRUD。
 
 ```schema: scope="body"
-{
-  "type": "form",
-  "wrapWithPanel": false,
-  "actions": [],
-  "body": [
-    {
-      "name": "static",
-      "type": "static",
-      "label": "静态甲",
-      "value": "值甲",
-      "popOver": "弹出甲"
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: form
 wrapWithPanel: false
 actions: []
 body:
   - name: static
     type: static
-    label: 静态乙
-    value: 值乙
-    popOver: 弹出乙
+    label: 静态展示
+    value: static
+    popOver: 弹出内容
 ```
 
 表格用页面数据，不打接口。
 
 ```schema
-{
-  "type": "page",
-  "data": {
-    "items": [
-      { "engine": "引擎甲", "id": 1 }
-    ]
-  },
-  "body": {
-    "type": "table",
-    "source": "${items}",
-    "columns": [
-      {
-        "name": "engine",
-        "label": "列甲",
-        "popOver": "列弹出甲"
-      }
-    ]
-  }
-}
-```
-
-```schema
 type: page
 data:
   items:
-    - engine: 引擎乙
+    - engine: Trident
       id: 1
 body:
   type: table
   source: ${items}
   columns:
     - name: engine
-      label: 列乙
-      popOver: 列弹出乙
+      label: Engine
+      popOver: 弹出内容
 ```
 
 ## 更多配置
 
 `trigger` / `showIcon` / `title` / `body` / `position`。
-
-```schema: scope="body"
-{
-  "type": "form",
-  "wrapWithPanel": false,
-  "actions": [],
-  "body": [
-    {
-      "type": "static",
-      "name": "hover",
-      "label": "悬停甲",
-      "value": "截断甲",
-      "popOver": {
-        "trigger": "hover",
-        "position": "left-top",
-        "showIcon": false,
-        "title": "标题甲",
-        "body": "全文甲"
-      }
-    }
-  ]
-}
-```
 
 ```schema: scope="body"
 type: form
@@ -128,14 +66,14 @@ actions: []
 body:
   - type: static
     name: hover
-    label: 悬停乙
-    value: 截断乙
+    label: 静态展示
+    value: static
     popOver:
       trigger: hover
       position: left-top
       showIcon: false
-      title: 标题乙
-      body: 全文乙
+      title: 标题
+      body: 弹出内容
 ```
 
 ## popOverEnableOn
@@ -143,43 +81,19 @@ body:
 列上的表达式决定这一行要不要弹出。`this.id == 1` 只开第一行。
 
 ```schema
-{
-  "type": "page",
-  "data": {
-    "items": [
-      { "id": 1, "engine": "启用甲" },
-      { "id": 2, "engine": "关闭甲" }
-    ]
-  },
-  "body": {
-    "type": "table",
-    "source": "${items}",
-    "columns": [
-      {
-        "name": "engine",
-        "label": "条件甲",
-        "popOver": { "body": "${engine}" },
-        "popOverEnableOn": "this.id == 1"
-      }
-    ]
-  }
-}
-```
-
-```schema
 type: page
 data:
   items:
     - id: 1
-      engine: 启用乙
+      engine: Trident
     - id: 2
-      engine: 关闭乙
+      engine: Gecko
 body:
   type: table
   source: ${items}
   columns:
     - name: engine
-      label: 条件乙
+      label: Engine
       popOver:
         body: ${engine}
       popOverEnableOn: this.id == 1

@@ -18,31 +18,12 @@ Drawer 主要由 [Action](./action) 的 `actionType: drawer` 触发。Vamis 用 
 ## 基本用法
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面用按钮打开抽屉。"
-}
-```
-
-```schema: scope="body"
-{
-  "label": "点开抽屉甲",
-  "type": "button",
-  "actionType": "drawer",
-  "drawer": {
-    "title": "抽屉标题甲",
-    "body": "这是一个抽屉甲"
-  }
-}
-```
-
-```schema: scope="body"
-label: 点开抽屉乙
+label: 弹出
 type: button
 actionType: drawer
 drawer:
-  title: 抽屉标题乙
-  body: 这是一个抽屉乙
+  title: 抽屉标题
+  body: 这是一个抽屉
 ```
 
 ## 指定弹出方向
@@ -50,68 +31,36 @@ drawer:
 `position` 可选 `left` / `right` / `top` / `bottom`，默认 `right`。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "左侧抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "position": "left", "title": "左侧标题甲", "body": "从左侧弹出的抽屉甲" }
-    },
-    {
-      "type": "button",
-      "label": "右侧抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "position": "right", "title": "右侧标题甲", "body": "从右侧弹出的抽屉甲" }
-    },
-    {
-      "type": "button",
-      "label": "顶部抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "position": "top", "title": "顶部标题甲", "body": "从顶部弹出的抽屉甲" }
-    },
-    {
-      "type": "button",
-      "label": "底部抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "position": "bottom", "title": "底部标题甲", "body": "从底部弹出的抽屉甲" }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 左侧抽屉乙
+    label: 左侧
     actionType: drawer
     drawer:
       position: left
-      title: 左侧标题乙
-      body: 从左侧弹出的抽屉乙
+      title: 提示
+      body: 从左侧弹出
   - type: button
-    label: 右侧抽屉乙
+    label: 右侧
     actionType: drawer
     drawer:
       position: right
-      title: 右侧标题乙
-      body: 从右侧弹出的抽屉乙
+      title: 提示
+      body: 从右侧弹出
   - type: button
-    label: 顶部抽屉乙
+    label: 顶部
     actionType: drawer
     drawer:
       position: top
-      title: 顶部标题乙
-      body: 从顶部弹出的抽屉乙
+      title: 提示
+      body: 从顶部弹出
   - type: button
-    label: 底部抽屉乙
+    label: 底部
     actionType: drawer
     drawer:
       position: bottom
-      title: 底部标题乙
-      body: 从底部弹出的抽屉乙
+      title: 提示
+      body: 从底部弹出
 ```
 
 ## 抽屉尺寸
@@ -119,103 +68,45 @@ buttons:
 `size` 可选 `xs` / `sm` / `md` / `lg` / `xl`。空值 400px。左右弹是宽度，上下弹是高度。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "极小抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "size": "xs", "title": "极小标题甲", "body": "极小抽屉正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "小抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "size": "sm", "title": "小标题甲", "body": "小抽屉正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "中抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "size": "md", "title": "中标题甲", "body": "中抽屉正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "大抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "size": "lg", "title": "大标题甲", "body": "大抽屉正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "很大抽屉甲",
-      "actionType": "drawer",
-      "drawer": { "size": "xl", "title": "很大标题甲", "body": "很大抽屉正文甲" }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 极小抽屉乙
+    label: 极小
     actionType: drawer
     drawer:
       size: xs
-      title: 极小标题乙
-      body: 极小抽屉正文乙
+      title: 提示
+      body: 这是个简单的抽屉
   - type: button
-    label: 大抽屉乙
+    label: 较大
     actionType: drawer
     drawer:
       size: lg
-      title: 大标题乙
-      body: 大抽屉正文乙
+      title: 提示
+      body: 这是个简单的抽屉
 ```
 
 ## 自定义宽高
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "自定义宽度甲",
-      "actionType": "drawer",
-      "drawer": { "position": "right", "width": 300, "title": "宽 300 甲", "body": "自定义 300px 宽的抽屉甲" }
-    },
-    {
-      "type": "button",
-      "label": "自定义高度甲",
-      "actionType": "drawer",
-      "drawer": { "position": "bottom", "height": 240, "title": "高 240 甲", "body": "自定义 240px 高的抽屉甲" }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 自定义宽度乙
+    label: 自定义宽度
     actionType: drawer
     drawer:
       position: right
       width: 300
-      title: 宽 300 乙
-      body: 自定义 300px 宽的抽屉乙
+      title: 提示
+      body: 自定义宽度
   - type: button
-    label: 自定义高度乙
+    label: 自定义高度
     actionType: drawer
     drawer:
       position: bottom
       height: 240
-      title: 高 240 乙
-      body: 自定义 240px 高的抽屉乙
+      title: 提示
+      body: 自定义高度
 ```
 
 ## 多级抽屉
@@ -223,54 +114,27 @@ buttons:
 再开一层会压栈，关当前层回到上一层。
 
 ```schema: scope="body"
-{
-  "type": "button",
-  "label": "多级抽屉甲",
-  "actionType": "drawer",
-  "drawer": {
-    "title": "外层抽屉甲",
-    "body": "外层抽屉正文甲",
-    "actions": [
-      { "type": "button", "actionType": "confirm", "label": "关上外层抽屉甲", "primary": true },
-      {
-        "type": "button",
-        "actionType": "drawer",
-        "label": "再弹一层抽屉甲",
-        "drawer": {
-          "title": "内层抽屉甲",
-          "body": "内层抽屉正文甲",
-          "actions": [
-            { "type": "button", "actionType": "confirm", "label": "不弹抽屉了甲", "primary": true }
-          ]
-        }
-      }
-    ]
-  }
-}
-```
-
-```schema: scope="body"
 type: button
-label: 多级抽屉乙
+label: 多级抽屉
 actionType: drawer
 drawer:
-  title: 外层抽屉乙
-  body: 外层抽屉正文乙
+  title: 提示
+  body: 这是个简单的抽屉
   actions:
     - type: button
       actionType: confirm
-      label: 关上外层抽屉乙
+      label: 关上提示
       primary: true
     - type: button
       actionType: drawer
-      label: 再弹一层抽屉乙
+      label: 再弹一个
       drawer:
-        title: 内层抽屉乙
-        body: 内层抽屉正文乙
+        title: 抽屉中的抽屉
+        body: 如果你想，可以继续弹下去
         actions:
           - type: button
             actionType: confirm
-            label: 不弹抽屉了乙
+            label: 关闭
             primary: true
 ```
 
@@ -279,60 +143,21 @@ drawer:
 `showCloseButton: false` 隐藏右上角。`overlay: false` 不画遮罩。`closeOnEsc` / `closeOnOutside` 要显式 `true`。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "无右上抽屉甲",
-      "actionType": "drawer",
-      "drawer": {
-        "title": "无右上抽屉标题甲",
-        "body": "没有右上角关闭的抽屉甲",
-        "showCloseButton": false
-      }
-    },
-    {
-      "type": "button",
-      "label": "无蒙层抽屉甲",
-      "actionType": "drawer",
-      "drawer": {
-        "title": "无蒙层标题甲",
-        "body": "没有蒙层的抽屉甲",
-        "overlay": false
-      }
-    },
-    {
-      "type": "button",
-      "label": "点遮罩关抽屉甲",
-      "actionType": "drawer",
-      "drawer": {
-        "title": "点遮罩标题甲",
-        "body": "点外面或 Esc 可关甲",
-        "closeOnEsc": true,
-        "closeOnOutside": true
-      }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 无右上抽屉乙
+    label: 无右上关闭
     actionType: drawer
     drawer:
-      title: 无右上抽屉标题乙
-      body: 没有右上角关闭的抽屉乙
+      title: 无右上抽屉标题
+      body: 没有右上角关闭
       showCloseButton: false
   - type: button
-    label: 无蒙层抽屉乙
+    label: 无蒙层
     actionType: drawer
     drawer:
-      title: 无蒙层标题乙
-      body: 没有蒙层的抽屉乙
+      title: 提示
+      body: 没有蒙层
       overlay: false
 ```
 

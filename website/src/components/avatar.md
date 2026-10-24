@@ -18,22 +18,8 @@ outline: deep
 ## 基本使用
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是头像。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "avatar",
-  "text": "甲A"
-}
-```
-
-```schema: scope="body"
 type: avatar
-text: 乙A
+text: AM
 ```
 
 ## 文字
@@ -41,22 +27,12 @@ text: 乙A
 `text` 不截成两个字，长文案按 `gap` 留边。纯变量 `${name}` 也会从数据域取。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "text": "甲AM" },
-    { "type": "avatar", "text": "甲长文字" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
-    text: 乙AM
+    text: AM
   - type: avatar
-    text: 乙长文字
+    text: ejson
 ```
 
 ## 方形和圆角形
@@ -64,28 +40,17 @@ body:
 `shape` 默认 `circle`。还可 `square`、`rounded`。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "shape": "square", "text": "甲方" },
-    { "type": "avatar", "shape": "rounded", "text": "甲圆" },
-    { "type": "avatar", "shape": "circle", "text": "甲圆圈" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
     shape: square
-    text: 乙方
+    text: AM
   - type: avatar
     shape: rounded
-    text: 乙圆
+    text: AM
   - type: avatar
     shape: circle
-    text: 乙圆圈
+    text: AM
 ```
 
 ## 大小
@@ -93,30 +58,17 @@ body:
 源码默认 40px（`default` / `normal` / 空）。`small` 32px，`large` 48px，也可写数字。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "size": "large", "text": "甲大" },
-    { "type": "avatar", "size": "default", "text": "甲默" },
-    { "type": "avatar", "size": "small", "text": "甲小" },
-    { "type": "avatar", "size": 60, "text": "甲60" },
-    { "type": "avatar", "size": 20, "text": "甲20" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
     size: large
-    text: 乙大
+    text: AM
   - type: avatar
     size: small
-    text: 乙小
+    text: AM
   - type: avatar
     size: 60
-    text: 乙60
+    text: AM
 ```
 
 ## 图片
@@ -124,24 +76,14 @@ body:
 `src` 优先。`fit` 默认 `cover`。`defaultAvatar` 在没写 src 时当占位图。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "fit": "cover", "text": "甲cover" },
-    { "type": "avatar", "fit": "contain", "text": "甲contain" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
     fit: cover
-    text: 乙cover
+    text: AM
   - type: avatar
     fit: contain
-    text: 乙contain
+    text: AM
 ```
 
 ## 角标
@@ -149,30 +91,19 @@ body:
 `badge` 可以是数字（当 `mode: text`），或 `{ mode, text, position }`。对象默认 `mode: dot`。活示例见 [Badge 角标](./badge)。
 
 ```schema: scope="body"
-{
-  "type": "container",
-  "body": [
-    { "type": "avatar", "text": "甲角", "badge": { "mode": "text", "text": 10 } },
-    { "type": "avatar", "text": "甲点", "badge": { "mode": "dot" } },
-    { "type": "avatar", "text": "甲数", "badge": 3 }
-  ]
-}
-```
-
-```schema: scope="body"
 type: container
 body:
   - type: avatar
-    text: 乙角
+    text: AM
     badge:
       mode: text
       text: 10
   - type: avatar
-    text: 乙点
+    text: AM
     badge:
       mode: dot
   - type: avatar
-    text: 乙数
+    text: AM
     badge: 3
 ```
 

@@ -22,88 +22,36 @@ outline: deep
 `show` 控制是否画出指示器。默认 true。
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是加载指示。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "flex",
-  "justify": "flex-start",
-  "alignItems": "center",
-  "items": [
-    { "type": "spinner", "show": true, "tip": "显示中甲" },
-    { "type": "spinner", "show": false, "tip": "隐藏了甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: flex
 justify: flex-start
 alignItems: center
 items:
   - type: spinner
     show: true
-    tip: 显示中乙
+    tip: 加载中
   - type: spinner
     show: false
-    tip: 隐藏了乙
+    tip: 已隐藏
 ```
 
 `showOn` 用表达式，优先于 `show`。
-
-```schema: scope="body"
-{
-  "type": "form",
-  "wrapWithPanel": false,
-  "body": [
-    {
-      "type": "switch",
-      "name": "loadingJia",
-      "label": "显示加载甲",
-      "value": true
-    },
-    {
-      "type": "spinner",
-      "showOn": "${loadingJia}",
-      "tip": "按开关甲"
-    }
-  ]
-}
-```
 
 ```schema: scope="body"
 type: form
 wrapWithPanel: false
 body:
   - type: switch
-    name: loadingYi
-    label: 显示加载乙
+    name: loading
+    label: 显示加载
     value: true
   - type: spinner
-    showOn: ${loadingYi}
-    tip: 按开关乙
+    showOn: ${loading}
+    tip: 加载中
 ```
 
 ## 尺寸
 
 `size` 只有 `sm`、`lg` 和空值三档，不是表单项宽度。
-
-```schema: scope="body"
-{
-  "type": "flex",
-  "justify": "flex-start",
-  "alignItems": "center",
-  "items": [
-    { "type": "spinner", "show": true, "size": "sm" },
-    { "type": "spinner", "show": true, "size": "" },
-    { "type": "spinner", "show": true, "size": "lg" }
-  ]
-}
-```
 
 ```schema: scope="body"
 type: flex
@@ -113,34 +61,19 @@ items:
   - type: spinner
     show: true
     size: sm
-    tip: 小号乙
+    className: mr-4
   - type: spinner
     show: true
     size: ""
-    tip: 默认号乙
+    className: mr-4
   - type: spinner
     show: true
     size: lg
-    tip: 大号乙
 ```
 
 ## 文案位置
 
 `tip` 配文案。`tipPlacement` 相对图标：`top` / `right` / `bottom`（默认）/ `left`。
-
-```schema: scope="body"
-{
-  "type": "flex",
-  "justify": "flex-start",
-  "alignItems": "center",
-  "items": [
-    { "type": "spinner", "show": true, "tip": "加载中甲", "tipPlacement": "bottom" },
-    { "type": "spinner", "show": true, "tip": "加载中甲右", "tipPlacement": "right" },
-    { "type": "spinner", "show": true, "tip": "加载中甲上", "tipPlacement": "top" },
-    { "type": "spinner", "show": true, "tip": "加载中甲左", "tipPlacement": "left" }
-  ]
-}
-```
 
 ```schema: scope="body"
 type: flex
@@ -149,19 +82,19 @@ alignItems: center
 items:
   - type: spinner
     show: true
-    tip: 加载中乙
+    tip: 加载中
     tipPlacement: bottom
   - type: spinner
     show: true
-    tip: 加载中乙右
+    tip: 加载中
     tipPlacement: right
   - type: spinner
     show: true
-    tip: 加载中乙上
+    tip: 加载中
     tipPlacement: top
   - type: spinner
     show: true
-    tip: 加载中乙左
+    tip: 加载中
     tipPlacement: left
 ```
 
@@ -170,26 +103,13 @@ items:
 有 `body` 时指示器居中叠在内容上。`overlay: true` 才加半透明遮罩（源码默认 false）。
 
 ```schema: scope="body"
-{
-  "type": "spinner",
-  "show": true,
-  "overlay": true,
-  "tip": "提交中甲",
-  "body": {
-    "type": "tpl",
-    "tpl": "容器内容甲：姓名、邮箱"
-  }
-}
-```
-
-```schema: scope="body"
 type: spinner
 show: true
 overlay: true
-tip: 提交中乙
+tip: 加载中
 body:
   type: tpl
-  tpl: 容器内容乙：姓名、邮箱
+  tpl: 姓名、邮箱
 ```
 
 `delay` 是 `show` 变为 true 之后再等多少毫秒才画出。默认 0。对照不要用 `delay: 1000` 当活示例（收割时指示器可能还没出现）。

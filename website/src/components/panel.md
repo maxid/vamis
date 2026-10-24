@@ -15,20 +15,12 @@ outline: deep
 
 ## 基本用法
 
-```schema: scope="body"
-{
-    "type": "panel",
-    "title": "面板标题",
-    "body": "面板内容"
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: panel
 title: 面板标题
-body: 面板内容 YAML
+body: 面板内容
 ```
 
 ## 底部配置按钮

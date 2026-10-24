@@ -17,51 +17,7 @@ outline: deep
 
 水平默认 12 列。`x/y` 是起点（从 1 起），`w/h` 是跨几格。
 
-```schema: scope="body"
-{
-  "type": "grid-2d",
-  "grids": [
-    {
-      "x": 1,
-      "y": 1,
-      "h": 1,
-      "w": 6,
-      "gridClassName": "bg-green-300",
-      "type": "tpl",
-      "tpl": "[grid-1] x:1 y:1 h:1 w:6"
-    },
-    {
-      "x": 7,
-      "y": 1,
-      "h": 1,
-      "w": 6,
-      "gridClassName": "bg-blue-300",
-      "type": "tpl",
-      "tpl": "[grid-2] x:7 y:1 h:1 w:6"
-    },
-    {
-      "x": 1,
-      "y": 2,
-      "h": 2,
-      "w": 4,
-      "gridClassName": "bg-red-300",
-      "type": "tpl",
-      "tpl": "[grid-3] x:1 y:2 h:2 w:4"
-    },
-    {
-      "x": 5,
-      "y": 2,
-      "h": 1,
-      "w": 8,
-      "gridClassName": "bg-purple-300",
-      "type": "tpl",
-      "tpl": "[grid-4] x:5 y:2 h:1 w:8"
-    }
-  ]
-}
-```
-
-同一段也可以写成 YAML：
+点「编辑 Schema」可切 JSON。
 
 ```schema: scope="body"
 type: grid-2d

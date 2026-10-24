@@ -20,32 +20,13 @@ outline: deep
 对照时菜单默认收起（Amis 弹出层不在根节点里，打开会对不齐树结点）。对照不跑 dialog。三角用图标，不进按钮文本，这样对照能按 `label` 定位。
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是下拉按钮。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "dropdown-button",
-  "label": "下拉菜单",
-  "buttons": [
-    { "label": "下拉项甲", "disabled": true },
-    { "label": "下拉项乙" },
-    { "label": "下拉项丙" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: dropdown-button
-label: 下拉菜单 YAML
+label: 下拉菜单
 buttons:
-  - label: 下拉项甲 YAML
+  - label: 按钮1
     disabled: true
-  - label: 下拉项乙 YAML
-  - label: 下拉项丙 YAML
+  - label: 按钮2
+  - label: 按钮3
 ```
 
 ## 分组展示模式
@@ -82,12 +63,13 @@ buttons:
 ```schema: scope="body"
 {
   "type": "dropdown-button",
-  "label": "点项即关",
+  "label": "下拉菜单",
   "closeOnClick": true,
   "closeOnOutside": true,
   "buttons": [
-    { "label": "关闭甲" },
-    { "label": "关闭乙" }
+    { "label": "按钮1", "disabled": true },
+    { "label": "按钮2" },
+    { "label": "按钮3" }
   ]
 }
 ```
@@ -123,8 +105,8 @@ buttons:
   "hideCaret": true,
   "tooltip": "提示",
   "buttons": [
-    { "label": "图标项甲" },
-    { "label": "图标项乙" }
+    { "label": "按钮1" },
+    { "label": "按钮2" }
   ]
 }
 ```

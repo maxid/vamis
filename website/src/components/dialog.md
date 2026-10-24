@@ -18,31 +18,12 @@ Dialog 主要由 [Action](./action) 的 `actionType: dialog` 触发。Vamis 用 
 ## 基本用法
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面用按钮打开对话框。"
-}
-```
-
-```schema: scope="body"
-{
-  "label": "点开对话框甲",
-  "type": "button",
-  "actionType": "dialog",
-  "dialog": {
-    "title": "对话框标题甲",
-    "body": "这是一个对话框甲"
-  }
-}
-```
-
-```schema: scope="body"
-label: 点开对话框乙
+label: 点击弹框
 type: button
 actionType: dialog
 dialog:
-  title: 对话框标题乙
-  body: 这是一个对话框乙
+  title: 弹框标题
+  body: 这是一个弹框
 ```
 
 ## 配置尺寸
@@ -50,72 +31,28 @@ dialog:
 `size` 不是表单项宽度。空值 500px，`xs` 200px，`sm` 350px，`md` 800px，`lg` 1100px，`xl` 90%，`full` 尽量铺满。也可用 `width` / `height`。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "较小对话框甲",
-      "actionType": "dialog",
-      "dialog": { "size": "sm", "title": "较小标题甲", "body": "较小对话框正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "标准对话框甲",
-      "actionType": "dialog",
-      "dialog": { "title": "标准标题甲", "body": "标准对话框正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "中等对话框甲",
-      "actionType": "dialog",
-      "dialog": { "size": "md", "title": "中等标题甲", "body": "中等对话框正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "较大对话框甲",
-      "actionType": "dialog",
-      "dialog": { "size": "lg", "title": "较大标题甲", "body": "较大对话框正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "很大对话框甲",
-      "actionType": "dialog",
-      "dialog": { "size": "xl", "title": "很大标题甲", "body": "很大对话框正文甲" }
-    },
-    {
-      "type": "button",
-      "label": "全屏对话框甲",
-      "actionType": "dialog",
-      "dialog": { "size": "full", "title": "全屏标题甲", "body": "全屏对话框正文甲" }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 较小对话框乙
+    label: 较小的弹框
     actionType: dialog
     dialog:
       size: sm
-      title: 较小标题乙
-      body: 较小对话框正文乙
+      title: 提示
+      body: 这是个简单的弹框
   - type: button
-    label: 标准对话框乙
+    label: 标准弹框
     actionType: dialog
     dialog:
-      title: 标准标题乙
-      body: 标准对话框正文乙
+      title: 提示
+      body: 这是个简单的弹框
   - type: button
-    label: 全屏对话框乙
+    label: 占满屏幕的弹框
     actionType: dialog
     dialog:
       size: full
-      title: 全屏标题乙
-      body: 全屏对话框正文乙
+      title: 全屏弹框
+      body: 弹框尽可能占满，内容部分滚动。
 ```
 
 ## 多级弹框
@@ -123,54 +60,27 @@ buttons:
 再开一层会压栈，关当前层回到上一层。多层不会同时错位叠出。
 
 ```schema: scope="body"
-{
-  "type": "button",
-  "label": "多级对话框甲",
-  "actionType": "dialog",
-  "dialog": {
-    "title": "外层对话框甲",
-    "body": "外层对话框正文甲",
-    "actions": [
-      { "type": "button", "actionType": "confirm", "label": "关上外层甲", "primary": true },
-      {
-        "type": "button",
-        "actionType": "dialog",
-        "label": "再弹一层甲",
-        "dialog": {
-          "title": "内层对话框甲",
-          "body": "内层对话框正文甲",
-          "actions": [
-            { "type": "button", "actionType": "confirm", "label": "不弹了甲", "primary": true }
-          ]
-        }
-      }
-    ]
-  }
-}
-```
-
-```schema: scope="body"
 type: button
-label: 多级对话框乙
+label: 多级弹框
 actionType: dialog
 dialog:
-  title: 外层对话框乙
-  body: 外层对话框正文乙
+  title: 提示
+  body: 这是个简单的弹框
   actions:
     - type: button
       actionType: confirm
-      label: 关上外层乙
+      label: 确认
       primary: true
     - type: button
       actionType: dialog
-      label: 再弹一层乙
+      label: 再弹一个
       dialog:
-        title: 内层对话框乙
-        body: 内层对话框正文乙
+        title: 弹框中的弹框
+        body: 如果你想，可以继续弹下去
         actions:
           - type: button
             actionType: confirm
-            label: 不弹了乙
+            label: 关闭
             primary: true
 ```
 
@@ -179,54 +89,26 @@ dialog:
 默认底部「取消」+「确认」。写了 `actions` 就用配置的；`[]` 不要底部按钮。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "无底部按钮甲",
-      "actionType": "dialog",
-      "dialog": {
-        "title": "无底栏标题甲",
-        "actions": [],
-        "body": "无底部按钮的对话框甲"
-      }
-    },
-    {
-      "type": "button",
-      "label": "只有确认甲",
-      "actionType": "dialog",
-      "dialog": {
-        "title": "单按钮标题甲",
-        "actions": [{ "type": "button", "actionType": "confirm", "label": "好的甲", "primary": true }],
-        "body": "只有一个确认的对话框甲"
-      }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 无底部按钮乙
+    label: 无底部按钮
     actionType: dialog
     dialog:
-      title: 无底栏标题乙
+      title: 提示
       actions: []
-      body: 无底部按钮的对话框乙
+      body: 没有底部按钮
   - type: button
-    label: 只有确认乙
+    label: 只有确认
     actionType: dialog
     dialog:
-      title: 单按钮标题乙
+      title: 提示
       actions:
         - type: button
           actionType: confirm
-          label: 好的乙
+          label: 确认
           primary: true
-      body: 只有一个确认的对话框乙
+      body: 只有一个确认按钮
 ```
 
 ## 关闭方式
@@ -234,50 +116,21 @@ buttons:
 `showCloseButton: false` 隐藏右上角关闭，底部按钮仍在。`closeOnEsc` / `closeOnOutside` 要显式 `true`。
 
 ```schema: scope="body"
-{
-  "type": "button-toolbar",
-  "buttons": [
-    {
-      "type": "button",
-      "label": "无右上关闭甲",
-      "actionType": "dialog",
-      "dialog": {
-        "title": "无右上标题甲",
-        "body": "没有右上角关闭的对话框甲",
-        "showCloseButton": false
-      }
-    },
-    {
-      "type": "button",
-      "label": "Esc与点遮罩甲",
-      "actionType": "dialog",
-      "dialog": {
-        "title": "可点遮罩标题甲",
-        "body": "Esc 或点遮罩可关甲",
-        "closeOnEsc": true,
-        "closeOnOutside": true
-      }
-    }
-  ]
-}
-```
-
-```schema: scope="body"
 type: button-toolbar
 buttons:
   - type: button
-    label: 无右上关闭乙
+    label: 无右上关闭
     actionType: dialog
     dialog:
-      title: 无右上标题乙
-      body: 没有右上角关闭的对话框乙
+      title: 提示
+      body: 没有右上角关闭
       showCloseButton: false
   - type: button
-    label: Esc与点遮罩乙
+    label: Esc 与点遮罩
     actionType: dialog
     dialog:
-      title: 可点遮罩标题乙
-      body: Esc 或点遮罩可关乙
+      title: 提示
+      body: Esc 或点遮罩可关闭
       closeOnEsc: true
       closeOnOutside: true
 ```

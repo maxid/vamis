@@ -18,81 +18,46 @@ outline: deep
 ## 基本使用
 
 ```schema: scope="body"
-{
-  "type": "tpl",
-  "tpl": "下面是向导甲。"
-}
-```
-
-```schema: scope="body"
-{
-  "type": "wizard",
-  "steps": [
-    { "title": "第一步甲", "body": "内容甲一" },
-    { "title": "第二步甲", "body": "内容甲二" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: wizard
 steps:
-  - title: 第一步乙
-    body: 内容乙一
-  - title: 第二步乙
-    body: 内容乙二
+  - title: 第一步
+    body: 这是第一步
+  - title: Step 2
+    body: 这是第二步
+  - title: Step 3
+    body: 这是最后一步了
 ```
 
 ## 从某一步开始
 
-`startStep` 从 1 计，且必须是字符串（数字会被忽略）。下面从第二步起，能看到「上一步」和「完成」。
-
-```schema: scope="body"
-{
-  "type": "wizard",
-  "startStep": "2",
-  "steps": [
-    { "title": "起步甲1", "body": "隐藏甲" },
-    { "title": "起步甲2", "body": "可见甲" }
-  ]
-}
-```
+`startStep` 从 1 计，且必须是字符串（数字会被忽略）。下面从第二步起，能看到「上一步」和「下一步」。
 
 ```schema: scope="body"
 type: wizard
 startStep: "2"
 steps:
-  - title: 起步乙1
-    body: 隐藏乙
-  - title: 起步乙2
-    body: 可见乙
+  - title: 第一步
+    body: 这是第一步
+  - title: Step 2
+    body: 这是第二步
+  - title: Step 3
+    body: 这是最后一步了
 ```
 
 ## 按钮文案
 
 ```schema: scope="body"
-{
-  "type": "wizard",
-  "actionPrevLabel": "回甲",
-  "actionNextLabel": "去甲",
-  "actionFinishLabel": "完甲",
-  "steps": [
-    { "title": "文案甲1", "body": "文案内容甲" },
-    { "title": "文案甲2", "body": "文案结尾甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: wizard
-actionPrevLabel: 回乙
-actionNextLabel: 去乙
-actionFinishLabel: 完乙
+actionPrevLabel: 上一步
+actionNextLabel: 下一步
+actionFinishLabel: 完成
 steps:
-  - title: 文案乙1
-    body: 文案内容乙
-  - title: 文案乙2
-    body: 文案结尾乙
+  - title: 第一步
+    body: 这是第一步
+  - title: Step 2
+    body: 这是第二步
+  - title: Step 3
+    body: 这是最后一步了
 ```
 
 ## 竖排
@@ -100,24 +65,15 @@ steps:
 `mode` 默认 `horizontal`。
 
 ```schema: scope="body"
-{
-  "type": "wizard",
-  "mode": "vertical",
-  "steps": [
-    { "title": "竖甲1", "body": "竖内容甲" },
-    { "title": "竖甲2", "body": "竖结尾甲" }
-  ]
-}
-```
-
-```schema: scope="body"
 type: wizard
 mode: vertical
 steps:
-  - title: 竖乙1
-    body: 竖内容乙
-  - title: 竖乙2
-    body: 竖结尾乙
+  - title: 第一步
+    body: 这是第一步
+  - title: Step 2
+    body: 这是第二步
+  - title: Step 3
+    body: 这是最后一步了
 ```
 
 ## 属性表
