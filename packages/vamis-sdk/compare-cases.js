@@ -7567,6 +7567,243 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-portlet-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "text": "这是一段描述信息"
+      },
+      "body": {
+        "type": "portlet",
+        "description": "${text}",
+        "tabs": [
+          {
+            "title": "标题",
+            "tab": "Content 1"
+          },
+          {
+            "title": "标题2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "text": "这是一段描述信息 YAML"
+      },
+      "body": {
+        "type": "portlet",
+        "description": "${text}",
+        "tabs": [
+          {
+            "title": "标题",
+            "tab": "Content 1 YAML"
+          },
+          {
+            "title": "标题2",
+            "tab": "Content 2 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "portlet",
+        "hideHeader": true,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "portlet",
+        "style": {
+          "borderColor": "#333"
+        },
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1 style"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "portlet",
+        "divider": false,
+        "tabs": [
+          {
+            "title": "标题",
+            "tab": "Content 1 nodiv"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "portlet",
+        "toolbar": [
+          {
+            "label": "固定操作"
+          }
+        ],
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1 tool",
+            "toolbar": [
+              {
+                "label": "本页操作"
+              }
+            ]
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2 tool"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-portlet-6",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Portlet 门户栏目",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Portlet 门户栏目 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "arr": [
+          {
+            "a": "收入",
+            "b": 199
+          },
+          {
+            "a": "支出",
+            "b": 299
+          }
+        ]
+      },
+      "body": {
+        "type": "portlet",
+        "source": "${arr}",
+        "tabs": [
+          {
+            "title": "${a}",
+            "body": "金额：${b}元"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-action-0",
     "group": "组件 / 功能",
     "bucket": "components",
