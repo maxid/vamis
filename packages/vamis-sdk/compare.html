@@ -152,6 +152,29 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      .classify {
+        margin: 0 16px 24px;
+        padding: 12px 16px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 13px;
+      }
+      .classify h2,
+      .classify h3 {
+        margin: 0 0 6px;
+        font-size: 13px;
+      }
+      .classify h3 {
+        margin-top: 10px;
+      }
+      .classify ul {
+        margin: 0;
+        padding-left: 1.2em;
+      }
+      .classify .advice {
+        color: #475569;
+      }
     </style>
   </head>
   <body>
@@ -197,6 +220,10 @@
       <tbody></tbody>
     </table>
     <p id="diff-note" class="parse-err" style="padding: 0 16px 16px"></p>
+    <section id="classify" class="classify" hidden>
+      <h2>问题分类</h2>
+      <div id="classify-body"></div>
+    </section>
     <script src="https://unpkg.com/js-yaml@4.1.1/dist/js-yaml.min.js"></script>
     <script src="./compare-cases.js"></script>
     <script>
@@ -399,6 +426,8 @@
             })
             .join('')
           document.getElementById('diff-note').textContent = ''
+          document.getElementById('classify').hidden = true
+          document.getElementById('classify-body').innerHTML = ''
         }
 
         function setCell(id, text, cls, title) {
@@ -515,11 +544,183 @@
           return diffs
         }
 
+        const SCOPE = {
+          global: { label: '全局', hint: 'html/body、SDK 根、主题 token。修一处会大面积变化。' },
+          helper: { label: '样式 helper', hint: 'schema className 工具类，对标 Amis helper 计算样式。' },
+          component: { label: '组件', hint: '某个 type 的默认外观，不要改全局 token。' },
+        }
+        const COMPACT_CLASS = /^(?:m|p)(?:-[trblxy])?(?:-(?:none|xs|sm|md|lg|xl|xxl|n|base))?$/
+        const TYPE_SIZE_CLASS = /^(text|leading|tracking)-(xs|sm|base|md|lg|xl|[2-8]xl)$/
+
+        function walkSchema(node, visit) {
+          if (!node || typeof node !== 'object') return
+          if (Array.isArray(node)) {
+            node.forEach(function (item) {
+              walkSchema(item, visit)
+            })
+            return
+          }
+          visit(node)
+          walkSchema(node.body, visit)
+          walkSchema(node.columns, visit)
+          walkSchema(node.items, visit)
+          walkSchema(node.buttons, visit)
+          walkSchema(node.actions, visit)
+          walkSchema(node.dialog, visit)
+        }
+
+        function collectClassNames(schema) {
+          const out = []
+          walkSchema(schema, function (node) {
+            if (typeof node.className === 'string') out.push.apply(out, node.className.split(/\s+/).filter(Boolean))
+            if (typeof node.tpl === 'string') {
+              const re = /class(?:Name)?="([^"]+)"/g
+              let match
+              while ((match = re.exec(node.tpl))) out.push.apply(out, match[1].split(/\s+/).filter(Boolean))
+            }
+          })
+          return out
+        }
+
+        function collectTypes(schema) {
+          const out = []
+          walkSchema(schema, function (node) {
+            if (typeof node.type === 'string') out.push(node.type)
+          })
+          return out
+        }
+
+        function isZero(value) {
+          const n = parseFloat(value)
+          return isFinite(n) && n === 0
+        }
+
+        function classifyIssue(diff, row) {
+          const prop = String((diff && diff.prop) || '')
+          const classes = collectClassNames(row && row.schema)
+          const types = collectTypes(row && row.schema)
+          const compact = classes.filter(function (name) {
+            return COMPACT_CLASS.test(name)
+          })[0]
+          if (prop === 'bodyFont' || prop === 'bodyFontSize') return 'global'
+          if (prop === 'fontFamily' && !classes.some(function (name) {
+            return name === 'font-sans' || name === 'font-serif' || name === 'font-mono'
+          })) return 'global'
+          if (prop === 'gap' || prop === 'marginLeft') {
+            if (compact && isZero(diff.vamis) && !isZero(diff.amis)) return 'helper'
+            if (compact) return 'global'
+            if (classes.some(function (name) {
+              return name.indexOf('space-') === 0 || name.indexOf('gap-') === 0
+            })) return 'helper'
+            return 'component'
+          }
+          if (prop === 'fontSize') {
+            if (classes.some(function (name) {
+              return TYPE_SIZE_CLASS.test(name)
+            })) return 'helper'
+            return 'global'
+          }
+          if (prop === 'fontWeight' || prop === 'lineHeight') {
+            if (types.indexOf('button') >= 0 || types.indexOf('action') >= 0 || types.indexOf('submit') >= 0) {
+              return 'component'
+            }
+            return 'component'
+          }
+          if (prop === 'sameRow') return 'component'
+          return 'helper'
+        }
+
+        function adviseIssue(diff, row, scope) {
+          const prop = String((diff && diff.prop) || '')
+          const compact = collectClassNames(row && row.schema).filter(function (name) {
+            return COMPACT_CLASS.test(name)
+          })[0]
+          if (scope === 'global' && (prop === 'bodyFont' || prop === 'fontFamily')) {
+            return 'Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈。在 sdk 根 / embed 的 html,body 对齐中文默认栈。'
+          }
+          if (scope === 'global' && (prop === 'gap' || prop === 'marginLeft')) {
+            return 'compact 阶应对齐 Amis 5/10/15/20/30/40/50。现在 --gap-* 是 4/8/12/16/20/24。改 token 一处，m/p 整阶回来。'
+          }
+          if (scope === 'helper' && (prop === 'gap' || prop === 'marginLeft')) {
+            return '缺档：补 Amis 同名 helper（' + (compact || '该类') + '），不要用邻近档近似。'
+          }
+          if (scope === 'helper' && prop === 'fontSize') {
+            return '对标 Amis helper 计算字号（text-sm 实测 12px，不是 0.875rem=14px）。'
+          }
+          if (scope === 'component' && prop === 'fontWeight') {
+            return 'Button 默认字重：Amis 400，Vamis font-medium=500。改 button cva。'
+          }
+          if (scope === 'component' && prop === 'lineHeight') {
+            return '控件行高跟该 type 默认走，不要改 html 行高。'
+          }
+          return SCOPE[scope] ? SCOPE[scope].hint : ''
+        }
+
+        function paintClassify(diffs) {
+          const box = document.getElementById('classify')
+          const body = document.getElementById('classify-body')
+          if (!diffs.length) {
+            box.hidden = true
+            body.innerHTML = ''
+            return
+          }
+          const groups = { global: [], helper: [], component: [] }
+          const row = item()
+          diffs.forEach(function (diff) {
+            const scope = classifyIssue(diff, row)
+            groups[scope].push({
+              diff: diff,
+              advice: adviseIssue(diff, row, scope),
+            })
+          })
+          const html = ['global', 'helper', 'component']
+            .filter(function (key) {
+              return groups[key].length
+            })
+            .map(function (key) {
+              const list = groups[key]
+              const advice = []
+              list.forEach(function (entry) {
+                if (entry.advice && advice.indexOf(entry.advice) < 0) advice.push(entry.advice)
+              })
+              const items = list
+                .map(function (entry) {
+                  return (
+                    '<li>' +
+                    entry.diff.prop +
+                    ': Amis ' +
+                    entry.diff.amis +
+                    ' / Vamis ' +
+                    entry.diff.vamis +
+                    '</li>'
+                  )
+                })
+                .join('')
+              return (
+                '<h3>' +
+                SCOPE[key].label +
+                '（' +
+                list.length +
+                '）</h3><p class="advice">' +
+                SCOPE[key].hint +
+                '</p><ul>' +
+                items +
+                '</ul><p class="advice">整改：' +
+                advice.join(' ') +
+                '</p>'
+              )
+            })
+            .join('')
+          body.innerHTML = html
+          box.hidden = false
+        }
+
         function scoreParity() {
           if (!got.amis || !got.vamis) return
           if (dirty) {
             setCell(cellId('amis', 'pass'), '自编')
             setCell(cellId('vamis', 'pass'), '自编')
+            paintClassify([])
             return
           }
           const result = scoreCase(item(), got.amis, got.vamis)
@@ -562,6 +763,14 @@
             .join('；')
           const note = [geometry, fonts, result.reason].filter(Boolean).join('；')
           document.getElementById('diff-note').textContent = note
+          const seen = {}
+          const classified = []
+          ;(result.diffs || []).concat(fontDiffs).forEach(function (diff) {
+            if (!diff || !diff.prop || seen[diff.prop]) return
+            seen[diff.prop] = true
+            classified.push(diff)
+          })
+          paintClassify(classified)
         }
 
         function paint(engine, payload) {
