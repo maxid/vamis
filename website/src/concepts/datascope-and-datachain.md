@@ -4,8 +4,8 @@ title: 数据域与数据链
 
 # 数据域与数据链
 
-::: info 实现进度 70% · 进行中
-主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、page → service 变量遮蔽、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。`trackExpression`、CRUD filter 独立域、表单项写到 page 域仍缺。JSON 与 YAML 同等有效。
+::: info 实现进度 75% · 进行中
+文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。JSON 与 YAML 同等有效。`trackExpression`（D9）、CRUD filter 独立域（D10）、表单项写到 page 域（D6）仍缺。
 :::
 
 每个能取数的容器有自己的**数据域**，子节点沿**数据链**向上找。这是 kernel D1。作者态 JSON 与 YAML 并列。
@@ -21,6 +21,13 @@ title: 数据域与数据链
 }
 ```
 
+YAML 写出来是同一棵树：
+
+```yaml
+type: page
+body: Hello World!
+```
+
 接下来要解决的是：**用接口把数据拉回来，填进内容区**。
 
 ## 添加初始化接口
@@ -33,7 +40,36 @@ title: 数据域与数据链
 }
 ```
 
-接口按 `{ status, msg, data }` 返回。`Page` 会把 `data` 写进当前数据域，`${date}` 从数据域取值。文档里这个 Play 进视口才请求，是外包的 [LazyComponent](/concepts/schema#lazycomponent)，不是 Page 内核在等可见。
+接口按 `{ status, msg, data }` 返回。同一份 YAML：
+
+```yaml
+type: page
+initApi: /api/mock2/page/initData
+body: date is ${date}
+```
+
+文档里这个 Play 进视口才请求，是外包的 [LazyComponent](/concepts/schema#lazycomponent)，不是 Page 内核在等可见。
+
+## 发生了什么?
+
+输出变成接口返回的日期，过程是：
+
+1. 给 `Page` 配了 `initApi`，初始化时请求这个接口。
+2. 请求成功后，`Page` 把返回里的 `data` 写进**当前数据域**。
+3. 渲染 `body` 时遇到 `${date}`，就到当前数据域取 `date`，替换后再输出。
+
+接口形态是：
+
+```json
+{
+  "status": 0,
+  "msg": "",
+  "data": {
+    "title": "Test Page Component",
+    "date": "2017-10-13"
+  }
+}
+```
 
 > 下一节是 [模板](/concepts/template)。`body` 字符串本身支持模板；很多组件的文本属性也一样。
 
@@ -127,6 +163,20 @@ page 下的 tpl：本层找到 `name = zhangsan`，输出 `my name is zhangsan`�
 service 里的 tpl：本层 `name = lisi`，`age` 本层没有，向上在 page 找到 `20`，输出 `my name is lisi, I'm 20 years old`。
 
 沿链取上一层也可以写 `${__super.age}`。取值语法在不同字段上可能不同，见 [模板](/concepts/template) 和 [表达式](/concepts/expression)。
+
+```schema
+type: page
+data:
+  name: zhangsan
+  age: 20
+body:
+  type: service
+  data:
+    name: lisi
+  body:
+    type: tpl
+    tpl: 本层 ${name}，上层年龄 ${__super.age}
+```
 
 ### 具备数据域的组件
 
@@ -324,7 +374,7 @@ Vamis 里 `trackExpression` 目前只接到 **API 自动刷新**（D3），还�
 
 ## URL 参数
 
-地址栏查询会进顶层数据域。点 [这里](/docs/concepts/datascope-and-datachain?word=myquery#url-参数) 再看 `${word}`。
+地址栏查询会进顶层数据域。点 [这里](/concepts/datascope-and-datachain?word=myquery#url-参数) 再看 `${word}`。
 
 ```schema
 {
