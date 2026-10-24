@@ -32,21 +32,21 @@
 | 术语 | 定义 |
 |------|------|
 | **Amis** | 百度 JSON 低代码引擎（6.13.0）。Vamis 对齐其 **schema 语义**，不复制 React/MST |
-| **cxd 转写** | 不搬 `.cxd-*` 前缀和 Amis 主题 SCSS。cxd 的盒子、密度、helper、交互尽量像素级落到 shadcn-vue token、`cva` variants、Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/cxd-transcribe.mdc` |
-| **样式行为精度** | `/style` 活示例对标 Amis **计算样式与盒模型**：同一 class 落在同一元素、同一属性、同一值。范本 `space-x-6` = 后盒 `margin-left: 24px`，不是 Tailwind 前盒 `margin-inline-end`。禁止同名 utility 两套叠加。规则：`.cursor/rules/style-behavior-parity.mdc` |
+| **cxd 转写** | 不搬 `.cxd-*` 前缀和 Amis 主题 SCSS。cxd 的盒子、密度、helper、交互尽量像素级落到 shadcn-vue token、`cva` variants、Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/style.mdc` |
+| **样式行为精度** | `/style` 活示例对标 Amis **计算样式与盒模型**：同一 class 落在同一元素、同一属性、同一值。范本 `space-x-6` = 后盒 `margin-left: 24px`，不是 Tailwind 前盒 `margin-inline-end`。禁止同名 utility 两套叠加。规则：`.cursor/rules/style.mdc` |
 | **type** | Schema 节点种类（`page` / `form` / `crud`…）。侧栏 155 项见组件 TODO |
 | **已注册 ≠ 语义完成** | `registerRenderer` 有调用只说明能 resolve；进度看文档主路径 |
 | **IR 信封** | `apiVersion: lcdp.ir/v1` + `kind` + `metadata` + `spec`。与 LCDP IR 同形 |
 | **UiPage** | Vamis 扩展 kind，`spec` 里放 Amis widget 树 |
 | **FormDef / TableDef** | LCDP IR 已有 kind；可编译成 form / crud 预览 |
-| **作者态** | YAML 与 JSON 并列，不强制 YAML。对象 / JSON 字符串 / YAML 字符串 / IR 信封都进同一运行时 |
+| **作者态** | YAML 与 JSON 并列，不强制 YAML。对象 / JSON 字符串 / YAML 字符串 / IR 信封都进同一运行时。规则：`.cursor/rules/site.mdc` |
 | **YAML 1.2 Core** | YAML 字面量：bool/null/数字不加引号；`yes`/`On`/`012` 当字符串。不约束 JSON |
 | **Scope / 数据链** | 数据域 + `__super`；D1 主路径已接（page/form/service/crud），`trackExpression` 去抖仍属 D9 |
 | **env** | 运行时注入：`fetcher` / `notify` / `jumpTo` / `alert` / `confirm`；`trusted` 才跑 adaptor 字符串 |
 | **onEvent** | 组件事件到动作注册表；D4 P0 已接 |
 | **shadcn token** | 颜色走语义名；**盒子尽量像素级对齐 cxd**（32 控件 / 24 表单项 / 98 label / 40 表行），实现不引入 `cxd-` 前缀 |
-| **默认自适应** | 特定组件铺满容器是默认，不必写 `size`/`w-full`。`size`/`className` 只是收窄或覆盖 |
-| **组装容器** | schema 布局壳用 `div`（对齐 Amis），不用 `header`/`aside`/`section`；Form 仅顶层用 `<form>`，嵌套降为 `div`。规则：`.cursor/rules/assembly-containers.mdc` |
+| **默认自适应** | 特定组件铺满容器是默认，不必写 `size`/`w-full`。`size`/`className` 只是收窄或覆盖。规则：`.cursor/rules/component.mdc` |
+| **组装容器** | schema 布局壳用 `div`（对齐 Amis），不用 `header`/`aside`/`section`；Form 仅顶层用 `<form>`，嵌套降为 `div`。规则：`.cursor/rules/component.mdc` |
 | **kernel P0** | 语义设计 D1–D8：Scope、表达式过滤器、API 管线、事件对象、联动、表单路径值、渲染器契约、诊断 |
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
@@ -69,6 +69,7 @@
 
 **最近交付**
 
+- 项目规则按域合并：站点 → `.cursor/rules/site.mdc`，样式 → `style.mdc`，组件 → `component.mdc`。收工清单仍是 `update-progress.mdc`。
 - `/style` Background / Border / Effect：`rounded-md` = 6px（不是 `--radius`）、`border-8` / `border-double`、Amis `shadow-lg` 第二层 `-2px`/`0.05`、补 `opacity-5`…`95` 与 `bg-none`。Radius / Width / Style / Shadow / Opacity **90%**；`background-color` / `border-color` 仍 **55%**（色盘表）。
 - `/style/typography/font-family`：`font-sans` / `serif` / `mono` 改回 Amis helper 硬编码字栈（不再走 `--font-sans` token）。page / body 默认仍是 `--fonts-base-family`。
 - `/style/typography` 14 页对标 Amis：字号走 `$fontSizes`（`text-lg` = 20px，不是 TW v3）；空白类名是 `white-space-*`；`tracking-wide` 计算值是 `normal`；补 `text-md` / `leading-3`～`10` / `list-inside` / `overflow-clip` 与 `m:` / `pc:`。`text-color` 仍 **55%**（色盘表）。其余 **90% 已完成**。
@@ -108,13 +109,13 @@
 - `/style/state` 对标 Amis 状态页：**90% 已完成**。`hover:` / `active:`（含 `.is-active`）/ `focus:` / `disabled:` / `group-hover:` / `pc:hover:` / `m:hover:` 写入 `helpers-palette.css`；HTML 岛还原 UA button；`class="Button"` 只转写壳，不搬 `cxd-Button`。
 - Monaco 内层 token 仍 `inherit`（压 Tailwind）；继承根钉在宿主 `--vscode-editor-line-height`（默认 20px）。色块不走 inherit。
 - `/style/layout/float` 对标 Amis Floats：左浮/右浮/不浮动 + `pc:` 响应式活示例，盒模型 `w-32` 128px、`m-4` 1rem、≥768px 才 `float`。本页 **90% 已完成**。
-- 样式对标口径升到 **行为精度**：后续 `/style` 按计算样式/盒模型对齐（同一元素、同一属性、同一值），写入规则 `.cursor/rules/style-behavior-parity.mdc`。范本仍是 `space-x-6` → 后盒 `margin-left: 24px`。
+- 样式对标口径升到 **行为精度**：后续 `/style` 按计算样式/盒模型对齐（同一元素、同一属性、同一值），现并入 `.cursor/rules/style.mdc`。范本仍是 `space-x-6` → 后盒 `margin-left: 24px`。
 - 修两处回归：`space-x-6` 对齐 Amis（第二个盒子 `margin-left: 24px`），并清掉 Tailwind v4 写在第一个盒子上的 `margin-inline-end`，避免 24+24 叠成 48px。`.hidden` 改放到 `@layer components`，不再压过 `lg:block`，文档 TOC 回来。
 - `/style/layout/box-sizing` 对标 Amis 同名页：左右 `box-border` 128px / `box-content` 160px。HTML 岛内去掉 Preflight 默认 `border-style:solid`，`border-4` 未配 `border-solid` 时不画边（不再多一圈蓝边）。本页 **90% 已完成**。
 - 按观感下调 `/style` 进度（首页 80%→**45%**）。对标 Amis 活示例：Form 默认标题「表单」、默认只画提交、标题栏灰底；`className: text-green-700` 落到标签；调色盘（gray/red/yellow/green/blue/cyan/indigo/purple/pink 50–900）写入 `helpers-palette.css`，文档表按完整色阶生成。
 - 对标 Amis `/style`：布局 / 语义色 helper 打进 `helpers-utility.css`（SDK 也能用）；`m:`/`pc:` 接到 display/flex/语义色，并加 Tailwind `@custom-variant`。颜色 / 背景 / 边框表补「示例效果」列。`cssVars` 对齐 `--primary-onHover`。Form / FormItem / Panel 接 `xxxClassName`；Container 写了 `bodyClassName` 不再强加 `space-y-3`。
 - 更正「配色钉死云舍蓝」：云舍蓝只是顶栏 5 种主题色之一（云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，默认色点），不是唯一主色、也不是禁用色。顶栏色点文案「墨蓝」改为「云舍蓝」。
-- 更正「不搬 cxd-」口径：只禁止 `.cxd-*` 前缀和主题 SCSS；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue / Tailwind。写入术语 **cxd 转写**、规则 `.cursor/rules/cxd-transcribe.mdc`，并改掉 AGENTS / README / 样式 spec / 组件页模板里「不追像素」「只学密度」的旧说法。
+- 更正「不搬 cxd-」口径：只禁止 `.cxd-*` 前缀和主题 SCSS；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue / Tailwind。写入术语 **cxd 转写**（现并入 `.cursor/rules/style.mdc`），并改掉 AGENTS / README / 样式 spec / 组件页模板里「不追像素」「只学密度」的旧说法。
 - 顶栏补「样式」入口（文档 \| 组件 \| **样式** \| 示例 \| 编辑器），路由 `/style` 一等，侧栏对齐 Amis CssDocs。开始四页按 Amis 结构改写；辅助类目录（Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography / Backgrounds / Borders / Effect）用生成器写出，不拷贝 Amis helper.md。旧 `/docs/style` 重定向到 `/style`。
 - 清掉 `pnpm typecheck`：playground tsconfig 排除测试文件、补 `nav.d.mts`，并收窄 SchemaNode / 表单项 `label` / fetcher / Monaco 0.57 类型。`vue-tsc --noEmit` 现为 0 错误。
 - 概念页「联动」对标 Amis 同名页：**90% 已完成**。`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、点号 `form.select`、逗号多目标、动态 `target` / `name` 已在 5173 核对。提交回写显隐用 `${id !== undefined}`（公式没有 `typeof`）。`clearValueOnHidden` 仍等 D6。
@@ -146,7 +147,7 @@
 - 对齐 Amis 远程接口生命周期：补 `isApiOutdated`。page/form `initApi`、service `api`、select `source`、crud/crud2 `api`、chart `api`、markdown `src` 在 url 不含 `$` 时只在挂载拉一次，数据更新不再重拉。`interval` 和显式 `reload` 仍会重拉。SchemaRenderer 不再因 schema 引用变化重建 Scope。wizard / mapping / nav / log / tasks / app 远程接口尚未接入。
 - 对标 Amis「数据域与数据链」：概念页按同名文档改写活示例。原 90% 已完成偏高，降为 **70% 进行中**。inherit 节点不再因 `data` 建域；service 数据链遮蔽修好；表单提交 merge `id`；`static-tpl` 别名；`extra-data` 不再盖 `__prev` / `__changeReason`；`ajax` 记 `api`。`trackExpression` / CRUD filter 独立域 / 表单项写 page 域仍缺。
 - 概念页「配置与 Schema」更名为 **配置与组件**（对齐 Amis 侧栏，路径仍是 `/concepts/schema`），并保留两种外形、书写规则、渲染管线（`parseSchemaText` → `jsonToIr` → `compileIrToWidget` → `SchemaRenderer`）。
-- 组装容器写成项目规则 `.cursor/rules/assembly-containers.mdc`（alwaysApply）：Page 壳用 `div`；Form 顶层 `<form>`、嵌套降 `div`；禁止 landmark 标签与嵌套 HTML `<form>`。已写入 AGENTS / CONTEXT 术语。
+- 组装容器写成项目规则（现并入 `.cursor/rules/component.mdc`）：Page 壳用 `div`；Form 顶层 `<form>`、嵌套降 `div`；禁止 landmark 标签与嵌套 HTML `<form>`。已写入 AGENTS / CONTEXT 术语。
 - Page 根 / header / aside 改回 `div` 组装（对齐 Amis，避免宿主 landmark 样式泄漏）；标题仍用 `h1`。Form 套在另一个 form 里默认 `div`，`wrapperComponent` 可覆盖；嵌套时默认提交按钮是 `type="button"`，Enter 不冒泡提交祖先表单。
 - Page header/toolbar 默认 `mb-0`（对齐 Amis，不再写死 `mb-4`）。Form `panelClassName` 走 `cn()` 覆盖默认 `mb-[var(--panel-margin-bottom)]`，`mb-0` 会真正清掉下边距。
 - 配置与组件「通过树形来实现布局」的树改回与 Amis 同形：Toolbar → Form、Grid 下两列 Panel（Tabs → Chart / Chart）、CRUD，不再把 Panel 链压成一行箭头。
@@ -154,7 +155,7 @@
 - 对标 Amis「配置与组件」收口 [配置与组件](website/src/concepts/schema.md)：`type` + 属性、组件树、`page` 唯一顶级、树形布局活示例。D7 注册信息 `test` / `weight` / `isolateScope` 已接；`form`/`service`/`crud` 用 `scope: 'self'` 保数据链。Tabs 认 `tab` 内容，Grid 未写 span 时均分，Form `actions: []` 不再画出默认提交。
 - 按文档导航收口 kernel：D2 模板默认文本节点（`|raw` / `type: html` 才 `v-html`），P0 过滤器 `date`/`datetime`/`number`/`percent`/`truncate`/`json`/`default`；D5 动态 `target` / 多目标 / `name?a=${a}`，SDK `getComponentByName` / `doAction` 可调用。Tpl / Html / Date / Number 文档进度随之上调。
 - 顶栏搜索快捷键 ⌘K 从 10px 等宽字改成 12px Command 图标 + 12px K。
-- 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；写入 `.cursor/rules/doc-progress.mdc`，并同步 [README.md](README.md) 当前状态。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。
+- 文档页标题下统一显示「实现进度 · 完成状态」（与组件页同一套）；现并入 `.cursor/rules/site.mdc`，并同步 [README.md](README.md) 当前状态。类型 / 概念 / 开始 / 样式 / 扩展手写页已补 banner；`types/api` 90% 已完成。
 - kernel D3 API 管线 P0：`requestApi`（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / GET `api.data` / `dataType` / GraphQL）。form / page / crud / service / select / ajax 已接；page/form/service/select 支持 url / `trackExpression` 自动刷新。文档 [API](website/src/types/api.md) 对标 Amis `types/api`。字符串 adaptor 仅 `env.trusted`（Playground 默认开）。
 - Remark 默认改为方形（对齐 Amis 未写 `shape`）；`shape: circle` 才是圆。问号色 `muted-foreground/55`，hover 仍走 warning。
 - Remark 问号改用 Amis 同款 SVG（12×12 viewBox，基线 y=10.5，铺满 16px 圆），不再用过小的描边图标。
@@ -174,7 +175,7 @@
 - 文档「编辑 Schema」做成 YAML / JSON 两个 Tab，`syncAuthoringText` 双向实时同步；解析失败时对侧与预览停在上一份有效 schema。
 - 布局对标起步：并行 `page` 70%、`container` 78%（仍进行中）。Page 接 initApi overlay / interval / aside / reload；Container 接 wrapperComponent / wrapperBody / 指针事件。文档手写活示例。
 - 准则落地「作者态不强制 YAML」：YAML 与 JSON 并列；`parseSchemaText` / SDK / 编辑器都收；文档生成器与组件页去掉「不是 JSON」；Playground 源码可格式化为 YAML 或 JSON。
-- 准则落地「默认自适应」：特定组件铺满容器不必写 `size`/`w-full`；Form 去掉 `max-w-3xl`；未写 size 挂 `vamis-control--fluid`；写入 AGENTS / 样式 spec §0 / `.cursor/rules/adaptive-default.mdc`；文档主路径先给无 size 表单。
+- 准则落地「默认自适应」：特定组件铺满容器不必写 `size`/`w-full`；Form 去掉 `max-w-3xl`；未写 size 挂 `vamis-control--fluid`；写入 AGENTS / 样式 spec §0 / `.cursor/rules/component.mdc`；文档主路径先给无 size 表单。
 - 样式宽度对标 Amis：`size: full` 占满；xs–lg 仅 ≥576px 钉死且 `max-width: 100%`；helper `w-*`/`min-w-*`/`max-w-*` 带 `m:`/`pc:`；横排窄屏 label 约 28%。
 - JS SDK P0 落地：`packages/vamis-sdk` 打出 `sdk.js` / `sdk.css`；`vamis.embed` 支持 JSON / YAML / IR，以及 `updateSchema` / `updateProps` / `unmount`；无构建页 `hello.html` 与文档 iframe `/sdk/hello.html`。
 - 规格锁定必须支持 JS SDK：任意 HTML `vamis.embed(container, schema, props?, env?)`，与 Vue `VamisRoot` 同一内核；不搬 `amisRequire` / 不单独引入 `cxd.css`（能力打进 `sdk.css` 的 token / Tailwind）。

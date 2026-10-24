@@ -10,7 +10,7 @@
   - Amis 源码：`packages/amis-ui/scss/themes/{cxd,antd,ang,dark}`、`_properties.scss`、`_components.scss`
   - 在线文档：Amis `http://localhost:8888/zh-CN/style/index`；Vamis Playground `/style`
 
-水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**不搬 `cxd-` 前缀、不编译 Amis SCSS**；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue token、`cva` variants 与 Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/cxd-transcribe.mdc`。
+水标指后台**信息密度、表单/表格/对话框可用性、状态清晰、可扫描**。**不搬 `cxd-` 前缀、不编译 Amis SCSS**；cxd 的盒子、密度、helper、交互尽量像素级转写到 shadcn-vue token、`cva` variants 与 Tailwind utility。主色走 `--primary`；云舍蓝是顶栏 5 色之一（默认），不是唯一主色、也不是禁用色。规则：`.cursor/rules/style.mdc`。
 
 ## 0. 准则：默认自适应
 
@@ -22,7 +22,7 @@ Amis 特定组件的自适应样式是**默认行为**，作者不必先配宽�
 - **渲染器禁止写死作者没要的上限。** 例如 form 上的 `max-w-3xl`。Dialog 等浮层可以有默认尺寸（对齐 Amis dialog `size`）。
 - **按钮、徽标、纯文本不要被拉成 100% 宽。** 只约束布局容器和表单控件槽。
 
-落地：FormItem 未写 `size` 时挂 `vamis-control--fluid`；Form / CRUD / Flex / Grid / Container / Wrapper 默认 `w-full min-w-0`。规则文件：`.cursor/rules/adaptive-default.mdc`。
+落地：FormItem 未写 `size` 时挂 `vamis-control--fluid`；Form / CRUD / Flex / Grid / Container / Wrapper 默认 `w-full min-w-0`。规则文件：`.cursor/rules/component.mdc`。
 
 ## 0.1 准则：helper 行为精度
 
@@ -32,7 +32,7 @@ Amis 特定组件的自适应样式是**默认行为**，作者不必先配宽�
 - 先读 Amis `packages/amis-ui/scss/helper` 的选择器，再写 `@vamis/ui` CSS。Playground 会扫描文档生成同名 Tailwind 规则；语义不同时清掉 TW 那侧，禁止两套叠加（缝加倍、边多一圈）。
 - 收工核宽高 / margin / padding / border / `box-sizing` / 相邻缝宽。未对齐盒模型不得标文档「已完成」。
 - `/style` 含 HTML 的活示例下附同一段已缩进源码（`type: code` / `language: html`）。inline / inline-block 相邻节点不拆行。
-- 规则：`.cursor/rules/style-behavior-parity.mdc`。
+- 规则：`.cursor/rules/style.mdc`。
 
 ## 1. Amis 样式系统（结论）
 

@@ -17,13 +17,13 @@ alwaysApply: true
 3. 若增减 type/alias：[同步状态](../../docs/superpowers/specs/2026-10-20-amis-sync-status.md) 的覆盖数字。
 4. 若改了某份 spec 的范围：更新该文档状态行（草案 / 进行中 / 部分落地 / 已完成）。
 5. 若动了对外文档站点：更新 [在线文档 spec](../../docs/superpowers/specs/2026-10-21-vamis-online-docs.md)；组件页进度仍以组件 TODO 为准，生成器 `website/scripts/gen-component-pages.mjs` 会读它。
-6. 对外文档页标题下的 **实现进度 / 完成状态** banner（`::: tip|info|warning|danger 实现进度 x% · 状态`）。组件页走生成器；手写页（types / concepts / start / style / extend、`page` / `container`）手改。格式见 `.cursor/rules/doc-progress.mdc`。
+6. 对外文档页标题下的 **实现进度 / 完成状态** banner。组件页走生成器；手写页手改。格式见 `.cursor/rules/site.mdc`。
 
 ## 口径
 
 - **已注册 ≠ 已完成**。只有文档主路径对齐才能标「已完成」/ 100%。
 - 占位 10–15%；精简 20–35%；主路径可交互但缺契约 40–70%。
-- `/style` helper 页：未对齐 Amis 计算样式/盒模型不得标「已完成」。口径见 `.cursor/rules/style-behavior-parity.mdc`。
+- `/style` helper 页：未对齐 Amis 计算样式/盒模型不得标「已完成」。口径见 `.cursor/rules/style.mdc`。
 - 禁止代码已合入仍写「未开始」；禁止没做写成「已完成」。
 - 被 kernel D1–D8 挡住时，进度可以升，但状态保持「进行中」，原因写清挡住的决策号。
 
