@@ -542,6 +542,8 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')
+    expect(schemaNodeDisplayClass({ type: 'divider' })).toBe('')
+    expect(schemaNodeDisplayClass({ type: 'divider', direction: 'vertical' })).toBe('inline-block')
   })
 
   it('does not stack page body with space-y (Amis Page-body is normal flow)', () => {

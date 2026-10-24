@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 62% | 12 |
+| 布局 | 2 / 15 | 13 | 0 | 65% | 12 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
@@ -45,7 +45,7 @@
 
 ---
 
-## 布局（2/15，均 62%）
+## 布局（2/15，均 65%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -53,8 +53,8 @@
 |------|------|------|------|------|---|
 | `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay（GET 不把数据域拼进 query）、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。`pullRefresh` 明确未接（移动端） | P0 |
 | `container` | Container 容器 | 已完成 | 100% | 主路径对齐：布局属性 + click/mouseenter/mouseleave 完整事件对象；沿用父 Scope；无对外动作。`draggable` 非运行时主路径 | P0 |
-| `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 55% | 能展开折叠；缺手风琴/受控/`activeKey` 语义对齐 | P0 |
-| `divider` | Divider 分割线 | 进行中 | 75% | 能画线；忽略 `lineStyle` / 颜色 / 垂直方向 | P0 |
+| `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 85% | 文档主路径已对齐：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。缺 `mountOnEnter`、`expand`·`collapse` 动作、FieldSet 像素级 | P0 |
+| `divider` | Divider 分割线 | 进行中 | 90% | 文档主路径已对齐：`lineStyle` / `direction` / `color` / `rotate` / `title` / `titlePosition`。缺 `themeCss`、窄屏 `scaleY(0.5)` | P0 |
 | `flex` | Flex 布局 | 进行中 | 60% | `justify`/`direction` 可用；缺 `alignItems`、子项 `flex` | P0 |
 | `grid` | Grid 水平分栏 | 进行中 | 65% | 12 栅格 span 可用，列等高靠 `className: h-full`；缺响应式 `xs/sm` 全套 | P0 |
 | `grid-2d` | Grid 2D 布局 | 进行中 | 45% | 已注册，二维格子精简 | P0 |
