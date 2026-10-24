@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- GitHub Pages 上对照页可用：`pnpm build` 把 `compare.html` / `embed-case.html` / `compare-cases.js` 拷进 `/sdk/`；文档链接带 `VITE_BASE` 并整页跳，避免 SPA 吃掉静态 HTML。Amis 栏仍依赖 unpkg。
 - 对照页结果表补上字体信息：字号 / 行高 / 字体栈（hover 看完整 family）。字体差异标红并写进备注，不挡盒模型 / smoke 判定。
 - 对照页结果表按用例 `measure` 换列：盒模型显示同一行/缝/盒子，smoke 显示状态/摘要；判定也跟当前用例走。
 - SDK 对照自动化：`pnpm compare:p0` / `pnpm compare` 用 Playwright 对同一份 schema 跑 `amis.embed` / `vamis.embed`，写 [对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md)。本轮全量 **793**（P0 14 + 文档收割 779）**785 过 / 8 败**；文档 smoke 全过，失败全是 compact helper 阶（`m-l-sm` 10 vs 8，`m-l` 15 vs 12，`m-l-xxl` / `m-l-n` 未实现）。`--all` 再加 Amis 组件文档。判定是 Vamis 对齐 Amis **实测**。
