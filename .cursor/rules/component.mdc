@@ -1,0 +1,32 @@
+---
+description: 组件：组装容器用 div；默认自适应铺满；className 打在 vamis-node
+alwaysApply: true
+---
+
+# 组件
+
+合并自原 `assembly-containers`、`adaptive-default`。约束 widget 树 / 渲染器，不约束 Playground / 编辑器外壳。
+
+## 组装容器：div 优先
+
+Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`，不要为「语义化」改成 `header` / `aside` / `section`。作者 `className` 打在 SchemaRenderer 外层 **`div.vamis-node`**。
+
+- **Page** 根、工具栏区、侧栏都是 `div`。标题可用 `h1`。不要加 `role="banner"` / `role="complementary"`
+- **Form** 顶层 `<form>`，嵌套默认 `div`。先 `useForm()` 再 `provideForm()`；有父 form 就降级。`wrapperComponent` 只认 `form` / `div`
+- 嵌套 form 当 `div` 时：默认提交按钮 `type="button"`（禁止 `type="submit"`）；输入框 Enter 要 `preventDefault` + `stopPropagation` 后走本表单 `submit()`
+- **Container** 默认 `div`；`wrapperComponent` 白名单（`div/section/article/main/header/footer/aside/nav/pre/span`）是作者覆盖
+- 新布局渲染器（flex / grid / panel / wrapper / tabs / wizard）默认也用 `div`，除非 Amis 该 type 就是别的标签。`type: nav` 仍可用 `<nav>`
+
+禁止：组装壳用 landmark 标签（宿主 `header {}` 会漏进 embed）；输出嵌套 HTML `<form>`；把 SchemaRenderer 外层改成非 `div`。
+
+## 默认自适应
+
+铺满容器是默认，不必先写 `size` / `className` / `w-full`。作者写最简 schema 就应在槽里随父级伸缩。
+
+- page / form / crud / table / grid / flex / container / 未写 `size` 的表单控件：吃满布局槽，`max-width: 100%`
+- `size: xs|sm|md|lg` 才钉死档位；`size: full` 只在默认吃不满时显式拉满；`className` / `m:` / `pc:` 才是覆盖
+- 文档主路径先给无 size 的表单，不要教「先写 `size: full` 才能用」
+- 禁止给 page/form/crud/table 写死 `max-w-3xl`。Dialog 等浮层可以有默认尺寸（对齐 Amis `size`）
+- 按钮、徽标、纯文本不要被拉成 100% 宽；只约束**布局容器和表单控件槽**
+
+禁止：把「铺满」做成作者必须记住的开关；为了 Playground 好看而收窄整页表单；新组件默认宽度写成固定 px（除非对齐 Amis 该 type 的 `size` 档，且未写 size 时仍自适应）。

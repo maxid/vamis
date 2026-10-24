@@ -1,0 +1,36 @@
+---
+description: 样式：cxd 转写、helper 盒模型对标、token 打组件 / helper 打 className
+alwaysApply: true
+---
+
+# 样式
+
+合并自原 `cxd-transcribe`、`style-behavior-parity`。约束 `@vamis/ui`、`/style` 活示例、schema `className`。
+
+## cxd 转写
+
+「不搬 `cxd-`」只禁止 **class 前缀和主题 SCSS 包**，不是放弃视觉与交互。
+
+- 不输出 `.cxd-Button` 这类 BEM，不编译 / 引入 `cxd.css`、`scss/themes/cxd.scss`，不把 `$ns: cxd-` 打进产物
+- 盒子（32/24/98/40）、密度、helper、状态、交互尽量像素级落到 token / `cva` / Tailwind
+- 文档禁止写成「不追像素级 cxd」「不复刻 cxd 皮肤」「只学密度」
+- 主色走 `--primary`。顶栏 5 色：云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红。云舍蓝是默认色点，不是唯一主色、也不是禁用色。`cssVars` 可覆盖
+
+## 行为精度（计算样式 / 盒模型）
+
+`/style` 与 `className` 对标 Amis 时，精度以 **计算样式 + 盒模型** 为准，不以截图为准。对照 `http://localhost:8888/zh-CN/style/…` 与 Amis helper SCSS。
+
+- **同一条 class，落在同一个元素、同一条属性、同一个计算值。** 先读 Amis 选择器再写 CSS
+- 范本：`space-x-6` 是后续兄弟 `~` 的 `margin-left: 24px`，不是 TW v4 的 `:not(:last-child)` + `margin-inline-end`
+- **同名 utility 禁止两套叠加。** Amis 与 TW 选择器/属性不同时：清掉 TW 那侧，保留 Amis 行为
+- **helper 复写不得压过站点变体。** `.hidden` / `.flex` 不要放进晚于 Tailwind 的 `@layer utilities`，否则 `hidden lg:block` 失效。复写放 `@layer components`，或只覆盖有分歧的那一条
+- 收工至少核：宽高、`margin-*` / `padding-*` / `border-width` / `box-sizing`、缝宽。未对齐盒模型不得标「已完成」
+
+禁止：只对截图；用 `gap` 去近似 Amis `space-x`（除非 Amis 该页就是 `gap`）。
+
+## token 与 helper 两层
+
+- **主题 token**（`:root` / `@theme` / `--fonts-base-family` / `--radius`）打在组件默认样子上
+- **Amis helper 类**（`font-sans`、`rounded-md`、`shadow-lg`）是作者 `className` 覆盖，打在 `div.vamis-node` 或文档 HTML 岛
+- 组件 Vue 模板不要用 helper 类名表示「主题默认」。控件 4px 圆角用 `rounded`（= `--radius`），不要用 `rounded-md`（Amis helper 是 6px）
+- html / body / SDK 根用 `font-family: var(--fonts-base-family)`，不要靠 `@apply font-sans` 当默认（`.font-sans` 是 Amis 英文栈）

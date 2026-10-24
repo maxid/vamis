@@ -10,7 +10,7 @@
 - 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
 - **cxd 转写**：不搬 `cxd-` 前缀；盒子、密度、交互尽量像素级落到 shadcn-vue / Tailwind。
 - **默认自适应**：page / form / 表单控件不写 `size` 就吃满容器；`size` / `className` 只是收窄。
-- **组装容器**：schema 布局壳用 `div`（对齐 Amis）；Form 顶层 `<form>`，嵌套默认 `div`。见 `.cursor/rules/assembly-containers.mdc`。
+- **组装容器**：schema 布局壳用 `div`（对齐 Amis）；Form 顶层 `<form>`，嵌套默认 `div`。见 `.cursor/rules/component.mdc`。
 - **作者态**：YAML 与 JSON 并列，不强制 YAML。
 - **在线文档**：组件 / 类型 / 概念 / 开始 / 样式 / 扩展页标题下显示「实现进度 · 完成状态」（已注册 ≠ 语义完成）。目录页（介绍、组件介绍）除外。
 - kernel D1 Scope、D3 API 管线、D4 事件对象 P0 已落地。
