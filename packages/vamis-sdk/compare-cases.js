@@ -7127,32 +7127,261 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "tabs",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1 YAML"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2 YAML"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "arr": [
+          {
+            "a": "收入",
+            "b": 199
+          },
+          {
+            "a": "支出",
+            "b": 299
+          }
+        ]
+      },
       "body": [
         {
           "type": "tabs",
+          "source": "${arr}",
           "tabs": [
             {
-              "title": "Tab 1",
-              "body": [
-                {
-                  "type": "tpl",
-                  "tpl": "第一页"
-                }
-              ]
-            },
-            {
-              "title": "Tab 2",
-              "body": [
-                {
-                  "type": "tpl",
-                  "tpl": "第二页"
-                }
-              ]
+              "title": "${a}",
+              "body": {
+                "type": "tpl",
+                "tpl": "金额：${b}元"
+              }
             }
           ]
         }
       ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2",
+            "disabled": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "activeKey": "tab2",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "hash": "tab1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "hash": "tab2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "activeKey": 1,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1 index"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2 index"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-6",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "vertical",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-7",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "card",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "卡片内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "卡片内容2"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
