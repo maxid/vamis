@@ -9,6 +9,7 @@
       body {
         margin: 0;
         background: #fff;
+        overflow: hidden;
       }
       #root {
         padding: 12px;
@@ -205,6 +206,44 @@
           })
         }
 
+        function contentHeight() {
+          const root = document.getElementById('root')
+          if (!root) return 80
+          const viewport = window.innerHeight
+          let bottom = 0
+          const nodes = [root].concat(Array.prototype.slice.call(root.querySelectorAll('*')))
+          for (let i = 0; i < nodes.length; i++) {
+            const el = nodes[i]
+            const cs = getComputedStyle(el)
+            if (cs.display === 'none' || cs.position === 'fixed') continue
+            const rect = el.getBoundingClientRect()
+            const fillsViewport = rect.top <= 1 && Math.abs(rect.height - viewport) <= 2
+            if (fillsViewport) continue
+            if (rect.bottom > bottom) bottom = rect.bottom
+          }
+          const next = Math.max(80, Math.ceil(bottom + 2))
+          if (next > viewport && next <= viewport + 2) return viewport
+          return next
+        }
+
+        let sizeTick = 0
+        let lastPosted = 0
+        function postSize() {
+          if (parent === window) return
+          const height = contentHeight()
+          if (height === lastPosted) return
+          lastPosted = height
+          parent.postMessage({ type: 'vamis-compare-size', engine: engine, height: height }, '*')
+        }
+
+        function scheduleSize() {
+          if (sizeTick) cancelAnimationFrame(sizeTick)
+          sizeTick = requestAnimationFrame(function () {
+            sizeTick = 0
+            postSize()
+          })
+        }
+
         function report(payload) {
           const message = {
             type: 'vamis-compare',
@@ -215,6 +254,7 @@
           }
           window.__vamisCompareLast = message
           parent.postMessage(message, '*')
+          scheduleSize()
         }
 
         function unmountPrev() {
@@ -226,6 +266,7 @@
             }
           }
           scoped = null
+          lastPosted = 0
           document.getElementById('root').innerHTML = ''
         }
 
@@ -250,6 +291,9 @@
             return
           }
           const started = runId
+          scheduleSize()
+          setTimeout(scheduleSize, 80)
+          setTimeout(scheduleSize, 320)
           waitForMeasure(spec, spec.type === 'smoke' ? 4000 : 8000).then(
             function (result) {
               if (started !== runId) return
@@ -293,6 +337,11 @@
             run(next)
           }
         }
+
+        if (typeof ResizeObserver === 'function') {
+          new ResizeObserver(scheduleSize).observe(document.getElementById('root'))
+        }
+        window.addEventListener('load', scheduleSize)
 
         boot().catch(function (err) {
           failBoot(String(err && err.message ? err.message : err))
