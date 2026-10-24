@@ -27,7 +27,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   tabs: doc('Tabs 选项卡', '布局', '选项卡。tabs[].body 或 tab；source 重复模板；activeKey 用 hash 或索引。'),
   wrapper: doc('Wrapper 包裹容器', '布局', '薄容器。默认 size md 内边距；none 无垫；style 可写对象或 ${style}。'),
   portlet: doc('Portlet 门户栏目', '布局', '带边框的栏目。tabs 同 Tabs；toolbar / description / hideHeader / divider。'),
-  'switch-container': doc('switch-container 状态容器', '布局', '按 visibleOn 取第一个可见状态节点。'),
+  'switch-container': doc('switch-container 状态容器', '布局', '按 visibleOn 取第一个可见状态；最多显示一种。style / click 与 Container 同类。'),
 
   action: doc('Action 行为按钮', '功能', '触发动作：ajax、dialog、toast、link 等。button / submit / reset 是别名。'),
   button: doc('Button 按钮', '功能', 'action 的别名，同一渲染器。'),

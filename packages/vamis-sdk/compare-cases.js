@@ -7804,6 +7804,226 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-switch-container-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "switch-container",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "switch-container #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "title": "",
+        "wrapWithPanel": false,
+        "data": {
+          "state": "a"
+        },
+        "body": [
+          {
+            "type": "button-group-select",
+            "name": "state",
+            "label": "切换状态",
+            "inline": false,
+            "options": [
+              {
+                "label": "选项1",
+                "value": "a"
+              },
+              {
+                "label": "选项2",
+                "value": "b"
+              }
+            ],
+            "multiple": false,
+            "value": "a"
+          },
+          {
+            "type": "switch-container",
+            "items": [
+              {
+                "title": "状态1",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "状态内容1",
+                    "inline": false
+                  }
+                ],
+                "visibleOn": "${state == \"a\"}"
+              },
+              {
+                "title": "状态2",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "状态内容2",
+                    "inline": false
+                  }
+                ],
+                "visibleOn": "${state == \"b\"}"
+              }
+            ]
+          }
+        ],
+        "actions": []
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-switch-container-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "switch-container",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "switch-container #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "title": "",
+        "wrapWithPanel": false,
+        "data": {
+          "state": "b"
+        },
+        "body": [
+          {
+            "type": "button-group-select",
+            "name": "state",
+            "label": "切换状态 YAML",
+            "inline": false,
+            "options": [
+              {
+                "label": "选项1",
+                "value": "a"
+              },
+              {
+                "label": "选项2",
+                "value": "b"
+              }
+            ],
+            "multiple": false,
+            "value": "b"
+          },
+          {
+            "type": "switch-container",
+            "items": [
+              {
+                "title": "状态1",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "状态内容 YAML 1",
+                    "inline": false
+                  }
+                ],
+                "visibleOn": "${state == \"a\"}"
+              },
+              {
+                "title": "状态2",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "状态内容 YAML 2",
+                    "inline": false
+                  }
+                ],
+                "visibleOn": "${state == \"b\"}"
+              }
+            ]
+          }
+        ],
+        "actions": []
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-switch-container-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "switch-container",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "switch-container #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "switch-container",
+        "style": {
+          "backgroundColor": "#C4C4C4"
+        },
+        "items": [
+          {
+            "title": "状态1",
+            "body": [
+              {
+                "type": "tpl",
+                "tpl": "状态内容1",
+                "inline": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-switch-container-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "switch-container",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "switch-container #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "switch-container",
+        "style": {
+          "backgroundColor": "#C4C4C4"
+        },
+        "items": [
+          {
+            "title": "状态1",
+            "body": [
+              {
+                "type": "tpl",
+                "tpl": "状态内容 YAML",
+                "inline": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-action-0",
     "group": "组件 / 功能",
     "bucket": "components",

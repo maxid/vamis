@@ -355,8 +355,16 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     events: { change: '切换栏目。event.data.value 是 hash 或索引。' },
   }),
   'switch-container': fields('SwitchContainer', {
-    items: '状态列表。按 visibleOn 取第一个可见项。',
-  }, { slots: ['items'] }),
+    items: '状态列表。每项 title / body / visibleOn。只显示首个命中的状态。',
+    style: '自定义样式，驼峰属性。打在宿主 div.vamis-node。',
+  }, {
+    slots: ['items'],
+    events: {
+      click: '点击时触发。',
+      mouseenter: '鼠标移入时触发。',
+      mouseleave: '鼠标移出时触发。',
+    },
+  }),
   pagination: fields('Pagination', {
     activePage: '当前页，默认 1。',
     lastPage: '总页数。有 total 时按 perPage 重算。',
