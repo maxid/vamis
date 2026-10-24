@@ -10,7 +10,7 @@
 ## 结论
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
-2. **type 名称覆盖 183 / 189（96.8%）**：`js-editor` / `ts-editor` 已并入 `editor` 别名。还剩 3 个真实 type 和 3 个别名。
+2. **type 名称覆盖 184 / 189（97.4%）**：`pager` 已并入 `pagination` 别名。还剩 3 个真实 type 和 2 个别名。
 3. **语义进度**：侧栏 155 项已完成 **2**（`page` / `container`）/ 进行中 151 / 未开始 2，平均 47%。D1 Scope 与 D4 事件对象 P0 已落地；D2/D3/D5–D8 仍挡其它组件。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 管线、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
@@ -50,14 +50,14 @@
 | amis 独有别名 | 13（另有 2 个别名与 type 同名） |
 | amis 去重合计 | **189** |
 | Vamis 注册 type | 159（`register.ts` 61、`extras` 98） |
-| Vamis 别名 | 71 |
-| Vamis 合计 | **230** |
-| 交集 | **183** |
-| 覆盖率 | **183 / 189 = 96.8%** |
-| 遗漏 | 6（3 个 type + 3 个别名） |
+| Vamis 别名 | 72 |
+| Vamis 合计 | **231** |
+| 交集 | **184** |
+| 覆盖率 | **184 / 189 = 97.4%** |
+| 遗漏 | 5（3 个 type + 2 个别名） |
 | Vamis 扩展 | 47 |
 
-### 3.1 遗漏明细（6）
+### 3.1 遗漏明细（5）
 
 | type | amis 出处 | Vamis 现状 / 建议 |
 |------|-----------|-------------------|
@@ -66,7 +66,6 @@
 | `cell-field` | `Table2/TableCell.tsx:8` | 并入 `cell` 别名 |
 | `map` | `minimal.ts:677`，别名 → `mapping` | `mapping` 已有，补 alias |
 | `navigation` | `minimal.ts:748`，别名 → `nav` | `nav` 已有，补 alias |
-| `pager` | `minimal.ts:100`，别名 → `pagination` | `pagination` 已有，补 alias |
 
 ### 3.2 Vamis 扩展（47）
 

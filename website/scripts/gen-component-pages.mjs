@@ -61,6 +61,7 @@ const HANDWRITTEN = new Set([
   '/components/grid',
   '/components/grid-2d',
   '/components/hbox',
+  '/components/pagination',
   '/components/chart',
   '/components/code',
   '/components/form/editor',

@@ -21,7 +21,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   'grid-2d': doc('Grid 2D 布局', '布局', '二维格子布局。'),
   hbox: doc('HBox 布局', '布局', '水平分栏。未写 width 时均分，默认 gap xs。'),
   vbox: doc('VBox 布局', '布局', '垂直盒子分栏。'),
-  pagination: doc('Pagination 分页', '布局', '页码控件。'),
+  pagination: doc('Pagination 分页', '布局', '页码。layout / mode / size，change 事件带 page。'),
   'pagination-wrapper': doc('PaginationWrapper 分页容器', '布局', '为子内容包一层分页。'),
   panel: doc('Panel 面板', '布局', '带标题/内容的面板，可用 className: h-full 吃满父槽。'),
   tabs: doc('Tabs 选项卡', '布局', '选项卡。子项用 tabs[].tab 作为内容。'),

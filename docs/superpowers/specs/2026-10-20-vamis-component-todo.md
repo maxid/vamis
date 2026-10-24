@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 74% | 13 |
+| 布局 | 2 / 15 | 13 | 0 | 77% | 13 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
@@ -45,7 +45,7 @@
 
 ---
 
-## 布局（2/15，均 74%）
+## 布局（2/15，均 77%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -59,7 +59,7 @@
 | `grid` | Grid 水平分栏 | 进行中 | 90% | 文档主路径已对齐：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `grid-2d` | Grid 2D 布局 | 进行中 | 90% | 文档主路径已对齐：`x/y/w/h`、`cols`、列宽/行高、`height: auto`、`gap` / `gapRow`、`align` / `valign`。缺格子 `themeCss` | P0 |
 | `hbox` | HBox 布局 | 进行中 | 90% | 文档主路径已对齐：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
-| `pagination` | Pagination 分页 | 进行中 | 55% | 页码可用；缺 `layout` 插槽、完整 `mode` | P0 |
+| `pagination` | Pagination 分页 | 进行中 | 90% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`。缺 `themeCss`、移动端 `mobileUI` | P0 |
 | `pagination-wrapper` | PaginationWrapper 分页容器 | 进行中 | 50% | 已注册；与数据域分页契约未对齐（D10） | P0 |
 | `panel` | Panel 面板 | 进行中 | 65% | title/body 可用，`h-full` 吃满父槽；缺 `actions` 语义细节 | P0 |
 | `tabs` | Tabs 选项卡 | 进行中 | 60% | 切 tab 可用；缺 `source` 动态、`mountOnEnter` | P0 |
@@ -271,7 +271,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `tags` | 数据展示 | `tag` 别名 | 55% |
 | editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`）；`yaml-editor`/`json-editor` 可开 schema 感知 | 78% |
 
-同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav、`pager`→pagination。`js-editor` / `ts-editor` 已并入 `editor` 别名。
+同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav。`pager` 已并入 `pagination` 别名；`js-editor` / `ts-editor` 已并入 `editor` 别名。
 
 ---
 
