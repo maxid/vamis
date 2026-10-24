@@ -91,6 +91,15 @@ describe('isRenderableSchema', () => {
     expect(
       isRenderableSchema({
         type: 'page',
+        body: {
+          type: 'grid-2d',
+          grids: [{ x: 1, y: 1, w: 1, h: 1, type: 'tpl', tpl: '格子' }],
+        },
+      }),
+    ).toBe(true)
+    expect(
+      isRenderableSchema({
+        type: 'page',
         body: [{ type: 'crud', api: '/x', columns: [{ name: 'id', label: 'ID' }] }],
       }),
     ).toBe(true)

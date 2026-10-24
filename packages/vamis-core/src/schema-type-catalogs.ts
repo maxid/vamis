@@ -301,11 +301,11 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     },
   }),
   hbox: fields('HBox', {
-    columns: '水平列。',
+    columns: '水平列。未写 width 时均分。',
     body: '同 columns。',
-    gap: '列间距。',
-    align: '水平对齐。',
-    valign: '垂直对齐。',
+    gap: '列间距，默认 xs。xs/sm/base/none/md/lg。',
+    align: '水平对齐：left/right/center/between。',
+    valign: '垂直对齐：top/middle/bottom/between。',
   }, { slots: ['columns', 'body'] }),
   vbox: fields('VBox', {
     rows: '垂直行。',
@@ -313,11 +313,12 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }, { slots: ['rows', 'body'] }),
   'grid-2d': fields('Grid2D', {
     grids: '格子列表，含 x/y/w/h。',
-    cols: '列数。',
-    gap: '间距。',
-    gapRow: '行间距。',
-    rowHeight: '行高。',
-    width: '总宽度。',
+    cols: '列数，默认 12。',
+    gap: '格子间距，默认 0。',
+    gapRow: '行间距，默认同 gap。',
+    rowGap: '同 gapRow。',
+    rowHeight: '默认行高，3.125rem。',
+    width: '容器宽度，默认 auto。',
   }, { slots: ['grids'] }),
   portlet: fields('Portlet', {
     tabs: '栏目 tabs。',

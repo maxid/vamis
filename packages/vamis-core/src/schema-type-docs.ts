@@ -19,7 +19,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   flex: doc('Flex 布局', '布局', '弹性布局。justify / direction 控制主轴。'),
   grid: doc('Grid 水平分栏', '布局', '12 栅格分栏，列可用 span。'),
   'grid-2d': doc('Grid 2D 布局', '布局', '二维格子布局。'),
-  hbox: doc('HBox 布局', '布局', '水平盒子分栏。'),
+  hbox: doc('HBox 布局', '布局', '水平分栏。未写 width 时均分，默认 gap xs。'),
   vbox: doc('VBox 布局', '布局', '垂直盒子分栏。'),
   pagination: doc('Pagination 分页', '布局', '页码控件。'),
   'pagination-wrapper': doc('PaginationWrapper 分页容器', '布局', '为子内容包一层分页。'),

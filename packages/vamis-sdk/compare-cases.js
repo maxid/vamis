@@ -6290,6 +6290,486 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-grid-2d-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "grids": [
+          {
+            "x": 1,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-green-300",
+            "type": "tpl",
+            "tpl": "[grid-1] x:1 y:1 h:1 w:6"
+          },
+          {
+            "x": 7,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "[grid-2] x:7 y:1 h:1 w:6"
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "h": 2,
+            "w": 4,
+            "gridClassName": "bg-red-300",
+            "type": "tpl",
+            "tpl": "[grid-3] x:1 y:2 h:2 w:4"
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "h": 1,
+            "w": 8,
+            "gridClassName": "bg-purple-300",
+            "type": "tpl",
+            "tpl": "[grid-4] x:5 y:2 h:1 w:8"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2d-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "grids": [
+          {
+            "x": 1,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-green-300",
+            "type": "tpl",
+            "tpl": "[grid-1] x:1 y:1 h:1 w:6"
+          },
+          {
+            "x": 7,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "[grid-2] x:7 y:1 h:1 w:6"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2d-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "cols": 3,
+        "grids": [
+          {
+            "x": 1,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "width": 100,
+            "gridClassName": "bg-green-300",
+            "type": "tpl",
+            "tpl": "[grid-1] x:1 y:1 h:1 w:1"
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "height": 100,
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "[grid-2] x:2 y:1 h:1 w:1"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "width": 100,
+            "gridClassName": "bg-red-300",
+            "type": "tpl",
+            "tpl": "[grid-3] x:3 y:1 h:1 w:1"
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "h": 1,
+            "w": 1,
+            "gridClassName": "bg-purple-300",
+            "type": "tpl",
+            "tpl": "[grid-4] x:2 y:2 h:1 w:1"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2d-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "cols": 3,
+        "grids": [
+          {
+            "x": 2,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "height": "auto",
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "1<br>2<br>3<br>4<br>5<br>6<br>"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2d-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "gap": 10,
+        "gapRow": 5,
+        "grids": [
+          {
+            "x": 1,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-green-300",
+            "type": "tpl",
+            "tpl": "[grid-1] x:1 y:1 h:1 w:6"
+          },
+          {
+            "x": 7,
+            "y": 1,
+            "h": 1,
+            "w": 6,
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "[grid-2] x:7 y:1 h:1 w:6"
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "h": 2,
+            "w": 4,
+            "gridClassName": "bg-red-300",
+            "type": "tpl",
+            "tpl": "[grid-3] x:1 y:2 h:2 w:4"
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "h": 1,
+            "w": 8,
+            "gridClassName": "bg-purple-300",
+            "type": "tpl",
+            "tpl": "[grid-4] x:5 y:2 h:1 w:8"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-grid-2d-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Grid 2D 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Grid 2D 布局 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "grid-2d",
+        "cols": 3,
+        "grids": [
+          {
+            "x": 1,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "gridClassName": "bg-green-300",
+            "type": "tpl",
+            "tpl": "[grid-1] x:1 y:1 h:1 w:1"
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "align": "center",
+            "valign": "middle",
+            "gridClassName": "bg-blue-300",
+            "type": "tpl",
+            "tpl": "hello"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "h": 1,
+            "w": 1,
+            "gridClassName": "bg-red-300",
+            "type": "tpl",
+            "tpl": "[grid-3] x:3 y:1 h:1 w:1"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-hbox-0",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "HBox 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "HBox 布局 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "hbox",
+          "columns": [
+            {
+              "type": "plain",
+              "text": "Col A",
+              "columnClassName": "bg-green-300"
+            },
+            "Col B"
+          ]
+        },
+        {
+          "type": "hbox",
+          "className": "m-t",
+          "columns": [
+            {
+              "type": "plain",
+              "text": "固定宽",
+              "width": 120,
+              "columnClassName": "bg-blue-300"
+            },
+            "..."
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-hbox-1",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "HBox 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "HBox 布局 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "hbox",
+        "columns": [
+          {
+            "type": "plain",
+            "text": "Col A",
+            "columnClassName": "bg-green-300"
+          },
+          "Col B"
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-hbox-2",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "HBox 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "HBox 布局 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "hbox",
+        "columns": [
+          {
+            "width": 160,
+            "columnClassName": "bg-green-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "width: 160"
+              }
+            ]
+          },
+          {
+            "width": "auto",
+            "columnClassName": "bg-blue-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "auto"
+              }
+            ]
+          },
+          {
+            "columnClassName": "bg-red-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "均分"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-hbox-3",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "HBox 布局",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "HBox 布局 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "hbox",
+        "gap": "md",
+        "align": "center",
+        "valign": "middle",
+        "columns": [
+          {
+            "columnClassName": "bg-green-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "左"
+              }
+            ]
+          },
+          {
+            "columnClassName": "bg-blue-300",
+            "body": [
+              {
+                "type": "plain",
+                "text": "右"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-pagination-0",
     "group": "组件 / 布局",
     "bucket": "components",

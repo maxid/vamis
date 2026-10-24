@@ -1,74 +1,159 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
-import { cssSize, layoutNodes, styleObject } from './utils'
+import {
+  SchemaRenderer,
+  asArray,
+  hboxColumnBody,
+  hboxColumnStyle,
+  hboxColumnVAlign,
+  hboxColumnWidthMode,
+  hboxGapToken,
+  hboxHAlign,
+  hboxVAlign,
+  isVisible,
+  resolveClassName,
+  resolveInlineStyle,
+  useData,
+  type SchemaObject,
+} from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject }>()
-const columns = computed(() => asArray(props.schema.columns || props.schema.body) as SchemaObject[])
+const data = useData()
+const columns = computed(() =>
+  asArray(props.schema.columns || props.schema.body).filter((col) =>
+    typeof col !== 'object' || isVisible(col as SchemaObject, data.value),
+  ),
+)
+const gap = computed(() => hboxGapToken(props.schema))
+const align = computed(() => hboxHAlign(props.schema))
+const valign = computed(() => hboxVAlign(props.schema))
 
-const gap = computed(() => {
-  const map: Record<string, string> = {
-    none: 'gap-0',
-    xs: 'gap-1',
-    sm: 'gap-2',
-    base: 'gap-3',
-    md: 'gap-4',
-    lg: 'gap-6',
-  }
-  return map[String(props.schema.gap || 'xs')] || 'gap-1'
-})
-
-const align = computed(() => {
-  const map: Record<string, string> = {
-    left: 'justify-start',
-    right: 'justify-end',
-    center: 'justify-center',
-    between: 'justify-between',
-  }
-  return map[String(props.schema.align || '')] || 'justify-start'
-})
-
-const valign = computed(() => {
-  const map: Record<string, string> = {
-    top: 'items-start',
-    middle: 'items-center',
-    bottom: 'items-end',
-    between: 'items-stretch',
-  }
-  return map[String(props.schema.valign || '')] || 'items-stretch'
-})
-
-function colStyle(col: SchemaObject) {
-  const width = cssSize(col.width)
-  return {
-    width,
-    height: cssSize(col.height),
-    flex: width ? '0 0 auto' : '1 1 0%',
-    ...styleObject(col.style),
-  }
+function colClass(col: unknown) {
+  return resolveClassName((col as SchemaObject).columnClassName, data.value)
 }
 
-function colValign(col: SchemaObject) {
-  const map: Record<string, string> = {
-    top: 'self-start',
-    middle: 'self-center',
-    bottom: 'self-end',
-    between: 'self-stretch',
-  }
-  return map[String(col.valign || '')] || ''
+function colStyle(col: unknown) {
+  return resolveInlineStyle(hboxColumnStyle(col), data.value)
 }
 </script>
 
 <template>
-  <div class="flex flex-wrap" :class="[schema.className, gap, align, valign]">
+  <div
+    data-vamis-hbox
+    :data-gap="gap"
+    :data-align="align"
+    :data-valign="valign"
+  >
     <div
       v-for="(col, i) in columns"
       :key="i"
-      class="min-w-0"
-      :class="[col.columnClassName, colValign(col)]"
+      data-hbox-col
+      :data-hbox-width="hboxColumnWidthMode(col)"
+      :data-hbox-valign="hboxColumnVAlign(col)"
+      :class="colClass(col)"
       :style="colStyle(col)"
     >
-      <SchemaRenderer v-for="(node, j) in layoutNodes(col)" :key="j" :schema="node" />
+      <SchemaRenderer
+        v-for="(node, j) in hboxColumnBody(col)"
+        :key="j"
+        :schema="node"
+      />
     </div>
   </div>
 </template>
+
+<style scoped>
+[data-vamis-hbox] {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+}
+[data-vamis-hbox] > [data-hbox-col] {
+  flex-basis: 0;
+  flex-grow: 1;
+  min-height: 1px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-width='custom'] {
+  flex-grow: unset;
+  flex-basis: unset;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-width='auto'] {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+[data-vamis-hbox][data-align='right'] { justify-content: flex-end; }
+[data-vamis-hbox][data-align='center'] { justify-content: center; }
+[data-vamis-hbox][data-align='between'] { justify-content: space-between; }
+
+[data-vamis-hbox][data-valign='middle'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='middle'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+[data-vamis-hbox][data-valign='bottom'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='bottom'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+[data-vamis-hbox][data-valign='between'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='between'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='top'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+[data-vamis-hbox][data-gap='xs'] {
+  margin-left: calc(var(--gap-xs) * -0.5);
+  margin-right: calc(var(--gap-xs) * -0.5);
+}
+[data-vamis-hbox][data-gap='xs'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-xs) * 0.5);
+  padding-right: calc(var(--gap-xs) * 0.5);
+}
+[data-vamis-hbox][data-gap='sm'] {
+  margin-left: calc(var(--gap-sm) * -0.5);
+  margin-right: calc(var(--gap-sm) * -0.5);
+}
+[data-vamis-hbox][data-gap='sm'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-sm) * 0.5);
+  padding-right: calc(var(--gap-sm) * 0.5);
+}
+[data-vamis-hbox][data-gap='base'] {
+  margin-left: calc(var(--gap-base) * -0.5);
+  margin-right: calc(var(--gap-base) * -0.5);
+}
+[data-vamis-hbox][data-gap='base'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-base) * 0.5);
+  padding-right: calc(var(--gap-base) * 0.5);
+}
+[data-vamis-hbox][data-gap='md'] {
+  margin-left: calc(var(--gap-md) * -0.5);
+  margin-right: calc(var(--gap-md) * -0.5);
+}
+[data-vamis-hbox][data-gap='md'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-md) * 0.5);
+  padding-right: calc(var(--gap-md) * 0.5);
+}
+[data-vamis-hbox][data-gap='lg'] {
+  margin-left: calc(var(--gap-lg) * -0.5);
+  margin-right: calc(var(--gap-lg) * -0.5);
+}
+[data-vamis-hbox][data-gap='lg'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-lg) * 0.5);
+  padding-right: calc(var(--gap-lg) * 0.5);
+}
+</style>
