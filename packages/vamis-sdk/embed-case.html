@@ -21,14 +21,45 @@
         padding: 12px;
       }
     </style>
+    <script>
+      (function () {
+        const params = new URLSearchParams(location.search)
+        const engine = params.get('engine') || 'vamis'
+        const amisSdk = (params.get('amisSdk') || 'https://unpkg.com/amis@6.13.0/sdk').replace(
+          /\/?$/,
+          '/',
+        )
+        const css =
+          engine === 'amis'
+            ? [amisSdk + 'sdk.css', amisSdk + 'helper.css', amisSdk + 'iconfont.css']
+            : ['./sdk.css']
+        const js = engine === 'amis' ? amisSdk + 'sdk.js' : './sdk.js'
+        const cssEls = css.map(function (href) {
+          const el = document.createElement('link')
+          el.rel = 'stylesheet'
+          el.href = href
+          document.head.appendChild(el)
+          return el
+        })
+        const jsEl = document.createElement('script')
+        jsEl.src = js
+        jsEl.async = false
+        document.head.appendChild(jsEl)
+        window.__vamisCompareAssets = {
+          engine: engine,
+          amisSdk: amisSdk.replace(/\/$/, ''),
+          cssEls: cssEls,
+          jsEl: jsEl,
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script>
       (function () {
-        const params = new URLSearchParams(location.search)
-        const engine = params.get('engine') || 'vamis'
-        const amisSdk = params.get('amisSdk') || 'https://unpkg.com/amis@6.13.0/sdk'
+        const assets = window.__vamisCompareAssets || {}
+        const engine = assets.engine || 'vamis'
         let ready = false
         let pending = null
         let scoped = null
@@ -43,28 +74,25 @@
           )
         }
 
-        function loadCss(href) {
+        function waitAsset(el, kind) {
           return new Promise(function (resolve, reject) {
-            const el = document.createElement('link')
-            el.rel = 'stylesheet'
-            el.href = href
-            el.onload = resolve
-            el.onerror = function () {
-              reject(new Error('css ' + href))
+            function fail() {
+              reject(new Error(kind + ' ' + (el.href || el.src)))
             }
-            document.head.appendChild(el)
-          })
-        }
-
-        function loadScript(src) {
-          return new Promise(function (resolve, reject) {
-            const el = document.createElement('script')
-            el.src = src
-            el.onload = resolve
-            el.onerror = function () {
-              reject(new Error('js ' + src))
+            if (kind === 'css') {
+              try {
+                if (el.sheet) return resolve()
+              } catch (_err) {
+                return resolve()
+              }
+            } else if (
+              (engine === 'amis' && typeof window.amisRequire === 'function') ||
+              (engine !== 'amis' && window.vamis)
+            ) {
+              return resolve()
             }
-            document.body.appendChild(el)
+            el.addEventListener('load', resolve)
+            el.addEventListener('error', fail)
           })
         }
 
@@ -634,13 +662,17 @@
         })
 
         async function boot() {
-          if (engine === 'amis') {
-            await loadCss(amisSdk.replace(/\/?$/, '/') + 'sdk.css')
-            await loadCss(amisSdk.replace(/\/?$/, '/') + 'helper.css')
-            await loadScript(amisSdk.replace(/\/?$/, '/') + 'sdk.js')
-          } else {
-            await loadCss('./sdk.css')
-            await loadScript('./sdk.js')
+          const cssEls = assets.cssEls || []
+          const waits = cssEls.map(function (el) {
+            return waitAsset(el, 'css')
+          })
+          if (assets.jsEl) waits.push(waitAsset(assets.jsEl, 'js'))
+          await Promise.all(waits)
+          if (engine === 'amis' && typeof window.amisRequire !== 'function') {
+            throw new Error('js ' + (assets.jsEl && assets.jsEl.src))
+          }
+          if (engine !== 'amis' && !window.vamis) {
+            throw new Error('js ' + (assets.jsEl && assets.jsEl.src))
           }
           ready = true
           window.__vamisCompareReady = true

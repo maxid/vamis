@@ -216,6 +216,7 @@ describe('nav-group', () => {
 
   it('loadCatalog groups default cases by Amis nav buckets', () => {
     const cases = loadCatalog()
+    expect(cases.length).toBeGreaterThan(100)
     expect(cases.some((row) => row.bucket === 'docs')).toBe(true)
     expect(cases.some((row) => row.bucket === 'components')).toBe(true)
     expect(cases.some((row) => row.bucket === 'style')).toBe(true)

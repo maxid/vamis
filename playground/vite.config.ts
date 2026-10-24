@@ -48,7 +48,9 @@ const SDK_MISSING_HTML = `<!doctype html>
 `
 
 function serveSdk(): Plugin {
-  const dir = path.join(repo, 'packages', 'vamis-sdk', 'dist')
+  const sdkRoot = path.join(repo, 'packages', 'vamis-sdk')
+  const dir = path.join(sdkRoot, 'dist')
+  const fromRoot = new Set(['hello.html', 'compare.html', 'embed-case.html', 'compare-cases.js'])
   const types: Record<string, string> = {
     '.js': 'text/javascript; charset=utf-8',
     '.mjs': 'text/javascript; charset=utf-8',
@@ -56,14 +58,22 @@ function serveSdk(): Plugin {
     '.html': 'text/html; charset=utf-8',
     '.map': 'application/json; charset=utf-8',
   }
+  function resolveSdkFile(file: string) {
+    if (fromRoot.has(file)) {
+      const src = path.normalize(path.join(sdkRoot, file))
+      if (src.startsWith(sdkRoot) && fs.existsSync(src) && fs.statSync(src).isFile()) return src
+    }
+    return path.normalize(path.join(dir, file))
+  }
   return {
     name: 'vamis-sdk-assets',
     configureServer(server) {
       server.middlewares.use('/sdk', (req, res, next) => {
         const url = (req.url || '/').split('?')[0]
         const file = !url || url === '/' ? 'hello.html' : url.replace(/^\//, '')
-        const full = path.normalize(path.join(dir, file))
-        if (!full.startsWith(dir) || !fs.existsSync(full) || fs.statSync(full).isDirectory()) {
+        const full = resolveSdkFile(file)
+        const allowed = full.startsWith(dir) || (fromRoot.has(file) && full.startsWith(sdkRoot))
+        if (!allowed || !fs.existsSync(full) || fs.statSync(full).isDirectory()) {
           if (file.endsWith('.html') || file === 'hello.html' || !file) {
             res.statusCode = 200
             res.setHeader('Content-Type', 'text/html; charset=utf-8')
