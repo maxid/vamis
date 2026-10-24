@@ -540,6 +540,7 @@ describe('fillsLayoutSlot', () => {
   it('marks form/panel/page as filling the parent and leaves buttons content-sized', () => {
     expect(fillsLayoutSlot('form')).toBe(true)
     expect(fillsLayoutSlot('panel')).toBe(true)
+    expect(fillsLayoutSlot('switch-container')).toBe(true)
     expect(fillsLayoutSlot('button')).toBe(false)
     expect(fillsLayoutSlot('action')).toBe(false)
   })

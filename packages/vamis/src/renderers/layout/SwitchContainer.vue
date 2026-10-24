@@ -1,19 +1,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, isVisible, type SchemaObject } from '@vamis/core'
-import { layoutNodes } from './utils'
+import {
+  SchemaRenderer,
+  switchContainerActive,
+  switchContainerBody,
+  useData,
+  type SchemaObject,
+} from '@vamis/core'
 
-const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
-const active = computed(() => {
-  const items = asArray(props.schema.items) as SchemaObject[]
-  return items.find((item) => isVisible(item, props.data))
+const props = defineProps<{ schema: SchemaObject }>()
+const data = useData()
+const body = computed(() => {
+  const active = switchContainerActive(props.schema, data.value)
+  return active ? switchContainerBody(active) : []
 })
 </script>
 
 <template>
-  <div :class="schema.className" :style="schema.style">
-    <template v-if="active">
-      <SchemaRenderer v-for="(node, i) in layoutNodes(active)" :key="i" :schema="node" />
-    </template>
+  <div data-vamis-switch-container class="w-full min-w-0">
+    <div v-if="body.length" style="display: inline">
+      <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
+    </div>
   </div>
 </template>

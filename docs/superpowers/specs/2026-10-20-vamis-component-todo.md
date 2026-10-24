@@ -33,19 +33,19 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 87% | 14 |
+| 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 54% | 4 |
 | 其他 | 0 / 7 | 6 | 1 | 32% | 2 |
-| **合计** | **2 / 155** | **151** | **2** | **49%** | **94** |
+| **合计** | **2 / 155** | **151** | **2** | **49%** | **95** |
 
 未开始只有 2 项，都不是独立 `type`：功能类 `popOver` 属性、其他类 `badge` 属性。Toast 文档主路径（`toast.items` / 位置）未齐，但 `actionType: toast` 已能弹出，算进行中 40%。
 
 ---
 
-## 布局（2/15，均 87%）
+## 布局（2/15，均 90%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -65,7 +65,7 @@
 | `tabs` | Tabs 选项卡 | 进行中 | 85% | 文档主路径已对齐：`tabs[].body` / `tab`、`source` 动态、`activeKey` / `hash`、`disabled`、`mountOnEnter`、`change`。缺 `addable` / `draggable` / `editable`、`tabsMode` 像素级、`themeCss`、`swipeable` | P0 |
 | `wrapper` | Wrapper 包裹容器 | 进行中 | 90% | 文档主路径已对齐：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss` | P0 |
 | `portlet` | Portlet 门户栏目 | 进行中 | 85% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`description`、`hideHeader`、默认分隔线 / `divider: false`、全局与 tab 级 `toolbar`、`mountOnEnter` 默认 false、`change`。缺 `themeCss`、icon 像素、`scrollable` | P0 |
-| `switch-container` | switch-container 状态容器 | 进行中 | 45% | 按 `visibleOn` 取首个状态；外观/事件未齐。侧栏未收录，docs 有独立页 | P0 |
+| `switch-container` | switch-container 状态容器 | 进行中 | 90% | 文档主路径已对齐：`items[].body` / `visibleOn` 取首个命中、`style`、宿主 click/mouseenter/mouseleave。缺 `themeCss`、`switchTo` 动作。侧栏未收录，docs 有独立页 | P0 |
 
 ---
 
