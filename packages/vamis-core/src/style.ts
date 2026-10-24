@@ -75,6 +75,7 @@ const LAYOUT_SLOT_TYPES = new Set([
   'wrapper',
   'portlet',
   'switch-container',
+  'app',
   'wizard',
   'tabs',
   'table',

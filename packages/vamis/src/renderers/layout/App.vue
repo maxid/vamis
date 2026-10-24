@@ -1,83 +1,46 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { SchemaRenderer, asArray, filterTpl, useEnv, type SchemaObject } from '@vamis/core'
+import {
+  SchemaRenderer,
+  appBrandName,
+  appDefaultPage,
+  appFlat,
+  appNav,
+  appNotFoundPage,
+  appSlot,
+  useData,
+  useEnv,
+  type SchemaObject,
+} from '@vamis/core'
 
-interface NavItem {
-  key: string
-  label: string
-  schema?: SchemaObject
-  link?: string
-  isDefault?: boolean
-  children: NavItem[]
-}
-
-const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
+const props = defineProps<{ schema: SchemaObject }>()
+const data = useData()
 const env = useEnv()
 
-function toNav(pages: unknown[], prefix = ''): NavItem[] {
-  return asArray(pages as SchemaObject[]).flatMap((raw, i) => {
-    const page = (raw && typeof raw === 'object' ? raw : {}) as SchemaObject
-    if (page.visible === false) return []
-    const key = String(page.url || page.label || `${prefix}${i}`)
-    const children = Array.isArray(page.children) ? toNav(page.children, `${key}-`) : []
-    const schema = page.schema
-      ? (page.schema as SchemaObject)
-      : page.body != null
-        ? { type: 'wrapper', body: page.body }
-        : undefined
-    return [
-      {
-        key,
-        label: filterTpl(page.label || page.title || `页面 ${i + 1}`, props.data),
-        schema,
-        link: typeof page.link === 'string' ? page.link : undefined,
-        isDefault: page.isDefaultPage === true,
-        children,
-      },
-    ]
-  })
-}
-
-const nav = computed(() => toNav(asArray(props.schema.pages)))
-
-const flat = computed(() => {
-  const out: { item: NavItem; depth: number; group: boolean }[] = []
-  const walk = (items: NavItem[], depth: number) => {
-    for (const item of items) {
-      const selectable = !!(item.schema || item.link)
-      if (item.children.length && !selectable) {
-        out.push({ item, depth, group: true })
-      } else if (selectable) {
-        out.push({ item, depth, group: false })
-      }
-      if (item.children.length) walk(item.children, depth + 1)
-    }
-  }
-  walk(nav.value, 0)
-  return out
+const nav = computed(() => appNav(props.schema, data.value))
+const flat = computed(() => appFlat(nav.value))
+const brand = computed(() => appBrandName(props.schema, data.value))
+const header = computed(() => appSlot(props.schema, 'header'))
+const asideBefore = computed(() => appSlot(props.schema, 'asideBefore'))
+const asideAfter = computed(() => appSlot(props.schema, 'asideAfter'))
+const footer = computed(() => appSlot(props.schema, 'footer'))
+const logoSrc = computed(() => {
+  const logo = props.schema.logo
+  return typeof logo === 'string' && (logo.startsWith('http') || logo.includes('/')) ? logo : ''
 })
-
-function findNav(items: NavItem[], pred: (item: NavItem) => boolean): NavItem | null {
-  for (const item of items) {
-    if (pred(item)) return item
-    const child = findNav(item.children, pred)
-    if (child) return child
-  }
-  return null
-}
-
-function firstLeaf(items: NavItem[]): NavItem | null {
-  return findNav(items, (item) => !!(item.isDefault && item.schema)) || findNav(items, (item) => !!item.schema)
-}
 
 const currentKey = ref('')
 const current = computed(() => {
   const key = currentKey.value
-  const found = flat.value.find((row) => !row.group && row.item.key === key)?.item
-  return found || firstLeaf(nav.value)
+  if (key) {
+    const found = flat.value.find((row) => !row.group && row.item.key === key)?.item
+    if (found?.schema) return found
+    return appNotFoundPage(nav.value)
+  }
+  return appDefaultPage(nav.value)
 })
 
-function select(item: NavItem) {
+function select(item: (typeof flat.value)[number]['item']) {
   if (item.link) {
     env.jumpTo(item.link)
     return
@@ -87,13 +50,18 @@ function select(item: NavItem) {
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-lg border bg-card">
-    <header v-if="schema.brandName || schema.logo" class="flex items-center gap-2 border-b px-4 py-3">
-      <img v-if="schema.logo" :src="schema.logo" alt="" class="h-6 w-6 rounded object-cover" />
-      <h2 class="text-sm font-semibold">{{ schema.brandName }}</h2>
-    </header>
+  <div data-vamis-app class="w-full min-w-0 overflow-hidden rounded-lg border bg-card">
+    <div
+      v-if="brand || logoSrc || header.length"
+      class="flex items-center gap-2 border-b px-4 py-3"
+    >
+      <img v-if="logoSrc" :src="logoSrc" alt="" class="h-6 w-6 rounded object-cover" />
+      <h1 v-if="brand" class="text-sm font-semibold">{{ brand }}</h1>
+      <SchemaRenderer v-for="(node, i) in header" :key="i" :schema="node" />
+    </div>
     <div class="grid gap-0 lg:grid-cols-[13rem_minmax(0,1fr)]">
-      <aside class="space-y-1 border-b p-2 lg:border-r lg:border-b-0">
+      <div class="space-y-1 border-b p-2 lg:border-r lg:border-b-0">
+        <SchemaRenderer v-for="(node, i) in asideBefore" :key="`before-${i}`" :schema="node" />
         <template v-for="row in flat" :key="row.item.key">
           <p
             v-if="row.group"
@@ -113,11 +81,15 @@ function select(item: NavItem) {
             {{ row.item.label }}
           </button>
         </template>
-      </aside>
+        <SchemaRenderer v-for="(node, i) in asideAfter" :key="`after-${i}`" :schema="node" />
+      </div>
       <div class="min-w-0 space-y-3 p-4">
         <SchemaRenderer v-if="current?.schema" :key="current.key" :schema="current.schema" />
         <p v-else class="text-sm text-muted-foreground">页面不存在</p>
       </div>
     </div>
-  </section>
+    <div v-if="footer.length" class="border-t px-4 py-3">
+      <SchemaRenderer v-for="(node, i) in footer" :key="i" :schema="node" />
+    </div>
+  </div>
 </template>

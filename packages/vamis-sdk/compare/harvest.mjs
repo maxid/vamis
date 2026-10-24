@@ -73,6 +73,9 @@ const CHILD_KEYS = [
   'header',
   'aside',
   'footer',
+  'pages',
+  'children',
+  'schema',
 ]
 
 const TEXT_KEYS = ['tpl', 'html', 'value', 'label', 'text', 'msg', 'title']
