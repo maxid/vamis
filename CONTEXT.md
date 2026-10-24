@@ -71,6 +71,7 @@
 **最近交付**
 
 - `avatar` 对照 **13/13**（目录 **893**）。先前 1 败是 `onError: return true`：对照 `vamis.embed` 未开 `trusted`，字符串函数体不跑、结点 value 空。对照页现与文档预览一样传 `env.trusted: true`；SDK 默认仍关。文档主路径 90%（src 真图、fa-user、`$var`、gap 缩放、ribbon）。剩余 lineHeight 21/20、toast 字重走对照全局暂缓。
+- 对照收割写进规则 `.cursor/rules/compare.mdc`：`compare-cases.js` / `dist/sdk.js` 不进 git，换机器不会自动更新。改完组件必须本机 `pnpm sdk:build`（运行时）+ `pnpm compare --page <type>`，收工清单与 AGENTS 已挂上。
 - 文档活示例文案对标 Amis 主路径（按钮 / Nav 1 / 提示类文案 / HOT / 第一步·Step 2·Step 3），去掉残留的甲/乙/丙唯一后缀。对照目录仍 **886**：badge **7/7**、dropdown-button **4/4**、wizard **4/4**、nav **3/3**、pagination-wrapper **2/2**、button-group **4/4**、tasks **3/3**、spinner **5/5**。
 - 文档活示例：每个语义示例只留一份 schema 围栏，去掉 JSON/YAML 甲乙孪生（对照解析后本就会去重）。切格式走「编辑 Schema」双 Tab。目录 **969 → 886**。`badge` 对照 **7/7**。
 - 补 `TYPE_CATALOGS.popover`：侧栏文档 type 不是独立渲染器，但补全目录要有自述，否则 `schema-completions` 报缺 catalog。
