@@ -101,6 +101,7 @@ const INLINE_BLOCK_SCHEMA_TYPES = new Set([
   'dropdown-button',
   'badge',
   'link',
+  'avatar',
 ])
 
 export function isInlineSchema(schema?: { type?: string; inline?: unknown } | null): boolean {

@@ -16743,12 +16743,430 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "avatar",
-      "body": [
-        {
-          "type": "avatar"
-        }
-      ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是头像。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "avatar",
+        "text": "甲A"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "avatar",
+        "text": "乙A"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-3",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "甲AM"
+          },
+          {
+            "type": "avatar",
+            "text": "甲长文字"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-4",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "乙AM"
+          },
+          {
+            "type": "avatar",
+            "text": "乙长文字"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-5",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "shape": "square",
+            "text": "甲方"
+          },
+          {
+            "type": "avatar",
+            "shape": "rounded",
+            "text": "甲圆"
+          },
+          {
+            "type": "avatar",
+            "shape": "circle",
+            "text": "甲圆圈"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-6",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "shape": "square",
+            "text": "乙方"
+          },
+          {
+            "type": "avatar",
+            "shape": "rounded",
+            "text": "乙圆"
+          },
+          {
+            "type": "avatar",
+            "shape": "circle",
+            "text": "乙圆圈"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-7",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "size": "large",
+            "text": "甲大"
+          },
+          {
+            "type": "avatar",
+            "size": "default",
+            "text": "甲默"
+          },
+          {
+            "type": "avatar",
+            "size": "small",
+            "text": "甲小"
+          },
+          {
+            "type": "avatar",
+            "size": 60,
+            "text": "甲60"
+          },
+          {
+            "type": "avatar",
+            "size": 20,
+            "text": "甲20"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-8",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "size": "large",
+            "text": "乙大"
+          },
+          {
+            "type": "avatar",
+            "size": "small",
+            "text": "乙小"
+          },
+          {
+            "type": "avatar",
+            "size": 60,
+            "text": "乙60"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-9",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "fit": "cover",
+            "text": "甲cover"
+          },
+          {
+            "type": "avatar",
+            "fit": "contain",
+            "text": "甲contain"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-10",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "fit": "cover",
+            "text": "乙cover"
+          },
+          {
+            "type": "avatar",
+            "fit": "contain",
+            "text": "乙contain"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-11",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "甲角",
+            "badge": {
+              "mode": "text",
+              "text": 10
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "甲点",
+            "badge": {
+              "mode": "dot"
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "甲数",
+            "badge": 3
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-avatar-12",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Avatar 头像",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Avatar 头像 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "乙角",
+            "badge": {
+              "mode": "text",
+              "text": 10
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "乙点",
+            "badge": {
+              "mode": "dot"
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "乙数",
+            "badge": 3
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -16767,12 +17185,274 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "tasks",
-      "body": [
-        {
-          "type": "tasks"
-        }
-      ]
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是任务列表。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksJia",
+        "items": [
+          {
+            "label": "hive 任务甲",
+            "key": "hive-a",
+            "status": 4,
+            "remark": "日志甲"
+          },
+          {
+            "label": "小流量甲",
+            "key": "partial-a",
+            "status": 4
+          },
+          {
+            "label": "全量甲",
+            "key": "full-a",
+            "status": 4
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksYi",
+        "items": [
+          {
+            "label": "hive 任务乙",
+            "key": "hive-b",
+            "status": 4,
+            "remark": "日志乙"
+          },
+          {
+            "label": "小流量乙",
+            "key": "partial-b",
+            "status": 4
+          },
+          {
+            "label": "全量乙",
+            "key": "full-b",
+            "status": 4
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-3",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksStatusJia",
+        "items": [
+          {
+            "label": "未开始甲",
+            "key": "s0-a",
+            "status": 0
+          },
+          {
+            "label": "就绪甲",
+            "key": "s1-a",
+            "status": 1
+          },
+          {
+            "label": "进行中甲",
+            "key": "s2-a",
+            "status": 2
+          },
+          {
+            "label": "出错甲",
+            "key": "s3-a",
+            "status": 3,
+            "remark": "不可重试甲"
+          },
+          {
+            "label": "已完成甲",
+            "key": "s4-a",
+            "status": 4
+          },
+          {
+            "label": "可重试甲",
+            "key": "s5-a",
+            "status": 5,
+            "remark": "可重试备注甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-4",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksStatusYi",
+        "items": [
+          {
+            "label": "未开始乙",
+            "key": "s0-b",
+            "status": 0
+          },
+          {
+            "label": "就绪乙",
+            "key": "s1-b",
+            "status": 1
+          },
+          {
+            "label": "进行中乙",
+            "key": "s2-b",
+            "status": 2
+          },
+          {
+            "label": "出错乙",
+            "key": "s3-b",
+            "status": 3,
+            "remark": "不可重试乙"
+          },
+          {
+            "label": "已完成乙",
+            "key": "s4-b",
+            "status": 4
+          },
+          {
+            "label": "可重试乙",
+            "key": "s5-b",
+            "status": 5,
+            "remark": "可重试备注乙"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-5",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksColsJia",
+        "taskNameLabel": "名称甲",
+        "statusLabel": "进度甲",
+        "remarkLabel": "说明甲",
+        "operationLabel": "动作甲",
+        "btnText": "发布甲",
+        "retryBtnText": "再试甲",
+        "items": [
+          {
+            "label": "列表示例甲",
+            "key": "col-a",
+            "status": 1,
+            "remark": "列备注甲"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tasks-6",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Tasks 任务操作集合",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tasks 任务操作集合 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tasks",
+        "name": "tasksColsYi",
+        "taskNameLabel": "名称乙",
+        "statusLabel": "进度乙",
+        "remarkLabel": "说明乙",
+        "operationLabel": "动作乙",
+        "btnText": "发布乙",
+        "retryBtnText": "再试乙",
+        "items": [
+          {
+            "label": "列表示例乙",
+            "key": "col-b",
+            "status": 5,
+            "remark": "列备注乙"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -16791,23 +17471,86 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "badge",
-      "body": [
-        {
-          "type": "grid-nav",
-          "options": [
-            {
-              "icon": "fa fa-bell",
-              "text": "消息",
-              "badge": 3
-            },
-            {
-              "icon": "fa fa-user",
-              "text": "我的"
+      "body": {
+        "type": "tpl",
+        "tpl": "下面是带头像角标。"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "角甲",
+            "badge": {
+              "mode": "text",
+              "text": 10
             }
-          ]
-        }
-      ]
+          },
+          {
+            "type": "avatar",
+            "text": "点甲",
+            "badge": {
+              "mode": "dot"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "container",
+        "body": [
+          {
+            "type": "avatar",
+            "text": "角乙",
+            "badge": {
+              "mode": "text",
+              "text": 10
+            }
+          },
+          {
+            "type": "avatar",
+            "text": "点乙",
+            "badge": {
+              "mode": "dot"
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
