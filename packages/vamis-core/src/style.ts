@@ -88,11 +88,35 @@ export function fillsLayoutSlot(type?: string): boolean {
 /** Amis Tpl 默认 inline（span）。block 外层会把 each 的 item 竖起来。 */
 const INLINE_SCHEMA_TYPES = new Set(['tpl', 'html', 'plain'])
 
+/** 按钮 / 徽标不占满一行，和 Amis 一样并排。className（如 m-l）打在这层盒子上。 */
+const INLINE_BLOCK_SCHEMA_TYPES = new Set([
+  'action',
+  'button',
+  'submit',
+  'reset',
+  'dropdown-button',
+  'badge',
+  'link',
+])
+
 export function isInlineSchema(schema?: { type?: string; inline?: unknown } | null): boolean {
   if (!schema) return false
   if (schema.inline === false) return false
   if (schema.inline === true) return true
   return INLINE_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
+}
+
+export function isInlineBlockSchema(schema?: { type?: string; inline?: unknown } | null): boolean {
+  if (!schema) return false
+  if (schema.inline === false) return false
+  return INLINE_BLOCK_SCHEMA_TYPES.has(String(schema.type || '').toLowerCase())
+}
+
+/** SchemaRenderer 外层 `div.vamis-node` 的 display class。 */
+export function schemaNodeDisplayClass(schema?: { type?: string; inline?: unknown } | null): string {
+  if (isInlineBlockSchema(schema)) return 'inline-block'
+  if (isInlineSchema(schema)) return 'inline'
+  return ''
 }
 
 export function isControlSize(size?: unknown): size is ControlSizeName {

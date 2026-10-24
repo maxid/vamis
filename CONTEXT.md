@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- Page 内容区去掉 `space-y-3`；`button` / `action` 的 `div.vamis-node` 改为 `inline-block`，两个按钮默认并排（对齐 Amis「样式」基本使用），`className: m-l` 才能拉开缝。
 - 概念组未完成页对标 Amis 同名文档补活示例：「事件动作」**85% 进行中**（`onEvent` / 常用动作 / 事件对象 / `preventDefault` / `stopPropagation` / `ignoreError` / `expression`；控制流与广播仍缺）、「行为」**80% 进行中**（`type: action` 主路径；`clickAction` 未接）、「样式」**75% 进行中**（`className` / `cssVars` / `size` / 指向 `/style`）、「数据域与数据链」**75% 进行中**（补「发生了什么」与 `__super` 活示例；D6 / D9 / D10 仍挡）。
 - 规则补上 Amis 对照仓相对位置（默认同级 `../amis`，不写本机绝对路径）以及文档 / 样式 / 核心 / 组件怎么查：`.cursor/rules/amis-lookup.mdc`。
 - 项目规则按域合并：站点 → `.cursor/rules/site.mdc`，样式 → `style.mdc`，组件 → `component.mdc`。收工清单仍是 `update-progress.mdc`。

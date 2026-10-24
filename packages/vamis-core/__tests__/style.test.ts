@@ -12,6 +12,7 @@ import {
   controlWidthForSize,
   fillsLayoutSlot,
   isInlineSchema,
+  schemaNodeDisplayClass,
   resolveClassName,
   resolveCssVars,
   resolveInlineStyle,
@@ -532,6 +533,25 @@ describe('isInlineSchema', () => {
   })
 })
 
+describe('schemaNodeDisplayClass', () => {
+  it('puts buttons inline-block so page body siblings sit on one line', () => {
+    expect(schemaNodeDisplayClass({ type: 'button' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'action' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'submit' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'badge' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
+    expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
+    expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')
+  })
+
+  it('does not stack page body with space-y (Amis Page-body is normal flow)', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
+    expect(page).toContain('class="w-full min-w-0 p-[var(--page-body-padding)]"')
+    expect(page).not.toContain('space-y-3 p-[var(--page-body-padding)]')
+  })
+})
+
 describe('style docs surface', () => {
   it('exposes 样式 as a first-class playground section aligned with Amis', () => {
     const here = dirname(fileURLToPath(import.meta.url))
@@ -563,7 +583,7 @@ describe('style docs surface', () => {
     expect(nav).toContain("link: '/style/typography/text-overflow'")
     expect(nav).toContain("text: '辅助类-响应式设计'")
     expect(index).toContain('# 快速开始')
-    expect(index).toContain('实现进度 45%')
+    expect(index).toContain('实现进度 50%')
     expect(index).toContain('--primary-onHover')
     expect(index).not.toContain('主按钮')
     expect(index).toContain('className: text-green-700')
