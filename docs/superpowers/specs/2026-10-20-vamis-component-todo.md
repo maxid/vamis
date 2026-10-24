@@ -33,7 +33,7 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 2 / 15 | 13 | 0 | 79% | 13 |
+| 布局 | 2 / 15 | 13 | 0 | 81% | 13 |
 | 功能 | 0 / 12 | 11 | 1 | 44% | 8 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
@@ -45,7 +45,7 @@
 
 ---
 
-## 布局（2/15，均 79%）
+## 布局（2/15，均 81%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -61,7 +61,7 @@
 | `hbox` | HBox 布局 | 进行中 | 90% | 文档主路径已对齐：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `pagination` | Pagination 分页 | 进行中 | 90% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`。缺 `themeCss`、移动端 `mobileUI` | P0 |
 | `pagination-wrapper` | PaginationWrapper 分页容器 | 进行中 | 90% | 文档主路径已对齐：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
-| `panel` | Panel 面板 | 进行中 | 65% | title/body 可用，`h-full` 吃满父槽；缺 `actions` 语义细节 | P0 |
+| `panel` | Panel 面板 | 进行中 | 90% | 文档主路径已对齐：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、色档、移动端 `Panel--form` | P0 |
 | `tabs` | Tabs 选项卡 | 进行中 | 60% | 切 tab 可用；缺 `source` 动态、`mountOnEnter` | P0 |
 | `wrapper` | Wrapper 包裹容器 | 进行中 | 65% | 能包一层；size/style 未齐 | P0 |
 | `portlet` | Portlet 门户栏目 | 进行中 | 45% | 已注册，工具栏/拖拽精简 | P0 |

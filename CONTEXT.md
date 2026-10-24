@@ -59,17 +59,18 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **49%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 79%；`page` 已完成 95% / `container` 已完成 100%；`collapse` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` 90%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 151 / 未开始 2，平均 **49%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 81%；`page` 已完成 95% / `container` 已完成 100%；`collapse` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` 90%；`form` 68%；FormItem 48%；`select` 60%；`service`/`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；未开始：`popOver` 属性、`badge` 属性 |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 266 + sdk 46 | `pnpm typecheck` 已通过；SDK 对照目录 **765**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 273 + sdk 46 | `pnpm typecheck` 已通过；SDK 对照目录 **769**。组件改树结点量测后，**功能**切片 14 条 **13 过 / 1 败**（Action toast 探测）。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- 对照全局（字体 / token）先放下，按 Amis 侧栏做组件：`panel` 主路径对齐 `title` / `header` / `body` / `footer` / `actions`、`affixFooter`。文档 **90% 进行中**。`pagination-wrapper` / `pagination` / `hbox` / `grid-2d` / `grid` / `flex` / `divider` / `collapse` 已对齐主路径。
 - 对照全局（字体 / token）先放下，按 Amis 侧栏做组件：`pagination-wrapper` 主路径对齐 `inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。文档 **90% 进行中**。`pagination` / `hbox` / `grid-2d` / `grid` / `flex` / `divider` / `collapse` 已对齐主路径。
 - 对照全局（字体 / token）先放下，按 Amis 侧栏做组件：`pagination` 主路径对齐 `layout` / `mode` / `size` / `maxButtons` / 省略号跳页 / `change` 事件。文档 **90% 进行中**。补 `pager` 别名，覆盖 **184 / 189（97.4%）**。`hbox` / `grid-2d` / `grid` / `flex` / `divider` / `collapse` 已对齐主路径。
 - 顶栏加 **对照** 入口（整页跳 `/sdk/compare.html`，带 `VITE_BASE`）；对照页标题右侧 **返回首页**。
@@ -221,7 +222,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **Panel**。组件修完只跑 `pnpm compare --page <type>`。
+1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：下一刀 **Tabs**。组件修完只跑 `pnpm compare --page <type>`。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
