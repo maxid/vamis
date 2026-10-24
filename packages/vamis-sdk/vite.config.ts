@@ -10,21 +10,23 @@ const sdk = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(sdk, '../..')
 const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
 
-function copyHelloHtml(): Plugin {
+function copySdkStatic(): Plugin {
+  const files = ['hello.html', 'compare.html', 'embed-case.html', 'compare-cases.js']
   return {
-    name: 'vamis-sdk-hello',
+    name: 'vamis-sdk-static',
     closeBundle() {
-      const from = path.join(sdk, 'hello.html')
-      const to = path.join(sdk, 'dist', 'hello.html')
-      if (fs.existsSync(from) && fs.existsSync(path.dirname(to))) {
-        fs.copyFileSync(from, to)
+      const dest = path.join(sdk, 'dist')
+      if (!fs.existsSync(dest)) return
+      for (const file of files) {
+        const from = path.join(sdk, file)
+        if (fs.existsSync(from)) fs.copyFileSync(from, path.join(dest, file))
       }
     },
   }
 }
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), copyHelloHtml()],
+  plugins: [vue(), tailwindcss(), copySdkStatic()],
   resolve: {
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },

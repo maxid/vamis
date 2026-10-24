@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amis / Vamis SDK 对照</title>
+    <style>
+      :root {
+        font-family: system-ui, sans-serif;
+        color: #0f172a;
+      }
+      body {
+        margin: 0;
+        background: #f8fafc;
+      }
+      header {
+        padding: 16px 20px 8px;
+      }
+      h1 {
+        font-size: 18px;
+        margin: 0 0 6px;
+      }
+      p,
+      label {
+        font-size: 13px;
+        color: #475569;
+      }
+      select {
+        font: inherit;
+        padding: 4px 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 0 16px 16px;
+      }
+      .pane {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .pane h2 {
+        margin: 0;
+        padding: 8px 12px;
+        font-size: 13px;
+        background: #f1f5f9;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      iframe {
+        width: 100%;
+        height: 220px;
+        border: 0;
+        background: #fff;
+      }
+      table {
+        width: calc(100% - 32px);
+        margin: 0 16px 24px;
+        border-collapse: collapse;
+        font-size: 13px;
+        background: #fff;
+      }
+      th,
+      td {
+        border: 1px solid #e2e8f0;
+        padding: 6px 8px;
+        text-align: left;
+      }
+      .ok {
+        color: #15803d;
+      }
+      .bad {
+        color: #b91c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>同一份 schema：Amis SDK vs Vamis SDK</h1>
+      <p>
+        两边都走 JS SDK（<code>amis.embed</code> / <code>vamis.embed</code>），量的是真实按钮盒子，不是文档站截图。Amis SDK 默认
+        <code>unpkg.com/amis@6.13.0</code>。
+      </p>
+      <label>
+        用例
+        <select id="case"></select>
+      </label>
+      <p id="expect"></p>
+    </header>
+    <div class="grid">
+      <section class="pane">
+        <h2>Amis 6.13.0</h2>
+        <iframe id="amis" title="Amis SDK"></iframe>
+      </section>
+      <section class="pane">
+        <h2>Vamis</h2>
+        <iframe id="vamis" title="Vamis SDK"></iframe>
+      </section>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>同一行</th>
+          <th>缝 gap</th>
+          <th>第二颗 top/left/宽</th>
+          <th>判定</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Amis</td>
+          <td id="amis-row">…</td>
+          <td id="amis-gap">…</td>
+          <td id="amis-box">…</td>
+          <td id="amis-pass">…</td>
+        </tr>
+        <tr>
+          <td>Vamis</td>
+          <td id="vamis-row">…</td>
+          <td id="vamis-gap">…</td>
+          <td id="vamis-box">…</td>
+          <td id="vamis-pass">…</td>
+        </tr>
+      </tbody>
+    </table>
+    <script src="./compare-cases.js"></script>
+    <script>
+      (function () {
+        const select = document.getElementById('case')
+        const params = new URLSearchParams(location.search)
+        const amisSdk = params.get('amisSdk') || ''
+        ;(window.VAMIS_COMPARE_CASES || []).forEach(function (row) {
+          const opt = document.createElement('option')
+          opt.value = row.id
+          opt.textContent = row.title
+          select.appendChild(opt)
+        })
+        const initial = params.get('case')
+        if (initial) select.value = initial
+
+        const got = { amis: null, vamis: null }
+
+        function item() {
+          return (window.VAMIS_COMPARE_CASES || []).find(function (row) {
+            return row.id === select.value
+          })
+        }
+
+        function frameUrl(engine) {
+          const q = new URLSearchParams({ engine: engine, case: select.value })
+          if (amisSdk) q.set('amisSdk', amisSdk)
+          return './embed-case.html?' + q.toString()
+        }
+
+        function setCell(id, text, cls) {
+          const el = document.getElementById(id)
+          el.textContent = text
+          el.className = cls || ''
+        }
+
+        function paint(engine, payload) {
+          got[engine] = payload
+          const prefix = engine
+          if (payload.error) {
+            setCell(prefix + '-row', payload.error, 'bad')
+            setCell(prefix + '-gap', '—')
+            setCell(prefix + '-box', '—')
+            setCell(prefix + '-pass', '失败', 'bad')
+            return
+          }
+          const m = payload.measure
+          setCell(prefix + '-row', m.sameRow ? '是' : '否', m.sameRow ? 'ok' : 'bad')
+          setCell(prefix + '-gap', String(m.gap) + 'px')
+          setCell(prefix + '-box', m.b.top + ' / ' + m.b.left + ' / ' + m.b.width)
+          const ok = item().pass(m)
+          setCell(prefix + '-pass', ok ? '通过' : '失败', ok ? 'ok' : 'bad')
+        }
+
+        function load() {
+          got.amis = null
+          got.vamis = null
+          document.getElementById('expect').textContent = '期望：' + item().expect
+          document.getElementById('amis').src = frameUrl('amis')
+          document.getElementById('vamis').src = frameUrl('vamis')
+          ;['amis', 'vamis'].forEach(function (engine) {
+            setCell(engine + '-row', '…')
+            setCell(engine + '-gap', '…')
+            setCell(engine + '-box', '…')
+            setCell(engine + '-pass', '…')
+          })
+          const next = new URL(location.href)
+          next.searchParams.set('case', select.value)
+          history.replaceState(null, '', next)
+        }
+
+        window.addEventListener('message', function (event) {
+          const data = event.data
+          if (!data || data.type !== 'vamis-compare') return
+          paint(data.engine, data)
+        })
+        select.addEventListener('change', load)
+        load()
+      })()
+    </script>
+  </body>
+</html>

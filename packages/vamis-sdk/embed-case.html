@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>compare frame</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #fff;
+      }
+      #root {
+        padding: 12px;
+        min-height: 80px;
+      }
+      .err {
+        color: #b91c1c;
+        font: 13px/1.4 system-ui;
+        padding: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./compare-cases.js"></script>
+    <script>
+      (function () {
+        const params = new URLSearchParams(location.search)
+        const engine = params.get('engine') || 'vamis'
+        const caseId = params.get('case') || 'style-two-buttons'
+        const amisSdk = params.get('amisSdk') || 'https://unpkg.com/amis@6.13.0/sdk'
+        const item = (window.VAMIS_COMPARE_CASES || []).find(function (row) {
+          return row.id === caseId
+        })
+
+        function fail(message) {
+          document.getElementById('root').innerHTML = '<p class="err"></p>'
+          document.querySelector('.err').textContent = message
+          parent.postMessage({ type: 'vamis-compare', engine: engine, caseId: caseId, error: message }, '*')
+        }
+
+        function loadCss(href) {
+          return new Promise(function (resolve, reject) {
+            const el = document.createElement('link')
+            el.rel = 'stylesheet'
+            el.href = href
+            el.onload = resolve
+            el.onerror = function () {
+              reject(new Error('css ' + href))
+            }
+            document.head.appendChild(el)
+          })
+        }
+
+        function loadScript(src) {
+          return new Promise(function (resolve, reject) {
+            const el = document.createElement('script')
+            el.src = src
+            el.onload = resolve
+            el.onerror = function () {
+              reject(new Error('js ' + src))
+            }
+            document.body.appendChild(el)
+          })
+        }
+
+        function measure(labels) {
+          const wanted = labels || ['按钮1', '按钮2']
+          const nodes = []
+          const all = document.querySelectorAll('button, a')
+          for (let i = 0; i < all.length; i++) {
+            const text = (all[i].textContent || '').trim()
+            if (wanted.indexOf(text) >= 0) nodes.push(all[i])
+          }
+          const a = nodes.find(function (n) {
+            return n.textContent.trim() === wanted[0]
+          })
+          const b = nodes.find(function (n) {
+            return n.textContent.trim() === wanted[1]
+          })
+          if (!a || !b) return { error: '找不到 ' + wanted.join(' / ') }
+          const ra = a.getBoundingClientRect()
+          const rb = b.getBoundingClientRect()
+          return {
+            a: { top: round(ra.top), left: round(ra.left), width: round(ra.width), height: round(ra.height) },
+            b: { top: round(rb.top), left: round(rb.left), width: round(rb.width), height: round(rb.height) },
+            sameRow: Math.abs(ra.top - rb.top) <= 2,
+            gap: round(rb.left - (ra.left + ra.width)),
+            bMarginLeft: getComputedStyle(b).marginLeft,
+          }
+        }
+
+        function round(n) {
+          return Math.round(n * 10) / 10
+        }
+
+        function waitForMeasure(labels, timeout) {
+          return new Promise(function (resolve, reject) {
+            const start = Date.now()
+            function tick() {
+              const result = measure(labels)
+              if (!result.error) {
+                resolve(result)
+                return
+              }
+              if (Date.now() - start > timeout) {
+                reject(new Error(result.error))
+                return
+              }
+              setTimeout(tick, 50)
+            }
+            tick()
+          })
+        }
+
+        function report(result) {
+          parent.postMessage(
+            {
+              type: 'vamis-compare',
+              engine: engine,
+              caseId: caseId,
+              measure: result,
+              error: result.error || null,
+            },
+            '*',
+          )
+        }
+
+        async function boot() {
+          if (!item) {
+            fail('unknown case ' + caseId)
+            return
+          }
+          if (engine === 'amis') {
+            await loadCss(amisSdk.replace(/\/?$/, '/') + 'sdk.css')
+            await loadCss(amisSdk.replace(/\/?$/, '/') + 'helper.css')
+            await loadScript(amisSdk.replace(/\/?$/, '/') + 'sdk.js')
+            const embed = window.amisRequire('amis/embed').embed
+            embed('#root', item.schema)
+          } else {
+            await loadCss('./sdk.css')
+            await loadScript('./sdk.js')
+            window.vamis.embed('#root', item.schema)
+          }
+          waitForMeasure(item.labels, 8000).then(report, function (err) {
+            fail(String(err && err.message ? err.message : err))
+          })
+        }
+
+        boot().catch(function (err) {
+          fail(String(err && err.message ? err.message : err))
+        })
+      })()
+    </script>
+  </body>
+</html>

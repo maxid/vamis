@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- SDK 对照已能量到真实盒子：`/sdk/compare.html` 同一份 schema 左右 `amis.embed`（unpkg `amis@6.13.0`）与 `vamis.embed`。默认两按钮两边都同一行、缝 0px；`className: m-l` 两边都同一行，但 Amis **15px**、Vamis **12px**（`--gap-base`）。Amis iframe 改为等到按钮出现再量，不再被 unpkg 慢加载误报「找不到」。
 - Page 内容区去掉 `space-y-3`；`button` / `action` 的 `div.vamis-node` 改为 `inline-block`，两个按钮默认并排（对齐 Amis「样式」基本使用），`className: m-l` 才能拉开缝。
 - 概念组未完成页对标 Amis 同名文档补活示例：「事件动作」**85% 进行中**（`onEvent` / 常用动作 / 事件对象 / `preventDefault` / `stopPropagation` / `ignoreError` / `expression`；控制流与广播仍缺）、「行为」**80% 进行中**（`type: action` 主路径；`clickAction` 未接）、「样式」**75% 进行中**（`className` / `cssVars` / `size` / 指向 `/style`）、「数据域与数据链」**75% 进行中**（补「发生了什么」与 `__super` 活示例；D6 / D9 / D10 仍挡）。
 - 规则补上 Amis 对照仓相对位置（默认同级 `../amis`，不写本机绝对路径）以及文档 / 样式 / 核心 / 组件怎么查：`.cursor/rules/amis-lookup.mdc`。
@@ -206,6 +207,7 @@
 3. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi），不挡 Schema 文档主路径。
 4. **布局下一对 `flex` + `grid`**：Page / Container 已完成；同样补文档示例与三张表。
 5. **表单项 D7**：`editor` / `diff-editor` 的 `clear` / `reset` / `focus` / `componentId setValue` 仍要注册 `doAction`。感知自述已接，动作还缺。
-6. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。下一刀按同一口径逐页核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
+6. **`m-l` 等 compact helper 对上 Amis 计算值**：SDK 对照已量出 `.m-l` Amis 15px / Vamis 12px。Amis `_utilities.scss` 是 5/10/15/20/30/50，Vamis `--gap-*` 是 4/8/12/16/20/24。下一刀把 helper 阶改到 Amis 实值（不要用 shadcn 4px 阶去近似），再用对照页卡死 15px。
+7. **样式收尾（D12 余项）**：Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按盒模型对齐。再核色盘表（Text Color / Background Color / Border Color）；以及 Panel 像素级、其余 `xxxClassName`、`registerTheme`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
