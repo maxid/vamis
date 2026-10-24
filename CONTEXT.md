@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 对照页左右 iframe 按内容撑开高度（两边取较高的一侧），内页 `overflow: hidden`，尽量不出滚动条；切用例会先收回到最小高度再长高。
 - 对照用例按 Amis 文档侧栏分成 **文档 / 组件 / 样式**（`website/nav.mjs`）。Vamis 可以比 Amis 多（尤其是样式），多出来的页标 extra、对照页下拉前缀 `+`。`pnpm compare --bucket 样式 --section Spacing` 切一片跑；对照页有文档/组件/样式筛选。迭代回路：完成一侧栏项 → 跑该片对照 → 评审报告 → 下一页。
 - 对照差异按 **全局 / 样式 helper / 组件** 分类汇总（对照页 + 报告），并带整改建议。全局先动 token / sdk 根，helper 补缺档，组件只改该 type。
 - 对照页字体量测改读正文节点 + 实际 used face（canvas 解析栈），并对照 `body` 字体。指定栈都是 `-apple-system` 时不再漏掉 Amis html `PingFang SC` 或 `text-sm` 12px vs 14px；smoke 有字体差时判定为「字体差」，不挡 Playwright 文档 smoke。

@@ -142,9 +142,12 @@
         border-bottom: 1px solid #e2e8f0;
       }
       iframe {
+        display: block;
         width: 100%;
-        height: 220px;
+        min-height: 80px;
+        height: 80px;
         border: 0;
+        overflow: hidden;
         background: #fff;
       }
       table {
@@ -234,11 +237,11 @@
     <div class="grid">
       <section class="pane">
         <h2>Amis 6.13.0</h2>
-        <iframe id="amis" title="Amis SDK"></iframe>
+        <iframe id="amis" title="Amis SDK" scrolling="no"></iframe>
       </section>
       <section class="pane">
         <h2>Vamis</h2>
-        <iframe id="vamis" title="Vamis SDK"></iframe>
+        <iframe id="vamis" title="Vamis SDK" scrolling="no"></iframe>
       </section>
     </div>
     <table id="result">
@@ -382,6 +385,33 @@
         let debounce = null
         const ready = { amis: false, vamis: false }
         const got = { amis: null, vamis: null }
+        const frameH = { amis: 80, vamis: 80 }
+
+        function readDocHeight(engine) {
+          try {
+            const frame = document.getElementById(engine)
+            const doc = frame && frame.contentDocument
+            const root = doc && doc.getElementById('root')
+            if (!root) return 0
+            const top = Math.max(0, root.getBoundingClientRect().top)
+            return Math.ceil(root.scrollHeight + top + 2)
+          } catch (_err) {
+            return 0
+          }
+        }
+
+        function applyFrameHeights() {
+          const used = Math.max(
+            80,
+            frameH.amis || 80,
+            frameH.vamis || 80,
+            readDocHeight('amis'),
+            readDocHeight('vamis'),
+          )
+          const capped = Math.min(used, 4000)
+          document.getElementById('amis').style.height = capped + 'px'
+          document.getElementById('vamis').style.height = capped + 'px'
+        }
 
         function item() {
           return (window.VAMIS_COMPARE_CASES || []).find(function (row) {
@@ -861,6 +891,9 @@
           runId += 1
           got.amis = null
           got.vamis = null
+          frameH.amis = 80
+          frameH.vamis = 80
+          applyFrameHeights()
           layoutTable()
           ;['amis', 'vamis'].forEach(sendTo)
         }
@@ -927,6 +960,14 @@
           }
           if (data.type === 'vamis-compare' && (data.engine === 'amis' || data.engine === 'vamis')) {
             paint(data.engine, data)
+            applyFrameHeights()
+            return
+          }
+          if (data.type === 'vamis-compare-size' && (data.engine === 'amis' || data.engine === 'vamis')) {
+            const height = Number(data.height)
+            if (!Number.isFinite(height)) return
+            frameH[data.engine] = Math.max(80, Math.min(Math.ceil(height), 4000))
+            applyFrameHeights()
           }
         })
 
