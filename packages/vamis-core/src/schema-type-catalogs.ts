@@ -203,8 +203,20 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     maxHeight: '最大高度。',
   }),
   tabs: fields('Tabs', {
-    tabs: '选项数组。内容在 tab 字段。',
-  }, { slots: ['tabs', 'tab'] }),
+    tabs: '选项数组。内容在 body 或 tab。',
+    source: '数据源，重复 tabs 模板生成选项卡。',
+    tabsMode: '外观：line / card / radio / vertical / chrome / simple / strong / tiled / sidebar。',
+    activeKey: '受控激活项，hash 或索引，可跟数据变化。',
+    defaultKey: '初始化激活项，hash 或索引。',
+    mountOnEnter: '点中才挂载，默认 true。',
+    unmountOnExit: '切走卸载，默认 false。',
+    toolbar: '顶部工具栏。',
+    linksClassName: '标题区 class。',
+    contentClassName: '内容区 class。',
+  }, {
+    slots: ['tabs', 'tab', 'toolbar'],
+    events: { change: '切换选项卡。event.data.value 是 hash 或索引。' },
+  }),
   crud: fields('CRUD', {
     api: '列表接口。',
     title: '列表标题。',

@@ -48,6 +48,35 @@
       select {
         font: inherit;
         padding: 4px 8px;
+        max-width: min(36vw, 360px);
+      }
+      .case-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+      }
+      .case-nav button {
+        font: inherit;
+        font-size: 13px;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        padding: 4px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        color: #334155;
+      }
+      .case-nav button:hover:not(:disabled) {
+        background: #f1f5f9;
+      }
+      .case-nav button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .case-pos {
+        font-size: 12px;
+        color: #64748b;
+        white-space: nowrap;
       }
       .toolbar {
         display: flex;
@@ -285,10 +314,15 @@
           <button type="button" data-bucket="components">组件</button>
           <button type="button" data-bucket="style">样式</button>
         </div>
-        <label>
-          用例
-          <select id="case"></select>
-        </label>
+        <div class="case-nav">
+          <button type="button" id="case-prev">上一个</button>
+          <label>
+            用例
+            <select id="case"></select>
+          </label>
+          <button type="button" id="case-next">下一个</button>
+          <span class="case-pos" id="case-pos"></span>
+        </div>
         <p id="expect"></p>
       </div>
     </header>
@@ -464,6 +498,9 @@
           return { pass: diffs.length === 0, diffs: diffs }
         }
         const select = document.getElementById('case')
+        const casePrev = document.getElementById('case-prev')
+        const caseNext = document.getElementById('case-next')
+        const casePos = document.getElementById('case-pos')
         const source = document.getElementById('source')
         const parseErr = document.getElementById('parse-err')
         const restore = document.getElementById('restore')
@@ -505,6 +542,40 @@
           })
           const want = keepId || params.get('case')
           if (want && rows.some(function (row) { return row.id === want })) select.value = want
+          syncCaseNav()
+        }
+        function filteredCases() {
+          return allCases().filter(function (row) {
+            return !bucketFilter || row.bucket === bucketFilter
+          })
+        }
+        function stepCaseId(ids, currentId, delta) {
+          if (!ids.length) return ''
+          const i = ids.indexOf(String(currentId || ''))
+          const from = i < 0 ? 0 : i
+          const next = from + Number(delta || 0)
+          if (next < 0 || next >= ids.length) return ids[from]
+          return ids[next]
+        }
+        function syncCaseNav() {
+          const rows = filteredCases()
+          const ids = rows.map(function (row) { return row.id })
+          const i = ids.indexOf(select.value)
+          const idx = i < 0 ? 0 : i
+          casePrev.disabled = idx <= 0 || !rows.length
+          caseNext.disabled = idx >= rows.length - 1 || !rows.length
+          casePos.textContent = rows.length ? idx + 1 + ' / ' + rows.length : '0 / 0'
+        }
+        function stepCase(delta) {
+          const rows = filteredCases()
+          const next = stepCaseId(
+            rows.map(function (row) { return row.id }),
+            select.value,
+            delta,
+          )
+          if (!next || next === select.value) return
+          select.value = next
+          applyCase(true)
         }
         fillSelect()
         document.getElementById('buckets').querySelectorAll('button').forEach(function (btn) {
@@ -1138,6 +1209,7 @@
           const next = new URL(location.href)
           next.searchParams.set('case', select.value)
           history.replaceState(null, '', next)
+          syncCaseNav()
           sendRun()
         }
 
@@ -1204,6 +1276,25 @@
         source.addEventListener('input', onSourceInput)
         select.addEventListener('change', function () {
           applyCase(true)
+        })
+        casePrev.addEventListener('click', function () {
+          stepCase(-1)
+        })
+        caseNext.addEventListener('click', function () {
+          stepCase(1)
+        })
+        document.addEventListener('keydown', function (e) {
+          if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return
+          const el = e.target
+          const tag = (el && el.tagName ? el.tagName : '').toLowerCase()
+          if (tag === 'textarea' || tag === 'input' || tag === 'select' || (el && el.isContentEditable)) return
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault()
+            stepCase(-1)
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault()
+            stepCase(1)
+          }
         })
 
         document.getElementById('amis').src = frameUrl('amis')

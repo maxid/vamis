@@ -96,6 +96,17 @@ export function matchSelf(row, query) {
   return String(row.id).toLowerCase() === q
 }
 
+/** 对照页「上一个 / 下一个」：在当前筛选列表里按 delta 挪一条，到头停住。 */
+export function stepCaseId(ids, currentId, delta) {
+  const list = Array.isArray(ids) ? ids.map((id) => String(id)) : []
+  if (!list.length) return ''
+  const i = list.indexOf(String(currentId || ''))
+  const from = i < 0 ? 0 : i
+  const next = from + Number(delta || 0)
+  if (next < 0 || next >= list.length) return list[from]
+  return list[next]
+}
+
 function schemaHasType(node, type) {
   if (!node || typeof node !== 'object') return false
   if (Array.isArray(node)) return node.some((item) => schemaHasType(item, type))

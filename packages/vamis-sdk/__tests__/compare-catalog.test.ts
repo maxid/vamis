@@ -15,6 +15,7 @@ import {
   matchSelf,
   parseViewportArg,
   rerunCommands,
+  stepCaseId,
 } from '../compare/catalog.mjs'
 import { scoreTree, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
@@ -379,6 +380,17 @@ describe('schema-tree', () => {
       'page/body/0:form/body/0:input-text.value',
       'page/body/0:form/body/1:button.dialog',
     ])
+  })
+})
+
+describe('stepCaseId', () => {
+  it('moves within the filtered list and stops at the ends', () => {
+    const ids = ['a', 'b', 'c']
+    expect(stepCaseId(ids, 'b', -1)).toBe('a')
+    expect(stepCaseId(ids, 'a', -1)).toBe('a')
+    expect(stepCaseId(ids, 'c', 1)).toBe('c')
+    expect(stepCaseId(ids, 'missing', 1)).toBe('b')
+    expect(stepCaseId([], 'a', 1)).toBe('')
   })
 })
 
