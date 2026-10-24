@@ -20,7 +20,6 @@ function parseArgs(argv) {
   const amisDocs = argv.includes('--all')
   return {
     p0,
-    docs: !p0,
     amisDocs,
     bucket: flagValue(argv, '--bucket'),
     section: flagValue(argv, '--section'),
@@ -101,7 +100,6 @@ export async function runCompare(argv = process.argv.slice(2)) {
     throw new Error('缺少 packages/vamis-sdk/dist/sdk.js，先跑 pnpm sdk:build')
   }
   const { cases, count } = buildCases({
-    docs: options.docs,
     amisDocs: options.amisDocs,
   })
   const list = cases.filter((row) => {

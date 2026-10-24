@@ -70,6 +70,8 @@
 
 **最近交付**
 
+- 对照页 `compare-cases.js` **始终写完整目录**（文档 / 组件 / 样式）。`pnpm compare:p0` 只过滤 Playwright 跑哪些条，不再把下拉冲成 14 条功能用例。
+- 对照页 Amis iframe 对齐官方 hello：`sdk.css` + `helper.css` + **`iconfont.css`** 在 `<head>` 并行拉，不再等 2.5MB `sdk.css` 串完再拉 JS。切用例时空白窗是加载顺序，不是主题没套上；云舍 Page 标题就是 16px/400、默认 Action 是白底描边。
 - 对照重跑口径：**全局**修完必须 `pnpm compare` 全量；**组件**修完只跑自身 `pnpm compare --page button`（或 `--id`）。报告会列出建议命令。
 - 组件对照改为 **schema 树结点级**：每个 type 结点对画出、运行时 value、`getComponentByName`、以及点过之后 dialog / toast / setValue。不再把「整页能画出」当成组件通过。`vamis.embed` 补 `getComponents()`。
 - 对照页左右 iframe 按内容撑开高度（两边取较高的一侧），内页 `overflow: hidden`，尽量不出滚动条；切用例会先收回到最小高度再长高。
