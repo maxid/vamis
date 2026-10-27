@@ -21,7 +21,6 @@ const SKIP_TYPES = new Set([
   'iframe',
   'log',
   'custom',
-  'web-component',
   'video',
 ])
 

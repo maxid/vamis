@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, amisEmbedInner, type SchemaObject } from '@vamis/core'
 
-const props = defineProps<{ schema: SchemaObject }>()
-const inner = computed(() => (props.schema.schema || props.schema.body) as SchemaObject)
+const props = defineProps<{ schema: SchemaObject; data: Record<string, unknown> }>()
+const inner = computed(() => amisEmbedInner(props.schema, props.data))
 </script>
 
 <template>

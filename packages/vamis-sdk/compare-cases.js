@@ -15874,6 +15874,68 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-web-component-0",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Web Component",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Web Component #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "web-component",
+        "tag": "random-number",
+        "props": {
+          "prefix": "hello",
+          "class": "my-class"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "hello"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-web-component-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Web Component",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Web Component #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "text": "World"
+      },
+      "body": {
+        "type": "web-component",
+        "tag": "random-number",
+        "props": {
+          "prefix": "${text}"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "${text}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-amis-0",
     "group": "组件 / 其他",
     "bucket": "components",
@@ -15886,12 +15948,68 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "amis",
-      "body": [
-        {
-          "type": "amis"
+      "body": {
+        "type": "amis",
+        "schema": {
+          "type": "tpl",
+          "tpl": "amis render"
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-amis-1",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "amis 渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "amis 渲染器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "amis": {
+          "type": "tpl",
+          "tpl": "amis render"
+        }
+      },
+      "body": {
+        "type": "amis",
+        "name": "amis"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-amis-2",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "amis 渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "amis 渲染器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "amis",
+        "props": {
+          "tpl": "amis render"
+        },
+        "value": {
+          "type": "tpl"
+        }
+      }
     },
     "measure": {
       "type": "tree"

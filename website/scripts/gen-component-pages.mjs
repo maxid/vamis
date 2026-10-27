@@ -88,6 +88,8 @@ const HANDWRITTEN = new Set([
   '/components/badge',
   '/components/audio',
   '/components/wizard',
+  '/components/web-component',
+  '/components/amis',
   '/components/popover',
   '/components/chart',
   '/components/code',

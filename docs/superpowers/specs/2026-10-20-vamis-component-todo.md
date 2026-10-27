@@ -38,10 +38,10 @@
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 63% | 5 |
-| **合计** | **2 / 155** | **153** | **0** | **53%** | **102** |
+| 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
+| **合计** | **2 / 155** | **153** | **0** | **54%** | **104** |
 
-侧栏已无未开始项。反馈五件已 80%；其他类 `avatar` 90%，`audio` / `tasks` / `wizard` / `badge` 80%；`popOver` 属性 80%。
+侧栏已无未开始项。反馈五件已 80%；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
 ---
 
@@ -232,7 +232,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 63%）
+## 其他（0/7，均 81%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
@@ -241,8 +241,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `tasks` | Tasks 任务操作集合 | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
 | `badge` | Badge 角标 | 进行中 | 80% | 不是独立 type。已挂 avatar / action / tpl / link / icon；mode 默认 dot、text 0 隐藏、overflowCount、visibleOn、ribbon。缺 cxd 斜条像素、animation 同帧 | P0 |
 | `wizard` | Wizard 向导 | 进行中 | 80% | 文档主路径已对齐：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
-| `web-component` | Web Component | 进行中 | 15% | **占位**：只渲染 tag + props | P0 |
-| `amis` | amis 渲染器 | 进行中 | 15% | **占位**：只嵌内层 schema | P0 |
+| `web-component` | Web Component | 进行中 | 80% | 文档主路径已对齐：`tag` 默认 div、`props` 字符串走 `${}`、`body` 子节点。缺宿主 customElements.define 生命周期、自定义事件回写 | P0 |
+| `amis` | amis 渲染器 | 进行中 | 80% | 文档主路径已对齐：`schema` / `value` / `name`（对象或 JSON 字符串）、`props` 盖到内层。缺 editor 同 name 实时编辑、非法 JSON 诊断 | P0 |
 
 ---
 

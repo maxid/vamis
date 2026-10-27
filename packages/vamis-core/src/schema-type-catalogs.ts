@@ -535,13 +535,16 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     onMount: '未接：禁止隐式 eval。',
   }, { slots: ['body'] }),
   'web-component': fields('WebComponent', {
-    tag: '自定义元素标签名。',
-    props: '传到元素上的属性。',
-  }),
+    tag: '自定义元素标签名，默认 div。',
+    props: '传到元素上的属性。字符串走模板。',
+    body: '子节点。',
+  }, { slots: ['body'] }),
   amis: fields('AmisEmbed', {
-    schema: '要嵌套渲染的 schema。',
-    body: '同 schema。',
-  }, { slots: ['body', 'schema'] }),
+    name: '从数据域取内层 schema。',
+    schema: '要嵌套渲染的 schema。对象或 JSON 字符串。',
+    value: '同 schema。',
+    props: '盖到内层的默认字段。',
+  }, { slots: ['schema'] }),
   alert: fields('Alert', {
     level: '语义色：info / success / warning / danger，默认 info。可写表达式。',
     body: '内容。字符串或子节点。',

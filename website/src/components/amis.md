@@ -5,35 +5,65 @@ outline: deep
 
 # amis 渲染器
 
-::: warning 实现进度 15% · 进行中
-**占位**：只嵌内层 schema
+::: info 实现进度 80% · 进行中
+文档主路径已对齐：`schema` / `value` / `name` 取内层配置（对象或 JSON 字符串）、`props` 向下覆盖。缺和 `editor` 同一 `name` 的实时编辑、非法 JSON 诊断。
 :::
 
-`amis` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+用来渲染数据里的另一份 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **其他**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **其他**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-## 基本用法
+设置 `schema` 或 `name`。值可以是对象，或字符串 JSON。
+
+## 基本使用
+
+```schema: scope="body"
+type: amis
+schema:
+  type: tpl
+  tpl: amis render
+```
+
+## 通过 name 绑定动态数据
+
+`name` 从数据域取同一份配置。对照不跑 `editor` + 表单提交。
 
 ```schema
 type: page
-title: amis
+data:
+  amis:
+    type: tpl
+    tpl: amis render
 body:
-  - type: amis
+  type: amis
+  name: amis
 ```
 
-## 常用属性
+## 向下传递 props
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+`props` 会盖到内层 schema 上，当作默认值。
+
+```schema: scope="body"
+type: amis
+props:
+  tpl: amis render
+value:
+  type: tpl
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `string` | `"amis"` | 指定为 amis 渲染器 |
+| name | `string` | | 绑定上下文变量名 |
+| schema | `object` / `string` | | 要渲染的 schema |
+| value | `object` / `string` | | 同 schema，走 getPropValue |
+| props | `object` | | 向下传递，盖到内层 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 不接文档里 `editor` + `form.api` 那份实时联调；用页面 `data` 绑定 `name`。
+- JSON 解析失败时不渲染，不弹诊断（D8）。
