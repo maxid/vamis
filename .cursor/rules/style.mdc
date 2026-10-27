@@ -33,4 +33,4 @@ alwaysApply: true
 - **主题 token**（`:root` / `@theme` / `--fonts-base-family` / `--radius`）打在组件默认样子上
 - **Amis helper 类**（`font-sans`、`rounded-md`、`shadow-lg`）是作者 `className` 覆盖，打在 `div.vamis-node` 或文档 HTML 岛
 - 组件 Vue 模板不要用 helper 类名表示「主题默认」。控件 4px 圆角用 `rounded`（= `--radius`），不要用 `rounded-md`（Amis helper 是 6px）
-- html / body / SDK 根用 `font-family: var(--fonts-base-family)`，不要靠 `@apply font-sans` 当默认（`.font-sans` 是 Amis 英文栈）
+- html / body 不钉字族（对齐 Amis unset）。`.vamis-root` / SDK 根走 `--fontFamilyBase`（= `--fonts-base-family`，实测 Helvetica Neue）、`font-size: 14px; line-height: 1.5`。不要 `@apply font-sans`（helper 英文硬编码栈）或 `text-sm`（TW 行高 20px）当默认

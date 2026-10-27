@@ -3,29 +3,21 @@
 - 日期：2026-10-27
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **6** · 通过 **6** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **5** · 通过 **5** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 6 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 0 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
 | 组件 | 0 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（6）
+### 全局（0）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-calendar-0` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-calendar-1` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-calendar-2` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-calendar-3` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-calendar-4` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-- `src-components-calendar-5` bodyFont: Amis `Times` / Vamis `Helvetica Neue`
-
-整改：
-- Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。
+- 无。
 
 ### 样式 helper（0）
 
@@ -44,7 +36,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 6 | 0 |
+| 组件 | 5 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -53,7 +45,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据展示 | 6 | 0 |
+| 组件 / 反馈 | 5 | 0 |
 
 ## P0 失败（驱动下一刀）
 

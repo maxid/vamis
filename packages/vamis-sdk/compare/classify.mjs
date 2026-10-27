@@ -118,7 +118,7 @@ export function adviseIssue(diff, item, scope) {
   const classes = collectClassNames(item?.schema)
   const compact = classes.find((name) => COMPACT_CLASS.test(name))
   if (scope === 'global' && (prop === 'bodyFont' || prop === 'fontFamily')) {
-    return 'Amis SDK 把 html/body 钉成 PingFang SC；Vamis 走 --fonts-base-family 长栈，实际落到 Helvetica Neue。在 sdk 根 / embed 的 html,body 对齐 Amis 默认中文栈。'
+    return 'Amis 6.13 组件字栈是 --fonts-base-family（实测 Helvetica Neue）；html/body 未钉字族（body 是 Times）。只在 .vamis-root / .vamis-sdk 走 --fonts-base-family，不要把 html/body 钉成 PingFang SC。'
   }
   if (scope === 'global' && (prop === 'gap' || prop === 'marginLeft')) {
     return 'compact 阶应对齐 Amis 5/10/15/20/30/40/50。现在 --gap-* 是 4/8/12/16/20/24。改 token 一处，m/p 整阶回来。'

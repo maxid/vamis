@@ -97,9 +97,12 @@
     "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
     "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
     SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+  /* 对齐 Amis 6.13 实测：组件走这条栈（Helvetica Neue），html/body 不钉字族（Times）。 */
   --fontFamilyBase: var(--fonts-base-family);
   --fontFamilyMonospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  --fontSizeBase: 14px;
+  --lineHeightBase: 1.5;
   --background: oklch(0.97 0.008 250);
   --foreground: oklch(0.24 0.035 258);
   --card: oklch(0.995 0.003 250);
@@ -124,8 +127,9 @@
   --warning-foreground: oklch(0.28 0.06 55);
   --info: oklch(0.55 0.11 230);
   --info-foreground: oklch(0.99 0.01 230);
-  --border: oklch(0.9 0.012 250);
-  --input: oklch(0.86 0.014 250);
+  /* Amis --colors-neutral-line-8 / --borderColor */
+  --border: #e8e9eb;
+  --input: #e8e9eb;
   --ring: oklch(0.49 0.16 var(--accent-h));
   --sidebar: oklch(0.22 0.04 258);
   --sidebar-foreground: oklch(0.93 0.015 250);
@@ -269,11 +273,17 @@
   * {
     @apply border-border;
   }
-  html {
-    @apply font-sans;
-  }
+  /* html/body 不钉字族、不改根字号（Amis body 是 UA Times / 16px）。不要 @apply font-sans 或 text-sm。 */
   body {
-    @apply bg-background text-foreground font-sans text-sm antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+  .vamis-sdk,
+  .vamis-root {
+    font-family: var(--fontFamilyBase);
+    font-size: var(--fontSizeBase);
+    line-height: var(--lineHeightBase);
   }
 }
 

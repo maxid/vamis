@@ -177,7 +177,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table` | Table 表格 | 进行中 | 55% | 能渲染列；列 `popOver` / `popOverEnableOn` 已接。无独立数据域、无 `quickEdit` | P0 |
 | `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table。重组件，单独一刀 | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
-| `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条。缺 change/click / setValue | P0 |
+| `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | 进行中 | 50% | 能展示字段；媒体/操作区未齐 | P0 |
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
@@ -225,7 +225,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `alert` | Alert 提示 | 进行中 | 80% | 文档主路径已对齐：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
-| `dialog` | Dialog 对话框 | 进行中 | 80% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。缺拖拽、`feedback`、弹层内表单提交、多级同时错位可见、像素级 cxd Modal | P0 |
+| `dialog` | Dialog 对话框 | 进行中 | 80% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。默认弹层 `top: 60px`（Amis `--Modal-content-startMarginTop`）。缺拖拽、`feedback`、弹层内表单提交、多级同时错位可见、像素级 cxd Modal | P0 |
 | `drawer` | Drawer 抽屉 | 进行中 | 80% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。缺 `resizable`、多级错位递减、像素级 cxd Drawer | P0 |
 | `spinner` | Spinner 加载中 | 进行中 | 80% | 文档主路径已对齐：`show` / `showOn`、`size` sm|lg|空、`overlay`（源码默认 false）、`tip` / `tipPlacement`、`delay`、`body` 容器。缺 hex SVG、fa / 内置 icon 名、父子 loading 互斥、`loadingConfig` | P0 |
 | （动作 `toast`） | Toast 轻提示 | 进行中 | 80% | 文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`、`timeout`、`closeButton` / `showIcon`、`allowHtml`。缺 `mobileUI` 切默认、`center` 像素级、schema 节点 body | P0 |

@@ -10,7 +10,7 @@ title: Font Family
 活示例对标 Amis Font Family：`font-sans` / `serif` / `mono` 落在同一元素的 `font-family`，字栈与 Amis helper 硬编码一致。独立样例 + 组合。本页与 Amis 一样没有 `m:` / `pc:`，不支持状态前缀。
 :::
 
-用哪套字。三条类都是 Amis helper 硬编码栈，不是 `--font-sans` token。page / body 默认仍走 `--fonts-base-family`（中文系统栈）；写了 `font-sans` 才换成 `ui-sans-serif, system-ui, …`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
+用哪套字。三条类都是 Amis helper 硬编码栈，不是 `--font-sans` token。page / `.vamis-root` 默认走 `--fonts-base-family`（与 Amis 组件栈相同）；写了 `font-sans` 才换成 `ui-sans-serif, system-ui, …`。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
@@ -22,7 +22,7 @@ title: Font Family
 
 ## font-sans
 
-Amis helper 硬编码栈：`ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`。page / body 默认仍走 `--fonts-base-family`（中文系统栈）；只有写了 `font-sans` 才换成这条。
+Amis helper 硬编码栈：`ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`。page / `.vamis-root` 默认走 `--fonts-base-family`（与 Amis 组件栈相同）；只有写了 `font-sans` 才换成这条。
 
 ```schema
 type: tpl

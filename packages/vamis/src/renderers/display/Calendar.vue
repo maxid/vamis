@@ -269,8 +269,10 @@ function applyTodayStyle(el: Element | null) {
                 class="vamis-cal-chip"
                 :class="[lane.className, { 'is-ph': lane.placeholder }]"
                 :style="{ width: `${lane.width}00%` }"
-                @click="!lane.placeholder && openSchedule(cell, $event)"
-              >{{ lane.content }}</div>
+                @click="openSchedule(cell, $event)"
+              >
+                <div class="vamis-cal-chip-text">{{ lane.content }}</div>
+              </div>
               <div v-if="calendarLaneMore(cell)" class="vamis-cal-more" @click="openSchedule(cell, $event)">
                 {{ calendarLaneMore(cell) }} 更多
               </div>
@@ -337,7 +339,9 @@ function applyTodayStyle(el: Element | null) {
   width: 240px;
   max-width: 100%;
   overflow: visible;
-  border: 1px solid #e8e9eb;
+  /* 对齐 Amis .rdtPicker padding: 4px，底边才会离开最后一行日期。 */
+  padding: 4px;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: #fff;
   font-size: 12px;
@@ -347,6 +351,7 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal.is-large {
   display: block;
   width: 100%;
+  padding: 0;
   overflow: visible;
 }
 .vamis-cal table {
@@ -427,7 +432,7 @@ function applyTodayStyle(el: Element | null) {
   right: 0;
   left: 0;
   height: 1px;
-  background: #e8e9eb;
+  background: var(--border);
 }
 .vamis-cal-dow {
   width: 14.2857%;
@@ -451,7 +456,7 @@ function applyTodayStyle(el: Element | null) {
   overflow: visible;
   height: 110px;
   padding: 1px;
-  border: 1px solid #e8e9eb;
+  border: 1px solid var(--border);
   background: #fff;
 }
 .vamis-cal-day {
@@ -527,6 +532,7 @@ function applyTodayStyle(el: Element | null) {
 }
 .vamis-cal-wrap {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   min-width: 100%;
@@ -557,14 +563,21 @@ function applyTodayStyle(el: Element | null) {
   line-height: 20px;
   color: #fff;
   text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   cursor: pointer;
 }
+/* 对齐 Amis .ScheduleCalendar-text-overflow：绝对定位抽出文字，父级宽度才钉在格子上，ellipsis 才会出现。 */
+.vamis-cal-chip-text {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 对齐 Amis 占位：bg-transparent，不能 visibility:hidden，否则点到后一天会点中前一天溢出的条。 */
 .vamis-cal-chip.is-ph {
-  visibility: hidden;
-  cursor: default;
+  z-index: 11;
+  background-color: transparent;
+  cursor: pointer;
 }
 .vamis-cal-more {
   padding: 0 4px;
@@ -634,8 +647,8 @@ function applyTodayStyle(el: Element | null) {
   position: absolute;
   inset: -50%;
   content: "";
-  border-top: 1px solid #e8e9eb;
-  border-bottom: 1px solid #e8e9eb;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   transform: scale(0.5);
 }
 </style>

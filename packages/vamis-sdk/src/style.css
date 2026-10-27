@@ -6,9 +6,17 @@
 @source "../../vamis-ui/**/*.{vue,ts}";
 @source "./**/*.{vue,ts}";
 
+/* Embed iframe：清掉 Tailwind preflight 钉在 html 上的 --font-sans / line-height:1.5，对齐 Amis body（Times / normal）。组件字仍走 .vamis-sdk。 */
+html {
+  font-family: initial;
+  line-height: normal;
+}
+
 .vamis-sdk {
   width: 100%;
   color: var(--foreground);
   /* Embed 不另涂画布：Amis 根是白底，宿主 html/body 透出来。`--background` 是略灰的 shadcn token，涂在这里会变成一块灰框。 */
-  font-family: var(--fonts-base-family, ui-sans-serif, system-ui, sans-serif);
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
 }

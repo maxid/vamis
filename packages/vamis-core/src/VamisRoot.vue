@@ -61,7 +61,7 @@ const rootVars = computed(() => resolveCssVars(ir.value.metadata.style?.cssVars)
 
 <template>
   <div
-    class="vamis-root w-full text-sm text-foreground"
+    class="vamis-root w-full text-foreground"
     data-api-version="lcdp.ir/v1"
     :data-density="density"
     :style="rootVars"

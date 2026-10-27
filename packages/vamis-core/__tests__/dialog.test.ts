@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   dialogActions,
@@ -60,5 +63,13 @@ describe('dialog defaults', () => {
       maxWidth: '320px',
       height: '200px',
     })
+  })
+
+  it('pins dialog to Amis Modal startMarginTop 60px, not vertical center', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis-ui/src/ui/dialog/DialogContent.vue'), 'utf8')
+    expect(vue).toContain('top-[60px]')
+    expect(vue).not.toContain('top-[50%]')
+    expect(vue).not.toContain('translate-y-[-50%]')
   })
 })

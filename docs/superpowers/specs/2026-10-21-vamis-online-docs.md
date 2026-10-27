@@ -12,7 +12,7 @@
 |------|------|------|
 | 文档 | `/` | 开始（含 JS SDK）、概念、类型、扩展；`/docs` 重定向到首页 |
 | 组件 | `/components` | 侧栏首位「组件介绍」（不进布局分组）+ 155 项 + 实时 Schema（YAML / JSON 双 Tab） |
-| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` + Flex 的 `direction` / `wrap` / `flex` / `grow` / `shrink` / `order` + Grid 的 `columns` / `column-start-end` / `rows` / `row-start-end` / `auto-flow` / `auto-columns` / `auto-rows` / `gap` + Box Alignment 全 9 页 + Spacing 全 3 页 + Sizing 全 2 页 + Typography 14 页 **90%** + Border Radius / Width / Style + Box Shadow / Opacity **90%**（`text-color` / `background-color` / `border-color` 仍 55%）。旧 `/docs/style` 重定向到这里 |
+| 样式 | `/style` | 对齐 Amis `/zh-CN/style`：快速开始 / CSS 变量 **65%** / 辅助类-响应式 / 辅助类-状态（**90%**，hover 全矩阵已进 SDK）+ Layout 的 `box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` + Flex 的 `direction` / `wrap` / `flex` / `grow` / `shrink` / `order` + Grid 的 `columns` / `column-start-end` / `rows` / `row-start-end` / `auto-flow` / `auto-columns` / `auto-rows` / `gap` + Box Alignment 全 9 页 + Spacing 全 3 页 + Sizing 全 2 页 + Typography 14 页 **90%** + Border Radius / Width / Style + Box Shadow / Opacity **90%**（`text-color` / `background-color` / `border-color` 仍 55%）。`.vamis-root` 走 `--fonts-base-family`、`14px` / `1.5`；浅色 `--border` 是 `#e8e9eb`。旧 `/docs/style` 重定向到这里 |
 | 示例 | `/examples` | Playground 分类树 + 预览 |
 | 编辑器 | `/editor` | 可视化骨架 |
 | 对照 | `/sdk/compare.html` | Amis / Vamis SDK 对照（静态页，整页跳，不走 Vue Router）；页内「返回首页」 |

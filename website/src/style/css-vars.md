@@ -4,8 +4,8 @@ title: CSS 变量
 
 # CSS 变量
 
-::: info 实现进度 60% · 进行中
-`:root` / `.dark`、`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。Amis 盒子名会映射到 Vamis token。完整 Amis 变量表未一一对照；`registerTheme` 仍是 D12 P1。表单面板壳已对齐默认标题，但 `--text-color` 主要改标签/正文，不是整份 cxd 变量表。
+::: info 实现进度 65% · 进行中
+`:root` / `.dark`、`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis `#e8e9eb`。完整 Amis 变量表未一一对照；`registerTheme` 仍是 D12 P1。表单面板壳已对齐默认标题，但 `--text-color` 主要改标签/正文，不是整份 cxd 变量表。
 :::
 
 主题切暗色 = 换 `:root` / `.dark` 变量，不是换 class 前缀。`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。实现见 `@vamis/core` 的 `resolveCssVars`。
@@ -21,7 +21,7 @@ title: CSS 变量
 | `--secondary` / `--muted` | 次要底 |
 | `--destructive` | 危险（Amis `danger`） |
 | `--success` / `--warning` / `--info` | 状态色 |
-| `--border` / `--input` / `--ring` | 线、输入、聚焦 |
+| `--border` / `--input` / `--ring` | 线、输入、聚焦。浅色 `--border` 是 Amis `#e8e9eb` |
 
 Amis 名会映射过来：`--body-bg` → `--background`，`--text-color` → `--foreground`，`--borderColor` → `--border`。
 
@@ -35,7 +35,8 @@ Amis 名会映射过来：`--body-bg` → `--background`，`--text-color` → `-
 | `--radius` | 默认圆角 0.25rem |
 | `--gap-xs` … `--gap-xl` | 4 / 8 / 12 / 16 / 20 / 24，给 `m-t-xs` 等 helper 用 |
 | `--table-cell-px` | 表单元格左右内边距。Amis `--TableCell-paddingX` 映射到这里 |
-| `--font-sans` / `--font-mono` | 正文 / 等宽。`--fonts-base-family` 会映到 `--font-sans` |
+| `--font-sans` / `--font-mono` | helper / Tailwind 字栈。`--fonts-base-family` 会映到 `--font-sans` |
+| `--fontFamilyBase` / `--fontSizeBase` / `--lineHeightBase` | `.vamis-root` / SDK 根：`--fonts-base-family`、14px、1.5。html/body 不钉字族、不改根字号（避免 rem 塌缩） |
 
 ```schema
 type: page

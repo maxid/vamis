@@ -136,8 +136,8 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 | `--borderColor` | `--border` / `--input` | 线、输入边 |
 | `--borderRadius` 4px | `--radius: 0.25rem` | 控件圆角 |
 | `--link-color` | `--primary`（或未来 `--link`） | 链接 |
-| `--fontSizeBase` 14px | `text-sm` + body `font-sans` | 正文字号 |
-| `--fontFamilyBase` / `--fonts-base-family` | `--font-sans` token（系统栈：PingFang / 微软雅黑 / -apple-system）；html/body 默认走它 | 正文字体，不嵌入 webfont。helper `.font-sans` 是 Amis `_font-family.scss` 硬编码栈（`ui-sans-serif, system-ui, …`），不是这个 token |
+| `--fontSizeBase` 14px | `.vamis-root` `14px` / `line-height: 1.5`（不改 html 根字号，避免 rem 塌缩） | 正文字号 |
+| `--fontFamilyBase` / `--fonts-base-family` | `.vamis-root` / SDK 根走 Amis 组件栈（实测 Helvetica Neue）；html/body 不钉字族。helper `.font-sans` 是另一条硬编码英文栈 | 正文字体，不嵌入 webfont。`--fonts-base-family` 映到 `--font-sans` token |
 | `--fontFamilyMonospace` | `--font-mono` token（SFMono / Menlo / Consolas） | IR / 代码。helper `.font-mono` 是 Amis 等宽硬编码栈（`ui-monospace, SFMono-Regular, …`） |
 | Layout aside 深底 | `--sidebar*` | Playground 色板、编辑器侧栏 |
 | 浮层阴影 | `shadow-lg` on Dialog | 对话框 |

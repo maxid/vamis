@@ -59,7 +59,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `--primary` 聚焦环 | `--ring` |
 | `--borderRadius` 4px | `--radius: 0.25rem` |
 | `--Form-input-height` 32px | 控件默认 `h-8`（16px 根下 = 32px） |
-| `--fontSizeBase` 14px | `text-sm`，**不改** `html` 根字号（避免 Tailwind rem 塌缩） |
+| `--fontSizeBase` 14px | `.vamis-root` `14px` / `line-height: 1.5`，**不改** `html` 根字号（避免 Tailwind rem 塌缩） |
 | `--gap-*` | Tailwind spacing |
 | `--shadows-*` | `shadow-xs/sm/md/lg` |
 | `level: primary` | `variant="default"` |

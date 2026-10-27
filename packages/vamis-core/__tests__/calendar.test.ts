@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   CALENDAR_SCHEDULE_CLASS_NAMES,
@@ -145,6 +148,21 @@ describe('calendar value and schedules', () => {
     expect(week[2][2]).toMatchObject({ content: '这是一个日程6', width: 1, placeholder: false })
     expect(week[3][0]).toMatchObject({ placeholder: true })
     expect(calendarLaneMore(weeks[3][2])).toBe(1)
+    expect(eventsOnDay(items, '2021-12-22').map((item) => item.content)).toEqual([
+      '这是一个日程4',
+      '这是一个日程5',
+      '这是一个日程6',
+      '这是一个日程7',
+    ])
+    expect(eventsOnDay(items, '2021-12-23').map((item) => item.content)).toEqual(['这是一个日程5'])
+    expect(
+      calendarSchedulePayload(eventsOnDay(items, '2021-12-23'), new Date(2021, 11, 23)).scheduleData,
+    ).toEqual([
+      expect.objectContaining({
+        content: '这是一个日程5',
+        time: '2021-12-22 02:14:00 - 2021-12-23 05:14:00',
+      }),
+    ])
   })
 
   it('splits header into year/month labels and a 12-cell decade', () => {
@@ -198,5 +216,17 @@ describe('calendar value and schedules', () => {
     expect(months).toHaveLength(12)
     expect(months[7]).toEqual({ value: 7, text: '08月' })
     expect(months[11]).toEqual({ value: 11, text: '12月' })
+  })
+
+  it('clips largeMode chip text with Amis inner ellipsis', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/display/Calendar.vue'), 'utf8')
+    expect(vue).toContain('class="vamis-cal-chip-text"')
+    expect(vue).toContain('.vamis-cal-chip-text {')
+    expect(vue).toContain('position: absolute')
+    expect(vue).toContain('text-overflow: ellipsis')
+    expect(vue).toContain('@click="openSchedule(cell, $event)"')
+    expect(vue).not.toContain('!lane.placeholder && openSchedule')
+    expect(vue).not.toContain('visibility: hidden')
   })
 })
