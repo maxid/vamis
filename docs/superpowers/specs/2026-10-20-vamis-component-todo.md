@@ -36,10 +36,10 @@
 | 布局 | 2 / 15 | 13 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 76% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
-| 数据展示 | 0 / 44 | 44 | 0 | 50% | 28 |
+| 数据展示 | 0 / 44 | 44 | 0 | 52% | 30 |
 | 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
-| **合计** | **2 / 155** | **153** | **0** | **54%** | **104** |
+| **合计** | **2 / 155** | **153** | **0** | **55%** | **106** |
 
 侧栏已无未开始项。反馈五件已 80%；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
@@ -169,15 +169,15 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 数据展示（0/44，均 49%）
+## 数据展示（0/44，均 52%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `crud` | CRUD 增删改查 | 进行中 | 58% | 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。无 `loadDataOnce`/`syncLocation`/`quickEdit`/`matchFunc`（D10） | P0 |
 | `table` | Table 表格 | 进行中 | 55% | 能渲染列；列 `popOver` / `popOverEnableOn` 已接。无独立数据域、无 `quickEdit` | P0 |
-| `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table | P0 |
-| `table-view` | Table View 表格视图 | 进行中 | 40% | 已注册，合并单元格/布局模式精简 | P0 |
-| `calendar` | Calendar 日历日程 | 进行中 | 40% | 已注册，日程数据精简 | P0 |
+| `table2` | Table2 表格 | 进行中 | 40% | 已注册，能力弱于 table。重组件，单独一刀 | P0 |
+| `table-view` | Table View 表格视图 | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
+| `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | 进行中 | 50% | 能展示字段；媒体/操作区未齐 | P0 |
 | `cards` | Cards 卡片组 | 进行中 | 50% | 能铺卡片；masonry 未齐 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |

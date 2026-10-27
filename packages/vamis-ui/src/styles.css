@@ -164,6 +164,10 @@
   --table-row-h-sm: 33px;
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
+  /* Amis table-view 内联样式用这些名字；未定义则 border/padding 整段失效。 */
+  --borderColor: var(--border);
+  --TableCell-paddingX: var(--table-cell-px);
+  --TableCell-paddingY: 8px;
   --page-body-padding: 12px;
   /* cxd --Panel-marginBottom (sizes-base-10 = 20px) */
   --panel-margin-bottom: var(--gap-lg);

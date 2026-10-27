@@ -12733,12 +12733,502 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "table-view",
-      "body": [
-        {
-          "type": "table-view"
+      "body": {
+        "type": "service",
+        "data": {
+          "beijing": "20",
+          "tianjing": "19"
+        },
+        "body": {
+          "type": "table-view",
+          "trs": [
+            {
+              "background": "#F7F7F7",
+              "tds": [
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "地区"
+                  }
+                },
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "城市"
+                  }
+                },
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "销量"
+                  }
+                }
+              ]
+            },
+            {
+              "tds": [
+                {
+                  "rowspan": 2,
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "华北"
+                  }
+                },
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "北京"
+                  }
+                },
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "${beijing}"
+                  }
+                }
+              ]
+            },
+            {
+              "tds": [
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "天津"
+                  }
+                },
+                {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "${tianjing}"
+                  }
+                }
+              ]
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table-view",
+        "trs": [
+          {
+            "background": "#F7F7F7",
+            "tds": [
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "地区"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "城市"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "销量"
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": ""
+                },
+                "style": {
+                  "borderBottomWidth": 0,
+                  "borderLeftWidth": 0
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "北京"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": ""
+                },
+                "style": {
+                  "borderBottomWidth": 0,
+                  "borderRightWidth": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table-view",
+        "cols": [
+          {},
+          {
+            "style": {
+              "background": "#F7F7F7"
+            }
+          }
+        ],
+        "trs": [
+          {
+            "tds": [
+              {
+                "rowspan": 2,
+                "body": {
+                  "type": "tpl",
+                  "tpl": "华北"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "北京"
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "天津"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table-view",
+        "caption": "标题",
+        "captionSide": "bottom",
+        "trs": [
+          {
+            "tds": [
+              {
+                "rowspan": 2,
+                "body": {
+                  "type": "tpl",
+                  "tpl": "华北"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "北京"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "${beijing}"
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "天津"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "${tianjing}"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "标题",
+      "data": {
+        "score": 40
+      },
+      "body": {
+        "type": "table-view",
+        "trs": [
+          {
+            "tds": [
+              {
+                "background": "${score>50 ? '#fef1d2': '#d7f8ff'}",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "分数>50"
+                }
+              },
+              {
+                "background": "${score<100 ? '#fef1d2': '#d7f8ff'}",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "分数<100"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "firstRow": true,
+        "displayBeijing": true
+      },
+      "body": {
+        "type": "table-view",
+        "trs": [
+          {
+            "background": "#F7F7F7",
+            "visibleOn": "firstRow",
+            "tds": [
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "地区"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "城市"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "销量"
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "visibleOn": "displayBeijing",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "北京"
+                }
+              },
+              {
+                "body": {
+                  "type": "tpl",
+                  "tpl": "天津"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-view-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table View 表格视图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table View 表格视图 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table-view",
+        "border": false,
+        "trs": [
+          {
+            "background": "#feceea",
+            "tds": [
+              {
+                "colspan": 2,
+                "align": "center",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "头部"
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "rowspan": 2,
+                "background": "#fef1d2",
+                "width": 200,
+                "body": {
+                  "type": "tpl",
+                  "tpl": "侧边"
+                }
+              },
+              {
+                "align": "center",
+                "background": "#a9fdd8",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "右上"
+                }
+              }
+            ]
+          },
+          {
+            "height": 200,
+            "tds": [
+              {
+                "align": "center",
+                "background": "#d7f8ff",
+                "body": {
+                  "type": "table-view",
+                  "border": false,
+                  "trs": [
+                    {
+                      "tds": [
+                        {
+                          "align": "center",
+                          "body": {
+                            "type": "tpl",
+                            "tpl": "栏目 1"
+                          }
+                        },
+                        {
+                          "align": "center",
+                          "body": {
+                            "type": "tpl",
+                            "tpl": "栏目 2"
+                          }
+                        },
+                        {
+                          "align": "center",
+                          "body": {
+                            "type": "tpl",
+                            "tpl": "栏目 3"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "tds": [
+              {
+                "colspan": 2,
+                "align": "center",
+                "background": "#cec5fa",
+                "body": {
+                  "type": "tpl",
+                  "tpl": "底部"
+                }
+              }
+            ]
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -12757,12 +13247,254 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "calendar",
-      "body": [
-        {
-          "type": "calendar"
+      "body": {
+        "type": "calendar",
+        "value": "1638288000",
+        "schedules": [
+          {
+            "startTime": "2021-12-11 05:14:00",
+            "endTime": "2021-12-11 06:14:00",
+            "content": "这是一个日程1"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-calendar-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Calendar 日历日程",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Calendar 日历日程 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "calendar",
+        "value": "1638288000",
+        "schedules": [
+          {
+            "startTime": "2021-12-11 05:14:00",
+            "endTime": "2021-12-11 06:14:00",
+            "content": "这是一个日程1",
+            "className": "bg-success"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程2",
+            "className": "bg-info"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-calendar-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Calendar 日历日程",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Calendar 日历日程 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "calendar",
+        "value": "1638288000",
+        "schedules": [
+          {
+            "startTime": "2021-12-11 05:14:00",
+            "endTime": "2021-12-11 06:14:00",
+            "content": "这是一个日程1"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程2"
+          }
+        ],
+        "scheduleAction": {
+          "actionType": "drawer",
+          "drawer": {
+            "title": "日程",
+            "body": {
+              "type": "table",
+              "columns": [
+                {
+                  "name": "time",
+                  "label": "时间"
+                },
+                {
+                  "name": "content",
+                  "label": "内容"
+                }
+              ],
+              "data": "${scheduleData}"
+            }
+          }
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-calendar-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Calendar 日历日程",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Calendar 日历日程 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "schedules": [
+          {
+            "startTime": "2021-12-11 05:14:00",
+            "endTime": "2021-12-11 06:14:00",
+            "content": "这是一个日程1"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程2"
+          }
+        ]
+      },
+      "body": {
+        "type": "calendar",
+        "value": "1638288000",
+        "schedules": "${schedules}"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-calendar-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Calendar 日历日程",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Calendar 日历日程 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "calendar",
+        "value": "1638288000",
+        "largeMode": true,
+        "schedules": [
+          {
+            "startTime": "2021-12-10 23:59:59",
+            "endTime": "2021-12-11 00:00:00",
+            "content": "这是一个日程1"
+          },
+          {
+            "startTime": "2021-12-12 00:00:00",
+            "endTime": "2021-12-13 00:00:01",
+            "content": "这是一个日程2"
+          },
+          {
+            "startTime": "2021-12-20 05:14:00",
+            "endTime": "2021-12-21 05:14:00",
+            "content": "这是一个日程3"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程4"
+          },
+          {
+            "startTime": "2021-12-22 02:14:00",
+            "endTime": "2021-12-23 05:14:00",
+            "content": "这是一个日程5"
+          },
+          {
+            "startTime": "2021-12-22 02:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程6"
+          },
+          {
+            "startTime": "2021-12-22 02:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程7"
+          },
+          {
+            "startTime": "2021-12-25 12:00:00",
+            "endTime": "2021-12-25 15:00:00",
+            "content": "这是一个日程8"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-calendar-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Calendar 日历日程",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Calendar 日历日程 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "calendar",
+        "value": "NOW()",
+        "todayActiveStyle": {
+          "backgroundColor": "#ef4444 !important",
+          "color": "#f8f9fa",
+          "border": "none",
+          "borderRadius": "15px"
+        },
+        "schedules": [
+          {
+            "startTime": "2021-12-11 05:14:00",
+            "endTime": "2021-12-11 06:14:00",
+            "content": "这是一个日程1"
+          },
+          {
+            "startTime": "2021-12-21 05:14:00",
+            "endTime": "2021-12-22 05:14:00",
+            "content": "这是一个日程2"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

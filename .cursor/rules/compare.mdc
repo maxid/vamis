@@ -18,7 +18,7 @@ alwaysApply: true
 | 全局 token / 默认字体 / helper 行为 | `pnpm sdk:build` | `pnpm compare` 全量 |
 | 窄屏 / `m:` / 移动端表单 | 同上 | 再加 `--mobile` |
 
-`pnpm compare` 会从 `website/src` **重收割完整目录**写入 `compare-cases.js`（并拷进 dist），再按 `--page` / `--bucket` 过滤 Playwright。不要手改 `compare-cases.js`。一批组件串行 `--page a && --page b`。
+`pnpm compare` 会从 `website/src` **重收割完整目录**写入 `compare-cases.js`（并拷进 dist），再按 `--page` / `--bucket` 过滤 Playwright。不要手改 `compare-cases.js`。一批组件串行 `--page a && --page b`。一批几个由复杂度定，不要无脑三个：轻 2–3、中 2、重（`table` / `table2` / `crud` / `form` / `chart`）**1 个**。口径见 `.cursor/rules/component.mdc`「串行分批」。
 
 运行时改了却只跑 `--page`、不 `sdk:build`：对照页仍是旧内核。只改 md 却不跑 compare：对照下拉仍是上一份收割。
 

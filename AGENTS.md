@@ -58,6 +58,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
 - 对照重跑：`compare-cases.js` / `dist/sdk.js` **不进 git**。改完组件必须本机更新对照，换机器不会自动带上。改运行时先 `pnpm sdk:build`；再 `pnpm compare --page <type>`（内部重收割完整目录）。全局 token/字体才 `pnpm compare` 全量。动到窄屏 / `m:` 再 `--mobile`。规则：`.cursor/rules/compare.mdc`。
+- 组件同步按复杂度串行分批：轻 2–3、中 2、重（`table` / `table2` / `crud` / `form` / `chart`）1 个。一批做完再对照。口径见 `.cursor/rules/component.mdc`「串行分批」。
 - 站点 / 样式 / 组件 / 对照约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`、`compare.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。任务收工见 `update-progress.mdc`。
 
 ## 关键文档

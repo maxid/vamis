@@ -59,18 +59,27 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **54%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 52%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55%；`table2` 40% |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `/style` 首页 **50%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。Monaco hex 色块走装饰器 `line-height:.8em`，token 仍 inherit。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js` + `sdk.css`；`getComponentByName` / `getComponents` / `doAction` 已接到根 ScopedContext。对照：样式看盒模型，**组件按 schema 树结点**对画出 / 值 / name / 动作。`pnpm compare --bucket 组件`，报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 360 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **897**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 377 + sdk 48 | `pnpm typecheck` 已通过；SDK 对照目录 **908**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
-- 其他：`web-component` 80%（`tag` 默认 div、`props` 字符串 `${}`、`body`）、`amis` 80%（`schema` / `value` / `name`、JSON 字符串、`props` 盖到内层）。对照 web-component **2/2**、amis **3/3**。目录 **897**。跳过 Custom。下一刀 **数据展示** table2 / table-view / calendar。
+- 修 table-view 对照 7 例：`:root` 补 `--borderColor` / `--TableCell-padding*`（原先 var 未定义，边框和内边距整段失效）；`colspan`/`rowspan` 缺省不再写成 0（Vue 模板 `|` 被当成按位或）；caption 居中。本页 **85%**。
+- Calendar 顶栏 `margin-top: -8px` 垂直居中（抵消 table border-spacing）；滚轮选中线用 Amis `#e8e9eb` 0.5px hairline。对照 calendar **6/6**。下一刀 **`table2` 单独**。
+- Calendar：滚轮可点非中间项；显示模式不高亮 value 那天；largeMode 外框 / 40px 星期行 / 日期居中 + hover。
+- Calendar 窄屏年/月选择改成 Amis 滚轮：月份带年列、无滚动条、当前项居中，上下渐浅。
+- Calendar 非本月日期用 Amis `#b8babf`，不再走偏深的 `--muted-foreground`。
+- Calendar 日程点贴在日期格底（不挡数字）；`bg-secondary` 条用 Amis 灰 `#5c5f66`，白字可读。
+- Calendar 顶栏改 SVG 箭头；点「年 / 月」切视图（窄屏 取消/确认）；点击日程点弹出「日程」表。`table` 能解析 `data: '${scheduleData}'`。
+- Calendar `largeMode` 跨日连条：起始格 `width: N00%` 溢出到后续日，同周占位、周一重新起条，每格最多 3 条 + `N 更多`。
+- 数据展示（中档一批）：`table-view` 80%、`calendar` 80%。Calendar 周一 7 列紧凑月历（禁止 helper `grid-cols-7`，Amis 该 class 实际 6 列）。对照 table-view **7/7**、calendar **5/5**。目录 **907**。
+- 其他：`web-component` 80%（`tag` 默认 div、`props` 字符串 `${}`、`body`）、`amis` 80%（`schema` / `value` / `name`、JSON 字符串、`props` 盖到内层）。对照 web-component **2/2**、amis **3/3**。目录 **897**。跳过 Custom。
 - `avatar` 对照 **13/13**（目录 **893**）。先前 1 败是 `onError: return true`：对照 `vamis.embed` 未开 `trusted`，字符串函数体不跑、结点 value 空。对照页现与文档预览一样传 `env.trusted: true`；SDK 默认仍关。文档主路径 90%（src 真图、fa-user、`$var`、gap 缩放、ribbon）。剩余 lineHeight 21/20、toast 字重走对照全局暂缓。
 - 对照收割写进规则 `.cursor/rules/compare.mdc`：`compare-cases.js` / `dist/sdk.js` 不进 git，换机器不会自动更新。改完组件必须本机 `pnpm sdk:build`（运行时）+ `pnpm compare --page <type>`，收工清单与 AGENTS 已挂上。
 - 文档活示例文案对标 Amis 主路径（按钮 / Nav 1 / 提示类文案 / HOT / 第一步·Step 2·Step 3），去掉残留的甲/乙/丙唯一后缀。对照目录仍 **886**：badge **7/7**、dropdown-button **4/4**、wizard **4/4**、nav **3/3**、pagination-wrapper **2/2**、button-group **4/4**、tasks **3/3**、spinner **5/5**。
@@ -245,7 +254,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按 Amis 侧栏，全局字体/token 先不动）**：其他主路径已齐。下一刀 **数据展示** 里未齐的项（按侧栏 `table2` / `table-view` / `calendar` 一批）。跳过 Custom 与 office/pdf 占位。一批做完 `pnpm sdk:build` + `pnpm compare --page …`。
+1. **组件同步（按复杂度串行分批，全局字体/token 先不动）**：`table-view` / `calendar` 已齐。下一刀 **`table2` 单独**（重：列/选择/分页/事件）。之后数据展示 `card` / `cards` / `carousel`（中档可一批）。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

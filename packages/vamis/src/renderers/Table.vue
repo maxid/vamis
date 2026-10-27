@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, resolveValue, type SchemaObject } from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import {
   Table,
@@ -26,7 +26,12 @@ const rows = computed<Record<string, any>[]>(() => {
     const value = props.data[key]
     return Array.isArray(value) ? value : []
   }
-  return Array.isArray(props.schema.data) ? props.schema.data : []
+  const raw = props.schema.data
+  if (typeof raw === 'string' && props.data) {
+    const value = resolveValue(raw, props.data)
+    return Array.isArray(value) ? value : []
+  }
+  return Array.isArray(raw) ? raw : []
 })
 </script>
 

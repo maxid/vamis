@@ -1,27 +1,59 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, type SchemaObject } from '@vamis/core'
-import { Table, TableBody, TableCell, TableRow } from '@vamis/ui'
+import {
+  SchemaRenderer,
+  asArray,
+  tableViewBorder,
+  tableViewBorderColor,
+  tableViewCaption,
+  tableViewCaptionSide,
+  tableViewCols,
+  tableViewPadding,
+  tableViewRows,
+  tableViewSpan,
+  tableViewTdStyle,
+  tableViewTrStyle,
+  tableViewWidth,
+  type SchemaObject,
+} from '@vamis/core'
 
-const props = defineProps<{ schema: SchemaObject }>()
-const rows = computed(() => (props.schema.trs || []) as any[])
+const props = defineProps<{ schema: SchemaObject; data?: Record<string, unknown> }>()
+const data = computed(() => props.data || {})
+const width = computed(() => tableViewWidth(props.schema))
+const padding = computed(() => tableViewPadding(props.schema))
+const border = computed(() => tableViewBorder(props.schema))
+const borderColor = computed(() => tableViewBorderColor(props.schema))
+const caption = computed(() => tableViewCaption(props.schema, data.value))
+const captionSide = computed(() => tableViewCaptionSide(props.schema))
+const cols = computed(() => tableViewCols(props.schema, data.value))
+const rows = computed(() => tableViewRows(props.schema, data.value))
+const tableOpts = computed(() => ({
+  border: border.value,
+  borderColor: borderColor.value,
+  padding: padding.value,
+}))
 </script>
 
 <template>
-  <Table>
-    <TableBody>
-      <TableRow v-for="(row, ri) in rows" :key="ri">
-        <TableCell
-          v-for="(cell, ci) in row.tds || []"
+  <table data-slot="table-view" :style="{ width, borderCollapse: 'collapse' }">
+    <caption v-if="caption" :style="{ captionSide, textAlign: 'center' }">{{ caption }}</caption>
+    <colgroup v-if="cols.length">
+      <col v-for="(col, i) in cols" :key="i" :span="col.span" :style="col.style as Record<string, string>" />
+    </colgroup>
+    <tbody>
+      <tr v-for="(row, ri) in rows" :key="ri" :style="tableViewTrStyle(row)">
+        <td
+          v-for="(cell, ci) in row.tds"
           :key="ci"
-          :colspan="cell.colspan"
-          :rowspan="cell.rowspan"
-          :style="{ background: cell.background, color: cell.color, textAlign: cell.align }"
+          :colspan="tableViewSpan(cell.colspan)"
+          :rowspan="tableViewSpan(cell.rowspan)"
+          :align="(cell.align as any) || 'left'"
+          :valign="(cell.valign as any) || 'middle'"
+          :style="tableViewTdStyle(cell, tableOpts)"
         >
-          <SchemaRenderer v-if="cell.body" :schema="cell.body" />
-          <span v-else>{{ cell.text || cell.tpl }}</span>
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+          <SchemaRenderer v-for="(node, ni) in asArray(cell.body as any)" :key="ni" :schema="node" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
