@@ -70,7 +70,7 @@
 
 **最近交付**
 
-- `table2` 排序图标垂直居中：SVG 去掉基线空隙（`line-height: 0` + `display: block`），与列头文字对齐。
+- `table2` 表头工具热区对齐 Amis：排序外壳 14×14，可感应图标 13×21（行高）；hover/点击都走这格，不吃整列。筛/搜同样按图标盒，不绑整格 th。
 - Calendar largeMode：跨日条点后一天只弹当天重叠日程（对齐 Amis `DaysView` 占位 `bg-transparent` 可点，payload 用当天 `scheduleData`）。Dialog 默认 `top: 60px`（`--Modal-content-startMarginTop`），不再垂直居中。
 - Calendar largeMode 日程条：内层绝对定位 + ellipsis，对齐 Amis `ScheduleCalendar-text-overflow`（超出格子显示「这是…」）。
 - Calendar 紧凑月历补齐 Amis `.rdtPicker` 的 `padding: 4px`，外框底边才离开最后一行日期（全局 token 肉眼几乎看不出）。

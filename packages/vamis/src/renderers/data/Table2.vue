@@ -278,36 +278,42 @@ function cellWidth(col: SchemaObject) {
           <TableHead
             v-for="(col, i) in visibleColumns"
             :key="colKey(col, i)"
-            :class="table2CanSort(col) ? 'cursor-pointer select-none' : ''"
             :style="cellWidth(col)"
-            @click="toggleSort(col)"
           >
             <span class="vamis-table2-head-cell">
               <SchemaRenderer v-if="col.title && typeof col.title === 'object'" :schema="col.title" />
               <template v-else>{{ col.title || col.label || col.name }}</template>
-              <span v-if="table2CanSort(col)" class="vamis-table2-sort" aria-hidden="true">
-                <svg
+              <span
+                v-if="table2CanSort(col)"
+                class="vamis-table2-sort"
+                role="button"
+                @click.stop="toggleSort(col)"
+              >
+                <i
                   class="vamis-table2-sort-icon is-up"
                   :class="{ 'is-active': sortDir(col) === 'asc' }"
-                  viewBox="0 0 7 10"
                 >
-                  <polygon points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
-                </svg>
-                <svg
+                  <svg viewBox="0 0 7 10">
+                    <polygon points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
+                  </svg>
+                </i>
+                <i
                   class="vamis-table2-sort-icon is-down"
                   :class="{ 'is-active': sortDir(col) === 'desc' }"
-                  viewBox="0 0 7 10"
                 >
-                  <polygon transform="translate(3.5,5) scale(1,-1) translate(-3.5,-5)" points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
-                </svg>
-                <svg
+                  <svg viewBox="0 0 7 10">
+                    <polygon transform="translate(3.5,5) scale(1,-1) translate(-3.5,-5)" points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
+                  </svg>
+                </i>
+                <i
                   class="vamis-table2-sort-icon is-default"
                   :class="{ 'is-active': !sortDir(col) }"
-                  viewBox="0 0 7 12"
                 >
-                  <polygon points="3.5354 0.0004 2.8284 0.7064 0.0004 3.5344 0.7074 4.2424 3.0354 1.9134 3.0354 5.0354 4.0354 5.0354 4.0354 1.9134 6.3634 4.2424 7.0704 3.5344 4.2424 0.7064" />
-                  <polygon points="3.035 7.0348 3.035 10.1558 0.708 7.8278 0 8.5348 2.828 11.3628 3.535 12.0708 4.243 11.3628 7.071 8.5348 6.363 7.8278 4.036 10.1558 4.036 7.0348" />
-                </svg>
+                  <svg viewBox="0 0 7 12">
+                    <polygon points="3.5354 0.0004 2.8284 0.7064 0.0004 3.5344 0.7074 4.2424 3.0354 1.9134 3.0354 5.0354 4.0354 5.0354 4.0354 1.9134 6.3634 4.2424 7.0704 3.5344 4.2424 0.7064" />
+                    <polygon points="3.035 7.0348 3.035 10.1558 0.708 7.8278 0 8.5348 2.828 11.3628 3.535 12.0708 4.243 11.3628 7.071 8.5348 6.363 7.8278 4.036 10.1558 4.036 7.0348" />
+                  </svg>
+                </i>
               </span>
             </span>
           </TableHead>
@@ -437,27 +443,41 @@ function cellWidth(col: SchemaObject) {
   line-height: 1.5;
 }
 .vamis-table2-sort {
+  position: relative;
   display: block;
   flex-shrink: 0;
   width: 14px;
   height: 14px;
   margin-left: 8px;
-  line-height: 0;
+  line-height: 21px;
   color: #b8babf;
+  cursor: pointer;
 }
 .vamis-table2-sort-icon {
   display: none;
+  position: absolute;
+  z-index: 2;
   width: 13px;
-  height: 13px;
+  height: 21px;
+  font-style: normal;
+  cursor: pointer;
   fill: currentColor;
 }
 .vamis-table2-sort-icon.is-active {
   display: block;
-  position: relative;
-  top: 2px;
+}
+.vamis-table2-sort-icon svg {
+  display: inline;
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  vertical-align: baseline;
 }
 .vamis-table2-sort-icon.is-default.is-active {
   color: #b8babf;
+}
+.vamis-table2-sort-icon.is-default.is-active:hover {
+  color: #151b26;
 }
 .vamis-table2-sort-icon.is-up.is-active,
 .vamis-table2-sort-icon.is-down.is-active {
