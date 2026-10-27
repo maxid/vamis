@@ -12721,6 +12721,560 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-table2-0",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "title": "表格标题 - ${rows.length}",
+          "source": "$rows",
+          "canAccessSuperData": true,
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine",
+              "width": 120
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            },
+            {
+              "title": "Operation",
+              "name": "operation",
+              "type": "button",
+              "label": "删除",
+              "size": "sm"
+            }
+          ],
+          "footer": {
+            "type": "tpl",
+            "tpl": "表格Footer"
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id"
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            },
+            {
+              "title": "Operation",
+              "name": "operation",
+              "type": "button",
+              "label": "删除",
+              "size": "sm"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id",
+            "rowClick": true
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            },
+            {
+              "title": "Operation",
+              "name": "operation",
+              "type": "button",
+              "label": "删除",
+              "size": "sm"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id",
+            "selectedRowKeys": [
+              1,
+              2
+            ]
+          },
+          "columns": [
+            {
+              "title": "ID",
+              "name": "id"
+            },
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "rowSelection": {
+            "type": "radio",
+            "keyField": "id",
+            "disableOn": "this.record.id === 1"
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id",
+            "selections": [
+              {
+                "key": "all",
+                "text": "全选所有"
+              },
+              {
+                "key": "invert",
+                "text": "反选当页"
+              },
+              {
+                "key": "none",
+                "text": "清空所有"
+              },
+              {
+                "key": "odd",
+                "text": "选择奇数行"
+              },
+              {
+                "key": "even",
+                "text": "选择偶数行"
+              }
+            ]
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "maxKeepItemSelectionLength": 2,
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id"
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine",
+              "sorter": true
+            },
+            {
+              "title": "Version",
+              "name": "version",
+              "sorter": true,
+              "width": 100
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-8",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "bordered": true,
+          "title": "标题",
+          "footer": "Footer",
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine"
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            },
+            {
+              "title": "Operation",
+              "name": "operation",
+              "type": "button",
+              "label": "删除",
+              "size": "sm"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-9",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table2",
+        "data": {
+          "items": []
+        },
+        "columns": [
+          {
+            "title": "Engine",
+            "name": "engine",
+            "width": 200
+          },
+          {
+            "title": "Version",
+            "name": "version",
+            "width": 200
+          },
+          {
+            "title": "Browser",
+            "name": "browser",
+            "width": 200
+          }
+        ],
+        "placeholder": "暂无数据"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table2-10",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table2 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table2 表格 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=6",
+        "body": {
+          "type": "table2",
+          "source": "$rows",
+          "size": "large",
+          "rowSelection": {
+            "type": "checkbox",
+            "keyField": "id"
+          },
+          "columns": [
+            {
+              "title": "Engine",
+              "name": "engine",
+              "sorter": true
+            },
+            {
+              "title": "Version",
+              "name": "version"
+            },
+            {
+              "title": "Browser",
+              "name": "browser"
+            },
+            {
+              "title": "Badge",
+              "name": "grade"
+            },
+            {
+              "title": "Platform",
+              "name": "platform"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-table-view-0",
     "group": "组件 / 数据展示",
     "bucket": "components",

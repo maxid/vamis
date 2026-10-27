@@ -176,7 +176,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
 
   crud: doc('CRUD 增删改查', '数据展示', '列表 + 筛选 + 分页 + 操作。api 拉数，filter 为筛选表单。'),
   table: doc('Table 表格', '数据展示', '静态或绑数据的表格。columns 定义列。'),
-  table2: doc('Table2 表格', '数据展示', '另一套表格实现。'),
+  table2: doc('Table2 表格', '数据展示', 'source 取数据链；rowSelection 选择；不配初始化接口。'),
   'table-view': doc('Table View 表格视图', '数据展示', '手动合并单元格的报表/布局表。trs/tds、caption、cols。'),
   calendar: doc('Calendar 日历日程', '数据展示', '月历与 schedules；年/月切换、点击日程、largeMode / todayActiveStyle。'),
   card: doc('Card 卡片', '数据展示', '单张卡片，可配 header/body。'),

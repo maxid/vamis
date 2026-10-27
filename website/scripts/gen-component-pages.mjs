@@ -92,6 +92,7 @@ const HANDWRITTEN = new Set([
   '/components/amis',
   '/components/popover',
   '/components/table-view',
+  '/components/table2',
   '/components/calendar',
   '/components/chart',
   '/components/code',
