@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import { docHref, withBase } from './pages'
+import { docHref, withBase } from './base'
 import { parseSchemaFenceMeta } from './schema-scope'
 
 export type TocItem = {

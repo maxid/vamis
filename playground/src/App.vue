@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button, Toaster } from '@vamis/ui'
 import SiteSearch from './components/SiteSearch.vue'
-import { withBase } from './docs/pages'
+import { withBase } from './docs/base'
 
 const GITHUB_REPO = 'https://github.com/maxid/vamis'
 const compareHref = withBase('/sdk/compare.html')

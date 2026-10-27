@@ -5,7 +5,8 @@ import SchemaPreview from '../components/SchemaPreview.vue'
 import DocCode from '../components/DocCode.vue'
 import DocSidebar from '../components/DocSidebar.vue'
 import DocToc from '../components/DocToc.vue'
-import { isStaticAssetHref, resolveDoc } from '../docs/pages'
+import { isStaticAssetHref } from '../docs/base'
+import { resolveDoc } from '../docs/pages'
 import { parseDoc } from '../docs/render'
 import { groupsForPath } from '../docs/sidebar'
 
@@ -14,8 +15,23 @@ const router = useRouter()
 const articleEl = ref<HTMLElement | null>(null)
 const tocEl = ref<HTMLElement | null>(null)
 const activeId = ref('')
+const page = ref<{ rel: string; raw: string } | null>(null)
+const docStatus = ref<'loading' | 'ready' | 'missing'>('loading')
 
-const page = computed(() => resolveDoc(route.path))
+let loadGen = 0
+watch(
+  () => route.path,
+  async (path) => {
+    const n = ++loadGen
+    docStatus.value = 'loading'
+    const next = await resolveDoc(path)
+    if (n !== loadGen) return
+    page.value = next
+    docStatus.value = next ? 'ready' : 'missing'
+  },
+  { immediate: true },
+)
+
 const parsed = computed(() => (page.value ? parseDoc(page.value.raw) : null))
 const groups = computed(() => groupsForPath(route.path))
 const toc = computed(() => parsed.value?.toc ?? [])
@@ -188,7 +204,8 @@ function onClick(event: MouseEvent) {
       class="min-h-0 min-w-0 overflow-auto px-8 py-6"
       @click="onClick"
     >
-      <p v-if="!parsed" class="text-sm text-muted-foreground">没有这份文档：{{ route.path }}</p>
+      <p v-if="docStatus === 'loading'" class="text-sm text-muted-foreground">加载文档…</p>
+      <p v-else-if="!parsed" class="text-sm text-muted-foreground">没有这份文档：{{ route.path }}</p>
       <template v-else>
         <template v-for="(block, i) in parsed.blocks" :key="`${route.path}:${i}`">
           <SchemaPreview

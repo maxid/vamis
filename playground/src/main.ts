@@ -5,7 +5,6 @@ import { vAutoHideScroll } from './directives/autoHideScroll'
 import { router } from './router'
 import { installMockFetch } from './mock/install'
 import './style.css'
-import 'vamis'
 
 if (import.meta.env.PROD) installMockFetch()
 

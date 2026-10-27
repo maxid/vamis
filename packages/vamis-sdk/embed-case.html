@@ -89,13 +89,22 @@
               } catch (_err) {
                 return resolve()
               }
-            } else if (
-              (engine === 'amis' && typeof window.amisRequire === 'function') ||
-              (engine !== 'amis' && window.vamis)
-            ) {
-              return resolve()
+              el.addEventListener('load', resolve)
+              el.addEventListener('error', fail)
+              return
             }
-            el.addEventListener('load', resolve)
+            if (engine === 'amis') {
+              if (typeof window.amisRequire === 'function') return resolve()
+              el.addEventListener('load', resolve)
+              el.addEventListener('error', fail)
+              return
+            }
+            if (window.__vamisSdkReady) return resolve()
+            function onReady() {
+              window.removeEventListener('vamis-sdk-ready', onReady)
+              resolve()
+            }
+            window.addEventListener('vamis-sdk-ready', onReady)
             el.addEventListener('error', fail)
           })
         }
@@ -725,7 +734,7 @@
           if (engine === 'amis' && typeof window.amisRequire !== 'function') {
             throw new Error('js ' + (assets.jsEl && assets.jsEl.src))
           }
-          if (engine !== 'amis' && !window.vamis) {
+          if (engine !== 'amis' && !window.__vamisSdkReady) {
             throw new Error('js ' + (assets.jsEl && assets.jsEl.src))
           }
           ready = true

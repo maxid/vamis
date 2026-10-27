@@ -119,6 +119,29 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  build: {
+    target: 'es2022',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          const path = id.replace(/\\/g, '/')
+          if (!path.includes('/node_modules/')) return
+          // monaco / echarts 必须靠动态 import 拆，不要进 manualChunks，否则入口会静态预加载 4MB+。
+          if (path.includes('/node_modules/yaml/')) return 'yaml'
+          if (path.includes('/node_modules/markdown-it/')) return 'markdown'
+          if (
+            path.includes('/vue/') ||
+            path.includes('/@vue/') ||
+            path.includes('/vue-router/') ||
+            path.includes('/pinia/') ||
+            path.includes('/vue-sonner/')
+          ) {
+            return 'vue'
+          }
+        },
+      },
+    },
+  },
   optimizeDeps: {
     include: ['monaco-editor'],
   },

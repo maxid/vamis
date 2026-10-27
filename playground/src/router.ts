@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import PlaygroundView from './views/PlaygroundView.vue'
-import EditorView from './views/EditorView.vue'
-import DocView from './views/DocView.vue'
+
+const DocView = () => import('./views/DocView.vue')
+const PlaygroundView = () => import('./views/PlaygroundView.vue')
+const EditorView = () => import('./views/EditorView.vue')
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

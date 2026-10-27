@@ -17,6 +17,8 @@ function copySdkStatic(): Plugin {
     closeBundle() {
       const dest = path.join(sdk, 'dist')
       if (!fs.existsSync(dest)) return
+      const loader = path.join(sdk, 'sdk-loader.js')
+      if (fs.existsSync(loader)) fs.copyFileSync(loader, path.join(dest, 'sdk.js'))
       for (const file of files) {
         const from = path.join(sdk, file)
         if (fs.existsSync(from)) fs.copyFileSync(from, path.join(dest, file))
@@ -52,16 +54,41 @@ export default defineConfig({
     'process.env.NODE_ENV': JSON.stringify('production'),
   },
   build: {
+    target: 'es2022',
     lib: {
       entry: path.join(sdk, 'src/index.ts'),
       name: 'vamis',
-      formats: ['iife'],
-      fileName: () => 'sdk.js',
+      formats: ['es'],
+      fileName: () => 'sdk.esm.js',
       cssFileName: 'sdk',
     },
     cssCodeSplit: false,
     emptyOutDir: true,
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        inlineDynamicImports: false,
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: (info) => {
+          const name = info.names?.[0] || info.name || ''
+          if (name === 'sdk.css' || name.endsWith('sdk.css')) return 'sdk.css'
+          return 'assets/[name]-[hash][extname]'
+        },
+        manualChunks(id) {
+          const path = id.replace(/\\/g, '/')
+          if (!path.includes('/node_modules/')) return
+          // monaco / echarts 走动态 import，不要 manualChunks，否则 sdk.esm 会静态拉 6MB。
+          if (path.includes('/node_modules/yaml/')) return 'yaml'
+          if (
+            path.includes('/vue/') ||
+            path.includes('/@vue/') ||
+            path.includes('/pinia/')
+          ) {
+            return 'vue'
+          }
+        },
+      },
+    },
   },
   test: {
     environment: 'happy-dom',
