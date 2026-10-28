@@ -74,42 +74,45 @@ const colsStyle = computed(() => {
   gap: 12px;
   grid-template-columns: 1fr;
 }
-@media (min-width: 768px) {
+@media (min-width: 576px) {
   .vamis-cards:not(.is-count):not(.is-masonry) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .vamis-cards.is-count {
+    grid-template-columns: repeat(var(--cards-cols, 1), minmax(0, 1fr));
+  }
 }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .vamis-cards:not(.is-count):not(.is-masonry) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .vamis-cards:not(.is-count):not(.is-masonry) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.vamis-cards.is-count {
-  grid-template-columns: repeat(var(--cards-cols, 1), minmax(0, 1fr));
-}
 .vamis-cards.is-masonry {
   display: block;
-  column-count: var(--cards-cols, 4);
+  column-count: 1;
   column-gap: 12px;
 }
-@media (max-width: 1199px) {
-  .vamis-cards.is-masonry:not(.is-count) {
-    column-count: 3;
-  }
+.vamis-cards.is-masonry.is-count {
+  column-count: var(--cards-cols, 1);
 }
-@media (max-width: 991px) {
+@media (min-width: 576px) {
   .vamis-cards.is-masonry:not(.is-count) {
     column-count: 2;
   }
 }
-@media (max-width: 767px) {
+@media (min-width: 768px) {
   .vamis-cards.is-masonry:not(.is-count) {
-    column-count: 1;
+    column-count: 3;
+  }
+}
+@media (min-width: 992px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 4;
   }
 }
 .vamis-cards.is-masonry .vamis-cards-item {

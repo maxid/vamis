@@ -632,7 +632,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     title: '列表标题。',
     header: '列表头部节点。',
     footer: '列表尾部节点。',
-    columnsCount: '固定列数。未写则 sm 2 / md 3 / lg 4。',
+    columnsCount: '固定列数。未写则 ≥576 两列 / ≥768 三列 / ≥992 四列（对齐 Amis Grid-col sm6/md4/lg3）。',
     masonryLayout: '瀑布流。默认 false。',
   }, { slots: ['card', 'header', 'footer'] }),
   list: fields('List', {

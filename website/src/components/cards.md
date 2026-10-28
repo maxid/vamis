@@ -6,7 +6,7 @@ outline: deep
 # Cards 卡片组
 
 ::: info 实现进度 70% · 进行中
-文档主路径已对齐：`source` 默认 `$items`（文档写法 `${items}` 同样可读）、`card` 子 schema、空态「暂无数据」、`columnsCount`、`masonryLayout` CSS 分栏。缺勾选/拖拽、CRUD 批量点选、`itemClassName` 像素级栅格。
+文档主路径已对齐：`source` 默认 `$items`（文档写法 `${items}` 同样可读）、`card` 子 schema、空态「暂无数据」、`columnsCount`、`masonryLayout` CSS 分栏。未写列数时 ≥576 两列 / ≥768 三列 / ≥992 四列。缺勾选/拖拽、CRUD 批量点选、`itemClassName` 像素级栅格。
 :::
 
 卡片列表。不配初始化接口，需要搭配 [Service](./service) 拉数，或手动初始化数据域，再用 `source` 从数据链取行。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

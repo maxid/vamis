@@ -179,7 +179,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table-view` | Table View 表格视图 | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | 进行中 | 70% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
-| `cards` | Cards 卡片组 | 进行中 | 70% | 文档主路径已对齐：source 默认 `$items`、card 子 schema、空态「暂无数据」、columnsCount、masonryLayout CSS 分栏。缺勾选/拖拽、CRUD 批量点选、itemClassName 像素级栅格 | P0 |
+| `cards` | Cards 卡片组 | 进行中 | 70% | 文档主路径已对齐：source 默认 `$items`、card 子 schema、空态「暂无数据」、columnsCount、masonryLayout CSS 分栏。默认列数对齐 Amis Grid-col（≥576 2 / ≥768 3 / ≥992 4）。缺勾选/拖拽、CRUD 批量点选、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
 | `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |

@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- Cards 默认栅格对齐 Amis `Grid-col--sm6/md4/lg3`：≥576 两列、≥768 三列、≥992 四列（原先 768 才两列，对照半栏看起来少一列）。
 - Dialog 关闭按钮 hover 出「关闭」提示：对齐 Amis `data-tooltip` / `data-position="left"`（Drawer 同样）。
 - Card 多媒体：图不再钉 `max-width: 180px`，走 `media.className`（文档主路径 `w-36 h-24`）；有 media/secondary 时底栏两个操作横排留缝，不挤成一列。
 - Card 头像按 Amis `Card-avtar`：`max-width: 200px`、图随内容，不再钉 50×50（那是 avatarText）。底栏 actions 整格 hover（`#f7f8fa` + 主色字），去掉按钮描边。
