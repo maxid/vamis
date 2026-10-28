@@ -34,6 +34,7 @@ alwaysApply: true
 - **每个语义示例只写一份活围栏**（`schema`）。不要为对照再复制一份只改甲/乙（或 JSON/YAML）的孪生围栏；解析后相同的 schema 对照本来就会去重。切格式走「编辑 Schema」双 Tab。这些围栏是对照收割源；改完必须按 `.cursor/rules/compare.mdc` 更新对照。
 - **示例文案对标 Amis 文档主路径**（按钮 / Nav 1 / 提示类文案 / HOT）。禁止用甲、乙、丙当唯一后缀去「制造」对照差异
 - **编辑 Schema** 必须是 YAML / JSON **两个 Tab**，改一边立刻同步（`syncAuthoringText`）。解析失败时保留对侧上次有效文本，预览停在上一份能跑的 schema
+- 活示例「编辑 Schema」按钮放在预览**框外**（框上右对齐），不要绝对定位进画布、不要 `pr-24` 给按钮留宽
 - YAML 字面量按 1.2 Core：`yes` / `On` / `012` 当字符串。这只约束 YAML，不否定 JSON
 
 禁止：写成「作者态是 YAML，不是 JSON」；把贴 JSON 当成二类导入；单框只收 YAML，或两个 Tab 不同步；活示例为对照去重改成甲/乙文案。

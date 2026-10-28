@@ -45,21 +45,17 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
 </script>
 
 <template>
-  <div class="doc-play my-5 overflow-hidden rounded-lg border bg-card" data-density="compact">
-    <div class="relative">
-      <Button
-        type="button"
-        size="xs"
-        variant="outline"
-        class="absolute right-3 top-3 z-10"
-        @click="editing = true"
-      >
+  <div class="doc-play my-5">
+    <div class="mb-2 flex justify-end">
+      <Button type="button" size="xs" variant="outline" @click="editing = true">
         编辑 Schema
       </Button>
+    </div>
+    <div class="overflow-hidden rounded-lg border bg-card" data-density="compact">
       <div v-if="banner && !editing" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
         {{ banner }}
       </div>
-      <div class="bg-background p-5 pr-24" :style="{ minHeight: `${minHeight}px` }">
+      <div class="bg-background p-5" :style="{ minHeight: `${minHeight}px` }">
         <LazyComponent placeholder="加载中，请稍后。。。">
           <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
         </LazyComponent>

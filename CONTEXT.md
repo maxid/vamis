@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 文档活示例「编辑 Schema」移到预览框上方外侧，去掉画布 `pr-24`，示例吃满框宽。
 - Dialog 桌面宽度回归：窄屏适配时 `DialogContent` 被改成 `max-w-none`，再加运行时拼接 `min-[576px]:max-w-[500px]`（Tailwind 扫不到），桌面弹层拉满。改回完整字面量 `max-w-[500px]` + `.vamis-dialog--default { max-width: 500px }`，100% 只留在 `<576`。对照 `toastOpen` 只认 `.vamis-toast` 条目（空 Host 不算打开）。dialog 桌面+移动 **5/5**，toast **11/11**。动窄屏必须桌面+移动一起跑。
 - Toast 状态图标与 Alert 共用 lucide（`levelToFeedbackIcon`：info / circle-check / triangle-alert / octagon-x），不再另画一套 Amis `alert-*` SVG。
 - Toast 对齐 Amis：去掉 vue-sonner。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px`（对照「桌面」iframe 768 也是这档）走暗底居中、40px 图标、一次一条、3000ms。`center` 不再映射成 `top-center`。Host 挂 `VamisApp` 并 Teleport 到 body。

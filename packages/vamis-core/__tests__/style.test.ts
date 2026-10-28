@@ -340,6 +340,9 @@ describe('Amis width helpers', () => {
     expect(preview).not.toContain('LazyInView')
     expect(preview).not.toContain('schemaKey')
     expect(preview).not.toContain(':key="schemaKey"')
+    expect(preview).not.toContain('absolute right-3 top-3')
+    expect(preview).not.toContain('pr-24')
+    expect(preview).toContain('mb-2 flex justify-end')
     // SPA 切页必须拆掉旧 LazyComponent：Amis MdRenderer 每页新建 root。
     expect(docView).toContain('`${route.path}:${i}`')
     expect(docView).not.toContain(':key="i"')
