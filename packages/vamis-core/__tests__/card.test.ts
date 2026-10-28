@@ -160,6 +160,8 @@ describe('card vue wiring', () => {
     expect(cards).toContain('cardsSource')
     expect(cards).toContain('cardsMasonry')
     expect(cards).toContain('cardsPlaceholder')
+    expect(cards).toContain('vamis-cards-placeholder')
+    expect(cards).toContain('height: 100px')
     expect(cards).toContain('column-count')
     expect(cards).toContain('@media (min-width: 576px)')
     expect(cards).toContain('repeat(3, minmax(0, 1fr))')

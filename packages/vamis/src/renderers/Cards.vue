@@ -134,8 +134,13 @@ const colsStyle = computed(() => {
   margin-bottom: 12px;
 }
 .vamis-cards-placeholder {
-  padding: 24px 8px;
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
   text-align: center;
   color: var(--muted-foreground);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 </style>

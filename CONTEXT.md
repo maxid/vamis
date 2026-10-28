@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- Cards 空态「暂无数据」对齐 Amis `Cards-placeholder`：100px 高、边框、圆角、居中。
 - Cards：默认栅格同一行拉齐高度；`masonryLayout` 才按内容各算高度。avatarText 不再默认 uppercase。
 - Cards 默认栅格对齐 Amis `Grid-col--sm6/md4/lg3`：≥576 两列、≥768 三列、≥992 四列（原先 768 才两列，对照半栏看起来少一列）。
 - Dialog 关闭按钮 hover 出「关闭」提示：对齐 Amis `data-tooltip` / `data-position="left"`（Drawer 同样）。
