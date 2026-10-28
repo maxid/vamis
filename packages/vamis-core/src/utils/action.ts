@@ -1,6 +1,7 @@
-/** Action 按钮外观。对齐 Amis：空 label 只留图标；primary 当 level；含 / 的 icon 当图片。 */
+/** Action 按钮外观。对齐 Amis：未写 label 不补「按钮」；空 label 只留图标；primary 当 level；icon 走 resolveIcon。 */
 
 import { filterTpl } from '../formula'
+import { resolveIcon } from './icon'
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -31,28 +32,24 @@ export function actionLabel(schema: unknown, data: Record<string, unknown> = {})
   if (rec.label === false || rec.label === '') return ''
   if (typeof rec.label === 'string') return filterTpl(rec.label, data)
   if (typeof rec.title === 'string' && rec.title) return filterTpl(rec.title, data)
-  return '按钮'
+  return ''
 }
 
 export function actionShowLabel(schema: unknown): boolean {
   const rec = asRecord(schema)
-  return rec.label !== false && rec.label !== ''
-}
-
-function iconKind(icon: unknown): 'url' | 'class' | '' {
-  if (typeof icon !== 'string' || !icon) return ''
-  if (/^https?:/i.test(icon) || icon.includes('/')) return 'url'
-  return 'class'
+  if (rec.label === false || rec.label === '') return false
+  if (typeof rec.label === 'string') return true
+  return typeof rec.title === 'string' && !!rec.title
 }
 
 export function actionIconSrc(schema: unknown, key = 'icon'): string {
-  const icon = asRecord(schema)[key]
-  return iconKind(icon) === 'url' ? String(icon) : ''
+  const resolved = resolveIcon(asRecord(schema)[key])
+  return resolved.kind === 'url' ? resolved.src : ''
 }
 
 export function actionIconClass(schema: unknown, key = 'icon'): string {
-  const icon = asRecord(schema)[key]
-  return iconKind(icon) === 'class' ? String(icon) : ''
+  const resolved = resolveIcon(asRecord(schema)[key])
+  return resolved.kind === 'class' ? resolved.className : ''
 }
 
 export function actionTooltip(schema: unknown, data: Record<string, unknown> = {}): string {

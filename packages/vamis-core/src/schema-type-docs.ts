@@ -191,7 +191,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   month: doc('Month 月份', '数据展示', '只读月份。'),
   each: doc('Each 循环渲染器', '数据展示', '按数组循环渲染子节点。'),
   html: doc('Html', '数据展示', 'tpl 别名。模板里的标签会渲染，插值默认转义。'),
-  icon: doc('Icon 图标', '数据展示', '展示图标。'),
+  icon: doc('Icon 图标', '数据展示', 'icon 名称默认 FA v4；URL / SVG；vendor fa / iconfont / 空。'),
   iframe: doc('iFrame', '数据展示', '嵌入外部页面。'),
   image: doc('Image 图片', '数据展示', '展示单张图。'),
   images: doc('Images 图片集', '数据展示', '平铺多图。'),

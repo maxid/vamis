@@ -2,6 +2,7 @@
 
 import { filterTpl } from '../formula'
 import type { PlainObject } from '../types'
+import { resolveIcon } from './icon'
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -79,8 +80,7 @@ export function avatarIcon(schema: unknown, data: PlainObject = {}): string {
 }
 
 export function avatarIconKind(icon: string): 'url' | 'class' {
-  if (/^https?:/i.test(icon) || icon.includes('/')) return 'url'
-  return 'class'
+  return resolveIcon(icon).kind === 'url' ? 'url' : 'class'
 }
 
 export function avatarIconSizePx(schema: unknown): number {

@@ -2,10 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   SchemaRenderer,
-  actionIconClass,
-  actionIconSrc,
   actionTooltip,
   filterTpl,
+  iconVendor,
+  resolveIcon,
   dropdownButtonAlign,
   dropdownButtonCloseOnClick,
   dropdownButtonCloseOnOutside,
@@ -16,6 +16,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, levelToVariant, sizeToButtonSize } from '@vamis/ui'
+import IconMark from '../IconMark.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const data = useData()
@@ -33,10 +34,12 @@ const label = computed(() => {
   return '下拉菜单'
 })
 const tooltip = computed(() => actionTooltip(props.schema, data.value))
-const iconSrc = computed(() => actionIconSrc(props.schema))
-const iconClass = computed(() => actionIconClass(props.schema))
-const rightSrc = computed(() => actionIconSrc(props.schema, 'rightIcon'))
-const rightClass = computed(() => actionIconClass(props.schema, 'rightIcon'))
+function resolveSchemaIcon(raw: unknown) {
+  const value = typeof raw === 'string' ? filterTpl(raw, data.value) : raw
+  return resolveIcon(value, { vendor: iconVendor(props.schema) })
+}
+const icon = computed(() => resolveSchemaIcon(props.schema.icon))
+const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
 const showLabel = computed(() => props.schema.iconOnly !== true && props.schema.label !== false && props.schema.label !== '')
 
 function setOpen(next: boolean) {
@@ -83,11 +86,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocPointer, 
       :class="schema.block === true ? 'w-full' : undefined"
       @click="onToggle"
     >
-      <img v-if="iconSrc" :src="iconSrc" alt="" class="size-4" />
-      <span v-else-if="iconClass" :class="iconClass" aria-hidden="true" />
+      <IconMark v-if="icon.kind !== 'empty'" :icon="icon" img-class="size-4" />
       <template v-if="showLabel">{{ label }}</template>
-      <img v-if="rightSrc" :src="rightSrc" alt="" class="size-4" />
-      <span v-else-if="rightClass" :class="rightClass" aria-hidden="true" />
+      <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
       <span
         v-if="!hideCaret"
         aria-hidden="true"

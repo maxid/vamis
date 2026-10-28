@@ -73,11 +73,11 @@
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
-| `action` | Action 行为按钮 | 进行中 | 85% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、URL `icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / email。缺倒计时、快捷键、fa 图标、Action 当容器、`download` / `saveAs`、控制流 | P0 |
+| `action` | Action 行为按钮 | 进行中 | 85% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`（FA class / URL / SVG，未写 `label` 不补「按钮」）、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / email。缺倒计时、快捷键、Action 当容器、`download` / `saveAs`、控制流 | P0 |
 | `app` | App 多页应用 | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
 | `button` | Button 按钮 | 进行中 | 85% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`；复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | 进行中 | 85% | 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`。缺 `btnActiveLevel`、圆角拼缝 | P0 |
-| `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层、fa 字体 | P0 |
+| `breadcrumb` | Breadcrumb 面包屑 | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | 进行中 | 80% | 文档主路径已对齐：`buttons` 分组、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret`、`defaultIsOpened`。三角走 CSS 不进按钮文本。缺弹出容器选择器 | P0 |
 | `service` | Service 功能型容器 | 进行中 | 75% | 文档主路径已对齐：独立 Scope、静态 `data`、`api` 刷新、`schemaApi` 当子 schema、`initFetch: false`、`reload`。缺 `dataProvider` / 轮询 | P0 |
@@ -178,8 +178,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table2` | Table2 表格 | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。缺 change/click / setValue | P0 |
-| `card` | Card 卡片 | 进行中 | 70% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
-| `cards` | Cards 卡片组 | 进行中 | 70% | 文档主路径已对齐：source 默认 `$items`、card 子 schema、空态「暂无数据」、columnsCount、masonryLayout CSS 分栏。默认列数对齐 Amis Grid-col（≥576 2 / ≥768 3 / ≥992 4）。缺勾选/拖拽、CRUD 批量点选、itemClassName 像素级栅格 | P0 |
+| `card` | Card 卡片 | 进行中 | 70% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
+| `cards` | Cards 卡片组 | 进行中 | 70% | 文档主路径已对齐：source 默认 `$items`、card 子 schema、空态「暂无数据」、columnsCount、masonryLayout CSS 分栏。默认列数对齐 Amis Grid-col（≥576 2 / ≥768 3 / ≥992 4）。底栏 icon 未写 label 只画图标。缺勾选/拖拽、CRUD 批量点选、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
 | `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
@@ -187,7 +187,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | 进行中 | 70% | 不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength | P0 |
 | `html` | Html | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine；其余过滤器仍 P1 | P0 |
-| `icon` | Icon 图标 | 进行中 | 60% | 能出图标；iconfont/vendor 未齐 | P0 |
+| `icon` | Icon 图标 | 进行中 | 75% | 文档主路径已对齐：icon 名称默认 FA v4、URL、内联 SVG、vendor fa/iconfont/空。字形走 sdk.css 的 FA + v4-shims。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
 | `iframe` | iFrame | 进行中 | 55% | 能嵌页 | P0 |
 | `image` | Image 图片 | 进行中 | 55% | 能显示；放大/图集未齐 | P0 |
 | `images` | Images 图片集 | 进行中 | 50% | 能平铺 | P0 |

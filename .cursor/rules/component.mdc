@@ -31,6 +31,10 @@ Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`�
 
 禁止：把「铺满」做成作者必须记住的开关；为了 Playground 好看而收窄整页表单；新组件默认宽度写成固定 px（除非对齐 Amis 该 type 的 `size` 档，且未写 size 时仍自适应）。
 
+## 图标字段
+
+`icon` / `rightIcon`（Action、Icon、Avatar、Nav、Breadcrumb、DropDownButton）走 `@vamis/core` 的 `resolveIcon`，不要各写一套 URL 判断。class 用 `<i>`，URL 用 `<img>`。未写 `label` 的按钮只留图标，不补「按钮」。规则细节见 `.cursor/rules/style.mdc`「图标」。
+
 ## 串行分批
 
 按 **复杂度** 决定一次做几个，不要无脑「一批三个」。一批内串行做完，再 `pnpm sdk:build` + `pnpm compare --page a && --page b`（见 `.cursor/rules/compare.mdc`）。

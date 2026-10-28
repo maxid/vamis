@@ -34,3 +34,15 @@ alwaysApply: true
 - **Amis helper 类**（`font-sans`、`rounded-md`、`shadow-lg`）是作者 `className` 覆盖，打在 `div.vamis-node` 或文档 HTML 岛
 - 组件 Vue 模板不要用 helper 类名表示「主题默认」。控件 4px 圆角用 `rounded`（= `--radius`），不要用 `rounded-md`（Amis helper 是 6px）
 - html / body 不钉字族（对齐 Amis unset）。`.vamis-root` / SDK 根走 `--fontFamilyBase`（= `--fonts-base-family`，实测 Helvetica Neue）、`font-size: 14px; line-height: 1.5`。不要 `@apply font-sans`（helper 英文硬编码栈）或 `text-sm`（TW 行高 20px）当默认
+
+## 图标
+
+对齐 Amis `packages/amis-core/src/utils/icon.tsx` 与 `packages/amis-ui/src/components/icons.tsx`。schema `icon` 只决定**落哪个节点**；字形来自字体 CSS、图片或 SVG，不要在运行时用 CSS mask / `::before` 给每个 `fa-*` 画一套。
+
+- **识别顺序**（与 Amis 一致）：`<svg` 字符串 → 内联 SVG；字符串含 `.` → `<img src>`；否则当 class 打在 `<i>`
+- **vendor**（`type: icon` 默认 `fa`）：`fa` → `fa fa-${name}`；`iconfont` → `iconfont icon-${name}`；`""` 原样落下（FA5/6 或宿主自己的字体）。已是 `fa fa-*` 完整 class 时不要再叠前缀
+- **Action / 按钮** 的 `icon: "fa fa-plus"` 已经是完整 class，不要再套一层 `vendor: fa`
+- **Font Awesome** 走 `@vamis/ui/fontawesome.css`（Playground JS 入口引入）。SDK 构建后把 `all.min.css` + `v4-shims.min.css` 追加进 `sdk.css`，webfont 拷到 `dist/assets/`。不要 `@import` 进走 Tailwind 的 `styles.css`（lib 模式会把 woff 做成 base64）。不搬 Amis 自有 `iconfont.woff`；`vendor: iconfont` 需宿主自备那份 CSS
+- **自定义**：图片 URL、SVG 字符串、`{ id: "svg-…" }` sprite、宿主字体 + class。不要为常用名再写 SVG 掩膜当扩展点
+
+禁止：用 helper CSS 冒充 Font Awesome；用 `/` 判断 URL（Amis 看 `.`）；把 `helpers-fa.css` 掩膜当作者自定义图标通道

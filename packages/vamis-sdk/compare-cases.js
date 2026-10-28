@@ -8002,9 +8002,9 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "带图标",
         "type": "button",
-        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+        "label": "带图标",
+        "icon": "fa fa-plus"
       }
     },
     "measure": {
@@ -8025,13 +8025,9 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "label": "Drawer Form",
         "type": "button",
-        "actionType": "drawer",
-        "drawer": {
-          "title": "表单设置",
-          "body": "抽屉内容"
-        }
+        "label": "带图标",
+        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
       }
     },
     "measure": {
@@ -8048,6 +8044,33 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "label": "Drawer Form",
+        "type": "button",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "表单设置",
+          "body": "抽屉内容"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-18",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #19",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14103,6 +14126,7 @@ window.VAMIS_COMPARE_CASES = [
             "type": "button",
             "label": "编辑",
             "actionType": "dialog",
+            "icon": "fa fa-pencil",
             "dialog": {
               "title": "编辑",
               "body": "你正在编辑该卡片"
@@ -14111,6 +14135,7 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "button",
             "label": "删除",
+            "icon": "fa fa-trash",
             "actionType": "dialog",
             "dialog": {
               "title": "提示",
@@ -14169,6 +14194,7 @@ window.VAMIS_COMPARE_CASES = [
             "type": "button",
             "label": "编辑",
             "actionType": "dialog",
+            "icon": "fa fa-pencil",
             "dialog": {
               "title": "编辑",
               "body": "你正在编辑该卡片"
@@ -14177,6 +14203,7 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "button",
             "label": "删除",
+            "icon": "fa fa-trash",
             "actionType": "dialog",
             "dialog": {
               "title": "提示",
@@ -14377,7 +14404,7 @@ window.VAMIS_COMPARE_CASES = [
             {
               "type": "button",
               "level": "link",
-              "label": "查看详情",
+              "icon": "fa fa-eye",
               "actionType": "dialog",
               "dialog": {
                 "title": "查看详情",
@@ -14715,12 +14742,32 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "icon",
-      "body": [
-        {
-          "type": "icon"
-        }
-      ]
+      "body": {
+        "type": "icon",
+        "icon": "cloud"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "icon",
+        "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+      }
     },
     "measure": {
       "type": "tree"

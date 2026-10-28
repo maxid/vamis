@@ -59,17 +59,20 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 54%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` / `cards` 70%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 54%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` / `cards` 70%；`icon` 75%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`（html/body 不钉字族）；浅色 `--border` 对齐 Amis `#e8e9eb`；Button 默认字重 400。`/style` 首页 **50%**，CSS 变量 **65%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 403 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **927**。`card` **5/5**、`cards` **4/4**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 407 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`card` **5/5**、`cards` **4/4**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- 图标对齐 Amis：`resolveIcon`（含 `.` 当图片、`<svg` 内联、否则 class）；Font Awesome + v4-shims 打进 `sdk.css`；删掉 CSS mask 画 `fa-*`。规则写入 `style.mdc` / `component.mdc`。
+- Action 未写 `label` 不再补「按钮」（对齐 Amis：有 icon 就只画图标）。Cards 基本用法改回 `icon: fa fa-eye`。
+- Card `actions.icon`：字段本来就往 Action 传；底栏 inline-flex，图标走 Font Awesome class。
 - Cards 空态「暂无数据」对齐 Amis `Cards-placeholder`：100px 高、边框、圆角、居中。
 - Cards：默认栅格同一行拉齐高度；`masonryLayout` 才按内容各算高度。avatarText 不再默认 uppercase。
 - Cards 默认栅格对齐 Amis `Grid-col--sm6/md4/lg3`：≥576 两列、≥768 三列、≥992 四列（原先 768 才两列，对照半栏看起来少一列）。

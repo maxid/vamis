@@ -10,6 +10,31 @@ const sdk = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(sdk, '../..')
 const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
 
+function resolveFontAwesome() {
+  const candidates = [
+    path.join(repo, 'packages/vamis-ui/node_modules/@fortawesome/fontawesome-free'),
+    path.join(repo, 'node_modules/@fortawesome/fontawesome-free'),
+  ]
+  return candidates.find((dir) => fs.existsSync(dir))
+}
+
+function appendFontAwesome(dest: string) {
+  const fa = resolveFontAwesome()
+  if (!fa) return
+  const assets = path.join(dest, 'assets')
+  fs.mkdirSync(assets, { recursive: true })
+  const webfonts = path.join(fa, 'webfonts')
+  for (const file of fs.readdirSync(webfonts)) {
+    fs.copyFileSync(path.join(webfonts, file), path.join(assets, file))
+  }
+  const rewrite = (css: string) => css.replaceAll('../webfonts/', './assets/')
+  const extra = [
+    rewrite(fs.readFileSync(path.join(fa, 'css/all.min.css'), 'utf8')),
+    rewrite(fs.readFileSync(path.join(fa, 'css/v4-shims.min.css'), 'utf8')),
+  ].join('\n')
+  fs.appendFileSync(path.join(dest, 'sdk.css'), `\n${extra}`)
+}
+
 function copySdkStatic(): Plugin {
   const files = ['hello.html', 'compare.html', 'embed-case.html', 'compare-cases.js']
   return {
@@ -29,6 +54,7 @@ function copySdkStatic(): Plugin {
         fs.mkdirSync(dir, { recursive: true })
         fs.copyFileSync(score, path.join(dir, 'score.mjs'))
       }
+      appendFontAwesome(dest)
     },
   }
 }
@@ -55,6 +81,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
+    assetsInlineLimit: 0,
     lib: {
       entry: path.join(sdk, 'src/index.ts'),
       name: 'vamis',

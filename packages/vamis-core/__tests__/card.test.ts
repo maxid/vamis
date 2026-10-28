@@ -152,6 +152,8 @@ describe('card vue wiring', () => {
     expect(card).toContain('window.open')
     expect(card).toContain('label: false')
     expect(card).not.toMatch(/\.vamis-card-avatar-text \{[^}]*text-transform: uppercase/)
+    expect(card).toContain('inline-flex')
+    expect(card).toContain('gap: 4px')
     expect(cards).toContain(':not(.is-masonry) .vamis-card')
     expect(cards).toContain('height: 100%')
     expect(cards).toContain('.vamis-cards.is-masonry .vamis-cards-item')

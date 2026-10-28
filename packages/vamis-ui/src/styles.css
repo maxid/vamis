@@ -11,7 +11,6 @@
 @import "./helpers-border.css";
 @import "./helpers-effect.css";
 @import "./helpers-palette.css";
-@import "./helpers-fa.css";
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant m (@media (max-width: 767px));

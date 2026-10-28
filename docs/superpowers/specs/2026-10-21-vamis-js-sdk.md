@@ -22,7 +22,7 @@ SDK **不另做一套运行时**。它把 Vue 3 + Pinia + `vamis` 打进一份 I
 |------|------|
 | `sdk.js` | 经典 `<script src>` 小 loader，挂 `window.vamis`（调用可排队到运行时就绪） |
 | `sdk.esm.js` | ES 入口：Vue / Pinia / 渲染器 / 默认 env。monaco / echarts / worker 另打成 `assets/*` 按需加载 |
-| `sdk.css` | `@vamis/ui` token + 辅助类。一文件即可跑，不拆 `helper.css` / `iconfont.css` |
+| `sdk.css` | `@vamis/ui` token + 辅助类 + Font Awesome（all + v4-shims，webfont 独立 asset）。一文件即可跑，不拆 `helper.css` / `iconfont.css` |
 
 包位置：`packages/vamis-sdk`（薄入口，依赖 workspace 的 `vamis` / `@vamis/core` / `@vamis/ui`）。构建脚本产出 `dist/sdk.js`、`dist/sdk.esm.js`、`dist/sdk.css` 与 chunks。npm 以后可从 `vamis/sdk` 或 `@vamis/sdk` 引用。宿主用法仍是外链 `sdk.js`，**不改 `embed` 契约**。
 

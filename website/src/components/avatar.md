@@ -6,7 +6,7 @@ outline: deep
 # Avatar 头像
 
 ::: info 实现进度 90% · 进行中
-文档主路径已对齐：`src` 真图、`text`、`icon: fa fa-user`、`$var` 降级、`shape` / `size` / `fit` / `gap` 像素缩放、`onError` 置换、`draggable`、`badge`（含 ribbon）。对照 **13/13**。其它 `fa-*` 需宿主自备字体；`onError` 字符串只在 `env.trusted` 编译（对照页已开）。
+文档主路径已对齐：`src` 真图、`text`、`icon: fa fa-user`、`$var` 降级、`shape` / `size` / `fit` / `gap` 像素缩放、`onError` 置换、`draggable`、`badge`（含 ribbon）。对照 **13/13**。`fa-*` 走 Font Awesome；`onError` 字符串只在 `env.trusted` 编译（对照页已开）。
 :::
 
 用来显示用户头像。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -232,7 +232,7 @@ body:
 | `src` | `string` | | 图片地址，可 `$var` / `${}` |
 | `defaultAvatar` | `string` | | 没写 src 时的占位图 |
 | `text` | `string` | | 文字 |
-| `icon` | `string` | `fa fa-user` | 图标。含 `/` 当图片；`fa fa-*` 写在 `<i>` |
+| `icon` | `string` | `fa fa-user` | 图标。含 `.` 当图片；`fa fa-*` 写在 `<i>` |
 | `shape` | `string` | `circle` | `circle` / `square` / `rounded` |
 | `size` | `number \| string` | `40` | `small` 32 / `default` `normal` 40 / `large` 48 / 数字 px |
 | `fit` | `string` | `cover` | 图片 object-fit |
@@ -273,5 +273,5 @@ onEvent:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `onError` 字符串函数体只在 `env.trusted` 编译，默认不跑。
-- `fa fa-user` 有内置字形；其它 `fa-*` 需宿主自备 Font Awesome，或仍显示空 `<i>`。
+- `fa-*` 走 `sdk.css` 里的 Font Awesome（含 v4-shims）。
 - 视觉走 token 圆与底（默认底 `#d1d5db`），不是 cxd Avatar 皮肤。

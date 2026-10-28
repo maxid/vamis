@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import {
-  actionIconClass,
-  actionIconSrc,
   actionKind,
   actionLabel,
   actionLevel,
   actionShowLabel,
   actionTooltip,
+  filterTpl,
+  iconVendor,
+  resolveIcon,
   createVamisEvent,
   eventEvalData,
   runAction,
@@ -22,6 +23,7 @@ import {
 } from '@vamis/core'
 import { Button, levelToVariant, sizeToButtonSize } from '@vamis/ui'
 import BadgeHost from './BadgeHost.vue'
+import IconMark from './IconMark.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -42,10 +44,12 @@ const label = computed(() => actionLabel(props.schema, data.value))
 const showLabel = computed(() => actionShowLabel(props.schema))
 const variant = computed(() => levelToVariant(actionLevel(props.schema), kind.value))
 const size = computed(() => sizeToButtonSize(props.schema.size))
-const iconSrc = computed(() => actionIconSrc(props.schema))
-const iconClass = computed(() => actionIconClass(props.schema))
-const rightSrc = computed(() => actionIconSrc(props.schema, 'rightIcon'))
-const rightClass = computed(() => actionIconClass(props.schema, 'rightIcon'))
+function resolveSchemaIcon(raw: unknown) {
+  const value = typeof raw === 'string' ? filterTpl(raw, data.value) : raw
+  return resolveIcon(value, { vendor: iconVendor(props.schema) })
+}
+const icon = computed(() => resolveSchemaIcon(props.schema.icon))
+const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
 const tooltip = computed(() => actionTooltip(props.schema, data.value))
 const block = computed(() => props.schema.block === true)
 
@@ -85,11 +89,9 @@ async function onClick() {
       :class="block ? 'w-full' : undefined"
       @click="onClick"
     >
-      <img v-if="iconSrc" :src="iconSrc" alt="" class="size-4" />
-      <span v-else-if="iconClass" :class="iconClass" aria-hidden="true" />
+      <IconMark v-if="icon.kind !== 'empty'" :icon="icon" img-class="size-4" />
       <template v-if="showLabel">{{ loading ? '处理中…' : label }}</template>
-      <img v-if="rightSrc" :src="rightSrc" alt="" class="size-4" />
-      <span v-else-if="rightClass" :class="rightClass" aria-hidden="true" />
+      <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
     </Button>
   </BadgeHost>
 </template>

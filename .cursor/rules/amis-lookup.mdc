@@ -34,3 +34,5 @@ Amis（`baidu/amis`，对齐 **6.13.0**）默认是本仓库的**同级目录** 
 | UI 原语 | `packages/amis-ui`（不搬 cxd class） | `packages/vamis-ui`（shadcn-vue） |
 
 查组件：先 `docs/zh-CN/components/<type>.md`（表单项在 `form/`），再打开对应 `renderers/*.tsx`，对照 Vamis 同名 Vue 与 `registerRenderer`。
+
+图标：文档 `docs/zh-CN/components/icon.md`（及 action 的「图标」节）；识别 `packages/amis-core/src/utils/icon.tsx`；渲染 `packages/amis-ui/src/components/icons.tsx`、`packages/amis/src/renderers/Icon.tsx`。文档站另引 `@fortawesome/fontawesome-free` 与 `examples/static/iconfont.css`。Vamis 规则见 `.cursor/rules/style.mdc`「图标」。

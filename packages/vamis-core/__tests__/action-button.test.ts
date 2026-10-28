@@ -30,6 +30,15 @@ describe('actionLabel', () => {
     expect(actionShowLabel({ label: '' })).toBe(false)
     expect(actionLabel({ label: 'hi ${name}' }, { name: 'Ada' })).toBe('hi Ada')
   })
+
+  it('does not invent 按钮 when label is omitted', () => {
+    expect(actionLabel({})).toBe('')
+    expect(actionShowLabel({})).toBe(false)
+    expect(actionLabel({ icon: 'fa fa-eye' })).toBe('')
+    expect(actionShowLabel({ icon: 'fa fa-eye' })).toBe(false)
+    expect(actionShowLabel({ icon: 'fa fa-eye', label: '查看详情' })).toBe(true)
+    expect(actionShowLabel({ title: '弹框' })).toBe(true)
+  })
 })
 
 describe('actionIconSrc / actionIconClass', () => {
@@ -40,6 +49,8 @@ describe('actionIconSrc / actionIconClass', () => {
     expect(actionIconSrc({ icon: 'fa fa-plus' })).toBe('')
     expect(actionIconClass({ icon: 'fa fa-plus' })).toBe('fa fa-plus')
     expect(actionIconClass({ icon: 'https://example.com/a.svg' })).toBe('')
+    expect(actionIconSrc({ icon: 'plus.png' })).toBe('plus.png')
+    expect(actionIconClass({ icon: 'plus.png' })).toBe('')
   })
 })
 

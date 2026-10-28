@@ -384,7 +384,10 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card-action [data-slot='button'],
 .vamis-card-action button {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   width: 100%;
   height: 40px;
   min-height: 40px;
@@ -397,7 +400,7 @@ async function onCardClick(event: MouseEvent) {
   color: var(--foreground);
   font-size: 12px;
   font-weight: 400;
-  line-height: 40px;
+  line-height: 1;
   text-decoration: none;
 }
 .vamis-card-action:hover {

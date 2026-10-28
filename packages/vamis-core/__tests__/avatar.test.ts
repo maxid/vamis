@@ -51,11 +51,12 @@ describe('avatar defaults', () => {
     expect(avatarAlt({ alt: '头像' })).toBe('头像')
   })
 
-  it('defaults icon to fa fa-user and treats / as image', () => {
+  it('defaults icon to fa fa-user and treats a dot as image', () => {
     expect(avatarIcon({})).toBe('fa fa-user')
     expect(avatarIcon({ icon: 'fa fa-user' })).toBe('fa fa-user')
     expect(avatarIconKind('fa fa-user')).toBe('class')
     expect(avatarIconKind('https://img/u.svg')).toBe('url')
+    expect(avatarIconKind('user.png')).toBe('url')
     expect(avatarIconSizePx({})).toBe(18)
     expect(avatarIconSizePx({ size: 'small' })).toBe(12)
     expect(avatarIconSizePx({ size: 'large' })).toBe(20)

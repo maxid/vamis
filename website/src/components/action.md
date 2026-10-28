@@ -6,7 +6,7 @@ outline: deep
 # Action 行为按钮
 
 ::: info 实现进度 85% · 进行中
-文档主路径已对齐：`actionType`、`level` / `primary`、`size`、URL `icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / url / email。缺倒计时、快捷键、fontawesome 图标、Action 当容器、`download` / `saveAs`、控制流。
+文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`（FA class / URL / SVG，未写 `label` 不补「按钮」）、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / url / email。缺倒计时、快捷键、Action 当容器、`download` / `saveAs`、控制流。
 :::
 
 Action 是触发页面行为的主要方法。`type: action` 与别名 `button` / `submit` / `reset` 同一渲染器。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -116,11 +116,17 @@ JSON 同等有效：
 
 ### 图标
 
-`icon` 含 `/` 或 `http` 时当图片。fontawesome 类名（`fa fa-plus`）未接图标字体，只保留 class。`label: ""` 可以只显示图标。
+`icon` 含 `.` 时当图片。`fa fa-*` 打在 `<i>` 上，字形走 Font Awesome（`sdk.css` 已带 v4-shims）。也可以写 SVG 字符串。未写 `label` 或 `label: ""` 都只显示图标，不会补「按钮」。
 
 ```schema: scope="body"
-label: 带图标
 type: button
+label: 带图标
+icon: fa fa-plus
+```
+
+```schema: scope="body"
+type: button
+label: 带图标
 icon: https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg
 ```
 
@@ -218,11 +224,11 @@ content: https://example.com/vamis
 |--------|------|--------|------|
 | type | `string` | `"action"` | 指定为 action 渲染器；`button` / `submit` / `reset` 是别名 |
 | actionType | `string` | | ajax / dialog / drawer / toast / copy / link / url / email / submit / reset / reload / setValue … |
-| label | `string` | `"按钮"` | 按钮文本。空字符串则只显示图标 |
+| label | `string` | | 按钮文本。未写或空字符串则只显示图标，不补「按钮」 |
 | level | `string` | `default` | primary / secondary / info / success / warning / danger / light / dark / link |
 | primary | `boolean` | | `true` 等价 `level: primary`；已写 `level` 时以 level 为准 |
 | size | `string` | | xs / sm / md / lg |
-| icon / rightIcon | `string` | | 含 `/` 当图片；fa 类名未接字体 |
+| icon / rightIcon | `string` | | 含 `.` 当图片；否则 class（`fa fa-*` 走 Font Awesome） |
 | block | `boolean` | | `true` 时按钮拉满一行 |
 | confirmText | 模板 | | 操作前确认 |
 | confirmTitle | 模板 | | 确认框标题 |

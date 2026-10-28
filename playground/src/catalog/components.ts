@@ -774,7 +774,7 @@ const DISPLAY: ComponentDef[] = [
     snippet: { type: 'each', source: '${items}', items: tpl('${name}') },
   },
   { type: 'html', label: 'Html', snippet: { type: 'html', html: '<em>html 直通</em>' } },
-  { type: 'icon', label: 'Icon 图标', snippet: { type: 'icon', icon: 'fa fa-home' } },
+  { type: 'icon', label: 'Icon 图标', snippet: { type: 'icon', icon: 'home' } },
   { type: 'iframe', label: 'iFrame', snippet: { type: 'iframe', src: 'https://example.com', height: 240 } },
   { type: 'image', label: 'Image 图片', snippet: { type: 'image', src: 'https://placehold.co/160x90', title: '示意图' } },
   {
