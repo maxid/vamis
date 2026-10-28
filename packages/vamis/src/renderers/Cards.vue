@@ -129,8 +129,12 @@ const colsStyle = computed(() => {
   height: 100%;
 }
 .vamis-cards.is-masonry .vamis-cards-item {
-  display: block;
+  display: inline-block;
+  width: 100%;
+  max-width: unset;
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
   margin-bottom: 12px;
 }
 .vamis-cards-placeholder {

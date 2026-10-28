@@ -309,6 +309,8 @@ describe('Amis width helpers', () => {
     expect(sr).toContain("!key.startsWith('__')")
     expect(sr).toContain('[needsChildScope.value, scopeMode.value]')
     expect(sr).not.toContain('props.schema] as const')
+    expect(sr).toContain('? (currentScope.value?.resolved() ?? parentData.value)')
+    expect(sr).toContain(': parentData.value')
   })
 
   it('refetches remote apis with isApiOutdated like Amis, not on every data change', () => {

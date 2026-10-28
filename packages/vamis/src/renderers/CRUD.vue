@@ -30,7 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from '@vamis/ui'
-import { asToolbarSchema, CrudHostKey, parseListPayload, selectedIdsOf } from './data/crudHost'
+import Cards from './Cards.vue'
+import { asToolbarSchema, CrudHostKey, parseListPayload, resolveTableSource, selectedIdsOf } from './data/crudHost'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -57,6 +58,25 @@ const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaOb
 const selectable = computed(
   () => props.schema.selectable === true || bulkActions.value.length > 0,
 )
+const isCardsMode = computed(() => {
+  const mode = String(props.schema.mode || 'table').toLowerCase()
+  return mode === 'cards' || mode === 'card'
+})
+const cardsChild = computed(
+  () =>
+    ({
+      type: 'cards',
+      source: '$items',
+      card: props.schema.card,
+    }) as SchemaObject,
+)
+const cardsData = computed(() => ({ items: store.items }))
+
+function seedLocalItems() {
+  const items = resolveTableSource(props.schema, props.data)
+  store.items = items
+  store.total = items.length
+}
 
 function toolbarNode(node: unknown): SchemaObject {
   const next = asToolbarSchema(node)
@@ -252,11 +272,21 @@ provide(CrudHostKey, {
 
 const crudApi = { name: props.schema.name, reload }
 scoped?.register(crudApi)
-onMounted(() => reload())
+onMounted(() => {
+  if (!props.schema.api) {
+    seedLocalItems()
+    return
+  }
+  void reload()
+})
 watch(
   () => [props.schema.api, props.data] as const,
   (curr, prev) => {
     if (!prev) return
+    if (!curr[0]) {
+      seedLocalItems()
+      return
+    }
     if (isApiOutdated(prev[0], curr[0], prev[1], curr[1])) void reload()
   },
 )
@@ -283,21 +313,21 @@ onBeforeUnmount(() => {
       }"
     />
     <div class="flex items-center justify-between gap-2">
-      <p class="text-xs text-muted-foreground tabular-nums">
+      <p v-if="!isCardsMode" class="text-xs text-muted-foreground tabular-nums">
         {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
       </p>
       <div class="flex flex-wrap items-center gap-2">
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
-        <span v-if="selectable" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
+        <span v-if="selectable && !isCardsMode" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"
           :key="'bulk-' + i"
           :schema="{ ...btn, disabled: !store.selectedItems.length || btn.disabled, reload: btn.reload || schema.name }"
           :extra-data="bulkData"
         />
-        <Button type="button" size="sm" variant="outline" @click="exportCsv">导出 CSV</Button>
+        <Button v-if="!isCardsMode" type="button" size="sm" variant="outline" @click="exportCsv">导出 CSV</Button>
         <Button
-          v-if="schema.api && schema.headerToolbar == null"
+          v-if="!isCardsMode && schema.api && schema.headerToolbar == null"
           type="button"
           size="sm"
           @click="openDialog({ title: '新增', body: { type: 'form', api: schema.api, body: columns.filter(c => c.name && c.type !== 'operation').map(c => ({ type: 'input-text', name: c.name, label: c.label })) } })"
@@ -306,7 +336,8 @@ onBeforeUnmount(() => {
         </Button>
       </div>
     </div>
-    <Table>
+    <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items" />
+    <Table v-else>
       <TableHeader>
         <TableRow>
           <TableHead v-if="selectable" class="w-10">
@@ -368,7 +399,7 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
-    <div v-if="schema.alwaysShowPagination || store.total > store.perPage" class="flex items-center justify-end gap-2">
+    <div v-if="!isCardsMode && (schema.alwaysShowPagination || store.total > store.perPage)" class="flex items-center justify-end gap-2">
       <Button type="button" size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
         上一页
       </Button>

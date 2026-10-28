@@ -14358,27 +14358,37 @@ window.VAMIS_COMPARE_CASES = [
           {
             "engine": "Trident",
             "browser": "Internet Explorer 4.0",
-            "version": "4"
+            "platform": "Win 95+",
+            "version": "4",
+            "grade": "X"
           },
           {
             "engine": "Trident",
             "browser": "Internet Explorer 5.0",
-            "version": "5"
+            "platform": "Win 95+",
+            "version": "5",
+            "grade": "C"
           },
           {
             "engine": "Trident",
             "browser": "Internet Explorer 5.5",
-            "version": "5.5"
+            "platform": "Win 95+",
+            "version": "5.5",
+            "grade": "A"
           },
           {
             "engine": "Trident",
             "browser": "Internet Explorer 6",
-            "version": "6"
+            "platform": "Win 98+",
+            "version": "6",
+            "grade": "A"
           },
           {
             "engine": "Trident",
             "browser": "Internet Explorer 7",
-            "version": "7"
+            "platform": "Win XP SP2+",
+            "version": "7",
+            "grade": "A"
           }
         ]
       },
@@ -14455,48 +14465,93 @@ window.VAMIS_COMPARE_CASES = [
         "items": [
           {
             "engine": "Trident",
-            "browser": "Internet Explorer 4.0"
+            "browser": "Internet Explorer 4.0",
+            "platform": "Win 95+",
+            "version": "4",
+            "grade": "X"
           },
           {
-            "engine": "Chrome",
-            "browser": "Chrome 44"
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.0",
+            "platform": "Win 95+",
+            "version": "5",
+            "grade": "C"
           },
           {
-            "engine": "Gecko",
-            "browser": "Firefox 1.0"
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.5",
+            "platform": "Win 95+",
+            "version": "5.5",
+            "grade": "A"
           },
           {
-            "engine": "Presto",
-            "browser": "Opera 10"
-          },
-          {
-            "engine": "Webkie",
-            "browser": "Safari 12"
+            "engine": "Trident",
+            "browser": "Internet Explorer 6",
+            "platform": "Win 98+",
+            "version": "6",
+            "grade": "A"
           }
         ]
       },
       "body": {
-        "type": "cards",
+        "type": "crud",
+        "mode": "cards",
+        "checkOnItemClick": true,
         "source": "$items",
+        "bulkActions": [
+          {
+            "type": "button",
+            "label": "查看选中",
+            "actionType": "dialog",
+            "dialog": {
+              "body": "${items|json}"
+            }
+          }
+        ],
         "card": {
-          "header": {
-            "avatarText": "${engine}",
-            "avatarTextBackground": [
-              "#FFB900",
-              "#D83B01",
-              "#B50E0E",
-              "#E81123",
-              "#B4009E",
-              "#5C2D91",
-              "#0078D7",
-              "#00B4FF",
-              "#008272"
-            ]
-          },
           "body": [
+            {
+              "label": "Engine",
+              "name": "engine"
+            },
             {
               "label": "Browser",
               "name": "browser"
+            },
+            {
+              "name": "version",
+              "label": "Version"
+            }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "level": "link",
+              "icon": "fa fa-eye",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "Engine",
+                      "name": "engine",
+                      "type": "static"
+                    },
+                    {
+                      "name": "browser",
+                      "label": "Browser",
+                      "type": "static"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version",
+                      "type": "static"
+                    }
+                  ]
+                }
+              }
             }
           ]
         }
@@ -14522,28 +14577,52 @@ window.VAMIS_COMPARE_CASES = [
       "data": {
         "items": [
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "风景如画的山水",
-            "description": "在这里，青山绿水相伴，让人心旷神怡。"
+            "description": "在这里，青山绿水相伴，让人心旷神怡。",
+            "author": "Alice",
+            "likes": "1.2k",
+            "imageHeight": "200px"
           },
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692942/d8e4992057f9.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "城市的日与夜",
-            "description": "灯火阑珊处，人来人往，演绎着城市的故事。繁华的街道上，每个人都在追逐着自己的梦想。"
+            "description": "灯火阑珊处，人来人往，演绎着城市的故事。繁华的街道上，每个人都在追逐着自己的梦想。夜幕降临后，霓虹闪烁，为城市增添了一份独特的魅力。都市的喧嚣与宁静在这里交织，构成了一幅动人的画卷。",
+            "author": "Bob",
+            "likes": "2.4k",
+            "imageHeight": "300px"
           },
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395693148/1314a2a3d3f6.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "美食的诱惑",
-            "description": "舌尖上的美味，让人流连忘返。"
+            "description": "舌尖上的美味，让人流连忘返。",
+            "author": "Charlie",
+            "likes": "3.5k",
+            "imageHeight": "180px"
           },
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "旅行日记",
-            "description": "背起行囊，走过山山水水。每一次旅行都是一次心灵的沉淀。"
+            "description": "背起行囊，走过山山水水。每一次旅行都是一次心灵的沉淀，让我们在路途中发现生活的美好。旅行不仅仅是观光，更是一种生活方式。",
+            "author": "David",
+            "likes": "4.2k",
+            "imageHeight": "250px"
           },
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692942/d8e4992057f9.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "咖啡时光",
-            "description": "一杯咖啡，一本书，一个午后。"
+            "description": "一杯咖啡，一本书，一个午后。",
+            "author": "Eve",
+            "likes": "1.8k",
+            "imageHeight": "220px"
           },
           {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395693148/1314a2a3d3f6.jpeg@s_0,w_800,l_1,f_jpg,q_80",
             "title": "艺术展览",
-            "description": "在艺术的殿堂里，每一幅作品都在诉说着自己的故事。"
+            "description": "在艺术的殿堂里，每一幅作品都在诉说着自己的故事。色彩的交织，线条的流动，让人沉醉其中。艺术，是生活的另一种表达方式。",
+            "author": "Frank",
+            "likes": "2.9k",
+            "imageHeight": "280px"
           }
         ]
       },
@@ -14553,41 +14632,102 @@ window.VAMIS_COMPARE_CASES = [
         "masonryLayout": true,
         "columnsCount": 3,
         "card": {
-          "header": {
-            "title": "${title}"
+          "type": "container",
+          "style": {
+            "background": "#fff",
+            "borderRadius": "8px",
+            "boxShadow": "0 2px 8px rgba(0, 0, 0, 0.1)",
+            "marginBottom": "16px",
+            "overflow": "hidden"
           },
-          "body": "${description}"
-        }
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-cards-3",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Cards 卡片组",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Cards 卡片组 #4",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "data": {
-        "items": []
-      },
-      "body": {
-        "type": "cards",
-        "source": "$items",
-        "card": {
           "body": [
             {
-              "label": "Engine",
-              "name": "engine"
+              "type": "image",
+              "src": "${image}",
+              "thumbMode": "cover",
+              "height": "${imageHeight}"
+            },
+            {
+              "type": "container",
+              "style": {
+                "padding": "12px"
+              },
+              "body": [
+                {
+                  "type": "tpl",
+                  "tpl": "${title}",
+                  "style": {
+                    "fontSize": "16px",
+                    "fontWeight": "bold",
+                    "marginBottom": "8px"
+                  }
+                },
+                {
+                  "type": "tpl",
+                  "tpl": "${description}",
+                  "style": {
+                    "color": "#666",
+                    "marginBottom": "12px",
+                    "fontSize": "14px",
+                    "lineHeight": 1.5
+                  }
+                },
+                {
+                  "type": "container",
+                  "style": {
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "alignItems": "center",
+                    "marginTop": "8px"
+                  },
+                  "body": [
+                    {
+                      "type": "container",
+                      "style": {
+                        "display": "flex",
+                        "alignItems": "center"
+                      },
+                      "body": [
+                        {
+                          "type": "avatar",
+                          "src": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_64,l_1,f_jpg,q_80",
+                          "size": "sm"
+                        },
+                        {
+                          "type": "tpl",
+                          "tpl": "${author}",
+                          "style": {
+                            "marginLeft": "8px",
+                            "color": "#333"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "style": {
+                        "display": "flex",
+                        "alignItems": "center"
+                      },
+                      "body": [
+                        {
+                          "type": "icon",
+                          "icon": "fa fa-heart",
+                          "className": "text-danger"
+                        },
+                        {
+                          "type": "tpl",
+                          "tpl": "${likes}",
+                          "style": {
+                            "marginLeft": "4px",
+                            "color": "#999"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

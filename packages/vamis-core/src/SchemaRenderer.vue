@@ -79,10 +79,12 @@ const data = computed(() => {
   for (const [key, value] of Object.entries(extra)) {
     if (!key.startsWith('__')) overlay[key] = value
   }
-  return {
-    ...(currentScope.value?.resolved() ?? parentData.value),
-    ...overlay,
-  }
+  // inherit 必须吃父级 provideData（含 extraData 行记录），不能退回 page Scope，
+  // 否则 cards 里 type:container 的 image/tpl 拿不到 ${image}/${title}。
+  const base = needsChildScope.value
+    ? (currentScope.value?.resolved() ?? parentData.value)
+    : parentData.value
+  return { ...base, ...overlay }
 })
 provideData(data)
 
