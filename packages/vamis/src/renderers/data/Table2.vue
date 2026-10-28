@@ -497,6 +497,10 @@ function cellWidth(col: SchemaObject) {
   background: #fff;
   vertical-align: middle;
   cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.vamis-table2-radio:hover:not(:disabled) {
+  border-color: var(--primary);
 }
 .vamis-table2-radio[aria-checked="true"] {
   border-color: var(--primary);

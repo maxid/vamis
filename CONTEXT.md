@@ -71,7 +71,7 @@
 **最近交付**
 
 - 生产构建拆包：站点首页不再整包 monaco（约 4MB）/ echarts。文档 markdown 按页懒加载；路由拆 Doc / 示例 / 编辑器。SDK 仍 `<script src="sdk.js">`，内部改 ES chunks（`sdk.esm.js` gzip ~277KB），monaco / echarts 用到才拉。
-- `table2` 排序 13×21 热区与 14×14 外壳、列头文字中线垂直居中（不跟 Amis 基线偏移）。
+- `table2` 选择列 hover：未选边框变主色、已选/半选底变浅主色，勾选图标 0.2s scale；单选圆同样边框 hover。对齐 Amis Checkbox 各状态。
 - Calendar largeMode：跨日条点后一天只弹当天重叠日程（对齐 Amis `DaysView` 占位 `bg-transparent` 可点，payload 用当天 `scheduleData`）。Dialog 默认 `top: 60px`（`--Modal-content-startMarginTop`），不再垂直居中。
 - Calendar largeMode 日程条：内层绝对定位 + ellipsis，对齐 Amis `ScheduleCalendar-text-overflow`（超出格子显示「这是…」）。
 - Calendar 紧凑月历补齐 Amis `.rdtPicker` 的 `padding: 4px`，外框底边才离开最后一行日期（全局 token 肉眼几乎看不出）。
