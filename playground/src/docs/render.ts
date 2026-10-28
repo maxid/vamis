@@ -89,21 +89,21 @@ export function parseFrontmatter(raw: string): { title: string; body: string } {
   return { title, body }
 }
 
-function rewriteHtml(html: string): string {
+function rewriteHtml(html: string, fromRel = ''): string {
   return html
-    .replace(/href="([^"]+)"/g, (_all, href: string) => `href="${docHref(href)}"`)
+    .replace(/href="([^"]+)"/g, (_all, href: string) => `href="${docHref(href, import.meta.env.BASE_URL || '/', fromRel)}"`)
     .replace(/src="([^"]+)"/g, (_all, src: string) => `src="${withBase(src)}"`)
 }
 
-function calloutHtml(level: string, title: string, body: string): string {
-  const inner = rewriteHtml(md.render(body.trim() || title))
+function calloutHtml(level: string, title: string, body: string, fromRel = ''): string {
+  const inner = rewriteHtml(md.render(body.trim() || title), fromRel)
   const heading = body.trim() ? title : ''
   return `<div class="doc-callout doc-callout--${level}">${
     heading ? `<p class="doc-callout__title">${heading}</p>` : ''
   }${inner}</div>`
 }
 
-export function parseDoc(raw: string): { title: string; blocks: DocBlock[]; toc: TocItem[] } {
+export function parseDoc(raw: string, fromRel = ''): { title: string; blocks: DocBlock[]; toc: TocItem[] } {
   const { title, body } = parseFrontmatter(raw)
   resetToc()
   const blocks: DocBlock[] = []
@@ -113,7 +113,7 @@ export function parseDoc(raw: string): { title: string; blocks: DocBlock[]; toc:
   let match: RegExpExecArray | null
   while ((match = tokenRe.exec(body))) {
     const before = body.slice(last, match.index)
-    if (before.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(before)) })
+    if (before.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(before), fromRel) })
     if (match[0].startsWith('```schema')) {
       const meta = parseSchemaFenceMeta(match[1] || '')
       blocks.push({
@@ -131,12 +131,12 @@ export function parseDoc(raw: string): { title: string; blocks: DocBlock[]; toc:
       const [level, ...rest] = firstLine.split(/\s+/)
       blocks.push({
         kind: 'html',
-        html: calloutHtml(level || 'info', rest.join(' '), match[6] || ''),
+        html: calloutHtml(level || 'info', rest.join(' '), match[6] || '', fromRel),
       })
     }
     last = match.index + match[0].length
   }
   const tail = body.slice(last)
-  if (tail.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(tail)) })
+  if (tail.trim()) blocks.push({ kind: 'html', html: rewriteHtml(md.render(tail), fromRel) })
   return { title, blocks, toc: tocState.items }
 }

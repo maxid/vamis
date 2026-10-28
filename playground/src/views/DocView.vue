@@ -32,7 +32,7 @@ watch(
   { immediate: true },
 )
 
-const parsed = computed(() => (page.value ? parseDoc(page.value.raw) : null))
+const parsed = computed(() => (page.value ? parseDoc(page.value.raw, page.value.rel) : null))
 const groups = computed(() => groupsForPath(route.path))
 const toc = computed(() => parsed.value?.toc ?? [])
 

@@ -5,8 +5,8 @@ outline: deep
 
 # Cards 卡片组
 
-::: info 实现进度 70% · 进行中
-文档主路径示例已对标 Amis：基本用法、CRUD `mode: cards` 批量操作、瀑布流（图 + container）。缺勾选框 / `checkOnItemClick`、拖拽、`itemClassName` 像素级栅格、动作表 `select` / `initDrag`。
+::: info 实现进度 75% · 进行中
+文档主路径示例已对标 Amis：基本用法、CRUD `mode: cards` 勾选 / 全选 / `checkOnItemClick`、瀑布流用表达式在 `h-stretch` / `cover` 间切换。缺拖拽、`itemClassName` 像素级栅格、动作表 `select` / `initDrag`。
 :::
 
 卡片展示，不支持配置初始化接口初始化数据域，所以需要搭配类似像 [Service](./service) 这样的、具有配置接口初始化数据域功能的组件，或者手动进行数据域初始化，然后通过 `source` 属性，获取数据链中的数据，完成数据展示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -78,11 +78,11 @@ body:
                 type: static
 ```
 
-或者你也可以使用 CRUD 的 [card 模式](./crud)。
+或者你也可以使用 CRUD 的 [card 模式](./card)。
 
 ## 当 cards 在 crud 中且配置了批量操作按钮时可点选
 
-如果配置了 `checkOnItemClick`，当用户点击卡片时就能选中这个卡片，而不是只能点击勾选框才能选中。当前还缺勾选框和点卡片选中，批量按钮已画出。
+如果配置了 `checkOnItemClick`，当用户点击卡片时就能选中这个卡片，而不是只能点击勾选框才能选中。
 
 ```schema
 type: page
@@ -152,6 +152,8 @@ body:
 
 设置 `"masonryLayout": true` 开启瀑布流布局模式，适合展示不同高度的卡片内容，比如图片列表、社交媒体流等场景。
 
+本例一张 `image`，用表达式在 `h-stretch`（按 `imageHeight` 拉伸、宽度吃满）和 `cover`（默认 110px 缩略图）之间切换。要哪种模式写在 schema 里即可。
+
 > 瀑布流布局支持两种方式设置列数:
 >
 > 1. 通过 `columnsCount` 设置固定列数
@@ -213,8 +215,8 @@ body:
     body:
       - type: image
         src: "${image}"
-        thumbMode: cover
-        height: "${imageHeight}"
+        thumbMode: "${index % 2 === 0 ? 'h-stretch' : 'cover'}"
+        height: "${index % 2 === 0 ? imageHeight : ''}"
       - type: container
         style:
           padding: 12px
@@ -280,9 +282,9 @@ body:
 | footerClassName | `string` | | 底部外层 CSS 类名 |
 | itemClassName | `string` | | 卡片 CSS 类名（栅格 class 尚未像素级对齐） |
 | card | [Card](./card) | | 配置卡片信息。也可以是 `type: container` 等任意节点 |
-| selectable | `boolean` | `false` | 卡片组是否可选（未接） |
-| multiple | `boolean` | `true` | 卡片组是否为多选（未接） |
-| checkOnItemClick | `boolean` | | 点选卡片内容是否选中卡片（未接） |
+| selectable | `boolean` | `false` | 卡片组是否可选。CRUD 配了 `bulkActions` 时自动为 true |
+| multiple | `boolean` | `true` | 卡片组是否为多选 |
+| checkOnItemClick | `boolean` | | 点选卡片内容是否选中卡片 |
 | columnsCount | `number` | | 固定列数。未写则 ≥576 两列 / ≥768 三列 / ≥992 四列 |
 | masonryLayout | `boolean` | `false` | 瀑布流 |
 
@@ -290,4 +292,4 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 勾选、`checkOnItemClick`、拖拽、动作表 `select` / `selectAll` / `clearAll` / `initDrag` / `setValue` 未接。瀑布流是 CSS `column-count`，不是 Amis Grid 绝对定位。
+- 拖拽、动作表 `select` / `selectAll` / `clearAll` / `initDrag` / `setValue` 未接。瀑布流是 CSS `column-count`，不是 Amis Grid 绝对定位。Image 默认 110px 缩略图；`h-stretch` 按 `height` 拉伸并吃满卡片宽。本页瀑布流用表达式在 `h-stretch` / `cover` 间切换。Container 默认 `wrapperBody` 包一层，同级子项换行。

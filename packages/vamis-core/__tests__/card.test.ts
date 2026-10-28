@@ -20,8 +20,13 @@ import {
   cardUseCardLabel,
   cardsCardSchema,
   cardsColumnsCount,
+  cardsCheckAll,
+  cardsCheckOnItemClick,
+  cardsHideCheckToggler,
   cardsMasonry,
+  cardsMultiple,
   cardsPlaceholder,
+  cardsSelectable,
   cardsSource,
 } from '../src/utils/card'
 
@@ -119,6 +124,13 @@ describe('cards source / layout', () => {
     expect(cardsMasonry({ masonryLayout: true })).toBe(true)
     expect(cardsColumnsCount({})).toBe(0)
     expect(cardsColumnsCount({ columnsCount: 3 })).toBe(3)
+    expect(cardsSelectable({})).toBe(false)
+    expect(cardsSelectable({ selectable: true })).toBe(true)
+    expect(cardsCheckOnItemClick({ checkOnItemClick: true })).toBe(true)
+    expect(cardsMultiple({})).toBe(true)
+    expect(cardsMultiple({ multiple: false })).toBe(false)
+    expect(cardsHideCheckToggler({})).toBe(false)
+    expect(cardsCheckAll({})).toBe(true)
     expect(cardsCardSchema({}).header).toEqual({ title: '${name}' })
     expect(cardsCardSchema({ card: { body: [{ name: 'engine' }] } }).body).toEqual([{ name: 'engine' }])
     expect(cardsCardSchema({ card: { type: 'container', body: [] } }).type).toBe('container')
@@ -156,11 +168,18 @@ describe('card vue wiring', () => {
     expect(card).toContain('inline-flex')
     expect(card).toContain('gap: 4px')
     expect(card).toContain(':schema="actionSchema(action)" :extra-data="data"')
+    expect(card).toContain('vamis-card-checkbox')
+    expect(card).toContain('is-checked')
+    expect(card).toContain('checkOnItemClick')
+    expect(cards).toContain('provideCardsSelect')
+    expect(cards).toContain('cardsSelectable')
+    expect(cards).toContain('cardsItemKey')
     expect(cards).toContain(':not(.is-masonry) .vamis-card')
     expect(cards).toContain('height: 100%')
     expect(cards).toContain('.vamis-cards.is-masonry .vamis-cards-item')
     expect(cards).toContain('display: inline-block')
     expect(cards).toContain('break-inside: avoid')
+    expect(cards).toContain('.vamis-cards.is-masonry .vamis-cards-item > .vamis-node')
     const register = readFileSync(resolve(here, '../../vamis/src/register.ts'), 'utf8')
     expect(register).toContain("type: 'card', component: Card, scope: 'self'")
     expect(cards).toContain('cardsSource')
@@ -169,6 +188,7 @@ describe('card vue wiring', () => {
     expect(cards).toContain('vamis-cards-placeholder')
     expect(cards).toContain('height: 100px')
     expect(cards).toContain('column-count')
+    expect(cards).not.toContain('column-width: 200px')
     expect(cards).toContain('@media (min-width: 576px)')
     expect(cards).toContain('repeat(3, minmax(0, 1fr))')
     expect(cards).toContain('@media (min-width: 768px)')
@@ -180,14 +200,31 @@ describe('card vue wiring', () => {
     expect(crud).toContain("mode === 'cards'")
     expect(crud).toContain('resolveTableSource')
     expect(crud).toContain('<Cards')
+    expect(crud).toContain('全选')
+    expect(crud).toContain('checkOnItemClick')
     expect(image).toContain('schema.height')
     expect(image).toContain('thumbMode')
+    expect(image).toContain('width: 110px')
+    expect(image).toContain("style.width = '100%'")
+    expect(image).toContain('is-h-stretch')
+    expect(image).toContain('object-fit: fill')
     expect(cardsDoc).toContain('## 基本用法')
     expect(cardsDoc).toContain('## 当 cards 在 crud 中且配置了批量操作按钮时可点选')
     expect(cardsDoc).toContain('masonryLayout: true')
     expect(cardsDoc).toContain('type: container')
-    expect(cardsDoc).toContain('thumbMode: cover')
+    expect(cardsDoc).toContain("thumbMode: \"${index % 2 === 0 ? 'h-stretch' : 'cover'}\"")
+    expect(cardsDoc).not.toContain('visibleOn: index % 2 === 0')
+    expect(cardsDoc).toContain('[card 模式](./card)')
+    expect(cardsDoc).toContain('[Service](./service)')
+    expect(cardsDoc).not.toContain('[card 模式](./crud)')
     expect(cardsDoc).not.toContain('设置头像文本背景')
     expect(cardsDoc).not.toContain('## 空列表')
+    const container = readFileSync(resolve(here, '../../vamis/src/renderers/Container.vue'), 'utf8')
+    expect(container).toContain('wrapperBody !== false')
+    expect(container).toContain('vamis-container-body')
+    expect(container).not.toContain('vamis-container-contents')
+    const base = readFileSync(resolve(here, '../../../playground/src/docs/base.ts'), 'utf8')
+    expect(base).toContain('fromRel')
+    expect(base).toContain('new URL(path, base)')
   })
 })

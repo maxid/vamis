@@ -68,6 +68,10 @@ const cardsChild = computed(
       type: 'cards',
       source: '$items',
       card: props.schema.card,
+      selectable: selectable.value,
+      multiple: props.schema.multiple !== false,
+      checkOnItemClick: props.schema.checkOnItemClick === true,
+      hideCheckToggler: props.schema.hideCheckToggler === true,
     }) as SchemaObject,
 )
 const cardsData = computed(() => ({ items: store.items }))
@@ -317,6 +321,16 @@ onBeforeUnmount(() => {
         {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
       </p>
       <div class="flex flex-wrap items-center gap-2">
+        <Button
+          v-if="isCardsMode && selectable"
+          type="button"
+          size="sm"
+          :variant="allSelected ? 'default' : 'outline'"
+          title="切换全选"
+          @click="toggleAll(!allSelected)"
+        >
+          全选
+        </Button>
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
         <span v-if="selectable && !isCardsMode" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer

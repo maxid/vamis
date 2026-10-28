@@ -36,11 +36,14 @@ import {
   type ActionSchema,
   type SchemaObject,
 } from '@vamis/core'
+import { Checkbox } from '@vamis/ui'
+import { useCardsSelect } from './cardsSelect'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
 const overlay = useOverlay()
 const scoped = useScoped()
+const select = useCardsSelect()
 
 const data = computed(() => props.data || {})
 const header = computed(() => cardHeader(props.schema))
@@ -67,8 +70,22 @@ const mediaKind = computed(() => cardMediaType(props.schema))
 const mediaUrl = computed(() => cardMediaUrl(props.schema, data.value))
 const mediaClass = computed(() => resolveClassName(media.value?.className, data.value))
 const bodyNodes = computed(() => cardBodyNodes(props.schema))
+const showCheck = computed(
+  () => !!select?.selectable.value && !select.hideCheckToggler.value,
+)
+const selected = computed(() => !!select?.isSelected(data.value))
 const hasHeading = computed(
-  () => !!(title.value || subTitle.value || description.value || avatar.value || avatarText.value || toolbar.value.length || highlight.value),
+  () =>
+    !!(
+      title.value ||
+      subTitle.value ||
+      description.value ||
+      avatar.value ||
+      avatarText.value ||
+      toolbar.value.length ||
+      highlight.value ||
+      showCheck.value
+    ),
 )
 const hasFooter = computed(() => !!(secondary.value || actionGroups.value.length))
 
@@ -92,8 +109,16 @@ function isInteractive(target: EventTarget | null) {
   return !!target.closest('button, a, input, textarea, select, [role=button], .vamis-card-actions, .vamis-card-toolbar')
 }
 
+function onCheck(checked: boolean) {
+  select?.toggle(data.value, checked)
+}
+
 async function onCardClick(event: MouseEvent) {
   if (isInteractive(event.target)) return
+  if (select?.selectable.value && select.checkOnItemClick.value) {
+    select.toggle(data.value)
+    return
+  }
   const href = cardHref(props.schema, data.value)
   if (href) {
     if (cardBlank(props.schema)) window.open(href, '_blank')
@@ -115,7 +140,8 @@ async function onCardClick(event: MouseEvent) {
   <div
     class="vamis-card"
     :class="{
-      'is-link': clickable,
+      'is-link': clickable || (select?.selectable.value && select.checkOnItemClick.value),
+      'is-checked': selected,
       'has-secondary': !!secondary,
       'is-media': !!media,
       [`is-media-${mediaPos}`]: !!media,
@@ -145,7 +171,14 @@ async function onCardClick(event: MouseEvent) {
           <div v-if="subTitle" class="vamis-card-subTitle">{{ subTitle }}</div>
           <div v-if="description" class="vamis-card-desc">{{ description }}</div>
         </div>
-        <div v-if="toolbar.length" class="vamis-card-toolbar">
+        <div v-if="toolbar.length || showCheck" class="vamis-card-toolbar">
+          <Checkbox
+            v-if="showCheck"
+            class="vamis-card-checkbox"
+            :model-value="selected"
+            @update:model-value="onCheck($event === true)"
+            @click.stop
+          />
           <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" :extra-data="data" />
         </div>
       </div>
@@ -191,6 +224,13 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card.is-link {
   cursor: pointer;
+}
+.vamis-card.is-checked {
+  border-color: var(--primary);
+  background: color-mix(in oklch, var(--primary) 6%, var(--card));
+}
+.vamis-card-checkbox {
+  margin: 0 8px;
 }
 .vamis-card.is-media-left,
 .vamis-card.is-media-right {

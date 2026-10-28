@@ -203,6 +203,26 @@ export function cardsColumnsCount(schema: unknown): number {
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0
 }
 
+export function cardsSelectable(schema: unknown): boolean {
+  return asRecord(schema).selectable === true
+}
+
+export function cardsCheckOnItemClick(schema: unknown): boolean {
+  return asRecord(schema).checkOnItemClick === true
+}
+
+export function cardsHideCheckToggler(schema: unknown): boolean {
+  return asRecord(schema).hideCheckToggler === true
+}
+
+export function cardsMultiple(schema: unknown): boolean {
+  return asRecord(schema).multiple !== false
+}
+
+export function cardsCheckAll(schema: unknown): boolean {
+  return asRecord(schema).checkAll !== false
+}
+
 export function cardsHeader(schema: unknown): unknown[] {
   return asNodes(asRecord(schema).header)
 }

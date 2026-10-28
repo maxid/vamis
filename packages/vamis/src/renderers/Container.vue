@@ -34,15 +34,17 @@ const tag = computed(() => {
   return SAFE_WRAPPER_TAGS.has(name) ? name : 'div'
 })
 const wrapBody = computed(() => props.schema.wrapperBody !== false)
-const bodyClass = computed(() => {
-  const extra = resolveClassName(props.schema.bodyClassName, data.value)
-  return extra || 'space-y-3'
-})
+const flattenSelf = computed(() => tag.value === 'div')
+const bodyClass = computed(() => resolveClassName(props.schema.bodyClassName, data.value))
 </script>
 
 <template>
-  <component :is="tag" class="w-full min-w-0">
-    <div v-if="wrapBody" :class="bodyClass">
+  <component
+    :is="tag"
+    :class="flattenSelf ? undefined : 'w-full min-w-0'"
+    :style="flattenSelf ? { display: 'contents' } : undefined"
+  >
+    <div v-if="wrapBody" class="vamis-container-body" :class="bodyClass">
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </div>
     <template v-else>

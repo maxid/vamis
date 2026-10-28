@@ -52,7 +52,7 @@
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `page` | Page 页面 | 已完成 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay（GET 不把数据域拼进 query）、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。`pullRefresh` 明确未接（移动端） | P0 |
-| `container` | Container 容器 | 已完成 | 100% | 主路径对齐：布局属性 + click/mouseenter/mouseleave 完整事件对象；沿用父 Scope；无对外动作。`draggable` 非运行时主路径 | P0 |
+| `container` | Container 容器 | 已完成 | 100% | 主路径对齐：`wrapperBody` 默认包一层（flex 也包，同级子项换行）、`style` / `wrapperComponent` / `bodyClassName`、click/mouseenter/mouseleave。沿用父 Scope。`draggable` 非运行时主路径 | P0 |
 | `collapse` / `collapse-group` | Collapse 折叠器 | 进行中 | 85% | 文档主路径已对齐：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。缺 `mountOnEnter`、`expand`·`collapse` 动作、FieldSet 像素级 | P0 |
 | `divider` | Divider 分割线 | 进行中 | 90% | 文档主路径已对齐：`lineStyle` / `direction` / `color` / `rotate` / `title` / `titlePosition`。缺 `themeCss`、窄屏 `scaleY(0.5)` | P0 |
 | `flex` | Flex 布局 | 进行中 | 90% | 文档主路径已对齐：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、整树 `envOverwrite` | P0 |
@@ -179,7 +179,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table-view` | Table View 表格视图 | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | 进行中 | 85% | 周一 7 列紧凑月历。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | 进行中 | 70% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
-| `cards` | Cards 卡片组 | 进行中 | 70% | 文档示例对标 Amis：基本用法、CRUD `mode: cards`（无 api 时吃 `source`）、瀑布流图+container。inherit 吃 extraData 行记录，`${image}` 能解析；瀑布流卡片不跨列切断。默认列数 ≥576 2 / ≥768 3 / ≥992 4。缺勾选/`checkOnItemClick`、拖拽、动作表、itemClassName 像素级栅格 | P0 |
+| `cards` | Cards 卡片组 | 进行中 | 75% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。缺拖拽、动作表、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
 | `code` | Code 代码高亮 | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
@@ -189,7 +189,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `html` | Html | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine；其余过滤器仍 P1 | P0 |
 | `icon` | Icon 图标 | 进行中 | 75% | 文档主路径已对齐：icon 名称默认 FA v4、URL、内联 SVG、vendor fa/iconfont/空。字形走 sdk.css 的 FA + v4-shims。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
 | `iframe` | iFrame | 进行中 | 55% | 能嵌页 | P0 |
-| `image` | Image 图片 | 进行中 | 55% | 能显示；放大/图集未齐 | P0 |
+| `image` | Image 图片 | 进行中 | 75% | 默认 110px 缩略图；`height`/`width` 插值；`thumbMode` contain/cover/w-full/h-full/`h-stretch`（按高度拉伸、宽度吃满），支持表达式。缺放大/图集/`imageMode: original` | P0 |
 | `images` | Images 图片集 | 进行中 | 50% | 能平铺 | P0 |
 | `grid-nav` | GridNav 宫格导航 | 进行中 | 50% | 能宫格；仅此处读了 `badge` | P0 |
 | `json` | Json | 进行中 | 50% | 能展开 JSON | P0 |

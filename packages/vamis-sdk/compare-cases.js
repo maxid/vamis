@@ -14644,8 +14644,8 @@ window.VAMIS_COMPARE_CASES = [
             {
               "type": "image",
               "src": "${image}",
-              "thumbMode": "cover",
-              "height": "${imageHeight}"
+              "thumbMode": "${index % 2 === 0 ? 'h-stretch' : 'cover'}",
+              "height": "${index % 2 === 0 ? imageHeight : ''}"
             },
             {
               "type": "container",
@@ -14930,6 +14930,39 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "image"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-image-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Image 图片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Image 图片 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "image",
+          "src": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80",
+          "thumbMode": "cover",
+          "title": "cover"
+        },
+        {
+          "type": "image",
+          "src": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80",
+          "thumbMode": "h-stretch",
+          "height": "160px",
+          "title": "h-stretch"
         }
       ]
     },

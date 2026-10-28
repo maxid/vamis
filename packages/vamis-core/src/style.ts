@@ -103,6 +103,7 @@ const INLINE_BLOCK_SCHEMA_TYPES = new Set([
   'badge',
   'link',
   'avatar',
+  'icon',
 ])
 
 export function isInlineSchema(schema?: { type?: string; inline?: unknown } | null): boolean {

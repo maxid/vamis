@@ -557,11 +557,14 @@ describe('Amis width helpers', () => {
     expect(panel).toContain('schema.bodyClassName')
   })
 
-  it('does not force space-y-3 when Container bodyClassName is set', () => {
+  it('keeps wrapperBody around children even when style.display is flex', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const container = readFileSync(resolve(here, '../../vamis/src/renderers/Container.vue'), 'utf8')
-    expect(container).toContain("return extra || 'space-y-3'")
-    expect(container).not.toContain('space-y-3 ${extra}')
+    expect(container).toContain('wrapperBody !== false')
+    expect(container).toContain('vamis-container-body')
+    expect(container).toContain("display: 'contents'")
+    expect(container).not.toContain('space-y-3')
+    expect(container).not.toContain('vamis-container-contents')
   })
 })
 
@@ -592,6 +595,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'submit' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'badge' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'avatar' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'icon' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')

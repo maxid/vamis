@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   SchemaRenderer,
   cardsCardSchema,
+  cardsCheckOnItemClick,
   cardsColumnsCount,
   cardsFooter,
   cardsHeader,
+  cardsHideCheckToggler,
   cardsMasonry,
+  cardsMultiple,
   cardsPlaceholder,
   cardsPlaceholderNode,
+  cardsSelectable,
   cardsSource,
   cardsTitle,
   type SchemaObject,
 } from '@vamis/core'
+import { useCrudHost } from './data/crudHost'
+import { provideCardsSelect } from './cardsSelect'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -20,6 +26,8 @@ const props = defineProps<{
   items?: Record<string, any>[]
 }>()
 
+const host = useCrudHost()
+const localSelected = ref<Record<string, any>[]>([])
 const rows = computed(() => cardsSource(props.schema, props.data || {}, props.items))
 const card = computed(() => cardsCardSchema(props.schema))
 const title = computed(() => cardsTitle(props.schema, props.data || {}))
@@ -29,9 +37,68 @@ const placeholder = computed(() => cardsPlaceholder(props.schema))
 const placeholderNode = computed(() => cardsPlaceholderNode(props.schema))
 const header = computed(() => cardsHeader(props.schema))
 const footer = computed(() => cardsFooter(props.schema))
+const selectable = computed(() => cardsSelectable(props.schema))
+const checkOnItemClick = computed(() => cardsCheckOnItemClick(props.schema))
+const hideCheckToggler = computed(() => cardsHideCheckToggler(props.schema))
+const multiple = computed(() => cardsMultiple(props.schema))
 const colsStyle = computed(() => {
   if (!columnsCount.value) return undefined
   return { '--cards-cols': String(columnsCount.value) } as Record<string, string>
+})
+
+function rowKey(row: Record<string, any>) {
+  if (host?.primaryField && row[host.primaryField] != null && row[host.primaryField] !== '') {
+    return String(row[host.primaryField])
+  }
+  return row.id != null && row.id !== '' ? String(row.id) : JSON.stringify(row)
+}
+
+function selectedList() {
+  return host ? host.selectedItems : localSelected.value
+}
+
+function itemKey(row: Record<string, any>) {
+  if (row.cardsItemKey != null && row.cardsItemKey !== '') return String(row.cardsItemKey)
+  return rowKey(row)
+}
+
+function sourceRow(row: Record<string, any>) {
+  const key = itemKey(row)
+  return rows.value.find((item) => rowKey(item) === key) || row
+}
+
+function isSelected(row: Record<string, any>) {
+  const key = itemKey(row)
+  return selectedList().some((item) => rowKey(item) === key)
+}
+
+function setSelected(items: Record<string, any>[]) {
+  if (host) host.setSelectedItems(items)
+  else localSelected.value = items
+}
+
+function toggle(row: Record<string, any>, checked?: boolean) {
+  const actual = sourceRow(row)
+  const on = checked == null ? !isSelected(actual) : checked
+  if (!multiple.value) {
+    setSelected(on ? [actual] : [])
+    return
+  }
+  if (on) {
+    if (!isSelected(actual)) setSelected([...selectedList(), actual])
+    return
+  }
+  const key = rowKey(actual)
+  setSelected(selectedList().filter((item) => rowKey(item) !== key))
+}
+
+provideCardsSelect({
+  selectable,
+  checkOnItemClick,
+  hideCheckToggler,
+  multiple,
+  isSelected,
+  toggle,
 })
 </script>
 
@@ -49,7 +116,7 @@ const colsStyle = computed(() => {
       :style="colsStyle"
     >
       <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item">
-        <SchemaRenderer :schema="card" :extra-data="{ ...row, index: i }" />
+        <SchemaRenderer :schema="card" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
       </div>
     </div>
     <div v-else class="vamis-cards-placeholder">
@@ -94,6 +161,7 @@ const colsStyle = computed(() => {
 }
 .vamis-cards.is-masonry {
   display: block;
+  width: 100%;
   column-count: 1;
   column-gap: 12px;
 }
@@ -136,6 +204,12 @@ const colsStyle = computed(() => {
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   margin-bottom: 12px;
+}
+.vamis-cards.is-masonry .vamis-cards-item > .vamis-node {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .vamis-cards-placeholder {
   width: 100%;

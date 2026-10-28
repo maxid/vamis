@@ -124,6 +124,18 @@ describe('evalExpression visibleOn', () => {
     expect(evalExpression('${id !== undefined}', { id: 1 })).toBe(true)
   })
 
+  it('can switch odd/even cards with index modulo', () => {
+    expect(evalExpression('index % 2 === 0', { index: 0 })).toBe(true)
+    expect(evalExpression('index % 2 === 0', { index: 1 })).toBe(false)
+    expect(evalExpression('index % 2 === 1', { index: 1 })).toBe(true)
+    expect(filterTpl("${index % 2 === 0 ? 'h-stretch' : 'cover'}", { index: 0 })).toBe('h-stretch')
+    expect(filterTpl("${index % 2 === 0 ? 'h-stretch' : 'cover'}", { index: 1 })).toBe('cover')
+    expect(filterTpl("${index % 2 === 0 ? imageHeight : ''}", { index: 0, imageHeight: '200px' })).toBe(
+      '200px',
+    )
+    expect(filterTpl("${index % 2 === 0 ? imageHeight : ''}", { index: 1, imageHeight: '200px' })).toBe('')
+  })
+
   it('does not parse JS typeof as a unary operator', () => {
     expect(evalExpression("${typeof id !== 'undefined'}", { id: 1 })).toBe(false)
     expect(evalExpression("typeof data.id !== 'undefined'", { id: 1 })).toBe(false)
