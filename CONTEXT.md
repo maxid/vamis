@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 修 `pnpm build`：Playground 不再让 Tailwind 解析 `@fortawesome/fontawesome-free`（会找不到包、还把 webfont base64 进 CSS）。Font Awesome 跟 SDK 一样构建后注入 `fontawesome.css`。
 - Image 增加 `thumbMode: h-stretch`（按 `height` 拉伸、宽度吃满父级）；`thumbMode` 走模板插值。Cards 瀑布流改成一张 `image`，用 `${index % 2 === 0 ? 'h-stretch' : 'cover'}` 混排，不再用 `visibleOn` 双节点。
 - 复合示例先补基础组件：Image 插值 `height`/`width`，只写 height 时宽度吃满卡片（瀑布流拉满）；默认仍是 110px 缩略图。Container 恢复 Amis `wrapperBody`（flex 也包一层），同级子 container 换行，不再用 `display:contents` 把作者/点赞挤成一行。Icon 外层 `inline-block`，和点赞数字同行。
 - Cards 瀑布流作者/点赞不再换行：flex 子 `container` 去掉 `w-full`（`vamis-container-contents`），`columnsCount` 配 `column-width: 200px` 避免窄预览把卡片挤到 110px。CRUD `mode: cards` 全选可来回勾选；`[card 模式](./card)` / `[Service](./service)` 落到 `/components/card`、`/components/service`。

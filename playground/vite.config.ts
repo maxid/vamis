@@ -6,12 +6,68 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig, type Plugin } from 'vite'
 import { mockApiPlugin } from './src/mock/plugin'
 import { collectPlaygroundRoutes, writeStaticPages } from './static-pages'
+import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../packages/vamis-ui/fontawesome-build.mjs'
 
 const playground = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(playground, '..')
 const websiteSrc = path.join(repo, 'website', 'src')
 const formulaDoc = path.join(repo, 'packages', 'vamis-formula', 'src', 'doc.md')
 const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
+
+function siteBase() {
+  const raw = process.env.VITE_BASE || '/'
+  return raw.endsWith('/') ? raw : `${raw}/`
+}
+
+function fontAwesome(): Plugin {
+  const types: Record<string, string> = {
+    woff2: 'font/woff2',
+    woff: 'font/woff',
+    ttf: 'font/ttf',
+    eot: 'application/vnd.ms-fontobject',
+    svg: 'image/svg+xml',
+  }
+  return {
+    name: 'vamis-fontawesome',
+    transformIndexHtml(html) {
+      if (!resolveFontAwesome() || html.includes('fontawesome.css')) return html
+      return html.replace('</head>', `    <link rel="stylesheet" href="${siteBase()}fontawesome.css" />\n  </head>`)
+    },
+    configureServer(server) {
+      const fa = resolveFontAwesome()
+      if (!fa) {
+        console.warn('[vamis-fontawesome] @fortawesome/fontawesome-free missing; run pnpm install')
+        return
+      }
+      server.middlewares.use((req, res, next) => {
+        const url = (req.url || '').split('?')[0]
+        const prefix = siteBase().replace(/\/$/, '')
+        if (url === `${prefix}/fontawesome.css` || url === '/fontawesome.css') {
+          res.setHeader('Content-Type', 'text/css; charset=utf-8')
+          res.end(fontAwesomeCss('./assets/'))
+          return
+        }
+        const match = url.match(/(?:^|\/)assets\/(fa-[^/]+\.(?:woff2?|ttf|eot|svg))$/)
+        if (match) {
+          const file = path.join(fa, 'webfonts', match[1])
+          if (fs.existsSync(file)) {
+            const ext = match[1].split('.').pop() || ''
+            res.setHeader('Content-Type', types[ext] || 'application/octet-stream')
+            fs.createReadStream(file).pipe(res)
+            return
+          }
+        }
+        next()
+      })
+    },
+    closeBundle() {
+      const dest = path.join(playground, 'dist')
+      if (!fs.existsSync(dest) || !resolveFontAwesome()) return
+      copyFontAwesomeWebfonts(path.join(dest, 'assets'))
+      fs.writeFileSync(path.join(dest, 'fontawesome.css'), fontAwesomeCss('./assets/'))
+    },
+  }
+}
 
 function staticSite(): Plugin {
   return {
@@ -102,7 +158,7 @@ function serveSdk(): Plugin {
 
 export default defineConfig({
   base: process.env.VITE_BASE || '/',
-  plugins: [vue(), tailwindcss(), mockApiPlugin(), serveSdk(), staticSite()],
+  plugins: [vue(), tailwindcss(), mockApiPlugin(), fontAwesome(), serveSdk(), staticSite()],
   resolve: {
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },
