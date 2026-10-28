@@ -70,8 +70,8 @@
 
 **最近交付**
 
+- 组件 TODO 优先级改为「依赖拓扑 + 综合分」：`S = 被依赖 × 8 + 深度`，Kahn 就绪集里 S 大者先做（`scripts/component-priority.mjs`）。`action` 从原 #33 升到 #5，`form` #49 / `crud` #59 / `page` #60；无人依赖叶子从 #61 起。分类表 `P` 列仍是阶段 P0。
 - 组件 TODO 增加「实现标准（强制）」：组件与文档必须对标或超越 amis 对等内容；`page` 因 `pullRefresh` 未接从「已完成」降为「进行中」，全局已完成 1 项（`container`）。
-- 组件 TODO 增加「依赖与优先级」：按 amis 主路径建 154 节点依赖图，叶子优先（#1 FormItem、#2 tpl、#3 icon），`crud` #150、`page` #153、`app` #154；补分层与全量执行顺序。
 - 组件进度核对（2026-10-28）：155 行逐项复核（注册 / 渲染器文件 / amis·vamis 文档页 / 行内「缺」项源码回查），重算分类与汇总为数据输入 48%、数据展示 55%、反馈 84%、合计 59%、≥50% 108；修正 `form/static`（65%）、`table`（55%）生成页，生成器 `parseTodo` 适配 8 列并保留 icon/image 手写页。
 - 组件 P0 TODO 每行补 `vamis 文档` / `amis 文档` 两列：vamis 相对 `http://localhost:5173`（`/components/...`），amis 相对 `http://localhost:8888`（`/zh-CN/components/...`）；无独立页标 `—`，附录按父文档归并。路径与 `website/src/components`、`../amis/docs/zh-CN/components` 文件逐一核对。
 - 修 `pnpm build`：Playground 不再让 Tailwind 解析 `@fortawesome/fontawesome-free`（会找不到包、还把 webfont base64 进 CSS）。Font Awesome 跟 SDK 一样构建后注入 `fontawesome.css`。
@@ -286,7 +286,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按依赖优先级推进，按实现标准验收**：先做叶子 #1–#32（`FormItem`、`tpl`、`icon`、`image`、`mapping`、`tag`…），再做 #33–#68 基础原子（`action`、`container`、`input-*`），`form` / `table` / `dialog` / `crud` / `page` 依次靠后；完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。原计划的 `carousel` 等展示件后移。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
+1. **组件同步按依赖综合分推进，按实现标准验收**：下一刀 FormItem（#1，48%），接着 `tpl`（#2）与 `icon`（#4）；`container`（#3）已完成，随后 `action`（#5）。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
