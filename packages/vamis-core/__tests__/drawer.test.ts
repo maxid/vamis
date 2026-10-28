@@ -45,6 +45,9 @@ describe('drawer defaults', () => {
   it('reads title / body / default close+confirm / custom size', () => {
     expect(drawerTitle({ title: '抽屉 ${who}' }, { who: '甲' })).toBe('抽屉 甲')
     expect(drawerBody({ body: '文案' })).toEqual(['文案'])
+    expect(drawerBody({ body: { type: 'form', body: [] } })).toEqual([
+      { type: 'form', mode: 'horizontal', wrapWithPanel: false, body: [] },
+    ])
     expect(drawerActions({})).toEqual([
       { type: 'button', actionType: 'close', label: '取消' },
       { type: 'button', actionType: 'confirm', label: '确认', primary: true },

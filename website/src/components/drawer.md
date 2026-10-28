@@ -5,8 +5,8 @@ outline: deep
 
 # Drawer 抽屉
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`actionType: drawer` 打开 overlay、`title` / `body`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`showCloseButton` / `overlay` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套按栈弹出。关闭按钮 hover 出「关闭」提示。缺拖拽改尺寸、多级错位递减、像素级 cxd Drawer。
+::: info 实现进度 85% · 进行中
+文档主路径已对齐：`actionType: drawer` 打开 overlay、`title` / `body`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`showCloseButton` / `overlay` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover 出「关闭」提示。缺拖拽改尺寸、多级错位递减、像素级 cxd Drawer。
 :::
 
 Drawer 主要由 [Action](./action) 的 `actionType: drawer` 触发。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

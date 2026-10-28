@@ -7,12 +7,14 @@ import {
   createStoreId,
   filterTpl,
   isApiOutdated,
+  overlayEmbedForm,
   toastNotices,
   toastNotifyConf,
   requestApi,
   useEnv,
   useRendererHub,
   useScoped,
+  type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
 import {
@@ -109,8 +111,8 @@ function openDialog(schema: SchemaObject) {
 
 function asDialogBody(schema: SchemaObject | null) {
   const body = schema?.body || schema
-  if (body && typeof body === 'object' && !Array.isArray(body) && (body as SchemaObject).type === 'form') {
-    return { ...(body as SchemaObject), wrapWithPanel: false }
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    return overlayEmbedForm(body as SchemaNode)
   }
   return body
 }

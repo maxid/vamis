@@ -48,6 +48,17 @@ describe('dialog defaults', () => {
     expect(dialogTitle({})).toBe('')
     expect(dialogBody({ body: '文案' })).toEqual(['文案'])
     expect(dialogBody({ body: { type: 'tpl', tpl: '节点' } })).toEqual([{ type: 'tpl', tpl: '节点' }])
+    expect(dialogBody({ body: { type: 'form', body: [{ type: 'static', name: 'engine' }] } })).toEqual([
+      {
+        type: 'form',
+        mode: 'horizontal',
+        wrapWithPanel: false,
+        body: [{ type: 'static', name: 'engine' }],
+      },
+    ])
+    expect(
+      dialogBody({ body: { type: 'form', wrapWithPanel: true, mode: 'inline', body: [] } }),
+    ).toEqual([{ type: 'form', wrapWithPanel: true, mode: 'inline', body: [] }])
     expect(dialogBody({})).toEqual([])
     expect(dialogActions({})).toEqual([
       { type: 'button', actionType: 'cancel', label: '取消' },

@@ -541,6 +541,7 @@ describe('Amis width helpers', () => {
     expect(form).toContain('schema.bodyClassName')
     expect(form).toContain('schema.actionsClassName')
     expect(form).toContain("wrapWithPanel.value ? '表单' : ''")
+    expect(form).toContain('!wrapWithPanel.value && !actionsDefined.value')
     expect(form).toContain('schema.reset === true')
     expect(form).toContain('bg-muted')
     expect(item).toContain('schema.labelClassName')

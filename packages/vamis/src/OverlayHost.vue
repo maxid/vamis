@@ -72,7 +72,12 @@ function preventIf(condition: boolean, event: Event) {
         </DialogTitle>
       </DialogHeader>
       <div class="min-h-0 overflow-auto">
-        <SchemaRenderer v-for="(node, i) in dialogBody(dialog)" :key="i" :schema="node" :extra-data="extra" />
+        <SchemaRenderer
+          v-for="(node, i) in dialogBody(dialog)"
+          :key="`${overlay?.state.seq}-${i}`"
+          :schema="node"
+          :extra-data="extra"
+        />
       </div>
       <DialogFooter v-if="dialogActions(dialog).length">
         <SchemaRenderer v-for="(node, i) in dialogActions(dialog)" :key="i" :schema="node" :extra-data="extra" />
@@ -98,7 +103,12 @@ function preventIf(condition: boolean, event: Event) {
         </SheetTitle>
       </SheetHeader>
       <div class="min-h-0 flex-1 overflow-auto px-4">
-        <SchemaRenderer v-for="(node, i) in drawerBody(drawer)" :key="i" :schema="node" :extra-data="extra" />
+        <SchemaRenderer
+          v-for="(node, i) in drawerBody(drawer)"
+          :key="`${overlay?.state.seq}-${i}`"
+          :schema="node"
+          :extra-data="extra"
+        />
       </div>
       <SheetFooter v-if="drawerActions(drawer).length" class="flex-row justify-end gap-2">
         <SchemaRenderer v-for="(node, i) in drawerActions(drawer)" :key="i" :schema="node" :extra-data="extra" />

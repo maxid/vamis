@@ -19,6 +19,10 @@ Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`�
 
 禁止：组装壳用 landmark 标签（宿主 `header {}` 会漏进 embed）；输出嵌套 HTML `<form>`；把 SchemaRenderer 外层改成非 `div`。
 
+## 浮层里的 Form
+
+Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。
+
 ## 默认自适应
 
 铺满容器是默认，不必先写 `size` / `className` / `w-full`。作者写最简 schema 就应在槽里随父级伸缩。

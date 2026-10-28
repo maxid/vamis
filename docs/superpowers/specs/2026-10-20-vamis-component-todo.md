@@ -37,7 +37,7 @@
 | 功能 | 0 / 12 | 12 | 0 | 76% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 47% | 39 |
 | 数据展示 | 0 / 44 | 44 | 0 | 54% | 31 |
-| 反馈 | 0 / 5 | 5 | 0 | 80% | 5 |
+| 反馈 | 0 / 5 | 5 | 0 | 82% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
 | **合计** | **2 / 155** | **153** | **0** | **55%** | **106** |
 
@@ -220,13 +220,13 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（0/5，均 80%）
+## 反馈（0/5，均 82%）
 
 | type | 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|---|
 | `alert` | Alert 提示 | 进行中 | 80% | 文档主路径已对齐：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
-| `dialog` | Dialog 对话框 | 进行中 | 80% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。默认弹层 `top: 60px`（Amis `--Modal-content-startMarginTop`）。关闭按钮 hover「关闭」提示（`data-tooltip` / `data-position=left`）。缺拖拽、`feedback`、弹层内表单提交、多级同时错位可见、像素级 cxd Modal | P0 |
-| `drawer` | Drawer 抽屉 | 进行中 | 80% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。关闭按钮 hover「关闭」提示。缺 `resizable`、多级错位递减、像素级 cxd Drawer | P0 |
+| `dialog` | Dialog 对话框 | 进行中 | 85% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。body 是 form 时默认 `mode: horizontal`、`wrapWithPanel: false`、无默认「提交」。浮层 data 按层压栈，关掉后不留上一张卡片。默认弹层 `top: 60px`。关闭按钮 hover「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal | P0 |
+| `drawer` | Drawer 抽屉 | 进行中 | 85% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover「关闭」提示。缺 `resizable`、多级错位递减、像素级 cxd Drawer | P0 |
 | `spinner` | Spinner 加载中 | 进行中 | 80% | 文档主路径已对齐：`show` / `showOn`、`size` sm|lg|空、`overlay`（源码默认 false）、`tip` / `tipPlacement`、`delay`、`body` 容器。缺 hex SVG、fa / 内置 icon 名、父子 loading 互斥、`loadingConfig` | P0 |
 | （动作 `toast`） | Toast 轻提示 | 进行中 | 80% | 文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`、`timeout`、`closeButton` / `showIcon`、`allowHtml`。缺 `mobileUI` 切默认、`center` 像素级、schema 节点 body | P0 |
 

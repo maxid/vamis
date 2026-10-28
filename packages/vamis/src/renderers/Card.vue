@@ -146,7 +146,7 @@ async function onCardClick(event: MouseEvent) {
           <div v-if="description" class="vamis-card-desc">{{ description }}</div>
         </div>
         <div v-if="toolbar.length" class="vamis-card-toolbar">
-          <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" />
+          <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" :extra-data="data" />
         </div>
       </div>
       <div v-if="bodyNodes.length" class="vamis-card-body">
@@ -165,7 +165,7 @@ async function onCardClick(event: MouseEvent) {
         <div v-if="actionGroups.length" class="vamis-card-actions-wrap">
           <div v-for="(group, gi) in actionGroups" :key="gi" class="vamis-card-actions">
             <div v-for="(action, ai) in group" :key="ai" class="vamis-card-action">
-              <SchemaRenderer :schema="actionSchema(action)" />
+              <SchemaRenderer :schema="actionSchema(action)" :extra-data="data" />
             </div>
           </div>
         </div>

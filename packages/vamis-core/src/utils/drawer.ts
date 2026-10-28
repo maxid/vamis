@@ -2,7 +2,7 @@
 
 import { filterTpl } from '../formula'
 import type { PlainObject, SchemaNode } from '../types'
-import { overlayFooterActions } from './dialog'
+import { overlayEmbedForm, overlayFooterActions } from './dialog'
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -71,7 +71,8 @@ export function drawerTitleNode(schema: unknown): SchemaNode | null {
 export function drawerBody(schema: unknown): SchemaNode[] {
   const body = asRecord(schema).body
   if (body == null || body === false || body === '') return []
-  return Array.isArray(body) ? (body as SchemaNode[]) : [body as SchemaNode]
+  const nodes = Array.isArray(body) ? (body as SchemaNode[]) : [body as SchemaNode]
+  return nodes.map(overlayEmbedForm)
 }
 
 export function drawerActions(schema: unknown): SchemaNode[] {

@@ -5,6 +5,7 @@ export interface OverlayState {
   dialog: SchemaObject | null
   drawer: SchemaObject | null
   data: PlainObject
+  seq: number
 }
 
 export interface OverlayApi {
@@ -18,30 +19,51 @@ export interface OverlayApi {
 
 export const OverlayKey: InjectionKey<OverlayApi> = Symbol('vamis-overlay')
 
+interface OverlayFrame {
+  schema: SchemaObject
+  data: PlainObject
+}
+
+function overlayPayload(data: PlainObject = {}): PlainObject {
+  const out: PlainObject = {}
+  for (const [key, value] of Object.entries(data)) {
+    if (key === 'event' || key.startsWith('__')) continue
+    out[key] = value
+  }
+  return out
+}
+
+function mergeFrame(parent: PlainObject | undefined, incoming: PlainObject = {}): PlainObject {
+  return { ...(parent || {}), ...overlayPayload(incoming) }
+}
+
 export function createOverlay(): OverlayApi {
-  const dialogs: SchemaObject[] = []
-  const drawers: SchemaObject[] = []
+  const dialogs: OverlayFrame[] = []
+  const drawers: OverlayFrame[] = []
   const state = reactive<OverlayState>({
     dialog: null,
     drawer: null,
     data: {},
+    seq: 0,
   })
 
   function sync() {
-    state.dialog = dialogs.at(-1) ?? null
-    state.drawer = drawers.at(-1) ?? null
+    const top = dialogs.at(-1) ?? drawers.at(-1)
+    state.dialog = dialogs.at(-1)?.schema ?? null
+    state.drawer = drawers.at(-1)?.schema ?? null
+    state.data = top?.data ?? {}
   }
 
   return {
     state,
     openDialog(schema, data = {}) {
-      dialogs.push(schema)
-      state.data = { ...state.data, ...data }
+      dialogs.push({ schema, data: mergeFrame(dialogs.at(-1)?.data, data) })
+      state.seq += 1
       sync()
     },
     openDrawer(schema, data = {}) {
-      drawers.push(schema)
-      state.data = { ...state.data, ...data }
+      drawers.push({ schema, data: mergeFrame(drawers.at(-1)?.data, data) })
+      state.seq += 1
       sync()
     },
     closeDialog() {

@@ -56,10 +56,26 @@ export function dialogTitleNode(schema: unknown): SchemaNode | null {
   return null
 }
 
+/**
+ * Dialog / Drawer 的 body 若是 `type: form`，对齐 Amis `Dialog.renderBody`：
+ * 默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。
+ */
+export function overlayEmbedForm(node: SchemaNode): SchemaNode {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return node
+  const rec = node as Record<string, unknown>
+  if (String(rec.type || '') !== 'form') return node
+  return {
+    mode: 'horizontal',
+    wrapWithPanel: false,
+    ...rec,
+  } as SchemaNode
+}
+
 export function dialogBody(schema: unknown): SchemaNode[] {
   const body = asRecord(schema).body
   if (body == null || body === false || body === '') return []
-  return Array.isArray(body) ? (body as SchemaNode[]) : [body as SchemaNode]
+  const nodes = Array.isArray(body) ? (body as SchemaNode[]) : [body as SchemaNode]
+  return nodes.map(overlayEmbedForm)
 }
 
 export function overlayFooterActions(
