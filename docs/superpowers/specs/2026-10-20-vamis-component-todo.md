@@ -2,14 +2,14 @@
 
 - 日期：2026-10-21（进度核对：2026-10-28）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
-- 优先级：**全部 P0**
+- 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 综合分（见文末「依赖与优先级」）
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
 - 视觉口径：[样式系统（Amis 水标 × shadcn）](./2026-10-21-vamis-style-system.md) — 渲染器走 token / Button·Input·Table·Card variants；不搬 `cxd-` 前缀，能力尽量像素级转写
 - 覆盖数字（只比 type 名）：[同步状态](./2026-10-20-amis-sync-status.md)
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-10-28（155 项逐项复核；汇总 59%、≥50% 108 项；已完成 1；依赖优先级 154 节点）
+- 最近核对：2026-10-28（155 项逐项复核；汇总 59%、≥50% 108 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -30,7 +30,7 @@
    | 100% | 满足实现标准（组件 + 文档对标或超越 amis） |
 5. 本清单不另起分类。侧栏未收录但 `docs/zh-CN` 有独立页的，在对应类末尾用脚注标出。
 6. **文档地址**：`vamis 文档` 是相对 `http://localhost:5173` 的路径，`amis 文档` 是相对 `http://localhost:8888` 的路径。例如 `table-view`：vamis `/components/table-view`（完整 `http://localhost:5173/components/table-view`），amis `/zh-CN/components/table-view`（完整 `http://localhost:8888/zh-CN/components/table-view`）。`—` 表示没有独立文档页。
-7. **依赖与优先级**：按 amis 主路径依赖拓扑排序，叶子（基础件）优先级最高、页面/应用最后；完整顺序见文末「依赖与优先级」。
+7. **依赖与优先级**：在依赖拓扑约束下按综合分 `S = 被依赖 × 8 + 深度` 排序。被更多组件依赖的基础件先做（FormItem / `tpl` / `action`），无人依赖的叶子后置；`#` 不是全局 S 序（依赖未齐不能开工）。完整顺序见文末「依赖与优先级」。
 
 ## 实现标准（强制，2026-10-28）
 
@@ -74,7 +74,7 @@
 
 侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
-执行顺序见文末「依赖与优先级」：叶子 #1–#32 先做，`page` #153、`app` #154 最后。
+执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（FormItem、`tpl`、`container`、`icon`、`action`…），`form` #49、`crud` #59、`page` #60，零被依赖叶子从 #61 起，`app` #154 最后。
 
 ---
 
@@ -282,186 +282,220 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 ## 依赖与优先级（基于 amis）
 
 - 口径：边 `A → B` 表示 A 的**主路径**需要 B（渲染或典型组合），不统计可选装饰与任意嵌套。
-- 依赖高度 `H`：叶子为 0，向上递增；`深度 = maxH - H`，叶子深度最大，优先级最高。
-- 排序：深度降序 → 被依赖次数降序 → 分类顺序 → 文档顺序。优先级 `#1` 最先做，`#154` 最后做。
+- **依赖链**：Kahn 拓扑——B 未排完则 A 不能开工（先做被依赖的节点）。
+- **树深度**：叶子高度 `H = 0`，沿依赖向上递增；`深度 = maxH − H`（当前 maxH = 7）。深度大 = 更靠近叶子、更基础。
+- **被依赖**：有多少个本表节点的主路径直接列出该 type。
+- **综合分** `S = 被依赖 × 8 + 深度`（8 = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 `pdf-viewer` 这类无人依赖的叶子排在 `action` / `form` 前面。同分再按深度降序、原文档序。
+- 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- `P` 列仍是阶段 P0；**执行顺序看本表**。
+- 跳过 Custom 与 office/pdf。当前建议下一批：FormItem、`tpl`、`icon`、`action`、`input-text`、`checkbox`、`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
+- 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
+
+### 速览
+
+| 段 | 序号 | 代表 |
+|----|------|------|
+| 解锁主干 | #1–#10 | FormItem、`tpl`、`container`、`icon`、`action`、`input-text`、`checkbox`、`input-date`、Options、`select` |
+| 主路径容器 | #11–#60 | #11 `image`、#15 `service`、#25 `table`、#33 `list`、#49 `form`、#50 `dialog`、#59 `crud`、#60 `page` |
+| 零被依赖 | #61–#153 | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
+| 最后 | #154 | `app` |
+
+`#` 是**拓扑就绪后**的综合分序，不是全局 S 序：例如 `action` 的 S 高于 `icon`，但必须等 `icon` 做完才能开工。
+
+```mermaid
+flowchart LR
+  FormItem --> Options
+  FormItem --> inputText["input-text"]
+  Options --> select
+  icon --> action
+  tpl --> container
+  tpl --> action
+  action --> form
+  FormItem --> form
+  select --> form
+  form --> dialog
+  form --> crud
+  table --> crud
+  crud --> page
+  page --> app
+```
 
 ### 分层
 
-| 依赖高度 H | 深度 | 数量 | 优先级区间 | 含义 |
-|-----------|------|------|-----------|------|
-| 0 | 7 | 32 | 1–32 | 叶子：无组件依赖（基础件，先做） |
-| 1 | 6 | 36 | 33–68 | 直接依赖叶子：基础控件 / 按钮 / 容器 |
-| 2 | 5 | 47 | 69–115 | 组合：表格 / 列表 / 卡片 / 面板 / 选择 |
-| 3 | 4 | 22 | 116–137 | 表单 / cards / 传输 / 复杂选择 |
-| 4 | 3 | 12 | 138–149 | 弹层 / 向导 / 组合表单 / 组合传输 |
-| 5 | 2 | 3 | 150–152 | CRUD / 日历 / 组合穿梭 |
-| 6 | 1 | 1 | 153–153 | 页面 |
-| 7 | 0 | 1 | 154–154 | 应用 |
+高度仍描述依赖树形状；序号不再按层切成连续区间（同层里被依赖多的会插到更浅、但已就绪的节点之前）。
+
+| 依赖高度 H | 深度 | 数量 | 最早 / 最晚 | 含义 |
+|-----------|------|------|-------------|------|
+| 0 | 7 | 32 | #1–#83 | 叶子：无组件依赖 |
+| 1 | 6 | 36 | #3–#101 | 直接依赖叶子：基础控件 / 按钮 / 容器 |
+| 2 | 5 | 47 | #10–#126 | 组合：表格 / 列表 / 卡片 / 面板 / 选择 |
+| 3 | 4 | 22 | #34–#142 | 表单 / cards / 传输 / 复杂选择 |
+| 4 | 3 | 12 | #50–#151 | 弹层 / 向导 / 组合表单 / 组合传输 |
+| 5 | 2 | 3 | #59–#153 | CRUD / 日历 / 组合穿梭 |
+| 6 | 1 | 1 | #60–#60 | 页面 |
+| 7 | 0 | 1 | #154–#154 | 应用 |
 
 ### 全量顺序
 
-| # | type | 依赖 | 深度 | 被依赖 | 状态 | 进度 |
-|---|------|------|------|--------|------|------|
-| 1 | FormItem（契约） | — | 7 | 38 | 进行中 | 48% |
-| 2 | `tpl` | — | 7 | 28 | 进行中 | 85% |
-| 3 | `icon` | — | 7 | 15 | 进行中 | 75% |
-| 4 | `image` | — | 7 | 5 | 进行中 | 75% |
-| 5 | `mapping` | — | 7 | 4 | 进行中 | 55% |
-| 6 | `tag` | — | 7 | 3 | 进行中 | 55% |
-| 7 | `formula` | — | 7 | 1 | 进行中 | 50% |
-| 8 | `chart` | — | 7 | 1 | 进行中 | 45% |
-| 9 | `progress` | — | 7 | 1 | 进行中 | 60% |
-| 10 | `divider` | — | 7 | 0 | 进行中 | 90% |
-| 11 | `custom` | — | 7 | 0 | 进行中 | 15% |
-| 12 | `code` | — | 7 | 0 | 进行中 | 92% |
-| 13 | `color` | — | 7 | 0 | 进行中 | 50% |
-| 14 | `date` / `datetime` / `time` / `month` | — | 7 | 0 | 进行中 | 60% |
-| 15 | `html` | — | 7 | 0 | 进行中 | 85% |
-| 16 | `iframe` | — | 7 | 0 | 进行中 | 55% |
-| 17 | `json` | — | 7 | 0 | 进行中 | 50% |
-| 18 | `log` | — | 7 | 0 | 进行中 | 25% |
-| 19 | `number` | — | 7 | 0 | 进行中 | 60% |
-| 20 | `markdown` | — | 7 | 0 | 进行中 | 45% |
-| 21 | `office-viewer`（Word/Excel） | — | 7 | 0 | 进行中 | 10% |
-| 22 | `pdf-viewer` | — | 7 | 0 | 进行中 | 10% |
-| 23 | `qrcode` | — | 7 | 0 | 进行中 | 45% |
-| 24 | `barcode` | — | 7 | 0 | 进行中 | 45% |
-| 25 | `remark` | — | 7 | 0 | 进行中 | 70% |
-| 26 | `sparkline` | — | 7 | 0 | 进行中 | 45% |
-| 27 | `video` | — | 7 | 0 | 进行中 | 45% |
-| 28 | `shape` | — | 7 | 0 | 进行中 | 40% |
-| 29 | `slider` | — | 7 | 0 | 进行中 | 45% |
-| 30 | `audio` | — | 7 | 0 | 进行中 | 80% |
-| 31 | `web-component` | — | 7 | 0 | 进行中 | 80% |
-| 32 | `amis` | — | 7 | 0 | 进行中 | 80% |
-| 33 | `action` | `icon`、`tpl` | 6 | 33 | 进行中 | 85% |
-| 34 | `container` | `tpl` | 6 | 23 | 已完成 | 100% |
-| 35 | `input-text` | `FormItem` | 6 | 12 | 进行中 | 60% |
-| 36 | `checkbox` | `FormItem` | 6 | 8 | 进行中 | 60% |
-| 37 | `input-date` | `FormItem` | 6 | 7 | 进行中 | 55% |
-| 38 | Options（契约） | `FormItem` | 6 | 6 | 进行中 | 35% |
-| 39 | `link` | `icon` | 6 | 4 | 进行中 | 60% |
-| 40 | `popOver` | `tpl` | 6 | 3 | 进行中 | 80% |
-| 41 | `input-file` | `FormItem` | 6 | 2 | 进行中 | 40% |
-| 42 | `input-number` | `FormItem` | 6 | 2 | 进行中 | 55% |
-| 43 | `radio` | `FormItem` | 6 | 2 | 进行中 | 60% |
-| 44 | `switch` | `FormItem` | 6 | 2 | 进行中 | 65% |
-| 45 | `hidden` | `FormItem` | 6 | 1 | 进行中 | 70% |
-| 46 | `input-image` | `FormItem`、`image` | 6 | 1 | 进行中 | 40% |
-| 47 | `textarea` | `FormItem` | 6 | 1 | 进行中 | 60% |
-| 48 | `each` | `tpl` | 6 | 1 | 进行中 | 70% |
-| 49 | `status` | `icon` | 6 | 1 | 进行中 | 55% |
-| 50 | `avatar` | `image`、`icon` | 6 | 1 | 进行中 | 90% |
-| 51 | `tooltip-wrapper` | `tpl` | 6 | 0 | 进行中 | 80% |
-| 52 | `control` | `FormItem` | 6 | 0 | 进行中 | 40% |
-| 53 | `input-color` | `FormItem` | 6 | 0 | 进行中 | 50% |
-| 54 | `input-formula` | `formula`、`FormItem` | 6 | 0 | 进行中 | 30% |
-| 55 | `diff-editor` | `FormItem` | 6 | 0 | 进行中 | 65% |
-| 56 | `editor` | `FormItem` | 6 | 0 | 进行中 | 85% |
-| 57 | `input-rating` | `FormItem`、`icon` | 6 | 0 | 进行中 | 55% |
-| 58 | `input-range` | `FormItem` | 6 | 0 | 进行中 | 50% |
-| 59 | `input-rich-text` | `FormItem` | 6 | 0 | 进行中 | 25% |
-| 60 | `input-signature` | `FormItem` | 6 | 0 | 进行中 | 35% |
-| 61 | `table-view` | `tpl`、`mapping`、`tag` | 6 | 0 | 进行中 | 85% |
-| 62 | `images` | `image` | 6 | 0 | 进行中 | 50% |
-| 63 | `steps` | `icon`、`tpl` | 6 | 0 | 进行中 | 55% |
-| 64 | `property` | `tpl`、`mapping` | 6 | 0 | 进行中 | 50% |
-| 65 | `timeline` | `icon`、`tpl` | 6 | 0 | 进行中 | 50% |
-| 66 | `spinner` | `tpl` | 6 | 0 | 进行中 | 80% |
-| 67 | `toast`（动作） | `icon`、`tpl` | 6 | 0 | 进行中 | 90% |
-| 68 | `badge` | `icon` | 6 | 0 | 进行中 | 80% |
-| 69 | `select` | `FormItem`、`Options` | 5 | 11 | 进行中 | 60% |
-| 70 | `input-date-range` | `input-date`、`FormItem` | 5 | 5 | 进行中 | 50% |
-| 71 | `service` | `container`、`action`、`tpl` | 5 | 4 | 进行中 | 75% |
-| 72 | `list` | `each`、`tpl`、`action` | 5 | 4 | 进行中 | 50% |
-| 73 | `tabs` | `container`、`action`、`tpl` | 5 | 3 | 进行中 | 85% |
-| 74 | `pagination` | `action` | 5 | 2 | 进行中 | 90% |
-| 75 | `panel` | `container`、`action`、`tpl` | 5 | 2 | 进行中 | 90% |
-| 76 | `table` | `tpl`、`mapping`、`action`、`popOver` | 5 | 2 | 进行中 | 55% |
-| 77 | `flex` | `container` | 5 | 1 | 进行中 | 90% |
-| 78 | `grid` | `container` | 5 | 1 | 进行中 | 90% |
-| 79 | `button` | `action` | 5 | 1 | 进行中 | 85% |
-| 80 | `nav` | `icon`、`action`、`tpl`、`link` | 5 | 1 | 进行中 | 80% |
-| 81 | `input-datetime` | `input-date` | 5 | 1 | 进行中 | 50% |
-| 82 | `input-month` | `input-date` | 5 | 1 | 进行中 | 45% |
-| 83 | `input-kv` | `FormItem`、`input-text`、`action` | 5 | 1 | 进行中 | 50% |
-| 84 | `input-quarter` | `input-date` | 5 | 1 | 进行中 | 45% |
-| 85 | `radios` | `radio`、`Options` | 5 | 1 | 进行中 | 55% |
-| 86 | `static` | `FormItem`、`popOver`、`tpl` | 5 | 1 | 进行中 | 65% |
-| 87 | `input-time` | `input-date` | 5 | 1 | 进行中 | 45% |
-| 88 | `input-tree` | `FormItem`、`checkbox` | 5 | 1 | 进行中 | 50% |
-| 89 | `input-year` | `input-date` | 5 | 1 | 进行中 | 45% |
-| 90 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 5 | 1 | 进行中 | 70% |
-| 91 | `collapse` / `collapse-group` | `container`、`tpl` | 5 | 0 | 进行中 | 85% |
-| 92 | `grid-2d` | `container` | 5 | 0 | 进行中 | 90% |
-| 93 | `hbox` | `container` | 5 | 0 | 进行中 | 90% |
-| 94 | `wrapper` | `container` | 5 | 0 | 进行中 | 90% |
-| 95 | `switch-container` | `container` | 5 | 0 | 进行中 | 90% |
-| 96 | `breadcrumb` | `link`、`icon` | 5 | 0 | 进行中 | 85% |
-| 97 | `anchor-nav` | `link`、`icon` | 5 | 0 | 进行中 | 80% |
-| 98 | `button-toolbar` | `action`、`container` | 5 | 0 | 进行中 | 60% |
-| 99 | `checkboxes` | `checkbox`、`Options`、`FormItem` | 5 | 0 | 进行中 | 55% |
-| 100 | `fieldset` | `FormItem`、`container` | 5 | 0 | 进行中 | 55% |
-| 101 | `input-excel` | `FormItem`、`input-file` | 5 | 0 | 进行中 | 20% |
-| 102 | `group` | `FormItem`、`container` | 5 | 0 | 进行中 | 55% |
-| 103 | `input-group` | `container`、`input-text` | 5 | 0 | 进行中 | 55% |
-| 104 | `location-picker` | `FormItem`、`input-text` | 5 | 0 | 进行中 | 25% |
-| 105 | `uuid` | `FormItem`、`input-text` | 5 | 0 | 进行中 | 70% |
-| 106 | `matrix-checkboxes` | `checkbox` | 5 | 0 | 进行中 | 40% |
-| 107 | `input-password` | `input-text` | 5 | 0 | 进行中 | 60% |
-| 108 | `input-repeat` | `FormItem`、`input-text` | 5 | 0 | 进行中 | 40% |
-| 109 | `input-verification-code` | `FormItem`、`input-text` | 5 | 0 | 进行中 | 50% |
-| 110 | `table2` | `tpl`、`action`、`checkbox`、`popOver` | 5 | 0 | 进行中 | 70% |
-| 111 | `carousel` | `image`、`tpl`、`action` | 5 | 0 | 进行中 | 45% |
-| 112 | `grid-nav` | `icon`、`link`、`tpl` | 5 | 0 | 进行中 | 50% |
-| 113 | `search-box` | `action`、`icon` | 5 | 0 | 进行中 | 50% |
-| 114 | `alert` | `action`、`icon` | 5 | 0 | 进行中 | 80% |
-| 115 | `tasks` | `action`、`progress`、`status` | 5 | 0 | 进行中 | 80% |
-| 116 | `form` | `FormItem`、`Options`、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image` | 4 | 10 | 进行中 | 68% |
-| 117 | `button-group` | `action`、`button` | 4 | 2 | 进行中 | 85% |
-| 118 | `picker` | `select`、`list` | 4 | 2 | 进行中 | 50% |
-| 119 | `transfer` | `list`、`checkbox` | 4 | 2 | 进行中 | 50% |
-| 120 | `json-schema` | `FormItem`、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 进行中 | 30% |
-| 121 | `cards` | `card`、`list` | 4 | 1 | 进行中 | 75% |
-| 122 | `pagination-wrapper` | `pagination`、`container` | 4 | 0 | 进行中 | 90% |
-| 123 | `portlet` | `tabs`、`action`、`container` | 4 | 0 | 进行中 | 85% |
-| 124 | `chained-select` | `select` | 4 | 0 | 进行中 | 50% |
-| 125 | `input-city` | `FormItem`、`select` | 4 | 0 | 进行中 | 25% |
-| 126 | `condition-builder` | `FormItem`、`Options`、`select`、`input-text`、`action` | 4 | 0 | 进行中 | 35% |
-| 127 | `input-datetime-range` | `input-datetime`、`input-date-range` | 4 | 0 | 进行中 | 45% |
-| 128 | `input-month-range` | `input-month`、`input-date-range` | 4 | 0 | 进行中 | 45% |
-| 129 | `input-kvs` | `input-kv`、`action` | 4 | 0 | 进行中 | 45% |
-| 130 | `list-select` | `select`、`list` | 4 | 0 | 进行中 | 50% |
-| 131 | `nested-select` | `select` | 4 | 0 | 进行中 | 45% |
-| 132 | `input-quarter-range` | `input-quarter`、`input-date-range` | 4 | 0 | 进行中 | 45% |
-| 133 | `chart-radios` | `radios`、`chart` | 4 | 0 | 进行中 | 35% |
-| 134 | `input-tag` | `select`、`tag` | 4 | 0 | 进行中 | 50% |
-| 135 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 进行中 | 45% |
-| 136 | `tree-select` | `select`、`input-tree` | 4 | 0 | 进行中 | 50% |
-| 137 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 进行中 | 45% |
-| 138 | `dialog` | `action`、`form`、`container`、`tpl` | 3 | 3 | 进行中 | 85% |
-| 139 | `drawer` | `action`、`form`、`container`、`tpl` | 3 | 2 | 进行中 | 85% |
-| 140 | `tabs-transfer` | `transfer`、`tabs` | 3 | 1 | 进行中 | 40% |
-| 141 | `dropdown-button` | `action`、`button-group` | 3 | 0 | 进行中 | 80% |
-| 142 | `input-array` | `form`、`action`、`input-text`、`container` | 3 | 0 | 进行中 | 50% |
-| 143 | `button-group-select` | `Options`、`FormItem`、`button-group` | 3 | 0 | 进行中 | 55% |
-| 144 | `combo` | `form`、`action`、`container` | 3 | 0 | 进行中 | 50% |
-| 145 | `input-sub-form` | `form`、`action`、`service`、`container` | 3 | 0 | 进行中 | 45% |
-| 146 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 进行中 | 45% |
-| 147 | `transfer-picker` | `transfer`、`picker` | 3 | 0 | 进行中 | 45% |
-| 148 | `json-schema-editor` | `json-schema`、`form`、`action` | 3 | 0 | 进行中 | 30% |
-| 149 | `wizard` | `form`、`action`、`panel` | 3 | 0 | 进行中 | 80% |
-| 150 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards` | 2 | 1 | 进行中 | 58% |
-| 151 | `tabs-transfer-picker` | `tabs-transfer`、`picker` | 2 | 0 | 进行中 | 35% |
-| 152 | `calendar` | `action`、`dialog`、`tpl` | 2 | 0 | 进行中 | 85% |
-| 153 | `page` | `container`、`panel`、`flex`、`grid`、`tabs`、`action`、`service`、`dialog`、`drawer`、`crud`、`form`、`tpl` | 1 | 1 | 进行中 | 95% |
-| 154 | `app` | `page`、`nav`、`service` | 0 | 0 | 进行中 | 80% |
+| # | type | 依赖 | 深度 | 被依赖 | S | 状态 | 进度 |
+|---|------|------|------|--------|---|------|------|
+| 1 | FormItem（契约） | — | 7 | 38 | 311 | 进行中 | 48% |
+| 2 | `tpl` | — | 7 | 28 | 231 | 进行中 | 85% |
+| 3 | `container` | `tpl` | 6 | 23 | 190 | 已完成 | 100% |
+| 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 75% |
+| 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 85% |
+| 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 60% |
+| 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 60% |
+| 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 55% |
+| 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
+| 10 | `select` | `FormItem`、`Options` | 5 | 11 | 93 | 进行中 | 60% |
+| 11 | `image` | — | 7 | 5 | 47 | 进行中 | 75% |
+| 12 | `input-date-range` | `input-date`、`FormItem` | 5 | 5 | 45 | 进行中 | 50% |
+| 13 | `mapping` | — | 7 | 4 | 39 | 进行中 | 55% |
+| 14 | `link` | `icon` | 6 | 4 | 38 | 进行中 | 60% |
+| 15 | `service` | `container`、`action`、`tpl` | 5 | 4 | 37 | 进行中 | 75% |
+| 16 | `tag` | — | 7 | 3 | 31 | 进行中 | 55% |
+| 17 | `popOver` | `tpl` | 6 | 3 | 30 | 进行中 | 80% |
+| 18 | `tabs` | `container`、`action`、`tpl` | 5 | 3 | 29 | 进行中 | 85% |
+| 19 | `input-file` | `FormItem` | 6 | 2 | 22 | 进行中 | 40% |
+| 20 | `input-number` | `FormItem` | 6 | 2 | 22 | 进行中 | 55% |
+| 21 | `radio` | `FormItem` | 6 | 2 | 22 | 进行中 | 60% |
+| 22 | `switch` | `FormItem` | 6 | 2 | 22 | 进行中 | 65% |
+| 23 | `pagination` | `action` | 5 | 2 | 21 | 进行中 | 90% |
+| 24 | `panel` | `container`、`action`、`tpl` | 5 | 2 | 21 | 进行中 | 90% |
+| 25 | `table` | `tpl`、`mapping`、`action`、`popOver` | 5 | 2 | 21 | 进行中 | 55% |
+| 26 | `formula` | — | 7 | 1 | 15 | 进行中 | 50% |
+| 27 | `chart` | — | 7 | 1 | 15 | 进行中 | 45% |
+| 28 | `progress` | — | 7 | 1 | 15 | 进行中 | 60% |
+| 29 | `hidden` | `FormItem` | 6 | 1 | 14 | 进行中 | 70% |
+| 30 | `input-image` | `FormItem`、`image` | 6 | 1 | 14 | 进行中 | 40% |
+| 31 | `textarea` | `FormItem` | 6 | 1 | 14 | 进行中 | 60% |
+| 32 | `each` | `tpl` | 6 | 1 | 14 | 进行中 | 70% |
+| 33 | `list` | `each`、`tpl`、`action` | 5 | 4 | 37 | 进行中 | 50% |
+| 34 | `picker` | `select`、`list` | 4 | 2 | 20 | 进行中 | 50% |
+| 35 | `transfer` | `list`、`checkbox` | 4 | 2 | 20 | 进行中 | 50% |
+| 36 | `status` | `icon` | 6 | 1 | 14 | 进行中 | 55% |
+| 37 | `avatar` | `image`、`icon` | 6 | 1 | 14 | 进行中 | 90% |
+| 38 | `flex` | `container` | 5 | 1 | 13 | 进行中 | 90% |
+| 39 | `grid` | `container` | 5 | 1 | 13 | 进行中 | 90% |
+| 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 85% |
+| 41 | `button-group` | `action`、`button` | 4 | 2 | 20 | 进行中 | 85% |
+| 42 | `nav` | `icon`、`action`、`tpl`、`link` | 5 | 1 | 13 | 进行中 | 80% |
+| 43 | `input-datetime` | `input-date` | 5 | 1 | 13 | 进行中 | 50% |
+| 44 | `input-month` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
+| 45 | `input-kv` | `FormItem`、`input-text`、`action` | 5 | 1 | 13 | 进行中 | 50% |
+| 46 | `input-quarter` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
+| 47 | `radios` | `radio`、`Options` | 5 | 1 | 13 | 进行中 | 55% |
+| 48 | `static` | `FormItem`、`popOver`、`tpl` | 5 | 1 | 13 | 进行中 | 65% |
+| 49 | `form` | `FormItem`、`Options`、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image` | 4 | 10 | 84 | 进行中 | 68% |
+| 50 | `dialog` | `action`、`form`、`container`、`tpl` | 3 | 3 | 27 | 进行中 | 85% |
+| 51 | `drawer` | `action`、`form`、`container`、`tpl` | 3 | 2 | 19 | 进行中 | 85% |
+| 52 | `input-time` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
+| 53 | `input-tree` | `FormItem`、`checkbox` | 5 | 1 | 13 | 进行中 | 50% |
+| 54 | `input-year` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
+| 55 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 5 | 1 | 13 | 进行中 | 70% |
+| 56 | `json-schema` | `FormItem`、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 12 | 进行中 | 30% |
+| 57 | `cards` | `card`、`list` | 4 | 1 | 12 | 进行中 | 75% |
+| 58 | `tabs-transfer` | `transfer`、`tabs` | 3 | 1 | 11 | 进行中 | 40% |
+| 59 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards` | 2 | 1 | 10 | 进行中 | 58% |
+| 60 | `page` | `container`、`panel`、`flex`、`grid`、`tabs`、`action`、`service`、`dialog`、`drawer`、`crud`、`form`、`tpl` | 1 | 1 | 9 | 进行中 | 95% |
+| 61 | `divider` | — | 7 | 0 | 7 | 进行中 | 90% |
+| 62 | `custom` | — | 7 | 0 | 7 | 进行中 | 15% |
+| 63 | `code` | — | 7 | 0 | 7 | 进行中 | 92% |
+| 64 | `color` | — | 7 | 0 | 7 | 进行中 | 50% |
+| 65 | `date` / `datetime` / `time` / `month` | — | 7 | 0 | 7 | 进行中 | 60% |
+| 66 | `html` | — | 7 | 0 | 7 | 进行中 | 85% |
+| 67 | `iframe` | — | 7 | 0 | 7 | 进行中 | 55% |
+| 68 | `json` | — | 7 | 0 | 7 | 进行中 | 50% |
+| 69 | `log` | — | 7 | 0 | 7 | 进行中 | 25% |
+| 70 | `number` | — | 7 | 0 | 7 | 进行中 | 60% |
+| 71 | `markdown` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 72 | `office-viewer`（Word/Excel） | — | 7 | 0 | 7 | 进行中 | 10% |
+| 73 | `pdf-viewer` | — | 7 | 0 | 7 | 进行中 | 10% |
+| 74 | `qrcode` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 75 | `barcode` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 76 | `remark` | — | 7 | 0 | 7 | 进行中 | 70% |
+| 77 | `sparkline` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 78 | `video` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 79 | `shape` | — | 7 | 0 | 7 | 进行中 | 40% |
+| 80 | `slider` | — | 7 | 0 | 7 | 进行中 | 45% |
+| 81 | `audio` | — | 7 | 0 | 7 | 进行中 | 80% |
+| 82 | `web-component` | — | 7 | 0 | 7 | 进行中 | 80% |
+| 83 | `amis` | — | 7 | 0 | 7 | 进行中 | 80% |
+| 84 | `tooltip-wrapper` | `tpl` | 6 | 0 | 6 | 进行中 | 80% |
+| 85 | `control` | `FormItem` | 6 | 0 | 6 | 进行中 | 40% |
+| 86 | `input-color` | `FormItem` | 6 | 0 | 6 | 进行中 | 50% |
+| 87 | `input-formula` | `formula`、`FormItem` | 6 | 0 | 6 | 进行中 | 30% |
+| 88 | `diff-editor` | `FormItem` | 6 | 0 | 6 | 进行中 | 65% |
+| 89 | `editor` | `FormItem` | 6 | 0 | 6 | 进行中 | 85% |
+| 90 | `input-rating` | `FormItem`、`icon` | 6 | 0 | 6 | 进行中 | 55% |
+| 91 | `input-range` | `FormItem` | 6 | 0 | 6 | 进行中 | 50% |
+| 92 | `input-rich-text` | `FormItem` | 6 | 0 | 6 | 进行中 | 25% |
+| 93 | `input-signature` | `FormItem` | 6 | 0 | 6 | 进行中 | 35% |
+| 94 | `table-view` | `tpl`、`mapping`、`tag` | 6 | 0 | 6 | 进行中 | 85% |
+| 95 | `images` | `image` | 6 | 0 | 6 | 进行中 | 50% |
+| 96 | `steps` | `icon`、`tpl` | 6 | 0 | 6 | 进行中 | 55% |
+| 97 | `property` | `tpl`、`mapping` | 6 | 0 | 6 | 进行中 | 50% |
+| 98 | `timeline` | `icon`、`tpl` | 6 | 0 | 6 | 进行中 | 50% |
+| 99 | `spinner` | `tpl` | 6 | 0 | 6 | 进行中 | 80% |
+| 100 | `toast`（动作） | `icon`、`tpl` | 6 | 0 | 6 | 进行中 | 90% |
+| 101 | `badge` | `icon` | 6 | 0 | 6 | 进行中 | 80% |
+| 102 | `collapse` / `collapse-group` | `container`、`tpl` | 5 | 0 | 5 | 进行中 | 85% |
+| 103 | `grid-2d` | `container` | 5 | 0 | 5 | 进行中 | 90% |
+| 104 | `hbox` | `container` | 5 | 0 | 5 | 进行中 | 90% |
+| 105 | `wrapper` | `container` | 5 | 0 | 5 | 进行中 | 90% |
+| 106 | `switch-container` | `container` | 5 | 0 | 5 | 进行中 | 90% |
+| 107 | `breadcrumb` | `link`、`icon` | 5 | 0 | 5 | 进行中 | 85% |
+| 108 | `anchor-nav` | `link`、`icon` | 5 | 0 | 5 | 进行中 | 80% |
+| 109 | `button-toolbar` | `action`、`container` | 5 | 0 | 5 | 进行中 | 60% |
+| 110 | `checkboxes` | `checkbox`、`Options`、`FormItem` | 5 | 0 | 5 | 进行中 | 55% |
+| 111 | `fieldset` | `FormItem`、`container` | 5 | 0 | 5 | 进行中 | 55% |
+| 112 | `input-excel` | `FormItem`、`input-file` | 5 | 0 | 5 | 进行中 | 20% |
+| 113 | `group` | `FormItem`、`container` | 5 | 0 | 5 | 进行中 | 55% |
+| 114 | `input-group` | `container`、`input-text` | 5 | 0 | 5 | 进行中 | 55% |
+| 115 | `location-picker` | `FormItem`、`input-text` | 5 | 0 | 5 | 进行中 | 25% |
+| 116 | `uuid` | `FormItem`、`input-text` | 5 | 0 | 5 | 进行中 | 70% |
+| 117 | `matrix-checkboxes` | `checkbox` | 5 | 0 | 5 | 进行中 | 40% |
+| 118 | `input-password` | `input-text` | 5 | 0 | 5 | 进行中 | 60% |
+| 119 | `input-repeat` | `FormItem`、`input-text` | 5 | 0 | 5 | 进行中 | 40% |
+| 120 | `input-verification-code` | `FormItem`、`input-text` | 5 | 0 | 5 | 进行中 | 50% |
+| 121 | `table2` | `tpl`、`action`、`checkbox`、`popOver` | 5 | 0 | 5 | 进行中 | 70% |
+| 122 | `carousel` | `image`、`tpl`、`action` | 5 | 0 | 5 | 进行中 | 45% |
+| 123 | `grid-nav` | `icon`、`link`、`tpl` | 5 | 0 | 5 | 进行中 | 50% |
+| 124 | `search-box` | `action`、`icon` | 5 | 0 | 5 | 进行中 | 50% |
+| 125 | `alert` | `action`、`icon` | 5 | 0 | 5 | 进行中 | 80% |
+| 126 | `tasks` | `action`、`progress`、`status` | 5 | 0 | 5 | 进行中 | 80% |
+| 127 | `pagination-wrapper` | `pagination`、`container` | 4 | 0 | 4 | 进行中 | 90% |
+| 128 | `portlet` | `tabs`、`action`、`container` | 4 | 0 | 4 | 进行中 | 85% |
+| 129 | `chained-select` | `select` | 4 | 0 | 4 | 进行中 | 50% |
+| 130 | `input-city` | `FormItem`、`select` | 4 | 0 | 4 | 进行中 | 25% |
+| 131 | `condition-builder` | `FormItem`、`Options`、`select`、`input-text`、`action` | 4 | 0 | 4 | 进行中 | 35% |
+| 132 | `input-datetime-range` | `input-datetime`、`input-date-range` | 4 | 0 | 4 | 进行中 | 45% |
+| 133 | `input-month-range` | `input-month`、`input-date-range` | 4 | 0 | 4 | 进行中 | 45% |
+| 134 | `input-kvs` | `input-kv`、`action` | 4 | 0 | 4 | 进行中 | 45% |
+| 135 | `list-select` | `select`、`list` | 4 | 0 | 4 | 进行中 | 50% |
+| 136 | `nested-select` | `select` | 4 | 0 | 4 | 进行中 | 45% |
+| 137 | `input-quarter-range` | `input-quarter`、`input-date-range` | 4 | 0 | 4 | 进行中 | 45% |
+| 138 | `chart-radios` | `radios`、`chart` | 4 | 0 | 4 | 进行中 | 35% |
+| 139 | `input-tag` | `select`、`tag` | 4 | 0 | 4 | 进行中 | 50% |
+| 140 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 4 | 进行中 | 45% |
+| 141 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 进行中 | 50% |
+| 142 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 4 | 进行中 | 45% |
+| 143 | `dropdown-button` | `action`、`button-group` | 3 | 0 | 3 | 进行中 | 80% |
+| 144 | `input-array` | `form`、`action`、`input-text`、`container` | 3 | 0 | 3 | 进行中 | 50% |
+| 145 | `button-group-select` | `Options`、`FormItem`、`button-group` | 3 | 0 | 3 | 进行中 | 55% |
+| 146 | `combo` | `form`、`action`、`container` | 3 | 0 | 3 | 进行中 | 50% |
+| 147 | `input-sub-form` | `form`、`action`、`service`、`container` | 3 | 0 | 3 | 进行中 | 45% |
+| 148 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 3 | 进行中 | 45% |
+| 149 | `transfer-picker` | `transfer`、`picker` | 3 | 0 | 3 | 进行中 | 45% |
+| 150 | `json-schema-editor` | `json-schema`、`form`、`action` | 3 | 0 | 3 | 进行中 | 30% |
+| 151 | `wizard` | `form`、`action`、`panel` | 3 | 0 | 3 | 进行中 | 80% |
+| 152 | `tabs-transfer-picker` | `tabs-transfer`、`picker` | 2 | 0 | 2 | 进行中 | 35% |
+| 153 | `calendar` | `action`、`dialog`、`tpl` | 2 | 0 | 2 | 进行中 | 85% |
+| 154 | `app` | `page`、`nav`、`service` | 0 | 0 | 0 | 进行中 | 80% |
 
----
 
 ## 附录：侧栏没有、Vamis 已注册
 
@@ -504,7 +538,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
   - `form/static`（55% → 65%）、`table`（50% → 55%）生成页滞后，已按 TODO 重新生成。
   - 文档地址两列导致 `website/scripts/gen-component-pages.mjs` 的 `parseTodo` 失配；已改为按 8 列解析并跳过 `（契约）`/`（动作 …）` 行。
   - 新增「实现标准」后复审：`page` 的 `pullRefresh` 未接，状态由「已完成」降为「进行中」；已完成 2 → 1、进行中 153 → 154。
-- 结论：155 项逐行百分比无需改动（`page` 仅状态降级）；差异集中在汇总数字、两页生成产物和生成器解析。
+- 优先级重算（2026-10-28）：原「先按深度分层、层内再按被依赖」会把 `pdf-viewer` 等无人依赖叶子排在 `action` 前面。改为 Kahn 拓扑 + 综合分 `S = 被依赖 × 8 + 深度`（脚本 `scripts/component-priority.mjs`）。`action` #5、`form` #49、`crud` #59、`page` #60；零被依赖从 #61 起。百分比未改。
+- 结论：155 项逐行百分比无需改动（`page` 仅状态降级）；差异集中在汇总数字、两页生成产物、生成器解析和依赖综合分。
 
 ---
 
