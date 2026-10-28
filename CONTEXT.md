@@ -52,24 +52,26 @@
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-10-27）
+## 当前进度（2026-10-28）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 53%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 54%；反馈均 80%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` / `spinner` / `alert` / `dialog` / `drawer` 80%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` / `cards` 70%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`（html/body 不钉字族）；浅色 `--border` 对齐 Amis `#e8e9eb`；Button 默认字重 400。`/style` 首页 **50%**，CSS 变量 **65%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 392 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **919**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 402 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **927**。`card` **5/5**、`cards` **4/4**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- Card 头像按 Amis `Card-avtar`：`max-width: 200px`、图随内容，不再钉 50×50（那是 avatarText）。底栏 actions 整格 hover（`#f7f8fa` + 主色字），去掉按钮描边。
+- 数据展示中档一批：`card` / `cards` 主路径 70%。Card：header 标题/副标题/描述/头像/`avatarText` hash 取色、`body` 字段或字符串、`useCardLabel` 默认 true、`actions`、`href` 优先于 `itemAction`、`media` 默认 left。Cards：`source` 默认 `$items`、空态「暂无数据」、`columnsCount`、`masonryLayout` CSS 分栏。对照 card **5/5**、cards **4/4**。缺勾选/拖拽。
 - 生产构建拆包：站点首页不再整包 monaco（约 4MB）/ echarts。文档 markdown 按页懒加载；路由拆 Doc / 示例 / 编辑器。SDK 仍 `<script src="sdk.js">`，内部改 ES chunks（`sdk.esm.js` gzip ~277KB），monaco / echarts 用到才拉。
 - `table2` 选择列 hover：未选边框变主色、已选/半选底变浅主色，勾选图标 0.2s scale；单选圆同样边框 hover。对齐 Amis Checkbox 各状态。
 - Calendar largeMode：跨日条点后一天只弹当天重叠日程（对齐 Amis `DaysView` 占位 `bg-transparent` 可点，payload 用当天 `scheduleData`）。Dialog 默认 `top: 60px`（`--Modal-content-startMarginTop`），不再垂直居中。
@@ -260,7 +262,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按复杂度串行分批）**：`table2` 主路径已到 70%。下一刀数据展示 **`card` / `cards`**（中档一批 2 个）；`carousel` 随后。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`。
+1. **组件同步（按复杂度串行分批）**：`card` / `cards` 主路径已到 70%。下一刀数据展示 **`carousel`**（中档，单独 1 个也可；若仍按中档 2 个则再带一个轻展示件）。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

@@ -94,6 +94,8 @@ const HANDWRITTEN = new Set([
   '/components/table-view',
   '/components/table2',
   '/components/calendar',
+  '/components/card',
+  '/components/cards',
   '/components/chart',
   '/components/code',
   '/components/form/editor',

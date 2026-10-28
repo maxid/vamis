@@ -80,6 +80,7 @@ const LAYOUT_SLOT_TYPES = new Set([
   'wizard',
   'tabs',
   'table',
+  'card',
   'cards',
   'list',
   'chart',

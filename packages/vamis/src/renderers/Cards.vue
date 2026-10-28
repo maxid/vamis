@@ -1,30 +1,124 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
+import {
+  SchemaRenderer,
+  cardsCardSchema,
+  cardsColumnsCount,
+  cardsFooter,
+  cardsHeader,
+  cardsMasonry,
+  cardsPlaceholder,
+  cardsPlaceholderNode,
+  cardsSource,
+  cardsTitle,
+  type SchemaObject,
+} from '@vamis/core'
 
-const props = defineProps<{ schema: SchemaObject; data: Record<string, any>; items?: Record<string, any>[] }>()
-const rows = computed(() => {
-  if (Array.isArray(props.items)) return props.items
-  const source = props.schema.source
-  if (typeof source === 'string' && source.includes('$')) {
-    const key = source.replace(/^\$\{?|\}$/g, '')
-    return Array.isArray(props.data?.[key]) ? props.data[key] : []
-  }
-  if (Array.isArray(props.data?.items)) return props.data.items
-  if (Array.isArray(props.data?.rows)) return props.data.rows
-  return asArray(props.schema.data || props.schema.items)
+const props = defineProps<{
+  schema: SchemaObject
+  data: Record<string, any>
+  items?: Record<string, any>[]
+}>()
+
+const rows = computed(() => cardsSource(props.schema, props.data || {}, props.items))
+const card = computed(() => cardsCardSchema(props.schema))
+const title = computed(() => cardsTitle(props.schema, props.data || {}))
+const masonry = computed(() => cardsMasonry(props.schema))
+const columnsCount = computed(() => cardsColumnsCount(props.schema))
+const placeholder = computed(() => cardsPlaceholder(props.schema))
+const placeholderNode = computed(() => cardsPlaceholderNode(props.schema))
+const header = computed(() => cardsHeader(props.schema))
+const footer = computed(() => cardsFooter(props.schema))
+const colsStyle = computed(() => {
+  if (!columnsCount.value) return undefined
+  return { '--cards-cols': String(columnsCount.value) } as Record<string, string>
 })
-const card = computed(() => (props.schema.card || { body: [{ type: 'tpl', tpl: '${name}' }] }) as SchemaObject)
 </script>
 
 <template>
-  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-    <SchemaRenderer
-      v-for="(row, i) in rows"
-      :key="i"
-      :schema="{ type: 'card', ...card }"
-      :extra-data="row"
-    />
-    <p v-if="!rows.length" class="text-xs text-muted-foreground">暂无卡片数据</p>
+  <div class="vamis-cards-wrap">
+    <div v-if="title" class="vamis-cards-title">{{ title }}</div>
+    <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="node" />
+    <div
+      v-if="rows.length"
+      class="vamis-cards"
+      :class="{
+        'is-masonry': masonry,
+        'is-count': columnsCount > 0,
+      }"
+      :style="colsStyle"
+    >
+      <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item">
+        <SchemaRenderer :schema="card" :extra-data="{ ...row, index: i }" />
+      </div>
+    </div>
+    <div v-else class="vamis-cards-placeholder">
+      <SchemaRenderer v-if="placeholderNode" :schema="placeholderNode" />
+      <template v-else>{{ placeholder }}</template>
+    </div>
+    <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="node" />
   </div>
 </template>
+
+<style>
+.vamis-cards-wrap {
+  width: 100%;
+}
+.vamis-cards-title {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.vamis-cards {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 992px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.vamis-cards.is-count {
+  grid-template-columns: repeat(var(--cards-cols, 1), minmax(0, 1fr));
+}
+.vamis-cards.is-masonry {
+  display: block;
+  column-count: var(--cards-cols, 4);
+  column-gap: 12px;
+}
+@media (max-width: 1199px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 3;
+  }
+}
+@media (max-width: 991px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 2;
+  }
+}
+@media (max-width: 767px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 1;
+  }
+}
+.vamis-cards.is-masonry .vamis-cards-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.vamis-cards-placeholder {
+  padding: 24px 8px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+</style>

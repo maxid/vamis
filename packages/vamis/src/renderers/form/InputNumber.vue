@@ -16,6 +16,13 @@ const value = computed({
 
 <template>
   <FormItem :schema="schema">
-    <Input v-model="value" type="number" :placeholder="schema.placeholder" :disabled="disabled" class="w-full" />
+    <Input
+      v-model="value"
+      type="number"
+      :name="schema.name"
+      :placeholder="schema.placeholder"
+      :disabled="disabled"
+      class="w-full"
+    />
   </FormItem>
 </template>

@@ -14067,12 +14067,503 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "card",
-      "body": [
-        {
-          "type": "card"
+      "body": {
+        "type": "card",
+        "header": {
+          "title": "标题",
+          "subTitle": "副标题",
+          "description": "这是一段描述",
+          "avatar": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+        },
+        "body": [
+          {
+            "type": "divider"
+          },
+          {
+            "type": "tpl",
+            "tpl": "Trident",
+            "inline": false,
+            "label": "Engine"
+          },
+          {
+            "name": "static",
+            "type": "static",
+            "label": "Browser",
+            "value": "Internet Explorer 5.0"
+          },
+          {
+            "type": "input-number",
+            "name": "version",
+            "label": "Version",
+            "size": "sm"
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "你删掉了该卡片"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "href": "https://github.com/baidu/amis",
+        "header": {
+          "title": "标题",
+          "subTitle": "副标题",
+          "description": "这是一段描述",
+          "avatar": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+        },
+        "useCardLabel": false,
+        "body": [
+          {
+            "type": "divider"
+          },
+          {
+            "type": "tpl",
+            "tpl": "Trident",
+            "inline": false,
+            "label": "Engine"
+          },
+          {
+            "name": "static",
+            "type": "static",
+            "label": "Browser",
+            "value": "Internet Explorer 5.0"
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "你删掉了该卡片"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "href": "https://github.com/baidu/amis",
+        "header": {
+          "title": "标题",
+          "subTitle": "副标题",
+          "description": "这是一段描述",
+          "avatarText": "AMIS"
+        },
+        "body": "这里是内容"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "itemAction": {
+          "type": "button",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "详情",
+            "body": "当前描述"
+          }
+        },
+        "header": {
+          "title": "标题",
+          "subTitle": "副标题",
+          "description": "这是一段描述",
+          "avatar": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+        },
+        "body": "这里是内容"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "header": {
+          "title": "标题"
+        },
+        "media": {
+          "type": "image",
+          "url": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80",
+          "position": "left"
+        },
+        "body": "这里是内容",
+        "secondary": "次要说明",
+        "actions": [
+          {
+            "type": "button",
+            "label": "操作",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "操作",
+              "body": "你正在编辑该卡片"
+            }
+          },
+          {
+            "type": "button",
+            "label": "操作",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "操作",
+              "body": "你正在编辑该卡片"
+            }
+          }
+        ],
+        "toolbar": [
+          {
+            "type": "tpl",
+            "tpl": "标签"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-0",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 4.0",
+            "version": "4"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.0",
+            "version": "5"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.5",
+            "version": "5.5"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 6",
+            "version": "6"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 7",
+            "version": "7"
+          }
+        ]
+      },
+      "body": {
+        "type": "cards",
+        "source": "$items",
+        "card": {
+          "body": [
+            {
+              "label": "Engine",
+              "name": "engine"
+            },
+            {
+              "label": "Browser",
+              "name": "browser"
+            },
+            {
+              "name": "version",
+              "label": "Version"
+            }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "level": "link",
+              "label": "查看详情",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "Engine",
+                      "name": "engine",
+                      "type": "static"
+                    },
+                    {
+                      "name": "browser",
+                      "label": "Browser",
+                      "type": "static"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version",
+                      "type": "static"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 4.0"
+          },
+          {
+            "engine": "Chrome",
+            "browser": "Chrome 44"
+          },
+          {
+            "engine": "Gecko",
+            "browser": "Firefox 1.0"
+          },
+          {
+            "engine": "Presto",
+            "browser": "Opera 10"
+          },
+          {
+            "engine": "Webkie",
+            "browser": "Safari 12"
+          }
+        ]
+      },
+      "body": {
+        "type": "cards",
+        "source": "$items",
+        "card": {
+          "header": {
+            "avatarText": "${engine}",
+            "avatarTextBackground": [
+              "#FFB900",
+              "#D83B01",
+              "#B50E0E",
+              "#E81123",
+              "#B4009E",
+              "#5C2D91",
+              "#0078D7",
+              "#00B4FF",
+              "#008272"
+            ]
+          },
+          "body": [
+            {
+              "label": "Browser",
+              "name": "browser"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "title": "风景如画的山水",
+            "description": "在这里，青山绿水相伴，让人心旷神怡。"
+          },
+          {
+            "title": "城市的日与夜",
+            "description": "灯火阑珊处，人来人往，演绎着城市的故事。繁华的街道上，每个人都在追逐着自己的梦想。"
+          },
+          {
+            "title": "美食的诱惑",
+            "description": "舌尖上的美味，让人流连忘返。"
+          },
+          {
+            "title": "旅行日记",
+            "description": "背起行囊，走过山山水水。每一次旅行都是一次心灵的沉淀。"
+          },
+          {
+            "title": "咖啡时光",
+            "description": "一杯咖啡，一本书，一个午后。"
+          },
+          {
+            "title": "艺术展览",
+            "description": "在艺术的殿堂里，每一幅作品都在诉说着自己的故事。"
+          }
+        ]
+      },
+      "body": {
+        "type": "cards",
+        "source": "$items",
+        "masonryLayout": true,
+        "columnsCount": 3,
+        "card": {
+          "header": {
+            "title": "${title}"
+          },
+          "body": "${description}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": []
+      },
+      "body": {
+        "type": "cards",
+        "source": "$items",
+        "card": {
+          "body": [
+            {
+              "label": "Engine",
+              "name": "engine"
+            }
+          ]
+        }
+      }
     },
     "measure": {
       "type": "tree"
