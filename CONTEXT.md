@@ -66,10 +66,12 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 416 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`toast` 对照 **11/11**（桌面+移动）。`card` **5/5**、`cards` **4/4**（移动 4/4）、`dialog` **5/5**（移动 5/5）、`drawer` **6/6**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 418 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`toast` 对照 **11/11**（桌面+移动）。`card` **5/5**、`cards` **4/4**（移动 4/4）、`dialog` **5/5**（移动 5/5）、`drawer` **6/6**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- Dialog 桌面宽度回归：窄屏适配时 `DialogContent` 被改成 `max-w-none`，再加运行时拼接 `min-[576px]:max-w-[500px]`（Tailwind 扫不到），桌面弹层拉满。改回完整字面量 `max-w-[500px]` + `.vamis-dialog--default { max-width: 500px }`，100% 只留在 `<576`。对照 `toastOpen` 只认 `.vamis-toast` 条目（空 Host 不算打开）。dialog 桌面+移动 **5/5**，toast **11/11**。动窄屏必须桌面+移动一起跑。
+- Toast 状态图标与 Alert 共用 lucide（`levelToFeedbackIcon`：info / circle-check / triangle-alert / octagon-x），不再另画一套 Amis `alert-*` SVG。
 - Toast 对齐 Amis：去掉 vue-sonner。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px`（对照「桌面」iframe 768 也是这档）走暗底居中、40px 图标、一次一条、3000ms。`center` 不再映射成 `top-center`。Host 挂 `VamisApp` 并 Teleport 到 body。
 - Dialog 窄屏对齐 Amis Modal `<576`：弹层拉满、底栏取消+确认横排均分（对照「移动」/ `m:`）。原先 Tailwind `sm:flex-row`（640）把按钮竖排且确认在上。
 - Dialog / Drawer 内 `type: form` 对齐 Amis `renderBody`：默认横排、`wrapWithPanel: false`、不画默认「提交」。浮层 data 按层压栈，关掉后不留上一张卡片的字段。Cards 点眼睛看详情时用当前卡片数据。
@@ -273,7 +275,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按复杂度串行分批）**：Toast 主路径已到 90%。下一刀数据展示 **`carousel`**（中档，单独 1 个也可；若仍按中档 2 个则再带一个轻展示件）。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`。
+1. **组件同步（按复杂度串行分批）**：Toast 主路径已到 90%；Dialog 桌面 500px 回归已修。下一刀数据展示 **`carousel`**（中档，单独 1 个也可；若仍按中档 2 个则再带一个轻展示件）。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

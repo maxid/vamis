@@ -54,7 +54,7 @@ export {
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { Separator } from './ui/separator'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
-export { Alert, AlertDescription, AlertTitle, levelToAlertVariant } from './ui/alert'
+export { Alert, AlertDescription, AlertTitle, levelToAlertVariant, levelToFeedbackIcon } from './ui/alert'
 export {
   Check,
   CircleCheckIcon,

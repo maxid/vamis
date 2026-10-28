@@ -33,16 +33,17 @@ describe('dialog defaults', () => {
     expect(dialogCloseOnOutside({ closeOnOutside: true })).toBe(true)
   })
 
-  it('maps size to max-width classes', () => {
-    expect(dialogSizeClass({})).toContain('500px')
-    expect(dialogSizeClass({})).toContain('min-[576px]:max-w-[500px]')
-    expect(dialogSizeClass({})).not.toContain('sm:max-w-[')
-    expect(dialogSizeClass({ size: 'sm' })).toContain('350px')
-    expect(dialogSizeClass({ size: 'md' })).toContain('800px')
-    expect(dialogSizeClass({ size: 'lg' })).toContain('1100px')
-    expect(dialogSizeClass({ size: 'xl' })).toContain('90%')
+  it('maps size to complete max-width class literals, not runtime templates', () => {
+    expect(dialogSizeClass({})).toBe('w-full max-w-[500px] vamis-dialog--default')
+    expect(dialogSizeClass({})).not.toContain('max-w-none')
+    expect(dialogSizeClass({})).not.toContain('${')
+    expect(dialogSizeClass({})).not.toContain('min-[576px]')
+    expect(dialogSizeClass({ size: 'sm' })).toContain('max-w-[350px]')
+    expect(dialogSizeClass({ size: 'md' })).toContain('max-w-[800px]')
+    expect(dialogSizeClass({ size: 'lg' })).toContain('max-w-[1100px]')
+    expect(dialogSizeClass({ size: 'xl' })).toContain('max-w-[90%]')
     expect(dialogSizeClass({ size: 'full' })).toContain('max-w-none')
-    expect(dialogSizeClass({ size: 'xs' })).toContain('200px')
+    expect(dialogSizeClass({ size: 'xs' })).toContain('max-w-[200px]')
   })
 
   it('reads title / body / default actions / custom width', () => {
@@ -96,6 +97,24 @@ describe('dialog defaults', () => {
     expect(css).toContain('@media (max-width: 575.98px)')
     expect(css).toContain("data-slot='dialog-footer'] [data-slot='button']")
     expect(css).toContain('height: 44px')
+  })
+
+  it('keeps desktop dialog 500px; 100% width only under 576', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    const content = readFileSync(resolve(here, '../../vamis-ui/src/ui/dialog/DialogContent.vue'), 'utf8')
+    const src = readFileSync(resolve(here, '../src/utils/dialog.ts'), 'utf8')
+    const mobileAt = css.indexOf('@media (max-width: 575.98px)')
+    const desktopAt = css.indexOf('.vamis-dialog--default')
+    expect(desktopAt).toBeGreaterThan(-1)
+    expect(mobileAt).toBeGreaterThan(desktopAt)
+    expect(css.slice(desktopAt, mobileAt)).toContain('max-width: 500px')
+    expect(css.slice(mobileAt)).toContain('max-width: none')
+    expect(content).not.toContain('max-w-none')
+    expect(src).not.toContain('min-[576px]:max-w-')
+    const fn = src.slice(src.indexOf('export function dialogSizeClass'), src.indexOf('export function dialogShowClose'))
+    expect(fn).toContain("max-w-[500px]")
+    expect(fn).not.toContain('${')
   })
 
   it('close button uses Amis data-tooltip 关闭 on the left', () => {

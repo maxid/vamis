@@ -117,6 +117,8 @@ describe('env.notify / toast', () => {
     expect(app).toContain('ToastHost')
     expect(message).toContain('vamis-toast--in')
     expect(message).toContain('vamis-toast--has-icon')
+    expect(message).toContain('levelToFeedbackIcon')
+    expect(message).not.toContain('viewBox="0 0 1024 1024"')
     expect(store).toContain('function claimToastHost')
   })
 
@@ -136,6 +138,7 @@ describe('env.notify / toast', () => {
     expect(envSrc).toContain('pushToast')
     const probe = readFileSync(resolve(here, '../../vamis-sdk/embed-case.html'), 'utf8')
     expect(probe).toContain('.vamis-toast')
+    expect(probe).not.toContain("[data-vamis-toast]")
   })
 
   it('editor canvas selection does not swallow action clicks', () => {

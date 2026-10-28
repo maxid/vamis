@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   alertActions,
@@ -46,5 +49,15 @@ describe('alert defaults', () => {
     expect(alertActions({})).toEqual([])
     expect(alertIconSrc({ icon: '/examples/static/logo.png' })).toBe('/examples/static/logo.png')
     expect(alertIconSrc({ icon: 'info-circle' })).toBe('')
+  })
+
+  it('shares lucide status icons with Toast', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const alert = readFileSync(resolve(here, '../../vamis/src/renderers/Alert.vue'), 'utf8')
+    const toast = readFileSync(resolve(here, '../../vamis/src/ToastMessage.vue'), 'utf8')
+    const ui = readFileSync(resolve(here, '../../vamis-ui/src/ui/alert/index.ts'), 'utf8')
+    expect(ui).toContain('export function levelToFeedbackIcon')
+    expect(alert).toContain('levelToFeedbackIcon')
+    expect(toast).toContain('levelToFeedbackIcon')
   })
 })

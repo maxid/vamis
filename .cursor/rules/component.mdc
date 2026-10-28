@@ -21,11 +21,11 @@ Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`�
 
 ## 轻提示 Toast
 
-对齐 Amis `Toast.tsx` / `_toast.scss`，不要用 vue-sonner 冒充。桌面：400px 白底、默认 `top-center`、bounce、状态色 `alert-*` 图标、可叠多条、无 `closeButton` 时点击关闭、hover 暂停超时。`isMobile()` = `matchMedia('(max-width: 768px)')`（对照「桌面」iframe ~768 也是这档）：暗底 `rgba(0,0,0,0.9)` 居中、40px 图标、同时只一条、3000ms、无关闭钮。`center` 是真实位置，不要映射成 `top-center`。Host 挂在 `VamisApp` 并 `Teleport` 到 `body`。
+对齐 Amis `Toast.tsx` / `_toast.scss`，不要用 vue-sonner 冒充。桌面：400px 白底、默认 `top-center`、bounce、状态图标与 Alert 共用 lucide（`levelToFeedbackIcon`）、可叠多条、无 `closeButton` 时点击关闭、hover 暂停超时。`isMobile()` = `matchMedia('(max-width: 768px)')`（对照「桌面」iframe ~768 也是这档）：暗底 `rgba(0,0,0,0.9)` 居中、40px 同一套图标、同时只一条、3000ms、无关闭钮。`center` 是真实位置，不要映射成 `top-center`。Host 挂在 `VamisApp` 并 `Teleport` 到 `body`。
 
 ## 浮层里的 Form
 
-Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。窄屏对齐 Amis Modal `media-breakpoint-down(sm)`（&lt;576px，对照「移动」/ helper `m:` 都落在这档）：弹层拉满、底栏按钮横排均分，不要用 Tailwind `sm:`（640px）把按钮竖排。
+Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。窄屏对齐 Amis Modal `media-breakpoint-down(sm)`（&lt;576px，对照「移动」/ helper `m:` 都落在这档）：弹层拉满、底栏按钮横排均分，不要用 Tailwind `sm:`（640px）把按钮竖排。**桌面默认 max-width 500px**；`width:100%` / `max-width:none` 只写在 `<576` 的 media query。禁止把 DialogContent 默认改成 `max-w-none`，禁止 `max-w-[${n}]` 运行时拼接（Tailwind 扫不到，桌面会被拉满）。改窄屏必须对照 `--page dialog` 桌面+移动。
 
 ## 默认自适应
 

@@ -11,25 +11,25 @@ export type DialogSize = '' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
 const DIALOG_SIZES = new Set<DialogSize>(['xs', 'sm', 'md', 'lg', 'xl', 'full'])
 
-const DIALOG_MAX: Record<Exclude<DialogSize, 'full'>, string> = {
-  '': '500px',
-  xs: '200px',
-  sm: '350px',
-  md: '800px',
-  lg: '1100px',
-  xl: '90%',
-}
-
 export function dialogSize(schema: unknown): DialogSize {
   const value = String(asRecord(schema).size ?? '')
   return DIALOG_SIZES.has(value as DialogSize) ? (value as DialogSize) : ''
 }
 
+/**
+ * 尺寸 class 必须是完整字面量，禁止运行时拼 Tailwind 任意值。
+ * 扫不到动态类时桌面会只剩 max-w-none 被拉满。
+ * 窄屏 100% 只写在 styles.css 的 576 以下 media query，不要把 DialogContent 默认改成 max-w-none。
+ */
 export function dialogSizeClass(schema: unknown): string {
   const size = dialogSize(schema)
-  if (size === 'full') return 'w-[calc(100%-60px)] h-[calc(100%-60px)] max-w-none min-[576px]:max-w-none'
-  const max = DIALOG_MAX[size]
-  return `w-full max-w-none min-[576px]:max-w-[${max}]`
+  if (size === 'full') return 'vamis-dialog--full w-[calc(100%-60px)] h-[calc(100%-60px)] max-w-none'
+  if (size === 'xs') return 'w-full max-w-[200px] vamis-dialog--xs'
+  if (size === 'sm') return 'w-full max-w-[350px] vamis-dialog--sm'
+  if (size === 'md') return 'w-full max-w-[800px] vamis-dialog--md'
+  if (size === 'lg') return 'w-full max-w-[1100px] vamis-dialog--lg'
+  if (size === 'xl') return 'w-full max-w-[90%] vamis-dialog--xl'
+  return 'w-full max-w-[500px] vamis-dialog--default'
 }
 
 export function dialogShowClose(schema: unknown): boolean {

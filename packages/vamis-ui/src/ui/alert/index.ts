@@ -1,5 +1,6 @@
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
+import { CircleCheckIcon, InfoIcon, OctagonXIcon, TriangleAlertIcon } from "@lucide/vue"
 
 export { default as Alert } from "./Alert.vue"
 export { default as AlertDescription } from "./AlertDescription.vue"
@@ -38,4 +39,13 @@ export function levelToAlertVariant(
   if (lv === "warning") return "warning"
   if (lv === "info") return "info"
   return "default"
+}
+
+/** Alert / Toast 共用一套 lucide 状态图标，不要各画一组 SVG。 */
+export function levelToFeedbackIcon(level?: unknown) {
+  const lv = String(level || "")
+  if (lv === "success") return CircleCheckIcon
+  if (lv === "warning") return TriangleAlertIcon
+  if (lv === "danger" || lv === "error") return OctagonXIcon
+  return InfoIcon
 }

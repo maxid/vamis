@@ -18,12 +18,9 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  CircleCheckIcon,
-  InfoIcon,
-  OctagonXIcon,
-  TriangleAlertIcon,
   XIcon,
   levelToAlertVariant,
+  levelToFeedbackIcon,
 } from '@vamis/ui'
 
 const props = defineProps<{
@@ -50,12 +47,7 @@ const showClose = computed(() => alertShowClose(props.schema))
 const iconSrc = computed(() => alertIconSrc(props.schema, data.value))
 const iconClass = computed(() => resolveClassName(props.schema.iconClassName, data.value))
 const closeClass = computed(() => resolveClassName(props.schema.closeButtonClassName, data.value))
-const levelIcon = computed(() => {
-  if (level.value === 'success') return CircleCheckIcon
-  if (level.value === 'warning') return TriangleAlertIcon
-  if (level.value === 'danger') return OctagonXIcon
-  return InfoIcon
-})
+const levelIcon = computed(() => levelToFeedbackIcon(level.value))
 
 function close() {
   open.value = false

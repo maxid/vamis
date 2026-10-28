@@ -583,8 +583,33 @@
   }
 }
 
+/* Dialog 桌面默认 500px（Amis Modal）。窄屏 100% 只写在下面 `<576`，不要把 DialogContent 默认改成 max-w-none。 */
+.vamis-dialog--default {
+  max-width: 500px;
+}
+.vamis-dialog--xs {
+  max-width: 200px;
+}
+.vamis-dialog--sm {
+  max-width: 350px;
+}
+.vamis-dialog--md {
+  max-width: 800px;
+}
+.vamis-dialog--lg {
+  max-width: 1100px;
+}
+.vamis-dialog--xl {
+  max-width: 90%;
+}
+.vamis-dialog--full {
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  max-width: none;
+}
+
 @media (max-width: 575.98px) {
-  [data-vamis-overlay='dialog'] {
+  [data-vamis-overlay='dialog']:not(.vamis-dialog--full) {
     width: 100%;
     max-width: none;
   }
@@ -748,6 +773,18 @@
 .vamis-toast--out {
   animation-name: vamiss-toast-out;
 }
+.vamis-toast--info .vamis-toast__icon {
+  color: var(--info);
+}
+.vamis-toast--success .vamis-toast__icon {
+  color: var(--success);
+}
+.vamis-toast--warning .vamis-toast__icon {
+  color: var(--warning);
+}
+.vamis-toast--error .vamis-toast__icon {
+  color: var(--destructive);
+}
 .vamis-toast__icon {
   display: inline-flex;
   text-rendering: auto;
@@ -832,6 +869,7 @@
   margin: var(--gap-base) 0;
   width: 40px;
   height: 40px;
+  color: #fff;
 }
 .vamis-toast-wrap.is-mobile .vamis-toast__icon > svg {
   width: 40px;
