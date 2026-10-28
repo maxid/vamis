@@ -449,29 +449,32 @@ function cellWidth(col: SchemaObject) {
   width: 14px;
   height: 14px;
   margin-left: 8px;
-  line-height: 21px;
   color: #b8babf;
   cursor: pointer;
 }
 .vamis-table2-sort-icon {
   display: none;
   position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 2;
   width: 13px;
   height: 21px;
   font-style: normal;
   cursor: pointer;
   fill: currentColor;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
 }
 .vamis-table2-sort-icon.is-active {
-  display: block;
+  display: flex;
 }
 .vamis-table2-sort-icon svg {
-  display: inline;
+  display: block;
   width: 13px;
   height: 13px;
   fill: currentColor;
-  vertical-align: baseline;
 }
 .vamis-table2-sort-icon.is-default.is-active {
   color: #b8babf;
