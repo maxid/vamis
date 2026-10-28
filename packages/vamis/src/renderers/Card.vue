@@ -209,6 +209,8 @@ async function onCardClick(event: MouseEvent) {
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+.vamis-card.is-media .vamis-card-main {
   justify-content: center;
 }
 .vamis-card-heading {
@@ -236,7 +238,7 @@ async function onCardClick(event: MouseEvent) {
   line-height: 50px;
   text-align: center;
   font-size: 18px;
-  text-transform: uppercase;
+  overflow: hidden;
 }
 .vamis-card-meta {
   flex: 1;

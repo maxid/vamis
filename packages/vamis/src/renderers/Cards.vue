@@ -115,7 +115,21 @@ const colsStyle = computed(() => {
     column-count: 4;
   }
 }
+.vamis-cards:not(.is-masonry) .vamis-cards-item {
+  display: flex;
+  min-width: 0;
+}
+.vamis-cards:not(.is-masonry) .vamis-cards-item > .vamis-node {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+.vamis-cards:not(.is-masonry) .vamis-card {
+  height: 100%;
+}
 .vamis-cards.is-masonry .vamis-cards-item {
+  display: block;
   break-inside: avoid;
   margin-bottom: 12px;
 }
