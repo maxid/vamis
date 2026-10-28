@@ -59,7 +59,7 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **55%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据展示均 54%；反馈均 84%；其他均 81%；`page` 已完成 95% / `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` 90%；`spinner` / `alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 75%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
+| 组件语义（侧栏 155） | 已完成 **1** / 进行中 154 / 未开始 0，平均 **59%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据输入均 48%；数据展示均 55%；反馈均 84%；其他均 81%；≥50% **108** 项；`page` 进行中 95%（未达标准：`pullRefresh`）/ `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` 90%；`spinner` / `alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 75%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`（html/body 不钉字族）；浅色 `--border` 对齐 Amis `#e8e9eb`；Button 默认字重 400。`/style` 首页 **50%**，CSS 变量 **65%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
@@ -70,6 +70,10 @@
 
 **最近交付**
 
+- 组件 TODO 增加「实现标准（强制）」：组件与文档必须对标或超越 amis 对等内容；`page` 因 `pullRefresh` 未接从「已完成」降为「进行中」，全局已完成 1 项（`container`）。
+- 组件 TODO 增加「依赖与优先级」：按 amis 主路径建 154 节点依赖图，叶子优先（#1 FormItem、#2 tpl、#3 icon），`crud` #150、`page` #153、`app` #154；补分层与全量执行顺序。
+- 组件进度核对（2026-10-28）：155 行逐项复核（注册 / 渲染器文件 / amis·vamis 文档页 / 行内「缺」项源码回查），重算分类与汇总为数据输入 48%、数据展示 55%、反馈 84%、合计 59%、≥50% 108；修正 `form/static`（65%）、`table`（55%）生成页，生成器 `parseTodo` 适配 8 列并保留 icon/image 手写页。
+- 组件 P0 TODO 每行补 `vamis 文档` / `amis 文档` 两列：vamis 相对 `http://localhost:5173`（`/components/...`），amis 相对 `http://localhost:8888`（`/zh-CN/components/...`）；无独立页标 `—`，附录按父文档归并。路径与 `website/src/components`、`../amis/docs/zh-CN/components` 文件逐一核对。
 - 修 `pnpm build`：Playground 不再让 Tailwind 解析 `@fortawesome/fontawesome-free`（会找不到包、还把 webfont base64 进 CSS）。Font Awesome 跟 SDK 一样构建后注入 `fontawesome.css`。
 - Image 增加 `thumbMode: h-stretch`（按 `height` 拉伸、宽度吃满父级）；`thumbMode` 走模板插值。Cards 瀑布流改成一张 `image`，用 `${index % 2 === 0 ? 'h-stretch' : 'cover'}` 混排，不再用 `visibleOn` 双节点。
 - 复合示例先补基础组件：Image 插值 `height`/`width`，只写 height 时宽度吃满卡片（瀑布流拉满）；默认仍是 110px 缩略图。Container 恢复 Amis `wrapperBody`（flex 也包一层），同级子 container 换行，不再用 `display:contents` 把作者/点赞挤成一行。Icon 外层 `inline-block`，和点赞数字同行。
@@ -282,7 +286,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步（按复杂度串行分批）**：Cards 瀑布流已用 `h-stretch` / `cover` 表达式混排。下一刀数据展示 **`carousel`** 前先把轮播用到的基础能力核对一遍。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。拖拽 / 动作表仍缺。
+1. **组件同步按依赖优先级推进，按实现标准验收**：先做叶子 #1–#32（`FormItem`、`tpl`、`icon`、`image`、`mapping`、`tag`…），再做 #33–#68 基础原子（`action`、`container`、`input-*`），`form` / `table` / `dialog` / `crud` / `page` 依次靠后；完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。原计划的 `carousel` 等展示件后移。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
 2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

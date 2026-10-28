@@ -5,8 +5,8 @@ outline: deep
 
 # Date 日期时间
 
-::: warning 实现进度 — · 进行中
-已按 type 注册；文档主路径仍在补齐。
+::: info 实现进度 60% · 进行中
+StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐
 :::
 
 `date` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

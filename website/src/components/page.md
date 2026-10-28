@@ -5,8 +5,8 @@ outline: deep
 
 # Page 页面
 
-::: tip 实现进度 95% · 已完成
-文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。根 / header / aside 用 `div` 组装（对齐 Amis）。`pullRefresh` 明确未接（Amis 仅移动端）。
+::: info 实现进度 95% · 进行中
+文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。根 / header / aside 用 `div` 组装（对齐 Amis）。按实现标准：`pullRefresh` 未接（Amis 仅移动端），未达 100%。
 :::
 
 `page` 是页面入口容器，对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

@@ -4,7 +4,7 @@
 
 按 **Amis 组件 type** 继续搬运；UI 原语用 **shadcn-vue / Tailwind**。不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。作者态和对齐 LCDP IR 不变。
 
-## 当前状态（2026-10-22）
+## 当前状态（2026-10-28）
 
 - 进度真源：[CONTEXT.md](CONTEXT.md)（任务结束必须回写完成状态与后续计划）。
 - 嵌入入口：Vue 用 `VamisRoot`；任意 HTML 用 JS SDK `vamis.embed`（`pnpm --filter @vamis/sdk build` → `packages/vamis-sdk/dist/sdk.js`）。
@@ -13,10 +13,10 @@
 - **组装容器**：schema 布局壳用 `div`（对齐 Amis）；Form 顶层 `<form>`，嵌套默认 `div`。见 `.cursor/rules/component.mdc`。
 - **作者态**：YAML 与 JSON 并列，不强制 YAML。
 - **在线文档**：组件 / 类型 / 概念 / 开始 / 样式 / 扩展页标题下显示「实现进度 · 完成状态」（已注册 ≠ 语义完成）。目录页（介绍、组件介绍）除外。
-- kernel D1 Scope、D3 API 管线、D4 事件对象 P0 已落地。
-- amis type 名称覆盖 **181 / 189（95.8%）**，剩 5 个 type 与 3 个别名。
-- 组件语义（侧栏 155）：已完成 **2**（`page` 95% / `container` 100%）/ 进行中 151 / 未开始 2，平均 **47%**。
-- `pnpm test`：formula 185 + core 175 + sdk 13；`pnpm build` 通过；`pnpm typecheck` 已通过。
+- kernel D1–D5 P0 已落地；D6 表单路径值、D8 诊断和 D7 渲染器 API 余项仍缺。
+- amis type 名称覆盖 **184 / 189（97.4%）**，剩 3 个 type 与 2 个别名。
+- 组件语义（侧栏 155）：已完成 **1**（`container` 100%）/ 进行中 154 / 未开始 0，平均 **59%**；`page` 95% 进行中（`pullRefresh` 未达实现标准）。
+- `pnpm test`：formula 185 + core 424 + sdk 49；`pnpm build` 通过；`pnpm typecheck` 已通过。
 - amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) 与 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。

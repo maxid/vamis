@@ -5,8 +5,8 @@ outline: deep
 
 # Static 静态展示
 
-::: info 实现进度 55% · 进行中
-能展示；`popOver`/`quickEdit` 无
+::: info 实现进度 65% · 进行中
+能展示；`popOver` 已接（字符串 / 对象 / 放大镜）。`quickEdit` 无
 :::
 
 `static` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

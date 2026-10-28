@@ -100,6 +100,8 @@ const HANDWRITTEN = new Set([
   '/components/code',
   '/components/form/editor',
   '/components/form/diff-editor',
+  '/components/icon',
+  '/components/image',
 ])
 
 function parseTodo(text) {
@@ -107,10 +109,12 @@ function parseTodo(text) {
   const map = {}
   for (const line of text.split('\n')) {
     const m = line.match(
-      /^\| `([^`]+)` \| [^|]+ \| (未开始|进行中|已完成) \| (\d+%) \| ([^|]+) \|/,
+      /^\| (.+?) \| [^|]+ \| [^|]+ \| [^|]+ \| (未开始|进行中|已完成) \| (\d+%) \| (.+?) \| P\d+ \|$/,
     )
     if (!m) continue
-    const keys = m[1].split('/').map((s) => s.replace(/`/g, '').trim()).filter(Boolean)
+    const typeCell = m[1].trim()
+    if (typeCell.startsWith('（')) continue
+    const keys = typeCell.replace(/`/g, '').split('/').map((s) => s.trim()).filter(Boolean)
     const rec = { status: m[2], progress: m[3], reason: m[4].trim() }
     for (const key of keys) map[key] = rec
   }
