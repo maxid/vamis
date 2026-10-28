@@ -66,10 +66,12 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 402 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **927**。`card` **5/5**、`cards` **4/4**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 403 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **927**。`card` **5/5**、`cards` **4/4**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- Dialog 关闭按钮 hover 出「关闭」提示：对齐 Amis `data-tooltip` / `data-position="left"`（Drawer 同样）。
+- Card 多媒体：图不再钉 `max-width: 180px`，走 `media.className`（文档主路径 `w-36 h-24`）；有 media/secondary 时底栏两个操作横排留缝，不挤成一列。
 - Card 头像按 Amis `Card-avtar`：`max-width: 200px`、图随内容，不再钉 50×50（那是 avatarText）。底栏 actions 整格 hover（`#f7f8fa` + 主色字），去掉按钮描边。
 - 数据展示中档一批：`card` / `cards` 主路径 70%。Card：header 标题/副标题/描述/头像/`avatarText` hash 取色、`body` 字段或字符串、`useCardLabel` 默认 true、`actions`、`href` 优先于 `itemAction`、`media` 默认 left。Cards：`source` 默认 `$items`、空态「暂无数据」、`columnsCount`、`masonryLayout` CSS 分栏。对照 card **5/5**、cards **4/4**。缺勾选/拖拽。
 - 生产构建拆包：站点首页不再整包 monaco（约 4MB）/ echarts。文档 markdown 按页懒加载；路由拆 Doc / 示例 / 编辑器。SDK 仍 `<script src="sdk.js">`，内部改 ES chunks（`sdk.esm.js` gzip ~277KB），monaco / echarts 用到才拉。

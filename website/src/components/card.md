@@ -134,6 +134,7 @@ header:
   title: 标题
 media:
   type: image
+  className: w-36 h-24
   url: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
   position: left
 body: 这里是内容

@@ -72,4 +72,15 @@ describe('dialog defaults', () => {
     expect(vue).not.toContain('top-[50%]')
     expect(vue).not.toContain('translate-y-[-50%]')
   })
+
+  it('close button uses Amis data-tooltip 关闭 on the left', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis-ui/src/ui/dialog/DialogContent.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(vue).toContain('data-tooltip="关闭"')
+    expect(vue).toContain('data-position="left"')
+    expect(css).toContain("[data-tooltip]::after")
+    expect(css).toContain("content: attr(data-tooltip)")
+    expect(css).toContain("[data-tooltip][data-position='left']::after")
+  })
 })

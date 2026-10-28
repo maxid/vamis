@@ -65,6 +65,7 @@ const media = computed(() => cardMedia(props.schema))
 const mediaPos = computed(() => cardMediaPosition(props.schema))
 const mediaKind = computed(() => cardMediaType(props.schema))
 const mediaUrl = computed(() => cardMediaUrl(props.schema, data.value))
+const mediaClass = computed(() => resolveClassName(media.value?.className, data.value))
 const bodyNodes = computed(() => cardBodyNodes(props.schema))
 const hasHeading = computed(
   () => !!(title.value || subTitle.value || description.value || avatar.value || avatarText.value || toolbar.value.length || highlight.value),
@@ -122,9 +123,9 @@ async function onCardClick(event: MouseEvent) {
     @click="onCardClick"
   >
     <div v-if="media && (mediaPos === 'left' || mediaPos === 'top')" class="vamis-card-media">
-      <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :src="mediaUrl" alt="" />
-      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :src="mediaUrl" controls />
-      <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :src="mediaUrl" />
+      <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :class="mediaClass" :src="mediaUrl" alt="" />
+      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :class="mediaClass" :src="mediaUrl" controls />
+      <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :class="mediaClass" :src="mediaUrl" />
     </div>
     <div class="vamis-card-main">
       <div v-if="hasHeading" class="vamis-card-heading">
@@ -171,9 +172,9 @@ async function onCardClick(event: MouseEvent) {
       </div>
     </div>
     <div v-if="media && (mediaPos === 'right' || mediaPos === 'bottom')" class="vamis-card-media">
-      <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :src="mediaUrl" alt="" />
-      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :src="mediaUrl" controls />
-      <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :src="mediaUrl" />
+      <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :class="mediaClass" :src="mediaUrl" alt="" />
+      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :class="mediaClass" :src="mediaUrl" controls />
+      <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :class="mediaClass" :src="mediaUrl" />
     </div>
   </div>
 </template>
@@ -194,7 +195,7 @@ async function onCardClick(event: MouseEvent) {
 .vamis-card.is-media-left,
 .vamis-card.is-media-right {
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
 }
 .vamis-card.is-media-right {
   flex-direction: row-reverse;
@@ -208,6 +209,7 @@ async function onCardClick(event: MouseEvent) {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 .vamis-card-heading {
   display: flex;
@@ -315,6 +317,11 @@ async function onCardClick(event: MouseEvent) {
 .vamis-card-actions-wrap {
   flex: 1;
   min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .vamis-card-actions {
   display: flex;
@@ -322,10 +329,23 @@ async function onCardClick(event: MouseEvent) {
   border-top: 1px solid var(--border);
   align-items: center;
 }
+.vamis-card.has-secondary .vamis-card-footer,
+.vamis-card.is-media .vamis-card-footer {
+  gap: 12px;
+  padding: 0 8px 8px;
+}
+.vamis-card.has-secondary .vamis-card-actions-wrap,
+.vamis-card.is-media .vamis-card-actions-wrap {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
 .vamis-card.has-secondary .vamis-card-actions,
 .vamis-card.is-media .vamis-card-actions {
   border-top: none;
   width: auto;
+  flex-wrap: nowrap;
+  gap: 12px;
   justify-content: flex-end;
 }
 .vamis-card-action {
@@ -343,6 +363,18 @@ async function onCardClick(event: MouseEvent) {
 .vamis-card.is-media .vamis-card-action {
   flex: none;
   border-right: none;
+}
+.vamis-card.has-secondary .vamis-card-action .vamis-node,
+.vamis-card.is-media .vamis-card-action .vamis-node {
+  height: auto;
+}
+.vamis-card.has-secondary .vamis-card-action [data-slot='button'],
+.vamis-card.is-media .vamis-card-action [data-slot='button'],
+.vamis-card.has-secondary .vamis-card-action button,
+.vamis-card.is-media .vamis-card-action button {
+  width: auto;
+  min-width: 48px;
+  padding: 0 12px;
 }
 .vamis-card-action .vamis-node {
   display: block;
@@ -382,8 +414,6 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card-media-img {
   display: block;
-  max-width: 180px;
-  height: auto;
   object-fit: cover;
   border-radius: var(--radius);
 }

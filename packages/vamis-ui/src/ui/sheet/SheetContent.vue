@@ -57,6 +57,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
       <DialogClose
         v-if="showCloseButton"
+        data-slot="sheet-close"
+        data-tooltip="关闭"
+        data-position="left"
         class="ring-offset-background focus-visible:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus:outline-hidden disabled:pointer-events-none"
         aria-label="关闭"
       >
