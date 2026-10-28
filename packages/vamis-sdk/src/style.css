@@ -1,5 +1,4 @@
 @import "@vamis/ui/styles.css";
-@import "vue-sonner/style.css";
 
 @source "../../vamis/**/*.{vue,ts}";
 @source "../../vamis-core/**/*.{vue,ts}";

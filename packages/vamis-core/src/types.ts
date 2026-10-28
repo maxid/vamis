@@ -138,6 +138,8 @@ export type NotifyConf = {
   closeButton?: boolean
   showIcon?: boolean
   allowHtml?: boolean
+  /** 对齐 Amis Toast `mobileUI`；缺省时按 `isMobileToast()`（max-width 768）。 */
+  mobile?: boolean
 }
 
 export interface RendererEnv {

@@ -5,8 +5,8 @@ outline: deep
 
 # Toast 轻提示
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`、`timeout`、`closeButton` / `showIcon`、`allowHtml`。缺 `mobileUI` 切 center/3000、`center` 像素级（现映射 `top-center`）、schema 节点 body。
+::: info 实现进度 90% · 进行中
+文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce；`max-width: 768px` 走暗底居中、一次一条、3000ms。缺 schema 节点 body。
 :::
 
 点击按钮弹出轻提示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -30,7 +30,7 @@ toast:
 
 ## 设置位置
 
-默认 `top-center`。可用 `top-right` / `top-center` / `top-left` / `bottom-center` / `bottom-left` / `bottom-right` / `center`（`center` 目前落到 `top-center`）。
+默认 `top-center`。可用 `top-right` / `top-center` / `top-left` / `bottom-center` / `bottom-left` / `bottom-right` / `center`。窄屏（`max-width: 768px`，对齐 Amis `isMobile()`）未写 `position` 时落到 `center`。
 
 ```schema: scope="body"
 type: button
@@ -215,6 +215,5 @@ toast:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 默认超时跟 Amis **源码** 4000 / error 6000，不是文档写的 5000。
-- `center` 目前映射 `top-center`；`mobileUI` 未切默认位置和 3000ms。
+- 默认超时跟 Amis **源码** 4000 / error 6000，不是文档写的 5000。窄屏未写 `timeout` 时 3000。
 - `title` / `body` 目前只吃字符串或带 `tpl` 的节点，不渲染任意 schema 子树。

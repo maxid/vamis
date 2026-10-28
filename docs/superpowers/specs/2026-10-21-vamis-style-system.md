@@ -225,7 +225,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 - Alert `level` → `levelToAlertVariant`（default / success / warning / info / destructive）
 - Status 值 `success|fail|pending|running|info` → Badge 同名语义色
-- `env.notify` → vue-sonner，Toaster 绑定 `--success-*` / `--error-*` / `--warning-*` / `--info-*`
+- `env.notify` → ToastHost（对齐 Amis Toast：桌面 400px 白底 bounce；`max-width: 768px` 暗底居中）
 
 ### 4.3 表单 / 表格
 

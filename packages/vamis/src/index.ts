@@ -2,6 +2,7 @@ import './register'
 
 export { default as VamisRoot } from './VamisApp.vue'
 export { default as OverlayHost } from './OverlayHost.vue'
+export { default as ToastHost } from './ToastHost.vue'
 export { default as Code } from './renderers/display/Code.vue'
 export { default as Editor } from './renderers/form/Editor.vue'
 export { mountCodeEditor, mountFormEditor, mountDiffEditor } from './renderers/display/code-highlight'

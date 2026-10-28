@@ -442,6 +442,8 @@
 
         function toastOpen() {
           return !!(
+            document.querySelector('.vamis-toast') ||
+            document.querySelector('[data-vamis-toast]') ||
             document.querySelector('[data-sonner-toast]') ||
             document.querySelector('.cxd-Toast') ||
             document.querySelector('.cxd-Notification') ||

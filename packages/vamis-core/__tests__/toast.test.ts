@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  isMobileToast,
   toastNotices,
   toastPosition,
   toastTimeout,
@@ -94,4 +95,20 @@ describe('toast notices', () => {
       allowHtml: false,
     })
   })
+
+  it('mobile notices default center / 3000 but keep explicit position', () => {
+    expect(toastNotices({ actionType: 'toast', msg: 'hi' }, {}, true)[0]).toMatchObject({
+      position: 'center',
+      timeout: 3000,
+    })
+    expect(
+      toastNotices(
+        { actionType: 'toast', toast: { position: 'top-left', items: [{ body: '角落' }] } },
+        {},
+        true,
+      )[0],
+    ).toMatchObject({ position: 'top-left', timeout: 3000, body: '角落' })
+    expect(typeof isMobileToast()).toBe('boolean')
+  })
 })
+

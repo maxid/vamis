@@ -1,7 +1,14 @@
 /** Toast 动作。对齐 Amis：items / position / timeout / closeButton / showIcon / allowHtml。 */
 
 import { filterTpl } from '../formula'
-import type { PlainObject } from '../types'
+import type { NotifyConf, NotifyType, PlainObject } from '../types'
+
+/** 对齐 Amis `isMobile()`：`max-width: 768px`。对照桌面 iframe ~768 也走 Toast-mobile。 */
+export function isMobileToast(): boolean {
+  const media = (globalThis as { matchMedia?: (query: string) => { matches: boolean } }).matchMedia
+  if (typeof media !== 'function') return false
+  return media('(max-width: 768px)').matches
+}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -46,6 +53,7 @@ export type ToastConf = {
   showIcon?: boolean
   title?: string
   allowHtml?: boolean
+  mobile?: boolean
 }
 
 export function toastPosition(value?: unknown, mobile = false): ToastPosition {
@@ -118,12 +126,7 @@ export function toastNotices(action: unknown, data: PlainObject = {}, mobile = f
   return [noticeFrom({}, parent, data, mobile)]
 }
 
-export function sonnerPosition(value?: unknown): Exclude<ToastPosition, 'center'> {
-  const place = toastPosition(value)
-  return place === 'center' ? 'top-center' : place
-}
-
-export function toastNotifyConf(notice: ToastNotice): ToastConf {
+export function toastNotifyConf(notice: ToastNotice, mobile = false): ToastConf {
   return {
     position: notice.position,
     timeout: notice.timeout,
@@ -131,5 +134,18 @@ export function toastNotifyConf(notice: ToastNotice): ToastConf {
     showIcon: notice.showIcon,
     title: notice.title || undefined,
     allowHtml: notice.allowHtml,
+    mobile,
+  }
+}
+
+/** 抽出 notices 并 `env.notify`。移动端默认 center / 3000，且一次只留一条。 */
+export function notifyToasts(
+  notify: (type: NotifyType, msg: string, conf?: NotifyConf) => void,
+  action: unknown,
+  data: PlainObject = {},
+) {
+  const mobile = isMobileToast()
+  for (const notice of toastNotices(action, data, mobile)) {
+    notify(notice.level, notice.body || notice.title || '提示', toastNotifyConf(notice, mobile))
   }
 }

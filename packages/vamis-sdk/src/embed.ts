@@ -1,6 +1,5 @@
 import { createApp, h, nextTick, reactive, ref } from 'vue'
 import { createPinia } from 'pinia'
-import { Toaster } from '@vamis/ui'
 import {
   VamisRoot,
   createDefaultEnv,
@@ -102,7 +101,6 @@ export function embed(
             data: state.data,
             env: state.env,
           }),
-          h(Toaster, { position: (env?.toastPosition as 'top-center') || 'top-center' }),
         ])
     },
   })

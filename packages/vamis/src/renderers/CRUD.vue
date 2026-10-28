@@ -8,8 +8,7 @@ import {
   filterTpl,
   isApiOutdated,
   overlayEmbedForm,
-  toastNotices,
-  toastNotifyConf,
+  notifyToasts,
   requestApi,
   useEnv,
   useRendererHub,
@@ -134,9 +133,7 @@ function withDialogReload(body: unknown, reloadTarget: unknown, row: Record<stri
 async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
   const actionType = button.actionType
   if (actionType === 'toast') {
-    for (const notice of toastNotices(button, row)) {
-      env.notify(notice.level, notice.body || notice.title || '提示', toastNotifyConf(notice))
-    }
+    notifyToasts(env.notify, button, row)
     return
   }
   if (actionType === 'dialog' || button.dialog) {

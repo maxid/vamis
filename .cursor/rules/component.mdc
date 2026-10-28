@@ -19,6 +19,10 @@ Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`�
 
 禁止：组装壳用 landmark 标签（宿主 `header {}` 会漏进 embed）；输出嵌套 HTML `<form>`；把 SchemaRenderer 外层改成非 `div`。
 
+## 轻提示 Toast
+
+对齐 Amis `Toast.tsx` / `_toast.scss`，不要用 vue-sonner 冒充。桌面：400px 白底、默认 `top-center`、bounce、状态色 `alert-*` 图标、可叠多条、无 `closeButton` 时点击关闭、hover 暂停超时。`isMobile()` = `matchMedia('(max-width: 768px)')`（对照「桌面」iframe ~768 也是这档）：暗底 `rgba(0,0,0,0.9)` 居中、40px 图标、同时只一条、3000ms、无关闭钮。`center` 是真实位置，不要映射成 `top-center`。Host 挂在 `VamisApp` 并 `Teleport` 到 `body`。
+
 ## 浮层里的 Form
 
 Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。窄屏对齐 Amis Modal `media-breakpoint-down(sm)`（&lt;576px，对照「移动」/ helper `m:` 都落在这档）：弹层拉满、底栏按钮横排均分，不要用 Tailwind `sm:`（640px）把按钮竖排。

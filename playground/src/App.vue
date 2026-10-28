@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { Button, Toaster } from '@vamis/ui'
+import { Button } from '@vamis/ui'
 import SiteSearch from './components/SiteSearch.vue'
 import { withBase } from './docs/base'
 
@@ -168,6 +168,5 @@ watch([dark, density, accent], () => {
         <component :is="Component" class="min-h-0 flex-1" />
       </RouterView>
     </main>
-    <Toaster position="top-center" :offset="72" />
   </div>
 </template>

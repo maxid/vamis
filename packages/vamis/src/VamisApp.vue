@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { VamisRoot } from '@vamis/core'
 import OverlayHost from './OverlayHost.vue'
+import ToastHost from './ToastHost.vue'
 import type { PlainObject, RendererEnv, ScopedContext } from '@vamis/core'
 
 defineProps<{
@@ -21,5 +22,6 @@ defineExpose({
 <template>
   <VamisRoot ref="rootRef" :schema="schema" :data="data" :env="env">
     <OverlayHost />
+    <ToastHost />
   </VamisRoot>
 </template>

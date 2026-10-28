@@ -1,7 +1,5 @@
 import { createPinia } from 'pinia'
 import DefaultTheme from 'vitepress/theme'
-import { h } from 'vue'
-import { Toaster } from '@vamis/ui'
 import 'vamis'
 import SchemaPreview from './components/SchemaPreview.vue'
 import CodeFence from './components/CodeFence.vue'
@@ -10,11 +8,7 @@ import type { Theme } from 'vitepress'
 
 export default {
   extends: DefaultTheme,
-  Layout() {
-    return h(DefaultTheme.Layout, null, {
-      'layout-bottom': () => h(Toaster, { position: 'top-center' }),
-    })
-  },
+  Layout: DefaultTheme.Layout,
   enhanceApp({ app }) {
     app.use(createPinia())
     app.component('SchemaPreview', SchemaPreview)
