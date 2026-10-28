@@ -21,7 +21,7 @@ Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`�
 
 ## 浮层里的 Form
 
-Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。
+Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody` / `Drawer.renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`，作者字段覆盖。`wrapWithPanel: false` 且未写 `actions` 时不要画默认「提交」。浮层 `data` 按层压栈，关掉后恢复上一层，不要把上一张卡片的字段留在 `state.data`。窄屏对齐 Amis Modal `media-breakpoint-down(sm)`（&lt;576px，对照「移动」/ helper `m:` 都落在这档）：弹层拉满、底栏按钮横排均分，不要用 Tailwind `sm:`（640px）把按钮竖排。
 
 ## 默认自适应
 

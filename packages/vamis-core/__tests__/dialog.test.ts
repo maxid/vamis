@@ -35,6 +35,8 @@ describe('dialog defaults', () => {
 
   it('maps size to max-width classes', () => {
     expect(dialogSizeClass({})).toContain('500px')
+    expect(dialogSizeClass({})).toContain('min-[576px]:max-w-[500px]')
+    expect(dialogSizeClass({})).not.toContain('sm:max-w-[')
     expect(dialogSizeClass({ size: 'sm' })).toContain('350px')
     expect(dialogSizeClass({ size: 'md' })).toContain('800px')
     expect(dialogSizeClass({ size: 'lg' })).toContain('1100px')
@@ -69,7 +71,7 @@ describe('dialog defaults', () => {
     expect(dialogActions({ actions: [{ type: 'button', label: '自定义' }] })).toEqual([
       { type: 'button', label: '自定义' },
     ])
-    expect(overlayFrameStyle({}, 'dialog')).toEqual({ maxWidth: '500px' })
+    expect(overlayFrameStyle({}, 'dialog')).toEqual({})
     expect(overlayFrameStyle({ width: 320, height: 200 }, 'dialog')).toEqual({
       maxWidth: '320px',
       height: '200px',
@@ -82,6 +84,18 @@ describe('dialog defaults', () => {
     expect(vue).toContain('top-[60px]')
     expect(vue).not.toContain('top-[50%]')
     expect(vue).not.toContain('translate-y-[-50%]')
+  })
+
+  it('keeps overlay footer in a row on mobile, matching Amis down(sm)', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const footer = readFileSync(resolve(here, '../../vamis-ui/src/ui/dialog/DialogFooter.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(footer).toContain('flex-row')
+    expect(footer).not.toContain('flex-col-reverse')
+    expect(footer).not.toContain('sm:flex-row')
+    expect(css).toContain('@media (max-width: 575.98px)')
+    expect(css).toContain("data-slot='dialog-footer'] [data-slot='button']")
+    expect(css).toContain('height: 44px')
   })
 
   it('close button uses Amis data-tooltip 关闭 on the left', () => {

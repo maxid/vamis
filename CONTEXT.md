@@ -66,10 +66,11 @@
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 409 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`card` **5/5**、`cards` **4/4**、`dialog` **5/5**、`drawer` **6/6**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 410 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`card` **5/5**、`cards` **4/4**（移动 4/4）、`dialog` **5/5**（移动 5/5）、`drawer` **6/6**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- Dialog 窄屏对齐 Amis Modal `<576`：弹层拉满、底栏取消+确认横排均分（对照「移动」/ `m:`）。原先 Tailwind `sm:flex-row`（640）把按钮竖排且确认在上。
 - Dialog / Drawer 内 `type: form` 对齐 Amis `renderBody`：默认横排、`wrapWithPanel: false`、不画默认「提交」。浮层 data 按层压栈，关掉后不留上一张卡片的字段。Cards 点眼睛看详情时用当前卡片数据。
 - 图标对齐 Amis：`resolveIcon`（含 `.` 当图片、`<svg` 内联、否则 class）；Font Awesome + v4-shims 打进 `sdk.css`；删掉 CSS mask 画 `fa-*`。规则写入 `style.mdc` / `component.mdc`。
 - Action 未写 `label` 不再补「按钮」（对齐 Amis：有 icon 就只画图标）。Cards 基本用法改回 `icon: fa fa-eye`。

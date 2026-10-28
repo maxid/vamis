@@ -572,6 +572,33 @@
     content: '';
     display: none !important;
   }
+
+  /* Amis Modal `media-breakpoint-down(sm)` = <576。对照「移动」/ helper `m:` 都落在这档。
+     底栏始终横排；窄屏按钮均分、高 44px。不要用 Tailwind `sm:`（640）把按钮竖起来。 */
+  [data-slot='dialog-footer'] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 575.98px) {
+  [data-vamis-overlay='dialog'] {
+    width: 100%;
+    max-width: none;
+  }
+  [data-slot='dialog-footer'] > .vamis-node {
+    display: block;
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+  [data-slot='dialog-footer'] [data-slot='button'] {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: 44px;
+  }
 }
 
 @media (min-width: 576px) {

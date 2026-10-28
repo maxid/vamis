@@ -6,7 +6,7 @@ outline: deep
 # Dialog 对话框
 
 ::: info 实现进度 85% · 进行中
-文档主路径已对齐：`actionType: dialog` 打开 overlay、`title` / `body`、`size` xs–full（默认 500px）、`showCloseButton`（默认 true）、`closeOnEsc` / `closeOnOutside`（默认 false）、未写 `actions` 则取消+确认、嵌套弹层按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover 出「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal。
+文档主路径已对齐：`actionType: dialog` 打开 overlay、`title` / `body`、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton`（默认 true）、`closeOnEsc` / `closeOnOutside`（默认 false）、未写 `actions` 则取消+确认、嵌套弹层按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。窄屏（&lt;576 / 对照「移动」）弹层拉满、底栏取消+确认横排均分。关闭按钮 hover 出「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal。
 :::
 
 Dialog 主要由 [Action](./action) 的 `actionType: dialog` 触发。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

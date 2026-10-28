@@ -27,9 +27,9 @@ export function dialogSize(schema: unknown): DialogSize {
 
 export function dialogSizeClass(schema: unknown): string {
   const size = dialogSize(schema)
-  if (size === 'full') return 'w-[calc(100%-60px)] h-[calc(100%-60px)] max-w-none sm:max-w-none'
+  if (size === 'full') return 'w-[calc(100%-60px)] h-[calc(100%-60px)] max-w-none min-[576px]:max-w-none'
   const max = DIALOG_MAX[size]
-  return `max-w-[${max}] sm:max-w-[${max}]`
+  return `w-full max-w-none min-[576px]:max-w-[${max}]`
 }
 
 export function dialogShowClose(schema: unknown): boolean {
@@ -125,8 +125,6 @@ export function overlayFrameStyle(
       style.width = 'calc(100% - 60px)'
       style.height = 'calc(100% - 60px)'
       style.maxWidth = 'none'
-    } else {
-      style.maxWidth = DIALOG_MAX[size]
     }
     if (rec.width != null && rec.width !== '') style.maxWidth = cssLen(rec.width)
     if (rec.height != null && rec.height !== '') style.height = cssLen(rec.height)
