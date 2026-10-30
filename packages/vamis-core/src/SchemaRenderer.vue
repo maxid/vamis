@@ -163,7 +163,7 @@ async function onHostEvent(native: Event, eventName: string) {
     :draggable="canDrag"
     :class="[
       'vamis-node',
-      fillsLayoutSlot(normalized.type) ? 'w-full min-w-0' : '',
+      fillsLayoutSlot(normalized.type) && !schemaNodeDisplayClass(normalized) ? 'w-full min-w-0' : '',
       schemaNodeDisplayClass(normalized),
       nodeClass,
       editor && editorPath != null

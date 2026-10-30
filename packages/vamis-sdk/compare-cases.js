@@ -10010,6 +10010,89 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "input-text",
+            "label": "文本框",
+            "name": "text"
+          },
+          {
+            "type": "input-password",
+            "label": "密码",
+            "name": "password"
+          }
+        ],
+        "submitText": null,
+        "actions": []
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "title": "",
+        "mode": "horizontal",
+        "autoFocus": false,
+        "body": [
+          {
+            "type": "input-text",
+            "label": "常规",
+            "name": "text1"
+          },
+          {
+            "type": "input-text",
+            "label": "内联",
+            "name": "text2",
+            "mode": "inline"
+          },
+          {
+            "type": "input-text",
+            "label": "内联2",
+            "name": "text3",
+            "mode": "inline"
+          }
+        ],
+        "submitText": null,
+        "actions": []
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "title": "",
+        "mode": "horizontal",
+        "autoFocus": false,
+        "body": [
+          {
+            "type": "input-text",
             "name": "name",
             "label": "名称",
             "description": "没写 size，默认铺满"
@@ -10027,6 +10110,709 @@ window.VAMIS_COMPARE_CASES = [
         ],
         "submitText": null,
         "actions": []
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "常规",
+            "name": "text1",
+            "placeholder": "常规标签"
+          },
+          {
+            "type": "input-text",
+            "label": "",
+            "name": "text2",
+            "placeholder": "不显示标签"
+          },
+          {
+            "type": "input-text",
+            "label": false,
+            "name": "text3",
+            "placeholder": "不显示标签且清除空间"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "无标签提示",
+            "name": "text1"
+          },
+          {
+            "type": "input-text",
+            "label": "有标签提示",
+            "labelRemark": "这是一段提示",
+            "name": "text2"
+          },
+          {
+            "type": "input-text",
+            "label": "更复杂的标签提示",
+            "labelRemark": {
+              "type": "remark",
+              "title": "提示",
+              "content": "first second ${text1}"
+            },
+            "name": "text3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "常规",
+            "name": "text1"
+          },
+          {
+            "type": "input-text",
+            "label": "禁用",
+            "name": "text2",
+            "disabled": true
+          },
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "disabledOn": "this.number > 1",
+            "description": "数量大于 1 时禁用"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "常规",
+            "name": "text1"
+          },
+          {
+            "type": "input-text",
+            "label": "隐藏",
+            "name": "text2",
+            "hidden": true
+          },
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "hiddenOn": "this.number > 1",
+            "description": "数量大于 1 时隐藏"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "labelWidth": 220,
+        "body": [
+          {
+            "type": "input-text",
+            "label": "静态",
+            "name": "text1",
+            "value": "text1的值",
+            "static": true
+          },
+          {
+            "type": "input-text",
+            "label": "输入态",
+            "name": "text2",
+            "value": "text2的值"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "labelWidth": 220,
+        "body": [
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "staticOn": "this.number > 1",
+            "value": "text value",
+            "description": "数量大于 1 时变成静态"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "labelWidth": 220,
+        "body": [
+          {
+            "type": "input-text",
+            "name": "var3",
+            "label": "自定义展示态schema",
+            "value": "表单项value",
+            "static": true,
+            "staticSchema": [
+              "自定义前缀 | ",
+              {
+                "type": "tpl",
+                "tpl": "${var3}"
+              },
+              " | 自定义后缀"
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-10",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "姓名",
+            "name": "person.name"
+          },
+          {
+            "type": "tpl",
+            "tpl": "数据域 person.name = ${person.name}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-11",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "data": {
+          "item1": "hello world!",
+          "item2": "hello amis!",
+          "item3": "hello amis-editor!"
+        },
+        "body": [
+          {
+            "type": "input-text",
+            "label": "test1",
+            "name": "test1",
+            "value": "123",
+            "description": "普通 value 默认值"
+          },
+          {
+            "type": "input-text",
+            "label": "test2",
+            "name": "item1",
+            "description": "关联数据域中的 item1"
+          },
+          {
+            "type": "input-text",
+            "label": "test3",
+            "name": "item2",
+            "value": "345",
+            "description": "非 value 表达式，优先使用 name 映射"
+          },
+          {
+            "type": "input-text",
+            "label": "test4",
+            "name": "test4",
+            "value": "${item3}",
+            "description": "value 表达式优先级最高"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-12",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "value": "这是一段文本",
+            "hiddenOn": "this.number > 1",
+            "clearValueOnHidden": true,
+            "description": "数量大于 1 时隐藏，并从数据域删除 text"
+          },
+          {
+            "type": "tpl",
+            "tpl": "text = ${text}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-13",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "requiredOn": "this.number > 1",
+            "description": "数量大于 1 时必填"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-14",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "validations": "minLength:2,isAlphanumeric",
+            "validationErrors": {
+              "minLength": "请至少输入两个字符",
+              "isAlphanumeric": "只能包含字母或数字"
+            },
+            "validateOnChange": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-15",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #16",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveFormFailed?waitSeconds=1",
+        "body": [
+          {
+            "name": "test2",
+            "type": "input-text",
+            "label": "服务端验证"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-16",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #17",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "name",
+            "type": "input-text",
+            "name": "name",
+            "required": true,
+            "validateApi": "/api/mock2/form/formitemFailed"
+          },
+          {
+            "label": "email",
+            "type": "input-text",
+            "name": "email",
+            "validateApi": "/api/mock2/form/formitemSuccess",
+            "required": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-17",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "浏览器",
+            "name": "browser",
+            "autoFill": {
+              "showSuggestion": false,
+              "fillMapping": {
+                "browser": "${browser}",
+                "version": "${version}",
+                "platform": "${platform1}"
+              },
+              "api": {
+                "url": "/api/mock2/form/autoUpdate?browser=${browser}",
+                "responseData": {
+                  "browser": "${browser}",
+                  "version": "${version}",
+                  "platform1": "${platform}"
+                },
+                "silent": false
+              }
+            }
+          },
+          {
+            "type": "input-text",
+            "label": "版本",
+            "name": "version"
+          },
+          {
+            "type": "input-text",
+            "label": "平台",
+            "name": "platform"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-18",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #19",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "姓名",
+            "name": "name",
+            "autoFill": {
+              "greet": "你好，${name}"
+            }
+          },
+          {
+            "type": "input-text",
+            "label": "问候",
+            "name": "greet"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-19",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #20",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "select",
+            "label": "类型",
+            "name": "type",
+            "options": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "type": "textarea",
+            "name": "version",
+            "disabled": true,
+            "description": "Type is ${type}"
+          }
+        ]
       }
     },
     "measure": {
@@ -14858,12 +15644,10 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "html",
-      "body": [
-        {
-          "type": "html"
-        }
-      ]
+      "body": {
+        "type": "html",
+        "html": "支持 <code>Html</code>"
+      }
     },
     "measure": {
       "type": "tree"
@@ -14906,7 +15690,219 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "icon",
+        "icon": "cloud",
+        "className": "text-info text-xl"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "icon",
         "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "icon",
+          "icon": "far fa-address-book",
+          "vendor": ""
+        },
+        {
+          "type": "icon",
+          "icon": "fas fa-address-book",
+          "vendor": ""
+        },
+        {
+          "type": "icon",
+          "icon": "far fa-address-book",
+          "vendor": "",
+          "className": "text-info text-xl"
+        },
+        {
+          "type": "icon",
+          "icon": "fas fa-address-book",
+          "vendor": "",
+          "className": "text-info text-xl"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "icon",
+          "icon": "fa-regular fa-address-book",
+          "vendor": ""
+        },
+        {
+          "type": "icon",
+          "icon": "fa-solid fa-address-book",
+          "vendor": ""
+        },
+        {
+          "type": "icon",
+          "icon": "fa-regular fa-address-book",
+          "vendor": "",
+          "className": "text-info text-xl"
+        },
+        {
+          "type": "icon",
+          "icon": "fa-solid fa-address-book",
+          "vendor": "",
+          "className": "text-info text-xl"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "icon",
+        "icon": "cloud",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.target.className}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "icon",
+        "icon": "cloud",
+        "onEvent": {
+          "mouseenter": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-icon-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Icon 图标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Icon 图标 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "icon",
+        "icon": "cloud",
+        "onEvent": {
+          "mouseleave": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
       }
     },
     "measure": {
@@ -15367,13 +16363,142 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "tpl",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "Hello ${name|default:Vamis}"
+      "data": {
+        "text": "World!"
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "Hello ${text}"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tpl-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tpl 模板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tpl 模板 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "Hello",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tpl-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tpl 模板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tpl 模板 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "Hello",
+        "onEvent": {
+          "mouseenter": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tpl-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tpl 模板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tpl 模板 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "tpl": "Hello",
+        "onEvent": {
+          "mouseleave": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tpl-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tpl 模板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tpl 模板 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "maxLine": 2,
+        "showNativeTitle": true,
+        "tpl": "这是一段比较长的模板文本，超过两行时会被截断并显示省略号。把窗口收窄更容易看出效果。"
+      }
     },
     "measure": {
       "type": "tree"

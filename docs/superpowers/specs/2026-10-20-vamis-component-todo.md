@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-10-28）
+- 日期：2026-10-21（进度核对：2026-10-29）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 综合分（见文末「依赖与优先级」）
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-10-28（155 项逐项复核；汇总 59%、≥50% 108 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-10-29（FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -66,11 +66,11 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 76% | 11 |
-| 数据输入 | 0 / 72 | 72 | 0 | 48% | 39 |
+| 数据输入 | 0 / 72 | 72 | 0 | 48% | 40 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
-| **合计** | **1 / 155** | **154** | **0** | **59%** | **108** |
+| **合计** | **1 / 155** | **154** | **0** | **59%** | **109** |
 
 侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
@@ -127,8 +127,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 68% | 默认标题「表单」、只画提交、标题栏灰底对齐 Amis 面板壳。`panelClassName` 等 xxxClassName 已接。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6 | P0 |
-| （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 48% | 有 label/required/error 壳，以及 `labelClassName` / `inputClassName` / `descriptionClassName`。缺路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden` | P0 |
+| `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 75% | 默认标题「表单」、只画提交、标题栏灰底。路径值 `a.b`、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`validateApi`、提交 `errors`、`debug` 已接。缺 combo 独立域 | P0 |
+| （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 82% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`、禁用/显隐、默认间距 24px、`mode: inline`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、form `debug`。缺 combo/table 路径级报错、`autoFill.showSuggestion`、事件动作切静态 | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |
 | `input-array` | InputArray 数组输入框 | `/components/form/input-array` | `/zh-CN/components/form/input-array` | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |
@@ -166,7 +166,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `matrix-checkboxes` | MatrixCheckboxes 矩阵勾选 | `/components/form/matrix-checkboxes` | `/zh-CN/components/form/matrix-checkboxes` | 进行中 | 40% | 已注册，行列数据精简 | P0 |
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 55% | native number；步进/精度/大数未齐 | P0 |
-| `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 60% | `input-text` 别名 | P0 |
+| `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 60% | `input-text` 别名；缺显隐开关 | P0 |
 | `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 50% | 能弹层多选 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
@@ -219,8 +219,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `color` | Color 颜色 | `/components/color` | `/zh-CN/components/color` | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | `/components/date` | `/zh-CN/components/date` | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
 | `each` | Each 循环渲染器 | `/components/each` | `/zh-CN/components/each` | 进行中 | 70% | 不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength | P0 |
-| `html` | Html | `/components/html` | `/zh-CN/components/html` | 进行中 | 85% | `tpl` 别名；始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。缺 maxLine；其余过滤器仍 P1 | P0 |
-| `icon` | Icon 图标 | `/components/icon` | `/zh-CN/components/icon` | 进行中 | 75% | 文档主路径已对齐：icon 名称默认 FA v4、URL、内联 SVG、vendor fa/iconfont/空。字形走 sdk.css 的 FA + v4-shims。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
+| `html` | Html | `/components/html` | `/zh-CN/components/html` | 进行中 | 90% | `tpl` 别名。文档主路径已对齐：渲染 HTML。`maxLine` / `showNativeTitle` / 事件同 Tpl。其余过滤器仍 P1 | P0 |
+| `icon` | Icon 图标 | `/components/icon` | `/zh-CN/components/icon` | 进行中 | 90% | 文档主路径已对齐：FA v4 名称、颜色/字号、URL、FA v5/v6 `vendor: ""`、click / mouseenter / mouseleave。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
 | `iframe` | iFrame | `/components/iframe` | `/zh-CN/components/iframe` | 进行中 | 55% | 能嵌页 | P0 |
 | `image` | Image 图片 | `/components/image` | `/zh-CN/components/image` | 进行中 | 75% | 默认 110px 缩略图；`height`/`width` 插值；`thumbMode` contain/cover/w-full/h-full/`h-stretch`（按高度拉伸、宽度吃满），支持表达式。缺放大/图集/`imageMode: original` | P0 |
 | `images` | Images 图片集 | `/components/images` | `/zh-CN/components/images` | 进行中 | 50% | 能平铺 | P0 |
@@ -244,7 +244,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `search-box` | SearchBox 搜索框 | `/components/search-box` | `/zh-CN/components/search-box` | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | `/components/sparkline` | `/zh-CN/components/sparkline` | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 55% | 能映射状态 | P0 |
-| `tpl` | Tpl 模板 | `/components/tpl` | `/zh-CN/components/tpl` | 进行中 | 85% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。标题/列表/链接在 html 岛内补回。P0 过滤器可用。badge 已接。缺 maxLine；其余过滤器仍 P1 | P0 |
+| `tpl` | Tpl 模板 | `/components/tpl` | `/zh-CN/components/tpl` | 进行中 | 92% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1 | P0 |
 | `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 55% | 能展示标签 | P0 |
 | `video` | Video 视频 | `/components/video` | `/zh-CN/components/video` | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | `/components/timeline` | `/zh-CN/components/timeline` | 进行中 | 50% | 能列节点 | P0 |
@@ -341,10 +341,10 @@ flowchart LR
 
 | # | type | 依赖 | 深度 | 被依赖 | S | 状态 | 进度 |
 |---|------|------|------|--------|---|------|------|
-| 1 | FormItem（契约） | — | 7 | 38 | 311 | 进行中 | 48% |
-| 2 | `tpl` | — | 7 | 28 | 231 | 进行中 | 85% |
+| 1 | FormItem（契约） | — | 7 | 38 | 311 | 进行中 | 82% |
+| 2 | `tpl` | — | 7 | 28 | 231 | 进行中 | 92% |
 | 3 | `container` | `tpl` | 6 | 23 | 190 | 已完成 | 100% |
-| 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 75% |
+| 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 90% |
 | 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 85% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 60% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 60% |
@@ -389,7 +389,7 @@ flowchart LR
 | 46 | `input-quarter` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
 | 47 | `radios` | `radio`、`Options` | 5 | 1 | 13 | 进行中 | 55% |
 | 48 | `static` | `FormItem`、`popOver`、`tpl` | 5 | 1 | 13 | 进行中 | 65% |
-| 49 | `form` | `FormItem`、`Options`、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image` | 4 | 10 | 84 | 进行中 | 68% |
+| 49 | `form` | `FormItem`、`Options`、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image` | 4 | 10 | 84 | 进行中 | 75% |
 | 50 | `dialog` | `action`、`form`、`container`、`tpl` | 3 | 3 | 27 | 进行中 | 85% |
 | 51 | `drawer` | `action`、`form`、`container`、`tpl` | 3 | 2 | 19 | 进行中 | 85% |
 | 52 | `input-time` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
@@ -406,7 +406,7 @@ flowchart LR
 | 63 | `code` | — | 7 | 0 | 7 | 进行中 | 92% |
 | 64 | `color` | — | 7 | 0 | 7 | 进行中 | 50% |
 | 65 | `date` / `datetime` / `time` / `month` | — | 7 | 0 | 7 | 进行中 | 60% |
-| 66 | `html` | — | 7 | 0 | 7 | 进行中 | 85% |
+| 66 | `html` | — | 7 | 0 | 7 | 进行中 | 90% |
 | 67 | `iframe` | — | 7 | 0 | 7 | 进行中 | 55% |
 | 68 | `json` | — | 7 | 0 | 7 | 进行中 | 50% |
 | 69 | `log` | — | 7 | 0 | 7 | 进行中 | 25% |

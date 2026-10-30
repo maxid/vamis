@@ -5,7 +5,7 @@ title: 联动
 # 联动
 
 ::: tip 实现进度 90% · 已完成
-文档主路径已对齐 Amis「联动」：`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、`name?a=${a}`、逗号多目标、动态 `target` / `name`。JSON 与 YAML 同等有效。隐藏清值 `clearValueOnHidden` 仍等 D6。
+文档主路径已对齐 Amis「联动」：`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、`name?a=${a}`、逗号多目标、动态 `target` / `name`、`clearValueOnHidden`。JSON 与 YAML 同等有效。
 :::
 
 上一节介绍了 [表达式](/concepts/expression)。表达式用得最多的场景，就是页面联动。作者态 **JSON 与 YAML 并列**，解析后走同一套 Scope / 组件注册表。
@@ -90,7 +90,7 @@ body:
 >
 > 表单项隐藏后，当前数据域**不会**删掉该字段，提交时可能仍带上隐藏项的值。
 >
-> 若提交时不要这个字段，Amis 用 [clearValueOnHidden](/components/form/formitem)。Vamis 尚未接线（D6），请先不要依赖隐藏清值。
+> 若提交时不要这个字段，配 [clearValueOnHidden](/components/form/formitem)。
 
 ### 接口联动
 

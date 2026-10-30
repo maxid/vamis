@@ -1,4 +1,6 @@
 import type { SchemaObject } from './types'
+import type { PlainObject } from './types'
+import { formItemRequired } from './utils/form-item'
 
 export type ValidationRules = Record<string, unknown>
 
@@ -11,7 +13,7 @@ function parseScalar(raw: string): unknown {
 
 export function parseValidations(schema: SchemaObject): ValidationRules {
   const rules: ValidationRules = {}
-  if (schema.required) rules.required = true
+  if (schema.required === true) rules.required = true
   if (schema.minLength != null) rules.minLength = schema.minLength
   if (schema.maxLength != null) rules.maxLength = schema.maxLength
   if (schema.maximum != null) rules.maximum = schema.maximum
@@ -58,11 +60,12 @@ function messageOf(schema: SchemaObject, key: string, fallback: string): string 
   return fallback
 }
 
-export function validateValue(schema: SchemaObject, value: unknown): string | null {
+export function validateValue(schema: SchemaObject, value: unknown, data: PlainObject = {}): string | null {
   const rules = parseValidations(schema)
   const label = String(schema.label || schema.name || '字段')
+  const required = formItemRequired(schema, data) || !!rules.required
 
-  if (rules.required && isEmpty(value)) {
+  if (required && isEmpty(value)) {
     return messageOf(schema, 'required', `${label} 不能为空`)
   }
   if (isEmpty(value)) return null

@@ -26,6 +26,10 @@ export interface SchemaObject extends PlainObject {
   hiddenOn?: string
   disabled?: boolean
   disabledOn?: string
+  static?: boolean
+  staticOn?: string
+  staticSchema?: unknown
+  staticPlaceholder?: string
   onEvent?: Record<string, { actions: ActionSchema[] }>
 }
 

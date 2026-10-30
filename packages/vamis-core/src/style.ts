@@ -30,6 +30,8 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   '--fontFamilyMonospace': '--font-mono',
   '--Form-input-height': '--control-h',
   '--Form-item-gap': '--form-item-gap',
+  '--Form-mode-inline-item-gap': '--form-mode-inline-item-gap',
+  '--Form-mode-inline-label-gap': '--form-mode-inline-label-gap',
   '--Form-input-paddingX': '--control-px',
   '--Form--horizontal-label-widthBase': '--form-label-width',
   '--Form--horizontal-label-widthXs': '--form-label-width-xs',
@@ -116,6 +118,7 @@ export function isInlineSchema(schema?: { type?: string; inline?: unknown } | nu
 type SchemaDisplayNode = {
   type?: string
   inline?: unknown
+  mode?: unknown
   direction?: unknown
   body?: unknown
 } | null
@@ -124,6 +127,8 @@ export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
   if (!schema) return false
   if (schema.inline === false) return false
   const type = String(schema.type || '').toLowerCase()
+  // FormItem `mode: inline` 并排；表单自身 `mode: inline` 仍是块级壳。
+  if (schema.mode === 'inline' && type !== 'form') return true
   if (type === 'divider' && schema.direction === 'vertical') return true
   if (schema.inline === true && type === 'tooltip-wrapper') return true
   if (type === 'spinner') {

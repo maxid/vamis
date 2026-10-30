@@ -124,6 +124,12 @@ export const FORM_ITEM_PROPS: Record<string, SchemaDoc> = {
   descriptionClassName: doc('descriptionClassName', '表单', '说明文字 class，走 resolveClassName。'),
   validations: doc('validations', '表单', '校验规则。'),
   validateOnChange: doc('validateOnChange', '表单', '变化时是否校验。'),
+  requiredOn: doc('requiredOn', '表单', '条件必填表达式。'),
+  validateApi: doc('validateApi', '表单', '单项后端校验。status 非 0 时 errors 字符串当该项报错。'),
+  autoFill: doc('autoFill', '表单', '改值后映射或请求填充其他字段。showSuggestion 参照录入未接。'),
+  static: doc('static', '表单', '静态展示。false 覆盖表单级静态。'),
+  staticOn: doc('staticOn', '表单', '条件静态展示。'),
+  staticSchema: doc('staticSchema', '表单', '自定义静态节点。'),
 }
 
 export const FORM_ITEM_EVENTS: Record<string, SchemaDoc> = {

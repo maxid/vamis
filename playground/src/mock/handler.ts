@@ -4,6 +4,7 @@ export type MockPayload = {
   status: number
   msg?: string
   data?: unknown
+  errors?: unknown
 }
 
 let sampleRows: SampleRow[] = createSampleRows()
@@ -131,6 +132,39 @@ export function handleMockApi(input: {
   if (pathname === '/api/mock2/form/saveForm') {
     const data = method === 'GET' ? query : body
     return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
+  }
+
+  if (pathname === '/api/mock2/form/saveFormFailed') {
+    return {
+      status: 422,
+      msg: '',
+      errors: { test2: '服务器端说，这个有错误。' },
+      data: null,
+    }
+  }
+
+  if (pathname === '/api/mock2/form/formitemFailed') {
+    return { status: 422, msg: '', errors: '当前用户已存在', data: null }
+  }
+
+  if (pathname === '/api/mock2/form/formitemSuccess') {
+    return { status: 0 }
+  }
+
+  if (pathname === '/api/mock2/form/autoUpdate') {
+    const browser = String(query.browser || body.browser || '')
+    const rows = [
+      { browser: 'Chrome', version: '1', platform: 'linux 1', Chrome: 'xxx1' },
+      { browser: 'Chrome', version: '2', platform: 'windows xp', Chrome: 'xxx2' },
+      { browser: 'Firefox', version: '3', platform: 'linux 2', Chrome: 'xxx3' },
+      { browser: 'Firefox', version: '4', platform: 'windows 8', Chrome: 'xxx4' },
+      { browser: 'Opera', version: '5', platform: 'linux 3', Chrome: 'xxx5' },
+      { browser: 'Opera', version: '6', platform: 'windows 10', Chrome: 'xxx6' },
+    ]
+    const hit = browser
+      ? rows.find((row) => row.browser.toLowerCase().includes(browser.toLowerCase()))
+      : undefined
+    return { status: 0, msg: '', data: query.items ? rows : hit }
   }
 
   if (pathname === '/api/mock2/form/getOptions') {

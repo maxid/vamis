@@ -5,8 +5,8 @@ outline: deep
 
 # Form 表单
 
-::: info 实现进度 68% · 进行中
-initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。默认标题「表单」、只画提交、标题栏灰底，对齐 Amis 面板壳。`panelClassName` / `headerClassName` / `titleClassName` / `bodyClassName` / `actionsClassName` 已接到对应区域。`target` 提交发给具名组件；返回 `data` 合并进表单域。`lazyLoad` 默认关。事件目前只接了 `submit`；动作 `reload` / `setValue` / `submit` / `reset` 可用。扁平路径、`clearValueOnHidden`、嵌套不递归校验仍等 D6。
+::: info 实现进度 75% · 进行中
+initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。默认标题「表单」、只画提交、标题栏灰底。`xxxClassName`、`target`、返回 `data` 合并、路径值、`clearValueOnHidden`、`validateApi`、提交 `errors`、`debug` 已接。事件目前只接了 `submit`。缺 combo 独立域。
 :::
 
 `type: form` 是数据输入的根。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。
@@ -34,7 +34,7 @@ body:
         value: offline
 ```
 
-水平布局的标签宽度走 `--form-label-width`。校验与 `xxx.yyy` 路径值仍是缺口，见 [FormItem](/components/form/formitem)。
+水平布局的标签宽度走 `--form-label-width`。路径值、`validateApi`、提交 `errors`、`autoFill` 见 [FormItem](/components/form/formitem)。
 
 ## lazyLoad
 

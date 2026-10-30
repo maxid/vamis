@@ -114,7 +114,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
       submit: doc('submit', 'Form 动作', '提交本表单。'),
       reset: doc('reset', 'Form 动作', '重置本表单。'),
       validate: doc('validate', 'Form 动作', '只校验不提交。'),
-      setValue: doc('setValue', 'Form 动作', '写入表单域。嵌套路径仍缺 D6。'),
+      setValue: doc('setValue', 'Form 动作', '写入表单域，支持 a.b / a.b[0].c。'),
     },
   },
   editor: {
@@ -200,8 +200,16 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     text: '纯文本，整段转义。',
     inline: '默认 true（跟在同一行）。false 时块级，独占一行。',
     wrapperComponent: '外层标签，div 或 span。',
+    showNativeTitle: 'true 时把纯文本写到外层 title。',
+    maxLine: '大于 0 时按行截断，超出省略。',
     popOver: '弹出详情。字符串精简写法，或 {body,title,trigger,showIcon}。',
     badge: '角标。数字当 text；对象 mode/text/position。',
+  }, {
+    events: {
+      click: '点击。',
+      mouseenter: '鼠标移入。',
+      mouseleave: '鼠标移出。',
+    },
   }),
   code: fields('Code', {
     value: '只读代码文本。',
@@ -681,9 +689,15 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     badge: '角标。',
   }),
   icon: fields('Icon', {
-    icon: '图标名或 svg。',
-    vendor: '图标库。',
+    icon: '图标名、URL、或 <svg> 字符串。',
+    vendor: '默认 fa（Font Awesome v4）。空字符串给 FA5/6 或其他字体。',
     badge: '角标。',
+  }, {
+    events: {
+      click: '点击。',
+      mouseenter: '鼠标移入。',
+      mouseleave: '鼠标移出。',
+    },
   }),
   avatar: fields('Avatar', {
     src: '头像地址。可 $var / ${}。',
