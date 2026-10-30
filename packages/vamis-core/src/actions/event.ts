@@ -1,5 +1,10 @@
 import type { PlainObject } from '../types'
 
+export type NativeEventLike = {
+  type: string
+  target?: unknown
+}
+
 export interface VamisEvent {
   type: string
   data: PlainObject
@@ -7,16 +12,23 @@ export interface VamisEvent {
   stopped: boolean
   /** Amis 拼写兼容 */
   readonly stoped: boolean
-  context: { nativeEvent?: { type: string } }
+  context: { nativeEvent?: { type: string; target?: { className: string } } }
   setData(patch: PlainObject): void
   preventDefault(): void
   stopPropagation(): void
 }
 
+function nativeEventTarget(target: NativeEventLike['target']): { className: string } {
+  if (target && typeof target === 'object' && 'className' in target) {
+    return { className: String((target as { className?: unknown }).className ?? '') }
+  }
+  return { className: '' }
+}
+
 export function createVamisEvent(
   type: string,
   payload: PlainObject = {},
-  nativeEvent?: { type: string },
+  nativeEvent?: NativeEventLike,
 ): VamisEvent {
   const data: PlainObject = { ...payload }
   const event: VamisEvent = {
@@ -27,7 +39,9 @@ export function createVamisEvent(
     get stoped() {
       return event.stopped
     },
-    context: nativeEvent ? { nativeEvent: { type: nativeEvent.type } } : {},
+    context: nativeEvent
+      ? { nativeEvent: { type: nativeEvent.type, target: nativeEventTarget(nativeEvent.target) } }
+      : {},
     setData(patch: PlainObject) {
       if (patch && typeof patch === 'object' && !Array.isArray(patch)) Object.assign(data, patch)
     },

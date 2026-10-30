@@ -152,6 +152,8 @@
   --control-h-lg: 36px;
   --control-px: 10px;
   --form-item-gap: 24px;
+  --form-mode-inline-item-gap: 16px;
+  --form-mode-inline-label-gap: 16px;
   --form-label-width: 98px;
   --form-label-gap: 16px;
   --form-label-width-xs: 50px;
@@ -344,9 +346,6 @@
     gap: 0.375rem;
     margin-bottom: var(--form-item-gap);
   }
-  .vamis-form-item--normal:last-child {
-    margin-bottom: 0;
-  }
   .vamis-form-item--horizontal {
     display: grid;
     grid-template-columns: 28% minmax(0, 1fr);
@@ -354,12 +353,23 @@
     align-items: start;
     margin-bottom: var(--form-item-gap);
   }
-  .vamis-form-item--horizontal:last-child {
+  /* SchemaRenderer 每项外包一层 .vamis-node，FormItem 自己永远是 last-child。只清表单 body 里最后一个节点。 */
+  .vamis-form .vamis-node:last-child > .vamis-form-item {
     margin-bottom: 0;
+  }
+  /* 内联项：包装层也要 inline-block，否则块级 .vamis-node 把并排挤成竖排。含继承 form.mode=inline。 */
+  .vamis-form .vamis-node:has(> .vamis-form-item--inline) {
+    display: inline-block;
+    vertical-align: top;
+    width: auto;
+    max-width: 100%;
   }
   .vamis-form-item--horizontal .vamis-form-item__label {
     justify-content: flex-start;
     text-align: left;
+  }
+  .vamis-form-item--horizontal.vamis-form-item--no-label {
+    grid-template-columns: minmax(0, 1fr);
   }
   .vamis-form-panel {
     width: 100%;
@@ -371,26 +381,61 @@
   .vamis-form-item--inline {
     display: inline-flex;
     max-width: 100%;
-    align-items: center;
-    gap: var(--gap-sm);
-    margin-right: var(--form-item-gap);
-    margin-bottom: calc(var(--form-item-gap) / 2);
+    align-items: flex-start;
+    gap: var(--form-mode-inline-label-gap);
+    margin-right: var(--form-mode-inline-item-gap);
+    margin-bottom: var(--form-item-gap);
+    vertical-align: top;
   }
-  .vamis-form-item--inline:last-child {
+  .vamis-form--inline .vamis-node:last-child > .vamis-form-item--inline {
     margin-right: 0;
   }
   .vamis-form-item--inline .vamis-form-item__label {
     margin-bottom: 0;
     white-space: nowrap;
+    padding-top: calc((var(--control-h) - 1rem) / 2);
   }
   .vamis-form-item--inline .vamis-control--fluid {
     width: auto;
     max-width: 100%;
+    display: inline-block;
+    vertical-align: top;
   }
   .vamis-control--fluid,
   .vamis-control--full {
     width: 100%;
     max-width: 100%;
+  }
+  .vamis-form-static {
+    min-height: var(--control-h);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: var(--fontSizeBase, 14px);
+    line-height: var(--lineHeightBase, 1.5);
+    font-weight: 400;
+    word-break: break-word;
+    margin-bottom: 0;
+  }
+  .vamis-form-static__placeholder {
+    color: var(--muted-foreground);
+  }
+  .vamis-form-item--inline .vamis-form-static {
+    display: inline-flex;
+    vertical-align: top;
+  }
+  .vamis-form-debug {
+    margin: 0 16px 16px;
+    max-height: 240px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--muted);
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 
   /*
@@ -410,6 +455,13 @@
     also present. Reset inside the HTML island so tpl/html demos match Amis.
     Utilities like `.border-solid` still win (@layer utilities > base).
   */
+  .vamis-html-max-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+  }
   .vamis-html :where(h1, h2, h3, h4, h5, h6) {
     font-weight: 600;
     line-height: 1.2;
@@ -629,6 +681,9 @@
 @media (min-width: 576px) {
   .vamis-form-item--horizontal {
     grid-template-columns: var(--form-label-width) minmax(0, 1fr);
+  }
+  .vamis-form-item--horizontal.vamis-form-item--no-label {
+    grid-template-columns: minmax(0, 1fr);
   }
   .vamis-form-item--horizontal .vamis-form-item__label {
     justify-content: flex-end;

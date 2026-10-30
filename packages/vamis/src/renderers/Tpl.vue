@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { evalTemplate, type SchemaObject } from '@vamis/core'
+import { evalTemplate, tplMaxLine, tplPlainText, type SchemaObject } from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import BadgeHost from './BadgeHost.vue'
 
@@ -25,13 +25,42 @@ const rendered = computed(() => {
     props.schema.html == null && props.schema.tpl == null && props.schema.text != null
   return evalTemplate(source, props.data, { asHtml: !textOnly })
 })
+
+const maxLine = computed(() => tplMaxLine(props.schema))
+const htmlContent = computed(() => rendered.value.html ?? rendered.value.text ?? '')
+const nativeTitle = computed(() => {
+  if (props.schema.showNativeTitle !== true) return undefined
+  return tplPlainText(String(htmlContent.value)) || undefined
+})
+const maxLineStyle = computed(() =>
+  maxLine.value > 0 ? { WebkitLineClamp: String(maxLine.value) } : undefined,
+)
 </script>
 
 <template>
   <BadgeHost :schema="schema" :data="data">
     <PopOverHost :schema="schema" :data="data">
-      <component :is="tag" v-if="rendered.html != null" class="vamis-html" v-html="rendered.html" />
-      <component :is="tag" v-else class="vamis-html">{{ rendered.text }}</component>
+      <component
+        v-if="maxLine > 0"
+        :is="tag"
+        class="vamis-html"
+        :title="nativeTitle"
+      >
+        <span class="vamis-html-max-line" :style="maxLineStyle" v-html="htmlContent" />
+      </component>
+      <component
+        :is="tag"
+        v-else-if="rendered.html != null"
+        class="vamis-html"
+        :title="nativeTitle"
+        v-html="rendered.html"
+      />
+      <component
+        :is="tag"
+        v-else
+        class="vamis-html"
+        :title="nativeTitle"
+      >{{ rendered.text }}</component>
     </PopOverHost>
   </BadgeHost>
 </template>

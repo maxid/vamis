@@ -52,24 +52,30 @@
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-10-28）
+## 当前进度（2026-10-29）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **1** / 进行中 154 / 未开始 0，平均 **59%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据输入均 48%；数据展示均 55%；反馈均 84%；其他均 81%；≥50% **108** 项；`page` 进行中 95%（未达标准：`pullRefresh`）/ `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` 90%；`spinner` / `alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 75%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 68%；FormItem 48%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl`/`html` 85%；`static` 65%；`table` 55% |
-| kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6/D8 与 D7 余项（错误边界）仍缺 |
+| 组件语义（侧栏 155） | 已完成 **1** / 进行中 154 / 未开始 0，平均 **59%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 76%；数据输入均 48%；数据展示均 55%；反馈均 84%；其他均 81%；≥50% **109** 项；`page` 进行中 95%（未达标准：`pullRefresh`）/ `container` 已完成 100%；`action` / `button` 85%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` / `tooltip-wrapper` 85%/80%；`toast` 90%；`spinner` / `alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` / `badge` / `web-component` / `amis` 80%；`table-view` 85% / `calendar` 85%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 90%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 75%；FormItem 82%；`select` 60%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl` 92% / `html` 90%；`static` 65%；`table` 55% |
+| kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D6 路径值 / `validateApi` / 提交 `errors` / `autoFill` P0 已接；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6 余项（combo 独立域）与 D8、D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`（html/body 不钉字族）；浅色 `--border` 对齐 Amis `#e8e9eb`；Button 默认字重 400。`/style` 首页 **50%**，CSS 变量 **65%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；文档/组件/样式页标题下「实现进度 · 状态」；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 424 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **929**。`toast` 对照 **11/11**（桌面+移动）。`card` **5/5**、`cards` **3/3**、`image` **2/2**（桌面+移动，本轮重跑）、`dialog` **5/5**（移动 5/5）、`drawer` **6/6**、`action` **23/23**、`icon` **2/2**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
+| 测试 | 源码用例 formula 185 + core 441 + sdk 49 | `pnpm typecheck` 已通过；SDK 对照目录 **958**。`toast` 对照 **11/11**（桌面+移动）。`card` **5/5**、`cards` **3/3**、`image` **2/2**（桌面+移动）、`formitem` **1/20**（P0 0：全局字号 16/14 + 表单项结点定位，Amis 不当独立 type）、`dialog` **5/5**（移动 5/5）、`drawer` **6/6**、`action` **23/23**、`tpl` **5/5**、`html` **1/1**、`icon` **8/8**、`avatar` **13/13**。`table2` 对照 9/11（2 败：列 `type:button` 结点定位，Amis 不当独立组件；P0 0）。全量上次 **878 过 / 30 败**。全局修完全量重跑，组件修完 `--page`；窄屏再 `--mobile`。 |
 
 **最近交付**
 
+- `tpl` / `html` 接 `maxLine`（`-webkit-line-clamp`）与 `showNativeTitle`；文档补属性表、click / mouseenter / mouseleave。`icon` 文档补颜色字号、FA v5/v6、事件；`nativeEvent.target.className` 可供 click 公式读取。进度 tpl 85% → 92%、html 85% → 90%、icon 75% → 90%。
+- FormItem 接 `validateApi`、提交接口 `errors`、无弹层 `autoFill`（`api` + `fillMapping`，改值 250ms 去抖）、form `debug`。文档补服务端校验 / 自动填充 / 及时读其他字段。进度 75% → 82%；`form` 70% → 75%。mock 补 `saveFormFailed` / `formitemFailed` / `formitemSuccess` / `autoUpdate`。
+- FormItem 接 `static` / `staticOn` / `staticSchema`（空值 `-`），表单 `labelWidth` 落到 `--form-label-width`。文档补禁用 / 显隐 / 静态展示章节。进度 70% → 75%。
+- FormItem `mode: inline`：包装层 `.vamis-node` 改为 `inline-block`（`:has(> .vamis-form-item--inline)` + schema `mode:inline`），项间距对齐 Amis `--Form-mode-inline-item-gap` 16px。水平表单里的内联项与 Amis 一样并排，不再竖排。
+- FormItem 默认间距：表单项被包在 `div.vamis-node` 里，原先 `:last-child { margin-bottom: 0 }` 把每一项缝都清掉了。改成只清表单 body 最后一个节点，对齐 Amis `--Form-item-gap` 24px。密码显隐开关属 `input-password`，不在本契约。
+- 按依赖综合分做 #1 FormItem：路径值 `a.b` / `a.b[0].c`、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、默认值表达式、labelRemark。文档主路径对齐 Amis formitem 章节。进度 48% → 68%，仍缺 validateApi / autoFill / static。
 - 组件 TODO 优先级改为「依赖拓扑 + 综合分」：`S = 被依赖 × 8 + 深度`，Kahn 就绪集里 S 大者先做（`scripts/component-priority.mjs`）。`action` 从原 #33 升到 #5，`form` #49 / `crud` #59 / `page` #60；无人依赖叶子从 #61 起。分类表 `P` 列仍是阶段 P0。
 - 组件 TODO 增加「实现标准（强制）」：组件与文档必须对标或超越 amis 对等内容；`page` 因 `pullRefresh` 未接从「已完成」降为「进行中」，全局已完成 1 项（`container`）。
 - 组件进度核对（2026-10-28）：155 行逐项复核（注册 / 渲染器文件 / amis·vamis 文档页 / 行内「缺」项源码回查），重算分类与汇总为数据输入 48%、数据展示 55%、反馈 84%、合计 59%、≥50% 108；修正 `form/static`（65%）、`table`（55%）生成页，生成器 `parseTodo` 适配 8 列并保留 icon/image 手写页。
@@ -286,8 +292,8 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按依赖综合分推进，按实现标准验收**：下一刀 FormItem（#1，48%），接着 `tpl`（#2）与 `icon`（#4）；`container`（#3）已完成，随后 `action`（#5）。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
-2. **P0 kernel D6 表单路径值**：`a.b[0].c` 读写、`clearValueOnHidden`。提交返回合并已接，不挡联动文档主路径。数据域页里「表单项写到 page 域」仍卡在这里。
+1. **组件同步按依赖综合分推进，按实现标准验收**：FormItem 82%，`tpl` 92%，`icon` 90%。下一刀 `action`（#5，85%），随后 `input-text`（#6）。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / 事件动作切静态跟后续刀。`input-password` 显隐开关轮到该 type 再做。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。
+2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
 5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条继续组件覆盖。

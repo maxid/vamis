@@ -4,15 +4,30 @@ import {
   SchemaRenderer,
   LazyComponent,
   apiMessage,
+  applyFormItemDefaults,
+  applyServerErrors,
   asArray,
+  autoFillApi,
+  autoFillMapping,
+  autoFillRow,
+  clearHiddenFormValues,
+  collectFormItems,
+  createObject,
+  createStoreId,
+  dataMapping,
+  formItemStatic,
+  formItemValidateOnChange,
+  getPathValue,
   isApiOutdated,
   isEffectiveApi,
-  createStoreId,
+  isVisible,
   mergeApiData,
   provideFormApi,
   requestApi,
   resolveClassName,
   runOnEvent,
+  setPathValue,
+  validateApiMessage,
   useEnv,
   useOverlay,
   useRendererHub,
@@ -42,7 +57,10 @@ const store = hub.add({
   id: createStoreId('form'),
   type: 'form',
   name: props.schema.name,
-  data: { ...(props.data || {}), ...(props.schema.data || {}) },
+  data: applyFormItemDefaults(
+    collectFormItems(asArray(props.schema.body || props.schema.controls)),
+    { ...(props.data || {}), ...(props.schema.data || {}) },
+  ),
 })
 
 const body = computed(() => asArray(props.schema.body || props.schema.controls))
@@ -91,6 +109,20 @@ const actionsClass = computed(() =>
     resolveClassName(props.schema.actionsClassName, props.data),
   ),
 )
+const debugJson = computed(() => {
+  const out: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(store.data)) {
+    if (key.startsWith('__')) continue
+    out[key] = value
+  }
+  return JSON.stringify(out, null, 2)
+})
+const labelWidthStyle = computed(() => {
+  const w = props.schema.labelWidth
+  if (w == null || w === '' || w === false) return undefined
+  const px = typeof w === 'number' ? `${w}px` : /^\d+(\.\d+)?$/.test(String(w)) ? `${w}px` : String(w)
+  return { '--form-label-width': px }
+})
 const parentForm = useForm()
 const wrapTag = computed(() => {
   const raw = props.schema.wrapperComponent
@@ -119,14 +151,85 @@ function onDefaultSubmitClick() {
   if (!nativeForm.value) void submit()
 }
 
+function formItems() {
+  return collectFormItems(body.value)
+}
+
+function itemByName(name: string) {
+  return formItems().find((item) => item.name === name)
+}
+
 function getValue(name: string) {
-  return store.data[name]
+  return getPathValue(store.data, name)
 }
 
 function setValue(name: string, value: unknown) {
-  store.data[name] = value
+  setPathValue(store.data, name, value)
   scope.value?.set(name, value, 'input')
-  if (store.errors[name]) delete store.errors[name]
+  const item = itemByName(name)
+  if (item && formItemValidateOnChange(item, props.schema)) {
+    const message = validateValue(item, getPathValue(store.data, name), store.data)
+    if (message) store.errors[name] = message
+    else {
+      delete store.errors[name]
+      void runValidateApi(item)
+    }
+  } else if (store.errors[name]) {
+    delete store.errors[name]
+  }
+  if (item) scheduleAutoFill(item, value)
+}
+
+const autoFillTimers = new Map<string, ReturnType<typeof setTimeout>>()
+
+function scheduleAutoFill(item: SchemaObject, value: unknown) {
+  const name = String(item.name || '')
+  if (!name || !autoFillMapping(item)) return
+  const prev = autoFillTimers.get(name)
+  if (prev) clearTimeout(prev)
+  autoFillTimers.set(
+    name,
+    setTimeout(() => {
+      autoFillTimers.delete(name)
+      void runAutoFill(item, value)
+    }, 250),
+  )
+}
+
+async function runValidateApi(item: SchemaObject): Promise<boolean> {
+  const name = String(item.name || '')
+  if (!name || !isEffectiveApi(item.validateApi, store.data)) return true
+  const ctx = { ...store.data, [name]: getPathValue(store.data, name) }
+  const result = await requestApi(item.validateApi, { env, data: ctx, reason: 'action' })
+  if (result.skipped) return true
+  if (!result.ok) {
+    store.errors[name] = validateApiMessage(result.payload, `表单项「${name}」校验失败`)
+    return false
+  }
+  delete store.errors[name]
+  return true
+}
+
+async function runAutoFill(item: SchemaObject, value: unknown) {
+  const mapping = autoFillMapping(item)
+  const name = String(item.name || '')
+  if (!mapping || !name) return
+  let ctx: Record<string, unknown> = { ...store.data, [name]: value, __term: value }
+  const api = autoFillApi(item)
+  if (api && isEffectiveApi(api, ctx)) {
+    const result = await requestApi(api, { env, data: ctx, reason: 'reload' })
+    if (result.skipped || !result.ok) return
+    const row = autoFillRow(result.data)
+    if (!row) return
+    ctx = createObject(store.data, { ...row, items: [row] })
+  }
+  const filled = dataMapping(mapping, ctx)
+  if (!filled || typeof filled !== 'object' || Array.isArray(filled)) return
+  for (const [key, next] of Object.entries(filled as Record<string, unknown>)) {
+    if (!key || key.startsWith('__')) continue
+    setPathValue(store.data, key, next)
+    scope.value?.set(key, next, 'input')
+  }
 }
 
 function setError(name: string, message: string) {
@@ -136,13 +239,12 @@ function setError(name: string, message: string) {
 function validate(): boolean {
   store.errors = {}
   let ok = true
-  for (const node of body.value) {
-    if (!node || typeof node === 'string') continue
-    const item = node as SchemaObject
+  for (const item of formItems()) {
     if (!item.name) continue
-    const message = validateValue(item, store.data[item.name])
+    if (!isVisible(item, store.data)) continue
+    const message = validateValue(item, getPathValue(store.data, String(item.name)), store.data)
     if (message) {
-      store.errors[item.name] = message
+      store.errors[String(item.name)] = message
       ok = false
     }
   }
@@ -156,6 +258,15 @@ function reset() {
 
 async function submit() {
   if (!validate()) {
+    env.notify('error', '请检查表单')
+    return
+  }
+  let remoteOk = true
+  for (const item of formItems()) {
+    if (!item.name || !isVisible(item, store.data)) continue
+    if (!(await runValidateApi(item))) remoteOk = false
+  }
+  if (!remoteOk) {
     env.notify('error', '请检查表单')
     return
   }
@@ -195,6 +306,7 @@ async function submit() {
     })
     if (result.skipped) return
     if (!result.ok) {
+      applyServerErrors(result.payload.errors, store.errors)
       throw new Error(apiMessage(api, result.payload, 'failed'))
     }
     mergeApiData(store.data, result)
@@ -263,6 +375,7 @@ const formApi = {
 provideForm({
   store,
   mode: String(props.schema.mode || 'normal'),
+  isStatic: () => formItemStatic(props.schema, { ...props.data, ...store.data }),
   getValue,
   setValue,
   submit,
@@ -279,6 +392,13 @@ onMounted(() => {
   }
 })
 watch(
+  () => store.data,
+  () => {
+    clearHiddenFormValues(formItems(), store.data)
+  },
+  { deep: true },
+)
+watch(
   () => [props.schema.initApi, props.data, store.data] as const,
   (curr, prev) => {
     if (!prev) return
@@ -290,6 +410,8 @@ watch(
 onBeforeUnmount(() => {
   parentScoped?.unregister(formApi)
   hub.remove(store.id)
+  for (const timer of autoFillTimers.values()) clearTimeout(timer)
+  autoFillTimers.clear()
 })
 </script>
 
@@ -299,6 +421,7 @@ onBeforeUnmount(() => {
       :is="wrapTag"
       class="w-full min-w-0"
       :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
+      :style="labelWidthStyle"
       @submit.prevent="submit"
       @keydown.enter="onNestedEnter"
     >
@@ -312,6 +435,7 @@ onBeforeUnmount(() => {
         <CardContent :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
         </CardContent>
+        <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <CardFooter v-if="showActionBar" :class="actionsClass">
           <template v-if="hasCustomActions">
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
@@ -331,6 +455,7 @@ onBeforeUnmount(() => {
         <div :class="bodyClass">
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
         </div>
+        <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <div v-if="showActionBar" :class="cn(actionsClass, 'flex gap-2 border-t-0 pt-3')">
           <template v-if="hasCustomActions">
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
