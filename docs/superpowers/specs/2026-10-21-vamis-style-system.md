@@ -220,8 +220,9 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 | `dark` | `dark`（实心炭灰 `#303540` + 白字） |
 | `link` | `link` |
 | `size: xs\|sm\|md\|lg` | 22 / 30 / 32 / 38px（`--button-h-*`，不改 `--control-h`） |
+| 空 label + `icon`，或 `iconOnly: true` | 正方形：`padding: 0`、`min-width`/`height` 跟档位（默认 32×32）；`level: link` 除外 |
 
-实现：`packages/vamis-ui/src/ui/button/index.ts` 的 `levelToVariant` / `sizeToButtonSize`；`Action` / `DropdownButton` 消费。
+实现：`packages/vamis-ui/src/ui/button/index.ts` 的 `levelToVariant` / `sizeToButtonSize(size, iconOnly)`；`Action` / `DropdownButton` 消费。
 
 ### 4.2 Alert / Badge / Status / Toast
 

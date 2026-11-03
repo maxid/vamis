@@ -38,10 +38,11 @@ export const buttonVariants = cva(
         "xs": "h-[var(--button-h-xs)] gap-1 px-1 text-[12px] leading-[1.5] has-[>svg]:px-1 [&_svg:not([class*='size-'])]:size-3",
         "sm": "h-[var(--button-h-sm)] gap-1 px-2.5 text-[12px] leading-[1.5] has-[>svg]:px-2",
         "lg": "h-[var(--button-h-lg)] px-4 has-[>svg]:px-3",
-        "icon": "size-[var(--button-h)]",
-        "icon-xs": "size-[var(--button-h-xs)] [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-[var(--button-h-sm)]",
-        "icon-lg": "size-[var(--button-h-lg)]",
+        "icon": "h-[var(--button-h)] min-w-[var(--button-h)] p-0 [&>i]:text-[14px] [&_svg:not([class*='size-'])]:size-[14px]",
+        "icon-xs": "h-[var(--button-h-xs)] min-w-[var(--button-h-xs)] p-0 [&>i]:text-[14px] [&_svg:not([class*='size-'])]:size-[14px]",
+        "icon-sm": "h-[var(--button-h-sm)] min-w-[var(--button-h-sm)] p-0 [&>i]:text-[14px] [&_svg:not([class*='size-'])]:size-[14px]",
+        "icon-md": "h-[var(--button-h-md)] min-w-[var(--button-h-md)] p-0 [&>i]:text-[14px] [&_svg:not([class*='size-'])]:size-[14px]",
+        "icon-lg": "h-[var(--button-h-lg)] min-w-[var(--button-h-lg)] p-0 [&>i]:text-[14px] [&_svg:not([class*='size-'])]:size-[14px]",
       },
     },
     defaultVariants: {
@@ -74,7 +75,15 @@ export function levelToVariant(
 
 export function sizeToButtonSize(
   size?: unknown,
+  iconOnly = false,
 ): NonNullable<ButtonVariants["size"]> {
+  if (iconOnly) {
+    if (size === "xs") return "icon-xs"
+    if (size === "sm") return "icon-sm"
+    if (size === "md") return "icon-md"
+    if (size === "lg") return "icon-lg"
+    return "icon"
+  }
   if (size === "xs") return "xs"
   if (size === "sm") return "sm"
   if (size === "md") return "md"

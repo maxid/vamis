@@ -38,9 +38,20 @@ export function actionLabel(schema: unknown, data: Record<string, unknown> = {})
 
 export function actionShowLabel(schema: unknown): boolean {
   const rec = asRecord(schema)
+  if (rec.iconOnly === true) return false
   if (rec.label === false || rec.label === '') return false
   if (typeof rec.label === 'string') return true
   return typeof rec.title === 'string' && !!rec.title
+}
+
+/** 对齐 Amis Action：`iconOnly={!!(icon && !label && level !== 'link')}`，并认 schema `iconOnly: true`。 */
+export function actionIconOnly(schema: unknown): boolean {
+  const rec = asRecord(schema)
+  if (actionLevel(schema) === 'link') return false
+  if (rec.iconOnly === true) return true
+  const icon = rec.icon
+  if (icon == null || icon === false || icon === '') return false
+  return !actionShowLabel(schema)
 }
 
 export function actionIconSrc(schema: unknown, key = 'icon'): string {

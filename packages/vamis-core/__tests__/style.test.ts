@@ -226,6 +226,7 @@ describe('Amis width helpers', () => {
     expect(root).not.toContain('text-sm')
     const button = readFileSync(resolve(here, '../../vamis-ui/src/ui/button/index.ts'), 'utf8')
     expect(button).toContain('rounded-[var(--button-radius)] font-normal')
+    expect(button).toContain('h-[var(--button-h)] min-w-[var(--button-h)] p-0')
     expect(button).not.toContain('font-medium')
     expect(button).not.toContain('text-sm font-medium')
     expect(css).toContain('--button-h-xs: 22px')

@@ -5,8 +5,8 @@ outline: deep
 
 # Action 行为按钮
 
-::: info 实现进度 94% · 进行中
-文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
+::: info 实现进度 95% · 进行中
+文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写；无文案图标按钮默认 32×32。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
 :::
 
 Action 是触发页面行为的主要方法。`type: action` 与别名 `button` / `submit` / `reset` 同一渲染器。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -128,7 +128,7 @@ dialog:
   body: 这是个简单的弹框。
 ```
 
-如果 `label` 配置为空字符串，可以只显示 `icon`：
+如果 `label` 配置为空字符串（或 `false` / `iconOnly: true`），可以只显示 `icon`。对齐 Amis `Button--iconOnly`：默认 **32×32**、padding 归零，xs/sm/md/lg 跟档位高度；`level: link` 不切正方形。有文案的按钮仍走横向 padding。
 
 ```schema: scope="body"
 label: ""
@@ -442,7 +442,8 @@ disabledTip: 禁用了
 |--------|------|--------|------|
 | type | `string` | `"action"` | 指定为 action 渲染器；`button` / `submit` / `reset` 是别名 |
 | actionType | `string` | | ajax / download / saveAs / dialog / drawer / toast / copy / link / url / email / submit / reset / clear / clear-and-submit / reset-and-submit / reload / setValue … |
-| label | `string` | | 按钮文本。未写或空字符串则只显示图标，不补「按钮」 |
+| label | `string` | | 按钮文本。未写或空字符串则只显示图标，不补「按钮」；有 icon 时走正方形盒模型 |
+| iconOnly | `boolean` | | `true` 时只显示图标，默认 32×32（`level: link` 除外） |
 | level | `string` | `default` | primary / secondary / info / success / warning / danger / light / dark / link |
 | primary | `boolean` | | `true` 等价 `level: primary`；已写 `level` 时以 level 为准 |
 | size | `string` | | xs / sm / md / lg |

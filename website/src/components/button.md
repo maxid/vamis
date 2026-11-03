@@ -5,8 +5,8 @@ outline: deep
 
 # Button 按钮
 
-::: info 实现进度 94% · 进行中
-`button` 是 `action` 的别名，同一渲染器。文档主路径已对齐：`level` / `primary`、`size`、`block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写。复杂行为见 [Action 行为按钮](/components/action)。
+::: info 实现进度 95% · 进行中
+`button` 是 `action` 的别名，同一渲染器。文档主路径已对齐：`level` / `primary`、`size`、`block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写；空 label + icon 默认 32×32。复杂行为见 [Action 行为按钮](/components/action)。
 :::
 
 `button` 实际上是 `action` 的别名，更多用法见 [Action](/components/action)。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

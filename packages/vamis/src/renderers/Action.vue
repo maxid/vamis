@@ -15,6 +15,7 @@ import {
   actionLabel,
   actionLevel,
   actionSchemaLoading,
+  actionIconOnly,
   actionShowLabel,
   actionTooltip,
   actionTooltipPlacement,
@@ -73,7 +74,7 @@ const variant = computed(() => {
   const level = isActive.value && activeLevel.value ? activeLevel.value : actionLevel(props.schema)
   return levelToVariant(level, kind.value)
 })
-const size = computed(() => sizeToButtonSize(props.schema.size))
+const size = computed(() => sizeToButtonSize(props.schema.size, !inCountDown.value && actionIconOnly(props.schema)))
 function resolveSchemaIcon(raw: unknown) {
   const value = typeof raw === 'string' ? filterTpl(raw, data.value) : raw
   return resolveIcon(value, { vendor: iconVendor(props.schema) })

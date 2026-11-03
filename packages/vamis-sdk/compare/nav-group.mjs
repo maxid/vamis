@@ -138,7 +138,9 @@ function atLink(link) {
 
 export function groupP0(id) {
   if (id === 'form-default') return atLink('/components/form')
-  if (id === 'button-level-primary' || id === 'style-two-buttons') return atLink('/components/button')
+  if (id === 'button-level-primary' || id === 'style-two-buttons' || id === 'button-icon-only') {
+    return atLink('/components/button')
+  }
   if (id === 'helper-space-x-6') return atLink('/style/spacing/space-between')
   if (String(id).startsWith('helper-') || id === 'style-two-buttons-ml') return atLink('/style/spacing/margin')
   return atLink('/style/')

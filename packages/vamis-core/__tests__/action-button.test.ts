@@ -11,6 +11,7 @@ import {
   actionDisabledTip,
   actionHotKey,
   actionIconClass,
+  actionIconOnly,
   actionIconSrc,
   actionIsContainer,
   actionKind,
@@ -59,6 +60,20 @@ describe('actionLabel', () => {
     expect(actionShowLabel({ icon: 'fa fa-eye' })).toBe(false)
     expect(actionShowLabel({ icon: 'fa fa-eye', label: '查看详情' })).toBe(true)
     expect(actionShowLabel({ title: '弹框' })).toBe(true)
+  })
+})
+
+describe('actionIconOnly', () => {
+  it('matches Amis icon && !label && level !== link, plus schema iconOnly', () => {
+    expect(actionIconOnly({ icon: 'fa fa-plus', label: '' })).toBe(true)
+    expect(actionIconOnly({ icon: 'fa fa-plus' })).toBe(true)
+    expect(actionIconOnly({ icon: 'fa fa-plus', label: false })).toBe(true)
+    expect(actionIconOnly({ icon: 'fa fa-plus', iconOnly: true, label: '隐藏' })).toBe(true)
+    expect(actionShowLabel({ icon: 'fa fa-plus', iconOnly: true, label: '隐藏' })).toBe(false)
+    expect(actionIconOnly({ icon: 'fa fa-plus', label: '弹框' })).toBe(false)
+    expect(actionIconOnly({ label: '' })).toBe(false)
+    expect(actionIconOnly({ icon: 'fa fa-plus', label: '', level: 'link' })).toBe(false)
+    expect(actionIconOnly({ icon: 'fa fa-plus', title: '弹框' })).toBe(false)
   })
 })
 
