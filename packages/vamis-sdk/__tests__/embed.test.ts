@@ -161,4 +161,93 @@ describe('embed', () => {
     await scoped.doAction({ actionType: 'toast', msg: 'hi ${name}' }, { name: 'Ada' })
     expect(notify).toHaveBeenCalledWith('info', 'hi Ada', expect.any(Object))
   })
+
+  it('checkbox writes trueValue/falseValue and keeps option beside the box', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'boxForm',
+        wrapWithPanel: false,
+        body: [
+          {
+            type: 'checkbox',
+            name: 'agree',
+            label: '勾选框',
+            option: '选项说明',
+            trueValue: 1,
+            falseValue: 0,
+          },
+        ],
+      },
+    })
+    await nextTick()
+    expect(host.textContent).toContain('勾选框')
+    expect(host.textContent).toContain('选项说明')
+    expect(host.querySelector('[data-slot="checkbox"]')).toBeTruthy()
+    const form = scoped.getComponentByName('boxForm') as {
+      getData?: () => Record<string, unknown>
+      context?: { getComponentByName: (name: string) => { setData?: (v: Record<string, unknown>) => void } }
+    }
+    const field = form?.context?.getComponentByName('agree')
+    expect(field).toBeTruthy()
+    field?.setData?.({ value: 1 })
+    await nextTick()
+    expect(form?.getData?.()?.agree).toBe(1)
+    field?.setData?.({ value: 0 })
+    await nextTick()
+    expect(form?.getData?.()?.agree).toBe(0)
+  })
+
+  it('checkbox clear / reset / setValue go through componentId', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'actForm',
+        wrapWithPanel: false,
+        body: [
+          {
+            type: 'checkbox',
+            name: 'type',
+            id: 'setvalue_type',
+            label: '选项',
+            option: '选项说明',
+            value: true,
+          },
+          {
+            type: 'button',
+            label: '清空',
+            onEvent: { click: { actions: [{ actionType: 'clear', componentId: 'setvalue_type' }] } },
+          },
+          {
+            type: 'button',
+            label: '重置',
+            onEvent: { click: { actions: [{ actionType: 'reset', componentId: 'setvalue_type' }] } },
+          },
+          {
+            type: 'button',
+            label: '赋值',
+            onEvent: { click: { actions: [{ actionType: 'setValue', componentId: 'setvalue_type', args: { value: false } }] } },
+          },
+        ],
+      },
+    })
+    await nextTick()
+    const form = scoped.getComponentByName('actForm') as { getData?: () => Record<string, unknown> }
+    expect(form?.getData?.()?.type).toBe(true)
+    const buttons = [...host.querySelectorAll('button')].filter((btn) =>
+      ['清空', '重置', '赋值'].includes((btn.textContent || '').trim()),
+    )
+    expect(buttons).toHaveLength(3)
+    buttons[0].click()
+    await nextTick()
+    expect(form?.getData?.()?.type).toBe('')
+    buttons[1].click()
+    await nextTick()
+    expect(form?.getData?.()?.type).toBe(true)
+    buttons[2].click()
+    await nextTick()
+    expect(form?.getData?.()?.type).toBe(false)
+  })
 })
