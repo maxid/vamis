@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-10-29（FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -183,7 +183,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `static` | Static 静态展示 | `/components/form/static` | `/zh-CN/components/form/static` | 进行中 | 65% | 能展示；`popOver` 已接（字符串 / 对象 / 放大镜）。`quickEdit` 无 | P0 |
 | `input-table` | InputTable 表格 | `/components/form/input-table` | `/zh-CN/components/form/input-table` | 进行中 | 45% | 能行内编辑；子 api、增删校验未齐 | P0 |
 | `input-tag` | InputTag 标签选择器 | `/components/form/input-tag` | `/zh-CN/components/form/input-tag` | 进行中 | 50% | 能回车加标签 | P0 |
-| `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 60% | 主路径可用；`addOn`/清值/计数未齐 | P0 |
+| `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 82% | 主路径已齐（addOn/清值/计数/边框/事件动作）；选择器已通主路径，检索精度与 `revealPassword` 仍缺 | P0 |
 | `textarea` | Textarea 多行输入框 | `/components/form/textarea` | `/zh-CN/components/form/textarea` | 进行中 | 60% | 主路径可用 | P0 |
 | `input-time` | InputTime 时间 | `/components/form/input-time` | `/zh-CN/components/form/input-time` | 进行中 | 45% | `input-date` 别名 | P0 |
 | `input-time-range` | InputTimeRange 时间范围 | `/components/form/input-time-range` | `/zh-CN/components/form/input-time-range` | 进行中 | 45% | 已注册 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：FormItem、`tpl`、`icon`、`action`、`input-text`、`checkbox`、`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。
+- 跳过 Custom 与 office/pdf。当前建议下一批：`checkbox`、`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 
@@ -346,7 +346,7 @@ flowchart LR
 | 3 | `container` | `tpl` | 6 | 23 | 190 | 已完成 | 100% |
 | 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 90% |
 | 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 85% |
-| 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 60% |
+| 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 60% |
 | 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 55% |
 | 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
@@ -512,7 +512,7 @@ flowchart LR
 | `list-item` / `flex-item` | 布局/展示 | 子节点 type | 40% | `/components/list、/components/flex` | `/zh-CN/components/list、/zh-CN/components/flex` |
 | `users-select` | 数据输入 | **精简**：内置 3 个用户 | 25% | — | — |
 | `icon-picker` / `icon-select` | 数据输入 | **精简**：8 个字符图标 | 25% | — | — |
-| `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 60% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
+| `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 82% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
 | `multi-select` | 数据输入 | `select` 别名 | 55% | `/components/form/select` | `/zh-CN/components/form/select` |
 | `qr-code` | 数据展示 | `qrcode` 别名 | 45% | `/components/qrcode` | `/zh-CN/components/qrcode` |
 | `static-json` / `static-table` | 数据展示 | json/table 别名 | 50% | `/components/json、/components/table` | `/zh-CN/components/json、/zh-CN/components/table` |

@@ -119,9 +119,27 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     assign(raw as PlainObject)
     return
   }
+  if (target) {
+    assign({ value: raw })
+    return
+  }
   if (action.name) {
     assign({ [action.name]: raw })
   }
+}
+
+async function runComponentAction(action: ActionSchema, ctx: ActionContext): Promise<boolean> {
+  const target = action.componentId || action.target
+  if (!target) return false
+  const data = actionData(action, ctx)
+  let found = false
+  for (const item of resolveTargets(target, data)) {
+    const component = ctx.scoped?.getComponentByName(item.name)
+    if (!component?.doAction) continue
+    await component.doAction(action, data)
+    found = true
+  }
+  return found
 }
 
 let builtins = false
@@ -227,8 +245,14 @@ function registerBuiltinActions() {
   registerAction('submit', async (_action, ctx) => {
     await ctx.form?.submit?.()
   })
-  registerAction('reset', async (_action, ctx) => {
-    ctx.form?.reset?.()
+  registerAction('reset', async (action, ctx) => {
+    if (!(await runComponentAction(action, ctx))) ctx.form?.reset?.()
+  })
+  registerAction('clear', async (action, ctx) => {
+    await runComponentAction(action, ctx)
+  })
+  registerAction('focus', async (action, ctx) => {
+    await runComponentAction(action, ctx)
   })
 
   registerAction('link', async (action, ctx) => {

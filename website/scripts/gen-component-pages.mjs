@@ -53,6 +53,7 @@ const HANDWRITTEN = new Set([
   '/components/form/formitem',
   '/components/form/control',
   '/components/form/options',
+  '/components/form/input-text',
   '/components/page',
   '/components/container',
   '/components/collapse',

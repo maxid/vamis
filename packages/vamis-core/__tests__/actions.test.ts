@@ -82,6 +82,43 @@ describe('onEvent actions', () => {
     expect(setData).toHaveBeenCalledWith({ date: '2023-05-01' }, true)
   })
 
+  it('setValue with componentId wraps a scalar as { value }', async () => {
+    const setData = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'setvalue_text', setData })
+    const context = ctx({ scoped })
+    await runAction(
+      {
+        actionType: 'setValue',
+        componentId: 'setvalue_text',
+        args: { value: 'amis go go go!' },
+      },
+      context,
+    )
+    expect(setData).toHaveBeenCalledWith({ value: 'amis go go go!' }, false)
+  })
+
+  it('clear / reset / focus with componentId call doAction', async () => {
+    const doAction = vi.fn()
+    const reset = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'clear_text', doAction })
+    const context = ctx({ scoped, form: { reset } })
+    await runAction({ actionType: 'clear', componentId: 'clear_text' }, context)
+    await runAction({ actionType: 'reset', componentId: 'clear_text' }, context)
+    await runAction({ actionType: 'focus', componentId: 'clear_text' }, context)
+    expect(doAction).toHaveBeenCalledTimes(3)
+    expect(doAction).toHaveBeenNthCalledWith(1, { actionType: 'clear', componentId: 'clear_text' }, expect.any(Object))
+    expect(reset).not.toHaveBeenCalled()
+  })
+
+  it('reset without componentId still resets the form', async () => {
+    const reset = vi.fn()
+    const context = ctx({ form: { reset } })
+    await runAction({ actionType: 'reset' }, context)
+    expect(reset).toHaveBeenCalled()
+  })
+
   it('exposes event.data for inited-style payloads', () => {
     const payload = withNativeEvent({ responseData: { date: 'now' }, date: 'now' }, { type: 'inited' })
     expect(payload.event.data.responseData).toEqual({ date: 'now' })
