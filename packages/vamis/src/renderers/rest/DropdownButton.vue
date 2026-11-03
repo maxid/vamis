@@ -80,7 +80,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocPointer, 
     <Button
       type="button"
       :variant="levelToVariant(schema.level)"
-      :size="sizeToButtonSize(schema.size)"
+      :size="sizeToButtonSize(schema.size, schema.iconOnly === true)"
       :disabled="disabled"
       :title="tooltip || undefined"
       :class="schema.block === true ? 'w-full' : undefined"

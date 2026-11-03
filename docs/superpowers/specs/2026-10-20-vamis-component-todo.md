@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-03（`action` / `button` 94%、`input-date` 82%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`action` / `button` 95%、`input-date` 82%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -106,9 +106,9 @@
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 94% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
+| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 95% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`（默认 32×32，xs/sm/md/lg 跟档位，`level: link` 除外）、`confirmText` / `confirmTitle`、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
 | `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
-| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 94% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写。复杂行为见 Action | P0 |
+| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 95% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写；空 label + icon 默认 32×32。复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | `/components/button-group` | `/zh-CN/components/button-group` | 进行中 | 85% | 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`。缺 `btnActiveLevel`、圆角拼缝 | P0 |
 | `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | `/components/custom` | `/zh-CN/components/custom` | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
@@ -345,7 +345,7 @@ flowchart LR
 | 2 | `tpl` | — | 7 | 28 | 231 | 进行中 | 92% |
 | 3 | `container` | `tpl` | 6 | 23 | 190 | 已完成 | 100% |
 | 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 90% |
-| 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 94% |
+| 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 95% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 85% |
 | 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 82% |
@@ -380,7 +380,7 @@ flowchart LR
 | 37 | `avatar` | `image`、`icon` | 6 | 1 | 14 | 进行中 | 90% |
 | 38 | `flex` | `container` | 5 | 1 | 13 | 进行中 | 90% |
 | 39 | `grid` | `container` | 5 | 1 | 13 | 进行中 | 90% |
-| 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 94% |
+| 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 95% |
 | 41 | `button-group` | `action`、`button` | 4 | 2 | 20 | 进行中 | 85% |
 | 42 | `nav` | `icon`、`action`、`tpl`、`link` | 5 | 1 | 13 | 进行中 | 80% |
 | 43 | `input-datetime` | `input-date` | 5 | 1 | 13 | 进行中 | 58% |
