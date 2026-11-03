@@ -224,6 +224,25 @@ export function handleMockApi(input: {
     return { status: 0, data: { options: byA[a] || [] } }
   }
 
+  if (pathname === '/api/mock2/options/autoComplete') {
+    const term = String(query.term || body.term || '').toLowerCase()
+    const all = [
+      { label: 'Apple', value: 'apple' },
+      { label: 'Banana', value: 'banana' },
+      { label: 'Orange', value: 'orange' },
+      { label: 'Watermelon', value: 'watermelon' },
+      { label: 'Amis', value: 'amis' },
+      { label: 'Vamis', value: 'vamis' },
+    ]
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        options: term ? all.filter((item) => item.label.toLowerCase().includes(term) || item.value.includes(term)) : all,
+      },
+    }
+  }
+
   if (pathname === '/api/mock2/options') {
     return {
       status: 0,
