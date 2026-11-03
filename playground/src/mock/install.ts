@@ -1,4 +1,4 @@
-import { handleMockApi } from './handler'
+import { handleMockApi, isMockFile } from './handler'
 
 function requestUrl(input: RequestInfo | URL): string {
   if (typeof input === 'string') return input
@@ -43,6 +43,15 @@ export function installMockFetch() {
       query,
       body,
     })
+    if (isMockFile(payload)) {
+      return new Response(payload.body, {
+        status: 200,
+        headers: {
+          'Content-Type': payload.contentType,
+          'Content-Disposition': `attachment; filename="${payload.filename}"`,
+        },
+      })
+    }
     return new Response(JSON.stringify(payload), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

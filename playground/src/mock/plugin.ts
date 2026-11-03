@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import { handleMockApi } from './handler'
+import { handleMockApi, isMockFile } from './handler'
 
 async function readBody(req: any): Promise<any> {
   const chunks: Buffer[] = []
@@ -14,7 +14,13 @@ async function readBody(req: any): Promise<any> {
   }
 }
 
-function send(res: any, data: unknown) {
+function send(res: any, data: ReturnType<typeof handleMockApi>) {
+  if (isMockFile(data)) {
+    res.setHeader('Content-Type', data.contentType)
+    res.setHeader('Content-Disposition', `attachment; filename="${data.filename}"`)
+    res.end(data.body)
+    return
+  }
   res.setHeader('Content-Type', 'application/json')
   res.end(JSON.stringify(data))
 }

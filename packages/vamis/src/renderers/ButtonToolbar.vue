@@ -7,7 +7,10 @@ const buttons = computed(() => asArray(props.schema.buttons || props.schema.body
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-1 rounded-md border bg-muted/40 p-1">
+  <div
+    data-vamis-button-toolbar
+    class="-ml-1 -mt-1 [&>*]:ml-1 [&>*]:mt-1"
+  >
     <SchemaRenderer v-for="(node, i) in buttons" :key="i" :schema="node" />
   </div>
 </template>
