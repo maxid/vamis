@@ -288,4 +288,115 @@ describe('onEvent actions', () => {
       'mailto:amis@baidu.com?subject=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E4%B8%BB%E9%A2%98&body=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E6%AD%A3%E6%96%87',
     )
   })
+
+  it('ajax redirects and opens feedback after success', async () => {
+    const openDialog = vi.fn()
+    const context = ctx({
+      overlay: {
+        state: { dialog: null, drawer: null, data: {} },
+        openDialog,
+        openDrawer: vi.fn(),
+        closeDialog: vi.fn(),
+        closeDrawer: vi.fn(),
+        close: vi.fn(),
+      },
+    })
+    await runAction(
+      {
+        actionType: 'ajax',
+        api: '/api/mock2/form/saveForm',
+        redirect: '/start/getting-started',
+        feedback: { title: '操作成功', body: '${name} 已操作成功' },
+      },
+      context,
+    )
+    expect(context.env.jumpTo).toHaveBeenCalledWith('/start/getting-started', { blank: false })
+    expect(openDialog).toHaveBeenCalledWith(
+      { title: '操作成功', body: '${name} 已操作成功' },
+      expect.objectContaining({ name: 'Ada' }),
+    )
+  })
+
+  it('passes blank to jumpTo for url / link', async () => {
+    const context = ctx()
+    await runAction({ actionType: 'url', url: 'https://www.baidu.com', blank: true }, context)
+    expect(context.env.jumpTo).toHaveBeenCalledWith('https://www.baidu.com', { blank: true, actionType: 'url' })
+    await runAction({ actionType: 'link', link: '/start/getting-started' }, context)
+    expect(context.env.jumpTo).toHaveBeenCalledWith('/start/getting-started', { blank: false, actionType: 'link' })
+  })
+
+  it('copies html via copyFormat', async () => {
+    const write = vi.fn(async () => undefined)
+    const writeText = vi.fn(async () => undefined)
+    vi.stubGlobal('navigator', { clipboard: { write, writeText } })
+    vi.stubGlobal(
+      'ClipboardItem',
+      class {
+        constructor(public items: Record<string, Blob>) {}
+      },
+    )
+    const context = ctx()
+    await runAction(
+      { actionType: 'copy', copyFormat: 'text/html', content: '<b>bold</b>' },
+      context,
+    )
+    expect(write).toHaveBeenCalled()
+    vi.unstubAllGlobals()
+  })
+
+  it('download treats the api as blob and saveAs uses the url', async () => {
+    const click = vi.fn()
+    const created: Array<Record<string, unknown>> = []
+    const fakeDoc = {
+      createElement: (tag: string) => {
+        const el = { href: '', download: '', rel: '', target: '', click, remove: vi.fn() }
+        if (tag === 'a') created.push(el)
+        return el
+      },
+      body: { appendChild: vi.fn((node: unknown) => node) },
+    }
+    vi.stubGlobal('document', fakeDoc)
+    vi.stubGlobal('URL', { createObjectURL: () => 'blob:out', revokeObjectURL: vi.fn() })
+    const blob = new Blob(['pdf'], { type: 'application/pdf' })
+    const context = ctx({
+      env: {
+        fetcher: vi.fn(async () => ({ status: 0, msg: 'ok', data: blob, fileName: 'download.pdf' })),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+    })
+    await runAction({ actionType: 'download', api: '/api/download', downloadFileName: 'out.pdf' }, context)
+    expect(context.env.fetcher).toHaveBeenCalled()
+    expect(created.some((el) => el.download === 'out.pdf')).toBe(true)
+    await runAction({ actionType: 'saveAs', api: '/api/download/report.csv', fileName: '保存的文件名' }, context)
+    expect(created.some((el) => el.download === '保存的文件名')).toBe(true)
+    expect(click).toHaveBeenCalled()
+    vi.unstubAllGlobals()
+  })
+
+  it('clear / clear-and-submit / reset-and-submit go through the form api', async () => {
+    const clear = vi.fn()
+    const reset = vi.fn()
+    const submit = vi.fn(async () => undefined)
+    const context = ctx({ form: { clear, reset, submit } })
+    await runAction({ actionType: 'clear' }, context)
+    expect(clear).toHaveBeenCalled()
+    await runAction({ actionType: 'clear-and-submit' }, context)
+    expect(submit).toHaveBeenCalled()
+    await runAction({ actionType: 'reset-and-submit' }, context)
+    expect(reset).toHaveBeenCalled()
+    expect(submit).toHaveBeenCalledTimes(2)
+  })
+
+  it('stops when required fields fail validation', async () => {
+    const validate = vi.fn(() => false)
+    const context = ctx({ form: { validate, submit: vi.fn() } })
+    const ran = await runAction({ actionType: 'submit', required: ['b'] }, context)
+    expect(validate).toHaveBeenCalledWith(['b'])
+    expect(ran).toBe(false)
+    expect(context.env.notify).toHaveBeenCalledWith('error', '请检查表单')
+    expect(context.form?.submit).not.toHaveBeenCalled()
+  })
 })
