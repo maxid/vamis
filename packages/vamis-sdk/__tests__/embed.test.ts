@@ -336,7 +336,8 @@ describe('embed', () => {
     expect(input?.value).toMatch(/2020-06-11/)
     input?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await nextTick()
-    const shortcut = [...host.querySelectorAll('.vamis-date-picker__shortcut')].find(
+    await nextTick()
+    const shortcut = [...document.querySelectorAll('.vamis-date-picker__shortcut')].find(
       (el) => (el.textContent || '').trim() === '今天',
     ) as HTMLButtonElement | undefined
     expect(shortcut).toBeTruthy()

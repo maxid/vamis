@@ -5,8 +5,8 @@ outline: deep
 
 # InputDate 日期
 
-::: info 实现进度 82% · 进行中
-主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。缺移动端 picker、`popOverContainerSelector`、日程 `schedules`。
+::: info 实现进度 85% · 进行中
+主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000；与 `type: calendar` 共用月历面板。缺移动端 picker、日程 `schedules`。
 :::
 
 `input-date` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

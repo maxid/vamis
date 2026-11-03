@@ -1,0 +1,60 @@
+---
+description: Amis 复用链：同一套月历/浮层；z-index 阶梯；禁止再分叉第二套 DOM
+alwaysApply: true
+---
+
+# 复用链与浮层
+
+对齐 Amis **6.13.0**。先读对照仓源码再写第二套 DOM。查阅口径见 `amis-lookup.mdc`。
+
+## 日期 / 日历
+
+Amis 链（不要再拆）：
+
+1. `packages/amis/src/renderers/Calendar.tsx`：`type: calendar` **extends DateControlRenderer**（`Form/InputDate.tsx`），默认 `embed: true`
+2. InputDate 渲染 `amis-ui` 的 `DatePicker`
+3. DatePicker 的 **弹层与 embed 都走** `amis-ui/src/components/calendar/Calendar`（DaysView / MonthsView / YearsView）；移动端另有 `CalendarMobile`
+4. DateRangePicker / MonthRangePicker 也 import 同一套 `calendar/Calendar`
+
+Vamis 入口（不要再新开月历）：
+
+| 用途 | 路径 |
+|------|------|
+| 共享月历面板 | `packages/vamis/src/renderers/calendar/DateCalendarPanel.vue` |
+| 表单日期 | `packages/vamis/src/renderers/form/InputDate.vue`（embed / 弹层都挂这块面板） |
+| `type: calendar` | `packages/vamis/src/renderers/display/Calendar.vue`（同一面板 + schedules / largeMode / 窄屏滚轮） |
+| 浮层原语 | `packages/vamis/src/overlay/VamisOverlay.vue` |
+| 容器 / 定位 / z-index | `packages/vamis-core/src/utils/overlay-layer.ts`（`Z_INDEX`、`overlayContainerFrom`、`overlayPosition`） |
+
+允许表单多出 shortcuts / 时分秒 / 页脚。不允许另一套圆角、字号、间距、选中色、非本月色（`#b8babf`）。`input-datetime` / `input-time` 已是 InputDate 别名。DateRange 仍是原生区间，**不要再长出第二套桌面月历**；要做就挂 `DateCalendarPanel`。
+
+## 浮层必须逃出裁切
+
+非 embed 的下拉 / 日期弹层：
+
+- 用 `VamisOverlay`（Vue `Teleport`）挂到 `env.getModalContainer()`（默认 `document.body`），或 schema `popOverContainerSelector`
+- **禁止**只写 `position: absolute; z-index: 20` 挂在 overflow 父级里（文档预览框会裁切）
+- 定位跟触发器（`overlayPosition`，page 坐标）；点击外部关闭时 overlay 与 trigger 都算内部
+
+对标 Amis：`DatePicker` 用 `Overlay` + `PopOver`，`container={popOverContainer || getParent}`，而 InputDate 传入 `popOverContainer={env.getModalContainer}`。
+
+## z-index 阶梯
+
+对齐 Amis `packages/amis-ui/scss/_variables.scss`。token 在 `:root`（Teleport 到 body 后仍能吃到），不要用 Tailwind `z-20` / `z-50` 当浮层高度。
+
+| token | 值 | 用途 |
+|-------|----|------|
+| `--z-dropdown` | **1000** | 日期弹层、下拉（`$zindex-dropdown`） |
+| `--z-sticky` | 900 | 粘性 |
+| `--z-fixed` | 1200 | 固定 |
+| `--z-modal` / `--z-popover` | 1400 | Dialog / Drawer；Amis `$zindex-popover = $zindex-modal` 防止 popover 被 modal 挡住 |
+| `--z-tooltip` | 1600 | 提示 |
+| `--z-toast` | 2000 | Toast（已是 2000） |
+
+日期弹层走 `--z-dropdown` **1000**。当前 Dialog 内容是 Tailwind `z-50`，1000 已盖在 modal 内容之上。Amis DatePicker 实际 class 是 PopOver（1400）；若以后 Dialog 对齐到 1400，日期弹层改 `--z-popover`，或把 Overlay 挂进 `getModalContainer` 指向的 dialog 根（与 Amis 同栈）。不要用 50 去「近似」1000。
+
+## 禁止
+
+- 为 `type: calendar` 再维护一套与 InputDate 不同的月历 DOM/CSS
+- 新下拉只 `absolute` 在控件里、靠 `z-20` 冒充浮层
+- 搬 `.cxd-DatePicker` / `.rdtPicker` 前缀（视觉转写到 `vamis-cal` / token）

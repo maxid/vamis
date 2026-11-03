@@ -220,7 +220,7 @@ describe('calendar value and schedules', () => {
 
   it('clips largeMode chip text with Amis inner ellipsis', () => {
     const here = dirname(fileURLToPath(import.meta.url))
-    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/display/Calendar.vue'), 'utf8')
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
     expect(vue).toContain('class="vamis-cal-chip-text"')
     expect(vue).toContain('.vamis-cal-chip-text {')
     expect(vue).toContain('position: absolute')
@@ -228,5 +228,15 @@ describe('calendar value and schedules', () => {
     expect(vue).toContain('@click="openSchedule(cell, $event)"')
     expect(vue).not.toContain('!lane.placeholder && openSchedule')
     expect(vue).not.toContain('visibility: hidden')
+  })
+
+  it('shares DateCalendarPanel across calendar and input-date', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const calendar = readFileSync(resolve(here, '../../vamis/src/renderers/display/Calendar.vue'), 'utf8')
+    const inputDate = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputDate.vue'), 'utf8')
+    expect(calendar).toContain("from '../calendar/DateCalendarPanel.vue'")
+    expect(inputDate).toContain("from '../calendar/DateCalendarPanel.vue'")
+    expect(inputDate).toContain('VamisOverlay')
+    expect(inputDate).not.toContain('vamis-date-cal__')
   })
 })

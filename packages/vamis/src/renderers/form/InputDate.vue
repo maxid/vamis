@@ -2,7 +2,9 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { cn } from '@vamis/ui'
 import {
-  CALENDAR_WEEKDAYS,
+  calendarDecade,
+  calendarMonthLabel,
+  calendarYearLabel,
   createVamisEvent,
   dayjs,
   displayInputDateValue,
@@ -10,8 +12,6 @@ import {
   filterTpl,
   formItemStatic,
   formItemStaticSchema,
-  INPUT_DATE_MONTHS,
-  inputDateCellIso,
   inputDateClearable,
   inputDateCloseOnSelect,
   inputDateHours,
@@ -24,6 +24,7 @@ import {
   inputDateTimeFormat,
   inputDateViewMode,
   isInputDateDisabled,
+  overlayContainerFrom,
   parseInputDateValue,
   parseTypedInputDate,
   pickInputDateValue,
@@ -37,11 +38,14 @@ import {
   useOverlay,
   useScope,
   useScoped,
+  type CalendarCell,
   type Dayjs,
   type SchemaObject,
 } from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
+import DateCalendarPanel from '../calendar/DateCalendarPanel.vue'
+import VamisOverlay from '../../overlay/VamisOverlay.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
@@ -85,14 +89,11 @@ const borderMode = computed(() => {
 })
 const shortcuts = computed(() => resolveInputDateShortcuts(props.schema.shortcuts, data.value))
 const weeks = computed(() => inputDateMonthCells(cursor.value.toDate(), new Date()))
-const yearLabel = computed(() => `${cursor.value.year()}年`)
-const monthLabel = computed(() => `${cursor.value.month() + 1}月`)
-const decade = computed(() => {
-  const from = Math.floor(cursor.value.year() / 10) * 10
-  const years: number[] = []
-  for (let y = from - 1; y <= from + 10; y++) years.push(y)
-  return { from, to: from + 9, years }
-})
+const yearLabel = computed(() => calendarYearLabel(cursor.value.toDate()))
+const monthLabel = computed(() => calendarMonthLabel(cursor.value.toDate()))
+const decade = computed(() => calendarDecade(cursor.value.toDate()))
+const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
+const panelCursor = computed(() => cursor.value.toDate())
 const selectedIso = computed(() => (parsed.value ? parsed.value.format('YYYY-MM-DD') : ''))
 const hour = computed(() => (parsed.value ? parsed.value.format('HH') : '00'))
 const minute = computed(() => (parsed.value ? parsed.value.format('mm') : '00'))
@@ -150,15 +151,14 @@ async function commit(next: string, close = false) {
   return true
 }
 
-function cellDisabled(iso: string, date: Date) {
-  const m = dayjs(date)
-  return isInputDateDisabled(m, props.schema, data.value, env.trusted === true)
+function cellDisabled(cell: CalendarCell) {
+  return isInputDateDisabled(dayjs(cell.date), props.schema, data.value, env.trusted === true)
 }
 
-async function pickDay(date: Date, iso: string) {
-  if (locked.value || cellDisabled(iso, date)) return
-  const next = pickInputDateValue(dayjs(date), props.schema, parsed.value)
-  syncCursor(dayjs(date))
+async function pickDay(cell: CalendarCell) {
+  if (locked.value || cellDisabled(cell)) return
+  const next = pickInputDateValue(dayjs(cell.date), props.schema, parsed.value)
+  syncCursor(dayjs(cell.date))
   await commit(next, true)
 }
 
@@ -294,13 +294,6 @@ const apis = [
 ].filter(Boolean) as ReturnType<typeof makeApi>[]
 for (const api of apis) scoped?.register(api)
 
-function onDocumentPointer(event: MouseEvent) {
-  if (!open.value || embed.value) return
-  const target = event.target as Node | null
-  if (target && rootEl.value?.contains(target)) return
-  open.value = false
-}
-
 function normalizeInitial() {
   const raw = current.value ?? props.schema.value
   if (raw == null || raw === '') return
@@ -314,11 +307,9 @@ onMounted(() => {
   normalizeInitial()
   pristine.value = name.value ? form?.getValue(name.value) : props.schema.value
   syncCursor(parsed.value)
-  document.addEventListener('mousedown', onDocumentPointer)
 })
 onBeforeUnmount(() => {
   for (const api of apis) scoped?.unregister(api)
-  document.removeEventListener('mousedown', onDocumentPointer)
 })
 
 watch(
@@ -382,11 +373,7 @@ watch(
         </span>
       </div>
 
-      <div
-        v-if="embed || open"
-        class="vamis-date-picker__popover"
-        :class="{ 'is-embed': embed }"
-      >
+      <div v-if="embed" class="vamis-date-picker__popover is-embed">
         <div v-if="shortcuts.length" class="vamis-date-picker__shortcuts">
           <button
             v-for="item in shortcuts"
@@ -399,83 +386,24 @@ watch(
             {{ item.label }}
           </button>
         </div>
-
-        <div v-if="!timeOnly" class="vamis-date-cal">
-          <div v-if="panelView === 'days'" class="vamis-date-cal__header">
-            <button type="button" class="vamis-date-cal__nav" aria-label="上一年" @mousedown.prevent @click="shiftYear(-1)">«</button>
-            <button type="button" class="vamis-date-cal__nav" aria-label="上一月" @mousedown.prevent @click="shiftMonth(-1)">‹</button>
-            <div class="vamis-date-cal__center">
-              <button type="button" class="vamis-date-cal__switch" @mousedown.prevent @click="panelView = 'years'">{{ yearLabel }}</button>
-              <button type="button" class="vamis-date-cal__switch" @mousedown.prevent @click="panelView = 'months'">{{ monthLabel }}</button>
-            </div>
-            <button type="button" class="vamis-date-cal__nav" aria-label="下一月" @mousedown.prevent @click="shiftMonth(1)">›</button>
-            <button type="button" class="vamis-date-cal__nav" aria-label="下一年" @mousedown.prevent @click="shiftYear(1)">»</button>
-          </div>
-          <div v-else-if="panelView === 'months'" class="vamis-date-cal__header is-span">
-            <button type="button" class="vamis-date-cal__nav" aria-label="上一年" @mousedown.prevent @click="shiftYear(-1)">«</button>
-            <button type="button" class="vamis-date-cal__switch" @mousedown.prevent @click="panelView = 'years'">{{ yearLabel }}</button>
-            <button type="button" class="vamis-date-cal__nav" aria-label="下一年" @mousedown.prevent @click="shiftYear(1)">»</button>
-          </div>
-          <div v-else class="vamis-date-cal__header is-span">
-            <button type="button" class="vamis-date-cal__nav" aria-label="上十年" @mousedown.prevent @click="shiftYear(-10)">«</button>
-            <span class="vamis-date-cal__switch">{{ decade.from }}年 - {{ decade.to }}年</span>
-            <button type="button" class="vamis-date-cal__nav" aria-label="下十年" @mousedown.prevent @click="shiftYear(10)">»</button>
-          </div>
-
-          <table v-if="panelView === 'days'" class="vamis-date-cal__table">
-            <thead>
-              <tr>
-                <th v-for="w in CALENDAR_WEEKDAYS" :key="w">{{ w }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(week, wi) in weeks" :key="wi">
-                <td
-                  v-for="cell in week"
-                  :key="inputDateCellIso(cell)"
-                  :class="{
-                    'is-other': !cell.current,
-                    'is-today': cell.today,
-                    'is-active': inputDateCellIso(cell) === selectedIso,
-                    'is-disabled': cellDisabled(inputDateCellIso(cell), cell.date),
-                  }"
-                  @mousedown.prevent
-                  @click="pickDay(cell.date, inputDateCellIso(cell))"
-                >
-                  <span>{{ cell.day }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div v-else-if="panelView === 'months'" class="vamis-date-cal__grid">
-            <button
-              v-for="(label, index) in INPUT_DATE_MONTHS"
-              :key="label"
-              type="button"
-              class="vamis-date-cal__pick"
-              :class="{ 'is-active': cursor.month() === index }"
-              @mousedown.prevent
-              @click="pickMonth(index)"
-            >
-              {{ label }}
-            </button>
-          </div>
-          <div v-else class="vamis-date-cal__grid">
-            <button
-              v-for="year in decade.years"
-              :key="year"
-              type="button"
-              class="vamis-date-cal__pick"
-              :class="{ 'is-active': cursor.year() === year, 'is-other': year < decade.from || year > decade.to }"
-              @mousedown.prevent
-              @click="pickYear(year)"
-            >
-              {{ year }}
-            </button>
-          </div>
-        </div>
-
+        <DateCalendarPanel
+          v-if="!timeOnly"
+          :cursor="panelCursor"
+          :view="panelView"
+          :weeks="weeks"
+          :year-label="yearLabel"
+          :month-label="monthLabel"
+          :decade="decade"
+          :selected-iso="selectedIso"
+          :disabled-iso="cellDisabled"
+          @shift-month="shiftMonth"
+          @shift-year="shiftYear"
+          @pick-year="pickYear"
+          @pick-month="pickMonth"
+          @pick-day="pickDay"
+          @open-year="panelView = 'years'"
+          @open-month="panelView = 'months'"
+        />
         <div v-if="showsTime" class="vamis-date-picker__time">
           <select :value="hour" :disabled="locked" @change="pickTime('hour', ($event.target as HTMLSelectElement).value)">
             <option v-for="h in hours" :key="h" :value="h">{{ h }}</option>
@@ -492,6 +420,62 @@ watch(
           </template>
         </div>
       </div>
+      <VamisOverlay
+        v-else
+        :show="open"
+        :target="rootEl"
+        :container="overlayContainer"
+        @outside="open = false"
+      >
+        <div class="vamis-date-picker__popover">
+          <div v-if="shortcuts.length" class="vamis-date-picker__shortcuts">
+            <button
+              v-for="item in shortcuts"
+              :key="item.key || item.label"
+              type="button"
+              class="vamis-date-picker__shortcut"
+              @mousedown.prevent
+              @click="pickShortcut(item.date)"
+            >
+              {{ item.label }}
+            </button>
+          </div>
+          <DateCalendarPanel
+            v-if="!timeOnly"
+            :framed="false"
+            :cursor="panelCursor"
+            :view="panelView"
+            :weeks="weeks"
+            :year-label="yearLabel"
+            :month-label="monthLabel"
+            :decade="decade"
+            :selected-iso="selectedIso"
+            :disabled-iso="cellDisabled"
+            @shift-month="shiftMonth"
+            @shift-year="shiftYear"
+            @pick-year="pickYear"
+            @pick-month="pickMonth"
+            @pick-day="pickDay"
+            @open-year="panelView = 'years'"
+            @open-month="panelView = 'months'"
+          />
+          <div v-if="showsTime" class="vamis-date-picker__time">
+            <select :value="hour" :disabled="locked" @change="pickTime('hour', ($event.target as HTMLSelectElement).value)">
+              <option v-for="h in hours" :key="h" :value="h">{{ h }}</option>
+            </select>
+            <span>:</span>
+            <select :value="minute" :disabled="locked" @change="pickTime('minute', ($event.target as HTMLSelectElement).value)">
+              <option v-for="m in minutes" :key="m" :value="m">{{ m }}</option>
+            </select>
+            <template v-if="showSeconds">
+              <span>:</span>
+              <select :value="second" :disabled="locked" @change="pickTime('second', ($event.target as HTMLSelectElement).value)">
+                <option v-for="s in minutes" :key="s" :value="s">{{ s }}</option>
+              </select>
+            </template>
+          </div>
+        </div>
+      </VamisOverlay>
     </div>
   </FormItem>
 </template>

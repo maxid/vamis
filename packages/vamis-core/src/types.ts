@@ -180,6 +180,8 @@ export interface RendererEnv {
   debug?: boolean
   /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */
   trusted?: boolean
+  /** 浮层挂载点。对齐 Amis `env.getModalContainer`，默认 `document.body`。 */
+  getModalContainer?: () => HTMLElement | undefined
 }
 
 export interface RenderContextValue {

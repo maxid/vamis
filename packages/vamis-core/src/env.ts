@@ -27,6 +27,9 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     async confirm(msg, title) {
       return window.confirm(title ? `${title}\n\n${msg}` : msg)
     },
+    getModalContainer() {
+      return typeof document !== 'undefined' ? document.body : undefined
+    },
     ...overrides,
   }
 }
