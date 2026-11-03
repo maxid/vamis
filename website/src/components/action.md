@@ -5,8 +5,8 @@ outline: deep
 
 # Action 行为按钮
 
-::: info 实现进度 92% · 进行中
-文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
+::: info 实现进度 94% · 进行中
+文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
 :::
 
 Action 是触发页面行为的主要方法。`type: action` 与别名 `button` / `submit` / `reset` 同一渲染器。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -17,9 +17,9 @@ Action 是触发页面行为的主要方法。`type: action` 与别名 `button` 
 
 ## 基本用法
 
-对照不跑 dialog 活示例（点击探测会和 Amis 树结点对不齐）：
+点击按钮弹框：
 
-```yaml
+```schema: scope="body"
 label: 弹框
 type: button
 actionType: dialog
@@ -28,119 +28,123 @@ dialog:
   body: 这是个简单的弹框。
 ```
 
-JSON 同等有效：
-
-```json
-{
-  "label": "弹框",
-  "type": "button",
-  "actionType": "dialog",
-  "dialog": {
-    "title": "弹框",
-    "body": "这是个简单的弹框。"
-  }
-}
-```
+JSON 同等有效，切格式走「编辑 Schema」。
 
 ## 样式
 
 ### 尺寸
 
-`size`：`xs` / `sm` / `md` / `lg`。未写时是默认高度。
-
-尺寸用活示例各画一颗按钮：
+配置 `size`，显示不同尺寸。`xs` / `sm` / `md` / `lg` 高度对齐 cxd 22 / 30 / 32 / 38px；未写时是默认高度 32px。
 
 ```schema: scope="body"
-{ "type": "button", "label": "默认档" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "极小", "size": "xs" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "小", "size": "sm" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "中等", "size": "md" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "大", "size": "lg" }
+type: button-toolbar
+buttons:
+  - type: button
+    label: 默认尺寸
+  - type: button
+    label: 极小
+    size: xs
+  - type: button
+    label: 小
+    size: sm
+  - type: button
+    label: 中等
+    size: md
+  - type: button
+    label: 大
+    size: lg
 ```
 
 ### 主题
 
-`level` 或 `primary: true`（等价 `level: primary`）。
+可以配置 `level` 或者 `primary`，显示不同样式。`primary: true` 等价 `level: primary`。cxd 里 `info` 与 `primary` 同色（`#2468f2` / `--primary`）；`active` + `activeLevel: primary` 的「高亮」也是这一档。
 
 ```schema: scope="body"
-{ "type": "button", "label": "默认" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "主要", "level": "primary" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "次要", "level": "secondary" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "信息", "level": "info" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "成功", "level": "success" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "警告", "level": "warning" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "危险", "level": "danger" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "浅色", "level": "light" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "深色", "level": "dark" }
-```
-
-```schema: scope="body"
-{ "type": "button", "label": "链接", "level": "link" }
+type: button-toolbar
+buttons:
+  - type: button
+    label: 默认
+  - type: button
+    label: 主要
+    level: primary
+  - type: button
+    label: 次要
+    level: secondary
+  - type: button
+    label: 信息
+    level: info
+  - type: button
+    label: 成功
+    level: success
+  - type: button
+    label: 警告
+    level: warning
+  - type: button
+    label: 危险
+    level: danger
+  - type: button
+    label: 浅色
+    level: light
+  - type: button
+    label: 深色
+    level: dark
+  - type: button
+    label: 链接
+    level: link
 ```
 
 `active: true` 时用 `activeLevel`（缺省仍走当前 `level`），并加上 `activeClassName`（默认 `is-active`）。
 
 ```schema: scope="body"
-{ "type": "button", "label": "高亮", "active": true, "activeLevel": "primary" }
+type: button
+label: 高亮
+active: true
+activeLevel: primary
 ```
 
 ### 图标
 
-`icon` 含 `.` 时当图片。`fa fa-*` 打在 `<i>` 上，字形走 Font Awesome（`sdk.css` 已带 v4-shims）。也可以写 SVG 字符串。未写 `label` 或 `label: ""` 都只显示图标，不会补「按钮」。
+可以配置 `icon`，实现按钮显示图标。`icon` 含 `.` 时当图片。`fa fa-*` 打在 `<i>` 上，字形走 Font Awesome（`sdk.css` 已带 v4-shims）。也可以写 SVG 字符串。未写 `label` 或 `label: ""` 都只显示图标，不会补「按钮」。
 
 ```schema: scope="body"
+label: 弹框
 type: button
-label: 带图标
+actionType: dialog
 icon: fa fa-plus
+dialog:
+  title: 弹框
+  body: 这是个简单的弹框。
 ```
 
+icon 也可以是 url 地址，比如
+
 ```schema: scope="body"
+label: 弹框
 type: button
-label: 带图标
+actionType: dialog
 icon: https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg
+dialog:
+  title: 弹框
+  body: 这是个简单的弹框。
+```
+
+如果 `label` 配置为空字符串，可以只显示 `icon`：
+
+```schema: scope="body"
+label: ""
+type: button
+actionType: dialog
+icon: fa fa-plus
+dialog:
+  title: 弹框
+  body: 这是个简单的弹框。
 ```
 
 ## 操作前确认
 
-`confirmText` 会先 `env.confirm`；`confirmTitle` 传给确认框标题（浏览器原生 `confirm` 没有标题栏）。对照不跑这条活示例：
+可以通过配置 `confirmText`，实现在任意操作前弹出提示框确认是否进行该操作。同时可以通过配置 `confirmTitle` 来设置弹窗标题。Playground 走浏览器原生 `confirm`，标题会拼进文案（原生对话框没有独立标题栏）。
 
-```yaml
+```schema: scope="body"
 label: ajax请求
 type: button
 actionType: ajax
@@ -151,9 +155,9 @@ api: /api/mock2/form/saveForm
 
 ## ajax 请求
 
-`actionType: ajax` + `api`。成功走 `env.notify`，可写 `messages.success` / `failed`，可用 `reload` 刷新目标。`reload: window` 会刷新当前页。对照不跑 ajax 活示例：
+通过配置 `"actionType": "ajax"` 和 `api`，可以实现 ajax 请求。成功走 `env.notify`，可写 `messages.success` / `failed`，可用 `reload` 刷新目标。`reload: window` 会刷新当前页。
 
-```yaml
+```schema: scope="body"
 label: ajax请求
 type: button
 actionType: ajax
@@ -162,9 +166,9 @@ api: /api/mock2/form/saveForm
 
 ### 请求成功后，跳转至某个页面
 
-`redirect` 支持模板。相对路径和完整 URL 都走 `env.jumpTo`。
+配置相对路径，实现单页跳转：
 
-```yaml
+```schema: scope="body"
 label: ajax请求
 type: button
 actionType: ajax
@@ -172,9 +176,19 @@ api: /api/mock2/form/saveForm
 redirect: /start/getting-started
 ```
 
+配置完整路径会走 `env.jumpTo` 直接跳转（会离开当前文档页）：
+
+```schema: scope="body"
+label: ajax请求
+type: button
+actionType: ajax
+api: /api/mock2/form/saveForm
+redirect: https://www.baidu.com/
+```
+
 ### 请求成功后，显示反馈弹框
 
-```yaml
+```schema: scope="body"
 type: button
 label: ajax 反馈弹框
 actionType: ajax
@@ -186,7 +200,9 @@ feedback:
 
 ### 自定义 toast 文字
 
-```yaml
+可以通过配置 `messages`，自定义接口返回 toast 信息。接口返回了 `msg` 时优先用接口文案。
+
+```schema: scope="body"
 type: button
 label: ajax 请求
 actionType: ajax
@@ -196,13 +212,11 @@ messages:
   failed: 失败了呢。。
 ```
 
-接口返回了 `msg` 时优先用接口文案。
-
 ## 下载请求
 
 `actionType: download` 是 ajax 特例，自动给 api 加上 `responseType: blob`。可用 `downloadFileName` 覆盖文件名；接口仍建议返回 `Content-Disposition`。
 
-```yaml
+```schema: scope="body"
 label: 下载
 type: action
 actionType: download
@@ -214,7 +228,7 @@ downloadFileName: download.pdf
 
 `actionType: saveAs` 不走 `env.fetcher`，按 url 拉文件并触发下载，不支持 POST。默认取 url 里的文件名，也可用 `fileName`。
 
-```yaml
+```schema: scope="body"
 label: 保存
 type: action
 actionType: saveAs
@@ -238,9 +252,9 @@ countDownTpl: ${timeLeft} 秒后重发
 
 ### 单页跳转
 
-`actionType: link` + `link`。对照不跑跳转活示例：
+`actionType: link` + `link`。会走 `env.jumpTo`，离开当前文档页。
 
-```yaml
+```schema: scope="body"
 label: 进入介绍页
 type: button
 level: info
@@ -252,7 +266,7 @@ link: /start/getting-started
 
 `actionType: url` + `url`。`blank: true` 时新窗口打开。
 
-```yaml
+```schema: scope="body"
 label: 打开 Baidu
 type: button
 level: success
@@ -263,9 +277,9 @@ blank: true
 
 ## 发送邮件
 
-`actionType: email` 拼 `mailto:`。对照不跑这条活示例：
+`actionType: email` 拼 `mailto:`，会唤起系统邮件客户端。
 
-```yaml
+```schema: scope="body"
 label: 发送邮件
 type: button
 actionType: email
@@ -277,9 +291,7 @@ body: 这是邮件正文
 
 ## 弹框
 
-对照不跑 dialog 活示例：
-
-```yaml
+```schema: scope="body"
 label: Dialog Form
 type: button
 level: primary
@@ -321,7 +333,7 @@ content: <a href='https://example.com/vamis'>link</a> <b>bold</b>
 
 ## 刷新其他组件
 
-`actionType: reload` + `target`（组件 `name`，逗号分隔）。ajax 成功后也可以写 `reload`。
+`actionType: reload` + `target`（组件 `name`，逗号分隔）。ajax 成功后也可以写 `reload`。`reload: window` 会刷新当前页，文档里不放这条活示例以免整页重载。
 
 ## 组件特有的行为类型
 
@@ -329,13 +341,17 @@ content: <a href='https://example.com/vamis'>link</a> <b>bold</b>
 
 `type: reset` 还原初始值。`actionType: clear` 清空字段（不一定等于初始值）。`reset-and-submit` / `clear-and-submit` 先还原或清空再提交。
 
-```yaml
+```schema: scope="body"
 type: form
+api: /api/mock2/form/saveForm
 body:
   - type: input-text
     name: username
     label: 用户名
     value: rick
+  - type: input-text
+    name: password
+    label: 密码
 actions:
   - type: button
     actionType: clear
@@ -353,17 +369,26 @@ actions:
 
 `onClick` 字符串只在 `env.trusted`（Playground 文档预览默认开）时编译成函数，参数是 `event` 和 `props`。返回 `false` 会阻止后续 `actionType`。可用 `props.formStore.setValues()` 改表单。
 
-```yaml
-label: 修改姓名
-type: button
-onClick: "props.formStore.setValues({name: 'amis', email: 'amis@baidu.com'});"
+```schema: scope="body"
+type: form
+wrapWithPanel: false
+body:
+  - type: input-text
+    name: name
+    label: 姓名
+  - type: input-text
+    name: email
+    label: 邮箱
+  - type: button
+    label: 修改姓名
+    onClick: "props.formStore.setValues({name: 'amis', email: 'amis@baidu.com'});"
 ```
 
 ## 全局键盘快捷键触发
 
 `hotKey` 支持 `ctrl` / `command` / `shift` / `alt` 以及 enter、esc、方向键等。这是页面级快捷键，不要用 `enter` 冒充回车提交。
 
-```yaml
+```schema: scope="body"
 label: 使用 ⌘+o 或 ctrl+o 来弹框
 type: button
 hotKey: command+o,ctrl+o
@@ -449,6 +474,7 @@ disabledTip: 禁用了
 | reload | `string` | | 动作结束后刷新目标 `name`；`window` 刷新当前页 |
 | close | `boolean` | | 在浮层 actions 里为 true 时结束后关当前层 |
 | required | `string[]` | | 提交前先校验这些字段 |
+| onClick | `string` | | 仅 `env.trusted` 下编译 |
 | onEvent | `object` | | 见事件表 |
 | badge | `number` / 对象 | | 角标。活示例见 [Badge 角标](./badge) |
 
@@ -460,9 +486,7 @@ disabledTip: 禁用了
 | mouseenter | 同上 | 鼠标移入（宿主） |
 | mouseleave | 同上 | 鼠标移出（宿主） |
 
-对照不跑带 toast 的指针事件活示例：
-
-```yaml
+```schema: scope="body"
 type: button
 label: Button
 onEvent:
@@ -486,3 +510,5 @@ onEvent:
 - `close` 目前只认 `true` 关当前 dialog / drawer，不按祖先名字关。
 - 控制流 `switch` / `loop` / `parallel` 仍是 D4 P1。
 - `nextCondition`、input-table 增行尚未接。
+- `confirmTitle` 走原生 `confirm`，标题拼进文案，没有独立标题栏。
+- `reload: window` 会整页刷新，文档不放活示例。
