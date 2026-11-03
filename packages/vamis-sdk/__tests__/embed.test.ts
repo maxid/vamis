@@ -250,4 +250,96 @@ describe('embed', () => {
     await nextTick()
     expect(form?.getData?.()?.type).toBe(false)
   })
+
+  it('input-date stores unix seconds and honors shortcuts / minDate', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'dateForm',
+        wrapWithPanel: false,
+        debug: true,
+        body: [
+          {
+            type: 'input-date',
+            name: 'date',
+            label: '日期',
+            value: '1591862818',
+            shortcuts: ['today', 'yesterday'],
+            minDate: '1591862818',
+          },
+        ],
+      },
+    })
+    await nextTick()
+    const form = scoped.getComponentByName('dateForm') as { getData?: () => Record<string, unknown> }
+    expect(String(form?.getData?.()?.date)).toBe('1591862818')
+    expect(host.querySelector('[data-slot="input-date"]')).toBeTruthy()
+    const input = host.querySelector('[data-slot="input-date"] input') as HTMLInputElement | null
+    expect(input?.value).toMatch(/2020-06-11/)
+    input?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    const shortcut = [...host.querySelectorAll('.vamis-date-picker__shortcut')].find(
+      (el) => (el.textContent || '').trim() === '今天',
+    ) as HTMLButtonElement | undefined
+    expect(shortcut).toBeTruthy()
+    shortcut?.click()
+    await nextTick()
+    const next = String(form?.getData?.()?.date || '')
+    expect(next).toMatch(/^\d{10}$/)
+    expect(Number(next)).toBeGreaterThanOrEqual(1591862818)
+  })
+
+  it('input-date clear / reset / setValue go through componentId', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'actDate',
+        wrapWithPanel: false,
+        body: [
+          {
+            type: 'input-date',
+            name: 'date',
+            id: 'setvalue_text',
+            label: '日期',
+            value: '1714060800',
+          },
+          {
+            type: 'button',
+            label: '清空',
+            onEvent: { click: { actions: [{ actionType: 'clear', componentId: 'setvalue_text' }] } },
+          },
+          {
+            type: 'button',
+            label: '重置',
+            onEvent: { click: { actions: [{ actionType: 'reset', componentId: 'setvalue_text' }] } },
+          },
+          {
+            type: 'button',
+            label: '赋值',
+            onEvent: {
+              click: { actions: [{ actionType: 'setValue', componentId: 'setvalue_text', args: { value: '1714233600' } }] },
+            },
+          },
+        ],
+      },
+    })
+    await nextTick()
+    const form = scoped.getComponentByName('actDate') as { getData?: () => Record<string, unknown> }
+    expect(String(form?.getData?.()?.date)).toBe('1714060800')
+    const buttons = [...host.querySelectorAll('button')].filter((btn) =>
+      ['清空', '重置', '赋值'].includes((btn.textContent || '').trim()),
+    )
+    expect(buttons).toHaveLength(3)
+    buttons[0].click()
+    await nextTick()
+    expect(form?.getData?.()?.date).toBe('')
+    buttons[1].click()
+    await nextTick()
+    expect(String(form?.getData?.()?.date)).toBe('1714060800')
+    buttons[2].click()
+    await nextTick()
+    expect(String(form?.getData?.()?.date)).toBe('1714233600')
+  })
 })
