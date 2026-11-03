@@ -10,6 +10,7 @@ export interface FormContext {
   setValue: (name: string, value: unknown) => void
   submit: () => Promise<void>
   reset: () => void
+  clear: () => void
   setError: (name: string, message: string) => void
 }
 

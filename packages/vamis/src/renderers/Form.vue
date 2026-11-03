@@ -236,13 +236,15 @@ function setError(name: string, message: string) {
   store.errors[name] = message
 }
 
-function validate(): boolean {
+function validate(extraRequired: string[] = []): boolean {
   store.errors = {}
   let ok = true
+  const extra = new Set(extraRequired)
   for (const item of formItems()) {
     if (!item.name) continue
     if (!isVisible(item, store.data)) continue
-    const message = validateValue(item, getPathValue(store.data, String(item.name)), store.data)
+    const schema = extra.has(String(item.name)) ? { ...item, required: true } : item
+    const message = validateValue(schema, getPathValue(store.data, String(item.name)), store.data)
     if (message) {
       store.errors[String(item.name)] = message
       ok = false
@@ -253,6 +255,15 @@ function validate(): boolean {
 
 function reset() {
   store.data = { ...(props.data || {}), ...(props.schema.data || {}) }
+  store.errors = {}
+}
+
+function clear() {
+  for (const item of formItems()) {
+    if (!item.name) continue
+    setPathValue(store.data, String(item.name), '')
+    scope.value?.set(String(item.name), '', 'action')
+  }
   store.errors = {}
 }
 
@@ -337,6 +348,7 @@ const formApi = {
   getValue,
   setValue,
   reset,
+  clear,
   reload: async (extra?: Record<string, any>, replace = false) => {
     if (extra && typeof extra === 'object') {
       if (replace) {
@@ -380,6 +392,7 @@ provideForm({
   setValue,
   submit,
   reset,
+  clear,
   setError,
 })
 provideFormApi(formApi)
