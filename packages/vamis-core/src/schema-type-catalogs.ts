@@ -1171,11 +1171,23 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     showSteps: '显示加减按钮。',
   }, { formItem: true }),
   checkbox: fields('Checkbox', {
-    option: '勾选旁文案。',
+    option: '勾选旁文案，不是 FormItem 左边的 label。字符串走 tpl，对象走子渲染器。',
     trueValue: '勾选时写入的值，默认 true。',
     falseValue: '未勾选写入的值，默认 false。',
+    optionType: 'default 画方框；button 画成可点按钮。',
     label: '表单项标签。option 才是勾选文案。',
-  }, { formItem: true }),
+    checked: '强制展示勾选，覆盖当前值比较。',
+    partial: '半选（indeterminate）。',
+    readOnly: '只读，不能改值。',
+  }, {
+    formItem: true,
+    events: { change: '选中状态变化。[name] 与 value 都是写入后的真假值。' },
+    actions: {
+      clear: '清空为空串（不是 falseValue）。用 componentId 点到本项。',
+      reset: '还原 pristine；没有则用 resetValue，再没有则空串。',
+      setValue: 'args.value 写成当前字段。componentId 指本勾选框。',
+    },
+  }),
   checkboxes: fields('Checkboxes', {
     options: `静态选项数组 \`{ label, value }\`。`,
     source: '动态拉选项。',

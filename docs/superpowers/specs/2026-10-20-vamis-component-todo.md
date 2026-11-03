@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-03（`input-text` 82%、`action` / `button` 92%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`checkbox` 85%、`input-text` 82%、`action` / `button` 92%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -135,7 +135,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `button-toolbar` | ButtonToolbar 按钮工具栏 | `/components/form/button-toolbar` | `/zh-CN/components/form/button-toolbar` | 进行中 | 60% | 能排按钮 | P0 |
 | `button-group-select` | ButtonGroupSelect 按钮点选 | `/components/form/button-group-select` | `/zh-CN/components/form/button-group-select` | 进行中 | 55% | 能选值；多选/自适应未齐 | P0 |
 | `chained-select` | ChainedSelect 链式下拉框 | `/components/form/chain-select` | `/zh-CN/components/form/chain-select` | 进行中 | 50% | 能链式选；api 级联精简 | P0 |
-| `checkbox` | Checkbox 勾选框 | `/components/form/checkbox` | `/zh-CN/components/form/checkbox` | 进行中 | 60% | 能绑布尔；`trueValue`/`option` 形态未齐 | P0 |
+| `checkbox` | Checkbox 勾选框 | `/components/form/checkbox` | `/zh-CN/components/form/checkbox` | 进行中 | 85% | `trueValue`/`falseValue`、`option` 与 `label` 分工、`optionType: button`、禁用/只读/静态、`change`、`clear`/`reset`/`setValue` 已接。缺 badge、themeCss 皮肤变量 | P0 |
 | `checkboxes` | Checkboxes 复选框 | `/components/form/checkboxes` | `/zh-CN/components/form/checkboxes` | 进行中 | 55% | 能多选；列数/全选未齐 | P0 |
 | `input-city` | InputCity 城市选择器 | `/components/form/input-city` | `/zh-CN/components/form/input-city` | 进行中 | 25% | **精简**：内置 3 省示例，非全国数据 | P0 |
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：`checkbox`、`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。`input-password` 显隐开关跟该 type。
+- 跳过 Custom 与 office/pdf。当前建议下一批：`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。`checkbox` 本轮已推到 85%；`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 
@@ -347,7 +347,7 @@ flowchart LR
 | 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 90% |
 | 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 92% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
-| 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 60% |
+| 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 85% |
 | 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 55% |
 | 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
 | 10 | `select` | `FormItem`、`Options` | 5 | 11 | 93 | 进行中 | 60% |
