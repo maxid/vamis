@@ -1,4 +1,4 @@
-import moment from 'moment';
+import {dayjs, parseDate} from '../src/dayjs';
 import {evaluate, parse, registerFunction} from '../src';
 
 const defaultContext = {
@@ -195,47 +195,47 @@ test('formula:date', () => {
     '2021-12-21'
   );
   expect(evalFormual('DATETOSTR(TODAY(), "YYYY-MM-DD")')).toBe(
-    moment().format('YYYY-MM-DD')
+    dayjs().format('YYYY-MM-DD')
   );
   expect(evalFormual('DATETOSTR(NOW(), "YYYY-MM-DD")')).toBe(
-    moment().format('YYYY-MM-DD')
+    dayjs().format('YYYY-MM-DD')
   );
   expect(evalFormual('DATETOSTR(1676563200, "YYYY-MM-DD")')).toBe(
-    moment(1676563200, 'X').format('YYYY-MM-DD')
+    parseDate(1676563200, 'X').format('YYYY-MM-DD')
   );
   expect(evalFormual('DATETOSTR(1676563200000, "YYYY-MM-DD")')).toBe(
-    moment(1676563200000, 'x').format('YYYY-MM-DD')
+    parseDate(1676563200000, 'x').format('YYYY-MM-DD')
   );
   expect(evalFormual('DATETOSTR("12/25/2022", "YYYY-MM-DD")')).toBe(
-    moment('12/25/2022').format('YYYY-MM-DD')
+    parseDate('12/25/2022').format('YYYY-MM-DD')
   );
   expect(evalFormual('DATETOSTR("12-25-2022", "YYYY/MM/DD")')).toBe(
-    moment('12-25-2022').format('YYYY/MM/DD')
+    parseDate('12-25-2022').format('YYYY/MM/DD')
   );
   expect(evalFormual('DATETOSTR("2022年12月25日", "YYYY/MM/DD")')).toBe(
-    moment('2022年12月25日', 'YYYY-MM-DD').format('YYYY/MM/DD')
+    parseDate('2022年12月25日', 'YYYY-MM-DD').format('YYYY/MM/DD')
   );
   expect(
     evalFormual(
       'DATETOSTR("2022年12月25日 14时23分56秒", "YYYY/MM/DD HH:mm:ss")'
     )
   ).toBe(
-    moment('2022年12月25日 14时23分56秒', 'YYYY-MM-DD HH:mm:ss').format(
+    parseDate('2022年12月25日 14时23分56秒', 'YYYY-MM-DD HH:mm:ss').format(
       'YYYY/MM/DD HH:mm:ss'
     )
   );
   expect(evalFormual('DATETOSTR("20230105", "YYYY/MM/DD")')).toBe(
-    moment('20230105', 'YYYY-MM-DD').format('YYYY/MM/DD')
+    parseDate('20230105', 'YYYY-MM-DD').format('YYYY/MM/DD')
   );
   expect(evalFormual('DATETOSTR("2023.01.05", "YYYY/MM/DD")')).toBe(
-    moment('2023.01.05', 'YYYY-MM-DD').format('YYYY/MM/DD')
+    parseDate('2023.01.05', 'YYYY-MM-DD').format('YYYY/MM/DD')
   );
   expect(
     evalFormual('DATETOSTR("2010-10-20 4:30 +0000", "YYYY-MM-DD HH:mm Z")')
-  ).toBe(moment('2010-10-20 4:30 +0000').format('YYYY-MM-DD HH:mm Z'));
+  ).toBe(parseDate('2010-10-20 4:30 +0000').format('YYYY-MM-DD HH:mm Z'));
   expect(
     evalFormual('DATETOSTR("2013-02-04T10:35:24-08:00", "YYYY-MM-DD HH:mm:ss")')
-  ).toBe(moment('2013-02-04T10:35:24-08:00').format('YYYY-MM-DD HH:mm:ss'));
+  ).toBe(parseDate('2013-02-04T10:35:24-08:00').format('YYYY-MM-DD HH:mm:ss'));
   expect(evalFormual('YEAR(STRTODATE("2021-10-24 10:10:10"))')).toBe(2021);
   expect(
     evalFormual(
@@ -266,63 +266,63 @@ test('formula:date', () => {
     )
   ).toBe('2023.02.18 11:59:59');
   expect(evalFormual('WEEKDAY("2023-02-27")')).toBe(
-    moment('2023-02-27').weekday()
+    parseDate('2023-02-27').weekday()
   );
   expect(evalFormual('WEEKDAY("2023-02-27", 2)')).toBe(
-    moment('2023-02-27').isoWeekday()
+    parseDate('2023-02-27').isoWeekday()
   );
-  expect(evalFormual('WEEK("2023-03-05")')).toBe(moment('2023-03-05').week());
+  expect(evalFormual('WEEK("2023-03-05")')).toBe(parseDate('2023-03-05').week());
   expect(
     evalFormual(
       'BETWEENRANGE("2023-03-08", ["2023-03-01", "2024-04-07"], "year")'
     )
   ).toBe(
-    moment('2023-03-08').isBetween('2023-03-01', '2024-04-07', 'year', '[]')
+    parseDate('2023-03-08').isBetween('2023-03-01', '2024-04-07', 'year', '[]')
   );
   expect(
     evalFormual(
       'BETWEENRANGE("2022-03-08", ["2023-03-01", "2024-04-07"], "year")'
     )
   ).toBe(
-    moment('2022-03-08').isBetween('2023-03-01', '2024-04-07', 'year', '[]')
+    parseDate('2022-03-08').isBetween('2023-03-01', '2024-04-07', 'year', '[]')
   );
   expect(
     evalFormual(
       'BETWEENRANGE("2023-03-08", ["2023-03-01", "2023-04-07"], "month")'
     )
   ).toBe(
-    moment('2023-03-08').isBetween('2023-03-01', '2023-04-07', 'month', '[]')
+    parseDate('2023-03-08').isBetween('2023-03-01', '2023-04-07', 'month', '[]')
   );
   expect(
     evalFormual(
       'BETWEENRANGE("2023-05-08", ["2023-03-01", "2023-04-07", "month"])'
     )
   ).toBe(
-    moment('2023-05-08').isBetween('2023-03-01', '2023-04-07', 'month', '[]')
+    parseDate('2023-05-08').isBetween('2023-03-01', '2023-04-07', 'month', '[]')
   );
   expect(
     evalFormual('BETWEENRANGE("2023-03-06", ["2023-03-01", "2023-05-07"])')
   ).toBe(
-    moment('2023-03-06').isBetween('2023-03-01', '2023-05-07', 'day', '[]')
+    parseDate('2023-03-06').isBetween('2023-03-01', '2023-05-07', 'day', '[]')
   );
   expect(
     evalFormual('BETWEENRANGE("2023-05-08", ["2023-03-01", "2023-05-07"])')
   ).toBe(
-    moment('2023-05-08').isBetween('2023-03-01', '2023-05-07', 'day', '[]')
+    parseDate('2023-05-08').isBetween('2023-03-01', '2023-05-07', 'day', '[]')
   );
   expect(
     evalFormual(
       'BETWEENRANGE("2023-05-07", ["2023-03-01", "2023-05-07"], "day", "()")'
     )
   ).toBe(
-    moment('2023-05-07').isBetween('2023-03-01', '2023-05-07', 'day', '()')
+    parseDate('2023-05-07').isBetween('2023-03-01', '2023-05-07', 'day', '()')
   );
   expect(
     evalFormual(
       'CONCATENATE(STARTOF("2023-02-28", "day"), "," ,ENDOF("2023-02-28", "day"))'
     )
   ).toBe(
-    `${moment('2023-02-28').startOf('day').format()},${moment('2023-02-28')
+    `${parseDate('2023-02-28').startOf('day').format()},${parseDate('2023-02-28')
       .endOf('day')
       .format()}`
   );
@@ -331,9 +331,9 @@ test('formula:date', () => {
       'CONCATENATE(STARTOF("2023-02-28", "day", "YYYY-MM-DD HH:mm:ss"), ",", ENDOF("2023-02-28", "day", "YYYY-MM-DD HH:mm:ss"))'
     )
   ).toBe(
-    `${moment('2023-02-28')
+    `${parseDate('2023-02-28')
       .startOf('day')
-      .format('YYYY-MM-DD HH:mm:ss')},${moment('2023-02-28')
+      .format('YYYY-MM-DD HH:mm:ss')},${parseDate('2023-02-28')
       .endOf('day')
       .format('YYYY-MM-DD HH:mm:ss')}`
   );
@@ -342,7 +342,7 @@ test('formula:date', () => {
       'CONCATENATE(STARTOF("2023-02-28", "day", "X"), "," ,ENDOF("2023-02-28", "day", "X"))'
     )
   ).toBe(
-    `${moment('2023-02-28').startOf('day').format('X')},${moment('2023-02-28')
+    `${parseDate('2023-02-28').startOf('day').format('X')},${parseDate('2023-02-28')
       .endOf('day')
       .format('X')}`
   );

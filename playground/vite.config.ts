@@ -7,6 +7,7 @@ import { defineConfig, type Plugin } from 'vite'
 import { mockApiPlugin } from './src/mock/plugin'
 import { collectPlaygroundRoutes, writeStaticPages } from './static-pages'
 import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../packages/vamis-ui/fontawesome-build.mjs'
+import { workspaceBareResolve } from '../scripts/vite-workspace-bare-resolve.mjs'
 
 const playground = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(playground, '..')
@@ -158,7 +159,7 @@ function serveSdk(): Plugin {
 
 export default defineConfig({
   base: process.env.VITE_BASE || '/',
-  plugins: [vue(), tailwindcss(), mockApiPlugin(), fontAwesome(), serveSdk(), staticSite()],
+  plugins: [vue(), tailwindcss(), workspaceBareResolve(repo, [playground]), mockApiPlugin(), fontAwesome(), serveSdk(), staticSite()],
   resolve: {
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },
