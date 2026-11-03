@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { dayjs } from '../src/utils/dayjs'
 import {
@@ -148,5 +151,16 @@ describe('store / display / actions helpers', () => {
     expect(inputDateResetValue({ resetValue: '0' }, TS)).toBe(TS)
     expect(inputDateResetValue({ resetValue: '0' }, undefined)).toBe('0')
     expect(inputDateResetValue({}, undefined)).toBe('')
+  })
+})
+
+describe('input-date renderer reuse', () => {
+  it('teleports the popover and reuses DateCalendarPanel', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputDate.vue'), 'utf8')
+    expect(vue).toContain('VamisOverlay')
+    expect(vue).toContain('DateCalendarPanel')
+    expect(vue).toContain('overlayContainerFrom')
+    expect(vue).not.toContain('vamis-date-cal__')
   })
 })
