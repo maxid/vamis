@@ -555,6 +555,28 @@
               rootFont: rootFont,
             }
           }
+          if (kind === 'style') {
+            const el =
+              (spec && spec.selector && document.querySelector(spec.selector)) ||
+              (spec && spec.selectors && spec.selectors[0] && document.querySelector(spec.selectors[0])) ||
+              document.querySelector('button')
+            if (!el) return { error: '找不到可量节点' }
+            const cs = getComputedStyle(el)
+            const rect = el.getBoundingClientRect()
+            const style = {}
+            const props = (spec && spec.props) || ['width', 'height', 'paddingLeft', 'paddingRight', 'minWidth']
+            for (let i = 0; i < props.length; i++) {
+              const key = props[i]
+              if (key === 'width') style[key] = round(rect.width) + 'px'
+              else if (key === 'height') style[key] = round(rect.height) + 'px'
+              else style[key] = cs[key]
+            }
+            return {
+              style: style,
+              font: readFont(el),
+              rootFont: rootFont,
+            }
+          }
           const pair = pairNodes(spec)
           const a = pair[0]
           const b = pair[1]

@@ -101,6 +101,40 @@ describe('embed', () => {
     expect(byLabel('中等')?.getAttribute('data-size')).toBe('md')
   })
 
+  it('maps empty-label / iconOnly buttons onto square icon sizes without touching labelled ones', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: [
+        { type: 'button', icon: 'fa fa-plus', label: '' },
+        { type: 'button', icon: 'fa fa-plus', label: '弹框' },
+        { type: 'button', icon: 'fa fa-plus', iconOnly: true, label: '隐藏' },
+        { type: 'button', icon: 'fa fa-plus', label: '', size: 'xs' },
+        { type: 'button', icon: 'fa fa-plus', label: '', size: 'sm' },
+        { type: 'button', icon: 'fa fa-plus', label: '', size: 'md' },
+        { type: 'button', icon: 'fa fa-plus', label: '', size: 'lg' },
+        { type: 'button', icon: 'fa fa-plus', label: '', level: 'link' },
+      ],
+    })
+    await nextTick()
+    const buttons = [...host.querySelectorAll('button')]
+    expect(buttons.map((btn) => btn.getAttribute('data-size'))).toEqual([
+      'icon',
+      'default',
+      'icon',
+      'icon-xs',
+      'icon-sm',
+      'icon-md',
+      'icon-lg',
+      'default',
+    ])
+    expect(buttons[0].querySelector('i.fa.fa-plus')).toBeTruthy()
+    expect((buttons[1].textContent || '').trim()).toBe('弹框')
+    expect((buttons[2].textContent || '').trim()).not.toContain('隐藏')
+    expect(buttons[1].className).toMatch(/px-3/)
+    expect(buttons[0].className).toMatch(/p-0/)
+    expect(buttons[0].className).not.toMatch(/px-3/)
+  })
+
   it('renders page / tpl / button from a JSON schema', async () => {
     const { host } = mount({
       type: 'page',

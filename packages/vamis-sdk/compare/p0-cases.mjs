@@ -79,6 +79,28 @@ export const p0Cases = [
     measure: { type: 'pair', selectors: ['[data-box="a"]', '[data-box="b"]'] },
   },
   {
+    id: 'button-icon-only',
+    group: 'p0-layout',
+    layer: 'p0',
+    title: '空 label + fa icon 为 32×32',
+    expect: 'Amis .cxd-Button--iconOnly：padding 0、min-width/height = --button-size-default-height 32px',
+    schema: {
+      type: 'page',
+      body: {
+        type: 'button',
+        actionType: 'dialog',
+        icon: 'fa fa-plus',
+        label: '',
+        dialog: { title: '弹框', body: '这是个简单的弹框' },
+      },
+    },
+    measure: {
+      type: 'style',
+      selector: 'button',
+      props: ['width', 'height', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'minWidth'],
+    },
+  },
+  {
     id: 'button-level-primary',
     group: 'p0-layout',
     layer: 'p0',
