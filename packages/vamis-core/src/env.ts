@@ -10,9 +10,13 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     notify(type, msg, conf?: NotifyConf) {
       pushToast(type, msg, conf)
     },
-    jumpTo(to) {
+    jumpTo(to, opts) {
       if (to === 'goBack') {
         window.history.back()
+        return
+      }
+      if (opts?.blank && typeof window !== 'undefined' && window.open) {
+        window.open(to, '_blank', 'noopener,noreferrer')
         return
       }
       window.location.assign(to)
@@ -20,8 +24,8 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     alert(msg) {
       window.alert(msg)
     },
-    async confirm(msg) {
-      return window.confirm(msg)
+    async confirm(msg, title) {
+      return window.confirm(title ? `${title}\n\n${msg}` : msg)
     },
     ...overrides,
   }

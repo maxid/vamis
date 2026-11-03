@@ -63,9 +63,12 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `--gap-*` | Tailwind spacing |
 | `--shadows-*` | `shadow-xs/sm/md/lg` |
 | `level: primary` | `variant="default"` |
-| `level: default/light` | `outline` / `ghost` |
+| `level: default` | `outline`（白底描边） |
+| `level: secondary` | 实心中灰 + 白字（`--button-secondary`，不改全局 `--secondary`） |
+| `level: light` | 浅底深字（`--button-light`） |
+| `level: dark` | 实心炭灰 + 白字（`--button-dark`） |
 | `level: danger` | `destructive` |
-| `level: success/warning/info` | 同名 variant |
+| `level: success/warning/info` | 同名 variant；info 走 `--button-info`（cxd 与 primary 同色） |
 | `level: link` | `link` |
 | `page.cssVars` | 写到页面根 style；别名映射到 shadcn 名 |
 | `m:` / `pc:` | 已接到间距 + 宽度 helper（&lt;768 / ≥768）；作者也可写 Tailwind `max-md:` / `md:` |

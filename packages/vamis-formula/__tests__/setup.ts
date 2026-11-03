@@ -1,7 +1,4 @@
-import moment from 'moment'
-import 'moment-timezone'
-
-moment.tz.setDefault('Asia/Shanghai')
+process.env.TZ = 'Asia/Shanghai'
 
 const memory = new Map<string, string>()
 const localStorageMock: Storage = {

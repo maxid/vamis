@@ -1,9 +1,23 @@
 import { cloneRows, createSampleRows, type SampleRow } from './sample'
 
-export type MockPayload = {
+export type MockFile = {
+  __file: true
+  body: string
+  contentType: string
+  filename: string
+}
+
+export type MockJson = {
   status: number
   msg?: string
   data?: unknown
+  errors?: unknown
+}
+
+export type MockPayload = MockJson | MockFile
+
+export function isMockFile(payload: MockPayload): payload is MockFile {
+  return (payload as MockFile).__file === true
 }
 
 let sampleRows: SampleRow[] = createSampleRows()
@@ -115,6 +129,19 @@ export function handleMockApi(input: {
   const query = input.query || {}
   const body = input.body || {}
 
+  if (pathname === '/api/mapping') {
+    return { status: 0, data: { id: 1 } }
+  }
+
+  if (pathname === '/api/download') {
+    return {
+      __file: true,
+      filename: 'download.pdf',
+      contentType: 'application/pdf',
+      body: '%PDF-1.1\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n',
+    }
+  }
+
   if (pathname === '/api/mock2/page/initData') {
     const now = new Date()
     return {
@@ -131,6 +158,39 @@ export function handleMockApi(input: {
   if (pathname === '/api/mock2/form/saveForm') {
     const data = method === 'GET' ? query : body
     return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
+  }
+
+  if (pathname === '/api/mock2/form/saveFormFailed') {
+    return {
+      status: 422,
+      msg: '',
+      errors: { test2: '服务器端说，这个有错误。' },
+      data: null,
+    }
+  }
+
+  if (pathname === '/api/mock2/form/formitemFailed') {
+    return { status: 422, msg: '', errors: '当前用户已存在', data: null }
+  }
+
+  if (pathname === '/api/mock2/form/formitemSuccess') {
+    return { status: 0 }
+  }
+
+  if (pathname === '/api/mock2/form/autoUpdate') {
+    const browser = String(query.browser || body.browser || '')
+    const rows = [
+      { browser: 'Chrome', version: '1', platform: 'linux 1', Chrome: 'xxx1' },
+      { browser: 'Chrome', version: '2', platform: 'windows xp', Chrome: 'xxx2' },
+      { browser: 'Firefox', version: '3', platform: 'linux 2', Chrome: 'xxx3' },
+      { browser: 'Firefox', version: '4', platform: 'windows 8', Chrome: 'xxx4' },
+      { browser: 'Opera', version: '5', platform: 'linux 3', Chrome: 'xxx5' },
+      { browser: 'Opera', version: '6', platform: 'windows 10', Chrome: 'xxx6' },
+    ]
+    const hit = browser
+      ? rows.find((row) => row.browser.toLowerCase().includes(browser.toLowerCase()))
+      : undefined
+    return { status: 0, msg: '', data: query.items ? rows : hit }
   }
 
   if (pathname === '/api/mock2/form/getOptions') {
@@ -188,6 +248,25 @@ export function handleMockApi(input: {
       ],
     }
     return { status: 0, data: { options: byA[a] || [] } }
+  }
+
+  if (pathname === '/api/mock2/options/autoComplete') {
+    const term = String(query.term || body.term || '').toLowerCase()
+    const all = [
+      { label: 'Apple', value: 'apple' },
+      { label: 'Banana', value: 'banana' },
+      { label: 'Orange', value: 'orange' },
+      { label: 'Watermelon', value: 'watermelon' },
+      { label: 'Amis', value: 'amis' },
+      { label: 'Vamis', value: 'vamis' },
+    ]
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        options: term ? all.filter((item) => item.label.toLowerCase().includes(term) || item.value.includes(term)) : all,
+      },
+    }
   }
 
   if (pathname === '/api/mock2/options') {

@@ -5,46 +5,22 @@ outline: deep
 
 # InputDatetime 日期时间选择器
 
-::: info 实现进度 50% · 进行中
-`input-date` 别名，时间 UI 不独立
+::: info 实现进度 58% · 进行中
+`input-date` 别名，已接日期+时分秒选择；时分秒约束与移动端 picker 未齐
 :::
 
-`input-datetime` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+`input-datetime` 与 `input-date` 同一渲染器。默认展示 `YYYY-MM-DD HH:mm:ss`，提交值默认 unix 秒。完整快捷键 / 限制范围见 [InputDate](./input-date)。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema
-type: page
-title: input-datetime
+```schema: scope="body"
+type: form
+debug: true
+api: /api/mock2/form/saveForm
 body:
-  - type: form
-    title: input-datetime
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: input-datetime
-        name: input_datetime
-        label: input-datetime
+  - type: input-datetime
+    name: datetime
+    label: 日期时间
 ```
-
-## 常用属性
-
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
-
-## 和 Amis 文档的差异
-
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。

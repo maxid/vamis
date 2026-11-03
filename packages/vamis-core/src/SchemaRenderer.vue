@@ -13,7 +13,20 @@ import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
 import Placeholder from './Placeholder.vue'
 import type { SchemaNode, SchemaObject } from './types'
 
-const SELF_CLICK_TYPES = new Set(['action', 'button', 'submit', 'reset'])
+const SELF_CLICK_TYPES = new Set([
+  'action',
+  'button',
+  'submit',
+  'reset',
+  'input-text',
+  'input-email',
+  'input-password',
+  'input-url',
+  'text',
+  'native-date',
+  'native-time',
+  'native-number',
+])
 
 const props = defineProps<{
   schema?: SchemaNode | null
@@ -163,7 +176,7 @@ async function onHostEvent(native: Event, eventName: string) {
     :draggable="canDrag"
     :class="[
       'vamis-node',
-      fillsLayoutSlot(normalized.type) ? 'w-full min-w-0' : '',
+      fillsLayoutSlot(normalized.type) && !schemaNodeDisplayClass(normalized) ? 'w-full min-w-0' : '',
       schemaNodeDisplayClass(normalized),
       nodeClass,
       editor && editorPath != null

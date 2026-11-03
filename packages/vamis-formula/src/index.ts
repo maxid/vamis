@@ -32,6 +32,8 @@ export {
 };
 
 export * from './types';
+export { dayjs, isDayjs, parseDate } from './dayjs';
+export type { Dayjs, ParseDateOptions } from './dayjs';
 
 export function evaluate(
   astOrString: string | ASTNode,

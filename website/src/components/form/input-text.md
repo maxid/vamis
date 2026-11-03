@@ -5,46 +5,552 @@ outline: deep
 
 # InputText 输入框
 
-::: info 实现进度 60% · 进行中
-主路径可用；`addOn`/清值/计数未齐
+::: info 实现进度 82% · 进行中
+主路径已对齐 Amis：`addOn`（含 position / 一体边框）、`clearable` / `resetValue`、`showCounter` / `maxLength`、`prefix` / `suffix` 映射、`borderMode`、`trimContents` / `clearValueOnEmpty` / `transform`、focus/blur/change/clear 与 clear/reset/focus/setValue。选择器模式已打通 options / source / autoComplete / multiple / creatable，键盘高亮与检索精度仍简于 Amis。`input-password` 的 `revealPassword` 未做。
 :::
 
 `input-text` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。同渲染器别名：`input-email` / `input-url` / `input-password` / `text` / `native-date` / `native-time` / `native-number`。
 
 ## 基本用法
 
-```schema
-type: page
-title: input-text
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
 body:
-  - type: form
-    title: input-text
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: input-text
-        name: input_text
-        label: input-text
+  - name: text
+    type: input-text
+    label: text
 ```
 
-## 常用属性
+## 不同边框风格
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text-half-border
+    type: input-text
+    label: 半边框
+    borderMode: half
+    inputControlClassName: bg-gray-100
+  - name: text-no-border
+    type: input-text
+    label: 无边框
+    borderMode: none
+    nativeInputClassName: focus:text-indigo-700
+```
+
+## 不同类型
+
+配置 `type` 可以支持不同格式的文本输入框。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text
+    type: input-text
+    label: text
+  - type: divider
+  - type: input-url
+    name: url
+    label: 链接
+  - type: divider
+  - type: input-email
+    name: email
+    label: 邮箱
+  - type: divider
+  - type: input-password
+    name: password
+    label: 密码
+```
+
+## 附加组件
+
+可以配置 `addOn`，附带附加组件，比如 button，还能设置 icon。`position` 默认 `right`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text
+    type: input-text
+    label: text
+    addOn:
+      type: button
+      icon: https://suda.cdn.bcebos.com/images%2F2021-01%2Fsearch.svg
+      label: 搜索
+```
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: keyword
+    type: input-text
+    label: 左侧
+    addOn:
+      type: text
+      label: https://
+      position: left
+```
+
+## 可清除
+
+通过 `clearable: true` 可以设置文本可清除。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text
+    type: input-text
+    label: text
+    clearable: true
+```
+
+## 选择器模式
+
+配置 `options` 即可支持选择器模式。`source` 和 `autoComplete` 同样会进入该模式。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text
+    type: input-text
+    label: text
+    options:
+      - label: aa
+        value: aa
+      - label: bb
+        value: bb
+      - label: cc
+        value: cc
+      - label: dd
+        value: dd
+```
+
+## 限制只能选择预设
+
+配置 options 并且配置 `creatable: false`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - name: text
+    type: input-text
+    label: text
+    creatable: false
+    options:
+      - label: OptionA
+        value: a
+      - label: OptionB
+        value: b
+      - label: OptionC
+        value: c
+      - label: OptionD
+        value: d
+```
+
+## 多选模式
+
+配置 `multiple: true`。长 label 会省略。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    multiple: true
+    options:
+      - label: OptionA
+        value: a
+      - label: OptionB (with long suffix for testing ellipsis)
+        value: b
+      - label: OptionC
+        value: c
+      - label: OptionD
+        value: d
+```
+
+## 前缀和后缀
+
+`prefix` 和 `suffix` 属性支持数据映射。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+data:
+  unit: MB
+body:
+  - name: text
+    type: input-text
+    label: text
+    prefix: ￥
+    suffix: RMB
+  - name: prefix
+    type: input-text
+    label: text
+    prefix: ￥
+  - name: suffix
+    type: input-text
+    label: text
+    suffix: ${unit}
+```
+
+## 显示计数器
+
+配置 `showCounter: true` 后输入框将显示计数器，一般会配合 `maxLength` 限制输入长度；不设 `maxLength` 则只展示计数、不限制。
+
+```schema: scope="body"
+type: form
+body:
+  - name: a
+    type: input-text
+    label: A
+    showCounter: true
+    placeholder: 请输入
+    options:
+      - label: aa
+        value: aa
+      - label: bb
+        value: bb
+      - label: cc
+        value: cc
+      - label: dd
+        value: dd
+  - name: b
+    type: input-text
+    label: B
+    showCounter: true
+    maxLength: 20
+    placeholder: 请输入
+```
+
+## 自动转换值
+
+可以配置 `transform`，来自动转换值，支持转小写或大写。
+
+> 只有键入的内容才会触发 transform，下拉框选中的值不转换。
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: lower
+    type: input-text
+    label: 转换小写
+    placeholder: 输入的英文自动转为小写
+    transform:
+      lowerCase: true
+    multiple: true
+    options:
+      - APPLE
+      - ORANGE
+      - WATERMELON
+  - name: upper
+    type: input-text
+    label: 转换大写
+    placeholder: 输入的英文自动转为大写
+    transform:
+      upperCase: true
+```
+
+## 文本内容为空时去掉这个值
+
+如果设置了 `clearValueOnEmpty: true`，当输入框的值清空时，提交的表单项里就不会有这个值。
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: 内容为空时清理这个表单项
+    value: v
+    clearValueOnEmpty: true
+```
+
+## 自动补全
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: name
+    type: input-text
+    label: 自动补全
+    autoComplete: /api/mock2/options/autoComplete?term=$term
+    placeholder: 请输入
+    multiple: true
+```
+
+## 属性表
+
+当做选择器表单项使用时，除了支持 [普通表单项属性](./formitem) 以外，还支持下面这些配置。
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|------|------|------|------|
+| options | `Array` | | 静态选项组 |
+| source | `string` 或 API | | 动态选项组 |
+| autoComplete | `string` 或 API | | 输入时按 `$term` 拉补全 |
+| multiple | `boolean` | | 是否多选 |
+| delimiter | `string` | `,` | 拼接符 |
+| labelField | `string` | `label` | 选项标签字段 |
+| valueField | `string` | `value` | 选项值字段 |
+| joinValues | `boolean` | `true` | 多选是否拼成字符串 |
+| extractValue | `boolean` | `false` | 只取 value |
+| addOn | `addOn` | | 附加 text / button / submit |
+| addOn.type | `string` | | `text`、`button` 或 `submit` |
+| addOn.label | `string` | | 文字说明 |
+| addOn.position | `left` / `right` | `right` | 附加位置 |
+| trimContents | `boolean` | `true` | 是否去除首尾空白 |
+| clearValueOnEmpty | `boolean` | | 空串时去掉这个字段 |
+| creatable | `boolean` | | `false` 时只能选预设 |
+| clearable | `boolean` | | 是否可清除 |
+| resetValue | `string` | `""` | 清除后设定的值 |
+| prefix | `string` | | 前缀，支持 `${}` |
+| suffix | `string` | | 后缀，支持 `${}` |
+| showCounter | `boolean` | | 是否显示计数器 |
+| minLength | `number` | | 最短字数（校验） |
+| maxLength | `number` | | 最长字数 |
+| transform | `object` | | `{ lowerCase, upperCase }` |
+| borderMode | `full` / `half` / `none` | `full` | 边框模式 |
+| inputControlClassName | `string` | | 输入框容器 class |
+| nativeInputClassName | `string` | | 原生 input class |
+| nativeAutoComplete | `string` | `off` | 原生 autocomplete |
+
+## 事件表
+
+可通过 `onEvent` 监听。动作里用 `${事件参数名}` 或 `${event.data.[事件参数名]}` 取值。`[name]` 表示当前组件绑定的字段名。
+
+| 事件 | 参数 | 说明 |
+|------|------|------|
+| click | `[name]` / `value` | 点击输入框，只针对选择器模式 |
+| enter | `[name]` / `value` | 回车，只针对选择器模式 |
+| focus | `[name]` / `value` | 获焦 |
+| blur | `[name]` / `value` | 失焦 |
+| change | `[name]` / `value` | 值变化 |
+| clear | `[name]` / `value` | 点清除 |
+
+### enter
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    options:
+      - label: aa
+        value: aa
+      - label: bb
+        value: bb
+    onEvent:
+      enter:
+        actions:
+          - actionType: toast
+            args:
+              msg: ${event.data.value|json}
+```
+
+### focus
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    onEvent:
+      focus:
+        actions:
+          - actionType: toast
+            args:
+              msg: ${event.data.value|json}
+```
+
+### blur
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    onEvent:
+      blur:
+        actions:
+          - actionType: toast
+            args:
+              msg: ${event.data.value|json}
+```
+
+### change
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    onEvent:
+      change:
+        actions:
+          - actionType: toast
+            args:
+              msg: ${event.data.value|json}
+```
+
+### clear
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    type: input-text
+    label: text
+    clearable: true
+    onEvent:
+      clear:
+        actions:
+          - actionType: toast
+            args:
+              msg: ${event.data.value|json}
+```
+
+## 动作表
+
+其他组件可通过 `actionType` + `componentId` 触发。
+
+| 动作 | 配置 | 说明 |
+|------|------|------|
+| clear | — | 清空；`clearValueOnEmpty` 时置 `undefined` |
+| reset | — | 恢复初始值，或 `resetValue` |
+| focus | — | 获取焦点 |
+| reload | — | 重拉 `source` |
+| setValue | `value` | 更新值；多选用 `,` 分隔 |
+
+### clear
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    id: clear_text
+    type: input-text
+    label: text
+    value: 清空我
+  - type: button
+    label: 清空
+    onEvent:
+      click:
+        actions:
+          - actionType: clear
+            componentId: clear_text
+```
+
+### reset
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    id: reset_text
+    type: input-text
+    label: text
+    value: 重置我
+  - type: button
+    label: 重置
+    onEvent:
+      click:
+        actions:
+          - actionType: reset
+            componentId: reset_text
+```
+
+### focus
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    id: focus_text
+    type: input-text
+    label: text
+    value: 聚焦我
+  - type: button
+    label: 聚焦
+    onEvent:
+      click:
+        actions:
+          - actionType: focus
+            componentId: focus_text
+```
+
+### reload
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    id: reload_text
+    type: input-text
+    label: text
+    value: a
+    source: /api/mock2/form/getOptions?waitSeconds=1
+  - type: button
+    label: 重新加载
+    onEvent:
+      click:
+        actions:
+          - actionType: reload
+            componentId: reload_text
+```
+
+### setValue
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - name: text
+    id: setvalue_text
+    type: input-text
+    label: text
+    value: amis
+  - type: button
+    label: 赋值
+    onEvent:
+      click:
+        actions:
+          - actionType: setValue
+            componentId: setvalue_text
+            args:
+              value: amis go go go!
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 选择器下拉是本地过滤（包含匹配），没有 Amis `match-sorter` / Downshift 那套高亮分词。
+- `autoComplete` 按 `$term` 去抖 250ms 拉选项；返回结构认 `options` / `items` / 数组。
+- `input-password` 的 `revealPassword` 显隐开关尚未做，仍是原生 `type=password`。
+- 焦点环走 token `box-shadow`，不搬 `.cxd-TextControl`。

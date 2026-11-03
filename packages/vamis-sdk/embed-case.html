@@ -313,6 +313,8 @@
             if (byLabel) return byLabel
           }
           if (node.type === 'button' || node.type === 'action' || node.type === 'submit' || node.type === 'reset') {
+            const host = document.querySelector('[data-vamis-action]')
+            if (host) return host
             const buttons = document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
             if (buttons.length === 1) return buttons[0]
           }
@@ -550,6 +552,28 @@
               smoke: true,
               text: (root.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80),
               font: readFont(textTarget(root)),
+              rootFont: rootFont,
+            }
+          }
+          if (kind === 'style') {
+            const el =
+              (spec && spec.selector && document.querySelector(spec.selector)) ||
+              (spec && spec.selectors && spec.selectors[0] && document.querySelector(spec.selectors[0])) ||
+              document.querySelector('button')
+            if (!el) return { error: '找不到可量节点' }
+            const cs = getComputedStyle(el)
+            const rect = el.getBoundingClientRect()
+            const style = {}
+            const props = (spec && spec.props) || ['width', 'height', 'paddingLeft', 'paddingRight', 'minWidth']
+            for (let i = 0; i < props.length; i++) {
+              const key = props[i]
+              if (key === 'width') style[key] = round(rect.width) + 'px'
+              else if (key === 'height') style[key] = round(rect.height) + 'px'
+              else style[key] = cs[key]
+            }
+            return {
+              style: style,
+              font: readFont(el),
               rootFont: rootFont,
             }
           }

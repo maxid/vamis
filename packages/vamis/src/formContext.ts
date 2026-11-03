@@ -5,10 +5,12 @@ import type { PlainObject } from '@vamis/core'
 export interface FormContext {
   store: NodeState
   mode?: string
+  isStatic?: () => boolean
   getValue: (name: string) => unknown
   setValue: (name: string, value: unknown) => void
   submit: () => Promise<void>
   reset: () => void
+  clear: () => void
   setError: (name: string, message: string) => void
 }
 

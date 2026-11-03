@@ -134,6 +134,17 @@ describe('scoreCase', () => {
     expect(result.pass).toBe(false)
   })
 
+  it('style fails when iconOnly width does not match Amis', () => {
+    const item = { measure: { type: 'style', props: ['width', 'height', 'paddingLeft'] } }
+    const result = scoreCase(
+      item,
+      { measure: { style: { width: '32px', height: '32px', paddingLeft: '0px' } } },
+      { measure: { style: { width: '38.25px', height: '32px', paddingLeft: '12px' } } },
+    )
+    expect(result.pass).toBe(false)
+    expect(result.diffs.map((row) => row.prop)).toEqual(['width', 'paddingLeft'])
+  })
+
   it('tree fails when a node value does not match Amis', () => {
     const item = { measure: { type: 'tree' } }
     const tree = (value: unknown, named: boolean) => [
@@ -237,6 +248,7 @@ describe('p0Cases', () => {
     const ids = p0Cases.map((row) => row.id)
     expect(ids).toContain('style-two-buttons')
     expect(ids).toContain('style-two-buttons-ml')
+    expect(ids).toContain('button-icon-only')
     expect(ids).toContain('helper-m-l')
     expect(ids).toContain('helper-m-l-xs')
     expect(p0Cases.every((row) => row.schema && row.measure)).toBe(true)

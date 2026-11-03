@@ -26,6 +26,7 @@ describe('VamisEvent', () => {
     expect(bag.event.data.extra).toBe(2)
     expect(bag.__rendererData.name).toBe('Ada')
     expect(bag.event.context.nativeEvent.type).toBe('click')
+    expect(bag.event.context.nativeEvent.target?.className).toBe('')
     expect(typeof bag.event.preventDefault).toBe('function')
     expect(typeof bag.event.stopPropagation).toBe('function')
     expect(typeof bag.event.setData).toBe('function')
@@ -83,5 +84,10 @@ describe('VamisEvent', () => {
       context,
     )
     expect(context.env.notify).toHaveBeenCalledWith('info', 'dev', expect.any(Object))
+  })
+
+  it('exposes nativeEvent.target.className for icon / tpl click formulas', () => {
+    const event = createVamisEvent('click', {}, { type: 'click', target: { className: 'fa fa-cloud' } })
+    expect(event.context.nativeEvent?.target?.className).toBe('fa fa-cloud')
   })
 })
