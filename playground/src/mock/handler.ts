@@ -1,10 +1,23 @@
 import { cloneRows, createSampleRows, type SampleRow } from './sample'
 
-export type MockPayload = {
+export type MockFile = {
+  __file: true
+  body: string
+  contentType: string
+  filename: string
+}
+
+export type MockJson = {
   status: number
   msg?: string
   data?: unknown
   errors?: unknown
+}
+
+export type MockPayload = MockJson | MockFile
+
+export function isMockFile(payload: MockPayload): payload is MockFile {
+  return (payload as MockFile).__file === true
 }
 
 let sampleRows: SampleRow[] = createSampleRows()
@@ -115,6 +128,19 @@ export function handleMockApi(input: {
   const pathname = (input.pathname || '').split('?')[0]
   const query = input.query || {}
   const body = input.body || {}
+
+  if (pathname === '/api/mapping') {
+    return { status: 0, data: { id: 1 } }
+  }
+
+  if (pathname === '/api/download') {
+    return {
+      __file: true,
+      filename: 'download.pdf',
+      contentType: 'application/pdf',
+      body: '%PDF-1.1\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n',
+    }
+  }
 
   if (pathname === '/api/mock2/page/initData') {
     const now = new Date()

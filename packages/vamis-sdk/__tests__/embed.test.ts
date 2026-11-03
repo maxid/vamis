@@ -78,6 +78,29 @@ describe('embed', () => {
     expect(wraps[1]?.className.split(/\s+/)).toContain('m-l')
   })
 
+  it('maps Amis button level and size onto data-variant / data-size', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: [
+        { type: 'button', label: '次要', level: 'secondary' },
+        { type: 'button', label: '深色', level: 'dark' },
+        { type: 'button', label: '浅色', level: 'light' },
+        { type: 'button', label: '信息', level: 'info' },
+        { type: 'button', label: '极小', size: 'xs' },
+        { type: 'button', label: '中等', size: 'md' },
+      ],
+    })
+    await nextTick()
+    const byLabel = (label: string) =>
+      [...host.querySelectorAll('button')].find((btn) => (btn.textContent || '').trim() === label)
+    expect(byLabel('次要')?.getAttribute('data-variant')).toBe('secondary')
+    expect(byLabel('深色')?.getAttribute('data-variant')).toBe('dark')
+    expect(byLabel('浅色')?.getAttribute('data-variant')).toBe('light')
+    expect(byLabel('信息')?.getAttribute('data-variant')).toBe('info')
+    expect(byLabel('极小')?.getAttribute('data-size')).toBe('xs')
+    expect(byLabel('中等')?.getAttribute('data-size')).toBe('md')
+  })
+
   it('renders page / tpl / button from a JSON schema', async () => {
     const { host } = mount({
       type: 'page',

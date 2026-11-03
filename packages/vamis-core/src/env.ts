@@ -24,8 +24,8 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     alert(msg) {
       window.alert(msg)
     },
-    async confirm(msg) {
-      return window.confirm(msg)
+    async confirm(msg, title) {
+      return window.confirm(title ? `${title}\n\n${msg}` : msg)
     },
     ...overrides,
   }

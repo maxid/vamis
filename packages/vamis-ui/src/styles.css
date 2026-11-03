@@ -151,6 +151,30 @@
   --control-h-sm: 28px;
   --control-h-lg: 36px;
   --control-px: 10px;
+  /* Button 局部密度：对齐 cxd `--button-size-*`，不改控件 `--control-h-*`。 */
+  --button-radius: 4px;
+  --button-h: 32px;
+  --button-h-xs: 22px;
+  --button-h-sm: 30px;
+  --button-h-md: 32px;
+  --button-h-lg: 38px;
+  /* cxd `--colors-neutral-fill-6/3`、`--colors-brand-10`、info=brand-5。不改全局 `--secondary`（helper / Badge 仍用浅底）。 */
+  --button-secondary: #b8babf;
+  --button-secondary-foreground: #ffffff;
+  --button-secondary-hover: #84878c;
+  --button-secondary-active: #5c5f66;
+  --button-dark: #303540;
+  --button-dark-foreground: #ffffff;
+  --button-dark-hover: #5c5f66;
+  --button-dark-active: #84878c;
+  --button-light: #e6f0ff;
+  --button-light-foreground: #151b26;
+  --button-light-hover: #d4e5ff;
+  --button-light-active: #7dadff;
+  --button-info: var(--primary);
+  --button-info-foreground: var(--primary-foreground);
+  --button-info-hover: var(--primary-hover);
+  --button-info-active: var(--primary-active);
   --form-item-gap: 24px;
   --form-mode-inline-item-gap: 16px;
   --form-mode-inline-label-gap: 16px;
@@ -268,6 +292,18 @@
   --info-border: oklch(0.4 0.06 230);
   --error-bg: oklch(0.28 0.05 25);
   --error-border: oklch(0.42 0.08 25);
+  --button-secondary: #b8bbbf;
+  --button-secondary-foreground: #151b26;
+  --button-secondary-hover: #d4d6d9;
+  --button-secondary-active: #e8e9eb;
+  --button-dark: #f2f3f5;
+  --button-dark-foreground: #151b26;
+  --button-dark-hover: #e8e9eb;
+  --button-dark-active: #d4d6d9;
+  --button-light: #0040bf;
+  --button-light-foreground: #ffffff;
+  --button-light-hover: #2468f2;
+  --button-light-active: #528eff;
 }
 
 @layer base {
