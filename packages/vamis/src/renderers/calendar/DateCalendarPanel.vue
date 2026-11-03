@@ -263,11 +263,12 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal {
   position: relative;
   box-sizing: border-box;
-  display: inline-block;
+  display: block;
   width: 240px;
   max-width: 100%;
   overflow: visible;
-  padding: 4px;
+  /* 对齐 Amis `_date.scss` `.rdt .rdtPicker { padding: 0 }`，弹层内日历 240×290。 */
+  padding: 0;
   border: 0;
   background: #fff;
   font-size: 12px;
@@ -290,11 +291,18 @@ function applyTodayStyle(el: Element | null) {
   padding: 0 12px;
   border-collapse: separate;
   border-spacing: 0 8px;
-  table-layout: fixed;
+  table-layout: auto;
 }
 .vamis-cal.is-large table {
   border-collapse: collapse;
   border-spacing: 0;
+  table-layout: fixed;
+}
+/* Tailwind preflight 把 td/th padding 清成 0；Amis 吃 UA `padding: 1px` + content-box，格子才是 26px。 */
+.vamis-cal:not(.is-large) th,
+.vamis-cal:not(.is-large) td {
+  box-sizing: content-box;
+  padding: 1px;
 }
 .vamis-cal-header {
   display: flex;
@@ -352,6 +360,8 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal-arrow.is-double {
   width: 10px;
   height: 10px;
+  position: relative;
+  top: -1px;
 }
 .vamis-cal-arrow.is-left {
   transform: rotate(180deg);
@@ -392,6 +402,7 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal-day {
   position: relative;
   display: inline-block;
+  box-sizing: content-box;
   width: 24px;
   height: 24px;
   line-height: 24px;

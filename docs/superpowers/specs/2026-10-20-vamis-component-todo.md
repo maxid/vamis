@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-03（`action` / `button` 95%、`input-date` 85%、`calendar` 87%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`action` / `button` 95%、`input-date` 88%、`calendar` 87%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -141,7 +141,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
 | `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 50% | 能多行子表单；子项 api、扁平模式未齐 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
-| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 85% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；与 calendar 共用 DateCalendarPanel。缺移动端 picker、schedules | P0 |
+| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 88% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。缺移动端 picker、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 58% | `input-date` 别名，已接日期+时分秒；时分秒约束与移动端 picker 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 50% | 能选区间 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 85%（弹层 Teleport + 与 calendar 共用面板）；`input-password` 显隐开关跟该 type。
+- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 88%（弹层 240×290 / popover padding 0）；`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 
@@ -348,7 +348,7 @@ flowchart LR
 | 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 95% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 85% |
-| 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 85% |
+| 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 88% |
 | 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
 | 10 | `select` | `FormItem`、`Options` | 5 | 11 | 93 | 进行中 | 60% |
 | 11 | `image` | — | 7 | 5 | 47 | 进行中 | 75% |

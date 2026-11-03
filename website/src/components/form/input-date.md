@@ -5,8 +5,8 @@ outline: deep
 
 # InputDate 日期
 
-::: info 实现进度 85% · 进行中
-主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000；与 `type: calendar` 共用月历面板。缺移动端 picker、日程 `schedules`。
+::: info 实现进度 88% · 进行中
+主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000；日历层 240×290，DatePicker-popover 242×292（padding 0）。与 `type: calendar` 共用月历面板。缺移动端 picker、日程 `schedules`。
 :::
 
 `input-date` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -27,9 +27,9 @@ body:
 
 ## 显示格式
 
-选中任意日期，默认显示格式是 `2020-04-14` 这样。自定义显示格式配置 `inputFormat`（或 `displayFormat`）。
+选中任意日期，可以看到默认显示日期的格式是像 `2020-04-14` 这样。自定义显示格式配置 `inputFormat`（或 `displayFormat`）。
 
-例如显示 `2020年04月14日`，配置 `YYYY年MM月DD日`：
+例如显示 `2020年04月14日`，查找 [dayjs 文档](https://day.js.org/docs/en/display/format)（格式令牌与 moment 相同）可知配置 `YYYY年MM月DD日`：
 
 ```schema: scope="body"
 type: form
@@ -40,6 +40,8 @@ body:
     label: 日期
     inputFormat: YYYY年MM月DD日
 ```
+
+选中任意日期，观察显示格式。
 
 ## 值格式
 
@@ -67,6 +69,8 @@ body:
     label: 日期
     format: YYYY-MM-DD
 ```
+
+选中任意日期，观察数据域中表单项值的变化。
 
 ## 默认值
 
@@ -215,6 +219,8 @@ body:
       - tomorrow
 ```
 
+上例配置 `"shortcuts": ["yesterday", "today", "tomorrow"]`，选择器顶部会显示快捷键「昨天」「今天」和「明天」。
+
 支持的快捷键：
 
 - `today`：今天
@@ -318,7 +324,7 @@ body:
 | clearable | `boolean` | `true` | 是否可清除 |
 | embed | `boolean` | `false` | 是否内联模式 |
 | disabledDate | `string` | | 哪些天不可点选（需 `env.trusted`） |
-| popOverContainerSelector | `string` | | 弹层挂载选择器。本刀未接 |
+| popOverContainerSelector | `string` | | 弹层挂载位置选择器，会通过 `querySelector` 获取 |
 | borderMode | `full \| half \| none` | `full` | 边框模式 |
 | inputForbid | `boolean` | `false` | 禁止键盘输入 |
 
@@ -421,5 +427,7 @@ body:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 默认值、`minDate` / `maxDate`、快捷键与文档主路径一致；`disabledDate` 字符串函数仅 `env.trusted`。
-- 未接：移动端 CalendarMobile picker、`popOverContainerSelector`、选择器内 `schedules` 日程、像素级 cxd `rdtPicker` 皮肤。
+- 日期弹层盒模型对齐 Amis：`.rdt.rdtStatic.rdtOpen` 240×290，`.DatePicker-popover` padding 0、边框 `#f2f3f5`、select-outer 阴影。
+- 未接：移动端 CalendarMobile picker、选择器内 `schedules` 日程。
 - `input-datetime` / `input-time` 是同一渲染器的薄别名，时间用时分秒下拉，不是独立滚轮。
+- Amis 属性表把 `closeOnSelect` 写成默认 `false`，源码 `defaultProps` 是 `true`；Vamis 跟源码。

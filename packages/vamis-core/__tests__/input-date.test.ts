@@ -164,3 +164,24 @@ describe('input-date renderer reuse', () => {
     expect(vue).not.toContain('vamis-date-cal__')
   })
 })
+
+describe('input-date popover box model', () => {
+  const here = dirname(fileURLToPath(import.meta.url))
+  const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+  const cal = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
+
+  it('matches Amis DatePicker-popover: padding 0, no min-width, select-outer border/shadow', () => {
+    const block = css.slice(css.indexOf('.vamis-date-picker__popover {'), css.indexOf('.vamis-date-picker__popover.is-embed'))
+    expect(block).toMatch(/padding:\s*0/)
+    expect(block).not.toMatch(/min-width:\s*256px/)
+    expect(block).toMatch(/#f2f3f5/)
+    expect(block).toMatch(/0px 1px 3px 0px rgba\(0, 0, 0, 0\.1\)/)
+  })
+
+  it('matches Amis rdt / rdtPicker: 240px, padding 0, UA cell padding 1px', () => {
+    expect(cal).toMatch(/\.vamis-cal \{[\s\S]*?width:\s*240px/)
+    expect(cal).toMatch(/\.vamis-cal \{[\s\S]*?padding:\s*0/)
+    expect(cal).toMatch(/padding:\s*1px/)
+    expect(cal).toMatch(/box-sizing:\s*content-box/)
+  })
+})
