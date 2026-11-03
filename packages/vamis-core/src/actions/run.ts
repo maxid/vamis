@@ -5,7 +5,16 @@ import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
 import type { Scope } from '../scope'
-import { actionMailto } from '../utils/action'
+import {
+  actionBlank,
+  actionCopyFormat,
+  actionMailto,
+  actionRequiredNames,
+  copyToClipboard,
+  fileNameFromUrl,
+  triggerBlobDownload,
+  triggerSaveAs,
+} from '../utils/action'
 import { notifyToasts } from '../utils/toast'
 import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
 import { getAction, registerAction } from './registry'
@@ -70,16 +79,21 @@ export async function runActions(actions: ActionSchema[] | undefined, ctx: Actio
   }
 }
 
-export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<void> {
+export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<boolean> {
   const data = actionData(action, ctx)
-  if (typeof action.expression === 'string' && !evalExpression(action.expression, data)) return
+  if (typeof action.expression === 'string' && !evalExpression(action.expression, data)) return false
   if (action.confirmText) {
     const title = typeof action.confirmTitle === 'string' ? filterTpl(action.confirmTitle, data) : undefined
-    if (!(await ctx.env.confirm(filterTpl(action.confirmText, data), title))) return
+    if (!(await ctx.env.confirm(filterTpl(action.confirmText, data), title))) return false
   }
 
   const type =
     action.actionType || (action.type === 'submit' ? 'submit' : action.type === 'reset' ? 'reset' : '')
+  const required = actionRequiredNames(action)
+  if (required.length && ctx.form?.validate && !ctx.form.validate(required)) {
+    ctx.env.notify('error', '请检查表单')
+    return false
+  }
   const handler = getAction(type)
   try {
     if (handler) await handler(action, ctx)
@@ -89,6 +103,39 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
 
   if (truthyFlag(action.preventDefault, data)) ctx.event?.preventDefault()
   if (truthyFlag(action.stopPropagation, data)) ctx.event?.stopPropagation()
+  return true
+}
+
+function closeAfterAction(action: ActionSchema, ctx: ActionContext) {
+  if (action.close !== true) return
+  if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
+  else ctx.overlay?.closeDrawer()
+}
+
+async function reloadAfterAction(action: ActionSchema, data: PlainObject, ctx: ActionContext) {
+  if (!action.reload) return
+  if (action.reload === 'window') {
+    if (typeof window !== 'undefined') window.location.reload()
+    return
+  }
+  await ctx.scoped?.reload(String(action.reload), data)
+}
+
+async function finishAjax(action: ActionSchema, data: PlainObject, resultData: unknown, ctx: ActionContext) {
+  const merged =
+    resultData && typeof resultData === 'object' && !Array.isArray(resultData)
+      ? { ...data, ...(resultData as PlainObject) }
+      : data
+  if (action.redirect) {
+    ctx.env.jumpTo(filterTpl(String(action.redirect), merged), { blank: actionBlank(action) })
+  }
+  if (action.feedback && ctx.overlay) {
+    const raw = action.feedback
+    const dialog = (typeof raw === 'string' ? { title: raw } : raw) as SchemaObject
+    ctx.overlay.openDialog(dialog, merged)
+  }
+  await reloadAfterAction(action, merged, ctx)
+  closeAfterAction(action, ctx)
 }
 
 function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionContext) {
@@ -146,7 +193,34 @@ function registerBuiltinActions() {
       if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
       else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')
     }
-    if (action.reload) await ctx.scoped?.reload(String(action.reload), data)
+    await finishAjax(action, data, result.data, ctx)
+  })
+
+  registerAction('download', async (action, ctx) => {
+    if (!action.api) return
+    const data = actionData(action, ctx)
+    const api =
+      typeof action.api === 'string'
+        ? { url: action.api, responseType: 'blob' as const, downloadFileName: action.downloadFileName }
+        : { ...action.api, responseType: 'blob' as const, downloadFileName: action.downloadFileName || action.api.downloadFileName }
+    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
+    if (result.skipped) return
+    if (!result.ok) {
+      throw new Error(apiMessage(action.api, result.payload, 'failed'))
+    }
+    const blob = result.data instanceof Blob ? result.data : new Blob([result.data == null ? '' : String(result.data)])
+    const name = filterTpl(String(action.downloadFileName || result.payload.fileName || 'download'), data)
+    triggerBlobDownload(blob, name)
+    await finishAjax(action, data, result.data instanceof Blob ? data : result.data, ctx)
+  })
+
+  registerAction('saveAs', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const api = action.api
+    const url = typeof api === 'string' ? filterTpl(api, data) : filterTpl(api?.url || '', data)
+    if (!url) return
+    const fileName = filterTpl(String(action.fileName || ''), data) || fileNameFromUrl(url)
+    triggerSaveAs(url, fileName)
   })
 
   registerAction('toast', async (action, ctx) => {
@@ -230,22 +304,37 @@ function registerBuiltinActions() {
   registerAction('reset', async (_action, ctx) => {
     ctx.form?.reset?.()
   })
+  registerAction('clear', async (_action, ctx) => {
+    ctx.form?.clear?.()
+  })
+  registerAction('clear-and-submit', async (_action, ctx) => {
+    ctx.form?.clear?.()
+    await ctx.form?.submit?.()
+  })
+  registerAction('reset-and-submit', async (_action, ctx) => {
+    ctx.form?.reset?.()
+    await ctx.form?.submit?.()
+  })
 
   registerAction('link', async (action, ctx) => {
     const data = actionData(action, ctx)
-    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data))
+    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data), {
+      blank: actionBlank(action),
+      actionType: 'link',
+    })
   })
   registerAction('url', async (action, ctx) => {
     const data = actionData(action, ctx)
-    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data))
+    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data), {
+      blank: actionBlank(action),
+      actionType: 'url',
+    })
   })
 
   registerAction('copy', async (action, ctx) => {
     const data = actionData(action, ctx)
     const text = filterTpl(action.copy || action.content || action.args?.content || '', data)
-    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text)
-    }
+    await copyToClipboard(text, actionCopyFormat(action))
   })
 
   registerAction('email', async (action, ctx) => {

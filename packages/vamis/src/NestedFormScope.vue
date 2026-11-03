@@ -51,6 +51,7 @@ provideForm({
   setValue,
   submit: async () => undefined,
   reset: () => undefined,
+  clear: () => undefined,
   setError,
 })
 provideFormApi({

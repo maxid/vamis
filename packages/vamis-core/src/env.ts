@@ -10,9 +10,13 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     notify(type, msg, conf?: NotifyConf) {
       pushToast(type, msg, conf)
     },
-    jumpTo(to) {
+    jumpTo(to, opts) {
       if (to === 'goBack') {
         window.history.back()
+        return
+      }
+      if (opts?.blank && typeof window !== 'undefined' && window.open) {
+        window.open(to, '_blank', 'noopener,noreferrer')
         return
       }
       window.location.assign(to)

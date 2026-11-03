@@ -9,6 +9,7 @@ import type {
 } from '../types'
 import { evalExpression, filterTpl } from '../formula'
 import { createObject } from '../context'
+import { parseContentDisposition } from './action'
 import { dataMapping } from './data-mapping'
 
 export interface ApiContext {
@@ -435,7 +436,10 @@ export async function defaultFetcher(api: ApiObject, data?: PlainObject): Promis
   if (api.responseType === 'blob') {
     const response = await fetch(url.toString(), { method, headers, body })
     const blob = await response.blob()
-    return { status: 0, ok: true, data: blob }
+    const fileName =
+      parseContentDisposition(response.headers.get('Content-Disposition') || response.headers.get('content-disposition')) ||
+      api.downloadFileName
+    return { status: 0, ok: true, data: blob, fileName }
   }
 
   const response = await fetch(url.toString(), { method, headers, body })

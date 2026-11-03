@@ -33,14 +33,32 @@ export interface SchemaObject extends PlainObject {
   onEvent?: Record<string, { actions: ActionSchema[] }>
 }
 
+export interface JumpToOptions {
+  blank?: boolean
+  actionType?: string
+}
+
 export interface ActionSchema extends SchemaObject {
   actionType?: string
   api?: SchemaApi
   dialog?: SchemaObject
+  drawer?: SchemaObject
   url?: string
   link?: string
+  blank?: boolean
   confirmText?: string
+  confirmTitle?: string
   dataMergeMode?: 'merge' | 'override'
+  redirect?: string
+  feedback?: SchemaObject | string
+  reload?: string
+  copy?: string
+  content?: string
+  copyFormat?: string
+  fileName?: string
+  downloadFileName?: string
+  close?: boolean | string
+  required?: string[]
 }
 
 export type SchemaApi = string | ApiObject
@@ -83,6 +101,8 @@ export interface ApiObject {
   attachDataToQuery?: boolean
   /** 即使 url 含 `$` 也把当前域拼进 query */
   forceAppendDataToQuery?: boolean
+  /** download 时覆盖文件名；仍建议接口返回 Content-Disposition */
+  downloadFileName?: string
 }
 
 export interface Payload {
@@ -92,6 +112,7 @@ export interface Payload {
   ok?: boolean
   msgTimeout?: number
   errors?: any
+  fileName?: string
 }
 
 export type RendererTest = RegExp | ((path: string, schema?: SchemaObject) => boolean)
@@ -150,7 +171,7 @@ export interface RendererEnv {
   /** 返回原始响应体；`requestApi` 再 `normalizePayload`。 */
   fetcher: (api: ApiObject, data?: PlainObject) => Promise<unknown>
   notify: (type: NotifyType, msg: string, conf?: NotifyConf) => void
-  jumpTo: (to: string) => void
+  jumpTo: (to: string, opts?: JumpToOptions) => void
   alert: (msg: string, title?: string) => void
   confirm: (msg: string, title?: string) => Promise<boolean>
   session?: string

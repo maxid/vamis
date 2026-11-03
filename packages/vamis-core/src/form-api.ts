@@ -9,7 +9,8 @@ export interface FormApiLike {
   getData?: () => PlainObject
   submit?: () => Promise<void> | void
   reset?: () => void
-  validate?: () => boolean
+  clear?: () => void
+  validate?: (extraRequired?: string[]) => boolean
 }
 
 export const FormApiKey: InjectionKey<FormApiLike> = Symbol('vamis-form-api')

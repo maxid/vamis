@@ -313,6 +313,8 @@
             if (byLabel) return byLabel
           }
           if (node.type === 'button' || node.type === 'action' || node.type === 'submit' || node.type === 'reset') {
+            const host = document.querySelector('[data-vamis-action]')
+            if (host) return host
             const buttons = document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
             if (buttons.length === 1) return buttons[0]
           }
