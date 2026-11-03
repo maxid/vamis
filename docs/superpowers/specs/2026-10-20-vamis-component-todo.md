@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-03（`checkbox` 85%、`input-text` 82%、`action` / `button` 92%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`input-date` 82%、`checkbox` 85%、`input-text` 82%、`action` / `button` 92%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -66,11 +66,11 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 77% | 11 |
-| 数据输入 | 0 / 72 | 72 | 0 | 48% | 40 |
+| 数据输入 | 0 / 72 | 72 | 0 | 49% | 41 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
-| **合计** | **1 / 155** | **154** | **0** | **59%** | **109** |
+| **合计** | **1 / 155** | **154** | **0** | **59%** | **110** |
 
 侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
@@ -141,8 +141,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
 | `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 50% | 能多行子表单；子项 api、扁平模式未齐 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
-| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 55% | 能选日期；快捷/限制未齐 | P0 |
-| `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 50% | `input-date` 别名，时间 UI 不独立 | P0 |
+| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 82% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。缺移动端 picker、popOverContainerSelector、schedules | P0 |
+| `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 58% | `input-date` 别名，已接日期+时分秒；时分秒约束与移动端 picker 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 50% | 能选区间 | P0 |
 | `input-datetime-range` | InputDatetimeRange 日期时间范围 | `/components/form/input-datetime-range` | `/zh-CN/components/form/input-datetime-range` | 进行中 | 45% | `input-date-range` 别名 | P0 |
@@ -185,7 +185,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-tag` | InputTag 标签选择器 | `/components/form/input-tag` | `/zh-CN/components/form/input-tag` | 进行中 | 50% | 能回车加标签 | P0 |
 | `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 82% | 主路径已齐（addOn/清值/计数/边框/事件动作）；选择器已通主路径，检索精度与 `revealPassword` 仍缺 | P0 |
 | `textarea` | Textarea 多行输入框 | `/components/form/textarea` | `/zh-CN/components/form/textarea` | 进行中 | 60% | 主路径可用 | P0 |
-| `input-time` | InputTime 时间 | `/components/form/input-time` | `/zh-CN/components/form/input-time` | 进行中 | 45% | `input-date` 别名 | P0 |
+| `input-time` | InputTime 时间 | `/components/form/input-time` | `/zh-CN/components/form/input-time` | 进行中 | 55% | `input-date` 别名，已接时间面板；滚轮 / 时间约束未齐 | P0 |
 | `input-time-range` | InputTimeRange 时间范围 | `/components/form/input-time-range` | `/zh-CN/components/form/input-time-range` | 进行中 | 45% | 已注册 | P0 |
 | `transfer` | Transfer 穿梭器 | `/components/form/transfer` | `/zh-CN/components/form/transfer` | 进行中 | 50% | 能左右移动；树/搜索未齐 | P0 |
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：`input-date`、Options、`select`、`image`、`input-date-range`、`mapping`。`checkbox` 本轮已推到 85%；`input-password` 显隐开关跟该 type。
+- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 本轮已推到 82%；`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 
@@ -348,7 +348,7 @@ flowchart LR
 | 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 92% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 85% |
-| 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 55% |
+| 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 82% |
 | 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
 | 10 | `select` | `FormItem`、`Options` | 5 | 11 | 93 | 进行中 | 60% |
 | 11 | `image` | — | 7 | 5 | 47 | 进行中 | 75% |
@@ -383,7 +383,7 @@ flowchart LR
 | 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 92% |
 | 41 | `button-group` | `action`、`button` | 4 | 2 | 20 | 进行中 | 85% |
 | 42 | `nav` | `icon`、`action`、`tpl`、`link` | 5 | 1 | 13 | 进行中 | 80% |
-| 43 | `input-datetime` | `input-date` | 5 | 1 | 13 | 进行中 | 50% |
+| 43 | `input-datetime` | `input-date` | 5 | 1 | 13 | 进行中 | 58% |
 | 44 | `input-month` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
 | 45 | `input-kv` | `FormItem`、`input-text`、`action` | 5 | 1 | 13 | 进行中 | 50% |
 | 46 | `input-quarter` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
@@ -392,7 +392,7 @@ flowchart LR
 | 49 | `form` | `FormItem`、`Options`、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image` | 4 | 10 | 84 | 进行中 | 75% |
 | 50 | `dialog` | `action`、`form`、`container`、`tpl` | 3 | 3 | 27 | 进行中 | 85% |
 | 51 | `drawer` | `action`、`form`、`container`、`tpl` | 3 | 2 | 19 | 进行中 | 85% |
-| 52 | `input-time` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
+| 52 | `input-time` | `input-date` | 5 | 1 | 13 | 进行中 | 55% |
 | 53 | `input-tree` | `FormItem`、`checkbox` | 5 | 1 | 13 | 进行中 | 50% |
 | 54 | `input-year` | `input-date` | 5 | 1 | 13 | 进行中 | 45% |
 | 55 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 5 | 1 | 13 | 进行中 | 70% |
