@@ -922,6 +922,183 @@
   .vamis-text-control.is-focused .vamis-text-control__addon--button [data-slot='button'] {
     border-color: var(--ring);
   }
+
+  .vamis-date-picker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+  }
+  .vamis-date-picker__icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted-foreground);
+    margin-left: 4px;
+  }
+  .vamis-date-picker__popover {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 256px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-shadow: 0 4px 16px rgb(15 23 42 / 0.12);
+  }
+  .vamis-date-picker__popover.is-embed,
+  .vamis-date-picker.is-embed .vamis-date-picker__popover {
+    position: relative;
+    top: 0;
+    box-shadow: none;
+  }
+  .vamis-date-picker__shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-bottom: 8px;
+  }
+  .vamis-date-picker__shortcut {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary);
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+  }
+  .vamis-date-picker__shortcut:hover {
+    text-decoration: underline;
+  }
+  .vamis-date-cal {
+    width: 240px;
+    max-width: 100%;
+    font-size: 12px;
+    user-select: none;
+  }
+  .vamis-date-cal__header {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 4px;
+  }
+  .vamis-date-cal__header.is-span {
+    justify-content: space-between;
+  }
+  .vamis-date-cal__center {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 8px;
+  }
+  .vamis-date-cal__nav,
+  .vamis-date-cal__switch,
+  .vamis-date-cal__pick {
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .vamis-date-cal__nav {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--muted-foreground);
+  }
+  .vamis-date-cal__switch {
+    font-weight: 500;
+    line-height: 24px;
+  }
+  .vamis-date-cal__switch:hover,
+  .vamis-date-cal__nav:hover {
+    color: var(--primary);
+  }
+  .vamis-date-cal__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .vamis-date-cal__table th {
+    height: 24px;
+    font-weight: 400;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+  .vamis-date-cal__table td {
+    height: 28px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .vamis-date-cal__table td span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+  }
+  .vamis-date-cal__table td.is-other span {
+    color: #b8babf;
+  }
+  .vamis-date-cal__table td.is-today span {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .vamis-date-cal__table td.is-active span {
+    color: #fff;
+    background: var(--primary);
+  }
+  .vamis-date-cal__table td:hover span {
+    background: color-mix(in oklch, var(--primary) 12%, transparent);
+  }
+  .vamis-date-cal__table td.is-active:hover span {
+    background: var(--primary);
+  }
+  .vamis-date-cal__table td.is-disabled {
+    cursor: not-allowed;
+  }
+  .vamis-date-cal__table td.is-disabled span,
+  .vamis-date-cal__table td.is-disabled:hover span {
+    color: #b8babf;
+    background: transparent;
+    opacity: 0.55;
+  }
+  .vamis-date-cal__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .vamis-date-cal__pick {
+    height: 32px;
+    border-radius: 4px;
+  }
+  .vamis-date-cal__pick:hover {
+    background: color-mix(in oklch, var(--primary) 12%, transparent);
+  }
+  .vamis-date-cal__pick.is-active {
+    color: #fff;
+    background: var(--primary);
+  }
+  .vamis-date-cal__pick.is-other {
+    color: #b8babf;
+  }
+  .vamis-date-picker__time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .vamis-date-picker__time select {
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 0 4px;
+  }
 }
 
 @media (min-width: 576px) {

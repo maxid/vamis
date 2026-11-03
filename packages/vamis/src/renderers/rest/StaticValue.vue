@@ -5,7 +5,11 @@ import { Badge } from '@vamis/ui'
 import { defaultDatePattern, formatDate, readValue } from './format'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
-const type = computed(() => props.schema.type || 'date')
+const type = computed(() => {
+  const kind = String(props.schema.type || 'date')
+  if (kind === 'static-date') return 'date'
+  return kind
+})
 const raw = computed(() => readValue(props.schema, props.data))
 
 const text = computed(() => {

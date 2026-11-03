@@ -42,7 +42,7 @@ import TableCell from '../renderers/rest/TableCell.vue'
 
 registerRenderer({ type: 'remark', component: Remark })
 registerRenderer({ type: 'dropdown-button', component: DropdownButton })
-registerRenderer({ type: 'date', component: StaticValue })
+registerRenderer({ type: 'date', alias: ['static-date'], component: StaticValue })
 registerRenderer({ type: 'datetime', component: StaticValue })
 registerRenderer({ type: 'time', component: StaticValue })
 registerRenderer({ type: 'month', component: StaticValue })
