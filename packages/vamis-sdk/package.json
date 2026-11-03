@@ -20,6 +20,7 @@
   "dependencies": {
     "@vamis/core": "workspace:*",
     "@vamis/ui": "workspace:*",
+    "dayjs": "^1.11.18",
     "pinia": "^3.0.0",
     "vamis": "workspace:*",
     "vue": "^3.5.22",

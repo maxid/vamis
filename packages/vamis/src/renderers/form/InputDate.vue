@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import moment, { type Moment } from 'moment'
 import { cn } from '@vamis/ui'
 import {
   CALENDAR_WEEKDAYS,
   createVamisEvent,
+  dayjs,
   displayInputDateValue,
   eventEvalData,
   filterTpl,
@@ -37,6 +37,7 @@ import {
   useOverlay,
   useScope,
   useScoped,
+  type Dayjs,
   type SchemaObject,
 } from '@vamis/core'
 import { useForm } from '../../formContext'
@@ -59,7 +60,7 @@ const focused = ref(false)
 const draft = ref('')
 const editing = ref(false)
 const panelView = ref<'days' | 'months' | 'years'>(inputDateViewMode(props.schema) === 'time' ? 'days' : 'days')
-const cursor = ref(moment())
+const cursor = ref(dayjs())
 const pristine = ref<unknown>(undefined)
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
@@ -119,8 +120,8 @@ function write(next: unknown) {
   if (name.value) form?.setValue(name.value, next)
 }
 
-function syncCursor(date?: Moment) {
-  cursor.value = (date?.isValid() ? date.clone() : moment()).startOf('day')
+function syncCursor(date?: Dayjs) {
+  cursor.value = (date?.isValid() ? date.clone() : dayjs()).startOf('day')
 }
 
 async function emitEvent(type: string, value: unknown, native?: Event) {
@@ -150,18 +151,18 @@ async function commit(next: string, close = false) {
 }
 
 function cellDisabled(iso: string, date: Date) {
-  const m = moment(date)
+  const m = dayjs(date)
   return isInputDateDisabled(m, props.schema, data.value, env.trusted === true)
 }
 
 async function pickDay(date: Date, iso: string) {
   if (locked.value || cellDisabled(iso, date)) return
-  const next = pickInputDateValue(moment(date), props.schema, parsed.value)
-  syncCursor(moment(date))
+  const next = pickInputDateValue(dayjs(date), props.schema, parsed.value)
+  syncCursor(dayjs(date))
   await commit(next, true)
 }
 
-async function pickShortcut(date: Moment) {
+async function pickShortcut(date: Dayjs) {
   if (locked.value) return
   const next = pickInputDateValue(date, props.schema, parsed.value)
   syncCursor(date)
@@ -170,10 +171,10 @@ async function pickShortcut(date: Moment) {
 
 async function pickTime(part: 'hour' | 'minute' | 'second', raw: string) {
   if (locked.value) return
-  const base = parsed.value?.clone() || cursor.value.clone()
-  if (part === 'hour') base.hour(Number(raw))
-  if (part === 'minute') base.minute(Number(raw))
-  if (part === 'second') base.second(Number(raw))
+  let base = parsed.value?.clone() || cursor.value.clone()
+  if (part === 'hour') base = base.hour(Number(raw))
+  if (part === 'minute') base = base.minute(Number(raw))
+  if (part === 'second') base = base.second(Number(raw))
   await commit(storeInputDateValue(base, props.schema), false)
 }
 

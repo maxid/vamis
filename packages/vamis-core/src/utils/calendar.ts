@@ -15,7 +15,7 @@ export const CALENDAR_SCHEDULE_CLASS_NAMES = [
   'bg-secondary',
 ] as const
 
-/** zh-CN / moment：周一起始。禁止用 helper `grid-cols-7`（Amis 该 class 实际是 6 列）。 */
+/** zh-CN：周一起始。禁止用 helper `grid-cols-7`（Amis 该 class 实际是 6 列）。 */
 export const CALENDAR_WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'] as const
 
 export type CalendarCell = {

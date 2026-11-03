@@ -1,5 +1,5 @@
 import { registerFilter } from '@vamis/formula'
-import moment from 'moment'
+import { parseDate } from './utils/dayjs'
 
 registerFilter('json', (input: unknown) => {
   try {
@@ -20,14 +20,12 @@ registerFilter('first', (input: unknown) => {
 })
 
 registerFilter('date', (input: unknown, format = 'LLL', inputFormat = 'X') => {
-  const parsed = moment(input as moment.MomentInput, inputFormat as string)
+  const parsed = parseDate(input, inputFormat as string)
   return parsed.isValid() ? parsed.format(format as string) : ''
 })
 
 registerFilter('datetime', (input: unknown, format = 'YYYY-MM-DD HH:mm:ss', inputFormat = '') => {
-  const parsed = inputFormat
-    ? moment(input as moment.MomentInput, inputFormat as string)
-    : moment(input as moment.MomentInput)
+  const parsed = inputFormat ? parseDate(input, inputFormat as string) : parseDate(input)
   return parsed.isValid() ? parsed.format(format as string) : ''
 })
 

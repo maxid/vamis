@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import moment from 'moment'
+import { dayjs } from '../src/utils/dayjs'
 import {
   displayInputDateValue,
   filterDate,
@@ -55,7 +55,7 @@ describe('filterDate', () => {
     expect(filterDate('-1days', {}, 'X', false, NOW)?.format('YYYY-MM-DD')).toBe('2020-06-10')
     expect(filterDate('today', {}, 'X', false, NOW)?.format('YYYY-MM-DD')).toBe('2020-06-11')
     expect(filterDate('now', {}, 'X', false, NOW)?.format('YYYY-MM-DD HH:mm')).toBe(
-      moment(NOW).format('YYYY-MM-DD HH:mm'),
+      dayjs(NOW).format('YYYY-MM-DD HH:mm'),
     )
   })
 
@@ -67,17 +67,17 @@ describe('filterDate', () => {
 
   it('stores default relative value as format X', () => {
     const stored = inputDateDefaultStored({ type: 'input-date', value: '+1days' }, {}, '+1days', NOW)
-    expect(stored).toBe(moment(NOW).startOf('day').add(1, 'day').format('X'))
+    expect(stored).toBe(dayjs(NOW).startOf('day').add(1, 'day').format('X'))
   })
 })
 
 describe('minDate / maxDate / disabledDate', () => {
   it('disables days before minDate and after maxDate', () => {
     const schema = { type: 'input-date', minDate: '-1days', maxDate: '+1days' }
-    const yesterday = moment(NOW).startOf('day').add(-1, 'day')
-    const today = moment(NOW).startOf('day')
-    const twoAgo = moment(NOW).startOf('day').add(-2, 'day')
-    const twoLater = moment(NOW).startOf('day').add(2, 'day')
+    const yesterday = dayjs(NOW).startOf('day').add(-1, 'day')
+    const today = dayjs(NOW).startOf('day')
+    const twoAgo = dayjs(NOW).startOf('day').add(-2, 'day')
+    const twoLater = dayjs(NOW).startOf('day').add(2, 'day')
     expect(isInputDateDisabled(twoAgo, schema, {}, false, NOW)).toBe(true)
     expect(isInputDateDisabled(yesterday, schema, {}, false, NOW)).toBe(false)
     expect(isInputDateDisabled(today, schema, {}, false, NOW)).toBe(false)
@@ -96,8 +96,8 @@ describe('minDate / maxDate / disabledDate', () => {
       type: 'input-date',
       disabledDate: 'return currentDate.day() == 1 || currentDate.day() == 0 || currentDate.day() == 6',
     }
-    const monday = moment('2020-06-08')
-    const tuesday = moment('2020-06-09')
+    const monday = dayjs('2020-06-08')
+    const tuesday = dayjs('2020-06-09')
     expect(isInputDateDisabled(monday, schema, {}, false)).toBe(false)
     expect(isInputDateDisabled(monday, schema, {}, true)).toBe(true)
     expect(isInputDateDisabled(tuesday, schema, {}, true)).toBe(false)
@@ -137,9 +137,9 @@ describe('store / display / actions helpers', () => {
   })
 
   it('formats utc YYYY-MM-DD from a local midnight that crosses the date line', () => {
-    const local = moment('2020-06-11T00:00:00')
+    const local = dayjs('2020-06-11T00:00:00')
     const utcText = formatInputDate(local, 'YYYY-MM-DD', true)
-    expect(utcText).toBe(moment.utc(local).format('YYYY-MM-DD'))
+    expect(utcText).toBe(dayjs.utc(local).format('YYYY-MM-DD'))
   })
 
   it('reads setData payload and reset fallback', () => {

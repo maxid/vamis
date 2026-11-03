@@ -1,4 +1,4 @@
-import moment from 'moment';
+import {parseDate} from '../src/dayjs';
 import {parse} from '../src/index';
 
 test('parser:simple', () => {
@@ -130,7 +130,7 @@ test('parser:filter-escape', () => {
       evalMode: false,
       filters: {
         date: (input: any, format = 'LLL', inputFormat = 'X') =>
-          moment(input, inputFormat).format(format)
+          parseDate(input, inputFormat).format(format)
       }
     } as any)
   ).toMatchSnapshot();

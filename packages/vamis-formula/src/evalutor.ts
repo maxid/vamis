@@ -2,7 +2,7 @@
  * @file 公式内置函数
  */
 
-import moment from 'moment';
+import { dayjs, parseDate } from './dayjs';
 import upperFirst from 'lodash/upperFirst';
 import padStart from 'lodash/padStart';
 import capitalize from 'lodash/capitalize';
@@ -1077,7 +1077,7 @@ export class Evaluator {
 
   normalizeText(raw: any) {
     if (raw instanceof Date) {
-      return moment(raw).format();
+      return dayjs(raw).format();
     }
 
     return `${raw}`;
@@ -1610,7 +1610,7 @@ export class Evaluator {
    */
   fnTIMESTAMP(date: Date, format?: 'x' | 'X') {
     return parseInt(
-      moment(this.normalizeDate(date)).format(format === 'x' ? 'x' : 'X'),
+      dayjs(this.normalizeDate(date)).format(format === 'x' ? 'x' : 'X'),
       10
     );
   }
@@ -1655,7 +1655,7 @@ export class Evaluator {
    * @returns {number} 星期几的数字标识
    */
   fnWEEKDAY(date: Date | string | number, type?: number) {
-    const md = moment(this.normalizeDate(date));
+    const md = dayjs(this.normalizeDate(date));
     return type === 2 ? md.isoWeekday() : md.weekday();
   }
 
@@ -1674,7 +1674,7 @@ export class Evaluator {
    * @returns {number} 星期几的数字标识
    */
   fnWEEK(date: Date | string | number, isISO = false) {
-    const md = moment(this.normalizeDate(date));
+    const md = dayjs(this.normalizeDate(date));
     return isISO ? md.isoWeek() : md.week();
   }
 
@@ -1700,7 +1700,7 @@ export class Evaluator {
     format: string = 'YYYY-MM-DD HH:mm:ss'
   ) {
     date = this.normalizeDate(date);
-    return moment(date).format(format);
+    return dayjs(date).format(format);
   }
 
   /**
@@ -1738,7 +1738,7 @@ export class Evaluator {
       .split(delimiter)
       .map(item =>
         item && format
-          ? moment(this.normalizeDate(item.trim())).format(format)
+          ? dayjs(this.normalizeDate(item.trim())).format(format)
           : item.trim()
       );
 
@@ -1764,7 +1764,7 @@ export class Evaluator {
    * @returns {any} 新的日期对象, 如果传入 format 则返回格式化后的日期字符串
    */
   fnSTARTOF(date: Date, unit?: any, format?: string) {
-    const md = moment(this.normalizeDate(date)).startOf(unit || 'day');
+    const md = dayjs(this.normalizeDate(date)).startOf(unit || 'day');
     return format ? md.format(format) : md.toDate();
   }
 
@@ -1779,7 +1779,7 @@ export class Evaluator {
    * @returns {any} 新的日期对象, 如果传入 format 则返回格式化后的日期字符串
    */
   fnENDOF(date: Date, unit?: any, format?: string) {
-    const md = moment(this.normalizeDate(date)).endOf(unit || 'day');
+    const md = dayjs(this.normalizeDate(date)).endOf(unit || 'day');
     return format ? md.format(format) : md.toDate();
   }
 
@@ -1794,7 +1794,7 @@ export class Evaluator {
       }
       while (formats.length) {
         const format = formats.shift()!;
-        const date = moment(raw, format);
+        const date = format ? parseDate(raw, format) : parseDate(raw);
 
         if (date.isValid()) {
           return date.toDate();
@@ -1901,7 +1901,7 @@ export class Evaluator {
   fnYEARS(endDate: Date, startDate: Date) {
     endDate = this.normalizeDate(endDate);
     startDate = this.normalizeDate(startDate);
-    return moment(endDate).diff(moment(startDate), 'year');
+    return dayjs(endDate).diff(dayjs(startDate), 'year');
   }
 
   /**
@@ -1916,7 +1916,7 @@ export class Evaluator {
   fnMINUTES(endDate: Date, startDate: Date) {
     endDate = this.normalizeDate(endDate);
     startDate = this.normalizeDate(startDate);
-    return moment(endDate).diff(moment(startDate), 'minutes');
+    return dayjs(endDate).diff(dayjs(startDate), 'minutes');
   }
 
   /**
@@ -1931,7 +1931,7 @@ export class Evaluator {
   fnDAYS(endDate: Date, startDate: Date) {
     endDate = this.normalizeDate(endDate);
     startDate = this.normalizeDate(startDate);
-    return moment(endDate).diff(moment(startDate), 'days');
+    return dayjs(endDate).diff(dayjs(startDate), 'days');
   }
 
   /**
@@ -1946,7 +1946,7 @@ export class Evaluator {
   fnHOURS(endDate: Date, startDate: Date) {
     endDate = this.normalizeDate(endDate);
     startDate = this.normalizeDate(startDate);
-    return moment(endDate).diff(moment(startDate), 'hour');
+    return dayjs(endDate).diff(dayjs(startDate), 'hour');
   }
 
   /**
@@ -1967,7 +1967,7 @@ export class Evaluator {
    */
   fnDATEMODIFY(date: Date, num: number, format: any) {
     date = this.normalizeDate(date);
-    return moment(date).add(num, format).toDate();
+    return dayjs(date).add(num, format).toDate();
   }
 
   /**
@@ -1982,7 +1982,7 @@ export class Evaluator {
    * @returns {date} 日期对象
    */
   fnSTRTODATE(value: any, format: string = '') {
-    return moment(value, format).toDate();
+    return parseDate(value, format).toDate();
   }
 
   /**
@@ -1998,7 +1998,7 @@ export class Evaluator {
   fnISBEFORE(a: Date, b: Date, unit: any = 'day') {
     a = this.normalizeDate(a);
     b = this.normalizeDate(b);
-    return moment(a).isBefore(moment(b), unit);
+    return dayjs(a).isBefore(dayjs(b), unit);
   }
 
   /**
@@ -2014,7 +2014,7 @@ export class Evaluator {
   fnISAFTER(a: Date, b: Date, unit: any = 'day') {
     a = this.normalizeDate(a);
     b = this.normalizeDate(b);
-    return moment(a).isAfter(moment(b), unit);
+    return dayjs(a).isAfter(dayjs(b), unit);
   }
 
   /**
@@ -2037,7 +2037,7 @@ export class Evaluator {
     inclusivity: '[]' | '()' | '(]' | '[)' = '[]'
   ) {
     const range = this.normalizeDateRange(daterange);
-    return moment(this.normalizeDate(date)).isBetween(
+    return dayjs(this.normalizeDate(date)).isBetween(
       range[0],
       range[1],
       unit,
@@ -2058,7 +2058,7 @@ export class Evaluator {
   fnISSAMEORBEFORE(a: Date, b: Date, unit: any = 'day') {
     a = this.normalizeDate(a);
     b = this.normalizeDate(b);
-    return moment(a).isSameOrBefore(moment(b), unit);
+    return dayjs(a).isSameOrBefore(dayjs(b), unit);
   }
 
   /**
@@ -2074,7 +2074,7 @@ export class Evaluator {
   fnISSAMEORAFTER(a: Date, b: Date, unit: any = 'day') {
     a = this.normalizeDate(a);
     b = this.normalizeDate(b);
-    return moment(a).isSameOrAfter(moment(b), unit);
+    return dayjs(a).isSameOrAfter(dayjs(b), unit);
   }
 
   /**

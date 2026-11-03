@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, type Plugin } from 'vite'
 import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../vamis-ui/fontawesome-build.mjs'
+import { workspaceBareResolve } from '../../scripts/vite-workspace-bare-resolve.mjs'
 
 const sdk = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(sdk, '../..')
@@ -43,7 +44,7 @@ function copySdkStatic(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), copySdkStatic()],
+  plugins: [vue(), tailwindcss(), workspaceBareResolve(repo), copySdkStatic()],
   resolve: {
     alias: [
       { find: '@vamis/ui', replacement: pkg('vamis-ui') },

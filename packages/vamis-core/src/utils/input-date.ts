@@ -1,6 +1,7 @@
 /** InputDate：对齐 Amis DateControl / DatePicker / filterDate（6.13.0）。 */
 
-import moment, { type Moment } from 'moment'
+import type { ManipulateType } from 'dayjs'
+import { dayjs, isDayjs, parseDate, type Dayjs } from './dayjs'
 import { resolveValue } from '../formula'
 import { getPathValue } from './path-value'
 import { calendarMonthCells, calendarWeeks, isoDay, type CalendarCell } from './calendar'
@@ -11,7 +12,7 @@ export type InputDateView = 'days' | 'months' | 'years' | 'time'
 const RELATIVE_RE =
   /^(.+)?(\+|-)(\d+)(minute|min|hour|day|week|month|year|weekday|second|millisecond)s?$/i
 
-const UNIT_MAP: Record<string, moment.DurationInputArg2> = {
+const UNIT_MAP: Record<string, ManipulateType> = {
   year: 'year',
   month: 'month',
   week: 'week',
@@ -24,7 +25,7 @@ const UNIT_MAP: Record<string, moment.DurationInputArg2> = {
   millisecond: 'millisecond',
 }
 
-const SHORTCUT_PRESETS: Record<string, { label: string; apply: (now: Moment) => Moment }> = {
+const SHORTCUT_PRESETS: Record<string, { label: string; apply: (now: Dayjs) => Dayjs }> = {
   now: { label: '现在', apply: (now) => now },
   today: { label: '今天', apply: (now) => now.startOf('day') },
   yesterday: { label: '昨天', apply: (now) => now.add(-1, 'days').startOf('day') },
@@ -42,7 +43,7 @@ const SHORTCUT_PRESETS: Record<string, { label: string; apply: (now: Moment) => 
 const SHORTCUT_ADVANCE: Array<{
   re: RegExp
   label: (n: string) => string
-  apply: (now: Moment, n: number) => Moment
+  apply: (now: Dayjs, n: number) => Dayjs
 }> = [
   { re: /^(\d+)hoursago$/, label: (n) => `${n}小时前`, apply: (now, n) => now.subtract(n, 'hours') },
   { re: /^(\d+)hourslater$/, label: (n) => `${n}小时后`, apply: (now, n) => now.add(n, 'hours') },
@@ -56,14 +57,15 @@ const SHORTCUT_ADVANCE: Array<{
   { re: /^(\d+)quarterslater$/, label: (n) => `${n}季度后`, apply: (now, n) => now.add(n, 'quarters') },
 ]
 
-export type InputDateShortcut = { key?: string; label: string; date: Moment }
+export type InputDateShortcut = { key?: string; label: string; date: Dayjs }
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
 }
 
 function factory(utc: boolean) {
-  return utc ? moment.utc : moment
+  return (input?: unknown, format?: string, strict?: boolean) =>
+    parseDate(input, format, { utc, strict: strict === true })
 }
 
 export function inputDateType(schema: { type?: string } | string | undefined): string {
@@ -154,13 +156,13 @@ export function filterDate(
   data: PlainObject = {},
   format = 'X',
   utc = false,
-  now: Date | Moment = new Date(),
-): Moment | undefined {
+  now: Date | Dayjs = new Date(),
+): Dayjs | undefined {
   if (value == null || value === '' || value === false) return undefined
   const mm = factory(utc)
-  const origin = moment.isMoment(now) ? now.clone() : mm(now)
+  const origin = isDayjs(now) ? now.clone() : mm(now)
 
-  if (moment.isMoment(value)) return utc ? moment.utc(value) : value.clone()
+  if (isDayjs(value)) return utc ? dayjs.utc(value) : value.clone()
   if (value instanceof Date) return mm(value)
 
   let next: unknown = value
@@ -177,7 +179,7 @@ export function filterDate(
   }
 
   if (next == null || next === '') return undefined
-  if (moment.isMoment(next)) return utc ? moment.utc(next) : next.clone()
+  if (isDayjs(next)) return utc ? dayjs.utc(next) : next.clone()
   if (next instanceof Date) return mm(next)
 
   if (typeof next === 'string') {
@@ -185,7 +187,7 @@ export function filterDate(
     const relative = RELATIVE_RE.exec(text)
     if (relative) {
       const step = parseInt(relative[3], 10)
-      const unit = UNIT_MAP[relative[4].toLowerCase()] || (relative[4] as moment.DurationInputArg2)
+      const unit = UNIT_MAP[relative[4].toLowerCase()] || (relative[4].toLowerCase() as ManipulateType)
       const base = relative[1]
         ? filterDate(relative[1], data, format, utc, origin) || origin.clone().startOf('day')
         : /minute|min|hour|second/i.test(relative[4])
@@ -195,7 +197,7 @@ export function filterDate(
     }
     if (text === 'now') return origin.clone()
     if (text === 'today') return origin.clone().startOf('day')
-    const byFormat = format ? mm(text, format) : undefined
+    const byFormat = format ? parseDate(text, format, { utc, strict: true }) : undefined
     if (byFormat?.isValid()) return utc ? byFormat.local() : byFormat
     return normalizeDate(text, format, { utc })
   }
@@ -210,15 +212,17 @@ export function normalizeDate(
   value: unknown,
   format?: string,
   options?: { utc?: boolean },
-): Moment | undefined {
+): Dayjs | undefined {
   if (value == null || value === '' || value === '0' || value === false) return undefined
   const utc = options?.utc === true
   const mm = factory(utc)
-  if (moment.isMoment(value)) return utc ? moment.utc(value).local() : value.clone()
+  if (isDayjs(value)) return utc ? dayjs.utc(value).local() : value.clone()
   if (value instanceof Date) return mm(value)
 
   if (typeof value === 'string' || typeof value === 'number') {
-    const strict = utc ? mm(value, format).local() : moment(value, format, true)
+    const strict = utc
+      ? parseDate(value, format, { utc: true }).local()
+      : parseDate(value, format, { strict: true })
     if (strict.isValid()) return strict
 
     let formats = ['', 'YYYY-MM-DD HH:mm:ss', 'X']
@@ -227,16 +231,16 @@ export function normalizeDate(
     else if (/^\d{13}((\.\d+)*)$/.test(text)) formats = ['x', 'X', 'YYYY-MM-DD HH:mm:ss', '']
 
     for (const item of formats) {
-      const date = item ? moment(value, item) : moment(value)
+      const date = item ? parseDate(value, item, { utc }) : parseDate(value, undefined, { utc })
       if (date.isValid()) return utc ? date.clone() : date
     }
   }
   return undefined
 }
 
-export function formatInputDate(date: Moment | undefined, format: string, utc = false): string {
+export function formatInputDate(date: Dayjs | undefined, format: string, utc = false): string {
   if (!date || !date.isValid()) return ''
-  const m = utc ? moment.utc(date) : date
+  const m = utc ? dayjs.utc(date) : date
   return m.format(format)
 }
 
@@ -244,15 +248,15 @@ export function parseInputDateValue(
   value: unknown,
   schema: SchemaObject,
   data: PlainObject = {},
-  now?: Date | Moment,
-): Moment | undefined {
+  now?: Date | Dayjs,
+): Dayjs | undefined {
   const format = inputDateValueFormat(schema)
   const utc = schema.utc === true
   return filterDate(value, data, format, utc, now) || normalizeDate(value, format, { utc })
 }
 
 export function storeInputDateValue(
-  date: Moment | undefined,
+  date: Dayjs | undefined,
   schema: SchemaObject,
 ): string {
   if (!date || !date.isValid()) return ''
@@ -261,9 +265,9 @@ export function storeInputDateValue(
 
 /** 日历点选：日期模式落到当天 0 点（`isEndDate` 则 23:59:59），时间模式保留时分秒。 */
 export function pickInputDateValue(
-  date: Moment | undefined,
+  date: Dayjs | undefined,
   schema: SchemaObject,
-  keepTime?: Moment,
+  keepTime?: Dayjs,
 ): string {
   if (!date || !date.isValid()) return ''
   let next = date.clone()
@@ -294,8 +298,8 @@ export function resolveBoundDate(
   raw: unknown,
   schema: SchemaObject,
   data: PlainObject,
-  now?: Date | Moment,
-): Moment | undefined {
+  now?: Date | Dayjs,
+): Dayjs | undefined {
   if (raw == null || raw === '') return undefined
   return parseInputDateValue(raw, schema, data, now)
 }
@@ -303,28 +307,28 @@ export function resolveBoundDate(
 export function inputDateMinMax(
   schema: SchemaObject,
   data: PlainObject,
-  now?: Date | Moment,
-): { min?: Moment; max?: Moment } {
+  now?: Date | Dayjs,
+): { min?: Dayjs; max?: Dayjs } {
   return {
     min: resolveBoundDate(schema.minDate, schema, data, now),
     max: resolveBoundDate(schema.maxDate, schema, data, now),
   }
 }
 
-function compileDisabledDate(body: string): ((currentDate: Moment, props: unknown) => boolean) | undefined {
+function compileDisabledDate(body: string): ((currentDate: Dayjs, props: unknown) => boolean) | undefined {
   try {
-    return new Function('currentDate', 'props', body) as (currentDate: Moment, props: unknown) => boolean
+    return new Function('currentDate', 'props', body) as (currentDate: Dayjs, props: unknown) => boolean
   } catch {
     return undefined
   }
 }
 
 export function isInputDateDisabled(
-  date: Moment,
+  date: Dayjs,
   schema: SchemaObject,
   data: PlainObject,
   trusted = false,
-  now?: Date | Moment,
+  now?: Date | Dayjs,
 ): boolean {
   const { min, max } = inputDateMinMax(schema, data, now)
   if (min && date.clone().endOf('day').isBefore(min)) return true
@@ -332,7 +336,7 @@ export function isInputDateDisabled(
   const raw = schema.disabledDate
   if (typeof raw === 'function') {
     try {
-      return Boolean((raw as (currentDate: Moment, props: unknown) => unknown)(date, { ...schema, data }))
+      return Boolean((raw as (currentDate: Dayjs, props: unknown) => unknown)(date, { ...schema, data }))
     } catch {
       return false
     }
@@ -349,7 +353,7 @@ export function isInputDateDisabled(
   return false
 }
 
-function resolveShortcutPreset(key: string): { label: string; apply: (now: Moment) => Moment } | undefined {
+function resolveShortcutPreset(key: string): { label: string; apply: (now: Dayjs) => Dayjs } | undefined {
   const preset = SHORTCUT_PRESETS[key]
   if (preset) return preset
   for (const item of SHORTCUT_ADVANCE) {
@@ -367,11 +371,11 @@ function resolveShortcutPreset(key: string): { label: string; apply: (now: Momen
 export function resolveInputDateShortcuts(
   raw: unknown,
   data: PlainObject = {},
-  now: Date | Moment = new Date(),
+  now: Date | Dayjs = new Date(),
 ): InputDateShortcut[] {
   if (raw == null || raw === false || raw === '') return []
   const list: unknown[] = typeof raw === 'string' ? raw.split(',') : Array.isArray(raw) ? raw : [raw]
-  const origin = moment.isMoment(now) ? now.clone() : moment(now)
+  const origin = isDayjs(now) ? now.clone() : parseDate(now)
   const out: InputDateShortcut[] = []
   for (const item of list) {
     if (item == null || item === false || item === '') continue
@@ -391,17 +395,17 @@ export function resolveInputDateShortcuts(
     }
     const date =
       filterDate(dateRaw, data, 'X', false, origin) ||
-      (dateRaw instanceof Date ? moment(dateRaw) : undefined) ||
-      (moment.isMoment(dateRaw) ? dateRaw.clone() : undefined)
+      (dateRaw instanceof Date ? parseDate(dateRaw) : undefined) ||
+      (isDayjs(dateRaw) ? dateRaw.clone() : undefined)
     if (!date || !date.isValid()) continue
     out.push({ label: label || date.format('YYYY-MM-DD'), date })
   }
   return out
 }
 
-export function inputDateMonthCells(cursor: Date | Moment, today?: Date | Moment): CalendarCell[][] {
-  const date = moment.isMoment(cursor) ? cursor.toDate() : cursor
-  const now = today ? (moment.isMoment(today) ? today.toDate() : today) : new Date()
+export function inputDateMonthCells(cursor: Date | Dayjs, today?: Date | Dayjs): CalendarCell[][] {
+  const date = isDayjs(cursor) ? cursor.toDate() : cursor
+  const now = today ? (isDayjs(today) ? today.toDate() : today) : new Date()
   return calendarWeeks(calendarMonthCells(date, [], now))
 }
 
@@ -413,7 +417,7 @@ export function inputDateDefaultStored(
   schema: SchemaObject,
   data: PlainObject,
   current: unknown,
-  now?: Date | Moment,
+  now?: Date | Dayjs,
 ): string | undefined {
   const raw = current ?? schema.value
   if (raw == null || raw === '') return undefined
@@ -453,11 +457,11 @@ export function parseTypedInputDate(
   text: string,
   schema: SchemaObject,
   data: PlainObject = {},
-): Moment | undefined {
+): Dayjs | undefined {
   const trimmed = text.trim()
   if (!trimmed) return undefined
   const display = inputDateDisplayFormat(schema)
-  const parsed = moment(trimmed, display, true)
+  const parsed = parseDate(trimmed, display, { strict: true })
   if (parsed.isValid()) return parsed
   return parseInputDateValue(trimmed, schema, data)
 }

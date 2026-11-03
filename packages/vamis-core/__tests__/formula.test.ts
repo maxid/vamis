@@ -67,7 +67,7 @@ describe('D2 runtime filters', () => {
     expect(filterTpl('${obj|json}', { obj: { a: 1 } })).toBe('{"a":1}')
   })
 
-  it('|date formats with a moment pattern', () => {
+  it('|date formats with a dayjs pattern', () => {
     expect(filterTpl("${d|date:'YYYY/MM/DD':'YYYY-MM-DD'}", { d: '2021-06-15' })).toBe('2021/06/15')
   })
 
