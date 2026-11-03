@@ -38,6 +38,21 @@ Vamis 入口（不要再新开月历）：
 
 对标 Amis：`DatePicker` 用 `Overlay` + `PopOver`，`container={popOverContainer || getParent}`，而 InputDate 传入 `popOverContainer={env.getModalContainer}`。
 
+## 弹层翻转（所有浮层共用）
+
+对齐 Amis `packages/amis-core/src/utils/dom.tsx` `calculatePosition`，DatePicker 默认 `overlayPlacement: 'auto'`。**所有**走 `VamisOverlay` 的弹层都用这一套，禁止各写一套「不够高就往上」。
+
+视口剩余高度（触发器底边到 `window.innerHeight`）小于弹层高度时翻到上方；宽度同理。试探顺序：
+
+1. `left-bottom-left-top`：触发器下、左对齐
+2. `right-bottom-right-top`：触发器下、右对齐
+3. `left-top-left-bottom`：触发器上、左对齐
+4. `right-top-right-bottom`：触发器上、右对齐
+
+四个方向都不能完全落在视口内时：能看见的轴保留，看不见的轴把浮层平移进视口，边距 **10px**（Amis 兜底）。实现：`overlayPosition`（需传入实测 `width` / `height`）；`VamisOverlay` 在 paint 后与 `ResizeObserver` 里重算。
+
+禁止：只按 `bottom + gap` 往下开；在单个渲染器里复制翻转分支。
+
 ## z-index 阶梯
 
 对齐 Amis `packages/amis-ui/scss/_variables.scss`。token 在 `:root`（Teleport 到 body 后仍能吃到），不要用 Tailwind `z-20` / `z-50` 当浮层高度。

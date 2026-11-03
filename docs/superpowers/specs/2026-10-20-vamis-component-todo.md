@@ -141,7 +141,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
 | `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 50% | 能多行子表单；子项 api、扁平模式未齐 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
-| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 88% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。缺移动端 picker、schedules | P0 |
+| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 88% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。缺移动端 picker、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 58% | `input-date` 别名，已接日期+时分秒；时分秒约束与移动端 picker 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 50% | 能选区间 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 88%（弹层 240×290 / popover padding 0）；`input-password` 显隐开关跟该 type。
+- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 88%（弹层 240×290 / auto 翻转）；`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 

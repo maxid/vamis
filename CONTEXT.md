@@ -70,6 +70,7 @@
 
 **最近交付**
 
+- 所有弹层翻转对齐 Amis Overlay `placement: auto`：下左 → 下右 → 上左 → 上右；视口底边剩余高度小于弹层则向上开。写进 `overlayPosition` / `VamisOverlay`，规则 `.cursor/rules/reuse-overlay.mdc`（所有 `VamisOverlay` 共用，禁止各写一套）。文档页贴底实测翻上（触发器底 627 / 视口 640，弹层 top 301）。对照桌面 `input-date` **2/19**（P0 0）。
 - `input-date` 日历弹层盒模型对齐 Amis 6.13.0：内侧 `.rdt.rdtStatic.rdtOpen` **240×290**（Vamis `.vamis-cal`），`.DatePicker-popover` **242×292**、`padding: 0`、边框 `#f2f3f5`、select-outer 阴影。根因是弹层 8px padding + `min-width: 256px`，以及 Tailwind 清掉 td/th 的 UA `padding: 1px`。文档补齐观察句与 `popOverContainerSelector`。进度 85% → 88%。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。
 - 日期/日历按 Amis 链收敛：抽出共享 `DateCalendarPanel`（`type: calendar` 与 `input-date` embed/弹层同一套月历）。非 embed 弹层走 `VamisOverlay` Teleport 到 `getModalContainer`（默认 body），z-index `--z-dropdown` **1000**，不再被文档预览 overflow 裁切。规则 `.cursor/rules/reuse-overlay.mdc`。`input-date` 82% → 85%，`calendar` 85% → 87%。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。
 - SDK 生产打包不再依赖 moment：公式 / `|date` / InputDate 迁到 dayjs（utc / customParseFormat / isoWeek / quarter 等 plugin）。pnpm 严格隔离下 Vite 从 sdk 上下文解不到 workspace 源码的裸导入，补 `workspaceBareResolve`。`pnpm sdk:build` 与 playground 生产构建通过；formula 185 / core 476 / sdk 60 仍绿。
@@ -301,7 +302,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按依赖综合分推进，按实现标准验收**：FormItem 82%，`tpl` 92%，`icon` 90%，`action` / `button` 95%，`input-text` 82%，`checkbox` 85%，`input-date` 88%。日期弹层盒模型已对齐（240×290 / popover padding 0）。下一刀 Options（#9，35%）。`input-date` 余项：移动端 picker、schedules。`input-text` 余项：选择器检索/高亮精度、`input-password` `revealPassword`。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / 事件动作切静态跟后续刀。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。SDK 打包已不再依赖 moment。
+1. **组件同步按依赖综合分推进，按实现标准验收**：FormItem 82%，`tpl` 92%，`icon` 90%，`action` / `button` 95%，`input-text` 82%，`checkbox` 85%，`input-date` 88%。弹层翻转已收进 `overlayPosition`（Amis auto）。下一刀 Options（#9，35%）。`input-date` 余项：移动端 picker、schedules。`input-text` 余项：选择器检索/高亮精度、`input-password` `revealPassword`。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / 事件动作切静态跟后续刀。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。SDK 打包已不再依赖 moment。
 2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

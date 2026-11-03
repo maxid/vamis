@@ -44,21 +44,132 @@ export function overlayContainerFrom(
 
 export type OverlayCoords = { top: number; left: number }
 
-/** 触发器下方起点。page 坐标，配合 position:absolute 挂到 body。 */
-export function overlayPosition(
-  target: HTMLElement,
-  opts?: { gap?: number; width?: number },
+/**
+ * Amis Overlay `placement: auto` 试探顺序（DatePicker 默认）。
+ * `atX-atY-myX-myY`：触发器锚点 → 浮层锚点。下左 → 下右 → 上左 → 上右。
+ */
+export const OVERLAY_AUTO_PLACEMENTS = [
+  'left-bottom-left-top',
+  'right-bottom-right-top',
+  'left-top-left-bottom',
+  'right-top-right-bottom',
+] as const
+
+export type OverlayPositionOpts = {
+  gap?: number
+  width?: number
+  height?: number
+  placement?: string
+}
+
+function viewSize(): { scrollX: number; scrollY: number; viewW: number; viewH: number } {
+  if (typeof window === 'undefined') {
+    return { scrollX: 0, scrollY: 0, viewW: Number.POSITIVE_INFINITY, viewH: Number.POSITIVE_INFINITY }
+  }
+  return {
+    scrollX: window.scrollX || 0,
+    scrollY: window.scrollY || 0,
+    viewW: window.innerWidth || Number.POSITIVE_INFINITY,
+    viewH: window.innerHeight || Number.POSITIVE_INFINITY,
+  }
+}
+
+function anchor(at: string, start: number, size: number): number {
+  if (at === 'right' || at === 'bottom') return start + size
+  if (at === 'center') return start + size / 2
+  return start
+}
+
+function overlayOffset(my: string, size: number): number {
+  if (my === 'right' || my === 'bottom') return size
+  if (my === 'center') return size / 2
+  return 0
+}
+
+function coordsForPlacement(
+  placement: string,
+  child: { left: number; top: number; width: number; height: number },
+  overlayW: number,
+  overlayH: number,
+  gap: number,
 ): OverlayCoords {
+  const [atX, atY, myX = atX, myY = atY] = placement.split('-')
+  let left = anchor(atX, child.left, child.width) - overlayOffset(myX, overlayW)
+  let top = anchor(atY, child.top, child.height) - overlayOffset(myY, overlayH)
+  if (myY === 'top') top += gap
+  else if (myY === 'bottom') top -= gap
+  return { top, left }
+}
+
+function fullyVisible(coords: OverlayCoords, overlayW: number, overlayH: number, viewW: number, viewH: number, scrollX: number, scrollY: number) {
+  const x = coords.left - scrollX
+  const y = coords.top - scrollY
+  const visibleX = !overlayW || (x >= 0 && x + overlayW < viewW)
+  const visibleY = !overlayH || (y >= 0 && y + overlayH < viewH)
+  return { visibleX, visibleY, ok: visibleX && visibleY }
+}
+
+/**
+ * 所有非 embed 弹层的定位准则，对齐 Amis `calculatePosition` + `placement: auto`。
+ * page 坐标，配合 `position:absolute` 挂到 body。
+ */
+export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts): OverlayCoords {
   const gap = opts?.gap ?? 2
   const r = target.getBoundingClientRect()
-  const scrollY = typeof window === 'undefined' ? 0 : window.scrollY
-  const scrollX = typeof window === 'undefined' ? 0 : window.scrollX
-  const viewW = typeof window === 'undefined' ? Number.POSITIVE_INFINITY : window.innerWidth
-  const top = r.bottom + scrollY + gap
-  let left = r.left + scrollX
-  const width = opts?.width
-  if (width && left + width > scrollX + viewW - 8) {
-    left = Math.max(scrollX + 8, scrollX + viewW - width - 8)
+  const { scrollX, scrollY, viewW, viewH } = viewSize()
+  const overlayW = opts?.width || 0
+  const overlayH = opts?.height || 0
+  const child = {
+    left: r.left + scrollX,
+    top: r.top + scrollY,
+    width: r.width,
+    height: r.height,
   }
-  return { top, left }
+
+  const placement = opts?.placement && opts.placement !== 'auto' ? opts.placement : 'auto'
+  const tests =
+    placement === 'auto'
+      ? [...OVERLAY_AUTO_PLACEMENTS]
+      : placement.split(/\s+/).filter(Boolean)
+
+  let visible: { atX?: string; atY?: string; myX?: string; myY?: string } = {}
+  let coords: OverlayCoords = coordsForPlacement(tests[0] || OVERLAY_AUTO_PLACEMENTS[0], child, overlayW, overlayH, gap)
+
+  for (let i = 0; i < tests.length; i += 1) {
+    const current = tests[i]
+    coords = coordsForPlacement(current, child, overlayW, overlayH, gap)
+    const { visibleX, visibleY, ok } = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
+    const [atX, atY, myX = atX, myY = atY] = current.split('-')
+    if (visibleX) {
+      visible.atX ??= atX
+      visible.myX ??= myX
+    }
+    if (visibleY) {
+      visible.atY ??= atY
+      visible.myY ??= myY
+    }
+    if (ok) return coords
+
+    const last = i === tests.length - 1
+    if (!last) continue
+
+    const fallback = [
+      visible.atX || 'left',
+      visible.atY || 'bottom',
+      visible.myX || 'left',
+      visible.myY || 'top',
+    ].join('-')
+    coords = coordsForPlacement(fallback, child, overlayW, overlayH, gap)
+    const still = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
+    if (still.ok) return coords
+    if (!still.visibleY && overlayH) {
+      coords = { ...coords, top: scrollY + Math.max(10, viewH - overlayH) - 10 }
+    }
+    if (!still.visibleX && overlayW) {
+      coords = { ...coords, left: scrollX + Math.max(10, viewW - overlayW) }
+    }
+    return coords
+  }
+
+  return coords
 }

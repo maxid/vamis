@@ -40,12 +40,32 @@ describe('overlay-layer', () => {
     const target = {
       getBoundingClientRect: () => ({ top: 10, bottom: 40, left: 20, right: 120, width: 100, height: 30 }),
     } as HTMLElement
-    ;(globalThis as { window?: { scrollY: number; scrollX: number; innerWidth: number } }).window = {
-      scrollY: 100,
-      scrollX: 5,
-      innerWidth: 1280,
-    }
+    stubViewport({ scrollY: 100, scrollX: 5, innerWidth: 1280, innerHeight: 800 })
     expect(overlayPosition(target, { gap: 2 })).toEqual({ top: 142, left: 25 })
+  })
+
+  it('keeps auto placement below-left when the viewport has room', () => {
+    const target = rect(40, 20, 200, 32)
+    stubViewport({ scrollY: 80, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 154, left: 20 })
+  })
+
+  it('flips above-left when remaining viewport below the trigger is shorter than the layer', () => {
+    const target = rect(400, 20, 200, 32)
+    stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 500 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 106, left: 20 })
+  })
+
+  it('tries below-right before flipping when the layer overflows the right edge', () => {
+    const target = rect(40, 1100, 160, 32)
+    stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 74, left: 1018 })
+  })
+
+  it('clamps 10px from the viewport when no auto direction fully fits', () => {
+    const target = rect(40, 20, 100, 32)
+    stubViewport({ scrollY: 50, scrollX: 0, innerWidth: 200, innerHeight: 120 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 50, left: 10 })
   })
 
   it('writes Amis z-index tokens and overlay class into styles.css', () => {
@@ -60,4 +80,29 @@ describe('overlay-layer', () => {
     expect(popover).not.toContain('z-index: 20')
     expect(popover).not.toContain('position: absolute')
   })
+
+  it('VamisOverlay feeds overlay size into auto placement', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis/src/overlay/VamisOverlay.vue'), 'utf8')
+    expect(vue).toContain('height: layer?.offsetHeight')
+    expect(vue).toContain("placement: 'auto'")
+    expect(vue).toContain('ResizeObserver')
+  })
 })
+
+function rect(top: number, left: number, width: number, height: number): HTMLElement {
+  return {
+    getBoundingClientRect: () => ({
+      top,
+      left,
+      width,
+      height,
+      bottom: top + height,
+      right: left + width,
+    }),
+  } as HTMLElement
+}
+
+function stubViewport(view: { scrollY: number; scrollX: number; innerWidth: number; innerHeight: number }) {
+  ;(globalThis as { window?: typeof view }).window = view
+}

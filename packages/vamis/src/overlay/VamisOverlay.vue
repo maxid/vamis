@@ -12,8 +12,9 @@ const props = withDefaults(
     target?: HTMLElement | null
     container?: OverlayContainer
     gap?: number
+    placement?: string
   }>(),
-  { gap: 2 },
+  { gap: 2, placement: 'auto' },
 )
 
 const emit = defineEmits<{ outside: []; placed: [] }>()
@@ -21,12 +22,18 @@ const emit = defineEmits<{ outside: []; placed: [] }>()
 const layerEl = ref<HTMLElement | null>(null)
 const coords = ref({ top: 0, left: 0 })
 const to = computed(() => resolveOverlayContainer(props.container))
+let layerObserver: ResizeObserver | null = null
 
 function place() {
   const el = props.target
   if (!el) return
-  const width = layerEl.value?.offsetWidth
-  coords.value = overlayPosition(el, { gap: props.gap, width })
+  const layer = layerEl.value
+  coords.value = overlayPosition(el, {
+    gap: props.gap,
+    width: layer?.offsetWidth,
+    height: layer?.offsetHeight,
+    placement: props.placement,
+  })
 }
 
 async function placeAfterPaint() {
@@ -50,12 +57,20 @@ function onReposition() {
 }
 
 watch(
-  () => [props.show, props.target, props.container] as const,
+  () => [props.show, props.target, props.container, props.placement] as const,
   () => {
     void placeAfterPaint()
   },
   { immediate: true },
 )
+
+watch(layerEl, (el) => {
+  layerObserver?.disconnect()
+  layerObserver = null
+  if (!el || typeof ResizeObserver === 'undefined') return
+  layerObserver = new ResizeObserver(() => place())
+  layerObserver.observe(el)
+})
 
 if (typeof document !== 'undefined') {
   document.addEventListener('mousedown', onDocPointer, true)
@@ -64,6 +79,7 @@ if (typeof document !== 'undefined') {
 }
 
 onBeforeUnmount(() => {
+  layerObserver?.disconnect()
   if (typeof document === 'undefined') return
   document.removeEventListener('mousedown', onDocPointer, true)
   window.removeEventListener('resize', onReposition)
