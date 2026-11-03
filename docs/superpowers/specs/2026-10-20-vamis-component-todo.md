@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-10-29（FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-03（`action` / `button` 92%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 109 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -65,7 +65,7 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 12 | 0 | 76% | 11 |
+| 功能 | 0 / 12 | 12 | 0 | 77% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 48% | 40 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
@@ -102,13 +102,13 @@
 
 ---
 
-## 功能（0/12，均 76%）
+## 功能（0/12，均 77%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 85% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`（FA class / URL / SVG，未写 `label` 不补「按钮」）、`confirmText` / `confirmTitle`、dialog / drawer / ajax / toast / copy / link / email。缺倒计时、快捷键、Action 当容器、`download` / `saveAs`、控制流 | P0 |
+| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 92% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
 | `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
-| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 85% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`；复杂行为见 Action | P0 |
+| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 92% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | `/components/button-group` | `/zh-CN/components/button-group` | 进行中 | 85% | 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`。缺 `btnActiveLevel`、圆角拼缝 | P0 |
 | `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | `/components/custom` | `/zh-CN/components/custom` | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
@@ -345,7 +345,7 @@ flowchart LR
 | 2 | `tpl` | — | 7 | 28 | 231 | 进行中 | 92% |
 | 3 | `container` | `tpl` | 6 | 23 | 190 | 已完成 | 100% |
 | 4 | `icon` | — | 7 | 15 | 127 | 进行中 | 90% |
-| 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 85% |
+| 5 | `action` | `icon`、`tpl` | 6 | 33 | 270 | 进行中 | 92% |
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 60% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 60% |
 | 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 55% |
@@ -380,7 +380,7 @@ flowchart LR
 | 37 | `avatar` | `image`、`icon` | 6 | 1 | 14 | 进行中 | 90% |
 | 38 | `flex` | `container` | 5 | 1 | 13 | 进行中 | 90% |
 | 39 | `grid` | `container` | 5 | 1 | 13 | 进行中 | 90% |
-| 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 85% |
+| 40 | `button` | `action` | 5 | 1 | 13 | 进行中 | 92% |
 | 41 | `button-group` | `action`、`button` | 4 | 2 | 20 | 进行中 | 85% |
 | 42 | `nav` | `icon`、`action`、`tpl`、`link` | 5 | 1 | 13 | 进行中 | 80% |
 | 43 | `input-datetime` | `input-date` | 5 | 1 | 13 | 进行中 | 50% |
