@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- FormItem 属性表对照源码复核：主路径字段已接；未接是 `labelAlign`、`static*ClassName`、`autoFill.showSuggestion` 族、`autoFill.silent`（表里曾写成已接，代码未读）。进度仍 **90%**。对照 `formitem` **29/30**（P0 0）。
 - FormItem 默认校验信息围栏改成合法 JSON（双引号 key/值），文档 `type: code` 才能按「接口返回示例」那样高亮。对照 `formitem` **29/30**（P0 0）。
 - FormItem 属性表改成与 Amis 同结构的四列（属性名 / 类型 / 默认值 / 说明），类型链到 `/types/` `/concepts/`，补齐 `autoFill.*` / `static*` 各字段；文末补「支持静态展示的表单项」清单。不抄 Amis 版本号和 `examples/form/switchDisplay`。对照 `formitem` **29/30**（P0 0）。
 - FormItem「格式校验」按 Amis 主路径对齐业务（规则表粒度 / `$1` / 默认 `validate.*` key / `isUrl.schemes` / `addRule`），但改写成 Vamis：去掉 Amis `2.2.0`/`1.4.0` 版本列、「amis 会有…」、`github.com/baidu/amis`；locale 指向 `@vamis/core` 的 `validateLocaleZh`。对照 `formitem` **29/30**（P0 0）。
