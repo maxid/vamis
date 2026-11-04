@@ -14,6 +14,7 @@ const props = withDefaults(
     gap?: number
     placement?: string
     layerClass?: string
+    offset?: [number, number]
   }>(),
   { gap: 2, placement: 'auto' },
 )
@@ -35,6 +36,7 @@ function place() {
     width: layer?.offsetWidth,
     height: layer?.offsetHeight,
     placement: props.placement,
+    offset: props.offset,
   })
   return true
 }
@@ -63,7 +65,7 @@ function onReposition() {
 }
 
 watch(
-  () => [props.show, props.target, props.container, props.placement] as const,
+  () => [props.show, props.target, props.container, props.placement, props.offset] as const,
   () => {
     if (!props.show) ready.value = false
     void placeAfterPaint()

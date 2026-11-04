@@ -1026,7 +1026,78 @@
   }
   .vamis-overlay.vamis-overlay--tooltip {
     z-index: var(--z-tooltip, 1600);
+  }
+  .vamis-overlay.vamis-overlay--tooltip.is-ghost {
     pointer-events: none;
+  }
+  .vamis-tooltip {
+    position: relative;
+    box-sizing: border-box;
+    max-width: 20rem;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+  .vamis-tooltip--light {
+    color: var(--popover-foreground);
+    background: var(--popover);
+    border: 1px solid var(--border);
+  }
+  .vamis-tooltip--dark {
+    color: var(--primary-foreground);
+    background: var(--foreground);
+    border: 1px solid var(--foreground);
+  }
+  .vamis-tooltip__title {
+    margin: 0 0 2px;
+    font-weight: 500;
+  }
+  .vamis-tooltip__body {
+    margin: 0;
+  }
+  .vamis-tooltip__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+  }
+  .vamis-tooltip--top .vamis-tooltip__arrow {
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-top-color: var(--border);
+  }
+  .vamis-tooltip--top.vamis-tooltip--dark .vamis-tooltip__arrow {
+    border-top-color: var(--foreground);
+  }
+  .vamis-tooltip--bottom .vamis-tooltip__arrow {
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-bottom-color: var(--border);
+  }
+  .vamis-tooltip--bottom.vamis-tooltip--dark .vamis-tooltip__arrow {
+    border-bottom-color: var(--foreground);
+  }
+  .vamis-tooltip--left .vamis-tooltip__arrow {
+    left: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border-left-color: var(--border);
+  }
+  .vamis-tooltip--left.vamis-tooltip--dark .vamis-tooltip__arrow {
+    border-left-color: var(--foreground);
+  }
+  .vamis-tooltip--right .vamis-tooltip__arrow {
+    right: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border-right-color: var(--border);
+  }
+  .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow {
+    border-right-color: var(--foreground);
   }
   .vamis-action-tooltip {
     box-sizing: border-box;

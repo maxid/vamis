@@ -6,7 +6,7 @@ outline: deep
 # Action 行为按钮
 
 ::: info 实现进度 95% · 进行中
-文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip` / `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写；无文案图标按钮默认 32×32。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
+文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`、`confirmText` / `confirmTitle`、dialog / drawer / ajax（含 `redirect` / `feedback`）/ toast / copy（含 `copyFormat`）/ link / url（含 `blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器、`tooltip` / `disabledTip`（字符串或 TooltipObject）/ `tooltipPlacement`、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写；无文案图标按钮默认 32×32。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。
 :::
 
 Action 是触发页面行为的主要方法。`type: action` 与别名 `button` / `submit` / `reset` 同一渲染器。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -458,6 +458,17 @@ tooltipPlacement: right
 tooltip: 点击链接跳转
 ```
 
+对象写法对齐 [TooltipWrapper](/components/tooltip) 的 TooltipObject（不要配 `type` / `body` / `wrapperComponent` / `className` / `inline`）：
+
+```schema: scope="body"
+label: 弹框
+type: button
+tooltip:
+  title: 标题
+  content: 提示文字
+  tooltipTheme: dark
+```
+
 ## 通用属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -481,9 +492,9 @@ tooltip: 点击链接跳转
 | body | Schema | | 非 email 时当容器 |
 | confirmText | 模板 | | 操作前确认 |
 | confirmTitle | 模板 | | 确认框标题 |
-| tooltip | `string` / 对象 | | 悬停提示 |
-| disabledTip | `string` / 对象 | | 禁用时的悬停提示 |
-| tooltipPlacement | `string` | `top` | top / right / bottom / left |
+| tooltip | `string` / TooltipObject | | 悬停提示。对象字段见下方 TooltipObject |
+| disabledTip | `string` / TooltipObject | | 禁用时的悬停提示。禁用且未写 disabledTip 时不回落到 tooltip |
+| tooltipPlacement | `string` | `top` | top / right / bottom / left；对象里的 `placement` 优先 |
 | api | Api | | ajax / download / saveAs 接口 |
 | redirect | 模板 | | ajax 成功后跳转 |
 | feedback | Dialog | | ajax 成功后弹框 |
@@ -500,6 +511,10 @@ tooltip: 点击链接跳转
 | onClick | `string` | | 仅 `env.trusted` 下编译 |
 | onEvent | `object` | | 见事件表 |
 | badge | `number` / 对象 | | 角标。活示例见 [Badge 角标](./badge) |
+
+### TooltipObject
+
+`TooltipObject` 为 [tooltip-wrapper](/components/tooltip) 属性配置，但是不需要配置如下属性 `type`、`body`、`wrapperComponent`、`className`、`inline`。浮层仍走 `VamisOverlay` Teleport（`--z-tooltip` 1600）。
 
 ## 事件表
 

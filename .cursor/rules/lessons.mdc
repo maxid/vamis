@@ -168,6 +168,12 @@ alwaysApply: true
 - 触及：`input-date` `dialog` `drawer` `toast` `action`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
+### Action tooltip 是 TooltipObject，不要压成一句纯文本
+- 踩过：只抽 `content`/`title` 当字符串，`tooltipTheme` / `title`+`content` / `showArrow` / delay / trigger 全部丢掉。Amis 该对象就是 tooltip-wrapper 配置（去掉 type/body/wrapperComponent/className/inline）。
+- 稳定做法：`actionTooltipConfig` 收 string 或对象，字段复用 `tooltip-wrapper.ts` 辅助函数；浮层仍走 `VamisOverlay` + `--z-tooltip`，不要用 tooltip-wrapper 那套 `absolute z-50`。禁用时只认 `disabledTip`，不回落到 `tooltip`。
+- 触及：`action` `button`
+- 规则：`packages/vamis-core/src/utils/action.ts` `actionTooltipConfig`；本文
+
 ### 日期 / 日历只保留一套面板
 - 踩过：`type: calendar` 与 `input-date` 两套月历 DOM/CSS，圆角字号选中色分叉。
 - 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。非本月色 `#b8babf`。

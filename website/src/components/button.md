@@ -73,10 +73,10 @@ loading: true
 | size | `'xs' \| 'sm' \| 'md' \| 'lg'` | | 按钮大小 |
 | actionType | `string` | `button` | 见 [Action](/components/action) |
 | level | `string` | `default` | 按钮样式 |
-| tooltip | `string` / 对象 | | 悬停提示 |
+| tooltip | `string` / TooltipObject | | 悬停提示。对象写法见 [Action](/components/action#tooltipobject) |
 | tooltipPlacement | `string` | `top` | 提示位置 |
 | disabled | `boolean` | `false` | 失效 |
-| disabledTip | `string` / 对象 | | 失效时的提示 |
+| disabledTip | `string` / TooltipObject | | 失效时的提示 |
 | block | `boolean` | `false` | 拉满父宽 |
 | loading | `boolean` | `false` | 显示 loading |
 | loadingOn | `string` | | loading 表达式 |

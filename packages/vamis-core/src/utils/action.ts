@@ -3,6 +3,15 @@
 import { evalExpression, filterTpl } from '../formula'
 import type { SchemaNode } from '../types'
 import { resolveIcon } from './icon'
+import {
+  tooltipContent,
+  tooltipDisabled,
+  tooltipPlacement,
+  tooltipTitle,
+  tooltipTriggers,
+  type TooltipPlacement,
+  type TooltipTrigger,
+} from './tooltip-wrapper'
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -64,29 +73,87 @@ export function actionIconClass(schema: unknown, key = 'icon'): string {
   return resolved.kind === 'class' ? resolved.className : ''
 }
 
-function tooltipObjectText(value: unknown, data: Record<string, unknown>): string {
-  if (typeof value === 'string') return filterTpl(value, data)
-  const obj = value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
-  if (!obj) return ''
-  return tplField(obj.content ?? obj.title, data)
+/** Amis：Action 的 TooltipObject 不收 type / body / wrapperComponent / className / inline。 */
+const TOOLTIP_OBJECT_SKIP = new Set(['type', 'body', 'wrapperComponent', 'className', 'inline'])
+
+function filterTipField(value: unknown, data: Record<string, unknown>): string {
+  if (value == null || value === false) return ''
+  return filterTpl(String(value), data)
+}
+
+function tooltipTextOf(cfg: Record<string, unknown> | null): string {
+  if (!cfg) return ''
+  return tooltipContent(cfg) || tooltipTitle(cfg)
+}
+
+/** 对齐 Amis Button：`disabled ? disabledTip : tooltip`。禁用且未写 disabledTip 时不回落到 tooltip。 */
+export function actionTooltipSource(schema: unknown, disabled = false): unknown {
+  const rec = asRecord(schema)
+  if (disabled) return rec.disabledTip
+  if (rec.tooltip != null && rec.tooltip !== false && rec.tooltip !== '') return rec.tooltip
+  return typeof rec.title === 'string' ? rec.title : undefined
+}
+
+/** 把 string / TooltipObject 收成 tooltip-wrapper 同形配置（对象字段优先于 Action 级 placement/trigger）。 */
+export function actionTooltipConfig(
+  schema: unknown,
+  data: Record<string, unknown> = {},
+  disabled = false,
+): Record<string, unknown> | null {
+  const rec = asRecord(schema)
+  const raw = actionTooltipSource(schema, disabled)
+  if (raw == null || raw === false || raw === '') return null
+
+  const defaults: Record<string, unknown> = {}
+  if (rec.tooltipPlacement) defaults.placement = rec.tooltipPlacement
+  if (rec.tooltipTrigger != null) defaults.trigger = rec.tooltipTrigger
+  if (rec.tooltipRootClose != null) defaults.rootClose = rec.tooltipRootClose
+
+  let obj: Record<string, unknown>
+  if (typeof raw === 'string') {
+    obj = { ...defaults, content: filterTipField(raw, data) }
+  } else if (typeof raw === 'object' && !Array.isArray(raw)) {
+    const src = asRecord(raw)
+    obj = { ...defaults }
+    for (const [key, value] of Object.entries(src)) {
+      if (TOOLTIP_OBJECT_SKIP.has(key)) continue
+      obj[key] = value
+    }
+    obj.title = filterTipField(src.title, data)
+    obj.content = filterTipField(src.content ?? src.body, data)
+  } else {
+    return null
+  }
+
+  if (tooltipDisabled(obj)) return null
+  if (!tooltipTextOf(obj)) return null
+  return obj
 }
 
 export function actionTooltip(schema: unknown, data: Record<string, unknown> = {}): string {
-  const rec = asRecord(schema)
-  const fromTooltip = tooltipObjectText(rec.tooltip, data)
-  if (fromTooltip) return fromTooltip
-  return typeof rec.title === 'string' ? filterTpl(rec.title, data) : ''
+  return tooltipTextOf(actionTooltipConfig(schema, data, false))
 }
 
 export function actionDisabledTip(schema: unknown, data: Record<string, unknown> = {}): string {
-  return tooltipObjectText(asRecord(schema).disabledTip, data)
+  return tooltipTextOf(actionTooltipConfig(schema, data, true))
 }
 
-const PLACES = new Set(['top', 'left', 'right', 'bottom'])
+export function actionTooltipPlacement(schema: unknown, disabled = false): TooltipPlacement {
+  const rec = asRecord(schema)
+  const raw = actionTooltipSource(schema, disabled)
+  if (raw && typeof raw === 'object' && !Array.isArray(raw) && asRecord(raw).placement) {
+    return tooltipPlacement(raw)
+  }
+  return tooltipPlacement({ placement: rec.tooltipPlacement })
+}
 
-export function actionTooltipPlacement(schema: unknown): 'top' | 'left' | 'right' | 'bottom' {
-  const value = String(asRecord(schema).tooltipPlacement || 'top')
-  return PLACES.has(value) ? (value as 'top' | 'left' | 'right' | 'bottom') : 'top'
+export function actionTooltipTriggers(cfg: Record<string, unknown> | null): TooltipTrigger[] {
+  if (cfg?.trigger != null) return tooltipTriggers(cfg)
+  return ['hover', 'focus']
+}
+
+export function actionTooltipRootClose(cfg: Record<string, unknown> | null): boolean {
+  return cfg?.rootClose === true
 }
 
 /** 把 Action `tooltipPlacement` 映到 overlayPosition 的 at-my 串。 */
@@ -97,8 +164,13 @@ export const ACTION_TOOLTIP_OVERLAY: Record<'top' | 'bottom' | 'left' | 'right',
   right: 'right-center-left-center',
 }
 
-export function actionTooltipOverlayPlacement(schema: unknown): string {
-  return ACTION_TOOLTIP_OVERLAY[actionTooltipPlacement(schema)]
+export function actionTooltipOverlayPlacement(schema: unknown, disabled = false): string {
+  const rec = asRecord(schema)
+  const raw = actionTooltipSource(schema, disabled)
+  const fromObj = raw && typeof raw === 'object' && !Array.isArray(raw) ? asRecord(raw).placement : undefined
+  const place = String(fromObj || rec.tooltipPlacement || 'top')
+  if (place === 'auto') return 'auto'
+  return ACTION_TOOLTIP_OVERLAY[actionTooltipPlacement(schema, disabled)]
 }
 
 export function actionMailto(schema: unknown, data: Record<string, unknown> = {}): string {

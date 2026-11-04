@@ -8566,20 +8566,12 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "label": "弹框",
         "type": "button",
-        "label": "Button",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msgType": "info",
-                  "msg": "${event.context.nativeEvent.type}"
-                }
-              }
-            ]
-          }
+        "tooltip": {
+          "title": "标题",
+          "content": "提示文字",
+          "tooltipTheme": "dark"
         }
       }
     },
@@ -8604,7 +8596,7 @@ window.VAMIS_COMPARE_CASES = [
         "type": "button",
         "label": "Button",
         "onEvent": {
-          "mouseenter": {
+          "click": {
             "actions": [
               {
                 "actionType": "toast",
@@ -8632,6 +8624,41 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #33",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "Button",
+        "onEvent": {
+          "mouseenter": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-33",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #34",
     "expect": "",
     "schema": {
       "type": "page",

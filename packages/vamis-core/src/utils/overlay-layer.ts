@@ -60,6 +60,7 @@ export type OverlayPositionOpts = {
   width?: number
   height?: number
   placement?: string
+  offset?: [number, number]
 }
 
 function viewSize(): { scrollX: number; scrollY: number; viewW: number; viewH: number } {
@@ -127,6 +128,10 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
     width: r.width,
     height: r.height,
   }
+  const ox = Number(opts?.offset?.[0]) || 0
+  const oy = Number(opts?.offset?.[1]) || 0
+  const shift = (c: OverlayCoords): OverlayCoords =>
+    ox || oy ? { top: c.top + oy, left: c.left + ox } : c
 
   const placement = opts?.placement && opts.placement !== 'auto' ? opts.placement : 'auto'
   const tests =
@@ -150,7 +155,7 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
       visible.atY ??= atY
       visible.myY ??= myY
     }
-    if (ok) return coords
+    if (ok) return shift(coords)
 
     const last = i === tests.length - 1
     if (!last) continue
@@ -163,15 +168,15 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
     ].join('-')
     coords = coordsForPlacement(fallback, child, overlayW, overlayH, gap)
     const still = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
-    if (still.ok) return coords
+    if (still.ok) return shift(coords)
     if (!still.visibleY && overlayH) {
       coords = { ...coords, top: scrollY + Math.max(10, viewH - overlayH) - 10 }
     }
     if (!still.visibleX && overlayW) {
       coords = { ...coords, left: scrollX + Math.max(10, viewW - overlayW) }
     }
-    return coords
+    return shift(coords)
   }
 
-  return coords
+  return shift(coords)
 }

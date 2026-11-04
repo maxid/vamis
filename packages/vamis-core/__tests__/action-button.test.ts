@@ -25,8 +25,11 @@ import {
   actionSchemaLoading,
   actionShowLabel,
   actionTooltip,
+  actionTooltipConfig,
   actionTooltipOverlayPlacement,
   actionTooltipPlacement,
+  actionTooltipRootClose,
+  actionTooltipTriggers,
   countdownRemaining,
   countdownStorageKey,
   fileNameFromUrl,
@@ -109,6 +112,47 @@ describe('actionTooltip / actionMailto', () => {
       'mailto:amis@baidu.com?subject=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E4%B8%BB%E9%A2%98&body=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E6%AD%A3%E6%96%87',
     )
   })
+
+  it('keeps TooltipObject fields from tooltip-wrapper and skips wrapper-only keys', () => {
+    const cfg = actionTooltipConfig({
+      tooltipPlacement: 'right',
+      tooltip: {
+        type: 'tooltip-wrapper',
+        body: '不要当内容',
+        className: 'no',
+        inline: true,
+        wrapperComponent: 'pre',
+        title: '标题 ${name}',
+        content: '${text}',
+        tooltipTheme: 'dark',
+        showArrow: false,
+        mouseEnterDelay: 1000,
+        placement: 'left',
+      },
+    }, { name: 'Ada', text: '提示文字' })
+    expect(cfg).toMatchObject({
+      title: '标题 Ada',
+      content: '提示文字',
+      tooltipTheme: 'dark',
+      showArrow: false,
+      mouseEnterDelay: 1000,
+      placement: 'left',
+    })
+    expect(cfg).not.toHaveProperty('type')
+    expect(cfg).not.toHaveProperty('body')
+    expect(cfg).not.toHaveProperty('className')
+    expect(cfg).not.toHaveProperty('inline')
+    expect(cfg).not.toHaveProperty('wrapperComponent')
+    expect(actionTooltipPlacement({ tooltip: { placement: 'left' }, tooltipPlacement: 'right' })).toBe('left')
+    expect(actionTooltipOverlayPlacement({ tooltip: { placement: 'auto' } })).toBe('auto')
+    expect(actionTooltipTriggers(cfg)).toEqual(['hover', 'focus'])
+    expect(actionTooltipTriggers({ trigger: 'click' })).toEqual(['click'])
+    expect(actionTooltipRootClose(cfg)).toBe(false)
+    expect(actionTooltipRootClose({ rootClose: true })).toBe(true)
+    expect(actionTooltipConfig({ tooltip: '点我' }, {}, true)).toBeNull()
+    expect(actionTooltipConfig({ tooltip: '点我', disabledTip: '禁用了' }, {}, true)?.content).toBe('禁用了')
+    expect(actionTooltipConfig({ tooltip: { content: 'x', disabled: true } })).toBeNull()
+  })
 })
 
 describe('countDown / hotKey / body / active / loading', () => {
@@ -172,13 +216,14 @@ describe('countDown / hotKey / body / active / loading', () => {
 })
 
 describe('action tooltip overlay', () => {
-  it('teleports via VamisOverlay at --z-tooltip and dispatches mouseenter/leave', () => {
+  it('teleports TooltipObject via VamisTooltipLayer at --z-tooltip', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/Action.vue'), 'utf8')
+    const layer = readFileSync(resolve(here, '../../vamis/src/overlay/VamisTooltipLayer.vue'), 'utf8')
     const overlay = readFileSync(resolve(here, '../../vamis/src/overlay/VamisOverlay.vue'), 'utf8')
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
-    expect(vue).toContain('VamisOverlay')
-    expect(vue).toContain('vamis-overlay--tooltip')
+    expect(vue).toContain('VamisTooltipLayer')
+    expect(vue).toContain('actionTooltipConfig')
     expect(vue).toContain('data-vamis-action')
     expect(vue.match(/data-vamis-action/g)?.length).toBeGreaterThanOrEqual(2)
     expect(vue).toContain("runOnEvent(props.schema, name, ctx)")
@@ -190,9 +235,13 @@ describe('action tooltip overlay', () => {
     expect(sr).toContain('SELF_POINTER_TYPES.has(type)')
     expect(vue).not.toContain('z-50')
     expect(vue).not.toMatch(/class="absolute z-/)
+    expect(layer).toContain('vamis-tooltip')
+    expect(layer).toContain('tooltipTheme')
+    expect(layer).toContain('VamisOverlay')
     expect(overlay).toContain('layerClass')
+    expect(overlay).toContain('offset: props.offset')
     expect(css).toContain('.vamis-overlay.vamis-overlay--tooltip')
     expect(css).toContain('z-index: var(--z-tooltip, 1600)')
-    expect(css).toContain('.vamis-action-tooltip')
+    expect(css).toContain('.vamis-tooltip--dark')
   })
 })

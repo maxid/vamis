@@ -8,7 +8,6 @@ import {
   actionBody,
   actionCountDown,
   actionCountDownTpl,
-  actionDisabledTip,
   actionHotKey,
   actionIsContainer,
   actionKind,
@@ -17,9 +16,9 @@ import {
   actionSchemaLoading,
   actionIconOnly,
   actionShowLabel,
-  actionTooltip,
-  actionTooltipOverlayPlacement,
-  actionTooltipPlacement,
+  actionTooltipConfig,
+  actionTooltipRootClose,
+  actionTooltipTriggers,
   countdownRemaining,
   countdownStorageKey,
   createVamisEvent,
@@ -32,6 +31,9 @@ import {
   resolveIcon,
   runAction,
   runOnEvent,
+  tooltipEnterable,
+  tooltipMouseEnterDelay,
+  tooltipMouseLeaveDelay,
   useData,
   useEnv,
   useFormApi,
@@ -42,7 +44,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, cn, levelToVariant, sizeToButtonSize } from '@vamis/ui'
-import VamisOverlay from '../overlay/VamisOverlay.vue'
+import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
 import BadgeHost from './BadgeHost.vue'
 import IconMark from './IconMark.vue'
 
@@ -66,6 +68,8 @@ const timeLeft = ref(0)
 const countDownEnd = ref(0)
 const instanceKey = `${props.schema.name || ''}${props.schema.id || ''}` || `anon-${Math.random().toString(36).slice(2)}`
 let countTimer: ReturnType<typeof setTimeout> | null = null
+let tipEnterTimer: ReturnType<typeof setTimeout> | null = null
+let tipLeaveTimer: ReturnType<typeof setTimeout> | null = null
 
 const kind = computed(() => actionKind(props.schema))
 const isContainer = computed(() => actionIsContainer(props.schema))
@@ -87,14 +91,12 @@ const icon = computed(() => resolveSchemaIcon(props.schema.icon))
 const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
 const schemaLoading = computed(() => actionSchemaLoading(props.schema, data.value))
 const isLoading = computed(() => loading.value || schemaLoading.value)
-const tooltip = computed(() => actionTooltip(props.schema, data.value))
-const disabledTip = computed(() => actionDisabledTip(props.schema, data.value))
-const placement = computed(() => actionTooltipPlacement(props.schema))
-const overlayPlacement = computed(() => actionTooltipOverlayPlacement(props.schema))
 const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const isDisabled = computed(() => props.disabled === true || inCountDown.value || isLoading.value)
-const tipText = computed(() => (isDisabled.value && disabledTip.value ? disabledTip.value : tooltip.value))
-const hasTip = computed(() => !!tipText.value)
+const tipConfig = computed(() => actionTooltipConfig(props.schema, data.value, isDisabled.value))
+const hasTip = computed(() => !!tipConfig.value)
+const tipTriggers = computed(() => actionTooltipTriggers(tipConfig.value))
+const tipEnterable = computed(() => (tipConfig.value ? tooltipEnterable(tipConfig.value) : false))
 const block = computed(() => props.schema.block === true)
 const displayLabel = computed(() => {
   if (inCountDown.value) {
@@ -183,6 +185,10 @@ async function runSchemaOnClick(native: Event): Promise<boolean> {
 }
 
 async function onClick(native?: Event) {
+  if (tipTriggers.value.includes('click') && hasTip.value) {
+    if (tipOpen.value) hideTip(true)
+    else showTip()
+  }
   if (isDisabled.value || inCountDown.value) return
   if (native && !(await runSchemaOnClick(native))) return
   loading.value = true
@@ -207,13 +213,36 @@ function onHotKey(event: KeyboardEvent) {
   void onClick(event)
 }
 
-function showTip() {
-  if (!hasTip.value) return
-  tipOpen.value = true
+function clearTipTimers() {
+  if (tipEnterTimer) clearTimeout(tipEnterTimer)
+  if (tipLeaveTimer) clearTimeout(tipLeaveTimer)
+  tipEnterTimer = null
+  tipLeaveTimer = null
 }
 
-function hideTip() {
-  tipOpen.value = false
+function showTip() {
+  if (!hasTip.value) return
+  clearTipTimers()
+  const wait = tooltipMouseEnterDelay(tipConfig.value)
+  if (!wait) {
+    tipOpen.value = true
+    return
+  }
+  tipEnterTimer = setTimeout(() => {
+    tipOpen.value = true
+  }, wait)
+}
+
+function hideTip(immediate = false) {
+  clearTipTimers()
+  const wait = immediate ? 0 : tooltipMouseLeaveDelay(tipConfig.value)
+  if (!wait) {
+    tipOpen.value = false
+    return
+  }
+  tipLeaveTimer = setTimeout(() => {
+    tipOpen.value = false
+  }, wait)
 }
 
 async function runPointerEvent(name: 'mouseenter' | 'mouseleave', native: Event) {
@@ -222,13 +251,36 @@ async function runPointerEvent(name: 'mouseenter' | 'mouseleave', native: Event)
 }
 
 function onEnter(native: MouseEvent) {
-  showTip()
+  if (tipTriggers.value.includes('hover')) showTip()
   if (!isDisabled.value) void runPointerEvent('mouseenter', native)
 }
 
 function onLeave(native: MouseEvent) {
-  hideTip()
+  if (tipTriggers.value.includes('hover')) hideTip()
   if (!isDisabled.value) void runPointerEvent('mouseleave', native)
+}
+
+function onFocusIn() {
+  if (tipTriggers.value.includes('focus')) showTip()
+}
+
+function onFocusOut() {
+  if (tipTriggers.value.includes('focus')) hideTip()
+}
+
+function onTipOutside() {
+  if (actionTooltipRootClose(tipConfig.value)) hideTip(true)
+}
+
+function onTipLayerEnter() {
+  if (!tipEnterable.value) return
+  clearTipTimers()
+  tipOpen.value = true
+}
+
+function onTipLayerLeave() {
+  if (!tipEnterable.value) return
+  if (tipTriggers.value.includes('hover')) hideTip()
 }
 
 onMounted(() => {
@@ -240,6 +292,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clearCountTimer()
+  clearTipTimers()
   window.removeEventListener('keydown', onHotKey)
 })
 </script>
@@ -254,6 +307,8 @@ onBeforeUnmount(() => {
       @click="onClick($event)"
       @mouseenter="onEnter($event)"
       @mouseleave="onLeave($event)"
+      @focusin="onFocusIn"
+      @focusout="onFocusOut"
     >
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </span>
@@ -265,6 +320,8 @@ onBeforeUnmount(() => {
       :class="block ? 'w-full' : undefined"
       @mouseenter="onEnter($event)"
       @mouseleave="onLeave($event)"
+      @focusin="onFocusIn"
+      @focusout="onFocusOut"
     >
       <Button
         :variant="variant"
@@ -284,15 +341,16 @@ onBeforeUnmount(() => {
         <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
       </Button>
     </span>
-    <VamisOverlay
+    <VamisTooltipLayer
+      v-if="tipConfig"
       :show="hasTip && tipOpen"
       :target="triggerEl"
       :container="overlayContainer"
-      :placement="overlayPlacement"
-      :gap="8"
-      layer-class="vamis-overlay--tooltip"
-    >
-      <div role="tooltip" class="vamis-action-tooltip" :data-place="placement">{{ tipText }}</div>
-    </VamisOverlay>
+      :tooltip="tipConfig"
+      :data="data"
+      @outside="onTipOutside"
+      @enter="onTipLayerEnter"
+      @leave="onTipLayerLeave"
+    />
   </BadgeHost>
 </template>

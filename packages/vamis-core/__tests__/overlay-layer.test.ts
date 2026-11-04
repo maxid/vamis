@@ -93,6 +93,15 @@ describe('overlay-layer', () => {
       top: 41,
       left: 228,
     })
+    expect(
+      overlayPosition(target, {
+        gap: 8,
+        width: 100,
+        height: 30,
+        placement: 'center-top-center-bottom',
+        offset: [10, -4],
+      }),
+    ).toEqual({ top: -2, left: 80 })
   })
 
   it('VamisOverlay feeds overlay size into auto placement', () => {
