@@ -1,0 +1,201 @@
+---
+description: 历史教训与稳定开发经验。组件修复后必须去重回写本文档。
+alwaysApply: true
+---
+
+# 历史教训与稳定经验
+
+本文档是**可演进的经验真源**。进度仍写 [CONTEXT.md](../../CONTEXT.md)；实现约束仍写各专题 `.mdc`。这里只收「踩过、换组件还会再踩」的稳定做法。
+
+## 何时必须写
+
+只要本轮**修复过组件**（渲染器 / type 行为 / 盒模型 / 浮层 / 对照失败的根因），声称完成前必须回写本文档。不要等用户提醒。
+
+要写：改了 `packages/vamis` 渲染器、`@vamis/core` 里该 type 的契约、该组件文档活示例导致对照/行为变化。
+
+可以不写：纯错字、只改进度数字、未动组件的 kernel 文案、计划里划掉一项。
+
+## 怎么写（去重）
+
+1. **先搜本文**。同一根因只留一条。用标题、关键词、`触及` 里的 type 名搜。
+2. **已有条目**：把本次 type 追加进 `触及`（去重）；若稳定做法变准了，改那一句，不要另开一条。
+3. **只收可复用经验**。换一个组件仍会踩才写。一次性笔误、漏挂字段、对照偶发超时不写。
+4. **禁止流水账**。不要把 CONTEXT「最近交付」整段搬过来。一条 = 短标题 + 踩过 + 稳定做法 + 触及 + 规则落点。
+5. **有专题规则就只指过去**。本文不复制 `component.mdc` / `style.mdc` / `reuse-overlay.mdc` 的整节「禁止」。
+6. 条目格式：
+
+```
+### 短标题（稳定结论，不是 bug 编号）
+- 踩过：现象 + 根因（一两句）
+- 稳定做法：下次怎么做
+- 触及：`type` 列表（空格分隔，去重追加）
+- 规则：已有 `.mdc` 或源码路径（没有就写「本文」）
+```
+
+## 稳定经验
+
+### 对标与验收
+
+### 已注册 ≠ 已完成
+- 踩过：`registerRenderer` 有调用就标完成；`page` 因 `pullRefresh` 未接从 100% 打回进行中。
+- 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。
+- 触及：`page` `container`
+- 规则：组件 P0 TODO「实现标准」；`.cursor/rules/update-progress.mdc`
+
+### 对照产物不进 git，本机必须重打
+- 踩过：换机器 / 新会话 / 只 `pnpm dev`，对照页仍是旧 `sdk.js` 和上一份收割。
+- 稳定做法：改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录）。只改 md 且已有 dist 可跳过 build。全局 token/字体才全量 `pnpm compare`。
+- 触及：所有对照过的 type
+- 规则：`.cursor/rules/compare.mdc`
+
+### 窄屏必须桌面 + 移动一起跑
+- 踩过：只修 `<576` 把 Dialog 桌面也拉满；只跑 `--mobile` 桌面回归看不见。
+- 稳定做法：动窄屏 / `m:` / 移动端表单，对照必须桌面 + `--mobile`。
+- 触及：`dialog` `drawer` `toast` `form` `input-date`
+- 规则：`.cursor/rules/compare.mdc`、`.cursor/rules/component.mdc`
+
+### 活示例不要为对照制造差异
+- 踩过：复制 JSON/YAML 孪生围栏、用甲/乙当唯一后缀，对照去重后仍像「少了示例」，目录虚高。
+- 稳定做法：每个语义只留一份 `schema` 围栏；文案对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。
+- 触及：文档活示例（`badge` `nav` `wizard` 等）
+- 规则：`.cursor/rules/site.mdc`
+
+### 组装与盒模型
+
+### 组装壳用 div，不要 landmark
+- 踩过：Page 根/侧栏改成 `header`/`aside`，宿主 `header {}` 漏进 embed。
+- 稳定做法：schema 布局壳用 `div`。标题可用 `h1`。不要 `role="banner"` / `role="complementary"`。`type: nav` 仍可用 `<nav>`。Container `wrapperComponent` 才是作者覆盖。
+- 触及：`page` `form` `container` `flex` `grid` `panel` `wrapper` `tabs` `wizard`
+- 规则：`.cursor/rules/component.mdc`
+
+### 禁止嵌套 HTML form
+- 踩过：嵌套 `type: form` 仍输出 `<form>`，Enter 提交祖先表单。
+- 稳定做法：先 `useForm()` 再 `provideForm()`；有父 form 就降为 `div`。嵌套时默认提交钮 `type="button"`；输入框 Enter 要 `preventDefault` + `stopPropagation` 后走本表单 `submit()`。
+- 触及：`form` `dialog` `drawer` `wizard`
+- 规则：`.cursor/rules/component.mdc`
+
+### 外层永远是 div.vamis-node，伪类要算包装层
+- 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。
+- 稳定做法：作者 `className` 打在外层 `div.vamis-node`。看「是不是最后一个 / 是不是 inline」时，对包装层写选择器（`:has(> .vamis-form-item--inline)`、只清 form body 最后一个 node）。不要把 SchemaRenderer 外层改成非 `div`。
+- 触及：`form` FormItem `input-text` `checkbox`
+- 规则：`.cursor/rules/component.mdc`
+
+### 铺满是默认，不要作者开关
+- 踩过：Playground 为好看给 page/form 写死 `max-w-3xl`；文档教「先写 `size: full`」。
+- 稳定做法：布局容器和表单控件槽默认吃满、`max-width: 100%`。`size: xs|sm|md|lg` 才钉档；`size: full` 只在默认吃不满时才写。按钮/徽标/纯文本不要拉成 100%。Dialog 等浮层可以有默认尺寸。
+- 触及：`page` `form` `crud` `table` `grid` `flex` `container`
+- 规则：`.cursor/rules/component.mdc`
+
+### 样式
+
+### 同一 class 对计算样式，不要对截图
+- 踩过：用 `gap` 近似 Amis `space-x`（后盒 `margin-left`）；同名 utility Amis/TW 两套叠加，缝加倍。
+- 稳定做法：先读 Amis 选择器再写 CSS。同一 class 落在同一元素、同一属性、同一计算值。语义不同就清掉 TW 那侧。收工核宽高、`margin-*`/`padding-*`/`border-width`/`box-sizing`、缝宽。
+- 触及：`/style` helper 页、带 `className` 的组件
+- 规则：`.cursor/rules/style.mdc`
+
+### helper 复写不得压过站点变体
+- 踩过：把 `.hidden` / `.flex` 放进晚于 Tailwind 的 `@layer utilities`，`hidden lg:block` 失效。
+- 稳定做法：复写放 `@layer components`，或只覆盖有分歧的那一条。
+- 触及：`/style` Layout
+- 规则：`.cursor/rules/style.mdc`
+
+### token 是默认，helper 是作者覆盖
+- 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。
+- 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。
+- 触及：Button 等控件、SDK 根
+- 规则：`.cursor/rules/style.mdc`
+
+### Amis helper 类名不等于字面含义
+- 踩过：日历用 `grid-cols-7` 画 7 列；Amis 该 class 实际 6 列。
+- 稳定做法：先读 `../amis/packages/amis-ui/scss/helper` 的选择器，不要望文生义。
+- 触及：`calendar`
+- 规则：`.cursor/rules/style.mdc`、`.cursor/rules/amis-lookup.mdc`
+
+### 不搬 cxd- 不是放弃像素
+- 踩过：文档写成「不追像素级 cxd」「只学密度」，后续刀按「差不多」做。
+- 稳定做法：不输出 `.cxd-*`、不引入主题 SCSS；盒子 32/24/98/40、密度、状态、交互尽量像素级落到 token / `cva` / Tailwind。
+- 触及：全局视觉
+- 规则：`.cursor/rules/style.mdc`
+
+### 断点不要混用三套
+- 踩过：Dialog 窄屏用 Tailwind `sm:`（640px），Amis Modal 是 `<576`；Toast 桌面 iframe ~768 被当成桌面，实际 Amis `isMobile` 已走暗底居中。
+- 稳定做法：弹层拉满 / 底栏均分对齐 Amis `<576`。Toast `isMobile()` = `max-width: 768px`。helper `m:` 与对照「移动」跟各自规则，不要混用。
+- 触及：`dialog` `drawer` `toast`
+- 规则：`.cursor/rules/component.mdc`
+
+### 禁止运行时拼接 Tailwind 完整 class
+- 踩过：DialogContent 改成 `max-w-none`，再拼 `min-[576px]:max-w-[500px]`，JIT 扫不到，桌面弹层拉满。
+- 稳定做法：完整字面量写进源码（如 `max-w-[500px]`）或 CSS 类。`width:100%` / `max-width:none` 只放进 `<576` 的 media query。
+- 触及：`dialog` `drawer`
+- 规则：`.cursor/rules/component.mdc`
+
+### 浮层与日期
+
+### 非 embed 浮层必须逃出裁切
+- 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
+- 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。
+- 触及：`input-date` `select` `calendar` 以及一切走下拉的控件
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### 弹层翻转共用 overlayPosition，禁止各写一套
+- 踩过：单个渲染器「不够高就往上」；贴底时与 Amis `placement: auto` 不一致。
+- 稳定做法：所有 `VamisOverlay` 走 `overlayPosition`。试探：下左 → 下右 → 上左 → 上右；都放不下则看不见的轴平移进视口，边距 10px。传入实测宽高，paint 后与 ResizeObserver 重算。
+- 触及：`input-date` 及所有 `VamisOverlay`
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### z-index 用 token，不要用 Tailwind 档冒充
+- 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
+- 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；Toast `--z-toast` 2000。token 打在 `:root`。
+- 触及：`input-date` `dialog` `drawer` `toast`
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### 日期 / 日历只保留一套面板
+- 踩过：`type: calendar` 与 `input-date` 两套月历 DOM/CSS，圆角字号选中色分叉。
+- 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。非本月色 `#b8babf`。
+- 触及：`calendar` `input-date` `input-datetime` `input-time`
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### Toast 对齐 Amis，不要用 vue-sonner 冒充
+- 踩过：用 vue-sonner 顶替；`center` 被映射成 `top-center`。
+- 稳定做法：跟 Amis `Toast.tsx` / `_toast.scss`。桌面 400px 白底可叠；移动（≤768）暗底居中一次一条。无 `closeButton` 时点击关闭。Host 挂 `VamisApp` 并 Teleport 到 body。图标与 Alert 共用 `levelToFeedbackIcon`。
+- 触及：`toast` `alert`
+- 规则：`.cursor/rules/component.mdc`
+
+### 浮层里的 Form 与数据栈
+- 踩过：Dialog body 是 `type: form` 时画出默认「提交」；关掉后上一张卡片字段留在 `state.data`。
+- 稳定做法：对齐 Amis `renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`；未写 `actions` 不要默认提交。浮层 `data` 按层压栈，关掉恢复上一层。
+- 触及：`dialog` `drawer` `form` `cards` `card`
+- 规则：`.cursor/rules/component.mdc`
+
+### 图标、文档、打包
+
+### 图标走 resolveIcon，字形走字体
+- 踩过：用 `/` 判断 URL（Amis 看 `.`）；CSS mask 给每个 `fa-*` 画一套；`fa fa-plus` 再叠 `vendor: fa`；未写 `label` 补了「按钮」。
+- 稳定做法：`<svg` → 内联；含 `.` → `<img>`；否则 `<i class>`。完整 `fa fa-*` 不要再加前缀。空 label 有 icon 就只画图标。FA 从 `@vamis/ui/fontawesome.css` 进 `sdk.css`，不要 `@import` 进走 Tailwind 的 `styles.css`（woff 会变 base64）。
+- 触及：`action` `button` `icon` `avatar` `nav` `breadcrumb` `dropdown-button` `card` `cards`
+- 规则：`.cursor/rules/style.mdc`
+
+### SDK 不要依赖解不到的包
+- 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。
+- 稳定做法：日期 / `|date` 走 dayjs（plugin 打进 bundle）。SDK 上下文补 `workspaceBareResolve`。字符串函数体仅 `env.trusted`；对照页与文档预览显式开 trusted，SDK 默认仍关。
+- 触及：`input-date` `avatar` 公式过滤器
+- 规则：本文；JS SDK spec
+
+### 不要用 display:contents 拆作者布局
+- 踩过：container 为让作者/点赞同行写成 `display:contents`，同级子节点被父级 flex/grid 直接排，窄预览挤成一行或错位。
+- 稳定做法：保留 Amis `wrapperBody` 那层真实盒子。同行靠子项自己的 flex，不要拆掉容器。
+- 触及：`container` `cards` `card`
+- 规则：本文
+
+### 串行分批，不要拿叶子凑数
+- 踩过：轻/中那批塞进 `table`/`crud`/`form`；先做无人依赖的展示叶子，主干（FormItem / Options / action）还缺。
+- 稳定做法：轻 2–3、中 2、重 1。按依赖综合分 `S = 被依赖 × 8 + 深度`。跳过 Custom 与 office/pdf。不要先做 TODO `#61` 起无人依赖叶子。
+- 触及：组件同步批次
+- 规则：`.cursor/rules/component.mdc`；组件 P0 TODO「依赖与优先级」
+
+### helper `bg-secondary` 不要改成组件专用色
+- 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。
+- 稳定做法：helper 继续绑 shadcn `--secondary`。组件专用色在该渲染器覆盖。
+- 触及：`calendar` `button` `badge`
+- 规则：本文；CONTEXT 后续计划「样式收尾」

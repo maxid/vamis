@@ -12,6 +12,7 @@
 | 计划 | `docs/superpowers/plans/` | 可执行任务清单 |
 | 在线文档 | `website/src` + playground 路由 | 与示例同端口；进度仍以本文件为准 |
 | 对标查阅 | `.cursor/rules/amis-lookup.mdc` | Amis 仓相对位置（默认 `../amis`）；文档 / 样式 / 核心 / 组件怎么查 |
+| 历史教训 | `.cursor/rules/lessons.mdc` | 稳定开发经验；**组件修复后必须去重回写**（不是进度流水） |
 
 > **图表**：优先 mermaid。
 
@@ -52,7 +53,7 @@
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-11-03）
+## 当前进度（2026-11-04）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -70,6 +71,7 @@
 
 **最近交付**
 
+- 历史教训独立成 `.cursor/rules/lessons.mdc`（始终生效）。组件修复后必须去重回写：先搜已有条目，同一根因只改「稳定做法」或追加 `触及`，禁止把「最近交付」搬过去。收工清单挂上 `update-progress.mdc` / AGENTS。已从规则禁止项与既往交付收成可复用经验（组装壳、浮层 Teleport、对照产物、Dialog 断点等）。
 - 所有弹层翻转对齐 Amis Overlay `placement: auto`：下左 → 下右 → 上左 → 上右；视口底边剩余高度小于弹层则向上开。写进 `overlayPosition` / `VamisOverlay`，规则 `.cursor/rules/reuse-overlay.mdc`（所有 `VamisOverlay` 共用，禁止各写一套）。文档页贴底实测翻上（触发器底 627 / 视口 640，弹层 top 301）。对照桌面 `input-date` **2/19**（P0 0）。
 - `input-date` 日历弹层盒模型对齐 Amis 6.13.0：内侧 `.rdt.rdtStatic.rdtOpen` **240×290**（Vamis `.vamis-cal`），`.DatePicker-popover` **242×292**、`padding: 0`、边框 `#f2f3f5`、select-outer 阴影。根因是弹层 8px padding + `min-width: 256px`，以及 Tailwind 清掉 td/th 的 UA `padding: 1px`。文档补齐观察句与 `popOverContainerSelector`。进度 85% → 88%。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。
 - 日期/日历按 Amis 链收敛：抽出共享 `DateCalendarPanel`（`type: calendar` 与 `input-date` embed/弹层同一套月历）。非 embed 弹层走 `VamisOverlay` Teleport 到 `getModalContainer`（默认 body），z-index `--z-dropdown` **1000**，不再被文档预览 overflow 裁切。规则 `.cursor/rules/reuse-overlay.mdc`。`input-date` 82% → 85%，`calendar` 85% → 87%。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。
