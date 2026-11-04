@@ -9,6 +9,7 @@ import {
 } from './embed'
 import {
   registerRenderer,
+  addRule,
   parseSchemaText,
   yamlFromUnknown,
   jsonToIr,
@@ -29,6 +30,7 @@ export {
 }
 export {
   registerRenderer,
+  addRule,
   parseSchemaText,
   yamlFromUnknown,
   jsonToIr,
@@ -44,6 +46,7 @@ const api = {
   embed,
   normalizeEmbedSchema,
   registerRenderer,
+  addRule,
   parseSchemaText,
   yamlFromUnknown,
   jsonToIr,

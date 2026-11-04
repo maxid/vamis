@@ -8,7 +8,8 @@ import { dayjs } from './utils/dayjs'
 
 export type ValidationRules = Record<string, unknown>
 type RuleArgs = unknown[]
-type ValidateFn = (values: PlainObject, value: unknown, ...args: RuleArgs) => boolean
+type ValidateFnResult = boolean | { error: true; msg?: string }
+type ValidateFn = (values: PlainObject, value: unknown, ...args: RuleArgs) => ValidateFnResult
 
 const ID_PROVINCE = new Set([
   '11', '12', '13', '14', '15', '21', '22', '23', '31', '32', '33', '34', '35', '36', '37',
@@ -426,8 +427,14 @@ export function validateValue(schema: SchemaObject, value: unknown, data: PlainO
       (ruleName.startsWith('matchRegexp') ? validations.matchRegexp : undefined)
     if (!fn) continue
     const args = (Array.isArray(raw) ? raw : [raw]).map((item) => resolveArg(item, data))
-    if (!fn(data, value, ...args)) {
+    const validateRes = fn(data, value, ...args)
+    let fnResErrorMsg = ''
+    if (validateRes && typeof validateRes === 'object' && validateRes.error === true) {
+      fnResErrorMsg = validateRes.msg ?? ''
+    }
+    if (!validateRes || fnResErrorMsg) {
       const key = ruleName === 'required' ? 'isRequired' : ruleName
+      if (fnResErrorMsg) return interpolate(translateValidateMessage(fnResErrorMsg), args)
       return messageOf(schema, key, args, value)
     }
   }

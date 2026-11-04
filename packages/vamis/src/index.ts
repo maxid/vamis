@@ -13,6 +13,7 @@ export {
   SchemaRenderer,
   LazyComponent,
   registerRenderer,
+  addRule,
   resolveRenderer,
   getRenderers,
   parseToIr,

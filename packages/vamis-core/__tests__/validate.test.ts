@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseValidations, validateValue } from '../src/validate'
+import { addRule, parseValidations, validateValue } from '../src/validate'
 
 describe('form validations', () => {
   it('parses string rules and reports minLength / maximum / matchRegexp', () => {
@@ -65,5 +65,20 @@ describe('form validations', () => {
       validationErrors: { isNumeric: 'validate.isNumeric' },
     }
     expect(validateValue(schema, 'abc')).toBe('请输入数字')
+  })
+
+  it('lets addRule return { error, msg } like Amis', () => {
+    addRule('isZXS', (_values, value) => {
+      if (value === '北京') return true
+      if (value === '新加坡') return { error: true, msg: '该地区不在国内' }
+      return { error: true, msg: '输入的不是直辖市' }
+    })
+    expect(validateValue({ type: 'input-text', name: 'city', validations: { isZXS: true } }, '北京')).toBeNull()
+    expect(validateValue({ type: 'input-text', name: 'city', validations: { isZXS: true } }, '新加坡')).toBe(
+      '该地区不在国内',
+    )
+    expect(validateValue({ type: 'input-text', name: 'city', validations: { isZXS: true } }, '杭州')).toBe(
+      '输入的不是直辖市',
+    )
   })
 })
