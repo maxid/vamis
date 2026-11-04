@@ -214,8 +214,9 @@ async function runAutoFill(item: SchemaObject, value: unknown) {
   const mapping = autoFillMapping(item)
   const name = String(item.name || '')
   if (!mapping || !name) return
-  let ctx: Record<string, unknown> = { ...store.data, [name]: value, __term: value }
   const api = autoFillApi(item)
+  if ((item.options || item.source || item.autoComplete) && !api) return
+  let ctx: Record<string, unknown> = { ...store.data, [name]: value, __term: value }
   if (api && isEffectiveApi(api, ctx)) {
     const result = await requestApi(api, { env, data: ctx, reason: 'reload' })
     if (result.skipped || !result.ok) return

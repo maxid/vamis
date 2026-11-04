@@ -1,0 +1,460 @@
+/** Options 选择器表单项契约：对齐 Amis 6.13.0 `OptionsControl`。 */
+
+import { dataMapping } from './data-mapping'
+import { resolveValue } from '../formula'
+import { getPathValue } from './path-value'
+import type { PlainObject, SchemaApi, SchemaObject } from '../types'
+
+export interface OptionItem {
+  label: string
+  value: unknown
+  disabled?: boolean
+  children?: OptionItem[]
+  defer?: boolean
+  [key: string]: unknown
+}
+
+export interface OptionsValueConfig {
+  multiple?: boolean
+  joinValues?: boolean
+  extractValue?: boolean
+  delimiter?: string
+  labelField?: string
+  valueField?: string
+  clearable?: boolean
+  resetValue?: unknown
+}
+
+export interface OptionsControlConfig extends OptionsValueConfig {
+  searchable?: boolean
+  checkAll?: boolean
+  defaultCheckAll?: boolean
+  selectFirst?: boolean
+  creatable?: boolean
+  valuesNoWrap?: boolean
+  createBtnLabel?: string
+  optionLabel?: string
+  clearValueOnSourceChange?: boolean
+  initAutoFill?: boolean | 'fillIfNotSet'
+}
+
+function isPlainObject(value: unknown): value is PlainObject {
+  return !!value && typeof value === 'object' && !Array.isArray(value)
+}
+
+export function optionsLabelField(schema: PlainObject = {}): string {
+  return schema.labelField != null && String(schema.labelField) ? String(schema.labelField) : 'label'
+}
+
+export function optionsValueField(schema: PlainObject = {}): string {
+  return schema.valueField != null && String(schema.valueField) ? String(schema.valueField) : 'value'
+}
+
+export function optionsDelimiter(schema: PlainObject = {}): string {
+  return schema.delimiter != null && schema.delimiter !== '' ? String(schema.delimiter) : ','
+}
+
+export function optionsJoinValues(schema: PlainObject = {}): boolean {
+  return schema.joinValues !== false
+}
+
+export function optionsExtractValue(schema: PlainObject = {}): boolean {
+  return schema.extractValue === true
+}
+
+export function optionsMultiple(schema: PlainObject = {}): boolean {
+  return schema.multiple === true || schema.type === 'multi-select'
+}
+
+export function optionsResetValue(schema: PlainObject = {}): unknown {
+  return schema.resetValue !== undefined ? schema.resetValue : ''
+}
+
+export function optionsValueConfig(schema: PlainObject = {}): OptionsValueConfig {
+  return {
+    multiple: optionsMultiple(schema),
+    joinValues: optionsJoinValues(schema),
+    extractValue: optionsExtractValue(schema),
+    delimiter: optionsDelimiter(schema),
+    labelField: optionsLabelField(schema),
+    valueField: optionsValueField(schema),
+    clearable: schema.clearable === true,
+    resetValue: optionsResetValue(schema),
+  }
+}
+
+export function optionsControlConfig(schema: PlainObject = {}): OptionsControlConfig {
+  return {
+    ...optionsValueConfig(schema),
+    searchable: schema.searchable === true,
+    checkAll: schema.checkAll === true,
+    defaultCheckAll: schema.defaultCheckAll === true,
+    selectFirst: schema.selectFirst === true,
+    creatable: schema.creatable === true || schema.addApi != null,
+    valuesNoWrap: schema.valuesNoWrap === true,
+    createBtnLabel: schema.createBtnLabel != null ? String(schema.createBtnLabel) : undefined,
+    optionLabel: schema.optionLabel != null ? String(schema.optionLabel) : undefined,
+    clearValueOnSourceChange: schema.clearValueOnSourceChange === true,
+    initAutoFill: schema.initAutoFill as boolean | 'fillIfNotSet' | undefined,
+  }
+}
+
+export function optionsCreateBtnLabel(schema: PlainObject = {}): string {
+  if (schema.createBtnLabel != null && String(schema.createBtnLabel)) return String(schema.createBtnLabel)
+  const kind = schema.optionLabel != null && String(schema.optionLabel) ? String(schema.optionLabel) : '选项'
+  return `新增${kind}`
+}
+
+export function getOptionValue(value: unknown, valueField = 'value'): unknown {
+  if (isPlainObject(value) && Object.prototype.hasOwnProperty.call(value, valueField)) {
+    return value[valueField]
+  }
+  return value
+}
+
+export function matchOptionValue(a: unknown, option: OptionItem, valueField = 'value'): boolean {
+  const aValue = getOptionValue(a, valueField)
+  const bValue = option[valueField] !== undefined ? option[valueField] : option.value
+  if (isPlainObject(aValue) && isPlainObject(bValue)) {
+    try {
+      return JSON.stringify(aValue) === JSON.stringify(bValue)
+    } catch {
+      return false
+    }
+  }
+  return aValue !== undefined && bValue !== undefined && String(bValue) === String(aValue)
+}
+
+export function optionValuesEqual(a: unknown, b: unknown, valueField = 'value'): boolean {
+  const left = getOptionValue(a, valueField)
+  const right = getOptionValue(b, valueField)
+  if (isPlainObject(left) && isPlainObject(right)) {
+    try {
+      return JSON.stringify(left) === JSON.stringify(right)
+    } catch {
+      return false
+    }
+  }
+  return String(left ?? '') === String(right ?? '')
+}
+
+function readLabel(node: PlainObject, labelField: string): string {
+  const raw = node[labelField]
+  if (raw != null && raw !== '') return String(raw)
+  if (labelField !== 'label') return ''
+  if (node.label != null && node.label !== '') return String(node.label)
+  return ''
+}
+
+function readValue(node: PlainObject, valueField: string, label: string): unknown {
+  if (Object.prototype.hasOwnProperty.call(node, valueField) && node[valueField] !== undefined) {
+    return node[valueField]
+  }
+  if (valueField !== 'value' && node.value !== undefined) return node.value
+  if (node.id !== undefined) return node.id
+  if (label !== '') return label
+  return ''
+}
+
+function asOptionItem(item: unknown, labelField: string, valueField: string): OptionItem {
+  if (item == null) return { label: '', value: '' }
+  if (typeof item !== 'object') {
+    return { label: String(item), value: item, [valueField]: item }
+  }
+  const node = item as PlainObject
+  const label = readLabel(node, labelField)
+  const value = readValue(node, valueField, label)
+  const children = Array.isArray(node.children)
+    ? normalizeOptions(node.children, labelField, valueField)
+    : undefined
+  const option: OptionItem = {
+    ...node,
+    label,
+    value,
+    [valueField]: value,
+  }
+  if (node.disabled) option.disabled = true
+  if (node.defer) option.defer = true
+  if (children) option.children = children
+  return option
+}
+
+/** 对齐 Amis `normalizeOptions`：字符串 / 数字数组 / 对象数组 / 字典；可按 labelField/valueField 映射。 */
+export function normalizeOptions(
+  raw: unknown,
+  labelField = 'label',
+  valueField = 'value',
+): OptionItem[] {
+  if (raw == null || raw === '') return []
+  if (typeof raw === 'string') {
+    return raw
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((item) => ({ label: item, value: item, [valueField]: item }))
+  }
+  if (Array.isArray(raw)) {
+    return raw.filter((item) => item != null).map((item) => asOptionItem(item, labelField, valueField))
+  }
+  if (isPlainObject(raw)) {
+    return Object.keys(raw).map((key) => ({
+      label: String(raw[key] ?? ''),
+      value: key,
+      [valueField]: key,
+    }))
+  }
+  return []
+}
+
+export function flattenOptions(options: OptionItem[], prefix = ''): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const item of options) {
+    const label = `${prefix}${item.label}`
+    if (item.children?.length) {
+      out.push(...flattenOptions(item.children, `${label} / `))
+    } else {
+      out.push({ ...item, label })
+    }
+  }
+  return out
+}
+
+export function walkOptions(options: OptionItem[]): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const item of options) {
+    out.push(item)
+    if (item.children?.length) out.push(...walkOptions(item.children))
+  }
+  return out
+}
+
+export function findOption(
+  options: OptionItem[],
+  value: unknown,
+  valueField = 'value',
+): OptionItem | undefined {
+  for (const item of options) {
+    if (matchOptionValue(value, item, valueField)) return item
+    if (item.children?.length) {
+      const hit = findOption(item.children, value, valueField)
+      if (hit) return hit
+    }
+  }
+  return undefined
+}
+
+export function isOptionsEmpty(value: unknown): boolean {
+  if (value == null || value === '') return true
+  if (Array.isArray(value)) return value.length === 0
+  return false
+}
+
+export function parseJoined(
+  value: unknown,
+  multiple: boolean,
+  joinValues = true,
+  delimiter = ',',
+): unknown[] {
+  if (value == null || value === '') return []
+  if (Array.isArray(value)) return value
+  if (multiple && joinValues && typeof value === 'string') {
+    return value.split(delimiter).map((item) => item.trim()).filter((item) => item !== '')
+  }
+  return [value]
+}
+
+export function dumpJoined(
+  values: unknown[],
+  multiple: boolean,
+  joinValues = true,
+  delimiter = ',',
+): unknown {
+  if (!multiple) return values[0] ?? ''
+  return joinValues ? values.map((item) => String(item)).join(delimiter) : values
+}
+
+export function parseOptionsValue(value: unknown, config: OptionsValueConfig = {}): unknown[] {
+  const multiple = !!config.multiple
+  const joinValues = config.joinValues !== false
+  const delimiter = config.delimiter || ','
+  return parseJoined(value, multiple, joinValues, delimiter)
+}
+
+function optionFromRaw(raw: unknown, options: OptionItem[], valueField: string): OptionItem {
+  if (isPlainObject(raw)) {
+    const key = raw[valueField] ?? raw.value
+    const hit = key !== undefined ? findOption(options, key, valueField) : undefined
+    if (hit) return hit
+    const label = raw.label != null ? String(raw.label) : String(key ?? '')
+    return { ...raw, label, value: key ?? raw.label ?? '' }
+  }
+  const hit = findOption(options, raw, valueField)
+  return hit || { label: String(raw ?? ''), value: raw }
+}
+
+export function getSelectedOptions(
+  value: unknown,
+  options: OptionItem[],
+  config: OptionsValueConfig = {},
+): OptionItem[] {
+  const valueField = config.valueField || 'value'
+  return parseOptionsValue(value, config).map((item) => optionFromRaw(item, options, valueField))
+}
+
+export function dumpOptionsValue(selected: OptionItem[], config: OptionsValueConfig = {}): unknown {
+  const multiple = !!config.multiple
+  const joinValues = config.joinValues !== false
+  const extractValue = config.extractValue === true
+  const delimiter = config.delimiter || ','
+  const resetValue = config.resetValue !== undefined ? config.resetValue : ''
+  if (!multiple) {
+    const item = selected[0]
+    if (!item) return resetValue
+    if (joinValues || extractValue) return item.value
+    return item
+  }
+  if (joinValues) {
+    return selected
+      .map((item) => item.value)
+      .filter((item) => item != null)
+      .map((item) => String(item))
+      .join(delimiter)
+  }
+  if (extractValue) return selected.map((item) => item.value)
+  return selected.slice()
+}
+
+export function toggleOption(
+  option: OptionItem,
+  selected: OptionItem[],
+  config: OptionsValueConfig = {},
+): OptionItem[] {
+  const valueField = config.valueField || 'value'
+  const idx = selected.findIndex((item) => matchOptionValue(option.value, item, valueField))
+  if (config.multiple) {
+    if (idx >= 0) return selected.filter((_, i) => i !== idx)
+    return [...selected, option]
+  }
+  if (idx >= 0 && config.clearable) return []
+  return [option]
+}
+
+export function selectableOptions(options: OptionItem[]): OptionItem[] {
+  return walkOptions(options).filter((item) => !item.disabled && item.value != null && item.value !== '')
+}
+
+export function isAllSelected(selected: OptionItem[], options: OptionItem[], valueField = 'value'): boolean {
+  const pool = selectableOptions(options)
+  if (!pool.length) return false
+  return pool.every((item) => selected.some((cur) => matchOptionValue(item.value, cur, valueField)))
+}
+
+export function toggleAllOptions(selected: OptionItem[], options: OptionItem[], valueField = 'value'): OptionItem[] {
+  return isAllSelected(selected, options, valueField) ? [] : selectableOptions(options)
+}
+
+export function firstEnabledOption(options: OptionItem[]): OptionItem | undefined {
+  return selectableOptions(options)[0]
+}
+
+export function filterOptions(options: OptionItem[], keyword: string): OptionItem[] {
+  const q = keyword.trim().toLowerCase()
+  if (!q) return options
+  return flattenOptions(options).filter((item) => {
+    return String(item.label).toLowerCase().includes(q) || String(item.value ?? '').toLowerCase().includes(q)
+  })
+}
+
+/** `${items}` / `$items` 这类数据域变量，不是接口 url。 */
+export function isOptionsVariableSource(source: unknown): source is string {
+  if (typeof source !== 'string' || !source) return false
+  if (source.includes('/') || /^[a-z][a-z0-9+.-]*:/i.test(source)) return false
+  return source.includes('$')
+}
+
+export function resolveOptionsSource(source: unknown, data: PlainObject = {}): unknown {
+  if (typeof source !== 'string') return undefined
+  return resolveValue(source, data)
+}
+
+export function optionsFromPayload(data: unknown): { list: unknown; value?: unknown } {
+  if (Array.isArray(data)) return { list: data }
+  if (!isPlainObject(data)) return { list: [] }
+  if (Array.isArray(data.options)) return { list: data.options, value: data.value }
+  if (Array.isArray(data.items)) return { list: data.items, value: data.value }
+  return { list: [], value: data.value }
+}
+
+export function optionsFillData(
+  selected: OptionItem[],
+  multiple: boolean,
+  data: PlainObject = {},
+): PlainObject {
+  if (multiple) return { ...data, items: selected }
+  const item = selected[0]
+  if (!item) return { ...data, items: selected }
+  return { ...data, ...item, items: selected }
+}
+
+export function isOptionsControlSchema(schema: SchemaObject): boolean {
+  return !!(schema.options || schema.source || schema.autoComplete || schema.multiple || schema.joinValues === false)
+}
+
+/** 选项 autoFill 的映射上下文：单选展开当前项，多选走 `items`。 */
+export function optionsAutoFillContext(
+  schema: SchemaObject,
+  value: unknown,
+  data: PlainObject = {},
+  options: OptionItem[] = [],
+): PlainObject | null {
+  if (!isOptionsControlSchema(schema) && !options.length) return null
+  const config = optionsValueConfig(schema)
+  const list = options.length ? options : normalizeOptions(schema.options, config.labelField, config.valueField)
+  const selected = getSelectedOptions(value, list, config)
+  return optionsFillData(selected, !!config.multiple, data)
+}
+
+export function applyOptionsAutoFill(
+  mapping: PlainObject,
+  selected: OptionItem[],
+  multiple: boolean,
+  data: PlainObject = {},
+  initAutoFill: boolean | 'fillIfNotSet' = 'fillIfNotSet',
+): PlainObject {
+  const ctx = optionsFillData(selected, multiple, data)
+  const out: PlainObject = {}
+  for (const [key, expr] of Object.entries(mapping)) {
+    if (!key || key.startsWith('__')) continue
+    if (initAutoFill === false) continue
+    if (initAutoFill === 'fillIfNotSet' || initAutoFill == null) {
+      const current = getPathValue(data, key)
+      if (current !== undefined) continue
+    }
+    const next =
+      typeof expr === 'string' ? resolveValue(expr, ctx) : dataMapping(expr, ctx)
+    if (next === undefined) continue
+    out[key] = next
+  }
+  return out
+}
+
+export function optionsClearValue(schema: PlainObject = {}): unknown {
+  return optionsResetValue(schema)
+}
+
+export function optionsSetDataValue(
+  values: Record<string, unknown> | undefined,
+  name?: string,
+): unknown | undefined {
+  if (!values || typeof values !== 'object' || Array.isArray(values)) return undefined
+  if (Object.prototype.hasOwnProperty.call(values, 'value')) return values.value
+  if (name && Object.prototype.hasOwnProperty.call(values, name)) return values[name]
+  return undefined
+}
+
+export function isOptionsAutoComplete(schema: PlainObject): boolean {
+  const raw = schema.autoComplete
+  return !!raw && raw !== false
+}
+
+export type OptionsSource = SchemaApi | string | false | null | undefined

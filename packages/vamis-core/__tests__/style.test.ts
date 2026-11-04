@@ -327,7 +327,7 @@ describe('Amis width helpers', () => {
     const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
     const form = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
     const service = readFileSync(resolve(here, '../../vamis/src/renderers/Service.vue'), 'utf8')
-    const select = readFileSync(resolve(here, '../../vamis/src/renderers/form/Select.vue'), 'utf8')
+    const select = readFileSync(resolve(here, '../../vamis/src/optionsControl.ts'), 'utf8')
     const markdown = readFileSync(resolve(here, '../../vamis/src/renderers/display/Markdown.vue'), 'utf8')
     const chart = readFileSync(resolve(here, '../../vamis/src/renderers/Chart.vue'), 'utf8')
     const crud = readFileSync(resolve(here, '../../vamis/src/renderers/CRUD.vue'), 'utf8')
@@ -337,6 +337,7 @@ describe('Amis width helpers', () => {
       expect(src).not.toContain('apiTrackKey')
     }
     expect(select).not.toContain('watch(() => props.schema.source, loadSource)')
+    expect(readFileSync(resolve(here, '../../vamis/src/renderers/form/Select.vue'), 'utf8')).toContain('useOptionsControl')
     expect(markdown).not.toContain("watch(() => props.schema.src, load)")
   })
 

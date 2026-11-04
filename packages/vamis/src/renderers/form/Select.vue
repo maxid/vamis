@@ -1,144 +1,190 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Checkbox,
-} from '@vamis/ui'
-import {
-  isApiOutdated,
-  isEffectiveApi,
-  requestApi,
-  useData,
-  useEnv,
-  useScoped,
-  type SchemaObject,
-} from '@vamis/core'
-import { useForm } from '../../formContext'
+import { computed, ref, toRef } from 'vue'
+import { Checkbox } from '@vamis/ui'
+import { filterTpl, isAllSelected, useData, type SchemaObject } from '@vamis/core'
 import FormItem from '../FormItem.vue'
-import {
-  dumpJoined,
-  flattenOptions,
-  normalizeOptions,
-  optionValuesEqual,
-  parseJoined,
-  type OptionItem,
-} from '../../options'
+import VamisOverlay from '../../overlay/VamisOverlay.vue'
+import { useOptionsControl } from '../../optionsControl'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
-const form = useForm()
-const env = useEnv()
-const scoped = useScoped()
+const schemaRef = toRef(props, 'schema')
+const disabledRef = toRef(props, 'disabled')
 const data = useData()
-const remote = ref<OptionItem[]>([])
+const rootEl = ref<HTMLElement | null>(null)
+const triggerWidth = ref(0)
+const creating = ref(false)
+const createDraft = ref<Record<string, string>>({})
 
-const multiple = computed(() => !!(props.schema.multiple || props.schema.type === 'multi-select'))
-const joinValues = computed(() => props.schema.joinValues !== false)
-
-const options = computed(() => {
-  const local = normalizeOptions(props.schema.options || remote.value)
-  return flattenOptions(local)
-})
-
-function isVariableSource(source: unknown): source is string {
-  return typeof source === 'string' && source.includes('$') && !source.includes('/') && !/^[a-z]+:/i.test(source)
-}
-
-async function loadSource() {
-  const source = props.schema.source
-  if (!source) return
-  if (isVariableSource(source)) {
-    const key = source.replace(/^\$\{?|\}$/g, '')
-    remote.value = normalizeOptions(data.value[key])
-    return
-  }
-  if (!isEffectiveApi(source as any, data.value)) return
-  try {
-    const result = await requestApi(source as any, { env, data: data.value, reason: 'init' })
-    if (result.skipped || !result.ok) return
-    const list = result.data?.options || result.data?.items || result.data
-    remote.value = normalizeOptions(list)
-  } catch (error) {
-    env.notify('error', error instanceof Error ? error.message : '选项加载失败')
-  }
-}
-
-onMounted(loadSource)
-watch(
-  () => [props.schema.source, data.value] as const,
-  (curr, prev) => {
-    if (!prev) return
-    if (isApiOutdated(prev[0] as any, curr[0] as any, prev[1], curr[1])) void loadSource()
-  },
+const ctl = useOptionsControl(schemaRef, disabledRef)
+const locked = computed(() => !!props.disabled)
+const checkAllLabel = computed(() =>
+  props.schema.checkAllLabel != null ? String(props.schema.checkAllLabel) : '全选',
 )
+const addControls = computed(() => (Array.isArray(props.schema.addControls) ? props.schema.addControls : []))
+const allChecked = computed(() => isAllSelected(ctl.selected.value, ctl.options.value, ctl.config.value.valueField))
 
-const selectApi = {
-  get name() {
-    return String(props.schema.name || props.schema.id || '')
-  },
-  reload: loadSource,
+function toggleOpen() {
+  if (locked.value) return
+  ctl.open.value = !ctl.open.value
+  triggerWidth.value = rootEl.value?.offsetWidth || 0
+  if (ctl.open.value && ctl.autoComplete.value) ctl.scheduleAutoComplete(ctl.keyword.value)
 }
-scoped?.register(selectApi)
-onBeforeUnmount(() => scoped?.unregister(selectApi))
 
-const selected = computed({
-  get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', multiple.value, joinValues.value),
-  set: (values: unknown[]) => {
-    if (!props.schema.name) return
-    form?.setValue(props.schema.name, dumpJoined(values, multiple.value, joinValues.value))
-  },
-})
+function startCreate() {
+  creating.value = true
+  const labelField = ctl.config.value.labelField || 'label'
+  createDraft.value = { [labelField]: '' }
+  for (const item of addControls.value) {
+    if (item && typeof item === 'object' && (item as SchemaObject).name) {
+      createDraft.value[String((item as SchemaObject).name)] = ''
+    }
+  }
+}
 
-const singleValue = computed({
-  get: () => {
-    const current = selected.value[0]
-    return current == null ? undefined : String(current)
-  },
-  set: (value: string) => {
-    selected.value = value == null || value === '' ? [] : [value]
-  },
-})
+async function confirmCreate() {
+  const values = { ...createDraft.value }
+  const labelField = ctl.config.value.labelField || 'label'
+  if (!String(values[labelField] ?? values.label ?? '').trim() && !addControls.value.length) return
+  creating.value = false
+  await ctl.createOption(values)
+  createDraft.value = {}
+}
 
-function toggle(option: OptionItem, checked: boolean) {
-  const current = selected.value.filter((item) => !optionValuesEqual(item, option.value))
-  selected.value = checked ? [...current, option.value] : current
+function cancelCreate() {
+  creating.value = false
+  createDraft.value = {}
+}
+
+function isSelected(value: unknown) {
+  return ctl.selected.value.some((item) => String(item.value) === String(value))
 }
 </script>
 
 <template>
   <FormItem :schema="schema">
-    <div v-if="multiple" class="max-h-48 space-y-1 overflow-auto rounded-md border p-2">
-      <label
-        v-for="opt in options"
-        :key="String(opt.value)"
-        class="flex items-center gap-2 text-sm"
-      >
-        <Checkbox
-          :model-value="selected.some((item) => optionValuesEqual(item, opt.value))"
-          :disabled="disabled || opt.disabled"
-          @update:model-value="toggle(opt, $event === true)"
-        />
-        <span>{{ opt.label }}</span>
-      </label>
-      <p v-if="!options.length" class="text-xs text-muted-foreground">暂无选项</p>
-    </div>
-    <Select
-      v-else
-      :model-value="singleValue"
-      :disabled="disabled"
-      @update:model-value="singleValue = String($event ?? '')"
+    <div
+      ref="rootEl"
+      class="vamis-select"
+      :class="{
+        'is-opened': ctl.open.value,
+        'is-disabled': locked,
+        'is-multiple': ctl.config.value.multiple,
+        'is-nowrap': ctl.config.value.valuesNoWrap,
+      }"
     >
-      <SelectTrigger class="w-full">
-        <SelectValue :placeholder="schema.placeholder || '请选择'" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem v-for="opt in options" :key="String(opt.value)" :value="String(opt.value)">
-          {{ opt.label }}
-        </SelectItem>
-      </SelectContent>
-    </Select>
+      <div
+        class="vamis-select__input"
+        :class="{ 'is-focused': ctl.open.value }"
+        @click="toggleOpen"
+      >
+        <div class="vamis-select__value">
+          <template v-if="ctl.config.value.multiple && ctl.selected.value.length">
+            <span
+              v-for="(item, index) in ctl.selected.value"
+              :key="`${item.value}-${index}`"
+              class="vamis-select__chip"
+            >{{ item.label }}</span>
+          </template>
+          <span v-else-if="ctl.selected.value[0]" class="vamis-select__single">{{ ctl.selected.value[0].label }}</span>
+          <span v-else class="vamis-select__placeholder">{{ filterTpl(ctl.placeholder.value, data) }}</span>
+        </div>
+        <button
+          v-if="schema.clearable && ctl.hasValue.value && !locked"
+          type="button"
+          class="vamis-select__clear"
+          aria-label="清除"
+          @mousedown.prevent
+          @click.stop="ctl.clear()"
+        >
+          ×
+        </button>
+        <span class="vamis-select__caret" aria-hidden="true" />
+      </div>
+      <VamisOverlay
+        :show="ctl.open.value"
+        :target="rootEl"
+        :container="ctl.overlayContainer.value"
+        @outside="ctl.open.value = false"
+      >
+        <div class="vamis-select__popover" :style="{ minWidth: triggerWidth ? `${triggerWidth}px` : undefined }">
+          <div v-if="ctl.config.value.searchable || ctl.autoComplete.value" class="vamis-select__search">
+            <input
+              :value="ctl.keyword.value"
+              class="vamis-select__search-input"
+              :placeholder="schema.searchPlaceholder ? String(schema.searchPlaceholder) : '搜索'"
+              @mousedown.stop
+              @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
+            >
+          </div>
+          <button
+            v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
+            type="button"
+            class="vamis-select__checkall"
+            @mousedown.prevent
+            @click.stop="ctl.toggleAll()"
+          >
+            <Checkbox :model-value="allChecked" :disabled="locked" />
+            <span>{{ checkAllLabel }}</span>
+          </button>
+          <div class="vamis-select__list">
+            <button
+              v-for="opt in ctl.filtered.value"
+              :key="String(opt.value)"
+              type="button"
+              class="vamis-select__item"
+              :class="{ 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked }"
+              :disabled="!!opt.disabled || locked"
+              :title="opt.label"
+              @mousedown.prevent
+              @click.stop="ctl.toggle(opt)"
+            >
+              <Checkbox
+                v-if="ctl.config.value.multiple"
+                :model-value="isSelected(opt.value)"
+                :disabled="!!opt.disabled || locked"
+              />
+              <span class="vamis-select__item-label">{{ opt.label }}</span>
+            </button>
+            <div v-if="ctl.loading.value && !ctl.filtered.value.length" class="vamis-select__empty">加载中…</div>
+            <div v-else-if="!ctl.filtered.value.length" class="vamis-select__empty">暂无选项</div>
+          </div>
+          <div v-if="ctl.config.value.creatable" class="vamis-select__create">
+            <button
+              v-if="!creating"
+              type="button"
+              class="vamis-select__create-btn"
+              :disabled="locked"
+              @mousedown.prevent
+              @click.stop="startCreate"
+            >
+              {{ ctl.createLabel.value }}
+            </button>
+            <div v-else class="vamis-select__create-form" @mousedown.stop>
+              <template v-if="addControls.length">
+                <input
+                  v-for="item in addControls"
+                  :key="String((item as SchemaObject).name)"
+                  class="vamis-select__search-input"
+                  :placeholder="String((item as SchemaObject).label || (item as SchemaObject).placeholder || (item as SchemaObject).name || '')"
+                  :value="createDraft[String((item as SchemaObject).name)]"
+                  @input="createDraft[String((item as SchemaObject).name)] = ($event.target as HTMLInputElement).value"
+                >
+              </template>
+              <input
+                v-else
+                class="vamis-select__search-input"
+                placeholder="请输入名称"
+                :value="createDraft[ctl.config.value.labelField || 'label']"
+                @input="createDraft[ctl.config.value.labelField || 'label'] = ($event.target as HTMLInputElement).value"
+              >
+              <div class="vamis-select__create-actions">
+                <button type="button" class="vamis-select__create-btn" @click="confirmCreate">确定</button>
+                <button type="button" class="vamis-select__create-btn is-muted" @click="cancelCreate">取消</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </VamisOverlay>
+    </div>
   </FormItem>
 </template>

@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-03（`action` / `button` 95%、`input-date` 88%、`calendar` 87%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 110 项；已完成 1；依赖综合分 154 节点）
+- 最近核对：2026-11-04（Options 契约 75%、`action` / `button` 95%、`input-date` 88%、`calendar` 87%、`checkbox` 85%、`input-text` 82%、FormItem 82%、`tpl` 92%、`html` 90%、`icon` 90%、`form` 75%；汇总 59%、≥50% 111 项；已完成 1；依赖综合分 154 节点）
 
 ## 怎么读
 
@@ -66,11 +66,11 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 77% | 11 |
-| 数据输入 | 0 / 72 | 72 | 0 | 49% | 41 |
+| 数据输入 | 0 / 72 | 72 | 0 | 50% | 42 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
-| **合计** | **1 / 155** | **154** | **0** | **59%** | **110** |
+| **合计** | **1 / 155** | **154** | **0** | **59%** | **111** |
 
 侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
@@ -121,7 +121,7 @@
 
 ---
 
-## 数据输入（0/72，均 48%）
+## 数据输入（0/72，均 50%）
 
 Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表单项（D6），必须进清单。
 
@@ -130,7 +130,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 75% | 默认标题「表单」、只画提交、标题栏灰底。路径值 `a.b`、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`validateApi`、提交 `errors`、`debug` 已接。缺 combo 独立域 | P0 |
 | （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 82% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`、禁用/显隐、默认间距 24px、`mode: inline`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、form `debug`。缺 combo/table 路径级报错、`autoFill.showSuggestion`、事件动作切静态 | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
-| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 35% | 无统一 OptionsControl；`source`/`autoComplete`/`joinValues` 各控件自实现且不齐 | P0 |
+| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 75% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、选项 autoFill。缺 editable/removable/deferApi/虚拟列表。select 已接入 | P0 |
 | `input-array` | InputArray 数组输入框 | `/components/form/input-array` | `/zh-CN/components/form/input-array` | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |
 | `button-toolbar` | ButtonToolbar 按钮工具栏 | `/components/form/button-toolbar` | `/zh-CN/components/form/button-toolbar` | 进行中 | 60% | 能排按钮 | P0 |
 | `button-group-select` | ButtonGroupSelect 按钮点选 | `/components/form/button-group-select` | `/zh-CN/components/form/button-group-select` | 进行中 | 55% | 能选值；多选/自适应未齐 | P0 |
@@ -289,7 +289,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：Options、`select`、`image`、`input-date-range`、`mapping`。`input-date` 88%（弹层 240×290 / auto 翻转）；`input-password` 显隐开关跟该 type。
+- 跳过 Custom 与 office/pdf。当前建议下一批：`select`（#10）、`image`、`input-date-range`、`mapping`。Options 契约 75%；`input-date` 88%（弹层 240×290 / auto 翻转）；`input-password` 显隐开关跟该 type。
 - 示例：`app → page → crud → {form, table, pagination, action, dialog}`；`form → FormItem / Options + input-*`；`table → tpl / mapping / action / popOver`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节）。
 
@@ -349,7 +349,7 @@ flowchart LR
 | 6 | `input-text` | `FormItem` | 6 | 12 | 102 | 进行中 | 82% |
 | 7 | `checkbox` | `FormItem` | 6 | 8 | 70 | 进行中 | 85% |
 | 8 | `input-date` | `FormItem` | 6 | 7 | 62 | 进行中 | 88% |
-| 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 35% |
+| 9 | Options（契约） | `FormItem` | 6 | 6 | 54 | 进行中 | 75% |
 | 10 | `select` | `FormItem`、`Options` | 5 | 11 | 93 | 进行中 | 60% |
 | 11 | `image` | — | 7 | 5 | 47 | 进行中 | 75% |
 | 12 | `input-date-range` | `input-date`、`FormItem` | 5 | 5 | 45 | 进行中 | 50% |
