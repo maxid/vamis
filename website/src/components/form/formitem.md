@@ -5,7 +5,7 @@ title: FormItem 表单项通用
 # FormItem 表单项通用
 
 ::: info 实现进度 90% · 进行中
-路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（含选择器 `limit`）、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）、`validations` / `validationErrors`。未写 `label` 仍占标签列（`label: false` 才去掉）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
+路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（含选择器 `limit`）、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）、`validations` / `validationErrors`（含默认 `validate.*` key）。未写 `label` 仍占标签列（`label: false` 才去掉）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
 :::
 
 > 所有派生自 FormItem 的组件，都具有 FormItem 的特性。FormItem 不是独立 `type`，字段仍然用各自的 `type`（`input-text`、`select`…）。
@@ -758,6 +758,53 @@ body:
 }
 ```
 
+默认的校验信息如下，可以直接配置文字，也可用多语言中的 key。参考：https://github.com/baidu/amis/blob/master/packages/amis-ui/src/locale/zh-CN.ts#L250
+
+```js
+{
+  isEmail: 'validate.isEmail',
+  isRequired: 'validate.isRequired',
+  isUrl: 'validate.isUrl',
+  isInt: 'validate.isInt',
+  isAlpha: 'validate.isAlpha',
+  isNumeric: 'validate.isNumeric',
+  isAlphanumeric: 'validate.isAlphanumeric',
+  isFloat: 'validate.isFloat',
+  isWords: 'validate.isWords',
+  isUrlPath: 'validate.isUrlPath',
+  matchRegexp: 'validate.matchRegexp',
+  minLength: 'validate.minLength',
+  maxLength: 'validate.maxLength',
+  maximum: 'validate.maximum',
+  lt: 'validate.lt',
+  minimum: 'validate.minimum',
+  gt: 'validate.gt',
+  isJson: 'validate.isJson',
+  isLength: 'validate.isLength',
+  notEmptyString: 'validate.notEmptyString',
+  equalsField: 'validate.equalsField',
+  equals: 'validate.equals',
+  isPhoneNumber: 'validate.isPhoneNumber',
+  isTelNumber: 'validate.isTelNumber',
+  isZipcode: 'validate.isZipcode',
+  isId: 'validate.isId',
+  /* 日期时间相关校验规则 2.2.0 及以上版本生效 */
+  isDateTimeSame: 'validate.isDateTimeSame',
+  isDateTimeBefore: 'validate.isDateTimeBefore',
+  isDateTimeAfter: 'validate.isDateTimeAfter',
+  isDateTimeSameOrBefore: 'validate.isDateTimeSameOrBefore',
+  isDateTimeSameOrAfter: 'validate.isDateTimeSameOrAfter',
+  isDateTimeBetween: 'validate.isDateTimeBetween',
+  isTimeSame: 'validate.isTimeSame',
+  isTimeBefore: 'validate.isTimeBefore',
+  isTimeAfter: 'validate.isTimeAfter',
+  isTimeSameOrBefore: 'validate.isTimeSameOrBefore',
+  isTimeSameOrAfter: 'validate.isTimeSameOrAfter',
+  isTimeBetween: 'validate.isTimeBetween',
+  isVariableName: 'validate.isVariableName'
+}
+```
+
 ### 表单项值发生变化即校验
 
 默认校验是当进行行为操作时，对表单项进行校验，如果你想每次表单项的值发生变化的时候就校验，请配置 `"validateOnChange": true`
@@ -982,5 +1029,5 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认 `validate.*` key、中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。
 - 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。

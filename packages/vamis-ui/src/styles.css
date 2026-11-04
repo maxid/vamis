@@ -735,9 +735,13 @@
     margin: 0.25em 0;
   }
   .vamis-html :where(a) {
-    color: var(--primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: var(--link-color);
+    font-weight: var(--link-font-weight);
+    text-decoration: var(--link-decoration);
+  }
+  .vamis-html :where(a:hover) {
+    color: var(--link-hover-color);
+    text-decoration: var(--link-hover-decoration);
   }
   .vamis-html :where(blockquote) {
     margin: 1em 0;

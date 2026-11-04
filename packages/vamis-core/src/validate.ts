@@ -153,49 +153,108 @@ function unitOf(raw: unknown): 'millisecond' | 'second' | 'minute' | 'hour' | 'd
 const EMAIL_RE =
   /^((([a-z]|\d|[!#$%&'*+\-/=?^_`{|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#$%&'*+\-/=?^_`{|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i
 
+/** 对齐 Amis `validateMessages`：默认是多语言 key，文案在 zh-CN locale。 */
+export const validateMessageKeys: Record<string, string> = {
+  isEmail: 'validate.isEmail',
+  isRequired: 'validate.isRequired',
+  isUrl: 'validate.isUrl',
+  isInt: 'validate.isInt',
+  isAlpha: 'validate.isAlpha',
+  isNumeric: 'validate.isNumeric',
+  isAlphanumeric: 'validate.isAlphanumeric',
+  isFloat: 'validate.isFloat',
+  isWords: 'validate.isWords',
+  isUrlPath: 'validate.isUrlPath',
+  matchRegexp: 'validate.matchRegexp',
+  minLength: 'validate.minLength',
+  maxLength: 'validate.maxLength',
+  minLengthArray: 'validate.array.minLength',
+  maxLengthArray: 'validate.array.maxLength',
+  maximum: 'validate.maximum',
+  lt: 'validate.lt',
+  minimum: 'validate.minimum',
+  gt: 'validate.gt',
+  isJson: 'validate.isJson',
+  isLength: 'validate.isLength',
+  notEmptyString: 'validate.notEmptyString',
+  notEmpty: 'validate.notEmptyString',
+  equalsField: 'validate.equalsField',
+  equals: 'validate.equals',
+  isPhoneNumber: 'validate.isPhoneNumber',
+  isTelNumber: 'validate.isTelNumber',
+  isZipcode: 'validate.isZipcode',
+  isId: 'validate.isId',
+  isId18: 'validate.isId',
+  isId15: 'validate.isId',
+  isDateTimeSame: 'validate.isDateTimeSame',
+  isDateTimeBefore: 'validate.isDateTimeBefore',
+  isDateTimeAfter: 'validate.isDateTimeAfter',
+  isDateTimeSameOrBefore: 'validate.isDateTimeSameOrBefore',
+  isDateTimeSameOrAfter: 'validate.isDateTimeSameOrAfter',
+  isDateTimeBetween: 'validate.isDateTimeBetween',
+  isTimeSame: 'validate.isTimeSame',
+  isTimeBefore: 'validate.isTimeBefore',
+  isTimeAfter: 'validate.isTimeAfter',
+  isTimeSameOrBefore: 'validate.isTimeSameOrBefore',
+  isTimeSameOrAfter: 'validate.isTimeSameOrAfter',
+  isTimeBetween: 'validate.isTimeBetween',
+  isVariableName: 'validate.isVariableName',
+}
+
+/** 默认校验信息：Amis `validateMessages` 的 key。实际中文由 `translateValidateMessage` 解。 */
 export const validateMessages: Record<string, string> = {
-  isRequired: '这是必填项',
-  required: '这是必填项',
-  isEmail: 'Email 格式不正确',
-  isUrl: 'URL 格式不正确',
-  isInt: '请输入整型数字',
-  isAlpha: '请输入字母',
-  isNumeric: '请输入数字',
-  isAlphanumeric: '请输入字母或者数字',
-  isFloat: '请输入浮点型数值',
-  isWords: '请输入单词',
-  isUrlPath: '只能输入字母、数字、`-` 和 `_`.',
-  matchRegexp: '格式不正确, 请输入符合规则为 $1 的内容。',
-  minLength: '请输入更多的内容，至少输入 $1 个字符。',
-  maxLength: '请控制内容长度, 不要输入 $1 个以上字符',
-  maximum: '当前输入值超出最大值 $1',
-  lt: '请输入小于 $1 的值',
-  minimum: '当前输入值低于最小值 $1',
-  gt: '请输入大于 $1 的值',
-  isJson: 'JSON 格式不正确',
-  isLength: '请输入长度为 $1 的内容',
-  notEmptyString: '请不要全输入空白字符',
-  equalsField: '输入的数据与 $1 值不一致',
-  equals: '输入的数据与 $1 不一致',
-  isPhoneNumber: '请输入合法的手机号码',
-  isTelNumber: '请输入合法的电话号码',
-  isZipcode: '请输入合法的邮编地址',
-  isId: '请输入合法的身份证号',
-  isId18: '请输入合法的身份证号',
-  isId15: '请输入合法的身份证号',
-  isDateTimeSame: '当前日期值不合法，请输入和 $1 相同的日期值',
-  isDateTimeBefore: '当前日期值不合法，请输入 $1 之前的日期值',
-  isDateTimeAfter: '当前日期值不合法，请输入 $1 之后的日期值',
-  isDateTimeSameOrBefore: '当前日期值不合法，请输入和 $1 相同或之前的日期值',
-  isDateTimeSameOrAfter: '当前日期值不合法，请输入和 $1 相同或之后的日期值',
-  isDateTimeBetween: '当前日期值不合法，请输入 $1 和 $2 之间的日期值',
-  isTimeSame: '当前时间值不合法，请输入和 $1 相同的时间值',
-  isTimeBefore: '当前时间值不合法，请输入 $1 之前的时间值',
-  isTimeAfter: '当前时间值不合法，请输入 $1 之后的时间值',
-  isTimeSameOrBefore: '当前时间值不合法，请输入和 $1 相同或之前的时间值',
-  isTimeSameOrAfter: '当前时间值不合法，请输入和 $1 相同或之后的时间值',
-  isTimeBetween: '当前时间值不合法，请输入 $1 和 $2 之间的时间值',
-  isVariableName: '请输入合法的变量名，变量名只能以字母或下划线开头，后续可包含字母、数字和下划线',
+  ...validateMessageKeys,
+  required: 'validate.isRequired',
+}
+
+/** 对齐 `amis-ui/src/locale/zh-CN.ts` `validate.*`。 */
+export const validateLocaleZh: Record<string, string> = {
+  'validate.equals': '输入的数据与 $1 不一致',
+  'validate.equalsField': '输入的数据与 $1 值不一致',
+  'validate.gt': '请输入大于 $1 的值',
+  'validate.isAlpha': '请输入字母',
+  'validate.isAlphanumeric': '请输入字母或者数字',
+  'validate.isEmail': 'Email 格式不正确',
+  'validate.isFloat': '请输入浮点型数值',
+  'validate.isId': '请输入合法的身份证号',
+  'validate.isInt': '请输入整型数字',
+  'validate.isJson': 'JSON 格式不正确',
+  'validate.isLength': '请输入长度为 $1 的内容',
+  'validate.isNumeric': '请输入数字',
+  'validate.isPhoneNumber': '请输入合法的手机号码',
+  'validate.isRequired': '这是必填项',
+  'validate.isTelNumber': '请输入合法的电话号码',
+  'validate.isUrl': 'URL 格式不正确',
+  'validate.isUrlPath': '只能输入字母、数字、`-` 和 `_`.',
+  'validate.isWords': '请输入单词',
+  'validate.isZipcode': '请输入合法的邮编地址',
+  'validate.lt': '请输入小于 $1 的值',
+  'validate.matchRegexp': '格式不正确, 请输入符合规则为 $1 的内容。',
+  'validate.maximum': '当前输入值超出最大值 $1',
+  'validate.maxLength': '请控制内容长度, 不要输入 $1 个以上字符',
+  'validate.array.maxLength': '请控制成员个数, 不能超过 $1 个',
+  'validate.minimum': '当前输入值低于最小值 $1',
+  'validate.minLength': '请输入更多的内容，至少输入 $1 个字符。',
+  'validate.array.minLength': '请添加更多的成员，成员数至少 $1 个。',
+  'validate.notEmptyString': '请不要全输入空白字符',
+  'validate.isDateTimeSame': '当前日期值不合法，请输入和 $1 相同的日期值',
+  'validate.isDateTimeBefore': '当前日期值不合法，请输入 $1 之前的日期值',
+  'validate.isDateTimeAfter': '当前日期值不合法，请输入 $1 之后的日期值',
+  'validate.isDateTimeSameOrBefore': '当前日期值不合法，请输入和 $1 相同或之前的日期值',
+  'validate.isDateTimeSameOrAfter': '当前日期值不合法，请输入和 $1 相同或之后的日期值',
+  'validate.isDateTimeBetween': '当前日期值不合法，请输入 $1 和 $2 之间的日期值',
+  'validate.isTimeSame': '当前时间值不合法，请输入和 $1 相同的时间值',
+  'validate.isTimeBefore': '当前时间值不合法，请输入 $1 之前的时间值',
+  'validate.isTimeAfter': '当前时间值不合法，请输入 $1 之后的时间值',
+  'validate.isTimeSameOrBefore': '当前时间值不合法，请输入和 $1 相同或之前的时间值',
+  'validate.isTimeSameOrAfter': '当前时间值不合法，请输入和 $1 相同或之后的时间值',
+  'validate.isTimeBetween': '当前时间值不合法，请输入 $1 和 $2 之间的时间值',
+  'validate.isVariableName':
+    '请输入合法的变量名，变量名只能以字母或下划线开头，后续可包含字母、数字和下划线',
+}
+
+export function translateValidateMessage(raw: string): string {
+  return validateLocaleZh[raw] || raw
 }
 
 const validations: Record<string, ValidateFn> = {
@@ -333,13 +392,14 @@ function interpolate(msg: string, args: RuleArgs): string {
   return out
 }
 
-function messageOf(schema: SchemaObject, key: string, args: RuleArgs): string {
+function messageOf(schema: SchemaObject, key: string, args: RuleArgs, value?: unknown): string {
   const custom = schema.validationErrors
+  const msgKey = Array.isArray(value) ? `${key}Array` : key
   const raw =
     custom && typeof custom === 'object' && custom[key] != null
       ? String(custom[key])
-      : validateMessages[key] || '格式不正确'
-  return interpolate(raw, args)
+      : validateMessages[msgKey] || validateMessages[key] || '格式不正确'
+  return interpolate(translateValidateMessage(raw), args)
 }
 
 function resolveArg(arg: unknown, data: PlainObject): unknown {
@@ -368,7 +428,7 @@ export function validateValue(schema: SchemaObject, value: unknown, data: PlainO
     const args = (Array.isArray(raw) ? raw : [raw]).map((item) => resolveArg(item, data))
     if (!fn(data, value, ...args)) {
       const key = ruleName === 'required' ? 'isRequired' : ruleName
-      return messageOf(schema, key, args)
+      return messageOf(schema, key, args, value)
     }
   }
   return null

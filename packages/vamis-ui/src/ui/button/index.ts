@@ -18,7 +18,7 @@ export const buttonVariants = cva(
           "border border-solid border-[var(--button-secondary)] bg-[var(--button-secondary)] text-[var(--button-secondary-foreground)] hover:border-[var(--button-secondary-hover)] hover:bg-[var(--button-secondary-hover)] active:border-[var(--button-secondary-active)] active:bg-[var(--button-secondary-active)]",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "border-0 bg-transparent text-primary underline-offset-4 hover:underline",
+        link: "border-0 bg-transparent shadow-none text-[var(--link-color)] hover:bg-transparent hover:text-[var(--link-hover-color)] active:text-[var(--link-active-color)] no-underline hover:no-underline",
         success:
           "border border-solid border-success bg-success text-success-foreground hover:bg-success/90",
         warning:

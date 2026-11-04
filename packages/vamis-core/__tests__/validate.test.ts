@@ -56,4 +56,14 @@ describe('form validations', () => {
     expect(validateValue(schema, 'http://example.com')).toBe('URL 格式不正确')
     expect(validateValue(schema, 'https://example.com')).toBeNull()
   })
+
+  it('resolves validationErrors locale keys like validate.isNumeric', () => {
+    const schema = {
+      type: 'input-text',
+      name: 'text',
+      validations: { isNumeric: true },
+      validationErrors: { isNumeric: 'validate.isNumeric' },
+    }
+    expect(validateValue(schema, 'abc')).toBe('请输入数字')
+  })
 })

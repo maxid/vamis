@@ -18,6 +18,16 @@ describe('levelToVariant', () => {
   })
 })
 
+describe('buttonVariants link', () => {
+  it('matches Amis Button--link: --link-color and no underline', () => {
+    const link = buttonVariants({ variant: 'link' })
+    expect(link).toContain('text-[var(--link-color)]')
+    expect(link).toContain('no-underline')
+    expect(link).not.toContain('hover:underline')
+    expect(link).not.toContain('underline-offset-4')
+  })
+})
+
 describe('sizeToButtonSize', () => {
   it('keeps the xs/sm/md/lg ladder instead of collapsing xs into sm', () => {
     expect(sizeToButtonSize()).toBe('default')
