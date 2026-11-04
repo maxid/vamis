@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
       v-if="show"
       ref="layerEl"
       class="vamis-overlay"
-      :class="layerClass"
+      :class="[layerClass, ready ? 'is-placed' : '']"
       data-vamis-overlay-layer
       :style="{ top: `${coords.top}px`, left: `${coords.left}px`, visibility: ready ? 'visible' : 'hidden' }"
       @mousedown.stop

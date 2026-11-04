@@ -22,6 +22,12 @@ alwaysApply: true
 
 运行时改了却只跑 `--page`、不 `sdk:build`：对照页仍是旧内核。只改 md 却不跑 compare：对照下拉仍是上一份收割。
 
+Cursor 可能把 `PLAYWRIGHT_BROWSERS_PATH` 指到空的 sandbox-cache，报 `Executable doesn't exist ... chrome-headless-shell`。对照改用本机目录：
+
+```bash
+PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" pnpm compare --page <type>
+```
+
 ## 禁止
 
 - 改完组件文档或渲染器就标完成，对照页还停在上一份收割 / 上一份 `sdk.js`

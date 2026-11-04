@@ -96,3 +96,28 @@ export function tooltipContent(schema: unknown, data: Record<string, unknown> = 
 export function tooltipDisabled(schema: unknown): boolean {
   return asRecord(schema).disabled === true
 }
+
+/** Amis Overlay `placement: top` 盒底贴触发器，再靠箭头高 4px + 2px 拉开。 */
+export const TOOLTIP_OVERLAY_GAP = 6
+
+/**
+ * 只把浮层字段交给 VamisTooltipLayer。
+ * 宿主 `style` / `className` / `body` / `inline` / `wrapperComponent` 不能漏进浮层（对齐 Amis renderer 的 tooltipObj）。
+ */
+export function tooltipLayerSchema(schema: unknown): Record<string, unknown> {
+  const rec = asRecord(schema)
+  return {
+    title: rec.title,
+    content: rec.content ?? rec.tooltip,
+    tooltip: rec.tooltip,
+    placement: rec.placement,
+    tooltipTheme: rec.tooltipTheme,
+    offset: rec.offset,
+    showArrow: rec.showArrow,
+    enterable: rec.enterable,
+    tooltipStyle: rec.tooltipStyle,
+    tooltipClassName: rec.tooltipClassName,
+    tooltipArrowClassName: rec.tooltipArrowClassName,
+    tooltipBodyClassName: rec.tooltipBodyClassName,
+  }
+}

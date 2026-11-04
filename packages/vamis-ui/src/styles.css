@@ -208,6 +208,28 @@
   --z-popover: 1400;
   --z-tooltip: 1600;
   --z-toast: 2000;
+  /* Amis fill-9 / text-color。Tooltip 边框不是 --border（line-8）。 */
+  --fill-9: #f2f3f5;
+  --text-loud: #151b26;
+  /*
+   * Overlay Tooltip 语义变量（Amis --Tooltip-*）。
+   * 圆角是 --borderRadiusLg 8px，不是全局 --radius 4px，也不是 Tailwind --radius-lg（6px）。
+   * Action / tooltip-wrapper / remark 共用；选择器只 var()。
+   */
+  --tooltip-max-width: 240px;
+  --tooltip-radius: 8px;
+  --tooltip-bg: #fff;
+  --tooltip-fg: var(--text-loud);
+  --tooltip-border: 1px solid var(--fill-9);
+  --tooltip-shadow: 0 4px 6px 1px rgb(8 14 26 / 6%),
+    0 1px 10px 0 rgb(8 14 26 / 5%), 0 2px 4px -1px rgb(8 14 26 / 4%);
+  --tooltip-title-padding: var(--gap-sm) var(--gap-base) 0;
+  --tooltip-body-padding: var(--gap-sm) var(--gap-base);
+  --tooltip-arrow-width: 8px;
+  --tooltip-arrow-height: 4px;
+  --tooltip-bg-dark: rgba(7, 12, 20, 0.85);
+  --tooltip-fg-dark: #fff;
+  --tooltip-shadow-dark: 0 2px 8px 0 rgba(7, 12, 20, 0.12);
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -1026,90 +1048,171 @@
   }
   .vamis-overlay.vamis-overlay--tooltip {
     z-index: var(--z-tooltip, 1600);
+    opacity: 0;
+  }
+  .vamis-overlay.vamis-overlay--tooltip.is-placed {
+    opacity: 1;
+    transition: opacity 0.2s ease;
   }
   .vamis-overlay.vamis-overlay--tooltip.is-ghost {
     pointer-events: none;
   }
+  /* Amis TooltipWrapper--inline：inline-block，不是 inline-flex。 */
+  .vamis-tooltip-wrapper {
+    display: block;
+  }
+  .vamis-tooltip-wrapper--inline {
+    display: inline-block;
+  }
+  /* Overlay Tooltip：只消费 :root --tooltip-*，不写死色 / px，不用 shadcn --popover。 */
   .vamis-tooltip {
     position: relative;
     box-sizing: border-box;
-    max-width: 20rem;
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: var(--radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  .vamis-tooltip--light {
-    color: var(--popover-foreground);
-    background: var(--popover);
-    border: 1px solid var(--border);
+    min-width: auto;
+    max-width: var(--tooltip-max-width);
+    text-align: left;
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: var(--fontSizeBase);
+    line-height: var(--lineHeightBase);
+    color: var(--tooltip-fg);
+    background: var(--tooltip-bg);
+    border: var(--tooltip-border);
+    border-radius: var(--tooltip-radius);
+    box-shadow: var(--tooltip-shadow);
   }
   .vamis-tooltip--dark {
-    color: var(--primary-foreground);
-    background: var(--foreground);
-    border: 1px solid var(--foreground);
+    color: var(--tooltip-fg-dark);
+    background: var(--tooltip-bg-dark);
+    border: none;
+    box-shadow: var(--tooltip-shadow-dark);
   }
   .vamis-tooltip__title {
-    margin: 0 0 2px;
-    font-weight: 500;
+    padding: var(--tooltip-title-padding);
+    margin: 0;
+    font-size: var(--fontSizeBase);
+    font-weight: 700;
+    color: inherit;
+  }
+  .vamis-tooltip__title:empty {
+    display: none;
   }
   .vamis-tooltip__body {
+    padding: var(--tooltip-body-padding);
     margin: 0;
+    color: inherit;
+    word-break: break-all;
+    text-align: left;
   }
   .vamis-tooltip__arrow {
     position: absolute;
-    width: 0;
-    height: 0;
-    border: 5px solid transparent;
+    display: block;
+    width: var(--tooltip-arrow-width);
+    height: var(--tooltip-arrow-height);
+    margin-left: calc(var(--tooltip-arrow-width) / -2);
+    left: 50%;
+  }
+  .vamis-tooltip__arrow::before,
+  .vamis-tooltip__arrow::after {
+    position: absolute;
+    display: block;
+    content: '';
+    border-color: transparent;
+    border-style: solid;
   }
   .vamis-tooltip--top .vamis-tooltip__arrow {
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-top-color: var(--border);
+    bottom: calc((var(--tooltip-arrow-height) + 1px) * -1);
   }
-  .vamis-tooltip--top.vamis-tooltip--dark .vamis-tooltip__arrow {
-    border-top-color: var(--foreground);
+  .vamis-tooltip--top .vamis-tooltip__arrow::before,
+  .vamis-tooltip--top .vamis-tooltip__arrow::after {
+    border-width: var(--tooltip-arrow-height) calc(var(--tooltip-arrow-width) / 2) 0;
+  }
+  .vamis-tooltip--top .vamis-tooltip__arrow::before {
+    bottom: 0;
+  }
+  .vamis-tooltip--top .vamis-tooltip__arrow::after {
+    bottom: 1px;
+    border-top-color: var(--tooltip-bg);
+  }
+  .vamis-tooltip--top.vamis-tooltip--dark .vamis-tooltip__arrow::before {
+    border-width: 0;
+  }
+  .vamis-tooltip--top.vamis-tooltip--dark .vamis-tooltip__arrow::after {
+    border-top-color: var(--tooltip-bg-dark);
   }
   .vamis-tooltip--bottom .vamis-tooltip__arrow {
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-bottom-color: var(--border);
+    top: calc((var(--tooltip-arrow-height) + 1px) * -1);
+    bottom: auto;
   }
-  .vamis-tooltip--bottom.vamis-tooltip--dark .vamis-tooltip__arrow {
-    border-bottom-color: var(--foreground);
+  .vamis-tooltip--bottom .vamis-tooltip__arrow::before,
+  .vamis-tooltip--bottom .vamis-tooltip__arrow::after {
+    border-width: 0 calc(var(--tooltip-arrow-width) / 2) var(--tooltip-arrow-height);
+  }
+  .vamis-tooltip--bottom .vamis-tooltip__arrow::before {
+    top: 0;
+  }
+  .vamis-tooltip--bottom .vamis-tooltip__arrow::after {
+    top: 1px;
+    border-bottom-color: var(--tooltip-bg);
+  }
+  .vamis-tooltip--bottom.vamis-tooltip--dark .vamis-tooltip__arrow::before {
+    border-width: 0;
+  }
+  .vamis-tooltip--bottom.vamis-tooltip--dark .vamis-tooltip__arrow::after {
+    border-bottom-color: var(--tooltip-bg-dark);
   }
   .vamis-tooltip--left .vamis-tooltip__arrow {
-    left: 100%;
+    left: auto;
+    right: calc((var(--tooltip-arrow-height) + 1px) * -1);
     top: 50%;
-    margin-top: -5px;
-    border-left-color: var(--border);
+    width: var(--tooltip-arrow-height);
+    height: var(--tooltip-arrow-width);
+    margin-left: 0;
+    margin-top: calc(var(--tooltip-arrow-width) / -2);
   }
-  .vamis-tooltip--left.vamis-tooltip--dark .vamis-tooltip__arrow {
-    border-left-color: var(--foreground);
+  .vamis-tooltip--left .vamis-tooltip__arrow::before,
+  .vamis-tooltip--left .vamis-tooltip__arrow::after {
+    border-width: calc(var(--tooltip-arrow-width) / 2) 0 calc(var(--tooltip-arrow-width) / 2)
+      var(--tooltip-arrow-height);
+  }
+  .vamis-tooltip--left .vamis-tooltip__arrow::before {
+    right: 0;
+  }
+  .vamis-tooltip--left .vamis-tooltip__arrow::after {
+    right: 1px;
+    border-left-color: var(--tooltip-bg);
+  }
+  .vamis-tooltip--left.vamis-tooltip--dark .vamis-tooltip__arrow::before {
+    border-width: 0;
+  }
+  .vamis-tooltip--left.vamis-tooltip--dark .vamis-tooltip__arrow::after {
+    border-left-color: var(--tooltip-bg-dark);
   }
   .vamis-tooltip--right .vamis-tooltip__arrow {
-    right: 100%;
+    left: calc((var(--tooltip-arrow-height) + 1px) * -1);
     top: 50%;
-    margin-top: -5px;
-    border-right-color: var(--border);
+    width: var(--tooltip-arrow-height);
+    height: var(--tooltip-arrow-width);
+    margin-left: 0;
+    margin-top: calc(var(--tooltip-arrow-width) / -2);
   }
-  .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow {
-    border-right-color: var(--foreground);
+  .vamis-tooltip--right .vamis-tooltip__arrow::before,
+  .vamis-tooltip--right .vamis-tooltip__arrow::after {
+    border-width: calc(var(--tooltip-arrow-width) / 2) var(--tooltip-arrow-height)
+      calc(var(--tooltip-arrow-width) / 2) 0;
   }
-  .vamis-action-tooltip {
-    box-sizing: border-box;
-    max-width: 20rem;
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--popover-foreground);
-    background: var(--popover);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  .vamis-tooltip--right .vamis-tooltip__arrow::before {
+    left: 0;
+  }
+  .vamis-tooltip--right .vamis-tooltip__arrow::after {
+    left: 1px;
+    border-right-color: var(--tooltip-bg);
+  }
+  .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow::before {
+    border-width: 0;
+  }
+  .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow::after {
+    border-right-color: var(--tooltip-bg-dark);
   }
   .vamis-select {
     position: relative;

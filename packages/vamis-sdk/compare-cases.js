@@ -9841,25 +9841,34 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "space-around",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "tooltip-wrapper",
-            "content": "提示文字",
-            "body": "hover 激活提示"
+      "body": [
+        {
+          "type": "flex",
+          "justify": "space-around",
+          "alignItems": "center",
+          "direction": "row",
+          "style": {
+            "width": 350,
+            "height": 30
           },
-          {
-            "type": "tooltip-wrapper",
-            "title": "标题",
-            "content": "提示文字",
-            "trigger": "click",
-            "body": "click 激活提示"
-          }
-        ]
-      }
+          "items": [
+            {
+              "type": "tooltip-wrapper",
+              "content": "提示文字",
+              "body": "hover 激活文字提示",
+              "className": "mb-1"
+            },
+            {
+              "type": "tooltip-wrapper",
+              "title": "标题",
+              "content": "提示文字",
+              "trigger": "click",
+              "body": "click 激活文字提示",
+              "className": "mb-1"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -9878,22 +9887,24 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tooltip-wrapper",
-        "content": "删除提示",
-        "inline": true,
-        "body": [
-          {
-            "type": "tpl",
-            "tpl": "删除"
-          },
-          {
-            "type": "tpl",
-            "className": "ml-1",
-            "tpl": "×"
-          }
-        ]
-      }
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "content": "删除提示",
+          "inline": true,
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "删除"
+            },
+            {
+              "className": "ml-1",
+              "type": "icon",
+              "icon": "trash"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -9916,30 +9927,106 @@ window.VAMIS_COMPARE_CASES = [
         "type": "flex",
         "justify": "space-around",
         "alignItems": "center",
+        "direction": "column",
         "items": [
           {
-            "type": "tooltip-wrapper",
-            "content": "上提示",
-            "placement": "top",
-            "body": "上"
+            "type": "flex",
+            "justify": "center",
+            "alignItems": "center",
+            "direction": "row",
+            "style": {
+              "width": 100,
+              "height": 30
+            },
+            "items": [
+              {
+                "type": "tooltip-wrapper",
+                "content": "提示文字",
+                "body": [
+                  {
+                    "type": "icon",
+                    "icon": "arrow-circle-up",
+                    "className": "mr-1"
+                  },
+                  {
+                    "type": "tpl",
+                    "tpl": "上"
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "tooltip-wrapper",
-            "content": "左提示",
-            "placement": "left",
-            "body": "左"
+            "type": "flex",
+            "justify": "space-around",
+            "alignItems": "center",
+            "direction": "row",
+            "style": {
+              "width": 200,
+              "height": 30
+            },
+            "items": [
+              {
+                "type": "tooltip-wrapper",
+                "content": "提示文字",
+                "placement": "left",
+                "body": [
+                  {
+                    "type": "icon",
+                    "icon": "arrow-circle-left",
+                    "className": "mr-1"
+                  },
+                  {
+                    "type": "tpl",
+                    "tpl": "左"
+                  }
+                ]
+              },
+              {
+                "type": "tooltip-wrapper",
+                "content": "提示文字",
+                "placement": "right",
+                "body": [
+                  {
+                    "type": "icon",
+                    "icon": "arrow-circle-right",
+                    "className": "mr-1"
+                  },
+                  {
+                    "type": "tpl",
+                    "tpl": "右"
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "tooltip-wrapper",
-            "content": "右提示",
-            "placement": "right",
-            "body": "右"
-          },
-          {
-            "type": "tooltip-wrapper",
-            "content": "下提示",
-            "placement": "bottom",
-            "body": "下"
+            "type": "flex",
+            "justify": "center",
+            "alignItems": "center",
+            "direction": "row",
+            "style": {
+              "width": 100,
+              "height": 30
+            },
+            "items": [
+              {
+                "type": "tooltip-wrapper",
+                "content": "提示文字",
+                "placement": "bottom",
+                "body": [
+                  {
+                    "type": "icon",
+                    "icon": "arrow-circle-down",
+                    "className": "mr-1"
+                  },
+                  {
+                    "type": "tpl",
+                    "tpl": "下"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -9961,17 +10048,25 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tooltip-wrapper",
-        "title": "偏移标题",
-        "content": "向右 10px 向上 20px",
-        "offset": [
-          10,
-          -20
-        ],
-        "inline": true,
-        "body": "带偏移的提示"
-      }
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "title": "标题",
+          "content": "文案提示位置偏移 [10, -20]",
+          "offset": [
+            10,
+            -20
+          ],
+          "inline": true,
+          "className": "mr-2",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "向右偏移10px向上偏移20px"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -9990,14 +10085,22 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tooltip-wrapper",
-        "title": "无箭头标题",
-        "content": "没有箭头",
-        "showArrow": false,
-        "inline": true,
-        "body": "没有箭头的提示"
-      }
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "title": "标题",
+          "content": "提示内容",
+          "showArrow": false,
+          "inline": true,
+          "className": "mr-2",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "没有箭头"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -10016,29 +10119,34 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "tooltip-wrapper",
-            "title": "浅色标题",
-            "content": "浅色提示",
-            "inline": true,
-            "className": "mr-2",
-            "body": "light 主题提示"
-          },
-          {
-            "type": "tooltip-wrapper",
-            "title": "深色标题",
-            "content": "深色提示",
-            "inline": true,
-            "tooltipTheme": "dark",
-            "body": "dark 主题提示"
-          }
-        ]
-      }
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "title": "标题",
+          "content": "文案提示",
+          "inline": true,
+          "className": "mr-2",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "light主题提示"
+            }
+          ]
+        },
+        {
+          "type": "tooltip-wrapper",
+          "title": "标题",
+          "content": "文案提示",
+          "inline": true,
+          "tooltipTheme": "dark",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "dark主题提示"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -10057,17 +10165,23 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tooltip-wrapper",
-        "content": "${tip}",
-        "data": {
-          "tip": "从数据域来的提示"
-        },
-        "body": {
-          "type": "tpl",
-          "tpl": "${tip}"
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "title": "标题",
+          "content": "提示内容",
+          "mouseEnterDelay": 1000,
+          "mouseLeaveDelay": 2000,
+          "inline": true,
+          "className": "mr-2",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "延迟1s展示，延迟2s隐藏"
+            }
+          ]
         }
-      }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -10086,28 +10200,24 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "tooltip-wrapper",
-          "content": "内联提示",
-          "inline": true,
-          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-          "body": "内联容器"
-        },
-        {
-          "type": "tooltip-wrapper",
-          "content": "内联提示",
-          "inline": true,
-          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
-          "body": "块级提示"
-        },
-        {
-          "type": "tooltip-wrapper",
-          "content": "块级提示",
-          "className": "p-1 mt-3 border-2 border-solid border-green-400",
-          "body": "非内联容器"
+      "data": {
+        "text": "The longest word in any of the major English language dictionaries is pneumonoultramicroscopicsilicovolcanoconiosis, a word that refers to a lung disease contracted from the inhalation of very fine silica particles, specifically from a volcano; medically, it is the same as silicosis."
+      },
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "${text}",
+        "body": {
+          "type": "html",
+          "style": {
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "maxWidth": "300px",
+            "display": "inline-block"
+          },
+          "html": "${text}"
         }
-      ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -10126,18 +10236,28 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tooltip-wrapper",
-        "content": "加粗浮层",
-        "inline": true,
-        "style": {
-          "fontStyle": "italic"
+      "body": [
+        {
+          "type": "tooltip-wrapper",
+          "content": "文字提示",
+          "inline": true,
+          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
+          "body": "内联容器1"
         },
-        "tooltipStyle": {
-          "fontWeight": "bold"
+        {
+          "type": "tooltip-wrapper",
+          "content": "文字提示",
+          "inline": true,
+          "className": "p-1 mr-3 border-2 border-solid border-indigo-400",
+          "body": "内联容器2"
         },
-        "body": "一段斜体文案"
-      }
+        {
+          "type": "tooltip-wrapper",
+          "content": "文字提示",
+          "className": "p-1 mt-3 border-2 border-solid border-green-400",
+          "body": "非内联容器"
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -10158,9 +10278,44 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "tooltip-wrapper",
-        "content": "代码提示",
+        "content": "文字提示(加粗)",
+        "inline": true,
+        "style": {
+          "fontStyle": "italic"
+        },
+        "tooltipStyle": {
+          "fontWeight": "bold"
+        },
+        "body": [
+          {
+            "type": "tpl",
+            "tpl": "一段文案"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tooltip-10",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "TooltipWrapper 文字提示容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "TooltipWrapper 文字提示容器 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tooltip-wrapper",
+        "content": "文字提示",
         "wrapperComponent": "pre",
-        "body": "function Hello() {\n  return 1\n}"
+        "body": "function HelloWorld() {\n    console.log('Hello World');\n}"
       }
     },
     "measure": {

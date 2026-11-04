@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import {
   ACTION_TOOLTIP_OVERLAY,
+  TOOLTIP_OVERLAY_GAP,
   resolveClassName,
   resolveInlineStyle,
   tooltipContent,
@@ -41,8 +42,8 @@ const extraClass = computed(() => resolveClassName(props.tooltip.tooltipClassNam
 const bodyClass = computed(() => resolveClassName(props.tooltip.tooltipBodyClassName, bag.value))
 const arrowClassName = computed(() => resolveClassName(props.tooltip.tooltipArrowClassName, bag.value))
 const extraStyle = computed(() => ({
-  ...resolveInlineStyle(props.tooltip.tooltipStyle, bag.value),
   ...resolveInlineStyle(props.tooltip.style, bag.value),
+  ...resolveInlineStyle(props.tooltip.tooltipStyle, bag.value),
 }))
 const layerClass = computed(() =>
   ['vamis-overlay--tooltip', enterable.value ? '' : 'is-ghost', extraClass.value].filter(Boolean).join(' '),
@@ -55,7 +56,7 @@ const layerClass = computed(() =>
     :target="target"
     :container="container"
     :placement="overlayPlacement"
-    :gap="8"
+    :gap="TOOLTIP_OVERLAY_GAP"
     :offset="offset"
     :layer-class="layerClass"
     @outside="emit('outside')"
@@ -69,14 +70,14 @@ const layerClass = computed(() =>
       @mouseenter="enterable && emit('enter')"
       @mouseleave="enterable && emit('leave')"
     >
-      <span
+      <div
         v-if="arrow"
         class="vamis-tooltip__arrow"
         :class="arrowClassName"
         aria-hidden="true"
       />
       <div v-if="title" class="vamis-tooltip__title">{{ title }}</div>
-      <div v-if="content" class="vamis-tooltip__body" :class="bodyClass">{{ content }}</div>
+      <div v-if="content" class="vamis-tooltip__body" :class="bodyClass" v-html="content" />
     </div>
   </VamisOverlay>
 </template>

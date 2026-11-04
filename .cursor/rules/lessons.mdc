@@ -48,6 +48,12 @@ alwaysApply: true
 - 触及：所有对照过的 type
 - 规则：`.cursor/rules/compare.mdc`
 
+### 对照 Playwright 要用本机浏览器目录
+- 踩过：Cursor 把 `PLAYWRIGHT_BROWSERS_PATH` 指到 sandbox-cache，缺 `chrome-headless-shell`，`pnpm compare` 即使用 `all` 权限也仍走那条空路径。
+- 稳定做法：对照前覆盖为本机 `~/Library/Caches/ms-playwright`（见 `compare.mdc`）。不要再装一份进 sandbox-cache。
+- 触及：对照
+- 规则：`.cursor/rules/compare.mdc`
+
 ### 对照不要用 click 去探 hover 事件
 - 踩过：`mouseenter` / `mouseleave` 活示例被 `el.click()` 探针点到；Vamis 指针进入会弹 toast，Amis 点按不弹，对照假红。
 - 稳定做法：`shouldProbe` 只认 click（及无事件前缀的 `actionType`）；`mouseenter` / `mouseleave` 不点。
@@ -77,6 +83,12 @@ alwaysApply: true
 - 稳定做法：每个语义只留一份 `schema` 围栏；文案对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。
 - 触及：文档活示例（`badge` `nav` `wizard` 等）
 - 规则：`.cursor/rules/site.mdc`
+
+### 对照过了 ≠ 文档站对齐；必须并排开两边同路径页
+- 踩过：`pnpm compare --page tooltip` 11/11，文档示例仍是短文案、无 FA 图标十字布局；浮层皮肤也偏。对照默认不打开 hover 浮层、不对活示例文案。用户每次都要贴 Amis / Vamis 两个 URL。
+- 稳定做法：改组件或活示例，声称完成前打开 Amis `localhost:8888/zh-CN/components/<type>` 与 Vamis `localhost:5173/components/<type>`（路径以侧栏为准，tooltip 是 `/tooltip` 不是 `/tooltip-wrapper`）。对：示例文案、图标、布局、打开后的浮层盒模型。不要等用户提醒。
+- 触及：`tooltip-wrapper` `action` `button` 及所有有文档活示例的 type
+- 规则：`.cursor/rules/amis-lookup.mdc`；`.cursor/rules/update-progress.mdc`
 
 ### 组装与盒模型
 
@@ -119,9 +131,9 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`
 
 ### token 是默认，helper 是作者覆盖
-- 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。
-- 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。
-- 触及：Button 等控件、SDK 根
+- 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。Overlay Tooltip 一度写死 `#fff` / `8px`，或拿 shadcn `--popover` 冒充。
+- 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。组件配方（`--button-*` / `--tooltip-*`）挂 `:root`，选择器只 `var()`。
+- 触及：Button 等控件、SDK 根、`tooltip-wrapper`
 - 规则：`.cursor/rules/style.mdc`
 
 ### Amis helper 类名不等于字面含义
@@ -153,8 +165,14 @@ alwaysApply: true
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
-- 触及：`input-date` `select` `calendar` `action` `button` 以及一切走下拉的控件
+- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
+- 踩过：用 shadcn `--popover` / `--radius` 画 12px、padding 6×10、圆角 4、5px 实心三角；对齐后又把 `#fff` / `8px` 写死在 `.vamis-tooltip`。文档示例改成「上/左/右/下」丢掉 FA 图标。宿主 `style` 漏进浮层。
+- 稳定做法：先读 `_tooltip.scss` + 文档 ```schema。量落到 `:root` `--tooltip-*`（圆角 8 是 Amis `--borderRadiusLg`，不是全局 `--radius` 4）。选择器只 `var()`。浮层只收 tooltipObj（`tooltipLayerSchema`）。`inline` 是 `inline-block`。
+- 触及：`tooltip-wrapper` `action` `button`
+- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --tooltip-*`
 
 ### 弹层翻转共用 overlayPosition，禁止各写一套
 - 踩过：单个渲染器「不够高就往上」；贴底时与 Amis `placement: auto` 不一致。
@@ -165,7 +183,7 @@ alwaysApply: true
 ### z-index 用 token，不要用 Tailwind 档冒充
 - 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
 - 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；提示 `--z-tooltip` 1600；Toast `--z-toast` 2000。token 打在 `:root`。
-- 触及：`input-date` `dialog` `drawer` `toast` `action`
+- 触及：`input-date` `dialog` `drawer` `toast` `action` `tooltip-wrapper`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### Action tooltip 是 TooltipObject，不要压成一句纯文本
