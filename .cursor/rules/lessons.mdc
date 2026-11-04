@@ -147,7 +147,7 @@ alwaysApply: true
 ### z-index 用 token，不要用 Tailwind 档冒充
 - 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
 - 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；Toast `--z-toast` 2000。token 打在 `:root`。
-- 触及：`input-date` `dialog` `drawer` `toast`
+- 触及：`input-date` `dialog` `drawer` `toast` `action`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### 日期 / 日历只保留一套面板
@@ -160,6 +160,12 @@ alwaysApply: true
 - 踩过：用 vue-sonner 顶替；`center` 被映射成 `top-center`。
 - 稳定做法：跟 Amis `Toast.tsx` / `_toast.scss`。桌面 400px 白底可叠；移动（≤768）暗底居中一次一条。无 `closeButton` 时点击关闭。Host 挂 `VamisApp` 并 Teleport 到 body。图标与 Alert 共用 `levelToFeedbackIcon`。
 - 触及：`toast` `alert`
+- 规则：`.cursor/rules/component.mdc`
+
+### Confirm 走 Alert Modal，不要用 window.confirm
+- 踩过：`env.confirm` 用原生 `window.confirm`，标题拼进文案、没有独立标题栏 / 危险确认钮 / 500px 盒模型，Esc 与点遮罩行为也和 Amis 不同。
+- 稳定做法：对齐 `amis-ui` Alert.confirm。store + `ConfirmHost` 复用 Dialog 原语。默认标题「系统消息」、无 X、Esc/点遮罩默认不关、确认 `danger`、取消 `default`、桌面 500px、页脚按钮 min-width 72px、`--z-modal` 1400。对标要看行为 / 事件 / 盒模型，不要停在「弹了个框」。
+- 触及：`action` `button` `dialog`
 - 规则：`.cursor/rules/component.mdc`
 
 ### 浮层里的 Form 与数据栈

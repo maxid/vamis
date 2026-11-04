@@ -704,12 +704,48 @@
   max-width: none;
 }
 
+/* Amis Alert.confirm：无关闭 X 的 Modal。盒模型对齐 `_modal.scss`，不要停在 DialogContent 的 z-50 / p-5。 */
+.vamis-confirm-overlay,
+[data-vamis-confirm] {
+  z-index: var(--z-modal);
+}
+[data-vamis-confirm] {
+  padding: 24px 0;
+  gap: 0;
+}
+[data-vamis-confirm] [data-slot='dialog-header'] {
+  padding: 0 24px;
+  gap: 0;
+  text-align: left;
+}
+[data-vamis-confirm] [data-slot='dialog-title'] {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  height: 21px;
+}
+.vamis-confirm-body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--foreground);
+  padding: 0 24px;
+  margin: 16px 0 24px;
+}
+[data-vamis-confirm] [data-slot='dialog-footer'] {
+  padding: 0 24px;
+}
+[data-vamis-confirm] [data-slot='dialog-footer'] [data-slot='button'] {
+  min-width: 72px;
+}
+
 @media (max-width: 575.98px) {
-  [data-vamis-overlay='dialog']:not(.vamis-dialog--full) {
+  [data-vamis-overlay='dialog']:not(.vamis-dialog--full),
+  [data-vamis-confirm]:not(.vamis-dialog--full) {
     width: 100%;
     max-width: none;
   }
-  [data-slot='dialog-footer'] > .vamis-node {
+  [data-slot='dialog-footer'] > .vamis-node,
+  [data-vamis-confirm] [data-slot='dialog-footer'] > [data-slot='button'] {
     display: block;
     flex: 1 1 0%;
     min-width: 0;

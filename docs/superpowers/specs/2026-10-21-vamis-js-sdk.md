@@ -95,7 +95,7 @@ interface VamisScoped {
 |------|------|
 | 容器 | CSS 选择器或 `HTMLElement`；找不到节点则打错误、不挂载。不要往 `document.body` 上直接 mount，必要时在 body 里建一层 div |
 | 默认 fetcher | SDK **内置** `window.fetch`，按 Amis payload `{ status, msg, data }` 解析。宿主仍可传 `env.fetcher` 覆盖 |
-| notify / alert / confirm / jumpTo | SDK 给默认实现（toast / `window.alert` / `window.confirm` / `location`）；宿主可覆盖 |
+| notify / alert / confirm / jumpTo | SDK 给默认实现（toast / `window.alert` / `Alert.confirm` Modal / `location`）；无 ConfirmHost 才回落 `window.confirm`；宿主可覆盖 |
 | 主题 | **不是** `cxd`/`antd` CSS 包。`env.theme` 映到 `data-accent` 或日后 `registerTheme`。皮肤仍是 shadcn token |
 | 密度 | 默认 compact（cxd 盒子）。可用 `html[data-density]` 或 IR `metadata.style.density` |
 | 多实例 | 同一页可 `embed` 多次；每实例独立 Pinia 根 store 与 env |

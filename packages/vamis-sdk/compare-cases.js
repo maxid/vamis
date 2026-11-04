@@ -11344,20 +11344,1418 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "mode": "horizontal",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              {
+                "label": "A",
+                "value": "a",
+                "disabled": true
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "data": {
+          "items": [
+            {
+              "label": "A",
+              "value": "a"
+            },
+            {
+              "label": "B",
+              "value": "b"
+            },
+            {
+              "label": "C",
+              "value": "c"
+            }
+          ]
+        },
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "source": "${items}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "source": "/api/mock2/form/getOptions?waitSeconds=1"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "value": "b",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "selectFirst": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "value": [
+              "a",
+              "c"
+            ],
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "data": {
+          "options": [
+            {
+              "label": "A",
+              "value": "a"
+            },
+            {
+              "label": "B",
+              "value": "b"
+            },
+            {
+              "label": "C",
+              "value": "c"
+            }
+          ]
+        },
+        "body": [
+          {
+            "label": "单选",
+            "type": "select",
+            "name": "select1",
+            "source": "${options}"
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "label": "多选",
+            "type": "select",
+            "name": "select2",
+            "multiple": true,
+            "source": "${options}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-10",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "多选",
+            "type": "select",
+            "name": "select2",
+            "checkAll": true,
+            "multiple": true,
+            "source": "/api/mock2/form/getOptions"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-11",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "多选",
+            "type": "select",
+            "name": "select2",
+            "checkAll": true,
+            "valuesNoWrap": true,
+            "multiple": true,
+            "source": "/api/mock2/form/getOptions"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-12",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-13",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "delimiter": "|",
+            "options": [
+              {
+                "label": "A",
+                "value": "a,1"
+              },
+              {
+                "label": "B",
+                "value": "b,2"
+              },
+              {
+                "label": "C",
+                "value": "c,3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-14",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "单选",
+            "type": "select",
+            "name": "select1",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "label": "多选",
+            "type": "select",
+            "name": "select2",
+            "multiple": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-15",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #16",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "joinValues": false,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-16",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #17",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "joinValues": false,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-17",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "joinValues": false,
+            "value": {
+              "label": "B",
+              "value": "b"
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-18",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #19",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "joinValues": false,
+            "extractValue": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-19",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #20",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "joinValues": false,
+            "extractValue": true,
+            "value": [
+              "a",
+              "b"
+            ],
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-20",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #21",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "searchable": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-21",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #22",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "name": "select",
+            "type": "select",
+            "label": "选项自动补全",
+            "autoComplete": "/api/mock2/options/autoComplete?term=$term",
+            "placeholder": "请输入"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-22",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #23",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              {
+                "text": "A",
+                "value": "a"
+              },
+              {
+                "text": "B",
+                "value": "b"
+              },
+              {
+                "text": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-23",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #24",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "labelField": "text",
+            "options": [
+              {
+                "text": "A",
+                "value": "a"
+              },
+              {
+                "text": "B",
+                "value": "b"
+              },
+              {
+                "text": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-24",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #25",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "options": [
+              {
+                "label": "A",
+                "val": "a"
+              },
+              {
+                "label": "B",
+                "val": "b"
+              },
+              {
+                "label": "C",
+                "val": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-25",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #26",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "valueField": "val",
+            "options": [
+              {
+                "label": "A",
+                "val": "a"
+              },
+              {
+                "label": "B",
+                "val": "b"
+              },
+              {
+                "label": "C",
+                "val": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-26",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #27",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "creatable": true,
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-27",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #28",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "creatable": true,
+            "addControls": [
+              {
+                "type": "input-text",
+                "name": "label",
+                "label": "选项标题"
+              },
+              {
+                "type": "input-text",
+                "name": "value",
+                "label": "选项值"
+              }
+            ],
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-28",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #29",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "creatable": true,
+            "addApi": "/api/mock2/form/saveForm",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-29",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #30",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
         "body": [
           {
             "type": "select",
-            "name": "status",
-            "label": "状态",
+            "label": "autoFill触发器",
+            "name": "select",
+            "autoFill": {
+              "option.instantValidate": "${label}",
+              "option.submitValidate": "${label}"
+            },
+            "clearable": true,
             "options": [
               {
-                "label": "在线",
-                "value": "online"
+                "label": "Option A",
+                "value": "a"
               },
               {
-                "label": "离线",
-                "value": "offline"
+                "label": "Option B",
+                "value": "b"
+              }
+            ]
+          },
+          {
+            "type": "input-text",
+            "name": "option.instantValidate",
+            "label": "目标1",
+            "description": "填充后立即校验",
+            "required": true,
+            "validateOnChange": true,
+            "validations": {
+              "equals": "Option B"
+            },
+            "validationErrors": {
+              "equals": "校验失败，数据必须为Option B"
+            }
+          },
+          {
+            "type": "input-text",
+            "name": "option.submitValidate",
+            "label": "目标2",
+            "description": "填充后提交表单时才校验",
+            "required": true,
+            "validations": {
+              "equals": "Option B"
+            },
+            "validationErrors": {
+              "equals": "校验失败，数据必须为Option B"
+            }
+          },
+          {
+            "type": "input-text",
+            "name": "option.c",
+            "label": "表单项3",
+            "description": "不受autoFill影响的表单项",
+            "value": "abc"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-30",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #31",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "select",
+            "label": "选项",
+            "name": "select",
+            "autoFill": {
+              "options": "${items|pick:label}",
+              "firstOption": "${items|first|pick:label}"
+            },
+            "multiple": true,
+            "clearable": true,
+            "options": [
+              {
+                "label": "Option A",
+                "value": "a"
+              },
+              {
+                "label": "Option B",
+                "value": "b"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-options-31",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Options 选择器表单项",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Options 选择器表单项 #32",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "clearable": true,
+            "value": "b",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
               }
             ]
           }

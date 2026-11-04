@@ -173,7 +173,12 @@ export interface RendererEnv {
   notify: (type: NotifyType, msg: string, conf?: NotifyConf) => void
   jumpTo: (to: string, opts?: JumpToOptions) => void
   alert: (msg: string, title?: string) => void
-  confirm: (msg: string, title?: string) => Promise<boolean>
+  /** 对齐 Amis `Alert.confirm`：默认 Modal，不是 `window.confirm`。第三参为按钮文案 / Esc / size。 */
+  confirm: (
+    msg: string,
+    title?: string,
+    options?: import('./confirm-store').ConfirmOptions,
+  ) => Promise<boolean>
   session?: string
   theme?: string
   initialData?: PlainObject

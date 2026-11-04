@@ -142,7 +142,7 @@ dialog:
 
 ## 操作前确认
 
-可以通过配置 `confirmText`，实现在任意操作前弹出提示框确认是否进行该操作。同时可以通过配置 `confirmTitle` 来设置弹窗标题。Playground 走浏览器原生 `confirm`，标题会拼进文案（原生对话框没有独立标题栏）。
+可以通过配置 `confirmText`，实现在任意操作前弹出提示框确认是否进行该操作。同时可以通过配置 `confirmTitle` 来设置弹窗标题。对齐 Amis `Alert.confirm`：走同一套 Dialog（默认标题「系统消息」、无关闭 X、Esc / 点遮罩不关、确认钮 `danger`、取消钮 `default`、桌面 500px），不是浏览器原生 `confirm`。
 
 ```schema: scope="body"
 label: ajax请求

@@ -67,7 +67,7 @@ dialog:
 | `dialog` / `drawer` | 打开弹窗 / 抽屉 | OverlayHost 已接 |
 | `closeDialog` / `closeDrawer` / `close` / `cancel` | 关掉当前浮层 | 已接 |
 | `toast` | 轻提示 | `msg` / `args.msg` / `args.msgType` 已接；`toast.items` 未齐 |
-| `alert` / `confirm` | 浏览器提示 / 确认 | 走 `env.alert` / `env.confirm` |
+| `alert` / `confirm` | 提示 / 确认 | `confirm` 走 Amis `Alert.confirm` Modal（`env.confirm`）；`alert` 仍是 `env.alert` |
 | `link` / `url` | 跳转 | 走 `env.jumpTo` |
 | `copy` | 复制到剪贴板 | 已接 |
 | `reload` | 刷新指定组件 | `target` / `componentId` 已接 |
