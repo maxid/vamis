@@ -2,13 +2,17 @@
 import { computed } from 'vue'
 import {
   badgeAnimation,
+  badgeClassName,
   badgeDisplayText,
   badgeLevel,
   badgeMode,
-  badgeOffset,
+  badgeOffsetStyle,
   badgePosition,
+  badgeRibbonOutSize,
   badgeSizePx,
+  badgeStyle,
   badgeVisible,
+  hasBadge,
   resolveClassName,
   resolveInlineStyle,
   useData,
@@ -22,108 +26,73 @@ const props = defineProps<{
 
 const injected = useData()
 const data = computed(() => ({ ...injected.value, ...(props.data || {}) }))
+const present = computed(() => hasBadge(props.schema))
 const show = computed(() => badgeVisible(props.schema, data.value))
 const mode = computed(() => badgeMode(props.schema))
 const mark = computed(() => badgeDisplayText(props.schema, data.value))
 const place = computed(() => badgePosition(props.schema))
-const level = computed(() => badgeLevel(props.schema))
+const level = computed(() => badgeLevel(props.schema, data.value))
 const size = computed(() => badgeSizePx(props.schema))
-const offset = computed(() => badgeOffset(props.schema))
-const pulse = computed(() => badgeAnimation(props.schema))
-const extraClass = computed(() => {
-  const rec = props.schema.badge
-  if (rec && typeof rec === 'object' && !Array.isArray(rec)) {
-    return resolveClassName((rec as Record<string, unknown>).className, data.value)
-  }
-  return ''
-})
-const extraStyle = computed(() => {
-  const rec = props.schema.badge
-  if (rec && typeof rec === 'object' && !Array.isArray(rec)) {
-    return resolveInlineStyle((rec as Record<string, unknown>).style, data.value)
-  }
-  return {}
-})
+const pulse = computed(() => badgeAnimation(props.schema) && mode.value === 'dot')
+const extraClass = computed(() => resolveClassName(badgeClassName(props.schema), data.value))
+const extraStyle = computed(() => resolveInlineStyle(badgeStyle(props.schema), data.value))
+const outSize = computed(() => badgeRibbonOutSize(props.schema))
 
-const cornerClass = computed(() => {
-  const pos = place.value
-  if (mode.value === 'ribbon') {
-    return pos.includes('left') ? 'left-0 top-0 origin-top-left' : 'right-0 top-0 origin-top-right'
-  }
-  if (pos === 'top-left') return '-top-1 -left-1'
-  if (pos === 'bottom-left') return '-bottom-1 -left-1'
-  if (pos === 'bottom-right') return '-bottom-1 -right-1'
-  return '-top-1 -right-1'
-})
-
-const levelClass = computed(() => {
-  const map: Record<string, string> = {
-    danger: 'bg-destructive text-destructive-foreground',
-    success: 'bg-green-600 text-white',
-    warning: 'bg-amber-500 text-white',
-    info: 'bg-sky-600 text-white',
-  }
-  return map[level.value] || map.danger
-})
-
-const markStyle = computed(() => {
-  const [x, y] = offset.value
+const sizeStyle = computed(() => {
   const px = size.value
-  const style: Record<string, string> = { ...extraStyle.value }
-  if (x || y) style.transform = `translate(${x}px, ${y}px)`
-  if (mode.value === 'dot') {
-    style.width = `${px}px`
-    style.height = `${px}px`
-  } else if (mode.value === 'ribbon') {
-    style.height = `${px}px`
-    style.lineHeight = `${px}px`
-    style.fontSize = `${Math.max(10, px)}px`
-  } else {
-    style.height = `${px + 2}px`
-    style.minWidth = `${px + 2}px`
-    style.lineHeight = `${px}px`
-    style.borderRadius = `${px / 2}px`
-    style.fontSize = `${Math.max(10, Math.round(px * 0.7))}px`
+  if (mode.value === 'dot') return { width: `${px}px`, height: `${px}px` }
+  if (mode.value === 'ribbon') {
+    return { height: `${px}px`, lineHeight: `${px}px`, fontSize: `${px}px` }
   }
-  return style
+  return {
+    borderRadius: `${px / 2}px`,
+    height: `${px + 2}px`,
+    lineHeight: `${px}px`,
+  }
+})
+
+const markStyle = computed(() => ({
+  ...badgeOffsetStyle(props.schema),
+  ...sizeStyle.value,
+  ...extraStyle.value,
+}))
+
+const animBorder = computed(() => {
+  const bg = extraStyle.value.background || extraStyle.value.backgroundColor
+  return bg || 'var(--badge-danger-bg)'
 })
 </script>
 
 <template>
-  <slot v-if="!show" />
-  <span v-else class="relative inline-flex" data-vamis-badge-host>
+  <slot v-if="!present" />
+  <span v-else class="vamis-badge" :class="extraClass" data-vamis-badge-host>
     <slot />
     <span
-      v-if="mode === 'ribbon'"
+      v-if="show && mode === 'ribbon'"
       data-vamis-badge
-      class="pointer-events-none absolute z-10 overflow-hidden"
-      :class="[cornerClass, extraClass]"
-      :style="{ width: `${size * 2.2}px`, height: `${size * 2.2}px` }"
+      class="vamis-badge__ribbon-out"
+      :class="`vamis-badge__ribbon-out--${place}`"
+      :style="{ width: `${outSize}px`, height: `${outSize}px` }"
     >
       <span
-        class="absolute top-[18%] w-[140%] text-center font-medium"
-        :class="[levelClass, place.includes('left') ? '-rotate-45' : 'rotate-45']"
+        class="vamis-badge__ribbon"
+        :class="[`vamis-badge__ribbon--${place}`, `vamis-badge--${level}`]"
         :style="markStyle"
       >
         {{ mark }}
       </span>
     </span>
     <span
-      v-else
+      v-else-if="show"
       data-vamis-badge
-      class="absolute z-10 flex items-center justify-center"
-      :class="[
-        cornerClass,
-        extraClass,
-        levelClass,
-        mode === 'dot' ? 'rounded-full' : 'rounded-full px-1 text-[10px] leading-none',
-      ]"
+      :class="[`vamis-badge__${mode}`, `vamis-badge--${place}`, `vamis-badge--${level}`]"
       :style="markStyle"
     >
-      <template v-if="mode !== 'dot'">{{ mark }}</template>
+      <template v-if="mode === 'text'">{{ mark }}</template>
       <span
         v-if="pulse"
-        class="absolute inset-0 animate-ping rounded-full border border-current opacity-60"
+        class="vamis-badge__anim"
+        :style="{ borderColor: animBorder }"
         aria-hidden="true"
       />
     </span>

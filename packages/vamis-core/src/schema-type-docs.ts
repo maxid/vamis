@@ -236,8 +236,8 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   badge: doc(
     'Badge 角标',
     '其他',
-    '不是独立 type。挂在 avatar / action / tpl / link / icon。mode 默认 dot；text 0 不显示。',
-    '常用：mode、text、position、level、overflowCount、visibleOn。',
+    '不是独立 type。挂在 avatar / action / tpl / link / icon。mode 默认 dot；数字简写也是 dot。',
+    '常用：mode、text、position、level、overflowCount、visibleOn、animation、style。',
   ),
   audio: doc('Audio 音频', '其他', 'inline 默认 true。controls / rates / 时间 0:00。'),
   tasks: doc('Tasks 任务操作集合', '其他', 'items 的 status 0–5、列名、上线/重试。'),

@@ -227,7 +227,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
       title: doc('title', 'Action', '无 tooltip 时回退文案。'),
       toast: doc('toast', 'Action', 'actionType: toast 时的配置：items / position / timeout / closeButton / showIcon。'),
       msg: doc('msg', 'Action', 'toast 无 items 时的文案；也可用 args.msg。'),
-      badge: doc('badge', 'Action', '角标。数字当 text；对象 mode/text/position/level。'),
+      badge: doc('badge', 'Action', '角标。数字简写默认 dot；对象 mode/text/position/level。'),
       close: doc('close', 'Action', '在 dialog / drawer 的 actions 里为 true 时结束后关浮层。'),
       required: doc('required', 'Action', '提交前先校验这些表单字段名。'),
     },
@@ -246,7 +246,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     showNativeTitle: 'true 时把纯文本写到外层 title。',
     maxLine: '大于 0 时按行截断，超出省略。',
     popOver: '弹出详情。字符串精简写法，或 {body,title,trigger,showIcon}。',
-    badge: '角标。数字当 text；对象 mode/text/position。',
+    badge: '角标。数字简写默认 dot；对象 mode/text/position。',
   }, {
     events: {
       click: '点击。',
@@ -755,7 +755,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     draggable: '图片是否允许拖动。',
     crossOrigin: '图片 CORS：anonymous / use-credentials。',
     onError: '失败函数体，return true 才换成 text/icon。需 env.trusted。',
-    badge: '角标：数字当 text；对象 mode/text/position/level/ribbon。',
+    badge: '角标：数字简写默认 dot；对象 mode/text/position/level/ribbon。',
   }, { events: { click: '点击。', mouseenter: '鼠标移入。', mouseleave: '鼠标移出。' } }),
   badge: fields('Badge', {
     mode: 'dot / text / ribbon，默认 dot。不是独立 type，挂在宿主上。',

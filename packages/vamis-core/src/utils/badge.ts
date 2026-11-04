@@ -22,9 +22,14 @@ function badgeRecord(schema: unknown): Record<string, unknown> | null {
   const badge = badgeRaw(schema)
   if (badge == null || badge === false) return null
   if (typeof badge === 'object' && !Array.isArray(badge)) return badge as Record<string, unknown>
-  if (typeof badge === 'number' || typeof badge === 'boolean') return { text: badge, mode: 'text' }
+  // Amis 对非对象 badge 解构，字段全空，落到默认 dot。
+  if (typeof badge === 'number' || typeof badge === 'boolean') return {}
   if (typeof badge === 'string') return { expression: badge }
-  return { text: badge }
+  return {}
+}
+
+export function hasBadge(schema: unknown): boolean {
+  return Boolean(badgeRaw(schema))
 }
 
 export function badgeVisible(schema: unknown, data: PlainObject = {}): boolean {
@@ -34,8 +39,10 @@ export function badgeVisible(schema: unknown, data: PlainObject = {}): boolean {
   if (typeof raw === 'string') return evalExpression(raw, data)
   if (typeof rec.visibleOn === 'string' && rec.visibleOn) return evalExpression(rec.visibleOn, data)
   if (badgeMode(schema) === 'text') {
-    const text = badgeDisplayText(schema, data)
-    if (text === '' || text === '0') return false
+    const raw = rec.text ?? rec.value
+    if (raw == null || raw === false || raw === '') return false
+    if (raw === 0) return false
+    if (badgeDisplayText(schema, data) === '') return false
   }
   return true
 }
@@ -44,7 +51,6 @@ export function badgeMode(schema: unknown): BadgeMode {
   const rec = badgeRecord(schema)
   const mode = String(rec?.mode || '')
   if (MODES.has(mode)) return mode as BadgeMode
-  if (typeof badgeRaw(schema) === 'number') return 'text'
   return 'dot'
 }
 
@@ -75,8 +81,9 @@ export function badgePosition(schema: unknown): string {
   return POSITIONS.has(value) ? value : 'top-right'
 }
 
-export function badgeLevel(schema: unknown): BadgeLevel {
-  const value = String(badgeRecord(schema)?.level || '')
+export function badgeLevel(schema: unknown, data: PlainObject = {}): BadgeLevel {
+  let value = String(badgeRecord(schema)?.level || '')
+  if (value.startsWith('$')) value = filterTpl(value, data)
   return LEVELS.has(value) ? (value as BadgeLevel) : 'danger'
 }
 
@@ -97,6 +104,27 @@ export function badgeOffset(schema: unknown): [number, number] {
   const x = Number(raw[0])
   const y = Number(raw[1])
   return [Number.isFinite(x) ? x : 0, Number.isFinite(y) ? y : 0]
+}
+
+/** Amis：有 offset 时整段替换定位 transform，不跟 position 四向。 */
+export function badgeOffsetStyle(schema: unknown): Record<string, string> {
+  const raw = badgeRecord(schema)?.offset
+  if (!Array.isArray(raw) || !raw.length) return {}
+  const x = Number.parseInt(String(raw[0]), 10) || 0
+  const y = Number.parseInt(String(raw[1]), 10) || 0
+  return { transform: `translate(calc(50% + ${x}px), calc(-50% + ${y}px))` }
+}
+
+export function badgeRibbonOutSize(schema: unknown): number {
+  return badgeSizePx(schema) * Math.SQRT2 + 5
+}
+
+export function badgeClassName(schema: unknown, data: PlainObject = {}): unknown {
+  return badgeRecord(schema)?.className
+}
+
+export function badgeStyle(schema: unknown): unknown {
+  return badgeRecord(schema)?.style
 }
 
 export function badgeAnimation(schema: unknown): boolean {

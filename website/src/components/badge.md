@@ -5,118 +5,139 @@ outline: deep
 
 # Badge 角标
 
-::: info 实现进度 80% · 进行中
-不是独立 `type`。已挂 `avatar` / `action` / `tpl` / `link` / `icon`：数字或 `{mode,text,position,level,overflowCount,visibleOn}`；`mode` 默认 dot；`text: 0` 不显示；字符串表达式当显隐。缺封顶像素级、ribbon 斜条皮肤、animation 与 cxd 完全同帧。
+::: info 实现进度 95% · 进行中
+不是独立 `type`。已挂 `avatar` / `action` / `tpl` / `link` / `icon`。文档主路径已对齐：dot / text / ribbon、position、offset、overflowCount、visibleOn、size、level、animation、style。盒模型转写 Amis `_badge.scss`（`--badge-*`）。缺 `themeCss`。
 :::
 
-部分组件可以设置 `badge` 属性来显示角标。1.2.3 起支持按钮、链接、模板。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+部分组件可以设置 `badge` 属性来显示角标。
 
-属于侧栏分类 **其他**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+> 1.2.2 及之前版本只支持头像组件
+>
+> 1.2.3 开始支持按钮、链接、模板组件。
 
-数字简写当成 `mode: text`。对象默认 `mode: dot`、`position: top-right`、`level: danger`、`overflowCount: 99`。
+作者态 YAML 与 JSON 同等有效。字段名不改写。
+
+属于侧栏分类 **其他**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-头像和按钮都可以挂。
-
 ```schema: scope="body"
-type: container
-body:
-  - type: avatar
-    text: AM
-    badge:
-      mode: text
-      text: 10
-  - type: action
-    label: 按钮
-    badge:
-      mode: text
-      text: 15
-```
-
-模板、链接同样吃 `badge`。
-
-```schema: scope="body"
-type: container
-body:
-  - type: tpl
-    tpl: Hello ${text}
-    badge:
-      mode: text
-      text: 25
-  - type: link
-    body: 链接
-    href: https://example.com
-    badge:
-      position: top-right
-```
-
-图标同样吃 `badge`。
-
-```schema: scope="body"
-type: icon
-icon: cloud
-className: text-info text-xl
-badge:
-  position: top-left
+- type: avatar
+  badge:
+    mode: text
+    text: 10
+- type: divider
+- type: action
+  label: 按钮
+  badge:
+    mode: text
+    text: 15
+- type: divider
+- type: link
+  href: https://www.baidu.com
+  body: 百度一下，你就知道
+  badge:
+    position: top-right
+- type: divider
+- type: tpl
+  tpl: Hello ${text}
+  badge:
+    mode: text
+    text: 25
+- type: divider
+- type: icon
+  icon: cloud
+  className: text-info text-xl
+  badge:
+    position: top-left
+- type: divider
+- type: action
+  label: 按钮
+  badge:
+    mode: ribbon
+    text: HOT
 ```
 
 ## 显示文字或数值
 
-`mode: text`。数值为零时不显示。数字简写 `badge: 3` 也走 text。
+设置 `mode` 为 `text`，通过 `text` 属性来显示文字或数字，数值为零的时候将不显示。
 
 ```schema: scope="body"
-type: container
+- type: avatar
+  badge:
+    mode: text
+    text: 10
+- type: avatar
+  className: m-l
+  badge:
+    mode: text
+    text: 0
+- type: avatar
+  className: m-l
+  badge:
+    mode: text
+    text: new
+```
+
+## 显示位置
+
+通过 `position` 来控制角标显示位置，默认 `top-right`，还可以设置为 `top-left`、`bottom-left`、`bottom-right`。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    position: top-left
+- type: avatar
+  className: m-l
+  badge:
+    position: bottom-left
+- type: avatar
+  className: m-l
+  badge:
+    position: bottom-right
+```
+
+通过 `offset` 来控制角标显示位置，offset 相对于 position 位置进行水平、垂直偏移。offset 在 `mode=ribbon` 下设置无效。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    offset: [10, 10]
+```
+
+## 动态数字
+
+`text` 可以取上下文变量。
+
+```schema
+type: page
+data:
+  myData: 10
 body:
-  - type: avatar
-    text: AM
-    badge:
-      mode: text
-      text: 10
-  - type: avatar
-    text: AM
-    className: m-l
-    badge:
-      mode: text
-      text: 0
-  - type: avatar
-    text: AM
-    className: m-l
-    badge:
-      mode: text
-      text: new
+  type: avatar
+  badge:
+    mode: text
+    visibleOn: this.myData > 1
+    text: "${myData}"
 ```
 
-## 丝带
+## 设置封顶值
 
-`mode: ribbon`。
-
-```schema: scope="body"
-type: action
-label: 按钮
-badge:
-  mode: ribbon
-  text: HOT
-```
-
-## 封顶值
-
-超过 `overflowCount` 显示 `N+`，默认 99。
+通过 `overflowCount` 可以设置封顶值。超过 overflowCount 的会显示为 `${overflowCount}+`，默认的 overflowCount 为 99。
 
 ```schema
 type: page
 body:
   type: avatar
-  text: AM
   badge:
     mode: text
     text: 10
     overflowCount: 9
 ```
 
-## 动态显隐
+## 动态控制是否显示角标
 
-字符串表达式当显隐；对象里也可以写 `visibleOn`。
+角标可以直接写表达式来判断是否显示。
 
 ```schema
 type: page
@@ -124,36 +145,115 @@ data:
   myData: 10
 body:
   - type: avatar
-    text: AM
     badge: this.myData > 1
   - type: avatar
-    text: AM
+    className: m-l
+    badge: this.myData > 10
+```
+
+还可以通过 `visibleOn` 表达式来动态控制，这样还能设置其他属性。
+
+```schema
+type: page
+data:
+  myData: 10
+body:
+  - type: avatar
+    badge:
+      visibleOn: this.myData > 1
+  - type: avatar
     className: m-l
     badge:
       visibleOn: this.myData > 10
-      mode: text
-      text: 1
+```
+
+## 设置大小
+
+通过 `size` 来控制大小。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    mode: text
+    text: 10
+    size: 20
+- type: avatar
+  className: m-l
+  badge:
+    mode: text
+    text: 10
+    size: 12
+- type: avatar
+  className: m-l
+  badge:
+    size: 12
+- type: avatar
+  className: m-l
+  badge:
+    size: 4
+```
+
+## 设置角标级别
+
+通过 `level` 来设置角标级别，改变角标背景颜色。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    mode: text
+    text: 10
+    size: 20
+    level: success
+```
+
+## 是否显示动画
+
+在默认点状态下，可以通过设置 `animation` 属性来控制是否显示动画。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    animation: true
+```
+
+## 自定义样式
+
+通过 `style` 来控制展现样式，比如背景及文字的颜色。
+
+```schema: scope="body"
+- type: avatar
+  badge:
+    mode: text
+    text: 10
+    style:
+      background: "#46C93A"
+- type: avatar
+  className: m-l
+  badge:
+    mode: text
+    text: 10
+    style:
+      background: "#1A5CFF"
 ```
 
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `mode` | `string` | `dot` | `dot` / `text` / `ribbon` |
-| `text` | `string \| number` | | 角标文案。`mode: text` 且为 0 时不显示 |
-| `size` | `number` | dot 6 / text 16 / ribbon 12 | 角标大小 |
-| `level` | `string` | `danger` | `info` / `success` / `warning` / `danger` |
-| `overflowCount` | `number` | 99 | 数字封顶 |
-| `position` | `string` | `top-right` | `top-right` / `top-left` / `bottom-right` / `bottom-left` |
-| `offset` | `number[]` | `[0, 0]` | 相对 position 的偏移 |
-| `animation` | `boolean` | | 圆点脉冲 |
-| `style` | `object` | | 角标自定义样式 |
-| `visibleOn` | 表达式 | | 控制显隐 |
-| `className` | `string` | | 角标 class |
+|--------|------|--------|------|
+| mode | `string` | `dot` | 角标类型，可以是 `dot` / `text` / `ribbon` |
+| text | `string` \| `number` | | 角标文案，支持字符串和数字，在 `mode='dot'` 下设置无效 |
+| size | `number` | | 角标大小。未写时 dot 6 / text 16 / ribbon 12 |
+| level | `string` | | 角标级别，可以是 `info` / `success` / `warning` / `danger`，设置之后角标背景颜色不同 |
+| overflowCount | `number` | `99` | 设置封顶的数字值 |
+| position | `string` | `top-right` | 角标位置，可以是 `top-right` / `top-left` / `bottom-right` / `bottom-left` |
+| offset | `number[top, left]` | `[0, 0]` | 角标位置，offset 相对于 position 位置进行水平、垂直偏移 |
+| className | `string` | | 外层 dom 的类名 |
+| animation | `boolean` | | 角标是否显示动画 |
+| style | `object` | | 角标的自定义样式 |
+| visibleOn | [表达式](/concepts/expression) | | 控制角标的显示隐藏 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 数字简写 `badge: 3` 按 text 显示数字；Amis 把非对象 badge 解构成默认圆点。
-- ribbon 是斜条示意，不是 cxd 切角像素。
-- fa 图标名未接字体；icon 仍显示短名。
+- 数字 / `true` 简写落到默认圆点（对齐 Amis 对非对象 badge 的解构）。
+- 未接 `themeCss`。

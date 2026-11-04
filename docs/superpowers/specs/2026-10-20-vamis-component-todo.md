@@ -69,7 +69,7 @@
 | 数据输入 | 0 / 72 | 72 | 0 | 50% | 42 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 81% | 7 |
+| 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
 | **合计** | **1 / 155** | **154** | **0** | **59%** | **111** |
 
 侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
@@ -265,14 +265,14 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 81%）
+## 其他（0/7，均 84%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `avatar` | Avatar 头像 | `/components/avatar` | `/zh-CN/components/avatar` | 进行中 | 90% | 文档主路径已对齐：src 真图 > text > icon（默认 fa fa-user）、$var 降级、shape/size/fit、gap 像素缩放、onError（trusted）、draggable、badge 含 ribbon。对照 **13/13**。其它 fa-* 需宿主字体 | P0 |
 | `audio` | Audio 音频 | `/components/audio` | `/zh-CN/components/audio` | 进行中 | 80% | 文档主路径已对齐：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
 | `tasks` | Tasks 任务操作集合 | `/components/tasks` | `/zh-CN/components/tasks` | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
-| `badge` | Badge 角标 | `/components/badge` | `/zh-CN/components/badge` | 进行中 | 80% | 不是独立 type。已挂 avatar / action / tpl / link / icon；mode 默认 dot、text 0 隐藏、overflowCount、visibleOn、ribbon。缺 cxd 斜条像素、animation 同帧 | P0 |
+| `badge` | Badge 角标 | `/components/badge` | `/zh-CN/components/badge` | 进行中 | 95% | 不是独立 type。文档主路径已对齐：dot/text/ribbon、position、offset、overflowCount、visibleOn、size、level、animation、style。盒模型转写 `_badge.scss`（`--badge-*`）。缺 `themeCss` | P0 |
 | `wizard` | Wizard 向导 | `/components/wizard` | `/zh-CN/components/wizard` | 进行中 | 80% | 文档主路径已对齐：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
 | `web-component` | Web Component | `/components/web-component` | `/zh-CN/components/web-component` | 进行中 | 80% | 文档主路径已对齐：`tag` 默认 div、`props` 字符串走 `${}`、`body` 子节点。缺宿主 customElements.define 生命周期、自定义事件回写 | P0 |
 | `amis` | amis 渲染器 | `/components/amis` | `/zh-CN/components/amis` | 进行中 | 80% | 文档主路径已对齐：`schema` / `value` / `name`（对象或 JSON 字符串）、`props` 盖到内层。缺 editor 同 name 实时编辑、非法 JSON 诊断 | P0 |
@@ -294,7 +294,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`badge`（#2，80%）、`remark`（#5，70%）、FormItem（#6，82%）、Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。`tooltip-wrapper` 92% 余项是 `themeCss`，不挡下一刀。不要切 `select`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`remark`（#5，70%）、FormItem（#6，82%）、Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。`badge` 95% 余项是 `themeCss`，不挡下一刀。不要切 `select`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -364,7 +364,7 @@ flowchart LR
 | # | type | 依赖 | 深度 | 被依赖 | S | U | 状态 | 进度 |
 |---|------|------|------|--------|---|---|------|------|
 | 1 | `icon` | — | 12 | 17 | 233 | 501 | 进行中 | 90% |
-| 2 | `badge` | `icon` | 11 | 7 | 102 | 501 | 进行中 | 80% |
+| 2 | `badge` | `icon` | 11 | 7 | 102 | 501 | 进行中 | 95% |
 | 3 | `tpl` | `badge` | 10 | 29 | 387 | 501 | 进行中 | 92% |
 | 4 | `tooltip-wrapper` | `tpl` | 9 | 3 | 48 | 501 | 进行中 | 92% |
 | 5 | `remark` | `tooltip-wrapper`、`icon`、`tpl` | 8 | 2 | 34 | 501 | 进行中 | 70% |

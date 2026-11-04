@@ -22899,27 +22899,70 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "AM",
-            "badge": {
-              "mode": "text",
-              "text": 10
-            }
-          },
-          {
-            "type": "action",
-            "label": "按钮",
-            "badge": {
-              "mode": "text",
-              "text": 15
-            }
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "mode": "text",
+            "text": 10
           }
-        ]
-      }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "action",
+          "label": "按钮",
+          "badge": {
+            "mode": "text",
+            "text": 15
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "link",
+          "href": "https://www.baidu.com",
+          "body": "百度一下，你就知道",
+          "badge": {
+            "position": "top-right"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "tpl",
+          "tpl": "Hello ${text}",
+          "badge": {
+            "mode": "text",
+            "text": 25
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "icon",
+          "icon": "cloud",
+          "className": "text-info text-xl",
+          "badge": {
+            "position": "top-left"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "action",
+          "label": "按钮",
+          "badge": {
+            "mode": "ribbon",
+            "text": "HOT"
+          }
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -22938,27 +22981,31 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "tpl",
-            "tpl": "Hello ${text}",
-            "badge": {
-              "mode": "text",
-              "text": 25
-            }
-          },
-          {
-            "type": "link",
-            "body": "链接",
-            "href": "https://example.com",
-            "badge": {
-              "position": "top-right"
-            }
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "mode": "text",
+            "text": 10
           }
-        ]
-      }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "mode": "text",
+            "text": 0
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "mode": "text",
+            "text": "new"
+          }
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -22977,14 +23024,28 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "icon",
-        "icon": "cloud",
-        "className": "text-info text-xl",
-        "badge": {
-          "position": "top-left"
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "position": "top-left"
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "position": "bottom-left"
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "position": "bottom-right"
+          }
         }
-      }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -23003,37 +23064,17 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "container",
-        "body": [
-          {
-            "type": "avatar",
-            "text": "AM",
-            "badge": {
-              "mode": "text",
-              "text": 10
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "AM",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": 0
-            }
-          },
-          {
-            "type": "avatar",
-            "text": "AM",
-            "className": "m-l",
-            "badge": {
-              "mode": "text",
-              "text": "new"
-            }
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "offset": [
+              10,
+              10
+            ]
           }
-        ]
-      }
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -23052,12 +23093,15 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "myData": 10
+      },
       "body": {
-        "type": "action",
-        "label": "按钮",
+        "type": "avatar",
         "badge": {
-          "mode": "ribbon",
-          "text": "HOT"
+          "mode": "text",
+          "visibleOn": "this.myData > 1",
+          "text": "${myData}"
         }
       }
     },
@@ -23080,7 +23124,6 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "avatar",
-        "text": "AM",
         "badge": {
           "mode": "text",
           "text": 10,
@@ -23111,17 +23154,194 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "avatar",
-          "text": "AM",
           "badge": "this.myData > 1"
         },
         {
           "type": "avatar",
-          "text": "AM",
+          "className": "m-l",
+          "badge": "this.myData > 10"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-7",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "myData": 10
+      },
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "visibleOn": "this.myData > 1"
+          }
+        },
+        {
+          "type": "avatar",
           "className": "m-l",
           "badge": {
-            "visibleOn": "this.myData > 10",
+            "visibleOn": "this.myData > 10"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-8",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
             "mode": "text",
-            "text": 1
+            "text": 10,
+            "size": 20
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "mode": "text",
+            "text": 10,
+            "size": 12
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "size": 12
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "size": 4
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-9",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "mode": "text",
+            "text": 10,
+            "size": 20,
+            "level": "success"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-10",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "animation": true
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-badge-11",
+    "group": "组件 / 其他",
+    "bucket": "components",
+    "section": "其他",
+    "page": "Badge 角标",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Badge 角标 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "avatar",
+          "badge": {
+            "mode": "text",
+            "text": 10,
+            "style": {
+              "background": "#46C93A"
+            }
+          }
+        },
+        {
+          "type": "avatar",
+          "className": "m-l",
+          "badge": {
+            "mode": "text",
+            "text": 10,
+            "style": {
+              "background": "#1A5CFF"
+            }
           }
         }
       ]

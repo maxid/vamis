@@ -139,7 +139,7 @@ alwaysApply: true
 ### token 是默认，helper 是作者覆盖
 - 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。Overlay Tooltip 一度写死 `#fff` / `8px`，或拿 shadcn `--popover` 冒充。
 - 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。组件配方（`--button-*` / `--tooltip-*`）挂 `:root`，选择器只 `var()`。
-- 触及：Button 等控件、SDK 根、`tooltip-wrapper`
+- 触及：Button 等控件、SDK 根、`tooltip-wrapper` `badge`
 - 规则：`.cursor/rules/style.mdc`
 
 ### Amis helper 类名不等于字面含义
@@ -179,6 +179,12 @@ alwaysApply: true
 - 稳定做法：先读 `_tooltip.scss` + 文档 ```schema。量落到 `:root` `--tooltip-*`（圆角 8 是 Amis `--borderRadiusLg`，不是全局 `--radius` 4）。选择器只 `var()`。浮层只收 tooltipObj（`tooltipLayerSchema`）。`inline` 是 `inline-block`。
 - 触及：`tooltip-wrapper` `action` `button`
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --tooltip-*`
+
+### Overlay Badge 按 `_badge.scss` 转写，不要用 shadcn Badge / animate-ping
+- 踩过：角标用 `inline-flex` + Tailwind `rotate-45` 小条、`animate-ping`；数字简写当成 text；`className` 打在点子上。Amis 宿主是 `inline-block`，ribbon 是 overflow 切 1000px 条 + `rotate(45deg) scale(0.7)`，动画是 `scale(0.8)→3.2`。
+- 稳定做法：先读 `_badge.scss`。量落到 `:root --badge-*`，选择器只 `var()`。数字 / `true` 简写默认 dot。`className` 打在宿主。offset 有值时整段替换 transform。文字角标 `height: size+2` 是给 border-box 吃 1px 边；不要再设 `content-box`，否则会再高 2px。
+- 触及：`badge` `avatar` `action` `tpl` `link` `icon`
+- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --badge-*`
 
 ### 弹层翻转共用 overlayPosition，禁止各写一套
 - 踩过：单个渲染器「不够高就往上」；贴底时与 Amis `placement: auto` 不一致。

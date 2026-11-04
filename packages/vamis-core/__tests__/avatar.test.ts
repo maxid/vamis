@@ -81,10 +81,11 @@ describe('avatar defaults', () => {
 })
 
 describe('avatar badge', () => {
-  it('reads text / mode from badge object or number', () => {
+  it('reads text / mode from badge object; number shorthand is default dot', () => {
     expect(badgeVisible({})).toBe(false)
     expect(badgeVisible({ badge: 3 })).toBe(true)
-    expect(badgeText({ badge: 3 })).toBe('3')
+    expect(badgeText({ badge: 3 })).toBe('')
+    expect(badgeMode({ badge: 3 })).toBe('dot')
     expect(badgeText({ badge: { mode: 'text', text: 10 } })).toBe('10')
     expect(badgeMode({ badge: { mode: 'dot' } })).toBe('dot')
     expect(badgeMode({ badge: { text: 1 } })).toBe('dot')

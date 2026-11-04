@@ -230,6 +230,22 @@
   --tooltip-bg-dark: rgba(7, 12, 20, 0.85);
   --tooltip-fg-dark: #fff;
   --tooltip-shadow-dark: 0 2px 8px 0 rgba(7, 12, 20, 0.12);
+  /*
+   * Overlay Badge 语义变量（Amis --Badge-*）。
+   * 默认尺寸 --gap-md 16px，JS size 覆盖；danger 走 --destructive（主题映射 --danger）。
+   * 选择器只 var()。
+   */
+  --badge-size: var(--gap-md);
+  --badge-color: #fff;
+  --badge-text-padding-x: 6px;
+  --badge-text-border: 1px solid #fff;
+  --badge-danger-bg: var(--destructive);
+  --badge-info-bg: var(--info);
+  --badge-success-bg: var(--success);
+  --badge-warning-bg: var(--warning);
+  --badge-ribbon-width: 1000px;
+  --badge-ribbon-scale: 0.7;
+  --badge-ribbon-nudge: 5px;
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -1213,6 +1229,143 @@
   }
   .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow::after {
     border-right-color: var(--tooltip-bg-dark);
+  }
+  /* Overlay Badge：只消费 :root --badge-*，不写死色 / px，不用 shadcn Badge。 */
+  .vamis-badge {
+    display: inline-block;
+    position: relative;
+  }
+  .vamis-badge__text,
+  .vamis-badge__dot,
+  .vamis-badge__ribbon {
+    background: var(--badge-danger-bg);
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    transform-origin: 100% 0;
+    z-index: auto;
+    border-radius: calc(var(--badge-size) / 2);
+  }
+  .vamis-badge--top-left {
+    top: 0;
+    left: 0;
+    right: auto;
+    transform: translate(-50%, -50%);
+  }
+  .vamis-badge--bottom-left {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    transform: translate(-50%, 50%);
+  }
+  .vamis-badge--bottom-right {
+    top: auto;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    transform: translate(50%, 50%);
+  }
+  .vamis-badge--danger {
+    background: var(--badge-danger-bg);
+  }
+  .vamis-badge--info {
+    background: var(--badge-info-bg);
+  }
+  .vamis-badge--success {
+    background: var(--badge-success-bg);
+  }
+  .vamis-badge--warning {
+    background: var(--badge-warning-bg);
+  }
+  .vamis-badge__text {
+    /* 跟 Amis html border-box。JS height:size+2 吃进 1px 边。 */
+    color: var(--badge-color);
+    height: var(--badge-size);
+    line-height: var(--badge-size);
+    white-space: nowrap;
+    text-align: center;
+    padding: 0 var(--badge-text-padding-x);
+    border: var(--badge-text-border);
+  }
+  .vamis-badge__dot {
+    z-index: auto;
+    width: var(--badge-size);
+    height: var(--badge-size);
+    border-radius: 50%;
+  }
+  .vamis-badge__ribbon-out {
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .vamis-badge__ribbon {
+    color: var(--badge-color);
+    height: var(--badge-size);
+    line-height: var(--badge-size);
+    transform: translateX(calc(50% - var(--badge-ribbon-nudge))) rotate(45deg)
+      scale(var(--badge-ribbon-scale));
+    transform-origin: 50% 0;
+    border-radius: 0;
+    text-align: center;
+    width: var(--badge-ribbon-width);
+    top: var(--badge-ribbon-nudge);
+  }
+  .vamis-badge__ribbon-out--top-left,
+  .vamis-badge__ribbon-out--top-right {
+    top: 0;
+  }
+  .vamis-badge__ribbon-out--top-left,
+  .vamis-badge__ribbon-out--bottom-left {
+    left: 0;
+    right: auto;
+  }
+  .vamis-badge__ribbon--top-left {
+    transform: translateX(calc(-50% + var(--badge-ribbon-nudge))) rotate(-45deg)
+      scale(var(--badge-ribbon-scale));
+    left: 0;
+    right: auto;
+  }
+  .vamis-badge__ribbon--bottom-left {
+    transform: translateX(calc(-50% + var(--badge-ribbon-nudge))) rotate(45deg)
+      scale(var(--badge-ribbon-scale));
+    transform-origin: 50% 100%;
+    left: 0;
+    right: auto;
+    bottom: var(--badge-ribbon-nudge);
+    top: auto;
+  }
+  .vamis-badge__ribbon--bottom-right {
+    transform: translateX(calc(50% - var(--badge-ribbon-nudge))) rotate(-45deg)
+      scale(var(--badge-ribbon-scale));
+    transform-origin: 50% 100%;
+    left: auto;
+    right: 0;
+    bottom: var(--badge-ribbon-nudge);
+    top: auto;
+  }
+  .vamis-badge__anim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--badge-danger-bg);
+    border-radius: 50%;
+    animation: vamis-badge-dot 1.2s infinite ease-in-out;
+    box-sizing: border-box;
+  }
+  @keyframes vamis-badge-dot {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.4;
+    }
+    to {
+      transform: scale(3.2);
+      opacity: 0;
+    }
   }
   .vamis-select {
     position: relative;
