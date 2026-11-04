@@ -6,6 +6,7 @@
 
 - [README.md](README.md) — 怎么跑、包结构（改结构先改它）
 - [CONTEXT.md](CONTEXT.md) — 术语、模块层次、**当前进度与后续计划**
+- [历史教训](.cursor/rules/lessons.mdc) — 稳定开发经验；**组件修复后必须去重回写**
 - 本文件 — 命令、约定、提交、任务收工必须回写文档
 - `docs/superpowers/` — 规格 / 计划正文
 
@@ -60,7 +61,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 对照重跑：`compare-cases.js` / `dist/sdk.js` **不进 git**。改完组件必须本机更新对照，换机器不会自动带上。改运行时先 `pnpm sdk:build`；再 `pnpm compare --page <type>`（内部重收割完整目录）。全局 token/字体才 `pnpm compare` 全量。动到窄屏 / `m:` 再 `--mobile`。规则：`.cursor/rules/compare.mdc`。
 - 组件同步按复杂度串行分批：轻 2–3、中 2、重（`table` / `table2` / `crud` / `form` / `chart`）1 个。一批做完再对照。口径见 `.cursor/rules/component.mdc`「串行分批」。
 - 图标对齐 Amis：`icon` 落到 `<i>` / `<img>` / SVG，字形走 Font Awesome（打进 `sdk.css`），不要用 CSS mask 画 `fa-*`。规则：`.cursor/rules/style.mdc`「图标」。
-- 站点 / 样式 / 组件 / 对照约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`、`compare.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。日期/日历复用链与浮层 z-index 见 `reuse-overlay.mdc`。任务收工见 `update-progress.mdc`。
+- 站点 / 样式 / 组件 / 对照约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`、`compare.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。日期/日历复用链与浮层 z-index 见 `reuse-overlay.mdc`。任务收工见 `update-progress.mdc`。组件修复后的稳定经验见 `lessons.mdc`（去重回写，不要另起流水账）。
 
 ## 关键文档
 
@@ -73,19 +74,21 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 | [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md) | Amis 水标 × shadcn token |
 | [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md) | 与 Playground 同端口的文档结构 |
 | [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md) | 任意 HTML `vamis.embed`；与 `VamisRoot` 同一内核 |
+| [历史教训](.cursor/rules/lessons.mdc) | 稳定开发经验；组件修复后必须去重回写 |
 
 ## 任务开始与结束（强制）
 
-**开始**：先读 `CONTEXT.md` 的「当前进度 / 后续计划」和相关 spec 状态行，对照代码。范围以文档为准，未列入的不擅自扩大。
+**开始**：先读 `CONTEXT.md` 的「当前进度 / 后续计划」、[历史教训](.cursor/rules/lessons.mdc) 和相关 spec 状态行，对照代码。范围以文档为准，未列入的不擅自扩大。
 
 **结束（每一项已交付的任务，不论大小）**：
 
 1. 回写完成状态与进度（禁止代码已合入仍写「未开始」，禁止未做写成「已完成」）。
 2. 规划并写下一条后续计划（下一刀做什么、为何、卡在哪）。
 3. 若动了渲染器 / 活示例 / 样式 helper：先按需 `pnpm sdk:build`，再 `pnpm compare --page <type>`。对照产物不进 git，不跑这一步对照页不会更新。见 `.cursor/rules/compare.mdc`。
-4. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
+4. 若修复过组件：把可复用经验去重回写 `.cursor/rules/lessons.mdc`（先搜已有条目，同一根因只追加 `触及` 或改「稳定做法」）。
+5. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
 
-未合入的项保持原状态并注明阻塞。不要 git commit / push，除非用户当轮明确要求。
+未合入的项保持原状态并注明阻塞。不要 git commit / push，除非用户当轮明确要求。未经当轮明确批准，禁止执行云端任务（Cloud Agent / 云端子代理）；规则见 `.cursor/rules/cloud-approval.mdc`。
 
 ## 提交说明
 
@@ -96,3 +99,4 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 不要提交密钥、`.env`、内网地址。
 - 模板默认转义；`|raw` / 字符串函数只在受信任模式。
 - 不要把 Amis 源码整仓复制进本仓库。
+- **禁止未经用户当轮明确批准执行云端任务**（Cursor Cloud Agent、云端子代理、best-of-n 云端）。本机命令不受限。见 `.cursor/rules/cloud-approval.mdc`。
