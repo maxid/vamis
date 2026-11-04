@@ -54,6 +54,12 @@ alwaysApply: true
 - 触及：`action` `button`
 - 规则：`packages/vamis-sdk/compare/schema-tree.mjs` `shouldProbe`；`embed-case.html`
 
+### 渲染器自己派发的事件，宿主不要再派一次
+- 踩过：Action 在按钮/容器上绑 `mouseenter` / `mouseleave` 并 `runOnEvent`（兼 tooltip）；`SchemaRenderer` 外层 `div.vamis-node` 也对同一 schema 走 `onHostEvent`。悬停一次 toast 两条。click 早已用 `SELF_CLICK_TYPES` 跳过宿主。
+- 稳定做法：组件自己处理的指针事件，宿主 `shouldHandleHostEvent` 必须跳过。`tpl` / `icon` 这类自己不绑指针的仍由宿主派发。mouseenter 不冒泡，子节点 `stopPropagation` 挡不住父级自己的 mouseenter。
+- 触及：`action` `button`
+- 规则：`packages/vamis-core/src/SchemaRenderer.vue` `shouldHandleHostEvent`
+
 ### 无 label 的容器 Action 按下标找节点
 - 踩过：对照 `querySelector('[data-vamis-action]')` 或 `buttons.length === 1`。容器示例两个无 label Action 时 Amis `.cxd-Action` 不是恰好 1 个（rendered false），Vamis 命中第一个，value 吃到内部 color 文本、dialog 探针点错节点。
 - 稳定做法：schema 走访给 action 编号，`querySelectorAll` 按下标取；命中包装 span 时点内部 `button`/`a`（`el.click()` 不会传到子节点）。`action` / `button` 不要把子节点 `textContent` 当 value。每个 Action 宿主都打 `data-vamis-action`。

@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- Action `mouseenter` / `mouseleave` 悬停一次只 toast 一条：`SchemaRenderer` 宿主对 `action` / `button` / `submit` / `reset` 跳过这两类事件（与 click 的 `SELF_CLICK_TYPES` 同理），只留按钮自己派发。mouseenter 不冒泡，子节点 `stopPropagation` 挡不住父级。
 - Action 容器 tooltip 真正逃出文档预览 `overflow: hidden`：`VamisOverlay` Teleport 到 body、`--z-tooltip` 1600，打开后先 hidden 再定位以免 0,0 闪到左上。事件表对齐 Amis 6.13.0：`click` / `mouseenter` / `mouseleave` 三节活示例，`${event.context.nativeEvent.type}` 实测为 click / mouseenter / mouseleave。对照不要用 click 探 hover；无 label 容器 Action 按下标找节点并点内部 button。对照桌面 `action` **37/37**。
 - `env.confirm` 对齐 Amis 6.13.0 `Alert.confirm`：去掉 Playground 原生 `window.confirm`。`confirm-store` + `ConfirmHost` 复用 Dialog 原语。实测盒模型与 Amis 同为 **500×164**、`top: 60`、padding `24px 0`、标题 14px/500、正文 margin `16px 0 24px`、页脚钮 72×32、无关闭 X、Esc / 点遮罩不关、确认 `danger`。对照桌面 `action` **34/34**。无 Host 才回落原生以免单测挂死。
 - `#9 Options` 抽出可复用契约：`normalizeOptions` / `joinValues` / `extractValue` / `delimiter` / `source`（数据域 + 远程）/ `selectFirst` / `checkAll` / `labelField` / `valueField` / `clearable` / `searchable` / `creatable` / 选项 `autoFill`。`select` 接入 `useOptionsControl` + `VamisOverlay`。文档按 Amis options 主路径补活示例。进度 35% → 75%。对照桌面 `options` **31/32**（P0 0）、`select` **1/1**。缺 editable / removable / deferApi / 虚拟列表。
@@ -308,7 +309,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按依赖综合分推进，按实现标准验收**：FormItem 82%，`tpl` 92%，`icon` 90%，`action` / `button` 95%（confirm 走 Alert Modal；容器 tooltip 已 Teleport；事件表 click/mouseenter/mouseleave 已对齐），`input-text` 82%，`checkbox` 85%，`input-date` 88%，Options 75%。弹层翻转已收进 `overlayPosition`（Amis auto）。下一刀 `select`（#10，60%），吃 Options 契约做下拉像素/多选细节/检索高亮，不要先做全量语义之外的展示叶子。`input-date` 余项：移动端 picker、schedules。`input-text` 余项：选择器检索/高亮精度、`input-password` `revealPassword`。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / 事件动作切静态跟后续刀。Options 余项：editable / removable / deferApi / 虚拟列表。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。SDK 打包已不再依赖 moment。
+1. **组件同步按依赖综合分推进，按实现标准验收**：FormItem 82%，`tpl` 92%，`icon` 90%，`action` / `button` 95%（confirm 走 Alert Modal；容器 tooltip 已 Teleport；事件表 click/mouseenter/mouseleave 已对齐，宿主不再二次派发），`input-text` 82%，`checkbox` 85%，`input-date` 88%，Options 75%。弹层翻转已收进 `overlayPosition`（Amis auto）。下一刀 `select`（#10，60%），吃 Options 契约做下拉像素/多选细节/检索高亮，不要先做全量语义之外的展示叶子。`input-date` 余项：移动端 picker、schedules。`input-text` 余项：选择器检索/高亮精度、`input-password` `revealPassword`。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / 事件动作切静态跟后续刀。Options 余项：editable / removable / deferApi / 虚拟列表。不要先做 #61 起无人依赖的展示叶子。完整顺序见 TODO「依赖与优先级」。每项须按「实现标准」逐项对标 amis 属性/事件/动作与文档章节，缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，动窄屏必须带桌面对照。SDK 打包已不再依赖 moment。
 2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

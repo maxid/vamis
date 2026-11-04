@@ -28,6 +28,9 @@ const SELF_CLICK_TYPES = new Set([
   'native-number',
 ])
 
+/** Action 自己在按钮/容器上派 mouseenter/leave（兼 tooltip）。宿主再派会 toast 两次。 */
+const SELF_POINTER_TYPES = new Set(['action', 'button', 'submit', 'reset'])
+
 const props = defineProps<{
   schema?: SchemaNode | null
   extraData?: Record<string, unknown>
@@ -108,7 +111,9 @@ const disabled = computed(() =>
 function shouldHandleHostEvent(eventName: string): boolean {
   const schema = normalized.value
   if (!schema?.onEvent?.[eventName]) return false
-  if (eventName === 'click' && SELF_CLICK_TYPES.has(schema.type || '')) return false
+  const type = schema.type || ''
+  if (eventName === 'click' && SELF_CLICK_TYPES.has(type)) return false
+  if ((eventName === 'mouseenter' || eventName === 'mouseleave') && SELF_POINTER_TYPES.has(type)) return false
   return true
 }
 const editor = useEditorSelection()
