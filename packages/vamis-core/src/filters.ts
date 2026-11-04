@@ -19,6 +19,20 @@ registerFilter('first', (input: unknown) => {
   return input
 })
 
+/** Amis `|pick:field`：对象取字段，数组则逐项取。 */
+registerFilter('pick', (input: unknown, field = 'label') => {
+  const key = String(field || 'label')
+  if (Array.isArray(input)) {
+    return input.map((item) => (item && typeof item === 'object' ? (item as Record<string, unknown>)[key] : item))
+  }
+  if (itemIsRecord(input)) return input[key]
+  return input
+})
+
+function itemIsRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value)
+}
+
 registerFilter('date', (input: unknown, format = 'LLL', inputFormat = 'X') => {
   const parsed = parseDate(input, inputFormat as string)
   return parsed.isValid() ? parsed.format(format as string) : ''

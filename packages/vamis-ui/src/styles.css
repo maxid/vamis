@@ -988,6 +988,169 @@
     font-size: var(--fontSizeBase);
     line-height: var(--lineHeightBase);
   }
+  .vamis-select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+  }
+  .vamis-select__input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--control-h);
+    padding: 0 8px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  .vamis-select__input:hover {
+    border-color: var(--ring);
+  }
+  .vamis-select__input.is-focused {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+  .vamis-select.is-disabled .vamis-select__input {
+    cursor: not-allowed;
+    opacity: 0.55;
+    background: var(--muted);
+  }
+  .vamis-select__value {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-height: calc(var(--control-h) - 2px);
+  }
+  .vamis-select.is-nowrap .vamis-select__value {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .vamis-select__placeholder {
+    color: var(--muted-foreground);
+  }
+  .vamis-select__single {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vamis-select__chip {
+    display: inline-flex;
+    max-width: 100%;
+    padding: 0 6px;
+    border-radius: 2px;
+    background: var(--accent);
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vamis-select__clear {
+    margin-left: 4px;
+    border: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .vamis-select__clear:hover {
+    color: var(--foreground);
+  }
+  .vamis-select__caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 6px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--muted-foreground);
+  }
+  .vamis-select.is-opened .vamis-select__caret {
+    transform: rotate(180deg);
+  }
+  .vamis-select__popover {
+    min-width: 160px;
+    max-height: 300px;
+    overflow: auto;
+    padding: 4px 0;
+    border: 1px solid #f2f3f5;
+    border-radius: var(--radius);
+    background: #fff;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+  }
+  .vamis-select__search,
+  .vamis-select__create-form {
+    padding: 4px 8px;
+  }
+  .vamis-select__search-input {
+    width: 100%;
+    height: var(--control-h);
+    padding: 0 8px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: var(--card);
+    box-sizing: border-box;
+    font: inherit;
+    font-size: var(--fontSizeBase);
+  }
+  .vamis-select__search-input + .vamis-select__search-input {
+    margin-top: 4px;
+  }
+  .vamis-select__checkall,
+  .vamis-select__item,
+  .vamis-select__create-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--fontSizeBase);
+    line-height: var(--lineHeightBase);
+    text-align: left;
+    cursor: pointer;
+  }
+  .vamis-select__item:hover,
+  .vamis-select__item.is-active,
+  .vamis-select__checkall:hover,
+  .vamis-select__create-btn:hover {
+    background: var(--accent);
+  }
+  .vamis-select__item.is-disabled {
+    cursor: not-allowed;
+    color: var(--muted-foreground);
+  }
+  .vamis-select__item-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vamis-select__empty {
+    padding: 8px 12px;
+    color: var(--muted-foreground);
+  }
+  .vamis-select__create {
+    border-top: 1px solid #f2f3f5;
+  }
+  .vamis-select__create-btn.is-muted {
+    color: var(--muted-foreground);
+  }
+  .vamis-select__create-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
   .vamis-date-picker__popover {
     /* 对齐 Amis `.cxd-DatePicker-popover`：padding 0，边框/阴影走 Form-select-outer。 */
     padding: 0;

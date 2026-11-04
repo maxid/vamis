@@ -93,6 +93,14 @@ describe('D2 runtime filters', () => {
   it('|default still fills empty values', () => {
     expect(filterTpl("${age|default:'-'}", {})).toBe('-')
   })
+
+  it('|pick extracts a field from objects or arrays', () => {
+    expect(filterTpl('${item|pick:label}', { item: { label: 'Option A', value: 'a' } })).toBe('Option A')
+    expect(filterTpl('${items|pick:label}', { items: [{ label: 'A' }, { label: 'B' }] })).toBe('A,B')
+    expect(filterTpl('${items|first|pick:label}', { items: [{ label: 'Option A' }, { label: 'Option B' }] })).toBe(
+      'Option A',
+    )
+  })
 })
 
 describe('D2 expression main path', () => {
