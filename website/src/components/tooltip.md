@@ -405,7 +405,7 @@ outline: deep
 | rootClose | `boolean` | `true` | 点外侧关闭 |
 | inline | `boolean` | `false` | 行内 |
 | wrapperComponent | `string` | `div` / `span` | 根标签 |
-| body | SchemaNode | | 被包裹内容 |
+| body | [SchemaNode](/types/schemanode) | | 内容容器 |
 | style | `object` / `string` | | 内容区样式（宿主节点） |
 | tooltipStyle | `object` / `string` | | 浮层样式 |
 | className | `string` | | 内容区类名（宿主节点） |

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { evalExpression, evalTemplate, filterTpl } from '../src/formula'
+import { evalExpression, evalTemplate, filterTpl, isVisible } from '../src/formula'
 
 describe('D2 template string main path', () => {
   it('leaves plain text unchanged', () => {
@@ -142,6 +142,13 @@ describe('evalExpression visibleOn', () => {
       '200px',
     )
     expect(filterTpl("${index % 2 === 0 ? imageHeight : ''}", { index: 1, imageHeight: '200px' })).toBe('')
+  })
+
+  it('hides SchemaNode by hidden / visible / hiddenOn', () => {
+    expect(isVisible({ hidden: true }, {})).toBe(false)
+    expect(isVisible({ visible: false }, {})).toBe(false)
+    expect(isVisible({ hiddenOn: '${number > 1}' }, { number: 0 })).toBe(true)
+    expect(isVisible({ hiddenOn: '${number > 1}' }, { number: 2 })).toBe(false)
   })
 
   it('does not parse JS typeof as a unary operator', () => {

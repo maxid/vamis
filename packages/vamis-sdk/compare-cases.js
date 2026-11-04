@@ -4058,14 +4058,143 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "text": "World"
+      },
+      "body": "Hello ${text}!"
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-schemanode-1",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "SchemaNode",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "SchemaNode #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "text": "World"
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "Hello ${text}!"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-schemanode-2",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "SchemaNode",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "SchemaNode #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
       "body": [
-        "纯字符串也会变成文本",
         {
-          "type": "divider"
+          "type": "form",
+          "body": [
+            {
+              "type": "input-text",
+              "label": "姓名",
+              "name": "name"
+            }
+          ]
         },
         {
-          "type": "button",
-          "label": "对象节点"
+          "type": "form",
+          "hidden": true,
+          "body": [
+            {
+              "type": "input-text",
+              "label": "姓名",
+              "name": "name"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-schemanode-3",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "SchemaNode",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "SchemaNode #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-number",
+            "label": "数量",
+            "name": "number",
+            "value": 0,
+            "description": "调整数量大小查看效果吧！"
+          },
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "hiddenOn": "${number > 1}",
+            "description": "当数量大于1的时候，该文本框会隐藏"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-schemanode-4",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "SchemaNode",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "SchemaNode #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "name": "amis",
+        "age": 1
+      },
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "my name is ${name}"
+        },
+        {
+          "type": "tpl",
+          "tpl": "I am ${age} years old"
         }
       ]
     },
