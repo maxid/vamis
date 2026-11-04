@@ -10960,9 +10960,6 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "title": "",
-        "mode": "horizontal",
-        "autoFocus": false,
         "body": [
           {
             "type": "input-text",
@@ -10978,12 +10975,26 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "input-text",
             "label": "内联2",
-            "name": "text3",
+            "name": "text2",
             "mode": "inline"
+          },
+          {
+            "type": "group",
+            "mode": "inline",
+            "body": [
+              {
+                "type": "input-text",
+                "label": "内联3",
+                "name": "text2"
+              },
+              {
+                "type": "input-text",
+                "label": "内联4",
+                "name": "text2"
+              }
+            ]
           }
-        ],
-        "submitText": null,
-        "actions": []
+        ]
       }
     },
     "measure": {

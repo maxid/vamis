@@ -158,6 +158,13 @@ alwaysApply: true
 - 触及：`page` `form` `crud` `table` `grid` `flex` `container`
 - 规则：`.cursor/rules/component.mdc`
 
+### 对标 Amis 默认 normal 时不要用 scope=form-item
+- 踩过：`scope="form-item"` 包装层强制 `mode: horizontal`，未写 mode 的「常规」变成左右；Amis `scope="body"` 的 form 默认 `normal` 是上下。内联项本身是左右（≥576 `Form-item--inline`）。
+- 稳定做法：Amis 文档 `scope="body"` 且 form 未写 mode 时，Vamis 也用 `scope="body"`，不要套 `form-item`。`mode: inline` 才是项内左右；`type: group` 把 `mode` / `subFormMode` 传给未写 mode 的子项，group 外壳不要 `inline-block`。
+- 触及：FormItem `form` `group`
+- 规则：本文；`playground/src/docs/schema-scope.ts`
+
+
 ### 样式
 
 ### 同一 class 对计算样式，不要对截图

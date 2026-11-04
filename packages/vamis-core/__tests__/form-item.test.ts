@@ -19,6 +19,7 @@ import {
   hiddenFieldsToClear,
   validateApiMessage,
 } from '../src/utils/form-item'
+import { groupChildSchema, groupFormMode } from '../src/utils/form-group'
 import { resetStatusStore, setStatusStatic, statusStaticOf } from '../src/status-store'
 import { getPathValue } from '../src/utils/path-value'
 import { validateValue } from '../src/validate'
@@ -169,6 +170,31 @@ describe('clearValueOnHidden', () => {
     expect(hiddenFieldsToClear(items, hidden)).toEqual(['text'])
     clearHiddenFormValues(items, hidden)
     expect(hidden).toEqual({ number: 2, keep: 'x' })
+  })
+})
+
+describe('groupChildSchema', () => {
+  it('lets group mode:inline flow to children that did not set mode', () => {
+    const group = { type: 'group', mode: 'inline' }
+    expect(groupFormMode(group, 'horizontal')).toBe('inline')
+    expect(groupChildSchema({ type: 'input-text', name: 'a' }, group, 'normal')).toEqual({
+      type: 'input-text',
+      name: 'a',
+      mode: 'inline',
+    })
+    expect(
+      groupChildSchema({ type: 'input-text', name: 'b', mode: 'horizontal' }, group, 'normal'),
+    ).toEqual({ type: 'input-text', name: 'b', mode: 'horizontal' })
+    expect(groupChildSchema({ type: 'input-text', name: 'c', inline: true }, group, 'normal')).toEqual(
+      { type: 'input-text', name: 'c', inline: true },
+    )
+  })
+
+  it('does not stamp normal onto children', () => {
+    expect(groupChildSchema({ type: 'input-text', name: 'a' }, { type: 'group' }, 'normal')).toEqual({
+      type: 'input-text',
+      name: 'a',
+    })
   })
 })
 

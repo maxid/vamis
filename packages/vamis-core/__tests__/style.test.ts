@@ -550,6 +550,9 @@ describe('Amis width helpers', () => {
     expect(theme).toContain('.vamis-form .vamis-node:has(> .vamis-form-item--inline)')
     expect(theme).toContain('--form-mode-inline-item-gap')
     expect(theme).toContain('--form-mode-inline-label-gap')
+    expect(theme).toContain('--form-mode-default-label-gap')
+    expect(theme).toContain('.vamis-form-group--hor')
+    expect(theme).toMatch(/\.vamis-form-item--inline \{[^}]*inline-flex/)
     expect(theme).toContain('.vamis-form-static')
     expect(theme).toContain('.vamis-form-debug')
   })
@@ -634,6 +637,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'input-text', mode: 'inline' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'select', mode: 'inline' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'form', mode: 'inline' })).toBe('')
+    expect(schemaNodeDisplayClass({ type: 'group', mode: 'inline' })).toBe('')
   })
 
   it('does not stack page body with space-y (Amis Page-body is normal flow)', () => {

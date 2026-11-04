@@ -42,20 +42,47 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 
 ### 内联模式
 
-配置 `"mode": "inline"`（或 `inline: true`），当前表单项使用内联模式。
+通过配置 `"mode": "inline"`，标识当前表单项使用内联模式。未写 `mode` 的项跟随表单默认 `normal`：标签在上、控件在下。`mode: inline` 的项并排，项内标签在左、控件在右。
 
-```schema: scope="form-item"
-- type: input-text
-  label: 常规
-  name: text1
-- type: input-text
-  label: 内联
-  name: text2
-  mode: inline
-- type: input-text
-  label: 内联2
-  name: text3
-  mode: inline
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "常规",
+      "name": "text1"
+    },
+    {
+      "type": "input-text",
+      "label": "内联",
+      "name": "text2",
+      "mode": "inline"
+    },
+    {
+      "type": "input-text",
+      "label": "内联2",
+      "name": "text2",
+      "mode": "inline"
+    },
+    {
+      "type": "group",
+      "mode": "inline",
+      "body": [
+        {
+          "type": "input-text",
+          "label": "内联3",
+          "name": "text2"
+        },
+        {
+          "type": "input-text",
+          "label": "内联4",
+          "name": "text2"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ### 表单项尺寸
@@ -766,5 +793,5 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。
 - 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。
