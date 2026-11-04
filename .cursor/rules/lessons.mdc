@@ -90,6 +90,12 @@ alwaysApply: true
 - 触及：FormItem
 - 规则：`.cursor/rules/site.mdc`
 
+### 文档 json 围栏必须是合法 JSON 才能高亮
+- 踩过：默认校验信息标 ` ```json ` 却写 JS 对象（无引号 key、单引号、注释）。文档 `type: code` 的 JSON monarch 只认 `"key":` / `"value"`，整段没有颜色。
+- 稳定做法：静态示例对齐「接口返回示例」：` ```json ` + 双引号合法 JSON。JS 对象语法用 ` ```javascript `。
+- 触及：FormItem
+- 规则：本文；`packages/vamis/src/renderers/display/code-highlight.ts` `ensureJsonMonarch`
+
 ### 属性表要对齐 Amis 列结构，章节不能少
 - 踩过：FormItem 属性表收成两列「属性 / 说明」，漏掉类型链接、`autoFill.*`、`staticClassName`，文末也没有「支持静态展示的表单项」。
 - 稳定做法：先读 Amis 同名 md 的「属性表 / 事件表 / 动作表」和文末清单。四列（属性名 / 类型 / 默认值 / 说明），类型链 `/types/` `/concepts/`。Amis 有的章节要有；版本号、Amis GitHub、Amis 示例仓路径改写成 Vamis（本节链到本页活示例，不要 `examples/form/switchDisplay`）。未接字段在说明里写 **未接**，并进差异表。
