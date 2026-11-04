@@ -60,6 +60,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `--borderRadius` 4px | `--radius: 0.25rem` |
 | `--Tooltip-*` / `--borderRadiusLg` 8px | `:root --tooltip-*`（不是 shadcn `--popover` / `--radius`；选择器只 `var()`） |
 | `--Badge-*` | `:root --badge-*`（不是 shadcn `Badge`；ribbon 切角 + dot `scale(0.8)→3.2`） |
+| `--Remark-*` | `:root --remark-*`（不是 shadcn Tooltip；16px 问号徽标，悬停 `#ff9326`） |
 | `--Form-input-height` 32px | 控件默认 `h-8`（16px 根下 = 32px） |
 | `--fontSizeBase` 14px | `.vamis-root` `14px` / `line-height: 1.5`，**不改** `html` 根字号（避免 Tailwind rem 塌缩） |
 | `--gap-*` | Tailwind spacing |

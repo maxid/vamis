@@ -93,7 +93,7 @@ alwaysApply: true
 ### 对照过了 ≠ 文档站对齐；必须并排开两边同路径页
 - 踩过：`pnpm compare --page tooltip` 11/11，文档示例仍是短文案、无 FA 图标十字布局；浮层皮肤也偏。对照默认不打开 hover 浮层、不对活示例文案。用户每次都要贴 Amis / Vamis 两个 URL。
 - 稳定做法：改组件或活示例，声称完成前打开 Amis `localhost:8888/zh-CN/components/<type>` 与 Vamis `localhost:5173/components/<type>`（路径以侧栏为准，tooltip 是 `/tooltip` 不是 `/tooltip-wrapper`）。对：示例文案、图标、布局、打开后的浮层盒模型。不要等用户提醒。
-- 触及：`tooltip-wrapper` `action` `button` 及所有有文档活示例的 type
+- 触及：`tooltip-wrapper` `action` `button` `badge` `remark` 及所有有文档活示例的 type
 - 规则：`.cursor/rules/amis-lookup.mdc`；`.cursor/rules/update-progress.mdc`
 
 ### 组装与盒模型
@@ -171,14 +171,20 @@ alwaysApply: true
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
-- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` 以及一切走下拉的控件
+- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
 - 踩过：用 shadcn `--popover` / `--radius` 画 12px、padding 6×10、圆角 4、5px 实心三角；对齐后又把 `#fff` / `8px` 写死在 `.vamis-tooltip`。文档示例改成「上/左/右/下」丢掉 FA 图标。宿主 `style` 漏进浮层。
 - 稳定做法：先读 `_tooltip.scss` + 文档 ```schema。量落到 `:root` `--tooltip-*`（圆角 8 是 Amis `--borderRadiusLg`，不是全局 `--radius` 4）。选择器只 `var()`。浮层只收 tooltipObj（`tooltipLayerSchema`）。`inline` 是 `inline-block`。
-- 触及：`tooltip-wrapper` `action` `button`
+- 触及：`tooltip-wrapper` `action` `button` `remark`
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --tooltip-*`
+
+### Overlay Remark 按 `_remark.scss` 转写，不要用 shadcn Tooltip
+- 踩过：问号徽标用 shadcn `Tooltip` + Tailwind `size-4` / `rounded-full`，浮层不 Teleport、盒模型也对不上。默认 icon 不是文档表里的 `fa fa-question-circle`，源码空 icon 走 `question-mark` SVG。
+- 稳定做法：宿主走 `:root --remark-*`（16px / 左缝 8px / 悬停 `#ff9326`），选择器只 `var()`。浮层复用 `VamisTooltipLayer`（`--z-tooltip` 1600），不要再开一层。未写 `icon` 用内置问号 SVG；写了走 `resolveIcon`。`shape: circle` 才圆。`mobileUI` 只认 schema / env 显式开关，不要用 Toast 的 768 视口（对照 iframe ~768 会误开 Dialog）。外层 `div.vamis-node` 要 `inline-block`，弹出位置四枚才能并排。
+- 触及：`remark` FormItem `page`
+- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --remark-*`
 
 ### Overlay Badge 按 `_badge.scss` 转写，不要用 shadcn Badge / animate-ping
 - 踩过：角标用 `inline-flex` + Tailwind `rotate-45` 小条、`animate-ping`；数字简写当成 text；`className` 打在点子上。Amis 宿主是 `inline-block`，ribbon 是 overflow 切 1000px 条 + `rotate(45deg) scale(0.7)`，动画是 `scale(0.8)→3.2`。

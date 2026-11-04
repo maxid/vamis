@@ -34,7 +34,7 @@ alwaysApply: true
 - **Amis helper 类**（`font-sans`、`rounded-md`、`shadow-lg`）是作者 `className` 覆盖，打在 `div.vamis-node` 或文档 HTML 岛
 - 组件 Vue 模板不要用 helper 类名表示「主题默认」。控件 4px 圆角用 `rounded`（= `--radius`），不要用 `rounded-md`（Amis helper 是 6px）
 - html / body 不钉字族（对齐 Amis unset）。`.vamis-root` / SDK 根走 `--fontFamilyBase`（= `--fonts-base-family`，实测 Helvetica Neue）、`font-size: 14px; line-height: 1.5`。不要 `@apply font-sans`（helper 英文硬编码栈）或 `text-sm`（TW 行高 20px）当默认
-- **组件配方也是 token，不要在 `.vamis-xxx` 写死色和 px。** 对齐 Amis `_properties.scss`：`--button-*`、`--tooltip-*`、`--badge-*` 挂 `:root`，选择器只 `var()`。主题切换 = 换变量。组件圆角可以和全局 `--radius` 不同（Overlay Tooltip 是 `--borderRadiusLg` 8px），但必须是变量。禁止用 shadcn `--popover` / `--radius` 去套 Overlay Tooltip。禁止用 shadcn `Badge` / `animate-ping` 去套 Overlay Badge。
+- **组件配方也是 token，不要在 `.vamis-xxx` 写死色和 px。** 对齐 Amis `_properties.scss`：`--button-*`、`--tooltip-*`、`--badge-*`、`--remark-*` 挂 `:root`，选择器只 `var()`。主题切换 = 换变量。组件圆角可以和全局 `--radius` 不同（Overlay Tooltip 是 `--borderRadiusLg` 8px），但必须是变量。禁止用 shadcn `--popover` / `--radius` 去套 Overlay Tooltip。禁止用 shadcn `Badge` / `animate-ping` 去套 Overlay Badge。禁止用 shadcn Tooltip 去套 Remark。
 
 ## 图标
 

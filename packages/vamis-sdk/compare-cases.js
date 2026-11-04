@@ -20546,10 +20546,130 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "remark",
+      "body": {
+        "type": "remark",
+        "content": "这是一段提醒"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-remark-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Remark 标记",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Remark 标记 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "remark",
+        "content": "这是一段提醒",
+        "shape": "circle"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-remark-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Remark 标记",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Remark 标记 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "remark",
+        "content": {
+          "title": "标题",
+          "body": "这是一段提醒"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-remark-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Remark 标记",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Remark 标记 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "github": "https://github.com/"
+      },
       "body": [
         {
-          "type": "remark"
+          "type": "remark",
+          "content": "${github}"
+        },
+        {
+          "type": "remark",
+          "content": {
+            "title": "${github|raw}",
+            "body": "${github}"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-remark-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Remark 标记",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Remark 标记 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "remark",
+          "content": "向上",
+          "placement": "top"
+        },
+        {
+          "type": "remark",
+          "content": "向下",
+          "placement": "bottom"
+        },
+        {
+          "type": "remark",
+          "content": "向左",
+          "placement": "left"
+        },
+        {
+          "type": "remark",
+          "content": "向右",
+          "placement": "right"
         }
       ]
     },

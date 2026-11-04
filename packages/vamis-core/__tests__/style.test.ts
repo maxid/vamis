@@ -621,6 +621,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'badge' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'avatar' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'icon' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'remark' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')

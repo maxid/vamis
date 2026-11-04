@@ -187,6 +187,8 @@ export interface RendererEnv {
   trusted?: boolean
   /** 浮层挂载点。对齐 Amis `env.getModalContainer`，默认 `document.body`。 */
   getModalContainer?: () => HTMLElement | undefined
+  /** 对齐 Amis `env.mobileUI`。Remark 等只认这个开关，不要用 768 视口误判。 */
+  mobileUI?: boolean
 }
 
 export interface RenderContextValue {

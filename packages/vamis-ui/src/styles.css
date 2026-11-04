@@ -246,6 +246,21 @@
   --badge-ribbon-width: 1000px;
   --badge-ribbon-scale: 0.7;
   --badge-ribbon-nudge: 5px;
+  /*
+   * Overlay Remark 语义变量（Amis --Remark-*）。
+   * 宽 16px、左缝 8px、悬停 warning-5 #ff9326；选择器只 var()。
+   * 不要用 shadcn Tooltip / --muted / --warning oklch 去套问号徽标。
+   */
+  --remark-width: 16px;
+  --remark-margin-left: var(--gap-sm);
+  --remark-font-size: 12px;
+  --remark-bg: #fff;
+  --remark-border-width: 1px;
+  --remark-border-color: var(--border);
+  --remark-icon-color: #84878c;
+  --remark-hover-bg: #ff9326;
+  --remark-hover-border-color: #ff9326;
+  --remark-hover-icon-color: #fff;
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -1229,6 +1244,50 @@
   }
   .vamis-tooltip--right.vamis-tooltip--dark .vamis-tooltip__arrow::after {
     border-right-color: var(--tooltip-bg-dark);
+  }
+  /* Overlay Remark：只消费 :root --remark-*，不用 shadcn Tooltip。 */
+  .vamis-remark {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: var(--remark-margin-left);
+    cursor: pointer;
+    text-align: center;
+  }
+  .vamis-remark > span {
+    color: var(--remark-icon-color);
+    font-size: var(--remark-font-size);
+  }
+  .vamis-remark__icon {
+    box-sizing: border-box;
+    color: var(--remark-icon-color);
+    font-size: var(--remark-font-size);
+    background: var(--remark-bg);
+    border: var(--remark-border-width) solid var(--remark-border-color);
+    width: var(--remark-width);
+    height: var(--remark-width);
+    line-height: 1;
+    display: inline-flex;
+    vertical-align: baseline;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+  .vamis-remark__icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .vamis-remark__icon--circle {
+    border-radius: 50%;
+  }
+  .vamis-remark > span + .vamis-remark__icon {
+    margin-left: var(--gap-xs);
+  }
+  .vamis-remark:hover > .vamis-remark__icon {
+    color: var(--remark-hover-icon-color);
+    background: var(--remark-hover-bg);
+    border-color: var(--remark-hover-border-color);
   }
   /* Overlay Badge：只消费 :root --badge-*，不写死色 / px，不用 shadcn Badge。 */
   .vamis-badge {

@@ -210,7 +210,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   property: doc('Property 属性表', '数据展示', 'label/content 属性对。'),
   qrcode: doc('QRCode 二维码', '数据展示', '二维码。'),
   barcode: doc('BarCode 条形码', '数据展示', '条形码。'),
-  remark: doc('Remark 标记', '数据展示', '问号说明，悬停出 tip。'),
+  remark: doc('Remark 标记', '数据展示', '问号徽标，悬停出 tip；content 支持标题对象。'),
   'search-box': doc('SearchBox 搜索框', '数据展示', '搜索输入。'),
   sparkline: doc('Sparkline 走势图', '数据展示', '微型折线。'),
   status: doc('Status 状态', '数据展示', '状态映射展示。'),

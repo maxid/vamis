@@ -240,7 +240,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `property` | Property 属性表 | `/components/property` | `/zh-CN/components/property` | 进行中 | 50% | 能出 label/content | P0 |
 | `qrcode` | QRCode 二维码 | `/components/qrcode` | `/zh-CN/components/qrcode` | 进行中 | 45% | 已注册 | P0 |
 | `barcode` | BarCode 条形码 | `/components/barcode` | `/zh-CN/components/barcode` | 进行中 | 45% | 已注册 | P0 |
-| `remark` | Remark 标记 | `/components/remark` | `/zh-CN/components/remark` | 进行中 | 70% | 圆形问号徽标 + tooltip；缺自定义 icon / 移动端弹层 | P0 |
+| `remark` | Remark 标记 | `/components/remark` | `/zh-CN/components/remark` | 进行中 | 92% | 文档主路径已对齐：content 文本 / `{ title, body }`、shape、变量、placement。浮层走 `VamisOverlay`（`--z-tooltip` 1600），徽标转写 `_remark.scss`（`--remark-*`）。自定义 icon / `mobileUI` Dialog 已接。缺 `themeCss` | P0 |
 | `search-box` | SearchBox 搜索框 | `/components/search-box` | `/zh-CN/components/search-box` | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | `/components/sparkline` | `/zh-CN/components/sparkline` | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 55% | 能映射状态 | P0 |
@@ -294,7 +294,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`remark`（#5，70%）、FormItem（#6，82%）、Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。`badge` 95% 余项是 `themeCss`，不挡下一刀。不要切 `select`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：FormItem（#6，82%）、Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。`remark` 92% / `badge` 95% 余项是 `themeCss`，不挡下一刀。不要切 `select`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -367,7 +367,7 @@ flowchart LR
 | 2 | `badge` | `icon` | 11 | 7 | 102 | 501 | 进行中 | 95% |
 | 3 | `tpl` | `badge` | 10 | 29 | 387 | 501 | 进行中 | 92% |
 | 4 | `tooltip-wrapper` | `tpl` | 9 | 3 | 48 | 501 | 进行中 | 92% |
-| 5 | `remark` | `tooltip-wrapper`、`icon`、`tpl` | 8 | 2 | 34 | 501 | 进行中 | 70% |
+| 5 | `remark` | `tooltip-wrapper`、`icon`、`tpl` | 8 | 2 | 34 | 501 | 进行中 | 92% |
 | 6 | FormItem（契约） | `remark` | 7 | 38 | 501 | 501 | 进行中 | 82% |
 | 7 | `toast`（动作） | `icon`、`tpl` | 9 | 1 | 22 | 437 | 进行中 | 90% |
 | 8 | `action` | `icon`、`tpl`、`tooltip-wrapper`、`badge`、`toast` | 8 | 33 | 437 | 437 | 进行中 | 95% |
