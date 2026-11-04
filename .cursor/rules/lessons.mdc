@@ -225,10 +225,10 @@ alwaysApply: true
 - 规则：`.cursor/rules/component.mdc`；组件 P0 TODO「依赖与优先级」
 
 ### 被依赖高不等于实现轻；构建依赖不能当装饰丢掉
-- 踩过：依赖列把默认包裹当可选装饰，又只补了 Action 一条边。Amis 还有 `withBadge`（tpl/link/checkbox/radio/avatar）、`FormItem.labelRemark`→remark、Form `wrapWithPanel`、Page/CRUD/Dialog/Select 的 Spinner、Table 勾选/`itemBadge`、`input-text` 选择器、`calendar` extends InputDate。只改 Action 会继续把 chrome 排到 #80+。
-- 稳定做法：全表按构建依赖补边（脚本 `DEPS_ADD` / `DEPS_SET`）。互开只留一边。就绪集先比解锁分 `U`。重算必须跑完整张表，不要只改一个 type。
-- 触及：`action` `button` `tooltip-wrapper` `badge` `toast` `dialog` `drawer` `remark` `FormItem` `tpl` `spinner` `panel` `table` `select` `input-text` `calendar` `avatar` `page` `crud`
-- 规则：组件 P0 TODO「依赖与优先级」；`scripts/component-priority.mjs`
+- 踩过：依赖列把默认包裹当可选装饰，又只补了 Action 一条边。Amis 还有 `withBadge`（badge.md 首例：action/tpl/link/avatar/icon，不是 checkbox/radio）、`nav.itemBadge`、`FormItem.labelRemark`→remark、Form `wrapWithPanel`、Page/CRUD/Dialog/Select 的 Spinner、Table `itemBadge`（勾选不是 `type: checkbox`）、`input-text` 选择器、`calendar` extends InputDate。只改 Action 会继续把 chrome 排到 #80+。
+- 稳定做法：全表按构建依赖补边（脚本 `DEPS_ADD` / `DEPS_SET` / `DEPS_REMOVE`）。边要拿 Amis 文档专章 + 示例主路径核对（`scripts/audit-amis-examples.mjs`），HOC 有但示例没有的不要硬加。互开只留一边。就绪集先比解锁分 `U`。重算必须跑完整张表，不要只改一个 type。分 type 图必须画开工前置闭包（全部祖先），只画直接依赖会把 `tooltip-wrapper` 当成叶子，又在 Action 里再造一套浮层。
+- 触及：`action` `button` `tooltip-wrapper` `badge` `toast` `dialog` `drawer` `remark` `FormItem` `tpl` `spinner` `panel` `table` `select` `input-text` `calendar` `avatar` `page` `crud` `nav` `list` `cards` `timeline` `transfer`
+- 规则：组件 P0 TODO「依赖与优先级」；`scripts/component-priority.mjs`；`scripts/audit-amis-examples.mjs`
 
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。
