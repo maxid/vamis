@@ -86,7 +86,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `components-form-formitem-13` FormItem 表单项通用 #14 — page/body/0:form.value: Amis `` / Vamis `父表单为静态 static: truetext1value初始配置了static: true, 但是后续可以使用动作切换状态静态输入态text3value无配置，跟随父表单变化静态输入态提交`；page/body/0:form/body/0:input-text.rendered: Amis `false` / Vamis `true`
+- `components-form-formitem-13` FormItem 表单项通用 #14 — page/body/0:form.value: Amis `` / Vamis `父表单为静态 static: truetext1value初始配置了static: true, 但是后续可以使用动作切换状态text1 切换状态-text3value无配置，跟随父表单变化父表单 切换状态-提交`；page/body/0:form/body/0:input-text.rendered: Amis `false` / Vamis `true`
 
 ## 重跑口径
 

@@ -71,6 +71,14 @@ export function formItemSubmitOnChange(item: SchemaObject, form: SchemaObject): 
   return form.submitOnChange === true
 }
 
+/**
+ * 水平表单里标签列：只有 `label: false` 才去掉。
+ * 未写 label / 空字符串仍占位，对齐 Amis `label !== false`。
+ */
+export function formItemHideLabel(schema: SchemaObject): boolean {
+  return schema.label === false
+}
+
 /** 有 type / 数组 / 字符串才当自定义静态 schema；`{ limit }` 留给选择器自己读。 */
 export function formItemStaticSchema(schema: SchemaObject): SchemaObject[] | null {
   const raw = schema.staticSchema

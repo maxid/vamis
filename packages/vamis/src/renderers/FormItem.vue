@@ -4,6 +4,7 @@ import { Label, cn } from '@vamis/ui'
 import {
   SchemaRenderer,
   filterTpl,
+  formItemHideLabel,
   formItemRequired,
   formItemStatic,
   formItemStaticSchema,
@@ -31,8 +32,8 @@ const layout = computed(() => {
 })
 const inline = computed(() => layout.value === 'inline')
 const horizontal = computed(() => layout.value === 'horizontal')
-const hideLabel = computed(() => props.schema.label === false)
-const showLabel = computed(() => !hideLabel.value && props.schema.label != null)
+const hideLabel = computed(() => formItemHideLabel(props.schema))
+const showLabel = computed(() => !hideLabel.value && props.schema.label != null && props.schema.label !== '')
 const labelText = computed(() =>
   showLabel.value ? filterTpl(String(props.schema.label ?? ''), itemData.value) : '',
 )
@@ -101,12 +102,12 @@ const labelRemark = computed(() => {
     :data-name="schema.name"
   >
     <Label
-      v-if="schema.label !== false && schema.label != null"
+      v-if="!hideLabel"
       class="vamis-form-item__label"
       :class="cn(horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground', labelClass)"
     >
-      <span v-if="required" class="mr-0.5 text-destructive">*</span>
-      <span v-html="labelText" />
+      <span v-if="required && (showLabel || labelRemark)" class="mr-0.5 text-destructive">*</span>
+      <span v-if="showLabel" v-html="labelText" />
       <SchemaRenderer v-if="labelRemark" :schema="labelRemark" :extra-data="itemData" />
     </Label>
     <div class="vamis-form-item__value min-w-0">

@@ -140,6 +140,12 @@ alwaysApply: true
 - 触及：FormItem `textarea` `input-text`
 - 规则：`packages/vamis-sdk/embed-case.html` `findNodeEl`
 
+### 没写 label 也要留标签列；button-toolbar 是表单项，button 不是
+- 踩过：水平表单里 `button-toolbar` 没写 label，按钮顶到标签列。Amis `label !== false` 仍画空 `<label>` 占列；只有 `label: false` 才去掉。`button-toolbar` 是 `@FormItem`，`button` / `action` 不是——若给 button 也套 FormItem，toolbar 里会再套一层。
+- 稳定做法：`formItemHideLabel` 只认 `label === false`。未写 / 空字符串仍渲染标签槽。`button-toolbar` 包 FormItem；不要在 `useForm()` 里给 Action 自动包。
+- 触及：FormItem `button-toolbar` `button` `action`
+- 规则：本文；Amis `Item.tsx` `label !== false`；`ButtonToolbar.tsx` `@FormItem`
+
 ### 外层永远是 div.vamis-node，伪类要算包装层
 - 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。
 - 稳定做法：作者 `className` 打在外层 `div.vamis-node`。看「是不是最后一个 / 是不是 inline」时，对包装层写选择器（`:has(> .vamis-form-item--inline)`、只清 form body 最后一个 node）。不要把 SchemaRenderer 外层改成非 `div`。

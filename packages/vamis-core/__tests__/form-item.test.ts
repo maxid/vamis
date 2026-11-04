@@ -8,6 +8,7 @@ import {
   autoFillRow,
   clearHiddenFormValues,
   collectFormItems,
+  formItemHideLabel,
   formItemRequired,
   formItemStatic,
   formItemStaticSchema,
@@ -21,6 +22,15 @@ import {
 import { resetStatusStore, setStatusStatic, statusStaticOf } from '../src/status-store'
 import { getPathValue } from '../src/utils/path-value'
 import { validateValue } from '../src/validate'
+
+describe('formItemHideLabel', () => {
+  it('only drops the label column when label is false', () => {
+    expect(formItemHideLabel({})).toBe(false)
+    expect(formItemHideLabel({ label: '数量' })).toBe(false)
+    expect(formItemHideLabel({ label: '' })).toBe(false)
+    expect(formItemHideLabel({ label: false })).toBe(true)
+  })
+})
 
 describe('formItemRequired', () => {
   it('honors required and requiredOn', () => {
