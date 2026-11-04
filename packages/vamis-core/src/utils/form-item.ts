@@ -3,7 +3,36 @@
 import { evalExpression, isVisible, resolveValue } from '../formula'
 import type { Payload, SchemaApi, SchemaObject } from '../types'
 import type { PlainObject } from '../types'
+import {
+  getSelectedOptions,
+  normalizeOptions,
+  optionsLabelField,
+  optionsMultiple,
+  optionsValueConfig,
+  optionsValueField,
+} from './options'
 import { deletePathValue, getPathValue, setPathValue } from './path-value'
+
+/** Amis StaticHoc：这些 type 静态展示走 `type: tags`（WordsField + inTag）。 */
+export const FORM_ITEM_STATIC_TAGS_TYPES = new Set(['input-tag'])
+
+/** Amis StaticHoc：这些 type 静态展示走 `type: words`。 */
+export const FORM_ITEM_STATIC_WORDS_TYPES = new Set([
+  'select',
+  'checkboxes',
+  'button-group-select',
+  'input-tree',
+  'tree-select',
+  'nested-select',
+  'cascader-select',
+  'radios',
+  'multi-select',
+  'transfer',
+  'transfer-picker',
+  'tabs-transfer',
+  'tabs-transfer-picker',
+  'picker',
+])
 
 export function isFormValueExpr(value: unknown): boolean {
   return typeof value === 'string' && value.includes('${') && !value.startsWith('\\${')
@@ -60,6 +89,63 @@ export function formItemStaticSchema(schema: SchemaObject): SchemaObject[] | nul
   if (Array.isArray(raw)) return raw.map(wrap)
   if (typeof raw === 'object' && (raw as SchemaObject).type) return [raw as SchemaObject]
   return null
+}
+
+function formItemStaticSelectorKind(type: string): 'tags' | 'words' | null {
+  if (FORM_ITEM_STATIC_TAGS_TYPES.has(type)) return 'tags'
+  if (FORM_ITEM_STATIC_WORDS_TYPES.has(type)) return 'words'
+  return null
+}
+
+function formItemStaticSelectorMultiple(schema: SchemaObject): boolean {
+  const type = String(schema.type ?? '')
+  if (type === 'input-tag' || type === 'checkboxes' || type === 'multi-select') return true
+  if (
+    type === 'transfer' ||
+    type === 'transfer-picker' ||
+    type === 'tabs-transfer' ||
+    type === 'tabs-transfer-picker'
+  ) {
+    return true
+  }
+  if (type === 'picker') return schema.multiple !== false
+  return optionsMultiple(schema)
+}
+
+/** 选择器静态展示用的词条（优先 option.label）。 */
+export function formItemStaticWords(schema: SchemaObject, value: unknown): string[] {
+  const labelField = optionsLabelField(schema)
+  const valueField = optionsValueField(schema)
+  const options = normalizeOptions(schema.options, labelField, valueField)
+  const selected = getSelectedOptions(value, options, {
+    ...optionsValueConfig(schema),
+    multiple: formItemStaticSelectorMultiple(schema),
+  })
+  return selected
+    .map((item) => String(item[labelField] ?? item.label ?? item.value ?? ''))
+    .filter((item) => item !== '')
+}
+
+/**
+ * `{ limit }` 这类无 type 的 staticSchema 不是自定义节点。
+ * 对齐 Amis StaticHoc：input-tag → tags，select 家族 → words，limit 当展示条数。
+ */
+export function formItemStaticSelectorNode(schema: SchemaObject, value: unknown): SchemaObject | null {
+  const kind = formItemStaticSelectorKind(String(schema.type ?? ''))
+  if (!kind) return null
+  const words = formItemStaticWords(schema, value)
+  if (!words.length) return null
+  const node: SchemaObject = { type: kind, words }
+  const extra = schema.staticSchema
+  if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
+    const rec = extra as SchemaObject
+    if (!rec.type) {
+      Object.assign(node, rec)
+      node.type = kind
+      node.words = words
+    }
+  }
+  return node
 }
 
 export function formItemValidateOnChange(item: SchemaObject, form: SchemaObject): boolean {

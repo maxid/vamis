@@ -265,6 +265,20 @@
   --remark-hover-bg: #ff9326;
   --remark-hover-border-color: #ff9326;
   --remark-hover-icon-color: #fff;
+  /*
+   * Tag 语义变量（Amis --Tag-*）。静态选择器 / type: tags 用这套，不要用 shadcn Badge。
+   * 高 24、左右 8、字 12、底 #f2f2f4、圆角 2。
+   */
+  --tag-height: 24px;
+  --tag-padding: 0 8px;
+  --tag-font-size: 12px;
+  --tag-font-weight: 400;
+  --tag-radius: 0px;
+  --tag-bg: var(--fill-9);
+  --tag-fg: var(--text-loud);
+  --tag-border-width: 0px;
+  --tag-border-color: transparent;
+  --tag-max-width: 160px;
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -533,6 +547,51 @@
   .vamis-form-item--inline .vamis-form-static {
     display: inline-flex;
     vertical-align: top;
+  }
+  .vamis-form-static > .vamis-node:has(> .vamis-words) {
+    min-width: 0;
+    width: 100%;
+  }
+  .vamis-words {
+    max-width: 100%;
+    word-break: break-word;
+  }
+  .vamis-tag {
+    display: inline-flex;
+    box-sizing: border-box;
+    height: var(--tag-height);
+    max-width: var(--tag-max-width);
+    padding: var(--tag-padding);
+    margin: 0 var(--gap-sm) var(--gap-xs) 0;
+    align-items: center;
+    font-size: var(--tag-font-size);
+    font-weight: var(--tag-font-weight);
+    line-height: var(--tag-height);
+    color: var(--tag-fg);
+    background: var(--tag-bg);
+    border: var(--tag-border-width) solid var(--tag-border-color);
+    border-radius: var(--tag-radius);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vamis-words__toggle {
+    display: inline-flex;
+    align-items: center;
+    height: var(--button-h);
+    margin-left: var(--gap-xs);
+    padding: 4px 12px;
+    border: 0;
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: var(--fontSizeBase, 14px);
+    line-height: 1.5;
+    vertical-align: baseline;
+  }
+  .vamis-words__toggle:hover {
+    color: var(--primary-hover, var(--primary));
   }
   .vamis-form-debug {
     margin: 0 16px 16px;

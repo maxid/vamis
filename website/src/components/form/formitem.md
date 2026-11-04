@@ -4,8 +4,8 @@ title: FormItem 表单项通用
 
 # FormItem 表单项通用
 
-::: info 实现进度 88% · 进行中
-路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
+::: info 实现进度 90% · 进行中
+路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（含选择器 `limit`）、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
 :::
 
 > 所有派生自 FormItem 的组件，都具有 FormItem 的特性。FormItem 不是独立 `type`，字段仍然用各自的 `type`（`input-text`、`select`…）。
@@ -302,6 +302,40 @@ body:
       - type: tpl
         tpl: "${var3}"
       - " | 自定义后缀"
+```
+
+##### 限制选择器类组件的展示数量
+
+下拉选择器、多选框等组件，当选项过多静态展示时，若全部展示会占用页面很多空间，所以默认进行了限制（10 个）。可以通过配置 `staticSchema.limit`，自定义静态展示时的数量。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "mode": "horizontal",
+  "labelWidth": 220,
+  "body": [
+    {
+      "type": "input-tag",
+      "name": "tags",
+      "label": "自定义展示数量",
+      "value": "1,2,3,4,5,6,7,8",
+      "options": [
+        {"label": "选项1", "value": "选项1"},
+        {"label": "选项2", "value": "选项2"},
+        {"label": "选项3", "value": "选项3"},
+        {"label": "选项4", "value": "选项4"},
+        {"label": "选项5", "value": "选项5"},
+        {"label": "选项6", "value": "选项6"},
+        {"label": "选项7", "value": "选项7"},
+        {"label": "选项8", "value": "选项8"}
+      ],
+      "static": true,
+      "staticSchema": {
+        "limit": 3
+      }
+    }
+  ]
+}
 ```
 
 ##### 通过事件动作切换表单项状态
@@ -721,7 +755,7 @@ body:
 | `clearValueOnHidden` | 隐藏时从数据域删除该字段 |
 | `visibleOn` / `hiddenOn` / `disabled` / `disabledOn` | 显隐与禁用 |
 | `static` / `staticOn` | 静态展示；动作 `static` / `nonstatic` 优先级更高 |
-| `staticSchema` | 自定义静态节点；无 type 的对象（如 `{ limit }`）不当 schema |
+| `staticSchema` | 自定义静态节点；无 type 的对象（如 `{ limit }`）不当自定义 schema，选择器类读 `limit`（默认 10） |
 | `staticPlaceholder` | 空值占位，默认 `-` |
 | `validateApi` | 单项后端校验；`422` + `errors` 字符串 |
 | `autoFill` | 映射或 `api` + `fillMapping`；`showSuggestion` 未接 |
@@ -732,5 +766,5 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。
 - 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。

@@ -7,6 +7,7 @@ import {
   formItemRequired,
   formItemStatic,
   formItemStaticSchema,
+  formItemStaticSelectorNode,
   isControlSize,
   resolveClassName,
   statusStaticOf,
@@ -64,6 +65,12 @@ const isStatic = computed(() =>
   ),
 )
 const staticNodes = computed(() => (isStatic.value ? formItemStaticSchema(props.schema) : null))
+const selectorStatic = computed(() => {
+  if (!isStatic.value || staticNodes.value) return null
+  const name = props.schema.name
+  const raw = (name ? form?.getValue(String(name)) : undefined) ?? props.schema.value
+  return formItemStaticSelectorNode(props.schema, raw)
+})
 const staticText = computed(() => {
   const name = props.schema.name
   const raw = name ? form?.getValue(String(name)) : undefined
@@ -116,6 +123,11 @@ const labelRemark = computed(() => {
             :extra-data="itemData"
           />
         </template>
+        <SchemaRenderer
+          v-else-if="selectorStatic"
+          :schema="selectorStatic"
+          :extra-data="itemData"
+        />
         <span v-else-if="staticText">{{ staticText }}</span>
         <span v-else class="vamis-form-static__placeholder">{{ staticPlaceholder }}</span>
       </div>

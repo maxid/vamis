@@ -622,6 +622,8 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'avatar' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'icon' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'remark' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'tags' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'words' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')

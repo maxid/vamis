@@ -11408,6 +11408,75 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
+        "mode": "horizontal",
+        "labelWidth": 220,
+        "body": [
+          {
+            "type": "input-tag",
+            "name": "tags",
+            "label": "自定义展示数量",
+            "value": "1,2,3,4,5,6,7,8",
+            "options": [
+              {
+                "label": "选项1",
+                "value": "选项1"
+              },
+              {
+                "label": "选项2",
+                "value": "选项2"
+              },
+              {
+                "label": "选项3",
+                "value": "选项3"
+              },
+              {
+                "label": "选项4",
+                "value": "选项4"
+              },
+              {
+                "label": "选项5",
+                "value": "选项5"
+              },
+              {
+                "label": "选项6",
+                "value": "选项6"
+              },
+              {
+                "label": "选项7",
+                "value": "选项7"
+              },
+              {
+                "label": "选项8",
+                "value": "选项8"
+              }
+            ],
+            "static": true,
+            "staticSchema": {
+              "limit": 3
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-12",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
         "title": "单个表单项状态切换",
         "mode": "horizontal",
         "labelWidth": 220,
@@ -11464,7 +11533,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-12",
+    "id": "components-form-formitem-13",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11472,7 +11541,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #13",
+    "title": "FormItem 表单项通用 #14",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11585,7 +11654,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-13",
+    "id": "components-form-formitem-14",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11593,7 +11662,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #14",
+    "title": "FormItem 表单项通用 #15",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11617,7 +11686,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-14",
+    "id": "components-form-formitem-15",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11625,7 +11694,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #15",
+    "title": "FormItem 表单项通用 #16",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11672,7 +11741,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-15",
+    "id": "components-form-formitem-16",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11680,7 +11749,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #16",
+    "title": "FormItem 表单项通用 #17",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11715,7 +11784,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-16",
+    "id": "components-form-formitem-17",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11723,7 +11792,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #17",
+    "title": "FormItem 表单项通用 #18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11753,7 +11822,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-17",
+    "id": "components-form-formitem-18",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11761,7 +11830,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #18",
+    "title": "FormItem 表单项通用 #19",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11788,7 +11857,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-18",
+    "id": "components-form-formitem-19",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11796,7 +11865,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #19",
+    "title": "FormItem 表单项通用 #20",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11818,7 +11887,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-19",
+    "id": "components-form-formitem-20",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11826,7 +11895,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #20",
+    "title": "FormItem 表单项通用 #21",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11857,7 +11926,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-20",
+    "id": "components-form-formitem-21",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11865,7 +11934,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #21",
+    "title": "FormItem 表单项通用 #22",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11912,7 +11981,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-21",
+    "id": "components-form-formitem-22",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11920,7 +11989,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #22",
+    "title": "FormItem 表单项通用 #23",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11948,7 +12017,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-22",
+    "id": "components-form-formitem-23",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11956,7 +12025,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #23",
+    "title": "FormItem 表单项通用 #24",
     "expect": "",
     "schema": {
       "type": "page",

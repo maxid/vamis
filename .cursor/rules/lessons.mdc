@@ -128,6 +128,12 @@ alwaysApply: true
 - 触及：FormItem `form` `grid`
 - 规则：`packages/vamis-core/src/utils/form-item.ts` `collectFormItems`
 
+### `{limit}` 不是自定义 schema，选择器静态走 tags/words
+- 踩过：`staticSchema: { limit: 3 }` 无 type，FormItem 当「不是自定义节点」后只画拼接文本；文档「限制选择器类组件的展示数量」整节缺席。Amis StaticHoc 把 `input-tag` 静态渲成 `type: tags`（WordsField + inTag），select 家族渲成 `type: words`，`limit` 默认 10。
+- 稳定做法：无 type 的 `staticSchema` 仍不当自定义节点。选择器静态由 `formItemStaticSelectorNode` 产出 tags/words。`type: tags` 不是 `tag` 的别名。
+- 触及：FormItem `input-tag` `tags` `words` `select`
+- 规则：本文；Amis `StaticHoc.tsx` / `Words.tsx`
+
 ### 对照按原生 name 找表单项
 - 踩过：textarea 没把 `schema.name` 落到原生控件，对照 `rendered` 假红。父表单 `static: true` 时 Amis 静态项也没有 `[name]`，对照会报 Amis false / Vamis true（P0 0）。
 - 稳定做法：input / textarea / select 都要有原生 `name`。静态展示没有原生控件时不要为对齐对照把 `id` 从 `div.vamis-node` 拿掉。

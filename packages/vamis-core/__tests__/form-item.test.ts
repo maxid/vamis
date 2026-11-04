@@ -11,6 +11,8 @@ import {
   formItemRequired,
   formItemStatic,
   formItemStaticSchema,
+  formItemStaticSelectorNode,
+  formItemStaticWords,
   formItemSubmitOnChange,
   formItemValidateOnChange,
   hiddenFieldsToClear,
@@ -78,6 +80,40 @@ describe('formItemStatic', () => {
     expect(nodes).toHaveLength(3)
     expect(nodes?.[0]).toEqual({ type: 'tpl', tpl: '自定义前缀 | ', inline: true })
     expect(nodes?.[1]).toEqual({ type: 'tpl', tpl: '${var3}' })
+  })
+
+  it('turns input-tag staticSchema.limit into tags + words', () => {
+    const schema = {
+      type: 'input-tag',
+      name: 'tags',
+      staticSchema: { limit: 3 },
+      options: [
+        { label: '选项1', value: '选项1' },
+        { label: '选项2', value: '选项2' },
+      ],
+    }
+    expect(formItemStaticSchema(schema)).toBeNull()
+    expect(formItemStaticWords(schema, '1,2,3,4,5,6,7,8')).toEqual(['1', '2', '3', '4', '5', '6', '7', '8'])
+    expect(formItemStaticSelectorNode(schema, '1,2,3,4,5,6,7,8')).toEqual({
+      type: 'tags',
+      words: ['1', '2', '3', '4', '5', '6', '7', '8'],
+      limit: 3,
+    })
+  })
+
+  it('maps select values to option labels for words static', () => {
+    const schema = {
+      type: 'select',
+      multiple: true,
+      options: [
+        { label: '苹果', value: 'a' },
+        { label: '梨', value: 'b' },
+      ],
+    }
+    expect(formItemStaticSelectorNode(schema, 'a,b')).toEqual({
+      type: 'words',
+      words: ['苹果', '梨'],
+    })
   })
 })
 
