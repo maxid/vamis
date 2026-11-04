@@ -85,11 +85,13 @@ body,
   border-top: 1px solid var(--border);
 }
 .doc-prose a {
-  color: var(--primary);
-  text-underline-offset: 2px;
+  color: var(--link-color);
+  font-weight: var(--link-font-weight, 400);
+  text-decoration: var(--link-decoration, none);
 }
 .doc-prose a:hover {
-  text-decoration: underline;
+  color: var(--link-hover-color);
+  text-decoration: var(--link-hover-decoration, none);
 }
 .doc-prose code {
   font-family: var(--font-mono, ui-monospace, monospace);

@@ -12,7 +12,7 @@ function inline(text: string) {
     .replace(/`([^`]+)`/g, '<code class="rounded bg-muted px-1 py-0.5 font-mono text-[0.85em]">$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => `<a class="text-primary underline-offset-2 hover:underline" href="${escapeHtml(safeHref(href))}" target="_blank" rel="noreferrer">${label}</a>`)
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => `<a href="${escapeHtml(safeHref(href))}" target="_blank" rel="noreferrer">${label}</a>`)
 }
 
 export function renderMarkdown(source: string) {

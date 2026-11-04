@@ -10,7 +10,7 @@ const text = computed(() => filterTpl(props.schema.body || props.schema.label ||
 
 <template>
   <BadgeHost :schema="schema" :data="data">
-    <a :href="href" class="text-primary underline-offset-2 hover:underline" :target="schema.blank === false ? '_self' : '_blank'">
+    <a :href="href" :target="schema.blank === false ? '_self' : '_blank'">
       {{ text }}
     </a>
   </BadgeHost>

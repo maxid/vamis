@@ -158,6 +158,12 @@ alwaysApply: true
 - 触及：`page` `form` `crud` `table` `grid` `flex` `container`
 - 规则：`.cursor/rules/component.mdc`
 
+### validations 默认文案和 $1 对齐 locale
+- 踩过：格式校验章节收成一条自造 YAML；默认文案带 label 前缀，和 Amis `请输入数字` / `validationErrors` 的 `$1` 对不上。
+- 稳定做法：对象 / 逗号字符串 / 自定义文案 / `$1` / 规则表按 Amis formitem.md 主路径。默认文案抄 `amis-ui/src/locale/zh-CN.ts`。多规则按写入顺序，中途失败即停。
+- 触及：FormItem `form`
+- 规则：本文；Amis `packages/amis-core/src/utils/validations.ts`
+
 ### 对标 Amis 默认 normal 时不要用 scope=form-item
 - 踩过：`scope="form-item"` 包装层强制 `mode: horizontal`，未写 mode 的「常规」变成左右；Amis `scope="body"` 的 form 默认 `normal` 是上下。内联项本身是左右（≥576 `Form-item--inline`）。
 - 稳定做法：Amis 文档 `scope="body"` 且 form 未写 mode 时，Vamis 也用 `scope="body"`，不要套 `form-item`。`mode: inline` 才是项内左右；`type: group` 把 `mode` / `subFormMode` 传给未写 mode 的子项，group 外壳不要 `inline-block`。
@@ -178,6 +184,12 @@ alwaysApply: true
 - 稳定做法：复写放 `@layer components`，或只覆盖有分歧的那一条。
 - 触及：`/style` Layout
 - 规则：`.cursor/rules/style.mdc`
+
+### 链接走 --link-*，不要 UA 下划线
+- 踩过：表单 label 里的 `<a>` 吃浏览器默认蓝+下划线，或 `.doc-prose a:hover` 再加下划线。Amis `_typography.scss` 是 `--link-color` `#2468f2`、`text-decoration: none`。
+- 稳定做法：`--link-color` / `--link-hover-color` 挂 `:root`。`.vamis-root a` 放 `@layer base`（压过 UA / preflight inherit，不压 Button utilities）。`type: link` 不要再叠 `text-primary hover:underline`。文档 prose 用同一套 token，不要 underline。
+- 触及：FormItem `tpl` `html` `link`
+- 规则：`.cursor/rules/style.mdc`；Amis `scss/base/_typography.scss`
 
 ### token 是默认，helper 是作者覆盖
 - 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。Overlay Tooltip 一度写死 `#fff` / `8px`，或拿 shadcn `--popover` 冒充。

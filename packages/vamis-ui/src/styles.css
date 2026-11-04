@@ -112,6 +112,13 @@
   --primary-foreground: oklch(0.99 0.01 var(--accent-h));
   --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
   --primary-active: color-mix(in oklch, var(--primary) 82%, black);
+  /* Amis `--colors-link-5/6/4`，不要用 oklch primary 冒充，也不要 UA 下划线。 */
+  --link-color: #2468f2;
+  --link-hover-color: #528eff;
+  --link-active-color: #144bcc;
+  --link-decoration: none;
+  --link-hover-decoration: none;
+  --link-font-weight: 400;
   --secondary: oklch(0.945 0.01 250);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 250);
@@ -2040,5 +2047,27 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* `@layer base` 压过 UA / preflight inherit，不压 Button utilities 和日历 scoped。对齐 Amis `_typography.scss` `a`。 */
+@layer base {
+  .vamis-root a,
+  .vamis-sdk a {
+    color: var(--link-color);
+    font-weight: var(--link-font-weight);
+    text-decoration: var(--link-decoration);
+    font-style: normal;
+    background-color: transparent;
+  }
+  .vamis-root a:hover,
+  .vamis-sdk a:hover {
+    color: var(--link-hover-color);
+    text-decoration: var(--link-hover-decoration);
+  }
+  .vamis-root a:active,
+  .vamis-sdk a:active {
+    color: var(--link-active-color);
+    text-decoration: var(--link-hover-decoration);
   }
 }

@@ -132,7 +132,7 @@ describe('validateValue requiredOn', () => {
   it('treats requiredOn as required when the expression is true', () => {
     const schema = { name: 'text', label: '文本', type: 'input-text', requiredOn: 'this.number > 1' }
     expect(validateValue(schema, '', { number: 0 })).toBeNull()
-    expect(validateValue(schema, '', { number: 2 })).toContain('不能为空')
+    expect(validateValue(schema, '', { number: 2 })).toBe('这是必填项')
   })
 })
 

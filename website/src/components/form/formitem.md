@@ -5,7 +5,7 @@ title: FormItem 表单项通用
 # FormItem 表单项通用
 
 ::: info 实现进度 90% · 进行中
-路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（含选择器 `limit`）、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）。未写 `label` 仍占标签列（`label: false` 才去掉）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
+路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（含选择器 `limit`）、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）、`validations` / `validationErrors`。未写 `label` 仍占标签列（`label: false` 才去掉）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
 :::
 
 > 所有派生自 FormItem 的组件，都具有 FormItem 的特性。FormItem 不是独立 `type`，字段仍然用各自的 `type`（`input-text`、`select`…）。
@@ -625,23 +625,212 @@ body:
 
 ## 格式校验
 
-`validations` 可对象或逗号分隔字符串；`validateOnChange: true` 时改值即校验。
+可以配置 `validations` 属性，指定校验当前表单项值的格式。
+
+可以通过对象形式配置
 
 ```schema: scope="body"
-type: form
-api: /api/mock2/form/saveForm
-body:
-  - type: input-text
-    label: 文本
-    name: text
-    validations: "minLength:2,isAlphanumeric"
-    validationErrors:
-      minLength: 请至少输入两个字符
-      isAlphanumeric: 只能包含字母或数字
-    validateOnChange: true
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": {
+        "isNumeric": true
+      },
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
 ```
 
-横向 `mode: horizontal` 时：桌面（≥576px）标签右对齐、宽 `--form-label-width`（98px）；窄屏标签约 28%、控件吃剩下的。
+同样也可以配置多个格式校验，按顺序进行校验，中途校验不通过就会终止
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": {
+        "isNumeric": true,
+        "minimum": 10
+      },
+      "validateOnChange": true,
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
+```
+
+### 字符串形式（不推荐）
+
+也可以配置字符串形式来指定，如下例，输入不合法的值，点击提交会报错并显示报错信息。（注意日期时间类的校验规则不支持字符串形式）
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": "isNumeric",
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
+```
+
+也可以指定多个格式校验，中间用`逗号`分隔。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": "isNumeric,minimum:10",
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
+```
+
+如果需要配置参数，例如显示最大值或最小值，则在格式标识符后`:`和参数
+
+### 自定义校验信息
+
+默认会有报错信息，若要自定义，配置 `validationErrors` 属性。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": {
+        "isNumeric": true
+      },
+      "validationErrors": {
+        "isNumeric": "同学，请输入数字哈"
+      },
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
+```
+
+如果需要获取当前格式校验配置的参数，可以使用 `$1`
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "validations": {
+        "isNumeric": true,
+        "minimum": 10
+      },
+      "validationErrors": {
+        "minimum": "同学，最少输入$1以上的数字哈"
+      },
+      "description": "请输入数字类型文本"
+    }
+  ]
+}
+```
+
+### 表单项值发生变化即校验
+
+默认校验是当进行行为操作时，对表单项进行校验，如果你想每次表单项的值发生变化的时候就校验，请配置 `"validateOnChange": true`
+
+### 支持的格式校验
+
+| 规则名称 | 说明 | 定义 | 版本 |
+| --- | --- | --- | --- |
+| `isEmail` | 必须是 Email。 | `(value: any) => boolean` |  |
+| `isUrl` | 必须是 Url。 | `(value: any) => boolean` |  |
+| `isNumeric` | 必须是 数值。 | `(value: any) => boolean` |  |
+| `isAlpha` | 必须是 字母。 | `(value: any) => boolean` |  |
+| `isAlphanumeric` | 必须是 字母或者数字。 | `(value: any) => boolean` |  |
+| `isInt` | 必须是 整形。 | `(value: any) => boolean` |  |
+| `isFloat` | 必须是 浮点形。 | `(value: any) => boolean` |  |
+| `isLength:length` | 是否长度正好等于设定值。 | `(value: any) => boolean` |  |
+| `minLength:length` | 最小长度。 | `(value: any, length: number) => boolean` |  |
+| `maxLength:length` | 最大长度。 | `(value: any, length: number) => boolean` |  |
+| `maximum:number` | 最大值。 | `(value: any, maximum: number) => boolean` |  |
+| `minimum:number` | 最小值。 | `(value: any, minimum:number) => boolean` |  |
+| `equals:xxx` | 当前值必须完全等于 xxx。 | `(value: any, targetValue: any) => boolean` |  |
+| `equalsField:xxx` | 当前值必须与 xxx 变量值一致。 | `(value: any, field: string) => boolean` |  |
+| `isJson` | 是否是合法的 Json 字符串。 | `(value: any) => boolean` |  |
+| `isUrlPath` | 是 url 路径。 | `(value: any) => boolean` |  |
+| `isPhoneNumber` | 是否为合法的手机号码 | `(value: any) => boolean` |  |
+| `isTelNumber` | 是否为合法的电话号码 | `(value: any) => boolean` |  |
+| `isZipcode` | 是否为邮编号码 | `(value: any) => boolean` |  |
+| `isId` | 是否为身份证号码，支持 18 位和 15 位验证，单个验证请使用 `isId18` / `isId15` | `(value: any) => boolean` |  |
+| `matchRegexp:/foo/` | 必须命中某个正则。 | `(value: any, regexp: string \| RegExp) => boolean` |  |
+| `matchRegexp${n}:/foo/` | 必须命中某个正则。设置正则表达式时属性名需以 `matchRegexp` 开头，`n` 支持 `1-9`。 | `(value: any, regexp: string \| RegExp) => boolean` |  |
+| `isDateTimeSame` | 日期和目标日期相同，支持指定粒度，默认到毫秒 | `(value, targetDate, granularity?) => boolean` | `2.2.0` |
+| `isDateTimeBefore` | 日期早于目标日期 | `(value, targetDate, granularity?) => boolean` | `2.2.0` |
+| `isDateTimeAfter` | 日期晚于目标日期 | `(value, targetDate, granularity?) => boolean` | `2.2.0` |
+| `isDateTimeSameOrBefore` | 日期早于或等于目标日期 | `(value, targetDate, granularity?) => boolean` | `2.2.0` |
+| `isDateTimeSameOrAfter` | 日期晚于或等于目标日期 | `(value, targetDate, granularity?) => boolean` | `2.2.0` |
+| `isDateTimeBetween` | 日期处于目标日期范围 | `(value, lhs, rhs, granularity?, inclusivity?) => boolean` | `2.2.0` |
+| `isTimeSame` | 时间和目标时间相同 | `(value, targetTime, granularity?) => boolean` | `2.2.0` |
+| `isTimeBefore` | 时间早于目标时间 | `(value, targetTime, granularity?) => boolean` | `2.2.0` |
+| `isTimeAfter` | 时间晚于目标时间 | `(value, targetTime, granularity?) => boolean` | `2.2.0` |
+| `isTimeSameOrBefore` | 时间早于或等于目标时间 | `(value, targetTime, granularity?) => boolean` | `2.2.0` |
+| `isTimeSameOrAfter` | 时间晚于或等于目标时间 | `(value, targetTime, granularity?) => boolean` | `2.2.0` |
+| `isTimeBetween` | 时间处于目标时间范围 | `(value, lhs, rhs, granularity?, inclusivity?) => boolean` | `2.2.0` |
+| `isVariableName` | 是否为合法的变量名，默认 `/^[a-zA-Z_]+[a-zA-Z0-9]*$/` | `(value: any) => boolean` | `2.5.0` |
+
+#### 验证只允许 http 协议的 url 地址
+
+`isUrl` 可以配置如下参数
+
+- schemes 协议，默认是：`['http', 'https', 'ftp', 'sftp']`
+- allowLocal 是否允许填写本地地址
+- allowDataUrl 是否允许 dataUrl
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "name": "url",
+      "type": "input-text",
+      "label": "只允许 https 打头的 url",
+      "validations": {
+        "isUrl": {
+          "schemes": ["https"]
+        }
+      }
+    }
+  ]
+}
+```
+
+### 自定义校验函数
+
+宿主可调用 `@vamis/core` 的 `addRule(name, fn, message)` 注册新规则。文档站不另开扩展页。
 
 ## 服务端校验
 
@@ -793,5 +982,5 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。
 - 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。

@@ -11853,12 +11853,10 @@ window.VAMIS_COMPARE_CASES = [
             "type": "input-text",
             "label": "文本",
             "name": "text",
-            "validations": "minLength:2,isAlphanumeric",
-            "validationErrors": {
-              "minLength": "请至少输入两个字符",
-              "isAlphanumeric": "只能包含字母或数字"
+            "validations": {
+              "isNumeric": true
             },
-            "validateOnChange": true
+            "description": "请输入数字类型文本"
           }
         ]
       }
@@ -11882,13 +11880,18 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "debug": true,
-        "api": "/api/mock2/form/saveFormFailed?waitSeconds=1",
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
-            "name": "test2",
             "type": "input-text",
-            "label": "服务端验证"
+            "label": "文本",
+            "name": "text",
+            "validations": {
+              "isNumeric": true,
+              "minimum": 10
+            },
+            "validateOnChange": true,
+            "description": "请输入数字类型文本"
           }
         ]
       }
@@ -11907,6 +11910,206 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #21",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "validations": "isNumeric",
+            "description": "请输入数字类型文本"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-21",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #22",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "validations": "isNumeric,minimum:10",
+            "description": "请输入数字类型文本"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-22",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #23",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "validations": {
+              "isNumeric": true
+            },
+            "validationErrors": {
+              "isNumeric": "同学，请输入数字哈"
+            },
+            "description": "请输入数字类型文本"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-23",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #24",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-text",
+            "label": "文本",
+            "name": "text",
+            "validations": {
+              "isNumeric": true,
+              "minimum": 10
+            },
+            "validationErrors": {
+              "minimum": "同学，最少输入$1以上的数字哈"
+            },
+            "description": "请输入数字类型文本"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-24",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #25",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "name": "url",
+            "type": "input-text",
+            "label": "只允许 https 打头的 url",
+            "validations": {
+              "isUrl": {
+                "schemes": [
+                  "https"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-25",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #26",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveFormFailed?waitSeconds=1",
+        "body": [
+          {
+            "name": "test2",
+            "type": "input-text",
+            "label": "服务端验证"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formitem-26",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "FormItem 表单项通用",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "FormItem 表单项通用 #27",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11937,7 +12140,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-21",
+    "id": "components-form-formitem-27",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -11945,7 +12148,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #22",
+    "title": "FormItem 表单项通用 #28",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11992,7 +12195,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-22",
+    "id": "components-form-formitem-28",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -12000,7 +12203,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #23",
+    "title": "FormItem 表单项通用 #29",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12028,7 +12231,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formitem-23",
+    "id": "components-form-formitem-29",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -12036,7 +12239,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "FormItem 表单项通用 #24",
+    "title": "FormItem 表单项通用 #30",
     "expect": "",
     "schema": {
       "type": "page",
