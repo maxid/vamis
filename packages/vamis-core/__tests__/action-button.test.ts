@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   actionActive,
@@ -22,6 +25,7 @@ import {
   actionSchemaLoading,
   actionShowLabel,
   actionTooltip,
+  actionTooltipOverlayPlacement,
   actionTooltipPlacement,
   countdownRemaining,
   countdownStorageKey,
@@ -97,6 +101,10 @@ describe('actionTooltip / actionMailto', () => {
     expect(actionDisabledTip({ disabledTip: '禁用了' })).toBe('禁用了')
     expect(actionTooltipPlacement({ tooltipPlacement: 'right' })).toBe('right')
     expect(actionTooltipPlacement({})).toBe('top')
+    expect(actionTooltipOverlayPlacement({})).toBe('center-top-center-bottom')
+    expect(actionTooltipOverlayPlacement({ tooltipPlacement: 'right' })).toBe('right-center-left-center')
+    expect(actionTooltipOverlayPlacement({ tooltipPlacement: 'bottom' })).toBe('center-bottom-center-top')
+    expect(actionTooltipOverlayPlacement({ tooltipPlacement: 'left' })).toBe('left-center-right-center')
     expect(actionMailto({ to: 'amis@baidu.com', subject: '这是邮件主题', body: '这是邮件正文' })).toBe(
       'mailto:amis@baidu.com?subject=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E4%B8%BB%E9%A2%98&body=%E8%BF%99%E6%98%AF%E9%82%AE%E4%BB%B6%E6%AD%A3%E6%96%87',
     )
@@ -160,5 +168,27 @@ describe('countDown / hotKey / body / active / loading', () => {
     expect(parseContentDisposition("attachment; filename*=UTF-8''%E4%B8%8B%E8%BD%BD.pdf")).toBe('下载.pdf')
     expect(fileNameFromUrl('/api/download/report.csv?x=1')).toBe('report.csv')
     expect(fileNameFromUrl('/api/download')).toBe('download')
+  })
+})
+
+describe('action tooltip overlay', () => {
+  it('teleports via VamisOverlay at --z-tooltip and dispatches mouseenter/leave', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/Action.vue'), 'utf8')
+    const overlay = readFileSync(resolve(here, '../../vamis/src/overlay/VamisOverlay.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(vue).toContain('VamisOverlay')
+    expect(vue).toContain('vamis-overlay--tooltip')
+    expect(vue).toContain('data-vamis-action')
+    expect(vue.match(/data-vamis-action/g)?.length).toBeGreaterThanOrEqual(2)
+    expect(vue).toContain("runOnEvent(props.schema, name, ctx)")
+    expect(vue).toContain("runPointerEvent('mouseenter'")
+    expect(vue).toContain("runPointerEvent('mouseleave'")
+    expect(vue).not.toContain('z-50')
+    expect(vue).not.toMatch(/class="absolute z-/)
+    expect(overlay).toContain('layerClass')
+    expect(css).toContain('.vamis-overlay.vamis-overlay--tooltip')
+    expect(css).toContain('z-index: var(--z-tooltip, 1600)')
+    expect(css).toContain('.vamis-action-tooltip')
   })
 })

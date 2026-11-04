@@ -8443,22 +8443,33 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "action",
-        "tooltip": "点击会有提示",
-        "actionType": "toast",
-        "toast": {
-          "items": [
-            {
-              "body": "点了容器"
-            }
-          ]
+      "body": [
+        {
+          "type": "action",
+          "body": {
+            "type": "color",
+            "value": "#108cee"
+          },
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "这是个简单的弹框。"
+          }
         },
-        "body": {
-          "type": "tpl",
-          "tpl": "点我打开提示"
+        {
+          "type": "action",
+          "tooltip": "点击会有弹框",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "这是个简单的弹框。"
+          },
+          "body": {
+            "type": "image",
+            "src": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+          }
         }
-      }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -8478,18 +8489,11 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "label": "弹框",
         "type": "button",
-        "label": "提示",
-        "actionType": "toast",
-        "tooltip": "点击链接跳转",
-        "tooltipPlacement": "right",
-        "toast": {
-          "items": [
-            {
-              "body": "点了提示按钮"
-            }
-          ]
-        }
+        "actionType": "link",
+        "link": "../index",
+        "tooltip": "点击链接跳转"
       }
     },
     "measure": {
@@ -8510,9 +8514,11 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "label": "弹框",
         "type": "button",
-        "label": "禁用提示",
+        "actionType": "link",
         "disabled": true,
+        "link": "../index",
         "disabledTip": "禁用了"
       }
     },
@@ -8534,10 +8540,106 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "label": "弹框",
+        "type": "button",
+        "actionType": "link",
+        "link": "../index",
+        "tooltipPlacement": "right",
+        "tooltip": "点击链接跳转"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-30",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #31",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
         "type": "button",
         "label": "Button",
         "onEvent": {
           "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-31",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #32",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "Button",
+        "onEvent": {
+          "mouseenter": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-action-32",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Action 行为按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Action 行为按钮 #33",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "Button",
+        "onEvent": {
+          "mouseleave": {
             "actions": [
               {
                 "actionType": "toast",

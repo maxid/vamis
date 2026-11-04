@@ -14,6 +14,7 @@ describe('overlay-layer', () => {
     expect(Z_INDEX.dropdown).toBe(1000)
     expect(Z_INDEX.modal).toBe(1400)
     expect(Z_INDEX.popover).toBe(1400)
+    expect(Z_INDEX.tooltip).toBe(1600)
     expect(Z_INDEX.toast).toBe(2000)
   })
 
@@ -81,12 +82,26 @@ describe('overlay-layer', () => {
     expect(popover).not.toContain('position: absolute')
   })
 
+  it('places a top / right tooltip with side gap', () => {
+    const target = rect(40, 20, 200, 32)
+    stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
+    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'center-top-center-bottom' })).toEqual({
+      top: 2,
+      left: 70,
+    })
+    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'right-center-left-center' })).toEqual({
+      top: 41,
+      left: 228,
+    })
+  })
+
   it('VamisOverlay feeds overlay size into auto placement', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const vue = readFileSync(resolve(here, '../../vamis/src/overlay/VamisOverlay.vue'), 'utf8')
     expect(vue).toContain('height: layer?.offsetHeight')
     expect(vue).toContain("placement: 'auto'")
     expect(vue).toContain('ResizeObserver')
+    expect(vue).toContain("visibility: ready ? 'visible' : 'hidden'")
   })
 })
 

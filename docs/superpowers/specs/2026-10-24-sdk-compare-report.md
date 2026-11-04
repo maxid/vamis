@@ -3,24 +3,22 @@
 - 日期：2026-11-04
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **34** · 通过 **34** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **37** · 通过 **37** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 4 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 2 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 7 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 6 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（4）
+### 全局（2）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 - `src-components-action-23` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-action-26` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-action-27` fontSize: Amis `12px` / Vamis `14px`
-- `src-components-action-29` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-action-30` fontSize: Amis `12px` / Vamis `14px`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -31,7 +29,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（7）
+### 组件（6）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
@@ -39,9 +37,8 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-components-action-23` lineHeight: Amis `18px` / Vamis `14px`
 - `src-components-action-23` fontWeight: Amis `400` / Vamis `500`
 - `src-components-action-24` lineHeight: Amis `21px` / Vamis `14px`
-- `src-components-action-26` lineHeight: Amis `24px` / Vamis `21px`
-- `src-components-action-27` lineHeight: Amis `24px` / Vamis `21px`
-- `src-components-action-29` lineHeight: Amis `24px` / Vamis `21px`
+- `src-components-action-26` lineHeight: Amis `21px` / Vamis `20px`
+- `src-components-action-30` lineHeight: Amis `24px` / Vamis `21px`
 
 整改：
 - Button 默认字重：Amis 400，Vamis shadcn font-medium=500。改 button cva，不要改全局。
@@ -52,7 +49,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 4 | 0 |
-| 组件 | 30 | 0 |
+| 组件 | 33 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -62,7 +59,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 | 组 | 合计 | 失败 |
 |----|------|------|
 | 文档 / 概念 | 4 | 0 |
-| 组件 / 功能 | 30 | 0 |
+| 组件 / 功能 | 33 | 0 |
 
 ## P0 失败（驱动下一刀）
 

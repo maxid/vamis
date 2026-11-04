@@ -98,6 +98,8 @@ function coordsForPlacement(
   let top = anchor(atY, child.top, child.height) - overlayOffset(myY, overlayH)
   if (myY === 'top') top += gap
   else if (myY === 'bottom') top -= gap
+  else if (myX === 'left') left += gap
+  else if (myX === 'right') left -= gap
   return { top, left }
 }
 

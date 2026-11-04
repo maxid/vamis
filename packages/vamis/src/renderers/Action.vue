@@ -18,6 +18,7 @@ import {
   actionIconOnly,
   actionShowLabel,
   actionTooltip,
+  actionTooltipOverlayPlacement,
   actionTooltipPlacement,
   countdownRemaining,
   countdownStorageKey,
@@ -26,6 +27,7 @@ import {
   filterTpl,
   iconVendor,
   matchHotKey,
+  overlayContainerFrom,
   readCountdownEnd,
   resolveIcon,
   runAction,
@@ -40,6 +42,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, cn, levelToVariant, sizeToButtonSize } from '@vamis/ui'
+import VamisOverlay from '../overlay/VamisOverlay.vue'
 import BadgeHost from './BadgeHost.vue'
 import IconMark from './IconMark.vue'
 
@@ -57,6 +60,7 @@ const overlay = useOverlay()
 const form = useFormApi()
 const loading = ref(false)
 const tipOpen = ref(false)
+const triggerEl = ref<HTMLElement | null>(null)
 const inCountDown = ref(false)
 const timeLeft = ref(0)
 const countDownEnd = ref(0)
@@ -86,6 +90,8 @@ const isLoading = computed(() => loading.value || schemaLoading.value)
 const tooltip = computed(() => actionTooltip(props.schema, data.value))
 const disabledTip = computed(() => actionDisabledTip(props.schema, data.value))
 const placement = computed(() => actionTooltipPlacement(props.schema))
+const overlayPlacement = computed(() => actionTooltipOverlayPlacement(props.schema))
+const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const isDisabled = computed(() => props.disabled === true || inCountDown.value || isLoading.value)
 const tipText = computed(() => (isDisabled.value && disabledTip.value ? disabledTip.value : tooltip.value))
 const hasTip = computed(() => !!tipText.value)
@@ -102,24 +108,6 @@ const buttonClass = computed(() =>
     isActive.value ? actionActiveClassName(props.schema) : undefined,
   ),
 )
-const placeClass = computed(() => {
-  const map: Record<string, string> = {
-    top: 'bottom-full left-1/2 mb-2 -translate-x-1/2',
-    bottom: 'top-full left-1/2 mt-2 -translate-x-1/2',
-    left: 'right-full top-1/2 mr-2 -translate-y-1/2',
-    right: 'left-full top-1/2 ml-2 -translate-y-1/2',
-  }
-  return map[placement.value] || map.top
-})
-const arrowClass = computed(() => {
-  const map: Record<string, string> = {
-    top: 'top-full left-1/2 -translate-x-1/2 border-x-[5px] border-x-transparent border-t-[5px] border-t-border',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-x-[5px] border-x-transparent border-b-[5px] border-b-border',
-    left: 'left-full top-1/2 -translate-y-1/2 border-y-[5px] border-y-transparent border-l-[5px] border-l-border',
-    right: 'right-full top-1/2 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-border',
-  }
-  return map[placement.value] || map.top
-})
 
 function clearCountTimer() {
   if (countTimer) clearTimeout(countTimer)
@@ -161,8 +149,8 @@ function restoreCountDown() {
   tickCountDown()
 }
 
-function makeCtx(native?: Event) {
-  const event = createVamisEvent('click', data.value, native || { type: 'click' })
+function makeCtx(native?: Event, type = 'click') {
+  const event = createVamisEvent(type, data.value, native || { type })
   return {
     env,
     data: eventEvalData(data.value, event),
@@ -228,6 +216,21 @@ function hideTip() {
   tipOpen.value = false
 }
 
+async function runPointerEvent(name: 'mouseenter' | 'mouseleave', native: Event) {
+  const ctx = makeCtx(native, name)
+  await runOnEvent(props.schema, name, ctx)
+}
+
+function onEnter(native: MouseEvent) {
+  showTip()
+  if (!isDisabled.value) void runPointerEvent('mouseenter', native)
+}
+
+function onLeave(native: MouseEvent) {
+  hideTip()
+  if (!isDisabled.value) void runPointerEvent('mouseleave', native)
+}
+
 onMounted(() => {
   restoreCountDown()
   if (actionHotKey(props.schema)) {
@@ -245,29 +248,23 @@ onBeforeUnmount(() => {
   <BadgeHost :schema="schema" :data="data">
     <span
       v-if="isContainer"
+      ref="triggerEl"
       data-vamis-action
-      class="relative inline-block cursor-pointer"
+      class="inline-block cursor-pointer"
       @click="onClick($event)"
-      @mouseenter="showTip"
-      @mouseleave="hideTip"
+      @mouseenter="onEnter($event)"
+      @mouseleave="onLeave($event)"
     >
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
-      <span
-        v-if="hasTip && tipOpen"
-        role="tooltip"
-        class="absolute z-50 w-max max-w-xs rounded-md border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md"
-        :class="placeClass"
-      >
-        {{ tipText }}
-        <span aria-hidden="true" class="absolute size-0" :class="arrowClass" />
-      </span>
     </span>
     <span
       v-else
-      class="relative inline-block"
+      ref="triggerEl"
+      data-vamis-action
+      class="inline-block"
       :class="block ? 'w-full' : undefined"
-      @mouseenter="showTip"
-      @mouseleave="hideTip"
+      @mouseenter="onEnter($event)"
+      @mouseleave="onLeave($event)"
     >
       <Button
         :variant="variant"
@@ -286,15 +283,16 @@ onBeforeUnmount(() => {
         <template v-if="showLabel">{{ displayLabel }}</template>
         <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
       </Button>
-      <span
-        v-if="hasTip && tipOpen"
-        role="tooltip"
-        class="absolute z-50 w-max max-w-xs rounded-md border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md"
-        :class="placeClass"
-      >
-        {{ tipText }}
-        <span aria-hidden="true" class="absolute size-0" :class="arrowClass" />
-      </span>
     </span>
+    <VamisOverlay
+      :show="hasTip && tipOpen"
+      :target="triggerEl"
+      :container="overlayContainer"
+      :placement="overlayPlacement"
+      :gap="8"
+      layer-class="vamis-overlay--tooltip"
+    >
+      <div role="tooltip" class="vamis-action-tooltip" :data-place="placement">{{ tipText }}</div>
+    </VamisOverlay>
   </BadgeHost>
 </template>

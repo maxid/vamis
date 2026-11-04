@@ -13,6 +13,7 @@ const props = withDefaults(
     container?: OverlayContainer
     gap?: number
     placement?: string
+    layerClass?: string
   }>(),
   { gap: 2, placement: 'auto' },
 )
@@ -21,12 +22,13 @@ const emit = defineEmits<{ outside: []; placed: [] }>()
 
 const layerEl = ref<HTMLElement | null>(null)
 const coords = ref({ top: 0, left: 0 })
+const ready = ref(false)
 const to = computed(() => resolveOverlayContainer(props.container))
 let layerObserver: ResizeObserver | null = null
 
 function place() {
   const el = props.target
-  if (!el) return
+  if (!el) return false
   const layer = layerEl.value
   coords.value = overlayPosition(el, {
     gap: props.gap,
@@ -34,14 +36,18 @@ function place() {
     height: layer?.offsetHeight,
     placement: props.placement,
   })
+  return true
 }
 
 async function placeAfterPaint() {
-  if (!props.show) return
+  if (!props.show) {
+    ready.value = false
+    return
+  }
   await nextTick()
   place()
   await nextTick()
-  place()
+  if (place()) ready.value = true
   emit('placed')
 }
 
@@ -59,6 +65,7 @@ function onReposition() {
 watch(
   () => [props.show, props.target, props.container, props.placement] as const,
   () => {
+    if (!props.show) ready.value = false
     void placeAfterPaint()
   },
   { immediate: true },
@@ -93,8 +100,9 @@ onBeforeUnmount(() => {
       v-if="show"
       ref="layerEl"
       class="vamis-overlay"
+      :class="layerClass"
       data-vamis-overlay-layer
-      :style="{ top: `${coords.top}px`, left: `${coords.left}px` }"
+      :style="{ top: `${coords.top}px`, left: `${coords.left}px`, visibility: ready ? 'visible' : 'hidden' }"
       @mousedown.stop
     >
       <slot />

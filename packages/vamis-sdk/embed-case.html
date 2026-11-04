@@ -235,6 +235,19 @@
           each: 1,
         }
         var SKIP_PROBE = { ajax: 1, link: 1, url: 1, email: 1, download: 1, copy: 1, reload: 1, submit: 1 }
+        var SKIP_PROBE_EVENT = { mouseenter: 1, mouseleave: 1 }
+        var ACTION_TYPES = { action: 1, button: 1, submit: 1, reset: 1 }
+
+        function shouldProbe(actions) {
+          return actions.some(function (item) {
+            const text = typeof item === 'string' ? item : ''
+            const split = text.indexOf(':')
+            const event = split >= 0 ? text.slice(0, split) : 'click'
+            if (SKIP_PROBE_EVENT[event]) return false
+            const action = split >= 0 ? text.slice(split + 1) : text
+            return !SKIP_PROBE[action]
+          })
+        }
 
         function isSchemaNode(value) {
           return !!(value && typeof value === 'object' && !Array.isArray(value) && typeof value.type === 'string')
@@ -257,11 +270,13 @@
 
         function walkSchemaTree(schema) {
           const out = []
+          let actionIndex = 0
           function visit(node, path) {
             if (!isSchemaNode(node) || out.length >= 80) return
             const name = node.name != null && node.name !== '' ? String(node.name) : ''
             const actions = collectNodeActions(node)
             const events = node.onEvent && typeof node.onEvent === 'object' ? Object.keys(node.onEvent) : []
+            const isAction = !!ACTION_TYPES[node.type]
             out.push({
               path: path,
               type: node.type,
@@ -271,10 +286,8 @@
               schemaValue: node.value !== undefined ? node.value : node.defaultValue,
               events: events,
               actions: actions,
-              probe: actions.some(function (item) {
-                const action = item.indexOf(':') >= 0 ? item.split(':').pop() : item
-                return !SKIP_PROBE[action]
-              }),
+              actionIndex: isAction ? actionIndex++ : -1,
+              probe: shouldProbe(actions),
             })
             TREE_CHILD_KEYS.forEach(function (key) {
               const child = node[key]
@@ -299,6 +312,13 @@
           return String(name).replace(/"/g, '\\"')
         }
 
+        function actionClickTarget(el) {
+          if (!el) return null
+          if (el.matches && el.matches('button, a, [role="button"]')) return el
+          const inner = el.querySelector && el.querySelector('button, a, [role="button"]')
+          return inner || el
+        }
+
         function findNodeEl(node) {
           if (node.name) {
             const named = document.querySelector('[name="' + cssEscapeName(node.name) + '"]')
@@ -312,11 +332,15 @@
             const byLabel = findByLabel(node.label)
             if (byLabel) return byLabel
           }
-          if (node.type === 'button' || node.type === 'action' || node.type === 'submit' || node.type === 'reset') {
-            const host = document.querySelector('[data-vamis-action]')
-            if (host) return host
-            const buttons = document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
-            if (buttons.length === 1) return buttons[0]
+          if (ACTION_TYPES[node.type]) {
+            const vam = document.querySelectorAll('[data-vamis-action]')
+            const buttons = vam.length
+              ? vam
+              : document.querySelectorAll('button, a.cxd-Button, .cxd-Button, .cxd-Action')
+            if (typeof node.actionIndex === 'number' && node.actionIndex >= 0 && buttons[node.actionIndex]) {
+              return actionClickTarget(buttons[node.actionIndex])
+            }
+            if (buttons.length === 1) return actionClickTarget(buttons[0])
           }
           if (node.type === 'avatar') {
             return document.querySelector('[data-vamis-avatar], .cxd-Avatar')
@@ -412,6 +436,7 @@
             if (comp.props && 'value' in comp.props) return comp.props.value
           }
           if (node.name && formData && node.name in formData) return formData[node.name]
+          if (ACTION_TYPES[node.type]) return node.schemaValue
           const el = findNodeEl(node)
           if (el && (node.type === 'avatar' || node.type === 'tasks' || node.type === 'audio' || node.type === 'wizard')) {
             const text = (el.textContent || '').replace(/\s+/g, ' ').trim()

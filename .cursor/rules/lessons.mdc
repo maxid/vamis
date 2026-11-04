@@ -48,6 +48,18 @@ alwaysApply: true
 - 触及：所有对照过的 type
 - 规则：`.cursor/rules/compare.mdc`
 
+### 对照不要用 click 去探 hover 事件
+- 踩过：`mouseenter` / `mouseleave` 活示例被 `el.click()` 探针点到；Vamis 指针进入会弹 toast，Amis 点按不弹，对照假红。
+- 稳定做法：`shouldProbe` 只认 click（及无事件前缀的 `actionType`）；`mouseenter` / `mouseleave` 不点。
+- 触及：`action` `button`
+- 规则：`packages/vamis-sdk/compare/schema-tree.mjs` `shouldProbe`；`embed-case.html`
+
+### 无 label 的容器 Action 按下标找节点
+- 踩过：对照 `querySelector('[data-vamis-action]')` 或 `buttons.length === 1`。容器示例两个无 label Action 时 Amis `.cxd-Action` 不是恰好 1 个（rendered false），Vamis 命中第一个，value 吃到内部 color 文本、dialog 探针点错节点。
+- 稳定做法：schema 走访给 action 编号，`querySelectorAll` 按下标取；命中包装 span 时点内部 `button`/`a`（`el.click()` 不会传到子节点）。`action` / `button` 不要把子节点 `textContent` 当 value。每个 Action 宿主都打 `data-vamis-action`。
+- 触及：`action` `button`
+- 规则：本文；`packages/vamis-sdk/embed-case.html` `findNodeEl`
+
 ### 窄屏必须桌面 + 移动一起跑
 - 踩过：只修 `<576` 把 Dialog 桌面也拉满；只跑 `--mobile` 桌面回归看不见。
 - 稳定做法：动窄屏 / `m:` / 移动端表单，对照必须桌面 + `--mobile`。
@@ -134,8 +146,8 @@ alwaysApply: true
 
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
-- 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。
-- 触及：`input-date` `select` `calendar` 以及一切走下拉的控件
+- 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
+- 触及：`input-date` `select` `calendar` `action` `button` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### 弹层翻转共用 overlayPosition，禁止各写一套
@@ -146,7 +158,7 @@ alwaysApply: true
 
 ### z-index 用 token，不要用 Tailwind 档冒充
 - 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
-- 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；Toast `--z-toast` 2000。token 打在 `:root`。
+- 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；提示 `--z-tooltip` 1600；Toast `--z-toast` 2000。token 打在 `:root`。
 - 触及：`input-date` `dialog` `drawer` `toast` `action`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 

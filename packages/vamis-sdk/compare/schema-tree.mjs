@@ -47,6 +47,19 @@ export const LAYOUT_TYPES = new Set([
 ])
 
 const SKIP_PROBE = new Set(['ajax', 'link', 'url', 'email', 'download', 'copy', 'reload', 'submit'])
+const SKIP_PROBE_EVENT = new Set(['mouseenter', 'mouseleave'])
+
+/** 点击探针不能代替 hover：mouseenter/leave 的 toast 会被 Playwright click 的 mouseenter 误伤。 */
+export function shouldProbe(actions) {
+  return (actions || []).some((item) => {
+    const text = typeof item === 'string' ? item : ''
+    const split = text.indexOf(':')
+    const event = split >= 0 ? text.slice(0, split) : 'click'
+    if (SKIP_PROBE_EVENT.has(event)) return false
+    const action = split >= 0 ? text.slice(split + 1) : text
+    return !SKIP_PROBE.has(action)
+  })
+}
 
 function isNode(value) {
   return Boolean(value && typeof value === 'object' && !Array.isArray(value) && typeof value.type === 'string')
@@ -97,10 +110,7 @@ export function walkSchemaTree(schema, options = {}) {
       schemaValue: node.value !== undefined ? node.value : node.defaultValue,
       events,
       actions,
-      probe: actions.some((item) => {
-        const action = item.includes(':') ? item.split(':').pop() : item
-        return !SKIP_PROBE.has(action)
-      }),
+      probe: shouldProbe(actions),
     })
     for (const key of CHILD_KEYS) {
       const child = node[key]

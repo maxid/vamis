@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -21,7 +22,7 @@ import {
   rerunCommands,
   stepCaseId,
 } from '../compare/catalog.mjs'
-import { scoreTree, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
+import { scoreTree, shouldProbe, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
 describe('applySchemaScope', () => {
   it('wraps body fragments in page', () => {
@@ -365,6 +366,34 @@ describe('schema-tree', () => {
     expect(input).toMatchObject({ name: 'name', schemaValue: 'Ada' })
     const button = nodes.find((row) => row.type === 'button')
     expect(button?.actions).toContain('dialog')
+    expect(button?.probe).toBe(true)
+  })
+
+  it('does not click-probe mouseenter/leave toasts', () => {
+    expect(shouldProbe(['mouseenter:toast'])).toBe(false)
+    expect(shouldProbe(['mouseleave:toast'])).toBe(false)
+    expect(shouldProbe(['click:toast'])).toBe(true)
+    expect(shouldProbe(['dialog'])).toBe(true)
+    const nodes = walkSchemaTree({
+      type: 'page',
+      body: {
+        type: 'button',
+        label: 'Button',
+        onEvent: { mouseenter: { actions: [{ actionType: 'toast', args: { msg: 'x' } }] } },
+      },
+    })
+    const button = nodes.find((row) => row.type === 'button')
+    expect(button?.actions).toEqual(['mouseenter:toast'])
+    expect(button?.probe).toBe(false)
+  })
+
+  it('embed-case indexes unlabeled actions and skips hover probes', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
+    expect(html).toContain('SKIP_PROBE_EVENT')
+    expect(html).toContain('actionIndex')
+    expect(html).toContain('ACTION_TYPES[node.type]')
+    expect(html).toContain('if (ACTION_TYPES[node.type]) return node.schemaValue')
+    expect(html).toContain('function actionClickTarget')
   })
 
   it('scores runtime value / rendered / named / dialog per node', () => {

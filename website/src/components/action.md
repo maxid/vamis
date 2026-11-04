@@ -400,40 +400,62 @@ dialog:
 
 ## Action 作为容器组件
 
-写了 `body` 且 `actionType` 不是 `email` 时，不再画按钮外观，只让子组件可点。
+action 还可以使用 `body` 来渲染其他组件，让那些不支持行为的组件支持点击事件，比如下面的例子
 
-```schema: scope="body"
-type: action
-tooltip: 点击会有提示
-actionType: toast
-toast:
-  items:
-    - body: 点了容器
-body:
-  type: tpl
-  tpl: 点我打开提示
+```schema: scope="body" height="280"
+- type: action
+  body:
+    type: color
+    value: '#108cee'
+  actionType: dialog
+  dialog:
+    title: 弹框
+    body: 这是个简单的弹框。
+- type: action
+  tooltip: 点击会有弹框
+  actionType: dialog
+  dialog:
+    title: 弹框
+    body: 这是个简单的弹框。
+  body:
+    type: image
+    src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
 ```
+
+在这种模式下不支持按钮的各种配置项，比如 `label`、`size`、`icon` 等，因为它只作为容器组件，没有展现。
 
 ## 按钮提示
 
-`tooltip` / `disabledTip` 走浮层，不再只用原生 `title`。`tooltipPlacement` 默认 `top`。
+通过 `tooltip` 来设置提示。`tooltipPlacement` 默认 `top`。
 
 ```schema: scope="body"
+label: 弹框
 type: button
-label: 提示
-actionType: toast
+actionType: link
+link: ../index
 tooltip: 点击链接跳转
-tooltipPlacement: right
-toast:
-  items:
-    - body: 点了提示按钮
 ```
 
+如果按钮是 disabled，需要使用 `disabledTip`
+
 ```schema: scope="body"
+label: 弹框
 type: button
-label: 禁用提示
+actionType: link
 disabled: true
+link: ../index
 disabledTip: 禁用了
+```
+
+还可以通过 `tooltipPlacement` 设置弹出位置
+
+```schema: scope="body"
+label: 弹框
+type: button
+actionType: link
+link: ../index
+tooltipPlacement: right
+tooltip: 点击链接跳转
 ```
 
 ## 通用属性表
@@ -481,17 +503,55 @@ disabledTip: 禁用了
 
 ## 事件表
 
+当前组件会对外派发以下事件，可以通过 `onEvent` 来监听这些事件，并通过 `actions` 来配置执行的动作，在 `actions` 中可以通过 `${事件参数名}` 或 `${event.data.[事件参数名]}` 来获取事件产生的数据，详细查看[事件动作](/concepts/event-action)。
+
 | 事件名称 | 事件参数 | 说明 |
 |----------|----------|------|
-| click | `event.context.nativeEvent.type` | 点击时触发。按钮自己处理 click，宿主不再派一次 |
-| mouseenter | 同上 | 鼠标移入（宿主） |
-| mouseleave | 同上 | 鼠标移出（宿主） |
+| click | - | 点击时触发 |
+| mouseenter | - | 鼠标移入时触发 |
+| mouseleave | - | 鼠标移出时触发 |
+
+### click
+
+鼠标点击。可以尝试通过 `${event.context.nativeEvent}` 获取鼠标事件对象。
 
 ```schema: scope="body"
 type: button
 label: Button
 onEvent:
   click:
+    actions:
+      - actionType: toast
+        args:
+          msgType: info
+          msg: ${event.context.nativeEvent.type}
+```
+
+### mouseenter
+
+鼠标移入。可以尝试通过 `${event.context.nativeEvent}` 获取鼠标事件对象。
+
+```schema: scope="body"
+type: button
+label: Button
+onEvent:
+  mouseenter:
+    actions:
+      - actionType: toast
+        args:
+          msgType: info
+          msg: ${event.context.nativeEvent.type}
+```
+
+### mouseleave
+
+鼠标移出。可以尝试通过 `${event.context.nativeEvent}` 获取鼠标事件对象。
+
+```schema: scope="body"
+type: button
+label: Button
+onEvent:
+  mouseleave:
     actions:
       - actionType: toast
         args:
@@ -511,5 +571,4 @@ onEvent:
 - `close` 目前只认 `true` 关当前 dialog / drawer，不按祖先名字关。
 - 控制流 `switch` / `loop` / `parallel` 仍是 D4 P1。
 - `nextCondition`、input-table 增行尚未接。
-- `confirmTitle` 走原生 `confirm`，标题拼进文案，没有独立标题栏。
 - `reload: window` 会整页刷新，文档不放活示例。

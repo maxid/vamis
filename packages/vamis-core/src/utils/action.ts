@@ -89,6 +89,18 @@ export function actionTooltipPlacement(schema: unknown): 'top' | 'left' | 'right
   return PLACES.has(value) ? (value as 'top' | 'left' | 'right' | 'bottom') : 'top'
 }
 
+/** 把 Action `tooltipPlacement` 映到 overlayPosition 的 at-my 串。 */
+export const ACTION_TOOLTIP_OVERLAY: Record<'top' | 'bottom' | 'left' | 'right', string> = {
+  top: 'center-top-center-bottom',
+  bottom: 'center-bottom-center-top',
+  left: 'left-center-right-center',
+  right: 'right-center-left-center',
+}
+
+export function actionTooltipOverlayPlacement(schema: unknown): string {
+  return ACTION_TOOLTIP_OVERLAY[actionTooltipPlacement(schema)]
+}
+
 export function actionMailto(schema: unknown, data: Record<string, unknown> = {}): string {
   const rec = asRecord(schema)
   const to = tplField(rec.to, data)
