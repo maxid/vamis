@@ -17,18 +17,29 @@ export function formItemRequired(schema: SchemaObject, data: PlainObject = {}): 
   return false
 }
 
-/** Amis：`static` / `staticOn` 优先于表单级静态。 */
+/**
+ * 静态展示。动作覆盖（`statusStore`）最高；否则 `static: true` 钉死；
+ * `static: false` 为输入态；`staticOn`；再跟随表单级。
+ */
 export function formItemStatic(
   schema: SchemaObject,
   data: PlainObject = {},
   formStatic = false,
+  override?: boolean,
 ): boolean {
+  if (typeof override === 'boolean') return override
   if (schema.static === false) return false
   if (schema.static === true) return true
   if (typeof schema.staticOn === 'string' && schema.staticOn) {
     return evalExpression(schema.staticOn, data)
   }
   return formStatic
+}
+
+export function formItemSubmitOnChange(item: SchemaObject, form: SchemaObject): boolean {
+  if (item.submitOnChange === true) return true
+  if (item.submitOnChange === false) return false
+  return form.submitOnChange === true
 }
 
 /** 有 type / 数组 / 字符串才当自定义静态 schema；`{ limit }` 留给选择器自己读。 */
@@ -57,14 +68,24 @@ export function formItemValidateOnChange(item: SchemaObject, form: SchemaObject)
   return form.validateOnChange === true
 }
 
+function nestedFormNodes(item: SchemaObject): unknown[] {
+  const out: unknown[] = []
+  for (const key of ['body', 'controls', 'columns', 'items'] as const) {
+    const raw = item[key]
+    if (raw == null) continue
+    out.push(...(Array.isArray(raw) ? raw : [raw]))
+  }
+  return out
+}
+
 export function collectFormItems(nodes: unknown[]): SchemaObject[] {
   const out: SchemaObject[] = []
   for (const node of nodes) {
     if (!node || typeof node !== 'object' || Array.isArray(node)) continue
     const item = node as SchemaObject
     if (item.name) out.push(item)
-    const nested = item.body ?? item.controls
-    if (nested) out.push(...collectFormItems(Array.isArray(nested) ? nested : [nested]))
+    const nested = nestedFormNodes(item)
+    if (nested.length) out.push(...collectFormItems(nested))
   }
   return out
 }

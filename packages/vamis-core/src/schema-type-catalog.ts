@@ -127,7 +127,9 @@ export const FORM_ITEM_PROPS: Record<string, SchemaDoc> = {
   requiredOn: doc('requiredOn', '表单', '条件必填表达式。'),
   validateApi: doc('validateApi', '表单', '单项后端校验。status 非 0 时 errors 字符串当该项报错。'),
   autoFill: doc('autoFill', '表单', '改值后映射或请求填充其他字段。showSuggestion 参照录入未接。'),
-  static: doc('static', '表单', '静态展示。false 覆盖表单级静态。'),
+  submitOnChange: doc('submitOnChange', '表单', '该表单项值变化时提交当前表单。'),
+  labelRemark: doc('labelRemark', '表单', '标签旁 Remark。'),
+  static: doc('static', '表单', '静态展示。动作 static/nonstatic 优先级更高。'),
   staticOn: doc('staticOn', '表单', '条件静态展示。'),
   staticSchema: doc('staticSchema', '表单', '自定义静态节点。'),
 }
@@ -155,6 +157,8 @@ export const GLOBAL_ACTIONS: Record<string, SchemaDoc> = {
   submit: doc('submit', '动作', '提交表单。'),
   reset: doc('reset', '动作', '重置表单。'),
   setValue: doc('setValue', '动作', '给目标组件设值。具体参数随目标 type 变。'),
+  static: doc('static', '动作', '把目标表单/表单项切成静态展示。componentId 对 id。'),
+  nonstatic: doc('nonstatic', '动作', '把目标表单/表单项切成输入态。优先级高于 schema.static。'),
 }
 
 const NODE_SLOTS = ['body', 'aside', 'toolbar', 'header', 'footer', 'items', 'tabs', 'tab', 'columns', 'filter', 'dialog', 'drawer', 'pages']

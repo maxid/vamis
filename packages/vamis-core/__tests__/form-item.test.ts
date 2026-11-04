@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import { describe, expect, it } from 'vitest'
 import {
   applyFormItemDefaults,
@@ -10,10 +11,12 @@ import {
   formItemRequired,
   formItemStatic,
   formItemStaticSchema,
+  formItemSubmitOnChange,
   formItemValidateOnChange,
   hiddenFieldsToClear,
   validateApiMessage,
 } from '../src/utils/form-item'
+import { resetStatusStore, setStatusStatic, statusStaticOf } from '../src/status-store'
 import { getPathValue } from '../src/utils/path-value'
 import { validateValue } from '../src/validate'
 
@@ -32,6 +35,36 @@ describe('formItemStatic', () => {
     expect(formItemStatic({ staticOn: 'this.number > 1' }, { number: 0 })).toBe(false)
     expect(formItemStatic({ staticOn: 'this.number > 1' }, { number: 2 })).toBe(true)
     expect(formItemStatic({}, {}, true)).toBe(true)
+  })
+
+  it('lets action override beat schema.static', () => {
+    expect(formItemStatic({ static: true }, {}, false, false)).toBe(false)
+    expect(formItemStatic({ static: false }, {}, true, true)).toBe(true)
+    expect(formItemSubmitOnChange({ submitOnChange: true }, {})).toBe(true)
+    expect(formItemSubmitOnChange({}, { submitOnChange: true })).toBe(true)
+    expect(formItemSubmitOnChange({ submitOnChange: false }, { submitOnChange: true })).toBe(false)
+  })
+
+  it('status store keys by id then name', () => {
+    resetStatusStore()
+    setStatusStatic('formItemSwitch', true)
+    expect(statusStaticOf({ id: 'formItemSwitch', name: 'var1' })).toBe(true)
+    setStatusStatic('formItemSwitch', false)
+    expect(statusStaticOf({ id: 'formItemSwitch' })).toBe(false)
+    resetStatusStore()
+    expect(statusStaticOf({ id: 'formItemSwitch' })).toBeUndefined()
+  })
+
+  it('status store is reactive for computed readers', () => {
+    resetStatusStore()
+    const schema = { id: 'formItemSwitch', name: 'var1' }
+    const flag = computed(() => statusStaticOf(schema))
+    expect(flag.value).toBeUndefined()
+    setStatusStatic('formItemSwitch', true)
+    expect(flag.value).toBe(true)
+    setStatusStatic('formItemSwitch', false)
+    expect(flag.value).toBe(false)
+    resetStatusStore()
   })
 
   it('wraps staticSchema strings and typed nodes', () => {
@@ -103,6 +136,17 @@ describe('collectFormItems / validateOnChange', () => {
     expect(formItemValidateOnChange({ name: 'a' }, { validateOnChange: true })).toBe(true)
     expect(formItemValidateOnChange({ name: 'a', validateOnChange: false }, { validateOnChange: true })).toBe(false)
     expect(formItemValidateOnChange({ name: 'a', validateOnChange: true }, {})).toBe(true)
+  })
+
+  it('walks grid columns so nested defaults still apply', () => {
+    const items = collectFormItems([
+      {
+        type: 'grid',
+        columns: [{ body: [{ type: 'input-text', name: 'name', value: 'amis' }] }],
+      },
+    ])
+    expect(items.map((item) => item.name)).toEqual(['name'])
+    expect(applyFormItemDefaults(items, {})).toEqual({ name: 'amis' })
   })
 })
 

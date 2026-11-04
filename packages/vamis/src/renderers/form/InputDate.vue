@@ -12,6 +12,7 @@ import {
   filterTpl,
   formItemStatic,
   formItemStaticSchema,
+  statusStaticOf,
   inputDateClearable,
   inputDateCloseOnSelect,
   inputDateHours,
@@ -72,7 +73,9 @@ const data = computed(() => viewData.value || {})
 const current = computed(() => (name.value ? form?.getValue(name.value) : props.schema.value))
 const parsed = computed(() => parseInputDateValue(current.value, props.schema, data.value))
 const displayText = computed(() => displayInputDateValue(current.value, props.schema, data.value))
-const isStatic = computed(() => formItemStatic(props.schema, data.value, form?.isStatic?.() === true))
+const isStatic = computed(() =>
+  formItemStatic(props.schema, data.value, form?.isStatic?.() === true, statusStaticOf(props.schema)),
+)
 const locked = computed(() => props.disabled || isStatic.value || props.schema.readOnly === true)
 const embed = computed(() => props.schema.embed === true)
 const clearable = computed(() => inputDateClearable(props.schema))

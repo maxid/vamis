@@ -9,6 +9,7 @@ import {
   formItemStaticSchema,
   isControlSize,
   resolveClassName,
+  statusStaticOf,
   type SchemaObject,
 } from '@vamis/core'
 import { useForm } from '../formContext'
@@ -54,7 +55,14 @@ const inputClass = computed(() => resolveClassName(props.schema.inputClassName, 
 const descriptionClass = computed(() =>
   resolveClassName(props.schema.descriptionClassName, itemData.value),
 )
-const isStatic = computed(() => formItemStatic(props.schema, itemData.value, form?.isStatic?.() === true))
+const isStatic = computed(() =>
+  formItemStatic(
+    props.schema,
+    itemData.value,
+    form?.isStatic?.() === true,
+    statusStaticOf(props.schema),
+  ),
+)
 const staticNodes = computed(() => (isStatic.value ? formItemStaticSchema(props.schema) : null))
 const staticText = computed(() => {
   const name = props.schema.name
@@ -91,7 +99,7 @@ const labelRemark = computed(() => {
       :class="cn(horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground', labelClass)"
     >
       <span v-if="required" class="mr-0.5 text-destructive">*</span>
-      <span>{{ labelText }}</span>
+      <span v-html="labelText" />
       <SchemaRenderer v-if="labelRemark" :schema="labelRemark" :extra-data="itemData" />
     </Label>
     <div class="vamis-form-item__value min-w-0">

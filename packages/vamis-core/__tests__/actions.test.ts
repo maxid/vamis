@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { runAction, runOnEvent, withNativeEvent } from '../src/actions/run'
 import type { ActionContext } from '../src/actions/run'
 import { ScopedContext } from '../src/scoped'
+import { resetStatusStore, statusStaticOf } from '../src/status-store'
 
 function ctx(partial: Partial<ActionContext> = {}): ActionContext {
   return {
@@ -110,6 +111,15 @@ describe('onEvent actions', () => {
     expect(doAction).toHaveBeenCalledTimes(3)
     expect(doAction).toHaveBeenNthCalledWith(1, { actionType: 'clear', componentId: 'clear_text' }, expect.any(Object))
     expect(reset).not.toHaveBeenCalled()
+  })
+
+  it('static / nonstatic write status store by componentId', async () => {
+    resetStatusStore()
+    await runAction({ actionType: 'static', componentId: 'formItemSwitch' }, ctx())
+    expect(statusStaticOf({ id: 'formItemSwitch' })).toBe(true)
+    await runAction({ actionType: 'nonstatic', componentId: 'formItemSwitch' }, ctx())
+    expect(statusStaticOf({ id: 'formItemSwitch' })).toBe(false)
+    resetStatusStore()
   })
 
   it('reset without componentId still resets the form', async () => {

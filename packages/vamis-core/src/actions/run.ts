@@ -16,6 +16,7 @@ import {
   triggerSaveAs,
 } from '../utils/action'
 import { notifyToasts } from '../utils/toast'
+import { setStatusStatic } from '../status-store'
 import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
 import { getAction, registerAction } from './registry'
 
@@ -360,6 +361,13 @@ function registerBuiltinActions() {
 
   registerAction('email', async (action, ctx) => {
     ctx.env.jumpTo(actionMailto(action, actionData(action, ctx)))
+  })
+
+  registerAction('static', async (action) => {
+    setStatusStatic(action.componentId || action.componentName, true)
+  })
+  registerAction('nonstatic', async (action) => {
+    setStatusStatic(action.componentId || action.componentName, false)
   })
 
   registerAction('wait', async (action) => {

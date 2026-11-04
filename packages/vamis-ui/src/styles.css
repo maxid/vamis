@@ -208,9 +208,13 @@
   --z-popover: 1400;
   --z-tooltip: 1600;
   --z-toast: 2000;
-  /* Amis fill-9 / text-color。Tooltip 边框不是 --border（line-8）。 */
+  /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
   --fill-9: #f2f3f5;
+  --fill-10: #f7f8fa;
   --text-loud: #151b26;
+  /* Amis --Form-input-onDisabled-*：灰底而不是 opacity。 */
+  --control-disabled-bg: var(--fill-10);
+  --control-disabled-color: #b8babf;
   /*
    * Overlay Tooltip 语义变量（Amis --Tooltip-*）。
    * 圆角是 --borderRadiusLg 8px，不是全局 --radius 4px，也不是 Tailwind --radius-lg（6px）。
@@ -365,6 +369,9 @@
   --button-light-foreground: #ffffff;
   --button-light-hover: #2468f2;
   --button-light-active: #528eff;
+  --fill-10: #151c26;
+  --control-disabled-bg: var(--fill-10);
+  --control-disabled-color: #d4d6d9;
 }
 
 @layer base {
@@ -390,7 +397,13 @@
     height: var(--control-h);
     @apply min-w-0 rounded border border-input bg-card px-2.5 text-sm shadow-xs outline-none;
     @apply focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
-    @apply disabled:cursor-not-allowed disabled:opacity-50;
+    @apply disabled:cursor-not-allowed;
+    &:disabled {
+      opacity: 1;
+      background: var(--control-disabled-bg);
+      border-color: var(--input);
+      color: var(--control-disabled-color);
+    }
   }
 
   .vamis-file-drop {
@@ -868,8 +881,35 @@
     padding-bottom: 2px;
   }
   .vamis-text-control.is-disabled .vamis-text-control__input {
-    opacity: 0.5;
+    background: var(--control-disabled-bg);
+    border-color: var(--input);
+    color: var(--control-disabled-color);
     pointer-events: none;
+    cursor: not-allowed;
+  }
+  .vamis-text-control.is-disabled .vamis-text-control__input:hover {
+    border-color: var(--input);
+  }
+  .vamis-text-control.is-disabled .vamis-text-control__native:disabled {
+    opacity: 1;
+    color: var(--control-disabled-color);
+    -webkit-text-fill-color: var(--control-disabled-color);
+    background: transparent;
+  }
+  .vamis-root [data-slot='input']:disabled,
+  .vamis-root [data-slot='textarea']:disabled,
+  .vamis-root [data-slot='select-trigger'][data-disabled],
+  .vamis-sdk [data-slot='input']:disabled,
+  .vamis-sdk [data-slot='textarea']:disabled,
+  .vamis-sdk [data-slot='select-trigger'][data-disabled] {
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: var(--control-disabled-bg);
+    border-color: var(--input);
+    color: var(--control-disabled-color);
+    -webkit-text-fill-color: var(--control-disabled-color);
+    box-shadow: none;
   }
   .vamis-text-control__native {
     flex: 1 1 auto;
@@ -1454,8 +1494,9 @@
   }
   .vamis-select.is-disabled .vamis-select__input {
     cursor: not-allowed;
-    opacity: 0.55;
-    background: var(--muted);
+    background: var(--control-disabled-bg);
+    border-color: var(--input);
+    color: var(--control-disabled-color);
   }
   .vamis-select__value {
     display: flex;

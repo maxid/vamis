@@ -86,10 +86,12 @@ body:
 | `onEvent` | `object` | | 见事件表 |
 | `horizontal` / `labelAlign` / `labelWidth` | | | **未齐**（横排宽走 CSS 变量） |
 | `rules` / `asyncApi` / `initAsyncApi` | | | **未接** |
-| `submitOnChange` / `submitOnInit` / `resetAfterSubmit` | `boolean` | `false` | **未接** |
+| `submitOnChange` | `boolean` | `false` | 表单项或表单级，改值即提交 |
+| `submitOnInit` / `resetAfterSubmit` | `boolean` | `false` | **未接** |
 | `persistData` / `promptPageLeave` / `trimValues` / `columnCount` | | | **未接** |
 | `inheritData` | `boolean` | `true` | 未接此开关；Form 固定自建数据域 |
-| `static` / `canAccessSuperData` / `preventEnterSubmit` | | | **未接** |
+| `static` | `boolean` | | schema 级已接；动作 `static` / `nonstatic` 按 id/name 覆盖 |
+| `canAccessSuperData` / `preventEnterSubmit` | | | **未接** |
 
 ## 事件表
 
@@ -147,7 +149,8 @@ body:
 | `submit` | | 校验并提交。走最近一层 Form |
 | `reset` | | 重置。走最近一层 Form |
 | `validate` | `outputVar` | **未接**为组件动作（内部校验会跑） |
-| `clear` / `static` / `nonstatic` / `validateFormItem` | | **未接** |
+| `static` / `nonstatic` | `componentId` / `componentName` | 写入 status-store，覆盖表单或表单项 `static` |
+| `clear` / `validateFormItem` | | **未接** |
 
 ### reload
 

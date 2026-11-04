@@ -15,6 +15,7 @@ import {
   formItemStatic,
   formItemStaticSchema,
   resolveClassName,
+  statusStaticOf,
   runOnEvent,
   useData,
   useEnv,
@@ -43,7 +44,9 @@ const checked = computed(() => checkboxIsChecked(current.value, props.schema))
 const partial = computed(() => props.schema.partial === true)
 const model = computed(() => (partial.value ? 'indeterminate' : checked.value))
 const buttonMode = computed(() => props.schema.optionType === 'button')
-const isStatic = computed(() => formItemStatic(props.schema, data.value, form?.isStatic?.() === true))
+const isStatic = computed(() =>
+  formItemStatic(props.schema, data.value, form?.isStatic?.() === true, statusStaticOf(props.schema)),
+)
 const locked = computed(() => {
   if (props.disabled || isStatic.value || props.schema.readOnly === true) return true
   if (typeof props.schema.readOnlyOn === 'string') return evalExpression(props.schema.readOnlyOn, data.value)

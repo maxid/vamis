@@ -16,6 +16,7 @@ import {
   createStoreId,
   dataMapping,
   formItemStatic,
+  formItemSubmitOnChange,
   formItemValidateOnChange,
   getPathValue,
   isApiOutdated,
@@ -27,6 +28,7 @@ import {
   resolveClassName,
   runOnEvent,
   setPathValue,
+  statusStaticOf,
   validateApiMessage,
   useEnv,
   useOverlay,
@@ -178,6 +180,7 @@ function setValue(name: string, value: unknown) {
     delete store.errors[name]
   }
   if (item) scheduleAutoFill(item, value)
+  if (item && formItemSubmitOnChange(item, props.schema)) void submit()
 }
 
 const autoFillTimers = new Map<string, ReturnType<typeof setTimeout>>()
@@ -388,7 +391,13 @@ const formApi = {
 provideForm({
   store,
   mode: String(props.schema.mode || 'normal'),
-  isStatic: () => formItemStatic(props.schema, { ...props.data, ...store.data }),
+  isStatic: () =>
+    formItemStatic(
+      props.schema,
+      { ...props.data, ...store.data },
+      false,
+      statusStaticOf(props.schema),
+    ),
   getValue,
   setValue,
   submit,

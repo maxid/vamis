@@ -15,6 +15,12 @@ const value = computed({
 
 <template>
   <FormItem :schema="schema">
-    <Textarea v-model="value" :placeholder="schema.placeholder" :disabled="disabled" class="min-h-24 w-full" />
+    <Textarea
+      v-model="value"
+      :name="schema.name ? String(schema.name) : undefined"
+      :placeholder="schema.placeholder"
+      :disabled="disabled"
+      class="min-h-24 w-full"
+    />
   </FormItem>
 </template>

@@ -93,7 +93,7 @@ alwaysApply: true
 ### 对照过了 ≠ 文档站对齐；必须并排开两边同路径页
 - 踩过：`pnpm compare --page tooltip` 11/11，文档示例仍是短文案、无 FA 图标十字布局；浮层皮肤也偏。对照默认不打开 hover 浮层、不对活示例文案。用户每次都要贴 Amis / Vamis 两个 URL。
 - 稳定做法：改组件或活示例，声称完成前打开 Amis `localhost:8888/zh-CN/components/<type>` 与 Vamis `localhost:5173/components/<type>`（路径以侧栏为准，tooltip 是 `/tooltip` 不是 `/tooltip-wrapper`）。对：示例文案、图标、布局、打开后的浮层盒模型。不要等用户提醒。
-- 触及：`tooltip-wrapper` `action` `button` `badge` `remark` 及所有有文档活示例的 type
+- 触及：`tooltip-wrapper` `action` `button` `badge` `remark` FormItem 及所有有文档活示例的 type
 - 规则：`.cursor/rules/amis-lookup.mdc`；`.cursor/rules/update-progress.mdc`
 
 ### 组装与盒模型
@@ -109,6 +109,30 @@ alwaysApply: true
 - 稳定做法：先 `useForm()` 再 `provideForm()`；有父 form 就降为 `div`。嵌套时默认提交钮 `type="button"`；输入框 Enter 要 `preventDefault` + `stopPropagation` 后走本表单 `submit()`。
 - 触及：`form` `dialog` `drawer` `wizard`
 - 规则：`.cursor/rules/component.mdc`
+
+### 全局 status 字典要直接读 key
+- 踩过：`static` / `nonstatic` 写入 reactive 字典后，FormItem computed 不切展示态。`statusStaticOf` 用 `hasOwnProperty` 短路，从未读 `staticState[id]`，新 key 建不成 Vue 依赖。
+- 稳定做法：直接读 `state.staticState[id]`；用 `typeof value === 'boolean'` 区分未写入和 `false`。单测先 `computed(() => statusStaticOf(schema))` 再 set。对齐 Amis `statusStore`，不要给每个控件做 `doAction`。
+- 触及：FormItem `form` `action`
+- 规则：`packages/vamis-core/src/status-store.ts`
+
+### 表单禁用用灰底，不要 opacity
+- 踩过：shadcn `disabled:opacity-50` 让禁用输入框仍像白底可填，肉眼几乎看不出禁用。Amis 是 `--Form-input-onDisabled-bg` fill-10 `#f7f8fa`、字色 `#b8babf`、边框仍 line-8，opacity 1。
+- 稳定做法：token `--control-disabled-bg` / `--control-disabled-color` 挂 `:root`，控件选择器只 `var()`。原生 `input:disabled` 要 `opacity: 1` 和 `-webkit-text-fill-color`，否则 UA 会再淡一层。按钮继续可以用 opacity，不要把这条套到 Button。
+- 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number`
+- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*`
+
+### 收集表单项要走进 grid columns
+- 踩过：`collectFormItems` 只递归 `body` / `controls`，grid 里 `columns[].body` 的默认值写不进表单域，禁用示例「姓名」空着。
+- 稳定做法：再走 `columns` / `items`。默认值、隐藏清值、提交校验共用这一份收集。
+- 触及：FormItem `form` `grid`
+- 规则：`packages/vamis-core/src/utils/form-item.ts` `collectFormItems`
+
+### 对照按原生 name 找表单项
+- 踩过：textarea 没把 `schema.name` 落到原生控件，对照 `rendered` 假红。父表单 `static: true` 时 Amis 静态项也没有 `[name]`，对照会报 Amis false / Vamis true（P0 0）。
+- 稳定做法：input / textarea / select 都要有原生 `name`。静态展示没有原生控件时不要为对齐对照把 `id` 从 `div.vamis-node` 拿掉。
+- 触及：FormItem `textarea` `input-text`
+- 规则：`packages/vamis-sdk/embed-case.html` `findNodeEl`
 
 ### 外层永远是 div.vamis-node，伪类要算包装层
 - 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。

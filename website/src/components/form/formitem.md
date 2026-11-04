@@ -4,8 +4,8 @@ title: FormItem 表单项通用
 
 # FormItem 表单项通用
 
-::: info 实现进度 82% · 进行中
-路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）。缺 combo/table 路径级报错、`autoFill.showSuggestion`、事件动作切静态。
+::: info 实现进度 88% · 进行中
+路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、事件动作 `static` / `nonstatic`、`submitOnChange`、`validateApi`、提交接口 `errors`、`autoFill`（不含参照录入弹层）。缺 combo/table 路径级报错、`autoFill.showSuggestion`。
 :::
 
 > 所有派生自 FormItem 的组件，都具有 FormItem 的特性。FormItem 不是独立 `type`，字段仍然用各自的 `type`（`input-text`、`select`…）。
@@ -20,13 +20,22 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 
 所有表单项都只可以配置在 `form` 的 `body` 里。
 
-```schema: scope="form-item"
-- type: input-text
-  label: 文本框
-  name: text
-- type: input-password
-  label: 密码
-  name: password
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "文本框",
+      "name": "text"
+    },
+    {
+      "type": "input-password",
+      "label": "<a href='./password'>密码</a>",
+      "name": "password"
+    }
+  ]
+}
 ```
 
 ## 表单项展示
@@ -53,19 +62,42 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 
 `size` 支持 `xs` / `sm` / `md` / `lg` / `full`。默认不写 `size`：控件铺满值列。`xs`–`lg` 对应 80 / 160 / 240 / 320px，只在 ≥576px 钉死。`full` 与默认铺满同效果。
 
-```schema: scope="form-item"
-- type: input-text
-  name: name
-  label: 名称
-  description: 没写 size，默认铺满
-- type: input-text
-  name: code
-  label: 短码
-  size: sm
-  labelClassName: text-primary
-  inputClassName: border-primary
-  descriptionClassName: text-info
-  description: 标签主色、控件槽描边、说明信息色
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "极小",
+      "name": "text-xs",
+      "size": "xs"
+    },
+    {
+      "type": "input-text",
+      "label": "小",
+      "name": "text-sm",
+      "size": "sm"
+    },
+    {
+      "type": "input-text",
+      "label": "中",
+      "name": "text-md",
+      "size": "md"
+    },
+    {
+      "type": "input-text",
+      "label": "大",
+      "name": "text-lg",
+      "size": "lg"
+    },
+    {
+      "type": "input-text",
+      "label": "占满",
+      "name": "text-full",
+      "size": "full"
+    }
+  ]
+}
 ```
 
 ### 表单项标签
@@ -110,34 +142,85 @@ body:
     labelRemark:
       type: remark
       title: 提示
-      content: first second ${text1}
+      content: "<pre>first \nsecond\n${text1}</pre>"
     name: text3
 ```
 
 ### 配置禁用
 
-`"disabled": true` 静态禁用，或用表达式 `disabledOn`。
+##### 静态配置
+
+通过配置 `"disabled": true` 来禁用表单项。
 
 ```schema: scope="body"
-type: form
-body:
-  - type: input-text
-    label: 常规
-    name: text1
-  - type: input-text
-    label: 禁用
-    name: text2
-    disabled: true
-  - type: input-number
-    label: 数量
-    name: number
-    value: 0
-    description: 调整数量大小查看效果
-  - type: input-text
-    label: 文本
-    name: text
-    disabledOn: this.number > 1
-    description: 数量大于 1 时禁用
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-text",
+      "label": "常规",
+      "name": "text1"
+    },
+    {
+      "type": "input-text",
+      "label": "禁用",
+      "name": "text2",
+      "disabled": true
+    },
+    {
+      "type": "grid",
+      "columns": [
+        {
+          "body": [
+            {
+              "type": "input-text",
+              "label": "姓名",
+              "name": "name",
+              "value": "amis",
+              "disabled": true
+            }
+          ]
+        },
+        {
+          "body": [
+            {
+              "type": "input-email",
+              "label": "邮箱",
+              "name": "email",
+              "disabled": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+##### 通过条件配置是否禁用
+
+也可以用表达式 `disabledOn`，在某个条件下禁用当前表单项。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-number",
+      "label": "数量",
+      "name": "number",
+      "value": 0,
+      "description": "调整数量大小查看效果吧！"
+    },
+    {
+      "type": "input-text",
+      "label": "文本",
+      "name": "text",
+      "disabledOn": "this.number > 1",
+      "description": "当数量大于1的时候，该文本框会被禁用"
+    }
+  ]
+}
 ```
 
 ### 配置显隐
@@ -219,6 +302,175 @@ body:
       - type: tpl
         tpl: "${var3}"
       - " | 自定义后缀"
+```
+
+##### 通过事件动作切换表单项状态
+
+`actionType: static` / `nonstatic`，用 `componentId` 点到表单项或整个表单。动作覆盖优先级最高，无视 schema 里的 `static`。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "title": "单个表单项状态切换",
+  "mode": "horizontal",
+  "labelWidth": 220,
+  "body": [
+    {
+      "type": "input-text",
+      "id": "formItemSwitch",
+      "name": "var1",
+      "label": "使用事件动作状态切换",
+      "value": "text"
+    },
+    {
+      "type": "button-toolbar",
+      "name": "button-toolbar",
+      "buttons": [
+        {
+          "type": "button",
+          "label": "输入态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "nonstatic",
+                  "componentId": "formItemSwitch"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "展示态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "static",
+                  "componentId": "formItemSwitch"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "actions": []
+}
+```
+
+##### 表单项静态展示优先级
+
+1. 表单项 `static: true` 始终静态；`static: false` 或不配则跟随父表单。事件动作覆盖最高。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "static": true,
+  "title": "父表单为静态 static: true",
+  "mode": "horizontal",
+  "id": "myForm",
+  "labelWidth": 220,
+  "body": [
+    {
+      "type": "input-text",
+      "label": "text1",
+      "static": true,
+      "value": "value",
+      "name": "text1",
+      "id": "text1",
+      "description": "初始配置了static: true, 但是后续可以使用动作切换状态"
+    },
+    {
+      "type": "button-toolbar",
+      "name": "button-toolbar1",
+      "label": "text1 切换状态",
+      "buttons": [
+        {
+          "type": "button",
+          "label": "静态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "static",
+                  "componentId": "text1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "输入态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "nonstatic",
+                  "componentId": "text1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "input-text",
+      "label": "text3",
+      "value": "value",
+      "name": "text3",
+      "description": "无配置，跟随父表单变化"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "button-toolbar",
+      "name": "button-toolbar0",
+      "label": "父表单 切换状态",
+      "buttons": [
+        {
+          "type": "button",
+          "label": "静态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "static",
+                  "componentId": "myForm"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "输入态",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "nonstatic",
+                  "componentId": "myForm"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## 表单项值
@@ -465,9 +717,10 @@ body:
 | `required` / `requiredOn` | 必填 / 条件必填 |
 | `validations` / `validationErrors` | 格式校验与文案 |
 | `validateOnChange` | 改值即校验；表单级也可开 |
+| `submitOnChange` | 该表单项值变化时提交当前表单 |
 | `clearValueOnHidden` | 隐藏时从数据域删除该字段 |
 | `visibleOn` / `hiddenOn` / `disabled` / `disabledOn` | 显隐与禁用 |
-| `static` / `staticOn` | 静态展示；`static: false` 覆盖表单级静态 |
+| `static` / `staticOn` | 静态展示；动作 `static` / `nonstatic` 优先级更高 |
 | `staticSchema` | 自定义静态节点；无 type 的对象（如 `{ limit }`）不当 schema |
 | `staticPlaceholder` | 空值占位，默认 `-` |
 | `validateApi` | 单项后端校验；`422` + `errors` 字符串 |
@@ -479,5 +732,5 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。
-- 未接：`autoFill.showSuggestion` 参照录入、`submitOnChange`、Combo/Table 路径级服务端报错、事件动作切静态。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`。
+- 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。
