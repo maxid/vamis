@@ -280,6 +280,8 @@ body:
 
 `"static": true` 把表单项改成只读展示；`staticOn` 用表达式切换。空值默认显示 `-`，可用 `staticPlaceholder` 覆盖。`staticSchema` 可自定义展示（字符串、tpl 或数组）。
 
+展示方式见本节活示例。哪些 type 支持静态展示，见[支持静态展示的表单项](#支持静态展示的表单项)。
+
 ```schema: scope="body"
 type: form
 mode: horizontal
@@ -760,7 +762,7 @@ body:
 
 默认的校验信息如下，可以直接配置文字，也可用多语言中的 key。key 对应的 zh-CN 文案在 `@vamis/core` 的 `validateLocaleZh`。
 
-```js
+```json
 {
   isEmail: 'validate.isEmail',
   isRequired: 'validate.isRequired',
@@ -999,35 +1001,113 @@ body:
 
 ## 属性表
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项类型 |
-| `name` | 字段路径，支持 `a.b` / `a.b[0].c` |
-| `value` | 默认值；`${}` 表达式优先于 name 映射 |
-| `label` | 标签，模板或 `false`（去掉占位） |
-| `labelRemark` | 标签旁 Remark |
-| `description` / `desc` | 说明 |
-| `placeholder` | 占位 |
-| `mode` / `inline` | `normal` / `horizontal` / `inline` |
-| `size` | `xs` / `sm` / `md` / `lg` / `full`；不写则铺满 |
-| `className` / `labelClassName` / `inputClassName` / `descriptionClassName` | class，走 `resolveClassName` |
-| `required` / `requiredOn` | 必填 / 条件必填 |
-| `validations` / `validationErrors` | 格式校验与文案 |
-| `validateOnChange` | 改值即校验；表单级也可开 |
-| `submitOnChange` | 该表单项值变化时提交当前表单 |
-| `clearValueOnHidden` | 隐藏时从数据域删除该字段 |
-| `visibleOn` / `hiddenOn` / `disabled` / `disabledOn` | 显隐与禁用 |
-| `static` / `staticOn` | 静态展示；动作 `static` / `nonstatic` 优先级更高 |
-| `staticSchema` | 自定义静态节点；无 type 的对象（如 `{ limit }`）不当自定义 schema，选择器类读 `limit`（默认 10） |
-| `staticPlaceholder` | 空值占位，默认 `-` |
-| `validateApi` | 单项后端校验；`422` + `errors` 字符串 |
-| `autoFill` | 映射或 `api` + `fillMapping`；`showSuggestion` 未接 |
-| `strictMode` | Vamis 默认及时读其他字段，无需设 false |
-| form `debug` | 表单下展示当前数据域 JSON |
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `string` | | 指定表单项类型 |
+| className | [ClassName](/types/classname) | | 表单项最外层类名 |
+| inputClassName | [ClassName](/types/classname) | | 表单控制器类名 |
+| labelClassName | [ClassName](/types/classname) | | label 的类名 |
+| descriptionClassName | [ClassName](/types/classname) | | 说明文字类名 |
+| name | `string` | | 字段名，指定该表单项提交时的 key，支持 `a.b` / `a.b[0].c` |
+| value | `any` | | 表单默认值；含 `${}` 时优先于 name 映射 |
+| label | [模板](/concepts/template) 或 `false` | | 表单项标签。`false` 去掉占位；未写仍占水平表单标签列 |
+| labelAlign | `"right" \| "left"` | `"right"` | 标签对齐，仅 `mode` 为 `horizontal` 时生效。**未齐**（横排宽走 CSS 变量） |
+| labelRemark | [Remark](/components/remark) | | 表单项标签描述 |
+| description | [模板](/concepts/template) | | 表单项描述。也认 `desc` |
+| placeholder | `string` | | 占位符 |
+| mode | `"normal" \| "horizontal" \| "inline"` | | 该项布局。不写跟随表单，默认 `normal` |
+| inline | `boolean` | | `true` 时该项为内联模式（等同 `mode: inline`） |
+| size | `"xs" \| "sm" \| "md" \| "lg" \| "full"` | | 控件档位。不写则铺满 |
+| strictMode | `boolean` | | Amis 配 `false` 才能及时读其他字段。Vamis 默认及时读，无需设 false |
+| submitOnChange | `boolean` | | 该表单项值变化时提交当前表单 |
+| disabled | `boolean` | | 当前表单项是否禁用 |
+| disabledOn | [表达式](/concepts/expression) | | 当前表单项是否禁用的条件 |
+| visible | `boolean` | | 当前表单项是否显示 |
+| visibleOn | [表达式](/concepts/expression) | | 当前表单项是否显示的条件 |
+| hidden | `boolean` | | 当前表单项是否隐藏 |
+| hiddenOn | [表达式](/concepts/expression) | | 当前表单项是否隐藏的条件 |
+| required | `boolean` | | 是否为必填 |
+| requiredOn | [表达式](/concepts/expression) | | 当前表单项是否为必填的条件 |
+| validations | `object` \| `string` | | 表单项值格式验证，支持设置多个，多个规则用英文逗号隔开 |
+| validationErrors | `object` | | 自定义校验文案，可用 `$1` 或 `validate.*` key |
+| validateOnChange | `boolean` | | 改值即校验；表单级也可开 |
+| validateApi | [API](/types/api) | | 表单项校验接口 |
+| autoFill | `object` | | 数据录入配置，自动填充或者参照录入 |
+| autoFill.showSuggestion | `boolean` | | `true` 为参照录入，`false` 自动填充。**未接** |
+| autoFill.api | [API](/types/api) | | 自动填充接口 / 参照录入筛选 CRUD 请求配置 |
+| autoFill.silent | `boolean` | | 是否展示数据格式错误提示，默认为 `true` |
+| autoFill.fillMapping | `object` | | 自动填充数据映射，键值对，值支持变量与表达式 |
+| autoFill.trigger | `string` | | 参照录入触发方式：`change` / `focus`。**未接**（随 `showSuggestion`） |
+| autoFill.mode | `string` | | 参照弹出方式 `dialog` / `drawer` / `popOver`。**未接** |
+| autoFill.labelField | `string` | | 参照录入 picker 的 `labelField`。**未接** |
+| autoFill.position | `string` | | 参照录入 `mode` 为 `popOver` 时的弹出位置。**未接** |
+| autoFill.size | `string` | | 参照录入 `mode` 为 `dialog` 时的大小。**未接** |
+| autoFill.columns | `Array` | | 参照录入数据展示列。**未接** |
+| autoFill.filter | [SchemaNode](/types/schemanode) | | 参照录入查询过滤条件。**未接** |
+| static | `boolean` | | 当前表单项是否静态展示，见[支持静态展示的表单项](#支持静态展示的表单项)。动作 `static` / `nonstatic` 优先级更高 |
+| staticOn | [表达式](/concepts/expression) | | 当前表单项是否静态展示的条件 |
+| staticClassName | [ClassName](/types/classname) | | 静态展示时的类名。**未接** |
+| staticLabelClassName | [ClassName](/types/classname) | | 静态展示时 Label 的类名。**未接** |
+| staticInputClassName | [ClassName](/types/classname) | | 静态展示时 value 的类名。**未接** |
+| staticSchema | [SchemaNode](/types/schemanode) | | 自定义静态展示方式。无 `type` 的对象（如 `{ limit }`）不当自定义节点 |
+| staticSchema.limit | `number` | `10` | 选择器类组件多选时展示态展示的数量 |
+| staticPlaceholder | `string` | `"-"` | 静态展示空值占位 |
+| clearValueOnHidden | `boolean` | | 隐藏时从数据域删除该字段 |
+| id | `string` | | 给事件动作 `static` / `nonstatic` 按 id 定位 |
+
+## 支持静态展示的表单项
+
+展示方式见上文[配置静态展示](#配置静态展示)。
+
+- form 表单
+- button-group-select 按钮点选
+- chained-select 链式下拉框
+- chart-radios 图表单选框
+- checkbox 勾选框
+- checkboxes 复选框
+- combo 组合
+- input-kv 键值对
+- input-array 数组输入框
+- input-city 城市选择器
+- input-color 颜色选择器
+- input-date 日期选择器
+- input-date-range 日期范围选择器
+- input-datetime-range 日期时间范围选择器
+- input-time-range 时间范围选择器
+- input-group 输入框组合
+- input-month-range 月份范围
+- input-number 数字输入
+- input-quarter-range 季度范围
+- input-range 滑块
+- input-rating 评分
+- input-tag 标签选择器
+- input-text 输入框
+- input-password 密码输入框
+- input-email 邮箱输入框
+- input-url url 输入框
+- native-date native 日期选择器
+- native-time native 时间选择器
+- native-number native 数字输入
+- input-tree 树形选择器
+- input-year-range 年份范围
+- list-select 列表选择器
+- location-picker 地理位置
+- matrix-checkboxes 矩阵勾选
+- nested-select 级联选择器
+- radios 单选框
+- select 下拉框
+- multi-select 多选下拉框
+- switch 开关
+- tabs-transfer 组合穿梭器
+- tabs-transfer-picker 组合穿梭选择器
+- textarea 多行输入框
+- transfer 穿梭器
+- transfer-picker 穿梭选择器
+- tree-select 树形选择器
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认 `validate.*` key、中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。
-- 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错。
+- 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认 `validate.*` key、中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。属性表四列对齐 Amis（类型链到 `/types/`、`/concepts/`），并保留 Vamis 字段（`mode` / `size` / `staticOn` / `hidden` / `validationErrors` 等）。没有 Amis 版本列，也不链到 Amis 示例页。
+- 未接：`autoFill.showSuggestion` 参照录入、Combo/Table 路径级服务端报错、`staticClassName` / `staticLabelClassName` / `staticInputClassName`、`labelAlign`。

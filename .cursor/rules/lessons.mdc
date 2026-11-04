@@ -90,6 +90,12 @@ alwaysApply: true
 - 触及：FormItem
 - 规则：`.cursor/rules/site.mdc`
 
+### 属性表要对齐 Amis 列结构，章节不能少
+- 踩过：FormItem 属性表收成两列「属性 / 说明」，漏掉类型链接、`autoFill.*`、`staticClassName`，文末也没有「支持静态展示的表单项」。
+- 稳定做法：先读 Amis 同名 md 的「属性表 / 事件表 / 动作表」和文末清单。四列（属性名 / 类型 / 默认值 / 说明），类型链 `/types/` `/concepts/`。Amis 有的章节要有；版本号、Amis GitHub、Amis 示例仓路径改写成 Vamis（本节链到本页活示例，不要 `examples/form/switchDisplay`）。未接字段在说明里写 **未接**，并进差异表。
+- 触及：FormItem
+- 规则：`.cursor/rules/site.mdc`；组件 P0 TODO「实现标准」
+
 ### 属性表里的 SchemaNode / API 必须链到类型页
 - 踩过：TooltipWrapper 属性表 `body` 写成纯文本 `SchemaNode`，Amis 是 `[SchemaNode](../../docs/types/schemanode)`，文档站点不进类型页。类型页自己也曾停在三行对照表。
 - 稳定做法：属性表类型列对标 Amis 链接。Vamis 写 `[SchemaNode](/types/schemanode)`、`[API](/types/api)`、`[ClassName](/types/classname)`。类型页要对齐 `docs/zh-CN/types/` 主路径，不要只写一句「和 Amis 一样宽松」。

@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- FormItem 属性表改成与 Amis 同结构的四列（属性名 / 类型 / 默认值 / 说明），类型链到 `/types/` `/concepts/`，补齐 `autoFill.*` / `static*` 各字段；文末补「支持静态展示的表单项」清单。不抄 Amis 版本号和 `examples/form/switchDisplay`。对照 `formitem` **29/30**（P0 0）。
 - FormItem「格式校验」按 Amis 主路径对齐业务（规则表粒度 / `$1` / 默认 `validate.*` key / `isUrl.schemes` / `addRule`），但改写成 Vamis：去掉 Amis `2.2.0`/`1.4.0` 版本列、「amis 会有…」、`github.com/baidu/amis`；locale 指向 `@vamis/core` 的 `validateLocaleZh`。对照 `formitem` **29/30**（P0 0）。
 - Action `level: link` 去掉 shadcn `hover:underline`，字色改 `--link-color` `#2468f2`（Amis `--button-link-default-font-color`）。格式校验补默认 `validate.*` key 表（可写中文或 locale key），文档对齐「默认的校验信息」+「支持的格式校验」规则表。对照 `action` **38/38**，`formitem` **29/30**（P0 0）。
 - FormItem 链接皮肤对齐 Amis：`--link-color` `#2468f2`、无下划线；`.vamis-root a` 放 `@layer base`（压过 UA / preflight inherit）。`type: link` 不再叠 `text-primary hover:underline`。格式校验按 Amis 主路径补对象 / 多规则中途终止 / 字符串形式 / `validationErrors` / `$1` / 规则表 / `isUrl.schemes`，默认文案抄 zh-CN（`请输入数字`）。对照 `formitem` **29/30**（P0 0）。双站核过：密码链接同色无下划线，提交 `abc` 报「请输入数字」，`$1` 替换成「同学，最少输入10以上的数字哈」。
