@@ -88,7 +88,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 4. 若修复过组件：把可复用经验去重回写 `.cursor/rules/lessons.mdc`（先搜已有条目，同一根因只追加 `触及` 或改「稳定做法」）。
 5. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
 
-未合入的项保持原状态并注明阻塞。不要 git commit / push，除非用户当轮明确要求。
+未合入的项保持原状态并注明阻塞。不要 git commit / push，除非用户当轮明确要求。未经当轮明确批准，禁止执行云端任务（Cloud Agent / 云端子代理）；规则见 `.cursor/rules/cloud-approval.mdc`。
 
 ## 提交说明
 
@@ -99,3 +99,4 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 不要提交密钥、`.env`、内网地址。
 - 模板默认转义；`|raw` / 字符串函数只在受信任模式。
 - 不要把 Amis 源码整仓复制进本仓库。
+- **禁止未经用户当轮明确批准执行云端任务**（Cursor Cloud Agent、云端子代理、best-of-n 云端）。本机命令不受限。见 `.cursor/rules/cloud-approval.mdc`。

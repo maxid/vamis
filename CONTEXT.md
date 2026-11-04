@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 云端任务必须先批准：写入 `.cursor/rules/cloud-approval.mdc`（始终生效）并挂进 AGENTS。未经当轮明确批准禁止 Cloud Agent / 云端子代理；本机命令不受限。
 - 历史教训独立成 `.cursor/rules/lessons.mdc`（始终生效）。组件修复后必须去重回写：先搜已有条目，同一根因只改「稳定做法」或追加 `触及`，禁止把「最近交付」搬过去。收工清单挂上 `update-progress.mdc` / AGENTS。已从规则禁止项与既往交付收成可复用经验（组装壳、浮层 Teleport、对照产物、Dialog 断点等）。
 - 所有弹层翻转对齐 Amis Overlay `placement: auto`：下左 → 下右 → 上左 → 上右；视口底边剩余高度小于弹层则向上开。写进 `overlayPosition` / `VamisOverlay`，规则 `.cursor/rules/reuse-overlay.mdc`（所有 `VamisOverlay` 共用，禁止各写一套）。文档页贴底实测翻上（触发器底 627 / 视口 640，弹层 top 301）。对照桌面 `input-date` **2/19**（P0 0）。
 - `input-date` 日历弹层盒模型对齐 Amis 6.13.0：内侧 `.rdt.rdtStatic.rdtOpen` **240×290**（Vamis `.vamis-cal`），`.DatePicker-popover` **242×292**、`padding: 0`、边框 `#f2f3f5`、select-outer 阴影。根因是弹层 8px padding + `min-width: 256px`，以及 Tailwind 清掉 td/th 的 UA `padding: 1px`。文档补齐观察句与 `popOverContainerSelector`。进度 85% → 88%。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。
