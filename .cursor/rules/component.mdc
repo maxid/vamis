@@ -55,6 +55,6 @@ Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody`
 |----|--------|----------|
 | 轻 | 占位壳、属性挂载（`badge` / `popOver`）、文档示例少、无独立数据域 | 2–3 个串行 |
 | 中 | 独立渲染器、文档主路径可交互、无重 API / 树数据 | 2 个串行 |
-| 重 | `table` / `table2` / `crud` / `form` / `chart`，列+选择+分页+事件动作一大摊 | **1 个** |
+| 重 | `action`（行为枢纽：tooltip / badge / toast / dialog / confirm）、`table` / `table2` / `crud` / `form` / `chart` | **1 个** |
 
-不要把重组件塞进轻/中那批凑数。跳过 Custom、office/pdf 占位。全局字体 / token 仍暂缓，不跟组件刀混做。
+不要把重组件塞进轻/中那批凑数。`action` 不是轻按钮；其构建依赖（`tooltip-wrapper` / `badge` / `toast`）未齐时不要切下一刀 `select`。跳过 Custom、office/pdf 占位。全局字体 / token 仍暂缓，不跟组件刀混做。

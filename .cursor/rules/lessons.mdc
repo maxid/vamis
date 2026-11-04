@@ -220,9 +220,15 @@ alwaysApply: true
 
 ### 串行分批，不要拿叶子凑数
 - 踩过：轻/中那批塞进 `table`/`crud`/`form`；先做无人依赖的展示叶子，主干（FormItem / Options / action）还缺。
-- 稳定做法：轻 2–3、中 2、重 1。按依赖综合分 `S = 被依赖 × 8 + 深度`。跳过 Custom 与 office/pdf。不要先做 TODO `#61` 起无人依赖叶子。
+- 稳定做法：轻 2–3、中 2、重 1。`action` 按重（行为枢纽）。按解锁分 U + 综合分 `S`。跳过 Custom 与 office/pdf。不要先做 TODO 零被依赖段的展示叶子。
 - 触及：组件同步批次
 - 规则：`.cursor/rules/component.mdc`；组件 P0 TODO「依赖与优先级」
+
+### 被依赖高不等于实现轻；构建依赖不能当装饰丢掉
+- 踩过：依赖列把默认包裹当可选装饰，又只补了 Action 一条边。Amis 还有 `withBadge`（tpl/link/checkbox/radio/avatar）、`FormItem.labelRemark`→remark、Form `wrapWithPanel`、Page/CRUD/Dialog/Select 的 Spinner、Table 勾选/`itemBadge`、`input-text` 选择器、`calendar` extends InputDate。只改 Action 会继续把 chrome 排到 #80+。
+- 稳定做法：全表按构建依赖补边（脚本 `DEPS_ADD` / `DEPS_SET`）。互开只留一边。就绪集先比解锁分 `U`。重算必须跑完整张表，不要只改一个 type。
+- 触及：`action` `button` `tooltip-wrapper` `badge` `toast` `dialog` `drawer` `remark` `FormItem` `tpl` `spinner` `panel` `table` `select` `input-text` `calendar` `avatar` `page` `crud`
+- 规则：组件 P0 TODO「依赖与优先级」；`scripts/component-priority.mjs`
 
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。

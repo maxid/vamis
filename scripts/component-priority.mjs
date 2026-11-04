@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * 从组件 TODO「全量顺序」表读依赖边，按「拓扑约束 + 综合分」重算实施顺序并回写该节。
+ * 从组件 TODO「全量顺序」表读依赖边，按「拓扑约束 + 解锁分 + 综合分」重算实施顺序并回写该节。
  *
  * 边 A 依赖 B：B 必须先做。就绪集（依赖均已排）里：
  *   S = 被依赖 × (max深度 + 1) + 深度
- * 被依赖多 1 次就超过整段深度差；同 S 再按深度、文档序。
+ *   U = max(S, 被自己挡住的下游 U)  —— 避免低 S chrome 堵住高 S 枢纽
+ * 同 U 再按 S、深度、文档序。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -38,6 +39,59 @@ function parseDeps(cell) {
     .filter(Boolean)
 }
 
+function formatDepCell(deps) {
+  if (!deps.length) return '—'
+  return deps.map((d) => (d === 'FormItem' || d === 'Options' ? d : `\`${d}\``)).join('、')
+}
+
+/**
+ * 全表构建依赖（默认包裹 / 文档专章 / 渲染器 import）。
+ * SET 整格替换；ADD 追加。互开不写回边：icon↔badge、action↔dialog/drawer、popOver↔dialog、calendar.scheduleAction。
+ */
+const DEPS_SET = {
+  calendar: ['input-date', 'tpl'],
+}
+
+const DEPS_ADD = {
+  FormItem: ['remark'],
+  tpl: ['badge'],
+  remark: ['tooltip-wrapper', 'icon', 'tpl'],
+  link: ['badge'],
+  checkbox: ['badge'],
+  radio: ['badge'],
+  avatar: ['badge'],
+  form: ['panel', 'spinner'],
+  page: ['spinner'],
+  service: ['spinner'],
+  dialog: ['spinner'],
+  drawer: ['spinner'],
+  crud: ['spinner'],
+  select: ['spinner'],
+  table: ['checkbox', 'badge'],
+  table2: ['badge', 'mapping'],
+  'dropdown-button': ['tooltip-wrapper'],
+  'input-text': ['Options', 'action'],
+}
+
+function applyBuildDeps(rows) {
+  const changed = []
+  for (const r of rows) {
+    const key = nodeKeys(r.label)[0]
+    let next = parseDeps(r.depCell)
+    if (DEPS_SET[key]) next = [...DEPS_SET[key]]
+    if (DEPS_ADD[key]) {
+      next = [...next]
+      for (const d of DEPS_ADD[key]) if (!next.includes(d)) next.push(d)
+    }
+    const cell = formatDepCell(next)
+    if (cell !== r.depCell) {
+      changed.push({ key, from: r.depCell, to: cell })
+      r.depCell = cell
+    }
+  }
+  return changed
+}
+
 function parseNodes(text) {
   const start = text.indexOf(SECTION_HEAD)
   if (start < 0) throw new Error('missing 依赖与优先级 section')
@@ -49,7 +103,7 @@ function parseNodes(text) {
   const rows = []
   for (const line of section.slice(tableStart).split('\n')) {
     const m = line.match(
-      /^\| (\d+) \| (.+?) \| (.+?) \| \d+ \| \d+ \| (?:[\d.]+ \| )?(未开始|进行中|已完成) \| (\d+%) \|$/,
+      /^\| (\d+) \| (.+?) \| (.+?) \| (?:\d+ \| )+(未开始|进行中|已完成) \| (\d+%) \|$/,
     )
     if (!m) continue
     rows.push({
@@ -115,6 +169,19 @@ function rank(rows) {
   const maxDepth = Math.max(...depth)
   const weight = maxDepth + 1
   const score = nodes.map((_, i) => fanIn[i] * weight + depth[i])
+  const unlock = nodes.map(() => 0)
+  const uVis = nodes.map(() => 0)
+  const dfsU = (id) => {
+    if (uVis[id] === 1) throw new Error(`unlock cycle at ${nodes[id].label}`)
+    if (uVis[id] === 2) return unlock[id]
+    uVis[id] = 1
+    let u = score[id]
+    for (const m of dependents[id]) u = Math.max(u, dfsU(m))
+    unlock[id] = u
+    uVis[id] = 2
+    return u
+  }
+  for (const n of nodes) dfsU(n.id)
 
   const wait = nodes.map((n) => n.depIds.length)
   const remainingDeps = nodes.map((n) => new Set(n.depIds))
@@ -128,6 +195,7 @@ function rank(rows) {
   for (const n of nodes) if (wait[n.id] === 0) pushReady(n.id)
 
   const cmpReady = (a, b) => {
+    if (unlock[a] !== unlock[b]) return unlock[b] - unlock[a]
     if (score[a] !== score[b]) return score[b] - score[a]
     if (fanIn[a] !== fanIn[b]) return fanIn[b] - fanIn[a]
     if (depth[a] !== depth[b]) return depth[b] - depth[a]
@@ -159,6 +227,7 @@ function rank(rows) {
     depth: depth[id],
     fanIn: fanIn[id],
     score: score[id],
+    unlock: unlock[id],
     status: nodes[id].status,
     progress: nodes[id].progress,
     keys: nodes[id].keys,
@@ -176,13 +245,10 @@ function layerRows(ranked, maxH) {
   }
   const meaning = {
     0: '叶子：无组件依赖',
-    1: '直接依赖叶子：基础控件 / 按钮 / 容器',
-    2: '组合：表格 / 列表 / 卡片 / 面板 / 选择',
-    3: '表单 / cards / 传输 / 复杂选择',
-    4: '弹层 / 向导 / 组合表单 / 组合传输',
-    5: 'CRUD / 日历 / 组合穿梭',
-    6: '页面',
-    7: '应用',
+    1: '直接依赖叶子（icon 等）',
+    [maxH - 2]: 'CRUD / 组合容器',
+    [maxH - 1]: '页面',
+    [maxH]: '应用',
   }
   const lines = [
     '| 依赖高度 H | 深度 | 数量 | 最早 / 最晚 | 含义 |',
@@ -202,12 +268,12 @@ function layerRows(ranked, maxH) {
 
 function orderTable(ranked) {
   const lines = [
-    '| # | type | 依赖 | 深度 | 被依赖 | S | 状态 | 进度 |',
-    '|---|------|------|------|--------|---|------|------|',
+    '| # | type | 依赖 | 深度 | 被依赖 | S | U | 状态 | 进度 |',
+    '|---|------|------|------|--------|---|---|------|------|',
   ]
   for (const r of ranked) {
     lines.push(
-      `| ${r.rank} | ${r.label} | ${r.depCell} | ${r.depth} | ${r.fanIn} | ${r.score} | ${r.status} | ${r.progress} |`,
+      `| ${r.rank} | ${r.label} | ${r.depCell} | ${r.depth} | ${r.fanIn} | ${r.score} | ${r.unlock} | ${r.status} | ${r.progress} |`,
     )
   }
   return lines.join('\n')
@@ -219,16 +285,18 @@ function typeLabel(r) {
   return `\`${k}\``
 }
 
-function topHint(ranked, n = 12) {
+function topHint(ranked, n = 8) {
   const skip = new Set(['custom', 'office-viewer', 'pdf-viewer'])
   const next = ranked.filter((r) => {
     if (r.status === '已完成') return false
     if (r.keys.some((k) => skip.has(k))) return false
+    const pct = Number.parseInt(r.progress, 10)
+    if (Number.isFinite(pct) && pct >= 90) return false
     return true
   })
   return next
     .slice(0, n)
-    .map((r) => typeLabel(r))
+    .map((r) => `${typeLabel(r)}（#${r.rank}，${r.progress}）`)
     .join('、')
 }
 
@@ -253,7 +321,7 @@ function overview(ranked) {
 | 零被依赖 | #${zeroAt}–#${ranked.length - 1} | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
 | 最后 | #${last.rank} | ${typeLabel(last)} |
 
-\`#\` 是**拓扑就绪后**的综合分序，不是全局 S 序：例如 \`action\` 的 S 高于 \`icon\`，但必须等 \`icon\` 做完才能开工。`
+\`#\` 是**拓扑就绪后**按解锁分 U 再按 S 的序，不是全局 S 序：例如 \`action\` 的 S 高于 \`tooltip-wrapper\`，但必须等 tooltip chrome 做完才能开工。`
 }
 
 function renderSection(result) {
@@ -261,16 +329,19 @@ function renderSection(result) {
   const next = topHint(ranked)
   return `${SECTION_HEAD}
 
-- 口径：边 \`A → B\` 表示 A 的**主路径**需要 B（渲染或典型组合），不统计可选装饰与任意嵌套。
+- 口径：边 \`A → B\` 表示 A 的**构建依赖**——默认包裹、渲染器 import、或文档专章把 B 当主路径。任意 \`body\` / \`scheduleAction\` 嵌套仍不统计。不要把默认包裹当成「可选装饰」。全表按此补边，不是只改 Action。
+- **已计入的构建依赖**：\`withBadge\` 宿主（\`action\` / \`tpl\` / \`link\` / \`checkbox\` / \`radio\` / \`avatar\`）；\`FormItem.labelRemark\` → \`remark\` → \`tooltip-wrapper\`；Form \`wrapWithPanel\` → \`panel\`；\`Spinner\` 宿主（\`page\` / \`service\` / \`dialog\` / \`drawer\` / \`crud\` / \`select\` / \`form\`）；Table 勾选 / \`itemBadge\`；\`input-text\` 选择器模式 + \`addOn\`；\`calendar\` extends \`input-date\`；\`dropdown-button\` / \`remark\` 的 TooltipWrapper。
+- **互开不成环**：\`actionType: dialog|drawer\` 与弹层页脚 \`action\`；\`icon\` 的 \`withBadge\` 与 \`badge → icon\`；\`popOver\` mode dialog。Kahn 只留一边。\`calendar.scheduleAction\` 当任意嵌套，不写 dialog。
 - **依赖链**：Kahn 拓扑——B 未排完则 A 不能开工（先做被依赖的节点）。
 - **树深度**：叶子高度 \`H = 0\`，沿依赖向上递增；\`深度 = maxH − H\`（当前 maxH = ${maxH}）。深度大 = 更靠近叶子、更基础。
-- **被依赖**：有多少个本表节点的主路径直接列出该 type。
-- **综合分** \`S = 被依赖 × ${weight} + 深度\`（${weight} = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 \`pdf-viewer\` 这类无人依赖的叶子排在 \`action\` / \`form\` 前面。同分再按深度降序、原文档序。
+- **被依赖**：有多少个本表节点的构建依赖直接列出该 type。
+- **综合分** \`S = 被依赖 × ${weight} + 深度\`（${weight} = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 \`pdf-viewer\` 这类无人依赖的叶子排在 \`action\` / \`form\` 前面。
+- **解锁分** \`U(n) = max(S(n), max U(依赖 n 的节点))\`。就绪集先比 U 再比 S，避免 \`tooltip-wrapper\`（被依赖少、S 低）堵住 \`action\`（被依赖多、S 高）。同分再按深度降序、原文档序。
 - 优先级 \`#1\` 最先做，\`#${count}\` 最后做。\`P\` 列仍是阶段 P0；**执行顺序看本表**。
 - \`FormItem\` / \`Options\` 是契约节点；\`toast\` 是动作；\`badge\` / \`popOver\` 是属性型节点，均按组件计入。
 - \`office-viewer\` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 ${count} 个 type 节点。
-- 跳过 Custom 与 office/pdf。当前建议下一批：${next}。
-- 示例：\`app → page → crud → {form, table, pagination, action, dialog}\`；\`form → FormItem / Options + input-*\`；\`table → tpl / mapping / action / popOver\`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：${next}。
+- 示例：\`icon → badge → tpl → tooltip-wrapper → remark → FormItem\`；\`action → {icon, tpl, tooltip-wrapper, badge, toast}\`；\`form → panel / spinner / FormItem / Options + input-*\`；\`calendar → input-date\`。
 - 重算：\`node scripts/component-priority.mjs\`（读本表依赖列，回写本节）。
 
 ${overview(ranked)}
@@ -280,10 +351,20 @@ flowchart LR
   FormItem --> Options
   FormItem --> inputText["input-text"]
   Options --> select
+  icon --> badge
+  badge --> tpl
+  tpl --> tooltipWrapper["tooltip-wrapper"]
+  tooltipWrapper --> remark
+  remark --> FormItem
   icon --> action
   tpl --> container
-  tpl --> action
+  tooltipWrapper --> action
+  badge --> action
+  toast --> action
   action --> form
+  panel --> form
+  spinner --> form
+  inputDate["input-date"] --> calendar
   FormItem --> form
   select --> form
   form --> dialog
@@ -309,7 +390,9 @@ ${orderTable(ranked)}
 function main() {
   const text = fs.readFileSync(todoPath, 'utf8')
   const { start, end, rows } = parseNodes(text)
+  const depPatch = applyBuildDeps(rows)
   const result = rank(rows)
+  result.depPatch = depPatch
   const section = renderSection(result)
   const next = text.slice(0, start) + section + text.slice(end)
   if (next !== text) fs.writeFileSync(todoPath, next)
@@ -320,12 +403,15 @@ function main() {
         nodes: result.count,
         maxH: result.maxH,
         weight: result.weight,
+        depPatch: depPatch.length,
+        depPatchSample: depPatch.slice(0, 24),
         moved: changed.length,
         top12: result.ranked.slice(0, 12).map((r) => ({
           rank: r.rank,
           was: r.orig,
           type: r.keys[0],
           S: r.score,
+          U: r.unlock,
           depth: r.depth,
           fanIn: r.fanIn,
         })),
