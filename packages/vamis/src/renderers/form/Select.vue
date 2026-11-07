@@ -118,6 +118,7 @@ async function onDelete(opt: (typeof ctl.options.value)[number], event: Event) {
         :show="ctl.open.value"
         :target="rootEl"
         :container="ctl.overlayContainer.value"
+        :gap="4"
         @outside="ctl.open.value = false"
       >
         <div class="vamis-select__popover" :style="{ minWidth: triggerWidth ? `${triggerWidth}px` : undefined }">

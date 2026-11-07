@@ -327,6 +327,12 @@ alwaysApply: true
 - 触及：`select` Options `dropdown-button` `table2` `json`
 - 规则：本文；Amis `_select.scss` `&-arrow`、`_dropdown.scss` `&-caret`
 
+### 下拉选项 hover / active 拆开，弹层不要写死白底
+- 踩过：Select 选项把 hover 和 `is-active` 都刷成 `--accent`，选中项看起来像灰底块；弹层 `background: #fff` / `border-color: #f2f3f5`，深色主题仍是白盒。Amis 选中是 brand 字色 + 菜单底，悬停才是 brand-10 底。控件与弹层之间 Amis 是 `PopOver--v-top { margin-top: 4px }`，Vamis Overlay 默认 gap 2 看起来像贴死。
+- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。Select 弹层 `VamisOverlay :gap="4"`（上翻同样 4px），不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。
+- 触及：`select` Options
+- 规则：本文；Amis `_select.scss` `&-option` / `PopOver--v-top`；`.cursor/rules/style.mdc` / `reuse-overlay.mdc`
+
 ### SDK 不要依赖解不到的包
 - 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。
 - 稳定做法：日期 / `|date` 走 dayjs（plugin 打进 bundle）。SDK 上下文补 `workspaceBareResolve`。字符串函数体仅 `env.trusted`；对照页与文档预览显式开 trusted，SDK 默认仍关。

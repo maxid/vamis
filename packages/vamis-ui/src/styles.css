@@ -157,6 +157,23 @@
   --animation-duration: 0.2s;
   --select-caret-color: #84878c;
   --select-caret-hover-color: #84878c;
+  /* 对齐 Amis `--Form-select-menu-*` / `--select-base-*-option-*`（cxd）。 */
+  --select-menu-bg: #ffffff;
+  --select-menu-color: #151b26;
+  --select-menu-border: #f2f3f5;
+  --select-menu-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+  --select-option-color: #151b26;
+  --select-option-bg: transparent;
+  --select-option-hover-color: #151b26;
+  --select-option-hover-bg: var(--button-light);
+  --select-option-active-color: #2468f2;
+  --select-option-active-bg: var(--select-menu-bg);
+  --select-option-disabled-color: #b8babf;
+  --select-option-disabled-bg: transparent;
+  --select-option-padding-x: 10px;
+  --select-option-line-height: 32px;
+  --select-popover-gap: 4px;
   --control-h: 32px;
   --control-h-sm: 28px;
   --control-h-lg: 36px;
@@ -354,6 +371,13 @@
   --muted-foreground: oklch(0.7 0.02 250);
   --select-caret-color: #d4d6d9;
   --select-caret-hover-color: #d4d6d9;
+  --select-menu-bg: #17202d;
+  --select-menu-color: #f7f8fa;
+  --select-menu-border: #303640;
+  --select-option-color: #f7f8fa;
+  --select-option-hover-color: #f7f8fa;
+  --select-option-active-color: #1677ff;
+  --select-option-disabled-color: #b8bbbf;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);
   --destructive: oklch(0.65 0.19 25);
@@ -1660,14 +1684,15 @@
     color: var(--select-caret-hover-color);
   }
   .vamis-select__popover {
-    min-width: 160px;
+    min-width: 120px;
     max-height: 300px;
     overflow: auto;
     padding: 4px 0;
-    border: 1px solid #f2f3f5;
+    border: 1px solid var(--select-menu-border);
     border-radius: var(--radius);
-    background: #fff;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+    background: var(--select-menu-bg);
+    color: var(--select-menu-color);
+    box-shadow: var(--select-menu-shadow);
   }
   .vamis-select__search,
   .vamis-select__create-form {
@@ -1692,28 +1717,36 @@
   .vamis-select__create-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--gap-xs);
     width: 100%;
-    min-height: 32px;
-    padding: 0 12px;
+    height: var(--select-option-line-height);
+    padding: 0 var(--select-option-padding-x);
     border: 0;
-    background: transparent;
-    color: inherit;
+    background: var(--select-option-bg);
+    color: var(--select-option-color);
+    box-sizing: border-box;
     font: inherit;
     font-size: var(--fontSizeBase);
-    line-height: var(--lineHeightBase);
+    font-weight: 400;
+    line-height: var(--select-option-line-height);
     text-align: left;
     cursor: pointer;
   }
+  .vamis-select__item.is-active {
+    color: var(--select-option-active-color);
+    background: var(--select-option-active-bg);
+  }
   .vamis-select__item:hover,
-  .vamis-select__item.is-active,
   .vamis-select__checkall:hover,
   .vamis-select__create-btn:hover {
-    background: var(--accent);
+    color: var(--select-option-hover-color);
+    background: var(--select-option-hover-bg);
   }
-  .vamis-select__item.is-disabled {
+  .vamis-select__item.is-disabled,
+  .vamis-select__item.is-disabled:hover {
     cursor: not-allowed;
-    color: var(--muted-foreground);
+    color: var(--select-option-disabled-color);
+    background: var(--select-option-disabled-bg);
   }
   .vamis-select__item-label {
     flex: 1;
@@ -1721,6 +1754,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: inherit;
   }
   .vamis-select__item-ops {
     display: flex;
@@ -1761,7 +1795,7 @@
     color: var(--muted-foreground);
   }
   .vamis-select__create {
-    border-top: 1px solid #f2f3f5;
+    border-top: 1px solid var(--select-menu-border);
   }
   .vamis-select__create-btn.is-muted {
     color: var(--muted-foreground);
