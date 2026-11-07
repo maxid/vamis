@@ -2,6 +2,7 @@ export { cn } from './lib/utils'
 export { resolveCssVars } from './lib/css-vars'
 export { default as VamisCaret } from './ui/VamisCaret.vue'
 export { default as VamisPasswordToggle } from './ui/VamisPasswordToggle.vue'
+export { default as VamisSpinnerMark } from './ui/VamisSpinnerMark.vue'
 
 export { Button, buttonVariants, levelToVariant, sizeToButtonSize } from './ui/button'
 export type { ButtonVariants } from './ui/button'

@@ -224,7 +224,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   alert: doc('Alert 提示', '反馈', '提示条。level / title / body、showIcon、showCloseButton、actions。'),
   dialog: doc('Dialog 对话框', '反馈', 'actionType: dialog 打开 overlay。size / showCloseButton / closeOnEsc / actions。'),
   drawer: doc('Drawer 抽屉', '反馈', 'actionType: drawer 打开 overlay。position / size / overlay / actions。'),
-  spinner: doc('Spinner 加载中', '反馈', '加载指示。show / size / overlay / tip / delay；有 body 时当容器。'),
+  spinner: doc('Spinner 加载中', '反馈', '加载指示。中心对称菱形 SVG、show / size / overlay / tip / delay / icon / loadingConfig；有 body 时当容器。'),
   toast: doc('Toast 轻提示', '反馈', '通常用 actionType: toast 弹出，配 toast.items / position / timeout。'),
 
   avatar: doc(

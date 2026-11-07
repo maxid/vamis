@@ -24,6 +24,7 @@ import {
 } from '@vamis/core'
 import { cn } from '@vamis/ui'
 import Remark from './rest/Remark.vue'
+import Spinner from './Spinner.vue'
 
 const DEFAULT_ASIDE_MIN = 160
 const DEFAULT_ASIDE_MAX = 400
@@ -97,6 +98,13 @@ const remarkSchema = computed<SchemaObject | null>(() => {
   return null
 })
 const cssText = computed(() => buildCssBlock(props.schema.css))
+const spinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: loading.value,
+  overlay: true,
+  size: 'lg',
+  loadingConfig: props.schema.loadingConfig,
+}))
 
 function isNodeObject(value: unknown): value is SchemaObject {
   return !!value && typeof value === 'object' && !Array.isArray(value)
@@ -120,7 +128,7 @@ function setData(values: PlainObject, replace = false) {
 }
 
 let mounted = false
-let fetching = false
+const loading = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
 let dragStartX = 0
 let dragStartWidth = DEFAULT_ASIDE_WIDTH
@@ -149,8 +157,8 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
     ? isEffectiveApi(initApi, viewData.value, props.schema.initFetch, props.schema.initFetchOn)
     : isEffectiveApi(initApi, viewData.value)
   if (!allowed) return
-  if (fetching) return
-  fetching = true
+  if (loading.value) return
+  loading.value = true
   clearTimer()
   try {
     const result = await requestApi(initApi, { env, data: viewData.value, reason: 'init' })
@@ -189,7 +197,7 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
     )
     if (!options.silent) env.notify('error', msg)
   } finally {
-    fetching = false
+    loading.value = false
   }
 }
 
@@ -318,7 +326,8 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
         </div>
-        <div class="w-full min-w-0 p-[var(--page-body-padding)]" :class="bodyClass">
+        <div class="relative w-full min-w-0 p-[var(--page-body-padding)]" :class="bodyClass">
+          <Spinner :schema="spinnerSchema" />
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>
       </div>

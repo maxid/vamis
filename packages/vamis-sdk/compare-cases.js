@@ -22648,21 +22648,8 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "flex",
-        "justify": "flex-start",
-        "alignItems": "center",
-        "items": [
-          {
-            "type": "spinner",
-            "show": true,
-            "tip": "加载中"
-          },
-          {
-            "type": "spinner",
-            "show": false,
-            "tip": "已隐藏"
-          }
-        ]
+        "type": "spinner",
+        "show": true
       }
     },
     "measure": {
@@ -22679,41 +22666,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #2",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "body": [
-          {
-            "type": "switch",
-            "name": "loading",
-            "label": "显示加载",
-            "value": true
-          },
-          {
-            "type": "spinner",
-            "showOn": "${loading}",
-            "tip": "加载中"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-spinner-2",
-    "group": "组件 / 反馈",
-    "bucket": "components",
-    "section": "反馈",
-    "page": "Spinner 加载中",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Spinner 加载中 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22747,6 +22699,31 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-spinner-2",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Spinner 加载中",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Spinner 加载中 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "spinner",
+        "show": true,
+        "className": "my-spinner",
+        "spinnerClassName": "my-spinner-custom-icon",
+        "spinnerWrapClassName": "my-spinner-wrap"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-spinner-3",
     "group": "组件 / 反馈",
     "bucket": "components",
@@ -22767,26 +22744,25 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "spinner",
             "show": true,
-            "tip": "加载中",
-            "tipPlacement": "bottom"
+            "icon": "",
+            "className": "mr-4"
           },
           {
             "type": "spinner",
             "show": true,
-            "tip": "加载中",
-            "tipPlacement": "right"
+            "icon": "reload",
+            "className": "mr-4"
           },
           {
             "type": "spinner",
             "show": true,
-            "tip": "加载中",
-            "tipPlacement": "top"
+            "icon": "fa fa-spinner",
+            "className": "mr-4"
           },
           {
             "type": "spinner",
             "show": true,
-            "tip": "加载中",
-            "tipPlacement": "left"
+            "icon": "/examples/static/logo.png"
           }
         ]
       }
@@ -22809,14 +22785,109 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
+        "type": "flex",
+        "justify": "flex-start",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中...",
+            "className": "mr-10"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中...",
+            "tipPlacement": "right",
+            "className": "mr-10"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中...",
+            "tipPlacement": "top",
+            "className": "mr-10"
+          },
+          {
+            "type": "spinner",
+            "show": true,
+            "tip": "加载中...",
+            "tipPlacement": "left"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-spinner-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Spinner 加载中",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Spinner 加载中 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
         "type": "spinner",
         "show": true,
         "overlay": true,
-        "tip": "加载中",
         "body": {
-          "type": "tpl",
-          "tpl": "姓名、邮箱"
+          "type": "form",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "name",
+              "label": "姓名："
+            },
+            {
+              "name": "email",
+              "type": "input-email",
+              "label": "邮箱："
+            }
+          ]
         }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-spinner-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Spinner 加载中",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Spinner 加载中 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "switch",
+            "name": "show",
+            "label": "show",
+            "value": true
+          },
+          {
+            "type": "spinner",
+            "overlay": false,
+            "showOn": "${show}"
+          }
+        ]
       }
     },
     "measure": {

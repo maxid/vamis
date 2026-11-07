@@ -617,10 +617,11 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     tip: '加载文案。',
     tipPlacement: '文案相对图标位置：top / right / bottom（默认）/ left。',
     delay: '延迟显示毫秒，默认 0。',
-    icon: '自定义图标。含 / 的当图片 URL；内置名 / fa 未接。',
+    icon: '自定义图标。内置名（如 reload）、fa class、或带 . 的图片 URL。写了 loadingConfig.root 时强制默认 V 标。',
     spinnerClassName: '打在图标上的 class。',
     spinnerWrapClassName: '作为容器时打在包裹层上的 class。',
     body: '包一层内容时的子节点。有 body 时指示器居中叠在内容上。',
+    loadingConfig: '挂载配置。root 是选择器；开启后强制 overlay，且 icon 失效。',
   }, { slots: ['body'] }),
   toast: fields('Toast', {
     items: '轻提示列表。通常用 actionType: toast，很少单独当页面 type。',

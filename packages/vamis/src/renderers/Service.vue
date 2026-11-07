@@ -17,6 +17,7 @@ import {
   type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
+import Spinner from './Spinner.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -41,6 +42,13 @@ const body = computed(() => {
   if (remoteSchema.value.length) return remoteSchema.value
   return asArray(props.schema.body || store.data.body)
 })
+const spinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: store.fetching,
+  overlay: true,
+  size: 'lg',
+  loadingConfig: props.schema.loadingConfig,
+}))
 
 async function fetchOne(api: SchemaApi | undefined, reason: 'init' | 'reload') {
   if (!api) return null
@@ -117,8 +125,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div data-vamis-service class="w-full min-w-0 space-y-3">
-    <p v-if="store.fetching" class="text-xs text-muted-foreground">加载中…</p>
+  <div data-vamis-service class="relative w-full min-w-0 space-y-3">
+    <Spinner :schema="spinnerSchema" />
     <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
   </div>
 </template>

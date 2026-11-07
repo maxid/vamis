@@ -647,7 +647,7 @@ describe('schemaNodeDisplayClass', () => {
   it('does not stack page body with space-y (Amis Page-body is normal flow)', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const page = readFileSync(resolve(here, '../../vamis/src/renderers/Page.vue'), 'utf8')
-    expect(page).toContain('class="w-full min-w-0 p-[var(--page-body-padding)]"')
+    expect(page).toContain('class="relative w-full min-w-0 p-[var(--page-body-padding)]"')
     expect(page).not.toContain('space-y-3 p-[var(--page-body-padding)]')
   })
 })

@@ -375,6 +375,12 @@ alwaysApply: true
 - 触及：`action` `button` `tooltip-wrapper` `badge` `toast` `dialog` `drawer` `remark` `FormItem` `tpl` `spinner` `panel` `table` `select` `input-text` `calendar` `avatar` `page` `crud` `nav` `list` `cards` `timeline` `transfer`
 - 规则：组件 P0 TODO「依赖与优先级」；`scripts/component-priority.mjs`；`scripts/audit-amis-examples.mjs`
 
+### Spinner 默认用中心对称循环标，宿主复用同一套，祖先 loading 挡住子级
+- 踩过：默认画 CSS 圆环；`icon: reload` / `fa fa-spinner` 当 URL 丢掉；Page / Service 各写「加载中…」或根本不转。又把 Amis `--Spinner-bg` 六边形整段搬进来当品牌。开口 V + SMIL `begin="id.end"` 链式在 Vue 动态 id 下播完就停，而且不是原点对称系统。Amis 是圆心原点裂成 N 点、连线、收回、循环。
+- 稳定做法：默认指示器走 `VamisSpinnerMark`（圆心原点四向裂开成菱形，依次连线再收回）。同一时钟 `dur` + `repeatCount="indefinite"`，不要 `begin` 链式。几何不要抄六边形，也不要开口 V。SVG class 用 `vamis-spinner-v`，不要占用 `.vamis-spinner-mark`（那是互斥定位 span，`opacity: 0`）。色 `currentColor` / `--primary`，不要写死 `#2468F2`。`icon` 空 = 默认标；`reload` 内置线图；含 `.` 当图；否则 class（fa）。父子互斥用共享 `spinnerPushParent` / `spinnerCheckLoading`（祖先 `contains` 子级则子级不画）。`loadingConfig.root` Teleport 且强制 overlay、忽略自定义 icon。Page / Service / 以后 Form Dialog 都挂 `Spinner.vue`，不要再写一套圆环。
+- 触及：`spinner` `page` `service`
+- 规则：本文；Amis `amis-ui` `Spinner.tsx` / `_spinner.scss`
+
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。
 - 稳定做法：helper 继续绑 shadcn `--secondary`。组件专用色在该渲染器覆盖。
