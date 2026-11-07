@@ -98,11 +98,21 @@ describe('input-text renderer reuse', () => {
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     expect(css).toContain('--control-hover-border: var(--primary)')
     expect(css).toContain('--control-focus-border: var(--ring)')
+    expect(css).toContain(
+      '--control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)',
+    )
+    expect(css).toContain('--control-focus-addon-color: var(--primary)')
     expect(css).not.toContain('color-mix(in oklch, var(--input) 55%, var(--foreground))')
     expect(css).toContain(
       '.vamis-text-control.is-focused:not(.is-disabled):has(> .vamis-text-control__input--full)',
     )
-    expect(css).toContain('box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)')
+    expect(css).toContain('box-shadow: var(--control-focus-glow)')
+    expect(css).toContain(
+      '.vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__addon--text {\n  color: var(--control-focus-addon-color)',
+    )
+    expect(css).toContain(
+      '.vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__input--none',
+    )
     expect(css).not.toContain('.vamis-text-control.is-focused .vamis-text-control__input--full {')
     const halfStart = css.indexOf('.vamis-text-control__input--half {')
     const halfBlock = css.slice(halfStart, css.indexOf('}', halfStart) + 1)

@@ -39,7 +39,7 @@ body:
     type: input-text
     label: 无边框
     borderMode: none
-    nativeInputClassName: focus:text-indigo-700
+    nativeInputClassName: focus:text-primary
 ```
 
 ## 不同类型
@@ -556,4 +556,4 @@ body:
 - 选择器下拉 Teleport 到 `env.getModalContainer()`，本地检索按 CONTAINS 档排序（精确 / 前缀优先于包含）并高亮匹配；配了 `autoComplete` 时不下本地过滤，去抖 250ms 按 `$term` 拉选项。
 - `input-password` 默认画出显隐钮；`revealPassword: false` 关掉。点开会派发 `review` / `encrypt`（Amis 源码有，文档页未列）。
 - 焦点环走 token `box-shadow`，不搬 `.cxd-TextControl`。
-- 「不同边框风格」半边框示例 `inputControlClassName` 用 `bg-muted`（浅/深都跟主题），不用 Amis 的 `bg-gray-100`（固定 `#f3f4f6`，深色会变成白底）。
+- 「不同边框风格」半边框示例 `inputControlClassName` 用 `bg-muted`（浅/深都跟主题），不用 Amis 的 `bg-gray-100`（固定 `#f3f4f6`，深色会变成白底）。无边框 `nativeInputClassName` 用 `focus:text-primary`，不用 Amis 的 `focus:text-indigo-700`（写死靛色，不跟 5 色）。

@@ -16999,7 +16999,7 @@ window.VAMIS_COMPARE_CASES = [
             "type": "input-text",
             "label": "无边框",
             "borderMode": "none",
-            "nativeInputClassName": "focus:text-indigo-700"
+            "nativeInputClassName": "focus:text-primary"
           }
         ]
       }

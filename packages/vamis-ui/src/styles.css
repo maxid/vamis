@@ -250,6 +250,8 @@
   /* hover 走主题色；focus 边仍用 --ring，3px glow 是 Vamis 原风格（不跟 Amis boxShadow:none）。 */
   --control-hover-border: var(--primary);
   --control-focus-border: var(--ring);
+  --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+  --control-focus-addon-color: var(--primary);
   /*
    * Overlay Tooltip 语义变量（Amis --Tooltip-*）。
    * 圆角是 --borderRadiusLg 8px，不是全局 --radius 4px，也不是 Tailwind --radius-lg（6px）。
@@ -1648,11 +1650,11 @@
     cursor: pointer;
   }
   .vamis-select__input:hover {
-    border-color: var(--ring);
+    border-color: var(--control-hover-border);
   }
   .vamis-select__input.is-focused {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 1px var(--primary);
+    border-color: var(--control-focus-border);
+    box-shadow: var(--control-focus-glow);
   }
   .vamis-select.is-disabled .vamis-select__input {
     cursor: not-allowed;
@@ -1896,12 +1898,20 @@
 }
 .vamis-text-control.is-focused:not(.is-disabled):has(> .vamis-text-control__input--full) {
   border-radius: var(--radius);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+  box-shadow: var(--control-focus-glow);
 }
 .vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__input,
 .vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__addon--text,
 .vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__addon--button [data-slot='button'] {
   border-color: var(--control-focus-border);
+}
+.vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__addon--text {
+  color: var(--control-focus-addon-color);
+}
+.vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__input--none,
+.vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__input--none .vamis-text-control__native {
+  color: var(--primary);
+  -webkit-text-fill-color: var(--primary);
 }
 .vamis-text-control__addon--text,
 .vamis-text-control__addon--button [data-slot='button'] {

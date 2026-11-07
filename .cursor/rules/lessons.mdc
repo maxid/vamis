@@ -141,10 +141,10 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*`
 
 ### 输入框 hover 走 --primary，focus glow 包整组
-- 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。
-- 稳定做法：hover `border-color: var(--primary)`（5 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），但 `box-shadow` 打在 `.vamis-text-control` 整组。压过 Button utilities 用 unlayered。
-- 触及：`input-text` `input-password`
-- 规则：本文；Amis `_text.scss` 只对 hover/竖缝/圆角；focus 皮肤跟 Vamis 原风格
+- 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。Select 触发器写成 `box-shadow: 0 0 0 1px`，和 InputText 的 3px glow 两套。addOn 文案和无边框 focus 字色没跟 `--primary`。
+- 稳定做法：hover `border-color: var(--primary)`（5 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），量进 `--control-focus-glow`，InputText 打在 `.vamis-text-control` 整组，**Select 触发器共用同一 token**（Amis cxd Select 是 `shadow-none`，不要各写 1px）。focus 时文字 addOn 字色 `--control-focus-addon-color`（= `--primary`，对齐 `--Form-input-onFocus-addOnColor`）；`borderMode: none` 无 glow，原生字色改 `--primary`。无边框示例用 `focus:text-primary`，不要 Amis 的 `focus:text-indigo-700`。压过 Button utilities 用 unlayered。
+- 触及：`input-text` `input-password` `select` Options
+- 规则：本文；Amis `_text.scss` 只对 hover/竖缝/圆角/addOn 字色；focus glow 跟 Vamis 原风格
 
 ### 收集表单项要走进 grid columns
 - 踩过：`collectFormItems` 只递归 `body` / `controls`，grid 里 `columns[].body` 的默认值写不进表单域，禁用示例「姓名」空着。

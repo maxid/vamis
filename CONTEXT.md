@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- Select 触发器 focus 与 InputText 共用 `--control-focus-glow`（Vamis 3px `color-mix`，不再是 1px 实线）。addOn 文案 focus 字色 `--control-focus-addon-color`（= `--primary`）；`borderMode: none` 无 glow、原生字色跟主题。无边框示例 `focus:text-primary`，不用 `indigo-700`。
 - `input-text` chrome：hover 边走 `--primary`；half 保留圆角且深色仍用 `--card`（原生 input `appearance: none`，避免 UA 白底）；addOn 1px 竖缝；**文字/按钮 addOn 都 `transition: none`，先亮附加区再亮输入**。focus 3px glow 包整组。下拉 PopOver 默认 gap 4（只上下翻，不对左右开）；`input-date` / `dropdown-button` 也走 `VamisOverlay`。
 - `input-text` #11：选择器检索对齐 Amis `matchSorter` CONTAINS（精确 / 前缀优先于包含、匹配高亮、多选「新增：」）；配了 `autoComplete` 不再本地过滤。建议下拉改 `VamisOverlay` `:gap="4"`。`input-password` 默认 `revealPassword` 显隐钮（Amis `view` / `invisible` 线图，`review` / `encrypt`）。进度 82% → **92%**，密码页 60% → **90%**。对照桌面 `input-text` **22/24**（P0 0）、`input-password` **0/2**（P0 0）。双站核过：密码钮切明文、选择器输入 `a` 只出 `aa` 且匹配字高亮、弹层 Teleport。
 - Options 下拉选中 / 悬停跟顶栏 5 色：`--select-option-active-color: var(--primary)`，悬停底 `color-mix` 进白（浅 20%）/ 黑（深 50%）保色相，不要 mix 进 `#17202d`（会把翠绿拉成青）。菜单底/边仍只跟浅深色。对照 `options` **38/39**（P0 0，仍是 `selectFirst`）、`select` **1/1**。
