@@ -321,6 +321,12 @@ alwaysApply: true
 - 触及：`action` `button` `icon` `avatar` `nav` `breadcrumb` `dropdown-button` `card` `cards`
 - 规则：`.cursor/rules/style.mdc`
 
+### 下拉 caret 走 right-arrow-bold 线图，不要 CSS 实心三角
+- 踩过：Select / DropdownButton 用 `border-top` 画实心三角，Table2 / Json 用 `▾`/`▸`；关开瞬间翻转、没有 `transition`。Amis 是 `Icon icon="right-arrow-bold"` 10×10，Select 外壳 90°、展开时 svg `rotate(180deg)` 且 `transition: transform var(--animation-duration)`（0.2s）；DropDown 是 svg 90° → 270°。
+- 稳定做法：chrome 箭头共用 `VamisCaret`（Amis 路径）。作者 `icon` / FA 仍走 `resolveIcon`。Tooltip 三角仍按 `_tooltip.scss`。不要再写 CSS `border` 三角或 unicode 块箭头。
+- 触及：`select` Options `dropdown-button` `table2` `json`
+- 规则：本文；Amis `_select.scss` `&-arrow`、`_dropdown.scss` `&-caret`
+
 ### SDK 不要依赖解不到的包
 - 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。
 - 稳定做法：日期 / `|date` 走 dayjs（plugin 打进 bundle）。SDK 上下文补 `workspaceBareResolve`。字符串函数体仅 `env.trusted`；对照页与文档预览显式开 trusted，SDK 默认仍关。

@@ -253,6 +253,7 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('VamisOverlay')
     expect(select).toContain('ctl.config.value.editable')
     expect(select).toContain('ctl.config.value.removable')
+    expect(select).toContain('VamisCaret')
     expect(hook).toContain('loadOptionsFromSource')
     expect(hook).toContain('toggleAllOptions')
     expect(hook).toContain('dumpOptionsValue')

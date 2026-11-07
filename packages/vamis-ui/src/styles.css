@@ -154,6 +154,9 @@
   --gap-md: 16px;
   --gap-lg: 20px;
   --gap-xl: 24px;
+  --animation-duration: 0.2s;
+  --select-caret-color: #84878c;
+  --select-caret-hover-color: #84878c;
   --control-h: 32px;
   --control-h-sm: 28px;
   --control-h-lg: 36px;
@@ -349,6 +352,8 @@
   --secondary-foreground: oklch(0.93 0.015 250);
   --muted: oklch(0.3 0.025 258);
   --muted-foreground: oklch(0.7 0.02 250);
+  --select-caret-color: #d4d6d9;
+  --select-caret-hover-color: #d4d6d9;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);
   --destructive: oklch(0.65 0.19 25);
@@ -1648,16 +1653,11 @@
     color: var(--foreground);
   }
   .vamis-select__caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 6px;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid var(--muted-foreground);
+    margin-left: 0;
+    color: var(--select-caret-color);
   }
-  .vamis-select.is-opened .vamis-select__caret {
-    transform: rotate(180deg);
+  .vamis-select:hover .vamis-select__caret {
+    color: var(--select-caret-hover-color);
   }
   .vamis-select__popover {
     min-width: 160px;
@@ -2081,6 +2081,52 @@
 .vamis-toast-wrap.is-mobile .vamis-toast--has-icon {
   min-width: 120px;
   padding-bottom: var(--gap-lg);
+}
+
+/* Chrome caret：Amis `right-arrow-bold` 10×10，禁止 CSS 实心三角。 */
+.vamis-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.vamis-caret svg {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  color: inherit;
+}
+.vamis-caret--select {
+  width: var(--gap-md);
+  text-align: center;
+  transform: rotate(90deg);
+}
+.vamis-caret--select svg {
+  transition: transform var(--animation-duration);
+}
+.vamis-caret--select.is-open svg,
+.vamis-select.is-opened .vamis-caret--select svg,
+[data-state='open'] .vamis-caret--select svg {
+  transform: rotate(180deg);
+}
+.vamis-caret--dropdown {
+  margin-left: var(--gap-sm);
+}
+.vamis-caret--dropdown svg {
+  transform: rotate(90deg);
+  transition: transform var(--animation-duration) ease;
+}
+.vamis-caret--dropdown.is-open svg,
+[data-state='open'] .vamis-caret--dropdown svg {
+  transform: rotate(270deg);
+}
+.vamis-caret--tree svg {
+  transform: rotate(0deg);
+  transition: transform var(--animation-duration) ease;
+}
+.vamis-caret--tree.is-open svg {
+  transform: rotate(90deg);
 }
 
 @media (prefers-reduced-motion: reduce) {

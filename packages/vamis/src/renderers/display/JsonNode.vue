@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Badge } from '@vamis/ui'
+import { Badge, VamisCaret } from '@vamis/ui'
 
 defineOptions({ name: 'JsonNode' })
 
@@ -46,7 +46,7 @@ const preview = computed(() => {
       class="inline-flex items-center gap-1 text-left hover:text-primary"
       @click="open = !open"
     >
-      <span class="w-3 text-muted-foreground">{{ open ? '▾' : '▸' }}</span>
+      <VamisCaret variant="tree" :open="open" class="text-muted-foreground" />
       <span v-if="name != null" class="text-primary">{{ name }}</span>
       <span class="text-muted-foreground">{{ preview }}</span>
       <Badge v-if="displayDataTypes" variant="outline">{{ kind }}</Badge>

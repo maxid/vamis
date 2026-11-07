@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   dropdownButtonAlign,
@@ -7,6 +10,8 @@ import {
   dropdownButtonItems,
   dropdownButtonTrigger,
 } from '../src/utils/dropdown-button'
+
+const here = dirname(fileURLToPath(import.meta.url))
 
 describe('dropdownButtonTrigger / close / caret', () => {
   it('defaults to click, closes outside, keeps menu after click', () => {
@@ -19,6 +24,13 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(dropdownButtonHideCaret({})).toBe(false)
     expect(dropdownButtonHideCaret({ hideCaret: true })).toBe(true)
     expect(dropdownButtonAlign({ align: 'right' })).toBe('right')
+  })
+
+  it('DropdownButton.vue uses the shared line caret, not a CSS triangle', () => {
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/rest/DropdownButton.vue'), 'utf8')
+    expect(vue).toContain('VamisCaret')
+    expect(vue).toContain('variant="dropdown"')
+    expect(vue).not.toContain('border-t-[4px]')
   })
 })
 

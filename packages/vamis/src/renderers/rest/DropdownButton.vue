@@ -15,7 +15,7 @@ import {
   useData,
   type SchemaObject,
 } from '@vamis/core'
-import { Button, levelToVariant, sizeToButtonSize } from '@vamis/ui'
+import { Button, VamisCaret, levelToVariant, sizeToButtonSize } from '@vamis/ui'
 import IconMark from '../IconMark.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
@@ -89,12 +89,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocPointer, 
       <IconMark v-if="icon.kind !== 'empty'" :icon="icon" img-class="size-4" />
       <template v-if="showLabel">{{ label }}</template>
       <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
-      <span
-        v-if="!hideCaret"
-        aria-hidden="true"
-        class="ml-2 inline-block size-0 border-x-[3.5px] border-x-transparent border-t-[4px] border-t-current"
-        :class="open ? 'rotate-180' : ''"
-      />
+      <VamisCaret v-if="!hideCaret" variant="dropdown" :open="open" />
     </Button>
     <div
       v-if="open"

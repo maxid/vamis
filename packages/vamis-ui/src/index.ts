@@ -1,5 +1,6 @@
 export { cn } from './lib/utils'
 export { resolveCssVars } from './lib/css-vars'
+export { default as VamisCaret } from './ui/VamisCaret.vue'
 
 export { Button, buttonVariants, levelToVariant, sizeToButtonSize } from './ui/button'
 export type { ButtonVariants } from './ui/button'

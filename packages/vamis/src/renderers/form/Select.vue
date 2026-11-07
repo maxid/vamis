@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue'
-import { Checkbox, Pencil, XIcon } from '@vamis/ui'
+import { Checkbox, Pencil, VamisCaret, XIcon } from '@vamis/ui'
 import { filterTpl, isAllSelected, useData, type SchemaObject } from '@vamis/core'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
@@ -112,7 +112,7 @@ async function onDelete(opt: (typeof ctl.options.value)[number], event: Event) {
         >
           ×
         </button>
-        <span class="vamis-select__caret" aria-hidden="true" />
+        <VamisCaret class="vamis-select__caret" :open="ctl.open.value" />
       </div>
       <VamisOverlay
         :show="ctl.open.value"

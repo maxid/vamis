@@ -31,6 +31,7 @@ import {
 import {
   Button,
   Checkbox,
+  VamisCaret,
   Table,
   TableBody,
   TableCell,
@@ -257,7 +258,9 @@ function cellWidth(col: SchemaObject) {
                 @update:model-value="toggleAll($event === true)"
               />
               <div v-if="selections.length" class="relative">
-                <button type="button" class="text-muted-foreground px-0.5" @click.stop="menuOpen = !menuOpen">▾</button>
+                <button type="button" class="text-muted-foreground px-0.5 inline-flex items-center" @click.stop="menuOpen = !menuOpen">
+                  <VamisCaret variant="dropdown" :open="menuOpen" />
+                </button>
                 <div
                   v-if="menuOpen"
                   class="absolute left-0 z-20 mt-1 min-w-28 rounded-md border bg-popover p-1 text-sm shadow-md"
