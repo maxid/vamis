@@ -329,7 +329,7 @@ alwaysApply: true
 
 ### 下拉选项 hover / active 拆开，弹层不要写死白底
 - 踩过：Select 选项把 hover 和 `is-active` 都刷成 `--accent`，选中项看起来像灰底块；弹层 `background: #fff` / `border-color: #f2f3f5`，深色主题仍是白盒。Amis 选中是 brand 字色 + 菜单底，悬停才是 brand-10 底。控件与弹层之间 Amis 是 `PopOver--v-top { margin-top: 4px }`，Vamis Overlay 默认 gap 2 看起来像贴死。
-- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。Select 弹层 `VamisOverlay :gap="4"`（上翻同样 4px），不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。
+- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。Select 弹层 `VamisOverlay :gap="4"`（上翻同样 4px），不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。菜单底/边只跟浅深色；选中字色 / 悬停底绑 `--primary`。悬停用 `color-mix(... white/black)` 保色相，不要 mix 进菜单底（深色 `#17202d` 会把翠绿拉成青）。不要写死云舍蓝，否则切翠绿选中还是蓝。
 - 触及：`select` Options
 - 规则：本文；Amis `_select.scss` `&-option` / `PopOver--v-top`；`.cursor/rules/style.mdc` / `reuse-overlay.mdc`
 

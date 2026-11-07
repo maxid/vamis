@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- Options 下拉选中 / 悬停跟顶栏 5 色：`--select-option-active-color: var(--primary)`，悬停底 `color-mix` 进白（浅 20%）/ 黑（深 50%）保色相，不要 mix 进 `#17202d`（会把翠绿拉成青）。菜单底/边仍只跟浅深色。对照 `options` **38/39**（P0 0，仍是 `selectFirst`）、`select` **1/1**。
 - Options 下拉弹层与控件间距对齐 Amis `margin-top: 4px`：Select 的 `VamisOverlay` 改 `:gap="4"`（上翻同样 4px）。深色 `--select-menu-bg` 改 `#17202d`。
 - Options 下拉项对标 Amis：选中蓝字（`#2468f2`）不是灰底；悬停才是 `#e6f0ff`；项高 32、左右垫 10px。弹层改 `--select-menu-*` token，深色走 `#17202d` / `#1677ff` / `#0040bf`，不再写死 `#fff`。
 - Chrome 下拉箭头统一成 Amis `right-arrow-bold` 线图：抽出 `VamisCaret`，Select 展开时 svg `rotate(180deg)` + `--animation-duration` 0.2s，DropdownButton 90°→270°。去掉 CSS 实心三角和 `▾`/`▸`。作者 FA 图标仍走 `resolveIcon`。

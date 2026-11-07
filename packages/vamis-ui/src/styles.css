@@ -166,8 +166,8 @@
   --select-option-color: #151b26;
   --select-option-bg: transparent;
   --select-option-hover-color: #151b26;
-  --select-option-hover-bg: var(--button-light);
-  --select-option-active-color: #2468f2;
+  --select-option-hover-bg: color-mix(in oklch, var(--primary) 20%, white);
+  --select-option-active-color: var(--primary);
   --select-option-active-bg: var(--select-menu-bg);
   --select-option-disabled-color: #b8babf;
   --select-option-disabled-bg: transparent;
@@ -376,7 +376,7 @@
   --select-menu-border: #303640;
   --select-option-color: #f7f8fa;
   --select-option-hover-color: #f7f8fa;
-  --select-option-active-color: #1677ff;
+  --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
   --select-option-disabled-color: #b8bbbf;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);

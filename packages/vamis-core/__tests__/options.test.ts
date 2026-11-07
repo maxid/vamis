@@ -265,8 +265,10 @@ describe('select uses the shared contract', () => {
 
   it('select option styles use tokens and split hover from active', () => {
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
-    expect(css).toContain('--select-option-active-color')
-    expect(css).toContain('--select-option-hover-bg')
+    expect(css).toContain('--select-option-active-color: var(--primary)')
+    expect(css).toContain('--select-option-hover-bg: color-mix(in oklch, var(--primary)')
+    expect(css).not.toContain('--select-option-active-color: #2468f2')
+    expect(css).not.toContain('--select-option-active-color: #1677ff')
     expect(css).toContain('--select-menu-bg')
     expect(css).toContain('--select-menu-bg: #17202d')
     expect(css).toContain('--select-popover-gap: 4px')
