@@ -213,10 +213,10 @@ toast:
 | --- | --- | --- | --- |
 | `actionType` | `string` | `"toast"` | 指定为 toast 轻提示 |
 | `items` | `Array<ToastItem>` | `[]` | 轻提示内容。没有 items 时用 `msg` / `args.msg` |
-| `position` | `string` | `top-center` | 提示位置 |
-| `closeButton` | `boolean` | `false` | 是否展示关闭按钮 |
+| `position` | `string` | `top-center`（窄屏为 `center`） | 提示显示位置，可用 `top-right`、`top-center`、`top-left`、`bottom-center`、`bottom-left`、`bottom-right`、`center` |
+| `closeButton` | `boolean` | `false` | 是否展示关闭按钮。窄屏不展示 |
 | `showIcon` | `boolean` | `true` | 是否展示图标 |
-| `timeout` | `number` | `4000`（error 为 6000） | 持续时间，单位 ms |
+| `timeout` | `number` | `4000`（error 为 6000，窄屏未写时 3000） | 持续时间，单位 ms |
 
 ## ToastItem 属性表
 
@@ -224,12 +224,12 @@ toast:
 | --- | --- | --- | --- |
 | `title` | `string` \| [SchemaNode](/types/schemanode) | | 标题，可模板或任意节点 |
 | `body` | `string` \| [SchemaNode](/types/schemanode) | | 内容，可模板或任意节点 |
-| `level` | `string` | `info` | `info` / `success` / `error` / `warning` |
-| `position` | `string` | 继承外层 | 单条位置 |
-| `closeButton` | `boolean` | 继承外层 | 单条关闭按钮 |
-| `showIcon` | `boolean` | 继承外层 | 单条图标 |
-| `timeout` | `number` | 继承外层 | 单条超时 |
-| `allowHtml` | `boolean` | `true` | body 是否当 HTML |
+| `level` | `string` | `info` | 展示图标，可选 `info`、`success`、`error`、`warning` |
+| `position` | `string` | 继承外层（外层默认 `top-center`，窄屏为 `center`） | 提示显示位置，可用 `top-right`、`top-center`、`top-left`、`bottom-center`、`bottom-left`、`bottom-right`、`center` |
+| `closeButton` | `boolean` | 继承外层 | 是否展示关闭按钮。窄屏不展示 |
+| `showIcon` | `boolean` | 继承外层 | 是否展示图标 |
+| `timeout` | `number` | 继承外层 | 持续时间，单位 ms。未写时跟外层：桌面 4000、error 6000、窄屏 3000 |
+| `allowHtml` | `boolean` | `true` | body 是否当 HTML 片段处理 |
 
 ## 和 Amis 文档的差异
 
