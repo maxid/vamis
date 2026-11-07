@@ -53,6 +53,18 @@ Vamis 入口（不要再新开月历）：
 
 禁止：只按 `bottom + gap` 往下开；在单个渲染器里复制翻转分支。
 
+## 下拉 PopOver 间距
+
+对齐 Amis `PopOver--v-top { margin-top: 4px }` / `PopOver--v-bottom { margin-bottom: 4px }`。
+
+- `VamisOverlay` / `overlayPosition` 默认 `OVERLAY_POPOVER_GAP = 4`
+- 下翻：相当于 margin-top 4、margin-bottom 0
+- 上翻：相当于 margin-bottom 4、margin-top 0
+- auto 试探只有上下（左对齐 / 右对齐），**不会向左或向右翻出**。左右是 Tooltip（`TOOLTIP_OVERLAY_GAP` 6，有 arrow）
+- 不要再写 CSS `margin-top`，会和 gap 叠成 8px
+
+Select / InputText 建议 / Date / DropdownButton 都走这套。禁止下拉菜单再 `absolute z-40 mt-1`。
+
 ## z-index 阶梯
 
 对齐 Amis `packages/amis-ui/scss/_variables.scss`。token 在 `:root`（Teleport 到 body 后仍能吃到），不要用 Tailwind `z-20` / `z-50` 当浮层高度。

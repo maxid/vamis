@@ -16268,22 +16268,47 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "input-password",
-      "body": [
-        {
-          "type": "form",
-          "title": "input-password",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "input-password",
-              "name": "input_password",
-              "label": "input-password"
-            }
-          ]
-        }
-      ]
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-password",
+            "name": "password",
+            "label": "密码"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-password-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputPassword 密码输入框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputPassword 密码输入框 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-password",
+            "name": "password",
+            "label": "密码",
+            "revealPassword": false
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -16967,7 +16992,7 @@ window.VAMIS_COMPARE_CASES = [
             "type": "input-text",
             "label": "半边框",
             "borderMode": "half",
-            "inputControlClassName": "bg-gray-100"
+            "inputControlClassName": "bg-muted"
           },
           {
             "name": "text-no-border",

@@ -8,6 +8,7 @@ import {
   iconVendor,
   isApiOutdated,
   isEffectiveApi,
+  overlayContainerFrom,
   requestApi,
   resolveClassName,
   resolveIcon,
@@ -20,20 +21,24 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { cn } from '@vamis/ui'
+import { cn, VamisPasswordToggle } from '@vamis/ui'
 import { controlInputValue, useForm } from '../../formContext'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import FormItem from '../FormItem.vue'
 import IconMark from '../IconMark.vue'
+import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import {
+  appendCreatableOption,
   applyTextEmptyValue,
   dumpTextValue,
   filterTextOptions,
+  highlightTextMatches,
   inputNativeType,
   isTextSuggestMode,
   normalizeAddOn,
   parseTextValue,
   readTextOptions,
+  showPasswordReveal,
   textValueToString,
   transformInputText,
 } from './input-text'
@@ -54,10 +59,13 @@ const viewData = useData()
 
 const inputEl = ref<HTMLInputElement | null>(null)
 const rootEl = ref<HTMLElement | null>(null)
+const inputWrapEl = ref<HTMLElement | null>(null)
 const focused = ref(false)
 const open = ref(false)
 const draft = ref('')
 const highlight = ref(-1)
+const revealed = ref(false)
+const triggerWidth = ref(0)
 const remote = ref<OptionItem[]>([])
 const loading = ref(false)
 const pristine = ref<unknown>(undefined)
@@ -92,7 +100,10 @@ const borderMode = computed(() => {
   const raw = String(props.schema.borderMode || 'full')
   return raw === 'half' || raw === 'none' ? raw : 'full'
 })
-const nativeType = computed(() => inputNativeType(props.schema.type))
+const baseNativeType = computed(() => inputNativeType(props.schema.type))
+const nativeType = computed(() => (baseNativeType.value === 'password' && revealed.value ? 'text' : baseNativeType.value))
+const canRevealPassword = computed(() => showPasswordReveal(props.schema) && !props.disabled)
+const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const nativeAutoComplete = computed(() =>
   props.schema.nativeAutoComplete == null ? 'off' : String(props.schema.nativeAutoComplete),
 )
@@ -143,9 +154,15 @@ const counterOver = computed(() => maxLength.value != null && displayValue.value
 const showClear = computed(
   () => clearable.value && !props.disabled && rawValue.value != null && rawValue.value !== '',
 )
-const filteredOptions = computed(() =>
-  filterTextOptions(options.value, suggest.value ? inputModel.value : '', multiple.value ? selected.value.map((item) => item.value) : []),
-)
+const selectedValues = computed(() => (multiple.value ? selected.value.map((item) => item.value) : []))
+const filteredOptions = computed(() => {
+  const keyword = suggest.value ? inputModel.value : ''
+  const filtered = filterTextOptions(options.value, keyword, selectedValues.value, {
+    skipLocal: !!props.schema.autoComplete,
+  })
+  return appendCreatableOption(filtered, keyword, selectedValues.value, creatable.value, multiple.value)
+})
+const showSuggest = computed(() => suggest.value && open.value && (filteredOptions.value.length || loading.value))
 const inputControlClass = computed(() =>
   cn(
     'vamis-text-control__input',
@@ -156,7 +173,11 @@ const inputControlClass = computed(() =>
   ),
 )
 const nativeClass = computed(() =>
-  cn('vamis-text-control__native', resolveClassName(props.schema.nativeInputClassName, viewData.value)),
+  cn(
+    'vamis-text-control__native',
+    canRevealPassword.value && 'vamis-text-control__native--password',
+    resolveClassName(props.schema.nativeInputClassName, viewData.value),
+  ),
 )
 const addOnIcon = computed(() => {
   if (!addOn.value || addOn.value.kind !== 'text' || addOn.value.icon == null) return null
@@ -202,13 +223,27 @@ function commitSelected(items: OptionItem[]) {
   return dumpTextValue(items, multiple.value, joinValues.value, extractValue.value, delimiter.value)
 }
 
+function measureTrigger() {
+  triggerWidth.value = inputWrapEl.value?.offsetWidth || rootEl.value?.offsetWidth || 0
+}
+
+function openSuggest() {
+  if (!suggest.value || props.disabled) return
+  open.value = true
+  measureTrigger()
+}
+
+function syncHighlight() {
+  highlight.value = filteredOptions.value.length ? 0 : -1
+}
+
 async function onInput(event: Event) {
   const el = event.target as HTMLInputElement
   const typed = transformInputText(el.value, transform.value)
   if (suggest.value && (multiple.value || !creatable.value)) {
     draft.value = typed
-    open.value = true
-    highlight.value = -1
+    openSuggest()
+    syncHighlight()
     scheduleAutoComplete(typed)
     if (el.value !== typed) el.value = typed
     return
@@ -217,8 +252,8 @@ async function onInput(event: Event) {
   if (!(await emitEvent('change', next, event))) return
   writeValue(next)
   if (suggest.value) {
-    open.value = true
-    highlight.value = -1
+    openSuggest()
+    syncHighlight()
     scheduleAutoComplete(typed)
   }
 }
@@ -226,8 +261,9 @@ async function onInput(event: Event) {
 async function onFocus(event: FocusEvent) {
   focused.value = true
   if (suggest.value) {
-    open.value = true
     if (multiple.value || !creatable.value) draft.value = ''
+    openSuggest()
+    syncHighlight()
     scheduleAutoComplete(draft.value)
   }
   await emitEvent('focus', rawValue.value, event)
@@ -249,9 +285,16 @@ async function onBlur(event: FocusEvent) {
 
 async function onClick(event: MouseEvent) {
   if (!suggest.value || props.disabled) return
-  open.value = true
+  openSuggest()
   if (!focused.value) inputEl.value?.focus()
   await emitEvent('click', rawValue.value, event)
+}
+
+async function toggleRevealPassword() {
+  if (!canRevealPassword.value) return
+  const eventName = revealed.value ? 'encrypt' : 'review'
+  if (!(await emitEvent(eventName, rawValue.value))) return
+  revealed.value = !revealed.value
 }
 
 async function pickOption(option: OptionItem) {
@@ -359,9 +402,7 @@ function focus() {
   }
 }
 
-function onDocumentPointer(event: MouseEvent) {
-  const root = rootEl.value
-  if (!root || root.contains(event.target as Node)) return
+function onSuggestOutside() {
   open.value = false
 }
 
@@ -434,13 +475,11 @@ scoped?.register(textApi)
 
 onMounted(() => {
   pristine.value = name.value ? form?.getValue(name.value) : props.schema.value
-  document.addEventListener('mousedown', onDocumentPointer)
   if (props.schema.source) void loadSource()
   if (isEffectiveApi(props.schema.autoComplete as any, viewData.value)) void loadAutoComplete('')
 })
 onBeforeUnmount(() => {
   scoped?.unregister(textApi)
-  document.removeEventListener('mousedown', onDocumentPointer)
   if (autoCompleteTimer) clearTimeout(autoCompleteTimer)
 })
 
@@ -449,6 +488,13 @@ watch(
   (curr, prev) => {
     if (!prev) return
     if (isApiOutdated(prev[0] as any, curr[0] as any, prev[1], curr[1])) void loadSource()
+  },
+)
+
+watch(
+  () => props.schema.revealPassword,
+  (next) => {
+    if (next === false) revealed.value = false
   },
 )
 </script>
@@ -475,7 +521,7 @@ watch(
           <template v-if="addOn.label">{{ filterTpl(addOn.label, viewData) }}</template>
         </span>
       </div>
-      <div :class="inputControlClass" @click="onClick">
+      <div ref="inputWrapEl" :class="inputControlClass" @click="onClick">
         <span v-if="prefixText" class="vamis-text-control__affix vamis-text-control__prefix">{{ prefixText }}</span>
         <span
           v-for="(item, index) in multiple ? selected : []"
@@ -519,31 +565,53 @@ watch(
         >
           ×
         </button>
+        <button
+          v-if="canRevealPassword"
+          type="button"
+          class="vamis-text-control__reveal"
+          :aria-label="revealed ? '隐藏密码' : '显示密码'"
+          @mousedown.prevent
+          @click.stop="toggleRevealPassword"
+        >
+          <VamisPasswordToggle :revealed="revealed" />
+        </button>
         <span
           v-if="showCounter"
           class="vamis-text-control__counter"
           :class="{ 'is-over': counterOver }"
         >{{ counterText }}</span>
         <span v-if="suffixText" class="vamis-text-control__affix vamis-text-control__suffix">{{ suffixText }}</span>
-        <div
-          v-if="suggest && open && (filteredOptions.length || loading)"
-          class="vamis-text-control__popover"
-        >
+      </div>
+      <VamisOverlay
+        :show="showSuggest"
+        :target="inputWrapEl"
+        :container="overlayContainer"
+        :gap="4"
+        @outside="onSuggestOutside"
+      >
+        <div class="vamis-text-control__popover" :style="{ minWidth: triggerWidth ? `${triggerWidth}px` : undefined }">
           <button
             v-for="(option, index) in filteredOptions"
             :key="`${option.value}-${index}`"
             type="button"
             class="vamis-text-control__sug"
-            :class="{ 'is-highlight': index === highlight, 'is-disabled': option.disabled }"
+            :class="{ 'is-highlight': index === highlight, 'is-disabled': option.disabled, 'is-new': option.isNew }"
             :disabled="option.disabled"
             @mousedown.prevent
             @click.stop="pickOption(option)"
           >
-            {{ option.label }}
+            <span v-if="option.isNew">新增：{{ option.label }}</span>
+            <span v-else>
+              <span
+                v-for="(part, partIndex) in highlightTextMatches(option.label, inputModel)"
+                :key="partIndex"
+                :class="{ 'is-matched': part.matched }"
+              >{{ part.text }}</span>
+            </span>
           </button>
           <div v-if="loading && !filteredOptions.length" class="vamis-text-control__sug is-muted">加载中…</div>
         </div>
-      </div>
+      </VamisOverlay>
       <div
         v-if="addOn && addOn.position === 'right'"
         class="vamis-text-control__addon"

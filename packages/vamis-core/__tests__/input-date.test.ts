@@ -161,6 +161,7 @@ describe('input-date renderer reuse', () => {
     expect(vue).toContain('VamisOverlay')
     expect(vue).toContain('DateCalendarPanel')
     expect(vue).toContain('overlayContainerFrom')
+    expect(vue).toContain(':gap="4"')
     expect(vue).not.toContain('vamis-date-cal__')
   })
 })

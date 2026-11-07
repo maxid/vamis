@@ -30,7 +30,10 @@ describe('dropdownButtonTrigger / close / caret', () => {
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/rest/DropdownButton.vue'), 'utf8')
     expect(vue).toContain('VamisCaret')
     expect(vue).toContain('variant="dropdown"')
+    expect(vue).toContain('VamisOverlay')
+    expect(vue).toContain(':gap="4"')
     expect(vue).not.toContain('border-t-[4px]')
+    expect(vue).not.toContain('absolute z-40')
   })
 })
 

@@ -140,6 +140,12 @@ alwaysApply: true
 - 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number`
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*`
 
+### 输入框 hover 走 --primary，focus glow 包整组
+- 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。
+- 稳定做法：hover `border-color: var(--primary)`（5 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），但 `box-shadow` 打在 `.vamis-text-control` 整组。压过 Button utilities 用 unlayered。
+- 触及：`input-text` `input-password`
+- 规则：本文；Amis `_text.scss` 只对 hover/竖缝/圆角；focus 皮肤跟 Vamis 原风格
+
 ### 收集表单项要走进 grid columns
 - 踩过：`collectFormItems` 只递归 `body` / `controls`，grid 里 `columns[].body` 的默认值写不进表单域，禁用示例「姓名」空着。
 - 稳定做法：再走 `columns` / `items`。默认值、隐藏清值、提交校验共用这一份收集。
@@ -244,7 +250,7 @@ alwaysApply: true
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
-- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` 以及一切走下拉的控件
+- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
@@ -329,9 +335,21 @@ alwaysApply: true
 
 ### 下拉选项 hover / active 拆开，弹层不要写死白底
 - 踩过：Select 选项把 hover 和 `is-active` 都刷成 `--accent`，选中项看起来像灰底块；弹层 `background: #fff` / `border-color: #f2f3f5`，深色主题仍是白盒。Amis 选中是 brand 字色 + 菜单底，悬停才是 brand-10 底。控件与弹层之间 Amis 是 `PopOver--v-top { margin-top: 4px }`，Vamis Overlay 默认 gap 2 看起来像贴死。
-- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。Select 弹层 `VamisOverlay :gap="4"`（上翻同样 4px），不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。菜单底/边只跟浅深色；选中字色 / 悬停底绑 `--primary`。悬停用 `color-mix(... white/black)` 保色相，不要 mix 进菜单底（深色 `#17202d` 会把翠绿拉成青）。不要写死云舍蓝，否则切翠绿选中还是蓝。
-- 触及：`select` Options
+- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。下拉 PopOver 默认 `OVERLAY_POPOVER_GAP = 4`（下翻 = margin-top 4 / margin-bottom 0，上翻反过来）。auto 只上下翻，不对左右开；左右是 Tooltip 的 placement（`TOOLTIP_OVERLAY_GAP` 6）。不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。菜单底/边只跟浅深色；选中字色 / 悬停底绑 `--primary`。悬停用 `color-mix(... white/black)` 保色相，不要 mix 进菜单底（深色 `#17202d` 会把翠绿拉成青）。不要写死云舍蓝，否则切翠绿选中还是蓝。
+- 触及：`select` Options `input-text` `input-date` `dropdown-button`
 - 规则：本文；Amis `_select.scss` `&-option` / `PopOver--v-top`；`.cursor/rules/style.mdc` / `reuse-overlay.mdc`
+
+### 文本选择器检索按 CONTAINS 排序，有 autoComplete 不要再本地过滤
+- 踩过：`input-text` 用 `includes` 完事，没有前缀优先和高亮；配了 `autoComplete` 仍本地切一刀，远端结果被滤掉。
+- 稳定做法：无 `autoComplete` 时按 EQUAL → STARTS_WITH → WORD_STARTS_WITH → CONTAINS 排序并高亮匹配字；有 `autoComplete` 只展示远端。多选 creatable 追加「新增：」。弹层走 `VamisOverlay`，不要 `absolute z-20`。
+- 触及：`input-text`
+- 规则：本文；Amis `InputText.tsx` `matchSorter` + `highlight()`
+
+### 密码显隐走 Amis view/invisible 线图，不要只改 type=password
+- 踩过：`input-password` 只输出原生密文框，文档主路径的显隐钮缺席。
+- 稳定做法：schema `revealPassword` 默认 true 画钮（`false` 关掉）；组件 state 才是当前是否明文。图标共用 `VamisPasswordToggle`（Amis 16×16 路径），尺寸/色走 `--input-password-icon-*`。切换派发 `review` / `encrypt`，被 prevent 不切。
+- 触及：`input-password` `input-text`
+- 规则：本文；Amis `InputText.tsx` `toggleRevealPassword`
 
 ### SDK 不要依赖解不到的包
 - 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。

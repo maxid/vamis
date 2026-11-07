@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
+  OVERLAY_POPOVER_GAP,
   overlayPosition,
   resolveOverlayContainer,
   type OverlayContainer,
@@ -16,7 +17,7 @@ const props = withDefaults(
     layerClass?: string
     offset?: [number, number]
   }>(),
-  { gap: 2, placement: 'auto' },
+  { gap: OVERLAY_POPOVER_GAP, placement: 'auto' },
 )
 
 const emit = defineEmits<{ outside: []; placed: [] }>()
@@ -65,7 +66,7 @@ function onReposition() {
 }
 
 watch(
-  () => [props.show, props.target, props.container, props.placement, props.offset] as const,
+  () => [props.show, props.target, props.container, props.placement, props.offset, props.gap] as const,
   () => {
     if (!props.show) ready.value = false
     void placeAfterPaint()

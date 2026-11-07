@@ -66,7 +66,7 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 78% | 11 |
-| 数据输入 | 0 / 72 | 72 | 0 | 50% | 42 |
+| 数据输入 | 0 / 72 | 72 | 0 | 51% | 42 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
 | 反馈 | 1 / 5 | 4 | 0 | 86% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
@@ -166,7 +166,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `matrix-checkboxes` | MatrixCheckboxes 矩阵勾选 | `/components/form/matrix-checkboxes` | `/zh-CN/components/form/matrix-checkboxes` | 进行中 | 40% | 已注册，行列数据精简 | P0 |
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 55% | native number；步进/精度/大数未齐 | P0 |
-| `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 60% | `input-text` 别名；缺显隐开关 | P0 |
+| `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
 | `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 50% | 能弹层多选 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
@@ -183,7 +183,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `static` | Static 静态展示 | `/components/form/static` | `/zh-CN/components/form/static` | 进行中 | 65% | 能展示；`popOver` 已接（字符串 / 对象 / 放大镜）。`quickEdit` 无 | P0 |
 | `input-table` | InputTable 表格 | `/components/form/input-table` | `/zh-CN/components/form/input-table` | 进行中 | 45% | 能行内编辑；子 api、增删校验未齐 | P0 |
 | `input-tag` | InputTag 标签选择器 | `/components/form/input-tag` | `/zh-CN/components/form/input-tag` | 进行中 | 50% | 能回车加标签 | P0 |
-| `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 82% | 主路径已齐（addOn/清值/计数/边框/事件动作）；选择器已通主路径，检索精度与 `revealPassword` 仍缺 | P0 |
+| `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 92% | 主路径已齐（addOn/清值/计数/边框/事件动作）；hover 走 `--primary`、half 保留圆角、addOn 1px 竖缝；focus 3px glow 包整组；选择器 CONTAINS 排序+高亮、`VamisOverlay`；`revealPassword` 已接。缺 `themeCss` | P0 |
 | `textarea` | Textarea 多行输入框 | `/components/form/textarea` | `/zh-CN/components/form/textarea` | 进行中 | 60% | 主路径可用 | P0 |
 | `input-time` | InputTime 时间 | `/components/form/input-time` | `/zh-CN/components/form/input-time` | 进行中 | 55% | `input-date` 别名，已接时间面板；滚轮 / 时间约束未齐 | P0 |
 | `input-time-range` | InputTimeRange 时间范围 | `/components/form/input-time-range` | `/zh-CN/components/form/input-time-range` | 进行中 | 45% | 已注册 | P0 |
@@ -294,7 +294,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`input-text`（#11，82%）、`spinner`（#12，80%）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡下一刀）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错，不挡 chrome。`remark` 92% / `badge` 95% 余项是 `themeCss`。不要切 `select`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`spinner`（#12，80%）。`input-text` #11 已到 92%（缺 `themeCss`，不挡下一刀）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡下一刀）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错，不挡 chrome。`remark` 92% / `badge` 95% 余项是 `themeCss`。不要切 `select`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -373,7 +373,7 @@ flowchart LR
 | 8 | `action` | `icon`、`tpl`、`tooltip-wrapper`、`badge`、`toast` | 8 | 33 | 437 | 437 | 进行中 | 95% |
 | 9 | `container` | `tpl` | 9 | 23 | 308 | 308 | 已完成 | 100% |
 | 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | 进行中 | 88% |
-| 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | 进行中 | 82% |
+| 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | 进行中 | 92% |
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | 进行中 | 80% |
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 60% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 85% |
@@ -491,7 +491,7 @@ flowchart LR
 | 126 | `input-group` | `container`、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 55% |
 | 127 | `location-picker` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 25% |
 | 128 | `uuid` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 70% |
-| 129 | `input-password` | `input-text` | 4 | 0 | 4 | 4 | 进行中 | 60% |
+| 129 | `input-password` | `input-text` | 4 | 0 | 4 | 4 | 进行中 | 90% |
 | 130 | `input-repeat` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 40% |
 | 131 | `input-verification-code` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 50% |
 | 132 | `chained-select` | `select` | 4 | 0 | 4 | 4 | 进行中 | 50% |
@@ -534,7 +534,7 @@ flowchart LR
 | `list-item` / `flex-item` | 布局/展示 | 子节点 type | 40% | `/components/list、/components/flex` | `/zh-CN/components/list、/zh-CN/components/flex` |
 | `users-select` | 数据输入 | **精简**：内置 3 个用户 | 25% | — | — |
 | `icon-picker` / `icon-select` | 数据输入 | **精简**：8 个字符图标 | 25% | — | — |
-| `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 82% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
+| `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 92% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
 | `multi-select` | 数据输入 | `select` 别名 | 55% | `/components/form/select` | `/zh-CN/components/form/select` |
 | `qr-code` | 数据展示 | `qrcode` 别名 | 45% | `/components/qrcode` | `/zh-CN/components/qrcode` |
 | `static-json` / `static-table` | 数据展示 | json/table 别名 | 50% | `/components/json、/components/table` | `/zh-CN/components/json、/zh-CN/components/table` |

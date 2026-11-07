@@ -5,8 +5,8 @@ outline: deep
 
 # InputText 输入框
 
-::: info 实现进度 82% · 进行中
-主路径已对齐 Amis：`addOn`（含 position / 一体边框）、`clearable` / `resetValue`、`showCounter` / `maxLength`、`prefix` / `suffix` 映射、`borderMode`、`trimContents` / `clearValueOnEmpty` / `transform`、focus/blur/change/clear 与 clear/reset/focus/setValue。选择器模式已打通 options / source / autoComplete / multiple / creatable，键盘高亮与检索精度仍简于 Amis。`input-password` 的 `revealPassword` 未做。
+::: info 实现进度 92% · 进行中
+主路径已对齐 Amis：`addOn`、`clearable` / 计数 / 边框 / 前缀后缀 / 事件动作。选择器走 `VamisOverlay`，本地检索按 CONTAINS 排序并高亮匹配，多选可「新增：」；`autoComplete` 不再本地过滤。`input-password` 默认 `revealPassword` 显隐钮（`review` / `encrypt`）。缺 `themeCss`。
 :::
 
 `input-text` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -34,7 +34,7 @@ body:
     type: input-text
     label: 半边框
     borderMode: half
-    inputControlClassName: bg-gray-100
+    inputControlClassName: bg-muted
   - name: text-no-border
     type: input-text
     label: 无边框
@@ -326,6 +326,7 @@ body:
 | inputControlClassName | `string` | | 输入框容器 class |
 | nativeInputClassName | `string` | | 原生 input class |
 | nativeAutoComplete | `string` | `off` | 原生 autocomplete |
+| revealPassword | `boolean` | `true` | 仅 `input-password`：是否展示显/隐按钮 |
 
 ## 事件表
 
@@ -339,6 +340,8 @@ body:
 | blur | `[name]` / `value` | 失焦 |
 | change | `[name]` / `value` | 值变化 |
 | clear | `[name]` / `value` | 点清除 |
+| review | `[name]` / `value` | 密码切到明文（`input-password`） |
+| encrypt | `[name]` / `value` | 密码切回密文（`input-password`） |
 
 ### enter
 
@@ -550,7 +553,7 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 选择器下拉是本地过滤（包含匹配），没有 Amis `match-sorter` / Downshift 那套高亮分词。
-- `autoComplete` 按 `$term` 去抖 250ms 拉选项；返回结构认 `options` / `items` / 数组。
-- `input-password` 的 `revealPassword` 显隐开关尚未做，仍是原生 `type=password`。
+- 选择器下拉 Teleport 到 `env.getModalContainer()`，本地检索按 CONTAINS 档排序（精确 / 前缀优先于包含）并高亮匹配；配了 `autoComplete` 时不下本地过滤，去抖 250ms 按 `$term` 拉选项。
+- `input-password` 默认画出显隐钮；`revealPassword: false` 关掉。点开会派发 `review` / `encrypt`（Amis 源码有，文档页未列）。
 - 焦点环走 token `box-shadow`，不搬 `.cxd-TextControl`。
+- 「不同边框风格」半边框示例 `inputControlClassName` 用 `bg-muted`（浅/深都跟主题），不用 Amis 的 `bg-gray-100`（固定 `#f3f4f6`，深色会变成白底）。

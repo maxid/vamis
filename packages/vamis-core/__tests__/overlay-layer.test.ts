@@ -3,6 +3,8 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
+  OVERLAY_AUTO_PLACEMENTS,
+  OVERLAY_POPOVER_GAP,
   overlayContainerFrom,
   overlayPosition,
   resolveOverlayContainer,
@@ -35,6 +37,24 @@ describe('overlay-layer', () => {
     ).toBe('#date-host')
     expect(overlayContainerFrom({}, { getModalContainer: () => box })).toBe(box)
     expect(overlayContainerFrom({})).toBe('body')
+  })
+
+  it('defaults dropdown popover gap to 4px and only flips above/below', () => {
+    const target = {
+      getBoundingClientRect: () => ({ top: 10, bottom: 40, left: 20, right: 120, width: 100, height: 30 }),
+    } as HTMLElement
+    stubViewport({ scrollY: 100, scrollX: 5, innerWidth: 1280, innerHeight: 800 })
+    expect(OVERLAY_POPOVER_GAP).toBe(4)
+    expect(overlayPosition(target)).toEqual({ top: 144, left: 25 })
+    expect(OVERLAY_AUTO_PLACEMENTS).toEqual([
+      'left-bottom-left-top',
+      'right-bottom-right-top',
+      'left-top-left-bottom',
+      'right-top-right-bottom',
+    ])
+    expect(OVERLAY_AUTO_PLACEMENTS.every((item) => item.split('-')[1] === 'bottom' || item.split('-')[1] === 'top')).toBe(
+      true,
+    )
   })
 
   it('places the layer below the trigger in page coordinates', () => {
@@ -108,6 +128,7 @@ describe('overlay-layer', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const vue = readFileSync(resolve(here, '../../vamis/src/overlay/VamisOverlay.vue'), 'utf8')
     expect(vue).toContain('height: layer?.offsetHeight')
+    expect(vue).toContain('OVERLAY_POPOVER_GAP')
     expect(vue).toContain("placement: 'auto'")
     expect(vue).toContain('ResizeObserver')
     expect(vue).toContain("visibility: ready ? 'visible' : 'hidden'")

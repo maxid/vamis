@@ -428,6 +428,7 @@ watch(
         :show="open"
         :target="rootEl"
         :container="overlayContainer"
+        :gap="4"
         @outside="open = false"
       >
         <div class="vamis-date-picker__popover">

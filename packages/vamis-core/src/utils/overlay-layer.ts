@@ -55,6 +55,9 @@ export const OVERLAY_AUTO_PLACEMENTS = [
   'right-top-right-bottom',
 ] as const
 
+/** Amis `PopOver--v-top { margin-top: 4px }` / `--v-bottom { margin-bottom: 4px }`。auto 只上下翻。 */
+export const OVERLAY_POPOVER_GAP = 4
+
 export type OverlayPositionOpts = {
   gap?: number
   width?: number
@@ -117,7 +120,7 @@ function fullyVisible(coords: OverlayCoords, overlayW: number, overlayH: number,
  * page 坐标，配合 `position:absolute` 挂到 body。
  */
 export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts): OverlayCoords {
-  const gap = opts?.gap ?? 2
+  const gap = opts?.gap ?? OVERLAY_POPOVER_GAP
   const r = target.getBoundingClientRect()
   const { scrollX, scrollY, viewW, viewH } = viewSize()
   const overlayW = opts?.width || 0
