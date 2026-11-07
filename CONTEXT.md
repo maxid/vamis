@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `checkbox` / Select 勾选 hover 改回 Amis：悬停 **label / option 文字** 也亮勾选盒（`.Checkbox:hover > i`；Select 的 Checkbox 是 option 整行）。只改盒子色，不改文案。先前只绑图标 `:hover`，是因为 Checkboxes/Select 用了无文字的勾选盒。
 - `input-date` 限制范围：`minDate` / `maxDate` / `disabledDate` 在年、月面板也禁用范围外格子（对齐 Amis MonthsView / YearsView：该月/年没有任何合法天才禁）。日格子原先已接。对照桌面 `input-date` **2/19**（P0 0）。
 - 月历标题箭头改用 Amis `right-arrow` / `right-double-arrow`（`VamisDateArrow` + `svg.icon`，nav `font-size: 18px`），不再自绘另一套 path。header 仍是 table-cell + 标题 inline。
 - `input-date` / `calendar` 月历弹层色量化进 `--cal-*`（底/边 alias `--select-menu-*`；格子 hover `--cal-cell-hover-*`；非本月 `--cal-other`）。`.dark` 弹层跟 Select 菜单 `#17202d`，不再写死 `#fff`。进度 88% → **90%**（`calendar` 87% → 88%）。仍缺移动端 picker、schedules。对照桌面 `input-date` **2/19**（P0 0）、`calendar` **6/6**。

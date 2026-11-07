@@ -2008,10 +2008,14 @@
     background: var(--select-check-checked-bg);
     border-color: var(--select-check-checked-bg);
   }
-  /* Amis 勾选 hover 打在 Checkbox 图标本身，不是 option 行。色号与表单勾共用 `--checkbox-checked-hover`。 */
+  /* Amis Select 的 Checkbox 是 option 整行 width:100%，文字是 children；悬停行 = 悬停勾。 */
+  .vamis-select__item:hover:not(.is-disabled) .vamis-select__check:not(.is-checked),
+  .vamis-select__checkall:hover .vamis-select__check:not(.is-checked),
   .vamis-select__check:hover:not(.is-checked) {
     border-color: var(--primary);
   }
+  .vamis-select__item:hover:not(.is-disabled) .vamis-select__check.is-checked,
+  .vamis-select__checkall:hover .vamis-select__check.is-checked,
   .vamis-select__check.is-checked:hover {
     background: var(--checkbox-checked-hover);
     border-color: var(--checkbox-checked-hover);
@@ -2556,6 +2560,12 @@
     border-color var(--animation-duration),
     background-color var(--animation-duration);
 }
+/* Amis `.Checkbox:hover > i`：label 含文字，悬停文字也要亮勾选盒。裸 Checkbox 仍认盒子自身 :hover。 */
+.vamis-checkbox-option:hover:not(.is-disabled) > .vamis-checkbox__mark:not(.is-checked):not(.is-partial),
+.vamis-checkbox-option:hover:not(.is-disabled)
+  > .vamis-checkbox[data-slot='checkbox']:not(:disabled):not([data-disabled]):not([data-state='checked']):not(
+    [data-state='indeterminate']
+  ),
 .vamis-checkbox__mark:hover:not(.is-disabled):not(.is-checked):not(.is-partial),
 .vamis-checkbox[data-slot='checkbox']:hover:not(:disabled):not([data-disabled]):not([data-state='checked']):not(
     [data-state='indeterminate']
@@ -2570,6 +2580,12 @@
   border-color: var(--checkbox-checked-bg);
   color: var(--checkbox-icon-color);
 }
+.vamis-checkbox-option:hover:not(.is-disabled) > .vamis-checkbox__mark.is-checked,
+.vamis-checkbox-option:hover:not(.is-disabled) > .vamis-checkbox__mark.is-partial,
+.vamis-checkbox-option:hover:not(.is-disabled)
+  > .vamis-checkbox[data-slot='checkbox'][data-state='checked']:not(:disabled):not([data-disabled]),
+.vamis-checkbox-option:hover:not(.is-disabled)
+  > .vamis-checkbox[data-slot='checkbox'][data-state='indeterminate']:not(:disabled):not([data-disabled]),
 .vamis-checkbox__mark.is-checked:hover:not(.is-disabled),
 .vamis-checkbox__mark.is-partial:hover:not(.is-disabled),
 .vamis-checkbox[data-slot='checkbox'][data-state='checked']:hover:not(:disabled):not([data-disabled]),
@@ -2577,6 +2593,12 @@
   background: var(--checkbox-checked-hover-bg);
   border-color: var(--checkbox-checked-hover-bg);
 }
+.vamis-checkbox-option:active:not(.is-disabled) > .vamis-checkbox__mark.is-checked,
+.vamis-checkbox-option:active:not(.is-disabled) > .vamis-checkbox__mark.is-partial,
+.vamis-checkbox-option:active:not(.is-disabled)
+  > .vamis-checkbox[data-slot='checkbox'][data-state='checked']:not(:disabled):not([data-disabled]),
+.vamis-checkbox-option:active:not(.is-disabled)
+  > .vamis-checkbox[data-slot='checkbox'][data-state='indeterminate']:not(:disabled):not([data-disabled]),
 .vamis-checkbox__mark.is-checked:active:not(.is-disabled),
 .vamis-checkbox__mark.is-partial:active:not(.is-disabled),
 .vamis-checkbox[data-slot='checkbox'][data-state='checked']:active:not(:disabled):not([data-disabled]),

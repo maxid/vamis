@@ -33,7 +33,12 @@ function toggle(value: unknown, checked: boolean) {
 <template>
   <FormItem :schema="schema">
     <div class="flex flex-wrap gap-3">
-      <label v-for="opt in options" :key="String(opt.value)" class="vamis-checkbox-option">
+      <label
+        v-for="opt in options"
+        :key="String(opt.value)"
+        class="vamis-checkbox-option"
+        :class="{ 'is-disabled': disabled }"
+      >
         <Checkbox
           :model-value="selected.includes(opt.value)"
           :disabled="disabled"

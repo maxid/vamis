@@ -82,10 +82,10 @@ describe('checkbox chrome', () => {
     expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h)')
     expect(css).toContain('--checkbox-checked-hover-bg: var(--checkbox-checked-hover)')
     expect(css).toContain('color: var(--checkbox-checked-hover)')
+    expect(css).toContain('.vamis-checkbox-option:hover:not(.is-disabled) > .vamis-checkbox__mark.is-checked')
     expect(css).toContain('.vamis-checkbox__mark.is-checked:hover:not(.is-disabled)')
+    expect(css).toContain('.vamis-select__item:hover:not(.is-disabled) .vamis-select__check.is-checked')
     expect(css).toContain('.vamis-select__check.is-checked:hover')
-    expect(css).not.toContain('.vamis-checkbox-option:hover:not(.is-disabled).is-checked .vamis-checkbox__mark')
-    expect(css).not.toContain('.vamis-select__item:hover .vamis-select__check:not(.is-checked)')
     expect(css).not.toContain('--checkbox-checked-hover-bg: var(--primary-hover)')
     expect(css).not.toMatch(
       /\.vamis-checkbox--button\.is-checked:hover[^{]*\{[^}]*var\(--primary-hover\)/,
