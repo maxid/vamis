@@ -1987,6 +1987,10 @@
   line-height: var(--gap-xl);
   word-break: break-word;
 }
+.vamis-toast__body--node {
+  display: block;
+  white-space: normal;
+}
 .vamis-toast__close {
   display: inline-flex;
   font-size: 16px;

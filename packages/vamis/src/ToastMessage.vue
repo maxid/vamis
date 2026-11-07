@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import type { ToastItem } from '@vamis/core'
+import { SchemaRenderer, type ToastItem } from '@vamis/core'
 import { XIcon, levelToFeedbackIcon } from '@vamis/ui'
 
 const props = defineProps<{ item: ToastItem }>()
@@ -10,6 +10,8 @@ const visible = ref(true)
 let timer: ReturnType<typeof setTimeout> | undefined
 
 const levelIcon = computed(() => levelToFeedbackIcon(props.item.level))
+const hasTitle = computed(() => Boolean(props.item.titleSchema || props.item.title))
+const hasBody = computed(() => Boolean(props.item.bodySchema || props.item.body))
 
 function clearTimer() {
   if (timer) clearTimeout(timer)
@@ -58,9 +60,25 @@ onBeforeUnmount(clearTimer)
         <component :is="levelIcon" />
       </div>
       <div class="vamis-toast__content">
-        <span v-if="item.title" class="vamis-toast__title">{{ item.title }}</span>
-        <div v-if="item.body" class="vamis-toast__body">
-          <div v-if="item.allowHtml" class="vamis-html" v-html="item.body" />
+        <span v-if="hasTitle" class="vamis-toast__title">
+          <SchemaRenderer
+            v-if="item.titleSchema"
+            :schema="item.titleSchema"
+            :extra-data="item.data"
+          />
+          <template v-else>{{ item.title }}</template>
+        </span>
+        <div
+          v-if="hasBody"
+          class="vamis-toast__body"
+          :class="{ 'vamis-toast__body--node': item.bodySchema }"
+        >
+          <SchemaRenderer
+            v-if="item.bodySchema"
+            :schema="item.bodySchema"
+            :extra-data="item.data"
+          />
+          <div v-else-if="item.allowHtml" class="vamis-html" v-html="item.body" />
           <template v-else>{{ item.body }}</template>
         </div>
       </div>

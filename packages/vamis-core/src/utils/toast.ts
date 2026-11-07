@@ -1,7 +1,7 @@
 /** Toast 动作。对齐 Amis：items / position / timeout / closeButton / showIcon / allowHtml。 */
 
 import { filterTpl } from '../formula'
-import type { NotifyConf, NotifyType, PlainObject } from '../types'
+import type { NotifyConf, NotifyType, PlainObject, SchemaNode, SchemaObject } from '../types'
 
 /** 对齐 Amis `isMobile()`：`max-width: 768px`。对照桌面 iframe ~768 也走 Toast-mobile。 */
 export function isMobileToast(): boolean {
@@ -39,6 +39,8 @@ export type ToastNotice = {
   level: ToastLevel
   body: string
   title: string
+  bodySchema?: SchemaObject
+  titleSchema?: SchemaObject
   position: ToastPosition
   timeout: number
   closeButton: boolean
@@ -54,6 +56,9 @@ export type ToastConf = {
   title?: string
   allowHtml?: boolean
   mobile?: boolean
+  bodySchema?: SchemaObject
+  titleSchema?: SchemaObject
+  data?: PlainObject
 }
 
 export function toastPosition(value?: unknown, mobile = false): ToastPosition {
@@ -87,6 +92,19 @@ function toastText(value: unknown, data: PlainObject): string {
   return ''
 }
 
+/** Amis `render('body', body)`：有 `type` 的对象或节点数组当 SchemaNode，不再抽成纯文本。 */
+export function toastSchemaObject(value: unknown): SchemaObject | null {
+  if (Array.isArray(value)) {
+    if (!value.length) return null
+    return { type: 'wrapper', body: value as SchemaNode[] }
+  }
+  if (value && typeof value === 'object') {
+    const rec = value as SchemaObject
+    if (typeof rec.type === 'string' && rec.type) return rec
+  }
+  return null
+}
+
 function flag(value: unknown, fallback: boolean): boolean {
   if (value === true) return true
   if (value === false) return false
@@ -101,10 +119,16 @@ function noticeFrom(
 ): ToastNotice {
   const merged = { ...parent, ...item }
   const level = toastLevel(merged.level || merged.msgType)
+  const bodyRaw = item.body ?? item.msg ?? item.message ?? parent.msg ?? parent.message
+  const titleRaw = item.title ?? parent.title
+  const bodySchema = toastSchemaObject(bodyRaw)
+  const titleSchema = toastSchemaObject(titleRaw)
   return {
     level,
-    body: toastText(item.body ?? item.msg ?? item.message ?? parent.msg ?? parent.message, data),
-    title: toastText(item.title ?? parent.title, data),
+    body: bodySchema ? '' : toastText(bodyRaw, data),
+    title: titleSchema ? '' : toastText(titleRaw, data),
+    ...(bodySchema ? { bodySchema } : {}),
+    ...(titleSchema ? { titleSchema } : {}),
     position: toastPosition(merged.position, mobile),
     timeout: toastTimeout(level, merged.timeout, mobile),
     closeButton: flag(merged.closeButton, false),
@@ -126,7 +150,7 @@ export function toastNotices(action: unknown, data: PlainObject = {}, mobile = f
   return [noticeFrom({}, parent, data, mobile)]
 }
 
-export function toastNotifyConf(notice: ToastNotice, mobile = false): ToastConf {
+export function toastNotifyConf(notice: ToastNotice, data: PlainObject = {}, mobile = false): ToastConf {
   return {
     position: notice.position,
     timeout: notice.timeout,
@@ -135,7 +159,17 @@ export function toastNotifyConf(notice: ToastNotice, mobile = false): ToastConf 
     title: notice.title || undefined,
     allowHtml: notice.allowHtml,
     mobile,
+    bodySchema: notice.bodySchema,
+    titleSchema: notice.titleSchema,
+    data,
   }
+}
+
+function toastFallbackText(notice: ToastNotice): string {
+  if (notice.body) return notice.body
+  if (notice.title) return notice.title
+  if (notice.bodySchema || notice.titleSchema) return ''
+  return '提示'
 }
 
 /** 抽出 notices 并 `env.notify`。移动端默认 center / 3000，且一次只留一条。 */
@@ -146,6 +180,6 @@ export function notifyToasts(
 ) {
   const mobile = isMobileToast()
   for (const notice of toastNotices(action, data, mobile)) {
-    notify(notice.level, notice.body || notice.title || '提示', toastNotifyConf(notice, mobile))
+    notify(notice.level, toastFallbackText(notice), toastNotifyConf(notice, data, mobile))
   }
 }

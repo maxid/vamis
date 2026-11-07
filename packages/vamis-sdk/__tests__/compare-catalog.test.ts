@@ -21,6 +21,7 @@ import {
   parseViewportArg,
   rerunCommands,
   stepCaseId,
+  matchCaseQuery,
 } from '../compare/catalog.mjs'
 import { scoreTree, shouldProbe, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
@@ -425,6 +426,38 @@ describe('schema-tree', () => {
       'page/body/0:form/body/0:input-text.value',
       'page/body/0:form/body/1:button.dialog',
     ])
+  })
+})
+
+describe('matchCaseQuery', () => {
+  const row = {
+    id: 'src-components-page-0',
+    title: 'Page 页面 #1',
+    page: 'Page 页面',
+    group: '组件 / 布局',
+    section: '布局',
+    bucket: 'components',
+  }
+
+  it('empty query keeps every row', () => {
+    expect(matchCaseQuery(row, '')).toBe(true)
+    expect(matchCaseQuery(row, '   ')).toBe(true)
+  })
+
+  it('matches title, page, id fragments; AND tokens', () => {
+    expect(matchCaseQuery(row, 'page')).toBe(true)
+    expect(matchCaseQuery(row, '页面')).toBe(true)
+    expect(matchCaseQuery(row, 'src-components-page-0')).toBe(true)
+    expect(matchCaseQuery(row, 'page 0')).toBe(true)
+    expect(matchCaseQuery(row, 'toast')).toBe(false)
+    expect(matchCaseQuery(row, 'page toast')).toBe(false)
+  })
+
+  it('compare.html wires a search box onto the case select', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../compare.html'), 'utf8')
+    expect(html).toContain('id="case-q"')
+    expect(html).toContain('function matchCaseQuery')
+    expect(html).toContain('placeholder="筛选标题 / 页 / id"')
   })
 })
 

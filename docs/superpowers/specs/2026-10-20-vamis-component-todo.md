@@ -68,11 +68,11 @@
 | 功能 | 0 / 12 | 12 | 0 | 78% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 50% | 42 |
 | 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
-| 反馈 | 0 / 5 | 5 | 0 | 84% | 5 |
+| 反馈 | 1 / 5 | 4 | 0 | 86% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
-| **合计** | **1 / 155** | **154** | **0** | **59%** | **111** |
+| **合计** | **2 / 155** | **153** | **0** | **59%** | **111** |
 
-侧栏已无未开始项。当前已完成仅 `container`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 90%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
+侧栏已无未开始项。当前已完成 `container`、`toast`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
 
@@ -253,7 +253,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（0/5，均 84%）
+## 反馈（1/5，均 86%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
@@ -261,7 +261,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `dialog` | Dialog 对话框 | `/components/dialog` | `/zh-CN/components/dialog` | 进行中 | 85% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。body 是 form 时默认 `mode: horizontal`、`wrapWithPanel: false`、无默认「提交」。窄屏 &lt;576 弹层拉满、底栏横排均分（对照「移动」/ `m:`）。浮层 data 按层压栈。默认弹层 `top: 60px`。关闭按钮 hover「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal | P0 |
 | `drawer` | Drawer 抽屉 | `/components/drawer` | `/zh-CN/components/drawer` | 进行中 | 85% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover「关闭」提示。缺 `resizable`、多级错位递减、像素级 cxd Drawer | P0 |
 | `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 进行中 | 80% | 文档主路径已对齐：`show` / `showOn`、`size` sm \| lg \| 空、`overlay`（源码默认 false）、`tip` / `tipPlacement`、`delay`、`body` 容器。缺 hex SVG、fa / 内置 icon 名、父子 loading 互斥、`loadingConfig` | P0 |
-| （动作 `toast`） | Toast 轻提示 | `/components/toast` | `/zh-CN/components/toast` | 进行中 | 90% | 文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px` 暗底居中、40px 图标、一次一条、3000ms。缺 schema 节点 body | P0 |
+| （动作 `toast`） | Toast 轻提示 | `/components/toast` | `/zh-CN/components/toast` | 已完成 | 100% | 文档主路径已对齐：`toast.items` / `body` / `title`（字符串或 SchemaNode）、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px` 暗底居中、40px 图标、一次一条、3000ms。有 `type` 的 `title`/`body` 走 `SchemaRenderer`，点击当时 data 快照 | P0 |
 
 ---
 
@@ -294,7 +294,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`toast`（#7，90%，缺 schema 节点 body）、Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错，不挡 chrome。`remark` 92% / `badge` 95% 余项是 `themeCss`。不要切 `select`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：Options（#10，75%）、`input-text`（#11，82%）、`spinner`（#12，80%）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错，不挡 chrome。`remark` 92% / `badge` 95% 余项是 `themeCss`。不要切 `select`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -369,7 +369,7 @@ flowchart LR
 | 4 | `tooltip-wrapper` | `tpl` | 9 | 3 | 48 | 501 | 进行中 | 92% |
 | 5 | `remark` | `tooltip-wrapper`、`icon`、`tpl` | 8 | 2 | 34 | 501 | 进行中 | 92% |
 | 6 | FormItem（契约） | `remark` | 7 | 38 | 501 | 501 | 进行中 | 88% |
-| 7 | `toast`（动作） | `icon`、`tpl` | 9 | 1 | 22 | 437 | 进行中 | 90% |
+| 7 | `toast`（动作） | `icon`、`tpl` | 9 | 1 | 22 | 437 | 已完成 | 100% |
 | 8 | `action` | `icon`、`tpl`、`tooltip-wrapper`、`badge`、`toast` | 8 | 33 | 437 | 437 | 进行中 | 95% |
 | 9 | `container` | `tpl` | 9 | 23 | 308 | 308 | 已完成 | 100% |
 | 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | 进行中 | 75% |

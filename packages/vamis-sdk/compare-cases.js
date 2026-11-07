@@ -22737,6 +22737,10 @@ window.VAMIS_COMPARE_CASES = [
               "position": "top-right"
             },
             {
+              "body": "中间提示",
+              "position": "center"
+            },
+            {
               "body": "左下方提示",
               "position": "bottom-left"
             },
@@ -22847,6 +22851,44 @@ window.VAMIS_COMPARE_CASES = [
           "items": [
             {
               "body": "<strong>Hello</strong> <span>world</span>"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-toast-11",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Toast 轻提示",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Toast 轻提示 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "组件内容",
+        "actionType": "toast",
+        "toast": {
+          "items": [
+            {
+              "title": {
+                "type": "tpl",
+                "tpl": "标题"
+              },
+              "body": {
+                "type": "tpl",
+                "className": "text-danger",
+                "tpl": "这是 schema 节点"
+              }
             }
           ]
         }

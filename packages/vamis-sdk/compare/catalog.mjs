@@ -124,6 +124,17 @@ export function matchSelf(row, query) {
   return String(row.id).toLowerCase() === q
 }
 
+/** 对照页用例搜索：空串全过；空白切开的每一段都要落在 id / 标题 / 页名 / 分组里。 */
+export function matchCaseQuery(row, query) {
+  const raw = String(query || '').trim().toLowerCase()
+  if (!raw) return true
+  const rec = row && typeof row === 'object' ? row : {}
+  const hay = [rec.id, rec.title, rec.page, rec.group, rec.section, rec.bucket, rec.source]
+    .map((part) => String(part || '').toLowerCase())
+    .join(' ')
+  return raw.split(/\s+/).every((token) => hay.includes(token))
+}
+
 /** 对照页「上一个 / 下一个」：在当前筛选列表里按 delta 挪一条，到头停住。 */
 export function stepCaseId(ids, currentId, delta) {
   const list = Array.isArray(ids) ? ids.map((id) => String(id)) : []

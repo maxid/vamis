@@ -5,8 +5,8 @@ outline: deep
 
 # Toast 轻提示
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`toast.items` / `body` / `title`、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce；`max-width: 768px` 走暗底居中、一次一条、3000ms。缺 schema 节点 body。
+::: tip 实现进度 100% · 已完成
+文档主路径已对齐：`toast.items` / `body` / `title`（字符串或 [SchemaNode](/types/schemanode)）、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce；`max-width: 768px` 走暗底居中、一次一条、3000ms。`title` / `body` 有 `type` 的节点走 `SchemaRenderer`，不再抽成纯文本。
 :::
 
 点击按钮弹出轻提示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -132,6 +132,7 @@ toast:
       { "body": "左上方提示", "position": "top-left" },
       { "body": "上方提示", "position": "top-center" },
       { "body": "右上方提示", "position": "top-right" },
+      { "body": "中间提示", "position": "center" },
       { "body": "左下方提示", "position": "bottom-left" },
       { "body": "下方提示", "position": "bottom-center" },
       { "body": "右下方提示", "position": "bottom-right" }
@@ -187,6 +188,25 @@ toast:
 }
 ```
 
+## Schema 节点
+
+`title` / `body` 可以是字符串，也可以是任意 [SchemaNode](/types/schemanode)。弹出时按点击当时的数据域渲染，不再抽成纯文本。
+
+```schema: scope="body"
+type: button
+label: 组件内容
+actionType: toast
+toast:
+  items:
+    - title:
+        type: tpl
+        tpl: 标题
+      body:
+        type: tpl
+        className: text-danger
+        tpl: 这是 schema 节点
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -202,8 +222,8 @@ toast:
 
 | 属性名 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `title` | `string` | | 标题，可模板 |
-| `body` | `string` | | 内容，可模板 |
+| `title` | `string` \| [SchemaNode](/types/schemanode) | | 标题，可模板或任意节点 |
+| `body` | `string` \| [SchemaNode](/types/schemanode) | | 内容，可模板或任意节点 |
 | `level` | `string` | `info` | `info` / `success` / `error` / `warning` |
 | `position` | `string` | 继承外层 | 单条位置 |
 | `closeButton` | `boolean` | 继承外层 | 单条关闭按钮 |
@@ -216,4 +236,3 @@ toast:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 默认超时跟 Amis **源码** 4000 / error 6000，不是文档写的 5000。窄屏未写 `timeout` 时 3000。
-- `title` / `body` 目前只吃字符串或带 `tpl` 的节点，不渲染任意 schema 子树。

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { pushToast, resetToasts, useToastState } from '../src/toast-store'
 import {
   isMobileToast,
   toastNotices,
+  toastSchemaObject,
   toastPosition,
   toastTimeout,
 } from '../src/utils/toast'
@@ -109,6 +111,41 @@ describe('toast notices', () => {
       )[0],
     ).toMatchObject({ position: 'top-left', timeout: 3000, body: '角落' })
     expect(typeof isMobileToast()).toBe('boolean')
+  })
+
+  it('keeps SchemaNode title/body instead of flattening to text', () => {
+    const tpl = { type: 'tpl', className: 'text-danger', tpl: '这是 schema 节点 ${name}' }
+    const title = { type: 'tpl', tpl: '标题' }
+    expect(toastSchemaObject(tpl)).toEqual(tpl)
+    expect(toastSchemaObject([tpl, title])).toEqual({ type: 'wrapper', body: [tpl, title] })
+    expect(toastSchemaObject({ tpl: 'plain' })).toBeNull()
+    const notices = toastNotices(
+      {
+        actionType: 'toast',
+        toast: {
+          items: [{ title, body: tpl }],
+        },
+      },
+      { name: 'Ada' },
+    )
+    expect(notices[0]).toMatchObject({
+      title: '',
+      body: '',
+      titleSchema: title,
+      bodySchema: tpl,
+    })
+  })
+
+  it('pushToast snapshots bodySchema and click-time data', () => {
+    resetToasts()
+    const schema = { type: 'tpl', tpl: 'hi ${name}' }
+    const data = { name: 'Ada' }
+    pushToast('info', '', { bodySchema: schema, data })
+    const item = useToastState().items[0]
+    expect(item.bodySchema).toEqual(schema)
+    expect(item.data).toEqual({ name: 'Ada' })
+    expect(item.data).not.toBe(data)
+    resetToasts()
   })
 })
 

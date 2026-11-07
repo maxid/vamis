@@ -165,6 +165,12 @@ export type NotifyConf = {
   allowHtml?: boolean
   /** 对齐 Amis Toast `mobileUI`；缺省时按 `isMobileToast()`（max-width 768）。 */
   mobile?: boolean
+  /** Amis `render('title', title)`：有 type 的 SchemaNode 进 ToastMessage。 */
+  titleSchema?: SchemaObject
+  /** Amis `render('body', body)`：有 type 的 SchemaNode 进 ToastMessage。 */
+  bodySchema?: SchemaObject
+  /** 弹出时的数据快照，给 schema body/title 插值。 */
+  data?: PlainObject
 }
 
 export interface RendererEnv {

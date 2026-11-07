@@ -105,7 +105,7 @@ alwaysApply: true
 ### 属性表里的 SchemaNode / API 必须链到类型页
 - 踩过：TooltipWrapper 属性表 `body` 写成纯文本 `SchemaNode`，Amis 是 `[SchemaNode](../../docs/types/schemanode)`，文档站点不进类型页。类型页自己也曾停在三行对照表。
 - 稳定做法：属性表类型列对标 Amis 链接。Vamis 写 `[SchemaNode](/types/schemanode)`、`[API](/types/api)`、`[ClassName](/types/classname)`。类型页要对齐 `docs/zh-CN/types/` 主路径，不要只写一句「和 Amis 一样宽松」。
-- 触及：`tooltip-wrapper` SchemaNode
+- 触及：`tooltip-wrapper` SchemaNode `toast`
 - 规则：`.cursor/rules/site.mdc`；`website/src/types/`
 
 ### 对照过了 ≠ 文档站对齐；必须并排开两边同路径页
@@ -294,6 +294,12 @@ alwaysApply: true
 - 稳定做法：跟 Amis `Toast.tsx` / `_toast.scss`。桌面 400px 白底可叠；移动（≤768）暗底居中一次一条。无 `closeButton` 时点击关闭。Host 挂 `VamisApp` 并 Teleport 到 body。图标与 Alert 共用 `levelToFeedbackIcon`。
 - 触及：`toast` `alert`
 - 规则：`.cursor/rules/component.mdc`
+
+### SchemaNode 内容不要抽成纯文本
+- 踩过：Toast `title`/`body` 经 `toastText` 递归抽 `tpl`/`html`，`{ type: tpl, className }` 丢掉 class 和子树。Amis `RootRenderer` 是 `render('body', body)`。
+- 稳定做法：有 `type` 的对象或节点数组当 SchemaNode 留下，弹出时 `SchemaRenderer` + 点击当时的 data 快照。无 type 的 `{ tpl }` 才抽字符串。数组包 `{ type: wrapper, body }`。
+- 触及：`toast`
+- 规则：Amis `RootRenderer` toast 分支；本文
 
 ### Confirm 走 Alert Modal，不要用 window.confirm
 - 踩过：`env.confirm` 用原生 `window.confirm`，标题拼进文案、没有独立标题栏 / 危险确认钮 / 500px 盒模型，Esc 与点遮罩行为也和 Amis 不同。

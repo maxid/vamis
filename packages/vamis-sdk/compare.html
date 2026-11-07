@@ -48,7 +48,12 @@
       select {
         font: inherit;
         padding: 4px 8px;
-        max-width: min(36vw, 360px);
+        max-width: min(32vw, 320px);
+      }
+      #case-q {
+        font: inherit;
+        padding: 4px 8px;
+        width: 148px;
       }
       .case-nav {
         display: flex;
@@ -318,6 +323,7 @@
           <button type="button" id="case-prev">上一个</button>
           <label>
             用例
+            <input type="search" id="case-q" placeholder="筛选标题 / 页 / id" autocomplete="off" spellcheck="false" />
             <select id="case"></select>
           </label>
           <button type="button" id="case-next">下一个</button>
@@ -498,6 +504,7 @@
           return { pass: diffs.length === 0, diffs: diffs }
         }
         const select = document.getElementById('case')
+        const caseQ = document.getElementById('case-q')
         const casePrev = document.getElementById('case-prev')
         const caseNext = document.getElementById('case-next')
         const casePos = document.getElementById('case-pos')
@@ -514,10 +521,24 @@
         function allCases() {
           return window.VAMIS_COMPARE_CASES || []
         }
+        function matchCaseQuery(row, query) {
+          const raw = String(query || '').trim().toLowerCase()
+          if (!raw) return true
+          const rec = row && typeof row === 'object' ? row : {}
+          const hay = [rec.id, rec.title, rec.page, rec.group, rec.section, rec.bucket, rec.source]
+            .map(function (part) { return String(part || '').toLowerCase() })
+            .join(' ')
+          return raw.split(/\s+/).every(function (token) { return hay.includes(token) })
+        }
+        function addCaseOption(parent, row) {
+          const opt = document.createElement('option')
+          opt.value = row.id
+          opt.textContent = (row.extra ? '+ ' : '') + row.title
+          parent.appendChild(opt)
+        }
         function fillSelect(keepId) {
-          const rows = allCases().filter(function (row) {
-            return !bucketFilter || row.bucket === bucketFilter
-          })
+          const rows = filteredCases()
+          const want = keepId || select.value || params.get('case')
           const groups = {}
           const order = []
           rows.forEach(function (row) {
@@ -533,20 +554,30 @@
             const og = document.createElement('optgroup')
             og.label = group + '（' + groups[group].length + '）'
             groups[group].forEach(function (row) {
-              const opt = document.createElement('option')
-              opt.value = row.id
-              opt.textContent = (row.extra ? '+ ' : '') + row.title
-              og.appendChild(opt)
+              addCaseOption(og, row)
             })
             select.appendChild(og)
           })
-          const want = keepId || params.get('case')
-          if (want && rows.some(function (row) { return row.id === want })) select.value = want
+          const inList = rows.some(function (row) { return row.id === want })
+          if (want && !inList) {
+            const current = allCases().find(function (row) { return row.id === want })
+            if (current) {
+              const og = document.createElement('optgroup')
+              og.label = '当前'
+              addCaseOption(og, current)
+              select.insertBefore(og, select.firstChild)
+            }
+          }
+          if (want && Array.prototype.some.call(select.options, function (opt) { return opt.value === want })) {
+            select.value = want
+          }
           syncCaseNav()
         }
         function filteredCases() {
+          const q = caseQ.value
           return allCases().filter(function (row) {
-            return !bucketFilter || row.bucket === bucketFilter
+            if (bucketFilter && row.bucket !== bucketFilter) return false
+            return matchCaseQuery(row, q)
           })
         }
         function stepCaseId(ids, currentId, delta) {
@@ -561,18 +592,22 @@
           const rows = filteredCases()
           const ids = rows.map(function (row) { return row.id })
           const i = ids.indexOf(select.value)
-          const idx = i < 0 ? 0 : i
-          casePrev.disabled = idx <= 0 || !rows.length
-          caseNext.disabled = idx >= rows.length - 1 || !rows.length
-          casePos.textContent = rows.length ? idx + 1 + ' / ' + rows.length : '0 / 0'
+          if (i < 0) {
+            casePrev.disabled = true
+            caseNext.disabled = !rows.length
+            casePos.textContent = rows.length ? '— / ' + rows.length : '0 / 0'
+            return
+          }
+          casePrev.disabled = i <= 0 || !rows.length
+          caseNext.disabled = i >= rows.length - 1 || !rows.length
+          casePos.textContent = rows.length ? i + 1 + ' / ' + rows.length : '0 / 0'
         }
         function stepCase(delta) {
           const rows = filteredCases()
-          const next = stepCaseId(
-            rows.map(function (row) { return row.id }),
-            select.value,
-            delta,
-          )
+          const ids = rows.map(function (row) { return row.id })
+          if (!ids.length) return
+          const i = ids.indexOf(select.value)
+          const next = i < 0 ? (delta > 0 ? ids[0] : '') : stepCaseId(ids, select.value, delta)
           if (!next || next === select.value) return
           select.value = next
           applyCase(true)
@@ -1291,6 +1326,21 @@
         })
         source.addEventListener('input', onSourceInput)
         select.addEventListener('change', function () {
+          applyCase(true)
+        })
+        caseQ.addEventListener('input', function () {
+          fillSelect(select.value)
+        })
+        caseQ.addEventListener('search', function () {
+          fillSelect(select.value)
+        })
+        caseQ.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter') return
+          e.preventDefault()
+          const rows = filteredCases()
+          if (rows.length !== 1) return
+          if (rows[0].id === select.value) return
+          select.value = rows[0].id
           applyCase(true)
         })
         casePrev.addEventListener('click', function () {

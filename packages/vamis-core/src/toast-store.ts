@@ -1,7 +1,7 @@
 /** Toast 队列。对齐 Amis ToastComponent：移动端一条、按 position 分组由 Host 画。 */
 
 import { reactive } from 'vue'
-import type { NotifyConf } from './types'
+import type { NotifyConf, PlainObject, SchemaObject } from './types'
 import {
   isMobileToast,
   toastLevel,
@@ -16,6 +16,9 @@ export type ToastItem = {
   level: ToastLevel
   body: string
   title: string
+  bodySchema?: SchemaObject
+  titleSchema?: SchemaObject
+  data?: PlainObject
   position: ToastPosition
   timeout: number
   closeButton: boolean
@@ -58,6 +61,9 @@ export function pushToast(level: string, body: string, conf?: NotifyConf) {
     level: lv,
     body,
     title: conf?.title ?? '',
+    bodySchema: conf?.bodySchema,
+    titleSchema: conf?.titleSchema,
+    data: conf?.data ? { ...conf.data } : undefined,
     position: toastPosition(conf?.position, mobile),
     timeout: toastTimeout(lv, conf?.timeout, mobile),
     closeButton: mobile ? false : conf?.closeButton === true,
