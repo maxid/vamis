@@ -172,11 +172,14 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
     coords = coordsForPlacement(fallback, child, overlayW, overlayH, gap)
     const still = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
     if (still.ok) return shift(coords)
-    if (!still.visibleY && overlayH) {
-      coords = { ...coords, top: scrollY + Math.max(10, viewH - overlayH) - 10 }
-    }
-    if (!still.visibleX && overlayW) {
-      coords = { ...coords, left: scrollX + Math.max(10, viewW - overlayW) }
+    const triggerOnScreen = r.bottom > 0 && r.top < viewH && r.right > 0 && r.left < viewW
+    if (triggerOnScreen) {
+      if (!still.visibleY && overlayH) {
+        coords = { ...coords, top: scrollY + Math.max(10, viewH - overlayH) - 10 }
+      }
+      if (!still.visibleX && overlayW) {
+        coords = { ...coords, left: scrollX + Math.max(10, viewW - overlayW) }
+      }
     }
     return shift(coords)
   }

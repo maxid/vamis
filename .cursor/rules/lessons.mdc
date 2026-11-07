@@ -255,8 +255,8 @@ alwaysApply: true
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
 - 踩过：用 shadcn `--popover` / `--radius` 画 12px、padding 6×10、圆角 4、5px 实心三角；对齐后又把 `#fff` / `8px` 写死在 `.vamis-tooltip`。文档示例改成「上/左/右/下」丢掉 FA 图标。宿主 `style` 漏进浮层。
-- 稳定做法：先读 `_tooltip.scss` + 文档 ```schema。量落到 `:root` `--tooltip-*`（圆角 8 是 Amis `--borderRadiusLg`，不是全局 `--radius` 4）。选择器只 `var()`。浮层只收 tooltipObj（`tooltipLayerSchema`）。`inline` 是 `inline-block`。
-- 触及：`tooltip-wrapper` `action` `button` `remark`
+- 稳定做法：先读 `_tooltip.scss` + 文档 ```schema。量落到 `:root` `--tooltip-*`（圆角 8 是 Amis `--borderRadiusLg`，不是全局 `--radius` 4）。选择器只 `var()`。浮层只收 tooltipObj（`tooltipLayerSchema`）。`inline` 是 `inline-block`。`.dark` 必须覆盖 `--tooltip-bg` / `--tooltip-fg` / `--tooltip-border`（Amis `--Tooltip-bg: var(--background)`），不要把浅色 `#fff` / `#151b26` 留到深色页。
+- 触及：`tooltip-wrapper` `action` `button` `remark` `select`
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --tooltip-*`
 
 ### Overlay Remark 按 `_remark.scss` 转写，不要用 shadcn Tooltip
@@ -354,7 +354,7 @@ alwaysApply: true
 ### SDK 不要依赖解不到的包
 - 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。
 - 稳定做法：日期 / `|date` 走 dayjs（plugin 打进 bundle）。SDK 上下文补 `workspaceBareResolve`。字符串函数体仅 `env.trusted`；对照页与文档预览显式开 trusted，SDK 默认仍关。
-- 触及：`input-date` `avatar` 公式过滤器
+- 触及：`input-date` `avatar` 公式过滤器 `select`
 - 规则：本文；JS SDK spec
 
 ### 不要用 display:contents 拆作者布局
@@ -378,8 +378,26 @@ alwaysApply: true
 ### Spinner 默认用中心对称循环标，宿主复用同一套，祖先 loading 挡住子级
 - 踩过：默认画 CSS 圆环；`icon: reload` / `fa fa-spinner` 当 URL 丢掉；Page / Service 各写「加载中…」或根本不转。又把 Amis `--Spinner-bg` 六边形整段搬进来当品牌。开口 V + SMIL `begin="id.end"` 链式在 Vue 动态 id 下播完就停，而且不是原点对称系统。Amis 是圆心原点裂成 N 点、连线、收回、循环。
 - 稳定做法：默认指示器走 `VamisSpinnerMark`（圆心原点四向裂开成菱形，依次连线再收回）。同一时钟 `dur` + `repeatCount="indefinite"`，不要 `begin` 链式。几何不要抄六边形，也不要开口 V。SVG class 用 `vamis-spinner-v`，不要占用 `.vamis-spinner-mark`（那是互斥定位 span，`opacity: 0`）。色 `currentColor` / `--primary`，不要写死 `#2468F2`。`icon` 空 = 默认标；`reload` 内置线图；含 `.` 当图；否则 class（fa）。父子互斥用共享 `spinnerPushParent` / `spinnerCheckLoading`（祖先 `contains` 子级则子级不画）。`loadingConfig.root` Teleport 且强制 overlay、忽略自定义 icon。Page / Service / 以后 Form Dialog 都挂 `Spinner.vue`，不要再写一套圆环。
-- 触及：`spinner` `page` `service`
+- 触及：`spinner` `page` `service` `select`
 - 规则：本文；Amis `amis-ui` `Spinner.tsx` / `_spinner.scss`
+
+### Select 分组检索保树，filterOption 只 trusted
+- 踩过：`filterOptions` 拍扁 `children`，分组检索丢组头。组名命中且 `children` 被滤空时，`children?.length` 为 0，组头变成可选项。`filterOption` 字符串 `Function` 未开 trusted 会当 XSS。
+- 稳定做法：检索走 `filterOptionTree`；组名命中时保留全部子项，模板用 `Array.isArray(children)` 判断组。`filterOption` 只 `env.trusted` 编译。全选检索默认 `checkAllBySearch`。
+- 触及：`select` Options
+- 规则：`packages/vamis-core/src/utils/options.ts` `filterOptionTree` / `runSelectFilterOption`
+
+### Select overlay 走 PopOverContainer 算法
+- 踩过：`overlay.width` 的 `±Npx` 要对触发器做 `calc`；`align` 映射 left/right/center placement，不能只往下开。
+- 稳定做法：`calcSelectOverlayWidth` / `selectOverlayPlacement`，弹层仍走 `VamisOverlay`。百分比宽度按触发器换算成 px（Teleport 后父级没有参照宽）。`maxTagCount` 只有 `Number.isFinite` 且 `> 0` 才截断（`Number(undefined)` 是 `NaN`，会把标签全收成 `+N`）。触发器滚出视口时不要把浮层平移进视口底部，跟着触发器一起滚走。多选折行后触发器变高，`VamisOverlay` 必须 ResizeObserver 触发器，PopOver 跟着底边走。单行/多行共用 `--select-pad-y` / `--select-pad-x`（4 / 10），不要靠 value `min-height: 30` 冒充上内边距（折行后会消失）。清除钮用 16px 图标和箭头放进 `__suffix` 一起 `align-items: center`，不要用文字 `×`。清除色对齐 Amis `--Form-input-clearBtn-color`（浅 `#d4d6d9` / 深 `#84878c`），hover 才到 text-4（浅 `#5c5f66` / 深 `#e8e9eb`），不要 `--muted-foreground` / `--foreground`。多选可见 tag 悬停走 `TooltipWrapper`（`label` / `placement: top` / hover），共用一层 `VamisTooltipLayer`；`+N` 溢出表格和折叠项不要再包。
+- 触及：`select`
+- 规则：本文；Amis `PopOverContainer.calcOverlayWidth` / `alignToPlacement`
+
+### 分组 Select 下拉是 TransferDropDown，不是 Select-input
+- 踩过：文档「分组」示例走 Amis `selectMode: group` → `TransferDropDown`（InputBox 32px、「请输入关键字」、搜索图标在右、GroupedSelection 小复选框、ResultBox 标签）。Vamis 用了普通 Select 检索条（32px 全边框、「搜索」、无图标）和 shadcn Checkbox，多选 `Number(undefined)` 还收成 `+1`。
+- 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。
+- 触及：`select`
+- 规则：本文；Amis `TransferDropDown` / `GroupedSelection` / `AutoFoldedList` / `mock/options/autoComplete.js`
 
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。

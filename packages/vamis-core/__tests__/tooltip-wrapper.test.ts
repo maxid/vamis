@@ -109,6 +109,8 @@ describe('tooltip-wrapper overlay', () => {
       'utf8',
     )
     expect(css).toContain('--tooltip-max-width: 240px')
+    expect(css).toContain('--tooltip-bg: #17202d')
+    expect(css).toContain('--tooltip-fg: #f7f8fa')
     expect(css).toContain('max-width: var(--tooltip-max-width)')
     expect(css).toContain('border-radius: var(--tooltip-radius)')
     expect(css).toContain('.vamis-tooltip__arrow::after')

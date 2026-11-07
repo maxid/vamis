@@ -147,7 +147,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   'input-range': doc('InputRange 滑块', '数据输入', '数值滑块。'),
   'input-repeat': doc('InputRepeat 重复频率', '数据输入', '选择重复周期。'),
   'input-rich-text': doc('InputRichText 富文本', '数据输入', '富文本编辑。'),
-  select: doc('Select 下拉框', '数据输入', '下拉选择。source 可拉选项。'),
+  select: doc('Select 下拉框', '数据输入', '下拉选择。menuTpl / 分组 / overlay / maxTagCount / searchable；table/tree/chained 未接。'),
   'input-sub-form': doc('InputSubForm 子表单', '数据输入', '嵌套一个子表单。'),
   switch: doc('Switch 开关', '数据输入', '布尔开关。'),
   static: doc('Static 静态展示', '数据输入', '表单里只读展示。'),

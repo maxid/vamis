@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import { handleMockApi, isMockFile } from './handler'
+import { handleMockApi, isMockFile, waitMockDelay } from './handler'
 
 async function readBody(req: any): Promise<any> {
   const chunks: Buffer[] = []
@@ -34,8 +34,7 @@ function mockMiddleware() {
     const query = Object.fromEntries(new URLSearchParams(queryString || ''))
     const method = (req.method || 'GET').toUpperCase()
     const body = method === 'GET' || method === 'HEAD' ? {} : await readBody(req)
-    const wait = Number(query.waitSeconds || 0)
-    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait * 1000))
+    await waitMockDelay(query)
     send(res, handleMockApi({ method, pathname, query, body }))
   }
 }

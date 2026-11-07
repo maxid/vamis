@@ -89,6 +89,15 @@ describe('overlay-layer', () => {
     expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 50, left: 10 })
   })
 
+  it('follows an off-screen trigger instead of pinning to the viewport bottom', () => {
+    const target = rect(-400, 20, 200, 32)
+    stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 800 })
+    const pos = overlayPosition(target, { gap: 4, width: 300, height: 200 })
+    expect(pos.top).toBeLessThan(0)
+    expect(pos.top).not.toBe(590)
+    expect(pos.left).toBe(20)
+  })
+
   it('writes Amis z-index tokens and overlay class into styles.css', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
@@ -131,6 +140,7 @@ describe('overlay-layer', () => {
     expect(vue).toContain('OVERLAY_POPOVER_GAP')
     expect(vue).toContain("placement: 'auto'")
     expect(vue).toContain('ResizeObserver')
+    expect(vue).toContain('targetObserver')
     expect(vue).toContain("visibility: ready ? 'visible' : 'hidden'")
   })
 })

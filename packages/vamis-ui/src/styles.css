@@ -173,6 +173,35 @@
   --select-option-disabled-bg: transparent;
   --select-option-padding-x: 10px;
   --select-option-line-height: 32px;
+  --select-group-color: #5c5f66;
+  --select-group-font-size: 12px;
+  --select-group-font-weight: 500;
+  --select-group-line-height: 24px;
+  --select-group-padding-y: 4px;
+  --select-search-height: 30px;
+  --select-search-icon-size: 14px;
+  --select-search-icon-color: #999999;
+  --select-search-placeholder: #b4b6ba;
+  --select-search-box-pad: 10px;
+  --select-check-size: 14px;
+  --select-check-radius: 2px;
+  --select-check-border: #d4d6d9;
+  --select-check-bg: #ffffff;
+  --select-check-checked-bg: var(--primary);
+  --select-check-checked-color: #ffffff;
+  --select-chip-bg: #f2f3f5;
+  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 12%, white);
+  --select-chip-color: #151b26;
+  --select-chip-close: #84878c;
+  --select-chip-close-hover: #151b26;
+  --select-chip-height: 22px;
+  --select-chip-max-width: 200px;
+  --select-pad-y: 4px;
+  --select-pad-x: var(--control-px);
+  --select-clear-size: 16px;
+  --select-clear-color: #d4d6d9;
+  --select-clear-hover-color: #5c5f66;
+  --select-clear-active-color: #303540;
   --select-popover-gap: 4px;
   --overlay-popover-gap: 4px;
   --input-password-icon-size: 16px;
@@ -395,6 +424,22 @@
   --select-option-hover-color: #f7f8fa;
   --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
   --select-option-disabled-color: #b8bbbf;
+  --select-group-color: #84878c;
+  --select-search-icon-color: #84878c;
+  --select-search-placeholder: #5c5f66;
+  --select-check-border: #5c5f66;
+  --select-check-bg: #17202d;
+  --select-chip-bg: #303640;
+  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, black);
+  --select-chip-color: #f7f8fa;
+  --select-chip-close: #84878c;
+  --select-chip-close-hover: #f7f8fa;
+  --select-clear-color: #84878c;
+  --select-clear-hover-color: #e8e9eb;
+  --select-clear-active-color: #f2f3f5;
+  --tooltip-bg: #17202d;
+  --tooltip-fg: #f7f8fa;
+  --tooltip-border: 1px solid #303640;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);
   --destructive: oklch(0.65 0.19 25);
@@ -1647,16 +1692,20 @@
     max-width: 100%;
   }
   .vamis-select__input {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
     min-height: var(--control-h);
-    padding: 0 8px;
+    padding: var(--select-pad-y) var(--select-pad-x);
     border: 1px solid var(--input);
     border-radius: var(--radius);
     background: var(--card);
     box-sizing: border-box;
     cursor: pointer;
+  }
+  .vamis-select.is-multiple .vamis-select__input {
+    height: auto;
   }
   .vamis-select__input:hover {
     border-color: var(--control-hover-border);
@@ -1678,44 +1727,112 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 4px;
-    min-height: calc(var(--control-h) - 2px);
+    padding-right: 4px;
   }
+  .vamis-select.is-fold .vamis-select__value,
   .vamis-select.is-nowrap .vamis-select__value {
     flex-wrap: nowrap;
     overflow: hidden;
   }
+  .vamis-select__value-measure {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+  }
   .vamis-select__placeholder {
     color: var(--muted-foreground);
+    line-height: var(--select-chip-height);
   }
   .vamis-select__single {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: var(--select-chip-height);
+  }
+  .vamis-select__suffix {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: center;
   }
   .vamis-select__chip {
     display: inline-flex;
-    max-width: 100%;
+    flex: 0 0 auto;
+    max-width: var(--select-chip-max-width);
+    min-height: var(--select-chip-height);
     padding: 0 6px;
     border-radius: 2px;
-    background: var(--accent);
+    background: var(--select-chip-bg);
+    color: var(--select-chip-color);
+    font-size: 12px;
+    font-weight: 400;
     line-height: 20px;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .vamis-select__chip:hover {
+    background: var(--select-chip-hover-bg);
+  }
+  .vamis-select__chip-label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .vamis-select__clear {
-    margin-left: 4px;
+  .vamis-select__chip-close {
+    flex: 0 0 auto;
+    margin-left: 10px;
+    padding: 0;
     border: 0;
     background: transparent;
-    color: var(--muted-foreground);
+    color: var(--select-chip-close);
+    font-size: 12px;
+    line-height: 1;
     cursor: pointer;
-    font-size: 14px;
+  }
+  .vamis-select__chip-close:hover {
+    color: var(--select-chip-close-hover);
+  }
+  .vamis-select__clear {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--select-clear-size);
+    height: var(--select-clear-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--select-clear-color);
+    cursor: pointer;
     line-height: 1;
   }
+  .vamis-select__clear svg {
+    display: block;
+    width: var(--select-clear-size);
+    height: var(--select-clear-size);
+    fill: currentColor;
+  }
   .vamis-select__clear:hover {
-    color: var(--foreground);
+    color: var(--select-clear-hover-color);
+  }
+  .vamis-select__clear:active {
+    color: var(--select-clear-active-color);
   }
   .vamis-select__caret {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--gap-md);
+    height: var(--select-clear-size);
     margin-left: 0;
     color: var(--select-caret-color);
   }
@@ -1733,11 +1850,75 @@
     color: var(--select-menu-color);
     box-shadow: var(--select-menu-shadow);
   }
-  .vamis-select__search,
+  .vamis-select__search--line {
+    margin: 0 10px;
+    height: var(--select-search-height);
+    border-bottom: 1px solid var(--border);
+  }
+  .vamis-select__search--box {
+    padding: var(--select-search-box-pad);
+  }
+  .vamis-select__search-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .vamis-select__search--box .vamis-select__search-inner {
+    height: var(--control-h);
+    padding: 0 8px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: var(--card);
+  }
+  .vamis-select__search--box .vamis-select__search-inner:hover {
+    border-color: var(--control-hover-border);
+  }
+  .vamis-select__search-icon {
+    flex: 0 0 auto;
+    width: var(--select-search-icon-size);
+    min-width: var(--select-search-icon-size);
+    height: var(--select-search-icon-size);
+    color: var(--select-search-icon-color);
+  }
+  .vamis-select__search--line .vamis-select__search-icon {
+    margin-right: 4px;
+  }
+  .vamis-select__search--box .vamis-select__search-icon {
+    margin-left: 4px;
+  }
+  .vamis-select__search-input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--fontSizeBase);
+  }
+  .vamis-select__search-input::placeholder {
+    color: var(--select-search-placeholder);
+  }
+  .vamis-select__search-clear {
+    flex: 0 0 auto;
+    margin-left: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--select-search-icon-color);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+  }
   .vamis-select__create-form {
     padding: 4px 8px;
   }
-  .vamis-select__search-input {
+  .vamis-select__create-input {
     width: 100%;
     height: var(--control-h);
     padding: 0 8px;
@@ -1748,8 +1929,37 @@
     font: inherit;
     font-size: var(--fontSizeBase);
   }
-  .vamis-select__search-input + .vamis-select__search-input {
+  .vamis-select__create-input + .vamis-select__create-input {
     margin-top: 4px;
+  }
+  .vamis-select__check {
+    display: inline-flex;
+    flex: 0 0 var(--select-check-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--select-check-size);
+    height: var(--select-check-size);
+    margin-right: 4px;
+    box-sizing: border-box;
+    border: 1px solid var(--select-check-border);
+    border-radius: var(--select-check-radius);
+    background: var(--select-check-bg);
+    color: var(--select-check-checked-color);
+  }
+  .vamis-select.is-group .vamis-select__check {
+    margin-right: 10px;
+  }
+  .vamis-select__check svg {
+    width: 10px;
+    height: 10px;
+  }
+  .vamis-select__check.is-checked {
+    background: var(--select-check-checked-bg);
+    border-color: var(--select-check-checked-bg);
+  }
+  .vamis-select__item:hover .vamis-select__check:not(.is-checked),
+  .vamis-select__checkall:hover .vamis-select__check:not(.is-checked) {
+    border-color: var(--primary);
   }
   .vamis-select__checkall,
   .vamis-select__item,
@@ -1829,9 +2039,57 @@
     width: 14px;
     height: 14px;
   }
-  .vamis-select__empty {
+  .vamis-select__empty,
+  .vamis-select__loading {
     padding: 8px 12px;
     color: var(--muted-foreground);
+  }
+  .vamis-select__loading {
+    display: flex;
+    justify-content: center;
+  }
+  .vamis-select__group-label {
+    padding: var(--select-group-padding-y) var(--select-option-padding-x);
+    color: var(--select-group-color);
+    font-size: var(--select-group-font-size);
+    font-weight: var(--select-group-font-weight);
+    line-height: var(--select-group-line-height);
+  }
+  .vamis-select__item--child {
+    padding-left: calc(var(--select-option-padding-x) + 10px);
+  }
+  .vamis-select__item.has-tpl {
+    height: auto;
+    min-height: var(--select-option-line-height);
+    align-items: flex-start;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    white-space: normal;
+  }
+  .vamis-select__item.has-tpl .vamis-select__item-label {
+    white-space: normal;
+  }
+  .vamis-select__overflow {
+    flex: 0 0 auto;
+  }
+  .vamis-select-overflow .vamis-tooltip {
+    color: var(--select-menu-color);
+    background: var(--select-menu-bg);
+    border: 1px solid var(--select-menu-border);
+    border-radius: var(--radius);
+    box-shadow: var(--select-menu-shadow);
+  }
+  .vamis-select-overflow__grid {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc((var(--select-chip-height) + 4px) * 5);
+  }
+  .vamis-select-overflow__grid .vamis-select__chip {
+    margin: 0 4px 4px 0;
   }
   .vamis-select__create {
     border-top: 1px solid var(--select-menu-border);

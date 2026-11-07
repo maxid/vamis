@@ -77,7 +77,10 @@ const layerClass = computed(() =>
         aria-hidden="true"
       />
       <div v-if="title" class="vamis-tooltip__title">{{ title }}</div>
-      <div v-if="content" class="vamis-tooltip__body" :class="bodyClass" v-html="content" />
+      <div v-if="$slots.body" class="vamis-tooltip__body" :class="bodyClass">
+        <slot name="body" />
+      </div>
+      <div v-else-if="content" class="vamis-tooltip__body" :class="bodyClass" v-html="content" />
     </div>
   </VamisOverlay>
 </template>

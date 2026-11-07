@@ -177,10 +177,21 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     clearValueOnSourceChange: '数据域 source 变化时清空当前值。',
     placeholder: '未选时的占位。',
     autoFill: '把选中项字段映射到其它表单项；多选走 items。',
+    menuTpl: '自定义菜单项模板，数据含 label / value / checked。',
+    searchApi: '检索时按 term 拉选项。',
+    filterOption: '自定义过滤函数体，参数 options / inputValue / option。需 env.trusted。',
+    maxTagCount: '多选标签最多展示几个，超出收成 +N。',
+    overlay: '{ width, align } 弹层宽度和对齐。',
+    hideSelected: '下拉里隐藏已选项。',
+    noResultsText: '无结果文案，默认「未找到任何结果」。',
+    checkAllBySearch: '检索时全选只作用于过滤结果，默认 true。',
+    selectMode: 'group 已接。table / tree / chained / associated 未接。',
   }, {
     formItem: true,
     events: {
-      change: '值变化。event.data.value 是当前值。',
+      change: '值变化。event.data.value / selectedItems / items。',
+      focus: '打开下拉。',
+      blur: '关闭下拉。',
     },
     actions: {
       clear: '清空为 resetValue，默认空串。',

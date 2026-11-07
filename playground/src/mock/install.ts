@@ -1,4 +1,4 @@
-import { handleMockApi, isMockFile } from './handler'
+import { handleMockApi, isMockFile, waitMockDelay } from './handler'
 
 function requestUrl(input: RequestInfo | URL): string {
   if (typeof input === 'string') return input
@@ -35,8 +35,7 @@ export function installMockFetch() {
     }
 
     const query = Object.fromEntries(url.searchParams)
-    const wait = Number(query.waitSeconds || 0)
-    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait * 1000))
+    await waitMockDelay(query)
     const payload = handleMockApi({
       method,
       pathname: url.pathname,

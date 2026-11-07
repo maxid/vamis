@@ -117,6 +117,60 @@ function decorateFromBody(body: Record<string, any>, id: number): SampleRow {
   }
 }
 
+/** Amis mock `waitSeconds` 与 autoComplete3 `delay=true` 随机延迟。waitSeconds 优先，避免叠两次。 */
+export async function waitMockDelay(query: Record<string, string | undefined> = {}) {
+  const wait = Number(query.waitSeconds || 0)
+  if (wait > 0) {
+    await new Promise((resolve) => setTimeout(resolve, wait * 1000))
+    return
+  }
+  if (query.delay === 'true' || query.delay === '1') {
+    const timeouts = [0, 200, 500, 700, 1000, 2000]
+    await new Promise((resolve) => setTimeout(resolve, timeouts[Math.floor(Math.random() * timeouts.length)]))
+  }
+}
+
+const AUTOCOMPLETE_DB = [
+  { label: 'zhugeliang', value: '1' },
+  { label: 'zhongwuyan', value: '2' },
+  { label: 'buzhihuowu', value: '3' },
+  { label: 'zhongkui', value: '4' },
+  { label: 'luna', value: '5' },
+  { label: 'wangzhaojun', value: '6' },
+]
+
+const AUTOCOMPLETE3_NAMES = [
+  'Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Frank', 'Grace', 'Heidi', 'Ivan', 'Judy',
+  'Mike', 'Nina', 'Oliver', 'Polly', 'Queenie', 'Randy', 'Sybil', 'Trudy', 'Victor', 'Wendy',
+  'Xander', 'Yvonne', 'Zoe',
+]
+
+function mapAutoCompleteRows(
+  db: { label: string; value: string }[],
+  query: Record<string, string>,
+  body: Record<string, any>,
+  caseInsensitive = false,
+) {
+  const labelField = String(query.labelField || body.labelField || 'label')
+  const valueField = String(query.valueField || body.valueField || 'value')
+  const term = String(query.term || body.term || '')
+  const q = caseInsensitive ? term.toLowerCase() : term
+  const matched = term
+    ? db.filter((item) => (caseInsensitive ? item.label.toLowerCase().includes(q) : item.label.includes(term)))
+    : db
+  return matched.map((item) => ({ [labelField]: item.label, [valueField]: item.value }))
+}
+
+function randomAutoComplete3(total: number) {
+  const out: { label: string; value: string }[] = []
+  const count = Number.isFinite(total) && total > 0 ? total : 20
+  for (let i = 0; i < count; i++) {
+    const name = AUTOCOMPLETE3_NAMES[Math.floor(Math.random() * AUTOCOMPLETE3_NAMES.length)]
+    out.push({ label: name, value: name })
+  }
+  return [...new Map(out.map((item) => [item.value, item])).values()]
+}
+
 /** 与 dev 中间件同一套 `/api/mock2` 语义；Pages 上没有后端，走这份纯函数。 */
 export function handleMockApi(input: {
   method: string
@@ -208,6 +262,17 @@ export function handleMockApi(input: {
             { label: 'Option D', value: 'd' },
             { label: 'Option E', value: 'e' },
             { label: 'Option F', value: 'f' },
+            { label: 'Option G', value: 'g' },
+            { label: 'Option H', value: 'h' },
+            { label: 'Option I', value: 'i' },
+            { label: 'Option J', value: 'j' },
+            { label: 'Option K', value: 'k' },
+            { label: 'Option L', value: 'l' },
+            { label: 'Option M', value: 'm' },
+            { label: 'Option N', value: 'n' },
+            { label: 'Option O', value: 'o' },
+            { label: 'Option P', value: 'p' },
+            { label: 'Option Q', value: 'q' },
           ]
     return { status: 0, msg: 'ok', data: { options } }
   }
@@ -250,22 +315,20 @@ export function handleMockApi(input: {
     return { status: 0, data: { options: byA[a] || [] } }
   }
 
-  if (pathname === '/api/mock2/options/autoComplete') {
-    const term = String(query.term || body.term || '').toLowerCase()
-    const all = [
-      { label: 'Apple', value: 'apple' },
-      { label: 'Banana', value: 'banana' },
-      { label: 'Orange', value: 'orange' },
-      { label: 'Watermelon', value: 'watermelon' },
-      { label: 'Amis', value: 'amis' },
-      { label: 'Vamis', value: 'vamis' },
-    ]
+  if (pathname === '/api/mock2/options/autoComplete3') {
+    const total = /^\d+$/.test(String(query.total || '')) ? Number(query.total) : 20
     return {
       status: 0,
-      msg: 'ok',
-      data: {
-        options: term ? all.filter((item) => item.label.toLowerCase().includes(term) || item.value.includes(term)) : all,
-      },
+      msg: '',
+      data: mapAutoCompleteRows(randomAutoComplete3(total), query, body, true),
+    }
+  }
+
+  if (pathname === '/api/mock2/options/autoComplete') {
+    return {
+      status: 0,
+      msg: '',
+      data: mapAutoCompleteRows(AUTOCOMPLETE_DB, query, body),
     }
   }
 

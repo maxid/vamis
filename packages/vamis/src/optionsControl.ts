@@ -8,7 +8,7 @@ import {
   createVamisEvent,
   dumpOptionsValue,
   eventEvalData,
-  filterOptions,
+  filterOptionTree,
   filterTpl,
   firstEnabledOption,
   getSelectedOptions,
@@ -25,6 +25,8 @@ import {
   optionsEditDialogTitle,
   optionsFromPayload,
   optionsSetDataValue,
+  omitSelectedOptions,
+  runSelectFilterOption,
   overlayContainerFrom,
   removeOptionFromTree,
   requestApi,
@@ -60,7 +62,9 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   const loading = ref(false)
   const keyword = ref('')
   const open = ref(false)
+  const searchResults = ref<OptionItem[] | null>(null)
   let autoCompleteTimer: ReturnType<typeof setTimeout> | undefined
+  let autoCompleteSeq = 0
   const name = computed(() => (schema.value.name ? String(schema.value.name) : ''))
   const config = computed((): OptionsControlConfig => optionsControlConfig(schema.value))
   const overlayContainer = computed(() =>
@@ -89,9 +93,20 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   const selected = computed(() => getSelectedOptions(rawValue.value, options.value, config.value))
 
   const filtered = computed(() => {
-    if (autoComplete.value) return options.value
-    if (!config.value.searchable) return options.value
-    return filterOptions(options.value, keyword.value)
+    let list = searchResults.value ?? options.value
+    if (!searchResults.value && !autoComplete.value && config.value.searchable && keyword.value.trim()) {
+      const custom = runSelectFilterOption(
+        options.value,
+        keyword.value,
+        schema.value.filterOption,
+        env.trusted === true,
+      )
+      list = custom ?? filterOptionTree(options.value, keyword.value)
+    }
+    if (schema.value.hideSelected === true) {
+      list = omitSelectedOptions(list, selected.value, config.value.valueField)
+    }
+    return list
   })
 
   const hasValue = computed(() => !isOptionsEmpty(rawValue.value))
@@ -150,6 +165,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
 
   async function toggle(option: OptionItem) {
     if (option.disabled || disabled?.value) return
+    if (Array.isArray(option.children)) return
     const nextItems = toggleOption(option, selected.value, config.value)
     await commit(nextItems)
     if (!config.value.multiple) open.value = false
@@ -157,7 +173,9 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
 
   async function toggleAll() {
     if (!config.value.multiple) return
-    await commit(toggleAllOptions(selected.value, options.value, config.value.valueField))
+    const pool =
+      config.value.checkAllBySearch !== false && keyword.value.trim() ? filtered.value : options.value
+    await commit(toggleAllOptions(selected.value, pool, config.value.valueField))
   }
 
   async function clear() {
@@ -387,25 +405,75 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   async function loadAutoComplete(term: string) {
     const api = schema.value.autoComplete
     if (!api || api === false || !isEffectiveApi(api as any, data.value)) return
+    const seq = ++autoCompleteSeq
     loading.value = true
     try {
       const result = await requestApi(api as any, { env, data: { ...data.value, term }, reason: 'init' })
+      if (seq !== autoCompleteSeq) return
       if (result.skipped || !result.ok) return
       const payload = optionsFromPayload(result.data)
       remote.value = normalizeOptions(payload.list, config.value.labelField, config.value.valueField)
     } catch (error) {
+      if (seq !== autoCompleteSeq) return
       env.notify('error', error instanceof Error ? error.message : '自动补全失败')
     } finally {
-      loading.value = false
+      if (seq === autoCompleteSeq) loading.value = false
+    }
+  }
+
+  async function loadSearch(term: string) {
+    const api = schema.value.searchApi
+    if (!api || !isEffectiveApi(api as any, { ...data.value, term })) {
+      searchResults.value = null
+      return
+    }
+    if (!term.trim()) {
+      searchResults.value = null
+      return
+    }
+    const seq = ++autoCompleteSeq
+    loading.value = true
+    try {
+      const result = await requestApi(api as any, { env, data: { ...data.value, term }, reason: 'init' })
+      if (seq !== autoCompleteSeq) return
+      if (result.skipped || !result.ok) return
+      const payload = optionsFromPayload(result.data)
+      searchResults.value = normalizeOptions(payload.list, config.value.labelField, config.value.valueField)
+    } catch (error) {
+      if (seq !== autoCompleteSeq) return
+      env.notify('error', error instanceof Error ? error.message : '搜索失败')
+    } finally {
+      if (seq === autoCompleteSeq) loading.value = false
     }
   }
 
   function scheduleAutoComplete(term: string) {
-    if (!autoComplete.value) return
     if (autoCompleteTimer) clearTimeout(autoCompleteTimer)
     autoCompleteTimer = setTimeout(() => {
-      void loadAutoComplete(term)
+      if (autoComplete.value) void loadAutoComplete(term)
+      else if (schema.value.searchApi) void loadSearch(term)
     }, 250)
+  }
+
+  async function emitNamed(eventName: 'focus' | 'blur') {
+    const payload = {
+      ...data.value,
+      value: rawValue.value,
+      items: options.value,
+      options: options.value,
+      selectedItems: selected.value,
+      ...(name.value ? { [name.value]: rawValue.value } : {}),
+    }
+    const event = createVamisEvent(eventName, payload)
+    await runOnEvent(schema.value, eventName, {
+      env,
+      data: eventEvalData(payload, event),
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+      event,
+    })
   }
 
   const api = {
@@ -420,6 +488,10 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       if (type === 'clear') await clear()
       else if (type === 'reset') await reset()
       else if (type === 'reload') await loadOptionsFromSource()
+      else if (type === 'setValue') {
+        const args = action && typeof action === 'object' ? (action as { args?: { value?: unknown } }).args : undefined
+        if (args && 'value' in args) write(args.value, true)
+      }
     },
   }
 
@@ -452,7 +524,12 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   )
 
   watch(keyword, (term) => {
-    if (autoComplete.value) scheduleAutoComplete(term)
+    if (autoComplete.value || schema.value.searchApi) scheduleAutoComplete(term)
+    else searchResults.value = null
+  })
+
+  watch(open, (now) => {
+    void emitNamed(now ? 'focus' : 'blur')
   })
 
   return {
@@ -482,6 +559,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     loadOptionsFromSource,
     loadAutoComplete,
     scheduleAutoComplete,
+    emitNamed,
   }
 }
 

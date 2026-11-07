@@ -27,6 +27,7 @@ const coords = ref({ top: 0, left: 0 })
 const ready = ref(false)
 const to = computed(() => resolveOverlayContainer(props.container))
 let layerObserver: ResizeObserver | null = null
+let targetObserver: ResizeObserver | null = null
 
 function place() {
   const el = props.target
@@ -82,6 +83,18 @@ watch(layerEl, (el) => {
   layerObserver.observe(el)
 })
 
+watch(
+  () => [props.show, props.target] as const,
+  ([show, target]) => {
+    targetObserver?.disconnect()
+    targetObserver = null
+    if (!show || !target || typeof ResizeObserver === 'undefined') return
+    targetObserver = new ResizeObserver(() => place())
+    targetObserver.observe(target)
+  },
+  { immediate: true },
+)
+
 if (typeof document !== 'undefined') {
   document.addEventListener('mousedown', onDocPointer, true)
   window.addEventListener('resize', onReposition)
@@ -90,6 +103,7 @@ if (typeof document !== 'undefined') {
 
 onBeforeUnmount(() => {
   layerObserver?.disconnect()
+  targetObserver?.disconnect()
   if (typeof document === 'undefined') return
   document.removeEventListener('mousedown', onDocPointer, true)
   window.removeEventListener('resize', onReposition)

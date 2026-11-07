@@ -28,6 +28,7 @@ export interface OptionsValueConfig {
 export interface OptionsControlConfig extends OptionsValueConfig {
   searchable?: boolean
   checkAll?: boolean
+  checkAllBySearch?: boolean
   defaultCheckAll?: boolean
   selectFirst?: boolean
   creatable?: boolean
@@ -90,6 +91,7 @@ export function optionsControlConfig(schema: PlainObject = {}): OptionsControlCo
     ...optionsValueConfig(schema),
     searchable: schema.searchable === true,
     checkAll: schema.checkAll === true,
+    checkAllBySearch: schema.checkAllBySearch !== false,
     defaultCheckAll: schema.defaultCheckAll === true,
     selectFirst: schema.selectFirst === true,
     creatable: schema.creatable === false ? false : schema.creatable === true || schema.addApi != null,
@@ -405,12 +407,142 @@ export function firstEnabledOption(options: OptionItem[]): OptionItem | undefine
   return selectableOptions(options)[0]
 }
 
+function optionMatchesKeyword(item: OptionItem, q: string): boolean {
+  return String(item.label).toLowerCase().includes(q) || String(item.value ?? '').toLowerCase().includes(q)
+}
+
 export function filterOptions(options: OptionItem[], keyword: string): OptionItem[] {
   const q = keyword.trim().toLowerCase()
   if (!q) return options
-  return flattenOptions(options).filter((item) => {
-    return String(item.label).toLowerCase().includes(q) || String(item.value ?? '').toLowerCase().includes(q)
-  })
+  return flattenOptions(options).filter((item) => optionMatchesKeyword(item, q))
+}
+
+export function isGroupOption(item: OptionItem): boolean {
+  return Array.isArray(item.children)
+}
+
+/** 检索时保留分组树，不要把 children 拍扁。组名命中时仍展示全部子项，避免组头变成可选项。 */
+export function filterOptionTree(options: OptionItem[], keyword: string): OptionItem[] {
+  const q = keyword.trim().toLowerCase()
+  if (!q) return options
+  const out: OptionItem[] = []
+  for (const item of options) {
+    if (isGroupOption(item)) {
+      const children = filterOptionTree(item.children || [], keyword)
+      if (children.length) out.push({ ...item, children })
+      else if (optionMatchesKeyword(item, q)) out.push({ ...item, children: item.children || [] })
+    } else if (optionMatchesKeyword(item, q)) {
+      out.push(item)
+    }
+  }
+  return out
+}
+
+/** Amis `filterOption` 字符串函数体，参数 options / inputValue / option。只在 trusted 编译。 */
+export function runSelectFilterOption(
+  options: OptionItem[],
+  inputValue: string,
+  filterOption: unknown,
+  trusted: boolean,
+): OptionItem[] | null {
+  if (typeof filterOption !== 'string' || !filterOption.trim() || !trusted) return null
+  try {
+    const fn = new Function('options', 'inputValue', 'option', filterOption) as (
+      list: OptionItem[],
+      q: string,
+      meta: { keys: string[] },
+    ) => unknown
+    const out = fn(options, inputValue, { keys: ['label', 'value'] })
+    return Array.isArray(out) ? (out as OptionItem[]) : null
+  } catch {
+    return null
+  }
+}
+
+export function omitSelectedOptions(
+  options: OptionItem[],
+  selected: OptionItem[],
+  valueField = 'value',
+): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const item of options) {
+    if (item.children?.length) {
+      const children = omitSelectedOptions(item.children, selected, valueField)
+      if (children.length) out.push({ ...item, children })
+    } else if (!selected.some((cur) => matchOptionValue(item.value, cur, valueField))) {
+      out.push(item)
+    }
+  }
+  return out
+}
+
+export function splitOverflowTags<T>(items: T[], maxTagCount?: number): { visible: T[]; rest: T[] } {
+  if (!Number.isFinite(maxTagCount as number) || (maxTagCount as number) <= 0 || items.length <= (maxTagCount as number)) {
+    return { visible: items, rest: [] }
+  }
+  const cap = maxTagCount as number
+  return { visible: items.slice(0, cap), rest: items.slice(cap) }
+}
+
+/** 对齐 Amis `AutoFoldedList`：按容器宽度决定可见标签数，不够再收成 +N。 */
+export function countVisibleTagsByWidth(opts: {
+  containerWidth: number
+  itemWidths: number[]
+  moreWidth: number
+  gap?: number
+  chipGap?: number
+  maxVisibleCount?: number
+}): number {
+  const { containerWidth, itemWidths, moreWidth, maxVisibleCount } = opts
+  const gap = opts.gap ?? 10
+  const chipGap = opts.chipGap ?? 4
+  const n = itemWidths.length
+  if (n === 0) return 0
+  if (!(containerWidth > 0)) return n
+  const cap =
+    Number.isFinite(maxVisibleCount as number) && (maxVisibleCount as number) > 0
+      ? Math.min(maxVisibleCount as number, n)
+      : n
+  const moreReserve = Math.max(moreWidth, 30) + gap
+  if (cap >= n) {
+    let total = 0
+    for (let i = 0; i < n; i++) total += itemWidths[i] + (i ? chipGap : 0)
+    if (total <= containerWidth) return n
+  }
+  let used = 0
+  let count = 0
+  for (let i = 0; i < cap; i++) {
+    const next = used + (count ? chipGap : 0) + itemWidths[i]
+    if (next + moreReserve > containerWidth) break
+    used = next
+    count++
+  }
+  return count
+}
+
+export type SelectOverlay = { width?: string | number; align?: 'left' | 'center' | 'right' }
+
+/** 对齐 Amis `PopOverContainer.calcOverlayWidth`。 */
+export function calcSelectOverlayWidth(overlay: unknown, targetWidth: number): number | string | undefined {
+  if (!overlay || typeof overlay !== 'object' || !(targetWidth > 0)) return
+  const width = (overlay as SelectOverlay).width
+  if (width == null || width === '') return
+  if (typeof width === 'number' || /^\d+$/.test(String(width))) return Number(width)
+  const raw = String(width)
+  if (/^\d+%$/.test(raw)) return (targetWidth * Number.parseFloat(raw)) / 100
+  if (/^\d+(px|rem|em|vw)$/.test(raw)) return raw
+  if (/^[+-]\d+(px|%|rem|em|vw)$/.test(raw)) {
+    return raw.replace(/^([+-])(.*)$/, `calc(${targetWidth}px $1 $2)`)
+  }
+}
+
+/** 对齐 Amis `alignToPlacement`。 */
+export function selectOverlayPlacement(overlay: unknown): string {
+  const align = overlay && typeof overlay === 'object' ? (overlay as SelectOverlay).align : undefined
+  if (align === 'right') return 'right-bottom-right-top'
+  if (align === 'center') return 'center-bottom-center-top'
+  if (align === 'left') return 'left-bottom-left-top'
+  return 'auto'
 }
 
 /** `${items}` / `$items` 这类数据域变量，不是接口 url。 */

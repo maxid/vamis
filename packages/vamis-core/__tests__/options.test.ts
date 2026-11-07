@@ -6,8 +6,15 @@ import {
   applyOptionsAutoFill,
   dumpJoined,
   dumpOptionsValue,
+  calcSelectOverlayWidth,
+  countVisibleTagsByWidth,
+  filterOptionTree,
   filterOptions,
   firstEnabledOption,
+  omitSelectedOptions,
+  runSelectFilterOption,
+  selectOverlayPlacement,
+  splitOverflowTags,
   flattenOptions,
   getSelectedOptions,
   isAllSelected,
@@ -141,6 +148,67 @@ describe('toggle / checkAll / selectFirst', () => {
     expect(filterOptions(options, 'C').map((item) => item.value)).toEqual(['c'])
     expect(filterOptions(options, 'a').map((item) => item.value)).toEqual(['a'])
   })
+
+  it('keeps group children when filtering the tree', () => {
+    const tree = [
+      { label: '法师', children: [{ label: '诸葛亮', value: 'zhugeliang' }] },
+      { label: '战士', children: [{ label: '曹操', value: 'caocao' }, { label: '钟无艳', value: 'zhongwuyan' }] },
+    ]
+    const hit = filterOptionTree(tree, '曹')
+    expect(hit).toHaveLength(1)
+    expect(hit[0].label).toBe('战士')
+    expect(hit[0].children?.map((item) => item.value)).toEqual(['caocao'])
+    const byGroup = filterOptionTree(tree, '法')
+    expect(byGroup).toHaveLength(1)
+    expect(byGroup[0].label).toBe('法师')
+    expect(byGroup[0].children).toHaveLength(1)
+    expect(Array.isArray(byGroup[0].children)).toBe(true)
+  })
+
+  it('runs filterOption only when trusted', () => {
+    const body = 'return options.filter((item) => String(item.weapon || "").includes(inputValue));'
+    const list = [{ label: 'A', value: 'a', weapon: '扇' }]
+    expect(runSelectFilterOption(list, '扇', body, false)).toBeNull()
+    expect(runSelectFilterOption(list, '扇', body, true)?.map((item) => item.value)).toEqual(['a'])
+    expect(runSelectFilterOption(list, '刀', body, true)).toEqual([])
+  })
+
+  it('hides selected leaves and splits overflow tags', () => {
+    const tree = [
+      { label: '法师', children: [{ label: '诸葛亮', value: 'a' }, { label: '曹操', value: 'b' }] },
+    ]
+    const hidden = omitSelectedOptions(tree, [{ label: '诸葛亮', value: 'a' }])
+    expect(hidden[0].children?.map((item) => item.value)).toEqual(['b'])
+    expect(splitOverflowTags(['a', 'b', 'c'], 2)).toEqual({ visible: ['a', 'b'], rest: ['c'] })
+    expect(splitOverflowTags(['a', 'b'], 100).rest).toEqual([])
+    expect(splitOverflowTags(['a'], Number.NaN).visible).toEqual(['a'])
+    expect(splitOverflowTags(['a'], Number('undefined')).rest).toEqual([])
+    expect(countVisibleTagsByWidth({
+      containerWidth: 120,
+      itemWidths: [50, 50, 50],
+      moreWidth: 30,
+    })).toBe(1)
+    expect(countVisibleTagsByWidth({
+      containerWidth: 400,
+      itemWidths: [50, 50, 50],
+      moreWidth: 30,
+    })).toBe(3)
+    expect(countVisibleTagsByWidth({
+      containerWidth: 400,
+      itemWidths: [50, 50, 50, 50],
+      moreWidth: 30,
+      maxVisibleCount: 2,
+    })).toBe(2)
+  })
+
+  it('maps overlay width and align like Amis PopOverContainer', () => {
+    expect(calcSelectOverlayWidth({ width: 300 }, 200)).toBe(300)
+    expect(calcSelectOverlayWidth({ width: '80%' }, 200)).toBe(160)
+    expect(calcSelectOverlayWidth({ width: '-100px' }, 240)).toBe('calc(240px - 100px)')
+    expect(selectOverlayPlacement({ align: 'right' })).toBe('right-bottom-right-top')
+    expect(selectOverlayPlacement({ align: 'center' })).toBe('center-bottom-center-top')
+    expect(selectOverlayPlacement({})).toBe('auto')
+  })
 })
 
 describe('source helpers', () => {
@@ -216,7 +284,9 @@ describe('schema helpers', () => {
     expect(optionsControlConfig({ editable: true, removable: true })).toMatchObject({
       editable: true,
       removable: true,
+      checkAllBySearch: true,
     })
+    expect(optionsControlConfig({ checkAllBySearch: false }).checkAllBySearch).toBe(false)
     expect(optionsControlConfig({ editApi: '/api/edit' }).editable).toBe(true)
     expect(optionsControlConfig({ deleteApi: '/api/del' }).removable).toBe(true)
     expect(optionsControlConfig({ editable: false, editApi: '/api/edit' }).editable).toBe(false)
@@ -251,10 +321,21 @@ describe('select uses the shared contract', () => {
     const hook = readFileSync(resolve(here, '../../vamis/src/optionsControl.ts'), 'utf8')
     expect(select).toContain('useOptionsControl')
     expect(select).toContain('VamisOverlay')
+    expect(select).toContain('countVisibleTagsByWidth')
+    expect(select).toContain("'is-fold': foldTags")
+    expect(select).toContain(':target="triggerEl"')
+    expect(select).toContain('vamis-select__suffix')
+    expect(select).toContain('showTagTip')
+    expect(select).not.toContain('vamis-select__check--end')
+    expect(select).toContain('@mouseenter="showTagTip($event, item.label)"')
+    expect(select).toContain('VamisTooltipLayer')
+    expect(select).toContain('vamis-select-overflow__grid')
+    expect(select).toContain('vamis-select__check')
     expect(select).toContain('ctl.config.value.editable')
     expect(select).toContain('ctl.config.value.removable')
     expect(select).toContain('VamisCaret')
     expect(select).toContain(':gap="4"')
+    expect(select).not.toContain('Checkbox')
     expect(hook).toContain('loadOptionsFromSource')
     expect(hook).toContain('toggleAllOptions')
     expect(hook).toContain('dumpOptionsValue')
@@ -274,6 +355,23 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('--select-popover-gap: 4px')
     expect(css).toContain('.vamis-select__item.is-active')
     expect(css).toContain('.vamis-select__input.is-focused')
+    expect(css).toContain('--select-search-height: 30px')
+    expect(css).toContain('--select-check-size: 14px')
+    expect(css).toContain('.vamis-select__search--box')
+    expect(css).toContain('.vamis-select__chip-close')
+    expect(css).toContain('--select-pad-y: 4px')
+    expect(css).toContain('padding: var(--select-pad-y) var(--select-pad-x)')
+    expect(css).toContain('.vamis-select__suffix')
+    expect(css).not.toContain('min-height: calc(var(--control-h) - 2px)')
+    expect(css).toContain('--select-clear-color: #d4d6d9')
+    expect(css).toContain('--select-clear-hover-color: #5c5f66')
+    expect(css).toContain('--select-clear-color: #84878c')
+    expect(css).toContain('--select-clear-hover-color: #e8e9eb')
+    expect(css).toContain('color: var(--select-clear-color)')
+    expect(css).not.toMatch(/\.vamis-select__clear:hover \{\s*color: var\(--foreground\)/)
+    expect(css).toContain('.vamis-select-overflow__grid')
+    expect(css).toContain('.vamis-select-overflow .vamis-tooltip')
+    expect(css).toContain('--tooltip-bg: #17202d')
     expect(css).toContain('box-shadow: var(--control-focus-glow)')
     expect(css).not.toContain('box-shadow: 0 0 0 1px var(--primary)')
     expect(css).not.toMatch(/\.vamis-select__item:hover,\s*\.vamis-select__item\.is-active/)

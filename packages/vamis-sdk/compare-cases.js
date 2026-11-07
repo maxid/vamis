@@ -16723,36 +16723,1056 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "select",
-      "body": [
-        {
-          "type": "form",
-          "title": "select",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "select",
-              "name": "select",
-              "label": "select",
-              "options": [
-                {
-                  "label": "选项 A"
-                }
-              ],
-              "value": "a"
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "选项",
+            "type": "select",
+            "name": "select",
+            "menuTpl": "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "分组",
+            "type": "select",
+            "name": "a",
+            "searchable": true,
+            "selectMode": "group",
+            "options": [
+              {
+                "label": "法师",
+                "children": [
+                  {
+                    "label": "诸葛亮",
+                    "value": "zhugeliang"
+                  }
+                ]
+              },
+              {
+                "label": "战士",
+                "children": [
+                  {
+                    "label": "曹操",
+                    "value": "caocao"
+                  },
+                  {
+                    "label": "钟无艳",
+                    "value": "zhongwuyan"
+                  }
+                ]
+              },
+              {
+                "label": "打野",
+                "children": [
+                  {
+                    "label": "李白",
+                    "value": "libai"
+                  },
+                  {
+                    "label": "韩信",
+                    "value": "hanxin"
+                  },
+                  {
+                    "label": "云中君",
+                    "value": "yunzhongjun"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "分组",
+            "type": "select",
+            "name": "a",
+            "multiple": true,
+            "searchable": true,
+            "selectMode": "group",
+            "options": [
+              {
+                "label": "法师",
+                "children": [
+                  {
+                    "label": "诸葛亮",
+                    "value": "zhugeliang"
+                  }
+                ]
+              },
+              {
+                "label": "战士",
+                "children": [
+                  {
+                    "label": "曹操",
+                    "value": "caocao"
+                  },
+                  {
+                    "label": "钟无艳",
+                    "value": "zhongwuyan"
+                  }
+                ]
+              },
+              {
+                "label": "打野",
+                "children": [
+                  {
+                    "label": "李白",
+                    "value": "libai"
+                  },
+                  {
+                    "label": "韩信",
+                    "value": "hanxin"
+                  },
+                  {
+                    "label": "云中君",
+                    "value": "yunzhongjun"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "带搜索",
+            "type": "select",
+            "name": "a",
+            "searchable": true,
+            "multiple": true,
+            "options": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang"
+              },
+              {
+                "label": "曹操",
+                "value": "caocao"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              },
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "带搜索",
+            "type": "select",
+            "name": "a",
+            "searchable": true,
+            "multiple": true,
+            "filterOption": "return options.filter(({value, label, weapon}) => value?.includes(inputValue) || label?.includes(inputValue) || weapon?.includes(inputValue));",
+            "options": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang",
+                "weapon": "翡翠仙扇"
+              },
+              {
+                "label": "曹操",
+                "value": "caocao",
+                "weapon": "幻影双刃"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan",
+                "weapon": "破岳震天锤"
+              },
+              {
+                "label": "李白",
+                "value": "libai",
+                "weapon": "青丝缠月剑"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin",
+                "weapon": "龙吟穿云枪"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun",
+                "weapon": "飘渺云影剑"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "远程检索",
+            "type": "select",
+            "name": "select",
+            "searchable": true,
+            "searchApi": "/api/mock2/options/autoComplete?term=${term}",
+            "placeholder": "请输入",
+            "clearable": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "label": "水果",
+            "type": "select",
+            "name": "select",
+            "multiple": true,
+            "maxTagCount": 100,
+            "checkAll": true,
+            "defaultCheckAll": true,
+            "overflowTagPopover": {
+              "title": "水果"
             },
-            {
-              "label": "选项 B",
-              "value": "b"
+            "options": [
+              {
+                "label": "苹果",
+                "value": "Apple"
+              },
+              {
+                "label": "香蕉",
+                "value": "Banana"
+              },
+              {
+                "label": "黑莓",
+                "value": "Blackberry"
+              },
+              {
+                "label": "蓝莓",
+                "value": "Blueberry"
+              },
+              {
+                "label": "樱桃",
+                "value": "Cherry"
+              },
+              {
+                "label": "杨桃",
+                "value": "Carambola"
+              },
+              {
+                "label": "椰子",
+                "value": "Coconut"
+              },
+              {
+                "label": "猕猴桃",
+                "value": "Kiwifruit"
+              },
+              {
+                "label": "柠檬",
+                "value": "Lemon"
+              },
+              {
+                "label": "菠萝",
+                "value": "Pineapple"
+              },
+              {
+                "label": "葡萄",
+                "value": "Grape"
+              },
+              {
+                "label": "石榴",
+                "value": "Pomegranate"
+              },
+              {
+                "label": "芒果",
+                "value": "Mango"
+              },
+              {
+                "label": "木瓜",
+                "value": "Papaya"
+              },
+              {
+                "label": "山竹",
+                "value": "Mangosteen"
+              },
+              {
+                "label": "榴莲",
+                "value": "Durian"
+              },
+              {
+                "label": "龙眼",
+                "value": "Longan"
+              },
+              {
+                "label": "荔枝",
+                "value": "Litchi"
+              },
+              {
+                "label": "枇杷",
+                "value": "Loquat"
+              },
+              {
+                "label": "柿子",
+                "value": "Persimmon"
+              },
+              {
+                "label": "柚子",
+                "value": "Pomelo"
+              },
+              {
+                "label": "橙子",
+                "value": "Orange"
+              },
+              {
+                "label": "橘子",
+                "value": "Tangerine"
+              },
+              {
+                "label": "金桔",
+                "value": "Kumquat"
+              },
+              {
+                "label": "李子",
+                "value": "Plum"
+              },
+              {
+                "label": "杏子",
+                "value": "Apricot"
+              },
+              {
+                "label": "桃子",
+                "value": "Peach"
+              },
+              {
+                "label": "梨子",
+                "value": "Pear"
+              },
+              {
+                "label": "草莓",
+                "value": "Strawberry"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "80% 宽度靠右对齐",
+            "type": "select",
+            "name": "select-right",
+            "menuTpl": "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>",
+            "overlay": {
+              "width": "80%",
+              "align": "right"
             },
-            {
-              "label": "选项 C",
-              "value": "c"
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          },
+          {
+            "label": "300px 宽度中间对齐",
+            "type": "select",
+            "name": "select-center",
+            "menuTpl": "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>",
+            "overlay": {
+              "width": 300,
+              "align": "center"
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "相对窄 100px 向左对齐",
+            "type": "select",
+            "name": "select",
+            "overlay": {
+              "width": "-100px",
+              "align": "left"
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "label": "多选",
+            "type": "select",
+            "name": "select2",
+            "searchable": true,
+            "checkAll": true,
+            "multiple": true,
+            "clearable": true,
+            "source": "/api/mock2/form/getOptions"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-10",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "name": "select1",
+            "type": "select",
+            "label": "选项自动补全（单选）",
+            "autoComplete": "/api/mock2/options/autoComplete3?delay=true&term=${term}&waitSeconds=2",
+            "placeholder": "请输入",
+            "clearable": true
+          },
+          {
+            "name": "select2",
+            "type": "select",
+            "label": "选项自动补全（多选）",
+            "autoComplete": "/api/mock2/options/autoComplete?labelField=name&valueField=id&term=${term}",
+            "placeholder": "请输入",
+            "labelField": "name",
+            "valueField": "id",
+            "clearable": true,
+            "multiple": true,
+            "maxTagCount": 2
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-11",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "select",
+            "name": "tree",
+            "label": "Tree",
+            "onEvent": {
+              "change": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "${event.data.tree|json}"
+                    }
+                  }
+                ]
+              }
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-12",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "select",
+            "name": "tree",
+            "label": "Tree",
+            "onEvent": {
+              "focus": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "${event.data.tree|json}"
+                    }
+                  }
+                ]
+              }
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-13",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "select",
+            "name": "tree",
+            "label": "Tree",
+            "onEvent": {
+              "blur": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "${event.data.tree|json}"
+                    }
+                  }
+                ]
+              }
+            },
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-14",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "select",
+            "name": "select",
+            "label": "选项",
+            "id": "clear-select",
+            "value": "a",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "label": "清空",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "clear",
+                    "componentId": "clear-select"
+                  }
+                ]
+              }
             }
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-15",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #16",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "select",
+            "name": "select",
+            "label": "选项",
+            "id": "reset-select",
+            "value": "a",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "label": "重置",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "reset",
+                    "componentId": "reset-select"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-16",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #17",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "select",
+            "name": "select",
+            "label": "选项",
+            "id": "reload-select",
+            "source": "/api/mock2/form/getOptions"
+          },
+          {
+            "type": "button",
+            "label": "刷新",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "reload",
+                    "componentId": "reload-select"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-select-17",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Select 下拉框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Select 下拉框 #18",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "select",
+            "name": "select",
+            "label": "选项",
+            "id": "set-select",
+            "options": [
+              {
+                "label": "A",
+                "value": "a"
+              },
+              {
+                "label": "B",
+                "value": "b"
+              },
+              {
+                "label": "C",
+                "value": "c"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "label": "设为 B",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "setValue",
+                    "componentId": "set-select",
+                    "args": {
+                      "value": "b"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
