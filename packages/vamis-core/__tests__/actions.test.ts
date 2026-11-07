@@ -209,6 +209,25 @@ describe('onEvent actions', () => {
     expect(confirm).not.toHaveBeenCalled()
   })
 
+  it('confirm submits the overlay dialog form when one is registered', async () => {
+    const closeDialog = vi.fn()
+    const submitDialogForm = vi.fn(async () => true)
+    const context = ctx({
+      overlay: {
+        state: { dialog: { title: '编辑选项' }, drawer: null, data: {} },
+        openDialog: vi.fn(),
+        openDrawer: vi.fn(),
+        closeDialog,
+        closeDrawer: vi.fn(),
+        close: vi.fn(),
+        submitDialogForm,
+      },
+    })
+    await runAction({ actionType: 'confirm' }, context)
+    expect(submitDialogForm).toHaveBeenCalled()
+    expect(closeDialog).not.toHaveBeenCalled()
+  })
+
   it('interpolates nativeEvent.type from the D4 event subset', async () => {
     const context = ctx({
       data: withNativeEvent({ name: 'Ada' }, { type: 'click' }),

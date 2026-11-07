@@ -308,10 +308,10 @@ alwaysApply: true
 - 规则：`.cursor/rules/component.mdc`
 
 ### 浮层里的 Form 与数据栈
-- 踩过：Dialog body 是 `type: form` 时画出默认「提交」；关掉后上一张卡片字段留在 `state.data`。
-- 稳定做法：对齐 Amis `renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`；未写 `actions` 不要默认提交。浮层 `data` 按层压栈，关掉恢复上一层。
-- 触及：`dialog` `drawer` `form` `cards` `card`
-- 规则：`.cursor/rules/component.mdc`
+- 踩过：Dialog body 是 `type: form` 时画出默认「提交」；关掉后上一张卡片字段留在 `state.data`。footer 的确认钮在 form 外面，`useFormApi` 拿不到内层表单，点确认只会关层、带不回值；无 api 的浮层表单还会 toast「已提交」。
+- 稳定做法：对齐 Amis `renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`；未写 `actions` 不要默认提交。浮层 `data` 按层压栈，关掉恢复上一层。`openDialog` 返回 Promise；Form 挂进 overlay 时 `registerDialogForm(submit)`，确认钮先 `submitDialogForm`，把 `store.data` 交给 `closeDialog(result)`。无 Host 表单才 toast。
+- 触及：`dialog` `drawer` `form` `cards` `card` Options `select`
+- 规则：`.cursor/rules/component.mdc`；`packages/vamis-core/src/overlay.ts`
 
 ### 图标、文档、打包
 

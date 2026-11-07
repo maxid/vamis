@@ -46,6 +46,28 @@ describe('overlay stack', () => {
     expect(api.state.data).toEqual({})
   })
 
+  it('resolves openDialog when closeDialog passes form values', async () => {
+    const api = createOverlay()
+    const pending = api.openDialog({ title: '编辑选项' }, { label: 'A' })
+    let submitted = false
+    api.registerDialogForm(async () => {
+      submitted = true
+      api.closeDialog({ label: 'AA', value: 'a' })
+    })
+    expect(await api.submitDialogForm()).toBe(true)
+    expect(submitted).toBe(true)
+    await expect(pending).resolves.toEqual({ label: 'AA', value: 'a' })
+    expect(api.state.dialog).toBeNull()
+  })
+
+  it('resolves false when the dialog is cancelled', async () => {
+    const api = createOverlay()
+    const pending = api.openDialog({ title: '编辑选项' })
+    expect(await api.submitDialogForm()).toBe(false)
+    api.closeDialog()
+    await expect(pending).resolves.toBe(false)
+  })
+
   it('remounts overlay body when seq changes', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const host = readFileSync(resolve(here, '../../vamis/src/OverlayHost.vue'), 'utf8')

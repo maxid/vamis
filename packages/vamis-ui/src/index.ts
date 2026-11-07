@@ -62,6 +62,7 @@ export {
   InfoIcon,
   OctagonXIcon,
   PauseIcon,
+  Pencil,
   PlayIcon,
   TriangleAlertIcon,
   Volume2Icon,

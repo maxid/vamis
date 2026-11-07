@@ -10,11 +10,14 @@ export interface OverlayState {
 
 export interface OverlayApi {
   state: OverlayState
-  openDialog: (schema: SchemaObject, data?: PlainObject) => void
+  openDialog: (schema: SchemaObject, data?: PlainObject) => Promise<PlainObject | false>
   openDrawer: (schema: SchemaObject, data?: PlainObject) => void
-  closeDialog: () => void
+  closeDialog: (result?: PlainObject | false) => void
   closeDrawer: () => void
   close: () => void
+  registerDialogForm: (submit: () => Promise<void>) => void
+  unregisterDialogForm: (submit: () => Promise<void>) => void
+  submitDialogForm: () => Promise<boolean>
 }
 
 export const OverlayKey: InjectionKey<OverlayApi> = Symbol('vamis-overlay')
@@ -22,6 +25,8 @@ export const OverlayKey: InjectionKey<OverlayApi> = Symbol('vamis-overlay')
 interface OverlayFrame {
   schema: SchemaObject
   data: PlainObject
+  resolve?: (value: PlainObject | false) => void
+  submitForm?: () => Promise<void>
 }
 
 function overlayPayload(data: PlainObject = {}): PlainObject {
@@ -57,17 +62,23 @@ export function createOverlay(): OverlayApi {
   return {
     state,
     openDialog(schema, data = {}) {
-      dialogs.push({ schema, data: mergeFrame(dialogs.at(-1)?.data, data) })
+      let resolve!: (value: PlainObject | false) => void
+      const done = new Promise<PlainObject | false>((r) => {
+        resolve = r
+      })
+      dialogs.push({ schema, data: mergeFrame(dialogs.at(-1)?.data, data), resolve })
       state.seq += 1
       sync()
+      return done
     },
     openDrawer(schema, data = {}) {
       drawers.push({ schema, data: mergeFrame(drawers.at(-1)?.data, data) })
       state.seq += 1
       sync()
     },
-    closeDialog() {
-      dialogs.pop()
+    closeDialog(result) {
+      const frame = dialogs.pop()
+      frame?.resolve?.(result === undefined ? false : result)
       sync()
     },
     closeDrawer() {
@@ -75,10 +86,24 @@ export function createOverlay(): OverlayApi {
       sync()
     },
     close() {
-      dialogs.length = 0
+      while (dialogs.length) dialogs.pop()?.resolve?.(false)
       drawers.length = 0
       state.data = {}
       sync()
+    },
+    registerDialogForm(submit) {
+      const top = dialogs.at(-1)
+      if (top) top.submitForm = submit
+    },
+    unregisterDialogForm(submit) {
+      const top = dialogs.at(-1)
+      if (top && top.submitForm === submit) top.submitForm = undefined
+    },
+    async submitDialogForm() {
+      const top = dialogs.at(-1)
+      if (!top?.submitForm) return false
+      await top.submitForm()
+      return true
     },
   }
 }

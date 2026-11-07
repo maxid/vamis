@@ -1,9 +1,9 @@
 # SDK 对照报告
 
 - 日期：2026-11-07
-- 视口：移动 375×812（Amis <768 表单）
+- 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **12** · 通过 **12** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **1** · 通过 **1** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -11,17 +11,18 @@
 |------|------|--------|
 | 全局 | 2 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 15 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 2 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
 ### 全局（2）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-toast-5` fontSize: Amis `16px` / Vamis `14px`
-- `src-components-toast-11` fontSize: Amis `16px` / Vamis `14px`
+- `components-form-select-0` fontSize: Amis `14px` / Vamis `24px`
+- `components-form-select-0` fontFamily: Amis `Helvetica Neue` / Vamis `system-ui`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
+- Amis 6.13 组件字栈是 --fonts-base-family（实测 Helvetica Neue）；html/body 未钉字族（body 是 Times）。只在 .vamis-root / .vamis-sdk 走 --fonts-base-family，不要把 html/body 钉成 PingFang SC。
 
 ### 样式 helper（0）
 
@@ -29,23 +30,12 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（15）
+### 组件（2）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-toast-0` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-1` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-2` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-3` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-4` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-5` lineHeight: Amis `24px` / Vamis `21px`
-- `src-components-toast-5` fontWeight: Amis `500` / Vamis `400`
-- `src-components-toast-6` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-7` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-8` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-9` lineHeight: Amis `18px` / Vamis `21px`
-- `src-components-toast-10` lineHeight: Amis `18px` / Vamis `21px`
-- …其余 3 条见 last-report.json
+- `components-form-select-0` lineHeight: Amis `21px` / Vamis `32px`
+- `components-form-select-0` fontWeight: Amis `400` / Vamis `600`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -56,7 +46,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 12 | 0 |
+| 组件 | 1 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -65,7 +55,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 反馈 | 12 | 0 |
+| 组件 / 数据输入 | 1 | 0 |
 
 ## P0 失败（驱动下一刀）
 

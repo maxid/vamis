@@ -1716,9 +1716,45 @@
     color: var(--muted-foreground);
   }
   .vamis-select__item-label {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .vamis-select__item-ops {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    opacity: 0;
+  }
+  .vamis-select__item:hover .vamis-select__item-ops,
+  .vamis-select__item:focus-within .vamis-select__item-ops {
+    opacity: 1;
+  }
+  .vamis-select__item-op {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+  .vamis-select__item-op:hover:not(:disabled) {
+    color: var(--foreground);
+  }
+  .vamis-select__item-op:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .vamis-select__item-op svg {
+    width: 14px;
+    height: 14px;
   }
   .vamis-select__empty {
     padding: 8px 12px;

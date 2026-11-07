@@ -256,6 +256,7 @@ function registerBuiltinActions() {
 
   registerAction('confirm', async (action, ctx) => {
     if (ctx.overlay?.state.dialog) {
+      if (await ctx.overlay.submitDialogForm?.()) return
       ctx.overlay.closeDialog()
       return
     }

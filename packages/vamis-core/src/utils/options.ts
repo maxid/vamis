@@ -31,6 +31,8 @@ export interface OptionsControlConfig extends OptionsValueConfig {
   defaultCheckAll?: boolean
   selectFirst?: boolean
   creatable?: boolean
+  editable?: boolean
+  removable?: boolean
   valuesNoWrap?: boolean
   createBtnLabel?: string
   optionLabel?: string
@@ -90,7 +92,9 @@ export function optionsControlConfig(schema: PlainObject = {}): OptionsControlCo
     checkAll: schema.checkAll === true,
     defaultCheckAll: schema.defaultCheckAll === true,
     selectFirst: schema.selectFirst === true,
-    creatable: schema.creatable === true || schema.addApi != null,
+    creatable: schema.creatable === false ? false : schema.creatable === true || schema.addApi != null,
+    editable: schema.editable === false ? false : schema.editable === true || schema.editApi != null,
+    removable: schema.removable === false ? false : schema.removable === true || schema.deleteApi != null,
     valuesNoWrap: schema.valuesNoWrap === true,
     createBtnLabel: schema.createBtnLabel != null ? String(schema.createBtnLabel) : undefined,
     optionLabel: schema.optionLabel != null ? String(schema.optionLabel) : undefined,
@@ -99,10 +103,54 @@ export function optionsControlConfig(schema: PlainObject = {}): OptionsControlCo
   }
 }
 
+export function optionsKindLabel(schema: PlainObject = {}): string {
+  return schema.optionLabel != null && String(schema.optionLabel) ? String(schema.optionLabel) : '选项'
+}
+
 export function optionsCreateBtnLabel(schema: PlainObject = {}): string {
   if (schema.createBtnLabel != null && String(schema.createBtnLabel)) return String(schema.createBtnLabel)
-  const kind = schema.optionLabel != null && String(schema.optionLabel) ? String(schema.optionLabel) : '选项'
-  return `新增${kind}`
+  return `新增${optionsKindLabel(schema)}`
+}
+
+export function optionsEditDialogTitle(schema: PlainObject = {}): string {
+  return `编辑${optionsKindLabel(schema)}`
+}
+
+/** 在选项树里按 value 合并一项，对齐 Amis `spliceTree` 编辑。 */
+export function updateOptionInTree(
+  list: OptionItem[],
+  origin: OptionItem,
+  patch: PlainObject,
+  valueField = 'value',
+): OptionItem[] {
+  return list.map((item) => {
+    if (item === origin || matchOptionValue(origin.value, item, valueField)) {
+      const next = { ...item, ...patch } as OptionItem
+      const label = next.label != null && String(next.label) !== '' ? String(next.label) : item.label
+      const value = next[valueField] !== undefined ? next[valueField] : next.value
+      return { ...next, label, value, [valueField]: value }
+    }
+    if (item.children?.length) {
+      return { ...item, children: updateOptionInTree(item.children, origin, patch, valueField) }
+    }
+    return item
+  })
+}
+
+/** 从选项树里按 value 去掉一项，对齐 Amis `spliceTree` 删除。 */
+export function removeOptionFromTree(
+  list: OptionItem[],
+  origin: OptionItem,
+  valueField = 'value',
+): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const item of list) {
+    if (item === origin || matchOptionValue(origin.value, item, valueField)) continue
+    const next = { ...item }
+    if (item.children?.length) next.children = removeOptionFromTree(item.children, origin, valueField)
+    out.push(next)
+  }
+  return out
 }
 
 export function getOptionValue(value: unknown, valueField = 'value'): unknown {

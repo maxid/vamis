@@ -5,8 +5,8 @@ outline: deep
 
 # Options 选择器表单项
 
-::: info 实现进度 75% · 进行中
-已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、选项 `autoFill`。缺选项编辑/删除接口、延时加载 `deferApi`、虚拟列表。
+::: info 实现进度 88% · 进行中
+已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。缺延时加载 `deferApi`、虚拟列表。
 :::
 
 **选择器表单项** 是指那些（例如下拉选择框）具有选择器特性的表单项。它派生自 [表单项](./formitem)，拥有表单项所有的特性。
@@ -719,9 +719,178 @@ body:
         value: c
 ```
 
-## 编辑 / 删除选项
+## 编辑选项
 
-Amis 还支持 `editable` / `editControls` / `editApi` / `editDialog`，以及 `removable` / `deleteApi`。Vamis 本轮契约尚未接入这两条，下一刀 `select` 再补。
+部分选择器支持在前端编辑选项。支持的组件：CheckBoxes、Select、Tree、Table-formitem。本页用 `select` 演示。
+
+### 前端编辑 editable
+
+配 `editable: true`，下拉每一项右侧会出现编辑图标。点开后弹出编辑弹框，改完点确认只改前端选项标签。不同组件交互会有不同。
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - label: 选项
+    type: select
+    name: select
+    editable: true
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+编辑弹框的默认配置如下：
+
+```json
+{
+  "type": "dialog",
+  "title": "编辑选项",
+  "body": {
+    "type": "form",
+    "body": [
+      {
+        "type": "input-text",
+        "name": "label",
+        "label": false,
+        "placeholder": "请输入名称"
+      }
+    ]
+  }
+}
+```
+
+- `optionLabel` 替换「选项」二字，例如 `员工` → 标题「编辑员工」
+- 默认表单项 `name` 是 `labelField`，默认 `label`
+
+### 自定义编辑表单项 editControls
+
+默认只能改当前项的 `label`。要改别的字段，配 `editControls`：
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - label: 选项
+    type: select
+    name: select
+    editable: true
+    editControls:
+      - type: input-text
+        name: label
+        label: 选项标题
+      - type: input-text
+        name: value
+        label: 选项值
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+改完再选中该项，观察数据域变化。
+
+### 配置编辑接口 editApi
+
+默认只改前端。配 `editApi` 会在确认时请求接口（实际就是编辑表单的 `api`）。同时有远程 `source` 时，成功后会重拉选项。
+
+```schema: scope="body"
+type: form
+body:
+  - label: 选项
+    type: select
+    name: select
+    editApi: /api/mock2/form/saveForm
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+只写 `editApi`、不写 `editable` 也会出现编辑图标。
+
+### 配置编辑弹框其它属性
+
+通过 `editDialog` 控制弹框属性，例如 `size` 调大。其它字段见 [Dialog](/components/dialog)。
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - label: 选项
+    type: select
+    name: select
+    editable: true
+    editDialog:
+      size: lg
+    editControls:
+      - type: input-text
+        name: label
+        label: 选项标题
+      - type: input-text
+        name: value
+        label: 选项值
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+## 删除选项
+
+配 `removable: true` 支持删除选项。支持的组件：CheckBoxes、Select、Tree、Table-formitem。
+
+```schema: scope="body"
+type: form
+debug: true
+body:
+  - label: 选项
+    type: select
+    name: select
+    removable: true
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+点开下拉，鼠标悬停在选项上，右侧会出现删除图标。
+
+### 配置删除接口 deleteApi
+
+配 `deleteApi` 用接口删除。只写 `deleteApi`、不写 `removable` 也会出现删除图标。可另配 `deleteConfirmText`，删除前走确认框。
+
+```schema: scope="body"
+type: form
+body:
+  - label: 选项
+    type: select
+    name: select
+    deleteApi: /api/mock2/form/saveForm
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
 
 ## 自动填充 autoFill
 
@@ -798,6 +967,22 @@ body:
 
 **初始不填充**：`initAutoFill` 默认 `fillIfNotSet`（目标没值才填）。`true` 总是覆盖，`false` 初始不填。
 
+## 控制选项高度
+
+下拉选项很多时（默认超过 100 条，可用 `virtualThreshold` 调）会切到虚拟渲染；选项文案过长会重叠，这时要设 `itemHeight`。**Vamis 本轮尚未接入虚拟列表**，长列表仍整表渲染；字段先挂在属性表里。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: select
+    label: 虚拟列表选择
+    name: virtual-select
+    clearable: true
+    searchable: true
+    source: /api/mock2/form/getOptions?waitSeconds=1&size=200
+```
+
 ## 可清除 clearable
 
 ```schema: scope="body"
@@ -844,7 +1029,15 @@ body:
 | creatable | `boolean` | `false` | 可新增 |
 | createBtnLabel | `string` | `新增选项` | 新增按钮文案 |
 | addControls | `Array` | | 新增表单项 |
-| addApi | API | | 新增保存接口 |
+| addApi | [API](/types/api) | | 新增保存接口 |
+| editable | `boolean` | `false` | 可编辑；配了 `editApi` 也会开 |
+| editControls | `Array` | | 编辑表单项 |
+| editApi | [API](/types/api) | | 编辑保存接口 |
+| editInitApi | [API](/types/api) | | 编辑表单 `initApi` |
+| editDialog | `object` | | 编辑弹框其它属性，见 [Dialog](/components/dialog) |
+| removable | `boolean` | `false` | 可删除；配了 `deleteApi` 也会开 |
+| deleteApi | [API](/types/api) | | 删除接口，默认 method `delete` |
+| deleteConfirmText | `string` | | 删除前确认文案，走 [数据映射](/concepts/data-mapping) |
 | autoFill | `object` | | 把选中项映射到其它字段 |
 
 ## 事件 / 动作
@@ -866,5 +1059,5 @@ body:
 
 - 作者态 YAML / JSON 并列。
 - 新增选项当前是下拉内简易表单，不是独立 Dialog；`addDialog` 尺寸等未接。
-- `editable` / `editApi` / `removable` / `deleteApi` / `deferApi` / 虚拟列表尚未接入。
+- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` / `virtualThreshold` / `itemHeight` 尚未接入。
 - 树形 / 级联 / 穿梭器已能复用值形状与 `normalizeOptions`，完整 UI 仍在各自组件页。

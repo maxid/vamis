@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue'
-import { Checkbox } from '@vamis/ui'
+import { Checkbox, Pencil, XIcon } from '@vamis/ui'
 import { filterTpl, isAllSelected, useData, type SchemaObject } from '@vamis/core'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
@@ -57,6 +57,20 @@ function cancelCreate() {
 
 function isSelected(value: unknown) {
   return ctl.selected.value.some((item) => String(item.value) === String(value))
+}
+
+async function onEdit(opt: (typeof ctl.options.value)[number], event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  ctl.open.value = false
+  await ctl.editOption(opt)
+}
+
+async function onDelete(opt: (typeof ctl.options.value)[number], event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  ctl.open.value = false
+  await ctl.deleteOption(opt)
 }
 </script>
 
@@ -127,16 +141,15 @@ function isSelected(value: unknown) {
             <span>{{ checkAllLabel }}</span>
           </button>
           <div class="vamis-select__list">
-            <button
+            <div
               v-for="opt in ctl.filtered.value"
               :key="String(opt.value)"
-              type="button"
+              role="option"
               class="vamis-select__item"
               :class="{ 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked }"
-              :disabled="!!opt.disabled || locked"
               :title="opt.label"
               @mousedown.prevent
-              @click.stop="ctl.toggle(opt)"
+              @click.stop="!opt.disabled && !locked && ctl.toggle(opt)"
             >
               <Checkbox
                 v-if="ctl.config.value.multiple"
@@ -144,7 +157,34 @@ function isSelected(value: unknown) {
                 :disabled="!!opt.disabled || locked"
               />
               <span class="vamis-select__item-label">{{ opt.label }}</span>
-            </button>
+              <span
+                v-if="ctl.config.value.editable || ctl.config.value.removable"
+                class="vamis-select__item-ops"
+              >
+                <button
+                  v-if="ctl.config.value.editable"
+                  type="button"
+                  class="vamis-select__item-op"
+                  aria-label="编辑"
+                  :disabled="!!opt.disabled || locked"
+                  @mousedown.prevent
+                  @click="onEdit(opt, $event)"
+                >
+                  <Pencil />
+                </button>
+                <button
+                  v-if="ctl.config.value.removable"
+                  type="button"
+                  class="vamis-select__item-op"
+                  aria-label="删除"
+                  :disabled="!!opt.disabled || locked"
+                  @mousedown.prevent
+                  @click="onDelete(opt, $event)"
+                >
+                  <XIcon />
+                </button>
+              </span>
+            </div>
             <div v-if="ctl.loading.value && !ctl.filtered.value.length" class="vamis-select__empty">加载中…</div>
             <div v-else-if="!ctl.filtered.value.length" class="vamis-select__empty">暂无选项</div>
           </div>

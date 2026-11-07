@@ -332,7 +332,7 @@ export async function requestApi(
   if (customData && built.data && typeof built.data === 'object') {
     built.data = dataMapping(built.data, ctx.data, convertKeyToPath)
   } else if (
-    (method === 'post' || method === 'put' || method === 'patch') &&
+    (method === 'post' || method === 'put' || method === 'patch' || method === 'delete') &&
     options.autoAppend &&
     Object.keys(payload).length
   ) {

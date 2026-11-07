@@ -2,12 +2,14 @@
 
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import {
+  apiMessage,
   applyOptionsAutoFill,
   autoFillMapping,
   createVamisEvent,
   dumpOptionsValue,
   eventEvalData,
   filterOptions,
+  filterTpl,
   firstEnabledOption,
   getSelectedOptions,
   isApiOutdated,
@@ -15,18 +17,22 @@ import {
   isOptionsAutoComplete,
   isOptionsEmpty,
   isOptionsVariableSource,
+  matchOptionValue,
   normalizeOptions,
   optionsClearValue,
   optionsControlConfig,
   optionsCreateBtnLabel,
+  optionsEditDialogTitle,
   optionsFromPayload,
   optionsSetDataValue,
   overlayContainerFrom,
+  removeOptionFromTree,
   requestApi,
   resolveOptionsSource,
   runOnEvent,
   toggleAllOptions,
   toggleOption,
+  updateOptionInTree,
   useData,
   useEnv,
   useFormApi,
@@ -50,6 +56,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
 
   const remote = ref<OptionItem[]>([])
   const extra = ref<OptionItem[]>([])
+  const override = ref<OptionItem[] | null>(null)
   const loading = ref(false)
   const keyword = ref('')
   const open = ref(false)
@@ -72,7 +79,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     const local = schema.value.options
       ? normalizeOptions(schema.value.options, labelField, valueField)
       : []
-    const base = remote.value.length ? remote.value : local
+    const base = override.value ?? (remote.value.length ? remote.value : local)
     if (!extra.value.length) return base
     return [...base, ...extra.value]
   })
@@ -179,6 +186,126 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     return item
   }
 
+  function applyTree(next: OptionItem[]) {
+    override.value = next
+    extra.value = []
+  }
+
+  function defaultEditControls() {
+    const labelField = config.value.labelField || 'label'
+    return [
+      {
+        type: 'input-text',
+        name: labelField,
+        label: false,
+        placeholder: '请输入名称',
+      },
+    ]
+  }
+
+  async function persistOptionApi(api: unknown, payload: Record<string, unknown>, method: 'post' | 'delete') {
+    if (!api || !isEffectiveApi(api as any, payload)) return { ok: true, data: payload }
+    try {
+      const result = await requestApi(api as any, { env, data: payload, reason: 'action' }, {
+        defaultMethod: method,
+        autoAppend: true,
+      })
+      if (result.skipped) return { ok: true, data: payload }
+      if (!result.ok) {
+        env.notify('error', apiMessage(api as any, result.payload, 'failed'))
+        return { ok: false, data: payload }
+      }
+      const data =
+        result.data && typeof result.data === 'object' && !Array.isArray(result.data)
+          ? { ...payload, ...result.data }
+          : payload
+      return { ok: true, data }
+    } catch (error) {
+      env.notify('error', error instanceof Error ? error.message : method === 'delete' ? '删除选项失败' : '编辑选项失败')
+      return { ok: false, data: payload }
+    }
+  }
+
+  async function reloadAfterMutate() {
+    extra.value = []
+    override.value = null
+    await loadOptionsFromSource()
+  }
+
+  function shouldReloadSource() {
+    const source = schema.value.source
+    return !!source && !isOptionsVariableSource(source)
+  }
+
+  async function editOption(origin: OptionItem) {
+    if (origin.disabled || disabled?.value) return
+    if (!overlay) return
+    const labelField = config.value.labelField || 'label'
+    const valueField = config.value.valueField || 'value'
+    const editControls = Array.isArray(schema.value.editControls) && schema.value.editControls.length
+      ? schema.value.editControls
+      : defaultEditControls()
+    const editDialog =
+      schema.value.editDialog && typeof schema.value.editDialog === 'object' && !Array.isArray(schema.value.editDialog)
+        ? (schema.value.editDialog as SchemaObject)
+        : {}
+    const result = await overlay.openDialog(
+      {
+        type: 'dialog',
+        title: optionsEditDialogTitle(schema.value),
+        ...editDialog,
+        body: {
+          type: 'form',
+          initApi: schema.value.editInitApi,
+          api: schema.value.editApi,
+          body: editControls,
+        },
+      },
+      { ...data.value, ...origin },
+    )
+    if (!result) return
+    const patch = {
+      ...origin,
+      ...result,
+      label: String(result[labelField] ?? result.label ?? origin.label),
+      value: result[valueField] ?? result.value ?? result[labelField] ?? origin.value,
+    } as OptionItem
+    if (shouldReloadSource() && schema.value.editApi) {
+      await reloadAfterMutate()
+      return
+    }
+    applyTree(updateOptionInTree(options.value, origin, patch, valueField))
+    const selectedHit = selected.value.some((item) => matchOptionValue(origin.value, item, valueField))
+    if (selectedHit) {
+      const nextSelected = selected.value.map((item) =>
+        matchOptionValue(origin.value, item, valueField) ? { ...item, ...patch } : item,
+      )
+      await commit(nextSelected)
+    }
+  }
+
+  async function deleteOption(origin: OptionItem) {
+    if (origin.disabled || disabled?.value) return
+    const valueField = config.value.valueField || 'value'
+    const ctx = { ...data.value, ...origin }
+    const confirmText = schema.value.deleteConfirmText
+    if (confirmText) {
+      const ok = await env.confirm(filterTpl(String(confirmText), ctx))
+      if (!ok) return
+    }
+    if (schema.value.deleteApi) {
+      const saved = await persistOptionApi(schema.value.deleteApi, ctx, 'delete')
+      if (!saved.ok) return
+    }
+    if (shouldReloadSource() && schema.value.source) {
+      await reloadAfterMutate()
+    } else {
+      applyTree(removeOptionFromTree(options.value, origin, valueField))
+    }
+    const still = selected.value.filter((item) => !matchOptionValue(origin.value, item, valueField))
+    if (still.length !== selected.value.length) await commit(still)
+  }
+
   async function createOption(values: Record<string, unknown>) {
     const labelField = config.value.labelField || 'label'
     const valueField = config.value.valueField || 'value'
@@ -225,6 +352,8 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     const labelField = config.value.labelField || 'label'
     const valueField = config.value.valueField || 'value'
     if (!source) return
+    override.value = null
+    extra.value = []
     if (isOptionsVariableSource(source)) {
       const resolved = resolveOptionsSource(source, data.value)
       const list = normalizeOptions(resolved, labelField, valueField)
@@ -348,6 +477,8 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     commit,
     createOption,
     addLocalOption,
+    editOption,
+    deleteOption,
     loadOptionsFromSource,
     loadAutoComplete,
     scheduleAutoComplete,

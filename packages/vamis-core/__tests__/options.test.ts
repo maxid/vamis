@@ -17,8 +17,12 @@ import {
   normalizeOptions,
   optionValuesEqual,
   optionsAutoFillContext,
+  optionsControlConfig,
   optionsCreateBtnLabel,
+  optionsEditDialogTitle,
   optionsFromPayload,
+  removeOptionFromTree,
+  updateOptionInTree,
   optionsValueConfig,
   parseJoined,
   parseOptionsValue,
@@ -208,11 +212,36 @@ describe('schema helpers', () => {
     })
     expect(optionsCreateBtnLabel({ optionLabel: '员工' })).toBe('新增员工')
     expect(optionsCreateBtnLabel({ createBtnLabel: '添加' })).toBe('添加')
+    expect(optionsEditDialogTitle({ optionLabel: '员工' })).toBe('编辑员工')
+    expect(optionsControlConfig({ editable: true, removable: true })).toMatchObject({
+      editable: true,
+      removable: true,
+    })
+    expect(optionsControlConfig({ editApi: '/api/edit' }).editable).toBe(true)
+    expect(optionsControlConfig({ deleteApi: '/api/del' }).removable).toBe(true)
+    expect(optionsControlConfig({ editable: false, editApi: '/api/edit' }).editable).toBe(false)
     expect(matchOptionValue('a', { label: 'A', value: 'a' })).toBe(true)
     expect(optionValuesEqual('1', 1)).toBe(true)
     expect(flattenOptions([{ label: 'P', value: 'p', children: [{ label: 'C', value: 'c' }] }]).map((item) => item.label)).toEqual([
       'P / C',
     ])
+  })
+})
+
+describe('edit / delete tree', () => {
+  it('updates and removes an option without dropping siblings', () => {
+    const tree = normalizeOptions([
+      { label: 'A', value: 'a' },
+      { label: 'B', value: 'b', children: [{ label: 'B1', value: 'b1' }] },
+      { label: 'C', value: 'c' },
+    ])
+    const edited = updateOptionInTree(tree, tree[0], { label: 'AA' })
+    expect(edited[0]).toMatchObject({ label: 'AA', value: 'a' })
+    expect(edited[1].children?.[0].value).toBe('b1')
+    const nested = updateOptionInTree(tree, tree[1].children![0], { label: 'B1x' })
+    expect(nested[1].children?.[0]).toMatchObject({ label: 'B1x', value: 'b1' })
+    expect(removeOptionFromTree(tree, tree[2]).map((item) => item.value)).toEqual(['a', 'b'])
+    expect(removeOptionFromTree(tree, tree[1].children![0])[1].children).toEqual([])
   })
 })
 
@@ -222,9 +251,13 @@ describe('select uses the shared contract', () => {
     const hook = readFileSync(resolve(here, '../../vamis/src/optionsControl.ts'), 'utf8')
     expect(select).toContain('useOptionsControl')
     expect(select).toContain('VamisOverlay')
+    expect(select).toContain('ctl.config.value.editable')
+    expect(select).toContain('ctl.config.value.removable')
     expect(hook).toContain('loadOptionsFromSource')
     expect(hook).toContain('toggleAllOptions')
     expect(hook).toContain('dumpOptionsValue')
     expect(hook).toContain('isApiOutdated')
+    expect(hook).toContain('editOption')
+    expect(hook).toContain('deleteOption')
   })
 })

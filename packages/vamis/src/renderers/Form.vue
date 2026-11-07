@@ -271,6 +271,14 @@ function clear() {
   store.errors = {}
 }
 
+let dialogFormBound = false
+
+function closeOverlayDialog(values: Record<string, unknown>) {
+  if (!dialogFormBound || !overlay?.state.dialog) return false
+  overlay.closeDialog({ ...values })
+  return true
+}
+
 async function submit() {
   if (!validate()) {
     env.notify('error', '请检查表单')
@@ -295,13 +303,14 @@ async function submit() {
       overlay,
       form: formApi,
     })
+    closeOverlayDialog(store.data)
     return
   }
   const api = props.schema.api
   if (!api) {
     if (props.schema.reload) {
       await scoped.reload(props.schema.reload, store.data)
-    } else {
+    } else if (!dialogFormBound) {
       env.notify('success', '已提交（未配置 api）')
     }
     await runOnEvent(props.schema, 'submit', {
@@ -311,6 +320,7 @@ async function submit() {
       overlay,
       form: formApi,
     })
+    closeOverlayDialog(store.data)
     return
   }
   store.saving = true
@@ -339,6 +349,7 @@ async function submit() {
       overlay,
       form: formApi,
     })
+    closeOverlayDialog(store.data)
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '提交失败')
   } finally {
@@ -410,6 +421,10 @@ parentScoped?.register(formApi)
 registerWizardValidate(validate)
 
 onMounted(() => {
+  if (overlay?.state.dialog) {
+    overlay.registerDialogForm(submit)
+    dialogFormBound = true
+  }
   if (isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data }, props.schema.initFetch, props.schema.initFetchOn)) {
     void formApi.reload()
   }
@@ -431,6 +446,8 @@ watch(
   },
 )
 onBeforeUnmount(() => {
+  if (dialogFormBound) overlay?.unregisterDialogForm(submit)
+  dialogFormBound = false
   parentScoped?.unregister(formApi)
   hub.remove(store.id)
   for (const timer of autoFillTimers.values()) clearTimeout(timer)

@@ -42,7 +42,7 @@ const drawer = computed(() => overlay?.state.drawer || null)
 const extra = computed(() => overlay?.state.data || {})
 
 function setDialogOpen(open: boolean) {
-  if (!open) overlay?.closeDialog()
+  if (!open && overlay?.state.dialog) overlay.closeDialog()
 }
 
 function setDrawerOpen(open: boolean) {
