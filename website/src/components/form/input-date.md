@@ -5,8 +5,8 @@ outline: deep
 
 # InputDate 日期
 
-::: info 实现进度 88% · 进行中
-主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000，贴底按 Amis `placement: auto` 向上翻。日历层 240×290，DatePicker-popover 242×292（padding 0）。与 `type: calendar` 共用月历面板。缺移动端 picker、日程 `schedules`。
+::: info 实现进度 90% · 进行中
+主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板；日 / 月 / 年面板都禁范围外格子）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000，贴底按 Amis `placement: auto` 向上翻。日历层 240×290，DatePicker-popover 242×292（padding 0）。与 `type: calendar` 共用月历面板。弹层走 `--cal-*`（底/边 alias Select 菜单，深色 `#17202d`）。缺移动端 picker、日程 `schedules`。
 :::
 
 `input-date` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -129,7 +129,7 @@ body:
 
 ## 限制范围
 
-可以通过 `maxDate` 和 `minDate` 限制可选范围。
+可以通过 `maxDate` 和 `minDate` 限制可选范围。点日历标题进入年、月视图时，范围外的年份和月份同样禁用。
 
 ### 固定时间值
 
@@ -427,7 +427,7 @@ body:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 默认值、`minDate` / `maxDate`、快捷键与文档主路径一致；`disabledDate` 字符串函数仅 `env.trusted`。
-- 日期弹层盒模型对齐 Amis：`.rdt.rdtStatic.rdtOpen` 240×290，`.DatePicker-popover` padding 0、边框 `#f2f3f5`、select-outer 阴影。
+- 日期弹层盒模型对齐 Amis：`.rdt.rdtStatic.rdtOpen` 240×290，`.DatePicker-popover` padding 0、边框 `--cal-border`（浅色 `#f2f3f5`）、select-outer 阴影。深色弹层走 `--cal-bg`（alias `--select-menu-bg` `#17202d`），不要写死 `#fff`。
 - 未接：移动端 CalendarMobile picker、选择器内 `schedules` 日程。
 - `input-datetime` / `input-time` 是同一渲染器的薄别名，时间用时分秒下拉，不是独立滚轮。
 - Amis 属性表把 `closeOnSelect` 写成默认 `false`，源码 `defaultProps` 是 `true`；Vamis 跟源码。

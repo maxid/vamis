@@ -11,6 +11,7 @@ import {
   type CalendarLane,
   type CalendarPickerOption,
 } from '@vamis/core'
+import { VamisDateArrow } from '@vamis/ui'
 import CalendarWheel from '../display/CalendarWheel.vue'
 
 export type DateCalendarView = 'days' | 'months' | 'years' | 'picker-year' | 'picker-month'
@@ -28,6 +29,8 @@ const props = withDefaults(
     framed?: boolean
     selectedIso?: string
     disabledIso?: (cell: CalendarCell) => boolean
+    disabledMonth?: (year: number, month: number) => boolean
+    disabledYear?: (year: number) => boolean
     todayActiveStyle?: unknown
     pickerYears?: CalendarPickerOption[]
     pickerMonths?: CalendarPickerOption[]
@@ -71,9 +74,27 @@ function cellDisabled(cell: CalendarCell) {
   return props.disabledIso?.(cell) === true
 }
 
+function monthDisabled(month: number) {
+  return props.disabledMonth?.(props.cursor.getFullYear(), month) === true
+}
+
+function yearDisabled(year: number | undefined) {
+  return year != null && props.disabledYear?.(year) === true
+}
+
 function onDayClick(cell: CalendarCell) {
   if (cellDisabled(cell)) return
   emit('pick-day', cell)
+}
+
+function onPickMonth(month: number) {
+  if (monthDisabled(month)) return
+  emit('pick-month', month)
+}
+
+function onPickYear(year: number | undefined) {
+  if (year == null || yearDisabled(year)) return
+  emit('pick-year', year)
 }
 
 function openSchedule(cell: CalendarCell, event: Event) {
@@ -117,54 +138,38 @@ function applyTodayStyle(el: Element | null) {
           <th :colspan="view === 'days' ? 7 : 3">
             <div v-if="view === 'days'" class="vamis-cal-header">
               <a class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
-                <svg class="vamis-cal-arrow is-double is-left" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" left />
               </a>
               <a class="vamis-cal-nav" aria-label="上一月" @click.prevent="emit('shift-month', -1)">
-                <svg class="vamis-cal-arrow is-left" viewBox="0 0 16 16" aria-hidden="true">
-                  <path stroke="currentColor" fill="none" stroke-linejoin="round" d="m5.497 13.664 5.657-5.657L5.497 2.35" />
-                </svg>
+                <VamisDateArrow left />
               </a>
               <div class="vamis-cal-center">
                 <a class="vamis-cal-switch" @click.prevent="emit('open-year')">{{ yearLabel }}</a>
                 <a class="vamis-cal-switch" @click.prevent="emit('open-month')">{{ monthLabel }}</a>
               </div>
               <a class="vamis-cal-nav" aria-label="下一月" @click.prevent="emit('shift-month', 1)">
-                <svg class="vamis-cal-arrow" viewBox="0 0 16 16" aria-hidden="true">
-                  <path stroke="currentColor" fill="none" stroke-linejoin="round" d="m5.497 13.664 5.657-5.657L5.497 2.35" />
-                </svg>
+                <VamisDateArrow />
               </a>
               <a class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
-                <svg class="vamis-cal-arrow is-double" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" />
               </a>
             </div>
             <div v-else-if="view === 'months'" class="vamis-cal-header is-span">
               <a class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
-                <svg class="vamis-cal-arrow is-double is-left" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" left />
               </a>
               <a class="vamis-cal-switch" @click.prevent="emit('open-year')">{{ yearLabel }}</a>
               <a class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
-                <svg class="vamis-cal-arrow is-double" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" />
               </a>
             </div>
             <div v-else class="vamis-cal-header is-span">
               <a class="vamis-cal-nav" aria-label="上十年" @click.prevent="emit('shift-year', -10)">
-                <svg class="vamis-cal-arrow is-double is-left" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" left />
               </a>
               <span class="vamis-cal-switch">{{ decade.from }}年 - {{ decade.to }}年</span>
               <a class="vamis-cal-nav" aria-label="下十年" @click.prevent="emit('shift-year', 10)">
-                <svg class="vamis-cal-arrow is-double" viewBox="0 0 10 10" aria-hidden="true">
-                  <path d="m.713.001 4.95 4.95-.003.003.003.003-4.95 4.95L0 9.194l4.24-4.24L0 .714.713.001Zm3.997 0 4.95 4.948-.004.004.004.003-4.95 4.95-.713-.714 4.24-4.239-4.24-4.24L4.71 0Z" fill="currentColor" fill-rule="evenodd" />
-                </svg>
+                <VamisDateArrow icon="right-double-arrow" />
               </a>
             </div>
             <div class="vamis-cal-line" />
@@ -231,8 +236,11 @@ function applyTodayStyle(el: Element | null) {
             v-for="col in 3"
             :key="col"
             class="vamis-cal-pick"
-            :class="{ 'is-active': (row - 1) * 3 + col - 1 === cursor.getMonth() }"
-            @click="emit('pick-month', (row - 1) * 3 + col - 1)"
+            :class="{
+              'is-active': (row - 1) * 3 + col - 1 === cursor.getMonth(),
+              'is-disabled': monthDisabled((row - 1) * 3 + col - 1),
+            }"
+            @click="onPickMonth((row - 1) * 3 + col - 1)"
           >
             <span>{{ CALENDAR_MONTHS[(row - 1) * 3 + col - 1] }}月</span>
           </td>
@@ -247,8 +255,9 @@ function applyTodayStyle(el: Element | null) {
             :class="{
               'is-other': decade.years[(row - 1) * 3 + col - 1]?.muted,
               'is-active': decade.years[(row - 1) * 3 + col - 1]?.year === cursor.getFullYear(),
+              'is-disabled': yearDisabled(decade.years[(row - 1) * 3 + col - 1]?.year),
             }"
-            @click="emit('pick-year', decade.years[(row - 1) * 3 + col - 1].year)"
+            @click="onPickYear(decade.years[(row - 1) * 3 + col - 1]?.year)"
           >
             <span>{{ decade.years[(row - 1) * 3 + col - 1].year }}</span>
           </td>
@@ -270,9 +279,9 @@ function applyTodayStyle(el: Element | null) {
   /* 对齐 Amis `_date.scss` `.rdt .rdtPicker { padding: 0 }`，弹层内日历 240×290。 */
   padding: 0;
   border: 0;
-  background: #fff;
+  background: var(--cal-bg);
   font-size: 12px;
-  color: var(--foreground);
+  color: var(--cal-fg);
   user-select: none;
 }
 .vamis-cal.is-framed {
@@ -304,28 +313,26 @@ function applyTodayStyle(el: Element | null) {
   box-sizing: content-box;
   padding: 1px;
 }
+/* 对齐 Amis `.rdtHeader`：table + table-cell middle。不要 flex 对 24px 行盒居中，汉字实际只有 ~16.5px。 */
 .vamis-cal-header {
-  display: flex;
-  align-items: center;
+  display: table;
+  table-layout: fixed;
+  border-collapse: separate;
+  width: 100%;
   height: 40px;
   margin-top: -8px;
+}
+.vamis-cal-header > * {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
 .vamis-cal.is-large .vamis-cal-header {
   margin-top: 0;
 }
-.vamis-cal-header.is-span {
-  justify-content: space-between;
-}
-.vamis-cal-center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .vamis-cal-switch {
   font-weight: 400;
   font-size: 14px;
-  line-height: 24px;
   color: inherit;
   cursor: pointer;
   text-decoration: none;
@@ -338,33 +345,18 @@ function applyTodayStyle(el: Element | null) {
   text-decoration: none;
 }
 .vamis-cal-nav {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
   width: 16px;
-  height: 24px;
-  color: inherit;
+  padding: 0;
+  color: var(--select-caret-color);
   cursor: pointer;
   text-decoration: none;
+  font-size: 18px;
+  font-family: auto;
+  font-weight: 400;
 }
 .vamis-cal-nav:hover {
   color: var(--primary);
   text-decoration: none;
-}
-.vamis-cal-arrow {
-  display: block;
-  width: 12px;
-  height: 12px;
-}
-.vamis-cal-arrow.is-double {
-  width: 10px;
-  height: 10px;
-  position: relative;
-  top: -1px;
-}
-.vamis-cal-arrow.is-left {
-  transform: rotate(180deg);
 }
 .vamis-cal-line {
   position: absolute;
@@ -397,7 +389,7 @@ function applyTodayStyle(el: Element | null) {
   height: 110px;
   padding: 1px;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--cal-bg);
 }
 .vamis-cal-day {
   position: relative;
@@ -411,8 +403,8 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal td.is-other .vamis-cal-day,
 .vamis-cal td.is-other.vamis-cal-pick,
 .vamis-cal.is-large td.is-other .vamis-cal-head {
-  /* Amis rdtOld/rdtNew：--inputDate-disabled-option-color = #b8babf */
-  color: #b8babf;
+  /* Amis rdtOld/rdtNew：--inputDate-disabled-option-color */
+  color: var(--cal-other);
 }
 .vamis-cal td.is-today .vamis-cal-day,
 .vamis-cal.is-large td.is-today .vamis-cal-head span {
@@ -425,15 +417,15 @@ function applyTodayStyle(el: Element | null) {
   color: var(--primary-foreground);
   border-color: var(--primary);
 }
-.vamis-cal td:hover .vamis-cal-day,
-.vamis-cal td.vamis-cal-pick:hover span,
-.vamis-cal.is-large td:hover .vamis-cal-head span {
-  background: #f7f8fa;
-  color: #151b26;
+.vamis-cal td:not(.is-disabled):hover .vamis-cal-day,
+.vamis-cal td.vamis-cal-pick:not(.is-disabled):hover span,
+.vamis-cal.is-large td:not(.is-disabled):hover .vamis-cal-head span {
+  background: var(--cal-cell-hover-bg);
+  color: var(--cal-cell-hover-fg);
 }
-.vamis-cal td.is-active:hover .vamis-cal-day,
-.vamis-cal td.is-active.vamis-cal-pick:hover span,
-.vamis-cal.is-large td.is-active:hover .vamis-cal-head span {
+.vamis-cal td.is-active:not(.is-disabled):hover .vamis-cal-day,
+.vamis-cal td.is-active.vamis-cal-pick:not(.is-disabled):hover span,
+.vamis-cal.is-large td.is-active:not(.is-disabled):hover .vamis-cal-head span {
   background: var(--primary);
   color: var(--primary-foreground);
 }
@@ -441,8 +433,10 @@ function applyTodayStyle(el: Element | null) {
   cursor: not-allowed;
 }
 .vamis-cal td.is-disabled .vamis-cal-day,
-.vamis-cal td.is-disabled:hover .vamis-cal-day {
-  color: #b8babf;
+.vamis-cal td.is-disabled:hover .vamis-cal-day,
+.vamis-cal td.is-disabled.vamis-cal-pick span,
+.vamis-cal td.is-disabled.vamis-cal-pick:hover span {
+  color: var(--cal-other);
   background: transparent;
   opacity: 0.55;
 }
@@ -483,10 +477,10 @@ function applyTodayStyle(el: Element | null) {
   height: 10px;
   border-radius: 9999px;
 }
-/* Amis --secondary 是 #5c5f66；shadcn --secondary 太浅，白字看不见。只盖日历条/点。 */
+/* Amis --secondary 是 text-5；shadcn --secondary 太浅，白字看不见。只盖日历条/点，走 --cal-bar。 */
 .vamis-cal-chip.bg-secondary,
 .vamis-cal-dot.bg-secondary {
-  background-color: #5c5f66;
+  background-color: var(--cal-bar);
 }
 .vamis-cal-wrap {
   position: absolute;
@@ -519,7 +513,7 @@ function applyTodayStyle(el: Element | null) {
   border-radius: var(--radius);
   font-size: 12px;
   line-height: 20px;
-  color: #fff;
+  color: var(--cal-chip-fg);
   text-align: left;
   cursor: pointer;
 }
@@ -546,7 +540,7 @@ function applyTodayStyle(el: Element | null) {
 }
 .vamis-cal-picker {
   overflow: hidden;
-  background: #fff;
+  background: var(--cal-bg);
 }
 .vamis-cal-picker-bar {
   display: flex;
@@ -562,7 +556,7 @@ function applyTodayStyle(el: Element | null) {
   font-size: 16px;
   cursor: pointer;
   text-decoration: none;
-  color: #666;
+  color: var(--cal-picker-cancel);
 }
 .vamis-cal-picker-ok {
   color: var(--primary);
@@ -572,7 +566,7 @@ function applyTodayStyle(el: Element | null) {
   font-size: 16px;
   font-weight: 500;
   line-height: 1.5;
-  color: #222;
+  color: var(--cal-picker-title);
   text-align: center;
 }
 .vamis-cal-picker-columns {
@@ -587,8 +581,16 @@ function applyTodayStyle(el: Element | null) {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0.9), hsla(0, 0%, 100%, 0.4)),
-    linear-gradient(0deg, hsla(0, 0%, 100%, 0.9), hsla(0, 0%, 100%, 0.4));
+  background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--cal-bg) 90%, transparent),
+      color-mix(in srgb, var(--cal-bg) 40%, transparent)
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cal-bg) 90%, transparent),
+      color-mix(in srgb, var(--cal-bg) 40%, transparent)
+    );
   background-repeat: no-repeat;
   background-position: top, bottom;
 }

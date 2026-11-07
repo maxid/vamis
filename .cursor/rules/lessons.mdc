@@ -254,9 +254,9 @@ alwaysApply: true
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### 深色浮层靠 `.dark` 换 token，不要写死浅色底
-- 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也有写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
-- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。
-- 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `dropdown-button` `dialog` `action`
+- 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也曾写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
+- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。
+- 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `calendar` `dropdown-button` `dialog` `action`
 - 规则：`.cursor/rules/style.mdc`「深色主题」
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
@@ -297,9 +297,21 @@ alwaysApply: true
 
 ### 日期 / 日历只保留一套面板
 - 踩过：`type: calendar` 与 `input-date` 两套月历 DOM/CSS，圆角字号选中色分叉。
-- 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。非本月色 `#b8babf`。
+- 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。颜色走 `--cal-*`（非本月 `--cal-other`，浅色仍是 `#b8babf`），不要在面板里写死 `#fff`。
 - 触及：`calendar` `input-date` `input-datetime` `input-time`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### minDate/maxDate 年月面板也要禁，不能只卡日格子
+- 踩过：限制范围示例只给日格 `is-disabled`；点标题进年/月视图后范围外格子仍可点。Amis MonthsView / YearsView 是扫该月/年里有没有一天 `isValidDate`。
+- 稳定做法：`isInputDateMonthDisabled` / `isInputDateYearDisabled`：整段在 min 之前或 max 之后才禁；有 `disabledDate` 再按天扫。格子 `is-disabled` 且不 emit；hover 用 `:not(.is-disabled)`。
+- 触及：`input-date` `input-datetime` `calendar`
+- 规则：本文；Amis `MonthsView.tsx` / `YearsView.tsx`
+
+### 月历标题箭头跟文字走 table-cell，不要 flex 对 24px 行盒
+- 踩过：header `display: flex; align-items: center` + 标题 `line-height: 24px`，汉字实际只有 ~16.5px，12px 箭头几何居中后相对文字偏下。自绘 SVG 即使用同一 path，缺 `svg.icon` 的 `top: 0.125em` / 双箭头 `-1px` 和 nav `font-size: 18px` 仍会对不齐。
+- 稳定做法：对齐 Amis `.rdtHeader`：`display: table` / `table-layout: fixed`，子级 `table-cell; vertical-align: middle`。箭头用 Amis `right-arrow` / `right-double-arrow`（`VamisDateArrow`，class `icon`），nav `font-size: 18px`；标题链接保持 inline。覆盖尺寸的选择器要带 `svg`（否则压不过 `svg.icon` 的 1em），并写 `display: inline; vertical-align: baseline`（否则吃 Tailwind preflight 的 `svg { display: block }`）。
+- 触及：`input-date` `calendar`
+- 规则：本文；Amis `_date.scss` `.rdtHeader` / `_normalize.scss` `svg.icon`
 
 ### Toast 对齐 Amis，不要用 vue-sonner 冒充
 - 踩过：用 vue-sonner 顶替；`center` 被映射成 `top-center`。

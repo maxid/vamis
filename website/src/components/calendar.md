@@ -5,8 +5,8 @@ outline: deep
 
 # Calendar 日历日程
 
-::: info 实现进度 87% · 进行中
-文档主路径已对齐：`value`、`schedules`、默认色循环、`largeMode` 跨日连条与格子样式、年/月滚轮、点击日程点弹出内容、`todayActiveStyle`。月历与 `input-date` 共用 `DateCalendarPanel`（对齐 Amis Calendar extends DateControlRenderer）。缺 change/click 事件与 setValue。
+::: info 实现进度 88% · 进行中
+文档主路径已对齐：`value`、`schedules`、默认色循环、`largeMode` 跨日连条与格子样式、年/月滚轮、点击日程点弹出内容、`todayActiveStyle`。月历与 `input-date` 共用 `DateCalendarPanel`（对齐 Amis Calendar extends DateControlRenderer）。面板色走 `--cal-*`（深色跟 Select 菜单）。缺 change/click 事件与 setValue。
 :::
 
 日历里展示日程。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

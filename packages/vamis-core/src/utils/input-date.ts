@@ -353,6 +353,57 @@ export function isInputDateDisabled(
   return false
 }
 
+function hasCustomDisabledDate(schema: SchemaObject, trusted: boolean): boolean {
+  const raw = schema.disabledDate
+  if (typeof raw === 'function') return true
+  return typeof raw === 'string' && Boolean(raw) && trusted
+}
+
+/** 对齐 Amis MonthsView / YearsView：区间内没有任何合法天才禁用该月/年。 */
+function isInputDateUnitDisabled(
+  unit: 'month' | 'year',
+  date: Dayjs,
+  schema: SchemaObject,
+  data: PlainObject,
+  trusted = false,
+  now?: Date | Dayjs,
+): boolean {
+  const start = date.clone().startOf(unit)
+  const end = date.clone().endOf(unit)
+  const { min, max } = inputDateMinMax(schema, data, now)
+  if (min && end.isBefore(min, 'day')) return true
+  if (max && start.isAfter(max, 'day')) return true
+  if (!hasCustomDisabledDate(schema, trusted)) return false
+  let cursor = start.clone().startOf('day')
+  const last = end.clone().startOf('day')
+  while (!cursor.isAfter(last, 'day')) {
+    if (!isInputDateDisabled(cursor, schema, data, trusted, now)) return false
+    cursor = cursor.add(1, 'day')
+  }
+  return true
+}
+
+export function isInputDateMonthDisabled(
+  year: number,
+  month: number,
+  schema: SchemaObject,
+  data: PlainObject,
+  trusted = false,
+  now?: Date | Dayjs,
+): boolean {
+  return isInputDateUnitDisabled('month', dayjs().year(year).month(month).date(1), schema, data, trusted, now)
+}
+
+export function isInputDateYearDisabled(
+  year: number,
+  schema: SchemaObject,
+  data: PlainObject,
+  trusted = false,
+  now?: Date | Dayjs,
+): boolean {
+  return isInputDateUnitDisabled('year', dayjs().year(year).month(0).date(1), schema, data, trusted, now)
+}
+
 function resolveShortcutPreset(key: string): { label: string; apply: (now: Dayjs) => Dayjs } | undefined {
   const preset = SHORTCUT_PRESETS[key]
   if (preset) return preset

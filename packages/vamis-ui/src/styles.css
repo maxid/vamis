@@ -163,6 +163,18 @@
   --select-menu-border: #f2f3f5;
   --select-menu-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+  /* 对齐 Amis `--DatePicker-*` / `--Calendar-cell-*` / `--inputDate-*`。弹层底跟 Select 菜单，不要写死 #fff。 */
+  --cal-bg: var(--select-menu-bg);
+  --cal-fg: var(--select-menu-color);
+  --cal-border: var(--select-menu-border);
+  --cal-shadow: var(--select-menu-shadow);
+  --cal-cell-hover-bg: #f7f8fa;
+  --cal-cell-hover-fg: #151b26;
+  --cal-other: #b8babf;
+  --cal-picker-cancel: #666;
+  --cal-picker-title: #222;
+  --cal-chip-fg: #fff;
+  --cal-bar: #5c5f66;
   --select-option-color: #151b26;
   --select-option-bg: transparent;
   --select-option-hover-color: #151b26;
@@ -446,6 +458,12 @@
   --select-menu-bg: #17202d;
   --select-menu-color: #f7f8fa;
   --select-menu-border: #303640;
+  --cal-cell-hover-bg: #151c26;
+  --cal-cell-hover-fg: #f7f8fa;
+  --cal-other: #b8bbbf;
+  --cal-picker-cancel: #84878c;
+  --cal-picker-title: #f7f8fa;
+  --cal-bar: #84878c;
   --select-option-color: #f7f8fa;
   --select-option-hover-color: #f7f8fa;
   --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
@@ -2154,10 +2172,11 @@
   .vamis-date-picker__popover {
     /* 对齐 Amis `.cxd-DatePicker-popover`：padding 0，边框/阴影走 Form-select-outer。 */
     padding: 0;
-    border: 1px solid #f2f3f5;
+    border: 1px solid var(--cal-border);
     border-radius: var(--radius);
-    background: #fff;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+    background: var(--cal-bg);
+    color: var(--cal-fg);
+    box-shadow: var(--cal-shadow);
   }
   .vamis-date-picker__popover.is-embed,
   .vamis-date-picker.is-embed .vamis-date-picker__popover {
@@ -2878,6 +2897,35 @@
 }
 .vamis-caret--tree.is-open svg {
   transform: rotate(90deg);
+}
+
+/* 月历标题箭头：对齐 Amis `svg.icon` + `_date.scss` `.rdtHeader` / `.rdtPrev`。
+   选择器必须带 `svg`，否则压不过 `.vamis-cal-header svg.icon`（0,2,1）。
+   display/vertical-align 要写明，否则吃 Tailwind preflight 的 block + middle。 */
+.vamis-cal-header svg.icon {
+  display: inline;
+  vertical-align: baseline;
+  fill: currentColor;
+  position: relative;
+  top: 0.125em;
+}
+.vamis-cal-header svg.date-icon-arrow,
+.vamis-cal-header svg.date-icon-arrow-left {
+  width: 10px;
+  height: 10px;
+  top: 0;
+}
+.vamis-cal-header svg.date-icon-arrow-left {
+  transform: rotate(180deg);
+  transform-origin: 50% 50%;
+}
+.vamis-cal-header svg.icon-right-double-arrow {
+  top: -1px;
+}
+.vamis-cal-header svg.icon-right-arrow {
+  width: 12px;
+  height: 12px;
+  fill: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -20,6 +20,8 @@ import {
   inputDateValueFormat,
   inputDateViewMode,
   isInputDateDisabled,
+  isInputDateMonthDisabled,
+  isInputDateYearDisabled,
   parseInputDateValue,
   resolveInputDateShortcuts,
   storeInputDateValue,
@@ -105,6 +107,19 @@ describe('minDate / maxDate / disabledDate', () => {
     expect(isInputDateDisabled(monday, schema, {}, true)).toBe(true)
     expect(isInputDateDisabled(tuesday, schema, {}, true)).toBe(false)
   })
+
+  it('disables months and years with no valid day (Amis MonthsView / YearsView)', () => {
+    const minOnly = { type: 'input-date', minDate: TS }
+    const maxOnly = { type: 'input-date', maxDate: TS }
+    expect(isInputDateMonthDisabled(2020, 4, minOnly, {}, false, NOW)).toBe(true)
+    expect(isInputDateMonthDisabled(2020, 5, minOnly, {}, false, NOW)).toBe(false)
+    expect(isInputDateMonthDisabled(2020, 5, maxOnly, {}, false, NOW)).toBe(false)
+    expect(isInputDateMonthDisabled(2020, 6, maxOnly, {}, false, NOW)).toBe(true)
+    expect(isInputDateYearDisabled(2019, minOnly, {}, false, NOW)).toBe(true)
+    expect(isInputDateYearDisabled(2020, minOnly, {}, false, NOW)).toBe(false)
+    expect(isInputDateYearDisabled(2021, maxOnly, {}, false, NOW)).toBe(true)
+    expect(isInputDateYearDisabled(2020, maxOnly, {}, false, NOW)).toBe(false)
+  })
 })
 
 describe('shortcuts', () => {
@@ -160,9 +175,21 @@ describe('input-date renderer reuse', () => {
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputDate.vue'), 'utf8')
     expect(vue).toContain('VamisOverlay')
     expect(vue).toContain('DateCalendarPanel')
+    expect(vue).toContain(':disabled-month="monthDisabled"')
+    expect(vue).toContain(':disabled-year="yearDisabled"')
     expect(vue).toContain('overlayContainerFrom')
     expect(vue).toContain(':gap="4"')
     expect(vue).not.toContain('vamis-date-cal__')
+  })
+})
+
+describe('input-date year/month range disable', () => {
+  it('month and year pick cells honor is-disabled', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const cal = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
+    expect(cal).toContain("'is-disabled': monthDisabled")
+    expect(cal).toContain("'is-disabled': yearDisabled")
+    expect(cal).toContain('td.is-disabled.vamis-cal-pick span')
   })
 })
 
@@ -175,8 +202,25 @@ describe('input-date popover box model', () => {
     const block = css.slice(css.indexOf('.vamis-date-picker__popover {'), css.indexOf('.vamis-date-picker__popover.is-embed'))
     expect(block).toMatch(/padding:\s*0/)
     expect(block).not.toMatch(/min-width:\s*256px/)
-    expect(block).toMatch(/#f2f3f5/)
-    expect(block).toMatch(/0px 1px 3px 0px rgba\(0, 0, 0, 0\.1\)/)
+    expect(block).toMatch(/border:\s*1px solid var\(--cal-border\)/)
+    expect(block).toMatch(/background:\s*var\(--cal-bg\)/)
+    expect(block).toMatch(/box-shadow:\s*var\(--cal-shadow\)/)
+    expect(block).not.toMatch(/background:\s*#fff/)
+    expect(css).toMatch(/--select-menu-border:\s*#f2f3f5/)
+    expect(css).toMatch(/0px 1px 3px 0px rgba\(0, 0, 0, 0\.1\)/)
+  })
+
+  it('calendar popover and panel use --cal-* tokens, not hardcoded #fff', () => {
+    expect(css).toMatch(/--cal-bg:\s*var\(--select-menu-bg\)/)
+    expect(css).toMatch(/--cal-cell-hover-bg:\s*#f7f8fa/)
+    expect(css).toMatch(/\.dark[\s\S]*--cal-cell-hover-bg:\s*#151c26/)
+    expect(css).toMatch(/\.dark[\s\S]*--select-menu-bg:\s*#17202d/)
+    expect(cal).toMatch(/background:\s*var\(--cal-bg\)/)
+    expect(cal).toMatch(/color:\s*var\(--cal-other\)/)
+    expect(cal).toMatch(/background:\s*var\(--cal-cell-hover-bg\)/)
+    expect(cal).not.toMatch(/background:\s*#fff/)
+    expect(cal).not.toMatch(/color:\s*#151b26/)
+    expect(cal).not.toMatch(/color:\s*#b8babf/)
   })
 
   it('matches Amis rdt / rdtPicker: 240px, padding 0, UA cell padding 1px', () => {
@@ -184,5 +228,23 @@ describe('input-date popover box model', () => {
     expect(cal).toMatch(/\.vamis-cal \{[\s\S]*?padding:\s*0/)
     expect(cal).toMatch(/padding:\s*1px/)
     expect(cal).toMatch(/box-sizing:\s*content-box/)
+  })
+
+  it('calendar header uses Amis table-cell, not flex against a 24px line box', () => {
+    const header = cal.slice(cal.indexOf('.vamis-cal-header {'), cal.indexOf('.vamis-cal-switch {'))
+    const nav = cal.slice(cal.indexOf('.vamis-cal-nav {'), cal.indexOf('.vamis-cal-nav:hover'))
+    const sw = cal.slice(cal.indexOf('.vamis-cal-switch {'), cal.indexOf('.vamis-cal-switch +'))
+    expect(header).toMatch(/display:\s*table/)
+    expect(header).toMatch(/vertical-align:\s*middle/)
+    expect(header).not.toMatch(/align-items:\s*center/)
+    expect(sw).not.toMatch(/line-height:\s*24px/)
+    expect(nav).not.toMatch(/display:\s*inline-flex/)
+    expect(nav).toMatch(/font-size:\s*18px/)
+    expect(cal).toContain('VamisDateArrow')
+    expect(cal).not.toContain('vamis-cal-arrow')
+    expect(css).toMatch(/\.vamis-cal-header svg\.icon \{[\s\S]*?display:\s*inline/)
+    expect(css).toMatch(/\.vamis-cal-header svg\.icon \{[\s\S]*?vertical-align:\s*baseline/)
+    expect(css).toMatch(/\.vamis-cal-header svg\.icon-right-double-arrow \{[\s\S]*?top:\s*-1px/)
+    expect(css).toMatch(/\.vamis-cal-header svg\.icon-right-arrow \{[\s\S]*?width:\s*12px/)
   })
 })

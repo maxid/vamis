@@ -94,7 +94,7 @@
 | `dropdown-button` | 下拉菜单 | 未核 | |
 | `input-text` | 选择器建议下拉 | 未核 | |
 | `input-password` | 同 input-text | 未核 | |
-| `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 未核 | 弹层写死 `#fff` |
+| `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 已核 2026-11-07 | `--cal-*` alias `--select-menu-*`，`.dark` 覆盖格子 hover / 非本月 |
 | `dialog` | Modal | 未核 | |
 | `drawer` | 抽屉 | 未核 | |
 | `toast` | 轻提示 | 未核 | 桌面写死 `#fff` / `#151b26` |
@@ -194,7 +194,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
 | `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 50% | 能多行子表单；子项 api、扁平模式未齐 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
-| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 88% | 日历点选、format/inputFormat、相对值、minDate/maxDate、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。缺移动端 picker、schedules | P0 |
+| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 90% | 日历点选、format/inputFormat、相对值、minDate/maxDate（日 + 年/月面板都禁范围外）、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。弹层 `--cal-*`（深色 alias Select 菜单 `#17202d`）。缺移动端 picker、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 58% | `input-date` 别名，已接日期+时分秒；时分秒约束与移动端 picker 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 50% | 能选区间 | P0 |
@@ -263,7 +263,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 55% | 能渲染列；列 `popOver` / `popOverEnableOn` 已接。无独立数据域、无 `quickEdit` | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
-| `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 87% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。缺 change/click / setValue | P0 |
+| `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 70% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
 | `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 75% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。缺拖拽、动作表、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
@@ -347,7 +347,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。当前建议下一批：`input-date`（#15，88%）未齐项。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 90%（深色 `--cal-*` 已核；minDate/maxDate 年/月面板已禁；缺移动端 picker、schedules）。当前建议下一批：继续 `input-date` 移动端 CalendarMobile picker（需 `--mobile`）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -430,7 +430,7 @@ flowchart LR
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | 进行中 | 95% |
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 90% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
-| 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 88% |
+| 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
 | 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 75% |
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 80% |
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
@@ -540,7 +540,7 @@ flowchart LR
 | 122 | `table2` | `tpl`、`action`、`checkbox`、`popOver`、`badge`、`mapping` | 5 | 0 | 5 | 5 | 进行中 | 70% |
 | 123 | `dropdown-button` | `action`、`button-group`、`tooltip-wrapper`、`icon` | 5 | 0 | 5 | 5 | 进行中 | 80% |
 | 124 | `button-group-select` | Options、FormItem、`button-group` | 5 | 0 | 5 | 5 | 进行中 | 55% |
-| 125 | `calendar` | `input-date`、`tpl` | 5 | 0 | 5 | 5 | 进行中 | 87% |
+| 125 | `calendar` | `input-date`、`tpl` | 5 | 0 | 5 | 5 | 进行中 | 88% |
 | 126 | `input-group` | `container`、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 55% |
 | 127 | `location-picker` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 25% |
 | 128 | `uuid` | FormItem、`input-text` | 4 | 0 | 4 | 4 | 进行中 | 70% |

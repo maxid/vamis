@@ -25,6 +25,8 @@ import {
   inputDateTimeFormat,
   inputDateViewMode,
   isInputDateDisabled,
+  isInputDateMonthDisabled,
+  isInputDateYearDisabled,
   overlayContainerFrom,
   parseInputDateValue,
   parseTypedInputDate,
@@ -158,6 +160,14 @@ function cellDisabled(cell: CalendarCell) {
   return isInputDateDisabled(dayjs(cell.date), props.schema, data.value, env.trusted === true)
 }
 
+function monthDisabled(year: number, month: number) {
+  return isInputDateMonthDisabled(year, month, props.schema, data.value, env.trusted === true)
+}
+
+function yearDisabled(year: number) {
+  return isInputDateYearDisabled(year, props.schema, data.value, env.trusted === true)
+}
+
 async function pickDay(cell: CalendarCell) {
   if (locked.value || cellDisabled(cell)) return
   const next = pickInputDateValue(dayjs(cell.date), props.schema, parsed.value)
@@ -188,10 +198,12 @@ function shiftYear(delta: number) {
   cursor.value = cursor.value.clone().add(delta, 'year')
 }
 function pickYear(year: number) {
+  if (yearDisabled(year)) return
   cursor.value = cursor.value.clone().year(year)
   panelView.value = 'months'
 }
 function pickMonth(month: number) {
+  if (monthDisabled(cursor.value.year(), month)) return
   cursor.value = cursor.value.clone().month(month)
   panelView.value = 'days'
 }
@@ -399,6 +411,8 @@ watch(
           :decade="decade"
           :selected-iso="selectedIso"
           :disabled-iso="cellDisabled"
+          :disabled-month="monthDisabled"
+          :disabled-year="yearDisabled"
           @shift-month="shiftMonth"
           @shift-year="shiftYear"
           @pick-year="pickYear"
@@ -455,6 +469,8 @@ watch(
             :decade="decade"
             :selected-iso="selectedIso"
             :disabled-iso="cellDisabled"
+            :disabled-month="monthDisabled"
+            :disabled-year="yearDisabled"
             @shift-month="shiftMonth"
             @shift-year="shiftYear"
             @pick-year="pickYear"
