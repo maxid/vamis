@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   checkboxClearValue,
@@ -8,6 +11,8 @@ import {
   checkboxTrueValue,
   checkboxWriteValue,
 } from '../src/utils/checkbox'
+
+const here = dirname(fileURLToPath(import.meta.url))
 
 describe('checkbox values', () => {
   it('defaults trueValue/falseValue to boolean', () => {
@@ -53,5 +58,52 @@ describe('checkbox values', () => {
     expect(checkboxSetDataValue({ value: false })).toBe(false)
     expect(checkboxSetDataValue({ type: 1 }, 'type')).toBe(1)
     expect(checkboxSetDataValue({ other: 1 }, 'type')).toBeUndefined()
+  })
+})
+
+describe('checkbox chrome', () => {
+  it('tokens follow Amis cxd 16×16 / 2px / dark menu surface', () => {
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain('--checkbox-size: 16px')
+    expect(css).toContain('--checkbox-radius: 2px')
+    expect(css).toContain('--checkbox-icon-size: 14px')
+    expect(css).toContain('--checkbox-bg: #fff')
+    expect(css).toContain('--checkbox-bg: #17202d')
+    expect(css).toContain('--checkbox-button-min-w: 80px')
+    expect(css).toContain('--checkbox-button-h: 32px')
+    expect(css).toContain('opacity: 1')
+    expect(css).toContain('.vamis-checkbox--button')
+    expect(css).toContain('background-color: transparent')
+    expect(css).toContain('display: inline-block')
+    expect(css).toMatch(/\.vamis-checkbox-option \{[^}]*display: inline-block/)
+    expect(css).toContain('vertical-align: text-bottom')
+    expect(css).not.toMatch(/\.vamis-checkbox-option \{[^}]*display: inline-flex/)
+    expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h)')
+    expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h)')
+    expect(css).toContain('--checkbox-checked-hover-bg: var(--checkbox-checked-hover)')
+    expect(css).toContain('color: var(--checkbox-checked-hover)')
+    expect(css).toContain('.vamis-checkbox__mark.is-checked:hover:not(.is-disabled)')
+    expect(css).toContain('.vamis-select__check.is-checked:hover')
+    expect(css).not.toContain('.vamis-checkbox-option:hover:not(.is-disabled).is-checked .vamis-checkbox__mark')
+    expect(css).not.toContain('.vamis-select__item:hover .vamis-select__check:not(.is-checked)')
+    expect(css).not.toContain('--checkbox-checked-hover-bg: var(--primary-hover)')
+    expect(css).not.toMatch(
+      /\.vamis-checkbox--button\.is-checked:hover[^{]*\{[^}]*var\(--primary-hover\)/,
+    )
+  })
+
+  it('form checkbox keeps native name, BadgeHost, and button chrome', () => {
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/form/Checkbox.vue'), 'utf8')
+    expect(vue).toContain('BadgeHost')
+    expect(vue).toContain('vamis-checkbox__native')
+    expect(vue).not.toContain(':name="fieldName')
+    expect(vue).toContain('vamis-checkbox--button')
+    expect(vue).toContain('<label')
+    expect(vue).not.toContain('<button')
+    expect(vue).toContain('vamis-checkbox__mark')
+    expect(vue).toContain('@click.prevent="onToggle(!checked)"')
+    expect(vue).toContain('data-slot="checkbox"')
+    expect(vue).not.toMatch(/import \{[^}]*\bCheckbox\b/)
+    expect(vue).not.toMatch(/import \{[^}]*\bButton\b/)
   })
 })

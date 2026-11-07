@@ -31,6 +31,7 @@
 5. 本清单不另起分类。侧栏未收录但 `docs/zh-CN` 有独立页的，在对应类末尾用脚注标出。
 6. **文档地址**：`vamis 文档` 是相对 `http://localhost:5173` 的路径，`amis 文档` 是相对 `http://localhost:8888` 的路径。例如 `table-view`：vamis `/components/table-view`（完整 `http://localhost:5173/components/table-view`），amis `/zh-CN/components/table-view`（完整 `http://localhost:8888/zh-CN/components/table-view`）。`—` 表示没有独立文档页。
 7. **依赖与优先级**：全表按构建依赖进图（默认包裹 / 渲染器 import / 文档专章 / Amis 示例主路径），不是只改 Action。拓扑图只画主干；每个 type 看 [分 type 依赖图](./2026-10-20-vamis-component-deps.md) 的**开工前置闭包**（全部祖先，禁止只看直接依赖）；154 个 type 看文末「全量顺序」。拓扑约束下先比解锁分 U、再比综合分 S。chrome（`icon` / `badge` / `tooltip-wrapper` / `remark` / `spinner`）排在 FormItem / Action 前面。无人依赖叶子后置。完整顺序见文末「依赖与优先级」。
+8. **深色浮层回归**：不往主表加列（155 行里大量占位没有浮层）。已推进过的项见下文「深色浮层回归」。对照不切 `.dark`、不探 hover，不能替代这份手核。
 
 ## 实现标准（强制，2026-10-28）
 
@@ -75,6 +76,58 @@
 侧栏已无未开始项。当前已完成 `container`、`toast`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
+
+## 深色浮层回归（已推进组件）
+
+口径：Playground 切「深色」，打开该页 tooltip / 下拉 / PopOver / Dialog / Toast。过了对照 ≠ 已核。`themeCss` 余项不挡打勾。收工把「未核」改成「已核」并写日期。
+
+范围：主表进度 **≥80%**（主路径对齐过），外加对照跑过、带浮层但不足 80% 的（`form` / `table2` / `card` / `cards` / `image` / Options）。占位 / 精简（&lt;50%）不进。
+
+### 有独立浮层（优先）
+
+| type | 浮层 | 深色 | 备注 |
+|------|------|------|------|
+| `select` | 下拉 + tag tooltip + `+N` 溢出 | 已核 | 2026-11-07。溢出走 `--select-menu-*`，tooltip 走 `--tooltip-*` |
+| `tooltip-wrapper` | Tooltip | 未核 | `.dark` 已覆盖 `--tooltip-*`，文档十字示例仍要手开 |
+| `remark` | Tooltip | 未核 | `--remark-bg` 仍 `#fff` |
+| `action` / `button` | tooltip / disabledTip；confirm Dialog | 未核 | |
+| `dropdown-button` | 下拉菜单 | 未核 | |
+| `input-text` | 选择器建议下拉 | 未核 | |
+| `input-password` | 同 input-text | 未核 | |
+| `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 未核 | 弹层写死 `#fff` |
+| `dialog` | Modal | 未核 | |
+| `drawer` | 抽屉 | 未核 | |
+| `toast` | 轻提示 | 未核 | 桌面写死 `#fff` / `#151b26` |
+| `popOver` | 字段弹出 | 未核 | |
+| `breadcrumb` | 文档记缺 tooltip 浮层 | 未核 | 有下拉项时核 |
+| `page` | remark / spinner overlay | 未核 | |
+| `form` / FormItem / Options | labelRemark；Options 下拉 | 未核 | form 75%，对照过 |
+| `table2` | 表头/筛选等浮层 | 未核 | 70%，对照过 |
+| `card` / `cards` | 卡片操作/弹出 | 未核 | 对照过 |
+| `image` | 预览 | 未核 | 对照过 |
+| `alert` | 关闭等 | 未核 | |
+| `spinner` | overlay | 未核 | |
+| `badge` | 角标宿主 | 未核 | |
+| `avatar` | badge | 未核 | |
+| `nav` | overflow / itemBadge | 未核 | |
+| `wizard` | 步骤里的 form/dialog | 未核 | |
+| `picker` | 弹层多选 | 未核 | 50%，有浮层但主路径未齐，可后置 |
+
+### 已推进、无独立浮层（切深色看默认皮）
+
+| type | 进度 | 深色 | 备注 |
+|------|------|------|------|
+| `container` | 100% | 未核 | |
+| `icon` `tpl` `html` | 90–92% | 未核 | |
+| `checkbox` | 90% | 已核 | 2026-11-07。无独立浮层；浅+深默认皮（16 盒 / 按钮模式 / 禁用灰底） |
+| `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
+| `collapse` / `tabs` / `portlet` | 85% | 未核 | |
+| `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
+| `divider` `pagination` `pagination-wrapper` `switch-container` | 90% | 未核 | |
+| `button-group` | 85% | 未核 | |
+| `table-view` | 85% | 未核 | |
+| `app` `anchor-nav` `service` | 75–80% | 未核 | |
+| `audio` `tasks` `web-component` `amis` | 80% | 未核 | |
 
 ---
 
@@ -135,7 +188,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `button-toolbar` | ButtonToolbar 按钮工具栏 | `/components/form/button-toolbar` | `/zh-CN/components/form/button-toolbar` | 进行中 | 60% | 能排按钮 | P0 |
 | `button-group-select` | ButtonGroupSelect 按钮点选 | `/components/form/button-group-select` | `/zh-CN/components/form/button-group-select` | 进行中 | 55% | 能选值；多选/自适应未齐 | P0 |
 | `chained-select` | ChainedSelect 链式下拉框 | `/components/form/chain-select` | `/zh-CN/components/form/chain-select` | 进行中 | 50% | 能链式选；api 级联精简 | P0 |
-| `checkbox` | Checkbox 勾选框 | `/components/form/checkbox` | `/zh-CN/components/form/checkbox` | 进行中 | 85% | `trueValue`/`falseValue`、`option` 与 `label` 分工、`optionType: button`、禁用/只读/静态、`change`、`clear`/`reset`/`setValue` 已接。缺 badge、themeCss 皮肤变量 | P0 |
+| `checkbox` | Checkbox 勾选框 | `/components/form/checkbox` | `/zh-CN/components/form/checkbox` | 进行中 | 90% | `trueValue`/`falseValue`、`option` 与 `label` 分工、`optionType: button`、禁用/只读/静态、`change`、`clear`/`reset`/`setValue`、`badge` 已接。盒模型 `--checkbox-*`（16×16 / 圆角 2）。缺 themeCss 皮肤变量 | P0 |
 | `checkboxes` | Checkboxes 复选框 | `/components/form/checkboxes` | `/zh-CN/components/form/checkboxes` | 进行中 | 55% | 能多选；列数/全选未齐 | P0 |
 | `input-city` | InputCity 城市选择器 | `/components/form/input-city` | `/zh-CN/components/form/input-city` | 进行中 | 25% | **精简**：内置 3 省示例，非全国数据 | P0 |
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
@@ -294,7 +347,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：`checkbox`（#14，85%）或 `input-date`（#15，88%）里未齐项。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。当前建议下一批：`input-date`（#15，88%）未齐项。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -376,7 +429,7 @@ flowchart LR
 | 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | 进行中 | 92% |
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | 进行中 | 95% |
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 90% |
-| 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 85% |
+| 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 88% |
 | 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 75% |
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 80% |

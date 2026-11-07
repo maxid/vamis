@@ -290,6 +290,32 @@
   --control-focus-border: var(--ring);
   --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
   --control-focus-addon-color: var(--primary);
+  /* Amis `_checks.scss` / cxd checkbox：16 盒、2px 圆角、勾 14。选择器只 var()。 */
+  --checkbox-size: 16px;
+  --checkbox-radius: 2px;
+  --checkbox-border-width: 1px;
+  --checkbox-border: var(--input);
+  --checkbox-bg: #fff;
+  --checkbox-gap: 8px;
+  --checkbox-icon-size: 14px;
+  --checkbox-icon-color: #fff;
+  --checkbox-checked-bg: var(--primary);
+  /* 默认勾选盒和按钮模式共用同一套 brand-6 / brand-4，不要再绑 `--primary-hover`。 */
+  --checkbox-checked-hover-bg: var(--checkbox-checked-hover);
+  --checkbox-checked-active-bg: var(--checkbox-checked-active);
+  --checkbox-disabled-bg: var(--control-disabled-bg);
+  --checkbox-disabled-icon: #d4d6d9;
+  --checkbox-text: var(--foreground);
+  --checkbox-control-pad-top: 5px;
+  --checkbox-button-h: 32px;
+  --checkbox-button-min-w: 80px;
+  --checkbox-button-pad-y: 4px;
+  --checkbox-button-pad-x: 12px;
+  --checkbox-button-radius: var(--radius);
+  /* Amis 浅色选中 hover = brand-6 `#528eff`（比 brand-5 浅、饱和度不掉）。默认勾选盒底/边和按钮模式字/边/三角共用。不要用 `--primary-hover`（浅色混黑会变深），也不要 mix 白（会发灰）。 */
+  --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h);
+  --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
+  --checkbox-font-size: var(--fontSizeBase);
   /*
    * Overlay Tooltip 语义变量（Amis --Tooltip-*）。
    * 圆角是 --borderRadiusLg 8px，不是全局 --radius 4px，也不是 Tailwind --radius-lg（6px）。
@@ -486,6 +512,13 @@
   --fill-10: #151c26;
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #d4d6d9;
+  --checkbox-bg: #17202d;
+  --checkbox-icon-color: #f7f8fa;
+  --checkbox-disabled-icon: #b8bbbf;
+  --checkbox-border: #5c6066;
+  /* Amis 深色选中 hover = brand-6 `#0061f2`（比 brand-5 `#1677ff` 深）。默认勾选盒与按钮模式共用。 */
+  --checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h);
+  --checkbox-checked-active: oklch(from var(--primary) calc(l + 0.08) c h);
 }
 
 @layer base {
@@ -1957,9 +1990,25 @@
     background: var(--select-check-checked-bg);
     border-color: var(--select-check-checked-bg);
   }
-  .vamis-select__item:hover .vamis-select__check:not(.is-checked),
-  .vamis-select__checkall:hover .vamis-select__check:not(.is-checked) {
+  /* Amis 勾选 hover 打在 Checkbox 图标本身，不是 option 行。色号与表单勾共用 `--checkbox-checked-hover`。 */
+  .vamis-select__check:hover:not(.is-checked) {
     border-color: var(--primary);
+  }
+  .vamis-select__check.is-checked:hover {
+    background: var(--checkbox-checked-hover);
+    border-color: var(--checkbox-checked-hover);
+  }
+  .vamis-select__check.is-checked:active {
+    background: var(--checkbox-checked-active);
+    border-color: var(--checkbox-checked-active);
+  }
+  .vamis-select__item.is-disabled .vamis-select__check:hover:not(.is-checked) {
+    border-color: var(--select-check-border);
+  }
+  .vamis-select__item.is-disabled .vamis-select__check.is-checked:hover,
+  .vamis-select__item.is-disabled .vamis-select__check.is-checked:active {
+    background: var(--select-check-checked-bg);
+    border-color: var(--select-check-checked-bg);
   }
   .vamis-select__checkall,
   .vamis-select__item,
@@ -2437,6 +2486,206 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Amis Checkbox：盒在 i / [data-slot=checkbox]，不要 shadcn size-4 + opacity。 */
+.vamis-checkbox-control {
+  padding-top: var(--checkbox-control-pad-top);
+}
+.vamis-checkbox-option {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  font-size: var(--checkbox-font-size);
+  font-weight: 400;
+  line-height: var(--lineHeightBase);
+  color: var(--checkbox-text);
+  cursor: pointer;
+}
+.vamis-checkbox-option.is-disabled {
+  cursor: not-allowed;
+  color: var(--control-disabled-color);
+}
+.vamis-checkbox__native {
+  display: none;
+}
+.vamis-checkbox-option > .vamis-checkbox__mark,
+.vamis-checkbox-option > .vamis-checkbox[data-slot='checkbox'] {
+  margin-right: var(--checkbox-gap);
+  vertical-align: text-bottom;
+}
+.vamis-checkbox__mark,
+.vamis-checkbox[data-slot='checkbox'] {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--checkbox-size);
+  align-items: center;
+  justify-content: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0;
+  padding: 0;
+  vertical-align: text-bottom;
+  border: var(--checkbox-border-width) solid var(--checkbox-border);
+  border-radius: var(--checkbox-radius);
+  background: var(--checkbox-bg);
+  color: var(--checkbox-icon-color);
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color var(--animation-duration),
+    background-color var(--animation-duration);
+}
+.vamis-checkbox__mark:hover:not(.is-disabled):not(.is-checked):not(.is-partial),
+.vamis-checkbox[data-slot='checkbox']:hover:not(:disabled):not([data-disabled]):not([data-state='checked']):not(
+    [data-state='indeterminate']
+  ) {
+  border-color: var(--primary);
+}
+.vamis-checkbox__mark.is-checked,
+.vamis-checkbox__mark.is-partial,
+.vamis-checkbox[data-slot='checkbox'][data-state='checked'],
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate'] {
+  background: var(--checkbox-checked-bg);
+  border-color: var(--checkbox-checked-bg);
+  color: var(--checkbox-icon-color);
+}
+.vamis-checkbox__mark.is-checked:hover:not(.is-disabled),
+.vamis-checkbox__mark.is-partial:hover:not(.is-disabled),
+.vamis-checkbox[data-slot='checkbox'][data-state='checked']:hover:not(:disabled):not([data-disabled]),
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate']:hover:not(:disabled):not([data-disabled]) {
+  background: var(--checkbox-checked-hover-bg);
+  border-color: var(--checkbox-checked-hover-bg);
+}
+.vamis-checkbox__mark.is-checked:active:not(.is-disabled),
+.vamis-checkbox__mark.is-partial:active:not(.is-disabled),
+.vamis-checkbox[data-slot='checkbox'][data-state='checked']:active:not(:disabled):not([data-disabled]),
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate']:active:not(:disabled):not([data-disabled]) {
+  background: var(--checkbox-checked-active-bg);
+  border-color: var(--checkbox-checked-active-bg);
+}
+.vamis-checkbox__mark.is-disabled,
+.vamis-checkbox[data-slot='checkbox']:disabled,
+.vamis-checkbox[data-slot='checkbox'][data-disabled] {
+  cursor: not-allowed;
+  opacity: 1;
+  background: var(--checkbox-disabled-bg);
+  border-color: var(--checkbox-border);
+  color: var(--checkbox-disabled-icon);
+}
+.vamis-checkbox__mark.is-disabled.is-checked,
+.vamis-checkbox__mark.is-disabled.is-partial,
+.vamis-checkbox[data-slot='checkbox'][data-state='checked']:disabled,
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate']:disabled,
+.vamis-checkbox[data-slot='checkbox'][data-state='checked'][data-disabled],
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate'][data-disabled] {
+  background: var(--checkbox-disabled-bg);
+  border-color: var(--checkbox-border);
+  color: var(--checkbox-disabled-icon);
+}
+.vamis-checkbox__icon {
+  display: block;
+  width: var(--checkbox-icon-size);
+  height: var(--checkbox-icon-size);
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform var(--animation-duration);
+}
+.vamis-checkbox__mark.is-checked .vamis-checkbox__icon,
+.vamis-checkbox__mark.is-partial .vamis-checkbox__icon,
+.vamis-checkbox[data-slot='checkbox'][data-state='checked'] .vamis-checkbox__icon,
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate'] .vamis-checkbox__icon {
+  transform: scale(1);
+}
+.vamis-checkbox__icon--partial {
+  display: none;
+}
+.vamis-checkbox__mark.is-partial .vamis-checkbox__icon--check,
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate'] .vamis-checkbox__icon--check {
+  display: none;
+}
+.vamis-checkbox__mark.is-partial .vamis-checkbox__icon--partial,
+.vamis-checkbox[data-slot='checkbox'][data-state='indeterminate'] .vamis-checkbox__icon--partial {
+  display: block;
+}
+.vamis-checkbox--button {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  appearance: none;
+  text-align: center;
+  min-width: var(--checkbox-button-min-w);
+  height: var(--checkbox-button-h);
+  margin: 0;
+  padding: var(--checkbox-button-pad-y) var(--checkbox-button-pad-x);
+  border: var(--checkbox-border-width) solid var(--checkbox-border);
+  border-radius: var(--checkbox-button-radius);
+  background-color: transparent;
+  color: var(--checkbox-text);
+  font-size: var(--checkbox-font-size);
+  font-weight: 400;
+  line-height: 21px;
+  cursor: pointer;
+}
+.vamis-checkbox--button:hover:not(.is-disabled):not(.is-checked) {
+  z-index: 1;
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+}
+.vamis-checkbox--button.is-checked {
+  z-index: 1;
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+}
+.vamis-checkbox--button.is-checked:hover:not(.is-disabled) {
+  color: var(--checkbox-checked-hover);
+  border-color: var(--checkbox-checked-hover);
+  background-color: transparent;
+}
+.vamis-checkbox--button.is-checked:hover:not(.is-disabled) .vamis-checkbox__corner {
+  background: var(--checkbox-checked-hover);
+}
+.vamis-checkbox--button.is-checked:active:not(.is-disabled) {
+  color: var(--checkbox-checked-active);
+  border-color: var(--checkbox-checked-active);
+  background-color: transparent;
+}
+.vamis-checkbox--button.is-checked:active:not(.is-disabled) .vamis-checkbox__corner {
+  background: var(--checkbox-checked-active);
+}
+.vamis-checkbox--button.is-disabled {
+  cursor: not-allowed;
+  color: var(--control-disabled-color);
+  background-color: var(--checkbox-disabled-bg);
+  border-color: var(--checkbox-border);
+}
+.vamis-checkbox__corner {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  overflow: hidden;
+  background: var(--primary);
+  clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  color: #fff;
+  pointer-events: none;
+}
+.vamis-checkbox--button.is-checked .vamis-checkbox__corner {
+  display: block;
+}
+.vamis-checkbox--button.is-disabled .vamis-checkbox__corner {
+  background: var(--checkbox-disabled-icon);
+}
+.vamis-checkbox__corner .vamis-checkbox__icon {
+  display: block;
+  width: var(--checkbox-icon-size);
+  height: var(--checkbox-icon-size);
+  transform: scale(0.8) translate(-20%, -20%);
 }
 
 .vamis-toast {

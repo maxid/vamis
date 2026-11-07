@@ -5,8 +5,8 @@ outline: deep
 
 # Checkbox 勾选框
 
-::: info 实现进度 85% · 进行中
-主路径已对齐：`option` 与 `label` 分工、`trueValue`/`falseValue`、`optionType: button`、禁用/只读/静态、`change`、`clear`/`reset`/`setValue`。缺 badge、themeCss 皮肤变量。
+::: info 实现进度 90% · 进行中
+主路径已对齐：`option` 与 `label` 分工、`trueValue`/`falseValue`、`optionType: button`（32×min 80、选中角标三角）、禁用/只读/静态、`change`、`clear`/`reset`/`setValue`、`badge`。盒模型转写 Amis `_checks.scss`（16×16 / 圆角 2 / 勾 14，`--checkbox-*`）。缺 themeCss 皮肤变量。
 :::
 
 用于实现勾选，功能和 [Switch](./switch) 类似，只是展现上不同。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀。
@@ -118,9 +118,10 @@ body:
 | option | `string` / schema | | 选项说明。字符串走 tpl；对象走子渲染器 |
 | trueValue | `string \| number \| boolean` | `true` | 标识真值 |
 | falseValue | `string \| number \| boolean` | `false` | 标识假值 |
-| optionType | `default \| button` | `default` | 设置 option 类型 |
+| optionType | `default \| button` | `default` | 设置 option 类型。`button` 是 32px 高、最小 80px 宽的描边钮，选中时左上角三角勾。选中 hover 变浅打在勾选图标本身（与 Select 菜单勾同一色号；深色主题变深） |
 | checked | `boolean` | | 强制展示勾选，覆盖当前值比较 |
 | partial | `boolean` | | 半选（indeterminate） |
+| badge | `[BadgeObject](/components/badge)` | | 角标。Amis 文档主路径无示例，源码 `withBadge` 已接 |
 | readOnly / `readOnlyOn` | `boolean` / 表达式 | | 只读，不能改值 |
 | disabled / `disabledOn` | `boolean` / 表达式 | | 禁用 |
 
@@ -235,6 +236,8 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- `badge`、themeCss / `checkboxCheckedClassName` 等皮肤变量未接。
+- 盒模型按 Amis `_checks.scss` 落到 `--checkbox-*`（浅底 `#fff` / 深底 `#17202d`），不搬 `.cxd-Checkbox`。
+- `badge` 已接（`BadgeHost`）；Amis 文档主路径没有角标示例，本页不另造一份。
+- themeCss / `checkboxCheckedClassName` 等皮肤变量未接。
 - `checkboxes` / `matrix-checkboxes` 是独立 type，本页不覆盖列数、全选、矩阵。
 - 对照动作例（clear / reset / setValue）Amis 侧探针找不到勾选框（无 HTML `name`/`id`，`findByLabel` 只认按钮文案），Vamis 因 `id` 落在 `div.vamis-node` 被判 `rendered`。功能本身可点。

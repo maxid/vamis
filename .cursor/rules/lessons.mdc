@@ -137,7 +137,7 @@ alwaysApply: true
 ### 表单禁用用灰底，不要 opacity
 - 踩过：shadcn `disabled:opacity-50` 让禁用输入框仍像白底可填，肉眼几乎看不出禁用。Amis 是 `--Form-input-onDisabled-bg` fill-10 `#f7f8fa`、字色 `#b8babf`、边框仍 line-8，opacity 1。
 - 稳定做法：token `--control-disabled-bg` / `--control-disabled-color` 挂 `:root`，控件选择器只 `var()`。原生 `input:disabled` 要 `opacity: 1` 和 `-webkit-text-fill-color`，否则 UA 会再淡一层。按钮继续可以用 opacity，不要把这条套到 Button。
-- 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number`
+- 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number` `checkbox`
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*`
 
 ### 输入框 hover 走 --primary，focus glow 包整组
@@ -252,6 +252,12 @@ alwaysApply: true
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
 - 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### 深色浮层靠 `.dark` 换 token，不要写死浅色底
+- 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也有写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
+- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。
+- 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `dropdown-button` `dialog` `action`
+- 规则：`.cursor/rules/style.mdc`「深色主题」
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款
 - 踩过：用 shadcn `--popover` / `--radius` 画 12px、padding 6×10、圆角 4、5px 实心三角；对齐后又把 `#fff` / `8px` 写死在 `.vamis-tooltip`。文档示例改成「上/左/右/下」丢掉 FA 图标。宿主 `style` 漏进浮层。
@@ -398,6 +404,12 @@ alwaysApply: true
 - 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。
 - 触及：`select`
 - 规则：本文；Amis `TransferDropDown` / `GroupedSelection` / `AutoFoldedList` / `mock/options/autoComplete.js`
+
+### 表单勾选走 `--checkbox-*`，不要 shadcn size-4 + Button
+- 踩过：默认勾选用 shadcn Checkbox（圆角 4、`disabled:opacity-50`、lucide 勾）；`optionType: button` 走实心/描边 Button，和 Amis 32×min80 描边钮 + 左上角三角勾对不上。
+- 稳定做法：量进 `:root` / `.dark` 的 `--checkbox-*`（16 盒、圆角 2、勾 14、浅底 `#fff` / 深底 `#17202d`）。选择器只 `var()`。禁用灰底 opacity 1。option 宿主是 **inline-block**，勾选盒 `vertical-align: text-bottom`（Amis `> i`）；不要 `inline-flex` + `align-items: center`，span 会变成 21px flex item，16 盒相对字形光学不居中。按钮模式宿主是 **label**（不要 `<button>` / shadcn `Button`），背景 **transparent**（Amis `rgba(0,0,0,0)`），选中只改描边/字色 + 左上角三角勾；用 `--checkbox-bg` 会在深色变成整块黑钮、浅色也可能被 button 样式刷成实心。选中 hover 打在**勾选图标本身**（`.vamis-checkbox__mark` / `[data-slot=checkbox]` / Select `.vamis-select__check`），不要绑 option 整行。色号走 `--checkbox-checked-hover`：浅色 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 变浅且不掉饱和），深色 `calc(l - 0.08)` 变深。表单勾、Checkboxes、Select 菜单勾共用。**不要**用 `--primary-hover`（浅色混黑会变深），也不要 `color-mix(..., white)`（会发灰），不要 `.option:hover .mark`。隐藏原生勾选框**不要**写 `name`：Amis 渲染器也不把 `name` 传给底层 input；一对上对照会命中 `display:none` 的 UA 盒（12px / weight 500），Amis 找不到节点就假红。表单值走 store。`badge` 包 `BadgeHost`。菜单里的 14px 勾仍是 `--select-check-*`，不要和表单 16 盒混用。
+- 触及：`checkbox` `checkboxes` `select` Options
+- 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
 
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。

@@ -15,7 +15,7 @@ Amis（`baidu/amis`，对齐 **6.13.0**）默认是本仓库的**同级目录** 
 
 - Markdown：`docs/zh-CN/`（`components/`、`concepts/`、`types/`、`style/`、`start/`、`extend/`）
 - 侧栏：组件 `examples/components/Components.tsx`；样式 `examples/components/CssDocs.tsx`
-- 在线：Amis 文档站默认 `http://localhost:8888/zh-CN/…`（仓内 `npm start`，vite `port: 8888`）；Vamis 同路径在 `http://127.0.0.1:5173/…`（`/zh-CN/style/layout/visibility` → `/style/layout/visibility`，组件 `/components/<type>`）。收工必须并排打开这两站同路径页对活示例；对照过了不等于文档站对齐。侧栏路径以 `examples/components/Components.tsx` 为准（tooltip 是 `/zh-CN/components/tooltip`，文件名是 `tooltip-wrapper.md`）
+- 在线：Amis 文档站默认 `http://localhost:8888/zh-CN/…`（仓内 `npm start`，vite `port: 8888`）；Vamis 同路径在 `http://127.0.0.1:5173/…`（`/zh-CN/style/layout/visibility` → `/style/layout/visibility`，组件 `/components/<type>`）。收工必须并排打开这两站同路径页对活示例；对照过了不等于文档站对齐。有 Tooltip / PopOver / 下拉的还要切 Vamis「深色」打开浮层（对照不切 `.dark`）。侧栏路径以 `examples/components/Components.tsx` 为准（tooltip 是 `/zh-CN/components/tooltip`，文件名是 `tooltip-wrapper.md`）
 - 本仓进度：`CONTEXT.md`、组件 P0 TODO。**已注册 ≠ 已完成**
 
 ## 样式

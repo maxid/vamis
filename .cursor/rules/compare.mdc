@@ -28,11 +28,14 @@ Cursor 可能把 `PLAYWRIGHT_BROWSERS_PATH` 指到空的 sandbox-cache，报 `Ex
 PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" pnpm compare --page <type>
 ```
 
+对照默认浅色、不打开 hover 浮层。深色 Tooltip / PopOver / 下拉要对文档站手核，口径见 `.cursor/rules/style.mdc`「深色主题」。
+
 ## 禁止
 
 - 改完组件文档或渲染器就标完成，对照页还停在上一份收割 / 上一份 `sdk.js`
 - 为对照去重改甲/乙文案（见 `.cursor/rules/site.mdc`）
 - 把 `compare-cases.js` 提交进 git
+- 对照过了就当深色浮层也过了（对照不切 `.dark`、不探 tooltip）
 
 ## 回写
 

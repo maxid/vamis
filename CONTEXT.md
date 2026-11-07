@@ -60,7 +60,7 @@
 | 面 | 状态 | 说明 |
 |----|------|------|
 | type 名称覆盖 | 184 / 189（97.4%） | 见 [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)；本轮补 `pager` → `pagination` 别名 |
-| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **59%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 78%；数据输入均 51%；数据展示均 55%；反馈均 89%；其他均 84%；≥50% **111** 项；`page` 进行中 95%（未达标准：`pullRefresh`）/ `container` 已完成 100%；`toast` 已完成 100%；`action` / `button` 95%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` 85%/80%；`tooltip-wrapper` 92%；`spinner` 95%；`alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` 80%；`badge` 95%；`remark` 92%；`web-component` / `amis` 80%；`table-view` 85% / `calendar` 87%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 90%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 75%；FormItem 90%；Options 88%；`input-text` 92%；`checkbox` 85%；`input-date` 88%；`select` 90%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl` 92% / `html` 90%；`static` 65%；`table` 55% |
+| 组件语义（侧栏 155） | 已完成 **2** / 进行中 153 / 未开始 0，平均 **59%** | [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)；布局均 90%；功能均 78%；数据输入均 51%；数据展示均 55%；反馈均 89%；其他均 84%；≥50% **111** 项；`page` 进行中 95%（未达标准：`pullRefresh`）/ `container` 已完成 100%；`toast` 已完成 100%；`action` / `button` 95%；`app` 80%；`button-group` / `breadcrumb` / `dropdown-button` / `nav` / `anchor-nav` 85%/80%；`tooltip-wrapper` 92%；`spinner` 95%；`alert` 80%；`dialog` / `drawer` 85%；`popOver` 属性 80%；`avatar` 90%；`tasks` / `audio` / `wizard` 80%；`badge` 95%；`remark` 92%；`web-component` / `amis` 80%；`table-view` 85% / `calendar` 87%；`table2` 70%；`card` 70% / `cards` 75%；`image` 75%；`icon` 90%；`service` 75%；`collapse` / `tabs` / `portlet` 85%；`divider` / `flex` / `grid` / `grid-2d` / `hbox` / `pagination` / `pagination-wrapper` / `panel` / `wrapper` / `switch-container` 90%；`form` 75%；FormItem 90%；Options 88%；`input-text` 92%；`checkbox` 90%；`input-date` 88%；`select` 90%；`crud` 58%；`code` 92%；`editor` 85%；`diff-editor` 65%；`tpl` 92% / `html` 90%；`static` 65%；`table` 55% |
 | kernel D1–D8 | D1 / D2 / D3 / D4 / D5 P0 已落地；D6 路径值 / `validateApi` / 提交 `errors` / `autoFill` P0 已接；D7 注册信息已接 | Scope + Tpl 对齐 Amis innerHTML（插值默认转义）/P0 过滤器 + `requestApi` + 事件对象 + 动态 target + `test`/`weight`/`isolateScope`；D6 余项（combo 独立域）与 D8、D7 余项（错误边界）仍缺 |
 | 视觉 | **cxd 转写** + **样式行为精度**：不搬前缀；helper 对标计算样式/盒模型，不是截图近似 | `.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`（html/body 不钉字族）；浅色 `--border` 对齐 Amis `#e8e9eb`；Button 默认字重 400。`/style` 首页 **50%**，CSS 变量 **65%**。Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography 14 页 / Border Radius·Width·Style / Box Shadow / Opacity / `state` **90%** 已按盒模型对齐。`text-color` / `background-color` / `border-color` 仍 55%（色盘表）。仍缺色盘表逐页核、像素级 Panel、`registerTheme` |
 | Playground | `/` 文档 + `/components` 组件 + `/style` 样式 + `/examples` 示例 | 同一 5173；顶栏：文档 \| 组件 \| 样式 \| 示例 \| 编辑器 \| **对照**（整页跳 `/sdk/compare.html`）；`pnpm build` 全静态 HTML，可发 GitHub Pages |
@@ -71,6 +71,12 @@
 
 **最近交付**
 
+- `checkbox` option 改回 Amis `inline-block` + 勾选盒 `vertical-align: text-bottom`，图标与 option 文字底对齐；不再 `inline-flex` 居中（span 会吃满 21px 行高，光学偏）。
+- `checkbox` 选中 hover 打在勾选图标本身（不是 option 行），色号 `--checkbox-checked-hover`（浅色抬 L = Amis brand-6）。表单勾、Checkboxes、Select 菜单勾共用；悬停选项文案不变浅。
+- `checkbox` 按钮模式改成 Amis 同款：宿主 `label`、背景 transparent、选中只描边 + 左上角三角勾，不再实心蓝钮。
+- `checkbox` #14：盒模型转写 Amis `_checks.scss`（`--checkbox-*` 16×16 / 圆角 2 / 勾 14；深色底 `#17202d`；禁用灰底不要 opacity）。`optionType: button` 改 32×min80 描边钮 + 左上角三角勾，不再用 shadcn Button。隐藏 input 不写 `name`（Amis 渲染器也不传，对照会命中 UA 隐藏盒）。`badge` 包 `BadgeHost`。进度 85% → **90%**（缺 themeCss）。
+- 已推进组件的深色浮层回归表写进 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)（不往 155 行主表加列）。`select` 已核；`checkbox` 默认皮已核；其余未核。优先有独立浮层的一行。
+- 深色浮层收工口径写入规则：对照不切 `.dark`、不探 hover；组件刀必须浅+深手开 tooltip / PopOver。已知仍写死 `#fff` 的有日期弹层、桌面 Toast、`--remark-bg`。
 - 深色主题覆盖 `--tooltip-*`；`maxTagCount` 溢出层跟下拉 `--select-menu-*`，不再白底深色标签。
 - 分组单选下拉不再画右侧复选框，只靠 `is-active`（对齐 Amis `GroupedSelection`）。
 - Select 多选可见 tag 悬停显示 label tooltip（`placement: top`），对齐 Amis `TooltipWrapper`。
@@ -349,10 +355,10 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`select` #13 已到 90%。**下一刀 `checkbox`（#14，85%）**，或补 `input-date` #15（88%）未齐项。`spinner` 菱形标暂缓再优先。`remark` / `badge` / `tooltip-wrapper` 余项 `themeCss`，不挡。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / combo 独立域，不挡下一刀。收工必须并排开两边文档站（对照不探 hover）。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。SDK 打包已不再依赖 moment。
+1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`select` #13 / `checkbox` #14 已到 90%。**下一刀 `input-date`（#15，88%）未齐项**。`spinner` 菱形标暂缓再优先。每刀收工除对照外，文档站再切一次「深色」打开 tooltip / 下拉 / PopOver（对照不探 hover、不切 `.dark`）。`remark` / `badge` / `tooltip-wrapper` / `checkbox` 余项 `themeCss`，不挡。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / combo 独立域，不挡下一刀。收工必须并排开两边文档站。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。SDK 打包已不再依赖 moment。
 2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
-5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条继续组件覆盖。
+5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条继续组件覆盖。**深色浮层回归**按组件 TODO「深色浮层回归」表打勾（优先有独立浮层的一行）。日期弹层仍写死 `#fff`、桌面 Toast `#fff` / `#151b26`、`--remark-bg` / `--text-loud` / `--fill-9` 未进 `.dark`。做法是补 token 覆盖，不要每个渲染器再写一套 `.dark .vamis-xxx`。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
