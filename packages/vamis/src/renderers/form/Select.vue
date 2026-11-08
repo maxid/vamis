@@ -10,6 +10,7 @@ import {
   isAllSelected,
   isGroupOption,
   overlayIsMobile,
+  POPUP_DEFAULT_HEIGHT,
   resolveClassName,
   selectOverlayPlacement,
   selectPopupHeight,
@@ -62,7 +63,12 @@ const isMobile = computed(() => {
   return overlayIsMobile(props.schema, env)
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
-const popupHeight = computed(() => selectPopupHeight(props.schema.overlay))
+const popupHeight = computed(() =>
+  selectPopupHeight(
+    props.schema.overlay,
+    isGroupMenu.value ? POPUP_DEFAULT_HEIGHT : undefined,
+  ),
+)
 const mobileDraft = ref<OptionItem[]>([])
 const mobileWheelIndex = ref(0)
 const checkAllLabel = computed(() =>
@@ -524,7 +530,7 @@ watch(
         <div
           v-if="showSearch"
           class="vamis-select__search"
-          :class="isGroupMenu ? 'vamis-select__search--box' : 'vamis-select__search--line'"
+          :class="isGroupMenu ? 'vamis-select__search--sheet' : 'vamis-select__search--line'"
         >
           <div class="vamis-select__search-inner">
             <svg

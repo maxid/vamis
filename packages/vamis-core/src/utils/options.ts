@@ -542,8 +542,11 @@ export function calcSelectOverlayWidth(overlay: unknown, targetWidth: number): n
   }
 }
 
-/** 移动端 Select PopUp 高度：`overlay.height` 覆盖，否则 320（Amis `.Select-popup`）。 */
-export function selectPopupHeight(overlay: unknown): number {
+/**
+ * 移动端 Select PopUp 高度：`overlay.height` 覆盖。
+ * 默认：普通 Select / 滚轮 320（`.Select-popup`）；分组 Transfer 传 400（`.PopUp`，对照 800 看起来像半屏，不是 50vh）。
+ */
+export function selectPopupHeight(overlay: unknown, fallback = SELECT_POPUP_HEIGHT): number {
   if (overlay && typeof overlay === 'object' && overlay !== null && 'height' in overlay) {
     const raw = (overlay as SelectOverlay).height
     if (typeof raw === 'number' && Number.isFinite(raw) && raw > 0) return raw
@@ -552,7 +555,7 @@ export function selectPopupHeight(overlay: unknown): number {
       if (Number.isFinite(n) && n > 0) return n
     }
   }
-  return SELECT_POPUP_HEIGHT
+  return fallback
 }
 
 /** 对齐 Amis `alignToPlacement`。 */

@@ -213,6 +213,8 @@ describe('toggle / checkAll / selectFirst', () => {
     expect(selectPopupHeight({})).toBe(320)
     expect(selectPopupHeight({ height: 400 })).toBe(400)
     expect(selectPopupHeight({ height: '280px' })).toBe(280)
+    expect(selectPopupHeight({}, 400)).toBe(400)
+    expect(selectPopupHeight({ height: 280 }, 400)).toBe(280)
   })
 })
 
@@ -337,6 +339,8 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('#default="{ item, index, checked }"')
     expect(select).toContain('vamis-select__popover--sheet')
     expect(select).not.toContain('vamiss-select__popover--sheet')
+    expect(select).toContain('vamis-select__search--sheet')
+    expect(select).toContain('POPUP_DEFAULT_HEIGHT')
     expect(select).toContain('confirmMobile')
     expect(select).toContain('countVisibleTagsByWidth')
     expect(select).toContain("'is-fold': foldTags")

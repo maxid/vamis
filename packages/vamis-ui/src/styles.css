@@ -254,6 +254,9 @@
   --button-info-active: var(--primary-active);
   --form-item-gap: 24px;
   --form-item-mobile-gap: 8px;
+  /* 对齐 Amis `--Form-item-fontSize` / `--Form-item-color`（text-4）。桌面移动同一套，不要跟 title 16 或 `--foreground`。 */
+  --form-item-font-size: 14px;
+  --form-item-color: #5c5f66;
   --form-mode-default-label-gap: 8px;
   --form-mode-inline-item-gap: 16px;
   --form-mode-inline-label-gap: 16px;
@@ -461,6 +464,7 @@
   --secondary-foreground: oklch(0.93 0.015 250);
   --muted: oklch(0.3 0.025 258);
   --muted-foreground: oklch(0.7 0.02 250);
+  --form-item-color: #e8e9eb;
   --select-caret-color: #d4d6d9;
   --select-caret-hover-color: #d4d6d9;
   --select-menu-bg: #17202d;
@@ -1994,6 +1998,16 @@
   .vamis-select__search--box {
     padding: var(--select-search-box-pad);
   }
+  /* 对齐 Amis 移动端 Transfer-search（外 10px）+ InputBox.is-mobile（32、无四边框、底线）。 */
+  .vamis-select__search--sheet {
+    flex-shrink: 0;
+    height: auto;
+    margin: 0;
+    padding: 10px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
   .vamis-select__search-inner {
     display: flex;
     align-items: center;
@@ -2011,6 +2025,14 @@
   .vamis-select__search--box .vamis-select__search-inner:hover {
     border-color: var(--control-hover-border);
   }
+  .vamis-select__search--sheet .vamis-select__search-inner {
+    height: var(--control-h);
+    padding: 4px 10px;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: var(--select-menu-bg);
+  }
   .vamis-select__search-icon {
     flex: 0 0 auto;
     width: var(--select-search-icon-size);
@@ -2021,7 +2043,8 @@
   .vamis-select__search--line .vamis-select__search-icon {
     margin-right: 4px;
   }
-  .vamis-select__search--box .vamis-select__search-icon {
+  .vamis-select__search--box .vamis-select__search-icon,
+  .vamis-select__search--sheet .vamis-select__search-icon {
     margin-left: 4px;
   }
   .vamis-select__search-input {
@@ -2755,6 +2778,18 @@
   pointer-events: none;
 }
 
+/*
+  对齐 Amis `.Form-label`：14 / 400 / #5c5f66（`--Form-item-*`）。
+  压过 Label 的 `text-sm leading-none` 和曾经的 `text-foreground`。
+  移动端 title 才是 16；label 不要跟 `--fontSizeBase` 抬到 16。
+*/
+.vamis-form-item__label {
+  font-size: var(--form-item-font-size);
+  font-weight: 400;
+  line-height: calc(var(--form-item-font-size) * var(--lineHeightBase));
+  color: var(--form-item-color);
+}
+
 @media (min-width: 576px) {
   .vamis-form-item--horizontal {
     grid-template-columns: var(--form-label-width) minmax(0, 1fr);
@@ -2885,13 +2920,7 @@
   .vamis-form-panel [data-slot="card-content"] {
     padding: 12px;
   }
-  .vamis-form-item__label,
-  .vamis-form-item__label.font-normal,
-  .vamis-form-item__label.text-sm {
-    font-size: var(--fontSizeLg);
-    font-weight: 400;
-    line-height: 24px;
-  }
+  /* label 仍 14（--Form-item-fontSize = fonts-size-7）。不要跟 title 一起抬到 16。 */
   .vamis-form-panel [data-slot="card-footer"],
   .vamis-form-actions {
     display: flex;

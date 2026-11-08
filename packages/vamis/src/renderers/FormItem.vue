@@ -104,7 +104,7 @@ const labelRemark = computed(() => {
     <Label
       v-if="!hideLabel"
       class="vamis-form-item__label"
-      :class="cn(horizontal || inline ? 'font-normal text-muted-foreground' : 'text-foreground', labelClass)"
+      :class="labelClass"
     >
       <span v-if="required && (showLabel || labelRemark)" class="mr-0.5 text-destructive">*</span>
       <span v-if="showLabel" v-html="labelText" />

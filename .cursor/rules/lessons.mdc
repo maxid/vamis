@@ -283,9 +283,15 @@ alwaysApply: true
 - 触及：`select` Options
 - 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `SelectMobile.tsx` / `TransferDropDown.tsx`
 
+### 表单 label 走 --form-item-*，不要 foreground / 16px
+- 踩过：`mode: normal` 用 `text-foreground`（偏黑），horizontal/inline 用 `text-muted-foreground`（oklch 偏深）；移动端一度跟 Panel title 抬到 16。Amis `.Form-label` 桌面移动都是 `--Form-item-fontSize` 14 + `--Form-item-color` `#5c5f66`（深色 `#e8e9eb`）。PC 字号已经 14，色号同样偏。
+- 稳定做法：`--form-item-font-size` / `--form-item-color` 挂 `:root` / `.dark`，`.vamis-form-item__label` 只 `var()`，unlayered 压过 Label 的 `text-sm leading-none`。不要跟移动端 `--fontSizeBase` 16 走。
+- 触及：`form` FormItem
+- 规则：本文；Amis `_form.scss` `.Form-label`；`_components.scss` `--Form-item-*`
+
 ### 窄屏表单面板盒模型跟 Amis Panel，不要留 Card px-4
 - 踩过：Options 对照里 Select 箭头停在 212px 盒右侧。根因是 CardHeader/Content `px-4 py-3`（16px）+ page-body 12px，面板比 Amis 窄一截；标题 `text-sm font-medium` 14/500，Amis heading 40px / 16/24/400。只改 padding 后 heading 仍 319：`w-full` 钉死内容区，Amis `Panel--form` 还有 `margin: 0 -12px 10px` 吃进 page padding。
-- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
+- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；**label 仍 14 / `#5c5f66`**（`--Form-item-fontSize` / `--Form-item-color`，桌面移动同一套，不要跟 title 一起抬到 16，也不要 `text-foreground`）。body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
 - 触及：`form` FormItem `select` Options
 - 规则：`.cursor/rules/component.mdc`；Amis `_panel.scss` `Panel--form` / `_properties.scss` `--Page-body-padding`
 

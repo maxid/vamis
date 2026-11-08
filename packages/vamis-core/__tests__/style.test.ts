@@ -230,6 +230,10 @@ describe('Amis width helpers', () => {
     expect(css).toContain('padding: 0 12px 12px')
     expect(css).toContain('margin: 0 -12px 10px')
     expect(css).toContain('.vamis-select.is-mobile .vamis-select__input')
+    expect(css).toContain('.vamis-select__search--sheet')
+    expect(css).not.toContain('.vamis-form-item__label.font-normal')
+    expect(css).toContain('--form-item-font-size: 14px')
+    expect(css).toContain('--form-item-color: #5c5f66')
   })
 
   it('pins widget root to Amis font token, 14px/1.5, and line-8 border', () => {
@@ -598,6 +602,7 @@ describe('Amis width helpers', () => {
     expect(form).toContain('schema.reset === true')
     expect(form).toContain('bg-muted')
     expect(item).toContain('schema.labelClassName')
+    expect(item).not.toContain("text-muted-foreground' : 'text-foreground'")
     expect(item).toContain('schema.className')
     expect(item).toContain('schema.inputClassName')
     expect(item).toContain('schema.descriptionClassName')

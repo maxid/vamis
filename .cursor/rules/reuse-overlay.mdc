@@ -38,7 +38,7 @@ Vamis 入口（不要再新开月历）：
 |------|------|
 | 共享底栏壳 | `packages/vamis/src/overlay/VamisPopUp.vue` |
 | 开关 | `overlayIsMobile`（schema / env `mobileUI` 优先，否则 `max-width: 768px`） |
-| 高度 | 通用 `POPUP_DEFAULT_HEIGHT` **400**（Amis `.PopUp`）；Select `SELECT_POPUP_HEIGHT` **320**（`.Select-popup`）。`overlay.height` 可覆盖。日期 sheet 仍 320 |
+| 高度 | 通用 `POPUP_DEFAULT_HEIGHT` **400**（Amis `.PopUp`；分组 Transfer 走这条，对照 800 iframe 看起来像半屏，**不是** `50vh`）；普通 Select `SELECT_POPUP_HEIGHT` **320**（`.Select-popup`）。`overlay.height` 可覆盖。日期 sheet 仍 320 |
 | 边框 | 移动端底栏共用 `--popup-border`（=`--border` `#e8e9eb`）+ `--popup-shadow`（Amis `--boxShadow`）。Select `.vamis-popup` 与 DatePickerSheet `.vamis-date-sheet__panel`（input-date / input-time / input-datetime）同一套，不要各写 `--cal-shadow`。遮罩 `rgba(0,0,0,0.3)`；不要用遮罩色去画 rim |
 | 取消/确认 | Amis `Button level=link size=default`：字号 `--fontSizeBase` 14、高 32、左右 padding 12。取消 `#666`、确认 `--primary`，hover 都走 `--link-hover-color` `#528eff`。Select 与 DatePickerSheet 共用选择器 |
 | 日期滚轮 | `DatePickerSheet`（面板 320px；动画与 PopUp 共用 keyframes） |
