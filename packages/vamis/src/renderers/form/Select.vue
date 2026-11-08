@@ -110,6 +110,10 @@ const isGroupMenu = computed(() => {
 const useMobileWheel = computed(
   () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value,
 )
+/** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
+const useMobileTick = computed(
+  () => isMobile.value && !!ctl.config.value.multiple && !isGroupMenu.value,
+)
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
 )
@@ -594,7 +598,11 @@ watch(
           <PickerFade class="vamis-picker-fade" />
           <div class="vamis-popup__frame" :style="{ height: `${SELECT_PICKER_ITEM_HEIGHT}px` }" />
         </div>
-        <div v-else class="vamis-select__popover vamis-select__popover--sheet">
+        <div
+          v-else
+          class="vamis-select__popover vamis-select__popover--sheet"
+          :class="{ 'is-tick': useMobileTick }"
+        >
           <button
             v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
             type="button"
@@ -646,7 +654,16 @@ watch(
                 @click="onPick(opt)"
               >
                 <span
-                  v-if="ctl.config.value.multiple"
+                  v-if="useMobileTick && isSelected(opt.value)"
+                  class="vamis-select__mcheck"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 16 16">
+                    <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
+                  </svg>
+                </span>
+                <span
+                  v-else-if="!useMobileTick && ctl.config.value.multiple"
                   class="vamis-select__check"
                   :class="{ 'is-checked': isSelected(opt.value) }"
                 >

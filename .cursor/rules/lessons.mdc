@@ -182,6 +182,12 @@ alwaysApply: true
 - 触及：`form` FormItem `input-text` `checkbox`
 - 规则：`.cursor/rules/component.mdc`
 
+### 1px 分隔线不要打在 overflow:hidden 的固定高子项上
+- 踩过：移动端多选两行选中之间的横线消失。Amis option **37px**（line-height 36 + 子项 1px 底边）；Vamis 钉死 36 且全局 `border-box`，1px 被吃进盒子，线落在裁切边上像 0.5px。不是勾把行撑高。这是 Tailwind preflight `* { box-sizing: border-box }` + 钉死 `height` 的通病，不是某一个 shadcn 组件独有。
+- 稳定做法：跟 Amis 一样 **不要钉死行高**。`height: auto`，`line-height: 36px`，1px 画在内层并用 `box-sizing: content-box`，整行量出来必须是 **37**。选中/未选同一套字重和 padding。勾的垂直居中用 `margin-top: -8px`，不要 `transform: translateY(-50%)`（合成层会让 1px 在 100% 缩放消失，一改缩放又出现）。不要 `scaleY(0.5)` hairline。
+- 触及：`select` Options
+- 规则：本文；`.cursor/rules/style.mdc`；Tailwind preflight `box-sizing`
+
 ### 铺满是默认，不要作者开关
 - 踩过：Playground 为好看给 page/form 写死 `max-w-3xl`；文档教「先写 `size: full`」。
 - 稳定做法：布局容器和表单控件槽默认吃满、`max-width: 100%`。`size: xs|sm|md|lg` 才钉档；`size: full` 只在默认吃不满时才写。按钮/徽标/纯文本不要拉成 100%。Dialog 等浮层可以有默认尺寸。
@@ -278,10 +284,10 @@ alwaysApply: true
 - 规则：本文；Amis `_properties.scss` `--Form-input-placeholderColor`
 
 ### 移动端 Select 只有普通单选才走滚轮
-- 踩过：所有非 multiple 的移动端 Select 都画 CalendarWheel，`menuTpl` 丢掉、`searchable` 不出现、`selectMode: group` 把 children 拍扁成三行滚轮。Amis 普通单选才是 Picker；group 走 TransferDropDown 列表；menuTpl 是 Picker `optionRender`。
-- 稳定做法：`useMobileWheel = mobile && !multiple && !isGroupMenu`。滚轮项用 CalendarWheel slot 渲 `menuTpl`；`searchable` 检索条放 PopUp 里滚轮/列表上方。分组列表复用桌面 Transfer 检索（icon 在右，placeholder 用 Select 的「请选择」）。
+- 踩过：所有非 multiple 的移动端 Select 都画 CalendarWheel，`menuTpl` 丢掉、`searchable` 不出现、`selectMode: group` 把 children 拍扁成三行滚轮。Amis 普通单选才是 Picker；group 走 TransferDropDown 列表；menuTpl 是 Picker `optionRender`。普通多选一度画左侧 Checkbox，Amis 是右侧 `Select-option-mcheck`。
+- 稳定做法：`useMobileWheel = mobile && !multiple && !isGroupMenu`。滚轮项用 CalendarWheel slot 渲 `menuTpl`；`searchable` 检索条放 PopUp 里滚轮/列表上方。分组列表复用桌面 Transfer 检索（icon 在右，placeholder 用 Select 的「请选择」）。普通多选 `useMobileTick`：无左侧勾选盒，选中才在右侧画 Amis `check` 16px（`--primary`）；分组多选仍走 GroupedSelection 左侧 14px 盒。行间 1px 底边打在 **item** 上并 `background-clip: padding-box`，不要打在 `overflow: hidden` 的 label 上（会被剪成 0.5px，两行选中之间看不见）。
 - 触及：`select` Options
-- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `SelectMobile.tsx` / `TransferDropDown.tsx`
+- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `SelectMobile.tsx` / `_select.scss` `&-option-mcheck` / `TransferDropDown.tsx`
 
 ### 表单 label 走 --form-item-*，不要 foreground / 16px
 - 踩过：`mode: normal` 用 `text-foreground`（偏黑），horizontal/inline 用 `text-muted-foreground`（oklch 偏深）；移动端一度跟 Panel title 抬到 16。Amis `.Form-label` 桌面移动都是 `--Form-item-fontSize` 14 + `--Form-item-color` `#5c5f66`（深色 `#e8e9eb`）。PC 字号已经 14，色号同样偏。

@@ -207,6 +207,7 @@
   /* Amis InputBox = `--Form-input-paddingY/X` size-3 / size-6。 */
   --select-search-input-pad-y: 4px;
   --select-search-input-pad-x: 10px;
+  --select-mcheck-size: 16px;
   --select-check-size: 14px;
   --select-check-radius: 2px;
   --select-check-border: #d4d6d9;
@@ -2189,6 +2190,52 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: inherit;
+  }
+  .vamis-select__mcheck {
+    position: absolute;
+    top: 50%;
+    right: var(--select-option-padding-x);
+    flex: none;
+    width: var(--select-mcheck-size);
+    height: var(--select-mcheck-size);
+    color: var(--primary);
+    /* 不用 translateY(-50%)：选中项一开合成层，100% 缩放下 1px 底边会落到半像素消失（缩放又能看见）。 */
+    margin-top: calc(var(--select-mcheck-size) / -2);
+    pointer-events: none;
+  }
+  .vamis-select__mcheck svg {
+    display: block;
+    width: var(--select-mcheck-size);
+    height: var(--select-mcheck-size);
+    fill: currentColor;
+  }
+  /*
+    Amis 移动多选：option 不钉死 height，line-height 36，1px 底边在
+    `.Select-option-item-check` 上，整行量出来是 37。
+    Tailwind/shadcn 全局 border-box + 钉死 height:36 会把 1px 吃进盒子，
+    行仍是 36，线落在裁切边上变成亚像素。这里跟 Amis：item height:auto，
+    线画在 label 上并用 content-box，36+1=37。
+  */
+  .vamis-select__popover--sheet.is-tick .vamis-select__item {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    line-height: 36px;
+    align-items: stretch;
+    border: 0;
+  }
+  .vamis-select__popover--sheet.is-tick .vamis-select__item-label {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    min-height: 36px;
+    line-height: 36px;
+    box-sizing: content-box;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .vamis-select__popover--sheet.is-tick .vamis-select__item:last-child .vamis-select__item-label {
+    border-bottom: none;
   }
   /* 滚轮 optionRender：对齐 PickerColumns-columnItem 居中，不要吃 list 的 flex:1 / text-align:left。 */
   .vamis-select__wheel-label {
