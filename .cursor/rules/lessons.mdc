@@ -73,9 +73,9 @@ alwaysApply: true
 - 规则：本文；`packages/vamis-sdk/embed-case.html` `findNodeEl`
 
 ### 表单窄屏靠 CSS 改 layout，不要按 type 各写一套
-- 踩过：对照 375 上 Vamis 标签在上、提交钮靠右小块；Amis 是 label 28% 与控件同行、底栏按钮 `flex:1` 拉满。
-- 稳定做法：对齐 `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`。`.vamis-form-item` 一律 flex + 标签 28% + 底部分割线；日期/文本/Select 去边框；`.vamis-form-panel` 去标题灰底与描边；footer 按钮 `flex:1`。所有表单控件自动吃到，不要给 `input-date` / `select` 再做一套移动 layout。JS `mobileUI` 768 只给 picker / Toast。
-- 触及：`form` FormItem `input-date` `select`
+- 踩过：对照 375 上 Vamis 标签在上、提交钮靠右小块；Amis 是 label 28% 与控件同行、底栏按钮 `flex:1` 拉满。只给 `.vamis-node` / 直接子 Button 设 `flex:1` 时，Action 的 `span.inline-block` 和 shadcn `shrink-0` 仍把提交收成左小块。
+- 稳定做法：对齐 `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`。`.vamis-form-item` 一律 flex + 标签 28% + 底部分割线；日期/文本/Select 去边框；`.vamis-form-panel` 去标题灰底与描边。footer 同时拉满 `.vamis-node`、`[data-vamis-action]`、`[data-slot="button"]`（同 Dialog）。所有表单控件自动吃到，不要给 `input-date` / `select` 再做一套移动 layout。JS `mobileUI` 768 只给 picker / Toast / Select PopUp。
+- 触及：`form` FormItem `input-date` `select` `action`
 - 规则：本文；Amis `_form.scss` 562+ / `_panel.scss` `Panel--form`
 
 ### 窄屏必须桌面 + 移动一起跑
@@ -253,6 +253,12 @@ alwaysApply: true
 
 ### 浮层与日期
 
+### 移动端 PopOver 走底部 PopUp，不要再用 VamisOverlay
+- 踩过：Select 对照「移动」仍是贴触发器的下拉；Amis `SelectMobile` 是 `PopUp` 从底部滑入，单选滚轮、多选列表，确认才写入。
+- 稳定做法：`overlayIsMobile`（schema/env `mobileUI` 优先，否则 768）。桌面 `VamisOverlay`，移动 `VamisPopUp`（height 0 贴底 in/out，`--z-modal` 1400，取消/确认）。单选挂 `CalendarWheel`，多选列表改 draft、确认 `commit`。日期已是 `DatePickerSheet` 同一套动画，新控件接 `VamisPopUp`，不要第三套壳。DropdownButton / InputText 建议下一刀接。
+- 触及：`select` Options `input-date`
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
@@ -320,10 +326,10 @@ alwaysApply: true
 - 规则：本文；`packages/vamis/src/renderers/calendar/PickerFade.vue`
 
 ### Dialog 窄屏底栏要打穿 Action 的 inline-block
-- 踩过：对照移动 Dialog 取消/确认还是 54px 小钮，中间一片空。footer 给 `.vamis-node` 设了 `flex:1`，按钮 `width:100%`，但 Action 还包着 `span[data-vamis-action].inline-block`，百分比相对这个收缩包裹，高度 44px 能生效、宽度不能。
-- 稳定做法：窄屏同时拉满 `.vamis-node` **和** `[data-vamis-action]`（`display:block; width:100%; flex:1`），按钮再 `display:flex; width:100%; height:44px`。不要假设 SchemaRenderer 外层就是按钮的包含块。
-- 触及：`dialog` `action` `button` `drawer`
-- 规则：本文；`packages/vamis-ui/src/styles.css` Dialog `<576`；Amis `_modal.scss` `Modal-footer > .Button { flex: 1 }`
+- 踩过：对照移动 Dialog 取消/确认还是 54px 小钮，中间一片空。footer 给 `.vamis-node` 设了 `flex:1`，按钮 `width:100%`，但 Action 还包着 `span[data-vamis-action].inline-block`，百分比相对这个收缩包裹，高度 44px 能生效、宽度不能。Form 默认提交同样被 `shrink-0` 收成左小块。
+- 稳定做法：窄屏同时拉满 `.vamis-node` **和** `[data-vamis-action]`（`display:block; width:100%; flex:1`），按钮再 `display:flex; width:100%`。Dialog 再钉 `height:44px`。不要假设 SchemaRenderer 外层就是按钮的包含块。Form 底栏同一套。
+- 触及：`dialog` `action` `button` `drawer` `form`
+- 规则：本文；`packages/vamis-ui/src/styles.css` Dialog `<576` / Form `767`；Amis `_modal.scss` `Modal-footer > .Button { flex: 1 }`
 
 ### 手机「桌面式网站」会把 CSS 视口撑过 768
 - 踩过：对照 `embed-case` 在手机上画出桌面月历 + 标签在上。浏览器 Desktop site / 桌面式把 layout viewport 设成 ~980，`matchMedia('(max-width: 768px)')` 为 false。Amis `isMobile()` 同样只认 CSS 视口，不认 UA。

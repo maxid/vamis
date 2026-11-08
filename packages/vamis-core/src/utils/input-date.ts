@@ -4,6 +4,7 @@ import type { ManipulateType } from 'dayjs'
 import { dayjs, isDayjs, parseDate, type Dayjs } from './dayjs'
 import { resolveValue } from '../formula'
 import { getPathValue } from './path-value'
+import { overlayIsMobile } from './overlay-layer'
 import { calendarMonthCells, calendarWeeks, isoDay, type CalendarCell, type CalendarPickerOption } from './calendar'
 import type { PlainObject, SchemaObject } from '../types'
 
@@ -411,12 +412,7 @@ export function inputDateIsMobile(
   schema: SchemaObject,
   env?: { mobileUI?: unknown } | null,
 ): boolean {
-  if (schema.mobileUI === true) return true
-  if (schema.mobileUI === false) return false
-  if (env?.mobileUI === true) return true
-  if (env?.mobileUI === false) return false
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
-  return window.matchMedia('(max-width: 768px)').matches
+  return overlayIsMobile(schema, env)
 }
 
 export function inputDatePickerTypes(schema: SchemaObject): InputDatePickerType[] {

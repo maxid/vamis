@@ -24,10 +24,24 @@ Vamis 入口（不要再新开月历）：
 | 表单日期 | `packages/vamis/src/renderers/form/InputDate.vue`（embed / 桌面弹层都挂这块面板） |
 | 移动端滚轮 PopUp | `packages/vamis/src/renderers/calendar/DatePickerSheet.vue`（默认；`mobileCalendarMode: calendar` 未接） |
 | `type: calendar` | `packages/vamis/src/renderers/display/Calendar.vue`（同一面板 + schedules / largeMode / 窄屏滚轮） |
-| 浮层原语 | `packages/vamis/src/overlay/VamisOverlay.vue` |
-| 容器 / 定位 / z-index | `packages/vamis-core/src/utils/overlay-layer.ts`（`Z_INDEX`、`overlayContainerFrom`、`overlayPosition`） |
+| 浮层原语 | `packages/vamis/src/overlay/VamisOverlay.vue`（桌面 PopOver） |
+| 移动端底栏 | `packages/vamis/src/overlay/VamisPopUp.vue`（Select 等；日期仍用 DatePickerSheet） |
+| 容器 / 定位 / z-index | `packages/vamis-core/src/utils/overlay-layer.ts`（`Z_INDEX`、`overlayContainerFrom`、`overlayPosition`、`overlayIsMobile`） |
 
 允许表单多出 shortcuts / 时分秒 / 页脚。不允许另一套圆角、字号、间距、选中色、非本月色（`#b8babf`）。`input-datetime` / `input-time` 已是 InputDate 别名。DateRange 仍是原生区间，**不要再长出第二套桌面月历**；要做就挂 `DateCalendarPanel`。
+
+## 移动端 PopOver 从底部滑入
+
+对齐 Amis `PopUp`（`SelectMobile` / DatePicker 窄屏）。桌面仍是 `VamisOverlay` + `PopOver` 定位；**`overlayIsMobile` 为真时改走 `VamisPopUp`**：固定底栏、遮罩、height 0 贴底 `in`/`out`（看起来从底部滑入/滑出）、取消/确认、`--z-modal` 1400。
+
+| 用途 | 路径 |
+|------|------|
+| 共享底栏壳 | `packages/vamis/src/overlay/VamisPopUp.vue` |
+| 开关 | `overlayIsMobile`（schema / env `mobileUI` 优先，否则 `max-width: 768px`） |
+| 日期滚轮 | `DatePickerSheet`（面板 320px；动画与 PopUp 共用 keyframes） |
+| Select | 单选 `CalendarWheel`；多选列表；确认才 `commit` |
+
+禁止：移动端 Select / 日期再挂 `VamisOverlay` 当下拉；为每个 type 再写一套滑入动画。DropdownButton / InputText 建议也接这块，不要第三套壳。`mobileCalendarMode: calendar` 仍未接。
 
 ## 浮层必须逃出裁切
 

@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import {
+  CALENDAR_PICKER_ITEM_HEIGHT,
+  CALENDAR_PICKER_VISIBLE,
   SchemaRenderer,
   calcSelectOverlayWidth,
   countVisibleTagsByWidth,
   filterTpl,
   isAllSelected,
   isGroupOption,
+  overlayIsMobile,
   resolveClassName,
   selectOverlayPlacement,
+  toggleAllOptions,
+  toggleOption,
   useData,
+  useEnv,
+  type CalendarPickerOption,
   type OptionItem,
   type SchemaNode,
   type SchemaObject,
@@ -17,7 +24,10 @@ import {
 import { Pencil, VamisCaret, VamisClear, XIcon } from '@vamis/ui'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
+import VamisPopUp from '../../overlay/VamisPopUp.vue'
 import VamisTooltipLayer from '../../overlay/VamisTooltipLayer.vue'
+import CalendarWheel from '../display/CalendarWheel.vue'
+import PickerFade from '../calendar/PickerFade.vue'
 import Spinner from '../Spinner.vue'
 import { useOptionsControl } from '../../optionsControl'
 
@@ -43,12 +53,41 @@ let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
 let tagTipHideTimer: ReturnType<typeof setTimeout> | undefined
 
 const ctl = useOptionsControl(schemaRef, disabledRef)
+const env = useEnv()
+const viewportTick = ref(0)
 const locked = computed(() => !!props.disabled)
+const isMobile = computed(() => {
+  viewportTick.value
+  return overlayIsMobile(props.schema, env)
+})
+const pickerHeight = CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const mobileDraft = ref<OptionItem[]>([])
+const mobileWheelIndex = ref(0)
 const checkAllLabel = computed(() =>
   props.schema.checkAllLabel != null ? String(props.schema.checkAllLabel) : '全选',
 )
 const addControls = computed(() => (Array.isArray(props.schema.addControls) ? props.schema.addControls : []))
-const allChecked = computed(() => isAllSelected(ctl.selected.value, ctl.filtered.value, ctl.config.value.valueField))
+function leafOptions(list: OptionItem[]): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const item of list) {
+    if (Array.isArray(item.children) && item.children.length) out.push(...leafOptions(item.children))
+    else out.push(item)
+  }
+  return out
+}
+const mobileLeaves = computed(() => leafOptions(ctl.filtered.value))
+const mobileWheelOptions = computed((): CalendarPickerOption[] =>
+  mobileLeaves.value.map((item, i) => ({
+    value: i,
+    text: String(item.label ?? item.value ?? ''),
+  })),
+)
+function selectedPool() {
+  return isMobile.value && ctl.open.value ? mobileDraft.value : ctl.selected.value
+}
+const allChecked = computed(() =>
+  isAllSelected(selectedPool(), ctl.filtered.value, ctl.config.value.valueField),
+)
 const menuTpl = computed(() => props.schema.menuTpl as SchemaNode | undefined)
 const noResultsText = computed(() =>
   props.schema.noResultsText != null ? String(props.schema.noResultsText) : '未找到任何结果',
@@ -225,7 +264,57 @@ function cancelCreate() {
 }
 
 function isSelected(value: unknown) {
-  return ctl.selected.value.some((item) => String(item.value) === String(value))
+  return selectedPool().some((item) => String(item.value) === String(value))
+}
+
+function syncMobileDraft() {
+  mobileDraft.value = [...ctl.selected.value]
+  const cur = ctl.selected.value[0]
+  const idx = cur
+    ? mobileLeaves.value.findIndex((item) => String(item.value) === String(cur.value))
+    : 0
+  mobileWheelIndex.value = idx < 0 ? 0 : idx
+}
+
+function onWheelIndex(index: number) {
+  mobileWheelIndex.value = index
+  const item = mobileLeaves.value[index]
+  mobileDraft.value = item ? [item] : []
+}
+
+function onPick(item: OptionItem) {
+  if (item.disabled || locked.value) return
+  if (isMobile.value) {
+    if (ctl.config.value.multiple) {
+      mobileDraft.value = toggleOption(item, mobileDraft.value, ctl.config.value)
+      return
+    }
+    mobileDraft.value = [item]
+    return
+  }
+  void ctl.toggle(item)
+}
+
+async function onToggleAll() {
+  if (isMobile.value) {
+    const pool =
+      ctl.config.value.checkAllBySearch !== false && ctl.keyword.value.trim()
+        ? ctl.filtered.value
+        : ctl.options.value
+    mobileDraft.value = toggleAllOptions(mobileDraft.value, pool, ctl.config.value.valueField)
+    return
+  }
+  await ctl.toggleAll()
+}
+
+async function confirmMobile() {
+  if (ctl.config.value.multiple) {
+    await ctl.commit(mobileDraft.value)
+  } else {
+    const item = mobileLeaves.value[mobileWheelIndex.value] ?? mobileLeaves.value[0]
+    await ctl.commit(item ? [item] : [])
+  }
+  closeMenu()
 }
 
 function menuData(opt: OptionItem, index: number) {
@@ -246,21 +335,39 @@ async function onDelete(opt: OptionItem, event: Event) {
   await ctl.deleteOption(opt)
 }
 
+let media: MediaQueryList | undefined
+let onMedia: (() => void) | undefined
+
 onMounted(() => {
   foldObserver = new ResizeObserver(() => measureTags())
   if (valueEl.value) foldObserver.observe(valueEl.value)
   scheduleMeasure()
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    media = window.matchMedia('(max-width: 768px)')
+    onMedia = () => {
+      viewportTick.value += 1
+    }
+    media.addEventListener('change', onMedia)
+  }
 })
 
 onBeforeUnmount(() => {
   foldObserver?.disconnect()
   if (overflowHideTimer) clearTimeout(overflowHideTimer)
   if (tagTipHideTimer) clearTimeout(tagTipHideTimer)
+  if (media && onMedia) media.removeEventListener('change', onMedia)
 })
 
 watch(
   () => [ctl.selected.value, triggerWidth.value, props.schema.maxTagCount] as const,
   scheduleMeasure,
+)
+
+watch(
+  () => ctl.open.value,
+  (open) => {
+    if (open && isMobile.value) syncMobileDraft()
+  },
 )
 </script>
 
@@ -383,7 +490,95 @@ watch(
           </div>
         </template>
       </VamisTooltipLayer>
+      <VamisPopUp
+        v-if="isMobile"
+        :show="ctl.open.value"
+        :container="ctl.overlayContainer.value"
+        @cancel="closeMenu"
+        @confirm="confirmMobile"
+      >
+        <div
+          v-if="!ctl.config.value.multiple"
+          class="vamis-popup__picker"
+          :style="{ height: `${pickerHeight}px` }"
+        >
+          <CalendarWheel
+            :model-value="mobileWheelIndex"
+            :options="mobileWheelOptions"
+            @update:model-value="onWheelIndex"
+          />
+          <PickerFade class="vamis-picker-fade" />
+          <div class="vamis-popup__frame" :style="{ height: `${CALENDAR_PICKER_ITEM_HEIGHT}px` }" />
+        </div>
+        <div v-else class="vamis-select__popover vamiss-select__popover--sheet">
+          <div
+            v-if="showSearch"
+            class="vamis-select__search"
+            :class="isGroupMenu ? 'vamis-select__search--box' : 'vamis-select__search--line'"
+          >
+            <div class="vamis-select__search-inner">
+              <input
+                :value="ctl.keyword.value"
+                class="vamis-select__search-input"
+                :placeholder="searchPlaceholder"
+                @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
+              >
+            </div>
+          </div>
+          <button
+            v-if="ctl.config.value.checkAll"
+            type="button"
+            class="vamis-select__checkall"
+            @click="onToggleAll()"
+          >
+            <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
+              <svg v-if="allChecked" viewBox="0 0 16 16" aria-hidden="true">
+                <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
+              </svg>
+            </span>
+            <span>{{ checkAllLabel }}</span>
+          </button>
+          <div class="vamis-select__list">
+            <template v-for="(opt, index) in ctl.filtered.value" :key="'m-' + String(opt.value ?? opt.label) + '-' + index">
+              <div v-if="isGroupOption(opt)" class="vamis-select__group">
+                <div class="vamis-select__group-label">{{ opt.label }}</div>
+                <div
+                  v-for="(child, ci) in opt.children"
+                  :key="'m-' + String(child.value) + '-' + ci"
+                  role="option"
+                  class="vamis-select__item vamis-select__item--child"
+                  :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked }]"
+                  @click="onPick(child)"
+                >
+                  <span class="vamis-select__check" :class="{ 'is-checked': isSelected(child.value) }">
+                    <svg v-if="isSelected(child.value)" viewBox="0 0 16 16" aria-hidden="true">
+                      <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
+                    </svg>
+                  </span>
+                  <span class="vamis-select__item-label">{{ child.label }}</span>
+                </div>
+              </div>
+              <div
+                v-else
+                role="option"
+                class="vamis-select__item"
+                :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked }]"
+                @click="onPick(opt)"
+              >
+                <span class="vamis-select__check" :class="{ 'is-checked': isSelected(opt.value) }">
+                  <svg v-if="isSelected(opt.value)" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
+                  </svg>
+                </span>
+                <span class="vamis-select__item-label">{{ opt.label }}</span>
+              </div>
+            </template>
+            <div v-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
+          </div>
+        </div>
+      </VamisPopUp>
       <VamisOverlay
+        v-else
         :show="ctl.open.value"
         :target="triggerEl"
         :container="ctl.overlayContainer.value"
@@ -442,7 +637,7 @@ watch(
             type="button"
             class="vamis-select__checkall"
             @mousedown.prevent
-            @click.stop="ctl.toggleAll()"
+            @click.stop="onToggleAll()"
           >
             <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
               <svg v-if="allChecked" viewBox="0 0 16 16" aria-hidden="true">
@@ -463,7 +658,7 @@ watch(
                   :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
                   :title="child.label"
                   @mousedown.prevent
-                  @click.stop="!child.disabled && !locked && ctl.toggle(child)"
+                  @click.stop="onPick(child)"
                 >
                   <span
                     v-if="ctl.config.value.multiple"
@@ -490,7 +685,7 @@ watch(
                 :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
                 :title="opt.label"
                 @mousedown.prevent
-                @click.stop="!opt.disabled && !locked && ctl.toggle(opt)"
+                  @click.stop="onPick(opt)"
               >
                 <span
                   v-if="ctl.config.value.multiple"

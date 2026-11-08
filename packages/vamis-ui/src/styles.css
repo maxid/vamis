@@ -2440,6 +2440,124 @@
     border-bottom: 1px solid var(--border);
     transform: scale(0.5);
   }
+  /* 对齐 Amis PopUp：固定底栏 400px，height 0 贴底滑入/滑出。Select / 其它移动端 PopOver 共用，不要再写第三套壳。 */
+  .vamis-popup {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+  }
+  .vamis-popup__mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .vamis-popup__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--select-menu-bg);
+    color: var(--select-menu-color);
+    font-family: var(--fontFamilyBase);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: var(--lineHeightBase);
+    border: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--cal-shadow);
+  }
+  .vamis-popup.is-in .vamis-popup__panel,
+  .vamis-popup.is-out .vamis-popup__panel,
+  .vamis-popup.is-in .vamis-popup__mask,
+  .vamis-popup.is-out .vamis-popup__mask {
+    animation-duration: var(--animation-duration);
+    animation-fill-mode: both;
+  }
+  .vamis-popup.is-in .vamis-popup__panel {
+    animation-name: vamis-date-sheet-in;
+  }
+  .vamis-popup.is-out .vamis-popup__panel {
+    animation-name: vamis-date-sheet-out;
+  }
+  .vamis-popup.is-in .vamis-popup__mask {
+    animation-name: vamis-date-sheet-mask-in;
+  }
+  .vamis-popup.is-out .vamis-popup__mask {
+    animation-name: vamis-date-sheet-mask-out;
+  }
+  .vamis-popup__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    flex-shrink: 0;
+  }
+  .vamis-popup__cancel,
+  .vamis-popup__ok {
+    height: 100%;
+    padding: 0 16px;
+    border: 0;
+    background: none;
+    line-height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--cal-picker-cancel);
+  }
+  .vamis-popup__ok {
+    color: var(--primary);
+  }
+  .vamis-popup__title {
+    max-width: 50%;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--cal-picker-title);
+    text-align: center;
+  }
+  .vamis-popup__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .vamis-popup__picker {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    overflow: hidden;
+    touch-action: none;
+  }
+  .vamis-popup__frame {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    left: 16px;
+    z-index: 2;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+  .vamis-popup__frame::after {
+    position: absolute;
+    inset: -50%;
+    content: "";
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transform: scale(0.5);
+  }
+  .vamis-select__popover--sheet {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    border: 0;
+    box-shadow: none;
+    max-height: none;
+    width: 100%;
+  }
 }
 
 /*
@@ -2730,16 +2848,29 @@
     border-top: none;
     border-top-width: 0;
   }
+  /*
+    对齐 Dialog：Action 包在 span[data-vamis-action].inline-block，
+    默认提交钮还带 shadcn shrink-0。只给 .vamis-node / 直接子 button 设 flex:1
+    时，width:100% 仍相对收缩包裹。span 和按钮都要拉满。
+  */
   .vamis-form-panel [data-slot="card-footer"] > .vamis-node,
+  .vamis-form-panel [data-slot="card-footer"] [data-vamis-action],
   .vamis-form-panel [data-slot="card-footer"] > [data-slot="button"],
   .vamis-form-actions > .vamis-node,
+  .vamis-form-actions [data-vamis-action],
   .vamis-form-actions > [data-slot="button"] {
-    flex: 1 1 0;
+    display: block;
+    flex: 1 1 0%;
     min-width: 0;
+    width: 100%;
   }
   .vamis-form-panel [data-slot="card-footer"] [data-slot="button"],
   .vamis-form-actions [data-slot="button"] {
+    display: flex;
     width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
   }
   .vamis-form-item .vamis-text-control__input,
   .vamis-form-item .vamis-text-control__input:hover,

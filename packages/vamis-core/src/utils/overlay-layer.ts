@@ -42,6 +42,23 @@ export function overlayContainerFrom(
   return resolveOverlayContainer(env?.getModalContainer)
 }
 
+/**
+ * 移动端 PopUp（底部滑入）开关。schema / env 显式 `mobileUI` 优先；
+ * 否则 `matchMedia('(max-width: 768px)')`，对齐 Amis `isMobile()`。
+ * 对照桌面 iframe ~768 / 1100 不进 PopUp；`?vp=mobile` 靠 env.mobileUI。
+ */
+export function overlayIsMobile(
+  schema?: { mobileUI?: unknown } | null,
+  env?: { mobileUI?: unknown } | null,
+): boolean {
+  if (schema?.mobileUI === true) return true
+  if (schema?.mobileUI === false) return false
+  if (env?.mobileUI === true) return true
+  if (env?.mobileUI === false) return false
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return window.matchMedia('(max-width: 768px)').matches
+}
+
 export type OverlayCoords = { top: number; left: number }
 
 /**

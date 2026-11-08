@@ -5,8 +5,8 @@ outline: deep
 
 # Select 下拉框
 
-::: info 实现进度 90% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`、全选、focus/blur。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
+::: info 实现进度 92% · 进行中
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`、全选、focus/blur。移动端从底部滑入（单选滚轮 / 多选列表）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

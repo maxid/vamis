@@ -221,6 +221,7 @@ describe('Amis width helpers', () => {
     )
     expect(css).toContain('flex: 0 0 28%')
     expect(css).toContain('.vamis-form-panel [data-slot="card-footer"]')
+    expect(css).toContain('.vamis-form-panel [data-slot="card-footer"] [data-vamis-action]')
     expect(css).toContain('flex: 1 1 0')
     expect(css).toContain('.vamis-form-item .vamis-date-picker .vamis-text-control__input')
   })

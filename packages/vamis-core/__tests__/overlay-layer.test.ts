@@ -6,6 +6,7 @@ import {
   OVERLAY_AUTO_PLACEMENTS,
   OVERLAY_POPOVER_GAP,
   overlayContainerFrom,
+  overlayIsMobile,
   overlayPosition,
   resolveOverlayContainer,
   Z_INDEX,
@@ -118,6 +119,32 @@ describe('overlay-layer', () => {
     expect(css).toContain('@keyframes vamis-date-sheet-in')
     expect(css).toContain('@keyframes vamis-date-sheet-out')
     expect(css).toContain('animation-name: vamis-date-sheet-in')
+    const popup = css.slice(css.indexOf('.vamis-popup {'), css.indexOf('.vamis-popup__mask'))
+    expect(popup).toContain('z-index: var(--z-modal)')
+    expect(popup).toContain('position: fixed')
+    const popupPanel = css.slice(css.indexOf('.vamis-popup__panel {'), css.indexOf('.vamis-popup.is-in .vamis-popup__panel,'))
+    expect(popupPanel).toContain('height: 400px')
+    expect(popupPanel).toContain('background: var(--select-menu-bg)')
+    expect(css).toContain('.vamis-popup.is-in .vamis-popup__panel {\n    animation-name: vamis-date-sheet-in')
+  })
+
+  it('overlayIsMobile honors schema/env mobileUI before the 768 viewport', () => {
+    expect(overlayIsMobile({ mobileUI: true })).toBe(true)
+    expect(overlayIsMobile({ mobileUI: false }, { mobileUI: true })).toBe(false)
+    expect(overlayIsMobile({}, { mobileUI: true })).toBe(true)
+    expect(overlayIsMobile({}, { mobileUI: false })).toBe(false)
+  })
+
+  it('VamisPopUp is the shared bottom sheet shell', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const popup = readFileSync(resolve(here, '../../vamis/src/overlay/VamisPopUp.vue'), 'utf8')
+    expect(popup).toContain('class="vamis-popup"')
+    expect(popup).toContain("'is-in': phase === 'in'")
+    expect(popup).toContain("'is-out': phase === 'out'")
+    expect(popup).toContain('取消')
+    expect(popup).toContain('确认')
+    expect(popup).toContain('Teleport')
+    expect(popup).toContain('@animationend')
   })
 
   it('places a top / right tooltip with side gap', () => {
