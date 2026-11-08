@@ -110,7 +110,7 @@ provideCollapseGroup({
 
 <template>
   <div
-    class="w-full min-w-0 overflow-hidden rounded-md border bg-card divide-y"
+    class="vamis-collapse-group w-full min-w-0 overflow-hidden rounded-md border bg-card divide-y"
     :data-fieldset="enableFieldSetStyle ? 'true' : undefined"
   >
     <SchemaRenderer v-for="(node, i) in items" :key="collapseItemKey(node, i)" :schema="node" />

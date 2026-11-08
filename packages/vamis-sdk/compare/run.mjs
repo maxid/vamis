@@ -121,8 +121,9 @@ export async function runCompare(argv = process.argv.slice(2)) {
     const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } })
     const amisPage = await context.newPage()
     const vamisPage = await context.newPage()
-    const amisUrl = `${origin}/embed-case.html?engine=amis&amisSdk=${encodeURIComponent(options.amisSdk)}`
-    const vamisUrl = `${origin}/embed-case.html?engine=vamis`
+    const mobileQ = options.mobile ? '&vp=mobile' : ''
+    const amisUrl = `${origin}/embed-case.html?engine=amis&amisSdk=${encodeURIComponent(options.amisSdk)}${mobileQ}`
+    const vamisUrl = `${origin}/embed-case.html?engine=vamis${mobileQ}`
     await Promise.all([amisPage.goto(amisUrl, { waitUntil: 'domcontentloaded' }), vamisPage.goto(vamisUrl)])
     await Promise.all([waitReady(amisPage), waitReady(vamisPage)])
     const rows = []

@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   tabBody,
@@ -66,5 +69,13 @@ describe('tabDisabled / mount flags', () => {
     expect(tabsMountOnEnter({ mountOnEnter: false })).toBe(false)
     expect(tabsUnmountOnExit({})).toBe(false)
     expect(tabsUnmountOnExit({ unmountOnExit: true })).toBe(true)
+  })
+})
+
+describe('tabs line bar', () => {
+  it('stretches the links bar so the underline spans the pane', () => {
+    const vue = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../vamis/src/renderers/Tabs.vue'), 'utf8')
+    expect(vue).toContain('width: 100%')
+    expect(vue).toContain('flex: 1 1 auto')
   })
 })

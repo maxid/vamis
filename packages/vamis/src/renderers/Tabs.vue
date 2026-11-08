@@ -187,10 +187,14 @@ function tipOf(tab: (typeof tabs.value)[number]) {
   align-items: flex-end;
   justify-content: space-between;
   gap: 8px;
+  width: 100%;
 }
 [data-vamis-tabs-links] {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
   border-bottom: 1px solid var(--border);
 }
 [data-vamis-tabs-links] > button {

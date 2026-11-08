@@ -319,6 +319,18 @@ alwaysApply: true
 - 触及：`input-date` `calendar`
 - 规则：本文；`packages/vamis/src/renderers/calendar/PickerFade.vue`
 
+### Dialog 窄屏底栏要打穿 Action 的 inline-block
+- 踩过：对照移动 Dialog 取消/确认还是 54px 小钮，中间一片空。footer 给 `.vamis-node` 设了 `flex:1`，按钮 `width:100%`，但 Action 还包着 `span[data-vamis-action].inline-block`，百分比相对这个收缩包裹，高度 44px 能生效、宽度不能。
+- 稳定做法：窄屏同时拉满 `.vamis-node` **和** `[data-vamis-action]`（`display:block; width:100%; flex:1`），按钮再 `display:flex; width:100%; height:44px`。不要假设 SchemaRenderer 外层就是按钮的包含块。
+- 触及：`dialog` `action` `button` `drawer`
+- 规则：本文；`packages/vamis-ui/src/styles.css` Dialog `<576`；Amis `_modal.scss` `Modal-footer > .Button { flex: 1 }`
+
+### 手机「桌面式网站」会把 CSS 视口撑过 768
+- 踩过：对照 `embed-case` 在手机上画出桌面月历 + 标签在上。浏览器 Desktop site / 桌面式把 layout viewport 设成 ~980，`matchMedia('(max-width: 768px)')` 为 false。Amis `isMobile()` 同样只认 CSS 视口，不认 UA。
+- 稳定做法：运行时继续认 CSS 视口（对齐 Amis）。测滚轮请关掉桌面式。顶层 `embed-case?vp=mobile` 才写 `env.mobileUI: true` 并钉 viewport 375，不要用 UA / `screen.width` 去对抗桌面式。对照 iframe 本身已是 375；`frameUrl` 也带上 `vp=mobile`，以免桌面式把 iframe 视口报宽。
+- 触及：`input-date` `form` 对照
+- 规则：本文；`packages/vamis-sdk/embed-case.html`；Amis `helper.ts` `isMobile()`
+
 ### 移动端 DatePicker 默认是滚轮 PopUp，不是 CalendarMobile
 - 踩过：把 `mobileCalendarMode: calendar` 的滚动月历当成窄屏默认。Amis 未写该字段时走 DaysView `renderPicker()`（年/月/日轮 + 取消/确认）。列区曾 `flex:1` 把 320-50 吃满，露出第 6 行，选中框也不在第 3 行；选中行再加 18px/500，Teleport 到 body 没带字族，看起来比 Amis 糙。
 - 稳定做法：`mobile && !embed` 开 `DatePickerSheet`（底栏 320px、`--z-modal`、Teleport body）。输入 `readOnly`，无 shortcuts。schema / env 显式 `mobileUI` 优先，否则 `matchMedia('(max-width: 768px)')`。对照桌面 1100 必须仍是 popover；`--mobile` 375 才是滚轮。`mobileCalendarMode: calendar` 另刀。进出对齐 Amis PopUp：`is-in`/`is-out` 动画 **height 0**（贴底 + overflow 看起来像上滑），遮罩 opacity；不要 `translateY`。关层等 animationend（500ms 兜底）再卸 DOM。列区高度钉死 `itemHeight(48) × visible(5)`，`flex: 0 0 auto`，选中永远在第 3 行，框线 `top:50%` + 高 48 相对第 3 行等距。字号全员 16px/400，选中只换色不加大；面板补 `font-family: var(--fontFamilyBase)`、`border: 1px solid var(--border)`（对齐 Amis PopUp `--borderColor`）。鼠标对齐 Amis PickerColumn：滚轮只 `preventDefault` 不改值，左键不能拖，点 `li` 才选；手指 touch 仍可滑。遮罩渐变把字面 `hsla()` 写进 `PickerFade` inline style（见上条），不要 opacity 实心带冒充。

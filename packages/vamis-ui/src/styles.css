@@ -1077,17 +1077,73 @@
     width: 100%;
     max-width: none;
   }
+  /*
+    Action 包在 span[data-vamis-action].inline-block 里。只给 .vamis-node 设 flex:1
+    时，按钮 width:100% 相对这个收缩包裹，还是 54px。span 也要拉满。
+  */
   [data-slot='dialog-footer'] > .vamis-node,
+  [data-slot='dialog-footer'] [data-vamis-action],
   [data-vamis-confirm] [data-slot='dialog-footer'] > [data-slot='button'] {
     display: block;
     flex: 1 1 0%;
     min-width: 0;
+    width: 100%;
   }
   [data-slot='dialog-footer'] [data-slot='button'] {
+    display: flex;
     width: 100%;
     min-width: 0;
     min-height: 0;
     height: 44px;
+    flex: 1 1 auto;
+  }
+}
+
+/*
+  Amis Collapse `media-breakpoint-down(sm)` = max-width 767px：去边框、底部分割线、箭头 float right。
+  对照「移动」375 和 helper `m:` 都落在这档。不要用 Tailwind sm 640。
+*/
+@media (max-width: 767px) {
+  .vamis-collapse-group {
+    overflow: visible;
+    border-width: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .vamis-collapse-group > .vamis-node {
+    border-top-width: 0;
+  }
+  .vamis-collapse {
+    position: relative;
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  .vamis-collapse::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    content: "";
+    border-bottom: 1px solid var(--border);
+    transform: scaleY(0.5);
+  }
+  .vamis-collapse__header {
+    padding-left: 0;
+    background: none;
+    flex-direction: row;
+  }
+  .vamis-collapse__arrow {
+    order: 2;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .vamis-collapse__body {
+    border-top: none;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

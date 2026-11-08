@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   collapseItemKey,
@@ -41,6 +44,22 @@ describe('standaloneCollapsed', () => {
   it('opens when collapsed is false or active is true', () => {
     expect(standaloneCollapsed({ collapsed: false })).toBe(false)
     expect(standaloneCollapsed({ active: true })).toBe(false)
+  })
+})
+
+describe('collapse renderer mobile', () => {
+  it('uses VamisCaret and floats the arrow right under 768', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/Collapse.vue'), 'utf8')
+    const group = readFileSync(resolve(here, '../../vamis/src/renderers/CollapseGroup.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(vue).toContain('VamisCaret')
+    expect(vue).toContain('variant="tree"')
+    expect(vue).toContain('vamis-collapse__arrow')
+    expect(group).toContain('vamis-collapse-group')
+    expect(css).toContain('@media (max-width: 767px)')
+    expect(css).toContain('.vamis-collapse__arrow')
+    expect(css).toContain('order: 2')
   })
 })
 

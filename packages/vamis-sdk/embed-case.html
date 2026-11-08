@@ -29,10 +29,21 @@
       (function () {
         const params = new URLSearchParams(location.search)
         const engine = params.get('engine') || 'vamis'
+        const forceMobile = params.get('vp') === 'mobile'
         const amisSdk = (params.get('amisSdk') || 'https://unpkg.com/amis@6.13.0/sdk').replace(
           /\/?$/,
           '/',
         )
+        /**
+         * 手机「桌面式网站」会把 CSS 视口撑到 ~980，matchMedia(768) 变桌面月历。
+         * 顶层 ?vp=mobile 才强制移动端：钉 viewport 375 + env.mobileUI。
+         * 不要靠 UA 去对抗桌面式。对照 iframe 本身已是 375，多带 vp 只是兜底。
+         */
+        if (forceMobile) {
+          document.documentElement.classList.add('vamis-mobile-ui')
+          const vpMeta = document.querySelector('meta[name="viewport"]')
+          if (vpMeta) vpMeta.setAttribute('content', 'width=375, initial-scale=1')
+        }
         /** 手机 WebView 会把 `./sdk.css` 解析成站点根 `/sdk.css`（404）。一律按 URL 里的 `/sdk/` 拼绝对地址。 */
         function sdkBase() {
           const path = location.pathname || '/'
@@ -46,10 +57,10 @@
           try {
             const href = new URL(name, location.origin + sdkBase())
             // 旧 WebView 可能还留着误加的一年 immutable。换 query 才能拿到新 css/js。
-            href.searchParams.set('v', '20261108e')
+            href.searchParams.set('v', '20261108f')
             return href.href
           } catch (_err) {
-            return sdkBase() + name + '?v=20261108e'
+            return sdkBase() + name + '?v=20261108f'
           }
         }
         const css =
@@ -73,6 +84,7 @@
           amisSdk: amisSdk.replace(/\/$/, ''),
           cssEls: cssEls,
           jsEl: jsEl,
+          mobileUI: forceMobile,
         }
       })()
     </script>
@@ -83,6 +95,7 @@
       (function () {
         const assets = window.__vamisCompareAssets || {}
         const engine = assets.engine || 'vamis'
+        const forceMobile = assets.mobileUI === true
         let ready = false
         let pending = null
         let scoped = null
@@ -814,11 +827,13 @@
           try {
             if (engine === 'amis') {
               const embed = window.amisRequire('amis/embed').embed
-              scoped = embed('#root', schema)
+              scoped = embed('#root', schema, {}, forceMobile ? { mobileUI: true } : {})
             } else {
               // 对照吃文档 schema：adaptor / onError / custom 字符串函数体与 Playground 一样要 env.trusted。
               // SDK 默认仍关（D：new Function 仅受信任模式）；这里只开对照页。
-              scoped = window.vamis.embed('#root', schema, {}, { trusted: true, parseLocation: false })
+              const env = { trusted: true, parseLocation: false }
+              if (forceMobile) env.mobileUI = true
+              scoped = window.vamis.embed('#root', schema, {}, env)
             }
           } catch (err) {
             report({ runId: runId, error: String(err && err.message ? err.message : err) })

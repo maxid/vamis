@@ -18,6 +18,7 @@ import {
   type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
+import { VamisCaret } from '@vamis/ui'
 import { useCollapseGroup } from './collapseGroup'
 
 const props = defineProps<{
@@ -109,12 +110,12 @@ async function onToggle() {
 
 <template>
   <div
-    class="w-full min-w-0 bg-card"
+    class="vamis-collapse w-full min-w-0 bg-card"
     :class="grouped ? '' : 'overflow-hidden rounded-md border'"
   >
     <button
       type="button"
-      class="flex w-full items-center gap-2 px-3 py-2 text-left text-[14px] font-normal leading-[21px]"
+      class="vamis-collapse__header flex w-full items-center gap-2 px-3 py-2 text-left text-[14px] font-normal leading-[21px]"
       :class="[
         headingClass,
         iconRight ? 'flex-row-reverse' : '',
@@ -127,21 +128,18 @@ async function onToggle() {
     >
       <span
         v-if="showArrow && collapsable"
-        class="inline-flex size-4 shrink-0 items-center justify-center text-muted-foreground transition-transform"
-        :class="open ? 'rotate-90' : ''"
+        class="vamis-collapse__arrow inline-flex size-4 shrink-0 items-center justify-center text-muted-foreground"
         aria-hidden="true"
       >
         <SchemaRenderer v-if="expandIcon" :schema="expandIcon" />
-        <svg v-else viewBox="0 0 16 16" class="size-3.5 fill-current" focusable="false">
-          <path d="M6 3.2 11 8 6 12.8V3.2z" />
-        </svg>
+        <VamisCaret v-else variant="tree" :open="open" />
       </span>
-      <span class="min-w-0 flex-1">
+      <span class="vamis-collapse__title min-w-0 flex-1">
         <SchemaRenderer v-if="headerIsSchema" :schema="headerNode" />
         <template v-else>{{ headerText }}</template>
       </span>
     </button>
-    <div v-show="open" class="border-t px-3 py-3" :class="bodyClass">
+    <div v-show="open" class="vamis-collapse__body border-t px-3 py-3" :class="bodyClass">
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </div>
   </div>

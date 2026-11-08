@@ -95,6 +95,7 @@ describe('dialog defaults', () => {
     expect(footer).not.toContain('flex-col-reverse')
     expect(footer).not.toContain('sm:flex-row')
     expect(css).toContain('@media (max-width: 575.98px)')
+    expect(css).toContain("data-slot='dialog-footer'] [data-vamis-action]")
     expect(css).toContain("data-slot='dialog-footer'] [data-slot='button']")
     expect(css).toContain('height: 44px')
   })

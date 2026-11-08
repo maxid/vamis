@@ -406,6 +406,15 @@ describe('schema-tree', () => {
     expect(html).toContain('parseLocation: false')
   })
 
+  it('embed-case honors ?vp=mobile as env.mobileUI and a 375 viewport', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
+    expect(html).toContain("params.get('vp') === 'mobile'")
+    expect(html).toContain("classList.add('vamis-mobile-ui')")
+    expect(html).toContain('width=375, initial-scale=1')
+    expect(html).toContain('if (forceMobile) env.mobileUI = true')
+    expect(html).toContain('forceMobile ? { mobileUI: true } : {}')
+  })
+
   it('sdk build appends hex --primary for WebViews without oklch', () => {
     const vite = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../vite.config.ts'), 'utf8')
     expect(vite).toContain('function appendLegacyPrimary')
@@ -483,6 +492,17 @@ describe('matchCaseQuery', () => {
     expect(html).toContain('id="case-q"')
     expect(html).toContain('function matchCaseQuery')
     expect(html).toContain('placeholder="筛选标题 / 页 / id"')
+  })
+
+  it('compare.html forwards vp=mobile into embed-case iframe', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../compare.html'), 'utf8')
+    expect(html).toContain("if (vpMode === 'mobile') q.set('vp', 'mobile')")
+  })
+
+  it('playwright --mobile appends vp=mobile onto embed-case URLs', () => {
+    const src = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../compare/run.mjs'), 'utf8')
+    expect(src).toContain("options.mobile ? '&vp=mobile' : ''")
+    expect(src).toContain('${mobileQ}')
   })
 })
 

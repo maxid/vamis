@@ -781,6 +781,7 @@
         function frameUrl(engine) {
           const q = new URLSearchParams({ engine: engine })
           if (amisSdk) q.set('amisSdk', amisSdk)
+          if (vpMode === 'mobile') q.set('vp', 'mobile')
           const rel = 'embed-case.html?' + q.toString()
           try {
             return new URL(rel, location.href).href
