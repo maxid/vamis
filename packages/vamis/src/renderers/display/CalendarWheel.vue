@@ -118,7 +118,9 @@ function onItemClick(i: number) {
         class="vamis-cal-wheel-item"
         :class="{ 'is-on': i === index }"
         @click="onItemClick(i)"
-      >{{ item.text }}</li>
+      >
+        <slot :item="item" :index="i" :checked="i === index">{{ item.text }}</slot>
+      </li>
     </ul>
   </div>
 </template>

@@ -42,7 +42,7 @@ Vamis 入口（不要再新开月历）：
 | 边框 | 移动端底栏共用 `--popup-border`（=`--border` `#e8e9eb`）+ `--popup-shadow`（Amis `--boxShadow`）。Select `.vamis-popup` 与 DatePickerSheet `.vamis-date-sheet__panel`（input-date / input-time / input-datetime）同一套，不要各写 `--cal-shadow`。遮罩 `rgba(0,0,0,0.3)`；不要用遮罩色去画 rim |
 | 取消/确认 | Amis `Button level=link size=default`：字号 `--fontSizeBase` 14、高 32、左右 padding 12。取消 `#666`、确认 `--primary`，hover 都走 `--link-hover-color` `#528eff`。Select 与 DatePickerSheet 共用选择器 |
 | 日期滚轮 | `DatePickerSheet`（面板 320px；动画与 PopUp 共用 keyframes） |
-| Select | 单选 `CalendarWheel` `itemHeight` 40；多选列表；确认才 `commit`。移动端箭头朝右、无翻转 |
+| Select | 普通单选才走 `CalendarWheel`（`itemHeight` 40，`menuTpl` 走 slot）；`searchable` 检索条在滚轮上方。`selectMode: group` / 多选走列表（Transfer 形态），不要把分组拍扁进滚轮。确认才 `commit`。移动端箭头朝右、无翻转 |
 
 禁止：移动端 Select / 日期再挂 `VamisOverlay` 当下拉；为每个 type 再写一套滑入动画。DropdownButton / InputText 建议也接这块，不要第三套壳。`mobileCalendarMode: calendar` 仍未接。
 

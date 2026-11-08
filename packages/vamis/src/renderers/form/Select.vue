@@ -100,12 +100,19 @@ const isGroupMenu = computed(() => {
   if (mode === 'group') return true
   return ctl.options.value.some((item) => isGroupOption(item))
 })
+/** 对齐 Amis：普通单选才走 Picker 滚轮；multiple / selectMode:group 走列表。 */
+const useMobileWheel = computed(
+  () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value,
+)
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
 )
 const searchPlaceholder = computed(() => {
   if (props.schema.searchPlaceholder != null) return String(props.schema.searchPlaceholder)
-  return isGroupMenu.value ? '请输入关键字' : '搜索'
+  if (isGroupMenu.value) {
+    return isMobile.value ? filterTpl(ctl.placeholder.value, data.value) : '请输入关键字'
+  }
+  return '搜索'
 })
 const visibleTags = computed(() => {
   if (!ctl.config.value.multiple) return []
@@ -310,17 +317,17 @@ async function onToggleAll() {
 }
 
 async function confirmMobile() {
-  if (ctl.config.value.multiple) {
-    await ctl.commit(mobileDraft.value)
-  } else {
+  if (useMobileWheel.value) {
     const item = mobileLeaves.value[mobileWheelIndex.value] ?? mobileLeaves.value[0]
     await ctl.commit(item ? [item] : [])
+  } else {
+    await ctl.commit(mobileDraft.value)
   }
   closeMenu()
 }
 
-function menuData(opt: OptionItem, index: number) {
-  return { ...opt, checked: isSelected(opt.value), index }
+function menuData(opt: OptionItem, index: number, checked?: boolean) {
+  return { ...opt, checked: checked ?? isSelected(opt.value), index }
 }
 
 async function onEdit(opt: OptionItem, event: Event) {
@@ -369,6 +376,19 @@ watch(
   () => ctl.open.value,
   (open) => {
     if (open && isMobile.value) syncMobileDraft()
+  },
+)
+
+watch(
+  () => ctl.filtered.value,
+  () => {
+    if (!useMobileWheel.value || !ctl.open.value) return
+    const cur = mobileDraft.value[0]
+    const idx = cur
+      ? mobileLeaves.value.findIndex((item) => String(item.value) === String(cur.value))
+      : 0
+    mobileWheelIndex.value = idx < 0 ? 0 : idx
+    if (idx < 0 && mobileLeaves.value[0]) mobileDraft.value = [mobileLeaves.value[0]]
   },
 )
 </script>
@@ -502,7 +522,50 @@ watch(
         @confirm="confirmMobile"
       >
         <div
-          v-if="!ctl.config.value.multiple"
+          v-if="showSearch"
+          class="vamis-select__search"
+          :class="isGroupMenu ? 'vamis-select__search--box' : 'vamis-select__search--line'"
+        >
+          <div class="vamis-select__search-inner">
+            <svg
+              v-if="!isGroupMenu"
+              class="vamis-select__search-icon"
+              viewBox="0 0 18 18"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
+              />
+            </svg>
+            <input
+              :value="ctl.keyword.value"
+              class="vamis-select__search-input"
+              :placeholder="searchPlaceholder"
+              @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
+            >
+            <button
+              v-if="ctl.keyword.value"
+              type="button"
+              class="vamis-select__search-clear"
+              aria-label="清除检索"
+              @click="clearSearch"
+            >×</button>
+            <svg
+              v-else-if="isGroupMenu"
+              class="vamis-select__search-icon"
+              viewBox="0 0 18 18"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          v-if="useMobileWheel"
           class="vamis-popup__picker"
           :style="{ height: `${pickerHeight}px` }"
         >
@@ -511,27 +574,23 @@ watch(
             :options="mobileWheelOptions"
             :item-height="SELECT_PICKER_ITEM_HEIGHT"
             @update:model-value="onWheelIndex"
-          />
+          >
+            <template #default="{ item, index, checked }">
+              <SchemaRenderer
+                v-if="menuTpl != null && mobileLeaves[index]"
+                class="vamis-select__item-label"
+                :schema="menuTpl"
+                :extra-data="menuData(mobileLeaves[index], index, checked)"
+              />
+              <template v-else>{{ item.text }}</template>
+            </template>
+          </CalendarWheel>
           <PickerFade class="vamis-picker-fade" />
           <div class="vamis-popup__frame" :style="{ height: `${SELECT_PICKER_ITEM_HEIGHT}px` }" />
         </div>
-        <div v-else class="vamis-select__popover vamiss-select__popover--sheet">
-          <div
-            v-if="showSearch"
-            class="vamis-select__search"
-            :class="isGroupMenu ? 'vamis-select__search--box' : 'vamis-select__search--line'"
-          >
-            <div class="vamis-select__search-inner">
-              <input
-                :value="ctl.keyword.value"
-                class="vamis-select__search-input"
-                :placeholder="searchPlaceholder"
-                @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
-              >
-            </div>
-          </div>
+        <div v-else class="vamis-select__popover vamis-select__popover--sheet">
           <button
-            v-if="ctl.config.value.checkAll"
+            v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
             type="button"
             class="vamis-select__checkall"
             @click="onToggleAll()"
@@ -552,30 +611,50 @@ watch(
                   :key="'m-' + String(child.value) + '-' + ci"
                   role="option"
                   class="vamis-select__item vamis-select__item--child"
-                  :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked }]"
+                  :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
                   @click="onPick(child)"
                 >
-                  <span class="vamis-select__check" :class="{ 'is-checked': isSelected(child.value) }">
+                  <span
+                    v-if="ctl.config.value.multiple"
+                    class="vamis-select__check"
+                    :class="{ 'is-checked': isSelected(child.value) }"
+                  >
                     <svg v-if="isSelected(child.value)" viewBox="0 0 16 16" aria-hidden="true">
                       <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
                     </svg>
                   </span>
-                  <span class="vamis-select__item-label">{{ child.label }}</span>
+                  <SchemaRenderer
+                    v-if="menuTpl != null"
+                    class="vamis-select__item-label"
+                    :schema="menuTpl"
+                    :extra-data="menuData(child, ci)"
+                  />
+                  <span v-else class="vamis-select__item-label">{{ child.label }}</span>
                 </div>
               </div>
               <div
                 v-else
                 role="option"
                 class="vamis-select__item"
-                :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked }]"
+                :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
                 @click="onPick(opt)"
               >
-                <span class="vamis-select__check" :class="{ 'is-checked': isSelected(opt.value) }">
+                <span
+                  v-if="ctl.config.value.multiple"
+                  class="vamis-select__check"
+                  :class="{ 'is-checked': isSelected(opt.value) }"
+                >
                   <svg v-if="isSelected(opt.value)" viewBox="0 0 16 16" aria-hidden="true">
                     <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
                   </svg>
                 </span>
-                <span class="vamis-select__item-label">{{ opt.label }}</span>
+                <SchemaRenderer
+                  v-if="menuTpl != null"
+                  class="vamis-select__item-label"
+                  :schema="menuTpl"
+                  :extra-data="menuData(opt, index)"
+                />
+                <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
               </div>
             </template>
             <div v-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>

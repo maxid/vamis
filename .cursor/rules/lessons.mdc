@@ -277,6 +277,18 @@ alwaysApply: true
 - 触及：`select` `input-text` `textarea` `input-date` FormItem
 - 规则：本文；Amis `_properties.scss` `--Form-input-placeholderColor`
 
+### 移动端 Select 只有普通单选才走滚轮
+- 踩过：所有非 multiple 的移动端 Select 都画 CalendarWheel，`menuTpl` 丢掉、`searchable` 不出现、`selectMode: group` 把 children 拍扁成三行滚轮。Amis 普通单选才是 Picker；group 走 TransferDropDown 列表；menuTpl 是 Picker `optionRender`。
+- 稳定做法：`useMobileWheel = mobile && !multiple && !isGroupMenu`。滚轮项用 CalendarWheel slot 渲 `menuTpl`；`searchable` 检索条放 PopUp 里滚轮/列表上方。分组列表复用桌面 Transfer 检索（icon 在右，placeholder 用 Select 的「请选择」）。
+- 触及：`select` Options
+- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `SelectMobile.tsx` / `TransferDropDown.tsx`
+
+### 窄屏表单面板盒模型跟 Amis Panel，不要留 Card px-4
+- 踩过：Options 对照里 Select 箭头停在 212px 盒右侧。根因是 CardHeader/Content `px-4 py-3`（16px）+ page-body 12px，面板比 Amis 窄一截；标题 `text-sm font-medium` 14/500，Amis heading 40px / 16/24/400。只改 padding 后 heading 仍 319：`w-full` 钉死内容区，Amis `Panel--form` 还有 `margin: 0 -12px 10px` 吃进 page padding。
+- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
+- 触及：`form` FormItem `select` Options
+- 规则：`.cursor/rules/component.mdc`；Amis `_panel.scss` `Panel--form` / `_properties.scss` `--Page-body-padding`
+
 ### 移动端 PopUp 边框与取消确认钮全仓共用
 - 踩过：Select `VamisPopUp` 用 `--border` + Amis `--boxShadow`，日期 sheet 用 `--cal-shadow`（下拉菜单那档浅影）；取消/确认写成 16px、拉满 60px 高，没有 link hover。Amis 是 `Button--link --size-default`（14px / 32px，hover `#528eff`）。
 - 稳定做法：`--popup-border` / `--popup-shadow` 打在 Select 底栏盒和 `DatePickerSheet` 面板上。按钮选择器同时挂 `.vamis-popup__*` 与 `.vamis-date-sheet__*`：`font-size: var(--fontSizeBase)`、高 `--button-h`、hover `--link-hover-color`。input-date / input-time / input-datetime 不要另写一档。

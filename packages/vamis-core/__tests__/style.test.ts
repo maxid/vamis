@@ -224,6 +224,12 @@ describe('Amis width helpers', () => {
     expect(css).toContain('.vamis-form-panel [data-slot="card-footer"] [data-vamis-action]')
     expect(css).toContain('flex: 1 1 0')
     expect(css).toContain('.vamis-form-item .vamis-date-picker .vamis-text-control__input')
+    expect(css).toContain('--page-body-padding: 16px')
+    expect(css).toContain('.vamis-form-panel [data-slot="card-content"]')
+    expect(css).toContain('padding: 8px 12px')
+    expect(css).toContain('padding: 0 12px 12px')
+    expect(css).toContain('margin: 0 -12px 10px')
+    expect(css).toContain('.vamis-select.is-mobile .vamis-select__input')
   })
 
   it('pins widget root to Amis font token, 14px/1.5, and line-8 border', () => {
