@@ -145,12 +145,18 @@ function onItemClick(i: number) {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   height: var(--vamis-wheel-item-h, 48px);
   line-height: var(--vamis-wheel-item-h, 48px);
   font-size: 16px;
   font-weight: 400;
   color: var(--cal-fg, var(--foreground));
   cursor: pointer;
+}
+.vamis-cal-wheel-item > :slotted(*) {
+  flex: 0 1 auto;
+  max-width: 100%;
+  text-align: center;
 }
 .vamis-cal-wheel-item.is-on {
   color: var(--cal-picker-title, var(--foreground));

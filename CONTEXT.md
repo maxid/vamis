@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 移动端 Select：滚轮 `menuTpl` 横向居中（独立 `__wheel-label`，不要 list 的 `flex:1`）；分组 GroupedSelection 组头 padding 12、子项 24（`gap-base * 2`），检索仍外 10 / 内 4×10。
 - 表单 label 对齐 Amis：14px / `#5c5f66`（`--form-item-*`），桌面移动同一套。移动端不要跟 Panel title 抬到 16；不要 `text-foreground` / `text-muted-foreground`。分组 Select 底栏 400（PopUp），普通滚轮仍 320；移动端分组检索走底边线不是描边盒。
 - 移动端 Select：普通单选才滚轮（`menuTpl` 进 slot，`${checked}` 是高亮行）；`selectMode: group` 走列表。窄屏表单面板对齐 Amis Panel--form：page padding 16、heading 8×12 / 40px、body 12、footer 0 12 12，再加 `width:auto; margin: 0 -12px 10px` 把面板吃到 343，Select 箭头才贴行右缘。
 - 窄屏 Dialog 底栏均分：Action 的 `span.inline-block` 把 `width:100%` 卡在 54px。同时拉满 `[data-vamis-action]`。Collapse 窄屏箭头靠右 + `VamisCaret`；Tabs line 下划线拉满槽宽。

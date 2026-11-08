@@ -584,7 +584,7 @@ watch(
             <template #default="{ item, index, checked }">
               <SchemaRenderer
                 v-if="menuTpl != null && mobileLeaves[index]"
-                class="vamis-select__item-label"
+                class="vamis-select__wheel-label"
                 :schema="menuTpl"
                 :extra-data="menuData(mobileLeaves[index], index, checked)"
               />

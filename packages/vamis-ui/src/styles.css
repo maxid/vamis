@@ -196,11 +196,17 @@
   --select-group-font-weight: 500;
   --select-group-line-height: 24px;
   --select-group-padding-y: 4px;
+  /* Amis `--select-group-paddingLeft: size-7` 12；子项 `padding-left: gap-base * 2` 24。不要跟 option 10 混用。 */
+  --select-group-padding-x: 12px;
+  --select-group-item-indent: calc(var(--gap-base) * 2);
   --select-search-height: 30px;
   --select-search-icon-size: 14px;
   --select-search-icon-color: #999999;
   --select-search-placeholder: var(--control-placeholder);
   --select-search-box-pad: 10px;
+  /* Amis InputBox = `--Form-input-paddingY/X` size-3 / size-6。 */
+  --select-search-input-pad-y: 4px;
+  --select-search-input-pad-x: 10px;
   --select-check-size: 14px;
   --select-check-radius: 2px;
   --select-check-border: #d4d6d9;
@@ -2003,7 +2009,7 @@
     flex-shrink: 0;
     height: auto;
     margin: 0;
-    padding: 10px;
+    padding: var(--select-search-box-pad);
     border: none;
     border-radius: 0;
     background: transparent;
@@ -2017,7 +2023,7 @@
   }
   .vamis-select__search--box .vamis-select__search-inner {
     height: var(--control-h);
-    padding: 0 8px;
+    padding: var(--select-search-input-pad-y) var(--select-search-input-pad-x);
     border: 1px solid var(--input);
     border-radius: var(--radius);
     background: var(--card);
@@ -2027,7 +2033,7 @@
   }
   .vamis-select__search--sheet .vamis-select__search-inner {
     height: var(--control-h);
-    padding: 4px 10px;
+    padding: var(--select-search-input-pad-y) var(--select-search-input-pad-x);
     border: none;
     border-bottom: 1px solid var(--border);
     border-radius: 0;
@@ -2184,6 +2190,14 @@
     white-space: nowrap;
     color: inherit;
   }
+  /* 滚轮 optionRender：对齐 PickerColumns-columnItem 居中，不要吃 list 的 flex:1 / text-align:left。 */
+  .vamis-select__wheel-label {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 100%;
+    text-align: center;
+    color: inherit;
+  }
   .vamis-select__item-ops {
     display: flex;
     align-items: center;
@@ -2228,14 +2242,14 @@
     justify-content: center;
   }
   .vamis-select__group-label {
-    padding: var(--select-group-padding-y) var(--select-option-padding-x);
+    padding: var(--select-group-padding-y) var(--select-group-padding-x);
     color: var(--select-group-color);
     font-size: var(--select-group-font-size);
     font-weight: var(--select-group-font-weight);
     line-height: var(--select-group-line-height);
   }
   .vamis-select__item--child {
-    padding-left: calc(var(--select-option-padding-x) + 10px);
+    padding-left: var(--select-group-item-indent);
   }
   .vamis-select__item.has-tpl {
     height: auto;
@@ -2578,6 +2592,11 @@
     flex: 0 0 auto;
     overflow: hidden;
     touch-action: none;
+  }
+  .vamis-popup__picker .vamis-cal-wheel-item,
+  .vamis-popup__picker .vamis-select__wheel-label,
+  .vamis-popup__picker .vamis-cal-wheel-item .vamis-node {
+    text-align: center;
   }
   .vamis-popup__frame {
     position: absolute;

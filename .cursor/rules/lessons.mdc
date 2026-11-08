@@ -521,10 +521,16 @@ alwaysApply: true
 - 规则：本文；Amis `PopOverContainer.calcOverlayWidth` / `alignToPlacement`
 
 ### 分组 Select 下拉是 TransferDropDown，不是 Select-input
-- 踩过：文档「分组」示例走 Amis `selectMode: group` → `TransferDropDown`（InputBox 32px、「请输入关键字」、搜索图标在右、GroupedSelection 小复选框、ResultBox 标签）。Vamis 用了普通 Select 检索条（32px 全边框、「搜索」、无图标）和 shadcn Checkbox，多选 `Number(undefined)` 还收成 `+1`。
-- 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。
+- 踩过：文档「分组」示例走 Amis `selectMode: group` → `TransferDropDown`（InputBox 32px、「请输入关键字」、搜索图标在右、GroupedSelection 小复选框、ResultBox 标签）。Vamis 用了普通 Select 检索条（32px 全边框、「搜索」、无图标）和 shadcn Checkbox，多选 `Number(undefined)` 还收成 `+1`。组头/子项一度跟普通 option 写成 10 / 20。
+- 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。组头 padding 走 `--select-group-padding-x` **12**（`--select-group-paddingLeft: size-7`）；子项 `--select-group-item-indent: calc(var(--gap-base) * 2)` **24**（`GroupedSelection-group > items > item`）。普通 option 仍 10。检索外层 Transfer-search **10**、内层 InputBox **4×10**（`--Form-input-paddingY/X`），不要跟组头 12 混。
 - 触及：`select`
-- 规则：本文；Amis `TransferDropDown` / `GroupedSelection` / `AutoFoldedList` / `mock/options/autoComplete.js`
+- 规则：本文；Amis `TransferDropDown` / `GroupedSelection` / `_selection.scss` / `AutoFoldedList` / `mock/options/autoComplete.js`
+
+### 滚轮 menuTpl 居中，不要复用 list 的 item-label
+- 踩过：移动端滚轮 slot 打了 `.vamis-select__item-label`（`flex: 1`），`optionRender` 被拉满后左对齐。Amis `PickerColumns-columnItem` 是 `justify-content: center`。
+- 稳定做法：滚轮用独立 `.vamis-select__wheel-label` + `text-align: center`；list 才 `flex: 1`。CalendarWheel 项本身也 `text-align: center`，`:slotted(*)` 不要 grow。
+- 触及：`select` `calendar`
+- 规则：本文；Amis `_picker-columns.scss` `&-columnItem`
 
 ### 表单勾选走 `--checkbox-*`，不要 shadcn size-4 + Button
 - 踩过：默认勾选用 shadcn Checkbox（圆角 4、`disabled:opacity-50`、lucide 勾）；`optionType: button` 走实心/描边 Button，和 Amis 32×min80 描边钮 + 左上角三角勾对不上。

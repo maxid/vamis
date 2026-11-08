@@ -238,6 +238,7 @@ describe('input-date renderer reuse', () => {
     expect(wheel).toContain('(itemH.value * (VISIBLE - 1)) / 2')
     expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-size:\s*16px/)
     expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-weight:\s*400/)
+    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*text-align:\s*center/)
     expect(wheel).not.toContain('font-size: 18px')
     expect(wheel).not.toContain('font-weight: 500')
     const columns = css.slice(

@@ -340,6 +340,7 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('vamis-select__popover--sheet')
     expect(select).not.toContain('vamiss-select__popover--sheet')
     expect(select).toContain('vamis-select__search--sheet')
+    expect(select).toContain('vamis-select__wheel-label')
     expect(select).toContain('POPUP_DEFAULT_HEIGHT')
     expect(select).toContain('confirmMobile')
     expect(select).toContain('countVisibleTagsByWidth')
