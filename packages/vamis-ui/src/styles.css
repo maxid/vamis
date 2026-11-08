@@ -172,6 +172,8 @@
   --cal-cell-hover-bg: #f7f8fa;
   --cal-cell-hover-fg: #151b26;
   --cal-other: #b8babf;
+  /* 对齐 Amis `--Form-input-placeholderColor` / `--text--muted-color` / `--colors-neutral-text-6`。不要用 `--muted-foreground`（偏深）。 */
+  --control-placeholder: #b8babf;
   --cal-picker-cancel: #666;
   --cal-picker-title: #222;
   --cal-chip-fg: #fff;
@@ -194,7 +196,7 @@
   --select-search-height: 30px;
   --select-search-icon-size: 14px;
   --select-search-icon-color: #999999;
-  --select-search-placeholder: #b4b6ba;
+  --select-search-placeholder: var(--control-placeholder);
   --select-search-box-pad: 10px;
   --select-check-size: 14px;
   --select-check-radius: 2px;
@@ -463,6 +465,7 @@
   --cal-cell-hover-bg: #151c26;
   --cal-cell-hover-fg: #f7f8fa;
   --cal-other: #b8bbbf;
+  --control-placeholder: #b8bbbf;
   --cal-picker-cancel: #84878c;
   --cal-picker-title: #f7f8fa;
   --cal-bar: #84878c;
@@ -472,7 +475,7 @@
   --select-option-disabled-color: #b8bbbf;
   --select-group-color: #84878c;
   --select-search-icon-color: #84878c;
-  --select-search-placeholder: #5c5f66;
+  --select-search-placeholder: var(--control-placeholder);
   --select-check-border: #5c5f66;
   --select-check-bg: #17202d;
   --select-chip-bg: #303640;
@@ -746,7 +749,7 @@
     margin-bottom: 0;
   }
   .vamis-form-static__placeholder {
-    color: var(--muted-foreground);
+    color: var(--control-placeholder);
   }
   .vamis-form-item--inline .vamis-form-static {
     display: inline-flex;
@@ -1246,7 +1249,7 @@
     box-shadow: none;
   }
   .vamis-text-control__native::placeholder {
-    color: var(--muted-foreground);
+    color: var(--control-placeholder);
   }
   .vamis-text-control__affix {
     flex: 0 0 auto;
@@ -1875,7 +1878,7 @@
     white-space: nowrap;
   }
   .vamis-select__placeholder {
-    color: var(--muted-foreground);
+    color: var(--control-placeholder);
     line-height: var(--select-chip-height);
   }
   .vamis-select__single {
@@ -2532,11 +2535,12 @@
     text-align: center;
   }
   .vamis-popup__body {
+    /* 对齐 Amis PickerColumns 列区贴顶，剩余空白在下。居中整块会把选中行压低。 */
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     overflow: hidden;
   }
   .vamis-popup__picker {
@@ -3393,6 +3397,12 @@
 .vamis-select.is-mobile.is-opened .vamis-caret--select svg {
   transform: rotate(-90deg);
   transition: none;
+}
+/* 对齐 Amis `--Form-input-placeholderColor`：全平台控件 placeholder，不要 `--muted-foreground`。 */
+.vamis-root input::placeholder,
+.vamis-root textarea::placeholder {
+  color: var(--control-placeholder);
+  opacity: 1;
 }
 .vamis-caret--dropdown {
   margin-left: var(--gap-sm);

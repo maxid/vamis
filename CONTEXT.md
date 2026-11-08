@@ -71,7 +71,7 @@
 
 **最近交付**
 
-- Select 移动端箭头朝右 `>`、不跟展开翻转（Amis `.is-mobile` svg `-90deg`，无动画）。`VamisPopUp` 对齐 Amis `.PopUp`：通用默认高度 400、Select 320（`overlay.height` 可覆盖）；边框 `1px solid var(--border)`（`#e8e9eb`）打在底栏盒上，遮罩 `position:fixed !important`。单选滚轮 `itemHeight` 40。表单底栏均分仍打穿 `[data-vamis-action]`。DropdownButton / InputText 建议下一刀接同一块壳。
+- 控件 placeholder 统一 `--control-placeholder` `#b8babf`（Amis `--Form-input-placeholderColor` / text-6），桌面+移动、Select / 文本 / 日期都走这档，不再用偏深的 `--muted-foreground`。Select 移动端滚轮列区贴顶（不在 PopUp body 里垂直居中），选中行与 Amis 第 3 行对齐。
 - 窄屏 Dialog 底栏均分：Action 的 `span.inline-block` 把 `width:100%` 卡在 54px。同时拉满 `[data-vamis-action]`。Collapse 窄屏箭头靠右 + `VamisCaret`；Tabs line 下划线拉满槽宽。
 - 对照 `?vp=mobile`：顶层 `embed-case` 写 `env.mobileUI` 并钉 viewport 375；`compare.html` iframe 也带上 `vp=mobile`。手机开「桌面式网站」时 CSS 视口 ~980，不再误走桌面月历。不要用 UA 对抗桌面式。
 - 移动端滚轮遮罩恢复 Amis 渐变：`hsla()` 写进 `PickerFade` inline style，绕过 lightningcss 编成 `#ffffffe6`。opacity 实心带会丢掉渐变；Amis 能渐变是因为产物里仍是字面 `hsla()`，不是 Tailwind「不适合移动端」。

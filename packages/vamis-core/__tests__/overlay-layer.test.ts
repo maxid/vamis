@@ -129,6 +129,9 @@ describe('overlay-layer', () => {
     expect(css).toContain('.vamis-popup.is-in {\n    animation-name: vamis-date-sheet-in')
     expect(css).toContain('position: fixed !important')
     expect(css).toContain('box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)')
+    const popupBody = css.slice(css.indexOf('.vamis-popup__body {'), css.indexOf('.vamis-popup__picker {'))
+    expect(popupBody).toContain('justify-content: flex-start')
+    expect(popupBody).not.toContain('justify-content: center')
   })
 
   it('overlayIsMobile honors schema/env mobileUI before the 768 viewport', () => {

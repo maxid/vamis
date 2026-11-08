@@ -271,6 +271,18 @@ alwaysApply: true
 - 触及：`select` Options
 - 规则：本文；Amis `_select.scss` `&-arrow` / `&.is-mobile`
 
+### placeholder 走 --control-placeholder，不要 --muted-foreground
+- 踩过：Select / input `::placeholder` 用 shadcn `--muted-foreground`（oklch 0.5，偏深）。Amis `--Form-input-placeholderColor` = `--text--muted-color` = `--colors-neutral-text-6` `#b8babf`。
+- 稳定做法：`:root --control-placeholder: #b8babf`（深色 `#b8bbbf`）。选择器只 `var()`：`.vamis-select__placeholder`、`.vamis-text-control__native::placeholder`、`.vamis-root input/textarea::placeholder`、静态空态。不要用 `placeholder:text-muted-foreground`（会压过 components 层）。
+- 触及：`select` `input-text` `textarea` `input-date` FormItem
+- 规则：本文；Amis `_properties.scss` `--Form-input-placeholderColor`
+
+### PopUp 列区贴顶，不要把 200px 滚轮在 body 里垂直居中
+- 踩过：`.vamis-popup__body { justify-content: center }` 把 5×40 列区在 320-60 剩余高度里上下居中，选中行相对整张底栏比 Amis 低一截。Amis `.PickerColumns { flex:1 }`、列 `height: wrapHeight` 贴顶，空白在下。
+- 稳定做法：body `justify-content: flex-start`。列区钉死 `itemHeight × 5`、`flex: 0 0 auto`，选中在第 3 行（`baseOffset = itemHeight * 2`）。不要为了「看起来居中」去居中整块列区。
+- 触及：`select` Options `input-date`
+- 规则：本文；Amis `Picker.tsx` `wrapHeight` / `_picker-columns.scss`
+
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
