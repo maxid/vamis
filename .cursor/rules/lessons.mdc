@@ -255,9 +255,21 @@ alwaysApply: true
 
 ### 移动端 PopOver 走底部 PopUp，不要再用 VamisOverlay
 - 踩过：Select 对照「移动」仍是贴触发器的下拉；Amis `SelectMobile` 是 `PopUp` 从底部滑入，单选滚轮、多选列表，确认才写入。
-- 稳定做法：`overlayIsMobile`（schema/env `mobileUI` 优先，否则 768）。桌面 `VamisOverlay`，移动 `VamisPopUp`（height 0 贴底 in/out，`--z-modal` 1400，取消/确认）。单选挂 `CalendarWheel`，多选列表改 draft、确认 `commit`。日期已是 `DatePickerSheet` 同一套动画，新控件接 `VamisPopUp`，不要第三套壳。DropdownButton / InputText 建议下一刀接。
+- 稳定做法：`overlayIsMobile`（schema/env `mobileUI` 优先，否则 768）。桌面 `VamisOverlay`，移动 `VamisPopUp`（height 0 贴底 in/out，`--z-modal` 1400，取消/确认）。通用高度 400、Select 320（`overlay.height` 可覆盖）。单选挂 `CalendarWheel`（Select `itemHeight` 40，日期仍 48），多选列表改 draft、确认 `commit`。日期已是 `DatePickerSheet` 同一套动画，新控件接 `VamisPopUp`，不要第三套壳。DropdownButton / InputText 建议下一刀接。
 - 触及：`select` Options `input-date`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### PopUp 边框打在底栏盒上，遮罩必须 fixed !important
+- 踩过：把 `.vamis-popup` 做成全屏壳、边框写在内层面板；或 `> * { position: relative }` 把遮罩收成 in-flow，rim 贴浅底。`--border` `#e8e9eb` 几乎看不见。误以为 rim 该跟遮罩 `rgba(0,0,0,0.3)` 同色。
+- 稳定做法：对齐 Amis `.PopUp`：底栏盒本身带 `border: 1px solid var(--border)` + `--boxShadow`。遮罩是子节点 `position: fixed !important`（压过 `> *`）。rim 色是 `--borderColor` / `--border`，不是遮罩色；看得见是因为暗遮罩衬着浅 rim。
+- 触及：`select` Options
+- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `_popup.scss` `PopUp-overlay`
+
+### 移动端 Select 箭头朝右，不要跟桌面翻转
+- 踩过：桌面 caret 外壳 90°、展开 svg `rotate(180deg)` 带 transition；移动端仍跟 `is-opened` 翻成 ∨。
+- 稳定做法：对齐 Amis `.Select.is-mobile .Select-arrow > svg { transform: rotate(-90deg) }`，展开旋转 gated `:not(.is-mobile)`。净朝向 0° = `>`，无动画。`:open` 在移动端恒 false。
+- 触及：`select` Options
+- 规则：本文；Amis `_select.scss` `&-arrow` / `&.is-mobile`
 
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。

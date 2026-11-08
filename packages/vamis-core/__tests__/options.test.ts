@@ -14,6 +14,7 @@ import {
   omitSelectedOptions,
   runSelectFilterOption,
   selectOverlayPlacement,
+  selectPopupHeight,
   splitOverflowTags,
   flattenOptions,
   getSelectedOptions,
@@ -208,6 +209,10 @@ describe('toggle / checkAll / selectFirst', () => {
     expect(selectOverlayPlacement({ align: 'right' })).toBe('right-bottom-right-top')
     expect(selectOverlayPlacement({ align: 'center' })).toBe('center-bottom-center-top')
     expect(selectOverlayPlacement({})).toBe('auto')
+    expect(selectPopupHeight(undefined)).toBe(320)
+    expect(selectPopupHeight({})).toBe(320)
+    expect(selectPopupHeight({ height: 400 })).toBe(400)
+    expect(selectPopupHeight({ height: '280px' })).toBe(280)
   })
 })
 
@@ -323,6 +328,9 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('VamisOverlay')
     expect(select).toContain('VamisPopUp')
     expect(select).toContain('overlayIsMobile')
+    expect(select).toContain("'is-mobile': isMobile")
+    expect(select).toContain('SELECT_PICKER_ITEM_HEIGHT')
+    expect(select).toContain('selectPopupHeight')
     expect(select).toContain('CalendarWheel')
     expect(select).toContain('confirmMobile')
     expect(select).toContain('countVisibleTagsByWidth')
@@ -338,6 +346,7 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('ctl.config.value.editable')
     expect(select).toContain('ctl.config.value.removable')
     expect(select).toContain('VamisCaret')
+    expect(select).toContain(':open="!isMobile && ctl.open.value"')
     expect(select).toContain('VamisClear')
     expect(select).toContain(':gap="4"')
     expect(select).not.toContain('Checkbox')
@@ -369,6 +378,8 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('.vamis-select__chip-close')
     expect(css).toContain('--select-pad-y: 4px')
     expect(css).toContain('padding: var(--select-pad-y) var(--select-pad-x)')
+    expect(css).toContain('.vamis-select.is-mobile .vamis-caret--select svg')
+    expect(css).toContain('transform: rotate(-90deg)')
     expect(css).toContain('.vamis-select__suffix')
     expect(css).not.toContain('min-height: calc(var(--control-h) - 2px)')
     expect(css).toContain('--select-clear-color: #d4d6d9')

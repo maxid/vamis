@@ -3,6 +3,7 @@
 import { dataMapping } from './data-mapping'
 import { resolveValue } from '../formula'
 import { getPathValue } from './path-value'
+import { SELECT_POPUP_HEIGHT } from './overlay-layer'
 import type { PlainObject, SchemaApi, SchemaObject } from '../types'
 
 export interface OptionItem {
@@ -520,7 +521,12 @@ export function countVisibleTagsByWidth(opts: {
   return count
 }
 
-export type SelectOverlay = { width?: string | number; align?: 'left' | 'center' | 'right' }
+export type SelectOverlay = {
+  width?: string | number
+  align?: 'left' | 'center' | 'right'
+  /** 移动端底栏高度。Amis 是 CSS `.Select-popup { height: 320px }`，schema 未列；Vamis 可写 px。 */
+  height?: string | number
+}
 
 /** 对齐 Amis `PopOverContainer.calcOverlayWidth`。 */
 export function calcSelectOverlayWidth(overlay: unknown, targetWidth: number): number | string | undefined {
@@ -534,6 +540,19 @@ export function calcSelectOverlayWidth(overlay: unknown, targetWidth: number): n
   if (/^[+-]\d+(px|%|rem|em|vw)$/.test(raw)) {
     return raw.replace(/^([+-])(.*)$/, `calc(${targetWidth}px $1 $2)`)
   }
+}
+
+/** 移动端 Select PopUp 高度：`overlay.height` 覆盖，否则 320（Amis `.Select-popup`）。 */
+export function selectPopupHeight(overlay: unknown): number {
+  if (overlay && typeof overlay === 'object' && overlay !== null && 'height' in overlay) {
+    const raw = (overlay as SelectOverlay).height
+    if (typeof raw === 'number' && Number.isFinite(raw) && raw > 0) return raw
+    if (typeof raw === 'string' && raw.trim()) {
+      const n = Number.parseFloat(raw)
+      if (Number.isFinite(n) && n > 0) return n
+    }
+  }
+  return SELECT_POPUP_HEIGHT
 }
 
 /** 对齐 Amis `alignToPlacement`。 */

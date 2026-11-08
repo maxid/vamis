@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import {
-  CALENDAR_PICKER_ITEM_HEIGHT,
   CALENDAR_PICKER_VISIBLE,
+  SELECT_PICKER_ITEM_HEIGHT,
   SchemaRenderer,
   calcSelectOverlayWidth,
   countVisibleTagsByWidth,
@@ -12,6 +12,7 @@ import {
   overlayIsMobile,
   resolveClassName,
   selectOverlayPlacement,
+  selectPopupHeight,
   toggleAllOptions,
   toggleOption,
   useData,
@@ -60,7 +61,8 @@ const isMobile = computed(() => {
   viewportTick.value
   return overlayIsMobile(props.schema, env)
 })
-const pickerHeight = CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const popupHeight = computed(() => selectPopupHeight(props.schema.overlay))
 const mobileDraft = ref<OptionItem[]>([])
 const mobileWheelIndex = ref(0)
 const checkAllLabel = computed(() =>
@@ -383,6 +385,7 @@ watch(
         'is-fold': foldTags,
         'is-nowrap': ctl.config.value.valuesNoWrap,
         'is-group': isGroupMenu,
+        'is-mobile': isMobile,
       }"
     >
       <div
@@ -449,7 +452,7 @@ watch(
           >
             <VamisClear />
           </button>
-          <VamisCaret class="vamis-select__caret" :open="ctl.open.value" />
+          <VamisCaret class="vamis-select__caret" :open="!isMobile && ctl.open.value" />
         </span>
       </div>
       <VamisTooltipLayer
@@ -493,6 +496,7 @@ watch(
       <VamisPopUp
         v-if="isMobile"
         :show="ctl.open.value"
+        :height="popupHeight"
         :container="ctl.overlayContainer.value"
         @cancel="closeMenu"
         @confirm="confirmMobile"
@@ -505,10 +509,11 @@ watch(
           <CalendarWheel
             :model-value="mobileWheelIndex"
             :options="mobileWheelOptions"
+            :item-height="SELECT_PICKER_ITEM_HEIGHT"
             @update:model-value="onWheelIndex"
           />
           <PickerFade class="vamis-picker-fade" />
-          <div class="vamis-popup__frame" :style="{ height: `${CALENDAR_PICKER_ITEM_HEIGHT}px` }" />
+          <div class="vamis-popup__frame" :style="{ height: `${SELECT_PICKER_ITEM_HEIGHT}px` }" />
         </div>
         <div v-else class="vamis-select__popover vamiss-select__popover--sheet">
           <div

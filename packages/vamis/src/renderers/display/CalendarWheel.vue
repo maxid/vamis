@@ -1,24 +1,29 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import {
-  CALENDAR_PICKER_ITEM_HEIGHT as ITEM,
+  CALENDAR_PICKER_ITEM_HEIGHT,
   CALENDAR_PICKER_VISIBLE as VISIBLE,
   type CalendarPickerOption,
 } from '@vamis/core'
 
-const props = defineProps<{
-  options: CalendarPickerOption[]
-  modelValue: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    options: CalendarPickerOption[]
+    modelValue: number
+    itemHeight?: number
+  }>(),
+  { itemHeight: CALENDAR_PICKER_ITEM_HEIGHT },
+)
 
 const emit = defineEmits<{ 'update:modelValue': [number] }>()
 
-const baseOffset = (ITEM * (VISIBLE - 1)) / 2
+const itemH = computed(() => (props.itemHeight > 0 ? props.itemHeight : CALENDAR_PICKER_ITEM_HEIGHT))
+const baseOffset = computed(() => (itemH.value * (VISIBLE - 1)) / 2)
 const index = computed(() => {
   const i = props.options.findIndex((item) => item.value === props.modelValue)
   return i < 0 ? 0 : i
 })
-const offset = ref(-index.value * ITEM)
+const offset = ref(-index.value * itemH.value)
 const duration = ref(0)
 let dragging = false
 let dragged = false
@@ -31,14 +36,14 @@ watch(
   () => {
     if (dragging) return
     duration.value = 200
-    offset.value = -index.value * ITEM
+    offset.value = -index.value * itemH.value
   },
 )
 
 function snap(next: number) {
   const i = Math.min(props.options.length - 1, Math.max(0, next))
   duration.value = 200
-  offset.value = -i * ITEM
+  offset.value = -i * itemH.value
   const item = props.options[i]
   if (item && item.value !== props.modelValue) emit('update:modelValue', item.value)
 }
@@ -77,7 +82,7 @@ function onPointerUp(event: PointerEvent) {
   if (el.hasPointerCapture(event.pointerId)) el.releasePointerCapture(event.pointerId)
   if (dragged) {
     skipClick = true
-    snap(Math.round(-offset.value / ITEM))
+    snap(Math.round(-offset.value / itemH.value))
     setTimeout(() => {
       skipClick = false
     }, 0)
@@ -93,6 +98,7 @@ function onItemClick(i: number) {
 <template>
   <div
     class="vamis-cal-wheel"
+    :style="{ '--vamis-wheel-item-h': `${itemH}px` }"
     @wheel.prevent="onWheel"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
@@ -137,8 +143,8 @@ function onItemClick(i: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  line-height: 48px;
+  height: var(--vamis-wheel-item-h, 48px);
+  line-height: var(--vamis-wheel-item-h, 48px);
   font-size: 16px;
   font-weight: 400;
   color: var(--cal-fg, var(--foreground));

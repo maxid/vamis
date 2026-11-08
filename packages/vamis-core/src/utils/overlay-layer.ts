@@ -42,6 +42,13 @@ export function overlayContainerFrom(
   return resolveOverlayContainer(env?.getModalContainer)
 }
 
+/** 对齐 Amis `.PopUp { height: 400px }`。Select 另走 `.Select-popup { height: 320px }`。 */
+export const POPUP_DEFAULT_HEIGHT = 400
+/** 对齐 Amis `.Select-popup` / `.DatePicker-mobile`。 */
+export const SELECT_POPUP_HEIGHT = 320
+/** 对齐 Amis SelectMobile Picker `itemHeight={40}`。日期滚轮仍是 48。 */
+export const SELECT_PICKER_ITEM_HEIGHT = 40
+
 /**
  * 移动端 PopUp（底部滑入）开关。schema / env 显式 `mobileUI` 优先；
  * 否则 `matchMedia('(max-width: 768px)')`，对齐 Amis `isMobile()`。

@@ -2440,25 +2440,20 @@
     border-bottom: 1px solid var(--border);
     transform: scale(0.5);
   }
-  /* 对齐 Amis PopUp：固定底栏 400px，height 0 贴底滑入/滑出。Select / 其它移动端 PopOver 共用，不要再写第三套壳。 */
+  /*
+    对齐 Amis `.PopUp`：底栏本身是 400px（Select `.Select-popup` 320）白盒，
+    边框 --borderColor #e8e9eb 打在这个盒上，遮罩是盒内 position:fixed。
+    不要把边框写在全屏壳里——会几乎看不见。
+  */
   .vamis-popup {
     position: fixed;
-    inset: 0;
-    z-index: var(--z-modal);
-  }
-  .vamis-popup__mask {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-  }
-  .vamis-popup__panel {
-    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    height: var(--vamis-popup-height, 400px);
+    z-index: var(--z-modal);
+    box-sizing: border-box;
     overflow: hidden;
     background: var(--select-menu-bg);
     color: var(--select-menu-color);
@@ -2467,20 +2462,31 @@
     font-weight: 400;
     line-height: var(--lineHeightBase);
     border: 1px solid var(--border);
-    border-radius: var(--radius) var(--radius) 0 0;
-    box-shadow: var(--cal-shadow);
+    border-radius: var(--radius);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
-  .vamis-popup.is-in .vamis-popup__panel,
-  .vamis-popup.is-out .vamis-popup__panel,
+  .vamis-popup > * {
+    position: relative;
+    z-index: 2;
+  }
+  /* 对齐 Amis `.PopUp-overlay { position: fixed !important }`：否则 `> *` 的 relative 会把遮罩收进 320 盒，rim 贴浅底几乎看不见。 */
+  .vamis-popup__mask {
+    position: fixed !important;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .vamis-popup.is-in,
+  .vamis-popup.is-out,
   .vamis-popup.is-in .vamis-popup__mask,
   .vamis-popup.is-out .vamis-popup__mask {
     animation-duration: var(--animation-duration);
     animation-fill-mode: both;
   }
-  .vamis-popup.is-in .vamis-popup__panel {
+  .vamis-popup.is-in {
     animation-name: vamis-date-sheet-in;
   }
-  .vamis-popup.is-out .vamis-popup__panel {
+  .vamis-popup.is-out {
     animation-name: vamis-date-sheet-out;
   }
   .vamis-popup.is-in .vamis-popup__mask {
@@ -2489,11 +2495,18 @@
   .vamis-popup.is-out .vamis-popup__mask {
     animation-name: vamis-date-sheet-mask-out;
   }
+  .vamis-popup__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--select-menu-bg);
+  }
   .vamis-popup__bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 50px;
+    height: 60px;
     flex-shrink: 0;
   }
   .vamis-popup__cancel,
@@ -2502,7 +2515,7 @@
     padding: 0 16px;
     border: 0;
     background: none;
-    line-height: 50px;
+    line-height: 60px;
     font-size: 16px;
     cursor: pointer;
     color: var(--cal-picker-cancel);
@@ -2523,6 +2536,7 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     overflow: hidden;
   }
   .vamis-popup__picker {
@@ -3370,9 +3384,15 @@
   transition: transform var(--animation-duration);
 }
 .vamis-caret--select.is-open svg,
-.vamis-select.is-opened .vamis-caret--select svg,
+.vamis-select.is-opened:not(.is-mobile) .vamis-caret--select svg,
 [data-state='open'] .vamis-caret--select svg {
   transform: rotate(180deg);
+}
+/* 对齐 Amis `.Select.is-mobile .Select-arrow > svg { transform: rotate(-90deg) }`：朝右、不跟展开翻转。 */
+.vamis-select.is-mobile .vamis-caret--select svg,
+.vamis-select.is-mobile.is-opened .vamis-caret--select svg {
+  transform: rotate(-90deg);
+  transition: none;
 }
 .vamis-caret--dropdown {
   margin-left: var(--gap-sm);

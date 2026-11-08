@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { resolveOverlayContainer, type OverlayContainer } from '@vamis/core'
+import { POPUP_DEFAULT_HEIGHT, resolveOverlayContainer, type OverlayContainer } from '@vamis/core'
 
 const props = withDefaults(
   defineProps<{
@@ -8,8 +8,10 @@ const props = withDefaults(
     title?: string
     container?: OverlayContainer
     showConfirm?: boolean
+    /** 底栏高度。默认 400（Amis `.PopUp`）；Select 传 320（`.Select-popup`）。 */
+    height?: number | string
   }>(),
-  { title: '', showConfirm: true },
+  { title: '', showConfirm: true, height: POPUP_DEFAULT_HEIGHT },
 )
 
 const emit = defineEmits<{ cancel: []; confirm: [] }>()
@@ -17,6 +19,11 @@ const emit = defineEmits<{ cancel: []; confirm: [] }>()
 const target = computed(() => resolveOverlayContainer(props.container))
 const visible = ref(false)
 const phase = ref<'in' | 'out' | ''>('')
+const heightStyle = computed(() => {
+  const h = props.height
+  if (h == null || h === '') return undefined
+  return { height: typeof h === 'number' ? `${h}px` : String(h) }
+})
 
 let leaveTimer: ReturnType<typeof setTimeout> | undefined
 let prevOverflow = ''
@@ -80,15 +87,13 @@ onBeforeUnmount(() => {
       v-if="visible"
       class="vamis-popup"
       :class="{ 'is-in': phase === 'in', 'is-out': phase === 'out' }"
-      role="presentation"
+      :style="heightStyle"
+      role="dialog"
+      aria-modal="true"
+      @animationend="onPanelAnimEnd"
     >
       <div class="vamis-popup__mask" @click="emit('cancel')" />
-      <div
-        class="vamis-popup__panel"
-        role="dialog"
-        aria-modal="true"
-        @animationend="onPanelAnimEnd"
-      >
+      <div class="vamis-popup__inner">
         <div v-if="showConfirm" class="vamis-popup__bar">
           <button type="button" class="vamis-popup__cancel" @click="emit('cancel')">取消</button>
           <div class="vamis-popup__title">{{ title }}</div>

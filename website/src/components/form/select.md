@@ -6,7 +6,7 @@ outline: deep
 # Select 下拉框
 
 ::: info 实现进度 92% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`、全选、focus/blur。移动端从底部滑入（单选滚轮 / 多选列表）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur。移动端从底部滑入（单选滚轮 itemHeight 40 / 多选列表；箭头朝右不翻转）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -295,7 +295,7 @@ body:
 
 ## 自定义下拉区域宽度与对齐方式
 
-`overlay.width` 可用数字（单位 px）或带单位的字符串：`%` / `px` / `rem` / `em` / `vw`。`overlay.align` 为 `left` / `center` / `right`。
+`overlay.width` 可用数字（单位 px）或带单位的字符串：`%` / `px` / `rem` / `em` / `vw`。`overlay.align` 为 `left` / `center` / `right`。移动端底栏高度默认 **320px**（对齐 Amis `.Select-popup`；通用 PopUp 默认 400）；可用 `overlay.height` 覆盖。
 
 相对值如 `-100px` 相当于触发器宽度减 100px（`calc(${trigger}px - 100px)`）；`+10vw` 同理。
 
@@ -436,7 +436,7 @@ body:
 | overflowTagPopover | [TooltipObject](/components/tooltip) | | 悬停 `+ N ...` 的溢出浮层。剩余项按标签表格渲染（可关），可配 `title` / `placement` / `tooltipClassName` |
 | optionClassName | [ClassName](/types/classname) | | 选项 CSS 类名 |
 | popOverContainerSelector | `string` | | 弹层挂载选择器 |
-| overlay | `{ width, align }` | | 弹层宽度与对齐：`align` 为 `left` / `center` / `right` |
+| overlay | `{ width, align, height }` | | 桌面：弹层宽度与对齐（`align` 为 `left` / `center` / `right`）。移动端：`height` 覆盖底栏高度，默认 320（Amis `.Select-popup`；未写 `overlay.height` 时走这档，通用 PopUp 默认 400） |
 | showInvalidMatch | `boolean` | `false` | 值对不上选项时飘红。**未接** |
 | noResultsText | `string` | `"未找到任何结果"` | 无结果文案 |
 | mobileClassName | `string` | | 移动端浮层类名。**未接** |

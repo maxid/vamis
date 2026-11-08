@@ -57,10 +57,10 @@
           try {
             const href = new URL(name, location.origin + sdkBase())
             // 旧 WebView 可能还留着误加的一年 immutable。换 query 才能拿到新 css/js。
-            href.searchParams.set('v', '20261108g')
+            href.searchParams.set('v', '20261108h')
             return href.href
           } catch (_err) {
-            return sdkBase() + name + '?v=20261108g'
+            return sdkBase() + name + '?v=20261108h'
           }
         }
         const css =

@@ -119,13 +119,16 @@ describe('overlay-layer', () => {
     expect(css).toContain('@keyframes vamis-date-sheet-in')
     expect(css).toContain('@keyframes vamis-date-sheet-out')
     expect(css).toContain('animation-name: vamis-date-sheet-in')
-    const popup = css.slice(css.indexOf('.vamis-popup {'), css.indexOf('.vamis-popup__mask'))
+    const popup = css.slice(css.indexOf('.vamis-popup {'), css.indexOf('.vamis-popup > *'))
     expect(popup).toContain('z-index: var(--z-modal)')
     expect(popup).toContain('position: fixed')
-    const popupPanel = css.slice(css.indexOf('.vamis-popup__panel {'), css.indexOf('.vamis-popup.is-in .vamis-popup__panel,'))
-    expect(popupPanel).toContain('height: 400px')
-    expect(popupPanel).toContain('background: var(--select-menu-bg)')
-    expect(css).toContain('.vamis-popup.is-in .vamis-popup__panel {\n    animation-name: vamis-date-sheet-in')
+    expect(popup).toContain('height: var(--vamis-popup-height, 400px)')
+    expect(popup).toContain('border: 1px solid var(--border)')
+    expect(popup).toContain('background: var(--select-menu-bg)')
+    expect(popup).not.toContain('inset: 0')
+    expect(css).toContain('.vamis-popup.is-in {\n    animation-name: vamis-date-sheet-in')
+    expect(css).toContain('position: fixed !important')
+    expect(css).toContain('box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)')
   })
 
   it('overlayIsMobile honors schema/env mobileUI before the 768 viewport', () => {
@@ -145,6 +148,8 @@ describe('overlay-layer', () => {
     expect(popup).toContain('确认')
     expect(popup).toContain('Teleport')
     expect(popup).toContain('@animationend')
+    expect(popup).toContain('POPUP_DEFAULT_HEIGHT')
+    expect(popup).toContain('heightStyle')
   })
 
   it('places a top / right tooltip with side gap', () => {

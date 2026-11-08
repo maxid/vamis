@@ -235,7 +235,7 @@ describe('input-date renderer reuse', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const wheel = readFileSync(resolve(here, '../../vamis/src/renderers/display/CalendarWheel.vue'), 'utf8')
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
-    expect(wheel).toContain('ITEM * (VISIBLE - 1)) / 2')
+    expect(wheel).toContain('(itemH.value * (VISIBLE - 1)) / 2')
     expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-size:\s*16px/)
     expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-weight:\s*400/)
     expect(wheel).not.toContain('font-size: 18px')

@@ -38,8 +38,10 @@ Vamis 入口（不要再新开月历）：
 |------|------|
 | 共享底栏壳 | `packages/vamis/src/overlay/VamisPopUp.vue` |
 | 开关 | `overlayIsMobile`（schema / env `mobileUI` 优先，否则 `max-width: 768px`） |
+| 高度 | 通用 `POPUP_DEFAULT_HEIGHT` **400**（Amis `.PopUp`）；Select `SELECT_POPUP_HEIGHT` **320**（`.Select-popup`）。`overlay.height` 可覆盖。日期 sheet 仍 320 |
+| 边框 | 打在底栏盒 `.vamis-popup` 上：`1px solid var(--border)`（`#e8e9eb`）+ `--boxShadow`。遮罩是盒内子节点 `position:fixed !important` + `rgba(0,0,0,0.3)`。不要把边框写在全屏壳上，也不要用遮罩色去画 rim |
 | 日期滚轮 | `DatePickerSheet`（面板 320px；动画与 PopUp 共用 keyframes） |
-| Select | 单选 `CalendarWheel`；多选列表；确认才 `commit` |
+| Select | 单选 `CalendarWheel` `itemHeight` 40；多选列表；确认才 `commit`。移动端箭头朝右、无翻转 |
 
 禁止：移动端 Select / 日期再挂 `VamisOverlay` 当下拉；为每个 type 再写一套滑入动画。DropdownButton / InputText 建议也接这块，不要第三套壳。`mobileCalendarMode: calendar` 仍未接。
 
