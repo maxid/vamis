@@ -378,6 +378,8 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('.vamis-select__chip-close')
     expect(css).toContain('--select-pad-y: 4px')
     expect(css).toContain('padding: var(--select-pad-y) var(--select-pad-x)')
+    expect(css).toContain('.vamis-popup__cancel,\n  .vamis-popup__ok,\n  .vamis-date-sheet__cancel,\n  .vamis-date-sheet__ok')
+    expect(css).toContain('font-size: var(--fontSizeBase)')
     expect(css).toContain('.vamis-select.is-mobile .vamis-caret--select svg')
     expect(css).toContain('transform: rotate(-90deg)')
     expect(css).toContain('--control-placeholder: #b8babf')

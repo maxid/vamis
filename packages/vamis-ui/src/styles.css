@@ -136,6 +136,9 @@
   --info-foreground: oklch(0.99 0.01 230);
   /* Amis --colors-neutral-line-8 / --borderColor */
   --border: #e8e9eb;
+  /* 移动端 PopUp（Select / DatePickerSheet / input-time）共用 rim，对齐 Amis `--borderColor` + `--boxShadow`。 */
+  --popup-border: var(--border);
+  --popup-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --input: #e8e9eb;
   --ring: oklch(0.49 0.16 var(--accent-h));
   --sidebar: oklch(0.22 0.04 258);
@@ -2330,9 +2333,9 @@
     font-size: 16px;
     font-weight: 400;
     line-height: var(--lineHeightBase);
-    border: 1px solid var(--border);
+    border: 1px solid var(--popup-border);
     border-radius: var(--radius);
-    box-shadow: var(--cal-shadow);
+    box-shadow: var(--popup-shadow);
   }
   /* 对齐 Amis PopUp `in`/`out`：height 0 + bottom 贴底，看起来从底部滑入/滑出。 */
   @keyframes vamis-date-sheet-in {
@@ -2378,22 +2381,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 50px;
+    height: 60px;
     flex-shrink: 0;
-  }
-  .vamis-date-sheet__cancel,
-  .vamis-date-sheet__ok {
-    height: 100%;
-    padding: 0 16px;
-    border: 0;
-    background: none;
-    line-height: 50px;
-    font-size: 16px;
-    cursor: pointer;
-    color: var(--cal-picker-cancel);
-  }
-  .vamis-date-sheet__ok {
-    color: var(--primary);
   }
   .vamis-date-sheet__title {
     max-width: 50%;
@@ -2464,9 +2453,9 @@
     font-size: 16px;
     font-weight: 400;
     line-height: var(--lineHeightBase);
-    border: 1px solid var(--border);
+    border: 1px solid var(--popup-border);
     border-radius: var(--radius);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    box-shadow: var(--popup-shadow);
   }
   .vamis-popup > * {
     position: relative;
@@ -2512,19 +2501,35 @@
     height: 60px;
     flex-shrink: 0;
   }
+  /* 对齐 Amis PopUp 里 `Button level=link size=default`：14px / 高 32，hover 走 link-6。Select 与 DatePickerSheet 共用。 */
   .vamis-popup__cancel,
-  .vamis-popup__ok {
-    height: 100%;
-    padding: 0 16px;
+  .vamis-popup__ok,
+  .vamis-date-sheet__cancel,
+  .vamis-date-sheet__ok {
+    height: var(--button-h);
+    padding: 0 12px;
     border: 0;
     background: none;
-    line-height: 60px;
-    font-size: 16px;
+    font-size: var(--fontSizeBase);
+    font-weight: 400;
+    line-height: var(--button-h);
     cursor: pointer;
     color: var(--cal-picker-cancel);
   }
-  .vamis-popup__ok {
+  .vamis-popup__cancel,
+  .vamis-date-sheet__cancel {
+    margin-left: var(--gap-sm);
+  }
+  .vamis-popup__ok,
+  .vamis-date-sheet__ok {
+    margin-right: var(--gap-sm);
     color: var(--primary);
+  }
+  .vamis-popup__cancel:hover,
+  .vamis-popup__ok:hover,
+  .vamis-date-sheet__cancel:hover,
+  .vamis-date-sheet__ok:hover {
+    color: var(--link-hover-color);
   }
   .vamis-popup__title {
     max-width: 50%;

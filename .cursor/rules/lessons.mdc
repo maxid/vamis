@@ -277,6 +277,12 @@ alwaysApply: true
 - 触及：`select` `input-text` `textarea` `input-date` FormItem
 - 规则：本文；Amis `_properties.scss` `--Form-input-placeholderColor`
 
+### 移动端 PopUp 边框与取消确认钮全仓共用
+- 踩过：Select `VamisPopUp` 用 `--border` + Amis `--boxShadow`，日期 sheet 用 `--cal-shadow`（下拉菜单那档浅影）；取消/确认写成 16px、拉满 60px 高，没有 link hover。Amis 是 `Button--link --size-default`（14px / 32px，hover `#528eff`）。
+- 稳定做法：`--popup-border` / `--popup-shadow` 打在 Select 底栏盒和 `DatePickerSheet` 面板上。按钮选择器同时挂 `.vamis-popup__*` 与 `.vamis-date-sheet__*`：`font-size: var(--fontSizeBase)`、高 `--button-h`、hover `--link-hover-color`。input-date / input-time / input-datetime 不要另写一档。
+- 触及：`select` `input-date` `input-datetime` `input-time` Options
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
 ### PopUp 列区贴顶，不要把 200px 滚轮在 body 里垂直居中
 - 踩过：`.vamis-popup__body { justify-content: center }` 把 5×40 列区在 320-60 剩余高度里上下居中，选中行相对整张底栏比 Amis 低一截。Amis `.PickerColumns { flex:1 }`、列 `height: wrapHeight` 贴顶，空白在下。
 - 稳定做法：body `justify-content: flex-start`。列区钉死 `itemHeight × 5`、`flex: 0 0 auto`，选中在第 3 行（`baseOffset = itemHeight * 2`）。不要为了「看起来居中」去居中整块列区。
