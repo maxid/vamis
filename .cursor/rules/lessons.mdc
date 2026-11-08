@@ -183,9 +183,9 @@ alwaysApply: true
 - 规则：`.cursor/rules/component.mdc`
 
 ### 1px 分隔线不要打在 overflow:hidden 的固定高子项上
-- 踩过：移动端多选两行选中之间的横线消失。Amis option **37px**（line-height 36 + 子项 1px 底边）；Vamis 钉死 36 且全局 `border-box`，1px 被吃进盒子，线落在裁切边上像 0.5px。不是勾把行撑高。这是 Tailwind preflight `* { box-sizing: border-box }` + 钉死 `height` 的通病，不是某一个 shadcn 组件独有。
-- 稳定做法：跟 Amis 一样 **不要钉死行高**。`height: auto`，`line-height: 36px`，1px 画在内层并用 `box-sizing: content-box`，整行量出来必须是 **37**。选中/未选同一套字重和 padding。勾的垂直居中用 `margin-top: -8px`，不要 `transform: translateY(-50%)`（合成层会让 1px 在 100% 缩放消失，一改缩放又出现）。不要 `scaleY(0.5)` hairline。
-- 触及：`select` Options
+- 踩过：移动端多选两行选中之间的横线消失。Amis option **37px**（line-height 36 + 子项 1px 底边）；Vamis 钉死 36 且全局 `border-box`，1px 被吃进盒子，线落在裁切边上像 0.5px。不是勾把行撑高。Chrome **100% 缩放**看不见、改缩放又出现。这是 Tailwind preflight `* { box-sizing: border-box }` + 钉死 `height` 的通病，不是某一个 shadcn 组件独有。`table` / `table2` 多选是另一面：Tailwind preflight `border-collapse: collapse` + `tr` 的 `border-b` + 选中 `bg-accent` + checkbox `translate-y-0.5`，两行选中共用那 1px，100% 缩放同样消失。
+- 稳定做法：列表项跟 Amis：**不要钉死行高**。`height: auto`，`line-height: 36px`，1px 画在内层并用 `box-sizing: content-box`，整行量出来必须是 **37**。选中/未选同一套字重和 padding。勾的垂直居中用 `margin-top: -8px`，不要 `transform: translateY(-50%)`（合成层会让 1px 在 100% 缩放消失，一改缩放又出现）。不要 `scaleY(0.5)` hairline。表格另走 Amis：`border-collapse: separate` + `border-spacing: 0`，线画在 **td** 上，不要 `tr` 的 `border-b`；选中底用 `--table-checked-bg`（= `--card`，对齐 fill-11），不要 `bg-accent` 盖线；checkbox 不要 `translate-y-0.5`。表格单元格仍钉 Amis 的 40px（含边），不要改成 41 的 content-box。
+- 触及：`select` Options `table` `table2` `crud`
 - 规则：本文；`.cursor/rules/style.mdc`；Tailwind preflight `box-sizing`
 
 ### 铺满是默认，不要作者开关

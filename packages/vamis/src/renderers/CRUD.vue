@@ -380,6 +380,7 @@ onBeforeUnmount(() => {
           v-for="row in store.items"
           :key="row.id ?? JSON.stringify(row)"
           :data-state="isSelected(row) ? 'selected' : undefined"
+          :class="{ 'is-checked': isSelected(row) }"
         >
           <TableCell v-if="selectable">
             <Checkbox

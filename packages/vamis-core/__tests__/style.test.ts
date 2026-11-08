@@ -247,6 +247,11 @@ describe('Amis width helpers', () => {
     expect(css).not.toContain('.vamis-form-item__label.font-normal')
     expect(css).toContain('--form-item-font-size: 14px')
     expect(css).toContain('--form-item-color: #5c5f66')
+    expect(css).toContain('--table-checked-bg: var(--card)')
+    expect(css).toContain('--table-checked-border: var(--border)')
+    expect(css).toContain('[data-slot="table"]')
+    expect(css).toContain('border-collapse: separate')
+    expect(css).toContain('border-spacing: 0')
   })
 
   it('pins widget root to Amis font token, 14px/1.5, and line-8 border', () => {

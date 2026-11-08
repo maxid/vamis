@@ -333,7 +333,7 @@ function cellWidth(col: SchemaObject) {
           v-for="(row, ri) in pagedRows"
           :key="rowId(row, ri)"
           :data-state="isSelected(row, ri) ? 'selected' : undefined"
-          :class="{ 'is-disabled': isDisabledRow(row, ri) }"
+          :class="{ 'is-checked': isSelected(row, ri), 'is-disabled': isDisabledRow(row, ri) }"
           @click="onRowClick(row, ri, $event)"
         >
           <TableCell v-if="selectable">
@@ -391,6 +391,8 @@ function cellWidth(col: SchemaObject) {
   background: transparent;
 }
 .vamis-table2 table {
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
@@ -398,7 +400,7 @@ function cellWidth(col: SchemaObject) {
 }
 .vamis-table2 th,
 .vamis-table2 td {
-  height: 40px;
+  height: var(--table-row-h);
   padding: 10px;
   font-weight: 400;
   vertical-align: middle;

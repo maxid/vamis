@@ -1,27 +1,30 @@
 # SDK 对照报告
 
 - 日期：2026-11-08
-- 视口：移动 375×812（Amis <768 表单）
+- 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **18** · 通过 **13** · 失败 **5**（P0 0）· Vamis 多出 extra **0**
+- 合计 **8** · 通过 **8** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 2 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 4 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 7 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 4 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（2）
+### 全局（4）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `components-form-select-9` fontSize: Amis `12px` / Vamis `16px`
-- `components-form-select-16` fontSize: Amis `12px` / Vamis `16px`
+- `src-components-table-0` fontSize: Amis `14px` / Vamis `24px`
+- `src-components-table-0` fontFamily: Amis `Helvetica Neue` / Vamis `system-ui`
+- `src-components-table-view-4` fontSize: Amis `16px` / Vamis `24px`
+- `src-components-table-view-4` fontFamily: Amis `Helvetica Neue` / Vamis `system-ui`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
+- Amis 6.13 组件字栈是 --fonts-base-family（实测 Helvetica Neue）；html/body 未钉字族（body 是 Times）。只在 .vamis-root / .vamis-sdk 走 --fonts-base-family，不要把 html/body 钉成 PingFang SC。
 
 ### 样式 helper（0）
 
@@ -29,28 +32,25 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（7）
+### 组件（4）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `components-form-select-6` page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
-- `components-form-select-14` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-15` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-16` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-16` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
-- `components-form-select-17` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-17` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- `src-components-table-0` lineHeight: Amis `21px` / Vamis `32px`
+- `src-components-table-0` fontWeight: Amis `400` / Vamis `600`
+- `src-components-table-view-4` lineHeight: Amis `24px` / Vamis `32px`
+- `src-components-table-view-4` fontWeight: Amis `400` / Vamis `600`
 
 整改：
-- 运行时值应对齐 Amis：schema.value / 表单域 / 控件当前值，不要只看能不能画出。
-- schema 树该结点要能在 DOM 里定位（name / label）。
+- 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
+- Button 默认字重：Amis 400，Vamis shadcn font-medium=500。改 button cva，不要改全局。
 
 ## 文档结构（对标 Amis：文档 / 组件 / 样式）
 
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 18 | 5 |
+| 组件 | 8 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -59,7 +59,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据输入 | 18 | 5 |
+| 组件 / 数据展示 | 8 | 0 |
 
 ## P0 失败（驱动下一刀）
 
@@ -67,11 +67,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `components-form-select-6` Select 下拉框 #7 — page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
-- `components-form-select-14` Select 下拉框 #15 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-15` Select 下拉框 #16 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-16` Select 下拉框 #17 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
-- `components-form-select-17` Select 下拉框 #18 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- 无失败。
 
 ## 重跑口径
 
@@ -79,10 +75,5 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --mobile` — 全局修完必须重跑全部移动端用例
-- `pnpm compare --page "components-form-select-6" --mobile` — 只重跑「components-form-select-6」自身
-- `pnpm compare --page "components-form-select-14" --mobile` — 只重跑「components-form-select-14」自身
-- `pnpm compare --page "components-form-select-15" --mobile` — 只重跑「components-form-select-15」自身
-- `pnpm compare --page "components-form-select-16" --mobile` — 只重跑「components-form-select-16」自身
-- `pnpm compare --page "components-form-select-17" --mobile` — 只重跑「components-form-select-17」自身
+- 本轮无失败切片。
 

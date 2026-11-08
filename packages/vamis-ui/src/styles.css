@@ -283,6 +283,10 @@
   --table-row-h-sm: 33px;
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
+  /* 对齐 Amis `--Table-onChecked-*`（fill-11 / line-8）。不要用 accent 盖住行间 1px。 */
+  --table-checked-bg: var(--card);
+  --table-checked-border: var(--border);
+  --table-checked-color: var(--foreground);
   /* Amis table-view 内联样式用这些名字；未定义则 border/padding 整段失效。 */
   --borderColor: var(--border);
   --TableCell-paddingX: var(--table-cell-px);
@@ -3129,6 +3133,37 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Amis table / table2：`border-collapse: separate` + 1px 画在 td 上。
+   Tailwind preflight 是 collapse，再叠 tr `border-b`、checkbox `translate-y-0.5`、
+   选中 `bg-accent`，两行选中之间的横线在 100% 缩放会亚像素消失。 */
+[data-slot="table"] {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+[data-slot="table-row"] {
+  border-bottom-width: 0;
+}
+[data-slot="table-row"][data-state="selected"],
+[data-slot="table-row"].is-checked {
+  background: var(--table-checked-bg);
+  color: var(--table-checked-color);
+}
+[data-slot="table-row"][data-state="selected"]:hover,
+[data-slot="table-row"].is-checked:hover {
+  background: var(--table-checked-bg);
+}
+[data-slot="table-cell"] {
+  border-top: 1px solid var(--border);
+}
+[data-slot="table-row"][data-state="selected"] + [data-slot="table-row"] > [data-slot="table-cell"],
+[data-slot="table-row"].is-checked + [data-slot="table-row"] > [data-slot="table-cell"] {
+  border-top-color: var(--table-checked-border);
+}
+[data-slot="table-head"] [data-slot="checkbox"],
+[data-slot="table-cell"] [data-slot="checkbox"] {
+  transform: none;
 }
 
 /* Amis Checkbox：盒在 i / [data-slot=checkbox]，不要 shadcn size-4 + opacity。 */

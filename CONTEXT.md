@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `table` / `table2` / CRUD 多选行间 1px：Tailwind `border-collapse: collapse` + `tr` `border-b` + 选中 `bg-accent` + checkbox `translate-y-0.5`，100% 缩放两行选中之间的横线会亚像素消失。改成 Amis `separate` + 线画在 td、选中底 `--table-checked-bg`（= `--card`）、勾不位移。单元格仍钉 40px，不要改成 41。
 - 移动端 Select 普通多选行高对齐 Amis **37px**（36 line-height + 内层 `content-box` 1px 底边）。钉死 36 + 全局 `border-box` 会把线吃进裁切边，Chrome **100% 缩放**下变成亚像素看不见、一改缩放又出现。勾的垂直居中改 `margin-top: -8px`，不要 `translateY(-50%)` 开合成层。
 - 移动端 Select 普通多选对齐 Amis：无左侧 Checkbox，选中项右侧 16px `check` 勾（`Select-option-mcheck`）；分组多选仍走 GroupedSelection 左侧勾选盒。
 - 移动端 Select：滚轮 `menuTpl` 横向居中（独立 `__wheel-label`，不要 list 的 `flex:1`）；分组 GroupedSelection 组头 padding 12、子项 24（`gap-base * 2`），检索仍外 10 / 内 4×10。
