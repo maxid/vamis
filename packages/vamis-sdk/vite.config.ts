@@ -19,6 +19,30 @@ function appendFontAwesome(dest: string) {
   if (extra) fs.appendFileSync(path.join(dest, 'sdk.css'), `\n${extra}`)
 }
 
+/** lightningcss 可能把 @supports 拆掉，旧 WebView 只剩 oklch，提交钮掉成描边。打包后再垫一层 hex。 */
+function appendLegacyPrimary(dest: string) {
+  const css = `/* old WebView: oklch(--primary) invalid → 云舍蓝 hex */
+@supports not (color: oklch(0 0 0)) {
+  :root {
+    --primary: #2468f2;
+    --primary-foreground: #ffffff;
+    --primary-hover: #1c5bd6;
+    --primary-active: #144bcc;
+    --ring: #2468f2;
+  }
+  .dark {
+    --primary: #528eff;
+    --primary-foreground: #151b26;
+    --primary-hover: #7dadff;
+    --primary-active: #2468f2;
+    --ring: #528eff;
+  }
+}
+`
+  const file = path.join(dest, 'sdk.css')
+  if (fs.existsSync(file)) fs.appendFileSync(file, `\n${css}`)
+}
+
 function copySdkStatic(): Plugin {
   const files = ['hello.html', 'compare.html', 'embed-case.html', 'compare-cases.js']
   return {
@@ -39,6 +63,7 @@ function copySdkStatic(): Plugin {
         fs.copyFileSync(score, path.join(dir, 'score.mjs'))
       }
       appendFontAwesome(dest)
+      appendLegacyPrimary(dest)
     },
   }
 }

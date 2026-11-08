@@ -13,6 +13,7 @@ import {
 } from '@vamis/core'
 import { VamisDateArrow } from '@vamis/ui'
 import CalendarWheel from '../display/CalendarWheel.vue'
+import PickerFade from './PickerFade.vue'
 
 export type DateCalendarView = 'days' | 'months' | 'years' | 'picker-year' | 'picker-month'
 
@@ -64,7 +65,6 @@ const emit = defineEmits<{
 }>()
 
 const pickerHeight = CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
-const pickerMaskSize = (pickerHeight - CALENDAR_PICKER_ITEM_HEIGHT) / 2
 const rootClass = computed(() => ({
   'is-large': props.large,
   'is-framed': props.framed !== false,
@@ -127,7 +127,7 @@ function applyTodayStyle(el: Element | null) {
           :options="pickerMonths"
           @update:model-value="emit('update:tempMonth', $event)"
         />
-        <div class="vamis-cal-picker-mask" :style="{ backgroundSize: `100% ${pickerMaskSize}px` }" />
+        <PickerFade class="vamis-cal-picker-mask" />
         <div class="vamis-cal-picker-frame" :style="{ height: `${CALENDAR_PICKER_ITEM_HEIGHT}px` }" />
       </div>
     </div>
@@ -541,6 +541,9 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal-picker {
   overflow: hidden;
   background: var(--cal-bg);
+  font-family: var(--fontFamilyBase);
+  font-size: 16px;
+  font-weight: 400;
 }
 .vamis-cal-picker-bar {
   display: flex;
@@ -573,26 +576,7 @@ function applyTodayStyle(el: Element | null) {
   position: relative;
   display: flex;
   overflow: hidden;
-  cursor: grab;
   touch-action: none;
-}
-.vamis-cal-picker-mask {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--cal-bg) 90%, transparent),
-      color-mix(in srgb, var(--cal-bg) 40%, transparent)
-    ),
-    linear-gradient(
-      0deg,
-      color-mix(in srgb, var(--cal-bg) 90%, transparent),
-      color-mix(in srgb, var(--cal-bg) 40%, transparent)
-    );
-  background-repeat: no-repeat;
-  background-position: top, bottom;
 }
 .vamis-cal-picker-frame {
   position: absolute;

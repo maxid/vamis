@@ -4,7 +4,7 @@ import type { ManipulateType } from 'dayjs'
 import { dayjs, isDayjs, parseDate, type Dayjs } from './dayjs'
 import { resolveValue } from '../formula'
 import { getPathValue } from './path-value'
-import { calendarMonthCells, calendarWeeks, isoDay, type CalendarCell } from './calendar'
+import { calendarMonthCells, calendarWeeks, isoDay, type CalendarCell, type CalendarPickerOption } from './calendar'
 import type { PlainObject, SchemaObject } from '../types'
 
 export type InputDateView = 'days' | 'months' | 'years' | 'time'
@@ -402,6 +402,135 @@ export function isInputDateYearDisabled(
   now?: Date | Dayjs,
 ): boolean {
   return isInputDateUnitDisabled('year', dayjs().year(year).month(0).date(1), schema, data, trusted, now)
+}
+
+export type InputDatePickerType = 'year' | 'month' | 'date' | 'hours' | 'minutes' | 'seconds'
+
+/** schema / env 显式 `mobileUI` 优先；否则对齐 Calendar 用 `max-width: 768px`。对照桌面 1100 不进 picker。 */
+export function inputDateIsMobile(
+  schema: SchemaObject,
+  env?: { mobileUI?: unknown } | null,
+): boolean {
+  if (schema.mobileUI === true) return true
+  if (schema.mobileUI === false) return false
+  if (env?.mobileUI === true) return true
+  if (env?.mobileUI === false) return false
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return window.matchMedia('(max-width: 768px)').matches
+}
+
+export function inputDatePickerTypes(schema: SchemaObject): InputDatePickerType[] {
+  const view = inputDateViewMode(schema)
+  const timeFmt = inputDateTimeFormat(schema)
+  const seconds = /s/i.test(timeFmt)
+  if (view === 'time') {
+    const types: InputDatePickerType[] = ['hours', 'minutes']
+    if (seconds) types.push('seconds')
+    return types
+  }
+  const types: InputDatePickerType[] =
+    view === 'years' ? ['year'] : view === 'months' ? ['year', 'month'] : ['year', 'month', 'date']
+  if (inputDateShowsTime(schema)) {
+    types.push('hours', 'minutes')
+    if (seconds) types.push('seconds')
+  }
+  return types
+}
+
+export function inputDatePickerTitle(types: InputDatePickerType[]): string {
+  if (types[0] === 'hours' || types.length > 3) return '选择时间'
+  if (types.length === 1) return '选择年'
+  if (types.length === 2) return '选择年月'
+  return '选择年月日'
+}
+
+function pickerRange(min: number, max: number): number[] {
+  const out: number[] = []
+  for (let i = min; i <= max; i++) out.push(i)
+  return out
+}
+
+function pad2(n: number): string {
+  return String(n).padStart(2, '0')
+}
+
+function readPickerPart(date: Dayjs, type: InputDatePickerType): number {
+  if (type === 'year') return date.year()
+  if (type === 'month') return date.month()
+  if (type === 'date') return date.date()
+  if (type === 'hours') return date.hour()
+  if (type === 'minutes') return date.minute()
+  return date.second()
+}
+
+/** 对齐 Amis Calendar.getDateBoundary / getColumns / DaysView getColumnsWithUnit。 */
+export function inputDatePickerColumns(
+  date: Dayjs,
+  schema: SchemaObject,
+  data: PlainObject,
+  now?: Date | Dayjs,
+): { types: InputDatePickerType[]; values: number[]; columns: CalendarPickerOption[][]; title: string } {
+  const types = inputDatePickerTypes(schema)
+  const { min, max } = inputDateMinMax(schema, data, now)
+  const year = date.year()
+  const month = date.month()
+  const bound = {
+    year: { min: min?.year() ?? year - 100, max: max?.year() ?? year + 100 },
+    month: {
+      min: min && year === min.year() ? min.month() : 0,
+      max: max && year === max.year() ? max.month() : 11,
+    },
+    date: {
+      min: min && year === min.year() && month === min.month() ? min.date() : 1,
+      max: max && year === max.year() && month === max.month() ? max.date() : date.daysInMonth(),
+    },
+    hours: { min: 0, max: 23 },
+    minutes: { min: 0, max: 59 },
+    seconds: { min: 0, max: 59 },
+  }
+  bound.date.max = Math.min(bound.date.max, date.daysInMonth())
+  const withUnit = types.length === 3 && types[0] === 'year' && types[2] === 'date'
+  const columns = types.map((type) => {
+    const { min: lo, max: hi } = bound[type]
+    return pickerRange(lo, hi).map((item) => {
+      if (type === 'year') return { value: item, text: withUnit ? `${item}年` : String(item) }
+      if (type === 'month') return { value: item, text: `${pad2(item + 1)}${withUnit ? '月' : ''}` }
+      if (type === 'date') return { value: item, text: `${pad2(item)}${withUnit ? '日' : ''}` }
+      return { value: item, text: pad2(item) }
+    })
+  })
+  const values = types.map((type, i) => {
+    const raw = readPickerPart(date, type)
+    const { min: lo, max: hi } = bound[type]
+    const col = columns[i]
+    const hit = col.find((item) => item.value === raw)
+    if (hit) return raw
+    return Math.min(hi, Math.max(lo, raw))
+  })
+  return { types, values, columns, title: inputDatePickerTitle(types) }
+}
+
+export function inputDateFromPickerValues(
+  values: number[],
+  types: InputDatePickerType[],
+  base: Dayjs,
+): Dayjs {
+  let next = base.clone().date(1)
+  types.forEach((type, i) => {
+    const raw = values[i]
+    if (!Number.isFinite(raw)) return
+    if (type === 'year') next = next.year(raw)
+    else if (type === 'month') next = next.month(raw)
+    else if (type === 'hours') next = next.hour(raw)
+    else if (type === 'minutes') next = next.minute(raw)
+    else if (type === 'seconds') next = next.second(raw)
+  })
+  const dateIndex = types.indexOf('date')
+  if (dateIndex >= 0 && Number.isFinite(values[dateIndex])) {
+    const day = Math.min(values[dateIndex], next.daysInMonth())
+    next = next.date(day)
+  }
+  return next
 }
 
 function resolveShortcutPreset(key: string): { label: string; apply: (now: Dayjs) => Dayjs } | undefined {

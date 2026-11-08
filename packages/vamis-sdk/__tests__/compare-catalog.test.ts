@@ -397,6 +397,31 @@ describe('schema-tree', () => {
     expect(html).toContain('function actionClickTarget')
   })
 
+  it('embed-case standalone loads a catalog case from ?case=', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
+    expect(html).toContain('function runFromQuery')
+    expect(html).toContain("q.get('case')")
+    expect(html).toContain('./compare-cases.js')
+    expect(html).toContain('if (parent !== window) return')
+    expect(html).toContain('parseLocation: false')
+  })
+
+  it('sdk build appends hex --primary for WebViews without oklch', () => {
+    const vite = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../vite.config.ts'), 'utf8')
+    expect(vite).toContain('function appendLegacyPrimary')
+    expect(vite).toContain('appendLegacyPrimary(dest)')
+    expect(vite).toContain('@supports not (color: oklch(0 0 0))')
+    expect(vite).toContain('--primary: #2468f2')
+  })
+
+  it('embed-case resolves sdk.css under /sdk/ not site root', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
+    expect(html).toContain('function sdkBase')
+    expect(html).toContain('function sdkFile')
+    expect(html).toContain("sdkFile('sdk.css')")
+    expect(html).not.toContain("['./sdk.css']")
+  })
+
   it('scores runtime value / rendered / named / dialog per node', () => {
     expect(valuesEqual('', undefined)).toBe(true)
     const amis = [

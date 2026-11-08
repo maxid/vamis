@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import {
   CALENDAR_PICKER_ITEM_HEIGHT as ITEM,
   CALENDAR_PICKER_VISIBLE as VISIBLE,
-  calendarPickerIndexFromClick,
   type CalendarPickerOption,
 } from '@vamis/core'
 
@@ -23,6 +22,7 @@ const offset = ref(-index.value * ITEM)
 const duration = ref(0)
 let dragging = false
 let dragged = false
+let skipClick = false
 let startY = 0
 let startOffset = 0
 
@@ -43,13 +43,14 @@ function snap(next: number) {
   if (item && item.value !== props.modelValue) emit('update:modelValue', item.value)
 }
 
+/** 对齐 Amis PickerColumn：鼠标滚轮不改值，只挡住页面跟着滚。 */
 function onWheel(event: WheelEvent) {
   event.preventDefault()
-  snap(index.value + (event.deltaY > 0 ? 1 : -1))
 }
 
+/** 对齐 Amis：只有 touch 能拖；鼠标左键拖不动，只能点 li。 */
 function onPointerDown(event: PointerEvent) {
-  if (event.button !== 0) return
+  if (event.pointerType !== 'touch') return
   dragging = true
   dragged = false
   startY = event.clientY
@@ -75,11 +76,17 @@ function onPointerUp(event: PointerEvent) {
   const el = event.currentTarget as HTMLElement
   if (el.hasPointerCapture(event.pointerId)) el.releasePointerCapture(event.pointerId)
   if (dragged) {
+    skipClick = true
     snap(Math.round(-offset.value / ITEM))
-    return
+    setTimeout(() => {
+      skipClick = false
+    }, 0)
   }
-  const y = event.clientY - el.getBoundingClientRect().top
-  snap(calendarPickerIndexFromClick(y, index.value, props.options.length))
+}
+
+function onItemClick(i: number) {
+  if (skipClick) return
+  snap(i)
 }
 </script>
 
@@ -104,6 +111,7 @@ function onPointerUp(event: PointerEvent) {
         :key="item.value"
         class="vamis-cal-wheel-item"
         :class="{ 'is-on': i === index }"
+        @click="onItemClick(i)"
       >{{ item.text }}</li>
     </ul>
   </div>
@@ -115,7 +123,6 @@ function onPointerUp(event: PointerEvent) {
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  cursor: grab;
   touch-action: none;
   user-select: none;
 }
@@ -133,11 +140,11 @@ function onPointerUp(event: PointerEvent) {
   height: 48px;
   line-height: 48px;
   font-size: 16px;
-  color: var(--foreground);
+  font-weight: 400;
+  color: var(--cal-fg, var(--foreground));
   cursor: pointer;
 }
 .vamis-cal-wheel-item.is-on {
-  font-size: 18px;
-  font-weight: 500;
+  color: var(--cal-picker-title, var(--foreground));
 }
 </style>

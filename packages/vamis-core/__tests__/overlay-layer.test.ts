@@ -109,6 +109,15 @@ describe('overlay-layer', () => {
     const popover = css.slice(css.indexOf('.vamis-date-picker__popover {'), css.indexOf('.vamis-date-picker__shortcuts'))
     expect(popover).not.toContain('z-index: 20')
     expect(popover).not.toContain('position: absolute')
+    const sheet = css.slice(css.indexOf('.vamis-date-sheet {'), css.indexOf('.vamis-date-sheet__mask'))
+    expect(sheet).toContain('z-index: var(--z-modal)')
+    expect(sheet).toContain('position: fixed')
+    const panel = css.slice(css.indexOf('.vamis-date-sheet__panel {'), css.indexOf('.vamis-date-sheet__bar'))
+    expect(panel).toContain('height: 320px')
+    expect(panel).toContain('border: 1px solid var(--border)')
+    expect(css).toContain('@keyframes vamis-date-sheet-in')
+    expect(css).toContain('@keyframes vamis-date-sheet-out')
+    expect(css).toContain('animation-name: vamis-date-sheet-in')
   })
 
   it('places a top / right tooltip with side gap', () => {

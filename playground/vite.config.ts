@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import zlib from 'node:zlib'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, type Plugin } from 'vite'
@@ -14,6 +15,30 @@ const repo = path.resolve(playground, '..')
 const websiteSrc = path.join(repo, 'website', 'src')
 const formulaDoc = path.join(repo, 'packages', 'vamis-formula', 'src', 'doc.md')
 const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
+
+/** `pnpm dev -- --host` / `--host 0.0.0.0` 绑所有网卡，方便手机连局域网。默认仍只听 localhost。 */
+function lanHost(argv = process.argv): true | string | undefined {
+  const eq = argv.find((a) => a.startsWith('--host='))
+  if (eq) {
+    const value = eq.slice('--host='.length)
+    return !value || value === 'true' || value === '0.0.0.0' ? true : value
+  }
+  const i = argv.indexOf('--host')
+  if (i >= 0) {
+    const next = argv[i + 1]
+    if (next && !next.startsWith('-')) {
+      return next === 'true' || next === '0.0.0.0' ? true : next
+    }
+    return true
+  }
+  const env = process.env.VAMIS_HOST
+  if (env === '0.0.0.0' || env === 'true' || env === '1' || env === '*') return true
+  if (env) return env
+  return undefined
+}
+
+const host = lanHost()
+const lan = host != null ? { host, allowedHosts: true as const } : {}
 
 function siteBase() {
   const raw = process.env.VITE_BASE || '/'
@@ -122,9 +147,61 @@ function serveSdk(): Plugin {
     }
     return path.normalize(path.join(dir, file))
   }
+  /** 按 mtime 缓存 gzip。流式 gzip 没有 Content-Length，部分手机 WebView 会一直等到连接结束才算 css load（对照里像卡 40s）。 */
+  const gzipCache = new Map<string, { mtimeMs: number; buf: Buffer }>()
+  function gzipFile(full: string, mtimeMs: number) {
+    const hit = gzipCache.get(full)
+    if (hit && hit.mtimeMs === mtimeMs) return hit.buf
+    const buf = zlib.gzipSync(fs.readFileSync(full), { level: 6 })
+    gzipCache.set(full, { mtimeMs, buf })
+    return buf
+  }
+  function sendSdkFile(req: { headers: { [key: string]: unknown }; url?: string }, res: { statusCode: number; setHeader: (k: string, v: string) => void; end: (b?: Buffer | string) => void }, full: string, file: string) {
+    const ext = path.extname(full)
+    const stat = fs.statSync(full)
+    const hashed = file.startsWith('assets/')
+    const etag = `"${stat.size.toString(16)}-${Math.trunc(stat.mtimeMs).toString(16)}"`
+    res.setHeader('ETag', etag)
+    // 开发机：sdk.css / sdk.js 无版本号，不能一年 immutable，否则 sdk:build 后手机仍吃旧包。
+    // no-cache = 每次用 ETag 校验，没改 304（不重下 2MB），改了才拉新。带 hash 的 assets/ 才可长期缓存。
+    res.setHeader(
+      'Cache-Control',
+      hashed ? 'public, max-age=31536000, immutable' : 'no-cache',
+    )
+    if (req.headers['if-none-match'] === etag) {
+      res.statusCode = 304
+      res.end()
+      return
+    }
+    res.setHeader('Content-Type', types[ext] || 'application/octet-stream')
+    const gzipOk =
+      /\.(?:css|js|mjs|html|map)$/i.test(ext) &&
+      /gzip/i.test(String(req.headers['accept-encoding'] || ''))
+    if (gzipOk) {
+      const buf = gzipFile(full, stat.mtimeMs)
+      res.setHeader('Content-Encoding', 'gzip')
+      res.setHeader('Vary', 'Accept-Encoding')
+      res.setHeader('Content-Length', String(buf.length))
+      res.end(buf)
+      return
+    }
+    res.setHeader('Content-Length', String(stat.size))
+    fs.createReadStream(full).pipe(res as unknown as NodeJS.WritableStream)
+  }
   return {
     name: 'vamis-sdk-assets',
     configureServer(server) {
+      // 手机 WebView 会把 `./sdk.css` 解析成站点根 `/sdk.css`（对照 iframe 报 css …/sdk.css）。
+      server.middlewares.use((req, res, next) => {
+        const url = (req.url || '').split('?')[0]
+        if (url === '/sdk.css' || url === '/sdk.js' || url === '/sdk.esm.js') {
+          res.statusCode = 302
+          res.setHeader('Location', '/sdk' + url)
+          res.end()
+          return
+        }
+        next()
+      })
       server.middlewares.use('/sdk', (req, res, next) => {
         const url = (req.url || '/').split('?')[0]
         const file = !url || url === '/' ? 'hello.html' : url.replace(/^\//, '')
@@ -140,8 +217,7 @@ function serveSdk(): Plugin {
           next()
           return
         }
-        res.setHeader('Content-Type', types[path.extname(full)] || 'application/octet-stream')
-        fs.createReadStream(full).pipe(res)
+        sendSdkFile(req, res, full, file)
       })
     },
     closeBundle() {
@@ -204,8 +280,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    ...lan,
     fs: {
       allow: [repo],
     },
+  },
+  preview: {
+    ...lan,
   },
 })

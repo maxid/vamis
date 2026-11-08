@@ -35,6 +35,7 @@
 
 ```bash
 pnpm dev           # http://127.0.0.1:5173  （文档和示例同一进程）
+pnpm dev -- --host # 0.0.0.0，手机走终端 Network 地址
 pnpm docs:build    # 可选：VitePress 静态导出
 pnpm --filter @vamis/docs gen   # 按 nav + TODO 重生组件页
 VITE_BASE=/vamis/ pnpm build && VITE_BASE=/vamis/ pnpm preview   # 模拟 GitHub Pages 路径

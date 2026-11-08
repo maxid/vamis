@@ -25,7 +25,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 - [AGENTS.md](AGENTS.md) — 命令、约定、任务收工必须回写进度
 - [CONTEXT.md](CONTEXT.md) — 术语、**当前进度与后续计划**
-- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/（首页即文档，与示例同一应用；文档页标题下有实现进度）
+- 在线文档：`pnpm dev` 后打开 http://127.0.0.1:5173/（首页即文档，与示例同一应用；文档页标题下有实现进度）。手机真机：`pnpm dev -- --host`，用终端打印的 Network 地址（需同一 Wi-Fi）
 - GitHub Pages：https://maxid.github.io/vamis/（推 `main` 后由 Actions 发布）
 
 ## 设计文档
@@ -44,7 +44,8 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。细节见 [同步状态](d
 
 ```bash
 pnpm install
-pnpm dev          # 文档 / 组件 / 样式 / 示例，http://127.0.0.1:5173
+pnpm dev                 # 文档 / 组件 / 样式 / 示例，http://127.0.0.1:5173
+pnpm dev -- --host       # 监听 0.0.0.0，手机用终端里的 Network 地址（同 Wi-Fi）
 ```
 
 | 路由 | 做什么 |
@@ -54,7 +55,8 @@ pnpm dev          # 文档 / 组件 / 样式 / 示例，http://127.0.0.1:5173
 | `/style` | 样式（对齐 Amis 顶栏：快速开始 / CSS 变量 / 辅助类目录） |
 | `/examples` | 示例：分类树 + 预览 + Schema |
 | `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + Schema |
-| `/sdk/compare.html` | Amis / Vamis SDK 对照（顶栏「对照」；页内可返回首页） |
+| `/sdk/compare.html` | Amis / Vamis SDK 对照（顶栏「对照」；页内可返回首页）。`?case=<id>&vp=mobile` 定位用例 |
+| `/sdk/embed-case.html` | 单引擎真机页。`?engine=vamis&case=components-form-input-date-0`（`case` 也可写 `input-date`） |
 
 跑核心测试：
 

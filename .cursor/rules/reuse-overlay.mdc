@@ -13,7 +13,7 @@ Amis 链（不要再拆）：
 
 1. `packages/amis/src/renderers/Calendar.tsx`：`type: calendar` **extends DateControlRenderer**（`Form/InputDate.tsx`），默认 `embed: true`
 2. InputDate 渲染 `amis-ui` 的 `DatePicker`
-3. DatePicker 的 **弹层与 embed 都走** `amis-ui/src/components/calendar/Calendar`（DaysView / MonthsView / YearsView）；移动端另有 `CalendarMobile`
+3. DatePicker 的 **弹层与 embed 都走** `amis-ui/src/components/calendar/Calendar`（DaysView / MonthsView / YearsView）。移动端默认是 PopUp + DaysView `renderPicker()` 滚轮；只有 `mobileCalendarMode === 'calendar'` 才走 `CalendarMobile`
 4. DateRangePicker / MonthRangePicker 也 import 同一套 `calendar/Calendar`
 
 Vamis 入口（不要再新开月历）：
@@ -21,7 +21,8 @@ Vamis 入口（不要再新开月历）：
 | 用途 | 路径 |
 |------|------|
 | 共享月历面板 | `packages/vamis/src/renderers/calendar/DateCalendarPanel.vue` |
-| 表单日期 | `packages/vamis/src/renderers/form/InputDate.vue`（embed / 弹层都挂这块面板） |
+| 表单日期 | `packages/vamis/src/renderers/form/InputDate.vue`（embed / 桌面弹层都挂这块面板） |
+| 移动端滚轮 PopUp | `packages/vamis/src/renderers/calendar/DatePickerSheet.vue`（默认；`mobileCalendarMode: calendar` 未接） |
 | `type: calendar` | `packages/vamis/src/renderers/display/Calendar.vue`（同一面板 + schedules / largeMode / 窄屏滚轮） |
 | 浮层原语 | `packages/vamis/src/overlay/VamisOverlay.vue` |
 | 容器 / 定位 / z-index | `packages/vamis-core/src/utils/overlay-layer.ts`（`Z_INDEX`、`overlayContainerFrom`、`overlayPosition`） |
@@ -74,7 +75,7 @@ Select / InputText 建议 / Date / DropdownButton 都走这套。禁止下拉菜
 | `--z-dropdown` | **1000** | 日期弹层、下拉（`$zindex-dropdown`） |
 | `--z-sticky` | 900 | 粘性 |
 | `--z-fixed` | 1200 | 固定 |
-| `--z-modal` / `--z-popover` | 1400 | Dialog / Drawer；Amis `$zindex-popover = $zindex-modal` 防止 popover 被 modal 挡住 |
+| `--z-modal` / `--z-popover` | 1400 | Dialog / Drawer / 移动端日期 PopUp（Amis PopUp 是 `$zindex-top` 3000；本仓走 modal 阶梯） |
 | `--z-tooltip` | 1600 | 提示 |
 | `--z-toast` | 2000 | Toast（已是 2000） |
 
@@ -83,5 +84,6 @@ Select / InputText 建议 / Date / DropdownButton 都走这套。禁止下拉菜
 ## 禁止
 
 - 为 `type: calendar` 再维护一套与 InputDate 不同的月历 DOM/CSS
+- 把 CalendarMobile 滚动月历当成 input-date 移动端默认（默认是 320px 滚轮 PopUp）
 - 新下拉只 `absolute` 在控件里、靠 `z-20` 冒充浮层
 - 搬 `.cxd-DatePicker` / `.rdtPicker` 前缀（视觉转写到 `vamis-cal` / token）

@@ -76,6 +76,8 @@ describe('input-text renderer reuse', () => {
     expect(vue).toContain('overlayContainerFrom')
     expect(vue).toContain(':gap="4"')
     expect(vue).toContain('VamisPasswordToggle')
+    expect(vue).toContain('VamisClear')
+    expect(vue).toContain('vamis-select__clear')
     expect(vue).toContain("revealed.value ? 'encrypt' : 'review'")
     expect(vue).toContain('highlightTextMatches')
     expect(vue).not.toContain('z-index: 20')

@@ -208,6 +208,29 @@ describe('embed', () => {
     expect(scoped.getComponents().length).toBeGreaterThan(0)
   })
 
+  it('parseLocation false keeps compare query keys out of form data', async () => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('engine', 'vamis')
+    url.searchParams.set('case', 'components-form-input-date-0')
+    window.history.replaceState({}, '', url)
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const scoped = embed(
+      host,
+      {
+        type: 'page',
+        body: { type: 'tpl', tpl: 'E=${engine}&C=${case}' },
+      },
+      undefined,
+      { parseLocation: false },
+    )
+    mounts.push(scoped)
+    await nextTick()
+    expect(host.textContent).toContain('E=&C=')
+    expect(host.textContent).not.toContain('vamis')
+    expect(host.textContent).not.toContain('components-form-input-date-0')
+  })
+
   it('doAction runs a toast through env.notify', async () => {
     const notify = vi.fn()
     const host = document.createElement('div')

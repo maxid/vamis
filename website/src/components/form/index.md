@@ -5,8 +5,8 @@ outline: deep
 
 # Form 表单
 
-::: info 实现进度 75% · 进行中
-initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。默认标题「表单」、只画提交、标题栏灰底。`xxxClassName`、`target`、返回 `data` 合并、路径值、`clearValueOnHidden`、`validateApi`、提交 `errors`、`debug` 已接。事件目前只接了 `submit`。缺 combo 独立域。
+::: info 实现进度 78% · 进行中
+initApi / validate / submit 走 `requestApi`；嵌套 form 默认降为 `div`。默认标题「表单」、只画提交。窄屏 ≤767（Amis `media-breakpoint-down(sm)`）标签与控件同行、底栏按钮拉满，面板去灰底描边。`xxxClassName`、`target`、返回 `data` 合并、路径值、`clearValueOnHidden`、`validateApi`、提交 `errors`、`debug` 已接。事件目前只接了 `submit`。缺 combo 独立域。
 :::
 
 `type: form` 是数据输入的根。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。

@@ -33,11 +33,30 @@
           /\/?$/,
           '/',
         )
+        /** 手机 WebView 会把 `./sdk.css` 解析成站点根 `/sdk.css`（404）。一律按 URL 里的 `/sdk/` 拼绝对地址。 */
+        function sdkBase() {
+          const path = location.pathname || '/'
+          const marker = '/sdk/'
+          const i = path.lastIndexOf(marker)
+          if (i >= 0) return path.slice(0, i + marker.length)
+          if (path === '/sdk' || /\/sdk$/.test(path)) return path + '/'
+          return path.replace(/[^/]*$/, '') || '/'
+        }
+        function sdkFile(name) {
+          try {
+            const href = new URL(name, location.origin + sdkBase())
+            // 旧 WebView 可能还留着误加的一年 immutable。换 query 才能拿到新 css/js。
+            href.searchParams.set('v', '20261108e')
+            return href.href
+          } catch (_err) {
+            return sdkBase() + name + '?v=20261108e'
+          }
+        }
         const css =
           engine === 'amis'
             ? [amisSdk + 'sdk.css', amisSdk + 'helper.css', amisSdk + 'iconfont.css']
-            : ['./sdk.css']
-        const js = engine === 'amis' ? amisSdk + 'sdk.js' : './sdk.js'
+            : [sdkFile('sdk.css')]
+        const js = engine === 'amis' ? amisSdk + 'sdk.js' : sdkFile('sdk.js')
         const cssEls = css.map(function (href) {
           const el = document.createElement('link')
           el.rel = 'stylesheet'
@@ -80,29 +99,45 @@
 
         function waitAsset(el, kind) {
           return new Promise(function (resolve, reject) {
+            const href = el.href || el.src || ''
+            let settled = false
+            const timer = setTimeout(function () {
+              done(new Error(kind + ' timeout ' + href))
+            }, 120000)
+            function done(err) {
+              if (settled) return
+              settled = true
+              clearTimeout(timer)
+              if (err) reject(err)
+              else resolve()
+            }
             function fail() {
-              reject(new Error(kind + ' ' + (el.href || el.src)))
+              done(new Error(kind + ' ' + href))
             }
             if (kind === 'css') {
               try {
-                if (el.sheet) return resolve()
+                if (el.sheet) return done()
               } catch (_err) {
-                return resolve()
+                return done()
               }
-              el.addEventListener('load', resolve)
+              el.addEventListener('load', function () {
+                done()
+              })
               el.addEventListener('error', fail)
               return
             }
             if (engine === 'amis') {
-              if (typeof window.amisRequire === 'function') return resolve()
-              el.addEventListener('load', resolve)
+              if (typeof window.amisRequire === 'function') return done()
+              el.addEventListener('load', function () {
+                done()
+              })
               el.addEventListener('error', fail)
               return
             }
-            if (window.__vamisSdkReady) return resolve()
+            if (window.__vamisSdkReady) return done()
             function onReady() {
               window.removeEventListener('vamis-sdk-ready', onReady)
-              resolve()
+              done()
             }
             window.addEventListener('vamis-sdk-ready', onReady)
             el.addEventListener('error', fail)
@@ -711,6 +746,62 @@
           document.getElementById('root').innerHTML = ''
         }
 
+        function loadScript(src) {
+          return new Promise(function (resolve, reject) {
+            const el = document.createElement('script')
+            el.src = src
+            el.onload = function () {
+              resolve()
+            }
+            el.onerror = function () {
+              reject(new Error('js ' + src))
+            }
+            document.head.appendChild(el)
+          })
+        }
+
+        function findCatalogCase(want) {
+          const rows = window.VAMIS_COMPARE_CASES || []
+          const raw = String(want || '').trim()
+          if (!raw) return null
+          const lower = raw.toLowerCase()
+          return (
+            rows.find(function (row) {
+              return row.id === raw
+            }) ||
+            rows.find(function (row) {
+              return String(row.id).toLowerCase() === lower
+            }) ||
+            rows.find(function (row) {
+              return String(row.id).toLowerCase().indexOf(lower) >= 0
+            }) ||
+            rows.find(function (row) {
+              return String(row.page || '').toLowerCase() === lower
+            }) ||
+            null
+          )
+        }
+
+        /** 顶层打开时认 ?case= / ?id=，拉对照目录后自己 embed。iframe 仍只吃 postMessage。 */
+        async function runFromQuery() {
+          if (parent !== window) return
+          const q = new URLSearchParams(location.search)
+          const want = q.get('case') || q.get('id')
+          if (!want) return
+          if (!window.VAMIS_COMPARE_CASES) await loadScript('./compare-cases.js')
+          const row = findCatalogCase(want)
+          if (!row) {
+            failBoot('找不到用例 ' + want + '（?case= 对应用例 id，如 components-form-input-date-0）')
+            return
+          }
+          document.title = (row.title || row.id) + ' · ' + engine
+          run({
+            runId: 1,
+            schema: row.schema,
+            measure: row.measure || { type: 'smoke' },
+          })
+        }
+
         function run(data) {
           runId = data.runId || 0
           const schema = data.schema
@@ -727,7 +818,7 @@
             } else {
               // 对照吃文档 schema：adaptor / onError / custom 字符串函数体与 Playground 一样要 env.trusted。
               // SDK 默认仍关（D：new Function 仅受信任模式）；这里只开对照页。
-              scoped = window.vamis.embed('#root', schema, {}, { trusted: true })
+              scoped = window.vamis.embed('#root', schema, {}, { trusted: true, parseLocation: false })
             }
           } catch (err) {
             report({ runId: runId, error: String(err && err.message ? err.message : err) })
@@ -795,6 +886,7 @@
             pending = null
             run(next)
           }
+          await runFromQuery()
         }
 
         if (typeof ResizeObserver === 'function') {

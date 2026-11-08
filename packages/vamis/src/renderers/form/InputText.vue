@@ -21,7 +21,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { cn, VamisPasswordToggle } from '@vamis/ui'
+import { cn, VamisClear, VamisPasswordToggle } from '@vamis/ui'
 import { controlInputValue, useForm } from '../../formContext'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import FormItem from '../FormItem.vue'
@@ -558,12 +558,12 @@ watch(
         <button
           v-if="showClear"
           type="button"
-          class="vamis-text-control__clear"
+          class="vamis-select__clear"
           aria-label="清除"
           @mousedown.prevent
           @click.stop="clearValue"
         >
-          ×
+          <VamisClear />
         </button>
         <button
           v-if="canRevealPassword"

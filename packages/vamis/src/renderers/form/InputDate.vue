@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { cn } from '@vamis/ui'
+import { cn, VamisClear } from '@vamis/ui'
 import {
   calendarDecade,
   calendarMonthLabel,
@@ -15,10 +15,14 @@ import {
   statusStaticOf,
   inputDateClearable,
   inputDateCloseOnSelect,
+  inputDateFromPickerValues,
   inputDateHours,
+  inputDateIsMobile,
   inputDateMinutes,
   inputDateMonthCells,
   inputDatePlaceholder,
+  inputDatePickerColumns,
+  inputDatePickerTypes,
   inputDateResetValue,
   inputDateSetDataValue,
   inputDateShowsTime,
@@ -48,6 +52,7 @@ import {
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import DateCalendarPanel from '../calendar/DateCalendarPanel.vue'
+import DatePickerSheet from '../calendar/DatePickerSheet.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
@@ -69,6 +74,11 @@ const editing = ref(false)
 const panelView = ref<'days' | 'months' | 'years'>(inputDateViewMode(props.schema) === 'time' ? 'days' : 'days')
 const cursor = ref(dayjs())
 const pristine = ref<unknown>(undefined)
+const viewportTick = ref(0)
+const pickerDraft = ref(dayjs())
+
+let media: MediaQueryList | undefined
+let onMedia: (() => void) | undefined
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
 const data = computed(() => viewData.value || {})
@@ -98,6 +108,11 @@ const yearLabel = computed(() => calendarYearLabel(cursor.value.toDate()))
 const monthLabel = computed(() => calendarMonthLabel(cursor.value.toDate()))
 const decade = computed(() => calendarDecade(cursor.value.toDate()))
 const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
+const isMobile = computed(() => {
+  viewportTick.value
+  return inputDateIsMobile(props.schema, env)
+})
+const pickerPack = computed(() => inputDatePickerColumns(pickerDraft.value, props.schema, data.value))
 const panelCursor = computed(() => cursor.value.toDate())
 const selectedIso = computed(() => (parsed.value ? parsed.value.format('YYYY-MM-DD') : ''))
 const hour = computed(() => (parsed.value ? parsed.value.format('HH') : '00'))
@@ -208,11 +223,31 @@ function pickMonth(month: number) {
   panelView.value = 'days'
 }
 
+function seedPicker() {
+  pickerDraft.value = parsed.value?.clone() || dayjs()
+}
+
+function onPickerValues(next: number[]) {
+  const types = inputDatePickerTypes(props.schema)
+  const date = inputDateFromPickerValues(next, types, pickerDraft.value)
+  const pack = inputDatePickerColumns(date, props.schema, data.value)
+  pickerDraft.value = inputDateFromPickerValues(pack.values, pack.types, date)
+}
+
+async function confirmPicker() {
+  if (locked.value) return
+  const { values, types } = pickerPack.value
+  const date = inputDateFromPickerValues(values, types, pickerDraft.value)
+  const next = pickInputDateValue(date, props.schema, parsed.value)
+  if (await commit(next, true)) open.value = false
+}
+
 function openPanel() {
   if (locked.value || embed.value) return
   open.value = true
   syncCursor(parsed.value)
   panelView.value = 'days'
+  seedPicker()
 }
 
 function toggleOpen() {
@@ -322,9 +357,16 @@ onMounted(() => {
   normalizeInitial()
   pristine.value = name.value ? form?.getValue(name.value) : props.schema.value
   syncCursor(parsed.value)
+  if (typeof window === 'undefined' || !window.matchMedia) return
+  media = window.matchMedia('(max-width: 768px)')
+  onMedia = () => {
+    viewportTick.value += 1
+  }
+  media.addEventListener('change', onMedia)
 })
 onBeforeUnmount(() => {
   for (const api of apis) scoped?.unregister(api)
+  if (media && onMedia) media.removeEventListener('change', onMedia)
 })
 
 watch(
@@ -346,6 +388,7 @@ watch(
         'is-focused': focused || open,
         'is-disabled': locked,
         'is-embed': embed,
+        'is-mobile': isMobile,
       }"
       data-slot="input-date"
     >
@@ -361,7 +404,7 @@ watch(
           :name="schema.name"
           :placeholder="placeholder"
           :disabled="locked"
-          :readonly="inputForbid"
+          :readonly="isMobile || inputForbid"
           :class="nativeClass"
           autocomplete="off"
           @input="onInput"
@@ -371,12 +414,12 @@ watch(
         <button
           v-if="showClear"
           type="button"
-          class="vamis-text-control__clear"
+          class="vamis-select__clear"
           aria-label="清除"
           @mousedown.prevent
           @click.stop="clearValue"
         >
-          ×
+          <VamisClear />
         </button>
         <span class="vamis-date-picker__icon" aria-hidden="true" @click.stop="toggleOpen">
           <svg viewBox="0 0 16 16" width="14" height="14">
@@ -437,6 +480,17 @@ watch(
           </template>
         </div>
       </div>
+      <DatePickerSheet
+        v-else-if="isMobile"
+        :show="open"
+        :title="pickerPack.title"
+        :columns="pickerPack.columns"
+        :values="pickerPack.values"
+        :container="overlayContainer"
+        @cancel="open = false"
+        @confirm="confirmPicker"
+        @update:values="onPickerValues"
+      />
       <VamisOverlay
         v-else
         :show="open"

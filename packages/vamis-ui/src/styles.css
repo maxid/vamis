@@ -108,10 +108,11 @@
   --card-foreground: oklch(0.24 0.035 258);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.24 0.035 258);
-  --primary: oklch(0.49 0.16 var(--accent-h));
-  --primary-foreground: oklch(0.99 0.01 var(--accent-h));
-  --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
-  --primary-active: color-mix(in oklch, var(--primary) 82%, black);
+  /* 默认云舍蓝用 6 位 hex：旧 WebView 没有 oklch，var(--primary) 会整段失效，提交钮掉成描边灰。 */
+  --primary: #2468f2;
+  --primary-foreground: #ffffff;
+  --primary-hover: #1c5bd6;
+  --primary-active: #144bcc;
   /* Amis `--colors-link-5/6/4`，不要用 oklch primary 冒充，也不要 UA 下划线。 */
   --link-color: #2468f2;
   --link-hover-color: #528eff;
@@ -247,6 +248,7 @@
   --button-info-hover: var(--primary-hover);
   --button-info-active: var(--primary-active);
   --form-item-gap: 24px;
+  --form-item-mobile-gap: 8px;
   --form-mode-default-label-gap: 8px;
   --form-mode-inline-item-gap: 16px;
   --form-mode-inline-label-gap: 16px;
@@ -445,10 +447,10 @@
   --card-foreground: oklch(0.93 0.015 250);
   --popover: oklch(0.24 0.028 258);
   --popover-foreground: oklch(0.93 0.015 250);
-  --primary: oklch(0.7 0.13 var(--accent-h));
-  --primary-foreground: oklch(0.2 0.03 var(--accent-h));
-  --primary-hover: color-mix(in oklch, var(--primary) 88%, white);
-  --primary-active: color-mix(in oklch, var(--primary) 78%, white);
+  --primary: #528eff;
+  --primary-foreground: #151b26;
+  --primary-hover: #7dadff;
+  --primary-active: #2468f2;
   --secondary: oklch(0.3 0.025 258);
   --secondary-foreground: oklch(0.93 0.015 250);
   --muted: oklch(0.3 0.025 258);
@@ -539,6 +541,23 @@
   --checkbox-checked-active: oklch(from var(--primary) calc(l + 0.08) c h);
 }
 
+@supports (color: oklch(0 0 0)) {
+  :root {
+    --primary: oklch(0.49 0.16 var(--accent-h));
+    --primary-foreground: oklch(0.99 0.01 var(--accent-h));
+    --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
+    --primary-active: color-mix(in oklch, var(--primary) 82%, black);
+    --ring: oklch(0.49 0.16 var(--accent-h));
+  }
+  .dark {
+    --primary: oklch(0.7 0.13 var(--accent-h));
+    --primary-foreground: oklch(0.2 0.03 var(--accent-h));
+    --primary-hover: color-mix(in oklch, var(--primary) 88%, white);
+    --primary-active: color-mix(in oklch, var(--primary) 78%, white);
+    --ring: oklch(0.7 0.13 var(--accent-h));
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -615,7 +634,8 @@
     cursor: not-allowed;
   }
 
-  /* Default fill (no size). xs–lg pin only ≥576px. size:full same as default fill, for inline leftover. Mobile horizontal label ~28%. */
+  /* Default fill (no size). xs–lg pin only ≥576px. size:full same as default fill, for inline leftover.
+     ≤767（Amis media-breakpoint-down(sm)）整表改 flex 行，见文末 unlayered 覆盖。 */
   .vamis-form-item--normal {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -1185,7 +1205,6 @@
   .vamis-text-control__suffix {
     margin-left: 6px;
   }
-  .vamis-text-control__clear,
   .vamis-text-control__chip-remove,
   .vamis-text-control__reveal {
     flex: 0 0 auto;
@@ -1222,7 +1241,9 @@
   .vamis-text-control__native--password {
     flex-basis: 0;
   }
-  .vamis-text-control__clear:hover,
+  .vamis-text-control .vamis-select__clear {
+    margin-left: 4px;
+  }
   .vamis-text-control__chip-remove:hover,
   .vamis-text-control__reveal:hover {
     color: var(--foreground);
@@ -1864,6 +1885,7 @@
     color: var(--select-clear-color);
     cursor: pointer;
     line-height: 1;
+    transition: color var(--animation-duration);
   }
   .vamis-select__clear svg {
     display: block;
@@ -2223,6 +2245,145 @@
     background: var(--card);
     padding: 0 4px;
   }
+  /* 对齐 Amis `.DatePicker-popup.DatePicker-mobile` 320px + PopUp 遮罩。Teleport 到 body。 */
+  .vamis-date-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+  }
+  .vamis-date-sheet__mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .vamis-date-sheet__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--cal-bg);
+    color: var(--cal-fg);
+    font-family: var(--fontFamilyBase);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: var(--lineHeightBase);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--cal-shadow);
+  }
+  /* 对齐 Amis PopUp `in`/`out`：height 0 + bottom 贴底，看起来从底部滑入/滑出。 */
+  @keyframes vamis-date-sheet-in {
+    from {
+      height: 0;
+    }
+  }
+  @keyframes vamis-date-sheet-out {
+    to {
+      height: 0;
+    }
+  }
+  @keyframes vamis-date-sheet-mask-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes vamis-date-sheet-mask-out {
+    to {
+      opacity: 0;
+    }
+  }
+  .vamis-date-sheet.is-in .vamis-date-sheet__panel,
+  .vamis-date-sheet.is-out .vamis-date-sheet__panel,
+  .vamis-date-sheet.is-in .vamis-date-sheet__mask,
+  .vamis-date-sheet.is-out .vamis-date-sheet__mask {
+    animation-duration: var(--animation-duration);
+    animation-fill-mode: both;
+  }
+  .vamis-date-sheet.is-in .vamis-date-sheet__panel {
+    animation-name: vamis-date-sheet-in;
+  }
+  .vamis-date-sheet.is-out .vamis-date-sheet__panel {
+    animation-name: vamis-date-sheet-out;
+  }
+  .vamis-date-sheet.is-in .vamis-date-sheet__mask {
+    animation-name: vamis-date-sheet-mask-in;
+  }
+  .vamis-date-sheet.is-out .vamis-date-sheet__mask {
+    animation-name: vamis-date-sheet-mask-out;
+  }
+  .vamis-date-sheet__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    flex-shrink: 0;
+  }
+  .vamis-date-sheet__cancel,
+  .vamis-date-sheet__ok {
+    height: 100%;
+    padding: 0 16px;
+    border: 0;
+    background: none;
+    line-height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--cal-picker-cancel);
+  }
+  .vamis-date-sheet__ok {
+    color: var(--primary);
+  }
+  .vamis-date-sheet__title {
+    max-width: 50%;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--cal-picker-title);
+    text-align: center;
+  }
+  .vamis-date-sheet__columns {
+    /* 对齐 Amis wrapHeight = itemHeight(48) * visibleItemCount(5)。不要 flex:1，否则 320-50 把第 6 行露出来，选中框也不在第 3 行。 */
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    overflow: hidden;
+    touch-action: none;
+  }
+  /* 渐变色由 PickerFade 运行时写字面 hsla（绕过 lightningcss → #ffffffe6）。这里只定位和 background-size。 */
+  .vamis-picker-fade,
+  .vamis-date-sheet__fade,
+  .vamis-cal-picker-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: top, bottom;
+    background-size: 100% 40%, 100% 40%;
+  }
+  .vamis-date-sheet__frame {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    left: 16px;
+    z-index: 2;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+  .vamis-date-sheet__frame::after {
+    position: absolute;
+    inset: -50%;
+    content: "";
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transform: scale(0.5);
+  }
 }
 
 /*
@@ -2423,6 +2584,130 @@
   .vamis-control--lg {
     width: var(--form-control-width-lg);
     max-width: 100%;
+  }
+}
+
+/*
+  Amis `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`：
+  sm 下一档 md=768，max = 767px。不是 Tailwind sm 640，也不是 Dialog 的 <576。
+  helper `m:` 同一档。对照桌面 iframe 768 仍走桌面；375 才吃这套。
+  unlayered：压过 Card `border` / `bg-muted` / `justify-end` 和控件 hover glow。
+*/
+@media (max-width: 767px) {
+  .vamis-form-item {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    margin-bottom: 0;
+    padding: var(--form-item-mobile-gap) 0;
+    gap: 0;
+  }
+  .vamis-form-item::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    content: "";
+    border-bottom: 1px solid var(--border);
+    transform: scaleY(0.5);
+  }
+  .vamis-form-item--inline {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    margin-right: 0;
+  }
+  .vamis-form .vamis-node:has(> .vamis-form-item--inline) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+  .vamis-form-item__label {
+    flex: 0 0 28%;
+    justify-content: flex-start;
+    width: auto;
+    max-width: 28%;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-right: calc(var(--form-label-gap, 16px) / 2);
+    overflow-wrap: break-word;
+    text-align: left;
+    white-space: normal;
+  }
+  .vamis-form-item__label > span {
+    display: inline-block;
+    line-height: var(--control-h);
+  }
+  .vamis-form-item__value {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .vamis-form-item__label + .vamis-form-item__value {
+    max-width: calc(100% - 28%);
+  }
+  .vamis-form-item .vamis-control--xs,
+  .vamis-form-item .vamis-control--sm,
+  .vamis-form-item .vamis-control--md,
+  .vamis-form-item .vamis-control--lg {
+    width: 100%;
+    max-width: 100%;
+  }
+  .vamis-form-panel[data-slot="card"],
+  .vamis-form-panel {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .vamis-form-panel [data-slot="card-header"] {
+    background: none;
+    border: none;
+    border-bottom-width: 0;
+    padding-bottom: 0;
+  }
+  .vamis-form-panel [data-slot="card-footer"],
+  .vamis-form-actions {
+    display: flex;
+    justify-content: stretch;
+    padding: 0 12px;
+    border-top: none;
+    border-top-width: 0;
+  }
+  .vamis-form-panel [data-slot="card-footer"] > .vamis-node,
+  .vamis-form-panel [data-slot="card-footer"] > [data-slot="button"],
+  .vamis-form-actions > .vamis-node,
+  .vamis-form-actions > [data-slot="button"] {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .vamis-form-panel [data-slot="card-footer"] [data-slot="button"],
+  .vamis-form-actions [data-slot="button"] {
+    width: 100%;
+  }
+  .vamis-form-item .vamis-text-control__input,
+  .vamis-form-item .vamis-text-control__input:hover,
+  .vamis-form-item .vamis-text-control:hover:not(.is-disabled) .vamis-text-control__input,
+  .vamis-form-item .vamis-text-control.is-focused:not(.is-disabled) .vamis-text-control__input,
+  .vamis-form-item .vamis-date-picker .vamis-text-control__input,
+  .vamis-form-item .vamis-select__input,
+  .vamis-form-item .vamis-select__input:hover,
+  .vamis-form-item .vamis-select__input.is-focused,
+  .vamis-form-item .vamis-text-control__addon--text {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 var(--control-px) 0 0;
+  }
+  .vamis-form-item .vamis-text-control.is-focused:not(.is-disabled):has(> .vamis-text-control__input--full) {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .vamis-form-item .vamis-text-control__addon--button [data-slot="button"] {
+    border: none;
+    background: transparent;
+    box-shadow: none;
   }
 }
 

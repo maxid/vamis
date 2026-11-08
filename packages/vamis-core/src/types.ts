@@ -188,6 +188,11 @@ export interface RendererEnv {
   session?: string
   theme?: string
   initialData?: PlainObject
+  /**
+   * 是否把 `location.search` 并进根数据域（对齐 Amis `parseQuery`）。
+   * 对照 `embed-case` 关掉，避免 `engine` / `case` / `bucket` / `vp` 漏进表单。
+   */
+  parseLocation?: boolean
   debug?: boolean
   /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */
   trusted?: boolean

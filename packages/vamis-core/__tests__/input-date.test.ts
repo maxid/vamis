@@ -22,6 +22,11 @@ import {
   isInputDateDisabled,
   isInputDateMonthDisabled,
   isInputDateYearDisabled,
+  inputDateFromPickerValues,
+  inputDateIsMobile,
+  inputDatePickerColumns,
+  inputDatePickerTitle,
+  inputDatePickerTypes,
   parseInputDateValue,
   resolveInputDateShortcuts,
   storeInputDateValue,
@@ -169,17 +174,105 @@ describe('store / display / actions helpers', () => {
   })
 })
 
+describe('input-date mobile picker', () => {
+  it('honors explicit mobileUI over viewport', () => {
+    expect(inputDateIsMobile({ type: 'input-date', mobileUI: true })).toBe(true)
+    expect(inputDateIsMobile({ type: 'input-date', mobileUI: false }, { mobileUI: true })).toBe(false)
+  })
+
+  it('builds year/month/date columns with 年月日 and clamps to minDate', () => {
+    expect(inputDatePickerTypes({ type: 'input-date' })).toEqual(['year', 'month', 'date'])
+    expect(inputDatePickerTitle(['year', 'month', 'date'])).toBe('选择年月日')
+    expect(inputDatePickerTypes({ type: 'input-datetime' })).toEqual(['year', 'month', 'date', 'hours', 'minutes', 'seconds'])
+    expect(inputDatePickerTitle(['year', 'month', 'date', 'hours', 'minutes'])).toBe('选择时间')
+    const date = dayjs('2020-06-11T16:06:58')
+    const { columns, values } = inputDatePickerColumns(date, { type: 'input-date', minDate: TS }, {}, NOW)
+    expect(values).toEqual([2020, 5, 11])
+    expect(columns[0][0]?.text).toBe('2020年')
+    expect(columns[1][0]?.value).toBe(5)
+    expect(columns[1][0]?.text).toBe('06月')
+    expect(columns[2][0]?.value).toBe(11)
+    expect(columns[2][0]?.text).toBe('11日')
+    const next = inputDateFromPickerValues([2020, 1, 31], ['year', 'month', 'date'], date)
+    expect(next.format('YYYY-MM-DD')).toBe('2020-02-29')
+  })
+})
+
 describe('input-date renderer reuse', () => {
   it('teleports the popover and reuses DateCalendarPanel', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputDate.vue'), 'utf8')
     expect(vue).toContain('VamisOverlay')
     expect(vue).toContain('DateCalendarPanel')
+    expect(vue).toContain('DatePickerSheet')
+    expect(vue).toContain('v-else-if="isMobile"')
+    expect(vue).toContain(':readonly="isMobile || inputForbid"')
     expect(vue).toContain(':disabled-month="monthDisabled"')
     expect(vue).toContain(':disabled-year="yearDisabled"')
     expect(vue).toContain('overlayContainerFrom')
     expect(vue).toContain(':gap="4"')
+    expect(vue).toContain('VamisClear')
+    expect(vue).toContain('vamis-select__clear')
     expect(vue).not.toContain('vamis-date-cal__')
+  })
+
+  it('mobile sheet reuses CalendarWheel and confirms via 取消/确认', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const sheet = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DatePickerSheet.vue'), 'utf8')
+    expect(sheet).toContain('CalendarWheel')
+    expect(sheet).toContain('PickerFade')
+    expect(sheet).toContain('取消')
+    expect(sheet).toContain('确认')
+    expect(sheet).toContain('Teleport')
+    expect(sheet).toContain('vamis-date-sheet')
+    expect(sheet).toContain("'is-in': phase === 'in'")
+    expect(sheet).toContain("'is-out': phase === 'out'")
+    expect(sheet).toContain('@animationend')
+    expect(sheet).toContain('CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE')
+  })
+
+  it('mobile wheel shows 5 rows of 16px, selected stays on row 3', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const wheel = readFileSync(resolve(here, '../../vamis/src/renderers/display/CalendarWheel.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(wheel).toContain('ITEM * (VISIBLE - 1)) / 2')
+    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-size:\s*16px/)
+    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-weight:\s*400/)
+    expect(wheel).not.toContain('font-size: 18px')
+    expect(wheel).not.toContain('font-weight: 500')
+    const columns = css.slice(
+      css.indexOf('.vamis-date-sheet__columns {'),
+      css.indexOf('.vamis-picker-fade,'),
+    )
+    expect(columns).toContain('flex: 0 0 auto')
+    expect(columns).not.toMatch(/flex:\s*1[;\s]/)
+    expect(css).toContain('.vamis-date-sheet__panel')
+    const panel = css.slice(
+      css.indexOf('.vamis-date-sheet__panel {'),
+      css.indexOf('.vamis-date-sheet.is-in .vamis-date-sheet__panel,'),
+    )
+    expect(panel).toContain('font-family: var(--fontFamilyBase)')
+    expect(panel).toContain('font-size: 16px')
+    expect(panel).toContain('border: 1px solid var(--border)')
+    const fade = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/PickerFade.vue'), 'utf8')
+    expect(fade).toContain("hsla(0, 0%, 100%, 0.9)")
+    expect(fade).toContain('linear-gradient(180deg, ${from}, ${to})')
+    expect(fade).not.toContain('color-mix(')
+    expect(css).toContain('background-size: 100% 40%, 100% 40%')
+    expect(css).not.toContain('.vamis-picker-fade__band')
+    expect(css).not.toContain('--cal-mask-from')
+    expect(css).not.toContain("color-mix(in srgb, var(--cal-bg)")
+  })
+
+  it('mobile wheel is click-only for mouse: no wheel snap, no mouse drag', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const wheel = readFileSync(resolve(here, '../../vamis/src/renderers/display/CalendarWheel.vue'), 'utf8')
+    expect(wheel).toContain("event.pointerType !== 'touch'")
+    expect(wheel).toContain('@click="onItemClick(i)"')
+    expect(wheel).toContain('@wheel.prevent')
+    expect(wheel).not.toContain('snap(index.value +')
+    expect(wheel).not.toContain('cursor: grab')
+    expect(wheel).toContain('skipClick')
   })
 })
 

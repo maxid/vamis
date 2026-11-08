@@ -72,6 +72,12 @@ alwaysApply: true
 - 触及：`action` `button`
 - 规则：本文；`packages/vamis-sdk/embed-case.html` `findNodeEl`
 
+### 表单窄屏靠 CSS 改 layout，不要按 type 各写一套
+- 踩过：对照 375 上 Vamis 标签在上、提交钮靠右小块；Amis 是 label 28% 与控件同行、底栏按钮 `flex:1` 拉满。
+- 稳定做法：对齐 `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`。`.vamis-form-item` 一律 flex + 标签 28% + 底部分割线；日期/文本/Select 去边框；`.vamis-form-panel` 去标题灰底与描边；footer 按钮 `flex:1`。所有表单控件自动吃到，不要给 `input-date` / `select` 再做一套移动 layout。JS `mobileUI` 768 只给 picker / Toast。
+- 触及：`form` FormItem `input-date` `select`
+- 规则：本文；Amis `_form.scss` 562+ / `_panel.scss` `Panel--form`
+
 ### 窄屏必须桌面 + 移动一起跑
 - 踩过：只修 `<576` 把 Dialog 桌面也拉满；只跑 `--mobile` 桌面回归看不见。
 - 稳定做法：动窄屏 / `m:` / 移动端表单，对照必须桌面 + `--mobile`。
@@ -234,10 +240,10 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`
 
 ### 断点不要混用三套
-- 踩过：Dialog 窄屏用 Tailwind `sm:`（640px），Amis Modal 是 `<576`；Toast 桌面 iframe ~768 被当成桌面，实际 Amis `isMobile` 已走暗底居中。
-- 稳定做法：弹层拉满 / 底栏均分对齐 Amis `<576`。Toast `isMobile()` = `max-width: 768px`。helper `m:` 与对照「移动」跟各自规则，不要混用。
-- 触及：`dialog` `drawer` `toast`
-- 规则：`.cursor/rules/component.mdc`
+- 踩过：Dialog 窄屏用 Tailwind `sm:`（640px），Amis Modal 是 `<576`；Toast 桌面 iframe ~768 被当成桌面，实际 Amis `isMobile` 已走暗底居中。Form 若按 Dialog 的 576 切，375 对照才对、但和 Amis `media-breakpoint-down(sm)`（下一档 md-1px = **767px**）以及 helper `m:` 对不上。
+- 稳定做法：Form 行布局 / helper `m:` 对齐 Amis mixin = `@media (max-width: 767px)`。Dialog/Drawer 弹层拉满仍按仓内已核的 `<576`。Toast / DatePicker JS `isMobile()` = 768。不要用 Tailwind `sm:` 640 去套任何一档。
+- 触及：`dialog` `drawer` `toast` `form` FormItem `input-date`
+- 规则：`.cursor/rules/component.mdc`；Amis `_functions.scss` `breakpoint-max(sm)`
 
 ### 禁止运行时拼接 Tailwind 完整 class
 - 踩过：DialogContent 改成 `max-w-none`，再拼 `min-[576px]:max-w-[500px]`，JIT 扫不到，桌面弹层拉满。
@@ -297,9 +303,27 @@ alwaysApply: true
 
 ### 日期 / 日历只保留一套面板
 - 踩过：`type: calendar` 与 `input-date` 两套月历 DOM/CSS，圆角字号选中色分叉。
-- 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。颜色走 `--cal-*`（非本月 `--cal-other`，浅色仍是 `#b8babf`），不要在面板里写死 `#fff`。
+- 稳定做法：共用 `DateCalendarPanel`。表单可多 shortcuts / 时分秒 / 页脚。DateRange 要做也挂这块，不要再长第二套桌面月历。颜色走 `--cal-*`（非本月 `--cal-other`，浅色仍是 `#b8babf`），不要在面板里写死 `#fff`。移动端默认滚轮走 `DatePickerSheet` + `CalendarWheel`，不要再画一套。
 - 触及：`calendar` `input-date` `input-datetime` `input-time`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### `--primary` 先写 6 位 hex，oklch 放进 @supports
+- 踩过：`--primary: oklch(.49 .16 var(--accent-h))` 在旧 WebView 里整段无效，`bg-primary` / 确认钮掉成描边灰。手机对照看起来像「主题没生效」。
+- 稳定做法：`:root` 默认云舍蓝 `#2468f2`。5 色切色的 oklch / `color-mix` 只放 `@supports (color: oklch(0 0 0))`。SDK 打包后再追加 `@supports not` hex（lightningcss 可能拆掉源码里的 @supports）。
+- 触及：`action` `button` `form` `input-date`
+- 规则：本文；`packages/vamis-ui/src/styles.css`；`packages/vamis-sdk/vite.config.ts` `appendLegacyPrimary`
+
+### 带 alpha 的色不要写进 CSS 变量
+- 踩过：滚轮遮罩 `--cal-mask-from: hsla(0,0%,100%,0.9)` 被 Tailwind/lightningcss 编成 `#ffffffe6`；旧 WebView 把 8 位 hex 当实心 `#ffffff`，上下 96px 全白，只剩中间一行。改成 opacity 实心带后又丢掉 Amis 渐变。Amis 产物里仍是字面 `hsla()`，所以同一台机能渐变。
+- 稳定做法：半透明色写进 Vue **inline style** 的字面 `hsla()` / `rgba()`，不要进 CSS 文件、也不要进 custom property。`color-mix` 同样不要。改完必须 `pnpm sdk:build`，手机对照再给 `sdk.css` 加 `?v=`。
+- 触及：`input-date` `calendar`
+- 规则：本文；`packages/vamis/src/renderers/calendar/PickerFade.vue`
+
+### 移动端 DatePicker 默认是滚轮 PopUp，不是 CalendarMobile
+- 踩过：把 `mobileCalendarMode: calendar` 的滚动月历当成窄屏默认。Amis 未写该字段时走 DaysView `renderPicker()`（年/月/日轮 + 取消/确认）。列区曾 `flex:1` 把 320-50 吃满，露出第 6 行，选中框也不在第 3 行；选中行再加 18px/500，Teleport 到 body 没带字族，看起来比 Amis 糙。
+- 稳定做法：`mobile && !embed` 开 `DatePickerSheet`（底栏 320px、`--z-modal`、Teleport body）。输入 `readOnly`，无 shortcuts。schema / env 显式 `mobileUI` 优先，否则 `matchMedia('(max-width: 768px)')`。对照桌面 1100 必须仍是 popover；`--mobile` 375 才是滚轮。`mobileCalendarMode: calendar` 另刀。进出对齐 Amis PopUp：`is-in`/`is-out` 动画 **height 0**（贴底 + overflow 看起来像上滑），遮罩 opacity；不要 `translateY`。关层等 animationend（500ms 兜底）再卸 DOM。列区高度钉死 `itemHeight(48) × visible(5)`，`flex: 0 0 auto`，选中永远在第 3 行，框线 `top:50%` + 高 48 相对第 3 行等距。字号全员 16px/400，选中只换色不加大；面板补 `font-family: var(--fontFamilyBase)`、`border: 1px solid var(--border)`（对齐 Amis PopUp `--borderColor`）。鼠标对齐 Amis PickerColumn：滚轮只 `preventDefault` 不改值，左键不能拖，点 `li` 才选；手指 touch 仍可滑。遮罩渐变把字面 `hsla()` 写进 `PickerFade` inline style（见上条），不要 opacity 实心带冒充。
+- 触及：`input-date` `input-datetime` `input-time` `calendar`
+- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `Picker.tsx` `wrapHeight` / `_picker-columns.scss`
 
 ### minDate/maxDate 年月面板也要禁，不能只卡日格子
 - 踩过：限制范围示例只给日格 `is-disabled`；点标题进年/月视图后范围外格子仍可点。Amis MonthsView / YearsView 是扫该月/年里有没有一天 `isValidDate`。
@@ -345,6 +369,12 @@ alwaysApply: true
 - 触及：`action` `button` `icon` `avatar` `nav` `breadcrumb` `dropdown-button` `card` `cards`
 - 规则：`.cursor/rules/style.mdc`
 
+### 表单清除钮共用 VamisClear / `.vamis-select__clear`
+- 踩过：Select 是 16px 圆底叉 + `--select-clear-*` hover；`input-text` / `input-date` 用文字 `×` 和 `--muted-foreground`，颜色和动效两套。
+- 稳定做法：图标抽 `VamisClear`（Amis `input-clear`），按钮 class 一律 `.vamis-select__clear`，hover/active 走 `--select-clear-*` + `transition: color`。标签上的小叉仍是 chip-close，不要混进清除钮。
+- 触及：`select` `input-text` `input-date`
+- 规则：本文；`packages/vamis-ui/src/ui/VamisClear.vue`
+
 ### 下拉 caret 走 right-arrow-bold 线图，不要 CSS 实心三角
 - 踩过：Select / DropdownButton 用 `border-top` 画实心三角，Table2 / Json 用 `▾`/`▸`；关开瞬间翻转、没有 `transition`。Amis 是 `Icon icon="right-arrow-bold"` 10×10，Select 外壳 90°、展开时 svg `rotate(180deg)` 且 `transition: transform var(--animation-duration)`（0.2s）；DropDown 是 svg 90° → 270°。
 - 稳定做法：chrome 箭头共用 `VamisCaret`（Amis 路径）。作者 `icon` / FA 仍走 `resolveIcon`。Tooltip 三角仍按 `_tooltip.scss`。不要再写 CSS `border` 三角或 unicode 块箭头。
@@ -368,6 +398,19 @@ alwaysApply: true
 - 稳定做法：schema `revealPassword` 默认 true 画钮（`false` 关掉）；组件 state 才是当前是否明文。图标共用 `VamisPasswordToggle`（Amis 16×16 路径），尺寸/色走 `--input-password-icon-*`。切换派发 `review` / `encrypt`，被 prevent 不切。
 - 触及：`input-password` `input-text`
 - 规则：本文；Amis `InputText.tsx` `toggleRevealPassword`
+
+### 对照 iframe 资源不要写 ./sdk.css
+- 踩过：手机 WebView 把 `./sdk.css` 解析成站点根 `/sdk.css`（404），对照 Vamis 栏红字 `css http://host/sdk.css`；Amis 走 unpkg 所以没事。`sdk.css` 约 1.7MB，4G 再叠超时。
+- 稳定做法：按页面 URL 里的 `/sdk/` 拼绝对地址（`sdkFile('sdk.css')`）。playground 把误请求的 `/sdk.css` 302 到 `/sdk/sdk.css`。
+- 触及：对照 `embed-case`
+- 规则：本文；`packages/vamis-sdk/embed-case.html`；`playground/vite.config.ts` `serveSdk`
+
+### 对照 /sdk 必须带 Content-Length + 缓存，不能对流式 gzip
+- 踩过：同样手机网上 Amis 约 3s、Vamis 每次约 40s。Amis 走 unpkg 长缓存；Vamis 经 Vite 每次把 2MB 级 css/js 重新传。流式 `createGzip()` 没有 Content-Length，部分 WebView 等连接结束才触发 stylesheet load。
+- 稳定做法：`gzipSync` 按 mtime 缓存并写 `Content-Length`。开发机 `sdk.css` / `sdk.js` **不能**一年 immutable（URL 无版本，`sdk:build` 后手机会吃旧包）。用 `no-cache` + ETag：没改 304，改了才拉新。带 hash 的 `assets/` 才 `immutable`。Amis 能一年缓存是因为 unpkg URL 带 `@6.13.0`。
+
+- 触及：对照 `embed-case`
+- 规则：本文；`playground/vite.config.ts` `serveSdk`
 
 ### SDK 不要依赖解不到的包
 - 踩过：生产打包吃 moment，pnpm 严格隔离下 Vite 解不到 workspace 裸导入；字符串 `onError` / adaptor 在对照 `embed` 未开 `trusted` 时不跑。

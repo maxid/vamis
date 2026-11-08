@@ -211,6 +211,20 @@ describe('Amis width helpers', () => {
     expect(css).toContain('grid-template-columns: 28% minmax(0, 1fr)')
   })
 
+  it('relays form items to a 28% label row below Amis sm-down (767px)', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain('--form-item-mobile-gap: 8px')
+    expect(css).toContain('@media (max-width: 767px)')
+    expect(css).toMatch(
+      /@media \(max-width: 767px\) \{[\s\S]*?\.vamis-form-item \{[\s\S]*?display:\s*flex/,
+    )
+    expect(css).toContain('flex: 0 0 28%')
+    expect(css).toContain('.vamis-form-panel [data-slot="card-footer"]')
+    expect(css).toContain('flex: 1 1 0')
+    expect(css).toContain('.vamis-form-item .vamis-date-picker .vamis-text-control__input')
+  })
+
   it('pins widget root to Amis font token, 14px/1.5, and line-8 border', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
@@ -218,6 +232,8 @@ describe('Amis width helpers', () => {
     expect(css).toContain('--fontSizeBase: 14px')
     expect(css).toContain('--lineHeightBase: 1.5')
     expect(css).toContain('--fontFamilyBase: var(--fonts-base-family)')
+    expect(css).toContain('--primary: #2468f2')
+    expect(css).toContain('@supports (color: oklch(0 0 0))')
     expect(css).not.toContain('--fonts-ui-family')
     expect(css).not.toMatch(/html \{\s*@apply font-sans/)
     expect(css).not.toContain('@apply bg-background text-foreground font-sans text-sm antialiased')

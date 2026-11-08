@@ -30,8 +30,9 @@ const rootStore = hub.add({
 provide(ParentStoreIdKey, rootId)
 
 function rootSeed(): PlainObject {
+  const fromQuery = env.value.parseLocation === false ? {} : parseSearch()
   return {
-    ...parseSearch(),
+    ...fromQuery,
     ...(env.value.initialData || {}),
     ...(props.data || {}),
   }

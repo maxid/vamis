@@ -5,13 +5,13 @@ outline: deep
 
 # InputDate 日期
 
-::: info 实现进度 90% · 进行中
-主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板；日 / 月 / 年面板都禁范围外格子）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000，贴底按 Amis `placement: auto` 向上翻。日历层 240×290，DatePicker-popover 242×292（padding 0）。与 `type: calendar` 共用月历面板。弹层走 `--cal-*`（底/边 alias Select 菜单，深色 `#17202d`）。缺移动端 picker、日程 `schedules`。
+::: info 实现进度 92% · 进行中
+主路径已对齐 Amis：日历点选、`format` / `inputFormat`（及 `valueFormat` / `displayFormat`）、相对默认值、`minDate` / `maxDate`（固定 / 相对 / `$` 模板；日 / 月 / 年面板都禁范围外格子）、`shortcuts`（预设与表达式）、`utc`、`embed`、`clearable`、`change` / `focus` / `blur` 与 `clear` / `reset` / `setValue`。弹层 Teleport 到 body（`popOverContainerSelector` / `getModalContainer`），z-index 1000，贴底按 Amis `placement: auto` 向上翻。日历层 240×290，DatePicker-popover 242×292（padding 0）。与 `type: calendar` 共用月历面板。弹层走 `--cal-*`（底/边 alias Select 菜单，深色 `#17202d`）。窄屏默认滚轮 PopUp（320px 年/月/日 + 取消/确认；`input` 只读；无 shortcuts；进出对齐 Amis PopUp height 动画）。缺 `mobileCalendarMode: calendar` 滚动月历、日程 `schedules`。
 :::
 
 `input-date` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。同渲染器别名：`input-datetime` / `input-time`（薄别名，时间面板已接；时分秒约束与移动端 picker 仍缺）。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。同渲染器别名：`input-datetime` / `input-time`（薄别名，时间面板已接；窄屏默认滚轮已接；时分秒约束与 `mobileCalendarMode: calendar` 仍缺）。
 
 ## 基本用法
 
@@ -203,7 +203,7 @@ body:
 
 ## 快捷键
 
-配置 `shortcuts` 后，选择器顶部会显示快捷项。移动端 picker 形式不支持快捷键（Vamis 本刀也尚未做移动端 picker）。
+配置 `shortcuts` 后，选择器顶部会显示快捷项。移动端滚轮 picker 不支持快捷键（对齐 Amis）。
 
 ```schema: scope="body"
 type: form
@@ -428,6 +428,6 @@ body:
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 默认值、`minDate` / `maxDate`、快捷键与文档主路径一致；`disabledDate` 字符串函数仅 `env.trusted`。
 - 日期弹层盒模型对齐 Amis：`.rdt.rdtStatic.rdtOpen` 240×290，`.DatePicker-popover` padding 0、边框 `--cal-border`（浅色 `#f2f3f5`）、select-outer 阴影。深色弹层走 `--cal-bg`（alias `--select-menu-bg` `#17202d`），不要写死 `#fff`。
-- 未接：移动端 CalendarMobile picker、选择器内 `schedules` 日程。
-- `input-datetime` / `input-time` 是同一渲染器的薄别名，时间用时分秒下拉，不是独立滚轮。
+- 窄屏默认滚轮 PopUp 已接（`max-width: 768px` 或显式 `mobileUI`；320px、年/月/日[+时分秒]、取消/确认；focus 从底部 height 滑入、blur 滑出）。未接：`mobileCalendarMode: calendar` 滚动月历、选择器内 `schedules` 日程。
+- `input-datetime` / `input-time` 是同一渲染器的薄别名；桌面时间仍是时分秒下拉，窄屏走同一套滚轮。
 - Amis 属性表把 `closeOnSelect` 写成默认 `false`，源码 `defaultProps` 是 `true`；Vamis 跟源码。

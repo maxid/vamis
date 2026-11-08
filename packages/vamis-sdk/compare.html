@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Amis / Vamis SDK 对照</title>
+    <link rel="preload" href="./sdk.css" as="style" />
+    <link rel="preload" href="./sdk.esm.js" as="script" crossorigin />
+    <link rel="preload" href="./sdk.js" as="script" />
     <style>
       :root {
         font-family: system-ui, sans-serif;
@@ -778,7 +781,12 @@
         function frameUrl(engine) {
           const q = new URLSearchParams({ engine: engine })
           if (amisSdk) q.set('amisSdk', amisSdk)
-          return './embed-case.html?' + q.toString()
+          const rel = 'embed-case.html?' + q.toString()
+          try {
+            return new URL(rel, location.href).href
+          } catch (_err) {
+            return './' + rel
+          }
         }
 
         function cellId(engine, key) {
