@@ -13,6 +13,7 @@ export {
   rankTextOption,
   readTextOptions,
   showPasswordReveal,
+  showTextSelectedMarks,
   textValueToString,
   transformInputText,
   type FilterTextOptionsOpts,

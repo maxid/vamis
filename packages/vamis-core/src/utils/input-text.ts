@@ -127,6 +127,23 @@ export function isTextSuggestMode(schema: SchemaObject): boolean {
   return !!(schema.source || schema.autoComplete || (Array.isArray(options) && options.length))
 }
 
+/**
+ * 对齐 Amis InputText 选中态：multiple 永远画 tag；`creatable: false` 单选在未输入筛选时画
+ * `TextControl-value`（不要只在 blur 把 label 写进 native input，focus 会空）。
+ */
+export function showTextSelectedMarks(opts: {
+  multiple: boolean
+  creatable: boolean
+  draft: string
+  open: boolean
+  selectedCount: number
+}): boolean {
+  if (!opts.selectedCount) return false
+  if (opts.multiple) return true
+  if (opts.creatable) return false
+  return !(opts.draft && opts.open)
+}
+
 export function addOnPosition(raw: unknown): 'left' | 'right' {
   if (raw && typeof raw === 'object' && !Array.isArray(raw) && (raw as SchemaObject).position === 'left') {
     return 'left'

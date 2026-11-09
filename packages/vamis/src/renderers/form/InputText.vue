@@ -40,6 +40,7 @@ import {
   parseTextValue,
   readTextOptions,
   showPasswordReveal,
+  showTextSelectedMarks,
   textValueToString,
   transformInputText,
 } from './input-text'
@@ -140,12 +141,23 @@ const selected = computed(() =>
 const rawValue = computed(() => (name.value ? form?.getValue(name.value) : undefined))
 const displayValue = computed(() => textValueToString(rawValue.value))
 const inputModel = computed(() => {
-  if (suggest.value && multiple.value) return draft.value
-  if (suggest.value && !creatable.value) {
-    if (focused.value || draft.value) return draft.value
-    return selected.value[0]?.label ?? ''
-  }
+  if (suggest.value && (multiple.value || !creatable.value)) return draft.value
   return displayValue.value
+})
+const visibleSelected = computed(() =>
+  showTextSelectedMarks({
+    multiple: multiple.value,
+    creatable: creatable.value,
+    draft: draft.value,
+    open: open.value,
+    selectedCount: selected.value.length,
+  })
+    ? selected.value
+    : [],
+)
+const nativePlaceholder = computed(() => {
+  if (focused.value || visibleSelected.value.length || inputModel.value) return ''
+  return placeholder.value
 })
 const counterText = computed(() => {
   const len = displayValue.value.length
@@ -532,13 +544,14 @@ watch(
       <div ref="inputWrapEl" :class="inputControlClass" @click="onClick">
         <span v-if="prefixText" class="vamis-text-control__affix vamis-text-control__prefix">{{ prefixText }}</span>
         <span
-          v-for="(item, index) in multiple ? selected : []"
+          v-for="(item, index) in visibleSelected"
           :key="`${item.value}-${index}`"
-          class="vamis-text-control__chip"
+          :class="multiple ? 'vamis-text-control__chip' : 'vamis-text-control__value'"
         >
-          <span class="vamis-text-control__chip-label">{{ item.label }}</span>
+          <span v-if="multiple" class="vamis-text-control__chip-label">{{ item.label }}</span>
+          <template v-else>{{ item.label }}</template>
           <button
-            v-if="!disabled"
+            v-if="multiple && !disabled"
             type="button"
             class="vamis-text-control__chip-remove"
             aria-label="移除"
@@ -552,7 +565,8 @@ watch(
           :value="controlInputValue(inputModel)"
           :type="nativeType"
           :name="schema.name"
-          :placeholder="(!multiple || !selected.length) && !focused ? placeholder : ''"
+          :size="suggest ? 10 : undefined"
+          :placeholder="nativePlaceholder"
           :disabled="disabled"
           :maxlength="maxLength"
           :minlength="minLength"

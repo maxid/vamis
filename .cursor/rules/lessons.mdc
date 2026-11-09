@@ -495,6 +495,18 @@ alwaysApply: true
 - 触及：`input-text`
 - 规则：本文；Amis `InputText.tsx` `matchSorter` + `highlight()`
 
+### input-text 只能选预设时选中值不要只在 blur 写进 input
+- 踩过：`creatable: false` 把 label 塞进 `inputModel`，focus 时 draft 清空，输入框看起来没选上。Amis 是旁边 `TextControl-value` 文本，native input 空着筛选项。
+- 稳定做法：multiple / `creatable: false` 的 input 只绑 draft。单选 `creatable: false` 画 `.vamis-text-control__value`（不是 chip），`(draft && open)` 才藏。
+- 触及：`input-text`
+- 规则：本文；Amis `InputText.tsx` `selectedOptions` map
+
+### input-text 多选一行不要 width:100% 把 native 挤到下一行
+- 踩过：`--multiple` `flex-wrap` + native `width:100%` + 固定 30px 高，一枚 tag 也折成两行。
+- 稳定做法：suggest / multiple 的 native `width:auto; flex:1; height:auto`，对齐 Amis `size={10}`。容器 `height:auto; min-height: control-h`。
+- 触及：`input-text`
+- 规则：本文；Amis `_text.scss` `&-input--multiple`
+
 ### 密码显隐走 Amis view/invisible 线图，不要只改 type=password
 - 踩过：`input-password` 只输出原生密文框，文档主路径的显隐钮缺席。
 - 稳定做法：schema `revealPassword` 默认 true 画钮（`false` 关掉）；组件 state 才是当前是否明文。图标共用 `VamisPasswordToggle`（Amis 16×16 路径），尺寸/色走 `--input-password-icon-*`。切换派发 `review` / `encrypt`，被 prevent 不切。

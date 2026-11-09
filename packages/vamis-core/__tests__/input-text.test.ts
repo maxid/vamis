@@ -8,6 +8,7 @@ import {
   highlightTextMatches,
   inputNativeType,
   showPasswordReveal,
+  showTextSelectedMarks,
   TEXT_MATCH_RANK,
   rankTextOption,
 } from '../src/utils/input-text'
@@ -60,6 +61,29 @@ describe('input-text match ranking', () => {
   })
 })
 
+describe('input-text selected marks', () => {
+  it('keeps creatable:false label visible while focused until the user types', () => {
+    expect(
+      showTextSelectedMarks({ multiple: false, creatable: false, draft: '', open: true, selectedCount: 1 }),
+    ).toBe(true)
+    expect(
+      showTextSelectedMarks({ multiple: false, creatable: false, draft: '', open: false, selectedCount: 1 }),
+    ).toBe(true)
+    expect(
+      showTextSelectedMarks({ multiple: false, creatable: false, draft: 'Opt', open: true, selectedCount: 1 }),
+    ).toBe(false)
+    expect(
+      showTextSelectedMarks({ multiple: false, creatable: true, draft: '', open: true, selectedCount: 1 }),
+    ).toBe(false)
+    expect(
+      showTextSelectedMarks({ multiple: true, creatable: true, draft: '', open: true, selectedCount: 1 }),
+    ).toBe(true)
+    expect(
+      showTextSelectedMarks({ multiple: true, creatable: true, draft: '', open: false, selectedCount: 0 }),
+    ).toBe(false)
+  })
+})
+
 describe('input-password reveal', () => {
   it('defaults on for input-password and off for other types', () => {
     expect(inputNativeType('input-password')).toBe('password')
@@ -85,6 +109,9 @@ describe('input-text renderer reuse', () => {
     expect(vue).toContain('vamis-select__clear')
     expect(vue).toContain("revealed.value ? 'encrypt' : 'review'")
     expect(vue).toContain('highlightTextMatches')
+    expect(vue).toContain('showTextSelectedMarks')
+    expect(vue).toContain('vamis-text-control__value')
+    expect(vue).toContain(':size="suggest ? 10 : undefined"')
     expect(vue).not.toContain('z-index: 20')
   })
 
@@ -101,6 +128,16 @@ describe('input-text renderer reuse', () => {
     expect(css).toContain('--input-password-icon-size: 16px')
     expect(css).toContain('.vamis-text-control__native--password')
     expect(css).toContain('.vamis-text-control__sug .is-matched')
+    expect(css).toContain('.vamis-text-control__value')
+    const multipleStart = css.indexOf('.vamis-text-control__input--multiple {')
+    const multipleBlock = css.slice(multipleStart, css.indexOf('}', multipleStart) + 1)
+    expect(multipleBlock).toContain('height: auto')
+    expect(multipleBlock).toContain('min-height: var(--control-h)')
+    expect(multipleBlock).not.toContain('gap:')
+    expect(css).toContain(
+      '.vamis-text-control__input--suggest .vamis-text-control__native,\n  .vamis-text-control__input--multiple .vamis-text-control__native',
+    )
+    expect(css).toContain('min-width: 2em')
   })
 
   it('hover follows --primary, focus glow wraps the whole control, addOn keeps 1px seam', () => {

@@ -1219,9 +1219,25 @@
     height: auto;
     min-height: var(--control-h);
     flex-wrap: wrap;
-    gap: 2px 0;
     padding-top: 2px;
     padding-bottom: 2px;
+  }
+  /* Amis `size={10}`：native 不要 width:100%，否则一枚 tag 就被挤到下一行变成两行高。 */
+  .vamis-text-control__input--suggest .vamis-text-control__native,
+  .vamis-text-control__input--multiple .vamis-text-control__native {
+    width: auto;
+    min-width: 2em;
+    height: auto;
+    flex: 1 1 2em;
+  }
+  .vamis-text-control__value {
+    flex: 0 0 auto;
+    display: inline-block;
+    user-select: none;
+    vertical-align: middle;
+    font-size: var(--fontSizeBase);
+    line-height: var(--lineHeightBase);
+    white-space: nowrap;
   }
   .vamis-text-control.is-disabled .vamis-text-control__input {
     background: var(--control-disabled-bg);
