@@ -15,6 +15,8 @@ import {
   Textarea,
 } from '@vamis/ui'
 import CatalogTree from '../components/CatalogTree.vue'
+import DocPhonePreview from '../components/DocPhonePreview.vue'
+import { docViewport } from '../docs/doc-viewport'
 import {
   componentGroups,
   componentLeaves,
@@ -31,6 +33,8 @@ const source = ref(defaultExample?.yaml || '')
 const selectedId = ref(defaultExample?.id || '')
 const selectedLabel = ref(defaultExample?.label || '表单页面')
 const error = ref('')
+
+const isMobile = computed(() => docViewport.value === 'mobile')
 
 const parsed = computed(() => {
   try {
@@ -92,12 +96,20 @@ function formatSource(kind: 'yaml' | 'json') {
         </div>
         <Badge variant="outline">lcdp.ir/v1</Badge>
       </div>
-      <div class="min-h-0 flex-1 overflow-auto bg-background p-5">
+      <div
+        class="min-h-0 flex-1 overflow-auto"
+        :class="isMobile ? 'doc-play__canvas--mobile' : 'bg-background p-5'"
+      >
         <Alert v-if="error" variant="destructive">
           <AlertTitle>无法解析</AlertTitle>
           <AlertDescription class="font-mono text-xs">{{ error }}</AlertDescription>
         </Alert>
-        <VamisRoot v-else-if="parsed" :schema="parsed" :env="{ trusted: true }" />
+        <template v-else-if="parsed">
+          <div v-show="!isMobile">
+            <VamisRoot :schema="parsed" :env="{ trusted: true }" />
+          </div>
+          <DocPhonePreview :schema="parsed" :active="isMobile" />
+        </template>
       </div>
     </section>
 

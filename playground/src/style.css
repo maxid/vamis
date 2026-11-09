@@ -9,6 +9,13 @@ body,
   overflow: hidden;
 }
 
+/* 文档移动预览 iframe：允许内容滚动，不要吃站点「禁止窗口滚动」。 */
+html.is-preview-frame,
+html.is-preview-frame body,
+html.is-preview-frame #app {
+  overflow: auto;
+}
+
 @source "../../packages/**/*.{vue,ts}";
 @source "../../website/src/**/*.md";
 @source "./**/*.{vue,ts}";
@@ -159,6 +166,71 @@ body,
 }
 .doc-play {
   position: relative;
+}
+.doc-play__stage {
+  position: relative;
+}
+.doc-play__canvas--mobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  background: color-mix(in oklch, var(--muted) 40%, var(--background));
+}
+.doc-play__phone {
+  --doc-phone-bezel: #4a4e57;
+  --doc-phone-slot: #2e3238;
+  box-sizing: content-box;
+  width: 375px;
+  max-width: 100%;
+  padding: 12px 10px 14px;
+  border-radius: 36px;
+  background: var(--doc-phone-bezel);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+}
+.dark .doc-play__phone {
+  --doc-phone-bezel: #2a2e36;
+  --doc-phone-slot: #15181d;
+}
+.doc-play__phone.is-parked {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.doc-play__phone-notch {
+  width: 92px;
+  height: 8px;
+  margin: 0 auto 10px;
+  border-radius: 999px;
+  background: var(--doc-phone-slot);
+}
+.doc-play__phone-screen {
+  overflow: hidden;
+  width: 375px;
+  height: 812px;
+  aspect-ratio: 375 / 812;
+  border-radius: 22px;
+  background: var(--background);
+}
+.doc-play__mobile-frame {
+  display: block;
+  width: 375px;
+  height: 812px;
+  border: 0;
+  background: var(--background);
+  opacity: 0;
+}
+.doc-play__mobile-frame.is-ready {
+  opacity: 1;
+}
+.doc-play__phone-home {
+  width: 108px;
+  height: 4px;
+  margin: 10px auto 0;
+  border-radius: 999px;
+  background: var(--doc-phone-slot);
 }
 
 /* 滚动条默认透明，滚动时才显出来，不占布局、不切栏 */

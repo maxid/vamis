@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { VamisRoot, LazyComponent, parseSchemaText } from 'vamis'
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from '@vamis/ui'
 import { applySchemaScope } from '../docs/schema-scope'
+import { withBase } from '../docs/base'
+import { docViewport } from '../docs/doc-viewport'
+import { PREVIEW_FRAME_PATH } from '../docs/preview-frame'
+import DocPhonePreview from './DocPhonePreview.vue'
 import SchemaSourceEditor from './SchemaSourceEditor.vue'
 
 const props = withDefaults(
@@ -18,6 +22,8 @@ const draft = ref(props.yaml.trim())
 const editing = ref(false)
 const lastGood = ref<unknown>({})
 const editError = ref('')
+const rootEl = ref<HTMLElement | null>(null)
+const inView = ref(false)
 
 watch(
   () => props.yaml,
@@ -41,12 +47,41 @@ const parsed = computed(() => {
 })
 
 const minHeight = computed(() => Math.max(160, Number(props.height) || 200))
+const isMobile = computed(() => docViewport.value === 'mobile')
+const phoneActive = computed(() => isMobile.value && inView.value)
 const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.value.error : ''))
+
+function prefetchFrame() {
+  const href = withBase(PREVIEW_FRAME_PATH)
+  if (document.querySelector('link[data-vamis-preview-frame]')) return
+  const link = document.createElement('link')
+  link.rel = 'prefetch'
+  link.as = 'document'
+  link.href = href
+  link.dataset.vamisPreviewFrame = '1'
+  document.head.appendChild(link)
+}
+
+let io: IntersectionObserver | undefined
+
+onMounted(() => {
+  const node = rootEl.value
+  io = new IntersectionObserver(
+    ([entry]) => {
+      if (entry?.isIntersecting) inView.value = true
+    },
+    { rootMargin: '160px 0px' },
+  )
+  if (node) io.observe(node)
+  window.setTimeout(prefetchFrame, 200)
+})
+
+onUnmounted(() => io?.disconnect())
 </script>
 
 <template>
-  <div class="doc-play my-5">
-    <div class="mb-2 flex justify-end">
+  <div ref="rootEl" class="doc-play my-5">
+    <div class="mb-2 flex items-center justify-end gap-2">
       <Button type="button" size="xs" variant="outline" @click="editing = true">
         编辑 Schema
       </Button>
@@ -55,10 +90,17 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
       <div v-if="banner && !editing" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
         {{ banner }}
       </div>
-      <div class="bg-background p-5" :style="{ minHeight: `${minHeight}px` }">
-        <LazyComponent placeholder="加载中，请稍后。。。">
-          <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
-        </LazyComponent>
+      <div
+        class="doc-play__stage"
+        :class="isMobile ? 'doc-play__canvas--mobile' : 'p-5'"
+        :style="isMobile ? undefined : { minHeight: `${minHeight}px` }"
+      >
+        <div v-show="!isMobile">
+          <LazyComponent placeholder="加载中，请稍后。。。">
+            <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
+          </LazyComponent>
+        </div>
+        <DocPhonePreview :schema="parsed.value" :active="phoneActive" />
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">

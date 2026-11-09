@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN" class="is-preview-frame">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>移动端预览</title>
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+        margin: 0;
+        background: #fff;
+      }
+      html.dark,
+      html.dark body,
+      html.dark #app {
+        background: #151b26;
+      }
+    </style>
+    <script>
+      (function () {
+        var q = new URLSearchParams(location.search)
+        var darkParam = q.get('dark')
+        var dark =
+          darkParam === '1' ||
+          (darkParam !== '0' && localStorage.getItem('vamis-theme') === 'dark')
+        document.documentElement.classList.add('is-preview-frame')
+        if (dark) document.documentElement.classList.add('dark')
+        document.documentElement.dataset.density =
+          q.get('density') || localStorage.getItem('vamis-density') || 'compact'
+        document.documentElement.dataset.accent =
+          q.get('accent') || localStorage.getItem('vamis-accent') || 'blue'
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/preview-frame-main.ts"></script>
+  </body>
+</html>

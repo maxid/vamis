@@ -255,6 +255,10 @@ export default defineConfig({
   build: {
     target: 'es2022',
     rollupOptions: {
+      input: {
+        main: path.join(playground, 'index.html'),
+        previewFrame: path.join(playground, 'preview-frame.html'),
+      },
       output: {
         manualChunks(id) {
           const path = id.replace(/\\/g, '/')

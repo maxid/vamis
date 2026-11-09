@@ -4,6 +4,8 @@ import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button } from '@vamis/ui'
 import SiteSearch from './components/SiteSearch.vue'
 import { withBase } from './docs/base'
+import { docViewport, hydrateDocViewport, setDocViewport } from './docs/doc-viewport'
+import { publishPreviewChrome } from './docs/preview-frame'
 
 const GITHUB_REPO = 'https://github.com/maxid/vamis'
 const compareHref = withBase('/sdk/compare.html')
@@ -50,12 +52,14 @@ function applyChrome() {
   document.documentElement.classList.toggle('dark', dark.value)
   document.documentElement.dataset.density = density.value
   document.documentElement.dataset.accent = accent.value
+  publishPreviewChrome()
 }
 
 onMounted(() => {
   dark.value = localStorage.getItem(THEME_KEY) === 'dark'
   density.value = localStorage.getItem(DENSITY_KEY) === 'comfortable' ? 'comfortable' : 'compact'
   accent.value = parseAccent(localStorage.getItem(ACCENT_KEY))
+  hydrateDocViewport()
   applyChrome()
 })
 
@@ -117,6 +121,26 @@ watch([dark, density, accent], () => {
           <div class="flex rounded-md border p-0.5">
             <Button size="xs" :variant="!dark ? 'default' : 'ghost'" @click="dark = false">浅色</Button>
             <Button size="xs" :variant="dark ? 'default' : 'ghost'" @click="dark = true">深色</Button>
+          </div>
+          <div class="flex rounded-md border p-0.5" role="radiogroup" aria-label="预览视口">
+            <Button
+              size="xs"
+              :variant="docViewport === 'desktop' ? 'default' : 'ghost'"
+              role="radio"
+              :aria-checked="docViewport === 'desktop'"
+              @click="setDocViewport('desktop')"
+            >
+              桌面
+            </Button>
+            <Button
+              size="xs"
+              :variant="docViewport === 'mobile' ? 'default' : 'ghost'"
+              role="radio"
+              :aria-checked="docViewport === 'mobile'"
+              @click="setDocViewport('mobile')"
+            >
+              移动
+            </Button>
           </div>
           <nav class="flex gap-2 text-sm">
             <RouterLink to="/" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="docsNavClass()">
