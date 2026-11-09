@@ -60,7 +60,6 @@ const scoped = useScoped()
 const scope = useScope()
 const overlay = useOverlay()
 const form = useFormApi()
-const loading = ref(false)
 const tipOpen = ref(false)
 const triggerEl = ref<HTMLElement | null>(null)
 const inCountDown = ref(false)
@@ -90,7 +89,7 @@ function resolveSchemaIcon(raw: unknown) {
 const icon = computed(() => resolveSchemaIcon(props.schema.icon))
 const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
 const schemaLoading = computed(() => actionSchemaLoading(props.schema, data.value))
-const isLoading = computed(() => loading.value || schemaLoading.value)
+const isLoading = computed(() => schemaLoading.value)
 const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const isDisabled = computed(() => props.disabled === true || inCountDown.value || isLoading.value)
 const tipConfig = computed(() => actionTooltipConfig(props.schema, data.value, isDisabled.value))
@@ -191,7 +190,6 @@ async function onClick(native?: Event) {
   }
   if (isDisabled.value || inCountDown.value) return
   if (native && !(await runSchemaOnClick(native))) return
-  loading.value = true
   const ctx = makeCtx(native)
   try {
     await runOnEvent(props.schema, 'click', ctx)
@@ -201,8 +199,6 @@ async function onClick(native?: Event) {
     }
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '操作失败')
-  } finally {
-    loading.value = false
   }
 }
 

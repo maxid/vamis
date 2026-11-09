@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `input-text` 拉 `source` 的 loading 画在控件右侧：`Spinner icon=reload size=sm`，对齐 Amis。Action 不再在 onClick 里自动转圈（只认 schema `loading` / `loadingOn`），「重新加载」按钮保持原样。
 - `|json` 不再把 `undefined` 编成 `null`：空 `input-text` focus toast 对齐 Amis 空正文（只画图标），不要显示 `null`。真正的 `null` 仍是 `"null"`。写了 `msg` 但公式算出空时也不要回落「提示」。
 - 撤回 `dropdown-button` / `input-text` 窄屏 `VamisPopUp`：对齐 Amis，两者贴触发器走 `VamisOverlay`。`options` 是前缀匹配提示，下拉按钮是就近展开，不是 Select 那种选完才确认的底栏。`dropdown-button` 85% → **80%**。
 - 对照 `dialogOpen` 排除 `.vamis-popup` / `.vamis-date-sheet`（Select 底栏 `role="dialog"` 不要当成 Dialog 效果）。

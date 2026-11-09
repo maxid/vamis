@@ -529,8 +529,14 @@ alwaysApply: true
 ### Spinner 默认用中心对称循环标，宿主复用同一套，祖先 loading 挡住子级
 - 踩过：默认画 CSS 圆环；`icon: reload` / `fa fa-spinner` 当 URL 丢掉；Page / Service 各写「加载中…」或根本不转。又把 Amis `--Spinner-bg` 六边形整段搬进来当品牌。开口 V + SMIL `begin="id.end"` 链式在 Vue 动态 id 下播完就停，而且不是原点对称系统。Amis 是圆心原点裂成 N 点、连线、收回、循环。
 - 稳定做法：默认指示器走 `VamisSpinnerMark`（圆心原点四向裂开成菱形，依次连线再收回）。同一时钟 `dur` + `repeatCount="indefinite"`，不要 `begin` 链式。几何不要抄六边形，也不要开口 V。SVG class 用 `vamis-spinner-v`，不要占用 `.vamis-spinner-mark`（那是互斥定位 span，`opacity: 0`）。色 `currentColor` / `--primary`，不要写死 `#2468F2`。`icon` 空 = 默认标；`reload` 内置线图；含 `.` 当图；否则 class（fa）。父子互斥用共享 `spinnerPushParent` / `spinnerCheckLoading`（祖先 `contains` 子级则子级不画）。`loadingConfig.root` Teleport 且强制 overlay、忽略自定义 icon。Page / Service / 以后 Form Dialog 都挂 `Spinner.vue`，不要再写一套圆环。
-- 触及：`spinner` `page` `service` `select`
+- 触及：`spinner` `page` `service` `select` `input-text`
 - 规则：本文；Amis `amis-ui` `Spinner.tsx` / `_spinner.scss`
+
+### Action 不要在 onClick 里自动转圈；控件 loading 画在控件上
+- 踩过：`reload` 输入框 `source` 时 Vamis 把整段 click 设 `loading=true`，按钮变成 CSS 圆环 +「重新加载」；Amis 按钮不动，InputText 右侧才是 `Spinner icon=reload size=sm`。
+- 稳定做法：Action 只认 schema `loading` / `loadingOn`。`source` / `autoComplete` 的 loading 挂该控件自己的 Spinner（`icon: reload` `size: sm`），不要再画一套 `animate-spin` 圆环，也不要让触发按钮冒充。
+- 触及：`action` `button` `input-text`
+- 规则：本文；Amis `InputText.tsx` Spinner；`Action.tsx` `loading` 来自 props
 
 ### Select 分组检索保树，filterOption 只 trusted
 - 踩过：`filterOptions` 拍扁 `children`，分组检索丢组头。组名命中且 `children` 被滤空时，`children?.length` 为 0，组头变成可选项。`filterOption` 字符串 `Function` 未开 trusted 会当 XSS。

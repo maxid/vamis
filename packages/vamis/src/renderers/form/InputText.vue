@@ -26,6 +26,7 @@ import { controlInputValue, useForm } from '../../formContext'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import FormItem from '../FormItem.vue'
 import IconMark from '../IconMark.vue'
+import Spinner from '../Spinner.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import {
   appendCreatableOption,
@@ -163,6 +164,13 @@ const filteredOptions = computed(() => {
   return appendCreatableOption(filtered, keyword, selectedValues.value, creatable.value, multiple.value)
 })
 const showSuggest = computed(() => suggest.value && open.value && (filteredOptions.value.length || loading.value))
+/** 对齐 Amis InputText：`loading` 时控件右侧 `Spinner icon=reload size=sm`。 */
+const loadingSpinnerSchema = computed(() => ({
+  show: loading.value,
+  icon: 'reload',
+  size: 'sm',
+  spinnerClassName: 'vamis-text-control__spinner',
+}))
 const inputControlClass = computed(() =>
   cn(
     'vamis-text-control__input',
@@ -581,6 +589,7 @@ watch(
           :class="{ 'is-over': counterOver }"
         >{{ counterText }}</span>
         <span v-if="suffixText" class="vamis-text-control__affix vamis-text-control__suffix">{{ suffixText }}</span>
+        <Spinner :schema="loadingSpinnerSchema" />
       </div>
       <VamisOverlay
         :show="showSuggest"

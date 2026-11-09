@@ -1322,6 +1322,15 @@
   .vamis-text-control .vamis-select__clear {
     margin-left: 4px;
   }
+  /* Amis TextControl 右侧 Spinner sm（16px reload），不要撑开行高。 */
+  .vamis-text-control .vamis-spinner {
+    flex: 0 0 auto;
+    margin-left: 4px;
+    line-height: 0;
+  }
+  .vamis-text-control__spinner {
+    display: block;
+  }
   .vamis-text-control__chip-remove:hover,
   .vamis-text-control__reveal:hover {
     color: var(--foreground);
