@@ -2,7 +2,9 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
   SchemaRenderer,
-  actionTooltip,
+  actionTooltipRootClose,
+  actionTooltipTriggers,
+  dropdownButtonTooltipConfig,
   filterTpl,
   iconVendor,
   overlayContainerFrom,
@@ -15,6 +17,9 @@ import {
   dropdownButtonHideCaret,
   dropdownButtonItems,
   dropdownButtonTrigger,
+  tooltipEnterable,
+  tooltipMouseEnterDelay,
+  tooltipMouseLeaveDelay,
   useData,
   useEnv,
   type SchemaObject,
@@ -22,12 +27,14 @@ import {
 import { Button, VamisCaret, levelToVariant, sizeToButtonSize } from '@vamis/ui'
 import IconMark from '../IconMark.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
+import VamisTooltipLayer from '../../overlay/VamisTooltipLayer.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const data = useData()
 const env = useEnv()
 const root = ref<HTMLElement | null>(null)
 const open = ref(props.schema.defaultIsOpened === true)
+const tipOpen = ref(false)
 const items = computed(() => dropdownButtonItems(props.schema, data.value))
 const trigger = computed(() => dropdownButtonTrigger(props.schema))
 const hideCaret = computed(() => dropdownButtonHideCaret(props.schema))
@@ -38,6 +45,10 @@ const overlayPlacement = computed(() =>
 )
 const mobileMenu = computed(() => overlayIsMobile(props.schema, env))
 const menuWidth = ref(0)
+const tipConfig = computed(() => dropdownButtonTooltipConfig(props.schema, data.value, props.disabled === true))
+const hasTip = computed(() => !!tipConfig.value)
+const tipTriggers = computed(() => actionTooltipTriggers(tipConfig.value))
+const tipEnterable = computed(() => (tipConfig.value ? tooltipEnterable(tipConfig.value) : false))
 provideDropdownMenuItem()
 watch(open, async (shown) => {
   if (!shown) return
@@ -51,7 +62,6 @@ const label = computed(() => {
   if (typeof rec.title === 'string') return filterTpl(rec.title, data.value)
   return '下拉菜单'
 })
-const tooltip = computed(() => actionTooltip(props.schema, data.value))
 function resolveSchemaIcon(raw: unknown) {
   const value = typeof raw === 'string' ? filterTpl(raw, data.value) : raw
   return resolveIcon(value, { vendor: iconVendor(props.schema) })
@@ -61,6 +71,8 @@ const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
 const showLabel = computed(() => props.schema.iconOnly !== true && props.schema.label !== false && props.schema.label !== '')
 
 let hoverTimer: ReturnType<typeof setTimeout> | undefined
+let tipEnterTimer: ReturnType<typeof setTimeout> | null = null
+let tipLeaveTimer: ReturnType<typeof setTimeout> | null = null
 function clearHoverTimer() {
   if (hoverTimer) {
     clearTimeout(hoverTimer)
@@ -79,15 +91,72 @@ function onToggle() {
 }
 
 function onHoverEnter() {
+  if (tipTriggers.value.includes('hover')) showTip()
   if (trigger.value !== 'hover') return
   clearHoverTimer()
   setOpen(true)
 }
 
 function onHoverLeave() {
+  if (tipTriggers.value.includes('hover')) hideTip()
   if (trigger.value !== 'hover') return
   clearHoverTimer()
   hoverTimer = setTimeout(() => setOpen(false), 80)
+}
+
+function onFocusIn() {
+  if (tipTriggers.value.includes('focus')) showTip()
+}
+
+function onFocusOut() {
+  if (tipTriggers.value.includes('focus')) hideTip()
+}
+
+function clearTipTimers() {
+  if (tipEnterTimer) clearTimeout(tipEnterTimer)
+  if (tipLeaveTimer) clearTimeout(tipLeaveTimer)
+  tipEnterTimer = null
+  tipLeaveTimer = null
+}
+
+function showTip() {
+  if (!hasTip.value) return
+  clearTipTimers()
+  const wait = tooltipMouseEnterDelay(tipConfig.value)
+  if (!wait) {
+    tipOpen.value = true
+    return
+  }
+  tipEnterTimer = setTimeout(() => {
+    tipOpen.value = true
+  }, wait)
+}
+
+function hideTip(immediate = false) {
+  clearTipTimers()
+  const wait = immediate ? 0 : tooltipMouseLeaveDelay(tipConfig.value)
+  if (!wait) {
+    tipOpen.value = false
+    return
+  }
+  tipLeaveTimer = setTimeout(() => {
+    tipOpen.value = false
+  }, wait)
+}
+
+function onTipOutside() {
+  if (actionTooltipRootClose(tipConfig.value)) hideTip(true)
+}
+
+function onTipLayerEnter() {
+  if (!tipEnterable.value) return
+  clearTipTimers()
+  tipOpen.value = true
+}
+
+function onTipLayerLeave() {
+  if (!tipEnterable.value) return
+  if (tipTriggers.value.includes('hover')) hideTip()
 }
 
 function onMenuClick() {
@@ -100,6 +169,7 @@ function onOutside() {
 
 onBeforeUnmount(() => {
   clearHoverTimer()
+  clearTipTimers()
 })
 </script>
 
@@ -111,13 +181,14 @@ onBeforeUnmount(() => {
     :class="schema.block === true ? 'w-full' : ''"
     @mouseenter="onHoverEnter"
     @mouseleave="onHoverLeave"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <Button
       type="button"
       :variant="levelToVariant(schema.level)"
       :size="sizeToButtonSize(schema.size, schema.iconOnly === true)"
       :disabled="disabled"
-      :title="tooltip || undefined"
       :class="schema.block === true ? 'w-full' : undefined"
       @click="onToggle"
     >
@@ -169,5 +240,16 @@ onBeforeUnmount(() => {
         </template>
       </ul>
     </VamisOverlay>
+    <VamisTooltipLayer
+      v-if="tipConfig"
+      :show="hasTip && tipOpen"
+      :target="root"
+      :container="overlayContainer"
+      :tooltip="tipConfig"
+      :data="data"
+      @outside="onTipOutside"
+      @enter="onTipLayerEnter"
+      @leave="onTipLayerLeave"
+    />
   </div>
 </template>

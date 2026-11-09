@@ -8,6 +8,7 @@ import {
   dropdownButtonCloseOnOutside,
   dropdownButtonHideCaret,
   dropdownButtonItems,
+  dropdownButtonTooltipConfig,
   dropdownButtonTrigger,
   provideDropdownMenuItem,
   useDropdownMenuItem,
@@ -38,6 +39,9 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(vue).toContain('provideDropdownMenuItem')
     expect(vue).toContain('vamis-dropdown-menu')
     expect(vue).toContain('vamis-dropdown-item')
+    expect(vue).toContain('VamisTooltipLayer')
+    expect(vue).toContain('dropdownButtonTooltipConfig')
+    expect(vue).not.toContain(':title="tooltip')
     expect(vue).not.toContain('bg-popover')
     expect(vue).not.toContain('border-t-[4px]')
     expect(vue).not.toContain('absolute z-40')
@@ -47,6 +51,15 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(css).toContain('.vamis-dropdown-item.is-disabled')
     expect(css).toContain('filter: grayscale(80%)')
     expect(css).not.toMatch(/\.vamis-dropdown-menu[^{]*bg-popover/)
+  })
+})
+
+describe('dropdownButtonTooltipConfig', () => {
+  it('reads tooltip / placement / disabledTip like Amis TooltipWrapper', () => {
+    expect(dropdownButtonTooltipConfig({ tooltip: '提示' })?.content).toBe('提示')
+    expect(dropdownButtonTooltipConfig({ tooltip: '提示', placement: 'bottom' })?.placement).toBe('bottom')
+    expect(dropdownButtonTooltipConfig({ tooltip: '提示' }, {}, true)).toBeNull()
+    expect(dropdownButtonTooltipConfig({ tooltip: '提示', disabledTip: '禁用了' }, {}, true)?.content).toBe('禁用了')
   })
 })
 

@@ -5,8 +5,8 @@ outline: deep
 
 # DropDownButton 下拉按钮
 
-::: info 实现进度 85% · 进行中
-文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`。菜单是 `ul>li` 列表项（`isMenuItem`），贴触发器走 `VamisOverlay`（窄屏也是）。缺菜单进出动画。
+::: info 实现进度 88% · 进行中
+文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`、`tooltip` / `placement` / `disabledTip`。菜单是 `ul>li` 列表项（`isMenuItem`），贴触发器走 `VamisOverlay`（窄屏也是）。`tooltip` 走同一套浮层（不要原生 `title`）。缺菜单进出动画。
 :::
 
 点击（或悬停）展开更多按钮。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -96,7 +96,7 @@ buttons:
 
 ## 只显示图标
 
-`hideCaret` 藏三角。`icon` 含 `/` 当图片；fa 字体未接。`tooltip` 目前落到原生 `title`。
+`hideCaret` 藏三角。`icon` 含 `/` 当图片。`tooltip` 走 `VamisOverlay` 文字提示（默认 hover / focus，`placement` 默认 top；主轴放不下翻对面，箭头跟着走）。
 
 ```schema: scope="body"
 {
@@ -128,6 +128,11 @@ buttons:
 | hideCaret | `boolean` | `false` | 隐藏下拉三角 |
 | iconOnly | `boolean` | | 只显示 icon |
 | icon / rightIcon | `string` | | 含 `/` 当图片 |
+| tooltip | `string` / `TooltipObject` | | 按钮提示。禁用时只认 `disabledTip` |
+| disabledTip | `string` / `TooltipObject` | | 禁用时的提示 |
+| placement | `top` / `right` / `bottom` / `left` | `top` | 提示位置；主轴放不下翻对面，箭头 class 跟实际边 |
+| tooltipTrigger | `hover` / `focus` / `click` | `hover` + `focus` | 提示触发 |
+| tooltipRootClose | `boolean` | `false` | 点外侧关提示 |
 
 ## 事件表
 
@@ -140,4 +145,4 @@ buttons:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 未接菜单进出动画。菜单贴触发器走 `VamisOverlay`（窄屏也是），不要接到 `VamisPopUp`。
+- 未接菜单进出动画。菜单贴触发器走 `VamisOverlay`（窄屏也是），不要接到 `VamisPopUp`。`tooltip` 不是原生 `title`。

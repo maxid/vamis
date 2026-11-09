@@ -362,10 +362,16 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --badge-*`
 
 ### 弹层翻转共用 overlayPosition，禁止各写一套
-- 踩过：单个渲染器「不够高就往上」；贴底时与 Amis `placement: auto` 不一致。
-- 稳定做法：所有 `VamisOverlay` 走 `overlayPosition`。试探：下左 → 下右 → 上左 → 上右；都放不下则看不见的轴平移进视口，边距 10px。传入实测宽高，paint 后与 ResizeObserver 重算。
-- 触及：`input-date` 及所有 `VamisOverlay`
+- 踩过：单个渲染器「不够高就往上」；贴底时与 Amis `placement: auto` 不一致。Tooltip 把 `top` 编成单条 hyphen 后走 auto 兜底，箭头还挂着 `--top`。又曾把对面翻层整段撤掉，窄视口又裁切在指定边。
+- 稳定做法：所有 `VamisOverlay` 走 `overlayPosition`。下拉 `auto`：下左 → 下右 → 上左 → 上右；都放不下则看不见的轴平移进视口，边距 10px。Tooltip 传 `top|bottom|left|right`，先指定边、主轴放不下翻对面，`vamis-tooltip--*` 跟 `overlayTooltipSide`。不要再撤掉这套翻层。传入实测宽高，paint 后与 ResizeObserver 重算。
+- 触及：`input-date` `tooltip-wrapper` `action` `dropdown-button` `remark` 及所有 `VamisOverlay`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### DropDownButton tooltip 走浮层，不要原生 title
+- 踩过：`tooltip: 提示` 写到 button `title`，对照页看不到 Amis 那种 Overlay Tooltip，点下去还把菜单撑开。
+- 稳定做法：Amis 是按钮外包 `TooltipWrapper`（默认 hover/focus，`placement` 不是 Action 的 `tooltipPlacement`）。Vamis 用 `dropdownButtonTooltipConfig` + `VamisTooltipLayer`。禁用只认 `disabledTip`。
+- 触及：`dropdown-button`
+- 规则：本文；Amis `DropDownButton.tsx` `TooltipWrapper`
 
 ### z-index 用 token，不要用 Tailwind 档冒充
 - 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
@@ -503,7 +509,7 @@ alwaysApply: true
 
 ### 对照 /sdk 必须带 Content-Length + 缓存，不能对流式 gzip
 - 踩过：同样手机网上 Amis 约 3s、Vamis 每次约 40s。Amis 走 unpkg 长缓存；Vamis 经 Vite 每次把 2MB 级 css/js 重新传。流式 `createGzip()` 没有 Content-Length，部分 WebView 等连接结束才触发 stylesheet load。
-- 稳定做法：`gzipSync` 按 mtime 缓存并写 `Content-Length`。开发机 `sdk.css` / `sdk.js` **不能**一年 immutable（URL 无版本，`sdk:build` 后手机会吃旧包）。用 `no-cache` + ETag：没改 304，改了才拉新。带 hash 的 `assets/` 才 `immutable`。Amis 能一年缓存是因为 unpkg URL 带 `@6.13.0`。
+- 稳定做法：`gzipSync` 按 mtime 缓存并写 `Content-Length`。开发机 `sdk.css` / `sdk.js` **不能**一年 immutable（URL 无版本，`sdk:build` 后手机会吃旧包）。用 `no-cache` + ETag：没改 304，改了才拉新。带 hash 的 `assets/` 才 `immutable`。Amis 能一年缓存是因为 unpkg URL 带 `@6.13.0`。`sdk.js` 是 loader，真正运行时是 `sdk.esm.js`；`new URL('./sdk.esm.js', src)` 会丢掉 `?v=`，必须把 searchParams 抄到 esm，否则对照 iframe 仍吃旧翻层逻辑。
 
 - 触及：对照 `embed-case`
 - 规则：本文；`playground/vite.config.ts` `serveSdk`

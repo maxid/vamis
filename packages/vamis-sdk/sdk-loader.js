@@ -91,7 +91,17 @@
   }
 
   var src = document.currentScript && document.currentScript.src
-  var esm = src ? new URL('./sdk.esm.js', src).href : './sdk.esm.js'
+  var esmUrl = src ? new URL('./sdk.esm.js', src) : null
+  if (esmUrl && src) {
+    try {
+      new URL(src).searchParams.forEach(function (value, key) {
+        esmUrl.searchParams.set(key, value)
+      })
+    } catch (_err) {
+      /* ignore */
+    }
+  }
+  var esm = esmUrl ? esmUrl.href : './sdk.esm.js'
   var preload = document.createElement('link')
   preload.rel = 'modulepreload'
   preload.href = esm

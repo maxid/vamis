@@ -66,7 +66,7 @@ export function overlayIsMobile(
   return window.matchMedia('(max-width: 768px)').matches
 }
 
-export type OverlayCoords = { top: number; left: number }
+export type OverlayCoords = { top: number; left: number; activePlacement: string }
 
 /**
  * Amis Overlay `placement: auto` 试探顺序（DatePicker 默认）。
@@ -78,6 +78,28 @@ export const OVERLAY_AUTO_PLACEMENTS = [
   'left-top-left-bottom',
   'right-top-right-bottom',
 ] as const
+
+/**
+ * Tooltip / 指定边 PopOver：`placement: top | bottom | left | right`。
+ * 先试指定边，主轴放不下再翻对面（top↔bottom、left↔right），箭头 class 跟实际边。
+ * 不要编成单条 hyphen 再走 auto 四向兜底（会滑到视口底、箭头还挂着 `--top`）。
+ */
+export const OVERLAY_SIDE_TESTS: Record<'top' | 'bottom' | 'left' | 'right', [string, string]> = {
+  top: ['center-top-center-bottom', 'center-bottom-center-top'],
+  bottom: ['center-bottom-center-top', 'center-top-center-bottom'],
+  left: ['left-center-right-center', 'right-center-left-center'],
+  right: ['right-center-left-center', 'left-center-right-center'],
+}
+
+export function overlayTooltipSide(active: string): 'top' | 'bottom' | 'left' | 'right' {
+  if (active === 'top' || active === 'bottom' || active === 'left' || active === 'right') return active
+  const [atX, atY, myX = atX, myY = atY] = active.split('-')
+  if (atY === 'top' && myY === 'bottom') return 'top'
+  if (atY === 'bottom' && myY === 'top') return 'bottom'
+  if (atX === 'left' && myX === 'right') return 'left'
+  if (atX === 'right' && myX === 'left') return 'right'
+  return 'top'
+}
 
 /** Amis `PopOver--v-top { margin-top: 4px }` / `--v-bottom { margin-bottom: 4px }`。auto 只上下翻。 */
 export const OVERLAY_POPOVER_GAP = 4
@@ -120,7 +142,7 @@ function coordsForPlacement(
   overlayW: number,
   overlayH: number,
   gap: number,
-): OverlayCoords {
+): { top: number; left: number } {
   const [atX, atY, myX = atX, myY = atY] = placement.split('-')
   let left = anchor(atX, child.left, child.width) - overlayOffset(myX, overlayW)
   let top = anchor(atY, child.top, child.height) - overlayOffset(myY, overlayH)
@@ -129,6 +151,29 @@ function coordsForPlacement(
   else if (myX === 'left') left += gap
   else if (myX === 'right') left -= gap
   return { top, left }
+}
+
+function clampOrthogonal(
+  coords: { top: number; left: number },
+  side: 'top' | 'bottom' | 'left' | 'right',
+  overlayW: number,
+  overlayH: number,
+  viewW: number,
+  viewH: number,
+  scrollX: number,
+  scrollY: number,
+): { top: number; left: number } {
+  const next = { ...coords }
+  if (side === 'top' || side === 'bottom') {
+    const x = next.left - scrollX
+    if (overlayW && x < 10) next.left = scrollX + 10
+    else if (overlayW && x + overlayW > viewW - 10) next.left = scrollX + Math.max(10, viewW - overlayW - 10)
+  } else {
+    const y = next.top - scrollY
+    if (overlayH && y < 10) next.top = scrollY + 10
+    else if (overlayH && y + overlayH > viewH - 10) next.top = scrollY + Math.max(10, viewH - overlayH - 10)
+  }
+  return next
 }
 
 function fullyVisible(coords: OverlayCoords, overlayW: number, overlayH: number, viewW: number, viewH: number, scrollX: number, scrollY: number) {
@@ -158,20 +203,26 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
   const ox = Number(opts?.offset?.[0]) || 0
   const oy = Number(opts?.offset?.[1]) || 0
   const shift = (c: OverlayCoords): OverlayCoords =>
-    ox || oy ? { top: c.top + oy, left: c.left + ox } : c
+    ox || oy ? { ...c, top: c.top + oy, left: c.left + ox } : c
 
   const placement = opts?.placement && opts.placement !== 'auto' ? opts.placement : 'auto'
-  const tests =
-    placement === 'auto'
-      ? [...OVERLAY_AUTO_PLACEMENTS]
+  const isAuto = placement === 'auto'
+  const sideTests = placement === 'top' || placement === 'bottom' || placement === 'left' || placement === 'right'
+    ? OVERLAY_SIDE_TESTS[placement]
+    : null
+  const tests = isAuto
+    ? [...OVERLAY_AUTO_PLACEMENTS]
+    : sideTests
+      ? [...sideTests]
       : placement.split(/\s+/).filter(Boolean)
+  const preferred = tests[0] || OVERLAY_AUTO_PLACEMENTS[0]
 
   let visible: { atX?: string; atY?: string; myX?: string; myY?: string } = {}
-  let coords: OverlayCoords = coordsForPlacement(tests[0] || OVERLAY_AUTO_PLACEMENTS[0], child, overlayW, overlayH, gap)
+  let coords: OverlayCoords = { ...coordsForPlacement(preferred, child, overlayW, overlayH, gap), activePlacement: preferred }
 
   for (let i = 0; i < tests.length; i += 1) {
     const current = tests[i]
-    coords = coordsForPlacement(current, child, overlayW, overlayH, gap)
+    coords = { ...coordsForPlacement(current, child, overlayW, overlayH, gap), activePlacement: current }
     const { visibleX, visibleY, ok } = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
     const [atX, atY, myX = atX, myY = atY] = current.split('-')
     if (visibleX) {
@@ -182,10 +233,32 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
       visible.atY ??= atY
       visible.myY ??= myY
     }
-    if (ok) return shift(coords)
+    if (sideTests) {
+      const side = overlayTooltipSide(current)
+      const primaryOk = side === 'top' || side === 'bottom' ? visibleY : visibleX
+      if (primaryOk) {
+        coords = {
+          ...clampOrthogonal(coords, side, overlayW, overlayH, viewW, viewH, scrollX, scrollY),
+          activePlacement: current,
+        }
+        return shift(coords)
+      }
+    } else if (ok) {
+      return shift(coords)
+    }
 
     const last = i === tests.length - 1
     if (!last) continue
+
+    if (sideTests) {
+      const side = overlayTooltipSide(preferred)
+      const raw = coordsForPlacement(preferred, child, overlayW, overlayH, gap)
+      coords = {
+        ...clampOrthogonal(raw, side, overlayW, overlayH, viewW, viewH, scrollX, scrollY),
+        activePlacement: preferred,
+      }
+      return shift(coords)
+    }
 
     const fallback = [
       visible.atX || 'left',
@@ -193,7 +266,7 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
       visible.myX || 'left',
       visible.myY || 'top',
     ].join('-')
-    coords = coordsForPlacement(fallback, child, overlayW, overlayH, gap)
+    coords = { ...coordsForPlacement(fallback, child, overlayW, overlayH, gap), activePlacement: fallback }
     const still = fullyVisible(coords, overlayW, overlayH, viewW, viewH, scrollX, scrollY)
     if (still.ok) return shift(coords)
     const triggerOnScreen = r.bottom > 0 && r.top < viewH && r.right > 0 && r.left < viewW

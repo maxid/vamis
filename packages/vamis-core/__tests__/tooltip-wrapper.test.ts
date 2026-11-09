@@ -104,6 +104,9 @@ describe('tooltip-wrapper overlay', () => {
     )
     expect(layer).toContain('TOOLTIP_OVERLAY_GAP')
     expect(layer).toContain('v-html="content"')
+    expect(layer).toContain('v-slot="{ placement: overlaySide }"')
+    expect(layer).toContain('vamis-tooltip--${overlaySide || place}')
+    expect(layer).not.toContain('ACTION_TOOLTIP_OVERLAY')
     const css = readFileSync(
       join(dirname(fileURLToPath(import.meta.url)), '../../vamis-ui/src/styles.css'),
       'utf8',

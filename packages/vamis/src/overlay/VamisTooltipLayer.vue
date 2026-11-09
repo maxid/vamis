@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
-  ACTION_TOOLTIP_OVERLAY,
   TOOLTIP_OVERLAY_GAP,
   resolveClassName,
   resolveInlineStyle,
@@ -36,7 +35,7 @@ const offset = computed(() => tooltipOffset(props.tooltip))
 const place = computed(() => tooltipPlacement(props.tooltip))
 const overlayPlacement = computed(() => {
   if (String(props.tooltip.placement || '') === 'auto') return 'auto'
-  return ACTION_TOOLTIP_OVERLAY[place.value]
+  return place.value
 })
 const extraClass = computed(() => resolveClassName(props.tooltip.tooltipClassName, bag.value))
 const bodyClass = computed(() => resolveClassName(props.tooltip.tooltipBodyClassName, bag.value))
@@ -60,13 +59,14 @@ const layerClass = computed(() =>
     :offset="offset"
     :layer-class="layerClass"
     @outside="emit('outside')"
+    v-slot="{ placement: overlaySide }"
   >
     <div
       role="tooltip"
       class="vamis-tooltip"
-      :class="[dark ? 'vamis-tooltip--dark' : 'vamis-tooltip--light', `vamis-tooltip--${place}`]"
+      :class="[dark ? 'vamis-tooltip--dark' : 'vamis-tooltip--light', `vamis-tooltip--${overlaySide || place}`]"
       :style="extraStyle"
-      :data-place="place"
+      :data-place="overlaySide || place"
       @mouseenter="enterable && emit('enter')"
       @mouseleave="enterable && emit('leave')"
     >

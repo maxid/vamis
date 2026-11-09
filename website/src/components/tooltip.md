@@ -75,7 +75,7 @@ outline: deep
 
 ## 提示位置
 
-提供四种不同方向的展示方式：`'top' | 'left' | 'right' | 'bottom'`。
+提供四种不同方向的展示方式：`'top' | 'left' | 'right' | 'bottom'`。主轴放不下时翻到对面，箭头 class 跟实际边走。
 
 ```schema: scope="body"
 {

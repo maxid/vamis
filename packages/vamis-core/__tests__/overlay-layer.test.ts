@@ -5,9 +5,11 @@ import { describe, expect, it } from 'vitest'
 import {
   OVERLAY_AUTO_PLACEMENTS,
   OVERLAY_POPOVER_GAP,
+  OVERLAY_SIDE_TESTS,
   overlayContainerFrom,
   overlayIsMobile,
   overlayPosition,
+  overlayTooltipSide,
   resolveOverlayContainer,
   Z_INDEX,
 } from '../src/utils/overlay-layer'
@@ -46,7 +48,7 @@ describe('overlay-layer', () => {
     } as HTMLElement
     stubViewport({ scrollY: 100, scrollX: 5, innerWidth: 1280, innerHeight: 800 })
     expect(OVERLAY_POPOVER_GAP).toBe(4)
-    expect(overlayPosition(target)).toEqual({ top: 144, left: 25 })
+    expect(overlayPosition(target)).toMatchObject({ top: 144, left: 25 })
     expect(OVERLAY_AUTO_PLACEMENTS).toEqual([
       'left-bottom-left-top',
       'right-bottom-right-top',
@@ -63,31 +65,31 @@ describe('overlay-layer', () => {
       getBoundingClientRect: () => ({ top: 10, bottom: 40, left: 20, right: 120, width: 100, height: 30 }),
     } as HTMLElement
     stubViewport({ scrollY: 100, scrollX: 5, innerWidth: 1280, innerHeight: 800 })
-    expect(overlayPosition(target, { gap: 2 })).toEqual({ top: 142, left: 25 })
+    expect(overlayPosition(target, { gap: 2 })).toMatchObject({ top: 142, left: 25 })
   })
 
   it('keeps auto placement below-left when the viewport has room', () => {
     const target = rect(40, 20, 200, 32)
     stubViewport({ scrollY: 80, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
-    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 154, left: 20 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toMatchObject({ top: 154, left: 20 })
   })
 
   it('flips above-left when remaining viewport below the trigger is shorter than the layer', () => {
     const target = rect(400, 20, 200, 32)
     stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 500 })
-    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 106, left: 20 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toMatchObject({ top: 106, left: 20 })
   })
 
   it('tries below-right before flipping when the layer overflows the right edge', () => {
     const target = rect(40, 1100, 160, 32)
     stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
-    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 74, left: 1018 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toMatchObject({ top: 74, left: 1018 })
   })
 
   it('clamps 10px from the viewport when no auto direction fully fits', () => {
     const target = rect(40, 20, 100, 32)
     stubViewport({ scrollY: 50, scrollX: 0, innerWidth: 200, innerHeight: 120 })
-    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toEqual({ top: 50, left: 10 })
+    expect(overlayPosition(target, { gap: 2, width: 242, height: 292 })).toMatchObject({ top: 50, left: 10 })
   })
 
   it('follows an off-screen trigger instead of pinning to the viewport bottom', () => {
@@ -164,11 +166,11 @@ describe('overlay-layer', () => {
   it('places a top / right tooltip with side gap', () => {
     const target = rect(40, 20, 200, 32)
     stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
-    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'center-top-center-bottom' })).toEqual({
+    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'center-top-center-bottom' })).toMatchObject({
       top: 2,
       left: 70,
     })
-    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'right-center-left-center' })).toEqual({
+    expect(overlayPosition(target, { gap: 8, width: 100, height: 30, placement: 'right-center-left-center' })).toMatchObject({
       top: 41,
       left: 228,
     })
@@ -180,7 +182,32 @@ describe('overlay-layer', () => {
         placement: 'center-top-center-bottom',
         offset: [10, -4],
       }),
-    ).toEqual({ top: -2, left: 80 })
+    ).toMatchObject({ top: -2, left: 80 })
+  })
+
+  it('flips tooltip to the opposite side when the requested placement does not fit', () => {
+    expect(OVERLAY_SIDE_TESTS.top).toEqual(['center-top-center-bottom', 'center-bottom-center-top'])
+    expect(overlayTooltipSide('center-top-center-bottom')).toBe('top')
+    expect(overlayTooltipSide('center-bottom-center-top')).toBe('bottom')
+    expect(overlayTooltipSide('left-center-right-center')).toBe('left')
+    expect(overlayTooltipSide('right-center-left-center')).toBe('right')
+    stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 800, innerHeight: 400 })
+    const room = overlayPosition(rect(80, 100, 80, 24), { gap: 6, width: 80, height: 40, placement: 'top' })
+    expect(overlayTooltipSide(room.activePlacement)).toBe('top')
+    expect(room.top).toBe(34)
+    const flipY = overlayPosition(rect(10, 100, 80, 24), { gap: 6, width: 80, height: 40, placement: 'top' })
+    expect(overlayTooltipSide(flipY.activePlacement)).toBe('bottom')
+    expect(flipY.top).toBe(40)
+    const flipX = overlayPosition(rect(100, 8, 80, 24), { gap: 6, width: 120, height: 32, placement: 'left' })
+    expect(overlayTooltipSide(flipX.activePlacement)).toBe('right')
+  })
+
+  it('sdk-loader forwards cache query onto sdk.esm.js', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const loader = readFileSync(resolve(here, '../../vamis-sdk/sdk-loader.js'), 'utf8')
+    expect(loader).toContain("new URL('./sdk.esm.js', src)")
+    expect(loader).toContain('searchParams.forEach')
+    expect(loader).toContain('esmUrl.searchParams.set')
   })
 
   it('VamisOverlay feeds overlay size into auto placement', () => {
@@ -189,6 +216,7 @@ describe('overlay-layer', () => {
     expect(vue).toContain('height: layer?.offsetHeight')
     expect(vue).toContain('OVERLAY_POPOVER_GAP')
     expect(vue).toContain("placement: 'auto'")
+    expect(vue).toContain('overlayTooltipSide')
     expect(vue).toContain('ResizeObserver')
     expect(vue).toContain('targetObserver')
     expect(vue).toContain("visibility: ready ? 'visible' : 'hidden'")

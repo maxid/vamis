@@ -3,6 +3,7 @@
 import { inject, provide, type InjectionKey } from 'vue'
 import { isVisible } from '../formula'
 import type { SchemaObject } from '../types'
+import { actionTooltipConfig } from './action'
 
 /** 菜单里的 Action 走 `isMenuItem`：渲染 `<a>`，不要完整 Button。 */
 export const DropdownMenuItemKey: InjectionKey<boolean> = Symbol('vamis-dropdown-menu-item')
@@ -45,6 +46,17 @@ export function dropdownButtonHideCaret(schema: unknown): boolean {
 
 export function dropdownButtonAlign(schema: unknown): 'left' | 'right' {
   return asRecord(schema).align === 'right' ? 'right' : 'left'
+}
+
+/** Amis DropDownButton 用 `placement` 给 TooltipWrapper，不是 Action 的 `tooltipPlacement`。 */
+export function dropdownButtonTooltipConfig(
+  schema: unknown,
+  data: Record<string, unknown> = {},
+  disabled = false,
+): Record<string, unknown> | null {
+  const rec = asRecord(schema)
+  const placement = rec.tooltipPlacement ?? rec.placement
+  return actionTooltipConfig(placement != null ? { ...rec, tooltipPlacement: placement } : rec, data, disabled)
 }
 
 function mapItem(raw: unknown, data: Record<string, unknown>): DropdownButtonItem | null {

@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
   OVERLAY_POPOVER_GAP,
   overlayPosition,
+  overlayTooltipSide,
   resolveOverlayContainer,
   type OverlayContainer,
 } from '@vamis/core'
@@ -24,6 +25,8 @@ const emit = defineEmits<{ outside: []; placed: [] }>()
 
 const layerEl = ref<HTMLElement | null>(null)
 const coords = ref({ top: 0, left: 0 })
+const activePlacement = ref('')
+const tooltipSide = computed(() => overlayTooltipSide(activePlacement.value || props.placement || ''))
 const ready = ref(false)
 const to = computed(() => resolveOverlayContainer(props.container))
 let layerObserver: ResizeObserver | null = null
@@ -33,13 +36,15 @@ function place() {
   const el = props.target
   if (!el) return false
   const layer = layerEl.value
-  coords.value = overlayPosition(el, {
+  const pos = overlayPosition(el, {
     gap: props.gap,
     width: layer?.offsetWidth,
     height: layer?.offsetHeight,
     placement: props.placement,
     offset: props.offset,
   })
+  coords.value = { top: pos.top, left: pos.left }
+  activePlacement.value = pos.activePlacement
   return true
 }
 
@@ -122,7 +127,7 @@ onBeforeUnmount(() => {
       :style="{ top: `${coords.top}px`, left: `${coords.left}px`, visibility: ready ? 'visible' : 'hidden' }"
       @mousedown.stop
     >
-      <slot />
+      <slot :placement="tooltipSide" :active-placement="activePlacement" />
     </div>
   </Teleport>
 </template>

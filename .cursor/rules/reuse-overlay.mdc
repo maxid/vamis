@@ -69,6 +69,8 @@ Vamis 入口（不要再新开月历）：
 
 四个方向都不能完全落在视口内时：能看见的轴保留，看不见的轴把浮层平移进视口，边距 **10px**（Amis 兜底）。实现：`overlayPosition`（需传入实测 `width` / `height`）；`VamisOverlay` 在 paint 后与 `ResizeObserver` 里重算。
 
+**Tooltip** 的 `placement` 是 `top | bottom | left | right`（不是 auto 四向）。先试指定边，主轴放不下再翻**对面**（top↔bottom、left↔right），正交轴不够再平移。`vamis-tooltip--*` 和箭头必须跟 `overlayTooltipSide(activePlacement)` 走。禁止把 `top` 编成单条 hyphen 再走 auto 兜底（会滑到视口底、箭头还挂着 `--top`）。不要再把对面翻层撤掉。
+
 禁止：只按 `bottom + gap` 往下开；在单个渲染器里复制翻转分支。
 
 ## 下拉 PopOver 间距
