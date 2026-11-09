@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { Input } from '@vamis/ui'
+import FilterInput from './FilterInput.vue'
 import type { SideGroup } from '../docs/sidebar'
 
 const props = defineProps<{
@@ -65,7 +65,7 @@ function isActive(link: string) {
 
 <template>
   <div class="flex h-full min-h-0 flex-col gap-3">
-    <Input v-model="filter" class="h-8" placeholder="筛选文档 / 组件" />
+    <FilterInput v-model="filter" class="h-8" placeholder="筛选文档 / 组件" />
     <nav v-auto-hide-scroll class="min-h-0 flex-1 overflow-auto pr-1 text-sm">
       <template v-for="group in visible" :key="group.link || group.text">
         <div v-if="isFlat(group) && group.link" class="mb-1">

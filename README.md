@@ -66,7 +66,7 @@ pnpm test
 
 ## GitHub Pages
 
-Playground（`/` 文档 + `/components` + `/style` + `/examples` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。
+Playground（`/` 文档 + `/components` + `/style` + `/examples` + `/editor`）可静态发布到 https://maxid.github.io/vamis/ 。国内访问 github.io 往往偏慢，站点默认桌面、不预拉移动预览 iframe；切「移动」才加载。
 
 第一次需要在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。之后推 `main` 或手动跑 workflow `Deploy playground to GitHub Pages`。
 

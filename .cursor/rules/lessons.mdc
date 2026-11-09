@@ -48,6 +48,12 @@ alwaysApply: true
 - 触及：文档移动预览
 - 规则：`.cursor/rules/site.mdc`；`playground/src/preview-frame.css`
 
+### 桌面不要预拉移动预览 iframe
+- 踩过：每个 SchemaPreview `onMounted` 200ms 就 `prefetch` `preview-frame.html`。默认桌面也会占一条 GitHub Pages 请求；国内访问 github.io 本身慢，跟文档首屏抢带宽。
+- 稳定做法：只在顶栏切到「移动」再 prefetch / 挂 iframe。拆 `register.ts` 降到 antd.mobile 那档体积另刀，不要用预取冒充快。
+- 触及：文档移动预览 GitHub Pages
+- 规则：`.cursor/rules/site.mdc`；`playground/src/components/SchemaPreview.vue`
+
 ### 文档移动预览整页只挂一个 iframe
 - 踩过：每个进过视口的示例自己挂 iframe 且 `opened` 永真。DevTools「资源」按解码累加：空帧约 5–7MB，两个框就是约 11MB；换 CSS 入口只少一百多 KB，数字几乎不动。
 - 稳定做法：`preview-frame-host` 单例 iframe，按 IntersectionObserver 比例塞进当前示例，离开视口 `release`。不要停尸 `visibility:hidden`。helper `m:` 仍要真实 375 视口，不要改成无 iframe。

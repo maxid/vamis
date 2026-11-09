@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Button, Input, ScrollArea } from '@vamis/ui'
+import { Button, ScrollArea } from '@vamis/ui'
+import FilterInput from './FilterInput.vue'
 import { cn } from '@vamis/ui/lib/utils'
 import type { CatalogGroup, CatalogLeaf } from '../catalog'
 
@@ -49,7 +50,7 @@ function toggle(id: string) {
 <template>
   <div class="flex h-full min-h-0 flex-col">
     <div class="shrink-0 px-3 pb-2 pt-2">
-      <Input v-model="query" :placeholder="placeholder || '筛选…'" class="text-sm" />
+      <FilterInput v-model="query" :placeholder="placeholder || '筛选…'" class="text-sm" />
     </div>
     <ScrollArea class="min-h-0 flex-1">
       <div class="space-y-1 px-2 pb-3">

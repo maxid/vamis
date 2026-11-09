@@ -65,6 +65,14 @@ function prefetchFrame() {
 
 let io: IntersectionObserver | undefined
 
+watch(
+  docViewport,
+  (vp) => {
+    if (vp === 'mobile') prefetchFrame()
+  },
+  { immediate: true },
+)
+
 onMounted(() => {
   const node = rootEl.value
   io = new IntersectionObserver(
@@ -75,7 +83,6 @@ onMounted(() => {
     { rootMargin: '160px 0px', threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
   )
   if (node) io.observe(node)
-  window.setTimeout(prefetchFrame, 200)
 })
 
 onUnmounted(() => io?.disconnect())
