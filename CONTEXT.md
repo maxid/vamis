@@ -71,7 +71,7 @@
 
 **最近交付**
 
-- 文档移动预览整页只挂 **一个** iframe（`preview-frame-host` 按交叉比例塞进当前示例）。先前每个示例各解码一份 `register.ts`（两个框 ≈ 11MB 资源），只换 CSS 入口几乎不动这个数字。离开视口释放，不要 `opened` 永真停尸。
+- 文档移动预览整页只挂 **一个** iframe（`preview-frame-host` 按交叉比例塞进当前示例）。先前每个示例各解码一份 `register.ts`（两个框 ≈ 11MB 资源），只换 CSS 入口几乎不动这个数字。离开视口释放，不要 `opened` 永真停尸。单帧仍约 7MB（全量 `register.ts` + `@vamis/ui`）；对标 antd.mobile 文档约 3MB 的体积优化暂缓。
 - 文档移动预览 iframe 不再打进 playground 文档壳 CSS：入口改 `preview-frame.css`（`@vamis/ui` + 页槽），生产 mock 动态 import。
 - 文档移动预览 iframe `?dark&density&accent` 不再进表单 `debug`：PreviewFrame / SchemaPreview / Playground 预览关 `parseLocation`（对照 embed-case 同一闸门）。正式 embed 默认仍吃 location.search。同一页多个 form 会共享根域 query，不是表单之间没隔离。
 - 样式规则补「遵循 / 违反 shadcn·Tailwind」判断标准：先分层（作者 class / 默认 chrome / 原语配方），默认 chrome 写工具类或硬套 shadcn 配方即违反；留原语换 token（窄屏 Form 贴 `--background`）算遵循。真源 `.cursor/rules/style.mdc`。
@@ -399,5 +399,6 @@
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
 5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条走 `--cal-bar`。**深色浮层回归**按组件 TODO「深色浮层回归」表打勾（优先有独立浮层的一行）。日期弹层已走 `--cal-*`；桌面 Toast `#fff` / `#151b26`、`--remark-bg` / `--text-loud` / `--fill-9` 未进 `.dark`。做法是补 token 覆盖，不要每个渲染器再写一套 `.dark .vamis-xxx`。
+6. **暂缓：文档移动预览体积**（对标 antd.mobile 文档约 3MB）。单例 iframe 后仍约 7MB，大头是全量 `register.ts` + helper CSS，不是 N 个框。以后要砍再拆注册表 / 按需渲染器，不要另打 mobile SDK。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
