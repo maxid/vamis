@@ -190,7 +190,9 @@ export interface RendererEnv {
   initialData?: PlainObject
   /**
    * 是否把 `location.search` 并进根数据域（对齐 Amis `parseQuery`）。
-   * 对照 `embed-case` 关掉，避免 `engine` / `case` / `bucket` / `vp` 漏进表单。
+   * 对照 `embed-case`、文档 PreviewFrame / SchemaPreview 关掉：宿主 URL 上的
+   * `engine` / `case` / `vp` / `dark` / `density` / `accent` 不是表单字段。
+   * 正式 `vamis.embed` 默认仍吃 query。
    */
   parseLocation?: boolean
   debug?: boolean

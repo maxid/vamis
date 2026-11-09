@@ -97,7 +97,7 @@ onUnmounted(() => io?.disconnect())
       >
         <div v-show="!isMobile">
           <LazyComponent placeholder="加载中，请稍后。。。">
-            <VamisRoot :schema="parsed.value" :env="{ trusted: true }" />
+            <VamisRoot :schema="parsed.value" :env="{ trusted: true, parseLocation: false }" />
           </LazyComponent>
         </div>
         <DocPhonePreview :schema="parsed.value" :active="phoneActive" />

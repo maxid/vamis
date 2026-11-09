@@ -71,6 +71,9 @@
 
 **最近交付**
 
+- 文档移动预览 iframe `?dark&density&accent` 不再进表单 `debug`：PreviewFrame / SchemaPreview / Playground 预览关 `parseLocation`（对照 embed-case 同一闸门）。正式 embed 默认仍吃 location.search。同一页多个 form 会共享根域 query，不是表单之间没隔离。
+- 样式规则补「遵循 / 违反 shadcn·Tailwind」判断标准：先分层（作者 class / 默认 chrome / 原语配方），默认 chrome 写工具类或硬套 shadcn 配方即违反；留原语换 token（窄屏 Form 贴 `--background`）算遵循。真源 `.cursor/rules/style.mdc`。
+- 文档手机预览去掉 Tailwind `p-4` 灰包白卡：Page 槽走 `--page-body-padding` 16px，窄屏表单面板底改 `--background`（对齐 Amis Panel--form，不要 shadcn `--card` 升高一层）。
 - 文档移动预览深色：后滚进视口的示例也会跟顶栏浅色/深色。主题写进 iframe URL 首屏，顶栏切色走 BroadcastChannel，不要只靠第一个 iframe 的 MutationObserver。
 - 文档活示例桌面/移动改到站点顶栏（浅色/深色旁），一次切换整页示例。移动屏幕钉 **375×812**（对照 `--mobile` / iPhone X CSS，约 19.5:9），不要 500 矮框；独立 `preview-frame.html` + 手机壳，只给进视口的示例挂 iframe。默认桌面。
 - `input-text` 多选 tag：关闭钮改 Amis `close.svg`（`VamisClose` 10px 线图，不要 `×` 文本）；省略只钉在 label `max-width: 60px`，短 OptionA 完整显示、长 OptionB 才省略。
@@ -93,7 +96,7 @@
 - 表单清除钮统一 `VamisClear` + `.vamis-select__clear`（`input-text` / `input-date` / `select`），hover 走 `--select-clear-*`，不再用文字 `×`。
 - 旧 WebView 提交钮掉成描边灰：`--primary` 是 `oklch()`，变量整段无效。默认改云舍蓝 `#2468f2`，5 色 oklch 放进 `@supports`；SDK 再追加 `@supports not` hex。
 - 旧浏览器日期滚轮仍只露中间一行：源码 `hsla` 被 lightningcss 编成 `#ffffffe6`，WebView 当实心白。遮罩改成四条 `var(--cal-bg)` + `opacity` 带；对照 `embed-case` 给 `sdk.css` 加 `?v=` 冲缓存。
-- 对照 URL 的 `engine` / `case` / `bucket` / `vp` 曾经 `parseSearch` 并进表单 `debug`。`embed-case` 现关 `parseLocation`，正式 `vamis.embed` 默认仍吃 location.search（对齐 Amis），没有这些 query 就不会出现。
+- 对照 URL 的 `engine` / `case` / `bucket` / `vp`、文档移动预览 `dark` / `density` / `accent` 曾经 `parseSearch` 并进表单 `debug`。`embed-case` 与文档 PreviewFrame / SchemaPreview 关 `parseLocation`；正式 `vamis.embed` 默认仍吃 location.search（对齐 Amis）。
 - 对照 `/sdk` 开发机：`sdk.css` / `sdk.js` 用 `no-cache` + ETag（没改 304，`sdk:build` 后自动拉新），不要一年 immutable。带 hash 的 `assets/` 才长期缓存。gzipSync + Content-Length 仍保留。
 - `embed-case.html` 顶层打开认 `?case=` / `?id=`（对照用例 id，也可写 `input-date` 这类片段），拉 `compare-cases.js` 后自己 embed；iframe 对照仍只吃 postMessage。手机可直接打开指定 case。
 - Playground 支持 `pnpm dev -- --host`（或 `VAMIS_HOST=0.0.0.0`）监听全部网卡，手机可走局域网 IP 测窄屏；默认仍只绑 localhost。

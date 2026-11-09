@@ -42,6 +42,12 @@ alwaysApply: true
 - 触及：`page` `container`
 - 规则：组件 P0 TODO「实现标准」；`.cursor/rules/update-progress.mdc`
 
+### 宿主 URL query 不要进表单数据域
+- 踩过：对照 `?engine&case&vp`、文档移动预览 `?dark&density&accent` 经默认 `parseSearch` 并进根域；`form.debug` 和提交 payload 都带上。同一 `VamisRoot` 里多个 form 都会抄到（`scope: self` 仍 inherit 父域，init 时 `store.data` 展开 `props.data`）。这不是表单之间没隔离，是宿主把 chrome 写在了应用 URL 上。
+- 稳定做法：正式 embed 默认 `parseLocation` 开着（对齐 Amis `parseQuery`）。对照 `embed-case`、文档 `PreviewFrame` / `SchemaPreview` / Playground 预览关掉。主题仍可写在 iframe URL 给首屏 HTML 脚本读，不要进数据域。
+- 触及：`form` 对照 文档移动预览
+- 规则：`VamisRoot` `parseLocation`；`packages/vamis-core/src/types.ts`
+
 ### 对照产物不进 git，本机必须重打
 - 踩过：换机器 / 新会话 / 只 `pnpm dev`，对照页仍是旧 `sdk.js` 和上一份收割。
 - 稳定做法：改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录）。只改 md 且已有 dist 可跳过 build。全局 token/字体才全量 `pnpm compare`。
@@ -315,7 +321,7 @@ alwaysApply: true
 
 ### 窄屏表单面板盒模型跟 Amis Panel，不要留 Card px-4
 - 踩过：Options 对照里 Select 箭头停在 212px 盒右侧。根因是 CardHeader/Content `px-4 py-3`（16px）+ page-body 12px，面板比 Amis 窄一截；标题 `text-sm font-medium` 14/500，Amis heading 40px / 16/24/400。只改 padding 后 heading 仍 319：`w-full` 钉死内容区，Amis `Panel--form` 还有 `margin: 0 -12px 10px` 吃进 page padding。
-- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；**label 仍 14 / `#5c5f66`**（`--Form-item-fontSize` / `--Form-item-color`，桌面移动同一套，不要跟 title 一起抬到 16，也不要 `text-foreground`）。body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
+- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；**label 仍 14 / `#5c5f66`**（`--Form-item-fontSize` / `--Form-item-color`，桌面移动同一套，不要跟 title 一起抬到 16，也不要 `text-foreground`）。body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。**窄屏面板底用 `--background`，不要 `--card`**（Amis Panel--form 去边框后跟 Page，灰包白卡是 iOS Settings 不是 Amis）。文档手机预览壳走同一 token 当 Page padding，不要 Tailwind `p-4`。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
 - 触及：`form` FormItem `select` Options
 - 规则：`.cursor/rules/component.mdc`；Amis `_panel.scss` `Panel--form` / `_properties.scss` `--Page-body-padding`
 

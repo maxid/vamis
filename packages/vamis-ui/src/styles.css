@@ -3118,6 +3118,9 @@
     border: none;
     border-radius: 0;
     box-shadow: none;
+    /* 窄屏不是 inset 白卡。Amis Panel--form 去边框后底跟 Page，不要 --card 衬出灰包白。 */
+    background: var(--background);
+    background-color: var(--background);
     /*
       对齐 Amis Panel--form：margin 0 -12px 10px。page padding 16 的内容区 319，
       负 margin 吃进左右各 12 → 面板 343。必须 width:auto，w-full 会钉死 319。

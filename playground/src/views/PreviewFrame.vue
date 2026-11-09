@@ -40,7 +40,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-full bg-background p-4">
-    <VamisRoot v-if="schema" :schema="schema" :env="{ trusted: true, mobileUI: true }" />
+  <div class="vamis-preview-page">
+    <VamisRoot
+      v-if="schema"
+      :schema="schema"
+      :env="{ trusted: true, mobileUI: true, parseLocation: false }"
+    />
   </div>
 </template>

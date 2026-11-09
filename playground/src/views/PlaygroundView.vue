@@ -106,7 +106,7 @@ function formatSource(kind: 'yaml' | 'json') {
         </Alert>
         <template v-else-if="parsed">
           <div v-show="!isMobile">
-            <VamisRoot :schema="parsed" :env="{ trusted: true }" />
+            <VamisRoot :schema="parsed" :env="{ trusted: true, parseLocation: false }" />
           </div>
           <DocPhonePreview :schema="parsed" :active="isMobile" />
         </template>

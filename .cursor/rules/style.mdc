@@ -1,11 +1,69 @@
 ---
-description: 样式：cxd 转写、helper 盒模型对标、token 打组件 / helper 打 className
+description: 样式：shadcn/Tailwind 判断标准、cxd 转写、helper 盒模型、token 打组件 / helper 打 className
 alwaysApply: true
 ---
 
 # 样式
 
 合并自原 `cxd-transcribe`、`style-behavior-parity`。约束 `@vamis/ui`、`/style` 活示例、schema `className`。
+
+## 判断标准：遵循还是违反 shadcn / Tailwind
+
+本仓 **遵循** 的是 shadcn 的主题机制和 Tailwind 的作者工具层，不是「做成 shadcn 官方 dashboard」。先定主语，再判对错。
+
+| 本仓要的 | 不是这个 |
+|----------|----------|
+| 主题 = `:root` / `.dark` 一套 CSS 变量 | 换 class 前缀、第二套 BEM |
+| 默认样子 = token + `cva` variant，选择器只 `var()` | 组件模板堆 `p-4` / `bg-card` / `text-sm` 当皮肤 |
+| Tailwind / Amis helper = 作者 `className` | 用工具类冒充 Page 槽、表单默认 chrome |
+| 原语用 shadcn-vue 的 DOM / a11y | 原语的**配方**（Card 升高、Badge ping、Tooltip、`disabled:opacity-50`）等于 Amis 该 type |
+
+### 先问落在哪一层
+
+写样式或改类名之前只问一件事：**这是作者 class、type 默认 chrome，还是 shadcn 原语配方？**
+
+1. **作者 `className` / `/style` helper**（`space-x-6`、`rounded-md`、`m:p-4`）→ 遵循 Tailwind 的「同名 utility」契约，但对标 Amis helper 的**计算值**。同一 class、同一元素、同一属性、同一值。细则见下节「行为精度」。
+2. **schema type 的默认样子**（Form 面板、Select 触发器、Page 槽、Tooltip）→ 遵循 shadcn 的「token 换肤」。写进 `:root`，选择器 `var()`。禁止用 Tailwind 工具类当默认。
+3. **shadcn 原语**（Card / Button / Dialog 壳）→ 再问配方是否等于 Amis 该 type 的契约（见下闸门）。
+
+分不清层 = 违反。典型事故：预览壳 `p-4` 冒充 `--page-body-padding`；控件默认 `rounded-md`（helper 6px）而 `--radius` 是 4px。
+
+### 原语配方闸门
+
+| Amis 该 type 的契约 | 怎么做 | 例 |
+|---------------------|--------|----|
+| ≈ shadcn 配方 | 原样用原语 | Button `outline`、Dialog 壳 |
+| ≠ shadcn 配方 | **留原语、换配方**：DOM/a11y 可留，底/边/字/盒走组件 token | 窄屏 Form 贴 `--background` 不要 `--card` 升高；Overlay Tooltip 走 `--tooltip-*` 不要 `--popover`；Checkbox 走 `--checkbox-*` 不要 `size-4` |
+| 两边都不是 | **禁止**（第三套视觉） | 自造一档既不是 shadcn 名也不是 Amis 量的色/密度 |
+
+「留原语、换配方」**算遵循** shadcn（变量换肤），**不算**违反。把 Card 升高、Badge `animate-ping`、shadcn Tooltip 直接套到契约不同的 type 上，才是违反。
+
+### 算遵循
+
+- 语义色优先用已有 shadcn 名：页面 `--background`、升高面 `--card`、品牌 `--primary`、危险 `--destructive` / `--danger`
+- 主题切换只改 `:root` / `.dark` 变量，组件选择器不写死 `#fff`
+- Button / 控件变体走 `cva`，不造 `.cxd-*`
+- 作者 `className` 是 Tailwind；helper 的全局语义（`bg-secondary`）不被单个组件改走
+- 间距/圆角能落到 token 或已有 spacing 就不要在 `.vamis-xxx` 写死 px
+
+### 算违反（越界）
+
+这些才叫「超出 shadcn / Tailwind 范式」：
+
+1. **工具类当默认皮肤**：`.vamis-root`、PreviewFrame、渲染器根写 `p-4`、`bg-card`、`rounded-md`、`text-sm`、`@apply font-sans`
+2. **选择器写死色和 px**：`.vamis-xxx { background: #fff; border-radius: 8px }` 而不是 `var(--tooltip-bg)` / `var(--borderRadiusLg)`
+3. **配方冒充 type**：shadcn Badge / `animate-ping` 当 Overlay Badge；shadcn Tooltip 当 Remark；`disabled:opacity-50` 当表单禁用；Card `--card` 当窄屏 `Panel--form`；`--popover` 当 Overlay Tooltip
+4. **同名 utility 两套叠加**：Amis helper 与 TW 选择器/属性不同时两套都留（缝加倍）
+5. **改 helper 全局语义伺候一个组件**：把 `bg-secondary` 改成日历灰，冲掉 Button / Badge
+6. **运行时拼接完整 Tailwind class**（JIT 扫不到，桌面 `max-w` 失效）
+7. **复写压过站点变体**：`.hidden` / `.flex` 放进晚于 Tailwind 的 `@layer utilities`
+8. **第三套设计语言**：既不映射 shadcn 名、又对不上 Amis 该 type 的量（自造密度/色相）
+
+unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper 同名但跟 Amis 选择器（`space-x` 后盒 `margin-left`）——这是 **cxd 转写**，规格允许，不要判成越界。
+
+### 评审一句话
+
+> 这是作者 class、默认 chrome，还是原语配方？默认 chrome 出现 Tailwind 工具类，或 shadcn 配方与 Amis 该 type 契约不符还硬套，即违反。
 
 ## cxd 转写
 

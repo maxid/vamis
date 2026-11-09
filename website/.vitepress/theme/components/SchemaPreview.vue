@@ -55,7 +55,7 @@ const banner = computed(() => editError.value || (!parsed.value.ok ? parsed.valu
     <div v-if="banner" class="vamis-preview__error">{{ banner }}</div>
     <div class="vamis-preview__canvas" :style="{ minHeight: `${minHeight}px` }">
       <LazyComponent placeholder="加载中，请稍后。。。">
-        <VamisRoot :schema="parsed.value" />
+        <VamisRoot :schema="parsed.value" :env="{ trusted: true, parseLocation: false }" />
       </LazyComponent>
     </div>
     <details class="vamis-preview__source" open>

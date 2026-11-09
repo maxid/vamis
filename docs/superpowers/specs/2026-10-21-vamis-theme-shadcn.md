@@ -46,6 +46,8 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 
 原则：**一套 CSS 变量，组件用 variant，不造第二套 `cxd-` 前缀。** 另一条：**默认自适应**——布局容器和表单控件不写 `size`/`className` 就吃满槽位，配置只用来收窄。
 
+**判断标准**（遵循 / 违反 shadcn·Tailwind）见 `.cursor/rules/style.mdc` 文首：先分层（作者 class / 默认 chrome / 原语配方），再套闸门。默认 chrome 写 `p-4`、`bg-card` 是违反；窄屏 Form 留 Card 原语、底改 `--background` 是「留原语、换配方」，算遵循。不要把「不像 shadcn dashboard」当成越界。
+
 | Amis | shadcn-vue / vamis-ui |
 |---|---|
 | `--body-bg` / `--background` | `--background` |
