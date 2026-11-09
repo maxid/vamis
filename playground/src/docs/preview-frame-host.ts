@@ -11,8 +11,9 @@ import {
 } from './preview-frame'
 
 /**
- * 文档移动预览只跑一份运行时。每个示例再挂 iframe 会把同一份
- * `register.ts` + `@vamis/ui` 再解码一遍（两个框 ≈ 11MB 资源）。
+ * 文档移动预览只跑一份运行时。iframe 固定挂在 body，按当前手机屏
+ * getBoundingClientRect 定位。禁止 appendChild 搬进手机壳：浏览器会
+ * 把整个 preview-frame 再加载一遍。
  */
 type PreviewClaim = {
   id: number
@@ -24,21 +25,62 @@ type PreviewClaim = {
 const claims = new Map<number, PreviewClaim>()
 let nextId = 1
 let iframe: HTMLIFrameElement | null = null
-let parkHost: HTMLElement | null = null
+let host: HTMLElement | null = null
 let assignedId: number | null = null
 let frameReady = false
+let lastPosted: unknown
+let placeRaf = 0
+let scroller: HTMLElement | Window | null = null
+let screenObserver: ResizeObserver | null = null
 
 export function allocPreviewId(): number {
   return nextId++
 }
 
+function overflowAncestor(el: HTMLElement): HTMLElement | Window {
+  let node: HTMLElement | null = el.parentElement
+  while (node && node !== document.body) {
+    const style = getComputedStyle(node)
+    if (/(auto|scroll)/.test(style.overflowY) || /(auto|scroll)/.test(style.overflow)) return node
+    node = node.parentElement
+  }
+  return window
+}
+
+function clipRectOf(el: HTMLElement) {
+  let clip = { top: 0, right: window.innerWidth, bottom: window.innerHeight, left: 0 }
+  let node: HTMLElement | null = el.parentElement
+  while (node && node !== document.body) {
+    const style = getComputedStyle(node)
+    if (style.overflowY !== 'visible' || style.overflowX !== 'visible') {
+      const r = node.getBoundingClientRect()
+      clip = {
+        top: Math.max(clip.top, r.top),
+        right: Math.min(clip.right, r.right),
+        bottom: Math.min(clip.bottom, r.bottom),
+        left: Math.max(clip.left, r.left),
+      }
+    }
+    node = node.parentElement
+  }
+  return clip
+}
+
 function ensureIframe() {
   if (iframe) return
-  parkHost = document.createElement('div')
-  parkHost.dataset.vamisPreviewPark = '1'
-  parkHost.style.cssText =
-    'position:absolute;left:-9999px;top:0;width:375px;height:812px;overflow:hidden;pointer-events:none'
-  document.body.appendChild(parkHost)
+  host = document.createElement('div')
+  host.dataset.vamisPreviewPark = '1'
+  host.style.cssText = [
+    'position:fixed',
+    'z-index:20',
+    `width:${MOBILE_PREVIEW_WIDTH}px`,
+    `height:${MOBILE_PREVIEW_HEIGHT}px`,
+    'overflow:hidden',
+    'visibility:hidden',
+    'pointer-events:none',
+    'box-sizing:border-box',
+  ].join(';')
+  document.body.appendChild(host)
 
   iframe = document.createElement('iframe')
   iframe.className = 'doc-play__mobile-frame'
@@ -46,9 +88,11 @@ function ensureIframe() {
   iframe.width = String(MOBILE_PREVIEW_WIDTH)
   iframe.height = String(MOBILE_PREVIEW_HEIGHT)
   iframe.src = previewFrameSrc(withBase(PREVIEW_FRAME_PATH))
+  iframe.style.cssText = 'display:block;width:100%;height:100%;border:0'
   iframe.addEventListener('load', postAssigned)
-  parkHost.appendChild(iframe)
+  host.appendChild(iframe)
   window.addEventListener('message', onMessage)
+  window.addEventListener('resize', schedulePlace)
 }
 
 function onMessage(event: MessageEvent) {
@@ -65,14 +109,72 @@ function postAssigned() {
   const claim = assignedId != null ? claims.get(assignedId) : undefined
   const win = iframe?.contentWindow
   if (!claim || !win || !frameReady) return
+  if (claim.schema === lastPosted) return
+  lastPosted = claim.schema
   win.postMessage(
     { type: PREVIEW_SCHEMA, schema: claim.schema, chrome: readPreviewChrome() },
     window.location.origin,
   )
 }
 
-function park() {
-  if (iframe && parkHost && iframe.parentElement !== parkHost) parkHost.appendChild(iframe)
+function schedulePlace() {
+  if (placeRaf) return
+  placeRaf = window.requestAnimationFrame(() => {
+    placeRaf = 0
+    place()
+  })
+}
+
+function bindScroller(screen: HTMLElement) {
+  const next = overflowAncestor(screen)
+  if (scroller === next) return
+  scroller?.removeEventListener('scroll', schedulePlace)
+  scroller = next
+  scroller.addEventListener('scroll', schedulePlace, { passive: true })
+}
+
+function watchScreen(screen: HTMLElement) {
+  screenObserver ??= new ResizeObserver(schedulePlace)
+  screenObserver.disconnect()
+  screenObserver.observe(screen)
+}
+
+function hideHost() {
+  if (!host) return
+  host.style.visibility = 'hidden'
+  host.style.pointerEvents = 'none'
+}
+
+function place() {
+  const claim = assignedId != null ? claims.get(assignedId) : undefined
+  if (!host || !iframe) return
+  if (!claim) {
+    hideHost()
+    return
+  }
+  const screen = claim.screen.getBoundingClientRect()
+  const clip = clipRectOf(claim.screen)
+  const fullyOutside =
+    screen.bottom <= clip.top ||
+    screen.top >= clip.bottom ||
+    screen.right <= clip.left ||
+    screen.left >= clip.right
+  if (fullyOutside) {
+    hideHost()
+    return
+  }
+  host.style.visibility = 'visible'
+  host.style.pointerEvents = 'auto'
+  host.style.left = `${screen.left}px`
+  host.style.top = `${screen.top}px`
+  host.style.width = `${screen.width}px`
+  host.style.height = `${screen.height}px`
+  host.style.borderRadius = getComputedStyle(claim.screen).borderRadius
+  const insetTop = Math.max(0, clip.top - screen.top)
+  const insetRight = Math.max(0, screen.right - clip.right)
+  const insetBottom = Math.max(0, screen.bottom - clip.bottom)
+  const insetLeft = Math.max(0, clip.left - screen.left)
+  host.style.clipPath = `inset(${insetTop}px ${insetRight}px ${insetBottom}px ${insetLeft}px)`
 }
 
 function pick() {
@@ -82,19 +184,12 @@ function pick() {
     if (claim.ratio <= 0) continue
     if (!best || claim.ratio > best.ratio) best = claim
   }
-  const next = best?.id ?? null
-  if (next !== assignedId) {
-    assignedId = next
-    iframe?.classList.remove('is-ready')
-    if (!best) {
-      park()
-      return
-    }
-    best.screen.appendChild(iframe!)
-  } else if (!best) {
-    park()
-    return
+  assignedId = best?.id ?? null
+  if (best) {
+    bindScroller(best.screen)
+    watchScreen(best.screen)
   }
+  place()
   postAssigned()
 }
 

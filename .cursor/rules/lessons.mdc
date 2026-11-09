@@ -55,8 +55,8 @@ alwaysApply: true
 - 规则：`.cursor/rules/site.mdc`；`playground/src/components/SchemaPreview.vue`
 
 ### 文档移动预览整页只挂一个 iframe
-- 踩过：每个进过视口的示例自己挂 iframe 且 `opened` 永真。DevTools「资源」按解码累加：空帧约 5–7MB，两个框就是约 11MB；换 CSS 入口只少一百多 KB，数字几乎不动。
-- 稳定做法：`preview-frame-host` 单例 iframe，按 IntersectionObserver 比例塞进当前示例，离开视口 `release`。不要停尸 `visibility:hidden`。helper `m:` 仍要真实 375 视口，不要改成无 iframe。
+- 踩过：每个进过视口的示例自己挂 iframe 且 `opened` 永真。DevTools「资源」按解码累加：空帧约 5–7MB，两个框就是约 11MB。后来改成单例却 `appendChild` 搬进手机壳，滚出再滚进会把 preview-frame **整页重载**。
+- 稳定做法：iframe 固定挂 `body`（`position:fixed` 对齐当前 `.doc-play__phone-screen`），用 clip-path 裁进滚动容器。禁止把 iframe 在壳之间搬来搬去。同一 schema 不要再 postMessage。helper `m:` 仍要真实 375 视口。
 - 触及：文档移动预览
 - 规则：`.cursor/rules/site.mdc`；`playground/src/docs/preview-frame-host.ts`
 

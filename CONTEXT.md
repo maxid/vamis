@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 文档移动预览单例 iframe 不再搬进手机壳：固定挂 body 按屏幕定位。先前 `appendChild` 换父级会让滚回视口时整页重载 preview-frame 资源。
 - 文档侧栏 / 示例树筛选框有内容时右侧出现清除钮（共用 `VamisClear`），点一下清空并保持焦点。
 - 文档移动预览：桌面默认不再 prefetch `preview-frame.html`（国内 GitHub Pages 跟首屏抢带宽）。切「移动」再拉。整页仍只挂一个 iframe；单帧约 7MB 对标 antd.mobile ~3MB 的拆注册表暂缓。
 - 文档移动预览 iframe 不再打进 playground 文档壳 CSS：入口改 `preview-frame.css`（`@vamis/ui` + 页槽），生产 mock 动态 import。
@@ -400,6 +401,6 @@
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
 5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条走 `--cal-bar`。**深色浮层回归**按组件 TODO「深色浮层回归」表打勾（优先有独立浮层的一行）。日期弹层已走 `--cal-*`；桌面 Toast `#fff` / `#151b26`、`--remark-bg` / `--text-loud` / `--fill-9` 未进 `.dark`。做法是补 token 覆盖，不要每个渲染器再写一套 `.dark .vamis-xxx`。
-6. **暂缓：文档移动预览体积**（对标 antd.mobile 文档约 3MB）。单例 iframe 后仍约 7MB，大头是全量 `register.ts` + helper CSS。国内访问 GitHub Pages（github.io）本身慢，体积会直接拖体验；桌面已改为不预拉 iframe。以后要砍再拆注册表 / 按需渲染器，不要另打 mobile SDK。Actions Pages 没有 `gh-pages` 分支，jsDelivr 镜像也挂不上，换源另说。
+6. **暂缓：文档移动预览体积**（对标 antd.mobile 文档约 3MB）。单例 iframe 后仍约 7MB，大头是全量 `register.ts` + helper CSS。滚回视口不再重载（iframe 固定挂 body）。国内访问 GitHub Pages（github.io）本身慢，体积会直接拖体验；桌面已改为不预拉 iframe。以后要砍再拆注册表 / 按需渲染器，不要另打 mobile SDK。Actions Pages 没有 `gh-pages` 分支，jsDelivr 镜像也挂不上，换源另说。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。
