@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
   SchemaRenderer,
   actionTooltip,
   filterTpl,
   iconVendor,
   overlayContainerFrom,
+  overlayIsMobile,
+  provideDropdownMenuItem,
   resolveIcon,
   dropdownButtonAlign,
   dropdownButtonCloseOnClick,
@@ -34,6 +36,14 @@ const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const overlayPlacement = computed(() =>
   align.value === 'right' ? 'right-bottom-right-top right-top-right-bottom' : 'auto',
 )
+const mobileMenu = computed(() => overlayIsMobile(props.schema, env))
+const menuWidth = ref(0)
+provideDropdownMenuItem()
+watch(open, async (shown) => {
+  if (!shown) return
+  await nextTick()
+  menuWidth.value = root.value?.offsetWidth || 0
+})
 const label = computed(() => {
   const rec = props.schema
   if (rec.label === false || rec.label === '') return ''
@@ -124,21 +134,40 @@ onBeforeUnmount(() => {
       :placement="overlayPlacement"
       @outside="onOutside"
     >
-      <div
-        class="vamis-dropdown-menu min-w-36 rounded-md border bg-popover p-1 shadow-md"
+      <ul
+        class="vamis-dropdown-menu"
+        :class="{ 'is-mobile': mobileMenu }"
+        :style="menuWidth ? { width: `${menuWidth}px` } : undefined"
+        role="menu"
         @mouseenter="onHoverEnter"
         @mouseleave="onHoverLeave"
         @click="onMenuClick"
       >
         <template v-for="(item, i) in items" :key="i">
-          <div v-if="item.kind === 'divider'" class="my-1 border-t" />
-          <div v-else-if="item.kind === 'group'" class="px-1 py-1">
-            <p class="px-2 py-1 text-xs text-muted-foreground">{{ item.label }}</p>
-            <SchemaRenderer v-for="(child, ci) in item.children" :key="ci" :schema="child.schema" />
-          </div>
-          <SchemaRenderer v-else :schema="item.schema" />
+          <li v-if="item.kind === 'divider'" class="vamis-dropdown-divider" />
+          <li v-else-if="item.kind === 'group'" class="vamis-dropdown-group">
+            <div class="vamis-dropdown-group-title">{{ item.label }}</div>
+            <ul class="vamis-dropdown-menu vamis-dropdown-menu--nested">
+              <li
+                v-for="(child, ci) in item.children"
+                :key="ci"
+                :class="child.kind === 'divider' ? 'vamis-dropdown-divider' : ['vamis-dropdown-item', { 'is-disabled': child.disabled }]"
+                role="none"
+              >
+                <SchemaRenderer v-if="child.kind !== 'divider'" :schema="child.schema" />
+              </li>
+            </ul>
+          </li>
+          <li
+            v-else
+            class="vamis-dropdown-item"
+            :class="{ 'is-disabled': item.disabled }"
+            role="none"
+          >
+            <SchemaRenderer :schema="item.schema" />
+          </li>
         </template>
-      </div>
+      </ul>
     </VamisOverlay>
   </div>
 </template>

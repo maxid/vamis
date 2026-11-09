@@ -9,6 +9,8 @@ import {
   dropdownButtonHideCaret,
   dropdownButtonItems,
   dropdownButtonTrigger,
+  provideDropdownMenuItem,
+  useDropdownMenuItem,
 } from '../src/utils/dropdown-button'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -33,8 +35,25 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(vue).toContain('VamisOverlay')
     expect(vue).not.toContain('VamisPopUp')
     expect(vue).toContain(':gap="4"')
+    expect(vue).toContain('provideDropdownMenuItem')
+    expect(vue).toContain('vamis-dropdown-menu')
+    expect(vue).toContain('vamis-dropdown-item')
+    expect(vue).not.toContain('bg-popover')
     expect(vue).not.toContain('border-t-[4px]')
     expect(vue).not.toContain('absolute z-40')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain('.vamis-dropdown-menu')
+    expect(css).toContain('--dropdown-menu-min-width: 160px')
+    expect(css).toContain('.vamis-dropdown-item.is-disabled')
+    expect(css).toContain('filter: grayscale(80%)')
+    expect(css).not.toMatch(/\.vamis-dropdown-menu[^{]*bg-popover/)
+  })
+})
+
+describe('dropdown menu item inject', () => {
+  it('exports menu-item inject for Action isMenuItem', () => {
+    expect(typeof provideDropdownMenuItem).toBe('function')
+    expect(typeof useDropdownMenuItem).toBe('function')
   })
 })
 

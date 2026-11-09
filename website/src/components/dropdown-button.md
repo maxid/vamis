@@ -5,8 +5,8 @@ outline: deep
 
 # DropDownButton 下拉按钮
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`。菜单贴触发器走 `VamisOverlay`（窄屏也是，对齐 Amis 就近展开）。缺菜单进出动画。
+::: info 实现进度 85% · 进行中
+文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`。菜单是 `ul>li` 列表项（`isMenuItem`），贴触发器走 `VamisOverlay`（窄屏也是）。缺菜单进出动画。
 :::
 
 点击（或悬停）展开更多按钮。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

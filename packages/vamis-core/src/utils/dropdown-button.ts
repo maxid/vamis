@@ -1,7 +1,19 @@
 /** DropDownButton。对齐 Amis：buttons 或 body；children 分组；visible:false 丢掉；默认 click / 点外侧关 / 点项不关。 */
 
+import { inject, provide, type InjectionKey } from 'vue'
 import { isVisible } from '../formula'
 import type { SchemaObject } from '../types'
+
+/** 菜单里的 Action 走 `isMenuItem`：渲染 `<a>`，不要完整 Button。 */
+export const DropdownMenuItemKey: InjectionKey<boolean> = Symbol('vamis-dropdown-menu-item')
+
+export function provideDropdownMenuItem() {
+  provide(DropdownMenuItemKey, true)
+}
+
+export function useDropdownMenuItem(): boolean {
+  return inject(DropdownMenuItemKey, false)
+}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}

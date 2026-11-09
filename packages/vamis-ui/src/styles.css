@@ -191,6 +191,11 @@
   --select-option-disabled-bg: transparent;
   --select-option-padding-x: 10px;
   --select-option-line-height: 32px;
+  /* 对齐 Amis `--DropDown-menu-*` / `--DropDown-menuItem-*`。 */
+  --dropdown-menu-min-width: 160px;
+  --dropdown-item-h: 32px;
+  --dropdown-item-disabled: #b4b6ba;
+  --dropdown-group-color: #848b99;
   --select-group-color: #5c5f66;
   --select-group-font-size: 12px;
   --select-group-font-weight: 500;
@@ -492,6 +497,8 @@
   --select-option-hover-color: #f7f8fa;
   --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
   --select-option-disabled-color: #b8bbbf;
+  --dropdown-item-disabled: #b8bbbf;
+  --dropdown-group-color: #84878c;
   --select-group-color: #84878c;
   --select-search-icon-color: #84878c;
   --select-search-placeholder: var(--control-placeholder);
@@ -2684,6 +2691,101 @@
     max-height: none;
     width: 100%;
   }
+}
+
+/*
+  DropDown 菜单对齐 Amis `_dropdown.scss`。
+  项是 ul>li + Action isMenuItem（<a>），不要完整 Button。
+  压过 SchemaRenderer 的 `inline-block`（button 默认并排）。
+*/
+.vamis-dropdown-menu {
+  margin: 0;
+  padding: var(--gap-xs) 0;
+  list-style: none;
+  min-width: var(--dropdown-menu-min-width);
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: left;
+  user-select: none;
+  border: 1px solid var(--select-menu-border);
+  border-radius: var(--radius);
+  background: var(--select-menu-bg);
+  color: var(--select-menu-color);
+  box-shadow: var(--select-menu-shadow);
+  box-sizing: border-box;
+}
+.vamis-dropdown-menu--nested {
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  background: transparent;
+}
+.vamis-dropdown-item {
+  display: block;
+  height: var(--dropdown-item-h);
+  padding: 0 var(--select-option-padding-x);
+  box-sizing: border-box;
+  line-height: var(--dropdown-item-h);
+  white-space: nowrap;
+  color: var(--select-option-color);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.vamis-dropdown-item > .vamis-node,
+.vamis-dropdown-item > .vamis-node.inline-block {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: inherit;
+}
+.vamis-dropdown-action {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  cursor: inherit;
+  box-sizing: border-box;
+}
+.vamis-dropdown-action:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.vamis-dropdown-menu:not(.is-mobile) .vamis-dropdown-item:not(.is-disabled):hover {
+  background: var(--select-option-hover-bg);
+  color: var(--select-option-hover-color);
+}
+.vamis-dropdown-item.is-disabled {
+  cursor: not-allowed;
+  color: var(--dropdown-item-disabled);
+  filter: grayscale(80%);
+}
+.vamis-dropdown-divider {
+  height: 1px;
+  margin: 4px 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--select-menu-border);
+  list-style: none;
+}
+.vamis-dropdown-group {
+  list-style: none;
+}
+.vamis-dropdown-group-title {
+  height: auto;
+  padding: var(--gap-xs) var(--gap-xs) var(--gap-xs) var(--gap-sm);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--dropdown-group-color);
+  cursor: default;
+}
+.vamis-dropdown-group .vamis-dropdown-item {
+  padding-left: var(--gap-lg);
 }
 
 /*

@@ -28,6 +28,7 @@ import {
   matchHotKey,
   overlayContainerFrom,
   readCountdownEnd,
+  useDropdownMenuItem,
   resolveIcon,
   runAction,
   runOnEvent,
@@ -60,6 +61,7 @@ const scoped = useScoped()
 const scope = useScope()
 const overlay = useOverlay()
 const form = useFormApi()
+const isMenuItem = useDropdownMenuItem()
 const tipOpen = ref(false)
 const triggerEl = ref<HTMLElement | null>(null)
 const inCountDown = ref(false)
@@ -308,6 +310,24 @@ onBeforeUnmount(() => {
     >
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </span>
+    <a
+      v-else-if="isMenuItem"
+      ref="triggerEl"
+      data-vamis-action
+      class="vamis-dropdown-action"
+      :class="{ 'is-disabled': isDisabled, 'is-active': isActive }"
+      role="menuitem"
+      :aria-disabled="isDisabled || undefined"
+      @click="onClick($event)"
+      @mouseenter="onEnter($event)"
+      @mouseleave="onLeave($event)"
+      @focusin="onFocusIn"
+      @focusout="onFocusOut"
+    >
+      <IconMark v-if="icon.kind !== 'empty'" :icon="icon" img-class="size-4" />
+      <span v-if="showLabel">{{ displayLabel }}</span>
+      <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
+    </a>
     <span
       v-else
       ref="triggerEl"

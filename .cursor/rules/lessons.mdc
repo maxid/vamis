@@ -277,6 +277,12 @@ alwaysApply: true
 - 触及：`dropdown-button` `input-text` `input-password`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
+### DropDown 菜单项是 li + isMenuItem，不要完整 Button
+- 踩过：菜单里 `SchemaRenderer` 出完整 Button（`inline-block`），三项横排成普通按钮；Amis 是 `ul.DropDown-menu > li.DropDown-button` 里 `isMenuItem` 的 `<a>`，竖排 32px 行。
+- 稳定做法：菜单 `provideDropdownMenuItem`，Action 改渲染 `<a class="vamis-dropdown-action">`，不要 Button 变体。行高 32、padding 10、禁用 `#b4b6ba` + `grayscale(80%)`。盒模型走 `--select-menu-*` / `--dropdown-*`。
+- 触及：`dropdown-button` `action` `button`
+- 规则：本文；Amis `DropDownButton.tsx` `isMenuItem`；`_dropdown.scss`
+
 ### PopUp 边框打在底栏盒上，遮罩必须 fixed !important
 - 踩过：把 `.vamis-popup` 做成全屏壳、边框写在内层面板；或 `> * { position: relative }` 把遮罩收成 in-flow，rim 贴浅底。`--border` `#e8e9eb` 几乎看不见。误以为 rim 该跟遮罩 `rgba(0,0,0,0.3)` 同色。
 - 稳定做法：对齐 Amis `.PopUp`：底栏盒本身带 `border: 1px solid var(--border)` + `--boxShadow`。遮罩是子节点 `position: fixed !important`（压过 `> *`）。rim 色是 `--borderColor` / `--border`，不是遮罩色；看得见是因为暗遮罩衬着浅 rim。
