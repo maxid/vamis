@@ -71,6 +71,8 @@
 
 **最近交付**
 
+- 文档移动预览整页只挂 **一个** iframe（`preview-frame-host` 按交叉比例塞进当前示例）。先前每个示例各解码一份 `register.ts`（两个框 ≈ 11MB 资源），只换 CSS 入口几乎不动这个数字。离开视口释放，不要 `opened` 永真停尸。
+- 文档移动预览 iframe 不再打进 playground 文档壳 CSS：入口改 `preview-frame.css`（`@vamis/ui` + 页槽），生产 mock 动态 import。
 - 文档移动预览 iframe `?dark&density&accent` 不再进表单 `debug`：PreviewFrame / SchemaPreview / Playground 预览关 `parseLocation`（对照 embed-case 同一闸门）。正式 embed 默认仍吃 location.search。同一页多个 form 会共享根域 query，不是表单之间没隔离。
 - 样式规则补「遵循 / 违反 shadcn·Tailwind」判断标准：先分层（作者 class / 默认 chrome / 原语配方），默认 chrome 写工具类或硬套 shadcn 配方即违反；留原语换 token（窄屏 Form 贴 `--background`）算遵循。真源 `.cursor/rules/style.mdc`。
 - 文档手机预览去掉 Tailwind `p-4` 灰包白卡：Page 槽走 `--page-body-padding` 16px，窄屏表单面板底改 `--background`（对齐 Amis Panel--form，不要 shadcn `--card` 升高一层）。
@@ -392,7 +394,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`select` #13 已到 92%（移动端 PopUp 已接）；`checkbox` #14 90%；`input-date` #15 92%；`form` #27 80%。`dropdown-button` / `input-text` 窄屏贴触发器走 Overlay，不要再接 PopUp。**下一刀按解锁分继续主干**（不要 `mobileCalendarMode: calendar`，不要零被依赖叶子）。手机「桌面式」对照已靠 `?vp=mobile` → `env.mobileUI`，不要用 UA 对抗。schedules 已在 `calendar`。`spinner` 菱形标暂缓再优先。每刀收工除对照外，文档站再切一次「深色」打开 tooltip / 下拉 / PopOver（对照不探 hover、不切 `.dark`）。`remark` / `badge` / `tooltip-wrapper` / `checkbox` 余项 `themeCss`，不挡。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / combo 独立域，不挡下一刀。收工必须并排开两边文档站。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。SDK 打包已不再依赖 moment。
+1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`select` #13 已到 92%（移动端 PopUp 已接）；`checkbox` #14 90%；`input-date` #15 92%；`form` #27 80%。`dropdown-button` / `input-text` 窄屏贴触发器走 Overlay，不要再接 PopUp。手机「桌面式」对照已靠 `?vp=mobile` → `env.mobileUI`，不要用 UA 对抗。schedules 已在 `calendar`。`spinner` 菱形标暂缓再优先。每刀收工除对照外，文档站再切一次「深色」打开 tooltip / 下拉 / PopOver（对照不探 hover、不切 `.dark`）。`remark` / `badge` / `tooltip-wrapper` / `checkbox` 余项 `themeCss`，不挡。FormItem 余项 `autoFill.showSuggestion` / combo 路径报错 / combo 独立域，不挡下一刀。收工必须并排开两边文档站。Action 余项：控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。SDK 打包已不再依赖 moment。
 2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

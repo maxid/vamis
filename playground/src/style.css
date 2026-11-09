@@ -9,26 +9,6 @@ body,
   overflow: hidden;
 }
 
-/* 文档移动预览 iframe：允许内容滚动，不要吃站点「禁止窗口滚动」。
-   视口已是 375，Page 槽走 --page-body-padding 16px（Amis --gap-md），不要 Tailwind p-4。
-   底与表单面板同一套 --background，避免灰包白卡。 */
-html.is-preview-frame {
-  --page-body-padding: 16px;
-  background: var(--background);
-}
-html.is-preview-frame,
-html.is-preview-frame body,
-html.is-preview-frame #app {
-  overflow: auto;
-  background: var(--background);
-}
-.vamis-preview-page {
-  box-sizing: border-box;
-  min-height: 100%;
-  padding: var(--page-body-padding);
-  background: var(--background);
-}
-
 @source "../../packages/**/*.{vue,ts}";
 @source "../../website/src/**/*.md";
 @source "./**/*.{vue,ts}";
@@ -204,13 +184,6 @@ html.is-preview-frame #app {
 .dark .doc-play__phone {
   --doc-phone-bezel: #2a2e36;
   --doc-phone-slot: #15181d;
-}
-.doc-play__phone.is-parked {
-  position: absolute;
-  left: 0;
-  top: 0;
-  visibility: hidden;
-  pointer-events: none;
 }
 .doc-play__phone-notch {
   width: 92px;

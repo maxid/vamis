@@ -24,6 +24,7 @@ const lastGood = ref<unknown>({})
 const editError = ref('')
 const rootEl = ref<HTMLElement | null>(null)
 const inView = ref(false)
+const viewRatio = ref(0)
 
 watch(
   () => props.yaml,
@@ -68,9 +69,10 @@ onMounted(() => {
   const node = rootEl.value
   io = new IntersectionObserver(
     ([entry]) => {
-      if (entry?.isIntersecting) inView.value = true
+      inView.value = !!entry?.isIntersecting
+      viewRatio.value = entry?.intersectionRatio ?? 0
     },
-    { rootMargin: '160px 0px' },
+    { rootMargin: '160px 0px', threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
   )
   if (node) io.observe(node)
   window.setTimeout(prefetchFrame, 200)
@@ -95,12 +97,12 @@ onUnmounted(() => io?.disconnect())
         :class="isMobile ? 'doc-play__canvas--mobile' : 'p-5'"
         :style="isMobile ? undefined : { minHeight: `${minHeight}px` }"
       >
-        <div v-show="!isMobile">
+        <div v-if="!isMobile">
           <LazyComponent placeholder="加载中，请稍后。。。">
             <VamisRoot :schema="parsed.value" :env="{ trusted: true, parseLocation: false }" />
           </LazyComponent>
         </div>
-        <DocPhonePreview :schema="parsed.value" :active="phoneActive" />
+        <DocPhonePreview :schema="parsed.value" :active="phoneActive" :ratio="viewRatio" />
       </div>
     </div>
     <Sheet :open="editing" @update:open="editing = $event">

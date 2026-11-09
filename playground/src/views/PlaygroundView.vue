@@ -105,7 +105,7 @@ function formatSource(kind: 'yaml' | 'json') {
           <AlertDescription class="font-mono text-xs">{{ error }}</AlertDescription>
         </Alert>
         <template v-else-if="parsed">
-          <div v-show="!isMobile">
+          <div v-if="!isMobile">
             <VamisRoot :schema="parsed" :env="{ trusted: true, parseLocation: false }" />
           </div>
           <DocPhonePreview :schema="parsed" :active="isMobile" />

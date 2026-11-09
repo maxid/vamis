@@ -36,7 +36,7 @@ alwaysApply: true
 - **对标文档要改写成 Vamis，禁止整节粘贴。** 先读两边 markdown：章节、活示例 schema、规则表业务对齐；Amis 产品版本号（`1.4.0` / `2.2.0`）、`github.com/baidu/amis`、自称「amis 会有…」改掉。没有 Vamis 对应版本就删掉「版本」列。locale / 源码链到本仓（如 `@vamis/core` 的 `validateLocaleZh`），不要链到 Amis GitHub
 - **编辑 Schema** 必须是 YAML / JSON **两个 Tab**，改一边立刻同步（`syncAuthoringText`）。解析失败时保留对侧上次有效文本，预览停在上一份能跑的 schema
 - 活示例「编辑 Schema」按钮放在预览**框外**（框上右对齐），不要绝对定位进画布、不要 `pr-24` 给按钮留宽
-- 桌面/移动切到**站点顶栏**（浅色/深色旁边），一次管整页示例，默认桌面。移动走独立 `preview-frame.html` + **375×812** iframe（iPhone X CSS / 对照 `--mobile`）+ `env.mobileUI` + 手机壳；只给进视口的示例挂 iframe。不要用 500 矮框或示例 fence 高度当屏幕，外框比例会对不上。浅色/深色写进 iframe URL 首屏，顶栏再切走 BroadcastChannel，后滚进视口的示例也要跟，不要只更新第一个 iframe。
+- 桌面/移动切到**站点顶栏**（浅色/深色旁边），一次管整页示例，默认桌面。移动走独立 `preview-frame.html` + **375×812** iframe（iPhone X CSS / 对照 `--mobile`）+ `env.mobileUI` + 手机壳。**整页只挂一个 iframe**（`preview-frame-host` 按交叉比例塞进当前示例），不要每个示例各执行一份 `register.ts`。离开视口就释放，不要 `opened` 永真停尸。不要用 500 矮框或示例 fence 高度当屏幕，外框比例会对不上。浅色/深色写进 iframe URL 首屏，顶栏再切走 BroadcastChannel。iframe 入口只引 `preview-frame.css`（`@vamis/ui` + 页槽），不要把 playground `style.css`（文档 prose / 手机外框 / `@source` 全站 md）打进预览。
 - YAML 字面量按 1.2 Core：`yes` / `On` / `012` 当字符串。这只约束 YAML，不否定 JSON
 
 禁止：写成「作者态是 YAML，不是 JSON」；把贴 JSON 当成二类导入；单框只收 YAML，或两个 Tab 不同步；活示例为对照去重改成甲/乙文案；把 Amis markdown 整节粘进 Vamis（含产品版本号、`github.com/baidu/amis`）。

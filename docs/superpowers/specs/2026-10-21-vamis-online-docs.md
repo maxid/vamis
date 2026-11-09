@@ -20,7 +20,7 @@
 | GitHub | 外链 | https://github.com/maxid/vamis |
 
 - 作者态 YAML 与 JSON 并列；` ```schema ` 在页面内交给 `VamisRoot` 真跑（可编辑即时预览），对齐 Amis `MdRenderer` + Play mini，不是截图。围栏可以是 YAML 或 JSON；**每个语义示例只写一份活围栏**，不要为对照再复制甲/乙孪生。**文案对标 Amis 主路径**，禁止甲/乙唯一后缀。切格式走「编辑 Schema」双 Tab。
-- 文档 **编辑 Schema** 是 YAML / JSON 两个 Tab，改一边立刻同步另一边；解析失败时对侧与预览停在上一份有效 schema。按钮在预览**框外**右上，不进画布、不占 `pr-24`。桌面/移动在站点顶栏（浅色/深色旁），一次管整页示例，默认桌面；移动走独立 `preview-frame.html` + **375×812** iframe + `env.mobileUI` + 手机壳，只给进视口的示例挂 iframe；浅色/深色经 URL + BroadcastChannel 同步到每个 iframe。编辑器用表单项 `editor`（`yaml-editor` / `json-editor`），`hideButtons` + `intellisense: schema`。Schema 感知来自 `registerRenderer` 自述（全部已注册 type 都有属性/事件/动作说明；按组件树定位封装节点的 `type`，对齐 monaco JSON Schema `$defs` / `if-then`），站点只消费。
+- 文档 **编辑 Schema** 是 YAML / JSON 两个 Tab，改一边立刻同步另一边；解析失败时对侧与预览停在上一份有效 schema。按钮在预览**框外**右上，不进画布、不占 `pr-24`。桌面/移动在站点顶栏（浅色/深色旁），一次管整页示例，默认桌面；移动走独立 `preview-frame.html` + **375×812** iframe + `env.mobileUI` + 手机壳；**整页一个 iframe**（`preview-frame-host` 按交叉比例塞进当前示例），入口只引 `preview-frame.css`（不要 playground 文档壳 `style.css`）；浅色/深色经 URL + BroadcastChannel 同步。编辑器用表单项 `editor`（`yaml-editor` / `json-editor`），`hideButtons` + `intellisense: schema`。Schema 感知来自 `registerRenderer` 自述（全部已注册 type 都有属性/事件/动作说明；按组件树定位封装节点的 `type`，对齐 monaco JSON Schema `$defs` / `if-then`），站点只消费。
 - **默认自适应**：文档主路径示例不要先写 `size: full` / `w-full`。先给无 size 的表单，再给可选收窄。
 - fence 支持 `scope` / `height`（如 ` ```schema: scope="form-item" height=300`）。`editor` 已接 `hideButtons` / `intellisense: schema` / `size: full`；文档编辑 Schema 用该组件而不是 textarea。低码应用同样写 `intellisense: schema` 或调用 `registerSchemaIntellisense`。`form/options` 手写页已按 Amis options 主路径补活示例（75%）。
 - 介绍页 CRUD 打 playground mock `/api/mock2/sample`（engine/browser/platform/grade）。

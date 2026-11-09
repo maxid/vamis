@@ -1,0 +1,26 @@
+@import "@vamis/ui/styles.css";
+
+/* 只扫运行时 Vue。不要 @source website md / playground 文档壳：
+   helper 已在 @vamis/ui，文档 prose / 手机外框不进 iframe。 */
+@source "../../packages/**/*.{vue,ts}";
+
+/* 视口已是 375，Page 槽走 --page-body-padding 16px（Amis --gap-md）。
+   底与表单面板同一套 --background，避免灰包白卡。 */
+html.is-preview-frame {
+  --page-body-padding: 16px;
+  background: var(--background);
+}
+html.is-preview-frame,
+html.is-preview-frame body,
+html.is-preview-frame #app {
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+  background: var(--background);
+}
+.vamis-preview-page {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: var(--page-body-padding);
+  background: var(--background);
+}

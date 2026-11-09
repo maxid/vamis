@@ -42,6 +42,18 @@ alwaysApply: true
 - 触及：`page` `container`
 - 规则：组件 P0 TODO「实现标准」；`.cursor/rules/update-progress.mdc`
 
+### 文档移动预览 iframe 不要打进站点壳 CSS
+- 踩过：`preview-frame-main` 引 playground `style.css`，每个示例 iframe 解析约 1.26MB（文档 prose、手机外框、`@source` 全站 md）。对照 https://mobile.ant.design/ 会显得极慢：那边是移动站本身 / 单组件 demo，不是 N 份完整文档 CSS。
+- 稳定做法：iframe 只引 `preview-frame.css`（`@vamis/ui` + 页槽）。helper 已在 `@vamis/ui`，不要 `@source website md`。手机外框留在父页 `style.css`。生产 mock 动态 import。不要另打一份 mobile SDK。
+- 触及：文档移动预览
+- 规则：`.cursor/rules/site.mdc`；`playground/src/preview-frame.css`
+
+### 文档移动预览整页只挂一个 iframe
+- 踩过：每个进过视口的示例自己挂 iframe 且 `opened` 永真。DevTools「资源」按解码累加：空帧约 5–7MB，两个框就是约 11MB；换 CSS 入口只少一百多 KB，数字几乎不动。
+- 稳定做法：`preview-frame-host` 单例 iframe，按 IntersectionObserver 比例塞进当前示例，离开视口 `release`。不要停尸 `visibility:hidden`。helper `m:` 仍要真实 375 视口，不要改成无 iframe。
+- 触及：文档移动预览
+- 规则：`.cursor/rules/site.mdc`；`playground/src/docs/preview-frame-host.ts`
+
 ### 宿主 URL query 不要进表单数据域
 - 踩过：对照 `?engine&case&vp`、文档移动预览 `?dark&density&accent` 经默认 `parseSearch` 并进根域；`form.debug` 和提交 payload 都带上。同一 `VamisRoot` 里多个 form 都会抄到（`scope: self` 仍 inherit 父域，init 时 `store.data` 展开 `props.data`）。这不是表单之间没隔离，是宿主把 chrome 写在了应用 URL 上。
 - 稳定做法：正式 embed 默认 `parseLocation` 开着（对齐 Amis `parseQuery`）。对照 `embed-case`、文档 `PreviewFrame` / `SchemaPreview` / Playground 预览关掉。主题仍可写在 iframe URL 给首屏 HTML 脚本读，不要进数据域。

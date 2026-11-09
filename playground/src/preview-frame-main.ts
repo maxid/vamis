@@ -1,10 +1,11 @@
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import PreviewFrame from './views/PreviewFrame.vue'
-import { installMockFetch } from './mock/install'
-import './style.css'
+import './preview-frame.css'
 
-if (import.meta.env.PROD) installMockFetch()
+if (import.meta.env.PROD) {
+  void import('./mock/install').then((m) => m.installMockFetch())
+}
 
 document.documentElement.classList.add('is-preview-frame')
 document.documentElement.dataset.density ||= 'compact'
