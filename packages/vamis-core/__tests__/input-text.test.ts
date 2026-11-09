@@ -102,6 +102,8 @@ describe('input-text renderer reuse', () => {
     expect(vue).toContain(':gap="4"')
     expect(vue).toContain('VamisPasswordToggle')
     expect(vue).toContain('VamisClear')
+    expect(vue).toContain('<VamisClose />')
+    expect(vue).not.toMatch(/chip-remove[^>]*>\s*×/)
     expect(vue).toContain('../Spinner.vue')
     expect(vue).toContain("icon: 'reload'")
     expect(vue).toContain("size: 'sm'")
@@ -138,6 +140,15 @@ describe('input-text renderer reuse', () => {
       '.vamis-text-control__input--suggest .vamis-text-control__native,\n  .vamis-text-control__input--multiple .vamis-text-control__native',
     )
     expect(css).toContain('min-width: 2em')
+    expect(css).toContain('--text-chip-label-max: 60px')
+    expect(css).toContain('--text-chip-close-size: 10px')
+    const chipStart = css.indexOf('.vamis-text-control__chip {')
+    const chipBlock = css.slice(chipStart, css.indexOf('}', chipStart) + 1)
+    expect(chipBlock).not.toContain('max-width')
+    expect(css).toContain('max-width: var(--text-chip-label-max)')
+    const close = readFileSync(resolve(here, '../../vamis-ui/src/ui/VamisClose.vue'), 'utf8')
+    expect(close).toContain('m13.5 1.44 1.06 1.06L9.06 8l5.5 5.5')
+    expect(close).toContain('class="vamis-close"')
   })
 
   it('hover follows --primary, focus glow wraps the whole control, addOn keeps 1px seam', () => {

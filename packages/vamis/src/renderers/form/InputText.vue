@@ -21,7 +21,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { cn, VamisClear, VamisPasswordToggle } from '@vamis/ui'
+import { cn, VamisClear, VamisClose, VamisPasswordToggle } from '@vamis/ui'
 import { controlInputValue, useForm } from '../../formContext'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import FormItem from '../FormItem.vue'
@@ -555,9 +555,10 @@ watch(
             type="button"
             class="vamis-text-control__chip-remove"
             aria-label="移除"
+            @mousedown.prevent
             @click.stop="removeSelected(index)"
           >
-            ×
+            <VamisClose />
           </button>
         </span>
         <input

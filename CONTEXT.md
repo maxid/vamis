@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `input-text` 多选 tag：关闭钮改 Amis `close.svg`（`VamisClose` 10px 线图，不要 `×` 文本）；省略只钉在 label `max-width: 60px`，短 OptionA 完整显示、长 OptionB 才省略。
 - `input-text` `creatable: false` 选中后 focus 仍显示 label（Amis `TextControl-value`，不要只在 blur 写进 input）。多选一枚 tag 不再被 native `width:100%` 挤成两行高（`size=10` + `width:auto`）。
 - DropDownButton `tooltip` 走 `VamisTooltipLayer`（对齐 Amis 外包 TooltipWrapper），不要原生 `title`。Tooltip `placement: top|left|right|bottom` 先指定边、主轴放不下翻对面，箭头 class 跟实际边。对照窄屏贴顶：Amis 裁在 `--top`，Vamis `--bottom` 翻到触发器下。不要再把这套 PopOver 翻层撤成贴边裁切。`sdk.js` loader 要把 `?v=` 抄到 `sdk.esm.js`。
 - DropDownButton 菜单对齐 Amis `ul>li` 列表项：Action 在菜单里走 `isMenuItem`（`<a>` 无 Button 皮），不要把三个按钮横排成完整 Button。禁用项灰度 + not-allowed。

@@ -467,9 +467,9 @@ alwaysApply: true
 
 ### 表单清除钮共用 VamisClear / `.vamis-select__clear`
 - 踩过：Select 是 16px 圆底叉 + `--select-clear-*` hover；`input-text` / `input-date` 用文字 `×` 和 `--muted-foreground`，颜色和动效两套。
-- 稳定做法：图标抽 `VamisClear`（Amis `input-clear`），按钮 class 一律 `.vamis-select__clear`，hover/active 走 `--select-clear-*` + `transition: color`。标签上的小叉仍是 chip-close，不要混进清除钮。
+- 稳定做法：图标抽 `VamisClear`（Amis `input-clear`），按钮 class 一律 `.vamis-select__clear`，hover/active 走 `--select-clear-*` + `transition: color`。标签上的小叉走 `VamisClose`（Amis `close.svg` 10px 线图），不要文字 `×`，不要混进清除钮。Select chip / input-tag / Transfer 结果区后续共用 `VamisClose`。
 - 触及：`select` `input-text` `input-date`
-- 规则：本文；`packages/vamis-ui/src/ui/VamisClear.vue`
+- 规则：本文；`packages/vamis-ui/src/ui/VamisClear.vue`；`packages/vamis-ui/src/ui/VamisClose.vue`
 
 ### 下拉 caret 走 right-arrow-bold 线图，不要 CSS 实心三角
 - 踩过：Select / DropdownButton 用 `border-top` 画实心三角，Table2 / Json 用 `▾`/`▸`；关开瞬间翻转、没有 `transition`。Amis 是 `Icon icon="right-arrow-bold"` 10×10，Select 外壳 90°、展开时 svg `rotate(180deg)` 且 `transition: transform var(--animation-duration)`（0.2s）；DropDown 是 svg 90° → 270°。
@@ -500,6 +500,18 @@ alwaysApply: true
 - 稳定做法：multiple / `creatable: false` 的 input 只绑 draft。单选 `creatable: false` 画 `.vamis-text-control__value`（不是 chip），`(draft && open)` 才藏。
 - 触及：`input-text`
 - 规则：本文；Amis `InputText.tsx` `selectedOptions` map
+
+### input-text 多选省略打在 label 上，不要钉死整颗 tag
+- 踩过：chip `max-width: 80px` 把关闭钮也算进去，短的 OptionA 也被截成 `Optio...`，长文本示例没有对照意义。
+- 稳定做法：对齐 Amis `TextControl-valueLabel`，只给文字 `max-width: 60px`。短 label 完整显示，长的才省略。
+- 触及：`input-text`
+- 规则：本文；Amis `_text.scss` `&-valueLabel`
+
+### tag 小叉用 SVG，不要 button 里写 ×
+- 踩过：`button` + 文本 `×` 吃宿主 `button {}`（padding / 背景 / 字号）和字族，叉的形状、对齐都会跑。Amis 是 `Icon icon="close"` 10px 线图。
+- 稳定做法：共用 `VamisClose`。按钮只做可点热区，unlayered 钉死 10px 盒、`font-size: 0`、无 padding。不要用 `VamisClear` 圆底冒充。后续 Select chip / input-tag / Transfer 同一条。
+- 触及：`input-text`
+- 规则：本文；Amis `icons/close.svg`；`_text.scss` `&-valueIcon`
 
 ### input-text 多选一行不要 width:100% 把 native 挤到下一行
 - 踩过：`--multiple` `flex-wrap` + native `width:100%` + 固定 30px 高，一枚 tag 也折成两行。

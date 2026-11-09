@@ -226,6 +226,9 @@
   --select-chip-close-hover: #151b26;
   --select-chip-height: 22px;
   --select-chip-max-width: 200px;
+  /* Amis TextControl-valueLabel `px2rem(60px)`；小叉 `valueIcon` 10px。钉在 label 上，不要钉整颗 tag。 */
+  --text-chip-label-max: 60px;
+  --text-chip-close-size: 10px;
   --select-pad-y: 4px;
   --select-pad-x: var(--control-px);
   --select-clear-size: 16px;
@@ -1306,7 +1309,6 @@
   .vamis-text-control__suffix {
     margin-left: 6px;
   }
-  .vamis-text-control__chip-remove,
   .vamis-text-control__reveal {
     flex: 0 0 auto;
     display: inline-flex;
@@ -1314,19 +1316,39 @@
     justify-content: center;
     width: 16px;
     height: 16px;
-    margin-left: 4px;
+    margin-left: auto;
     padding: 0;
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: var(--muted-foreground);
+    color: var(--input-password-icon-color);
     font-size: 14px;
     line-height: 1;
     cursor: pointer;
   }
-  .vamis-text-control__reveal {
-    margin-left: auto;
-    color: var(--input-password-icon-color);
+  .vamis-text-control__chip-remove {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--text-chip-close-size);
+    height: var(--text-chip-close-size);
+    margin-left: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--select-chip-close);
+    font-size: var(--text-chip-close-size);
+    line-height: 0;
+    cursor: pointer;
+  }
+  .vamis-text-control__chip-remove svg,
+  .vamis-close {
+    display: block;
+    width: var(--text-chip-close-size);
+    height: var(--text-chip-close-size);
+    flex: 0 0 auto;
   }
   .vamis-password-toggle {
     display: inline-flex;
@@ -1354,9 +1376,11 @@
   .vamis-text-control__spinner {
     display: block;
   }
-  .vamis-text-control__chip-remove:hover,
   .vamis-text-control__reveal:hover {
     color: var(--foreground);
+  }
+  .vamis-text-control__chip-remove:hover {
+    color: var(--select-chip-close-hover);
   }
   .vamis-text-control__counter {
     flex: 0 0 auto;
@@ -1371,7 +1395,6 @@
   }
   .vamis-text-control__chip {
     display: inline-flex;
-    max-width: 80px;
     align-items: center;
     margin: 2px 3px;
     padding: 0 8px;
@@ -1382,9 +1405,11 @@
   }
   .vamis-text-control__chip-label {
     display: block;
+    max-width: var(--text-chip-label-max);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 20px;
   }
   .vamis-text-control__popover {
     min-width: 120px;
@@ -3724,6 +3749,27 @@
 }
 .vamis-caret--tree.is-open svg {
   transform: rotate(90deg);
+}
+
+/* 宿主 `button {}` 会改 padding / 字号 / 背景；tag 小叉是 SVG，unlayered 钉死 10px 盒。 */
+.vamis-text-control__chip-remove {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--text-chip-close-size);
+  height: var(--text-chip-close-size);
+  margin: 0 0 0 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  font-size: 0;
+  line-height: 0;
+  color: var(--select-chip-close);
+}
+.vamis-text-control__chip-remove:hover {
+  color: var(--select-chip-close-hover);
 }
 
 /* 月历标题箭头：对齐 Amis `svg.icon` + `_date.scss` `.rdtHeader` / `.rdtPrev`。
