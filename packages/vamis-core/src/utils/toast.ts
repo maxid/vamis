@@ -41,6 +41,8 @@ export type ToastNotice = {
   title: string
   bodySchema?: SchemaObject
   titleSchema?: SchemaObject
+  /** 写了 msg/body 但公式算出空（如 `${event.data.value|json}` 的 undefined）时不要改成「提示」。 */
+  allowEmpty?: boolean
   position: ToastPosition
   timeout: number
   closeButton: boolean
@@ -123,12 +125,14 @@ function noticeFrom(
   const titleRaw = item.title ?? parent.title
   const bodySchema = toastSchemaObject(bodyRaw)
   const titleSchema = toastSchemaObject(titleRaw)
+  const body = bodySchema ? '' : toastText(bodyRaw, data)
   return {
     level,
-    body: bodySchema ? '' : toastText(bodyRaw, data),
+    body,
     title: titleSchema ? '' : toastText(titleRaw, data),
     ...(bodySchema ? { bodySchema } : {}),
     ...(titleSchema ? { titleSchema } : {}),
+    ...(bodyRaw != null && bodyRaw !== false && !body && !bodySchema ? { allowEmpty: true } : {}),
     position: toastPosition(merged.position, mobile),
     timeout: toastTimeout(level, merged.timeout, mobile),
     closeButton: flag(merged.closeButton, false),
@@ -168,7 +172,7 @@ export function toastNotifyConf(notice: ToastNotice, data: PlainObject = {}, mob
 function toastFallbackText(notice: ToastNotice): string {
   if (notice.body) return notice.body
   if (notice.title) return notice.title
-  if (notice.bodySchema || notice.titleSchema) return ''
+  if (notice.bodySchema || notice.titleSchema || notice.allowEmpty) return ''
   return '提示'
 }
 

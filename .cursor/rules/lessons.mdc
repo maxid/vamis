@@ -60,6 +60,12 @@ alwaysApply: true
 - 触及：`action` `button`
 - 规则：`packages/vamis-sdk/compare/schema-tree.mjs` `shouldProbe`；`embed-case.html`
 
+### 对照 dialogOpen 不要把 PopUp 当 Dialog
+- 踩过：`input-text` 建议窄屏走 `VamisPopUp`（`role="dialog"`），探针 click + `enter:toast` 把底栏当成 dialog 效果，Amis 没有 PopUp 就假红。
+- 稳定做法：`dialogOpen` / `closeDialog` 排除 `.vamis-popup` / `.vamis-date-sheet`。真正 Dialog 走 `[data-slot="dialog-content"]` / `.cxd-Modal`。
+- 触及：`input-text` `dropdown-button` `select` `input-date`
+- 规则：`packages/vamis-sdk/embed-case.html` `dialogOpen`
+
 ### 渲染器自己派发的事件，宿主不要再派一次
 - 踩过：Action 在按钮/容器上绑 `mouseenter` / `mouseleave` 并 `runOnEvent`（兼 tooltip）；`SchemaRenderer` 外层 `div.vamis-node` 也对同一 schema 走 `onHostEvent`。悬停一次 toast 两条。click 早已用 `SELF_CLICK_TYPES` 跳过宿主。
 - 稳定做法：组件自己处理的指针事件，宿主 `shouldHandleHostEvent` 必须跳过。`tpl` / `icon` 这类自己不绑指针的仍由宿主派发。mouseenter 不冒泡，子节点 `stopPropagation` 挡不住父级自己的 mouseenter。
@@ -261,8 +267,14 @@ alwaysApply: true
 
 ### 移动端 PopOver 走底部 PopUp，不要再用 VamisOverlay
 - 踩过：Select 对照「移动」仍是贴触发器的下拉；Amis `SelectMobile` 是 `PopUp` 从底部滑入，单选滚轮、多选列表，确认才写入。
-- 稳定做法：`overlayIsMobile`（schema/env `mobileUI` 优先，否则 768）。桌面 `VamisOverlay`，移动 `VamisPopUp`（height 0 贴底 in/out，`--z-modal` 1400，取消/确认）。通用高度 400、Select 320（`overlay.height` 可覆盖）。单选挂 `CalendarWheel`（Select `itemHeight` 40，日期仍 48），多选列表改 draft、确认 `commit`。日期已是 `DatePickerSheet` 同一套动画，新控件接 `VamisPopUp`，不要第三套壳。DropdownButton / InputText 建议下一刀接。
+- 稳定做法：`overlayIsMobile`（schema/env `mobileUI` 优先，否则 768）。**Select / 日期**桌面 `VamisOverlay`，移动 `VamisPopUp`（height 0 贴底 in/out，`--z-modal` 1400，取消/确认）。通用高度 400、普通 Select 320（`overlay.height` 可覆盖）。单选挂 `CalendarWheel`（Select `itemHeight` 40，日期仍 48），多选列表改 draft、确认 `commit`。日期已是 `DatePickerSheet` 同一套动画。**不要**把 `dropdown-button` / `input-text` 建议接到 PopUp。
 - 触及：`select` Options `input-date`
+- 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### DropdownButton / InputText 建议贴触发器，不要走 PopUp
+- 踩过：窄屏接到 `VamisPopUp` 后，输入框无法边打边滤、下拉按钮离开原位；Amis 两者都是贴触发器的 Overlay。`options` 是前缀匹配提示，下拉菜单是就近展开，不是 Select 那种选完才确认的底栏。
+- 稳定做法：PopUp 只给 Select / 日期。`dropdown-button` / `input-text` 桌面和窄屏都走 `VamisOverlay`。
+- 触及：`dropdown-button` `input-text` `input-password`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### PopUp 边框打在底栏盒上，遮罩必须 fixed !important
@@ -458,6 +470,12 @@ alwaysApply: true
 - 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。下拉 PopOver 默认 `OVERLAY_POPOVER_GAP = 4`（下翻 = margin-top 4 / margin-bottom 0，上翻反过来）。auto 只上下翻，不对左右开；左右是 Tooltip 的 placement（`TOOLTIP_OVERLAY_GAP` 6）。不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。菜单底/边只跟浅深色；选中字色 / 悬停底绑 `--primary`。悬停用 `color-mix(... white/black)` 保色相，不要 mix 进菜单底（深色 `#17202d` 会把翠绿拉成青）。不要写死云舍蓝，否则切翠绿选中还是蓝。
 - 触及：`select` Options `input-text` `input-date` `dropdown-button`
 - 规则：本文；Amis `_select.scss` `&-option` / `PopOver--v-top`；`.cursor/rules/style.mdc` / `reuse-overlay.mdc`
+
+### `|json` 不要把 undefined 编成 null
+- 踩过：`JSON.stringify(input ?? null)` 让空 `input-text` 的 focus toast 显示 `null`；Amis `JSON.stringify(undefined)` 是空，对照 toast 正文对不上。空串之后 `toastFallbackText` 又会改成「提示」。
+- 稳定做法：对齐 Amis `filter.ts` 的 `json`：不要 `?? null`；stringify 得到 `undefined` 就当空串。真正的 `null` 仍是 `"null"`，空字符串仍是 `""`。写了 `msg`/`body` 但公式算出空时，toast 保留空正文（只画图标），不要回落「提示」。
+- 触及：`input-text` toast 公式
+- 规则：`packages/vamis-core/src/filters.ts`；`packages/vamis-core/src/utils/toast.ts`
 
 ### 文本选择器检索按 CONTAINS 排序，有 autoComplete 不要再本地过滤
 - 踩过：`input-text` 用 `includes` 完事，没有前缀优先和高亮；配了 `autoComplete` 仍本地切一刀，远端结果被滤掉。

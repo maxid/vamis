@@ -32,7 +32,7 @@ Vamis 入口（不要再新开月历）：
 
 ## 移动端 PopOver 从底部滑入
 
-对齐 Amis `PopUp`（`SelectMobile` / DatePicker 窄屏）。桌面仍是 `VamisOverlay` + `PopOver` 定位；**`overlayIsMobile` 为真时改走 `VamisPopUp`**：固定底栏、遮罩、height 0 贴底 `in`/`out`（看起来从底部滑入/滑出）、取消/确认、`--z-modal` 1400。
+对齐 Amis `PopUp`（**只** `SelectMobile` / DatePicker 窄屏）。桌面仍是 `VamisOverlay` + `PopOver` 定位；Select / 日期在 **`overlayIsMobile` 为真时改走 `VamisPopUp`**：固定底栏、遮罩、height 0 贴底 `in`/`out`（看起来从底部滑入/滑出）、取消/确认、`--z-modal` 1400。`dropdown-button` / `input-text` 建议不走这条。
 
 | 用途 | 路径 |
 |------|------|
@@ -44,7 +44,7 @@ Vamis 入口（不要再新开月历）：
 | 日期滚轮 | `DatePickerSheet`（面板 320px；动画与 PopUp 共用 keyframes） |
 | Select | 普通单选才走 `CalendarWheel`（`itemHeight` 40，`menuTpl` 走 slot）；`searchable` 检索条在滚轮上方。`selectMode: group` / 多选走列表（Transfer 形态），不要把分组拍扁进滚轮。确认才 `commit`。移动端箭头朝右、无翻转 |
 
-禁止：移动端 Select / 日期再挂 `VamisOverlay` 当下拉；为每个 type 再写一套滑入动画。DropdownButton / InputText 建议也接这块，不要第三套壳。`mobileCalendarMode: calendar` 仍未接。
+禁止：移动端 Select / 日期再挂 `VamisOverlay` 当下拉；为每个 type 再写一套滑入动画。**`dropdown-button` / `input-text` 的 `options` 必须贴触发器走 `VamisOverlay`**（对齐 Amis：前缀匹配提示 / 就近展开菜单），不要接 `VamisPopUp`。`mobileCalendarMode: calendar` 仍未接。
 
 ## 浮层必须逃出裁切
 

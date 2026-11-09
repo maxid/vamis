@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { pushToast, resetToasts, useToastState } from '../src/toast-store'
 import {
   isMobileToast,
+  notifyToasts,
   toastNotices,
   toastSchemaObject,
   toastPosition,
@@ -134,6 +135,24 @@ describe('toast notices', () => {
       titleSchema: title,
       bodySchema: tpl,
     })
+  })
+
+  it('keeps empty |json msg instead of 提示', () => {
+    const notices = toastNotices(
+      { actionType: 'toast', args: { msg: '${event.data.value|json}' } },
+      { event: { data: {} } },
+    )
+    expect(notices[0].body).toBe('')
+    expect(notices[0].allowEmpty).toBe(true)
+    const calls: Array<[string, string]> = []
+    notifyToasts(
+      (type, msg) => {
+        calls.push([type, msg])
+      },
+      { actionType: 'toast', msg: '${event.data.value|json}' },
+      { event: { data: {} } },
+    )
+    expect(calls[0]?.[1]).toBe('')
   })
 
   it('pushToast snapshots bodySchema and click-time data', () => {

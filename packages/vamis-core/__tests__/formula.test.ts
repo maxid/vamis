@@ -67,6 +67,14 @@ describe('D2 runtime filters', () => {
     expect(filterTpl('${obj|json}', { obj: { a: 1 } })).toBe('{"a":1}')
   })
 
+  it('|json does not turn undefined into null', () => {
+    expect(filterTpl('${v|json}', {})).toBe('')
+    expect(filterTpl('${event.data.value|json}', { event: { data: {} } })).toBe('')
+    expect(filterTpl('${event.data.value|json}', { event: { data: { value: undefined } } })).toBe('')
+    expect(filterTpl('${event.data.value|json}', { event: { data: { value: null } } })).toBe('null')
+    expect(filterTpl('${event.data.value|json}', { event: { data: { value: '' } } })).toBe('""')
+  })
+
   it('|date formats with a dayjs pattern', () => {
     expect(filterTpl("${d|date:'YYYY/MM/DD':'YYYY-MM-DD'}", { d: '2021-06-15' })).toBe('2021/06/15')
   })

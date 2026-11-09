@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
       @outside="onOutside"
     >
       <div
-        class="min-w-36 rounded-md border bg-popover p-1 shadow-md"
+        class="vamis-dropdown-menu min-w-36 rounded-md border bg-popover p-1 shadow-md"
         @mouseenter="onHoverEnter"
         @mouseleave="onHoverLeave"
         @click="onMenuClick"

@@ -31,6 +31,7 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(vue).toContain('VamisCaret')
     expect(vue).toContain('variant="dropdown"')
     expect(vue).toContain('VamisOverlay')
+    expect(vue).not.toContain('VamisPopUp')
     expect(vue).toContain(':gap="4"')
     expect(vue).not.toContain('border-t-[4px]')
     expect(vue).not.toContain('absolute z-40')

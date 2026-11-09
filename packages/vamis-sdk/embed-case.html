@@ -57,10 +57,10 @@
           try {
             const href = new URL(name, location.origin + sdkBase())
             // 旧 WebView 可能还留着误加的一年 immutable。换 query 才能拿到新 css/js。
-            href.searchParams.set('v', '20261108t')
+            href.searchParams.set('v', '20261109c')
             return href.href
           } catch (_err) {
-            return sdkBase() + name + '?v=20261108t'
+            return sdkBase() + name + '?v=20261109c'
           }
         }
         const css =
@@ -505,7 +505,7 @@
 
         function dialogOpen() {
           return !!(
-            document.querySelector('[role="dialog"]') ||
+            document.querySelector('[role="dialog"]:not(.vamis-popup):not(.vamis-date-sheet)') ||
             document.querySelector('[data-slot="dialog-content"]') ||
             document.querySelector('[data-slot="sheet-content"]') ||
             document.querySelector('[data-vamis-overlay]') ||
@@ -528,7 +528,7 @@
         function closeDialog() {
           const close =
             document.querySelector('[data-vamis-overlay] button') ||
-            document.querySelector('[role="dialog"] button') ||
+            document.querySelector('[role="dialog"]:not(.vamis-popup):not(.vamis-date-sheet) button') ||
             document.querySelector('[data-slot="dialog-content"] button') ||
             document.querySelector('[data-slot="sheet-content"] button') ||
             document.querySelector('.cxd-Modal-close') ||

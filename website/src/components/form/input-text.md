@@ -6,7 +6,7 @@ outline: deep
 # InputText 输入框
 
 ::: info 实现进度 92% · 进行中
-主路径已对齐 Amis：`addOn`、`clearable` / 计数 / 边框 / 前缀后缀 / 事件动作。选择器走 `VamisOverlay`，本地检索按 CONTAINS 排序并高亮匹配，多选可「新增：」；`autoComplete` 不再本地过滤。`input-password` 默认 `revealPassword` 显隐钮（`review` / `encrypt`）。缺 `themeCss`。
+主路径已对齐 Amis：`addOn`、`clearable` / 计数 / 边框 / 前缀后缀 / 事件动作。选择器建议贴输入框走 `VamisOverlay`（窄屏也是，边打边滤）；本地检索按 CONTAINS 排序并高亮匹配，多选可「新增：」；`autoComplete` 不再本地过滤。`input-password` 默认 `revealPassword` 显隐钮（`review` / `encrypt`）。缺 `themeCss`。
 :::
 
 `input-text` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -553,7 +553,7 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 选择器下拉 Teleport 到 `env.getModalContainer()`，本地检索按 CONTAINS 档排序（精确 / 前缀优先于包含）并高亮匹配；配了 `autoComplete` 时不下本地过滤，去抖 250ms 按 `$term` 拉选项。
+- 选择器建议 Teleport 到 `env.getModalContainer()`，贴输入框走 `VamisOverlay`（窄屏也是，不要底栏 PopUp）；本地检索按 CONTAINS 档排序（精确 / 前缀优先于包含）并高亮匹配；配了 `autoComplete` 时不下本地过滤，去抖 250ms 按 `$term` 拉选项。
 - `input-password` 默认画出显隐钮；`revealPassword: false` 关掉。点开会派发 `review` / `encrypt`（Amis 源码有，文档页未列）。
 - 焦点环走 token `box-shadow`，不搬 `.cxd-TextControl`。
 - 「不同边框风格」半边框示例 `inputControlClassName` 用 `bg-muted`（浅/深都跟主题），不用 Amis 的 `bg-gray-100`（固定 `#f3f4f6`，深色会变成白底）。无边框 `nativeInputClassName` 用 `focus:text-primary`，不用 Amis 的 `focus:text-indigo-700`（写死靛色，不跟 5 色）。

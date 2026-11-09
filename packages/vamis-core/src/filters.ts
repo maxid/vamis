@@ -1,9 +1,12 @@
 import { registerFilter } from '@vamis/formula'
 import { parseDate } from './utils/dayjs'
 
-registerFilter('json', (input: unknown) => {
+registerFilter('json', (input: unknown, tabSize: number | string = 0) => {
   try {
-    return JSON.stringify(input ?? null)
+    const n = parseInt(String(tabSize), 10)
+    const text = n ? JSON.stringify(input, null, n) : JSON.stringify(input)
+    // Amis JSON.stringify(undefined) 是 undefined，不要 ?? null 编成 "null"。
+    return text ?? ''
   } catch {
     return ''
   }

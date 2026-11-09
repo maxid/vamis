@@ -406,6 +406,11 @@ describe('schema-tree', () => {
     expect(html).toContain('parseLocation: false')
   })
 
+  it('embed-case dialogOpen ignores picker sheets', () => {
+    const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
+    expect(html).toContain('[role="dialog"]:not(.vamis-popup):not(.vamis-date-sheet)')
+  })
+
   it('embed-case honors ?vp=mobile as env.mobileUI and a 375 viewport', () => {
     const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../embed-case.html'), 'utf8')
     expect(html).toContain("params.get('vp') === 'mobile'")

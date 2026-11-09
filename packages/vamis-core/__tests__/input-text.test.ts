@@ -73,6 +73,7 @@ describe('input-text renderer reuse', () => {
   it('teleports suggestions and wires password reveal', () => {
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputText.vue'), 'utf8')
     expect(vue).toContain('VamisOverlay')
+    expect(vue).not.toContain('VamisPopUp')
     expect(vue).toContain('overlayContainerFrom')
     expect(vue).toContain(':gap="4"')
     expect(vue).toContain('VamisPasswordToggle')
@@ -91,6 +92,8 @@ describe('input-text renderer reuse', () => {
     expect(block).toContain('var(--select-menu-border)')
     expect(block).not.toMatch(/position:\s*absolute/)
     expect(block).not.toMatch(/z-index:\s*20/)
+    expect(css).not.toContain('.vamis-text-control__popover.is-sheet')
+    expect(css).not.toContain('.vamis-dropdown-menu.is-sheet')
     expect(css).toContain('--input-password-icon-size: 16px')
     expect(css).toContain('.vamis-text-control__native--password')
     expect(css).toContain('.vamis-text-control__sug .is-matched')

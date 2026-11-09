@@ -6,7 +6,7 @@ outline: deep
 # DropDownButton 下拉按钮
 
 ::: info 实现进度 80% · 进行中
-文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`。缺 `popOverContainerSelector`、菜单进出动画。
+文档主路径已对齐：`buttons` / `body`、分组 `children`、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret` / `iconOnly`、`defaultIsOpened`、`align`。菜单贴触发器走 `VamisOverlay`（窄屏也是，对齐 Amis 就近展开）。缺菜单进出动画。
 :::
 
 点击（或悬停）展开更多按钮。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -140,4 +140,4 @@ buttons:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 未接 `popOverContainerSelector`、菜单进出动画、fontawesome。
+- 未接菜单进出动画。菜单贴触发器走 `VamisOverlay`（窄屏也是），不要接到 `VamisPopUp`。
