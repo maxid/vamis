@@ -670,6 +670,18 @@ alwaysApply: true
 - 触及：`checkbox` `checkboxes` `select` Options
 - 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
 
+### dataMapping 不要把 File / Blob 当普通对象
+- 踩过：`receiver` POST `{ file: File }` 经 `dataMapping` 把 File 当 plain object 枚举，文件体变成空对象，FormData 里没有文件。
+- 稳定做法：`isPlainObject` 排除 `Blob` / `FormData`（File 是 Blob）。上传 payload 才能原样进 `toFormBody`。
+- 触及：`input-file`
+- 规则：本文；`packages/vamis-core/src/utils/data-mapping.ts`
+
+### FileControl 默认 chrome 走 `--file-*`，不要 Tailwind dropzone
+- 踩过：占位用 dashed muted 卡片 +「点击或拖拽」；Amis 是 32 高 enhance 钮、列表 max-height 144、拖拽区 180 / 1px dashed。
+- 稳定做法：量进 `:root` / `.dark` 的 `--file-*`，选择器只 `var()`。拖拽文案「将文件拖到此处，或」和「点击上传」不要换行，否则会多一个空格。
+- 触及：`input-file`
+- 规则：`.cursor/rules/style.mdc`；Amis `_file.scss`
+
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。
 - 稳定做法：helper 继续绑 shadcn `--secondary`。组件专用色在该渲染器覆盖。

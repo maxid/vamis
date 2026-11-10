@@ -214,6 +214,54 @@ export function handleMockApi(input: {
     return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
   }
 
+  if (pathname === '/api/upload/file' || pathname === '/api/mock2/upload/file') {
+    const file = body?.file
+    const filename =
+      file && typeof file === 'object' && 'name' in file
+        ? String((file as { name?: unknown }).name || 'file')
+        : typeof file === 'string'
+          ? file
+          : 'fis3-react.md'
+    const url = `https://amis.example/upload/${encodeURIComponent(filename)}`
+    return {
+      status: 0,
+      msg: 'ok',
+      data: { value: url, url, filename },
+    }
+  }
+
+  if (pathname === '/api/mock2/upload/random') {
+    const n = Math.floor(Math.random() * 10) + 1
+    if (n <= 5) return { status: 500, msg: '上传失败', data: null }
+    const url = `http://amis.bj.bcebos.com/amis/random/${n}`
+    return {
+      status: 0,
+      msg: '上传成功',
+      data: { value: url, url, filename: `random${n}.js` },
+    }
+  }
+
+  if (pathname === '/api/upload/startChunk') {
+    return {
+      status: 0,
+      msg: '',
+      data: {
+        key: `images/${String(body?.filename || 'file')}`,
+        uploadId: '036f64cd5dd95750d4bcb33556b629c6',
+      },
+    }
+  }
+
+  if (pathname === '/api/upload/chunk') {
+    return { status: 0, msg: '', data: { eTag: '016bd9b68ddd5cd7318875da3ea28207' } }
+  }
+
+  if (pathname === '/api/upload/finishChunk' || pathname === '/api/upload/finishChunkApi') {
+    const filename = String(body?.filename || 'file')
+    const url = `https://xxxx.cdn.bcebos.com/images/${encodeURIComponent(filename)}`
+    return { status: 0, msg: '', data: { value: url, url } }
+  }
+
   if (pathname === '/api/mock2/form/saveFormFailed') {
     return {
       status: 422,

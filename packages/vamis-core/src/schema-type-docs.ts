@@ -124,7 +124,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   'diff-editor': doc('DiffEditor 对比编辑器', '数据输入', '左右对比。左侧 diffValue 只读，右侧绑 name。'),
   fieldset: doc('FieldSet 表单项集合', '数据输入', '分组折叠的表单项集合。'),
   'input-excel': doc('InputExcel Excel 解析', '数据输入', '选择 Excel 文件。'),
-  'input-file': doc('InputFile 文件上传', '数据输入', '上传文件。receiver 指定接口。'),
+  'input-file': doc('InputFile 文件上传', '数据输入', '上传文件。receiver 默认 /api/upload/file，autoUpload 默认 true。'),
   formula: doc('Formula 公式', '数据输入', '按公式写入字段值，界面上通常不展示。'),
   group: doc('Group 表单项组', '数据输入', '同一行横排多个表单项。'),
   hidden: doc('Hidden 隐藏字段', '数据输入', '不展示，只存值。'),

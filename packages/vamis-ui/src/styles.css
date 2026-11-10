@@ -462,6 +462,39 @@
   /* Amis `--PopOver-bg` / `--PopOverAble-*`。不要用 shadcn `--popover`。 */
   --popover-layer-bg: #ffffff;
   --popover-layer-fg: var(--select-menu-color);
+  /* Amis `_file.scss` / `--inputFile-*`。选择器只 var()。 */
+  --file-list-mt: 8px;
+  --file-list-mb: 8px;
+  --file-list-max-h: 144px;
+  --file-list-pad-y: 4px;
+  --file-list-pad-x: 6px;
+  --file-list-color: var(--primary);
+  --file-list-size: 12px;
+  --file-list-weight: 400;
+  --file-list-bg: transparent;
+  --file-list-hover-bg: var(--fill-9);
+  --file-icon-size: 12px;
+  --file-icon-color: var(--text-loud);
+  --file-icon-gap: 6px;
+  --file-clear-size: 12px;
+  --file-clear-color: #84878c;
+  --file-clear-hover: #5c5f66;
+  --file-drag-h: 180px;
+  --file-drag-border: 1px dashed var(--border);
+  --file-drag-radius: var(--radius);
+  --file-drag-bg: var(--card);
+  --file-drag-hover-bg: var(--fill-9);
+  --file-drag-color: #5c5f66;
+  --file-drag-size: 12px;
+  --file-drag-icon: 48px;
+  --file-drag-icon-color: #d4d6d9;
+  --file-drag-icon-gap: 10px;
+  --file-progress-h: 5px;
+  --file-progress-bg: #ebebeb;
+  --file-progress-fill: var(--info);
+  --file-danger: var(--destructive);
+  --file-select-gap: 10px;
+  --file-size-color: var(--file-clear-color);
   --popover-layer-border: 1px solid var(--border);
   --popover-layer-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --popover-layer-min: 320px;
@@ -568,6 +601,16 @@
   --tooltip-bg: #17202d;
   --tooltip-fg: #f7f8fa;
   --tooltip-border: 1px solid #303640;
+  --file-list-hover-bg: #151c26;
+  --file-icon-color: #e8e9eb;
+  --file-clear-color: #84878c;
+  --file-clear-hover: #e8e9eb;
+  --file-drag-bg: var(--background);
+  --file-drag-hover-bg: var(--card);
+  --file-drag-color: #b8bbbf;
+  --file-drag-icon-color: #5c5f66;
+  --file-progress-bg: #303640;
+  --file-size-color: #84878c;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);
   --destructive: oklch(0.65 0.19 25);
@@ -676,12 +719,6 @@
     }
   }
 
-  .vamis-file-drop {
-    min-height: calc(var(--control-h) * 2.5);
-    @apply flex cursor-pointer flex-col items-center justify-center gap-1 rounded border border-dashed border-input bg-muted/40 px-4 py-4 text-center text-sm;
-    @apply hover:border-ring hover:bg-muted/70;
-    @apply has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
-  }
 
   input[type="range"][data-slot="range"] {
     -webkit-appearance: none;
@@ -4493,4 +4530,195 @@
     color: var(--link-active-color);
     text-decoration: var(--link-hover-decoration);
   }
+}
+
+/* Amis `.FileControl`：选择器只 var()。 */
+.vamis-file__tpl {
+  display: block;
+  margin-bottom: var(--gap-base);
+  cursor: pointer;
+}
+.vamis-file__dropzone {
+  outline: none;
+}
+.vamis-file__select {
+  display: inline-flex;
+  margin-right: var(--file-select-gap);
+}
+.vamis-file__select .vamis-file__upload {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  display: inline;
+  vertical-align: baseline;
+}
+.vamis-file__select span {
+  font-size: var(--fontSizeSm, 12px);
+  line-height: 20px;
+}
+.vamis-file__size {
+  margin-top: 4px;
+  line-height: 20px;
+  font-size: var(--fontSizeSm, 12px);
+  color: var(--file-size-color);
+}
+.vamis-file__list {
+  list-style: none;
+  margin: var(--file-list-mt) 0 var(--file-list-mb);
+  padding: 0;
+  max-height: var(--file-list-max-h);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.vamis-file__list > li {
+  margin-bottom: 4px;
+  font-size: 12px;
+  background: var(--file-list-bg);
+}
+.vamis-file__list > li:hover {
+  border-radius: 2px;
+  background: var(--file-list-hover-bg);
+}
+.vamis-file__item {
+  padding: var(--file-list-pad-y) var(--file-list-pad-x);
+  display: flex;
+  line-height: 24px;
+  height: auto;
+  align-items: center;
+}
+.vamis-file__item.is-invalid,
+.vamis-file__item.is-invalid .vamis-file__icon,
+.vamis-file__item.is-invalid .vamis-file__name {
+  color: var(--file-danger);
+}
+.vamis-file__icon {
+  margin-right: var(--file-icon-gap);
+  font-size: var(--file-icon-size);
+  color: var(--file-icon-color);
+  flex: none;
+}
+.vamis-file__icon svg {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: baseline;
+}
+.vamis-file__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  color: var(--file-list-color);
+  font-size: var(--file-list-size);
+  font-weight: var(--file-list-weight);
+  line-height: 24px;
+  min-width: 0;
+}
+.vamis-root a.vamis-file__name,
+.vamis-sdk a.vamis-file__name,
+.vamis-root a.vamis-file__name:hover,
+.vamis-sdk a.vamis-file__name:hover {
+  color: var(--file-list-color);
+  text-decoration: none;
+}
+.vamis-file__clear {
+  color: var(--file-clear-color);
+  display: none;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: var(--gap-xs, 4px);
+  font-size: var(--file-clear-size);
+  line-height: 24px;
+  flex: none;
+  width: var(--file-clear-size);
+  height: var(--file-clear-size);
+}
+.vamis-file__clear .vamis-close {
+  width: var(--file-clear-size);
+  height: var(--file-clear-size);
+  display: block;
+}
+.vamis-file__list > li:hover .vamis-file__clear {
+  display: block;
+}
+.vamis-file__clear:hover {
+  color: var(--file-clear-hover);
+}
+.vamis-file__progress {
+  display: inline-flex;
+  height: 20px;
+  padding: 0 6px;
+  transform: translateY(-3px);
+  width: 100%;
+  align-items: center;
+  white-space: nowrap;
+}
+.vamis-file__progress > span {
+  display: inline-block;
+  padding: 0 4px 0 10px;
+  font-size: 12px;
+}
+.vamis-file__bar {
+  height: var(--file-progress-h);
+  min-width: 0;
+  flex: 1;
+  background: var(--file-progress-bg);
+}
+.vamis-file__bar > span {
+  display: block;
+  background: var(--file-progress-fill);
+  border-radius: 2px;
+  height: 100%;
+}
+.vamis-file__tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  height: var(--file-drag-h);
+  text-align: center;
+  border: var(--file-drag-border);
+  border-radius: var(--file-drag-radius);
+  background: var(--file-drag-bg);
+  cursor: pointer;
+}
+.vamis-file__tip:hover,
+.vamis-file__dropzone.is-active .vamis-file__tip {
+  background: var(--file-drag-hover-bg);
+}
+.vamis-file__dropzone.disabled .vamis-file__tip {
+  filter: grayscale(100%);
+  cursor: not-allowed;
+  pointer-events: auto;
+  background: var(--control-disabled-bg);
+}
+.vamis-file__cloud {
+  width: var(--file-drag-icon);
+  height: var(--file-drag-icon);
+  color: var(--file-drag-icon-color);
+  display: block;
+}
+.vamis-file__tip > span {
+  margin-top: var(--file-drag-icon-gap);
+  line-height: 20px;
+  font-size: var(--file-drag-size);
+  font-weight: 400;
+  color: var(--file-drag-color);
+}
+.vamis-file__tip-click {
+  color: var(--primary);
+}
+.vamis-file__help a {
+  color: var(--file-clear-color);
+  font-size: var(--fontSizeSm, 12px);
+}
+.vamis-file__sum {
+  font-size: var(--fontSizeSm, 12px);
+}
+.vamis-file__sum > a {
+  cursor: pointer;
+  font-size: var(--fontSizeSm, 12px);
+}
+.vamis-file__upload-btn {
+  margin-top: 8px;
 }

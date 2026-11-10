@@ -22,6 +22,11 @@ registerFilter('first', (input: unknown) => {
   return input
 })
 
+registerFilter('last', (input: unknown) => {
+  if (Array.isArray(input)) return input[input.length - 1]
+  return input
+})
+
 /** Amis `|pick:field`：对象取字段，数组则逐项取。 */
 registerFilter('pick', (input: unknown, field = 'label') => {
   const key = String(field || 'label')

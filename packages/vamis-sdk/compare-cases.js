@@ -15855,22 +15855,423 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "input-file",
-      "body": [
-        {
-          "type": "form",
-          "title": "input-file",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "accept": "*",
+            "receiver": "/api/upload/file"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "限制只能上传csv文件",
+            "accept": ".csv",
+            "receiver": "/api/upload/file"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "不能上传超过 1M 的文件",
+            "maxSize": 1048576,
+            "receiver": "/api/upload/file"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "data": {
+          "file": {
+            "id": "2ba48d02d348",
+            "value": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+            "url": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+            "filename": "file(single).md",
+            "name": "file(single).md",
+            "state": "uploaded"
+          },
+          "files": [
             {
-              "type": "input-file",
-              "name": "input_file",
-              "label": "input-file"
+              "id": "2ba48d02d349",
+              "value": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "url": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "filename": "file1.md",
+              "name": "file1.md",
+              "state": "uploaded"
+            },
+            {
+              "id": "14723e0bc640",
+              "value": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "url": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "filename": "file2.md",
+              "name": "file2.md",
+              "state": "uploaded"
             }
           ]
-        }
-      ]
+        },
+        "body": [
+          {
+            "type": "input-file",
+            "name": "files",
+            "label": "File(多选)",
+            "mode": "horizontal",
+            "labelAlign": "left",
+            "accept": "*",
+            "receiver": "/api/upload/file",
+            "multiple": true,
+            "autoUpload": false,
+            "joinValues": false,
+            "onEvent": {
+              "success": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msgType": "info",
+                      "msg": "「${event.data.path}」上传成功"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File(单选)",
+            "mode": "horizontal",
+            "labelAlign": "left",
+            "accept": "*",
+            "receiver": "/api/upload/file",
+            "multiple": false,
+            "autoUpload": false,
+            "joinValues": false,
+            "onEvent": {
+              "success": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msgType": "info",
+                      "msg": "「${event.data.path}」上传成功"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "accept": "*",
+            "asBlob": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "accept": "*",
+            "receiver": "/api/upload/file",
+            "autoFill": {
+              "myUrl": "${url}"
+            }
+          },
+          {
+            "type": "input-text",
+            "name": "myUrl",
+            "label": "url"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "multiple": true,
+            "receiver": "/api/upload/file",
+            "autoFill": {
+              "myUrl": "${items|pick:url}",
+              "lastUrl": "${items|last|pick:url}"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "accept": "*",
+            "receiver": "/api/upload/file",
+            "drag": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "data": {
+          "files": [
+            {
+              "id": "2ba48d02d349",
+              "value": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "url": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "filename": "file1.md",
+              "name": "file1.md",
+              "state": "uploaded"
+            },
+            {
+              "id": "14723e0bc640",
+              "value": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "url": "http://amis.bj.bcebos.com/amis/2017-11/1510713111265/fis3-react.md",
+              "filename": "file2.md",
+              "name": "file2.md",
+              "state": "uploaded"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "input-file",
+            "name": "files",
+            "label": false,
+            "mode": "horizontal",
+            "accept": "*",
+            "receiver": "/api/mock2/upload/random",
+            "multiple": true,
+            "joinValues": false
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-file-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputFile 文件上传",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputFile 文件上传 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-file",
+            "name": "file",
+            "label": "File",
+            "accept": "*",
+            "receiver": "/api/upload/file",
+            "id": "clear_text"
+          },
+          {
+            "type": "button",
+            "label": "清空",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "clear",
+                    "componentId": "clear_text"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

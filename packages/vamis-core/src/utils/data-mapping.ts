@@ -2,8 +2,14 @@ import type { PlainObject } from '../types'
 import { createObject } from '../context'
 import { resolveValue } from '../formula'
 
+function isBinaryLike(value: unknown): boolean {
+  if (typeof Blob !== 'undefined' && value instanceof Blob) return true
+  if (typeof FormData !== 'undefined' && value instanceof FormData) return true
+  return false
+}
+
 function isPlainObject(value: unknown): value is PlainObject {
-  return !!value && typeof value === 'object' && !Array.isArray(value)
+  return !!value && typeof value === 'object' && !Array.isArray(value) && !isBinaryLike(value)
 }
 
 function setPath(target: PlainObject, key: string, value: unknown, convertKeyToPath?: boolean) {
