@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCases } from './build-cases.mjs'
 import { matchCatalog, parseViewportArg, rerunCommands, VIEWPORT } from './catalog.mjs'
+import { stampSdkHtmlFiles } from './sdk-stamp.mjs'
 import { collectFontDiffs, scoreCase } from './score.mjs'
 import { attachFindings } from './classify.mjs'
 import { writeReport } from './report.mjs'
@@ -112,6 +113,7 @@ export async function runCompare(argv = process.argv.slice(2)) {
   }
   fs.copyFileSync(path.join(sdk, 'embed-case.html'), path.join(dist, 'embed-case.html'))
   fs.copyFileSync(path.join(sdk, 'compare.html'), path.join(dist, 'compare.html'))
+  stampSdkHtmlFiles(sdk, dist)
   const { server, origin } = await startStatic(dist)
   let browser
   try {

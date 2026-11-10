@@ -54,13 +54,14 @@
           return path.replace(/[^/]*$/, '') || '/'
         }
         function sdkFile(name) {
+          // 占位由 serveSdk / sdk:build 换成产物 mtime。写死日期的话 sdk:build 后对照仍吃旧包。
+          const stamp = '__VAMIS_SDK_V__'
           try {
             const href = new URL(name, location.origin + sdkBase())
-            // 旧 WebView 可能还留着误加的一年 immutable。换 query 才能拿到新 css/js。
-            href.searchParams.set('v', '20261109j')
+            href.searchParams.set('v', stamp)
             return href.href
           } catch (_err) {
-            return sdkBase() + name + '?v=20261109j'
+            return sdkBase() + name + '?v=' + stamp
           }
         }
         const css =
@@ -801,7 +802,7 @@
           const q = new URLSearchParams(location.search)
           const want = q.get('case') || q.get('id')
           if (!want) return
-          if (!window.VAMIS_COMPARE_CASES) await loadScript('./compare-cases.js')
+          if (!window.VAMIS_COMPARE_CASES) await loadScript('./compare-cases.js?v=__VAMIS_SDK_V__')
           const row = findCatalogCase(want)
           if (!row) {
             failBoot('找不到用例 ' + want + '（?case= 对应用例 id，如 components-form-input-date-0）')

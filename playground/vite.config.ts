@@ -9,6 +9,7 @@ import { mockApiPlugin } from './src/mock/plugin'
 import { collectPlaygroundRoutes, writeStaticPages } from './static-pages'
 import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../packages/vamis-ui/fontawesome-build.mjs'
 import { workspaceBareResolve } from '../scripts/vite-workspace-bare-resolve.mjs'
+import { applySdkStamp, sdkCacheStamp } from '../packages/vamis-sdk/compare/sdk-stamp.mjs'
 
 const playground = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(playground, '..')
@@ -156,11 +157,24 @@ function serveSdk(): Plugin {
     gzipCache.set(full, { mtimeMs, buf })
     return buf
   }
+  function gzipBuffer(key: string, body: Buffer) {
+    const mtimeMs = body.length
+    const hit = gzipCache.get(key)
+    if (hit && hit.mtimeMs === mtimeMs) return hit.buf
+    const buf = zlib.gzipSync(body, { level: 6 })
+    gzipCache.set(key, { mtimeMs, buf })
+    return buf
+  }
   function sendSdkFile(req: { headers: { [key: string]: unknown }; url?: string }, res: { statusCode: number; setHeader: (k: string, v: string) => void; end: (b?: Buffer | string) => void }, full: string, file: string) {
     const ext = path.extname(full)
     const stat = fs.statSync(full)
     const hashed = file.startsWith('assets/')
-    const etag = `"${stat.size.toString(16)}-${Math.trunc(stat.mtimeMs).toString(16)}"`
+    const stampHtml = file === 'compare.html' || file === 'embed-case.html'
+    const stamp = stampHtml ? sdkCacheStamp(sdkRoot) : ''
+    const stamped = stampHtml ? Buffer.from(applySdkStamp(fs.readFileSync(full, 'utf8'), stamp)) : null
+    const etag = stamped
+      ? `"${stamped.length.toString(16)}-${stamp}"`
+      : `"${stat.size.toString(16)}-${Math.trunc(stat.mtimeMs).toString(16)}"`
     res.setHeader('ETag', etag)
     // 开发机：sdk.css / sdk.js 无版本号，不能一年 immutable，否则 sdk:build 后手机仍吃旧包。
     // no-cache = 每次用 ETag 校验，没改 304（不重下 2MB），改了才拉新。带 hash 的 assets/ 才可长期缓存。
@@ -178,11 +192,16 @@ function serveSdk(): Plugin {
       /\.(?:css|js|mjs|html|map)$/i.test(ext) &&
       /gzip/i.test(String(req.headers['accept-encoding'] || ''))
     if (gzipOk) {
-      const buf = gzipFile(full, stat.mtimeMs)
+      const buf = stamped ? gzipBuffer(file + ':' + stamp, stamped) : gzipFile(full, stat.mtimeMs)
       res.setHeader('Content-Encoding', 'gzip')
       res.setHeader('Vary', 'Accept-Encoding')
       res.setHeader('Content-Length', String(buf.length))
       res.end(buf)
+      return
+    }
+    if (stamped) {
+      res.setHeader('Content-Length', String(stamped.length))
+      res.end(stamped)
       return
     }
     res.setHeader('Content-Length', String(stat.size))

@@ -7,6 +7,7 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig, type Plugin } from 'vite'
 import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../vamis-ui/fontawesome-build.mjs'
 import { workspaceBareResolve } from '../../scripts/vite-workspace-bare-resolve.mjs'
+import { stampSdkHtmlFiles } from './compare/sdk-stamp.mjs'
 
 const sdk = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(sdk, '../..')
@@ -64,6 +65,7 @@ function copySdkStatic(): Plugin {
       }
       appendFontAwesome(dest)
       appendLegacyPrimary(dest)
+      stampSdkHtmlFiles(sdk, dest)
     },
   }
 }

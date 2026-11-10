@@ -4,9 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Amis / Vamis SDK 对照</title>
-    <link rel="preload" href="./sdk.css" as="style" />
-    <link rel="preload" href="./sdk.esm.js" as="script" crossorigin />
-    <link rel="preload" href="./sdk.js" as="script" />
     <style>
       :root {
         font-family: system-ui, sans-serif;
@@ -379,7 +376,7 @@
       <div id="classify-body"></div>
     </section>
     <script src="https://unpkg.com/js-yaml@4.1.1/dist/js-yaml.min.js"></script>
-    <script src="./compare-cases.js"></script>
+    <script src="./compare-cases.js?v=__VAMIS_SDK_V__"></script>
     <script>
       ;(function () {
         function measureKind(measure) {
@@ -648,6 +645,7 @@
             frameH.amis = FRAME_H.min
             frameH.vamis = FRAME_H.min
             applyFrameHeights()
+            loadFrames()
             applyCase(false)
           })
         })
@@ -782,6 +780,7 @@
           const q = new URLSearchParams({ engine: engine })
           if (amisSdk) q.set('amisSdk', amisSdk)
           if (vpMode === 'mobile') q.set('vp', 'mobile')
+          q.set('sdk', '__VAMIS_SDK_V__')
           const rel = 'embed-case.html?' + q.toString()
           try {
             return new URL(rel, location.href).href
@@ -1372,8 +1371,13 @@
           }
         })
 
-        document.getElementById('amis').src = frameUrl('amis')
-        document.getElementById('vamis').src = frameUrl('vamis')
+        function loadFrames() {
+          ready.amis = false
+          ready.vamis = false
+          document.getElementById('amis').src = frameUrl('amis')
+          document.getElementById('vamis').src = frameUrl('vamis')
+        }
+        loadFrames()
         window.addEventListener('resize', applyFrameHeights)
         if (typeof ResizeObserver === 'function') {
           const ro = new ResizeObserver(applyFrameHeights)

@@ -605,7 +605,7 @@ alwaysApply: true
 
 ### 对照 /sdk 必须带 Content-Length + 缓存，不能对流式 gzip
 - 踩过：同样手机网上 Amis 约 3s、Vamis 每次约 40s。Amis 走 unpkg 长缓存；Vamis 经 Vite 每次把 2MB 级 css/js 重新传。流式 `createGzip()` 没有 Content-Length，部分 WebView 等连接结束才触发 stylesheet load。
-- 稳定做法：`gzipSync` 按 mtime 缓存并写 `Content-Length`。开发机 `sdk.css` / `sdk.js` **不能**一年 immutable（URL 无版本，`sdk:build` 后手机会吃旧包）。用 `no-cache` + ETag：没改 304，改了才拉新。带 hash 的 `assets/` 才 `immutable`。Amis 能一年缓存是因为 unpkg URL 带 `@6.13.0`。`sdk.js` 是 loader，真正运行时是 `sdk.esm.js`；`new URL('./sdk.esm.js', src)` 会丢掉 `?v=`，必须把 searchParams 抄到 esm，否则对照 iframe 仍吃旧翻层逻辑。
+- 稳定做法：`gzipSync` 按 mtime 缓存并写 `Content-Length`。开发机 `sdk.css` / `sdk.js` **不能**一年 immutable（URL 无版本，`sdk:build` 后手机会吃旧包）。用 `no-cache` + ETag：没改 304，改了才拉新。带 hash 的 `assets/` 才 `immutable`。Amis 能一年缓存是因为 unpkg URL 带 `@6.13.0`。`sdk.js` 是 loader，真正运行时是 `sdk.esm.js`；`new URL('./sdk.esm.js', src)` 会丢掉 `?v=`，必须把 searchParams 抄到 esm，否则对照 iframe 仍吃旧翻层逻辑。`embed-case` 的 `?v=` **不要写死日期**（`20261109j` 这类一旦被旧 WebView 当年 immutable 缓存，后续 `sdk:build` 对照页永远旧包）。源 HTML 留 `__VAMIS_SDK_V__`，`sdk:build` / `serveSdk` / `pnpm compare` 按 `sdk.js` mtime 替换。对照页不要 preload 无戳的 `sdk.esm.js`。
 
 - 触及：对照 `embed-case`
 - 规则：本文；`playground/vite.config.ts` `serveSdk`

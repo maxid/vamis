@@ -9,6 +9,7 @@ import { harvestMarkdown, harvestSource, isRenderableSchema } from '../compare/h
 import { measureLabel, resultColumns, scoreCase } from '../compare/score.mjs'
 import { adviseIssue, classifyIssue } from '../compare/classify.mjs'
 import { decorateCase, groupFromPath, groupP0 } from '../compare/nav-group.mjs'
+import { applySdkStamp, SDK_STAMP_TOKEN } from '../compare/sdk-stamp.mjs'
 import {
   FRAME_HEIGHT,
   clampFrameHeight,
@@ -434,6 +435,8 @@ describe('schema-tree', () => {
     expect(html).toContain('function sdkFile')
     expect(html).toContain("sdkFile('sdk.css')")
     expect(html).not.toContain("['./sdk.css']")
+    expect(html).toContain("__VAMIS_SDK_V__")
+    expect(html).not.toContain('20261109j')
   })
 
   it('scores runtime value / rendered / named / dialog per node', () => {
@@ -502,6 +505,9 @@ describe('matchCaseQuery', () => {
   it('compare.html forwards vp=mobile into embed-case iframe', () => {
     const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../compare.html'), 'utf8')
     expect(html).toContain("if (vpMode === 'mobile') q.set('vp', 'mobile')")
+    expect(html).toContain("q.set('sdk', '__VAMIS_SDK_V__')")
+    expect(html).toContain('function loadFrames()')
+    expect(html).toContain('./compare-cases.js?v=__VAMIS_SDK_V__')
   })
 
   it('playwright --mobile appends vp=mobile onto embed-case URLs', () => {
@@ -616,5 +622,11 @@ describe('rerun slice', () => {
     expect(tall.visual).toBe(FRAME_HEIGHT.max)
     expect(tall.iframe).toBe(Math.ceil(FRAME_HEIGHT.max / scale))
     expect(tall.overflow).toBe(true)
+  })
+})
+
+describe('sdkCacheStamp', () => {
+  it('replaces the HTML token with the build stamp', () => {
+    expect(applySdkStamp(`sdk.js?v=${SDK_STAMP_TOKEN}`, 'abc')).toBe('sdk.js?v=abc')
   })
 })
