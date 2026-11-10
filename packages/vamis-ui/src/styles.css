@@ -422,6 +422,36 @@
   --tag-border-width: 0px;
   --tag-border-color: transparent;
   --tag-max-width: 160px;
+  /*
+   * Image 语义变量（Amis --image-image-*）。缩略 110、内边距 4、标题 14 / 说明 12。
+   * 选择器只 var()。放大层永远是黑底白字，不跟主题换肤。
+   */
+  --image-pad: 4px;
+  --image-thumb: 110px;
+  --image-title-size: 14px;
+  --image-caption-size: 12px;
+  --image-title-color: var(--text-loud);
+  --image-caption-color: var(--text-loud);
+  --image-info-pad: 5px 10px;
+  --image-overlay: rgba(8, 14, 26, 0.5);
+  --image-gallery-max: 1010px;
+  --image-gallery-gutter: 30px;
+  --image-gallery-mask: rgba(0, 0, 0, 0.7);
+  --image-gallery-stage: #000;
+  --image-gallery-fg: #fff;
+  /* 放大工具栏永远白底黑标，不跟 .dark 换肤（舞台已是黑底）。 */
+  --image-gallery-toolbar-bg: #ffffff;
+  --image-gallery-toolbar-shadow: 0 2px 6px 0 rgba(211, 211, 211, 0.5);
+  --image-gallery-toolbar-radius: 4px;
+  --image-gallery-toolbar-bottom: 20px;
+  --image-gallery-tool: 40px;
+  --image-gallery-tool-pad: 13px;
+  --image-gallery-tool-hover: #f2f3f5;
+  --image-gallery-tool-fg: #151b26;
+  --image-gallery-tool-disabled: #b8babf;
+  --tooltip-attr-bg: rgba(0, 0, 0, 0.7);
+  --tooltip-attr-fg: #fff;
+  --tooltip-attr-gap: var(--gap-sm);
 
   --success-bg: oklch(0.96 0.03 145);
   --success-border: oklch(0.84 0.07 145);
@@ -549,6 +579,8 @@
   --info-border: oklch(0.4 0.06 230);
   --error-bg: oklch(0.28 0.05 25);
   --error-border: oklch(0.42 0.08 25);
+  --image-title-color: #e8e9eb;
+  --image-caption-color: #e8e9eb;
   --button-secondary: #b8bbbf;
   --button-secondary-foreground: #151b26;
   --button-secondary-hover: #d4d6d9;
@@ -689,6 +721,13 @@
   /* SchemaRenderer 每项外包一层 .vamis-node，FormItem 自己永远是 last-child。只清表单 body 里最后一个节点。 */
   .vamis-form .vamis-node:last-child > .vamis-form-item {
     margin-bottom: 0;
+  }
+  /* Form 管布局：horizontal / normal 包装层块级 100%。叶子（Image）的 inline-block 留在内层。 */
+  .vamis-form .vamis-node:has(> .vamis-form-item--horizontal),
+  .vamis-form .vamis-node:has(> .vamis-form-item--normal) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
   }
   /* 内联项：包装层也要 inline-block，否则块级 .vamis-node 把并排挤成竖排。含继承 form.mode=inline。 */
   .vamis-form .vamis-node:has(> .vamis-form-item--inline) {
@@ -973,7 +1012,7 @@
     font-size: 0.875em;
   }
 
-  /* Amis [data-tooltip] / data-position. Dialog.close 默认 left。 */
+  /* Amis [data-tooltip] / data-position. Dialog.close 默认 left。动画在 unlayered @keyframes tooltipIn。 */
   [data-tooltip] {
     position: relative;
   }
@@ -988,20 +1027,23 @@
     width: max-content;
     box-sizing: content-box;
     max-width: 300px;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--tooltip-attr-bg);
     border-radius: var(--radius);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     left: 100%;
     top: 50%;
     transform: translateY(-50%);
-    color: #fff;
+    color: var(--tooltip-attr-fg);
     padding: 2px 10px;
     display: none;
-    z-index: 1070;
+    z-index: var(--z-tooltip);
+    animation-duration: var(--animation-duration);
+    animation-fill-mode: both;
   }
   [data-tooltip]:not(.is-disabled):hover::after {
     display: inline-block;
-    margin: 0 0 0 var(--gap-sm);
+    animation-name: tooltipIn;
+    margin: 0 0 0 var(--tooltip-attr-gap);
   }
   [data-tooltip][data-position='bottom']::after {
     left: 50%;
@@ -1009,7 +1051,7 @@
     transform: translateX(-50%);
   }
   [data-tooltip][data-position='bottom']:hover::after {
-    margin: var(--gap-sm) 0 0 0;
+    margin: var(--tooltip-attr-gap) 0 0 0;
   }
   [data-tooltip][data-position='left']::after {
     top: 50%;
@@ -1018,7 +1060,7 @@
     transform: translateY(-50%);
   }
   [data-tooltip][data-position='left']:hover::after {
-    margin: 0 var(--gap-sm) 0 0;
+    margin: 0 var(--tooltip-attr-gap) 0 0;
   }
   [data-tooltip][data-position='top']::after {
     left: 50%;
@@ -1027,7 +1069,7 @@
     transform: translateX(-50%);
   }
   [data-tooltip][data-position='top']:hover::after {
-    margin: calc(var(--gap-sm) * -1) 0 0 0;
+    margin: calc(var(--tooltip-attr-gap) * -1) 0 0 0;
   }
   [data-tooltip]:hover:active::after {
     content: '';
@@ -1042,6 +1084,22 @@
     align-items: center;
     justify-content: flex-end;
   }
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    margin: 0;
+  }
+}
+
+/* unlayered：Teleport 关闭钮 / 工具栏 hover 不被 @layer components 丢掉滑入。 */
+[data-tooltip]:not(.is-disabled):hover::after {
+  display: inline-block;
+  animation-name: tooltipIn;
+}
+[data-tooltip][data-position='left']:hover::after {
+  margin: 0 var(--tooltip-attr-gap) 0 0;
 }
 
 /* Dialog 桌面默认 500px（Amis Modal）。窄屏 100% 只写在下面 `<576`，不要把 DialogContent 默认改成 max-w-none。 */
@@ -3012,6 +3070,14 @@
   color: var(--form-item-color);
 }
 
+/* 压过 utilities `.inline-block`：Form 管行宽，horizontal / normal 包装层必须块级。 */
+.vamis-form .vamis-node:has(> .vamis-form-item--horizontal),
+.vamis-form .vamis-node:has(> .vamis-form-item--normal) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
 @media (min-width: 576px) {
   .vamis-form-item--horizontal {
     grid-template-columns: var(--form-label-width) minmax(0, 1fr);
@@ -3802,6 +3868,351 @@
   width: 12px;
   height: 12px;
   fill: none;
+}
+
+.vamis-image-field {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+.vamis-image-field.is-original,
+.vamis-image-field.is-fill {
+  display: block;
+  width: 100%;
+}
+.vamis-image-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+.vamis-image {
+  display: inline-block;
+  padding: var(--image-pad);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  max-width: 100%;
+  vertical-align: top;
+}
+.vamis-image.is-fill,
+.vamis-image.is-original {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+}
+.vamis-image.no-border {
+  border: 0;
+  padding: 0;
+}
+.vamis-image-thumbWrap {
+  position: relative;
+  display: block;
+}
+.vamis-image-thumb {
+  display: block;
+  width: var(--image-thumb);
+  height: var(--image-thumb);
+  position: relative;
+  overflow: hidden;
+}
+.vamis-image.is-fill .vamis-image-thumb,
+.vamis-image.is-original .vamis-image-thumb {
+  width: 100%;
+}
+.vamis-image.is-original .vamis-image-thumb {
+  height: auto;
+}
+.vamis-image-thumb.is-ratio-4-3 {
+  height: calc(var(--image-thumb) * 3 / 4);
+}
+.vamis-image-thumb.is-ratio-16-9 {
+  height: calc(var(--image-thumb) * 9 / 16);
+}
+.vamis-image-thumb img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-height: 100%;
+  width: auto;
+  transform: translate(-50%, -50%);
+}
+.vamis-image.is-original .vamis-image-thumb img {
+  position: static;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  transform: none;
+  margin: auto;
+  display: block;
+}
+.vamis-image-thumb.is-cover img,
+.vamis-image-thumb.is-contain img,
+.vamis-image-thumb.is-h-stretch img {
+  position: static;
+  width: 100%;
+  height: 100%;
+  transform: none;
+  object-fit: cover;
+}
+.vamis-image-thumb.is-contain img {
+  object-fit: contain;
+}
+.vamis-image-thumb.is-h-stretch img {
+  object-fit: fill;
+}
+.vamis-image-thumb.is-w-full img {
+  position: static;
+  width: 100%;
+  height: auto;
+  transform: none;
+}
+.vamis-image-thumb.is-h-full img {
+  position: static;
+  width: auto;
+  height: 100%;
+  transform: none;
+}
+.vamis-image-overlay {
+  background: var(--image-overlay);
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.vamis-image-thumbWrap:hover .vamis-image-overlay {
+  display: flex;
+}
+.vamis-image-overlay__view {
+  display: inline-flex;
+  padding: 0 5px;
+  line-height: 1;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.vamis-image-view {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+}
+.vamis-image-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--image-thumb);
+  height: var(--image-thumb);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-align: center;
+  padding: 8px;
+}
+.vamis-image-info {
+  display: block;
+  padding: var(--image-info-pad);
+}
+.vamis-image.is-thumb .vamis-image-info {
+  padding: 0;
+}
+.vamis-image-title {
+  display: block;
+  font-size: var(--image-title-size);
+  color: var(--image-title-color);
+}
+.vamis-image-caption {
+  display: block;
+  font-size: var(--image-caption-size);
+  color: var(--image-caption-color);
+}
+.vamis-image-gallery {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.vamis-image-gallery__mask {
+  position: absolute;
+  inset: 0;
+  background: var(--image-gallery-mask);
+}
+.vamis-image-gallery__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 0;
+  flex-grow: 1;
+  margin: var(--image-gallery-gutter);
+  width: calc(100% - 2 * var(--image-gallery-gutter));
+  max-width: var(--image-gallery-max);
+  max-height: calc(100vh - 2 * var(--image-gallery-gutter));
+  min-height: 0;
+  background: transparent;
+  padding-top: 0;
+}
+.vamis-image-gallery__close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  overflow: visible;
+}
+.vamis-image-gallery__close:hover {
+  color: #fff;
+}
+.vamis-image-gallery__close .vamis-close {
+  width: 16px;
+  height: 16px;
+}
+.vamis-image-gallery__title,
+.vamis-image-gallery__caption {
+  flex: 0 0 auto;
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  color: var(--image-gallery-fg);
+  text-align: center;
+  margin-bottom: 18px;
+}
+.vamis-image-gallery__caption {
+  text-align: left;
+  margin-bottom: 4px;
+}
+.vamis-image-gallery__main {
+  position: relative;
+  flex-basis: 0;
+  flex-grow: 1;
+  height: 0;
+  min-height: 0;
+  background: var(--image-gallery-stage);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+.vamis-image-gallery__main > img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: grab;
+  transition: transform 0.3s cubic-bezier(0, 0, 0.25, 1);
+}
+.vamis-image-gallery__main.is-dragging > img {
+  transition: none;
+  cursor: grabbing;
+}
+.vamis-image-gallery__toolbar {
+  position: absolute;
+  left: 50%;
+  bottom: var(--image-gallery-toolbar-bottom);
+  transform: translateX(-50%);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px;
+  border-radius: var(--image-gallery-toolbar-radius);
+  background: var(--image-gallery-toolbar-bg);
+  box-shadow: var(--image-gallery-toolbar-shadow);
+}
+.vamis-image-gallery__tool {
+  width: var(--image-gallery-tool);
+  height: var(--image-gallery-tool);
+  padding: var(--image-gallery-tool-pad);
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--image-gallery-tool-fg);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.vamis-image-gallery__tool-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: inherit;
+}
+.vamis-image-gallery__tool-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.vamis-image-gallery__tool:not(.is-disabled):hover {
+  background: var(--image-gallery-tool-hover);
+  color: var(--primary);
+}
+.vamis-image-gallery__tool:not(.is-disabled):hover .vamis-image-gallery__tool-icon svg {
+  fill: var(--primary);
+}
+.vamis-image-gallery__tool.is-disabled {
+  cursor: not-allowed;
+  color: var(--image-gallery-tool-disabled);
+  pointer-events: none;
+}
+.vamis-image-gallery__nav.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.vamis-image-gallery__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+.vamis-image-gallery__nav.is-prev {
+  left: 16px;
+}
+.vamis-image-gallery__nav.is-next {
+  right: 16px;
+}
+.vamis-image-gallery__footer {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0 0;
+}
+.vamis-image-gallery__thumb {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+.vamis-image-gallery__thumb.is-active {
+  border-color: #fff;
+}
+.vamis-image-gallery__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @media (prefers-reduced-motion: reduce) {

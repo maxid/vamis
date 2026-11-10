@@ -99,6 +99,19 @@ describe('onEvent actions', () => {
     expect(setData).toHaveBeenCalledWith({ value: 'amis go go go!' }, false)
   })
 
+  it('unknown actionType with componentId calls the target doAction', async () => {
+    const doAction = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'previewImage', doAction })
+    const context = ctx({ scoped })
+    const preview = { actionType: 'preview', componentId: 'previewImage' }
+    const zoom = { actionType: 'zoom', componentId: 'previewImage', args: { scale: 50 } }
+    await runAction(preview, context)
+    await runAction(zoom, context)
+    expect(doAction).toHaveBeenNthCalledWith(1, preview, expect.any(Object))
+    expect(doAction).toHaveBeenNthCalledWith(2, zoom, expect.any(Object))
+  })
+
   it('clear / reset / focus with componentId call doAction', async () => {
     const doAction = vi.fn()
     const reset = vi.fn()

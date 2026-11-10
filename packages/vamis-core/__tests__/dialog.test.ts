@@ -127,5 +127,7 @@ describe('dialog defaults', () => {
     expect(css).toContain("[data-tooltip]::after")
     expect(css).toContain("content: attr(data-tooltip)")
     expect(css).toContain("[data-tooltip][data-position='left']::after")
+    expect(css).toContain('animation-name: tooltipIn')
+    expect(css).toContain('@keyframes tooltipIn')
   })
 })

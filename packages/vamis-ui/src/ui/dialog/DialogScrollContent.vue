@@ -48,10 +48,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <slot />
 
         <DialogClose
+          data-slot="dialog-close"
+          data-tooltip="关闭"
+          data-position="left"
           class="absolute top-4 right-4 p-0.5 transition-colors rounded hover:bg-secondary"
+          aria-label="关闭"
         >
           <X class="w-4 h-4" />
-          <span class="sr-only">Close</span>
+          <span class="sr-only">关闭</span>
         </DialogClose>
       </DialogContent>
     </DialogOverlay>

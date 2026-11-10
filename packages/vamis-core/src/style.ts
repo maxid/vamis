@@ -129,6 +129,7 @@ type SchemaDisplayNode = {
   mode?: unknown
   direction?: unknown
   body?: unknown
+  imageMode?: unknown
 } | null
 
 export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
@@ -142,6 +143,9 @@ export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
   if (type === 'spinner') {
     return schema.body == null || schema.body === false || schema.body === ''
   }
+  // `type: image` 才跟 Amis `.Image--thumb` 一样 inline-block（页里并排）。
+  // `static-image` 是 FormItem：包装层必须块级，否则缩成缩略图宽、水平表折成 2×2。
+  if (type === 'image' && schema.imageMode !== 'original') return true
   return INLINE_BLOCK_SCHEMA_TYPES.has(type)
 }
 

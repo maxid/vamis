@@ -68,7 +68,7 @@
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 78% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 51% | 42 |
-| 数据展示 | 0 / 44 | 44 | 0 | 55% | 31 |
+| 数据展示 | 0 / 44 | 44 | 0 | 56% | 31 |
 | 反馈 | 1 / 5 | 4 | 0 | 89% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
 | **合计** | **2 / 155** | **153** | **0** | **59%** | **111** |
@@ -104,7 +104,7 @@
 | `form` / FormItem / Options | labelRemark；Options 下拉 | 未核 | form 75%，对照过 |
 | `table2` | 表头/筛选等浮层 | 未核 | 70%，对照过 |
 | `card` / `cards` | 卡片操作/弹出 | 未核 | 对照过 |
-| `image` | 预览 | 未核 | 对照过 |
+| `image` | 预览 | 已核 | 2026-11-10。放大层永远黑底白字，不跟 `.dark` 换肤 |
 | `alert` | 关闭等 | 未核 | |
 | `spinner` | overlay | 未核 | |
 | `badge` | 角标宿主 | 未核 | |
@@ -275,7 +275,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `html` | Html | `/components/html` | `/zh-CN/components/html` | 进行中 | 90% | `tpl` 别名。文档主路径已对齐：渲染 HTML。`maxLine` / `showNativeTitle` / 事件同 Tpl。其余过滤器仍 P1 | P0 |
 | `icon` | Icon 图标 | `/components/icon` | `/zh-CN/components/icon` | 进行中 | 90% | 文档主路径已对齐：FA v4 名称、颜色/字号、URL、FA v5/v6 `vendor: ""`、click / mouseenter / mouseleave。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
 | `iframe` | iFrame | `/components/iframe` | `/zh-CN/components/iframe` | 进行中 | 55% | 能嵌页 | P0 |
-| `image` | Image 图片 | `/components/image` | `/zh-CN/components/image` | 进行中 | 75% | 默认 110px 缩略图；`height`/`width` 插值；`thumbMode` contain/cover/w-full/h-full/`h-stretch`（按高度拉伸、宽度吃满），支持表达式。缺放大/图集/`imageMode: original` | P0 |
+| `image` | Image 图片 | `/components/image` | `/zh-CN/components/image` | 进行中 | 90% | `src`/`name`、标题/说明、默认 110px 缩略图、`thumbMode`/`thumbRatio`、高宽、`imageMode: original`、`enlargeAble` 放大层、`originalSrc`、`href`、`clickAction`、click/mouseenter/mouseleave、`preview`/`zoom`、放大工具栏（白底 40px SVG + 关闭钮左滑 tooltip）。`static-image` 走 FormItem。缺 CRUD `enlargeWithGallary` 图集、`hoverMode`、`themeCss` | P0 |
 | `images` | Images 图片集 | `/components/images` | `/zh-CN/components/images` | 进行中 | 50% | 能平铺 | P0 |
 | `grid-nav` | GridNav 宫格导航 | `/components/grid-nav` | `/zh-CN/components/grid-nav` | 进行中 | 50% | 能宫格；仅此处读了 `badge` | P0 |
 | `json` | Json | `/components/json` | `/zh-CN/components/json` | 进行中 | 50% | 能展开 JSON | P0 |
@@ -347,7 +347,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules）。当前建议下一批：`input-date` 的 `mobileCalendarMode: calendar`（CalendarMobile 滚动月历，需 `--mobile`），或 `select` 余项。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 88%（缺 CRUD 图集 / hoverMode / themeCss）。当前建议下一批：`popOver` #17（80%）或 `input-file` #19。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -431,7 +431,7 @@ flowchart LR
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 90% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 92% |
-| 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 75% |
+| 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 88% |
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 80% |
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 40% |

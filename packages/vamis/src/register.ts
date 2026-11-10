@@ -21,6 +21,7 @@ import ButtonToolbar from './renderers/ButtonToolbar.vue'
 import Each from './renderers/Each.vue'
 import Wizard from './renderers/Wizard.vue'
 import Image from './renderers/Image.vue'
+import StaticImage from './renderers/StaticImage.vue'
 import Images from './renderers/Images.vue'
 import Nav from './renderers/Nav.vue'
 import Breadcrumb from './renderers/Breadcrumb.vue'
@@ -90,6 +91,7 @@ registerRenderer({ type: 'button-toolbar', component: ButtonToolbar, isFormItem:
 registerRenderer({ type: 'each', component: Each })
 registerRenderer({ type: 'wizard', component: Wizard })
 registerRenderer({ type: 'image', component: Image })
+registerRenderer({ type: 'static-image', component: StaticImage, isFormItem: true })
 registerRenderer({ type: 'images', component: Images })
 registerRenderer({ type: 'nav', component: Nav })
 registerRenderer({ type: 'breadcrumb', component: Breadcrumb })

@@ -97,7 +97,9 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
   }
   const handler = getAction(type)
   try {
+    // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
     if (handler) await handler(action, ctx)
+    else await runComponentAction(action, ctx)
   } catch (error) {
     if (!action.ignoreError) throw error
   }

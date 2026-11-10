@@ -5,56 +5,404 @@ outline: deep
 
 # Image 图片
 
-::: info 实现进度 75% · 进行中
-主路径：`src` / `name`、默认 110px 缩略图、`height` / `width` 模板插值、`thumbMode` contain/cover/w-full/h-full/`h-stretch`（按高度拉伸）。`thumbMode` 支持表达式。缺放大镜、图集、`imageMode: original`。
+::: info 实现进度 90% · 进行中
+主路径：`src` / `name`、标题与说明、缩略图 `thumbMode` / `thumbRatio`、高宽、原图模式、`enlargeAble` 放大预览、`originalSrc`、`href`、`clickAction`、click / mouseenter / mouseleave、`preview` / `zoom`、放大工具栏（白底 40px SVG，关闭钮左滑 tooltip）。缺 CRUD 行内图集 `enlargeWithGallary`、`hoverMode`、`themeCss`。
 :::
 
 `image` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。JSON 与 YAML 同等有效。
 
-## 基本用法
+## 基本使用
 
 ```schema
 type: page
-title: image
 body:
-  - type: image
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+```
+
+也可以配置 `name` 关联上下文数据。
+
+```schema
+type: page
+data:
+  imageUrl: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+body:
+  type: image
+  name: imageUrl
+```
+
+## 配置标题和说明
+
+```schema
+type: page
+body:
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+  title: 这是标题
+  imageCaption: 这是一段说明
 ```
 
 ## 配置缩略图
 
-`thumbMode` 决定预览图怎么铺进缩略框。Amis 原有 `contain` / `cover` / `w-full` / `h-full`；Vamis 另加 `h-stretch`：按 `height` 拉伸、宽度吃满父级。也可以写成表达式，例如 `${index % 2 === 0 ? 'h-stretch' : 'cover'}`。
+### 显示模式
+
+`thumbMode` 决定预览图怎么铺进缩略框：`contain`（默认）/ `cover` / `w-full` / `h-full`。Vamis 另加 `h-stretch`：按 `height` 拉伸、宽度吃满父级。也可以写成表达式。
+
+```schema: scope="body"
+type: form
+mode: horizontal
+data:
+  image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+body:
+  - type: static-image
+    name: image
+    label: 宽度占满
+    thumbMode: w-full
+  - type: static-image
+    name: image
+    label: 高度占满
+    thumbMode: h-full
+  - type: static-image
+    name: image
+    label: 默认
+    thumbMode: contain
+  - type: static-image
+    name: image
+    label: 覆盖
+    thumbMode: cover
+```
+
+### 显示比例
+
+```schema: scope="body"
+type: form
+mode: horizontal
+data:
+  image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+body:
+  - type: static-image
+    name: image
+    label: 1比1
+    thumbRatio: "1:1"
+    thumbMode: cover
+  - type: static-image
+    name: image
+    label: 4比3
+    thumbRatio: "4:3"
+    thumbMode: cover
+  - type: static-image
+    name: image
+    label: 16比9
+    thumbRatio: "16:9"
+    thumbMode: cover
+```
+
+## 放大功能
+
+配置 `enlargeAble: true`，鼠标移到图片上会显示可点击图标，点击可放大展示。
 
 ```schema
 type: page
 body:
-  - type: image
-    src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
-    thumbMode: cover
-    title: cover
-  - type: image
-    src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
-    thumbMode: h-stretch
-    height: 160px
-    title: h-stretch
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+  enlargeAble: true
 ```
 
-## 常用属性
+可以配置 `originalSrc`，指定放大预览用的原图地址。
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `src` / `name` | 图片地址；`name` 从数据域取 |
-| `height` / `width` | 缩略图尺寸，支持 `${imageHeight}` |
-| `thumbMode` | `contain`（默认）/ `cover` / `w-full` / `h-full` / `h-stretch`（按高度拉伸、宽度吃满父级）。支持 `${}` 表达式 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+```schema
+type: page
+body:
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+  originalSrc: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg
+  enlargeAble: true
+```
 
-## 和 Amis 文档的差异
+`enlargeTitle` 和 `enlargeCaption` 配置放大预览中的标题和描述。
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+```schema
+type: page
+body:
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+  originalSrc: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg
+  enlargeAble: true
+  enlargeTitle: 这是一个标题
+  enlargeCaption: 这是一段描述
+```
+
+列表里默认会把各行图片收成图集（`enlargeWithGallary` 默认 true）。**未接**：当前放大只预览这一张，不收集同行其它图。
+
+## 设置高宽
+
+通过 `width` 和 `height` 设置缩略图显示的高宽。
+
+```schema
+type: page
+body:
+  type: image
+  width: 200px
+  height: 200px
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_400,l_1,f_jpg,q_80
+```
+
+## 原图模式
+
+默认是缩略图模式。配置 `imageMode: original` 改为原图模式：块状展示，宽度尽可能占满。
+
+```schema
+type: page
+data:
+  imageUrl: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg
+body:
+  type: image
+  imageMode: original
+  name: imageUrl
+  title: 这是标题
+  imageCaption: 这是一段说明
+```
+
+## 打开外部链接
+
+设置 `href` 后点击图片打开链接。这和放大功能互斥，只能二选一。
+
+```schema: scope="body"
+type: image
+src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+href: https://github.com
+```
+
+`href` 也可以是模板。
+
+```schema
+type: page
+data:
+  imageUrl: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg
+  imageHref: https://github.com
+body:
+  type: image
+  name: imageUrl
+  href: ${imageHref}
+```
+
+## 用作 Field 时
+
+当用在 Table 的列、List 的内容、Card 的内容和表单的 `static-image` 中时，可以设置 `name` 映射同名变量。
+
+### Table 中的列类型
+
+```schema: scope="body"
+type: table
+data:
+  items:
+    - id: "1"
+      image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+    - id: "2"
+      image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+    - id: "3"
+      image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+columns:
+  - name: id
+    label: Id
+  - name: image
+    label: 图片
+    type: image
+```
+
+### Form 中静态展示
+
+```schema: scope="body"
+type: form
+data:
+  image: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+body:
+  - type: static-image
+    name: image
+    label: 图片
+    innerClassName: no-border
+```
+
+## 自定义点击行为
+
+通过 `clickAction` 设置点击触发行为。
+
+```schema: scope="body"
+type: image
+src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+className: cursor-pointer
+clickAction:
+  actionType: dialog
+  dialog:
+    title: 弹框标题
+    body: 这是一个弹框
+```
+
+## 工具栏
+
+配置 `showToolbar: true` 使图片在放大模式下开启工具栏。`toolbarActions` 可自定义，见下方 ImageAction。
+
+```schema
+type: page
+body:
+  type: image
+  src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+  enlargeAble: true
+  showToolbar: true
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `string` | | Table、Card、List 中为 `image`；Form 静态展示为 `static-image` |
+| className | [`ClassName`](/types/classname) | | 外层 CSS 类名 |
+| innerClassName | [`ClassName`](/types/classname) | | 组件内层 CSS 类名 |
+| imageClassName | [`ClassName`](/types/classname) | | 图片 CSS 类名 |
+| thumbClassName | [`ClassName`](/types/classname) | | 缩略图 CSS 类名 |
+| height | `string` | | 缩略图高度 |
+| width | `string` | | 缩略图宽度 |
+| title | `string` | | 标题 |
+| imageCaption | `string` | | 描述 |
+| placeholder | `string` | | 占位文本 |
+| defaultImage | `string` | 内置占位图 | 无数据时显示的图片 |
+| src | `string` | | 缩略图地址 |
+| href | [模板](/concepts/template) | | 外部链接；与放大互斥 |
+| originalSrc | `string` | | 原图地址 |
+| enlargeAble | `boolean` | | 支持放大预览 |
+| enlargeTitle | `string` | | 放大预览的标题 |
+| enlargeCaption | `string` | | 放大预览的描述 |
+| enlargeWithGallary | `boolean` | `true` | 列表里放大是否展示图集。**未接** |
+| thumbMode | `string` | `contain` | `'w-full'` / `'h-full'` / `'contain'` / `'cover'` / `'h-stretch'` |
+| thumbRatio | `string` | `1:1` | `'1:1'` / `'4:3'` / `'16:9'` |
+| imageMode | `string` | `thumb` | `'thumb'` 缩略图 / `'original'` 原图 |
+| showToolbar | `boolean` | `false` | 放大模式下是否展示工具栏 |
+| toolbarActions | `ImageAction[]` | 全部开启 | 旋转、缩放 |
+| maxScale | `number` 或 [模板](/concepts/template) | `200` | `zoom` 动作最大百分比 |
+| minScale | `number` 或 [模板](/concepts/template) | `50` | `zoom` 动作最小百分比 |
+
+#### ImageAction
+
+```typescript
+interface ImageAction {
+  key: 'rotateRight' | 'rotateLeft' | 'zoomIn' | 'zoomOut' | 'scaleOrigin'
+  label?: string
+  icon?: string
+  iconClassName?: string
+  disabled?: boolean
+}
+```
+
+## 事件表
+
+当前组件会对外派发以下事件，可以通过 `onEvent` 监听，在动作里用 `${事件参数名}` 或 `${event.data.[事件参数名]}` 取数据。详见[事件动作](/concepts/event-action)。
+
+| 事件名称 | 事件参数 | 说明 |
+| --- | --- | --- |
+| click | 上下文数据 | 点击图片时触发 |
+| mouseenter | 上下文数据 | 鼠标移入时触发 |
+| mouseleave | 上下文数据 | 鼠标移出时触发 |
+
+### click / mouseenter / mouseleave
+
+```schema: scope="body"
+type: image
+src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+onEvent:
+  click:
+    actions:
+      - actionType: toast
+        args:
+          msg: 图片被点击了
+  mouseenter:
+    actions:
+      - actionType: toast
+        args:
+          msg: 鼠标移入图片
+  mouseleave:
+    actions:
+      - actionType: toast
+        args:
+          msg: 鼠标移出图片
+```
+
+## 动作表
+
+其它组件可以通过 `actionType` + `componentId` 触发这些动作。详见[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称 | 动作配置 | 说明 |
+| --- | --- | --- |
+| preview | - | 预览图片 |
+| zoom | `scale: number` 或模板。每次放大或缩小的百分比，正值为放大，负值为缩小，默认 50 | 等比例缩放缩略图 |
+
+### preview
+
+可以通过 `originalSrc` 指定预览的原图地址。
+
+```schema: scope="body"
+type: page
+body:
+  type: container
+  body:
+    - type: image
+      className: mb-1
+      src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+      originalSrc: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg
+      id: previewImage
+    - type: action
+      label: 预览图片
+      onEvent:
+        click:
+          actions:
+            - actionType: preview
+              componentId: previewImage
+```
+
+### zoom
+
+可以通过 `maxScale` 和 `minScale` 限制调整的比例。
+
+```schema: scope="body"
+type: page
+body:
+  type: container
+  body:
+    - type: flex
+      items:
+        - type: image
+          innerClassName: no-border
+          className: mt-5 mb-5
+          src: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
+          maxScale: 200
+          minScale: 20
+          id: zoomImage
+    - type: action
+      label: 放大图片
+      onEvent:
+        click:
+          actions:
+            - actionType: zoom
+              args:
+                scale: 50
+              componentId: zoomImage
+    - type: action
+      label: 缩小图片
+      className: mx-1
+      onEvent:
+        click:
+          actions:
+            - actionType: zoom
+              args:
+                scale: -50
+              componentId: zoomImage
+```
+
+## 与 Amis 的差异
+
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
+- `thumbMode: h-stretch` 是 Vamis 增强：按高度拉伸、宽度吃满。
+- **未接** `enlargeWithGallary`：CRUD / Table 放大不收集行内其它图片。
+- **未接** `hoverMode`、`themeCss`。

@@ -207,9 +207,9 @@ alwaysApply: true
 - 规则：本文；Amis `Item.tsx` `label !== false`；`ButtonToolbar.tsx` `@FormItem`
 
 ### 外层永远是 div.vamis-node，伪类要算包装层
-- 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。
-- 稳定做法：作者 `className` 打在外层 `div.vamis-node`。看「是不是最后一个 / 是不是 inline」时，对包装层写选择器（`:has(> .vamis-form-item--inline)`、只清 form body 最后一个 node）。不要把 SchemaRenderer 外层改成非 `div`。
-- 触及：`form` FormItem `input-text` `checkbox`
+- 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。又把 `type: image` 的 `inline-block` 打到 `static-image` 的包装层，水平表缩成缩略图宽、折成 2×2。
+- 稳定做法：作者 `className` 打在外层 `div.vamis-node`。看「是不是最后一个 / 是不是 inline」时，对包装层写选择器（`:has(> .vamis-form-item--inline)`、只清 form body 最后一个 node）。horizontal / normal 包装层必须块级 100%；只有 `--inline` 才给包装层 `inline-block`。叶子（`.vamis-image`、Button）自己 inline-block。不要把 SchemaRenderer 外层改成非 `div`。
+- 触及：`form` FormItem `input-text` `checkbox` `static-image` `image`
 - 规则：`.cursor/rules/component.mdc`
 
 ### 1px 分隔线不要打在 overflow:hidden 的固定高子项上
@@ -456,6 +456,18 @@ alwaysApply: true
 - 稳定做法：对齐 Amis `.rdtHeader`：`display: table` / `table-layout: fixed`，子级 `table-cell; vertical-align: middle`。箭头用 Amis `right-arrow` / `right-double-arrow`（`VamisDateArrow`，class `icon`），nav `font-size: 18px`；标题链接保持 inline。覆盖尺寸的选择器要带 `svg`（否则压不过 `svg.icon` 的 1em），并写 `display: inline; vertical-align: baseline`（否则吃 Tailwind preflight 的 `svg { display: block }`）。
 - 触及：`input-date` `calendar`
 - 规则：本文；Amis `_date.scss` `.rdtHeader` / `_normalize.scss` `svg.icon`
+
+### Image 放大走独立 Gallery，不要 Dialog 塞一张图
+- 踩过：用普通 Dialog 预览对不上 Amis ImageGallery（黑底舞台、标题/说明、工具栏、Esc/点遮罩关）。`href` 和 `enlargeAble` 叠在一起还会抢点击。黑舞台一度按图片缩成 320px 矮条，关闭钮贴在条上，和 Amis `Modal size=full` 的 1010×（视口-60）对不上。
+- 稳定做法：`enlargeAble` 开独立 Teleport 层（`--z-modal`，永远黑底白字，不跟 `.dark` 换肤）。盒模型对齐 `Modal--full` + `.ImageGallery`：外边距 30、宽 `min(1010, 100%-60)`、高吃满视口减 60；舞台 `flex-grow:1; height:0`；关闭钮绝对定位在这块面板右上（标题行始终占 18+18，即使没文案）。关闭钮（含 Dialog / Drawer）走 Amis `[data-tooltip="关闭"][data-position=left]` + `tooltipIn`（从 margin:0 滑到左侧 gap），不要原生 `title`。工具栏是白底 4px 圆角条、40×40 SVG（rotate/zoom/scale-origin），标签只进 tooltip，不要中文当按钮。`href` 与放大互斥。`click` 由组件自己派（宿主 `SELF_CLICK` 跳过），先 `onEvent` 再 `clickAction`。`type: images` 要做图集也挂同一层。
+- 触及：`image` `static-image`
+- 规则：本文；Amis `ImageGallery.tsx` `size="full"` / `_modal.scss` `Modal--full` / `_image-gallery.scss`
+
+### 未注册的 actionType + componentId 要落到目标 doAction
+- 踩过：Image 写了 `preview` / `zoom` 的 `doAction`，文档按钮点了没反应。`runAction` 只跑 `getAction(type)`，内置表没有的类型直接空过。
+- 稳定做法：对齐 Amis `runActions`：找不到内置动作时走 `runComponentAction`（按 `componentId` / `target` 找 scoped 组件再 `doAction`）。不要给每个组件动作单独 `registerAction`。组件用 `schema.id` 当 scoped `name` 注册。
+- 触及：`image` `action`
+- 规则：本文；Amis `Action.ts` `runActions` / `CmptAction`
 
 ### Toast 对齐 Amis，不要用 vue-sonner 冒充
 - 踩过：用 vue-sonner 顶替；`center` 被映射成 `top-center`。
