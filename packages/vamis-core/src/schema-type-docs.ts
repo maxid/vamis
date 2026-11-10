@@ -135,7 +135,7 @@ export const SCHEMA_TYPE_DOCS: Record<string, SchemaDoc> = {
   uuid: doc('UUID 随机 ID', '数据输入', '自动生成唯一 id。'),
   'matrix-checkboxes': doc('MatrixCheckboxes 矩阵勾选', '数据输入', '行列矩阵多选。'),
   'nested-select': doc('NestedSelect 级联选择器', '数据输入', '树形级联下拉。'),
-  'input-number': doc('InputNumber 数字输入', '数据输入', '数字输入，可步进。'),
+  'input-number': doc('InputNumber 数字输入', '数据输入', '数字输入。步进、精度、单位、大数、enhance。'),
   'input-password': doc('InputPassword 密码', '数据输入', '密码输入。'),
   picker: doc('Picker 列表选择器', '数据输入', '弹层从列表多选。'),
   'input-quarter': doc('InputQuarter 季度', '数据输入', '季度选择。'),

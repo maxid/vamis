@@ -6,6 +6,7 @@ import { provideForm } from './formContext'
 const props = defineProps<{
   row: Record<string, any>
   persist: () => void
+  mode?: string
 }>()
 
 const errors = reactive<Record<string, string>>({})
@@ -47,6 +48,7 @@ function setError(name: string, message: string) {
 
 provideForm({
   store,
+  mode: props.mode,
   getValue,
   setValue,
   submit: async () => undefined,

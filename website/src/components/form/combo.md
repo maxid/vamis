@@ -5,8 +5,8 @@ outline: deep
 
 # Combo 组合
 
-::: info 实现进度 50% · 进行中
-能多行子表单；子项 api、扁平模式未齐
+::: info 实现进度 55% · 进行中
+默认 `multiple: false`、内嵌 `mode: row` 横排。缺 multiLine / 拖拽 / 子项 api / 扁平模式。
 :::
 
 `combo` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

@@ -19,7 +19,7 @@ import {
   hiddenFieldsToClear,
   validateApiMessage,
 } from '../src/utils/form-item'
-import { groupChildSchema, groupFormMode } from '../src/utils/form-group'
+import { comboChildSchema, comboItemMode, formLayoutSkipCol, groupChildSchema, groupFormMode } from '../src/utils/form-group'
 import { resetStatusStore, setStatusStatic, statusStaticOf } from '../src/status-store'
 import { getPathValue } from '../src/utils/path-value'
 import { validateValue } from '../src/validate'
@@ -194,6 +194,32 @@ describe('groupChildSchema', () => {
     expect(groupChildSchema({ type: 'input-text', name: 'a' }, { type: 'group' }, 'normal')).toEqual({
       type: 'input-text',
       name: 'a',
+    })
+  })
+})
+
+describe('form row / combo layout', () => {
+  it('skips col wrap for inline hidden formula', () => {
+    expect(formLayoutSkipCol({ type: 'input-text', name: 'a' })).toBe(false)
+    expect(formLayoutSkipCol({ type: 'input-text', inline: true })).toBe(true)
+    expect(formLayoutSkipCol({ type: 'hidden', name: 'h' })).toBe(true)
+    expect(formLayoutSkipCol({ type: 'formula', name: 'f' })).toBe(true)
+    expect(formLayoutSkipCol({ type: 'input-text', mode: 'inline' })).toBe(true)
+  })
+
+  it('combo default is row; multiLine uses subFormMode', () => {
+    expect(comboItemMode({ type: 'combo' })).toBe('row')
+    expect(comboItemMode({ type: 'combo', multiLine: true })).toBe('normal')
+    expect(comboItemMode({ type: 'combo', multiLine: true, subFormMode: 'horizontal' })).toBe('horizontal')
+    expect(comboChildSchema({ type: 'input-text', name: 'age' }, 'row')).toEqual({
+      type: 'input-text',
+      name: 'age',
+      mode: 'row',
+    })
+    expect(comboChildSchema({ type: 'input-text', name: 'age', mode: 'inline' }, 'row')).toEqual({
+      type: 'input-text',
+      name: 'age',
+      mode: 'inline',
     })
   })
 })

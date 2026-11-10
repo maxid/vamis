@@ -16671,22 +16671,494 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "input-number",
-      "body": [
-        {
-          "type": "form",
-          "title": "input-number",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "input-number",
-              "name": "input_number",
-              "label": "input-number"
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "data": {
+          "number2": 3.1234
+        },
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number1",
+            "label": "数字",
+            "precision": 2,
+            "step": 0.01,
+            "value": 2.98786
+          },
+          {
+            "type": "input-number",
+            "name": "number2",
+            "label": "数字2",
+            "precision": 3,
+            "step": 0.001
+          },
+          {
+            "type": "input-number",
+            "name": "number3",
+            "label": "数字3",
+            "step": 0.001,
+            "description": "不设置precision，仅设置step, 实际精度为3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number1",
+            "label": "数字resetValue为0",
+            "resetValue": 0,
+            "value": 1234
+          },
+          {
+            "type": "input-number",
+            "name": "number2",
+            "label": "数字带有min",
+            "min": 100,
+            "resetValue": 0,
+            "value": 1234,
+            "description": "清空输入后组件值变为100，因为设置了最小值min为100"
+          },
+          {
+            "type": "input-number",
+            "name": "number3",
+            "label": "数字带有max和precision",
+            "max": 100.5,
+            "precision": 2,
+            "resetValue": 1000,
+            "value": 1234,
+            "description": "清空输入后组件值变为100.5，因为设置了最大值max为100.5"
+          },
+          {
+            "type": "input-number",
+            "name": "number4",
+            "label": "数字未设置resetValue",
+            "resetValue": "string",
+            "value": 1234,
+            "description": "清空输入后组件值变为\"string\"，因为resetValue不是一个合法的数字"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "value": 111111,
+            "prefix": "$",
+            "suffix": "%",
+            "kilobitSeparator": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "unitOptions": [
+              "px",
+              "%",
+              "em"
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "displayMode": "enhance"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "big": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "debugConfig": {
+          "levelExpand": 2
+        },
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "name": "numberClear",
+                "type": "input-number",
+                "label": "清空",
+                "value": 123,
+                "clearValueOnEmpty": true
+              },
+              {
+                "name": "numberNotClear",
+                "type": "input-number",
+                "label": "不清空",
+                "value": 456
+              }
+            ]
+          },
+          {
+            "type": "combo",
+            "name": "user",
+            "label": "用户",
+            "items": [
+              {
+                "name": "text",
+                "label": "名字",
+                "type": "input-text"
+              },
+              {
+                "name": "gender",
+                "label": "性别",
+                "type": "select",
+                "options": [
+                  "男",
+                  "女"
+                ]
+              },
+              {
+                "name": "age",
+                "label": "年龄",
+                "type": "input-number",
+                "clearValueOnEmpty": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "native-number",
+            "name": "number",
+            "label": "数字"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "id": "clear_text",
+            "value": 1
+          },
+          {
+            "type": "button",
+            "label": "清空",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "clear",
+                    "componentId": "clear_text"
+                  }
+                ]
+              }
             }
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-10",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "id": "reset_text",
+            "value": 1
+          },
+          {
+            "type": "button",
+            "label": "重置",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "reset",
+                    "componentId": "reset_text"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-number-11",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputNumber 数字输入",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputNumber 数字输入 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-number",
+            "name": "number",
+            "label": "数字",
+            "id": "setvalue_text",
+            "value": 1
+          },
+          {
+            "type": "button",
+            "label": "赋值",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "setValue",
+                    "componentId": "setvalue_text",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"

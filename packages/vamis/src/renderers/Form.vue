@@ -43,6 +43,7 @@ import {
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
 import { provideForm, useForm } from '../formContext'
 import { registerWizardValidate } from '../wizardGate'
+import FormRow from './form/FormRow.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -82,6 +83,7 @@ const showActionBar = computed(() => {
 })
 const lazyLoad = computed(() => props.schema.lazyLoad === true)
 const isInline = computed(() => String(props.schema.mode || '') === 'inline')
+const isRow = computed(() => String(props.schema.mode || '') === 'row')
 const panelTitle = computed(() => {
   const title = props.schema.title
   if (title === false || title === '') return ''
@@ -460,7 +462,7 @@ onBeforeUnmount(() => {
     <component
       :is="wrapTag"
       class="w-full min-w-0"
-      :class="isInline ? 'vamis-form vamis-form--inline' : 'vamis-form'"
+      :class="cn('vamis-form', isInline && 'vamis-form--inline', isRow && 'vamis-form--row')"
       :style="labelWidthStyle"
       @submit.prevent="submit"
       @keydown.enter="onNestedEnter"
@@ -473,7 +475,10 @@ onBeforeUnmount(() => {
           <CardTitle :class="titleClass">{{ panelTitle }}</CardTitle>
         </CardHeader>
         <CardContent :class="bodyClass">
-          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+          <FormRow v-if="isRow" :nodes="body" :extra-data="store.data" />
+          <template v-else>
+            <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+          </template>
         </CardContent>
         <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <CardFooter v-if="showActionBar" :class="actionsClass">
@@ -493,7 +498,10 @@ onBeforeUnmount(() => {
       <template v-else>
         <h2 v-if="panelTitle" class="mb-3 text-sm font-medium">{{ panelTitle }}</h2>
         <div :class="bodyClass">
-          <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+          <FormRow v-if="isRow" :nodes="body" :extra-data="store.data" />
+          <template v-else>
+            <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
+          </template>
         </div>
         <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <div v-if="showActionBar" :class="cn(actionsClass, 'flex gap-2 border-t-0 pt-3')">

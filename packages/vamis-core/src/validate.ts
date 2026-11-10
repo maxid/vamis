@@ -38,6 +38,7 @@ export function parseValidations(schema: SchemaObject): ValidationRules {
   if (type === 'input-url') rules.isUrl = true
 
   const raw = schema.validations
+  if (type === 'input-number' && (raw == null || raw === '')) rules.isNumeric = true
   if (typeof raw === 'string' && raw.trim()) {
     for (const part of raw.split(',')) {
       const trimmed = part.trim()

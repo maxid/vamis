@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, groupChildSchema, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, asArray, formLayoutSkipCol, groupChildSchema, type SchemaObject } from '@vamis/core'
 import { useForm } from '../../formContext'
 
 const props = defineProps<{ schema: SchemaObject }>()
@@ -17,6 +17,14 @@ function childOf(node: SchemaObject) {
     class="vamis-form-group"
     :class="vertical ? 'vamis-form-group--ver' : 'vamis-form-group--hor'"
   >
-    <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="childOf(node)" />
+    <template v-for="(node, i) in body" :key="i">
+      <SchemaRenderer
+        v-if="vertical || formLayoutSkipCol(childOf(node))"
+        :schema="childOf(node)"
+      />
+      <div v-else class="vamis-form-group-col">
+        <SchemaRenderer :schema="childOf(node)" />
+      </div>
+    </template>
   </div>
 </template>

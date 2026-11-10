@@ -276,6 +276,8 @@
   --form-mode-inline-item-gap: 16px;
   --form-mode-inline-label-gap: 16px;
   --form-group-gutter: var(--gap-md);
+  --form-row-gutter: 10px;
+  --form-label-padding-top: calc((var(--control-h) - var(--lineHeightBase) * var(--form-item-font-size)) / 2);
   --form-label-width: 98px;
   --form-label-gap: 16px;
   --form-label-width-xs: 50px;
@@ -495,6 +497,19 @@
   --file-danger: var(--destructive);
   --file-select-gap: 10px;
   --file-size-color: var(--file-clear-color);
+  /* Amis Number / `_number.scss`：handler 24、单位 56、enhance 左右 24×32。 */
+  --number-handler-w: 24px;
+  --number-handler-color: var(--foreground);
+  --number-handler-hover: var(--primary);
+  --number-handler-bg: var(--card);
+  --number-handler-disabled: #b8babf;
+  --number-unit-min: 56px;
+  --number-unit-bg: var(--fill-10);
+  --number-unit-pad-x: 12px;
+  --number-enhance-btn: 24px;
+  --number-enhance-icon: 14px;
+  --number-enhance-color: #151b26;
+  --number-pad-x: 10px;
   --popover-layer-border: 1px solid var(--border);
   --popover-layer-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --popover-layer-min: 320px;
@@ -611,6 +626,10 @@
   --file-drag-icon-color: #5c5f66;
   --file-progress-bg: #303640;
   --file-size-color: #84878c;
+  --number-handler-color: #f7f8fa;
+  --number-handler-bg: var(--card);
+  --number-unit-bg: var(--fill-10);
+  --number-enhance-color: #e8e9eb;
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 250);
   --destructive: oklch(0.65 0.19 25);
@@ -757,6 +776,14 @@
     cursor: not-allowed;
   }
 
+  /*
+    Form 布局对齐 Amis Item.tsx / Form.tsx / _form.scss / _group.scss，不要用 horizontal 28% 去冒充别的 mode。
+    - normal（表单默认）：标签在上，项块级 100% 竖排
+    - horizontal：标签左 28%/labelWidth，项竖排
+    - inline：项 inline-block 并排，项内标签在左
+    - row：Form-row flex + Form-col flex:1；项内标签贴控件左（不是 28%）。Combo 默认走这条
+    Group--hor：≥768 才 flex；子项包 Form-groupColumn，width:100% 相对列不是相对整表
+  */
   /* Default fill (no size). xs–lg pin only ≥576px. size:full same as default fill, for inline leftover.
      ≤767（Amis media-breakpoint-down(sm)）整表改 flex 行，见文末 unlayered 覆盖。 */
   .vamis-form-item--normal {
@@ -839,25 +866,121 @@
   .vamis-form .vamis-node:last-child > .vamis-form-group {
     margin-bottom: 0;
   }
-  .vamis-form-group--hor {
+  .vamis-form-group-col {
+    margin-bottom: var(--gap-sm, 8px);
+  }
+  .vamis-form-group--ver > .vamis-form-group-col + .vamis-form-group-col,
+  .vamis-form-group--ver > .vamis-node + .vamis-node {
+    margin-top: var(--form-item-gap);
+  }
+  .vamis-form-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    margin-left: calc(var(--form-group-gutter) / -2);
-    margin-right: calc(var(--form-group-gutter) / -2);
+    margin-left: calc(var(--form-row-gutter) / -2);
+    margin-right: calc(var(--form-row-gutter) / -2);
   }
-  .vamis-form-group--hor > .vamis-node {
-    padding-left: calc(var(--form-group-gutter) / 2);
-    padding-right: calc(var(--form-group-gutter) / 2);
+  .vamis-form-row > * {
+    padding-left: calc(var(--form-row-gutter) / 2);
+    padding-right: calc(var(--form-row-gutter) / 2);
   }
-  .vamis-form-group--hor .vamis-form-item {
+  .vamis-form-col {
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+  .vamis-form-col > .vamis-node,
+  .vamis-form-group-col > .vamis-node {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .vamis-form-item--row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
     margin-bottom: 0;
   }
-  .vamis-form-group--hor .vamis-form-item--inline {
-    margin-right: 0;
+  .vamis-form-item--row .vamis-form-item__label {
+    display: inline-block;
+    width: auto;
+    max-width: none;
+    margin-bottom: 0;
+    padding-top: var(--form-label-padding-top);
+    padding-right: var(--form-row-gutter);
+    white-space: nowrap;
   }
-  .vamis-form-group--ver > .vamis-node + .vamis-node {
-    margin-top: var(--form-item-gap);
+  .vamis-form-item--row .vamis-form-item__value {
+    flex-basis: 0;
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+  .vamis-combo-items {
+    min-width: 0;
+  }
+  .vamis-combo--hor .vamis-combo-item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+  .vamis-combo--hor .vamis-combo-item + .vamis-combo-item {
+    margin-top: var(--gap-sm, 8px);
+  }
+  .vamis-combo-item-inner {
+    flex-basis: 0;
+    flex-grow: 1;
+    min-width: 0;
+  }
+  .vamis-combo-item:has(.vamis-combo-del) .vamis-combo-item-inner {
+    margin-right: 12px;
+  }
+  .vamis-combo-del {
+    margin-left: var(--gap-xs, 4px);
+    padding-top: var(--form-label-padding-top);
+    height: 30px;
+    border: 0;
+    background: transparent;
+    color: var(--form-item-color);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .vamis-combo-del:hover {
+    color: var(--destructive);
+  }
+  .vamis-number__handler {
+    user-select: none;
+  }
+  /* Amis `_group.scss` `media-breakpoint-up(md)`：≥768 才横排均分。 */
+  @media (min-width: 768px) {
+    .vamis-form-group--hor {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-left: calc(var(--form-group-gutter) / -2);
+      margin-right: calc(var(--form-group-gutter) / -2);
+    }
+    .vamis-form-group--hor > * {
+      padding-left: calc(var(--form-group-gutter) / 2);
+      padding-right: calc(var(--form-group-gutter) / 2);
+    }
+    .vamis-form-group--hor .vamis-form-item {
+      margin-bottom: 0;
+    }
+    .vamis-form-group--hor .vamis-form-item--inline {
+      margin-right: 0;
+    }
+    .vamis-form-group-col {
+      flex-basis: 0;
+      flex-grow: 1;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-bottom: 0;
+    }
   }
   .vamis-control--fluid,
   .vamis-control--full {
@@ -3537,7 +3660,11 @@
   .vamis-form-item .vamis-select__input,
   .vamis-form-item .vamis-select__input:hover,
   .vamis-form-item .vamis-select__input.is-focused,
-  .vamis-form-item .vamis-text-control__addon--text {
+  .vamis-form-item .vamis-text-control__addon--text,
+  .vamis-form-item .vamis-number,
+  .vamis-form-item .vamis-number:hover,
+  .vamis-form-item .vamis-number.is-focused,
+  .vamis-form-item .vamis-number__unit {
     border: none;
     border-radius: 0;
     background: transparent;
@@ -4721,4 +4848,232 @@
 }
 .vamis-file__upload-btn {
   margin-top: 8px;
+}
+
+/* Amis `.Number` / `.NumberControl`：选择器只 var()。 */
+.vamis-number-control {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.vamis-number-control.is-with-unit {
+  display: flex;
+}
+.vamis-number {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: var(--control-h);
+  line-height: var(--control-h);
+  font-size: var(--fontSizeBase);
+  background: var(--card);
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  transition: border-color var(--animation-duration) ease-in-out;
+}
+.vamis-number-control.is-with-unit .vamis-number {
+  flex: 1 1 auto;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+.vamis-number:hover:not(.is-disabled):not(.is-readonly) {
+  border-color: var(--control-hover-border);
+}
+.vamis-number.is-focused:not(.is-disabled) {
+  border-color: var(--control-focus-border);
+  box-shadow: var(--control-focus-glow);
+}
+.vamis-number.is-disabled {
+  background: var(--control-disabled-bg);
+  border-color: var(--input);
+  color: var(--control-disabled-color);
+  cursor: not-allowed;
+}
+.vamis-number.is-mobile {
+  border: none;
+  box-shadow: none;
+}
+.vamis-number--border-half {
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: none;
+}
+.vamis-number--border-none {
+  border-color: transparent;
+  box-shadow: none;
+}
+.vamis-number.is-focused:not(.is-disabled).vamis-number--border-none {
+  color: var(--primary);
+}
+.vamis-number__input-wrap {
+  overflow: hidden;
+  height: 100%;
+  min-width: 0;
+}
+.vamis-number__native {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 var(--number-pad-x);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: calc(var(--control-h) - 2px);
+  appearance: none;
+  -moz-appearance: textfield;
+  box-sizing: border-box;
+}
+.vamis-number__native::placeholder {
+  color: var(--control-placeholder);
+}
+.vamis-number.is-disabled .vamis-number__native:disabled {
+  opacity: 1;
+  color: var(--control-disabled-color);
+  -webkit-text-fill-color: var(--control-disabled-color);
+  cursor: not-allowed;
+}
+.vamis-number__handlers {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--number-handler-w);
+  height: 100%;
+  border-left: 1px solid var(--input);
+  background: var(--number-handler-bg);
+  outline: var(--number-pad-x) solid var(--card);
+}
+.vamis-number:hover:not(.is-disabled):not(.no-steps) .vamis-number__handlers,
+.vamis-number.is-focused:not(.is-disabled):not(.no-steps) .vamis-number__handlers {
+  display: block;
+}
+.vamis-number.no-steps .vamis-number__handlers {
+  display: none;
+}
+.vamis-number__handler {
+  display: block;
+  width: 100%;
+  height: 50%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: var(--number-handler-bg);
+  color: var(--number-handler-color);
+  line-height: calc((var(--control-h) - 6px) / 2);
+  cursor: pointer;
+  box-sizing: border-box;
+  user-select: none;
+}
+.vamis-number__handler--up {
+  border-bottom: 1px solid var(--input);
+  padding-top: 1px;
+}
+.vamis-number__handler:hover:not(:disabled) {
+  color: var(--number-handler-hover);
+}
+.vamis-number__handler:disabled,
+.vamis-number__handler.is-disabled {
+  color: var(--number-handler-disabled);
+  cursor: not-allowed;
+}
+.vamis-number__caret {
+  display: inline;
+  width: 8px;
+  height: 6px;
+  vertical-align: middle;
+}
+.vamis-number.is-enhance {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+.vamis-number.is-enhance .vamis-number__input-wrap {
+  flex: 1 1 auto;
+  border-left: 1px solid var(--input);
+  border-right: 1px solid var(--input);
+}
+.vamis-number.is-enhance .vamis-number__native {
+  text-align: center;
+  padding: 0;
+}
+.vamis-number__enhance-btn {
+  flex: 0 0 var(--number-enhance-btn);
+  width: var(--number-enhance-btn);
+  align-self: stretch;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: var(--fill-10);
+  color: var(--number-enhance-color);
+  cursor: pointer;
+  line-height: calc(var(--control-h) - 2px);
+  text-align: center;
+}
+.vamis-number__enhance-btn:hover:not(:disabled) {
+  background: var(--card);
+  color: var(--primary);
+}
+.vamis-number__enhance-btn:disabled,
+.vamis-number__enhance-btn.is-disabled {
+  color: var(--number-handler-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.vamis-number__enhance-icon {
+  display: inline;
+  width: var(--number-enhance-icon);
+  height: var(--number-enhance-icon);
+  vertical-align: middle;
+}
+.vamis-number__unit {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--number-unit-min);
+  height: var(--control-h);
+  padding: 0 var(--number-unit-pad-x);
+  margin: 0;
+  border: 1px solid var(--input);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--number-unit-bg);
+  color: inherit;
+  font: inherit;
+  line-height: var(--control-h);
+  box-sizing: border-box;
+  cursor: pointer;
+  gap: 4px;
+}
+.vamis-number__unit.is-single {
+  cursor: default;
+  min-width: unset;
+}
+.vamis-number-control.is-with-unit:hover .vamis-number:not(.is-disabled):not(.is-readonly),
+.vamis-number-control.is-with-unit:hover .vamis-number__unit {
+  border-color: var(--control-hover-border);
+}
+.vamis-number-control.is-with-unit .vamis-number.is-focused + .vamis-number__unit {
+  border-color: var(--control-focus-border);
+}
+.vamis-control--sm .vamis-number,
+.vamis-control--sm .vamis-number__unit,
+.vamis-control--sm .vamis-number__enhance-btn {
+  height: var(--control-h-sm);
+  line-height: var(--control-h-sm);
+}
+.vamis-control--lg .vamis-number,
+.vamis-control--lg .vamis-number__unit,
+.vamis-control--lg .vamis-number__enhance-btn {
+  height: var(--control-h-lg);
+  line-height: var(--control-h-lg);
 }

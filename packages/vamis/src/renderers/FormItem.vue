@@ -32,6 +32,7 @@ const layout = computed(() => {
 })
 const inline = computed(() => layout.value === 'inline')
 const horizontal = computed(() => layout.value === 'horizontal')
+const row = computed(() => layout.value === 'row')
 const hideLabel = computed(() => formItemHideLabel(props.schema))
 const showLabel = computed(() => !hideLabel.value && props.schema.label != null && props.schema.label !== '')
 const labelText = computed(() =>
@@ -43,6 +44,7 @@ const description = computed(() => {
 })
 const itemLayoutClass = computed(() => {
   if (inline.value) return 'vamis-form-item--inline'
+  if (row.value) return 'vamis-form-item--row'
   if (horizontal.value) return hideLabel.value ? 'vamis-form-item--horizontal vamis-form-item--no-label' : 'vamis-form-item--horizontal'
   return 'vamis-form-item--normal'
 })

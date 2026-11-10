@@ -112,6 +112,7 @@
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
 | `picker` | 弹层多选 | 未核 | 50%，有浮层但主路径未齐，可后置 |
+| `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#17202d`），无独立 tooltip |
 
 ### 已推进、无独立浮层（切深色看默认皮）
 
@@ -192,7 +193,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `checkboxes` | Checkboxes 复选框 | `/components/form/checkboxes` | `/zh-CN/components/form/checkboxes` | 进行中 | 55% | 能多选；列数/全选未齐 | P0 |
 | `input-city` | InputCity 城市选择器 | `/components/form/input-city` | `/zh-CN/components/form/input-city` | 进行中 | 25% | **精简**：内置 3 省示例，非全国数据 | P0 |
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
-| `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 50% | 能多行子表单；子项 api、扁平模式未齐 | P0 |
+| `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 55% | 默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
 | `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 92% | 日历点选、format/inputFormat、相对值、minDate/maxDate（日 + 年/月面板都禁范围外）、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。弹层 `--cal-*`（深色 alias Select 菜单 `#17202d`）。窄屏默认滚轮 PopUp（320px / 年/月/日 / 取消确认；PopUp height 进出动画）。缺 `mobileCalendarMode: calendar`、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 62% | `input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐 | P0 |
@@ -209,7 +210,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-excel` | InputExcel Excel 解析 | `/components/form/input-excel` | `/zh-CN/components/form/input-excel` | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | `/components/form/input-file` | `/zh-CN/components/form/input-file` | 进行中 | 88% | 主路径已对齐：receiver POST form-data、默认 autoUpload、accept/maxSize、多选 joinValues、asBlob/asBase64、拖拽、分片 start/chunk/finish、change/success/fail/remove、clear。缺 themeCss、提交时未等 pending 传完 | P0 |
 | `formula` | Formula 公式 | `/components/form/formula` | `/zh-CN/components/form/formula` | 进行中 | 50% | 能按公式写值；与 expr 层未统一（D2） | P0 |
-| `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 60% | 横排 flex，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签 | P0 |
+| `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 70% | ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签 | P0 |
 | `hidden` | Hidden 隐藏字段 | `/components/form/hidden` | `/zh-CN/components/form/hidden` | 进行中 | 70% | 能存值；仍走扁平 name | P0 |
 | `input-image` | InputImage 图片 | `/components/form/input-image` | `/zh-CN/components/form/input-image` | 进行中 | 40% | 能选图；裁剪/多图/上传 api 未齐 | P0 |
 | `input-group` | InputGroup 输入框组合 | `/components/form/input-group` | `/zh-CN/components/form/input-group` | 进行中 | 55% | 能并排控件 | P0 |
@@ -218,7 +219,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `uuid` | UUID 随机 ID | `/components/form/uuid` | `/zh-CN/components/form/uuid` | 进行中 | 70% | 能生成；仍走扁平 name | P0 |
 | `matrix-checkboxes` | MatrixCheckboxes 矩阵勾选 | `/components/form/matrix-checkboxes` | `/zh-CN/components/form/matrix-checkboxes` | 进行中 | 40% | 已注册，行列数据精简 | P0 |
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
-| `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 55% | native number；步进/精度/大数未齐 | P0 |
+| `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 88% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue。缺 themeCss | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
 | `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 50% | 能弹层多选 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
@@ -347,7 +348,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。当前建议下一批：`input-number` #20。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。当前建议下一批：`radio` #21。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -435,7 +436,7 @@ flowchart LR
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 90% |
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
-| 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 55% |
+| 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 60% |
 | 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 65% |
 | 23 | `hidden` | FormItem | 6 | 1 | 19 | 134 | 进行中 | 70% |
@@ -531,7 +532,7 @@ flowchart LR
 | 113 | `input-rich-text` | FormItem | 6 | 0 | 6 | 6 | 进行中 | 25% |
 | 114 | `input-signature` | FormItem | 6 | 0 | 6 | 6 | 进行中 | 35% |
 | 115 | `fieldset` | FormItem、`container` | 6 | 0 | 6 | 6 | 进行中 | 55% |
-| 116 | `group` | FormItem、`container` | 6 | 0 | 6 | 6 | 进行中 | 55% |
+| 116 | `group` | FormItem、`container` | 6 | 0 | 6 | 6 | 进行中 | 70% |
 | 117 | `pagination-wrapper` | `pagination`、`container` | 6 | 0 | 6 | 6 | 进行中 | 90% |
 | 118 | `portlet` | `tabs`、`action`、`container` | 6 | 0 | 6 | 6 | 进行中 | 85% |
 | 119 | `checkboxes` | `checkbox`、Options、FormItem | 5 | 0 | 5 | 5 | 进行中 | 55% |
@@ -562,7 +563,7 @@ flowchart LR
 | 144 | `list-select` | `select`、`list` | 4 | 0 | 4 | 4 | 进行中 | 50% |
 | 145 | `input-kvs` | `input-kv`、`action` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 146 | `input-array` | `form`、`action`、`input-text`、`container` | 3 | 0 | 3 | 3 | 进行中 | 50% |
-| 147 | `combo` | `form`、`action`、`container` | 3 | 0 | 3 | 3 | 进行中 | 50% |
+| 147 | `combo` | `form`、`action`、`container` | 3 | 0 | 3 | 3 | 进行中 | 55% |
 | 148 | `input-sub-form` | `form`、`action`、`service`、`container` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 149 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 150 | `json-schema-editor` | `json-schema`、`form`、`action` | 3 | 0 | 3 | 3 | 进行中 | 30% |

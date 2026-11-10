@@ -254,6 +254,12 @@ alwaysApply: true
 - 触及：FormItem `form`
 - 规则：本文；Amis `packages/amis-core/src/utils/validations.ts`
 
+### 表单 mode:row 是 Combo 横排，不要用 horizontal 28% 冒充
+- 踩过：`clearValueOnEmpty` 示例里 group 两项竖排、combo 姓名/性别/年龄各占一行。根因是缺 Amis 的 `mode: row`（Form-row + Form-col flex:1，项内标签贴控件左），又用 `.vamis-node { width:100% }` 把 Group 子项撑成整表宽。Combo 还把 `multiple` 默认成 true，画出卡片 +「新增一项」。
+- 稳定做法：五种 mode 分开——`normal` 标签在上竖排；`horizontal` 才是 28% 左标签；`inline` 项并排；`row` 是列均分 + 项内左右；`flex` 另刀。Group ≥768 子项包 `Form-groupColumn`（flex 1），`width:100%` 相对列。Combo 默认 `multiple: false`、内嵌 `mode: row`。不要改示例 schema 去凑外观。
+- 触及：`form` FormItem `group` `combo` `input-number`
+- 规则：本文；Amis `Form.tsx` `mode === 'row'`；`Item.tsx` `row:`；`Group.tsx` `Form-groupColumn`；`Combo.tsx` `multiLine ? subFormMode : 'row'`
+
 ### 对标 Amis 默认 normal 时不要用 scope=form-item
 - 踩过：`scope="form-item"` 包装层强制 `mode: horizontal`，未写 mode 的「常规」变成左右；Amis `scope="body"` 的 form 默认 `normal` 是上下。内联项本身是左右（≥576 `Form-item--inline`）。
 - 稳定做法：Amis 文档 `scope="body"` 且 form 未写 mode 时，Vamis 也用 `scope="body"`，不要套 `form-item`。`mode: inline` 才是项内左右；`type: group` 把 `mode` / `subFormMode` 传给未写 mode 的子项，group 外壳不要 `inline-block`。
@@ -675,6 +681,18 @@ alwaysApply: true
 - 稳定做法：`isPlainObject` 排除 `Blob` / `FormData`（File 是 Blob）。上传 payload 才能原样进 `toFormBody`。
 - 触及：`input-file`
 - 规则：本文；`packages/vamis-core/src/utils/data-mapping.ts`
+
+### Number 控件不要用 native `type=number` / shadcn Input 冒充
+- 踩过：占位只挂 `type="number"`，没有步进柄、精度、千分位、单位、enhance。Amis 是 `NumberInput`（rc-input-number）+ `type=text` 展示层。对照探针读 `input.value` 展示串，不要把 `getValue` 改成 `$111,111%`。
+- 稳定做法：量进 `:root` / `.dark` 的 `--number-*`（高 32、handler 24、单位 56、pad **10**——Amis 计算值，不是 size-6=12）。输入用 `type=text` `inputmode=decimal`。前缀/千分位只在展示层，`getValue` 仍是数字。右侧步进长按对齐 rc-input-number `StepHandler`（先加一次，600ms 后每 200ms 再加）；`enhance` 两侧按钮只点一次，不要长按。
+- 触及：`input-number`
+- 规则：`.cursor/rules/style.mdc`；Amis `_number.scss`
+
+### FormItem 默认校验是 replace，不要 merge
+- 踩过：先写 `isNumeric` 再 `Object.assign` 作者 `validations`，默认规则和作者叠在一起。Amis InputNumber `defaultProps.validations` 是整段替换。
+- 稳定做法：`schema.validations` 为空才补该 type 的默认规则。
+- 触及：`input-number`
+- 规则：本文；Amis `InputNumber.tsx` `defaultProps`
 
 ### FileControl 默认 chrome 走 `--file-*`，不要 Tailwind dropzone
 - 踩过：占位用 dashed muted 卡片 +「点击或拖拽」；Amis 是 32 高 enhance 钮、列表 max-height 144、拖拽区 180 / 1px dashed。
