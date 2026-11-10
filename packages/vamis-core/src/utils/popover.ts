@@ -9,6 +9,7 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 export type PopOverTrigger = 'click' | 'hover'
 export type PopOverMode = 'popOver' | 'dialog' | 'drawer'
+export type PopOverTextOverflow = 'ellipsis' | 'noWrap' | ''
 
 const MODES = new Set(['popOver', 'dialog', 'drawer'])
 const POSITIONS = new Set([
@@ -41,23 +42,38 @@ function popOverObject(schema: unknown): Record<string, unknown> | null {
   return null
 }
 
+export function popOverTextOverflow(schema: unknown): PopOverTextOverflow {
+  const value = String(asRecord(schema).textOverflow || '')
+  if (value === 'ellipsis' || value === 'noWrap') return value
+  return ''
+}
+
+function hasPopOverConfig(schema: unknown): boolean {
+  const raw = popOverRaw(schema)
+  return raw != null && raw !== false && raw !== ''
+}
+
 export function popOverEnabled(schema: unknown, data: PlainObject = {}): boolean {
   const rec = asRecord(schema)
-  const raw = rec.popOver
-  if (raw == null || raw === false || raw === '') return false
   if (rec.popOverEnable === false || rec.popOverEnabled === false) return false
-  if (typeof rec.popOverEnableOn === 'string' && rec.popOverEnableOn) {
-    return evalExpression(rec.popOverEnableOn, data)
+  if (hasPopOverConfig(schema)) {
+    if (typeof rec.popOverEnableOn === 'string' && rec.popOverEnableOn) {
+      return evalExpression(rec.popOverEnableOn, data)
+    }
+    return true
   }
-  return true
+  return popOverTextOverflow(schema) === 'ellipsis'
 }
 
 export function popOverTrigger(schema: unknown): PopOverTrigger {
   const trigger = String(popOverObject(schema)?.trigger || '')
-  return trigger === 'hover' ? 'hover' : 'click'
+  if (trigger === 'hover') return 'hover'
+  if (!hasPopOverConfig(schema) && popOverTextOverflow(schema) === 'ellipsis') return 'hover'
+  return 'click'
 }
 
 export function popOverShowIcon(schema: unknown): boolean {
+  if (!hasPopOverConfig(schema)) return false
   const rec = popOverObject(schema)
   if (rec && rec.showIcon === false) return false
   return true
@@ -70,7 +86,22 @@ export function popOverMode(schema: unknown): PopOverMode {
 
 export function popOverPosition(schema: unknown): string {
   const value = String(popOverObject(schema)?.position || '')
-  return POSITIONS.has(value) ? value : 'center'
+  if (POSITIONS.has(value)) return value
+  if (!hasPopOverConfig(schema) && popOverTextOverflow(schema) === 'ellipsis') return 'auto'
+  return 'center'
+}
+
+/**
+ * Amis HocPopOver `targetOutter`：`type: cell`（table / crud / table2 列）定位目标是整格 td，
+ * 不是放大镜。static / list / cards 的 `type: field` 仍用按钮或 wrap。
+ */
+export function popOverPositionTarget(
+  host: Element | null | undefined,
+  parts: { showIcon: boolean; btn: HTMLElement | null; wrap: HTMLElement | null },
+): HTMLElement | null {
+  const cell = host && typeof host.closest === 'function' ? host.closest('td, th') : null
+  if (cell) return cell as HTMLElement
+  return parts.showIcon ? parts.btn : parts.wrap
 }
 
 export function popOverOffset(schema: unknown): { x: number; y: number } {
@@ -103,7 +134,13 @@ export function popOverBodyNode(schema: unknown): SchemaObject {
   }
   if (typeof raw === 'string') return asTpl(raw)
   const obj = popOverObject(schema)
-  if (!obj) return asTpl('')
+  if (!obj) {
+    if (popOverTextOverflow(schema) === 'ellipsis') {
+      const name = rec.name
+      return asTpl(typeof name === 'string' && name ? `\${${name}}` : '')
+    }
+    return asTpl('')
+  }
   const body = obj.body
   if (typeof body === 'string' || typeof body === 'number' || typeof body === 'boolean') return asTpl(body)
   if (body && typeof body === 'object' && !Array.isArray(body)) return body as SchemaObject

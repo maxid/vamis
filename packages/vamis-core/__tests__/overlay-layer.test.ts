@@ -163,6 +163,16 @@ describe('overlay-layer', () => {
     expect(popup).toContain('heightStyle')
   })
 
+  it('centers PopOver on the trigger when placement is center', () => {
+    const target = rect(40, 20, 200, 32)
+    stubViewport({ scrollY: 80, scrollX: 0, innerWidth: 1280, innerHeight: 900 })
+    expect(overlayPosition(target, { gap: 4, width: 320, height: 100, placement: 'center' })).toMatchObject({
+      top: 86,
+      left: -40,
+      activePlacement: 'center',
+    })
+  })
+
   it('places a top / right tooltip with side gap', () => {
     const target = rect(40, 20, 200, 32)
     stubViewport({ scrollY: 0, scrollX: 0, innerWidth: 1280, innerHeight: 900 })

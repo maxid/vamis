@@ -66,14 +66,14 @@
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 12 | 0 | 78% | 11 |
+| 功能 | 0 / 12 | 12 | 0 | 80% | 11 |
 | 数据输入 | 0 / 72 | 72 | 0 | 51% | 42 |
 | 数据展示 | 0 / 44 | 44 | 0 | 56% | 31 |
 | 反馈 | 1 / 5 | 4 | 0 | 89% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
 | **合计** | **2 / 155** | **153** | **0** | **59%** | **111** |
 
-侧栏已无未开始项。当前已完成 `container`、`toast`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 80%。
+侧栏已无未开始项。当前已完成 `container`、`toast`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 90%。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
 
@@ -98,7 +98,7 @@
 | `dialog` | Modal | 未核 | |
 | `drawer` | 抽屉 | 未核 | |
 | `toast` | 轻提示 | 未核 | 桌面写死 `#fff` / `#151b26` |
-| `popOver` | 字段弹出 | 未核 | |
+| `popOver` | 字段弹出 | 已核 | 2026-11-10。浅 320 白底 / 深 `--popover-layer-bg: #17202d`，表格列 `center` 盖整格 td，`--z-popover` 1400 |
 | `breadcrumb` | 文档记缺 tooltip 浮层 | 未核 | 有下拉项时核 |
 | `page` | remark / spinner overlay | 未核 | |
 | `form` / FormItem / Options | labelRemark；Options 下拉 | 未核 | form 75%，对照过 |
@@ -155,7 +155,7 @@
 
 ---
 
-## 功能（0/12，均 78%）
+## 功能（0/12，均 80%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
@@ -170,7 +170,7 @@
 | `nav` | Nav 导航 | `/components/nav` | `/zh-CN/components/nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | `/components/anchor-nav` | `/zh-CN/components/anchor-nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | `/components/tooltip` | `/zh-CN/components/tooltip-wrapper` | 进行中 | 92% | 文档主路径已对齐：`content` / `title`、`trigger` hover/click/focus、`placement`、`tooltipTheme`、`offset`、`showArrow`、`inline`、`wrapperComponent`。活示例对标 Amis（图标十字布局 / trash / 长文本省略）。浮层 `VamisOverlay` Teleport、`--z-tooltip` 1600、盒 240 / 8×12 / 圆角 8 / 8×4 箭头。`placement` 主轴放不下翻对面（箭头跟边）。缺 `themeCss` | P0 |
-| `popOver` | PopOver 弹出提示 | `/components/popover` | `/zh-CN/components/popover` | 进行中 | 80% | 不是独立 type。文档主路径已对齐：static / table 列 / tpl / list·cards 字段；字符串精简写法、`trigger` 默认 click、`showIcon` 默认 true、`popOverEnableOn`、`mode` dialog/drawer。缺 crud 远程列、`textOverflow` 省略自动弹出、浮层像素 | P0 |
+| `popOver` | PopOver 弹出提示 | `/components/popover` | `/zh-CN/components/popover` | 进行中 | 90% | 不是独立 type。文档主路径已对齐 Amis 同名页。表格列浮层相对整格 `td` 居中（Amis `targetOutter`），static / list / cards 仍锚按钮。缺 CRUD 默认工具栏像素 | P0 |
 
 ---
 
@@ -347,7 +347,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 88%（缺 CRUD 图集 / hoverMode / themeCss）。当前建议下一批：`popOver` #17（80%）或 `input-file` #19。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。当前建议下一批：`input-file` #19。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -431,8 +431,8 @@ flowchart LR
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 90% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 92% |
-| 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 88% |
-| 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 80% |
+| 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 90% |
+| 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 90% |
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 40% |
 | 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 55% |

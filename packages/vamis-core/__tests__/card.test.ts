@@ -54,6 +54,11 @@ describe('card header / body', () => {
       type: 'tpl',
       tpl: '${engine}',
     })
+    expect(cardFieldValueSchema({ name: 'engine', popOver: '弹出内容' })).toEqual({
+      type: 'tpl',
+      tpl: '${engine}',
+      popOver: '弹出内容',
+    })
     expect(cardFieldValueSchema({ type: 'static', name: 'browser', value: 'IE' }).type).toBe('static')
   })
 })

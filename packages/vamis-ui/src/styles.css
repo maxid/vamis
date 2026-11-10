@@ -449,6 +449,15 @@
   --image-gallery-tool-hover: #f2f3f5;
   --image-gallery-tool-fg: #151b26;
   --image-gallery-tool-disabled: #b8babf;
+  /* Amis `--PopOver-bg` / `--PopOverAble-*`。不要用 shadcn `--popover`。 */
+  --popover-layer-bg: #ffffff;
+  --popover-layer-fg: var(--select-menu-color);
+  --popover-layer-border: 1px solid var(--border);
+  --popover-layer-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --popover-layer-min: 320px;
+  --popover-layer-max: 640px;
+  --popover-layer-title-pad: 8px 12px;
+  --popover-layer-body-pad: 12px;
   --tooltip-attr-bg: rgba(0, 0, 0, 0.7);
   --tooltip-attr-fg: #fff;
   --tooltip-attr-gap: var(--gap-sm);
@@ -518,6 +527,7 @@
   --select-caret-hover-color: #d4d6d9;
   --select-menu-bg: #17202d;
   --select-menu-color: #f7f8fa;
+  --popover-layer-bg: #17202d;
   --select-menu-border: #303640;
   --cal-cell-hover-bg: #151c26;
   --cal-cell-hover-fg: #f7f8fa;
@@ -1610,6 +1620,100 @@
   }
   .vamis-overlay.vamis-overlay--tooltip.is-ghost {
     pointer-events: none;
+  }
+  .vamis-overlay.vamis-overlay--popover {
+    z-index: var(--z-popover, 1400);
+  }
+  .vamis-popover-host {
+    position: relative;
+    outline: none;
+  }
+  .vamis-popover-btn {
+    display: inline-block;
+    margin-left: var(--gap-xs);
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.6;
+    vertical-align: middle;
+  }
+  .vamis-popover-btn:hover {
+    opacity: 1;
+  }
+  .vamis-popover-btn svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+  .vamis-popover-wrap {
+    display: -webkit-inline-box;
+    vertical-align: middle;
+  }
+  .vamis-popover-wrap--ellipsis {
+    width: auto;
+    max-width: 100%;
+    max-height: 30px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    word-break: break-all;
+  }
+  .vamis-popover-wrap--nowrap {
+    white-space: nowrap;
+  }
+  .vamis-popover-layer {
+    min-width: var(--popover-layer-min);
+    max-width: var(--popover-layer-max);
+    padding: 0;
+    background: var(--popover-layer-bg);
+    color: var(--popover-layer-fg);
+    border: var(--popover-layer-border);
+    border-radius: var(--radius);
+    box-shadow: var(--popover-layer-shadow);
+    font-size: var(--fontSizeBase);
+    line-height: var(--lineHeightBase);
+    box-sizing: border-box;
+  }
+  .vamis-popover-layer__title {
+    padding: var(--popover-layer-title-pad);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .vamis-popover-layer__body {
+    padding: var(--popover-layer-body-pad);
+  }
+  .vamis-popover-fixed {
+    position: fixed;
+    z-index: var(--z-popover, 1400);
+  }
+  .vamis-popover-fixed--fixed-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .vamis-popover-fixed--fixed-left-top {
+    top: 0;
+    left: 0;
+  }
+  .vamis-popover-fixed--fixed-right-top {
+    top: 0;
+    right: 0;
+  }
+  .vamis-popover-fixed--fixed-left-bottom {
+    bottom: 0;
+    left: 0;
+  }
+  .vamis-popover-fixed--fixed-right-bottom {
+    bottom: 0;
+    right: 0;
   }
   /* Amis TooltipWrapper--inline：inline-block，不是 inline-flex。 */
   .vamis-tooltip-wrapper {

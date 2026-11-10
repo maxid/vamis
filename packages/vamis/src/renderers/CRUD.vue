@@ -31,6 +31,7 @@ import {
   TableRow,
 } from '@vamis/ui'
 import Cards from './Cards.vue'
+import PopOverHost from './PopOverHost.vue'
 import { asToolbarSchema, CrudHostKey, parseListPayload, resolveTableSource, selectedIdsOf } from './data/crudHost'
 
 const props = defineProps<{
@@ -409,7 +410,9 @@ onBeforeUnmount(() => {
               :schema="col"
               :extra-data="row"
             />
-            <span v-else>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
+            <PopOverHost v-else :schema="col" :data="row">
+              <span>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
+            </PopOverHost>
           </TableCell>
         </TableRow>
       </TableBody>

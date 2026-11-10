@@ -18,6 +18,13 @@ const props = defineProps<{
 }>()
 
 const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
+
+function colWidthStyle(col: SchemaObject) {
+  const w = col.width
+  if (w == null || w === '') return undefined
+  const value = typeof w === 'number' ? `${w}px` : String(w)
+  return { width: value, maxWidth: value, overflow: 'hidden' }
+}
 const rows = computed<Record<string, any>[]>(() => {
   if (Array.isArray(props.items)) return props.items
   const source = props.schema.source
@@ -39,7 +46,7 @@ const rows = computed<Record<string, any>[]>(() => {
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`">
+        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
           {{ col.label || col.name }}
         </TableHead>
       </TableRow>
@@ -51,7 +58,7 @@ const rows = computed<Record<string, any>[]>(() => {
         </TableCell>
       </TableRow>
       <TableRow v-for="(row, i) in rows" :key="row.id ?? i">
-        <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
+        <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
           <SchemaRenderer
             v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
             :schema="col"

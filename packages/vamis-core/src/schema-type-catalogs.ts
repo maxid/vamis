@@ -590,6 +590,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     mode: 'popOver / dialog / drawer。',
     offset: '{left, top} 或 {x, y} 偏移。',
     popOverClassName: '浮层 class。',
+    textOverflow: 'ellipsis 单行省略，超出才弹出；noWrap 不换行且不弹。',
   }),
   custom: fields('Custom', {
     html: '自定义 HTML。不要写可执行函数。',

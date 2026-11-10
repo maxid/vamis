@@ -10465,16 +10465,15 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "actions": [],
-        "body": [
+        "type": "crud",
+        "api": "/api/mock2/sample?waitSeconds=1",
+        "columns": [
           {
-            "name": "static",
-            "type": "static",
-            "label": "静态展示",
-            "value": "static",
-            "popOver": "弹出内容"
+            "type": "tpl",
+            "name": "engine",
+            "label": "Rendering engine",
+            "tpl": "${engine|truncate:6}",
+            "popOver": "${engine}"
           }
         ]
       }
@@ -10496,25 +10495,59 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "items": [
-          {
-            "engine": "Trident",
-            "id": 1
+      "body": [
+        {
+          "type": "form",
+          "body": [
+            {
+              "name": "static",
+              "type": "static",
+              "label": "静态展示",
+              "value": "static",
+              "popOver": "弹出内容"
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": {
+            "type": "list",
+            "source": "$rows",
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine",
+                      "popOver": "弹出内容"
+                    }
+                  ]
+                }
+              ]
+            }
           }
-        ]
-      },
-      "body": {
-        "type": "table",
-        "source": "${items}",
-        "columns": [
-          {
-            "name": "engine",
-            "label": "Engine",
-            "popOver": "弹出内容"
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": {
+            "type": "cards",
+            "source": "$rows",
+            "card": {
+              "body": [
+                {
+                  "label": "Engine",
+                  "name": "engine",
+                  "popOver": "弹出内容"
+                }
+              ]
+            }
           }
-        ]
-      }
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -10534,21 +10567,23 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "form",
-        "wrapWithPanel": false,
-        "actions": [],
-        "body": [
+        "type": "crud",
+        "api": "/api/mock2/sample?waitSeconds=1",
+        "columns": [
           {
-            "type": "static",
-            "name": "hover",
-            "label": "静态展示",
-            "value": "static",
+            "type": "tpl",
+            "name": "engine",
+            "label": "Rendering engine",
+            "tpl": "${engine|truncate:6}",
             "popOver": {
               "trigger": "hover",
               "position": "left-top",
               "showIcon": false,
               "title": "标题",
-              "body": "弹出内容"
+              "body": {
+                "type": "tpl",
+                "tpl": "${engine}"
+              }
             }
           }
         ]
@@ -10571,29 +10606,30 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "items": [
-          {
-            "id": 1,
-            "engine": "Trident"
-          },
-          {
-            "id": 2,
-            "engine": "Gecko"
-          }
-        ]
-      },
       "body": {
-        "type": "table",
-        "source": "${items}",
+        "type": "crud",
+        "api": "/api/mock2/sample?waitSeconds=1",
         "columns": [
           {
-            "name": "engine",
-            "label": "Engine",
+            "name": "id",
+            "label": "ID",
             "popOver": {
-              "body": "${engine}"
+              "body": {
+                "type": "tpl",
+                "tpl": "${id}"
+              }
             },
             "popOverEnableOn": "this.id == 1"
+          },
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "popOver": {
+              "body": {
+                "type": "tpl",
+                "tpl": "${engine}"
+              }
+            }
           }
         ]
       }

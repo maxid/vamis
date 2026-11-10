@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import {
+  OVERLAY_POPOVER_GAP,
+  overlayContainerFrom,
   popOverBodyNode,
   popOverEnabled,
   popOverExclusiveClear,
@@ -9,16 +11,20 @@ import {
   popOverOffset,
   popOverOverlaySchema,
   popOverPosition,
+  popOverPositionTarget,
   popOverShowIcon,
+  popOverTextOverflow,
   popOverTitle,
   popOverTrigger,
   resolveClassName,
   useData,
+  useEnv,
   useOverlay,
   SchemaRenderer,
   type SchemaObject,
 } from '@vamis/core'
-import { ZoomInIcon } from '@vamis/ui'
+import { VamisGalleryToolIcon } from '@vamis/ui'
+import VamisOverlay from '../overlay/VamisOverlay.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -26,6 +32,7 @@ const props = defineProps<{
 }>()
 
 const injected = useData()
+const env = useEnv()
 const overlay = useOverlay()
 const data = computed(() => ({ ...injected.value, ...(props.data || {}) }))
 const enabled = computed(() => popOverEnabled(props.schema, data.value))
@@ -35,16 +42,19 @@ const mode = computed(() => popOverMode(props.schema))
 const position = computed(() => popOverPosition(props.schema))
 const title = computed(() => popOverTitle(props.schema, data.value))
 const body = computed(() => popOverBodyNode(props.schema))
+const overflow = computed(() => popOverTextOverflow(props.schema))
 const offset = computed(() => popOverOffset(props.schema))
 const layerClass = computed(() =>
   resolveClassName(popOverObjectClass(props.schema), data.value),
 )
-
-const root = ref<HTMLElement | null>(null)
-const layerEl = ref<HTMLElement | null>(null)
-const open = ref(false)
-const leaveTimer = ref<ReturnType<typeof setTimeout> | null>(null)
-const coords = ref({ top: 0, left: 0, transform: 'translateX(-50%)' })
+const container = computed(() => overlayContainerFrom(props.schema, env))
+const isFixed = computed(() => position.value.startsWith('fixed-'))
+const overlayGap = computed(() => {
+  if (position.value === 'center' || isFixed.value) return 0
+  if (position.value === 'auto' || position.value.split('-').length > 2) return OVERLAY_POPOVER_GAP
+  return 0
+})
+const overlayOffset = computed<[number, number]>(() => [offset.value.x, offset.value.y])
 
 function popOverObjectClass(schema: SchemaObject): unknown {
   const raw = schema.popOver
@@ -54,75 +64,43 @@ function popOverObjectClass(schema: SchemaObject): unknown {
   return undefined
 }
 
-const localOpen = computed(() => open.value && mode.value === 'popOver')
+const hostEl = ref<HTMLElement | null>(null)
+const wrap = ref<HTMLElement | null>(null)
+const btn = ref<HTMLElement | null>(null)
+const anchor = computed(() =>
+  popOverPositionTarget(hostEl.value, {
+    showIcon: showIcon.value,
+    btn: btn.value,
+    wrap: wrap.value,
+  }),
+)
+const open = ref(false)
+const leaveTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 
-function placeLayer() {
-  const el = root.value
-  if (!el) return
-  const r = el.getBoundingClientRect()
-  const { x, y } = offset.value
-  const pos = position.value
-  if (pos.startsWith('fixed-')) {
-    const map: Record<string, { top: number; left: number; transform: string }> = {
-      'fixed-center': { top: window.innerHeight / 2, left: window.innerWidth / 2, transform: 'translate(-50%, -50%)' },
-      'fixed-left-top': { top: 16, left: 16, transform: 'none' },
-      'fixed-right-top': { top: 16, left: window.innerWidth - 16, transform: 'translateX(-100%)' },
-      'fixed-left-bottom': { top: window.innerHeight - 16, left: 16, transform: 'translateY(-100%)' },
-      'fixed-right-bottom': {
-        top: window.innerHeight - 16,
-        left: window.innerWidth - 16,
-        transform: 'translate(-100%, -100%)',
-      },
-    }
-    coords.value = map[pos] || map['fixed-center']
-    return
-  }
-  const map: Record<string, { top: number; left: number; transform: string }> = {
-    center: { top: r.bottom + 4, left: r.left + r.width / 2, transform: 'translateX(-50%)' },
-    'left-top': { top: r.top, left: r.left, transform: 'translate(-100%, -100%)' },
-    'right-top': { top: r.top, left: r.right, transform: 'translateY(-100%)' },
-    'left-bottom': { top: r.bottom, left: r.left, transform: 'translateX(-100%)' },
-    'right-bottom': { top: r.bottom, left: r.right, transform: 'none' },
-    'left-top-right-bottom': { top: r.top, left: r.left, transform: 'translate(-100%, -100%)' },
-    'left-center-right-center': { top: r.top + r.height / 2, left: r.left, transform: 'translate(-100%, -50%)' },
-    'left-bottom-right-top': { top: r.bottom, left: r.left, transform: 'translateX(-100%)' },
-    'right-top-left-bottom': { top: r.top, left: r.right, transform: 'translateY(-100%)' },
-    'right-center-left-center': { top: r.top + r.height / 2, left: r.right, transform: 'translateY(-50%)' },
-    'right-bottom-left-top': { top: r.bottom, left: r.right, transform: 'none' },
-    'center-center-center-center': {
-      top: r.top + r.height / 2,
-      left: r.left + r.width / 2,
-      transform: 'translate(-50%, -50%)',
-    },
-  }
-  const next = map[pos] || map.center
-  coords.value = { top: next.top + y, left: next.left + x, transform: next.transform }
-}
+const localOpen = computed(() => open.value && mode.value === 'popOver')
 
 function clearTimer() {
   if (leaveTimer.value) clearTimeout(leaveTimer.value)
   leaveTimer.value = null
 }
 
-function unbindDoc() {
-  document.removeEventListener('pointerdown', onDocPointer, true)
-}
-
 function close() {
   clearTimer()
-  unbindDoc()
   open.value = false
   popOverExclusiveClear(close)
 }
 
+function contentFits(): boolean {
+  const el = wrap.value
+  if (!el || overflow.value !== 'ellipsis') return false
+  return el.clientHeight >= el.scrollHeight && el.clientWidth >= el.scrollWidth
+}
+
 function openLocal() {
+  if (overflow.value === 'noWrap') return
+  if (overflow.value === 'ellipsis' && contentFits()) return
   popOverExclusiveOpen(close)
   open.value = true
-  nextTick(() => {
-    placeLayer()
-    unbindDoc()
-    document.addEventListener('pointerdown', onDocPointer, true)
-  })
 }
 
 function openOverlay() {
@@ -158,6 +136,11 @@ function onClick(event: Event) {
   show(event)
 }
 
+function onWrapClick(event: Event) {
+  if (showIcon.value) return
+  onClick(event)
+}
+
 function onEnter() {
   if (trigger.value !== 'hover') return
   clearTimer()
@@ -169,20 +152,11 @@ function onLeave() {
   hideLater()
 }
 
-function onLayerEnter() {
-  if (trigger.value !== 'hover') return
-  clearTimer()
-}
-
-function onLayerLeave() {
-  if (trigger.value !== 'hover') return
-  hideLater()
-}
-
-function onDocPointer(event: PointerEvent) {
-  if (!localOpen.value) return
-  const target = event.target as Node | null
-  if (target && (root.value?.contains(target) || layerEl.value?.contains(target))) return
+function onFixedOutside(event: MouseEvent) {
+  if (!localOpen.value || !isFixed.value) return
+  const node = event.target as Node | null
+  const layer = document.querySelector('[data-vamis-popover-layer]')
+  if (node && (anchor.value?.contains(node) || layer?.contains(node))) return
   close()
 }
 
@@ -190,7 +164,14 @@ watch(enabled, (ok) => {
   if (!ok) close()
 })
 
+if (typeof document !== 'undefined') {
+  document.addEventListener('mousedown', onFixedOutside, true)
+}
+
 onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('mousedown', onFixedOutside, true)
+  }
   close()
 })
 </script>
@@ -199,50 +180,76 @@ onBeforeUnmount(() => {
   <slot v-if="!enabled" />
   <span
     v-else
-    ref="root"
+    ref="hostEl"
     data-vamis-popover
-    class="relative inline-flex items-center gap-1"
+    class="vamis-popover-host"
+    @mouseenter="onEnter"
+    @mouseleave="onLeave"
   >
     <span
-      v-if="!showIcon"
-      class="inline-flex min-w-0 cursor-pointer"
-      @click.stop="onClick"
-      @mouseenter="onEnter"
-      @mouseleave="onLeave"
+      ref="wrap"
+      class="vamis-popover-wrap"
+      :class="{
+        'vamis-popover-wrap--ellipsis': overflow === 'ellipsis',
+        'vamis-popover-wrap--nowrap': overflow === 'noWrap',
+      }"
+      @click.stop="onWrapClick"
     >
       <slot />
     </span>
-    <slot v-else />
-    <button
+    <span
       v-if="showIcon"
-      type="button"
-      class="inline-flex size-4 shrink-0 items-center justify-center text-muted-foreground hover:text-foreground"
+      ref="btn"
+      class="vamis-popover-btn"
+      role="button"
+      tabindex="0"
       aria-label="查看详情"
       @click.stop="onClick"
-      @mouseenter="onEnter"
-      @mouseleave="onLeave"
     >
-      <ZoomInIcon class="size-3.5" />
-    </button>
-    <Teleport to="body">
+      <VamisGalleryToolIcon name="zoom-in" />
+    </span>
+    <VamisOverlay
+      v-if="!isFixed"
+      :show="localOpen"
+      :target="anchor"
+      :container="container"
+      :placement="position"
+      :gap="overlayGap"
+      :offset="overlayOffset"
+      layer-class="vamis-overlay--popover"
+      @outside="close"
+    >
       <div
-        v-if="localOpen"
-        ref="layerEl"
+        class="vamis-popover-layer"
+        :class="layerClass"
         role="dialog"
         data-vamis-popover-layer
-        class="fixed z-50 w-max min-w-40 max-w-sm rounded border bg-popover p-3 text-sm text-popover-foreground shadow-md"
-        :class="layerClass"
-        :style="{
-          top: `${coords.top}px`,
-          left: `${coords.left}px`,
-          transform: coords.transform,
-        }"
-        @mouseenter="onLayerEnter"
-        @mouseleave="onLayerLeave"
+        @mouseenter="onEnter"
+        @mouseleave="onLeave"
         @click.stop
       >
-        <p v-if="title" class="mb-2 font-medium">{{ title }}</p>
-        <SchemaRenderer :schema="body" :extra-data="data" />
+        <div v-if="title" class="vamis-popover-layer__title">{{ title }}</div>
+        <div class="vamis-popover-layer__body">
+          <SchemaRenderer :schema="body" :extra-data="data" />
+        </div>
+      </div>
+    </VamisOverlay>
+    <Teleport v-else-if="localOpen" to="body">
+      <div
+        class="vamis-popover-fixed"
+        :class="`vamis-popover-fixed--${position}`"
+        role="dialog"
+        data-vamis-popover-layer
+        @mouseenter="onEnter"
+        @mouseleave="onLeave"
+        @click.stop
+      >
+        <div class="vamis-popover-layer" :class="layerClass">
+          <div v-if="title" class="vamis-popover-layer__title">{{ title }}</div>
+          <div class="vamis-popover-layer__body">
+            <SchemaRenderer :schema="body" :extra-data="data" />
+          </div>
+        </div>
       </div>
     </Teleport>
   </span>

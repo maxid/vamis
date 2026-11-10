@@ -154,14 +154,23 @@ export function cardFieldLabel(node: unknown): string {
   return String(label)
 }
 
+function cardFieldPopOver(rec: Record<string, unknown>): Record<string, unknown> {
+  const next: Record<string, unknown> = {}
+  for (const key of ['popOver', 'popOverEnable', 'popOverEnabled', 'popOverEnableOn', 'textOverflow'] as const) {
+    if (rec[key] != null) next[key] = rec[key]
+  }
+  return next
+}
+
 export function cardFieldValueSchema(node: unknown): SchemaObject {
   const rec = asRecord(node)
   if (typeof rec.type === 'string' && rec.type) return rec as SchemaObject
-  if (typeof rec.tpl === 'string') return { type: 'tpl', tpl: rec.tpl }
-  if (rec.value != null && rec.value !== '') return { type: 'tpl', tpl: String(rec.value) }
+  const pop = cardFieldPopOver(rec)
+  if (typeof rec.tpl === 'string') return { type: 'tpl', tpl: rec.tpl, ...pop }
+  if (rec.value != null && rec.value !== '') return { type: 'tpl', tpl: String(rec.value), ...pop }
   const name = rec.name
-  if (typeof name === 'string' && name) return { type: 'tpl', tpl: `\${${name}}` }
-  return { type: 'tpl', tpl: '' }
+  if (typeof name === 'string' && name) return { type: 'tpl', tpl: `\${${name}}`, ...pop }
+  return { type: 'tpl', tpl: '', ...pop }
 }
 
 export function cardsSource(schema: unknown, data: PlainObject = {}, items?: PlainObject[]): PlainObject[] {

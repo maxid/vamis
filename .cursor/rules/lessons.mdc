@@ -147,8 +147,20 @@ alwaysApply: true
 ### 对照过了 ≠ 文档站对齐；必须并排开两边同路径页
 - 踩过：`pnpm compare --page tooltip` 11/11，文档示例仍是短文案、无 FA 图标十字布局；浮层皮肤也偏。对照默认不打开 hover 浮层、不对活示例文案。用户每次都要贴 Amis / Vamis 两个 URL。
 - 稳定做法：改组件或活示例，声称完成前打开 Amis `localhost:8888/zh-CN/components/<type>` 与 Vamis `localhost:5173/components/<type>`（路径以侧栏为准，tooltip 是 `/tooltip` 不是 `/tooltip-wrapper`）。对：示例文案、图标、布局、打开后的浮层盒模型。不要等用户提醒。
-- 触及：`tooltip-wrapper` `action` `button` `badge` `remark` FormItem 及所有有文档活示例的 type
+- 触及：`tooltip-wrapper` `action` `button` `badge` `remark` FormItem `popOver` 及所有有文档活示例的 type
 - 规则：`.cursor/rules/amis-lookup.mdc`；`.cursor/rules/update-progress.mdc`
+
+### CRUD 普通列也要走 PopOverHost，卡片合成 tpl 要带上 popOver
+- 踩过：Table 包了宿主，CRUD 自写单元格把无 type 列收成纯 span；`cardFieldValueSchema` 合成 `{type:tpl}` 时丢掉 `popOver`。文档 CRUD / cards 示例没有放大镜。
+- 稳定做法：CRUD 普通列和 Table 一样包 `PopOverHost`；`type: tpl` 仍走 SchemaRenderer（Tpl 自己包）。卡片字段合成 tpl 时拷走 `popOver*` / `textOverflow`。文档活示例对标 Amis 主路径 CRUD / list / cards，不要为对照改成本地小表。
+- 触及：`popOver` `table` `crud` `cards` `list`
+- 规则：本文；`.cursor/rules/site.mdc`
+
+### 表格列 PopOver 定位目标是整格 td，不是放大镜
+- 踩过：Amis `TableCell` `@PopOverable({ targetOutter: true })` 把 Overlay target 钉在单元格上，`placement: center` 相对列宽居中。Vamis 有 icon 时 `:target="btn"`，浮层跟点击点走。
+- 稳定做法：在 `td`/`th` 里 overlay target 用 `closest('td, th')`；static / list / cards 仍用按钮或 wrap。不要改 `overlayPosition` 的 center 算法去猜点击坐标。
+- 触及：`popOver` `table` `crud` `table2`
+- 规则：本文；Amis `PopOver.tsx` `targetOutter`；`TableCell.tsx`
 
 ### 组装与盒模型
 
@@ -358,13 +370,19 @@ alwaysApply: true
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
-- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` 以及一切走下拉的控件
+- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` `popOver` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
+
+### PopOver 走 VamisOverlay + token，不要 Tailwind 冒充
+- 踩过：PopOverHost 自写 Teleport + `z-50` / `bg-popover` / `p-3`，lucide ZoomIn，`center` 被映射到触发器下方。
+- 稳定做法：`VamisOverlay` + `--popover-layer-*`（min 320 / max 640 / `--z-popover` 1400）。`placement: center` 盖在触发器上（gap 0）。图标 `VamisGalleryToolIcon name="zoom-in"`。`textOverflow: ellipsis` 无 `popOver` 也启用，溢出才开、无放大镜；`noWrap` 永不弹。深色 `--popover-layer-bg: #17202d`（跟 `--select-menu-bg`，不要 fill-11 `#070d14`）。不要用 Panel 渲染器包 body（scoped CSS 会压过剥离边框）。`textOverflow` 溢出检测打在正文 wrap 上，不要打在放大镜按钮上。
+- 触及：`popOver` `static` `table` `tpl` `list` `cards`
+- 规则：本文；`.cursor/rules/reuse-overlay.mdc`；Amis `PopOver.tsx` / `_popover.scss`
 
 ### 深色浮层靠 `.dark` 换 token，不要写死浅色底
 - 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也曾写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
 - 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。
-- 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `calendar` `dropdown-button` `dialog` `action`
+- 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `calendar` `dropdown-button` `dialog` `action` `popOver`
 - 规则：`.cursor/rules/style.mdc`「深色主题」
 
 ### Overlay Tooltip 按 `_tooltip.scss` 转写，量进 :root，不要自造一款

@@ -206,6 +206,13 @@ export function overlayPosition(target: HTMLElement, opts?: OverlayPositionOpts)
     ox || oy ? { ...c, top: c.top + oy, left: c.left + ox } : c
 
   const placement = opts?.placement && opts.placement !== 'auto' ? opts.placement : 'auto'
+  if (placement === 'center') {
+    return shift({
+      left: child.left + (child.width - overlayW) / 2,
+      top: child.top + (child.height - overlayH) / 2,
+      activePlacement: 'center',
+    })
+  }
   const isAuto = placement === 'auto'
   const sideTests = placement === 'top' || placement === 'bottom' || placement === 'left' || placement === 'right'
     ? OVERLAY_SIDE_TESTS[placement]
