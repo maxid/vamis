@@ -218,7 +218,7 @@ function onPerPage(e: Event) {
           </li>
         </ul>
         <div v-else-if="widget === 'go'" data-pagination="go">
-          <span>跳转至</span>
+          <span data-pagination="go-left">跳转至</span>
           <input
             :disabled="locked"
             :value="goInput"
@@ -234,16 +234,13 @@ function onPerPage(e: Event) {
 </template>
 
 <style scoped>
+/* Amis `.Pagination-wrap`：块级 + 子项 inline-block/inline-flex，不要 flex+align-items 去对 -8px 底边距。 */
 [data-vamis-pagination] {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: color-mix(in oklch, var(--foreground) 55%, transparent);
-}
-[data-vamis-pagination][data-size='sm'] {
-  gap: 4px;
+  display: inline-block;
+  font-size: 0;
+  line-height: 0;
+  white-space: nowrap;
+  color: var(--text-loud, #151b26);
 }
 [data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > a,
 [data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > span {
@@ -255,8 +252,12 @@ function onPerPage(e: Event) {
 [data-pagination='pager'] {
   display: inline-block;
   padding: 0;
-  margin: 0;
+  margin: 0 0 -8px;
   list-style: none;
+  vertical-align: top;
+  /* 字号/行高打在 a/span 上。ul 自己 12/32 会多出 ~1.4px strut，统计和前往看起来偏上。 */
+  font-size: 0;
+  line-height: 0;
 }
 [data-pagination='pager'] > li {
   display: inline-flex;
@@ -273,7 +274,7 @@ function onPerPage(e: Event) {
   line-height: 32px;
   padding: 0 8px;
   text-align: center;
-  color: inherit;
+  color: var(--form-item-color, #5c5f66);
   font-size: 12px;
   box-sizing: border-box;
   display: inline-flex;
@@ -317,6 +318,10 @@ function onPerPage(e: Event) {
 }
 [data-pagination='total'] {
   display: inline-block;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--form-item-color, #5c5f66);
+  vertical-align: top;
 }
 [data-pagination='perpage'] {
   height: 32px;
@@ -324,9 +329,10 @@ function onPerPage(e: Event) {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card, #fff);
-  color: inherit;
+  color: var(--form-item-color, #5c5f66);
   padding: 0 8px;
   font-size: 12px;
+  vertical-align: top;
 }
 [data-vamis-pagination][data-size='sm'] [data-pagination='perpage'] {
   height: 24px;
@@ -337,6 +343,15 @@ function onPerPage(e: Event) {
   align-items: center;
   height: 32px;
   flex-wrap: nowrap;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-loud, #151b26);
+}
+[data-pagination='go-left'] {
+  color: var(--form-item-color, #5c5f66);
+  font-size: 14px;
+  line-height: 1.5;
 }
 [data-pagination='go'] input {
   width: 50px;
@@ -348,7 +363,10 @@ function onPerPage(e: Event) {
   border-radius: var(--radius) 0 0 var(--radius);
   text-align: center;
   background: var(--card, #fff);
-  color: inherit;
+  color: var(--form-item-color, #5c5f66);
+  font-size: 14px;
+  /* border-box 32 含 1px 边，行高跟内容区 30，避免字比格子低 1px。 */
+  line-height: 30px;
   box-sizing: border-box;
 }
 [data-pagination='go'] input:focus,
@@ -357,20 +375,26 @@ function onPerPage(e: Event) {
   border-color: var(--primary);
 }
 [data-pagination='go-btn'] {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
-  line-height: 32px;
+  line-height: 1;
   text-align: center;
   cursor: pointer;
   border: 1px solid var(--border);
   border-left: none;
+  margin-left: -1px;
   border-radius: 0 var(--radius) var(--radius) 0;
   font-size: 12px;
+  color: var(--text-loud, #151b26);
+  box-sizing: border-box;
 }
 [data-pagination='go-btn']:hover {
   color: var(--primary);
   border-color: var(--primary);
+  border-left: 1px solid var(--primary);
 }
 [data-vamis-pagination].disabled,
 [data-vamis-pagination].disabled [data-pagination='pager'] > li {

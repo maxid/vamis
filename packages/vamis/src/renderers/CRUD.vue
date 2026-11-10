@@ -90,6 +90,8 @@ const pagerSchema = computed(
       lastPage: lastPage.value,
       total: store.total,
       perPage: store.perPage,
+      // cxd 主题默认 maxButtons: 9（组件自身默认 5），文档站 CRUD 才会画出 1 2 3 4 5 6 7 … N
+      maxButtons: 9,
       showPageInput: lastPage.value > 9,
     }) as SchemaObject,
 )
@@ -311,21 +313,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full min-w-0 space-y-3">
+  <div class="w-full min-w-0">
     <h2 v-if="schema.title" class="text-sm font-medium">{{ schema.title }}</h2>
-    <SchemaRenderer
-      v-if="filterSchema"
-      :schema="{
-        ...filterSchema,
-        type: filterSchema.type || 'form',
-        mode: filterSchema.mode || 'horizontal',
-        wrapWithPanel: filterSchema.wrapWithPanel === true,
-        api: undefined,
-        reload: schema.name,
-        submitText: filterSchema.submitText || '搜索',
-        resetAfterSubmit: false,
-      }"
-    />
+    <div v-if="filterSchema" class="vamis-crud-filter">
+      <SchemaRenderer
+        :schema="{
+          ...filterSchema,
+          type: filterSchema.type || 'form',
+          mode: filterSchema.mode || 'horizontal',
+          wrapWithPanel: filterSchema.wrapWithPanel === true,
+          api: undefined,
+          reload: schema.name,
+          submitText: filterSchema.submitText || '搜索',
+          resetAfterSubmit: false,
+        }"
+      />
+    </div>
     <div v-if="headerToolbar.length || bulkActions.length || (isCardsMode && selectable) || (selectable && !isCardsMode && store.selectedItems.length)" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
         <Button
@@ -348,6 +351,7 @@ onBeforeUnmount(() => {
         />
       </div>
     </div>
+    <div class="vamis-crud-body">
     <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items" />
     <Table v-else>
       <TableHeader>
@@ -414,13 +418,16 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
-    <div v-if="showPager" class="vamis-crud-toolbar">
-      <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--left">
-        <span class="vamis-crud-statistics">{{ statisticsText }}</span>
+    <div v-if="showPager" class="vamis-table-foot-toolbar">
+      <div class="vamis-crud-toolbar">
+        <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--left">
+          <span class="vamis-crud-statistics">{{ statisticsText }}</span>
+        </div>
+        <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--right">
+          <Pagination :schema="pagerSchema" @page-change="onPagerChange" />
+        </div>
       </div>
-      <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--right">
-        <Pagination :schema="pagerSchema" @page-change="onPagerChange" />
-      </div>
+    </div>
     </div>
     <Dialog v-model:open="dialogOpen">
       <DialogContent class="max-w-xl">

@@ -43,8 +43,18 @@ function decorate(item: Omit<SampleRow, 'id' | 'name' | 'status'>, id: number): 
   }
 }
 
+/** 对齐 Amis `mock/cfc/mock/sample.db.js`：底表拼接 10 次，共 1710 条 / 171 页。 */
+const SAMPLE_TOTAL = 1710
+
 export function createSampleRows(): SampleRow[] {
-  return SEED.concat(SEED, SEED).map((item, index) => decorate(item, index + 1))
+  const rows: SampleRow[] = []
+  while (rows.length < SAMPLE_TOTAL) {
+    for (const item of SEED) {
+      rows.push(decorate(item, rows.length + 1))
+      if (rows.length >= SAMPLE_TOTAL) break
+    }
+  }
+  return rows
 }
 
 export function cloneRows(rows: SampleRow[]): SampleRow[] {

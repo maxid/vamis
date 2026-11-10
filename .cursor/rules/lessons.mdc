@@ -163,10 +163,10 @@ alwaysApply: true
 - 规则：本文；Amis `PopOver.tsx` `targetOutter`；`Form/Static.tsx` `@PopOver({ position: 'right' })`
 
 ### CRUD 底栏用 Pagination + statistics，不要自制上一页下一页
-- 踩过：popover 文档 CRUD 底栏只有「上一页 / 下一页」，Amis 是 `footerToolbar: ['statistics', 'pagination']`（`1/N 共：T 项` + 页码）。顺手默认「导出 CSV / 新增」Amis 也没有。
-- 稳定做法：默认 header 不造导出/新增；footer 复用 `Pagination.vue`，`showPageInput` 仅 `lastPage > 9`。List 未写 title 不要补「列表项」；hbox 在 ListItem 里走 `ListItem-field`（label 150px + value）。
+- 踩过：popover 文档 CRUD 底栏只有「上一页 / 下一页」，Amis 是 `footerToolbar: ['statistics', 'pagination']`（`1/N 共：T 项` + 页码）。顺手默认「导出 CSV / 新增」Amis 也没有。mock 只拼 60 条时 `lastPage` 只有 6，跳转至不出现，页码也画不出 cxd 的 `1 2 3 4 5 6 7 … N`。
+- 稳定做法：默认 header 不造导出/新增；footer 复用 `Pagination.vue`。cxd 主题 `maxButtons: 9`（Pagination 组件默认仍是 5），`showPageInput` 仅 `lastPage > 9`。`/api/mock2/sample` 对齐 Amis `sample.db.js` 底表拼接 10 次共 **1710** 条。默认不要加 `switch-per-page`（截图里「每页」是 32px 的「前往」，不是 perPage Select）。Pagination 外壳对齐 `.Pagination-wrap`：子项 `inline-block` / `inline-flex` + `vertical-align: top`，页码 ul 才 `margin-bottom: -8px`；禁止 flex `align-items: center` 去对这条负边距（跳转区会比页码高 4px）。字号不要统刷 12：页码 / 前往 12，跳转至与输入 14，统计继承正文 14 / `--text-loud`。有 1px 边的格子（前往 / 输入）不要 `height`+`line-height` 都写 32：Tailwind `border-box` 会把字挤偏 1px，改 `inline-flex` 居中或行高 30。CRUD 底栏对齐 Amis：toolbar 在表内 `.Table-toolbar.Table-footToolbar`（`padding: gap-base 4px` → **54**），内层 `.Crud-toolbar` 才是 float + clearfix、item 高 30、`margin-top` 10、盒 **40**、`margin-top: -10px` 抵 foot 的 padding-Y。**禁止**把 -10px 打在表格兄弟上（会叠进末行）。`.cxd-Table` 自己 `margin-bottom: gap-md` **16px**，CRUD 后再跟组件靠这条，不要用根上 `space-y-3`（会压过 -10px）。禁止 flex 当 Crud-toolbar（32px 页码 `min-height:auto` 会撑成 42）。页码可以溢出 30px item，不要把 item 改成 32。filter 走独立 `margin-bottom: var(--gap-base)`。List 未写 title 不要补「列表项」；hbox 在 ListItem 里走 `ListItem-field`（label 150px + value）。
 - 触及：`crud` `pagination` `list` `popOver`
-- 规则：本文；Amis `CRUD.tsx` `footerToolbar`；`List.tsx` `itemRender`
+- 规则：本文；Amis `CRUD.tsx` `footerToolbar`；`cxd.ts` `pagination.maxButtons`；`List.tsx` `itemRender`
 
 ### List-items 是带 15px 右边距的 div，不要用 ul/li 冒充
 - 踩过：用 `ul > li` 再给内层 padding，对照 `div.List-items` 宽高对不上。Amis 该项是 `div`，`margin-right: 15px`、`margin-bottom: gap-sm`，行 padding / 斑马纹 / 顶边打在同一层 ListItem。List 行里的 popOver 宿主做成 flex、放大镜 `svg { display:block; height:14px }` 会吃掉 Amis `svg.icon` 的 inline + `top: 0.125em` 行盒（行高低 ~1.4px，五项合计 List-items 矮约 7px）。

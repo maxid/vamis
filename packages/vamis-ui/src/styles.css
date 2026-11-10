@@ -329,6 +329,11 @@
   --list-bg: var(--fill-11);
   --list-item-strip-bg: var(--fill-10);
   --list-items-margin-right: 15px;
+  /* Amis `--Crud-toolbar-gap` size-6 / `--Crud-toolbar-height`。 */
+  --crud-toolbar-gap: 10px;
+  --crud-toolbar-h: 30px;
+  --table-toolbar-margin-x: 4px;
+  --table-toolbar-margin-y: var(--gap-base);
   /* Amis --Form-input-onDisabled-*：灰底而不是 opacity。 */
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #b8babf;
@@ -1708,18 +1713,51 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .vamis-crud-toolbar {
+  /* Amis `.cxd-Table`：toolbar 在表内 `.Table-footToolbar`，表本身 `margin-bottom: gap-md`。
+     Crud-toolbar 的 -10px 是抵 foot 的 padding-Y 12，禁止单独打在表格兄弟上（会叠进末行）。 */
+  .vamis-crud-filter {
+    margin-bottom: var(--gap-base, 12px);
+  }
+  .vamis-crud-body {
+    margin-bottom: var(--gap-md, 16px);
+  }
+  .vamis-table-foot-toolbar {
     display: flex;
     flex-wrap: wrap;
+    padding: var(--table-toolbar-margin-y, 12px) var(--table-toolbar-margin-x, 4px);
+  }
+  .vamis-crud-toolbar {
+    margin-top: calc(var(--crud-toolbar-gap, 10px) * -1);
+    flex: 1 1 0%;
+    min-width: 0;
+    color: var(--text-loud, #151b26);
+  }
+  .vamis-crud-toolbar::before,
+  .vamis-crud-toolbar::after {
+    display: table;
+    content: '';
+  }
+  .vamis-crud-toolbar::after {
+    clear: both;
+  }
+  .vamis-crud-toolbar-item {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    min-height: 32px;
-    font-size: 12px;
-    color: var(--form-item-color);
+    height: var(--crud-toolbar-h, 30px);
+    line-height: 1.5;
+    margin-top: var(--crud-toolbar-gap, 10px);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .vamis-crud-toolbar-item--left {
+    float: left;
+  }
+  .vamis-crud-toolbar-item--right {
+    float: right;
   }
   .vamis-crud-statistics {
-    line-height: 32px;
+    line-height: var(--crud-toolbar-h, 30px);
+    vertical-align: middle;
   }
   .vamis-popover-btn {
     display: inline-block;

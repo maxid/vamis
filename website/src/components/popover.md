@@ -157,5 +157,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 活示例打同一份 `/api/mock2/sample`（本仓 mock 约 60 条 / 6 页，Amis 文档站约 110 条 / 11 页，页码数量会差一截）。CRUD 默认底栏已接 `statistics` + `Pagination`；导出 / 新增需写进 `headerToolbar`。
+- 活示例打同一份 `/api/mock2/sample`（本仓 mock 1710 条 / 171 页，对齐 Amis `sample.db.js` 底表拼接 10 次）。CRUD 默认底栏已接 `statistics` + `Pagination`（cxd `maxButtons: 9`，`lastPage > 9` 才出「跳转至 / 前往」）；导出 / 新增需写进 `headerToolbar`。默认没有「每页」下拉（那是 `switch-per-page` / `showPerPage`）。
 - 文档未单独演示 `textOverflow` 活示例（Amis 同名页也没有这一节），能力已接，写在属性表。
