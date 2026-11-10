@@ -91,6 +91,16 @@ describe('input-number chrome', () => {
     expect(css).toContain('--number-pad-x: 10px')
   })
 
+  it('focus glow wraps the whole Number group; enhance stays shrink-to-fit', () => {
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain(
+      '.vamis-number-control:has(> .vamis-number.is-focused:not(.is-disabled):not(.vamis-number--border-none):not(.is-mobile))',
+    )
+    expect(css).toContain('.vamis-number-control:has(> .vamis-number.is-enhance):not(.is-with-unit)')
+    expect(css).toContain('.vamis-number.is-enhance {\n  display: inline-flex')
+    expect(css).toContain('.vamis-number.is-enhance .vamis-number__native {\n  /* block + width:auto')
+  })
+
   it('right-side handlers long-press like rc-input-number StepHandler', () => {
     expect(NUMBER_STEP_DELAY).toBe(600)
     expect(NUMBER_STEP_INTERVAL).toBe(200)

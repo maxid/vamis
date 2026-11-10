@@ -3329,6 +3329,26 @@
   border-bottom-right-radius: var(--radius);
 }
 
+/*
+  Number 同 InputText：3px glow 打在整组（含单位 / enhance ±），不要打在 overflow:hidden 的输入壳上。
+  Amis `.Number--enhance` 是 inline-flex，不要 width:100% 拉满。
+*/
+.vamis-number-control:has(> .vamis-number.is-enhance):not(.is-with-unit) {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  vertical-align: top;
+}
+.vamis-number-control:has(> .vamis-number.is-focused:not(.is-disabled):not(.vamis-number--border-none):not(.is-mobile)) {
+  border-radius: var(--radius);
+  box-shadow: var(--control-focus-glow);
+}
+.vamis-number-control.is-with-unit:has(> .vamis-number.is-focused:not(.is-disabled)) .vamis-number__unit {
+  border-color: var(--control-focus-border);
+  color: var(--control-focus-addon-color);
+  transition: none;
+}
+
 @keyframes vamis-spinner-spin {
   to {
     transform: rotate(1turn);
@@ -4887,7 +4907,6 @@
 }
 .vamis-number.is-focused:not(.is-disabled) {
   border-color: var(--control-focus-border);
-  box-shadow: var(--control-focus-glow);
 }
 .vamis-number.is-disabled {
   background: var(--control-disabled-bg);
@@ -4993,16 +5012,23 @@
   vertical-align: middle;
 }
 .vamis-number.is-enhance {
-  display: flex;
+  display: inline-flex;
   align-items: stretch;
+  width: auto;
+  max-width: 100%;
   overflow: hidden;
+  vertical-align: middle;
 }
 .vamis-number.is-enhance .vamis-number__input-wrap {
   flex: 1 1 auto;
+  width: auto;
   border-left: 1px solid var(--input);
   border-right: 1px solid var(--input);
 }
 .vamis-number.is-enhance .vamis-number__native {
+  /* block + width:auto 会吃满父级；Amis enhance 内层 Number 是 shrink-to-fit（rc 默认约 90）。 */
+  width: 90px;
+  min-width: 0;
   text-align: center;
   padding: 0;
 }
@@ -5064,6 +5090,10 @@
 }
 .vamis-number-control.is-with-unit .vamis-number.is-focused + .vamis-number__unit {
   border-color: var(--control-focus-border);
+}
+.vamis-number-control.is-with-unit .vamis-number.is-enhance {
+  flex: 0 0 auto;
+  width: auto;
 }
 .vamis-control--sm .vamis-number,
 .vamis-control--sm .vamis-number__unit,

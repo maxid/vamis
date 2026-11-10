@@ -203,7 +203,7 @@ alwaysApply: true
 ### 输入框 hover 走 --primary，focus glow 包整组
 - 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。Select 触发器写成 `box-shadow: 0 0 0 1px`，和 InputText 的 3px glow 两套。addOn 文案和无边框 focus 字色没跟 `--primary`。
 - 稳定做法：hover `border-color: var(--primary)`（5 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），量进 `--control-focus-glow`，InputText 打在 `.vamis-text-control` 整组，**Select 触发器共用同一 token**（Amis cxd Select 是 `shadow-none`，不要各写 1px）。focus 时文字 addOn 字色 `--control-focus-addon-color`（= `--primary`，对齐 `--Form-input-onFocus-addOnColor`）；`borderMode: none` 无 glow，原生字色改 `--primary`。无边框示例用 `focus:text-primary`，不要 Amis 的 `focus:text-indigo-700`。压过 Button utilities 用 unlayered。
-- 触及：`input-text` `input-password` `select` Options
+- 触及：`input-text` `input-password` `select` Options `input-number`
 - 规则：本文；Amis `_text.scss` 只对 hover/竖缝/圆角/addOn 字色；focus glow 跟 Vamis 原风格
 
 ### 收集表单项要走进 grid columns
@@ -684,7 +684,7 @@ alwaysApply: true
 
 ### Number 控件不要用 native `type=number` / shadcn Input 冒充
 - 踩过：占位只挂 `type="number"`，没有步进柄、精度、千分位、单位、enhance。Amis 是 `NumberInput`（rc-input-number）+ `type=text` 展示层。对照探针读 `input.value` 展示串，不要把 `getValue` 改成 `$111,111%`。
-- 稳定做法：量进 `:root` / `.dark` 的 `--number-*`（高 32、handler 24、单位 56、pad **10**——Amis 计算值，不是 size-6=12）。输入用 `type=text` `inputmode=decimal`。前缀/千分位只在展示层，`getValue` 仍是数字。右侧步进长按对齐 rc-input-number `StepHandler`（先加一次，600ms 后每 200ms 再加）；`enhance` 两侧按钮只点一次，不要长按。
+- 稳定做法：量进 `:root` / `.dark` 的 `--number-*`（高 32、handler 24、单位 56、pad **10**——Amis 计算值，不是 size-6=12）。输入用 `type=text` `inputmode=decimal`。前缀/千分位只在展示层，`getValue` 仍是数字。右侧步进长按对齐 rc-input-number `StepHandler`（先加一次，600ms 后每 200ms 再加）；`enhance` 两侧按钮只点一次，不要长按。focus glow 打在 `.vamis-number-control`（含单位），不要打在 `overflow:hidden` 的 `.vamis-number` 上。`displayMode: enhance` 对齐 Amis `.Number--enhance`：`inline-flex` / `width: auto`，内层约 90px，不要 `width:100%`。
 - 触及：`input-number`
 - 规则：`.cursor/rules/style.mdc`；Amis `_number.scss`
 
