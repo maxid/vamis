@@ -1721,6 +1721,9 @@
   .vamis-crud-body {
     margin-bottom: var(--gap-md, 16px);
   }
+  .vamis-crud-content {
+    position: relative;
+  }
   .vamis-table-foot-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -3203,6 +3206,14 @@
   background: var(--spinner-overlay-bg);
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
+  filter: blur(1px);
+  opacity: 0;
+  animation: vamis-spinner-overlay-in var(--animation-duration) ease-out forwards;
+}
+@keyframes vamis-spinner-overlay-in {
+  to {
+    opacity: 1;
+  }
 }
 .vamis-spinner-wrap {
   position: relative;

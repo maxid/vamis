@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import {
   SchemaRenderer,
   apiMessage,
@@ -33,6 +33,7 @@ import {
 import Cards from './Cards.vue'
 import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
+import Spinner from './Spinner.vue'
 import { asToolbarSchema, CrudHostKey, parseListPayload, resolveTableSource, selectedIdsOf } from './data/crudHost'
 
 const props = defineProps<{
@@ -95,6 +96,16 @@ const pagerSchema = computed(
       showPageInput: lastPage.value > 9,
     }) as SchemaObject,
 )
+/** 对齐 Amis Table：`Spinner overlay show={store.loading}` 盖表格区，不盖底栏。 */
+const spinnerSchema = computed(
+  () =>
+    ({
+      type: 'spinner',
+      show: store.fetching,
+      overlay: true,
+      loadingConfig: props.schema.loadingConfig,
+    }) as SchemaObject,
+)
 
 function onPagerChange(page: number, perPage?: number) {
   if (perPage != null && perPage !== store.perPage) {
@@ -132,6 +143,7 @@ function sanitizeQuery(extra: Record<string, any>) {
 async function reload(extra: Record<string, any> = {}) {
   if (!props.schema.api) return
   store.fetching = true
+  await nextTick()
   const queryPatch = sanitizeQuery(extra)
   store.query = { ...store.query, ...queryPatch }
   if (Object.keys(queryPatch).length) store.page = 1
@@ -313,7 +325,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full min-w-0">
+  <div class="w-full min-w-0" :class="{ 'is-loading': store.fetching }">
     <h2 v-if="schema.title" class="text-sm font-medium">{{ schema.title }}</h2>
     <div v-if="filterSchema" class="vamis-crud-filter">
       <SchemaRenderer
@@ -352,6 +364,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="vamis-crud-body">
+    <div class="vamis-crud-content">
     <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items" />
     <Table v-else>
       <TableHeader>
@@ -418,6 +431,8 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
+    <Spinner :schema="spinnerSchema" />
+    </div>
     <div v-if="showPager" class="vamis-table-foot-toolbar">
       <div class="vamis-crud-toolbar">
         <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--left">
