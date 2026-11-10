@@ -52,6 +52,13 @@ export function hboxColumnWidthMode(col: unknown): 'auto' | 'custom' | undefined
   return undefined
 }
 
+export function hboxColumnLabel(col: unknown): string {
+  if (!col || typeof col !== 'object' || Array.isArray(col)) return ''
+  const label = (col as SchemaObject).label
+  if (label == null || label === false) return ''
+  return String(label)
+}
+
 export function hboxColumnBody(col: unknown): SchemaNode[] {
   if (col == null) return []
   if (typeof col !== 'object') return toArray(col as SchemaCollection)

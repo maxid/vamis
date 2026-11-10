@@ -5,8 +5,8 @@ outline: deep
 
 # List 列表
 
-::: info 实现进度 50% · 进行中
-能列条目
+::: info 实现进度 62% · 进行中
+未写 title 不再补「列表项」；hbox 列走 ListItem-field。`List-items` 盒模型对齐 Amis（右边距 15px、行 padding 8×12）。勾选 / 拖拽未接。
 :::
 
 `list` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

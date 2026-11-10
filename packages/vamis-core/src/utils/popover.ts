@@ -14,6 +14,10 @@ export type PopOverTextOverflow = 'ellipsis' | 'noWrap' | ''
 const MODES = new Set(['popOver', 'dialog', 'drawer'])
 const POSITIONS = new Set([
   'center',
+  'left',
+  'right',
+  'top',
+  'bottom',
   'left-top',
   'right-top',
   'left-bottom',
@@ -84,16 +88,17 @@ export function popOverMode(schema: unknown): PopOverMode {
   return MODES.has(mode) ? (mode as PopOverMode) : 'popOver'
 }
 
-export function popOverPosition(schema: unknown): string {
+export function popOverPosition(schema: unknown, fallback = 'center'): string {
   const value = String(popOverObject(schema)?.position || '')
   if (POSITIONS.has(value)) return value
   if (!hasPopOverConfig(schema) && popOverTextOverflow(schema) === 'ellipsis') return 'auto'
-  return 'center'
+  return fallback
 }
 
 /**
- * Amis HocPopOver `targetOutter`：`type: cell`（table / crud / table2 列）定位目标是整格 td，
- * 不是放大镜。static / list / cards 的 `type: field` 仍用按钮或 wrap。
+ * Amis HocPopOver `targetOutter`：`type: cell`（table / crud / table2 列）定位目标是整格 td。
+ * 表单 static / list / cards 默认 `targetOutter: false`，锚放大镜或 wrap。
+ * 表单 static 另有 HOC `position: 'right'`（见 `popOverPosition` 的 fallback）。
  */
 export function popOverPositionTarget(
   host: Element | null | undefined,

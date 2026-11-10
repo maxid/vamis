@@ -156,11 +156,23 @@ alwaysApply: true
 - 触及：`popOver` `table` `crud` `cards` `list`
 - 规则：本文；`.cursor/rules/site.mdc`
 
-### 表格列 PopOver 定位目标是整格 td，不是放大镜
-- 踩过：Amis `TableCell` `@PopOverable({ targetOutter: true })` 把 Overlay target 钉在单元格上，`placement: center` 相对列宽居中。Vamis 有 icon 时 `:target="btn"`，浮层跟点击点走。
-- 稳定做法：在 `td`/`th` 里 overlay target 用 `closest('td, th')`；static / list / cards 仍用按钮或 wrap。不要改 `overlayPosition` 的 center 算法去猜点击坐标。
-- 触及：`popOver` `table` `crud` `table2`
-- 规则：本文；Amis `PopOver.tsx` `targetOutter`；`TableCell.tsx`
+### 表格列 PopOver 定位目标是整格 td；表单 static 是 right + 放大镜
+- 踩过：Amis `TableCell` `@PopOverable({ targetOutter: true })` 把 Overlay target 钉在单元格上，`placement: center` 相对列宽居中。Vamis 有 icon 时曾跟点击点走。后来又把表单 static 锚到 `width:100%` 的 host 上 `center`，320 层盖住整行控件槽，看起来像输入框。Amis `StaticFieldRenderer` 是 `@PopOver({ position: 'right' })`，target 仍是 14px 放大镜，层贴图标右缘。
+- 稳定做法：`td`/`th` 里 overlay target 用 `closest('td, th')`。表单 static / list / cards 锚按钮或 wrap，不要锚 100% host。static 默认 `defaultPosition: right`（作者 `popOver.position` 覆盖）。`left`/`right`/`top`/`bottom` 要进 `popOverPosition` 白名单。不要改 `overlayPosition` 的 center 算法去猜点击坐标。
+- 触及：`popOver` `table` `crud` `table2` `static` `list`
+- 规则：本文；Amis `PopOver.tsx` `targetOutter`；`Form/Static.tsx` `@PopOver({ position: 'right' })`
+
+### CRUD 底栏用 Pagination + statistics，不要自制上一页下一页
+- 踩过：popover 文档 CRUD 底栏只有「上一页 / 下一页」，Amis 是 `footerToolbar: ['statistics', 'pagination']`（`1/N 共：T 项` + 页码）。顺手默认「导出 CSV / 新增」Amis 也没有。
+- 稳定做法：默认 header 不造导出/新增；footer 复用 `Pagination.vue`，`showPageInput` 仅 `lastPage > 9`。List 未写 title 不要补「列表项」；hbox 在 ListItem 里走 `ListItem-field`（label 150px + value）。
+- 触及：`crud` `pagination` `list` `popOver`
+- 规则：本文；Amis `CRUD.tsx` `footerToolbar`；`List.tsx` `itemRender`
+
+### List-items 是带 15px 右边距的 div，不要用 ul/li 冒充
+- 踩过：用 `ul > li` 再给内层 padding，对照 `div.List-items` 宽高对不上。Amis 该项是 `div`，`margin-right: 15px`、`margin-bottom: gap-sm`，行 padding / 斑马纹 / 顶边打在同一层 ListItem。List 行里的 popOver 宿主做成 flex、放大镜 `svg { display:block; height:14px }` 会吃掉 Amis `svg.icon` 的 inline + `top: 0.125em` 行盒（行高低 ~1.4px，五项合计 List-items 矮约 7px）。
+- 稳定做法：`[data-vamis-list-items]` 对齐 `_list.scss` `&-items`。行 chrome 打在直接子 `.vamis-node`（SchemaRenderer 包装层），不要再给 `[data-vamis-list-item]` 叠一套 padding。空态走独立 placeholder，不要画在 items 框里。list 字段里的 popOver 宿主 `display:block; width:100%`（对齐 `Field--popOverAble`），放大镜走 `svg.icon`（inline / `top: 0.125em` / baseline），不要 flex 把行盒压成 line-height。
+- 触及：`list` `popOver` `hbox`
+- 规则：本文；Amis `_list.scss` `.List-items`；`_popoverable.scss`；`_normalize.scss` `svg.icon`
 
 ### 组装与盒模型
 

@@ -6,7 +6,7 @@ outline: deep
 # PopOver 弹出提示
 
 ::: info 实现进度 90% · 进行中
-文档主路径已对齐 Amis 同名页：不是独立 type，挂在 `static` / `table` 列 / `tpl` / list·cards 字段；基本配置 CRUD 截断 + 精简写法、在其它组件里 form / list / cards、`trigger` / `showIcon` / `title` / `position`、`popOverEnableOn`。浮层走 `VamisOverlay` + `--popover-layer-*`。缺 CRUD 默认工具栏像素。
+文档主路径已对齐 Amis 同名页：不是独立 type，挂在 `static` / `table` 列 / `tpl` / list·cards 字段；基本配置 CRUD 截断 + 精简写法、在其它组件里 form / list / cards、`trigger` / `showIcon` / `title` / `position`、`popOverEnableOn`。浮层走 `VamisOverlay` + `--popover-layer-*`。表格列相对整格 `td` 居中；CRUD 底栏默认 `statistics` + 页码。缺 CRUD header 像素、list 其余皮肤。
 :::
 
 popover 不是一个独立组件，它是嵌入到其它组件中使用的，目前可以在以下组件中配置
@@ -157,5 +157,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 活示例打同一份 `/api/mock2/sample`；CRUD 默认工具栏（导出 / 新增）尚未对齐 Amis，不挡列上 popOver。
+- 活示例打同一份 `/api/mock2/sample`（本仓 mock 约 60 条 / 6 页，Amis 文档站约 110 条 / 11 页，页码数量会差一截）。CRUD 默认底栏已接 `statistics` + `Pagination`；导出 / 新增需写进 `headerToolbar`。
 - 文档未单独演示 `textOverflow` 活示例（Amis 同名页也没有这一节），能力已接，写在属性表。

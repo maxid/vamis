@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   hboxColumnBody,
+  hboxColumnLabel,
   hboxColumnStyle,
   hboxColumnVAlign,
   hboxColumnWidthMode,
@@ -69,5 +70,11 @@ describe('hboxColumnBody', () => {
     expect(hboxColumnBody({ name: 'engine', label: 'Engine', popOver: '全文甲' })).toEqual([
       { type: 'field', name: 'engine', label: 'Engine', popOver: '全文甲' },
     ])
+  })
+
+  it('reads column label for ListItem-field', () => {
+    expect(hboxColumnLabel({ name: 'engine', label: 'Engine' })).toBe('Engine')
+    expect(hboxColumnLabel({ name: 'engine', label: false })).toBe('')
+    expect(hboxColumnLabel('Engine')).toBe('')
   })
 })

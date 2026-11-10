@@ -323,7 +323,12 @@
   /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
   --fill-9: #f2f3f5;
   --fill-10: #f7f8fa;
+  --fill-11: #ffffff;
   --text-loud: #151b26;
+  /* Amis `--List-bg` / `--ListItem--strip-bg` / `List-items` margin-right px2rem(15px)。 */
+  --list-bg: var(--fill-11);
+  --list-item-strip-bg: var(--fill-10);
+  --list-items-margin-right: 15px;
   /* Amis --Form-input-onDisabled-*：灰底而不是 opacity。 */
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #b8babf;
@@ -604,6 +609,8 @@
   --button-light-hover: #2468f2;
   --button-light-active: #528eff;
   --fill-10: #151c26;
+  --list-bg: var(--card);
+  --list-item-strip-bg: var(--fill-10);
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #d4d6d9;
   --checkbox-bg: #17202d;
@@ -1626,13 +1633,97 @@
   }
   .vamis-popover-host {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
     outline: none;
+  }
+  .vamis-list-field__value .vamis-popover-host {
+    display: block;
+    width: 100%;
+  }
+  [data-vamis-list] {
+    position: relative;
+  }
+  [data-vamis-list-items] {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--list-bg);
+    margin-bottom: var(--gap-sm);
+    margin-right: var(--list-items-margin-right);
+  }
+  [data-vamis-list-items] > .vamis-node {
+    position: relative;
+    display: block;
+    padding: var(--gap-sm) var(--gap-base);
+  }
+  [data-vamis-list-items] > .vamis-node + .vamis-node {
+    border-top: 1px solid var(--border);
+  }
+  [data-vamis-list-items] > .vamis-node:nth-child(even) {
+    background: var(--list-item-strip-bg);
+  }
+  .vamis-list__empty {
+    color: var(--control-placeholder, #b8babf);
+    text-align: center;
+    min-height: 30px;
+    line-height: 30px;
+  }
+  [data-vamis-list-item] {
+    position: relative;
+    display: block;
+  }
+  .vamis-list-item__title {
+    margin: 0;
+    font-size: var(--fontSizeBase);
+    font-weight: 400;
+  }
+  .vamis-list-item__subtitle {
+    margin: 0;
+    font-size: 12px;
+    color: var(--form-item-color);
+  }
+  .vamis-list-item__actions {
+    float: right;
+  }
+  [data-vamis-list-field] {
+    display: flex;
+    flex-wrap: nowrap;
+    position: relative;
+  }
+  .vamis-list-item__content {
+    overflow: hidden;
+  }
+  .vamis-list-field__label {
+    width: 150px;
+    flex: 0 0 150px;
+    color: var(--control-placeholder, #b8babf);
+  }
+  .vamis-list-field__value {
+    position: relative;
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+    width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .vamis-crud-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    min-height: 32px;
+    font-size: 12px;
+    color: var(--form-item-color);
+  }
+  .vamis-crud-statistics {
+    line-height: 32px;
   }
   .vamis-popover-btn {
     display: inline-block;
     margin-left: var(--gap-xs);
-    width: 14px;
-    height: 14px;
     padding: 0;
     border: 0;
     background: transparent;
@@ -1645,9 +1736,12 @@
     opacity: 1;
   }
   .vamis-popover-btn svg {
-    display: block;
+    display: inline;
     width: 14px;
     height: 14px;
+    position: relative;
+    top: 0.125em;
+    vertical-align: baseline;
     fill: currentColor;
   }
   .vamis-popover-wrap {

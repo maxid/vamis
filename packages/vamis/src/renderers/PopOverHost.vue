@@ -29,6 +29,8 @@ import VamisOverlay from '../overlay/VamisOverlay.vue'
 const props = defineProps<{
   schema: SchemaObject
   data?: Record<string, any>
+  /** Amis HOC `config.position`。表单 static 是 `right`，其余默认 `center`。 */
+  defaultPosition?: string
 }>()
 
 const injected = useData()
@@ -39,7 +41,7 @@ const enabled = computed(() => popOverEnabled(props.schema, data.value))
 const trigger = computed(() => popOverTrigger(props.schema))
 const showIcon = computed(() => popOverShowIcon(props.schema))
 const mode = computed(() => popOverMode(props.schema))
-const position = computed(() => popOverPosition(props.schema))
+const position = computed(() => popOverPosition(props.schema, props.defaultPosition || 'center'))
 const title = computed(() => popOverTitle(props.schema, data.value))
 const body = computed(() => popOverBodyNode(props.schema))
 const overflow = computed(() => popOverTextOverflow(props.schema))

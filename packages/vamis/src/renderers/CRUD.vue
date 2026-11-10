@@ -31,6 +31,7 @@ import {
   TableRow,
 } from '@vamis/ui'
 import Cards from './Cards.vue'
+import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import { asToolbarSchema, CrudHostKey, parseListPayload, resolveTableSource, selectedIdsOf } from './data/crudHost'
 
@@ -76,6 +77,32 @@ const cardsChild = computed(
     }) as SchemaObject,
 )
 const cardsData = computed(() => ({ items: store.items }))
+const lastPage = computed(() => Math.max(1, Math.ceil((store.total || 0) / (store.perPage || 10)) || 1))
+const showPager = computed(
+  () => !isCardsMode.value && (props.schema.alwaysShowPagination === true || lastPage.value > 1),
+)
+const statisticsText = computed(() => `${store.page}/${lastPage.value} 共：${store.total} 项`)
+const pagerSchema = computed(
+  () =>
+    ({
+      type: 'pagination',
+      activePage: store.page,
+      lastPage: lastPage.value,
+      total: store.total,
+      perPage: store.perPage,
+      showPageInput: lastPage.value > 9,
+    }) as SchemaObject,
+)
+
+function onPagerChange(page: number, perPage?: number) {
+  if (perPage != null && perPage !== store.perPage) {
+    store.perPage = perPage
+    store.page = 1
+  } else {
+    store.page = page
+  }
+  void reload()
+}
 
 function seedLocalItems() {
   const items = resolveTableSource(props.schema, props.data)
@@ -194,24 +221,6 @@ function toggleSort(col: SchemaObject) {
   reload()
 }
 
-function exportCsv() {
-  const cols = columns.value.filter((col) => col.name && col.type !== 'operation')
-  const header = cols.map((col) => col.label || col.name)
-  const lines = [
-    header.join(','),
-    ...store.items.map((row) =>
-      cols.map((col) => JSON.stringify(row[col.name as string] ?? '')).join(','),
-    ),
-  ]
-  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${props.schema.name || 'export'}.csv`
-  link.click()
-  URL.revokeObjectURL(url)
-}
-
 function sortMark(col: SchemaObject) {
   if (!col.name || store.query.orderBy !== col.name) return ''
   return store.query.orderDir === 'desc' ? ' ↓' : ' ↑'
@@ -317,10 +326,7 @@ onBeforeUnmount(() => {
         resetAfterSubmit: false,
       }"
     />
-    <div class="flex items-center justify-between gap-2">
-      <p v-if="!isCardsMode" class="text-xs text-muted-foreground tabular-nums">
-        {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
-      </p>
+    <div v-if="headerToolbar.length || bulkActions.length || (isCardsMode && selectable) || (selectable && !isCardsMode && store.selectedItems.length)" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
         <Button
           v-if="isCardsMode && selectable"
@@ -340,15 +346,6 @@ onBeforeUnmount(() => {
           :schema="{ ...btn, disabled: !store.selectedItems.length || btn.disabled, reload: btn.reload || schema.name }"
           :extra-data="bulkData"
         />
-        <Button v-if="!isCardsMode" type="button" size="sm" variant="outline" @click="exportCsv">导出 CSV</Button>
-        <Button
-          v-if="!isCardsMode && schema.api && schema.headerToolbar == null"
-          type="button"
-          size="sm"
-          @click="openDialog({ title: '新增', body: { type: 'form', api: schema.api, body: columns.filter(c => c.name && c.type !== 'operation').map(c => ({ type: 'input-text', name: c.name, label: c.label })) } })"
-        >
-          新增
-        </Button>
       </div>
     </div>
     <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items" />
@@ -417,19 +414,13 @@ onBeforeUnmount(() => {
         </TableRow>
       </TableBody>
     </Table>
-    <div v-if="!isCardsMode && (schema.alwaysShowPagination || store.total > store.perPage)" class="flex items-center justify-end gap-2">
-      <Button type="button" size="sm" variant="outline" :disabled="store.page <= 1" @click="store.page -= 1; reload()">
-        上一页
-      </Button>
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        :disabled="store.page * store.perPage >= store.total"
-        @click="store.page += 1; reload()"
-      >
-        下一页
-      </Button>
+    <div v-if="showPager" class="vamis-crud-toolbar">
+      <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--left">
+        <span class="vamis-crud-statistics">{{ statisticsText }}</span>
+      </div>
+      <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--right">
+        <Pagination :schema="pagerSchema" @page-change="onPagerChange" />
+      </div>
     </div>
     <Dialog v-model:open="dialogOpen">
       <DialogContent class="max-w-xl">

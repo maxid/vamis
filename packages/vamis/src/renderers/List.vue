@@ -19,15 +19,17 @@ const item = computed(() => (props.schema.listItem || { type: 'list-item' }) as 
 </script>
 
 <template>
-  <ul class="space-y-2">
-    <li v-for="(row, i) in rows" :key="i">
+  <div data-vamis-list>
+    <div v-if="rows.length" data-vamis-list-items>
       <SchemaRenderer
-        :schema="{ type: 'list-item', ...item, title: item.title || '${title}', subTitle: item.subTitle || item.desc }"
+        v-for="(row, i) in rows"
+        :key="i"
+        :schema="{ type: 'list-item', ...item }"
         :extra-data="row"
       />
-    </li>
-    <li v-if="!rows.length" class="rounded-md border px-3 py-6 text-center text-xs text-muted-foreground">
+    </div>
+    <div v-else class="vamis-list__empty">
       {{ schema.placeholder || '暂无列表数据' }}
-    </li>
-  </ul>
+    </div>
+  </div>
 </template>
