@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 对外发布材料：中英 README 首屏、`assets/readme/` 截图、`docs/marketing/`（检查清单 / GitHub 资料 / 渠道文案 / 长文 / npm 清单 / OG 卡）与社区文件（CONTRIBUTING / SECURITY / ROADMAP / CHANGELOG / issue & PR 模板）。未动运行时。
 - `input-number` focus glow 打在 `.vamis-number-control`（包住单位 km），不再只亮输入壳。`displayMode: enhance` 对齐 Amis `inline-flex`，内层 90px，不再 `width:100%` 拉满。
 - 对照页缓存戳改为产物 mtime（`__VAMIS_SDK_V__`），不再手写 `20261109j`。`sdk:build` 后刷新 `/sdk/compare.html` 就会拉新 `sdk.js` / 目录；切「移动」会重载 iframe。对照页没有文档站那种 HMR。
 - 表单布局补 `mode: row` + Group 列盒：Combo 默认 `multiple: false`、内嵌 row 横排；Group ≥768 走 `Form-groupColumn` 均分。`width:100%` 相对列不再撑成整表宽。input-number 右侧步进长按对齐 rc-input-number（600ms / 200ms），enhance 两侧按钮不连加。
@@ -420,5 +421,6 @@
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。
 5. **样式收尾（D12 余项）**：色盘表；Panel 像素级、其余 `xxxClassName`、`registerTheme`。helper `bg-secondary` 仍绑 shadcn `--secondary`（不要改成 Amis `#5c5f66`，会冲掉 Button/Badge）；日历条走 `--cal-bar`。**深色浮层回归**按组件 TODO「深色浮层回归」表打勾（优先有独立浮层的一行）。日期弹层已走 `--cal-*`；桌面 Toast `#fff` / `#151b26`、`--remark-bg` / `--text-loud` / `--fill-9` 未进 `.dark`。做法是补 token 覆盖，不要每个渲染器再写一套 `.dark .vamis-xxx`。
 6. **暂缓：文档移动预览体积**（对标 antd.mobile 文档约 3MB）。单例 iframe 后仍约 7MB，大头是全量 `register.ts` + helper CSS。滚回视口不再重载（iframe 固定挂 body）。国内访问 GitHub Pages（github.io）本身慢，体积会直接拖体验；桌面已改为不预拉 iframe。以后要砍再拆注册表 / 按需渲染器，不要另打 mobile SDK。Actions Pages 没有 `gh-pages` 分支，jsDelivr 镜像也挂不上，换源另说。
+7. **对外发布执行（非运行时）**：材料见 `docs/marketing/`；P0 阻塞 = npm 构建与发布、演示站自定义域名、GitHub About / topics / 社交预览。渠道与投放由作者执行；首发前按 `docs/marketing/00-launch-checklist.md` 验收。
 
 非本阶段：office/pdf 真实预览、TinyMCE、MST、完整 amis-editor。`.cxd-*` 前缀永不搬入产物；cxd 能力转写是目标，不是非目标。

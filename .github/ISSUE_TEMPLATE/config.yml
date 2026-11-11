@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 使用问题 / 想法
+    url: https://github.com/maxid/vamis/discussions
+    about: 不确定是不是 bug、想讨论用法或方案，优先开 Discussions
+  - name: 组件进度
+    url: https://github.com/maxid/vamis/blob/main/CONTEXT.md
+    about: 先看当前进度和后续计划，避免重复提案
