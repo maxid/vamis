@@ -109,6 +109,15 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
   return true
 }
 
+/** Amis CmptAction：`componentId` 跨域按 id 找（form 外也能点到 form 内）；name/target 只沿父链。 */
+function findTargetComponent(ctx: ActionContext, action: ActionSchema, name: string) {
+  if (!ctx.scoped) return undefined
+  if (action.componentId) {
+    return ctx.scoped.getComponentById?.(name) ?? ctx.scoped.getComponentByName(name)
+  }
+  return ctx.scoped.getComponentByName(name)
+}
+
 function closeAfterAction(action: ActionSchema, ctx: ActionContext) {
   if (action.close !== true) return
   if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
@@ -146,12 +155,12 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     action.value ??
     action.args?.value ??
     (action.args && !action.args.value ? action.args : undefined)
-  const target = action.componentId || action.target
+  const target = action.componentId || action.componentName || action.target
   const replace = action.dataMergeMode === 'override'
   const assign = (values: PlainObject) => {
     if (target) {
       for (const item of resolveTargets(target, data)) {
-        ctx.scoped?.getComponentByName(item.name)?.setData?.(values, replace)
+        findTargetComponent(ctx, action, item.name)?.setData?.(values, replace)
       }
       return
     }
@@ -179,12 +188,12 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
 }
 
 async function runComponentAction(action: ActionSchema, ctx: ActionContext): Promise<boolean> {
-  const target = action.componentId || action.target
+  const target = action.componentId || action.componentName || action.target
   if (!target) return false
   const data = actionData(action, ctx)
   let found = false
   for (const item of resolveTargets(target, data)) {
-    const component = ctx.scoped?.getComponentByName(item.name)
+    const component = findTargetComponent(ctx, action, item.name)
     if (!component?.doAction) continue
     await component.doAction(action, data)
     found = true
@@ -288,7 +297,7 @@ function registerBuiltinActions() {
         ? (action.data as PlainObject)
         : undefined
     await ctx.scoped?.reload(
-      action.target || action.componentId || action.args?.target,
+      action.target || action.componentId || action.componentName || action.args?.target,
       extra,
       action.dataMergeMode === 'override',
       data,

@@ -24,6 +24,27 @@ export function useForm(): FormContext | undefined {
   return inject(FormContextKey, undefined)
 }
 
+/** Combo `multiple` 把 `type: radio` 互斥写回整列。返回 false 时 Radio 不再自己写字段。 */
+export interface ComboRadioApi {
+  index: number
+  onChange?: (ctx: {
+    index: number
+    name: string
+    trueValue: unknown
+    falseValue: unknown
+  }) => false | void
+}
+
+export const ComboRadioKey: InjectionKey<ComboRadioApi> = Symbol('vamis-combo-radio')
+
+export function provideComboRadio(api: ComboRadioApi) {
+  provide(ComboRadioKey, api)
+}
+
+export function useComboRadio(): ComboRadioApi | undefined {
+  return inject(ComboRadioKey, undefined)
+}
+
 export function useFormData(): PlainObject {
   return useForm()?.store.data || {}
 }

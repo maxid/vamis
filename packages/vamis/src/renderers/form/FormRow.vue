@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { SchemaRenderer, formLayoutSkipCol, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, formLayoutSkipCol, resolveClassName, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{
   nodes: SchemaObject[]
   extraData?: Record<string, any>
 }>()
+
+function colClass(node: SchemaObject) {
+  return resolveClassName(node.columnClassName, props.extraData || {})
+}
 </script>
 
 <template>
@@ -15,7 +19,7 @@ const props = defineProps<{
         :schema="node"
         :extra-data="extraData"
       />
-      <div v-else class="vamis-form-col">
+      <div v-else class="vamis-form-col" :class="colClass(node)">
         <SchemaRenderer :schema="node" :extra-data="extraData" />
       </div>
     </template>

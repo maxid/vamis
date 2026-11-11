@@ -1,30 +1,222 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { RadioGroup, RadioGroupItem } from '@vamis/ui'
-import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { computed, onBeforeUnmount, ref } from 'vue'
+import { cn } from '@vamis/ui'
+import {
+  SchemaRenderer,
+  checkboxClearValue,
+  checkboxFalseValue,
+  checkboxIsChecked,
+  checkboxResetValue,
+  checkboxSetDataValue,
+  checkboxTrueValue,
+  checkboxWriteValue,
+  createVamisEvent,
+  evalExpression,
+  eventEvalData,
+  filterTpl,
+  formItemStatic,
+  formItemStaticSchema,
+  resolveClassName,
+  statusStaticOf,
+  runOnEvent,
+  useData,
+  useEnv,
+  useFormApi,
+  useOverlay,
+  useScope,
+  useScoped,
+  type SchemaObject,
+} from '@vamis/core'
+import { useComboRadio, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
+import BadgeHost from '../BadgeHost.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
+
 const form = useForm()
-const trueValue = computed(() => props.schema.trueValue ?? true)
-const falseValue = computed(() => props.schema.falseValue ?? false)
-const value = computed({
-  get: () => {
-    const current = props.schema.name ? form?.getValue(props.schema.name) : undefined
-    return String(current) === String(trueValue.value) ? 'on' : 'off'
-  },
-  set: (v) => props.schema.name && form?.setValue(props.schema.name, v === 'on' ? trueValue.value : falseValue.value),
+const combo = useComboRadio()
+const env = useEnv()
+const scoped = useScoped()
+const scope = useScope()
+const overlay = useOverlay()
+const formApi = useFormApi()
+const data = useData()
+
+const fieldName = computed(() => (props.schema.name ? String(props.schema.name) : ''))
+const current = computed(() => (fieldName.value ? form?.getValue(fieldName.value) : props.schema.value))
+const checked = computed(() => checkboxIsChecked(current.value, props.schema))
+const partial = computed(() => props.schema.partial === true)
+const buttonMode = computed(() => props.schema.optionType === 'button')
+const isStatic = computed(() =>
+  formItemStatic(props.schema, data.value, form?.isStatic?.() === true, statusStaticOf(props.schema)),
+)
+const locked = computed(() => {
+  if (props.disabled || isStatic.value || props.schema.readOnly === true) return true
+  if (typeof props.schema.readOnlyOn === 'string') return evalExpression(props.schema.readOnlyOn, data.value)
+  return false
 })
+const optionNode = computed(() => resolveOption(props.schema.option, data.value))
+const optionClass = computed(() => resolveClassName(props.schema.labelClassName, data.value))
+const formItemSchema = computed(() => {
+  if (isStatic.value && formItemStaticSchema(props.schema)) return props.schema
+  return { ...props.schema, static: false }
+})
+const pristine = fieldName.value ? form?.getValue(fieldName.value) : props.schema.value
+const nativeEl = ref<HTMLInputElement | null>(null)
+const markClass = computed(() => ({
+  'is-checked': checked.value,
+  'is-partial': partial.value,
+  'is-disabled': locked.value,
+}))
+
+function write(next: unknown) {
+  if (fieldName.value) form?.setValue(fieldName.value, next)
+}
+
+async function emitChange(next: unknown) {
+  const payload = {
+    ...data.value,
+    value: next,
+    ...(fieldName.value ? { [fieldName.value]: next } : {}),
+  }
+  const event = createVamisEvent('change', payload)
+  await runOnEvent(props.schema, 'change', {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    overlay,
+    form: formApi,
+    scope: scope.value,
+    event,
+  })
+  return event
+}
+
+async function onToggle(nextChecked: boolean) {
+  if (locked.value) return
+  const next = checkboxWriteValue(nextChecked, props.schema)
+  if (combo?.onChange) {
+    const blocked = combo.onChange({
+      index: combo.index,
+      name: fieldName.value,
+      trueValue: checkboxTrueValue(props.schema),
+      falseValue: checkboxFalseValue(props.schema),
+    })
+    if (blocked === false) return
+  }
+  const event = await emitChange(next)
+  if (event.prevented) return
+  write(next)
+}
+
+function onNativeChange(ev: Event) {
+  const el = ev.target as HTMLInputElement
+  void onToggle(el.checked)
+}
+
+function setData(values: Record<string, unknown>) {
+  const next = checkboxSetDataValue(values, fieldName.value)
+  if (next !== undefined) write(next)
+}
+
+async function doAction(action: { actionType?: string; value?: unknown; args?: { value?: unknown } }) {
+  const type = action?.actionType
+  if (type === 'clear') {
+    write(checkboxClearValue())
+    return
+  }
+  if (type === 'reset') {
+    write(checkboxResetValue(props.schema, pristine))
+    return
+  }
+  if (type === 'setValue') {
+    write(action.args?.value ?? action.value)
+  }
+}
+
+function makeApi(name: string) {
+  return {
+    name,
+    setData,
+    doAction,
+    getValue: () => current.value,
+    getData: () =>
+      fieldName.value ? { value: current.value, [fieldName.value]: current.value } : { value: current.value },
+  }
+}
+const scopedId = String(props.schema.id || '')
+const scopedName = fieldName.value
+const apis = [
+  scopedId ? makeApi(scopedId) : null,
+  scopedName && scopedName !== scopedId ? makeApi(scopedName) : null,
+].filter(Boolean) as ReturnType<typeof makeApi>[]
+for (const api of apis) scoped?.register(api)
+onBeforeUnmount(() => {
+  for (const api of apis) scoped?.unregister(api)
+})
+
+function resolveOption(raw: unknown, ctx: Record<string, unknown>) {
+  if (raw == null || raw === false || raw === '') return null
+  if (typeof raw === 'string' || typeof raw === 'number') {
+    return { kind: 'text' as const, text: filterTpl(String(raw), ctx) }
+  }
+  if (typeof raw === 'object' && !Array.isArray(raw)) {
+    const rec = raw as SchemaObject
+    return { kind: 'schema' as const, schema: rec.type ? rec : ({ type: 'tpl', tpl: String(rec.tpl ?? ''), inline: true } as SchemaObject) }
+  }
+  return { kind: 'text' as const, text: String(raw) }
+}
 </script>
 
 <template>
-  <FormItem :schema="schema">
-    <RadioGroup :model-value="value" :disabled="disabled" class="flex items-center gap-2" @update:model-value="value = $event === 'on' ? 'on' : 'off'">
-      <label class="flex items-center gap-2 text-sm">
-        <RadioGroupItem value="on" />
-        {{ schema.option || schema.label || '选项' }}
-      </label>
-    </RadioGroup>
+  <FormItem :schema="formItemSchema">
+    <BadgeHost :schema="schema" :data="data">
+      <div class="vamis-checkbox-control">
+        <label
+          v-if="buttonMode"
+          class="vamis-radio--button"
+          :class="[cn(optionClass), { 'is-checked': checked, 'is-disabled': locked }]"
+          @click.prevent="onToggle(!checked)"
+        >
+          <input
+            ref="nativeEl"
+            class="vamis-checkbox__native"
+            type="radio"
+            :checked="checked"
+            :disabled="locked"
+            tabindex="-1"
+            @change="onNativeChange"
+          />
+          <span v-if="optionNode?.kind === 'text'">{{ optionNode.text }}</span>
+          <SchemaRenderer v-else-if="optionNode?.kind === 'schema'" :schema="optionNode.schema" :extra-data="data" />
+        </label>
+        <label
+          v-else
+          class="vamis-radio-option"
+          :class="markClass"
+          @click.prevent="onToggle(!checked)"
+        >
+          <input
+            ref="nativeEl"
+            class="vamis-checkbox__native"
+            type="radio"
+            :checked="checked"
+            :disabled="locked"
+            tabindex="-1"
+            @change="onNativeChange"
+          />
+          <i class="vamis-radio__mark" :class="markClass" aria-hidden="true">
+            <svg class="vamis-radio__dot" viewBox="0 0 1024 1024">
+              <path
+                d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z"
+                fill="currentColor"
+              />
+            </svg>
+          </i>
+          <span v-if="optionNode?.kind === 'text'" :class="optionClass">{{ optionNode.text }}</span>
+          <SchemaRenderer v-else-if="optionNode?.kind === 'schema'" :schema="optionNode.schema" :extra-data="data" />
+        </label>
+      </div>
+    </BadgeHost>
   </FormItem>
 </template>

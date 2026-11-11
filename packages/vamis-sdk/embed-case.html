@@ -288,6 +288,16 @@
         var ACTION_TYPES = { action: 1, button: 1, submit: 1, reset: 1 }
 
         function shouldProbe(actions) {
+          // 事件链里带 ajax 的结果取决于后端；静态对照服 404 会让两边动作链停在不同的地方。
+          if (
+            actions.some(function (item) {
+              const text = typeof item === 'string' ? item : ''
+              const split = text.indexOf(':')
+              return (split >= 0 ? text.slice(split + 1) : text) === 'ajax'
+            })
+          ) {
+            return false
+          }
           return actions.some(function (item) {
             const text = typeof item === 'string' ? item : ''
             const split = text.indexOf(':')
@@ -372,6 +382,16 @@
           if (node.name) {
             const named = document.querySelector('[name="' + cssEscapeName(node.name) + '"]')
             if (named) return named
+            // Amis 表单项不把 name 传到 input，但两端外壳都带 data-amis-name / data-name。
+            // 开关 / 勾选 / 单选按外壳里的原生控件定位，避免 schema 带 id 时只命中 Vamis 包装层。
+            if (node.type === 'switch' || node.type === 'checkbox' || node.type === 'radio') {
+              const esc = cssEscapeName(node.name)
+              const item = document.querySelector(
+                '[data-amis-name="' + esc + '"], [data-name="' + esc + '"]'
+              )
+              const control = item && item.querySelector('input[type="checkbox"], input[type="radio"]')
+              if (control) return control
+            }
           }
           if (node.id) {
             const byId = document.getElementById(node.id)
@@ -486,6 +506,8 @@
           }
           if (node.name && formData && node.name in formData) return formData[node.name]
           if (ACTION_TYPES[node.type]) return node.schemaValue
+          // 布局容器没有控件值；Vamis 包装层 textContent 不是表单值（Amis 也不读）。
+          if (TREE_LAYOUT[node.type]) return node.schemaValue
           const el = findNodeEl(node)
           if (el && (node.type === 'avatar' || node.type === 'tasks' || node.type === 'audio' || node.type === 'wizard')) {
             const text = (el.textContent || '').replace(/\s+/g, ' ').trim()
@@ -494,6 +516,15 @@
           const fromDom = readInputValue(el)
           if (fromDom !== undefined) return fromDom
           return node.schemaValue
+        }
+
+        /** 交互后的值：开关 / 勾选 / 单选直接读原生控件，别走可能过期的 formData。 */
+        function readProbeValue(node) {
+          if (node.type === 'switch' || node.type === 'checkbox' || node.type === 'radio') {
+            const el = findNodeEl(node)
+            if (el && typeof el.checked === 'boolean') return el.checked
+          }
+          return readNodeValue(node, collectFormData())
         }
 
         function nodeRendered(node) {
@@ -514,6 +545,17 @@
             document.querySelector('.cxd-Drawer') ||
             document.querySelector('.cxd-Dialog')
           )
+        }
+
+        /** 上一用例的 toast 可能还挂在 store / body 上；每个用例量测前清掉，避免跨用例假红。 */
+        function clearToasts() {
+          document
+            .querySelectorAll(
+              '.vamis-toast, [data-sonner-toast], .cxd-Toast, .cxd-Notification, [data-state="open"][data-slot="toast"]'
+            )
+            .forEach(function (el) {
+              el.remove()
+            })
         }
 
         function toastOpen() {
@@ -587,7 +629,7 @@
             el.click()
             await sleep(280)
             node.effect = { dialog: dialogOpen(), toast: toastOpen() }
-            if (wantsSetValue) node.valueAfter = readNodeValue(node, collectFormData())
+            if (wantsSetValue) node.valueAfter = readProbeValue(node)
             if (node.effect.dialog) {
               closeDialog()
               await sleep(120)
@@ -596,6 +638,7 @@
         }
 
         async function snapshotTree(schema) {
+          clearToasts()
           const root = document.getElementById('root')
           if (!root || !root.childElementCount) return { error: '未渲染' }
           const nodes = walkSchemaTree(schema)
@@ -617,6 +660,7 @@
         }
 
         function measure(spec) {
+          clearToasts()
           const kind = (spec && spec.type) || 'pair'
           const rootFont = readFont(document.body)
           if (kind === 'smoke') {

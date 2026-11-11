@@ -370,6 +370,60 @@
   --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h);
   --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
   --checkbox-font-size: var(--fontSizeBase);
+  /* Amis `_checks.scss` radio：18 圆、10 实心点、缝 10。选中只改边和点，底仍 fill-11。按钮模式选中是实心 brand，不是 checkbox 透明+角标。 */
+  --radio-size: 18px;
+  --radio-dot: 10px;
+  --radio-gap: 10px;
+  --radio-mark-shift: -2px;
+  --radio-bg: var(--checkbox-bg);
+  --radio-border: var(--checkbox-border);
+  --radio-disabled-bg: var(--control-disabled-bg);
+  --radio-disabled-icon: var(--checkbox-disabled-icon);
+  --radio-button-h: var(--checkbox-button-h);
+  --radio-button-min-w: var(--checkbox-button-min-w);
+  --radio-button-pad-y: var(--checkbox-button-pad-y);
+  --radio-button-pad-x: var(--checkbox-button-pad-x);
+  --radio-button-radius: var(--checkbox-button-radius);
+  --radio-button-checked-fg: var(--primary-foreground);
+  --radio-button-disabled-checked-bg: #d4d6d9;
+  --radio-button-disabled-checked-fg: #84878c;
+  --radio-button-disabled-checked-border: #b8babf;
+  /*
+   * Amis `_switch.scss` / cxd：轨道 44×20、滑块 16 + 2px 边、30 圆角；
+   * 选中 brand-5，hover/active brand-4；关闭 neutral-fill-7，hover fill-6。
+   * 文字 12 / 700、白字；option 12 / 400、gap 8。选择器只 var()。
+   */
+  --switch-height: 20px;
+  --switch-width: 44px;
+  --switch-radius: 30px;
+  --switch-bg: #d4d6d9;
+  --switch-bg-hover: #b8babf;
+  --switch-checked-bg: var(--primary);
+  --switch-checked-hover-bg: #144bcc;
+  --switch-checked-active-bg: #144bcc;
+  --switch-thumb-size: 16px;
+  --switch-thumb-margin: 2px;
+  --switch-thumb-bg: #fff;
+  --switch-transition: all 0.5s ease;
+  --switch-slider-transition: all 0.5s ease;
+  --switch-text-color: #fff;
+  --switch-text-size: 12px;
+  --switch-text-weight: 700;
+  --switch-text-indent: 4px;
+  --switch-text-off-margin-left: 24px;
+  --switch-text-off-margin-right: 8px;
+  --switch-text-on-margin-left: 8px;
+  --switch-text-on-margin-right: 24px;
+  --switch-spinner-size: 14px;
+  --switch-spinner-color: #5c5f66;
+  --switch-option-color: var(--foreground);
+  --switch-option-size: 12px;
+  --switch-option-line-height: 1.5;
+  --switch-option-gap: 8px;
+  --switch-sm-height: 16px;
+  --switch-sm-width: 28px;
+  --switch-sm-thumb-size: 12px;
+  --switch-control-pad-top: calc((var(--control-h) - var(--switch-height)) / 2);
   /*
    * Overlay Tooltip 语义变量（Amis --Tooltip-*）。
    * 圆角是 --borderRadiusLg 8px，不是全局 --radius 4px，也不是 Tailwind --radius-lg（6px）。
@@ -687,6 +741,22 @@
   /* Amis 深色选中 hover = brand-6 `#0061f2`（比 brand-5 `#1677ff` 深）。默认勾选盒与按钮模式共用。 */
   --checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h);
   --checkbox-checked-active: oklch(from var(--primary) calc(l + 0.08) c h);
+  --radio-bg: var(--checkbox-bg);
+  --radio-border: var(--checkbox-border);
+  --radio-disabled-bg: var(--control-disabled-bg);
+  --radio-disabled-icon: var(--checkbox-disabled-icon);
+  --radio-button-disabled-checked-bg: #5c6066;
+  --radio-button-disabled-checked-fg: #b8bbbf;
+  --radio-button-disabled-checked-border: #84878c;
+  /* Amis 深色：轨道 neutral-fill-7 / hover fill-6，滑块浅色；选中仍走主题 primary。 */
+  --switch-bg: #84878c;
+  --switch-bg-hover: #b8bbbf;
+  --switch-thumb-bg: #f7f8fa;
+  --switch-text-color: #f7f8fa;
+  --switch-checked-hover-bg: var(--primary-hover);
+  --switch-checked-active-bg: var(--primary-active);
+  --switch-spinner-color: #151b26;
+  --switch-option-color: var(--foreground);
 }
 
 @supports (color: oklch(0 0 0)) {
@@ -934,6 +1004,11 @@
     flex-basis: 0;
     flex-grow: 1;
     min-width: 0;
+  }
+  /* Amis `_utilities.scss` `.no-grow`：Combo radio `columnClassName`。 */
+  .no-grow {
+    flex-grow: unset !important;
+    flex-basis: unset !important;
   }
   .vamis-combo-item:has(.vamis-combo-del) .vamis-combo-item-inner {
     margin-right: 12px;
@@ -4034,6 +4109,315 @@
   width: var(--checkbox-icon-size);
   height: var(--checkbox-icon-size);
   transform: scale(0.8) translate(-20%, -20%);
+}
+
+.vamis-radio-option {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  font-size: var(--checkbox-font-size);
+  font-weight: 400;
+  line-height: var(--lineHeightBase);
+  color: var(--checkbox-text);
+  cursor: pointer;
+}
+.vamis-radio-option.is-disabled {
+  cursor: not-allowed;
+  color: var(--control-disabled-color);
+}
+.vamis-radio-option > .vamis-radio__mark {
+  margin-top: var(--radio-mark-shift);
+  margin-right: 0;
+  vertical-align: text-bottom;
+}
+.vamis-radio-option > span,
+.vamis-radio-option > .vamis-node {
+  margin-left: var(--radio-gap);
+}
+.vamis-radio__mark {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--radio-size);
+  align-items: center;
+  justify-content: center;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  margin: 0;
+  padding: 0;
+  vertical-align: text-bottom;
+  border: var(--checkbox-border-width) solid var(--radio-border);
+  border-radius: 50%;
+  background: var(--radio-bg);
+  color: var(--primary);
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color var(--animation-duration),
+    background-color var(--animation-duration);
+}
+.vamis-radio-option:hover:not(.is-disabled) > .vamis-radio__mark:not(.is-checked):not(.is-partial),
+.vamis-radio__mark:hover:not(.is-disabled):not(.is-checked):not(.is-partial) {
+  border-color: var(--primary);
+  background: var(--radio-bg);
+}
+.vamis-radio__mark.is-checked,
+.vamis-radio__mark.is-partial {
+  background: var(--radio-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.vamis-radio__mark.is-disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  background: var(--radio-disabled-bg);
+  border-color: var(--radio-border);
+  color: var(--radio-disabled-icon);
+}
+.vamis-radio__mark.is-disabled.is-checked,
+.vamis-radio__mark.is-disabled.is-partial {
+  background: var(--radio-disabled-bg);
+  border-color: var(--radio-border);
+  color: var(--radio-disabled-icon);
+}
+.vamis-radio__dot {
+  display: block;
+  width: var(--radio-dot);
+  height: var(--radio-dot);
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform var(--animation-duration);
+}
+.vamis-radio__mark.is-checked .vamis-radio__dot,
+.vamis-radio__mark.is-partial .vamis-radio__dot {
+  transform: scale(1);
+}
+.vamis-radio--button {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  appearance: none;
+  text-align: center;
+  min-width: var(--radio-button-min-w);
+  height: var(--radio-button-h);
+  margin: 0;
+  padding: var(--radio-button-pad-y) var(--radio-button-pad-x);
+  border: var(--checkbox-border-width) solid var(--radio-border);
+  border-radius: var(--radio-button-radius);
+  background-color: transparent;
+  color: var(--checkbox-text);
+  font-size: var(--checkbox-font-size);
+  font-weight: 400;
+  line-height: 21px;
+  cursor: pointer;
+}
+.vamis-radio--button:hover:not(.is-disabled):not(.is-checked) {
+  z-index: 1;
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+}
+.vamis-radio--button.is-checked {
+  z-index: 1;
+  color: var(--radio-button-checked-fg);
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+.vamis-radio--button.is-checked:hover:not(.is-disabled) {
+  color: var(--radio-button-checked-fg);
+  border-color: var(--checkbox-checked-hover);
+  background-color: var(--checkbox-checked-hover);
+}
+.vamis-radio--button.is-checked:active:not(.is-disabled) {
+  color: var(--radio-button-checked-fg);
+  border-color: var(--checkbox-checked-active);
+  background-color: var(--checkbox-checked-active);
+}
+.vamis-radio--button.is-disabled {
+  cursor: not-allowed;
+  color: var(--control-disabled-color);
+  background-color: var(--radio-disabled-bg);
+  border-color: var(--radio-border);
+}
+.vamis-radio--button.is-disabled.is-checked {
+  color: var(--radio-button-disabled-checked-fg);
+  background-color: var(--radio-button-disabled-checked-bg);
+  border-color: var(--radio-button-disabled-checked-border);
+}
+
+/*
+ * Amis `_switch.scss` 转写：label 当轨道、原生 checkbox 只做 a11y、文字叠在轨道里。
+ * 不要用 shadcn Switch 皮冒充（18×32、没有 onText/offText、option 位置也不同）。
+ */
+.vamis-switch-control {
+  padding-top: var(--switch-control-pad-top);
+}
+.vamis-switch {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  height: var(--switch-height);
+  min-width: var(--switch-width);
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--switch-radius);
+  background: var(--switch-bg);
+  vertical-align: middle;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--switch-transition);
+}
+.vamis-switch.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.vamis-switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.vamis-switch__text {
+  margin: 0 var(--switch-text-off-margin-right) 0 var(--switch-text-off-margin-left);
+  color: var(--switch-text-color);
+  text-indent: var(--switch-text-indent);
+  font-size: var(--switch-text-size);
+  font-weight: var(--switch-text-weight);
+  font-style: normal;
+  line-height: var(--switch-height);
+  text-transform: uppercase;
+  vertical-align: super;
+  transition: all var(--animation-duration);
+}
+.vamis-switch__text > .vamis-node,
+.vamis-switch__text .vamis-icon-svg {
+  display: inline;
+  vertical-align: middle;
+}
+.vamis-switch__text svg {
+  width: var(--switch-text-size);
+  height: var(--switch-text-size);
+  margin-top: calc((var(--switch-height) - var(--switch-text-size)) / 2);
+}
+.vamis-switch__slider::before {
+  content: '';
+  position: absolute;
+  top: var(--switch-thumb-margin);
+  bottom: var(--switch-thumb-margin);
+  left: var(--switch-thumb-margin);
+  width: var(--switch-thumb-size);
+  border-radius: 50%;
+  background: var(--switch-thumb-bg);
+  transition: var(--switch-slider-transition);
+}
+.vamis-switch:hover {
+  background: var(--switch-bg-hover);
+}
+.vamis-switch.is-checked {
+  background: var(--switch-checked-bg);
+}
+.vamis-switch.is-checked .vamis-switch__text {
+  margin: 0 var(--switch-text-on-margin-right) 0 var(--switch-text-on-margin-left);
+}
+.vamis-switch.is-checked .vamis-switch__slider::before {
+  left: calc(100% - var(--switch-thumb-size) - var(--switch-thumb-margin));
+  right: var(--switch-thumb-margin);
+  border-width: 0;
+  background: var(--switch-thumb-bg);
+}
+.vamis-switch.is-checked:hover {
+  background: var(--switch-checked-hover-bg);
+}
+.vamis-switch.is-checked:active {
+  background: var(--switch-checked-active-bg);
+}
+.vamis-switch:active .vamis-switch__slider::before {
+  width: calc(var(--switch-height) + 2px);
+  border-radius: 10px;
+}
+.vamis-switch.is-checked:active .vamis-switch__slider::before {
+  left: calc(100% - (var(--switch-height) + 2px) - var(--switch-thumb-margin));
+}
+.vamis-switch--sm {
+  height: var(--switch-sm-height);
+  min-width: var(--switch-sm-width);
+}
+.vamis-switch--sm .vamis-switch__text {
+  line-height: var(--switch-sm-height);
+}
+.vamis-switch--sm .vamis-switch__slider::before {
+  width: var(--switch-sm-thumb-size);
+  top: var(--switch-thumb-margin);
+  bottom: var(--switch-thumb-margin);
+  left: var(--switch-thumb-margin);
+  right: auto;
+}
+.vamis-switch--sm.is-checked .vamis-switch__slider::before {
+  left: calc(100% - var(--switch-sm-thumb-size) - var(--switch-thumb-margin));
+  right: var(--switch-thumb-margin);
+}
+.vamis-switch--sm:active .vamis-switch__slider::before {
+  width: calc(var(--switch-sm-height) + 2px);
+}
+.vamis-switch--sm.is-checked:active .vamis-switch__slider::before {
+  left: calc(
+    100% - (var(--switch-sm-height) + 2px) - var(--switch-thumb-margin)
+  );
+}
+.vamis-switch__spinner {
+  position: absolute;
+  top: var(--switch-thumb-margin);
+  left: var(--switch-thumb-margin);
+  display: flex;
+  width: var(--switch-thumb-size);
+  height: var(--switch-thumb-size);
+  align-items: center;
+  justify-content: center;
+}
+.vamis-switch.is-checked .vamis-switch__spinner {
+  left: calc(100% - var(--switch-thumb-size) - var(--switch-thumb-margin));
+}
+.vamis-switch__spinner-icon {
+  display: block;
+  width: var(--switch-spinner-size);
+  height: var(--switch-spinner-size);
+  border: 2px solid color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
+  border-top-color: var(--switch-spinner-color);
+  border-radius: 50%;
+  animation: vamis-spinner-spin 1s linear infinite;
+}
+.vamis-switch--sm .vamis-switch__spinner {
+  width: var(--switch-sm-thumb-size);
+  height: var(--switch-sm-thumb-size);
+}
+.vamis-switch--sm.is-checked .vamis-switch__spinner {
+  left: calc(100% - var(--switch-sm-thumb-size) - var(--switch-thumb-margin));
+}
+.vamis-switch--sm .vamis-switch__spinner-icon {
+  width: 10px;
+  height: 10px;
+  border-width: 1.5px;
+}
+.vamis-switch-option {
+  display: inline;
+  margin: 0 0 0 var(--switch-option-gap);
+  color: var(--switch-option-color);
+  font-size: var(--switch-option-size);
+  font-weight: 400;
+  line-height: var(--switch-option-line-height);
+  vertical-align: middle;
+}
+.vamis-switch-option:first-child {
+  margin-left: 0;
+  margin-right: var(--switch-option-gap);
+}
+.vamis-switch-option:empty {
+  display: none;
+}
+.vamis-form-static .vamis-switch-option {
+  color: var(--muted-foreground);
 }
 
 .vamis-toast {

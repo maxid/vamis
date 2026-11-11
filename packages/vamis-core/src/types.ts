@@ -40,6 +40,8 @@ export interface JumpToOptions {
 
 export interface ActionSchema extends SchemaObject {
   actionType?: string
+  /** 目标组件：componentId 优先，其次 componentName（name），最后 target。 */
+  componentName?: string
   api?: SchemaApi
   dialog?: SchemaObject
   drawer?: SchemaObject

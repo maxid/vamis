@@ -5,6 +5,8 @@ import { dataMapping } from './utils/data-mapping'
 
 export interface ScopedComponent {
   name?: string
+  /** 组件 schema `id`。`getComponentById` 跨数据域按它查找（对齐 Amis）。 */
+  id?: string
   /** 子组件注册表。`my_form.select` 这类点号路径会走进来。 */
   context?: ScopedContext
   reload?: (extra?: PlainObject, replace?: boolean) => Promise<void> | void
@@ -82,17 +84,34 @@ export function resolveTargets(target: unknown, data: PlainObject = {}): Resolve
 export class ScopedContext {
   parent?: ScopedContext
   components: ScopedComponent[] = []
+  /**
+   * 全树共享的注册表。Amis `getComponentById` 会沿 scope 树向下找（`componentId` 可以从
+   * form 外的按钮点到 form 内的表单项）；`getComponentByName` 仍只沿父链向上，两者不要混。
+   */
+  registry: ScopedComponent[]
 
   constructor(parent?: ScopedContext) {
     this.parent = parent
+    this.registry = parent ? parent.registry : []
   }
 
   register(component: ScopedComponent) {
     if (!this.components.includes(component)) this.components.push(component)
+    if (!this.registry.includes(component)) this.registry.push(component)
   }
 
   unregister(component: ScopedComponent) {
     this.components = this.components.filter((item) => item !== component)
+    const index = this.registry.indexOf(component)
+    if (index >= 0) this.registry.splice(index, 1)
+  }
+
+  /** 跨数据域按 id 找组件。对齐 Amis `Scoped.getComponentById`（componentId 用）。 */
+  getComponentById(id: string): ScopedComponent | undefined {
+    const exact = this.registry.find((item) => item.id === id)
+    if (exact) return exact
+    // 现有渲染器大多把 id 注册成一个 name（兼容旧 API），这里兜住。
+    return this.registry.find((item) => item.name === id)
   }
 
   getComponentByName(name: string): ScopedComponent | undefined {
@@ -124,7 +143,7 @@ export class ScopedContext {
     const ctx = data || extra || {}
     for (const item of resolveTargets(target, ctx)) {
       const payload = item.extra ? { ...(extra || {}), ...item.extra } : extra
-      const component = this.getComponentByName(item.name)
+      const component = this.getComponentByName(item.name) || this.getComponentById(item.name)
       await component?.reload?.(payload, replace)
     }
   }

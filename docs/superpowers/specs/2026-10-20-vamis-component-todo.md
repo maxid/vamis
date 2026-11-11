@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-04（Amis 全量示例核对后再算：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 111 项；已完成 1）
+- 最近核对：2026-11-11（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 112 项；已完成 2）
 
 ## 怎么读
 
@@ -121,6 +121,7 @@
 | `container` | 100% | 未核 | |
 | `icon` `tpl` `html` | 90–92% | 未核 | |
 | `checkbox` | 90% | 已核 | 2026-11-07。无独立浮层；浅+深默认皮（16 盒 / 按钮模式 / 禁用灰底） |
+| `switch` | 88% | 已核 | 2026-11-11。无独立浮层；浅 `#d4d6d9` / 深 `#84878c`，滑块 16 白 / 深 `#f7f8fa`，选中走 `--primary`；`change` 示例的 toast 属全局 |
 | `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
 | `collapse` / `tabs` / `portlet` | 85% | 未核 | |
 | `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
@@ -224,7 +225,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 50% | 能弹层多选 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
-| `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 60% | 单个 radio | P0 |
+| `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |
 | `radios` | Radios 单选框 | `/components/form/radios` | `/zh-CN/components/radios` | 进行中 | 55% | 组单选 | P0 |
 | `chart-radios` | ChartRadios 图表单选框 | `/components/form/chart-radios` | `/zh-CN/components/form/chart-radios` | 进行中 | 35% | **精简**：无真实图表点选 | P0 |
 | `input-rating` | InputRating 评分 | `/components/form/input-rating` | `/zh-CN/components/form/input-rating` | 进行中 | 55% | 能打分；半星/自定义字符未齐 | P0 |
@@ -233,7 +234,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-rich-text` | InputRichText 富文本 | `/components/form/input-rich-text` | `/zh-CN/components/form/input-rich-text` | 进行中 | 25% | **精简**：多行文本，未接 TinyMCE/Froala（设计非目标） | P0 |
 | `select` | Select 下拉框 | `/components/form/select` | `/zh-CN/components/form/select` | 进行中 | 92% | 主路径已对齐：分组 Transfer 检索框 / 小复选框 / 多选 tag hover tooltip / 按宽度 `+ N ...`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（含移动端 `height` 默认 320）、全选、`autoComplete` mock、focus/blur。移动端 `VamisPopUp` 底部滑入（普通单选才滚轮 itemHeight 40 + `menuTpl` slot 居中；普通多选右侧勾不是左侧 Checkbox，行高 37px 内层 `content-box` 1px 以免 100% 缩放丢线；`searchable` 在上方；`selectMode: group` 组头 12 / 子项 24；确认才写入；箭头朝右不翻转）。`selectMode` table/tree/chained/associated、`deferApi`、人员点选未接 | P0 |
 | `input-sub-form` | InputSubForm 子表单 | `/components/form/input-sub-form` | `/zh-CN/components/form/input-sub-form` | 进行中 | 45% | 能嵌表单；弹层/多选未齐 | P0 |
-| `switch` | Switch 开关 | `/components/form/switch` | `/zh-CN/components/form/switch` | 进行中 | 65% | 能切换；`trueValue` 未齐 | P0 |
+| `switch` | Switch 开关 | `/components/form/switch` | `/zh-CN/components/form/switch` | 进行中 | 88% | 主路径已对齐：`trueValue` / `falseValue`（宽松相等，默认 true/false）、`option` 右侧说明、`onText` / `offText`（字符串 / IconSchema / SchemaCollection）、`size` sm/md（44×20 / 28×16，滑块 16/12 + 2px 边、30 圆角，`--switch-*`）、`loading` / `loadingOn`（不可操作，转圈画在滑块位）、`change`、`clear` / `reset` / `setValue`（`componentId` 按 id 跨数据域，form 外按钮可点 form 内；`componentName` 沿父链）、静态态。文档按 Amis 章节改写（含 `id` + `componentId` 动作示例、`loadingOn` + ajax 异步链），属性 / 事件 / 动作表齐全。对照桌面 **14/14**、移动 **14/14**（P0 0）。缺 `themeCss` | P0 |
 | `static` | Static 静态展示 | `/components/form/static` | `/zh-CN/components/form/static` | 进行中 | 68% | 能展示；`popOver` 已接（字符串 / 对象 / 放大镜，默认 `position: right` 贴图标）。`quickEdit` 无 | P0 |
 | `input-table` | InputTable 表格 | `/components/form/input-table` | `/zh-CN/components/form/input-table` | 进行中 | 45% | 能行内编辑；子 api、增删校验未齐 | P0 |
 | `input-tag` | InputTag 标签选择器 | `/components/form/input-tag` | `/zh-CN/components/form/input-tag` | 进行中 | 50% | 能回车加标签 | P0 |
@@ -348,7 +349,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。当前建议下一批：`radio` #21。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；当前建议下一批：`hidden` #23。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -437,8 +438,8 @@ flowchart LR
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
-| 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 60% |
-| 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 65% |
+| 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
+| 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 23 | `hidden` | FormItem | 6 | 1 | 19 | 134 | 进行中 | 70% |
 | 24 | `input-image` | FormItem、`image` | 6 | 1 | 19 | 134 | 进行中 | 40% |
 | 25 | `textarea` | FormItem | 6 | 1 | 19 | 134 | 进行中 | 60% |

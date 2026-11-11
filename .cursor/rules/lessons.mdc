@@ -174,6 +174,12 @@ alwaysApply: true
 - 触及：`list` `popOver` `hbox`
 - 规则：本文；Amis `_list.scss` `.List-items`；`_popoverable.scss`；`_normalize.scss` `svg.icon`
 
+### componentId 按 id 跨数据域找；对照探针别把包装层当控件
+- 踩过：`setValue` / `clear` / `reset` 的 `componentId` 原先进 `getComponentByName`，只沿父链向上，form 外的按钮点不到 form 内的表单项（Amis `getComponentById` 会沿 scope 树向下）。示例补 `id` 后，对照 `findNodeEl` 又先按 `#id` 命中 Vamis `.vamis-node` 包装层、Amis 没有 → `rendered` / `value` 假红；`valueAfter` 走 formData 会读到交互前的旧值。
+- 稳定做法：`ScopedContext` 维护全树共享 registry，`getComponentById` 按 id 跨域找（`getComponentByName` 仍只沿父链，和 Amis 一致），`componentId` 动作优先走 id；文档保持 Amis 的 `id` + `componentId` 写法（form 外的按钮也能点 form 内）。对照探针：表单项 `[name]` 未命中时按 `[data-amis-name]` / `[data-name]` 找原生控件，交互后读控件 checked；事件链带 `ajax` 不点（静态服 404 会让两边动作链停在不同位置）；每个用例量测前清残留 toast。
+- 触及：`switch` `hidden` `componentId` 对照
+- 规则：`packages/vamis-core/src/scoped.ts` `getComponentById`；`packages/vamis-core/src/actions/run.ts`；`packages/vamis-sdk/embed-case.html`
+
 ### 组装与盒模型
 
 ### 组装壳用 div，不要 landmark
@@ -316,6 +322,12 @@ alwaysApply: true
 - 稳定做法：完整字面量写进源码（如 `max-w-[500px]`）或 CSS 类。`width:100%` / `max-width:none` 只放进 `<576` 的 media query。
 - 触及：`dialog` `drawer`
 - 规则：`.cursor/rules/component.mdc`
+
+### Switch 是 44×20 轨道 + 原生 checkbox，不要 shadcn Switch 皮
+- 踩过：旧 `switch` 直接套 `@vamis/ui` 的 shadcn Switch（约 18×32、无 onText/offText、无 option），`trueValue` 被 `!!value` 盖掉，对照连值都对不上。
+- 稳定做法：`label` 当轨道 + 原生 checkbox（a11y），`--switch-*` 转写 Amis `_switch.scss`：44×20 / 16 滑块 + 2px 边 / 30 圆角 / 12-700 白字；sm 28×16 / 12 滑块。`trueValue` / `falseValue` 复用 checkbox helpers（宽松相等，默认 true/false）；`onText` / `offText` 分字符串、只有 icon 的对象、SchemaCollection 三路；`loading` / `loadingOn` 期间不可操作，转圈画在滑块位。`option` 是开关右侧说明，不是 FormItem label。
+- 触及：`switch`
+- 规则：`.cursor/rules/component.mdc`；`packages/vamis-ui/src/styles.css`
 
 ### 浮层与日期
 
@@ -673,8 +685,14 @@ alwaysApply: true
 ### 表单勾选走 `--checkbox-*`，不要 shadcn size-4 + Button
 - 踩过：默认勾选用 shadcn Checkbox（圆角 4、`disabled:opacity-50`、lucide 勾）；`optionType: button` 走实心/描边 Button，和 Amis 32×min80 描边钮 + 左上角三角勾对不上。
 - 稳定做法：量进 `:root` / `.dark` 的 `--checkbox-*`（16 盒、圆角 2、勾 14、浅底 `#fff` / 深底 `#17202d`）。选择器只 `var()`。禁用灰底 opacity 1。option 宿主是 **inline-block**，勾选盒 `vertical-align: text-bottom`（Amis `> i`）；不要 `inline-flex` + `align-items: center`，span 会变成 21px flex item，16 盒相对字形光学不居中。按钮模式宿主是 **label**（不要 `<button>` / shadcn `Button`），背景 **transparent**（Amis `rgba(0,0,0,0)`），选中只改描边/字色 + 左上角三角勾；用 `--checkbox-bg` 会在深色变成整块黑钮、浅色也可能被 button 样式刷成实心。hover 对齐 Amis `.Checkbox:hover > i`：打在 **label（含文字）**，样式只落到勾选盒，**不要改 option 文案色**（Amis hover text 也是 text-2；Select 另用 `> span { color: option-color }` 锁住）。Select 菜单里 Amis Checkbox 是 option **整行** `width:100%`，所以 `.vamis-select__item:hover .vamis-select__check`；不要只给 14px 空盒子绑 `:hover`。色号走 `--checkbox-checked-hover`：浅色 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 变浅且不掉饱和），深色 `calc(l - 0.08)` 变深。表单勾、Checkboxes、Select 菜单勾共用。**不要**用 `--primary-hover`（浅色混黑会变深），也不要 `color-mix(..., white)`（会发灰）。隐藏原生勾选框**不要**写 `name`：Amis 渲染器也不把 `name` 传给底层 input；一对上对照会命中 `display:none` 的 UA 盒（12px / weight 500），Amis 找不到节点就假红。表单值走 store。`badge` 包 `BadgeHost`。菜单里的 14px 勾仍是 `--select-check-*`，不要和表单 16 盒混用。
-- 触及：`checkbox` `checkboxes` `select` Options
+- 触及：`checkbox` `checkboxes` `select` Options `radio`
 - 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
+
+### Radio 是圆点布尔，不要 RadioGroup / checkbox 方盒
+- 踩过：占位用 shadcn RadioGroup，空 `option` 补「选项」；按钮模式若套 checkbox 透明底 + 角标三角，和 Amis 实心 brand 底对不上。
+- 稳定做法：`type: radio` 是 Combo / input-table 里的布尔圆点（18 / 内点 10，`--radio-*`），不是 `radios` 组。真假值复用 checkbox helpers。未写 `option` 只画圆点。按钮选中 `--primary` 实心底 + `--primary-foreground` 字，不要角标。Combo `multiple` 且数组 ≥2 且首项对象才 `comboApplyRadio`（当前行 trueValue、其余 falseValue），返回 `false` 时 Radio 不再自己写字段、也不派 `change`。隐藏 native 不要 `name`。`input-table` 互斥另刀。
+- 触及：`radio` `combo`
+- 规则：本文；Amis `Radio.tsx` / `Combo.tsx` `handleRadioChange` / `_checks.scss` `&--radio`
 
 ### dataMapping 不要把 File / Blob 当普通对象
 - 踩过：`receiver` POST `{ file: File }` 经 `dataMapping` 把 File 当 plain object 枚举，文件体变成空对象，FormData 里没有文件。

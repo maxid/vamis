@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { provideFormApi, type NodeState } from '@vamis/core'
-import { provideForm } from './formContext'
+import { provideComboRadio, provideForm, type ComboRadioApi } from './formContext'
 
 const props = defineProps<{
   row: Record<string, any>
   persist: () => void
   mode?: string
+  index?: number
+  onRadioChange?: ComboRadioApi['onChange']
 }>()
 
 const errors = reactive<Record<string, string>>({})
@@ -61,6 +63,10 @@ provideFormApi({
   setValue,
   setData,
   getData: () => ({ ...props.row }),
+})
+provideComboRadio({
+  index: props.index ?? 0,
+  onChange: props.onRadioChange,
 })
 </script>
 

@@ -99,6 +99,34 @@ describe('onEvent actions', () => {
     expect(setData).toHaveBeenCalledWith({ value: 'amis go go go!' }, false)
   })
 
+  it('componentId reaches a form item inside a child data scope', async () => {
+    const root = new ScopedContext()
+    const formScope = new ScopedContext(root)
+    const setData = vi.fn()
+    const doAction = vi.fn()
+    formScope.register({ name: 'switch', id: 'u:switch', setData, doAction })
+    const context = ctx({ scoped: root })
+    expect(root.getComponentByName('switch')).toBeUndefined()
+    expect(root.getComponentById('u:switch')).toBeTruthy()
+    await runAction({ actionType: 'setValue', componentId: 'u:switch', args: { value: true } }, context)
+    await runAction({ actionType: 'clear', componentId: 'u:switch' }, context)
+    expect(setData).toHaveBeenCalledWith({ value: true }, false)
+    expect(doAction).toHaveBeenCalledWith({ actionType: 'clear', componentId: 'u:switch' }, expect.any(Object))
+  })
+
+  it('clear / reset / setValue address the target by componentName', async () => {
+    const doAction = vi.fn()
+    const setData = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'switch', doAction, setData })
+    const context = ctx({ scoped })
+    await runAction({ actionType: 'clear', componentName: 'switch' }, context)
+    await runAction({ actionType: 'reset', componentName: 'switch' }, context)
+    await runAction({ actionType: 'setValue', componentName: 'switch', args: { value: true } }, context)
+    expect(doAction).toHaveBeenCalledTimes(2)
+    expect(setData).toHaveBeenCalledWith({ value: true }, false)
+  })
+
   it('unknown actionType with componentId calls the target doAction', async () => {
     const doAction = vi.fn()
     const scoped = new ScopedContext()

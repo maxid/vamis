@@ -60,6 +60,9 @@ const HANDWRITTEN = new Set([
   '/components/form/input-datetime',
   '/components/form/input-time',
   '/components/form/checkbox',
+  // radio / switch 已按 Amis 章节手写，跑 `pnpm docs:build` 不能被生成器覆盖。
+  '/components/form/radio',
+  '/components/form/switch',
   '/components/page',
   '/components/container',
   '/components/collapse',

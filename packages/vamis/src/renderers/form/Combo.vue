@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import {
   SchemaRenderer,
   asArray,
+  comboApplyRadio,
   comboChildSchema,
   comboItemMode,
   type SchemaObject,
@@ -46,6 +47,19 @@ function remove(index: number) {
 function persistCurrent() {
   persist(rows.value.map((row) => ({ ...row })))
 }
+
+function handleRadioChange(ctx: {
+  index: number
+  name: string
+  trueValue: unknown
+  falseValue: unknown
+}) {
+  if (!multiple.value || props.disabled || !ctx.name) return
+  const next = comboApplyRadio(rows.value, ctx.index, ctx.name, ctx.trueValue, ctx.falseValue)
+  if (!next) return
+  persist(next)
+  return false
+}
 </script>
 
 <template>
@@ -61,7 +75,13 @@ function persistCurrent() {
           class="vamis-combo-item"
         >
           <div class="vamis-combo-item-inner">
-            <NestedFormScope :row="row" :persist="persistCurrent" :mode="itemMode">
+            <NestedFormScope
+              :row="row"
+              :index="i"
+              :persist="persistCurrent"
+              :mode="itemMode"
+              :on-radio-change="handleRadioChange"
+            >
               <FormRow
                 v-if="itemMode === 'row'"
                 :nodes="rowNodes"

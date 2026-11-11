@@ -19,7 +19,7 @@ import {
   hiddenFieldsToClear,
   validateApiMessage,
 } from '../src/utils/form-item'
-import { comboChildSchema, comboItemMode, formLayoutSkipCol, groupChildSchema, groupFormMode } from '../src/utils/form-group'
+import { comboApplyRadio, comboChildSchema, comboItemMode, formLayoutSkipCol, groupChildSchema, groupFormMode } from '../src/utils/form-group'
 import { resetStatusStore, setStatusStatic, statusStaticOf } from '../src/status-store'
 import { getPathValue } from '../src/utils/path-value'
 import { validateValue } from '../src/validate'
@@ -221,6 +221,25 @@ describe('form row / combo layout', () => {
       name: 'age',
       mode: 'inline',
     })
+  })
+
+  it('combo radio exclusive writes trueValue on the clicked row', () => {
+    const next = comboApplyRadio(
+      [
+        { isAnswer: true, answer: 'A' },
+        { isAnswer: false, answer: 'B' },
+      ],
+      1,
+      'isAnswer',
+      1,
+      0,
+    )
+    expect(next).toEqual([
+      { isAnswer: 0, answer: 'A' },
+      { isAnswer: 1, answer: 'B' },
+    ])
+    expect(comboApplyRadio([{ isAnswer: false }], 0, 'isAnswer', true, false)).toBeNull()
+    expect(comboApplyRadio(['x', 'y'], 0, 'isAnswer', true, false)).toBeNull()
   })
 })
 
