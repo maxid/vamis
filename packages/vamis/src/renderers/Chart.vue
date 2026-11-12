@@ -1,16 +1,34 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { isApiOutdated, LazyComponent, requestApi, useEnv, type SchemaObject } from '@vamis/core'
+import {
+  createVamisEvent,
+  eventEvalData,
+  isApiOutdated,
+  LazyComponent,
+  requestApi,
+  resolveValue,
+  runOnEvent,
+  useEnv,
+  useScoped,
+  type SchemaObject,
+} from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
+const scoped = useScoped()
 const el = ref<HTMLDivElement>()
 const missing = ref('')
-let chart: { dispose: () => void; setOption: (option: unknown) => void; resize: () => void } | null = null
+let chart: {
+  dispose: () => void
+  setOption: (option: unknown, replace?: boolean) => void
+  resize: () => void
+  on?: (event: string, handler: (params: unknown) => void) => void
+} | null = null
 let listeningResize = false
 
 async function fetchOption() {
   let option = props.schema.config || props.schema.chart
+  if (!option && props.schema.source != null) option = resolveValue(props.schema.source, props.data)
   if (!option && props.schema.api) {
     const result = await requestApi(props.schema.api, { env, data: props.data, reason: 'init' })
     option = result.data?.config || result.data
@@ -29,14 +47,19 @@ async function applyOption(option: unknown) {
   missing.value = ''
   if (!el.value) return
   if (chart) {
-    chart.setOption(option)
+    chart.setOption(option, props.schema.replaceChartOption === true)
     return
   }
   try {
     const echarts = await import('echarts')
     if (!el.value) return
     chart = echarts.init(el.value)
-    chart.setOption(option)
+    chart.setOption(option, props.schema.replaceChartOption === true)
+    chart.on?.('click', async (params: unknown) => {
+      const payload = { ...props.data, ...(params && typeof params === 'object' ? (params as Record<string, unknown>) : {}) }
+      const event = createVamisEvent('click', payload)
+      await runOnEvent(props.schema, 'click', { env, data: eventEvalData(payload, event), scoped, event })
+    })
     if (!listeningResize) {
       window.addEventListener('resize', onResize)
       listeningResize = true
@@ -86,7 +109,23 @@ function onResize() {
   chart?.resize()
 }
 
+const chartApi = {
+  name: String(props.schema.id || props.schema.name || ''),
+  id: props.schema.id ? String(props.schema.id) : undefined,
+  getData: () => ({ option: lastOption }),
+  setData(values: Record<string, unknown>) {
+    if (values && 'option' in values) void applyOption(values.option)
+  },
+  async doAction(action: { actionType?: string; args?: { value?: unknown } }) {
+    if (action?.actionType === 'reload') await loadChart()
+    else if (action?.actionType === 'setValue') await applyOption(action.args?.value)
+    else if (action?.actionType === 'reset') await applyOption(await fetchOption())
+  },
+}
+scoped?.register(chartApi as never)
+
 onBeforeUnmount(() => {
+  scoped?.unregister(chartApi as never)
   if (listeningResize) window.removeEventListener('resize', onResize)
   chart?.dispose()
   chart = null
@@ -94,7 +133,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div>
+  <div :style="schema.style">
     <div v-if="missing" class="rounded-md border border-dashed px-3 py-6 text-sm text-muted-foreground">
       {{ missing }}
     </div>
@@ -103,7 +142,7 @@ onBeforeUnmount(() => {
       :un-mount-on-hidden="schema.unMountOnHidden === true"
       placeholder="..."
     >
-      <div ref="el" class="h-64 w-full" />
+      <div ref="el" class="w-full" :style="{ height: schema.height || '16rem' }" />
     </LazyComponent>
   </div>
 </template>

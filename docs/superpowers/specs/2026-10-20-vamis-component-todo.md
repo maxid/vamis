@@ -272,7 +272,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 80% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
 | `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 80% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。补 select / selectAll / clearAll 动作表；缺拖拽、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
-| `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
+| `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 60% | `config` / `api` / `source` option、LazyComponent 画布、`height`、`replaceChartOption`、echarts `click` 事件、`reload` / `setValue` / `reset` 动作；文档补属性/事件/动作。对照 harness 将 chart 列入 SKIP_TYPES，**不参与文档 smoke**；以双站手动核验。缺 `mapURL` / 百度地图 / `trackExpression` / `dataFilter` | P0 |
 | `code` | Code 代码高亮 | `/components/code` | `/zh-CN/components/code` | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
 | `color` | Color 颜色 | `/components/color` | `/zh-CN/components/color` | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | `/components/date` | `/zh-CN/components/date` | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
@@ -467,7 +467,7 @@ flowchart LR
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
-| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 45% |
+| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 60% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 80% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |

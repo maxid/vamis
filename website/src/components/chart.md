@@ -48,11 +48,11 @@ body:
 | `config` / `chart` | `object` | | echarts option；无 `api` 时用这份 |
 | `unMountOnHidden` | `boolean` | `false` | 滚出视口是否卸载画布。Amis 源码有、文档属性表未列 |
 | `style` | `object` | | 根元素 style |
-| `width` / `height` | `string` | | **未齐**（当前画布高度写死 16rem，宽随容器） |
+| `width` / `height` | `string` | `16rem` | 画布高度；宽随容器 |
 | `initFetch` | `boolean` | | **未接** |
 | `interval` | `number` | | **未接**（Chart 不轮询） |
-| `source` | 数据映射 | | **未接** |
-| `replaceChartOption` | `boolean` | `false` | **未接** |
+| `source` | 数据映射 | | 从数据域取 echarts option |
+| `replaceChartOption` | `boolean` | `false` | setOption 时替换而非合并 |
 | `trackExpression` | `string` | | **未接**（url 含 `$` 才随数据重拉） |
 | `dataFilter` | `string` | | **未接** |
 | `mapURL` / `mapName` / `loadBaiduMap` | | | **未接** |
@@ -63,6 +63,10 @@ body:
 画布始终包一层内核 [LazyComponent](/concepts/schema#lazycomponent)（对齐 Amis Chart）。默认进视口才初始化 echarts；`unMountOnHidden: true` 才在滚出时拆掉画布。Chart 的 `api` 仍在组件挂载时发，不跟画布可见性走。
 
 ## 事件表
+
+| 事件名称 | 事件参数 | 说明 |
+|----------|----------|------|
+| `click` | echarts 点击参数 + 数据域 | 图表元素点击 |
 
 Amis Chart 通过 `onEvent` 派发以下事件。Vamis **尚未把这些接到 Chart**（没有 `runOnEvent`）。
 
@@ -75,6 +79,12 @@ Amis Chart 通过 `onEvent` 派发以下事件。Vamis **尚未把这些接到 C
 | `finished` | `{ echarts }` | **未接** |
 
 ## 动作表
+
+| 动作名称 | 动作配置 | 说明 |
+|----------|----------|------|
+| `reload` | - | 重拉 `api` 并重绘 |
+| `setValue` | `args.value` = echarts option | 直接换 option |
+| `reset` | - | 回到 `config` / `api` 初始 option |
 
 其它组件通过 `actionType` + `componentId` 触发。Chart **没有注册** `reload` / `setData`，下面两项目前无效。
 
