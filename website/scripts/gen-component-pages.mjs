@@ -71,6 +71,7 @@ const HANDWRITTEN = new Set([
   '/components/form/input-file',
   '/components/form/input-image',
   '/components/form/textarea',
+  '/components/form/transfer',
   '/components/form/static',
   '/components/page',
   '/components/container',

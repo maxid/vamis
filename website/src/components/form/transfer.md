@@ -5,30 +5,24 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 50% · 进行中
-能左右移动；树/搜索未齐
+::: info 实现进度 60% · 进行中
+主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 
-`transfer` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema
-type: page
-title: transfer
+```schema: scope="body"
+type: form
 body:
-  - type: form
-    title: transfer
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: transfer
-        name: transfer
-        label: transfer
-        options:
-          - label: 选项 A
+  - type: transfer
+    name: transfer
+    label: 穿梭器
+    options:
+      - label: 选项 A
         value: a
       - label: 选项 B
         value: b
@@ -36,22 +30,45 @@ body:
         value: c
 ```
 
-## 常用属性
+## 展示模式
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+Amis 支持 `mode: list | table | tree | chained`；Vamis 目前只实现基础双栏列表，`table` / `tree` / `chained` 未接，按 list 展示。
+
+## 搜索
+
+`searchable: true` 时左右两栏出现搜索框，`searchPlaceholder` 改占位，`leftTitle` / `rightTitle` 加栏标题：
+
+```yaml
+type: transfer
+name: transfer
+label: 穿梭器
+searchable: true
+searchPlaceholder: 搜索选项
+leftTitle: 待选
+rightTitle: 已选
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `options` | `Option[]` | | 静态选项 |
+| `value` / `name` | | | 已选值 |
+| `joinValues` | `boolean` | `true` | 是否用分隔符拼接 |
+| `delimiter` | `string` | `,` | 拼接分隔符 |
+| `searchable` | `boolean` | `false` | 左右搜索框 |
+| `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
+| `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
+| `mode` | `string` | `list` | 仅 list 已实现 |
+| `source` | API | | **未接** 远程选项 |
 
 ## 和 Amis 文档的差异
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
+- 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
+- 未接：table / tree / chained 模式、远程 source、分页、排序、拖拽、属性/事件/动作表完整项。

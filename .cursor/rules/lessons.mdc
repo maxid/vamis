@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Transfer 搜索只过滤本地 options；对照基础示例别带初始值
+- 稳定做法：searchable 时左右各一个输入框，按 label 小写包含过滤 `leftShown/rightShown`，无结果占位仍显示；leftTitle/rightTitle 放栏头；对照基础 form 示例不要预置 data.transfer（Amis 不写、Vamis 会读表单域导致 value 假红）。
+- 触及：`transfer`
+
 ### Status 默认状态 + map/labelMap/source 三路覆盖
 - 稳定做法：DEFAULTS 表给 0/1/success/pending/queue/schedule/fail/warning/info 的文本/图标/颜色；`source[value]` 优先（label 支持模板），其次 `labelMap[value]`、`map[value]`；icon 走 resolveIcon + IconMark；无值/无匹配显示 `placeholder`（默认 -）。
 - 触及：`status`

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
 import { useForm } from '../../formContext'
@@ -19,8 +19,20 @@ const selected = computed({
   get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
   set: (values: unknown[]) => props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
 })
+const searchable = computed(() => props.schema.searchable === true)
+const leftQuery = ref('')
+const rightQuery = ref('')
+function matched(item: { label?: unknown }, query: string) {
+  if (!query) return true
+  return String(item.label ?? '').toLowerCase().includes(query.toLowerCase())
+}
 const left = computed(() => options.value.filter((item) => !selected.value.some((value) => optionValuesEqual(value, item.value))))
 const right = computed(() => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))))
+const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
+const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
+const leftTitle = computed(() => String(props.schema.leftTitle || ''))
+const rightTitle = computed(() => String(props.schema.rightTitle || ''))
+const searchPlaceholder = computed(() => String(props.schema.searchPlaceholder || '搜索'))
 
 function add(value: unknown) {
   selected.value = [...selected.value, value]
@@ -39,26 +51,34 @@ function clear() {
 <template>
   <FormItem :schema="schema">
     <div class="grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
-      <ul class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
-        <li v-for="item in left" :key="String(item.value)">
+      <div class="space-y-1">
+        <p v-if="leftTitle" class="text-xs text-muted-foreground">{{ leftTitle }}</p>
+        <input v-if="searchable" v-model="leftQuery" class="vamis-input h-8 w-full rounded-md border px-2 text-sm" :placeholder="searchPlaceholder" />
+        <ul class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+        <li v-for="item in leftShown" :key="String(item.value)">
           <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :disabled="disabled" @click="add(item.value)">
             {{ item.label }}
           </button>
         </li>
-        <li v-if="!left.length" class="px-2 py-4 text-xs text-muted-foreground">无候选</li>
-      </ul>
+        <li v-if="!leftShown.length" class="px-2 py-4 text-xs text-muted-foreground">无候选</li>
+        </ul>
+      </div>
       <div class="flex flex-col justify-center gap-1">
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="addAll">全部 &gt;</Button>
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="clear">&lt; 清空</Button>
       </div>
-      <ul class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
-        <li v-for="item in right" :key="String(item.value)">
+      <div class="space-y-1">
+        <p v-if="rightTitle" class="text-xs text-muted-foreground">{{ rightTitle }}</p>
+        <input v-if="searchable" v-model="rightQuery" class="vamis-input h-8 w-full rounded-md border px-2 text-sm" :placeholder="searchPlaceholder" />
+        <ul class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+        <li v-for="item in rightShown" :key="String(item.value)">
           <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :disabled="disabled" @click="remove(item.value)">
             {{ item.label }}
           </button>
         </li>
-        <li v-if="!right.length" class="px-2 py-4 text-xs text-muted-foreground">未选择</li>
-      </ul>
+        <li v-if="!rightShown.length" class="px-2 py-4 text-xs text-muted-foreground">未选择</li>
+        </ul>
+      </div>
     </div>
   </FormItem>
 </template>
