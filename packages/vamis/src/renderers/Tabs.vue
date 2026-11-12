@@ -41,7 +41,10 @@ const mode = computed(() => tabsMode(props.schema))
 const mountOnEnter = computed(() => tabsMountOnEnter(props.schema))
 const unmountOnExit = computed(() => tabsUnmountOnExit(props.schema))
 const allTabs = computed(() => tabsFromSource(props.schema, data.value))
-const tabs = computed(() => tabsVisible(allTabs.value, data.value))
+const localTabs = ref<ReturnType<typeof tabsFromSource>>([...allTabs.value])
+let edited = false
+watch(allTabs, (next) => { if (!edited) localTabs.value = [...next] }, { deep: true })
+const tabs = computed(() => tabsVisible(localTabs.value, data.value))
 const linksClass = computed(() => resolveClassName(props.schema.linksClassName, data.value))
 const contentClass = computed(() => resolveClassName(props.schema.contentClassName, data.value))
 const toolbar = computed(() => asArray(props.schema.toolbar))
@@ -129,6 +132,72 @@ function paneClass(tab: (typeof tabs.value)[number]) {
   return resolveClassName(tab.className, scopeOf(tab))
 }
 
+const addable = computed(() => props.schema.addable === true)
+const closable = computed(() => props.schema.closable === true)
+const editable = computed(() => props.schema.editable === true)
+const addBtnText = computed(() => String(props.schema.addBtnText || '新增'))
+const editing = ref(-1)
+const editingTitle = ref('')
+const dragIndex = ref(-1)
+
+function addTab() {
+  edited = true
+  const next = { title: `Tab ${localTabs.value.length + 1}`, tab: '' } as (typeof localTabs.value)[number]
+  localTabs.value = [...localTabs.value, next]
+  const key = keyOf(next, localTabs.value.length - 1)
+  active.value = key
+  visited.value = new Set([...visited.value, key])
+}
+
+function closeTab(index: number, event: Event) {
+  event.stopPropagation()
+  edited = true
+  const next = [...localTabs.value]
+  next.splice(index, 1)
+  localTabs.value = next
+  if (!next.length) active.value = ''
+}
+
+function startEdit(index: number, event: MouseEvent) {
+  if (!editable.value) return
+  const tab = localTabs.value[index]
+  if (tabDisabled(tab, scopeOf(tab))) return
+  editing.value = index
+  editingTitle.value = titleOf(tab)
+  event.stopPropagation()
+  setTimeout(() => {
+    const input = document.querySelector<HTMLInputElement>('[data-vamis-tabs-edit]')
+    input?.focus()
+    input?.select()
+  })
+}
+
+function commitEdit() {
+  if (editing.value < 0) return
+  const tab = localTabs.value[editing.value]
+  if (tab && editingTitle.value.trim()) {
+    ;(tab as Record<string, unknown>).title = editingTitle.value.trim()
+    edited = true
+  }
+  editing.value = -1
+}
+
+function onDragStart(index: number, event: DragEvent) {
+  dragIndex.value = index
+  event.dataTransfer?.setData('text/plain', String(index))
+}
+
+function onDrop(index: number, event: DragEvent) {
+  event.preventDefault()
+  if (dragIndex.value < 0 || dragIndex.value === index) return
+  const next = [...localTabs.value]
+  const [moved] = next.splice(dragIndex.value, 1)
+  next.splice(index, 0, moved)
+  localTabs.value = next
+  edited = true
+  dragIndex.value = -1
+}
+
 function tipOf(tab: (typeof tabs.value)[number]) {
   if (!props.schema.showTip) return undefined
   const tip = tab.tip
@@ -148,11 +217,35 @@ function tipOf(tab: (typeof tabs.value)[number]) {
           :data-active="active === keyOf(tab, i) ? 'true' : undefined"
           :disabled="tabDisabled(tab, scopeOf(tab))"
           :title="tipOf(tab)"
+          :draggable="schema.draggable === true"
           @click="onSelect(tab, i)"
+          @dblclick="startEdit(i, $event)"
+          @dragstart="onDragStart(i, $event)"
+          @dragover.prevent
+          @drop="onDrop(i, $event)"
         >
-          <SchemaRenderer v-if="tab.title && typeof tab.title === 'object'" :schema="tab.title" :extra-data="extraOf(tab)" />
-          <template v-else>{{ titleOf(tab) || `Tab ${i + 1}` }}</template>
+          <input
+            v-if="editing === i"
+            v-model="editingTitle"
+            data-vamis-tabs-edit
+            class="vamis-tabs__edit"
+            @click.stop
+            @blur="commitEdit"
+            @keydown.enter.prevent="commitEdit"
+          >
+          <template v-else>
+            <SchemaRenderer v-if="tab.title && typeof tab.title === 'object'" :schema="tab.title" :extra-data="extraOf(tab)" />
+            <template v-else>{{ titleOf(tab) || `Tab ${i + 1}` }}</template>
+          </template>
+          <span
+            v-if="closable && (tab as Record<string, unknown>).closable !== false"
+            class="vamis-tabs__close"
+            role="button"
+            aria-label="关闭"
+            @click="closeTab(i, $event)"
+          >×</span>
         </button>
+        <button v-if="addable" type="button" class="vamis-tabs__add" @click="addTab">{{ addBtnText }}</button>
       </div>
       <div v-if="toolbar.length" data-vamis-tabs-toolbar :class="toolbarClass">
         <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" />
@@ -262,5 +355,28 @@ function tipOf(tab: (typeof tabs.value)[number]) {
 [data-vamis-tabs][data-mode='tiled'] [data-vamis-tabs-links] > button {
   flex: 1;
   text-align: center;
+}
+.vamis-tabs__edit {
+  width: 7em;
+  border: 1px solid var(--input);
+  border-radius: 2px;
+  padding: 0 4px;
+  font: inherit;
+}
+.vamis-tabs__close {
+  margin-left: 6px;
+  color: var(--select-clear-color);
+}
+.vamis-tabs__close:hover {
+  color: var(--foreground);
+}
+.vamis-tabs__add {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 10px;
 }
 </style>

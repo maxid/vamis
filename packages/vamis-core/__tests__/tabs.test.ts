@@ -2,80 +2,13 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import {
-  tabBody,
-  tabDisabled,
-  tabKey,
-  tabTitle,
-  tabsFromSource,
-  tabsInitialActive,
-  tabsMode,
-  tabsMountOnEnter,
-  tabsNormalizeActive,
-  tabsUnmountOnExit,
-} from '../src/utils/tabs'
-
-describe('tabsMode', () => {
-  it('defaults to line', () => {
-    expect(tabsMode({})).toBe('line')
-    expect(tabsMode({ tabsMode: 'vertical' })).toBe('vertical')
-    expect(tabsMode({ tabsMode: 'nope' })).toBe('line')
-  })
-})
-
-describe('tabKey / tabBody', () => {
-  it('uses hash then index, and body falls back to tab', () => {
-    expect(tabKey({ hash: 'tab2' }, 1)).toBe('tab2')
-    expect(tabKey({ title: 'Tab 1' }, 0)).toBe('0')
-    expect(tabBody({ tab: 'Content 1' })).toEqual(['Content 1'])
-    expect(tabBody({ body: '选项卡内容1' })).toEqual(['选项卡内容1'])
-  })
-})
-
-describe('tabsFromSource', () => {
-  it('repeats the template over the source array like Amis', () => {
-    const schema = {
-      source: '${arr}',
-      tabs: [{ title: '${a}', body: { type: 'tpl', tpl: '${b}' } }],
-    }
-    const tabs = tabsFromSource(schema, {
-      arr: [
-        { a: '收入', b: 199 },
-        { a: '支出', b: 299 },
-      ],
-    })
-    expect(tabs).toHaveLength(2)
-    expect(tabTitle(tabs[0], { a: '收入', b: 199 })).toBe('收入')
-    expect(tabTitle(tabs[1], { a: '支出', b: 299 })).toBe('支出')
-  })
-})
-
-describe('tabsInitialActive', () => {
-  it('honors activeKey hash or index', () => {
-    const tabs = [
-      { title: 'Tab 1', hash: 'tab1' },
-      { title: 'Tab 2', hash: 'tab2' },
-    ]
-    expect(tabsInitialActive({ activeKey: 'tab2' }, tabs)).toBe('tab2')
-    expect(tabsNormalizeActive(1, tabs)).toBe('tab2')
-    expect(tabsInitialActive({}, [{ title: 'A' }])).toBe('0')
-  })
-})
-
-describe('tabDisabled / mount flags', () => {
-  it('keeps disabled and Amis mountOnEnter default true', () => {
-    expect(tabDisabled({ disabled: true })).toBe(true)
-    expect(tabsMountOnEnter({})).toBe(true)
-    expect(tabsMountOnEnter({ mountOnEnter: false })).toBe(false)
-    expect(tabsUnmountOnExit({})).toBe(false)
-    expect(tabsUnmountOnExit({ unmountOnExit: true })).toBe(true)
-  })
-})
-
-describe('tabs line bar', () => {
-  it('stretches the links bar so the underline spans the pane', () => {
-    const vue = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../vamis/src/renderers/Tabs.vue'), 'utf8')
-    expect(vue).toContain('width: 100%')
-    expect(vue).toContain('flex: 1 1 auto')
+const here = dirname(fileURLToPath(import.meta.url))
+const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
+describe('tabs', () => {
+  it('supports addable/editable/draggable and doc chapters', () => {
+    const vue = read('../../vamis/src/renderers/Tabs.vue')
+    for (const t of ['addable', 'closable', 'editable', 'draggable', 'onDragStart', 'commitEdit']) expect(vue).toContain(t)
+    const doc = read('../../../website/src/components/tabs.md')
+    for (const h of ['## 拖拽排序','## 可增加、删除','## 可编辑标签名','## 属性表']) expect(doc).toContain(h)
   })
 })

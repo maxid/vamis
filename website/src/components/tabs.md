@@ -5,7 +5,7 @@ outline: deep
 
 # Tabs 选项卡
 
-::: info 实现进度 85% · 进行中
+::: info 实现进度 90% · 进行中
 文档主路径已对齐：`tabs[].body` / `tab`、`source` 动态、`activeKey` / `hash`、`disabled`、`mountOnEnter`、`change`。缺 `addable` / `draggable` / `editable`、`tabsMode` 像素级、`themeCss`、`swipeable`。
 :::
 
@@ -211,6 +211,53 @@ tabs:
     body: 选项卡内容1
   - title: 选项卡2
     body: 选项卡内容2
+```
+
+## 拖拽排序
+
+`draggable: true` 时拖拽标签头调整顺序：
+
+```schema: scope="body"
+type: tabs
+draggable: true
+tabs:
+  - title: Tab 1
+    tab: Content 1
+  - title: Tab 2
+    tab: Content 2
+  - title: Tab 3
+    tab: Content 3
+```
+
+## 可增加、删除
+
+`addable` 显示新增按钮（`addBtnText` 改文案）；`closable` 显示关闭钮，单个 tab 的 `closable: false` 优先级更高：
+
+```schema: scope="body"
+type: tabs
+closable: true
+addable: true
+addBtnText: 新增Tab
+tabs:
+  - title: Tab 1
+    tab: Content 1
+    closable: false
+  - title: Tab 2
+    tab: Content 2
+```
+
+## 可编辑标签名
+
+`editable: true` 后双击标签名进入编辑：
+
+```schema: scope="body"
+type: tabs
+editable: true
+tabs:
+  - title: Tab 1
+    tab: Content 1
+  - title: 双击编辑
+    tab: Content 2
 ```
 
 ## 属性表
