@@ -7,8 +7,8 @@ const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
 describe('picker', () => {
   it('supports embed/maxTagCount and doc chapters', () => {
     const vue = read('../../vamis/src/renderers/form/Picker.vue')
-    for (const t of ['embed', 'maxTagCount', 'hiddenCount', 'commitInline']) expect(vue).toContain(t)
+    for (const t of ['embed', 'maxTagCount', 'hiddenCount', 'commitInline', 'loadSource', 'remoteOptions']) expect(vue).toContain(t)
     const doc = read('../../../website/src/components/form/picker.md')
-    for (const h of ['## 基本用法','## 多选','## 内嵌模式','## 限制标签最大展示数量','## 属性表']) expect(doc).toContain(h)
+    for (const h of ['## 基本用法','## 多选','## 内嵌模式','## 远程选项','## 限制标签最大展示数量','## 属性表']) expect(doc).toContain(h)
   })
 })

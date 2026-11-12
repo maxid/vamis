@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import {
   Badge,
   Button,
@@ -11,7 +11,14 @@ import {
   DialogTitle,
   Input,
 } from '@vamis/ui'
-import type { SchemaObject } from '@vamis/core'
+import {
+  isApiOutdated,
+  isEffectiveApi,
+  requestApi,
+  resolveValue,
+  useEnv,
+  type SchemaObject,
+} from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
@@ -25,6 +32,8 @@ import {
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const env = useEnv()
+const remoteOptions = ref<unknown[] | null>(null)
 const open = ref(false)
 const keyword = ref('')
 const draft = ref<unknown[]>([])
@@ -40,7 +49,7 @@ const labelField = computed(() => String(props.schema.labelField || 'label'))
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 
 const options = computed(() => {
-  const raw = normalizeOptions(props.schema.options)
+  const raw = normalizeOptions(remoteOptions.value ?? props.schema.options)
   return flattenOptions(raw).map((item) => ({
     ...item,
     label: String((item as any)[labelField.value] ?? item.label),
@@ -102,6 +111,37 @@ function confirm() {
 function clear() {
   selected.value = []
 }
+async function loadSource() {
+  const source = props.schema.source
+  if (!source) return
+  if (typeof source === 'string' && source.trim().startsWith('$')) {
+    const resolved = resolveValue(source, props.schema.data || {})
+    if (Array.isArray(resolved)) remoteOptions.value = resolved
+    return
+  }
+  if (!isEffectiveApi(source, props.schema.data || {})) return
+  try {
+    const result = await requestApi(source, { env, data: props.schema.data || {}, reason: 'init' })
+    if (result.skipped || !result.ok) return
+    const payload = result.data || {}
+    const list = Array.isArray(payload)
+      ? payload
+      : payload.options ?? payload.items ?? payload.records ?? payload
+    if (Array.isArray(list)) remoteOptions.value = list
+  } catch {
+    /* 保留空选项 */
+  }
+}
+
+onMounted(() => void loadSource())
+watch(
+  () => [props.schema.source, props.schema.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) void loadSource()
+  },
+  { deep: true },
+)
 </script>
 
 <template>

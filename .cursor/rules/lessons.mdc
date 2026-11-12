@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Picker source 支持变量与 API，归一到 options/items/records
+- 稳定做法：source 以 `$` 开头用 resolveValue 直接拿数组；API 走 requestApi，依次取 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source 与 schema.data 用 isApiOutdated。
+- 触及：`picker`
+
 ### Table quickEdit 当前仅文本输入，写回原行对象
 - 稳定做法：`editingCell` 键 `${row.id||name}-${field}`，笔按钮 stopPropagation 启动，输入 v-model draft，blur/Enter 写回 `row[field]` 并派发 `quickEdit`；不要写回 displayRows 副本；select/number 等复杂控件仍待接。
 - 触及：`table`
