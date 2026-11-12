@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 深色/控制台核验：table、crud、transfer、picker、progress、status 六页切 `.dark` 无 pageerror，背景走暗色 token；无需修复。
 - 收尾验证：全量 **1316 例 / 1252 过 / 64 败**（P0 8 基线 helper，其余多为 Cursor form 文档探针差异）；`pnpm test` **905 全过**，`typecheck` 72。
 - `progress` 刻度线：line 模式 `threshold` 绝对刻度 + `showThresholdText`；文档更新。80% → **85%**（圆/仪表盘刻度与 gapPosition 弧线未接）。
 - `crud` loadDataOnce：切页/筛选/排序全部本地完成（筛选按字段 contains、排序按 orderBy/orderDir），不再重复请求；文档更新。80% → **82%**。
