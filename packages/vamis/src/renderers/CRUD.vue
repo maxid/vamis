@@ -220,9 +220,19 @@ function sanitizeQuery(extra: Record<string, any>) {
 }
 
 function paginateLocal() {
+  const skip = new Set(['page', 'perPage', 'orderBy', 'orderDir'])
+  const filters = Object.entries(store.query).filter(([key, value]) => !skip.has(key) && value != null && value !== '')
+  let list = allItems.value.filter((row) =>
+    filters.every(([key, value]) => String(row?.[key] ?? '').toLowerCase().includes(String(value).toLowerCase())),
+  )
+  const orderBy = String(store.query.orderBy || '')
+  if (orderBy) {
+    const dir = String(store.query.orderDir || 'asc') === 'desc' ? -1 : 1
+    list = [...list].sort((a, b) => String(a?.[orderBy] ?? '').localeCompare(String(b?.[orderBy] ?? ''), 'zh-CN', { numeric: true }) * dir)
+  }
   const start = (store.page - 1) * store.perPage
-  store.items = allItems.value.slice(start, start + store.perPage)
-  store.total = allItems.value.length
+  store.items = list.slice(start, start + store.perPage)
+  store.total = list.length
 }
 
 async function reload(extra: Record<string, any> = {}) {
@@ -233,7 +243,6 @@ async function reload(extra: Record<string, any> = {}) {
     const queryPatch = sanitizeQuery(extra)
     store.query = { ...store.query, ...queryPatch }
     try {
-      if (Object.keys(queryPatch).length) allItems.value = []
       if (!allItems.value.length) {
         const result = await requestApi(props.schema.api, {
           env,
