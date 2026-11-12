@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `table` 多层嵌套：children 递归展开、子行可继续展开；文档更新。table 仍 **99%**（余独立数据域、子行选择/合并/拖拽）。
 - `picker` pickerSchema：自定义弹层渲染，内层可选 table 的 selectedItems 在确认时按 valueField 桥接；文档补章节。75% → **80%**。
 - `transfer` tree：按 children 渲染可展开/折叠树，父节点只展开、叶子才可选；文档更新。80% → **82%**。
 - `crud` 表达式 matchFunc：`loadDataOnce` 本地过滤支持表达式字符串，按行 + query 求值；文档注明 Amis JS 函数不支持。82% → **84%**。

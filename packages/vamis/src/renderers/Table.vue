@@ -222,8 +222,26 @@ function toggleExpand(row: Record<string, any>, index: number) {
   expandedKeys.value = next
 }
 
-function childRow(row: Record<string, any>, index: number) {
-  return childrenOf(row).map((child, ci) => ({ child, ci, key: `${rowIdOf(row, index)}-${ci}` }))
+function toggleKey(key: string) {
+  const next = new Set(expandedKeys.value)
+  if (next.has(key)) next.delete(key)
+  else next.add(key)
+  expandedKeys.value = next
+}
+
+function nestedRowsFor(row: Record<string, any>, index: number) {
+  const out: Array<{ child: Record<string, any>; depth: number; key: string; hasChildren: boolean; expanded: boolean }> = []
+  const walk = (children: Record<string, any>[], base: string, depth: number) => {
+    children.forEach((child, ci) => {
+      const key = `${base}/${ci}`
+      const kids = childrenOf(child)
+      const expanded = expandedKeys.value.has(key)
+      out.push({ child, depth, key, hasChildren: kids.length > 0, expanded })
+      if (kids.length && expanded) walk(kids, key, depth + 1)
+    })
+  }
+  walk(childrenOf(row), rowIdOf(row, index), 1)
+  return out
 }
 
 const dragFrom = ref(-1)
@@ -493,11 +511,17 @@ function rowClass(row: Record<string, any>) {
           </PopOverHost>
         </TableCell>
       </TableRow>
-        <template v-for="item in isExpanded(row, i) ? childRow(row, i) : []" :key="item.key">
+        <template v-for="item in isExpanded(row, i) ? nestedRowsFor(row, i) : []" :key="item.key">
           <TableRow class="bg-muted/20">
             <TableCell v-if="selectable" />
             <TableCell v-for="(col, ci) in columns" :key="`c-${ci}`" :style="colWidthStyle(col)">
-              <span :class="{ 'pl-5': ci === 0 }">
+              <span :style="ci === 0 ? { paddingLeft: `${(item.depth - 1) * 16 + 20}px` } : undefined">
+                <button
+                  v-if="ci === 0 && item.hasChildren"
+                  type="button"
+                  class="mr-1 inline-flex size-4 items-center justify-center text-xs text-muted-foreground"
+                  @click.stop="toggleKey(item.key)"
+                >{{ item.expanded ? '▾' : '▸' }}</button>
                 <SchemaRenderer v-if="col.type && col.type !== 'text' && col.type !== 'plain'" :schema="col" :extra-data="item.child" />
                 <template v-else>{{ item.child[String(col.name || '')] ?? '' }}</template>
               </span>
