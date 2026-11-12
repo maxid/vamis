@@ -131,7 +131,15 @@ registerRenderer({ type: 'radios', component: Radios, isFormItem: true })
 registerRenderer({ type: 'switch', component: Switch, isFormItem: true })
 // Amis Hidden `wrap: false`：不落 DOM，值由表单域初始化/提交。
 registerRenderer({ type: 'hidden', component: Hidden, isFormItem: true, wrap: false })
-registerRenderer({ type: 'static', alias: ['static-tpl'], component: Static, isFormItem: true })
+// Amis `static-xxx` 统一走 Static：test 兜底 `static-json` / `static-datetime` / `static-mapping` / `static-progress` 等。
+registerRenderer({
+  type: 'static',
+  alias: ['static-tpl'],
+  test: /(^|\/)static(-[^/]+)?$/,
+  weight: -90,
+  component: Static,
+  isFormItem: true,
+})
 registerRenderer({
   type: 'input-date',
   alias: ['input-datetime', 'input-time'],

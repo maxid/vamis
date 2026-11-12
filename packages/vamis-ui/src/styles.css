@@ -5075,6 +5075,36 @@
 }
 
 
+
+/* Amis `Form-static--borderFull/Half`：静态展示可带输入框外观。 */
+.vamis-static__text {
+  white-space: pre-wrap;
+}
+.vamis-static--border-full {
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+}
+.vamis-static--border-half {
+  border-bottom: 1px solid var(--input);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+}
+.vamis-static__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--gap-xs);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--select-clear-color);
+  cursor: pointer;
+}
+.vamis-static__copy:hover {
+  color: var(--primary);
+}
+
 /* Amis `.TextareaControl`：多行文本；行高由 JS 在 minRows–maxRows 间自适应。 */
 .vamis-textarea-control {
   position: relative;

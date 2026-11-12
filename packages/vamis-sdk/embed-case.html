@@ -494,6 +494,8 @@
         }
 
         function readNodeValue(node, formData) {
+          // static-image / static-images 是展示字段：Amis 不从表单域回读，统一用 schemaValue。
+          if (node.type === 'static-image' || node.type === 'static-images') return node.schemaValue
           // 文件/图片输入的原生 input 才是真实控件值；别把表单域里 Amis 不暴露的初始值读成差异。
           if (node.type === 'input-file' || node.type === 'input-image') {
             const control = findNodeEl(node)

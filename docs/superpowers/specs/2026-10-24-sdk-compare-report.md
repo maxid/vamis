@@ -3,17 +3,17 @@
 - 日期：2026-11-12
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **1179** · 通过 **1131** · 失败 **48**（P0 8）· Vamis 多出 extra **0**
+- 合计 **1183** · 通过 **1138** · 失败 **45**（P0 8）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 465 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 468 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 266 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
 | 组件 | 830 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（465）
+### 全局（468）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
@@ -29,7 +29,7 @@ html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组�
 - `src-concepts-data-mapping-6` fontSize: Amis `12px` / Vamis `14px`
 - `src-concepts-linkage-0` fontSize: Amis `12px` / Vamis `14px`
 - `src-concepts-linkage-1` fontSize: Amis `12px` / Vamis `14px`
-- …其余 453 条见 last-report.json
+- …其余 456 条见 last-report.json
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -90,7 +90,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 105 | 0 |
-| 组件 | 603 | 40 |
+| 组件 | 607 | 37 |
 | 样式 | 471 | 8 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -106,8 +106,8 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 | 组件 / 反馈 | 36 | 0 |
 | 组件 / 功能 | 80 | 0 |
 | 组件 / 其他 | 41 | 0 |
-| 组件 / 数据输入 | 267 | 32 |
-| 组件 / 数据展示 | 95 | 8 |
+| 组件 / 数据输入 | 271 | 32 |
+| 组件 / 数据展示 | 95 | 5 |
 | 样式 / 开始 | 13 | 0 |
 | 样式 / Backgrounds | 8 | 0 |
 | 样式 / BORDERS | 33 | 0 |
@@ -140,7 +140,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `components-form-input-date-2` InputDate 日期选择器 #3 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-3` InputDate 日期选择器 #4 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-4` InputDate 日期选择器 #5 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `+1days` / Vamis `1794499200`
-- `components-form-input-date-5` InputDate 日期选择器 #6 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `${DATEMODIFY(NOW(), 2, 'days')}` / Vamis `1794644947`
+- `components-form-input-date-5` InputDate 日期选择器 #6 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `${DATEMODIFY(NOW(), 2, 'days')}` / Vamis `1794647363`
 - `components-form-input-date-6` InputDate 日期选择器 #7 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/1:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-7` InputDate 日期选择器 #8 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-8` InputDate 日期选择器 #9 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/1:input-date.rendered: Amis `false` / Vamis `true`
@@ -153,7 +153,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `components-form-input-date-17` InputDate 日期选择器 #18 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-18` InputDate 日期选择器 #19 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-datetime-0` InputDatetime 日期时间选择器 #1 — page/body/0:form/body/0:input-datetime.rendered: Amis `false` / Vamis `true`
-- …其余 20 条见 `compare/last-report.json`
+- …其余 17 条见 `compare/last-report.json`
 
 ## 重跑口径
 
@@ -197,9 +197,6 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `pnpm compare --page "src-components-table2-1"` — 只重跑「src-components-table2-1」自身
 - `pnpm compare --page "src-components-table2-2"` — 只重跑「src-components-table2-2」自身
 - `pnpm compare --page "src-components-card-0"` — 只重跑「src-components-card-0」自身
-- `pnpm compare --page "src-components-image-3"` — 只重跑「src-components-image-3」自身
-- `pnpm compare --page "src-components-image-4"` — 只重跑「src-components-image-4」自身
-- `pnpm compare --page "src-components-image-13"` — 只重跑「src-components-image-13」自身
 - `pnpm compare --page "src-components-image-17"` — 只重跑「src-components-image-17」自身
 - `pnpm compare --page "src-components-image-18"` — 只重跑「src-components-image-18」自身
 - `pnpm compare --page "helper-m-l-n"` — 只重跑「helper-m-l-n」自身
