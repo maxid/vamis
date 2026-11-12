@@ -104,6 +104,8 @@ export function isDisabled(schema: PlainObject, data: PlainObject = {}): boolean
 
 export function resolveValue(expr: unknown, data: PlainObject = {}): unknown {
   if (expr == null || typeof expr !== 'string') return expr
+  // Amis：`"\\${xxx}"` 转义后是字面 `${xxx}`，不当表达式
+  if (expr.includes('\\${')) return expr.replace(/\\\$\{/g, '${')
   if (expr.startsWith('${') && expr.endsWith('}') && expr.indexOf('${', 1) === -1) {
     try {
       return evaluate(expr, formulaData(data), { evalMode: false, defaultFilter: 'raw' })

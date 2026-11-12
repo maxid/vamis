@@ -5807,3 +5807,41 @@
 .vamis-sdk .label-danger {
   background: var(--badge-danger-bg);
 }
+
+/* Amis `.DateRangeControl`：两个输入框 + 日历浮层。 */
+.vamis-date-range {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: var(--control-h);
+  padding: 0 var(--control-px);
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.vamis-date-range.is-focused {
+  border-color: var(--control-focus-border);
+  box-shadow: var(--control-focus-glow);
+}
+.vamis-date-range.is-disabled {
+  background: var(--control-disabled-bg);
+  color: var(--control-disabled-color);
+}
+.vamis-date-range__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(var(--control-h) - 2px);
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font-size: var(--fontSizeBase);
+}
+.vamis-date-range__input::placeholder {
+  color: var(--control-placeholder);
+}
+.vamis-date-range__separator {
+  color: var(--control-placeholder);
+}

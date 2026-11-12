@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { evalExpression, evalTemplate, filterTpl, isVisible } from '../src/formula'
+import { evalExpression, evalTemplate, filterTpl, isVisible, resolveValue } from '../src/formula'
 
 describe('D2 template string main path', () => {
   it('leaves plain text unchanged', () => {
@@ -162,5 +162,10 @@ describe('evalExpression visibleOn', () => {
   it('does not parse JS typeof as a unary operator', () => {
     expect(evalExpression("${typeof id !== 'undefined'}", { id: 1 })).toBe(false)
     expect(evalExpression("typeof data.id !== 'undefined'", { id: 1 })).toBe(false)
+  })
+
+  it('unescapes \\${xxx} to literal ${xxx} like Amis data mapping', () => {
+    expect(resolveValue('\\${rick}', { rick: 'nope' })).toBe('${rick}')
+    expect(resolveValue('hello \\${rick}', {})).toBe('hello ${rick}')
   })
 })

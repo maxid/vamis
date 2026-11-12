@@ -39,10 +39,12 @@ describe('form lifecycle / submission', () => {
   it('doc covers the main Amis form chapters', () => {
     const doc = read('../../../website/src/components/form/index.md')
     for (const heading of [
+      '## 基本用法',
       '## 表单展示',
+      '### 默认模式',
       '### 水平模式',
       '### 内联模式',
-      '### 自定义底部按钮',
+      '### 底部按钮栏',
       '### 去掉表单边框',
       '## 表单静态展示',
       '## 表单项数据初始化',
@@ -50,6 +52,8 @@ describe('form lifecycle / submission', () => {
       '## 表单校验',
       '## 重置表单',
       '## 表单数据域调试',
+      '## 禁用数据链',
+      '## 提交后行为',
       '## 持久化保存表单项数据',
       '## 禁用回车提交',
       '## 属性表',

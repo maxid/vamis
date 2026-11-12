@@ -104,9 +104,16 @@ function clearPersisted() {
   }
 }
 
+const parentData = { ...(props.data || {}) }
+const mappedSchemaData = dataMapping(props.schema.data || {}, parentData)
 const initialFormData = applyFormItemDefaults(
   collectFormItems(asArray(props.schema.body || props.schema.controls)),
-  { ...(props.data || {}), ...(props.schema.data || {}) },
+  {
+    ...parentData,
+    ...(mappedSchemaData && typeof mappedSchemaData === 'object' && !Array.isArray(mappedSchemaData)
+      ? mappedSchemaData
+      : {}),
+  },
 )
 
 function cloneData(data: Record<string, any>): Record<string, any> {
@@ -134,9 +141,18 @@ const wrapWithPanel = computed(() => props.schema.wrapWithPanel !== false)
 function schemaHidesButtons(node: unknown): boolean {
   return !!node && typeof node === 'object' && !Array.isArray(node) && (node as SchemaObject).hideButtons === true
 }
+/** Amis：`submitText: ""` 去掉默认提交钮；`false` / 未写仍是「提交」。 */
+const hideDefaultSubmit = computed(() => props.schema.submitText === '')
+const defaultSubmitLabel = computed(() => {
+  const text = props.schema.submitText
+  if (text == null || text === false) return '提交'
+  return String(text)
+})
 const showActionBar = computed(() => {
-  if (!wrapWithPanel.value && !actionsDefined.value) return false
+  // Amis：wrapWithPanel false 时 title / actions 都失效
+  if (!wrapWithPanel.value) return false
   if (actionsDefined.value) return actions.value.length > 0
+  if (hideDefaultSubmit.value && props.schema.reset !== true) return false
   const items = body.value.filter((node) => node && typeof node === 'object')
   if (items.length > 0 && items.every(schemaHidesButtons)) return false
   return true
@@ -688,8 +704,13 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
           <template v-else>
-            <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
-              {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+            <Button
+              v-if="!hideDefaultSubmit"
+              :type="submitButtonType"
+              :disabled="store.saving"
+              @click="onDefaultSubmitClick"
+            >
+              {{ store.saving ? '提交中…' : defaultSubmitLabel }}
             </Button>
             <Button v-if="showReset" type="button" variant="outline" @click="reset">
               重置
@@ -698,7 +719,6 @@ onBeforeUnmount(() => {
         </CardFooter>
       </Card>
       <template v-else>
-        <h2 v-if="panelTitle" class="mb-3 text-sm font-medium">{{ panelTitle }}</h2>
         <div :class="bodyClass">
           <FormRow v-if="isRow" :nodes="body" :extra-data="store.data" />
           <template v-else>
@@ -711,8 +731,13 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
           </template>
           <template v-else>
-            <Button :type="submitButtonType" :disabled="store.saving" @click="onDefaultSubmitClick">
-              {{ store.saving ? '提交中…' : (schema.submitText || '提交') }}
+            <Button
+              v-if="!hideDefaultSubmit"
+              :type="submitButtonType"
+              :disabled="store.saving"
+              @click="onDefaultSubmitClick"
+            >
+              {{ store.saving ? '提交中…' : defaultSubmitLabel }}
             </Button>
             <Button v-if="showReset" type="button" variant="outline" @click="reset">
               重置
