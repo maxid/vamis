@@ -33,6 +33,7 @@ const env = useEnv()
 const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
+const localRows = ref<Record<string, any>[] | null>(null)
 const selected = ref<number[]>([])
 const columnFilters = ref<Record<string, string>>({})
 const editingCell = ref('')
@@ -324,8 +325,25 @@ async function emitRowClick(row: Record<string, any>, i: number, event: MouseEve
 const tableApi = {
   name: String(props.schema.id || props.schema.name || ''),
   id: props.schema.id ? String(props.schema.id) : undefined,
-  getData: () => ({ selectedItems: selected.value.map((i) => displayRows.value[i]).filter(Boolean) }),
-  setData: () => {},
+  getData: () => ({
+    items: displayRows.value,
+    rows: displayRows.value,
+    total: rows.value.length,
+    selectedItems: selected.value.map((i) => displayRows.value[i]).filter(Boolean),
+  }),
+  setData(values: Record<string, unknown>) {
+    if (Array.isArray(values)) {
+      localRows.value = values as Record<string, any>[]
+      selected.value = []
+      return
+    }
+    if (!values || typeof values !== 'object') return
+    const next = (values as Record<string, unknown>).items ?? (values as Record<string, unknown>).rows
+    if (Array.isArray(next)) {
+      localRows.value = next as Record<string, any>[]
+      selected.value = []
+    }
+  },
   async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
     const type = action?.actionType
     if (type === 'selectAll') selected.value = displayRows.value.map((_, i) => i)
@@ -370,6 +388,7 @@ function colWidthStyle(col: SchemaObject) {
   return { width: value, maxWidth: value, overflow: 'hidden' }
 }
 const rows = computed<Record<string, any>[]>(() => {
+  if (localRows.value) return localRows.value
   if (Array.isArray(props.items)) return props.items
   const source = props.schema.source
   if (typeof source === 'string' && source.startsWith('$') && props.data) {

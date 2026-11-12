@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `table` 独立数据域：注册 `getData()`（items/rows/total/selectedItems）与 `setData({items})`，支持按钮 setValue 替换本地行；文档补章节。table 仍 **99%**（余子行选择/合并/拖拽）。
 - `picker` pickerSchema：内层 form 可按 valueField 读取字段（数组/单值）与 table selectedItems 一起桥接；文档更新。80% → **82%**。
 - 收尾验证：全量 **1317 例 / 1253 过 / 64 败**（P0 8 基线 helper，其余多为 Cursor form 文档探针差异）；`pnpm test` **905 全过**，`typecheck` 76（并发 Action/Card 等既有报错）。
 - `table` 多层嵌套：children 递归展开、子行可继续展开；文档更新。table 仍 **99%**（余独立数据域、子行选择/合并/拖拽）。

@@ -221,6 +221,26 @@ columns:
 
 选择结果通过组件 `getData().selectedItems` 读取，动作见下。
 
+## 独立数据域
+
+表格注册了组件 API：`getData()` 返回 `items` / `rows` / `total` / `selectedItems`，`setData({ items })` 可替换本地行数据（按钮 `setValue` + `componentId` 即可）：
+
+```yaml
+type: button
+label: 替换数据
+onEvent:
+  click:
+    actions:
+      - actionType: setValue
+        componentId: my_table
+        args:
+          value:
+            items:
+              - name: Edge
+```
+
+`table` 需配置 `id: my_table`。
+
 ## 嵌套
 
 行数据带 `children`（可用 `childrenColumnName` 改名）时出现展开箭头，子行缩进展示：
@@ -408,6 +428,7 @@ columns:
 | `columns[].filterable.options` | `any[]` | | 列下拉筛选 |
 | `columns[].width` | `number` / `string` | | 列宽 |
 | `childrenColumnName` | `string` | `children` | 嵌套子行字段 |
+| `id` | `string` | | 组件 API 的 `componentId` |
 | `prefixRow` / `affixRow` | `SchemaNode[]` | | 顶部 / 底部总结行，支持 `colSpan` |
 | `prefixRowClassName` / `affixRowClassName` | `string` | | 总结行 class |
 | `combineNum` | `number` | | 从左到右自动合并单元格列数 |
@@ -443,5 +464,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、行拖拽 / `orderChange`、选择动作、列 `popOver`。
-- 未接：独立数据域；子行不支持选择/合并/拖拽。筛选为客户端过滤。
+- 独立数据域已接（`getData` / `setData`）；子行不支持选择/合并/拖拽。筛选为客户端过滤。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

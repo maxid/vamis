@@ -786,6 +786,10 @@ alwaysApply: true
 - 稳定做法：source 以 `$` 开头用 resolveValue 直接拿数组；API 走 requestApi，依次取 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source 与 schema.data 用 isApiOutdated。
 - 触及：`picker`
 
+### Table 本地数据域用 localRows 覆盖 source
+- 稳定做法：localRows 非空时优先于 items/source/data；setData 接受数组或 {items}/{rows} 并清空选择；getData 返回 items/rows/total/selectedItems，供 setValue 组件动作使用。
+- 触及：`table`
+
 ### Table 嵌套支持多级但子行不进 selection/merge
 - 稳定做法：nestedRowsFor 递归收集展开后代，子 key 用父路径 `/ci`，depth 控制缩进；子行只有展示，选择/合并/拖拽仍只作用于顶层 displayRows。
 - 触及：`table`
