@@ -5,7 +5,7 @@ outline: deep
 
 # Pagination 分页
 
-::: info 实现进度 90% · 进行中
+::: info 实现进度 92% · 进行中
 文档主路径已对齐：`layout`、`mode`（normal / simple）、`size: sm`、`maxButtons`、`total` / `perPage` / `activePage`、`showPerPage` / `showPageInput`、`ellipsisPageGap`、`change` 事件。缺 `themeCss`、移动端 `mobileUI`。
 :::
 
@@ -115,6 +115,26 @@ body:
 ```
 
 JSON 同等有效。`activePage: ${page}` 会跟着数据域走。
+
+## 变更事件
+
+`change` 返回 `page` / `perPage`，可接动作（如 toast、刷新列表）：
+
+```schema: scope="body"
+type: page
+body:
+  - type: pagination
+    total: 100
+    perPage: 10
+    activePage: 1
+    layout: total,perPage,pager,go
+    onEvent:
+      change:
+        actions:
+          - actionType: toast
+            args:
+              msg: "第 ${event.data.page} 页 / 每页 ${event.data.perPage}"
+```
 
 ## 属性表
 
