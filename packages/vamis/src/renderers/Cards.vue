@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import {
   SchemaRenderer,
   cardsCardSchema,
@@ -15,6 +15,7 @@ import {
   cardsSelectable,
   cardsSource,
   cardsTitle,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import { useCrudHost } from './data/crudHost'
@@ -27,6 +28,7 @@ const props = defineProps<{
 }>()
 
 const host = useCrudHost()
+const scoped = useScoped()
 const localSelected = ref<Record<string, any>[]>([])
 const rows = computed(() => cardsSource(props.schema, props.data || {}, props.items))
 const card = computed(() => cardsCardSchema(props.schema))
@@ -100,6 +102,29 @@ provideCardsSelect({
   isSelected,
   toggle,
 })
+const cardsApi = {
+  name: String(props.schema.id || props.schema.name || ''),
+  id: props.schema.id ? String(props.schema.id) : undefined,
+  getData: () => ({ selectedItems: selectedList() }),
+  setData: () => {},
+  async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
+    const type = action?.actionType
+    if (type === 'selectAll') {
+      setSelected(rows.value.slice())
+    } else if (type === 'clearAll') {
+      setSelected([])
+    } else if (type === 'select') {
+      const raw = String(action.args?.index ?? '')
+      const indexes = raw
+        .split(',')
+        .map((part) => Number(part.trim()))
+        .filter((n) => Number.isFinite(n))
+      setSelected(indexes.map((i) => rows.value[i]).filter(Boolean) as Record<string, any>[])
+    }
+  },
+}
+scoped?.register(cardsApi as never)
+onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
 </script>
 
 <template>

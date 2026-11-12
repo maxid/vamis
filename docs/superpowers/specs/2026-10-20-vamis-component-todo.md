@@ -270,7 +270,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
 | `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 80% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
-| `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 75% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。缺拖拽、动作表、itemClassName 像素级栅格 | P0 |
+| `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 80% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。补 select / selectAll / clearAll 动作表；缺拖拽、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 45% | 文档已补属性表 / 事件表 / 动作表。画布走 LazyComponent（`unMountOnHidden` 默认 false）。事件与 `reload`/`setValue` 未接；无 `mapURL` / `source` | P0 |
 | `code` | Code 代码高亮 | `/components/code` | `/zh-CN/components/code` | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
@@ -473,7 +473,7 @@ flowchart LR
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
 | 51 | `grid` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
 | 52 | `nav` | `icon`、`action`、`tpl`、`link`、`badge` | 7 | 1 | 20 | 20 | 进行中 | 80% |
-| 53 | `cards` | `card`、`list`、`popOver` | 6 | 1 | 19 | 19 | 进行中 | 75% |
+| 53 | `cards` | `card`、`list`、`popOver` | 6 | 1 | 19 | 19 | 进行中 | 80% |
 | 54 | `input-datetime` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 62% |
 | 55 | `input-month` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 56 | `input-quarter` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |

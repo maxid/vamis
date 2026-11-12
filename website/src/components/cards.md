@@ -5,7 +5,7 @@ outline: deep
 
 # Cards 卡片组
 
-::: info 实现进度 75% · 进行中
+::: info 实现进度 80% · 进行中
 文档主路径示例已对标 Amis：基本用法、CRUD `mode: cards` 勾选 / 全选 / `checkOnItemClick`、瀑布流用表达式在 `h-stretch` / `cover` 间切换。缺拖拽、`itemClassName` 像素级栅格、动作表 `select` / `initDrag`。
 :::
 
@@ -287,6 +287,45 @@ body:
 | checkOnItemClick | `boolean` | | 点选卡片内容是否选中卡片 |
 | columnsCount | `number` | | 固定列数。未写则 ≥576 两列 / ≥768 三列 / ≥992 四列 |
 | masonryLayout | `boolean` | `false` | 瀑布流 |
+
+## 动作表
+
+`cards` 通过 `componentId` 暴露选择动作；`args.index` 支持逗号分隔的多个下标：
+
+| 动作名称 | 动作配置 | 说明 |
+|----------|----------|------|
+| `select` | `args.index`：下标，支持 `0,1` | 选中指定卡片 |
+| `selectAll` | - | 全选 |
+| `clearAll` | - | 清空选择 |
+| `reload` / `setValue` | 通用动作 | 由外层作用域处理 |
+
+```yaml
+type: button-toolbar
+buttons:
+  - type: action
+    label: 选中前两个
+    onEvent:
+      click:
+        actions:
+          - actionType: select
+            componentId: cards-select
+            args:
+              index: "0,1"
+  - type: action
+    label: 全选
+    onEvent:
+      click:
+        actions:
+          - actionType: selectAll
+            componentId: cards-select
+  - type: action
+    label: 清空
+    onEvent:
+      click:
+        actions:
+          - actionType: clearAll
+            componentId: cards-select
+```
 
 ## 和 Amis 文档的差异
 
