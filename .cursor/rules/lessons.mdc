@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 列筛选在排序/拖拽/合并之前过滤
+- 稳定做法：`columnFilters` 先得 filteredRows，再由 sortedRows/displayRows 消费；searchable 输入包含匹配、filterable.options 下拉相等匹配；变化派发 `columnFilter(filterName,filterValue)`；不要在原 rows 上原地改。
+- 触及：`table`
+
 ### Table 固定列 sticky 偏移按同侧前序列宽累加
 - 稳定做法：`fixed:left/right` 输出 `position:sticky; left/right:offset; background:var(--card); zIndex:1`；offset 由同侧前序固定列 `width`（数字或默认 120）累加；外层容器必须 `overflow-x:auto`。
 - 触及：`table`

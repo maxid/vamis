@@ -34,6 +34,36 @@ const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
+const columnFilters = ref<Record<string, string>>({})
+const filterableColumns = computed(() =>
+  columns.value.filter((col) => col.searchable === true || (col.filterable && typeof col.filterable === 'object')),
+)
+const filteredRows = computed(() => {
+  const active = Object.entries(columnFilters.value).filter(([, value]) => value !== '')
+  if (!active.length) return rows.value
+  return rows.value.filter((row) =>
+    active.every(([field, query]) => String(row?.[field] ?? '').toLowerCase().includes(query.toLowerCase())),
+  )
+})
+
+async function setColumnFilter(col: SchemaObject, value: string) {
+  const field = String(col.name || '')
+  if (!field) return
+  columnFilters.value = { ...columnFilters.value, [field]: value }
+  const payload = { ...(props.data || {}), filterName: field, filterValue: value }
+  const event = createVamisEvent('columnFilter', payload)
+  await runOnEvent(props.schema, 'columnFilter', { env, data: eventEvalData(payload, event), scoped, event })
+}
+
+function filterOptions(col: SchemaObject): Array<{ label: string; value: string }> {
+  const raw = col.filterable && typeof col.filterable === 'object' ? (col.filterable as Record<string, unknown>).options : undefined
+  if (!Array.isArray(raw)) return []
+  return raw.map((item) =>
+    item && typeof item === 'object'
+      ? { label: String((item as Record<string, unknown>).label ?? (item as Record<string, unknown>).value ?? ''), value: String((item as Record<string, unknown>).value ?? '') }
+      : { label: String(item), value: String(item) },
+  )
+}
 const prefixRow = computed(() => (Array.isArray(props.schema.prefixRow) ? props.schema.prefixRow : []) as SchemaObject[])
 const affixRow = computed(() => (Array.isArray(props.schema.affixRow) ? props.schema.affixRow : []) as SchemaObject[])
 const summaryData = computed(() => ({ ...(props.data || {}), rows: rows.value }))
@@ -105,7 +135,7 @@ const sortedRows = computed(() => {
   const state = sortState.value
   if (!state) return rows.value
   const field = state.key
-  return [...rows.value].sort((a, b) => {
+  return [...filteredRows.value].sort((a, b) => {
     const av = a?.[field]
     const bv = b?.[field]
     if (av == null && bv == null) return 0
@@ -273,6 +303,27 @@ function rowClass(row: Record<string, any>) {
 
 <template>
   <div class="vamis-table-wrap overflow-x-auto">
+  <div v-if="filterableColumns.length" class="vamis-table__filters mb-2 flex flex-wrap gap-2">
+    <label v-for="col in filterableColumns" :key="col.name || col.label" class="flex items-center gap-1 text-xs">
+      <span>{{ col.label || col.name }}</span>
+      <select
+        v-if="col.filterable && filterOptions(col).length"
+        class="h-7 rounded-md border px-1"
+        :value="columnFilters[String(col.name || '')] || ''"
+        @change="setColumnFilter(col, ($event.target as HTMLSelectElement).value)"
+      >
+        <option value="">全部</option>
+        <option v-for="opt in filterOptions(col)" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      </select>
+      <input
+        v-else
+        class="h-7 w-32 rounded-md border px-1"
+        :value="columnFilters[String(col.name || '')] || ''"
+        :placeholder="`搜索${col.label || col.name || ''}`"
+        @input="setColumnFilter(col, ($event.target as HTMLInputElement).value)"
+      >
+    </label>
+  </div>
   <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
   <Table>
     <TableHeader>

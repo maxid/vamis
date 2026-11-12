@@ -5,7 +5,7 @@ outline: deep
 
 # Table 表格
 
-::: info 实现进度 95% · 进行中
+::: info 实现进度 97% · 进行中
 主路径：`columns`（name / label / type / width / tpl / mapping / action）、`data` / `source` 数据、空状态 `placeholder`、标题 `title`、行 `rowClassName`、整行 `itemAction`、列 `popOver`。缺独立数据域、`quickEdit`、多选 / 拖拽 / 合并单元格 / 超级表头 / 总结行等高阶能力。
 :::
 
@@ -221,6 +221,32 @@ columns:
 
 选择结果通过组件 `getData().selectedItems` 读取，动作见下。
 
+## 列筛选
+
+列配 `searchable: true` 出现文本搜索；`filterable.options` 出现下拉筛选。变化派发 `columnFilter`：
+
+```schema: scope="body"
+type: table
+data:
+  items:
+    - engine: Blink
+      browser: Chrome
+    - engine: WebKit
+      browser: Safari
+    - engine: Gecko
+      browser: Firefox
+columns:
+  - name: engine
+    label: Engine
+    searchable: true
+  - name: browser
+    label: Browser
+    filterable:
+      options:
+        - Chrome
+        - Safari
+```
+
 ## 固定列
 
 列配 `fixed: left` / `right` 时横向滚动保持贴边；宽度用 `width` 控制：
@@ -335,6 +361,8 @@ columns:
 | `draggable` | `boolean` | `false` | 行拖拽排序 |
 | `columns[].groupName` | `string` | | 超级表头分组 |
 | `columns[].fixed` | `"left" \| "right"` | | 固定列 |
+| `columns[].searchable` | `boolean` | `false` | 列文本搜索 |
+| `columns[].filterable.options` | `any[]` | | 列下拉筛选 |
 | `columns[].width` | `number` / `string` | | 列宽 |
 | `prefixRow` / `affixRow` | `SchemaNode[]` | | 顶部 / 底部总结行，支持 `colSpan` |
 | `prefixRowClassName` / `affixRowClassName` | `string` | | 总结行 class |
@@ -350,6 +378,7 @@ columns:
 |----------|----------|------|
 | `rowClick` | 当前行数据 + `index` | 点击某一行（选择模式下同时切换勾选） |
 | `columnSort` | `orderBy` / `orderDir` | 点击排序列 |
+| `columnFilter` | `filterName` / `filterValue` | 列筛选变化 |
 | `orderChange` | `movedItems` | 拖拽行排序后 |
 
 单元格内的按钮 / 表单事件由对应渲染器派发。
@@ -369,5 +398,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、行拖拽 / `orderChange`、选择动作、列 `popOver`。
-- 未接：独立数据域、`quickEdit`。
+- 未接：独立数据域、`quickEdit`。筛选为客户端过滤。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。
