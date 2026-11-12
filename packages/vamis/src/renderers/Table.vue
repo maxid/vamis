@@ -34,6 +34,21 @@ const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
+const hasGroups = computed(() => columns.value.some((col) => col.groupName != null && col.groupName !== ''))
+const headerGroups = computed(() => {
+  const groups: Array<{ label: string; span: number }> = []
+  for (const col of columns.value) {
+    const label = col.groupName != null ? String(col.groupName) : ''
+    if (!label) {
+      groups.push({ label: '', span: 1 })
+      continue
+    }
+    const last = groups[groups.length - 1]
+    if (last && last.label === label) last.span += 1
+    else groups.push({ label, span: 1 })
+  }
+  return groups
+})
 const combineNum = computed(() => {
   const n = Number(props.schema.combineNum)
   return Number.isFinite(n) && n > 0 ? n : 0
@@ -229,8 +244,14 @@ function rowClass(row: Record<string, any>) {
   <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
   <Table>
     <TableHeader>
+      <TableRow v-if="hasGroups">
+        <TableHead v-if="selectable" :rowspan="2" />
+        <TableHead v-for="(group, gi) in headerGroups" :key="'g' + gi" :colspan="group.span" class="text-center">
+          {{ group.label }}
+        </TableHead>
+      </TableRow>
       <TableRow>
-        <TableHead v-if="selectable" class="w-10"><input type="checkbox" :checked="allSelected()" @change="toggleAll"></TableHead>
+        <TableHead v-if="selectable" :rowspan="hasGroups ? 2 : undefined" class="w-10"><input type="checkbox" :checked="allSelected()" @change="toggleAll"></TableHead>
         <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)" :class="{ 'cursor-pointer select-none': col.sortable === true }" @click="sortBy(col)">
           {{ col.label || col.name }}
           <span v-if="col.sortable === true" class="ml-1 text-xs text-muted-foreground">{{ sortIcon(col) }}</span>
