@@ -5074,6 +5074,78 @@
   }
 }
 
+
+/* Amis `.TextareaControl`：多行文本；行高由 JS 在 minRows–maxRows 间自适应。 */
+.vamis-textarea-control {
+  position: relative;
+  width: 100%;
+}
+.vamis-textarea-control__native {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 4px 22px 4px 10px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+  outline: none;
+  resize: vertical;
+  /* 高度过渡常驻：清除钮会先聚焦再改值，只挂 .is-focused 会与高度变化同一帧提交、看不到动画。 */
+  transition:
+    height var(--animation-duration) ease-in-out,
+    border-color var(--animation-duration) ease-in-out,
+    box-shadow var(--animation-duration) ease-in-out;
+}
+.vamis-textarea-control__native::placeholder {
+  color: var(--control-placeholder);
+}
+.vamis-textarea-control__native:hover:not(:disabled):not([readonly]) {
+  border-color: var(--control-hover-border);
+}
+.vamis-textarea-control.is-focused .vamis-textarea-control__native {
+  border-color: var(--control-focus-border);
+  box-shadow: var(--control-focus-glow);
+}
+.vamis-textarea-control--half .vamis-textarea-control__native {
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: none;
+}
+.vamis-textarea-control--none .vamis-textarea-control__native {
+  border-color: transparent;
+  box-shadow: none;
+}
+.vamis-textarea-control.is-disabled .vamis-textarea-control__native {
+  background: var(--control-disabled-bg);
+  color: var(--control-disabled-color);
+  cursor: not-allowed;
+}
+.vamis-textarea-control.is-counter .vamis-textarea-control__native {
+  padding-bottom: 27px;
+}
+.vamis-textarea-control__clear {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+.vamis-textarea-control__counter {
+  position: absolute;
+  right: 10px;
+  bottom: 4px;
+  color: var(--select-clear-color);
+  font-size: 12px;
+  line-height: 15px;
+  pointer-events: none;
+}
+.vamis-textarea-control__counter.is-over {
+  color: var(--destructive);
+}
+
 /* Amis `.FileControl`：选择器只 var()。 */
 .vamis-file__tpl {
   display: block;

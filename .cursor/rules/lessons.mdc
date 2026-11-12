@@ -724,6 +724,12 @@ alwaysApply: true
 - 触及：`input-number`
 - 规则：本文；Amis `InputNumber.tsx` `defaultProps`
 
+### Textarea 清除钮回填 resetValue，动作 clear 写空串
+- 踩过：把 textarea 的清除钮和 `clear` 动作都写成 `''`，或把 `resetValue` 只挂到 reset；Amis 是清除钮 `onChange(resetValue)`（随后聚焦），`doAction('clear')` 才写 `''`。
+- 稳定做法：清除钮用 `resetValue ?? ''` 并 `focus()`；动作 clear 写 `''` 再 focus；reset 用 pristine ?? resetValue；trimContents 只打失焦，不要跟 InputText 的逐字 trim。行高按 `minRows * 21 + 10` 到 `maxRows * 21 + 10` 自适应，showCounter 时原生 textarea `padding-bottom: 27px` 给计数器留位。高度过渡要常驻（Amis `.is-focused > .TextareaControl-input { transition: all .2s }`，只挂 focus 会和高度变化同帧提交看不到动画）；量内容高度时临时 `transition:none; height:auto` 再恢复，否则 `auto` 不可插值会截断过渡。程序化清空会冲掉原生 undo，清空前后把旧值记进 undoStack，textarea 聚焦时拦 Ctrl/⌘+Z 恢复；用户重新输入后清空 undoStack。
+- 触及：`textarea`
+- 规则：`packages/vamis/src/renderers/form/Textarea.vue`；Amis `TextAreaControl` / `Textarea.tsx`
+
 ### FileControl 默认 chrome 走 `--file-*`，不要 Tailwind dropzone
 - 踩过：占位用 dashed muted 卡片 +「点击或拖拽」；Amis 是 32 高 enhance 钮、列表 max-height 144、拖拽区 180 / 1px dashed。
 - 稳定做法：量进 `:root` / `.dark` 的 `--file-*`，选择器只 `var()`。拖拽文案「将文件拖到此处，或」和「点击上传」不要换行，否则会多一个空格。

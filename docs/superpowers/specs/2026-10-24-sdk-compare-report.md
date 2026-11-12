@@ -3,17 +3,17 @@
 - 日期：2026-11-12
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **1172** · 通过 **1124** · 失败 **48**（P0 8）· Vamis 多出 extra **0**
+- 合计 **1179** · 通过 **1131** · 失败 **48**（P0 8）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 459 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 465 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 266 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 816 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 830 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（459）
+### 全局（465）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
@@ -29,7 +29,7 @@ html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组�
 - `src-concepts-data-mapping-6` fontSize: Amis `12px` / Vamis `14px`
 - `src-concepts-linkage-0` fontSize: Amis `12px` / Vamis `14px`
 - `src-concepts-linkage-1` fontSize: Amis `12px` / Vamis `14px`
-- …其余 447 条见 last-report.json
+- …其余 453 条见 last-report.json
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -60,7 +60,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - 缺档：补 Amis 同名 helper（m-l-xxl），不要用邻近档或 token 近似。
 - schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
-### 组件（816）
+### 组件（830）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
@@ -76,7 +76,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-concepts-template-0` fontWeight: Amis `400` / Vamis `600`
 - `src-concepts-template-1` lineHeight: Amis `30.8px` / Vamis `33.6px`
 - `src-concepts-template-1` fontWeight: Amis `400` / Vamis `600`
-- …其余 804 条见 last-report.json
+- …其余 818 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -90,7 +90,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 105 | 0 |
-| 组件 | 596 | 40 |
+| 组件 | 603 | 40 |
 | 样式 | 471 | 8 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -106,7 +106,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 | 组件 / 反馈 | 36 | 0 |
 | 组件 / 功能 | 80 | 0 |
 | 组件 / 其他 | 41 | 0 |
-| 组件 / 数据输入 | 260 | 32 |
+| 组件 / 数据输入 | 267 | 32 |
 | 组件 / 数据展示 | 95 | 8 |
 | 样式 / 开始 | 13 | 0 |
 | 样式 / Backgrounds | 8 | 0 |
@@ -140,7 +140,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `components-form-input-date-2` InputDate 日期选择器 #3 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-3` InputDate 日期选择器 #4 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-4` InputDate 日期选择器 #5 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `+1days` / Vamis `1794499200`
-- `components-form-input-date-5` InputDate 日期选择器 #6 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `${DATEMODIFY(NOW(), 2, 'days')}` / Vamis `1794626930`
+- `components-form-input-date-5` InputDate 日期选择器 #6 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:input-date.value: Amis `${DATEMODIFY(NOW(), 2, 'days')}` / Vamis `1794644947`
 - `components-form-input-date-6` InputDate 日期选择器 #7 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/1:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-7` InputDate 日期选择器 #8 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`
 - `components-form-input-date-8` InputDate 日期选择器 #9 — page/body/0:form/body/0:input-date.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/1:input-date.rendered: Amis `false` / Vamis `true`
