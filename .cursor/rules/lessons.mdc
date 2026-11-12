@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table quickEdit 当前仅文本输入，写回原行对象
+- 稳定做法：`editingCell` 键 `${row.id||name}-${field}`，笔按钮 stopPropagation 启动，输入 v-model draft，blur/Enter 写回 `row[field]` 并派发 `quickEdit`；不要写回 displayRows 副本；select/number 等复杂控件仍待接。
+- 触及：`table`
+
 ### Table 列筛选在排序/拖拽/合并之前过滤
 - 稳定做法：`columnFilters` 先得 filteredRows，再由 sortedRows/displayRows 消费；searchable 输入包含匹配、filterable.options 下拉相等匹配；变化派发 `columnFilter(filterName,filterValue)`；不要在原 rows 上原地改。
 - 触及：`table`

@@ -35,6 +35,43 @@ const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
 const columnFilters = ref<Record<string, string>>({})
+const editingCell = ref('')
+const draftValue = ref('')
+
+function quickEditConfig(col: SchemaObject) {
+  const raw = col.quickEdit
+  return raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : raw === true ? {} : null
+}
+
+function quickEditable(col: SchemaObject) {
+  return quickEditConfig(col) != null
+}
+
+function cellKey(row: Record<string, any>, col: SchemaObject) {
+  return `${row.id ?? row.name ?? ''}-${String(col.name || '')}`
+}
+
+function startEdit(row: Record<string, any>, col: SchemaObject) {
+  const conf = quickEditConfig(col)
+  if (!conf || row[String(col.name || '')] == null) return
+  editingCell.value = cellKey(row, col)
+  draftValue.value = String(row[String(col.name || '')] ?? '')
+}
+
+async function commitEdit(row: Record<string, any>, col: SchemaObject) {
+  const field = String(col.name || '')
+  if (!field || !editingCell.value) return
+  const value = draftValue.value
+  row[field] = value
+  editingCell.value = ''
+  const payload = { ...(props.data || {}), ...row, name: field, value }
+  const event = createVamisEvent('quickEdit', payload)
+  await runOnEvent(props.schema, 'quickEdit', { env, data: eventEvalData(payload, event), scoped, event })
+}
+
+function cancelEdit() {
+  editingCell.value = ''
+}
 const filterableColumns = computed(() =>
   columns.value.filter((col) => col.searchable === true || (col.filterable && typeof col.filterable === 'object')),
 )
@@ -360,8 +397,24 @@ function rowClass(row: Record<string, any>) {
           :rowspan="cellMeta(i, ci)?.rowspan"
           :class="{ invisible: cellMeta(i, ci)?.skip }"
         >
+          <template v-if="quickEditable(col)">
+            <input
+              v-if="editingCell === cellKey(row, col)"
+              v-model="draftValue"
+              class="h-7 w-full rounded border px-1 text-sm"
+              autofocus
+              @click.stop
+              @blur="commitEdit(row, col)"
+              @keydown.enter.prevent="commitEdit(row, col)"
+              @keydown.esc.prevent="cancelEdit"
+            >
+            <span v-else class="inline-flex items-center gap-1">
+              {{ row[String(col.name || '')] ?? '' }}
+              <button type="button" class="text-xs text-muted-foreground hover:text-primary" aria-label="编辑" @click.stop="startEdit(row, col)">✎</button>
+            </span>
+          </template>
           <SchemaRenderer
-            v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
+            v-else-if="col.type && col.type !== 'text' && col.type !== 'plain'"
             :schema="col"
             :extra-data="row"
           />
