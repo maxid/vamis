@@ -107,6 +107,8 @@ const data = computed(() => {
 provideData(data)
 
 const visible = computed(() => (normalized.value ? isVisible(normalized.value, data.value) : false))
+/** Amis `wrap: false`：功能性组件（hidden）没有 DOM 包装，也不能拖拽选中。 */
+const rendererWrap = computed(() => renderer.value?.wrap !== false)
 const disabled = computed(() =>
   normalized.value ? isDisabled(normalized.value, data.value) : false,
 )
@@ -176,8 +178,15 @@ async function onHostEvent(native: Event, eventName: string) {
 </script>
 
 <template>
+  <component
+    :is="renderer.component"
+    v-if="visible && normalized && renderer && !rendererWrap"
+    :schema="normalized"
+    :data="data"
+    :disabled="disabled"
+  />
   <div
-    v-if="visible && normalized"
+    v-else-if="visible && normalized"
     :id="nodeId"
     :data-editor-path="editorPath"
     :draggable="canDrag"

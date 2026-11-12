@@ -130,7 +130,8 @@ registerRenderer({ type: 'checkbox', component: Checkbox, isFormItem: true })
 registerRenderer({ type: 'checkboxes', component: Checkboxes, isFormItem: true })
 registerRenderer({ type: 'radios', component: Radios, isFormItem: true })
 registerRenderer({ type: 'switch', component: Switch, isFormItem: true })
-registerRenderer({ type: 'hidden', component: Hidden, isFormItem: true })
+// Amis Hidden `wrap: false`：不落 DOM，值由表单域初始化/提交。
+registerRenderer({ type: 'hidden', component: Hidden, isFormItem: true, wrap: false })
 registerRenderer({ type: 'static', alias: ['static-tpl'], component: Static, isFormItem: true })
 registerRenderer({
   type: 'input-date',

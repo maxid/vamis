@@ -1322,7 +1322,8 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     },
   }),
   hidden: fields('Hidden', {
-    value: '隐藏值。',
+    name: '写入表单数据的字段名，支持 a.b[0] 路径。',
+    value: '隐藏字段的初始值；固定值、${} 表达式。',
   }, { formItem: true }),
   static: fields('Static', {
     tpl: '展示模板。',

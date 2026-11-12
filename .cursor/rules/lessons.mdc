@@ -188,6 +188,12 @@ alwaysApply: true
 - 触及：`page` `form` `container` `flex` `grid` `panel` `wrapper` `tabs` `wizard`
 - 规则：`.cursor/rules/component.mdc`
 
+### Amis `wrap:false` 的功能性渲染器不要包 `.vamis-node`
+- 踩过：`hidden` 已渲染 null，但 SchemaRenderer 仍包一层空 div；Amis FormItem `wrap:false` 完全不落 DOM，空包装层会进 flex/gap，也让对照 `findNodeEl` 把它当结点。
+- 稳定做法：`RendererConfig` 加 `wrap?: boolean`；`registerRenderer({ type: 'hidden', wrap: false })`；SchemaRenderer 在 `wrap === false` 时直接挂组件（不落包装层、不可拖拽选中）。组件返回 null/注释，值仍由表单域初始化与提交。
+- 触及：`hidden`
+- 规则：`packages/vamis-core/src/SchemaRenderer.vue`；`packages/vamis-core/src/types.ts`
+
 ### 禁止嵌套 HTML form
 - 踩过：嵌套 `type: form` 仍输出 `<form>`，Enter 提交祖先表单。
 - 稳定做法：先 `useForm()` 再 `provideForm()`；有父 form 就降为 `div`。嵌套时默认提交钮 `type="button"`；输入框 Enter 要 `preventDefault` + `stopPropagation` 后走本表单 `submit()`。
