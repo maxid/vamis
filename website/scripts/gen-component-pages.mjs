@@ -82,6 +82,7 @@ const HANDWRITTEN = new Set([
   '/components/hbox',
   '/components/pagination',
   '/components/progress',
+  '/components/status',
   '/components/pagination-wrapper',
   '/components/panel',
   '/components/tabs',

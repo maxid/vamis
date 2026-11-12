@@ -301,7 +301,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `remark` | Remark 标记 | `/components/remark` | `/zh-CN/components/remark` | 进行中 | 92% | 文档主路径已对齐：content 文本 / `{ title, body }`、shape、变量、placement。浮层走 `VamisOverlay`（`--z-tooltip` 1600），徽标转写 `_remark.scss`（`--remark-*`）。自定义 icon / `mobileUI` Dialog 已接。缺 `themeCss` | P0 |
 | `search-box` | SearchBox 搜索框 | `/components/search-box` | `/zh-CN/components/search-box` | 进行中 | 50% | 能输入搜索；历史/增强未齐 | P0 |
 | `sparkline` | Sparkline 走势图 | `/components/sparkline` | `/zh-CN/components/sparkline` | 进行中 | 45% | svg 折线精简 | P0 |
-| `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 55% | 能映射状态 | P0 |
+| `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 75% | 默认状态列表、`map` / `labelMap`、`source` 自定义、`placeholder`；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：默认图标字体外的图标依赖宿主 | P0 |
 | `tpl` | Tpl 模板 | `/components/tpl` | `/zh-CN/components/tpl` | 进行中 | 92% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1 | P0 |
 | `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 80% | `displayMode` normal/rounded/status、预设 / 自定义 `color`、`label` / `value` / `tags`、`closable`、`checkable` / `checked`、`click` / `close` / `mouseenter` / `mouseleave` 事件；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：拖拽 / 远程 tags | P0 |
 | `video` | Video 视频 | `/components/video` | `/zh-CN/components/video` | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
@@ -469,7 +469,7 @@ flowchart LR
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 50% |
 | 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 45% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 80% |
-| 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 55% |
+| 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
 | 51 | `grid` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
 | 52 | `nav` | `icon`、`action`、`tpl`、`link`、`badge` | 7 | 1 | 20 | 20 | 进行中 | 80% |
