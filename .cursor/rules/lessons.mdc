@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### ButtonGroup 拼缝用邻钮负 margin + 首尾圆角
+- 稳定做法：`> div:not(:first-child) :deep(button)` 去左圆角并 `margin-left:-1px`；`> div:not(:last-child)` 去右圆角；竖向改 top/bottom 圆角与 `margin-top:-1px`；`btnActiveLevel` 不用于普通按钮组。
+- 触及：`button-group`
+
 ### Table 列渲染优先 type；行操作示例别在对照里放多按钮
 - 稳定做法：列有 `type` 且非 text/plain 时走 SchemaRenderer（extra-data 行），否则原生值 + PopOverHost；新增 `title` / `placeholder` / 整行 `itemAction`（runAction）/ `rowClassName`；对照的按钮列示例只放一个按钮或改 yaml 非活示例，多按钮时 Amis/Vamis actionIndex 易假红。
 - 触及：`table`

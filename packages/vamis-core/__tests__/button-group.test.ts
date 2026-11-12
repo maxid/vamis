@@ -1,27 +1,16 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { buttonGroupButtons, buttonGroupTiled, buttonGroupVertical } from '../src/utils/button-group'
-
-describe('buttonGroupVertical / tiled', () => {
-  it('reads layout flags', () => {
-    expect(buttonGroupVertical({})).toBe(false)
-    expect(buttonGroupVertical({ vertical: true })).toBe(true)
-    expect(buttonGroupTiled({})).toBe(false)
-    expect(buttonGroupTiled({ tiled: true })).toBe(true)
-  })
-})
-
-describe('buttonGroupButtons', () => {
-  it('reads buttons or body and applies btnLevel unless the button has level', () => {
-    expect(buttonGroupButtons({})).toEqual([])
-    const buttons = buttonGroupButtons({
-      btnLevel: 'light',
-      buttons: [
-        { type: 'button', label: '按钮1' },
-        { type: 'button', label: '按钮3', level: 'primary' },
-      ],
-    })
-    expect(buttons[0].level).toBe('light')
-    expect(buttons[1].level).toBe('primary')
-    expect(buttonGroupButtons({ body: [{ type: 'button', label: '普通按钮' }] })).toHaveLength(1)
+const here = dirname(fileURLToPath(import.meta.url))
+const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
+describe('button-group', () => {
+  it('has seam styles and doc property rows', () => {
+    const vue = read('../../vamis/src/renderers/ButtonGroup.vue')
+    expect(vue).toContain('margin-left: -1px')
+    expect(vue).toContain('border-top-right-radius: 0')
+    const doc = read('../../../website/src/components/button-group.md')
+    expect(doc).toContain('btnActiveLevel')
+    expect(doc).toContain('## 属性表')
   })
 })

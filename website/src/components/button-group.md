@@ -5,7 +5,7 @@ outline: deep
 
 # ButtonGroup 按钮组
 
-::: info 实现进度 85% · 进行中
+::: info 实现进度 90% · 进行中
 文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`（按钮自己的 `level` 优先）。缺 `btnActiveLevel`（点选用）、按钮圆角拼接像素级。
 :::
 
@@ -107,7 +107,7 @@ buttons:
 | vertical | `boolean` | `false` | 垂直模式 |
 | tiled | `boolean` | `false` | 平铺模式 |
 | btnLevel | `string` | `"default"` | 统一按钮样式 |
-| btnActiveLevel | `string` | `"default"` | 选中样式（点选） |
+| btnActiveLevel | `string` | `"default"` | 选中样式（普通按钮组不切换选中，实际由 ButtonGroupSelect 用） |
 | buttons | `Array<Action>` | | [按钮](/components/action) |
 | body | 同 buttons | | 兼容写法 |
 | className | `string` | | 打在宿主 `div.vamis-node` |
@@ -116,4 +116,4 @@ buttons:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 未做 cxd 按钮组负边距拼缝与圆角裁切；`btnActiveLevel` 留给 [ButtonGroupSelect](/components/form/button-group-select)。
+- 已做相邻按钮 1px 负缝与首尾圆角裁切（横 / 竖）；`btnActiveLevel` 留给 [ButtonGroupSelect](/components/form/button-group-select)。

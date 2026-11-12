@@ -32,3 +32,23 @@ const tiled = computed(() => buttonGroupTiled(props.schema))
     </div>
   </div>
 </template>
+
+<style scoped>
+[data-vamis-button-group] > div:not(:first-child) :deep(button) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: -1px;
+}
+[data-vamis-button-group] > div:not(:last-child) :deep(button) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+[data-vamis-button-group].flex-col > div:not(:first-child) :deep(button) {
+  border-radius: 0 0 var(--radius) var(--radius);
+  margin-left: 0;
+  margin-top: -1px;
+}
+[data-vamis-button-group].flex-col > div:not(:last-child) :deep(button) {
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+</style>
