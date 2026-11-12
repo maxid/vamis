@@ -770,6 +770,10 @@ alwaysApply: true
 - 稳定做法：source 以 `$` 开头 resolveValue 拿数组；API 归一到 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source + schema.data 用 isApiOutdated。
 - 触及：`transfer`
 
+### Picker pickerSchema 用 scoped.getComponentById 桥接内层 table
+- 稳定做法：pickerSchema 存在时弹层渲染 SchemaRenderer，内部 table 需 selectable 且 name/id；确认时 getComponentById(key).getData().selectedItems 按 valueField 映射到 draft；自定义表单取值仍未接。
+- 触及：`picker`
+
 ### Picker 分页客户端 slice，搜索重置页码
 - 稳定做法：pagedOptions 按 pickerPage/perPage slice filtered；搜索 watch 重置 pickerPage=1；跨页 draft 保留；末页 Math.ceil。
 - 触及：`picker`

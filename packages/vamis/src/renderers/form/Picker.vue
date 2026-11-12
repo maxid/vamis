@@ -12,11 +12,14 @@ import {
   Input,
 } from '@vamis/ui'
 import {
+  SchemaRenderer,
   isApiOutdated,
   isEffectiveApi,
   requestApi,
   resolveValue,
+  useData,
   useEnv,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import { useForm } from '../../formContext'
@@ -33,6 +36,8 @@ import {
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
 const env = useEnv()
+const viewData = useData()
+const scoped = useScoped()
 const remoteOptions = ref<unknown[] | null>(null)
 const open = ref(false)
 const keyword = ref('')
@@ -40,6 +45,7 @@ const pickerPage = ref(1)
 const draft = ref<unknown[]>([])
 
 const multiple = computed(() => !!props.schema.multiple)
+const pickerSchema = computed(() => (props.schema.pickerSchema && typeof props.schema.pickerSchema === 'object' ? (props.schema.pickerSchema as SchemaObject) : null))
 const embed = computed(() => props.schema.embed === true)
 const maxTagCount = computed(() => {
   const n = Number(props.schema.maxTagCount)
@@ -118,6 +124,16 @@ function commitInline(option: OptionItem, checked: boolean) {
 }
 
 function confirm() {
+  if (pickerSchema.value) {
+    const key = String(pickerSchema.value.id || pickerSchema.value.name || '')
+    const nested = key ? scoped?.getComponentById(key) : undefined
+    const items = nested?.getData?.()?.selectedItems
+    if (Array.isArray(items)) {
+      draft.value = items
+        .map((item: any) => (item && typeof item === 'object' ? item[valueField.value] ?? item.value : item))
+        .filter((item) => item != null)
+    }
+  }
   selected.value = [...draft.value]
   open.value = false
 }
@@ -180,8 +196,13 @@ watch(
         <DialogHeader>
           <DialogTitle>{{ schema.modalTitle || schema.label || '请选择' }}</DialogTitle>
         </DialogHeader>
-        <Input v-model="keyword" placeholder="筛选" class="mb-2" />
-        <ul class="max-h-64 space-y-1 overflow-auto rounded-md border p-2">
+        <SchemaRenderer
+          v-if="pickerSchema"
+          :schema="pickerSchema"
+          :extra-data="{ ...viewData, items: options }"
+        />
+        <Input v-else v-model="keyword" placeholder="筛选" class="mb-2" />
+        <ul v-if="!pickerSchema" class="max-h-64 space-y-1 overflow-auto rounded-md border p-2">
           <li v-for="opt in filtered" :key="String(opt.value)">
             <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
               <Checkbox :model-value="isChecked(opt)" @update:model-value="toggle(opt, $event === true)" />
@@ -190,7 +211,7 @@ watch(
           </li>
           <li v-if="!filtered.length" class="px-2 py-6 text-center text-xs text-muted-foreground">暂无选项</li>
         </ul>
-        <div v-if="lastPage > 1" class="mt-2 flex items-center justify-end gap-2 text-xs">
+        <div v-if="!pickerSchema && lastPage > 1" class="mt-2 flex items-center justify-end gap-2 text-xs">
           <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage <= 1" @click="pickerPage -= 1">上一页</button>
           <span>{{ pickerPage }} / {{ lastPage }}</span>
           <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage >= lastPage" @click="pickerPage += 1">下一页</button>

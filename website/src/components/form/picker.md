@@ -5,7 +5,7 @@ outline: deep
 
 # Picker 列表选择器
 
-::: info 实现进度 75% · 进行中
+::: info 实现进度 80% · 进行中
 静态 `options`、`multiple`、弹层搜索 / 确认 / 取消、`embed` 内嵌、`maxTagCount`、`clearable`、`joinValues` / `delimiter`、`labelField` / `valueField`。缺 `pickerSchema` 自定义弹层、远程 `source`、分页 / 分组 / 树选择。
 :::
 
@@ -103,6 +103,30 @@ label: 本地变量
 source: "${dict}"
 ```
 
+## 自定义弹层（pickerSchema）
+
+`pickerSchema` 替代默认列表；若内层是可选 table / crud，确认时读取其 `selectedItems` 并按 `valueField` 写回：
+
+```yaml
+type: picker
+name: picker
+label: 表格选择
+valueField: id
+labelField: name
+pickerSchema:
+  type: table
+  name: picker_table
+  selectable: true
+  source: /api/mock2/sample
+  columns:
+    - name: id
+      label: ID
+    - name: name
+      label: 名称
+```
+
+> 当前支持内层 table 的勾选桥接；pickerSchema 内自定义表单取值仍未接。
+
 ## 分页
 
 `perPage` 控制弹层每页选项数，搜索时自动回到第一页：
@@ -135,7 +159,7 @@ options:
 | `clearable` | `boolean` | `true` | 可清除 |
 | `placeholder` | `string` | `请选择` | 未选占位 |
 | `modalTitle` | `string` | | 弹层标题 |
-| `pickerSchema` | Schema | | **未接** 自定义弹层 |
+| `pickerSchema` | Schema | | 自定义弹层（内层 table 勾选可桥接） |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 事件表
@@ -150,4 +174,4 @@ options:
 
 - 与 Amis 一致：静态 options、multiple、joinValues/delimiter、弹层搜索/确定/取消、clearable。
 - 已加：`embed` 内嵌、`maxTagCount` 折叠标签。
-- 未接：`pickerSchema`、分组 / 树选择、完整事件动作表。
+- 未接：pickerSchema 内自定义表单取值、分组 / 树选择、完整事件动作表。
