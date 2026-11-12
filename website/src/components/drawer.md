@@ -5,7 +5,7 @@ outline: deep
 
 # Drawer 抽屉
 
-::: info 实现进度 85% · 进行中
+::: info 实现进度 88% · 进行中
 文档主路径已对齐：`actionType: drawer` 打开 overlay、`title` / `body`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`showCloseButton` / `overlay` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover 出「关闭」提示。缺拖拽改尺寸、多级错位递减、像素级 cxd Drawer。
 :::
 
@@ -161,6 +161,52 @@ buttons:
       overlay: false
 ```
 
+## 动作后关闭抽屉
+
+抽屉内按钮配 `actionType: close` 关闭当前层：
+
+```schema: scope="body"
+type: button
+label: 打开并关闭
+actionType: drawer
+drawer:
+  title: 提示
+  body:
+    type: button
+    label: 关闭
+    actionType: close
+```
+
+## 配置抽屉的按钮
+
+`actions` 覆盖默认「取消 + 确认」，弹层内表单默认无提交钮：
+
+```schema: scope="body"
+type: button
+label: 编辑
+actionType: drawer
+drawer:
+  title: 编辑
+  body:
+    type: form
+    body:
+      - type: input-text
+        name: name
+        label: 名称
+  actions:
+    - type: button
+      label: 取消
+      actionType: close
+    - type: button
+      label: 保存
+      level: primary
+      actionType: close
+```
+
+## 可拖拽抽屉大小
+
+Amis 的 `resizable` 暂未接；需要固定尺寸请用 `width` / `height`。
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -184,5 +230,5 @@ buttons:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 嵌套抽屉按栈替换顶层，不按层递减宽度。
-- 不接 `resizable`、弹层内表单提交。
+- 补动作后关闭 / 配置按钮 / resizable 未接说明；不接弹层内表单提交。
 - 视觉走 shadcn Sheet token，不是 cxd Drawer 皮肤。
