@@ -213,7 +213,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `fieldset` | FieldSet 表单项集合 | `/components/form/fieldset` | `/zh-CN/components/form/fieldset` | 进行中 | 55% | 能分组折叠 | P0 |
 | `input-excel` | InputExcel Excel 解析 | `/components/form/input-excel` | `/zh-CN/components/form/input-excel` | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | `/components/form/input-file` | `/zh-CN/components/form/input-file` | 进行中 | 88% | 主路径已对齐：receiver POST form-data、默认 autoUpload、accept/maxSize、多选 joinValues、asBlob/asBase64、拖拽、分片 start/chunk/finish、change/success/fail/remove、clear。缺 themeCss、提交时未等 pending 传完 | P0 |
-| `formula` | Formula 公式 | `/components/form/formula` | `/zh-CN/components/form/formula` | 进行中 | 50% | 能按公式写值；与 expr 层未统一（D2） | P0 |
+| `formula` | Formula 公式 | `/components/form/formula` | `/zh-CN/components/form/formula` | 进行中 | 65% | `formula` 求值写回 `name`、`initSet`/`autoSet`/`condition`、`id` + `target` 手动应用；文档按 Amis 章节重写。对照桌面 **2/2**、移动 **2/2**（P0 0）。缺 input-formula 编辑器与表达式层统一（D2） | P0 |
 | `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 70% | ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签 | P0 |
 | `hidden` | Hidden 隐藏字段 | `/components/form/hidden` | `/zh-CN/components/form/hidden` | 已完成 | 100% | 与 Amis 一致：渲染 null、`wrap: false`（SchemaRenderer 直接挂组件，不落 `.vamis-node`）、值随表单初始化/提交、`name` 支持 `a.b[0]` 路径、`value` 支持 `${}` 表达式；文档覆盖基本用法 / 属性 / 事件 / 动作表。对照桌面 **1/1**、移动 **1/1**（P0 0） | P0 |
 | `input-image` | InputImage 图片 | `/components/form/input-image` | `/zh-CN/components/form/input-image` | 进行中 | 80% | 主路径已对齐：复用 InputFile 上传管线（receiver POST form-data、`data.value`/`data.url` 回填）、`autoUpload` / 手动上传 / `hideUploadButton`、`multiple` / `joinValues` / `extractValue` / `delimiter`、`accept` / `capture`、`maxSize` / `maxLength`、`limit` 尺寸校验、`frameImage` / `fixedSize`、`uploadBtnText`、`autoFill` / `initAutoFill`（源码默认 true）、`draggable` 排序、`change` / `remove` / `success` / `fail`、`clear`；缩略图 120 方块（`--input-image-*`）。文档按 Amis 章节改写，手动上传 / 隐藏上传按钮 / 多选 autoFill / 其他表单项填充 / initAutoFill / 拖拽排序示例均按 Amis 原例对齐。对照桌面 **12/12**、移动 **12/12**（P0 0）。缺 `crop` 系列 / `allowInput` / 图片预览画廊；`uploadBtnText` 只收字符串、`fixedSize` 只加类名 | P0 |
@@ -466,7 +466,7 @@ flowchart LR
 | 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 60% |
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
-| 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 50% |
+| 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
 | 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 45% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 80% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |

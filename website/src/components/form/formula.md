@@ -5,46 +5,150 @@ outline: deep
 
 # Formula 公式
 
-::: info 实现进度 50% · 进行中
-能按公式写值；与 expr 层未统一（D2）
+::: info 实现进度 65% · 进行中
+`formula` 表达式求值并写回 `name` 字段、`initSet` 初始化应用、`autoSet` 自动监听字段变化、`condition` 条件应用、`id` + 按钮 `target` 手动应用。缺表达式层与 Formula 编辑器（input-formula）统一（D2）。
 :::
 
-`formula` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+公式表单项：按表达式计算结果写回表单字段。属于普通表单项，通用属性见 [FormItem](./formitem)。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema
-type: page
-title: formula
+公式字段只负责计算并写值，展示可用一个只读 input：
+
+```yaml
+type: form
 body:
-  - type: form
-    title: formula
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: formula
-        name: formula
-        label: formula
+  - type: input-number
+    name: a
+    label: A
+    value: 1
+  - type: input-number
+    name: b
+    label: B
+    value: 2
+  - type: input-number
+    name: sum
+    label: 和
+    disabled: true
+  - type: formula
+    name: sum
+    formula: "a + b"
 ```
 
-## 常用属性
+## 自动应用
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+默认 `autoSet: true`，依赖字段变化时重算；`initSet` 默认 true，挂载即应用一次。
+
+```yaml
+type: form
+body:
+  - type: input-number
+    name: a
+    label: A
+    value: 1
+  - type: input-number
+    name: b
+    label: B
+    value: 2
+  - type: input-number
+    name: sum
+    label: 和
+    disabled: true
+  - type: formula
+    name: sum
+    value: 0
+    formula: "a + b"
+```
+
+## 手动应用
+
+`autoSet: false` + `initSet: false`，用按钮 `target` 指向 formula 的 `id` 触发：
+
+```schema: scope="body"
+type: form
+body:
+  - type: input-number
+    name: a
+    label: A
+  - type: input-number
+    name: b
+    label: B
+  - type: input-number
+    name: sum
+    label: 和
+    disabled: true
+  - type: formula
+    name: sum
+    id: theFormula
+    value: 0
+    formula: "a + b"
+    autoSet: false
+    initSet: false
+  - type: button
+    label: 计算
+    target: theFormula
+```
+
+## 条件应用
+
+`condition` 命中才应用；可写 tpl 依赖字段或表达式：
+
+```schema: scope="body"
+type: form
+body:
+  - type: radios
+    name: radios
+    label: radios
+    options:
+      - label: a
+        value: a
+      - label: b
+        value: b
+  - type: input-text
+    name: b
+    label: B
+  - type: formula
+    name: b
+    formula: "''"
+    condition: "${radios}"
+    initSet: false
+```
+
+## 使用新表达式语法
+
+`${...}` 模板可直接拼接字符串；不带 `${}` 的表达式走公式引擎：
+
+```yaml
+type: form
+body:
+  - type: input-text
+    name: name
+    label: 名称
+    value: amis
+  - type: input-text
+    name: greet
+    label: 问候
+    disabled: true
+  - type: formula
+    name: greet
+    formula: "你好，${name}"
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `name` | `string` | | 写回的表单字段 |
+| `formula` | `string` | | 表达式 / 模板 |
+| `value` | `any` | | 初始显示值 |
+| `initSet` | `boolean` | `true` | 挂载时应用一次 |
+| `autoSet` | `boolean` | `true` | 监听依赖字段自动应用 |
+| `condition` | `string` | | 条件表达式 / tpl |
+| `id` | `string` | | 手动 target 的组件 id |
 
 ## 和 Amis 文档的差异
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 与 Amis 一致：`formula` / `value`、`initSet`、`autoSet`、`condition`、`id` + `target` 手动应用。
+- 未接：`input-formula` 可视化公式编辑器、表达式层与 D2 完全统一、`formula` 的 `evalMode` 细节。
