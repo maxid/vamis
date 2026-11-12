@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 移动全量对照：**1317 例 / 1254 过 / 63 败（P0 8）**；失败仍集中在 Cursor form 文档探针与少量既有项，本批 table/picker/transfer/crud 新增用例移动端全过。
 - `transfer` 树形模式：`mode: tree` 按 children 扁平化 + 缩进展示（展开/折叠未接）；文档补树形。75% → **80%**。
 - `picker` 分页：`perPage` 弹层分页 + 搜索回第一页，跨页保留选择；文档补分页。70% → **75%**。
 - `table` 嵌套行：`children`/`childrenColumnName` 展开子行（缩进、一层），文档补嵌套章节。table 仍 **99%**（余独立数据域/深层嵌套交互）。
