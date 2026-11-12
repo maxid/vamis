@@ -5,11 +5,14 @@ import {
   apiMessage,
   asArray,
   createStoreId,
+  createVamisEvent,
+  eventEvalData,
   filterTpl,
   isApiOutdated,
   overlayEmbedForm,
   notifyToasts,
   requestApi,
+  runOnEvent,
   useEnv,
   useRendererHub,
   useScoped,
@@ -55,6 +58,8 @@ const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 const filterSchema = computed(() => props.schema.filter as SchemaObject | undefined)
 const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
 const dialogOpen = ref(false)
+const editingCell = ref('')
+const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
 const dialogSchema = ref<SchemaObject | null>(null)
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
@@ -131,6 +136,35 @@ function syncToLocation() {
   } catch {
     /* ignore */
   }
+}
+
+function quickEditable(col: SchemaObject) {
+  return col.quickEdit === true || (col.quickEdit != null && typeof col.quickEdit === 'object')
+}
+
+function cellEditKey(row: Record<string, any>, col: SchemaObject) {
+  return `${rowKey(row)}-${String(col.name || '')}`
+}
+
+function startCellEdit(row: Record<string, any>, col: SchemaObject) {
+  const field = String(col.name || '')
+  if (!field || row[field] == null) return
+  editingCell.value = cellEditKey(row, col)
+  draftValue.value = String(row[field] ?? '')
+}
+
+async function commitCellEdit(row: Record<string, any>, col: SchemaObject) {
+  const field = String(col.name || '')
+  if (!field || !editingCell.value) return
+  row[field] = draftValue.value
+  editingCell.value = ''
+  const payload = { ...row, name: field, value: draftValue.value }
+  const event = createVamisEvent('quickEdit', payload)
+  await runOnEvent(props.schema, 'quickEdit', { env, data: eventEvalData(payload, event), scoped, event })
+}
+
+function cancelCellEdit() {
+  editingCell.value = ''
 }
 
 function onPagerChange(page: number, perPage?: number) {
@@ -484,6 +518,22 @@ onBeforeUnmount(() => {
               :schema="col"
               :extra-data="row"
             />
+            <template v-else-if="quickEditable(col)">
+              <input
+                v-if="editingCell === cellEditKey(row, col)"
+                v-model="draftValue"
+                class="h-7 w-full rounded border px-1 text-sm"
+                autofocus
+                @click.stop
+                @blur="commitCellEdit(row, col)"
+                @keydown.enter.prevent="commitCellEdit(row, col)"
+                @keydown.esc.prevent="cancelCellEdit"
+              >
+              <span v-else class="inline-flex items-center gap-1">
+                {{ row[String(col.name || '')] ?? '' }}
+                <button type="button" class="text-xs text-muted-foreground hover:text-primary" aria-label="编辑" @click.stop="startCellEdit(row, col)">✎</button>
+              </span>
+            </template>
             <PopOverHost v-else :schema="col" :data="row">
               <span>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
             </PopOverHost>

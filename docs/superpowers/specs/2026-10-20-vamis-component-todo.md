@@ -264,7 +264,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 74% | 文档介绍页用 `/api/mock2/sample` 真跑（1710 条 / 171 页）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`（不盖底栏）。补 `loadDataOnce` / `syncLocation`；缺 `quickEdit`/`matchFunc`（D10）；header 导出/新增仍要写进 `headerToolbar` | P0 |
+| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 78% | 文档介绍页用 `/api/mock2/sample` 真跑（1710 条 / 171 页）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`（不盖底栏）。补 `loadDataOnce` / `syncLocation` / 文本 quickEdit；缺 `matchFunc`（D10）；header 导出/新增仍要写进 `headerToolbar` | P0 |
 | `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 99% | 主路径文档已补：基础列 / `data` / `source` / 空状态 / 列 `type`（tpl/mapping/tag/button）/ 整行 `itemAction` / `title` / `rowClassName` / 列 `popOver`。对照桌面 **5/5**、移动 **5/5**（P0 0）。补 `selectable` / `multiple` / 全选、`rowClick` 事件、select/selectAll/clearAll 动作；补列排序 `sortable` / `sortBy` / `columnSort`；补行拖拽排序 / `orderChange`；补超级表头 / 合并 / 总结行 / 固定列 / 列搜索筛选 / 文本快速编辑；缺独立数据域 | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
@@ -484,7 +484,7 @@ flowchart LR
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | 进行中 | 30% |
 | 63 | `tabs-transfer` | `transfer`、`tabs` | 4 | 1 | 17 | 17 | 进行中 | 40% |
-| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | 进行中 | 74% |
+| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | 进行中 | 78% |
 | 65 | `page` | `container`、`panel`、`flex`、`grid`、`tabs`、`action`、`service`、`dialog`、`drawer`、`crud`、`form`、`tpl`、`spinner`、`remark` | 1 | 1 | 14 | 14 | 进行中 | 95% |
 | 66 | `divider` | — | 12 | 0 | 12 | 12 | 进行中 | 90% |
 | 67 | `custom` | — | 12 | 0 | 12 | 12 | 进行中 | 15% |

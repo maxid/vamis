@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### CRUD quickEdit 与 Table 同构，写回 row
+- 稳定做法：`editingCell` 用 `rowKey(row)-field`，编辑笔 stopPropagation，blur/Enter 写回并派发 `quickEdit`；当前仅文本控件；不要与 operation 列混用。
+- 触及：`crud`
+
 ### CRUD syncLocation 只同步 page/perPage，replaceState
 - 稳定做法：挂载前 syncFromLocation（读取 page/perPage 并校验 >=1），切页/改 perPage 后 syncToLocation 用 URL + history.replaceState，不 pushState；筛选参数暂不同步，文档写清。
 - 触及：`crud`
