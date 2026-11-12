@@ -34,6 +34,46 @@ const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
+const combineNum = computed(() => {
+  const n = Number(props.schema.combineNum)
+  return Number.isFinite(n) && n > 0 ? n : 0
+})
+const combineFrom = computed(() => {
+  const n = Number(props.schema.combineFromIndex)
+  return Number.isFinite(n) && n >= 0 ? n : 0
+})
+const mergeMap = computed(() => {
+  const map: Record<string, { skip: boolean; rowspan: number }> = {}
+  const rows = displayRows.value
+  const cols = columns.value
+  const num = combineNum.value
+  if (!num) return map
+  const from = combineFrom.value
+  const same = (a: Record<string, any>, b: Record<string, any>) => {
+    for (let i = from; i < from + num && i < cols.length; i++) {
+      const key = String(cols[i]?.name || '')
+      if (!key) continue
+      if (String(a?.[key] ?? '') !== String(b?.[key] ?? '')) return false
+    }
+    return true
+  }
+  let i = 0
+  while (i < rows.length) {
+    let span = 1
+    while (i + span < rows.length && same(rows[i], rows[i + span])) span++
+    for (let r = i; r < i + span; r++) {
+      for (let c = from; c < from + num && c < cols.length; c++) {
+        map[`${r}-${c}`] = { skip: r > i, rowspan: r === i ? span : 0 }
+      }
+    }
+    i += span
+  }
+  return map
+})
+
+function cellMeta(rowIndex: number, colIndex: number) {
+  return mergeMap.value[`${rowIndex}-${colIndex}`]
+}
 const sortState = ref<{ key: string; dir: 'asc' | 'desc' } | null>(null)
 const sortedRows = computed(() => {
   const state = sortState.value
@@ -204,7 +244,13 @@ function rowClass(row: Record<string, any>) {
         </TableCell>
       </TableRow>
       <TableRow v-for="(row, i) in sortedRows" :key="row.id ?? i" :class="rowClass(row)" @click="onRowClick(row, $event)">
-        <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
+        <TableCell
+          v-for="(col, ci) in columns"
+          :key="`${col.name || col.label || ''}`"
+          :style="colWidthStyle(col)"
+          :rowspan="cellMeta(i, ci)?.rowspan"
+          :class="{ invisible: cellMeta(i, ci)?.skip }"
+        >
           <SchemaRenderer
             v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
             :schema="col"

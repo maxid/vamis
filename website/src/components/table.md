@@ -5,7 +5,7 @@ outline: deep
 
 # Table 表格
 
-::: info 实现进度 82% · 进行中
+::: info 实现进度 86% · 进行中
 主路径：`columns`（name / label / type / width / tpl / mapping / action）、`data` / `source` 数据、空状态 `placeholder`、标题 `title`、行 `rowClassName`、整行 `itemAction`、列 `popOver`。缺独立数据域、`quickEdit`、多选 / 拖拽 / 合并单元格 / 超级表头 / 总结行等高阶能力。
 :::
 
@@ -101,6 +101,33 @@ columns:
     map:
       "1": "<span class='label label-success'>正常</span>"
       "2": "<span class='label label-default'>停用</span>"
+```
+
+## 合并单元格
+
+`combineNum` 从左到右自动合并相同值的单元格；`combineFromIndex` 跳过前 N 列：
+
+```schema: scope="body"
+type: table
+combineNum: 2
+data:
+  items:
+    - engine: Trident
+      browser: IE 4.2
+      version: "4"
+    - engine: Trident
+      browser: IE 4.2
+      version: "5"
+    - engine: Gecko
+      browser: Firefox 1.0
+      version: "5"
+columns:
+  - name: engine
+    label: Engine
+  - name: browser
+    label: Browser
+  - name: version
+    label: Version
 ```
 
 ## 拖拽排序
@@ -224,6 +251,8 @@ columns:
 | `itemAction` | Action | | 整行点击动作 |
 | `rowClassName` | `string` | | 行 class，支持表达式 |
 | `draggable` | `boolean` | `false` | 行拖拽排序 |
+| `combineNum` | `number` | | 从左到右自动合并单元格列数 |
+| `combineFromIndex` | `number` | `0` | 跳过前 N 列再开始合并 |
 | `columns[].popOver` | `PopOver` | | 单元格详情弹层 |
 | `columns[].sortable` | `boolean` | `false` | 表头可点击排序 |
 | `columns[].sortBy` | `string` | | 排序字段，默认 `name` |
@@ -253,5 +282,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、行拖拽 / `orderChange`、选择动作、列 `popOver`。
-- 未接：独立数据域、合并单元格 / 超级表头 / 总结行 / 固定列 / `quickEdit`。
+- 未接：独立数据域、超级表头 / 总结行 / 固定列 / `quickEdit`。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

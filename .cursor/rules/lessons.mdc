@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 合并单元格按显示行重算 rowspan
+- 稳定做法：`combineNum + combineFromIndex` 对 displayRows 连续相同的前缀列分组，组首写 `rowspan=span`、组内单元格 `invisible`；不要把 rowspan 固定写进列 schema，排序/拖拽后必须基于 displayRows 重算。
+- 触及：`table`
+
 ### Table 拖拽排序用本地 dragOrder 映射，事件只读不写回
 - 稳定做法：`dragOrder` 存 sortedRows 下标数组，`displayRows` 映射；drop 后 splice 并派发 `orderChange.movedItems`；不直接改原始 rows；行选择/全选同样基于 displayRows。
 - 触及：`table`
