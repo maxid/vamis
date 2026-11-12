@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Tag 的关闭/可选状态是本地态 + 事件，不要塞进 Badge
+- 稳定做法：`closable` 渲染按钮并派发 `close`（`prevented` 阻止隐藏）；`checkable` 点击 toggle `checked` 并派发 `click`；`mouseenter/leave` 也派发；样式用 `.vamis-tag__close` / `.is-checked`，mapping 的 tag schema 仍走 Tag 渲染。
+- 触及：`tag`
+
 ### Each 的 maxLength 支持表达式；static-each 对照读 schemaValue
 - 稳定做法：`maxLength` 为字符串时按 `resolveValue` 求值再 `slice(0, n)`；`value` 可直接给数组；`source` 优先于 `name`；`static-each` 探针返回 schemaValue，不要读表单域。
 - 触及：`each` `static-each`

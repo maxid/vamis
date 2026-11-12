@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { filterTpl, resolveClassName, type SchemaObject } from '@vamis/core'
+import { computed, ref } from 'vue'
+import { createVamisEvent, eventEvalData, filterTpl, resolveClassName, runOnEvent, useEnv, useScoped, type SchemaObject } from '@vamis/core'
+import { VamisClose } from '@vamis/ui'
 import { readValue } from './format'
 
 const PRESET = ['inactive', 'active', 'success', 'processing', 'error', 'warning'] as const
 type Preset = (typeof PRESET)[number]
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
+const env = useEnv()
+const scoped = useScoped()
+const closed = ref(false)
+const checked = ref(props.schema.checked === true)
 
 function asText(raw: unknown): string {
   if (raw == null || raw === '') return ''
@@ -64,6 +69,33 @@ const tagStyle = computed(() => {
   return style
 })
 
+const checkable = computed(() => props.schema.checkable === true)
+const closable = computed(() => props.schema.closable === true)
+
+async function emitTagEvent(eventName: string, native: Event) {
+  const payload = { ...props.data, label: label.value, value: label.value }
+  const event = createVamisEvent(eventName, payload, native)
+  await runOnEvent(props.schema, eventName, {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    event,
+  })
+  return !event.prevented
+}
+
+async function onClick(event: MouseEvent) {
+  if (props.schema.disabled === true) return
+  if (!(await emitTagEvent('click', event))) return
+  if (checkable.value) checked.value = !checked.value
+}
+
+async function onClose(event: MouseEvent) {
+  event.stopPropagation()
+  if (!(await emitTagEvent('close', event))) return
+  closed.value = true
+}
+
 const className = computed(() => {
   const mode = displayMode.value
   const classes = ['vamis-tag', `vamis-tag--${mode}`]
@@ -72,15 +104,19 @@ const className = computed(() => {
   if (color.value) classes.push('vamis-tag--has-color')
   if (isPreset.value) classes.push(`vamis-tag--${mode}--${color.value}`)
   if (props.schema.disabled) classes.push('is-disabled')
+  if (checkable.value && checked.value) classes.push('is-checked')
   return classes.join(' ')
 })
 </script>
 
 <template>
-  <span :class="className" :style="tagStyle">
+  <span v-if="!closed" :class="className" :style="tagStyle" @click="onClick" @mouseenter="emitTagEvent('mouseenter', $event)" @mouseleave="emitTagEvent('mouseleave', $event)">
     <span class="vamis-tag__text" :title="label || undefined">
       <span v-if="displayMode === 'status'" class="vamis-tag__prev" aria-hidden="true" />
       {{ label }}
     </span>
+    <button v-if="closable && !props.schema.disabled" type="button" class="vamis-tag__close" aria-label="关闭" @click="onClose">
+      <VamisClose />
+    </button>
   </span>
 </template>
