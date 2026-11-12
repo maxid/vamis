@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 总结行用 rows 数据域渲染 affix/prefix 单元格
+- 稳定做法：`prefixRow/affixRow` 是 SchemaNode 数组，按 `colSpan` 渲染 TableCell；extra-data 注入 `{...data, rows}` 供 `${rows|...}`；`type:'text'` 归一成 `{type:'tpl',tpl:text}`（Vamis text 别名是 input-text，不能直接进表格）。
+- 触及：`table`
+
 ### Table 超级表头按相邻 groupName 分组 colspan
 - 稳定做法：有任一列 groupName 时多画一行表头；相邻同组列合并 colspan，未分组列保留空 th；普通表头行保留 `rowspan=2` 的选择列。不要在列 schema 上改 label 代替分组。
 - 触及：`table`

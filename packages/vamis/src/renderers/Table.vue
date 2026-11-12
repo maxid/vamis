@@ -34,6 +34,17 @@ const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
+const prefixRow = computed(() => (Array.isArray(props.schema.prefixRow) ? props.schema.prefixRow : []) as SchemaObject[])
+const affixRow = computed(() => (Array.isArray(props.schema.affixRow) ? props.schema.affixRow : []) as SchemaObject[])
+const summaryData = computed(() => ({ ...(props.data || {}), rows: rows.value }))
+function summaryCell(cell: SchemaObject): SchemaObject {
+  return cell?.type === 'text' && cell.text != null ? { type: 'tpl', tpl: cell.text } : cell
+}
+function summaryClass(expr: unknown) {
+  if (expr == null || expr === '') return ''
+  return typeof expr === 'string' && expr.includes('${') ? resolveClassName(expr, summaryData.value) : String(expr)
+}
+
 const hasGroups = computed(() => columns.value.some((col) => col.groupName != null && col.groupName !== ''))
 const headerGroups = computed(() => {
   const groups: Array<{ label: string; span: number }> = []
@@ -244,6 +255,11 @@ function rowClass(row: Record<string, any>) {
   <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
   <Table>
     <TableHeader>
+      <TableRow v-if="prefixRow.length" :class="summaryClass(schema.prefixRowClassName)">
+        <TableCell v-for="(cell, ci) in prefixRow" :key="'p' + ci" :colspan="cell.colSpan ?? 1">
+          <SchemaRenderer :schema="summaryCell(cell)" :extra-data="summaryData" />
+        </TableCell>
+      </TableRow>
       <TableRow v-if="hasGroups">
         <TableHead v-if="selectable" :rowspan="2" />
         <TableHead v-for="(group, gi) in headerGroups" :key="'g' + gi" :colspan="group.span" class="text-center">
@@ -280,6 +296,11 @@ function rowClass(row: Record<string, any>) {
           <PopOverHost v-else :schema="col" :data="row">
             <span>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
           </PopOverHost>
+        </TableCell>
+      </TableRow>
+      <TableRow v-if="affixRow.length" :class="summaryClass(schema.affixRowClassName)">
+        <TableCell v-for="(cell, ci) in affixRow" :key="'a' + ci" :colspan="cell.colSpan ?? 1">
+          <SchemaRenderer :schema="summaryCell(cell)" :extra-data="summaryData" />
         </TableCell>
       </TableRow>
     </TableBody>
