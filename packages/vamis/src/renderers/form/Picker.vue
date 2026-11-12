@@ -127,11 +127,15 @@ function confirm() {
   if (pickerSchema.value) {
     const key = String(pickerSchema.value.id || pickerSchema.value.name || '')
     const nested = key ? scoped?.getComponentById(key) : undefined
-    const items = nested?.getData?.()?.selectedItems
+    const nestedData = nested?.getData?.() as Record<string, any> | undefined
+    const items = nestedData?.selectedItems
     if (Array.isArray(items)) {
       draft.value = items
         .map((item: any) => (item && typeof item === 'object' ? item[valueField.value] ?? item.value : item))
         .filter((item) => item != null)
+    } else if (nestedData && typeof nestedData === 'object') {
+      const raw = nestedData[valueField.value]
+      if (raw != null) draft.value = Array.isArray(raw) ? raw : [raw]
     }
   }
   selected.value = [...draft.value]

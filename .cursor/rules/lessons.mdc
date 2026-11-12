@@ -770,6 +770,10 @@ alwaysApply: true
 - 稳定做法：source 以 `$` 开头 resolveValue 拿数组；API 归一到 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source + schema.data 用 isApiOutdated。
 - 触及：`transfer`
 
+### Picker pickerSchema 兼容 table selectedItems 与 form valueField
+- 稳定做法：确认时 getComponentById(key).getData()，有 selectedItems 数组按 valueField 映射；否则对象取 data[valueField]（数组/单值）；自定义表单字段名需与 valueField 一致。
+- 触及：`picker`
+
 ### Picker pickerSchema 用 scoped.getComponentById 桥接内层 table
 - 稳定做法：pickerSchema 存在时弹层渲染 SchemaRenderer，内部 table 需 selectable 且 name/id；确认时 getComponentById(key).getData().selectedItems 按 valueField 映射到 draft；自定义表单取值仍未接。
 - 触及：`picker`
