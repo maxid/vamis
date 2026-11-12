@@ -724,6 +724,12 @@ alwaysApply: true
 - 触及：`input-number`
 - 规则：本文；Amis `InputNumber.tsx` `defaultProps`
 
+### Form 重置要 clone 初始数据；生命周期事件按 Amis 语义分发
+- 踩过：`store.data` 直接引用 `initialFormData`，用户输入原地改动后 `reset()` 把同一个对象赋回去，值没变；`resetAfterSubmit` 看着完全没生效。`persistData` 恢复同理，必须 clone，否则默认值被污染。
+- 稳定做法：setup 时快照 `initialFormData`，`readPersisted` / `reset` 都 `cloneData`；`inited` 在首次 `initApi` 后发（带 responseData/Status/Msg/error），`initApiFinished` 每次 reload 都发（`__trigger: init|reload`）；`change` 挂在 Form 的 `setValue`；`validateSucc/Error`、`formItemValidate*` 在 `validate()` 内发；`submitSucc/submitFail` 包在提交 try/catch；`preventEnterSubmit` 默认 false（true 才拦回车）；`rules.rule` 用 `data.x` 表达式，`name` 命中则写表单项 errors，否则挂 `errors.__form` 在表单底部展示。
+- 触及：`form` `formitem` `combo`
+- 规则：`packages/vamis/src/renderers/Form.vue`
+
 ### static-xxx 用 renderer test 兜底，不要逐个注册；copyable 走默认 `${name | raw}`
 - 踩过：`static-datetime` / `static-mapping` / `static-progress` / `static-images` 没有精确注册就落到未知 type；`static` 自己做一份文本展示又和 `static-json` / `static-image` 的现成渲染器分叉。
 - 稳定做法：`registerRenderer({ type: 'static', test: /(^|\/)static(-[^/]+)?$/, weight: -90 })`，Static 里 `subType = suffix || (tpl ? 'tpl' : 'plain')`，其余交给 `SchemaRenderer` 渲染目标 type（json/date/mapping/progress/images…），并注入 `value` + 按 name 覆盖的 data。`text` 是纯文本、`tpl` 是 HTML；空值占位 `-`；`copyable` 默认 `${name | raw}`、支持 content/tooltip；`borderMode` full/half 套输入框外观。FormItem 传 `static: false`，整表单 static 时仍由 Static 自己展示。quickEdit 未接要写进差异。

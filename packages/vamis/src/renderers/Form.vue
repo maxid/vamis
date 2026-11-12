@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   SchemaRenderer,
   LazyComponent,
@@ -15,6 +15,8 @@ import {
   createObject,
   createStoreId,
   dataMapping,
+  evalExpression,
+  filterTpl,
   formItemStatic,
   formItemSubmitOnChange,
   formItemValidateOnChange,
@@ -56,16 +58,74 @@ const parentScoped = useScoped()
 const scoped = provideScoped(parentScoped)
 const overlay = useOverlay()
 const scope = useScope()
+const PERSIST_KEY = typeof props.schema.persistData === 'string' ? props.schema.persistData : ''
+
+/** Amis persistData：localStorage 恢复 + 只存 persistDataKeys（缺省全存）。 */
+function readPersisted(defaults: Record<string, any>): Record<string, any> {
+  if (!PERSIST_KEY || typeof localStorage === 'undefined') return cloneData(defaults)
+  try {
+    const raw = localStorage.getItem(PERSIST_KEY)
+    if (!raw) return defaults
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return defaults
+    const keys = asArray(props.schema.persistDataKeys).map(String)
+    const picked: Record<string, any> = {}
+    for (const [key, value] of Object.entries(parsed)) {
+      if (!keys.length || keys.includes(key)) picked[key] = value
+    }
+    return cloneData({ ...defaults, ...picked })
+  } catch {
+    return cloneData(defaults)
+  }
+}
+
+function persistNow() {
+  if (!PERSIST_KEY || typeof localStorage === 'undefined') return
+  try {
+    const keys = asArray(props.schema.persistDataKeys).map(String)
+    const out: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(store.data)) {
+      if (key.startsWith('__')) continue
+      if (keys.length && !keys.includes(key)) continue
+      out[key] = value
+    }
+    localStorage.setItem(PERSIST_KEY, JSON.stringify(out))
+  } catch {
+    /* 隐私模式 / QuotaExceeded 时静默 */
+  }
+}
+
+function clearPersisted() {
+  if (!PERSIST_KEY || typeof localStorage === 'undefined') return
+  try {
+    localStorage.removeItem(PERSIST_KEY)
+  } catch {
+    /* ignore */
+  }
+}
+
+const initialFormData = applyFormItemDefaults(
+  collectFormItems(asArray(props.schema.body || props.schema.controls)),
+  { ...(props.data || {}), ...(props.schema.data || {}) },
+)
+
+function cloneData(data: Record<string, any>): Record<string, any> {
+  try {
+    return structuredClone(data)
+  } catch {
+    return JSON.parse(JSON.stringify(data))
+  }
+}
+
 const store = hub.add({
   id: createStoreId('form'),
   type: 'form',
   name: props.schema.name,
-  data: applyFormItemDefaults(
-    collectFormItems(asArray(props.schema.body || props.schema.controls)),
-    { ...(props.data || {}), ...(props.schema.data || {}) },
-  ),
+  data: readPersisted(initialFormData),
 })
 
+const rootEl = ref<HTMLElement | null>(null)
+let initedFired = false
 const body = computed(() => asArray(props.schema.body || props.schema.controls))
 const actions = computed(() => asArray(props.schema.actions))
 const actionsDefined = computed(() => Array.isArray(props.schema.actions))
@@ -140,6 +200,11 @@ const nativeForm = computed(() => wrapTag.value === 'form')
 const submitButtonType = computed(() => (nativeForm.value ? 'submit' : 'button'))
 
 function onNestedEnter(event: KeyboardEvent) {
+  if (props.schema.preventEnterSubmit === true) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
   if (nativeForm.value) return
   const el = event.target as HTMLElement | null
   if (!el) return
@@ -182,6 +247,7 @@ function setValue(name: string, value: unknown) {
     delete store.errors[name]
   }
   if (item) scheduleAutoFill(item, value)
+  void emitFormEvent('change')
   if (item && formItemSubmitOnChange(item, props.schema)) void submit()
 }
 
@@ -242,6 +308,41 @@ function setError(name: string, message: string) {
   store.errors[name] = message
 }
 
+function formEventCtx(extra: Record<string, unknown> = {}) {
+  return {
+    env,
+    data: { ...props.data, ...store.data, ...extra },
+    scoped,
+    overlay,
+    form: formApi,
+  }
+}
+
+/** 对齐 Amis onEvent：inited / change / validate* / submit* / initApiFinished。 */
+async function emitFormEvent(eventName: string, extra: Record<string, unknown> = {}) {
+  await runOnEvent(props.schema, eventName, formEventCtx(extra))
+}
+
+function messageOf(key: 'saveSuccess' | 'saveFailed' | 'validateFailed' | 'fetchSuccess' | 'fetchFailed', fallback: string) {
+  const messages = props.schema.messages
+  if (messages && typeof messages === 'object' && !Array.isArray(messages)) {
+    const value = (messages as Record<string, unknown>)[key]
+    if (typeof value === 'string' && value) return filterTpl(value, store.data)
+  }
+  return fallback
+}
+
+function trimDeep(value: unknown): unknown {
+  if (typeof value === 'string') return value.trim()
+  if (Array.isArray(value)) return value.map(trimDeep)
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {}
+    for (const [key, item] of Object.entries(value)) out[key] = trimDeep(item)
+    return out
+  }
+  return value
+}
+
 function validate(extraRequired: string[] = []): boolean {
   store.errors = {}
   let ok = true
@@ -249,18 +350,54 @@ function validate(extraRequired: string[] = []): boolean {
   for (const item of formItems()) {
     if (!item.name) continue
     if (!isVisible(item, store.data)) continue
-    const schema = extra.has(String(item.name)) ? { ...item, required: true } : item
-    const message = validateValue(schema, getPathValue(store.data, String(item.name)), store.data)
+    const itemName = String(item.name)
+    const itemValue = getPathValue(store.data, itemName)
+    const schema = extra.has(itemName) ? { ...item, required: true } : item
+    const message = validateValue(schema, itemValue, store.data)
     if (message) {
-      store.errors[String(item.name)] = message
+      store.errors[itemName] = message
       ok = false
+      void emitFormEvent('formItemValidateError', {
+        __formName: itemName,
+        __formValue: itemValue,
+        __errors: message,
+      })
+    } else {
+      void emitFormEvent('formItemValidateSucc', {
+        __formName: itemName,
+        __formValue: itemValue,
+      })
     }
   }
+  // Amis rules：组合校验，`name` 命中则高亮对应表单项，否则错误挂在表单底部。
+  for (const raw of asArray(props.schema.rules)) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) continue
+    const rule = raw as Record<string, unknown>
+    const expr = typeof rule.rule === 'string' ? rule.rule : ''
+    if (!expr) continue
+    let passed = true
+    try {
+      passed = !!evalExpression(expr, { ...store.data, data: store.data })
+    } catch {
+      passed = true
+    }
+    if (passed) continue
+    ok = false
+    const message = typeof rule.message === 'string' && rule.message ? rule.message : '表单校验失败'
+    const rawNames = Array.isArray(rule.name) ? rule.name : rule.name == null ? [] : [rule.name]
+    const names = rawNames.map(String).filter(Boolean)
+    if (names.length) {
+      for (const next of names) store.errors[next] = message
+    } else {
+      store.errors.__form = message
+    }
+  }
+  void emitFormEvent(ok ? 'validateSucc' : 'validateError')
   return ok
 }
 
 function reset() {
-  store.data = { ...(props.data || {}), ...(props.schema.data || {}) }
+  store.data = cloneData(initialFormData)
   store.errors = {}
 }
 
@@ -282,8 +419,11 @@ function closeOverlayDialog(values: Record<string, unknown>) {
 }
 
 async function submit() {
+  if (props.schema.trimValues === true) {
+    store.data = trimDeep(store.data) as Record<string, any>
+  }
   if (!validate()) {
-    env.notify('error', '请检查表单')
+    env.notify('error', messageOf('validateFailed', '请检查表单'))
     return
   }
   let remoteOk = true
@@ -292,7 +432,7 @@ async function submit() {
     if (!(await runValidateApi(item))) remoteOk = false
   }
   if (!remoteOk) {
-    env.notify('error', '请检查表单')
+    env.notify('error', messageOf('validateFailed', '请检查表单'))
     return
   }
   const target = typeof props.schema.target === 'string' ? props.schema.target.trim() : ''
@@ -340,7 +480,7 @@ async function submit() {
     if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
       scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
     }
-    env.notify('success', apiMessage(api, result.payload, 'success'))
+    env.notify('success', messageOf('saveSuccess', apiMessage(api, result.payload, 'success')))
     if (props.schema.reload) {
       await scoped.reload(props.schema.reload, store.data)
     }
@@ -351,12 +491,62 @@ async function submit() {
       overlay,
       form: formApi,
     })
+    await emitFormEvent('submitSucc', { result: result.payload })
+    if (props.schema.clearPersistDataAfterSubmit !== false) clearPersisted()
+    if (props.schema.resetAfterSubmit === true) reset()
+    const redirect = props.schema.redirect
+    if (typeof redirect === 'string' && redirect) {
+      const payload = (result.payload || {}) as unknown as Record<string, unknown>
+      env.jumpTo(filterTpl(redirect, { ...store.data, ...payload }))
+    }
     closeOverlayDialog(store.data)
   } catch (error) {
-    env.notify('error', error instanceof Error ? error.message : '提交失败')
+    const message = error instanceof Error ? error.message : '提交失败'
+    env.notify('error', messageOf('saveFailed', message))
+    void emitFormEvent('submitFail', { error })
   } finally {
     store.saving = false
   }
+}
+
+async function runInitApi(
+  trigger: 'init' | 'reload',
+  extra?: Record<string, any>,
+  replace = false,
+): Promise<Record<string, unknown> | null> {
+  if (extra && typeof extra === 'object') {
+    if (replace) {
+      for (const key of Object.keys(store.data)) delete store.data[key]
+    }
+    Object.assign(store.data, extra)
+  }
+  if (!isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data })) return null
+  let last: Record<string, unknown> | null = null
+  store.fetching = true
+  try {
+    const result = await requestApi(props.schema.initApi, { env, data: { ...props.data, ...store.data }, reason: 'init' })
+    if (!result.skipped) {
+      const payload = (result.payload || {}) as unknown as Record<string, unknown>
+      last = {
+        responseData: result.data,
+        responseStatus: payload.status,
+        responseMsg: payload.msg,
+        error: !result.ok,
+      }
+      if (result.ok) {
+        mergeApiData(store.data, result)
+        if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+          scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
+        }
+      } else {
+        env.notify('error', messageOf('fetchFailed', apiMessage(props.schema.initApi, result.payload, 'failed')))
+      }
+    }
+  } finally {
+    store.fetching = false
+  }
+  if (last) await emitFormEvent('initApiFinished', { ...last, __trigger: trigger })
+  return last
 }
 
 const formApi = {
@@ -367,27 +557,7 @@ const formApi = {
   reset,
   clear,
   reload: async (extra?: Record<string, any>, replace = false) => {
-    if (extra && typeof extra === 'object') {
-      if (replace) {
-        for (const key of Object.keys(store.data)) delete store.data[key]
-      }
-      Object.assign(store.data, extra)
-    }
-    if (!isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data })) return
-    store.fetching = true
-    try {
-      const result = await requestApi(props.schema.initApi, { env, data: { ...props.data, ...store.data }, reason: 'init' })
-      if (!result.skipped && result.ok) {
-        mergeApiData(store.data, result)
-        if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
-          scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
-        }
-      } else if (!result.skipped && !result.ok) {
-        env.notify('error', apiMessage(props.schema.initApi, result.payload, 'failed'))
-      }
-    } finally {
-      store.fetching = false
-    }
+    await runInitApi('reload', extra, replace)
   },
   getData: () => ({ ...store.data }),
   setData: (values: Record<string, any>, replace = false, reason: ChangeReason = 'action') => {
@@ -422,19 +592,49 @@ provideFormApi(formApi)
 parentScoped?.register(formApi)
 registerWizardValidate(validate)
 
-onMounted(() => {
+function focusFirstField() {
+  const root = rootEl.value
+  if (!root) return
+  const candidates = root.querySelectorAll<HTMLElement>(
+    'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled])',
+  )
+  for (const el of candidates) {
+    if (el.offsetParent !== null) {
+      el.focus()
+      return
+    }
+  }
+}
+
+onMounted(async () => {
   if (overlay?.state.dialog) {
     overlay.registerDialogForm(submit)
     dialogFormBound = true
   }
-  if (isEffectiveApi(props.schema.initApi, { ...props.data, ...store.data }, props.schema.initFetch, props.schema.initFetchOn)) {
-    void formApi.reload()
+  let initResult: Record<string, unknown> | null = null
+  if (
+    isEffectiveApi(
+      props.schema.initApi,
+      { ...props.data, ...store.data },
+      props.schema.initFetch,
+      props.schema.initFetchOn,
+    )
+  ) {
+    initResult = await runInitApi('init')
   }
+  if (!initedFired) {
+    initedFired = true
+    await emitFormEvent('inited', initResult ? { ...initResult } : { error: false })
+  }
+  await nextTick()
+  if (props.schema.autoFocus === true) focusFirstField()
+  if (props.schema.submitOnInit === true) void submit()
 })
 watch(
   () => store.data,
   () => {
     clearHiddenFormValues(formItems(), store.data)
+    persistNow()
   },
   { deep: true },
 )
@@ -460,6 +660,7 @@ onBeforeUnmount(() => {
 <template>
   <LazyComponent :default-visible="!lazyLoad">
     <component
+      ref="rootEl"
       :is="wrapTag"
       class="w-full min-w-0"
       :class="cn('vamis-form', isInline && 'vamis-form--inline', isRow && 'vamis-form--row')"
@@ -480,6 +681,7 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
           </template>
         </CardContent>
+        <p v-if="store.errors.__form" class="m-t-xs text-xs text-destructive">{{ store.errors.__form }}</p>
         <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <CardFooter v-if="showActionBar" :class="actionsClass">
           <template v-if="hasCustomActions">
