@@ -5,8 +5,8 @@ outline: deep
 
 # Card 卡片
 
-::: info 实现进度 70% · 进行中
-文档主路径已对齐：`header` 标题/副标题/描述/头像/`avatarText` 与背景色、`body` 字段或字符串、`useCardLabel` 默认 true、`actions`（含 `icon: fa fa-*`）、`href` 优先于 `itemAction`、`media` / `mediaPosition` 默认 left、`secondary` / `toolbar`。缺勾选/拖拽、`themeCss`。
+::: info 实现进度 80% · 进行中
+文档主路径已对齐：`header` 标题/副标题/描述/头像/`avatarText` 与背景色、`body` 字段或字符串、`useCardLabel` 默认 true、`actions`（含 `icon: fa fa-*`）、`href` 优先于 `itemAction`、`media` / `mediaPosition` 默认 left、`secondary` / `toolbar`。补标签 / 按钮 / 文本 / 单元格章节；缺勾选/拖拽、`themeCss`。
 :::
 
 单张卡片。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -159,6 +159,72 @@ actions:
 toolbar:
   - type: tpl
     tpl: 标签
+```
+
+## 设置标签卡片
+
+`toolbar` 可放标签、`secondary` 放次要说明：
+
+```schema: scope="body"
+type: card
+header:
+  title: 标题
+body: 这里是卡片内容
+secondary: 次要说明
+toolbar:
+  - type: tpl
+    tpl: 标签
+    className: label label-warning
+```
+
+## 设置按钮卡片
+
+`itemAction` 让整张卡片可点击，常用于「创建 / 添加」入口：
+
+```schema: scope="body"
+type: card
+body:
+  type: wrapper
+  className: h-32 flex items-center justify-center
+  body:
+    type: tpl
+    tpl: 点击会有弹框
+itemAction:
+  type: button
+  actionType: dialog
+  dialog:
+    title: 详情
+    body: 当前描述
+```
+
+## 设置文本卡片
+
+`body` 直接放文本或 tpl，适合纯说明卡片：
+
+```schema: scope="body"
+type: card
+header:
+  title: 文本卡片
+body:
+  type: tpl
+  tpl: 这里是一段文本内容
+```
+
+## 设置单元格卡片
+
+`body` 用 `list-item` / `hbox` 组合出单元格样式：
+
+```schema: scope="body"
+type: card
+header:
+  title: 单元格
+body:
+  type: hbox
+  columns:
+    - label: 名称
+      name: name
+    - label: 状态
+      name: status
 ```
 
 ## 常用属性
