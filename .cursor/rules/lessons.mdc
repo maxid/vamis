@@ -730,6 +730,12 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### 日期范围的存储/展示分离 + 对照探针
+- 踩过：`input-date-range` 默认 `valueFormat: X`，直接拿 `value` 当显示文本会显示时间戳；两端 input 都没有 `name`，对照按 label 兜底会把「日期范围」文本读成 value。
+- 稳定做法：读值时按 `valueFormat`（默认 X）用 `filterDate` 解析，显示按 `displayFormat`（默认 YYYY-MM-DD）；结束日期默认对齐到当天的 `23:59:59`（结束字段存储时 `endOf('day')`）。单字段用 `delimiter`（默认逗号）拼，`extraName` 时开始/结束分别写两个字段。`shortcuts` 预设 + `{n}daysago` 等动态文案 + `{label,startDate,endDate}`。对照探针：`input-date-range` rendered 用表单项外壳 `[data-amis-name]/[data-name]`，value 直接读 formData / schemaValue，不要走 label 文本。
+- 触及：`input-date-range` `input-datetime-range`
+- 规则：`packages/vamis/src/renderers/form/DateRange.vue`；Amis `InputDateRange.tsx`、`DateRangePicker`
+
 ### Mapping 的 label 走 tpl/schema，不要 strip HTML；Tag label 要落到 value
 - 踩过：旧 Mapping 用 `Badge` + `strip(html)`，HTML 标签样式全丢；schema 映射 `{type:'tag', label}` 到了 Vamis Tag（只读 value/tags）显示 `-`。
 - 稳定做法：字符串 label 渲染 `{type:'tpl', tpl}`，对象 label 按 `labelField` / `label` / `type` 三路；`tag` 映射把 `label` 落到 `value`；`itemSchema` 字符串走 tpl、对象走 SchemaRenderer，extra-data 合并 `item` 或对象字段。对象数组单 key → key→value，多 key → `valueField` 匹配；`source` 纯变量走 resolveValue（`$${}` 先去掉一个 `$`），远程走 requestApi 后归一 options/items/records；布尔尝试 `1` / `0` 再 `*`。`static-mapping` 对照探针读 schemaValue，别读表单域。

@@ -57,6 +57,7 @@ const isStatic = computed(() =>
   formItemStatic(props.schema, data.value, form?.isStatic?.() === true, statusStaticOf(props.schema)),
 )
 const locked = computed(() => props.disabled || isStatic.value || props.schema.readOnly === true)
+const embed = computed(() => props.schema.embed === true)
 const clearable = computed(() => props.schema.clearable !== false)
 const placeholder = computed(() => String(props.schema.placeholder || '请选择日期范围'))
 const displayFormat = computed(() => {
@@ -335,6 +336,36 @@ const formItemSchema = computed(() => (isStaticOutside.value ? props.schema : { 
 <template>
   <FormItem :schema="formItemSchema">
     <span v-if="isStatic" class="vamis-form-static">{{ [displayStart, displayEnd].filter(Boolean).join(' ~ ') || '-' }}</span>
+    <div v-else-if="embed" class="vamis-date-picker is-embed">
+      <div v-if="shortcuts.length" class="vamis-date-picker__shortcuts">
+        <button
+          v-for="item in shortcuts"
+          :key="item.key || item.label"
+          type="button"
+          class="vamis-date-picker__shortcut"
+          @mousedown.prevent
+          @click="pickShortcut(item)"
+        >
+          {{ item.label }}
+        </button>
+      </div>
+      <DateCalendarPanel
+        :cursor="cursor.toDate()"
+        view="days"
+        :weeks="weeks"
+        :year-label="yearLabel"
+        :month-label="monthLabel"
+        :decade="decade"
+        :selected-iso="draftStart ? draftStart.format('YYYY-MM-DD') : selectedIso"
+        @shift-month="cursor = cursor.add($event, 'month')"
+        @shift-year="cursor = cursor.add($event, 'year')"
+        @pick-year="(year) => (cursor = cursor.year(year))"
+        @pick-month="(month) => (cursor = cursor.month(month))"
+        @pick-day="pickDay"
+        @open-year="() => {}"
+        @open-month="() => {}"
+      />
+    </div>
     <div
       v-else
       ref="rootEl"

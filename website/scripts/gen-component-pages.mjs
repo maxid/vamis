@@ -59,6 +59,7 @@ const HANDWRITTEN = new Set([
   '/components/form/input-text',
   '/components/form/input-password',
   '/components/form/input-date',
+  '/components/form/input-date-range',
   '/components/form/input-datetime',
   '/components/form/input-time',
   '/components/form/checkbox',

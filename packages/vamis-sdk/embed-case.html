@@ -392,6 +392,13 @@
               const control = item && item.querySelector('input[type="checkbox"], input[type="radio"]')
               if (control) return control
             }
+            if (node.type === 'input-date-range' || node.type === 'input-datetime-range') {
+              const esc = cssEscapeName(node.name)
+              const item = document.querySelector(
+                '[data-amis-name="' + esc + '"], [data-name="' + esc + '"]'
+              )
+              if (item) return item
+            }
             if (node.type === 'input-file' || node.type === 'input-image') {
               const esc = cssEscapeName(node.name)
               const item = document.querySelector(
@@ -496,6 +503,11 @@
         function readNodeValue(node, formData) {
           // static-image / static-images 是展示字段：Amis 不从表单域回读，统一用 schemaValue。
           if (node.type === 'static-image' || node.type === 'static-images' || node.type === 'static-mapping') return node.schemaValue
+          // 日期范围两端都没有 name input；标签兜底会把 label/日历文本读成值，统一取表单域。
+          if (node.type === 'input-date-range' || node.type === 'input-datetime-range') {
+            if (node.name && formData && node.name in formData) return formData[node.name]
+            return node.schemaValue
+          }
           // 文件/图片输入的原生 input 才是真实控件值；别把表单域里 Amis 不暴露的初始值读成差异。
           if (node.type === 'input-file' || node.type === 'input-image') {
             const control = findNodeEl(node)
