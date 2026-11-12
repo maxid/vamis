@@ -49,7 +49,9 @@ const FLAT_OPTIONS = `- label: 选项 A
 
 const HANDWRITTEN = new Set([
   '/components/',
+  '/components/mapping',
   '/components/form/',
+  '/components/form',
   '/components/form/formitem',
   '/components/form/control',
   '/components/form/options',

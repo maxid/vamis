@@ -5760,3 +5760,50 @@
   height: var(--control-h-lg);
   line-height: var(--control-h-lg);
 }
+
+/*
+ * Amis 旧版 `.label-*` utility 兼容：mapping / tpl / static 的 HTML 里常见
+ * `<span class="label label-info">`。这不是 Vamis 的 Badge 组件，保持 Amis 的
+ * 75% 字号、白色文字和语义底色，方便存量 schema 迁移。
+ */
+.vamis-root .label,
+.vamis-sdk .label {
+  display: inline-block;
+  padding: 0.2em 0.6em 0.3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25em;
+}
+.vamis-root .label:empty,
+.vamis-sdk .label:empty {
+  display: none;
+}
+.vamis-root .label-default,
+.vamis-sdk .label-default {
+  background: #d4d6d9;
+}
+.vamis-root .label-primary,
+.vamis-sdk .label-primary {
+  background: var(--primary);
+}
+.vamis-root .label-success,
+.vamis-sdk .label-success {
+  background: var(--badge-success-bg);
+}
+.vamis-root .label-info,
+.vamis-sdk .label-info {
+  background: var(--badge-info-bg);
+}
+.vamis-root .label-warning,
+.vamis-sdk .label-warning {
+  background: var(--badge-warning-bg);
+}
+.vamis-root .label-danger,
+.vamis-sdk .label-danger {
+  background: var(--badge-danger-bg);
+}

@@ -123,7 +123,7 @@ alwaysApply: true
 ### 对标文档要改写成 Vamis，不要整节粘贴
 - 踩过：格式校验整节 splice Amis `formitem.md`，把 `2.2.0` / `1.4.0`、`github.com/baidu/amis`、「amis 会有默认的报错信息」带进 Vamis 文档。Vamis 没有 Amis 的版本线，也不是 Amis 仓库。
 - 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。Amis 旧示例里的 `type: text` 在 6.13 已不是注册 type（Amis 渲染不出来），改写时换 `input-text`，不要照抄旧别名。
-- 触及：FormItem `input-image`
+- 触及：FormItem `input-image` `form`
 - 规则：`.cursor/rules/site.mdc`
 
 ### 文档 json 围栏必须是合法 JSON 才能高亮
@@ -723,6 +723,30 @@ alwaysApply: true
 - 稳定做法：`schema.validations` 为空才补该 type 的默认规则。
 - 触及：`input-number`
 - 规则：本文；Amis `InputNumber.tsx` `defaultProps`
+
+### Amis `.label-*` 是 utility，不是 Badge；放在 `.vamis-root` / `.vamis-sdk` 内兼容
+- 踩过：mapping / tpl / static 的 HTML 经常写 `<span class='label label-info'>`。Vamis 只有 shadcn Badge，没有 Amis `_utilities.scss` 的 `.label-*`，这些映射直接退化成纯文本。
+- 稳定做法：在 `styles.css` 补 `.vamis-root .label` / `.vamis-sdk .label`，padding `0.2em 0.6em 0.3em`、75% 字号、白字、`0.25em` 圆角；颜色走 `--primary` / `--badge-info-bg` / `--badge-success-bg` / `--badge-warning-bg` / `--badge-danger-bg`，default 用 `#d4d6d9`。只挂在渲染根下，别污染文档站 / 宿主自己的 `.label`。
+- 触及：`mapping` `tpl` `static` `html`
+- 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
+
+### Mapping 的 label 走 tpl/schema，不要 strip HTML；Tag label 要落到 value
+- 踩过：旧 Mapping 用 `Badge` + `strip(html)`，HTML 标签样式全丢；schema 映射 `{type:'tag', label}` 到了 Vamis Tag（只读 value/tags）显示 `-`。
+- 稳定做法：字符串 label 渲染 `{type:'tpl', tpl}`，对象 label 按 `labelField` / `label` / `type` 三路；`tag` 映射把 `label` 落到 `value`；`itemSchema` 字符串走 tpl、对象走 SchemaRenderer，extra-data 合并 `item` 或对象字段。对象数组单 key → key→value，多 key → `valueField` 匹配；`source` 纯变量走 resolveValue（`$${}` 先去掉一个 `$`），远程走 requestApi 后归一 options/items/records；布尔尝试 `1` / `0` 再 `*`。`static-mapping` 对照探针读 schemaValue，别读表单域。
+- 触及：`mapping` `static-mapping` `statics`
+- 规则：`packages/vamis/src/renderers/Mapping.vue`
+
+### `submitText: ""` 去掉默认提交；`wrapWithPanel: false` 时 title/actions 失效
+- 踩过：`submitText || '提交'` 把空串当 falsy，Amis「通过 submitText 去掉提交按钮」仍画出「提交」。`wrapWithPanel: false` 还画 h2 标题和自定义 actions，Amis 文档写明两者都失效。
+- 稳定做法：只把 `submitText === ''` 当隐藏默认钮；`false` / 未写仍是「提交」。无 panel 时 `showActionBar` 恒 false，不要在非 panel 分支补标题。
+- 触及：`form`
+- 规则：本文；Amis `Form.tsx` `submitText` / `wrapWithPanel`
+
+### form 的 `schema.data` 要走 dataMapping，`\\${}` 转义成字面 `${}`
+- 踩过：Form 初始化直接 `{...schema.data}`，文档「不想映射就转义」示例 Vamis 显示 `\${rick}`，Amis 是 `${rick}`。
+- 稳定做法：`dataMapping(schema.data, parentData)` 后再和父域合并。`resolveValue` 对 `\${` 做 `replace(/\\\$\{/g, '${')`，不当表达式。
+- 触及：`form`
+- 规则：本文；Amis `tpl-builtin` `\\$`；`packages/vamis-core/src/formula.ts` `resolveValue`
 
 ### Form 重置要 clone 初始数据；生命周期事件按 Amis 语义分发
 - 踩过：`store.data` 直接引用 `initialFormData`，用户输入原地改动后 `reset()` 把同一个对象赋回去，值没变；`resetAfterSubmit` 看着完全没生效。`persistData` 恢复同理，必须 clone，否则默认值被污染。
