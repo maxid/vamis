@@ -5,7 +5,7 @@ outline: deep
 
 # Dialog 对话框
 
-::: info 实现进度 85% · 进行中
+::: info 实现进度 88% · 进行中
 文档主路径已对齐：`actionType: dialog` 打开 overlay、`title` / `body`、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton`（默认 true）、`closeOnEsc` / `closeOnOutside`（默认 false）、未写 `actions` 则取消+确认、嵌套弹层按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。窄屏（&lt;576 / 对照「移动」）弹层拉满、底栏取消+确认横排均分。关闭按钮 hover 出「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal。
 :::
 
@@ -135,6 +135,71 @@ buttons:
       closeOnOutside: true
 ```
 
+## 弹框与数据映射
+
+弹层共享当前数据域，`body` 里可直接用变量：
+
+```schema: scope="body"
+type: page
+data:
+  name: amis
+body:
+  - type: button
+    label: 查看详情
+    actionType: dialog
+    dialog:
+      title: 详情
+      body: "当前名称：${name}"
+```
+
+## 动作后关闭弹框
+
+弹层内按钮配 `actionType: close` 关闭当前层：
+
+```schema: scope="body"
+type: button
+label: 打开并关闭
+actionType: dialog
+dialog:
+  title: 提示
+  body:
+    type: container
+    body:
+      type: button
+      label: 关闭
+      actionType: close
+```
+
+## 弹框中配置表单
+
+`body` 用 `form` 时默认横向、无面板、无默认提交按钮；按钮由弹层 `actions` 提供：
+
+```schema: scope="body"
+type: button
+label: 编辑
+actionType: dialog
+dialog:
+  title: 编辑
+  body:
+    type: form
+    body:
+      - type: input-text
+        name: name
+        label: 名称
+  actions:
+    - type: button
+      label: 取消
+      actionType: close
+    - type: button
+      label: 保存
+      level: primary
+      actionType: close
+```
+
+## feedback 反馈弹框
+
+Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可用 `submitSucc` 事件 + `dialog` 动作组合。
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -156,5 +221,5 @@ buttons:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 嵌套弹层按栈替换顶层，不像素级错位叠出。
-- 不接 `draggable`、`feedback`、弹层内表单提交、`close:name` 关指定层。
+- 补数据映射 / 动作后关闭 / 弹层表单章节；不接 `draggable`、`feedback`、弹层内表单提交、`close:name` 关指定层。
 - 视觉走 shadcn Dialog token，不是 cxd Modal 皮肤。
