@@ -214,6 +214,27 @@ scoped?.register(tableApi as never)
 onBeforeUnmount(() => scoped?.unregister(tableApi as never))
 const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 
+function colWidth(col: SchemaObject): number {
+  const w = Number(col.width)
+  return Number.isFinite(w) && w > 0 ? w : 120
+}
+
+function fixedStyle(col: SchemaObject, index: number) {
+  const side = col.fixed === 'left' || col.fixed === 'right' ? col.fixed : ''
+  if (!side) return undefined
+  const fixedCols = columns.value
+    .slice(0, side === 'left' ? index : columns.value.length)
+    .filter((item, i) => item.fixed === side && (side === 'left' ? i < index : i > index))
+  const offset = fixedCols.reduce((sum, item) => sum + colWidth(item), 0)
+  return {
+    position: 'sticky' as const,
+    left: side === 'left' ? `${offset}px` : undefined,
+    right: side === 'right' ? `${offset}px` : undefined,
+    zIndex: 1,
+    background: 'var(--card)',
+  }
+}
+
 function colWidthStyle(col: SchemaObject) {
   const w = col.width
   if (w == null || w === '') return undefined
@@ -251,7 +272,7 @@ function rowClass(row: Record<string, any>) {
 </script>
 
 <template>
-  <div class="vamis-table-wrap">
+  <div class="vamis-table-wrap overflow-x-auto">
   <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
   <Table>
     <TableHeader>
@@ -268,7 +289,7 @@ function rowClass(row: Record<string, any>) {
       </TableRow>
       <TableRow>
         <TableHead v-if="selectable" :rowspan="hasGroups ? 2 : undefined" class="w-10"><input type="checkbox" :checked="allSelected()" @change="toggleAll"></TableHead>
-        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)" :class="{ 'cursor-pointer select-none': col.sortable === true }" @click="sortBy(col)">
+        <TableHead v-for="(col, ci) in columns" :key="`${col.name || col.label || ''}`" :style="[colWidthStyle(col), fixedStyle(col, ci)]" :class="{ 'cursor-pointer select-none': col.sortable === true }" @click="sortBy(col)">
           {{ col.label || col.name }}
           <span v-if="col.sortable === true" class="ml-1 text-xs text-muted-foreground">{{ sortIcon(col) }}</span>
         </TableHead>
@@ -284,7 +305,7 @@ function rowClass(row: Record<string, any>) {
         <TableCell
           v-for="(col, ci) in columns"
           :key="`${col.name || col.label || ''}`"
-          :style="colWidthStyle(col)"
+          :style="[colWidthStyle(col), fixedStyle(col, ci)]"
           :rowspan="cellMeta(i, ci)?.rowspan"
           :class="{ invisible: cellMeta(i, ci)?.skip }"
         >

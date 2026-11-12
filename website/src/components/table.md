@@ -5,7 +5,7 @@ outline: deep
 
 # Table 表格
 
-::: info 实现进度 92% · 进行中
+::: info 实现进度 95% · 进行中
 主路径：`columns`（name / label / type / width / tpl / mapping / action）、`data` / `source` 数据、空状态 `placeholder`、标题 `title`、行 `rowClassName`、整行 `itemAction`、列 `popOver`。缺独立数据域、`quickEdit`、多选 / 拖拽 / 合并单元格 / 超级表头 / 总结行等高阶能力。
 :::
 
@@ -221,6 +221,38 @@ columns:
 
 选择结果通过组件 `getData().selectedItems` 读取，动作见下。
 
+## 固定列
+
+列配 `fixed: left` / `right` 时横向滚动保持贴边；宽度用 `width` 控制：
+
+```schema: scope="body"
+type: table
+data:
+  items:
+    - id: "1"
+      name: Chrome
+      engine: Blink
+      version: "100"
+columns:
+  - name: id
+    label: ID
+    width: 80
+    fixed: left
+  - name: name
+    label: 名称
+    width: 180
+    fixed: left
+  - name: engine
+    label: Engine
+    width: 240
+  - name: version
+    label: Version
+    width: 240
+  - name: name
+    label: 名称
+    width: 240
+```
+
 ## 总结行
 
 `prefixRow` / `affixRow` 在表头下 / 表格底部插入总结行；单元格 schema 支持 `colSpan`。可用 `${rows|pick:version|sum}` 汇总：
@@ -302,6 +334,8 @@ columns:
 | `rowClassName` | `string` | | 行 class，支持表达式 |
 | `draggable` | `boolean` | `false` | 行拖拽排序 |
 | `columns[].groupName` | `string` | | 超级表头分组 |
+| `columns[].fixed` | `"left" \| "right"` | | 固定列 |
+| `columns[].width` | `number` / `string` | | 列宽 |
 | `prefixRow` / `affixRow` | `SchemaNode[]` | | 顶部 / 底部总结行，支持 `colSpan` |
 | `prefixRowClassName` / `affixRowClassName` | `string` | | 总结行 class |
 | `combineNum` | `number` | | 从左到右自动合并单元格列数 |
@@ -335,5 +369,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、行拖拽 / `orderChange`、选择动作、列 `popOver`。
-- 未接：独立数据域、固定列 / `quickEdit`。
+- 未接：独立数据域、`quickEdit`。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

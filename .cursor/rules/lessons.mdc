@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 固定列 sticky 偏移按同侧前序列宽累加
+- 稳定做法：`fixed:left/right` 输出 `position:sticky; left/right:offset; background:var(--card); zIndex:1`；offset 由同侧前序固定列 `width`（数字或默认 120）累加；外层容器必须 `overflow-x:auto`。
+- 触及：`table`
+
 ### Table 总结行用 rows 数据域渲染 affix/prefix 单元格
 - 稳定做法：`prefixRow/affixRow` 是 SchemaNode 数组，按 `colSpan` 渲染 TableCell；extra-data 注入 `{...data, rows}` 供 `${rows|...}`；`type:'text'` 归一成 `{type:'tpl',tpl:text}`（Vamis text 别名是 input-text，不能直接进表格）。
 - 触及：`table`
