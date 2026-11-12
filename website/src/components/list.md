@@ -5,41 +5,149 @@ outline: deep
 
 # List 列表
 
-::: info 实现进度 62% · 进行中
-未写 title 不再补「列表项」；hbox 列走 ListItem-field。`List-items` 盒模型对齐 Amis（右边距 15px、行 padding 8×12）。勾选 / 拖拽未接。
+::: info 实现进度 75% · 进行中
+`source` / `name` / `items` 取数、`listItem` 循环、`selectable` / `multiple` 多选与单选、`itemAction` 整行点击动作、`className` / `style`、`placeholder`、`itemClick` 事件、`select` / `selectAll` / `clearAll` 动作。缺字母索引条 / 拖拽排序。
 :::
 
-`list` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+列表展示；本身不拉接口，通常用静态数据、[Service](/components/service) 或 CRUD。Vamis 用 YAML 或 JSON 书写，字段名不改写。
 
 属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema
-type: page
-title: list
+```schema: scope="body"
+type: list
+source: "${rows}"
+listItem:
+  body:
+    type: hbox
+    columns:
+      - label: Engine
+        name: engine
+      - label: Version
+        name: version
 data:
-  items:
-    - name: 泵房-A
-      status: online
-    - name: 闸门-B
-      status: offline
-body:
-  - type: list
+  rows:
+    - browser: Chrome
+      engine: Blink
+      version: "100"
+    - browser: Safari
+      engine: WebKit
+      version: "15"
 ```
 
-## 常用属性
+## 选择模式
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+`selectable: true` 开启多选；`multiple: false` 为单选：
+
+```schema: scope="body"
+type: list
+selectable: true
+source: "${rows}"
+listItem:
+  body:
+    type: tpl
+    tpl: "${browser} (${version})"
+data:
+  rows:
+    - browser: Chrome
+      version: "100"
+    - browser: Safari
+      version: "15"
+```
+
+```schema: scope="body"
+type: list
+selectable: true
+multiple: false
+source: "${rows}"
+listItem:
+  body:
+    type: tpl
+    tpl: "${browser}"
+data:
+  rows:
+    - browser: Chrome
+    - browser: Safari
+```
+
+## 单行点击操作
+
+`itemAction` 配 action，点击整行触发（可弹框、刷新其它组件等）：
+
+```schema: scope="body"
+type: list
+source: "${rows}"
+itemAction:
+  type: button
+  actionType: dialog
+  dialog:
+    title: 详情
+    body: "当前行：${browser} ${version}"
+listItem:
+  body:
+    type: tpl
+    tpl: "${browser} - ${version}"
+data:
+  rows:
+    - browser: Chrome
+      version: "100"
+    - browser: Safari
+      version: "15"
+```
+
+## 设置组件的 CSS 类
+
+`className` 加在外层，`innerClassName` 留在列表层级（样式需自备）：
+
+```schema: scope="body"
+type: list
+className: p-2
+source: "${rows}"
+listItem:
+  body:
+    type: tpl
+    tpl: "${browser}"
+data:
+  rows:
+    - browser: Chrome
+    - browser: Safari
+```
+
+## 字母索引条
+
+Amis 的 `listItem` 配合 `index` 字段可显示字母索引条；Vamis 暂未接，按普通列表渲染。
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `source` / `name` | `string` | | 取数据域数组；`items` 也可直接传 |
+| `listItem` | SchemaNode | | 每行内容，默认 `list-item` |
+| `selectable` | `boolean` | `false` | 开启选择 |
+| `multiple` | `boolean` | `true` | `false` 单选 |
+| `itemAction` | Action | | 整行点击动作 |
+| `placeholder` | `string` | `暂无列表数据` | 空列表占位 |
+| `className` / `style` | | | 外层样式 |
+| `innerClassName` | `string` | | 列表层 class（未特殊处理） |
+
+## 事件表
+
+| 事件名称 | 事件参数 | 说明 |
+|----------|----------|------|
+| `itemClick` | 当前行数据 + `index` | 点击某一行 |
+
+## 动作表
+
+| 动作名称 | 动作配置 | 说明 |
+|----------|----------|------|
+| `select` | `args.index` | 选中/取消某行 |
+| `selectAll` | - | 全选 |
+| `clearAll` | - | 清空选择 |
+| `reload` / `setValue` | 同通用动作 | 由外层作用域处理 |
 
 ## 和 Amis 文档的差异
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
+- 与 Amis 一致：`source` / `listItem`、多选/单选、`itemAction`、`itemClick`、选择动作。
+- 未接：字母索引条、拖拽排序、`ListItem` 勾选框与 CRUD list 模式的联动细节；选择态存于组件本地（`getData()` 可读 `selectedItems`）。

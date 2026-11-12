@@ -285,7 +285,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `grid-nav` | GridNav 宫格导航 | `/components/grid-nav` | `/zh-CN/components/grid-nav` | 进行中 | 50% | 能宫格；仅此处读了 `badge` | P0 |
 | `json` | Json | `/components/json` | `/zh-CN/components/json` | 进行中 | 50% | 能展开 JSON | P0 |
 | `link` | Link 链接 | `/components/link` | `/zh-CN/components/link` | 进行中 | 85% | 主路径已对齐：`href` 插值 / `body` 与 SchemaNode、`blank`（默认 true）/ `htmlTarget`、`title`、`disabled`、`icon` / `rightIcon`、`badge`、`className` / `style`、`static-link`；文档按 Amis 章节改写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：`env.tracker` 埋点 | P0 |
-| `list` | List 列表 | `/components/list` | `/zh-CN/components/list` | 进行中 | 62% | 未写 title 不再补「列表项」；hbox 列走 `ListItem-field`。`List-items` 盒模型对齐 Amis（`margin-right: 15px`、行 padding 8×12、斑马纹打在包装层；字段 popOver 宿主 block + `svg.icon` 行盒）。其余勾选 / 拖拽未接 | P0 |
+| `list` | List 列表 | `/components/list` | `/zh-CN/components/list` | 进行中 | 75% | `source` / `name` / `items`、`listItem` 循环、`selectable` / `multiple` 多选单选、`itemAction` 整行点击、`placeholder`、`className` / `style`、`itemClick` 事件、`select` / `selectAll` / `clearAll` 动作；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**（P0 0）。缺字母索引条 / 拖拽排序 | P0 |
 | `log` | Log 实时日志 | `/components/log` | `/zh-CN/components/log` | 进行中 | 25% | **精简**：静态分行，无轮询/ANSI | P0 |
 | `mapping` | Mapping 映射 | `/components/mapping` | `/zh-CN/components/mapping` | 进行中 | 85% | 主路径已对齐：`map` 的 k-v / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串 / SchemaNode）、数组多值、布尔 `1` / `0`、`placeholder`；文档按 Amis 章节改写。HTML `.label-*` 走 `--label-*`（success `#30bf13`）；`type: tag` 走 `.vamis-tag`（rounded `#4096ff` 描边）。对照桌面 **14/14**、移动 **14/14**（P0 0）。余项：30s source 缓存未单实现 | P0 |
 | `number` | Number 展示 | `/components/number` | `/zh-CN/components/number` | 进行中 | 60% | StaticValue；number / percent 过滤器已接，组件自身精度档未齐 | P0 |
@@ -453,7 +453,7 @@ flowchart LR
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 85% |
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 85% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 80% |
-| 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 50% |
+| 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 75% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 80% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 85% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 90% |

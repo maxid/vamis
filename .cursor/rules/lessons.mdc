@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### List 的选择态是组件本地态；itemAction 用 runAction
+- 稳定做法：`selectable` 渲染原生 checkbox，multiple 切换 / 单选替换；`getData().selectedItems` 暴露；`itemClick` 先派发，再用 `runAction(itemAction, ctx)` 执行整行动作；对照 harvest 的 CHILD_KEYS 要包含 `listItem` / `itemAction`，否则 list 示例被 `LAYOUT_NEEDS_CHILDREN` 过滤。
+- 触及：`list` `list-item`
+
 ### Tag 的关闭/可选状态是本地态 + 事件，不要塞进 Badge
 - 稳定做法：`closable` 渲染按钮并派发 `close`（`prevented` 阻止隐藏）；`checkable` 点击 toggle `checked` 并派发 `click`；`mouseenter/leave` 也派发；样式用 `.vamis-tag__close` / `.is-checked`，mapping 的 tag schema 仍走 Tag 渲染。
 - 触及：`tag`

@@ -62,6 +62,8 @@ const CHILD_KEYS = [
   'controls',
   'buttons',
   'actions',
+  'listItem',
+  'itemAction',
   'steps',
   'tabs',
   'links',
