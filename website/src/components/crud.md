@@ -5,8 +5,8 @@ outline: deep
 
 # CRUD 增删改查
 
-::: info 实现进度 82% · 进行中
-文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。补 `loadDataOnce`（本地分页/筛选/排序）/ `syncLocation` / quickEdit 多控件；缺 `matchFunc`（D10）
+::: info 实现进度 84% · 进行中
+文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。补 `loadDataOnce`（本地分页/筛选/排序）/ `syncLocation` / quickEdit 多控件 / 表达式 matchFunc；缺 Amis JS 函数式 matchFunc（D10）
 :::
 
 `crud` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -44,6 +44,22 @@ body:
         searchable: true
       - name: status
         label: 状态
+```
+
+## 本地过滤函数
+
+`loadDataOnce` 下可配 `matchFunc`（Vamis 支持**表达式字符串**，按行求值；Amis 的 JS 函数字符串不支持）：
+
+```yaml
+type: crud
+loadDataOnce: true
+api: /api/mock2/sample
+matchFunc: "data.status === 'enabled'"
+columns:
+  - name: id
+    label: ID
+  - name: name
+    label: 名称
 ```
 
 ## 快速编辑
@@ -111,6 +127,7 @@ columns:
 | `type` | 组件种类，与 Amis 同名 |
 | `loadDataOnce` | 一次拉全量后本地分页 / 筛选 / 排序（默认 `false`） |
 | `columns[].quickEdit` | 单元格就地编辑：true / `{type: input-text\|input-number\|select\|textarea, options}` |
+| `matchFunc` | 本地行过滤表达式（Vamis 扩展） |
 | `syncLocation` | 从 URL 同步 page / perPage（默认 `false`） |
 | `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
 | `visibleOn` / `hiddenOn` | 显隐表达式 |
@@ -121,4 +138,4 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接 `loadDataOnce`（本地分页/筛选/排序）/ `syncLocation` / quickEdit 多控件；`matchFunc`（D10）仍未接。
+- 已接 `loadDataOnce`（本地分页/筛选/排序）/ `syncLocation` / quickEdit 多控件 / 表达式 matchFunc；Amis JS 函数式 matchFunc（D10）仍不执行。

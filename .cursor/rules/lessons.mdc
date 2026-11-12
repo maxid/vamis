@@ -742,6 +742,10 @@ alwaysApply: true
 - 稳定做法：挂载前 syncFromLocation（读取 page/perPage 并校验 >=1），切页/改 perPage 后 syncToLocation 用 URL + history.replaceState，不 pushState；筛选参数暂不同步，文档写清。
 - 触及：`crud`
 
+### CRUD matchFunc 只做表达式，不执行 JS 函数字符串
+- 稳定做法：loadDataOnce 本地过滤后，若 schema.matchFunc 是字符串则逐行 evalExpression，上下文含行字段 + query + data；异常时保留该行；Amis 的函数字符串不在 Vamis 执行，文档写明。
+- 触及：`crud`
+
 ### CRUD loadDataOnce 的筛选/排序也走本地
 - 稳定做法：allItems 只存原始全量；paginateLocal 先按 store.query（跳过 page/perPage/orderBy/orderDir）字段 contains 过滤，再 orderBy/orderDir 排序，最后 slice；筛选变化清 query 不重拉，只有 allItems 为空才请求。
 - 触及：`crud`

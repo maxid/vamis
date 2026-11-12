@@ -6,6 +6,7 @@ import {
   asArray,
   createStoreId,
   createVamisEvent,
+  evalExpression,
   eventEvalData,
   filterTpl,
   isApiOutdated,
@@ -225,6 +226,16 @@ function paginateLocal() {
   let list = allItems.value.filter((row) =>
     filters.every(([key, value]) => String(row?.[key] ?? '').toLowerCase().includes(String(value).toLowerCase())),
   )
+  const matchFunc = props.schema.matchFunc
+  if (typeof matchFunc === 'string' && matchFunc.trim()) {
+    list = list.filter((row) => {
+      try {
+        return !!evalExpression(matchFunc, { ...store.query, ...row, data: { ...row, query: store.query } })
+      } catch {
+        return true
+      }
+    })
+  }
   const orderBy = String(store.query.orderBy || '')
   if (orderBy) {
     const dir = String(store.query.orderDir || 'asc') === 'desc' ? -1 : 1
