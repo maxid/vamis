@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- 稳定化：修 Table 生命周期事件导入 / rowClick 事件类型、Cards SchemaRenderer 的 unknown 节点类型、Progress 单测断言；`pnpm test` 900 全过。typecheck 73（剩既有 input-date/sdk 配置报错）。
 - `drawer` #45：文档补动作后关闭 / 配置按钮 / resizable 未接章节；对照桌面 **8/8**、移动 **8/8**。85% → **88%**。
 - `dialog` #44：文档补数据映射 / 动作后关闭 / 弹层表单章节并注明 `feedback` 未接；对照桌面 **8/8**、移动 **8/8**。85% → **88%**。
 - `status` #49：补默认状态列表、`map`/`labelMap`、`source` 自定义（label/icon/color/className）、placeholder；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**。55% → **75%**。

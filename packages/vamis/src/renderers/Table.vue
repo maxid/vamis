@@ -1,6 +1,18 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { SchemaRenderer, resolveClassName, resolveValue, runAction, useEnv, useScoped, type ActionSchema, type SchemaObject } from '@vamis/core'
+import {
+  SchemaRenderer,
+  createVamisEvent,
+  eventEvalData,
+  resolveClassName,
+  resolveValue,
+  runAction,
+  runOnEvent,
+  useEnv,
+  useScoped,
+  type ActionSchema,
+  type SchemaObject,
+} from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import {
   Table,
@@ -94,7 +106,6 @@ async function onRowClick(row: Record<string, any>, event: MouseEvent) {
     env,
     data: { ...(props.data || {}), ...row },
     scoped,
-    event,
   })
 }
 

@@ -31,6 +31,9 @@ const host = useCrudHost()
 const scoped = useScoped()
 const localSelected = ref<Record<string, any>[]>([])
 const rows = computed(() => cardsSource(props.schema, props.data || {}, props.items))
+function asSchema(node: unknown): SchemaObject {
+  return node as SchemaObject
+}
 const card = computed(() => cardsCardSchema(props.schema))
 const title = computed(() => cardsTitle(props.schema, props.data || {}))
 const masonry = computed(() => cardsMasonry(props.schema))
@@ -130,7 +133,7 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
 <template>
   <div class="vamis-cards-wrap">
     <div v-if="title" class="vamis-cards-title">{{ title }}</div>
-    <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="node" />
+    <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="asSchema(node)" />
     <div
       v-if="rows.length"
       class="vamis-cards"
@@ -141,14 +144,14 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
       :style="colsStyle"
     >
       <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item">
-        <SchemaRenderer :schema="card" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
+        <SchemaRenderer :schema="asSchema(card)" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
       </div>
     </div>
     <div v-else class="vamis-cards-placeholder">
-      <SchemaRenderer v-if="placeholderNode" :schema="placeholderNode" />
+      <SchemaRenderer v-if="placeholderNode" :schema="asSchema(placeholderNode)" />
       <template v-else>{{ placeholder }}</template>
     </div>
-    <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="node" />
+    <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="asSchema(node)" />
   </div>
 </template>
 
