@@ -81,6 +81,7 @@ const HANDWRITTEN = new Set([
   '/components/grid-2d',
   '/components/hbox',
   '/components/pagination',
+  '/components/progress',
   '/components/pagination-wrapper',
   '/components/panel',
   '/components/tabs',

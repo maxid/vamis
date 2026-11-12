@@ -293,7 +293,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `office-viewer` | OfficeViewer Word 渲染 | `/components/office-viewer` | `/zh-CN/components/office-viewer` | 进行中 | 10% | **占位**：ViewerStub「未接入预览」（设计非目标） | P0 |
 | `office-viewer` | OfficeViewer Excel 渲染 | `/components/office-viewer-excel` | `/zh-CN/components/office-viewer-excel` | 进行中 | 10% | **占位**：同一 type + `excelOptions`，同样未接入 | P0 |
 | `pdf-viewer` | PDFViewer 渲染 | `/components/pdf-viewer` | `/zh-CN/components/pdf-viewer` | 进行中 | 10% | **占位**：ViewerStub | P0 |
-| `progress` | Progress 进度条 | `/components/progress` | `/zh-CN/components/progress` | 进行中 | 60% | 线性条；缺圆/仪表盘 | P0 |
+| `progress` | Progress 进度条 | `/components/progress` | `/zh-CN/components/progress` | 进行中 | 80% | `mode` line/circle/dashboard、`value`、`map`（单色/数组/阈值对象）、`strokeWidth`、`gapDegree`、`showLabel`/`valueTpl`、`stripe`/`animate`、`reset`/`setValue`。对照桌面 **6/6**、移动 **6/6**（P0 0）。缺 `threshold` 刻度线 / gapPosition 精确弧线 | P0 |
 | `steps` | Steps 步骤条 | `/components/steps` | `/zh-CN/components/steps` | 进行中 | 55% | 能展示步骤 | P0 |
 | `property` | Property 属性表 | `/components/property` | `/zh-CN/components/property` | 进行中 | 50% | 能出 label/content | P0 |
 | `qrcode` | QRCode 二维码 | `/components/qrcode` | `/zh-CN/components/qrcode` | 进行中 | 45% | 已注册 | P0 |
@@ -468,7 +468,7 @@ flowchart LR
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 85% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 50% |
 | 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 45% |
-| 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 60% |
+| 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 80% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 55% |
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
 | 51 | `grid` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
