@@ -175,6 +175,10 @@
   --cal-cell-hover-bg: #f7f8fa;
   --cal-cell-hover-fg: #151b26;
   --cal-other: #b8babf;
+  --cal-between-bg: #e6f0ff;
+  --date-range-sep: #d4d6d9;
+  --date-range-ranger-bg: #f7f8fa;
+  --date-range-cursor: var(--primary);
   /* 对齐 Amis `--Form-input-placeholderColor` / `--text--muted-color` / `--colors-neutral-text-6`。不要用 `--muted-foreground`（偏深）。 */
   --control-placeholder: #b8babf;
   --cal-picker-cancel: #666;
@@ -677,6 +681,9 @@
   --cal-cell-hover-bg: #151c26;
   --cal-cell-hover-fg: #f7f8fa;
   --cal-other: #b8bbbf;
+  --cal-between-bg: #0040bf;
+  --date-range-sep: #5c5f66;
+  --date-range-ranger-bg: #151c26;
   --control-placeholder: #b8bbbf;
   --cal-picker-cancel: #84878c;
   --cal-picker-title: #f7f8fa;
@@ -5944,18 +5951,19 @@
   background: var(--label-danger-bg);
 }
 
-/* Amis `.DateRangeControl`：两个输入框 + 日历浮层。 */
+/* Amis `.DateRangePicker`：双输入 + 中间短线 + 双月历 PopOver。 */
 .vamis-date-range {
   position: relative;
-  display: flex;
+  display: inline-flex;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 6px;
   width: 100%;
-  min-height: var(--control-h);
-  padding: 0 var(--control-px);
+  height: var(--control-h);
+  padding: 0 var(--control-px) 0 10px;
   border: 1px solid var(--input);
   border-radius: var(--radius);
   background: var(--card);
+  color: var(--cal-fg);
 }
 .vamis-date-range.is-focused {
   border-color: var(--control-focus-border);
@@ -5965,19 +5973,102 @@
   background: var(--control-disabled-bg);
   color: var(--control-disabled-color);
 }
+.vamis-date-range .vamis-select__clear {
+  display: none;
+}
+.vamis-date-range:not(.is-disabled):hover .vamis-select__clear {
+  display: flex;
+}
+.vamis-date-range:not(.is-disabled):hover .vamis-select__clear + .vamis-date-picker__icon {
+  display: none;
+}
 .vamis-date-range__input {
   flex: 1 1 0;
+  width: 50%;
   min-width: 0;
-  height: calc(var(--control-h) - 2px);
-  border: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
   outline: none;
   background: transparent;
   color: inherit;
   font-size: var(--fontSizeBase);
+  line-height: 30px;
+  text-align: center;
 }
 .vamis-date-range__input::placeholder {
   color: var(--control-placeholder);
 }
+.vamis-date-range__input.is-active {
+  border-bottom-color: var(--date-range-cursor);
+}
 .vamis-date-range__separator {
-  color: var(--control-placeholder);
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+}
+.vamis-date-range__separator-line {
+  width: 8px;
+  height: 1px;
+  background: var(--date-range-sep);
+}
+.vamis-date-range__popover {
+  overflow: hidden;
+}
+.vamis-date-range__rangers {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin: 0;
+  padding: 0 10px;
+  list-style: none;
+  background: var(--date-range-ranger-bg);
+  line-height: 32px;
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: center;
+}
+.vamis-date-range__ranger {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 12px;
+}
+.vamis-date-range__ranger a {
+  cursor: pointer;
+  color: var(--form-item-color);
+  text-decoration: none;
+}
+.vamis-date-range__ranger a:hover {
+  color: var(--primary);
+}
+.vamis-date-range__calendars {
+  display: flex;
+}
+.vamis-date-range__calendars.is-vertical {
+  flex-direction: column;
+}
+.vamis-date-range__cal {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+}
+.vamis-date-range__cal.is-end {
+  margin-top: 20px;
+}
+.vamis-date-range__calendars:not(.is-vertical) .vamis-date-range__cal.is-end {
+  margin-top: 0;
+  border-left: 1px solid var(--cal-border);
+}
+.vamis-date-range__actions {
+  text-align: right;
+  padding: var(--gap-sm);
+  border-top: 1px solid var(--cal-border);
+}
+.vamis-date-range__confirm {
+  margin-left: var(--gap-sm);
+}
+.vamis-date-picker.is-embed .vamis-date-range__rangers {
+  margin: 0;
 }

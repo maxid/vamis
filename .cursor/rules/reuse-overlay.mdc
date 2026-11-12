@@ -28,7 +28,7 @@ Vamis 入口（不要再新开月历）：
 | 移动端底栏 | `packages/vamis/src/overlay/VamisPopUp.vue`（Select 等；日期仍用 DatePickerSheet） |
 | 容器 / 定位 / z-index | `packages/vamis-core/src/utils/overlay-layer.ts`（`Z_INDEX`、`overlayContainerFrom`、`overlayPosition`、`overlayIsMobile`） |
 
-允许表单多出 shortcuts / 时分秒 / 页脚。不允许另一套圆角、字号、间距、选中色、非本月色（`#b8babf`）。`input-datetime` / `input-time` 已是 InputDate 别名。DateRange 仍是原生区间，**不要再长出第二套桌面月历**；要做就挂 `DateCalendarPanel`。
+允许表单多出 shortcuts / 时分秒 / 页脚。不允许另一套圆角、字号、间距、选中色、非本月色（`#b8babf`）。`input-datetime` / `input-time` 已是 InputDate 别名。DateRange 桌面是**两块** `DateCalendarPanel`（左当月、右下月，区间高亮只打在当月 `td`；左藏下一月箭头、右藏上一月箭头，禁止同年同月），不要再长第二套月历 DOM/CSS。
 
 ## 移动端 PopOver 从底部滑入
 

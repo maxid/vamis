@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { VamisClear } from '@vamis/ui'
+import { Button, VamisClear } from '@vamis/ui'
 import {
+  addDateDuration,
+  applyDateRangePart,
   calendarDecade,
   calendarMonthLabel,
   calendarYearLabel,
@@ -9,13 +11,16 @@ import {
   dayjs,
   eventEvalData,
   filterDate,
-  filterTpl,
   formItemStatic,
   formItemStaticSchema,
+  inputDateMinMax,
   inputDateMonthCells,
+  isInputDateDisabled,
+  parseDateDuration,
   resolveClassName,
   runOnEvent,
   statusStaticOf,
+  subtractDateDuration,
   useData,
   useEnv,
   useFormApi,
@@ -28,7 +33,7 @@ import {
 } from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
-import DateCalendarPanel from '../calendar/DateCalendarPanel.vue'
+import DateCalendarPanel, { type DateCalendarView } from '../calendar/DateCalendarPanel.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
@@ -44,9 +49,13 @@ const data = useData()
 const rootEl = ref<HTMLElement | null>(null)
 const open = ref(false)
 const focused = ref(false)
+const editState = ref<'start' | 'end'>('start')
 const startText = ref('')
 const endText = ref('')
-const cursor = ref(dayjs())
+const cursorStart = ref(dayjs())
+const cursorEnd = ref(dayjs().add(1, 'month'))
+const startView = ref<DateCalendarView>('days')
+const endView = ref<DateCalendarView>('days')
 const pristine = ref<unknown>(undefined)
 const draftStart = ref<Dayjs | undefined>(undefined)
 const draftEnd = ref<Dayjs | undefined>(undefined)
@@ -59,7 +68,10 @@ const isStatic = computed(() =>
 const locked = computed(() => props.disabled || isStatic.value || props.schema.readOnly === true)
 const embed = computed(() => props.schema.embed === true)
 const clearable = computed(() => props.schema.clearable !== false)
-const placeholder = computed(() => String(props.schema.placeholder || '请选择日期范围'))
+const closeOnSelect = computed(() => props.schema.closeOnSelect !== false)
+const trusted = computed(() => env.trusted === true)
+const startPlaceholder = computed(() => String(props.schema.startPlaceholder || '开始时间'))
+const endPlaceholder = computed(() => String(props.schema.endPlaceholder || '结束时间'))
 const displayFormat = computed(() => {
   const raw = String(props.schema.displayFormat || props.schema.inputFormat || '')
   if (raw) return raw
@@ -68,6 +80,7 @@ const displayFormat = computed(() => {
 const valueFormat = computed(() => String(props.schema.valueFormat || props.schema.format || 'X'))
 const delimiter = computed(() => String(props.schema.delimiter ?? ','))
 const utc = computed(() => props.schema.utc === true)
+const joinValues = computed(() => props.schema.joinValues !== false)
 
 const rawValue = computed(() => {
   if (name.value) return form?.getValue(name.value)
@@ -102,11 +115,33 @@ const range = computed<{ start?: Dayjs; end?: Dayjs }>(() => {
 const displayStart = computed(() => (range.value.start ? range.value.start.format(displayFormat.value) : ''))
 const displayEnd = computed(() => (range.value.end ? range.value.end.format(displayFormat.value) : ''))
 const showClear = computed(() => clearable.value && !locked.value && (!!displayStart.value || !!displayEnd.value))
-const selectedIso = computed(() => (range.value.start ? range.value.start.format('YYYY-MM-DD') : ''))
-const weeks = computed(() => inputDateMonthCells(cursor.value.toDate(), new Date()))
-const yearLabel = computed(() => calendarYearLabel(cursor.value.toDate()))
-const monthLabel = computed(() => calendarMonthLabel(cursor.value.toDate()))
-const decade = computed(() => calendarDecade(cursor.value.toDate()))
+const selectedIso = computed(() => {
+  const start = draftStart.value || range.value.start
+  return start ? start.format('YYYY-MM-DD') : ''
+})
+const rangeStartIso = computed(() => {
+  const start = draftStart.value || range.value.start
+  return start ? start.format('YYYY-MM-DD') : ''
+})
+const rangeEndIso = computed(() => {
+  const end = draftEnd.value || range.value.end
+  return end ? end.format('YYYY-MM-DD') : ''
+})
+const startWeeks = computed(() => inputDateMonthCells(cursorStart.value.toDate(), new Date()))
+const endWeeks = computed(() => inputDateMonthCells(cursorEnd.value.toDate(), new Date()))
+const startYearLabel = computed(() => calendarYearLabel(cursorStart.value.toDate()))
+const startMonthLabel = computed(() => calendarMonthLabel(cursorStart.value.toDate()))
+const startDecade = computed(() => calendarDecade(cursorStart.value.toDate()))
+const endYearLabel = computed(() => calendarYearLabel(cursorEnd.value.toDate()))
+const endMonthLabel = computed(() => calendarMonthLabel(cursorEnd.value.toDate()))
+const endDecade = computed(() => calendarDecade(cursorEnd.value.toDate()))
+const canConfirm = computed(() => {
+  const start = draftStart.value
+  const end = draftEnd.value
+  return !!(start?.isValid() && end?.isValid() && !start.isAfter(end, 'second'))
+})
+const minDuration = computed(() => parseDateDuration(props.schema.minDuration))
+const maxDuration = computed(() => parseDateDuration(props.schema.maxDuration))
 
 type Shortcut = { key?: string; label: string; start: Dayjs; end: Dayjs }
 
@@ -143,11 +178,11 @@ const shortcutLabels: Record<string, string> = {
   yesterday: '昨天',
   tomorrow: '明天',
   prevweek: '上周',
-  thisweek: '本周',
-  thismonth: '本月',
-  prevmonth: '上月',
-  thisquarter: '本季度',
-  prevquarter: '上季度',
+  thisweek: '这个周',
+  thismonth: '这个月',
+  prevmonth: '上个月',
+  thisquarter: '这个季度',
+  prevquarter: '上个季度',
   thisyear: '今年',
   lastYear: '去年',
 }
@@ -204,12 +239,36 @@ async function emitEvent(eventName: string, value: unknown, native?: Event) {
 
 function storedValue(date: Dayjs | undefined, isEnd: boolean): string {
   if (!date || !date.isValid()) return ''
-  const next = isEnd && /^(day|X|YYYY-MM-DD)$/i.test(valueFormat.value) ? date.endOf('day') : date
-  return next.format(valueFormat.value)
+  return date.format(valueFormat.value)
+}
+
+function boundPart(date: Dayjs, type: 'start' | 'end', origin?: Dayjs): Dayjs {
+  return applyDateRangePart(date, type, props.schema, data.value, origin, trusted.value)
+}
+
+function clampEnd(value: Dayjs, start?: Dayjs): Dayjs {
+  let next = value
+  if (!start) return next
+  if (minDuration.value && next.isBefore(addDateDuration(start, minDuration.value))) {
+    next = addDateDuration(start, minDuration.value)
+  }
+  if (maxDuration.value && next.isAfter(addDateDuration(start, maxDuration.value))) {
+    next = addDateDuration(start, maxDuration.value)
+  }
+  const { max } = inputDateMinMax(props.schema, data.value)
+  if (max && next.isAfter(max, 'second')) next = max
+  return next
+}
+
+function payloadOf(start?: Dayjs, end?: Dayjs): unknown {
+  const startRaw = storedValue(start, false)
+  const endRaw = storedValue(end, true)
+  if (!joinValues.value) return [startRaw, endRaw]
+  return `${startRaw}${delimiter.value}${endRaw}`
 }
 
 async function commit(start?: Dayjs, end?: Dayjs) {
-  const value = `${storedValue(start, false)}${delimiter.value}${storedValue(end, true)}`
+  const value = payloadOf(start, end)
   if (!(await emitEvent('change', value))) return
   if (!name.value || !form) return
   if (extraName.value) {
@@ -241,52 +300,186 @@ function syncText() {
   endText.value = displayEnd.value
 }
 
-function openPanel() {
+function syncDraftText() {
+  startText.value = draftStart.value ? draftStart.value.format(displayFormat.value) : ''
+  endText.value = draftEnd.value ? draftEnd.value.format(displayFormat.value) : ''
+}
+
+function monthIndex(date: Dayjs) {
+  return date.year() * 12 + date.month()
+}
+
+function clampApart(preferred: 'start' | 'end' = 'end') {
+  const start = cursorStart.value.startOf('month')
+  const end = cursorEnd.value.startOf('month')
+  if (monthIndex(start) < monthIndex(end)) {
+    cursorStart.value = start
+    cursorEnd.value = end
+    return
+  }
+  if (preferred === 'start') {
+    cursorStart.value = start
+    cursorEnd.value = start.add(1, 'month')
+    return
+  }
+  cursorEnd.value = end
+  cursorStart.value = end.subtract(1, 'month')
+}
+
+function setCursors(start?: Dayjs) {
+  const base = (start || dayjs()).startOf('month')
+  cursorStart.value = base
+  cursorEnd.value = base.add(1, 'month')
+  startView.value = 'days'
+  endView.value = 'days'
+}
+
+function openPanel(side: 'start' | 'end' = 'start') {
   if (locked.value) return
   draftStart.value = range.value.start
   draftEnd.value = range.value.end
-  if (range.value.start) cursor.value = range.value.start.clone()
+  editState.value = side
+  setCursors(range.value.start)
+  syncDraftText()
   open.value = true
+}
+
+function pickStartYear(year: number) {
+  cursorStart.value = cursorStart.value.year(year)
+  startView.value = 'months'
+  clampApart('start')
+}
+
+function pickStartMonth(month: number) {
+  cursorStart.value = cursorStart.value.month(month)
+  startView.value = 'days'
+  clampApart('start')
+}
+
+function pickEndYear(year: number) {
+  cursorEnd.value = cursorEnd.value.year(year)
+  endView.value = 'months'
+  clampApart('end')
+}
+
+function pickEndMonth(month: number) {
+  cursorEnd.value = cursorEnd.value.month(month)
+  endView.value = 'days'
+  clampApart('end')
 }
 
 function toggleOpen(event: Event) {
   event.stopPropagation()
-  if (open.value) open.value = false
+  if (open.value) cancelPanel()
   else openPanel()
+}
+
+function cancelPanel() {
+  open.value = false
+  draftStart.value = range.value.start
+  draftEnd.value = range.value.end
+  syncText()
+}
+
+function checkStart(date: Dayjs): boolean {
+  const { min, max } = inputDateMinMax(props.schema, data.value)
+  const end = draftEnd.value
+  const cap = max && end ? (max.isBefore(end) ? max : end) : max || end
+  if (min && date.isBefore(min, 'day')) return false
+  if (cap && date.isAfter(cap, 'day')) return false
+  if (end && minDuration.value && date.isAfter(subtractDateDuration(end, minDuration.value), 'second')) return false
+  if (end && maxDuration.value && date.isBefore(subtractDateDuration(end, maxDuration.value), 'second')) return false
+  return true
+}
+
+function checkEnd(date: Dayjs): boolean {
+  const { min, max } = inputDateMinMax(props.schema, data.value)
+  const start = draftStart.value
+  const floor = min && start ? (min.isAfter(start) ? min : start) : min || start
+  if (floor && date.startOf('day').isBefore(floor.clone().startOf('day'), 'day')) return false
+  if (max && date.isAfter(max, 'day')) return false
+  if (start && minDuration.value && date.isBefore(addDateDuration(start, minDuration.value), 'second')) return false
+  if (start && maxDuration.value && date.isAfter(addDateDuration(start, maxDuration.value), 'second')) return false
+  return true
+}
+
+function disabledStart(cell: CalendarCell) {
+  const date = dayjs(cell.date)
+  return isInputDateDisabled(date, props.schema, data.value, trusted.value) || !checkStart(date)
+}
+
+function disabledEnd(cell: CalendarCell) {
+  const date = dayjs(cell.date)
+  return isInputDateDisabled(date, props.schema, data.value, trusted.value) || !checkEnd(date)
+}
+
+async function confirmPanel() {
+  const start = draftStart.value
+  const end = draftEnd.value
+  if (!start && !end) return
+  if (start && end && start.isAfter(end)) return
+  await commit(start, end)
+  if (start && !end) {
+    editState.value = 'end'
+    return
+  }
+  open.value = false
 }
 
 async function pickDay(cell: CalendarCell) {
   const picked = dayjs(cell.date).startOf('day')
-  if (!draftStart.value || draftEnd.value) {
-    draftStart.value = picked
-    draftEnd.value = undefined
+  if (editState.value === 'start') {
+    draftStart.value = boundPart(picked, 'start', draftStart.value)
+    editState.value = 'end'
+    syncDraftText()
     return
   }
-  draftEnd.value = picked.endOf('day')
-  await commit(draftStart.value, draftEnd.value)
-  open.value = false
+  const clamped = clampEnd(picked, draftStart.value)
+  draftEnd.value = boundPart(clamped, 'end', draftEnd.value)
+  syncDraftText()
+  if (embed.value) await confirmPanel()
 }
 
 async function pickShortcut(shortcut: Shortcut) {
-  await commit(shortcut.start, shortcut.end)
-  open.value = false
+  const { min, max } = inputDateMinMax(props.schema, data.value)
+  let start = shortcut.start
+  let end = shortcut.end
+  if (min?.isValid()) start = start.isBefore(min) ? min : start
+  if (max?.isValid()) end = end.isAfter(max) ? max : end
+  draftStart.value = boundPart(start, 'start', draftStart.value)
+  draftEnd.value = boundPart(end, 'end', draftEnd.value)
+  setCursors(draftStart.value)
+  syncDraftText()
+  if (embed.value || closeOnSelect.value) await confirmPanel()
 }
 
 async function clearValue() {
   startText.value = ''
   endText.value = ''
+  draftStart.value = undefined
+  draftEnd.value = undefined
   await commit(undefined, undefined)
 }
 
 async function resetValue() {
-  const next = pristine.value
-  const parsed = parsePart(next)
-  await commit(parsed, undefined)
+  const next = pristine.value ?? props.schema.resetValue
+  await commitFromRaw(next)
 }
 
 function focus() {
   const input = rootEl.value?.querySelector('input')
   input?.focus()
+}
+
+async function onFocus(native: Event, side: 'start' | 'end') {
+  focused.value = true
+  editState.value = side
+  await emitEvent('focus', payloadOf(range.value.start, range.value.end), native)
+}
+
+async function onBlur(native: Event) {
+  focused.value = false
+  await emitEvent('blur', payloadOf(range.value.start, range.value.end), native)
 }
 
 const rangeApi = {
@@ -309,6 +502,10 @@ const rangeApi = {
 }
 
 async function commitFromRaw(raw: unknown) {
+  if (raw == null || raw === '') {
+    await commit(undefined, undefined)
+    return
+  }
   if (Array.isArray(raw)) {
     await commit(parsePart(raw[0]), parsePart(raw[1]))
     return
@@ -319,11 +516,21 @@ async function commitFromRaw(raw: unknown) {
   }
 }
 
+function shiftCursor(side: 'start' | 'end', unit: 'month' | 'year', delta: number) {
+  if (side === 'start') cursorStart.value = cursorStart.value.add(delta, unit)
+  else cursorEnd.value = cursorEnd.value.add(delta, unit)
+  clampApart(side)
+}
+
 scoped?.register(rangeApi as never)
 onBeforeUnmount(() => scoped?.unregister(rangeApi as never))
 
-watch(displayStart, syncText, { immediate: true })
-watch(displayEnd, syncText)
+watch(displayStart, () => {
+  if (!open.value) syncText()
+}, { immediate: true })
+watch(displayEnd, () => {
+  if (!open.value) syncText()
+})
 watch(range, () => {
   pristine.value ??= rawValue.value
 })
@@ -337,34 +544,59 @@ const formItemSchema = computed(() => (isStaticOutside.value ? props.schema : { 
   <FormItem :schema="formItemSchema">
     <span v-if="isStatic" class="vamis-form-static">{{ [displayStart, displayEnd].filter(Boolean).join(' ~ ') || '-' }}</span>
     <div v-else-if="embed" class="vamis-date-picker is-embed">
-      <div v-if="shortcuts.length" class="vamis-date-picker__shortcuts">
-        <button
-          v-for="item in shortcuts"
-          :key="item.key || item.label"
-          type="button"
-          class="vamis-date-picker__shortcut"
-          @mousedown.prevent
-          @click="pickShortcut(item)"
-        >
-          {{ item.label }}
-        </button>
+      <ul v-if="shortcuts.length" class="vamis-date-range__rangers">
+        <li v-for="item in shortcuts" :key="item.key || item.label" class="vamis-date-range__ranger">
+          <a @mousedown.prevent @click="pickShortcut(item)">{{ item.label }}</a>
+        </li>
+      </ul>
+      <div class="vamis-date-range__calendars is-vertical">
+        <div class="vamis-date-range__cal is-start">
+          <DateCalendarPanel
+            :framed="false"
+            :cursor="cursorStart.toDate()"
+            :view="startView"
+            :weeks="startWeeks"
+            :year-label="startYearLabel"
+            :month-label="startMonthLabel"
+            :decade="startDecade"
+            :selected-iso="selectedIso"
+            :range-start-iso="rangeStartIso"
+            :range-end-iso="rangeEndIso"
+            :disabled-iso="disabledStart"
+            hide-next-nav
+            @shift-month="shiftCursor('start', 'month', $event)"
+            @shift-year="shiftCursor('start', 'year', $event)"
+            @pick-year="pickStartYear"
+            @pick-month="pickStartMonth"
+            @pick-day="pickDay"
+            @open-year="startView = 'years'"
+            @open-month="startView = 'months'"
+          />
+        </div>
+        <div class="vamis-date-range__cal is-end">
+          <DateCalendarPanel
+            :framed="false"
+            :cursor="cursorEnd.toDate()"
+            :view="endView"
+            :weeks="endWeeks"
+            :year-label="endYearLabel"
+            :month-label="endMonthLabel"
+            :decade="endDecade"
+            :selected-iso="selectedIso"
+            :range-start-iso="rangeStartIso"
+            :range-end-iso="rangeEndIso"
+            :disabled-iso="disabledEnd"
+            hide-prev-nav
+            @shift-month="shiftCursor('end', 'month', $event)"
+            @shift-year="shiftCursor('end', 'year', $event)"
+            @pick-year="pickEndYear"
+            @pick-month="pickEndMonth"
+            @pick-day="pickDay"
+            @open-year="endView = 'years'"
+            @open-month="endView = 'months'"
+          />
+        </div>
       </div>
-      <DateCalendarPanel
-        :cursor="cursor.toDate()"
-        view="days"
-        :weeks="weeks"
-        :year-label="yearLabel"
-        :month-label="monthLabel"
-        :decade="decade"
-        :selected-iso="draftStart ? draftStart.format('YYYY-MM-DD') : selectedIso"
-        @shift-month="cursor = cursor.add($event, 'month')"
-        @shift-year="cursor = cursor.add($event, 'year')"
-        @pick-year="(year) => (cursor = cursor.year(year))"
-        @pick-month="(month) => (cursor = cursor.month(month))"
-        @pick-day="pickDay"
-        @open-year="() => {}"
-        @open-month="() => {}"
-      />
     </div>
     <div
       v-else
@@ -376,30 +608,34 @@ const formItemSchema = computed(() => (isStaticOutside.value ? props.schema : { 
         [String(resolveClassName(schema.className, data) || '')]: !!schema.className,
       }"
       data-slot="input-date-range"
-      @click="openPanel"
+      @click="openPanel()"
     >
       <input
         :value="startText"
         type="text"
         class="vamis-date-range__input"
-        :placeholder="placeholder"
+        :class="{ 'is-active': open && editState === 'start' }"
+        :placeholder="startPlaceholder"
         :disabled="locked"
         autocomplete="off"
+        @click.stop="openPanel('start')"
         @input="onTextInput('start', $event)"
-        @focus="focused = true"
-        @blur="focused = false"
+        @focus="onFocus($event, 'start')"
+        @blur="onBlur($event)"
       >
-      <span class="vamis-date-range__separator">~</span>
+      <span class="vamis-date-range__separator" aria-hidden="true"><span class="vamis-date-range__separator-line" /></span>
       <input
         :value="endText"
         type="text"
         class="vamis-date-range__input"
-        :placeholder="placeholder"
+        :class="{ 'is-active': open && editState === 'end' }"
+        :placeholder="endPlaceholder"
         :disabled="locked"
         autocomplete="off"
+        @click.stop="openPanel('end')"
         @input="onTextInput('end', $event)"
-        @focus="focused = true"
-        @blur="focused = false"
+        @focus="onFocus($event, 'end')"
+        @blur="onBlur($event)"
       >
       <button v-if="showClear" type="button" class="vamis-select__clear" aria-label="清除" @mousedown.prevent @click.stop="clearValue">
         <VamisClear />
@@ -409,37 +645,65 @@ const formItemSchema = computed(() => (isStaticOutside.value ? props.schema : { 
           <path fill="currentColor" d="M3.5 1.5A.5.5 0 0 1 4 2v.5h8V2a.5.5 0 0 1 1 0v.5h.5A1.5 1.5 0 0 1 15 4v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13V4a1.5 1.5 0 0 1 1.5-1.5H3V2a.5.5 0 0 1 .5-.5ZM2 6v7a.5.5 0 0 0 .5.5h11A.5.5 0 0 0 14 13V6H2Zm0-1h12V4a.5.5 0 0 0-.5-.5h-11A.5.5 0 0 0 2 4v1Z" />
         </svg>
       </span>
-      <VamisOverlay :show="open" :target="rootEl" :gap="4" @outside="open = false">
-        <div class="vamis-date-picker__popover">
-          <div v-if="shortcuts.length" class="vamis-date-picker__shortcuts">
-            <button
-              v-for="item in shortcuts"
-              :key="item.key || item.label"
-              type="button"
-              class="vamis-date-picker__shortcut"
-              @mousedown.prevent
-              @click="pickShortcut(item)"
-            >
-              {{ item.label }}
-            </button>
+      <VamisOverlay :show="open" :target="rootEl" :gap="4" @outside="cancelPanel">
+        <div class="vamis-date-picker__popover vamis-date-range__popover">
+          <ul v-if="shortcuts.length" class="vamis-date-range__rangers">
+            <li v-for="item in shortcuts" :key="item.key || item.label" class="vamis-date-range__ranger">
+              <a @mousedown.prevent @click="pickShortcut(item)">{{ item.label }}</a>
+            </li>
+          </ul>
+          <div class="vamis-date-range__calendars">
+            <div class="vamis-date-range__cal is-start">
+              <DateCalendarPanel
+                :framed="false"
+                :cursor="cursorStart.toDate()"
+                :view="startView"
+                :weeks="startWeeks"
+                :year-label="startYearLabel"
+                :month-label="startMonthLabel"
+                :decade="startDecade"
+                :selected-iso="selectedIso"
+                :range-start-iso="rangeStartIso"
+                :range-end-iso="rangeEndIso"
+                :disabled-iso="disabledStart"
+                hide-next-nav
+                @shift-month="shiftCursor('start', 'month', $event)"
+                @shift-year="shiftCursor('start', 'year', $event)"
+                @pick-year="pickStartYear"
+                @pick-month="pickStartMonth"
+                @pick-day="pickDay"
+                @open-year="startView = 'years'"
+                @open-month="startView = 'months'"
+              />
+            </div>
+            <div class="vamis-date-range__cal is-end">
+              <DateCalendarPanel
+                :framed="false"
+                :cursor="cursorEnd.toDate()"
+                :view="endView"
+                :weeks="endWeeks"
+                :year-label="endYearLabel"
+                :month-label="endMonthLabel"
+                :decade="endDecade"
+                :selected-iso="selectedIso"
+                :range-start-iso="rangeStartIso"
+                :range-end-iso="rangeEndIso"
+                :disabled-iso="disabledEnd"
+                hide-prev-nav
+                @shift-month="shiftCursor('end', 'month', $event)"
+                @shift-year="shiftCursor('end', 'year', $event)"
+                @pick-year="pickEndYear"
+                @pick-month="pickEndMonth"
+                @pick-day="pickDay"
+                @open-year="endView = 'years'"
+                @open-month="endView = 'months'"
+              />
+            </div>
           </div>
-          <DateCalendarPanel
-            :framed="false"
-            :cursor="cursor.toDate()"
-            view="days"
-            :weeks="weeks"
-            :year-label="yearLabel"
-            :month-label="monthLabel"
-            :decade="decade"
-            :selected-iso="draftStart ? draftStart.format('YYYY-MM-DD') : selectedIso"
-            @shift-month="cursor = cursor.add($event, 'month')"
-            @shift-year="cursor = cursor.add($event, 'year')"
-            @pick-year="(year) => (cursor = cursor.year(year))"
-            @pick-month="(month) => (cursor = cursor.month(month))"
-            @pick-day="pickDay"
-            @open-year="() => {}"
-            @open-month="() => {}"
-          />
+          <div class="vamis-date-range__actions">
+            <Button size="sm" variant="outline" type="button" @click="cancelPanel">取消</Button>
+            <Button size="sm" class="vamis-date-range__confirm" type="button" :disabled="!canConfirm" @click="confirmPanel">确认</Button>
+          </div>
         </div>
       </VamisOverlay>
     </div>

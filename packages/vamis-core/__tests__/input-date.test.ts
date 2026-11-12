@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { dayjs } from '../src/utils/dayjs'
 import {
+  applyDateRangePart,
+  dateRangeTimeUnit,
   displayInputDateValue,
   filterDate,
   formatInputDate,
@@ -27,8 +29,10 @@ import {
   inputDatePickerColumns,
   inputDatePickerTitle,
   inputDatePickerTypes,
+  parseDateDuration,
   parseInputDateValue,
   resolveInputDateShortcuts,
+  runDateRangeTransform,
   storeInputDateValue,
 } from '../src/utils/input-date'
 
@@ -341,5 +345,46 @@ describe('input-date popover box model', () => {
     expect(css).toMatch(/\.vamis-cal-header svg\.icon \{[\s\S]*?vertical-align:\s*baseline/)
     expect(css).toMatch(/\.vamis-cal-header svg\.icon-right-double-arrow \{[\s\S]*?top:\s*-1px/)
     expect(css).toMatch(/\.vamis-cal-header svg\.icon-right-arrow \{[\s\S]*?width:\s*12px/)
+  })
+})
+
+describe('input-date-range helpers', () => {
+  it('parses Amis duration strings', () => {
+    expect(parseDateDuration('2days')).toEqual({ amount: 2, unit: 'day' })
+    expect(parseDateDuration('1year')).toEqual({ amount: 1, unit: 'year' })
+    expect(parseDateDuration('')).toBeUndefined()
+  })
+
+  it('maps timeFormat to start/end unit', () => {
+    expect(dateRangeTimeUnit(undefined)).toBe('day')
+    expect(dateRangeTimeUnit('HH:mm:ss')).toBe('second')
+    expect(dateRangeTimeUnit('HH:mm')).toBe('minute')
+    expect(dateRangeTimeUnit('HH')).toBe('hour')
+  })
+
+  it('runs trusted transform with a moment-compatible wrapper', () => {
+    const start = dayjs('2024-05-01T00:00:00')
+    const out = runDateRangeTransform(
+      start,
+      { type: 'end', timeFormat: '' },
+      {
+        type: 'input-date-range',
+        transform:
+          "const now = moment(); if (config.type === 'end') {value.set({hours: now.hours(), minutes: now.minutes(), seconds: now.seconds(), milliseconds: now.milliseconds()})}; return value;",
+      },
+      {},
+      true,
+    )
+    expect(out?.isValid()).toBe(true)
+    expect(out?.hour()).toBe(dayjs().hour())
+    expect(runDateRangeTransform(start, { type: 'end', timeFormat: '' }, { type: 'input-date-range', transform: 'return value;' }, {}, false)).toBeUndefined()
+  })
+
+  it('applies startOf/endOf day when there is no origin', () => {
+    const picked = dayjs('2024-05-08T15:30:00')
+    const start = applyDateRangePart(picked, 'start', { type: 'input-date-range' }, {}, undefined, false)
+    const end = applyDateRangePart(picked, 'end', { type: 'input-date-range' }, {}, undefined, false)
+    expect(start.format('HH:mm:ss')).toBe('00:00:00')
+    expect(end.format('HH:mm:ss')).toBe('23:59:59')
   })
 })

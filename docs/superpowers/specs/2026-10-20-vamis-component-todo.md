@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-11（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
+- 最近核对：2026-11-12（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
 
 ## 怎么读
 
@@ -202,7 +202,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 92% | 日历点选、format/inputFormat、相对值、minDate/maxDate（日 + 年/月面板都禁范围外）、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。弹层 `--cal-*`（深色 alias Select 菜单 `#17202d`）。窄屏默认滚轮 PopUp（320px / 年/月/日 / 取消确认；PopUp height 进出动画）。缺 `mobileCalendarMode: calendar`、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 62% | `input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
-| `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 80% | 主路径已对齐：双输入框 + 区间日历、`valueFormat` / `displayFormat` / `delimiter`、默认值 / 相对值、`shortcuts`（预设 / `{n}daysago` / 表达式对象）、`embed`、`extraName` 两字段、`clearable`、静态展示；`change` / `focus` / `blur`、`clear` / `reset` / `focus` / `setValue`。文档按 Amis 章节改写。对照桌面 **10/10**、移动 **10/10**（P0 0）。余项：`transform` / `timeFormat` 级对齐 / `minDuration` / `maxDuration`、跨月高亮只标开始 | P0 |
+| `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 90% | 主路径已对齐：双输入框 + 左右双月历、区间高亮只打当月格子、快捷条居中、桌面取消/确认、点年/月标题进面板、左右不同月（内侧箭头隐藏 + `clampApart`）、`valueFormat` / `displayFormat` / `delimiter`、默认值 / 相对值 / 公式、`shortcuts`、`embed`、`extraName`、`minDuration` / `maxDuration`、`timeFormat` 对齐、`transform`（trusted）；`change` / `focus` / `blur`、`clear` / `reset` / `setValue`。文档按 Amis 章节改写。对照桌面 **11/13**、移动 **11/13**（P0 0；#4/#5 公式 value Amis 仍是模板串、Vamis 已求值）。余项：`animation` 游标、`popOverContainerSelector`、窄屏 CalendarMobile | P0 |
 | `input-datetime-range` | InputDatetimeRange 日期时间范围 | `/components/form/input-datetime-range` | `/zh-CN/components/form/input-datetime-range` | 进行中 | 45% | `input-date-range` 别名 | P0 |
 | `input-month-range` | InputMonthRange 月份范围 | `/components/form/input-month-range` | `/zh-CN/components/form/input-month-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `input-kv` | InputKV 键值对 | `/components/form/input-kv` | `/zh-CN/components/form/input-kv` | 进行中 | 50% | 能增删 KV | P0 |
@@ -352,7 +352,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（示例 Tag / `.label-*` 已对齐；余项 source 缓存，不挡）；`input-date-range` #29 已到 80%（缺 transform / 时长约束，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（示例 Tag / `.label-*` 已对齐；余项 source 缓存，不挡）；`input-date-range` #29 已到 90%（缺 animation / CalendarMobile，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -449,7 +449,7 @@ flowchart LR
 | 26 | `static` | FormItem、`popOver`、`tpl` | 6 | 1 | 19 | 134 | 进行中 | 85% |
 | 27 | `form` | FormItem、Options、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image`、`panel`、`spinner` | 4 | 10 | 134 | 134 | 进行中 | 88% |
 | 28 | `mapping` | — | 12 | 5 | 77 | 77 | 进行中 | 85% |
-| 29 | `input-date-range` | `input-date`、FormItem | 5 | 5 | 70 | 70 | 进行中 | 80% |
+| 29 | `input-date-range` | `input-date`、FormItem | 5 | 5 | 70 | 70 | 进行中 | 90% |
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 60% |
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 75% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 70% |

@@ -736,6 +736,12 @@ alwaysApply: true
 - 触及：`input-date-range` `input-datetime-range`
 - 规则：`packages/vamis/src/renderers/form/DateRange.vue`；Amis `InputDateRange.tsx`、`DateRangePicker`
 
+### 日期范围弹层是两块 DateCalendarPanel，区间色打在 td
+- 踩过：单月历 + 只把开始日标成 `is-active`，跨月看不见区间；两个输入框同一句「请选择日期范围」；点第二天就提交关层。Amis 是左右两个 Calendar、快捷条、桌面取消/确认，`rdtBetween` 在 **td** 上，起止才 `rdtActive`。区间落到单月时，邻月 `is-other` 格子仍被刷蓝；左右还能翻到同年同月；标题 `open-year` / `open-month` 空接。
+- 稳定做法：复用 `DateCalendarPanel` 两份（左 `cursor`、右 `+1 month`），`rangeStartIso` / `rangeEndIso`；`is-range` 只打在 `cell.current` 的 **td**，起止半边渐变。占位走「开始时间 / 结束时间」。草稿点选，确认才 `commit`；embed / 快捷键才立即写入。左右各接 `startView` / `endView`（点标题进年/月面板）。左藏下一月/年、右藏上一月/年，占位格保住表头；`clampApart` 保证左月永远早于右月。不要再长第二套月历。
+- 触及：`input-date-range` `calendar`
+- 规则：`.cursor/rules/reuse-overlay.mdc`；Amis `DateRangePicker.tsx` `renderDay` / `_date.scss` `rdtBetween`
+
 ### Mapping 的 label 走 tpl/schema，不要 strip HTML；Tag 不要用 shadcn Badge
 - 踩过：旧 Mapping 用 `Badge` + `strip(html)`，HTML 标签样式全丢；schema 映射 `{type:'tag', label}` 到了 Vamis Tag（只读 value/tags、套 shadcn Badge），`displayMode: rounded` + `color: #4096ff` 变成灰胶囊、字是色值。
 - 稳定做法：字符串 label 渲染 `{type:'tpl', tpl}`，对象 label 按 `labelField` / `label` / `type` 三路。`type: tag` 走 `.vamis-tag`（normal 灰底 / rounded 白底 12px 圆 + 1px 边 / 自定义色：normal 填底、rounded 描边+字色）；`label` 经 `getPropValue || filterTpl(label)`。mapping 仍把 tag 的 `label` 落到 `value`（对齐 Amis 渲染 tag 时 `value: null`，避免从表单域抢值）。`itemSchema` extra-data 按 Amis `createObject`：object 摊字段，非 object 才 `{item}`。对象数组单 key → key→value，多 key → `valueField` 匹配；`source` 纯变量走 resolveValue（`$${}` 先去掉一个 `$`），远程走 requestApi 后归一 options/items/records；布尔尝试 `1` / `0` 再 `*`。`static-mapping` 对照探针读 schemaValue，别读表单域。

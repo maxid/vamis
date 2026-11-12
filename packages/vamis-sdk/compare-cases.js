@@ -18194,7 +18194,6 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "debug": true,
         "api": "/api/mock2/form/saveForm",
         "body": [
           {
@@ -18225,7 +18224,6 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "debug": true,
         "api": "/api/mock2/form/saveForm",
         "body": [
           {
@@ -18260,17 +18258,9 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "input-date-range",
-            "name": "select",
+            "name": "date",
             "label": "日期范围",
-            "shortcuts": [
-              "7daysago",
-              "15dayslater",
-              "2weeksago",
-              "1weekslater",
-              "thismonth",
-              "2monthsago",
-              "3monthslater"
-            ]
+            "value": "${DATETOSTR(DATEMODIFY(STARTOF(NOW(), 'week'), 1, 'day'), 'X') + ',' + DATETOSTR(DATEMODIFY(ENDOF(NOW(), 'week'), '1', 'day'), 'X')}"
           }
         ]
       }
@@ -18294,24 +18284,13 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
-        "debug": true,
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
             "type": "input-date-range",
-            "name": "select",
-            "label": "自定义快捷键",
-            "shortcuts": [
-              {
-                "label": "1天前",
-                "startDate": "${DATEMODIFY(NOW(), -1, 'day')}",
-                "endDate": "${NOW()}"
-              },
-              {
-                "label": "本月",
-                "startDate": "${STARTOF(NOW(), 'month')}",
-                "endDate": "${ENDOF(NOW(), 'month')}"
-              }
-            ]
+            "name": "date",
+            "label": "日期范围",
+            "value": "${DATETOSTR(STARTOF(DATEMODIFY(NOW(), -1, 'month'), 'month'), 'X') + ',' + DATETOSTR(ENDOF(DATEMODIFY(NOW(), -1, 'month'), 'month'), 'X')}"
           }
         ]
       }
@@ -18335,12 +18314,21 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
             "type": "input-date-range",
-            "name": "date",
-            "label": "内嵌日期范围",
-            "embed": true
+            "name": "select",
+            "label": "日期范围",
+            "shortcuts": [
+              "7daysago",
+              "15dayslater",
+              "2weeksago",
+              "1weekslater",
+              "thismonth",
+              "2monthsago",
+              "3monthslater"
+            ]
           }
         ]
       }
@@ -18369,9 +18357,25 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "input-date-range",
-            "name": "begin",
-            "extraName": "end",
-            "label": "日期范围"
+            "name": "select",
+            "label": "日期范围",
+            "shortcuts": [
+              {
+                "label": "1天前",
+                "startDate": "${DATEMODIFY(NOW(), -1, 'day')}",
+                "endDate": "${NOW()}"
+              },
+              {
+                "label": "1个月前",
+                "startDate": "${DATEMODIFY(NOW(), -1, 'months')}",
+                "endDate": "${NOW()}"
+              },
+              {
+                "label": "本季度",
+                "startDate": "${STARTOF(NOW(), 'quarter')}",
+                "endDate": "${ENDOF(NOW(), 'quarter')}"
+              }
+            ]
           }
         ]
       }
@@ -18395,28 +18399,14 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
+        "api": "/api/mock2/form/saveForm",
         "debug": true,
         "body": [
           {
             "type": "input-date-range",
             "name": "date",
-            "id": "clear_range",
-            "label": "日期",
-            "value": "1714060800,1714319999"
-          },
-          {
-            "type": "button",
-            "label": "清空",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "clear",
-                    "componentId": "clear_range"
-                  }
-                ]
-              }
-            }
+            "label": "日期范围",
+            "embed": true
           }
         ]
       }
@@ -18441,27 +18431,13 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "form",
         "debug": true,
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
             "type": "input-date-range",
-            "name": "date",
-            "id": "reset_range",
-            "label": "日期",
-            "value": "1714060800,1714319999"
-          },
-          {
-            "type": "button",
-            "label": "重置",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "reset",
-                    "componentId": "reset_range"
-                  }
-                ]
-              }
-            }
+            "name": "begin",
+            "extraName": "end",
+            "label": "日期范围"
           }
         ]
       }
@@ -18486,11 +18462,139 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "form",
         "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "range1",
+            "label": "日期范围（默认）",
+            "valueFormat": "YYYY-MM-DDTHH:mm:ss[Z]"
+          },
+          {
+            "type": "input-date-range",
+            "name": "range2",
+            "label": "日期范围（使用transform函数）",
+            "valueFormat": "YYYY-MM-DDTHH:mm:ss[Z]",
+            "transform": "const now = moment(); if (config.type === 'end') {value.set({hours: now.hours(), minutes: now.minutes(), seconds: now.seconds(), milliseconds: now.milliseconds()})}; return value;"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-10",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
         "body": [
           {
             "type": "input-date-range",
             "name": "date",
-            "id": "setvalue_range",
+            "id": "clear_text",
+            "label": "日期",
+            "value": "1714060800,1714319999"
+          },
+          {
+            "type": "button",
+            "label": "清空",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "clear",
+                    "componentId": "clear_text"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-11",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "id": "reset_text",
+            "label": "日期",
+            "value": "1714060800,1714319999"
+          },
+          {
+            "type": "button",
+            "label": "重置",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "reset",
+                    "componentId": "reset_text"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-12",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "id": "setvalue_text",
             "label": "日期",
             "value": "1714060800,1714319999"
           },
@@ -18502,7 +18606,7 @@ window.VAMIS_COMPARE_CASES = [
                 "actions": [
                   {
                     "actionType": "setValue",
-                    "componentId": "setvalue_range",
+                    "componentId": "setvalue_text",
                     "args": {
                       "value": "1714060800,1714492799"
                     }

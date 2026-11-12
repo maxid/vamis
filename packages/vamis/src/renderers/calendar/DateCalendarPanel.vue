@@ -29,6 +29,10 @@ const props = withDefaults(
     large?: boolean
     framed?: boolean
     selectedIso?: string
+    rangeStartIso?: string
+    rangeEndIso?: string
+    hidePrevNav?: boolean
+    hideNextNav?: boolean
     disabledIso?: (cell: CalendarCell) => boolean
     disabledMonth?: (year: number, month: number) => boolean
     disabledYear?: (year: number) => boolean
@@ -41,6 +45,8 @@ const props = withDefaults(
   {
     framed: true,
     large: false,
+    hidePrevNav: false,
+    hideNextNav: false,
     weekLanes: () => [],
     pickerYears: () => [],
     pickerMonths: () => [],
@@ -72,6 +78,26 @@ const rootClass = computed(() => ({
 
 function cellDisabled(cell: CalendarCell) {
   return props.disabledIso?.(cell) === true
+}
+
+function cellDayClass(cell: CalendarCell) {
+  const iso = cell.iso
+  const start = props.rangeStartIso || ''
+  const end = props.rangeEndIso || ''
+  const selected = props.selectedIso || ''
+  const inMonth = cell.current
+  const isStart = inMonth && !!start && iso === start
+  const isEnd = inMonth && !!end && iso === end
+  const spanning = inMonth && !!start && !!end && start !== end && iso >= start && iso <= end
+  return {
+    'is-other': !cell.current,
+    'is-today': cell.today,
+    'is-active': isStart || isEnd || (inMonth && !end && (iso === start || iso === selected)),
+    'is-range': spanning,
+    'is-range-start': spanning && isStart,
+    'is-range-end': spanning && isEnd,
+    'is-disabled': cellDisabled(cell),
+  }
 }
 
 function monthDisabled(month: number) {
@@ -137,40 +163,48 @@ function applyTodayStyle(el: Element | null) {
         <tr>
           <th :colspan="view === 'days' ? 7 : 3">
             <div v-if="view === 'days'" class="vamis-cal-header">
-              <a class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
+              <a v-if="!hidePrevNav" class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
                 <VamisDateArrow icon="right-double-arrow" left />
               </a>
-              <a class="vamis-cal-nav" aria-label="上一月" @click.prevent="emit('shift-month', -1)">
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
+              <a v-if="!hidePrevNav" class="vamis-cal-nav" aria-label="上一月" @click.prevent="emit('shift-month', -1)">
                 <VamisDateArrow left />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
               <div class="vamis-cal-center">
                 <a class="vamis-cal-switch" @click.prevent="emit('open-year')">{{ yearLabel }}</a>
                 <a class="vamis-cal-switch" @click.prevent="emit('open-month')">{{ monthLabel }}</a>
               </div>
-              <a class="vamis-cal-nav" aria-label="下一月" @click.prevent="emit('shift-month', 1)">
+              <a v-if="!hideNextNav" class="vamis-cal-nav" aria-label="下一月" @click.prevent="emit('shift-month', 1)">
                 <VamisDateArrow />
               </a>
-              <a class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
+              <a v-if="!hideNextNav" class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
                 <VamisDateArrow icon="right-double-arrow" />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
             </div>
             <div v-else-if="view === 'months'" class="vamis-cal-header is-span">
-              <a class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
+              <a v-if="!hidePrevNav" class="vamis-cal-nav" aria-label="上一年" @click.prevent="emit('shift-year', -1)">
                 <VamisDateArrow icon="right-double-arrow" left />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
               <a class="vamis-cal-switch" @click.prevent="emit('open-year')">{{ yearLabel }}</a>
-              <a class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
+              <a v-if="!hideNextNav" class="vamis-cal-nav" aria-label="下一年" @click.prevent="emit('shift-year', 1)">
                 <VamisDateArrow icon="right-double-arrow" />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
             </div>
             <div v-else class="vamis-cal-header is-span">
-              <a class="vamis-cal-nav" aria-label="上十年" @click.prevent="emit('shift-year', -10)">
+              <a v-if="!hidePrevNav" class="vamis-cal-nav" aria-label="上十年" @click.prevent="emit('shift-year', -10)">
                 <VamisDateArrow icon="right-double-arrow" left />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
               <span class="vamis-cal-switch">{{ decade.from }}年 - {{ decade.to }}年</span>
-              <a class="vamis-cal-nav" aria-label="下十年" @click.prevent="emit('shift-year', 10)">
+              <a v-if="!hideNextNav" class="vamis-cal-nav" aria-label="下十年" @click.prevent="emit('shift-year', 10)">
                 <VamisDateArrow icon="right-double-arrow" />
               </a>
+              <span v-else class="vamis-cal-nav" aria-hidden="true" />
             </div>
             <div class="vamis-cal-line" />
           </th>
@@ -184,12 +218,7 @@ function applyTodayStyle(el: Element | null) {
           <td
             v-for="(cell, di) in week"
             :key="cell.iso"
-            :class="{
-              'is-other': !cell.current,
-              'is-today': cell.today,
-              'is-active': !!selectedIso && cell.iso === selectedIso,
-              'is-disabled': cellDisabled(cell),
-            }"
+            :class="cellDayClass(cell)"
             @click="onDayClick(cell)"
           >
             <div v-if="large" class="vamis-cal-wrap">
@@ -409,6 +438,32 @@ function applyTodayStyle(el: Element | null) {
 .vamis-cal td.is-today .vamis-cal-day,
 .vamis-cal.is-large td.is-today .vamis-cal-head span {
   border: 1px solid var(--primary);
+}
+.vamis-cal td.is-range {
+  background: var(--cal-between-bg);
+}
+.vamis-cal td.is-other.is-range,
+.vamis-cal td.is-other.is-range-start,
+.vamis-cal td.is-other.is-range-end {
+  background: transparent;
+}
+.vamis-cal td.is-range-start {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 50%,
+    var(--cal-between-bg) 51%,
+    var(--cal-between-bg) 100%
+  );
+}
+.vamis-cal td.is-range-end {
+  background: linear-gradient(
+    to right,
+    var(--cal-between-bg) 0%,
+    var(--cal-between-bg) 50%,
+    transparent 51%,
+    transparent 100%
+  );
 }
 .vamis-cal td.is-active .vamis-cal-day,
 .vamis-cal td.is-active.vamis-cal-pick span,

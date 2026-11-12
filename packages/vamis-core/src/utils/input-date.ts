@@ -16,6 +16,7 @@ const RELATIVE_RE =
 const UNIT_MAP: Record<string, ManipulateType> = {
   year: 'year',
   month: 'month',
+  quarter: 'quarter' as ManipulateType,
   week: 'week',
   weekday: 'week',
   day: 'day',
@@ -640,4 +641,158 @@ export function parseTypedInputDate(
   const parsed = parseDate(trimmed, display, { strict: true })
   if (parsed.isValid()) return parsed
   return parseInputDateValue(trimmed, schema, data)
+}
+
+const DURATION_RE =
+  /^((?:-|\+)?(?:\d*\.)?\d+)(minute|min|hour|day|week|month|quarter|year|weekday|second|millisecond)s?$/i
+
+/** 对齐 Amis `parseDuration`：`2days` / `1year`。 */
+export function parseDateDuration(str: unknown): { amount: number; unit: ManipulateType } | undefined {
+  if (str == null || str === '') return undefined
+  const matches = String(str).trim().match(DURATION_RE)
+  if (!matches) return undefined
+  const unit = UNIT_MAP[matches[2].toLowerCase()]
+  if (!unit) return undefined
+  const amount = Number.parseFloat(matches[1])
+  if (!Number.isFinite(amount)) return undefined
+  return { amount, unit }
+}
+
+export function addDateDuration(date: Dayjs, duration: { amount: number; unit: ManipulateType }): Dayjs {
+  return date.add(duration.amount, duration.unit)
+}
+
+export function subtractDateDuration(date: Dayjs, duration: { amount: number; unit: ManipulateType }): Dayjs {
+  return date.subtract(duration.amount, duration.unit)
+}
+
+/** 对齐 Amis DateRangePicker.filterDate：按 `timeFormat` 落到 day/hour/minute/second/quarter。 */
+export function dateRangeTimeUnit(timeFormat: unknown): ManipulateType {
+  const raw = typeof timeFormat === 'string' ? timeFormat : ''
+  if (/ss/.test(raw)) return 'second'
+  if (/mm/.test(raw)) return 'minute'
+  if (/HH/i.test(raw)) return 'hour'
+  if (/Q/i.test(raw)) return 'quarter'
+  return 'day'
+}
+
+type MomentBox = { current: Dayjs }
+
+function wrapMoment(date: Dayjs) {
+  const box: MomentBox = { current: date.clone() }
+  const api: Record<string, unknown> = {}
+  const setUnit = (unit: ManipulateType | 'millisecond', value?: number) => {
+    if (value == null) {
+      if (unit === 'hour') return box.current.hour()
+      if (unit === 'minute') return box.current.minute()
+      if (unit === 'second') return box.current.second()
+      return box.current.millisecond()
+    }
+    if (unit === 'hour') box.current = box.current.hour(value)
+    else if (unit === 'minute') box.current = box.current.minute(value)
+    else if (unit === 'second') box.current = box.current.second(value)
+    else box.current = box.current.millisecond(value)
+    return api
+  }
+  Object.assign(api, {
+    hours: (value?: number) => setUnit('hour', value),
+    hour: (value?: number) => setUnit('hour', value),
+    minutes: (value?: number) => setUnit('minute', value),
+    minute: (value?: number) => setUnit('minute', value),
+    seconds: (value?: number) => setUnit('second', value),
+    second: (value?: number) => setUnit('second', value),
+    milliseconds: (value?: number) => setUnit('millisecond', value),
+    millisecond: (value?: number) => setUnit('millisecond', value),
+    set(obj: Record<string, number>) {
+      let next = box.current
+      if (obj.hours != null || obj.hour != null) next = next.hour(obj.hours ?? obj.hour)
+      if (obj.minutes != null || obj.minute != null) next = next.minute(obj.minutes ?? obj.minute)
+      if (obj.seconds != null || obj.second != null) next = next.second(obj.seconds ?? obj.second)
+      if (obj.milliseconds != null || obj.millisecond != null) {
+        next = next.millisecond(obj.milliseconds ?? obj.millisecond)
+      }
+      box.current = next
+      return api
+    },
+    clone: () => wrapMoment(box.current),
+    format: (pattern?: string) => (pattern ? box.current.format(pattern) : box.current.format()),
+    isValid: () => box.current.isValid(),
+    startOf: (unit: ManipulateType) => wrapMoment(box.current.startOf(unit)),
+    endOf: (unit: ManipulateType) => wrapMoment(box.current.endOf(unit)),
+    add: (amount: number, unit: ManipulateType) => wrapMoment(box.current.add(amount, unit)),
+    subtract: (amount: number, unit: ManipulateType) => wrapMoment(box.current.subtract(amount, unit)),
+    toDayjs: () => box.current,
+  })
+  Object.defineProperty(api, '__box', { value: box })
+  return api
+}
+
+function unwrapMoment(value: unknown): Dayjs | undefined {
+  if (!value) return undefined
+  if (isDayjs(value)) return value
+  if (typeof value === 'object' && value && typeof (value as { toDayjs?: unknown }).toDayjs === 'function') {
+    const next = (value as { toDayjs: () => Dayjs }).toDayjs()
+    return isDayjs(next) && next.isValid() ? next : undefined
+  }
+  return undefined
+}
+
+function momentFactory(input?: unknown, format?: string) {
+  if (input && typeof input === 'object' && typeof (input as { toDayjs?: unknown }).toDayjs === 'function') {
+    return input
+  }
+  if (isDayjs(input)) return wrapMoment(input)
+  if (input == null || input === '') return wrapMoment(dayjs())
+  const parsed = format ? parseDate(input as string | number | Date, format) : dayjs(input as string | number | Date)
+  return wrapMoment(parsed.isValid() ? parsed : dayjs())
+}
+
+/** 对齐 Amis DateRangePicker `transform`：字符串函数体只在 trusted 编译。 */
+export function runDateRangeTransform(
+  value: Dayjs,
+  config: { type: 'start' | 'end'; originValue?: Dayjs; timeFormat: string },
+  schema: SchemaObject,
+  data: PlainObject,
+  trusted: boolean,
+): Dayjs | undefined {
+  const raw = schema.transform
+  if (typeof raw === 'function') {
+    try {
+      const wrapped = wrapMoment(value)
+      const out = (raw as (...args: unknown[]) => unknown)(wrapped, config, schema, data, momentFactory)
+      return unwrapMoment(out) ?? unwrapMoment(wrapped)
+    } catch {
+      return undefined
+    }
+  }
+  if (typeof raw !== 'string' || !raw.trim() || !trusted) return undefined
+  try {
+    const fn = new Function('value', 'config', 'props', 'data', 'moment', raw) as (
+      value: unknown,
+      config: unknown,
+      props: unknown,
+      data: unknown,
+      moment: typeof momentFactory,
+    ) => unknown
+    const wrapped = wrapMoment(value)
+    const out = fn(wrapped, config, schema, data, momentFactory)
+    return unwrapMoment(out) ?? unwrapMoment(wrapped)
+  } catch {
+    return undefined
+  }
+}
+
+export function applyDateRangePart(
+  date: Dayjs,
+  type: 'start' | 'end',
+  schema: SchemaObject,
+  data: PlainObject,
+  origin?: Dayjs,
+  trusted = false,
+): Dayjs {
+  const timeFormat = typeof schema.timeFormat === 'string' ? schema.timeFormat : ''
+  const unit = origin ? dateRangeTimeUnit(timeFormat) : 'day'
+  let value = type === 'start' ? date.startOf(unit) : date.endOf(unit)
+  const next = runDateRangeTransform(value, { type, originValue: origin, timeFormat }, schema, data, trusted)
+  return next && next.isValid() ? next : value
 }
