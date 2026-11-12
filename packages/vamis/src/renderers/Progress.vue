@@ -52,6 +52,21 @@ const arcLength = computed(() => circumference * (1 - gapDegree.value / 360))
 const dashOffset = computed(() => arcLength.value * (1 - value.value / 100))
 const rotation = computed(() => (gapDegree.value ? 90 + gapDegree.value / 2 : -90))
 const svgSize = 100
+const thresholds = computed(() => {
+  const raw = props.schema.threshold
+  if (!Array.isArray(raw)) return []
+  return raw
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const rec = item as Record<string, unknown>
+      const value = String(rec.value ?? '').replace('%', '')
+      const n = Number(value)
+      if (!Number.isFinite(n)) return null
+      return { value: Math.min(100, Math.max(0, n)), color: String(rec.color || 'var(--foreground)') }
+    })
+    .filter(Boolean) as Array<{ value: number; color: string }>
+})
+const showThresholdText = computed(() => props.schema.showThresholdText === true)
 const stripe = computed(() => props.schema.stripe === true)
 const animate = computed(() => props.schema.animate !== false)
 
@@ -74,13 +89,23 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
 <template>
   <div data-vamis-progress :data-mode="mode" class="flex items-center gap-2">
     <template v-if="mode === 'line'">
-      <div class="h-2 flex-1 overflow-hidden rounded-full" :style="{ background: 'var(--muted)', height: `${strokeWidth}px` }">
+      <div class="relative h-2 flex-1 overflow-hidden rounded-full" :style="{ background: 'var(--muted)', height: `${strokeWidth}px` }">
         <div
           class="h-full rounded-full"
           :class="{ 'vamis-progress__stripe': stripe, 'vamis-progress__animate': animate }"
           :style="{ width: `${value}%`, background: color }"
         />
+        <span
+          v-for="(item, i) in thresholds"
+          :key="i"
+          class="absolute top-0 bottom-0 w-0.5"
+          :style="{ left: `${item.value}%`, background: item.color }"
+          :title="showThresholdText ? `${item.value}%` : undefined"
+        />
       </div>
+      <span v-if="showThresholdText && thresholds.length" class="shrink-0 text-xs text-muted-foreground">
+        {{ thresholds.map((item) => `${item.value}%`).join(' / ') }}
+      </span>
       <span v-if="showLabel" class="shrink-0 text-xs text-muted-foreground">{{ label }}</span>
     </template>
     <template v-else>

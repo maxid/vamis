@@ -5,7 +5,7 @@ outline: deep
 
 # Progress 进度条
 
-::: info 实现进度 80% · 进行中
+::: info 实现进度 85% · 进行中
 `mode` line / circle / dashboard、`value`、`map` 颜色（单色 / 数组 / 阈值对象）、`strokeWidth`、`gapDegree` / `gapPosition`、`showLabel` / `valueTpl`、`stripe` / `animate`、`placeholder`、`reset` / `setValue` 动作。阈值刻度（`threshold`）暂未接。
 :::
 
@@ -111,7 +111,22 @@ body:
 
 ## 阈值（刻度）
 
-`threshold` 刻度线尚未接；可先用 `map` 阈值色表达分段。
+`threshold` 在进度条上画刻度线（line 模式），`showThresholdText` 同时展示刻度文本：
+
+```schema
+type: page
+body:
+  type: progress
+  value: 60
+  threshold:
+    - value: "30%"
+      color: red
+    - value: "90%"
+      color: blue
+  showThresholdText: true
+```
+
+圆 / 仪表盘模式暂不画刻度线。
 
 ## 属性表
 
@@ -127,6 +142,8 @@ body:
 | `valueTpl` | `string` | | 进度文本模板 |
 | `stripe` | `boolean` | `false` | 条纹 |
 | `animate` | `boolean` | `true` | 动画 |
+| `threshold` | `{value,color}[]` | | 刻度线（line 模式） |
+| `showThresholdText` | `boolean` | `false` | 展示刻度文本 |
 | `placeholder` | `string` | | 无值占位 |
 
 ## 动作表
@@ -140,4 +157,4 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：三种模式、颜色映射、线宽、缺口、文本模板、条纹 / 动画、reset/setValue。
-- 未接：`threshold` / `showThresholdText` 刻度线、`gapPosition` 的精确弧线偏移。
+- `threshold` / `showThresholdText` 已接 line 模式；圆 / 仪表盘刻度线与 `gapPosition` 精确弧线偏移未接。

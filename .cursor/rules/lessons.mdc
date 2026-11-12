@@ -818,6 +818,10 @@ alwaysApply: true
 - 稳定做法：DEFAULTS 表给 0/1/success/pending/queue/schedule/fail/warning/info 的文本/图标/颜色；`source[value]` 优先（label 支持模板），其次 `labelMap[value]`、`map[value]`；icon 走 resolveIcon + IconMark；无值/无匹配显示 `placeholder`（默认 -）。
 - 触及：`status`
 
+### Progress threshold 只画 line 模式绝对刻度
+- 稳定做法：threshold 解析 `30%`/数字为 0-100，line 轨道 relative 定位 2px 竖线，showThresholdText 额外显示文本；circle/dashboard 不画假刻度。
+- 触及：`progress`
+
 ### Progress circle/dashboard 用 SVG stroke-dasharray；map 三形态
 - 稳定做法：line 用 div 宽度，circle/dashboard 用 `<circle>` + `stroke-dasharray = arcLength circumference`、`dashoffset = arc*(1-value/100)`、rotate `-90 + gapDegree/2`；`map` 字符串/数组/阈值对象三路，数组按 `Math.floor(value/(100/len))` 取色；`valueTpl` 过滤 `${value}`；actions 用本地 override，不依赖表单域。
 - 触及：`progress`
