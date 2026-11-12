@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 拖拽排序用本地 dragOrder 映射，事件只读不写回
+- 稳定做法：`dragOrder` 存 sortedRows 下标数组，`displayRows` 映射；drop 后 splice 并派发 `orderChange.movedItems`；不直接改原始 rows；行选择/全选同样基于 displayRows。
+- 触及：`table`
+
 ### Table 客户端排序要同步选择索引
 - 稳定做法：`sortState` 只存 `{key,dir}`，`sortedRows` 派生；表头点击 sortable 列循环 asc→desc→none 并派发 `columnSort`；行选择 / 全选 / getData.selectedItems 都基于 `sortedRows`，否则排序后勾选错位。
 - 触及：`table`

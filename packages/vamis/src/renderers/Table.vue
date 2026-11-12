@@ -50,6 +50,35 @@ const sortedRows = computed(() => {
   })
 })
 
+const dragFrom = ref(-1)
+const dragOrder = ref<number[] | null>(null)
+const displayRows = computed(() => {
+  if (!dragOrder.value) return sortedRows.value
+  return dragOrder.value.map((i) => sortedRows.value[i]).filter(Boolean)
+})
+
+function onDragStartRow(index: number, event: DragEvent) {
+  if (props.schema.draggable !== true) return
+  dragFrom.value = index
+  event.dataTransfer?.setData('text/plain', String(index))
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+}
+
+async function onDropRow(index: number, event: DragEvent) {
+  event.preventDefault()
+  if (props.schema.draggable !== true || dragFrom.value < 0 || dragFrom.value === index) return
+  const base = dragOrder.value || displayRows.value.map((_, i) => i)
+  const next = [...base]
+  const [moved] = next.splice(dragFrom.value, 1)
+  next.splice(index, 0, moved)
+  dragOrder.value = next
+  dragFrom.value = -1
+  const movedItems = next.map((i) => sortedRows.value[i]).filter(Boolean)
+  const payload = { ...(props.data || {}), movedItems }
+  const ev = createVamisEvent('orderChange', payload)
+  await runOnEvent(props.schema, 'orderChange', { env, data: eventEvalData(payload, ev), scoped, event: ev })
+}
+
 async function sortBy(col: SchemaObject) {
   if (col.sortable !== true) return
   const field = String(col.sortBy || col.name || '')
@@ -86,7 +115,7 @@ function allSelected() {
 }
 
 function toggleAll() {
-  selected.value = allSelected() ? [] : sortedRows.value.map((_, i) => i)
+  selected.value = allSelected() ? [] : displayRows.value.map((_, i) => i)
 }
 
 async function emitRowClick(row: Record<string, any>, i: number, event: MouseEvent) {
@@ -101,17 +130,17 @@ async function emitRowClick(row: Record<string, any>, i: number, event: MouseEve
 const tableApi = {
   name: String(props.schema.id || props.schema.name || ''),
   id: props.schema.id ? String(props.schema.id) : undefined,
-  getData: () => ({ selectedItems: selected.value.map((i) => sortedRows.value[i]).filter(Boolean) }),
+  getData: () => ({ selectedItems: selected.value.map((i) => displayRows.value[i]).filter(Boolean) }),
   setData: () => {},
   async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
     const type = action?.actionType
-    if (type === 'selectAll') selected.value = sortedRows.value.map((_, i) => i)
+    if (type === 'selectAll') selected.value = displayRows.value.map((_, i) => i)
     else if (type === 'clearAll') selected.value = []
     else if (type === 'select') {
       selected.value = String(action.args?.index ?? '')
         .split(',')
         .map((part) => Number(part.trim()))
-        .filter((n) => Number.isFinite(n) && sortedRows.value[n])
+        .filter((n) => Number.isFinite(n) && displayRows.value[n])
     }
   },
 }
