@@ -225,7 +225,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 88% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue。缺 themeCss | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
-| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 70% | 静态 options、multiple、弹层搜索/确认/取消、embed、maxTagCount、clearable、joinValues/delimiter、labelField/valueField；文档重写。对照桌面 **1/1**、移动 **1/1**（P0 0）。补远程/变量 source 选项；缺 pickerSchema、分页/分组/树 | P0 |
+| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 75% | 静态 options、multiple、弹层搜索/确认/取消、embed、maxTagCount、clearable、joinValues/delimiter、labelField/valueField；文档重写。对照桌面 **1/1**、移动 **1/1**（P0 0）。补远程/变量 source、分页；缺 pickerSchema、分组/树 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |
@@ -463,7 +463,7 @@ flowchart LR
 | 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 96% |
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | 进行中 | 90% |
 | 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | 进行中 | 75% |
-| 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 70% |
+| 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 75% |
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |

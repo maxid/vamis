@@ -5,7 +5,7 @@ outline: deep
 
 # Picker 列表选择器
 
-::: info 实现进度 70% · 进行中
+::: info 实现进度 75% · 进行中
 静态 `options`、`multiple`、弹层搜索 / 确认 / 取消、`embed` 内嵌、`maxTagCount`、`clearable`、`joinValues` / `delimiter`、`labelField` / `valueField`。缺 `pickerSchema` 自定义弹层、远程 `source`、分页 / 分组 / 树选择。
 :::
 
@@ -103,6 +103,22 @@ label: 本地变量
 source: "${dict}"
 ```
 
+## 分页
+
+`perPage` 控制弹层每页选项数，搜索时自动回到第一页：
+
+```yaml
+type: picker
+name: picker
+label: 分页选择
+perPage: 10
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -115,6 +131,7 @@ source: "${dict}"
 | `labelField` / `valueField` | `string` | `label` / `value` | 选项字段名 |
 | `embed` | `boolean` | `false` | 内嵌列表 |
 | `maxTagCount` | `number` | | 最多展示标签数，其余 `+N` |
+| `perPage` | `number` | `10` | 弹层每页选项数 |
 | `clearable` | `boolean` | `true` | 可清除 |
 | `placeholder` | `string` | `请选择` | 未选占位 |
 | `modalTitle` | `string` | | 弹层标题 |
@@ -133,4 +150,4 @@ source: "${dict}"
 
 - 与 Amis 一致：静态 options、multiple、joinValues/delimiter、弹层搜索/确定/取消、clearable。
 - 已加：`embed` 内嵌、`maxTagCount` 折叠标签。
-- 未接：`pickerSchema`、分页 / 分组 / 树选择、完整事件动作表。
+- 未接：`pickerSchema`、分组 / 树选择、完整事件动作表。

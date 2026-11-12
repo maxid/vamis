@@ -36,6 +36,7 @@ const env = useEnv()
 const remoteOptions = ref<unknown[] | null>(null)
 const open = ref(false)
 const keyword = ref('')
+const pickerPage = ref(1)
 const draft = ref<unknown[]>([])
 
 const multiple = computed(() => !!props.schema.multiple)
@@ -66,11 +67,21 @@ const selected = computed({
   },
 })
 
+const perPage = computed(() => {
+  const n = Number(props.schema.perPage)
+  return Number.isFinite(n) && n > 0 ? n : 10
+})
 const filtered = computed(() => {
   const q = keyword.value.trim().toLowerCase()
   if (!q) return options.value
   return options.value.filter((item) => item.label.toLowerCase().includes(q) || String(item.value).toLowerCase().includes(q))
 })
+
+const pagedOptions = computed(() => {
+  const start = (pickerPage.value - 1) * perPage.value
+  return filtered.value.slice(start, start + perPage.value)
+})
+const lastPage = computed(() => Math.max(1, Math.ceil(filtered.value.length / perPage.value)))
 
 const selectedLabels = computed(() =>
   selected.value.map((value) => options.value.find((item) => optionValuesEqual(item.value, value))?.label || String(value)),
@@ -89,9 +100,12 @@ function toggle(option: OptionItem, checked: boolean) {
   draft.value = checked ? [...next, option.value] : next
 }
 
+watch(keyword, () => { pickerPage.value = 1 })
+
 function openPicker() {
   draft.value = [...selected.value]
   keyword.value = ''
+  pickerPage.value = 1
   open.value = true
 }
 
@@ -154,7 +168,7 @@ watch(
       <Button v-if="selectedLabels.length && schema.clearable !== false" type="button" size="sm" variant="ghost" :disabled="disabled" @click="clear">清除</Button>
     </div>
     <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
-      <li v-for="opt in filtered" :key="String(opt.value)">
+      <li v-for="opt in pagedOptions" :key="String(opt.value)">
         <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
           <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, opt.value))" @update:model-value="commitInline(opt, $event === true)" />
           <span>{{ opt.label }}</span>
@@ -176,6 +190,11 @@ watch(
           </li>
           <li v-if="!filtered.length" class="px-2 py-6 text-center text-xs text-muted-foreground">暂无选项</li>
         </ul>
+        <div v-if="lastPage > 1" class="mt-2 flex items-center justify-end gap-2 text-xs">
+          <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage <= 1" @click="pickerPage -= 1">上一页</button>
+          <span>{{ pickerPage }} / {{ lastPage }}</span>
+          <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage >= lastPage" @click="pickerPage += 1">下一页</button>
+        </div>
         <DialogFooter>
           <Button type="button" variant="outline" @click="open = false">取消</Button>
           <Button type="button" @click="confirm">确定</Button>

@@ -758,6 +758,10 @@ alwaysApply: true
 - 稳定做法：source 以 `$` 开头 resolveValue 拿数组；API 归一到 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source + schema.data 用 isApiOutdated。
 - 触及：`transfer`
 
+### Picker 分页客户端 slice，搜索重置页码
+- 稳定做法：pagedOptions 按 pickerPage/perPage slice filtered；搜索 watch 重置 pickerPage=1；跨页 draft 保留；末页 Math.ceil。
+- 触及：`picker`
+
 ### Picker source 支持变量与 API，归一到 options/items/records
 - 稳定做法：source 以 `$` 开头用 resolveValue 直接拿数组；API 走 requestApi，依次取 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source 与 schema.data 用 isApiOutdated。
 - 触及：`picker`
