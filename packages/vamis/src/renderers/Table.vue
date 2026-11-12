@@ -198,6 +198,34 @@ const sortedRows = computed(() => {
   })
 })
 
+const childrenField = computed(() => String(props.schema.childrenColumnName || 'children'))
+const expandedKeys = ref<Set<string>>(new Set())
+
+function childrenOf(row: Record<string, any>) {
+  const list = row?.[childrenField.value]
+  return Array.isArray(list) ? (list as Record<string, any>[]) : []
+}
+
+function rowIdOf(row: Record<string, any>, index: number) {
+  return String(row?.id ?? index)
+}
+
+function isExpanded(row: Record<string, any>, index: number) {
+  return expandedKeys.value.has(rowIdOf(row, index))
+}
+
+function toggleExpand(row: Record<string, any>, index: number) {
+  const key = rowIdOf(row, index)
+  const next = new Set(expandedKeys.value)
+  if (next.has(key)) next.delete(key)
+  else next.add(key)
+  expandedKeys.value = next
+}
+
+function childRow(row: Record<string, any>, index: number) {
+  return childrenOf(row).map((child, ci) => ({ child, ci, key: `${rowIdOf(row, index)}-${ci}` }))
+}
+
 const dragFrom = ref(-1)
 const dragOrder = ref<number[] | null>(null)
 const displayRows = computed(() => {
@@ -412,6 +440,13 @@ function rowClass(row: Record<string, any>) {
           :rowspan="cellMeta(i, ci)?.rowspan"
           :class="{ invisible: cellMeta(i, ci)?.skip }"
         >
+          <button
+            v-if="ci === 0 && childrenOf(row).length"
+            type="button"
+            class="mr-1 inline-flex size-4 items-center justify-center text-xs text-muted-foreground"
+            :aria-label="isExpanded(row, i) ? '收起' : '展开'"
+            @click.stop="toggleExpand(row, i)"
+          >{{ isExpanded(row, i) ? '▾' : '▸' }}</button>
           <template v-if="quickEditable(col)">
             <select
               v-if="editingCell === cellKey(row, col) && quickEditType(col) === 'select'"
@@ -458,6 +493,17 @@ function rowClass(row: Record<string, any>) {
           </PopOverHost>
         </TableCell>
       </TableRow>
+        <template v-for="item in isExpanded(row, i) ? childRow(row, i) : []" :key="item.key">
+          <TableRow class="bg-muted/20">
+            <TableCell v-if="selectable" />
+            <TableCell v-for="(col, ci) in columns" :key="`c-${ci}`" :style="colWidthStyle(col)">
+              <span :class="{ 'pl-5': ci === 0 }">
+                <SchemaRenderer v-if="col.type && col.type !== 'text' && col.type !== 'plain'" :schema="col" :extra-data="item.child" />
+                <template v-else>{{ item.child[String(col.name || '')] ?? '' }}</template>
+              </span>
+            </TableCell>
+          </TableRow>
+        </template>
       <TableRow v-if="affixRow.length" :class="summaryClass(schema.affixRowClassName)">
         <TableCell v-for="(cell, ci) in affixRow" :key="'a' + ci" :colspan="cell.colSpan ?? 1">
           <SchemaRenderer :schema="summaryCell(cell)" :extra-data="summaryData" />

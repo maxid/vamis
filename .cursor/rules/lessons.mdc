@@ -762,6 +762,10 @@ alwaysApply: true
 - 稳定做法：source 以 `$` 开头用 resolveValue 直接拿数组；API 走 requestApi，依次取 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source 与 schema.data 用 isApiOutdated。
 - 触及：`picker`
 
+### Table 嵌套行只做一层展开，不并入 selection/merge
+- 稳定做法：`children` 字段取子行，父行首列 toggle ▸/▾，展开后在父行后追加 `TableRow`（首列 pl-5）；子行不参与选择/合并/拖拽；深层递归和子行交互仍待接。
+- 触及：`table`
+
 ### Table quickEdit 按 type 切 select/textarea/number
 - 稳定做法：`quickEditConfig.type` 决定控件，select change 即提交、textarea/input-number blur 提交、文本 Enter/blur；仍写回原行对象。
 - 触及：`table`

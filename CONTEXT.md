@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `table` 嵌套行：`children`/`childrenColumnName` 展开子行（缩进、一层），文档补嵌套章节。table 仍 **99%**（余独立数据域/深层嵌套交互）。
 - 深色/控制台核验：table、crud、transfer、picker、progress、status 六页切 `.dark` 无 pageerror，背景走暗色 token；无需修复。
 - 收尾验证：全量 **1316 例 / 1252 过 / 64 败**（P0 8 基线 helper，其余多为 Cursor form 文档探针差异）；`pnpm test` **905 全过**，`typecheck` 72。
 - `progress` 刻度线：line 模式 `threshold` 绝对刻度 + `showThresholdText`；文档更新。80% → **85%**（圆/仪表盘刻度与 gapPosition 弧线未接）。
