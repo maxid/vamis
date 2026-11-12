@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Transfer mode=table 用双栏 table，tree/chained 回退 list
+- 稳定做法：`mode` 只分 list/table 两分支，表格列固定 名称/值，行点击仍走 add/remove；tree/chained 不做假实现，文档明确未接。
+- 触及：`transfer`
+
 ### Transfer source 与 Picker 同套加载逻辑
 - 稳定做法：source 以 `$` 开头 resolveValue 拿数组；API 归一到 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source + schema.data 用 isApiOutdated。
 - 触及：`transfer`

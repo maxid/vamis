@@ -5,7 +5,7 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 68% · 进行中
+::: info 实现进度 75% · 进行中
 主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 
@@ -32,7 +32,21 @@ body:
 
 ## 展示模式
 
-Amis 支持 `mode: list | table | tree | chained`；Vamis 目前只实现基础双栏列表，`table` / `tree` / `chained` 未接，按 list 展示。
+`mode` 支持 `list`（默认）/ `table`；`tree` / `chained` 仍按 list 展示，未接。
+
+```yaml
+type: transfer
+name: transfer
+label: 表格模式
+mode: table
+leftTitle: 待选
+rightTitle: 已选
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+```
 
 ## 搜索
 
@@ -77,11 +91,11 @@ valueField: value
 | `searchable` | `boolean` | `false` | 左右搜索框 |
 | `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
 | `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
-| `mode` | `string` | `list` | 仅 list 已实现 |
+| `mode` | `string` | `list` | `list` / `table`；tree/chained 未接 |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 和 Amis 文档的差异
 
 - 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
 - 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
-- 未接：table / tree / chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
+- 未接：tree / chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
