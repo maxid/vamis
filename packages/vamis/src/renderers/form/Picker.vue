@@ -30,6 +30,11 @@ const keyword = ref('')
 const draft = ref<unknown[]>([])
 
 const multiple = computed(() => !!props.schema.multiple)
+const embed = computed(() => props.schema.embed === true)
+const maxTagCount = computed(() => {
+  const n = Number(props.schema.maxTagCount)
+  return Number.isFinite(n) && n >= 0 ? n : 0
+})
 const joinValues = computed(() => props.schema.joinValues !== false)
 const labelField = computed(() => String(props.schema.labelField || 'label'))
 const valueField = computed(() => String(props.schema.valueField || 'value'))
@@ -81,6 +86,14 @@ function openPicker() {
   open.value = true
 }
 
+const shownLabels = computed(() => (maxTagCount.value > 0 ? selectedLabels.value.slice(0, maxTagCount.value) : selectedLabels.value))
+const hiddenCount = computed(() => Math.max(0, selectedLabels.value.length - shownLabels.value.length))
+
+function commitInline(option: OptionItem, checked: boolean) {
+  if (!multiple.value) selected.value = checked ? [option.value] : []
+  else selected.value = checked ? [...selected.value.filter((v) => !optionValuesEqual(v, option.value)), option.value] : selected.value.filter((v) => !optionValuesEqual(v, option.value))
+}
+
 function confirm() {
   selected.value = [...draft.value]
   open.value = false
@@ -94,12 +107,21 @@ function clear() {
 <template>
   <FormItem :schema="schema">
     <div class="flex flex-wrap items-center gap-2">
-      <Badge v-for="(label, i) in selectedLabels" :key="i" variant="secondary">{{ label }}</Badge>
+      <Badge v-for="(label, i) in shownLabels" :key="i" variant="secondary">{{ label }}</Badge>
+      <Badge v-if="hiddenCount > 0" variant="outline">+{{ hiddenCount }}</Badge>
       <span v-if="!selectedLabels.length" class="text-sm text-muted-foreground">{{ schema.placeholder || '请选择' }}</span>
-      <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="openPicker">选择</Button>
+      <Button v-if="!embed" type="button" size="sm" variant="outline" :disabled="disabled" @click="openPicker">选择</Button>
       <Button v-if="selectedLabels.length && schema.clearable !== false" type="button" size="sm" variant="ghost" :disabled="disabled" @click="clear">清除</Button>
     </div>
-    <Dialog :open="open" @update:open="open = $event">
+    <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
+      <li v-for="opt in filtered" :key="String(opt.value)">
+        <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
+          <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, opt.value))" @update:model-value="commitInline(opt, $event === true)" />
+          <span>{{ opt.label }}</span>
+        </label>
+      </li>
+    </ul>
+    <Dialog v-if="!embed" :open="open" @update:open="open = $event">
       <DialogContent class="max-w-lg">
         <DialogHeader>
           <DialogTitle>{{ schema.modalTitle || schema.label || '请选择' }}</DialogTitle>

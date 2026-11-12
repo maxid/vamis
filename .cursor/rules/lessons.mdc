@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Picker embed 提交即时写回，弹层仍旧草稿确认
+- 稳定做法：embed 分支用 `selected` 即时 toggle（单选替换），弹层分支用 draft + 确定；maxTagCount 只折叠展示（`+N`），不裁剪真实值；基础文档示例 options 用合法列表，避免旧版畸形 YAML。
+- 触及：`picker`
+
 ### Transfer 搜索只过滤本地 options；对照基础示例别带初始值
 - 稳定做法：searchable 时左右各一个输入框，按 label 小写包含过滤 `leftShown/rightShown`，无结果占位仍显示；leftTitle/rightTitle 放栏头；对照基础 form 示例不要预置 data.transfer（Amis 不写、Vamis 会读表单域导致 value 假红）。
 - 触及：`transfer`

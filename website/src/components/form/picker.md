@@ -5,30 +5,24 @@ outline: deep
 
 # Picker 列表选择器
 
-::: info 实现进度 50% · 进行中
-能弹层多选
+::: info 实现进度 60% · 进行中
+静态 `options`、`multiple`、弹层搜索 / 确认 / 取消、`embed` 内嵌、`maxTagCount`、`clearable`、`joinValues` / `delimiter`、`labelField` / `valueField`。缺 `pickerSchema` 自定义弹层、远程 `source`、分页 / 分组 / 树选择。
 :::
 
-`picker` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+列表选择器：弹层里选选项，确认后写回表单。属于普通表单项，通用属性见 [FormItem](./formitem)。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
 
 ## 基本用法
 
-```schema
-type: page
-title: picker
+```schema: scope="body"
+type: form
 body:
-  - type: form
-    title: picker
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: picker
-        name: picker
-        label: picker
-        options:
-          - label: 选项 A
+  - type: picker
+    name: picker
+    label: 选择器
+    options:
+      - label: 选项 A
         value: a
       - label: 选项 B
         value: b
@@ -36,22 +30,87 @@ body:
         value: c
 ```
 
-## 常用属性
+## 多选
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+`multiple: true` 可多选；`joinValues` + `delimiter` 控制写回格式：
+
+```yaml
+type: picker
+name: picker
+label: 多选
+multiple: true
+joinValues: true
+delimiter: ","
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+```
+
+## 内嵌模式
+
+`embed: true` 不弹层，直接把列表画在表单里：
+
+```yaml
+type: picker
+name: picker
+label: 内嵌
+embed: true
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+```
+
+## 限制标签最大展示数量
+
+`maxTagCount: 2` 只展示前 2 个标签，其余折叠成 `+N`：
+
+```yaml
+type: picker
+name: picker
+label: 限制标签
+multiple: true
+maxTagCount: 2
+options:
+  - label: 选项 A
+    value: a
+  - label: 选项 B
+    value: b
+  - label: 选项 C
+    value: c
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `options` | `Option[]` | | 静态选项 |
+| `name` / `value` | | | 表单字段与初始值 |
+| `multiple` | `boolean` | `false` | 多选 |
+| `joinValues` | `boolean` | `true` | 多选时用分隔符拼接 |
+| `delimiter` | `string` | `,` | 拼接分隔符 |
+| `labelField` / `valueField` | `string` | `label` / `value` | 选项字段名 |
+| `embed` | `boolean` | `false` | 内嵌列表 |
+| `maxTagCount` | `number` | | 最多展示标签数，其余 `+N` |
+| `clearable` | `boolean` | `true` | 可清除 |
+| `placeholder` | `string` | `请选择` | 未选占位 |
+| `modalTitle` | `string` | | 弹层标题 |
+| `pickerSchema` | Schema | | **未接** 自定义弹层 |
+| `source` | API | | **未接** 远程选项 |
+
+## 事件表
+
+弹层确认 / 清空会写回表单字段；`picker` 暂无独立组件事件。
+
+## 动作表
+
+`picker` 没有专属动作。
 
 ## 和 Amis 文档的差异
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
-- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 与 Amis 一致：静态 options、multiple、joinValues/delimiter、弹层搜索/确定/取消、clearable。
+- 已加：`embed` 内嵌、`maxTagCount` 折叠标签。
+- 未接：`pickerSchema`、远程 `source`、分页 / 分组 / 树选择、完整事件动作表。
