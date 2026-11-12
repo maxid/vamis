@@ -57,7 +57,6 @@ import Combo from './renderers/form/Combo.vue'
 import InputTable from './renderers/form/InputTable.vue'
 import Transfer from './renderers/form/Transfer.vue'
 import InputFile from './renderers/form/InputFile.vue'
-import InputImage from './renderers/form/InputImage.vue'
 import InputTree from './renderers/form/InputTree.vue'
 import TreeSelect from './renderers/form/TreeSelect.vue'
 import NestedSelect from './renderers/form/NestedSelect.vue'
@@ -149,7 +148,8 @@ registerRenderer({ type: 'combo', component: Combo, isFormItem: true })
 registerRenderer({ type: 'input-table', component: InputTable, isFormItem: true })
 registerRenderer({ type: 'transfer', component: Transfer, isFormItem: true })
 registerRenderer({ type: 'input-file', component: InputFile, isFormItem: true })
-registerRenderer({ type: 'input-image', component: InputImage, isFormItem: true })
+// Amis InputImage：复用 InputFile 的上传管线，图片模式走缩略图/裁剪之外的图片专属 UI。
+registerRenderer({ type: 'input-image', component: InputFile, isFormItem: true })
 registerRenderer({ type: 'input-tree', component: InputTree, isFormItem: true })
 registerRenderer({ type: 'tree-select', component: TreeSelect, isFormItem: true })
 registerRenderer({ type: 'nested-select', component: NestedSelect, isFormItem: true })

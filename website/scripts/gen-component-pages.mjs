@@ -64,6 +64,8 @@ const HANDWRITTEN = new Set([
   '/components/form/radio',
   '/components/form/switch',
   '/components/form/hidden',
+  '/components/form/input-file',
+  '/components/form/input-image',
   '/components/page',
   '/components/container',
   '/components/collapse',

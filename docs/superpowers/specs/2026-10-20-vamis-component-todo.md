@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-11（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 112 项；已完成 3）
+- 最近核对：2026-11-11（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
 
 ## 怎么读
 
@@ -67,11 +67,11 @@
 |------|---------------|--------|--------|----------|-------------------|
 | 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
 | 功能 | 0 / 12 | 12 | 0 | 80% | 11 |
-| 数据输入 | 1 / 72 | 71 | 0 | 52% | 43 |
+| 数据输入 | 1 / 72 | 71 | 0 | 53% | 44 |
 | 数据展示 | 0 / 44 | 44 | 0 | 56% | 31 |
 | 反馈 | 1 / 5 | 4 | 0 | 89% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
-| **合计** | **3 / 155** | **152** | **0** | **59%** | **112** |
+| **合计** | **3 / 155** | **152** | **0** | **59%** | **113** |
 
 侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 90%。
 
@@ -123,6 +123,7 @@
 | `checkbox` | 90% | 已核 | 2026-11-07。无独立浮层；浅+深默认皮（16 盒 / 按钮模式 / 禁用灰底） |
 | `switch` | 88% | 已核 | 2026-11-11。无独立浮层；浅 `#d4d6d9` / 深 `#84878c`，滑块 16 白 / 深 `#f7f8fa`，选中走 `--primary`；`change` 示例的 toast 属全局 |
 | `hidden` | 100% | 无需核 | 2026-11-12。`wrap: false` 不落 DOM，无可视默认皮与浮层 |
+| `input-image` | 80% | 已核 | 2026-11-12。`--input-image-*` 走 `--card` / `--border` / `--primary`；无浮层（点击缩略图新窗口） |
 | `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
 | `collapse` / `tabs` / `portlet` | 85% | 未核 | |
 | `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
@@ -214,7 +215,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `formula` | Formula 公式 | `/components/form/formula` | `/zh-CN/components/form/formula` | 进行中 | 50% | 能按公式写值；与 expr 层未统一（D2） | P0 |
 | `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 70% | ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签 | P0 |
 | `hidden` | Hidden 隐藏字段 | `/components/form/hidden` | `/zh-CN/components/form/hidden` | 已完成 | 100% | 与 Amis 一致：渲染 null、`wrap: false`（SchemaRenderer 直接挂组件，不落 `.vamis-node`）、值随表单初始化/提交、`name` 支持 `a.b[0]` 路径、`value` 支持 `${}` 表达式；文档覆盖基本用法 / 属性 / 事件 / 动作表。对照桌面 **1/1**、移动 **1/1**（P0 0） | P0 |
-| `input-image` | InputImage 图片 | `/components/form/input-image` | `/zh-CN/components/form/input-image` | 进行中 | 40% | 能选图；裁剪/多图/上传 api 未齐 | P0 |
+| `input-image` | InputImage 图片 | `/components/form/input-image` | `/zh-CN/components/form/input-image` | 进行中 | 80% | 主路径已对齐：复用 InputFile 上传管线（receiver POST form-data、`data.value`/`data.url` 回填）、`autoUpload` / 手动上传 / `hideUploadButton`、`multiple` / `joinValues` / `extractValue` / `delimiter`、`accept` / `capture`、`maxSize` / `maxLength`、`limit` 尺寸校验、`frameImage` / `fixedSize`、`uploadBtnText`、`autoFill` / `initAutoFill`（源码默认 true）、`draggable` 排序、`change` / `remove` / `success` / `fail`、`clear`；缩略图 120 方块（`--input-image-*`）。文档按 Amis 章节改写，手动上传 / 隐藏上传按钮 / 多选 autoFill / 其他表单项填充 / initAutoFill / 拖拽排序示例均按 Amis 原例对齐。对照桌面 **12/12**、移动 **12/12**（P0 0）。缺 `crop` 系列 / `allowInput` / 图片预览画廊；`uploadBtnText` 只收字符串、`fixedSize` 只加类名 | P0 |
 | `input-group` | InputGroup 输入框组合 | `/components/form/input-group` | `/zh-CN/components/form/input-group` | 进行中 | 55% | 能并排控件 | P0 |
 | `list-select` | ListSelect 选择器 | `/components/form/list-select` | `/zh-CN/components/form/list-select` | 进行中 | 50% | 能点选列表 | P0 |
 | `location-picker` | LocationPicker 地理位置 | `/components/form/location-picker` | `/zh-CN/components/form/location-picker` | 进行中 | 25% | **精简**：地址/经/纬三个输入框，无地图 | P0 |
@@ -350,7 +351,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；当前建议下一批：`input-image` #24（40%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；当前建议下一批：`textarea` #25（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -442,7 +443,7 @@ flowchart LR
 | 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 23 | `hidden` | FormItem | 6 | 1 | 19 | 134 | 已完成 | 100% |
-| 24 | `input-image` | FormItem、`image` | 6 | 1 | 19 | 134 | 进行中 | 40% |
+| 24 | `input-image` | FormItem、`image` | 6 | 1 | 19 | 134 | 进行中 | 80% |
 | 25 | `textarea` | FormItem | 6 | 1 | 19 | 134 | 进行中 | 60% |
 | 26 | `static` | FormItem、`popOver`、`tpl` | 6 | 1 | 19 | 134 | 进行中 | 65% |
 | 27 | `form` | FormItem、Options、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image`、`panel`、`spinner` | 4 | 10 | 134 | 134 | 进行中 | 80% |

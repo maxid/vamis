@@ -392,6 +392,14 @@
               const control = item && item.querySelector('input[type="checkbox"], input[type="radio"]')
               if (control) return control
             }
+            if (node.type === 'input-file' || node.type === 'input-image') {
+              const esc = cssEscapeName(node.name)
+              const item = document.querySelector(
+                '[data-amis-name="' + esc + '"], [data-name="' + esc + '"]'
+              )
+              const control = item && item.querySelector('input[type="file"]')
+              if (control) return control
+            }
           }
           if (node.id) {
             const byId = document.getElementById(node.id)
@@ -486,6 +494,11 @@
         }
 
         function readNodeValue(node, formData) {
+          // 文件/图片输入的原生 input 才是真实控件值；别把表单域里 Amis 不暴露的初始值读成差异。
+          if (node.type === 'input-file' || node.type === 'input-image') {
+            const control = findNodeEl(node)
+            if (control && 'value' in control) return control.value
+          }
           const comp = readComponent(node)
           if (comp) {
             if (typeof comp.getValue === 'function') {

@@ -551,6 +551,16 @@
   --file-danger: var(--destructive);
   --file-select-gap: 10px;
   --file-size-color: var(--file-clear-color);
+  /* Amis `_image.scss` InputImage：120 方块、4 圆角、1px 边；上传文案 12/400。 */
+  --input-image-size: 120px;
+  --input-image-radius: var(--radius);
+  --input-image-border: 1px solid var(--border);
+  --input-image-bg: var(--card);
+  --input-image-add-color: #84878c;
+  --input-image-add-hover-border: var(--primary);
+  --input-image-add-hover-color: var(--primary);
+  --input-image-danger: var(--destructive);
+  --input-image-gap: var(--gap-base);
   /* Amis Number / `_number.scss`：handler 24、单位 56、enhance 左右 24×32。 */
   --number-handler-w: 24px;
   --number-handler-color: var(--foreground);
@@ -680,6 +690,7 @@
   --file-drag-icon-color: #5c5f66;
   --file-progress-bg: #303640;
   --file-size-color: #84878c;
+  --input-image-add-color: #b8bbbf;
   --number-handler-color: #f7f8fa;
   --number-handler-bg: var(--card);
   --number-unit-bg: var(--fill-10);
@@ -5252,6 +5263,162 @@
 }
 .vamis-file__upload-btn {
   margin-top: 8px;
+}
+
+
+/* Amis `.ImageControl`（input-image）：120 方块缩略图 + 同尺寸添加块。选择器只 var()。 */
+.vamis-image-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--input-image-gap);
+}
+.vamis-image-control__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--input-image-gap);
+}
+.vamis-image-control__item {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--input-image-size);
+  height: var(--input-image-size);
+  padding: 4px;
+  border: var(--input-image-border);
+  border-radius: var(--input-image-radius);
+  background: var(--input-image-bg);
+  vertical-align: top;
+}
+.vamis-image-control__item.is-invalid {
+  border-color: var(--input-image-danger);
+}
+.vamis-image-control__item.is-dragging {
+  border-color: var(--primary);
+}
+.vamis-image-control__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--radius) - 1px);
+  object-fit: cover;
+  cursor: zoom-in;
+}
+.vamis-image-control__fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0 4px;
+  color: var(--input-image-danger);
+  font-size: 12px;
+  text-align: center;
+}
+.vamis-image-control__fallback-name {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vamis-image-control__fallback-error {
+  font-size: 10px;
+  line-height: 1.3;
+}
+.vamis-image-control__error {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  max-height: 30px;
+  overflow: hidden;
+  padding: 0 4px;
+  border-radius: 2px;
+  background: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
+  color: #fff;
+  font-size: 10px;
+  line-height: 15px;
+}
+.vamis-image-control__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+.vamis-image-control__remove .vamis-close {
+  width: 10px;
+  height: 10px;
+}
+.vamis-image-control__item:hover .vamis-image-control__remove {
+  display: flex;
+}
+.vamis-image-control__progress {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  height: var(--file-progress-h);
+  background: var(--file-progress-bg);
+}
+.vamis-image-control__progress > i {
+  display: block;
+  height: 100%;
+  background: var(--file-progress-fill);
+}
+.vamis-image-control__add {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: var(--input-image-size);
+  height: var(--input-image-size);
+  overflow: hidden;
+  margin: 0;
+  border: var(--input-image-border);
+  border-radius: var(--input-image-radius);
+  background: var(--input-image-bg);
+  color: var(--input-image-add-color);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.vamis-image-control__add:hover:not(.is-disabled) {
+  border-color: var(--input-image-add-hover-border);
+  color: var(--input-image-add-hover-color);
+}
+.vamis-image-control__add.is-disabled {
+  cursor: not-allowed;
+  background: var(--control-disabled-bg);
+  color: var(--control-disabled-color);
+}
+.vamis-image-control__plus {
+  position: relative;
+  z-index: 1;
+  font-size: 24px;
+  line-height: 1;
+}
+.vamis-image-control__add-text {
+  position: relative;
+  z-index: 1;
+  line-height: 20px;
+}
+.vamis-image-control__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Amis `.Number` / `.NumberControl`：选择器只 var()。 */

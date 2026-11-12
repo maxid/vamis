@@ -59,13 +59,26 @@ let tickQueued = false
 const pristine = ref<unknown>(undefined)
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
+const imageMode = computed(() => String(props.schema.type || '') === 'input-image')
+const imageDraggable = computed(() => imageMode.value && props.schema.draggable === true)
+const imageDraggableTip = computed(() =>
+  props.schema.draggableTip != null ? String(props.schema.draggableTip) : '拖拽排序',
+)
 const multiple = computed(() => props.schema.multiple === true)
 const autoUpload = computed(() => props.schema.autoUpload !== false)
 const hideUploadButton = computed(() => props.schema.hideUploadButton === true)
 const drag = computed(() => props.schema.drag === true)
 const asBase64 = computed(() => props.schema.asBase64 === true)
 const asBlob = computed(() => props.schema.asBlob === true)
-const accept = computed(() => fileAcceptOf(props.schema))
+const accept = computed(() => {
+  if (imageMode.value && props.schema.accept == null) return 'image/jpeg, image/jpg, image/png, image/gif'
+  return fileAcceptOf(props.schema)
+})
+/** Amis `capture` 是 string，原样交给 input；类型收窄只为满足 Vue DOM 类型。 */
+const captureAttr = computed<'user' | 'environment' | undefined>(() => {
+  const raw = props.schema.capture
+  return raw == null ? undefined : (String(raw) as 'user' | 'environment')
+})
 const maxSize = computed(() => {
   const n = Number(props.schema.maxSize)
   return Number.isFinite(n) && n > 0 ? n : 0
@@ -74,7 +87,10 @@ const maxLength = computed(() => {
   const n = Number(props.schema.maxLength)
   return Number.isFinite(n) && n > 0 ? n : 0
 })
-const receiver = computed(() => (props.schema.receiver == null ? '/api/upload/file' : (props.schema.receiver as SchemaApi)))
+const receiver = computed(() => {
+  if (props.schema.receiver != null) return props.schema.receiver as SchemaApi
+  return imageMode.value ? '/api/upload' : '/api/upload/file'
+})
 const startChunkApi = computed(() => (props.schema.startChunkApi == null ? '/api/upload/startChunk' : (props.schema.startChunkApi as SchemaApi)))
 const chunkApi = computed(() => (props.schema.chunkApi == null ? '/api/upload/chunk' : (props.schema.chunkApi as SchemaApi)))
 const finishChunkApi = computed(() => (props.schema.finishChunkApi == null ? '/api/upload/finishChunk' : (props.schema.finishChunkApi as SchemaApi)))
@@ -98,10 +114,28 @@ const templateUrl = computed(() => props.schema.templateUrl)
 const documentation = computed(() =>
   props.schema.documentation != null ? String(props.schema.documentation) : '帮助文档',
 )
+// Amis 源码 InputImage / InputFile 的 initAutoFill 默认都是 true（属性表写 false 是文档笔误）。
 const initAutoFill = computed(() => props.schema.initAutoFill !== false)
 const nameField = computed(() => fileFieldName(props.schema, 'name'))
 const valueField = computed(() => fileFieldName(props.schema, 'value'))
 const fileField = computed(() => fileFieldName(props.schema, 'file'))
+const uploadLabel = computed(() => {
+  const raw = props.schema.uploadBtnText
+  if (raw != null && raw !== '' && typeof raw !== 'object') return filterTpl(String(raw), viewData.value)
+  return '图片上传'
+})
+const frameImageSrc = computed(() => {
+  const raw = props.schema.frameImage
+  if (typeof raw !== 'string' || !raw) return ''
+  return filterTpl(raw, viewData.value)
+})
+const canAddImage = computed(() => {
+  if (props.disabled) return false
+  if (multiple.value && maxLength.value) return files.value.length < maxLength.value
+  return multiple.value || files.value.length === 0
+})
+const dragIndex = ref<number | null>(null)
+const previewUrls = new Set<string>()
 
 function currentFormValue(): unknown {
   return name.value ? form?.getValue(name.value) : props.schema.value
@@ -182,7 +216,103 @@ function rejectTypeAlert(rejected: File[]) {
   )
 }
 
-function addFiles(picked: File[]) {
+function rememberPreview(file: File): string | undefined {
+  if (typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') return undefined
+  const url = URL.createObjectURL(file)
+  previewUrls.add(url)
+  return url
+}
+
+function releasePreview(url?: unknown) {
+  if (typeof url !== 'string' || !previewUrls.has(url)) return
+  URL.revokeObjectURL(url)
+  previewUrls.delete(url)
+}
+
+function imageSrcOf(item: FileItem): string {
+  if (typeof item.preview === 'string' && item.preview) return item.preview
+  const url = fileItemUrl(item, props.schema)
+  if (typeof url === 'string' && url) return url
+  if (typeof item.value === 'string' && item.value) return item.value
+  return ''
+}
+
+function openImage(item: FileItem) {
+  const src = imageSrcOf(item)
+  if (src && typeof window !== 'undefined') window.open(src, '_blank', 'noopener')
+}
+
+function imageSizeOf(file: File): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(url)
+      reject(new Error('图片读取失败'))
+    }
+    img.src = url
+  })
+}
+
+/** Amis `limit`：宽 / 高 / 最小 / 最大 / 宽高比，超出标 invalid、不传上传。 */
+async function validateImageLimit(file: File): Promise<string | undefined> {
+  const limit = props.schema.limit
+  if (!limit || typeof limit !== 'object' || Array.isArray(limit)) return
+  const conf = limit as Record<string, unknown>
+  const num = (key: string) => {
+    const n = Number(conf[key])
+    return Number.isFinite(n) && n > 0 ? n : 0
+  }
+  const expectedWidth = num('width')
+  const expectedHeight = num('height')
+  const minWidth = num('minWidth')
+  const minHeight = num('minHeight')
+  const maxWidth = num('maxWidth')
+  const maxHeight = num('maxHeight')
+  const ratio = Number(conf.aspectRatio)
+  if (!expectedWidth && !expectedHeight && !minWidth && !minHeight && !maxWidth && !maxHeight && !ratio) return
+  const size = await imageSizeOf(file)
+  if (expectedWidth && size.width !== expectedWidth) return `请上传宽度 ${expectedWidth}px 的图片`
+  if (expectedHeight && size.height !== expectedHeight) return `请上传高度 ${expectedHeight}px 的图片`
+  if (minWidth && size.width < minWidth) return `请上传不要小于 ${minWidth}px 宽的图片`
+  if (minHeight && size.height < minHeight) return `请上传不要小于 ${minHeight}px 高的图片`
+  if (maxWidth && size.width > maxWidth) return `请上传不要大于 ${maxWidth}px 宽的图片`
+  if (maxHeight && size.height > maxHeight) return `请上传不要大于 ${maxHeight}px 高的图片`
+  if (Number.isFinite(ratio) && ratio > 0) {
+    const actual = size.width / size.height
+    if (Math.abs(actual - ratio) > 0.01) return `请上传尺寸比率为 ${Number(ratio.toFixed(4))} 的图片`
+  }
+  return
+}
+
+function onImageDragStart(index: number, event: DragEvent) {
+  if (!imageDraggable.value || props.disabled) return
+  dragIndex.value = index
+  event.dataTransfer?.setData('text/plain', String(index))
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+}
+
+function onImageDrop(index: number, event: DragEvent) {
+  event.preventDefault()
+  const from = dragIndex.value
+  dragIndex.value = null
+  if (from == null || from === index) return
+  const next = files.value.slice()
+  const [moved] = next.splice(from, 1)
+  next.splice(index, 0, moved)
+  files.value = next
+  void commitChange()
+}
+
+function onImageDragEnd() {
+  dragIndex.value = null
+}
+
+async function addFiles(picked: File[]) {
   if (!picked.length || props.disabled) return
   const allowed = multiple.value && maxLength.value ? Math.max(0, maxLength.value - files.value.length) : picked.length
   const accepted: File[] = []
@@ -201,12 +331,29 @@ function addFiles(picked: File[]) {
       [nameField.value]: file.name,
       filename: file.name,
       size: file.size,
-      state: oversize ? 'invalid' : 'pending',
+      state: oversize ? ('invalid' as const) : ('pending' as const),
       error: oversize ? sizeLimitTip(file) : undefined,
       progress: 0,
       file,
     }
   })
+  if (imageMode.value) {
+    for (const item of incoming) {
+      if (!item.file) continue
+      item.preview = rememberPreview(item.file)
+      if (item.state === 'invalid') continue
+      try {
+        const limitError = await validateImageLimit(item.file)
+        if (limitError) {
+          item.state = 'invalid'
+          item.error = limitError
+        }
+      } catch {
+        item.state = 'invalid'
+        item.error = '图片读取失败'
+      }
+    }
+  }
   files.value = multiple.value ? files.value.concat(incoming) : incoming
   error.value = ''
   if (autoUpload.value) void startUpload()
@@ -214,7 +361,7 @@ function addFiles(picked: File[]) {
 
 function onNativeChange(event: Event) {
   const el = event.target as HTMLInputElement
-  addFiles(nativeFilesFromList(el.files))
+  void addFiles(nativeFilesFromList(el.files))
   el.value = ''
 }
 
@@ -227,7 +374,7 @@ function onDrop(event: DragEvent) {
   event.preventDefault()
   dragging.value = false
   if (selectDisabled.value) return
-  addFiles(nativeFilesFromList(event.dataTransfer?.files))
+  void addFiles(nativeFilesFromList(event.dataTransfer?.files))
 }
 
 async function removeFile(index: number) {
@@ -243,12 +390,14 @@ async function removeFile(index: number) {
     return
   }
   if (currentId === item.id) currentId = null
+  releasePreview(item.preview)
   files.value = files.value.filter((_, i) => i !== index)
   if (uploading.value && !currentId) queueTick()
   else await commitChange()
 }
 
 async function clearFiles() {
+  for (const item of files.value) releasePreview(item.preview)
   files.value = []
   currentId = null
   uploading.value = false
@@ -540,7 +689,8 @@ function setData(values: Record<string, unknown>) {
   hydrate(next)
 }
 
-async function doAction(action: { actionType?: string; value?: unknown; args?: { value?: unknown } }) {
+async function doAction(raw: unknown) {
+  const action = raw as { actionType?: string; value?: unknown; args?: { value?: unknown } }
   const type = action?.actionType
   if (type === 'clear') {
     await clearFiles()
@@ -569,6 +719,8 @@ const apis = [
 for (const api of apis) scoped?.register(api)
 onBeforeUnmount(() => {
   for (const api of apis) scoped?.unregister(api)
+  for (const url of previewUrls) URL.revokeObjectURL(url)
+  previewUrls.clear()
 })
 
 watch(
@@ -589,6 +741,18 @@ onMounted(() => {
 <template>
   <FormItem :schema="schema">
     <div class="vamis-file" :class="{ 'is-disabled': disabled }">
+      <input
+        ref="inputEl"
+        class="sr-only"
+        type="file"
+        :accept="accept"
+        :capture="captureAttr"
+        :disabled="disabled"
+        :multiple="multiple"
+        @change="onNativeChange"
+        @click.stop
+      >
+      <template v-if="!imageMode">
       <a
         v-if="templateUrl"
         class="vamis-file__tpl"
@@ -608,17 +772,6 @@ onMounted(() => {
         @dragleave="dragging = false"
         @drop="onDrop"
       >
-        <input
-          ref="inputEl"
-          class="sr-only"
-          type="file"
-          :accept="accept"
-          :capture="schema.capture != null ? String(schema.capture) : undefined"
-          :disabled="disabled"
-          :multiple="multiple"
-          @change="onNativeChange"
-          @click.stop
-        >
         <div
           v-if="drag || dragging"
           class="vamis-file__tip"
@@ -707,6 +860,91 @@ onMounted(() => {
       >
         {{ uploading ? '暂停上传' : '开始上传' }}
       </Button>
+      </template>
+      <template v-else>
+        <div
+          class="vamis-image-control"
+          :class="{ 'is-disabled': disabled, 'is-active': dragging }"
+          @dragover.prevent="!selectDisabled && (dragging = true)"
+          @dragleave="dragging = false"
+          @drop.prevent="onDrop"
+        >
+          <div v-if="files.length" class="vamis-image-control__list">
+            <div
+              v-for="(item, index) in files"
+              :key="item.id"
+              class="vamis-image-control__item"
+              :class="{
+                'is-invalid': item.state === 'invalid' || item.state === 'error',
+                'is-uploading': item.state === 'uploading',
+                'is-dragging': dragIndex === index,
+                [String(schema.fixedSizeClassName || '')]: schema.fixedSize === true,
+              }"
+              :draggable="imageDraggable && !disabled"
+              :data-tooltip="imageDraggable ? imageDraggableTip : undefined"
+              @dragstart="onImageDragStart(index, $event)"
+              @dragover.prevent
+              @drop.prevent="onImageDrop(index, $event)"
+              @dragend="onImageDragEnd"
+            >
+              <img
+                v-if="imageSrcOf(item)"
+                class="vamis-image-control__img"
+                :src="imageSrcOf(item)"
+                :alt="String(item.name || '')"
+                @click="openImage(item)"
+              >
+              <div v-else class="vamis-image-control__fallback">
+                <span class="vamis-image-control__fallback-name">{{ item.name || '图片' }}</span>
+                <small v-if="item.error" class="vamis-image-control__fallback-error">{{ item.error }}</small>
+              </div>
+              <div v-if="item.state === 'uploading'" class="vamis-image-control__progress">
+                <i :style="{ width: `${Math.round((item.progress || 0) * 100)}%` }" />
+              </div>
+              <span
+                v-if="item.error && item.state !== 'uploading'"
+                class="vamis-image-control__error"
+              >{{ item.error }}</span>
+              <a
+                v-if="!disabled"
+                href="#"
+                class="vamis-image-control__remove"
+                data-tooltip="移除"
+                data-position="left"
+                @click.prevent="removeFile(index)"
+              >
+                <VamisClose />
+              </a>
+            </div>
+          </div>
+          <label
+            v-if="canAddImage"
+            class="vamis-image-control__add"
+            :class="{ 'is-disabled': selectDisabled }"
+            @click.prevent="openPicker"
+          >
+            <img v-if="frameImageSrc" :src="frameImageSrc" class="vamis-image-control__frame" alt="">
+            <span class="vamis-image-control__plus" aria-hidden="true">+</span>
+            <span class="vamis-image-control__add-text">{{ uploadLabel }}</span>
+          </label>
+          <div v-if="maxSize" class="vamis-file__size">{{ sizeLimitTip() }}</div>
+          <div v-if="failedCount" class="vamis-file__sum">
+            已成功上传 {{ uploadedCount }} 个图片，{{ failedCount }} 个图片上传失败，
+            <a href="#" @click.prevent="startUpload(true)">重试上传</a>
+            失败图片
+          </div>
+          <Button
+            v-if="!autoUpload && !hideUploadButton && files.length"
+            type="button"
+            variant="outline"
+            class="vamis-file__upload-btn"
+            :disabled="!hasPending && !uploading"
+            @click="toggleUpload"
+          >
+            {{ uploading ? '暂停上传' : '开始上传' }}
+          </Button>
+        </div>
+      </template>
     </div>
   </FormItem>
 </template>

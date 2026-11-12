@@ -122,8 +122,8 @@ alwaysApply: true
 
 ### 对标文档要改写成 Vamis，不要整节粘贴
 - 踩过：格式校验整节 splice Amis `formitem.md`，把 `2.2.0` / `1.4.0`、`github.com/baidu/amis`、「amis 会有默认的报错信息」带进 Vamis 文档。Vamis 没有 Amis 的版本线，也不是 Amis 仓库。
-- 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。
-- 触及：FormItem
+- 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。Amis 旧示例里的 `type: text` 在 6.13 已不是注册 type（Amis 渲染不出来），改写时换 `input-text`，不要照抄旧别名。
+- 触及：FormItem `input-image`
 - 规则：`.cursor/rules/site.mdc`
 
 ### 文档 json 围栏必须是合法 JSON 才能高亮
@@ -179,6 +179,12 @@ alwaysApply: true
 - 稳定做法：`ScopedContext` 维护全树共享 registry，`getComponentById` 按 id 跨域找（`getComponentByName` 仍只沿父链，和 Amis 一致），`componentId` 动作优先走 id；文档保持 Amis 的 `id` + `componentId` 写法（form 外的按钮也能点 form 内）。对照探针：表单项 `[name]` 未命中时按 `[data-amis-name]` / `[data-name]` 找原生控件，交互后读控件 checked；事件链带 `ajax` 不点（静态服 404 会让两边动作链停在不同位置）；每个用例量测前清残留 toast。
 - 触及：`switch` `hidden` `componentId` 对照
 - 规则：`packages/vamis-core/src/scoped.ts` `getComponentById`；`packages/vamis-core/src/actions/run.ts`；`packages/vamis-sdk/embed-case.html`
+
+### 文件/图片对照按 data-name 找原生 input，值读原生 value
+- 踩过：`input-image` 带 `data` 初始值时，Vamis 的 formData 有 URL、Amis 只暴露空的 file input；带 `id` 时又先命中 Vamis `.vamis-node` 包装层，`rendered/value` 全假红，`input-file` 也连带 3 条。
+- 稳定做法：`findNodeEl` 对 `input-file` / `input-image` 先按 `[data-amis-name]` / `[data-name]` 找外壳里的 `input[type=file]`；`readNodeValue` 对这两类直接读原生 `value`，不要读 formData / schemaValue。同类控件（switch / checkbox / radio）同理按外壳找原生控件。
+- 触及：`input-file` `input-image` `switch` `checkbox` `radio`
+- 规则：`packages/vamis-sdk/embed-case.html`
 
 ### 组装与盒模型
 
@@ -723,6 +729,12 @@ alwaysApply: true
 - 稳定做法：量进 `:root` / `.dark` 的 `--file-*`，选择器只 `var()`。拖拽文案「将文件拖到此处，或」和「点击上传」不要换行，否则会多一个空格。
 - 触及：`input-file`
 - 规则：`.cursor/rules/style.mdc`；Amis `_file.scss`
+
+### InputImage 复用 FileControl 上传管线，不要另起一套
+- 踩过：`input-image` 原先是独立 stub（本地 objectURL + 假值），没有 receiver / 多选 / 事件 / autoFill；`receiver` 返回的 url 也没回填。
+- 稳定做法：`registerRenderer({ type: 'input-image', component: InputFile })`，组件内按 `schema.type === 'input-image'` 走图片分支：默认 `accept` 图片 MIME、默认 `receiver /api/upload`、`initAutoFill` 默认 **true**（Amis 源码；属性表写 false 是笔误）、120 方块缩略图 + 添加块、`limit` 尺寸校验、`draggable` 排序、`frameImage` / `fixedSize` / `uploadBtnText`。上传、事件、autoFill、clear 继续用 InputFile 同一套；crop 系列未接要写进文档差异。
+- 触及：`input-image` `input-file`
+- 规则：`packages/vamis/src/renderers/form/InputFile.vue`；`packages/vamis-ui/src/styles.css` `--input-image-*`
 
 ### helper `bg-secondary` 不要改成组件专用色
 - 踩过：日历条要 Amis 灰 `#5c5f66`，若改 helper `bg-secondary` 会冲掉 Button/Badge。
