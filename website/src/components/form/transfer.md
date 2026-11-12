@@ -5,7 +5,7 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 75% · 进行中
+::: info 实现进度 80% · 进行中
 主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 
@@ -32,7 +32,7 @@ body:
 
 ## 展示模式
 
-`mode` 支持 `list`（默认）/ `table`；`tree` / `chained` 仍按 list 展示，未接。
+`mode` 支持 `list`（默认）/ `table` / `tree`；`tree` 用扁平化 + 缩进展示层级（暂无展开/折叠），`chained` 未接。
 
 ```yaml
 type: transfer
@@ -67,6 +67,28 @@ options:
     value: b
 ```
 
+## 树形模式
+
+`mode: tree` 时按选项 `children` 扁平化并用缩进展示层级（展开/折叠未接）：
+
+```yaml
+type: transfer
+name: transfer
+label: 树形穿梭
+mode: tree
+options:
+  - label: 前端
+    children:
+      - label: Vue
+        value: vue
+      - label: React
+        value: react
+  - label: 后端
+    children:
+      - label: Node
+        value: node
+```
+
 ## 远程选项
 
 `source` 支持数据域变量 / API，归一到 options / items / records：
@@ -91,11 +113,11 @@ valueField: value
 | `searchable` | `boolean` | `false` | 左右搜索框 |
 | `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
 | `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
-| `mode` | `string` | `list` | `list` / `table`；tree/chained 未接 |
+| `mode` | `string` | `list` | `list` / `table` / `tree`（扁平缩进）；chained 未接 |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 和 Amis 文档的差异
 
 - 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
 - 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
-- 未接：tree / chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
+- 未接：tree 展开/折叠、chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。

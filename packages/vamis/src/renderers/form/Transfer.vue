@@ -31,6 +31,10 @@ const selected = computed({
 const mode = computed(() => String(props.schema.mode || 'list'))
 const searchable = computed(() => props.schema.searchable === true)
 const leftQuery = ref('')
+function treeDepth(item: { label?: unknown }) {
+  if (mode.value !== 'tree') return 0
+  return Math.max(0, String(item.label || '').split(' / ').length - 1)
+}
 const rightQuery = ref('')
 function matched(item: { label?: unknown }, query: string) {
   if (!query) return true
@@ -97,7 +101,7 @@ watch(
           <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
           <tbody>
             <tr v-for="item in leftShown" :key="String(item.value)" class="cursor-pointer hover:bg-accent" @click="add(item.value)">
-              <td class="px-2 py-1">{{ item.label }}</td>
+              <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
               <td class="px-2 py-1 text-muted-foreground">{{ item.value }}</td>
             </tr>
             <tr v-if="!leftShown.length"><td colspan="2" class="px-2 py-4 text-center text-xs text-muted-foreground">无候选</td></tr>
@@ -105,7 +109,7 @@ watch(
         </table>
         <ul v-else class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
         <li v-for="item in leftShown" :key="String(item.value)">
-          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :disabled="disabled" @click="add(item.value)">
+          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="add(item.value)">
             {{ item.label }}
           </button>
         </li>
@@ -123,7 +127,7 @@ watch(
           <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
           <tbody>
             <tr v-for="item in rightShown" :key="String(item.value)" class="cursor-pointer hover:bg-accent" @click="remove(item.value)">
-              <td class="px-2 py-1">{{ item.label }}</td>
+              <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
               <td class="px-2 py-1 text-muted-foreground">{{ item.value }}</td>
             </tr>
             <tr v-if="!rightShown.length"><td colspan="2" class="px-2 py-4 text-center text-xs text-muted-foreground">未选择</td></tr>
@@ -131,7 +135,7 @@ watch(
         </table>
         <ul v-else class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
         <li v-for="item in rightShown" :key="String(item.value)">
-          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :disabled="disabled" @click="remove(item.value)">
+          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="remove(item.value)">
             {{ item.label }}
           </button>
         </li>

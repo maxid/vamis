@@ -750,6 +750,10 @@ alwaysApply: true
 - 稳定做法：loadDataOnce 首次 page=1/perPage=999999 拉全量存 allItems；切页/改 perPage 只 slice，不再请求；筛选 queryPatch 非空时清空 allItems 重拉；total 用 allItems.length。
 - 触及：`crud`
 
+### Transfer tree 先做扁平缩进，不做展开折叠
+- 稳定做法：normalize+flattenOptions 已把 children 拼成 `父 / 子` label；tree 模式用 label 分段数算 depth，列表/表格首列按 depth 加 paddingLeft；parent 无 value 不参与选择；展开/折叠仍待接。
+- 触及：`transfer`
+
 ### Transfer mode=table 用双栏 table，tree/chained 回退 list
 - 稳定做法：`mode` 只分 list/table 两分支，表格列固定 名称/值，行点击仍走 add/remove；tree/chained 不做假实现，文档明确未接。
 - 触及：`transfer`
