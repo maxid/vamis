@@ -5,8 +5,8 @@ outline: deep
 
 # CRUD 增删改查
 
-::: info 实现进度 78% · 进行中
-文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。补 `loadDataOnce` / `syncLocation` / 文本 quickEdit；缺 `matchFunc`（D10）
+::: info 实现进度 80% · 进行中
+文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。补 `loadDataOnce` / `syncLocation` / quickEdit（文本/数字/select/textarea）；缺 `matchFunc`（D10）
 :::
 
 `crud` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -48,7 +48,7 @@ body:
 
 ## 快速编辑
 
-列配 `quickEdit: true` 出现编辑笔，就地改单元格，失焦/Enter 写回并派发 `quickEdit`：
+列配 `quickEdit: true` 出现编辑笔，就地改单元格，失焦/Enter 写回并派发 `quickEdit`；对象写法支持 `select` / `textarea` / `input-number`：
 
 ```yaml
 type: crud
@@ -59,6 +59,19 @@ columns:
   - name: name
     label: 名称
     quickEdit: true
+  - name: status
+    label: 状态
+    quickEdit:
+      type: select
+      options:
+        - label: 启用
+          value: enabled
+        - label: 停用
+          value: disabled
+  - name: remark
+    label: 备注
+    quickEdit:
+      type: textarea
 ```
 
 ## 同步地址栏
@@ -97,7 +110,7 @@ columns:
 |------|------|
 | `type` | 组件种类，与 Amis 同名 |
 | `loadDataOnce` | 一次拉全量后本地分页（默认 `false`） |
-| `columns[].quickEdit` | 单元格就地编辑（当前文本） |
+| `columns[].quickEdit` | 单元格就地编辑：true / `{type: input-text\|input-number\|select\|textarea, options}` |
 | `syncLocation` | 从 URL 同步 page / perPage（默认 `false`） |
 | `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
 | `visibleOn` / `hiddenOn` | 显隐表达式 |
@@ -108,4 +121,4 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已接 `loadDataOnce` / `syncLocation` / 文本 quickEdit；`matchFunc`（D10）仍未接。
+- 已接 `loadDataOnce` / `syncLocation` / quickEdit（文本/数字/select/textarea）；`matchFunc`（D10）仍未接。
