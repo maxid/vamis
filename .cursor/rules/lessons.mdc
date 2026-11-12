@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### CRUD loadDataOnce 用 allItems + 客户端分页
+- 稳定做法：loadDataOnce 首次 page=1/perPage=999999 拉全量存 allItems；切页/改 perPage 只 slice，不再请求；筛选 queryPatch 非空时清空 allItems 重拉；total 用 allItems.length。
+- 触及：`crud`
+
 ### Transfer mode=table 用双栏 table，tree/chained 回退 list
 - 稳定做法：`mode` 只分 list/table 两分支，表格列固定 名称/值，行点击仍走 add/remove；tree/chained 不做假实现，文档明确未接。
 - 触及：`transfer`

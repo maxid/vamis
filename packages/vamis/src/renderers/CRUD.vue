@@ -55,6 +55,7 @@ const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 const filterSchema = computed(() => props.schema.filter as SchemaObject | undefined)
 const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
 const dialogOpen = ref(false)
+const allItems = ref<Record<string, any>[]>([])
 const dialogSchema = ref<SchemaObject | null>(null)
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
@@ -140,8 +141,40 @@ function sanitizeQuery(extra: Record<string, any>) {
   return next
 }
 
+function paginateLocal() {
+  const start = (store.page - 1) * store.perPage
+  store.items = allItems.value.slice(start, start + store.perPage)
+  store.total = allItems.value.length
+}
+
 async function reload(extra: Record<string, any> = {}) {
   if (!props.schema.api) return
+  if (props.schema.loadDataOnce === true) {
+    store.fetching = true
+    await nextTick()
+    const queryPatch = sanitizeQuery(extra)
+    store.query = { ...store.query, ...queryPatch }
+    try {
+      if (Object.keys(queryPatch).length) allItems.value = []
+      if (!allItems.value.length) {
+        const result = await requestApi(props.schema.api, {
+          env,
+          data: { ...store.query, page: 1, perPage: 999999, orderBy: store.query.orderBy, orderDir: store.query.orderDir },
+          reason: 'reload',
+        }, { autoAppend: true })
+        if (result.skipped) return
+        if (!result.ok) throw new Error(result.payload.msg || '加载失败')
+        allItems.value = parseListPayload(result.data).items
+      }
+      paginateLocal()
+      if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []
+    } catch (error) {
+      env.notify('error', error instanceof Error ? error.message : '加载失败')
+    } finally {
+      store.fetching = false
+    }
+    return
+  }
   store.fetching = true
   await nextTick()
   const queryPatch = sanitizeQuery(extra)
