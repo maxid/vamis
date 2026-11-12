@@ -166,7 +166,7 @@
 |------|------|------|------|------|------|------|------|
 | `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 95% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`（默认 32×32，xs/sm/md/lg 跟档位，`level: link` 除外；`level: link` 无下划线、`--link-color`）、`confirmText` / `confirmTitle`（Amis `Alert.confirm` Modal：默认标题「系统消息」、无 X、Esc/点遮罩不关、确认 danger）、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器（`tooltip` 走 `VamisOverlay` `--z-tooltip` 1600，不裁切）、`tooltip` / `disabledTip`（字符串或 TooltipObject：title/content/theme/arrow/delay/trigger/offset，不含 type/body/wrapperComponent/className/inline）/ `tooltipPlacement`、click / mouseenter / mouseleave 事件活示例、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
 | `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
-| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 95% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写；空 label + icon 默认 32×32。复杂行为见 Action | P0 |
+| `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 96% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写；空 label + icon 默认 32×32。复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | `/components/button-group` | `/zh-CN/components/button-group` | 进行中 | 90% | `buttons` / `body`、`vertical`、`tiled`、`btnLevel`；相邻按钮 1px 负缝 + 首尾圆角裁切。`btnActiveLevel` 归 ButtonGroupSelect。对照桌面 **4/4**、移动 **4/4**（P0 0） | P0 |
 | `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | `/components/custom` | `/zh-CN/components/custom` | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
@@ -460,7 +460,7 @@ flowchart LR
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 65% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
 | 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 80% |
-| 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 95% |
+| 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 96% |
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | 进行中 | 90% |
 | 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | 进行中 | 50% |
 | 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 50% |

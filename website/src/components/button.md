@@ -5,7 +5,7 @@ outline: deep
 
 # Button 按钮
 
-::: info 实现进度 95% · 进行中
+::: info 实现进度 96% · 进行中
 `button` 是 `action` 的别名，同一渲染器。文档主路径已对齐：`level` / `primary`、`size`、`block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。按钮 `secondary` / `dark` / `light` 与尺寸阶梯已按 cxd 像素转写；空 label + icon 默认 32×32。复杂行为见 [Action 行为按钮](/components/action)。
 :::
 
@@ -64,6 +64,41 @@ level: primary
 loading: true
 ```
 
+## 禁用与提示
+
+`disabled` 置灰；`tooltip` / `disabledTip` 悬停提示，`tooltipPlacement` 控制位置：
+
+```schema: scope="body"
+type: button-toolbar
+buttons:
+  - type: button
+    label: 禁用按钮
+    disabled: true
+    disabledTip: 没有权限
+  - type: button
+    label: 悬停提示
+    tooltip: 这是一条提示
+    tooltipPlacement: right
+```
+
+## 图标按钮
+
+`icon` / `rightIcon` 配 Font Awesome，空 label + icon 自动 32×32：
+
+```schema: scope="body"
+type: button-toolbar
+buttons:
+  - type: button
+    label: 搜索
+    icon: fa fa-search
+  - type: button
+    icon: fa fa-plus
+    level: primary
+  - type: button
+    label: 下一步
+    rightIcon: fa fa-arrow-right
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -80,6 +115,7 @@ loading: true
 | block | `boolean` | `false` | 拉满父宽 |
 | loading | `boolean` | `false` | 显示 loading |
 | loadingOn | `string` | | loading 表达式 |
+| icon / rightIcon | `string` | | 左右图标 |
 
 完整字段、事件、动作出 [Action](/components/action)。
 
