@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Each 的 maxLength 支持表达式；static-each 对照读 schemaValue
+- 稳定做法：`maxLength` 为字符串时按 `resolveValue` 求值再 `slice(0, n)`；`value` 可直接给数组；`source` 优先于 `name`；`static-each` 探针返回 schemaValue，不要读表单域。
+- 触及：`each` `static-each`
+
 ### Service 轮询要挂定时器并清理；事件在请求完成时派发
 - 踩过：只接了 `initFetch` 一次性 reload，`interval` / `silentPolling` / `stopAutoRefreshWhen` 完全没读；`init` / `fetchInited` / `fetchSchemaInited` 文档写了但没派发。
 - 稳定做法：`startPolling` 只在 `interval >= 1000` 时 `setInterval`，每次先 `evalExpression(stopAutoRefreshWhen, data)`，命中就 `clearInterval`；轮询 reload 把 `silentPolling` 传给 `fetchOne` 决定是否置 `store.fetching`；api / schemaApi 请求完成无论成败都派发 `fetchInited` / `fetchSchemaInited`（带 responseData/Status/Msg/error），挂载后先发 `init`；`showErrorMsg:false` 不 toast，`messages.fetchSuccess` 才成功提示。卸载时 `onBeforeUnmount(stopPolling)`。

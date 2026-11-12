@@ -276,7 +276,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `code` | Code 代码高亮 | `/components/code` | `/zh-CN/components/code` | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
 | `color` | Color 颜色 | `/components/color` | `/zh-CN/components/color` | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | `/components/date` | `/zh-CN/components/date` | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
-| `each` | Each 循环渲染器 | `/components/each` | `/zh-CN/components/each` | 进行中 | 70% | 不再给 item 套竖排壳；tpl item 默认 inline。placeholder / itemKeyName / indexKeyName 已接。缺 maxLength | P0 |
+| `each` | Each 循环渲染器 | `/components/each` | `/zh-CN/components/each` | 进行中 | 80% | 数组 / 对象循环、`value` / `name` / `source`、`items`、`itemKeyName` / `indexKeyName`、`placeholder`、`maxLength`（含表达式）；不套 `.Each` 竖排壳，tpl inline。文档按 Amis 章节扩展。对照桌面 **6/6**、移动 **6/6**（P0 0） | P0 |
 | `html` | Html | `/components/html` | `/zh-CN/components/html` | 进行中 | 90% | `tpl` 别名。文档主路径已对齐：渲染 HTML。`maxLine` / `showNativeTitle` / 事件同 Tpl。其余过滤器仍 P1 | P0 |
 | `icon` | Icon 图标 | `/components/icon` | `/zh-CN/components/icon` | 进行中 | 90% | 文档主路径已对齐：FA v4 名称、颜色/字号、URL、FA v5/v6 `vendor: ""`、click / mouseenter / mouseleave。缺 Amis 自有 iconfont 字体、registerIcon 组件表、iconContent CSS 变量 | P0 |
 | `iframe` | iFrame | `/components/iframe` | `/zh-CN/components/iframe` | 进行中 | 55% | 能嵌页 | P0 |
@@ -452,7 +452,7 @@ flowchart LR
 | 29 | `input-date-range` | `input-date`、FormItem | 5 | 5 | 70 | 70 | 进行中 | 90% |
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 85% |
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 85% |
-| 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 70% |
+| 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 80% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 50% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 70% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 85% |

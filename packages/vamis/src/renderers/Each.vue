@@ -8,12 +8,18 @@ const props = defineProps<{
 }>()
 
 const list = computed(() => {
-  const resolved = resolveValue(props.schema.source ?? props.schema.name, props.data)
-  if (Array.isArray(resolved)) return resolved
-  if (resolved && typeof resolved === 'object') {
-    return Object.entries(resolved as Record<string, unknown>).map(([key, value]) => ({ key, value }))
+  let resolved: unknown
+  if (props.schema.source != null) resolved = resolveValue(props.schema.source, props.data)
+  else if (props.schema.name) resolved = resolveValue(props.schema.name, props.data)
+  else resolved = props.schema.value
+  let arr: unknown[] = []
+  if (Array.isArray(resolved)) arr = resolved
+  else if (resolved && typeof resolved === 'object') {
+    arr = Object.entries(resolved as Record<string, unknown>).map(([key, value]) => ({ key, value }))
   }
-  return []
+  const maxRaw = props.schema.maxLength
+  const max = maxRaw != null && typeof maxRaw === 'string' && maxRaw.includes('$') ? Number(resolveValue(maxRaw, props.data)) : Number(maxRaw)
+  return Number.isFinite(max) && max >= 1 ? arr.slice(0, max) : arr
 })
 const itemSchema = computed(() => props.schema.items || props.schema.body || { type: 'tpl', tpl: '${item}' })
 const placeholder = computed(() => {

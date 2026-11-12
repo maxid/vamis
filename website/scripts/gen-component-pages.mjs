@@ -94,6 +94,7 @@ const HANDWRITTEN = new Set([
   '/components/breadcrumb',
   '/components/dropdown-button',
   '/components/service',
+  '/components/each',
   '/components/nav',
   '/components/anchor-nav',
   '/components/tooltip',
