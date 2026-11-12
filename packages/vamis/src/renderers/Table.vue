@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, resolveValue, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, resolveClassName, resolveValue, runAction, useEnv, useScoped, type ActionSchema, type SchemaObject } from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import {
   Table,
@@ -17,6 +17,8 @@ const props = defineProps<{
   items?: Record<string, any>[]
 }>()
 
+const env = useEnv()
+const scoped = useScoped()
 const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 
 function colWidthStyle(col: SchemaObject) {
@@ -40,9 +42,25 @@ const rows = computed<Record<string, any>[]>(() => {
   }
   return Array.isArray(raw) ? raw : []
 })
+async function onRowClick(row: Record<string, any>, event: MouseEvent) {
+  const action = props.schema.itemAction
+  if (!action || typeof action !== 'object') return
+  await runAction(action as ActionSchema, {
+    env,
+    data: { ...(props.data || {}), ...row },
+    scoped,
+    event,
+  })
+}
+
+function rowClass(row: Record<string, any>) {
+  return resolveClassName(props.schema.rowClassName, row)
+}
 </script>
 
 <template>
+  <div class="vamis-table-wrap">
+  <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
   <Table>
     <TableHeader>
       <TableRow>
@@ -54,10 +72,10 @@ const rows = computed<Record<string, any>[]>(() => {
     <TableBody>
       <TableRow v-if="!rows.length">
         <TableCell :colspan="Math.max(columns.length, 1)" class="py-8 text-center text-muted-foreground">
-          暂无数据
+          {{ schema.placeholder || '暂无数据' }}
         </TableCell>
       </TableRow>
-      <TableRow v-for="(row, i) in rows" :key="row.id ?? i">
+      <TableRow v-for="(row, i) in rows" :key="row.id ?? i" :class="rowClass(row)" @click="onRowClick(row, $event)">
         <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
           <SchemaRenderer
             v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
@@ -71,4 +89,5 @@ const rows = computed<Record<string, any>[]>(() => {
       </TableRow>
     </TableBody>
   </Table>
+  </div>
 </template>
