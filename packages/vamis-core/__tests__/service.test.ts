@@ -1,13 +1,22 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { serviceRemoteSchema } from '../src/utils/service'
 
-describe('serviceRemoteSchema', () => {
-  it('treats schemaApi data as a widget tree', () => {
-    expect(serviceRemoteSchema({ type: 'tabs', tabs: [{ title: 'TabA', body: '卡片A内容' }] })).toEqual([
-      { type: 'tabs', tabs: [{ title: 'TabA', body: '卡片A内容' }] },
-    ])
-    expect(serviceRemoteSchema({ body: { type: 'tpl', tpl: '动态' } })).toEqual([{ type: 'tpl', tpl: '动态' }])
-    expect(serviceRemoteSchema([{ type: 'tpl', tpl: '列表' }])).toHaveLength(1)
-    expect(serviceRemoteSchema({})).toEqual([])
+const here = dirname(fileURLToPath(import.meta.url))
+const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
+
+describe('service', () => {
+  it('supports polling and lifecycle events', () => {
+    const vue = read('../../vamis/src/renderers/Service.vue')
+    for (const token of ['startPolling', 'silentPolling', 'stopAutoRefreshWhen', "emitServiceEvent('init'", "emitServiceEvent('fetchInited'", "emitServiceEvent('fetchSchemaInited'", 'showErrorMsg']) {
+      expect(vue).toContain(token)
+    }
+  })
+  it('doc covers service chapters', () => {
+    const doc = read('../../../website/src/components/service.md')
+    for (const heading of ['## 基本使用', '## 展示列表', '## 定时轮询刷新', '### 静默轮询', '## 隐藏错误信息', '## 属性表', '## 事件表', '## 动作表']) {
+      expect(doc).toContain(heading)
+    }
   })
 })

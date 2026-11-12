@@ -730,6 +730,12 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Service 轮询要挂定时器并清理；事件在请求完成时派发
+- 踩过：只接了 `initFetch` 一次性 reload，`interval` / `silentPolling` / `stopAutoRefreshWhen` 完全没读；`init` / `fetchInited` / `fetchSchemaInited` 文档写了但没派发。
+- 稳定做法：`startPolling` 只在 `interval >= 1000` 时 `setInterval`，每次先 `evalExpression(stopAutoRefreshWhen, data)`，命中就 `clearInterval`；轮询 reload 把 `silentPolling` 传给 `fetchOne` 决定是否置 `store.fetching`；api / schemaApi 请求完成无论成败都派发 `fetchInited` / `fetchSchemaInited`（带 responseData/Status/Msg/error），挂载后先发 `init`；`showErrorMsg:false` 不 toast，`messages.fetchSuccess` 才成功提示。卸载时 `onBeforeUnmount(stopPolling)`。
+- 触及：`service`
+- 规则：`packages/vamis/src/renderers/Service.vue`；Amis `Service.tsx`
+
 ### Link 的 href 取名字段兜底，禁用态输出 span
 - 踩过：`href` 未写时 Link 直接拿 `body` 当 href；`blank` 默认被写成当前页；`disabled` 仍渲染 `<a href>`。
 - 稳定做法：`href` 只用 `schema.href`（模板插值），否则按 `name` 从数据域取值，再否则空；`body` 支持字符串/SchemaNode，缺省回退 href 或 `link`；`blank` 默认 true，`htmlTarget` 优先；`disabled` 输出不可点的 span 并置灰；`icon`/`rightIcon` 走 `resolveIcon` + IconMark；角标继续用 BadgeHost。
