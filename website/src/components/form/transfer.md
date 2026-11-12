@@ -5,7 +5,7 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 80% · 进行中
+::: info 实现进度 82% · 进行中
 主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 
@@ -32,7 +32,7 @@ body:
 
 ## 展示模式
 
-`mode` 支持 `list`（默认）/ `table` / `tree`；`tree` 用扁平化 + 缩进展示层级（暂无展开/折叠），`chained` 未接。
+`mode` 支持 `list`（默认）/ `table` / `tree`；`tree` 按 `children` 渲染可展开/折叠的层级（父节点仅展开、不参与选择），`chained` 未接。
 
 ```yaml
 type: transfer
@@ -69,7 +69,7 @@ options:
 
 ## 树形模式
 
-`mode: tree` 时按选项 `children` 扁平化并用缩进展示层级（展开/折叠未接）：
+`mode: tree` 时按选项 `children` 渲染树，点击父节点展开/折叠，叶子节点才加入选择：
 
 ```yaml
 type: transfer
@@ -120,4 +120,4 @@ valueField: value
 
 - 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
 - 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
-- 未接：tree 展开/折叠、chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
+- 未接：chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。

@@ -7,7 +7,7 @@ const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
 describe('transfer', () => {
   it('supports search/titles and doc chapters', () => {
     const vue = read('../../vamis/src/renderers/form/Transfer.vue')
-    for (const t of ['searchable', 'searchPlaceholder', 'leftTitle', 'rightTitle', 'leftShown', 'loadSource', 'remoteOptions', 'mode', 'treeDepth']) expect(vue).toContain(t)
+    for (const t of ['searchable', 'searchPlaceholder', 'leftTitle', 'rightTitle', 'leftShown', 'loadSource', 'remoteOptions', 'mode', 'treeDepth', 'treeRows', 'toggleTree']) expect(vue).toContain(t)
     const doc = read('../../../website/src/components/form/transfer.md')
     for (const h of ['## 基本用法','## 树形模式','## 远程选项','## 展示模式','## 搜索','## 属性表','## 和 Amis 文档的差异']) expect(doc).toContain(h)
   })

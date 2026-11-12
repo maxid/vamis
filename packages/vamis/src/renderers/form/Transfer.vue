@@ -23,7 +23,49 @@ const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
 const env = useEnv()
 const remoteOptions = ref<unknown[] | null>(null)
-const options = computed(() => flattenOptions(normalizeOptions(remoteOptions.value ?? props.schema.options)))
+const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
+const options = computed(() => flattenOptions(rawOptions.value))
+type TreeRow = { key: string; label: string; value?: unknown; depth: number; children: TreeRow[] }
+const expandedTree = ref<Set<string>>(new Set())
+
+function buildTree(nodes: any[], depth = 0, prefix = ''): TreeRow[] {
+  return (nodes || []).map((node, index) => {
+    const key = `${prefix}${index}`
+    const children = Array.isArray(node.children) ? buildTree(node.children, depth + 1, `${key}-`) : []
+    return { key, label: String(node.label ?? node.value ?? ''), value: node.value, depth, children }
+  })
+}
+
+const treeRows = computed(() => buildTree(rawOptions.value as any[]))
+function treeExpandable(node: TreeRow) { return node.children.length > 0 }
+function treeIsExpanded(node: TreeRow) { return expandedTree.value.has(node.key) }
+function toggleTree(node: TreeRow) {
+  const next = new Set(expandedTree.value)
+  if (next.has(node.key)) next.delete(node.key)
+  else next.add(node.key)
+  expandedTree.value = next
+}
+function treeOnClick(node: TreeRow) {
+  if (treeExpandable(node)) toggleTree(node)
+  else if (node.value != null) add(node.value)
+}
+function treeVisible(nodes: TreeRow[]): TreeRow[] {
+  const q = leftQuery.value.trim().toLowerCase()
+  const out: TreeRow[] = []
+  for (const node of nodes) {
+    const children = treeVisible(node.children)
+    const matches = !q || node.label.toLowerCase().includes(q)
+    if (matches) out.push({ ...node, children })
+    else if (children.length) out.push({ ...node, children })
+  }
+  return out
+}
+function treeDisplay(node: TreeRow): boolean {
+  if (leftQuery.value.trim()) return true
+  if (node.depth === 0) return true
+  const parentKey = node.key.split('-').slice(0, -1).join('-')
+  return expandedTree.value.has(parentKey)
+}
 const selected = computed({
   get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
   set: (values: unknown[]) => props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
@@ -97,7 +139,21 @@ watch(
       <div class="space-y-1">
         <p v-if="leftTitle" class="text-xs text-muted-foreground">{{ leftTitle }}</p>
         <input v-if="searchable" v-model="leftQuery" class="vamis-input h-8 w-full rounded-md border px-2 text-sm" :placeholder="searchPlaceholder" />
-        <table v-if="mode === 'table'" class="w-full border-collapse text-sm">
+        <ul v-if="mode === 'tree'" class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+          <li v-for="node in treeVisible(treeRows)" v-show="treeDisplay(node)" :key="node.key">
+            <button
+              type="button"
+              class="w-full rounded px-2 py-1 text-left hover:bg-accent"
+              :style="{ paddingLeft: `${8 + node.depth * 12}px` }"
+              :disabled="disabled"
+              @click="treeOnClick(node)"
+            >
+              <span v-if="treeExpandable(node)" class="mr-1 inline-block w-3 text-xs">{{ treeIsExpanded(node) ? '▾' : '▸' }}</span>
+              {{ node.label }}
+            </button>
+          </li>
+        </ul>
+        <table v-else-if="mode === 'table'" class="w-full border-collapse text-sm">
           <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
           <tbody>
             <tr v-for="item in leftShown" :key="String(item.value)" class="cursor-pointer hover:bg-accent" @click="add(item.value)">
