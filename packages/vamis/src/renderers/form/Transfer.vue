@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Button } from '@vamis/ui'
-import type { SchemaObject } from '@vamis/core'
+import {
+  isApiOutdated,
+  isEffectiveApi,
+  requestApi,
+  resolveValue,
+  useEnv,
+  type SchemaObject,
+} from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
@@ -14,7 +21,9 @@ import {
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
-const options = computed(() => flattenOptions(normalizeOptions(props.schema.options)))
+const env = useEnv()
+const remoteOptions = ref<unknown[] | null>(null)
+const options = computed(() => flattenOptions(normalizeOptions(remoteOptions.value ?? props.schema.options)))
 const selected = computed({
   get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
   set: (values: unknown[]) => props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
@@ -46,6 +55,35 @@ function addAll() {
 function clear() {
   selected.value = []
 }
+async function loadSource() {
+  const source = props.schema.source
+  if (!source) return
+  if (typeof source === 'string' && source.trim().startsWith('$')) {
+    const resolved = resolveValue(source, props.schema.data || {})
+    if (Array.isArray(resolved)) remoteOptions.value = resolved
+    return
+  }
+  if (!isEffectiveApi(source, props.schema.data || {})) return
+  try {
+    const result = await requestApi(source, { env, data: props.schema.data || {}, reason: 'init' })
+    if (result.skipped || !result.ok) return
+    const payload = result.data || {}
+    const list = Array.isArray(payload) ? payload : payload.options ?? payload.items ?? payload.records ?? payload
+    if (Array.isArray(list)) remoteOptions.value = list
+  } catch {
+    /* 保留空选项 */
+  }
+}
+
+onMounted(() => void loadSource())
+watch(
+  () => [props.schema.source, props.schema.data] as const,
+  (curr, prev) => {
+    if (!prev) return
+    if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) void loadSource()
+  },
+  { deep: true },
+)
 </script>
 
 <template>

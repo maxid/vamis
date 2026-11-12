@@ -5,7 +5,7 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 60% · 进行中
+::: info 实现进度 68% · 进行中
 主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 
@@ -53,6 +53,19 @@ options:
     value: b
 ```
 
+## 远程选项
+
+`source` 支持数据域变量 / API，归一到 options / items / records：
+
+```yaml
+type: transfer
+name: transfer
+label: 远程穿梭
+source: /api/mock2/form/options
+labelField: label
+valueField: value
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -65,10 +78,10 @@ options:
 | `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
 | `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
 | `mode` | `string` | `list` | 仅 list 已实现 |
-| `source` | API | | **未接** 远程选项 |
+| `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 和 Amis 文档的差异
 
 - 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
 - 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
-- 未接：table / tree / chained 模式、远程 source、分页、排序、拖拽、属性/事件/动作表完整项。
+- 未接：table / tree / chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
