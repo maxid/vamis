@@ -5,7 +5,7 @@ outline: deep
 
 # Table 表格
 
-::: info 实现进度 72% · 进行中
+::: info 实现进度 78% · 进行中
 主路径：`columns`（name / label / type / width / tpl / mapping / action）、`data` / `source` 数据、空状态 `placeholder`、标题 `title`、行 `rowClassName`、整行 `itemAction`、列 `popOver`。缺独立数据域、`quickEdit`、多选 / 拖拽 / 合并单元格 / 超级表头 / 总结行等高阶能力。
 :::
 
@@ -103,6 +103,29 @@ columns:
       "2": "<span class='label label-default'>停用</span>"
 ```
 
+## 列排序
+
+列配 `sortable: true` 时点击表头做客户端排序；`sortBy` 可指定排序字段。事件 `columnSort` 返回 `orderBy` / `orderDir`：
+
+```schema: scope="body"
+type: table
+data:
+  items:
+    - name: Chrome
+      version: "100"
+    - name: Safari
+      version: "15"
+    - name: Firefox
+      version: "95"
+columns:
+  - name: name
+    label: 名称
+    sortable: true
+  - name: version
+    label: 版本
+    sortable: true
+```
+
 ## 选择模式
 
 `selectable: true` 显示行勾选框与表头全选；`multiple: false` 单选：
@@ -179,12 +202,15 @@ columns:
 | `itemAction` | Action | | 整行点击动作 |
 | `rowClassName` | `string` | | 行 class，支持表达式 |
 | `columns[].popOver` | `PopOver` | | 单元格详情弹层 |
+| `columns[].sortable` | `boolean` | `false` | 表头可点击排序 |
+| `columns[].sortBy` | `string` | | 排序字段，默认 `name` |
 
 ## 事件表
 
 | 事件名称 | 事件参数 | 说明 |
 |----------|----------|------|
 | `rowClick` | 当前行数据 + `index` | 点击某一行（选择模式下同时切换勾选） |
+| `columnSort` | `orderBy` / `orderDir` | 点击排序列 |
 
 单元格内的按钮 / 表单事件由对应渲染器派发。
 
@@ -202,6 +228,6 @@ columns:
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、选择动作、列 `popOver`。
+- 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、选择动作、列 `popOver`。
 - 未接：独立数据域、拖拽 / 排序 / 合并单元格 / 超级表头 / 总结行 / 固定列 / `quickEdit`。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

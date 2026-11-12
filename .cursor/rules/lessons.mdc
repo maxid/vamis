@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 客户端排序要同步选择索引
+- 稳定做法：`sortState` 只存 `{key,dir}`，`sortedRows` 派生；表头点击 sortable 列循环 asc→desc→none 并派发 `columnSort`；行选择 / 全选 / getData.selectedItems 都基于 `sortedRows`，否则排序后勾选错位。
+- 触及：`table`
+
 ### Chart 是 harness SKIP_TYPES，改动只能双站手动核验
 - 稳定做法：chart option 优先 `config` / `chart`，其次 `source` resolveValue，最后 `api`；`setOption(option, replaceChartOption===true)`；echarts 实例 mount 后注册 `chart.on('click')` 经 runOnEvent 派发；`reload/setValue/reset` 走 scoped API。对照脚本 SKIP_TYPES 含 chart，不会生成 smoke 用例，验收要并排开 Amis/Vamis 文档页。
 - 触及：`chart`

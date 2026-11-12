@@ -34,6 +34,47 @@ const scoped = useScoped()
 const selectable = computed(() => props.schema.selectable === true)
 const multiple = computed(() => props.schema.multiple !== false)
 const selected = ref<number[]>([])
+const sortState = ref<{ key: string; dir: 'asc' | 'desc' } | null>(null)
+const sortedRows = computed(() => {
+  const state = sortState.value
+  if (!state) return rows.value
+  const field = state.key
+  return [...rows.value].sort((a, b) => {
+    const av = a?.[field]
+    const bv = b?.[field]
+    if (av == null && bv == null) return 0
+    if (av == null) return 1
+    if (bv == null) return -1
+    const diff = String(av).localeCompare(String(bv), 'zh-CN', { numeric: true })
+    return state.dir === 'asc' ? diff : -diff
+  })
+})
+
+async function sortBy(col: SchemaObject) {
+  if (col.sortable !== true) return
+  const field = String(col.sortBy || col.name || '')
+  if (!field) return
+  const next =
+    !sortState.value || sortState.value.key !== field
+      ? { key: field, dir: 'asc' as const }
+      : sortState.value.dir === 'asc'
+        ? { key: field, dir: 'desc' as const }
+        : null
+  sortState.value = next
+  const payload = {
+    ...(props.data || {}),
+    orderBy: next?.key || '',
+    orderDir: next?.dir || '',
+  }
+  const event = createVamisEvent('columnSort', payload)
+  await runOnEvent(props.schema, 'columnSort', { env, data: eventEvalData(payload, event), scoped, event })
+}
+
+function sortIcon(col: SchemaObject) {
+  const field = String(col.sortBy || col.name || '')
+  if (sortState.value?.key !== field) return '↕'
+  return sortState.value.dir === 'asc' ? '↑' : '↓'
+}
 
 function toggle(i: number) {
   if (multiple.value) selected.value = selected.value.includes(i) ? selected.value.filter((n) => n !== i) : [...selected.value, i]
@@ -41,11 +82,11 @@ function toggle(i: number) {
 }
 
 function allSelected() {
-  return rows.value.length > 0 && selected.value.length === rows.value.length
+  return rows.value.length > 0 && selected.value.length === sortedRows.value.length
 }
 
 function toggleAll() {
-  selected.value = allSelected() ? [] : rows.value.map((_, i) => i)
+  selected.value = allSelected() ? [] : sortedRows.value.map((_, i) => i)
 }
 
 async function emitRowClick(row: Record<string, any>, i: number, event: MouseEvent) {
@@ -60,17 +101,17 @@ async function emitRowClick(row: Record<string, any>, i: number, event: MouseEve
 const tableApi = {
   name: String(props.schema.id || props.schema.name || ''),
   id: props.schema.id ? String(props.schema.id) : undefined,
-  getData: () => ({ selectedItems: selected.value.map((i) => rows.value[i]).filter(Boolean) }),
+  getData: () => ({ selectedItems: selected.value.map((i) => sortedRows.value[i]).filter(Boolean) }),
   setData: () => {},
   async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
     const type = action?.actionType
-    if (type === 'selectAll') selected.value = rows.value.map((_, i) => i)
+    if (type === 'selectAll') selected.value = sortedRows.value.map((_, i) => i)
     else if (type === 'clearAll') selected.value = []
     else if (type === 'select') {
       selected.value = String(action.args?.index ?? '')
         .split(',')
         .map((part) => Number(part.trim()))
-        .filter((n) => Number.isFinite(n) && rows.value[n])
+        .filter((n) => Number.isFinite(n) && sortedRows.value[n])
     }
   },
 }
@@ -121,8 +162,9 @@ function rowClass(row: Record<string, any>) {
     <TableHeader>
       <TableRow>
         <TableHead v-if="selectable" class="w-10"><input type="checkbox" :checked="allSelected()" @change="toggleAll"></TableHead>
-        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
+        <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)" :class="{ 'cursor-pointer select-none': col.sortable === true }" @click="sortBy(col)">
           {{ col.label || col.name }}
+          <span v-if="col.sortable === true" class="ml-1 text-xs text-muted-foreground">{{ sortIcon(col) }}</span>
         </TableHead>
       </TableRow>
     </TableHeader>
@@ -132,7 +174,7 @@ function rowClass(row: Record<string, any>) {
           {{ schema.placeholder || '暂无数据' }}
         </TableCell>
       </TableRow>
-      <TableRow v-for="(row, i) in rows" :key="row.id ?? i" :class="rowClass(row)" @click="onRowClick(row, $event)">
+      <TableRow v-for="(row, i) in sortedRows" :key="row.id ?? i" :class="rowClass(row)" @click="onRowClick(row, $event)">
         <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
           <SchemaRenderer
             v-if="col.type && col.type !== 'text' && col.type !== 'plain'"
