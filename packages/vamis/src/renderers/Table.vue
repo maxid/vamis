@@ -43,6 +43,21 @@ function quickEditConfig(col: SchemaObject) {
   return raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : raw === true ? {} : null
 }
 
+function quickEditType(col: SchemaObject): string {
+  const conf = quickEditConfig(col)
+  return String(conf?.type || 'input-text')
+}
+
+function quickEditOptions(col: SchemaObject): Array<{ label: string; value: string }> {
+  const raw = quickEditConfig(col)?.options
+  if (!Array.isArray(raw)) return []
+  return raw.map((item) =>
+    item && typeof item === 'object'
+      ? { label: String((item as Record<string, unknown>).label ?? (item as Record<string, unknown>).value ?? ''), value: String((item as Record<string, unknown>).value ?? '') }
+      : { label: String(item), value: String(item) },
+  )
+}
+
 function quickEditable(col: SchemaObject) {
   return quickEditConfig(col) != null
 }
@@ -398,9 +413,29 @@ function rowClass(row: Record<string, any>) {
           :class="{ invisible: cellMeta(i, ci)?.skip }"
         >
           <template v-if="quickEditable(col)">
-            <input
-              v-if="editingCell === cellKey(row, col)"
+            <select
+              v-if="editingCell === cellKey(row, col) && quickEditType(col) === 'select'"
               v-model="draftValue"
+              class="h-7 w-full rounded border px-1 text-sm"
+              autofocus
+              @click.stop
+              @change="commitEdit(row, col)"
+              @blur="commitEdit(row, col)"
+            >
+              <option v-for="opt in quickEditOptions(col)" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
+            <textarea
+              v-else-if="editingCell === cellKey(row, col) && quickEditType(col) === 'textarea'"
+              v-model="draftValue"
+              class="min-h-16 w-full rounded border px-1 text-sm"
+              autofocus
+              @click.stop
+              @blur="commitEdit(row, col)"
+            />
+            <input
+              v-else-if="editingCell === cellKey(row, col)"
+              v-model="draftValue"
+              :type="quickEditType(col) === 'input-number' ? 'number' : 'text'"
               class="h-7 w-full rounded border px-1 text-sm"
               autofocus
               @click.stop

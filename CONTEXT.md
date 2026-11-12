@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `table` quickEdit：对象写法支持 select / textarea / input-number，change/blur 写回并派发；文档同步。对照桌面/移动 **14/14**（table 仍 99%，余独立数据域）。
 - `crud` quickEdit：对象写法支持 select / textarea / input-number，失焦或 change 写回并派发 quickEdit；文档补多控件示例。78% → **80%**。CRUD 介绍页对照仍为既有 **0/1** 探针差异。
 - `crud`：补文本 `quickEdit` 就地编辑、写回并派发 `quickEdit`；文档补快速编辑。74% → **78%**。CRUD 介绍页对照仍为既有 **0/1** 探针差异。
 - `crud`：补 `syncLocation` 从 URL 读 page/perPage、切页/改 perPage 写回地址栏（replaceState）；文档补同步地址栏。70% → **74%**。CRUD 介绍页对照仍为既有 **0/1** 探针差异。

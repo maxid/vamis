@@ -223,7 +223,7 @@ columns:
 
 ## 快速编辑
 
-列配 `quickEdit: true` 时单元格出现编辑笔，点击就地输入，失焦/Enter 写回并派发 `quickEdit`：
+列配 `quickEdit: true` 时单元格出现编辑笔；对象写法支持 `select` / `textarea` / `input-number`，失焦/Enter/change 写回并派发 `quickEdit`：
 
 ```schema: scope="body"
 type: table
@@ -382,7 +382,7 @@ columns:
 | `columns[].groupName` | `string` | | 超级表头分组 |
 | `columns[].fixed` | `"left" \| "right"` | | 固定列 |
 | `columns[].searchable` | `boolean` | `false` | 列文本搜索 |
-| `columns[].quickEdit` | `boolean` / object | `false` | 单元格就地编辑（当前文本） |
+| `columns[].quickEdit` | `boolean` / object | `false` | 就地编辑：true / `{type: input-text\|input-number\|select\|textarea, options}` |
 | `columns[].filterable.options` | `any[]` | | 列下拉筛选 |
 | `columns[].width` | `number` / `string` | | 列宽 |
 | `prefixRow` / `affixRow` | `SchemaNode[]` | | 顶部 / 底部总结行，支持 `colSpan` |
@@ -420,5 +420,5 @@ columns:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、列排序 / `columnSort`、行拖拽 / `orderChange`、选择动作、列 `popOver`。
-- 未接：独立数据域；快速编辑目前仅文本输入。筛选为客户端过滤。
+- 未接：独立数据域。筛选为客户端过滤。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。
