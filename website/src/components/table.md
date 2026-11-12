@@ -5,7 +5,7 @@ outline: deep
 
 # Table 表格
 
-::: info 实现进度 65% · 进行中
+::: info 实现进度 72% · 进行中
 主路径：`columns`（name / label / type / width / tpl / mapping / action）、`data` / `source` 数据、空状态 `placeholder`、标题 `title`、行 `rowClassName`、整行 `itemAction`、列 `popOver`。缺独立数据域、`quickEdit`、多选 / 拖拽 / 合并单元格 / 超级表头 / 总结行等高阶能力。
 :::
 
@@ -103,6 +103,26 @@ columns:
       "2": "<span class='label label-default'>停用</span>"
 ```
 
+## 选择模式
+
+`selectable: true` 显示行勾选框与表头全选；`multiple: false` 单选：
+
+```schema: scope="body"
+type: table
+selectable: true
+data:
+  items:
+    - id: "1"
+      name: Chrome
+    - id: "2"
+      name: Safari
+columns:
+  - name: name
+    label: 名称
+```
+
+选择结果通过组件 `getData().selectedItems` 读取，动作见下。
+
 ## 行操作按钮
 
 列 `type: button`，按钮里用当前行数据：
@@ -162,15 +182,26 @@ columns:
 
 ## 事件表
 
-表格单元格内的按钮 / 表单事件由对应渲染器派发；整行点击用 `itemAction`，当前行为 `rowClick` 尚未独立派发。
+| 事件名称 | 事件参数 | 说明 |
+|----------|----------|------|
+| `rowClick` | 当前行数据 + `index` | 点击某一行（选择模式下同时切换勾选） |
+
+单元格内的按钮 / 表单事件由对应渲染器派发。
 
 ## 动作表
 
-表格没有专属动作；刷新数据通常由外层 `service` / `crud` 的 `reload` 触发。
+| 动作名称 | 动作配置 | 说明 |
+|----------|----------|------|
+| `select` | `args.index`，支持 `0,1` | 选中指定行 |
+| `selectAll` | - | 全选 |
+| `clearAll` | - | 清空选择 |
+| `reload` / `setValue` | 通用动作 | 由外层作用域处理 |
+
+刷新数据通常由外层 `service` / `crud` 的 `reload` 触发。
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、列 `popOver`。
-- 未接：独立数据域、多选 / 拖拽 / 排序 / 合并单元格 / 超级表头 / 总结行 / 固定列 / `quickEdit`、`rowClick` 事件。
+- 已接：基础列渲染、`type` 列、`data` / `source`、空状态、标题、整行 `itemAction`、`selectable` / `multiple` / 全选、`rowClick`、选择动作、列 `popOver`。
+- 未接：独立数据域、拖拽 / 排序 / 合并单元格 / 超级表头 / 总结行 / 固定列 / `quickEdit`。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { SchemaRenderer, resolveClassName, resolveValue, runAction, useEnv, useScoped, type ActionSchema, type SchemaObject } from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import {
@@ -19,6 +19,51 @@ const props = defineProps<{
 
 const env = useEnv()
 const scoped = useScoped()
+const selectable = computed(() => props.schema.selectable === true)
+const multiple = computed(() => props.schema.multiple !== false)
+const selected = ref<number[]>([])
+
+function toggle(i: number) {
+  if (multiple.value) selected.value = selected.value.includes(i) ? selected.value.filter((n) => n !== i) : [...selected.value, i]
+  else selected.value = selected.value[0] === i ? [] : [i]
+}
+
+function allSelected() {
+  return rows.value.length > 0 && selected.value.length === rows.value.length
+}
+
+function toggleAll() {
+  selected.value = allSelected() ? [] : rows.value.map((_, i) => i)
+}
+
+async function emitRowClick(row: Record<string, any>, i: number, event: MouseEvent) {
+  if (selectable.value) toggle(i)
+  const payload = { ...(props.data || {}), ...row, index: i }
+  const ev = createVamisEvent('rowClick', payload, event)
+  await runOnEvent(props.schema, 'rowClick', { env, data: eventEvalData(payload, ev), scoped, event: ev })
+  if (ev.prevented) return
+  await onRowClick(row, event)
+}
+
+const tableApi = {
+  name: String(props.schema.id || props.schema.name || ''),
+  id: props.schema.id ? String(props.schema.id) : undefined,
+  getData: () => ({ selectedItems: selected.value.map((i) => rows.value[i]).filter(Boolean) }),
+  setData: () => {},
+  async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
+    const type = action?.actionType
+    if (type === 'selectAll') selected.value = rows.value.map((_, i) => i)
+    else if (type === 'clearAll') selected.value = []
+    else if (type === 'select') {
+      selected.value = String(action.args?.index ?? '')
+        .split(',')
+        .map((part) => Number(part.trim()))
+        .filter((n) => Number.isFinite(n) && rows.value[n])
+    }
+  },
+}
+scoped?.register(tableApi as never)
+onBeforeUnmount(() => scoped?.unregister(tableApi as never))
 const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 
 function colWidthStyle(col: SchemaObject) {
@@ -64,6 +109,7 @@ function rowClass(row: Record<string, any>) {
   <Table>
     <TableHeader>
       <TableRow>
+        <TableHead v-if="selectable" class="w-10"><input type="checkbox" :checked="allSelected()" @change="toggleAll"></TableHead>
         <TableHead v-for="col in columns" :key="`${col.name || col.label || ''}`" :style="colWidthStyle(col)">
           {{ col.label || col.name }}
         </TableHead>

@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### Table 行选择与 rowClick：checkpoint 用原生 checkbox
+- 稳定做法：表头 selectAll + 行 checkbox，selectable 时行点击 toggle 并派发 `rowClick`（prevented 阻止 itemAction）；组件注册 select/selectAll/clearAll，`getData().selectedItems` 返回行数组；文档选择示例用静态 data，避免 service 远程。
+- 触及：`table`
+
 ### ButtonGroup 拼缝用邻钮负 margin + 首尾圆角
 - 稳定做法：`> div:not(:first-child) :deep(button)` 去左圆角并 `margin-left:-1px`；`> div:not(:last-child)` 去右圆角；竖向改 top/bottom 圆角与 `margin-top:-1px`；`btnActiveLevel` 不用于普通按钮组。
 - 触及：`button-group`
