@@ -730,6 +730,10 @@ alwaysApply: true
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
+### CRUD syncLocation 只同步 page/perPage，replaceState
+- 稳定做法：挂载前 syncFromLocation（读取 page/perPage 并校验 >=1），切页/改 perPage 后 syncToLocation 用 URL + history.replaceState，不 pushState；筛选参数暂不同步，文档写清。
+- 触及：`crud`
+
 ### CRUD loadDataOnce 用 allItems + 客户端分页
 - 稳定做法：loadDataOnce 首次 page=1/perPage=999999 拉全量存 allItems；切页/改 perPage 只 slice，不再请求；筛选 queryPatch 非空时清空 allItems 重拉；total 用 allItems.length。
 - 触及：`crud`

@@ -108,6 +108,31 @@ const spinnerSchema = computed(
     }) as SchemaObject,
 )
 
+function syncFromLocation() {
+  if (props.schema.syncLocation !== true || typeof window === 'undefined') return
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const page = Number(params.get('page'))
+    const perPage = Number(params.get('perPage'))
+    if (Number.isFinite(page) && page >= 1) store.page = page
+    if (Number.isFinite(perPage) && perPage >= 1) store.perPage = perPage
+  } catch {
+    /* ignore */
+  }
+}
+
+function syncToLocation() {
+  if (props.schema.syncLocation !== true || typeof window === 'undefined') return
+  try {
+    const url = new URL(window.location.href)
+    url.searchParams.set('page', String(store.page))
+    url.searchParams.set('perPage', String(store.perPage))
+    window.history.replaceState(window.history.state, '', url.toString())
+  } catch {
+    /* ignore */
+  }
+}
+
 function onPagerChange(page: number, perPage?: number) {
   if (perPage != null && perPage !== store.perPage) {
     store.perPage = perPage
@@ -115,6 +140,7 @@ function onPagerChange(page: number, perPage?: number) {
   } else {
     store.page = page
   }
+  syncToLocation()
   void reload()
 }
 
@@ -334,6 +360,7 @@ provide(CrudHostKey, {
 const crudApi = { name: props.schema.name, reload }
 scoped?.register(crudApi)
 onMounted(() => {
+  syncFromLocation()
   if (!props.schema.api) {
     seedLocalItems()
     return
