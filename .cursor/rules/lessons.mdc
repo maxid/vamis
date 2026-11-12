@@ -725,8 +725,8 @@ alwaysApply: true
 - 规则：本文；Amis `InputNumber.tsx` `defaultProps`
 
 ### Amis `.label-*` 是 utility，不是 Badge；放在 `.vamis-root` / `.vamis-sdk` 内兼容
-- 踩过：mapping / tpl / static 的 HTML 经常写 `<span class='label label-info'>`。Vamis 只有 shadcn Badge，没有 Amis `_utilities.scss` 的 `.label-*`，这些映射直接退化成纯文本。
-- 稳定做法：在 `styles.css` 补 `.vamis-root .label` / `.vamis-sdk .label`，padding `0.2em 0.6em 0.3em`、75% 字号、白字、`0.25em` 圆角；颜色走 `--primary` / `--badge-info-bg` / `--badge-success-bg` / `--badge-warning-bg` / `--badge-danger-bg`，default 用 `#d4d6d9`。只挂在渲染根下，别污染文档站 / 宿主自己的 `.label`。
+- 踩过：mapping / tpl / static 的 HTML 经常写 `<span class='label label-info'>`。Vamis 只有 shadcn Badge，没有 Amis `_utilities.scss` 的 `.label-*`，这些映射直接退化成纯文本。后来绑 `--badge-success-bg` / `--success` oklch，开心绿比 Amis `#30bf13` 深，`display:inline-block` 盒模型也偏。
+- 稳定做法：在 `styles.css` 补 `.vamis-root .label` / `.vamis-sdk .label`，`display: inline`、padding `0.2em 0.6em 0.3em`、75% 字号、字重 700、`0.25em` 圆角。色号走 `--label-*` hex（success `#30bf13` / info `#2468f2` / warning `#ff9326` / danger `#f23d3d` / default `#303540`），不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。只挂在渲染根下，别污染文档站 / 宿主自己的 `.label`。
 - 触及：`mapping` `tpl` `static` `html`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
@@ -736,11 +736,11 @@ alwaysApply: true
 - 触及：`input-date-range` `input-datetime-range`
 - 规则：`packages/vamis/src/renderers/form/DateRange.vue`；Amis `InputDateRange.tsx`、`DateRangePicker`
 
-### Mapping 的 label 走 tpl/schema，不要 strip HTML；Tag label 要落到 value
-- 踩过：旧 Mapping 用 `Badge` + `strip(html)`，HTML 标签样式全丢；schema 映射 `{type:'tag', label}` 到了 Vamis Tag（只读 value/tags）显示 `-`。
-- 稳定做法：字符串 label 渲染 `{type:'tpl', tpl}`，对象 label 按 `labelField` / `label` / `type` 三路；`tag` 映射把 `label` 落到 `value`；`itemSchema` 字符串走 tpl、对象走 SchemaRenderer，extra-data 合并 `item` 或对象字段。对象数组单 key → key→value，多 key → `valueField` 匹配；`source` 纯变量走 resolveValue（`$${}` 先去掉一个 `$`），远程走 requestApi 后归一 options/items/records；布尔尝试 `1` / `0` 再 `*`。`static-mapping` 对照探针读 schemaValue，别读表单域。
-- 触及：`mapping` `static-mapping` `statics`
-- 规则：`packages/vamis/src/renderers/Mapping.vue`
+### Mapping 的 label 走 tpl/schema，不要 strip HTML；Tag 不要用 shadcn Badge
+- 踩过：旧 Mapping 用 `Badge` + `strip(html)`，HTML 标签样式全丢；schema 映射 `{type:'tag', label}` 到了 Vamis Tag（只读 value/tags、套 shadcn Badge），`displayMode: rounded` + `color: #4096ff` 变成灰胶囊、字是色值。
+- 稳定做法：字符串 label 渲染 `{type:'tpl', tpl}`，对象 label 按 `labelField` / `label` / `type` 三路。`type: tag` 走 `.vamis-tag`（normal 灰底 / rounded 白底 12px 圆 + 1px 边 / 自定义色：normal 填底、rounded 描边+字色）；`label` 经 `getPropValue || filterTpl(label)`。mapping 仍把 tag 的 `label` 落到 `value`（对齐 Amis 渲染 tag 时 `value: null`，避免从表单域抢值）。`itemSchema` extra-data 按 Amis `createObject`：object 摊字段，非 object 才 `{item}`。对象数组单 key → key→value，多 key → `valueField` 匹配；`source` 纯变量走 resolveValue（`$${}` 先去掉一个 `$`），远程走 requestApi 后归一 options/items/records；布尔尝试 `1` / `0` 再 `*`。`static-mapping` 对照探针读 schemaValue，别读表单域。
+- 触及：`mapping` `static-mapping` `statics` `tag`
+- 规则：`packages/vamis/src/renderers/Mapping.vue`；`packages/vamis/src/renderers/rest/Tag.vue`
 
 ### `submitText: ""` 去掉默认提交；`wrapWithPanel: false` 时 title/actions 失效
 - 踩过：`submitText || '提交'` 把空串当 falsy，Amis「通过 submitText 去掉提交按钮」仍画出「提交」。`wrapWithPanel: false` 还画 h2 标题和自定义 actions，Amis 文档写明两者都失效。

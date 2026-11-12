@@ -107,12 +107,11 @@ function labelOf(value: unknown): unknown {
 }
 
 function itemData(value: unknown) {
-  return {
-    ...data.value,
-    ...(value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : { item: value }),
-    item: value,
-    value,
-  }
+  const patch =
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : { item: value }
+  return { ...data.value, ...patch }
 }
 
 function tagFriendly(schema: SchemaObject): SchemaObject {

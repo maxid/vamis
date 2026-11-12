@@ -488,6 +488,29 @@
   --tag-border-width: 0px;
   --tag-border-color: transparent;
   --tag-max-width: 160px;
+  --tag-on-color: #fff;
+  --tag-rounded-radius: 12px;
+  --tag-rounded-bg: #fff;
+  --tag-rounded-border: #b8babf;
+  --tag-inactive: #b8babf;
+  --tag-active: #2468f2;
+  --tag-processing: #528eff;
+  --tag-success: #30bf13;
+  --tag-error: #f23d3d;
+  --tag-warning: #ff9326;
+  --tag-status-size: 8px;
+  --tag-status-gap: 8px;
+  /*
+   * Amis `.label-*` utility（mapping / tpl HTML）。色号对齐 `--label--*-bg`，
+   * 不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。
+   */
+  --label-fg: #fff;
+  --label-default-bg: #303540;
+  --label-primary-bg: #2468f2;
+  --label-success-bg: #30bf13;
+  --label-info-bg: #2468f2;
+  --label-warning-bg: #ff9326;
+  --label-danger-bg: #f23d3d;
   /*
    * Image 语义变量（Amis --image-image-*）。缩略 110、内边距 4、标题 14 / 说明 12。
    * 选择器只 var()。放大层永远是黑底白字，不跟主题换肤。
@@ -680,6 +703,10 @@
   --tooltip-bg: #17202d;
   --tooltip-fg: #f7f8fa;
   --tooltip-border: 1px solid #303640;
+  --tag-bg: #303640;
+  --tag-fg: #e8e9eb;
+  --tag-rounded-bg: #17202d;
+  --tag-rounded-border: #5c5f66;
   --file-list-hover-bg: #151c26;
   --file-icon-color: #e8e9eb;
   --file-clear-color: #84878c;
@@ -1105,7 +1132,9 @@
     height: var(--tag-height);
     max-width: var(--tag-max-width);
     padding: var(--tag-padding);
-    margin: 0 var(--gap-sm) var(--gap-xs) 0;
+    margin: 0;
+    flex-flow: row nowrap;
+    justify-content: center;
     align-items: center;
     font-size: var(--tag-font-size);
     font-weight: var(--tag-font-weight);
@@ -1118,6 +1147,113 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .vamis-tag:not(:last-child) {
+    margin-right: var(--gap-sm);
+  }
+  .vamis-tag__text {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: var(--tag-height);
+  }
+  .vamis-tag--has-color.vamis-tag--normal {
+    color: var(--tag-on-color);
+  }
+  .vamis-tag--rounded {
+    background: var(--tag-rounded-bg);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--tag-rounded-border);
+    border-radius: var(--tag-rounded-radius);
+    color: var(--tag-bg);
+    line-height: 22px;
+  }
+  .vamis-tag--rounded .vamis-tag__text {
+    line-height: 22px;
+  }
+  .vamis-tag--status {
+    background: var(--tag-rounded-bg);
+  }
+  .vamis-tag__prev {
+    display: inline-block;
+    width: var(--tag-status-size);
+    height: var(--tag-status-size);
+    margin-right: var(--tag-status-gap);
+    border-radius: 50%;
+    background: var(--tag-status-color, var(--tag-bg));
+    vertical-align: middle;
+  }
+  .vamis-tag--normal--inactive {
+    color: var(--tag-fg);
+    background: var(--tag-inactive);
+  }
+  .vamis-tag--normal--active {
+    color: var(--tag-on-color);
+    background: var(--tag-active);
+  }
+  .vamis-tag--normal--processing {
+    color: var(--tag-on-color);
+    background: var(--tag-processing);
+  }
+  .vamis-tag--normal--success {
+    color: var(--tag-on-color);
+    background: var(--tag-success);
+  }
+  .vamis-tag--normal--error {
+    color: var(--tag-on-color);
+    background: var(--tag-error);
+  }
+  .vamis-tag--normal--warning {
+    color: var(--tag-on-color);
+    background: var(--tag-warning);
+  }
+  .vamis-tag--rounded--inactive {
+    color: var(--tag-inactive);
+  }
+  .vamis-tag--rounded--active {
+    color: var(--tag-active);
+  }
+  .vamis-tag--rounded--processing {
+    color: var(--tag-processing);
+  }
+  .vamis-tag--rounded--success {
+    color: var(--tag-success);
+  }
+  .vamis-tag--rounded--error {
+    color: var(--tag-error);
+  }
+  .vamis-tag--rounded--warning {
+    color: var(--tag-warning);
+  }
+  .vamis-tag--status--inactive .vamis-tag__prev {
+    background: var(--tag-inactive);
+  }
+  .vamis-tag--status--active .vamis-tag__prev {
+    background: var(--tag-active);
+  }
+  .vamis-tag--status--processing .vamis-tag__prev {
+    background: var(--tag-processing);
+  }
+  .vamis-tag--status--success .vamis-tag__prev {
+    background: var(--tag-success);
+  }
+  .vamis-tag--status--error .vamis-tag__prev {
+    background: var(--tag-error);
+  }
+  .vamis-tag--status--warning .vamis-tag__prev {
+    background: var(--tag-warning);
+  }
+  .vamis-tag.is-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .vamis-mapping__item {
+    margin-right: var(--gap-xs);
+  }
+  .vamis-mapping__item:last-child {
+    margin-right: 0;
   }
   .vamis-words__toggle {
     display: inline-flex;
@@ -5768,12 +5904,12 @@
  */
 .vamis-root .label,
 .vamis-sdk .label {
-  display: inline-block;
+  display: inline;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
+  color: var(--label-fg);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
@@ -5785,27 +5921,27 @@
 }
 .vamis-root .label-default,
 .vamis-sdk .label-default {
-  background: #d4d6d9;
+  background: var(--label-default-bg);
 }
 .vamis-root .label-primary,
 .vamis-sdk .label-primary {
-  background: var(--primary);
+  background: var(--label-primary-bg);
 }
 .vamis-root .label-success,
 .vamis-sdk .label-success {
-  background: var(--badge-success-bg);
+  background: var(--label-success-bg);
 }
 .vamis-root .label-info,
 .vamis-sdk .label-info {
-  background: var(--badge-info-bg);
+  background: var(--label-info-bg);
 }
 .vamis-root .label-warning,
 .vamis-sdk .label-warning {
-  background: var(--badge-warning-bg);
+  background: var(--label-warning-bg);
 }
 .vamis-root .label-danger,
 .vamis-sdk .label-danger {
-  background: var(--badge-danger-bg);
+  background: var(--label-danger-bg);
 }
 
 /* Amis `.DateRangeControl`：两个输入框 + 日历浮层。 */

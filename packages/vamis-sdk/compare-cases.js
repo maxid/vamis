@@ -18162,22 +18162,357 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "input-date-range",
-      "body": [
-        {
-          "type": "form",
-          "title": "input-date-range",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "input-date-range",
-              "name": "input_date_range",
-              "label": "input-date-range"
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "select",
+            "label": "日期范围"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "label": "日期范围",
+            "value": "1659283200,1661961599"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-2",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "label": "日期范围",
+            "value": "today,+1weeks"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-3",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "select",
+            "label": "日期范围",
+            "shortcuts": [
+              "7daysago",
+              "15dayslater",
+              "2weeksago",
+              "1weekslater",
+              "thismonth",
+              "2monthsago",
+              "3monthslater"
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-4",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "select",
+            "label": "自定义快捷键",
+            "shortcuts": [
+              {
+                "label": "1天前",
+                "startDate": "${DATEMODIFY(NOW(), -1, 'day')}",
+                "endDate": "${NOW()}"
+              },
+              {
+                "label": "本月",
+                "startDate": "${STARTOF(NOW(), 'month')}",
+                "endDate": "${ENDOF(NOW(), 'month')}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-5",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "label": "内嵌日期范围",
+            "embed": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-6",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "begin",
+            "extraName": "end",
+            "label": "日期范围"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-7",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "id": "clear_range",
+            "label": "日期",
+            "value": "1714060800,1714319999"
+          },
+          {
+            "type": "button",
+            "label": "清空",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "clear",
+                    "componentId": "clear_range"
+                  }
+                ]
+              }
             }
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-8",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "id": "reset_range",
+            "label": "日期",
+            "value": "1714060800,1714319999"
+          },
+          {
+            "type": "button",
+            "label": "重置",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "reset",
+                    "componentId": "reset_range"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-input-date-range-9",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "InputDateRange 日期范围",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "InputDateRange 日期范围 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "input-date-range",
+            "name": "date",
+            "id": "setvalue_range",
+            "label": "日期",
+            "value": "1714060800,1714319999"
+          },
+          {
+            "type": "button",
+            "label": "赋值",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "setValue",
+                    "componentId": "setvalue_range",
+                    "args": {
+                      "value": "1714060800,1714492799"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -28392,6 +28727,7 @@ window.VAMIS_COMPARE_CASES = [
           "1": "<span class='label label-info'>漂亮</span>",
           "2": "<span class='label label-success'>开心</span>",
           "3": "<span class='label label-danger'>惊吓</span>",
+          "4": "<span class='label label-warning'>紧张</span>",
           "*": "<span class='label label-default'>其他：${type}</span>"
         }
       }
@@ -28454,6 +28790,7 @@ window.VAMIS_COMPARE_CASES = [
         "map": {
           "1": "第一",
           "2": "第二",
+          "3": "第三",
           "*": "其他"
         },
         "itemSchema": "自定义模板：<span style='color: red'>${item}</span>"
@@ -28482,6 +28819,7 @@ window.VAMIS_COMPARE_CASES = [
         "map": {
           "1": "第一",
           "2": "第二",
+          "3": "第三",
           "*": "其他"
         },
         "itemSchema": {
@@ -28521,6 +28859,10 @@ window.VAMIS_COMPARE_CASES = [
           "2": {
             "label": "伤心",
             "color": "blue"
+          },
+          "3": {
+            "label": "冷漠",
+            "color": "gray"
           },
           "*": "其他"
         },

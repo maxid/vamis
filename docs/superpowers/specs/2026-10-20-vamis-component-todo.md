@@ -287,7 +287,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `link` | Link 链接 | `/components/link` | `/zh-CN/components/link` | 进行中 | 60% | 能出链 | P0 |
 | `list` | List 列表 | `/components/list` | `/zh-CN/components/list` | 进行中 | 62% | 未写 title 不再补「列表项」；hbox 列走 `ListItem-field`。`List-items` 盒模型对齐 Amis（`margin-right: 15px`、行 padding 8×12、斑马纹打在包装层；字段 popOver 宿主 block + `svg.icon` 行盒）。其余勾选 / 拖拽未接 | P0 |
 | `log` | Log 实时日志 | `/components/log` | `/zh-CN/components/log` | 进行中 | 25% | **精简**：静态分行，无轮询/ANSI | P0 |
-| `mapping` | Mapping 映射 | `/components/mapping` | `/zh-CN/components/mapping` | 进行中 | 85% | 主路径已对齐：`map` 的 k-v / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串 / SchemaNode）、数组多值、布尔 `1` / `0`、`placeholder`；文档按 Amis 章节改写。对照桌面 **14/14**、移动 **14/14**（P0 0）。余项：30s source 缓存未单实现 | P0 |
+| `mapping` | Mapping 映射 | `/components/mapping` | `/zh-CN/components/mapping` | 进行中 | 85% | 主路径已对齐：`map` 的 k-v / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串 / SchemaNode）、数组多值、布尔 `1` / `0`、`placeholder`；文档按 Amis 章节改写。HTML `.label-*` 走 `--label-*`（success `#30bf13`）；`type: tag` 走 `.vamis-tag`（rounded `#4096ff` 描边）。对照桌面 **14/14**、移动 **14/14**（P0 0）。余项：30s source 缓存未单实现 | P0 |
 | `number` | Number 展示 | `/components/number` | `/zh-CN/components/number` | 进行中 | 60% | StaticValue；number / percent 过滤器已接，组件自身精度档未齐 | P0 |
 | `markdown` | Markdown 渲染 | `/components/markdown` | `/zh-CN/components/markdown` | 进行中 | 45% | 已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简 | P0 |
 | `office-viewer` | OfficeViewer Word 渲染 | `/components/office-viewer` | `/zh-CN/components/office-viewer` | 进行中 | 10% | **占位**：ViewerStub「未接入预览」（设计非目标） | P0 |
@@ -303,7 +303,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `sparkline` | Sparkline 走势图 | `/components/sparkline` | `/zh-CN/components/sparkline` | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 55% | 能映射状态 | P0 |
 | `tpl` | Tpl 模板 | `/components/tpl` | `/zh-CN/components/tpl` | 进行中 | 92% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1 | P0 |
-| `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 55% | 能展示标签 | P0 |
+| `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 70% | `displayMode` normal/rounded/status + `color`（预设 / 自定义 hex）走 `.vamis-tag` token，不再套 shadcn Badge。mapping 示例依赖这条。缺 closable / checkable / 文档主路径 | P0 |
 | `video` | Video 视频 | `/components/video` | `/zh-CN/components/video` | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | `/components/timeline` | `/zh-CN/components/timeline` | 进行中 | 50% | 能列节点 | P0 |
 | `shape` | Shape 形状 | `/components/shape` | `/zh-CN/components/shape` | 进行中 | 40% | 已注册，图形精简 | P0 |
@@ -352,7 +352,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（余项 source 缓存，不挡）；`input-date-range` #29 已到 80%（缺 transform / 时长约束，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（示例 Tag / `.label-*` 已对齐；余项 source 缓存，不挡）；`input-date-range` #29 已到 80%（缺 transform / 时长约束，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -454,7 +454,7 @@ flowchart LR
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 75% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 70% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 50% |
-| 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 55% |
+| 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 70% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 85% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 90% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 55% |

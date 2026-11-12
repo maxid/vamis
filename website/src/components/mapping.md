@@ -6,7 +6,7 @@ outline: deep
 # Mapping 映射
 
 ::: info 实现进度 85% · 进行中
-主路径已对齐：`map` 的 k-v 对象 / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串或 SchemaNode）、数组值映射多个、布尔 `1` / `0`、`placeholder`。文档按 Amis 章节改写。
+主路径已对齐：`map` 的 k-v 对象 / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串或 SchemaNode）、数组值映射多个、布尔 `1` / `0`、`placeholder`。HTML `.label-*` 与 `type: tag`（rounded / color）盒模型已对齐。余项 source 30s 缓存未单实现。
 :::
 
 `mapping` 把值按 `map` 字典映射成展示文本或组件。属于数据展示；也可作为 Table 列、Form 的 `static-mapping` 使用。Vamis 用 YAML 或 JSON 书写，字段名不改写。
@@ -29,8 +29,6 @@ body:
 
 ## 渲染 HTML
 
-映射值是 HTML 字符串时直接渲染；`${type}` 等变量仍可用：
-
 ```schema
 type: page
 body:
@@ -40,14 +38,15 @@ body:
     "1": "<span class='label label-info'>漂亮</span>"
     "2": "<span class='label label-success'>开心</span>"
     "3": "<span class='label label-danger'>惊吓</span>"
+    "4": "<span class='label label-warning'>紧张</span>"
     "*": "<span class='label label-default'>其他：${type}</span>"
 ```
 
-`.label` / `.label-info` / `.label-success` / `.label-warning` / `.label-danger` / `.label-default` / `.label-primary` 是 Amis 旧版 utility；Vamis 已在 `.vamis-root` / `.vamis-sdk` 内做兼容样式（75% 字号、白字、语义底色），存量 schema 可直接迁移。
-
 ## 渲染其它组件
 
-映射值可以是 amis schema；配置了 `itemSchema` 后映射值不再作为 schema 渲染：
+映射值也可以是 schema，用来渲染其它组件。
+
+> 配置了 `itemSchema` 后，映射值不会再作为 schema 渲染
 
 ```schema
 type: page
@@ -68,9 +67,11 @@ body:
 
 ## 渲染自定义模板
 
-配置 `itemSchema` 渲染字符串模板或 SchemaNode。映射值非 object 时用 `${item}` 取映射值；映射值是 object 时可用 `${属性}` 取值，也可读数据域变量。
+可配置 `itemSchema` 渲染自定义模板，支持 HTML 或 schema。映射值非 object 时用 `${item}` 取映射值。
 
 ### html 或字符串模板
+
+使用 `${item}` 获取映射值。
 
 ```schema
 type: page
@@ -80,6 +81,7 @@ body:
   map:
     "1": 第一
     "2": 第二
+    "3": 第三
     "*": 其他
   itemSchema: "自定义模板：<span style='color: red'>${item}</span>"
 ```
@@ -94,6 +96,7 @@ body:
   map:
     "1": 第一
     "2": 第二
+    "3": 第三
     "*": 其他
   itemSchema:
     type: tag
@@ -101,6 +104,10 @@ body:
 ```
 
 ### 在模板中渲染数据
+
+- 映射值是 object 时，模板可取 object 属性
+- 映射值非 object 时，用 `${item}` 取映射值
+- 也可以读数据域里的其它数据
 
 ```schema
 type: page
@@ -116,6 +123,9 @@ body:
     "2":
       label: 伤心
       color: blue
+    "3":
+      label: 冷漠
+      color: gray
     "*": 其他
   itemSchema:
     type: tag
@@ -125,7 +135,7 @@ body:
 
 ## 映射展示多个
 
-`value` 为数组时逐项映射：
+如果返回值是数组会显示为多个。
 
 ```schema
 type: page
@@ -316,6 +326,7 @@ body:
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 与 Amis 一致：k-v / 对象数组 / 多 key 数组、`source` 变量与 API、`itemSchema` 字符串与 SchemaNode、数组多值、布尔 `1`/`0`、`placeholder`。
-- `labelField` 配置后映射值不再作为 schema 渲染；`Tag` 映射（`{type:'tag', label: ...}`）会落到 Vamis Tag 的 `value` 展示。
+- `labelField` 配置后映射值不再作为 schema 渲染。映射到 `type: tag` 时把 `label` 落到 Tag 的 `value`（对齐 Amis 渲染 tag 时 `value: null`，避免从表单域抢值）。
+- HTML 映射里的 `.label` / `.label-*` 走 `--label-*` token（对齐 Amis `--label--*-bg`），不是 Overlay Badge。
 - `source` 的 30s 缓存未单独实现，缓存策略交给宿主 env；远程字典失败时保留占位。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。
