@@ -3,6 +3,7 @@
 import { evalExpression, filterTpl, isVisible, resolveValue } from '../formula'
 import type { Payload, SchemaApi, SchemaObject } from '../types'
 import type { PlainObject } from '../types'
+import { dataMapping } from './data-mapping'
 import {
   getSelectedOptions,
   normalizeOptions,
@@ -208,19 +209,53 @@ export function collectFormItems(nodes: unknown[]): SchemaObject[] {
   return out
 }
 
-/** Amis：value 表达式优先；否则已有 name 映射；再否则用普通 value 当默认。 */
-export function applyFormItemDefaults(items: SchemaObject[], data: PlainObject): PlainObject {
+/** Amis：value 表达式优先；否则已有 name 映射；再否则用普通 value 当默认。lookup 给表达式读父域，写入仍只打 data。 */
+export function applyFormItemDefaults(
+  items: SchemaObject[],
+  data: PlainObject,
+  lookup: PlainObject = data,
+): PlainObject {
   for (const item of items) {
     const name = String(item.name || '')
     if (!name) continue
     const raw = item.value
     if (isFormValueExpr(raw)) {
-      setPathValue(data, name, resolveValue(raw, data))
+      setPathValue(data, name, resolveValue(raw, lookup))
     } else if (getPathValue(data, name) === undefined && raw != null && raw !== '') {
       setPathValue(data, name, raw)
     }
   }
   return data
+}
+
+function asOwnObject(value: unknown): PlainObject {
+  if (value && typeof value === 'object' && !Array.isArray(value)) return { ...(value as PlainObject) }
+  return {}
+}
+
+/**
+ * Amis FormStore：本域 = schema.data（经 dataMapping）+ 表单项默认值。
+ * 父域不摊进 store（debug / persist / 提交只见本域）。
+ * `canAccessSuperData` 默认 true：只把**同名**表单项从父域拷进来；Each 的 `${arr}` 仍走 SchemaRenderer 父域 overlay。
+ */
+export function initFormStoreData(
+  items: SchemaObject[],
+  parentData: PlainObject = {},
+  schemaData?: unknown,
+  canAccessSuperData = true,
+): PlainObject {
+  const own = asOwnObject(dataMapping(schemaData || {}, parentData))
+  if (canAccessSuperData) {
+    for (const item of items) {
+      const name = String(item.name || '')
+      if (!name) continue
+      if (getPathValue(own, name) !== undefined) continue
+      const fromParent = getPathValue(parentData, name)
+      if (fromParent !== undefined) setPathValue(own, name, fromParent)
+    }
+  }
+  const lookup = canAccessSuperData ? { ...parentData, ...own } : own
+  return applyFormItemDefaults(items, own, lookup)
 }
 
 export function hiddenFieldsToClear(items: SchemaObject[], data: PlainObject): string[] {

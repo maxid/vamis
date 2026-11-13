@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- Form 数据域：初始化不再把父域整份摊进 `store.data`。`debug` / persist / 提交只见本域；`canAccessSuperData` 默认 true 只映射同名表单项。动态表单项 debug 不再带 page `arr`，Each `${arr}` 仍走父域 overlay。对照 `each` 桌面 **7/7**、`form` 桌面 **41/58**（P0 0，与修前同分）。
 - `each` 对标 Amis 文档主路径：取值 `value` > `source` > `name`，空数组占位「暂无数据」，`items` 数组拆开渲染，动态表单项展开 `name`/`label`。Table / Form / source / 动态表单活示例对齐。对照桌面 **7/7**、移动 **7/7**（P0 0）。80% → **90%**。
 - `service` 接口联动：`isApiOutdated` 只比 `props.data`，请求 `{ ...store.data, ...props.data }`（父域后写），换数据模板会重拉。FormItem `description` 字符串走 `v-html`（HTML/`text-danger`），不再转义成字面标签。90% → **92%**。
 - `button-group`：邻钮 1px 负缝改打在 `.vamis-node` 上，hover / focus 抬 wrapper `z-index`（后钮不再盖住前钮描边）。活示例文案对齐 Amis。90% → **92%**。

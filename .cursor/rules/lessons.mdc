@@ -971,9 +971,15 @@ alwaysApply: true
 
 ### form 的 `schema.data` 要走 dataMapping，`\\${}` 转义成字面 `${}`
 - 踩过：Form 初始化直接 `{...schema.data}`，文档「不想映射就转义」示例 Vamis 显示 `\${rick}`，Amis 是 `${rick}`。
-- 稳定做法：`dataMapping(schema.data, parentData)` 后再和父域合并。`resolveValue` 对 `\${` 做 `replace(/\\\$\{/g, '${')`，不当表达式。
+- 稳定做法：`dataMapping(schema.data, parentData)` 写入本域。`resolveValue` 对 `\${` 做 `replace(/\\\$\{/g, '${')`，不当表达式。不要把整份父域再摊进 `store.data`（见下条）。
 - 触及：`form`
 - 规则：本文；Amis `tpl-builtin` `\\$`；`packages/vamis-core/src/formula.ts` `resolveValue`
+
+### 表单 store 只收本域，不要摊父域
+- 踩过：`{...parentData, ...mappedSchemaData}` 把 page `arr` 写进 `store.data`，动态表单项 debug / persist / 提交都带上父域结构。Amis FormStore 是 `createObject(super, own)`，debug「只会展示当前表单的数据域」。
+- 稳定做法：`initFormStoreData`：own = `dataMapping(schema.data, parent)`；`canAccessSuperData !== false` 只拷**同名**表单项；`applyFormItemDefaults` 写 own，表达式 lookup 才叠父域。Each `${arr}` 靠 SchemaRenderer 父域 overlay，不要把 `arr` 变成表单字段。`inheritData: false`（共用上层域提交）仍未接。
+- 触及：`form` `each`
+- 规则：本文；Amis `FormStore` `canAccessSuperData` / `createObject`；`packages/vamis-core/src/utils/form-item.ts` `initFormStoreData`
 
 ### Form 重置要 clone 初始数据；生命周期事件按 Amis 语义分发
 - 踩过：`store.data` 直接引用 `initialFormData`，用户输入原地改动后 `reset()` 把同一个对象赋回去，值没变；`resetAfterSubmit` 看着完全没生效。`persistData` 恢复同理，必须 clone，否则默认值被污染。

@@ -6,7 +6,7 @@ outline: deep
 # Form 表单
 
 ::: info 实现进度 88% · 进行中
-主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、生命周期事件、`rules` 组合校验、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`canAccessSuperData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
+主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、生命周期事件、`rules` 组合校验、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项；父域其它字段不进 debug / 提交）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
 :::
 
 表单是数据输入的根，主要作用是提交或者展示表单数据。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。
@@ -792,7 +792,7 @@ body:
 
 ## 禁用数据链
 
-默认表单可以获取到完整数据链中的数据。例如在 CRUD 列表项弹框里放表单，同 `name` 表单项会按上层行数据初始化。如果是新建而不是编辑，可以设置 `"canAccessSuperData": false` 关闭该行为。**未接**。
+默认表单可以获取到完整数据链中的数据。例如在 CRUD 列表项弹框里放表单，同 `name` 表单项会按上层行数据初始化。如果是新建而不是编辑，可以设置 `"canAccessSuperData": false` 关闭该行为。父域其它字段不会写进表单数据域：`debug` 只展示当前表单本域，提交 payload 也不带上。`inheritData: false`（共用上层域提交）仍**未接**。
 
 ## 提交后行为
 
@@ -1021,7 +1021,7 @@ body:
 | redirect | `string` | | 保存成功后跳转（支持相对 / 绝对地址） |
 | reload | `string` | | 操作完后刷新目标对象（填组件 `name`；`window` 整页刷新） |
 | autoFocus | `boolean` | `false` | 是否自动聚焦 |
-| canAccessSuperData | `boolean` | `true` | **未接**。是否自动获取上层数据并映射到表单项 |
+| canAccessSuperData | `boolean` | `true` | 是否把上层同名字段映射到表单项。默认 true；父域其它字段不进本域 |
 | persistData | `string` | `""` | 指定一个唯一 key，开启本地缓存 |
 | persistDataKeys | `string[]` | | 只缓存指定 key |
 | clearPersistDataAfterSubmit | `boolean` | `true` | 提交成功后是否清除本地缓存 |
@@ -1784,6 +1784,6 @@ onEvent:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `submit` 事件不会拦掉默认提交；Vamis 先校验并保存，再发事件。
-- 未接：`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign`、表单项级 `labelWidth`、`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`canAccessSuperData` / `inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。
+- 未接：`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign`、表单项级 `labelWidth`、`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
 

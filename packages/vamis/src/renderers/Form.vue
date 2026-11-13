@@ -4,7 +4,6 @@ import {
   SchemaRenderer,
   LazyComponent,
   apiMessage,
-  applyFormItemDefaults,
   applyServerErrors,
   asArray,
   autoFillApi,
@@ -21,6 +20,7 @@ import {
   formItemSubmitOnChange,
   formItemValidateOnChange,
   getPathValue,
+  initFormStoreData,
   isApiOutdated,
   isEffectiveApi,
   isVisible,
@@ -105,15 +105,11 @@ function clearPersisted() {
 }
 
 const parentData = { ...(props.data || {}) }
-const mappedSchemaData = dataMapping(props.schema.data || {}, parentData)
-const initialFormData = applyFormItemDefaults(
+const initialFormData = initFormStoreData(
   collectFormItems(asArray(props.schema.body || props.schema.controls)),
-  {
-    ...parentData,
-    ...(mappedSchemaData && typeof mappedSchemaData === 'object' && !Array.isArray(mappedSchemaData)
-      ? mappedSchemaData
-      : {}),
-  },
+  parentData,
+  props.schema.data,
+  props.schema.canAccessSuperData !== false,
 )
 
 function cloneData(data: Record<string, any>): Record<string, any> {

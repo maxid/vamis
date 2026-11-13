@@ -19,6 +19,7 @@ import {
   formItemSubmitOnChange,
   formItemValidateOnChange,
   hiddenFieldsToClear,
+  initFormStoreData,
   validateApiMessage,
 } from '../src/utils/form-item'
 import { comboApplyRadio, comboChildSchema, comboItemMode, formLayoutSkipCol, groupChildSchema, groupFormMode } from '../src/utils/form-group'
@@ -159,6 +160,40 @@ describe('validateValue requiredOn', () => {
     const schema = { name: 'text', label: '文本', type: 'input-text', requiredOn: 'this.number > 1' }
     expect(validateValue(schema, '', { number: 0 })).toBeNull()
     expect(validateValue(schema, '', { number: 2 })).toBe('这是必填项')
+  })
+})
+
+describe('initFormStoreData', () => {
+  it('does not copy unrelated parent keys into the form domain', () => {
+    const parent = { arr: ['A', 'B', 'C'], other: 1 }
+    const own = initFormStoreData(
+      collectFormItems([{ type: 'each', source: '${arr}', items: { type: 'input-text', name: 'text${index}' } }]),
+      parent,
+    )
+    expect(own).toEqual({})
+    expect(Object.keys(own)).not.toContain('arr')
+  })
+
+  it('seeds same-name form items from parent when canAccessSuperData', () => {
+    expect(
+      initFormStoreData([{ type: 'input-text', name: 'name' }], { name: 'Ada', arr: ['A'] }),
+    ).toEqual({ name: 'Ada' })
+    expect(
+      initFormStoreData([{ type: 'input-text', name: 'name' }], { name: 'Ada', arr: ['A'] }, undefined, false),
+    ).toEqual({})
+  })
+
+  it('keeps mapped schema.data and lets value expressions read the parent', () => {
+    expect(
+      initFormStoreData(
+        [{ type: 'input-text', name: 'title' }],
+        { arr: ['A'], title: 'page' },
+        { title: 'form', flag: '${arr}' },
+      ),
+    ).toEqual({ title: 'form', flag: ['A'] })
+    expect(
+      initFormStoreData([{ type: 'input-text', name: 'pick', value: '${arr}' }], { arr: ['A', 'B'] }),
+    ).toEqual({ pick: ['A', 'B'] })
   })
 })
 
