@@ -131,7 +131,7 @@
 | `divider` `pagination` `pagination-wrapper` `switch-container` | 90% | 未核 | |
 | `button-group` | 92% | 已核 | 邻钮 1px 负缝打在 `.vamis-node`，hover 抬 wrapper；无独立浮层 |
 | `table-view` | 85% | 未核 | |
-| `app` `anchor-nav` `service` | 80–90% | 未核 | `service` 2026-11-13。Spinner overlay 不改盒模型；文档章节已补 |
+| `app` `anchor-nav` `service` | 80–92% | 未核 | `service` 2026-11-13。接口联动用父域做 isApiOutdated；Spinner overlay 不改盒模型 |
 | `audio` `tasks` `web-component` `amis` | 80% | 未核 | |
 
 ---
@@ -171,7 +171,7 @@
 | `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | `/components/custom` | `/zh-CN/components/custom` | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | `/components/dropdown-button` | `/zh-CN/components/dropdown-button` | 进行中 | 88% | 文档主路径已对齐：`buttons` 分组、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret`、`defaultIsOpened`、`tooltip` / `placement` / `disabledTip`。菜单 `ul>li` + Action `isMenuItem`（不是完整 Button），贴触发器 `VamisOverlay`。缺菜单进出动画 | P0 |
-| `service` | Service 功能型容器 | `/components/service` | `/zh-CN/components/service` | 进行中 | 90% | 主路径已对齐：独立 Scope、静态 `data`、`api` 拉数、`schemaApi` 子 schema（含 `controls` 表单项）、`initFetch` / `initFetchSchema`、`reload` / `rebuild` / `setValue`、`interval` 轮询 / `silentPolling` / `stopAutoRefreshWhen`、顶部错误 Alert、`init` / `fetchInited` / `fetchSchemaInited`。Spinner overlay 绝对定位，不改已渲染盒模型。文档章节对标 Amis（jsonp / js / ws / dataProvider 未接占位）。对照桌面 **8/14**、移动 **8/14**（P0 0）。缺 `dataProvider` / `ws` / jsonp / `js:` schemaApi | P0 |
+| `service` | Service 功能型容器 | `/components/service` | `/zh-CN/components/service` | 进行中 | 92% | 主路径已对齐：独立 Scope、静态 `data`、`api` 拉数、`schemaApi` 子 schema（含 `controls` 表单项）、`initFetch` / `initFetchSchema`、`reload` / `rebuild` / `setValue`、接口联动（`isApiOutdated` 只比父域，请求 `{ ...store, ...props.data }` 父域后写）、`interval` 轮询 / `silentPolling` / `stopAutoRefreshWhen`、顶部错误 Alert、`init` / `fetchInited` / `fetchSchemaInited`。Spinner overlay 绝对定位，不改已渲染盒模型。文档章节对标 Amis（jsonp / js / ws / dataProvider 未接占位）。对照桌面 **8/14**、移动 **8/14**（P0 0）。缺 `dataProvider` / `ws` / jsonp / `js:` schemaApi | P0 |
 | `nav` | Nav 导航 | `/components/nav` | `/zh-CN/components/nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
 | `anchor-nav` | AnchorNav 锚点导航 | `/components/anchor-nav` | `/zh-CN/components/anchor-nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | `/components/tooltip` | `/zh-CN/components/tooltip-wrapper` | 进行中 | 92% | 文档主路径已对齐：`content` / `title`、`trigger` hover/click/focus、`placement`、`tooltipTheme`、`offset`、`showArrow`、`inline`、`wrapperComponent`。活示例对标 Amis（图标十字布局 / trash / 长文本省略）。浮层 `VamisOverlay` Teleport、`--z-tooltip` 1600、盒 240 / 8×12 / 圆角 8 / 8×4 箭头。`placement` 主轴放不下翻对面（箭头跟边）。缺 `themeCss` | P0 |
@@ -186,7 +186,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 88% | 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、`initApiFinished` / `inited` / `change` / `validateSucc` / `validateError` / `submit` / `submitSucc` / `submitFail` / `formItemValidate*` 事件、`rules` 组合校验（`data.x` 表达式 + `name` 高亮）、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`；文档按 Amis `form/index` 全章节改写（基本用法姓名/邮箱、展示/静态/初始化/提交/校验/事件/动作，未接字段标出）。`submitText: ""` 去默认提交；`wrapWithPanel: false` 时 title/actions 失效。对照桌面 **41/58**、移动 **41/58**（P0 0）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`canAccessSuperData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域 | P0 |
-| （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 90% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`（选择器 `limit` → `tags`/`words`）、事件动作 `static`/`nonstatic`（status-store 按 id/name）、禁用/显隐、默认间距 24px、`mode: inline`（项并排、项内左右）、默认 `normal` 标签在上（窄屏 ≤767 改 28% 同行）、未写 label 仍占标签列、`button-toolbar` 包 FormItem、`validateApi`、提交 `errors`、`autoFill`（映射/`api`+`fillMapping`，无弹层）、form `debug`、label HTML、`validations`/`validationErrors`（对象/字符串/`$1`/`isUrl.schemes`/默认 `validate.*` key）。属性表四列 +「支持静态展示的表单项」。缺 combo/table 路径级报错、`autoFill.showSuggestion` 族、`autoFill.silent`、`staticClassName` 三件、`labelAlign` | P0 |
+| （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 90% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`（选择器 `limit` → `tags`/`words`）、事件动作 `static`/`nonstatic`（status-store 按 id/name）、禁用/显隐、默认间距 24px、`mode: inline`（项并排、项内左右）、默认 `normal` 标签在上（窄屏 ≤767 改 28% 同行）、未写 label 仍占标签列、`button-toolbar` 包 FormItem、`validateApi`、提交 `errors`、`autoFill`（映射/`api`+`fillMapping`，无弹层）、form `debug`、label HTML、description HTML、`validations`/`validationErrors`（对象/字符串/`$1`/`isUrl.schemes`/默认 `validate.*` key）。属性表四列 +「支持静态展示的表单项」。缺 combo/table 路径级报错、`autoFill.showSuggestion` 族、`autoFill.silent`、`staticClassName` 三件、`labelAlign` | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 88% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。缺 deferApi、虚拟列表。select 已接入 | P0 |
 | `input-array` | InputArray 数组输入框 | `/components/form/input-array` | `/zh-CN/components/form/input-array` | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |
@@ -451,7 +451,7 @@ flowchart LR
 | 28 | `mapping` | — | 12 | 5 | 77 | 77 | 进行中 | 85% |
 | 29 | `input-date-range` | `input-date`、FormItem | 5 | 5 | 70 | 70 | 进行中 | 90% |
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 85% |
-| 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 90% |
+| 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 92% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 80% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 75% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 80% |

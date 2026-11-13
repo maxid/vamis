@@ -26,6 +26,13 @@ describe('service', () => {
     }
     expect(vue).not.toContain('space-y-3')
   })
+  it('tracks api linkage from parent data, not the last fetched store overlay', () => {
+    const vue = read('../../vamis/src/renderers/Service.vue')
+    expect(vue).toContain('isApiOutdated(prev[0], curr[0], prevData, currData)')
+    expect(vue).toContain('{ ...store.data, ...props.data, ...extra }')
+    expect(vue).not.toContain('...(prev[2] || {}), ...(prev[3] || {})')
+    expect(vue).not.toContain('props.schema.api, props.schema.schemaApi, props.data, store.data')
+  })
   it('schemaApi controls become form items', () => {
     expect(serviceRemoteSchema({ type: 'tabs', tabs: [{ title: 'A' }] })).toEqual([
       { type: 'tabs', tabs: [{ title: 'A' }] },

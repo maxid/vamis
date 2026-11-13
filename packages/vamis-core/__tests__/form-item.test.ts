@@ -8,6 +8,8 @@ import {
   autoFillRow,
   clearHiddenFormValues,
   collectFormItems,
+  formItemDescriptionHtml,
+  formItemDescriptionNode,
   formItemHideLabel,
   formItemRequired,
   formItemStatic,
@@ -30,6 +32,30 @@ describe('formItemHideLabel', () => {
     expect(formItemHideLabel({ label: '数量' })).toBe(false)
     expect(formItemHideLabel({ label: '' })).toBe(false)
     expect(formItemHideLabel({ label: false })).toBe(true)
+  })
+})
+
+describe('formItemDescription', () => {
+  it('keeps html in string descriptions for innerHTML', () => {
+    expect(
+      formItemDescriptionHtml(
+        { description: '<span class="text-danger">请修改该下拉选择器查看效果</span>' },
+        {},
+      ),
+    ).toBe('<span class="text-danger">请修改该下拉选择器查看效果</span>')
+    expect(formItemDescriptionHtml({ desc: '数量 ${n}' }, { n: 2 })).toBe('数量 2')
+    expect(formItemDescriptionNode({ description: '<span>x</span>' })).toBeNull()
+  })
+
+  it('treats object descriptions as schema nodes', () => {
+    expect(formItemDescriptionNode({ description: { type: 'tpl', tpl: 'hi' } })).toEqual({
+      type: 'tpl',
+      tpl: 'hi',
+    })
+    expect(formItemDescriptionNode({ description: [{ type: 'tpl', tpl: 'a' }] })).toEqual({
+      type: 'wrapper',
+      body: [{ type: 'tpl', tpl: 'a' }],
+    })
   })
 })
 

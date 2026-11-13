@@ -1012,7 +1012,7 @@ body:
 | label | [模板](/concepts/template) 或 `false` | | 表单项标签。`false` 去掉占位；未写仍占水平表单标签列 |
 | labelAlign | `"right" \| "left"` | `"right"` | 标签对齐，仅 `mode` 为 `horizontal` 时生效。**未接**；当前水平标签固定左对齐，不是 Amis 默认右对齐 |
 | labelRemark | [Remark](/components/remark) | | 表单项标签描述 |
-| description | [模板](/concepts/template) | | 表单项描述。也认 `desc` |
+| description | [模板](/concepts/template) | | 表单项描述。也认 `desc`。字符串按 HTML 渲染（可含 `text-danger` 等 helper），对象当 SchemaNode |
 | placeholder | `string` | | 占位符 |
 | mode | `"normal" \| "horizontal" \| "inline"` | | 该项布局。不写跟随表单，默认 `normal` |
 | inline | `boolean` | | `true` 时该项为内联模式（等同 `mode: inline`） |

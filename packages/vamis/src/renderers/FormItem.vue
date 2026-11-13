@@ -4,6 +4,8 @@ import { Label, cn } from '@vamis/ui'
 import {
   SchemaRenderer,
   filterTpl,
+  formItemDescriptionHtml,
+  formItemDescriptionNode,
   formItemHideLabel,
   formItemRequired,
   formItemStatic,
@@ -38,10 +40,8 @@ const showLabel = computed(() => !hideLabel.value && props.schema.label != null 
 const labelText = computed(() =>
   showLabel.value ? filterTpl(String(props.schema.label ?? ''), itemData.value) : '',
 )
-const description = computed(() => {
-  const raw = props.schema.description ?? props.schema.desc
-  return raw != null && raw !== '' ? filterTpl(String(raw), itemData.value) : ''
-})
+const descriptionHtml = computed(() => formItemDescriptionHtml(props.schema, itemData.value))
+const descriptionNode = computed(() => formItemDescriptionNode(props.schema))
 const itemLayoutClass = computed(() => {
   if (inline.value) return 'vamis-form-item--inline'
   if (row.value) return 'vamis-form-item--row'
@@ -142,13 +142,19 @@ const labelRemark = computed(() => {
         <slot />
       </div>
       <p v-if="error" class="m-t-xs text-xs text-destructive">{{ error }}</p>
-      <p
-        v-else-if="description"
-        class="m-t-xs text-xs text-muted-foreground"
+      <div
+        v-else-if="descriptionNode"
+        class="vamis-form-description"
         :class="descriptionClass"
       >
-        {{ description }}
-      </p>
+        <SchemaRenderer :schema="descriptionNode" :extra-data="itemData" />
+      </div>
+      <div
+        v-else-if="descriptionHtml"
+        class="vamis-form-description"
+        :class="descriptionClass"
+        v-html="descriptionHtml"
+      />
     </div>
   </div>
 </template>

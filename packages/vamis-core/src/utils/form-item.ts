@@ -1,6 +1,6 @@
 /** FormItem 通用契约：必填表达式、默认值、隐藏清值、改值校验。 */
 
-import { evalExpression, isVisible, resolveValue } from '../formula'
+import { evalExpression, filterTpl, isVisible, resolveValue } from '../formula'
 import type { Payload, SchemaApi, SchemaObject } from '../types'
 import type { PlainObject } from '../types'
 import {
@@ -77,6 +77,28 @@ export function formItemSubmitOnChange(item: SchemaObject, form: SchemaObject): 
  */
 export function formItemHideLabel(schema: SchemaObject): boolean {
   return schema.label === false
+}
+
+/**
+ * Amis `render('description')`：字符串走 Tpl innerHTML（含 `text-danger` 这类 helper），
+ * 不要当纯文本插值。对象 / 数组当 SchemaNode。
+ */
+export function formItemDescriptionHtml(schema: SchemaObject, data: PlainObject = {}): string {
+  const raw = schema.description ?? schema.desc
+  if (typeof raw !== 'string' || raw === '') return ''
+  return filterTpl(raw, data)
+}
+
+export function formItemDescriptionNode(schema: SchemaObject): SchemaObject | null {
+  const raw = schema.description ?? schema.desc
+  if (raw == null || typeof raw !== 'object') return null
+  if (Array.isArray(raw)) return { type: 'wrapper', body: raw }
+  const rec = raw as SchemaObject
+  if (rec.type) return rec
+  if (typeof rec.tpl === 'string' || typeof rec.html === 'string') {
+    return { type: 'tpl', ...rec }
+  }
+  return rec
 }
 
 /** 有 type / 数组 / 字符串才当自定义静态 schema；`{ limit }` 留给选择器自己读。 */

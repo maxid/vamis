@@ -5,8 +5,8 @@ outline: deep
 
 # Service 功能型容器
 
-::: info 实现进度 90% · 进行中
-主路径已对齐：独立 Scope、`api` / `schemaApi`、轮询、错误 Alert、`reload` / `rebuild` / `setValue`。文档章节对标 Amis。未接 `dataProvider` / `ws` / jsonp / `js:` schemaApi。
+::: info 实现进度 92% · 进行中
+主路径已对齐：独立 Scope、`api` / `schemaApi`、接口联动（url `${}` 随父域变化重拉）、轮询、错误 Alert、`reload` / `rebuild` / `setValue`。文档章节对标 Amis。未接 `dataProvider` / `ws` / jsonp / `js:` schemaApi。
 :::
 
 部分展示组件自己不会拉接口，要用 `source` 从数据链取数。例如 [Table](./table)、[Cards](./cards)、[List](./list)。`Service` 负责配置初始化接口、写入本域，子组件再按数据链取值。

@@ -280,6 +280,10 @@
   /* 对齐 Amis `--Form-item-fontSize` / `--Form-item-color`（text-4）。桌面移动同一套，不要跟 title 16 或 `--foreground`。 */
   --form-item-font-size: 14px;
   --form-item-color: #5c5f66;
+  /* 对齐 Amis `--Form-description-*`（text-5 / size-8 / gap-xs）。 */
+  --form-description-color: #84878c;
+  --form-description-font-size: 12px;
+  --form-description-gap: var(--gap-xs);
   --form-mode-default-label-gap: 8px;
   --form-mode-inline-item-gap: 16px;
   --form-mode-inline-label-gap: 16px;
@@ -676,6 +680,7 @@
   --muted: oklch(0.3 0.025 258);
   --muted-foreground: oklch(0.7 0.02 250);
   --form-item-color: #e8e9eb;
+  --form-description-color: #b8bbbf;
   --link-disabled-color: #b8bbbf;
   --link-hover-color: #7dadff;
   --select-caret-color: #d4d6d9;
@@ -3829,6 +3834,17 @@
   font-weight: 400;
   line-height: calc(var(--form-item-font-size) * var(--lineHeightBase));
   color: var(--form-item-color);
+}
+
+/* 对齐 Amis `.Form-description`：字符串 description 走 innerHTML，不要 muted 工具类。 */
+.vamis-form-description {
+  display: block;
+  word-break: break-word;
+  color: var(--form-description-color);
+  font-weight: 400;
+  line-height: var(--lineHeightBase);
+  margin-top: var(--form-description-gap);
+  font-size: var(--form-description-font-size);
 }
 
 /* 压过 utilities `.inline-block`：Form 管行宽，horizontal / normal 包装层必须块级。 */

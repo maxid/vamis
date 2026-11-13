@@ -45,10 +45,15 @@ const errorKey = ref(0)
 let pollTimer: ReturnType<typeof setInterval> | undefined
 const firedInit = ref(false)
 
+/** 对齐 Amis hasRemoteData 同步：本域在前，父域/表单后写，避免上次接口的 `tpl` 盖住联动字段。 */
+function layerData(extra: Record<string, unknown> = {}): PlainObject {
+  return { ...store.data, ...props.data, ...extra }
+}
+
 async function emitServiceEvent(eventName: string, extra: Record<string, unknown> = {}) {
   await runOnEvent(props.schema, eventName, {
     env,
-    data: { ...props.data, ...store.data, ...extra },
+    data: layerData(extra),
     scoped,
   })
 }
@@ -120,7 +125,7 @@ async function fetchOne(api: SchemaApi | undefined, reason: 'init' | 'reload', s
   try {
     const result = await requestApi(api, {
       env,
-      data: { ...props.data, ...store.data },
+      data: layerData(),
       reason,
     })
     if (!result.skipped && !result.ok) {
@@ -149,7 +154,7 @@ function shouldStopPolling(): boolean {
   const expr = props.schema.stopAutoRefreshWhen
   if (typeof expr !== 'string' || !expr) return false
   try {
-    return !!evalExpression(expr, { ...props.data, ...store.data })
+    return !!evalExpression(expr, layerData())
   } catch {
     return false
   }
@@ -245,7 +250,7 @@ async function doAction(action: unknown, _ctx?: PlainObject) {
 
 const api = {
   get name() {
-    return filterTpl(String(props.schema.name || props.schema.id || ''), { ...props.data, ...store.data })
+    return filterTpl(String(props.schema.name || props.schema.id || ''), layerData())
   },
   get id() {
     const id = props.schema.id
@@ -268,11 +273,11 @@ onMounted(async () => {
   startPolling()
 })
 watch(
-  () => [props.schema.api, props.schema.schemaApi, props.data, store.data] as const,
+  () => [props.schema.api, props.schema.schemaApi, props.data] as const,
   (curr, prev) => {
     if (!prev) return
-    const prevData = { ...(prev[2] || {}), ...(prev[3] || {}) }
-    const currData = { ...(curr[2] || {}), ...(curr[3] || {}) }
+    const prevData = prev[2] || {}
+    const currData = curr[2] || {}
     const apiOut = isApiOutdated(prev[0], curr[0], prevData, currData)
     const schemaOut = isApiOutdated(prev[1], curr[1], prevData, currData)
     if (apiOut || schemaOut) void reload()
