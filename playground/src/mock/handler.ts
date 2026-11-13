@@ -207,12 +207,23 @@ export function handleMockApi(input: {
     }
   }
 
+  if (pathname === '/api/mock2/page/initDataError') {
+    return {
+      status: 404,
+      msg: '测试返回错误',
+      data: {
+        title: 'Test Page Component',
+        date: '2017-10-13',
+      },
+    }
+  }
+
   if (pathname === '/api/mock2/crud/table') {
     return listPayload(filterSample(query), { ...query, perPage: '10' })
   }
 
   if (pathname === '/api/mock2/service/schema') {
-    const type = String(query.type || '')
+    const type = String(query.type || body.type || '')
     const schemas: Record<string, unknown> = {
       tabs: {
         type: 'tabs',
@@ -221,10 +232,31 @@ export function handleMockApi(input: {
           { title: 'TabB', body: '卡片B内容' },
         ],
       },
+      form: {
+        type: 'form',
+        title: '常规模式',
+        mode: 'normal',
+        api: '/api/mock2/form/saveForm?waitSeconds=2',
+        body: [
+          { type: 'input-email', name: 'email', required: true, placeholder: '请输入邮箱', label: '邮箱' },
+          { type: 'input-password', name: 'password', label: '密码', required: true, placeholder: '请输入密码' },
+          { type: 'checkbox', name: 'rememberMe', option: '记住登录' },
+        ],
+      },
+      crud: {
+        type: 'crud',
+        api: '/api/mock2/crud/table?perPage=5',
+        syncLocation: false,
+        columns: [
+          { name: 'engine', label: 'Engine' },
+          { name: 'version', label: 'Version' },
+        ],
+      },
       controls: {
         controls: [
           { label: '名称', type: 'input-text', name: 'name' },
           { label: '作者', type: 'input-text', name: 'author' },
+          { label: '请求时间', type: 'input-datetime', name: 'date' },
         ],
       },
     }

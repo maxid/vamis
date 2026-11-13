@@ -11,7 +11,7 @@ function toNodes(node: unknown): SchemaNode[] {
   return Array.isArray(node) ? (node as SchemaNode[]) : [node as SchemaNode]
 }
 
-/** schemaApi 返回的 data：有 type 就整棵渲染；否则取 body。 */
+/** schemaApi 返回的 data：有 type 就整棵渲染；否则取 body / controls（表单项）。 */
 export function serviceRemoteSchema(data: unknown): SchemaNode[] {
   if (data == null || data === false) return []
   if (Array.isArray(data)) return data as SchemaNode[]
@@ -19,5 +19,6 @@ export function serviceRemoteSchema(data: unknown): SchemaNode[] {
   const rec = asRecord(data)
   if (typeof rec.type === 'string' && rec.type) return [rec as SchemaObject]
   if (rec.body != null) return toNodes(rec.body)
+  if (rec.controls != null) return toNodes(rec.controls)
   return []
 }

@@ -200,6 +200,12 @@ alwaysApply: true
 - 触及：`page` `form` `container` `flex` `grid` `panel` `wrapper` `tabs` `wizard`
 - 规则：`.cursor/rules/component.mdc`
 
+### 遮罩 Spinner 不要当 space-y 兄弟
+- 踩过：Service 根写 `space-y-3`，轮询时 overlay / mark 作为 in-flow 兄弟触发 `~ * { margin-top }`，已渲染 Panel 盒模型跳 12px。Amis `.Service` 只有 `position: relative`，Spinner overlay 绝对定位盖在内容上。
+- 稳定做法：宿主只 `position: relative`；先 body 再 Spinner；禁止 `space-y` / `gap` 把 overlay 当兄弟。overlay 必须 `absolute; inset: 0`。
+- 触及：`service` `spinner` `page` `crud`
+- 规则：本文；Amis `_service.scss` `.Service`
+
 ### Amis `wrap:false` 的功能性渲染器不要包 `.vamis-node`
 - 踩过：`hidden` 已渲染 null，但 SchemaRenderer 仍包一层空 div；Amis FormItem `wrap:false` 完全不落 DOM，空包装层会进 flex/gap，也让对照 `findNodeEl` 把它当结点。
 - 稳定做法：`RendererConfig` 加 `wrap?: boolean`；`registerRenderer({ type: 'hidden', wrap: false })`；SchemaRenderer 在 `wrap === false` 时直接挂组件（不落包装层、不可拖拽选中）。组件返回 null/注释，值仍由表单域初始化与提交。
@@ -909,7 +915,7 @@ alwaysApply: true
 
 ### Service 轮询要挂定时器并清理；事件在请求完成时派发
 - 踩过：只接了 `initFetch` 一次性 reload，`interval` / `silentPolling` / `stopAutoRefreshWhen` 完全没读；`init` / `fetchInited` / `fetchSchemaInited` 文档写了但没派发。
-- 稳定做法：`startPolling` 只在 `interval >= 1000` 时 `setInterval`，每次先 `evalExpression(stopAutoRefreshWhen, data)`，命中就 `clearInterval`；轮询 reload 把 `silentPolling` 传给 `fetchOne` 决定是否置 `store.fetching`；api / schemaApi 请求完成无论成败都派发 `fetchInited` / `fetchSchemaInited`（带 responseData/Status/Msg/error），挂载后先发 `init`；`showErrorMsg:false` 不 toast，`messages.fetchSuccess` 才成功提示。卸载时 `onBeforeUnmount(stopPolling)`。
+- 稳定做法：`startPolling` 只在 `interval >= 1000` 时 `setInterval`，每次先 `evalExpression(stopAutoRefreshWhen, data)`，命中就 `clearInterval`；轮询 reload 把 `silentPolling` 传给 `fetchOne` 决定是否置 `store.fetching`；api / schemaApi 请求完成无论成败都派发 `fetchInited` / `fetchSchemaInited`（带 responseData/Status/Msg/error），挂载后先发 `init`；失败始终 toast，`showErrorMsg` 只控制顶部 Alert（`false` 对齐 Amis「仅保留 toast」），`messages.fetchSuccess` 才成功提示。卸载时 `onBeforeUnmount(stopPolling)`。
 - 触及：`service`
 - 规则：`packages/vamis/src/renderers/Service.vue`；Amis `Service.tsx`
 

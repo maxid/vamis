@@ -9902,15 +9902,56 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "service",
-        "api": "/api/mock2/number/random?waitSeconds=1",
-        "interval": 2000,
-        "stopAutoRefreshWhen": "this.random === 6",
-        "body": {
-          "type": "panel",
-          "title": "随机数字",
-          "body": "现在是：${random}"
-        }
+        "title": "",
+        "type": "form",
+        "api": "/api/mock2/form/saveForm?waitSeconds=1",
+        "mode": "horizontal",
+        "body": [
+          {
+            "label": "数据模板",
+            "type": "select",
+            "name": "tpl",
+            "value": "tpl1",
+            "size": "sm",
+            "options": [
+              {
+                "label": "模板1",
+                "value": "tpl1"
+              },
+              {
+                "label": "模板2",
+                "value": "tpl2"
+              },
+              {
+                "label": "模板3",
+                "value": "tpl3"
+              }
+            ],
+            "description": "<span class=\"text-danger\">请修改该下拉选择器查看效果</span>"
+          },
+          {
+            "type": "service",
+            "api": "/api/mock2/form/initData?tpl=${tpl}",
+            "body": [
+              {
+                "label": "名称",
+                "type": "input-text",
+                "name": "name"
+              },
+              {
+                "label": "作者",
+                "type": "input-text",
+                "name": "author"
+              },
+              {
+                "label": "请求时间",
+                "type": "input-datetime",
+                "name": "date"
+              }
+            ]
+          }
+        ],
+        "actions": []
       }
     },
     "measure": {
@@ -9934,6 +9975,35 @@ window.VAMIS_COMPARE_CASES = [
         "type": "service",
         "api": "/api/mock2/number/random?waitSeconds=1",
         "interval": 2000,
+        "stopAutoRefreshWhen": "this.random === 6",
+        "body": {
+          "type": "panel",
+          "title": "随机数字",
+          "body": "现在是：${random}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/number/random?waitSeconds=1",
+        "interval": 2000,
         "silentPolling": true,
         "stopAutoRefreshWhen": "this.random === 6",
         "body": {
@@ -9942,6 +10012,441 @@ window.VAMIS_COMPARE_CASES = [
           "body": "现在是：${random}"
         }
       }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/page/initDataError",
+        "body": [
+          {
+            "type": "tpl",
+            "tpl": "展示错误信息"
+          },
+          {
+            "type": "icon",
+            "icon": "fa-solid fa-arrow-up"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-6",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/page/initDataError",
+        "showErrorMsg": false,
+        "body": [
+          {
+            "type": "tpl",
+            "tpl": "不展示错误信息"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-7",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/page/initData",
+        "body": {
+          "type": "panel",
+          "title": "$title",
+          "body": "现在是：${date}"
+        },
+        "onEvent": {
+          "init": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "init"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-8",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/page/initData",
+        "body": [
+          {
+            "type": "panel",
+            "title": "$title",
+            "body": "现在是：${date}"
+          }
+        ],
+        "onEvent": {
+          "fetchInited": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "title:${event.data.responseData.title}，date:${date}，status:${event.data.responseStatus}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-9",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新请求",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "service-reload",
+                  "actionType": "reload"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "service-reload",
+          "name": "service-reload",
+          "api": "/api/mock2/number/random",
+          "body": "现在是：${random}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-10",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新请求",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "service-reload",
+                  "actionType": "reload",
+                  "data": {
+                    "date": "${NOW()}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "service-reload",
+          "name": "service-reload",
+          "api": "/api/mock2/number/random",
+          "body": "现在是：${random}, 当前时间：${date}"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-11",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "alert",
+          "body": "请选择一种构建方式生成组件",
+          "level": "info",
+          "showIcon": true,
+          "className": "mb-3",
+          "visibleOn": "this.schemaType == null"
+        },
+        {
+          "type": "button-group",
+          "tiled": true,
+          "className": "mb-3",
+          "buttons": [
+            {
+              "type": "action",
+              "label": "构建form",
+              "icon": "fa fa-hammer",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "rebuild",
+                      "componentId": "service-rebuild",
+                      "args": {
+                        "schemaType": "form"
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "action",
+              "label": "构建tabs",
+              "icon": "fa fa-hammer",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "rebuild",
+                      "componentId": "service-rebuild",
+                      "args": {
+                        "schemaType": "tabs"
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "action",
+              "label": "构建crud",
+              "icon": "fa fa-hammer",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "rebuild",
+                      "componentId": "service-rebuild",
+                      "args": {
+                        "schemaType": "crud"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "id": "service-rebuild",
+          "name": "service-rebuild",
+          "schemaApi": {
+            "url": "/api/mock2/service/schema?type=${schemaType}",
+            "method": "post",
+            "sendOn": "this.schemaType != null"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-12",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "更新数据",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "service-setvalue",
+                  "args": {
+                    "value": {
+                      "name": "aisuda",
+                      "email": "aisuda@baidu.com"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "service-setvalue",
+          "name": "service-setvalue",
+          "data": {
+            "name": "amis",
+            "email": "amis@baidu.com"
+          },
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "名字：${name|default:'-'}，邮箱：${email|default:'-'}"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-13",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "更新数据",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "service-setvalue",
+                  "args": {
+                    "value": {
+                      "name": "aisuda"
+                    }
+                  },
+                  "dataMergeMode": "override"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "service-setvalue",
+          "name": "service-setvalue",
+          "data": {
+            "name": "amis",
+            "email": "amis@baidu.com"
+          },
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "名字：${name|default:'-'}，邮箱：${email|default:'-'}"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"

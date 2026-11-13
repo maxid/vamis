@@ -3731,6 +3731,16 @@
 }
 
 /*
+  对齐 Amis `.Service { position: relative }`。
+  不要 space-y / gap：Spinner overlay 与 mark 是兄弟节点，:not([hidden]) ~ * 会给已渲染 body 加 margin。
+*/
+[data-vamis-service] {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+/*
   对齐 Amis `.Form-label`：14 / 400 / #5c5f66（`--Form-item-*`）。
   压过 Label 的 `text-sm leading-none` 和曾经的 `text-foreground`。
   移动端 title 才是 16；label 不要跟 `--fontSizeBase` 抬到 16。
