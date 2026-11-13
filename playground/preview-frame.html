@@ -31,6 +31,8 @@
           q.get('density') || localStorage.getItem('vamis-density') || 'compact'
         document.documentElement.dataset.accent =
           q.get('accent') || localStorage.getItem('vamis-accent') || 'blue'
+        document.documentElement.dataset.theme =
+          q.get('theme') || localStorage.getItem('vamis-theme-pack') || 'cxd'
       })()
     </script>
   </head>

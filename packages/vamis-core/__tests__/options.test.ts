@@ -395,7 +395,7 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('font-size: var(--fontSizeBase)')
     expect(css).toContain('.vamis-select.is-mobile .vamis-caret--select svg')
     expect(css).toContain('transform: rotate(-90deg)')
-    expect(css).toContain('--control-placeholder: #b8babf')
+    expect(css).toContain('--control-placeholder: var(--colors-neutral-text-6)')
     expect(css).toContain('color: var(--control-placeholder)')
     expect(css).toContain('.vamis-select__placeholder')
     expect(css).toContain('.vamis-select__suffix')

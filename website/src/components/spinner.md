@@ -15,7 +15,7 @@ outline: deep
 
 `className` / `style` 打在宿主 `div.vamis-node`。裸 spinner 是 `inline-block`，和 Amis `inline-flex` 一样并排。有 `body` 时当容器，指示器叠在内容中间。
 
-源码里 `overlay` 默认 **false**（文档有的写成 true）。`size` 空值是 32px，`sm` 16px，`lg` 48px。未写 `icon` 时用 Vamis 中心对称 loading 标（不是 Amis 六边形）：一枚原点向四向裂开，再沿菱形依次连线、依次消失、收回原点，2.7s 无限循环。色绑 `--primary`（跟顶栏 5 色）。
+源码里 `overlay` 默认 **false**（文档有的写成 true）。`size` 空值是 32px，`sm` 16px，`lg` 48px。未写 `icon` 时用 Vamis 中心对称 loading 标（不是 Amis 六边形）：一枚原点向四向裂开，再沿菱形依次连线、依次消失、收回原点，2.7s 无限循环。色绑 `--primary`（跟主题包 brand）。
 
 ## 基本使用
 

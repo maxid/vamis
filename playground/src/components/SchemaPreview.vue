@@ -95,7 +95,7 @@ onUnmounted(() => io?.disconnect())
         编辑 Schema
       </Button>
     </div>
-    <div class="overflow-hidden rounded-lg border bg-card" data-density="compact">
+    <div class="doc-play__preview overflow-hidden rounded-lg border" data-density="compact">
       <div v-if="banner && !editing" class="border-b bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive">
         {{ banner }}
       </div>

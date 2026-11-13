@@ -96,7 +96,7 @@ interface VamisScoped {
 | 容器 | CSS 选择器或 `HTMLElement`；找不到节点则打错误、不挂载。不要往 `document.body` 上直接 mount，必要时在 body 里建一层 div |
 | 默认 fetcher | SDK **内置** `window.fetch`，按 Amis payload `{ status, msg, data }` 解析。宿主仍可传 `env.fetcher` 覆盖 |
 | notify / alert / confirm / jumpTo | SDK 给默认实现（toast / `window.alert` / `Alert.confirm` Modal / `location`）；无 ConfirmHost 才回落 `window.confirm`；宿主可覆盖 |
-| 主题 | **不是** `cxd`/`antd` CSS 包。`env.theme` 映到 `data-accent` 或日后 `registerTheme`。皮肤仍是 shadcn token |
+| 主题 | `env.theme` 为 `cxd` / `antd` / `ang` / `dark` 时写宿主 `data-theme`（dark 同时加 `.dark`）。不换 `.cxd-` 前缀 |
 | 密度 | 默认 compact（cxd 盒子）。可用 `html[data-density]` 或 IR `metadata.style.density` |
 | 多实例 | 同一页可 `embed` 多次；每实例独立 Pinia 根 store 与 env |
 | 卸载 | `scoped.unmount()` 必须卸 Vue app，不留监听 |
@@ -141,7 +141,7 @@ flowchart LR
 | `amisRequire` AMD | `window.vamis` 单一全局 |
 | `sdk-ie11.css` | 不支持 IE |
 | `cxd.css` / `antd.css` / `helper.css` 分文件 | 一份 `sdk.css` |
-| `theme: 'cxd' \| 'antd'` 换 BEM 前缀 | token / `data-accent` |
+| `theme: 'cxd' \| 'antd'` 换 BEM 前缀 | token / `data-theme`（色阶） |
 | 把 React 打进 SDK 给自定义组件用 | 自定义走 Vue 组件或 `custom` DOM |
 
 ## 8. 分阶段验收

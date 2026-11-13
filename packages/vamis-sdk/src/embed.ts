@@ -19,6 +19,22 @@ export type EmbedProps = {
   locale?: string
 }
 
+const THEME_PACKS = new Set(['cxd', 'antd', 'ang', 'dark', 'green', 'amber'])
+const LEGACY_THEME: Record<string, string> = {
+  blue: 'cxd',
+  sky: 'antd',
+  rose: 'cxd',
+}
+
+function applyEmbedTheme(host: HTMLElement, theme: string | undefined) {
+  if (!theme) return
+  const pack = THEME_PACKS.has(theme) ? theme : LEGACY_THEME[theme]
+  if (!pack) return
+  host.dataset.theme = pack
+  host.classList.toggle('dark', pack === 'dark')
+  host.dataset.accent = pack === 'green' || pack === 'amber' ? pack : 'blue'
+}
+
 export type EmbedEnv = Partial<RendererEnv> & {
   theme?: string
   requestAdaptor?: (api: unknown) => unknown | Promise<unknown>
@@ -81,7 +97,7 @@ export function embed(
 ): VamisScoped {
   const { host, created } = resolveContainer(container)
   host.dataset.density ||= 'compact'
-  if (env?.theme) host.dataset.accent = env.theme
+  applyEmbedTheme(host, env?.theme)
 
   const state = reactive({
     schema: normalizeEmbedSchema(schema),

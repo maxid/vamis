@@ -4,11 +4,11 @@ title: CSS 变量
 
 # CSS 变量
 
-::: info 实现进度 65% · 进行中
-`:root` / `.dark`、`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis `#e8e9eb`。完整 Amis 变量表未一一对照；`registerTheme` 仍是 D12 P1。表单面板壳已对齐默认标题，但 `--text-color` 主要改标签/正文，不是整份 cxd 变量表。
+::: info 实现进度 70% · 进行中
+`:root` / `[data-theme]` / `.dark` 换 `--colors-*` 色阶（云舍 / 仿 AntD / ang / dark）。`--primary` / `--success` / `--tag-*` 只 alias。`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis line-8。完整 Amis 变量表未一一对照；JS `registerTheme` 仍是 D12 P1。
 :::
 
-主题切暗色 = 换 `:root` / `.dark` 变量，不是换 class 前缀。`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。实现见 `@vamis/core` 的 `resolveCssVars`。
+主题切包 = 换 `[data-theme]` / `.dark` 的 `--colors-*` 色阶，不是换 class 前缀。`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。实现见 `@vamis/core` 的 `resolveCssVars`。
 
 ## 颜色
 
@@ -16,12 +16,12 @@ title: CSS 变量
 |------|------|
 | `--background` / `--foreground` | 画布与正文 |
 | `--card` / `--card-foreground` | 面板 |
-| `--primary` / `--primary-foreground` | 主色、主按钮。顶栏 5 色点改 `--accent-h`：云舍蓝（默认）/ 翠绿 / 琥珀 / 青空 / 玫红 |
+| `--primary` / `--primary-foreground` | 主色、主按钮。alias `--colors-brand-5`。顶栏 5 色点换整套色阶，站点壳跟主色走 |
 | `--primary-hover` / `--primary-active` | 主按钮悬停 / 按下。Amis `--primary-onHover` / `--primary-onActive` 会映射过来 |
 | `--secondary` / `--muted` | 次要底 |
 | `--destructive` | 危险（Amis `danger`） |
-| `--success` / `--warning` / `--info` | 状态色 |
-| `--border` / `--input` / `--ring` | 线、输入、聚焦。浅色 `--border` 是 Amis `#e8e9eb` |
+| `--success` / `--warning` / `--info` | 状态色。alias `--colors-success-5` / `--colors-warning-5` / `--colors-info-5`，跟主题包走 |
+| `--border` / `--input` / `--ring` | 线、输入、聚焦。`--border` alias `--colors-neutral-line-8` |
 
 Amis 名会映射过来：`--body-bg` → `--background`，`--text-color` → `--foreground`，`--borderColor` → `--border`。
 

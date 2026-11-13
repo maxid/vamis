@@ -12,7 +12,7 @@ Vamis 和 Amis 一样：绝大多数观感用 **className 辅助类** 就能调�
 
 实现上分两层，不要混着用同一串 class 名当「主题默认」：
 
-1. **主题 token**（`--primary`、`--radius`、`--fonts-base-family`、`--control-h`）打在组件默认外观上。主色走 `--primary`；顶栏 5 色是云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，云舍蓝是默认色点。
+1. **主题 token**（`--primary`、`--radius`、`--fonts-base-family`、`--control-h`）打在组件默认外观上。主色走 `--primary`；顶栏 5 色点切 **云舍 / 仿 AntD / ang / 翠绿 / 琥珀**，整站壳跟当前主色，浅色/深色是第四包。
 2. **辅助 class** 写在节点的 `className` 上，落在 `div.vamis-node`。间距、宽高、布局、颜色、圆角、阴影与 Amis `/style` **同一 class、同一元素、同一属性、同一计算值**。不搬 `.cxd-` 前缀。
 
 完整辅助类目录在顶栏 [样式](/style/)。本页只讲 schema 里怎么用。

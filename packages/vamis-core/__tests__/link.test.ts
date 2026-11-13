@@ -17,7 +17,7 @@ describe('link', () => {
     const css = read('../../vamis-ui/src/styles.css')
     expect(css).toContain('--link-disabled-color')
     expect(css).toContain('--link-color: var(--primary)')
-    expect(css).toContain('--link-hover-color: #528eff')
+    expect(css).toContain('--link-hover-color: var(--colors-brand-6)')
     expect(css).toContain('oklch(from var(--primary) calc(l + 0.16) c h)')
     expect(css).toContain('.vamis-link.is-disabled')
     const doc = read('../../../website/src/components/link.md')

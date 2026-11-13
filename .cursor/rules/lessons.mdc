@@ -93,7 +93,7 @@ alwaysApply: true
 ### 渲染器自己派发的事件，宿主不要再派一次
 - 踩过：Action 在按钮/容器上绑 `mouseenter` / `mouseleave` 并 `runOnEvent`（兼 tooltip）；`SchemaRenderer` 外层 `div.vamis-node` 也对同一 schema 走 `onHostEvent`。悬停一次 toast 两条。click 早已用 `SELF_CLICK_TYPES` 跳过宿主。
 - 稳定做法：组件自己处理的指针事件，宿主 `shouldHandleHostEvent` 必须跳过。`tpl` / `icon` 这类自己不绑指针的仍由宿主派发。mouseenter 不冒泡，子节点 `stopPropagation` 挡不住父级自己的 mouseenter。
-- 触及：`action` `button`
+- 触及：`action` `button` `tag`
 - 规则：`packages/vamis-core/src/SchemaRenderer.vue` `shouldHandleHostEvent`
 
 ### 无 label 的容器 Action 按下标找节点
@@ -275,7 +275,7 @@ alwaysApply: true
 ### 外层永远是 div.vamis-node，伪类要算包装层
 - 踩过：FormItem 自己写 `:last-child { margin-bottom: 0 }`，但每项都被 `div.vamis-node` 包着，每一项都是 last-child，24px 缝全被清掉。`mode: inline` 只改内层，水平表单里仍竖排。又把 `type: image` 的 `inline-block` 打到 `static-image` 的包装层，水平表缩成缩略图宽、折成 2×2。
 - 稳定做法：作者 `className` 打在外层 `div.vamis-node`。看「是不是最后一个 / 是不是 inline」时，对包装层写选择器（`:has(> .vamis-form-item--inline)`、只清 form body 最后一个 node）。horizontal / normal 包装层必须块级 100%；只有 `--inline` 才给包装层 `inline-block`。叶子（`.vamis-image`、Button）自己 inline-block。不要把 SchemaRenderer 外层改成非 `div`。
-- 触及：`form` FormItem `input-text` `checkbox` `static-image` `image`
+- 触及：`form` FormItem `input-text` `checkbox` `static-image` `image` `tag`
 - 规则：`.cursor/rules/component.mdc`
 
 ### 1px 分隔线不要打在 overflow:hidden 的固定高子项上
@@ -341,6 +341,12 @@ alwaysApply: true
 - 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。组件配方（`--button-*` / `--tooltip-*`）挂 `:root`，选择器只 `var()`。
 - 触及：Button 等控件、SDK 根、`tooltip-wrapper` `badge`
 - 规则：`.cursor/rules/style.mdc`
+
+### 组件色 alias `--colors-*` 主题阶，不要写死 hex
+- 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。顶栏一度并排「云舍 ▾」和下方 5 色点，看起来像两套主题。
+- 稳定做法：主题包只换 `--colors-brand-*` / `--colors-success-5` 等色阶。`--primary` / `--success` / `--destructive` / `--tag-*` / `--label-*` 只 alias。顶栏用 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀），hover 出名称，不要再并排下拉。浅色/深色加 `.dark`，不要改当前色点的 brand。不要在组件 token 再写一套调色盘。
+- 触及：`tag` Button FormItem
+- 规则：`packages/vamis-ui/src/themes.css`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
 
 ### Amis helper 类名不等于字面含义
 - 踩过：日历用 `grid-cols-7` 画 7 列；Amis 该 class 实际 6 列。
@@ -585,6 +591,12 @@ alwaysApply: true
 - 规则：`.cursor/rules/component.mdc`；`packages/vamis-core/src/overlay.ts`
 
 ### 图标、文档、打包
+
+### 行内图标和文字之间不要留模板空白
+- 踩过：`status` 前置圆点和 `{{ label }}` 之间有换行空格，标签比 Amis 宽约 3px（96→99）。
+- 稳定做法：行内 `</span>{{ label }}` 紧贴，不要换行；量宽时对 `textContent` 里的空白节点。
+- 触及：`tag`
+- 规则：本文
 
 ### 图标走 resolveIcon，字形走字体
 - 踩过：用 `/` 判断 URL（Amis 看 `.`）；CSS mask 给每个 `fa-*` 画一套；`fa fa-plus` 再叠 `vendor: fa`；未写 `label` 补了「按钮」。

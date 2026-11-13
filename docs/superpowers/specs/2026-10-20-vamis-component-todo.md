@@ -303,7 +303,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `sparkline` | Sparkline 走势图 | `/components/sparkline` | `/zh-CN/components/sparkline` | 进行中 | 45% | svg 折线精简 | P0 |
 | `status` | Status 状态 | `/components/status` | `/zh-CN/components/status` | 进行中 | 75% | 默认状态列表、`map` / `labelMap`、`source` 自定义、`placeholder`；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：默认图标字体外的图标依赖宿主 | P0 |
 | `tpl` | Tpl 模板 | `/components/tpl` | `/zh-CN/components/tpl` | 进行中 | 92% | 对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1 | P0 |
-| `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 80% | `displayMode` normal/rounded/status、预设 / 自定义 `color`、`label` / `value` / `tags`、`closable`、`checkable` / `checked`、`click` / `close` / `mouseenter` / `mouseleave` 事件；文档按 Amis 章节重写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：拖拽 / 远程 tags | P0 |
+| `tag` | Tag 标签 | `/components/tag` | `/zh-CN/components/tag` | 进行中 | 90% | 文档主路径已对齐：三种 `displayMode`、预设 / 自定义 `color`、`icon` / `closeIcon`、`closable`、click / mouseenter / mouseleave / close。status 默认圆点 SVG；关闭不隐藏。预设色 alias `--colors-*`（云舍 / 仿 AntD / ang / dark）。对照桌面 **8/8**、移动 **8/8**（P0 0）。余项：Amis 源码有 `checkable` 但文档与 UI 未接（Vamis 保留为增强）；`themeCss` | P0 |
 | `video` | Video 视频 | `/components/video` | `/zh-CN/components/video` | 进行中 | 45% | 能播；弹幕/直播未齐 | P0 |
 | `timeline` | Timeline 时间轴 | `/components/timeline` | `/zh-CN/components/timeline` | 进行中 | 50% | 能列节点 | P0 |
 | `shape` | Shape 形状 | `/components/shape` | `/zh-CN/components/shape` | 进行中 | 40% | 已注册，图形精简 | P0 |
@@ -454,7 +454,7 @@ flowchart LR
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 92% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 90% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 75% |
-| 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 80% |
+| 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 90% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 99% |

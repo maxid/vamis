@@ -25,6 +25,7 @@ function appendLegacyPrimary(dest: string) {
   const css = `/* old WebView: oklch(--primary) invalid → 云舍蓝 hex */
 @supports not (color: oklch(0 0 0)) {
   :root {
+    --colors-brand-5: #2468f2;
     --primary: #2468f2;
     --primary-foreground: #ffffff;
     --primary-hover: #1c5bd6;
@@ -32,11 +33,12 @@ function appendLegacyPrimary(dest: string) {
     --ring: #2468f2;
   }
   .dark {
-    --primary: #528eff;
-    --primary-foreground: #151b26;
-    --primary-hover: #7dadff;
-    --primary-active: #2468f2;
-    --ring: #528eff;
+    --colors-brand-5: #1677ff;
+    --primary: #1677ff;
+    --primary-foreground: #ffffff;
+    --primary-hover: #2486ff;
+    --primary-active: #0061f2;
+    --ring: #1677ff;
   }
 }
 `

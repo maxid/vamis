@@ -28,45 +28,55 @@ function docsNavClass() {
 
 const THEME_KEY = 'vamis-theme'
 const DENSITY_KEY = 'vamis-density'
-const ACCENT_KEY = 'vamis-accent'
+const PACK_KEY = 'vamis-theme-pack'
 
-type Accent = 'blue' | 'green' | 'amber' | 'sky' | 'rose'
+type ThemePack = 'cxd' | 'antd' | 'ang' | 'green' | 'amber'
 
-const accents: { id: Accent; label: string; color: string }[] = [
-  { id: 'blue', label: '云舍蓝', color: 'oklch(0.49 0.16 258)' },
-  { id: 'green', label: '翠绿', color: 'oklch(0.52 0.14 145)' },
-  { id: 'amber', label: '琥珀', color: 'oklch(0.7 0.15 65)' },
-  { id: 'sky', label: '青空', color: 'oklch(0.55 0.11 230)' },
-  { id: 'rose', label: '玫红', color: 'oklch(0.57 0.2 27)' },
+const packs: { id: ThemePack; label: string; color: string }[] = [
+  { id: 'cxd', label: '云舍', color: '#2468f2' },
+  { id: 'antd', label: '仿 AntD', color: '#1677ff' },
+  { id: 'ang', label: 'ang', color: '#7266ba' },
+  { id: 'green', label: '翠绿', color: '#267d30' },
+  { id: 'amber', label: '琥珀', color: '#9b4500' },
 ]
+
+const ACCENT_BY_PACK: Record<ThemePack, string> = {
+  cxd: 'blue',
+  antd: 'blue',
+  ang: 'blue',
+  green: 'green',
+  amber: 'amber',
+}
 
 const dark = ref(false)
 const density = ref<'compact' | 'comfortable'>('compact')
-const accent = ref<Accent>('blue')
+const pack = ref<ThemePack>('cxd')
 
-function parseAccent(value: string | null): Accent {
-  return accents.some((item) => item.id === value) ? (value as Accent) : 'blue'
+function parsePack(value: string | null): ThemePack {
+  if (value === 'blue') return 'cxd'
+  return packs.some((item) => item.id === value) ? (value as ThemePack) : 'cxd'
 }
 
 function applyChrome() {
   document.documentElement.classList.toggle('dark', dark.value)
   document.documentElement.dataset.density = density.value
-  document.documentElement.dataset.accent = accent.value
+  document.documentElement.dataset.accent = ACCENT_BY_PACK[pack.value]
+  document.documentElement.dataset.theme = pack.value
   publishPreviewChrome()
 }
 
 onMounted(() => {
   dark.value = localStorage.getItem(THEME_KEY) === 'dark'
   density.value = localStorage.getItem(DENSITY_KEY) === 'comfortable' ? 'comfortable' : 'compact'
-  accent.value = parseAccent(localStorage.getItem(ACCENT_KEY))
+  pack.value = parsePack(localStorage.getItem(PACK_KEY))
   hydrateDocViewport()
   applyChrome()
 })
 
-watch([dark, density, accent], () => {
+watch([dark, density, pack], () => {
   localStorage.setItem(THEME_KEY, dark.value ? 'dark' : 'light')
   localStorage.setItem(DENSITY_KEY, density.value)
-  localStorage.setItem(ACCENT_KEY, accent.value)
+  localStorage.setItem(PACK_KEY, pack.value)
   applyChrome()
 })
 </script>
@@ -83,21 +93,21 @@ watch([dark, density, accent], () => {
           <SiteSearch />
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <div class="flex items-center gap-0.5" role="radiogroup" aria-label="主题色">
+          <div class="flex items-center gap-0.5" role="radiogroup" aria-label="主题">
             <button
-              v-for="item in accents"
+              v-for="item in packs"
               :key="item.id"
               type="button"
               role="radio"
-              class="flex size-5 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              class="doc-theme-dot flex size-5 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
               :aria-label="item.label"
-              :aria-checked="accent === item.id"
-              :title="item.label"
-              @click="accent = item.id"
+              :aria-checked="pack === item.id"
+              :data-label="item.label"
+              @click="pack = item.id"
             >
               <span
                 class="size-2.5 rounded-full transition"
-                :class="accent === item.id ? 'ring-2 ring-foreground ring-offset-1 ring-offset-card' : ''"
+                :class="pack === item.id ? 'ring-2 ring-foreground ring-offset-1 ring-offset-card' : ''"
                 :style="{ background: item.color }"
               />
             </button>

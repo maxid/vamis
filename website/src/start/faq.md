@@ -36,9 +36,9 @@ title: 常见问题
 
 不用。page / form / 表单控件**默认吃满布局槽**，跟 Amis 一样，这是降低心智负担的准则。`size: xs|sm|md|lg` 才是可选收窄；`className` 只在要覆盖时写。
 
-## 主题能换成云舍吗？
+## 主题能换成云舍 / 仿 AntD / ang 吗？
 
-没有 `theme: cxd` 去换 `.cxd-` 前缀。皮肤是 shadcn token + `variant`；cxd 的盒子和密度尽量像素级转写。`level: primary` 映射到 `variant="default"`。主色走 `--primary`：顶栏 5 色点是云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红，**云舍蓝是其中一种（默认）**；也可用 `page.cssVars` 覆盖。
+可以切色阶，不换 `.cxd-` 前缀。顶栏 5 色点写 `html[data-theme]`（云舍 / 仿 AntD / ang / 翠绿 / 琥珀），悬停显示名称；浅色/深色是第四包（对齐 Amis dark）。顶栏 / 链接 / 按钮跟当前 `--primary`；浅色画布仍是原来的白底，不要跟色相染绿/染琥珀。`--success` / Tag 预设色都 alias `--colors-*`，组件不要自己再写一套 hex。`page.cssVars` 仍可覆盖单页。
 
 ## typecheck 过了吗？
 

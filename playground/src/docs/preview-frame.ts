@@ -19,6 +19,7 @@ export type PreviewChrome = {
   dark: boolean
   density: string
   accent: string
+  theme: string
 }
 
 export function readPreviewChrome(): PreviewChrome {
@@ -27,6 +28,7 @@ export function readPreviewChrome(): PreviewChrome {
     dark: root.classList.contains('dark'),
     density: root.dataset.density || 'compact',
     accent: root.dataset.accent || 'blue',
+    theme: root.dataset.theme || 'cxd',
   }
 }
 
@@ -36,6 +38,7 @@ export function applyPreviewChrome(chrome: PreviewChrome | undefined) {
   root.classList.toggle('dark', chrome.dark)
   root.dataset.density = chrome.density || 'compact'
   root.dataset.accent = chrome.accent || 'blue'
+  root.dataset.theme = chrome.theme || 'cxd'
 }
 
 /** 所有移动预览 iframe 共用；后打开的示例也能收到当前浅色/深色。 */
@@ -75,6 +78,7 @@ export function previewFrameSrc(baseHref: string, chrome: PreviewChrome = readPr
     dark: chrome.dark ? '1' : '0',
     density: chrome.density || 'compact',
     accent: chrome.accent || 'blue',
+    theme: chrome.theme || 'cxd',
   })
   const join = baseHref.includes('?') ? '&' : '?'
   return `${baseHref}${join}${params.toString()}`

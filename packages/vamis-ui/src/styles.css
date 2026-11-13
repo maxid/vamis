@@ -11,6 +11,7 @@
 @import "./helpers-border.css";
 @import "./helpers-effect.css";
 @import "./helpers-palette.css";
+@import "./themes.css";
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant m (@media (max-width: 767px));
@@ -89,7 +90,7 @@
 :root {
   color-scheme: light;
   --accent-h: 258;
-  --radius: 0.25rem;
+  --radius: var(--borders-radius-3);
   /* Amis --fonts-base-family（fonts.css 系统栈）。不嵌入 webfont / 商用字体文件。 */
   --fonts-base-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
     "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
@@ -108,20 +109,20 @@
   --card-foreground: oklch(0.24 0.035 258);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.24 0.035 258);
-  /* 默认云舍蓝用 6 位 hex：旧 WebView 没有 oklch，var(--primary) 会整段失效，提交钮掉成描边灰。 */
-  --primary: #2468f2;
-  --primary-foreground: #ffffff;
-  --primary-hover: #1c5bd6;
-  --primary-active: #144bcc;
+  /* 语义色只 alias 主题阶。换 data-theme 整套走，禁止组件再写死 hex。 */
+  --primary: var(--colors-brand-5);
+  --primary-foreground: var(--colors-neutral-text-11);
+  --primary-hover: var(--colors-brand-4);
+  --primary-active: var(--colors-brand-3);
   /* 链接色跟 `--primary`（顶栏 5 色）。hover 变浅（Amis brand-6），不要绑 `--primary-hover`（混黑几乎看不出）。 */
   --link-color: var(--primary);
-  --link-hover-color: #528eff;
+  --link-hover-color: var(--colors-brand-6);
   --link-active-color: var(--primary-active);
   --link-decoration: none;
   --link-hover-decoration: none;
   --link-font-weight: 400;
   /* Amis `--link-disabled-color` = `--colors-neutral-text-6`，不要 `--muted-foreground`。 */
-  --link-disabled-color: #b8babf;
+  --link-disabled-color: var(--colors-neutral-text-6);
   --link-icon-size: 14px;
   --link-icon-margin: 4px;
   --secondary: oklch(0.945 0.01 250);
@@ -130,21 +131,21 @@
   --muted-foreground: oklch(0.5 0.02 258);
   --accent: oklch(0.94 0.018 var(--accent-h));
   --accent-foreground: oklch(0.28 0.04 var(--accent-h));
-  --destructive: oklch(0.57 0.2 27);
-  --destructive-foreground: oklch(0.99 0.01 20);
-  --success: oklch(0.52 0.14 145);
-  --success-foreground: oklch(0.99 0.01 145);
-  --warning: oklch(0.7 0.15 65);
-  --warning-foreground: oklch(0.28 0.06 55);
-  --info: oklch(0.55 0.11 230);
-  --info-foreground: oklch(0.99 0.01 230);
+  --destructive: var(--colors-error-5);
+  --destructive-foreground: var(--colors-neutral-text-11);
+  --success: var(--colors-success-5);
+  --success-foreground: var(--colors-neutral-text-11);
+  --warning: var(--colors-warning-5);
+  --warning-foreground: var(--colors-neutral-text-11);
+  --info: var(--colors-info-5);
+  --info-foreground: var(--colors-neutral-text-11);
   /* Amis --colors-neutral-line-8 / --borderColor */
-  --border: #e8e9eb;
+  --border: var(--colors-neutral-line-8);
   /* 移动端 PopUp（Select / DatePickerSheet / input-time）共用 rim，对齐 Amis `--borderColor` + `--boxShadow`。 */
   --popup-border: var(--border);
   --popup-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --input: #e8e9eb;
-  --ring: oklch(0.49 0.16 var(--accent-h));
+  --ring: var(--colors-brand-5);
   --sidebar: oklch(0.22 0.04 258);
   --sidebar-foreground: oklch(0.93 0.015 250);
   --sidebar-primary: oklch(0.72 0.12 var(--accent-h));
@@ -184,7 +185,7 @@
   --date-range-ranger-bg: #f7f8fa;
   --date-range-cursor: var(--primary);
   /* 对齐 Amis `--Form-input-placeholderColor` / `--text--muted-color` / `--colors-neutral-text-6`。不要用 `--muted-foreground`（偏深）。 */
-  --control-placeholder: #b8babf;
+  --control-placeholder: var(--colors-neutral-text-6);
   --cal-picker-cancel: #666;
   --cal-picker-title: #222;
   --cal-chip-fg: #fff;
@@ -252,7 +253,7 @@
   --control-h-lg: 36px;
   --control-px: 10px;
   /* Button 局部密度：对齐 cxd `--button-size-*`，不改控件 `--control-h-*`。 */
-  --button-radius: 4px;
+  --button-radius: var(--borders-radius-3);
   --button-h: 32px;
   --button-h-xs: 22px;
   --button-h-sm: 30px;
@@ -335,10 +336,10 @@
   --spinner-tip-font-size: 12px;
   --spinner-overlay-bg: rgba(255, 255, 255, 0.1);
   /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
-  --fill-9: #f2f3f5;
-  --fill-10: #f7f8fa;
-  --fill-11: #ffffff;
-  --text-loud: #151b26;
+  --fill-9: var(--colors-neutral-fill-9);
+  --fill-10: var(--colors-neutral-fill-10);
+  --fill-11: var(--colors-neutral-fill-11);
+  --text-loud: var(--colors-neutral-text-2);
   /* Amis `--List-bg` / `--ListItem--strip-bg` / `List-items` margin-right px2rem(15px)。 */
   --list-bg: var(--fill-11);
   --list-item-strip-bg: var(--fill-10);
@@ -350,7 +351,7 @@
   --table-toolbar-margin-y: var(--gap-base);
   /* Amis --Form-input-onDisabled-*：灰底而不是 opacity。 */
   --control-disabled-bg: var(--fill-10);
-  --control-disabled-color: #b8babf;
+  --control-disabled-color: var(--colors-neutral-text-6);
   /* hover 走主题色；focus 边仍用 --ring，3px glow 是 Vamis 原风格（不跟 Amis boxShadow:none）。 */
   --control-hover-border: var(--primary);
   --control-focus-border: var(--ring);
@@ -494,35 +495,39 @@
   --tag-padding: 0 8px;
   --tag-font-size: 12px;
   --tag-font-weight: 400;
-  --tag-radius: 0px;
-  --tag-bg: var(--fill-9);
-  --tag-fg: var(--text-loud);
+  --tag-radius: var(--borders-radius-1);
+  --tag-bg: var(--colors-neutral-fill-9);
+  --tag-fg: var(--colors-neutral-text-2);
   --tag-border-width: 0px;
   --tag-border-color: transparent;
   --tag-max-width: 160px;
-  --tag-on-color: #fff;
+  --tag-on-color: var(--colors-neutral-fill-11);
   --tag-rounded-radius: 12px;
-  --tag-rounded-bg: #fff;
-  --tag-rounded-border: #b8babf;
-  --tag-inactive: #b8babf;
-  --tag-active: #2468f2;
-  --tag-processing: #528eff;
-  --tag-success: #30bf13;
-  --tag-error: #f23d3d;
-  --tag-warning: #ff9326;
+  --tag-rounded-bg: var(--colors-neutral-fill-11);
+  --tag-rounded-border: var(--colors-neutral-line-6);
+  --tag-inactive: var(--colors-neutral-fill-6);
+  --tag-active: var(--colors-brand-5);
+  --tag-processing: var(--colors-brand-6);
+  --tag-success: var(--colors-success-5);
+  --tag-error: var(--colors-error-5);
+  --tag-warning: var(--colors-warning-5);
   --tag-status-size: 8px;
   --tag-status-gap: 8px;
+  --tag-close-size: 8px;
+  --tag-close-margin: 8px;
+  --tag-checkable-bg: #f2f2f4;
+  --tag-checkable-hover: #e6e6e8;
   /*
    * Amis `.label-*` utility（mapping / tpl HTML）。色号对齐 `--label--*-bg`，
    * 不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。
    */
-  --label-fg: #fff;
-  --label-default-bg: #303540;
-  --label-primary-bg: #2468f2;
-  --label-success-bg: #30bf13;
-  --label-info-bg: #2468f2;
-  --label-warning-bg: #ff9326;
-  --label-danger-bg: #f23d3d;
+  --label-fg: var(--colors-neutral-fill-11);
+  --label-default-bg: var(--colors-neutral-text-3);
+  --label-primary-bg: var(--colors-brand-5);
+  --label-success-bg: var(--colors-success-5);
+  --label-info-bg: var(--colors-info-5);
+  --label-warning-bg: var(--colors-warning-5);
+  --label-danger-bg: var(--colors-error-5);
   /*
    * Image 语义变量（Amis --image-image-*）。缩略 110、内边距 4、标题 14 / 说明 12。
    * 选择器只 var()。放大层永远是黑底白字，不跟主题换肤。
@@ -663,26 +668,45 @@
   --accent-h: 27;
 }
 
+/* 顶栏 / 链接 / accent hover 跟当前主题包色相走。浅色画布（--background/--card/--muted）钉 250 白底，不要跟 accent-h 染色。 */
+[data-theme="cxd"] {
+  --accent-h: 258;
+}
+[data-theme="antd"] {
+  --accent-h: 255;
+}
+[data-theme="ang"] {
+  --accent-h: 291;
+}
+[data-theme="green"] {
+  --accent-h: 145;
+}
+[data-theme="amber"] {
+  --accent-h: 65;
+}
+[data-theme="dark"] {
+  --accent-h: 255;
+}
+
 .dark {
   color-scheme: dark;
-  --background: oklch(0.2 0.025 258);
-  --foreground: oklch(0.93 0.015 250);
-  --card: oklch(0.24 0.028 258);
-  --card-foreground: oklch(0.93 0.015 250);
-  --popover: oklch(0.24 0.028 258);
-  --popover-foreground: oklch(0.93 0.015 250);
-  --primary: #528eff;
-  --primary-foreground: #151b26;
-  --primary-hover: #7dadff;
-  --primary-active: #2468f2;
-  --secondary: oklch(0.3 0.025 258);
-  --secondary-foreground: oklch(0.93 0.015 250);
-  --muted: oklch(0.3 0.025 258);
-  --muted-foreground: oklch(0.7 0.02 250);
+  --background: oklch(0.2 0.025 var(--accent-h));
+  --foreground: oklch(0.93 0.015 var(--accent-h));
+  --card: oklch(0.24 0.028 var(--accent-h));
+  --card-foreground: oklch(0.93 0.015 var(--accent-h));
+  --popover: oklch(0.24 0.028 var(--accent-h));
+  --popover-foreground: oklch(0.93 0.015 var(--accent-h));
+  --primary-foreground: var(--colors-neutral-text-1);
+  --primary-hover: var(--colors-brand-4);
+  --primary-active: var(--colors-brand-6);
+  --secondary: oklch(0.3 0.025 var(--accent-h));
+  --secondary-foreground: oklch(0.93 0.015 var(--accent-h));
+  --muted: oklch(0.3 0.025 var(--accent-h));
+  --muted-foreground: oklch(0.7 0.02 var(--accent-h));
   --form-item-color: #e8e9eb;
   --form-description-color: #b8bbbf;
   --link-disabled-color: #b8bbbf;
-  --link-hover-color: #7dadff;
+  --link-hover-color: var(--colors-brand-6);
   --select-caret-color: #d4d6d9;
   --select-caret-hover-color: #d4d6d9;
   --select-menu-bg: #17202d;
@@ -721,10 +745,10 @@
   --tooltip-bg: #17202d;
   --tooltip-fg: #f7f8fa;
   --tooltip-border: 1px solid #303640;
-  --tag-bg: #303640;
-  --tag-fg: #e8e9eb;
   --tag-rounded-bg: #17202d;
-  --tag-rounded-border: #5c5f66;
+  --tag-rounded-border: var(--colors-neutral-line-8);
+  --tag-checkable-bg: #303640;
+  --tag-checkable-hover: #3d4450;
   --file-list-hover-bg: #151c26;
   --file-icon-color: #e8e9eb;
   --file-clear-color: #84878c;
@@ -741,7 +765,7 @@
   --number-unit-bg: var(--fill-10);
   --number-enhance-color: #e8e9eb;
   --accent: oklch(0.32 0.03 var(--accent-h));
-  --accent-foreground: oklch(0.93 0.015 250);
+  --accent-foreground: oklch(0.93 0.015 var(--accent-h));
   --destructive: oklch(0.65 0.19 25);
   --destructive-foreground: oklch(0.99 0.01 20);
   --success: oklch(0.68 0.14 145);
@@ -750,19 +774,19 @@
   --warning-foreground: oklch(0.22 0.05 55);
   --info: oklch(0.7 0.1 230);
   --info-foreground: oklch(0.18 0.04 230);
-  --border: oklch(0.35 0.03 258);
-  --input: oklch(0.35 0.03 258);
+  --border: oklch(0.35 0.03 var(--accent-h));
+  --input: oklch(0.35 0.03 var(--accent-h));
   --ring: oklch(0.7 0.13 var(--accent-h));
-  --sidebar: oklch(0.18 0.03 258);
-  --sidebar-foreground: oklch(0.93 0.015 250);
+  --sidebar: oklch(0.18 0.03 var(--accent-h));
+  --sidebar-foreground: oklch(0.93 0.015 var(--accent-h));
   --sidebar-primary: oklch(0.7 0.13 var(--accent-h));
   --sidebar-primary-foreground: oklch(0.2 0.03 var(--accent-h));
-  --sidebar-accent: oklch(0.28 0.03 258);
-  --sidebar-accent-foreground: oklch(0.93 0.015 250);
-  --sidebar-border: oklch(0.32 0.03 258);
+  --sidebar-accent: oklch(0.28 0.03 var(--accent-h));
+  --sidebar-accent-foreground: oklch(0.93 0.015 var(--accent-h));
+  --sidebar-border: oklch(0.32 0.03 var(--accent-h));
   --sidebar-ring: oklch(0.7 0.13 var(--accent-h));
-  --code: oklch(0.16 0.03 258);
-  --code-foreground: oklch(0.88 0.03 250);
+  --code: oklch(0.16 0.03 var(--accent-h));
+  --code-foreground: oklch(0.88 0.03 var(--accent-h));
   --success-bg: oklch(0.28 0.05 145);
   --success-border: oklch(0.4 0.08 145);
   --warning-bg: oklch(0.3 0.05 70);
@@ -783,8 +807,8 @@
   --button-dark-active: #d4d6d9;
   --button-light: #0040bf;
   --button-light-foreground: #ffffff;
-  --button-light-hover: #2468f2;
-  --button-light-active: #528eff;
+  --button-light-hover: var(--colors-brand-5);
+  --button-light-active: var(--colors-brand-6);
   --fill-10: #151c26;
   --list-bg: var(--card);
   --list-item-strip-bg: var(--fill-10);
@@ -817,19 +841,9 @@
 
 @supports (color: oklch(0 0 0)) {
   :root {
-    --primary: oklch(0.49 0.16 var(--accent-h));
-    --primary-foreground: oklch(0.99 0.01 var(--accent-h));
     --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
     --primary-active: color-mix(in oklch, var(--primary) 82%, black);
-    --ring: oklch(0.49 0.16 var(--accent-h));
-    --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
-  }
-  .dark {
-    --primary: oklch(0.7 0.13 var(--accent-h));
-    --primary-foreground: oklch(0.2 0.03 var(--accent-h));
-    --primary-hover: color-mix(in oklch, var(--primary) 88%, white);
-    --primary-active: color-mix(in oklch, var(--primary) 78%, white);
-    --ring: oklch(0.7 0.13 var(--accent-h));
+    --ring: var(--colors-brand-5);
     --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
   }
 }
@@ -1146,6 +1160,9 @@
     max-width: 100%;
     word-break: break-word;
   }
+  .vamis-node:has(> .vamis-tag):not(:last-child) {
+    margin-right: var(--gap-sm);
+  }
   .vamis-tag {
     display: inline-flex;
     box-sizing: border-box;
@@ -1164,12 +1181,7 @@
     border: var(--tag-border-width) solid var(--tag-border-color);
     border-radius: var(--tag-radius);
     vertical-align: middle;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .vamis-tag:not(:last-child) {
-    margin-right: var(--gap-sm);
   }
   .vamis-tag__text {
     display: inline-block;
@@ -1197,16 +1209,28 @@
     background: var(--tag-rounded-bg);
   }
   .vamis-tag__prev {
-    display: inline-block;
-    width: var(--tag-status-size);
-    height: var(--tag-status-size);
+    display: inline-flex;
+    align-items: center;
+    color: var(--tag-status-color, var(--tag-bg));
     margin-right: var(--tag-status-gap);
-    border-radius: 50%;
-    background: var(--tag-status-color, var(--tag-bg));
     vertical-align: middle;
   }
+  .vamis-tag__prev i {
+    font-size: var(--tag-status-size);
+  }
+  .vamis-tag-default-icon {
+    width: var(--tag-status-size);
+    height: var(--tag-status-size);
+    display: inline;
+    vertical-align: baseline;
+    fill: currentColor;
+    top: 0;
+  }
+  .vamis-tag--status:not(.vamis-tag--status--processing):not(.vamis-tag--status--active) .vamis-tag-dot-wave {
+    display: none;
+  }
   .vamis-tag--normal--inactive {
-    color: var(--tag-fg);
+    color: var(--tag-on-color);
     background: var(--tag-inactive);
   }
   .vamis-tag--normal--active {
@@ -1248,22 +1272,22 @@
     color: var(--tag-warning);
   }
   .vamis-tag--status--inactive .vamis-tag__prev {
-    background: var(--tag-inactive);
+    color: var(--tag-inactive);
   }
   .vamis-tag--status--active .vamis-tag__prev {
-    background: var(--tag-active);
+    color: var(--tag-active);
   }
   .vamis-tag--status--processing .vamis-tag__prev {
-    background: var(--tag-processing);
+    color: var(--tag-processing);
   }
   .vamis-tag--status--success .vamis-tag__prev {
-    background: var(--tag-success);
+    color: var(--tag-success);
   }
   .vamis-tag--status--error .vamis-tag__prev {
-    background: var(--tag-error);
+    color: var(--tag-error);
   }
   .vamis-tag--status--warning .vamis-tag__prev {
-    background: var(--tag-warning);
+    color: var(--tag-warning);
   }
   .vamis-tag.is-disabled {
     opacity: 0.3;
@@ -6244,22 +6268,57 @@
   margin: 0;
 }
 
-/* Amis Tag：关闭钮 / 可选态。 */
+/* Amis Tag：关闭钮 / 可选态。关闭 8px、缝 8px；hover 0.7 / active 0.3。 */
 .vamis-tag__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 4px;
+  margin-left: var(--tag-close-margin);
   padding: 0;
   border: 0;
   background: transparent;
   color: currentColor;
   cursor: pointer;
-  opacity: 0.65;
+  line-height: 0;
+  font-size: 0;
+}
+.vamis-tag__close .vamis-close,
+.vamis-tag__close .icon,
+.vamis-tag__close svg {
+  display: block;
+  width: var(--tag-close-size);
+  height: var(--tag-close-size);
 }
 .vamis-tag__close:hover {
-  opacity: 1;
+  opacity: 0.7;
+}
+.vamis-tag__close:active {
+  opacity: 0.3;
+}
+.vamis-tag.is-disabled .vamis-tag__close {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.vamis-tag.is-checkable {
+  background: var(--tag-checkable-bg);
+  cursor: pointer;
+}
+.vamis-tag.is-checkable:hover {
+  background: var(--tag-checkable-hover);
 }
 .vamis-tag.is-checked {
-  box-shadow: inset 0 0 0 1px var(--primary);
+  color: var(--tag-on-color);
+  background: var(--primary);
+  box-shadow: none;
+}
+.vamis-tag.is-checked:hover {
+  background: var(--primary);
+}
+.vamis-tag-default-icon.icon,
+svg.vamis-tag-default-icon {
+  width: var(--tag-status-size);
+  height: var(--tag-status-size);
+  display: inline;
+  vertical-align: baseline;
+  top: 0;
 }

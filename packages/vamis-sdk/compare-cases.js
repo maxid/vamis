@@ -32699,7 +32699,20 @@ window.VAMIS_COMPARE_CASES = [
           "type": "tag",
           "label": "状态标签",
           "displayMode": "status",
-          "color": "success"
+          "color": "active",
+          "closable": true
+        },
+        {
+          "type": "tag",
+          "label": "#4096ff",
+          "displayMode": "rounded",
+          "color": "#4096ff"
+        },
+        {
+          "type": "tag",
+          "label": "#f70e47",
+          "displayMode": "rounded",
+          "color": "#f70e47"
         }
       ]
     },
@@ -32723,23 +32736,39 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "tag",
-          "label": "success",
-          "color": "success"
+          "label": "active",
+          "displayMode": "normal",
+          "color": "active"
         },
         {
           "type": "tag",
-          "label": "warning",
-          "color": "warning"
+          "label": "inactive",
+          "displayMode": "normal",
+          "color": "inactive"
         },
         {
           "type": "tag",
           "label": "error",
+          "displayMode": "normal",
           "color": "error"
         },
         {
           "type": "tag",
-          "label": "自定义",
-          "color": "#4096ff"
+          "label": "success",
+          "displayMode": "normal",
+          "color": "success"
+        },
+        {
+          "type": "tag",
+          "label": "processing",
+          "displayMode": "normal",
+          "color": "processing"
+        },
+        {
+          "type": "tag",
+          "label": "warning",
+          "displayMode": "normal",
+          "color": "warning"
         }
       ]
     },
@@ -32760,16 +32789,40 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tag",
-        "label": "自定义样式",
-        "displayMode": "rounded",
-        "color": "#4096ff",
-        "className": "m-l-xs",
-        "style": {
-          "fontWeight": 600
+      "body": [
+        {
+          "type": "tag",
+          "label": "面性标签",
+          "displayMode": "normal",
+          "color": "active"
+        },
+        {
+          "type": "tag",
+          "label": "线性标签",
+          "displayMode": "rounded",
+          "color": "inactive"
+        },
+        {
+          "type": "tag",
+          "label": "自定义样式1",
+          "displayMode": "normal",
+          "style": {
+            "backgroundColor": "#fff",
+            "border": "1px solid #ccc",
+            "color": "#666"
+          }
+        },
+        {
+          "type": "tag",
+          "label": "自定义样式2",
+          "displayMode": "rounded",
+          "style": {
+            "backgroundColor": "#2468f2",
+            "borderColor": "#2468f2",
+            "color": "#fff"
+          }
         }
-      }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -32788,32 +32841,137 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": [
-        {
-          "type": "tag",
-          "label": "关闭了！",
-          "closable": true,
-          "onEvent": {
-            "close": {
-              "actions": [
-                {
-                  "actionType": "toast",
-                  "args": {
-                    "msg": "关闭 ${event.data.label}"
-                  }
+      "body": {
+        "type": "tag",
+        "label": "success",
+        "displayMode": "normal",
+        "color": "success",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type} ${event.data.label}"
                 }
-              ]
-            }
+              }
+            ]
           }
-        },
-        {
-          "type": "tag",
-          "label": "可选标签",
-          "checkable": true,
-          "checked": true,
-          "color": "active"
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tag",
+        "label": "success",
+        "displayMode": "normal",
+        "color": "success",
+        "onEvent": {
+          "mouseenter": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type} ${event.data.label}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tag",
+        "label": "success",
+        "displayMode": "normal",
+        "color": "success",
+        "onEvent": {
+          "mouseleave": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.context.nativeEvent.type} ${event.data.label}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tag",
+        "label": "success",
+        "displayMode": "normal",
+        "color": "success",
+        "closable": true,
+        "onEvent": {
+          "close": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "close ${event.data.label}"
+                }
+              }
+            ]
+          }
+        }
+      }
     },
     "measure": {
       "type": "tree"

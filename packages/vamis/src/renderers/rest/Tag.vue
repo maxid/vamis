@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { createVamisEvent, eventEvalData, filterTpl, resolveClassName, runOnEvent, useEnv, useScoped, type SchemaObject } from '@vamis/core'
+import {
+  createVamisEvent,
+  eventEvalData,
+  filterTpl,
+  resolveClassName,
+  resolveIcon,
+  runOnEvent,
+  useEnv,
+  useScoped,
+  type ResolvedIcon,
+  type SchemaObject,
+} from '@vamis/core'
 import { VamisClose } from '@vamis/ui'
+import IconMark from '../IconMark.vue'
 import { readValue } from './format'
 
 const PRESET = ['inactive', 'active', 'success', 'processing', 'error', 'warning'] as const
@@ -10,7 +22,6 @@ type Preset = (typeof PRESET)[number]
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
 const scoped = useScoped()
-const closed = ref(false)
 const checked = ref(props.schema.checked === true)
 
 function asText(raw: unknown): string {
@@ -49,6 +60,16 @@ const color = computed(() => {
 const isPreset = computed(() => PRESET.includes(color.value as Preset))
 const customColor = computed(() => (color.value && !isPreset.value ? color.value : ''))
 
+const statusIcon = computed<ResolvedIcon>(() => {
+  if (displayMode.value !== 'status') return { kind: 'empty' }
+  return resolveIcon(props.schema.icon)
+})
+const useDefaultDot = computed(
+  () => displayMode.value === 'status' && statusIcon.value.kind === 'empty',
+)
+const closeIcon = computed<ResolvedIcon>(() => resolveIcon(props.schema.closeIcon))
+const useDefaultClose = computed(() => closeIcon.value.kind === 'empty')
+
 const tagStyle = computed(() => {
   const mode = displayMode.value
   const custom = customColor.value
@@ -73,7 +94,7 @@ const checkable = computed(() => props.schema.checkable === true)
 const closable = computed(() => props.schema.closable === true)
 
 async function emitTagEvent(eventName: string, native: Event) {
-  const payload = { ...props.data, label: label.value, value: label.value }
+  const payload = { ...props.data, label: label.value }
   const event = createVamisEvent(eventName, payload, native)
   await runOnEvent(props.schema, eventName, {
     env,
@@ -92,8 +113,8 @@ async function onClick(event: MouseEvent) {
 
 async function onClose(event: MouseEvent) {
   event.stopPropagation()
-  if (!(await emitTagEvent('close', event))) return
-  closed.value = true
+  if (props.schema.disabled === true) return
+  await emitTagEvent('close', event)
 }
 
 const className = computed(() => {
@@ -104,19 +125,41 @@ const className = computed(() => {
   if (color.value) classes.push('vamis-tag--has-color')
   if (isPreset.value) classes.push(`vamis-tag--${mode}--${color.value}`)
   if (props.schema.disabled) classes.push('is-disabled')
+  if (checkable.value) classes.push('is-checkable')
   if (checkable.value && checked.value) classes.push('is-checked')
   return classes.join(' ')
 })
 </script>
 
 <template>
-  <span v-if="!closed" :class="className" :style="tagStyle" @click="onClick" @mouseenter="emitTagEvent('mouseenter', $event)" @mouseleave="emitTagEvent('mouseleave', $event)">
-    <span class="vamis-tag__text" :title="label || undefined">
-      <span v-if="displayMode === 'status'" class="vamis-tag__prev" aria-hidden="true" />
-      {{ label }}
+  <span
+    :class="className"
+    :style="tagStyle"
+    @click="onClick"
+    @mouseenter="emitTagEvent('mouseenter', $event)"
+    @mouseleave="emitTagEvent('mouseleave', $event)"
+  >
+    <span class="vamis-tag__text" :title="label || undefined"
+      ><span v-if="displayMode === 'status'" class="vamis-tag__prev" aria-hidden="true"
+        ><IconMark v-if="!useDefaultDot" :icon="statusIcon" /><svg
+          v-else
+          class="icon vamis-tag-default-icon"
+          viewBox="0 0 16 16"
+          xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+        >
+          <g fill="currentColor" fill-rule="evenodd">
+            <circle cx="8" cy="8" r="6" />
+            <circle class="vamis-tag-dot-wave" cx="8" cy="8" r="6" opacity=".5">
+              <animate attributeName="r" begin="0" values="6;8;6" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        </svg></span
+      >{{ label }}</span
+    >
+    <span v-if="closable" class="vamis-tag__close" role="button" aria-label="关闭" @click="onClose">
+      <IconMark v-if="!useDefaultClose" :icon="closeIcon" />
+      <VamisClose v-else />
     </span>
-    <button v-if="closable && !props.schema.disabled" type="button" class="vamis-tag__close" aria-label="关闭" @click="onClose">
-      <VamisClose />
-    </button>
   </span>
 </template>

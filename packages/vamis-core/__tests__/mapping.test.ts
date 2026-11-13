@@ -25,7 +25,7 @@ describe('mapping', () => {
     expect(css).toContain('.vamis-root .label-info')
     expect(css).toContain('.vamis-root .label-success')
     expect(css).toContain('.vamis-root .label-danger')
-    expect(css).toContain('--label-success-bg: #30bf13')
+    expect(css).toContain('--label-success-bg: var(--colors-success-5)')
     expect(css).toContain('.vamis-tag--rounded')
     const tag = read('../../vamis/src/renderers/rest/Tag.vue')
     expect(tag).toContain('vamis-tag')

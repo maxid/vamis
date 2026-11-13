@@ -163,6 +163,9 @@ body,
 .doc-play__stage {
   position: relative;
 }
+.doc-play__preview {
+  background: var(--page-main-bg);
+}
 .doc-play__canvas--mobile {
   display: flex;
   justify-content: center;
@@ -243,4 +246,29 @@ body,
 }
 .doc-play .vamis-root {
   min-width: 0;
+}
+
+.doc-theme-dot {
+  position: relative;
+}
+.doc-theme-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--tooltip-bg, #151b26);
+  color: var(--tooltip-fg, #fff);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: var(--z-tooltip, 1600);
+}
+.doc-theme-dot:hover::after,
+.doc-theme-dot:focus-visible::after {
+  opacity: 1;
 }

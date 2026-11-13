@@ -72,7 +72,7 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - 不输出 `.cxd-Button` 这类 BEM，不编译 / 引入 `cxd.css`、`scss/themes/cxd.scss`，不把 `$ns: cxd-` 打进产物
 - 盒子（32/24/98/40）、密度、helper、状态、交互尽量像素级落到 token / `cva` / Tailwind
 - 文档禁止写成「不追像素级 cxd」「不复刻 cxd 皮肤」「只学密度」
-- 主色走 `--primary`。顶栏 5 色：云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红。云舍蓝是默认色点，不是唯一主色、也不是禁用色。`cssVars` 可覆盖
+- 主色走 `--primary`（alias `--colors-brand-5`）。主题包：云舍 / 仿 AntD / ang / dark + 翠绿 / 琥珀（`html[data-theme]` + `.dark`）。顶栏用 5 色点切主题（其中 3 个是云舍 / 仿 AntD / ang），hover 提示名称，不要下拉。浅色/深色是第四包 dark。组件不要再写死 hex。`cssVars` 可覆盖
 
 ## 行为精度（计算样式 / 盒模型）
 

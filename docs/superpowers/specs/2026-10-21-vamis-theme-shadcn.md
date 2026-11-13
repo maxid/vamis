@@ -1,8 +1,8 @@
 # Vamis 主题：Amis 样式系统 → shadcn token
 
 - 日期：2026-10-21
-- 状态：落地（token / 盒子辅助类 / IR metadata.style；`registerTheme` 仍 P1）
-- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；主色走 `--primary`（云舍蓝是顶栏 5 色之一）；不搬 `cxd-` 前缀
+- 状态：落地（token / 盒子辅助类 / IR metadata.style / 四套 `--colors-*` 主题包；JS `registerTheme` 仍 P1）
+- 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；主色走 `--primary`（云舍 pack 的 brand-5）；不搬 `cxd-` 前缀
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
 
 ## 1. Amis 样式系统要点
@@ -79,13 +79,13 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `m:` / `pc:` | 已接到间距 + 宽度 helper（&lt;768 / ≥768）；作者也可写 Tailwind `max-md:` / `md:` |
 | `.cxd-Form` 等 | **禁止前缀**（盒子走 token，不走 BEM） |
 
-组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `.dark` 变量，不是换 class 前缀。Playground 顶栏色点改 `html[data-accent]` 的 `--accent-h`，从而带动 `--primary` / `--ring`；成功/警告/危险仍是固定语义色。
+组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `[data-theme]` / `.dark` 的 `--colors-*` 色阶，不是换 class 前缀。`--primary` / `--success` / `--tag-*` 只 alias 色阶，禁止组件再写死 hex。Playground 顶栏只有一套主题控件：**云舍 / 仿 AntD / ang**（`html[data-theme]`）+ 浅色/深色（Amis 第四包 dark）。不要再并排 5 色点。`registerTheme` JS API 仍 P1。
 
 ## 3. 视觉方向（后台产品水标）
 
 - 对象：YAML 生成的后台页（表单 / CRUD / 弹窗）。
 - 受众：操作员填表、扫表、改一行数据。
-- 签名：Amis 系统字体栈（`--fonts-base-family`）+ 32px 控件节奏。不嵌入 webfont / 商用字体文件。主色默认云舍蓝（顶栏 5 色之一：云舍蓝 / 翠绿 / 琥珀 / 青空 / 玫红），走 `--primary`。
+- 签名：Amis 系统字体栈（`--fonts-base-family`）+ 32px 控件节奏。不嵌入 webfont / 商用字体文件。主色默认云舍 brand-5 `#2468f2`，走 `--primary`。
 - 不做：奶油衬线、酸绿暗色、报纸细线；不做第二套主题 class。
 
 light / dark 都写完整 semantic token。`color-scheme` 跟主题走。
