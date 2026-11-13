@@ -889,9 +889,11 @@ alwaysApply: true
 - 稳定做法：表头 selectAll + 行 checkbox，selectable 时行点击 toggle 并派发 `rowClick`（prevented 阻止 itemAction）；组件注册 select/selectAll/clearAll，`getData().selectedItems` 返回行数组；文档选择示例用静态 data，避免 service 远程。
 - 触及：`table`
 
-### ButtonGroup 拼缝用邻钮负 margin + 首尾圆角
-- 稳定做法：`> div:not(:first-child) :deep(button)` 去左圆角并 `margin-left:-1px`；`> div:not(:last-child)` 去右圆角；竖向改 top/bottom 圆角与 `margin-top:-1px`；`btnActiveLevel` 不用于普通按钮组。
+### ButtonGroup 拼缝用邻钮负 margin + 首尾圆角；hover 抬 wrapper
+- 踩过：邻钮 1px 负缝叠边后，后钮盖住前钮 hover 描边（缺边）。把 `z-index` 打在内层 `button` 上无效——`SchemaRenderer` 的 `.vamis-node` 才是兄弟。这不是 table 半像素（collapse + `border-box` 吃线），是叠边后的绘制顺序。
+- 稳定做法：负 margin 打在 flex 子项 `.vamis-node`（不要再包一层 div、不要打在 button 上）；`hover` / `focus-within` / `:active` 给该子项 `position: relative; z-index: 1`。圆角按角写、不要竖向用 `border-radius` 简写盖掉中间项。`btnActiveLevel` 不用于普通按钮组。
 - 触及：`button-group`
+- 规则：Amis `_button-group.scss` hover `z-index`；本文
 
 ### Table 列渲染优先 type；行操作示例别在对照里放多按钮
 - 稳定做法：列有 `type` 且非 text/plain 时走 SchemaRenderer（extra-data 行），否则原生值 + PopOverHost；新增 `title` / `placeholder` / 整行 `itemAction`（runAction）/ `rowClassName`；对照的按钮列示例只放一个按钮或改 yaml 非活示例，多按钮时 Amis/Vamis actionIndex 易假红。

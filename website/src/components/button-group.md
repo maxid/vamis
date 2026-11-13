@@ -5,8 +5,8 @@ outline: deep
 
 # ButtonGroup 按钮组
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`（按钮自己的 `level` 优先）。缺 `btnActiveLevel`（点选用）、按钮圆角拼接像素级。
+::: info 实现进度 92% · 进行中
+文档主路径已对齐：`buttons` / `body`、`vertical`、`tiled`、`btnLevel`（按钮自己的 `level` 优先）；邻钮 1px 负缝、首尾圆角、hover 描边抬层。缺 `btnActiveLevel`（点选用，见 [ButtonGroupSelect](/components/form/button-group-select)）。
 :::
 
 把多个按钮组合展示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -61,9 +61,9 @@ buttons:
   "type": "button-group",
   "tiled": true,
   "buttons": [
-    { "type": "button", "label": "平铺1" },
-    { "type": "button", "label": "平铺2" },
-    { "type": "button", "label": "平铺3" }
+    { "type": "button", "label": "按钮1" },
+    { "type": "button", "label": "按钮2" },
+    { "type": "button", "label": "按钮3" }
   ]
 }
 ```
@@ -76,10 +76,11 @@ buttons:
 {
   "type": "button-group",
   "btnLevel": "light",
+  "btnActiveLevel": "warning",
   "buttons": [
-    { "type": "button", "label": "浅色1" },
-    { "type": "button", "label": "浅色2" },
-    { "type": "button", "label": "覆盖", "level": "primary" }
+    { "type": "button", "label": "按钮1" },
+    { "type": "button", "label": "按钮2" },
+    { "type": "button", "label": "按钮3", "level": "primary" }
   ]
 }
 ```
@@ -89,16 +90,16 @@ buttons:
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | type | `string` | `"button-group"` | 指定为 button-group 渲染器 |
-| vertical | `boolean` | `false` | 垂直模式 |
-| tiled | `boolean` | `false` | 平铺模式 |
-| btnLevel | `string` | `"default"` | 统一按钮样式 |
-| btnActiveLevel | `string` | `"default"` | 选中样式（普通按钮组不切换选中，实际由 ButtonGroupSelect 用） |
+| vertical | `boolean` | `false` | 是否使用垂直模式 |
+| tiled | `boolean` | `false` | 是否使用平铺模式 |
+| btnLevel | `'link' \| 'primary' \| 'secondary' \| 'info' \| 'success' \| 'warning' \| 'danger' \| 'light' \| 'dark' \| 'default'` | `"default"` | 按钮样式 |
+| btnActiveLevel | `'link' \| 'primary' \| 'secondary' \| 'info' \| 'success' \| 'warning' \| 'danger' \| 'light' \| 'dark' \| 'default'` | `"default"` | 选中按钮样式（普通按钮组不切换选中，实际由 [ButtonGroupSelect](/components/form/button-group-select) 用） |
 | buttons | `Array<Action>` | | [按钮](/components/action) |
 | body | 同 buttons | | 兼容写法 |
-| className | `string` | | 打在宿主 `div.vamis-node` |
+| className | `[ClassName](/types/classname)` | | 打在宿主 `div.vamis-node` |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 已做相邻按钮 1px 负缝与首尾圆角裁切（横 / 竖）；`btnActiveLevel` 留给 [ButtonGroupSelect](/components/form/button-group-select)。
+- `btnActiveLevel` 留给 [ButtonGroupSelect](/components/form/button-group-select)；普通按钮组不切换选中。

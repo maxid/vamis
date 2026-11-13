@@ -3741,6 +3741,85 @@
 }
 
 /*
+  对齐 Amis `.ButtonGroup`：邻钮 -1px 叠边，hover / focus 把当前项抬到上层，
+  否则后一个 `.vamis-node` 盖住前钮的 hover 描边（缺边）。
+  负 margin 打在 flex 子项 `.vamis-node` 上，不要打在内层 button 上
+  （button 的 z-index 出不了包装层）。不是 table 那种 collapse + border-box 吃 1px。
+*/
+[data-vamis-button-group] {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  flex-wrap: wrap;
+}
+[data-vamis-button-group] > .vamis-node {
+  position: relative;
+  flex: 0 1 auto;
+}
+[data-vamis-button-group] > .vamis-node:hover,
+[data-vamis-button-group] > .vamis-node:focus-within,
+[data-vamis-button-group] > .vamis-node:active {
+  z-index: 1;
+}
+[data-vamis-button-group] [data-slot='button'] {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-vamis-button-group] > .vamis-node + .vamis-node {
+  margin-left: -1px;
+}
+[data-vamis-button-group] > .vamis-node:not(:last-child) [data-slot='button'] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+[data-vamis-button-group] > .vamis-node:not(:first-child) [data-slot='button'] {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+[data-vamis-button-group].is-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+[data-vamis-button-group].is-vertical > .vamis-node {
+  width: 100%;
+}
+[data-vamis-button-group].is-vertical > .vamis-node + .vamis-node {
+  margin-left: 0;
+  margin-top: -1px;
+}
+[data-vamis-button-group].is-vertical > .vamis-node:not(:last-child) [data-slot='button'] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+[data-vamis-button-group].is-vertical > .vamis-node:not(:first-child) [data-slot='button'] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+[data-vamis-button-group].is-vertical > .vamis-node:first-child [data-slot='button'] {
+  border-top-right-radius: var(--button-radius);
+}
+[data-vamis-button-group].is-vertical > .vamis-node:last-child [data-slot='button'] {
+  border-bottom-left-radius: var(--button-radius);
+}
+
+[data-vamis-button-group].is-tiled {
+  display: flex;
+  width: 100%;
+}
+[data-vamis-button-group].is-tiled > .vamis-node {
+  flex-grow: 1;
+  min-width: 0;
+  text-align: center;
+}
+[data-vamis-button-group].is-tiled [data-slot='button'] {
+  width: 100%;
+}
+
+/*
   对齐 Amis `.Form-label`：14 / 400 / #5c5f66（`--Form-item-*`）。
   压过 Label 的 `text-sm leading-none` 和曾经的 `text-foreground`。
   移动端 title 才是 16；label 不要跟 `--fontSizeBase` 抬到 16。

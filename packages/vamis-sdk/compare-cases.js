@@ -9432,15 +9432,15 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "平铺1"
+            "label": "按钮1"
           },
           {
             "type": "button",
-            "label": "平铺2"
+            "label": "按钮2"
           },
           {
             "type": "button",
-            "label": "平铺3"
+            "label": "按钮3"
           }
         ]
       }
@@ -9465,18 +9465,19 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "button-group",
         "btnLevel": "light",
+        "btnActiveLevel": "warning",
         "buttons": [
           {
             "type": "button",
-            "label": "浅色1"
+            "label": "按钮1"
           },
           {
             "type": "button",
-            "label": "浅色2"
+            "label": "按钮2"
           },
           {
             "type": "button",
-            "label": "覆盖",
+            "label": "按钮3",
             "level": "primary"
           }
         ]
