@@ -430,14 +430,29 @@ export function handleMockApi(input: {
     }
   }
 
-  if (pathname === '/api/mock2/chart/chart1') {
+  if (pathname === '/api/mock2/chart/chart' || pathname === '/api/mock2/chart/chart1') {
+    const rand = () => Math.ceil(Math.random() * 100)
+    if (pathname.endsWith('chart1')) {
+      return {
+        status: 0,
+        data: {
+          title: { text: '远程图表' },
+          xAxis: { type: 'category', data: ['A', 'B', 'C'] },
+          yAxis: { type: 'value' },
+          series: [{ type: 'bar', data: [4, 7, 2] }],
+        },
+      }
+    }
     return {
       status: 0,
+      msg: 'ok',
       data: {
-        title: { text: '远程图表' },
-        xAxis: { type: 'category', data: ['A', 'B', 'C'] },
-        yAxis: { type: 'value' },
-        series: [{ type: 'bar', data: [4, 7, 2] }],
+        title: { text: '销售情况' },
+        tooltip: {},
+        legend: { data: ['销量'] },
+        xAxis: { data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'] },
+        yAxis: {},
+        series: [{ name: '销量', type: 'bar', data: [rand(), rand(), rand(), rand(), rand(), rand()] }],
       },
     }
   }

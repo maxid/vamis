@@ -123,7 +123,7 @@ alwaysApply: true
 ### 活示例不要为对照制造差异
 - 踩过：复制 JSON/YAML 孪生围栏、用甲/乙当唯一后缀，对照去重后仍像「少了示例」，目录虚高。Service 曾把 Amis 的 `api` + Panel 改成静态 `data` + tpl，文档站文案/盒模型和 Amis 对不上。
 - 稳定做法：每个语义只留一份 `schema` 围栏；文案和 schema 对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。对照对齐 mock，不要为了对照把活示例改瘦。
-- 触及：文档活示例（`badge` `nav` `wizard` `service` 等）
+- 触及：文档活示例（`badge` `nav` `wizard` `service` `button-group` `each` `list` `pagination` `chart` `picker` `transfer` `formula` `table` `tag` `crud`）
 - 规则：`.cursor/rules/site.mdc`
 
 ### 对标文档要改写成 Vamis，不要整节粘贴
@@ -176,7 +176,7 @@ alwaysApply: true
 
 ### List-items 是带 15px 右边距的 div，不要用 ul/li 冒充
 - 踩过：用 `ul > li` 再给内层 padding，对照 `div.List-items` 宽高对不上。Amis 该项是 `div`，`margin-right: 15px`、`margin-bottom: gap-sm`，行 padding / 斑马纹 / 顶边打在同一层 ListItem。List 行里的 popOver 宿主做成 flex、放大镜 `svg { display:block; height:14px }` 会吃掉 Amis `svg.icon` 的 inline + `top: 0.125em` 行盒（行高低 ~1.4px，五项合计 List-items 矮约 7px）。
-- 稳定做法：`[data-vamis-list-items]` 对齐 `_list.scss` `&-items`。行 chrome 打在直接子 `.vamis-node`（SchemaRenderer 包装层），不要再给 `[data-vamis-list-item]` 叠一套 padding。空态走独立 placeholder，不要画在 items 框里。list 字段里的 popOver 宿主 `display:block; width:100%`（对齐 `Field--popOverAble`），放大镜走 `svg.icon`（inline / `top: 0.125em` / baseline），不要 flex 把行盒压成 line-height。
+- 稳定做法：`[data-vamis-list-items]` 对齐 `_list.scss` `&-items`。行 chrome（padding / 斑马 / 顶边）打在直接子 `.vamis-node` **和** `.vamis-list__item`（List 为了 click / checkbox 还包一层行壳，选择器只认 `.vamis-node` 时 5 行会叠在一起）。行上 `overflow: hidden` 清 `actions` 的 `float: right`。空态走独立 placeholder。list 字段里的 popOver 宿主 `display:block; width:100%`，放大镜走 `svg.icon`。
 - 触及：`list` `popOver` `hbox`
 - 规则：本文；Amis `_list.scss` `.List-items`；`_popoverable.scss`；`_normalize.scss` `svg.icon`
 

@@ -17,17 +17,25 @@ outline: deep
 
 ```schema: scope="body"
 type: form
+api: /api/mock2/form/saveForm
 body:
   - type: transfer
     name: transfer
-    label: 穿梭器
+    label: 默认
+    value: zhugeliang,libai
     options:
-      - label: 选项 A
-        value: a
-      - label: 选项 B
-        value: b
-      - label: 选项 C
-        value: c
+      - label: 诸葛亮
+        value: zhugeliang
+      - label: 曹操
+        value: caocao
+      - label: 钟无艳
+        value: zhongwuyan
+      - label: 李白
+        value: libai
+      - label: 韩信
+        value: hanxin
+      - label: 云中君
+        value: yunzhongjun
 ```
 
 ## 展示模式
@@ -50,21 +58,29 @@ options:
 
 ## 搜索
 
-`searchable: true` 时左右两栏出现搜索框，`searchPlaceholder` 改占位，`leftTitle` / `rightTitle` 加栏标题：
+`searchable: true` 时左侧出现搜索框；未配 `searchApi` 时按 label / value 本地匹配。
 
-```yaml
-type: transfer
-name: transfer
-label: 穿梭器
-searchable: true
-searchPlaceholder: 搜索选项
-leftTitle: 待选
-rightTitle: 已选
-options:
-  - label: 选项 A
-    value: a
-  - label: 选项 B
-    value: b
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: transfer
+    name: transfer
+    label: 带搜索
+    searchable: true
+    options:
+      - label: 诸葛亮
+        value: zhugeliang
+      - label: 曹操
+        value: caocao
+      - label: 钟无艳
+        value: zhongwuyan
+      - label: 李白
+        value: libai
+      - label: 韩信
+        value: hanxin
+      - label: 云中君
+        value: yunzhongjun
 ```
 
 ## 树形模式

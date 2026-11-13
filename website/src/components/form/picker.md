@@ -17,16 +17,17 @@ outline: deep
 
 ```schema: scope="body"
 type: form
+api: /api/mock2/form/saveForm
 body:
   - type: picker
     name: picker
-    label: 选择器
+    label: picker
     options:
-      - label: 选项 A
+      - label: A
         value: a
-      - label: 选项 B
+      - label: B
         value: b
-      - label: 选项 C
+      - label: C
         value: c
 ```
 

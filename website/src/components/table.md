@@ -15,28 +15,20 @@ outline: deep
 
 ## 基本用法
 
+表格本身不拉接口，通常挂在 Service 上用 `source: $rows`。
+
 ```schema: scope="body"
-type: table
-title: 浏览器
-data:
-  items:
-    - id: "1"
-      engine: Blink
-      browser: Chrome
-      version: "100"
-    - id: "2"
-      engine: WebKit
-      browser: Safari
-      version: "15"
-columns:
-  - name: id
-    label: ID
-  - name: engine
-    label: Engine
-  - name: browser
-    label: Browser
-  - name: version
-    label: Version
+type: service
+api: /api/mock2/sample?perPage=5
+body:
+  - type: table
+    title: 表格1
+    source: $rows
+    columns:
+      - name: engine
+        label: Engine
+      - name: version
+        label: Version
 ```
 
 ## 数据需求

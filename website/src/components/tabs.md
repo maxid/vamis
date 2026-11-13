@@ -21,6 +21,7 @@ outline: deep
 
 ```schema: scope="body"
 type: tabs
+swipeable: true
 tabs:
   - title: Tab 1
     tab: Content 1

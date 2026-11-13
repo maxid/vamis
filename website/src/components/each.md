@@ -15,51 +15,67 @@ outline: deep
 
 ## 基本用法
 
-```schema: scope="body"
-type: each
-source: "${items}"
-items:
-  type: tpl
-  tpl: "${index}: ${item}"
+通过 `name` 指定要循环的数组，`items` 指定循环内容。
+
+```schema: scope="page"
+type: page
 data:
-  items: [A, B, C]
+  arr: [A, B, C]
+body:
+  type: each
+  name: arr
+  items:
+    type: tpl
+    tpl: "<span class='label label-default m-l-sm'>${item}</span> "
 ```
 
 ## 如果是对象数组
 
-对象成员可直接取字段：
+对象成员可直接取字段，也可用 `item.xxx`；`index` 是数组下标。
 
-```schema: scope="body"
-type: each
-source: "${rows}"
-items:
-  type: tpl
-  tpl: "${name} - ${age}"
+```schema: scope="page" height="160"
+type: page
 data:
-  rows:
-    - name: 张三
-      age: 18
-    - name: 李四
-      age: 20
+  arr:
+    - name: a
+    - name: b
+    - name: c
+body:
+  type: each
+  name: arr
+  items:
+    type: tpl
+    tpl: "<span class='label label-default m-l-sm'>${name}:${index}</span> "
 ```
 
 ## 循环嵌套
 
-`items` 里可以继续写 `each`，内层用 `source` 取外层成员字段：
+默认 `item` / `index` 只指向最内层。要拿外层信息，自定义 `itemKeyName` / `indexKeyName`。
 
-```schema: scope="body"
-type: each
-source: "${groups}"
-items:
-  type: each
-  source: "${items}"
-  items:
-    type: tpl
-    tpl: "${item}"
+```schema: scope="page" height="160"
+type: page
 data:
-  groups:
-    - items: [a, b]
-    - items: [c, d]
+  arr:
+    - name: a
+      subList: [a1, a2]
+    - name: b
+      subList: [b1, b2]
+    - name: c
+      subList: [c1, c2]
+body:
+  type: each
+  name: arr
+  itemKeyName: itemOutter
+  indexKeyName: indexOutter
+  items:
+    - type: tpl
+      inline: false
+      tpl: "<span class='label label-default m-l-sm'>${name}:${index}</span> "
+    - type: each
+      name: subList
+      items:
+        - type: tpl
+          tpl: "<span class='label label-default m-l-sm'>${itemOutter.name}-${item}:${indexOutter}-${index}</span> "
 ```
 
 ## 用作 Field 时

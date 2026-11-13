@@ -6756,23 +6756,29 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "pagination",
-        "layout": "total,perPage,pager,go",
-        "mode": "normal",
-        "activePage": 2,
-        "lastPage": 99999,
-        "total": 999,
-        "perPage": 10,
-        "maxButtons": 7,
-        "showPerPage": true,
-        "perPageAvailable": [
-          10,
-          20,
-          50,
-          100
-        ],
-        "showPageInput": true,
-        "disabled": false
+        "type": "service",
+        "api": "/api/mock2/crud/table",
+        "body": [
+          {
+            "type": "pagination",
+            "layout": "total,perPage,pager,go",
+            "mode": "normal",
+            "activePage": 2,
+            "lastPage": 99999,
+            "total": 999,
+            "perPage": 10,
+            "maxButtons": 7,
+            "showPerPage": true,
+            "perPageAvailable": [
+              10,
+              20,
+              50,
+              100
+            ],
+            "showPageInput": true,
+            "disabled": false
+          }
+        ]
       }
     },
     "measure": {
@@ -7118,6 +7124,7 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "tabs",
+        "swipeable": true,
         "tabs": [
           {
             "title": "Tab 1",
@@ -9344,11 +9351,20 @@ window.VAMIS_COMPARE_CASES = [
         "buttons": [
           {
             "type": "button",
-            "label": "Button"
+            "label": "Button",
+            "actionType": "dialog",
+            "dialog": {
+              "confirmMode": false,
+              "title": "提示",
+              "body": "对，你刚点击了！"
+            }
           },
           {
             "type": "button",
-            "label": "按钮2"
+            "actionType": "url",
+            "url": "https://www.baidu.com",
+            "blank": true,
+            "label": "百度一下"
           },
           {
             "type": "button",
@@ -19644,6 +19660,52 @@ window.VAMIS_COMPARE_CASES = [
             "type": "input-number",
             "name": "sum",
             "label": "和",
+            "disabled": true,
+            "description": "自动计算 A + B"
+          },
+          {
+            "type": "formula",
+            "name": "sum",
+            "value": 0,
+            "formula": "a + b"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formula-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Formula 公式",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Formula 公式 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "a",
+            "label": "A"
+          },
+          {
+            "type": "input-number",
+            "name": "b",
+            "label": "B"
+          },
+          {
+            "type": "input-number",
+            "name": "sum",
+            "label": "和",
             "disabled": true
           },
           {
@@ -19668,7 +19730,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "components-form-formula-1",
+    "id": "components-form-formula-2",
     "group": "组件 / 数据输入",
     "bucket": "components",
     "section": "数据输入",
@@ -19676,7 +19738,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Formula 公式 #2",
+    "title": "Formula 公式 #3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21243,22 +21305,23 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
             "type": "picker",
             "name": "picker",
-            "label": "选择器",
+            "label": "picker",
             "options": [
               {
-                "label": "选项 A",
+                "label": "A",
                 "value": "a"
               },
               {
-                "label": "选项 B",
+                "label": "B",
                 "value": "b"
               },
               {
-                "label": "选项 C",
+                "label": "C",
                 "value": "c"
               }
             ]
@@ -25396,23 +25459,93 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "form",
+        "api": "/api/mock2/form/saveForm",
         "body": [
           {
             "type": "transfer",
             "name": "transfer",
-            "label": "穿梭器",
+            "label": "默认",
+            "value": "zhugeliang,libai",
             "options": [
               {
-                "label": "选项 A",
-                "value": "a"
+                "label": "诸葛亮",
+                "value": "zhugeliang"
               },
               {
-                "label": "选项 B",
-                "value": "b"
+                "label": "曹操",
+                "value": "caocao"
               },
               {
-                "label": "选项 C",
-                "value": "c"
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              },
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-transfer-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Transfer 穿梭器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Transfer 穿梭器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "api": "/api/mock2/form/saveForm",
+        "body": [
+          {
+            "type": "transfer",
+            "name": "transfer",
+            "label": "带搜索",
+            "searchable": true,
+            "options": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang"
+              },
+              {
+                "label": "曹操",
+                "value": "caocao"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              },
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
               }
             ]
           }
@@ -25900,51 +26033,94 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "crud",
-      "body": [
-        {
-          "type": "crud",
-          "syncLocation": false,
-          "api": "/api/mock2/sample",
-          "headerToolbar": [
-            {
-              "type": "button",
-              "label": "新增",
-              "level": "primary",
-              "actionType": "dialog",
-              "dialog": {
-                "title": "新增",
-                "body": {
-                  "type": "form",
-                  "api": "/api/mock2/sample",
-                  "body": [
-                    {
-                      "type": "input-text",
-                      "name": "name",
-                      "label": "名称"
-                    }
-                  ]
+      "body": {
+        "type": "crud",
+        "api": "/api/mock2/sample",
+        "syncLocation": false,
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "engine",
+            "label": "Rendering engine"
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          },
+          {
+            "name": "platform",
+            "label": "Platform(s)"
+          },
+          {
+            "name": "version",
+            "label": "Engine version"
+          },
+          {
+            "name": "grade",
+            "label": "CSS grade"
+          },
+          {
+            "type": "operation",
+            "label": "操作",
+            "buttons": [
+              {
+                "label": "详情",
+                "type": "button",
+                "level": "link",
+                "actionType": "dialog",
+                "dialog": {
+                  "title": "查看详情",
+                  "body": {
+                    "type": "form",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "engine",
+                        "label": "Engine"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "browser",
+                        "label": "Browser"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "platform",
+                        "label": "platform"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "version",
+                        "label": "version"
+                      },
+                      {
+                        "type": "control",
+                        "label": "grade",
+                        "body": {
+                          "type": "tag",
+                          "label": "${grade}",
+                          "displayMode": "normal",
+                          "color": "active"
+                        }
+                      }
+                    ]
+                  }
                 }
+              },
+              {
+                "label": "删除",
+                "type": "button",
+                "level": "link",
+                "className": "text-danger",
+                "disabledOn": "this.grade === 'A'"
               }
-            }
-          ],
-          "columns": [
-            {
-              "name": "id",
-              "label": "ID"
-            },
-            {
-              "name": "name",
-              "label": "名称",
-              "searchable": true
-            },
-            {
-              "name": "status",
-              "label": "状态"
-            }
-          ]
-        }
-      ]
+            ]
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -25964,40 +26140,23 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "title": "浏览器",
-        "data": {
-          "items": [
-            {
-              "id": "1",
-              "engine": "Blink",
-              "browser": "Chrome",
-              "version": "100"
-            },
-            {
-              "id": "2",
-              "engine": "WebKit",
-              "browser": "Safari",
-              "version": "15"
-            }
-          ]
-        },
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "name": "engine",
-            "label": "Engine"
-          },
-          {
-            "name": "browser",
-            "label": "Browser"
-          },
-          {
-            "name": "version",
-            "label": "Version"
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
           }
         ]
       }
@@ -28902,19 +29061,19 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "arr": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
       "body": {
         "type": "each",
-        "source": "${items}",
+        "name": "arr",
         "items": {
           "type": "tpl",
-          "tpl": "${index}: ${item}"
-        },
-        "data": {
-          "items": [
-            "A",
-            "B",
-            "C"
-          ]
+          "tpl": "<span class='label label-default m-l-sm'>${item}</span> "
         }
       }
     },
@@ -28935,24 +29094,25 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "arr": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          },
+          {
+            "name": "c"
+          }
+        ]
+      },
       "body": {
         "type": "each",
-        "source": "${rows}",
+        "name": "arr",
         "items": {
           "type": "tpl",
-          "tpl": "${name} - ${age}"
-        },
-        "data": {
-          "rows": [
-            {
-              "name": "张三",
-              "age": 18
-            },
-            {
-              "name": "李四",
-              "age": 20
-            }
-          ]
+          "tpl": "<span class='label label-default m-l-sm'>${name}:${index}</span> "
         }
       }
     },
@@ -28973,33 +29133,53 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "arr": [
+          {
+            "name": "a",
+            "subList": [
+              "a1",
+              "a2"
+            ]
+          },
+          {
+            "name": "b",
+            "subList": [
+              "b1",
+              "b2"
+            ]
+          },
+          {
+            "name": "c",
+            "subList": [
+              "c1",
+              "c2"
+            ]
+          }
+        ]
+      },
       "body": {
         "type": "each",
-        "source": "${groups}",
-        "items": {
-          "type": "each",
-          "source": "${items}",
-          "items": {
+        "name": "arr",
+        "itemKeyName": "itemOutter",
+        "indexKeyName": "indexOutter",
+        "items": [
+          {
             "type": "tpl",
-            "tpl": "${item}"
+            "inline": false,
+            "tpl": "<span class='label label-default m-l-sm'>${name}:${index}</span> "
+          },
+          {
+            "type": "each",
+            "name": "subList",
+            "items": [
+              {
+                "type": "tpl",
+                "tpl": "<span class='label label-default m-l-sm'>${itemOutter.name}-${item}:${indexOutter}-${index}</span> "
+              }
+            ]
           }
-        },
-        "data": {
-          "groups": [
-            {
-              "items": [
-                "a",
-                "b"
-              ]
-            },
-            {
-              "items": [
-                "c",
-                "d"
-              ]
-            }
-          ]
-        }
+        ]
       }
     },
     "measure": {
@@ -30268,37 +30448,57 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "list",
-        "source": "${rows}",
-        "listItem": {
-          "body": {
-            "type": "hbox",
-            "columns": [
-              {
-                "label": "Engine",
-                "name": "engine"
-              },
-              {
-                "label": "Version",
-                "name": "version"
-              }
-            ]
-          }
-        },
-        "data": {
-          "rows": [
-            {
-              "browser": "Chrome",
-              "engine": "Blink",
-              "version": "100"
-            },
-            {
-              "browser": "Safari",
-              "engine": "WebKit",
-              "version": "15"
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "source": "$rows",
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version"
+                    }
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": "button",
+                  "level": "link",
+                  "label": "查看详情",
+                  "actionType": "dialog",
+                  "dialog": {
+                    "title": "查看详情",
+                    "body": {
+                      "type": "form",
+                      "body": [
+                        {
+                          "label": "Engine",
+                          "name": "engine",
+                          "type": "static"
+                        },
+                        {
+                          "name": "version",
+                          "label": "Version",
+                          "type": "static"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
-          ]
-        }
+          }
+        ]
       }
     },
     "measure": {
@@ -30319,27 +30519,32 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "list",
-        "selectable": true,
-        "source": "${rows}",
-        "listItem": {
-          "body": {
-            "type": "tpl",
-            "tpl": "${browser} (${version})"
-          }
-        },
-        "data": {
-          "rows": [
-            {
-              "browser": "Chrome",
-              "version": "100"
-            },
-            {
-              "browser": "Safari",
-              "version": "15"
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "selectable": true,
+            "source": "$rows",
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version"
+                    }
+                  ]
+                }
+              ]
             }
-          ]
-        }
+          }
+        ]
       }
     },
     "measure": {
@@ -30360,26 +30565,33 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "list",
-        "selectable": true,
-        "multiple": false,
-        "source": "${rows}",
-        "listItem": {
-          "body": {
-            "type": "tpl",
-            "tpl": "${browser}"
-          }
-        },
-        "data": {
-          "rows": [
-            {
-              "browser": "Chrome"
-            },
-            {
-              "browser": "Safari"
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "selectable": true,
+            "multiple": false,
+            "source": "$rows",
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version"
+                    }
+                  ]
+                }
+              ]
             }
-          ]
-        }
+          }
+        ]
       }
     },
     "measure": {
@@ -31874,6 +32086,28 @@ window.VAMIS_COMPARE_CASES = [
           "type": "tag",
           "label": "这是一个很长长长长长长长长长长长长长的标签",
           "color": "success"
+        },
+        {
+          "type": "tag",
+          "label": "这是一个很长长长长长长长长长长长长长的标签",
+          "closable": true
+        },
+        {
+          "type": "tag",
+          "label": "关闭了！",
+          "closable": true,
+          "onEvent": {
+            "close": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "${event.data.label}"
+                  }
+                }
+              ]
+            }
+          }
         }
       ]
     },

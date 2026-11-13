@@ -19,18 +19,24 @@ outline: deep
 
 ```schema: scope="body"
 {
-    "type": "pagination",
-    "layout": "total,perPage,pager,go",
-    "mode": "normal",
-    "activePage": 2,
-    "lastPage": 99999,
-    "total": 999,
-    "perPage": 10,
-    "maxButtons": 7,
-    "showPerPage": true,
-    "perPageAvailable": [10, 20, 50, 100],
-    "showPageInput": true,
-    "disabled": false
+    "type": "service",
+    "api": "/api/mock2/crud/table",
+    "body": [
+        {
+            "type": "pagination",
+            "layout": "total,perPage,pager,go",
+            "mode": "normal",
+            "activePage": 2,
+            "lastPage": 99999,
+            "total": 999,
+            "perPage": 10,
+            "maxButtons": 7,
+            "showPerPage": true,
+            "perPageAvailable": [10, 20, 50, 100],
+            "showPageInput": true,
+            "disabled": false
+        }
+    ]
 }
 ```
 

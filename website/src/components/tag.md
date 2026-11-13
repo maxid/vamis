@@ -28,6 +28,18 @@ body:
   - type: tag
     label: 这是一个很长长长长长长长长长长长长长的标签
     color: success
+  - type: tag
+    label: 这是一个很长长长长长长长长长长长长长的标签
+    closable: true
+  - type: tag
+    label: 关闭了！
+    closable: true
+    onEvent:
+      close:
+        actions:
+          - actionType: toast
+            args:
+              msg: "${event.data.label}"
 ```
 
 ## 不同的模式

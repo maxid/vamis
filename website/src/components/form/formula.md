@@ -15,25 +15,25 @@ outline: deep
 
 ## 基本用法
 
-公式字段只负责计算并写值，展示可用一个只读 input：
+公式字段本身隐藏，把结果写到指定表单项。
 
-```yaml
+```schema: scope="body"
 type: form
 body:
   - type: input-number
     name: a
     label: A
-    value: 1
   - type: input-number
     name: b
     label: B
-    value: 2
   - type: input-number
     name: sum
     label: 和
     disabled: true
+    description: 自动计算 A + B
   - type: formula
     name: sum
+    value: 0
     formula: "a + b"
 ```
 
@@ -41,21 +41,20 @@ body:
 
 默认 `autoSet: true`，依赖字段变化时重算；`initSet` 默认 true，挂载即应用一次。
 
-```yaml
+```schema: scope="body"
 type: form
 body:
   - type: input-number
     name: a
     label: A
-    value: 1
   - type: input-number
     name: b
     label: B
-    value: 2
   - type: input-number
     name: sum
     label: 和
     disabled: true
+    description: 自动计算 A + B
   - type: formula
     name: sum
     value: 0

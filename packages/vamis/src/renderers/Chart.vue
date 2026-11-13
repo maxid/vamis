@@ -37,6 +37,21 @@ async function fetchOption() {
 }
 
 let lastOption: unknown
+let pollTimer: ReturnType<typeof setTimeout> | undefined
+
+function stopPolling() {
+  if (pollTimer) clearTimeout(pollTimer)
+  pollTimer = undefined
+}
+
+function schedulePoll() {
+  stopPolling()
+  const interval = Number(props.schema.interval)
+  if (!Number.isFinite(interval) || interval < 1000) return
+  pollTimer = setTimeout(() => {
+    void loadChart()
+  }, interval)
+}
 
 async function applyOption(option: unknown) {
   lastOption = option
@@ -72,6 +87,7 @@ async function applyOption(option: unknown) {
 async function loadChart() {
   try {
     await applyOption(await fetchOption())
+    schedulePoll()
   } catch (error) {
     missing.value = error instanceof Error ? error.message : 'chart api 加载失败'
   }
@@ -91,17 +107,16 @@ watch(el, (node) => {
 })
 
 watch(
+  () => props.schema.interval,
+  () => schedulePoll(),
+)
+
+watch(
   () => [props.schema.api, props.data] as const,
   (curr, prev) => {
     if (!prev) return
     if (!isApiOutdated(prev[0], curr[0], prev[1], curr[1])) return
-    void (async () => {
-      try {
-        await applyOption(await fetchOption())
-      } catch (error) {
-        missing.value = error instanceof Error ? error.message : 'chart api 加载失败'
-      }
-    })()
+    void loadChart()
   },
 )
 
@@ -125,6 +140,7 @@ const chartApi = {
 scoped?.register(chartApi as never)
 
 onBeforeUnmount(() => {
+  stopPolling()
   scoped?.unregister(chartApi as never)
   if (listeningResize) window.removeEventListener('resize', onResize)
   chart?.dispose()

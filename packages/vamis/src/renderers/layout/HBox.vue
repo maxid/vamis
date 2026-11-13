@@ -46,6 +46,7 @@ function colStyle(col: unknown) {
     :data-gap="gap"
     :data-align="align"
     :data-valign="valign"
+    :data-list-field="asListField ? '' : undefined"
   >
     <div
       v-for="(col, i) in columns"
@@ -91,6 +92,10 @@ function colStyle(col: unknown) {
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;
+}
+[data-vamis-hbox][data-list-field] > [data-hbox-col] {
+  min-width: 0;
+  width: auto;
 }
 [data-vamis-hbox] > [data-hbox-col][data-hbox-width='custom'] {
   flex-grow: unset;

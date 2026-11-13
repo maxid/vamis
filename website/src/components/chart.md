@@ -5,8 +5,8 @@ outline: deep
 
 # Chart 图表
 
-::: warning 实现进度 45% · 进行中
-有 `config`/`api` 时动态加载 echarts；画布走内核 LazyComponent（`unMountOnHidden` 默认 false）；`api` 按 `isApiOutdated` 刷新。属性表 / 事件表 / 动作表已按 Amis 列出：事件与 `reload` / `setValue` 尚未接到 Chart。无 `mapURL` / `source` 变量；无库则占位。
+::: warning 实现进度 60% · 进行中
+有 `config`/`api` 时动态加载 echarts；`interval` 拉完再 `setTimeout` 轮询（≥1000ms）。画布走内核 LazyComponent。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch`。对照 harness 将 chart 列入 SKIP_TYPES，以双站手核。
 :::
 
 图表走 echarts，配置格式与 echarts 相同。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
@@ -15,12 +15,10 @@ outline: deep
 
 `api` 可直接返回完整 echarts option。
 
-```schema
-type: page
-title: chart
-body:
-  - type: chart
-    api: /api/mock2/chart/chart1
+```schema: scope="body"
+type: chart
+api: /api/mock2/chart/chart
+interval: 5000
 ```
 
 ## 静态数据
@@ -50,7 +48,7 @@ body:
 | `style` | `object` | | 根元素 style |
 | `width` / `height` | `string` | `16rem` | 画布高度；宽随容器 |
 | `initFetch` | `boolean` | | **未接** |
-| `interval` | `number` | | **未接**（Chart 不轮询） |
+| `interval` | `number` | | 刷新间隔（毫秒），小于 1000 不轮询。对齐 Amis：每次拉完再 `setTimeout` |
 | `source` | 数据映射 | | 从数据域取 echarts option |
 | `replaceChartOption` | `boolean` | `false` | setOption 时替换而非合并 |
 | `trackExpression` | `string` | | **未接**（url 含 `$` 才随数据重拉） |

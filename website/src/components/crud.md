@@ -15,35 +15,61 @@ outline: deep
 
 ## 基本用法
 
-```schema
-type: page
-title: crud
-body:
-  - type: crud
-    syncLocation: false
-    api: /api/mock2/sample
-    headerToolbar:
-      - type: button
-        label: 新增
-        level: primary
+最基本的用法是配置 **数据源接口（api）** 以及 **展示列（columns）**。
+
+```schema: scope="body"
+type: crud
+api: /api/mock2/sample
+syncLocation: false
+columns:
+  - name: id
+    label: ID
+  - name: engine
+    label: Rendering engine
+  - name: browser
+    label: Browser
+  - name: platform
+    label: Platform(s)
+  - name: version
+    label: Engine version
+  - name: grade
+    label: CSS grade
+  - type: operation
+    label: 操作
+    buttons:
+      - label: 详情
+        type: button
+        level: link
         actionType: dialog
         dialog:
-          title: 新增
+          title: 查看详情
           body:
             type: form
-            api: /api/mock2/sample
             body:
               - type: input-text
-                name: name
-                label: 名称
-    columns:
-      - name: id
-        label: ID
-      - name: name
-        label: 名称
-        searchable: true
-      - name: status
-        label: 状态
+                name: engine
+                label: Engine
+              - type: input-text
+                name: browser
+                label: Browser
+              - type: input-text
+                name: platform
+                label: platform
+              - type: input-text
+                name: version
+                label: version
+              - type: control
+                label: grade
+                body:
+                  type: tag
+                  label: "${grade}"
+                  displayMode: normal
+                  color: active
+      - label: 删除
+        type: button
+        level: link
+        className: text-danger
+        disabledOn: this.grade === 'A'
 ```
 
 ## 本地过滤函数

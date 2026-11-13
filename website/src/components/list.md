@@ -15,25 +15,38 @@ outline: deep
 
 ## 基本用法
 
+列表本身不拉接口，通常挂在 Service 上用 `source: $rows`。
+
 ```schema: scope="body"
-type: list
-source: "${rows}"
-listItem:
-  body:
-    type: hbox
-    columns:
-      - label: Engine
-        name: engine
-      - label: Version
-        name: version
-data:
-  rows:
-    - browser: Chrome
-      engine: Blink
-      version: "100"
-    - browser: Safari
-      engine: WebKit
-      version: "15"
+type: service
+api: /api/mock2/sample?perPage=5
+body:
+  - type: list
+    source: $rows
+    listItem:
+      body:
+        - type: hbox
+          columns:
+            - label: Engine
+              name: engine
+            - name: version
+              label: Version
+      actions:
+        - type: button
+          level: link
+          label: 查看详情
+          actionType: dialog
+          dialog:
+            title: 查看详情
+            body:
+              type: form
+              body:
+                - label: Engine
+                  name: engine
+                  type: static
+                - name: version
+                  label: Version
+                  type: static
 ```
 
 ## 选择模式
@@ -41,34 +54,38 @@ data:
 `selectable: true` 开启多选；`multiple: false` 为单选：
 
 ```schema: scope="body"
-type: list
-selectable: true
-source: "${rows}"
-listItem:
-  body:
-    type: tpl
-    tpl: "${browser} (${version})"
-data:
-  rows:
-    - browser: Chrome
-      version: "100"
-    - browser: Safari
-      version: "15"
+type: service
+api: /api/mock2/sample?perPage=5
+body:
+  - type: list
+    selectable: true
+    source: $rows
+    listItem:
+      body:
+        - type: hbox
+          columns:
+            - label: Engine
+              name: engine
+            - name: version
+              label: Version
 ```
 
 ```schema: scope="body"
-type: list
-selectable: true
-multiple: false
-source: "${rows}"
-listItem:
-  body:
-    type: tpl
-    tpl: "${browser}"
-data:
-  rows:
-    - browser: Chrome
-    - browser: Safari
+type: service
+api: /api/mock2/sample?perPage=5
+body:
+  - type: list
+    selectable: true
+    multiple: false
+    source: $rows
+    listItem:
+      body:
+        - type: hbox
+          columns:
+            - label: Engine
+              name: engine
+            - name: version
+              label: Version
 ```
 
 ## 单行点击操作

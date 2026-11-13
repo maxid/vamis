@@ -17,9 +17,7 @@ outline: deep
 
 ## 基本用法
 
-对照不跑 dialog / url 活示例：
-
-```yaml
+```schema: scope="body"
 type: button-group
 buttons:
   - type: button
@@ -34,19 +32,6 @@ buttons:
     url: https://www.baidu.com
     blank: true
     label: 百度一下
-  - type: button
-    label: 普通按钮
-```
-
-活示例只用普通按钮：
-
-```schema: scope="body"
-type: button-group
-buttons:
-  - type: button
-    label: Button
-  - type: button
-    label: 按钮2
   - type: button
     label: 普通按钮
 ```
