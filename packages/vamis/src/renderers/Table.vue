@@ -5,9 +5,9 @@ import {
   createVamisEvent,
   eventEvalData,
   resolveClassName,
-  resolveValue,
   runAction,
   runOnEvent,
+  table2Source,
   useEnv,
   useScoped,
   type ActionSchema,
@@ -389,19 +389,7 @@ function colWidthStyle(col: SchemaObject) {
 }
 const rows = computed<Record<string, any>[]>(() => {
   if (localRows.value) return localRows.value
-  if (Array.isArray(props.items)) return props.items
-  const source = props.schema.source
-  if (typeof source === 'string' && source.startsWith('$') && props.data) {
-    const key = source.replace(/^\$\{?|\}$/g, '')
-    const value = props.data[key]
-    return Array.isArray(value) ? value : []
-  }
-  const raw = props.schema.data
-  if (typeof raw === 'string' && props.data) {
-    const value = resolveValue(raw, props.data)
-    return Array.isArray(value) ? value : []
-  }
-  return Array.isArray(raw) ? raw : []
+  return table2Source(props.schema, props.data || {}, props.items)
 })
 async function onRowClick(row: Record<string, any>, event: MouseEvent) {
   const action = props.schema.itemAction

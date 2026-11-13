@@ -654,13 +654,15 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     allowHtml: 'body 是否当 HTML，默认 true。',
   }),
   each: fields('Each', {
+    value: '直接给定要循环的数组。优先于 source / name。',
     name: '数组字段名。',
     source: '数据源表达式或数组。',
     items: '每一项的 schema。',
     body: '同 items。',
-    placeholder: '空数组占位。',
+    placeholder: '空数组占位。默认「暂无数据」。',
     itemKeyName: '成员在数据域里的键名，默认 item。',
     indexKeyName: '序号键名，默认 index。',
+    maxLength: '最多循环次数。数字或表达式。',
     inline: 'true 时 each 本身也 inline，可跟在一段文本后面。',
   }, { slots: ['items', 'body'] }),
   image: fields('Image', {

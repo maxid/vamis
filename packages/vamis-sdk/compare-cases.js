@@ -29711,17 +29711,23 @@ window.VAMIS_COMPARE_CASES = [
           "items": [
             {
               "id": "1",
-              "tags": [
-                "前端",
-                "低代码"
+              "each": [
+                "A1",
+                "B1",
+                "C1"
               ]
             },
             {
               "id": "2",
-              "tags": [
-                "Vue",
-                "Amis"
+              "each": [
+                "A2",
+                "B2",
+                "C2"
               ]
+            },
+            {
+              "id": "3",
+              "each": []
             }
           ]
         },
@@ -29731,12 +29737,13 @@ window.VAMIS_COMPARE_CASES = [
             "label": "Id"
           },
           {
-            "name": "tags",
-            "label": "标签",
+            "name": "each",
+            "label": "循环",
             "type": "each",
+            "placeholder": "暂无内容",
             "items": {
-              "type": "tag",
-              "label": "${item}"
+              "type": "tpl",
+              "tpl": "<span class='label label-info m-l-sm'>${item}</span>"
             }
           }
         ]
@@ -29762,19 +29769,20 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "form",
         "data": {
-          "names": [
-            "张三",
-            "李四"
+          "each": [
+            "A",
+            "B",
+            "C"
           ]
         },
         "body": [
           {
-            "type": "static-each",
-            "name": "names",
-            "label": "成员",
+            "type": "each",
+            "label": "静态展示each",
+            "name": "each",
             "items": {
               "type": "tpl",
-              "tpl": "${item}"
+              "tpl": "<span class='label label-info m-l-sm'>${item}</span>"
             }
           }
         ]
@@ -29797,23 +29805,63 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "arr": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
       "body": {
         "type": "each",
-        "source": "${items}",
-        "maxLength": 2,
+        "source": "${arr}",
         "items": {
           "type": "tpl",
-          "tpl": "${item}"
-        },
-        "data": {
-          "items": [
-            1,
-            2,
-            3,
-            4
-          ]
+          "tpl": "<span class='label label-default m-l-sm'>${item}</span> "
         }
       }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "arr": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "body": [
+        {
+          "type": "form",
+          "debug": true,
+          "body": [
+            {
+              "type": "each",
+              "source": "${arr}",
+              "items": {
+                "type": "input-text",
+                "label": "Input${item}",
+                "name": "text${index}"
+              }
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"

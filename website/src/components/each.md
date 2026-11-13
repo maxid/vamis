@@ -5,8 +5,8 @@ outline: deep
 
 # Each 循环渲染器
 
-::: info 实现进度 80% · 进行中
-`source` / `name` / `value` 取数组、对象转 `{key,value}`、`items` 循环渲染、`itemKeyName` / `indexKeyName`、`placeholder`、`maxLength`（支持表达式）。文档按 Amis 章节扩展。余项：动态数据源/远程 items 依赖宿主 API。
+::: info 实现进度 90% · 进行中
+`value` / `source` / `name` 取数组、对象转 `{key,value}`、`items` 循环（含数组嵌套）、`itemKeyName` / `indexKeyName`、默认占位「暂无数据」、`maxLength`（含表达式）。文档主路径活示例已对标 Amis。余项：`themeCss`。
 :::
 
 `each` 按数组循环渲染 `items`。Vamis 用 YAML 或 JSON 书写，字段名不改写。
@@ -29,9 +29,13 @@ body:
     tpl: "<span class='label label-default m-l-sm'>${item}</span> "
 ```
 
-## 如果是对象数组
+### 如果是对象数组
 
 对象成员可直接取字段，也可用 `item.xxx`；`index` 是数组下标。
+
+::: warning
+如果成员对象本身也有名字为 `index` 的字段就会覆盖到，获取不到索引了，请查看「循环嵌套」的章节解决。
+:::
 
 ```schema: scope="page" height="160"
 type: page
@@ -48,7 +52,7 @@ body:
     tpl: "<span class='label label-default m-l-sm'>${name}:${index}</span> "
 ```
 
-## 循环嵌套
+### 循环嵌套
 
 默认 `item` / `index` 只指向最内层。要拿外层信息，自定义 `itemKeyName` / `indexKeyName`。
 
@@ -80,7 +84,7 @@ body:
 
 ## 用作 Field 时
 
-Table 列、Form 静态展示都可用 `each`，按 `name` 映射同名变量。
+Table 列、List / Card 内容、表单静态展示都可用 `each`，按 `name` 映射同名变量，再用 `item` 取单项。
 
 ### Table 中的列类型
 
@@ -89,83 +93,93 @@ type: table
 data:
   items:
     - id: "1"
-      tags: [前端, 低代码]
+      each: [A1, B1, C1]
     - id: "2"
-      tags: [Vue, Amis]
+      each: [A2, B2, C2]
+    - id: "3"
+      each: []
 columns:
   - name: id
     label: Id
-  - name: tags
-    label: 标签
+  - name: each
+    label: 循环
     type: each
+    placeholder: 暂无内容
     items:
-      type: tag
-      label: "${item}"
+      type: tpl
+      tpl: "<span class='label label-info m-l-sm'>${item}</span>"
 ```
+
+List、Card 的内容配置同上。
 
 ### Form 中静态展示
 
 ```schema: scope="body"
 type: form
 data:
-  names: [张三, 李四]
+  each: [A, B, C]
 body:
-  - type: static-each
-    name: names
-    label: 成员
+  - type: each
+    label: 静态展示each
+    name: each
     items:
       type: tpl
-      tpl: "${item}"
+      tpl: "<span class='label label-info m-l-sm'>${item}</span>"
 ```
 
 ## 使用数据映射
 
-`source` 支持数据映射表达式，`maxLength` 控制最多循环次数：
-
-```schema: scope="body"
-type: each
-source: "${items}"
-maxLength: 2
-items:
-  type: tpl
-  tpl: "${item}"
+```schema: scope="page"
+type: page
 data:
-  items: [1, 2, 3, 4]
+  arr: [A, B, C]
+body:
+  type: each
+  source: "${arr}"
+  items:
+    type: tpl
+    tpl: "<span class='label label-default m-l-sm'>${item}</span> "
 ```
+
+源码取值顺序是 `value` > `source` > `name`。用作 Field 时运行时会把 `name` 映射进 `value`，所以文档里「`name` 比 `source` 更高」指的是这种用法。
 
 ## 动态表单项
 
-`items` 可以为 array，循环产出多个表单项（如动态字段）：
+表单项可通过表达式配置动态字段，结合 `each` 使用。循环体里的 `name` / `label` 会按当前成员展开。
 
-```yaml
-type: form
+```schema: scope="page"
+type: page
 data:
-  fields: [name, email]
+  arr: [A, B, C]
 body:
-  - type: each
-    source: "${fields}"
-    items:
-      type: input-text
-      name: "${item}"
-      label: "${item}"
+  - type: form
+    debug: true
+    body:
+      - type: each
+        source: "${arr}"
+        items:
+          type: input-text
+          label: Input${item}
+          name: text${index}
 ```
 
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `value` | `array` | `[]` | 直接给定要循环的值 |
+| `type` | `string` | `"each"` | 指定为 Each 组件 |
+| `value` | `array` | | 直接给定要循环的值，优先于 `source` / `name` |
 | `name` | `string` | | 取数据域同名变量 |
-| `source` | `string` | | 数据映射表达式，优先于 `name` |
-| `items` / `body` | SchemaNode | | 循环体 |
-| `placeholder` | `string` | | 空数组时占位文本 |
+| `source` | `string` | | 数据映射表达式，见 [数据映射](/docs/concepts/data-mapping) |
+| `items` | [SchemaNode](/types/schemanode) | | 使用当前成员循环输出渲染器 |
+| `placeholder` | `string` | `"暂无数据"` | `value` 不存在或为空数组时的占位文本 |
 | `itemKeyName` | `string` | `item` | 当前成员在循环体内的变量名 |
 | `indexKeyName` | `string` | `index` | 当前序号变量名 |
-| `maxLength` | `number` / 表达式 | | 最多循环次数 |
+| `maxLength` | `number` / 表达式 | | 最多循环次数（Amis 源码有，文档表未列） |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 与 Amis 一致：数组循环、对象转 `{key,value}`、`items`、`itemKeyName` / `indexKeyName`、`placeholder`、`maxLength`。
-- Vamis 不额外套 `.Each` 竖排壳，`tpl` 成员默认 inline；`static-each` 走 Static 泛型。
+- `items` 未写时回落到 `{ type: tpl, tpl: '${item}' }`。
+- 未接 `themeCss` / `wrapperCustomStyle`。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

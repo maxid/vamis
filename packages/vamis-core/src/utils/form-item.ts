@@ -185,6 +185,8 @@ export function formItemValidateOnChange(item: SchemaObject, form: SchemaObject)
 }
 
 function nestedFormNodes(item: SchemaObject): unknown[] {
+  // Each 的 items 是循环体，要等渲染时按成员 clone；不要把 `text${index}` 收成一个字段。
+  if (String(item.type || '').toLowerCase() === 'each') return []
   const out: unknown[] = []
   for (const key of ['body', 'controls', 'columns', 'items'] as const) {
     const raw = item[key]

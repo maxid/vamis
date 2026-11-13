@@ -822,8 +822,8 @@ alwaysApply: true
 - 触及：`picker`
 
 ### Table 本地数据域用 localRows 覆盖 source
-- 稳定做法：localRows 非空时优先于 items/source/data；setData 接受数组或 {items}/{rows} 并清空选择；getData 返回 items/rows/total/selectedItems，供 setValue 组件动作使用。
-- 触及：`table`
+- 稳定做法：localRows 非空时优先于 items/source/data；未写 source 时默认 `${items}`（复用 `table2Source`，含 `schema.data.items`）。setData 接受数组或 {items}/{rows} 并清空选择；getData 返回 items/rows/total/selectedItems，供 setValue 组件动作使用。
+- 触及：`table` `each`
 
 ### Table 嵌套支持多级但子行不进 selection/merge
 - 稳定做法：nestedRowsFor 递归收集展开后代，子 key 用父路径 `/ci`，depth 控制缩进；子行只有展示，选择/合并/拖拽仍只作用于顶层 displayRows。
@@ -924,8 +924,14 @@ alwaysApply: true
 - 触及：`tag`
 
 ### Each 的 maxLength 支持表达式；static-each 对照读 schemaValue
-- 稳定做法：`maxLength` 为字符串时按 `resolveValue` 求值再 `slice(0, n)`；`value` 可直接给数组；`source` 优先于 `name`；`static-each` 探针返回 schemaValue，不要读表单域。
+- 稳定做法：`maxLength` 为字符串时按 `resolveValue` 求值再 `slice(0, n)`；`value` 可直接给数组；取值顺序对齐 Amis `getPropValue`：`value` > `source` > `name`（文档说 name 更高是因为 Field 会把 name 映射进 value）。空数组默认占位「暂无数据」。`items` 是数组时要 `asArray` 再渲染，不要把数组当无 type 的 schema。对照探针：`each` / `static-each` 返回 schemaValue，不要读表单域（Each 不是 FormItem，form.data 有同名字段会假红）。
 - 触及：`each` `static-each`
+
+### Each items 数组要拆开渲染；name/label 只在当前层展开
+- 踩过：嵌套 each 的 `items: [tpl, each]` 整段交给 SchemaRenderer，数组没有 type，内层循环不画。动态表单项 `name: text${index}` 若不展开，三个输入框共用一个字段。整棵 `dataMapping` 又会把内层 `${item}` 用外层成员烤死。
+- 稳定做法：`asArray(items)` 逐个 SchemaRenderer。只 `filterTpl` 当前层 `name` / `label`。`collectFormItems` 不要走进 `type: each` 的 items。对象成员先 `{index, ...item}` 再写自定义 itemKey/indexKey，否则改了 `indexKeyName` 后 `${index}` 丢了。
+- 触及：`each`
+- 规则：`packages/vamis-core/src/utils/each.ts`；Amis `Each.tsx` / `wrapControl` tokenize name
 
 ### Service 轮询要挂定时器并清理；事件在请求完成时派发
 - 踩过：只接了 `initFetch` 一次性 reload，`interval` / `silentPolling` / `stopAutoRefreshWhen` 完全没读；`init` / `fetchInited` / `fetchSchemaInited` 文档写了但没派发。

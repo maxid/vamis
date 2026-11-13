@@ -291,6 +291,17 @@ describe('collectFormItems / validateOnChange', () => {
     expect(items.map((item) => item.name)).toEqual(['name'])
     expect(applyFormItemDefaults(items, {})).toEqual({ name: 'amis' })
   })
+
+  it('does not collect each.items as form fields', () => {
+    const items = collectFormItems([
+      {
+        type: 'each',
+        source: '${arr}',
+        items: { type: 'input-text', name: 'text${index}', label: 'Input${item}' },
+      },
+    ])
+    expect(items.map((item) => item.name)).toEqual([])
+  })
 })
 
 describe('server errors / autoFill', () => {

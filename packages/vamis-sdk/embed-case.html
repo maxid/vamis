@@ -501,8 +501,16 @@
         }
 
         function readNodeValue(node, formData) {
-          // static-image / static-images 是展示字段：Amis 不从表单域回读，统一用 schemaValue。
-          if (node.type === 'static-image' || node.type === 'static-images' || node.type === 'static-mapping' || node.type === 'static-each') return node.schemaValue
+          // static-* / each 是展示或循环壳：Amis 不从表单域回读，统一用 schemaValue。
+          if (
+            node.type === 'static-image' ||
+            node.type === 'static-images' ||
+            node.type === 'static-mapping' ||
+            node.type === 'static-each' ||
+            node.type === 'each'
+          ) {
+            return node.schemaValue
+          }
           // 日期范围两端都没有 name input；标签兜底会把 label/日历文本读成值，统一取表单域。
           if (node.type === 'input-date-range' || node.type === 'input-datetime-range') {
             if (node.name && formData && node.name in formData) return formData[node.name]

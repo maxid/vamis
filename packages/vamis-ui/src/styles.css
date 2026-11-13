@@ -2080,6 +2080,15 @@
     min-height: 30px;
     line-height: 30px;
   }
+  /* 对齐 Amis `.Each`：块级壳、不 flex 竖排；占位走 muted + gap-sm。 */
+  .vamis-each {
+    display: block;
+  }
+  .vamis-each__placeholder {
+    color: var(--control-placeholder, #b8babf);
+    text-align: left;
+    padding: var(--gap-sm);
+  }
   [data-vamis-list-item] {
     position: relative;
     display: block;
