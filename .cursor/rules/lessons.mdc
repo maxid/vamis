@@ -284,6 +284,13 @@ alwaysApply: true
 - 触及：FormItem `form` `group`
 - 规则：本文；`playground/src/docs/schema-scope.ts`
 
+### 文档活示例默认套 page，认 scope=page
+- 踩过：Amis 围栏 `scope="body"` / `scope="page"` 都是 `{ type: page, body }`；`Play.jsx` 漏了 `page` 这档。Vamis `SchemaPreview` 只在围栏写了已知 scope 才包，对照 harvest 却会包，缺 Page 槽的示例盒模型 / padding / 数据域会对不上。编辑 Schema 若只绑围栏原文，JSON Tab 看不到 `type: page`。
+- 稳定做法：`applySchemaScope` 把 `page` 当 `body` 别名；未写 scope 且不是 page/IR 就套 `{ type: page, body }`；`scope=none` 才不包。对齐 Amis `buildSchema`：包装后的树 `formatSchemaAs` 进编辑缓冲（`scopeAuthoringText`），围栏 markdown 仍是片段、不要回写。playground 与 compare `scope.mjs` 同口径。
+- 触及：文档预览 对照 编辑 Schema
+- 规则：`playground/src/docs/schema-scope.ts`；Amis `examples/components/Play.jsx` `schemaCode`
+
+
 
 ### 样式
 

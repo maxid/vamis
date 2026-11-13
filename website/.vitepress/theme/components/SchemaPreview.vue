@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { VamisRoot, LazyComponent, parseSchemaText } from 'vamis'
-import { applySchemaScope } from '../../../../playground/src/docs/schema-scope'
+import { applySchemaScope, scopeAuthoringText } from '../../../../playground/src/docs/schema-scope'
 import SchemaSourceEditor from '../../../../playground/src/components/SchemaSourceEditor.vue'
 
 const props = withDefaults(
@@ -21,14 +21,14 @@ function decodeSource(raw: string) {
   }
 }
 
-const draft = ref(decodeSource(props.yaml))
+const draft = ref(scopeAuthoringText(decodeSource(props.yaml), props.scope))
 const lastGood = ref<unknown>({})
 const editError = ref('')
 
 watch(
-  () => props.yaml,
-  (value) => {
-    draft.value = decodeSource(value)
+  () => [props.yaml, props.scope] as const,
+  ([yaml, scope]) => {
+    draft.value = scopeAuthoringText(decodeSource(yaml), scope)
   },
 )
 

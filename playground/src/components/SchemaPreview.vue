@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { VamisRoot, LazyComponent, parseSchemaText } from 'vamis'
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from '@vamis/ui'
-import { applySchemaScope } from '../docs/schema-scope'
+import { applySchemaScope, scopeAuthoringText } from '../docs/schema-scope'
 import { withBase } from '../docs/base'
 import { docViewport } from '../docs/doc-viewport'
 import { PREVIEW_FRAME_PATH } from '../docs/preview-frame'
@@ -18,7 +18,7 @@ const props = withDefaults(
   { height: 200 },
 )
 
-const draft = ref(props.yaml.trim())
+const draft = ref(scopeAuthoringText(props.yaml, props.scope))
 const editing = ref(false)
 const lastGood = ref<unknown>({})
 const editError = ref('')
@@ -27,9 +27,9 @@ const inView = ref(false)
 const viewRatio = ref(0)
 
 watch(
-  () => props.yaml,
-  (value) => {
-    draft.value = value.trim()
+  () => [props.yaml, props.scope] as const,
+  ([yaml, scope]) => {
+    draft.value = scopeAuthoringText(yaml, scope)
   },
 )
 

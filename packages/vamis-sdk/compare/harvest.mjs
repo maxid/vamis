@@ -148,13 +148,6 @@ function parseFence(body) {
   return parseSchemaText(body, (text) => parseYaml(text, { prettyErrors: true, schema: 'core', version: '1.2' }))
 }
 
-function schemaNeedsPage(node) {
-  if (!node || typeof node !== 'object') return true
-  if (Array.isArray(node)) return true
-  if (node.type === 'page' || node.apiVersion) return false
-  return true
-}
-
 export function harvestSource(source, rel, options = {}) {
   const group = options.group || 'docs'
   const seen = options.seen || new Set()
@@ -171,7 +164,7 @@ export function harvestSource(source, rel, options = {}) {
       continue
     }
     const meta = parseSchemaFenceMeta(match[1] || '')
-    const schema = applySchemaScope(parsed, meta.scope || (schemaNeedsPage(parsed) ? 'body' : undefined))
+    const schema = applySchemaScope(parsed, meta.scope)
     if (!isRenderableSchema(schema)) continue
     const key = JSON.stringify(schema)
     if (seen.has(key)) continue

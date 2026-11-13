@@ -1,7 +1,13 @@
-/** Amis ```schema: scope="form-item"``` 包装。文档片段不是完整 page 时，套一层再交给运行时。 */
+import { formatSchemaAs, parseSchemaText } from '@vamis/core'
+
+/** Amis ```schema: scope="body|page|form|form-item"``` 包装。文档片段不是完整 page 时，套一层再交给运行时。 */
+
+const wrapPage = (inner: unknown) => ({ type: 'page', body: inner })
 
 const SCOPES: Record<string, (inner: unknown) => unknown> = {
-  body: (inner) => ({ type: 'page', body: inner }),
+  body: wrapPage,
+  /** Amis each.md 等写 `scope="page"`；Play.jsx 漏了这档，语义等同 `body`。 */
+  page: wrapPage,
   form: (inner) => ({
     type: 'page',
     body: {
@@ -34,16 +40,37 @@ const SCOPES: Record<string, (inner: unknown) => unknown> = {
 function isPageLike(node: unknown): boolean {
   if (!node || typeof node !== 'object' || Array.isArray(node)) return false
   const rec = node as Record<string, unknown>
-  if (rec.type === 'page') return true
+  if (rec.type === 'page' || rec.type === 'app') return true
   if (typeof rec.apiVersion === 'string' && rec.spec) return true
   return false
 }
 
 export function applySchemaScope(node: unknown, scope?: string): unknown {
-  if (!scope || scope === 'none') return node
+  if (scope === 'none') return node
   if (isPageLike(node)) return node
-  const wrap = SCOPES[scope]
+  const wrap = SCOPES[scope || 'body']
   return wrap ? wrap(node) : node
+}
+
+function looksJson(text: string) {
+  const trimmed = text.trim()
+  return trimmed.startsWith('{') || trimmed.startsWith('[')
+}
+
+/**
+ * Amis Play.jsx：`buildSchema` 把围栏套进 `scopes[scope]` 后再
+ * `JSON.stringify` 进 `schemaCode`。编辑器看到的是包装后的树，不是围栏原文。
+ * Markdown 围栏仍是片段；只有编辑缓冲 / 预览吃这份。
+ */
+export function scopeAuthoringText(text: string, scope?: string): string {
+  const trimmed = text.trim()
+  if (!trimmed) return trimmed
+  try {
+    const wrapped = applySchemaScope(parseSchemaText(trimmed), scope)
+    return formatSchemaAs(wrapped, looksJson(trimmed) ? 'json' : 'yaml')
+  } catch {
+    return trimmed
+  }
 }
 
 export function parseSchemaFenceMeta(info: string): { scope?: string; height?: number } {

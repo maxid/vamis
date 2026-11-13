@@ -1,7 +1,10 @@
-/** Amis ```schema: scope="form-item"``` 包装。与 playground 同口径。 */
+/** Amis ```schema: scope="body|page|form|form-item"``` 包装。与 playground 同口径。 */
+
+const wrapPage = (inner) => ({ type: 'page', body: inner })
 
 const SCOPES = {
-  body: (inner) => ({ type: 'page', body: inner }),
+  body: wrapPage,
+  page: wrapPage,
   form: (inner) => ({
     type: 'page',
     body: {
@@ -33,15 +36,15 @@ const SCOPES = {
 
 function isPageLike(node) {
   if (!node || typeof node !== 'object' || Array.isArray(node)) return false
-  if (node.type === 'page') return true
+  if (node.type === 'page' || node.type === 'app') return true
   if (typeof node.apiVersion === 'string' && node.spec) return true
   return false
 }
 
 export function applySchemaScope(node, scope) {
-  if (!scope || scope === 'none') return node
+  if (scope === 'none') return node
   if (isPageLike(node)) return node
-  const wrap = SCOPES[scope]
+  const wrap = SCOPES[scope || 'body']
   return wrap ? wrap(node) : node
 }
 

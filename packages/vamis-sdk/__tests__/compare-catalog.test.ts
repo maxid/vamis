@@ -27,22 +27,42 @@ import {
 import { scoreTree, shouldProbe, valuesEqual, walkSchemaTree } from '../compare/schema-tree.mjs'
 
 describe('applySchemaScope', () => {
+  const fragment = { type: 'button', label: 'Go' }
+  const wrapped = { type: 'page', body: fragment }
+
   it('wraps body fragments in page', () => {
-    expect(applySchemaScope({ type: 'button', label: 'Go' }, 'body')).toEqual({
-      type: 'page',
-      body: { type: 'button', label: 'Go' },
-    })
+    expect(applySchemaScope(fragment, 'body')).toEqual(wrapped)
+  })
+
+  it('treats scope=page as body wrap', () => {
+    expect(applySchemaScope(fragment, 'page')).toEqual(wrapped)
+  })
+
+  it('defaults missing scope to page wrap', () => {
+    expect(applySchemaScope(fragment)).toEqual(wrapped)
+  })
+
+  it('honors scope=none', () => {
+    expect(applySchemaScope(fragment, 'none')).toBe(fragment)
   })
 
   it('keeps a page as-is', () => {
     const page = { type: 'page', body: 'x' }
     expect(applySchemaScope(page, 'body')).toBe(page)
+    expect(applySchemaScope(page, 'page')).toBe(page)
+    expect(applySchemaScope(page)).toBe(page)
+  })
+
+  it('does not wrap type=app', () => {
+    const app = { type: 'app', pages: [] }
+    expect(applySchemaScope(app)).toBe(app)
   })
 })
 
 describe('parseSchemaFenceMeta', () => {
   it('reads scope from fence info', () => {
     expect(parseSchemaFenceMeta('schema: scope="body"')).toEqual({ scope: 'body' })
+    expect(parseSchemaFenceMeta('schema: scope="page"')).toEqual({ scope: 'page' })
   })
 })
 

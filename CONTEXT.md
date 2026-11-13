@@ -53,7 +53,7 @@
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-11-12）
+## 当前进度（2026-11-13）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -71,6 +71,8 @@
 
 **最近交付**
 
+- 编辑 Schema 对齐 Amis `schemaCode`：围栏片段经 `scopeAuthoringText` 套 `{ type: page, body }` 后再进 YAML/JSON Tab；markdown 围栏仍是原文，不回写。
+- 文档活示例默认套 `{ type: page, body }`：`applySchemaScope` 认 `scope="page"`（= `body`）；未写 scope 且不是 page 也包一层，和对照 harvest 同口径。
 - `link` 样式：无下划线；色跟 `--primary`；hover 变浅（brand-6 / `l + 0.16`，不要混黑）；禁用钉 `--link-disabled-color` `#b8babf`。进度仍 **85%**。
 
 - `picker` 分组选项：options children 渲染组头、组内缩进，组节点不可选；搜索保留匹配组；文档补分组。82% → **84%**。
