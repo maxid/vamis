@@ -11,7 +11,7 @@ export interface ScopedComponent {
   context?: ScopedContext
   reload?: (extra?: PlainObject, replace?: boolean) => Promise<void> | void
   getData?: () => PlainObject
-  setData?: (values: PlainObject, replace?: boolean) => void
+  setData?: (values: PlainObject, replace?: boolean, index?: unknown, condition?: unknown) => void
   submit?: () => Promise<void> | void
   doAction?: (actions: unknown, ctx?: PlainObject) => Promise<void> | void
 }

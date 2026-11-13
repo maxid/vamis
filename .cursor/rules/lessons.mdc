@@ -183,7 +183,7 @@ alwaysApply: true
 ### componentId 按 id 跨数据域找；对照探针别把包装层当控件
 - 踩过：`setValue` / `clear` / `reset` 的 `componentId` 原先进 `getComponentByName`，只沿父链向上，form 外的按钮点不到 form 内的表单项（Amis `getComponentById` 会沿 scope 树向下）。示例补 `id` 后，对照 `findNodeEl` 又先按 `#id` 命中 Vamis `.vamis-node` 包装层、Amis 没有 → `rendered` / `value` 假红；`valueAfter` 走 formData 会读到交互前的旧值。
 - 稳定做法：`ScopedContext` 维护全树共享 registry，`getComponentById` 按 id 跨域找（`getComponentByName` 仍只沿父链，和 Amis 一致），`componentId` 动作优先走 id；文档保持 Amis 的 `id` + `componentId` 写法（form 外的按钮也能点 form 内）。对照探针：表单项 `[name]` 未命中时按 `[data-amis-name]` / `[data-name]` 找原生控件，交互后读控件 checked；事件链带 `ajax` 不点（静态服 404 会让两边动作链停在不同位置）；每个用例量测前清残留 toast。
-- 触及：`switch` `hidden` `componentId` 对照
+- 触及：`switch` `hidden` `componentId` `list` 对照
 - 规则：`packages/vamis-core/src/scoped.ts` `getComponentById`；`packages/vamis-core/src/actions/run.ts`；`packages/vamis-sdk/embed-case.html`
 
 ### 文件/图片对照按 data-name 找原生 input，值读原生 value
@@ -934,8 +934,22 @@ alwaysApply: true
 - 触及：`tabs`
 
 ### List 的选择态是组件本地态；itemAction 用 runAction
-- 稳定做法：`selectable` 渲染原生 checkbox，multiple 切换 / 单选替换；`getData().selectedItems` 暴露；`itemClick` 先派发，再用 `runAction(itemAction, ctx)` 执行整行动作；对照 harvest 的 CHILD_KEYS 要包含 `listItem` / `itemAction`，否则 list 示例被 `LAYOUT_NEEDS_CHILDREN` 过滤。
-- 触及：`list` `list-item`
+- 踩过：selectable 时点整行就勾选；itemClick toast 要 `${event.data.item.index}` 才对得上 Amis。带 `id` 的动作示例对照先按 `#id` 命中 Vamis `.vamis-node`，Amis 没有 → rendered/value 假红。行内 Action 的 `.vamis-node.w-full` 把 float 动作条拉成整行，点行 / 勾选 / itemAction / itemClick 都被挡住；itemAction 弹层还要传 `overlay`。
+- 稳定做法：行点击用 `@click.capture`（内层 `SchemaRenderer` 的 host click 会抢冒泡）；先拦真正的控件/按钮（对齐 `isClickOnInput`）；有 `onEvent.itemClick` 就不走 `itemAction`；`runAction` / `runOnEvent` 带上 `overlay`。勾选复用 `@vamis/ui` Checkbox / `.vamis-radio-dot`（与 Table2 同一套），未写 `checkOnItemClick: false` 时点行也可勾。动作条 `.vamis-node` 必须 `width: auto`，行 `display: flex; align-items: center`。对照把 `list` 放进 `TREE_LAYOUT`。
+- 触及：`list` `list-item` `table2`
+- 规则：Amis `List.tsx` handleClick / itemAction 互斥；`packages/vamis-sdk/embed-case.html`
+
+### 文档预览井不要 overflow-hidden，会裁死 sticky
+- 踩过：List 字母索引条 `position: sticky` 被 `.doc-play__preview.overflow-hidden` 当成包含块，条钉死在示例井里；用 400px 内部滚动冒充浮动。Amis `.Playgroud-preview` 的 `overflow: hidden` 是注释掉的。
+- 稳定做法：预览井 overflow visible。索引条 `align-self: flex-start; height: fit-content`，滚动/自动定位跟最近 overflow 祖先（文档 `article`），点字母 `scrollIntoView`。不要给 list 再开内部 scroller。
+- 触及：`list` 文档预览
+- 规则：Amis `_list.scss` AlphabetIndexer；`playground/src/components/SchemaPreview.vue`
+
+### List initDrag 整行可拖，手柄只是视觉
+- 踩过：只给 drag-bar `draggable`，内层 `.vamis-node[draggable=false]` 把行内容拖拽吃掉，只能抓 8 点手柄。只用行内 reorder、没有 ghost 时，拖出列表看不见跟随层。
+- 稳定做法：排序态 `pointerdown` 打在 `.vamis-list__item`，手柄只做视觉；内层 node `pointer-events: none`。克隆一行 `position:fixed` 跟指针（可拖出列表），原行 `opacity` 做占位。SchemaRenderer 未在编辑器时不要写 `draggable=false`（`canDrag || undefined`）。
+- 触及：`list`
+- 规则：本文；Amis `List.tsx` Sortable
 
 ### Tag 的关闭/可选状态是本地态 + 事件，不要塞进 Badge
 - 稳定做法：`closable` 渲染按钮并派发 `close`（`prevented` 阻止隐藏）；`checkable` 点击 toggle `checked` 并派发 `click`；`mouseenter/leave` 也派发；样式用 `.vamis-tag__close` / `.is-checked`，mapping 的 tag schema 仍走 Tag 渲染。

@@ -190,7 +190,7 @@ async function onHostEvent(native: Event, eventName: string) {
     v-else-if="visible && normalized"
     :id="nodeId"
     :data-editor-path="editorPath"
-    :draggable="canDrag"
+    :draggable="canDrag || undefined"
     :class="[
       'vamis-node',
       fillsLayoutSlot(normalized.type) && !schemaNodeDisplayClass(normalized) ? 'w-full min-w-0' : '',

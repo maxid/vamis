@@ -3,21 +3,36 @@
 - 日期：2026-11-13
 - 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **8** · 通过 **8** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **19** · 通过 **19** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 0 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 13 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 1 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 9 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（0）
+### 全局（13）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- 无。
+- `src-components-list-0` fontSize: Amis `16px` / Vamis `14px`
+- `src-components-list-1` fontSize: Amis `16px` / Vamis `14px`
+- `src-components-list-2` fontSize: Amis `16px` / Vamis `14px`
+- `src-components-list-3` fontSize: Amis `16px` / Vamis `14px`
+- `src-components-list-4` fontSize: Amis `16px` / Vamis `14px`
+- `src-components-list-5` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-0` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-1` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-2` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-3` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-4` fontSize: Amis `16px` / Vamis `14px`
+- `style-typography-list-style-type-5` fontSize: Amis `16px` / Vamis `14px`
+- …其余 1 条见 last-report.json
+
+整改：
+- html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 ### 样式 helper（0）
 
@@ -25,11 +40,19 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（1）
+### 组件（9）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-tag-0` lineHeight: Amis `24px` / Vamis `22px`
+- `src-components-list-0` lineHeight: Amis `24px` / Vamis `30px`
+- `src-components-list-1` lineHeight: Amis `24px` / Vamis `30px`
+- `style-typography-list-style-type-0` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-1` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-2` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-3` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-4` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-5` lineHeight: Amis `24px` / Vamis `21px`
+- `style-typography-list-style-type-6` lineHeight: Amis `24px` / Vamis `21px`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -39,8 +62,8 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 8 | 0 |
-| 样式 | 0 | 0 |
+| 组件 | 12 | 0 |
+| 样式 | 7 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
 
@@ -48,7 +71,8 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据展示 | 8 | 0 |
+| 组件 / 数据展示 | 12 | 0 |
+| 样式 / Typography | 7 | 0 |
 
 ## P0 失败（驱动下一刀）
 

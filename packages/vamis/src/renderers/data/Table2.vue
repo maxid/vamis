@@ -340,7 +340,7 @@ function cellWidth(col: SchemaObject) {
             <button
               v-if="isRadio"
               type="button"
-              class="vamis-table2-radio"
+              class="vamis-radio-dot vamis-table2-radio"
               role="radio"
               :aria-checked="isSelected(row, ri)"
               :disabled="isDisabledRow(row, ri)"
@@ -490,38 +490,6 @@ function cellWidth(col: SchemaObject) {
 .vamis-table2-sort-icon.is-up.is-active,
 .vamis-table2-sort-icon.is-down.is-active {
   color: var(--primary);
-}
-.vamis-table2-radio {
-  box-sizing: border-box;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  background: #fff;
-  vertical-align: middle;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-.vamis-table2-radio:hover:not(:disabled) {
-  border-color: var(--primary);
-}
-.vamis-table2-radio[aria-checked="true"] {
-  border-color: var(--primary);
-}
-.vamis-table2-radio[aria-checked="true"]::after {
-  content: "";
-  display: block;
-  width: 8px;
-  height: 8px;
-  margin: 3px auto;
-  border-radius: 9999px;
-  background: var(--primary);
-}
-.vamis-table2-radio:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 .vamis-table2 tr.is-disabled {
   color: var(--muted-foreground);

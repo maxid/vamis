@@ -156,11 +156,17 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     action.args?.value ??
     (action.args && !action.args.value ? action.args : undefined)
   const target = action.componentId || action.componentName || action.target
-  const replace = action.dataMergeMode === 'override'
+  const args = (action.args && typeof action.args === 'object' ? action.args : {}) as PlainObject
+  const replace = action.dataMergeMode === 'override' || args.replace === true
   const assign = (values: PlainObject) => {
     if (target) {
       for (const item of resolveTargets(target, data)) {
-        findTargetComponent(ctx, action, item.name)?.setData?.(values, replace)
+        const component = findTargetComponent(ctx, action, item.name)
+        if (args.index != null || args.condition != null) {
+          component?.setData?.(values, replace, args.index, args.condition)
+        } else {
+          component?.setData?.(values, replace)
+        }
       }
       return
     }

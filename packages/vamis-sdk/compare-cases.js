@@ -31166,34 +31166,65 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "list",
-        "source": "${rows}",
-        "itemAction": {
-          "type": "button",
-          "actionType": "dialog",
-          "dialog": {
-            "title": "详情",
-            "body": "当前行：${browser} ${version}"
-          }
-        },
-        "listItem": {
-          "body": {
-            "type": "tpl",
-            "tpl": "${browser} - ${version}"
-          }
-        },
-        "data": {
-          "rows": [
-            {
-              "browser": "Chrome",
-              "version": "100"
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "source": "$rows",
+            "itemAction": {
+              "type": "button",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "详情",
+                "body": "当前行的数据 browser: ${browser}, version: ${version}"
+              }
             },
-            {
-              "browser": "Safari",
-              "version": "15"
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version"
+                    }
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": "button",
+                  "level": "link",
+                  "label": "查看详情",
+                  "actionType": "dialog",
+                  "dialog": {
+                    "title": "查看详情",
+                    "body": {
+                      "type": "form",
+                      "body": [
+                        {
+                          "label": "Engine",
+                          "name": "engine",
+                          "type": "static"
+                        },
+                        {
+                          "name": "version",
+                          "label": "Version",
+                          "type": "static"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
-          ]
-        }
+          }
+        ]
       }
     },
     "measure": {
@@ -31214,26 +31245,674 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "body": {
-        "type": "list",
-        "className": "p-2",
-        "source": "${rows}",
-        "listItem": {
-          "body": {
-            "type": "tpl",
-            "tpl": "${browser}"
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "source": "$rows",
+            "listItem": {
+              "body": {
+                "type": "wrapper",
+                "className": "border-4 border-solid border-primary",
+                "innerClassName": "border-4 border-solid border-success",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                  }
+                ]
+              }
+            }
           }
-        },
-        "data": {
-          "rows": [
-            {
-              "browser": "Chrome"
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "list",
+            "source": "$rows",
+            "listItem": {
+              "body": [
+                {
+                  "type": "hbox",
+                  "columns": [
+                    {
+                      "label": "Engine",
+                      "name": "engine"
+                    },
+                    {
+                      "name": "version",
+                      "label": "Version"
+                    }
+                  ]
+                }
+              ]
             },
+            "onEvent": {
+              "itemClick": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msgType": "info",
+                      "msg": "${event.data.item.index} ${event.data.item.data.engine}"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
             {
-              "browser": "Safari"
+              "name": "trigger1",
+              "id": "trigger1",
+              "type": "action",
+              "label": "选中前两个",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "select",
+                      "componentId": "list-select",
+                      "args": {
+                        "index": "0,1"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": [
+            {
+              "id": "list-select",
+              "type": "list",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           ]
         }
-      }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger2",
+              "id": "trigger2",
+              "type": "action",
+              "label": "设置列表全部项选中",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "selectAll",
+                      "componentId": "list-select",
+                      "description": "点击设置指定列表全部内容选中"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "list-select",
+              "type": "list",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-8",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger3",
+              "id": "trigger3",
+              "type": "action",
+              "label": "清空列表全部选中项",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "clearAll",
+                      "componentId": "list-select",
+                      "description": "点击设置指定列表全部选中项清空"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "list-select",
+              "type": "list",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-9",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger4",
+              "id": "trigger4",
+              "type": "action",
+              "label": "开启列表行排序",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "initDrag",
+                      "componentId": "list-select",
+                      "description": "点击开启列表行排序功能"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "trigger5",
+              "id": "trigger5",
+              "type": "action",
+              "label": "取消列表行排序",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "cancelDrag",
+                      "componentId": "list-select",
+                      "description": "点击取消列表行排序功能"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "list-select",
+              "type": "list",
+              "source": "$rows",
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-10",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "更新列表记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue",
+                  "args": {
+                    "value": {
+                      "rows": [
+                        {
+                          "engine": "Trident - f12fj",
+                          "browser": "Internet Explorer 4.0",
+                          "platform": "Win 95+",
+                          "version": "4",
+                          "grade": "X",
+                          "badgeText": "默认",
+                          "id": 1
+                        },
+                        {
+                          "engine": "Trident - oqvc0e",
+                          "browser": "Internet Explorer 5.0",
+                          "platform": "Win 95+",
+                          "version": "5",
+                          "grade": "C",
+                          "badgeText": "危险",
+                          "id": 2
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "清空列表",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue",
+                  "args": {
+                    "value": {
+                      "rows": []
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "u:b25a8ef0050b",
+          "api": {
+            "method": "get",
+            "url": "/api/mock2/sample?perPage=5"
+          },
+          "body": [
+            {
+              "type": "list",
+              "id": "list_setvalue",
+              "title": "引擎列表",
+              "source": "$rows",
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-11",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "i": "1,3"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "更新index为1和3的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "vamis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "8",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "index": "${i}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新index为1和3的行记录(替换)",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "vamis",
+                      "id": 1234
+                    },
+                    "index": "${i}",
+                    "replace": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新version=7的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "vamis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "4",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "condition": "${version === '7'}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新version=4的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "list_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "vamis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "4",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "condition": {
+                      "conjunction": "and",
+                      "children": [
+                        {
+                          "left": {
+                            "type": "field",
+                            "field": "version"
+                          },
+                          "op": "equal",
+                          "right": "4"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "id": "u:b25a8ef0050b",
+          "api": {
+            "method": "get",
+            "url": "/api/mock2/sample?perPage=5"
+          },
+          "body": [
+            {
+              "type": "list",
+              "id": "list_setvalue_item",
+              "title": "引擎列表",
+              "source": "$rows",
+              "listItem": {
+                "body": [
+                  {
+                    "type": "hbox",
+                    "columns": [
+                      {
+                        "label": "Engine",
+                        "name": "engine"
+                      },
+                      {
+                        "name": "version",
+                        "label": "Version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"

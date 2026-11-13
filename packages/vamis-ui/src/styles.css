@@ -344,6 +344,12 @@
   --list-bg: var(--fill-11);
   --list-item-strip-bg: var(--fill-10);
   --list-items-margin-right: 15px;
+  --list-item-checked-bg: var(--colors-brand-10);
+  --list-item-checked-color: var(--colors-brand-4);
+  --list-item-checked-border: var(--colors-brand-4);
+  --list-item-hover-bg: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --list-heading-unsaved-bg: #e8f0fe;
+  --list-heading-unsaved-color: #4285f4;
   /* Amis `--Crud-toolbar-gap` size-6 / `--Crud-toolbar-height`。 */
   --crud-toolbar-gap: 10px;
   --crud-toolbar-h: 30px;
@@ -812,6 +818,10 @@
   --fill-10: #151c26;
   --list-bg: var(--card);
   --list-item-strip-bg: var(--fill-10);
+  --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, black);
+  --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+  --list-heading-unsaved-bg: color-mix(in oklch, var(--primary) 18%, black);
+  --list-heading-unsaved-color: oklch(0.7 0.13 var(--accent-h));
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #d4d6d9;
   --checkbox-bg: #17202d;
@@ -2083,6 +2093,52 @@
   [data-vamis-list] {
     position: relative;
   }
+  .vamis-list__wrap {
+    display: flex;
+    position: relative;
+  }
+  .vamis-list__main {
+    flex: 1;
+    min-width: 0;
+  }
+  .vamis-list__heading {
+    padding: var(--gap-xs) 0;
+  }
+  .vamis-list__heading.is-unsaved {
+    background: var(--list-heading-unsaved-bg);
+    color: var(--list-heading-unsaved-color);
+    padding: var(--gap-xs) var(--gap-sm);
+    margin-bottom: var(--gap-sm);
+  }
+  .vamis-list__save,
+  .vamis-list__reset {
+    margin-left: var(--gap-sm);
+    height: 24px;
+    padding: 0 8px;
+    font-size: 12px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .vamis-list__save {
+    background: var(--success, #30bf13);
+    color: #fff;
+  }
+  .vamis-list__reset {
+    background: var(--danger, #f23d3d);
+    color: #fff;
+  }
+  .vamis-list__header,
+  .vamis-list__footer {
+    padding: var(--gap-sm) var(--gap-base);
+  }
+  .vamis-list__drag-tip {
+    width: 100%;
+    color: var(--info);
+    clear: both;
+    margin-top: var(--gap-xs);
+    margin-bottom: var(--gap-xs);
+  }
   [data-vamis-list-items] {
     border-radius: var(--radius);
     border: 1px solid var(--border);
@@ -2093,9 +2149,18 @@
   [data-vamis-list-items] > .vamis-node,
   [data-vamis-list-items] > .vamis-list__item {
     position: relative;
-    display: block;
+    display: flex;
+    align-items: center;
     padding: var(--gap-sm) var(--gap-base);
     overflow: hidden;
+  }
+  [data-vamis-list-items] > .vamis-list__item > .vamis-node {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    width: auto;
+    max-width: none;
   }
   [data-vamis-list-items] > .vamis-node + .vamis-node,
   [data-vamis-list-items] > .vamis-list__item + .vamis-list__item {
@@ -2105,11 +2170,148 @@
   [data-vamis-list-items] > .vamis-list__item:nth-child(even) {
     background: var(--list-item-strip-bg);
   }
+  .vamis-list__item.is-selected {
+    background: var(--list-item-checked-bg);
+    color: var(--list-item-checked-color);
+    border-color: var(--list-item-checked-border);
+  }
+  .vamis-list__item.is-selected + .vamis-list__item {
+    border-top-color: var(--list-item-checked-border);
+  }
+  .vamis-list__item.has-item-action,
+  .vamis-list__item.is-selectable {
+    cursor: pointer;
+  }
+  .vamis-list__item.has-item-action:hover {
+    background: var(--list-item-hover-bg);
+  }
+  .vamis-list__item.is-dragging {
+    cursor: move;
+    user-select: none;
+    touch-action: none;
+  }
+  .vamis-list__item.is-dragging > .vamis-node,
+  .vamis-list__item.is-dragging a,
+  .vamis-list__item.is-dragging img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+  .vamis-list__item.is-ghost {
+    opacity: 0.65;
+  }
+  .vamis-list__item-float {
+    display: flex;
+    align-items: center;
+    padding: var(--gap-sm) var(--gap-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--list-bg, var(--card));
+    color: inherit;
+    font: inherit;
+    opacity: 0.92;
+    box-shadow: var(--popup-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+    cursor: move;
+  }
+  .vamis-list__item-float > .vamis-node {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    width: auto;
+    pointer-events: none;
+  }
+  .vamis-list__check,
+  .vamis-list__drag {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--gap-sm);
+  }
+  .vamis-list__check .vamis-checkbox {
+    vertical-align: middle;
+  }
+  .vamis-list__drag {
+    width: 16px;
+    height: 16px;
+    cursor: move;
+    color: var(--form-item-color);
+  }
+  .vamis-list__drag svg.icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+  /* 与 Table2 行选择圆点同一套，挂 :root --checkbox-* */
+  .vamis-radio-dot {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 1px solid var(--checkbox-border, var(--border));
+    border-radius: 9999px;
+    background: var(--checkbox-bg, #fff);
+    vertical-align: middle;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .vamis-radio-dot:hover:not(:disabled) {
+    border-color: var(--primary);
+  }
+  .vamis-radio-dot[aria-checked='true'] {
+    border-color: var(--primary);
+  }
+  .vamis-radio-dot[aria-checked='true']::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    margin: 3px auto;
+    border-radius: 9999px;
+    background: var(--primary);
+  }
+  .vamis-radio-dot:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
   .vamis-list__empty {
     color: var(--control-placeholder, #b8babf);
     text-align: center;
     min-height: 30px;
     line-height: 30px;
+  }
+  .vamis-list__index {
+    position: sticky;
+    top: calc(var(--affix-offset-top, 0px) + var(--gap-base));
+    right: 5px;
+    height: fit-content;
+    padding: 10px 5px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--popup-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    overflow-y: auto;
+    font-size: var(--fontSizeSm, 12px);
+    line-height: 1.5;
+  }
+  .vamis-list__index-letter {
+    font-size: var(--fontSizeSm, 12px);
+    line-height: 1.5;
+    padding: 2px 4px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .vamis-list__index-letter:hover {
+    color: var(--primary);
+  }
+  .vamis-list__index-letter.is-active {
+    color: var(--primary-foreground, #fff);
+    background: var(--primary);
+    border-radius: 2px;
   }
   /* 对齐 Amis `.Each`：块级壳、不 flex 竖排；占位走 muted + gap-sm。 */
   .vamis-each {
@@ -2122,20 +2324,57 @@
   }
   [data-vamis-list-item] {
     position: relative;
-    display: block;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
   }
   .vamis-list-item__title {
     margin: 0;
+    padding: 0;
     font-size: var(--fontSizeBase);
+    color: var(--text-loud);
     font-weight: 400;
   }
   .vamis-list-item__subtitle {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fontSizeSm, 12px);
     color: var(--form-item-color);
   }
   .vamis-list-item__actions {
-    float: right;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    order: 1;
+    margin-left: auto;
+  }
+  .vamis-list-item__actions .vamis-node,
+  .vamis-list-item__actions [data-vamis-action] {
+    display: inline-block;
+    width: auto;
+    max-width: none;
+  }
+  .vamis-list-item__actions [data-slot='button'] {
+    height: auto;
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: inherit;
+  }
+  .vamis-list-item--actions-left .vamis-list-item__actions {
+    order: 0;
+    margin-left: 0;
+    margin-right: var(--gap-base);
+  }
+  .vamis-list-item__avatar {
+    flex: 0 0 40px;
+    width: 40px;
+    margin-right: var(--gap-base);
+  }
+  .vamis-list-item__avatar img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
   }
   [data-vamis-list-field] {
     display: flex;
@@ -2143,6 +2382,8 @@
     position: relative;
   }
   .vamis-list-item__content {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
   }
   [data-vamis-list-item] [data-vamis-hbox] > [data-hbox-col] {
@@ -3574,6 +3815,15 @@
 }
 .vamis-dropdown-group .vamis-dropdown-item {
   padding-left: var(--gap-lg);
+}
+
+/* 压过 Button `h-[var(--button-h-sm)]`：列表动作不撑行高，与文字垂直居中。 */
+.vamis-list-item__actions [data-slot='button'] {
+  height: auto;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: inherit;
 }
 
 /*

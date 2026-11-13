@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-12（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
+- 最近核对：2026-11-13（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
 
 ## 怎么读
 
@@ -285,7 +285,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `grid-nav` | GridNav 宫格导航 | `/components/grid-nav` | `/zh-CN/components/grid-nav` | 进行中 | 50% | 能宫格；仅此处读了 `badge` | P0 |
 | `json` | Json | `/components/json` | `/zh-CN/components/json` | 进行中 | 50% | 能展开 JSON | P0 |
 | `link` | Link 链接 | `/components/link` | `/zh-CN/components/link` | 进行中 | 85% | 主路径已对齐：`href` 插值 / `body` 与 SchemaNode、`blank`（默认 true）/ `htmlTarget`、`title`、`disabled`（`--link-disabled-color` `#b8babf`，无下划线）、`icon` / `rightIcon`、`badge`、`className` / `style`、`static-link`；文档按 Amis 章节改写。对照桌面 **5/5**、移动 **5/5**（P0 0）。余项：`env.tracker` 埋点 | P0 |
-| `list` | List 列表 | `/components/list` | `/zh-CN/components/list` | 进行中 | 75% | 基本用法对标 Amis：Service sample + hbox Engine/Version + 查看详情。行 chrome 打在 `.vamis-list__item`（padding / 斑马 / 清 float）。对照桌面 **12/12**（含 typography list-style，P0 0）。缺字母索引条 / 拖拽排序 | P0 |
+| `list` | List 列表 | `/components/list` | `/zh-CN/components/list` | 进行中 | 90% | 文档主路径已对齐：Service `source`、选择 / `itemAction`、字母索引条、`itemClick`、`select` / `selectAll` / `clearAll` / `initDrag` / `setValue`。行 flex 垂直居中；勾选与 Table2 共用 Checkbox / `.vamis-radio-dot`；点行可选；索引条 sticky 随页面滚动并自动定位（不要 400px 内部滚动）；`initDrag` 整行可拖。对照桌面 **19/19**、移动 **19/19**（P0 0，含 typography list-style）。缺 `submitQuickEdit`、CRUD list 模式联动 | P0 |
 | `log` | Log 实时日志 | `/components/log` | `/zh-CN/components/log` | 进行中 | 25% | **精简**：静态分行，无轮询/ANSI | P0 |
 | `mapping` | Mapping 映射 | `/components/mapping` | `/zh-CN/components/mapping` | 进行中 | 85% | 主路径已对齐：`map` 的 k-v / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串 / SchemaNode）、数组多值、布尔 `1` / `0`、`placeholder`；文档按 Amis 章节改写。HTML `.label-*` 走 `--label-*`（success `#30bf13`）；`type: tag` 走 `.vamis-tag`（rounded `#4096ff` 描边）。对照桌面 **14/14**、移动 **14/14**（P0 0）。余项：30s source 缓存未单实现 | P0 |
 | `number` | Number 展示 | `/components/number` | `/zh-CN/components/number` | 进行中 | 60% | StaticValue；number / percent 过滤器已接，组件自身精度档未齐 | P0 |
@@ -453,7 +453,7 @@ flowchart LR
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 85% |
 | 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 92% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 90% |
-| 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 75% |
+| 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 90% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 90% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
