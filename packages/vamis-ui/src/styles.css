@@ -113,13 +113,17 @@
   --primary-foreground: #ffffff;
   --primary-hover: #1c5bd6;
   --primary-active: #144bcc;
-  /* Amis `--colors-link-5/6/4`，不要用 oklch primary 冒充，也不要 UA 下划线。 */
-  --link-color: #2468f2;
+  /* 链接色跟 `--primary`（顶栏 5 色）。hover 变浅（Amis brand-6），不要绑 `--primary-hover`（混黑几乎看不出）。 */
+  --link-color: var(--primary);
   --link-hover-color: #528eff;
-  --link-active-color: #144bcc;
+  --link-active-color: var(--primary-active);
   --link-decoration: none;
   --link-hover-decoration: none;
   --link-font-weight: 400;
+  /* Amis `--link-disabled-color` = `--colors-neutral-text-6`，不要 `--muted-foreground`。 */
+  --link-disabled-color: #b8babf;
+  --link-icon-size: 14px;
+  --link-icon-margin: 4px;
   --secondary: oklch(0.945 0.01 250);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 250);
@@ -672,6 +676,8 @@
   --muted: oklch(0.3 0.025 258);
   --muted-foreground: oklch(0.7 0.02 250);
   --form-item-color: #e8e9eb;
+  --link-disabled-color: #b8bbbf;
+  --link-hover-color: #7dadff;
   --select-caret-color: #d4d6d9;
   --select-caret-hover-color: #d4d6d9;
   --select-menu-bg: #17202d;
@@ -811,6 +817,7 @@
     --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
     --primary-active: color-mix(in oklch, var(--primary) 82%, black);
     --ring: oklch(0.49 0.16 var(--accent-h));
+    --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
   }
   .dark {
     --primary: oklch(0.7 0.13 var(--accent-h));
@@ -818,6 +825,7 @@
     --primary-hover: color-mix(in oklch, var(--primary) 88%, white);
     --primary-active: color-mix(in oklch, var(--primary) 78%, white);
     --ring: oklch(0.7 0.13 var(--accent-h));
+    --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
   }
 }
 
@@ -5215,6 +5223,47 @@
     color: var(--link-active-color);
     text-decoration: var(--link-hover-decoration);
   }
+}
+
+/* 色跟 `--primary`，hover 变浅（brand-6 / `l + 0.16`），无下划线。禁用钉灰。 */
+.vamis-link {
+  color: var(--link-color);
+  font-weight: var(--link-font-weight);
+  text-decoration: var(--link-decoration);
+  font-style: normal;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color var(--animation-duration);
+}
+.vamis-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: var(--link-hover-decoration);
+}
+.vamis-link:active {
+  color: var(--link-active-color);
+  text-decoration: var(--link-hover-decoration);
+}
+.vamis-link.is-disabled,
+.vamis-link.is-disabled:hover,
+.vamis-link.is-disabled:active {
+  color: var(--link-disabled-color);
+  font-weight: var(--link-font-weight);
+  text-decoration: none;
+  font-style: normal;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+.vamis-link i {
+  font-size: var(--link-icon-size);
+  margin: 0 var(--link-icon-margin);
+}
+.vamis-link .vamis-link__icon,
+.vamis-link svg.icon {
+  display: inline-block;
+  width: var(--link-icon-size);
+  height: var(--link-icon-size);
+  margin: 0 var(--link-icon-margin);
+  vertical-align: text-top;
 }
 
 

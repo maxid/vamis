@@ -6868,6 +6868,45 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-pagination-4",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Pagination 分页",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Pagination 分页 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "pagination",
+          "total": 100,
+          "perPage": 10,
+          "activePage": 1,
+          "layout": "total,perPage,pager,go",
+          "onEvent": {
+            "change": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "第 ${event.data.page} 页 / 每页 ${event.data.perPage}"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-pagination-wrapper-0",
     "group": "组件 / 布局",
     "bucket": "components",
@@ -7298,6 +7337,109 @@ window.VAMIS_COMPARE_CASES = [
           {
             "title": "选项卡2",
             "body": "卡片内容2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-7",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "draggable": true,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          },
+          {
+            "title": "Tab 3",
+            "tab": "Content 3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-8",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "closable": true,
+        "addable": true,
+        "addBtnText": "新增Tab",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1",
+            "closable": false
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-9",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "editable": true,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "双击编辑",
+            "tab": "Content 2"
           }
         ]
       }
@@ -9111,6 +9253,79 @@ window.VAMIS_COMPARE_CASES = [
         "label": "按钮页加载",
         "level": "primary",
         "loading": true
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-4",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "禁用按钮",
+            "disabled": true,
+            "disabledTip": "没有权限"
+          },
+          {
+            "type": "button",
+            "label": "悬停提示",
+            "tooltip": "这是一条提示",
+            "tooltipPlacement": "right"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-button-5",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Button 按钮",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Button 按钮 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button-toolbar",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "搜索",
+            "icon": "fa fa-search"
+          },
+          {
+            "type": "button",
+            "icon": "fa fa-plus",
+            "level": "primary"
+          },
+          {
+            "type": "button",
+            "label": "下一步",
+            "rightIcon": "fa fa-arrow-right"
+          }
+        ]
       }
     },
     "measure": {
@@ -19345,22 +19560,91 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "formula",
-      "body": [
-        {
-          "type": "form",
-          "title": "formula",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "formula",
-              "name": "formula",
-              "label": "formula"
-            }
-          ]
-        }
-      ]
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-number",
+            "name": "a",
+            "label": "A"
+          },
+          {
+            "type": "input-number",
+            "name": "b",
+            "label": "B"
+          },
+          {
+            "type": "input-number",
+            "name": "sum",
+            "label": "和",
+            "disabled": true
+          },
+          {
+            "type": "formula",
+            "name": "sum",
+            "id": "theFormula",
+            "value": 0,
+            "formula": "a + b",
+            "autoSet": false,
+            "initSet": false
+          },
+          {
+            "type": "button",
+            "label": "计算",
+            "target": "theFormula"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "components-form-formula-1",
+    "group": "组件 / 数据输入",
+    "bucket": "components",
+    "section": "数据输入",
+    "page": "Formula 公式",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Formula 公式 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "radios",
+            "name": "radios",
+            "label": "radios",
+            "options": [
+              {
+                "label": "a",
+                "value": "a"
+              },
+              {
+                "label": "b",
+                "value": "b"
+              }
+            ]
+          },
+          {
+            "type": "input-text",
+            "name": "b",
+            "label": "B"
+          },
+          {
+            "type": "formula",
+            "name": "b",
+            "formula": "''",
+            "condition": "${radios}",
+            "initSet": false
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -20890,36 +21174,30 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "picker",
-      "body": [
-        {
-          "type": "form",
-          "title": "picker",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "picker",
-              "name": "picker",
-              "label": "picker",
-              "options": [
-                {
-                  "label": "选项 A"
-                }
-              ],
-              "value": "a"
-            },
-            {
-              "label": "选项 B",
-              "value": "b"
-            },
-            {
-              "label": "选项 C",
-              "value": "c"
-            }
-          ]
-        }
-      ]
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "picker",
+            "name": "picker",
+            "label": "选择器",
+            "options": [
+              {
+                "label": "选项 A",
+                "value": "a"
+              },
+              {
+                "label": "选项 B",
+                "value": "b"
+              },
+              {
+                "label": "选项 C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -25049,36 +25327,30 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "transfer",
-      "body": [
-        {
-          "type": "form",
-          "title": "transfer",
-          "mode": "horizontal",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "transfer",
-              "name": "transfer",
-              "label": "transfer",
-              "options": [
-                {
-                  "label": "选项 A"
-                }
-              ],
-              "value": "a"
-            },
-            {
-              "label": "选项 B",
-              "value": "b"
-            },
-            {
-              "label": "选项 C",
-              "value": "c"
-            }
-          ]
-        }
-      ]
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "transfer",
+            "name": "transfer",
+            "label": "穿梭器",
+            "options": [
+              {
+                "label": "选项 A",
+                "value": "a"
+              },
+              {
+                "label": "选项 B",
+                "value": "b"
+              },
+              {
+                "label": "选项 C",
+                "value": "c"
+              }
+            ]
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -25624,35 +25896,726 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "table",
-      "data": {
-        "items": [
-          {
-            "name": "泵房-A",
-            "status": "online"
-          },
-          {
-            "name": "闸门-B",
-            "status": "offline"
-          }
-        ]
-      },
-      "body": [
-        {
-          "type": "table",
-          "source": "${items}",
-          "columns": [
+      "body": {
+        "type": "table",
+        "title": "浏览器",
+        "data": {
+          "items": [
             {
-              "name": "name",
-              "label": "名称"
+              "id": "1",
+              "engine": "Blink",
+              "browser": "Chrome",
+              "version": "100"
             },
             {
-              "name": "status",
-              "label": "状态"
+              "id": "2",
+              "engine": "WebKit",
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "engine",
+            "label": "Engine"
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          },
+          {
+            "name": "version",
+            "label": "Version"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "source": "${rows}",
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          },
+          {
+            "name": "age",
+            "label": "年龄"
+          }
+        ],
+        "data": {
+          "rows": [
+            {
+              "name": "张三",
+              "age": 18
+            },
+            {
+              "name": "李四",
+              "age": 20
             }
           ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "placeholder": "暂时没有记录",
+        "data": {
+          "items": []
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "status": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "status": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID",
+            "width": 60
+          },
+          {
+            "name": "name",
+            "label": "名称",
+            "type": "tpl",
+            "tpl": "${name}（${id}）"
+          },
+          {
+            "name": "status",
+            "label": "状态",
+            "type": "mapping",
+            "map": {
+              "1": "<span class='label label-success'>正常</span>",
+              "2": "<span class='label label-default'>停用</span>"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "engine": "Blink",
+              "browser": "Chrome",
+              "version": "100"
+            },
+            {
+              "engine": "WebKit",
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "引擎",
+            "groupName": "引擎信息"
+          },
+          {
+            "name": "browser",
+            "label": "浏览器",
+            "groupName": "产品"
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "groupName": "产品"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "combineNum": 2,
+        "data": {
+          "items": [
+            {
+              "engine": "Trident",
+              "browser": "IE 4.2",
+              "version": "4"
+            },
+            {
+              "engine": "Trident",
+              "browser": "IE 4.2",
+              "version": "5"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 1.0",
+              "version": "5"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine"
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          },
+          {
+            "name": "version",
+            "label": "Version"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "draggable": true,
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            },
+            {
+              "id": "3",
+              "name": "Firefox"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "name": "Chrome",
+              "version": "100"
+            },
+            {
+              "name": "Safari",
+              "version": "15"
+            },
+            {
+              "name": "Firefox",
+              "version": "95"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称",
+            "sortable": true
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "sortable": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-8",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "selectable": true,
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-9",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #10",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome",
+              "children": [
+                {
+                  "id": "1-1",
+                  "name": "Chrome Beta"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-10",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #11",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "name": "Chrome",
+              "version": "100"
+            },
+            {
+              "name": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "quickEdit": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-11",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #12",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "engine": "Blink",
+              "browser": "Chrome"
+            },
+            {
+              "engine": "WebKit",
+              "browser": "Safari"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine",
+            "searchable": true
+          },
+          {
+            "name": "browser",
+            "label": "Browser",
+            "filterable": {
+              "options": [
+                "Chrome",
+                "Safari"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-12",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #13",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome",
+              "engine": "Blink",
+              "version": "100"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID",
+            "width": 80,
+            "fixed": "left"
+          },
+          {
+            "name": "name",
+            "label": "名称",
+            "width": 180,
+            "fixed": "left"
+          },
+          {
+            "name": "engine",
+            "label": "Engine",
+            "width": 240
+          },
+          {
+            "name": "version",
+            "label": "Version",
+            "width": 240
+          },
+          {
+            "name": "name",
+            "label": "名称",
+            "width": 240
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-13",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #14",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "browser": "Chrome",
+              "version": "100"
+            },
+            {
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "browser",
+            "label": "Browser"
+          },
+          {
+            "name": "version",
+            "label": "Version"
+          }
+        ],
+        "affixRow": [
+          {
+            "type": "text",
+            "text": "总计"
+          },
+          {
+            "type": "tpl",
+            "tpl": "${rows|pick:version|sum}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-14",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #15",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "itemAction": {
+          "actionType": "dialog",
+          "dialog": {
+            "title": "详情",
+            "body": "当前行：${name}"
+          }
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -27256,6 +28219,141 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-card-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "header": {
+          "title": "标题"
+        },
+        "body": "这里是卡片内容",
+        "secondary": "次要说明",
+        "toolbar": [
+          {
+            "type": "tpl",
+            "tpl": "标签",
+            "className": "label label-warning"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "body": {
+          "type": "wrapper",
+          "className": "h-32 flex items-center justify-center",
+          "body": {
+            "type": "tpl",
+            "tpl": "点击会有弹框"
+          }
+        },
+        "itemAction": {
+          "type": "button",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "详情",
+            "body": "当前描述"
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "header": {
+          "title": "文本卡片"
+        },
+        "body": {
+          "type": "tpl",
+          "tpl": "这里是一段文本内容"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-card-8",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Card 卡片",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Card 卡片 #9",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "card",
+        "header": {
+          "title": "单元格"
+        },
+        "body": {
+          "type": "hbox",
+          "columns": [
+            {
+              "label": "名称",
+              "name": "name"
+            },
+            {
+              "label": "状态",
+              "name": "status"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-cards-0",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -27737,24 +28835,232 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "each",
-      "data": {
-        "items": [
+      "body": {
+        "type": "each",
+        "source": "${items}",
+        "items": {
+          "type": "tpl",
+          "tpl": "${index}: ${item}"
+        },
+        "data": {
+          "items": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "each",
+        "source": "${rows}",
+        "items": {
+          "type": "tpl",
+          "tpl": "${name} - ${age}"
+        },
+        "data": {
+          "rows": [
+            {
+              "name": "张三",
+              "age": 18
+            },
+            {
+              "name": "李四",
+              "age": 20
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "each",
+        "source": "${groups}",
+        "items": {
+          "type": "each",
+          "source": "${items}",
+          "items": {
+            "type": "tpl",
+            "tpl": "${item}"
+          }
+        },
+        "data": {
+          "groups": [
+            {
+              "items": [
+                "a",
+                "b"
+              ]
+            },
+            {
+              "items": [
+                "c",
+                "d"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "tags": [
+                "前端",
+                "低代码"
+              ]
+            },
+            {
+              "id": "2",
+              "tags": [
+                "Vue",
+                "Amis"
+              ]
+            }
+          ]
+        },
+        "columns": [
           {
-            "name": "泵房-A",
-            "status": "online"
+            "name": "id",
+            "label": "Id"
           },
           {
-            "name": "闸门-B",
-            "status": "offline"
+            "name": "tags",
+            "label": "标签",
+            "type": "each",
+            "items": {
+              "type": "tag",
+              "label": "${item}"
+            }
           }
         ]
-      },
-      "body": [
-        {
-          "type": "each"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "data": {
+          "names": [
+            "张三",
+            "李四"
+          ]
+        },
+        "body": [
+          {
+            "type": "static-each",
+            "name": "names",
+            "label": "成员",
+            "items": {
+              "type": "tpl",
+              "tpl": "${item}"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-each-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Each 循环渲染器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Each 循环渲染器 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "each",
+        "source": "${items}",
+        "maxLength": 2,
+        "items": {
+          "type": "tpl",
+          "tpl": "${item}"
+        },
+        "data": {
+          "items": [
+            1,
+            2,
+            3,
+            4
+          ]
         }
-      ]
+      }
     },
     "measure": {
       "type": "tree"
@@ -28772,12 +30078,329 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "link",
-      "body": [
-        {
-          "type": "link"
+      "body": {
+        "type": "link",
+        "href": "https://www.baidu.com",
+        "body": "百度一下，你就知道"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-link-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Link 链接",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Link 链接 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "link",
+        "href": "https://www.baidu.com",
+        "body": "百度一下，你就知道",
+        "blank": true
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-link-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Link 链接",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Link 链接 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "link",
+        "href": "https://www.baidu.com",
+        "body": "百度一下，你就知道",
+        "blank": true,
+        "disabled": true
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-link-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Link 链接",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Link 链接 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "link",
+        "href": "https://www.baidu.com",
+        "body": "百度一下，你就知道",
+        "blank": true,
+        "icon": "fa fa-search"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-link-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Link 链接",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Link 链接 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "link",
+        "href": "https://www.baidu.com",
+        "body": "百度一下，你就知道",
+        "icon": "fa fa-search",
+        "rightIcon": "fa fa-external-link"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-0",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #1",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "list",
+        "source": "${rows}",
+        "listItem": {
+          "body": {
+            "type": "hbox",
+            "columns": [
+              {
+                "label": "Engine",
+                "name": "engine"
+              },
+              {
+                "label": "Version",
+                "name": "version"
+              }
+            ]
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "browser": "Chrome",
+              "engine": "Blink",
+              "version": "100"
+            },
+            {
+              "browser": "Safari",
+              "engine": "WebKit",
+              "version": "15"
+            }
+          ]
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "list",
+        "selectable": true,
+        "source": "${rows}",
+        "listItem": {
+          "body": {
+            "type": "tpl",
+            "tpl": "${browser} (${version})"
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "browser": "Chrome",
+              "version": "100"
+            },
+            {
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "list",
+        "selectable": true,
+        "multiple": false,
+        "source": "${rows}",
+        "listItem": {
+          "body": {
+            "type": "tpl",
+            "tpl": "${browser}"
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "browser": "Chrome"
+            },
+            {
+              "browser": "Safari"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "list",
+        "source": "${rows}",
+        "itemAction": {
+          "type": "button",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "详情",
+            "body": "当前行：${browser} ${version}"
+          }
+        },
+        "listItem": {
+          "body": {
+            "type": "tpl",
+            "tpl": "${browser} - ${version}"
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "browser": "Chrome",
+              "version": "100"
+            },
+            {
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "list",
+        "className": "p-2",
+        "source": "${rows}",
+        "listItem": {
+          "body": {
+            "type": "tpl",
+            "tpl": "${browser}"
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "browser": "Chrome"
+            },
+            {
+              "browser": "Safari"
+            }
+          ]
+        }
+      }
     },
     "measure": {
       "type": "tree"
@@ -29338,12 +30961,223 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "progress",
+      "body": {
+        "type": "progress",
+        "value": 60
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
       "body": [
         {
-          "type": "progress"
+          "type": "progress",
+          "value": 40,
+          "map": "#F96D3E"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "progress",
+          "value": 60,
+          "map": [
+            "bg-danger",
+            "bg-success"
+          ]
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "progress",
+          "value": 20,
+          "mode": "circle",
+          "map": [
+            {
+              "value": 30,
+              "color": "#007bff"
+            },
+            {
+              "value": 60,
+              "color": "#fad733"
+            }
+          ]
         }
       ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "progress",
+        "value": 60,
+        "mode": "circle"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "progress",
+        "value": 60,
+        "mode": "dashboard",
+        "gapDegree": 22,
+        "gapPosition": "bottom"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "progress",
+          "value": 60,
+          "mode": "line",
+          "strokeWidth": 4
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "progress",
+          "value": 60,
+          "mode": "line",
+          "strokeWidth": 12
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "progress",
+          "value": 60,
+          "mode": "dashboard",
+          "strokeWidth": 12
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "progress",
+          "mode": "circle",
+          "value": 60,
+          "valueTpl": "${value}个"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "progress",
+          "value": 60,
+          "showLabel": false
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-progress-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Progress 进度条",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Progress 进度条 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "progress",
+        "value": 60,
+        "threshold": [
+          {
+            "value": "30%",
+            "color": "red"
+          },
+          {
+            "value": "90%",
+            "color": "blue"
+          }
+        ],
+        "showThresholdText": true
+      }
     },
     "measure": {
       "type": "tree"
@@ -29650,12 +31484,141 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "status",
-      "body": [
-        {
-          "type": "status"
+      "body": {
+        "type": "status",
+        "value": 1
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-status-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Status 状态",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Status 状态 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "value": "success"
+            },
+            {
+              "value": "pending"
+            },
+            {
+              "value": "queue"
+            },
+            {
+              "value": "fail"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "value",
+            "label": "状态",
+            "type": "status"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-status-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Status 状态",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Status 状态 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "status",
+        "value": "unusual",
+        "source": {
+          "normal": {
+            "label": "正常",
+            "icon": "fa fa-check-circle",
+            "color": "#30bf13"
+          },
+          "unusual": {
+            "label": "异常",
+            "icon": "fa fa-times-circle",
+            "color": "#f00"
+          }
         }
-      ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-status-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Status 状态",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Status 状态 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "status",
+        "value": "2",
+        "map": {
+          "2": "fa fa-heart"
+        },
+        "labelMap": {
+          "2": "喜欢"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-status-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Status 状态",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Status 状态 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "status",
+        "name": "state",
+        "data": {
+          "state": "pending"
+        }
+      }
     },
     "measure": {
       "type": "tree"
@@ -29828,10 +31791,172 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "tag",
       "body": [
         {
-          "type": "tag"
+          "type": "tag",
+          "label": "普通的标签",
+          "displayMode": "rounded",
+          "color": "inactive"
+        },
+        {
+          "type": "tag",
+          "label": "普通标签",
+          "color": "processing"
+        },
+        {
+          "type": "tag",
+          "label": "这是一个很长长长长长长长长长长长长长的标签",
+          "color": "success"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-1",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #2",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "tag",
+          "label": "面性标签",
+          "displayMode": "normal",
+          "color": "active"
+        },
+        {
+          "type": "tag",
+          "label": "线性标签",
+          "displayMode": "rounded",
+          "color": "inactive"
+        },
+        {
+          "type": "tag",
+          "label": "状态标签",
+          "displayMode": "status",
+          "color": "success"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "tag",
+          "label": "success",
+          "color": "success"
+        },
+        {
+          "type": "tag",
+          "label": "warning",
+          "color": "warning"
+        },
+        {
+          "type": "tag",
+          "label": "error",
+          "color": "error"
+        },
+        {
+          "type": "tag",
+          "label": "自定义",
+          "color": "#4096ff"
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tag",
+        "label": "自定义样式",
+        "displayMode": "rounded",
+        "color": "#4096ff",
+        "className": "m-l-xs",
+        "style": {
+          "fontWeight": 600
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tag-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Tag 标签",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tag 标签 #5",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "tag",
+          "label": "关闭了！",
+          "closable": true,
+          "onEvent": {
+            "close": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "关闭 ${event.data.label}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "tag",
+          "label": "可选标签",
+          "checkable": true,
+          "checked": true,
+          "color": "active"
         }
       ]
     },
@@ -30401,6 +32526,121 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-dialog-5",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #6",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "name": "amis"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "查看详情",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "详情",
+            "body": "当前名称：${name}"
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "打开并关闭",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "提示",
+          "body": {
+            "type": "container",
+            "body": {
+              "type": "button",
+              "label": "关闭",
+              "actionType": "close"
+            }
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-dialog-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Dialog 对话框",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Dialog 对话框 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "编辑",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "编辑",
+          "body": {
+            "type": "form",
+            "body": [
+              {
+                "type": "input-text",
+                "name": "name",
+                "label": "名称"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "type": "button",
+              "label": "取消",
+              "actionType": "close"
+            },
+            {
+              "type": "button",
+              "label": "保存",
+              "level": "primary",
+              "actionType": "close"
+            }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-drawer-0",
     "group": "组件 / 反馈",
     "bucket": "components",
@@ -30667,6 +32907,86 @@ window.VAMIS_COMPARE_CASES = [
             }
           }
         ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-6",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #7",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "打开并关闭",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "提示",
+          "body": {
+            "type": "button",
+            "label": "关闭",
+            "actionType": "close"
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-drawer-7",
+    "group": "组件 / 反馈",
+    "bucket": "components",
+    "section": "反馈",
+    "page": "Drawer 抽屉",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Drawer 抽屉 #8",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "button",
+        "label": "编辑",
+        "actionType": "drawer",
+        "drawer": {
+          "title": "编辑",
+          "body": {
+            "type": "form",
+            "body": [
+              {
+                "type": "input-text",
+                "name": "name",
+                "label": "名称"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "type": "button",
+              "label": "取消",
+              "actionType": "close"
+            },
+            {
+              "type": "button",
+              "label": "保存",
+              "level": "primary",
+              "actionType": "close"
+            }
+          ]
+        }
       }
     },
     "measure": {

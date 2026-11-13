@@ -47,11 +47,7 @@ const rightIcon = computed(() =>
 )
 const className = computed(() => resolveClassName(props.schema.className, data.value))
 const linkClass = computed(() =>
-  cn(
-    'vamis-link inline-flex items-center gap-1 no-underline',
-    disabled.value ? 'cursor-not-allowed text-muted-foreground' : 'text-primary hover:underline',
-    className.value,
-  ),
+  cn('vamis-link', disabled.value && 'is-disabled', className.value),
 )
 </script>
 
@@ -65,16 +61,16 @@ const linkClass = computed(() =>
       :class="linkClass"
       :style="schema.style"
     >
-      <IconMark v-if="icon" :icon="icon" img-class="inline-block size-4" />
+      <IconMark v-if="icon" :icon="icon" img-class="vamis-link__icon" />
       <SchemaRenderer v-if="bodyNode" :schema="bodyNode" :extra-data="data" />
       <template v-else>{{ text }}</template>
-      <IconMark v-if="rightIcon" :icon="rightIcon" img-class="inline-block size-4" />
+      <IconMark v-if="rightIcon" :icon="rightIcon" img-class="vamis-link__icon" />
     </a>
     <span v-else :class="linkClass" :title="title" :style="schema.style" aria-disabled="true">
-      <IconMark v-if="icon" :icon="icon" img-class="inline-block size-4" />
+      <IconMark v-if="icon" :icon="icon" img-class="vamis-link__icon" />
       <SchemaRenderer v-if="bodyNode" :schema="bodyNode" :extra-data="data" />
       <template v-else>{{ text }}</template>
-      <IconMark v-if="rightIcon" :icon="rightIcon" img-class="inline-block size-4" />
+      <IconMark v-if="rightIcon" :icon="rightIcon" img-class="vamis-link__icon" />
     </span>
   </BadgeHost>
 </template>

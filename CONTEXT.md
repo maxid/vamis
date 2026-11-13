@@ -71,6 +71,8 @@
 
 **最近交付**
 
+- `link` 样式：无下划线；色跟 `--primary`；hover 变浅（brand-6 / `l + 0.16`，不要混黑）；禁用钉 `--link-disabled-color` `#b8babf`。进度仍 **85%**。
+
 - `picker` 分组选项：options children 渲染组头、组内缩进，组节点不可选；搜索保留匹配组；文档补分组。82% → **84%**。
 - 本轮目标收尾：table 独立数据域 / 多级嵌套、crud 表达式 matchFunc、transfer tree 展开、picker pickerSchema 桥接均落地；全量 **1317 / 1253 过 / 64 败**（P0 8），测试 905 全过，typecheck 76。
 - `table` 独立数据域：注册 `getData()`（items/rows/total/selectedItems）与 `setData({items})`，支持按钮 setValue 替换本地行；文档补章节。table 仍 **99%**（余子行选择/合并/拖拽）。

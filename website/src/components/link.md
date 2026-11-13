@@ -6,7 +6,7 @@ outline: deep
 # Link 链接
 
 ::: info 实现进度 85% · 进行中
-主路径已对齐：`href`（按数据域插值）、`body` / 默认文本、`blank` / `htmlTarget` 打开方式、`title`、`disabled`、`icon` / `rightIcon`、`badge`、`className` / `style`，也可在 Form 中用 `static-link` 静态展示。对照见下。
+主路径已对齐：`href`（按数据域插值）、`body` / 默认文本、`blank` / `htmlTarget` 打开方式、`title`、`disabled`（无下划线、禁用灰 `#b8babf`）、`icon` / `rightIcon`、`badge`、`className` / `style`，也可在 Form 中用 `static-link` 静态展示。对照见下。
 :::
 
 `link` 渲染一个超链接。可作为 Table 列、List / Card 内容或独立展示组件。Vamis 用 YAML 或 JSON 书写，字段名不改写。
@@ -38,7 +38,7 @@ body:
 
 ## 禁用超链接
 
-`disabled: true` 时不输出可点击的 `href`，样式置灰：
+`disabled: true` 时不输出可点击的 `href`，字色走禁用灰 `#b8babf`，无下划线：
 
 ```schema
 type: page
