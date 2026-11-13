@@ -11,6 +11,12 @@ describe('D2 template string main path', () => {
     expect(filterTpl('Hello ${text}', {})).toBe('Hello ')
   })
 
+  it('maps whole-string $title like Amis tokenize', () => {
+    expect(filterTpl('$title', { title: 'Test Page Component' })).toBe('Test Page Component')
+    expect(resolveValue('$title', { title: 'Test Page Component' })).toBe('Test Page Component')
+    expect(filterTpl('$title', {})).toBe('$title')
+  })
+
   it('evaluates a ternary inside ${}', () => {
     expect(filterTpl("${xxx == 1 ? 'One' : 'Others'}", { xxx: 1 })).toBe('One')
     expect(filterTpl("${xxx == 1 ? 'One' : 'Others'}", { xxx: 0 })).toBe('Others')

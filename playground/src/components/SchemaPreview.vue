@@ -101,7 +101,7 @@ onUnmounted(() => io?.disconnect())
       </div>
       <div
         class="doc-play__stage"
-        :class="isMobile ? 'doc-play__canvas--mobile' : 'p-5'"
+        :class="isMobile ? 'doc-play__canvas--mobile' : undefined"
         :style="isMobile ? undefined : { minHeight: `${minHeight}px` }"
       >
         <div v-if="!isMobile">

@@ -9,7 +9,7 @@ outline: deep
 主路径已对齐：独立 Scope、静态 `data`、`api` 拉数、`schemaApi` 子 schema、`initFetch`、`reload`、`interval` 轮询 / `silentPolling` / `stopAutoRefreshWhen`、`init` / `fetchInited` / `fetchSchemaInited` 事件、`messages.fetchSuccess`、`showErrorMsg`。缺 `dataProvider` / `ws` / `rebuild`。
 :::
 
-部分展示组件自己不会拉接口，要用 `source` 从数据链取数。`Service` 负责拉数（或拉 schema），子组件再从它的数据域取值。
+部分展示组件自己不会拉接口，要用 `source` 从数据链取数。例如 [Table](./table)、[Cards](./cards)、[List](./list)。`Service` 负责配置初始化接口、写入本域，子组件再按数据链取值。
 
 Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
@@ -19,62 +19,96 @@ Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwi
 
 ## 基本使用
 
-对照不跑远程 `api`（避免 Amis / Vamis 两套 mock 对不齐）。静态 `data` 同样进本域：
+最基本的用法是配初始化接口 `api`，把返回数据写入自身数据域，子组件再按 [数据链](/concepts/datascope-and-datachain) 取值。
 
 ```schema: scope="body"
-type: service
-data:
-  title: Test Page
-  date: 2017-10-14
-body:
-  type: tpl
-  tpl: ${title} · 现在是：${date}
-```
-
-远程 `api` 对照不跑：
-
-```yaml
 type: service
 api: /api/mock2/page/initData
 body:
-  type: tpl
-  tpl: 现在是：${date}
+  type: panel
+  title: $title
+  body: 现在是：${date}
 ```
 
-## 展示列表
+接口返回结构：
 
-子组件用 `source: $rows` 取本域列表。对照不跑 crud 接口：
-
-```schema: scope="body"
+```json
 {
-  "type": "service",
+  "status": 0,
+  "msg": "",
   "data": {
-    "rows": [
-      { "engine": "Trident", "version": "4" },
-      { "engine": "Gecko", "version": "1.9" }
-    ]
-  },
-  "body": {
-    "type": "tpl",
-    "tpl": "首行 ${rows[0].engine}"
+    "title": "Test Page Component",
+    "date": "2017-10-13"
   }
 }
 ```
 
+子组件里就可以用 `${title}` 和 `${date}`。静态 `data` 同样进本域，不必先打接口。
+
+## 展示列表
+
+常见组合是 Service + Table：接口里的列表用 `source: $rows` 交给表格。
+
+```schema: scope="body"
+{
+  "type": "service",
+  "api": "/api/mock2/crud/table?perPage=5",
+  "body": [
+    {
+      "type": "table",
+      "title": "表格1",
+      "source": "$rows",
+      "columns": [
+        { "name": "engine", "label": "Engine" },
+        { "name": "version", "label": "Version" }
+      ]
+    },
+    {
+      "type": "table",
+      "source": "$rows",
+      "columns": [
+        { "name": "engine", "label": "Engine" },
+        { "name": "version", "label": "Version" }
+      ]
+    }
+  ]
+}
+```
+
+`table` 配 `source: $rows` 即可拿到接口 `data.rows`。
+
 ## 动态渲染页面
 
-`schemaApi` 把接口 `data` 当成子 schema 渲染（有 `type` 就整棵画）。jsonp / `js:` 未接。对照不跑：
+`schemaApi` 把接口 `data` 当成子 schema 渲染（有 `type` 就整棵画）。
 
-```yaml
+```schema: scope="body"
 type: service
 schemaApi: /api/mock2/service/schema?type=tabs
 ```
 
+接口 `data` 类似：
+
+```json
+{
+  "status": 0,
+  "msg": "",
+  "data": {
+    "type": "tabs",
+    "tabs": [
+      { "title": "TabA", "body": "卡片A内容" },
+      { "title": "TabB", "body": "卡片B内容" }
+    ]
+  }
+}
+```
+
+jsonp / `js:` schemaApi **未接**。
+
 ## 定时轮询刷新
 
-设置 `interval`（ms，最低 1000）会定时重拉 `api` / `schemaApi`；`stopAutoRefreshWhen` 命中表达式时停止。对照页不跑远程接口，这里保留配置写法：
+设置 `interval`（ms，最低 1000）会定时重拉 `api` / `schemaApi`；`stopAutoRefreshWhen` 命中表达式时停止。
 
-```yaml
+```schema: scope="body"
 type: service
 api: /api/mock2/number/random?waitSeconds=1
 interval: 2000
@@ -89,14 +123,16 @@ body:
 
 `silentPolling: true` 时轮询不显示 loading（仅配 `interval` 生效）：
 
-```yaml
+```schema: scope="body"
 type: service
 api: /api/mock2/number/random?waitSeconds=1
 interval: 2000
 silentPolling: true
+stopAutoRefreshWhen: this.random === 6
 body:
-  type: tpl
-  tpl: ${random}
+  type: panel
+  title: 随机数字
+  body: 现在是：${random}
 ```
 
 ## 隐藏错误信息

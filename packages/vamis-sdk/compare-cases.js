@@ -8967,34 +8967,31 @@ window.VAMIS_COMPARE_CASES = [
     "title": "App 多页应用 #1",
     "expect": "",
     "schema": {
-      "type": "page",
-      "body": {
-        "type": "app",
-        "brandName": "应用名称",
-        "pages": [
-          {
-            "label": "分组1",
-            "children": [
-              {
-                "label": "页面A",
-                "url": "/pageA",
-                "schema": {
-                  "type": "page",
-                  "body": "Page A"
-                }
-              },
-              {
-                "label": "页面B",
-                "url": "/pageB",
-                "schema": {
-                  "type": "page",
-                  "body": "Page B"
-                }
+      "type": "app",
+      "brandName": "应用名称",
+      "pages": [
+        {
+          "label": "分组1",
+          "children": [
+            {
+              "label": "页面A",
+              "url": "/pageA",
+              "schema": {
+                "type": "page",
+                "body": "Page A"
               }
-            ]
-          }
-        ]
-      }
+            },
+            {
+              "label": "页面B",
+              "url": "/pageB",
+              "schema": {
+                "type": "page",
+                "body": "Page B"
+              }
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -9012,24 +9009,21 @@ window.VAMIS_COMPARE_CASES = [
     "title": "App 多页应用 #2",
     "expect": "",
     "schema": {
-      "type": "page",
-      "body": {
-        "type": "app",
-        "brandName": "带页脚",
-        "footer": {
-          "type": "tpl",
-          "tpl": "页脚文案"
-        },
-        "pages": [
-          {
-            "label": "首页",
-            "schema": {
-              "type": "page",
-              "body": "主内容"
-            }
+      "type": "app",
+      "brandName": "带页脚",
+      "footer": {
+        "type": "tpl",
+        "tpl": "页脚文案"
+      },
+      "pages": [
+        {
+          "label": "首页",
+          "schema": {
+            "type": "page",
+            "body": "主内容"
           }
-        ]
-      }
+        }
+      ]
     },
     "measure": {
       "type": "tree"
@@ -9813,13 +9807,11 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "service",
-        "data": {
-          "title": "Test Page",
-          "date": "2017-10-14"
-        },
+        "api": "/api/mock2/page/initData",
         "body": {
-          "type": "tpl",
-          "tpl": "${title} · 现在是：${date}"
+          "type": "panel",
+          "title": "$title",
+          "body": "现在是：${date}"
         }
       }
     },
@@ -9842,21 +9834,96 @@ window.VAMIS_COMPARE_CASES = [
       "type": "page",
       "body": {
         "type": "service",
-        "data": {
-          "rows": [
-            {
-              "engine": "Trident",
-              "version": "4"
-            },
-            {
-              "engine": "Gecko",
-              "version": "1.9"
-            }
-          ]
-        },
+        "api": "/api/mock2/crud/table?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-2",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #3",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/number/random?waitSeconds=1",
+        "interval": 2000,
+        "stopAutoRefreshWhen": "this.random === 6",
         "body": {
-          "type": "tpl",
-          "tpl": "首行 ${rows[0].engine}"
+          "type": "panel",
+          "title": "随机数字",
+          "body": "现在是：${random}"
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-service-3",
+    "group": "组件 / 功能",
+    "bucket": "components",
+    "section": "功能",
+    "page": "Service 功能型容器",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Service 功能型容器 #4",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/number/random?waitSeconds=1",
+        "interval": 2000,
+        "silentPolling": true,
+        "stopAutoRefreshWhen": "this.random === 6",
+        "body": {
+          "type": "panel",
+          "title": "随机数字",
+          "body": "现在是：${random}"
         }
       }
     },

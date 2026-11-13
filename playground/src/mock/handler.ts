@@ -197,14 +197,51 @@ export function handleMockApi(input: {
   }
 
   if (pathname === '/api/mock2/page/initData') {
-    const now = new Date()
     return {
       status: 0,
-      msg: 'ok',
+      msg: '',
       data: {
-        title: '页面标题',
-        date: now.toLocaleString(),
-        time: now.getTime(),
+        title: 'Test Page Component',
+        date: '2017-10-13',
+      },
+    }
+  }
+
+  if (pathname === '/api/mock2/crud/table') {
+    return listPayload(filterSample(query), { ...query, perPage: '10' })
+  }
+
+  if (pathname === '/api/mock2/service/schema') {
+    const type = String(query.type || '')
+    const schemas: Record<string, unknown> = {
+      tabs: {
+        type: 'tabs',
+        tabs: [
+          { title: 'TabA', body: '卡片A内容' },
+          { title: 'TabB', body: '卡片B内容' },
+        ],
+      },
+      controls: {
+        controls: [
+          { label: '名称', type: 'input-text', name: 'name' },
+          { label: '作者', type: 'input-text', name: 'author' },
+        ],
+      },
+    }
+    const data = schemas[type]
+    if (!data) return { status: 404, msg: 'Not Found' }
+    return { status: 0, msg: '', data }
+  }
+
+  if (pathname === '/api/mock2/number/random') {
+    if (query.error) return { status: 404, msg: 'Not Found' }
+    const max = query.max != null ? Number(query.max) : 10
+    const min = query.min != null ? Number(query.min) : 1
+    return {
+      status: 0,
+      msg: '随机返回一个数字',
+      data: {
+        random: Math.floor(Math.random() * (max - min + 1) + min),
       },
     }
   }

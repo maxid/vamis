@@ -60,9 +60,18 @@ export function evalExpression(expression: string | undefined, data: PlainObject
   }
 }
 
+function resolveDollarName(expr: string, data: PlainObject): unknown | undefined {
+  if (!/^\$[A-Za-z_]\w*$/.test(expr)) return undefined
+  const key = expr.slice(1)
+  if (!Object.prototype.hasOwnProperty.call(data, key)) return undefined
+  return data[key]
+}
+
 export function filterTpl(tpl: unknown, data: PlainObject = {}, defaultFilter = 'raw'): string {
   if (tpl == null) return ''
   if (typeof tpl !== 'string') return String(tpl)
+  const dollar = resolveDollarName(tpl, data)
+  if (dollar !== undefined) return dollar == null ? '' : String(dollar)
   if (!tpl.includes('${')) return tpl
   try {
     const value = evaluate(tpl, formulaData(data), { evalMode: false, defaultFilter })
@@ -106,6 +115,8 @@ export function resolveValue(expr: unknown, data: PlainObject = {}): unknown {
   if (expr == null || typeof expr !== 'string') return expr
   // Amis：`"\\${xxx}"` 转义后是字面 `${xxx}`，不当表达式
   if (expr.includes('\\${')) return expr.replace(/\\\$\{/g, '${')
+  const dollar = resolveDollarName(expr, data)
+  if (dollar !== undefined) return dollar
   if (expr.startsWith('${') && expr.endsWith('}') && expr.indexOf('${', 1) === -1) {
     try {
       return evaluate(expr, formulaData(data), { evalMode: false, defaultFilter: 'raw' })

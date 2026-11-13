@@ -114,10 +114,16 @@ alwaysApply: true
 - 触及：`dialog` `drawer` `toast` `form` `input-date`
 - 规则：`.cursor/rules/compare.mdc`、`.cursor/rules/component.mdc`
 
+### 整串 `$title` 按字段名取值
+- 踩过：Amis Panel `title: $title` 走 tokenize；Vamis `filterTpl` 只认 `${}`，标题显示字面 `$title`。
+- 稳定做法：整串 `$ident` 在 `filterTpl` / `resolveValue` 里当数据域字段名（Amis tokenize 子集）。中间夹着的 `$` 不要乱展开。
+- 触及：`panel` `service`
+- 规则：`packages/vamis-core/src/formula.ts` `resolveDollarName`
+
 ### 活示例不要为对照制造差异
-- 踩过：复制 JSON/YAML 孪生围栏、用甲/乙当唯一后缀，对照去重后仍像「少了示例」，目录虚高。
-- 稳定做法：每个语义只留一份 `schema` 围栏；文案对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。
-- 触及：文档活示例（`badge` `nav` `wizard` 等）
+- 踩过：复制 JSON/YAML 孪生围栏、用甲/乙当唯一后缀，对照去重后仍像「少了示例」，目录虚高。Service 曾把 Amis 的 `api` + Panel 改成静态 `data` + tpl，文档站文案/盒模型和 Amis 对不上。
+- 稳定做法：每个语义只留一份 `schema` 围栏；文案和 schema 对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。对照对齐 mock，不要为了对照把活示例改瘦。
+- 触及：文档活示例（`badge` `nav` `wizard` `service` 等）
 - 规则：`.cursor/rules/site.mdc`
 
 ### 对标文档要改写成 Vamis，不要整节粘贴
@@ -285,8 +291,8 @@ alwaysApply: true
 - 规则：本文；`playground/src/docs/schema-scope.ts`
 
 ### 文档活示例默认套 page，认 scope=page
-- 踩过：Amis 围栏 `scope="body"` / `scope="page"` 都是 `{ type: page, body }`；`Play.jsx` 漏了 `page` 这档。Vamis `SchemaPreview` 只在围栏写了已知 scope 才包，对照 harvest 却会包，缺 Page 槽的示例盒模型 / padding / 数据域会对不上。编辑 Schema 若只绑围栏原文，JSON Tab 看不到 `type: page`。
-- 稳定做法：`applySchemaScope` 把 `page` 当 `body` 别名；未写 scope 且不是 page/IR 就套 `{ type: page, body }`；`scope=none` 才不包。对齐 Amis `buildSchema`：包装后的树 `formatSchemaAs` 进编辑缓冲（`scopeAuthoringText`），围栏 markdown 仍是片段、不要回写。playground 与 compare `scope.mjs` 同口径。
+- 踩过：Amis 围栏 `scope="body"` / `scope="page"` 都是 `{ type: page, body }`；`Play.jsx` 漏了 `page` 这档。Vamis `SchemaPreview` 只在围栏写了已知 scope 才包，对照 harvest 却会包，缺 Page 槽的示例盒模型 / padding / 数据域会对不上。编辑 Schema 若只绑围栏原文，JSON Tab 看不到 `type: page`。套 page 后还留预览壳 `p-5`，和 Page 12px 叠成 32px。
+- 稳定做法：`applySchemaScope` 把 `page` 当 `body` 别名；未写 scope 且不是 page/IR 就套 `{ type: page, body }`；`scope=none` 才不包。对齐 Amis `buildSchema`：包装后的树 `formatSchemaAs` 进编辑缓冲（`scopeAuthoringText`），围栏 markdown 仍是片段、不要回写。playground 与 compare `scope.mjs` 同口径。桌面预览壳 padding **0**（Amis `.Playgroud-preview`），页边距只留 Page `--page-body-padding` 12px；不要再叠 `p-5`。
 - 触及：文档预览 对照 编辑 Schema
 - 规则：`playground/src/docs/schema-scope.ts`；Amis `examples/components/Play.jsx` `schemaCode`
 
