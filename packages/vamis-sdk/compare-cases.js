@@ -10,6 +10,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "快速开始 #1",
+    "heading": "作者态：YAML 或 JSON",
     "expect": "",
     "schema": {
       "type": "page",
@@ -48,6 +49,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "快速开始 #2",
+    "heading": "作者态：YAML 或 JSON",
     "expect": "",
     "schema": {
       "type": "page",
@@ -73,6 +75,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "配置与组件 #1",
+    "heading": "最简单的配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -92,6 +95,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "配置与组件 #2",
+    "heading": "组件树",
     "expect": "",
     "schema": {
       "type": "page",
@@ -114,6 +118,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "配置与组件 #3",
+    "heading": "组件树",
     "expect": "",
     "schema": {
       "type": "page",
@@ -154,6 +159,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "配置与组件 #4",
+    "heading": "通过树形来实现布局",
     "expect": "",
     "schema": {
       "type": "page",
@@ -327,6 +333,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #1",
+    "heading": "添加初始化接口",
     "expect": "",
     "schema": {
       "type": "page",
@@ -347,6 +354,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #2",
+    "heading": "数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -366,6 +374,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #3",
+    "heading": "数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -388,6 +397,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #4",
+    "heading": "数据链",
     "expect": "",
     "schema": {
       "type": "page",
@@ -426,6 +436,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #5",
+    "heading": "数据链",
     "expect": "",
     "schema": {
       "type": "page",
@@ -458,6 +469,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #6",
+    "heading": "常见误解",
     "expect": "",
     "schema": {
       "type": "page",
@@ -495,6 +507,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #7",
+    "heading": "常见误解",
     "expect": "",
     "schema": {
       "type": "page",
@@ -535,6 +548,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #8",
+    "heading": "2. 显式配置 data",
     "expect": "",
     "schema": {
       "type": "page",
@@ -558,6 +572,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #9",
+    "heading": "更新数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -596,6 +611,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #10",
+    "heading": "URL 参数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -615,6 +631,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #11",
+    "heading": "隐藏数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -687,6 +704,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #1",
+    "heading": "渲染 html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -709,6 +727,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #2",
+    "heading": "渲染 html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -731,6 +750,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #3",
+    "heading": "渲染 html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -762,6 +782,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #4",
+    "heading": "渲染 html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -785,6 +806,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #5",
+    "heading": "表达式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -810,6 +832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #6",
+    "heading": "过滤器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -847,6 +870,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #7",
+    "heading": "JavaScript 模板引擎",
     "expect": "",
     "schema": {
       "type": "page",
@@ -915,6 +939,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #8",
+    "heading": "1. 不要写成 ${data.xxx}",
     "expect": "",
     "schema": {
       "type": "page",
@@ -940,6 +965,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #9",
+    "heading": "1. 不要写成 ${data.xxx}",
     "expect": "",
     "schema": {
       "type": "page",
@@ -965,6 +991,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #1",
+    "heading": "模板字符串",
     "expect": "",
     "schema": {
       "type": "page",
@@ -990,6 +1017,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #2",
+    "heading": "模板字符串",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1015,6 +1043,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #3",
+    "heading": "支持链式取值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1044,6 +1073,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #4",
+    "heading": "自定义 api 请求体数据格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1093,6 +1123,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #5",
+    "heading": "展开所配置的数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1152,6 +1183,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #6",
+    "heading": "展开所配置的数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1209,6 +1241,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #7",
+    "heading": "数组提取值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1289,6 +1322,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #8",
+    "heading": "namespace",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1308,6 +1342,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #9",
+    "heading": "html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1333,6 +1368,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #10",
+    "heading": "raw",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1358,6 +1394,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #11",
+    "heading": "json",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1386,6 +1423,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #12",
+    "heading": "date",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1411,6 +1449,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #13",
+    "heading": "date",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1436,6 +1475,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #14",
+    "heading": "date",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1461,6 +1501,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #15",
+    "heading": "date",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1486,6 +1527,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #16",
+    "heading": "number",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1511,6 +1553,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #17",
+    "heading": "percent",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1544,6 +1587,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #18",
+    "heading": "truncate",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1569,6 +1613,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #19",
+    "heading": "default",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1594,6 +1639,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #20",
+    "heading": "first",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1623,6 +1669,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据映射 #21",
+    "heading": "串联使用过滤器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1652,6 +1699,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #1",
+    "heading": "使用场景",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1678,6 +1726,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #2",
+    "heading": "使用场景",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1706,6 +1755,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #3",
+    "heading": "使用场景",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1728,6 +1778,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #4",
+    "heading": "表达式语法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1769,6 +1820,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #5",
+    "heading": "特殊字符变量名",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1791,6 +1843,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #6",
+    "heading": "公式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1816,6 +1869,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #7",
+    "heading": "公式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1842,6 +1896,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "表达式 #8",
+    "heading": "函数调用示例",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1931,6 +1986,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #1",
+    "heading": "组件配置联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -1983,6 +2039,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #2",
+    "heading": "接口联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2036,6 +2093,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #3",
+    "heading": "接口联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2093,6 +2151,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #4",
+    "heading": "接口联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2139,6 +2198,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #5",
+    "heading": "表单提交返回数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2187,6 +2247,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #6",
+    "heading": "组件间联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2246,6 +2307,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #7",
+    "heading": "组件间联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2307,6 +2369,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #8",
+    "heading": "发送指定数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2382,6 +2445,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #9",
+    "heading": "配置多个目标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2441,6 +2505,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #10",
+    "heading": "动态目标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2550,6 +2615,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #11",
+    "heading": "动态目标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2615,6 +2681,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #1",
+    "heading": "onEvent",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2673,6 +2740,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #2",
+    "heading": "onEvent",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2709,6 +2777,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #3",
+    "heading": "发送 http 请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2753,6 +2822,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #4",
+    "heading": "发送 http 请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2792,6 +2862,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #5",
+    "heading": "弹窗",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2858,6 +2929,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #6",
+    "heading": "跳转链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2891,6 +2963,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #7",
+    "heading": "刷新组件 / 改数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2952,6 +3025,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #8",
+    "heading": "事件上下文",
     "expect": "",
     "schema": {
       "type": "page",
@@ -2989,6 +3063,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #9",
+    "heading": "阻止默认行为",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3026,6 +3101,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #10",
+    "heading": "停止后续动作",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3074,6 +3150,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #11",
+    "heading": "条件执行",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3128,6 +3205,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #12",
+    "heading": "条件执行",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3168,6 +3246,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "行为 #1",
+    "heading": "通过行为按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3192,6 +3271,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "行为 #2",
+    "heading": "通过行为按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3219,6 +3299,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "行为 #3",
+    "heading": "常用动作",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3266,6 +3347,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "行为 #4",
+    "heading": "常用动作",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3292,6 +3374,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "样式 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3331,6 +3414,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "样式 #2",
+    "heading": "CSS 变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3369,6 +3453,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "样式 #3",
+    "heading": "表单项宽度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3410,6 +3495,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "样式 #4",
+    "heading": "状态与响应式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3433,6 +3519,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #1",
+    "heading": "请求数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3474,6 +3561,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #2",
+    "heading": "数据体格式 dataType",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3515,6 +3603,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #3",
+    "heading": "数据体格式 dataType",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3553,6 +3642,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #4",
+    "heading": "请求头",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3588,6 +3678,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #5",
+    "heading": "请求条件 sendOn",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3644,6 +3735,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #6",
+    "heading": "接口缓存 cache",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3685,6 +3777,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #7",
+    "heading": "发送 / 接收适配器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3723,6 +3816,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #8",
+    "heading": "发送 / 接收适配器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3756,6 +3850,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #9",
+    "heading": "提示信息 messages",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3801,6 +3896,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #10",
+    "heading": "自动刷新",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3864,6 +3960,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #11",
+    "heading": "跟踪数据 trackExpression",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3920,6 +4017,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "API #12",
+    "heading": "GraphQL",
     "expect": "",
     "schema": {
       "type": "page",
@@ -3958,6 +4056,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ClassName #1",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4004,6 +4103,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ClassName #2",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4055,6 +4155,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SchemaNode #1",
+    "heading": "模板",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4077,6 +4178,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SchemaNode #2",
+    "heading": "Schema 配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4102,6 +4204,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SchemaNode #3",
+    "heading": "配置显隐",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4143,6 +4246,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SchemaNode #4",
+    "heading": "配置显隐",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4180,6 +4284,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SchemaNode #5",
+    "heading": "SchemaArray 配置数组",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4212,6 +4317,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4232,6 +4338,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #2",
+    "heading": "数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4254,6 +4361,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #3",
+    "heading": "渲染组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4283,6 +4391,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #4",
+    "heading": "在其他区域渲染组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4319,6 +4428,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #5",
+    "heading": "页面初始化请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4344,6 +4454,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #6",
+    "heading": "轮询初始化接口",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4370,6 +4481,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #7",
+    "heading": "轮询初始化接口",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4397,6 +4509,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #8",
+    "heading": "CSS 变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4429,6 +4542,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #9",
+    "heading": "自定义 CSS",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4457,6 +4571,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #10",
+    "heading": "aside 可调整宽度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4490,6 +4605,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #11",
+    "heading": "aside 展示位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4522,6 +4638,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #12",
+    "heading": "init 和 inited",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4571,6 +4688,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #13",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4612,6 +4730,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #14",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4656,6 +4775,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #15",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4702,6 +4822,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Page 页面 #16",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4749,6 +4870,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4771,6 +4893,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #2",
+    "heading": "style",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4796,6 +4919,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #3",
+    "heading": "wrapperComponent",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4819,6 +4943,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #4",
+    "heading": "wrapperBody 与 bodyClassName",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4851,6 +4976,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #5",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4886,6 +5012,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #6",
+    "heading": "mouseenter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4921,6 +5048,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Container 容器 #7",
+    "heading": "mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4956,6 +5084,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -4994,6 +5123,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #2",
+    "heading": "手风琴模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5039,6 +5169,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #3",
+    "heading": "自定义图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5081,6 +5212,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #4",
+    "heading": "设置图标位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5120,6 +5252,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #5",
+    "heading": "面板嵌套",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5171,6 +5304,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #6",
+    "heading": "折叠面板禁用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5210,6 +5344,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #7",
+    "heading": "折叠面板图标隐藏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5246,6 +5381,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #8",
+    "heading": "类 FieldSet 样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5297,6 +5433,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #9",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5348,6 +5485,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Collapse 折叠器 #10",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5384,6 +5522,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Divider 分割线 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5405,6 +5544,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Divider 分割线 #2",
+    "heading": "不同样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5433,6 +5573,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Divider 分割线 #3",
+    "heading": "带标题的分割线",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5468,6 +5609,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Divider 分割线 #4",
+    "heading": "垂直方向",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5503,6 +5645,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Divider 分割线 #5",
+    "heading": "颜色与旋转",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5532,6 +5675,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex 布局 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5585,6 +5729,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex 布局 #2",
+    "heading": "子节点水平分布",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5827,6 +5972,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex 布局 #3",
+    "heading": "垂直方向位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -5976,6 +6122,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex 布局 #4",
+    "heading": "布局方向",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6069,6 +6216,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex 布局 #5",
+    "heading": "移动端支持",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6125,6 +6273,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 水平分栏 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6201,6 +6350,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 水平分栏 #2",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6242,6 +6392,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 水平分栏 #3",
+    "heading": "响应式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6285,6 +6436,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 水平分栏 #4",
+    "heading": "间距与对齐",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6331,6 +6483,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6372,6 +6525,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #2",
+    "heading": "独立设置高宽",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6435,6 +6589,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #3",
+    "heading": "自适应内容高度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6469,6 +6624,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #4",
+    "heading": "格子间距 gap / gapRow",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6530,6 +6686,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid 2D 布局 #5",
+    "heading": "内容区域小于格子的摆放",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6583,6 +6740,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "HBox 布局 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6627,6 +6785,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "HBox 布局 #2",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6656,6 +6815,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "HBox 布局 #3",
+    "heading": "列宽",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6708,6 +6868,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "HBox 布局 #4",
+    "heading": "间距与对齐",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6752,6 +6913,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Pagination 分页 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6795,6 +6957,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Pagination 分页 #2",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6823,6 +6986,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Pagination 分页 #3",
+    "heading": "微型模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6859,6 +7023,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Pagination 分页 #4",
+    "heading": "简洁模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6883,6 +7048,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Pagination 分页 #5",
+    "heading": "变更事件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6922,6 +7088,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PaginationWrapper 分页容器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -6981,6 +7148,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PaginationWrapper 分页容器 #2",
+    "heading": "分页位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7029,6 +7197,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Panel 面板 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7052,6 +7221,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Panel 面板 #2",
+    "heading": "底部配置按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7085,6 +7255,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Panel 面板 #3",
+    "heading": "固定底部",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7119,6 +7290,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7151,6 +7323,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #2",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7196,6 +7369,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #3",
+    "heading": "可禁用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7228,6 +7402,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #4",
+    "heading": "配置 hash 与默认激活",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7262,6 +7437,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #5",
+    "heading": "配置 hash 与默认激活",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7294,6 +7470,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #6",
+    "heading": "展示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7330,6 +7507,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #7",
+    "heading": "展示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7362,6 +7540,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #8",
+    "heading": "拖拽排序",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7398,6 +7577,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #9",
+    "heading": "可增加、删除",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7433,6 +7613,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #10",
+    "heading": "可编辑标签名",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7465,6 +7646,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wrapper 包裹容器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7488,6 +7670,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wrapper 包裹容器 #2",
+    "heading": "动态获取",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7519,6 +7702,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wrapper 包裹容器 #3",
+    "heading": "动态获取",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7551,6 +7735,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wrapper 包裹容器 #4",
+    "heading": "不同内边距",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7621,6 +7806,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7656,6 +7842,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #2",
+    "heading": "隐藏头部",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7684,6 +7871,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #3",
+    "heading": "设置 style",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7714,6 +7902,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #4",
+    "heading": "去掉分隔线",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7742,6 +7931,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #5",
+    "heading": "配置工具栏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7783,6 +7973,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Portlet 门户栏目 #6",
+    "heading": "source 动态数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7823,6 +8014,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "switch-container #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7897,6 +8089,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "switch-container #2",
+    "heading": "style",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7933,6 +8126,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -7960,6 +8154,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #2",
+    "heading": "尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8007,6 +8202,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #3",
+    "heading": "主题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8079,6 +8275,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #4",
+    "heading": "主题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8103,6 +8300,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #5",
+    "heading": "图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8131,6 +8329,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #6",
+    "heading": "图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8159,6 +8358,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #7",
+    "heading": "图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8187,6 +8387,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #8",
+    "heading": "操作前确认",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8213,6 +8414,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #9",
+    "heading": "ajax 请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8237,6 +8439,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #10",
+    "heading": "请求成功后，跳转至某个页面",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8262,6 +8465,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #11",
+    "heading": "请求成功后，跳转至某个页面",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8287,6 +8491,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #12",
+    "heading": "请求成功后，显示反馈弹框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8315,6 +8520,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #13",
+    "heading": "自定义 toast 文字",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8343,6 +8549,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #14",
+    "heading": "下载请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8368,6 +8575,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #15",
+    "heading": "保存到本地",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8393,6 +8601,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #16",
+    "heading": "倒计时",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8418,6 +8627,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #17",
+    "heading": "单页跳转",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8443,6 +8653,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #18",
+    "heading": "直接跳转",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8469,6 +8680,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #19",
+    "heading": "发送邮件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8496,6 +8708,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #20",
+    "heading": "弹框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8524,6 +8737,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #21",
+    "heading": "抽屉",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8551,6 +8765,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #22",
+    "heading": "复制文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8575,6 +8790,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #23",
+    "heading": "复制文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8600,6 +8816,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #24",
+    "heading": "重置 / 清空表单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8651,6 +8868,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #25",
+    "heading": "自定义点击事件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8690,6 +8908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #26",
+    "heading": "全局键盘快捷键触发",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8718,6 +8937,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #27",
+    "heading": "Action 作为容器组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8763,6 +8983,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #28",
+    "heading": "按钮提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8788,6 +9009,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #29",
+    "heading": "按钮提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8814,6 +9036,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #30",
+    "heading": "按钮提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8840,6 +9063,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #31",
+    "heading": "按钮提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8867,6 +9091,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #32",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8902,6 +9127,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #33",
+    "heading": "mouseenter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8937,6 +9163,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Action 行为按钮 #34",
+    "heading": "mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -8972,6 +9199,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "App 多页应用 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "app",
@@ -9014,6 +9242,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "App 多页应用 #2",
+    "heading": "顶栏与页脚",
     "expect": "",
     "schema": {
       "type": "app",
@@ -9046,6 +9275,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "空 label + fa icon 为 32×32",
+    "heading": "",
     "expect": "Amis .cxd-Button--iconOnly：padding 0、min-width/height = --button-size-default-height 32px",
     "schema": {
       "type": "page",
@@ -9084,6 +9314,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "primary 按钮能渲染",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9107,6 +9338,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9134,6 +9366,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "两个按钮默认挨在一起",
+    "heading": "",
     "expect": "同一行，缝约 0（不要换行）",
     "schema": {
       "type": "page",
@@ -9180,6 +9413,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #2",
+    "heading": "尺寸与主题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9222,6 +9456,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #3",
+    "heading": "尺寸与主题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9246,6 +9481,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #4",
+    "heading": "尺寸与主题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9270,6 +9506,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #5",
+    "heading": "禁用与提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9305,6 +9542,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Button 按钮 #6",
+    "heading": "图标按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9343,6 +9581,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroup 按钮组 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9387,6 +9626,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroup 按钮组 #2",
+    "heading": "垂直模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9423,6 +9663,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroup 按钮组 #3",
+    "heading": "平铺模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9459,6 +9700,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroup 按钮组 #4",
+    "heading": "按钮主题样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9497,6 +9739,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Breadcrumb 面包屑 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9529,6 +9772,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Breadcrumb 面包屑 #2",
+    "heading": "动态数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9564,6 +9808,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Breadcrumb 面包屑 #3",
+    "heading": "分隔符",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9598,6 +9843,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Breadcrumb 面包屑 #4",
+    "heading": "下拉菜单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9638,6 +9884,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Breadcrumb 面包屑 #5",
+    "heading": "最大展示长度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9671,6 +9918,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DropDownButton 下拉按钮 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9705,6 +9953,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DropDownButton 下拉按钮 #2",
+    "heading": "分组展示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9751,6 +10000,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DropDownButton 下拉按钮 #3",
+    "heading": "关闭下拉菜单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9787,6 +10037,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DropDownButton 下拉按钮 #4",
+    "heading": "只显示图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9819,6 +10070,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9846,6 +10098,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #2",
+    "heading": "展示列表",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9899,6 +10152,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #3",
+    "heading": "接口联动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9969,6 +10223,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #4",
+    "heading": "定时轮询刷新",
     "expect": "",
     "schema": {
       "type": "page",
@@ -9998,6 +10253,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #5",
+    "heading": "静默轮询",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10028,6 +10284,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #6",
+    "heading": "隐藏错误信息",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10060,6 +10317,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #7",
+    "heading": "隐藏错误信息",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10089,6 +10347,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #8",
+    "heading": "init",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10128,6 +10387,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #9",
+    "heading": "fetchInited",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10169,6 +10429,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #10",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10210,6 +10471,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #11",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10254,6 +10516,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #12",
+    "heading": "rebuild",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10353,6 +10616,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #13",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10408,6 +10672,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Service 功能型容器 #14",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10463,6 +10728,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Nav 导航 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10501,6 +10767,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Nav 导航 #2",
+    "heading": "配置多层级",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10553,6 +10820,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Nav 导航 #3",
+    "heading": "横向摆放",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10589,6 +10857,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "AnchorNav 锚点导航 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10633,6 +10902,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "AnchorNav 锚点导航 #2",
+    "heading": "水平导航",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10678,6 +10948,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "AnchorNav 锚点导航 #3",
+    "heading": "默认定位到某个区域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10726,6 +10997,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "AnchorNav 锚点导航 #4",
+    "heading": "默认定位到某个区域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10771,6 +11043,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #1",
+    "heading": "基本配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10817,6 +11090,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #2",
+    "heading": "基本配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10853,6 +11127,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #3",
+    "heading": "提示位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -10978,6 +11253,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #4",
+    "heading": "位置偏移",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11015,6 +11291,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #5",
+    "heading": "展示箭头",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11049,6 +11326,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #6",
+    "heading": "主题色",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11095,6 +11373,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #7",
+    "heading": "延迟打开与关闭",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11130,6 +11409,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #8",
+    "heading": "动态文案",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11166,6 +11446,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #9",
+    "heading": "内联展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11206,6 +11487,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #10",
+    "heading": "自定义样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11241,6 +11523,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TooltipWrapper 文字提示容器 #11",
+    "heading": "自定义包裹标签",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11265,6 +11548,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PopOver 弹出提示 #1",
+    "heading": "基本配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11296,6 +11580,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PopOver 弹出提示 #2",
+    "heading": "在其它组件里的示例",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11367,6 +11652,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PopOver 弹出提示 #3",
+    "heading": "更多配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11407,6 +11693,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "PopOver 弹出提示 #4",
+    "heading": "popOverEnableOn",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11452,6 +11739,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11486,6 +11774,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "默认 Form",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11514,6 +11803,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #2",
+    "heading": "水平模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11555,6 +11845,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #3",
+    "heading": "水平模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11601,6 +11892,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #4",
+    "heading": "水平模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11645,6 +11937,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #5",
+    "heading": "水平模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11703,6 +11996,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #6",
+    "heading": "水平模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11742,6 +12036,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #7",
+    "heading": "内联模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11785,6 +12080,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #8",
+    "heading": "自定义 label 宽度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11853,6 +12149,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #9",
+    "heading": "实现一行展示多个表单项",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11889,6 +12186,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #10",
+    "heading": "实现一行展示多个表单项",
     "expect": "",
     "schema": {
       "type": "page",
@@ -11999,6 +12297,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #11",
+    "heading": "底部按钮栏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12043,6 +12342,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #12",
+    "heading": "底部按钮栏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12097,6 +12397,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #13",
+    "heading": "去掉表单边框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12131,6 +12432,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #14",
+    "heading": "设置初始状态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12179,6 +12481,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #15",
+    "heading": "切换输入态和展示态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12264,6 +12567,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #16",
+    "heading": "表单项数据初始化",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12299,6 +12603,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #17",
+    "heading": "轮询初始化请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12330,6 +12635,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #18",
+    "heading": "轮询初始化请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12362,6 +12668,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #19",
+    "heading": "静态初始化数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12400,6 +12707,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #20",
+    "heading": "静态初始化数据域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12438,6 +12746,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #21",
+    "heading": "数据格式一致性问题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12487,6 +12796,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #22",
+    "heading": "表单提交",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12522,6 +12832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #23",
+    "heading": "表单提交",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12564,6 +12875,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #24",
+    "heading": "轮询提交请求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12600,6 +12912,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #25",
+    "heading": "表单校验",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12640,6 +12953,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #26",
+    "heading": "组合校验高亮表单项",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12684,6 +12998,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #27",
+    "heading": "重置表单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12727,6 +13042,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #28",
+    "heading": "表单数据域调试",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12766,6 +13082,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #29",
+    "heading": "重置表单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12801,6 +13118,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #30",
+    "heading": "跳转页面",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12837,6 +13155,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #31",
+    "heading": "刷新目标组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12881,6 +13200,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #32",
+    "heading": "显示提交的返回结果",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12917,6 +13237,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #33",
+    "heading": "将提交返回内容发送到其它组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -12963,6 +13284,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #34",
+    "heading": "将数据域发送给目标组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13022,6 +13344,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #35",
+    "heading": "限制只存储某些 key",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13060,6 +13383,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #36",
+    "heading": "禁用回车提交",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13095,6 +13419,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #37",
+    "heading": "inited",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13153,6 +13478,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #38",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13210,6 +13536,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #39",
+    "heading": "formItemValidateSucc",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13286,6 +13613,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #40",
+    "heading": "validateSucc",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13349,6 +13677,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #41",
+    "heading": "validateError",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13412,6 +13741,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #42",
+    "heading": "submit",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13470,6 +13800,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #43",
+    "heading": "submitSucc",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13529,6 +13860,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #44",
+    "heading": "submitFail",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13588,6 +13920,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #45",
+    "heading": "initApiFinished",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13653,6 +13986,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #46",
+    "heading": "asyncApiFinished",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13713,6 +14047,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #47",
+    "heading": "validate",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13785,6 +14120,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #48",
+    "heading": "submit",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13857,6 +14193,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #49",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13918,6 +14255,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #50",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -13979,6 +14317,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #51",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14032,6 +14371,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #52",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14093,6 +14433,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #53",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14149,6 +14490,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #54",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14202,6 +14544,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #55",
+    "heading": "static 和 nonstatic",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14266,6 +14609,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #56",
+    "heading": "validateFormItem",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14330,6 +14674,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Form 表单 #57",
+    "heading": "clearError",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14378,6 +14723,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14411,6 +14757,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #2",
+    "heading": "内联模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14467,6 +14814,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #3",
+    "heading": "表单项尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14520,6 +14868,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #4",
+    "heading": "表单项标签",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14562,6 +14911,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #5",
+    "heading": "表单项标签提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14607,6 +14957,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #6",
+    "heading": "配置禁用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14667,6 +15018,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #7",
+    "heading": "配置禁用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14704,6 +15056,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #8",
+    "heading": "配置显隐",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14752,6 +15105,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #9",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14790,6 +15144,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #10",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14830,6 +15185,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #11",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14870,6 +15226,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #12",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -14939,6 +15296,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #13",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15009,6 +15367,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #14",
+    "heading": "配置静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15130,6 +15489,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #15",
+    "heading": "表单项值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15162,6 +15522,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #16",
+    "heading": "配置默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15217,6 +15578,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #17",
+    "heading": "隐藏时删除表单项值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15260,6 +15622,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #18",
+    "heading": "表单项必填",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15298,6 +15661,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #19",
+    "heading": "格式校验",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15331,6 +15695,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #20",
+    "heading": "格式校验",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15366,6 +15731,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #21",
+    "heading": "字符串形式（不推荐）",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15397,6 +15763,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #22",
+    "heading": "字符串形式（不推荐）",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15428,6 +15795,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #23",
+    "heading": "自定义校验信息",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15464,6 +15832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #24",
+    "heading": "自定义校验信息",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15501,6 +15870,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #25",
+    "heading": "支持的格式校验",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15536,6 +15906,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #26",
+    "heading": "通过表单提交接口",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15566,6 +15937,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #27",
+    "heading": "通过表单项校验接口",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15605,6 +15977,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #28",
+    "heading": "配置自动填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15660,6 +16033,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #29",
+    "heading": "配置自动填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15696,6 +16070,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FormItem 表单项通用 #30",
+    "heading": "及时获取其他表单项的值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15735,6 +16110,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #1",
+    "heading": "选项组格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15777,6 +16153,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #2",
+    "heading": "标准格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15820,6 +16197,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #3",
+    "heading": "简单格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15854,6 +16232,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #4",
+    "heading": "单一选项禁用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15897,6 +16276,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #5",
+    "heading": "通过数据域中变量配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15942,6 +16322,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #6",
+    "heading": "远程拉取",
     "expect": "",
     "schema": {
       "type": "page",
@@ -15971,6 +16352,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #7",
+    "heading": "静态配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16014,6 +16396,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #8",
+    "heading": "静态配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16057,6 +16440,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #9",
+    "heading": "数据格式一致性问题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16104,6 +16488,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #10",
+    "heading": "多选 multiple",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16160,6 +16545,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #11",
+    "heading": "多选 multiple",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16191,6 +16577,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #12",
+    "heading": "多选 multiple",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16224,6 +16611,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #13",
+    "heading": "拼接符 delimiter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16268,6 +16656,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #14",
+    "heading": "拼接符 delimiter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16313,6 +16702,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #15",
+    "heading": "拼接值 joinValues",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16379,6 +16769,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #16",
+    "heading": "单选模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16423,6 +16814,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #17",
+    "heading": "多选模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16468,6 +16860,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #18",
+    "heading": "自动选中问题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16516,6 +16909,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #19",
+    "heading": "提取多选值 extractValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16562,6 +16956,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #20",
+    "heading": "自动选中问题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16612,6 +17007,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #21",
+    "heading": "检索 searchable",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16655,6 +17051,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #22",
+    "heading": "自动补全 autoComplete",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16685,6 +17082,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #23",
+    "heading": "选项标签字段 labelField",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16728,6 +17126,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #24",
+    "heading": "选项标签字段 labelField",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16772,6 +17171,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #25",
+    "heading": "选项值字段 valueField",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16815,6 +17215,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #26",
+    "heading": "选项值字段 valueField",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16859,6 +17260,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #27",
+    "heading": "前端新增 creatable",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16902,6 +17304,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #28",
+    "heading": "自定义新增表单项 addControls",
     "expect": "",
     "schema": {
       "type": "page",
@@ -16958,6 +17361,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #29",
+    "heading": "配置新增接口 addApi",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17002,6 +17406,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #30",
+    "heading": "前端编辑 editable",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17046,6 +17451,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #31",
+    "heading": "自定义编辑表单项 editControls",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17102,6 +17508,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #32",
+    "heading": "配置编辑接口 editApi",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17145,6 +17552,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #33",
+    "heading": "配置编辑弹框其它属性",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17204,6 +17612,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #34",
+    "heading": "删除选项",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17248,6 +17657,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #35",
+    "heading": "配置删除接口 deleteApi",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17291,6 +17701,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #36",
+    "heading": "自动填充 autoFill",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17370,6 +17781,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #37",
+    "heading": "自动填充 autoFill",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17416,6 +17828,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #38",
+    "heading": "控制选项高度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17448,6 +17861,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Options 选择器表单项 #39",
+    "heading": "可清除 clearable",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17493,6 +17907,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputArray 数组输入框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17527,6 +17942,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonToolbar 按钮工具栏 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17561,6 +17977,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ButtonGroupSelect 按钮点选 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17609,6 +18026,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ChainedSelect 链式下拉框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17667,6 +18085,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17696,6 +18115,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #2",
+    "heading": "配置真假值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17726,6 +18146,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #3",
+    "heading": "配置真假值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17758,6 +18179,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #4",
+    "heading": "按钮模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17791,6 +18213,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #5",
+    "heading": "配置禁用 / 只读",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17850,6 +18273,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #6",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17892,6 +18316,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #7",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17938,6 +18363,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #8",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -17984,6 +18410,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkbox 勾选框 #9",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18033,6 +18460,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Checkboxes 复选框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18081,6 +18509,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputCity 城市选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18115,6 +18544,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputColor 颜色选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18149,6 +18579,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Combo 组合 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18183,6 +18614,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ConditionBuilder 条件组合 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18217,6 +18649,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18247,6 +18680,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #2",
+    "heading": "显示格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18277,6 +18711,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #3",
+    "heading": "值格式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18308,6 +18743,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #4",
+    "heading": "基本配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18339,6 +18775,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #5",
+    "heading": "相对值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18370,6 +18807,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #6",
+    "heading": "通过公式配置默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18401,6 +18839,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #7",
+    "heading": "固定时间值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18440,6 +18879,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #8",
+    "heading": "支持相对值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18472,6 +18912,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #9",
+    "heading": "支持模板",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18509,6 +18950,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #10",
+    "heading": "通过 js 来控制",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18541,6 +18983,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #11",
+    "heading": "快捷键",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18576,6 +19019,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #12",
+    "heading": "快捷键",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18614,6 +19058,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #13",
+    "heading": "UTC",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18652,6 +19097,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #14",
+    "heading": "内嵌模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18687,6 +19133,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #15",
+    "heading": "原生日期组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18716,6 +19163,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #16",
+    "heading": "事件表",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18761,6 +19209,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #17",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18806,6 +19255,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #18",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18851,6 +19301,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDate 日期选择器 #19",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18899,6 +19350,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDatetime 日期时间选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18929,6 +19381,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputMonth 月份选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18963,6 +19416,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -18993,6 +19447,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #2",
+    "heading": "默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19023,6 +19478,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #3",
+    "heading": "默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19053,6 +19509,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #4",
+    "heading": "默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19083,6 +19540,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #5",
+    "heading": "默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19113,6 +19571,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #6",
+    "heading": "快捷键",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19151,6 +19610,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #7",
+    "heading": "快捷键",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19198,6 +19658,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #8",
+    "heading": "内嵌模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19229,6 +19690,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #9",
+    "heading": "存成两个字段",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19260,6 +19722,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #10",
+    "heading": "数据处理函数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19298,6 +19761,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #11",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19343,6 +19807,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #12",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19388,6 +19853,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDateRange 日期范围 #13",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19436,6 +19902,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputDatetimeRange 日期时间范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19470,6 +19937,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputMonthRange 月份范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19504,6 +19972,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputKV 键值对 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19538,6 +20007,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputKVS 键值对象 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19572,6 +20042,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFormula 公式编辑器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19606,6 +20077,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "DiffEditor 对比编辑器 #1",
+    "heading": "禁用编辑器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19643,6 +20115,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "FieldSet 表单项集合 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19677,6 +20150,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputExcel Excel 解析 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19711,6 +20185,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19742,6 +20217,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #2",
+    "heading": "限制文件类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19773,6 +20249,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #3",
+    "heading": "限制文件大小",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19804,6 +20281,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #4",
+    "heading": "手动上传",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19906,6 +20384,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #5",
+    "heading": "作为表单项上传",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19938,6 +20417,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #6",
+    "heading": "自动填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -19977,6 +20457,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #7",
+    "heading": "自动填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20013,6 +20494,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #8",
+    "heading": "拖拽上传",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20045,6 +20527,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #9",
+    "heading": "上传文件列表",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20100,6 +20583,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputFile 文件上传 #10",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20146,6 +20630,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Formula 公式 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20192,6 +20677,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Formula 公式 #2",
+    "heading": "手动应用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20245,6 +20731,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Formula 公式 #3",
+    "heading": "条件应用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20295,6 +20782,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Group 表单项组 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20329,6 +20817,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Hidden 隐藏字段 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20369,6 +20858,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20399,6 +20889,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #2",
+    "heading": "限制文件类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20430,6 +20921,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #3",
+    "heading": "限制文件宽度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20464,6 +20956,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #4",
+    "heading": "限制文件大小",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20496,6 +20989,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #5",
+    "heading": "手动上传",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20600,6 +21094,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #6",
+    "heading": "隐藏上传按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20706,6 +21201,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #7",
+    "heading": "自动填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20744,6 +21240,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #8",
+    "heading": "多选模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20807,6 +21304,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #9",
+    "heading": "其他表单项填充",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20856,6 +21354,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #10",
+    "heading": "initAutoFill 初始化时自动同步",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20912,6 +21411,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #11",
+    "heading": "拖拽排序",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20954,6 +21454,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputImage 图片 #12",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -20999,6 +21500,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputGroup 输入框组合 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21033,6 +21535,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ListSelect 选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21081,6 +21584,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "LocationPicker 地理位置 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21115,6 +21619,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "UUID 随机 ID #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21149,6 +21654,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "MatrixCheckboxes 矩阵勾选 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21183,6 +21689,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "NestedSelect 级联选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21241,6 +21748,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21270,6 +21778,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #2",
+    "heading": "设置精度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21320,6 +21829,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #3",
+    "heading": "重置值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21379,6 +21889,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #4",
+    "heading": "前后缀、千分分隔",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21412,6 +21923,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #5",
+    "heading": "带单位数字",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21447,6 +21959,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #6",
+    "heading": "加强版输入框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21477,6 +21990,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #7",
+    "heading": "是否是大数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21508,6 +22022,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #8",
+    "heading": "内容清空时删除字段",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21580,6 +22095,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #9",
+    "heading": "原生数字组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21609,6 +22125,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #10",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21654,6 +22171,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #11",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21699,6 +22217,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputNumber 数字输入 #12",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21747,6 +22266,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputPassword 密码输入框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21776,6 +22296,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputPassword 密码输入框 #2",
+    "heading": "配置密码显/隐藏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21806,6 +22327,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Picker 列表选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21849,6 +22371,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputQuarter 季度 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21883,6 +22406,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputQuarterRange 季度范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21917,6 +22441,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #1",
+    "heading": "combo 中使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -21973,6 +22498,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #2",
+    "heading": "input-table 中使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22040,6 +22566,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #3",
+    "heading": "配置真假值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22098,6 +22625,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #4",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22138,6 +22666,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #5",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22184,6 +22713,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #6",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22230,6 +22760,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radio 单选框 #7",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22279,6 +22810,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Radios 单选框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22327,6 +22859,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "ChartRadios 图表单选框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22375,6 +22908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputRating 评分 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22409,6 +22943,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputRange 滑块 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22443,6 +22978,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputRepeat 重复频率 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22477,6 +23013,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputRichText 富文本 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22511,6 +23048,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #1",
+    "heading": "自定义菜单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22554,6 +23092,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #2",
+    "heading": "分组展示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22626,6 +23165,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #3",
+    "heading": "分组展示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22699,6 +23239,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #4",
+    "heading": "支持搜索",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22756,6 +23297,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #5",
+    "heading": "自定义搜索函数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22820,6 +23362,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #6",
+    "heading": "searchApi",
     "expect": "",
     "schema": {
       "type": "page",
@@ -22852,6 +23395,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #7",
+    "heading": "限制标签最大展示数量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23006,6 +23550,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #8",
+    "heading": "自定义下拉区域宽度与对齐方式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23077,6 +23622,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #9",
+    "heading": "自定义下拉区域宽度与对齐方式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23123,6 +23669,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #10",
+    "heading": "多选全选",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23156,6 +23703,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #11",
+    "heading": "自动补全 autoComplete",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23199,6 +23747,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #12",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23255,6 +23804,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #13",
+    "heading": "focus",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23311,6 +23861,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #14",
+    "heading": "blur",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23367,6 +23918,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #15",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23421,6 +23973,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #16",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23475,6 +24028,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #17",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23519,6 +24073,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Select 下拉框 #18",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23579,6 +24134,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputSubForm 子表单 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23613,6 +24169,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23643,6 +24200,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #2",
+    "heading": "禁用状态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23674,6 +24232,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #3",
+    "heading": "配置真假值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23703,6 +24262,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #4",
+    "heading": "配置真假值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23734,6 +24294,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #5",
+    "heading": "配置开启和关闭状态的文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23764,6 +24325,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #6",
+    "heading": "使用 Schema 配置文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23816,6 +24378,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #7",
+    "heading": "默认值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23846,6 +24409,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #8",
+    "heading": "不同尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23881,6 +24445,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #9",
+    "heading": "加载状态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -23923,6 +24488,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #10",
+    "heading": "加载状态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24003,6 +24569,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #11",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24054,6 +24621,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #12",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24099,6 +24667,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #13",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24145,6 +24714,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Switch 开关 #14",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24196,6 +24766,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Static 静态展示 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24225,6 +24796,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Static 静态展示 #2",
+    "heading": "数据域变量映射",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24272,6 +24844,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Static 静态展示 #3",
+    "heading": "展示其他组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24304,6 +24877,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Static 静态展示 #4",
+    "heading": "展示其他组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24446,6 +25020,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Static 静态展示 #5",
+    "heading": "弹出框（popOver）",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24481,6 +25056,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputTable 表格 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24515,6 +25091,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputTag 标签选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24563,6 +25140,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24592,6 +25170,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #2",
+    "heading": "不同边框风格",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24630,6 +25209,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #3",
+    "heading": "不同类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24683,6 +25263,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #4",
+    "heading": "附加组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24717,6 +25298,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #5",
+    "heading": "附加组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24751,6 +25333,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #6",
+    "heading": "可清除",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24781,6 +25364,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #7",
+    "heading": "选择器模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24828,6 +25412,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #8",
+    "heading": "限制只能选择预设",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24876,6 +25461,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #9",
+    "heading": "多选模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24925,6 +25511,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #10",
+    "heading": "前缀和后缀",
     "expect": "",
     "schema": {
       "type": "page",
@@ -24971,6 +25558,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #11",
+    "heading": "显示计数器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25027,6 +25615,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #12",
+    "heading": "自动转换值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25075,6 +25664,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #13",
+    "heading": "文本内容为空时去掉这个值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25106,6 +25696,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #14",
+    "heading": "自动补全",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25138,6 +25729,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #15",
+    "heading": "enter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25189,6 +25781,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #16",
+    "heading": "focus",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25230,6 +25823,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #17",
+    "heading": "blur",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25271,6 +25865,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #18",
+    "heading": "change",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25312,6 +25907,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #19",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25354,6 +25950,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #20",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25399,6 +25996,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #21",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25444,6 +26042,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #22",
+    "heading": "focus",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25489,6 +26088,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #23",
+    "heading": "reload",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25535,6 +26135,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputText 输入框 #24",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25583,6 +26184,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25612,6 +26214,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #2",
+    "heading": "清空输入框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25643,6 +26246,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #3",
+    "heading": "清空输入框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25674,6 +26278,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #4",
+    "heading": "显示计数器",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25713,6 +26318,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #5",
+    "heading": "clear",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25758,6 +26364,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #6",
+    "heading": "reset",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25803,6 +26410,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #7",
+    "heading": "focus",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25848,6 +26456,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Textarea 多行输入框 #8",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25896,6 +26505,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputTime 时间 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25926,6 +26536,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputTimeRange 时间范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -25960,6 +26571,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Transfer 穿梭器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26016,6 +26628,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Transfer 穿梭器 #2",
+    "heading": "搜索",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26072,6 +26685,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TransferPicker 穿梭选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26120,6 +26734,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TabsTransfer 组合穿梭器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26168,6 +26783,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TabsTransferPicker #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26216,6 +26832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputTree 树形选择框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26274,6 +26891,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "TreeSelect 树形选择器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26332,6 +26950,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputYear 年输入 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26366,6 +26985,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputYearRange 年份范围 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26400,6 +27020,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "JsonSchema #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26434,6 +27055,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "JsonSchema Editor #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26468,6 +27090,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputSignature 签名面板 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26502,6 +27125,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "InputVerificationCode 验证码 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26536,6 +27160,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "CRUD 增删改查 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26642,6 +27267,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26681,6 +27307,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #2",
+    "heading": "数据需求",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26725,6 +27352,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #3",
+    "heading": "空状态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26756,6 +27384,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #4",
+    "heading": "列配置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26813,6 +27442,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #5",
+    "heading": "超级表头",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26865,6 +27495,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #6",
+    "heading": "合并单元格",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26920,6 +27551,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #7",
+    "heading": "拖拽排序",
     "expect": "",
     "schema": {
       "type": "page",
@@ -26968,6 +27600,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #8",
+    "heading": "列排序",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27017,6 +27650,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #9",
+    "heading": "选择模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27057,6 +27691,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #10",
+    "heading": "嵌套",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27106,6 +27741,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #11",
+    "heading": "快速编辑",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27150,6 +27786,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #12",
+    "heading": "列筛选",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27204,6 +27841,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #13",
+    "heading": "固定列",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27264,6 +27902,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #14",
+    "heading": "总结行",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27317,6 +27956,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #15",
+    "heading": "单行点击操作",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27363,6 +28003,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27417,6 +28058,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #2",
+    "heading": "多选",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27468,6 +28110,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #3",
+    "heading": "点击整行选择",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27520,6 +28163,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #4",
+    "heading": "已选择",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27572,6 +28216,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #5",
+    "heading": "单选",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27617,6 +28262,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #6",
+    "heading": "自定义选择菜单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27683,6 +28329,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #7",
+    "heading": "最大选择个数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27728,6 +28375,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #8",
+    "heading": "筛选和排序",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27771,6 +28419,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #9",
+    "heading": "带边框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27821,6 +28470,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #10",
+    "heading": "数据为空",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27863,6 +28513,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table2 表格 #11",
+    "heading": "表格尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -27917,6 +28568,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28009,6 +28661,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #2",
+    "heading": "单元格样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28085,6 +28738,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #3",
+    "heading": "列设置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28143,6 +28797,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #4",
+    "heading": "标题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28207,6 +28862,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #5",
+    "heading": "支持变量及表达式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28252,6 +28908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #6",
+    "heading": "行和单元格 visibleOn",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28320,6 +28977,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table View 表格视图 #7",
+    "heading": "作为布局方法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28431,6 +29089,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28465,6 +29124,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #2",
+    "heading": "自定义颜色",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28501,6 +29161,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #3",
+    "heading": "自定义日程展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28555,6 +29216,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #4",
+    "heading": "支持从数据源中获取日程",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28592,6 +29254,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #5",
+    "heading": "放大模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28657,6 +29320,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Calendar 日历日程 #6",
+    "heading": "今日高亮样式自定义",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28697,6 +29361,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28769,6 +29434,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #2",
+    "heading": "打开链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28837,6 +29503,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #3",
+    "heading": "设置头像文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28866,6 +29533,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #4",
+    "heading": "点击卡片的行为",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28902,6 +29570,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #5",
+    "heading": "设置多媒体卡片",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28960,6 +29629,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #6",
+    "heading": "设置标签卡片",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28993,6 +29663,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #7",
+    "heading": "设置按钮卡片",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29030,6 +29701,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #8",
+    "heading": "设置文本卡片",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29058,6 +29730,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Card 卡片 #9",
+    "heading": "设置单元格卡片",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29095,6 +29768,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Cards 卡片组 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29203,6 +29877,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Cards 卡片组 #2",
+    "heading": "当 cards 在 crud 中且配置了批量操作按钮时可点选",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29316,6 +29991,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Cards 卡片组 #3",
+    "heading": "瀑布流布局",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29492,6 +30168,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Carousel 轮播图 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29516,6 +30193,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Color 颜色 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29540,6 +30218,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Date 日期时间 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29564,6 +30243,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29597,6 +30277,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #2",
+    "heading": "如果是对象数组",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29636,6 +30317,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #3",
+    "heading": "循环嵌套",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29702,6 +30384,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #4",
+    "heading": "Table 中的列类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29763,6 +30446,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #5",
+    "heading": "Form 中静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29802,6 +30486,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #6",
+    "heading": "使用数据映射",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29835,6 +30520,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Each 循环渲染器 #7",
+    "heading": "动态表单项",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29877,6 +30563,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Html #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29899,6 +30586,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29921,6 +30609,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #2",
+    "heading": "颜色及大小调整",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29944,6 +30633,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #3",
+    "heading": "使用图标链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -29966,6 +30656,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #4",
+    "heading": "fontawesome v5 版本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30008,6 +30699,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #5",
+    "heading": "fontawesome v6 版本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30050,6 +30742,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #6",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30085,6 +30778,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #7",
+    "heading": "mouseenter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30120,6 +30814,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Icon 图标 #8",
+    "heading": "mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30155,6 +30850,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30177,6 +30873,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #2",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30202,6 +30899,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #3",
+    "heading": "配置标题和说明",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30226,6 +30924,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #4",
+    "heading": "显示模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30277,6 +30976,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #5",
+    "heading": "显示比例",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30325,6 +31025,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #6",
+    "heading": "放大功能",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30348,6 +31049,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #7",
+    "heading": "放大功能",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30372,6 +31074,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #8",
+    "heading": "放大功能",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30398,6 +31101,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #9",
+    "heading": "设置高宽",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30422,6 +31126,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #10",
+    "heading": "原图模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30450,6 +31155,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #11",
+    "heading": "打开外部链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30473,6 +31179,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #12",
+    "heading": "打开外部链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30500,6 +31207,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #13",
+    "heading": "Table 中的列类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30548,6 +31256,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #14",
+    "heading": "Form 中静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30580,6 +31289,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #15",
+    "heading": "自定义点击行为",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30610,6 +31320,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #16",
+    "heading": "工具栏",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30634,6 +31345,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #17",
+    "heading": "click / mouseenter / mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30688,6 +31400,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #18",
+    "heading": "preview",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30732,6 +31445,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Image 图片 #19",
+    "heading": "zoom",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30804,6 +31518,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Images 图片集 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30828,6 +31543,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "GridNav 宫格导航 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30852,6 +31568,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Json #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30876,6 +31593,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Link 链接 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30899,6 +31617,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Link 链接 #2",
+    "heading": "新标签页打开",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30923,6 +31642,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Link 链接 #3",
+    "heading": "禁用超链接",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30948,6 +31668,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Link 链接 #4",
+    "heading": "添加图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30973,6 +31694,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Link 链接 #5",
+    "heading": "添加图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -30998,6 +31720,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31069,6 +31792,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #2",
+    "heading": "选择模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31115,6 +31839,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #3",
+    "heading": "选择模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31162,6 +31887,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #4",
+    "heading": "单行点击操作",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31241,6 +31967,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #5",
+    "heading": "设置组件的 CSS 类",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31282,6 +32009,199 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List 列表 #6",
+    "heading": "字母索引条",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "rows": [
+            {
+              "id": 1,
+              "name": "Alice Smith",
+              "title": "软件工程师",
+              "desc": "alice@example.com"
+            },
+            {
+              "id": 2,
+              "name": "Bob Johnson",
+              "title": "产品经理",
+              "desc": "bob@example.com"
+            },
+            {
+              "id": 3,
+              "name": "Charlie Brown",
+              "title": "设计师",
+              "desc": "charlie@example.com"
+            },
+            {
+              "id": 4,
+              "name": "David Wang",
+              "title": "开发工程师",
+              "desc": "david@example.com"
+            },
+            {
+              "id": 5,
+              "name": "Eve Johnson",
+              "title": "产品经理",
+              "desc": "eve@example.com"
+            },
+            {
+              "id": 6,
+              "name": "Frank Smith",
+              "title": "设计师",
+              "desc": "frank@example.com"
+            },
+            {
+              "id": 7,
+              "name": "Grace Brown",
+              "title": "产品经理",
+              "desc": "grace@example.com"
+            },
+            {
+              "id": 8,
+              "name": "Henry Davis",
+              "title": "开发工程师",
+              "desc": "henry@example.com"
+            },
+            {
+              "id": 9,
+              "name": "Ivy Evans",
+              "title": "产品经理",
+              "desc": "ivy@example.com"
+            },
+            {
+              "id": 10,
+              "name": "Jack White",
+              "title": "设计师",
+              "desc": "jack@example.com"
+            },
+            {
+              "id": 11,
+              "name": "Kate Green",
+              "title": "产品经理",
+              "desc": "kate@example.com"
+            },
+            {
+              "id": 12,
+              "name": "Leo Brown",
+              "title": "开发工程师",
+              "desc": "leo@example.com"
+            },
+            {
+              "id": 13,
+              "name": "Mia Davis",
+              "title": "产品经理",
+              "desc": "mia@example.com"
+            },
+            {
+              "id": 14,
+              "name": "Noah White",
+              "title": "设计师",
+              "desc": "noah@example.com"
+            },
+            {
+              "id": 15,
+              "name": "Olivia Green",
+              "title": "产品经理",
+              "desc": "olivia@example.com"
+            },
+            {
+              "id": 16,
+              "name": "Paul Brown",
+              "title": "开发工程师",
+              "desc": "paul@example.com"
+            },
+            {
+              "id": 17,
+              "name": "Quinn Davis",
+              "title": "产品经理",
+              "desc": "quinn@example.com"
+            },
+            {
+              "id": 18,
+              "name": "Ryan Evans",
+              "title": "设计师",
+              "desc": "ryan@example.com"
+            },
+            {
+              "id": 19,
+              "name": "Samuel White",
+              "title": "开发工程师",
+              "desc": "samuel@example.com"
+            },
+            {
+              "id": 20,
+              "name": "Thomas Green",
+              "title": "产品经理",
+              "desc": "thomas@example.com"
+            },
+            {
+              "id": 21,
+              "name": "Uma Davis",
+              "title": "设计师",
+              "desc": "uma@example.com"
+            },
+            {
+              "id": 22,
+              "name": "Vincent Brown",
+              "title": "开发工程师",
+              "desc": "vincent@example.com"
+            },
+            {
+              "id": 23,
+              "name": "Wendy Evans",
+              "title": "产品经理",
+              "desc": "wendy@example.com"
+            },
+            {
+              "id": 24,
+              "name": "Xavier Davis",
+              "title": "设计师",
+              "desc": "xavier@example.com"
+            },
+            {
+              "id": 25,
+              "name": "Yvonne White",
+              "title": "开发工程师",
+              "desc": "yvonne@example.com"
+            },
+            {
+              "id": 26,
+              "name": "Zachary Brown",
+              "title": "产品经理",
+              "desc": "zachary@example.com"
+            }
+          ]
+        },
+        "body": {
+          "type": "list",
+          "source": "$rows",
+          "showIndexBar": true,
+          "listItem": {
+            "title": "${name}",
+            "subTitle": "${title}",
+            "desc": "${desc}"
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-list-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "List 列表",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "List 列表 #7",
+    "heading": "itemClick",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31331,7 +32251,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-6",
+    "id": "src-components-list-7",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31339,7 +32259,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #7",
+    "title": "List 列表 #8",
+    "heading": "select",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31406,7 +32327,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-7",
+    "id": "src-components-list-8",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31414,7 +32335,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #8",
+    "title": "List 列表 #9",
+    "heading": "selectAll",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31479,7 +32401,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-8",
+    "id": "src-components-list-9",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31487,7 +32409,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #9",
+    "title": "List 列表 #10",
+    "heading": "clearAll",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31552,7 +32475,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-9",
+    "id": "src-components-list-10",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31560,7 +32483,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #10",
+    "title": "List 列表 #11",
+    "heading": "initDrag & cancelDrag",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31640,7 +32564,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-10",
+    "id": "src-components-list-11",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31648,7 +32572,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #11",
+    "title": "List 列表 #12",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31751,7 +32676,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-list-11",
+    "id": "src-components-list-12",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -31759,7 +32684,8 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "List 列表 #12",
+    "title": "List 列表 #13",
+    "heading": "setValue",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31928,6 +32854,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31956,6 +32883,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #2",
+    "heading": "渲染 HTML",
     "expect": "",
     "schema": {
       "type": "page",
@@ -31985,6 +32913,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #3",
+    "heading": "渲染其它组件",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32020,6 +32949,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #4",
+    "heading": "html 或字符串模板",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32049,6 +32979,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #5",
+    "heading": "SchemaNode 模板",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32081,6 +33012,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #6",
+    "heading": "在模板中渲染数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32126,6 +33058,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #7",
+    "heading": "映射展示多个",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32161,6 +33094,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #8",
+    "heading": "对象数组",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32202,6 +33136,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #9",
+    "heading": "Table 中的列类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32255,6 +33190,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #10",
+    "heading": "Form 中静态展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32291,6 +33227,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #11",
+    "heading": "布尔值映射",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32326,6 +33263,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #12",
+    "heading": "远程拉取字典",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32358,6 +33296,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #13",
+    "heading": "关联上下文变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32395,6 +33334,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Mapping 映射 #14",
+    "heading": "占位文本",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32422,6 +33362,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Number 展示 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32446,6 +33387,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Markdown 渲染 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32470,6 +33412,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32492,6 +33435,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #2",
+    "heading": "颜色映射",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32546,6 +33490,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #3",
+    "heading": "圆形进度条",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32569,6 +33514,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #4",
+    "heading": "仪表盘进度条",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32594,6 +33540,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #5",
+    "heading": "设置线条宽度",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32638,6 +33585,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #6",
+    "heading": "自定义格式输出内容",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32672,6 +33620,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Progress 进度条 #7",
+    "heading": "阈值（刻度）",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32705,6 +33654,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Steps 步骤条 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32729,6 +33679,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Property 属性表 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32753,6 +33704,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "QRCode 二维码 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32777,6 +33729,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "BarCode 条形码 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32801,6 +33754,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Remark 标记 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32823,6 +33777,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Remark 标记 #2",
+    "heading": "图标形状",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32846,6 +33801,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Remark 标记 #3",
+    "heading": "可配置标题",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32871,6 +33827,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Remark 标记 #4",
+    "heading": "支持变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32905,6 +33862,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Remark 标记 #5",
+    "heading": "弹出位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32945,6 +33903,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "SearchBox 搜索框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32969,6 +33928,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Sparkline 走势图 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -32993,6 +33953,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Status 状态 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33015,6 +33976,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Status 状态 #2",
+    "heading": "默认状态列表",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33059,6 +34021,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Status 状态 #3",
+    "heading": "自定义状态图标、文本、颜色",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33093,6 +34056,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Status 状态 #4",
+    "heading": "使用 map / labelMap",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33121,6 +34085,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Status 状态 #5",
+    "heading": "动态数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33146,6 +34111,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tpl 模板 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33171,6 +34137,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tpl 模板 #2",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33206,6 +34173,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tpl 模板 #3",
+    "heading": "mouseenter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33241,6 +34209,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tpl 模板 #4",
+    "heading": "mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33276,6 +34245,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tpl 模板 #5",
+    "heading": "限制行数",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33300,6 +34270,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33358,6 +34329,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #2",
+    "heading": "不同的模式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33409,6 +34381,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #3",
+    "heading": "标签颜色",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33465,6 +34438,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #4",
+    "heading": "自定义样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33517,6 +34491,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #5",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33554,6 +34529,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #6",
+    "heading": "mouseenter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33591,6 +34567,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #7",
+    "heading": "mouseleave",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33628,6 +34605,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tag 标签 #8",
+    "heading": "close",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33666,6 +34644,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Timeline 时间轴 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33690,6 +34669,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Shape 形状 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33714,6 +34694,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Slider 滑动条 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33738,6 +34719,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33805,6 +34787,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #2",
+    "heading": "图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33859,6 +34842,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #3",
+    "heading": "level 支持表达式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33885,6 +34869,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #4",
+    "heading": "显示关闭按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33923,6 +34908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #5",
+    "heading": "操作区域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -33957,6 +34943,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Alert 提示 #6",
+    "heading": "操作区域",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34002,6 +34989,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34029,6 +35017,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #2",
+    "heading": "配置尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34081,6 +35070,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #3",
+    "heading": "多级弹框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34133,6 +35123,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #4",
+    "heading": "配置弹窗的按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34183,6 +35174,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #5",
+    "heading": "关闭方式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34227,6 +35219,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #6",
+    "heading": "弹框与数据映射",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34259,6 +35252,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #7",
+    "heading": "动作后关闭弹框",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34293,6 +35287,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Dialog 对话框 #8",
+    "heading": "弹框中配置表单",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34342,6 +35337,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34369,6 +35365,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #2",
+    "heading": "指定弹出方向",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34432,6 +35429,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #3",
+    "heading": "抽屉尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34475,6 +35473,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #4",
+    "heading": "自定义宽高",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34520,6 +35519,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #5",
+    "heading": "多级抽屉",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34572,6 +35572,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #6",
+    "heading": "关闭与蒙层",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34615,6 +35616,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #7",
+    "heading": "动作后关闭抽屉",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34646,6 +35648,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Drawer 抽屉 #8",
+    "heading": "配置抽屉的按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34695,6 +35698,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34717,6 +35721,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #2",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34759,6 +35764,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #3",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34784,6 +35790,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #4",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34832,6 +35839,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #5",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34883,6 +35891,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #6",
+    "heading": "作为容器使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34921,6 +35930,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Spinner 加载中 #7",
+    "heading": "动态控制组件渲染",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34955,6 +35965,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -34985,6 +35996,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #2",
+    "heading": "设置位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35016,6 +36028,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #3",
+    "heading": "不展示关闭按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35047,6 +36060,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #4",
+    "heading": "关闭图标展示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35078,6 +36092,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #5",
+    "heading": "持续时间设置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35109,6 +36124,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #6",
+    "heading": "带标题的提示",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35140,6 +36156,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #7",
+    "heading": "提示单独设置不同的类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35183,6 +36200,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #8",
+    "heading": "提示单独设置不同的位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35238,6 +36256,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #9",
+    "heading": "提示单独设置是否展示关闭按钮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35273,6 +36292,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #10",
+    "heading": "提示单独设置不同的持续时间",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35308,6 +36328,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #11",
+    "heading": "渲染 html",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35338,6 +36359,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Toast 轻提示 #12",
+    "heading": "Schema 节点",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35376,6 +36398,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35398,6 +36421,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #2",
+    "heading": "文字",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35420,6 +36444,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #3",
+    "heading": "图标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35442,6 +36467,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #4",
+    "heading": "动态图片或文字",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35481,6 +36507,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #5",
+    "heading": "方形和圆角形",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35518,6 +36545,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #6",
+    "heading": "大小",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35571,6 +36599,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #7",
+    "heading": "控制字符类型距离左右两侧边界单位像素",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35605,6 +36634,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #8",
+    "heading": "图片拉伸方式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35654,6 +36684,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #9",
+    "heading": "控制图片是否允许拖动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35690,6 +36721,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #10",
+    "heading": "图片加载失败后，通过 onError 控制是否进行 text、icon 置换",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35714,6 +36746,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #11",
+    "heading": "样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35740,6 +36773,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #12",
+    "heading": "角标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35795,6 +36829,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Avatar 头像 #13",
+    "heading": "click",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35829,6 +36864,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Audio 音频 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35850,6 +36886,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Audio 音频 #2",
+    "heading": "倍速",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35875,6 +36912,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Audio 音频 #3",
+    "heading": "只要时间",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35899,6 +36937,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Audio 音频 #4",
+    "heading": "块级",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35921,6 +36960,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tasks 任务操作集合 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -35961,6 +37001,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tasks 任务操作集合 #2",
+    "heading": "状态",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36017,6 +37058,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tasks 任务操作集合 #3",
+    "heading": "列名",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36053,6 +37095,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36135,6 +37178,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #2",
+    "heading": "显示文字或数值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36178,6 +37222,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #3",
+    "heading": "显示位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36218,6 +37263,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #4",
+    "heading": "显示位置",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36247,6 +37293,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #5",
+    "heading": "动态数字",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36276,6 +37323,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #6",
+    "heading": "设置封顶值",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36302,6 +37350,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #7",
+    "heading": "动态控制是否显示角标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36334,6 +37383,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #8",
+    "heading": "动态控制是否显示角标",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36370,6 +37420,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #9",
+    "heading": "设置大小",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36421,6 +37472,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #10",
+    "heading": "设置角标级别",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36450,6 +37502,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #11",
+    "heading": "是否显示动画",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36476,6 +37529,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Badge 角标 #12",
+    "heading": "自定义样式",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36517,6 +37571,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wizard 向导 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36552,6 +37607,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wizard 向导 #2",
+    "heading": "从某一步开始",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36588,6 +37644,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wizard 向导 #3",
+    "heading": "按钮文案",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36626,6 +37683,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Wizard 向导 #4",
+    "heading": "竖排",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36662,6 +37720,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Web Component #1",
+    "heading": "基本用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36692,6 +37751,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Web Component #2",
+    "heading": "属性支持变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36724,6 +37784,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "amis 渲染器 #1",
+    "heading": "基本使用",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36749,6 +37810,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "amis 渲染器 #2",
+    "heading": "通过 name 绑定动态数据",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36777,6 +37839,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "amis 渲染器 #3",
+    "heading": "向下传递 props",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36804,6 +37867,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "快速开始 #1",
+    "heading": "CSS 变量",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36843,6 +37907,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "快速开始 #2",
+    "heading": "辅助 class",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36878,6 +37943,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "快速开始 #3",
+    "heading": "wrapper 内嵌 style",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36912,6 +37978,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "CSS 变量 #1",
+    "heading": "尺寸",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36955,6 +38022,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-响应式设计 #1",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -36978,6 +38046,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-响应式设计 #2",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37011,6 +38080,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #1",
+    "heading": "",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37034,6 +38104,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #2",
+    "heading": "Hover",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37057,6 +38128,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #3",
+    "heading": "Group-Hover",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37080,6 +38152,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #4",
+    "heading": "Focus",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37103,6 +38176,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #5",
+    "heading": "Active",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37126,6 +38200,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #6",
+    "heading": "Disabled",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37149,6 +38224,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "辅助类-状态样式 #7",
+    "heading": "结合响应式设计一起？",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37172,6 +38248,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Sizing #1",
+    "heading": "用法",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37195,6 +38272,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #1",
+    "heading": "block",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37218,6 +38296,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #2",
+    "heading": "inline-block",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37241,6 +38320,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #3",
+    "heading": "inline",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37264,6 +38344,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #4",
+    "heading": "flex",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37287,6 +38368,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #5",
+    "heading": "inline-flex",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37310,6 +38392,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #6",
+    "heading": "grid",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37333,6 +38416,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #7",
+    "heading": "inline-grid",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37356,6 +38440,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #8",
+    "heading": "contents",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37379,6 +38464,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #9",
+    "heading": "hidden",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37402,6 +38488,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #10",
+    "heading": "flow-root",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37425,6 +38512,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #11",
+    "heading": "table",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37448,6 +38536,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #12",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37471,6 +38560,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Display #13",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37494,6 +38584,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Floats #1",
+    "heading": "左浮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37517,6 +38608,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Floats #2",
+    "heading": "右浮",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37540,6 +38632,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Floats #3",
+    "heading": "不浮动",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37563,6 +38656,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #1",
+    "heading": "clear-left",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37586,6 +38680,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #2",
+    "heading": "clear-right",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37609,6 +38704,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #3",
+    "heading": "clear-both",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37632,6 +38728,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #4",
+    "heading": "clear-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37655,6 +38752,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37678,6 +38776,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37701,6 +38800,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37724,6 +38824,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Clear #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37747,6 +38848,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #1",
+    "heading": "overflow-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37770,6 +38872,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #2",
+    "heading": "overflow-hidden",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37793,6 +38896,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #3",
+    "heading": "overflow-visible",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37816,6 +38920,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #4",
+    "heading": "overflow-scroll",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37839,6 +38944,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #5",
+    "heading": "overflow-x-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37862,6 +38968,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #6",
+    "heading": "overflow-y-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37885,6 +38992,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #7",
+    "heading": "overflow-x-hidden",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37908,6 +39016,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #8",
+    "heading": "overflow-y-hidden",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37931,6 +39040,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #9",
+    "heading": "overflow-x-visible",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37954,6 +39064,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #10",
+    "heading": "overflow-y-visible",
     "expect": "",
     "schema": {
       "type": "page",
@@ -37977,6 +39088,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #11",
+    "heading": "overflow-x-scroll",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38000,6 +39112,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #12",
+    "heading": "overflow-y-scroll",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38023,6 +39136,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #13",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38046,6 +39160,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #14",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38069,6 +39184,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Overflow #15",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38092,6 +39208,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #1",
+    "heading": "static",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38115,6 +39232,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #2",
+    "heading": "relative",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38138,6 +39256,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #3",
+    "heading": "absolute",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38161,6 +39280,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #4",
+    "heading": "sticky",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38184,6 +39304,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #5",
+    "heading": "fixed",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38207,6 +39328,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38230,6 +39352,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Position #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38253,6 +39376,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #1",
+    "heading": "top-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38276,6 +39400,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #2",
+    "heading": "right-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38299,6 +39424,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #3",
+    "heading": "bottom-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38322,6 +39448,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #4",
+    "heading": "left-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38345,6 +39472,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #5",
+    "heading": "inset-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38368,6 +39496,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #6",
+    "heading": "inset-x-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38391,6 +39520,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #7",
+    "heading": "inset-y-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38414,6 +39544,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #8",
+    "heading": "top-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38437,6 +39568,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #9",
+    "heading": "-top-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38460,6 +39592,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #10",
+    "heading": "top-1/2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38483,6 +39616,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #11",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38506,6 +39640,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Top / Right / Bottom / Left #12",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38529,6 +39664,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Visibility #1",
+    "heading": "visible",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38552,6 +39688,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Visibility #2",
+    "heading": "invisible",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38575,6 +39712,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Visibility #3",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38598,6 +39736,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Visibility #4",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38621,6 +39760,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #1",
+    "heading": "z-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38644,6 +39784,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #2",
+    "heading": "z-10",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38667,6 +39808,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #3",
+    "heading": "z-20",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38690,6 +39832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #4",
+    "heading": "z-30",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38713,6 +39856,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #5",
+    "heading": "z-40",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38736,6 +39880,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #6",
+    "heading": "z-50",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38759,6 +39904,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #7",
+    "heading": "z-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38782,6 +39928,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #8",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38805,6 +39952,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Z-Index #9",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38828,6 +39976,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #1",
+    "heading": "flex-row",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38851,6 +40000,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #2",
+    "heading": "flex-row-reverse",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38874,6 +40024,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #3",
+    "heading": "flex-col",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38897,6 +40048,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #4",
+    "heading": "flex-col-reverse",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38920,6 +40072,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38943,6 +40096,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Direction #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38966,6 +40120,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Wrap #1",
+    "heading": "flex-wrap",
     "expect": "",
     "schema": {
       "type": "page",
@@ -38989,6 +40144,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Wrap #2",
+    "heading": "flex-wrap-reverse",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39012,6 +40168,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Wrap #3",
+    "heading": "flex-nowrap",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39035,6 +40192,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Wrap #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39058,6 +40216,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Wrap #5",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39081,6 +40240,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #1",
+    "heading": "flex-1",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39104,6 +40264,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #2",
+    "heading": "flex-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39127,6 +40288,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #3",
+    "heading": "flex-initial",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39150,6 +40312,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #4",
+    "heading": "flex-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39173,6 +40336,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39196,6 +40360,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39219,6 +40384,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Grow #1",
+    "heading": "flex-grow",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39242,6 +40408,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Grow #2",
+    "heading": "flex-grow-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39265,6 +40432,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Grow #3",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39288,6 +40456,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Grow #4",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39311,6 +40480,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Shrink #1",
+    "heading": "flex-shrink",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39334,6 +40504,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Shrink #2",
+    "heading": "flex-shrink-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39357,6 +40528,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Shrink #3",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39380,6 +40552,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Shrink #4",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39403,6 +40576,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Order #1",
+    "heading": "order-1",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39426,6 +40600,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Order #2",
+    "heading": "order-first",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39449,6 +40624,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Order #3",
+    "heading": "order-last",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39472,6 +40648,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Order #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39495,6 +40672,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Flex Order #5",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39518,6 +40696,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #1",
+    "heading": "grid-cols-1",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39541,6 +40720,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #2",
+    "heading": "grid-cols-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39564,6 +40744,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #3",
+    "heading": "grid-cols-3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39587,6 +40768,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #4",
+    "heading": "grid-cols-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39610,6 +40792,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #5",
+    "heading": "grid-cols-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39633,6 +40816,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39656,6 +40840,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Columns #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39679,6 +40864,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #1",
+    "heading": "col-span-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39702,6 +40888,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #2",
+    "heading": "col-span-3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39725,6 +40912,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #3",
+    "heading": "col-span-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39748,6 +40936,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #4",
+    "heading": "col-start-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39771,6 +40960,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #5",
+    "heading": "col-end-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39794,6 +40984,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39817,6 +41008,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Column Start / End #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39840,6 +41032,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #1",
+    "heading": "grid-rows-1",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39863,6 +41056,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #2",
+    "heading": "grid-rows-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39886,6 +41080,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #3",
+    "heading": "grid-rows-3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39909,6 +41104,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #4",
+    "heading": "grid-rows-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39932,6 +41128,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #5",
+    "heading": "grid-rows-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39955,6 +41152,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -39978,6 +41176,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Template Rows #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40001,6 +41200,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #1",
+    "heading": "row-span-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40024,6 +41224,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #2",
+    "heading": "row-span-3",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40047,6 +41248,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #3",
+    "heading": "row-span-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40070,6 +41272,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #4",
+    "heading": "row-start-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40093,6 +41296,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #5",
+    "heading": "row-end-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40116,6 +41320,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40139,6 +41344,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Row Start / End #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40162,6 +41368,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #1",
+    "heading": "grid-flow-row",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40185,6 +41392,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #2",
+    "heading": "grid-flow-col",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40208,6 +41416,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #3",
+    "heading": "grid-flow-row-dense",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40231,6 +41440,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #4",
+    "heading": "grid-flow-col-dense",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40254,6 +41464,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40277,6 +41488,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Flow #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40300,6 +41512,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #1",
+    "heading": "auto-cols-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40323,6 +41536,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #2",
+    "heading": "auto-cols-min",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40346,6 +41560,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #3",
+    "heading": "auto-cols-max",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40369,6 +41584,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #4",
+    "heading": "auto-cols-fr",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40392,6 +41608,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40415,6 +41632,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Columns #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40438,6 +41656,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #1",
+    "heading": "auto-rows-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40461,6 +41680,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #2",
+    "heading": "auto-rows-min",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40484,6 +41704,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #3",
+    "heading": "auto-rows-max",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40507,6 +41728,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #4",
+    "heading": "auto-rows-fr",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40530,6 +41752,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40553,6 +41776,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Grid Auto Rows #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40576,6 +41800,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #1",
+    "heading": "gap-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40599,6 +41824,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #2",
+    "heading": "gap-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40622,6 +41848,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #3",
+    "heading": "gap-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40645,6 +41872,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #4",
+    "heading": "gap-6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40668,6 +41896,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #5",
+    "heading": "gap-x-8",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40691,6 +41920,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #6",
+    "heading": "gap-y-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40714,6 +41944,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40737,6 +41968,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Gap #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40760,6 +41992,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #1",
+    "heading": "justify-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40783,6 +42016,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #2",
+    "heading": "justify-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40806,6 +42040,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #3",
+    "heading": "justify-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40829,6 +42064,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #4",
+    "heading": "justify-between",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40852,6 +42088,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #5",
+    "heading": "justify-around",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40875,6 +42112,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #6",
+    "heading": "justify-evenly",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40898,6 +42136,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40921,6 +42160,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Content #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40944,6 +42184,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #1",
+    "heading": "justify-items-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40967,6 +42208,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #2",
+    "heading": "justify-items-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -40990,6 +42232,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #3",
+    "heading": "justify-items-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41013,6 +42256,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #4",
+    "heading": "justify-items-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41036,6 +42280,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #5",
+    "heading": "justify-items-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41059,6 +42304,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41082,6 +42328,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Items #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41105,6 +42352,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #1",
+    "heading": "justify-self-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41128,6 +42376,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #2",
+    "heading": "justify-self-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41151,6 +42400,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #3",
+    "heading": "justify-self-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41174,6 +42424,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #4",
+    "heading": "justify-self-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41197,6 +42448,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #5",
+    "heading": "justify-self-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41220,6 +42472,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41243,6 +42496,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Justify Self #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41266,6 +42520,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #1",
+    "heading": "content-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41289,6 +42544,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #2",
+    "heading": "content-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41312,6 +42568,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #3",
+    "heading": "content-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41335,6 +42592,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #4",
+    "heading": "content-between",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41358,6 +42616,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #5",
+    "heading": "content-around",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41381,6 +42640,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #6",
+    "heading": "content-evenly",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41404,6 +42664,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41427,6 +42688,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Content #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41450,6 +42712,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #1",
+    "heading": "items-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41473,6 +42736,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #2",
+    "heading": "items-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41496,6 +42760,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #3",
+    "heading": "items-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41519,6 +42784,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #4",
+    "heading": "items-baseline",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41542,6 +42808,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #5",
+    "heading": "items-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41565,6 +42832,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41588,6 +42856,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Items #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41611,6 +42880,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #1",
+    "heading": "self-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41634,6 +42904,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #2",
+    "heading": "self-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41657,6 +42928,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #3",
+    "heading": "self-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41680,6 +42952,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #4",
+    "heading": "self-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41703,6 +42976,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #5",
+    "heading": "self-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41726,6 +43000,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41749,6 +43024,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Align Self #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41772,6 +43048,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #1",
+    "heading": "place-content-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41795,6 +43072,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #2",
+    "heading": "place-content-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41818,6 +43096,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #3",
+    "heading": "place-content-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41841,6 +43120,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #4",
+    "heading": "place-content-between",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41864,6 +43144,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #5",
+    "heading": "place-content-around",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41887,6 +43168,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #6",
+    "heading": "place-content-evenly",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41910,6 +43192,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #7",
+    "heading": "place-content-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41933,6 +43216,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #8",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41956,6 +43240,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Content #9",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -41979,6 +43264,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #1",
+    "heading": "place-items-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42002,6 +43288,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #2",
+    "heading": "place-items-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42025,6 +43312,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #3",
+    "heading": "place-items-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42048,6 +43336,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #4",
+    "heading": "place-items-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42071,6 +43360,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #5",
+    "heading": "place-items-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42094,6 +43384,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42117,6 +43408,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Items #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42140,6 +43432,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #1",
+    "heading": "place-self-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42163,6 +43456,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #2",
+    "heading": "place-self-start",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42186,6 +43480,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #3",
+    "heading": "place-self-end",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42209,6 +43504,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #4",
+    "heading": "place-self-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42232,6 +43528,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #5",
+    "heading": "place-self-stretch",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42255,6 +43552,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42278,6 +43576,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Place Self #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42301,6 +43600,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #1",
+    "heading": "p-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42324,6 +43624,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #2",
+    "heading": "p-px",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42347,6 +43648,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #3",
+    "heading": "p-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42370,6 +43672,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #4",
+    "heading": "p-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42393,6 +43696,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #5",
+    "heading": "p-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42416,6 +43720,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #6",
+    "heading": "p-18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42439,6 +43744,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #7",
+    "heading": "px-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42462,6 +43768,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #8",
+    "heading": "py-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42485,6 +43792,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #9",
+    "heading": "pt-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42508,6 +43816,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #10",
+    "heading": "pr-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42531,6 +43840,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #11",
+    "heading": "pb-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42554,6 +43864,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #12",
+    "heading": "pl-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42577,6 +43888,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #13",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42600,6 +43912,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Padding #14",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -42623,6 +43936,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l",
+    "heading": "",
     "expect": "Amis 15px",
     "schema": {
       "type": "page",
@@ -42670,6 +43984,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-lg",
+    "heading": "",
     "expect": "Amis 30px",
     "schema": {
       "type": "page",
@@ -42717,6 +44032,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-md",
+    "heading": "",
     "expect": "Amis 20px",
     "schema": {
       "type": "page",
@@ -42764,6 +44080,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-n",
+    "heading": "",
     "expect": "Amis -15px",
     "schema": {
       "type": "page",
@@ -42811,6 +44128,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-none",
+    "heading": "",
     "expect": "Amis 0px",
     "schema": {
       "type": "page",
@@ -42858,6 +44176,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-sm",
+    "heading": "",
     "expect": "Amis 10px",
     "schema": {
       "type": "page",
@@ -42905,6 +44224,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-xl",
+    "heading": "",
     "expect": "Amis 40px",
     "schema": {
       "type": "page",
@@ -42952,6 +44272,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-xs",
+    "heading": "",
     "expect": "Amis 5px",
     "schema": {
       "type": "page",
@@ -42999,6 +44320,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "className: m-l-xxl",
+    "heading": "",
     "expect": "Amis 50px",
     "schema": {
       "type": "page",
@@ -43046,6 +44368,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #1",
+    "heading": "m-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43069,6 +44392,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "第二个按钮 className: m-l 拉开缝",
+    "heading": "",
     "expect": "Amis `.m-l` 为 15px",
     "schema": {
       "type": "page",
@@ -43116,6 +44440,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #2",
+    "heading": "m-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43139,6 +44464,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #3",
+    "heading": "m-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43162,6 +44488,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #4",
+    "heading": "m-18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43185,6 +44512,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #5",
+    "heading": "-m-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43208,6 +44536,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #6",
+    "heading": "mx-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43231,6 +44560,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #7",
+    "heading": "my-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43254,6 +44584,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #8",
+    "heading": "mt-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43277,6 +44608,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #9",
+    "heading": "mr-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43300,6 +44632,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #10",
+    "heading": "mb-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43323,6 +44656,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #11",
+    "heading": "ml-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43346,6 +44680,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #12",
+    "heading": "mx-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43369,6 +44704,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #13",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43392,6 +44728,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Margin #14",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43415,6 +44752,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "p0",
     "layer": "p0",
     "title": "tpl 容器 className: flex space-x-6",
+    "heading": "",
     "expect": "后盒相对前盒 margin-left 24px（Amis space-x-6）",
     "schema": {
       "type": "page",
@@ -43442,6 +44780,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #1",
+    "heading": "space-x-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43465,6 +44804,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #2",
+    "heading": "space-x-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43488,6 +44828,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #3",
+    "heading": "space-x-6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43511,6 +44852,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #4",
+    "heading": "space-x-18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43534,6 +44876,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #5",
+    "heading": "space-x-reverse",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43557,6 +44900,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #6",
+    "heading": "space-y-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43580,6 +44924,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #7",
+    "heading": "space-y-6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43603,6 +44948,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #8",
+    "heading": "space-y-reverse",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43626,6 +44972,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #9",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43649,6 +44996,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Space Between #10",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43672,6 +45020,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #1",
+    "heading": "w-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43695,6 +45044,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #2",
+    "heading": "w-px",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43718,6 +45068,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #3",
+    "heading": "w-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43741,6 +45092,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #4",
+    "heading": "w-16",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43764,6 +45116,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #5",
+    "heading": "w-18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43787,6 +45140,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #6",
+    "heading": "w-32",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43810,6 +45164,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #7",
+    "heading": "w-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43833,6 +45188,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #8",
+    "heading": "w-1x",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43856,6 +45212,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #9",
+    "heading": "w-1/2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43879,6 +45236,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #10",
+    "heading": "w-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43902,6 +45260,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #11",
+    "heading": "min-w-xs",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43925,6 +45284,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #12",
+    "heading": "max-w-xs",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43948,6 +45308,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #13",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43971,6 +45332,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Width #14",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -43994,6 +45356,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #1",
+    "heading": "h-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44017,6 +45380,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #2",
+    "heading": "h-px",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44040,6 +45404,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #3",
+    "heading": "h-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44063,6 +45428,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #4",
+    "heading": "h-16",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44086,6 +45452,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #5",
+    "heading": "h-18",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44109,6 +45476,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #6",
+    "heading": "h-32",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44132,6 +45500,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #7",
+    "heading": "h-auto",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44155,6 +45524,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #8",
+    "heading": "h-1/2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44178,6 +45548,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #9",
+    "heading": "h-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44201,6 +45572,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #10",
+    "heading": "min-h-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44224,6 +45596,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #11",
+    "heading": "max-h-16",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44247,6 +45620,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #12",
+    "heading": "max-h-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44270,6 +45644,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #13",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44293,6 +45668,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Height #14",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44316,6 +45692,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Family #1",
+    "heading": "font-sans",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44339,6 +45716,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Family #2",
+    "heading": "font-serif",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44362,6 +45740,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Family #3",
+    "heading": "font-mono",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44385,6 +45764,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Family #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44408,6 +45788,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #1",
+    "heading": "text-xs",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44431,6 +45812,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #2",
+    "heading": "text-sm",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44454,6 +45836,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #3",
+    "heading": "text-base",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44477,6 +45860,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #4",
+    "heading": "text-md",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44500,6 +45884,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #5",
+    "heading": "text-lg",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44523,6 +45908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #6",
+    "heading": "text-xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44546,6 +45932,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #7",
+    "heading": "text-2xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44569,6 +45956,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #8",
+    "heading": "text-3xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44592,6 +45980,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #9",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44615,6 +46004,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Size #10",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44638,6 +46028,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font style #1",
+    "heading": "italic",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44661,6 +46052,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font style #2",
+    "heading": "not-italic",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44684,6 +46076,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font style #3",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44707,6 +46100,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font style #4",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44730,6 +46124,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #1",
+    "heading": "font-thin",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44753,6 +46148,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #2",
+    "heading": "font-light",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44776,6 +46172,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #3",
+    "heading": "font-normal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44799,6 +46196,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #4",
+    "heading": "font-medium",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44822,6 +46220,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #5",
+    "heading": "font-semibold",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44845,6 +46244,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #6",
+    "heading": "font-bold",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44868,6 +46268,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #7",
+    "heading": "font-black",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44891,6 +46292,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #8",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44914,6 +46316,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Font Weight #9",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44937,6 +46340,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #1",
+    "heading": "tracking-tighter",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44960,6 +46364,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #2",
+    "heading": "tracking-tight",
     "expect": "",
     "schema": {
       "type": "page",
@@ -44983,6 +46388,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #3",
+    "heading": "tracking-normal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45006,6 +46412,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #4",
+    "heading": "tracking-wide",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45029,6 +46436,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #5",
+    "heading": "tracking-wider",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45052,6 +46460,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #6",
+    "heading": "tracking-widest",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45075,6 +46484,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45098,6 +46508,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Letter Spacing #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45121,6 +46532,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #1",
+    "heading": "leading-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45144,6 +46556,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #2",
+    "heading": "leading-tight",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45167,6 +46580,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #3",
+    "heading": "leading-normal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45190,6 +46604,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #4",
+    "heading": "leading-loose",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45213,6 +46628,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #5",
+    "heading": "leading-6",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45236,6 +46652,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #6",
+    "heading": "leading-10",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45259,6 +46676,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45282,6 +46700,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Line Height #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45305,6 +46724,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #1",
+    "heading": "list-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45328,6 +46748,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #2",
+    "heading": "list-disc",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45351,6 +46772,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #3",
+    "heading": "list-decimal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45374,6 +46796,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #4",
+    "heading": "list-inside",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45397,6 +46820,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #5",
+    "heading": "list-outside",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45420,6 +46844,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45443,6 +46868,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "List Style Type #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45466,6 +46892,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #1",
+    "heading": "text-left",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45489,6 +46916,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #2",
+    "heading": "text-center",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45512,6 +46940,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #3",
+    "heading": "text-right",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45535,6 +46964,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #4",
+    "heading": "text-justify",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45558,6 +46988,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45581,6 +47012,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Alignment #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45604,6 +47036,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #1",
+    "heading": "text-primary",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45627,6 +47060,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #2",
+    "heading": "text-success",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45650,6 +47084,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #3",
+    "heading": "text-danger",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45673,6 +47108,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #4",
+    "heading": "text-green-700",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45696,6 +47132,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45719,6 +47156,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Color #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45742,6 +47180,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Decoration #1",
+    "heading": "underline",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45765,6 +47204,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Decoration #2",
+    "heading": "line-through",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45788,6 +47228,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Decoration #3",
+    "heading": "no-underline",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45811,6 +47252,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Decoration #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45834,6 +47276,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Decoration #5",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45857,6 +47300,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #1",
+    "heading": "uppercase",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45880,6 +47324,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #2",
+    "heading": "lowercase",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45903,6 +47348,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #3",
+    "heading": "capitalize",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45926,6 +47372,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #4",
+    "heading": "normal-case",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45949,6 +47396,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45972,6 +47420,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Transform #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -45995,6 +47444,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #1",
+    "heading": "align-baseline",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46018,6 +47468,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #2",
+    "heading": "align-top",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46041,6 +47492,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #3",
+    "heading": "align-middle",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46064,6 +47516,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #4",
+    "heading": "align-bottom",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46087,6 +47540,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #5",
+    "heading": "align-text-top",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46110,6 +47564,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #6",
+    "heading": "align-text-bottom",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46133,6 +47588,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46156,6 +47612,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Vertical Alignment #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46179,6 +47636,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #1",
+    "heading": "white-space-normal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46202,6 +47660,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #2",
+    "heading": "white-space-nowrap",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46225,6 +47684,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #3",
+    "heading": "white-space-pre",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46248,6 +47708,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #4",
+    "heading": "white-space-pre-line",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46271,6 +47732,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #5",
+    "heading": "white-space-pre-wrap",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46294,6 +47756,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46317,6 +47780,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Whitespace #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46340,6 +47804,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Word Break #1",
+    "heading": "break-normal",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46363,6 +47828,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Word Break #2",
+    "heading": "break-words",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46386,6 +47852,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Word Break #3",
+    "heading": "break-all",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46409,6 +47876,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Word Break #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46432,6 +47900,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Word Break #5",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46455,6 +47924,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Overflow #1",
+    "heading": "truncate",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46478,6 +47948,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Overflow #2",
+    "heading": "overflow-ellipsis",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46501,6 +47972,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Overflow #3",
+    "heading": "overflow-clip",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46524,6 +47996,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Overflow #4",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46547,6 +48020,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Text Overflow #5",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46570,6 +48044,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #1",
+    "heading": "bg-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46593,6 +48068,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #2",
+    "heading": "bg-transparent",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46616,6 +48092,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #3",
+    "heading": "bg-black",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46639,6 +48116,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #4",
+    "heading": "bg-primary",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46662,6 +48140,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #5",
+    "heading": "bg-gray-200",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46685,6 +48164,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #6",
+    "heading": "bg-blue-500",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46708,6 +48188,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #7",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46731,6 +48212,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Background Color #8",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46754,6 +48236,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #1",
+    "heading": "rounded-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46777,6 +48260,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #2",
+    "heading": "rounded-sm",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46800,6 +48284,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #3",
+    "heading": "rounded",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46823,6 +48308,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #4",
+    "heading": "rounded-md",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46846,6 +48332,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #5",
+    "heading": "rounded-lg",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46869,6 +48356,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #6",
+    "heading": "rounded-xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46892,6 +48380,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #7",
+    "heading": "rounded-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46915,6 +48404,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #8",
+    "heading": "rounded-t-lg",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46938,6 +48428,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #9",
+    "heading": "rounded-tl-full",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46961,6 +48452,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #10",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -46984,6 +48476,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Radius #11",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47007,6 +48500,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #1",
+    "heading": "border",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47030,6 +48524,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #2",
+    "heading": "border-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47053,6 +48548,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #3",
+    "heading": "border-2",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47076,6 +48572,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #4",
+    "heading": "border-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47099,6 +48596,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #5",
+    "heading": "border-8",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47122,6 +48620,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #6",
+    "heading": "border-t-4",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47145,6 +48644,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #7",
+    "heading": "border-l-8",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47168,6 +48668,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #8",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47191,6 +48692,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Width #9",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47214,6 +48716,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #1",
+    "heading": "border-primary",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47237,6 +48740,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #2",
+    "heading": "border-danger",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47260,6 +48764,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #3",
+    "heading": "border-gray-700",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47283,6 +48788,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #4",
+    "heading": "border-blue-500",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47306,6 +48812,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #5",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47329,6 +48836,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Color #6",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47352,6 +48860,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #1",
+    "heading": "border-solid",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47375,6 +48884,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #2",
+    "heading": "border-dashed",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47398,6 +48908,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #3",
+    "heading": "border-dotted",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47421,6 +48932,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #4",
+    "heading": "border-double",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47444,6 +48956,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #5",
+    "heading": "border-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47467,6 +48980,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #6",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47490,6 +49004,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Border Style #7",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47513,6 +49028,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #1",
+    "heading": "shadow-sm",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47536,6 +49052,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #2",
+    "heading": "shadow",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47559,6 +49076,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #3",
+    "heading": "shadow-md",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47582,6 +49100,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #4",
+    "heading": "shadow-lg",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47605,6 +49124,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #5",
+    "heading": "shadow-xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47628,6 +49148,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #6",
+    "heading": "shadow-2xl",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47651,6 +49172,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #7",
+    "heading": "shadow-inner",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47674,6 +49196,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #8",
+    "heading": "shadow-none",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47697,6 +49220,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #9",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47720,6 +49244,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Box Shadow #10",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47743,6 +49268,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #1",
+    "heading": "opacity-0",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47766,6 +49292,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #2",
+    "heading": "opacity-5",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47789,6 +49316,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #3",
+    "heading": "opacity-25",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47812,6 +49340,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #4",
+    "heading": "opacity-50",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47835,6 +49364,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #5",
+    "heading": "opacity-75",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47858,6 +49388,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #6",
+    "heading": "opacity-95",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47881,6 +49412,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #7",
+    "heading": "opacity-100",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47904,6 +49436,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #8",
+    "heading": "组合",
     "expect": "",
     "schema": {
       "type": "page",
@@ -47927,6 +49460,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Opacity #9",
+    "heading": "响应式设计",
     "expect": "",
     "schema": {
       "type": "page",

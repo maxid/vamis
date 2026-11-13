@@ -108,6 +108,14 @@ describe('harvestMarkdown', () => {
     )
     expect(rows.map((row) => row.schema)).toEqual([{ type: 'page', body: 'Hello' }])
   })
+
+  it('keeps the nearest markdown heading on each fence', () => {
+    const rows = harvestSource(
+      ['## 字母索引条', '', '```schema', 'type: page', 'body: Hello', '```'].join('\n'),
+      'website/src/components/list.md',
+    )
+    expect(rows[0].heading).toBe('字母索引条')
+  })
 })
 
 describe('isRenderableSchema', () => {
@@ -129,6 +137,21 @@ describe('isRenderableSchema', () => {
       isRenderableSchema({
         type: 'page',
         body: [{ type: 'crud', api: '/x', columns: [{ name: 'id', label: 'ID' }] }],
+      }),
+    ).toBe(true)
+    expect(
+      isRenderableSchema({
+        type: 'page',
+        body: {
+          type: 'service',
+          data: { rows: [{ name: 'Alice Smith' }] },
+          body: {
+            type: 'list',
+            source: '$rows',
+            showIndexBar: true,
+            listItem: { title: '${name}', subTitle: '${title}', desc: '${desc}' },
+          },
+        },
       }),
     ).toBe(true)
   })

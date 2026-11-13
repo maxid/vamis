@@ -216,6 +216,7 @@ export function toBrowserScript(cases) {
     origin: row.origin,
     layer: row.layer || 'docs',
     title: row.title,
+    heading: row.heading || '',
     expect: row.expect || '',
     schema: row.schema,
     measure: row.measure,

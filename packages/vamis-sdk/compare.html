@@ -525,7 +525,7 @@
           const raw = String(query || '').trim().toLowerCase()
           if (!raw) return true
           const rec = row && typeof row === 'object' ? row : {}
-          const hay = [rec.id, rec.title, rec.page, rec.group, rec.section, rec.bucket, rec.source]
+          const hay = [rec.id, rec.title, rec.heading, rec.page, rec.group, rec.section, rec.bucket, rec.source]
             .map(function (part) { return String(part || '').toLowerCase() })
             .join(' ')
           return raw.split(/\s+/).every(function (token) { return hay.includes(token) })
@@ -533,7 +533,7 @@
         function addCaseOption(parent, row) {
           const opt = document.createElement('option')
           opt.value = row.id
-          opt.textContent = (row.extra ? '+ ' : '') + row.title
+          opt.textContent = (row.extra ? '+ ' : '') + row.title + (row.heading ? ' · ' + row.heading : '')
           parent.appendChild(opt)
         }
         function fillSelect(keepId) {

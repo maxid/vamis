@@ -79,7 +79,7 @@ const CHILD_KEYS = [
   'card',
 ]
 
-const TEXT_KEYS = ['tpl', 'html', 'value', 'label', 'text', 'msg', 'title']
+const TEXT_KEYS = ['tpl', 'html', 'value', 'label', 'text', 'msg', 'title', 'subTitle', 'desc']
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out
@@ -125,7 +125,7 @@ function walkSchema(node, visit) {
   for (const key of TEXT_KEYS) {
     if (typeof node[key] === 'string' && node[key].trim() && key !== 'title') visit({ text: true })
   }
-  if (typeof node.title === 'string' && node.title.trim() && type && type !== 'page' && type !== 'form') {
+  if (typeof node.title === 'string' && node.title.trim() && type !== 'page' && type !== 'form') {
     visit({ text: true })
   }
   for (const key of CHILD_KEYS) walkSchema(node[key], visit)
@@ -146,6 +146,15 @@ function slug(file, index) {
 
 function parseFence(body) {
   return parseSchemaText(body, (text) => parseYaml(text, { prettyErrors: true, schema: 'core', version: '1.2' }))
+}
+
+function lastHeading(source, offset) {
+  const before = String(source || '').slice(0, Math.max(0, offset))
+  let heading = ''
+  for (const match of before.matchAll(/^#{2,3}[ \t]+(.+?)\s*$/gm)) {
+    heading = String(match[1] || '').trim()
+  }
+  return heading
 }
 
 export function harvestSource(source, rel, options = {}) {
@@ -173,6 +182,7 @@ export function harvestSource(source, rel, options = {}) {
       id: slug(rel, index),
       group,
       title: `${rel} #${index + 1}`,
+      heading: lastHeading(source, match.index ?? 0),
       source: rel,
       layer: 'docs',
       index,

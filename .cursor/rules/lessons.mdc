@@ -72,6 +72,12 @@ alwaysApply: true
 - 触及：所有对照过的 type
 - 规则：`.cursor/rules/compare.mdc`
 
+### 收割 listItem 的 title/subTitle/desc 也算可见内容
+- 踩过：字母索引条只有 typeless `listItem: { title, subTitle, desc }`，`isRenderableSchema` 把 service+list 当空布局跳过，对照页没有对应示例。
+- 稳定做法：`TEXT_KEYS` 含 `subTitle`/`desc`；无 type 的 `title` 也算 text（page/form 的 title 仍跳过）。对照下拉带 markdown 二级标题，能搜「字母索引条」。
+- 触及：`list` 对照
+- 规则：`packages/vamis-sdk/compare/harvest.mjs`
+
 ### 对照 Playwright 要用本机浏览器目录
 - 踩过：Cursor 把 `PLAYWRIGHT_BROWSERS_PATH` 指到 sandbox-cache，缺 `chrome-headless-shell`，`pnpm compare` 即使用 `all` 权限也仍走那条空路径。
 - 稳定做法：对照前覆盖为本机 `~/Library/Caches/ms-playwright`（见 `compare.mdc`）。不要再装一份进 sandbox-cache。
