@@ -343,10 +343,16 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`
 
 ### 组件色 alias `--colors-*` 主题阶，不要写死 hex
-- 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。顶栏一度并排「云舍 ▾」和下方 5 色点，看起来像两套主题。
-- 稳定做法：主题包只换 `--colors-brand-*` / `--colors-success-5` 等色阶。`--primary` / `--success` / `--destructive` / `--tag-*` / `--label-*` 只 alias。顶栏用 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀），hover 出名称，不要再并排下拉。浅色/深色加 `.dark`，不要改当前色点的 brand。不要在组件 token 再写一套调色盘。
-- 触及：`tag` Button FormItem
-- 规则：`packages/vamis-ui/src/themes.css`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
+- 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。顶栏一度并排「云舍 ▾」和下方 5 色点，看起来像两套主题。配整套 brand 阶时用了顶栏色点 swatch（翠绿 `oklch(0.52 0.14 145)` → `#267d30`），浅色 applied 其实是 `oklch(0.49 0.16 145)`（`#007617`）；深色却把 `--primary` 钉成同一档 brand-5，线上 bit.uscan.cn 深色是 `oklch(.7 .13 accent-h)` 薄荷绿。文档预览再刷 fill-11 / `--background`，井和外壳 `--card` 不是一色。
+- 稳定做法：浅色 `--primary` alias brand-5；**深色**在 `@supports oklch` 里抬成 `oklch(0.7 0.13 var(--accent-h))`，foreground `oklch(0.2 0.03 var(--accent-h))`，不要深色还用浅色那档 `#007617`。`--ring` / focus glow 跟 `--primary`，`@supports :root` 不要再钉 `brand-5`（会压过 `.dark --ring`，翠绿深色 focus 仍是森林绿）。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）。文档 `.doc-play__preview` 加 `bg-card`，不要 `--page-main-bg`。对线上以 bit.uscan.cn 同路径为准，不要只对 5173。
+- 触及：`tag` Button FormItem 主题包 文档预览
+- 规则：`packages/vamis-ui/src/styles.css` `@supports .dark --primary`；`playground/src/components/SchemaPreview.vue`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
+
+### 浅色/深色切换不要让 border 插值 hex↔oklch
+- 踩过：线框按钮（尤其「编辑 Schema」）切主题时边框 黑→白→灰，过程约 150ms 肉眼可见。浅色 `--input` 是 hex、深色是 `oklch(... var(--accent-h))`，Button `transition: border-color 0.15s` 插值对不上，边先跳成近白，底还是深色。
+- 稳定做法：`--border` / `--input` 两边都 alias `--colors-neutral-line-8`（浅 `#e8e9eb` / 深 `#5c6066`）。切 `html.dark` 前加 `theme-changing`（`transition: none`），两帧后再摘掉。hover 边框动画仍在，只是换主题不走过渡。
+- 触及：Button `outline` 文档壳
+- 规则：`packages/vamis-ui/src/styles.css` `html.theme-changing`；`playground/src/docs/preview-frame.ts` `withoutThemeTransition`
 
 ### Amis helper 类名不等于字面含义
 - 踩过：日历用 `grid-cols-7` 画 7 列；Amis 该 class 实际 6 列。

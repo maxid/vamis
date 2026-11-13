@@ -5,7 +5,7 @@ import { Button } from '@vamis/ui'
 import SiteSearch from './components/SiteSearch.vue'
 import { withBase } from './docs/base'
 import { docViewport, hydrateDocViewport, setDocViewport } from './docs/doc-viewport'
-import { publishPreviewChrome } from './docs/preview-frame'
+import { publishPreviewChrome, withoutThemeTransition } from './docs/preview-frame'
 
 const GITHUB_REPO = 'https://github.com/maxid/vamis'
 const compareHref = withBase('/sdk/compare.html')
@@ -36,7 +36,7 @@ const packs: { id: ThemePack; label: string; color: string }[] = [
   { id: 'cxd', label: '云舍', color: '#2468f2' },
   { id: 'antd', label: '仿 AntD', color: '#1677ff' },
   { id: 'ang', label: 'ang', color: '#7266ba' },
-  { id: 'green', label: '翠绿', color: '#267d30' },
+  { id: 'green', label: '翠绿', color: '#007617' },
   { id: 'amber', label: '琥珀', color: '#9b4500' },
 ]
 
@@ -58,10 +58,12 @@ function parsePack(value: string | null): ThemePack {
 }
 
 function applyChrome() {
-  document.documentElement.classList.toggle('dark', dark.value)
-  document.documentElement.dataset.density = density.value
-  document.documentElement.dataset.accent = ACCENT_BY_PACK[pack.value]
-  document.documentElement.dataset.theme = pack.value
+  withoutThemeTransition(() => {
+    document.documentElement.classList.toggle('dark', dark.value)
+    document.documentElement.dataset.density = density.value
+    document.documentElement.dataset.accent = ACCENT_BY_PACK[pack.value]
+    document.documentElement.dataset.theme = pack.value
+  })
   publishPreviewChrome()
 }
 

@@ -32,13 +32,31 @@ export function readPreviewChrome(): PreviewChrome {
   }
 }
 
+let themeChangingGen = 0
+
+/** 先加 `theme-changing` 再改 token，避免 outline 边框 0.15s 插值闪白。 */
+export function withoutThemeTransition(apply: () => void) {
+  const root = document.documentElement
+  const gen = ++themeChangingGen
+  root.classList.add('theme-changing')
+  apply()
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (gen !== themeChangingGen) return
+      root.classList.remove('theme-changing')
+    })
+  })
+}
+
 export function applyPreviewChrome(chrome: PreviewChrome | undefined) {
   if (!chrome) return
-  const root = document.documentElement
-  root.classList.toggle('dark', chrome.dark)
-  root.dataset.density = chrome.density || 'compact'
-  root.dataset.accent = chrome.accent || 'blue'
-  root.dataset.theme = chrome.theme || 'cxd'
+  withoutThemeTransition(() => {
+    const root = document.documentElement
+    root.classList.toggle('dark', chrome.dark)
+    root.dataset.density = chrome.density || 'compact'
+    root.dataset.accent = chrome.accent || 'blue'
+    root.dataset.theme = chrome.theme || 'cxd'
+  })
 }
 
 /** 所有移动预览 iframe 共用；后打开的示例也能收到当前浅色/深色。 */

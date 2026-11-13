@@ -291,16 +291,17 @@
  * 云舍 / 仿 AntD / ang 三套已在上面。
  */
 [data-theme="green"] {
+  /* brand-5 = 改主题包前 applied `--primary: oklch(0.49 0.16 145)`，不是顶栏色点 swatch。 */
   --colors-brand-1: #002300;
   --colors-brand-2: #003401;
   --colors-brand-3: #004602;
-  --colors-brand-4: #045e17;
-  --colors-brand-5: #267d30;
-  --colors-brand-6: #549957;
-  --colors-brand-7: #76af77;
-  --colors-brand-8: #98c598;
-  --colors-brand-9: #bddabd;
-  --colors-brand-10: #d9ead9;
+  --colors-brand-4: #005c0a;
+  --colors-brand-5: #007617;
+  --colors-brand-6: #418e47;
+  --colors-brand-7: #65a467;
+  --colors-brand-8: #87ba88;
+  --colors-brand-9: #b3d5b3;
+  --colors-brand-10: #d2e9d1;
   --colors-info-1: var(--colors-brand-1);
   --colors-info-2: var(--colors-brand-2);
   --colors-info-3: var(--colors-brand-3);

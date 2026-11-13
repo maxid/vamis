@@ -71,7 +71,7 @@
 
 **最近交付**
 
-- 主题色阶：`themes.css` `--colors-*`，`--primary` / `--success` / `--tag-*` 只 alias。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）切整套包，hover 出名称；浅色/深色加 `.dark` 不改当前 brand。浅色画布仍是原来的白底（`--background` / `--card` / `--muted` 钉 `250`），不要跟 `--accent-h` 染绿/染琥珀。顶栏 / 链接 / 按钮跟 `--primary`。琥珀 brand-5 回 `#9b4500`（原先 `oklch(0.49 0.16 65)`）。`env.theme` 映 `data-theme`。
+- 主题色阶：`themes.css` `--colors-*`，`--primary` / `--success` / `--tag-*` 只 alias。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）切整套包，hover 出名称；浅色/深色加 `.dark` 不改当前 brand。浅色画布钉 `250` 白底、深色画布钉 `258` 原底，不要跟 `--accent-h` 染色。顶栏 / 链接 / 按钮跟 `--primary`。翠绿浅色 brand-5 `#007617`（`oklch(0.49 0.16 145)`）；深色主色跟线上 bit.uscan.cn 抬成 `oklch(0.7 0.13 var(--accent-h))`，`--ring` / focus glow 跟 `--primary`（不要 `@supports :root` 钉 brand-5 把深色 focus 压回森林绿）。文档预览井 `bg-card`。琥珀 brand-5 `#9b4500`。浅色/深色切换加 `theme-changing` 关掉边/色过渡，`--border`/`--input` 两边都走 `--colors-neutral-line-8`，避免 outline 黑→白→灰。`env.theme` 映 `data-theme`。
 - `tag` 对标 Amis 文档主路径：三种模式 / 六色 / `style` / `icon`·`closeIcon`、事件活示例；status 默认圆点 SVG；关闭不隐藏；包装层 `margin-right` 8px。对照桌面 **8/8**、移动 **8/8**（P0 0）。80% → **90%**。
 - Form 数据域：初始化不再把父域整份摊进 `store.data`。`debug` / persist / 提交只见本域；`canAccessSuperData` 默认 true 只映射同名表单项。动态表单项 debug 不再带 page `arr`，Each `${arr}` 仍走父域 overlay。对照 `each` 桌面 **7/7**、`form` 桌面 **41/58**（P0 0，与修前同分）。
 - `each` 对标 Amis 文档主路径：取值 `value` > `source` > `name`，空数组占位「暂无数据」，`items` 数组拆开渲染，动态表单项展开 `name`/`label`。Table / Form / source / 动态表单活示例对齐。对照桌面 **7/7**、移动 **7/7**（P0 0）。80% → **90%**。

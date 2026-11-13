@@ -38,7 +38,7 @@ title: 常见问题
 
 ## 主题能换成云舍 / 仿 AntD / ang 吗？
 
-可以切色阶，不换 `.cxd-` 前缀。顶栏 5 色点写 `html[data-theme]`（云舍 / 仿 AntD / ang / 翠绿 / 琥珀），悬停显示名称；浅色/深色是第四包（对齐 Amis dark）。顶栏 / 链接 / 按钮跟当前 `--primary`；浅色画布仍是原来的白底，不要跟色相染绿/染琥珀。`--success` / Tag 预设色都 alias `--colors-*`，组件不要自己再写一套 hex。`page.cssVars` 仍可覆盖单页。
+可以切色阶，不换 `.cxd-` 前缀。顶栏 5 色点写 `html[data-theme]`（云舍 / 仿 AntD / ang / 翠绿 / 琥珀），悬停显示名称；浅色/深色是第四包（对齐 Amis dark）。顶栏 / 链接 / 按钮跟当前 `--primary`（翠绿浅色 `#007617`，深色抬亮 `oklch(.7 .13 145)`；琥珀 `#9b4500`）；浅色画布仍是原来的白底、深色仍是原来的底色，不要跟色相染色。文档活示例预览井跟 `--card`，不要另刷 Page fill。`--success` / Tag 预设色都 alias `--colors-*`，组件不要自己再写一套 hex。`page.cssVars` 仍可覆盖单页。
 
 ## typecheck 过了吗？
 

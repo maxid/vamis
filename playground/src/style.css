@@ -163,9 +163,6 @@ body,
 .doc-play__stage {
   position: relative;
 }
-.doc-play__preview {
-  background: var(--page-main-bg);
-}
 .doc-play__canvas--mobile {
   display: flex;
   justify-content: center;

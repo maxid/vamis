@@ -144,7 +144,7 @@
   /* 移动端 PopUp（Select / DatePickerSheet / input-time）共用 rim，对齐 Amis `--borderColor` + `--boxShadow`。 */
   --popup-border: var(--border);
   --popup-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  --input: #e8e9eb;
+  --input: var(--colors-neutral-line-8);
   --ring: var(--colors-brand-5);
   --sidebar: oklch(0.22 0.04 258);
   --sidebar-foreground: oklch(0.93 0.015 250);
@@ -668,7 +668,7 @@
   --accent-h: 27;
 }
 
-/* 顶栏 / 链接 / accent hover 跟当前主题包色相走。浅色画布（--background/--card/--muted）钉 250 白底，不要跟 accent-h 染色。 */
+/* 顶栏 / 链接 / accent hover 跟当前主题包色相走。浅色画布钉 250、深色钉 258，不要跟 accent-h 染色。 */
 [data-theme="cxd"] {
   --accent-h: 258;
 }
@@ -690,19 +690,19 @@
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.2 0.025 var(--accent-h));
-  --foreground: oklch(0.93 0.015 var(--accent-h));
-  --card: oklch(0.24 0.028 var(--accent-h));
-  --card-foreground: oklch(0.93 0.015 var(--accent-h));
-  --popover: oklch(0.24 0.028 var(--accent-h));
-  --popover-foreground: oklch(0.93 0.015 var(--accent-h));
+  --background: oklch(0.2 0.025 258);
+  --foreground: oklch(0.93 0.015 258);
+  --card: oklch(0.24 0.028 258);
+  --card-foreground: oklch(0.93 0.015 258);
+  --popover: oklch(0.24 0.028 258);
+  --popover-foreground: oklch(0.93 0.015 258);
   --primary-foreground: var(--colors-neutral-text-1);
   --primary-hover: var(--colors-brand-4);
   --primary-active: var(--colors-brand-6);
-  --secondary: oklch(0.3 0.025 var(--accent-h));
-  --secondary-foreground: oklch(0.93 0.015 var(--accent-h));
-  --muted: oklch(0.3 0.025 var(--accent-h));
-  --muted-foreground: oklch(0.7 0.02 var(--accent-h));
+  --secondary: oklch(0.3 0.025 258);
+  --secondary-foreground: oklch(0.93 0.015 258);
+  --muted: oklch(0.3 0.025 258);
+  --muted-foreground: oklch(0.7 0.02 258);
   --form-item-color: #e8e9eb;
   --form-description-color: #b8bbbf;
   --link-disabled-color: #b8bbbf;
@@ -765,7 +765,7 @@
   --number-unit-bg: var(--fill-10);
   --number-enhance-color: #e8e9eb;
   --accent: oklch(0.32 0.03 var(--accent-h));
-  --accent-foreground: oklch(0.93 0.015 var(--accent-h));
+  --accent-foreground: oklch(0.93 0.015 258);
   --destructive: oklch(0.65 0.19 25);
   --destructive-foreground: oklch(0.99 0.01 20);
   --success: oklch(0.68 0.14 145);
@@ -774,19 +774,19 @@
   --warning-foreground: oklch(0.22 0.05 55);
   --info: oklch(0.7 0.1 230);
   --info-foreground: oklch(0.18 0.04 230);
-  --border: oklch(0.35 0.03 var(--accent-h));
-  --input: oklch(0.35 0.03 var(--accent-h));
+  --border: var(--colors-neutral-line-8);
+  --input: var(--colors-neutral-line-8);
   --ring: oklch(0.7 0.13 var(--accent-h));
-  --sidebar: oklch(0.18 0.03 var(--accent-h));
-  --sidebar-foreground: oklch(0.93 0.015 var(--accent-h));
+  --sidebar: oklch(0.18 0.03 258);
+  --sidebar-foreground: oklch(0.93 0.015 258);
   --sidebar-primary: oklch(0.7 0.13 var(--accent-h));
-  --sidebar-primary-foreground: oklch(0.2 0.03 var(--accent-h));
-  --sidebar-accent: oklch(0.28 0.03 var(--accent-h));
-  --sidebar-accent-foreground: oklch(0.93 0.015 var(--accent-h));
-  --sidebar-border: oklch(0.32 0.03 var(--accent-h));
+  --sidebar-primary-foreground: oklch(0.2 0.03 258);
+  --sidebar-accent: oklch(0.28 0.03 258);
+  --sidebar-accent-foreground: oklch(0.93 0.015 258);
+  --sidebar-border: oklch(0.32 0.03 258);
   --sidebar-ring: oklch(0.7 0.13 var(--accent-h));
-  --code: oklch(0.16 0.03 var(--accent-h));
-  --code-foreground: oklch(0.88 0.03 var(--accent-h));
+  --code: oklch(0.16 0.03 258);
+  --code-foreground: oklch(0.88 0.03 258);
   --success-bg: oklch(0.28 0.05 145);
   --success-border: oklch(0.4 0.08 145);
   --warning-bg: oklch(0.3 0.05 70);
@@ -843,8 +843,15 @@
   :root {
     --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
     --primary-active: color-mix(in oklch, var(--primary) 82%, black);
-    --ring: var(--colors-brand-5);
+    /* focus glow / ring 跟 applied `--primary`，不要钉 brand-5：@supports :root 会压过 `.dark --ring`。 */
+    --ring: var(--primary);
     --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
+  }
+  /* 深色主色抬亮，对齐线上 bit.uscan.cn：浅色 brand-5，深色 oklch(.7 .13 accent-h)。翠绿深色是薄荷绿，不是浅色那档 #007617。 */
+  .dark {
+    --primary: oklch(0.7 0.13 var(--accent-h));
+    --primary-foreground: oklch(0.2 0.03 var(--accent-h));
+    --ring: var(--primary);
   }
 }
 
@@ -5347,6 +5354,16 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* 浅色/深色切换时关掉色/边过渡。Button outline 的 border-color 0.15s
+ * 在 hex ↔ oklch 之间插值会先跳成白边再落到灰，肉眼能看出三帧。 */
+html.theme-changing,
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition: none !important;
+  animation: none !important;
 }
 
 /* `@layer base` 压过 UA / preflight inherit，不压 Button utilities 和日历 scoped。对齐 Amis `_typography.scss` `a`。 */
