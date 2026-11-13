@@ -55,13 +55,38 @@ const joinValues = computed(() => props.schema.joinValues !== false)
 const labelField = computed(() => String(props.schema.labelField || 'label'))
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 
-const options = computed(() => {
-  const raw = normalizeOptions(remoteOptions.value ?? props.schema.options)
-  return flattenOptions(raw).map((item) => ({
+const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
+const options = computed(() =>
+  flattenOptions(rawOptions.value).map((item) => ({
     ...item,
     label: String((item as any)[labelField.value] ?? item.label),
     value: (item as any)[valueField.value] ?? item.value,
-  }))
+  })),
+)
+type PickerRow =
+  | { kind: 'group'; label: string; depth: number }
+  | { kind: 'option'; label: string; value: unknown; depth: number; option: OptionItem }
+const allRows = computed<PickerRow[]>(() => {
+  const out: PickerRow[] = []
+  const walk = (nodes: any[], depth: number) => {
+    for (const node of nodes || []) {
+      const children = Array.isArray(node.children) ? node.children : []
+      if (children.length) {
+        out.push({ kind: 'group', label: String(node[labelField.value] ?? node.label ?? ''), depth })
+        walk(children, depth + 1)
+      } else {
+        out.push({
+          kind: 'option',
+          label: String(node[labelField.value] ?? node.label ?? ''),
+          value: node[valueField.value] ?? node.value,
+          depth,
+          option: node,
+        })
+      }
+    }
+  }
+  walk(rawOptions.value as any[], 0)
+  return out
 })
 
 const selected = computed({
@@ -77,17 +102,35 @@ const perPage = computed(() => {
   const n = Number(props.schema.perPage)
   return Number.isFinite(n) && n > 0 ? n : 10
 })
-const filtered = computed(() => {
+const filteredRows = computed<PickerRow[]>(() => {
   const q = keyword.value.trim().toLowerCase()
-  if (!q) return options.value
-  return options.value.filter((item) => item.label.toLowerCase().includes(q) || String(item.value).toLowerCase().includes(q))
+  if (!q) return allRows.value
+  const out: PickerRow[] = []
+  let pendingGroup: PickerRow | null = null
+  let groupIncluded = false
+  for (const row of allRows.value) {
+    if (row.kind === 'group') {
+      pendingGroup = row
+      groupIncluded = false
+      continue
+    }
+    const matched = row.label.toLowerCase().includes(q) || String(row.value).toLowerCase().includes(q)
+    if (!matched) continue
+    if (pendingGroup && !groupIncluded) {
+      out.push(pendingGroup)
+      groupIncluded = true
+    }
+    out.push(row)
+  }
+  return out
 })
-
-const pagedOptions = computed(() => {
+const filtered = filteredRows
+const pagedRows = computed(() => {
   const start = (pickerPage.value - 1) * perPage.value
-  return filtered.value.slice(start, start + perPage.value)
+  return filteredRows.value.slice(start, start + perPage.value)
 })
-const lastPage = computed(() => Math.max(1, Math.ceil(filtered.value.length / perPage.value)))
+const pagedOptions = pagedRows
+const lastPage = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / perPage.value)))
 
 const selectedLabels = computed(() =>
   selected.value.map((value) => options.value.find((item) => optionValuesEqual(item.value, value))?.label || String(value)),
@@ -188,12 +231,15 @@ watch(
       <Button v-if="selectedLabels.length && schema.clearable !== false" type="button" size="sm" variant="ghost" :disabled="disabled" @click="clear">清除</Button>
     </div>
     <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
-      <li v-for="opt in pagedOptions" :key="String(opt.value)">
-        <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
-          <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, opt.value))" @update:model-value="commitInline(opt, $event === true)" />
-          <span>{{ opt.label }}</span>
-        </label>
-      </li>
+      <template v-for="(row, i) in pagedRows" :key="i">
+        <li v-if="row.kind === 'group'" class="px-2 pt-2 pb-1 text-xs font-medium text-muted-foreground" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
+        <li v-else>
+          <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
+            <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, row.value))" @update:model-value="commitInline(row.option, $event === true)" />
+            <span>{{ row.label }}</span>
+          </label>
+        </li>
+      </template>
     </ul>
     <Dialog v-if="!embed" :open="open" @update:open="open = $event">
       <DialogContent class="max-w-lg">
@@ -207,13 +253,16 @@ watch(
         />
         <Input v-else v-model="keyword" placeholder="筛选" class="mb-2" />
         <ul v-if="!pickerSchema" class="max-h-64 space-y-1 overflow-auto rounded-md border p-2">
-          <li v-for="opt in filtered" :key="String(opt.value)">
-            <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
-              <Checkbox :model-value="isChecked(opt)" @update:model-value="toggle(opt, $event === true)" />
-              <span>{{ opt.label }}</span>
-            </label>
-          </li>
-          <li v-if="!filtered.length" class="px-2 py-6 text-center text-xs text-muted-foreground">暂无选项</li>
+          <template v-for="(row, i) in pagedRows" :key="i">
+            <li v-if="row.kind === 'group'" class="px-2 pt-2 pb-1 text-xs font-medium text-muted-foreground" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
+            <li v-else>
+              <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
+                <Checkbox :model-value="isChecked(row.option)" @update:model-value="toggle(row.option, $event === true)" />
+                <span>{{ row.label }}</span>
+              </label>
+            </li>
+          </template>
+          <li v-if="!filteredRows.length" class="px-2 py-6 text-center text-xs text-muted-foreground">暂无选项</li>
         </ul>
         <div v-if="!pickerSchema && lastPage > 1" class="mt-2 flex items-center justify-end gap-2 text-xs">
           <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage <= 1" @click="pickerPage -= 1">上一页</button>
