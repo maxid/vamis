@@ -17,6 +17,8 @@ describe('cards', () => {
       '修改了内容',
       'selectedItems',
       'showFooterCheckAll',
+      'vamis-cards-actions',
+      'headerToolbar',
       'gap: 12px',
       "runOnEvent(props.schema, 'selectedChange'",
       "runOnEvent(props.schema, 'rowClick'",
@@ -48,7 +50,7 @@ describe('cards', () => {
       '### initDrag & cancelDrag',
       '### setValue',
       '### selectedChange',
-      '更新version=4的行记录',
+      '更新version=4',
       'h-stretch',
     ])
       expect(doc).toContain(h)

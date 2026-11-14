@@ -6,7 +6,7 @@ outline: deep
 # Cards 卡片组
 
 ::: info 实现进度 92% · 进行中
-文档主路径已对齐：基本用法、CRUD `mode: cards` 勾选 / 顶栏+底栏全选 / `checkOnItemClick`、瀑布流 `h-stretch` / `cover` 表达式、属性表、事件表 selectedChange / selected / rowClick / orderChange、动作表 select / selectAll / clearAll / initDrag / setValue（含指定行 `index`/`condition` 与「修改了内容」未保存条）。`title` / 全选 toolbar / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。拖动手柄抄 Amis `drag-bar.svg`（`stroke`）。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss`。
+文档主路径已对齐：基本用法、CRUD `mode: cards` 勾选 / Cards-toolbar 注入 bulkActions / 顶栏+底栏全选 / `checkOnItemClick`、瀑布流 `h-stretch` / `cover` 表达式、属性表、事件表 selectedChange / selected / rowClick / orderChange、动作表 select / selectAll / clearAll / initDrag / setValue（含指定行 `index`/`condition` 与「修改了内容」未保存条）。`title` / 全选 toolbar / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。拖动手柄抄 Amis `drag-bar.svg`（`stroke`）。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss`。
 :::
 
 卡片展示，不支持配置初始化接口初始化数据域，所以需要搭配类似像 [Service](./service) 这样的、具有配置接口初始化数据域功能的组件，或者手动进行数据域初始化，然后通过 `source` 属性，获取数据链中的数据，完成数据展示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

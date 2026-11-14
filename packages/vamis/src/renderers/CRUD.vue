@@ -38,7 +38,14 @@ import Cards from './Cards.vue'
 import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import Spinner from './Spinner.vue'
-import { asToolbarSchema, CrudHostKey, parseListPayload, resolveTableSource, selectedIdsOf } from './data/crudHost'
+import {
+  asToolbarSchema,
+  CrudHostKey,
+  isBulkToolbar,
+  parseListPayload,
+  resolveTableSource,
+  selectedIdsOf,
+} from './data/crudHost'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -72,6 +79,14 @@ const isCardsMode = computed(() => {
   const mode = String(props.schema.mode || 'table').toLowerCase()
   return mode === 'cards' || mode === 'card'
 })
+/** Amis CRUD `headerToolbar` 默认 `['bulkActions']`。cards 把这条注入 Cards-toolbar，不要在 CRUD 根上另画一段 flex。 */
+const resolvedHeaderToolbar = computed(() => {
+  if (props.schema.headerToolbar != null) return asArray(props.schema.headerToolbar)
+  return isCardsMode.value ? ['bulkActions'] : headerToolbar.value
+})
+const cardsHeaderToolbarOpen = computed(() =>
+  resolvedHeaderToolbar.value.some((node) => (isBulkToolbar(node) ? bulkActions.value.length > 0 : true)),
+)
 const cardsChild = computed(
   () =>
     ({
@@ -210,6 +225,21 @@ function toolbarNode(node: unknown): SchemaObject {
     return { ...next, reload: props.schema.name }
   }
   return next
+}
+
+function toolbarAlign(node: unknown): 'left' | 'right' {
+  const rec = node && typeof node === 'object' ? (node as Record<string, unknown>) : null
+  if (rec?.align === 'right' || rec?.align === 'left') return rec.align
+  const type = typeof node === 'string' ? node : String(rec?.type || '')
+  return type === 'pagination' ? 'right' : 'left'
+}
+
+function bulkActionSchema(btn: SchemaObject): SchemaObject {
+  return {
+    ...btn,
+    disabled: !store.selectedItems.length || btn.disabled,
+    reload: btn.reload || props.schema.name,
+  }
 }
 
 function sanitizeQuery(extra: Record<string, any>) {
@@ -458,7 +488,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full min-w-0" :class="{ 'is-loading': store.fetching }">
+  <div class="vamis-crud w-full min-w-0" :class="{ 'is-loading': store.fetching }">
     <h2 v-if="schema.title" class="text-sm font-medium">{{ schema.title }}</h2>
     <div v-if="filterSchema" class="vamis-crud-filter">
       <SchemaRenderer
@@ -474,31 +504,43 @@ onBeforeUnmount(() => {
         }"
       />
     </div>
-    <div v-if="headerToolbar.length || bulkActions.length || (isCardsMode && selectable) || (selectable && !isCardsMode && store.selectedItems.length)" class="flex items-center justify-between gap-2">
+    <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length || (selectable && store.selectedItems.length))" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
-        <Button
-          v-if="isCardsMode && selectable"
-          type="button"
-          size="sm"
-          :variant="allSelected ? 'default' : 'outline'"
-          title="切换全选"
-          @click="toggleAll(!allSelected)"
-        >
-          全选
-        </Button>
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
-        <span v-if="selectable && !isCardsMode" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
+        <span v-if="selectable" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"
           :key="'bulk-' + i"
-          :schema="{ ...btn, disabled: !store.selectedItems.length || btn.disabled, reload: btn.reload || schema.name }"
+          :schema="bulkActionSchema(btn)"
           :extra-data="bulkData"
         />
       </div>
     </div>
     <div class="vamis-crud-body">
     <div class="vamis-crud-content">
-    <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items" />
+    <Cards v-if="isCardsMode" :schema="cardsChild" :data="cardsData" :items="store.items">
+      <template v-if="cardsHeaderToolbarOpen" #headerToolbar>
+        <div class="vamis-crud-toolbar">
+          <template v-for="(node, i) in resolvedHeaderToolbar" :key="'ht-' + i">
+            <div
+              v-if="!isBulkToolbar(node) || bulkActions.length"
+              class="vamis-crud-toolbar-item"
+              :class="toolbarAlign(node) === 'right' ? 'vamis-crud-toolbar-item--right' : 'vamis-crud-toolbar-item--left'"
+            >
+              <div v-if="isBulkToolbar(node)" class="vamis-crud-actions">
+                <SchemaRenderer
+                  v-for="(btn, bi) in bulkActions"
+                  :key="'bulk-' + bi"
+                  :schema="bulkActionSchema(btn)"
+                  :extra-data="bulkData"
+                />
+              </div>
+              <SchemaRenderer v-else :schema="toolbarNode(node)" />
+            </div>
+          </template>
+        </div>
+      </template>
+    </Cards>
     <Table v-else>
       <TableHeader>
         <TableRow>

@@ -2466,8 +2466,15 @@
   }
   /* Amis `.cxd-Table`：toolbar 在表内 `.Table-footToolbar`，表本身 `margin-bottom: gap-md`。
      Crud-toolbar 的 -10px 是抵 foot 的 padding-Y 12，禁止单独打在表格兄弟上（会叠进末行）。 */
+  .vamis-crud {
+    position: relative;
+    width: 100%;
+  }
   .vamis-crud-filter {
     margin-bottom: var(--gap-base, 12px);
+  }
+  .vamis-crud-actions > * + * {
+    margin-left: var(--crud-toolbar-gap, 10px);
   }
   .vamis-crud-body {
     margin-bottom: var(--gap-md, 16px);

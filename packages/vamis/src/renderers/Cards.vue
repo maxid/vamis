@@ -296,7 +296,7 @@ const showCheckAllBtn = computed(
     rows.value.length > 0 &&
     !dragging.value,
 )
-const showHeaderCheckAll = computed(() => showCheckAllBtn.value && !host)
+const showHeaderCheckAll = computed(() => showCheckAllBtn.value)
 const showFooterCheckAll = computed(() => showCheckAllBtn.value)
 const modifiedCount = computed(() => (localRows.value || []).filter(rowIsModified).length)
 const showQuickSave = computed(() => modifiedCount.value > 0 && props.schema.hideQuickSaveBtn !== true)
@@ -427,21 +427,24 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
       </Button>
     </div>
     <div v-else-if="title" class="vamis-cards-title">{{ title }}</div>
-    <div v-if="header.length || showHeaderCheckAll || dragging" class="vamis-cards-header" :class="headerClass">
-    <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="asSchema(node)" />
-    <div v-if="showHeaderCheckAll || dragging" class="vamis-cards-toolbar">
-      <Button
-        v-if="showHeaderCheckAll"
-        type="button"
-        size="sm"
-        :variant="allChecked ? 'default' : 'outline'"
-        title="切换全选"
-        @click="toggleCheckAll"
-      >
-        全选
-      </Button>
-      <div v-if="dragging" class="vamis-cards-dragTip">请拖动顶部的按钮进行排序</div>
+    <div v-if="header.length" class="vamis-cards-header" :class="headerClass">
+      <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="asSchema(node)" />
     </div>
+    <div v-if="showHeaderCheckAll || dragging || $slots.headerToolbar" class="vamis-cards-toolbar">
+      <div v-if="showHeaderCheckAll || dragging" class="vamis-cards-actions">
+        <Button
+          v-if="showHeaderCheckAll"
+          type="button"
+          size="sm"
+          :variant="allChecked ? 'default' : 'outline'"
+          title="切换全选"
+          @click="toggleCheckAll"
+        >
+          全选
+        </Button>
+      </div>
+      <slot name="headerToolbar" />
+      <div v-if="dragging" class="vamis-cards-dragTip">请拖动顶部的按钮进行排序</div>
     </div>
     <div
       v-if="rows.length"
@@ -461,19 +464,22 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
       <SchemaRenderer v-if="placeholderNode" :schema="asSchema(placeholderNode)" />
       <template v-else>{{ placeholder }}</template>
     </div>
-    <div v-if="showFooterCheckAll || footer.length" class="vamis-cards-footer" :class="footerClass">
-    <div v-if="showFooterCheckAll" class="vamis-cards-toolbar">
-      <Button
-        type="button"
-        size="sm"
-        :variant="allChecked ? 'default' : 'outline'"
-        title="切换全选"
-        @click="toggleCheckAll"
-      >
-        全选
-      </Button>
+    <div v-if="showFooterCheckAll || $slots.footerToolbar" class="vamis-cards-toolbar">
+      <div v-if="showFooterCheckAll" class="vamis-cards-actions">
+        <Button
+          type="button"
+          size="sm"
+          :variant="allChecked ? 'default' : 'outline'"
+          title="切换全选"
+          @click="toggleCheckAll"
+        >
+          全选
+        </Button>
+      </div>
+      <slot name="footerToolbar" />
     </div>
-    <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="asSchema(node)" />
+    <div v-if="footer.length" class="vamis-cards-footer" :class="footerClass">
+      <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="asSchema(node)" />
     </div>
   </div>
 </template>
@@ -500,9 +506,23 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
   height: 1em;
   vertical-align: -0.125em;
 }
+.vamis-cards-header {
+  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x);
+}
 .vamis-cards-toolbar {
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x)
     var(--cards-toolbar-margin-y);
+}
+.vamis-cards-header + .vamis-cards-toolbar {
+  padding-top: 0;
+}
+.vamis-cards-actions {
+  display: inline-block;
+}
+.vamis-cards-actions > * {
+  margin-right: var(--crud-toolbar-gap, 10px);
 }
 @media (min-width: 576px) {
   .vamis-cards-toolbar {

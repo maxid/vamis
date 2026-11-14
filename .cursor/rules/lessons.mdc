@@ -1122,11 +1122,11 @@ alwaysApply: true
 - 触及：`cards` `card`
 - 规则：本文；Amis `_cards.scss` / `_card.scss` `is-checked` / `Cards.tsx` `renderHeading`
 
-### Cards 全选在组件工具栏；拖拽手柄是卡片顶钮
-- 踩过：只在 CRUD 顶栏画「全选」，Amis `renderActions` 在 header/footer 各插一次。为了对齐 Grid-col 去改 `gap: 12px` 会把卡片间距打没。
-- 稳定做法：CRUD 顶栏那份留在 CRUD；Cards `selectable` 时底栏再画「全选」。不要改 `.vamis-cards { gap: 12px }` 和瀑布流 `h-stretch` 示例。拖拽用已有 `.vamis-card-drag`，Sortable `handle` 指过去。toolbar 左右 padding 必须是 0，全选才和左卡对齐。
+### CRUD cards 的 toolbar 注入 Cards-toolbar，不要在 CRUD 根上画 flex 条
+- 踩过：`mode: cards` 在 CRUD 根上用 `flex gap-2` 画「全选 / 查看选中」，条缩成 216px；Amis 是 `.Cards-toolbar` 吃满 Crud（padding `gap-base` 0），CRUD 通过 `headerToolbarRender` 把 `bulkActions` 插进同一条。Cards 见 host 就藏顶栏全选，只剩那段 shrink-wrap。
+- 稳定做法：对齐 `CRUD.renderHeaderToolbar` → Cards `renderHeader`。默认 `headerToolbar: ['bulkActions']` 走 slot `#headerToolbar` + `.vamis-crud-toolbar`（float item 高 30）。Cards header/footer 都画 `checkAll`（不要 `&& !host`）。不要在 CRUD 根上另写 Tailwind flex 条。不要改 `.vamis-cards { gap: 12px }`。
 - 触及：`cards` `crud` `card`
-- 规则：本文；Amis `Cards.tsx` `renderCheckAll`；`05570a3` / `1d6c3ea`
+- 规则：本文；Amis `CRUD.tsx` `headerToolbarRender` / `Cards.tsx` `renderHeader` / `_cards.scss` `&-toolbar`
 
 ### Cards setData 要收 index/condition；模板里不要把已 unwrap 的 data 再取 .value
 - 踩过：`componentId` 的 `setValue` 走内核 `setData(values, replace, index, condition)`，Cards 只声明一个参数，指定行 payload 被当整表替换后丢掉。补 `is-modified` 时模板写 `isModified?.(data.value)`，script-setup 里 `data` 已是行对象，`.value` 是 undefined，`row.index` 抛错，Vue 补丁中断，卡片变成标题下两段 `v-if` 注释。再叠 `displayRows` / `ensureLocal` 空列表短路会让脚本里 `rows.length===10`、格子仍是「暂无数据」。
