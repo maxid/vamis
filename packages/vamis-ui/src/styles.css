@@ -133,6 +133,9 @@
   --tabs-line-border: var(--border);
   --tabs-line-pad-x: 16px;
   --tabs-line-underline: 2px;
+  /* 切页 ink 滑动：Ant Design easeOut（先快后慢），不是 Amis。 */
+  --tabs-ink-duration: 0.3s;
+  --tabs-ink-ease: cubic-bezier(0.215, 0.61, 0.355, 1);
   --tabs-pane-pad: var(--gap-base);
   --tabs-close: #83868c;
   --tabs-icon-gap: var(--gap-sm);
@@ -6644,6 +6647,7 @@ svg.vamis-tag-default-icon {
   pointer-events: none;
 }
 .vamis-tabs__links {
+  position: relative;
   display: flex;
   flex: 1 1 auto;
   flex-wrap: nowrap;
@@ -6699,7 +6703,8 @@ svg.vamis-tag-default-icon {
 .vamis-tabs--line .vamis-tabs__link:first-child {
   padding-left: 0;
 }
-.vamis-tabs--line .vamis-tabs__link:last-child {
+.vamis-tabs--line .vamis-tabs__link:last-child,
+.vamis-tabs--line .vamis-tabs__link:has(+ .vamis-tabs__ink) {
   padding-right: 0;
 }
 .vamis-tabs--line .vamis-tabs__link > button {
@@ -6713,7 +6718,31 @@ svg.vamis-tag-default-icon {
 }
 .vamis-tabs--line .vamis-tabs__link.is-active > button {
   color: var(--tabs-line-active);
-  border-bottom: var(--tabs-line-underline) solid var(--tabs-line-active);
+  /* 透明 2px 保住 31px / 未激活文字矮 1px；色条走 `.vamis-tabs__ink`。 */
+  border-bottom: var(--tabs-line-underline) solid transparent;
+}
+.vamis-tabs__ink {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: var(--tabs-line-underline);
+  width: 0;
+  background: var(--tabs-line-active);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transform-origin: left center;
+  will-change: transform, width;
+  z-index: 1;
+}
+.vamis-tabs__ink.is-ready {
+  transition:
+    transform var(--tabs-ink-duration) var(--tabs-ink-ease),
+    width var(--tabs-ink-duration) var(--tabs-ink-ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vamis-tabs__ink.is-ready {
+    transition: none;
+  }
 }
 .vamis-tabs__link.is-disabled > button {
   color: var(--tabs-line-disabled);

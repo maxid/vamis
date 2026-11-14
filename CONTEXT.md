@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `tabs` line 下划线优化：切页时 `.vamis-tabs__ink` 滑到目标项（0.3s、`cubic-bezier(0.215, 0.61, 0.355, 1)` 先快后慢，对齐 Ant Design ink-bar）。激活项仍留透明 2px 保住未激活文字矮 1px。Amis 是立刻换色，写进差异表。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - `tabs` `deleteTab`：删当前项后 `seedVisited` 邻居，`mountOnEnter` 下内容区会挂上激活 pane（删「选项卡1」后显示「选项卡内容2」）。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - `tabs` 续对标：line 未激活文字矮 1px（inactive `border-width: 0`、active 2px、行 stretch）；「新增Tab」与标签同 `line-height: 1.5` 且 add 挪出 links；hash 来回 `pushState` + `hashchange`/`popstate`；初始化示例 radios `name:key` 在 `activeKey` 公式求空后仍切 tab；折叠默认「更多」；sidebar 内容区内侧 1px 竖线。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - 对照收割：`listItem` 的 `title` / `subTitle` / `desc` 算可见内容，字母索引条不再被当空布局跳过；下拉显示「List 列表 #6 · 字母索引条」。对照目录 **1343**；`list` 桌面 **20/20**、移动 **20/20**（P0 0）。

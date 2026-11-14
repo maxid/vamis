@@ -178,6 +178,7 @@ async function onSelect(tab: (typeof tabs.value)[number], index: number) {
   visited.value = next
   writeForm(tab, index, key)
   moreOpen.value = false
+  void nextTick(() => placeInk(true))
 }
 
 function paneClass(tab: (typeof tabs.value)[number]) {
@@ -198,7 +199,46 @@ const editingTitle = ref('')
 const moreOpen = ref(false)
 const moreEl = ref<HTMLElement | null>(null)
 const linksEl = ref<HTMLElement | null>(null)
+const inkEl = ref<HTMLElement | null>(null)
+const inkReady = ref(false)
+let inkObserver: ResizeObserver | null = null
 let sortable: Sortable | null = null
+
+function inkReducedMotion() {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function placeInk(animate: boolean) {
+  if (mode.value !== 'line') return
+  const root = linksEl.value
+  const ink = inkEl.value || root?.querySelector<HTMLElement>('.vamis-tabs__ink') || null
+  if (!root || !ink) return
+  const activeLink = root.querySelector('.vamis-tabs__link.is-active') as HTMLElement | null
+  const target = (activeLink?.querySelector(':scope > button') as HTMLElement | null) || activeLink
+  if (!target) {
+    ink.style.width = '0px'
+    ink.style.transform = 'translate3d(0, 0, 0)'
+    return
+  }
+  const rootRect = root.getBoundingClientRect()
+  const box = target.getBoundingClientRect()
+  const left = box.left - rootRect.left + root.scrollLeft
+  const width = box.width
+  const run = animate && inkReady.value && !inkReducedMotion()
+  if (run) {
+    if (ink.style.transition === 'none') void ink.offsetWidth
+    ink.style.transition = ''
+  } else {
+    ink.style.transition = 'none'
+  }
+  ink.style.width = `${width}px`
+  ink.style.transform = `translate3d(${left}px, 0, 0)`
+  if (!inkReady.value) {
+    requestAnimationFrame(() => {
+      inkReady.value = true
+    })
+  }
+}
 const tipEl = ref<HTMLElement | null>(null)
 const tipOpen = ref(false)
 const tipText = ref('')
@@ -254,6 +294,7 @@ async function closeTab(index: number, event: Event) {
     active.value = nextKey
     if (nextKey) seedVisited(nextKey)
   }
+  void nextTick(() => placeInk(true))
 }
 
 function startEdit(index: number, event: MouseEvent) {
@@ -317,6 +358,7 @@ function initSortable() {
       next.splice(to, 0, moved)
       localTabs.value = next
       edited = true
+      void nextTick(() => placeInk(inkReady.value))
     },
   })
 }
@@ -393,6 +435,7 @@ function onHashChange() {
   active.value = key
   seedVisited(key)
   writeForm(tabs.value[found], found, key)
+  void nextTick(() => placeInk(true))
 }
 
 onMounted(() => {
@@ -400,8 +443,31 @@ onMounted(() => {
   if (index >= 0) writeForm(tabs.value[index], index, active.value)
   window.addEventListener('hashchange', onHashChange)
   window.addEventListener('popstate', onHashChange)
-  void nextTick(() => initSortable())
+  void nextTick(() => {
+    initSortable()
+    placeInk(false)
+    if (typeof ResizeObserver !== 'undefined' && linksEl.value) {
+      inkObserver = new ResizeObserver(() => placeInk(inkReady.value))
+      inkObserver.observe(linksEl.value)
+    }
+  })
 })
+
+watch(
+  () =>
+    [
+      mode.value,
+      active.value,
+      shownTabs.value.length,
+      overflowTabs.value.length,
+      shownTabs.value.map((item) => `${item.i}:${titleOf(item.tab)}`).join('\0'),
+    ] as const,
+  () => {
+    if (mode.value !== 'line') return
+    void nextTick(() => placeInk(inkReady.value))
+  },
+  { flush: 'post' },
+)
 
 watch(
   () => props.schema.draggable === true,
@@ -412,6 +478,8 @@ onBeforeUnmount(() => {
   if (api.name || api.id) scoped?.unregister(api as never)
   window.removeEventListener('hashchange', onHashChange)
   window.removeEventListener('popstate', onHashChange)
+  inkObserver?.disconnect()
+  inkObserver = null
   destroySortable()
 })
 
@@ -494,6 +562,13 @@ const rootClass = computed(() =>
             <VamisCaret variant="select" :open="moreOpen" />
           </button>
         </div>
+        <div
+          v-if="mode === 'line'"
+          ref="inkEl"
+          class="vamis-tabs__ink"
+          :class="{ 'is-ready': inkReady }"
+          aria-hidden="true"
+        />
       </div>
       <button v-if="addable" type="button" class="vamis-tabs__add" @click="addTab">
         <svg class="vamis-tabs__add-icon" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">

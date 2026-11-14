@@ -942,7 +942,7 @@ alwaysApply: true
 
 ### Tabs 盒模型打在 link 上；对照不要读 formData
 - 踩过：padding / 边框打在 `button` 上，card / radio / tiled / strong 和 Amis `li` 对不齐。给所有 line 项垫 2px 透明下划线会把未激活文字抬平，Amis 要的是未激活矮 1px。新增按钮放进 links 用 `line-height: 1` 会对不齐标签。`hash` 只写一次、折叠文案停在 `more`、sidebar 清掉内容区竖边。
-- 稳定做法：整颗 `.vamis-tabs__link` 接收 click。line **只有激活项** 2px 下划线，未激活 `border-width: 0`，行 `align-items: stretch`（inactive 文字矮 1px）。关闭钮放进 button 文本行。新增是 nav 里 links 的兄弟，同一套 `font-size: 14` / `line-height: 1.5` / `padding-bottom: 8px`。拖拽 SortableJS `animation: 250`。折叠 `__('more')` → 「更多」。`hash` 每次选中都 `updateLocation`（`pushState` + `hashchange`/`popstate` 回写）。初始化示例 `activeKey` 公式求空时仍跟 radios `name:key`。sidebar 内容区内侧留 1px `--tabs-line-border`。Chrome 激活才白底。`toInt` 对齐 Amis；无 form 的 radios 写 `scope.set`。对照 `tabs`/`tab` 走 schemaValue。
+- 稳定做法：整颗 `.vamis-tabs__link` 接收 click。line **只有激活项** 2px 下划线，未激活 `border-width: 0`，行 `align-items: stretch`（inactive 文字矮 1px）。色条走滑动 `.vamis-tabs__ink`（Vamis 优化，对标 Ant Design easeOut），active `border` 改透明 2px 保住 1px 文字偏移，不要把色画回 border。ink 量 **button** 宽（Amis 下划线在 `a` 上，不是 li 的 16px pad）。ink 是 links 末子时 `:last-child` 不再是末项，用 `:has(+ .vamis-tabs__ink)` 清右 pad。关闭钮放进 button 文本行。新增是 nav 里 links 的兄弟，同一套 `font-size: 14` / `line-height: 1.5` / `padding-bottom: 8px`。拖拽 SortableJS `animation: 250`。折叠 `__('more')` → 「更多」。`hash` 每次选中都 `updateLocation`（`pushState` + `hashchange`/`popstate` 回写）。初始化示例 `activeKey` 公式求空时仍跟 radios `name:key`。sidebar 内容区内侧留 1px `--tabs-line-border`。Chrome 激活才白底。`toInt` 对齐 Amis；无 form 的 radios 写 `scope.set`。对照 `tabs`/`tab` 走 schemaValue。
 - 触及：`tabs` `radios`
 - 规则：Amis `_tabs.scss` / `Tabs.tsx` handleSelect；`packages/vamis-sdk/embed-case.html` `readNodeValue`
 

@@ -6,7 +6,7 @@ outline: deep
 # Tabs 选项卡
 
 ::: info 实现进度 95% · 进行中
-文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、`tabsMode` 九种、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms）、折叠「更多」下拉、地址栏 `#hash` 来回同步、`change` / `delete`、`changeActiveKey` / `deleteTab`。余项：`swipeable`、chrome 耳朵 SVG、`themeCss`。
+文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、`tabsMode` 九种、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms）、折叠「更多」下拉、地址栏 `#hash` 来回同步、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 切页下划线滑动（优化，不同于 Amis）。余项：`swipeable`、chrome 耳朵 SVG、`themeCss`。
 :::
 
 选项卡容器。Vamis 用 YAML 或 JSON 书写，字段名不改写。
@@ -1102,3 +1102,4 @@ outline: deep
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 未接 `swipeable`、chrome 耳朵 SVG、`onSelect` 字符串、`tabs[x].reload`、单项 `unmountOnExit`、`themeCss`。
 - Chrome 模式是圆角条近似，没有 Amis 那对 SVG 耳朵。
+- **优化（不同于 Amis）**：`tabsMode: line` 的激活下划线切页时滑动到目标项（0.3s、`cubic-bezier(0.215, 0.61, 0.355, 1)` 先快后慢，对齐 Ant Design Tabs ink-bar）。Amis 是立刻换色。`prefers-reduced-motion: reduce` 时不动画。

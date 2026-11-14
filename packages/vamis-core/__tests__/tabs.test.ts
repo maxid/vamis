@@ -25,6 +25,8 @@ describe('tabs', () => {
       'tabsCollapseOnExceed',
       'tabsNormalizeActive',
       'popstate',
+      'placeInk',
+      'vamis-tabs__ink',
     ]) {
       expect(vue).toContain(t)
     }
