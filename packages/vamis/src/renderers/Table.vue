@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, useId } from 'vue'
 import {
   SchemaRenderer,
+  asArray,
   copyToClipboard,
   createVamisEvent,
   eventEvalData,
@@ -15,6 +16,7 @@ import {
   useEnv,
   useScoped,
   type ActionSchema,
+  type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
 import IconMark from './IconMark.vue'
@@ -282,13 +284,27 @@ function indexText(path: number[]) {
 
 const dragFrom = ref(-1)
 const dragOrder = ref<number[] | null>(null)
+const dragging = ref(false)
 const displayRows = computed(() => {
   if (!dragOrder.value) return sortedRows.value
   return dragOrder.value.map((i) => sortedRows.value[i]).filter(Boolean)
 })
+const canDragRow = computed(() => draggable.value && dragging.value)
+
+function setDragging(next: boolean) {
+  dragging.value = next
+  if (next) selected.value = []
+}
+
+function toggleDragging() {
+  setDragging(!dragging.value)
+}
 
 function onDragStartRow(index: number, event: DragEvent) {
-  if (!draggable.value) return
+  if (!canDragRow.value) {
+    event.preventDefault()
+    return
+  }
   dragFrom.value = index
   event.dataTransfer?.setData('text/plain', String(index))
   if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
@@ -296,7 +312,7 @@ function onDragStartRow(index: number, event: DragEvent) {
 
 async function onDropRow(index: number, event: DragEvent) {
   event.preventDefault()
-  if (!draggable.value || dragFrom.value < 0 || dragFrom.value === index) return
+  if (!canDragRow.value || dragFrom.value < 0 || dragFrom.value === index) return
   const base = dragOrder.value || displayRows.value.map((_, i) => i)
   const next = [...base]
   const [moved] = next.splice(dragFrom.value, 1)
@@ -418,6 +434,10 @@ const tableApi = {
         .map((part) => Number(part.trim()))
         .filter((n) => Number.isFinite(n) && displayRows.value[n])
       void emitSelected()
+    } else if (type === 'initDrag') {
+      setDragging(true)
+    } else if (type === 'cancelDrag') {
+      setDragging(false)
     }
   },
 }
@@ -590,12 +610,89 @@ const wrapClass = computed(() =>
     'vamis-table-wrap',
     tableFixed.value ? 'is-fixed' : '',
     resizingCol.value >= 0 ? 'is-col-resizing' : '',
+    dragging.value ? 'is-dragging' : '',
     resolveClassName(props.schema.className, props.data || {}),
   ]
     .filter(Boolean)
     .join(' '),
 )
 const tableClass = computed(() => resolveClassName(props.schema.tableClassName, props.data || {}))
+const showHeader = computed(() => props.schema.showHeader !== false)
+const showFooter = computed(() => props.schema.showFooter !== false)
+const headingText = computed(() => {
+  const title = props.schema.title
+  if (title == null || title === false || title === '') return ''
+  return filterTpl(String(title), props.data || {})
+})
+const headerClass = computed(() => resolveClassName(props.schema.headerClassName, props.data || {}))
+const footerClass = computed(() => resolveClassName(props.schema.footerClassName, props.data || {}))
+const toolbarClass = computed(() => resolveClassName(props.schema.toolbarClassName, props.data || {}))
+const headerToolbarClass = computed(() =>
+  resolveClassName(props.schema.headerToolbarClassName, props.data || {}),
+)
+const footerToolbarClass = computed(() =>
+  resolveClassName(props.schema.footerToolbarClassName, props.data || {}),
+)
+const isNestedTable = computed(() => rows.value.some((row) => childrenOf(row).length > 0))
+const showDragToggler = computed(
+  () => draggable.value && !isNestedTable.value && rows.value.length > 1,
+)
+
+type TableToolbarItem =
+  | { kind: 'toggler'; schema: SchemaObject }
+  | { kind: 'drag' }
+  | { kind: 'schema'; schema: SchemaObject }
+
+function asSchema(node: SchemaNode): SchemaObject {
+  if (node && typeof node === 'object' && !Array.isArray(node)) return node as SchemaObject
+  return { type: 'tpl', tpl: String(node ?? '') }
+}
+
+function toolbarItem(node: unknown): TableToolbarItem | null {
+  const type =
+    typeof node === 'string'
+      ? node
+      : node && typeof node === 'object'
+        ? String((node as SchemaObject).type || '')
+        : ''
+  if (type === 'columns-toggler' || type === 'column-toggler') {
+    const extra = node && typeof node === 'object' ? (node as SchemaObject) : {}
+    return {
+      kind: 'toggler',
+      schema: { type: 'column-toggler', label: false, size: 'sm', ...extra },
+    }
+  }
+  if (type === 'drag-toggler') return { kind: 'drag' }
+  if (typeof node === 'string') return null
+  if (node && typeof node === 'object') return { kind: 'schema', schema: asSchema(node as SchemaNode) }
+  return null
+}
+
+const headerNodes = computed(() => asArray(props.schema.header).filter(Boolean).map(asSchema))
+const footerNodes = computed(() => asArray(props.schema.footer).filter(Boolean).map(asSchema))
+const actionBarItems = computed(() => {
+  const items: TableToolbarItem[] = []
+  const seen = new Set<string>()
+  for (const node of [...asArray(props.schema.headerToolbar), ...asArray(props.schema.actions)]) {
+    const item = toolbarItem(node)
+    if (!item) continue
+    items.push(item)
+    seen.add(item.kind)
+  }
+  if (showToggler.value && !seen.has('toggler')) {
+    items.push({ kind: 'toggler', schema: { type: 'column-toggler', label: false, size: 'sm' } })
+  }
+  if (showDragToggler.value && !seen.has('drag')) items.push({ kind: 'drag' })
+  return items
+})
+const footerActionItems = computed(() => {
+  const items: TableToolbarItem[] = []
+  for (const node of [...asArray(props.schema.footerToolbar), ...asArray(props.schema.actions)]) {
+    const item = toolbarItem(node)
+    if (item) items.push(item)
+  }
+  return items
+})
 
 async function onRowClick(row: Record<string, any>, event: MouseEvent) {
   const action = props.schema.itemAction
@@ -647,10 +744,44 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
       >
     </label>
   </div>
-  <div v-if="schema.title || showToggler" class="vamis-table__title">
-    <ColumnToggler v-if="showToggler" :schema="{ type: 'column-toggler', label: false }" />
-    <span v-if="schema.title">{{ schema.title }}</span>
+  <div
+    v-if="showHeader && headerNodes.length"
+    class="vamis-table__header"
+    :class="headerClass"
+  >
+    <SchemaRenderer v-for="(node, i) in headerNodes" :key="'h' + i" :schema="node" />
   </div>
+  <div
+    v-if="showHeader && (actionBarItems.length || dragging || $slots.headerToolbar)"
+    class="vamis-table__toolbar vamis-table__head-toolbar"
+    :class="[toolbarClass, headerToolbarClass]"
+  >
+    <div v-if="actionBarItems.length" class="vamis-table__actions">
+      <template v-for="(item, i) in actionBarItems" :key="'a' + i">
+        <ColumnToggler v-if="item.kind === 'toggler'" :schema="item.schema" />
+        <button
+          v-else-if="item.kind === 'drag'"
+          type="button"
+          class="vamis-table__toolbar-btn vamis-table__drag-toggler"
+          :class="{ 'is-active': dragging }"
+          aria-label="开始排序"
+          :aria-pressed="dragging"
+          @click.stop="toggleDragging"
+        >
+          <svg class="vamis-table__drag-toggler-icon icon" viewBox="0 0 175 201" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M104.295 11.995v177.5c0 6.2 5.1 11.3 11.3 11.3 3.4 0 6.5-1.5 8.7-4.1.8-.6 1.5-1.4 2.1-2.2l46.5-66.3c3.6-5.1 2.4-12.1-2.7-15.7-5.1-3.6-12.1-2.3-15.7 2.8l-27.6 39.3v-142.6c-.1-6.2-5.2-11.3-11.4-11.3s-11.2 5.1-11.2 11.3Zm-33.2 0c0-6.2-5.1-11.3-11.3-11.3-3.4 0-6.5 1.5-8.7 4.1-.8.7-1.5 1.4-2.1 2.2l-46.5 66.3c-1.3 1.9-2 4.1-2 6.5 0 3.7 1.8 7.1 4.8 9.2 2.5 1.7 5.4 2.4 8.4 1.9s5.5-2.2 7.3-4.6l27.6-39.3v142.5c0 6.2 5.1 11.3 11.3 11.3 6.2-.1 11.2-5.2 11.2-11.4v-177.4Z"
+            />
+          </svg>
+        </button>
+        <SchemaRenderer v-else :schema="item.schema" />
+      </template>
+    </div>
+    <slot name="headerToolbar" />
+    <div v-if="dragging" class="vamis-table__drag-tip">请拖动左边的按钮进行排序</div>
+  </div>
+  <div v-if="headingText" class="vamis-table__heading">{{ headingText }}</div>
   <Table :class="tableClass">
     <TableHeader>
       <TableRow v-if="hasGroups">
@@ -751,7 +882,7 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
         <TableRow
           :class="[rowClass(row), { 'is-checked': isSelected(i) }]"
           :data-state="isSelected(i) ? 'selected' : undefined"
-          :draggable="draggable"
+          :draggable="canDragRow"
           @click="handleRowClick(row, i, $event)"
           @dblclick="emitRowEvent('rowDbClick', row, i, $event)"
           @mouseenter="emitRowEvent('rowMouseEnter', row, i, $event)"
@@ -903,5 +1034,25 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
       </TableRow>
     </TableBody>
   </Table>
+  <div
+    v-if="showFooter && (footerActionItems.length || $slots.footerToolbar)"
+    class="vamis-table__toolbar vamis-table__foot-toolbar"
+    :class="[toolbarClass, footerToolbarClass]"
+  >
+    <div v-if="footerActionItems.length" class="vamis-table__actions">
+      <template v-for="(item, i) in footerActionItems" :key="'f' + i">
+        <ColumnToggler v-if="item.kind === 'toggler'" :schema="item.schema" />
+        <SchemaRenderer v-else-if="item.kind === 'schema'" :schema="item.schema" />
+      </template>
+    </div>
+    <slot name="footerToolbar" />
+  </div>
+  <div
+    v-if="showFooter && footerNodes.length"
+    class="vamis-table__footer"
+    :class="footerClass"
+  >
+    <SchemaRenderer v-for="(node, i) in footerNodes" :key="'ft' + i" :schema="node" />
+  </div>
   </div>
 </template>

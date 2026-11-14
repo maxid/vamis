@@ -71,7 +71,8 @@
 
 **最近交付**
 
-- `table` 行列盒模型：td `--TableCell-paddingY/X` 11/10、首末 edge 16、表体 12px；th 首末 12、高 44。去掉单元格 `min-content`（列类型不再永远出横条）。开关列 64、进度 70、List 项 8/12 与 Amis 列类型同宽。映射 `.label` 与开关/状态同一水平带。对照目录 **1386**；`--page table` **33/33**（P0 0）。进度仍 **99%**（缺 toolbar / Footable）。
+- `table` toolbar：田从 heading 挪到 `Table-headToolbar`（padding **12×0** 贴齐带边框的表体左缘；Amis 左右 4px 是因为表没有独立描边）。按钮 30×58 对齐 size sm。`header`/`footer`/`actions`；`draggable` 出「开始排序」。对照目录 **1386**；`--page table` **33/33**（P0 0）。进度仍 **99%**。
+- `table` 行列盒模型：td `--TableCell-paddingY/X` 11/10、首末 edge 16、表体 12px；th 首末 12、高 44。去掉单元格 `min-content`（列类型不再永远出横条）。开关列 64、进度 70、List 项 8/12 与 Amis 列类型同宽。映射 `.label` 与开关/状态同一水平带。对照目录 **1386**；`--page table` **33/33**（P0 0）。进度仍 **99%**（缺 Footable）。
 - `table` 三项对标：表头 `th:not(:last-child)` 白竖线（fill-10 底 + fill-11 缝）让 resizer 可发现；`/api/mock2/sample` 给 engine 拼随机后缀对齐 Amis mock；列类型活示例换成 Amis JSON，单元格渲 `text`/`image`/`date`/`progress`/`status`/`switch`/`mapping`/`list`（`getPropValue`、boolean→0/1、无 form 的 switch），`columnsTogglable` auto 画 田。对照目录 **1386**；`--page table` **33/33**（P0 0）。进度仍 **99%**。
 - CRUD `mode: cards` 工具栏：对齐 Amis `headerToolbarRender`，默认 `headerToolbar: ['bulkActions']` 注入 `.vamis-cards-toolbar`（padding 12px 0、全宽），不再在 CRUD 根上画 shrink-wrap 的 flex 条。Cards 顶栏/底栏都画全选（不要 `&& !host`）。实测 toolbar 488×54 对上 Amis 564×54（宽随预览槽）。对照 `cards` 桌面 **4/10**（P0 0）、`crud` **1/1**。`cards` 进度仍 **92%**。
 - `image` `h-stretch` 宽度吃满：包装层不再对 stretch 图打 `inline-block`（`schemaNodeDisplayClass` 传入行 data 解析 `thumbMode` 表达式）；CSS `:has(> .is-fill)` 打穿 shrink-wrap。瀑布流偶数卡图宽 = 列宽，奇数 cover 仍 110px。未改 Cards / `gap: 12px` / 瀑布流 schema。对照 `image` 桌面 **17/19**（P0 0；#18/#19 预览动作 Amis `rendered` 空）。进度仍 **90%**。
@@ -513,7 +514,7 @@
 
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
 
-1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`table` #37 已到 99%（列类型行列盒模型已齐）。下一刀 **table toolbar**（Amis `Table-headToolbar` / `renderActions`，田应在 toolbar 不是 heading）或 **`crud` 深化**（仍 84%）。缺 Footable / itemBadge / autoFillHeight / itemActions / affixHeader，不挡。`cards` 92%（缺 submitQuickEdit）。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。
+1. **组件同步按全表构建依赖 + 解锁分 U 推进**：主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`table` #37 已到 99%（行列盒模型 + toolbar 已齐）。下一刀 **`crud` 深化**（仍 84%；table 模式 headerToolbar 仍是根上 flex 条，应注入 Table `#headerToolbar`）或 table 余项 Footable / itemBadge / affixHeader，不挡 100%。`cards` 92%（缺 submitQuickEdit）。不要先做零被依赖段的展示叶子。完整顺序见 TODO「依赖与优先级」。缺一不得标 100%。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。
 2. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。
 3. **P0 kernel D8 诊断**：`env.debug`、未知 type 带 schema path、动作日志、渲染错误边界。对应文档 [调试](website/src/extend/debug.md)。
 4. **D7 余项**：渲染器注入 `dispatch` / `reload`（RendererApi）；`editor` / `diff-editor` / Collapse 的组件动作仍缺。

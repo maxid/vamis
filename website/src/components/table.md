@@ -6,7 +6,7 @@ outline: deep
 # Table 表格
 
 ::: info 实现进度 99% · 进行中
-主路径：`columns`、`data` / `source`、空状态（desk-empty 图 + 200px 占位）、表头列宽拖拽（`resizable` 默认 true）、选择 / 拖拽 / 合并 / 超级表头 / 快速编辑。缺 Footable、行角标 `itemBadge`、`autoFillHeight`、`backgroundScale`、悬浮 `itemActions`。
+主路径：`columns`、`data` / `source`、空状态、表头列宽拖拽、工具栏（田 / 开始排序在 `Table-headToolbar`，不是标题栏）、选择 / 拖拽 / 合并 / 超级表头 / 快速编辑。缺 Footable、行角标 `itemBadge`、`autoFillHeight`、`backgroundScale`、悬浮 `itemActions`。
 :::
 
 表格展示，不支持配置初始化接口初始化数据域，所以需要搭配类似 [Service](/components/service) 这样具有接口初始化数据域的组件，或者手动初始化数据域，再通过 `source` 从数据链取数。Vamis 用 YAML 或 JSON 书写，字段名不改写。复杂场景建议用 [CRUD](/components/crud)。
@@ -580,7 +580,7 @@ columns:
 
 ## 拖拽排序
 
-`draggable: true` 时左侧出现拖拽手柄，松手派发 `orderChange`（`movedItems` 为排序后的行）：
+`draggable: true` 且多于一行时，工具栏出现「开始排序」按钮（`initDrag` / `cancelDrag`）。点了之后左侧手柄才可拖，松手派发 `orderChange`（`movedItems` 为排序后的行）：
 
 ```schema: scope="body"
 type: table
@@ -858,12 +858,18 @@ columns:
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `type` | `string` | | `"type"` 指定为 table 渲染器 |
-| `title` | `string` | | 标题 |
+| `title` | `string` | | 标题，画在 heading（不是工具栏） |
 | `source` | `string` | `${items}` | 数据源，绑定当前环境变量 |
 | `data` | `array` / `{items}` | | 本地表格数据 |
 | `placeholder` | `string` | `暂无数据` | 没数据时的文字提示 |
 | `className` | [`ClassName`](/types/classname) | | 外层 CSS 类名 |
 | `tableClassName` | [`ClassName`](/types/classname) | | 表格 CSS 类名 |
+| `header` | [SchemaNode](/types/schemanode) | | 顶部内容，在工具栏之上 |
+| `footer` | [SchemaNode](/types/schemanode) | | 底部内容，在工具栏之下 |
+| `headerClassName` | [`ClassName`](/types/classname) | | 顶部外层 CSS 类名 |
+| `footerClassName` | [`ClassName`](/types/classname) | | 底部外层 CSS 类名 |
+| `toolbarClassName` | [`ClassName`](/types/classname) | | 工具栏 CSS 类名 |
+| `actions` | `Array<[Action](/components/action)>` | | 工具栏按钮。列显示开关、开始排序会自动追加到顶栏 |
 | `showIndex` | `boolean` | `false` | 是否展示序号 |
 | `columns` | `Array<Column>` | | 列信息，见列配置属性表 |
 | `combineNum` | `number` | | 自动合并单元格 |
@@ -881,12 +887,12 @@ columns:
 | `selectable` | `boolean` | `false` | 支持勾选 |
 | `multiple` | `boolean` | `false` | `true` 为多选 checkbox，默认单选 radio |
 | `tableLayout` | `auto` \| `fixed` | `auto` | `fixed` 时内容不会撑开表格 |
-| `draggable` | `boolean` | `false` | 行拖拽排序 |
+| `draggable` | `boolean` | `false` | 行拖拽排序。多于一行时工具栏出「开始排序」，点了才可拖 |
 | `childrenColumnName` | `string` | `children` | 嵌套子行字段 |
 | `id` | `string` | | 组件 API 的 `componentId` |
 | `deferApi` | [API](/types/api) | | 行数据有 `defer` 时继续加载。**未接** |
 | `affixHeader` | `boolean` | `true` | 固定表头。**未接** |
-| `columnsTogglable` | `auto` / `boolean` | `auto` | 列显示开关。默认 `auto`：叶列多于 5 列时在标题栏显示 田 |
+| `columnsTogglable` | `auto` / `boolean` | `auto` | 列显示开关。默认 `auto`：叶列多于 5 列时在**工具栏**显示 田 |
 | `resizable` | `boolean` | `true` | 表头列之间拖拽调整列宽；`false` 关掉 |
 | `footable` | `boolean` / `object` | | 底部展开列。**未接** |
 
@@ -948,7 +954,7 @@ columns:
 | `clearAll` | - | 清空选择 |
 | `setValue` | `args.value` 为 `{items}` / `{rows}` | 更新列表记录 |
 | `reload` | 通用动作 | 由外层 `service` / `crud` 处理 |
-| `initDrag` / `cancelDrag` | - | 开关拖拽。**未接**（用 schema `draggable`） |
+| `initDrag` / `cancelDrag` | - | 开关拖拽。`draggable` 时工具栏按钮等同这两个动作 |
 | `submitQuickEdit` | - | 快速编辑提交。**未接** |
 | `toggleExpanded` / `setExpanded` | `args.index` | 展开收起。**未接**（点箭头即可） |
 
@@ -957,8 +963,8 @@ columns:
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 已接：列 `type`（`text` / `image` / `date` / `progress` / `status` / `switch` / `mapping` / `list` 等）/ `width` / `align` / `className` / `classNameExpr` / `copyable` / `popOver`、空状态、标题、`selectable` / `multiple` / `showIndex`、`columnsTogglable` auto、列排序 / 筛选 / 拖拽 / 合并 / 超级表头 / 总结行 / 嵌套 / 快速编辑、独立数据域。容器不够宽时 `.Table-content` 出横向滚动（单元格 `min-content`，进度条 `min-width: 50px`）。`status` 的 boolean/`0`/`1` 只画图标。
-- 未接：Footable、`itemBadge`、`itemActions` 悬浮按钮、`autoFillHeight`、`backgroundScale`、`affixHeader`、`deferApi`。
+- 已接：列 `type`（`text` / `image` / `date` / `progress` / `status` / `switch` / `mapping` / `list` 等）/ `width` / `align` / `className` / `classNameExpr` / `copyable` / `popOver`、空状态、标题 heading、`header` / `footer` / `actions`、工具栏（`columnsTogglable` 田、`draggable` 开始排序）、`selectable` / `multiple` / `showIndex`、列排序 / 筛选 / 拖拽 / 合并 / 超级表头 / 总结行 / 嵌套 / 快速编辑、独立数据域。容器不够宽时 `.Table-content` 才出横向滚动。`status` 的 boolean/`0`/`1` 只画图标。
+- 未接：Footable、`itemBadge`、`itemActions` 悬浮按钮、`autoFillHeight`、`backgroundScale`、`affixHeader`、`deferApi`、`export-excel`。
 - 表头默认 `resizable: true`。列间可见分隔是 thead `border-right: fill-11`（灰底上的白竖线），拖拽热区对齐 Amis `.Table-content-colDragLine`（7px / hover `--primary`）。写了数字 `width` 的列保持该宽，拖的是未钉死的列。
 - 空状态对齐 Amis `Table-placeholder`：高度 200px、字号 12、色 `--colors-neutral-text-6`、`desk-empty` 图 74px。
 - 子行不支持选择 / 合并 / 拖拽。筛选为客户端过滤。

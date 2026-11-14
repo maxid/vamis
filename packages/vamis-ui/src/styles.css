@@ -403,6 +403,8 @@
   --crud-toolbar-h: 30px;
   --table-toolbar-margin-x: 4px;
   --table-toolbar-margin-y: var(--gap-base);
+  /* Amis Button--size-sm 进 Table-actions（ColumnToggler / drag-toggler）高 30。 */
+  --table-toolbar-btn-h: var(--button-h-sm);
   /* Amis --Form-input-onDisabled-*：灰底而不是 opacity。 */
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: var(--colors-neutral-text-6);
@@ -4698,19 +4700,68 @@
 .vamis-table-wrap.is-fixed [data-slot="table"] {
   table-layout: fixed;
 }
-.vamis-table__title {
-  background: var(--table-heading-bg);
-  min-height: var(--table-heading-height);
-  padding: 0 var(--gap-sm);
+.vamis-table__header,
+.vamis-table__footer {
+  padding: var(--table-toolbar-margin-y) 0;
+}
+.vamis-table__header > * + .vamis-node {
+  margin-left: var(--crud-toolbar-gap);
+}
+/* Amis toolbar 左右 4px，因为它的表没有独立描边。Vamis 表在 `rounded-lg border`
+   卡片里，再垫 4px 田会比表体左缘缩进去。左右 0 贴齐卡片边。 */
+.vamis-table__toolbar {
   display: flex;
+  flex-wrap: wrap;
+  padding: var(--table-toolbar-margin-y) 0;
+}
+.vamis-table__header + .vamis-table__toolbar {
+  padding-top: 0;
+}
+.vamis-table__actions {
+  display: inline-block;
+}
+.vamis-table__actions > * {
+  margin-right: var(--crud-toolbar-gap);
+}
+.vamis-table__drag-tip {
+  width: 100%;
+  clear: both;
+  margin-top: var(--gap-xs);
+  color: var(--info);
+}
+.vamis-table__toolbar-btn {
+  display: inline-flex;
   align-items: center;
-  gap: var(--gap-sm);
-  font-size: var(--fontSizeBase, 14px);
+  justify-content: center;
+  height: var(--table-toolbar-btn-h);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+}
+.vamis-table__toolbar-btn.is-active {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.vamis-table__drag-toggler-icon {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.vamis-table__heading {
+  background: var(--table-heading-bg);
+  height: var(--table-heading-height);
+  box-sizing: border-box;
+  padding: calc((var(--table-heading-height) - var(--table-font-size) * 1.5) / 2) var(--gap-sm);
+  font-size: var(--table-font-size);
   line-height: 1.5;
 }
 .vamis-column-toggler {
   position: relative;
   display: inline-block;
+  vertical-align: middle;
 }
 .vamis-column-toggler__btn {
   display: inline-flex;
@@ -4729,6 +4780,12 @@
 }
 .vamis-column-toggler__btn.is-icon {
   padding: 0 8px;
+}
+.vamis-column-toggler__btn.is-sm,
+.vamis-column-toggler__btn.is-sm.is-icon {
+  height: var(--table-toolbar-btn-h);
+  padding: 4px 10px;
+  font-size: 12px;
 }
 .vamis-column-toggler__icon {
   width: 14px;

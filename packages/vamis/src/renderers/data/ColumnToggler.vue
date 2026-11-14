@@ -17,6 +17,7 @@ const open = ref(false)
 
 const columns = computed(() => toggle.togglableColumns.value)
 const iconOnly = computed(() => props.schema.label === false || props.schema.iconOnly === true)
+const sizeSm = computed(() => props.schema.size === 'sm')
 const label = computed(() => {
   if (iconOnly.value) return ''
   if (props.schema.label != null && props.schema.label !== '') return String(props.schema.label)
@@ -39,7 +40,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
     <button
       type="button"
       class="vamis-column-toggler__btn"
-      :class="{ 'is-icon': iconOnly }"
+      :class="{ 'is-icon': iconOnly, 'is-sm': sizeSm }"
       :aria-label="iconOnly ? '列显示' : label"
       @click.stop="open = !open"
     >
