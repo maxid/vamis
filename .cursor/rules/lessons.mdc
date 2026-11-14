@@ -1067,3 +1067,45 @@ alwaysApply: true
 - 稳定做法：helper 继续绑 shadcn `--secondary`。组件专用色在该渲染器覆盖。
 - 触及：`calendar` `button` `badge`
 - 规则：本文；CONTEXT 后续计划「样式收尾」
+
+### Card 字符串 body 不要包字段行
+- 踩过：把 `body: "这里是内容"` 收成 `{type:tpl}` 再套 `.vamis-card-field`，看起来像表单项；Amis `renderChild` 对字符串直接 `render()`。
+- 稳定做法：字符串/数字 body 当 tpl 直接渲；只有对象数组才走 Card-field。`hbox`/`grid` 才跳过字段壳。
+- 触及：`card`
+- 规则：本文；Amis `Card.tsx` `renderChild`
+
+### Wrapper 的 style 要打在内层盒子
+- 踩过：`schema.style` 只在 `div.vamis-node`，Wrapper 内层 `width:100%` 是唯一子节点，单元格 `display:flex` 排不成左右。
+- 稳定做法：`size: none` 清掉 padding 后，把 `resolveInlineStyle` 合进 `[data-vamis-wrapper]`。
+- 触及：`wrapper` `card`
+- 规则：本文
+
+### 作者 className 在包装层，卡片 chrome 要让 helper 打穿
+- 踩过：`className: border-0` / `bodyClassName: p-0` 打在 `div.vamis-node`，内层 `.vamis-card` 仍有 1px 边和 16px 垫；unlayered 组件 padding 压过 helper。
+- 稳定做法：`.vamis-node.border-0 > .vamis-card` 清边；heading/body 的 `p-0` 在组件 CSS 显式覆盖。
+- 触及：`card`
+- 规则：`.cursor/rules/component.mdc` 作者 className 打在 `div.vamis-node`
+
+### helper `b-Nx` 单独不加边，要配 `.b` / `.b-a`
+- 踩过：Amis 示例 `avatarClassName: ... b-3x` 没有 `.b`，计算边框是 0；Tailwind preflight 给 `*` 写了 `border-style:solid` + `--border`，只写 `border-width:3px` 会画出一圈可见边，头像从 64 吃成 58。
+- 稳定做法：`.b-2x`…`.b-5x` 只改宽度；`:not(.b):not(.b-a)` 把 style 打回 none。要可见边必须带 `.b` / `.b-a`。
+- 触及：`card` avatar helper
+- 规则：`packages/vamis-ui/src/helpers-utility.css`；Amis `_utilities.scss` `.b` / `.b-3x`
+
+### Card 字段里的 FormItem 不要留 24px 底缝
+- 踩过：`static` / `input-number` 进 Card-field 后仍吃 `.vamis-form-item--normal { margin-bottom: 24px }`，Browser/Version 行比 Amis 高一截。Amis Form-item 是 fieldValue 的 last-child，缝被清掉。
+- 稳定做法：`.vamis-card-fieldValue .vamis-form-item { margin-bottom: 0 }`。`useCardLabel` 时 inner schema `label: false`。desc 不要套 subTitle 的 muted/clamp/上边距。
+- 触及：`card` FormItem `static` `input-number`
+- 规则：本文；Amis `Card.tsx` `renderLabel: !useCardLabel`
+
+### Card actions 是 `<a>`，dropdown 仍走 Button--link
+- 踩过：把 actions 刷成 40px Button 并强制 `--text-loud`，多媒体底栏「操作」又肥又黑，「下拉菜单」盖住次要说明；切 翠绿 / 深色也不跟 `--primary`。
+- 稳定做法：Amis `renderActions` 是 `isMenuItem` + `componentClass: a` + `Card-action`。普通按钮渲 `<a class="vamis-card-action">`（12px / 行高 40 / `--text-loud`，hover `--primary`）。`dropdown-button` 不要打 `__cardAction`，触发器仍是 `Button--link --size-sm`，字色 `--link-color`。作者 `mr-4` 打在 `.vamis-node`。未写 `label` 不要补「下拉菜单」。
+- 触及：`card` `action` `dropdown-button`
+- 规则：本文；Amis `Card.tsx` `renderActions` / `DropDownButton.tsx` label
+
+### Wrapper 不要当布局槽 `w-full`
+- 踩过：`fillsLayoutSlot('wrapper')` 给包装层 `w-full`，单元格卡片两个 Wrapper 并排成 50/50 嵌套边框；Amis Wrapper 是 block 但不吃 flex 份额，`h-32 flex` 打在 Card-fieldValue 上让两块上下叠。
+- 稳定做法：`LAYOUT_SLOT_TYPES` 不含 `wrapper`。作者 `className` 打在 Card-fieldValue，不要抄进 Wrapper 内层。
+- 触及：`wrapper` `card`
+- 规则：`packages/vamis-core/src/style.ts` `LAYOUT_SLOT_TYPES`；Amis `card-item-field` className → fieldValue

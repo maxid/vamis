@@ -1,7 +1,7 @@
 /** DropDownButton。对齐 Amis：buttons 或 body；children 分组；visible:false 丢掉；默认 click / 点外侧关 / 点项不关。 */
 
 import { inject, provide, type InjectionKey } from 'vue'
-import { isVisible } from '../formula'
+import { filterTpl, isVisible } from '../formula'
 import type { SchemaObject } from '../types'
 import { actionTooltipConfig } from './action'
 
@@ -46,6 +46,23 @@ export function dropdownButtonHideCaret(schema: unknown): boolean {
 
 export function dropdownButtonAlign(schema: unknown): 'left' | 'right' {
   return asRecord(schema).align === 'right' ? 'right' : 'left'
+}
+
+/** Amis DropDownButton 未写 label 就空着，不要补「下拉菜单」。icon-only / hideCaret 同理。 */
+export function dropdownButtonLabel(schema: unknown, data: Record<string, unknown> = {}): string {
+  const rec = asRecord(schema)
+  if (rec.label === false || rec.label === '') return ''
+  if (typeof rec.label === 'string') return filterTpl(rec.label, data)
+  if (typeof rec.title === 'string' && rec.title) return filterTpl(rec.title, data)
+  return ''
+}
+
+export function dropdownButtonShowLabel(schema: unknown): boolean {
+  const rec = asRecord(schema)
+  if (rec.iconOnly === true) return false
+  if (rec.label === false || rec.label === '') return false
+  if (typeof rec.label === 'string') return true
+  return typeof rec.title === 'string' && !!rec.title
 }
 
 /** Amis DropDownButton 用 `placement` 给 TooltipWrapper，不是 Action 的 `tooltipPlacement`。 */

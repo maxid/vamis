@@ -1,6 +1,6 @@
 /** Card / Cards。对齐 Amis Card、Cards：header/body/actions、href 优先于 itemAction、source 默认 `$items`。 */
 
-import { filterTpl, isVisible } from '../formula'
+import { evalExpression, filterTpl, isVisible } from '../formula'
 import type { ActionSchema, PlainObject, SchemaObject } from '../types'
 import { table2Source } from './table2'
 
@@ -63,8 +63,20 @@ export function cardAvatarTextBackground(text: string, colors: unknown): string 
   return String(colors[i] ?? '')
 }
 
-export function cardHighlight(schema: unknown): boolean {
-  return headerOrRoot(schema, 'highlight') === true
+export function cardHighlight(schema: unknown, data: PlainObject = {}): boolean {
+  const raw = headerOrRoot(schema, 'highlight')
+  if (typeof raw === 'string') return evalExpression(raw, data)
+  return raw === true
+}
+
+export function cardSubTitlePlaceholder(schema: unknown, data: PlainObject = {}): string {
+  return filterTpl(cardHeader(schema).subTitlePlaceholder ?? '', data)
+}
+
+export function cardDescriptionPlaceholder(schema: unknown, data: PlainObject = {}): string {
+  const header = cardHeader(schema)
+  const raw = header.descriptionPlaceholder ?? header.descPlaceholder ?? ''
+  return filterTpl(raw, data)
 }
 
 export function cardUseCardLabel(schema: unknown): boolean {
@@ -72,6 +84,8 @@ export function cardUseCardLabel(schema: unknown): boolean {
 }
 
 export function cardBlank(schema: unknown): boolean {
+  const header = cardHeader(schema)
+  if (typeof header.blank === 'boolean') return header.blank
   return asRecord(schema).blank !== false
 }
 
@@ -118,6 +132,56 @@ export function cardToolbar(schema: unknown): unknown[] {
   return asNodes(rec.toolbar ?? cardHeader(schema).toolbar)
 }
 
+export function cardToolbarItemSchema(action: unknown): SchemaObject {
+  const rec = asRecord(action)
+  return {
+    type: 'button',
+    level: 'link',
+    size: rec.size || 'sm',
+    ...rec,
+  } as SchemaObject
+}
+
+/** Amis `renderActions`：`isMenuItem` + `componentClass: a` + `Card-action`。dropdown-button 仍走 Button--link。 */
+export function cardActionIsDropdown(action: unknown): boolean {
+  return asRecord(action).type === 'dropdown-button'
+}
+
+export function cardActionSchema(action: SchemaObject): SchemaObject {
+  const rec = asRecord(action)
+  return {
+    level: 'link',
+    type: 'button',
+    size: rec.size || 'sm',
+    ...rec,
+    ...(cardActionIsDropdown(rec) ? {} : { __cardAction: true }),
+  } as SchemaObject
+}
+
+export function cardDragging(schema: unknown): boolean {
+  return asRecord(schema).dragging === true
+}
+
+export function cardSelectable(schema: unknown): boolean {
+  return asRecord(schema).selectable === true
+}
+
+export function cardCheckable(schema: unknown): boolean {
+  return asRecord(schema).checkable !== false
+}
+
+export function cardHideCheckToggler(schema: unknown): boolean {
+  return asRecord(schema).hideCheckToggler === true
+}
+
+export function cardSelected(schema: unknown): boolean {
+  return asRecord(schema).selected === true
+}
+
+export function cardMultiple(schema: unknown): boolean {
+  return asRecord(schema).multiple === true
+}
+
 export function cardMedia(schema: unknown): Record<string, unknown> | null {
   const rec = asRecord(asRecord(schema).media)
   return Object.keys(rec).length ? rec : null
@@ -140,12 +204,29 @@ export function cardMediaUrl(schema: unknown, data: PlainObject = {}): string {
   return filterTpl(String(media.url ?? media.src ?? ''), data)
 }
 
+export function cardBodyPlain(schema: unknown): string | number | null {
+  const body = asRecord(schema).body
+  if (typeof body === 'string' || typeof body === 'number') return body
+  return null
+}
+
+export function cardChildIsLayout(node: unknown): boolean {
+  const type = asRecord(node).type
+  return type === 'hbox' || type === 'grid'
+}
+
+/** Amis `card-item-field` 把作者 className 打在 Card-fieldValue 上，不传给内层 Wrapper。 */
+export function cardFieldClassName(node: unknown): unknown {
+  return asRecord(node).className
+}
+
 export function cardBodyNodes(schema: unknown): unknown[] {
   const body = asRecord(schema).body
   if (body == null || body === false) return []
+  if (typeof body === 'string' || typeof body === 'number') return []
   if (Array.isArray(body)) return body
   if (typeof body === 'object') return [body]
-  return [{ type: 'tpl', tpl: String(body) }]
+  return []
 }
 
 export function cardFieldLabel(node: unknown): string {

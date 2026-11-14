@@ -28,6 +28,19 @@ function classNameFor(icon: string, vendor?: string): string {
   return prefix && prefix !== icon ? `${icon} ${prefix}` : icon
 }
 
+/** Amis `amis-ui` `registerIcon('plus')`。`type: icon` 先走注册 SVG，不要 `vendor: fa` 编成 `fa fa-plus`。Action 的 `fa fa-plus` 仍走 class。 */
+const ICON_PLUS_SVG =
+  '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" class="icon-plus" aria-hidden="true"><path d="M6.6 6.6V12H5.4V6.6H0V5.4h5.4V0h1.2v5.4H12v1.2z" fill="currentColor"/></svg>'
+
+const BUILTIN_ICON_SVG: Record<string, string> = {
+  plus: ICON_PLUS_SVG,
+  add: ICON_PLUS_SVG,
+}
+
+export function iconBuiltinSvg(icon: unknown): string {
+  return typeof icon === 'string' ? BUILTIN_ICON_SVG[icon] || '' : ''
+}
+
 export function resolveIcon(icon: unknown, options: { vendor?: string } = {}): ResolvedIcon {
   if (icon == null || icon === false || icon === '') return { kind: 'empty' }
 

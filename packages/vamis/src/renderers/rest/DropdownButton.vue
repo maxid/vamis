@@ -16,6 +16,8 @@ import {
   dropdownButtonCloseOnOutside,
   dropdownButtonHideCaret,
   dropdownButtonItems,
+  dropdownButtonLabel,
+  dropdownButtonShowLabel,
   dropdownButtonTrigger,
   tooltipEnterable,
   tooltipMouseEnterDelay,
@@ -55,20 +57,14 @@ watch(open, async (shown) => {
   await nextTick()
   menuWidth.value = root.value?.offsetWidth || 0
 })
-const label = computed(() => {
-  const rec = props.schema
-  if (rec.label === false || rec.label === '') return ''
-  if (typeof rec.label === 'string') return filterTpl(rec.label, data.value)
-  if (typeof rec.title === 'string') return filterTpl(rec.title, data.value)
-  return '下拉菜单'
-})
+const label = computed(() => dropdownButtonLabel(props.schema, data.value))
 function resolveSchemaIcon(raw: unknown) {
   const value = typeof raw === 'string' ? filterTpl(raw, data.value) : raw
   return resolveIcon(value, { vendor: iconVendor(props.schema) })
 }
 const icon = computed(() => resolveSchemaIcon(props.schema.icon))
 const rightIcon = computed(() => resolveSchemaIcon(props.schema.rightIcon))
-const showLabel = computed(() => props.schema.iconOnly !== true && props.schema.label !== false && props.schema.label !== '')
+const showLabel = computed(() => dropdownButtonShowLabel(props.schema))
 
 let hoverTimer: ReturnType<typeof setTimeout> | undefined
 let tipEnterTimer: ReturnType<typeof setTimeout> | null = null

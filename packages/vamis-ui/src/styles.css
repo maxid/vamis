@@ -561,6 +561,25 @@
   --label-warning-bg: var(--colors-warning-5);
   --label-danger-bg: var(--colors-error-5);
   /*
+   * Card 转写 Amis `--Card-*`。选择器只 var()。
+   * actions 默认字 `--text-loud`，hover 字 `--primary`（跟 5 色包）；
+   * hover 底对齐 `--Card-actions-onHover-bg` fill-11。
+   */
+  --card-bg: var(--card);
+  --card-border: var(--border);
+  --card-border-width: 1px;
+  --card-radius: var(--radius);
+  --card-muted: var(--colors-neutral-text-6); /* Amis `--text--muted-color`，不要 `--form-item-color` */
+  --card-secondary: var(--colors-neutral-fill-5);
+  --card-checked-bg: var(--card);
+  --card-checked-border: var(--primary);
+  --card-checked-color: var(--primary);
+  --card-action-font-size: 12px;
+  --card-action-color: var(--text-loud);
+  --card-action-border: var(--colors-neutral-line-10);
+  --card-action-hover-bg: var(--colors-neutral-fill-11);
+  --card-action-hover-color: var(--primary);
+  /*
    * Image 语义变量（Amis --image-image-*）。缩略 110、内边距 4、标题 14 / 说明 12。
    * 选择器只 var()。放大层永远是黑底白字，不跟主题换肤。
    */

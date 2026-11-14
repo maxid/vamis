@@ -269,7 +269,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
-| `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 80% | 文档主路径已对齐：header 标题/副标题/描述/头像/avatarText 与背景色、body 字段或字符串、useCardLabel 默认 true、actions（含 icon: fa fa-*）、href 优先于 itemAction、media 默认 left、secondary / toolbar。缺勾选/拖拽、themeCss | P0 |
+| `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 90% | 文档主路径已对齐：header/body/actions、href 优先于 itemAction、media、toolbar、标签/按钮/文本/单元格、配置工具栏、属性表四列。actions 走 Card-action `<a>`，dropdown 跟 `--primary`；副标题 text-6。缺 `themeCss`、Cards 拖拽排序 | P0 |
 | `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 80% | 文档示例对标 Amis：基本用法、CRUD `mode: cards` 勾选/全选/`checkOnItemClick`、瀑布流一张 image 用表达式切 `h-stretch` / `cover`。补 select / selectAll / clearAll 动作表；缺拖拽、itemClassName 像素级栅格 | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 62% | 基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch` | P0 |
@@ -459,7 +459,7 @@ flowchart LR
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 99% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
-| 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 80% |
+| 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 90% |
 | 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 96% |
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | 进行中 | 92% |
 | 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | 进行中 | 82% |

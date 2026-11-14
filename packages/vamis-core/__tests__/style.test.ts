@@ -751,6 +751,7 @@ describe('fillsLayoutSlot', () => {
     expect(fillsLayoutSlot('form')).toBe(true)
     expect(fillsLayoutSlot('panel')).toBe(true)
     expect(fillsLayoutSlot('switch-container')).toBe(true)
+    expect(fillsLayoutSlot('wrapper')).toBe(false)
     expect(fillsLayoutSlot('button')).toBe(false)
     expect(fillsLayoutSlot('action')).toBe(false)
   })

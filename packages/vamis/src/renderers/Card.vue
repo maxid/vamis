@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   SchemaRenderer,
+  cardActionSchema,
   cardActions,
   cardActionsCount,
   cardAvatar,
@@ -9,11 +10,18 @@ import {
   cardAvatarTextBackground,
   cardBlank,
   cardBodyNodes,
+  cardBodyPlain,
+  cardCheckable,
+  cardChildIsLayout,
   cardClickable,
   cardDescription,
+  cardDescriptionPlaceholder,
+  cardDragging,
+  cardFieldClassName,
   cardFieldLabel,
   cardFieldValueSchema,
   cardHeader,
+  cardHideCheckToggler,
   cardHighlight,
   cardHref,
   cardItemAction,
@@ -23,9 +31,13 @@ import {
   cardMediaUrl,
   cardPadActions,
   cardSecondary,
+  cardSelectable,
+  cardSelected,
   cardSubTitle,
+  cardSubTitlePlaceholder,
   cardTitle,
   cardToolbar,
+  cardToolbarItemSchema,
   cardUseCardLabel,
   popOverFieldSchema,
   resolveClassName,
@@ -44,79 +56,140 @@ const env = useEnv()
 const overlay = useOverlay()
 const scoped = useScoped()
 const select = useCardsSelect()
+const localChecked = ref(cardSelected(props.schema))
 
 const data = computed(() => props.data || {})
 const header = computed(() => cardHeader(props.schema))
 const title = computed(() => cardTitle(props.schema, data.value))
 const subTitle = computed(() => cardSubTitle(props.schema, data.value))
+const subTitlePlaceholder = computed(() => cardSubTitlePlaceholder(props.schema, data.value))
 const description = computed(() => cardDescription(props.schema, data.value))
+const descriptionPlaceholder = computed(() => cardDescriptionPlaceholder(props.schema, data.value))
 const avatar = computed(() => cardAvatar(props.schema, data.value))
 const avatarClass = computed(() => resolveClassName(header.value.avatarClassName, data.value))
+const imageClass = computed(() =>
+  resolveClassName(header.value.imageClassName ?? props.schema.imageClassName, data.value),
+)
+const avatarTextClass = computed(() =>
+  resolveClassName(header.value.avatarTextClassName, data.value),
+)
+const headingClass = computed(() =>
+  resolveClassName(header.value.className ?? props.schema.headerClassName, data.value),
+)
+const titleClass = computed(() =>
+  resolveClassName(header.value.titleClassName ?? props.schema.titleClassName, data.value),
+)
+const subTitleClass = computed(() =>
+  resolveClassName(header.value.subTitleClassName ?? props.schema.subTitleClassName, data.value),
+)
+const descClass = computed(() =>
+  resolveClassName(
+    header.value.descriptionClassName ??
+      header.value.descClassName ??
+      props.schema.descriptionClassName,
+    data.value,
+  ),
+)
+const bodyClass = computed(() => resolveClassName(props.schema.bodyClassName, data.value))
+const footerClass = computed(() => resolveClassName(props.schema.footerClassName, data.value))
+const secondaryClass = computed(() =>
+  resolveClassName(props.schema.secondaryClassName, data.value),
+)
+const highlightClass = computed(() =>
+  resolveClassName(header.value.highlightClassName, data.value),
+)
 const avatarText = computed(() => cardAvatarText(props.schema, data.value))
 const avatarBg = computed(() =>
   cardAvatarTextBackground(avatarText.value, header.value.avatarTextBackground),
 )
-const highlight = computed(() => cardHighlight(props.schema))
+const highlight = computed(() => cardHighlight(props.schema, data.value))
+const dragging = computed(() => cardDragging(props.schema))
 const useLabel = computed(() => cardUseCardLabel(props.schema))
 const clickable = computed(() => cardClickable(props.schema, data.value))
 const secondary = computed(() => cardSecondary(props.schema, data.value))
 const actionGroups = computed(() =>
   cardPadActions(cardActions(props.schema, data.value), cardActionsCount(props.schema)),
 )
-const toolbar = computed(() => cardToolbar(props.schema))
+const toolbar = computed(() => cardToolbar(props.schema).map((item) => cardToolbarItemSchema(item)))
 const media = computed(() => cardMedia(props.schema))
 const mediaPos = computed(() => cardMediaPosition(props.schema))
 const mediaKind = computed(() => cardMediaType(props.schema))
 const mediaUrl = computed(() => cardMediaUrl(props.schema, data.value))
 const mediaClass = computed(() => resolveClassName(media.value?.className, data.value))
-const bodyNodes = computed(() => cardBodyNodes(props.schema))
-const showCheck = computed(
-  () => !!select?.selectable.value && !select.hideCheckToggler.value,
+const mediaPoster = computed(() =>
+  media.value?.poster != null ? String(media.value.poster) : '',
 )
-const selected = computed(() => !!select?.isSelected(data.value))
+const mediaAutoPlay = computed(() => media.value?.autoPlay === true)
+const plainBody = computed(() => cardBodyPlain(props.schema))
+const bodyNodes = computed(() => cardBodyNodes(props.schema))
+const showCheck = computed(() => {
+  if (select) return select.selectable.value && !select.hideCheckToggler.value
+  return cardSelectable(props.schema) && !cardHideCheckToggler(props.schema)
+})
+const checkable = computed(() => cardCheckable(props.schema))
+const selected = computed(() => (select ? !!select.isSelected(data.value) : localChecked.value))
+const hasToolbar = computed(
+  () => !!(toolbar.value.length || showCheck.value || highlight.value || dragging.value),
+)
 const hasHeading = computed(
   () =>
     !!(
       title.value ||
       subTitle.value ||
+      subTitlePlaceholder.value ||
       description.value ||
+      descriptionPlaceholder.value ||
       avatar.value ||
       avatarText.value ||
-      toolbar.value.length ||
-      highlight.value ||
-      showCheck.value
+      hasToolbar.value
     ),
 )
 const hasFooter = computed(() => !!(secondary.value || actionGroups.value.length))
+const hasBody = computed(() => plainBody.value != null || bodyNodes.value.length > 0)
+
+function asSchema(node: unknown): SchemaObject {
+  if (typeof node === 'string' || typeof node === 'number') return { type: 'tpl', tpl: String(node) }
+  return node as SchemaObject
+}
 
 function fieldSchema(node: unknown) {
   const schema = popOverFieldSchema(cardFieldValueSchema(node))
-  if (useLabel.value && cardFieldLabel(node)) return { ...schema, label: false }
-  return schema
+  const withLabel = useLabel.value && cardFieldLabel(node) ? { ...schema, label: false } : schema
+  const { className: _className, ...rest } = withLabel
+  return rest
+}
+
+function fieldValueClass(node: unknown) {
+  return resolveClassName(cardFieldClassName(node), data.value)
 }
 
 function actionSchema(action: SchemaObject): SchemaObject {
-  return {
-    level: 'link',
-    type: 'button',
-    size: action.size || 'sm',
-    ...action,
-  }
+  return cardActionSchema(action)
 }
 
 function isInteractive(target: EventTarget | null) {
   if (!(target instanceof Element)) return false
-  return !!target.closest('button, a, input, textarea, select, [role=button], .vamis-card-actions, .vamis-card-toolbar')
+  return !!target.closest(
+    'button, a, input, textarea, select, [role=button], .vamis-card-actions, .vamis-card-toolbar',
+  )
 }
 
 function onCheck(checked: boolean) {
-  select?.toggle(data.value, checked)
+  if (select) {
+    select.toggle(data.value, checked)
+    return
+  }
+  localChecked.value = checked
 }
 
 async function onCardClick(event: MouseEvent) {
   if (isInteractive(event.target)) return
   if (select?.selectable.value && select.checkOnItemClick.value) {
     select.toggle(data.value)
+    return
+  }
+  if (!select && cardSelectable(props.schema) && props.schema.checkOnItemClick === true) {
+    localChecked.value = !localChecked.value
     return
   }
   const href = cardHref(props.schema, data.value)
@@ -150,63 +223,105 @@ async function onCardClick(event: MouseEvent) {
   >
     <div v-if="media && (mediaPos === 'left' || mediaPos === 'top')" class="vamis-card-media">
       <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :class="mediaClass" :src="mediaUrl" alt="" />
-      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :class="mediaClass" :src="mediaUrl" controls />
+      <video
+        v-else-if="mediaKind === 'video' && mediaUrl"
+        class="vamis-card-media-video"
+        :class="mediaClass"
+        :src="mediaUrl"
+        :poster="mediaPoster || undefined"
+        :autoplay="mediaAutoPlay"
+        controls
+      />
       <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :class="mediaClass" :src="mediaUrl" />
     </div>
     <div class="vamis-card-main">
-      <div v-if="hasHeading" class="vamis-card-heading">
+      <div v-if="hasHeading" class="vamis-card-heading" :class="headingClass">
         <span v-if="avatar" class="vamis-card-avatar" :class="avatarClass">
-          <img :src="avatar" alt="" />
+          <img :class="imageClass" :src="avatar" alt="" />
         </span>
         <span
           v-else-if="avatarText"
           class="vamis-card-avatar-text"
+          :class="avatarTextClass"
           :style="avatarBg ? { background: avatarBg } : undefined"
         >{{ avatarText }}</span>
         <div class="vamis-card-meta">
-          <div v-if="title || highlight" class="vamis-card-title">
-            <span v-if="highlight" class="vamis-card-highlight" />
-            {{ title }}
-          </div>
-          <div v-if="subTitle" class="vamis-card-subTitle">{{ subTitle }}</div>
-          <div v-if="description" class="vamis-card-desc">{{ description }}</div>
+          <div v-if="title" class="vamis-card-title" :class="titleClass">{{ title }}</div>
+          <div
+            v-if="subTitle || subTitlePlaceholder"
+            class="vamis-card-subTitle"
+            :class="[subTitleClass, { 'vamis-card-placeholder': !subTitle && !!subTitlePlaceholder }]"
+          >{{ subTitle || subTitlePlaceholder }}</div>
+          <div
+            v-if="description || descriptionPlaceholder"
+            class="vamis-card-desc"
+            :class="[descClass, { 'vamis-card-placeholder': !description && !!descriptionPlaceholder }]"
+          >{{ description || descriptionPlaceholder }}</div>
         </div>
-        <div v-if="toolbar.length || showCheck" class="vamis-card-toolbar">
+        <div v-if="hasToolbar" class="vamis-card-toolbar">
+          <i v-if="highlight" class="vamis-card-highlight" :class="highlightClass" />
           <Checkbox
             v-if="showCheck"
             class="vamis-card-checkbox"
             :model-value="selected"
+            :disabled="!checkable"
             @update:model-value="onCheck($event === true)"
             @click.stop
           />
           <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" :extra-data="data" />
+          <span v-if="dragging" class="vamis-card-drag" title="拖动排序" @click.stop>
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <g transform="translate(5 1)" fill="currentColor">
+                <circle cx="1" cy="1" r="1" />
+                <circle cx="5" cy="1" r="1" />
+                <circle cx="1" cy="5" r="1" />
+                <circle cx="5" cy="5" r="1" />
+                <circle cx="1" cy="9" r="1" />
+                <circle cx="5" cy="9" r="1" />
+                <circle cx="1" cy="13" r="1" />
+                <circle cx="5" cy="13" r="1" />
+              </g>
+            </svg>
+          </span>
         </div>
       </div>
-      <div v-if="bodyNodes.length" class="vamis-card-body">
-        <template v-for="(node, i) in bodyNodes" :key="i">
-          <SchemaRenderer v-if="cardFieldValueSchema(node).type === 'divider'" :schema="fieldSchema(node)" />
+      <div v-if="hasBody" class="vamis-card-body" :class="bodyClass">
+        <SchemaRenderer v-if="plainBody != null" :schema="asSchema(plainBody)" :extra-data="data" />
+        <template v-else v-for="(node, i) in bodyNodes" :key="i">
+          <SchemaRenderer v-if="cardChildIsLayout(node)" :schema="asSchema(node)" :extra-data="data" />
           <div v-else class="vamis-card-field">
             <span v-if="useLabel && cardFieldLabel(node)" class="vamis-card-fieldLabel">{{ cardFieldLabel(node) }}</span>
-            <div class="vamis-card-fieldValue">
-              <SchemaRenderer :schema="fieldSchema(node)" />
+            <div class="vamis-card-fieldValue" :class="fieldValueClass(node)">
+              <SchemaRenderer :schema="fieldSchema(node)" :extra-data="data" />
             </div>
           </div>
         </template>
       </div>
-      <div v-if="hasFooter" class="vamis-card-footer">
-        <div v-if="secondary" class="vamis-card-secondary">{{ secondary }}</div>
+      <div v-if="hasFooter" class="vamis-card-footer" :class="footerClass">
+        <div v-if="secondary" class="vamis-card-secondary" :class="secondaryClass">{{ secondary }}</div>
         <div v-if="actionGroups.length" class="vamis-card-actions-wrap">
           <div v-for="(group, gi) in actionGroups" :key="gi" class="vamis-card-actions">
-            <div v-for="(action, ai) in group" :key="ai" class="vamis-card-action">
-              <SchemaRenderer :schema="actionSchema(action)" :extra-data="data" />
-            </div>
+            <SchemaRenderer
+              v-for="(action, ai) in group"
+              :key="ai"
+              :schema="actionSchema(action)"
+              :extra-data="data"
+            />
           </div>
         </div>
       </div>
     </div>
     <div v-if="media && (mediaPos === 'right' || mediaPos === 'bottom')" class="vamis-card-media">
       <img v-if="mediaKind === 'image' && mediaUrl" class="vamis-card-media-img" :class="mediaClass" :src="mediaUrl" alt="" />
-      <video v-else-if="mediaKind === 'video' && mediaUrl" class="vamis-card-media-video" :class="mediaClass" :src="mediaUrl" controls />
+      <video
+        v-else-if="mediaKind === 'video' && mediaUrl"
+        class="vamis-card-media-video"
+        :class="mediaClass"
+        :src="mediaUrl"
+        :poster="mediaPoster || undefined"
+        :autoplay="mediaAutoPlay"
+        controls
+      />
       <iframe v-else-if="mediaKind === 'iframe' && mediaUrl" class="vamis-card-media-iframe" :class="mediaClass" :src="mediaUrl" />
     </div>
   </div>
@@ -217,17 +332,31 @@ async function onCardClick(event: MouseEvent) {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border);
+  border-radius: var(--card-radius);
+  margin-bottom: var(--gap-base);
   position: relative;
+}
+.vamis-node.border-0 > .vamis-card,
+.vamis-node.border-none > .vamis-card {
+  border-width: 0;
 }
 .vamis-card.is-link {
   cursor: pointer;
 }
 .vamis-card.is-checked {
-  border-color: var(--primary);
-  background: color-mix(in oklch, var(--primary) 6%, var(--card));
+  border-color: var(--card-checked-border);
+  background: var(--card-checked-bg);
+  color: var(--card-checked-color);
+}
+.vamis-card.is-checked .vamis-card-fieldLabel {
+  color: var(--card-checked-color);
+}
+.vamis-card.is-checked .vamis-card-actions,
+.vamis-card.is-checked .vamis-card-action {
+  border-color: var(--card-checked-border);
+  color: var(--card-checked-color);
 }
 .vamis-card-checkbox {
   margin: 0 8px;
@@ -255,7 +384,17 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card-heading {
   display: flex;
-  padding: 16px;
+  padding: var(--gap-md);
+}
+.vamis-card-heading.p-0,
+.vamis-card-heading.p-none {
+  padding: 0;
+}
+.vamis-card-heading.pb-2 {
+  padding-bottom: 8px;
+}
+.vamis-card-heading.items-center {
+  align-items: center;
 }
 .vamis-card-avatar {
   flex-shrink: 0;
@@ -263,15 +402,13 @@ async function onCardClick(event: MouseEvent) {
   max-width: 200px;
 }
 .vamis-card-avatar img {
-  display: block;
   max-width: 100%;
-  height: auto;
 }
 .vamis-card-avatar-text {
   flex-shrink: 0;
   width: 50px;
   height: 50px;
-  margin-right: 16px;
+  margin-right: var(--gap-base);
   border-radius: 500px;
   background: var(--primary);
   color: var(--primary-foreground);
@@ -279,29 +416,36 @@ async function onCardClick(event: MouseEvent) {
   text-align: center;
   font-size: 18px;
   overflow: hidden;
+  text-transform: uppercase;
 }
 .vamis-card-meta {
   flex: 1;
   min-width: 0;
 }
 .vamis-card-title {
-  color: var(--foreground);
-  font-size: 14px;
+  color: var(--text-loud);
+  font-size: var(--fontSizeBase);
   font-weight: 500;
   line-height: 21px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.vamis-card-title + .vamis-card-subTitle,
+.vamis-card-title + .vamis-card-placeholder {
+  margin-top: var(--gap-xs);
+}
 .vamis-card-subTitle,
-.vamis-card-desc {
-  margin-top: 4px;
-  max-height: calc(14px * 1.5 * 2);
+.vamis-card-placeholder {
+  max-height: calc(var(--fontSizeBase) * var(--lineHeightBase) * 2);
   overflow: hidden;
-  color: var(--muted-foreground);
+  color: var(--card-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+.vamis-card-desc {
+  color: var(--text-loud);
 }
 .vamis-card-highlight {
   display: inline-block;
@@ -313,15 +457,35 @@ async function onCardClick(event: MouseEvent) {
   vertical-align: middle;
 }
 .vamis-card-toolbar {
-  margin-left: 16px;
+  margin-left: var(--gap-md);
   text-align: right;
   line-height: normal;
 }
+.vamis-card-drag {
+  display: inline-block;
+  cursor: grab;
+  padding: 0 var(--gap-sm);
+  color: var(--card-muted);
+}
+.vamis-card-drag svg.icon {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
 .vamis-card-body {
-  padding: 16px;
+  padding: var(--gap-md);
   flex: 1 0 auto;
 }
+.vamis-card-body.p-0,
+.vamis-card-body.p-none {
+  padding: 0;
+}
 .vamis-card-heading + .vamis-card-body {
+  padding-top: 0;
+}
+.vamis-card-heading + .vamis-card-body.p-0,
+.vamis-card-heading + .vamis-card-body.p-none {
   padding-top: 0;
 }
 .vamis-card-field {
@@ -331,15 +495,22 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card-fieldLabel {
   flex: 0 0 40%;
-  color: var(--muted-foreground);
+  color: var(--card-muted);
   overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
 }
 .vamis-card-fieldValue {
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.vamis-card-fieldValue .vamis-form-item {
+  margin-bottom: 0;
 }
 .vamis-card-footer {
   display: flex;
@@ -348,9 +519,9 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card-secondary {
   max-width: 200px;
-  padding: 0 16px;
-  color: var(--muted-foreground);
-  font-size: 14px;
+  padding: 0 var(--gap-md);
+  color: var(--card-secondary);
+  font-size: var(--fontSizeBase);
   line-height: 21px;
   white-space: nowrap;
   overflow: hidden;
@@ -363,96 +534,63 @@ async function onCardClick(event: MouseEvent) {
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
 }
 .vamis-card-actions {
   display: flex;
+  flex-direction: row;
   width: 100%;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--card-action-border);
   align-items: center;
+  white-space: nowrap;
 }
-.vamis-card.has-secondary .vamis-card-footer,
-.vamis-card.is-media .vamis-card-footer {
-  gap: 12px;
-  padding: 0 8px 8px;
+.vamis-card.is-media-left .vamis-card-actions {
+  margin-left: var(--gap-md);
+  border-left: 1px solid var(--card-action-border);
 }
-.vamis-card.has-secondary .vamis-card-actions-wrap,
-.vamis-card.is-media .vamis-card-actions-wrap {
-  flex: 0 0 auto;
-  flex-wrap: nowrap;
-  gap: 12px;
-}
-.vamis-card.has-secondary .vamis-card-actions,
-.vamis-card.is-media .vamis-card-actions {
-  border-top: none;
+.vamis-card.has-secondary .vamis-card-secondary + .vamis-card-actions-wrap .vamis-card-actions,
+.vamis-card.is-media .vamis-card-actions-wrap .vamis-card-actions {
+  margin-left: unset;
+  border: none;
   width: auto;
-  flex-wrap: nowrap;
-  gap: 12px;
-  justify-content: flex-end;
 }
-.vamis-card-action {
+.vamis-card-actions > .vamis-node:has(.vamis-card-action) {
   flex: 1 1 0;
   min-width: 0;
   text-align: center;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--card-action-border);
   line-height: 40px;
+}
+.vamis-card-actions > .vamis-node:has(.vamis-card-action):last-child {
+  border-right: none;
+}
+.vamis-card.has-secondary .vamis-card-actions > .vamis-node:has(.vamis-card-action),
+.vamis-card.is-media .vamis-card-actions > .vamis-node:has(.vamis-card-action) {
+  flex: none;
+  border: none;
+}
+a.vamis-card-action {
+  display: block;
+  background: transparent;
+  color: var(--card-action-color);
+  font-size: var(--card-action-font-size);
+  font-weight: 400;
+  line-height: 40px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
 }
-.vamis-card-action:last-child {
-  border-right: none;
+a.vamis-card-action.is-disabled {
+  color: var(--card-muted);
+  cursor: not-allowed;
 }
-.vamis-card.has-secondary .vamis-card-action,
-.vamis-card.is-media .vamis-card-action {
-  flex: none;
-  border-right: none;
-}
-.vamis-card.has-secondary .vamis-card-action .vamis-node,
-.vamis-card.is-media .vamis-card-action .vamis-node {
-  height: auto;
-}
-.vamis-card.has-secondary .vamis-card-action [data-slot='button'],
-.vamis-card.is-media .vamis-card-action [data-slot='button'],
-.vamis-card.has-secondary .vamis-card-action button,
-.vamis-card.is-media .vamis-card-action button {
-  width: auto;
-  min-width: 48px;
-  padding: 0 12px;
-}
-.vamis-card-action .vamis-node {
-  display: block;
-  height: 40px;
-}
-.vamis-card-action [data-slot='button'],
-.vamis-card-action button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: 100%;
-  height: 40px;
-  min-height: 40px;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  color: var(--foreground);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
+a.vamis-card-action:not(.is-disabled):hover {
+  background: var(--card-action-hover-bg);
+  color: var(--card-action-hover-color);
   text-decoration: none;
 }
-.vamis-card-action:hover {
-  background: #f7f8fa;
-}
-.vamis-card-action:hover [data-slot='button'],
-.vamis-card-action:hover button {
-  background: transparent;
-  box-shadow: none;
-  border: 0;
-  color: var(--primary);
-  text-decoration: none;
+a.vamis-card-action > i:first-child:not(:last-child),
+a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
+  margin-right: 4px;
 }
 .vamis-card-media {
   flex-shrink: 0;

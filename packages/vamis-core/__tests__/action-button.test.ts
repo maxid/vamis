@@ -230,6 +230,8 @@ describe('action tooltip overlay', () => {
     expect(vue).not.toContain('loading.value = true')
     expect(vue).toContain('useDropdownMenuItem')
     expect(vue).toContain('vamis-dropdown-action')
+    expect(vue).toContain('vamis-card-action')
+    expect(vue).toContain('__cardAction')
     expect(vue).toContain("runPointerEvent('mouseenter'")
     expect(vue).toContain("runPointerEvent('mouseleave'")
     const sr = readFileSync(resolve(here, '../src/SchemaRenderer.vue'), 'utf8')

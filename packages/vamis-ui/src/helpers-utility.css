@@ -862,4 +862,48 @@
   .place-self-end { place-self: end; }
   .place-self-center { place-self: center; }
   .place-self-stretch { place-self: stretch; }
+
+  /* Amis `_utilities.scss`：Card 头像常用 pull-left / thumb-* / avatar / b-Nx */
+  .pull-left { float: left; }
+  .pull-right { float: right; }
+  .pull-none { float: none; }
+  .b { border: 1px solid rgba(0, 0, 0, 0.05); }
+  .b-a { border: 1px solid var(--border); }
+  .b-2x { border-width: 2px; }
+  .b-3x { border-width: 3px; }
+  .b-4x { border-width: 4px; }
+  .b-5x { border-width: 5px; }
+  /* TW preflight 给 * 写了 border-style:solid；Amis 只有 .b / .b-a 才出边，光 b-3x 宽度不算可见边 */
+  .b-2x:not(.b):not(.b-a),
+  .b-3x:not(.b):not(.b-a),
+  .b-4x:not(.b):not(.b-a),
+  .b-5x:not(.b):not(.b-a) {
+    border-style: none;
+  }
+  .avatar {
+    position: relative;
+    display: block;
+    border-radius: 500px;
+    white-space: nowrap;
+  }
+  .avatar img {
+    border-radius: 500px;
+    width: 100%;
+  }
+  .thumb-lg { width: 96px; display: inline-block; }
+  .thumb-md { width: 64px; display: inline-block; }
+  .thumb { width: 50px; display: inline-block; }
+  .thumb-sm { width: 40px; display: inline-block; }
+  .thumb-xs { width: 34px; display: inline-block; }
+  .thumb-xxs { width: 30px; display: inline-block; }
+  .thumb img,
+  .thumb-xxs img,
+  .thumb-xs img,
+  .thumb-sm img,
+  .thumb-md img,
+  .thumb-lg img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+  }
 }

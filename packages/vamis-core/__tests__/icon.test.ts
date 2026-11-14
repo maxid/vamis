@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { iconVendor, resolveIcon } from '../src/utils/icon'
+import { iconBuiltinSvg, iconVendor, resolveIcon } from '../src/utils/icon'
 
 describe('resolveIcon', () => {
   it('treats a path with a dot as url, matching Amis indexOf(".")', () => {
@@ -36,6 +36,17 @@ describe('resolveIcon', () => {
       kind: 'class',
       className: 'fa fa-home',
     })
+  })
+})
+
+describe('iconBuiltinSvg', () => {
+  it('matches Amis registerIcon plus/add before vendor fa', () => {
+    expect(iconBuiltinSvg('plus')).toContain('viewBox="0 0 12 12"')
+    expect(iconBuiltinSvg('plus')).toContain('icon-plus')
+    expect(iconBuiltinSvg('plus')).not.toContain('class="icon"')
+    expect(iconBuiltinSvg('add')).toContain('viewBox="0 0 12 12"')
+    expect(iconBuiltinSvg('fa fa-plus')).toBe('')
+    expect(iconBuiltinSvg('cloud')).toBe('')
   })
 })
 

@@ -62,6 +62,7 @@ const scope = useScope()
 const overlay = useOverlay()
 const form = useFormApi()
 const isMenuItem = useDropdownMenuItem()
+const isCardAction = computed(() => props.schema.__cardAction === true)
 const tipOpen = ref(false)
 const triggerEl = ref<HTMLElement | null>(null)
 const inCountDown = ref(false)
@@ -310,6 +311,23 @@ onBeforeUnmount(() => {
     >
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </span>
+    <a
+      v-else-if="isCardAction"
+      ref="triggerEl"
+      data-vamis-action
+      class="vamis-card-action"
+      :class="{ 'is-disabled': isDisabled, 'is-active': isActive }"
+      :aria-disabled="isDisabled || undefined"
+      @click="onClick($event)"
+      @mouseenter="onEnter($event)"
+      @mouseleave="onLeave($event)"
+      @focusin="onFocusIn"
+      @focusout="onFocusOut"
+    >
+      <IconMark v-if="icon.kind !== 'empty'" :icon="icon" img-class="size-4" />
+      <span v-if="showLabel">{{ displayLabel }}</span>
+      <IconMark v-if="rightIcon.kind !== 'empty'" :icon="rightIcon" img-class="size-4" />
+    </a>
     <a
       v-else-if="isMenuItem"
       ref="triggerEl"

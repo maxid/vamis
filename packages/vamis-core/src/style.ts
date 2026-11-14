@@ -78,7 +78,6 @@ const LAYOUT_SLOT_TYPES = new Set([
   'hbox',
   'panel',
   'container',
-  'wrapper',
   'portlet',
   'switch-container',
   'app',

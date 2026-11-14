@@ -8,6 +8,8 @@ import {
   dropdownButtonCloseOnOutside,
   dropdownButtonHideCaret,
   dropdownButtonItems,
+  dropdownButtonLabel,
+  dropdownButtonShowLabel,
   dropdownButtonTooltipConfig,
   dropdownButtonTrigger,
   provideDropdownMenuItem,
@@ -29,6 +31,15 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(dropdownButtonAlign({ align: 'right' })).toBe('right')
   })
 
+  it('does not invent a default 下拉菜单 label', () => {
+    expect(dropdownButtonLabel({})).toBe('')
+    expect(dropdownButtonShowLabel({})).toBe(false)
+    expect(dropdownButtonShowLabel({ icon: 'fa fa-ellipsis-h', hideCaret: true })).toBe(false)
+    expect(dropdownButtonLabel({ label: '下拉菜单' })).toBe('下拉菜单')
+    expect(dropdownButtonShowLabel({ label: '下拉菜单' })).toBe(true)
+    expect(dropdownButtonLabel({ title: '更多' })).toBe('更多')
+  })
+
   it('DropdownButton.vue uses the shared line caret, not a CSS triangle', () => {
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/rest/DropdownButton.vue'), 'utf8')
     expect(vue).toContain('VamisCaret')
@@ -41,6 +52,8 @@ describe('dropdownButtonTrigger / close / caret', () => {
     expect(vue).toContain('vamis-dropdown-item')
     expect(vue).toContain('VamisTooltipLayer')
     expect(vue).toContain('dropdownButtonTooltipConfig')
+    expect(vue).toContain('dropdownButtonLabel')
+    expect(vue).not.toContain("'下拉菜单'")
     expect(vue).not.toContain(':title="tooltip')
     expect(vue).not.toContain('bg-popover')
     expect(vue).not.toContain('border-t-[4px]')

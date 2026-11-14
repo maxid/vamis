@@ -75,3 +75,19 @@ registerFilter('truncate', (input: unknown, length?: unknown, end?: unknown) => 
   const max = parseInt(String(length), 10) || 200
   return input.substring(0, max) + (input.length > max ? suffix : '')
 })
+
+/** Amis `tpl-builtin`：`${engine|substring:0:2|upperCase}`。 */
+registerFilter('substring', (input: unknown, start?: unknown, end?: unknown) => {
+  if (typeof input !== 'string') return input
+  const from = start == null || start === '' ? 0 : Number(start)
+  if (end == null || end === '') return input.substring(from)
+  return input.substring(from, Number(end))
+})
+
+registerFilter('upperCase', (input: unknown) =>
+  typeof input === 'string' ? input.toUpperCase() : input,
+)
+
+registerFilter('lowerCase', (input: unknown) =>
+  typeof input === 'string' ? input.toLowerCase() : input,
+)

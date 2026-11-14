@@ -5,8 +5,8 @@ outline: deep
 
 # Card 卡片
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`header` 标题/副标题/描述/头像/`avatarText` 与背景色、`body` 字段或字符串、`useCardLabel` 默认 true、`actions`（含 `icon: fa fa-*`）、`href` 优先于 `itemAction`、`media` / `mediaPosition` 默认 left、`secondary` / `toolbar`。补标签 / 按钮 / 文本 / 单元格章节；缺勾选/拖拽、`themeCss`。
+::: info 实现进度 90% · 进行中
+文档主路径已对齐：`header` / `body` / `actions` / `href` / `itemAction` / `media` / `toolbar` / `secondary`、标签 / 按钮 / 文本 / 单元格章节与配置工具栏。缺 `themeCss`、Cards 拖拽排序。
 :::
 
 单张卡片。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -16,238 +16,720 @@ outline: deep
 ## 基本用法
 
 ```schema: scope="body"
-type: card
-header:
-  title: 标题
-  subTitle: 副标题
-  description: 这是一段描述
-  avatar: https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg
-body:
-  - type: divider
-  - type: tpl
-    tpl: Trident
-    inline: false
-    label: Engine
-  - name: static
-    type: static
-    label: Browser
-    value: Internet Explorer 5.0
-  - type: input-number
-    name: version
-    label: Version
-    size: sm
-actions:
-  - type: button
-    label: 编辑
-    actionType: dialog
-    icon: fa fa-pencil
-    dialog:
-      title: 编辑
-      body: 你正在编辑该卡片
-  - type: button
-    label: 删除
-    icon: fa fa-trash
-    actionType: dialog
-    dialog:
-      title: 提示
-      body: 你删掉了该卡片
+{
+    "type": "card",
+    "header": {
+        "title": "标题",
+        "subTitle": "副标题",
+        "description": "这是一段描述",
+        "avatarClassName": "pull-left thumb-md avatar b-3x m-r",
+        "avatar": "data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg t='1631083237695' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2420' xmlns:xlink='http://www.w3.org/1999/xlink' width='1024' height='1024'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M959.872 128c0.032 0.032 0.096 0.064 0.128 0.128v767.776c-0.032 0.032-0.064 0.096-0.128 0.128H64.096c-0.032-0.032-0.096-0.064-0.128-0.128V128.128c0.032-0.032 0.064-0.096 0.128-0.128h895.776zM960 64H64C28.8 64 0 92.8 0 128v768c0 35.2 28.8 64 64 64h896c35.2 0 64-28.8 64-64V128c0-35.2-28.8-64-64-64z' p-id='2421' fill='%23bfbfbf'%3E%3C/path%3E%3Cpath d='M832 288c0 53.024-42.976 96-96 96s-96-42.976-96-96 42.976-96 96-96 96 42.976 96 96zM896 832H128V704l224-384 256 320h64l224-192z' p-id='2422' fill='%23bfbfbf'%3E%3C/path%3E%3C/svg%3E"
+    },
+    "body": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "tpl",
+        "tpl": "Trident",
+        "inline": false,
+        "label": "Engine"
+      },
+      {
+        "name": "static",
+        "type": "static",
+        "label": "Browser",
+        "value": "Internet Explorer 5.0"
+      },
+      {
+        "type": "input-number",
+        "name": "version",
+        "label": "Version",
+        "size": "sm"
+      }
+    ],
+    "actions": [
+        {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "icon": "fa fa-pencil",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+        },
+        {
+          "type": "button",
+          "label": "删除",
+          "icon": "fa fa-trash",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "提示",
+            "body": "你删掉了该卡片"
+          }
+        }
+    ]
+}
 ```
 
 ## 打开链接
 
-通过 `href` 设置点击卡片打开外部链接。默认 `blank: true` 新窗口。
+通过 `href` 属性可以设置点击卡片打开外部链接。默认 `blank: true` 新窗口。
 
 ```schema: scope="body"
-type: card
-href: https://github.com/baidu/amis
-header:
-  title: 标题
-  subTitle: 副标题
-  description: 这是一段描述
-  avatar: https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg
-useCardLabel: false
-body:
-  - type: divider
-  - type: tpl
-    tpl: Trident
-    inline: false
-    label: Engine
-  - name: static
-    type: static
-    label: Browser
-    value: Internet Explorer 5.0
-actions:
-  - type: button
-    label: 编辑
-    actionType: dialog
-    icon: fa fa-pencil
-    dialog:
-      title: 编辑
-      body: 你正在编辑该卡片
-  - type: button
-    label: 删除
-    icon: fa fa-trash
-    actionType: dialog
-    dialog:
-      title: 提示
-      body: 你删掉了该卡片
+{
+    "type": "card",
+    "href": "https://github.com/maxid/vamis",
+    "header": {
+        "title": "标题",
+        "subTitle": "副标题",
+        "description": "这是一段描述",
+        "avatarClassName": "pull-left thumb-md avatar b-3x m-r",
+        "avatar": "data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg t='1631083237695' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2420' xmlns:xlink='http://www.w3.org/1999/xlink' width='1024' height='1024'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M959.872 128c0.032 0.032 0.096 0.064 0.128 0.128v767.776c-0.032 0.032-0.064 0.096-0.128 0.128H64.096c-0.032-0.032-0.096-0.064-0.128-0.128V128.128c0.032-0.032 0.064-0.096 0.128-0.128h895.776zM960 64H64C28.8 64 0 92.8 0 128v768c0 35.2 28.8 64 64 64h896c35.2 0 64-28.8 64-64V128c0-35.2-28.8-64-64-64z' p-id='2421' fill='%23bfbfbf'%3E%3C/path%3E%3Cpath d='M832 288c0 53.024-42.976 96-96 96s-96-42.976-96-96 42.976-96 96-96 96 42.976 96 96zM896 832H128V704l224-384 256 320h64l224-192z' p-id='2422' fill='%23bfbfbf'%3E%3C/path%3E%3C/svg%3E"
+    },
+    "useCardLabel": false,
+    "body": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "tpl",
+        "tpl": "Trident",
+        "inline": false,
+        "label": "Engine"
+      },
+      {
+        "name": "static",
+        "type": "static",
+        "label": "Browser",
+        "value": "Internet Explorer 5.0",
+        "mode": "horizontal"
+      },
+      {
+        "type": "input-number",
+        "name": "version",
+        "label": "Version",
+        "size": "sm",
+        "mode": "horizontal"
+      }
+    ],
+    "actions": [
+        {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+        },
+        {
+          "type": "button",
+          "label": "删除",
+          "actionType": "dialog",
+          "dialog": {
+            "title": "提示",
+            "body": "你删掉了该卡片"
+          }
+        }
+    ]
+}
 ```
 
 ## 设置头像文本
 
-没有 `avatar` 时可以用 `avatarText`。再配 `avatarTextBackground` 会按文本 hash 取色（多和 [cards](./cards) 一起用）。
+如果没有 avatar，还可以通过 `avatarText` 设置头像文本。
 
 ```schema: scope="body"
-type: card
-href: https://github.com/baidu/amis
-header:
-  title: 标题
-  subTitle: 副标题
-  description: 这是一段描述
-  avatarText: AMIS
-body: 这里是内容
+{
+    "type": "card",
+    "href": "https://github.com/maxid/vamis",
+    "header": {
+        "title": "标题",
+        "subTitle": "副标题",
+        "description": "这是一段描述",
+        "avatarText": "AMIS"
+    },
+    "body": "这里是内容"
+}
+```
+
+可以设置文本背景色，它会根据数据分配一个颜色，主要配合 [cards](./cards) 使用。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "engine": "Trident",
+        "browser": "Internet Explorer 4.0"
+      },
+      {
+        "engine": "Chrome",
+        "browser": "Chrome 44"
+      },
+      {
+        "engine": "Gecko",
+        "browser": "Firefox 1.0"
+      },
+      {
+        "engine": "Presto",
+        "browser": "Opera 10"
+      },
+      {
+        "engine": "Webkie",
+        "browser": "Safari 12"
+      }
+    ]
+  },
+  "body": {
+    "type": "cards",
+    "source": "$items",
+    "card": {
+      "header": {
+        "avatarText": "${engine|substring:0:2|upperCase}",
+        "avatarTextBackground": ["#FFB900", "#D83B01", "#B50E0E", "#E81123", "#B4009E", "#5C2D91", "#0078D7", "#00B4FF", "#008272"]
+      },
+      "body": [
+        {
+          "label": "Browser",
+          "name": "browser"
+        }
+      ]
+    }
+  }
+}
 ```
 
 ## 点击卡片的行为
 
-`itemAction` 设置整张卡片的点击。和 `href` 冲突：写了 `href` 则以链接为准。
+通过设置 `itemAction` 可以设置整个卡片的点击行为。
 
 ```schema: scope="body"
-type: card
-itemAction:
-  type: button
-  actionType: dialog
-  dialog:
-    title: 详情
-    body: 当前描述
-header:
-  title: 标题
-  subTitle: 副标题
-  description: 这是一段描述
-  avatar: https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg
-body: 这里是内容
+{
+    "type": "card",
+    "itemAction": {
+      "type": "button",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "详情",
+        "body": "当前描述"
+      }
+    },
+    "header": {
+        "title": "标题",
+        "subTitle": "副标题",
+        "description": "这是一段描述",
+        "avatarClassName": "pull-left thumb-md avatar b-3x m-r",
+        "avatar": "data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg t='1631083237695' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2420' xmlns:xlink='http://www.w3.org/1999/xlink' width='1024' height='1024'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M959.872 128c0.032 0.032 0.096 0.064 0.128 0.128v767.776c-0.032 0.032-0.064 0.096-0.128 0.128H64.096c-0.032-0.032-0.096-0.064-0.128-0.128V128.128c0.032-0.032 0.064-0.096 0.128-0.128h895.776zM960 64H64C28.8 64 0 92.8 0 128v768c0 35.2 28.8 64 64 64h896c35.2 0 64-28.8 64-64V128c0-35.2-28.8-64-64-64z' p-id='2421' fill='%23bfbfbf'%3E%3C/path%3E%3Cpath d='M832 288c0 53.024-42.976 96-96 96s-96-42.976-96-96 42.976-96 96-96 96 42.976 96 96zM896 832H128V704l224-384 256 320h64l224-192z' p-id='2422' fill='%23bfbfbf'%3E%3C/path%3E%3C/svg%3E"
+    },
+    "body": "这里是内容"
+}
 ```
+
+注意它和前面的 `href` 配置冲突，如果设置了 `href` 这个将不会生效。
 
 ## 设置多媒体卡片
 
-`media` 配图/视频，`mediaPosition` 默认 `left`，也可 `right` / `top` / `bottom`。底部可写 `secondary` 与 `actions`，头上可写 `toolbar`。
+通过设置 `media` 可以设置为多媒体卡片，通过 `mediaPosition` 可以设置多媒体位置（默认 `left`）。
 
 ```schema: scope="body"
-type: card
-header:
-  title: 标题
-media:
-  type: image
-  className: w-36 h-24
-  url: https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80
-  position: left
-body: 这里是内容
-secondary: 次要说明
-actions:
-  - type: button
-    label: 操作
-    actionType: dialog
-    dialog:
-      title: 操作
-      body: 你正在编辑该卡片
-  - type: button
-    label: 操作
-    actionType: dialog
-    dialog:
-      title: 操作
-      body: 你正在编辑该卡片
-toolbar:
-  - type: tpl
-    tpl: 标签
+{
+    "type": "card",
+    "header": {
+      "title": "标题"
+    },
+    "media": {
+      "type": "image",
+      "className": "w-36 h-24",
+      "url": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80",
+      "position": "left"
+    },
+    "body": "这里是内容",
+    "secondary": "次要说明",
+    "actions": [
+      {
+        "type": "button",
+        "label": "操作",
+        "actionType": "dialog",
+        "className": "mr-4",
+        "dialog": {
+          "title": "操作",
+          "body": "你正在编辑该卡片"
+        }
+      },
+      {
+        "type": "button",
+        "label": "操作",
+        "actionType": "dialog",
+        "className": "mr-2.5",
+        "dialog": {
+          "title": "操作",
+          "body": "你正在编辑该卡片"
+        }
+      },
+      {
+        "type": "dropdown-button",
+        "level": "link",
+        "icon": "fa fa-ellipsis-h",
+        "className": "pr-1 flex",
+        "hideCaret": true,
+        "buttons": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "你删掉了该卡片"
+            }
+          }
+        ]
+      }
+    ],
+    "toolbar": [
+      {
+        "type": "tpl",
+        "tpl": "标签",
+        "className": "label label-warning"
+      }
+    ]
+}
 ```
 
 ## 设置标签卡片
 
-`toolbar` 可放标签、`secondary` 放次要说明：
-
 ```schema: scope="body"
-type: card
-header:
-  title: 标题
-body: 这里是卡片内容
-secondary: 次要说明
-toolbar:
-  - type: tpl
-    tpl: 标签
-    className: label label-warning
+{
+    "type": "card",
+    "header": {
+      "title": "标题"
+    },
+    "body": "这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容",
+    "secondary": "次要说明",
+    "actions": [
+      {
+        "type": "button",
+        "label": "操作",
+        "actionType": "dialog",
+        "className": "mr-4",
+        "dialog": {
+          "title": "操作",
+          "body": "你正在编辑该卡片"
+        }
+      },
+      {
+        "type": "button",
+        "label": "操作",
+        "actionType": "dialog",
+        "className": "mr-2.5",
+        "dialog": {
+          "title": "操作",
+          "body": "你正在编辑该卡片"
+        }
+      },
+      {
+        "type": "dropdown-button",
+        "level": "link",
+        "icon": "fa fa-ellipsis-h",
+        "className": "pr-1 flex",
+        "hideCaret": true,
+        "buttons": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑",
+              "body": "你正在编辑该卡片"
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "你删掉了该卡片"
+            }
+          }
+        ]
+      }
+    ],
+    "toolbar": [
+      {
+        "type": "tpl",
+        "tpl": "标签",
+        "className": "label label-warning"
+      }
+    ]
+}
 ```
 
 ## 设置按钮卡片
 
-`itemAction` 让整张卡片可点击，常用于「创建 / 添加」入口：
+按钮卡片一般以卡片形式展示当前卡片的执行语义，例如：创建卡片、添加卡片等场景。
 
 ```schema: scope="body"
-type: card
-body:
-  type: wrapper
-  className: h-32 flex items-center justify-center
-  body:
-    type: tpl
-    tpl: 点击会有弹框
-itemAction:
-  type: button
-  actionType: dialog
-  dialog:
-    title: 详情
-    body: 当前描述
+{
+  "type": "card",
+  "className": "hover:shadow",
+  "body": {
+    "type": "wrapper",
+    "className": "h-32 flex items-center justify-center",
+    "body": [
+      {
+        "type": "wrapper",
+        "size": "none",
+        "className": "text-center",
+        "body": {
+          "type": "icon",
+          "icon": "plus",
+          "className": "text-2xl"
+        }
+      },
+      {
+        "type": "wrapper",
+        "size": "none",
+        "body": "点击会有弹框"
+      }
+    ]
+  },
+  "itemAction": {
+    "type": "button",
+    "actionType": "dialog",
+    "dialog": {
+      "title": "详情",
+      "body": "当前描述"
+    }
+  }
+}
 ```
 
 ## 设置文本卡片
 
-`body` 直接放文本或 tpl，适合纯说明卡片：
-
 ```schema: scope="body"
-type: card
-header:
-  title: 文本卡片
-body:
-  type: tpl
-  tpl: 这里是一段文本内容
+{
+  "type": "card",
+  "header": {
+    "className": "items-center",
+    "title": "卡片标题"
+  },
+  "body": {
+    "type": "wrapper",
+    "size": "none",
+    "body": {
+      "type": "tabs",
+      "tabs": [
+        {
+          "title": "标签1",
+          "className": "p-0",
+          "tab": [
+            {
+              "type": "card",
+              "className": "border-0",
+              "header": {
+                "className": "p-0 pb-2",
+                "title": "内容标题"
+              },
+              "body": "卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容",
+              "bodyClassName": "p-0"
+            },
+            {
+              "type": "card",
+              "className": "border-0",
+              "header": {
+                "className": "p-0 pb-2",
+                "title": "内容标题"
+              },
+              "body": "卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容",
+              "bodyClassName": "p-0"
+            }
+          ]
+        },
+        {
+          "title": "标签2",
+          "className": "p-0",
+          "tab": "卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容卡片内容"
+        }
+      ]
+    }
+  },
+  "toolbar": [
+    {
+      "type": "button",
+      "label": "操作",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "操作",
+        "body": "你正在编辑该卡片"
+      }
+    }
+  ]
+}
 ```
 
 ## 设置单元格卡片
 
-`body` 用 `list-item` / `hbox` 组合出单元格样式：
-
 ```schema: scope="body"
-type: card
-header:
-  title: 单元格
-body:
-  type: hbox
-  columns:
-    - label: 名称
-      name: name
-    - label: 状态
-      name: status
+{
+  "type": "card",
+  "body": [
+    {
+      "type": "wrapper",
+      "size": "none",
+      "body": {
+        "type": "wrapper",
+        "size": "none",
+        "style": {
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "space-between",
+          "margin-bottom": "4px"
+        },
+        "body": [
+          {
+            "type": "wrapper",
+            "size": "none",
+            "style": {
+              "flex": "1",
+              "overflow": "hidden",
+              "white-space": "nowrap",
+              "text-overflow": "ellipsis"
+            },
+            "body": "单元格"
+          },
+          {
+            "type": "wrapper",
+            "size": "none",
+            "style": {
+              "color": "#999"
+            },
+            "body": "内容"
+          }
+        ]
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "wrapper",
+      "size": "none",
+      "body": [
+        {
+          "type": "wrapper",
+          "size": "none",
+          "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "space-between",
+            "marginBottom": "4px"
+          },
+          "body": [
+            {
+              "type": "wrapper",
+              "size": "none",
+              "style": {
+                "flex": "1",
+                "overflow": "hidden",
+                "whiteSpace": "nowrap",
+                "textOverflow": "ellipsis"
+              },
+              "body": "单元格"
+            },
+            {
+              "type": "wrapper",
+              "size": "none",
+              "style": {
+                "color": "#999"
+              },
+              "body": "内容"
+            }
+          ]
+        },
+        {
+          "type": "wrapper",
+          "size": "none",
+          "style": {
+            "color": "#999",
+            "fontSize": "12px"
+          },
+          "body": "描述信息"
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 配置工具栏
 
-| 属性 | 说明 |
-|------|------|
-| `header.title` / `subTitle` / `description` | 头部文案，可写 `${}` |
-| `header.avatar` | 头像图 |
-| `header.avatarText` | 没图时的头像文字 |
-| `header.avatarTextBackground` | 颜色数组，按文本 hash 取色 |
-| `header.highlight` | 标题前绿点 |
-| `body` | 字符串或字段数组；无 `type` 的 `{label, name}` 当静态字段 |
-| `useCardLabel` | 是否在字段左侧出 label。默认 true |
-| `actions` | 底栏按钮。默认 `level: link`、`size: sm`。`icon` 支持图片 URL 或 `fa fa-*`（Font Awesome） |
-| `href` | 点击打开链接，优先于 `itemAction` |
-| `blank` | 链接是否新窗口。默认 true |
-| `itemAction` | 点击卡片触发的动作 |
-| `media` / `mediaPosition` | 多媒体。位置默认 left |
-| `secondary` | 底栏次要说明 |
-| `toolbar` | 头部右侧 |
+`toolbar` 放在卡片头部右侧，可混合按钮与下拉。
+
+```schema: scope="body"
+{
+    "type": "card",
+    "header": {
+        "title": "标题",
+        "subTitle": "副标题",
+        "description": "这是一段描述",
+        "avatarClassName": "pull-left thumb-md avatar b-3x m-r",
+        "avatar": "data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg t='1631083237695' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2420' xmlns:xlink='http://www.w3.org/1999/xlink' width='1024' height='1024'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M959.872 128c0.032 0.032 0.096 0.064 0.128 0.128v767.776c-0.032 0.032-0.064 0.096-0.128 0.128H64.096c-0.032-0.032-0.096-0.064-0.128-0.128V128.128c0.032-0.032 0.064-0.096 0.128-0.128h895.776zM960 64H64C28.8 64 0 92.8 0 128v768c0 35.2 28.8 64 64 64h896c35.2 0 64-28.8 64-64V128c0-35.2-28.8-64-64-64z' p-id='2421' fill='%23bfbfbf'%3E%3C/path%3E%3Cpath d='M832 288c0 53.024-42.976 96-96 96s-96-42.976-96-96 42.976-96 96-96 96 42.976 96 96zM896 832H128V704l224-384 256 320h64l224-192z' p-id='2422' fill='%23bfbfbf'%3E%3C/path%3E%3C/svg%3E"
+    },
+    "body": "这里是内容",
+    "toolbar": [
+      {
+        "type": "button",
+        "icon": "fa fa-eye",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "查看",
+          "body": {
+            "type": "form",
+            "body": [
+              {
+                "type": "static",
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "static",
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "static",
+                "name": "platform",
+                "label": "Platform(s)"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "static",
+                "name": "version",
+                "label": "Engine version"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "static",
+                "name": "grade",
+                "label": "CSS grade"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "html",
+                "html": "<p>添加其他 <span>Html 片段</span> 需要支持变量替换（todo）.</p>"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "dropdown-button",
+        "level": "link",
+        "icon": "fa fa-ellipsis-h",
+        "hideCaret": true,
+        "buttons": [
+          {
+              "type": "button",
+              "label": "编辑",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "编辑",
+                "body": "你正在编辑该卡片"
+              }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "提示",
+              "body": "你删掉了该卡片"
+            }
+          }
+        ]
+      }
+    ]
+}
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| type | `string` | `"card"` | 指定为 Card 渲染器 |
+| className | [ClassName](/types/classname) | | 打在外层 `div.vamis-node` |
+| href | [模板](/concepts/template) | | 外部链接，优先于 `itemAction` |
+| header | `Object` | | Card 头部内容设置 |
+| header.className | [ClassName](/types/classname) | | 头部类名 |
+| header.title | [模板](/concepts/template) | | 标题 |
+| header.titleClassName | [ClassName](/types/classname) | | 标题类名 |
+| header.subTitle | [模板](/concepts/template) | | 副标题 |
+| header.subTitleClassName | [ClassName](/types/classname) | | 副标题类名 |
+| header.subTitlePlaceholder | `string` | | 副标题占位 |
+| header.description | [模板](/concepts/template) | | 描述 |
+| header.descriptionClassName | [ClassName](/types/classname) | | 描述类名 |
+| header.descriptionPlaceholder | `string` | | 描述占位 |
+| header.avatar | [模板](/concepts/template) | | 图片 |
+| header.avatarClassName | [ClassName](/types/classname) | `"pull-left thumb avatar b-3x m-r"` | 图片包括层类名 |
+| header.imageClassName | [ClassName](/types/classname) | | 图片类名 |
+| header.avatarText | [模板](/concepts/template) | | 如果不配置图片，则会在图片处显示该文本 |
+| header.avatarTextBackground | `Array` | | 设置文本背景色，它会根据数据分配一个颜色 |
+| header.avatarTextClassName | [ClassName](/types/classname) | | 图片文本类名 |
+| header.highlight | `boolean` | `false` | 是否显示激活样式（工具栏绿点） |
+| header.highlightClassName | [ClassName](/types/classname) | | 激活样式类名 |
+| header.blank | `boolean` | `true` | 是否新窗口打开 |
+| body | `Array` / `string` | | 内容容器；字符串不包字段行，对象数组按字段渲染 |
+| bodyClassName | [ClassName](/types/classname) | | 内容区域类名 |
+| actions | Array<[Action](/components/action)> | | 配置按钮集合 |
+| actionsCount | `number` | `4` | 按钮集合每行个数 |
+| itemAction | [Action](/components/action) | | 点击卡片的行为 |
+| media | `Object` | | Card 多媒体部内容设置 |
+| media.type | `'image'\|'video'` | | 多媒体类型 |
+| media.url | `string` | | 图片/视频链接 |
+| media.position | `'left'\|'right'\|'top'\|'bottom'` | `'left'` | 多媒体位置 |
+| media.className | [ClassName](/types/classname) | `"w-44 h-28"` | 多媒体类名 |
+| media.isLive | `boolean` | `false` | 视频是否为直播。**未接** |
+| media.autoPlay | `boolean` | `false` | 视频是否自动播放 |
+| media.poster | `string` | | 视频封面 |
+| secondary | [模板](/concepts/template) | | 次要说明 |
+| toolbar | Array<[Action](/components/action)> | | 工具栏按钮 |
+| dragging | `boolean` | `false` | 是否显示拖拽图标（手柄；Cards 排序另见 cards） |
+| selectable | `boolean` | `false` | 卡片是否可选 |
+| checkable | `boolean` | `true` | 卡片选择按钮是否禁用 |
+| selected | `boolean` | `false` | 卡片选择按钮是否选中 |
+| hideCheckToggler | `boolean` | `false` | 卡片选择按钮是否隐藏 |
+| multiple | `boolean` | `false` | 卡片是否为多选 |
+| useCardLabel | `boolean` | `true` | 卡片内容区的表单项 label 是否使用 Card 内部的样式 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 勾选、拖拽、卡片在 CRUD 里的批量点选未接。
+- `themeCss` 未接。
+- `media.isLive` 未接。
+- Cards 组内拖拽排序未接；单卡 `dragging: true` 只显示手柄。
