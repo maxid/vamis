@@ -28547,30 +28547,198 @@ window.VAMIS_COMPARE_CASES = [
         "data": {
           "items": [
             {
-              "id": "1",
-              "status": "1",
-              "name": "Chrome",
-              "progress": 22
+              "id": "91264",
+              "text": "衡 阎",
+              "progress": 22,
+              "type": 4,
+              "boolean": true,
+              "list": [
+                {
+                  "title": "Forward Functionality Technician",
+                  "description": "nisi ex eum"
+                },
+                {
+                  "title": "District Applications Specialist",
+                  "description": "ipsam ratione voluptas"
+                },
+                {
+                  "title": "Future Operations Manager",
+                  "description": "ducimus fugit debitis"
+                },
+                {
+                  "title": "Dynamic Solutions Associate",
+                  "description": "saepe consequatur aut"
+                }
+              ],
+              "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+              "carousel": [
+                {
+                  "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                },
+                {
+                  "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                },
+                {
+                  "image": "https://video-react.js.org/assets/poster.png"
+                }
+              ],
+              "date": 1591270438,
+              "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+              "json": {
+                "id": 1,
+                "text": "text"
+              }
             },
             {
-              "id": "2",
-              "status": "2",
-              "name": "Safari",
-              "progress": 80
+              "id": "34202",
+              "text": "吉 卢汉市",
+              "progress": 85,
+              "type": 1,
+              "boolean": true,
+              "list": [
+                {
+                  "title": "Dynamic Assurance Orchestrator",
+                  "description": "ea ullam voluptates"
+                },
+                {
+                  "title": "Internal Division Assistant",
+                  "description": "illum deleniti qui"
+                },
+                {
+                  "title": "International Usability Administrator",
+                  "description": "sit voluptatem quia"
+                },
+                {
+                  "title": "Lead Optimization Orchestrator",
+                  "description": "autem et blanditiis"
+                },
+                {
+                  "title": "Future Division Assistant",
+                  "description": "dolor cupiditate sint"
+                },
+                {
+                  "title": "Forward Program Orchestrator",
+                  "description": "quia distinctio voluptas"
+                },
+                {
+                  "title": "Human Implementation Technician",
+                  "description": "consequatur quaerat ullam"
+                },
+                {
+                  "title": "National Identity Administrator",
+                  "description": "ipsa et reiciendis"
+                },
+                {
+                  "title": "Regional Factors Planner",
+                  "description": "sed deserunt natus"
+                },
+                {
+                  "title": "Human Data Administrator",
+                  "description": "rerum consequatur odit"
+                }
+              ],
+              "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+              "carousel": [
+                {
+                  "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                },
+                {
+                  "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                },
+                {
+                  "image": "https://video-react.js.org/assets/poster.png"
+                }
+              ],
+              "date": 1591270438,
+              "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+              "json": {
+                "id": 1,
+                "text": "text"
+              }
+            },
+            {
+              "id": "37701",
+              "text": "立辉安市",
+              "progress": 72,
+              "type": 2,
+              "boolean": false,
+              "list": [
+                {
+                  "title": "Corporate Metrics Liason",
+                  "description": "aspernatur natus qui"
+                },
+                {
+                  "title": "Central Paradigm Analyst",
+                  "description": "sequi numquam ad"
+                },
+                {
+                  "title": "International Data Administrator",
+                  "description": "sed libero eum"
+                },
+                {
+                  "title": "Forward Optimization Assistant",
+                  "description": "officiis accusantium dolorem"
+                },
+                {
+                  "title": "Senior Metrics Executive",
+                  "description": "commodi sint quod"
+                },
+                {
+                  "title": "Corporate Quality Facilitator",
+                  "description": "aut aperiam est"
+                },
+                {
+                  "title": "Forward Operations Producer",
+                  "description": "sed corporis eaque"
+                },
+                {
+                  "title": "National Integration Analyst",
+                  "description": "quasi ab cumque"
+                }
+              ],
+              "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+              "carousel": [
+                {
+                  "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                },
+                {
+                  "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                },
+                {
+                  "image": "https://video-react.js.org/assets/poster.png"
+                }
+              ],
+              "date": 1591270438,
+              "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+              "json": {
+                "id": 1,
+                "text": "text"
+              }
             }
           ]
         },
+        "affixHeader": false,
+        "syncLocation": false,
         "columns": [
           {
             "name": "id",
             "label": "ID",
-            "width": 60
+            "type": "text"
           },
           {
-            "name": "name",
-            "label": "名称",
-            "type": "tpl",
-            "tpl": "${name}（${id}）"
+            "name": "text",
+            "label": "文本",
+            "type": "text"
+          },
+          {
+            "type": "image",
+            "label": "图片",
+            "name": "image"
+          },
+          {
+            "name": "date",
+            "type": "date",
+            "label": "日期"
           },
           {
             "name": "progress",
@@ -28578,12 +28746,35 @@ window.VAMIS_COMPARE_CASES = [
             "type": "progress"
           },
           {
-            "name": "status",
+            "name": "boolean",
             "label": "状态",
+            "type": "status"
+          },
+          {
+            "name": "boolean",
+            "label": "开关",
+            "type": "switch"
+          },
+          {
+            "name": "type",
+            "label": "映射",
             "type": "mapping",
             "map": {
-              "1": "<span class='label label-success'>正常</span>",
-              "2": "<span class='label label-default'>停用</span>"
+              "1": "<span class='label label-info'>漂亮</span>",
+              "2": "<span class='label label-success'>开心</span>",
+              "3": "<span class='label label-danger'>惊吓</span>",
+              "4": "<span class='label label-warning'>紧张</span>",
+              "*": "其他：${type}"
+            }
+          },
+          {
+            "name": "list",
+            "type": "list",
+            "label": "List",
+            "placeholder": "-",
+            "listItem": {
+              "title": "${title}",
+              "subTitle": "${description}"
             }
           }
         ]

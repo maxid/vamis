@@ -6,9 +6,10 @@ import IconMark from './IconMark.vue'
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const data = computed(() => props.data || {})
 
+/** 对齐 Amis StatusField defaultProps：map 有 0/1 图标，labelMap 没有数字键，boolean/0/1 只画图标。 */
 const DEFAULTS: Record<string, { label: string; icon: string; color: string }> = {
-  '0': { label: '失败', icon: 'fail', color: 'var(--destructive)' },
-  '1': { label: '成功', icon: 'success', color: 'var(--success)' },
+  '0': { label: '', icon: 'fail', color: 'var(--destructive)' },
+  '1': { label: '', icon: 'success', color: 'var(--success)' },
   success: { label: '成功', icon: 'success', color: 'var(--success)' },
   pending: { label: '运行中', icon: 'rolling', color: 'var(--primary)' },
   queue: { label: '排队中', icon: 'warning', color: 'var(--warning)' },
@@ -28,9 +29,11 @@ const ICONS: Record<string, string> = {
 }
 
 const raw = computed(() => {
-  const value = props.schema.value
-  if (value != null) return value
-  return props.schema.name ? data.value[String(props.schema.name)] : undefined
+  let value = props.schema.value
+  if (value == null) value = props.schema.name ? data.value[String(props.schema.name)] : undefined
+  if (typeof value === 'boolean') return value ? 1 : 0
+  if (value != null && value !== '' && /^\d+$/.test(String(value))) return parseInt(String(value), 10) || 0
+  return value
 })
 const key = computed(() => (raw.value == null ? '' : String(raw.value)))
 

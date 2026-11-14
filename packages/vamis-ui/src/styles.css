@@ -332,18 +332,36 @@
   --table-row-h-sm: 33px;
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
+  /* Amis `--Table-fontSize` = fonts-size-8；`--TableCell-paddingY` = (height - 12*1.5)/2。 */
+  --table-font-size: 12px;
+  --table-cell-py: calc((var(--table-row-h) - var(--table-font-size) * 1.5) / 2);
+  --table-cell-edge-px: 16px;
+  --table-thead-edge-px: 12px;
+  --table-thead-font-size: 14px;
   /* 对齐 Amis `--Table-onChecked-*`（fill-11 / line-8）。不要用 accent 盖住行间 1px。 */
   --table-checked-bg: var(--card);
   --table-checked-border: var(--border);
   --table-checked-color: var(--foreground);
   --table-heading-bg: var(--card);
   --table-heading-height: 40px;
+  /* Amis `--Table-thead-bg` fill-10 / `--Table-thead-borderColor` fill-11（白竖线）。 */
+  --table-thead-bg: var(--colors-neutral-fill-10);
+  --table-thead-sep: var(--colors-neutral-fill-11);
+  --table-thead-sep-width: 1px;
   --table-placeholder-h: 200px;
   --table-empty-icon-size: 74px;
+  /* Amis `--Progress-line-*`：轨道 fill-8、条 brand-5、字 12 / text-2、圆角 4、min-width 50。 */
+  --progress-line-bg: var(--colors-neutral-fill-8);
+  --progress-line-color: var(--colors-neutral-text-2);
+  --progress-line-font-size: 12px;
+  --progress-bar-h: 8px;
+  --progress-radius: var(--radius);
+  --progress-min-width: 50px;
+  --progress-text-gap: 8px;
   /* Amis table-view 内联样式用这些名字；未定义则 border/padding 整段失效。 */
   --borderColor: var(--border);
   --TableCell-paddingX: var(--table-cell-px);
-  --TableCell-paddingY: 8px;
+  --TableCell-paddingY: var(--table-cell-py);
   --page-body-padding: 12px;
   --fontSizeLg: 16px;
   /* cxd --Panel-marginBottom (sizes-base-10 = 20px) */
@@ -4547,17 +4565,112 @@
 .vamis-table-wrap {
   position: relative;
   width: 100%;
+  min-width: 0;
   margin-bottom: var(--gap-md);
   font-family: var(--fontFamilyBase);
+  font-size: var(--table-font-size);
+  line-height: 1.5;
+  color: var(--colors-neutral-text-2);
+}
+/* 对齐 Amis `.Table-content { overflow-x: auto }`。table `width/min-width: 100%`，列可收缩；
+   只有内容 min-width 超出容器才出横向滚动。禁止给单元格节点钉 `min-content`（列类型会永远溢出）。 */
+.vamis-table-wrap [data-slot="table-container"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.vamis-table-wrap [data-slot="table"] {
+  width: 100%;
+  min-width: 100%;
+  font-size: var(--table-font-size);
+  line-height: 1.5;
+}
+/* Amis `td`：paddingY/X、首末 edge、white-space 默认 normal、vertical-align middle。
+   覆盖 shadcn TableCell 的 `py-0` / `text-sm` / `whitespace-nowrap` / 钉死 40 高。 */
+.vamis-table-wrap [data-slot="table-cell"] {
+  height: auto;
+  min-height: var(--table-row-h);
+  padding: var(--table-cell-py) var(--table-cell-px);
+  font-size: var(--table-font-size);
+  line-height: 1.5;
+  white-space: normal;
+  vertical-align: middle;
+}
+.vamis-table-wrap tbody tr > [data-slot="table-cell"]:first-child {
+  padding-left: var(--table-cell-edge-px);
+}
+.vamis-table-wrap tbody tr > [data-slot="table-cell"]:last-child {
+  padding-right: var(--table-cell-edge-px);
+}
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node {
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  max-width: 100%;
+}
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has(.vamis-list),
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has([data-vamis-list]),
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has(.vamis-progress) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.vamis-table-wrap [data-slot="table-cell"] .text-sm {
+  font-size: inherit;
+  line-height: inherit;
+}
+.vamis-table-wrap [data-slot="table-cell"] .vamis-switch-control {
+  padding-top: 0;
+}
+.vamis-table-wrap [data-slot="table-cell"] .vamis-form-item__value,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-form-item .min-w-0 {
+  min-width: auto;
+}
+.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping {
   font-size: var(--fontSizeBase, 14px);
   line-height: 1.5;
+  vertical-align: middle;
+}
+.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping__item,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping .vamis-node,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping .vamis-html {
+  display: inline;
+}
+.vamis-table-wrap [data-slot="table-cell"] .vamis-status,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-progress,
+.vamis-table-wrap [data-slot="table-cell"] .vamis-switch {
+  vertical-align: middle;
+}
+.vamis-table-wrap [data-slot="table-cell"] [data-vamis-list-items],
+.vamis-table-wrap [data-slot="table-cell"] .vamis-list__item,
+.vamis-table-wrap [data-slot="table-cell"] [data-vamis-list-item] {
+  white-space: normal;
 }
 .vamis-table-wrap [data-slot="table-head"] {
   position: relative;
-  font-size: var(--fontSizeBase, 14px);
+  height: auto;
+  min-height: var(--table-row-h);
+  padding: var(--table-cell-py) var(--table-cell-px);
+  background: var(--table-thead-bg);
+  color: var(--colors-neutral-text-2);
+  font-size: var(--table-thead-font-size);
   font-weight: 400;
   line-height: 1.5;
+  white-space: nowrap;
   overflow: visible;
+  border-bottom: var(--table-thead-sep-width) solid var(--table-thead-sep);
+}
+.vamis-table-wrap thead tr > [data-slot="table-head"]:first-child {
+  padding-left: var(--table-thead-edge-px);
+}
+.vamis-table-wrap thead tr > [data-slot="table-head"]:last-child {
+  padding-right: var(--table-thead-edge-px);
+}
+.vamis-table-wrap [data-slot="table-head"]:not(:last-child) {
+  border-right: var(--table-thead-sep-width) solid var(--table-thead-sep);
 }
 .vamis-table-wrap.is-col-resizing {
   cursor: col-resize;
@@ -4591,8 +4704,71 @@
   padding: 0 var(--gap-sm);
   display: flex;
   align-items: center;
+  gap: var(--gap-sm);
   font-size: var(--fontSizeBase, 14px);
   line-height: 1.5;
+}
+.vamis-column-toggler {
+  position: relative;
+  display: inline-block;
+}
+.vamis-column-toggler__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: var(--button-h, 32px);
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--foreground);
+  font-size: var(--fontSizeBase, 14px);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.vamis-column-toggler__btn.is-icon {
+  padding: 0 8px;
+}
+.vamis-column-toggler__icon {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+.vamis-column-toggler__btn .vamis-caret,
+.vamis-column-toggler__btn .vamis-caret svg {
+  width: 10px;
+  height: 10px;
+}
+.vamis-column-toggler__menu {
+  position: absolute;
+  z-index: var(--z-dropdown, 1000);
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  min-width: 160px;
+  max-height: 500px;
+  overflow: auto;
+  padding: 4px 0;
+  background: var(--select-menu-bg, var(--card));
+  border: 1px solid var(--select-menu-border, var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--popup-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+.vamis-column-toggler__menu.is-right {
+  left: auto;
+  right: 0;
+}
+.vamis-column-toggler__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 32px;
+  cursor: pointer;
+  font-size: var(--fontSizeBase, 14px);
+  color: var(--link-color, var(--primary));
+  white-space: nowrap;
 }
 .vamis-table__filters {
   display: flex;
@@ -4660,7 +4836,9 @@
 .vamis-table-wrap tr.vamis-table__placeholder:hover {
   background: transparent;
 }
-.vamis-table-wrap tr.vamis-table__placeholder [data-slot="table-cell"],
+.vamis-table-wrap tr.vamis-table__placeholder > [data-slot="table-cell"],
+.vamis-table-wrap tr.vamis-table__placeholder > [data-slot="table-cell"]:first-child,
+.vamis-table-wrap tr.vamis-table__placeholder > [data-slot="table-cell"]:last-child,
 .vamis-table__empty {
   height: var(--table-placeholder-h);
   padding: 0;
@@ -4705,6 +4883,64 @@
 }
 .vamis-table__edit-btn:hover {
   color: var(--primary);
+}
+.vamis-table-wrap .vamis-form-item,
+.vamis-table-wrap .vamis-form-item--normal,
+.vamis-table-wrap .vamis-form-item--horizontal {
+  margin-bottom: 0;
+  width: auto;
+  display: inline-block;
+}
+
+/* Amis `_progress.scss`：line 是 flex 子项 width 100% + min-width 50，不要 `flex-1`（表格列会挤成 0）。 */
+.vamis-progress {
+  display: flex;
+  align-items: center;
+  min-width: var(--progress-min-width);
+  color: var(--progress-line-color);
+  font-size: var(--progress-line-font-size);
+}
+.vamis-progress__line {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+.vamis-progress__inter {
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--progress-line-bg);
+  border-radius: var(--progress-radius);
+}
+.vamis-progress__bar {
+  width: 0;
+  height: var(--progress-bar-h);
+  background: var(--primary);
+  border-radius: var(--progress-radius);
+  transition: width var(--animation-duration, 0.3s) ease;
+}
+.vamis-progress__text {
+  display: inline-block;
+  flex-grow: 1;
+  margin-left: var(--progress-text-gap);
+  white-space: nowrap;
+  text-align: left;
+  color: var(--progress-line-color);
+  font-size: var(--progress-line-font-size);
+}
+.vamis-progress__threshold {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--foreground);
+  z-index: 1;
+}
+.vamis-progress__threshold-text {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  white-space: nowrap;
 }
 .vamis-table__nested [data-slot="table-cell"] {
   background: var(--card);

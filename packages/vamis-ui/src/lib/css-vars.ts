@@ -26,6 +26,7 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   "--TableCell-height-small": "--table-row-h-sm",
   "--TableCell-height-large": "--table-row-h-lg",
   "--TableCell-paddingX": "--table-cell-px",
+  "--TableCell-paddingY": "--table-cell-py",
   "--Page-body-padding": "--page-body-padding",
 }
 

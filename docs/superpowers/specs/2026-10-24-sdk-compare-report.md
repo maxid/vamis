@@ -3,30 +3,26 @@
 - 日期：2026-11-14
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **33** · 通过 **32** · 失败 **1**（P0 0）· Vamis 多出 extra **0**
+- 合计 **7** · 通过 **7** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 6 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 3 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 8 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 3 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（6）
+### 全局（3）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-table-3` fontSize: Amis `14px` / Vamis `12px`
-- `src-components-table-4` fontSize: Amis `14px` / Vamis `12px`
-- `src-components-table-16` fontFamily: Amis `Helvetica Neue` / Vamis `-apple-system`
-- `src-components-table-21` fontSize: Amis `14px` / Vamis `12px`
-- `src-components-table-view-4` fontSize: Amis `16px` / Vamis `24px`
-- `src-components-table-view-4` fontFamily: Amis `Helvetica Neue` / Vamis `system-ui`
+- `src-components-progress-2` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-progress-3` fontSize: Amis `12px` / Vamis `14px`
+- `src-components-progress-5` fontSize: Amis `12px` / Vamis `14px`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
-- Amis 6.13 组件字栈是 --fonts-base-family（实测 Helvetica Neue）；html/body 未钉字族（body 是 Times）。只在 .vamis-root / .vamis-sdk 走 --fonts-base-family，不要把 html/body 钉成 PingFang SC。
 
 ### 样式 helper（0）
 
@@ -34,30 +30,23 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（8）
+### 组件（3）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-table-2` page/body/0:table/columns/2:progress.named: Amis `false` / Vamis `true`
-- `src-components-table-3` lineHeight: Amis `21px` / Vamis `16px`
-- `src-components-table-3` fontWeight: Amis `400` / Vamis `500`
-- `src-components-table-4` lineHeight: Amis `21px` / Vamis `16px`
-- `src-components-table-4` fontWeight: Amis `400` / Vamis `500`
-- `src-components-table-21` lineHeight: Amis `21px` / Vamis `18px`
-- `src-components-table-view-4` lineHeight: Amis `24px` / Vamis `32px`
-- `src-components-table-view-4` fontWeight: Amis `400` / Vamis `600`
+- `src-components-progress-2` lineHeight: Amis `18px` / Vamis `20px`
+- `src-components-progress-3` lineHeight: Amis `18px` / Vamis `20px`
+- `src-components-progress-5` lineHeight: Amis `18px` / Vamis `20px`
 
 整改：
-- 有 name 的结点应能 getComponentByName。Vamis 要在该 type 注册 Scoped。
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
-- Button 默认字重：Amis 400，Vamis shadcn font-medium=500。改 button cva，不要改全局。
 
 ## 文档结构（对标 Amis：文档 / 组件 / 样式）
 
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 33 | 1 |
+| 组件 | 7 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -66,7 +55,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据展示 | 33 | 1 |
+| 组件 / 数据展示 | 7 | 0 |
 
 ## P0 失败（驱动下一刀）
 
@@ -74,7 +63,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `src-components-table-2` Table 表格 #3 — page/body/0:table/columns/2:progress.named: Amis `false` / Vamis `true`
+- 无失败。
 
 ## 重跑口径
 
@@ -82,5 +71,5 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "src-components-table-2"` — 只重跑「src-components-table-2」自身
+- 本轮无失败切片。
 

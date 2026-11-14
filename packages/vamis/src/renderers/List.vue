@@ -4,6 +4,7 @@ import {
   SchemaRenderer,
   asArray,
   createVamisEvent,
+  eachList,
   eventEvalData,
   filterTpl,
   runAction,
@@ -67,7 +68,13 @@ function findOverflowAncestor(el: HTMLElement): HTMLElement | null {
 
 const rows = computed(() => {
   if (localRows.value) return localRows.value
-  return table2Source(props.schema, props.data || {}, props.items)
+  if (Array.isArray(props.items)) return props.items
+  const data = props.data || {}
+  const rec = props.schema
+  if (rec.value != null || rec.source != null || rec.name) {
+    return eachList(rec, data) as Record<string, any>[]
+  }
+  return table2Source(rec, data)
 })
 const item = computed(() => (props.schema.listItem || { type: 'list-item' }) as SchemaObject)
 const selectable = computed(() => props.schema.selectable === true)

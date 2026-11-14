@@ -67,37 +67,246 @@ body:
 
 ### 列类型
 
-除了简单展示数据源返回的字段，列还支持除表单项以外的组件类型，例如 `tpl`、`mapping`、`progress`、`status`、`image`：
+除了简单展示数据源所返回的数据以外，列支持除表单项以外所有组件类型，例如：
 
 ```schema: scope="body"
-type: table
-data:
-  items:
-    - id: "1"
-      status: "1"
-      name: Chrome
-      progress: 22
-    - id: "2"
-      status: "2"
-      name: Safari
-      progress: 80
-columns:
-  - name: id
-    label: ID
-    width: 60
-  - name: name
-    label: 名称
-    type: tpl
-    tpl: "${name}（${id}）"
-  - name: progress
-    label: 进度
-    type: progress
-  - name: status
-    label: 状态
-    type: mapping
-    map:
-      "1": "<span class='label label-success'>正常</span>"
-      "2": "<span class='label label-default'>停用</span>"
+{
+    "type": "table",
+    "data": {
+        "items": [
+            {
+                "id": "91264",
+                "text": "衡 阎",
+                "progress": 22,
+                "type": 4,
+                "boolean": true,
+                "list": [
+                    {
+                        "title": "Forward Functionality Technician",
+                        "description": "nisi ex eum"
+                    },
+                    {
+                        "title": "District Applications Specialist",
+                        "description": "ipsam ratione voluptas"
+                    },
+                    {
+                        "title": "Future Operations Manager",
+                        "description": "ducimus fugit debitis"
+                    },
+                    {
+                        "title": "Dynamic Solutions Associate",
+                        "description": "saepe consequatur aut"
+                    }
+                ],
+                "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+                "carousel": [
+                    {
+                        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                    },
+                    {
+                        "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                    },
+                    {
+                        "image": "https://video-react.js.org/assets/poster.png"
+                    }
+                ],
+                "date": 1591270438,
+                "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+                "json": {
+                    "id": 1,
+                    "text": "text"
+                }
+            },
+            {
+                "id": "34202",
+                "text": "吉 卢汉市",
+                "progress": 85,
+                "type": 1,
+                "boolean": true,
+                "list": [
+                    {
+                        "title": "Dynamic Assurance Orchestrator",
+                        "description": "ea ullam voluptates"
+                    },
+                    {
+                        "title": "Internal Division Assistant",
+                        "description": "illum deleniti qui"
+                    },
+                    {
+                        "title": "International Usability Administrator",
+                        "description": "sit voluptatem quia"
+                    },
+                    {
+                        "title": "Lead Optimization Orchestrator",
+                        "description": "autem et blanditiis"
+                    },
+                    {
+                        "title": "Future Division Assistant",
+                        "description": "dolor cupiditate sint"
+                    },
+                    {
+                        "title": "Forward Program Orchestrator",
+                        "description": "quia distinctio voluptas"
+                    },
+                    {
+                        "title": "Human Implementation Technician",
+                        "description": "consequatur quaerat ullam"
+                    },
+                    {
+                        "title": "National Identity Administrator",
+                        "description": "ipsa et reiciendis"
+                    },
+                    {
+                        "title": "Regional Factors Planner",
+                        "description": "sed deserunt natus"
+                    },
+                    {
+                        "title": "Human Data Administrator",
+                        "description": "rerum consequatur odit"
+                    }
+                ],
+                "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+                "carousel": [
+                    {
+                        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                    },
+                    {
+                        "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                    },
+                    {
+                        "image": "https://video-react.js.org/assets/poster.png"
+                    }
+                ],
+                "date": 1591270438,
+                "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+                "json": {
+                    "id": 1,
+                    "text": "text"
+                }
+            },
+            {
+                "id": "37701",
+                "text": "立辉安市",
+                "progress": 72,
+                "type": 2,
+                "boolean": false,
+                "list": [
+                    {
+                        "title": "Corporate Metrics Liason",
+                        "description": "aspernatur natus qui"
+                    },
+                    {
+                        "title": "Central Paradigm Analyst",
+                        "description": "sequi numquam ad"
+                    },
+                    {
+                        "title": "International Data Administrator",
+                        "description": "sed libero eum"
+                    },
+                    {
+                        "title": "Forward Optimization Assistant",
+                        "description": "officiis accusantium dolorem"
+                    },
+                    {
+                        "title": "Senior Metrics Executive",
+                        "description": "commodi sint quod"
+                    },
+                    {
+                        "title": "Corporate Quality Facilitator",
+                        "description": "aut aperiam est"
+                    },
+                    {
+                        "title": "Forward Operations Producer",
+                        "description": "sed corporis eaque"
+                    },
+                    {
+                        "title": "National Integration Analyst",
+                        "description": "quasi ab cumque"
+                    }
+                ],
+                "audio": "https://news-bos.cdn.bcebos.com/mvideo/%E7%9A%87%E5%90%8E%E5%A4%A7%E9%81%93%E4%B8%9C.aac",
+                "carousel": [
+                    {
+                        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+                    },
+                    {
+                        "html": "<div style=\"width: 100%; height: 200px; background: #e3e3e3; text-align: center; line-height: 200px;\">carousel data in crud</div>"
+                    },
+                    {
+                        "image": "https://video-react.js.org/assets/poster.png"
+                    }
+                ],
+                "date": 1591270438,
+                "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg",
+                "json": {
+                    "id": 1,
+                    "text": "text"
+                }
+            }
+        ]
+    },
+    "affixHeader": false,
+    "syncLocation": false,
+    "columns": [
+        {
+            "name": "id",
+            "label": "ID",
+            "type": "text"
+        },
+        {
+            "name": "text",
+            "label": "文本",
+            "type": "text"
+        },
+        {
+            "type": "image",
+            "label": "图片",
+            "name": "image"
+        },
+        {
+            "name": "date",
+            "type": "date",
+            "label": "日期"
+        },
+        {
+            "name": "progress",
+            "label": "进度",
+            "type": "progress"
+        },
+        {
+            "name": "boolean",
+            "label": "状态",
+            "type": "status"
+        },
+        {
+            "name": "boolean",
+            "label": "开关",
+            "type": "switch"
+        },
+        {
+            "name": "type",
+            "label": "映射",
+            "type": "mapping",
+            "map": {
+                "1": "<span class='label label-info'>漂亮</span>",
+                "2": "<span class='label label-success'>开心</span>",
+                "3": "<span class='label label-danger'>惊吓</span>",
+                "4": "<span class='label label-warning'>紧张</span>",
+                "*": "其他：${type}"
+            }
+        },
+        {
+            "name": "list",
+            "type": "list",
+            "label": "List",
+            "placeholder": "-",
+            "listItem": {
+                "title": "${title}",
+                "subTitle": "${description}"
+            }
+        }
+    ]
+}
 ```
 
 ### 列宽
@@ -677,7 +886,7 @@ columns:
 | `id` | `string` | | 组件 API 的 `componentId` |
 | `deferApi` | [API](/types/api) | | 行数据有 `defer` 时继续加载。**未接** |
 | `affixHeader` | `boolean` | `true` | 固定表头。**未接** |
-| `columnsTogglable` | `auto` / `boolean` | `auto` | 列显示开关。**未接** |
+| `columnsTogglable` | `auto` / `boolean` | `auto` | 列显示开关。默认 `auto`：叶列多于 5 列时在标题栏显示 田 |
 | `resizable` | `boolean` | `true` | 表头列之间拖拽调整列宽；`false` 关掉 |
 | `footable` | `boolean` / `object` | | 底部展开列。**未接** |
 
@@ -687,7 +896,7 @@ columns:
 |--------|------|--------|------|
 | `label` | [模板](/concepts/template) | | 表头文本 |
 | `name` | `string` | | 通过名称关联数据 |
-| `type` | `string` | | 列渲染器，如 `tpl` / `mapping` / `progress` / `button` |
+| `type` | `string` | | 列渲染器。除表单项外的组件类型都可，文档示例含 `text` / `image` / `date` / `progress` / `status` / `switch` / `mapping` / `list` |
 | `width` | `number` \| `string` | | 列宽，数字为像素，也可百分比 |
 | `fixed` | `left` \| `right` \| `none` | | 是否固定当前列 |
 | `popOver` | | | 弹出框 |
@@ -748,10 +957,9 @@ columns:
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- 已接：列 `type` / `width` / `align` / `className` / `classNameExpr` / `copyable` / `popOver`、空状态、标题、`selectable` / `multiple` / `showIndex`、列排序 / 筛选 / 拖拽 / 合并 / 超级表头 / 总结行 / 嵌套 / 快速编辑、独立数据域。
-- 未接：Footable、`itemBadge`、`itemActions` 悬浮按钮、`autoFillHeight`、`backgroundScale`、`columnsTogglable`、`affixHeader`、`deferApi`。
-- 表头默认 `resizable: true`，列间拖拽线对齐 Amis `.Table-content-colDragLine`（7px / hover `--primary`）。写了数字 `width` 的列保持该宽，拖的是未钉死的列。
+- 已接：列 `type`（`text` / `image` / `date` / `progress` / `status` / `switch` / `mapping` / `list` 等）/ `width` / `align` / `className` / `classNameExpr` / `copyable` / `popOver`、空状态、标题、`selectable` / `multiple` / `showIndex`、`columnsTogglable` auto、列排序 / 筛选 / 拖拽 / 合并 / 超级表头 / 总结行 / 嵌套 / 快速编辑、独立数据域。容器不够宽时 `.Table-content` 出横向滚动（单元格 `min-content`，进度条 `min-width: 50px`）。`status` 的 boolean/`0`/`1` 只画图标。
+- 未接：Footable、`itemBadge`、`itemActions` 悬浮按钮、`autoFillHeight`、`backgroundScale`、`affixHeader`、`deferApi`。
+- 表头默认 `resizable: true`。列间可见分隔是 thead `border-right: fill-11`（灰底上的白竖线），拖拽热区对齐 Amis `.Table-content-colDragLine`（7px / hover `--primary`）。写了数字 `width` 的列保持该宽，拖的是未钉死的列。
 - 空状态对齐 Amis `Table-placeholder`：高度 200px、字号 12、色 `--colors-neutral-text-6`、`desk-empty` 图 74px。
 - 子行不支持选择 / 合并 / 拖拽。筛选为客户端过滤。
-- 列类型文档示例未搬 Amis 的 audio / carousel / list 大表，那些 type 各自有专页。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

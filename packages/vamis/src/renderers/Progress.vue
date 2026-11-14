@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { filterTpl, resolveValue, useData, useScoped, type SchemaObject } from '@vamis/core'
+import { eachResolvedValue, filterTpl, resolveValue, useData, useScoped, type SchemaObject } from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data?: Record<string, any> }>()
 const viewData = useData()
@@ -9,7 +9,8 @@ const data = computed(() => ({ ...viewData.value, ...(props.data || {}) }))
 const override = ref<number | null>(null)
 
 const value = computed(() => {
-  const raw = override.value != null ? override.value : resolveValue(props.schema.value ?? 0, data.value)
+  const fromProp = eachResolvedValue(props.schema, data.value)
+  const raw = override.value != null ? override.value : resolveValue(fromProp ?? 0, data.value)
   const n = Number(raw)
   return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : 0
 })
@@ -27,19 +28,34 @@ const label = computed(() => {
   if (props.schema.valueTpl != null) return filterTpl(String(props.schema.valueTpl), { ...data.value, value: value.value })
   return `${Math.round(value.value)}%`
 })
+/** 对齐 Amis Progress defaultProps.map；`bg-*` 是 class 名，转成 token 当 bar 底。 */
+const DEFAULT_MAP = ['bg-danger', 'bg-warning', 'bg-info', 'bg-success', 'bg-success']
+const BG_COLORS: Record<string, string> = {
+  'bg-danger': 'var(--destructive)',
+  'bg-warning': 'var(--warning)',
+  'bg-info': 'var(--info)',
+  'bg-success': 'var(--success)',
+  'bg-primary': 'var(--primary)',
+}
+function resolveBarColor(raw: string) {
+  return BG_COLORS[raw] || raw
+}
 const color = computed(() => {
-  const map = props.schema.map
-  if (typeof map === 'string' && map && !map.startsWith('bg-')) return map
+  const map = props.schema.map == null ? DEFAULT_MAP : props.schema.map
+  if (typeof map === 'string' && map) return resolveBarColor(map)
   if (Array.isArray(map)) {
     const numeric = map.filter((item) => item && typeof item === 'object') as Array<Record<string, unknown>>
     if (numeric.length) {
       const hit = [...numeric].sort((a, b) => Number(a.value) - Number(b.value)).find((item) => value.value <= Number(item.value))
-      if (hit && typeof hit.color === 'string') return hit.color
+      if (hit && typeof hit.color === 'string') return resolveBarColor(hit.color)
     }
     const strings = map.filter((item): item is string => typeof item === 'string')
-    if (strings.length) return strings[Math.min(strings.length - 1, Math.floor(value.value / (100 / strings.length)))]
+    if (strings.length) {
+      const idx = Math.min(strings.length - 1, Math.floor(value.value / (100 / strings.length)))
+      return resolveBarColor(strings[idx])
+    }
   }
-  return value.value >= 90 ? 'var(--success)' : value.value >= 60 ? 'var(--warning)' : 'var(--primary)'
+  return 'var(--primary)'
 })
 const gapDegree = computed(() => {
   if (mode.value !== 'dashboard') return 0
@@ -87,26 +103,27 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
 </script>
 
 <template>
-  <div data-vamis-progress :data-mode="mode" class="flex items-center gap-2">
+  <div data-vamis-progress class="vamis-progress" :data-mode="mode">
     <template v-if="mode === 'line'">
-      <div class="relative h-2 flex-1 overflow-hidden rounded-full" :style="{ background: 'var(--muted)', height: `${strokeWidth}px` }">
-        <div
-          class="h-full rounded-full"
-          :class="{ 'vamis-progress__stripe': stripe, 'vamis-progress__animate': animate }"
-          :style="{ width: `${value}%`, background: color }"
-        />
+      <div class="vamis-progress__line">
         <span
           v-for="(item, i) in thresholds"
           :key="i"
-          class="absolute top-0 bottom-0 w-0.5"
-          :style="{ left: `${item.value}%`, background: item.color }"
-          :title="showThresholdText ? `${item.value}%` : undefined"
-        />
+          class="vamis-progress__threshold"
+          :style="{ left: `${item.value}%`, borderColor: item.color }"
+        >
+          <span v-if="showThresholdText" class="vamis-progress__threshold-text">{{ item.value }}%</span>
+        </span>
+        <div class="vamis-progress__inter">
+          <div
+            class="vamis-progress__bar"
+            :class="{ 'vamis-progress__stripe': stripe, 'vamis-progress__animate': animate }"
+            :style="{ width: `${value}%`, height: `${strokeWidth}px`, background: color }"
+            :title="`${Math.round(value)}%`"
+          />
+        </div>
       </div>
-      <span v-if="showThresholdText && thresholds.length" class="shrink-0 text-xs text-muted-foreground">
-        {{ thresholds.map((item) => `${item.value}%`).join(' / ') }}
-      </span>
-      <span v-if="showLabel" class="shrink-0 text-xs text-muted-foreground">{{ label }}</span>
+      <span v-if="showLabel" class="vamis-progress__text">{{ label }}</span>
     </template>
     <template v-else>
       <div class="relative" :style="{ width: `${svgSize + 8}px`, height: `${svgSize + 8}px` }">
@@ -133,8 +150,17 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
 
 <style scoped>
 .vamis-progress__stripe {
-  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%, transparent 75%, transparent);
-  background-size: 16px 16px;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 32px 32px;
 }
 .vamis-progress__animate {
   transition: width 0.3s ease;

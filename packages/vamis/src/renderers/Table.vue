@@ -10,6 +10,7 @@ import {
   resolveIcon,
   runAction,
   runOnEvent,
+  table2ColumnsTogglable,
   table2Source,
   useEnv,
   useScoped,
@@ -18,6 +19,8 @@ import {
 } from '@vamis/core'
 import IconMark from './IconMark.vue'
 import PopOverHost from './PopOverHost.vue'
+import ColumnToggler from './data/ColumnToggler.vue'
+import { provideColumnToggle, useColumnToggle } from './data/crudHost'
 import {
   Table,
   TableBody,
@@ -453,7 +456,31 @@ onBeforeUnmount(() => {
   onColResizeUp()
   scoped?.unregister(tableApi as never)
 })
-const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
+const allColumns = computed(() => (props.schema.columns || []) as SchemaObject[])
+const columnToggle = useColumnToggle(allColumns)
+provideColumnToggle(columnToggle)
+const showToggler = computed(() => table2ColumnsTogglable(props.schema, allColumns.value.length))
+const columns = computed(() => columnToggle.visibleColumns.value)
+
+function cellIsRenderer(col: SchemaObject) {
+  const type = String(col.type || '')
+  return !!type && type !== 'text' && type !== 'plain'
+}
+
+/** 对齐 Amis TableCell：内层走列 type，非 button 去掉 label，避免 FormItem 再画「开关」。
+ *  列 `name` 只用来从行上取值，不传给内层（对照 named 探针、原生 [name]）。 */
+function cellSchema(col: SchemaObject, row: Record<string, any> = {}): SchemaObject {
+  const type = String(col.type || 'plain')
+  const next: SchemaObject = { ...col, type }
+  if (type !== 'button' && type !== 'dropdown-button' && type !== 'action') next.label = false
+  const field = col.name != null ? String(col.name) : ''
+  if (field && Object.prototype.hasOwnProperty.call(row, field)) {
+    if (next.value == null) next.value = row[field]
+    if ((type === 'image' || type === 'static-image') && next.src == null) next.src = row[field]
+  }
+  delete next.name
+  return next
+}
 
 function colWidth(col: SchemaObject): number {
   const w = Number(col.width)
@@ -620,7 +647,10 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
       >
     </label>
   </div>
-  <div v-if="schema.title" class="vamis-table__title">{{ schema.title }}</div>
+  <div v-if="schema.title || showToggler" class="vamis-table__title">
+    <ColumnToggler v-if="showToggler" :schema="{ type: 'column-toggler', label: false }" />
+    <span v-if="schema.title">{{ schema.title }}</span>
+  </div>
   <Table :class="tableClass">
     <TableHeader>
       <TableRow v-if="hasGroups">
@@ -814,8 +844,8 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
                 <button type="button" class="vamis-table__edit-btn" aria-label="编辑" @click.stop="startEdit(row, col)">✎</button>
               </span>
             </template>
-            <template v-else-if="col.type && col.type !== 'text' && col.type !== 'plain'">
-              <SchemaRenderer :schema="col" :extra-data="row" />
+            <template v-else-if="cellIsRenderer(col)">
+              <SchemaRenderer :schema="cellSchema(col, row)" :extra-data="row" />
               <button
                 v-if="colCopyable(col) && copyContentOf(col, row)"
                 type="button"
@@ -860,7 +890,7 @@ function cellText(col: SchemaObject, row: Record<string, any>) {
                 class="vamis-table__expand"
                 @click.stop="toggleKey(item.key)"
               >{{ item.expanded ? '▾' : '▸' }}</button>
-              <SchemaRenderer v-if="col.type && col.type !== 'text' && col.type !== 'plain'" :schema="col" :extra-data="item.child" />
+              <SchemaRenderer v-if="cellIsRenderer(col)" :schema="cellSchema(col, item.child)" :extra-data="item.child" />
               <template v-else>{{ item.child[String(col.name || '')] ?? '' }}</template>
             </span>
           </TableCell>

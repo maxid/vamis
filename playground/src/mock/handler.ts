@@ -33,6 +33,11 @@ function filterSample(query: Record<string, string>): SampleRow[] {
   if (browser === 'aol') browser = 'aol'
 
   let rows = cloneRows(sampleRows)
+  // 对齐 Amis `mock/cfc/mock/sample.js`：每次请求给 engine 拼随机后缀，避免看起来没刷新。
+  rows = rows.map((row) => ({
+    ...row,
+    engine: `${row.engine} - ${Math.random().toString(36).substring(7)}`,
+  }))
   if (id) rows = rows.filter((row) => String(row.id) === id)
   if (keywords) {
     rows = rows.filter((row) => JSON.stringify(row).toLowerCase().includes(keywords))

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import {
   SchemaRenderer,
   checkboxClearValue,
@@ -36,7 +36,14 @@ const formApi = useFormApi()
 const data = useData()
 
 const fieldName = computed(() => (props.schema.name ? String(props.schema.name) : ''))
-const current = computed(() => (fieldName.value ? form?.getValue(fieldName.value) : props.schema.value))
+const localValue = ref<unknown>(undefined)
+const hasLocal = ref(false)
+const current = computed(() => {
+  if (hasLocal.value) return localValue.value
+  if (fieldName.value && form) return form.getValue(fieldName.value)
+  if (fieldName.value) return data.value[fieldName.value]
+  return props.schema.value
+})
 const valueSchema = computed(() => ({
   trueValue: props.schema.trueValue,
   falseValue: props.schema.falseValue,
@@ -122,7 +129,12 @@ const formItemSchema = computed(() => {
 const pristine = fieldName.value ? form?.getValue(fieldName.value) : props.schema.value
 
 function write(next: unknown) {
-  if (fieldName.value) form?.setValue(fieldName.value, next)
+  if (fieldName.value && form) {
+    form.setValue(fieldName.value, next)
+    return
+  }
+  hasLocal.value = true
+  localValue.value = next
 }
 
 async function emitChange(next: unknown) {
