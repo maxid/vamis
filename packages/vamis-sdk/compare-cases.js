@@ -8372,6 +8372,8 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "tabs",
         "tabsMode": "tiled",
+        "collapseOnExceed": 3,
+        "collapseBtnLabel": "展开",
         "tabs": [
           {
             "title": "Tab 1",
@@ -8393,8 +8395,7 @@ window.VAMIS_COMPARE_CASES = [
             "title": "Tab 5",
             "tab": "Content 5"
           }
-        ],
-        "collapseOnExceed": 3
+        ]
       }
     },
     "measure": {
@@ -8411,6 +8412,138 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #29",
+    "heading": "超出容器",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "actions": [],
+        "body": [
+          {
+            "type": "button-group-select",
+            "name": "dir",
+            "label": false,
+            "value": "line",
+            "options": [
+              {
+                "label": "横向",
+                "value": "line"
+              },
+              {
+                "label": "纵向",
+                "value": "vertical"
+              }
+            ]
+          },
+          {
+            "type": "tabs",
+            "tabsMode": "${dir}",
+            "collapseBtnLabel": "展开",
+            "style": {
+              "height": "240px"
+            },
+            "tabs": [
+              {
+                "title": "Tab 0",
+                "tab": "Content of tab 0"
+              },
+              {
+                "title": "Tab 1",
+                "tab": "Content of tab 1"
+              },
+              {
+                "title": "Tab 2",
+                "tab": "Content of tab 2"
+              },
+              {
+                "title": "Tab 3",
+                "tab": "Content of tab 3"
+              },
+              {
+                "title": "Tab 4",
+                "tab": "Content of tab 4"
+              },
+              {
+                "title": "Tab 5",
+                "tab": "Content of tab 5"
+              },
+              {
+                "title": "Tab 6",
+                "tab": "Content of tab 6"
+              },
+              {
+                "title": "Tab 7",
+                "tab": "Content of tab 7"
+              },
+              {
+                "title": "Tab 8",
+                "tab": "Content of tab 8"
+              },
+              {
+                "title": "Tab 9",
+                "tab": "Content of tab 9"
+              },
+              {
+                "title": "Tab 10",
+                "tab": "Content of tab 10"
+              },
+              {
+                "title": "Tab 11",
+                "tab": "Content of tab 11"
+              },
+              {
+                "title": "Tab 12",
+                "tab": "Content of tab 12"
+              },
+              {
+                "title": "Tab 13",
+                "tab": "Content of tab 13"
+              },
+              {
+                "title": "Tab 14",
+                "tab": "Content of tab 14"
+              },
+              {
+                "title": "Tab 15",
+                "tab": "Content of tab 15"
+              },
+              {
+                "title": "Tab 16",
+                "tab": "Content of tab 16"
+              },
+              {
+                "title": "Tab 17",
+                "tab": "Content of tab 17"
+              },
+              {
+                "title": "Tab 18",
+                "tab": "Content of tab 18"
+              },
+              {
+                "title": "Tab 19",
+                "tab": "Content of tab 19"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-29",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #30",
     "heading": "change",
     "expect": "",
     "schema": {
@@ -8452,7 +8585,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-29",
+    "id": "src-components-tabs-30",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -8460,7 +8593,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #30",
+    "title": "Tabs 选项卡 #31",
     "heading": "delete",
     "expect": "",
     "schema": {
@@ -8503,7 +8636,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-30",
+    "id": "src-components-tabs-31",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -8511,7 +8644,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #31",
+    "title": "Tabs 选项卡 #32",
     "heading": "changeActiveKey",
     "expect": "",
     "schema": {
@@ -8597,7 +8730,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-31",
+    "id": "src-components-tabs-32",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -8605,7 +8738,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #32",
+    "title": "Tabs 选项卡 #33",
     "heading": "deleteTab",
     "expect": "",
     "schema": {

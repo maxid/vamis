@@ -37,10 +37,11 @@ const TAB_MODES = new Set<TabsMode>([
 
 export type TabItem = SchemaObject & { __item?: unknown }
 
-export function tabsMode(schema: unknown): TabsMode {
+export function tabsMode(schema: unknown, data: Record<string, unknown> = {}): TabsMode {
   const rec = asRecord(schema)
   const mode = rec.tabsMode ?? rec.mode
-  return typeof mode === 'string' && TAB_MODES.has(mode as TabsMode) ? (mode as TabsMode) : 'line'
+  const resolved = typeof mode === 'string' ? String(resolveValue(mode, data) ?? mode) : mode
+  return typeof resolved === 'string' && TAB_MODES.has(resolved as TabsMode) ? (resolved as TabsMode) : 'line'
 }
 
 export function tabsSidePosition(schema: unknown): 'left' | 'right' {
@@ -63,6 +64,54 @@ export function tabsCollapseBtnLabel(schema: unknown): string {
   const text = asRecord(schema).collapseBtnLabel
   const raw = text != null && String(text).trim() ? String(text) : 'more'
   return TABS_LOCALE[raw] || raw
+}
+
+export function tabsUseAutoOverflow(schema: unknown): boolean {
+  return tabsCollapseOnExceed(schema) === 0
+}
+
+/** 拖完按对象身份把 active / visited 从旧索引 key 映到新槽位。 */
+export function tabsRemapAfterReorder<T>(
+  prev: T[],
+  next: T[],
+  active: string,
+  visited: Iterable<string>,
+  keyOf: (tab: T, index: number) => string,
+): { active: string; visited: Set<string> } {
+  const map = new Map<string, string>()
+  for (let oldI = 0; oldI < prev.length; oldI++) {
+    const tab = prev[oldI]
+    const newI = next.indexOf(tab)
+    if (newI < 0) continue
+    map.set(keyOf(tab, oldI), keyOf(tab, newI))
+  }
+  const nextVisited = new Set<string>()
+  for (const key of visited) nextVisited.add(map.get(key) ?? key)
+  return { active: map.get(active) ?? active, visited: nextVisited }
+}
+
+export function tabsIndexesEqual(a: readonly number[], b: readonly number[]): boolean {
+  if (a.length !== b.length) return false
+  return a.every((n, i) => n === b[i])
+}
+
+/** 相对滚动视口不完全可见的项下标。 */
+export function tabsHiddenIndexesByBox(
+  items: Array<{ getBoundingClientRect: () => DOMRect }>,
+  viewport: { getBoundingClientRect: () => DOMRect },
+  vertical: boolean,
+): number[] {
+  const vr = viewport.getBoundingClientRect()
+  const slack = 1
+  const hidden: number[] = []
+  for (let i = 0; i < items.length; i++) {
+    const r = items[i].getBoundingClientRect()
+    const fully = vertical
+      ? r.top >= vr.top - slack && r.bottom <= vr.bottom + slack
+      : r.left >= vr.left - slack && r.right <= vr.right + slack
+    if (!fully) hidden.push(i)
+  }
+  return hidden
 }
 
 export function tabClosable(schema: unknown, tab: unknown): boolean {

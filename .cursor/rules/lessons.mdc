@@ -935,14 +935,20 @@ alwaysApply: true
 - 稳定做法：列有 `type` 且非 text/plain 时走 SchemaRenderer（extra-data 行），否则原生值 + PopOverHost；新增 `title` / `placeholder` / 整行 `itemAction`（runAction）/ `rowClassName`；对照的按钮列示例只放一个按钮或改 yaml 非活示例，多按钮时 Amis/Vamis actionIndex 易假红。
 - 触及：`table`
 
+### Tabs 自适应溢出相等就跳过，更多钉在滚动区外
+- 踩过：`measureAutoOverflow` 每次 ResizeObserver 都写 `overflowing` / `hiddenIndexes`，「更多」一出现 links 变窄再触发 RO，文档页多实例把页面打崩。
+- 稳定做法：索引没变就不要写 ref；自适应「更多」是 nav 里 links 的兄弟（右侧/底部），不要塞进滚动条里；只 observe `linksEl`，不要再 observe 父级；`requestAnimationFrame` 合并测量。ink 挂在 `.vamis-tabs__links-wrap`（overflow hidden）上，不要当 links 的 flex 子项；滚动只 `placeInk(false)`，否则下划线进出视口会带着「更多」上下抖。
+- 触及：`tabs`
+- 规则：本文；`packages/vamis/src/renderers/Tabs.vue` `scheduleMeasure`
+
 ### Tabs 的增删/改名/拖拽放本地 tabs 副本
 - 踩过：`deleteTab` / 关闭当前项只改 `active`，没把邻居写入 `visited`。`mountOnEnter` 默认 true，内容区 `v-if="showContent"` 不挂载，激活标签有了、pane 是空的。
-- 稳定做法：`localTabs` 从 `tabsFromSource` 初始化，`edited` 前随 source watch 同步；addable 追加并激活新 key，closable 按单个 tab 覆盖全局，editable 双击输入框、blur/Enter 提交，draggable 用原生 HTML5 拖拽重排；不要直接改只读 schema。删当前项后 `seedVisited(nextKey)`，不要只改 `active`。
+- 稳定做法：`localTabs` 从 `tabsFromSource` 初始化，`edited` 前随 source watch 同步；addable 追加并激活新 key，closable 按单个 tab 覆盖全局，editable 双击输入框、blur/Enter 提交，draggable 用 Sortable 重排。拖完必须 `tabsRemapAfterReorder` 按 **tab 对象** 重绑 active/visited（索引 key 会留在原槽位）。删当前项后 `seedVisited(nextKey)`，不要只改 `active`。未写 `collapseOnExceed` 时按容器宽高滚动（无滚动条）+ 右侧/底部「更多」，不要只做按个数折叠。
 - 触及：`tabs`
 
 ### Tabs 盒模型打在 link 上；对照不要读 formData
 - 踩过：padding / 边框打在 `button` 上，card / radio / tiled / strong 和 Amis `li` 对不齐。给所有 line 项垫 2px 透明下划线会把未激活文字抬平，Amis 要的是未激活矮 1px。新增按钮放进 links 用 `line-height: 1` 会对不齐标签。`hash` 只写一次、折叠文案停在 `more`、sidebar 清掉内容区竖边。
-- 稳定做法：整颗 `.vamis-tabs__link` 接收 click。line **只有激活项** 2px 下划线，未激活 `border-width: 0`，行 `align-items: stretch`（inactive 文字矮 1px）。色条走滑动 `.vamis-tabs__ink`（Vamis 优化，对标 Ant Design easeOut），active `border` 改透明 2px 保住 1px 文字偏移，不要把色画回 border。ink 量 **button** 宽（Amis 下划线在 `a` 上，不是 li 的 16px pad）。ink 是 links 末子时 `:last-child` 不再是末项，用 `:has(+ .vamis-tabs__ink)` 清右 pad。关闭钮放进 button 文本行。新增是 nav 里 links 的兄弟，同一套 `font-size: 14` / `line-height: 1.5` / `padding-bottom: 8px`。拖拽 SortableJS `animation: 250`。折叠 `__('more')` → 「更多」。`hash` 每次选中都 `updateLocation`（`pushState` + `hashchange`/`popstate` 回写）。初始化示例 `activeKey` 公式求空时仍跟 radios `name:key`。sidebar 内容区内侧留 1px `--tabs-line-border`。Chrome 激活才白底。`toInt` 对齐 Amis；无 form 的 radios 写 `scope.set`。对照 `tabs`/`tab` 走 schemaValue。
+- 稳定做法：整颗 `.vamis-tabs__link` 接收 click。line **只有激活项** 2px 下划线，未激活 `border-width: 0`，行 `align-items: stretch`（inactive 文字矮 1px）。色条走滑动 `.vamis-tabs__ink`（Vamis 优化，对标 Ant Design easeOut），active `border` 改透明 2px 保住 1px 文字偏移，不要把色画回 border。ink 量 **button** 宽（Amis 下划线在 `a` 上，不是 li 的 16px pad），定位相对 wrap 的 getBoundingClientRect（不要加 scrollLeft）。ink 不进滚动 links，末项仍是 `:last-child`。关闭钮放进 button 文本行。新增 / 自动「更多」是 wrap 的兄弟，同一套 `font-size: 14` / `line-height: 1.5` / `padding-bottom: 8px`，line 的更多钮也留 2px 透明底边（跟 `.vamis-tabs__add`），不要跟激活下划线抢高度。拖拽 SortableJS `animation: 250`，结束后按对象重绑 active。折叠 `__('more')` → 「更多」；`collapseBtnLabel` 自动溢出和 `collapseOnExceed` 共用（more-host 不要 `max-width: 160`）。未写 `collapseOnExceed` 时 links `overflow: auto` 藏滚动条，超出项进 pinned「更多」。`hash` 每次选中都 `updateLocation`（`pushState` + `hashchange`/`popstate` 回写）。初始化示例 `activeKey` 公式求空时仍跟 radios `name:key`。sidebar 内容区内侧留 1px `--tabs-line-border`。Chrome 激活才白底。`toInt` 对齐 Amis；无 form 的 radios 写 `scope.set`。对照 `tabs`/`tab` 走 schemaValue。
 - 触及：`tabs` `radios`
 - 规则：Amis `_tabs.scss` / `Tabs.tsx` handleSelect；`packages/vamis-sdk/embed-case.html` `readNodeValue`
 

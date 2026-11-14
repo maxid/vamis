@@ -6,7 +6,7 @@ outline: deep
 # Tabs 选项卡
 
 ::: info 实现进度 95% · 进行中
-文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、`tabsMode` 九种、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms）、折叠「更多」下拉、地址栏 `#hash` 来回同步、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 切页下划线滑动（优化，不同于 Amis）。余项：`swipeable`、chrome 耳朵 SVG、`themeCss`。
+文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、`tabsMode` 九种、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms）、折叠「更多」/`collapseBtnLabel`、默认按容器溢出（不用写字段）、地址栏 `#hash` 来回同步、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 切页下划线滑动（优化，不同于 Amis）。余项：`swipeable`、chrome 耳朵 SVG、`themeCss`。
 :::
 
 选项卡容器。Vamis 用 YAML 或 JSON 书写，字段名不改写。
@@ -756,12 +756,14 @@ outline: deep
 
 ## 配置超出折叠
 
-`collapseOnExceed` 超出后折进「更多」；`collapseBtnLabel` 改按钮文案。
+`collapseOnExceed` 超出后折进「更多」；`collapseBtnLabel` 改按钮文案（未写时 zh-CN 为「更多」）。
 
 ```schema: scope="body"
 {
     "type": "tabs",
     "tabsMode": "tiled",
+    "collapseOnExceed": 3,
+    "collapseBtnLabel": "展开",
     "tabs": [
         {
             "title": "Tab 1",
@@ -783,8 +785,59 @@ outline: deep
             "title": "Tab 5",
             "tab": "Content 5"
         }
-    ],
-    "collapseOnExceed": 3
+    ]
+}
+```
+
+## 超出容器
+
+**默认就这样，tabs 上不用写溢出字段。** 项比容器宽（或 `vertical` / `sidebar` 时比容器高）就会滚，并在右侧或底部出「更多」。仍可写 `collapseBtnLabel` 改按钮文案、写 `collapseOnExceed` 改成按个数折叠。下面横向/纵向只是换外观，外壳限高是为了让纵向看得见裁切，不是开关。
+
+```schema: scope="body"
+{
+    "type": "form",
+    "wrapWithPanel": false,
+    "actions": [],
+    "body": [
+        {
+            "type": "button-group-select",
+            "name": "dir",
+            "label": false,
+            "value": "line",
+            "options": [
+                { "label": "横向", "value": "line" },
+                { "label": "纵向", "value": "vertical" }
+            ]
+        },
+        {
+            "type": "tabs",
+            "tabsMode": "${dir}",
+            "collapseBtnLabel": "展开",
+            "style": { "height": "240px" },
+            "tabs": [
+                { "title": "Tab 0", "tab": "Content of tab 0" },
+                { "title": "Tab 1", "tab": "Content of tab 1" },
+                { "title": "Tab 2", "tab": "Content of tab 2" },
+                { "title": "Tab 3", "tab": "Content of tab 3" },
+                { "title": "Tab 4", "tab": "Content of tab 4" },
+                { "title": "Tab 5", "tab": "Content of tab 5" },
+                { "title": "Tab 6", "tab": "Content of tab 6" },
+                { "title": "Tab 7", "tab": "Content of tab 7" },
+                { "title": "Tab 8", "tab": "Content of tab 8" },
+                { "title": "Tab 9", "tab": "Content of tab 9" },
+                { "title": "Tab 10", "tab": "Content of tab 10" },
+                { "title": "Tab 11", "tab": "Content of tab 11" },
+                { "title": "Tab 12", "tab": "Content of tab 12" },
+                { "title": "Tab 13", "tab": "Content of tab 13" },
+                { "title": "Tab 14", "tab": "Content of tab 14" },
+                { "title": "Tab 15", "tab": "Content of tab 15" },
+                { "title": "Tab 16", "tab": "Content of tab 16" },
+                { "title": "Tab 17", "tab": "Content of tab 17" },
+                { "title": "Tab 18", "tab": "Content of tab 18" },
+                { "title": "Tab 19", "tab": "Content of tab 19" }
+            ]
+        }
+    ]
 }
 ```
 
@@ -838,8 +891,8 @@ outline: deep
 | editable | `boolean` | false | 是否可编辑标签名 |
 | scrollable | `boolean` | true | 属性废弃，未接 |
 | sidePosition | `left` / `right` | `left` | `sidebar` 模式下标签栏位置 |
-| collapseOnExceed | `number` | | 超出后开始折叠 |
-| collapseBtnLabel | `string` | `more` | 折叠按钮文案。未写时 zh-CN 显示「更多」 |
+| collapseOnExceed | `number` | | 可选。写了才按个数折叠。默认不写，按容器宽高滚动 +「更多」 |
+| collapseBtnLabel | `string` | `more` | 可选。默认溢出和 `collapseOnExceed` 的「更多」按钮文案。未写时 zh-CN 显示「更多」 |
 | swipeable | `boolean` | false | **未接**。移动端手势滑动 |
 
 ## 事件表
@@ -1103,3 +1156,4 @@ outline: deep
 - 未接 `swipeable`、chrome 耳朵 SVG、`onSelect` 字符串、`tabs[x].reload`、单项 `unmountOnExit`、`themeCss`。
 - Chrome 模式是圆角条近似，没有 Amis 那对 SVG 耳朵。
 - **优化（不同于 Amis）**：`tabsMode: line` 的激活下划线切页时滑动到目标项（0.3s、`cubic-bezier(0.215, 0.61, 0.355, 1)` 先快后慢，对齐 Ant Design Tabs ink-bar）。Amis 是立刻换色。`prefers-reduced-motion: reduce` 时不动画。
+- **优化（不同于 Amis）**：溢出是默认行为，不用写字段。标签超出容器宽（横向）或高（`vertical` / `sidebar`）后可滚动且无滚动条，右侧或底部出「更多」。Amis 要写 `collapseOnExceed` 才折叠，默认不按容器裁切。

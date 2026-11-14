@@ -23,13 +23,17 @@ import {
   tabsCollapseBtnLabel,
   tabsCollapseOnExceed,
   tabsFromSource,
+  tabsHiddenIndexesByBox,
+  tabsIndexesEqual,
   tabsInitialActive,
   tabsMode,
   tabsMountOnEnter,
   tabsNormalizeActive,
+  tabsRemapAfterReorder,
   tabsResolveActiveKey,
   tabsSidePosition,
   tabsUnmountOnExit,
+  tabsUseAutoOverflow,
   tabsVisible,
   useData,
   useEnv,
@@ -54,7 +58,7 @@ const formApi = useFormApi()
 const scope = useScope()
 const form = useForm()
 
-const mode = computed(() => tabsMode(props.schema))
+const mode = computed(() => tabsMode(props.schema, data.value))
 const sidePosition = computed(() => tabsSidePosition(props.schema))
 const mountOnEnter = computed(() => tabsMountOnEnter(props.schema))
 const unmountOnExit = computed(() => tabsUnmountOnExit(props.schema))
@@ -178,7 +182,25 @@ async function onSelect(tab: (typeof tabs.value)[number], index: number) {
   visited.value = next
   writeForm(tab, index, key)
   moreOpen.value = false
-  void nextTick(() => placeInk(true))
+  void nextTick(() => {
+    scrollActiveIntoView()
+    placeInk(true)
+    scheduleMeasure()
+  })
+}
+
+function onLinksWheel(event: WheelEvent) {
+  if (!useAutoOverflow.value || !overflowing.value || isVerticalBar()) return
+  const el = linksEl.value
+  if (!el) return
+  if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return
+  el.scrollLeft += event.deltaY
+  event.preventDefault()
+}
+
+function onLinksScroll() {
+  if (mode.value === 'line') placeInk(false)
+  scheduleMeasure()
 }
 
 function paneClass(tab: (typeof tabs.value)[number]) {
@@ -194,15 +216,75 @@ const editable = computed(() => props.schema.editable === true)
 const addBtnText = computed(() => tabsAddBtnText(props.schema))
 const collapseAt = computed(() => tabsCollapseOnExceed(props.schema))
 const collapseLabel = computed(() => tabsCollapseBtnLabel(props.schema))
+const useAutoOverflow = computed(() => tabsUseAutoOverflow(props.schema))
+const overflowing = ref(false)
+const hiddenIndexes = ref<number[]>([])
 const editing = ref(-1)
 const editingTitle = ref('')
 const moreOpen = ref(false)
 const moreEl = ref<HTMLElement | null>(null)
 const linksEl = ref<HTMLElement | null>(null)
+const wrapEl = ref<HTMLElement | null>(null)
 const inkEl = ref<HTMLElement | null>(null)
 const inkReady = ref(false)
 let inkObserver: ResizeObserver | null = null
 let sortable: Sortable | null = null
+let measureRaf = 0
+let measuring = false
+let tabUidSeq = 0
+const tabUids = new WeakMap<object, string>()
+
+function uidOf(tab: object) {
+  let id = tabUids.get(tab)
+  if (!id) {
+    id = `tab-${++tabUidSeq}`
+    tabUids.set(tab, id)
+  }
+  return id
+}
+
+function isVerticalBar() {
+  return mode.value === 'vertical' || mode.value === 'sidebar'
+}
+
+function measureAutoOverflow() {
+  if (!useAutoOverflow.value) {
+    if (overflowing.value) overflowing.value = false
+    if (hiddenIndexes.value.length) hiddenIndexes.value = []
+    return
+  }
+  const links = linksEl.value
+  if (!links) return
+  const vertical = isVerticalBar()
+  const overflowPx = vertical
+    ? links.scrollHeight - links.clientHeight
+    : links.scrollWidth - links.clientWidth
+  const nextOverflowing = overflowPx > 2
+  if (overflowing.value !== nextOverflowing) overflowing.value = nextOverflowing
+  const items = [...links.querySelectorAll<HTMLElement>(':scope > .vamis-tabs__link:not(.vamis-tabs__more-host)')]
+  const nextHidden = nextOverflowing ? tabsHiddenIndexesByBox(items, links, vertical) : []
+  if (!tabsIndexesEqual(hiddenIndexes.value, nextHidden)) hiddenIndexes.value = nextHidden
+}
+
+function scheduleMeasure() {
+  if (measuring || measureRaf) return
+  measureRaf = requestAnimationFrame(() => {
+    measureRaf = 0
+    measuring = true
+    try {
+      measureAutoOverflow()
+    } finally {
+      measuring = false
+    }
+  })
+}
+
+function scrollActiveIntoView() {
+  const index = tabs.value.findIndex((tab, i) => keyOf(tab, i) === active.value)
+  if (index < 0) return
+  const el = linksEl.value?.querySelector<HTMLElement>(`[data-tab-index="${index}"]`)
+  el?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+}
 
 function inkReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -211,8 +293,9 @@ function inkReducedMotion() {
 function placeInk(animate: boolean) {
   if (mode.value !== 'line') return
   const root = linksEl.value
-  const ink = inkEl.value || root?.querySelector<HTMLElement>('.vamis-tabs__ink') || null
-  if (!root || !ink) return
+  const wrap = wrapEl.value
+  const ink = inkEl.value || wrap?.querySelector<HTMLElement>('.vamis-tabs__ink') || null
+  if (!root || !wrap || !ink) return
   const activeLink = root.querySelector('.vamis-tabs__link.is-active') as HTMLElement | null
   const target = (activeLink?.querySelector(':scope > button') as HTMLElement | null) || activeLink
   if (!target) {
@@ -220,9 +303,9 @@ function placeInk(animate: boolean) {
     ink.style.transform = 'translate3d(0, 0, 0)'
     return
   }
-  const rootRect = root.getBoundingClientRect()
+  const wrapRect = wrap.getBoundingClientRect()
   const box = target.getBoundingClientRect()
-  const left = box.left - rootRect.left + root.scrollLeft
+  const left = box.left - wrapRect.left
   const width = box.width
   const run = animate && inkReady.value && !inkReducedMotion()
   if (run) {
@@ -253,8 +336,11 @@ const shownTabs = computed(() => {
 const overflowTabs = computed(() => {
   const list = tabs.value
   const n = collapseAt.value
-  if (!n || list.length <= n) return []
-  return list.slice(n - 1).map((tab, i) => ({ tab, i: i + n - 1 }))
+  if (n && list.length > n) return list.slice(n - 1).map((tab, i) => ({ tab, i: i + n - 1 }))
+  if (!useAutoOverflow.value || !overflowing.value) return []
+  return hiddenIndexes.value
+    .map((i) => ({ tab: list[i], i }))
+    .filter((item): item is { tab: (typeof list)[number]; i: number } => Boolean(item.tab))
 })
 
 function addTab() {
@@ -294,7 +380,10 @@ async function closeTab(index: number, event: Event) {
     active.value = nextKey
     if (nextKey) seedVisited(nextKey)
   }
-  void nextTick(() => placeInk(true))
+  void nextTick(() => {
+    placeInk(true)
+    scheduleMeasure()
+  })
 }
 
 function startEdit(index: number, event: MouseEvent) {
@@ -353,12 +442,19 @@ function initSortable() {
         }
       }
       if (!Number.isInteger(from) || to < 0 || from === to) return
-      const next = [...localTabs.value]
+      const prev = localTabs.value
+      const next = [...prev]
       const [moved] = next.splice(from, 1)
       next.splice(to, 0, moved)
+      const remapped = tabsRemapAfterReorder(prev, next, active.value, visited.value, (tab, i) => keyOf(tab, i))
       localTabs.value = next
+      active.value = remapped.active
+      visited.value = remapped.visited
       edited = true
-      void nextTick(() => placeInk(inkReady.value))
+      void nextTick(() => {
+        placeInk(inkReady.value)
+        scheduleMeasure()
+      })
     },
   })
 }
@@ -446,8 +542,13 @@ onMounted(() => {
   void nextTick(() => {
     initSortable()
     placeInk(false)
+    scheduleMeasure()
+    scrollActiveIntoView()
     if (typeof ResizeObserver !== 'undefined' && linksEl.value) {
-      inkObserver = new ResizeObserver(() => placeInk(inkReady.value))
+      inkObserver = new ResizeObserver(() => {
+        placeInk(inkReady.value)
+        scheduleMeasure()
+      })
       inkObserver.observe(linksEl.value)
     }
   })
@@ -460,11 +561,14 @@ watch(
       active.value,
       shownTabs.value.length,
       overflowTabs.value.length,
+      overflowing.value,
       shownTabs.value.map((item) => `${item.i}:${titleOf(item.tab)}`).join('\0'),
     ] as const,
   () => {
-    if (mode.value !== 'line') return
-    void nextTick(() => placeInk(inkReady.value))
+    void nextTick(() => {
+      if (mode.value === 'line') placeInk(inkReady.value)
+      scheduleMeasure()
+    })
   },
   { flush: 'post' },
 )
@@ -474,12 +578,22 @@ watch(
   () => { void nextTick(() => initSortable()) },
 )
 
+watch(mode, () => {
+  void nextTick(() => {
+    scrollActiveIntoView()
+    placeInk(false)
+    scheduleMeasure()
+  })
+})
+
 onBeforeUnmount(() => {
   if (api.name || api.id) scoped?.unregister(api as never)
   window.removeEventListener('hashchange', onHashChange)
   window.removeEventListener('popstate', onHashChange)
   inkObserver?.disconnect()
   inkObserver = null
+  if (measureRaf) cancelAnimationFrame(measureRaf)
+  measureRaf = 0
   destroySortable()
 })
 
@@ -488,6 +602,7 @@ const rootClass = computed(() =>
     'vamis-tabs',
     `vamis-tabs--${mode.value}`,
     mode.value === 'sidebar' ? `vamis-tabs--sidebar-${sidePosition.value}` : '',
+    useAutoOverflow.value ? 'is-auto-overflow' : '',
   ]
     .filter(Boolean)
     .join(' '),
@@ -496,11 +611,23 @@ const rootClass = computed(() =>
 
 <template>
   <div data-vamis-tabs :class="rootClass" :data-mode="mode">
-    <div class="vamis-tabs__nav" data-vamis-tabs-nav :class="{ 'is-toolbar': toolbar.length }">
-      <div ref="linksEl" class="vamis-tabs__links" data-vamis-tabs-links :class="linksClass">
+    <div
+      class="vamis-tabs__nav"
+      data-vamis-tabs-nav
+      :class="{ 'is-toolbar': toolbar.length, 'is-auto-overflow': useAutoOverflow }"
+    >
+      <div ref="wrapEl" class="vamis-tabs__links-wrap">
+      <div
+        ref="linksEl"
+        class="vamis-tabs__links"
+        data-vamis-tabs-links
+        :class="linksClass"
+        @wheel="onLinksWheel"
+        @scroll="onLinksScroll"
+      >
         <div
           v-for="item in shownTabs"
-          :key="keyOf(item.tab, item.i)"
+          :key="uidOf(item.tab)"
           class="vamis-tabs__link"
           :class="{
             'is-active': active === keyOf(item.tab, item.i),
@@ -552,7 +679,7 @@ const rootClass = computed(() =>
           </button>
         </div>
         <div
-          v-if="overflowTabs.length"
+          v-if="!useAutoOverflow && overflowTabs.length"
           ref="moreEl"
           class="vamis-tabs__link vamis-tabs__more-host"
           :class="{ 'is-active': overflowTabs.some((item) => active === keyOf(item.tab, item.i)) }"
@@ -562,6 +689,7 @@ const rootClass = computed(() =>
             <VamisCaret variant="select" :open="moreOpen" />
           </button>
         </div>
+      </div>
         <div
           v-if="mode === 'line'"
           ref="inkEl"
@@ -569,6 +697,17 @@ const rootClass = computed(() =>
           :class="{ 'is-ready': inkReady }"
           aria-hidden="true"
         />
+      </div>
+      <div
+        v-if="useAutoOverflow && overflowing && overflowTabs.length"
+        ref="moreEl"
+        class="vamis-tabs__link vamis-tabs__more-host vamis-tabs__more-host--auto"
+        :class="{ 'is-active': overflowTabs.some((item) => active === keyOf(item.tab, item.i)) }"
+      >
+        <button type="button" class="vamis-tabs__more" :class="{ 'is-opened': moreOpen }" @click="moreOpen = !moreOpen">
+          <span>{{ collapseLabel }}</span>
+          <VamisCaret variant="select" :open="moreOpen" />
+        </button>
       </div>
       <button v-if="addable" type="button" class="vamis-tabs__add" @click="addTab">
         <svg class="vamis-tabs__add-icon" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -581,7 +720,7 @@ const rootClass = computed(() =>
       </div>
     </div>
     <div class="vamis-tabs__content" data-vamis-tabs-content :class="contentClass">
-      <template v-for="(tab, i) in tabs" :key="keyOf(tab, i)">
+      <template v-for="(tab, i) in tabs" :key="uidOf(tab)">
         <div
           v-if="showContent(keyOf(tab, i))"
           v-show="active === keyOf(tab, i)"
@@ -607,7 +746,7 @@ const rootClass = computed(() =>
       <ul class="vamis-dropdown-menu vamis-tabs__more-menu">
         <li
           v-for="item in overflowTabs"
-          :key="keyOf(item.tab, item.i)"
+          :key="uidOf(item.tab)"
           class="vamis-dropdown-item"
           :class="{
             'is-active': active === keyOf(item.tab, item.i),

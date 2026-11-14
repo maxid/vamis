@@ -6646,6 +6646,14 @@ svg.vamis-tag-default-icon {
   border-bottom: 1px solid var(--tabs-line-border);
   pointer-events: none;
 }
+.vamis-tabs__links-wrap {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+}
 .vamis-tabs__links {
   position: relative;
   display: flex;
@@ -6848,7 +6856,8 @@ svg.vamis-tag-default-icon {
   cursor: pointer;
   padding: 0 0 8px;
 }
-.vamis-tabs__more.is-opened {
+.vamis-tabs__more.is-opened,
+.vamis-tabs__more-host.is-active .vamis-tabs__more {
   color: var(--tabs-line-active);
 }
 .vamis-tabs__more .vamis-caret {
@@ -6856,6 +6865,30 @@ svg.vamis-tag-default-icon {
 }
 .vamis-tabs__more-menu {
   min-width: var(--dropdown-menu-min-width);
+}
+.vamis-tabs__more-host {
+  max-width: none;
+  overflow: visible;
+}
+.vamis-tabs__nav.is-auto-overflow .vamis-tabs__links {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.vamis-tabs__nav.is-auto-overflow .vamis-tabs__links::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.vamis-tabs__more-host--auto {
+  flex: none;
+  align-self: stretch;
+}
+.vamis-tabs--line .vamis-tabs__more-host--auto .vamis-tabs__more {
+  padding: 0 12px 8px;
+  height: 100%;
+  border-bottom: var(--tabs-line-underline) solid transparent;
 }
 
 .vamis-tabs--card .vamis-tabs__nav {
@@ -7010,6 +7043,7 @@ svg.vamis-tag-default-icon {
   flex-direction: row;
   align-items: stretch;
   min-height: 200px;
+  height: 100%;
   border: 1px solid var(--tabs-line-border);
 }
 .vamis-tabs--vertical .vamis-tabs__nav {
@@ -7046,10 +7080,34 @@ svg.vamis-tag-default-icon {
   width: calc(100% - var(--tabs-vertical-w));
   border: 0;
 }
+.vamis-tabs--vertical .vamis-tabs__nav.is-auto-overflow,
+.vamis-tabs--sidebar .vamis-tabs__nav.is-auto-overflow {
+  min-height: 0;
+}
+.vamis-tabs--vertical .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links-wrap,
+.vamis-tabs--sidebar .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links-wrap {
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+.vamis-tabs--vertical .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links,
+.vamis-tabs--sidebar .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links {
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.vamis-tabs--vertical .vamis-tabs__more-host--auto .vamis-tabs__more,
+.vamis-tabs--sidebar .vamis-tabs__more-host--auto .vamis-tabs__more {
+  padding: 8px 12px;
+  width: 100%;
+  justify-content: flex-start;
+}
 
 .vamis-tabs--sidebar {
   display: flex;
   align-items: stretch;
+  height: 100%;
 }
 .vamis-tabs--sidebar-right {
   flex-direction: row-reverse;
