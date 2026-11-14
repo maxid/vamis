@@ -71,7 +71,7 @@
 
 **最近交付**
 
-- `tabs` 横向「更多」不再跟 ink 下划线抖：ink 挂在 `.vamis-tabs__links-wrap` 上，滚动只重算位置；`collapseBtnLabel` 在默认溢出和按个数折叠共用（综合示例「展开」）。对照目录 **1366**；桌面 **33/33**、移动 **33/33**（P0 0）。进度仍 **95%**。
+- `tabs` 加强选中项压住底线：`links-wrap` 默认 `overflow: visible`，只有 line 才 hidden，避免把 strong 的 `-1px` 重叠裁掉。对照目录 **1366**；桌面 **33/33**、移动 **33/33**（P0 0）。进度仍 **95%**。
 - `tabs` line 下划线优化：切页时 `.vamis-tabs__ink` 滑到目标项（0.3s、`cubic-bezier(0.215, 0.61, 0.355, 1)` 先快后慢，对齐 Ant Design ink-bar）。激活项仍留透明 2px 保住未激活文字矮 1px。Amis 是立刻换色，写进差异表。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - `tabs` `deleteTab`：删当前项后 `seedVisited` 邻居，`mountOnEnter` 下内容区会挂上激活 pane（删「选项卡1」后显示「选项卡内容2」）。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - `tabs` 续对标：line 未激活文字矮 1px（inactive `border-width: 0`、active 2px、行 stretch）；「新增Tab」与标签同 `line-height: 1.5` 且 add 挪出 links；hash 来回 `pushState` + `hashchange`/`popstate`；初始化示例 radios `name:key` 在 `activeKey` 公式求空后仍切 tab；折叠默认「更多」；sidebar 内容区内侧 1px 竖线。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。

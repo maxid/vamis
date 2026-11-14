@@ -6652,6 +6652,9 @@ svg.vamis-tag-default-icon {
   flex: 1 1 auto;
   align-items: stretch;
   min-width: 0;
+  overflow: visible;
+}
+.vamis-tabs--line .vamis-tabs__links-wrap {
   overflow: hidden;
 }
 .vamis-tabs__links {
@@ -6946,10 +6949,14 @@ svg.vamis-tag-default-icon {
 
 .vamis-tabs--strong .vamis-tabs__nav {
   align-items: stretch;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 0;
+  z-index: 1;
 }
 .vamis-tabs--strong .vamis-tabs__nav::before {
   content: none;
+}
+.vamis-tabs--strong .vamis-tabs__links-wrap {
+  overflow: visible;
 }
 .vamis-tabs--strong .vamis-tabs__links {
   margin-bottom: -1px;
@@ -6961,6 +6968,7 @@ svg.vamis-tag-default-icon {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius) var(--radius) 0 0;
+  overflow: visible;
 }
 .vamis-tabs--strong .vamis-tabs__link > button {
   padding: 0;
@@ -6968,11 +6976,17 @@ svg.vamis-tag-default-icon {
   border: 0;
 }
 .vamis-tabs--strong .vamis-tabs__link.is-active {
-  border-bottom-color: transparent;
+  border-bottom-color: var(--card);
+  z-index: 1;
+  box-shadow: 0 1px 0 var(--card);
 }
 .vamis-tabs--strong .vamis-tabs__link.is-active > button,
 .vamis-tabs--strong .vamis-tabs__link:not(.is-disabled):hover > button {
   color: var(--primary);
+}
+.vamis-tabs--strong .vamis-tabs__content {
+  border-width: 1px;
+  background: var(--card);
 }
 
 .vamis-tabs--radio .vamis-tabs__nav::before {
@@ -7089,6 +7103,7 @@ svg.vamis-tag-default-icon {
   flex-direction: column;
   min-height: 0;
   height: 100%;
+  overflow: hidden;
 }
 .vamis-tabs--vertical .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links,
 .vamis-tabs--sidebar .vamis-tabs__nav.is-auto-overflow .vamis-tabs__links {

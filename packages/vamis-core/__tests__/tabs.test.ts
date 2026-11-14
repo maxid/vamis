@@ -69,6 +69,10 @@ describe('tabs', () => {
     expect(overflowFence).not.toContain('"source"')
     expect(overflowFence).not.toContain('collapseOnExceed')
     expect(vue).toMatch(/active\.value === key[\s\S]*seedVisited\(nextKey\)/)
+    const css = read('../../vamis-ui/src/styles.css')
+    expect(css).toContain('.vamis-tabs--strong .vamis-tabs__link.is-active')
+    expect(css).toMatch(/\.vamis-tabs--strong \.vamis-tabs__link\.is-active \{[\s\S]*?border-bottom-color: var\(--card\)/)
+    expect(css).toContain('.vamis-tabs--line .vamis-tabs__links-wrap')
   })
 
   it('reads tabsMode or mode and form value', () => {
