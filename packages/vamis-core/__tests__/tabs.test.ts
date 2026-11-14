@@ -42,6 +42,7 @@ describe('tabs', () => {
     ]) {
       expect(doc).toContain(h)
     }
+    expect(vue).toMatch(/active\.value === key[\s\S]*seedVisited\(nextKey\)/)
   })
 
   it('reads tabsMode or mode and form value', () => {

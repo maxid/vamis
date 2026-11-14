@@ -248,8 +248,11 @@ async function closeTab(index: number, event: Event) {
   next.splice(index, 1)
   localTabs.value = next
   if (active.value === key) {
-    const neighbor = next[Math.min(index, next.length - 1)]
-    active.value = neighbor ? keyOf(neighbor, Math.min(index, next.length - 1)) : ''
+    const nextIndex = Math.min(index, next.length - 1)
+    const neighbor = next[nextIndex]
+    const nextKey = neighbor ? keyOf(neighbor, nextIndex) : ''
+    active.value = nextKey
+    if (nextKey) seedVisited(nextKey)
   }
 }
 

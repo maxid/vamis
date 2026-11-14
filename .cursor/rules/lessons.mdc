@@ -936,7 +936,8 @@ alwaysApply: true
 - 触及：`table`
 
 ### Tabs 的增删/改名/拖拽放本地 tabs 副本
-- 稳定做法：`localTabs` 从 `tabsFromSource` 初始化，`edited` 前随 source watch 同步；addable 追加并激活新 key，closable 按单个 tab 覆盖全局，editable 双击输入框、blur/Enter 提交，draggable 用原生 HTML5 拖拽重排；不要直接改只读 schema。
+- 踩过：`deleteTab` / 关闭当前项只改 `active`，没把邻居写入 `visited`。`mountOnEnter` 默认 true，内容区 `v-if="showContent"` 不挂载，激活标签有了、pane 是空的。
+- 稳定做法：`localTabs` 从 `tabsFromSource` 初始化，`edited` 前随 source watch 同步；addable 追加并激活新 key，closable 按单个 tab 覆盖全局，editable 双击输入框、blur/Enter 提交，draggable 用原生 HTML5 拖拽重排；不要直接改只读 schema。删当前项后 `seedVisited(nextKey)`，不要只改 `active`。
 - 触及：`tabs`
 
 ### Tabs 盒模型打在 link 上；对照不要读 formData

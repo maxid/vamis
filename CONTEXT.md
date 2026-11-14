@@ -71,6 +71,7 @@
 
 **最近交付**
 
+- `tabs` `deleteTab`：删当前项后 `seedVisited` 邻居，`mountOnEnter` 下内容区会挂上激活 pane（删「选项卡1」后显示「选项卡内容2」）。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - `tabs` 续对标：line 未激活文字矮 1px（inactive `border-width: 0`、active 2px、行 stretch）；「新增Tab」与标签同 `line-height: 1.5` 且 add 挪出 links；hash 来回 `pushState` + `hashchange`/`popstate`；初始化示例 radios `name:key` 在 `activeKey` 公式求空后仍切 tab；折叠默认「更多」；sidebar 内容区内侧 1px 竖线。对照目录 **1365**；桌面 **32/32**、移动 **32/32**（P0 0）。进度仍 **95%**。
 - 对照收割：`listItem` 的 `title` / `subTitle` / `desc` 算可见内容，字母索引条不再被当空布局跳过；下拉显示「List 列表 #6 · 字母索引条」。对照目录 **1343**；`list` 桌面 **20/20**、移动 **20/20**（P0 0）。
 - `list` 索引条 / `initDrag`：索引条字母 `12px / line-height 1.5 / padding 2px 4px`，整条 **592px** 对齐 Amis AlphabetIndexer（不要写死 `line-height: 14px`）。`initDrag` 克隆行 `position:fixed` 跟指针，可拖出列表外；原行半透明占位。对照桌面 **20/20**、移动 **20/20**（P0 0）。进度仍 **90%**。
