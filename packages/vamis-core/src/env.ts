@@ -22,6 +22,37 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
       }
       window.location.assign(to)
     },
+    updateLocation(to, replace) {
+      if (typeof window === 'undefined') return
+      if (to === 'goBack') {
+        window.history.back()
+        return
+      }
+      if (to.startsWith('#')) {
+        const hash = to === '#' ? '' : to.replace(/^#/, '')
+        const url = new URL(window.location.href)
+        const href = `${url.pathname}${url.search}${hash ? `#${hash}` : ''}`
+        const current = `${url.pathname}${url.search}${url.hash}`
+        if (current === href) return
+        if (replace && window.history.replaceState) {
+          window.history.replaceState(window.history.state, '', href)
+          window.dispatchEvent(new HashChangeEvent('hashchange'))
+          return
+        }
+        if (window.history.pushState) {
+          window.history.pushState(window.history.state, '', href)
+          window.dispatchEvent(new HashChangeEvent('hashchange'))
+          return
+        }
+        window.location.hash = hash
+        return
+      }
+      if (replace && window.history.replaceState) {
+        window.history.replaceState(window.history.state, '', to)
+        return
+      }
+      window.location.assign(to)
+    },
     alert(msg) {
       window.alert(msg)
     },

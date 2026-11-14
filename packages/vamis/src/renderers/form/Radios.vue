@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RadioGroup, RadioGroupItem } from '@vamis/ui'
-import type { SchemaObject } from '@vamis/core'
+import { useData, useScope, type SchemaObject } from '@vamis/core'
 import { useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const data = useData()
+const scope = useScope()
 const options = computed(() =>
   (props.schema.options || []).map((item: any) =>
     typeof item === 'object'
@@ -14,22 +16,30 @@ const options = computed(() =>
       : { label: String(item), value: item },
   ),
 )
+function fieldName(): string {
+  return typeof props.schema.name === 'string' ? props.schema.name : ''
+}
 const value = computed({
   get: () => {
-    const current = props.schema.name ? form?.getValue(props.schema.name) : undefined
+    const name = fieldName()
+    if (!name) return undefined
+    const current = form ? form.getValue(name) : (data.value[name] ?? scope.value?.get(name))
     return current == null ? undefined : String(current)
   },
   set: (v: unknown) => {
-    if (!props.schema.name) return
+    const name = fieldName()
+    if (!name) return
     const match = options.value.find((opt: { value: unknown }) => String(opt.value) === String(v))
-    form?.setValue(props.schema.name, match ? match.value : v)
+    const next = match ? match.value : v
+    if (form) form.setValue(name, next)
+    else scope.value?.set(name, next, 'input')
   },
 })
 </script>
 
 <template>
   <FormItem :schema="schema">
-    <RadioGroup :model-value="value" :disabled="disabled" class="flex flex-wrap gap-3" @update:model-value="value = $event">
+    <RadioGroup data-vamis-radios :model-value="value" :disabled="disabled" class="flex flex-wrap gap-3" @update:model-value="value = $event">
       <label v-for="opt in options" :key="opt.value" class="flex items-center gap-2 text-sm">
         <RadioGroupItem :value="String(opt.value)" />
         {{ opt.label }}

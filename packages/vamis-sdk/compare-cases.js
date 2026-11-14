@@ -7348,7 +7348,7 @@ window.VAMIS_COMPARE_CASES = [
               "title": "${a}",
               "body": {
                 "type": "tpl",
-                "tpl": "金额：${b}元"
+                "tpl": "金额：${b|number}元"
               }
             }
           ]
@@ -7369,177 +7369,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Tabs 选项卡 #3",
-    "heading": "可禁用",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tabs",
-        "tabs": [
-          {
-            "title": "Tab 1",
-            "tab": "Content 1"
-          },
-          {
-            "title": "Tab 2",
-            "tab": "Content 2",
-            "disabled": true
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-3",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #4",
-    "heading": "配置 hash 与默认激活",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tabs",
-        "activeKey": "tab2",
-        "tabs": [
-          {
-            "title": "Tab 1",
-            "hash": "tab1",
-            "tab": "Content 1"
-          },
-          {
-            "title": "Tab 2",
-            "hash": "tab2",
-            "tab": "Content 2"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-4",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #5",
-    "heading": "配置 hash 与默认激活",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tabs",
-        "activeKey": 1,
-        "tabs": [
-          {
-            "title": "Tab 1",
-            "tab": "Content 1 index"
-          },
-          {
-            "title": "Tab 2",
-            "tab": "Content 2 index"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-5",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #6",
-    "heading": "展示模式",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tabs",
-        "tabsMode": "vertical",
-        "tabs": [
-          {
-            "title": "选项卡1",
-            "body": "选项卡内容1"
-          },
-          {
-            "title": "选项卡2",
-            "body": "选项卡内容2"
-          },
-          {
-            "title": "选项卡3",
-            "body": "选项卡内容3"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-6",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #7",
-    "heading": "展示模式",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "tabs",
-        "tabsMode": "card",
-        "tabs": [
-          {
-            "title": "选项卡1",
-            "body": "卡片内容1"
-          },
-          {
-            "title": "选项卡2",
-            "body": "卡片内容2"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-tabs-7",
-    "group": "组件 / 布局",
-    "bucket": "components",
-    "section": "布局",
-    "page": "Tabs 选项卡",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Tabs 选项卡 #8",
     "heading": "拖拽排序",
     "expect": "",
     "schema": {
@@ -7568,7 +7397,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-8",
+    "id": "src-components-tabs-3",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7576,7 +7405,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #9",
+    "title": "Tabs 选项卡 #4",
     "heading": "可增加、删除",
     "expect": "",
     "schema": {
@@ -7604,7 +7433,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-tabs-9",
+    "id": "src-components-tabs-4",
     "group": "组件 / 布局",
     "bucket": "components",
     "section": "布局",
@@ -7612,7 +7441,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Tabs 选项卡 #10",
+    "title": "Tabs 选项卡 #5",
     "heading": "可编辑标签名",
     "expect": "",
     "schema": {
@@ -7626,11 +7455,1239 @@ window.VAMIS_COMPARE_CASES = [
             "tab": "Content 1"
           },
           {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          },
+          {
             "title": "双击编辑",
             "tab": "Content 2"
           }
         ]
       }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-5",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #6",
+    "heading": "可禁用",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2",
+            "disabled": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-6",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #7",
+    "heading": "显示提示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "showTip": true,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-7",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #8",
+    "heading": "作为表单项的值",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "tabs",
+            "name": "tab",
+            "tabs": [
+              {
+                "title": "Tab 1",
+                "tab": "Content 1"
+              },
+              {
+                "title": "Tab 2",
+                "tab": "Content 2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-8",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #9",
+    "heading": "作为表单项的值",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "body": [
+          {
+            "type": "tabs",
+            "name": "tab",
+            "tabs": [
+              {
+                "title": "Tab 1",
+                "tab": "Content 1",
+                "value": 0
+              },
+              {
+                "title": "Tab 2",
+                "tab": "Content 2",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-9",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #10",
+    "heading": "简约",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "simple",
+        "tabs": [
+          {
+            "title": "简约(10)",
+            "body": "选项卡内容1",
+            "icon": "fa fa-home"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-10",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #11",
+    "heading": "加强",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "strong",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-11",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #12",
+    "heading": "线型",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "line",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-12",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #13",
+    "heading": "卡片",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "card",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-13",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #14",
+    "heading": "仿 Chrome",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "chrome",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-14",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #15",
+    "heading": "水平铺满",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "tiled",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          },
+          {
+            "title": "选项卡4",
+            "body": "选项卡内容4"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-15",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #16",
+    "heading": "选择器型",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "radio",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-16",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #17",
+    "heading": "垂直",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "vertical",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-17",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #18",
+    "heading": "侧边栏模式",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "sidebar",
+        "sidePosition": "right",
+        "tabs": [
+          {
+            "title": "按钮",
+            "body": "选项卡内容1",
+            "icon": "fa fa-square"
+          },
+          {
+            "title": "动作",
+            "body": "选项卡内容2",
+            "icon": "fa fa-gavel"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-18",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #19",
+    "heading": "配置顶部工具栏",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "toolbar": [
+          {
+            "type": "button",
+            "label": "按钮",
+            "size": "sm",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "弹窗标题",
+              "body": "你点击了"
+            }
+          }
+        ],
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-19",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #20",
+    "heading": "配置 hash",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "hash": "tab1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "hash": "tab2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-20",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #21",
+    "heading": "默认显示某个选项卡",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "activeKey": "tab2",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "hash": "tab1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "hash": "tab2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-21",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #22",
+    "heading": "默认显示某个选项卡",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "arr": [
+          {
+            "a": "收入",
+            "b": 199,
+            "key": "a"
+          },
+          {
+            "a": "支出",
+            "b": 299,
+            "key": "b"
+          }
+        ]
+      },
+      "body": [
+        {
+          "type": "tabs",
+          "activeKey": "b",
+          "source": "${arr}",
+          "tabs": [
+            {
+              "title": "${a}",
+              "hash": "${key}",
+              "body": {
+                "type": "tpl",
+                "tpl": "金额：${b|number}元"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-22",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #23",
+    "heading": "默认显示某个选项卡",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "activeKey": 1,
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-23",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #24",
+    "heading": "动态设置选项卡",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "key": 2
+      },
+      "body": [
+        {
+          "type": "radios",
+          "name": "key",
+          "mode": "inline",
+          "label": "激活的选项卡",
+          "options": [
+            {
+              "label": "Tab 1",
+              "value": 0
+            },
+            {
+              "label": "Tab 2",
+              "value": 1
+            },
+            {
+              "label": "Tab 3",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "tabs",
+          "activeKey": "${key|toInt}",
+          "tabs": [
+            {
+              "title": "Tab 1",
+              "tab": "Content 1"
+            },
+            {
+              "title": "Tab 2",
+              "tab": "Content 2"
+            },
+            {
+              "title": "Tab 3",
+              "tab": "Content 3"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-24",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #25",
+    "heading": "初始化设置默认选项卡",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "defaultKey": 1,
+        "key": 2
+      },
+      "body": [
+        {
+          "type": "radios",
+          "name": "key",
+          "mode": "inline",
+          "label": "激活的选项卡",
+          "options": [
+            {
+              "label": "Tab 1",
+              "value": 0
+            },
+            {
+              "label": "Tab 2",
+              "value": 1
+            },
+            {
+              "label": "Tab 3",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "tabs",
+          "activeKey": "${activeKey|toInt}",
+          "defaultKey": "${defaultKey|toInt}",
+          "tabs": [
+            {
+              "title": "Tab 1",
+              "tab": "Content 1"
+            },
+            {
+              "title": "Tab 2",
+              "tab": "Content 2"
+            },
+            {
+              "title": "Tab 3",
+              "tab": "Content 3"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-25",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #26",
+    "heading": "图标",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1",
+            "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-26",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #27",
+    "heading": "title 自定义",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "addBtnText": "新增Tab",
+        "showTip": true,
+        "tabs": [
+          {
+            "title": {
+              "type": "container",
+              "body": [
+                {
+                  "type": "tpl",
+                  "tpl": "这里是容器内容区"
+                },
+                {
+                  "type": "icon",
+                  "icon": "cloud"
+                }
+              ]
+            },
+            "closable": true,
+            "tab": "Content 1",
+            "tip": "容器内容区提示"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-27",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #28",
+    "heading": "配置超出折叠",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "tabsMode": "tiled",
+        "tabs": [
+          {
+            "title": "Tab 1",
+            "tab": "Content 1"
+          },
+          {
+            "title": "Tab 2",
+            "tab": "Content 2"
+          },
+          {
+            "title": "Tab 3",
+            "tab": "Content 3"
+          },
+          {
+            "title": "Tab 4",
+            "tab": "Content 4"
+          },
+          {
+            "title": "Tab 5",
+            "tab": "Content 5"
+          }
+        ],
+        "collapseOnExceed": 3
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-28",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #29",
+    "heading": "change",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "mode": "line",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ],
+        "onEvent": {
+          "change": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "切换至选项卡${event.data.value}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-29",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #30",
+    "heading": "delete",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tabs",
+        "closable": true,
+        "mode": "line",
+        "tabs": [
+          {
+            "title": "选项卡1",
+            "body": "选项卡内容1"
+          },
+          {
+            "title": "选项卡2",
+            "body": "选项卡内容2"
+          },
+          {
+            "title": "选项卡3",
+            "body": "选项卡内容3"
+          }
+        ],
+        "onEvent": {
+          "delete": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "删除选项卡${event.data.value}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-30",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #31",
+    "heading": "changeActiveKey",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "action",
+          "label": "激活选项卡1",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "changeActiveKey",
+                  "componentId": "tabs-change-receiver",
+                  "args": {
+                    "activeKey": 1
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "action",
+          "label": "激活选项卡2",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "changeActiveKey",
+                  "componentId": "tabs-change-receiver",
+                  "args": {
+                    "activeKey": 2
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "action",
+          "label": "激活选项卡3",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "changeActiveKey",
+                  "componentId": "tabs-change-receiver",
+                  "args": {
+                    "activeKey": 3
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "tabs-change-receiver",
+          "type": "tabs",
+          "mode": "line",
+          "tabs": [
+            {
+              "title": "选项卡1",
+              "body": "选项卡内容1"
+            },
+            {
+              "title": "选项卡2",
+              "body": "选项卡内容2"
+            },
+            {
+              "title": "选项卡3",
+              "body": "选项卡内容3"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-tabs-31",
+    "group": "组件 / 布局",
+    "bucket": "components",
+    "section": "布局",
+    "page": "Tabs 选项卡",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Tabs 选项卡 #32",
+    "heading": "deleteTab",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "action",
+          "label": "删除选项卡1",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "deleteTab",
+                  "componentId": "tabs-delete-receiver",
+                  "args": {
+                    "deleteHash": "tab1"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "action",
+          "label": "删除选项卡2",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "deleteTab",
+                  "componentId": "tabs-delete-receiver",
+                  "args": {
+                    "deleteHash": "tab2"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "action",
+          "label": "删除选项卡3",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "deleteTab",
+                  "componentId": "tabs-delete-receiver",
+                  "args": {
+                    "deleteHash": "tab3"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "tabs-delete-receiver",
+          "type": "tabs",
+          "mode": "line",
+          "tabs": [
+            {
+              "title": "选项卡1",
+              "hash": "tab1",
+              "body": "选项卡内容1"
+            },
+            {
+              "title": "选项卡2",
+              "hash": "tab2",
+              "body": "选项卡内容2"
+            },
+            {
+              "title": "选项卡3",
+              "hash": "tab3",
+              "body": "选项卡内容3"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "tree"

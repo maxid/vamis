@@ -125,6 +125,29 @@
   --link-disabled-color: var(--colors-neutral-text-6);
   --link-icon-size: 14px;
   --link-icon-margin: 4px;
+  /* Tabs：转写 Amis `--Tabs-*` / `--Tabs--line-*`，选择器只 var()。 */
+  --tabs-line-color: var(--colors-neutral-text-2);
+  --tabs-line-hover: var(--primary);
+  --tabs-line-active: var(--primary);
+  --tabs-line-disabled: var(--colors-neutral-text-6);
+  --tabs-line-border: var(--border);
+  --tabs-line-pad-x: 16px;
+  --tabs-line-underline: 2px;
+  --tabs-pane-pad: var(--gap-base);
+  --tabs-close: #83868c;
+  --tabs-icon-gap: var(--gap-sm);
+  --tabs-card-bg: var(--colors-neutral-fill-10);
+  --tabs-card-active-bg: var(--colors-neutral-fill-11);
+  --tabs-radio-h: 30px;
+  --tabs-vertical-w: 140px;
+  --tabs-vertical-active-border: 4px;
+  --tabs-sidebar-w: 62px;
+  --tabs-sidebar-pad: 22px;
+  --tabs-chrome-radius: 8px;
+  --tabs-chrome-bg: var(--colors-neutral-fill-10);
+  --tabs-chrome-hover: var(--colors-neutral-fill-10);
+  --tabs-chrome-active: var(--card);
+  --tabs-add-icon: 15px;
   --secondary: oklch(0.945 0.01 250);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 250);
@@ -1012,6 +1035,12 @@
     margin-bottom: 0;
     white-space: nowrap;
     padding-top: calc((var(--control-h) - 1rem) / 2);
+  }
+  .vamis-form-item--inline:has([data-vamis-radios]) {
+    align-items: center;
+  }
+  .vamis-form-item--inline:has([data-vamis-radios]) .vamis-form-item__label {
+    padding-top: 0;
   }
   .vamis-form-item--inline .vamis-control--fluid {
     width: auto;
@@ -3788,6 +3817,9 @@
 .vamis-dropdown-menu:not(.is-mobile) .vamis-dropdown-item:not(.is-disabled):hover {
   background: var(--select-option-hover-bg);
   color: var(--select-option-hover-color);
+}
+.vamis-dropdown-item.is-active {
+  color: var(--primary);
 }
 .vamis-dropdown-item.is-disabled {
   cursor: not-allowed;
@@ -6589,3 +6621,516 @@ svg.vamis-tag-default-icon {
   vertical-align: baseline;
   top: 0;
 }
+
+/* Tabs：对齐 Amis `_tabs.scss` line/card/simple/strong/radio/tiled/vertical/sidebar/chrome。 */
+.vamis-tabs {
+  width: 100%;
+  min-width: 0;
+}
+.vamis-tabs__nav {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+}
+.vamis-tabs--line .vamis-tabs__nav::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid var(--tabs-line-border);
+  pointer-events: none;
+}
+.vamis-tabs__links {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+.vamis-tabs__link {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  max-width: 160px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.vamis-tabs__link > button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: var(--tabs-icon-gap);
+  max-width: 100%;
+  padding: 0 0 8px;
+  margin: 0 3px 0 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--tabs-line-color);
+  cursor: pointer;
+  overflow: hidden;
+}
+.vamis-tabs__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vamis-tabs__icon,
+.vamis-tabs__icon.icon,
+.vamis-tabs__link img.vamis-tabs__icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.vamis-tabs--line .vamis-tabs__link {
+  padding: 0 var(--tabs-line-pad-x);
+}
+.vamis-tabs--line .vamis-tabs__link:first-child {
+  padding-left: 0;
+}
+.vamis-tabs--line .vamis-tabs__link:last-child {
+  padding-right: 0;
+}
+.vamis-tabs--line .vamis-tabs__link > button {
+  align-self: stretch;
+  height: 100%;
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+.vamis-tabs--line .vamis-tabs__link:not(.is-disabled):hover > button {
+  color: var(--tabs-line-hover);
+}
+.vamis-tabs--line .vamis-tabs__link.is-active > button {
+  color: var(--tabs-line-active);
+  border-bottom: var(--tabs-line-underline) solid var(--tabs-line-active);
+}
+.vamis-tabs__link.is-disabled > button {
+  color: var(--tabs-line-disabled);
+  cursor: not-allowed;
+}
+.vamis-tabs__content {
+  background: var(--card);
+  border-style: solid;
+  border-width: 0 1px 1px;
+  border-color: var(--border);
+}
+.vamis-tabs--line .vamis-tabs__content,
+.vamis-tabs--card .vamis-tabs__content,
+.vamis-tabs--simple .vamis-tabs__content,
+.vamis-tabs--chrome .vamis-tabs__content,
+.vamis-tabs--vertical .vamis-tabs__content {
+  border: 0;
+  background: transparent;
+}
+.vamis-tabs--radio .vamis-tabs__content {
+  border-width: 1px;
+  background: transparent;
+}
+.vamis-tabs__pane {
+  padding: var(--tabs-pane-pad);
+}
+.vamis-tabs__link--dragging {
+  opacity: 0.4;
+}
+.vamis-tabs__close {
+  display: flex;
+  align-items: center;
+  width: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--tabs-close);
+  flex: none;
+  transition: width 0.2s linear, margin 0.2s linear;
+}
+.vamis-tabs__link:hover .vamis-tabs__close {
+  width: 12px;
+  margin-left: 4px;
+}
+.vamis-tabs__close .vamis-close,
+.vamis-tabs__close svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+.vamis-tabs__add {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  flex: none;
+  color: var(--tabs-line-color);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  cursor: pointer;
+  padding: 0 0 8px;
+  margin: 0 0 0 20px;
+  white-space: nowrap;
+}
+.vamis-tabs--line .vamis-tabs__add {
+  border-bottom: var(--tabs-line-underline) solid transparent;
+}
+.vamis-tabs__add-icon {
+  width: var(--tabs-add-icon);
+  height: var(--tabs-add-icon);
+  padding: 1px;
+  margin-right: var(--gap-xs);
+  flex: none;
+  display: block;
+}
+.vamis-tabs__add:hover {
+  color: var(--primary);
+}
+.vamis-tabs__edit {
+  width: 7em;
+  border: 0;
+  outline: none;
+  font: inherit;
+  background: transparent;
+}
+.vamis-tabs__toolbar {
+  flex: none;
+  padding-bottom: 8px;
+}
+.vamis-tabs__more {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  color: var(--tabs-line-color);
+  cursor: pointer;
+  padding: 0 0 8px;
+}
+.vamis-tabs__more.is-opened {
+  color: var(--tabs-line-active);
+}
+.vamis-tabs__more .vamis-caret {
+  margin-left: 2px;
+}
+.vamis-tabs__more-menu {
+  min-width: var(--dropdown-menu-min-width);
+}
+
+.vamis-tabs--card .vamis-tabs__nav {
+  background: var(--tabs-card-bg);
+}
+.vamis-tabs--card .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--card .vamis-tabs__links {
+  padding: 8px 10px 0;
+}
+.vamis-tabs--card .vamis-tabs__link {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: transparent;
+}
+.vamis-tabs--card .vamis-tabs__link > button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.vamis-tabs--card .vamis-tabs__link.is-active {
+  background: var(--tabs-card-active-bg);
+}
+.vamis-tabs--card .vamis-tabs__link:not(.is-disabled):hover {
+  background: var(--tabs-card-active-bg);
+}
+
+.vamis-tabs--simple .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--simple .vamis-tabs__link {
+  padding: 4px 16px;
+}
+.vamis-tabs--simple .vamis-tabs__link:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  height: 14px;
+  width: 0;
+  transform: translateY(-50%);
+  border-right: 1px solid var(--border);
+}
+.vamis-tabs--simple .vamis-tabs__link > button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.vamis-tabs--simple .vamis-tabs__link.is-active > button,
+.vamis-tabs--simple .vamis-tabs__link:not(.is-disabled):hover > button {
+  color: var(--primary);
+}
+
+.vamis-tabs--strong .vamis-tabs__nav {
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+}
+.vamis-tabs--strong .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--strong .vamis-tabs__links {
+  margin-bottom: -1px;
+  align-items: stretch;
+}
+.vamis-tabs--strong .vamis-tabs__link {
+  margin-right: 8px;
+  padding: 8px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.vamis-tabs--strong .vamis-tabs__link > button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.vamis-tabs--strong .vamis-tabs__link.is-active {
+  border-bottom-color: transparent;
+}
+.vamis-tabs--strong .vamis-tabs__link.is-active > button,
+.vamis-tabs--strong .vamis-tabs__link:not(.is-disabled):hover > button {
+  color: var(--primary);
+}
+
+.vamis-tabs--radio .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--radio .vamis-tabs__nav {
+  margin-bottom: 10px;
+}
+.vamis-tabs--radio .vamis-tabs__link {
+  max-width: none;
+  min-width: 68px;
+  height: var(--tabs-radio-h);
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+.vamis-tabs--radio .vamis-tabs__link > button {
+  width: 100%;
+  height: 100%;
+  padding: 0 12px;
+  margin: 0;
+  justify-content: center;
+  border: 0;
+}
+.vamis-tabs--radio .vamis-tabs__link + .vamis-tabs__link {
+  margin-left: -1px;
+}
+.vamis-tabs--radio .vamis-tabs__link.is-active {
+  z-index: 1;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.vamis-tabs--radio .vamis-tabs__link.is-active > button {
+  color: var(--primary-foreground);
+}
+
+.vamis-tabs--tiled .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--tiled .vamis-tabs__nav {
+  align-items: stretch;
+  border-bottom: 0;
+}
+.vamis-tabs--tiled .vamis-tabs__links {
+  width: 100%;
+  align-items: stretch;
+}
+.vamis-tabs--tiled .vamis-tabs__link {
+  flex: 1 1 0;
+  max-width: none;
+  justify-content: center;
+  margin-left: -1px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+.vamis-tabs--tiled .vamis-tabs__link > button {
+  width: 100%;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+.vamis-tabs--tiled .vamis-tabs__link.is-active {
+  border-top-color: var(--primary);
+  border-bottom-color: transparent;
+}
+
+.vamis-tabs--vertical {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 200px;
+  border: 1px solid var(--tabs-line-border);
+}
+.vamis-tabs--vertical .vamis-tabs__nav {
+  flex: 0 0 var(--tabs-vertical-w);
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--tabs-card-bg);
+}
+.vamis-tabs--vertical .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--vertical .vamis-tabs__links {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+.vamis-tabs--vertical .vamis-tabs__link {
+  max-width: none;
+  padding: 0;
+}
+.vamis-tabs--vertical .vamis-tabs__link > button {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  margin: 0;
+  border-left: var(--tabs-vertical-active-border) solid transparent;
+}
+.vamis-tabs--vertical .vamis-tabs__link.is-active > button {
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+.vamis-tabs--vertical .vamis-tabs__content {
+  flex: 1 1 auto;
+  width: calc(100% - var(--tabs-vertical-w));
+  border: 0;
+}
+
+.vamis-tabs--sidebar {
+  display: flex;
+  align-items: stretch;
+}
+.vamis-tabs--sidebar-right {
+  flex-direction: row-reverse;
+}
+.vamis-tabs--sidebar .vamis-tabs__nav {
+  flex: 0 0 var(--tabs-sidebar-w);
+  align-items: flex-start;
+}
+.vamis-tabs--sidebar .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--sidebar .vamis-tabs__links {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: var(--tabs-sidebar-pad);
+}
+.vamis-tabs--sidebar .vamis-tabs__link {
+  max-width: none;
+  margin-bottom: var(--tabs-sidebar-pad);
+  flex-direction: column;
+  align-items: center;
+}
+.vamis-tabs--sidebar .vamis-tabs__link > button {
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: var(--colors-neutral-text-5);
+}
+.vamis-tabs--sidebar .vamis-tabs__icon,
+.vamis-tabs--sidebar .vamis-tabs__icon.icon,
+.vamis-tabs--sidebar .vamis-tabs__link i {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+  margin: 0;
+  display: inline-block;
+}
+.vamis-tabs--sidebar .vamis-tabs__link.is-active > button,
+.vamis-tabs--sidebar .vamis-tabs__link:not(.is-disabled):hover > button {
+  color: var(--primary);
+}
+.vamis-tabs--sidebar .vamis-tabs__content {
+  flex: 1 1 auto;
+  background: transparent;
+  border-style: solid;
+  border-color: var(--tabs-line-border);
+  border-width: 0 1px 0 1px;
+}
+.vamis-tabs--sidebar-left .vamis-tabs__content {
+  border-right-width: 0;
+}
+.vamis-tabs--sidebar-right .vamis-tabs__content {
+  border-left-width: 0;
+}
+
+.vamis-tabs--chrome .vamis-tabs__nav {
+  background: var(--tabs-chrome-bg);
+  overflow-x: hidden;
+}
+.vamis-tabs--chrome .vamis-tabs__nav::before {
+  content: none;
+}
+.vamis-tabs--chrome .vamis-tabs__links {
+  width: 100%;
+  padding: 8px 10px 0;
+}
+.vamis-tabs--chrome .vamis-tabs__link {
+  flex: 1;
+  min-width: 0;
+  max-width: 250px;
+  padding: 7px 20px 6px;
+  overflow: visible;
+  cursor: pointer;
+}
+.vamis-tabs--chrome .vamis-tabs__link > button {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  min-width: 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.vamis-tabs--chrome .vamis-tabs__link .vamis-tabs__close {
+  pointer-events: auto;
+}
+.vamis-tabs--chrome .vamis-tabs__link:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: var(--tabs-chrome-radius);
+  height: calc(100% - var(--tabs-chrome-radius) * 2);
+  width: 1px;
+  background: var(--colors-neutral-line-5);
+}
+.vamis-tabs--chrome .vamis-tabs__link.is-active {
+  background: var(--tabs-chrome-active);
+  border-radius: var(--tabs-chrome-radius) var(--tabs-chrome-radius) 0 0;
+}
+.vamis-tabs--chrome .vamis-tabs__link.is-active::after {
+  display: none;
+}
+
+.dark {
+  --tabs-close: #84878c;
+}
+

@@ -939,6 +939,12 @@ alwaysApply: true
 - 稳定做法：`localTabs` 从 `tabsFromSource` 初始化，`edited` 前随 source watch 同步；addable 追加并激活新 key，closable 按单个 tab 覆盖全局，editable 双击输入框、blur/Enter 提交，draggable 用原生 HTML5 拖拽重排；不要直接改只读 schema。
 - 触及：`tabs`
 
+### Tabs 盒模型打在 link 上；对照不要读 formData
+- 踩过：padding / 边框打在 `button` 上，card / radio / tiled / strong 和 Amis `li` 对不齐。给所有 line 项垫 2px 透明下划线会把未激活文字抬平，Amis 要的是未激活矮 1px。新增按钮放进 links 用 `line-height: 1` 会对不齐标签。`hash` 只写一次、折叠文案停在 `more`、sidebar 清掉内容区竖边。
+- 稳定做法：整颗 `.vamis-tabs__link` 接收 click。line **只有激活项** 2px 下划线，未激活 `border-width: 0`，行 `align-items: stretch`（inactive 文字矮 1px）。关闭钮放进 button 文本行。新增是 nav 里 links 的兄弟，同一套 `font-size: 14` / `line-height: 1.5` / `padding-bottom: 8px`。拖拽 SortableJS `animation: 250`。折叠 `__('more')` → 「更多」。`hash` 每次选中都 `updateLocation`（`pushState` + `hashchange`/`popstate` 回写）。初始化示例 `activeKey` 公式求空时仍跟 radios `name:key`。sidebar 内容区内侧留 1px `--tabs-line-border`。Chrome 激活才白底。`toInt` 对齐 Amis；无 form 的 radios 写 `scope.set`。对照 `tabs`/`tab` 走 schemaValue。
+- 触及：`tabs` `radios`
+- 规则：Amis `_tabs.scss` / `Tabs.tsx` handleSelect；`packages/vamis-sdk/embed-case.html` `readNodeValue`
+
 ### List 的选择态是组件本地态；itemAction 用 runAction
 - 踩过：selectable 时点整行就勾选；itemClick toast 要 `${event.data.item.index}` 才对得上 Amis。带 `id` 的动作示例对照先按 `#id` 命中 Vamis `.vamis-node`，Amis 没有 → rendered/value 假红。行内 Action 的 `.vamis-node.w-full` 把 float 动作条拉成整行，点行 / 勾选 / itemAction / itemClick 都被挡住；itemAction 弹层还要传 `overlay`。
 - 稳定做法：行点击用 `@click.capture`（内层 `SchemaRenderer` 的 host click 会抢冒泡）；先拦真正的控件/按钮（对齐 `isClickOnInput`）；有 `onEvent.itemClick` 就不走 `itemAction`；`runAction` / `runOnEvent` 带上 `overlay`。勾选复用 `@vamis/ui` Checkbox / `.vamis-radio-dot`（与 Table2 同一套），未写 `checkOnItemClick: false` 时点行也可勾。动作条 `.vamis-node` 必须 `width: auto`，行 `display: flex; align-items: center`。对照把 `list` 放进 `TREE_LAYOUT`。

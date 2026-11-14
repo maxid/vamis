@@ -51,6 +51,9 @@ registerFilter('datetime', (input: unknown, format = 'YYYY-MM-DD HH:mm:ss', inpu
   return parsed.isValid() ? parsed.format(format as string) : ''
 })
 
+/** Amis `|toInt`：字符串 parseInt，其它原样（数字 radios 值保持 number）。 */
+registerFilter('toInt', (input: unknown) => (typeof input === 'string' ? parseInt(input, 10) : input))
+
 registerFilter('number', (input: unknown) => {
   const parts = String(input ?? '').split('.')
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')

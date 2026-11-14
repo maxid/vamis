@@ -182,6 +182,8 @@ export interface RendererEnv {
   fetcher: (api: ApiObject, data?: PlainObject) => Promise<unknown>
   notify: (type: NotifyType, msg: string, conf?: NotifyConf) => void
   jumpTo: (to: string, opts?: JumpToOptions) => void
+  /** 对齐 Amis `env.updateLocation`。Tabs `hash` 写 `#key`；`replace` 走 `history.replaceState`。 */
+  updateLocation?: (to: string, replace?: boolean) => void
   alert: (msg: string, title?: string) => void
   /** 对齐 Amis `Alert.confirm`：默认 Modal，不是 `window.confirm`。第三参为按钮文案 / Esc / size。 */
   confirm: (

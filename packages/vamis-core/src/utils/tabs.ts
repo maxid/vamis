@@ -38,8 +38,50 @@ const TAB_MODES = new Set<TabsMode>([
 export type TabItem = SchemaObject & { __item?: unknown }
 
 export function tabsMode(schema: unknown): TabsMode {
-  const mode = asRecord(schema).tabsMode
+  const rec = asRecord(schema)
+  const mode = rec.tabsMode ?? rec.mode
   return typeof mode === 'string' && TAB_MODES.has(mode as TabsMode) ? (mode as TabsMode) : 'line'
+}
+
+export function tabsSidePosition(schema: unknown): 'left' | 'right' {
+  return asRecord(schema).sidePosition === 'right' ? 'right' : 'left'
+}
+
+export function tabsAddBtnText(schema: unknown): string {
+  const text = asRecord(schema).addBtnText
+  return text != null && String(text).trim() ? String(text) : '新增'
+}
+
+export function tabsCollapseOnExceed(schema: unknown): number {
+  const n = Number(asRecord(schema).collapseOnExceed)
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0
+}
+
+const TABS_LOCALE: Record<string, string> = { more: '更多' }
+
+export function tabsCollapseBtnLabel(schema: unknown): string {
+  const text = asRecord(schema).collapseBtnLabel
+  const raw = text != null && String(text).trim() ? String(text) : 'more'
+  return TABS_LOCALE[raw] || raw
+}
+
+export function tabClosable(schema: unknown, tab: unknown): boolean {
+  const rec = asRecord(tab)
+  if (rec.closable === false) return false
+  if (rec.closable === true) return true
+  return asRecord(schema).closable === true
+}
+
+export function tabIconPosition(tab: unknown): 'left' | 'right' {
+  return asRecord(tab).iconPosition === 'right' ? 'right' : 'left'
+}
+
+export function tabFormValue(tab: unknown, key: string, data: Record<string, unknown> = {}): unknown {
+  const rec = asRecord(tab)
+  if (rec.value != null) return rec.value
+  const title = tabTitle(tab, data)
+  if (typeof title === 'string' && title) return title
+  return key
 }
 
 export function tabsTemplates(schema: unknown): SchemaObject[] {
@@ -94,6 +136,23 @@ export function tabsVisible(tabs: TabItem[], data: Record<string, unknown> = {})
   return tabs.filter((tab) => isVisible(tab, tabScope(tab, data)))
 }
 
+export function tabsLocationHash(): string {
+  if (typeof window === 'undefined' || !window.location) return ''
+  return String(window.location.hash || '').replace(/^#/, '')
+}
+
+export function tabHasHash(tab: unknown, data: Record<string, unknown> = {}): boolean {
+  const rec = asRecord(tab)
+  if (rec.hash == null || rec.hash === '') return false
+  return Boolean(filterTpl(String(rec.hash), data))
+}
+
+function tabsEmptyActive(value: unknown): boolean {
+  if (value == null || value === '') return true
+  if (typeof value === 'number' && Number.isNaN(value)) return true
+  return false
+}
+
 export function tabsNormalizeActive(
   key: unknown,
   tabs: TabItem[],
@@ -110,9 +169,28 @@ export function tabsNormalizeActive(
   return keys[0]
 }
 
+/** schema.activeKey 求值；公式空 / NaN 视为未指定，好落到 defaultKey / hash。 */
+export function tabsResolveActiveKey(
+  schema: unknown,
+  tabs: TabItem[],
+  data: Record<string, unknown> = {},
+): string | undefined {
+  const rec = asRecord(schema)
+  if (rec.activeKey == null || rec.activeKey === '') return undefined
+  const raw = resolveValue(rec.activeKey, data)
+  if (tabsEmptyActive(raw)) return undefined
+  return tabsNormalizeActive(raw, tabs, data)
+}
+
 export function tabsInitialActive(schema: unknown, tabs: TabItem[], data: Record<string, unknown> = {}): string {
   const rec = asRecord(schema)
-  if (rec.activeKey != null && rec.activeKey !== '') return tabsNormalizeActive(rec.activeKey, tabs, data)
+  const fromActive = tabsResolveActiveKey(schema, tabs, data)
+  if (fromActive != null) return fromActive
+  const hash = tabsLocationHash()
+  if (hash) {
+    const keys = tabs.map((tab, index) => tabKey(tab, index, tabScope(tab, data)))
+    if (keys.includes(hash)) return hash
+  }
   if (rec.defaultKey != null && rec.defaultKey !== '') return tabsNormalizeActive(rec.defaultKey, tabs, data)
   return tabsNormalizeActive(undefined, tabs, data)
 }

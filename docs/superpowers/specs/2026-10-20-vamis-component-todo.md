@@ -126,7 +126,7 @@
 | `input-image` | 80% | 已核 | 2026-11-12。`--input-image-*` 走 `--card` / `--border` / `--primary`；无浮层（点击缩略图新窗口） |
 | `textarea` | 85% | 已核 | 2026-11-12。textarea 走 `--card` / `--input` / `--foreground`；无浮层 |
 | `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
-| `collapse` / `tabs` / `portlet` | 85% | 未核 | |
+| `collapse` / `tabs` / `portlet` | 85% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#17202d` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
 | `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
 | `divider` `pagination` `pagination-wrapper` `switch-container` | 90% | 未核 | |
 | `button-group` | 92% | 已核 | 邻钮 1px 负缝打在 `.vamis-node`，hover 抬 wrapper；无独立浮层 |
@@ -153,7 +153,7 @@
 | `pagination` | Pagination 分页 | `/components/pagination` | `/zh-CN/components/pagination` | 进行中 | 92% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`。文档补 change 事件示例与 llipsis/perPageAvailable/showPageInput/onPageChange 属性；缺 `themeCss`、移动端 `mobileUI` | P0 |
 | `pagination-wrapper` | PaginationWrapper 分页容器 | `/components/pagination-wrapper` | `/zh-CN/components/pagination-wrapper` | 进行中 | 90% | 文档主路径已对齐：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
 | `panel` | Panel 面板 | `/components/panel` | `/zh-CN/components/panel` | 进行中 | 90% | 文档主路径已对齐：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、色档、移动端 `Panel--form` | P0 |
-| `tabs` | Tabs 选项卡 | `/components/tabs` | `/zh-CN/components/tabs` | 进行中 | 90% | 文档主路径已对齐：`tabs[].body` / `tab`、`source` 动态、`activeKey` / `hash`、`disabled`、`mountOnEnter`、`change`。line 模式链接条 `width: 100%`，下划线拉满槽宽。补 `addable` / `addBtnText`、`closable`、`editable`（双击改名）、`draggable`；缺其余 `tabsMode` 像素级、`themeCss`、`swipeable` | P0 |
+| `tabs` | Tabs 选项卡 | `/components/tabs` | `/zh-CN/components/tabs` | 进行中 | 95% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、九种 `tabsMode`（`mode` 别名）、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms）、折叠「更多」下拉、地址栏 `#hash` 来回同步、sidebar 内侧竖线、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 未激活文字矮 1px（inactive 无 2px 下划线）。缺 `swipeable`、chrome 耳朵 SVG、`themeCss`、单项 `unmountOnExit` | P0 |
 | `wrapper` | Wrapper 包裹容器 | `/components/wrapper` | `/zh-CN/components/wrapper` | 进行中 | 90% | 文档主路径已对齐：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss` | P0 |
 | `portlet` | Portlet 门户栏目 | `/components/portlet` | `/zh-CN/components/portlet` | 进行中 | 85% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`description`、`hideHeader`、默认分隔线 / `divider: false`、全局与 tab 级 `toolbar`、`mountOnEnter` 默认 false、`change`。缺 `themeCss`、icon 像素、`scrollable` | P0 |
 | `switch-container` | switch-container 状态容器 | `/components/switch-container` | `/zh-CN/components/switch-container` | 进行中 | 90% | 文档主路径已对齐：`items[].body` / `visibleOn` 取首个命中、`style`、宿主 click/mouseenter/mouseleave。缺 `themeCss`、`switchTo` 动作。侧栏未收录，docs 有独立页 | P0 |
@@ -455,7 +455,7 @@ flowchart LR
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 90% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 90% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
-| 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 90% |
+| 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 95% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 99% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
