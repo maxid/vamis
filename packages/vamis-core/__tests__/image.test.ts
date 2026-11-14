@@ -113,6 +113,21 @@ describe('image renderer / docs', () => {
     expect(schemaNodeDisplayClass({ type: 'image' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'static-image' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'image', imageMode: 'original' })).toBe('')
+    expect(schemaNodeDisplayClass({ type: 'image', thumbMode: 'h-stretch' })).toBe('')
+    expect(
+      schemaNodeDisplayClass(
+        { type: 'image', thumbMode: "${index % 2 === 0 ? 'h-stretch' : 'cover'}" },
+        { index: 0 },
+      ),
+    ).toBe('')
+    expect(
+      schemaNodeDisplayClass(
+        { type: 'image', thumbMode: "${index % 2 === 0 ? 'h-stretch' : 'cover'}" },
+        { index: 1 },
+      ),
+    ).toBe('inline-block')
+    expect(css).toContain('.vamis-image-thumb.is-h-stretch')
+    expect(css).toContain('.vamis-node.inline-block:has(> .vamis-image-field.is-fill)')
     expect(css).toContain('.vamis-form .vamis-node:has(> .vamis-form-item--horizontal)')
     expect(docs).toContain('## 放大功能')
     expect(docs).toContain('## 原图模式')

@@ -284,6 +284,12 @@ alwaysApply: true
 - 触及：`form` FormItem `input-text` `checkbox` `static-image` `image` `tag`
 - 规则：`.cursor/rules/component.mdc`
 
+### Image `h-stretch` 要打穿包装层 inline-block
+- 踩过：瀑布流偶数卡右侧留白。根因是 `type: image` 一律给 `.vamis-node` 打 `inline-block`（对齐页里并排缩略图），内层 `.is-fill` 的 `width:100%` 相对 shrink-wrap 父级解不成卡片列宽。不是 Cards `gap` / masonry 的问题。
+- 稳定做法：`isInlineBlockSchema` 对 image 再看解析后的 `thumbMode`（`schemaNodeDisplayClass` 要传入行 `data`，表达式 `${index % 2 === 0 ? 'h-stretch' : 'cover'}` 才能分奇偶）。`h-stretch` / `imageMode: original` 包装层块级。CSS 再加 `.vamis-node.inline-block:has(> .vamis-image-field.is-fill)` → `display:block; width:100%`。cover 仍 inline-block、110px。不要改 Cards 或瀑布流 schema。
+- 触及：`image` `cards`
+- 规则：本文；`packages/vamis-core/src/style.ts` `isInlineBlockSchema`
+
 ### 1px 分隔线不要打在 overflow:hidden 的固定高子项上
 - 踩过：移动端多选两行选中之间的横线消失。Amis option **37px**（line-height 36 + 子项 1px 底边）；Vamis 钉死 36 且全局 `border-box`，1px 被吃进盒子，线落在裁切边上像 0.5px。不是勾把行撑高。Chrome **100% 缩放**看不见、改缩放又出现。这是 Tailwind preflight `* { box-sizing: border-box }` + 钉死 `height` 的通病，不是某一个 shadcn 组件独有。`table` / `table2` 多选是另一面：Tailwind preflight `border-collapse: collapse` + `tr` 的 `border-b` + 选中 `bg-accent` + checkbox `translate-y-0.5`，两行选中共用那 1px，100% 缩放同样消失。
 - 稳定做法：列表项跟 Amis：**不要钉死行高**。`height: auto`，`line-height: 36px`，1px 画在内层并用 `box-sizing: content-box`，整行量出来必须是 **37**。选中/未选同一套字重和 padding。勾的垂直居中用 `margin-top: -8px`，不要 `transform: translateY(-50%)`（合成层会让 1px 在 100% 缩放消失，一改缩放又出现）。不要 `scaleY(0.5)` hairline。表格另走 Amis：`border-collapse: separate` + `border-spacing: 0`，线画在 **td** 上，不要 `tr` 的 `border-b`；选中底用 `--table-checked-bg`（= `--card`，对齐 fill-11），不要 `bg-accent` 盖线；checkbox 不要 `translate-y-0.5`。表格单元格仍钉 Amis 的 40px（含边），不要改成 41 的 content-box。

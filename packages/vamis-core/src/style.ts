@@ -1,5 +1,6 @@
 import type { PlainObject } from './types'
 import { evalExpression, filterTpl, resolveValue } from './formula'
+import { imageFillsParent, imageThumbMode } from './utils/image'
 
 const GAP_HELPER =
   /^(m|p)(?:-(t|b|l|r|x|y))?(?:-(none|xxs|xs|sm|base|md|lg|xl|xxl))?$/
@@ -129,9 +130,10 @@ type SchemaDisplayNode = {
   direction?: unknown
   body?: unknown
   imageMode?: unknown
+  thumbMode?: unknown
 } | null
 
-export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
+export function isInlineBlockSchema(schema?: SchemaDisplayNode, data?: PlainObject): boolean {
   if (!schema) return false
   if (schema.inline === false) return false
   const type = String(schema.type || '').toLowerCase()
@@ -144,13 +146,18 @@ export function isInlineBlockSchema(schema?: SchemaDisplayNode): boolean {
   }
   // `type: image` 才跟 Amis `.Image--thumb` 一样 inline-block（页里并排）。
   // `static-image` 是 FormItem：包装层必须块级，否则缩成缩略图宽、水平表折成 2×2。
-  if (type === 'image' && schema.imageMode !== 'original') return true
+  // `h-stretch` 要吃满父级宽，包装层再 inline-block 会 shrink-wrap，内层 width:100% 解不成卡片宽。
+  if (type === 'image') {
+    if (schema.imageMode === 'original') return false
+    if (imageFillsParent(imageThumbMode(schema, data))) return false
+    return true
+  }
   return INLINE_BLOCK_SCHEMA_TYPES.has(type)
 }
 
 /** SchemaRenderer 外层 `div.vamis-node` 的 display class。 */
-export function schemaNodeDisplayClass(schema?: SchemaDisplayNode): string {
-  if (isInlineBlockSchema(schema)) return 'inline-block'
+export function schemaNodeDisplayClass(schema?: SchemaDisplayNode, data?: PlainObject): string {
+  if (isInlineBlockSchema(schema, data)) return 'inline-block'
   if (isInlineSchema(schema)) return 'inline'
   return ''
 }

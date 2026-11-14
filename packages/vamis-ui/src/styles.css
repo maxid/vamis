@@ -5334,10 +5334,21 @@
   display: block;
   width: 100%;
 }
+/* h-stretch / original 内层 width:100%。包装层若仍是 inline-block 会 shrink-wrap，百分比解不成父级宽。 */
+.vamis-node.inline-block:has(> .vamis-image-field.is-fill),
+.vamis-node.inline-block:has(> .vamis-image-field.is-original) {
+  display: block;
+  width: 100%;
+}
 .vamis-image-link {
   display: inline-block;
   color: inherit;
   text-decoration: none;
+}
+.vamis-image-field.is-fill .vamis-image-link,
+.vamis-image-field.is-original .vamis-image-link {
+  display: block;
+  width: 100%;
 }
 .vamis-image {
   display: inline-block;
@@ -5370,7 +5381,8 @@
   overflow: hidden;
 }
 .vamis-image.is-fill .vamis-image-thumb,
-.vamis-image.is-original .vamis-image-thumb {
+.vamis-image.is-original .vamis-image-thumb,
+.vamis-image-thumb.is-h-stretch {
   width: 100%;
 }
 .vamis-image.is-original .vamis-image-thumb {

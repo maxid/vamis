@@ -135,6 +135,7 @@ const editorDrop = computed(
 )
 const canDrag = computed(() => !!editor && !!editorPath.value)
 const nodeClass = computed(() => resolveClassName(normalized.value?.className, data.value))
+const nodeDisplayClass = computed(() => schemaNodeDisplayClass(normalized.value, data.value))
 const nodeStyle = computed(() => ({
   ...resolveCssVars(
     normalized.value?.cssVars && typeof normalized.value.cssVars === 'object'
@@ -193,8 +194,8 @@ async function onHostEvent(native: Event, eventName: string) {
     :draggable="canDrag || undefined"
     :class="[
       'vamis-node',
-      fillsLayoutSlot(normalized.type) && !schemaNodeDisplayClass(normalized) ? 'w-full min-w-0' : '',
-      schemaNodeDisplayClass(normalized),
+      fillsLayoutSlot(normalized.type) && !nodeDisplayClass ? 'w-full min-w-0' : '',
+      nodeDisplayClass,
       nodeClass,
       editor && editorPath != null
         ? [

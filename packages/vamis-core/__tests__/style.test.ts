@@ -782,6 +782,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'tag' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'words' })).toBe('inline-block')
     expect(schemaNodeDisplayClass({ type: 'image' })).toBe('inline-block')
+    expect(schemaNodeDisplayClass({ type: 'image', thumbMode: 'h-stretch' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'static-image' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'image', imageMode: 'original' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')

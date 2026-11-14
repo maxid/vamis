@@ -6,7 +6,7 @@ outline: deep
 # Image 图片
 
 ::: info 实现进度 90% · 进行中
-主路径：`src` / `name`、标题与说明、缩略图 `thumbMode` / `thumbRatio`、高宽、原图模式、`enlargeAble` 放大预览、`originalSrc`、`href`、`clickAction`、click / mouseenter / mouseleave、`preview` / `zoom`、放大工具栏（白底 40px SVG，关闭钮左滑 tooltip）。缺 CRUD 行内图集 `enlargeWithGallary`、`hoverMode`、`themeCss`。
+主路径：`src` / `name`、标题与说明、缩略图 `thumbMode` / `thumbRatio`、高宽、`h-stretch` 宽度吃满父级、原图模式、`enlargeAble` 放大预览、`originalSrc`、`href`、`clickAction`、click / mouseenter / mouseleave、`preview` / `zoom`、放大工具栏（白底 40px SVG，关闭钮左滑 tooltip）。缺 CRUD 行内图集 `enlargeWithGallary`、`hoverMode`、`themeCss`。
 :::
 
 `image` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
