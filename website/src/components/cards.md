@@ -588,7 +588,7 @@ data:
   i: "1,3"
 body:
   - type: button
-    label: 更新index为1和3的行记录
+    label: 更新index为1和3
     onEvent:
       click:
         actions:
@@ -605,7 +605,8 @@ body:
                 id: 1234
               index: "${i}"
   - type: button
-    label: 更新index为1和3的行记录(替换)
+    label: 更新index为1和3(替换)
+    className: ml-2
     onEvent:
       click:
         actions:
@@ -618,7 +619,8 @@ body:
               index: "${i}"
               replace: true
   - type: button
-    label: 更新version=7的行记录
+    label: 更新version=7
+    className: ml-2
     onEvent:
       click:
         actions:
@@ -635,7 +637,8 @@ body:
                 id: 1234
               condition: "${version === '7'}"
   - type: button
-    label: 更新version=4的行记录
+    label: 更新version=4
+    className: ml-2
     onEvent:
       click:
         actions:

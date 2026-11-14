@@ -32285,7 +32285,7 @@ window.VAMIS_COMPARE_CASES = [
       "body": [
         {
           "type": "button",
-          "label": "更新index为1和3的行记录",
+          "label": "更新index为1和3",
           "onEvent": {
             "click": {
               "actions": [
@@ -32311,7 +32311,8 @@ window.VAMIS_COMPARE_CASES = [
         },
         {
           "type": "button",
-          "label": "更新index为1和3的行记录(替换)",
+          "label": "更新index为1和3(替换)",
+          "className": "ml-2",
           "onEvent": {
             "click": {
               "actions": [
@@ -32333,7 +32334,8 @@ window.VAMIS_COMPARE_CASES = [
         },
         {
           "type": "button",
-          "label": "更新version=7的行记录",
+          "label": "更新version=7",
+          "className": "ml-2",
           "onEvent": {
             "click": {
               "actions": [
@@ -32359,7 +32361,8 @@ window.VAMIS_COMPARE_CASES = [
         },
         {
           "type": "button",
-          "label": "更新version=4的行记录",
+          "label": "更新version=4",
+          "className": "ml-2",
           "onEvent": {
             "click": {
               "actions": [
