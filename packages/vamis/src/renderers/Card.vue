@@ -103,7 +103,7 @@ const avatarBg = computed(() =>
   cardAvatarTextBackground(avatarText.value, header.value.avatarTextBackground),
 )
 const highlight = computed(() => cardHighlight(props.schema, data.value))
-const dragging = computed(() => cardDragging(props.schema))
+const dragging = computed(() => !!(select?.dragging?.value || cardDragging(props.schema)))
 const useLabel = computed(() => cardUseCardLabel(props.schema))
 const clickable = computed(() => cardClickable(props.schema, data.value))
 const secondary = computed(() => cardSecondary(props.schema, data.value))
@@ -185,9 +185,10 @@ function onCheck(checked: boolean) {
 async function onCardClick(event: MouseEvent) {
   if (isInteractive(event.target)) return
   if (select?.selectable.value && select.checkOnItemClick.value) {
-    select.toggle(data.value)
-    return
+    await select.toggle(data.value)
   }
+  if (select?.onItemClick) await select.onItemClick(data.value, event)
+  if (select?.selectable.value && select.checkOnItemClick.value) return
   if (!select && cardSelectable(props.schema) && props.schema.checkOnItemClick === true) {
     localChecked.value = !localChecked.value
     return
@@ -350,9 +351,6 @@ async function onCardClick(event: MouseEvent) {
   background: var(--card-checked-bg);
   color: var(--card-checked-color);
 }
-.vamis-card.is-checked .vamis-card-fieldLabel {
-  color: var(--card-checked-color);
-}
 .vamis-card.is-checked .vamis-card-actions,
 .vamis-card.is-checked .vamis-card-action {
   border-color: var(--card-checked-border);
@@ -503,11 +501,15 @@ async function onCardClick(event: MouseEvent) {
   -webkit-line-clamp: 2;
   word-wrap: break-word;
 }
+.vamis-card.is-checked .vamis-card-fieldLabel {
+  color: var(--card-checked-fieldLabel);
+}
 .vamis-card-fieldValue {
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-loud);
 }
 .vamis-card-fieldValue .vamis-form-item {
   margin-bottom: 0;

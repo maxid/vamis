@@ -82,6 +82,7 @@ const cardsChild = computed(
       multiple: props.schema.multiple !== false,
       checkOnItemClick: props.schema.checkOnItemClick === true,
       hideCheckToggler: props.schema.hideCheckToggler === true,
+      checkAll: props.schema.checkAll !== false,
     }) as SchemaObject,
 )
 const cardsData = computed(() => ({ items: store.items }))

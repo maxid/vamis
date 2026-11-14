@@ -5,8 +5,8 @@ outline: deep
 
 # Cards 卡片组
 
-::: info 实现进度 80% · 进行中
-文档主路径示例已对标 Amis：基本用法、CRUD `mode: cards` 勾选 / 全选 / `checkOnItemClick`、瀑布流用表达式在 `h-stretch` / `cover` 间切换。缺拖拽、`itemClassName` 像素级栅格、动作表 `select` / `initDrag`。
+::: info 实现进度 90% · 进行中
+文档主路径已对齐：基本用法、CRUD `mode: cards` 勾选 / 顶栏+底栏全选 / `checkOnItemClick`、瀑布流 `h-stretch` / `cover` 表达式、属性表、事件表 selectedChange / selected / rowClick / orderChange、动作表 select / selectAll / clearAll / initDrag / setValue（含 condition 组合）。`title` / 全选 toolbar / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss`。
 :::
 
 卡片展示，不支持配置初始化接口初始化数据域，所以需要搭配类似像 [Service](./service) 这样的、具有配置接口初始化数据域功能的组件，或者手动进行数据域初始化，然后通过 `source` 属性，获取数据链中的数据，完成数据展示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -78,7 +78,7 @@ body:
                 type: static
 ```
 
-或者你也可以使用 CRUD 的 [card 模式](./card)。
+或者你也可以使用 CRUD 的 [card 模式](./crud)。
 
 ## 当 cards 在 crud 中且配置了批量操作按钮时可点选
 
@@ -274,61 +274,411 @@ body:
 | 属性名 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | type | `string` | | `"cards"` 指定为卡片组 |
-| title | 模板 | | 标题 |
-| source | 数据映射 | `${items}` | 数据源，获取当前数据域中的变量。`$items` / `$rows` 同样可读 |
-| placeholder | 模板 | 暂无数据 | 当没数据的时候的文字提示 |
-| className | `string` | | 外层 CSS 类名 |
-| headerClassName | `string` | | 顶部外层 CSS 类名 |
-| footerClassName | `string` | | 底部外层 CSS 类名 |
-| itemClassName | `string` | | 卡片 CSS 类名（栅格 class 尚未像素级对齐） |
-| card | [Card](./card) | | 配置卡片信息。也可以是 `type: container` 等任意节点 |
-| selectable | `boolean` | `false` | 卡片组是否可选。CRUD 配了 `bulkActions` 时自动为 true |
+| title | [模板](/concepts/template) | | 标题 |
+| source | [数据映射](/concepts/data-mapping) | `${items}` | 数据源，获取当前数据域中的变量 |
+| placeholder | [模板](/concepts/template) | 暂无数据 | 当没数据的时候的文字提示 |
+| className | [ClassName](/types/classname) | | 外层 CSS 类名 |
+| headerClassName | [ClassName](/types/classname) | | 顶部外层 CSS 类名 |
+| footerClassName | [ClassName](/types/classname) | | 底部外层 CSS 类名 |
+| itemClassName | [ClassName](/types/classname) | | 卡片 CSS 类名。未写时 ≥576 两列 / ≥768 三列 / ≥992 四列；栅格 class 尚未像素级对齐 |
+| card | [Card](./card) | | 配置卡片信息 |
+| selectable | `boolean` | `false` | 卡片组是否可选 |
 | multiple | `boolean` | `true` | 卡片组是否为多选 |
 | checkOnItemClick | `boolean` | | 点选卡片内容是否选中卡片 |
-| columnsCount | `number` | | 固定列数。未写则 ≥576 两列 / ≥768 三列 / ≥992 四列 |
+| checkAll | `boolean` | `true` | 可选且多选时显示「全选」。CRUD 顶栏一份，卡片组底栏再一份 |
+| hideCheckToggler | `boolean` | | 隐藏卡片右上角勾选框 |
+| columnsCount | `number` | | 固定列数，覆盖默认断点列数 |
 | masonryLayout | `boolean` | `false` | 瀑布流 |
+| header | [SchemaNode](/types/schemanode) | | 顶部区域 |
+| footer | [SchemaNode](/types/schemanode) | | 底部区域 |
+
+## 事件表
+
+当前组件会对外派发以下事件，可以通过 `onEvent` 来监听这些事件，并通过 `actions` 来配置执行的动作，在 `actions` 中可以通过 `${事件参数名}` 或 `${event.data.[事件参数名]}` 来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+| 事件名称 | 事件参数 | 说明 |
+|----------|----------|------|
+| selectedChange | `item` | 勾选某一张卡片 |
+| selected | `selectItems` / `unSelectItems` | 选择同步 |
+| rowClick | `item` / `index` | 点击卡片 |
+| orderChange | `movedItems` | 拖拽提交顺序；`preventDefault` 会拦住提交 |
+
+### selectedChange
+
+点卡片勾选框，或配置了 `checkOnItemClick` 时点卡片内容，都会派发。
+
+```schema
+type: page
+data:
+  items:
+    - engine: Trident
+      browser: Internet Explorer 4.0
+      platform: Win 95+
+      version: "4"
+      grade: X
+    - engine: Trident
+      browser: Internet Explorer 5.0
+      platform: Win 95+
+      version: "5"
+      grade: C
+    - engine: Trident
+      browser: Internet Explorer 5.5
+      platform: Win 95+
+      version: "5.5"
+      grade: A
+    - engine: Trident
+      browser: Internet Explorer 6
+      platform: Win 98+
+      version: "6"
+      grade: A
+body:
+  type: cards
+  source: $items
+  selectable: true
+  checkOnItemClick: true
+  card:
+    body:
+      - label: Engine
+        name: engine
+      - label: Browser
+        name: browser
+      - name: version
+        label: Version
+  onEvent:
+    selectedChange:
+      actions:
+        - actionType: toast
+          args:
+            msgType: info
+            msg: "${event.data.item.browser}"
+    rowClick:
+      actions:
+        - actionType: toast
+          args:
+            msgType: info
+            msg: "index ${event.data.index}"
+```
 
 ## 动作表
 
-`cards` 通过 `componentId` 暴露选择动作；`args.index` 支持逗号分隔的多个下标：
+其他组件可以通过指定 `actionType`、`componentId` 来触发这些动作，动作配置写在 `args` 里，详见 [事件动作](/concepts/event-action)。
 
 | 动作名称 | 动作配置 | 说明 |
 |----------|----------|------|
-| `select` | `args.index`：下标，支持 `0,1` | 选中指定卡片 |
-| `selectAll` | - | 全选 |
-| `clearAll` | - | 清空选择 |
-| `reload` / `setValue` | 通用动作 | 由外层作用域处理 |
+| select | `args.index` 可选，指定行数，支持表达式；`args.condition` 可选，通过表达式指定更新哪些行，支持条件组合 | 设置列表的选中项 |
+| selectAll | - | 设置列表全部项选中 |
+| clearAll | - | 清空列表所有选中项 |
+| initDrag | - | 开启列表拖拽排序功能 |
+| cancelDrag | - | 放弃列表拖拽排序功能 |
+| setValue | `args.value`：object；`args.index` 可选，指定行数，支持表达式；`args.condition` 可选，通过表达式指定更新哪些行，支持条件组合 | 更新列表记录 |
+| submitQuickEdit | | **未接** |
 
-```yaml
-type: button-toolbar
-buttons:
-  - type: action
-    label: 选中前两个
+### select
+
+- `args.index` 可选，指定行数，支持表达式
+- `args.condition` 可选，通过表达式指定更新哪些行，支持条件组合
+
+```schema: scope="body"
+- type: button-toolbar
+  className: m-b
+  buttons:
+    - name: trigger1
+      id: trigger1
+      type: action
+      label: 选中前两个
+      onEvent:
+        click:
+          actions:
+            - actionType: select
+              componentId: cards-select
+              args:
+                index: "0,1"
+- type: service
+  api: /api/mock2/sample?perPage=5
+  body:
+    - id: cards-select
+      type: cards
+      source: $rows
+      selectable: true
+      multiple: true
+      card:
+        body:
+          - label: Engine
+            name: engine
+          - label: Browser
+            name: browser
+          - name: version
+            label: Version
+```
+
+### selectAll
+
+```schema: scope="body"
+- type: button-toolbar
+  className: m-b
+  buttons:
+    - name: trigger2
+      id: trigger2
+      type: action
+      label: 设置列表全部项选中
+      onEvent:
+        click:
+          actions:
+            - actionType: selectAll
+              componentId: cards-select-all
+              description: 点击设置指定列表全部内容选中
+- type: service
+  api: /api/mock2/sample?perPage=10
+  body:
+    - id: cards-select-all
+      type: cards
+      source: $rows
+      selectable: true
+      multiple: true
+      card:
+        body:
+          - label: Engine
+            name: engine
+          - label: Browser
+            name: browser
+          - name: version
+            label: Version
+```
+
+### clearAll
+
+```schema: scope="body"
+- type: button-toolbar
+  className: m-b
+  buttons:
+    - name: trigger3
+      id: trigger3
+      type: action
+      label: 清空列表全部选中项
+      onEvent:
+        click:
+          actions:
+            - actionType: clearAll
+              componentId: cards-clear-all
+              description: 点击设置指定列表全部选中项清空
+- type: service
+  api: /api/mock2/sample?perPage=10
+  body:
+    - id: cards-clear-all
+      type: cards
+      source: $rows
+      selectable: true
+      multiple: true
+      card:
+        body:
+          - label: Engine
+            name: engine
+          - label: Browser
+            name: browser
+          - name: version
+            label: Version
+```
+
+### initDrag & cancelDrag
+
+```schema: scope="body"
+- type: button-toolbar
+  className: m-b
+  buttons:
+    - name: trigger4
+      id: trigger4
+      type: action
+      label: 开启列表行排序
+      onEvent:
+        click:
+          actions:
+            - actionType: initDrag
+              componentId: cards-drag
+              description: 点击开启列表行排序功能
+    - name: trigger5
+      id: trigger5
+      type: action
+      label: 取消列表行排序
+      onEvent:
+        click:
+          actions:
+            - actionType: cancelDrag
+              componentId: cards-drag
+              description: 点击取消列表行排序功能
+- type: service
+  api: /api/mock2/sample?perPage=10
+  body:
+    - id: cards-drag
+      type: cards
+      source: $rows
+      card:
+        body:
+          - label: Engine
+            name: engine
+          - label: Browser
+            name: browser
+          - name: version
+            label: Version
+```
+
+### setValue
+
+#### 更新列表记录
+
+```schema: scope="body"
+- type: button
+  label: 更新列表记录
+  onEvent:
+    click:
+      actions:
+        - actionType: setValue
+          componentId: cards_setvalue
+          args:
+            value:
+              rows:
+                - engine: Trident - f12fj
+                  browser: Internet Explorer 4.0
+                  platform: Win 95+
+                  version: "4"
+                  grade: X
+                  badgeText: 默认
+                  id: 1
+                - engine: Trident - oqvc0e
+                  browser: Internet Explorer 5.0
+                  platform: Win 95+
+                  version: "5"
+                  grade: C
+                  badgeText: 危险
+                  id: 2
+- type: button
+  label: 清空列表
+  className: ml-2
+  onEvent:
+    click:
+      actions:
+        - actionType: setValue
+          componentId: cards_setvalue
+          args:
+            value:
+              rows: []
+- type: service
+  api: /api/mock2/sample?perPage=5
+  body:
+    - type: cards
+      id: cards_setvalue
+      title: 引擎列表
+      source: $rows
+      card:
+        body:
+          - label: Engine
+            name: engine
+          - label: Browser
+            name: browser
+          - name: version
+            label: Version
+```
+
+#### 更新指定行记录
+
+可以通过指定 `index` 或者 `condition` 来分别更新指定索引的行记录和指定满足条件（条件表达式或者 ConditionBuilder）的行记录，另外 `replace` 同样生效，即可以完全替换指定行记录，也可以对指定行记录做合并。
+
+```schema
+type: page
+data:
+  i: "1,3"
+body:
+  - type: button
+    label: 更新index为1和3的行记录
     onEvent:
       click:
         actions:
-          - actionType: select
-            componentId: cards-select
+          - actionType: setValue
+            componentId: cards_setvalue_item
             args:
-              index: "0,1"
-  - type: action
-    label: 全选
+              value:
+                engine: amis
+                browser: Chrome
+                platform: Mac Pro
+                version: "8"
+                grade: Y
+                badgeText: 你好！
+                id: 1234
+              index: "${i}"
+  - type: button
+    label: 更新index为1和3的行记录(替换)
     onEvent:
       click:
         actions:
-          - actionType: selectAll
-            componentId: cards-select
-  - type: action
-    label: 清空
+          - actionType: setValue
+            componentId: cards_setvalue_item
+            args:
+              value:
+                engine: amis
+                id: 1234
+              index: "${i}"
+              replace: true
+  - type: button
+    label: 更新version=7的行记录
     onEvent:
       click:
         actions:
-          - actionType: clearAll
-            componentId: cards-select
+          - actionType: setValue
+            componentId: cards_setvalue_item
+            args:
+              value:
+                engine: amis
+                browser: Chrome
+                platform: Mac Pro
+                version: "4"
+                grade: Y
+                badgeText: 你好！
+                id: 1234
+              condition: "${version === '7'}"
+  - type: button
+    label: 更新version=4的行记录
+    onEvent:
+      click:
+        actions:
+          - actionType: setValue
+            componentId: cards_setvalue_item
+            args:
+              value:
+                engine: amis
+                browser: Chrome
+                platform: Mac Pro
+                version: "4"
+                grade: Y
+                badgeText: 你好！
+                id: 1234
+              condition:
+                conjunction: and
+                children:
+                  - left:
+                      type: field
+                      field: version
+                    op: equal
+                    right: "4"
+  - type: service
+    api: /api/mock2/sample?perPage=5
+    body:
+      - type: cards
+        id: cards_setvalue_item
+        title: 引擎列表
+        source: $rows
+        card:
+          body:
+            - label: Engine
+              name: engine
+            - label: Browser
+              name: browser
+            - name: version
+              label: Version
 ```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 拖拽、动作表 `select` / `selectAll` / `clearAll` / `initDrag` / `setValue` 未接。瀑布流是 CSS `column-count`，不是 Amis Grid 绝对定位。Image 默认 110px 缩略图；`h-stretch` 按 `height` 拉伸并吃满卡片宽。本页瀑布流用表达式在 `h-stretch` / `cover` 间切换。Container 默认 `wrapperBody` 包一层，同级子项换行。
+- `submitQuickEdit` 未接。`affixHeader` / `affixFooter` / `itemCheckableOn` / `itemDraggableOn` / `themeCss` 未接。事件表按 Amis `Cards.tsx` 派发（文档站未列）。
+- 瀑布流是 CSS `column-count` + `gap: 12px`，不是 Amis Grid 绝对定位。本页瀑布流用表达式在 `h-stretch` / `cover` 间切换（Amis 原文 `height: ${imageHeight}` 嵌套 Image 吃不到）。
+- `itemClassName` 栅格 class 尚未像素级对齐。

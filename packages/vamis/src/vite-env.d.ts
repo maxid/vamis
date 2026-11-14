@@ -10,6 +10,7 @@ declare module 'sortablejs' {
   export interface SortableOptions {
     animation?: number
     draggable?: string
+    handle?: string
     ghostClass?: string
     filter?: string
     preventOnFilter?: boolean

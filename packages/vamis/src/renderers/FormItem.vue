@@ -95,6 +95,12 @@ const labelRemark = computed(() => {
   }
   return null
 })
+/** Amis `Item.tsx`：horizontal 才 `label !== false` 留空列；normal / inline / row 是 `label &&`。 */
+const paintLabel = computed(() => {
+  if (hideLabel.value) return false
+  if (horizontal.value) return true
+  return showLabel.value || !!labelRemark.value
+})
 </script>
 
 <template>
@@ -104,7 +110,7 @@ const labelRemark = computed(() => {
     :data-name="schema.name"
   >
     <Label
-      v-if="!hideLabel"
+      v-if="paintLabel"
       class="vamis-form-item__label"
       :class="labelClass"
     >

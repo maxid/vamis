@@ -683,6 +683,8 @@ describe('Amis width helpers', () => {
     expect(theme).toContain('.vamis-form-panel')
     expect(theme).not.toMatch(/\.vamis-form-panel \{[^}]*margin-bottom/)
     expect(theme).toContain('.vamis-form .vamis-node:last-child > .vamis-form-item')
+    expect(theme).toContain('.vamis-node:has(> .vamis-form-item--normal)')
+    expect(theme).toContain('.vamis-node.m-b > .vamis-form-item')
     expect(theme).not.toContain('.vamis-form-item--horizontal:last-child')
     expect(theme).not.toContain('.vamis-form-item--normal:last-child')
     expect(theme).toContain('.vamis-form .vamis-node:has(> .vamis-form-item--inline)')

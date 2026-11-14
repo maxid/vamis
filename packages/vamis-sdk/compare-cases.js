@@ -31753,6 +31753,683 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-cards-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #4",
+    "heading": "selectedChange",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 4.0",
+            "platform": "Win 95+",
+            "version": "4",
+            "grade": "X"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.0",
+            "platform": "Win 95+",
+            "version": "5",
+            "grade": "C"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 5.5",
+            "platform": "Win 95+",
+            "version": "5.5",
+            "grade": "A"
+          },
+          {
+            "engine": "Trident",
+            "browser": "Internet Explorer 6",
+            "platform": "Win 98+",
+            "version": "6",
+            "grade": "A"
+          }
+        ]
+      },
+      "body": {
+        "type": "cards",
+        "source": "$items",
+        "selectable": true,
+        "checkOnItemClick": true,
+        "card": {
+          "body": [
+            {
+              "label": "Engine",
+              "name": "engine"
+            },
+            {
+              "label": "Browser",
+              "name": "browser"
+            },
+            {
+              "name": "version",
+              "label": "Version"
+            }
+          ]
+        },
+        "onEvent": {
+          "selectedChange": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "${event.data.item.browser}"
+                }
+              }
+            ]
+          },
+          "rowClick": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "info",
+                  "msg": "index ${event.data.index}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #5",
+    "heading": "select",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger1",
+              "id": "trigger1",
+              "type": "action",
+              "label": "选中前两个",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "select",
+                      "componentId": "cards-select",
+                      "args": {
+                        "index": "0,1"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": [
+            {
+              "id": "cards-select",
+              "type": "cards",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-5",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #6",
+    "heading": "selectAll",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger2",
+              "id": "trigger2",
+              "type": "action",
+              "label": "设置列表全部项选中",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "selectAll",
+                      "componentId": "cards-select-all",
+                      "description": "点击设置指定列表全部内容选中"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "cards-select-all",
+              "type": "cards",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #7",
+    "heading": "clearAll",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger3",
+              "id": "trigger3",
+              "type": "action",
+              "label": "清空列表全部选中项",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "clearAll",
+                      "componentId": "cards-clear-all",
+                      "description": "点击设置指定列表全部选中项清空"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "cards-clear-all",
+              "type": "cards",
+              "source": "$rows",
+              "selectable": true,
+              "multiple": true,
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #8",
+    "heading": "initDrag & cancelDrag",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button-toolbar",
+          "className": "m-b",
+          "buttons": [
+            {
+              "name": "trigger4",
+              "id": "trigger4",
+              "type": "action",
+              "label": "开启列表行排序",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "initDrag",
+                      "componentId": "cards-drag",
+                      "description": "点击开启列表行排序功能"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "trigger5",
+              "id": "trigger5",
+              "type": "action",
+              "label": "取消列表行排序",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "cancelDrag",
+                      "componentId": "cards-drag",
+                      "description": "点击取消列表行排序功能"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=10",
+          "body": [
+            {
+              "id": "cards-drag",
+              "type": "cards",
+              "source": "$rows",
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-8",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #9",
+    "heading": "setValue",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "更新列表记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue",
+                  "args": {
+                    "value": {
+                      "rows": [
+                        {
+                          "engine": "Trident - f12fj",
+                          "browser": "Internet Explorer 4.0",
+                          "platform": "Win 95+",
+                          "version": "4",
+                          "grade": "X",
+                          "badgeText": "默认",
+                          "id": 1
+                        },
+                        {
+                          "engine": "Trident - oqvc0e",
+                          "browser": "Internet Explorer 5.0",
+                          "platform": "Win 95+",
+                          "version": "5",
+                          "grade": "C",
+                          "badgeText": "危险",
+                          "id": 2
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "清空列表",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue",
+                  "args": {
+                    "value": {
+                      "rows": []
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": [
+            {
+              "type": "cards",
+              "id": "cards_setvalue",
+              "title": "引擎列表",
+              "source": "$rows",
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-cards-9",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Cards 卡片组",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Cards 卡片组 #10",
+    "heading": "setValue",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "i": "1,3"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "更新index为1和3的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "amis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "8",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "index": "${i}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新index为1和3的行记录(替换)",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "amis",
+                      "id": 1234
+                    },
+                    "index": "${i}",
+                    "replace": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新version=7的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "amis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "4",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "condition": "${version === '7'}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "更新version=4的行记录",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "cards_setvalue_item",
+                  "args": {
+                    "value": {
+                      "engine": "amis",
+                      "browser": "Chrome",
+                      "platform": "Mac Pro",
+                      "version": "4",
+                      "grade": "Y",
+                      "badgeText": "你好！",
+                      "id": 1234
+                    },
+                    "condition": {
+                      "conjunction": "and",
+                      "children": [
+                        {
+                          "left": {
+                            "type": "field",
+                            "field": "version"
+                          },
+                          "op": "equal",
+                          "right": "4"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/sample?perPage=5",
+          "body": [
+            {
+              "type": "cards",
+              "id": "cards_setvalue_item",
+              "title": "引擎列表",
+              "source": "$rows",
+              "card": {
+                "body": [
+                  {
+                    "label": "Engine",
+                    "name": "engine"
+                  },
+                  {
+                    "label": "Browser",
+                    "name": "browser"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-carousel-0",
     "group": "组件 / 数据展示",
     "bucket": "components",

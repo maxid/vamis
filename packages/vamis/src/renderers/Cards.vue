@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
   SchemaRenderer,
   cardsCardSchema,
+  cardsCheckAll,
   cardsCheckOnItemClick,
   cardsColumnsCount,
   cardsFooter,
@@ -15,9 +16,17 @@ import {
   cardsSelectable,
   cardsSource,
   cardsTitle,
+  createVamisEvent,
+  eventEvalData,
+  resolveClassName,
+  runOnEvent,
+  useEnv,
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
+import { Button } from '@vamis/ui'
+import Sortable from 'sortablejs'
+import { matchListRows } from './list-utils'
 import { useCrudHost } from './data/crudHost'
 import { provideCardsSelect } from './cardsSelect'
 
@@ -29,8 +38,18 @@ const props = defineProps<{
 
 const host = useCrudHost()
 const scoped = useScoped()
+const env = useEnv()
 const localSelected = ref<Record<string, any>[]>([])
-const rows = computed(() => cardsSource(props.schema, props.data || {}, props.items))
+const localRows = ref<Record<string, any>[] | null>(null)
+const snapshot = ref<Record<string, any>[] | null>(null)
+const dragging = ref(false)
+const moved = ref(0)
+const bodyEl = ref<HTMLElement | null>(null)
+let sortable: Sortable | null = null
+const rows = computed(() => {
+  if (localRows.value) return localRows.value
+  return cardsSource(props.schema, props.data || {}, props.items)
+})
 function asSchema(node: unknown): SchemaObject {
   return node as SchemaObject
 }
@@ -46,10 +65,16 @@ const selectable = computed(() => cardsSelectable(props.schema))
 const checkOnItemClick = computed(() => cardsCheckOnItemClick(props.schema))
 const hideCheckToggler = computed(() => cardsHideCheckToggler(props.schema))
 const multiple = computed(() => cardsMultiple(props.schema))
+const checkAll = computed(() => cardsCheckAll(props.schema))
 const colsStyle = computed(() => {
   if (!columnsCount.value) return undefined
   return { '--cards-cols': String(columnsCount.value) } as Record<string, string>
 })
+const headerClass = computed(() => resolveClassName(props.schema.headerClassName, props.data || {}))
+const footerClass = computed(() => resolveClassName(props.schema.footerClassName, props.data || {}))
+function itemClass(row: Record<string, any>, index: number) {
+  return resolveClassName(props.schema.itemClassName, { ...(props.data || {}), ...row, index })
+}
 
 function rowKey(row: Record<string, any>) {
   if (host?.primaryField && row[host.primaryField] != null && row[host.primaryField] !== '') {
@@ -82,19 +107,114 @@ function setSelected(items: Record<string, any>[]) {
   else localSelected.value = items
 }
 
-function toggle(row: Record<string, any>, checked?: boolean) {
+function eventCtx(name: string, extra: Record<string, unknown>, native?: Event) {
+  const payload = { ...(props.data || {}), ...extra }
+  const event = createVamisEvent(name, payload, native)
+  return {
+    event,
+    ctx: { env, data: eventEvalData(payload, event), scoped, event },
+  }
+}
+
+async function emitSelected() {
+  const selectItems = selectedList()
+  const keys = new Set(selectItems.map((item) => rowKey(item)))
+  const unSelectItems = rows.value.filter((item) => !keys.has(rowKey(item)))
+  const { ctx } = eventCtx('selected', { selectItems, unSelectItems })
+  await runOnEvent(props.schema, 'selected', ctx)
+}
+
+async function emitSelectedChange(item: Record<string, any>) {
+  const { ctx } = eventCtx('selectedChange', { item })
+  await runOnEvent(props.schema, 'selectedChange', ctx)
+}
+
+function ensureLocal() {
+  if (!localRows.value) localRows.value = rows.value.map((row) => ({ ...row }))
+}
+
+function applySetValue(
+  values: Record<string, unknown> | unknown[] | undefined,
+  replace?: boolean,
+  index?: unknown,
+  condition?: unknown,
+) {
+  ensureLocal()
+  const data = props.data || {}
+  if (index != null || condition != null) {
+    const targets = matchListRows(localRows.value || [], data, index, condition)
+    const patch = (values && typeof values === 'object' && !Array.isArray(values) ? values : {}) as Record<string, any>
+    for (const i of targets) {
+      const current = localRows.value?.[i]
+      if (!current) continue
+      localRows.value![i] = replace ? { ...patch } : { ...current, ...patch }
+    }
+    return
+  }
+  if (Array.isArray(values)) {
+    localRows.value = values as Record<string, any>[]
+    setSelected([])
+    return
+  }
+  const next = values?.items ?? values?.rows
+  if (Array.isArray(next)) {
+    localRows.value = next as Record<string, any>[]
+    setSelected([])
+  }
+}
+
+function destroySortable() {
+  sortable?.destroy()
+  sortable = null
+}
+
+function initSortable() {
+  destroySortable()
+  const el = bodyEl.value
+  if (!el) return
+  sortable = new Sortable(el, {
+    animation: 150,
+    handle: '.vamis-card-drag',
+    ghostClass: 'is-dragging',
+    onEnd(event) {
+      const from = event.oldIndex
+      const to = event.newIndex
+      if (from == null || to == null || from === to) return
+      ensureLocal()
+      const next = (localRows.value || []).slice()
+      const [movedRow] = next.splice(from, 1)
+      next.splice(to, 0, movedRow)
+      localRows.value = next
+      if (!snapshot.value) snapshot.value = rows.value.map((row) => ({ ...row }))
+      moved.value += 1
+    },
+  })
+}
+
+async function toggle(row: Record<string, any>, checked?: boolean) {
   const actual = sourceRow(row)
   const on = checked == null ? !isSelected(actual) : checked
   if (!multiple.value) {
     setSelected(on ? [actual] : [])
-    return
-  }
-  if (on) {
+  } else if (on) {
     if (!isSelected(actual)) setSelected([...selectedList(), actual])
-    return
+  } else {
+    const key = rowKey(actual)
+    setSelected(selectedList().filter((item) => rowKey(item) !== key))
   }
-  const key = rowKey(actual)
-  setSelected(selectedList().filter((item) => rowKey(item) !== key))
+  await emitSelectedChange(actual)
+  await emitSelected()
+}
+
+async function onItemClick(row: Record<string, any>, native: MouseEvent) {
+  const actual = sourceRow(row)
+  const index = Number(row.index)
+  const { ctx } = eventCtx(
+    'rowClick',
+    { item: actual, index: Number.isFinite(index) ? index : rows.value.indexOf(actual) },
+    native,
+  )
+  await runOnEvent(props.schema, 'rowClick', ctx)
 }
 
 provideCardsSelect({
@@ -102,40 +222,137 @@ provideCardsSelect({
   checkOnItemClick,
   hideCheckToggler,
   multiple,
+  dragging: computed(() => dragging.value),
   isSelected,
   toggle,
+  onItemClick,
 })
+
+const allChecked = computed(
+  () => rows.value.length > 0 && rows.value.every((row) => isSelected(row)),
+)
+const showCheckAllBtn = computed(
+  () =>
+    selectable.value &&
+    checkAll.value &&
+    multiple.value &&
+    rows.value.length > 0 &&
+    !dragging.value,
+)
+const showHeaderCheckAll = computed(() => showCheckAllBtn.value && !host)
+const showFooterCheckAll = computed(() => showCheckAllBtn.value)
+
+async function toggleCheckAll() {
+  if (allChecked.value) setSelected([])
+  else setSelected(rows.value.slice())
+  await emitSelected()
+}
+
+async function saveOrder() {
+  const movedItems = (localRows.value || []).map((row) => ({ ...row }))
+  const { event, ctx } = eventCtx('orderChange', { movedItems })
+  await runOnEvent(props.schema, 'orderChange', ctx)
+  if (event.prevented) return
+  snapshot.value = movedItems
+  moved.value = 0
+  dragging.value = false
+}
+
+function resetOrder() {
+  if (snapshot.value) localRows.value = snapshot.value.map((row) => ({ ...row }))
+  moved.value = 0
+  dragging.value = false
+}
+
 const cardsApi = {
   name: String(props.schema.id || props.schema.name || ''),
   id: props.schema.id ? String(props.schema.id) : undefined,
-  getData: () => ({ selectedItems: selectedList() }),
-  setData: () => {},
-  async doAction(action: { actionType?: string; args?: { index?: string | number } }) {
+  getData: () => ({
+    items: rows.value,
+    rows: rows.value,
+    total: rows.value.length,
+    selectedItems: selectedList(),
+  }),
+  setData: (values?: Record<string, unknown> | unknown[]) => applySetValue(values),
+  async doAction(action: { actionType?: string; args?: Record<string, unknown> }) {
     const type = action?.actionType
+    const args = action?.args || {}
     if (type === 'selectAll') {
       setSelected(rows.value.slice())
+      await emitSelected()
     } else if (type === 'clearAll') {
       setSelected([])
+      await emitSelected()
     } else if (type === 'select') {
-      const raw = String(action.args?.index ?? '')
-      const indexes = raw
-        .split(',')
-        .map((part) => Number(part.trim()))
-        .filter((n) => Number.isFinite(n))
+      const indexes = matchListRows(rows.value, props.data || {}, args.index, args.condition)
       setSelected(indexes.map((i) => rows.value[i]).filter(Boolean) as Record<string, any>[])
+      await emitSelected()
+    } else if (type === 'initDrag') {
+      ensureLocal()
+      if (!snapshot.value) snapshot.value = (localRows.value || []).map((row) => ({ ...row }))
+      setSelected([])
+      dragging.value = true
+      await emitSelected()
+    } else if (type === 'cancelDrag') {
+      dragging.value = false
+    } else if (type === 'setValue') {
+      applySetValue(
+        (args.value || {}) as Record<string, unknown>,
+        Boolean(args.replace),
+        args.index,
+        args.condition,
+      )
     }
   },
 }
 scoped?.register(cardsApi as never)
-onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
+onBeforeUnmount(() => {
+  scoped?.unregister(cardsApi as never)
+  destroySortable()
+})
+watch([dragging, bodyEl, () => rows.value.length], () => {
+  if (dragging.value) void nextTick(initSortable)
+  else destroySortable()
+})
 </script>
 
 <template>
-  <div class="vamis-cards-wrap">
-    <div v-if="title" class="vamis-cards-title">{{ title }}</div>
+  <div class="vamis-cards-wrap" :class="{ 'is-unsaved': moved }">
+    <div v-if="moved" class="vamis-cards-title">
+      当前有 {{ moved }} 条记录修改了顺序, 但并没有提交。请选择:
+      <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveOrder">
+        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
+        </svg>
+        提交
+      </Button>
+      <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="resetOrder">
+        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="m13.5 1.44 1.06 1.06L9.06 8l5.5 5.5-1.06 1.06L8 9.06l-5.5 5.5-1.06-1.06L6.938 8l-5.5-5.5L2.5 1.44 8 6.938z" />
+        </svg>
+        放弃
+      </Button>
+    </div>
+    <div v-else-if="title" class="vamis-cards-title">{{ title }}</div>
+    <div v-if="header.length || showHeaderCheckAll || dragging" class="vamis-cards-header" :class="headerClass">
     <SchemaRenderer v-for="(node, i) in header" :key="'h' + i" :schema="asSchema(node)" />
+    <div v-if="showHeaderCheckAll || dragging" class="vamis-cards-toolbar">
+      <Button
+        v-if="showHeaderCheckAll"
+        type="button"
+        size="sm"
+        :variant="allChecked ? 'default' : 'outline'"
+        title="切换全选"
+        @click="toggleCheckAll"
+      >
+        全选
+      </Button>
+      <div v-if="dragging" class="vamis-cards-dragTip">请拖动顶部的按钮进行排序</div>
+    </div>
+    </div>
     <div
       v-if="rows.length"
+      ref="bodyEl"
       class="vamis-cards"
       :class="{
         'is-masonry': masonry,
@@ -143,7 +360,7 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
       }"
       :style="colsStyle"
     >
-      <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item">
+      <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item" :class="itemClass(row, i)">
         <SchemaRenderer :schema="asSchema(card)" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
       </div>
     </div>
@@ -151,7 +368,20 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
       <SchemaRenderer v-if="placeholderNode" :schema="asSchema(placeholderNode)" />
       <template v-else>{{ placeholder }}</template>
     </div>
+    <div v-if="showFooterCheckAll || footer.length" class="vamis-cards-footer" :class="footerClass">
+    <div v-if="showFooterCheckAll" class="vamis-cards-toolbar">
+      <Button
+        type="button"
+        size="sm"
+        :variant="allChecked ? 'default' : 'outline'"
+        title="切换全选"
+        @click="toggleCheckAll"
+      >
+        全选
+      </Button>
+    </div>
     <SchemaRenderer v-for="(node, i) in footer" :key="'f' + i" :schema="asSchema(node)" />
+    </div>
   </div>
 </template>
 
@@ -160,9 +390,38 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
   width: 100%;
 }
 .vamis-cards-title {
-  margin-bottom: 8px;
-  font-size: 16px;
-  font-weight: 500;
+  padding: var(--gap-xs) 0;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: inherit;
+}
+.vamis-cards-wrap.is-unsaved .vamis-cards-title {
+  background: var(--cards-unsaved-heading-bg);
+  color: var(--cards-unsaved-heading-color);
+  padding: var(--gap-xs) var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+.vamis-cards-title [data-slot='button'] svg.icon {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+.vamis-cards-toolbar {
+  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x)
+    var(--cards-toolbar-margin-y);
+}
+@media (min-width: 576px) {
+  .vamis-cards-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.vamis-cards-dragTip {
+  width: 100%;
+  color: var(--info, var(--primary));
+  clear: both;
+  margin-top: 4px;
 }
 .vamis-cards {
   display: grid;
@@ -238,6 +497,9 @@ onBeforeUnmount(() => scoped?.unregister(cardsApi as never))
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+.vamis-cards-item.is-dragging {
+  opacity: 0.6;
 }
 .vamis-cards-placeholder {
   width: 100%;

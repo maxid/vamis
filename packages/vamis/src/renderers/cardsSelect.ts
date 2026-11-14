@@ -5,8 +5,10 @@ export type CardsSelectApi = {
   checkOnItemClick: ComputedRef<boolean>
   hideCheckToggler: ComputedRef<boolean>
   multiple: ComputedRef<boolean>
+  dragging: ComputedRef<boolean>
   isSelected: (row: Record<string, any>) => boolean
-  toggle: (row: Record<string, any>, checked?: boolean) => void
+  toggle: (row: Record<string, any>, checked?: boolean) => void | Promise<void>
+  onItemClick?: (row: Record<string, any>, event: MouseEvent) => void | Promise<void>
 }
 
 export const CardsSelectKey: InjectionKey<CardsSelectApi> = Symbol('vamis-cards-select')
