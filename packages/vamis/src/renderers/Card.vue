@@ -216,6 +216,7 @@ async function onCardClick(event: MouseEvent) {
     :class="{
       'is-link': clickable || (select?.selectable.value && select.checkOnItemClick.value),
       'is-checked': selected,
+      'is-modified': !!select?.isModified?.(data),
       'has-secondary': !!secondary,
       'is-media': !!media,
       [`is-media-${mediaPos}`]: !!media,
@@ -272,7 +273,7 @@ async function onCardClick(event: MouseEvent) {
           <SchemaRenderer v-for="(node, i) in toolbar" :key="i" :schema="node" :extra-data="data" />
           <span v-if="dragging" class="vamis-card-drag" title="拖动排序" @click.stop>
             <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-              <g transform="translate(5 1)" fill="currentColor">
+              <g transform="translate(5 1)" stroke="currentColor">
                 <circle cx="1" cy="1" r="1" />
                 <circle cx="5" cy="1" r="1" />
                 <circle cx="1" cy="5" r="1" />
@@ -355,6 +356,16 @@ async function onCardClick(event: MouseEvent) {
 .vamis-card.is-checked .vamis-card-action {
   border-color: var(--card-checked-border);
   color: var(--card-checked-color);
+}
+.vamis-card.is-modified {
+  border-color: var(--card-modified-border);
+  background: var(--card-modified-bg);
+  color: var(--card-modified-color);
+}
+.vamis-card.is-modified .vamis-card-actions,
+.vamis-card.is-modified .vamis-card-action {
+  border-color: var(--card-modified-border);
+  color: var(--card-modified-color);
 }
 .vamis-card-checkbox {
   margin: 0 8px;
@@ -503,6 +514,9 @@ async function onCardClick(event: MouseEvent) {
 }
 .vamis-card.is-checked .vamis-card-fieldLabel {
   color: var(--card-checked-fieldLabel);
+}
+.vamis-card.is-modified .vamis-card-fieldLabel {
+  color: var(--card-modified-fieldLabel);
 }
 .vamis-card-fieldValue {
   flex: 1 1 0;

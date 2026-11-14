@@ -39,6 +39,7 @@ const props = defineProps<{
 const host = useCrudHost()
 const scoped = useScoped()
 const env = useEnv()
+const ORIGIN = Symbol('cardsOrigin')
 const localSelected = ref<Record<string, any>[]>([])
 const localRows = ref<Record<string, any>[] | null>(null)
 const snapshot = ref<Record<string, any>[] | null>(null)
@@ -129,8 +130,59 @@ async function emitSelectedChange(item: Record<string, any>) {
   await runOnEvent(props.schema, 'selectedChange', ctx)
 }
 
+function dataOf(row: Record<string, any>) {
+  const out: Record<string, any> = {}
+  for (const key of Object.keys(row)) out[key] = row[key]
+  return out
+}
+
+function stampOrigin(row: Record<string, any>, orig?: Record<string, any>) {
+  const copy = dataOf(row)
+  copy[ORIGIN] = orig ? dataOf(orig) : dataOf(row)
+  return copy
+}
+
+function originOf(row: Record<string, any>) {
+  return row[ORIGIN] as Record<string, any> | undefined
+}
+
+function rowIsModified(row: Record<string, any>) {
+  const orig = originOf(row)
+  if (!orig) return false
+  const keys = new Set([...Object.keys(row), ...Object.keys(orig)])
+  for (const key of keys) {
+    const a = row[key]
+    const b = orig[key]
+    if (Object.is(a, b)) continue
+    if (a && b && typeof a === 'object' && typeof b === 'object') {
+      try {
+        if (JSON.stringify(a) !== JSON.stringify(b)) return true
+      } catch {
+        return true
+      }
+      continue
+    }
+    return true
+  }
+  return false
+}
+
+function isModified(row?: Record<string, any>) {
+  if (!row) return false
+  const i = Number(row.index)
+  const list = localRows.value || rows.value
+  if (Number.isFinite(i) && i >= 0 && i < list.length) return rowIsModified(list[i])
+  const key = itemKey(row)
+  const found = list.find((item) => rowKey(item) === key)
+  return found ? rowIsModified(found) : false
+}
+
+function adoptRows(list: Record<string, any>[]) {
+  return list.map((row) => stampOrigin(row))
+}
+
 function ensureLocal() {
-  if (!localRows.value) localRows.value = rows.value.map((row) => ({ ...row }))
+  if (!localRows.value) localRows.value = adoptRows(rows.value)
 }
 
 function applySetValue(
@@ -142,23 +194,27 @@ function applySetValue(
   ensureLocal()
   const data = props.data || {}
   if (index != null || condition != null) {
-    const targets = matchListRows(localRows.value || [], data, index, condition)
+    const next = (localRows.value || []).slice()
+    const targets = matchListRows(next, data, index, condition)
     const patch = (values && typeof values === 'object' && !Array.isArray(values) ? values : {}) as Record<string, any>
     for (const i of targets) {
-      const current = localRows.value?.[i]
+      const current = next[i]
       if (!current) continue
-      localRows.value![i] = replace ? { ...patch } : { ...current, ...patch }
+      const orig = originOf(current) || dataOf(current)
+      const patched = replace ? dataOf(patch) : { ...dataOf(current), ...patch }
+      next[i] = stampOrigin(patched, orig)
     }
+    localRows.value = next
     return
   }
   if (Array.isArray(values)) {
-    localRows.value = values as Record<string, any>[]
+    localRows.value = adoptRows(values as Record<string, any>[])
     setSelected([])
     return
   }
   const next = values?.items ?? values?.rows
   if (Array.isArray(next)) {
-    localRows.value = next as Record<string, any>[]
+    localRows.value = adoptRows(next as Record<string, any>[])
     setSelected([])
   }
 }
@@ -224,6 +280,7 @@ provideCardsSelect({
   multiple,
   dragging: computed(() => dragging.value),
   isSelected,
+  isModified,
   toggle,
   onItemClick,
 })
@@ -241,6 +298,9 @@ const showCheckAllBtn = computed(
 )
 const showHeaderCheckAll = computed(() => showCheckAllBtn.value && !host)
 const showFooterCheckAll = computed(() => showCheckAllBtn.value)
+const modifiedCount = computed(() => (localRows.value || []).filter(rowIsModified).length)
+const showQuickSave = computed(() => modifiedCount.value > 0 && props.schema.hideQuickSaveBtn !== true)
+const unsaved = computed(() => showQuickSave.value || moved.value > 0)
 
 async function toggleCheckAll() {
   if (allChecked.value) setSelected([])
@@ -258,6 +318,19 @@ async function saveOrder() {
   dragging.value = false
 }
 
+function saveModified() {
+  if (!localRows.value) return
+  localRows.value = localRows.value.map((row) => stampOrigin(row))
+}
+
+function resetModified() {
+  if (!localRows.value) return
+  localRows.value = localRows.value.map((row) => {
+    const orig = originOf(row)
+    return orig ? stampOrigin(orig, orig) : stampOrigin(row)
+  })
+}
+
 function resetOrder() {
   if (snapshot.value) localRows.value = snapshot.value.map((row) => ({ ...row }))
   moved.value = 0
@@ -273,7 +346,12 @@ const cardsApi = {
     total: rows.value.length,
     selectedItems: selectedList(),
   }),
-  setData: (values?: Record<string, unknown> | unknown[]) => applySetValue(values),
+  setData: (
+    values?: Record<string, unknown> | unknown[],
+    replace?: boolean,
+    index?: unknown,
+    condition?: unknown,
+  ) => applySetValue(values, replace, index, condition),
   async doAction(action: { actionType?: string; args?: Record<string, unknown> }) {
     const type = action?.actionType
     const args = action?.args || {}
@@ -296,7 +374,7 @@ const cardsApi = {
     } else if (type === 'cancelDrag') {
       dragging.value = false
     } else if (type === 'setValue') {
-      applySetValue(
+      cardsApi.setData(
         (args.value || {}) as Record<string, unknown>,
         Boolean(args.replace),
         args.index,
@@ -317,8 +395,23 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
 </script>
 
 <template>
-  <div class="vamis-cards-wrap" :class="{ 'is-unsaved': moved }">
-    <div v-if="moved" class="vamis-cards-title">
+  <div class="vamis-cards-wrap" :class="{ 'is-unsaved': unsaved }">
+    <div v-if="showQuickSave" class="vamis-cards-title">
+      当前有 {{ modifiedCount }} 条记录修改了内容, 但并没有提交。请选择:
+      <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveModified">
+        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
+        </svg>
+        提交
+      </Button>
+      <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="resetModified">
+        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="m13.5 1.44 1.06 1.06L9.06 8l5.5 5.5-1.06 1.06L8 9.06l-5.5 5.5-1.06-1.06L6.938 8l-5.5-5.5L2.5 1.44 8 6.938z" />
+        </svg>
+        放弃
+      </Button>
+    </div>
+    <div v-else-if="moved" class="vamis-cards-title">
       当前有 {{ moved }} 条记录修改了顺序, 但并没有提交。请选择:
       <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveOrder">
         <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">

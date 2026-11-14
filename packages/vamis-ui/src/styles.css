@@ -575,6 +575,10 @@
   --card-checked-border: var(--primary);
   --card-checked-color: var(--primary);
   --card-checked-fieldLabel: var(--primary);
+  --card-modified-bg: var(--colors-neutral-fill-8);
+  --card-modified-border: var(--primary);
+  --card-modified-color: var(--colors-brand-6);
+  --card-modified-fieldLabel: var(--colors-brand-8);
   --cards-toolbar-margin-x: 0;
   --cards-toolbar-margin-y: var(--gap-base);
   --cards-unsaved-heading-bg: #e8f0fe;

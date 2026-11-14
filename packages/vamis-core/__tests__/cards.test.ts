@@ -13,6 +13,8 @@ describe('cards', () => {
       "type === 'select'",
       "type === 'initDrag'",
       "type === 'setValue'",
+      'index?: unknown',
+      '修改了内容',
       'selectedItems',
       'showFooterCheckAll',
       'gap: 12px',
@@ -26,7 +28,10 @@ describe('cards', () => {
       expect(vue).toContain(t)
     const card = read('../../vamis/src/renderers/Card.vue')
     expect(card).toContain('--card-checked-fieldLabel')
+    expect(card).toContain('is-modified')
+    expect(card).toContain('stroke="currentColor"')
     const theme = read('../../vamis-ui/src/styles.css')
+    expect(theme).toContain('--card-modified-bg: var(--colors-neutral-fill-8)')
     expect(theme).toContain('--cards-unsaved-heading-bg: #e8f0fe')
     expect(theme).toContain('--card-checked-bg: var(--colors-neutral-fill-11)')
     expect(theme).toContain('.vamis-node:has(> .vamis-form-item--normal)')

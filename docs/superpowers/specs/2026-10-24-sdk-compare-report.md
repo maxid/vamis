@@ -1,7 +1,7 @@
 # SDK 对照报告
 
 - 日期：2026-11-14
-- 视口：移动 375×812（Amis <768 表单）
+- 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
 - 合计 **10** · 通过 **4** · 失败 **6**（P0 0）· Vamis 多出 extra **0**
 
@@ -9,16 +9,15 @@
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 2 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 1 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 14 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 13 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（2）
+### 全局（1）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-components-cards-0` fontSize: Amis `16px` / Vamis `14px`
-- `src-components-cards-3` fontSize: Amis `16px` / Vamis `12px`
+- `src-components-cards-3` fontSize: Amis `14px` / Vamis `12px`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -29,12 +28,11 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（14）
+### 组件（13）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-components-cards-0` lineHeight: Amis `24px` / Vamis `21px`
-- `src-components-cards-3` lineHeight: Amis `24px` / Vamis `18px`
+- `src-components-cards-3` lineHeight: Amis `21px` / Vamis `18px`
 - `src-components-cards-4` page/body/1:service/body/0:cards.rendered: Amis `false` / Vamis `true`
 - `src-components-cards-4` page/body/1:service/body/0:cards.value: Amis `` / Vamis `暂无数据`
 - `src-components-cards-5` page/body/1:service/body/0:cards.rendered: Amis `false` / Vamis `true`
@@ -45,7 +43,8 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-components-cards-7` page/body/1:service/body/0:cards.value: Amis `` / Vamis `暂无数据`
 - `src-components-cards-8` page/body/2:service/body/0:cards.rendered: Amis `false` / Vamis `true`
 - `src-components-cards-8` page/body/2:service/body/0:cards.value: Amis `` / Vamis `引擎列表暂无数据`
-- …其余 2 条见 last-report.json
+- `src-components-cards-9` page/body/4:service/body/0:cards.rendered: Amis `false` / Vamis `true`
+- …其余 1 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -87,10 +86,10 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "src-components-cards-4" --mobile` — 只重跑「src-components-cards-4」自身
-- `pnpm compare --page "src-components-cards-5" --mobile` — 只重跑「src-components-cards-5」自身
-- `pnpm compare --page "src-components-cards-6" --mobile` — 只重跑「src-components-cards-6」自身
-- `pnpm compare --page "src-components-cards-7" --mobile` — 只重跑「src-components-cards-7」自身
-- `pnpm compare --page "src-components-cards-8" --mobile` — 只重跑「src-components-cards-8」自身
-- `pnpm compare --page "src-components-cards-9" --mobile` — 只重跑「src-components-cards-9」自身
+- `pnpm compare --page "src-components-cards-4"` — 只重跑「src-components-cards-4」自身
+- `pnpm compare --page "src-components-cards-5"` — 只重跑「src-components-cards-5」自身
+- `pnpm compare --page "src-components-cards-6"` — 只重跑「src-components-cards-6」自身
+- `pnpm compare --page "src-components-cards-7"` — 只重跑「src-components-cards-7」自身
+- `pnpm compare --page "src-components-cards-8"` — 只重跑「src-components-cards-8」自身
+- `pnpm compare --page "src-components-cards-9"` — 只重跑「src-components-cards-9」自身
 

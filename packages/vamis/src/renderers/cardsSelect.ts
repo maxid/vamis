@@ -7,6 +7,7 @@ export type CardsSelectApi = {
   multiple: ComputedRef<boolean>
   dragging: ComputedRef<boolean>
   isSelected: (row: Record<string, any>) => boolean
+  isModified?: (row: Record<string, any>) => boolean
   toggle: (row: Record<string, any>, checked?: boolean) => void | Promise<void>
   onItemClick?: (row: Record<string, any>, event: MouseEvent) => void | Promise<void>
 }
