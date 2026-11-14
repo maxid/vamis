@@ -28497,35 +28497,31 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #2",
-    "heading": "数据需求",
+    "heading": "空状态展示",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "source": "${rows}",
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "name",
-            "label": "名称"
-          },
-          {
-            "name": "age",
-            "label": "年龄"
+            "type": "table",
+            "title": "表格1",
+            "source": [],
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ],
+            "placeholder": "您还没有创建任何实例"
           }
-        ],
-        "data": {
-          "rows": [
-            {
-              "name": "张三",
-              "age": 18
-            },
-            {
-              "name": "李四",
-              "age": 20
-            }
-          ]
-        }
+        ]
       }
     },
     "measure": {
@@ -28542,39 +28538,7 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #3",
-    "heading": "空状态展示",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "table",
-        "placeholder": "暂时没有记录",
-        "data": {
-          "items": []
-        },
-        "columns": [
-          {
-            "name": "name",
-            "label": "名称"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-table-3",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table 表格 #4",
-    "heading": "列配置",
+    "heading": "列类型",
     "expect": "",
     "schema": {
       "type": "page",
@@ -28585,12 +28549,14 @@ window.VAMIS_COMPARE_CASES = [
             {
               "id": "1",
               "status": "1",
-              "name": "Chrome"
+              "name": "Chrome",
+              "progress": 22
             },
             {
               "id": "2",
               "status": "2",
-              "name": "Safari"
+              "name": "Safari",
+              "progress": 80
             }
           ]
         },
@@ -28605,6 +28571,11 @@ window.VAMIS_COMPARE_CASES = [
             "label": "名称",
             "type": "tpl",
             "tpl": "${name}（${id}）"
+          },
+          {
+            "name": "progress",
+            "label": "进度",
+            "type": "progress"
           },
           {
             "name": "status",
@@ -28623,6 +28594,45 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-table-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #4",
+    "heading": "列宽",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "crud",
+        "api": "/api/mock2/sample?waitSeconds=1",
+        "tableLayout": "fixed",
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "width": 150
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-table-4",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -28632,41 +28642,22 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #5",
-    "heading": "超级表头",
+    "heading": "列宽",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "data": {
-          "items": [
-            {
-              "engine": "Blink",
-              "browser": "Chrome",
-              "version": "100"
-            },
-            {
-              "engine": "WebKit",
-              "browser": "Safari",
-              "version": "15"
-            }
-          ]
-        },
+        "type": "crud",
+        "api": "/api/mock2/sample?waitSeconds=1",
         "columns": [
           {
+            "name": "id",
+            "label": "ID"
+          },
+          {
             "name": "engine",
-            "label": "引擎",
-            "groupName": "引擎信息"
-          },
-          {
-            "name": "browser",
-            "label": "浏览器",
-            "groupName": "产品"
-          },
-          {
-            "name": "version",
-            "label": "版本",
-            "groupName": "产品"
+            "label": "Rendering engine",
+            "width": "50%"
           }
         ]
       }
@@ -28685,44 +28676,30 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #6",
-    "heading": "合并单元格",
+    "heading": "列对齐方式",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "combineNum": 2,
-        "data": {
-          "items": [
-            {
-              "engine": "Trident",
-              "browser": "IE 4.2",
-              "version": "4"
-            },
-            {
-              "engine": "Trident",
-              "browser": "IE 4.2",
-              "version": "5"
-            },
-            {
-              "engine": "Gecko",
-              "browser": "Firefox 1.0",
-              "version": "5"
-            }
-          ]
-        },
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "engine",
-            "label": "Engine"
-          },
-          {
-            "name": "browser",
-            "label": "Browser"
-          },
-          {
-            "name": "version",
-            "label": "Version"
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "label": "Version",
+                "type": "tpl",
+                "tpl": "${version | number}",
+                "align": "right"
+              }
+            ]
           }
         ]
       }
@@ -28741,37 +28718,29 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #7",
-    "heading": "拖拽排序",
+    "heading": "列样式",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "draggable": true,
-        "data": {
-          "items": [
-            {
-              "id": "1",
-              "name": "Chrome"
-            },
-            {
-              "id": "2",
-              "name": "Safari"
-            },
-            {
-              "id": "3",
-              "name": "Firefox"
-            }
-          ]
-        },
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "name": "name",
-            "label": "名称"
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "className": "text-primary"
+              }
+            ]
           }
         ]
       }
@@ -28790,38 +28759,30 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #8",
-    "heading": "列排序",
+    "heading": "列样式",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "data": {
-          "items": [
-            {
-              "name": "Chrome",
-              "version": "100"
-            },
-            {
-              "name": "Safari",
-              "version": "15"
-            },
-            {
-              "name": "Firefox",
-              "version": "95"
-            }
-          ]
-        },
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "name",
-            "label": "名称",
-            "sortable": true
-          },
-          {
-            "name": "version",
-            "label": "版本",
-            "sortable": true
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "className": "text-primary",
+                "labelClassName": "font-bold"
+              }
+            ]
           }
         ]
       }
@@ -28840,29 +28801,32 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #9",
-    "heading": "选择模式",
+    "heading": "单元格样式",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
-        "type": "table",
-        "selectable": true,
-        "data": {
-          "items": [
-            {
-              "id": "1",
-              "name": "Chrome"
-            },
-            {
-              "id": "2",
-              "name": "Safari"
-            }
-          ]
-        },
-        "columns": [
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
           {
-            "name": "name",
-            "label": "名称"
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "classNameExpr": "${ version > 5 ? 'text-danger' : '' }"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              }
+            ]
           }
         ]
       }
@@ -28881,156 +28845,6 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #10",
-    "heading": "嵌套",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "table",
-        "data": {
-          "items": [
-            {
-              "id": "1",
-              "name": "Chrome",
-              "children": [
-                {
-                  "id": "1-1",
-                  "name": "Chrome Beta"
-                }
-              ]
-            },
-            {
-              "id": "2",
-              "name": "Safari"
-            }
-          ]
-        },
-        "columns": [
-          {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "name": "name",
-            "label": "名称"
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-table-10",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table 表格 #11",
-    "heading": "快速编辑",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "table",
-        "data": {
-          "items": [
-            {
-              "name": "Chrome",
-              "version": "100"
-            },
-            {
-              "name": "Safari",
-              "version": "15"
-            }
-          ]
-        },
-        "columns": [
-          {
-            "name": "name",
-            "label": "名称"
-          },
-          {
-            "name": "version",
-            "label": "版本",
-            "quickEdit": true
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-table-11",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table 表格 #12",
-    "heading": "列筛选",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "table",
-        "data": {
-          "items": [
-            {
-              "engine": "Blink",
-              "browser": "Chrome"
-            },
-            {
-              "engine": "WebKit",
-              "browser": "Safari"
-            },
-            {
-              "engine": "Gecko",
-              "browser": "Firefox"
-            }
-          ]
-        },
-        "columns": [
-          {
-            "name": "engine",
-            "label": "Engine",
-            "searchable": true
-          },
-          {
-            "name": "browser",
-            "label": "Browser",
-            "filterable": {
-              "options": [
-                "Chrome",
-                "Safari"
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-table-12",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table 表格 #13",
     "heading": "固定列",
     "expect": "",
     "schema": {
@@ -29083,6 +28897,151 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-components-table-10",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #11",
+    "heading": "可复制",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "source": "$rows",
+        "data": {
+          "rows": [
+            {
+              "id": 1,
+              "engine": "Trident"
+            },
+            {
+              "id": 2,
+              "engine": "Gecko"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "copyable": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-11",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #12",
+    "heading": "可复制",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "source": "$rows",
+        "data": {
+          "rows": [
+            {
+              "id": 1,
+              "engine": "Trident"
+            },
+            {
+              "id": 2,
+              "engine": "Gecko"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "copyable": {
+              "content": "复制的内容是：${engine}"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-12",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #13",
+    "heading": "弹出框（popOver）",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "source": "${table}",
+        "data": {
+          "table": [
+            {
+              "id": 1,
+              "text": "The longest word in any of the major English language dictionaries is pneumonoultramicroscopicsilicovolcanoconiosis, a word that refers to a lung disease contracted from the inhalation of very fine silica particles, specifically from a volcano; medically, it is the same as silicosis."
+            },
+            {
+              "id": 2,
+              "text": "The longest word in any of the major English language dictionaries is pneumonoultramicroscopicsilicovolcanoconiosis, a word that refers to a lung disease contracted from the inhalation of very fine silica particles, specifically from a volcano; medically, it is the same as silicosis."
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "text",
+            "label": "long text",
+            "popOver": {
+              "body": {
+                "type": "tpl",
+                "tpl": "${text}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
     "id": "src-components-table-13",
     "group": "组件 / 数据展示",
     "bucket": "components",
@@ -29092,6 +29051,517 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #14",
+    "heading": "超级表头",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "engine": "Blink",
+              "browser": "Chrome",
+              "version": "100"
+            },
+            {
+              "engine": "WebKit",
+              "browser": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "引擎",
+            "groupName": "引擎信息"
+          },
+          {
+            "name": "browser",
+            "label": "浏览器",
+            "groupName": "产品"
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "groupName": "产品"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-14",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #15",
+    "heading": "合并单元格",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "combineNum": 2,
+        "data": {
+          "items": [
+            {
+              "engine": "Trident",
+              "browser": "IE 4.2",
+              "version": "4"
+            },
+            {
+              "engine": "Trident",
+              "browser": "IE 4.2",
+              "version": "5"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 1.0",
+              "version": "5"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine"
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          },
+          {
+            "name": "version",
+            "label": "Version"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-15",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #16",
+    "heading": "拖拽排序",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "draggable": true,
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            },
+            {
+              "id": "3",
+              "name": "Firefox"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-16",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #17",
+    "heading": "列排序",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "name": "Chrome",
+              "version": "100"
+            },
+            {
+              "name": "Safari",
+              "version": "15"
+            },
+            {
+              "name": "Firefox",
+              "version": "95"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称",
+            "sortable": true
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "sortable": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-17",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #18",
+    "heading": "选择模式",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "selectable": true,
+        "multiple": true,
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-18",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #19",
+    "heading": "嵌套",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome",
+              "children": [
+                {
+                  "id": "1-1",
+                  "name": "Chrome Beta"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "name": "Safari"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "id",
+            "label": "ID"
+          },
+          {
+            "name": "name",
+            "label": "名称"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-19",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #20",
+    "heading": "显示序号",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "showIndex": true,
+        "data": {
+          "items": [
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 4.0",
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0"
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0"
+                }
+              ]
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 1.0"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine"
+          },
+          {
+            "name": "browser",
+            "label": "Browser"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-20",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #21",
+    "heading": "快速编辑",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "name": "Chrome",
+              "version": "100"
+            },
+            {
+              "name": "Safari",
+              "version": "15"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          },
+          {
+            "name": "version",
+            "label": "版本",
+            "quickEdit": true
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-21",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #22",
+    "heading": "列筛选",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "engine": "Blink",
+              "browser": "Chrome"
+            },
+            {
+              "engine": "WebKit",
+              "browser": "Safari"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Engine",
+            "searchable": true
+          },
+          {
+            "name": "browser",
+            "label": "Browser",
+            "filterable": {
+              "options": [
+                "Chrome",
+                "Safari"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-22",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #23",
+    "heading": "高亮行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "rowClassNameExpr": "${id % 2 ? 'bg-success' : 'bg-blue-50'}",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "platform",
+                "label": "Platform"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-23",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #24",
     "heading": "总结行",
     "expect": "",
     "schema": {
@@ -29137,7 +29607,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-14",
+    "id": "src-components-table-24",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -29145,7 +29615,53 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #15",
+    "title": "Table 表格 #25",
+    "heading": "行操作按钮",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "table",
+        "data": {
+          "items": [
+            {
+              "id": "1",
+              "name": "Chrome"
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "name",
+            "label": "名称"
+          },
+          {
+            "type": "button",
+            "label": "查看",
+            "level": "link",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "详情",
+              "body": "当前行：${name}"
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-25",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #26",
     "heading": "单行点击操作",
     "expect": "",
     "schema": {

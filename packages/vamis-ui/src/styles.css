@@ -336,6 +336,10 @@
   --table-checked-bg: var(--card);
   --table-checked-border: var(--border);
   --table-checked-color: var(--foreground);
+  --table-heading-bg: var(--card);
+  --table-heading-height: 40px;
+  --table-placeholder-h: 200px;
+  --table-empty-icon-size: 74px;
   /* Amis table-view 内联样式用这些名字；未定义则 border/padding 整段失效。 */
   --borderColor: var(--border);
   --TableCell-paddingX: var(--table-cell-px);
@@ -4537,6 +4541,173 @@
 [data-slot="table-head"] [data-slot="checkbox"],
 [data-slot="table-cell"] [data-slot="checkbox"] {
   transform: none;
+}
+
+/* Amis `.Table`：标题栏 40 / 序号 50 / 勾选列，tableLayout:fixed。 */
+.vamis-table-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: var(--gap-md);
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeBase, 14px);
+  line-height: 1.5;
+}
+.vamis-table-wrap [data-slot="table-head"] {
+  position: relative;
+  font-size: var(--fontSizeBase, 14px);
+  font-weight: 400;
+  line-height: 1.5;
+  overflow: visible;
+}
+.vamis-table-wrap.is-col-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+.vamis-table__col-resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  width: 7px;
+  cursor: col-resize;
+  user-select: none;
+  opacity: 0.5;
+  z-index: 15;
+}
+.vamis-table__col-resizer.is-last {
+  width: 4px;
+  right: 0;
+}
+.vamis-table__col-resizer:hover,
+.vamis-table__col-resizer.is-resizing {
+  background: var(--primary);
+}
+.vamis-table-wrap.is-fixed [data-slot="table"] {
+  table-layout: fixed;
+}
+.vamis-table__title {
+  background: var(--table-heading-bg);
+  min-height: var(--table-heading-height);
+  padding: 0 var(--gap-sm);
+  display: flex;
+  align-items: center;
+  font-size: var(--fontSizeBase, 14px);
+  line-height: 1.5;
+}
+.vamis-table__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+.vamis-table__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: 12px;
+}
+.vamis-table__filter-input {
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 var(--gap-xs);
+  background: var(--card);
+}
+.vamis-table__filter-input--search {
+  width: 8rem;
+}
+.vamis-table__check-cell,
+.vamis-table__drag-cell,
+.vamis-table__index-cell {
+  width: 30px;
+  text-align: center;
+}
+.vamis-table__index-cell {
+  width: 50px;
+}
+.vamis-table__drag {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  cursor: move;
+  color: var(--form-item-color);
+  vertical-align: middle;
+}
+.vamis-table__drag svg.icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+.vamis-table__expand {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--gap-xs);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--form-item-color);
+  cursor: pointer;
+  font-size: 12px;
+}
+.vamis-table__sort {
+  margin-left: var(--gap-xs);
+  font-size: 12px;
+  color: var(--form-item-color);
+}
+.vamis-table-wrap tr.vamis-table__placeholder:hover {
+  background: transparent;
+}
+.vamis-table-wrap tr.vamis-table__placeholder [data-slot="table-cell"],
+.vamis-table__empty {
+  height: var(--table-placeholder-h);
+  padding: 0;
+  vertical-align: middle;
+  text-align: center;
+  white-space: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--colors-neutral-text-6);
+  background: transparent;
+}
+.vamis-table__empty-icon.icon {
+  display: block;
+  margin: 0 auto;
+  width: var(--table-empty-icon-size);
+  height: var(--table-empty-icon-size);
+}
+.vamis-table__edit {
+  height: 28px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 var(--gap-xs);
+  font-size: var(--fontSizeBase, 14px);
+}
+.vamis-table__edit--area {
+  height: auto;
+  min-height: 64px;
+}
+.vamis-table__quick {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+.vamis-table__edit-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--form-item-color);
+  cursor: pointer;
+  font-size: 12px;
+}
+.vamis-table__edit-btn:hover {
+  color: var(--primary);
+}
+.vamis-table__nested [data-slot="table-cell"] {
+  background: var(--card);
 }
 
 /* Amis Checkbox：盒在 i / [data-slot=checkbox]，不要 shadcn size-4 + opacity。 */

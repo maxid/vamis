@@ -927,9 +927,17 @@ alwaysApply: true
 - 稳定做法：line 用 div 宽度，circle/dashboard 用 `<circle>` + `stroke-dasharray = arcLength circumference`、`dashoffset = arc*(1-value/100)`、rotate `-90 + gapDegree/2`；`map` 字符串/数组/阈值对象三路，数组按 `Math.floor(value/(100/len))` 取色；`valueTpl` 过滤 `${value}`；actions 用本地 override，不依赖表单域。
 - 触及：`progress`
 
-### Table 行选择与 rowClick：checkpoint 用原生 checkbox
-- 稳定做法：表头 selectAll + 行 checkbox，selectable 时行点击 toggle 并派发 `rowClick`（prevented 阻止 itemAction）；组件注册 select/selectAll/clearAll，`getData().selectedItems` 返回行数组；文档选择示例用静态 data，避免 service 远程。
+### Table 表头默认可拖列宽；空状态要 desk-empty 图
+- 踩过：文档基本用法 Amis `th` 右侧有 `.Table-content-colDragLine`（7px / hover `--primary`），Vamis 没有；空状态只有一行灰字，缺 200px 高、12px / text-6、74px `desk-empty` SVG。
+- 稳定做法：`resizable !== false` 时每个数据列 `th` 绝对定位拖拽条（末列 4px `right:0`），mousedown 记宽、mousemove `Math.max(30, start+delta)` 写进 `colWidths`，拖过之后 `table-layout:fixed`。空状态 `tr.vamis-table__placeholder` 打穿 TableCell 的 40px 行高，SVG 从 Amis `desk-empty.svg` 原样拷，渐变 id 用 `useId()` 防多实例冲突。
 - 触及：`table`
+- 规则：Amis `handleColResizeMouseDown` / `_table.scss` `&-content-colDragLine` / `&-placeholder`；本文
+
+### Table 行选择与 rowClick：checkpoint 用原生 checkbox
+- 踩过：只在表头画勾选列、body 没有对应 td，列对不齐；`multiple` 默认 true 和 Amis 单选 radio 相反；嵌套行 `v-for` 写在 `</TableRow>` 后面，`row`/`i` 出了作用域。
+- 稳定做法：表头 / 行 / 嵌套行同一套额外列（拖拽、勾选、序号）。`multiple` 默认 false（圆点），`true` 才 checkbox + 全选。点行勾选只认 `checkOnItemClick`，且与 `itemAction` 互斥。`rowClick` 的 `prevented` 才挡住 itemAction。勾选列用原生 checkbox / `.vamis-radio-dot`，不要 shadcn Checkbox、不要 `name`、不要 `translate-y`。嵌套行必须包在父行 `template v-for` 里。文档选择示例用静态 data。
+- 触及：`table`
+- 规则：Amis `Table/Cell.tsx` `__checkme` / `__index` / `__dragme`；本文
 
 ### ButtonGroup 拼缝用邻钮负 margin + 首尾圆角；hover 抬 wrapper
 - 踩过：邻钮 1px 负缝叠边后，后钮盖住前钮 hover 描边（缺边）。把 `z-index` 打在内层 `button` 上无效——`SchemaRenderer` 的 `.vamis-node` 才是兄弟。这不是 table 半像素（collapse + `border-box` 吃线），是叠边后的绘制顺序。
