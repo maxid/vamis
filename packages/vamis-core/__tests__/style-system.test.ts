@@ -97,7 +97,7 @@ const HEX_TOKEN_CEILING = 31
 const RENDERER_CEILING = {
   lucideTags: 0,
   textSize: 0,
-  semanticColor: 7,
+  semanticColor: 1,
 }
 
 /** 模板里拿字符当图标。箭头 / 叉 / 勾都该是 @vamis/ui 的 Vamis* 图标。 */

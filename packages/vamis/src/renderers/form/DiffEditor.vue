@@ -197,7 +197,7 @@ watch(editorTheme, (theme) => {
 <template>
   <FormItem :schema="itemSchema">
     <div
-      class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border bg-background"
+      class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border"
       :class="{ 'ring-1 ring-ring': focused }"
       :style="{ height: `${height}px` }"
     >

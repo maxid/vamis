@@ -56,7 +56,7 @@ function clear() {
         ref="canvas"
         width="360"
         height="140"
-        class="w-full rounded-md border bg-background"
+        class="vamis-signature w-full rounded-md border"
         @mousedown="start"
         @mousemove="move"
         @mouseup="end"

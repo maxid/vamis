@@ -19,7 +19,7 @@ const actions = computed(() => drawerActions(props.schema))
 <template>
   <div
     data-vamis-drawer-inline
-    class="rounded-lg border bg-card p-5 shadow-sm"
+    class="rounded-lg border p-5 shadow-sm"
     :class="drawerSizeClass(schema)"
     :style="overlayFrameStyle(schema, 'drawer')"
   >

@@ -11203,3 +11203,21 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
     background: transparent;
   }
 }
+
+/* ---- 皮肤迁出模板（2026-11 第十二刀） ---- */
+[data-vamis-dialog-inline],
+[data-vamis-drawer-inline] {
+  background: var(--card);
+}
+
+.vamis-input-color {
+  background: var(--card);
+}
+
+.vamis-signature {
+  background: var(--background);
+}
+
+.vamis-shape {
+  color: var(--primary);
+}

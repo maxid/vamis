@@ -19,7 +19,7 @@ const actions = computed(() => dialogActions(props.schema))
 <template>
   <div
     data-vamis-dialog-inline
-    class="rounded-lg border bg-card p-5 shadow-sm"
+    class="rounded-lg border p-5 shadow-sm"
     :class="dialogSizeClass(schema)"
     :style="overlayFrameStyle(schema, 'dialog')"
   >

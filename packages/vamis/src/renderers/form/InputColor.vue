@@ -26,7 +26,7 @@ const value = computed({
       <input
         :value="value"
         type="color"
-        class="h-[var(--control-h)] w-12 cursor-pointer rounded-md border bg-card p-1"
+        class="vamis-input-color h-[var(--control-h)] w-12 cursor-pointer rounded-md border p-1"
         :disabled="disabled"
         @input="value = ($event.target as HTMLInputElement).value"
       />
