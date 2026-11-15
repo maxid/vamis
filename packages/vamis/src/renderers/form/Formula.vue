@@ -20,7 +20,9 @@ const result = computed(() => {
   const ctx = { ...data.value, ...(form?.store.data || {}) }
   if (formula.includes('${')) return filterTpl(formula, ctx)
   const value = evalFormula(formula, ctx)
-  return value == null ? '' : String(value)
+  // 两边都空时公式引擎是 NaN；Amis evalJS 缺变量抛错后留下 schema value 0。
+  if (typeof value === 'number' && Number.isNaN(value)) return 0
+  return value == null ? '' : value
 })
 
 function apply() {

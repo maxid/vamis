@@ -35,11 +35,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@vamis/ui'
+import RowValueHost from './renderers/data/RowValueHost.vue'
 
 const overlay = useOverlay()
 const dialog = computed(() => overlay?.state.dialog || null)
 const drawer = computed(() => overlay?.state.drawer || null)
 const extra = computed(() => overlay?.state.data || {})
+
+function onOverlayFieldChange(payload: { name: string; value: unknown }) {
+  if (payload.name) overlay?.setValue(payload.name, payload.value)
+}
 
 function setDialogOpen(open: boolean) {
   if (!open && overlay?.state.dialog) overlay.closeDialog()
@@ -72,12 +77,14 @@ function preventIf(condition: boolean, event: Event) {
         </DialogTitle>
       </DialogHeader>
       <div class="min-h-0 overflow-auto">
-        <SchemaRenderer
-          v-for="(node, i) in dialogBody(dialog)"
-          :key="`${overlay?.state.seq}-${i}`"
-          :schema="node"
-          :extra-data="extra"
-        />
+        <RowValueHost @change="onOverlayFieldChange">
+          <SchemaRenderer
+            v-for="(node, i) in dialogBody(dialog)"
+            :key="`${overlay?.state.seq}-${i}`"
+            :schema="node"
+            :extra-data="extra"
+          />
+        </RowValueHost>
       </div>
       <DialogFooter v-if="dialogActions(dialog).length">
         <SchemaRenderer v-for="(node, i) in dialogActions(dialog)" :key="i" :schema="node" :extra-data="extra" />
@@ -103,12 +110,14 @@ function preventIf(condition: boolean, event: Event) {
         </SheetTitle>
       </SheetHeader>
       <div class="min-h-0 flex-1 overflow-auto px-4">
-        <SchemaRenderer
-          v-for="(node, i) in drawerBody(drawer)"
-          :key="`${overlay?.state.seq}-${i}`"
-          :schema="node"
-          :extra-data="extra"
-        />
+        <RowValueHost @change="onOverlayFieldChange">
+          <SchemaRenderer
+            v-for="(node, i) in drawerBody(drawer)"
+            :key="`${overlay?.state.seq}-${i}`"
+            :schema="node"
+            :extra-data="extra"
+          />
+        </RowValueHost>
       </div>
       <SheetFooter v-if="drawerActions(drawer).length" class="flex-row justify-end gap-2">
         <SchemaRenderer v-for="(node, i) in drawerActions(drawer)" :key="i" :schema="node" :extra-data="extra" />

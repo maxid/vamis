@@ -24,6 +24,9 @@ describe('list', () => {
       'syncLetterFromScroll',
       'onRowPointerDown',
       'vamis-list__item-float',
+      'RowValueHost',
+      'setByPathCopy',
+      'onRowChange',
     ])
       expect(vue).toContain(t)
     expect(read('../../vamis/src/renderers/rest/ListItem.vue')).toContain("level: 'link'")

@@ -1,4 +1,5 @@
 import { inject, provide, reactive, type InjectionKey } from 'vue'
+import { getByPath, setByPathCopy } from './scope'
 import type { PlainObject, SchemaObject } from './types'
 
 export interface OverlayState {
@@ -15,6 +16,8 @@ export interface OverlayApi {
   closeDialog: (result?: PlainObject | false) => void
   closeDrawer: () => void
   close: () => void
+  /** 浮层里脱离表单的表单项写回当前层 data。对齐 Amis `Dialog.handleFormChange`。 */
+  setValue: (name: string, value: unknown) => void
   registerDialogForm: (submit: () => Promise<void>) => void
   unregisterDialogForm: (submit: () => Promise<void>) => void
   submitDialogForm: () => Promise<boolean>
@@ -89,6 +92,13 @@ export function createOverlay(): OverlayApi {
       while (dialogs.length) dialogs.pop()?.resolve?.(false)
       drawers.length = 0
       state.data = {}
+      sync()
+    },
+    setValue(name, value) {
+      const top = dialogs.at(-1) ?? drawers.at(-1)
+      if (!top || !name) return
+      if (getByPath(top.data, name) === value) return
+      top.data = setByPathCopy(top.data, name, value)
       sync()
     },
     registerDialogForm(submit) {

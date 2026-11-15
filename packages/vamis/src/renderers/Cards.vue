@@ -18,8 +18,10 @@ import {
   cardsTitle,
   createVamisEvent,
   eventEvalData,
+  getByPath,
   resolveClassName,
   runOnEvent,
+  setByPathCopy,
   useEnv,
   useScoped,
   type SchemaObject,
@@ -28,6 +30,7 @@ import { Button, VamisIcon } from '@vamis/ui'
 import Sortable from 'sortablejs'
 import { matchListRows } from './list-utils'
 import { useCrudHost } from './data/crudHost'
+import RowValueHost from './data/RowValueHost.vue'
 import { provideCardsSelect } from './cardsSelect'
 
 const props = defineProps<{
@@ -183,6 +186,24 @@ function adoptRows(list: Record<string, any>[]) {
 
 function ensureLocal() {
   if (!localRows.value) localRows.value = adoptRows(rows.value)
+}
+
+/**
+ * 卡片里脱离表单的表单项写回这一行。Card 自己有数据域，SchemaRenderer 会先写本层再交给这里。
+ * 行记录整体换新并保住 ORIGIN；init 写入算原始值，不进「修改了内容」。
+ */
+function onRowChange(row: Record<string, any>, payload: { name: string; value: unknown; init: boolean }) {
+  if (!payload.name) return
+  ensureLocal()
+  const key = rowKey(row)
+  const patch = (item: Record<string, any>) => {
+    if (rowKey(item) !== key) return item
+    if (getByPath(item, payload.name) === payload.value) return item
+    const next = setByPathCopy(dataOf(item), payload.name, payload.value)
+    return stampOrigin(next, payload.init ? next : originOf(item) || dataOf(item))
+  }
+  localRows.value = (localRows.value || []).map(patch)
+  setSelected(selectedList().map(patch))
 }
 
 function applySetValue(
@@ -449,7 +470,9 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
       :style="colsStyle"
     >
       <div v-for="(row, i) in rows" :key="i" class="vamis-cards-item" :class="itemClass(row, i)">
-        <SchemaRenderer :schema="asSchema(card)" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
+        <RowValueHost isolate-names @change="onRowChange(row, $event)">
+          <SchemaRenderer :schema="asSchema(card)" :extra-data="{ ...row, index: i, cardsItemKey: rowKey(row) }" />
+        </RowValueHost>
       </div>
     </div>
     <div v-else class="vamis-cards-placeholder">

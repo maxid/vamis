@@ -200,8 +200,8 @@ alwaysApply: true
 
 ### 脱离表单的表单项走 useFieldValue，不要 `form?.setValue`
 - 踩过：表格列类型示例里开关和状态是同一个字段，开关改了状态列不动。不是 Table 或 Switch 单点：表单项只会 `form?.getValue` / `form?.setValue`，没有祖先表单时读不到数据链、写的值直接丢掉（约 130 处），Switch 退回组件本地态所以自己会动。Amis `wrapControl` 没有 formStore 时把变化交给最近的 `onChange`：`TableRow` 写回行，`Page` / `Service` / `Dialog` 写进本层 store；`TableCell` 也保留列 `name`。
-- 稳定做法：表单项一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主必须 `provideValueHost`：表格单元格自己提供，其它地方包一层 `data/RowValueHost.vue`（CRUD 单元格已接；List / Cards / Dialog 未接）。同一个 `name` 每行注册一次，行内表单项要收进本行自己的 scoped（`provideScoped(useScoped())`）并带 `inputOnly`，否则页面那层 `getComponentByName` 会捞到某一行的控件，对照 `named` / `rendered` 也假红（Amis `TableCell` 是 `inputOnly: true`，没有表单项外壳）。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。
-- 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards`
+- 稳定做法：表单项一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主必须 `provideValueHost`：表格单元格自己提供，其它地方包一层 `data/RowValueHost.vue`（CRUD / List / Cards 行、Dialog / Drawer overlay body 已接）。`card` 的 `scope: 'self'` 会截断 ValueHost，不要拆 isolateScope；`SchemaRenderer` 要同时写 `childScope` 并冒泡到 `parentValueHost`，外层宿主才能换行。Overlay 帧用 `setByPathCopy` + `sync()`，不要原地改 `state.data`。同一个 `name` 每行注册一次，行内表单项要收进本行自己的 scoped（`provideScoped(useScoped())`）并带 `inputOnly`，否则页面那层 `getComponentByName` 会捞到某一行的控件，对照 `named` / `rendered` 也假红（Amis `TableCell` 是 `inputOnly: true`，没有表单项外壳）。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。
+- 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards` `card` `dialog` `drawer`
 - 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；`packages/vamis/src/renderers/data/RowValueHost.vue`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange` / `Table/TableCell.tsx` `inputOnly`
 
 ### Amis 文档站给示例传 `affixHeader: false`，生产默认才是 true
@@ -940,7 +940,8 @@ alwaysApply: true
 - 触及：`chart`
 
 ### Formula 写入要区分 initSet/autoSet/condition；空值示例会假红
-- 稳定做法：`apply()` 只在有 name、未 disabled、condition 命中时写 form；initSet 默认 true 挂载应用一次，autoSet 默认 true watch form.store.data；`id` 注册 doAction apply/reload 供 button target。对照 formula 文档的 A+B/模板示例 Amis 侧常 rendered=false，活示例只保留 manual/condition，其余用 yaml 代码块。
+- 踩过：空 `a + b` 引擎算出 `NaN`（`undefined+undefined`）；Amis `evalJS` 缺变量抛错得到 null，initSet 跳过，schema `value: 0` 留下。对照假红。
+- 稳定做法：`apply()` 只在有 name、未 disabled、condition 命中时写 form；initSet 默认 true 挂载应用一次，autoSet 默认 true watch form.store.data；`id` 注册 doAction apply/reload 供 button target。`Formula.vue` 把 `NaN` 收成 `0`、保留数字类型，不要全局改 `evalFormula`。对照 formula 文档的 A+B/模板示例 Amis 侧常 rendered=false，活示例只保留 manual/condition，其余用 yaml 代码块。
 - 触及：`formula`
 
 ### Picker embed 提交即时写回，弹层仍旧草稿确认

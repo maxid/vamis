@@ -308,5 +308,6 @@ describe('data chain for form items outside a form', () => {
     expect(table).toContain('@change="onCellChange(row, $event)"')
     const renderer = read('../src/SchemaRenderer.vue')
     expect(renderer).toContain('provideValueHost')
+    expect(renderer).toContain('parentValueHost.setValue')
   })
 })

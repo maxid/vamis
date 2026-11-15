@@ -7,8 +7,10 @@ import {
   eachList,
   eventEvalData,
   filterTpl,
+  getByPath,
   runAction,
   runOnEvent,
+  setByPathCopy,
   table2Source,
   useEnv,
   useOverlay,
@@ -24,6 +26,7 @@ import {
   listItemLetter,
   matchListRows,
 } from './list-utils'
+import RowValueHost from './data/RowValueHost.vue'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any>; items?: Record<string, any>[] }>()
 const env = useEnv()
@@ -129,6 +132,20 @@ function rowData(row: Record<string, any>, i: number) {
 
 function ensureLocal() {
   if (!localRows.value) localRows.value = rows.value.map((row) => ({ ...row }))
+}
+
+/**
+ * 行里脱离表单的表单项写回这一行。对齐 Amis List 项 store；行记录整体换新。
+ */
+function onRowChange(i: number, payload: { name: string; value: unknown; init: boolean }) {
+  if (!payload.name) return
+  ensureLocal()
+  const list = localRows.value || []
+  const current = list[i]
+  if (!current || getByPath(current, payload.name) === payload.value) return
+  const next = list.slice()
+  next[i] = setByPathCopy(current, payload.name, payload.value)
+  localRows.value = next
 }
 
 function letterOf(row: Record<string, any>) {
@@ -458,7 +475,9 @@ watch(
                 @click="toggle(i)"
               />
             </span>
-            <SchemaRenderer :schema="{ type: 'list-item', ...item }" :extra-data="rowData(row, i)" />
+            <RowValueHost isolate-names @change="onRowChange(i, $event)">
+              <SchemaRenderer :schema="{ type: 'list-item', ...item }" :extra-data="rowData(row, i)" />
+            </RowValueHost>
           </div>
         </div>
         <div v-else class="vamis-list__empty">

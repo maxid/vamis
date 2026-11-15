@@ -3,7 +3,7 @@
 - 日期：2026-11-15
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **1416** · 通过 **1334** · 失败 **82**（P0 8）· Vamis 多出 extra **0**
+- 合计 **1416** · 通过 **1335** · 失败 **81**（P0 8）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -11,7 +11,7 @@
 |------|------|--------|
 | 全局 | 388 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 266 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 855 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 853 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
 ### 全局（388）
 
@@ -60,7 +60,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - 缺档：补 Amis 同名 helper（m-l-xxl），不要用邻近档或 token 近似。
 - schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
-### 组件（855）
+### 组件（853）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
@@ -76,7 +76,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-concepts-data-mapping-3` fontWeight: Amis `400` / Vamis `500`
 - `src-concepts-data-mapping-4` lineHeight: Amis `18px` / Vamis `14px`
 - `src-concepts-data-mapping-4` fontWeight: Amis `400` / Vamis `500`
-- …其余 843 条见 last-report.json
+- …其余 841 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -91,7 +91,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 105 | 0 |
-| 组件 | 840 | 74 |
+| 组件 | 840 | 73 |
 | 样式 | 471 | 8 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -107,7 +107,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 | 组件 / 反馈 | 41 | 0 |
 | 组件 / 功能 | 94 | 6 |
 | 组件 / 其他 | 41 | 0 |
-| 组件 / 数据输入 | 337 | 52 |
+| 组件 / 数据输入 | 337 | 51 |
 | 组件 / 数据展示 | 216 | 16 |
 | 样式 / 开始 | 13 | 0 |
 | 样式 / Backgrounds | 8 | 0 |
@@ -154,7 +154,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `components-form-index-43` Form 表单 #44 — page/body/1:input-text.rendered: Amis `false` / Vamis `true`；page/body/1:input-text.value: Amis `` / Vamis `上下文-`
 - `components-form-index-44` Form 表单 #45 — page/body/0:form.toast: Amis `false` / Vamis `true`
 - `components-form-index-45` Form 表单 #46 — page/body/1:input-text.rendered: Amis `false` / Vamis `true`；page/body/1:input-text.value: Amis `` / Vamis `上下文-`
-- …其余 54 条见 `compare/last-report.json`
+- …其余 53 条见 `compare/last-report.json`
 
 ## 重跑口径
 
@@ -208,7 +208,6 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - `pnpm compare --page "components-form-input-datetime-0"` — 只重跑「components-form-input-datetime-0」自身
 - `pnpm compare --page "components-form-input-date-range-3"` — 只重跑「components-form-input-date-range-3」自身
 - `pnpm compare --page "components-form-input-date-range-4"` — 只重跑「components-form-input-date-range-4」自身
-- `pnpm compare --page "components-form-formula-0"` — 只重跑「components-form-formula-0」自身
 - `pnpm compare --page "components-form-input-number-3"` — 只重跑「components-form-input-number-3」自身
 - `pnpm compare --page "components-form-radio-0"` — 只重跑「components-form-radio-0」自身
 - `pnpm compare --page "components-form-radio-1"` — 只重跑「components-form-radio-1」自身
