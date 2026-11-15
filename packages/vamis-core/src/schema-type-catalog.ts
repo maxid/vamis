@@ -187,6 +187,14 @@ export function markFormItemType(type: string, yes = true): void {
   else if (!builtinFormItemTypes.has(key)) FORM_ITEM_TYPES.delete(key)
 }
 
+/** 这个 type 是不是表单项（内置清单 + 注册时标了 `isFormItem` 的）。 */
+export function isFormItemType(type?: string): boolean {
+  const key = type?.toLowerCase()
+  if (!key) return false
+  const resolved = resolveTypeAlias(key)
+  return FORM_ITEM_TYPES.has(key) || (!!resolved && FORM_ITEM_TYPES.has(resolved))
+}
+
 function fieldDoc(key: string, value: SchemaFieldInput, category: string): SchemaDoc {
   if (typeof value === 'string') return doc(key, category, value)
   return {

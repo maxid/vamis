@@ -16,6 +16,8 @@ export interface ColumnToggleApi {
   visibleColumns: ComputedRef<SchemaObject[]>
   isVisible: (col: SchemaObject, index?: number) => boolean
   setVisible: (col: SchemaObject, visible: boolean, index?: number) => void
+  /** 全选 / 全不选（`toggable: false` 的列不动）。 */
+  setAll: (visible: boolean) => void
 }
 
 export const CrudHostKey: InjectionKey<CrudHostApi> = Symbol('vamis-crud-host')
@@ -33,24 +35,52 @@ export function colKey(col: SchemaObject, index = 0): string {
   return String(col.name || col.title || col.label || `col-${index}`)
 }
 
-export function useColumnToggle(columns: ComputedRef<SchemaObject[]>): ColumnToggleApi {
+/**
+ * 列显隐。key 按列在 `columns` 里的原始下标取（没有 name / label 的列才落到 `col-i`），
+ * 调用方不用自己传下标。`onChange` 在作者点了显隐之后回调（Table 用它派 `columnToggled`）。
+ */
+export function useColumnToggle(
+  columns: ComputedRef<SchemaObject[]>,
+  onChange?: (visible: SchemaObject[]) => void,
+  /** 作者没点过时的显隐（Table `persistKey` 从本地缓存恢复）；返回 `undefined` 落回 `toggled`。 */
+  preset?: (col: SchemaObject, index: number) => boolean | undefined,
+): ColumnToggleApi {
   const visibility = reactive<Record<string, boolean>>({})
 
-  function isVisible(col: SchemaObject, index = 0) {
-    const key = colKey(col, index)
+  function keyOf(col: SchemaObject, index?: number) {
+    const at = columns.value.indexOf(col)
+    return colKey(col, at >= 0 ? at : index)
+  }
+
+  function isVisible(col: SchemaObject, index?: number) {
+    const key = keyOf(col, index)
     if (Object.prototype.hasOwnProperty.call(visibility, key)) return visibility[key]
+    if (preset && col.toggable !== false) {
+      const at = columns.value.indexOf(col)
+      const saved = preset(col, at >= 0 ? at : index ?? 0)
+      if (saved !== undefined) return saved
+    }
     return col.toggled !== false
   }
 
-  function setVisible(col: SchemaObject, visible: boolean, index = 0) {
+  function setVisible(col: SchemaObject, visible: boolean, index?: number) {
     if (col.toggable === false) return
-    visibility[colKey(col, index)] = visible
+    visibility[keyOf(col, index)] = visible
+    onChange?.(visibleColumns.value)
+  }
+
+  function setAll(visible: boolean) {
+    for (const col of columns.value) {
+      if (col.toggable === false) continue
+      visibility[keyOf(col)] = visible
+    }
+    onChange?.(visibleColumns.value)
   }
 
   const visibleColumns = computed(() => columns.value.filter((col, i) => isVisible(col, i)))
   const togglableColumns = computed(() => columns.value.filter((col) => col.toggable !== false))
 
-  return { columns, togglableColumns, visibleColumns, isVisible, setVisible }
+  return { columns, togglableColumns, visibleColumns, isVisible, setVisible, setAll }
 }
 
 export function provideColumnToggle(api: ColumnToggleApi) {

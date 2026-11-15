@@ -49,7 +49,7 @@ import {
   type Dayjs,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import DateCalendarPanel from '../calendar/DateCalendarPanel.vue'
 import DatePickerSheet from '../calendar/DatePickerSheet.vue'
@@ -58,6 +58,8 @@ import VamisOverlay from '../../overlay/VamisOverlay.vue'
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -82,7 +84,7 @@ let onMedia: (() => void) | undefined
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
 const data = computed(() => viewData.value || {})
-const current = computed(() => (name.value ? form?.getValue(name.value) : props.schema.value))
+const current = computed(() => (name.value ? fieldApi.getValue(name.value) : props.schema.value))
 const parsed = computed(() => parseInputDateValue(current.value, props.schema, data.value))
 const displayText = computed(() => displayInputDateValue(current.value, props.schema, data.value))
 const isStatic = computed(() =>
@@ -138,7 +140,7 @@ const nativeClass = computed(() =>
 )
 
 function write(next: unknown) {
-  if (name.value) form?.setValue(name.value, next)
+  if (name.value) fieldApi.setValue(name.value, next)
 }
 
 function syncCursor(date?: Dayjs) {
@@ -355,7 +357,7 @@ function normalizeInitial() {
 
 onMounted(() => {
   normalizeInitial()
-  pristine.value = name.value ? form?.getValue(name.value) : props.schema.value
+  pristine.value = name.value ? fieldApi.getValue(name.value) : props.schema.value
   syncCursor(parsed.value)
   if (typeof window === 'undefined' || !window.matchMedia) return
   media = window.matchMedia('(max-width: 768px)')

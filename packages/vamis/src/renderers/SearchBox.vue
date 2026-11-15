@@ -2,19 +2,20 @@
 import { computed, ref } from 'vue'
 import { Button, Input } from '@vamis/ui'
 import { useEnv, useScoped, type SchemaObject } from '@vamis/core'
-import { controlInputValue, useForm } from '../formContext'
+import { controlInputValue, useFieldValue, useForm } from '../formContext'
 import { useCrudHost } from './data/crudHost'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const crudHost = useCrudHost()
 const local = ref(props.schema.value ?? '')
 const value = computed({
-  get: () => controlInputValue(props.schema.name && form ? form.getValue(props.schema.name) : local.value),
+  get: () => controlInputValue(props.schema.name && form ? fieldApi.getValue(props.schema.name) : local.value),
   set: (next) => {
-    if (props.schema.name && form) form.setValue(props.schema.name, next)
+    if (props.schema.name && form) fieldApi.setValue(props.schema.name, next)
     else local.value = next
   },
 })

@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
-- 同步时间：2026-10-21
-- Vamis 基线：`f7aa2bb`（`main`，与 `origin/main` 一致）
+- 同步时间：2026-11-15
+- Vamis 基线：`3d09081`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -10,8 +10,8 @@
 ## 结论
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
-2. **type 名称覆盖 184 / 189（97.4%）**：`pager` 已并入 `pagination` 别名。还剩 3 个真实 type 和 2 个别名。
-3. **语义进度（2026-11-07）**：侧栏 155 项已完成 **2**（`container`、`toast`）/ 进行中 153 / 未开始 0，平均 59%；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。D1–D5 P0 已落地；D6 / D8 与 D7 余项仍缺。
+2. **type 名称覆盖 185 / 189（97.9%）**：还剩 3 个真实 type 和 `navigation` 1 个别名。
+3. **语义进度（2026-11-15）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **67%**；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域），D7 错误边界 / D8 诊断仍缺。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 管线、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
 ## 1. 上游对齐
@@ -29,12 +29,12 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 175 + sdk 13 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 676 + sdk 80 = **941**，全绿 |
 | 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
-| 类型检查 | `pnpm typecheck` | 已通过（playground `vue-tsc --noEmit`） |
+| 类型检查 | `pnpm typecheck` | **失败：68 个错误**（Checkbox / Radio / InputDate / Spinner / Tpl / Wizard 等） |
 | 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |
 
-结论：`dev` / `build` / `typecheck` 可用；`typecheck` 可进 CI。
+结论：`dev` / `build` / `test` 可用；`typecheck` 当前 68 错，暂不能作为 CI 门禁。
 
 ## 3. amis type 覆盖
 
@@ -49,25 +49,24 @@
 | amis type 名 | 176 |
 | amis 独有别名 | 13（另有 2 个别名与 type 同名） |
 | amis 去重合计 | **189** |
-| Vamis 注册 type | 159（`register.ts` 61、`extras` 98） |
-| Vamis 别名 | 72 |
-| Vamis 合计 | **231** |
-| 交集 | **184** |
-| 覆盖率 | **184 / 189 = 97.4%** |
-| 遗漏 | 5（3 个 type + 2 个别名） |
-| Vamis 扩展 | 47 |
+| Vamis 注册 type | 161（`register.ts` + `extras/*`） |
+| Vamis 别名 | 73 |
+| Vamis 合计 | **234** |
+| 交集 | **185** |
+| 覆盖率 | **185 / 189 = 97.9%** |
+| 遗漏 | 4（3 个 type + `navigation` 别名） |
+| Vamis 扩展 | 49 |
 
-### 3.1 遗漏明细（5）
+### 3.1 遗漏明细（4）
 
 | type | amis 出处 | Vamis 现状 / 建议 |
 |------|-----------|-------------------|
 | `cascader-select` | `Form/NestedSelect.tsx:1118` | `NestedSelect` 已实现多列级联，按变体注册即可 |
 | `card-item-field` | `Card.tsx:859` | 并入 `cell` 别名（与 `list-item-field` 同类） |
 | `cell-field` | `Table2/TableCell.tsx:8` | 并入 `cell` 别名 |
-| `map` | `minimal.ts:677`，别名 → `mapping` | `mapping` 已有，补 alias |
 | `navigation` | `minimal.ts:748`，别名 → `nav` | `nav` 已有，补 alias |
 
-### 3.2 Vamis 扩展（47）
+### 3.2 Vamis 扩展（49）
 
 语言族别名（`json-editor` 等）并入 `editor`（含 `js-editor` / `ts-editor`）。另有兼容别名：`columns-toggler`、`static-json`、`static-table`、`static-tpl`、`table-cell`、`tooltip`、`fieldSet`。
 
@@ -82,7 +81,7 @@
 - **数据**：`crud` 支持 `api`、分页、`filter`、排序、多选 / `bulkActions`、`headerToolbar`、弹窗编辑；配套 `table` / `table2`、`operation`、`column-toggler`、`cell`。
 - **动作**：`ajax`、`toast`、`setValue`、`reload`、`dialog`、`drawer`、`closeDialog` / `closeDrawer` / `cancel`、`submit`；支持 `onEvent`。
 - **公式**：仓内 `@vamis/formula`；模板 `${}` 走 parser；`|raw` / `|html` 可用，其余 Amis 运行时过滤器未搬。
-- **布局 / 展示**：`page`（initApi overlay 已接，70%）、`container`（78%）、`flex`、`grid`、`tabs`、`wizard`、`panel`、`collapse`、`nav`、`cards`、`chart`（需 `config` / `api`）等。
+- **布局 / 展示**：`page`（initApi overlay 已接，95%）、`container`（100%）、`flex`、`grid`、`tabs`、`wizard`、`panel`、`collapse`、`nav`、`cards`、`chart`（需 `config` / `api`）等。
 
 ### 4.2 深度分级
 
@@ -100,7 +99,7 @@
 - **IR**：`UiPage`、`FormDef`、`TableDef` 可编译为 widget 树；未知 kind / 未知 type 显示占位，不崩。
 - **公式**：`@vamis/formula` 已替代 npm `amis-formula`；`filterTpl` 走 parser，`${name|raw}` / `${name|html}` 可用；`|date` / `|json` 等运行时过滤器仍未搬。
 - **Playground**：`/` 文档、`/components` 组件、`/examples` 示例（15 个样例文件）；`/editor` 仍在。
-- **JS SDK**：`vamis.embed` P0 已有；`getComponentByName` / `doAction` 仍抛未实现，等 D4/D5。
+- **JS SDK**：`vamis.embed` P0 已有；`getComponentByName` / `doAction` 已接，等更多组件动作覆盖。
 - **编辑器**：树 + 预览 + 属性 + YAML/JSON；无插件市场。
 - **测试**：formula / core / sdk 有单测；渲染器还没有组件级测试。
 
@@ -108,8 +107,8 @@
 
 > 运行时语义与实现顺序见 [语义设计](2026-10-20-vamis-runtime-semantics-design.md)；本节只列同步动作。
 
-1. **补齐 8 个遗漏**：3 个别名是一行改动；`cascader-select` 复用 `NestedSelect`；`js-editor` / `ts-editor` 复用 `editor`；`card-item-field` / `cell-field` 并进 `cell`。
-2. **提交门禁**：`pnpm typecheck` 已清零；可以把 `pnpm test + typecheck + build` 组合成 CI。
+1. **补齐 4 个遗漏**：`navigation` 是一行别名；`cascader-select` 复用 `NestedSelect`；`card-item-field` / `cell-field` 并进 `cell`。
+2. **提交门禁**：先清 68 个 `pnpm typecheck` 错误，再把 `pnpm test + typecheck + build` 组合成 CI。
 3. **补深度而不是补数量**：
    - CRUD：`loadDataOnce`、`quickEdit`、`syncLocation`；
    - 表单：`combo` / `input-table` 的子表单 `api`、更多校验规则；

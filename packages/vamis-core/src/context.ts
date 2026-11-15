@@ -40,6 +40,25 @@ export function useScope(): ComputedRef<Scope | undefined> {
   return computed(() => unref(scope))
 }
 
+/**
+ * 脱离表单的表单项把值写到哪。对齐 Amis：`wrapControl` 没有 `formStore` 时把变化交给最近的 `onChange`，
+ * `TableRow` 写回行数据，`Page` / `Service` 这类有自己数据域的渲染器写进本层数据域。
+ * 取值不走这里：行记录、本层数据域都已经在 `useData()` 里。
+ */
+export interface ValueHost {
+  setValue: (name: string, value: unknown) => void
+}
+
+export const ValueHostKey: InjectionKey<ValueHost> = Symbol('vamis-value-host')
+
+export function provideValueHost(host: ValueHost) {
+  provide(ValueHostKey, host)
+}
+
+export function useValueHost(): ValueHost | undefined {
+  return inject(ValueHostKey, undefined)
+}
+
 export function asArray(node?: SchemaCollection | null): SchemaNode[] {
   if (node == null) return []
   return Array.isArray(node) ? node : [node]

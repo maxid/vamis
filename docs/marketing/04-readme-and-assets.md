@@ -25,7 +25,7 @@
 
 - 首屏只放"是什么 / 给谁 / 能跑什么 / 怎么试"，设计文档、包结构、LCDP 细节全部后移。
 - 不写"复刻"作为第一句；用"兼容实现 / 原生重写"，减少"换皮"误读。
-- 状态数字（184/189、59%、880）必须与 `CONTEXT.md` 同步；每次发版改 README 时一起改。
+- 状态数字（185/189、67%、941）必须与 `CONTEXT.md` 同步；每次发版改 README 时一起改。
 - 英文 README 与中文结构一致，但不要把中文长文全量翻译；链接到中文文档即可。
 
 ## 2. 徽章
@@ -36,7 +36,7 @@ npm 发布前：
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-184%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-880%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-941%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 ```
 
@@ -140,7 +140,7 @@ ffmpeg -i recording.webm -vf "fps=8,scale=1200:-1:flags=lanczos,split[a][b];[a]p
 给 GitHub Social preview、掘金封面、X 卡片共用。规格：
 
 - 尺寸 **1280 × 640**，PNG，< 1 MB；
-- 左侧：`Vamis`（大字）+ `Amis 的 Schema，原生跑在 Vue 3 上`（副标题）+ 三行小字：`184/189 Amis types · YAML / JSON · Vue 3 + shadcn-vue`；
+- 左侧：`Vamis`（大字）+ `Amis 的 Schema，原生跑在 Vue 3 上`（副标题）+ 三行小字：`185/189 Amis types · YAML / JSON · Vue 3 + shadcn-vue`；
 - 右侧：`editor.png` 裁切，放在 12–16px 圆角卡片里；
 - 底部一行：`github.com/maxid/vamis`；
 - 背景用浅色（跟编辑器截图一致），不要深色科技风，和产品气质不符。
@@ -152,7 +152,7 @@ ffmpeg -i recording.webm -vf "fps=8,scale=1200:-1:flags=lanczos,split[a][b];[a]p
 - [ ] 首屏图片路径正确，手机宽度下不溢出
 - [ ] 所有链接可点：Demo / 文档 / 对照 / English / License
 - [ ] 徽章没有坏图（尤其 npm 未发布时）
-- [ ] 数字与 `CONTEXT.md` 一致（184/189、59%、880、1142）
+- [ ] 数字与 `CONTEXT.md` 一致（185/189、67%、941、1386）
 - [ ] 有 alpha 声明 + 非官方声明
 - [ ] 英文 README 顶部有互链
 - [ ] 不出现公开的 `localhost` 链接（开发命令里的 `127.0.0.1` 除外）、`{{占位}}`、本地绝对路径

@@ -2,12 +2,13 @@
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, flattenArrayRows, inflateArrayRows, type SchemaObject } from '@vamis/core'
 import { Button } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import NestedFormScope from '../../NestedFormScope.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const item = computed(() => {
   const raw = asArray(props.schema.items || props.schema.item)
   const first = (raw[0] && typeof raw[0] === 'object' ? raw[0] : { type: 'input-text', name: 'item' }) as SchemaObject
@@ -17,12 +18,12 @@ const fieldName = computed(() => String(item.value.name || 'item'))
 const flat = computed(() => props.schema.flat !== false)
 
 const rows = computed<Record<string, any>[]>(() =>
-  inflateArrayRows(props.schema.name ? form?.getValue(props.schema.name) : undefined, fieldName.value) as Record<string, any>[],
+  inflateArrayRows(props.schema.name ? fieldApi.getValue(props.schema.name) : undefined, fieldName.value) as Record<string, any>[],
 )
 
 function persist(next: Record<string, any>[]) {
   if (!props.schema.name) return
-  form?.setValue(props.schema.name, flattenArrayRows(next, fieldName.value, flat.value))
+  fieldApi.setValue(props.schema.name, flattenArrayRows(next, fieldName.value, flat.value))
 }
 
 function add() {

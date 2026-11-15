@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-10-29）
+- 日期：2026-10-21（进度核对：2026-11-15）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-13（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 59%、≥50% 113 项；已完成 3）
+- 最近核对：2026-11-15（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 **67%**、≥50% **114** 项；已完成 3）
 
 ## 怎么读
 
@@ -18,8 +18,8 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但未达到「实现标准」：占位 / 精简 / 缺 amis 已有能力或文档章节 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **1 项**（`container`）；`page` 因 `pullRefresh` 未接降为进行中。
-4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 95.8% 见同步状态）。档位：
+   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **3 项**（`container` / `hidden` / `toast`）；`page` 因 `pullRefresh` 未接降为进行中。
+4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 97.9% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|
    | 0% | 未开始 |
@@ -65,13 +65,13 @@
 
 | 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
 |------|---------------|--------|--------|----------|-------------------|
-| 布局 | 1 / 15 | 14 | 0 | 90% | 15 |
-| 功能 | 0 / 12 | 12 | 0 | 80% | 11 |
-| 数据输入 | 1 / 72 | 71 | 0 | 53% | 44 |
-| 数据展示 | 0 / 44 | 44 | 0 | 56% | 31 |
-| 反馈 | 1 / 5 | 4 | 0 | 89% | 5 |
+| 布局 | 1 / 15 | 14 | 0 | 91% | 15 |
+| 功能 | 0 / 12 | 12 | 0 | 82% | 11 |
+| 数据输入 | 1 / 72 | 71 | 0 | 58% | 44 |
+| 数据展示 | 0 / 44 | 44 | 0 | 64% | 32 |
+| 反馈 | 1 / 5 | 4 | 0 | 90% | 5 |
 | 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
-| **合计** | **3 / 155** | **152** | **0** | **59%** | **113** |
+| **合计** | **3 / 155** | **152** | **0** | **67%** | **114** |
 
 侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 90%。
 
@@ -136,7 +136,7 @@
 
 ---
 
-## 布局（1/15，均 90%）
+## 布局（1/15，均 91%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -160,7 +160,7 @@
 
 ---
 
-## 功能（0/12，均 80%）
+## 功能（0/12，均 82%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
@@ -179,7 +179,7 @@
 
 ---
 
-## 数据输入（0/72，均 50%）
+## 数据输入（1/72，均 58%）
 
 Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表单项（D6），必须进清单。
 
@@ -260,12 +260,12 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 数据展示（0/44，均 55%）
+## 数据展示（0/44，均 64%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 84% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
-| `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 99% | 列类型盒模型 + 工具栏对齐 Amis：田 / 开始排序在 `Table-headToolbar`（padding 12×4），heading 只放 title；`header`/`footer`/`actions`、`initDrag`/`cancelDrag`。对照 **33/33**（P0 0）。缺 Footable / itemBadge / autoFillHeight / backgroundScale / itemActions / affixHeader / export-excel | P0 |
+| `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 88% | 2026-11-15 按 Amis 整体重做一轮（列类型、工具栏、选择默认多选、快速编辑、Footable、`deferApi`、`affixHeader` / `affixFooter`、`lazyRenderAfter`、`persistKey`、单元格表单项写回行数据），**代码未提交、未跑 typecheck / test / 对照**，旧的 33/33 不代表当前。未接 `reUseRow`、`export-excel`。交接见 `docs/superpowers/plans/2026-11-15-table-data-chain-handoff.md` | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
@@ -311,7 +311,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（1/5，均 89%）
+## 反馈（1/5，均 90%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
@@ -426,14 +426,14 @@ flowchart LR
 | 3 | `tpl` | `badge` | 10 | 29 | 387 | 501 | 进行中 | 92% |
 | 4 | `tooltip-wrapper` | `tpl` | 9 | 3 | 48 | 501 | 进行中 | 92% |
 | 5 | `remark` | `tooltip-wrapper`、`icon`、`tpl` | 8 | 2 | 34 | 501 | 进行中 | 92% |
-| 6 | FormItem（契约） | `remark` | 7 | 38 | 501 | 501 | 进行中 | 88% |
+| 6 | FormItem（契约） | `remark` | 7 | 38 | 501 | 501 | 进行中 | 90% |
 | 7 | `toast`（动作） | `icon`、`tpl` | 9 | 1 | 22 | 437 | 已完成 | 100% |
 | 8 | `action` | `icon`、`tpl`、`tooltip-wrapper`、`badge`、`toast` | 8 | 33 | 437 | 437 | 进行中 | 95% |
 | 9 | `container` | `tpl` | 9 | 23 | 308 | 308 | 已完成 | 100% |
 | 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | 进行中 | 88% |
 | 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | 进行中 | 92% |
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | 进行中 | 95% |
-| 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 90% |
+| 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | 进行中 | 92% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 92% |
 | 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 90% |
@@ -467,7 +467,7 @@ flowchart LR
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
-| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 60% |
+| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 62% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 85% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
@@ -606,7 +606,7 @@ flowchart LR
 
 ---
 
-## 进度核对（2026-10-28）
+## 进度核对（2026-11-15）
 
 - 范围：本清单 155 个侧栏条目；附录 17 项只登记别名/子节点，不参与百分比。
 - 核对内容：
@@ -621,7 +621,8 @@ flowchart LR
 - 优先级重算（2026-10-28）：原「先按深度分层、层内再按被依赖」会把 `pdf-viewer` 等无人依赖叶子排在 `action` 前面。改为 Kahn 拓扑 + 综合分 `S = 被依赖 × 8 + 深度`（脚本 `scripts/component-priority.mjs`）。当时 `action` #5、`form` #49；依赖列仍把 tooltip/badge/toast 当装饰。
 - 优先级重算（2026-11-04）：**全表**按构建依赖补边，不是只改 Action。补 `withBadge` 宿主、`FormItem.labelRemark`→`remark`→`tooltip-wrapper`、Form `wrapWithPanel`→`panel`、Spinner 宿主、Table `itemBadge`、`input-text` 选择器+`addOn`、`calendar` extends `input-date`。互开（action↔dialog、icon↔badge、popOver↔dialog）不写回边。就绪集先比解锁分 U。
 - 优先级重算（2026-11-04 示例核对）：`scripts/audit-amis-examples.mjs` 收割 Amis 文档 ```schema **1882** 份（失败 2）+ examples 112。按专章/主路径示例修正：加 `nav.itemBadge`、`page.remark`、list/cards `popOver`、timeline→`card`、transfer/input-tree→Options、`dropdown-button`→icon；删 checkbox/radio `withBadge`（badge.md 未列）、`table → checkbox`（`selectable` 不是 `type: checkbox`）。主干序号未变：`icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`spinner` #12、`form` #27、`dialog` #44、`crud` #64、`page` #65。百分比未改。
-- 结论：155 项逐行百分比无需改动（`page` 仅状态降级）；差异集中在汇总数字、两页生成产物、生成器解析和依赖综合分。
+- 同步（2026-11-15）：按 155 行重算汇总为 **3 已完成 / 152 进行中 / 0 未开始，平均 67%，≥50% 114**；分类均：布局 91%、功能 82%、数据输入 58%、数据展示 64%、反馈 90%、其他 84%。同步优先级表 3 行（FormItem 88→90、select 90→92、chart 60→62）与 4 个页面 banner（input-datetime / group / input-time / chart）。
+- 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 ---
 

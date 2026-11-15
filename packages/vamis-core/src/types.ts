@@ -208,6 +208,11 @@ export interface RendererEnv {
   getModalContainer?: () => HTMLElement | undefined
   /** 对齐 Amis `env.mobileUI`。Remark 等只认这个开关，不要用 768 视口误判。 */
   mobileUI?: boolean
+  /**
+   * 表格没写 `affixHeader` 时的默认值，缺省 true（表头吸顶）。
+   * Amis 文档站给根 props 传 `affixHeader: false`；Vamis 文档预览走这个开关，正式嵌入不用写。
+   */
+  affixHeader?: boolean
 }
 
 export interface RenderContextValue {

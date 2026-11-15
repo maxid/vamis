@@ -5,8 +5,8 @@ outline: deep
 
 # Group 表单项组
 
-::: info 实现进度 55% · 进行中
-能横排表单项
+::: info 实现进度 70% · 进行中
+≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签
 :::
 
 `group` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

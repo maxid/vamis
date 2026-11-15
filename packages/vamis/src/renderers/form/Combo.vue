@@ -9,13 +9,14 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import NestedFormScope from '../../NestedFormScope.vue'
 import FormRow from './FormRow.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const multiple = computed(() => props.schema.multiple === true)
 const multiLine = computed(() => props.schema.multiLine === true)
 const itemMode = computed(() => comboItemMode(props.schema))
@@ -23,7 +24,7 @@ const fields = computed(() => asArray(props.schema.items || props.schema.columns
 const rowNodes = computed(() => fields.value.map((node) => comboChildSchema(node, itemMode.value)))
 
 const rows = computed<Record<string, any>[]>(() => {
-  const value = props.schema.name ? form?.getValue(props.schema.name) : undefined
+  const value = props.schema.name ? fieldApi.getValue(props.schema.name) : undefined
   if (multiple.value) {
     return Array.isArray(value) && value.length ? (value as Record<string, any>[]) : [{}]
   }
@@ -32,7 +33,7 @@ const rows = computed<Record<string, any>[]>(() => {
 
 function persist(next: Record<string, any>[]) {
   if (!props.schema.name) return
-  form?.setValue(props.schema.name, multiple.value ? next : next[0] || {})
+  fieldApi.setValue(props.schema.name, multiple.value ? next : next[0] || {})
 }
 
 function add() {

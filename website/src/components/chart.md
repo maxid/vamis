@@ -5,9 +5,10 @@ outline: deep
 
 # Chart 图表
 
-::: warning 实现进度 60% · 进行中
-有 `config`/`api` 时动态加载 echarts；`interval` 拉完再 `setTimeout` 轮询（≥1000ms）。画布走内核 LazyComponent。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch`。对照 harness 将 chart 列入 SKIP_TYPES，以双站手核。
+::: warning 实现进度 62% · 进行中
+基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch`。
 :::
+
 
 图表走 echarts，配置格式与 echarts 相同。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
 

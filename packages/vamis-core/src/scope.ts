@@ -13,8 +13,12 @@ export interface Scope {
   resolved(): PlainObject
 }
 
-function getByPath(obj: unknown, path: string): unknown {
+/** 按路径取值。先认字面 key（`a.b` 本身就是字段名），再按 `.` / `[n]` 逐级走。 */
+export function getByPath(obj: unknown, path: string): unknown {
   if (!path) return obj
+  if (obj != null && typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, path)) {
+    return (obj as PlainObject)[path]
+  }
   const parts = path.replace(/\[(\d+)\]/g, '.$1').split('.').filter(Boolean)
   let cur: unknown = obj
   for (const part of parts) {
@@ -42,6 +46,13 @@ function setByPath(obj: PlainObject, path: string, value: unknown): void {
   }
   cursor[parts[parts.length - 1]] = value
   obj[top] = next
+}
+
+/** 按路径写值，返回新对象：沿途每一层都浅拷贝，原对象不动（行记录、快照都靠这个保持不可变）。 */
+export function setByPathCopy(obj: PlainObject, path: string, value: unknown): PlainObject {
+  const next = { ...obj }
+  setByPath(next, path, value)
+  return next
 }
 
 export function parseSearch(search?: string): PlainObject {

@@ -5,8 +5,8 @@ outline: deep
 
 # InputTime 时间
 
-::: info 实现进度 55% · 进行中
-`input-date` 别名，已接时间面板；滚轮 / 时间约束未齐
+::: info 实现进度 60% · 进行中
+`input-date` 别名，已接时间面板与窄屏滚轮；桌面仍是下拉，时间约束未齐
 :::
 
 `input-time` 与 `input-date` 同一渲染器。默认展示 `HH:mm`。完整快捷键 / 限制范围见 [InputDate](./input-date)。

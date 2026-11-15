@@ -2,12 +2,13 @@
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
 import { Button } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import NestedFormScope from '../../NestedFormScope.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const multiple = computed(() => !!props.schema.multiple)
 const fields = computed(() => {
   const nested = props.schema.form && typeof props.schema.form === 'object' ? props.schema.form : props.schema
@@ -17,7 +18,7 @@ const labelField = computed(() => String(props.schema.labelField || ''))
 const btnLabel = computed(() => String(props.schema.btnLabel || '设置'))
 
 const rows = computed<Record<string, any>[]>(() => {
-  const value = props.schema.name ? form?.getValue(props.schema.name) : undefined
+  const value = props.schema.name ? fieldApi.getValue(props.schema.name) : undefined
   if (multiple.value) {
     return Array.isArray(value) && value.length ? (value as Record<string, any>[]) : [{}]
   }
@@ -26,7 +27,7 @@ const rows = computed<Record<string, any>[]>(() => {
 
 function persist(next: Record<string, any>[]) {
   if (!props.schema.name) return
-  form?.setValue(props.schema.name, multiple.value ? next : next[0] || {})
+  fieldApi.setValue(props.schema.name, multiple.value ? next : next[0] || {})
 }
 
 function add() {

@@ -2,11 +2,12 @@
 import { onMounted, ref } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const canvas = ref<HTMLCanvasElement | null>(null)
 let drawing = false
 
@@ -39,12 +40,12 @@ function move(event: MouseEvent) {
 }
 function end() {
   drawing = false
-  if (props.schema.name && canvas.value) form?.setValue(props.schema.name, canvas.value.toDataURL())
+  if (props.schema.name && canvas.value) fieldApi.setValue(props.schema.name, canvas.value.toDataURL())
 }
 function clear() {
   const el = canvas.value
   el?.getContext('2d')?.clearRect(0, 0, el.width, el.height)
-  if (props.schema.name) form?.setValue(props.schema.name, '')
+  if (props.schema.name) fieldApi.setValue(props.schema.name, '')
 }
 </script>
 

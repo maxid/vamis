@@ -227,6 +227,35 @@ export function handleMockApi(input: {
     return listPayload(filterSample(query), { ...query, perPage: '10' })
   }
 
+  // 对齐 Amis `mock/cfc/mock/crud/table6.js`：列表只给顶层行并标 `defer`，带 `parentId` 时返回该行详情 + children。
+  if (pathname === '/api/mock2/crud/table6') {
+    const top = sampleRows.slice(0, 5)
+    const kidsOf = (id: number) =>
+      id < 1000
+        ? sampleRows.slice(id, id + 2).map((row, i) => ({ ...row, id: id * 1000 + i + 1, defer: i === 0 }))
+        : id < 1000000
+          ? sampleRows.slice(0, 1).map((row) => ({ ...row, id: id * 1000 + 1 }))
+          : []
+    if (query.parentId) {
+      const id = Number(query.parentId)
+      const base = sampleRows[(id < 1000 ? id : Math.floor(id / 1000)) - 1] || sampleRows[0]
+      if (!Number.isFinite(id) || !base) return { status: 404, msg: 'Not Found' }
+      return { status: 0, msg: 'ok', data: { ...base, id, children: kidsOf(id) } }
+    }
+    return { status: 0, msg: 'ok', data: { count: top.length, rows: top.map((row) => ({ ...row, defer: true })) } }
+  }
+
+  // 对齐 Amis `mock/cfc/mock/crud/filterOptions.js`：表头过滤 `filterable.source` 的选项。
+  if (pathname === '/api/mock2/crud/filterOptions') {
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        options: ['A', 'B', 'C', 'D', 'X'].map((value) => ({ label: value, value })),
+      },
+    }
+  }
+
   if (pathname === '/api/mock2/service/schema') {
     const type = String(query.type || body.type || '')
     const schemas: Record<string, unknown> = {

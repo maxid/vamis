@@ -35,12 +35,14 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, VamisClose } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -138,7 +140,7 @@ const dragIndex = ref<number | null>(null)
 const previewUrls = new Set<string>()
 
 function currentFormValue(): unknown {
-  return name.value ? form?.getValue(name.value) : props.schema.value
+  return name.value ? fieldApi.getValue(name.value) : props.schema.value
 }
 
 function hydrate(raw: unknown, prev = files.value) {
@@ -184,7 +186,7 @@ function syncAutoFill() {
   const ctx = createObject(viewData.value, multiple.value ? { items: kept } : kept[0] || {})
   const toSync = dataMapping(mapping, ctx) as Record<string, unknown>
   for (const [key, val] of Object.entries(toSync)) {
-    form?.setValue(key, val)
+    fieldApi.setValue(key, val)
   }
 }
 
@@ -192,7 +194,7 @@ async function commitChange() {
   const next = formValueOf()
   if (!(await emitEvent('change'))) return
   emitValue.value = next
-  if (name.value) form?.setValue(name.value, next)
+  if (name.value) fieldApi.setValue(name.value, next)
   syncAutoFill()
 }
 
@@ -402,7 +404,7 @@ async function clearFiles() {
   currentId = null
   uploading.value = false
   emitValue.value = ''
-  if (name.value) form?.setValue(name.value, '')
+  if (name.value) fieldApi.setValue(name.value, '')
 }
 
 function readAsBase64(file: File): Promise<string> {

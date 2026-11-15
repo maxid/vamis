@@ -38,8 +38,8 @@ alwaysApply: true
 
 ### 已注册 ≠ 已完成
 - 踩过：`registerRenderer` 有调用就标完成；`page` 因 `pullRefresh` 未接从 100% 打回进行中。
-- 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。
-- 触及：`page` `container`
+- 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。 进度数字只按「逐章节两站核过」算：`table` 对照 33/33 时标 99%，被用户打回，实际还缺十几项。对照条数全过不能当百分比。
+- 触及：`page` `container` `table`
 - 规则：组件 P0 TODO「实现标准」；`.cursor/rules/update-progress.mdc`
 
 ### 文档移动预览 iframe 不要打进站点壳 CSS
@@ -197,6 +197,18 @@ alwaysApply: true
 - 稳定做法：`findNodeEl` 对 `input-file` / `input-image` 先按 `[data-amis-name]` / `[data-name]` 找外壳里的 `input[type=file]`；`readNodeValue` 对这两类直接读原生 `value`，不要读 formData / schemaValue。同类控件（switch / checkbox / radio）同理按外壳找原生控件。
 - 触及：`input-file` `input-image` `switch` `checkbox` `radio`
 - 规则：`packages/vamis-sdk/embed-case.html`
+
+### 脱离表单的表单项走 useFieldValue，不要 `form?.setValue`
+- 踩过：表格列类型示例里开关和状态是同一个字段，开关改了状态列不动。不是 Table 或 Switch 单点：表单项只会 `form?.getValue` / `form?.setValue`，没有祖先表单时读不到数据链、写的值直接丢掉（约 130 处），Switch 退回组件本地态所以自己会动。Amis `wrapControl` 没有 formStore 时把变化交给最近的 `onChange`：`TableRow` 写回行，`Page` / `Service` / `Dialog` 写进本层 store；`TableCell` 也保留列 `name`。
+- 稳定做法：表单项一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主（CRUD 单元格、List、Cards）必须 `provideValueHost`。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。（2026-11-15 代码已写，未跑对照；CRUD / List / Cards / Dialog 未接，验证后改掉本句。）
+- 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards`
+- 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange`
+
+### Amis 文档站给示例传 `affixHeader: false`，生产默认才是 true
+- 踩过：对着 Amis 文档页看不到固定表头，以为默认关。文档站 env 统一传了 `affixHeader: false`；组件默认是开，结构是 sticky 的 `Table-fixedTop`（工具栏 + 标题 + 只有 thead 的定宽表），表体自己的 thead 用负 margin 藏起来。
+- 稳定做法：默认值看组件源码，不看文档站渲染结果。Vamis 用 `env.affixHeader` 给文档预览 / 对照关掉，schema 上写了仍以 schema 为准。固定表头的列宽从表体量出来写进 `<colgroup>`，阴影这类带 alpha 的色写 inline style。
+- 触及：`table`
+- 规则：本文；Amis `examples/components/` 文档壳 env；`Table/index.tsx` `renderAffixHeader`
 
 ### 组装与盒模型
 
@@ -952,8 +964,8 @@ alwaysApply: true
 - 规则：Amis `mock/cfc/mock/sample.js` `index()`；本文
 
 ### Table 行选择与 rowClick：checkpoint 用原生 checkbox
-- 踩过：只在表头画勾选列、body 没有对应 td，列对不齐；`multiple` 默认 true 和 Amis 单选 radio 相反；嵌套行 `v-for` 写在 `</TableRow>` 后面，`row`/`i` 出了作用域。
-- 稳定做法：表头 / 行 / 嵌套行同一套额外列（拖拽、勾选、序号）。`multiple` 默认 false（圆点），`true` 才 checkbox + 全选。点行勾选只认 `checkOnItemClick`，且与 `itemAction` 互斥。`rowClick` 的 `prevented` 才挡住 itemAction。勾选列用原生 checkbox / `.vamis-radio-dot`，不要 shadcn Checkbox、不要 `name`、不要 `translate-y`。嵌套行必须包在父行 `template v-for` 里。文档选择示例用静态 data。
+- 踩过：只在表头画勾选列、body 没有对应 td，列对不齐；曾把 `multiple` 默认写成 false（单选圆点），Amis 源码默认是多选；嵌套行 `v-for` 写在 `</TableRow>` 后面，`row`/`i` 出了作用域。
+- 稳定做法：表头 / 行 / 嵌套行同一套额外列（拖拽、勾选、序号）。`multiple` 默认 **true**（checkbox + 全选），`multiple: false` 才是单选圆点；默认值以 Amis 源码和渲染出的 DOM 为准，不要凭印象。点行勾选只认 `checkOnItemClick`，且与 `itemAction` 互斥。`rowClick` 的 `prevented` 才挡住 itemAction。勾选列用原生 checkbox / `.vamis-radio-dot`，不要 shadcn Checkbox、不要 `name`、不要 `translate-y`。嵌套行必须包在父行 `template v-for` 里。文档选择示例用静态 data。
 - 触及：`table`
 - 规则：Amis `Table/Cell.tsx` `__checkme` / `__index` / `__dragme`；本文
 

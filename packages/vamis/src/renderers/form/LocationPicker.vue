@@ -2,18 +2,19 @@
 import { computed } from 'vue'
 import { Input } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const loc = computed({
   get: () => {
-    const raw = props.schema.name ? form?.getValue(props.schema.name) : undefined
+    const raw = props.schema.name ? fieldApi.getValue(props.schema.name) : undefined
     if (raw && typeof raw === 'object') return { address: String((raw as any).address || ''), lng: String((raw as any).lng ?? ''), lat: String((raw as any).lat ?? '') }
     return { address: String(raw || ''), lng: '', lat: '' }
   },
-  set: (next) => props.schema.name && form?.setValue(props.schema.name, next),
+  set: (next) => props.schema.name && fieldApi.setValue(props.schema.name, next),
 })
 </script>
 

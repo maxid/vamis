@@ -11,6 +11,8 @@ import {
 } from './schema-type-catalog'
 import type { RendererConfig, SchemaObject } from './types'
 
+export { isFormItemType } from './schema-type-catalog'
+
 const renderers: RendererConfig[] = []
 const byType = new Map<string, RendererConfig>()
 

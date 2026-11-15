@@ -44,7 +44,7 @@ onUnmounted(() => {
     <VamisRoot
       v-if="schema"
       :schema="schema"
-      :env="{ trusted: true, mobileUI: true, parseLocation: false }"
+      :env="{ trusted: true, mobileUI: true, parseLocation: false, affixHeader: false }"
     />
   </div>
 </template>

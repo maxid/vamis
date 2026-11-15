@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { RadioGroup, RadioGroupItem } from '@vamis/ui'
 import { useData, useScope, type SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const data = useData()
 const scope = useScope()
 const options = computed(() =>
@@ -23,7 +24,7 @@ const value = computed({
   get: () => {
     const name = fieldName()
     if (!name) return undefined
-    const current = form ? form.getValue(name) : (data.value[name] ?? scope.value?.get(name))
+    const current = fieldApi.getValue(name) ?? (form ? undefined : scope.value?.get(name))
     return current == null ? undefined : String(current)
   },
   set: (v: unknown) => {
@@ -31,8 +32,7 @@ const value = computed({
     if (!name) return
     const match = options.value.find((opt: { value: unknown }) => String(opt.value) === String(v))
     const next = match ? match.value : v
-    if (form) form.setValue(name, next)
-    else scope.value?.set(name, next, 'input')
+    fieldApi.setValue(name, next)
   },
 })
 </script>

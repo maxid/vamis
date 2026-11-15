@@ -16,12 +16,14 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { VamisClear } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -36,7 +38,7 @@ const pristine = ref<unknown>(undefined)
 const undoStack = ref<string[]>([])
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
-const rawValue = computed(() => (name.value ? form?.getValue(name.value) : props.schema.value))
+const rawValue = computed(() => (name.value ? fieldApi.getValue(name.value) : props.schema.value))
 const displayValue = computed(() => valueToString(rawValue.value))
 const placeholder = computed(() =>
   props.schema.placeholder != null ? filterTpl(String(props.schema.placeholder), data.value) : '',
@@ -129,7 +131,7 @@ async function emitEvent(eventName: string, value: unknown, native?: Event) {
 }
 
 function writeValue(next: unknown) {
-  if (name.value && form) form.setValue(name.value, next)
+  if (name.value) fieldApi.setValue(name.value, next)
 }
 
 async function onInput(event: Event) {

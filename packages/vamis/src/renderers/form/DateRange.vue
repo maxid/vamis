@@ -31,7 +31,7 @@ import {
   type Dayjs,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import DateCalendarPanel, { type DateCalendarView } from '../calendar/DateCalendarPanel.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
@@ -39,6 +39,8 @@ import VamisOverlay from '../../overlay/VamisOverlay.vue'
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -83,7 +85,7 @@ const utc = computed(() => props.schema.utc === true)
 const joinValues = computed(() => props.schema.joinValues !== false)
 
 const rawValue = computed(() => {
-  if (name.value) return form?.getValue(name.value)
+  if (name.value) return fieldApi.getValue(name.value)
   return props.schema.value
 })
 
@@ -106,8 +108,8 @@ const range = computed<{ start?: Dayjs; end?: Dayjs }>(() => {
     ;[start, end] = raw.split(delimiter.value)
   }
   if (extraName.value) {
-    start = form?.getValue(name.value)
-    end = form?.getValue(extraName.value)
+    start = fieldApi.getValue(name.value)
+    end = fieldApi.getValue(extraName.value)
   }
   return { start: parsePart(start), end: parsePart(end) }
 })
@@ -270,12 +272,12 @@ function payloadOf(start?: Dayjs, end?: Dayjs): unknown {
 async function commit(start?: Dayjs, end?: Dayjs) {
   const value = payloadOf(start, end)
   if (!(await emitEvent('change', value))) return
-  if (!name.value || !form) return
+  if (!name.value) return
   if (extraName.value) {
-    form.setValue(name.value, storedValue(start, false))
-    form.setValue(extraName.value, storedValue(end, true))
+    fieldApi.setValue(name.value, storedValue(start, false))
+    fieldApi.setValue(extraName.value, storedValue(end, true))
   } else {
-    form.setValue(name.value, value)
+    fieldApi.setValue(name.value, value)
   }
 }
 

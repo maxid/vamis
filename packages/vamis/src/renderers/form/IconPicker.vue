@@ -2,15 +2,16 @@
 import { computed } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const ICONS = ['★', '♥', '⚙', '⚑', '●', '■', '▲', '➤']
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const value = computed({
-  get: () => String((props.schema.name ? form?.getValue(props.schema.name) : '') || ''),
-  set: (v: string) => props.schema.name && form?.setValue(props.schema.name, v),
+  get: () => String((props.schema.name ? fieldApi.getValue(props.schema.name) : '') || ''),
+  set: (v: string) => props.schema.name && fieldApi.setValue(props.schema.name, v),
 })
 const icons = computed(() => (props.schema.options || ICONS).map((item: any) => (typeof item === 'object' ? item.value || item.label : item)))
 </script>

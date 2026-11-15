@@ -7,13 +7,13 @@
 GitHub 的 description 上限 350 字符，中英可混排。推荐英文为主 + 中文补充，兼顾国际搜索和中文用户：
 
 ```
-Amis-compatible JSON/YAML low-code runtime for Vue 3. 184/189 Amis types, shadcn-vue UI, embeddable vamis.embed SDK. Unofficial; not affiliated with Baidu. 用 Vue 3 原生渲染 Amis schema 的低代码运行时。
+Amis-compatible JSON/YAML low-code runtime for Vue 3. 185/189 Amis types, shadcn-vue UI, embeddable vamis.embed SDK. Unofficial; not affiliated with Baidu. 用 Vue 3 原生渲染 Amis schema 的低代码运行时。
 ```
 
 短版（如果觉得太长）：
 
 ```
-Vue 3 原生的 Amis 兼容低代码运行时：同一份 JSON/YAML schema，184/189 types，shadcn-vue，可嵌入 SDK。非百度官方项目。
+Vue 3 原生的 Amis 兼容低代码运行时：同一份 JSON/YAML schema，185/189 types，shadcn-vue，可嵌入 SDK。非百度官方项目。
 ```
 
 **不要写**：
@@ -63,7 +63,7 @@ json
 
 - 尺寸：**1280 × 640**，PNG / JPG，尽量 < 1 MB。
 - 现成文件：`docs/marketing/assets/og-card.png`（已生成，可直接上传）。
-- 内容：左边 `Vamis` + 「Amis 的 Schema，原生跑在 Vue 3 上」+ 三行小字（184/189 types · YAML/JSON · 非官方）；右边编辑器截图（`assets/readme/editor.png`）裁切。
+- 内容：左边 `Vamis` + 「Amis 的 Schema，原生跑在 Vue 3 上」+ 三行小字（185/189 types · YAML/JSON · 非官方）；右边编辑器截图（`assets/readme/editor.png`）裁切。
 - 位置：仓库 **Settings → Social preview → Upload an image**。
 - 这张图会出现在 X / 掘金 / 公众号 / Slack 等所有分享卡片里，值得花 20 分钟做。
 
@@ -75,7 +75,7 @@ json
 
 1. 一句话定位（Amis 的 Schema，原生跑在 Vue 3 上）。
 2. 一张真实产品截图（编辑器 / CRUD / 对照页三选一，不要放 logo 墙）。
-3. 状态说明：alpha、184/189 type、语义 59%、非官方。
+3. 状态说明：alpha、185/189 type、语义 67%、非官方。
 4. 三个入口：Demo、文档、对照页。
 
 徽章建议（npm 发布前不要放 npm 徽章，会显示 package not found）：
@@ -84,7 +84,7 @@ json
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-184%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-880%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-941%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 ```
 
@@ -117,10 +117,10 @@ v0.1.0-alpha.1 — 第一次公开 alpha
 
 ## 这次有什么
 
-- 184 / 189 个 Amis type 名称已注册，组件语义平均 59%
+- 185 / 189 个 Amis type 名称已注册，组件语义平均 67%
 - Vue `VamisRoot` + 任意 HTML `vamis.embed` 两条入口
 - YAML / JSON 双作者态，信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）
-- 880 个单测通过；Playwright 对照用例 1142 条，P0 差异归零
+- 941 个单测通过；Playwright 对照用例 1386 条，P0 8 条 helper 差异（均为 `m-l-*`）
 - 在线 Demo / 组件文档 / Amis 并排对照页
 
 ## 现在能跑

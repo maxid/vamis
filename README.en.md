@@ -6,8 +6,8 @@ Vamis is an **Amis-compatible** JSON/YAML low-code runtime, reimplemented in Vue
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
-[![Amis types](https://img.shields.io/badge/Amis%20types-184%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-880%20passing-brightgreen.svg)](package.json)
+[![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
+[![Tests](https://img.shields.io/badge/tests-941%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [Live demo](https://maxid.github.io/vamis/) · [Component docs](https://maxid.github.io/vamis/components) · [Amis side-by-side](https://maxid.github.io/vamis/sdk/compare.html) · [中文](README.md)
@@ -15,7 +15,7 @@ Vamis is an **Amis-compatible** JSON/YAML low-code runtime, reimplemented in Vue
 ![Vamis editor: component tree, live preview, properties and YAML/IR](assets/readme/editor.png)
 
 > [!WARNING]
-> **Early alpha. Unofficial project, not affiliated with Baidu.** 184/189 Amis component types are registered, but average semantic parity across the 155 sidebar components is **59%**. Use it for evaluation and feedback, not for critical production yet.
+> **Early alpha. Unofficial project, not affiliated with Baidu.** 185/189 Amis component types are registered, but average semantic parity across the 155 sidebar components is **67%**. Use it for evaluation and feedback, not for critical production yet.
 
 ## Why Vamis
 
@@ -149,16 +149,16 @@ Unknown `type` / unimplemented `kind` renders a placeholder instead of crashing.
 
 ## How parity is verified
 
-Playwright mounts the same schema with `amis.embed` and `vamis.embed` side by side, then compares schema-tree nodes — rendered or not, runtime `value`, `getComponentByName`, and action results — rather than whole-page screenshots. There are currently **1,142 comparison cases**; P0 diffs are zero, with 30 non-P0 diffs left in the last full run. The same harness also checks box model and 375px mobile behavior.
+Playwright mounts the same schema with `amis.embed` and `vamis.embed` side by side, then compares schema-tree nodes — rendered or not, runtime `value`, `getComponentByName`, and action results — rather than whole-page screenshots. There are currently **1,386 comparison cases**; the last full run passed **1,252** with 64 failures (8 P0, all `m-l-*` helpers). The same harness also checks box model and 375px mobile behavior.
 
 Progress is public: docs pages show implementation percentages, and every task updates `CONTEXT.md`.
 
-## Status (2026-11-10)
+## Status (2026-11-15)
 
-- Amis type names covered: **184 / 189 (97.4%)**; 3 types and 2 aliases remain.
-- 155 sidebar components: **2 complete** (`container`, `toast`), 153 in progress, **59% average** semantic parity.
-- Kernel D1–D5 P0 landed; D6 path values, D7 renderer API leftovers and D8 diagnostics are still missing.
-- Tests: formula 185 + core 620 + sdk 75 = **880 passing**.
+- Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
+- 155 sidebar components: **3 complete** (`container`, `hidden`, `toast`), 152 in progress, **67% average** semantic parity.
+- Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 error boundary and D8 diagnostics are still missing.
+- Tests: formula 185 + core 676 + sdk 80 = **941 passing**; `pnpm typecheck` still reports 68 errors.
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.
 
 ## Development

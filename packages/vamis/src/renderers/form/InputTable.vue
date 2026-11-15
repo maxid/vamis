@@ -2,22 +2,23 @@
 import { computed } from 'vue'
 import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import NestedFormScope from '../../NestedFormScope.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const columns = computed(() => asArray(props.schema.columns || props.schema.items) as SchemaObject[])
 
 const rows = computed<Record<string, any>[]>(() => {
-  const value = props.schema.name ? form?.getValue(props.schema.name) : undefined
+  const value = props.schema.name ? fieldApi.getValue(props.schema.name) : undefined
   return Array.isArray(value) && value.length ? (value as Record<string, any>[]) : [{}]
 })
 
 function persist(next: Record<string, any>[]) {
   if (!props.schema.name) return
-  form?.setValue(props.schema.name, next)
+  fieldApi.setValue(props.schema.name, next)
 }
 
 function add() {

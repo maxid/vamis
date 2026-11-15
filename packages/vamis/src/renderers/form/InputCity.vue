@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const CITIES = [
@@ -13,9 +13,10 @@ const CITIES = [
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const parts = computed({
   get: () => {
-    const raw = props.schema.name ? form?.getValue(props.schema.name) : ''
+    const raw = props.schema.name ? fieldApi.getValue(props.schema.name) : ''
     if (raw && typeof raw === 'object') return { province: String((raw as any).code || (raw as any).province || ''), city: String((raw as any).city || '') }
     const text = String(raw || '')
     const [province, city] = text.split(',').map((item) => item.trim())
@@ -23,7 +24,7 @@ const parts = computed({
   },
   set: (next) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, props.schema.extractValue === false ? next : [next.province, next.city].filter(Boolean).join(','))
+    fieldApi.setValue(props.schema.name, props.schema.extractValue === false ? next : [next.province, next.city].filter(Boolean).join(','))
   },
 })
 const cities = computed(() => CITIES.find((item) => item.value === parts.value.province)?.children || [])

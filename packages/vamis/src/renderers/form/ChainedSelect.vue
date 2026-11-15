@@ -8,20 +8,21 @@ import {
   SelectValue,
 } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import { dumpJoined, normalizeOptions, optionValuesEqual, parseJoined, type OptionItem } from '../../options'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const joinValues = computed(() => props.schema.joinValues !== false)
 const tree = computed(() => normalizeOptions(props.schema.options))
 
 const selected = computed({
-  get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, joinValues.value),
+  get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', true, joinValues.value),
   set: (values: unknown[]) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, dumpJoined(values, true, joinValues.value))
+    fieldApi.setValue(props.schema.name, dumpJoined(values, true, joinValues.value))
   },
 })
 

@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { Input, Slider } from '@vamis/ui'
 import { readRangeValue, type SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const min = computed(() => Number(props.schema.min ?? 0))
 const max = computed(() => Number(props.schema.max ?? 100))
 const step = computed(() => Number(props.schema.step ?? 1))
@@ -19,13 +20,13 @@ function clamp(raw: unknown) {
 }
 
 const single = computed({
-  get: () => clamp(props.schema.name ? form?.getValue(props.schema.name) : min.value),
-  set: (v: number) => props.schema.name && form?.setValue(props.schema.name, clamp(v)),
+  get: () => clamp(props.schema.name ? fieldApi.getValue(props.schema.name) : min.value),
+  set: (v: number) => props.schema.name && fieldApi.setValue(props.schema.name, clamp(v)),
 })
 
 const range = computed({
   get() {
-    const pair = readRangeValue(props.schema.name ? form?.getValue(props.schema.name) : undefined)
+    const pair = readRangeValue(props.schema.name ? fieldApi.getValue(props.schema.name) : undefined)
     const start = clamp(pair.start || min.value)
     const end = clamp(pair.end || max.value)
     return { start: Math.min(start, end), end: Math.max(start, end) }
@@ -35,10 +36,10 @@ const range = computed({
     const start = clamp(next.start)
     const end = clamp(next.end)
     if (props.schema.delimiter) {
-      form?.setValue(props.schema.name, [start, end].join(String(props.schema.delimiter)))
+      fieldApi.setValue(props.schema.name, [start, end].join(String(props.schema.delimiter)))
       return
     }
-    form?.setValue(props.schema.name, { min: Math.min(start, end), max: Math.max(start, end) })
+    fieldApi.setValue(props.schema.name, { min: Math.min(start, end), max: Math.max(start, end) })
   },
 })
 </script>

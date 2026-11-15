@@ -2,15 +2,16 @@
 import { computed } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const count = computed(() => Number(props.schema.count || 5))
 const value = computed({
-  get: () => Number(props.schema.name ? form?.getValue(props.schema.name) : 0) || 0,
-  set: (v: number) => props.schema.name && form?.setValue(props.schema.name, v),
+  get: () => Number(props.schema.name ? fieldApi.getValue(props.schema.name) : 0) || 0,
+  set: (v: number) => props.schema.name && fieldApi.setValue(props.schema.name, v),
 })
 </script>
 

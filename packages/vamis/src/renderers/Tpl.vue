@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { evalTemplate, tplMaxLine, tplPlainText, type SchemaObject } from '@vamis/core'
+import { eachResolvedValue, evalTemplate, tplMaxLine, tplPlainText, type SchemaObject } from '@vamis/core'
 import PopOverHost from './PopOverHost.vue'
 import BadgeHost from './BadgeHost.vue'
 
@@ -19,6 +19,14 @@ const rendered = computed(() => {
   if (props.schema.raw != null && props.schema.raw !== '') {
     const raw = String(props.schema.raw)
     return { text: raw, html: raw, usedFilters: [] as string[] }
+  }
+  // Amis `Tpl.getContent`：html / tpl / text 都没写时按 `value` / `name` 取值（表格列里的 `{type: tpl, name}`）。
+  if (!props.schema.html && !props.schema.tpl && !props.schema.text) {
+    const value = eachResolvedValue(props.schema, props.data)
+    if (value != null && value !== '') {
+      const text = typeof value === 'string' ? value : JSON.stringify(value)
+      return { text, html: undefined, usedFilters: [] as string[] }
+    }
   }
   const source = props.schema.html ?? props.schema.tpl ?? props.schema.text ?? ''
   const textOnly =

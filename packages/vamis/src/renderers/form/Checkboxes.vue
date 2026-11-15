@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { Checkbox } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const options = computed(() =>
   (props.schema.options || []).map((item: any) =>
     typeof item === 'object'
@@ -16,10 +17,10 @@ const options = computed(() =>
 )
 const selected = computed<unknown[]>({
   get: () => {
-    const current = props.schema.name ? form?.getValue(props.schema.name) : []
+    const current = props.schema.name ? fieldApi.getValue(props.schema.name) : []
     return Array.isArray(current) ? current : []
   },
-  set: (v) => props.schema.name && form?.setValue(props.schema.name, v),
+  set: (v) => props.schema.name && fieldApi.setValue(props.schema.name, v),
 })
 
 function toggle(value: unknown, checked: boolean) {

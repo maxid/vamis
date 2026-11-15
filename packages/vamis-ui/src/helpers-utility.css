@@ -800,7 +800,27 @@
   .pc\:place-self-stretch { place-self: stretch; }
 }
 
+/* Amis `_utilities.scss` 固定宽高档。`w-xs` / `w-sm` / `w-md` / `w-lg` / `w-xl` 与 Tailwind v4 的容器档同名、取值不同，这里只收不重名的几档。 */
+@layer components {
+  .w-xxs { width: 60px; }
+  .w-ssm { width: 120px; }
+  .w-xxl { width: 360px; }
+  .w-xxxl { width: 420px; }
+  .h-xxs { height: 60px; }
+  .h-ssm { height: 120px; }
+  .h-xxl { height: 360px; }
+  .h-xxxl { height: 420px; }
+}
+
 @layer utilities {
+  /* Amis `_utilities.scss` 的 `.text-ellipsis` 是整套单行省略；helper 同名类只有 `text-overflow`，两条在 Amis 里叠在一起生效。
+     放在 utilities 里才压得过包装层上的 `.inline`。 */
+  .text-ellipsis {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
   /* Amis helper grid-cols-7 is repeat(6). Beat Tailwind's repeat(7). */
   .grid-cols-7 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 

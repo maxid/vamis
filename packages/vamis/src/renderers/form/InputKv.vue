@@ -2,17 +2,18 @@
 import { computed } from 'vue'
 import { kvRowsFromValue, valueFromKvRows, type SchemaObject } from '@vamis/core'
 import { Button, Input } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
 
+const fieldApi = useFieldValue()
 const rows = computed({
-  get: () => kvRowsFromValue(props.schema.name ? form?.getValue(props.schema.name) : undefined),
+  get: () => kvRowsFromValue(props.schema.name ? fieldApi.getValue(props.schema.name) : undefined),
   set: (next) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, valueFromKvRows(next))
+    fieldApi.setValue(props.schema.name, valueFromKvRows(next))
   },
 })
 

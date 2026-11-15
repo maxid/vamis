@@ -5,8 +5,8 @@ outline: deep
 
 # InputDatetime 日期时间选择器
 
-::: info 实现进度 58% · 进行中
-`input-date` 别名，已接日期+时分秒选择；时分秒约束与移动端 picker 未齐
+::: info 实现进度 62% · 进行中
+`input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐
 :::
 
 `input-datetime` 与 `input-date` 同一渲染器。默认展示 `YYYY-MM-DD HH:mm:ss`，提交值默认 unix 秒。完整快捷键 / 限制范围见 [InputDate](./input-date)。

@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { Input } from '@vamis/ui'
 import { formatQuarter, parseQuarter, readRangeValue, writeRangeValue, type SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const kind = computed(() => {
   const type = String(props.schema.type || '')
   if (type === 'input-quarter-range') return 'quarter'
@@ -16,10 +17,10 @@ const kind = computed(() => {
 const inputType = computed(() => (kind.value === 'year' ? 'number' : 'month'))
 
 const range = computed({
-  get: () => readRangeValue(props.schema.name ? form?.getValue(props.schema.name) : undefined, props.schema.delimiter),
+  get: () => readRangeValue(props.schema.name ? fieldApi.getValue(props.schema.name) : undefined, props.schema.delimiter),
   set: (next) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, writeRangeValue(next, props.schema.delimiter))
+    fieldApi.setValue(props.schema.name, writeRangeValue(next, props.schema.delimiter))
   },
 })
 

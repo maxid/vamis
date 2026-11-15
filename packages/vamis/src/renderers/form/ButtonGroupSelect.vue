@@ -2,18 +2,19 @@
 import { computed } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import { dumpJoined, normalizeOptions, optionValuesEqual, parseJoined } from '../../options'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const multiple = computed(() => !!props.schema.multiple)
 const options = computed(() => normalizeOptions(props.schema.options))
 const selected = computed({
-  get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', multiple.value, props.schema.joinValues !== false),
+  get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', multiple.value, props.schema.joinValues !== false),
   set: (values: unknown[]) =>
-    props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, multiple.value, props.schema.joinValues !== false)),
+    props.schema.name && fieldApi.setValue(props.schema.name, dumpJoined(values, multiple.value, props.schema.joinValues !== false)),
 })
 
 function toggle(value: unknown) {

@@ -350,6 +350,44 @@
   --table-thead-sep-width: 1px;
   --table-placeholder-h: 200px;
   --table-empty-icon-size: 74px;
+  /* Amis `--Table-*`：行底 / 悬停 / 修改 / 未保存标题 / 表头图标 / 展开钮 / 树缩进 / 固定列。 */
+  --table-bg: var(--card);
+  --table-hover-bg: var(--colors-brand-10);
+  --table-modified-bg: #e8f0fe;
+  --table-modified-border: #d0e0fd;
+  --table-modified-color: #4285f4;
+  --table-unsaved-heading-bg: var(--colors-neutral-fill-9);
+  --table-unsaved-heading-color: var(--primary);
+  --table-thead-icon-color: var(--colors-neutral-text-5);
+  --table-thead-icon-muted: var(--colors-neutral-text-6);
+  --table-thead-icon-size: 12px;
+  --table-expand-btn-color: var(--colors-neutral-text-5);
+  --table-expand-btn-w: 14px;
+  --table-expand-btn-h: 16px;
+  --table-tree-indent: var(--gap-lg);
+  --table-tree-border: var(--border);
+  --table-fixed-z: 20;
+  --table-fixed-shadow-w: 30px;
+  --table-fixed-left-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
+  --table-fixed-right-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
+  --table-item-actions-pad: 0 var(--table-cell-px) 0 80px;
+  --table-foot-label-w: 120px;
+  --table-search-min-w: 320px;
+  --table-search-max-w: 640px;
+  --table-filter-w: 160px;
+  --table-muted-color: var(--colors-neutral-text-6);
+  --table-filter-btn-w: 16px;
+  --table-copy-color: var(--colors-neutral-text-5);
+  --table-copy-hover-color: var(--primary);
+  --table-badge-z: 25;
+  /* Amis `.ColumnToggler-menu`：160 宽、项 32 高、sm 勾选。 */
+  --column-toggler-menu-w: 160px;
+  --column-toggler-item-h: 32px;
+  --column-toggler-item-pad: 6px 8px;
+  --column-toggler-menu-border: var(--border);
+  --column-toggler-label-color: var(--text-loud);
+  --column-toggler-check-size: var(--select-check-size);
+  --column-toggler-menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
   /* Amis `--Progress-line-*`：轨道 fill-8、条 brand-5、字 12 / text-2、圆角 4、min-width 50。 */
   --progress-line-bg: var(--colors-neutral-fill-8);
   --progress-line-color: var(--colors-neutral-text-2);
@@ -900,6 +938,14 @@
   --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
   --list-heading-unsaved-bg: color-mix(in oklch, var(--primary) 18%, black);
   --list-heading-unsaved-color: oklch(0.7 0.13 var(--accent-h));
+  --table-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+  --table-modified-bg: color-mix(in oklch, var(--primary) 18%, black);
+  --table-modified-border: color-mix(in oklch, var(--primary) 28%, black);
+  --table-modified-color: oklch(0.7 0.13 var(--accent-h));
+  --table-unsaved-heading-bg: var(--fill-10);
+  --table-fixed-left-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.45);
+  --table-fixed-right-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.45);
+  --column-toggler-menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
   --control-disabled-bg: var(--fill-10);
   --control-disabled-color: #d4d6d9;
   --checkbox-bg: #17202d;
@@ -2560,8 +2606,8 @@
   }
   .vamis-popover-btn svg {
     display: inline;
-    width: 14px;
-    height: 14px;
+    width: 1em;
+    height: 1em;
     position: relative;
     top: 0.125em;
     vertical-align: baseline;
@@ -4612,6 +4658,11 @@
   width: auto;
   max-width: 100%;
 }
+/* Amis `TplField` / `PlainField` 是 td 里的 inline span；inline-block + middle 会把 18px 行盒撑成 18.9。 */
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node.inline {
+  display: inline;
+  vertical-align: baseline;
+}
 .vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has(.vamis-list),
 .vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has([data-vamis-list]),
 .vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has(.vamis-progress) {
@@ -4704,6 +4755,14 @@
 .vamis-table__footer {
   padding: var(--table-toolbar-margin-y) 0;
 }
+/* Amis `Table-footer--affix` / `Table-footToolbar--affix`：页面滚动时贴在视口底。 */
+.vamis-table__footer.is-affix,
+.vamis-table__foot-toolbar.is-affix {
+  position: sticky;
+  bottom: var(--affix-offset-bottom, 0px);
+  z-index: var(--z-sticky);
+  background: var(--table-bg);
+}
 .vamis-table__header > * + .vamis-node {
   margin-left: var(--crud-toolbar-gap);
 }
@@ -4722,6 +4781,7 @@
 }
 .vamis-table__actions > * {
   margin-right: var(--crud-toolbar-gap);
+  vertical-align: top;
 }
 .vamis-table__drag-tip {
   width: 100%;
@@ -4745,18 +4805,35 @@
   color: var(--primary);
   border-color: var(--primary);
 }
+/* Amis `Button--iconOnly --size-sm`：30 方钮，图标 14。 */
+.vamis-table__drag-toggler {
+  width: var(--table-toolbar-btn-h);
+  padding: 0;
+}
 .vamis-table__drag-toggler-icon {
-  width: 12px;
-  height: 12px;
+  width: var(--fontSizeBase);
+  height: var(--fontSizeBase);
   display: block;
 }
 .vamis-table__heading {
   background: var(--table-heading-bg);
-  height: var(--table-heading-height);
+  min-height: var(--table-heading-height);
   box-sizing: border-box;
   padding: calc((var(--table-heading-height) - var(--table-font-size) * 1.5) / 2) var(--gap-sm);
   font-size: var(--table-font-size);
   line-height: 1.5;
+}
+/* Amis `.Table--unsaved .Table-heading`：有未提交的修改 / 排序时换底色和字色。 */
+.vamis-table-wrap.is-unsaved .vamis-table__heading {
+  background: var(--table-unsaved-heading-bg);
+  color: var(--table-unsaved-heading-color);
+}
+.vamis-table__heading [data-slot="button"] {
+  vertical-align: baseline;
+}
+.vamis-table__heading [data-slot="button"] > svg.icon {
+  width: 12px;
+  height: 12px;
 }
 .vamis-column-toggler {
   position: relative;
@@ -4778,6 +4855,15 @@
   line-height: 1.5;
   cursor: pointer;
 }
+/* Amis `.ColumnToggler.is-actived > .Button`：有列被藏起来时图标变链接色。 */
+.vamis-column-toggler__btn.is-actived {
+  color: var(--link-color);
+}
+.vamis-column-toggler__btn:hover,
+.vamis-column-toggler__btn.is-opened {
+  border-color: var(--primary);
+  color: var(--primary);
+}
 .vamis-column-toggler__btn.is-icon {
   padding: 0 8px;
 }
@@ -4797,98 +4883,612 @@
   width: 10px;
   height: 10px;
 }
+/* 菜单走 VamisOverlay（Teleport），定位交给浮层；这里只画皮。 */
 .vamis-column-toggler__menu {
-  position: absolute;
-  z-index: var(--z-dropdown, 1000);
-  top: 100%;
-  left: 0;
-  margin-top: 4px;
-  min-width: 160px;
+  margin: 0;
+  padding: var(--gap-xs) 0;
+  list-style: none;
+  box-sizing: border-box;
+  width: var(--column-toggler-menu-w);
   max-height: 500px;
   overflow: auto;
-  padding: 4px 0;
-  background: var(--select-menu-bg, var(--card));
-  border: 1px solid var(--select-menu-border, var(--border));
+  background: var(--select-menu-bg);
+  border: 1px solid var(--column-toggler-menu-border);
   border-radius: var(--radius);
-  box-shadow: var(--popup-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
-}
-.vamis-column-toggler__menu.is-right {
-  left: auto;
-  right: 0;
+  box-shadow: var(--column-toggler-menu-shadow);
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
 }
 .vamis-column-toggler__item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  height: 32px;
-  cursor: pointer;
-  font-size: var(--fontSizeBase, 14px);
-  color: var(--link-color, var(--primary));
+  box-sizing: border-box;
+  height: var(--column-toggler-item-h);
+  padding: var(--column-toggler-item-pad);
+  color: var(--link-color);
   white-space: nowrap;
 }
-.vamis-table__filters {
+.vamis-column-toggler__item > label {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-sm);
-  margin-bottom: var(--gap-sm);
-}
-.vamis-table__filter {
-  display: inline-flex;
   align-items: center;
-  gap: var(--gap-xs);
-  font-size: 12px;
+  gap: var(--checkbox-gap);
+  height: 100%;
+  cursor: pointer;
 }
-.vamis-table__filter-input {
-  height: 28px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0 var(--gap-xs);
-  background: var(--card);
+.vamis-column-toggler__item > label > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--column-toggler-label-color);
 }
-.vamis-table__filter-input--search {
-  width: 8rem;
+/* Amis `Checkbox--sm`：14 盒。 */
+.vamis-column-toggler__item .vamis-checkbox[data-slot='checkbox'] {
+  flex-basis: var(--column-toggler-check-size);
+  width: var(--column-toggler-check-size);
+  height: var(--column-toggler-check-size);
 }
-.vamis-table__check-cell,
-.vamis-table__drag-cell,
-.vamis-table__index-cell {
-  width: 30px;
+.vamis-column-toggler__item:hover {
+  background: var(--select-option-hover-bg);
+}
+/* ---- Table：行状态。对齐 Amis `tbody > tr`：默认底、悬停、勾选、修改 / 移动。 ---- */
+.vamis-table-wrap tbody > tr.vamis-table__tr {
+  background: var(--table-bg);
+  transition: none;
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr:hover,
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-hovered {
+  background: var(--table-hover-bg);
+}
+/* Amis `.is-checked` 写在 hover 之后，且没有 checked:hover 分支：勾选行悬停不变色。 */
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-checked,
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-checked:hover {
+  background: var(--table-checked-bg);
+  color: var(--table-checked-color);
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-modified,
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-moved {
+  background: var(--table-modified-bg);
+  color: var(--table-modified-color);
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-modified > [data-slot="table-cell"],
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-moved > [data-slot="table-cell"] {
+  border-top-color: var(--table-modified-border);
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-dragging {
+  opacity: 1;
+  background: var(--table-hover-bg);
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr.is-summary:hover {
+  background: var(--table-bg);
+}
+.vamis-table-wrap tbody > tr.has-item-action,
+.vamis-table-wrap.is-check-on-click tbody > tr.vamis-table__tr {
+  cursor: pointer;
+}
+.vamis-table-wrap [data-slot="table-cell"],
+.vamis-table-wrap [data-slot="table-head"] {
+  position: relative;
+}
+/* Amis `tbody > tr > th`（列 `isHead` / 总结行表头格）：表头底色，线跟数据格走。 */
+.vamis-table-wrap tbody [data-slot="table-head"] {
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+  font-size: var(--table-font-size);
+}
+/* Amis 的 tbody th 上下各一条线（白 + 灰），所以非末行比数据行高 1px。 */
+.vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"] {
+  border-bottom: 1px solid var(--table-thead-sep);
+}
+.vamis-table-wrap tbody tr > [data-slot="table-head"]:first-child {
+  padding-left: var(--table-cell-edge-px);
+}
+.vamis-table-wrap tbody tr > [data-slot="table-head"]:last-child {
+  padding-right: var(--table-cell-edge-px);
+}
+.vamis-table-wrap th[colspan],
+.vamis-table-wrap td[colspan] {
   text-align: center;
 }
-.vamis-table__index-cell {
-  width: 50px;
+.vamis-table-wrap thead > tr.is-fake-hide {
+  visibility: hidden;
+  position: absolute;
 }
-.vamis-table__drag {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
+.vamis-table__muted {
+  color: var(--table-muted-color);
+}
+.vamis-table-wrap .vamis-table__nowrap {
+  white-space: nowrap;
+}
+
+/* ---- 内置列：勾选 / 拖拽 / 展开 / 序号。`width: 1px` 让列收缩到内容宽。 ---- */
+.vamis-table-wrap .vamis-table__check-cell,
+.vamis-table-wrap .vamis-table__index-cell {
+  width: 1px;
+  white-space: nowrap;
+}
+.vamis-table-wrap tr > .vamis-table__check-cell,
+.vamis-table-wrap thead tr > .vamis-table__check-cell:first-child {
+  padding-left: var(--table-cell-edge-px);
+  padding-right: var(--table-cell-px);
+}
+.vamis-table-wrap .vamis-table__drag-cell,
+.vamis-table-wrap .vamis-table__expand-cell {
+  width: 1px;
+  padding-right: 0;
+  border-right: 0;
+  white-space: nowrap;
+}
+.vamis-table-wrap td.vamis-table__drag-cell {
   cursor: move;
-  color: var(--form-item-color);
+  color: var(--table-thead-icon-color);
+}
+.vamis-table-wrap td.vamis-table__drag-cell > svg.icon {
+  display: inline-block;
+  width: var(--table-thead-icon-size);
+  height: var(--table-thead-icon-size);
+  top: 0;
   vertical-align: middle;
 }
-.vamis-table__drag svg.icon {
-  display: block;
-  width: 16px;
-  height: 16px;
+/* 勾选：原生 checkbox 画成 Amis 16 盒（`--checkbox-*`），不要 shadcn Checkbox。 */
+.vamis-table__check {
+  display: inline-block;
+  margin: 0;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase, 1.5);
+  cursor: pointer;
 }
-.vamis-table__expand {
+.vamis-table__check > input {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0 var(--checkbox-gap) 0 0;
+  border: var(--checkbox-border-width) solid var(--checkbox-border);
+  border-radius: var(--checkbox-radius);
+  background: var(--checkbox-bg);
+  vertical-align: text-bottom;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.vamis-table__check:hover > input {
+  border-color: var(--primary);
+}
+.vamis-table__check > input:checked,
+.vamis-table__check > input:indeterminate {
+  border-color: var(--checkbox-checked-bg);
+  background: var(--checkbox-checked-bg);
+}
+.vamis-table__check > input:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--checkbox-icon-color);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.vamis-table__check > input:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 6px;
+  height: 2px;
+  background: var(--checkbox-icon-color);
+}
+.vamis-table__check-cell > .vamis-radio-dot {
+  margin-right: var(--checkbox-gap);
+  vertical-align: text-bottom;
+}
+
+/* ---- 展开钮 / 树缩进。对齐 Amis `.Table-expandBtn2` / `-indent` / `-expandSpace`。 ---- */
+.vamis-table__expand-btn {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
-  width: 16px;
-  height: 16px;
-  margin-right: var(--gap-xs);
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  width: var(--table-expand-btn-w);
+  height: var(--table-expand-btn-h);
+  line-height: 1;
+  color: var(--table-expand-btn-color);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.vamis-table__expand-btn:hover {
+  color: var(--table-expand-btn-color);
+}
+.vamis-table__expand-btn .vamis-caret svg {
+  transform: rotate(90deg);
+  transition: transform ease-in-out var(--animation-duration);
+}
+.vamis-table__expand-btn.is-active .vamis-caret svg {
+  transform: rotate(-90deg);
+}
+.vamis-table__primary-cell {
+  white-space: nowrap;
+}
+.vamis-table__primary-cell > .vamis-table__expand-btn,
+.vamis-table__primary-cell > .vamis-table__retry-btn,
+.vamis-table__primary-cell > .vamis-table__defer-spinner {
+  margin-right: var(--gap-sm);
+}
+/* 懒加载行：转圈占住展开钮的位置（Amis `Spinner size=sm`）；失败后换成重试钮（`Table-retryBtn`）。 */
+.vamis-table__defer-spinner {
+  display: inline-block;
+  width: var(--table-expand-btn-w);
+  height: var(--table-expand-btn-w);
+  color: var(--primary);
+  vertical-align: middle;
+}
+.vamis-table__retry-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--table-expand-btn-w);
+  height: var(--table-expand-btn-h);
+  color: var(--destructive);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.vamis-table__retry-btn > svg.icon {
+  width: 1em;
+  height: 1em;
+}
+.vamis-table__indent {
+  display: inline-block;
+}
+.vamis-table__expand-space {
+  display: inline-block;
+  width: calc(var(--table-expand-btn-w) + var(--gap-sm));
+}
+/* 展开行左侧的竖线（Amis `tr.is-expanded > td.Table-expandCell::before`）。 */
+.vamis-table-wrap tr.is-expanded > td.vamis-table__expand-cell::before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  top: 50%;
+  bottom: 0;
+  left: calc(var(--table-cell-edge-px) + var(--table-expand-btn-w) / 2);
+  background: var(--table-tree-border);
+}
+
+/* ---- Footable：窄屏收起的列放进展开行。 ---- */
+.vamis-table-wrap tr.vamis-table__foot-row:hover {
+  background: transparent;
+}
+.vamis-table-wrap td.vamis-table__foot {
+  background: var(--table-thead-bg);
+  text-align: left;
+}
+.vamis-table__foot-table {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  background: transparent;
+}
+.vamis-table__foot-table > tbody > tr > th {
+  width: var(--table-foot-label-w);
+  padding: var(--table-cell-py) var(--table-cell-px);
+  text-align: right;
+  font-weight: 700;
+}
+.vamis-table__foot-table > tbody > tr > td {
+  padding: var(--table-cell-py) var(--table-cell-px);
+  word-break: break-all;
+}
+.vamis-table__foot-table > tbody > tr:not(:first-child) {
+  border-top: 1px solid var(--border);
+}
+
+/* ---- 表头：标题 / 排序 / 搜索 / 过滤。 ---- */
+.vamis-table__th-title {
+  display: inline-block;
+}
+/* Amis 的 Remark 直接排在 `TableCell--title` 里，包装层不留盒子。 */
+.vamis-table__th-title > .vamis-node {
+  display: contents;
+}
+[data-slot="table-head"] > .vamis-table__expand-btn {
+  margin-right: var(--gap-sm);
+}
+.vamis-table__sort-btn,
+.vamis-table__search-btn,
+.vamis-table__filter-btn {
+  display: inline-block;
+  vertical-align: top;
+  padding-left: var(--gap-sm);
+  cursor: pointer;
+}
+.vamis-table__search-btn svg.icon,
+.vamis-table__filter-btn svg.icon,
+.vamis-table__sort-icon > svg.icon {
+  width: var(--table-thead-icon-size);
+  height: var(--table-thead-icon-size);
+}
+.vamis-table__sort-btn {
+  position: relative;
+  box-sizing: content-box;
+  width: 6px;
+  height: var(--gap-md);
+  color: var(--table-thead-icon-color);
+}
+.vamis-table__sort-icon {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  font-style: normal;
+}
+.vamis-table__sort-icon.is-active {
+  display: block;
+}
+/* Amis `svg.icon`：inline + `top: 0.125em`；吃 preflight 的 `svg { display: block }` 会贴到行盒顶。 */
+.vamis-table__search-btn svg.icon,
+.vamis-table__filter-btn svg.icon,
+.vamis-table__sort-icon > svg.icon {
+  display: inline;
+  position: relative;
+  top: 0.125em;
+  vertical-align: baseline;
+}
+.vamis-table__sort-icon.is-default {
+  color: var(--table-thead-icon-muted);
+}
+.vamis-table__sort-btn:hover .vamis-table__sort-icon.is-default,
+.vamis-table__sort-icon.is-up.is-active,
+.vamis-table__sort-icon.is-down.is-active {
+  color: var(--primary);
+}
+.vamis-table__search-btn,
+.vamis-table__filter-btn {
+  color: var(--table-thead-icon-muted);
+}
+/* Amis `--TableCell-filterBtn-width`：16（含左 8），图标溢出 4px。 */
+.vamis-table__filter-btn {
+  box-sizing: border-box;
+  width: var(--table-filter-btn-w);
+}
+.vamis-table__search-btn.is-active,
+.vamis-table__filter-btn.is-active {
+  color: var(--primary);
+}
+/* Amis `.is-opened { color: var(--Button--default-onActive-border) }` 这个变量 cxd 没定义，落回表头字色；过滤钮打开时不变色。 */
+.vamis-table__search-btn.is-opened {
+  color: inherit;
+}
+.vamis-table__search-btn:hover,
+.vamis-table__filter-btn:hover {
+  color: var(--primary);
+}
+/* 搜索 PopOver：Amis `TableCell-searchPopOver` + 里面的 Panel（body 12 / footer 8×12 右对齐）。 */
+.vamis-table-search {
+  box-sizing: border-box;
+  min-width: var(--table-search-min-w);
+  max-width: var(--table-search-max-w);
+  border: var(--popover-layer-border);
+  border-radius: var(--radius);
+  background: var(--popover-layer-bg);
+  box-shadow: var(--popover-layer-shadow);
+  color: var(--foreground);
+  white-space: normal;
+  text-align: left;
+}
+.vamis-table-search__body {
+  padding: var(--gap-base);
+}
+.vamis-table-search__body .vamis-form-item {
+  margin-bottom: 0;
+}
+.vamis-table-search__body .vamis-form-item + .vamis-form-item,
+.vamis-table-search__body .vamis-node + .vamis-node > .vamis-form-item {
+  margin-top: var(--gap-base);
+}
+.vamis-table-search__footer {
+  padding: var(--gap-sm) var(--gap-base);
+  border-top: 1px solid var(--border);
+  text-align: right;
+}
+.vamis-table-search__footer > [data-slot="button"] {
+  margin-left: var(--gap-sm);
+}
+/* 过滤 PopOver：Amis `TableCell-filterPopOver` 宽 160，项 32 高。 */
+.vamis-table-filter {
+  width: var(--table-filter-w);
+  min-width: 0;
   padding: 0;
+  box-shadow: var(--popover-layer-shadow);
+  white-space: normal;
+}
+.vamis-table-filter__check > label {
+  display: flex;
+  align-items: center;
+  gap: var(--checkbox-gap);
+  height: 100%;
+  cursor: pointer;
+}
+
+/* ---- 固定列。对齐 Amis `is-sticky*`：sticky + 继承行底色，滚动后才出阴影。 ---- */
+.vamis-table-wrap .is-sticky {
+  position: sticky;
+  z-index: var(--table-fixed-z);
+}
+.vamis-table-wrap td.is-sticky,
+.vamis-table-wrap tbody th.is-sticky {
+  background: inherit;
+}
+.vamis-table-wrap tbody th.is-sticky {
+  background: var(--table-thead-bg);
+}
+.vamis-table-wrap .is-sticky-last-left::after,
+.vamis-table-wrap .is-sticky-first-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  width: var(--table-fixed-shadow-w);
+  transition: box-shadow 0.3s;
+  pointer-events: none;
+}
+.vamis-table-wrap .is-sticky-last-left::after {
+  right: 0;
+  transform: translateX(100%);
+}
+.vamis-table-wrap .is-sticky-first-right::after {
+  left: 0;
+  transform: translateX(-100%);
+}
+.vamis-table-wrap [data-slot="table"].is-scrolled-left .is-sticky-last-left::after {
+  box-shadow: var(--table-fixed-left-shadow);
+}
+.vamis-table-wrap [data-slot="table"].is-scrolled-right .is-sticky-first-right::after {
+  box-shadow: var(--table-fixed-right-shadow);
+}
+
+/* ---- 合并单元格（Amis `Table-table--withCombine`）。 ---- */
+.vamis-table-wrap .vamis-table--combine tbody > tr.vamis-table__tr:hover {
+  background: var(--table-bg);
+}
+.vamis-table-wrap .vamis-table--combine tbody > tr > [data-slot="table-cell"] {
+  vertical-align: middle;
+}
+.vamis-table-wrap .vamis-table--combine tbody > tr > [data-slot="table-cell"]:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+/* 只收 thead th 与 tbody td；`isHead` 的 tbody th 仍留首末 16。 */
+.vamis-table-wrap .vamis-table--combine tbody > tr > [data-slot="table-cell"]:first-child,
+.vamis-table-wrap .vamis-table--combine thead > tr > [data-slot="table-head"]:first-child {
+  padding-left: var(--table-cell-px);
+}
+.vamis-table-wrap .vamis-table--combine tbody > tr > [data-slot="table-cell"]:last-child,
+.vamis-table-wrap .vamis-table--combine thead > tr > [data-slot="table-head"]:last-child {
+  padding-right: var(--table-cell-px);
+}
+
+/* ---- 行悬浮按钮（Amis `Table-itemActions-wrap`）。 ---- */
+.vamis-table__content-wrap {
+  position: relative;
+}
+.vamis-table__item-actions-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 30px;
+  z-index: calc(var(--table-fixed-z) + 1);
+  pointer-events: none;
+}
+.vamis-table__item-actions {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: var(--table-item-actions-pad);
+  background: linear-gradient(90deg, transparent 0%, var(--table-hover-bg) 20%, var(--table-hover-bg) 100%);
+  pointer-events: all;
+}
+.vamis-table__item-actions > .vamis-node {
+  display: inline-block;
+  width: auto;
+}
+
+/* ---- 行角标（Amis `.Table-badge`）：贴在首个数据格左上角，压过固定列。 ---- */
+.vamis-table-wrap .vamis-badge.vamis-table__badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--table-badge-z);
+}
+
+/* ---- 内容超出省略（列 `textOverflow: ellipsis`）。 ---- */
+.vamis-table__ellipsis {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.vamis-table__ellipsis > .vamis-node {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- 懒渲染占位行（Amis `virtual-table-body-placeholder`）：只撑高度，不画边和底。 ---- */
+.vamis-table-wrap tbody > tr.vamis-table__virtual-pad,
+.vamis-table-wrap tbody > tr.vamis-table__virtual-pad > td {
+  padding: 0;
+  margin: 0;
   border: 0;
   background: transparent;
-  color: var(--form-item-color);
-  cursor: pointer;
-  font-size: 12px;
 }
-.vamis-table__sort {
-  margin-left: var(--gap-xs);
-  font-size: 12px;
-  color: var(--form-item-color);
+
+/* ---- 表头吸顶（Amis `Table-fixedTop` + `Table-table--affixHeader`）----
+   工具栏 / 标题 / 只有 thead 的表一起 sticky；表体自己的 thead 只负责撑列宽，藏起来并用负 margin 收掉高度。
+   卡片描边拆成两段：吸顶表头带上、左、右边和上圆角，表体容器去掉上边。 */
+.vamis-table__fixed-top {
+  position: sticky;
+  top: var(--affix-offset-top, 0px);
+  z-index: var(--z-sticky);
+  background: var(--table-bg);
+}
+.vamis-table__affix-head {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-bottom-width: 0;
+  /* 和表体容器的 `rounded-lg` 同一档（helper 是 0.5rem）。 */
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: var(--table-bg);
+}
+.vamis-table__fixed-top.is-fake-hide > .vamis-table__affix-head {
+  visibility: hidden;
+  position: absolute;
+}
+.vamis-table-wrap .vamis-table__affix-table {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.vamis-table__fixed-shadow {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  height: 30px;
+  margin-top: -2px;
+  pointer-events: none;
+}
+.vamis-table-wrap.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] {
+  border-top-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.vamis-table-wrap.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] > table {
+  margin-top: calc(var(--table-thead-height, 0px) * -1);
+}
+.vamis-table-wrap.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] > table > thead {
+  visibility: hidden;
+}
+
+/* ---- 高度自适应（Amis `Table--autoFillHeight`）：内容区自己滚，表头吸顶。 ---- */
+.vamis-table-wrap.is-auto-fill {
+  margin-bottom: 0;
+}
+.vamis-table-wrap.is-auto-fill [data-slot="table-container"] {
+  overflow-y: auto;
+}
+.vamis-table-wrap.is-auto-fill thead [data-slot="table-head"] {
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--table-fixed-z) + 1);
+}
+.vamis-table-wrap.is-auto-fill thead [data-slot="table-head"].is-sticky {
+  z-index: calc(var(--table-fixed-z) + 2);
 }
 .vamis-table-wrap tr.vamis-table__placeholder:hover {
   background: transparent;
@@ -4914,16 +5514,25 @@
   height: var(--table-empty-icon-size);
 }
 .vamis-table__edit {
-  height: 28px;
+  box-sizing: border-box;
+  height: var(--button-h-sm);
   width: 100%;
-  border: 1px solid var(--border);
+  min-width: 80px;
+  border: 1px solid var(--input);
   border-radius: var(--radius);
-  padding: 0 var(--gap-xs);
-  font-size: var(--fontSizeBase, 14px);
+  padding: 0 var(--gap-sm);
+  background: var(--card);
+  color: inherit;
+  font-size: inherit;
+}
+.vamis-table__edit:focus {
+  outline: none;
+  border-color: var(--control-focus-border);
 }
 .vamis-table__edit--area {
   height: auto;
   min-height: 64px;
+  padding: var(--gap-xs) var(--gap-sm);
 }
 .vamis-table__quick {
   display: inline-flex;
@@ -4931,15 +5540,51 @@
   gap: var(--gap-xs);
 }
 .vamis-table__edit-btn {
+  display: inline-flex;
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--form-item-color);
+  color: var(--table-thead-icon-color);
   cursor: pointer;
-  font-size: 12px;
+  visibility: hidden;
+}
+.vamis-table__edit-btn > svg.icon {
+  width: var(--table-thead-icon-size);
+  height: var(--table-thead-icon-size);
+  top: 0;
+}
+[data-slot="table-cell"]:hover .vamis-table__edit-btn,
+.vamis-table__foot-table td:hover .vamis-table__edit-btn {
+  visibility: visible;
 }
 .vamis-table__edit-btn:hover {
   color: var(--primary);
+}
+/* Amis `TableCell` 自己就是 popOver 宿主：内容和放大镜直接排在 td 里（块级内容时图标落到下一行）。 */
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-popover-host:has(> .vamis-popover-wrap > .vamis-node),
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-popover-host > .vamis-popover-wrap:has(> .vamis-node) {
+  display: contents;
+}
+.vamis-table__copy > svg.icon {
+  display: inline;
+  position: relative;
+  top: 0.125em;
+  width: 1em;
+  height: 1em;
+  vertical-align: baseline;
+}
+/* Amis `.Field-copyBtn`：常显的 inline-block，跟正文字号（14 / 21 行盒），所以带复制的行是 44 高。 */
+.vamis-table__copy {
+  display: inline-block;
+  margin-left: var(--gap-xs);
+  color: var(--table-copy-color);
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.vamis-table__copy:hover {
+  color: var(--table-copy-hover-color);
 }
 .vamis-table-wrap .vamis-form-item,
 .vamis-table-wrap .vamis-form-item--normal,
@@ -4999,10 +5644,6 @@
   font-size: 12px;
   white-space: nowrap;
 }
-.vamis-table__nested [data-slot="table-cell"] {
-  background: var(--card);
-}
-
 /* Amis Checkbox：盒在 i / [data-slot=checkbox]，不要 shadcn size-4 + opacity。 */
 .vamis-checkbox-control {
   padding-top: var(--checkbox-control-pad-top);

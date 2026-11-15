@@ -3,7 +3,7 @@ import { computed, shallowRef, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
-import { provideData, provideScope, useData, useEnv, useScope } from './context'
+import { provideData, provideScope, provideValueHost, useData, useEnv, useScope, useValueHost } from './context'
 import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
@@ -92,6 +92,18 @@ watch(
 )
 const currentScope = computed(() => childScope.value ?? parentScope.value)
 provideScope(currentScope)
+/**
+ * 脱离表单的表单项写值：有自己数据域的渲染器（page / service / card…）截住，写进本层数据域；
+ * 其余原样交给上层（表格行会在单元格那层接住）。对齐 Amis `Page.handleChange` → `store.changeValue`。
+ */
+const parentValueHost = useValueHost()
+provideValueHost({
+  setValue(name, value) {
+    if (childScope.value) childScope.value.set(name, value, 'input')
+    else if (parentValueHost) parentValueHost.setValue(name, value)
+    else parentScope.value?.set(name, value, 'input')
+  },
+})
 const data = computed(() => {
   const extra = props.extraData || {}
   const overlay: Record<string, unknown> = {}

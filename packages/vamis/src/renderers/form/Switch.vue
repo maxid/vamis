@@ -22,12 +22,14 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -38,10 +40,10 @@ const data = useData()
 const fieldName = computed(() => (props.schema.name ? String(props.schema.name) : ''))
 const localValue = ref<unknown>(undefined)
 const hasLocal = ref(false)
+/** 没写 `name` 的开关无处可写，值只留在组件里；写了 `name` 一律走表单 / 数据链，同一字段的其他组件才会跟着变。 */
 const current = computed(() => {
+  if (fieldName.value) return fieldApi.getValue(fieldName.value)
   if (hasLocal.value) return localValue.value
-  if (fieldName.value && form) return form.getValue(fieldName.value)
-  if (fieldName.value) return data.value[fieldName.value]
   return props.schema.value
 })
 const valueSchema = computed(() => ({
@@ -126,11 +128,11 @@ const formItemSchema = computed(() => {
   if (formItemStaticSchema(props.schema)) return props.schema
   return { ...props.schema, staticSchema: staticNodes.value }
 })
-const pristine = fieldName.value ? form?.getValue(fieldName.value) : props.schema.value
+const pristine = fieldName.value ? fieldApi.getValue(fieldName.value) : props.schema.value
 
 function write(next: unknown) {
-  if (fieldName.value && form) {
-    form.setValue(fieldName.value, next)
+  if (fieldName.value) {
+    fieldApi.setValue(fieldName.value, next)
     return
   }
   hasLocal.value = true

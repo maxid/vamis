@@ -45,10 +45,11 @@ import {
   type OptionsControlConfig,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from './formContext'
+import { useFieldValue, useForm } from './formContext'
 
 export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<boolean | undefined>) {
   const form = useForm()
+  const fieldApi = useFieldValue()
   const env = useEnv()
   const scoped = useScoped()
   const scope = useScope()
@@ -88,7 +89,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     return [...base, ...extra.value]
   })
 
-  const rawValue = computed(() => (name.value ? form?.getValue(name.value) : schema.value.value))
+  const rawValue = computed(() => (name.value ? fieldApi.getValue(name.value) : schema.value.value))
 
   const selected = computed(() => getSelectedOptions(rawValue.value, options.value, config.value))
 
@@ -112,8 +113,8 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   const hasValue = computed(() => !isOptionsEmpty(rawValue.value))
 
   function write(next: unknown, fill: boolean | 'fillIfNotSet' | 'always' = 'always') {
-    if (!name.value || !form) return
-    form.setValue(name.value, next)
+    if (!name.value) return
+    fieldApi.setValue(name.value, next)
     if (fill === false) return
     applyFill(next, fill === 'always' || fill === true ? true : fill)
   }
@@ -130,7 +131,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       initAutoFill,
     )
     for (const [key, next] of Object.entries(filled)) {
-      form?.setValue(key, next)
+      fieldApi.setValue(key, next)
     }
   }
 
@@ -348,8 +349,8 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   }
 
   function applyDefaultSelection(list: OptionItem[], sourceValue?: unknown) {
-    if (!name.value || !form) return
-    const current = form.getValue(name.value)
+    if (!name.value) return
+    const current = fieldApi.getValue(name.value)
     if (sourceValue != null && isOptionsEmpty(current)) {
       write(sourceValue, schema.value.initAutoFill ?? 'fillIfNotSet')
       return
@@ -481,7 +482,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       return String(schema.value.id || schema.value.name || '')
     },
     reload: loadOptionsFromSource,
-    getData: () => (name.value ? { value: form?.getValue(name.value) } : {}),
+    getData: () => (name.value ? { value: fieldApi.getValue(name.value) } : {}),
     setData,
     async doAction(action: unknown) {
       const type = action && typeof action === 'object' ? String((action as { actionType?: string }).actionType || '') : ''
@@ -498,7 +499,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   scoped?.register(api)
 
   onMounted(() => {
-    pristine.value = name.value ? form?.getValue(name.value) : schema.value.value
+    pristine.value = name.value ? fieldApi.getValue(name.value) : schema.value.value
     if (schema.value.source) void loadOptionsFromSource()
     else applyDefaultSelection(options.value)
     if (autoComplete.value) void loadAutoComplete(keyword.value)

@@ -22,7 +22,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
   dumpJoined,
@@ -35,6 +35,7 @@ import {
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const env = useEnv()
 const viewData = useData()
 const scoped = useScoped()
@@ -91,10 +92,10 @@ const allRows = computed<PickerRow[]>(() => {
 
 const selected = computed({
   get: () =>
-    parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', multiple.value, joinValues.value),
+    parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', multiple.value, joinValues.value),
   set: (values: unknown[]) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, dumpJoined(values, multiple.value, joinValues.value))
+    fieldApi.setValue(props.schema.name, dumpJoined(values, multiple.value, joinValues.value))
   },
 })
 

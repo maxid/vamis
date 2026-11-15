@@ -9,7 +9,7 @@ import {
   useEnv,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
   dumpJoined,
@@ -21,6 +21,7 @@ import {
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const env = useEnv()
 const remoteOptions = ref<unknown[] | null>(null)
 const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
@@ -67,8 +68,8 @@ function treeDisplay(node: TreeRow): boolean {
   return expandedTree.value.has(parentKey)
 }
 const selected = computed({
-  get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
-  set: (values: unknown[]) => props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
+  get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
+  set: (values: unknown[]) => props.schema.name && fieldApi.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
 })
 const mode = computed(() => String(props.schema.mode || 'list'))
 const searchable = computed(() => props.schema.searchable === true)

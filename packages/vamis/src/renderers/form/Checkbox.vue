@@ -25,13 +25,15 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import BadgeHost from '../BadgeHost.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -40,7 +42,7 @@ const formApi = useFormApi()
 const data = useData()
 
 const fieldName = computed(() => (props.schema.name ? String(props.schema.name) : ''))
-const current = computed(() => (fieldName.value ? form?.getValue(fieldName.value) : props.schema.value))
+const current = computed(() => (fieldName.value ? fieldApi.getValue(fieldName.value) : props.schema.value))
 const checked = computed(() => checkboxIsChecked(current.value, props.schema))
 const partial = computed(() => props.schema.partial === true)
 const buttonMode = computed(() => props.schema.optionType === 'button')
@@ -58,7 +60,7 @@ const formItemSchema = computed(() => {
   if (isStatic.value && formItemStaticSchema(props.schema)) return props.schema
   return { ...props.schema, static: false }
 })
-const pristine = fieldName.value ? form?.getValue(fieldName.value) : props.schema.value
+const pristine = fieldName.value ? fieldApi.getValue(fieldName.value) : props.schema.value
 const nativeEl = ref<HTMLInputElement | null>(null)
 const markClass = computed(() => ({
   'is-checked': checked.value,
@@ -75,7 +77,7 @@ watch(
 )
 
 function write(next: unknown) {
-  if (fieldName.value) form?.setValue(fieldName.value, next)
+  if (fieldName.value) fieldApi.setValue(fieldName.value, next)
 }
 
 async function emitChange(next: unknown) {

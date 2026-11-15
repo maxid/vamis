@@ -22,7 +22,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { cn, VamisClear, VamisClose, VamisPasswordToggle } from '@vamis/ui'
-import { controlInputValue, useForm } from '../../formContext'
+import { controlInputValue, useFieldValue, useForm } from '../../formContext'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import FormItem from '../FormItem.vue'
 import IconMark from '../IconMark.vue'
@@ -52,6 +52,8 @@ const props = defineProps<{
 }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -131,14 +133,14 @@ const options = computed(() => {
 })
 const selected = computed(() =>
   parseTextValue(
-    name.value ? form?.getValue(name.value) : undefined,
+    name.value ? fieldApi.getValue(name.value) : undefined,
     options.value,
     multiple.value,
     joinValues.value,
     delimiter.value,
   ),
 )
-const rawValue = computed(() => (name.value ? form?.getValue(name.value) : undefined))
+const rawValue = computed(() => (name.value ? fieldApi.getValue(name.value) : undefined))
 const displayValue = computed(() => textValueToString(rawValue.value))
 const inputModel = computed(() => {
   if (suggest.value && (multiple.value || !creatable.value)) return draft.value
@@ -229,8 +231,8 @@ async function emitEvent(eventName: string, value: unknown, native?: Event): Pro
 }
 
 function writeValue(next: unknown) {
-  if (!name.value || !form) return
-  form.setValue(name.value, next)
+  if (!name.value) return
+  fieldApi.setValue(name.value, next)
 }
 
 function commitNormal(raw: string, fromSelect = false) {
@@ -476,7 +478,7 @@ const textApi = {
     return String(props.schema.id || props.schema.name || '')
   },
   reload: loadSource,
-  getData: () => (name.value ? { value: form?.getValue(name.value) } : {}),
+  getData: () => (name.value ? { value: fieldApi.getValue(name.value) } : {}),
   setData(values: Record<string, unknown>) {
     if (!values || typeof values !== 'object') return
     if ('value' in values) writeValue(values.value)
@@ -494,7 +496,7 @@ const textApi = {
 scoped?.register(textApi)
 
 onMounted(() => {
-  pristine.value = name.value ? form?.getValue(name.value) : props.schema.value
+  pristine.value = name.value ? fieldApi.getValue(name.value) : props.schema.value
   if (props.schema.source) void loadSource()
   if (isEffectiveApi(props.schema.autoComplete as any, viewData.value)) void loadAutoComplete('')
 })

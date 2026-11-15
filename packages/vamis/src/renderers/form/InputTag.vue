@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue'
 import { Badge, Button, Input } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import { dumpJoined, normalizeOptions, parseJoined } from '../../options'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const draft = ref('')
 
 const joinValues = computed(() => props.schema.joinValues !== false)
@@ -16,12 +17,12 @@ const options = computed(() => normalizeOptions(props.schema.options))
 
 const tags = computed({
   get: () =>
-    parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', true, joinValues.value).map((item) =>
+    parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', true, joinValues.value).map((item) =>
       String(item),
     ),
   set: (values: string[]) => {
     if (!props.schema.name) return
-    form?.setValue(props.schema.name, dumpJoined(values, true, joinValues.value))
+    fieldApi.setValue(props.schema.name, dumpJoined(values, true, joinValues.value))
   },
 })
 

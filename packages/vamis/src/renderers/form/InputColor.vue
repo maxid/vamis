@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { Input } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const presets = computed(() =>
   Array.isArray(props.schema.presetColors)
     ? props.schema.presetColors.map((item: any) => (typeof item === 'string' ? item : String(item.color || item.value || '')))
@@ -14,8 +15,8 @@ const presets = computed(() =>
 )
 
 const value = computed({
-  get: () => String((props.schema.name ? form?.getValue(props.schema.name) : '') || '#000000'),
-  set: (v) => props.schema.name && form?.setValue(props.schema.name, v),
+  get: () => String((props.schema.name ? fieldApi.getValue(props.schema.name) : '') || '#000000'),
+  set: (v) => props.schema.name && fieldApi.setValue(props.schema.name, v),
 })
 </script>
 

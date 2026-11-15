@@ -32,13 +32,15 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { VamisCaret } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -99,7 +101,7 @@ const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const showHandlers = computed(() => showSteps.value && !readOnly.value && displayMode.value !== 'enhance')
 
 function currentFormValue(): unknown {
-  return name.value ? form?.getValue(name.value) : props.schema.value
+  return name.value ? fieldApi.getValue(name.value) : props.schema.value
 }
 
 function numericPart(raw: unknown): unknown {
@@ -174,8 +176,8 @@ async function emitEvent(eventName: string, value: unknown): Promise<boolean> {
 }
 
 function write(next: unknown) {
-  if (!name.value || !form) return
-  form.setValue(name.value, next)
+  if (!name.value) return
+  fieldApi.setValue(name.value, next)
 }
 
 function finalize(raw: unknown): unknown {
@@ -392,7 +394,7 @@ onMounted(() => {
   syncUnitFromValue(raw)
   if (!hasUnits.value && raw != null && raw !== '' && !big.value) {
     const next = formatNumberValue(raw, precision.value, false)
-    if (next !== raw && name.value) form?.setValue(name.value, next)
+    if (next !== raw && name.value) fieldApi.setValue(name.value, next)
   }
 })
 

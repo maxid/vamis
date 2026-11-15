@@ -8,12 +8,13 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, Input } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
 
+const fieldApi = useFieldValue()
 const fields = computed(() =>
   (Array.isArray(props.schema.fields) ? props.schema.fields : []).map((item: any) => ({
     name: String(item.name || item.field || ''),
@@ -25,8 +26,8 @@ const fields = computed(() =>
 )
 
 const value = computed({
-  get: () => normalizeConditionValue(props.schema.name ? form?.getValue(props.schema.name) : undefined),
-  set: (next) => props.schema.name && form?.setValue(props.schema.name, next),
+  get: () => normalizeConditionValue(props.schema.name ? fieldApi.getValue(props.schema.name) : undefined),
+  set: (next) => props.schema.name && fieldApi.setValue(props.schema.name, next),
 })
 
 function opsFor(fieldName: string) {

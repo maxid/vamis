@@ -13,7 +13,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
   applyEditorTheme,
@@ -37,6 +37,8 @@ const emit = defineEmits<{
 }>()
 
 const form = useForm()
+
+const fieldApi = useFieldValue()
 const env = inject(EnvKey, null) ?? createDefaultEnv()
 const scoped = useScoped()
 const scope = useScope()
@@ -56,10 +58,10 @@ let applying = false
 
 function seedFormValue() {
   const name = props.schema.name
-  if (!name || !form) return
-  if (form.getValue(name) !== undefined) return
+  if (!name) return
+  if (fieldApi.getValue(name) !== undefined) return
   if (props.schema.value == null || props.schema.value === '') return
-  form.setValue(name, normalizeEditorValue(props.schema.value, language.value))
+  fieldApi.setValue(name, normalizeEditorValue(props.schema.value, language.value))
 }
 
 onMounted(() => {
@@ -98,8 +100,8 @@ const language = computed(() => {
   return String(resolved || 'javascript')
 })
 function boundValue(): unknown {
-  if (props.schema.name && form) {
-    const current = form.getValue(props.schema.name)
+  if (props.schema.name) {
+    const current = fieldApi.getValue(props.schema.name)
     if (current !== undefined) return current
   }
   return props.schema.value
@@ -181,7 +183,7 @@ async function mount() {
   session.editor.onDidChangeModelContent(() => {
     if (applying || !session) return
     const next = session.editor.getValue()
-    if (props.schema.name) form?.setValue(props.schema.name, next)
+    if (props.schema.name) fieldApi.setValue(props.schema.name, next)
     emit('change', next)
     void emitEvent('change', next)
   })

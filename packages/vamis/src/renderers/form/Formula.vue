@@ -2,12 +2,13 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { evalExpression, evalFormula, filterTpl, useScoped, type SchemaObject } from '@vamis/core'
 import { Input } from '@vamis/ui'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import { useData } from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const data = useData()
 const scoped = useScoped()
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
@@ -34,7 +35,7 @@ function apply() {
   }
   applying.value = true
   try {
-    form.setValue(name.value, result.value)
+    fieldApi.setValue(name.value, result.value)
   } finally {
     applying.value = false
   }
@@ -58,7 +59,7 @@ const formulaApi = {
   id: props.schema.id ? String(props.schema.id) : undefined,
   getData: () => ({ value: result.value }),
   setData(values: Record<string, unknown>) {
-    if (values && 'value' in values && name.value && form) form.setValue(name.value, values.value)
+    if (values && 'value' in values && name.value) fieldApi.setValue(name.value, values.value)
   },
   async doAction(action: { actionType?: string }) {
     if (action?.actionType === 'apply' || action?.actionType === 'reload' || !action?.actionType) apply()

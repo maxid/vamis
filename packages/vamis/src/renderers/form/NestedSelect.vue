@@ -2,20 +2,21 @@
 import { computed, ref } from 'vue'
 import { Button } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import { dumpJoined, normalizeOptions, optionValuesEqual, parseJoined, type OptionItem } from '../../options'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const open = ref(false)
 const stack = ref<OptionItem[][]>([])
 const path = ref<OptionItem[]>([])
 const tree = computed(() => normalizeOptions(props.schema.options))
 const columns = computed(() => [tree.value, ...stack.value].filter((col) => col?.length))
 const selected = computed({
-  get: () => parseJoined(props.schema.name ? form?.getValue(props.schema.name) : '', false, true),
-  set: (values: unknown[]) => props.schema.name && form?.setValue(props.schema.name, dumpJoined(values, false, true)),
+  get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', false, true),
+  set: (values: unknown[]) => props.schema.name && fieldApi.setValue(props.schema.name, dumpJoined(values, false, true)),
 })
 const label = computed(() => {
   if (path.value.length) return path.value.map((item) => item.label).join(' / ')

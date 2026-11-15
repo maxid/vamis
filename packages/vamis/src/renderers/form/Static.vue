@@ -7,13 +7,14 @@ import {
   useData,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../../formContext'
+import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import IconMark from '../IconMark.vue'
 import PopOverHost from '../PopOverHost.vue'
 
 const props = defineProps<{ schema: SchemaObject; data?: Record<string, any> }>()
 const form = useForm()
+const fieldApi = useFieldValue()
 const injected = useData()
 
 const watchData = computed(() => ({ ...injected.value, ...(props.data || {}) }))
@@ -22,7 +23,7 @@ const name = computed(() => (props.schema.name ? String(props.schema.name) : '')
 /** 当前值：表单域优先，其次 data，最后 schema.value。 */
 const rawValue = computed(() => {
   if (name.value) {
-    const fromForm = form?.getValue(name.value)
+    const fromForm = fieldApi.getValue(name.value)
     if (fromForm !== undefined) return fromForm
     if (name.value in watchData.value) return watchData.value[name.value]
   }
