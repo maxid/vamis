@@ -39,5 +39,5 @@ watch(
 </script>
 
 <template>
-  <div data-slot="markdown" data-testid="markdown-body" class="space-y-3 text-sm" v-html="html" />
+  <div data-slot="markdown" data-testid="markdown-body" class="vamis-markdown" v-html="html" />
 </template>

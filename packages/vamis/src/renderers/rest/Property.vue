@@ -16,15 +16,15 @@ const columns = computed(() => Number(props.schema.column || 2))
 <template>
   <Card>
     <CardHeader v-if="schema.title">
-      <CardTitle class="text-base">{{ schema.title }}</CardTitle>
+      <CardTitle class="vamis-property__title">{{ schema.title }}</CardTitle>
     </CardHeader>
     <CardContent
-      class="grid gap-3 text-sm"
+      class="vamis-property__body"
       :style="{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }"
     >
       <div v-for="(item, i) in items" :key="i" class="space-y-1">
-        <div class="text-xs text-muted-foreground">{{ item.label }}</div>
-        <div>{{ item.content || '-' }}</div>
+        <div class="vamis-property__label">{{ item.label }}</div>
+        <div class="vamis-property__value">{{ item.content || '-' }}</div>
       </div>
     </CardContent>
   </Card>

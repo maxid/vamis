@@ -9,7 +9,7 @@ function safeHref(href: string) {
 
 function inline(text: string) {
   return escapeHtml(text)
-    .replace(/`([^`]+)`/g, '<code class="rounded bg-muted px-1 py-0.5 font-mono text-[0.85em]">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="vamis-markdown__code">$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => `<a href="${escapeHtml(safeHref(href))}" target="_blank" rel="noreferrer">${label}</a>`)
@@ -31,7 +31,7 @@ export function renderMarkdown(source: string) {
       }
       i++
       out.push(
-        `<pre class="overflow-auto rounded-md border bg-muted/40 p-3 font-mono text-xs"><code data-lang="${lang}">${escapeHtml(buf.join('\n'))}</code></pre>`,
+        `<pre class="vamis-markdown__pre"><code data-lang="${lang}">${escapeHtml(buf.join('\n'))}</code></pre>`,
       )
       continue
     }
@@ -59,19 +59,18 @@ export function renderMarkdown(source: string) {
         buf.push(lines[i].replace(/^>\s?/, ''))
         i++
       }
-      out.push(`<blockquote class="border-l-2 pl-3 text-muted-foreground">${inline(buf.join(' '))}</blockquote>`)
+      out.push(`<blockquote class="vamis-markdown__quote">${inline(buf.join(' '))}</blockquote>`)
       continue
     }
     if (/^---+$/.test(line.trim())) {
-      out.push('<hr class="my-3 border-border" />')
+      out.push('<hr class="vamis-markdown__hr" />')
       i++
       continue
     }
     const heading = /^(#{1,6})\s+(.*)$/.exec(line)
     if (heading) {
       const level = heading[1].length
-      const size = ['text-2xl', 'text-xl', 'text-lg', 'text-base', 'text-sm', 'text-sm'][level - 1]
-      out.push(`<h${level} class="${size} font-semibold tracking-tight">${inline(heading[2])}</h${level}>`)
+      out.push(`<h${level} class="vamis-markdown__h${level}">${inline(heading[2])}</h${level}>`)
       i++
       continue
     }

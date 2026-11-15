@@ -49,15 +49,15 @@ function toggle() {
     <div class="relative">
       <Button type="button" variant="outline" class="w-full justify-between" :disabled="disabled" @click="toggle">
         <span class="truncate">{{ label }}</span>
-        <span class="text-xs text-muted-foreground">级联</span>
+        <span class="vamis-nested-select__hint">级联</span>
       </Button>
-      <div v-if="open" class="absolute z-20 mt-1 flex max-h-56 overflow-auto rounded-md border bg-popover shadow-md">
-        <ul v-for="(col, depth) in columns" :key="depth" class="min-w-32 border-r last:border-r-0 py-1 text-sm">
+      <div v-if="open" class="vamis-nested-select__menu">
+        <ul v-for="(col, depth) in columns" :key="depth" class="vamis-nested-select__col">
           <li v-for="item in col" :key="String(item.value)">
             <button
               type="button"
-              class="flex w-full items-center justify-between px-3 py-1.5 text-left hover:bg-accent"
-              :class="isActive(item, depth) ? 'bg-accent' : ''"
+              class="vamis-nested-select__option"
+              :class="isActive(item, depth) ? 'is-active' : ''"
               @click="pick(item, depth)"
             >
               <span>{{ item.label }}</span>

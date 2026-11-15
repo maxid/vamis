@@ -48,8 +48,8 @@ function go(key: string) {
         v-for="row in sections"
         :key="row.key"
         type="button"
-        class="rounded-md px-3 py-1.5 text-left text-sm hover:bg-accent"
-        :class="current === row.key ? 'bg-primary text-primary-foreground hover:bg-primary' : ''"
+        class="vamis-anchor-nav__link"
+        :class="current === row.key ? 'is-active' : ''"
         @click="go(row.key)"
       >
         {{ row.title }}
@@ -57,7 +57,7 @@ function go(key: string) {
     </div>
     <div class="max-h-[28rem] space-y-6 overflow-auto" :class="sectionClass">
       <div v-for="row in sections" :key="'s' + row.key" :data-anchor="row.key" class="scroll-mt-3 space-y-2">
-        <h3 class="text-sm font-medium">{{ row.title }}</h3>
+        <h3 class="vamis-anchor-nav__title">{{ row.title }}</h3>
         <SchemaRenderer v-for="(node, j) in row.body" :key="j" :schema="node" />
       </div>
     </div>

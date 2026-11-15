@@ -8,12 +8,12 @@ const current = computed(() => Number(props.schema.value ?? props.schema.current
 </script>
 
 <template>
-  <ol class="flex flex-wrap gap-2">
+  <ol class="vamis-steps">
     <li
       v-for="(step, i) in steps"
       :key="i"
-      class="flex items-center gap-2 rounded-full border px-3 py-1 text-xs"
-      :class="i === current ? 'border-primary bg-primary text-primary-foreground' : 'text-muted-foreground'"
+      class="vamis-steps__item"
+      :class="i === current ? 'is-active' : ''"
     >
       <span>{{ i + 1 }}</span>
       <span>{{ step.title || step.label || `步骤 ${i + 1}` }}</span>

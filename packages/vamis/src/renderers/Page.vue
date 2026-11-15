@@ -294,7 +294,7 @@ onBeforeUnmount(() => {
         <SchemaRenderer v-for="(node, i) in aside" :key="'a' + i" :schema="node" />
         <div
           v-if="schema.asideResizor"
-          class="absolute right-0 top-0 z-10 h-full w-1 cursor-col-resize bg-border hover:bg-primary"
+          class="vamis-page__resizor vamis-page__resizor--right"
           @mousedown="onResizeDown"
         />
       </div>
@@ -305,7 +305,7 @@ onBeforeUnmount(() => {
           :class="headerClass"
         >
           <div v-if="hasTitleBlock" class="min-w-0" :class="toolbar.length ? 'flex-1' : ''">
-            <h1 v-if="schema.title" class="flex flex-wrap items-center gap-1 text-pretty font-sans text-xl font-semibold tracking-tight">
+            <h1 v-if="schema.title" class="vamis-page__title">
               <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" />
               <template v-else>{{ titleText }}</template>
               <Remark
@@ -314,7 +314,7 @@ onBeforeUnmount(() => {
                 :data="viewData"
               />
             </h1>
-            <p v-if="schema.subTitle" class="mt-1 text-sm text-muted-foreground">
+            <p v-if="schema.subTitle" class="vamis-page__subtitle">
               <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" />
               <template v-else>{{ subTitleText }}</template>
             </p>
@@ -340,7 +340,7 @@ onBeforeUnmount(() => {
       >
         <div
           v-if="schema.asideResizor"
-          class="absolute left-0 top-0 z-10 h-full w-1 cursor-col-resize bg-border hover:bg-primary"
+          class="vamis-page__resizor vamis-page__resizor--left"
           @mousedown="onResizeDown"
         />
         <SchemaRenderer v-for="(node, i) in aside" :key="'ar' + i" :schema="node" />
