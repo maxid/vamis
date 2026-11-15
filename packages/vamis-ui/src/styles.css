@@ -11165,3 +11165,41 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-color);
   background: var(--background);
 }
+
+/* ---- 皮肤迁出模板（2026-11 第十一刀） ---- */
+.vamis-json-schema__label {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-input-tag__suggestion {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+}
+
+.vamis-matrix {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+
+.vamis-radios__option {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+
+.vamis-collapse-group {
+  background: var(--card);
+}
+
+.vamis-mapping__placeholder {
+  color: var(--text-muted);
+}
+
+@media (max-width: 767px) {
+  .vamis-collapse-group {
+    background: transparent;
+  }
+}

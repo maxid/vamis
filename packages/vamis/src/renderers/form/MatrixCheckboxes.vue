@@ -30,7 +30,7 @@ function toggle(row: unknown, col: unknown, checked: boolean) {
 
 <template>
   <FormItem :schema="schema">
-    <table class="w-full text-sm">
+    <table class="vamis-matrix w-full">
       <thead>
         <tr>
           <th class="p-1 text-left" />

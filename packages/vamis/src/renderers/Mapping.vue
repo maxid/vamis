@@ -189,7 +189,7 @@ watch(
           :extra-data="data"
         />
       </span>
-      <span v-else class="vamis-mapping__placeholder text-muted-foreground">{{ schema.placeholder || '-' }}</span>
+      <span v-else class="vamis-mapping__placeholder">{{ schema.placeholder || '-' }}</span>
     </template>
   </span>
 </template>

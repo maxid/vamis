@@ -21,9 +21,9 @@ const fields = computed(() => {
 
 <template>
   <FormItem :schema="schema">
-    <div class="space-y-2">
+    <div class="vamis-json-schema space-y-2">
       <div v-for="field in fields" :key="field.name" class="grid gap-1">
-        <span class="text-xs text-muted-foreground">{{ field.label }}</span>
+        <span class="vamis-json-schema__label">{{ field.label }}</span>
         <Switch
           v-if="field.kind === 'boolean'"
           :model-value="!!(schema.name ? (fieldApi.getValue(schema.name) as any)?.[field.name] : false)"

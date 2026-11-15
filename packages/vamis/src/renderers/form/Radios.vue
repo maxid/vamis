@@ -40,7 +40,7 @@ const value = computed({
 <template>
   <FormItem :schema="schema">
     <RadioGroup data-vamis-radios :model-value="value" :disabled="disabled" class="flex flex-wrap gap-3" @update:model-value="value = $event">
-      <label v-for="opt in options" :key="opt.value" class="flex items-center gap-2 text-sm">
+      <label v-for="opt in options" :key="opt.value" class="vamis-radios__option flex items-center gap-2">
         <RadioGroupItem :value="String(opt.value)" />
         {{ opt.label }}
       </label>

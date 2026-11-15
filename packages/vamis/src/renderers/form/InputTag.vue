@@ -79,7 +79,7 @@ const suggestions = computed(() => {
           type="button"
           size="sm"
           variant="ghost"
-          class="h-6 px-2 text-xs"
+          class="vamis-input-tag__suggestion h-6 px-2"
           :disabled="disabled"
           @click="add(item)"
         >
