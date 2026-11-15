@@ -77,9 +77,9 @@ const empty = computed(() => !label.value && !icon.value)
 </script>
 
 <template>
-  <span class="vamis-status inline-flex items-center gap-1 text-sm" :class="className" :style="color ? { color } : undefined">
+  <span class="vamis-status inline-flex items-center gap-1" :class="className" :style="color ? { color } : undefined">
     <IconMark v-if="icon" :icon="icon" img-class="inline-block size-3.5" />
     <span v-if="label">{{ label }}</span>
-    <span v-else-if="empty" class="text-muted-foreground">{{ placeholder }}</span>
+    <span v-else-if="empty" class="vamis-status__empty">{{ placeholder }}</span>
   </span>
 </template>

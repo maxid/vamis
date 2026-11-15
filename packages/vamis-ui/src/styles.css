@@ -11073,3 +11073,55 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
     background: transparent;
   }
 }
+
+/* ---- 皮肤迁出模板（2026-11 第九刀） ---- */
+.vamis-subform__item {
+  background: var(--background);
+}
+.vamis-subform__label {
+  margin-bottom: var(--gap-sm);
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-chart__empty {
+  padding: var(--gap-xl) var(--gap-base);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--borderRadiusMd);
+}
+
+.vamis-images__empty {
+  margin: 0;
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-progress__circle-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+
+.vamis-status {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-status__empty {
+  color: var(--text-muted);
+}
+
+.vamis-operation__empty {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}

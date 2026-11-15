@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div :style="schema.style">
-    <div v-if="missing" class="rounded-md border border-dashed px-3 py-6 text-sm text-muted-foreground">
+    <div v-if="missing" class="vamis-chart__empty">
       {{ missing }}
     </div>
     <LazyComponent

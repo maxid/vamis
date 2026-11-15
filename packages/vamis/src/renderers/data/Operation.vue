@@ -22,6 +22,6 @@ const buttons = computed(() =>
 <template>
   <div class="flex flex-wrap items-center gap-1">
     <SchemaRenderer v-for="(btn, i) in buttons" :key="i" :schema="btn" />
-    <span v-if="!buttons.length" class="text-xs text-muted-foreground">{{ schema.placeholder || '' }}</span>
+    <span v-if="!buttons.length" class="vamis-operation__empty">{{ schema.placeholder || '' }}</span>
   </div>
 </template>

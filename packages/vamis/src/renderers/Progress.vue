@@ -142,7 +142,7 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
             :style="{ transition: animate ? 'stroke-dashoffset 0.3s ease' : undefined }"
           />
         </svg>
-        <span v-if="showLabel" class="absolute inset-0 flex items-center justify-center text-sm">{{ label }}</span>
+        <span v-if="showLabel" class="vamis-progress__circle-label">{{ label }}</span>
       </div>
     </template>
   </div>

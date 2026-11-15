@@ -52,8 +52,8 @@ function rowLabel(row: Record<string, any>, index: number) {
 <template>
   <FormItem :schema="schema">
     <div class="space-y-3">
-      <div v-for="(row, i) in rows" :key="i" class="rounded-md border bg-background p-3">
-        <div class="mb-2 text-xs font-medium text-muted-foreground">{{ rowLabel(row, i) }}</div>
+      <div v-for="(row, i) in rows" :key="i" class="vamis-subform__item rounded-md border p-3">
+        <div class="vamis-subform__label">{{ rowLabel(row, i) }}</div>
         <NestedFormScope :row="row" :persist="persistCurrent">
           <div class="grid gap-2">
             <SchemaRenderer v-for="(node, fi) in fields" :key="fi" :schema="node" />

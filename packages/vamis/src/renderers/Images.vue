@@ -27,6 +27,6 @@ function srcOf(item: unknown) {
       class="h-20 w-20 rounded-md border object-cover"
       alt=""
     />
-    <p v-if="!list.length" class="text-xs text-muted-foreground">暂无图片</p>
+    <p v-if="!list.length" class="vamis-images__empty">暂无图片</p>
   </div>
 </template>
