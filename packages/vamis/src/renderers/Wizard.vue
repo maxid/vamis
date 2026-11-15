@@ -79,20 +79,17 @@ function next() {
     :class="mode === 'vertical' ? 'flex gap-4' : 'space-y-4'"
   >
     <ol
-      class="flex gap-2 text-sm"
+      class="vamis-wizard__nav flex gap-2"
       :class="mode === 'vertical' ? 'w-40 shrink-0 flex-col' : 'flex-wrap'"
     >
       <li
         v-for="(step, i) in steps"
         :key="i"
-        class="rounded-full border px-3 py-1"
-        :class="
-          i === index
-            ? 'border-primary bg-primary text-primary-foreground'
-            : jumpable(step, i)
-              ? 'cursor-pointer text-foreground'
-              : 'text-muted-foreground'
-        "
+        class="vamis-wizard__step rounded-full border px-3 py-1"
+        :class="{
+          'is-active': i === index,
+          'is-jumpable': i !== index && jumpable(step, i),
+        }"
         @click="jumpable(step, i) ? goto(i) : undefined"
       >
         <span v-if="i < index" class="inline-flex"><VamisIcon name="check" class="vamis-wizard__done-icon" /></span>

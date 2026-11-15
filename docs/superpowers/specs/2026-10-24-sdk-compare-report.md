@@ -11,7 +11,7 @@
 |------|------|--------|
 | 全局 | 522 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 266 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 999 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 992 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
 ### 全局（522）
 
@@ -60,7 +60,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - 缺档：补 Amis 同名 helper（m-l-xxl），不要用邻近档或 token 近似。
 - schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
-### 组件（999）
+### 组件（992）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
@@ -73,10 +73,10 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-concepts-datascope-and-datachain-10` lineHeight: Amis `18px` / Vamis `14px`
 - `src-concepts-datascope-and-datachain-10` fontWeight: Amis `400` / Vamis `500`
 - `src-concepts-template-0` lineHeight: Amis `30.8px` / Vamis `33.6px`
-- `src-concepts-template-0` fontWeight: Amis `400` / Vamis `600`
 - `src-concepts-template-1` lineHeight: Amis `30.8px` / Vamis `33.6px`
-- `src-concepts-template-1` fontWeight: Amis `400` / Vamis `600`
-- …其余 987 条见 last-report.json
+- `src-concepts-data-mapping-3` lineHeight: Amis `18px` / Vamis `14px`
+- `src-concepts-data-mapping-3` fontWeight: Amis `400` / Vamis `500`
+- …其余 980 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。

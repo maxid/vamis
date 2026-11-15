@@ -1488,9 +1488,9 @@
     word-break: break-word;
   }
   .vamis-html :where(h1, h2, h3, h4, h5, h6) {
-    font-weight: 600;
+    font-weight: var(--fontWeightNormal);
     line-height: 1.2;
-    color: var(--foreground);
+    color: var(--text-color);
   }
   .vamis-html :where(h1) {
     font-size: 2em;
@@ -1576,7 +1576,7 @@
     padding: 0.25em 0.5em;
   }
   .vamis-html :where(th) {
-    font-weight: 600;
+    font-weight: var(--fontWeightNormal);
   }
   .vamis-html :where(pre) {
     margin: 1em 0;
@@ -10144,8 +10144,8 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 /* ---- 图标收口（2026-11）：原先拿字符当图标的几处 ---- */
 .vamis-carousel__arrow {
   display: block;
-  width: var(--icon-size);
-  height: var(--icon-size);
+  width: var(--gap-lg);
+  height: var(--gap-lg);
 }
 .vamis-input-tag__remove {
   display: inline-flex;
@@ -10346,4 +10346,195 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: block;
   width: var(--icon-size);
   height: var(--icon-size);
+}
+
+/* ---- 皮肤迁出模板（2026-11 第四刀） ---- */
+.vamis-wizard__nav {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-wizard__step.is-jumpable {
+  color: var(--text-color);
+  cursor: pointer;
+}
+.vamis-wizard__step.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.vamis-timeline--vertical {
+  border-left: 1px solid var(--border);
+}
+.vamis-timeline__item--horizontal {
+  border-top: 1px solid var(--border);
+}
+.vamis-timeline__dot {
+  background: var(--primary);
+}
+.vamis-timeline__dot--success {
+  background: var(--success);
+}
+.vamis-timeline__dot--warning {
+  background: var(--warning);
+}
+.vamis-timeline__dot--danger {
+  background: var(--destructive);
+}
+.vamis-timeline__dot--info {
+  background: var(--info);
+}
+.vamis-timeline__time,
+.vamis-timeline__detail {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-tertiary);
+}
+.vamis-timeline__title {
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-timeline__detail {
+  margin-top: var(--gap-xs);
+}
+
+[data-vamis-app] {
+  background: var(--card);
+}
+.vamis-app__brand {
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-app__group {
+  font-size: var(--fontSizeSm);
+  color: var(--text-muted);
+}
+.vamis-app__nav {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-app__nav:hover {
+  background: var(--select-option-hover-bg);
+}
+.vamis-app__nav.is-active,
+.vamis-app__nav.is-active:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.vamis-app__empty {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-carousel {
+  background: var(--fill-10);
+}
+.vamis-carousel__empty,
+.vamis-carousel__fallback {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-carousel__fallback {
+  color: var(--text-color);
+}
+.vamis-carousel__caption {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--white);
+}
+.vamis-carousel__dot {
+  background: var(--white);
+  opacity: 0.7;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.vamis-carousel__dot.is-current {
+  background: var(--primary);
+  opacity: 1;
+}
+
+[data-vamis-breadcrumb] {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-tertiary);
+}
+.vamis-breadcrumb__item {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.vamis-breadcrumb__item:hover {
+  color: var(--primary);
+}
+.vamis-breadcrumb__item.is-last {
+  color: var(--text-color);
+  font-weight: var(--fontWeightMd);
+  cursor: default;
+}
+.vamis-breadcrumb__menu {
+  z-index: var(--z-dropdown);
+  background: var(--card);
+}
+.vamis-breadcrumb__option {
+  font: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.vamis-breadcrumb__option:hover {
+  background: var(--select-option-hover-bg);
+}
+
+.vamis-json__empty {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-json-node {
+  font-size: var(--fontSizeSm);
+  line-height: 1.5;
+}
+.vamis-json-node__toggle {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.vamis-json-node__toggle:hover {
+  color: var(--primary);
+}
+.vamis-json-node__caret {
+  color: var(--text-muted);
+}
+.vamis-json-node__key {
+  color: var(--primary);
+}
+.vamis-json-node__preview {
+  color: var(--text-muted);
+}
+.vamis-json-node__value {
+  color: var(--text-color);
+}
+.vamis-json-node__value.is-string {
+  color: var(--success);
+}
+.vamis-json-node__value.is-number {
+  color: var(--info);
 }

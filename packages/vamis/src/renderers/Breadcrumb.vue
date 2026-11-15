@@ -41,23 +41,26 @@ function go(item: SchemaObject) {
 </script>
 
 <template>
-  <div data-vamis-breadcrumb class="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+  <div data-vamis-breadcrumb class="flex flex-wrap items-center gap-1">
     <template v-for="(item, i) in items" :key="i">
       <span v-if="i" class="px-0.5" :class="separatorClass">{{ separator }}</span>
       <details v-if="Array.isArray(item.dropdown) && item.dropdown.length" class="relative">
-        <summary class="cursor-pointer list-none hover:text-foreground" :class="itemClass">
+        <summary
+          class="vamis-breadcrumb__item cursor-pointer list-none"
+          :class="[itemClass, i === items.length - 1 ? 'is-last' : '']"
+        >
           <img v-if="iconSrc(item)" :src="iconSrc(item)" alt="" class="mr-1 inline-block h-3.5 w-3.5" />
           <i v-else-if="iconClass(item)" :class="iconClass(item)" class="mr-1" />
-          <span :title="display(item, i).title" :class="i === items.length - 1 ? 'text-foreground' : ''">
+          <span :title="display(item, i).title">
             {{ display(item, i).text }}
           </span>
         </summary>
-        <div class="absolute z-10 mt-1 min-w-[8rem] rounded-md border bg-popover p-1 shadow-md">
+        <div class="vamis-breadcrumb__menu absolute mt-1 min-w-[8rem] rounded-md border p-1 shadow-md">
           <button
             v-for="(drop, di) in item.dropdown"
             :key="di"
             type="button"
-            class="block w-full rounded px-2 py-1 text-left text-sm hover:bg-accent"
+            class="vamis-breadcrumb__option block w-full rounded px-2 py-1 text-left"
             @click="go(drop)"
           >
             {{ drop.label }}
@@ -67,7 +70,7 @@ function go(item: SchemaObject) {
       <button
         v-else-if="item.href && i !== items.length - 1"
         type="button"
-        class="hover:text-foreground"
+        class="vamis-breadcrumb__item"
         :class="itemClass"
         :title="display(item, i).title"
         @click="go(item)"
@@ -78,7 +81,7 @@ function go(item: SchemaObject) {
       </button>
       <span
         v-else
-        :class="[itemClass, i === items.length - 1 ? 'text-foreground' : '']"
+        :class="[itemClass, 'vamis-breadcrumb__item', i === items.length - 1 ? 'is-last' : '']"
         :title="display(item, i).title"
       >
         <img v-if="iconSrc(item)" :src="iconSrc(item)" alt="" class="mr-1 inline-block h-3.5 w-3.5" />

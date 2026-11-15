@@ -54,9 +54,7 @@ describe('style ruler: styles.css', () => {
   })
 
   it('font-weight in selectors comes from the ruler', () => {
-    // 存量：600 不在 400 / 500 / 700 标尺里（Amis 标题档），两处
-    const numeric = plainDeclarations(/^font-weight:\s*\d/)
-    expect(numeric.length).toBeLessThanOrEqual(2)
+    expect(plainDeclarations(/^font-weight:\s*\d/)).toEqual([])
   })
 
   it('ruler tokens exist once on :root', () => {
@@ -98,8 +96,8 @@ describe('style ruler: styles.css', () => {
 const HEX_TOKEN_CEILING = 31
 const RENDERER_CEILING = {
   lucideTags: 0,
-  textSize: 67,
-  semanticColor: 99,
+  textSize: 59,
+  semanticColor: 72,
 }
 
 /** 模板里拿字符当图标。箭头 / 叉 / 勾都该是 @vamis/ui 的 Vamis* 图标。 */

@@ -40,7 +40,7 @@ async function copy() {
       <Button size="xs" variant="ghost" @click="copy">复制</Button>
     </div>
     <ScrollArea class="max-h-80 p-3">
-      <p v-if="parsed == null" class="text-sm text-muted-foreground">{{ schema.placeholder || '-' }}</p>
+      <p v-if="parsed == null" class="vamis-json__empty">{{ schema.placeholder || '-' }}</p>
       <JsonNode
         v-else
         :value="parsed"

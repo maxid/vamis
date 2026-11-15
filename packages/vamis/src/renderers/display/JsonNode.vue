@@ -39,21 +39,24 @@ const preview = computed(() => {
 </script>
 
 <template>
-  <div class="font-mono text-xs leading-6">
+  <div class="vamis-json-node font-mono">
     <button
       v-if="isObject"
       type="button"
-      class="inline-flex items-center gap-1 text-left hover:text-primary"
+      class="vamis-json-node__toggle inline-flex items-center gap-1 text-left"
       @click="open = !open"
     >
-      <VamisCaret variant="tree" :open="open" class="text-muted-foreground" />
-      <span v-if="name != null" class="text-primary">{{ name }}</span>
-      <span class="text-muted-foreground">{{ preview }}</span>
+      <VamisCaret variant="tree" :open="open" class="vamis-json-node__caret" />
+      <span v-if="name != null" class="vamis-json-node__key">{{ name }}</span>
+      <span class="vamis-json-node__preview">{{ preview }}</span>
       <Badge v-if="displayDataTypes" variant="outline">{{ kind }}</Badge>
     </button>
     <div v-else class="flex items-baseline gap-1">
-      <span v-if="name != null" class="text-primary">{{ name }}:</span>
-      <span :class="kind === 'string' ? 'text-emerald-700' : kind === 'number' ? 'text-sky-700' : 'text-foreground'">
+      <span v-if="name != null" class="vamis-json-node__key">{{ name }}:</span>
+      <span
+        class="vamis-json-node__value"
+        :class="kind === 'string' ? 'is-string' : kind === 'number' ? 'is-number' : ''"
+      >
         {{ preview }}
       </span>
       <Badge v-if="displayDataTypes" variant="outline">{{ kind }}</Badge>

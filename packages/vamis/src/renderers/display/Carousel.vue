@@ -67,12 +67,12 @@ onBeforeUnmount(stop)
 <template>
   <div
     data-slot="carousel"
-    class="relative overflow-hidden rounded-md border bg-muted"
+    class="vamis-carousel relative overflow-hidden rounded-md border"
     :style="{ width, height }"
     @mouseenter="paused = true"
     @mouseleave="paused = false"
   >
-    <div v-if="!items.length" class="flex h-full items-center justify-center text-sm text-muted-foreground">
+    <div v-if="!items.length" class="vamis-carousel__empty flex h-full items-center justify-center">
       {{ schema.placeholder || '暂无轮播内容' }}
     </div>
     <template v-else>
@@ -86,11 +86,11 @@ onBeforeUnmount(stop)
           class="h-full w-full"
           :class="schema.thumbMode === 'contain' ? 'object-contain' : 'object-cover'"
         />
-        <div v-else class="flex h-full items-center justify-center text-sm">{{ itemTitle(current) || current }}</div>
+        <div v-else class="vamis-carousel__fallback flex h-full items-center justify-center">{{ itemTitle(current) || current }}</div>
       </div>
       <p
         v-if="itemTitle(current) && !schema.itemSchema"
-        class="pointer-events-none absolute inset-x-0 bottom-8 px-3 text-center text-sm text-white drop-shadow"
+        class="vamis-carousel__caption pointer-events-none absolute inset-x-0 bottom-8 px-3 text-center drop-shadow"
       >
         {{ itemTitle(current) }}
       </p>
@@ -117,8 +117,8 @@ onBeforeUnmount(stop)
           v-for="(_, i) in items"
           :key="i"
           type="button"
-          class="h-2 w-2 rounded-full"
-          :class="i === index ? 'bg-primary' : 'bg-white/70'"
+          class="vamis-carousel__dot h-2 w-2 rounded-full"
+          :class="i === index ? 'is-current' : ''"
           @click="go(i)"
         />
       </div>
