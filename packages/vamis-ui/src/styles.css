@@ -10766,3 +10766,141 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   border: 0;
   border-bottom: 1px solid var(--border);
 }
+
+/* ---- 皮肤迁出模板（2026-11 第六刀） ---- */
+.vamis-static-value {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-static-value--color {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.vamis-static-value__swatch {
+  width: var(--fontSizeLg);
+  height: var(--fontSizeLg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.vamis-static-value--pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.vamis-nav__item {
+  padding: var(--gap-xs) var(--gap-base);
+  font: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.vamis-nav__item:hover {
+  background: var(--select-option-hover-bg);
+}
+.vamis-nav__item.is-active,
+.vamis-nav__item.is-active:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.vamis-nav__item:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.vamis-form-panel__header {
+  border-bottom: 1px solid var(--border);
+  background: var(--fill-10);
+}
+@media (max-width: 767px) {
+  .vamis-form-panel__header {
+    background: none;
+    border-bottom: none;
+  }
+}
+.vamis-form__error {
+  margin-top: var(--gap-xs);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--destructive);
+}
+
+.vamis-grid-nav__item {
+  min-width: 0;
+  padding: var(--gap-base);
+  font: inherit;
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  background: var(--card);
+  cursor: pointer;
+}
+.vamis-grid-nav__item:hover {
+  background: var(--select-option-hover-bg);
+}
+.vamis-grid-nav__icon-fallback {
+  display: inline-flex;
+  height: var(--gap-xl);
+  min-width: var(--gap-xl);
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--gap-sm);
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeSm);
+  line-height: 1;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--fill-10);
+}
+
+.vamis-log {
+  height: 10rem;
+  padding: var(--gap-sm);
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--fill-10);
+}
+.vamis-log__empty {
+  color: var(--text-muted);
+}
+
+.vamis-viewer-stub {
+  padding: var(--gap-xl) var(--gap-base);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+.vamis-viewer-stub__kind {
+  margin: 0;
+  font-weight: var(--fontWeightMd);
+  color: var(--text-color);
+}
+.vamis-viewer-stub__file {
+  margin: var(--gap-xs) 0 0;
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeSm);
+  color: var(--text-color);
+}
+.vamis-viewer-stub__src {
+  margin: var(--gap-xs) 0 0;
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeSm);
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.vamis-viewer-stub__hint {
+  margin: var(--gap-sm) 0 0;
+}

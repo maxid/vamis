@@ -717,7 +717,7 @@ describe('Amis width helpers', () => {
     expect(form).toContain("wrapWithPanel.value ? '表单' : ''")
     expect(form).toContain('if (!wrapWithPanel.value) return false')
     expect(form).toContain('schema.reset === true')
-    expect(form).toContain('bg-muted')
+    expect(form).toContain('vamis-form-panel__header')
     expect(item).toContain('schema.labelClassName')
     expect(item).not.toContain("text-muted-foreground' : 'text-foreground'")
     expect(item).toContain('schema.className')

@@ -170,7 +170,7 @@ const panelClass = computed(() =>
   ),
 )
 const headerClass = computed(() =>
-  cn('border-b bg-muted', resolveClassName(props.schema.headerClassName, props.data)),
+    cn('vamis-form-panel__header', resolveClassName(props.schema.headerClassName, props.data)),
 )
 const titleClass = computed(() => resolveClassName(props.schema.titleClassName, props.data))
 const bodyClass = computed(() =>
@@ -693,7 +693,7 @@ onBeforeUnmount(() => {
             <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
           </template>
         </CardContent>
-        <p v-if="store.errors.__form" class="m-t-xs text-xs text-destructive">{{ store.errors.__form }}</p>
+        <p v-if="store.errors.__form" class="vamis-form__error">{{ store.errors.__form }}</p>
         <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <CardFooter v-if="showActionBar" :class="actionsClass">
           <template v-if="hasCustomActions">

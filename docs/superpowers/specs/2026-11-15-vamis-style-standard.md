@@ -1,7 +1,7 @@
 # Vamis 样式规范
 
 - 日期：2026-11-15
-- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号 / 语义色工具类（42 / 55 处）是存量，按 §9 的上限只许减
+- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号 / 语义色工具类（33 / 44 处）是存量，按 §9 的上限只许减
 - 范围：`@vamis/ui` 的 token 与默认皮肤、`packages/vamis` 渲染器模板与内联样式。不管作者 `className`（helper 的行为精度见 [样式系统](./2026-10-21-vamis-style-system.md) §0.1）
 - 关联：
   - [样式系统（设计由来）](./2026-10-21-vamis-style-system.md)、[主题 token](./2026-10-21-vamis-theme-shadcn.md)
@@ -172,8 +172,8 @@ JS 需要引用主题色时写 `var(--token)` 字符串（`Status` 的状态色�
 | 渲染器内联 `<svg>` | 只在 5 个数据图形文件 |
 | `VamisIcon` 用到的名字都已登记 | 是 |
 | lucide 标签 | 0 |
-| 模板 Tailwind 字号类（`text-xs`…`text-xl`） | ≤ 42 |
-| 模板 Tailwind 语义色类 | ≤ 55 |
+| 模板 Tailwind 字号类（`text-xs`…`text-xl`） | ≤ 33 |
+| 模板 Tailwind 语义色类 | ≤ 44 |
 
 ## 10. 写或改一个组件的样式
 
@@ -187,7 +187,7 @@ JS 需要引用主题色时写 `var(--token)` 字符串（`Status` 的状态色�
 
 ## 11. 还没做完的
 
-- 模板里的 Tailwind 字号类 42 处、语义色类 55 处还在，下一批集中在 `StaticValue` / `Nav` / `Form` / `GridNav` / `Log` / `ViewerStub`。按渲染器迁成 `.vamis-xxx` + token
+- 模板里的 Tailwind 字号类 33 处、语义色类 44 处还在，下一批先 `FieldSet` / `InputRating` / `InputRichText` / `DatePartRange` / `BarCode` / `QRCode`。按渲染器迁成 `.vamis-xxx` + token
 - `CRUD` 仍自己画单元格，表格的盒模型（单元格 padding、首末列 16）没有跟 `Table` 走。字号已经一致；彻底一致要让 CRUD 复用 `Table` 渲染器（Amis 就是 `type: mode || 'table'`）
 - 选择器里数字 `font-weight: 600` 已并到 `--fontWeightNormal`（Amis `_typography.scss` 标题是 400，不加第四档）
 - `ui/select/SelectItem.vue` 仍用 lucide `Check`（shadcn 原语内部，不进渲染器守卫）

@@ -41,11 +41,11 @@ const text = computed(() => {
 </script>
 
 <template>
-  <span v-if="type === 'color'" class="inline-flex items-center gap-2 text-sm">
-    <span class="size-4 rounded-sm border" :style="{ background: String(raw || '#000') }" />
+  <span v-if="type === 'color'" class="vamis-static-value vamis-static-value--color">
+    <span class="vamis-static-value__swatch" :style="{ background: String(raw || '#000') }" />
     {{ raw }}
   </span>
-  <pre v-else-if="type === 'multiline-text'" class="whitespace-pre-wrap text-sm">{{ text }}</pre>
+  <pre v-else-if="type === 'multiline-text'" class="vamis-static-value vamis-static-value--pre">{{ text }}</pre>
   <Badge v-else-if="type === 'password'" variant="secondary">{{ text || '未设置' }}</Badge>
-  <span v-else class="text-sm">{{ text }}</span>
+  <span v-else class="vamis-static-value">{{ text }}</span>
 </template>

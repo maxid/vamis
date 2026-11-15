@@ -45,7 +45,7 @@ function onClick(item: SchemaObject) {
       v-for="(item, i) in items"
       :key="i"
       type="button"
-      class="min-w-0 bg-card p-3 text-sm hover:bg-accent"
+      class="vamis-grid-nav__item"
       :class="[
         schema.itemClassName,
         bordered ? 'border' : '',
@@ -63,7 +63,7 @@ function onClick(item: SchemaObject) {
       />
       <span
         v-else-if="iconOf(item)"
-        class="inline-flex h-8 min-w-8 items-center justify-center rounded-md border bg-muted px-2 font-mono text-[10px] uppercase"
+        class="vamis-grid-nav__icon-fallback"
       >
         {{ iconOf(item).split(/[\s_-]/).filter(Boolean).pop() }}
       </span>

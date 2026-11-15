@@ -13,8 +13,8 @@ const lines = computed(() => {
 </script>
 
 <template>
-  <ScrollArea class="h-40 rounded-md border bg-muted/30 p-2 font-mono text-xs">
-    <div v-for="(line, i) in lines" :key="i">{{ line }}</div>
-    <div v-if="!lines.length" class="text-muted-foreground">暂无日志</div>
+  <ScrollArea class="vamis-log">
+    <div v-for="(line, i) in lines" :key="i" class="vamis-log__line">{{ line }}</div>
+    <div v-if="!lines.length" class="vamis-log__empty">暂无日志</div>
   </ScrollArea>
 </template>
