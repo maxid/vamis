@@ -96,8 +96,8 @@ describe('style ruler: styles.css', () => {
 const HEX_TOKEN_CEILING = 31
 const RENDERER_CEILING = {
   lucideTags: 0,
-  textSize: 10,
-  semanticColor: 16,
+  textSize: 4,
+  semanticColor: 10,
 }
 
 /** 模板里拿字符当图标。箭头 / 叉 / 勾都该是 @vamis/ui 的 Vamis* 图标。 */

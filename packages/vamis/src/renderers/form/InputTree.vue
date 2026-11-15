@@ -53,7 +53,7 @@ function checked(item: OptionItem) {
     <input
       v-if="schema.searchable"
       v-model="query"
-      class="mb-2 w-full rounded-md border bg-background px-2 py-1 text-sm"
+      class="vamis-input-tree__search mb-2 w-full rounded-md border px-2 py-1"
       placeholder="搜索"
     />
     <div class="max-h-56 overflow-auto rounded-md border py-1">

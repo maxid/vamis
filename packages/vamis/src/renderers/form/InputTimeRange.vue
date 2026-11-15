@@ -18,7 +18,7 @@ const range = computed({
   <FormItem :schema="schema">
     <div class="flex items-center gap-2">
       <Input type="time" :model-value="String(range.start || '')" :disabled="disabled" @update:model-value="range = { ...range, start: String($event ?? '') }" />
-      <span class="text-xs text-muted-foreground">至</span>
+      <span class="vamis-date-part-range__sep">至</span>
       <Input type="time" :model-value="String(range.end || '')" :disabled="disabled" @update:model-value="range = { ...range, end: String($event ?? '') }" />
     </div>
   </FormItem>

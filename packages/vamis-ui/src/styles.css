@@ -11125,3 +11125,43 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--text-muted);
 }
+
+/* ---- 皮肤迁出模板（2026-11 第十刀） ---- */
+.vamis-sparkline__empty {
+  margin: 0;
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-video__empty {
+  padding: var(--gap-xl) var(--gap-base);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--borderRadiusMd);
+}
+
+.vamis-chained-select__empty {
+  margin: 0;
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-condition-builder__toolbar {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+}
+.vamis-condition-builder__label {
+  color: var(--text-muted);
+}
+
+.vamis-input-tree__search {
+  font: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  background: var(--background);
+}

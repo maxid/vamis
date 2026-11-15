@@ -66,8 +66,8 @@ function setConjunction(conjunction: 'and' | 'or') {
 <template>
   <FormItem :schema="schema">
     <div class="space-y-2 rounded-md border p-3">
-      <div class="flex items-center gap-2 text-xs">
-        <span class="text-muted-foreground">组合</span>
+      <div class="vamis-condition-builder__toolbar flex items-center gap-2">
+        <span class="vamis-condition-builder__label">组合</span>
         <Button type="button" size="sm" :variant="value.conjunction === 'and' ? 'default' : 'outline'" :disabled="disabled" @click="setConjunction('and')">且</Button>
         <Button type="button" size="sm" :variant="value.conjunction === 'or' ? 'default' : 'outline'" :disabled="disabled" @click="setConjunction('or')">或</Button>
       </div>

@@ -20,6 +20,6 @@ const poster = computed(() => filterTpl(props.schema.poster || '', props.data))
       :muted="schema.muted === true"
       :loop="schema.loop === true"
     />
-    <div v-else class="rounded-md border border-dashed px-3 py-6 text-sm text-muted-foreground">未配置视频 src</div>
+    <div v-else class="vamis-video__empty">未配置视频 src</div>
   </div>
 </template>

@@ -40,7 +40,7 @@ const area = computed(() => {
 
 <template>
   <div data-slot="sparkline" class="inline-block">
-    <p v-if="points.length < 2" class="text-xs text-muted-foreground">{{ schema.placeholder || '暂无趋势数据' }}</p>
+    <p v-if="points.length < 2" class="vamis-sparkline__empty">{{ schema.placeholder || '暂无趋势数据' }}</p>
     <svg
       v-else
       :width="width"

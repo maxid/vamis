@@ -87,7 +87,7 @@ function pick(depth: number, value: string) {
           </SelectItem>
         </SelectContent>
       </Select>
-      <p v-if="!tree.length" class="text-xs text-muted-foreground">暂无选项</p>
+      <p v-if="!tree.length" class="vamis-chained-select__empty">暂无选项</p>
     </div>
   </FormItem>
 </template>
