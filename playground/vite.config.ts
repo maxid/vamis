@@ -289,8 +289,7 @@ export default defineConfig({
             path.includes('/vue/') ||
             path.includes('/@vue/') ||
             path.includes('/vue-router/') ||
-            path.includes('/pinia/') ||
-            path.includes('/vue-sonner/')
+            path.includes('/pinia/')
           ) {
             return 'vue'
           }

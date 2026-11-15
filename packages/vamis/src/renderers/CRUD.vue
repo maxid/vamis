@@ -9,11 +9,14 @@ import {
   evalExpression,
   eventEvalData,
   filterTpl,
+  getByPath,
   isApiOutdated,
+  isFormItemType,
   overlayEmbedForm,
   notifyToasts,
   requestApi,
   runOnEvent,
+  setByPathCopy,
   useEnv,
   useRendererHub,
   useScoped,
@@ -38,6 +41,7 @@ import Cards from './Cards.vue'
 import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import Spinner from './Spinner.vue'
+import RowValueHost from './data/RowValueHost.vue'
 import {
   asToolbarSchema,
   CrudHostKey,
@@ -200,6 +204,26 @@ async function commitCellEdit(row: Record<string, any>, col: SchemaObject) {
 
 function cancelCellEdit() {
   editingCell.value = ''
+}
+
+/** 列是表单项（开关、输入框…）时不画它自己的 label，表头已经有了。 */
+function cellSchema(col: SchemaObject): SchemaObject {
+  return isFormItemType(String(col.type || '')) ? { ...col, label: false, inputOnly: true } : col
+}
+
+/**
+ * 单元格里的表单项改了值：写回这一行（Amis `TableRow.handleChange`），同一行其它列跟着变。
+ * 行记录整体换新，不原地改；已勾选的同一行、`loadDataOnce` 的全量缓存一起换。
+ */
+function onCellChange(row: Record<string, any>, payload: { name: string; value: unknown; init: boolean }) {
+  if (!payload.name || getByPath(row, payload.name) === payload.value) return
+  const key = rowKey(row)
+  const next = setByPathCopy(row, payload.name, payload.value)
+  // 当前页按对象身份换；勾选和全量缓存里是另一份引用，按主键找
+  const swap = (list: Record<string, any>[]) => list.map((item) => (rowKey(item) === key ? next : item))
+  store.items = store.items.map((item) => (item === row ? next : item))
+  store.selectedItems = swap(store.selectedItems)
+  if (allItems.value.length) allItems.value = swap(allItems.value)
 }
 
 function onPagerChange(page: number, perPage?: number) {
@@ -594,11 +618,13 @@ onBeforeUnmount(() => {
                 </Button>
               </div>
             </template>
-            <SchemaRenderer
+            <RowValueHost
               v-else-if="col.type && col.type !== 'text' && col.type !== 'plain'"
-              :schema="col"
-              :extra-data="row"
-            />
+              :isolate-names="isFormItemType(String(col.type))"
+              @change="onCellChange(row, $event)"
+            >
+              <SchemaRenderer :schema="cellSchema(col)" :extra-data="row" />
+            </RowValueHost>
             <template v-else-if="quickEditable(col)">
               <select
                 v-if="editingCell === cellEditKey(row, col) && quickEditType(col) === 'select'"

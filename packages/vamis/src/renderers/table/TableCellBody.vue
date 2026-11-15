@@ -9,13 +9,15 @@ import {
   copyToClipboard,
   filterTpl,
   isFormItemType,
+  provideScoped,
   provideValueHost,
   resolveIcon,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import IconMark from '../IconMark.vue'
 import PopOverHost from '../PopOverHost.vue'
-import TableIcon from './TableIcon.vue'
+import { VamisTableIcon } from '@vamis/ui'
 
 const props = defineProps<{
   column: SchemaObject
@@ -47,6 +49,11 @@ provideValueHost({
     emit('change', { name, value, init: !settled.value })
   },
 })
+/**
+ * 表单项列每行都会按同一个 `name` 注册组件。收进本格自己的 scoped：格内照常能按名字找到外面的组件，
+ * 页面那层按 `name` 找不到这些行内控件（Amis 的单元格控件同样不进页面 scoped）。按 id 找不受影响。
+ */
+if (props.column.name != null && isFormItemType(String(props.column.type || ''))) provideScoped(useScoped())
 
 /** 列自己就是按钮时，`onEvent` / `label` 属于按钮本身，不能摘掉。 */
 const ACTION_TYPES = new Set(['button', 'action', 'submit', 'reset', 'dropdown-button', 'button-group', 'operation'])
@@ -109,6 +116,8 @@ const cellSchema = computed<SchemaObject>(() => {
   next.className = col.innerClassName
   next.style = col.innerStyle
   if (!keepName.value) delete next.name
+  // Amis `TableCell`：单元格里的表单项只渲控件本身，没有表单项外壳的 `data-name`
+  else next.inputOnly = true
   delete next.innerClassName
   delete next.innerStyle
   delete next.remark
@@ -243,7 +252,7 @@ function cancelEdit() {
       <SchemaRenderer v-if="isRenderer" :schema="cellSchema" :extra-data="rowData" />
       <span v-else :class="{ 'vamis-table__muted': empty }">{{ text }}</span>
       <button type="button" class="vamis-table__edit-btn" aria-label="编辑" @click.stop="startEdit">
-        <TableIcon name="edit" />
+        <VamisTableIcon name="edit" />
       </button>
     </span>
   </template>
@@ -265,7 +274,7 @@ function cancelEdit() {
       @click.stop="copyCell"
     >
       <IconMark v-if="copyMark" :icon="copyMark" img-class="icon" />
-      <TableIcon v-else name="copy" />
+      <VamisTableIcon v-else name="copy" />
     </a>
   </template>
   <PopOverHost v-else :schema="column" :data="row">
@@ -280,7 +289,7 @@ function cancelEdit() {
       @click.stop="copyCell"
     >
       <IconMark v-if="copyMark" :icon="copyMark" img-class="icon" />
-      <TableIcon v-else name="copy" />
+      <VamisTableIcon v-else name="copy" />
     </a>
   </PopOverHost>
 </template>

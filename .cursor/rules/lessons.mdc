@@ -200,9 +200,9 @@ alwaysApply: true
 
 ### 脱离表单的表单项走 useFieldValue，不要 `form?.setValue`
 - 踩过：表格列类型示例里开关和状态是同一个字段，开关改了状态列不动。不是 Table 或 Switch 单点：表单项只会 `form?.getValue` / `form?.setValue`，没有祖先表单时读不到数据链、写的值直接丢掉（约 130 处），Switch 退回组件本地态所以自己会动。Amis `wrapControl` 没有 formStore 时把变化交给最近的 `onChange`：`TableRow` 写回行，`Page` / `Service` / `Dialog` 写进本层 store；`TableCell` 也保留列 `name`。
-- 稳定做法：表单项一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主（CRUD 单元格、List、Cards）必须 `provideValueHost`。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。（2026-11-15 代码已写，未跑对照；CRUD / List / Cards / Dialog 未接，验证后改掉本句。）
+- 稳定做法：表单项一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主必须 `provideValueHost`：表格单元格自己提供，其它地方包一层 `data/RowValueHost.vue`（CRUD 单元格已接；List / Cards / Dialog 未接）。同一个 `name` 每行注册一次，行内表单项要收进本行自己的 scoped（`provideScoped(useScoped())`）并带 `inputOnly`，否则页面那层 `getComponentByName` 会捞到某一行的控件，对照 `named` / `rendered` 也假红（Amis `TableCell` 是 `inputOnly: true`，没有表单项外壳）。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。
 - 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards`
-- 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange`
+- 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；`packages/vamis/src/renderers/data/RowValueHost.vue`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange` / `Table/TableCell.tsx` `inputOnly`
 
 ### Amis 文档站给示例传 `affixHeader: false`，生产默认才是 true
 - 踩过：对着 Amis 文档页看不到固定表头，以为默认关。文档站 env 统一传了 `affixHeader: false`；组件默认是开，结构是 sticky 的 `Table-fixedTop`（工具栏 + 标题 + 只有 thead 的定宽表），表体自己的 thead 用负 margin 藏起来。
@@ -719,6 +719,12 @@ alwaysApply: true
 - 触及：`container` `cards` `card`
 - 规则：本文
 
+### 包分工先对 Amis 三层，再判「放错了」
+- 踩过：看到 `renderers/table/` 下一堆子件，直觉是「UI 的东西该进 `@vamis/ui`」；又看到 `styles.css` 8000 多行全是 `.vamis-xxx`，直觉是「渲染器皮肤堆在 ui 里越界」。对着 Amis 一核两个都不对：`amis` 渲染器包零样式文件、零 SVG，SCSS 和图标全在 `amis-ui`；`Table/TableCell.tsx` 这类读 schema 的子件留在渲染器包。真正的偏差是 16 个渲染器自带 `<style>`（CSS 两个家）、纯 SVG 图标放在渲染器目录、ui 留着没人用的 shadcn 导出（`sonner` / `Tooltip` / `Separator`）和一份与 core 重复的 `resolveCssVars`。
+- 稳定做法：判断放哪先问「要不要读 schema / data / env」。要 → 渲染器包（带 env 的共享浮层件在 `src/overlay/`）；纯 SVG、无状态原语、CSS → ui。`@vamis/ui` 不依赖 `@vamis/core`，这是和 Amis 唯一的差别。新渲染器不写 `<style>`，存量名单只许减。ui 的导出零引用就删，不要「先备着」。
+- 触及：`table` 包结构
+- 规则：`.cursor/rules/packages.mdc`；`packages/vamis-core/__tests__/package-boundary.test.ts`
+
 ### 串行分批，不要拿叶子凑数
 - 踩过：轻/中那批塞进 `table`/`crud`/`form`；先做无人依赖的展示叶子，主干（FormItem / Options / action）还缺。
 - 稳定做法：轻 2–3、中 2、重 1。`action` 按重（行为枢纽）。按解锁分 U + 综合分 `S`。跳过 Custom 与 office/pdf。不要先做 TODO 零被依赖段的展示叶子。
@@ -998,8 +1004,8 @@ alwaysApply: true
 
 ### List 的选择态是组件本地态；itemAction 用 runAction
 - 踩过：selectable 时点整行就勾选；itemClick toast 要 `${event.data.item.index}` 才对得上 Amis。带 `id` 的动作示例对照先按 `#id` 命中 Vamis `.vamis-node`，Amis 没有 → rendered/value 假红。行内 Action 的 `.vamis-node.w-full` 把 float 动作条拉成整行，点行 / 勾选 / itemAction / itemClick 都被挡住；itemAction 弹层还要传 `overlay`。
-- 稳定做法：行点击用 `@click.capture`（内层 `SchemaRenderer` 的 host click 会抢冒泡）；先拦真正的控件/按钮（对齐 `isClickOnInput`）；有 `onEvent.itemClick` 就不走 `itemAction`；`runAction` / `runOnEvent` 带上 `overlay`。勾选复用 `@vamis/ui` Checkbox / `.vamis-radio-dot`（与 Table2 同一套），未写 `checkOnItemClick: false` 时点行也可勾。动作条 `.vamis-node` 必须 `width: auto`，行 `display: flex; align-items: center`。对照把 `list` 放进 `TREE_LAYOUT`。
-- 触及：`list` `list-item` `table2`
+- 稳定做法：行点击用 `@click.capture`（内层 `SchemaRenderer` 的 host click 会抢冒泡）；先拦真正的控件/按钮（对齐 `isClickOnInput`）；有 `onEvent.itemClick` 就不走 `itemAction`；`runAction` / `runOnEvent` 带上 `overlay`。勾选复用 `@vamis/ui` Checkbox / `.vamis-radio-dot`（与 Table2 同一套），未写 `checkOnItemClick: false` 时点行也可勾。动作条 `.vamis-node` 必须 `width: auto`，行 `display: flex; align-items: center`。对照把 `list` 放进 `TREE_LAYOUT`；`table` 同理（动作表示例给表格写了 `id`，只有 Vamis 包装层带 `#id`）。
+- 触及：`list` `list-item` `table2` `table`
 - 规则：Amis `List.tsx` handleClick / itemAction 互斥；`packages/vamis-sdk/embed-case.html`
 
 ### 文档预览井不要 overflow-hidden，会裁死 sticky

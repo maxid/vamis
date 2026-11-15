@@ -50,15 +50,25 @@ import {
   type TableRowNode,
   type TableSummaryCell,
 } from '@vamis/core'
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, VamisCaret, VamisSpinnerMark } from '@vamis/ui'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  VamisCaret,
+  VamisSpinnerMark,
+  VamisTableEmptyIcon,
+  VamisTableIcon,
+} from '@vamis/ui'
 import BadgeHost from './BadgeHost.vue'
 import ColumnToggler from './data/ColumnToggler.vue'
 import { provideColumnToggle, useColumnToggle } from './data/crudHost'
 import TableCellBody from './table/TableCellBody.vue'
-import TableEmptyIcon from './table/TableEmptyIcon.vue'
 import TableHeadFilter from './table/TableHeadFilter.vue'
 import TableHeadSearch from './table/TableHeadSearch.vue'
-import TableIcon from './table/TableIcon.vue'
 import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
 
 type Row = Record<string, any>
@@ -1630,7 +1640,7 @@ function setDragBtnEl(el: unknown) {
               @focus="dragTipOpen = true"
               @blur="dragTipOpen = false"
             >
-              <TableIcon name="drag" class="vamis-table__drag-toggler-icon" />
+              <VamisTableIcon name="drag" class="vamis-table__drag-toggler-icon" />
             </button>
             <SchemaRenderer v-else :schema="item.schema" />
           </template>
@@ -1649,19 +1659,19 @@ function setDragBtnEl(el: unknown) {
         <span v-if="unsavedMode === 'modified'">
           当前有 {{ modifiedRows.length }} 条记录修改但没有提交，你可以：
           <Button type="button" size="xs" variant="success" class="m-l-sm" @click="submitQuickEdit">
-            <TableIcon name="check" />提交
+            <VamisTableIcon name="check" />提交
           </Button>
           <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="discardChanges">
-            <TableIcon name="close" />放弃
+            <VamisTableIcon name="close" />放弃
           </Button>
         </span>
         <span v-else-if="unsavedMode === 'moved'">
           当前有 {{ movedIds.size }} 条记录修改了顺序但没有提交，你可以：
           <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveOrder">
-            <TableIcon name="check" />提交
+            <VamisTableIcon name="check" />提交
           </Button>
           <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="discardChanges">
-            <TableIcon name="close" />放弃
+            <VamisTableIcon name="close" />放弃
           </Button>
         </span>
         <template v-else>{{ headingText }}</template>
@@ -1760,13 +1770,13 @@ function setDragBtnEl(el: unknown) {
                 @click.stop="sortBy(cell.col)"
               >
                 <i class="vamis-table__sort-icon is-down" :class="{ 'is-active': sortDir(cell.col) === 'desc' }">
-                  <TableIcon name="sort-desc" />
+                  <VamisTableIcon name="sort-desc" />
                 </i>
                 <i class="vamis-table__sort-icon is-up" :class="{ 'is-active': sortDir(cell.col) === 'asc' }">
-                  <TableIcon name="sort-asc" />
+                  <VamisTableIcon name="sort-asc" />
                 </i>
                 <i class="vamis-table__sort-icon is-default" :class="{ 'is-active': !sortDir(cell.col) }">
-                  <TableIcon name="sort-default" />
+                  <VamisTableIcon name="sort-default" />
                 </i>
               </span>
               <TableHeadFilter
@@ -1836,7 +1846,7 @@ function setDragBtnEl(el: unknown) {
           </TableRow>
           <TableRow v-if="!tree.length" class="vamis-table__placeholder">
             <TableCell :colspan="colSpan" class="vamis-table__empty">
-              <TableEmptyIcon />
+              <VamisTableEmptyIcon />
               {{ schema.placeholder || '暂无数据' }}
             </TableCell>
           </TableRow>
@@ -1864,7 +1874,7 @@ function setDragBtnEl(el: unknown) {
                 :class="['vamis-table__drag-cell', leadSticky('drag').className]"
                 :style="leadSticky('drag').style"
               >
-                <TableIcon v-if="rowDraggable(row)" name="drag-bar" />
+                <VamisTableIcon v-if="rowDraggable(row)" name="drag-bar" />
               </TableCell>
               <TableCell
                 v-if="showCheckCol"
@@ -1932,7 +1942,7 @@ function setDragBtnEl(el: unknown) {
                       aria-label="重试"
                       @click.stop="retryDeferred(row)"
                     >
-                      <TableIcon name="retry" />
+                      <VamisTableIcon name="retry" />
                     </a><a
                       v-else-if="row.children.length || isDeferred(row)"
                       class="vamis-table__expand-btn"

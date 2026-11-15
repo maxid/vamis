@@ -1,5 +1,4 @@
 export { cn } from './lib/utils'
-export { resolveCssVars } from './lib/css-vars'
 export { default as VamisCaret } from './ui/VamisCaret.vue'
 export { default as VamisClear } from './ui/VamisClear.vue'
 export { default as VamisClose } from './ui/VamisClose.vue'
@@ -7,6 +6,8 @@ export { default as VamisGalleryToolIcon } from './ui/VamisGalleryToolIcon.vue'
 export { default as VamisDateArrow } from './ui/VamisDateArrow.vue'
 export { default as VamisPasswordToggle } from './ui/VamisPasswordToggle.vue'
 export { default as VamisSpinnerMark } from './ui/VamisSpinnerMark.vue'
+export { default as VamisTableEmptyIcon } from './ui/VamisTableEmptyIcon.vue'
+export { default as VamisTableIcon } from './ui/VamisTableIcon.vue'
 
 export { Button, buttonVariants, levelToVariant, sizeToButtonSize } from './ui/button'
 export type { ButtonVariants } from './ui/button'
@@ -59,25 +60,17 @@ export {
   CardTitle,
 } from './ui/card'
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
-export { Separator } from './ui/separator'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
 export { Alert, AlertDescription, AlertTitle, levelToAlertVariant, levelToFeedbackIcon } from './ui/alert'
 export {
   Check,
-  CircleCheckIcon,
-  CircleUserRoundIcon,
-  InfoIcon,
-  OctagonXIcon,
   PauseIcon,
   Pencil,
   PlayIcon,
-  TriangleAlertIcon,
   Volume2Icon,
   VolumeXIcon,
   XIcon,
-  ZoomInIcon,
 } from '@lucide/vue'
-export { Toaster } from './ui/sonner'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
 export {
   Sheet,
@@ -89,9 +82,3 @@ export {
   SheetTitle,
   SheetTrigger,
 } from './ui/sheet'
-export {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from './ui/tooltip'

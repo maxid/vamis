@@ -5,9 +5,8 @@
  */
 import { computed, ref } from 'vue'
 import type { SchemaObject, TableFilterOption } from '@vamis/core'
-import { Checkbox } from '@vamis/ui'
+import { Checkbox, VamisTableIcon } from '@vamis/ui'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
-import TableIcon from './TableIcon.vue'
 
 const props = defineProps<{
   column: SchemaObject
@@ -65,7 +64,7 @@ function reset() {
     @click.stop
   >
     <span role="button" :aria-label="`筛选${column.label ?? ''}`" @click="opened = !opened">
-      <TableIcon name="column-filter" />
+      <VamisTableIcon name="column-filter" />
     </span>
     <VamisOverlay
       :show="opened"

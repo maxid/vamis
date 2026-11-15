@@ -5,9 +5,8 @@
  */
 import { computed, onBeforeUnmount, ref, useId } from 'vue'
 import { SchemaRenderer, useScoped, type SchemaObject } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, VamisTableIcon } from '@vamis/ui'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
-import TableIcon from './TableIcon.vue'
 
 const props = defineProps<{
   column: SchemaObject
@@ -139,7 +138,7 @@ function onEnter(event: KeyboardEvent) {
     @click.stop
   >
     <span role="button" :aria-label="`搜索${label}`" @click="open">
-      <TableIcon name="search" />
+      <VamisTableIcon name="search" />
     </span>
     <VamisOverlay
       :show="opened"

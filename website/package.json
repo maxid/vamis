@@ -15,8 +15,7 @@
     "@vamis/ui": "workspace:*",
     "pinia": "^3.0.0",
     "vamis": "workspace:*",
-    "vue": "^3.5.22",
-    "vue-sonner": "^2.0.9"
+    "vue": "^3.5.22"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.14",

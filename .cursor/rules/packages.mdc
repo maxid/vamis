@@ -1,0 +1,77 @@
+---
+description: 包分工：core / ui / vamis 各放什么、依赖方向、组件 CSS 与图标归哪
+alwaysApply: true
+---
+
+# 包分工
+
+水标是 Amis 的三层：`amis-core`（工厂 / env / store）、`amis-ui`（组件 + **全部** SCSS + **全部** SVG 图标）、`amis`（渲染器，零样式文件、零 SVG）。Vamis 按同一刀切，只有一处不同：`@vamis/ui` 不依赖 `@vamis/core`。新增文件前先定它落在哪一层。
+
+## 依赖方向
+
+```
+@vamis/formula ← @vamis/core ←┐
+                              ├─ vamis ← @vamis/editor / @vamis/sdk / playground
+                   @vamis/ui ←┘
+```
+
+- `@vamis/formula`、`@vamis/ui`：不依赖任何 workspace 包
+- `@vamis/core`：只依赖 `@vamis/formula`
+- `vamis`：只依赖 core / ui / formula
+- 运行时代码禁止跨包相对路径 import（`../../vamis-ui/src/...`），走包名。Tailwind `@source`、文档 glob、单测读源码不算
+
+## 东西放哪
+
+| 这是什么 | 放哪 | Amis 对应 |
+|----|----|----|
+| 工厂、env、scope、store、动作、公式封装、`SchemaRenderer` | `packages/vamis-core/src` | `amis-core/src` |
+| 按 type 算 schema 的纯函数（可单测） | `packages/vamis-core/src/utils/<type>.ts` | 散在 `renderers/*.tsx` 与 `amis-core/utils` |
+| 浮层定位算法、z-index 阶梯 | `packages/vamis-core/src/utils/overlay-layer.ts` | `amis-core/src/utils/dom.tsx` |
+| 全局 store（toast / confirm / spinner / status） | `packages/vamis-core/src/*-store.ts` | `amis-ui` Toast / Alert 内部状态 |
+| 无状态原语（Button / Dialog / Checkbox…） | `packages/vamis-ui/src/ui/<name>/` | `amis-ui/src/components` |
+| 组件 chrome 用的 SVG 图标 | `packages/vamis-ui/src/ui/Vamis*.vue` | `amis-ui/src/icons` |
+| token、主题包、helper、**所有渲染器的默认皮肤** | `packages/vamis-ui/src/{styles,themes,helpers*}.css` | `amis-ui/scss` |
+| Amis type 渲染器 | `packages/vamis/src/renderers` | `amis/src/renderers` |
+| 只有一个渲染器用、要读 schema 的子件 | `packages/vamis/src/renderers/<type>/` | `amis/src/renderers/Table/` |
+| 多个渲染器共用、要读 env 的浮层件 | `packages/vamis/src/overlay/` | `amis-core` Overlay / PopOver、`amis-ui` PopUp / TooltipWrapper |
+| 全局 Host（Toast / Confirm / Overlay） | `packages/vamis/src/*Host.vue`（状态在 core store） | `amis-ui` |
+
+分不清时按顺序问：
+
+1. 要读 `schema` / `data` / `env` / 动作吗？要 → 不进 ui
+2. 是不依赖 Vue 组件树的纯计算吗？是 → core `utils/<type>.ts`，写单测
+3. 只是一段 SVG、一个无状态原语、一条 CSS？→ ui
+4. 剩下的是渲染器或它的子件 → `packages/vamis`
+
+## 和 Amis 唯一的差别：ui 不依赖 core
+
+Amis `amis-ui` 大量 import `amis-core`，所以带 env 的 Overlay / PopUp / TooltipWrapper 能留在 ui 侧。Vamis 的 ui 是 shadcn 原语层，保持零 workspace 依赖（宿主可以单独拿它的 token 和原语）。代价是：凡是要读 env、数据域、`overlayPosition` 的共享件都**不能**进 ui，放 `packages/vamis/src/overlay/`（`VamisOverlay` / `VamisPopUp` / `VamisTooltipLayer` / `ImageGallery`）。
+
+所以「看起来像 UI 的东西」不一定归 ui。`packages/vamis/src/renderers/table/` 里的 `TableCellBody` / `TableHeadFilter` / `TableHeadSearch` 读列 schema、派事件、渲 `SchemaRenderer`，和 Amis `renderers/Table/TableCell.tsx` 同层，留在渲染器包。里面的纯 SVG 才归 ui（`VamisTableIcon` / `VamisTableEmptyIcon`）。
+
+## 组件 CSS 只有一个家
+
+渲染器的默认 chrome 写进 `packages/vamis-ui/src/styles.css`：量挂 `:root` / `.dark`，选择器 `.vamis-xxx` 只 `var()`。这和 Amis 把 `_table.scss` 放在 `amis-ui/scss/components/` 是一回事，不是越界。
+
+- **新渲染器不要写 `<style>` 块。** 现存 16 个带 `<style>` 的渲染器是存量（名单在 `packages/vamis-core/__tests__/package-boundary.test.ts`），只许减。动到其中一个时顺手把它的 CSS 迁进 `styles.css`，并把名单那一行删掉
+- 为什么不能两处都放：`scoped` 会压过作者 helper 和宿主的剥离样式；深色只在 `.dark` 一处核；SDK 的 `sdk.css` 也只有一份来源
+- 例外：带 alpha 的色写 Vue inline style（见 `lessons.mdc`「带 alpha 的色不要写进 CSS 变量」）
+- token / helper / 原语配方三层怎么判见 `style.mdc`，本文只管文件放哪
+
+## ui 导出什么
+
+- **原语**：只留有渲染器在用的。零引用的删掉，不要「先备着」。加新原语前先问 Amis 该 type 的契约是否 ≈ shadcn 配方（`style.mdc`「原语配方闸门」）
+- **不再导出**：`sonner`（Toast 走 core `toast-store` + `ToastHost`）、shadcn `Tooltip`（走 `VamisTooltipLayer`）。`vue-sonner` 不得回到任何 `package.json`
+- **图标**：chrome 图标把 Amis SVG 转写成 `Vamis*` 组件。单一用途一个文件（`VamisCaret` / `VamisClear` / `VamisClose`），一族图标一个文件按 `name` 切（`VamisTableIcon` / `VamisGalleryToolIcon`）。lucide 只 re-export 渲染器实际在用的。作者 `icon` 字段仍走 core 的 `resolveIcon`，不进这条
+- **不放**：读 env / schema 的组件、按 type 的业务逻辑、第二份 `@vamis/core` 已有的函数
+
+## 守卫
+
+`packages/vamis-core/__tests__/package-boundary.test.ts`（`pnpm test` 会跑）：依赖方向、ui 不带 sonner / Tooltip、带 `<style>` 的渲染器名单不增长、`*Icon.vue` 不落在渲染器目录。改分工先改本文和这份测试。
+
+## 禁止
+
+- ui import `@vamis/core` / `vamis`；core import `@vamis/ui`
+- 渲染器目录里新建纯 SVG 图标文件，或新渲染器自带 `<style>`
+- 为了「放进 ui」把读 schema 的子件削成无状态壳，再在渲染器里包一层
+- 在 ui 里复制 core 的工具函数

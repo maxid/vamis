@@ -265,7 +265,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 84% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
-| `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 88% | 2026-11-15 按 Amis 整体重做一轮（列类型、工具栏、选择默认多选、快速编辑、Footable、`deferApi`、`affixHeader` / `affixFooter`、`lazyRenderAfter`、`persistKey`、单元格表单项写回行数据），**代码未提交、未跑 typecheck / test / 对照**，旧的 33/33 不代表当前。未接 `reUseRow`、`export-excel`。交接见 `docs/superpowers/plans/2026-11-15-table-data-chain-handoff.md` | P0 |
+| `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 88% | 2026-11-15 按 Amis 整体重做一轮并验证：列类型、工具栏、选择默认多选、快速编辑、Footable、`deferApi`、`affixHeader` / `affixFooter`、`lazyRenderAfter`、`persistKey`、单元格表单项写回行数据（开关改了同行状态列跟着变）。对照桌面 63/63，移动无失败；`deferApi` / 固定表头（浅色 + 深色）/ 懒渲染在浏览器核过。未接 `reUseRow`、`export-excel`；逐章节的深色双站核对没做完 | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
@@ -457,7 +457,7 @@ flowchart LR
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 95% |
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
-| 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 99% |
+| 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 88% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
 | 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 90% |
 | 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 96% |

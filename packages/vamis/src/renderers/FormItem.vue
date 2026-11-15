@@ -107,7 +107,7 @@ const paintLabel = computed(() => {
   <div
     class="vamis-form-item"
     :class="itemLayoutClass"
-    :data-name="schema.name"
+    :data-name="schema.inputOnly ? undefined : schema.name"
   >
     <Label
       v-if="paintLabel"

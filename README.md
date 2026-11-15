@@ -214,10 +214,10 @@ VITE_BASE=/vamis/ pnpm preview   # http://127.0.0.1:4173/vamis/
 ## 包结构
 
 ```
-packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer
+packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer、env、按 type 的 schema 纯函数
 packages/vamis-formula  表达式 / 过滤器 / 内置函数（amis-formula 6.13.0 MIT）
-packages/vamis-ui       shadcn-vue 原语与主题 token
-packages/vamis          渲染器注册表（register.ts + extras/*.ts）
+packages/vamis-ui       shadcn-vue 原语、chrome 图标、主题 token / helper、所有渲染器的默认皮肤（不依赖其它包）
+packages/vamis          Amis type 渲染器（register.ts + extras/*.ts）、带 env 的共享浮层件、全局 Host
 packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / Schema）
 packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档 / 组件 / 样式 / 示例 / 编辑器（同一 Vite，5173）

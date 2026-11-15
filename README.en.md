@@ -186,10 +186,10 @@ pnpm compare     # Playwright parity run; --page <type> / --mobile
 ## Packages
 
 ```
-packages/vamis-core     factory, IR, formula wrapper, Pinia hub, SchemaRenderer
+packages/vamis-core     factory, IR, formula wrapper, Pinia hub, SchemaRenderer, env, per-type schema helpers
 packages/vamis-formula  expression engine (ported from amis-formula 6.13.0, MIT)
-packages/vamis-ui       shadcn-vue primitives and theme tokens
-packages/vamis          renderer registry
+packages/vamis-ui       shadcn-vue primitives, chrome icons, theme tokens / helpers, default skins of all renderers (no workspace deps)
+packages/vamis          Amis type renderers, env-aware shared overlays, global hosts
 packages/vamis-editor   visual editor (tree / preview / properties / schema)
 packages/vamis-sdk      JS SDK (sdk.js + vamis.embed)
 playground              docs / components / styles / examples / editor (Vite, port 5173)
