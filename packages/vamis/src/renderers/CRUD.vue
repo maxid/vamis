@@ -36,6 +36,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  VamisIcon,
 } from '@vamis/ui'
 import Cards from './Cards.vue'
 import Pagination from './Pagination.vue'
@@ -370,9 +371,7 @@ function asDialogBody(schema: SchemaObject | null) {
 
 function operationClass(btn: SchemaObject) {
   const destructive = btn.level === 'danger' || !!btn.confirmText
-  return destructive
-    ? 'text-destructive hover:bg-destructive/10 hover:text-destructive'
-    : 'text-primary hover:bg-primary/10'
+  return destructive ? 'vamis-crud-op vamis-crud-op--danger' : 'vamis-crud-op'
 }
 
 function withDialogReload(body: unknown, reloadTarget: unknown, row: Record<string, any>) {
@@ -513,7 +512,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="vamis-crud w-full min-w-0" :class="{ 'is-loading': store.fetching }">
-    <h2 v-if="schema.title" class="text-sm font-medium">{{ schema.title }}</h2>
+    <h2 v-if="schema.title" class="vamis-crud__title">{{ schema.title }}</h2>
     <div v-if="filterSchema" class="vamis-crud-filter">
       <SchemaRenderer
         :schema="{
@@ -531,7 +530,7 @@ onBeforeUnmount(() => {
     <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length || (selectable && store.selectedItems.length))" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
-        <span v-if="selectable" class="text-xs text-muted-foreground tabular-nums">已选 {{ store.selectedItems.length }}</span>
+        <span v-if="selectable" class="vamis-crud__selected tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"
           :key="'bulk-' + i"
@@ -586,7 +585,7 @@ onBeforeUnmount(() => {
       </TableHeader>
       <TableBody>
         <TableRow v-if="!store.items.length">
-          <TableCell :colspan="Math.max(columns.length, 1) + (selectable ? 1 : 0)" class="py-10 text-center text-muted-foreground">
+          <TableCell :colspan="Math.max(columns.length, 1) + (selectable ? 1 : 0)" class="vamis-crud__empty py-10 text-center">
             暂无数据
           </TableCell>
         </TableRow>
@@ -629,7 +628,7 @@ onBeforeUnmount(() => {
               <select
                 v-if="editingCell === cellEditKey(row, col) && quickEditType(col) === 'select'"
                 v-model="draftValue"
-                class="h-7 w-full rounded border px-1 text-sm"
+                class="vamis-crud__edit-field h-7 w-full rounded border px-1"
                 autofocus
                 @click.stop
                 @change="commitCellEdit(row, col)"
@@ -640,7 +639,7 @@ onBeforeUnmount(() => {
               <textarea
                 v-else-if="editingCell === cellEditKey(row, col) && quickEditType(col) === 'textarea'"
                 v-model="draftValue"
-                class="min-h-16 w-full rounded border px-1 text-sm"
+                class="vamis-crud__edit-field min-h-16 w-full rounded border px-1"
                 autofocus
                 @click.stop
                 @blur="commitCellEdit(row, col)"
@@ -649,7 +648,7 @@ onBeforeUnmount(() => {
                 v-else-if="editingCell === cellEditKey(row, col)"
                 v-model="draftValue"
                 :type="quickEditType(col) === 'input-number' ? 'number' : 'text'"
-                class="h-7 w-full rounded border px-1 text-sm"
+                class="vamis-crud__edit-field h-7 w-full rounded border px-1"
                 autofocus
                 @click.stop
                 @blur="commitCellEdit(row, col)"
@@ -658,7 +657,7 @@ onBeforeUnmount(() => {
               >
               <span v-else class="inline-flex items-center gap-1">
                 {{ row[String(col.name || '')] ?? '' }}
-                <button type="button" class="text-xs text-muted-foreground hover:text-primary" aria-label="编辑" @click.stop="startCellEdit(row, col)">✎</button>
+                <button type="button" class="vamis-crud__edit" aria-label="编辑" @click.stop="startCellEdit(row, col)"><VamisIcon name="pencil" /></button>
               </span>
             </template>
             <PopOverHost v-else :schema="col" :data="row">

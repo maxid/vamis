@@ -17,7 +17,7 @@ import {
   wizardSteps,
   type SchemaObject,
 } from '@vamis/core'
-import { Button, Check } from '@vamis/ui'
+import { Button, VamisIcon } from '@vamis/ui'
 import { provideWizardGate } from '../wizardGate'
 
 const props = defineProps<{
@@ -95,7 +95,7 @@ function next() {
         "
         @click="jumpable(step, i) ? goto(i) : undefined"
       >
-        <span v-if="i < index" class="inline-flex"><Check class="size-3" /></span>
+        <span v-if="i < index" class="inline-flex"><VamisIcon name="check" class="vamis-wizard__done-icon" /></span>
         <span v-else>{{ i + 1 }}</span>{{ wizardStepTitle(step, i) }}
       </li>
     </ol>

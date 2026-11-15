@@ -9777,8 +9777,8 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   border-spacing: 0;
   font-size: var(--fontSizeSm);
   font-weight: var(--fontWeightNormal);
-  line-height: 1.5;
-  color: var(--foreground);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
 }
 .vamis-table2 th,
 .vamis-table2 td {
@@ -9796,18 +9796,18 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding-right: 12px;
 }
 .vamis-table2 th {
-  font-size: var(--fontSizeBase);
-  line-height: 1.5;
-  color: var(--muted-foreground);
-  background: color-mix(in oklch, var(--muted) 70%, var(--card));
-  border-right: 1px solid color-mix(in oklch, var(--border) 70%, white);
+  font-size: var(--table-thead-font-size);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  background: var(--table-thead-bg);
+  border-right: var(--table-thead-sep-width) solid var(--table-thead-sep);
 }
 .vamis-table2 th:last-child {
   border-right: 0;
 }
 .vamis-table2 td {
-  font-size: var(--fontSizeSm);
-  line-height: 1.5;
+  font-size: var(--table-font-size);
+  line-height: var(--lineHeightBase);
   border-top: 1px solid var(--border);
 }
 .vamis-table2 tbody tr:last-child td {
@@ -9821,13 +9821,13 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding: 10px 8px;
   font-size: var(--fontSizeBase);
   font-weight: var(--fontWeightNormal);
-  line-height: 1.5;
-  color: var(--foreground);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
 }
 .vamis-table2-head-cell {
   display: flex;
   align-items: center;
-  line-height: 1.5;
+  line-height: var(--lineHeightBase);
 }
 .vamis-table2-sort {
   position: relative;
@@ -9874,8 +9874,8 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--primary);
 }
 .vamis-table2 tr.is-disabled {
-  color: var(--muted-foreground);
-  background: color-mix(in oklch, var(--muted) 50%, var(--card));
+  color: var(--text-muted);
+  background: var(--control-disabled-bg);
 }
 .vamis-table2.is-small th,
 .vamis-table2.is-small td {
@@ -10177,4 +10177,173 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-switch-container__body {
   display: inline;
+}
+
+/* ---- 皮肤迁出模板（2026-11 第三刀） ---- */
+.vamis-transfer__title,
+.vamis-transfer-picker__hint {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-secondary);
+}
+.vamis-transfer__search,
+.vamis-transfer__list,
+.vamis-transfer__table,
+.vamis-transfer__item {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-transfer__item:hover:not(:disabled),
+.vamis-transfer__row:hover {
+  background: var(--select-option-hover-bg);
+  color: var(--select-option-hover-color);
+}
+.vamis-transfer__value {
+  color: var(--text-tertiary);
+}
+.vamis-transfer__empty {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-picker__placeholder {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--control-placeholder);
+}
+.vamis-picker__group {
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-secondary);
+}
+.vamis-picker__item {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-picker__item:hover {
+  background: var(--select-option-hover-bg);
+  color: var(--select-option-hover-color);
+}
+.vamis-picker__empty,
+.vamis-picker__pager {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-range__row,
+.vamis-range__label {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-secondary);
+}
+.vamis-range__hint,
+.vamis-range__unit {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-table2-menu-btn {
+  color: var(--table-thead-icon-color);
+}
+.vamis-table2-menu {
+  background: var(--select-menu-bg);
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  border-color: var(--border);
+  box-shadow: var(--select-menu-shadow);
+}
+.vamis-table2-menu-item:hover {
+  background: var(--select-option-hover-bg);
+  color: var(--select-option-hover-color);
+}
+.vamis-table2-empty,
+.vamis-table2-loading,
+.vamis-table2-pager {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-table2-loading {
+  background: var(--card);
+  font-size: var(--fontSizeBase);
+}
+
+.vamis-crud__title {
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-crud__selected,
+.vamis-crud__empty,
+.vamis-tasks__remark {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-crud__edit-field {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-crud__edit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0;
+}
+.vamis-crud__edit svg {
+  display: block;
+  width: var(--fontSizeSm);
+  height: var(--fontSizeSm);
+}
+.vamis-crud__edit:hover {
+  color: var(--primary);
+}
+.vamis-crud-op {
+  color: var(--primary);
+}
+.vamis-crud-op:hover {
+  background: var(--select-option-hover-bg);
+}
+.vamis-crud-op--danger,
+.vamis-crud-op--danger:hover {
+  color: var(--destructive);
+}
+
+.vamis-audio {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-audio__rate {
+  font-size: var(--fontSizeSm);
+}
+.vamis-audio__time {
+  color: var(--text-muted);
+}
+.vamis-audio__icon {
+  display: block;
+  width: var(--fontSizeLg);
+  height: var(--fontSizeLg);
+  color: currentColor;
+}
+.vamis-wizard__done-icon {
+  display: block;
+  width: var(--fontSizeSm);
+  height: var(--fontSizeSm);
+}
+.vamis-alert__close-icon {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }

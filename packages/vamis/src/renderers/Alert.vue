@@ -18,7 +18,7 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  XIcon,
+  VamisIcon,
   levelToAlertVariant,
   levelToFeedbackIcon,
 } from '@vamis/ui'
@@ -76,7 +76,7 @@ function close() {
       aria-label="关闭提示"
       @click.stop="close"
     >
-      <XIcon class="size-3.5" />
+      <VamisIcon name="close" class="vamis-alert__close-icon" />
     </button>
   </Alert>
 </template>

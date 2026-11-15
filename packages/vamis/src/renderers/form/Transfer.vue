@@ -136,15 +136,15 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div class="grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
+    <div class="vamis-transfer grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
       <div class="space-y-1">
-        <p v-if="leftTitle" class="text-xs text-muted-foreground">{{ leftTitle }}</p>
-        <input v-if="searchable" v-model="leftQuery" class="vamis-input h-8 w-full rounded-md border px-2 text-sm" :placeholder="searchPlaceholder" />
-        <ul v-if="mode === 'tree'" class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+        <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
+        <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+        <ul v-if="mode === 'tree'" class="vamis-transfer__list max-h-48 overflow-auto rounded-md border p-2">
           <li v-for="node in treeVisible(treeRows)" v-show="treeDisplay(node)" :key="node.key">
             <button
               type="button"
-              class="w-full rounded px-2 py-1 text-left hover:bg-accent"
+              class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
               :style="{ paddingLeft: `${8 + node.depth * 12}px` }"
               :disabled="disabled"
               @click="treeOnClick(node)"
@@ -154,23 +154,23 @@ watch(
             </button>
           </li>
         </ul>
-        <table v-else-if="mode === 'table'" class="w-full border-collapse text-sm">
+        <table v-else-if="mode === 'table'" class="vamis-transfer__table w-full border-collapse">
           <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
           <tbody>
-            <tr v-for="item in leftShown" :key="String(item.value)" class="cursor-pointer hover:bg-accent" @click="add(item.value)">
+            <tr v-for="item in leftShown" :key="String(item.value)" class="vamis-transfer__row cursor-pointer" @click="add(item.value)">
               <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
-              <td class="px-2 py-1 text-muted-foreground">{{ item.value }}</td>
+              <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
             </tr>
-            <tr v-if="!leftShown.length"><td colspan="2" class="px-2 py-4 text-center text-xs text-muted-foreground">无候选</td></tr>
+            <tr v-if="!leftShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">无候选</td></tr>
           </tbody>
         </table>
-        <ul v-else class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+        <ul v-else class="vamis-transfer__list max-h-48 overflow-auto rounded-md border p-2">
         <li v-for="item in leftShown" :key="String(item.value)">
-          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="add(item.value)">
+          <button type="button" class="vamis-transfer__item w-full rounded px-2 py-1 text-left" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="add(item.value)">
             {{ item.label }}
           </button>
         </li>
-        <li v-if="!leftShown.length" class="px-2 py-4 text-xs text-muted-foreground">无候选</li>
+        <li v-if="!leftShown.length" class="vamis-transfer__empty px-2 py-4">无候选</li>
         </ul>
       </div>
       <div class="flex flex-col justify-center gap-1">
@@ -178,25 +178,25 @@ watch(
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="clear">&lt; 清空</Button>
       </div>
       <div class="space-y-1">
-        <p v-if="rightTitle" class="text-xs text-muted-foreground">{{ rightTitle }}</p>
-        <input v-if="searchable" v-model="rightQuery" class="vamis-input h-8 w-full rounded-md border px-2 text-sm" :placeholder="searchPlaceholder" />
-        <table v-if="mode === 'table'" class="w-full border-collapse text-sm">
+        <p v-if="rightTitle" class="vamis-transfer__title">{{ rightTitle }}</p>
+        <input v-if="searchable" v-model="rightQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+        <table v-if="mode === 'table'" class="vamis-transfer__table w-full border-collapse">
           <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
           <tbody>
-            <tr v-for="item in rightShown" :key="String(item.value)" class="cursor-pointer hover:bg-accent" @click="remove(item.value)">
+            <tr v-for="item in rightShown" :key="String(item.value)" class="vamis-transfer__row cursor-pointer" @click="remove(item.value)">
               <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
-              <td class="px-2 py-1 text-muted-foreground">{{ item.value }}</td>
+              <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
             </tr>
-            <tr v-if="!rightShown.length"><td colspan="2" class="px-2 py-4 text-center text-xs text-muted-foreground">未选择</td></tr>
+            <tr v-if="!rightShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">未选择</td></tr>
           </tbody>
         </table>
-        <ul v-else class="max-h-48 overflow-auto rounded-md border p-2 text-sm">
+        <ul v-else class="vamis-transfer__list max-h-48 overflow-auto rounded-md border p-2">
         <li v-for="item in rightShown" :key="String(item.value)">
-          <button type="button" class="w-full rounded px-2 py-1 text-left hover:bg-accent" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="remove(item.value)">
+          <button type="button" class="vamis-transfer__item w-full rounded px-2 py-1 text-left" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }" :disabled="disabled" @click="remove(item.value)">
             {{ item.label }}
           </button>
         </li>
-        <li v-if="!rightShown.length" class="px-2 py-4 text-xs text-muted-foreground">未选择</li>
+        <li v-if="!rightShown.length" class="vamis-transfer__empty px-2 py-4">未选择</li>
         </ul>
       </div>
     </div>

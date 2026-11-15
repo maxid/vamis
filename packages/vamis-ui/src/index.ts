@@ -64,15 +64,6 @@ export {
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
 export { Alert, AlertDescription, AlertTitle, levelToAlertVariant, levelToFeedbackIcon } from './ui/alert'
-export {
-  Check,
-  PauseIcon,
-  Pencil,
-  PlayIcon,
-  Volume2Icon,
-  VolumeXIcon,
-  XIcon,
-} from '@lucide/vue'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
 export {
   Sheet,

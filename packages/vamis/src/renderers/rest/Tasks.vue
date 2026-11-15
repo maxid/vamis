@@ -74,7 +74,7 @@ function statusVariant(item: unknown) {
           <TableCell>
             <Badge :variant="statusVariant(item)">{{ taskStatusText(schema, item) }}</Badge>
           </TableCell>
-          <TableCell class="text-muted-foreground">{{ taskRemark(item, data) }}</TableCell>
+          <TableCell class="vamis-tasks__remark">{{ taskRemark(item, data) }}</TableCell>
         </TableRow>
       </TableBody>
     </Table>

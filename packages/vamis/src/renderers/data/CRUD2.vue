@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
       }"
     />
     <div class="flex items-center justify-between gap-2">
-      <p class="text-xs text-muted-foreground tabular-nums">
+      <p class="vamis-crud__selected tabular-nums">
         {{ store.fetching ? '加载中…' : `共 ${store.total} 条` }}
         <span v-if="selectable"> · 已选 {{ store.selectedItems.length }}</span>
       </p>
@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
             />
           </template>
           <Button v-else-if="toolbarType(node) === 'reload'" type="button" size="sm" variant="outline" @click="reload()">刷新</Button>
-          <span v-else-if="toolbarType(node) === 'statistics'" class="text-xs text-muted-foreground">{{ store.total }} 条</span>
+          <span v-else-if="toolbarType(node) === 'statistics'" class="vamis-crud__selected">{{ store.total }} 条</span>
           <SchemaRenderer v-else :schema="asToolbarSchema(node)" :extra-data="extraData" />
         </template>
         <template v-if="bulkActions.length && !headerToolbar.some((node) => isBulkToolbar(node))">

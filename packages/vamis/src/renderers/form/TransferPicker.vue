@@ -21,6 +21,6 @@ const open = ref(false)
         <Transfer :schema="schema" :disabled="disabled" />
       </DialogContent>
     </Dialog>
-    <span class="text-xs text-muted-foreground">弹层穿梭选择</span>
+    <span class="vamis-transfer-picker__hint">弹层穿梭选择</span>
   </div>
 </template>

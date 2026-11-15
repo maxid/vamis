@@ -47,8 +47,8 @@ const range = computed({
 <template>
   <FormItem :schema="schema">
     <div v-if="multiple" class="space-y-3">
-      <div class="flex items-center gap-3 text-sm">
-        <span class="w-10 tabular-nums text-muted-foreground">{{ range.start }}</span>
+      <div class="vamis-range__row flex items-center gap-3">
+        <span class="vamis-range__label w-10 tabular-nums">{{ range.start }}</span>
         <Slider
           :model-value="range.start"
           :min="min"
@@ -58,8 +58,8 @@ const range = computed({
           @update:model-value="range = { ...range, start: $event }"
         />
       </div>
-      <div class="flex items-center gap-3 text-sm">
-        <span class="w-10 tabular-nums text-muted-foreground">{{ range.end }}</span>
+      <div class="vamis-range__row flex items-center gap-3">
+        <span class="vamis-range__label w-10 tabular-nums">{{ range.end }}</span>
         <Slider
           :model-value="range.end"
           :min="min"
@@ -69,7 +69,7 @@ const range = computed({
           @update:model-value="range = { ...range, end: $event }"
         />
       </div>
-      <p class="text-xs text-muted-foreground">{{ range.start }}{{ schema.unit || '' }} ~ {{ range.end }}{{ schema.unit || '' }}</p>
+      <p class="vamis-range__hint">{{ range.start }}{{ schema.unit || '' }} ~ {{ range.end }}{{ schema.unit || '' }}</p>
     </div>
     <div v-else class="flex items-center gap-3">
       <Slider
@@ -87,7 +87,7 @@ const range = computed({
         :disabled="disabled"
         @update:model-value="single = Number($event)"
       />
-      <span v-if="schema.unit" class="text-xs text-muted-foreground">{{ schema.unit }}</span>
+      <span v-if="schema.unit" class="vamis-range__unit">{{ schema.unit }}</span>
     </div>
   </FormItem>
 </template>

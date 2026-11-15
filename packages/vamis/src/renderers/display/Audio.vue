@@ -12,7 +12,7 @@ import {
   useData,
   type SchemaObject,
 } from '@vamis/core'
-import { PauseIcon, PlayIcon, Volume2Icon, VolumeXIcon } from '@vamis/ui'
+import { VamisIcon } from '@vamis/ui'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -107,7 +107,7 @@ function toggleMute() {
 <template>
   <div
     data-vamis-audio
-    class="relative items-center gap-2 text-sm"
+    class="vamis-audio relative items-center gap-2"
     :class="inline ? 'inline-flex' : 'flex w-full'"
   >
     <audio
@@ -121,7 +121,7 @@ function toggleMute() {
     <button
       v-if="showRates"
       type="button"
-      class="min-w-10 rounded px-1 py-0.5 text-xs"
+      class="vamis-audio__rate min-w-10 rounded px-1 py-0.5"
       @click="src ? (pickRate = !pickRate) : undefined"
     >
       <span v-if="!pickRate">{{ audioRateLabel(rate) }}</span>
@@ -132,10 +132,10 @@ function toggleMute() {
       </span>
     </button>
     <button v-if="showPlay" type="button" class="inline-flex size-7 items-center justify-center" @click="togglePlay">
-      <PauseIcon v-if="playing" class="size-4" />
-      <PlayIcon v-else class="size-4" />
+      <VamisIcon v-if="playing" name="pause" class="vamis-audio__icon" />
+      <VamisIcon v-else name="play" class="vamis-audio__icon" />
     </button>
-    <span v-if="showTime" class="tabular-nums text-muted-foreground">{{ currentLabel }} / {{ durationLabel }}</span>
+    <span v-if="showTime" class="vamis-audio__time tabular-nums">{{ currentLabel }} / {{ durationLabel }}</span>
     <input
       v-if="showProcess"
       type="range"
@@ -154,8 +154,8 @@ function toggleMute() {
       @mouseleave="pickVolume = false"
       @click="toggleMute"
     >
-      <VolumeXIcon v-if="muted || volume === 0" class="size-4" />
-      <Volume2Icon v-else class="size-4" />
+      <VamisIcon v-if="muted || volume === 0" name="mute" class="vamis-audio__icon" />
+      <VamisIcon v-else name="volume" class="vamis-audio__icon" />
       <input
         v-if="pickVolume"
         type="range"

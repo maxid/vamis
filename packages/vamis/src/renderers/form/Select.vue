@@ -23,7 +23,7 @@ import {
   type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
-import { Pencil, VamisCaret, VamisClear, XIcon, VamisIcon, VamisClose } from '@vamis/ui'
+import { VamisCaret, VamisClear, VamisIcon, VamisClose } from '@vamis/ui'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
@@ -769,7 +769,7 @@ watch(
                     @mousedown.prevent
                     @click="onEdit(opt, $event)"
                   >
-                    <Pencil />
+                    <VamisIcon name="pencil" />
                   </button>
                   <button
                     v-if="ctl.config.value.removable"
@@ -780,7 +780,7 @@ watch(
                     @mousedown.prevent
                     @click="onDelete(opt, $event)"
                   >
-                    <XIcon />
+                    <VamisIcon name="close" />
                   </button>
                 </span>
               </div>

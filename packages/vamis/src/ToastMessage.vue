@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { SchemaRenderer, type ToastItem } from '@vamis/core'
-import { XIcon, levelToFeedbackIcon } from '@vamis/ui'
+import { VamisIcon, levelToFeedbackIcon } from '@vamis/ui'
 
 const props = defineProps<{ item: ToastItem }>()
 const emit = defineEmits<{ dismiss: [] }>()
@@ -83,7 +83,7 @@ onBeforeUnmount(clearTimer)
         </div>
       </div>
       <a v-if="item.closeButton" class="vamis-toast__close" @click.stop="close">
-        <XIcon />
+        <VamisIcon name="close" />
       </a>
     </div>
   </Transition>

@@ -224,18 +224,18 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div class="flex flex-wrap items-center gap-2">
+    <div class="vamis-picker flex flex-wrap items-center gap-2">
       <Badge v-for="(label, i) in shownLabels" :key="i" variant="secondary">{{ label }}</Badge>
       <Badge v-if="hiddenCount > 0" variant="outline">+{{ hiddenCount }}</Badge>
-      <span v-if="!selectedLabels.length" class="text-sm text-muted-foreground">{{ schema.placeholder || '请选择' }}</span>
+      <span v-if="!selectedLabels.length" class="vamis-picker__placeholder">{{ schema.placeholder || '请选择' }}</span>
       <Button v-if="!embed" type="button" size="sm" variant="outline" :disabled="disabled" @click="openPicker">选择</Button>
       <Button v-if="selectedLabels.length && schema.clearable !== false" type="button" size="sm" variant="ghost" :disabled="disabled" @click="clear">清除</Button>
     </div>
     <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
       <template v-for="(row, i) in pagedRows" :key="i">
-        <li v-if="row.kind === 'group'" class="px-2 pt-2 pb-1 text-xs font-medium text-muted-foreground" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
+        <li v-if="row.kind === 'group'" class="vamis-picker__group px-2 pt-2 pb-1" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
         <li v-else>
-          <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
+          <label class="vamis-picker__item flex items-center gap-2 rounded px-2 py-1.5" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
             <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, row.value))" @update:model-value="commitInline(row.option, $event === true)" />
             <span>{{ row.label }}</span>
           </label>
@@ -255,17 +255,17 @@ watch(
         <Input v-else v-model="keyword" placeholder="筛选" class="mb-2" />
         <ul v-if="!pickerSchema" class="max-h-64 space-y-1 overflow-auto rounded-md border p-2">
           <template v-for="(row, i) in pagedRows" :key="i">
-            <li v-if="row.kind === 'group'" class="px-2 pt-2 pb-1 text-xs font-medium text-muted-foreground" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
+            <li v-if="row.kind === 'group'" class="vamis-picker__group px-2 pt-2 pb-1" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
             <li v-else>
-              <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
+              <label class="vamis-picker__item flex items-center gap-2 rounded px-2 py-1.5" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
                 <Checkbox :model-value="isChecked(row.option)" @update:model-value="toggle(row.option, $event === true)" />
                 <span>{{ row.label }}</span>
               </label>
             </li>
           </template>
-          <li v-if="!filteredRows.length" class="px-2 py-6 text-center text-xs text-muted-foreground">暂无选项</li>
+          <li v-if="!filteredRows.length" class="vamis-picker__empty px-2 py-6 text-center">暂无选项</li>
         </ul>
-        <div v-if="!pickerSchema && lastPage > 1" class="mt-2 flex items-center justify-end gap-2 text-xs">
+        <div v-if="!pickerSchema && lastPage > 1" class="vamis-picker__pager mt-2 flex items-center justify-end gap-2">
           <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage <= 1" @click="pickerPage -= 1">上一页</button>
           <span>{{ pickerPage }} / {{ lastPage }}</span>
           <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage >= lastPage" @click="pickerPage += 1">下一页</button>

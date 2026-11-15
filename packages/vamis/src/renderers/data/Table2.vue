@@ -259,18 +259,18 @@ function cellWidth(col: SchemaObject) {
                 @update:model-value="toggleAll($event === true)"
               />
               <div v-if="selections.length" class="relative">
-                <button type="button" class="text-muted-foreground px-0.5 inline-flex items-center" @click.stop="menuOpen = !menuOpen">
+                <button type="button" class="vamis-table2-menu-btn px-0.5 inline-flex items-center" @click.stop="menuOpen = !menuOpen">
                   <VamisCaret variant="dropdown" :open="menuOpen" />
                 </button>
                 <div
                   v-if="menuOpen"
-                  class="absolute left-0 z-20 mt-1 min-w-28 rounded-md border bg-popover p-1 text-sm shadow-md"
+                  class="vamis-table2-menu absolute left-0 z-20 mt-1 min-w-28 rounded-md border p-1 shadow-md"
                 >
                   <button
                     v-for="item in selections"
                     :key="item.key"
                     type="button"
-                    class="block w-full rounded px-2 py-1 text-left hover:bg-muted"
+                    class="vamis-table2-menu-item block w-full rounded px-2 py-1 text-left"
                     @click="applyMenu(item.key)"
                   >
                     {{ item.text }}
@@ -318,7 +318,7 @@ function cellWidth(col: SchemaObject) {
       </TableHeader>
       <TableBody>
         <TableRow v-if="!pagedRows.length">
-          <TableCell :colspan="colSpan" class="text-center text-muted-foreground">
+          <TableCell :colspan="colSpan" class="vamis-table2-empty text-center">
             <SchemaRenderer v-if="placeholderNode" :schema="placeholderNode" />
             <template v-else>{{ placeholderText }}</template>
           </TableCell>
@@ -360,13 +360,13 @@ function cellWidth(col: SchemaObject) {
     </div>
     <div
       v-if="loading"
-      class="bg-background/70 absolute inset-0 z-10 flex items-center justify-center text-sm text-muted-foreground"
+      class="vamis-table2-loading absolute inset-0 z-10 flex items-center justify-center"
     >
       加载中
     </div>
     <div v-if="showPager" class="flex justify-end gap-2 p-2">
       <Button type="button" size="sm" variant="outline" :disabled="page <= 1" @click="page -= 1">上一页</Button>
-      <span class="px-2 text-xs text-muted-foreground">{{ page }} / {{ Math.max(1, Math.ceil(total / perPage)) }}</span>
+      <span class="vamis-table2-pager px-2">{{ page }} / {{ Math.max(1, Math.ceil(total / perPage)) }}</span>
       <Button type="button" size="sm" variant="outline" :disabled="page * perPage >= total" @click="page += 1">下一页</Button>
     </div>
   </div>
