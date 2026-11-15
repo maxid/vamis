@@ -83,6 +83,8 @@ shadcn 的 `--foreground` / `--muted-foreground` 只是这几档的别名，不�
 | `--z-dropdown` / `--z-modal`（= `--z-popover`）/ `--z-tooltip` / `--z-toast` | 1000 / 1400 / 1600 / 2000 |
 | `--animation-duration` | 0.2s |
 
+Vamis chrome 的直角 / 圆角用**全局开关**切（见 [主题 spec §4](./2026-10-21-vamis-theme-shadcn.md)），不要给 Page / Form 再加 `rounded` 字段。默认仍是 Amis 量：`--page-radius: 0`、`--panel-radius: var(--radius)`。
+
 ## 3. 色号
 
 1. hex 只出现在两处：`themes.css` 的色阶，和 `styles.css` 里**色阶上没有**的 Amis 字面量 token（现有 31 条，例：`--table-modified-bg: #e8f0fe`、`--avatar-bg: #d1d5db`、`--code-dark-bg`）。后者注明 Amis 出处，条数只许减

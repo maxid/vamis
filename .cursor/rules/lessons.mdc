@@ -1039,6 +1039,12 @@ alwaysApply: true
 - 触及：`list` `list-item` `table2` `table`
 - 规则：Amis `List.tsx` handleClick / itemAction 互斥；`packages/vamis-sdk/embed-case.html`
 
+### 文档预览 minHeight 要 flex 传到 Page，不要只打在外壳
+- 踩过：`.doc-play__stage` 写了 `min-height: 200`（对齐 Amis Play 默认 height），Page / aside 仍是内容高 66px，侧栏竖线停在「这是侧边栏部分」。对照 iframe 没有这层壳，所以对照一致、文档站不一致。
+- 稳定做法：对齐 `.Playgroud-preview`（`display:flex; align-items:stretch` + `> div { flex: 1 }`）。Vamis 多了 Lazy / `vamis-root` / `.vamis-node`，这条链都要 `flex: 1` 才到 `.vamis-page`。不要给预览里每一个 `.vamis-node` 都改成 flex（会拆按钮）。移动壳 `:not(.doc-play__canvas--mobile)` 排除。
+- 触及：`page` 文档预览
+- 规则：本文；Amis `examples/style.scss` `.Playgroud-preview`；`playground/src/style.css`
+
 ### 文档预览井不要 overflow-hidden，会裁死 sticky
 - 踩过：List 字母索引条 `position: sticky` 被 `.doc-play__preview.overflow-hidden` 当成包含块，条钉死在示例井里；用 400px 内部滚动冒充浮动。Amis `.Playgroud-preview` 的 `overflow: hidden` 是注释掉的。
 - 稳定做法：预览井 overflow visible。索引条 `align-self: flex-start; height: fit-content`，滚动/自动定位跟最近 overflow 祖先（文档 `article`），点字母 `scrollIntoView`。不要给 list 再开内部 scroller。

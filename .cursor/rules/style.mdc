@@ -93,6 +93,7 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - 组件 Vue 模板不要用 helper 类名表示「主题默认」。控件 4px 圆角用 `rounded`（= `--radius`），不要用 `rounded-md`（Amis helper 是 6px）
 - html / body 不钉字族（对齐 Amis unset）。`.vamis-root` / SDK 根走 `--fontFamilyBase`（= `--fonts-base-family`，实测 Helvetica Neue）、`font-size: 14px; line-height: 1.5`。不要 `@apply font-sans`（helper 英文硬编码栈）或 `text-sm`（TW 行高 20px）当默认
 - **组件配方也是 token，不要在 `.vamis-xxx` 写死色和 px。** 对齐 Amis `_properties.scss`：`--button-*`、`--tooltip-*`、`--badge-*`、`--remark-*` 挂 `:root`，选择器只 `var()`。主题切换 = 换变量。组件圆角可以和全局 `--radius` 不同（Overlay Tooltip 是 `--borderRadiusLg` 8px），但必须是变量。禁止用 shadcn `--popover` / `--radius` 去套 Overlay Tooltip。禁止用 shadcn `Badge` / `animate-ping` 去套 Overlay Badge。禁止用 shadcn Tooltip 去套 Remark。
+- **Vamis chrome 圆角走全局开关，不要组件字段。** Page / Form 的 `rounded` 是过渡 API。直角 / 圆角切的是组装壳（Page / Form 面板 / Dialog / Card…），默认仍对齐 Amis；作者 helper 和控件自己的圆角不在范围内。口径见主题 spec §4。禁止再给某个 type 加 `rounded: true`。
 
 ## 标尺：一个量只有一处定义
 

@@ -1787,5 +1787,5 @@ onEvent:
 - `submit` 事件不会拦掉默认提交；Vamis 先校验并保存，再发事件。
 - 未接：`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign`、表单项级 `labelWidth`、`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
-- 默认 panel 圆角对齐 Amis（`--radius` 4px），不是 shadcn Card 的 `rounded-lg` 8px。`rounded: true` / `panelClassName: rounded-lg` 才用 8px。
+- 默认 panel 圆角对齐 Amis（`--radius` 4px），不是 shadcn Card 的 `rounded-lg` 8px。schema `rounded` / `panelClassName: rounded-lg` 是过渡写法；直角 / 圆角将改成 Vamis chrome 全局开关，不再按 type 声明。
 

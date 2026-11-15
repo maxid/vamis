@@ -89,3 +89,15 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 - 不做：奶油衬线、酸绿暗色、报纸细线；不做第二套主题 class。
 
 light / dark 都写完整 semantic token。`color-scheme` 跟主题走。
+
+## 4. 待决：Vamis chrome 圆角开关（2026-11-16）
+
+**不要做成组件字段。** Page / Form 上的 `rounded: true` 只是过渡；直角还是圆角是整份运行时的优化，用**一个开关**切 Vamis 组装壳，不是每个 type 自己声明。
+
+| 要 | 不要 |
+|----|------|
+| 默认对齐 Amis：Page **0**、Panel **4px**（`--radius`） | 默认改成 8px / Card `rounded-lg` |
+| 一个开关（env / 根属性 / token，落地时再定）打开后，chrome 一起走 `--borderRadiusLg` | schema 上 `page.rounded` / `form.rounded` 各写一份 |
+| 范围 = Vamis chrome：Page、Form 面板、Dialog / Drawer 壳、Card、CRUD / Panel 标题栏这类组装盒 | 作者 `className` helper（`rounded-md` 仍是 6px）；按钮、输入、Tooltip、Badge 自己的 Amis 圆角 |
+
+落地时：开关进 token（例如根上 `data-vamis-radius=round` 改 `--page-radius` / `--panel-radius`），删组件 `rounded` 字段，对照默认仍关着以免盒模型相对 Amis 假红。

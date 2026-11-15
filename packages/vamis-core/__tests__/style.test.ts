@@ -838,6 +838,8 @@ describe('style docs surface', () => {
     expect(playgroundCss).toContain('list-style: disc')
     expect(playgroundCss).toContain('list-style: circle')
     expect(playgroundCss).toContain('.doc-prose blockquote')
+    expect(playgroundCss).toContain('.doc-play__stage:not(.doc-play__canvas--mobile)')
+    expect(playgroundCss).toContain('.doc-play__stage:not(.doc-play__canvas--mobile) .vamis-page')
     expect(router).toContain("path: '/style'")
     expect(router).toContain("redirect: '/style/'")
     expect(nav).toContain("text: '快速开始'")

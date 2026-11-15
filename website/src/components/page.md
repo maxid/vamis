@@ -487,4 +487,4 @@ Amis 的 `pullRefresh` 仅移动端。**Vamis 未接**，配置会被忽略，�
 - `pullRefresh` 未做（Amis 仅移动端）。`silentPolling` 不控制加载动画。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
 - `css` 挂在 Page 节点上，不写 `document.head`。
-- 默认无圆角（对齐 Amis Page）。`rounded: true` 或 `className: rounded-lg` 才加左上 / 右上圆角，是 Vamis 优化。
+- 默认无圆角（对齐 Amis Page）。schema `rounded` / `className: rounded-lg` 是过渡写法；直角 / 圆角将改成 Vamis chrome 全局开关，不再按 type 声明。
