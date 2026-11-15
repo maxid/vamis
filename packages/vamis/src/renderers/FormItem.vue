@@ -114,7 +114,7 @@ const paintLabel = computed(() => {
       class="vamis-form-item__label"
       :class="labelClass"
     >
-      <span v-if="required && (showLabel || labelRemark)" class="mr-0.5 text-destructive">*</span>
+      <span v-if="required && (showLabel || labelRemark)" class="vamis-form-item__star">*</span>
       <span v-if="showLabel" v-html="labelText" />
       <SchemaRenderer v-if="labelRemark" :schema="labelRemark" :extra-data="itemData" />
     </Label>
@@ -147,7 +147,7 @@ const paintLabel = computed(() => {
       >
         <slot />
       </div>
-      <p v-if="error" class="m-t-xs text-xs text-destructive">{{ error }}</p>
+      <p v-if="error" class="vamis-form__error">{{ error }}</p>
       <div
         v-else-if="descriptionNode"
         class="vamis-form-description"

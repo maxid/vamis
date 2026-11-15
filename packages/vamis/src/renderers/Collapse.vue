@@ -110,7 +110,7 @@ async function onToggle() {
 
 <template>
   <div
-    class="vamis-collapse w-full min-w-0 bg-card"
+    class="vamis-collapse w-full min-w-0"
     :class="grouped ? '' : 'overflow-hidden rounded-md border'"
   >
     <button
@@ -128,7 +128,7 @@ async function onToggle() {
     >
       <span
         v-if="showArrow && collapsable"
-        class="vamis-collapse__arrow inline-flex size-4 shrink-0 items-center justify-center text-muted-foreground"
+        class="vamis-collapse__arrow inline-flex size-4 shrink-0 items-center justify-center"
         aria-hidden="true"
       >
         <SchemaRenderer v-if="expandIcon" :schema="expandIcon" />

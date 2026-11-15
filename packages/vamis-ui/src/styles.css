@@ -10986,3 +10986,90 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--destructive);
 }
+
+/* ---- 皮肤迁出模板（2026-11 第八刀） ---- */
+.vamis-form-item__star {
+  color: var(--destructive);
+}
+
+.vamis-tree-select__hint {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-tree-select__menu {
+  background: var(--select-menu-bg);
+  border-color: var(--select-menu-border);
+}
+.vamis-tree-select__item {
+  display: block;
+  width: 100%;
+  padding: var(--gap-xs) var(--gap-sm);
+  font: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--select-option-color);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.vamis-tree-select__item:hover {
+  background: var(--select-option-hover-bg);
+}
+.vamis-tree-select__item.is-active,
+.vamis-tree-select__item.is-active:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.vamis-tree-select__item:disabled {
+  color: var(--select-option-disabled-color);
+  cursor: not-allowed;
+}
+
+.vamis-collapse {
+  background: var(--card);
+}
+.vamis-collapse__arrow {
+  color: var(--text-muted);
+}
+
+.vamis-monaco {
+  background: var(--background);
+}
+.vamis-monaco__full {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-sm);
+  z-index: 20;
+  padding: 0;
+  font: inherit;
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.vamis-monaco__full:hover {
+  color: var(--text-color);
+}
+
+.vamis-iframe {
+  background: var(--background);
+}
+.vamis-iframe__empty {
+  padding: var(--gap-xl) var(--gap-base);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--borderRadiusMd);
+}
+
+@media (max-width: 767px) {
+  .vamis-collapse {
+    background: transparent;
+  }
+}

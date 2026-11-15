@@ -18,8 +18,8 @@ const emit = defineEmits<{
     <li v-for="node in nodes" :key="String(node.value)">
       <button
         type="button"
-        class="w-full rounded px-2 py-1 text-left text-sm"
-        :class="checked(node) ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
+        class="vamis-tree-select__item"
+        :class="{ 'is-active': checked(node) }"
         :style="{ paddingLeft: `${8 + (depth || 0) * 12}px` }"
         :disabled="disabled || node.disabled"
         @click="emit('pick', node)"

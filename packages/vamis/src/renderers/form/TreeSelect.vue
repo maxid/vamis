@@ -55,9 +55,9 @@ function checked(item: OptionItem) {
     <div class="relative">
       <Button type="button" variant="outline" class="w-full justify-between" :disabled="disabled" @click="open = !open">
         <span class="truncate">{{ label }}</span>
-        <span class="text-xs text-muted-foreground">树选择</span>
+        <span class="vamis-tree-select__hint">树选择</span>
       </Button>
-      <div v-if="open" class="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md border bg-popover py-1 shadow-md">
+      <div v-if="open" class="vamis-tree-select__menu absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md border py-1 shadow-md">
         <TreeBranch :nodes="tree" :checked="checked" :disabled="!!disabled" @pick="toggle" />
       </div>
     </div>

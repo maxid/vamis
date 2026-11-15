@@ -255,7 +255,7 @@ watch(fullscreen, async () => {
   >
     <Teleport to="body" :disabled="!fullscreen">
       <div
-        class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border bg-background"
+        class="vamis-monaco relative w-full min-w-0 overflow-visible rounded-md border"
         :class="{
           'ring-1 ring-ring': focused,
           'vamis-monaco--fullscreen': fullscreen,
@@ -266,7 +266,7 @@ watch(fullscreen, async () => {
         <button
           v-if="allowFullscreen"
           type="button"
-          class="absolute right-2 top-1 z-20 text-xs text-muted-foreground hover:text-foreground"
+          class="vamis-monaco__full"
           @click="fullscreen = !fullscreen"
         >
           {{ fullscreen ? '退出全屏' : '全屏' }}

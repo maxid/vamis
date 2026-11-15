@@ -22,7 +22,7 @@ const iframeTitle = computed(
   <div data-slot="iframe">
     <iframe
       v-if="safe"
-      class="w-full rounded-md border bg-background"
+      class="vamis-iframe w-full rounded-md border"
       :src="src"
       :name="schema.name"
       :title="iframeTitle"
@@ -33,7 +33,7 @@ const iframeTitle = computed(
       :sandbox="schema.sandbox"
       :referrerpolicy="schema.referrerpolicy"
     />
-    <div v-else class="rounded-md border border-dashed px-3 py-6 text-sm text-muted-foreground">
+    <div v-else class="vamis-iframe__empty">
       {{ src ? 'iframe src 不合法，已拒绝加载' : '未配置 iframe src' }}
     </div>
   </div>
