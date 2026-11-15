@@ -160,6 +160,10 @@ body,
 .doc-play {
   position: relative;
 }
+.doc-play__preview {
+  /* clip 到 rounded-lg，不建滚动包含块（overflow:hidden 会裁死 sticky）。 */
+  overflow: clip;
+}
 .doc-play__stage {
   position: relative;
 }

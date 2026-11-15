@@ -166,6 +166,7 @@ const showReset = computed(() => props.schema.reset === true)
 const panelClass = computed(() =>
   cn(
     'vamis-form-panel w-full min-w-0 mb-[var(--panel-margin-bottom)] overflow-hidden shadow-none',
+    props.schema.rounded === true ? 'is-rounded' : 'rounded',
     resolveClassName(props.schema.panelClassName, props.data),
   ),
 )

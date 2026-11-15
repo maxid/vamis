@@ -439,9 +439,27 @@
   --borderColor: var(--border);
   --TableCell-paddingX: var(--table-cell-px);
   --TableCell-paddingY: var(--table-cell-py);
-  --page-body-padding: 12px;
-  /* cxd --Panel-marginBottom (sizes-base-10 = 20px) */
+  /* Amis `--Page-*`：body 12、header 10×16、aside 160。 */
+  --page-body-padding: var(--gap-base);
+  --page-header-padding-y: 10px;
+  --page-header-padding-x: var(--gap-md);
+  --page-aside-width: 160px;
+  --page-aside-max-width: 300px;
+  --page-title-font-size: var(--fontSizeLg);
+  --page-title-font-weight: var(--fontWeightNormal);
+  --page-title-line-height: var(--lineHeightBase);
+  --page-title-color: var(--text-color);
+  --page-subtitle-color: var(--text-secondary);
+  --page-resizor-w: 12px;
+  --page-resizor-h: 24px;
+  --page-resizor-offset: 6px;
+  --page-resizor-radius: 2px;
+  --page-resizor-line-height: 10px;
+  /* Amis Page 无圆角；`rounded` / `className: rounded-lg` 才用 --borderRadiusLg 做左上右上。 */
+  --page-radius: 0;
+  /* cxd --Panel-marginBottom (sizes-base-10 = 20px)；圆角 --Panel-borderRadius = radius-3。 */
   --panel-margin-bottom: var(--gap-lg);
+  --panel-radius: var(--radius);
   /* Amis $zindex-* 阶梯。浮层 Teleport 到 body 后仍吃 :root。 */
   --z-dropdown: 1000;
   --z-sticky: 900;
@@ -10616,40 +10634,173 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--primary-foreground);
 }
 
+.vamis-page {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  background: var(--page-main-bg);
+  border-radius: var(--page-radius);
+}
+.vamis-page.is-rounded,
+.vamis-node.rounded-lg > .vamis-page {
+  border-top-left-radius: var(--borderRadiusLg);
+  border-top-right-radius: var(--borderRadiusLg);
+  overflow: clip;
+}
+.vamis-page__header {
+  padding: var(--page-header-padding-y) var(--page-header-padding-x);
+}
+.vamis-page__content {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+.vamis-page__main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.vamis-page__main > .vamis-page__header {
+  border-bottom: 1px solid var(--border);
+}
+.vamis-page__header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.vamis-page__header-row .vamis-page__header,
+.vamis-page__header-row .vamis-page__toolbar {
+  flex-grow: 1;
+  min-height: 100%;
+}
+.vamis-page__header-row .vamis-page__toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--gap-base);
+  text-align: right;
+}
+.vamis-page__toolbar > * + * {
+  margin-left: var(--gap-xs);
+}
 .vamis-page__title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap-xs);
   margin: 0;
-  font-size: var(--fontSizeLg);
-  font-weight: var(--fontWeightNormal);
-  line-height: var(--lineHeightBase);
-  color: var(--text-color);
+  padding: 0;
+  font-size: var(--page-title-font-size);
+  font-weight: var(--page-title-font-weight);
+  line-height: var(--page-title-line-height);
+  color: var(--page-title-color);
 }
 .vamis-page__subtitle {
+  display: block;
   margin: var(--gap-xs) 0 0;
   font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
   line-height: var(--lineHeightBase);
-  color: var(--text-secondary);
+  color: var(--page-subtitle-color);
+}
+.vamis-page__body {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: var(--page-body-padding);
+  flex: 1 1 auto;
+}
+.vamis-page__aside {
+  position: relative;
+}
+.vamis-page__aside-tpl {
+  padding: var(--gap-xs);
 }
 .vamis-page__resizor {
   position: absolute;
-  top: 0;
+  top: 50%;
+  right: calc(var(--page-resizor-offset) * -1);
   z-index: 1;
-  height: 100%;
-  width: 4px;
-  cursor: col-resize;
-  background: var(--border);
+  box-sizing: border-box;
+  width: var(--page-resizor-w);
+  height: var(--page-resizor-h);
+  margin-top: calc(var(--page-resizor-h) / -2);
+  border: 1px solid var(--border);
+  border-radius: var(--page-resizor-radius);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: var(--fontSizeSm);
+  line-height: var(--page-resizor-line-height);
+  text-align: center;
+  cursor: ew-resize;
+  user-select: none;
+  writing-mode: vertical-lr;
+}
+.vamis-page__resizor::after {
+  content: "···";
 }
 .vamis-page__resizor:hover {
-  background: var(--primary);
+  color: var(--text-color);
+  box-shadow: var(--select-menu-shadow);
 }
-.vamis-page__resizor--right {
-  right: 0;
+.vamis-page--right-aside > .vamis-page__aside > .vamis-page__resizor {
+  right: auto;
+  left: calc(var(--page-resizor-offset) * -1);
 }
-.vamis-page__resizor--left {
-  left: 0;
+
+@media (max-width: 767px) {
+  .vamis-page {
+    flex-direction: column;
+  }
+  .vamis-page__aside {
+    flex-shrink: 0;
+  }
+  .vamis-page__content {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+  .vamis-page__main {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .vamis-page__aside {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--page-aside-width);
+    border-right: 1px solid var(--border);
+  }
+  .vamis-page__aside--with-width {
+    min-width: var(--page-aside-width);
+    max-width: var(--page-aside-max-width);
+  }
+  .vamis-page--with-sidebar > .vamis-page__content {
+    width: 0;
+    flex-grow: 1;
+  }
+  .vamis-page--right-aside {
+    flex-direction: row-reverse;
+  }
+  .vamis-page--right-aside > .vamis-page__aside {
+    border-right: none;
+    border-left: 1px solid var(--border);
+  }
+  .vamis-page--aside-sticky > .vamis-page__aside {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }
 
 .vamis-anchor-nav__link {
@@ -10818,7 +10969,20 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   border-bottom: 1px solid var(--border);
   background: var(--fill-10);
 }
+/* 压过 Card `rounded-lg`（helper 8px）。Amis Panel 是 radius-3 = 4px。 */
+.vamis-form-panel[data-slot="card"],
+.vamis-form-panel {
+  border-radius: var(--panel-radius);
+}
+.vamis-form-panel.is-rounded,
+.vamis-form-panel.rounded-lg {
+  --panel-radius: var(--borderRadiusLg);
+}
 @media (max-width: 767px) {
+  .vamis-form-panel[data-slot="card"],
+  .vamis-form-panel {
+    border-radius: 0;
+  }
   .vamis-form-panel__header {
     background: none;
     border-bottom: none;

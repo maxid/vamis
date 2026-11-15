@@ -998,7 +998,8 @@ body:
 | messages.saveFailed | `string` | | 保存失败时提示 |
 | messages.validateFailed | `string` | `"依赖的部分字段没有通过验证"` | 表单验证失败时的提示 |
 | wrapWithPanel | `boolean` | `true` | 是否让 Form 用 panel 包起来，设置为 false 后 actions 将无效 |
-| panelClassName | [`ClassName`](/types/classname) | | 外层 panel 的类名 |
+| panelClassName | [`ClassName`](/types/classname) | | 外层 panel 的类名。`rounded-lg` 把圆角从默认 4px 抬到 8px（Vamis 优化） |
+| rounded | `boolean` | `false` | **Vamis 优化**。默认 panel 圆角对齐 Amis `--Panel-borderRadius`（`--radius` 4px）；`true` 时走 `--borderRadiusLg`（8px） |
 | api | [API](/types/api) | | Form 用来保存数据的 api |
 | initApi | [API](/types/api) | | Form 用来获取初始数据的 api |
 | rules | `Array<{rule,message,name?}>` | | 表单组合校验规则 |
@@ -1786,4 +1787,5 @@ onEvent:
 - `submit` 事件不会拦掉默认提交；Vamis 先校验并保存，再发事件。
 - 未接：`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign`、表单项级 `labelWidth`、`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
+- 默认 panel 圆角对齐 Amis（`--radius` 4px），不是 shadcn Card 的 `rounded-lg` 8px。`rounded: true` / `panelClassName: rounded-lg` 才用 8px。
 

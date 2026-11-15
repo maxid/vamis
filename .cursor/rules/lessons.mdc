@@ -212,6 +212,18 @@ alwaysApply: true
 
 ### 组装与盒模型
 
+### Page header 要有 padding 和底边，不要只改标题字号
+- 踩过：第五刀把 title 从 `text-xl font-semibold` 改成 16/400，没补 Amis `Page-header` 的 10×16 和 1px 底边，标题贴在预览顶上，和正文也对不齐。
+- 稳定做法：`.vamis-page` 转写 `_page.scss`。header padding 走 `--page-header-padding-*`，`main > header` / `header-row` 底边 `--border`，body `--page-body-padding`，aside 默认 160 + 右边。标题字号只是其中一条。侧栏拖宽手柄是 12×24 的 `···`，不是通高 4px 条。
+- 触及：`page`
+- 规则：Amis `_page.scss` / `Page.tsx` `renderHeader`；本文
+
+### Page / Form 圆角默认跟 Amis，不要用 Card `rounded-lg`
+- 踩过：Form 套 shadcn Card，`rounded-lg` 是 helper 8px；Amis Panel 是 `--borders-radius-3` 4px。Page 默认无圆角；文档预览井 `rounded-lg` 又不 `overflow:clip` 时，直角 Page 底会把井的顶角方掉。
+- 稳定做法：`--page-radius: 0`、`--panel-radius: var(--radius)`。Form 用 twMerge `rounded` 换掉 Card 自带的 `rounded-lg`，只有 `is-rounded` / 作者 `panelClassName: rounded-lg` 才抬 `--panel-radius`。不要写「凡带 rounded-lg 就抬」却忘了 Card 永远带这个 class。预览井用 `overflow: clip` 保住井自己的圆角，不要 `hidden`（会裁 sticky）。
+- 触及：`page` `form`
+- 规则：本文；Amis `_panel.scss` `--Panel-borderRadius`；`.doc-play__preview`
+
 ### 组装壳用 div，不要 landmark
 - 踩过：Page 根/侧栏改成 `header`/`aside`，宿主 `header {}` 漏进 embed。
 - 稳定做法：schema 布局壳用 `div`。标题可用 `h1`。不要 `role="banner"` / `role="complementary"`。`type: nav` 仍可用 `<nav>`。Container `wrapperComponent` 才是作者覆盖。

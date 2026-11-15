@@ -28,7 +28,7 @@ import Spinner from './Spinner.vue'
 
 const DEFAULT_ASIDE_MIN = 160
 const DEFAULT_ASIDE_MAX = 400
-const DEFAULT_ASIDE_WIDTH = 256
+const DEFAULT_ASIDE_WIDTH = 160
 
 const props = defineProps<{
   schema: SchemaObject
@@ -62,24 +62,37 @@ const cssVars = computed(() =>
 const hasTitleBlock = computed(
   () => !!(props.schema.title || props.schema.subTitle || props.schema.remark),
 )
-const hasHeader = computed(() => hasTitleBlock.value || toolbar.value.length > 0)
-const headerClass = computed(() =>
+const hasToolbar = computed(() => toolbar.value.length > 0)
+const hasHeaderRow = computed(() => hasTitleBlock.value && hasToolbar.value)
+const rootClass = computed(() =>
   cn(
-    hasTitleBlock.value && toolbar.value.length
-      ? 'mb-0 flex w-full min-w-0 items-center justify-between gap-4'
-      : 'mb-0 w-full min-w-0',
-    resolveClassName(props.schema.headerClassName, viewData.value),
+    'vamis-page',
+    hasAside.value && 'vamis-page--with-sidebar',
+    hasAside.value && asideSticky.value && 'vamis-page--aside-sticky',
+    hasAside.value && !asideOnLeft.value && 'vamis-page--right-aside',
+    props.schema.rounded === true && 'is-rounded',
   ),
+)
+const headerClass = computed(() =>
+  cn('vamis-page__header', resolveClassName(props.schema.headerClassName, viewData.value)),
 )
 const toolbarClass = computed(() =>
+  cn('vamis-page__toolbar', resolveClassName(props.schema.toolbarClassName, viewData.value)),
+)
+const bodyClass = computed(() =>
+  cn('vamis-page__body', resolveClassName(props.schema.bodyClassName, viewData.value)),
+)
+const asideClass = computed(() =>
   cn(
-    'min-w-0',
-    hasTitleBlock.value ? 'flex flex-1 flex-wrap items-center justify-end gap-2' : 'w-full',
-    resolveClassName(props.schema.toolbarClassName, viewData.value),
+    'vamis-page__aside',
+    props.schema.asideResizor ? '' : 'vamis-page__aside--with-width',
+    resolveClassName(props.schema.asideClassName, viewData.value),
   ),
 )
-const bodyClass = computed(() => resolveClassName(props.schema.bodyClassName, viewData.value))
-const asideClass = computed(() => resolveClassName(props.schema.asideClassName, viewData.value))
+const asideStyle = computed(() =>
+  props.schema.asideResizor ? { width: `${asideWidth.value}px` } : undefined,
+)
+const asideIsTpl = computed(() => typeof props.schema.aside === 'string')
 const titleText = computed(() =>
   typeof props.schema.title === 'string' ? filterTpl(props.schema.title, viewData.value) : '',
 )
@@ -282,68 +295,57 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full min-w-0 space-y-4" :style="cssVars">
+  <div :class="rootClass" :style="cssVars">
     <component :is="'style'" v-if="cssText">{{ cssText }}</component>
-    <div class="flex w-full min-w-0 gap-4">
-      <div
-        v-if="hasAside && asideOnLeft"
-        class="relative min-w-0 shrink-0 space-y-3"
-        :class="[asideSticky ? 'sticky top-0 self-start' : '', asideClass]"
-        :style="{ width: `${asideWidth}px` }"
-      >
+    <div v-if="hasAside" :class="asideClass" :style="asideStyle">
+      <div v-if="asideIsTpl" class="vamis-page__aside-tpl">
         <SchemaRenderer v-for="(node, i) in aside" :key="'a' + i" :schema="node" />
-        <div
-          v-if="schema.asideResizor"
-          class="vamis-page__resizor vamis-page__resizor--right"
-          @mousedown="onResizeDown"
-        />
       </div>
-
-      <div class="flex min-w-0 flex-1 flex-col">
-        <div
-          v-if="hasHeader"
-          :class="headerClass"
-        >
-          <div v-if="hasTitleBlock" class="min-w-0" :class="toolbar.length ? 'flex-1' : ''">
+      <template v-else>
+        <SchemaRenderer v-for="(node, i) in aside" :key="'a' + i" :schema="node" />
+      </template>
+      <div
+        v-if="schema.asideResizor"
+        class="vamis-page__resizor"
+        @mousedown="onResizeDown"
+      />
+    </div>
+    <div class="vamis-page__content">
+      <div class="vamis-page__main">
+        <div v-if="hasHeaderRow" class="vamis-page__header-row">
+          <div :class="headerClass">
             <h1 v-if="schema.title" class="vamis-page__title">
               <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" />
               <template v-else>{{ titleText }}</template>
-              <Remark
-                v-if="remarkSchema"
-                :schema="remarkSchema"
-                :data="viewData"
-              />
+              <Remark v-if="remarkSchema" :schema="remarkSchema" :data="viewData" />
             </h1>
-            <p v-if="schema.subTitle" class="vamis-page__subtitle">
+            <small v-if="schema.subTitle" class="vamis-page__subtitle">
               <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" />
               <template v-else>{{ subTitleText }}</template>
-            </p>
+            </small>
           </div>
-          <div
-            v-if="toolbar.length"
-            :class="toolbarClass"
-          >
+          <div :class="toolbarClass">
             <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
           </div>
         </div>
-        <div class="relative w-full min-w-0 p-[var(--page-body-padding)]" :class="bodyClass">
+        <div v-else-if="hasTitleBlock" :class="headerClass">
+          <h1 v-if="schema.title" class="vamis-page__title">
+            <SchemaRenderer v-if="isNodeObject(schema.title)" :schema="schema.title" />
+            <template v-else>{{ titleText }}</template>
+            <Remark v-if="remarkSchema" :schema="remarkSchema" :data="viewData" />
+          </h1>
+          <small v-if="schema.subTitle" class="vamis-page__subtitle">
+            <SchemaRenderer v-if="isNodeObject(schema.subTitle)" :schema="schema.subTitle" />
+            <template v-else>{{ subTitleText }}</template>
+          </small>
+        </div>
+        <div v-else-if="hasToolbar" :class="toolbarClass">
+          <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
+        </div>
+        <div :class="bodyClass">
           <Spinner :schema="spinnerSchema" />
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>
-      </div>
-
-      <div
-        v-if="hasAside && !asideOnLeft"
-        class="relative min-w-0 shrink-0 space-y-3"
-        :class="[asideSticky ? 'sticky top-0 self-start' : '', asideClass]"
-        :style="{ width: `${asideWidth}px` }"
-      >
-        <div
-          v-if="schema.asideResizor"
-          class="vamis-page__resizor vamis-page__resizor--left"
-          @mousedown="onResizeDown"
-        />
-        <SchemaRenderer v-for="(node, i) in aside" :key="'ar' + i" :schema="node" />
       </div>
     </div>
   </div>

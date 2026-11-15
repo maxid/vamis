@@ -53,7 +53,16 @@ const AMIS_CSS_VAR_ALIASES: Record<string, string> = {
   '--TableCell-height-large': '--table-row-h-lg',
   '--TableCell-paddingX': '--table-cell-px',
   '--Page-body-padding': '--page-body-padding',
+  '--Page-header-paddingX': '--page-header-padding-x',
+  '--Page-header-paddingY': '--page-header-padding-y',
+  '--Page-aside-width': '--page-aside-width',
+  '--Page-aside-maxWidth': '--page-aside-max-width',
+  '--Page-title-fontSize': '--page-title-font-size',
+  '--Page-title-fontWeight': '--page-title-font-weight',
+  '--Page-title-lineHeight': '--page-title-line-height',
+  '--Page-title-color': '--page-title-color',
   '--Panel-marginBottom': '--panel-margin-bottom',
+  '--Panel-borderRadius': '--panel-radius',
 }
 
 const CONTROL_WIDTH: Record<string, string> = {
