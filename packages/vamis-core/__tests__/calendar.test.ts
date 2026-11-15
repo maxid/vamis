@@ -222,12 +222,15 @@ describe('calendar value and schedules', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
     expect(vue).toContain('class="vamis-cal-chip-text"')
-    expect(vue).toContain('.vamis-cal-chip-text {')
-    expect(vue).toContain('position: absolute')
-    expect(vue).toContain('text-overflow: ellipsis')
+    // 月历皮肤在 @vamis/ui 的 styles.css，渲染器不带 <style>
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    const chip = css.slice(css.indexOf('.vamis-cal-chip-text {'))
+    expect(chip.slice(0, chip.indexOf('}'))).toContain('position: absolute')
+    expect(chip.slice(0, chip.indexOf('}'))).toContain('text-overflow: ellipsis')
+    expect(vue).not.toContain('<style')
     expect(vue).toContain('@click="openSchedule(cell, $event)"')
     expect(vue).not.toContain('!lane.placeholder && openSchedule')
-    expect(vue).not.toContain('visibility: hidden')
+    expect(css.slice(css.indexOf('.vamis-cal-chip {'), css.indexOf('.vamis-cal-chip-text {'))).not.toContain('visibility: hidden')
   })
 
   it('shares DateCalendarPanel across calendar and input-date', () => {

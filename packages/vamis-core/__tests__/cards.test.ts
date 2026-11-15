@@ -6,7 +6,8 @@ const here = dirname(fileURLToPath(import.meta.url))
 const read = (rel: string) => readFileSync(resolve(here, rel), 'utf8')
 describe('cards', () => {
   it('exposes select actions and doc table', () => {
-    const vue = read('../../vamis/src/renderers/Cards.vue')
+    // 皮肤在 @vamis/ui 的 styles.css，渲染器不带 <style>
+    const vue = read('../../vamis/src/renderers/Cards.vue') + read('../../vamis-ui/src/styles.css')
     for (const t of [
       "type === 'selectAll'",
       "type === 'clearAll'",
@@ -28,13 +29,15 @@ describe('cards', () => {
       "padding: var(--gap-xs) 0",
     ])
       expect(vue).toContain(t)
-    const card = read('../../vamis/src/renderers/Card.vue')
+    const card = read('../../vamis/src/renderers/Card.vue') + read('../../vamis-ui/src/styles.css')
     expect(card).toContain('--card-checked-fieldLabel')
     expect(card).toContain('is-modified')
-    expect(card).toContain('stroke="currentColor"')
+    // 拖拽手柄是 @vamis/ui 登记的 drag-bar（Amis 原件是 stroke），渲染器不写 <svg>
+    expect(card).toContain('<VamisIcon name="drag-bar"')
+    expect(read('../../vamis-ui/src/ui/vamis-icons.ts')).toContain('translate(5 1)" stroke="currentColor"')
     const theme = read('../../vamis-ui/src/styles.css')
     expect(theme).toContain('--card-modified-bg: var(--colors-neutral-fill-8)')
-    expect(theme).toContain('--cards-unsaved-heading-bg: #e8f0fe')
+    expect(theme).toContain('--cards-unsaved-heading-bg: var(--table-modified-bg)')
     expect(theme).toContain('--card-checked-bg: var(--colors-neutral-fill-11)')
     expect(theme).toContain('.vamis-node:has(> .vamis-form-item--normal)')
     expect(theme).toContain('.vamis-node.m-b > .vamis-form-item')

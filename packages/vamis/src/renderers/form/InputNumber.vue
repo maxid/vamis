@@ -31,7 +31,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisCaret } from '@vamis/ui'
+import { VamisCaret, VamisIcon } from '@vamis/ui'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
@@ -443,9 +443,7 @@ const numberClass = computed(() => [
           aria-label="减少"
           @mousedown.prevent="stepBy(-1, $event)"
         >
-          <svg viewBox="0 0 12 2" class="vamis-number__enhance-icon" aria-hidden="true">
-            <polygon points="0 1.6 0 0.4 12 0.4 12 1.6" fill="currentColor" />
-          </svg>
+          <VamisIcon name="minus" class="vamis-number__enhance-icon" />
         </button>
         <div class="vamis-number__input-wrap">
           <input
@@ -481,9 +479,7 @@ const numberClass = computed(() => [
             @mouseup="stopHold"
             @mouseleave="stopHold"
           >
-            <svg viewBox="0 0 12 8" class="vamis-number__caret" aria-hidden="true">
-              <path d="M1.5 6.2 L6 1.8 L10.5 6.2" fill="none" stroke="currentColor" stroke-width="1.2" />
-            </svg>
+            <VamisIcon name="step-up" class="vamis-number__caret" />
           </button>
           <button
             type="button"
@@ -496,9 +492,7 @@ const numberClass = computed(() => [
             @mouseup="stopHold"
             @mouseleave="stopHold"
           >
-            <svg viewBox="0 0 12 8" class="vamis-number__caret" aria-hidden="true">
-              <path d="M1.5 1.8 L6 6.2 L10.5 1.8" fill="none" stroke="currentColor" stroke-width="1.2" />
-            </svg>
+            <VamisIcon name="step-down" class="vamis-number__caret" />
           </button>
         </div>
         <button
@@ -511,9 +505,7 @@ const numberClass = computed(() => [
           aria-label="增加"
           @mousedown.prevent="stepBy(1, $event)"
         >
-          <svg viewBox="0 0 12 12" class="vamis-number__enhance-icon" aria-hidden="true">
-            <path d="M6.6 6.6V12H5.4V6.6H0V5.4h5.4V0h1.2v5.4H12v1.2z" fill="currentColor" />
-          </svg>
+          <VamisIcon name="plus" class="vamis-number__enhance-icon" />
         </button>
       </div>
       <div
@@ -540,7 +532,7 @@ const numberClass = computed(() => [
         :container="overlayContainer"
         @outside="unitOpen = false"
       >
-        <div class="vamis-select__popover" style="min-width: 80px">
+        <div class="vamis-select__popover vamis-number__unit-menu">
           <div
             v-for="item in units"
             :key="String(item.value)"

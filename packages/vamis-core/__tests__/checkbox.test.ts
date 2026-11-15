@@ -65,10 +65,11 @@ describe('checkbox chrome', () => {
   it('tokens follow Amis cxd 16×16 / 2px / dark menu surface', () => {
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     expect(css).toContain('--checkbox-size: 16px')
-    expect(css).toContain('--checkbox-radius: 2px')
+    expect(css).toContain('--checkbox-radius: var(--borderRadiusSm)')
     expect(css).toContain('--checkbox-icon-size: 14px')
-    expect(css).toContain('--checkbox-bg: #fff')
-    expect(css).toContain('--checkbox-bg: #17202d')
+    // 勾选盒底走升高面 --card（浅色 fill-11，深色 #17202d），不再单独写 hex
+    expect(css).toContain('--checkbox-bg: var(--card)')
+    expect(css).toContain('--card: #17202d')
     expect(css).toContain('--checkbox-button-min-w: 80px')
     expect(css).toContain('--checkbox-button-h: 32px')
     expect(css).toContain('opacity: 1')

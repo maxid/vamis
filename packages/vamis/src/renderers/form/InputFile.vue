@@ -34,7 +34,7 @@ import {
   type SchemaApi,
   type SchemaObject,
 } from '@vamis/core'
-import { Button, VamisClose } from '@vamis/ui'
+import { Button, VamisClose, VamisIcon } from '@vamis/ui'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 
@@ -779,13 +779,7 @@ onMounted(() => {
           class="vamis-file__tip"
           @click="openPicker"
         >
-          <svg class="vamis-file__cloud" viewBox="0 0 42 31" aria-hidden="true" focusable="false">
-            <path
-              fill="currentColor"
-              fill-rule="evenodd"
-              d="m20.872 15.498 4.512 6.003h-3.012v9h-3v-9H16.38l4.49-6.003Zm0-14.999c6.47 0 11.946 4.143 14.046 9.897 3.957.945 6.918 4.491 6.918 8.733 0 4.962-4.038 9-9 9-1.044 0-2.034-.213-2.964-.546v-3.315c.738.426 1.55.732 2.445.81.174.012.342.051.519.051 3.309 0 6-2.691 6-6 0-2.262-1.272-4.212-3.126-5.235-.858-.471-1.827-.765-2.874-.765-.07 0-.132.018-.201.021-.207-1.026-.576-1.983-1.023-2.898-1.953-3.981-6.012-6.753-10.74-6.753-4.725 0-8.778 2.769-10.737 6.744-.45.915-.82 1.872-1.026 2.898L9 13.129c-1.086 0-2.094.315-2.973.822C4.228 14.986 3 16.909 3 19.129c0 3.309 2.69 6 6 6 .147 0 .285-.033.432-.045.888-.063 1.698-.357 2.439-.759v3.285c-.906.315-1.86.519-2.871.519-4.962 0-9-4.038-9-9 0-4.203 2.91-7.716 6.813-8.7C8.904 4.66 14.389.499 20.872.499Z"
-            />
-          </svg>
+          <VamisIcon name="cloud-upload" class="vamis-file__cloud" />
           <span>将文件拖到此处，或<span class="vamis-file__tip-click">点击上传</span></span>
           <div v-if="schema.documentLink" class="vamis-file__help">
             <a :href="String(schema.documentLink)" @click.stop>{{ documentation }}</a>
@@ -800,12 +794,7 @@ onMounted(() => {
           :disabled="selectDisabled"
           @click="openPicker"
         >
-          <svg class="vamis-file__upload" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <path
-              fill="currentColor"
-              d="M3 10v2.995h10V10h1v4h-1v-.005H3V14H2v-4h1Zm5.026-8 3.814 3.815-.707.707-2.616-2.617V11h-1V3.923L4.89 6.548l-.707-.706L8.026 2Z"
-            />
-          </svg>
+          <VamisIcon name="upload" class="vamis-file__upload" />
           <span>{{ btnLabel }}</span>
         </Button>
       </div>
@@ -818,10 +807,7 @@ onMounted(() => {
             :title="item.state === 'invalid' || item.state === 'error' ? item.error : fileItemName(item, schema)"
           >
             <span class="vamis-file__icon">
-              <svg viewBox="0 0 14 16" aria-hidden="true" focusable="false">
-                <path d="M0 0v16h14V4.001L9.939 0H0Zm1 1h8v4h4v10H1V1Zm9 .464 2.575 2.537H10V1.464Z" fill="currentColor" />
-                <path d="M4 12h6v-1H4zm0-3h6V8H4z" fill="currentColor" />
-              </svg>
+              <VamisIcon name="file" />
             </span>
             <a
               v-if="fileHref(item)"
@@ -926,7 +912,7 @@ onMounted(() => {
             @click.prevent="openPicker"
           >
             <img v-if="frameImageSrc" :src="frameImageSrc" class="vamis-image-control__frame" alt="">
-            <span class="vamis-image-control__plus" aria-hidden="true">+</span>
+            <VamisIcon name="plus-fine" class="vamis-image-control__plus" />
             <span class="vamis-image-control__add-text">{{ uploadLabel }}</span>
           </label>
           <div v-if="maxSize" class="vamis-file__size">{{ sizeLimitTip() }}</div>

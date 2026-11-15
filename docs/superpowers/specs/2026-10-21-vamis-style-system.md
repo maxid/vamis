@@ -3,6 +3,7 @@
 - 日期：2026-10-23
 - 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全页 / Spacing 全页 / Sizing 全页 / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`text-color` / `background-color` / `border-color` 仍 55%。`registerTheme`、其余 `xxxClassName` 仍 P1）
 - 关联：
+  - [样式规范](./2026-11-15-vamis-style-standard.md)：写组件样式照着做的条款（标尺 / 色号 / 图标 / `:style` / 守卫）。本文是设计由来
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
   - [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)
 - 参考：

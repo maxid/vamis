@@ -147,22 +147,3 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
     </template>
   </div>
 </template>
-
-<style scoped>
-.vamis-progress__stripe {
-  background-image: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.15) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 255, 255, 0.15) 75%,
-    transparent 75%,
-    transparent
-  );
-  background-size: 32px 32px;
-}
-.vamis-progress__animate {
-  transition: width 0.3s ease;
-}
-</style>

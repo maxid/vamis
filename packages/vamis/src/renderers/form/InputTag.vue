@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Badge, Button, Input } from '@vamis/ui'
+import { Badge, Button, Input, VamisClose } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
@@ -62,7 +62,7 @@ const suggestions = computed(() => {
       <div class="flex flex-wrap items-center gap-1">
         <Badge v-for="(tag, i) in tags" :key="tag + i" variant="secondary" class="gap-1">
           {{ tag }}
-          <button type="button" class="text-xs" :disabled="disabled" @click="remove(i)">×</button>
+          <button type="button" class="vamis-input-tag__remove" :disabled="disabled" aria-label="移除" @click="remove(i)"><VamisClose /></button>
         </Badge>
         <Input
           v-model="draft"

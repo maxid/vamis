@@ -105,7 +105,7 @@ describe('image renderer / docs', () => {
     expect(css).toContain('.vamis-image-gallery')
     expect(css).toContain('--image-gallery-max: 1010px')
     expect(css).toContain('--image-gallery-gutter: 30px')
-    expect(css).toContain('--image-gallery-toolbar-bg: #ffffff')
+    expect(css).toContain('--image-gallery-toolbar-bg: var(--white)')
     expect(css).toContain('--image-gallery-tool: 40px')
     expect(css).toContain('animation-name: tooltipIn')
     expect(gallery).toContain('vamis-image-gallery__title')

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { SchemaRenderer, type SchemaObject } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, VamisIcon } from '@vamis/ui'
 import { cssSize, readList } from './prop'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
@@ -101,7 +101,7 @@ onBeforeUnmount(stop)
         class="absolute left-2 top-1/2 -translate-y-1/2"
         @click="go(index - 1)"
       >
-        ‹
+        <VamisIcon name="left-arrow" class="vamis-carousel__arrow" />
       </Button>
       <Button
         v-if="controls.includes('arrows') && items.length > 1"
@@ -110,7 +110,7 @@ onBeforeUnmount(stop)
         class="absolute right-2 top-1/2 -translate-y-1/2"
         @click="go(index + 1)"
       >
-        ›
+        <VamisIcon name="right-arrow" class="vamis-carousel__arrow" />
       </Button>
       <div v-if="controls.includes('dots')" class="absolute inset-x-0 bottom-2 flex justify-center gap-1">
         <button

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { overlayContainerFrom, overlayIsMobile, useEnv, type ImageToolbarAction } from '@vamis/core'
-import { VamisClose, VamisGalleryToolIcon } from '@vamis/ui'
+import { VamisClose, VamisGalleryToolIcon, VamisIcon } from '@vamis/ui'
 
 export type ImageGalleryItem = {
   src: string
@@ -199,7 +199,7 @@ const mobile = overlayIsMobile(undefined, env)
             aria-label="上一张"
             @click="go(current - 1)"
           >
-            ‹
+            <VamisIcon name="left-arrow" />
           </button>
           <button
             v-if="showStrip"
@@ -210,7 +210,7 @@ const mobile = overlayIsMobile(undefined, env)
             aria-label="下一张"
             @click="go(current + 1)"
           >
-            ›
+            <VamisIcon name="right-arrow" />
           </button>
         </div>
         <div v-if="showStrip" class="vamis-image-gallery__footer">

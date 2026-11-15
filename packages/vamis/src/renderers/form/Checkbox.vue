@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { cn } from '@vamis/ui'
+import { cn, VamisIcon } from '@vamis/ui'
 import {
   SchemaRenderer,
   checkboxClearValue,
@@ -186,12 +186,7 @@ function resolveOption(raw: unknown, ctx: Record<string, unknown>) {
             @change="onNativeChange"
           />
           <i class="vamis-checkbox__corner" aria-hidden="true">
-            <svg class="vamis-checkbox__icon" viewBox="0 0 1024 1024">
-              <path
-                d="M806.784 295.744l45.248 45.184-362.112 362.048-45.184 45.312-226.24-226.24 45.184-45.184 180.992 180.928z"
-                fill="currentColor"
-              />
-            </svg>
+            <VamisIcon name="checkbox-check" class="vamis-checkbox__icon" />
           </i>
           <span v-if="optionNode?.kind === 'text'">{{ optionNode.text }}</span>
           <SchemaRenderer v-else-if="optionNode?.kind === 'schema'" :schema="optionNode.schema" :extra-data="data" />
@@ -212,15 +207,8 @@ function resolveOption(raw: unknown, ctx: Record<string, unknown>) {
             @change="onNativeChange"
           />
           <i class="vamis-checkbox__mark" data-slot="checkbox" :class="markClass" aria-hidden="true">
-            <svg class="vamis-checkbox__icon vamis-checkbox__icon--check" viewBox="0 0 1024 1024">
-              <path
-                d="M806.784 295.744l45.248 45.184-362.112 362.048-45.184 45.312-226.24-226.24 45.184-45.184 180.992 180.928z"
-                fill="currentColor"
-              />
-            </svg>
-            <svg class="vamis-checkbox__icon vamis-checkbox__icon--partial" viewBox="0 0 12 12">
-              <rect x="2" y="5" width="8" height="2" fill="currentColor" />
-            </svg>
+            <VamisIcon name="checkbox-check" class="vamis-checkbox__icon vamis-checkbox__icon--check" />
+            <VamisIcon name="checkbox-partial" class="vamis-checkbox__icon vamis-checkbox__icon--partial" />
           </i>
           <span v-if="optionNode?.kind === 'text'" :class="optionClass">{{ optionNode.text }}</span>
           <SchemaRenderer v-else-if="optionNode?.kind === 'schema'" :schema="optionNode.schema" :extra-data="data" />

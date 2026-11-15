@@ -15,7 +15,7 @@ describe('tag', () => {
       'VamisClose',
       'resolveIcon',
       'vamis-tag-default-icon',
-      'vamis-tag-dot-wave',
+      'name="status-dot"',
     ])
       expect(vue).toContain(t)
     expect(vue).not.toContain('closed.value = true')

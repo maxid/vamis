@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@vamis/ui/lib/utils"
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -10,7 +9,7 @@ const props = defineProps<{
 <template>
   <tr
     data-slot="table-row"
-    :class="cn('hover:bg-muted/50 transition-colors', props.class)"
+    :class="props.class"
   >
     <slot />
   </tr>

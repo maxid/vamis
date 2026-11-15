@@ -12,7 +12,7 @@ import {
   type ResolvedIcon,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisClose } from '@vamis/ui'
+import { VamisClose, VamisIcon } from '@vamis/ui'
 import IconMark from '../IconMark.vue'
 import { readValue } from './format'
 
@@ -141,20 +141,7 @@ const className = computed(() => {
   >
     <span class="vamis-tag__text" :title="label || undefined"
       ><span v-if="displayMode === 'status'" class="vamis-tag__prev" aria-hidden="true"
-        ><IconMark v-if="!useDefaultDot" :icon="statusIcon" /><svg
-          v-else
-          class="icon vamis-tag-default-icon"
-          viewBox="0 0 16 16"
-          xmlns="http://www.w3.org/2000/svg"
-          focusable="false"
-        >
-          <g fill="currentColor" fill-rule="evenodd">
-            <circle cx="8" cy="8" r="6" />
-            <circle class="vamis-tag-dot-wave" cx="8" cy="8" r="6" opacity=".5">
-              <animate attributeName="r" begin="0" values="6;8;6" dur="1.5s" repeatCount="indefinite" />
-            </circle>
-          </g>
-        </svg></span
+        ><IconMark v-if="!useDefaultDot" :icon="statusIcon" /><VamisIcon name="status-dot" v-else class="icon vamis-tag-default-icon" /></span
       >{{ label }}</span
     >
     <span v-if="closable" class="vamis-tag__close" role="button" aria-label="关闭" @click="onClose">

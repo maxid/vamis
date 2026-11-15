@@ -94,6 +94,19 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - html / body 不钉字族（对齐 Amis unset）。`.vamis-root` / SDK 根走 `--fontFamilyBase`（= `--fonts-base-family`，实测 Helvetica Neue）、`font-size: 14px; line-height: 1.5`。不要 `@apply font-sans`（helper 英文硬编码栈）或 `text-sm`（TW 行高 20px）当默认
 - **组件配方也是 token，不要在 `.vamis-xxx` 写死色和 px。** 对齐 Amis `_properties.scss`：`--button-*`、`--tooltip-*`、`--badge-*`、`--remark-*` 挂 `:root`，选择器只 `var()`。主题切换 = 换变量。组件圆角可以和全局 `--radius` 不同（Overlay Tooltip 是 `--borderRadiusLg` 8px），但必须是变量。禁止用 shadcn `--popover` / `--radius` 去套 Overlay Tooltip。禁止用 shadcn `Badge` / `animate-ping` 去套 Overlay Badge。禁止用 shadcn Tooltip 去套 Remark。
 
+## 标尺：一个量只有一处定义
+
+完整条款见 [样式规范](../../docs/superpowers/specs/2026-11-15-vamis-style-standard.md)。写组件样式前先读它，下面是硬线。
+
+- **四层单向引用**：主题色阶（`themes.css` `--colors-*`）→ 标尺（`:root` 的 `--fontSize*` / `--fontWeight*` / `--borderRadius*` / `--text-*` / `--icon-*` / `--gap-*` / `--card`）→ 组件 token → 选择器。选择器只 `var()`，不出现 px 字号和 hex，也不写 `var(--x, #fff)` 兜底
+- **字号**只有 12 / 14 / 16 / 18 四档（`--fontSizeSm` / `Base` / `Lg` / `Xl`），字重 400 / 500 / 700。模板不用 `text-xs` / `text-sm` 当默认字号
+- **文字色四档**：`--text-color` 正文、`--text-secondary` 标签、`--text-tertiary` 说明、`--text-muted` 占位禁用。shadcn 的 `--foreground` / `--muted-foreground` 是它们的别名
+- **升高面**（卡片 / 下拉 / Tooltip / PopOver / 勾选盒底）一律 `var(--card)`。不写 `#fff`，不各起带 hex 的 `--xxx-bg`
+- **hex** 只在 `themes.css` 色阶和少数色阶上没有的 Amis 字面量 token 里。`.dark` 只留色阶翻转后不对的覆盖
+- **`:style`** 只放作者在 schema 里写的值、运行时量出来的几何、带 alpha 的字面色。默认皮肤常量写 class + token；作者没写时给 `undefined`，不要回落一个 hex。模板不写静态 `style="…"`
+- **原语配方打在原语上**（`[data-slot="…"]`），不要挂在某一个渲染器的外壳下。表格 th 14 / td 12 在 `[data-slot="table-head"]` / `[data-slot="table-cell"]`，`Table` / `CRUD` / `InputTable` / `Tasks` 共用
+- 守卫：`packages/vamis-core/__tests__/style-system.test.ts`。上限只许减
+
 ## 深色主题（浮层必核）
 
 主题切换 = 换 `:root` / `.dark` 变量，不是另写一套选择器。已完成的组件多数只核过浅色；Tooltip / PopOver / 下拉 / Dialog / Toast **Teleport 到 body** 后仍吃 `html.dark` 的变量，但写死 `#fff` 的面板不会变。
@@ -106,6 +119,8 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 禁止：只看浅色文档站就标完成；只给 Select 补 `.dark`、别的浮层继续白盒。
 
 ## 图标
+
+组件自带的 chrome 图标（勾 / 叉 / 翻页 / 拖拽手柄 / 搜索…）只有一个来源：`<VamisIcon name>`，字形登记在 `packages/vamis-ui/src/ui/vamis-icons.ts`（转写 Amis `amis-ui/src/icons/*.svg`）；带展开、动画的用专用 `Vamis*` 组件。渲染器模板不写 chrome 的 `<svg>`，不拿 `×` `›` `▾` `+` 当图标，不再新引 lucide。下面说的是作者 `icon` 字段。
 
 对齐 Amis `packages/amis-core/src/utils/icon.tsx` 与 `packages/amis-ui/src/components/icons.tsx`。schema `icon` 只决定**落哪个节点**；字形来自字体 CSS、图片或 SVG，不要在运行时用 CSS mask / `::before` 给每个 `fa-*` 画一套。
 

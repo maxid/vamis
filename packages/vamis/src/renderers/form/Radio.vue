@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { cn } from '@vamis/ui'
+import { cn, VamisIcon } from '@vamis/ui'
 import {
   SchemaRenderer,
   checkboxClearValue,
@@ -208,12 +208,7 @@ function resolveOption(raw: unknown, ctx: Record<string, unknown>) {
             @change="onNativeChange"
           />
           <i class="vamis-radio__mark" :class="markClass" aria-hidden="true">
-            <svg class="vamis-radio__dot" viewBox="0 0 1024 1024">
-              <path
-                d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z"
-                fill="currentColor"
-              />
-            </svg>
+            <VamisIcon name="radio-dot" class="vamis-radio__dot" />
           </i>
           <span v-if="optionNode?.kind === 'text'" :class="optionClass">{{ optionNode.text }}</span>
           <SchemaRenderer v-else-if="optionNode?.kind === 'schema'" :schema="optionNode.schema" :extra-data="data" />

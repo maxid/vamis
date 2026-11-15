@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VamisIcon } from '@vamis/ui'
 import { computed, ref } from 'vue'
 import {
   SchemaRenderer,
@@ -74,9 +75,7 @@ function toggle() {
           aria-label="折叠"
           @click="toggle"
         >
-          <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
-            <path d="M2 4.5 L6 8.5 L10 4.5" fill="none" stroke="currentColor" stroke-width="1.4" />
-          </svg>
+          <VamisIcon name="chevron-down" width="12" height="12" />
         </button>
       </template>
     </div>
@@ -98,74 +97,3 @@ function toggle() {
     </div>
   </div>
 </template>
-
-<style scoped>
-[data-vamis-panel] {
-  width: 100%;
-  min-width: 0;
-  margin: 0 0 var(--panel-margin-bottom, 20px);
-  background: var(--card, #fff);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
-[data-vamis-panel-heading] {
-  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
-  background: color-mix(in oklch, var(--muted) 55%, var(--card, #fff));
-  color: color-mix(in oklch, var(--foreground) 72%, transparent);
-  border-bottom: 1px solid var(--border);
-  border-radius: var(--radius) var(--radius) 0 0;
-  box-sizing: border-box;
-}
-[data-vamis-panel-heading].is-collapsible {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-[data-vamis-panel-title] {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: inherit;
-}
-[data-vamis-panel-arrow] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  transform: rotate(180deg);
-  transition: transform 0.1s ease-in;
-}
-[data-vamis-panel-arrow][data-collapsed] {
-  transform: rotate(0deg);
-}
-[data-vamis-panel-body] {
-  padding: var(--gap-base, 12px);
-  box-sizing: border-box;
-}
-[data-vamis-panel-footer],
-[data-vamis-panel-actions] {
-  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
-  border-top: 1px solid var(--border);
-  background: transparent;
-  box-sizing: border-box;
-  clear: both;
-}
-[data-vamis-panel-actions] {
-  text-align: right;
-}
-[data-vamis-panel-actions] > * {
-  margin-left: var(--gap-sm, 8px);
-}
-[data-vamis-panel-footer-wrap][data-affix] {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-  background: var(--card, #fff);
-}
-</style>

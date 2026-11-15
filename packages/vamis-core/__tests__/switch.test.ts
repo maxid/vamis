@@ -15,7 +15,7 @@ describe('switch chrome', () => {
     expect(css).toContain('--switch-radius: 30px')
     expect(css).toContain('--switch-thumb-size: 16px')
     expect(css).toContain('--switch-thumb-margin: 2px')
-    expect(css).toContain('--switch-checked-hover-bg: #144bcc')
+    expect(css).toContain('--switch-checked-hover-bg: var(--colors-brand-4)')
     expect(css).toContain('--switch-sm-height: 16px')
     expect(css).toContain('--switch-sm-width: 28px')
     expect(css).toContain('--switch-sm-thumb-size: 12px')
@@ -26,8 +26,10 @@ describe('switch chrome', () => {
 
   it('dark theme overrides the same switch tokens', () => {
     const dark = css.slice(css.indexOf('.dark {'))
-    expect(dark).toContain('--switch-bg: #84878c')
-    expect(dark).toContain('--switch-thumb-bg: #f7f8fa')
+    // 轨道底跟主题色阶翻转（fill-7），深色不再单独覆盖
+    expect(css).toContain('--switch-bg: var(--colors-neutral-fill-7)')
+    expect(dark).not.toContain('--switch-bg:')
+    expect(dark).toContain('--switch-thumb-bg: var(--colors-neutral-fill-2)')
     expect(dark).toContain('--switch-checked-hover-bg: var(--primary-hover)')
   })
 

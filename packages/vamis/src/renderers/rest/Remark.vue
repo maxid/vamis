@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VamisIcon } from '@vamis/ui'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import {
   filterTpl,
@@ -160,15 +161,7 @@ onBeforeUnmount(() => {
   >
     <span v-if="label">{{ label }}</span>
     <span :class="iconClass" aria-hidden="true">
-      <svg
-        v-if="icon.kind === 'empty'"
-        viewBox="0 0 12 12"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <text font-size="12" fill="currentColor">
-          <tspan x="3" y="10.5">？</tspan>
-        </text>
-      </svg>
+      <VamisIcon name="question-mark" v-if="icon.kind === 'empty'" />
       <IconMark v-else :icon="icon" />
     </span>
   </div>

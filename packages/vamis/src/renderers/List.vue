@@ -17,7 +17,7 @@ import {
   type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
-import { Checkbox } from '@vamis/ui'
+import { Checkbox, VamisIcon } from '@vamis/ui'
 import {
   isListControlClick,
   listIndexDataField,
@@ -441,18 +441,7 @@ watch(
               title="拖动排序"
               @click.stop
             >
-              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-                <g transform="translate(5 1)" fill="currentColor">
-                  <circle cx="1" cy="1" r="1" />
-                  <circle cx="5" cy="1" r="1" />
-                  <circle cx="1" cy="5" r="1" />
-                  <circle cx="5" cy="5" r="1" />
-                  <circle cx="1" cy="9" r="1" />
-                  <circle cx="5" cy="9" r="1" />
-                  <circle cx="1" cy="13" r="1" />
-                  <circle cx="5" cy="13" r="1" />
-                </g>
-              </svg>
+              <VamisIcon name="drag-bar" class="icon" />
             </span>
             <span v-else-if="selectable" class="vamis-list__check" @click.stop>
               <Checkbox

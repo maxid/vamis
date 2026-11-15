@@ -23,7 +23,7 @@ import {
   type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
-import { Pencil, VamisCaret, VamisClear, XIcon } from '@vamis/ui'
+import { Pencil, VamisCaret, VamisClear, XIcon, VamisIcon, VamisClose } from '@vamis/ui'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
@@ -441,7 +441,7 @@ watch(
                 aria-label="移除"
                 @mousedown.prevent
                 @click="removeTag(item, $event)"
-              >×</button>
+              ><VamisClose /></button>
             </span>
             <span
               v-if="restTags.length"
@@ -467,7 +467,7 @@ watch(
             data-fold-chip
           >
             <span class="vamis-select__chip-label">{{ item.label }}</span>
-            <button v-if="!locked && !item.disabled" type="button" class="vamis-select__chip-close">×</button>
+            <button v-if="!locked && !item.disabled" type="button" class="vamis-select__chip-close"><VamisClose /></button>
           </span>
           <span class="vamis-select__chip vamis-select__overflow" data-fold-more>+ 00 ...</span>
         </div>
@@ -518,7 +518,7 @@ watch(
                 aria-label="移除"
                 @mousedown.prevent
                 @click="removeTag(item, $event)"
-              >×</button>
+              ><VamisClose /></button>
             </span>
           </div>
         </template>
@@ -537,17 +537,7 @@ watch(
           :class="isGroupMenu ? 'vamis-select__search--sheet' : 'vamis-select__search--line'"
         >
           <div class="vamis-select__search-inner">
-            <svg
-              v-if="!isGroupMenu"
-              class="vamis-select__search-icon"
-              viewBox="0 0 18 18"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
-              />
-            </svg>
+            <VamisIcon name="search" v-if="!isGroupMenu" class="vamis-select__search-icon" />
             <input
               :value="ctl.keyword.value"
               class="vamis-select__search-input"
@@ -560,18 +550,8 @@ watch(
               class="vamis-select__search-clear"
               aria-label="清除检索"
               @click="clearSearch"
-            >×</button>
-            <svg
-              v-else-if="isGroupMenu"
-              class="vamis-select__search-icon"
-              viewBox="0 0 18 18"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
-              />
-            </svg>
+            ><VamisClose /></button>
+            <VamisIcon name="search" v-else-if="isGroupMenu" class="vamis-select__search-icon" />
           </div>
         </div>
         <div
@@ -610,9 +590,7 @@ watch(
             @click="onToggleAll()"
           >
             <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
-              <svg v-if="allChecked" viewBox="0 0 16 16" aria-hidden="true">
-                <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-              </svg>
+              <VamisIcon name="menu-check" v-if="allChecked" />
             </span>
             <span>{{ checkAllLabel }}</span>
           </button>
@@ -633,9 +611,7 @@ watch(
                     class="vamis-select__check"
                     :class="{ 'is-checked': isSelected(child.value) }"
                   >
-                    <svg v-if="isSelected(child.value)" viewBox="0 0 16 16" aria-hidden="true">
-                      <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-                    </svg>
+                    <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
                   </span>
                   <SchemaRenderer
                     v-if="menuTpl != null"
@@ -658,18 +634,14 @@ watch(
                   class="vamis-select__mcheck"
                   aria-hidden="true"
                 >
-                  <svg viewBox="0 0 16 16">
-                    <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
-                  </svg>
+                  <VamisIcon name="check" />
                 </span>
                 <span
                   v-else-if="!useMobileTick && ctl.config.value.multiple"
                   class="vamis-select__check"
                   :class="{ 'is-checked': isSelected(opt.value) }"
                 >
-                  <svg v-if="isSelected(opt.value)" viewBox="0 0 16 16" aria-hidden="true">
-                    <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-                  </svg>
+                  <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
                 </span>
                 <SchemaRenderer
                   v-if="menuTpl != null"
@@ -701,17 +673,7 @@ watch(
             @mousedown.stop
           >
             <div class="vamis-select__search-inner">
-              <svg
-                v-if="!isGroupMenu"
-                class="vamis-select__search-icon"
-                viewBox="0 0 18 18"
-                aria-hidden="true"
-              >
-                <path
-                  fill="currentColor"
-                  d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
-                />
-              </svg>
+              <VamisIcon name="search" v-if="!isGroupMenu" class="vamis-select__search-icon" />
               <input
                 :value="ctl.keyword.value"
                 class="vamis-select__search-input"
@@ -725,18 +687,8 @@ watch(
                 aria-label="清除检索"
                 @mousedown.prevent
                 @click="clearSearch"
-              >×</button>
-              <svg
-                v-else-if="isGroupMenu"
-                class="vamis-select__search-icon"
-                viewBox="0 0 18 18"
-                aria-hidden="true"
-              >
-                <path
-                  fill="currentColor"
-                  d="M2 8c0-3.309 2.691-6 6-6s6 2.691 6 6-2.691 6-6 6-6-2.691-6-6Zm16 8.586L14.314 12.9A7.955 7.955 0 0 0 16 8a8 8 0 1 0-8 8 7.955 7.955 0 0 0 4.9-1.686L16.586 18 18 16.586Z"
-                />
-              </svg>
+              ><VamisClose /></button>
+              <VamisIcon name="search" v-else-if="isGroupMenu" class="vamis-select__search-icon" />
             </div>
           </div>
           <button
@@ -747,9 +699,7 @@ watch(
             @click.stop="onToggleAll()"
           >
             <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
-              <svg v-if="allChecked" viewBox="0 0 16 16" aria-hidden="true">
-                <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-              </svg>
+              <VamisIcon name="menu-check" v-if="allChecked" />
             </span>
             <span>{{ checkAllLabel }}</span>
           </button>
@@ -772,9 +722,7 @@ watch(
                     class="vamis-select__check"
                     :class="{ 'is-checked': isSelected(child.value) }"
                   >
-                    <svg v-if="isSelected(child.value)" viewBox="0 0 16 16" aria-hidden="true">
-                      <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-                    </svg>
+                    <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
                   </span>
                   <SchemaRenderer
                     v-if="menuTpl != null"
@@ -799,9 +747,7 @@ watch(
                   class="vamis-select__check"
                   :class="{ 'is-checked': isSelected(opt.value) }"
                 >
-                  <svg v-if="isSelected(opt.value)" viewBox="0 0 16 16" aria-hidden="true">
-                    <path fill="currentColor" d="M6.4 11.2 3.2 8l1.05-1.05L6.4 9.1l5.35-5.35L12.8 4.8z" />
-                  </svg>
+                  <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
                 </span>
                 <SchemaRenderer
                   v-if="menuTpl != null"

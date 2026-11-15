@@ -38,6 +38,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  VamisIcon,
 } from '@vamis/ui'
 import ColumnToggler from './ColumnToggler.vue'
 import {
@@ -296,26 +297,19 @@ function cellWidth(col: SchemaObject) {
                   class="vamis-table2-sort-icon is-up"
                   :class="{ 'is-active': sortDir(col) === 'asc' }"
                 >
-                  <svg viewBox="0 0 7 10">
-                    <polygon points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
-                  </svg>
+                  <VamisIcon name="sort-asc" />
                 </i>
                 <i
                   class="vamis-table2-sort-icon is-down"
                   :class="{ 'is-active': sortDir(col) === 'desc' }"
                 >
-                  <svg viewBox="0 0 7 10">
-                    <polygon transform="translate(3.5,5) scale(1,-1) translate(-3.5,-5)" points="3.5 0 2.8 0.703 0 3.514 0.7 4.217 3.005 1.903 3.005 10 3.995 10 3.995 1.903 6.3 4.217 7 3.514 4.2 0.703" />
-                  </svg>
+                  <VamisIcon name="sort-desc" />
                 </i>
                 <i
                   class="vamis-table2-sort-icon is-default"
                   :class="{ 'is-active': !sortDir(col) }"
                 >
-                  <svg viewBox="0 0 7 12">
-                    <polygon points="3.5354 0.0004 2.8284 0.7064 0.0004 3.5344 0.7074 4.2424 3.0354 1.9134 3.0354 5.0354 4.0354 5.0354 4.0354 1.9134 6.3634 4.2424 7.0704 3.5344 4.2424 0.7064" />
-                    <polygon points="3.035 7.0348 3.035 10.1558 0.708 7.8278 0 8.5348 2.828 11.3628 3.535 12.0708 4.243 11.3628 7.071 8.5348 6.363 7.8278 4.036 10.1558 4.036 7.0348" />
-                  </svg>
+                  <VamisIcon name="sort-default" />
                 </i>
               </span>
             </span>
@@ -377,145 +371,3 @@ function cellWidth(col: SchemaObject) {
     </div>
   </div>
 </template>
-
-<style>
-.vamis-table2 {
-  overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--card);
-}
-.vamis-table2 [data-slot="table-container"] {
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-.vamis-table2 table {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--foreground);
-}
-.vamis-table2 th,
-.vamis-table2 td {
-  height: var(--table-row-h);
-  padding: 10px;
-  font-weight: 400;
-  vertical-align: middle;
-}
-.vamis-table2 th:first-child,
-.vamis-table2 td:first-child {
-  padding-left: 12px;
-}
-.vamis-table2 th:last-child,
-.vamis-table2 td:last-child {
-  padding-right: 12px;
-}
-.vamis-table2 th {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted-foreground);
-  background: color-mix(in oklch, var(--muted) 70%, var(--card));
-  border-right: 1px solid color-mix(in oklch, var(--border) 70%, white);
-}
-.vamis-table2 th:last-child {
-  border-right: 0;
-}
-.vamis-table2 td {
-  font-size: 12px;
-  line-height: 1.5;
-  border-top: 1px solid var(--border);
-}
-.vamis-table2 tbody tr:last-child td {
-  border-bottom: 1px solid var(--border);
-}
-.vamis-table2-title,
-.vamis-table2-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 8px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--foreground);
-}
-.vamis-table2-head-cell {
-  display: flex;
-  align-items: center;
-  line-height: 1.5;
-}
-.vamis-table2-sort {
-  position: relative;
-  display: block;
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-  margin-left: 8px;
-  color: #b8babf;
-  cursor: pointer;
-}
-.vamis-table2-sort-icon {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  width: 13px;
-  height: 21px;
-  font-style: normal;
-  cursor: pointer;
-  fill: currentColor;
-  transform: translate(-50%, -50%);
-  align-items: center;
-  justify-content: center;
-}
-.vamis-table2-sort-icon.is-active {
-  display: flex;
-}
-.vamis-table2-sort-icon svg {
-  display: block;
-  width: 13px;
-  height: 13px;
-  fill: currentColor;
-}
-.vamis-table2-sort-icon.is-default.is-active {
-  color: #b8babf;
-}
-.vamis-table2-sort-icon.is-default.is-active:hover {
-  color: #151b26;
-}
-.vamis-table2-sort-icon.is-up.is-active,
-.vamis-table2-sort-icon.is-down.is-active {
-  color: var(--primary);
-}
-.vamis-table2 tr.is-disabled {
-  color: var(--muted-foreground);
-  background: color-mix(in oklch, var(--muted) 50%, var(--card));
-}
-.vamis-table2.is-small th,
-.vamis-table2.is-small td {
-  height: 33px;
-  padding: 6px 4px;
-}
-.vamis-table2.is-large th,
-.vamis-table2.is-large td {
-  height: 61px;
-  padding: 20px 12px;
-}
-.vamis-table2.is-bordered {
-  border: 1px solid var(--border);
-}
-.vamis-table2.is-bordered .vamis-table2-title {
-  border-bottom: 1px solid var(--border);
-}
-.vamis-table2.is-bordered .vamis-table2-footer {
-  border-top: 1px solid var(--border);
-}
-.vamis-table2.is-bordered th,
-.vamis-table2.is-bordered td {
-  border: 1px solid var(--border);
-}
-</style>

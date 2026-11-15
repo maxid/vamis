@@ -43,7 +43,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisCaret, VamisClose } from '@vamis/ui'
+import { VamisCaret, VamisClose, VamisIcon } from '@vamis/ui'
 import { useForm } from '../formContext'
 import IconMark from './IconMark.vue'
 import VamisOverlay from '../overlay/VamisOverlay.vue'
@@ -710,9 +710,7 @@ const rootClass = computed(() =>
         </button>
       </div>
       <button v-if="addable" type="button" class="vamis-tabs__add" @click="addTab">
-        <svg class="vamis-tabs__add-icon" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path d="M6.6 6.6V12H5.4V6.6H0V5.4h5.4V0h1.2v5.4H12v1.2z" fill="currentColor" />
-        </svg>
+        <VamisIcon name="plus" class="vamis-tabs__add-icon" />
         <span>{{ addBtnText }}</span>
       </button>
       <div v-if="toolbar.length" class="vamis-tabs__toolbar" data-vamis-tabs-toolbar :class="toolbarClass">

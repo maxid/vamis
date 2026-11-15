@@ -66,33 +66,14 @@ describe('package boundaries', () => {
     expect(pkg).not.toContain('vue-sonner')
   })
 
-  it('renderer-owned <style> blocks do not grow', () => {
-    // Amis 的组件样式全在 amis-ui/scss；Vamis 的默认皮肤同样归 @vamis/ui 的 styles.css。
-    // 这份名单是存量，只许减。新渲染器的 CSS 写进 styles.css。
-    const legacy = [
-      'renderers/Card.vue',
-      'renderers/Cards.vue',
-      'renderers/Divider.vue',
-      'renderers/Grid.vue',
-      'renderers/Icon.vue',
-      'renderers/Pagination.vue',
-      'renderers/Panel.vue',
-      'renderers/Progress.vue',
-      'renderers/Wrapper.vue',
-      'renderers/calendar/DateCalendarPanel.vue',
-      'renderers/data/Table2.vue',
-      'renderers/display/CalendarWheel.vue',
-      'renderers/display/Code.vue',
-      'renderers/layout/HBox.vue',
-      'renderers/layout/PaginationWrapper.vue',
-      'renderers/layout/Portlet.vue',
-    ]
+  it('renderers carry no <style> block', () => {
+    // Amis 的组件样式全在 amis-ui/scss；Vamis 的默认皮肤同样只有 @vamis/ui 的 styles.css 一个家。
     const src = join(packagesDir, 'vamis/src')
     const withStyle = sourceFiles(src)
       .filter(file => file.endsWith('.vue') && /<style[\s>]/.test(readFileSync(file, 'utf8')))
       .map(file => relative(src, file).split('\\').join('/'))
       .sort()
-    expect(withStyle.filter(file => !legacy.includes(file))).toEqual([])
+    expect(withStyle).toEqual([])
   })
 
   it('chrome SVG icons live in @vamis/ui, not next to renderers', () => {

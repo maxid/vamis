@@ -33,12 +33,3 @@ const innerClass = computed(() => resolveClassName(props.schema.innerClassName, 
     <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
   </template>
 </template>
-
-<style scoped>
-[data-vamis-wrapper] {
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  box-sizing: border-box;
-}
-</style>

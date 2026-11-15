@@ -29,7 +29,7 @@ alwaysApply: true
 | 浮层定位算法、z-index 阶梯 | `packages/vamis-core/src/utils/overlay-layer.ts` | `amis-core/src/utils/dom.tsx` |
 | 全局 store（toast / confirm / spinner / status） | `packages/vamis-core/src/*-store.ts` | `amis-ui` Toast / Alert 内部状态 |
 | 无状态原语（Button / Dialog / Checkbox…） | `packages/vamis-ui/src/ui/<name>/` | `amis-ui/src/components` |
-| 组件 chrome 用的 SVG 图标 | `packages/vamis-ui/src/ui/Vamis*.vue` | `amis-ui/src/icons` |
+| 组件 chrome 用的 SVG 图标 | 静态字形登记在 `packages/vamis-ui/src/ui/vamis-icons.ts`（`<VamisIcon name>`）；带状态的是 `packages/vamis-ui/src/ui/Vamis*.vue` | `amis-ui/src/icons` |
 | token、主题包、helper、**所有渲染器的默认皮肤** | `packages/vamis-ui/src/{styles,themes,helpers*}.css` | `amis-ui/scss` |
 | Amis type 渲染器 | `packages/vamis/src/renderers` | `amis/src/renderers` |
 | 只有一个渲染器用、要读 schema 的子件 | `packages/vamis/src/renderers/<type>/` | `amis/src/renderers/Table/` |
@@ -53,7 +53,7 @@ Amis `amis-ui` 大量 import `amis-core`，所以带 env 的 Overlay / PopUp / T
 
 渲染器的默认 chrome 写进 `packages/vamis-ui/src/styles.css`：量挂 `:root` / `.dark`，选择器 `.vamis-xxx` 只 `var()`。这和 Amis 把 `_table.scss` 放在 `amis-ui/scss/components/` 是一回事，不是越界。
 
-- **新渲染器不要写 `<style>` 块。** 现存 16 个带 `<style>` 的渲染器是存量（名单在 `packages/vamis-core/__tests__/package-boundary.test.ts`），只许减。动到其中一个时顺手把它的 CSS 迁进 `styles.css`，并把名单那一行删掉
+- **渲染器不写 `<style>` 块。** 原有 16 个已全部迁进 `styles.css`，守卫要求为 0。去掉 `scoped` 后选择器是全局的：属性选择器要带上自己的宿主前缀，`:deep()` / `:slotted()` 展开成普通后代选择器
 - 为什么不能两处都放：`scoped` 会压过作者 helper 和宿主的剥离样式；深色只在 `.dark` 一处核；SDK 的 `sdk.css` 也只有一份来源
 - 例外：带 alpha 的色写 Vue inline style（见 `lessons.mdc`「带 alpha 的色不要写进 CSS 变量」）
 - token / helper / 原语配方三层怎么判见 `style.mdc`，本文只管文件放哪
@@ -67,11 +67,11 @@ Amis `amis-ui` 大量 import `amis-core`，所以带 env 的 Overlay / PopUp / T
 
 ## 守卫
 
-`packages/vamis-core/__tests__/package-boundary.test.ts`（`pnpm test` 会跑）：依赖方向、ui 不带 sonner / Tooltip、带 `<style>` 的渲染器名单不增长、`*Icon.vue` 不落在渲染器目录。改分工先改本文和这份测试。
+`packages/vamis-core/__tests__/package-boundary.test.ts`（`pnpm test` 会跑）：依赖方向、ui 不带 sonner / Tooltip、渲染器不带 `<style>`、`*Icon.vue` 不落在渲染器目录。样式的标尺另有 `style-system.test.ts`（口径见 `style.mdc`「标尺」）。改分工先改本文和这份测试。
 
 ## 禁止
 
 - ui import `@vamis/core` / `vamis`；core import `@vamis/ui`
-- 渲染器目录里新建纯 SVG 图标文件，或新渲染器自带 `<style>`
+- 渲染器目录里新建纯 SVG 图标文件、模板里内联 chrome `<svg>`，或渲染器自带 `<style>`
 - 为了「放进 ui」把读 schema 的子件削成无状态壳，再在渲染器里包一层
 - 在 ui 里复制 core 的工具函数

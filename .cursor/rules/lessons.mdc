@@ -362,9 +362,9 @@ alwaysApply: true
 
 ### token 是默认，helper 是作者覆盖
 - 踩过：控件默认用 `rounded-md`（Amis helper 6px）而主题 `--radius` 是 4px；根上 `@apply font-sans` / `text-sm`（行高 20px）偏离 14px / 1.5。Overlay Tooltip 一度写死 `#fff` / `8px`，或拿 shadcn `--popover` 冒充。
-- 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。组件配方（`--button-*` / `--tooltip-*`）挂 `:root`，选择器只 `var()`。
-- 触及：Button 等控件、SDK 根、`tooltip-wrapper` `badge`
-- 规则：`.cursor/rules/style.mdc`
+- 稳定做法：组件模板不要用 helper 表示主题默认。html/body 不钉字族。`.vamis-root` / SDK 根走 `--fontFamilyBase`。组件配方（`--button-*` / `--tooltip-*`）挂 `:root`，选择器只 `var()`。组件 token 的值也不写字面量：字号引用 `--fontSizeSm/Base/Lg/Xl`，颜色引用色阶或 `--text-*` / `--card`。同一个 12 既写 `12px` 又写 `var(--fontSizeSm, 12px)`，就是两处定义，兜底值也不要。`:style` 里的默认色 / 默认字号同理，作者没写就给 `undefined` 让 CSS 默认生效。
+- 触及：Button 等控件、SDK 根、`tooltip-wrapper` `badge` `avatar` `input-number`
+- 规则：`.cursor/rules/style.mdc`「标尺」；`docs/superpowers/specs/2026-11-15-vamis-style-standard.md`
 
 ### 组件色 alias `--colors-*` 主题阶，不要写死 hex
 - 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。顶栏一度并排「云舍 ▾」和下方 5 色点，看起来像两套主题。配整套 brand 阶时用了顶栏色点 swatch（翠绿 `oklch(0.52 0.14 145)` → `#267d30`），浅色 applied 其实是 `oklch(0.49 0.16 145)`（`#007617`）；深色却把 `--primary` 钉成同一档 brand-5，线上 bit.uscan.cn 深色是 `oklch(.7 .13 accent-h)` 薄荷绿。文档预览再刷 fill-11 / `--background`，井和外壳 `--card` 不是一色。
@@ -490,7 +490,7 @@ alwaysApply: true
 
 ### 深色浮层靠 `.dark` 换 token，不要写死浅色底
 - 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也曾写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
-- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。
+- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。升高面的底统一 alias `--card`（深色 `#17202d`），不要每个组件各起一个带 hex 的 `--xxx-bg` 再到 `.dark` 里各盖一次：token 引用色阶 / `--card` 之后深色自动跟，`.dark` 只留色阶翻转后不对的那几条。删 `.dark` 覆盖前先看 `@supports` 块：那里重写过 `:root` 的 token（`--primary-hover` / `--link-hover-color`），`.dark` 的覆盖不能删。
 - 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `calendar` `dropdown-button` `dialog` `action` `popOver`
 - 规则：`.cursor/rules/style.mdc`「深色主题」
 
@@ -634,6 +634,12 @@ alwaysApply: true
 - 触及：`action` `button` `icon` `avatar` `nav` `breadcrumb` `dropdown-button` `card` `cards`
 - 规则：`.cursor/rules/style.mdc`
 
+### chrome 图标只有一个登记表，不要在渲染器里内联 svg 或用字符
+- 踩过：同一个勾 / 叉 / 翻页箭头在 24 个渲染器里各抄一份 `<svg>`，另有 8 个文件拿 `×` `›` `▾` `+` 当图标（吃宿主字族，粗细和基线不稳），再加 lucide，四套并存。改一个字形要找十几处。
+- 稳定做法：静态 chrome 图标走 `<VamisIcon name>`，字形登记在 `@vamis/ui` 的 `vamis-icons.ts`（转写 Amis `amis-ui/src/icons/*.svg`，沿用 Amis 的名字）。有展开 / 动画 / 两态的才写专用 `Vamis*` 组件。渲染器里的 `<svg>` 只留数据图形（进度环、迷你图、二维码、形状）。尺寸和颜色写在调用处的 class 上，字形用 `currentColor`。`font-size: 0` + 固定盒的热区里放 SVG 时，SVG 自己要有宽高，不要靠 `1em`。
+- 触及：`select` `pagination` `input-number` `cards` `card` `tabs` `input-file` `input-image` `image` `checkbox` `radio` `input-date` `input-date-range` `tag` `remark` `table2` `carousel` `input-tag` `transfer` `nested-select`
+- 规则：`.cursor/rules/style.mdc`「图标」；`packages/vamis-core/__tests__/style-system.test.ts`
+
 ### 表单清除钮共用 VamisClear / `.vamis-select__clear`
 - 踩过：Select 是 16px 圆底叉 + `--select-clear-*` hover；`input-text` / `input-date` 用文字 `×` 和 `--muted-foreground`，颜色和动效两套。
 - 稳定做法：图标抽 `VamisClear`（Amis `input-clear`），按钮 class 一律 `.vamis-select__clear`，hover/active 走 `--select-clear-*` + `transition: color`。标签上的小叉走 `VamisClose`（Amis `close.svg` 10px 线图），不要文字 `×`，不要混进清除钮。Select chip / input-tag / Transfer 结果区后续共用 `VamisClose`。
@@ -719,10 +725,16 @@ alwaysApply: true
 - 触及：`container` `cards` `card`
 - 规则：本文
 
+### 原语的 Amis 配方打在原语上，不要挂在某个渲染器的外壳下
+- 踩过：CRUD 的表格数据 14px、表头 12px，Table 是表头 14、数据 12。表格的 Amis 配方全写在 `.vamis-table-wrap [data-slot=…]` 下，只有 `Table` 渲染器带这个外壳；`CRUD` / `InputTable` / `Tasks` 直接用 `<Table>` 原语，吃到的是原语模板里 shadcn 的 `text-sm` / `text-xs` / `bg-muted`，正好和 Amis 相反。
+- 稳定做法：字号、字色、表头底、行悬停这类「这个原语在 Amis 里长什么样」写在 `[data-slot="…"]` 上，原语模板里不留字号和颜色的工具类。渲染器外壳下只放它独有的盒模型。两个组件同一种元素字号不一样时，先查它们是不是走了同一个原语、配方挂在谁身上，不要在第二个渲染器里再抄一遍。
+- 触及：`table` `crud` `input-table` `tasks`
+- 规则：`.cursor/rules/style.mdc`「标尺」；`packages/vamis-ui/src/ui/table/`；`style-system.test.ts`
+
 ### 包分工先对 Amis 三层，再判「放错了」
 - 踩过：看到 `renderers/table/` 下一堆子件，直觉是「UI 的东西该进 `@vamis/ui`」；又看到 `styles.css` 8000 多行全是 `.vamis-xxx`，直觉是「渲染器皮肤堆在 ui 里越界」。对着 Amis 一核两个都不对：`amis` 渲染器包零样式文件、零 SVG，SCSS 和图标全在 `amis-ui`；`Table/TableCell.tsx` 这类读 schema 的子件留在渲染器包。真正的偏差是 16 个渲染器自带 `<style>`（CSS 两个家）、纯 SVG 图标放在渲染器目录、ui 留着没人用的 shadcn 导出（`sonner` / `Tooltip` / `Separator`）和一份与 core 重复的 `resolveCssVars`。
-- 稳定做法：判断放哪先问「要不要读 schema / data / env」。要 → 渲染器包（带 env 的共享浮层件在 `src/overlay/`）；纯 SVG、无状态原语、CSS → ui。`@vamis/ui` 不依赖 `@vamis/core`，这是和 Amis 唯一的差别。新渲染器不写 `<style>`，存量名单只许减。ui 的导出零引用就删，不要「先备着」。
-- 触及：`table` 包结构
+- 稳定做法：判断放哪先问「要不要读 schema / data / env」。要 → 渲染器包（带 env 的共享浮层件在 `src/overlay/`）；纯 SVG、无状态原语、CSS → ui。`@vamis/ui` 不依赖 `@vamis/core`，这是和 Amis 唯一的差别。渲染器不写 `<style>`（16 个存量已全部迁进 `styles.css`）。ui 的导出零引用就删，不要「先备着」。把 `scoped` 样式迁成全局时：属性选择器要补宿主前缀（`Grid` 的 `[data-col]` 会漏到表格的 `<col data-col>`）；`:deep()` / `:slotted()` 展开成后代选择器；读 `.vue` 源码断言 CSS 的单测改读 `styles.css` 对应那一段。
+- 触及：`table` `grid` `card` `pagination` `calendar` 包结构
 - 规则：`.cursor/rules/packages.mdc`；`packages/vamis-core/__tests__/package-boundary.test.ts`
 
 ### 串行分批，不要拿叶子凑数

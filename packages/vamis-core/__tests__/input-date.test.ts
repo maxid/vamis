@@ -240,9 +240,9 @@ describe('input-date renderer reuse', () => {
     const wheel = readFileSync(resolve(here, '../../vamis/src/renderers/display/CalendarWheel.vue'), 'utf8')
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     expect(wheel).toContain('(itemH.value * (VISIBLE - 1)) / 2')
-    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-size:\s*16px/)
-    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-weight:\s*400/)
-    expect(wheel).toMatch(/\.vamis-cal-wheel-item \{[^}]*text-align:\s*center/)
+    expect(css).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-size:\s*var\(--fontSizeLg\)/)
+    expect(css).toMatch(/\.vamis-cal-wheel-item \{[^}]*font-weight:\s*var\(--fontWeightNormal\)/)
+    expect(css).toMatch(/\.vamis-cal-wheel-item \{[^}]*text-align:\s*center/)
     expect(wheel).not.toContain('font-size: 18px')
     expect(wheel).not.toContain('font-weight: 500')
     const columns = css.slice(
@@ -257,7 +257,7 @@ describe('input-date renderer reuse', () => {
       css.indexOf('.vamis-date-sheet.is-in .vamis-date-sheet__panel,'),
     )
     expect(panel).toContain('font-family: var(--fontFamilyBase)')
-    expect(panel).toContain('font-size: 16px')
+    expect(panel).toContain('font-size: var(--fontSizeLg)')
     expect(panel).toContain('border: 1px solid var(--popup-border)')
     expect(panel).toContain('box-shadow: var(--popup-shadow)')
     const fade = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/PickerFade.vue'), 'utf8')
@@ -288,14 +288,18 @@ describe('input-date year/month range disable', () => {
     const cal = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
     expect(cal).toContain("'is-disabled': monthDisabled")
     expect(cal).toContain("'is-disabled': yearDisabled")
-    expect(cal).toContain('td.is-disabled.vamis-cal-pick span')
+    expect(readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')).toContain('td.is-disabled.vamis-cal-pick span')
   })
 })
 
 describe('input-date popover box model', () => {
   const here = dirname(fileURLToPath(import.meta.url))
   const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
-  const cal = readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8')
+  // 月历皮肤已迁进 styles.css：结构看 .vue，盒模型只切月历那一段 css
+  const calStart = css.indexOf('/* ---- calendar/DateCalendarPanel.vue')
+  const cal =
+    readFileSync(resolve(here, '../../vamis/src/renderers/calendar/DateCalendarPanel.vue'), 'utf8') +
+    css.slice(calStart, css.indexOf('/* ---- data/Table2.vue', calStart))
 
   it('matches Amis DatePicker-popover: padding 0, no min-width, select-outer border/shadow', () => {
     const block = css.slice(css.indexOf('.vamis-date-picker__popover {'), css.indexOf('.vamis-date-picker__popover.is-embed'))
@@ -305,15 +309,15 @@ describe('input-date popover box model', () => {
     expect(block).toMatch(/background:\s*var\(--cal-bg\)/)
     expect(block).toMatch(/box-shadow:\s*var\(--cal-shadow\)/)
     expect(block).not.toMatch(/background:\s*#fff/)
-    expect(css).toMatch(/--select-menu-border:\s*#f2f3f5/)
+    expect(css).toMatch(/--select-menu-border:\s*var\(--colors-neutral-line-9\)/)
     expect(css).toMatch(/0px 1px 3px 0px rgba\(0, 0, 0, 0\.1\)/)
   })
 
   it('calendar popover and panel use --cal-* tokens, not hardcoded #fff', () => {
     expect(css).toMatch(/--cal-bg:\s*var\(--select-menu-bg\)/)
-    expect(css).toMatch(/--cal-cell-hover-bg:\s*#f7f8fa/)
-    expect(css).toMatch(/\.dark[\s\S]*--cal-cell-hover-bg:\s*#151c26/)
-    expect(css).toMatch(/\.dark[\s\S]*--select-menu-bg:\s*#17202d/)
+    expect(css).toMatch(/--cal-cell-hover-bg:\s*var\(--colors-neutral-fill-10\)/)
+    expect(css).toMatch(/--select-menu-bg:\s*var\(--card\)/)
+    expect(css).toMatch(/\.dark[\s\S]*--card:\s*#17202d/)
     expect(cal).toMatch(/background:\s*var\(--cal-bg\)/)
     expect(cal).toMatch(/color:\s*var\(--cal-other\)/)
     expect(cal).toMatch(/background:\s*var\(--cal-cell-hover-bg\)/)
@@ -338,7 +342,7 @@ describe('input-date popover box model', () => {
     expect(header).not.toMatch(/align-items:\s*center/)
     expect(sw).not.toMatch(/line-height:\s*24px/)
     expect(nav).not.toMatch(/display:\s*inline-flex/)
-    expect(nav).toMatch(/font-size:\s*18px/)
+    expect(nav).toMatch(/font-size:\s*var\(--fontSizeXl\)/)
     expect(cal).toContain('VamisDateArrow')
     expect(cal).not.toContain('vamis-cal-arrow')
     expect(css).toMatch(/\.vamis-cal-header svg\.icon \{[\s\S]*?display:\s*inline/)

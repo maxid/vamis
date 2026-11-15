@@ -100,7 +100,8 @@ const frameStyle = computed(() => ({
   height: `${size.value}px`,
   lineHeight: `${size.value}px`,
   borderRadius: radius.value,
-  background: paint.value.background || paint.value.backgroundColor || '#d1d5db',
+  // 默认底色在 styles.css 的 `--avatar-bg`；这里只透传作者写的值
+  background: paint.value.background || paint.value.backgroundColor || undefined,
   color: paint.value.color,
 }))
 </script>

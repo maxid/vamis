@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { Button, VamisClear } from '@vamis/ui'
+import { Button, VamisClear, VamisIcon } from '@vamis/ui'
 import {
   addDateDuration,
   applyDateRangePart,
@@ -643,9 +643,7 @@ const formItemSchema = computed(() => (isStaticOutside.value ? props.schema : { 
         <VamisClear />
       </button>
       <span class="vamis-date-picker__icon" aria-hidden="true" @click.stop="toggleOpen">
-        <svg viewBox="0 0 16 16" width="14" height="14">
-          <path fill="currentColor" d="M3.5 1.5A.5.5 0 0 1 4 2v.5h8V2a.5.5 0 0 1 1 0v.5h.5A1.5 1.5 0 0 1 15 4v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13V4a1.5 1.5 0 0 1 1.5-1.5H3V2a.5.5 0 0 1 .5-.5ZM2 6v7a.5.5 0 0 0 .5.5h11A.5.5 0 0 0 14 13V6H2Zm0-1h12V4a.5.5 0 0 0-.5-.5h-11A.5.5 0 0 0 2 4v1Z" />
-        </svg>
+        <VamisIcon name="calendar" width="14" height="14" />
       </span>
       <VamisOverlay :show="open" :target="rootEl" :gap="4" @outside="cancelPanel">
         <div class="vamis-date-picker__popover vamis-date-range__popover">

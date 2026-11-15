@@ -3,7 +3,7 @@
 - 日期：2026-10-21
 - 状态：落地（token / 盒子辅助类 / IR metadata.style / 四套 `--colors-*` 主题包；JS `registerTheme` 仍 P1）
 - 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；主色走 `--primary`（云舍 pack 的 brand-5）；不搬 `cxd-` 前缀
-- 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）
+- 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）；标尺与条款见 [样式规范](./2026-11-15-vamis-style-standard.md)
 
 ## 1. Amis 样式系统要点
 

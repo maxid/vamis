@@ -24,7 +24,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { Button } from '@vamis/ui'
+import { Button, VamisIcon } from '@vamis/ui'
 import Sortable from 'sortablejs'
 import { matchListRows } from './list-utils'
 import { useCrudHost } from './data/crudHost'
@@ -399,30 +399,22 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
     <div v-if="showQuickSave" class="vamis-cards-title">
       当前有 {{ modifiedCount }} 条记录修改了内容, 但并没有提交。请选择:
       <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveModified">
-        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
-        </svg>
+        <VamisIcon name="check" class="icon m-r-xs" />
         提交
       </Button>
       <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="resetModified">
-        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="m13.5 1.44 1.06 1.06L9.06 8l5.5 5.5-1.06 1.06L8 9.06l-5.5 5.5-1.06-1.06L6.938 8l-5.5-5.5L2.5 1.44 8 6.938z" />
-        </svg>
+        <VamisIcon name="close" class="icon m-r-xs" />
         放弃
       </Button>
     </div>
     <div v-else-if="moved" class="vamis-cards-title">
       当前有 {{ moved }} 条记录修改了顺序, 但并没有提交。请选择:
       <Button type="button" size="xs" variant="success" class="m-l-sm" @click="saveOrder">
-        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M13.943 3 15 4.055l-8.531 8.54L1 7.12l1.057-1.056 4.412 4.418z" />
-        </svg>
+        <VamisIcon name="check" class="icon m-r-xs" />
         提交
       </Button>
       <Button type="button" size="xs" variant="destructive" class="m-l-sm" @click="resetOrder">
-        <svg class="icon m-r-xs" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="m13.5 1.44 1.06 1.06L9.06 8l5.5 5.5-1.06 1.06L8 9.06l-5.5 5.5-1.06-1.06L6.938 8l-5.5-5.5L2.5 1.44 8 6.938z" />
-        </svg>
+        <VamisIcon name="close" class="icon m-r-xs" />
         放弃
       </Button>
     </div>
@@ -483,145 +475,3 @@ watch([dragging, bodyEl, () => rows.value.length], () => {
     </div>
   </div>
 </template>
-
-<style>
-.vamis-cards-wrap {
-  width: 100%;
-}
-.vamis-cards-title {
-  padding: var(--gap-xs) 0;
-  font-size: inherit;
-  font-weight: 400;
-  line-height: inherit;
-}
-.vamis-cards-wrap.is-unsaved .vamis-cards-title {
-  background: var(--cards-unsaved-heading-bg);
-  color: var(--cards-unsaved-heading-color);
-  padding: var(--gap-xs) var(--gap-sm);
-  margin-bottom: var(--gap-sm);
-}
-.vamis-cards-title [data-slot='button'] svg.icon {
-  display: inline;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.125em;
-}
-.vamis-cards-header {
-  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x);
-}
-.vamis-cards-toolbar {
-  width: 100%;
-  box-sizing: border-box;
-  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x)
-    var(--cards-toolbar-margin-y);
-}
-.vamis-cards-header + .vamis-cards-toolbar {
-  padding-top: 0;
-}
-.vamis-cards-actions {
-  display: inline-block;
-}
-.vamis-cards-actions > * {
-  margin-right: var(--crud-toolbar-gap, 10px);
-}
-@media (min-width: 576px) {
-  .vamis-cards-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-  }
-}
-.vamis-cards-dragTip {
-  width: 100%;
-  color: var(--info, var(--primary));
-  clear: both;
-  margin-top: 4px;
-}
-.vamis-cards {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 576px) {
-  .vamis-cards:not(.is-count):not(.is-masonry) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .vamis-cards.is-count {
-    grid-template-columns: repeat(var(--cards-cols, 1), minmax(0, 1fr));
-  }
-}
-@media (min-width: 768px) {
-  .vamis-cards:not(.is-count):not(.is-masonry) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 992px) {
-  .vamis-cards:not(.is-count):not(.is-masonry) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.vamis-cards.is-masonry {
-  display: block;
-  width: 100%;
-  column-count: 1;
-  column-gap: 12px;
-}
-.vamis-cards.is-masonry.is-count {
-  column-count: var(--cards-cols, 1);
-}
-@media (min-width: 576px) {
-  .vamis-cards.is-masonry:not(.is-count) {
-    column-count: 2;
-  }
-}
-@media (min-width: 768px) {
-  .vamis-cards.is-masonry:not(.is-count) {
-    column-count: 3;
-  }
-}
-@media (min-width: 992px) {
-  .vamis-cards.is-masonry:not(.is-count) {
-    column-count: 4;
-  }
-}
-.vamis-cards:not(.is-masonry) .vamis-cards-item {
-  display: flex;
-  min-width: 0;
-}
-.vamis-cards:not(.is-masonry) .vamis-cards-item > .vamis-node {
-  display: flex;
-  flex: 1 1 auto;
-  width: 100%;
-  min-width: 0;
-}
-.vamis-cards:not(.is-masonry) .vamis-card {
-  height: 100%;
-}
-.vamis-cards.is-masonry .vamis-cards-item {
-  display: inline-block;
-  width: 100%;
-  max-width: unset;
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
-  margin-bottom: 12px;
-}
-.vamis-cards.is-masonry .vamis-cards-item > .vamis-node {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.vamis-cards-item.is-dragging {
-  opacity: 0.6;
-}
-.vamis-cards-placeholder {
-  width: 100%;
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-  color: var(--muted-foreground);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-</style>

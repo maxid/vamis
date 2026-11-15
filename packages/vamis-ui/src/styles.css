@@ -103,12 +103,42 @@
     "Liberation Mono", "Courier New", monospace;
   --fontSizeBase: 14px;
   --lineHeightBase: 1.5;
+  /*
+   * 基础标尺。组件 token 只引用这一层和主题色阶（--colors-*），不再各写各的 px / hex。
+   * 名字与取值对齐 Amis `_properties.scss`：`--fontSize*` / `--fontWeight*` / `--borderRadius*` /
+   * `--text-color` / `--text--muted-color` / `--icon-color`。
+   */
+  --fontSizeXs: 12px;
+  --fontSizeSm: 12px;
+  --fontSizeMd: 14px;
+  --fontSizeLg: 16px;
+  --fontSizeXl: 18px;
+  --fontWeightNormal: 400;
+  --fontWeightMd: 500;
+  --fontWeightBold: 700;
+  --borderRadiusSm: var(--borders-radius-2);
+  --borderRadius: var(--radius);
+  --borderRadiusMd: var(--borders-radius-4);
+  --borderRadiusLg: var(--borders-radius-5);
+  --borderRadiusFull: 9999px;
+  /* 不随浅深色翻转的黑白：色块上的字、图片预览舞台。 */
+  --white: #ffffff;
+  --black: #000000;
+  /* 文字四档：正文 / 次要（标签）/ 辅助（说明、图标）/ 弱（占位、禁用）。 */
+  --text-color: var(--colors-neutral-text-2);
+  --text-secondary: var(--colors-neutral-text-4);
+  --text-tertiary: var(--colors-neutral-text-5);
+  --text-muted: var(--colors-neutral-text-6);
+  --icon-color: var(--colors-neutral-text-5);
+  --icon-hover-color: var(--primary);
+  --icon-size: 14px;
   --background: oklch(0.97 0.008 250);
-  --foreground: oklch(0.24 0.035 258);
-  --card: oklch(0.995 0.003 250);
-  --card-foreground: oklch(0.24 0.035 258);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.035 258);
+  /* shadcn 名只是别名：正文色、升高面都落在主题色阶上，和组件 token 是同一套灰。 */
+  --foreground: var(--text-color);
+  --card: var(--colors-neutral-fill-11);
+  --card-foreground: var(--text-color);
+  --popover: var(--card);
+  --popover-foreground: var(--text-color);
   /* 语义色只 alias 主题阶。换 data-theme 整套走，禁止组件再写死 hex。 */
   --primary: var(--colors-brand-5);
   --primary-foreground: var(--colors-neutral-text-11);
@@ -120,7 +150,7 @@
   --link-active-color: var(--primary-active);
   --link-decoration: none;
   --link-hover-decoration: none;
-  --link-font-weight: 400;
+  --link-font-weight: var(--fontWeightNormal);
   /* Amis `--link-disabled-color` = `--colors-neutral-text-6`，不要 `--muted-foreground`。 */
   --link-disabled-color: var(--colors-neutral-text-6);
   --link-icon-size: 14px;
@@ -146,7 +176,8 @@
   --tabs-vertical-active-border: 4px;
   --tabs-sidebar-w: 62px;
   --tabs-sidebar-pad: 22px;
-  --tabs-chrome-radius: 8px;
+  --tabs-sidebar-icon-size: 24px;
+  --tabs-chrome-radius: var(--borderRadiusLg);
   --tabs-chrome-bg: var(--colors-neutral-fill-10);
   --tabs-chrome-hover: var(--colors-neutral-fill-10);
   --tabs-chrome-active: var(--card);
@@ -154,7 +185,7 @@
   --secondary: oklch(0.945 0.01 250);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 250);
-  --muted-foreground: oklch(0.5 0.02 258);
+  --muted-foreground: var(--text-secondary);
   --accent: oklch(0.94 0.018 var(--accent-h));
   --accent-foreground: oklch(0.28 0.04 var(--accent-h));
   --destructive: var(--colors-error-5);
@@ -182,6 +213,10 @@
   --sidebar-ring: oklch(0.72 0.12 var(--accent-h));
   --code: oklch(0.22 0.03 258);
   --code-foreground: oklch(0.88 0.03 250);
+  /* Monaco vs-dark 的编辑区底色：代码块深色主题固定这块，不跟页面浅深色走。 */
+  --code-dark-bg: #1e1e1e;
+  /* Amis `_pagination.scss` 禁用页码写的是字面量 #ccc，不在色阶上。 */
+  --pagination-disabled-color: #cccccc;
 
   --gap-xs: 4px;
   --gap-sm: 8px;
@@ -190,12 +225,12 @@
   --gap-lg: 20px;
   --gap-xl: 24px;
   --animation-duration: 0.2s;
-  --select-caret-color: #84878c;
-  --select-caret-hover-color: #84878c;
+  --select-caret-color: var(--colors-neutral-text-5);
+  --select-caret-hover-color: var(--colors-neutral-text-5);
   /* 对齐 Amis `--Form-select-menu-*` / `--select-base-*-option-*`（cxd）。 */
-  --select-menu-bg: #ffffff;
-  --select-menu-color: #151b26;
-  --select-menu-border: #f2f3f5;
+  --select-menu-bg: var(--card);
+  --select-menu-color: var(--colors-neutral-text-2);
+  --select-menu-border: var(--colors-neutral-line-9);
   --select-menu-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px 0px rgba(0, 0, 0, 0.06);
   /* 对齐 Amis `--DatePicker-*` / `--Calendar-cell-*` / `--inputDate-*`。弹层底跟 Select 菜单，不要写死 #fff。 */
@@ -203,26 +238,26 @@
   --cal-fg: var(--select-menu-color);
   --cal-border: var(--select-menu-border);
   --cal-shadow: var(--select-menu-shadow);
-  --cal-cell-hover-bg: #f7f8fa;
-  --cal-cell-hover-fg: #151b26;
-  --cal-other: #b8babf;
-  --cal-between-bg: #e6f0ff;
-  --date-range-sep: #d4d6d9;
-  --date-range-ranger-bg: #f7f8fa;
+  --cal-cell-hover-bg: var(--colors-neutral-fill-10);
+  --cal-cell-hover-fg: var(--colors-neutral-text-2);
+  --cal-other: var(--colors-neutral-text-6);
+  --cal-between-bg: var(--colors-brand-10);
+  --date-range-sep: var(--colors-neutral-line-7);
+  --date-range-ranger-bg: var(--colors-neutral-fill-10);
   --date-range-cursor: var(--primary);
   /* 对齐 Amis `--Form-input-placeholderColor` / `--text--muted-color` / `--colors-neutral-text-6`。不要用 `--muted-foreground`（偏深）。 */
   --control-placeholder: var(--colors-neutral-text-6);
   --cal-picker-cancel: #666;
   --cal-picker-title: #222;
-  --cal-chip-fg: #fff;
-  --cal-bar: #5c5f66;
-  --select-option-color: #151b26;
+  --cal-chip-fg: var(--white);
+  --cal-bar: var(--colors-neutral-text-4);
+  --select-option-color: var(--colors-neutral-text-2);
   --select-option-bg: transparent;
-  --select-option-hover-color: #151b26;
+  --select-option-hover-color: var(--colors-neutral-text-2);
   --select-option-hover-bg: color-mix(in oklch, var(--primary) 20%, white);
   --select-option-active-color: var(--primary);
   --select-option-active-bg: var(--select-menu-bg);
-  --select-option-disabled-color: #b8babf;
+  --select-option-disabled-color: var(--colors-neutral-text-6);
   --select-option-disabled-bg: transparent;
   --select-option-padding-x: 10px;
   --select-option-line-height: 32px;
@@ -231,9 +266,9 @@
   --dropdown-item-h: 32px;
   --dropdown-item-disabled: #b4b6ba;
   --dropdown-group-color: #848b99;
-  --select-group-color: #5c5f66;
-  --select-group-font-size: 12px;
-  --select-group-font-weight: 500;
+  --select-group-color: var(--colors-neutral-text-4);
+  --select-group-font-size: var(--fontSizeSm);
+  --select-group-font-weight: var(--fontWeightMd);
   --select-group-line-height: 24px;
   --select-group-padding-y: 4px;
   /* Amis `--select-group-paddingLeft: size-7` 12；子项 `padding-left: gap-base * 2` 24。不要跟 option 10 混用。 */
@@ -249,27 +284,31 @@
   --select-search-input-pad-x: 10px;
   --select-mcheck-size: 16px;
   --select-check-size: 14px;
-  --select-check-radius: 2px;
-  --select-check-border: #d4d6d9;
-  --select-check-bg: #ffffff;
+  --select-check-radius: var(--borderRadiusSm);
+  --select-check-border: var(--colors-neutral-line-7);
+  --select-check-bg: var(--card);
   --select-check-checked-bg: var(--primary);
-  --select-check-checked-color: #ffffff;
-  --select-chip-bg: #f2f3f5;
+  --select-check-checked-color: var(--white);
+  --select-chip-bg: var(--colors-neutral-fill-9);
   --select-chip-hover-bg: color-mix(in oklch, var(--primary) 12%, white);
-  --select-chip-color: #151b26;
-  --select-chip-close: #84878c;
-  --select-chip-close-hover: #151b26;
+  --select-chip-color: var(--colors-neutral-text-2);
+  --select-chip-close: var(--colors-neutral-text-5);
+  --select-chip-close-hover: var(--colors-neutral-fill-2);
   --select-chip-height: 22px;
   --select-chip-max-width: 200px;
   /* Amis TextControl-valueLabel `px2rem(60px)`；小叉 `valueIcon` 10px。钉在 label 上，不要钉整颗 tag。 */
   --text-chip-label-max: 60px;
   --text-chip-close-size: 10px;
+  /* Amis `--Avatar-bg` */
+  --avatar-bg: #d1d5db;
+  --number-unit-menu-min-width: 80px;
+  --image-gallery-nav-size: 32px;
   --select-pad-y: 4px;
   --select-pad-x: var(--control-px);
   --select-clear-size: 16px;
-  --select-clear-color: #d4d6d9;
-  --select-clear-hover-color: #5c5f66;
-  --select-clear-active-color: #303540;
+  --select-clear-color: var(--colors-neutral-text-7);
+  --select-clear-hover-color: var(--colors-neutral-text-4);
+  --select-clear-active-color: var(--colors-neutral-text-3);
   --select-popover-gap: 4px;
   --overlay-popover-gap: 4px;
   --input-password-icon-size: 16px;
@@ -279,25 +318,25 @@
   --control-h-lg: 36px;
   --control-px: 10px;
   /* Button 局部密度：对齐 cxd `--button-size-*`，不改控件 `--control-h-*`。 */
-  --button-radius: var(--borders-radius-3);
+  --button-radius: var(--borderRadius);
   --button-h: 32px;
   --button-h-xs: 22px;
   --button-h-sm: 30px;
   --button-h-md: 32px;
   --button-h-lg: 38px;
   /* cxd `--colors-neutral-fill-6/3`、`--colors-brand-10`、info=brand-5。不改全局 `--secondary`（helper / Badge 仍用浅底）。 */
-  --button-secondary: #b8babf;
-  --button-secondary-foreground: #ffffff;
-  --button-secondary-hover: #84878c;
-  --button-secondary-active: #5c5f66;
-  --button-dark: #303540;
-  --button-dark-foreground: #ffffff;
-  --button-dark-hover: #5c5f66;
-  --button-dark-active: #84878c;
-  --button-light: #e6f0ff;
-  --button-light-foreground: #151b26;
-  --button-light-hover: #d4e5ff;
-  --button-light-active: #7dadff;
+  --button-secondary: var(--colors-neutral-text-6);
+  --button-secondary-foreground: var(--white);
+  --button-secondary-hover: var(--colors-neutral-fill-5);
+  --button-secondary-active: var(--colors-neutral-text-4);
+  --button-dark: var(--colors-neutral-text-3);
+  --button-dark-foreground: var(--white);
+  --button-dark-hover: var(--colors-neutral-fill-4);
+  --button-dark-active: var(--colors-neutral-text-5);
+  --button-light: var(--colors-brand-10);
+  --button-light-foreground: var(--colors-neutral-text-2);
+  --button-light-hover: var(--colors-brand-9);
+  --button-light-active: var(--colors-brand-7);
   --button-info: var(--primary);
   --button-info-foreground: var(--primary-foreground);
   --button-info-hover: var(--primary-hover);
@@ -305,11 +344,11 @@
   --form-item-gap: 24px;
   --form-item-mobile-gap: 8px;
   /* 对齐 Amis `--Form-item-fontSize` / `--Form-item-color`（text-4）。桌面移动同一套，不要跟 title 16 或 `--foreground`。 */
-  --form-item-font-size: 14px;
-  --form-item-color: #5c5f66;
+  --form-item-font-size: var(--fontSizeBase);
+  --form-item-color: var(--text-secondary);
   /* 对齐 Amis `--Form-description-*`（text-5 / size-8 / gap-xs）。 */
-  --form-description-color: #84878c;
-  --form-description-font-size: 12px;
+  --form-description-color: var(--text-tertiary);
+  --form-description-font-size: var(--fontSizeSm);
   --form-description-gap: var(--gap-xs);
   --form-mode-default-label-gap: 8px;
   --form-mode-inline-item-gap: 16px;
@@ -333,11 +372,11 @@
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
   /* Amis `--Table-fontSize` = fonts-size-8；`--TableCell-paddingY` = (height - 12*1.5)/2。 */
-  --table-font-size: 12px;
+  --table-font-size: var(--fontSizeSm);
   --table-cell-py: calc((var(--table-row-h) - var(--table-font-size) * 1.5) / 2);
   --table-cell-edge-px: 16px;
   --table-thead-edge-px: 12px;
-  --table-thead-font-size: 14px;
+  --table-thead-font-size: var(--fontSizeBase);
   /* 对齐 Amis `--Table-onChecked-*`（fill-11 / line-8）。不要用 accent 盖住行间 1px。 */
   --table-checked-bg: var(--card);
   --table-checked-border: var(--border);
@@ -391,7 +430,7 @@
   /* Amis `--Progress-line-*`：轨道 fill-8、条 brand-5、字 12 / text-2、圆角 4、min-width 50。 */
   --progress-line-bg: var(--colors-neutral-fill-8);
   --progress-line-color: var(--colors-neutral-text-2);
-  --progress-line-font-size: 12px;
+  --progress-line-font-size: var(--fontSizeSm);
   --progress-bar-h: 8px;
   --progress-radius: var(--radius);
   --progress-min-width: 50px;
@@ -401,7 +440,6 @@
   --TableCell-paddingX: var(--table-cell-px);
   --TableCell-paddingY: var(--table-cell-py);
   --page-body-padding: 12px;
-  --fontSizeLg: 16px;
   /* cxd --Panel-marginBottom (sizes-base-10 = 20px) */
   --panel-margin-bottom: var(--gap-lg);
   /* Amis $zindex-* 阶梯。浮层 Teleport 到 body 后仍吃 :root。 */
@@ -414,18 +452,24 @@
   --z-toast: 2000;
   /* Amis $zindex-spinner-overlay：叠在宿主内容上，不是全局浮层阶梯。 */
   --z-spinner: 11;
+  /* 桌面 Toast：Amis `--Toast-bg` / `--Toast-color` 跟主题；移动端是暗底白字，不翻转。 */
+  --toast-bg: var(--card);
+  --toast-border: var(--card);
+  --toast-color: var(--text-color);
+  --toast-close-color: var(--icon-color);
+  --toast-mobile-color: var(--white);
   --spinner-size: 32px;
   --spinner-size-sm: 16px;
   --spinner-size-lg: 48px;
   --spinner-color: var(--primary);
   --spinner-tip-gap: 12px;
-  --spinner-tip-font-size: 12px;
+  --spinner-tip-font-size: var(--fontSizeSm);
   --spinner-overlay-bg: rgba(255, 255, 255, 0.1);
   /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
   --fill-9: var(--colors-neutral-fill-9);
   --fill-10: var(--colors-neutral-fill-10);
   --fill-11: var(--colors-neutral-fill-11);
-  --text-loud: var(--colors-neutral-text-2);
+  --text-loud: var(--text-color);
   /* Amis `--List-bg` / `--ListItem--strip-bg` / `List-items` margin-right px2rem(15px)。 */
   --list-bg: var(--fill-11);
   --list-item-strip-bg: var(--fill-10);
@@ -434,8 +478,8 @@
   --list-item-checked-color: var(--colors-brand-4);
   --list-item-checked-border: var(--colors-brand-4);
   --list-item-hover-bg: color-mix(in oklch, var(--primary) 8%, var(--card));
-  --list-heading-unsaved-bg: #e8f0fe;
-  --list-heading-unsaved-color: #4285f4;
+  --list-heading-unsaved-bg: var(--table-modified-bg);
+  --list-heading-unsaved-color: var(--table-modified-color);
   /* Amis `--Crud-toolbar-gap` size-6 / `--Crud-toolbar-height`。 */
   --crud-toolbar-gap: 10px;
   --crud-toolbar-h: 30px;
@@ -453,19 +497,19 @@
   --control-focus-addon-color: var(--primary);
   /* Amis `_checks.scss` / cxd checkbox：16 盒、2px 圆角、勾 14。选择器只 var()。 */
   --checkbox-size: 16px;
-  --checkbox-radius: 2px;
+  --checkbox-radius: var(--borderRadiusSm);
   --checkbox-border-width: 1px;
   --checkbox-border: var(--input);
-  --checkbox-bg: #fff;
+  --checkbox-bg: var(--card);
   --checkbox-gap: 8px;
   --checkbox-icon-size: 14px;
-  --checkbox-icon-color: #fff;
+  --checkbox-icon-color: var(--white);
   --checkbox-checked-bg: var(--primary);
   /* 默认勾选盒和按钮模式共用同一套 brand-6 / brand-4，不要再绑 `--primary-hover`。 */
   --checkbox-checked-hover-bg: var(--checkbox-checked-hover);
   --checkbox-checked-active-bg: var(--checkbox-checked-active);
   --checkbox-disabled-bg: var(--control-disabled-bg);
-  --checkbox-disabled-icon: #d4d6d9;
+  --checkbox-disabled-icon: var(--colors-neutral-text-7);
   --checkbox-text: var(--foreground);
   --checkbox-control-pad-top: 5px;
   --checkbox-button-h: 32px;
@@ -492,9 +536,9 @@
   --radio-button-pad-x: var(--checkbox-button-pad-x);
   --radio-button-radius: var(--checkbox-button-radius);
   --radio-button-checked-fg: var(--primary-foreground);
-  --radio-button-disabled-checked-bg: #d4d6d9;
-  --radio-button-disabled-checked-fg: #84878c;
-  --radio-button-disabled-checked-border: #b8babf;
+  --radio-button-disabled-checked-bg: var(--colors-neutral-fill-7);
+  --radio-button-disabled-checked-fg: var(--text-tertiary);
+  --radio-button-disabled-checked-border: var(--colors-neutral-line-6);
   /*
    * Amis `_switch.scss` / cxd：轨道 44×20、滑块 16 + 2px 边、30 圆角；
    * 选中 brand-5，hover/active brand-4；关闭 neutral-fill-7，hover fill-6。
@@ -503,18 +547,18 @@
   --switch-height: 20px;
   --switch-width: 44px;
   --switch-radius: 30px;
-  --switch-bg: #d4d6d9;
-  --switch-bg-hover: #b8babf;
+  --switch-bg: var(--colors-neutral-fill-7);
+  --switch-bg-hover: var(--colors-neutral-fill-6);
   --switch-checked-bg: var(--primary);
-  --switch-checked-hover-bg: #144bcc;
-  --switch-checked-active-bg: #144bcc;
+  --switch-checked-hover-bg: var(--colors-brand-4);
+  --switch-checked-active-bg: var(--colors-brand-4);
   --switch-thumb-size: 16px;
   --switch-thumb-margin: 2px;
-  --switch-thumb-bg: #fff;
+  --switch-thumb-bg: var(--white);
   --switch-transition: all 0.5s ease;
   --switch-slider-transition: all 0.5s ease;
-  --switch-text-color: #fff;
-  --switch-text-size: 12px;
+  --switch-text-color: var(--white);
+  --switch-text-size: var(--fontSizeSm);
   --switch-text-weight: 700;
   --switch-text-indent: 4px;
   --switch-text-off-margin-left: 24px;
@@ -522,9 +566,9 @@
   --switch-text-on-margin-left: 8px;
   --switch-text-on-margin-right: 24px;
   --switch-spinner-size: 14px;
-  --switch-spinner-color: #5c5f66;
+  --switch-spinner-color: var(--colors-neutral-text-4);
   --switch-option-color: var(--foreground);
-  --switch-option-size: 12px;
+  --switch-option-size: var(--fontSizeSm);
   --switch-option-line-height: 1.5;
   --switch-option-gap: 8px;
   --switch-sm-height: 16px;
@@ -537,8 +581,8 @@
    * Action / tooltip-wrapper / remark 共用；选择器只 var()。
    */
   --tooltip-max-width: 240px;
-  --tooltip-radius: 8px;
-  --tooltip-bg: #fff;
+  --tooltip-radius: var(--borderRadiusLg);
+  --tooltip-bg: var(--card);
   --tooltip-fg: var(--text-loud);
   --tooltip-border: 1px solid var(--fill-9);
   --tooltip-shadow: 0 4px 6px 1px rgb(8 14 26 / 6%),
@@ -548,7 +592,7 @@
   --tooltip-arrow-width: 8px;
   --tooltip-arrow-height: 4px;
   --tooltip-bg-dark: rgba(7, 12, 20, 0.85);
-  --tooltip-fg-dark: #fff;
+  --tooltip-fg-dark: var(--white);
   --tooltip-shadow-dark: 0 2px 8px 0 rgba(7, 12, 20, 0.12);
   /*
    * Overlay Badge 语义变量（Amis --Badge-*）。
@@ -556,7 +600,7 @@
    * 选择器只 var()。
    */
   --badge-size: var(--gap-md);
-  --badge-color: #fff;
+  --badge-color: var(--white);
   --badge-text-padding-x: 6px;
   --badge-text-border: 1px solid #fff;
   --badge-danger-bg: var(--destructive);
@@ -573,22 +617,22 @@
    */
   --remark-width: 16px;
   --remark-margin-left: var(--gap-sm);
-  --remark-font-size: 12px;
-  --remark-bg: #fff;
+  --remark-font-size: var(--fontSizeSm);
+  --remark-bg: var(--card);
   --remark-border-width: 1px;
   --remark-border-color: var(--border);
-  --remark-icon-color: #84878c;
-  --remark-hover-bg: #ff9326;
-  --remark-hover-border-color: #ff9326;
-  --remark-hover-icon-color: #fff;
+  --remark-icon-color: var(--icon-color);
+  --remark-hover-bg: var(--colors-warning-5);
+  --remark-hover-border-color: var(--colors-warning-5);
+  --remark-hover-icon-color: var(--white);
   /*
    * Tag 语义变量（Amis --Tag-*）。静态选择器 / type: tags 用这套，不要用 shadcn Badge。
    * 高 24、左右 8、字 12、底 #f2f2f4、圆角 2。
    */
   --tag-height: 24px;
   --tag-padding: 0 8px;
-  --tag-font-size: 12px;
-  --tag-font-weight: 400;
+  --tag-font-size: var(--fontSizeSm);
+  --tag-font-weight: var(--fontWeightNormal);
   --tag-radius: var(--borders-radius-1);
   --tag-bg: var(--colors-neutral-fill-9);
   --tag-fg: var(--colors-neutral-text-2);
@@ -597,7 +641,7 @@
   --tag-max-width: 160px;
   --tag-on-color: var(--colors-neutral-fill-11);
   --tag-rounded-radius: 12px;
-  --tag-rounded-bg: var(--colors-neutral-fill-11);
+  --tag-rounded-bg: var(--card);
   --tag-rounded-border: var(--colors-neutral-line-6);
   --tag-inactive: var(--colors-neutral-fill-6);
   --tag-active: var(--colors-brand-5);
@@ -643,9 +687,9 @@
   --card-modified-fieldLabel: var(--colors-brand-8);
   --cards-toolbar-margin-x: 0;
   --cards-toolbar-margin-y: var(--gap-base);
-  --cards-unsaved-heading-bg: #e8f0fe;
-  --cards-unsaved-heading-color: #4285f4;
-  --card-action-font-size: 12px;
+  --cards-unsaved-heading-bg: var(--table-modified-bg);
+  --cards-unsaved-heading-color: var(--table-modified-color);
+  --card-action-font-size: var(--fontSizeSm);
   --card-action-color: var(--text-loud);
   --card-action-border: var(--colors-neutral-line-10);
   --card-action-hover-bg: var(--colors-neutral-fill-11);
@@ -656,8 +700,8 @@
    */
   --image-pad: 4px;
   --image-thumb: 110px;
-  --image-title-size: 14px;
-  --image-caption-size: 12px;
+  --image-title-size: var(--fontSizeBase);
+  --image-caption-size: var(--fontSizeSm);
   --image-title-color: var(--text-loud);
   --image-caption-color: var(--text-loud);
   --image-info-pad: 5px 10px;
@@ -665,12 +709,12 @@
   --image-gallery-max: 1010px;
   --image-gallery-gutter: 30px;
   --image-gallery-mask: rgba(0, 0, 0, 0.7);
-  --image-gallery-stage: #000;
-  --image-gallery-fg: #fff;
+  --image-gallery-stage: var(--black);
+  --image-gallery-fg: var(--white);
   /* 放大工具栏永远白底黑标，不跟 .dark 换肤（舞台已是黑底）。 */
-  --image-gallery-toolbar-bg: #ffffff;
+  --image-gallery-toolbar-bg: var(--white);
   --image-gallery-toolbar-shadow: 0 2px 6px 0 rgba(211, 211, 211, 0.5);
-  --image-gallery-toolbar-radius: 4px;
+  --image-gallery-toolbar-radius: var(--borderRadius);
   --image-gallery-toolbar-bottom: 20px;
   --image-gallery-tool: 40px;
   --image-gallery-tool-pad: 13px;
@@ -678,7 +722,7 @@
   --image-gallery-tool-fg: #151b26;
   --image-gallery-tool-disabled: #b8babf;
   /* Amis `--PopOver-bg` / `--PopOverAble-*`。不要用 shadcn `--popover`。 */
-  --popover-layer-bg: #ffffff;
+  --popover-layer-bg: var(--card);
   --popover-layer-fg: var(--select-menu-color);
   /* Amis `_file.scss` / `--inputFile-*`。选择器只 var()。 */
   --file-list-mt: 8px;
@@ -695,17 +739,17 @@
   --file-icon-color: var(--text-loud);
   --file-icon-gap: 6px;
   --file-clear-size: 12px;
-  --file-clear-color: #84878c;
-  --file-clear-hover: #5c5f66;
+  --file-clear-color: var(--colors-neutral-text-5);
+  --file-clear-hover: var(--colors-neutral-fill-4);
   --file-drag-h: 180px;
   --file-drag-border: 1px dashed var(--border);
   --file-drag-radius: var(--radius);
   --file-drag-bg: var(--card);
   --file-drag-hover-bg: var(--fill-9);
-  --file-drag-color: #5c5f66;
+  --file-drag-color: var(--colors-neutral-text-4);
   --file-drag-size: 12px;
   --file-drag-icon: 48px;
-  --file-drag-icon-color: #d4d6d9;
+  --file-drag-icon-color: var(--colors-neutral-text-7);
   --file-drag-icon-gap: 10px;
   --file-progress-h: 5px;
   --file-progress-bg: #ebebeb;
@@ -718,23 +762,25 @@
   --input-image-radius: var(--radius);
   --input-image-border: 1px solid var(--border);
   --input-image-bg: var(--card);
-  --input-image-add-color: #84878c;
+  --input-image-add-color: var(--text-tertiary);
   --input-image-add-hover-border: var(--primary);
   --input-image-add-hover-color: var(--primary);
   --input-image-danger: var(--destructive);
+  --input-image-error-font-size: 10px;
+  --input-image-add-icon-size: 24px;
   --input-image-gap: var(--gap-base);
   /* Amis Number / `_number.scss`：handler 24、单位 56、enhance 左右 24×32。 */
   --number-handler-w: 24px;
   --number-handler-color: var(--foreground);
   --number-handler-hover: var(--primary);
   --number-handler-bg: var(--card);
-  --number-handler-disabled: #b8babf;
+  --number-handler-disabled: var(--text-muted);
   --number-unit-min: 56px;
   --number-unit-bg: var(--fill-10);
   --number-unit-pad-x: 12px;
   --number-enhance-btn: 24px;
   --number-enhance-icon: 14px;
-  --number-enhance-color: #151b26;
+  --number-enhance-color: var(--colors-neutral-text-2);
   --number-pad-x: 10px;
   --popover-layer-border: 1px solid var(--border);
   --popover-layer-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -743,7 +789,7 @@
   --popover-layer-title-pad: 8px 12px;
   --popover-layer-body-pad: 12px;
   --tooltip-attr-bg: rgba(0, 0, 0, 0.7);
-  --tooltip-attr-fg: #fff;
+  --tooltip-attr-fg: var(--white);
   --tooltip-attr-gap: var(--gap-sm);
 
   --success-bg: oklch(0.96 0.03 145);
@@ -813,79 +859,44 @@
 .dark {
   color-scheme: dark;
   --background: oklch(0.2 0.025 258);
-  --foreground: oklch(0.93 0.015 258);
-  --card: oklch(0.24 0.028 258);
-  --card-foreground: oklch(0.93 0.015 258);
-  --popover: oklch(0.24 0.028 258);
-  --popover-foreground: oklch(0.93 0.015 258);
+  /* 升高面（卡片、下拉、提示、勾选盒）。色阶 fill-11 在深色是 #070d14，太黑，不用。 */
+  --card: #17202d;
+  /* 辅助 / 弱文字在深色共用 text-6：色阶 text-5 太亮，会和正文混在一起。 */
+  --text-tertiary: var(--colors-neutral-text-6);
   --primary-foreground: var(--colors-neutral-text-1);
   --primary-hover: var(--colors-brand-4);
   --primary-active: var(--colors-brand-6);
+  --link-hover-color: var(--colors-brand-6);
   --secondary: oklch(0.3 0.025 258);
   --secondary-foreground: oklch(0.93 0.015 258);
   --muted: oklch(0.3 0.025 258);
-  --muted-foreground: oklch(0.7 0.02 258);
-  --form-item-color: #e8e9eb;
-  --form-description-color: #b8bbbf;
-  --link-disabled-color: #b8bbbf;
-  --link-hover-color: var(--colors-brand-6);
-  --select-caret-color: #d4d6d9;
-  --select-caret-hover-color: #d4d6d9;
-  --select-menu-bg: #17202d;
-  --select-menu-color: #f7f8fa;
-  --popover-layer-bg: #17202d;
-  --select-menu-border: #303640;
-  --cal-cell-hover-bg: #151c26;
-  --cal-cell-hover-fg: #f7f8fa;
-  --cal-other: #b8bbbf;
+  --muted-foreground: var(--colors-neutral-text-6);
   --cal-between-bg: #0040bf;
   --date-range-sep: #5c5f66;
-  --date-range-ranger-bg: #151c26;
-  --control-placeholder: #b8bbbf;
-  --cal-picker-cancel: #84878c;
-  --cal-picker-title: #f7f8fa;
-  --cal-bar: #84878c;
-  --select-option-color: #f7f8fa;
-  --select-option-hover-color: #f7f8fa;
+  --cal-picker-cancel: var(--colors-neutral-text-7);
+  --cal-picker-title: var(--colors-neutral-text-2);
+  --cal-bar: var(--colors-neutral-text-7);
   --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
-  --select-option-disabled-color: #b8bbbf;
-  --dropdown-item-disabled: #b8bbbf;
-  --dropdown-group-color: #84878c;
-  --select-group-color: #84878c;
-  --select-search-icon-color: #84878c;
-  --select-search-placeholder: var(--control-placeholder);
+  --dropdown-item-disabled: var(--colors-neutral-text-6);
+  --dropdown-group-color: var(--colors-neutral-text-7);
+  --select-group-color: var(--colors-neutral-text-7);
+  --select-search-icon-color: var(--colors-neutral-text-7);
   --select-check-border: #5c5f66;
-  --select-check-bg: #17202d;
-  --select-chip-bg: #303640;
   --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, black);
-  --select-chip-color: #f7f8fa;
-  --select-chip-close: #84878c;
-  --select-chip-close-hover: #f7f8fa;
-  --select-clear-color: #84878c;
-  --select-clear-hover-color: #e8e9eb;
-  --select-clear-active-color: #f2f3f5;
-  --tooltip-bg: #17202d;
-  --tooltip-fg: #f7f8fa;
+  --select-chip-close: var(--colors-neutral-text-7);
   --tooltip-border: 1px solid #303640;
-  --tag-rounded-bg: #17202d;
   --tag-rounded-border: var(--colors-neutral-line-8);
-  --tag-checkable-bg: #303640;
+  --tag-checkable-bg: var(--colors-neutral-fill-9);
   --tag-checkable-hover: #3d4450;
-  --file-list-hover-bg: #151c26;
-  --file-icon-color: #e8e9eb;
-  --file-clear-color: #84878c;
-  --file-clear-hover: #e8e9eb;
+  --file-list-hover-bg: var(--colors-neutral-fill-10);
+  --file-icon-color: var(--colors-neutral-text-4);
+  --file-clear-color: var(--colors-neutral-text-7);
   --file-drag-bg: var(--background);
   --file-drag-hover-bg: var(--card);
-  --file-drag-color: #b8bbbf;
+  --file-drag-color: var(--colors-neutral-text-6);
   --file-drag-icon-color: #5c5f66;
-  --file-progress-bg: #303640;
-  --file-size-color: #84878c;
-  --input-image-add-color: #b8bbbf;
-  --number-handler-color: #f7f8fa;
-  --number-handler-bg: var(--card);
-  --number-unit-bg: var(--fill-10);
-  --number-enhance-color: #e8e9eb;
+  --file-progress-bg: var(--colors-neutral-fill-9);
+  --number-enhance-color: var(--colors-neutral-text-4);
   --accent: oklch(0.32 0.03 var(--accent-h));
   --accent-foreground: oklch(0.93 0.015 258);
   --destructive: oklch(0.65 0.19 25);
@@ -896,16 +907,12 @@
   --warning-foreground: oklch(0.22 0.05 55);
   --info: oklch(0.7 0.1 230);
   --info-foreground: oklch(0.18 0.04 230);
-  --border: var(--colors-neutral-line-8);
-  --input: var(--colors-neutral-line-8);
   --ring: oklch(0.7 0.13 var(--accent-h));
   --sidebar: oklch(0.18 0.03 258);
   --sidebar-foreground: oklch(0.93 0.015 258);
   --sidebar-primary: oklch(0.7 0.13 var(--accent-h));
-  --sidebar-primary-foreground: oklch(0.2 0.03 258);
   --sidebar-accent: oklch(0.28 0.03 258);
   --sidebar-accent-foreground: oklch(0.93 0.015 258);
-  --sidebar-border: oklch(0.32 0.03 258);
   --sidebar-ring: oklch(0.7 0.13 var(--accent-h));
   --code: oklch(0.16 0.03 258);
   --code-foreground: oklch(0.88 0.03 258);
@@ -917,27 +924,17 @@
   --info-border: oklch(0.4 0.06 230);
   --error-bg: oklch(0.28 0.05 25);
   --error-border: oklch(0.42 0.08 25);
-  --image-title-color: #e8e9eb;
-  --image-caption-color: #e8e9eb;
-  --button-secondary: #b8bbbf;
+  --image-title-color: var(--colors-neutral-text-4);
+  --image-caption-color: var(--colors-neutral-text-4);
   --button-secondary-foreground: #151b26;
-  --button-secondary-hover: #d4d6d9;
-  --button-secondary-active: #e8e9eb;
-  --button-dark: #f2f3f5;
   --button-dark-foreground: #151b26;
-  --button-dark-hover: #e8e9eb;
-  --button-dark-active: #d4d6d9;
   --button-light: #0040bf;
-  --button-light-foreground: #ffffff;
+  --button-light-foreground: var(--colors-neutral-text-1);
   --button-light-hover: var(--colors-brand-5);
   --button-light-active: var(--colors-brand-6);
-  --fill-10: #151c26;
   --list-bg: var(--card);
-  --list-item-strip-bg: var(--fill-10);
   --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, black);
   --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
-  --list-heading-unsaved-bg: color-mix(in oklch, var(--primary) 18%, black);
-  --list-heading-unsaved-color: oklch(0.7 0.13 var(--accent-h));
   --table-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
   --table-modified-bg: color-mix(in oklch, var(--primary) 18%, black);
   --table-modified-border: color-mix(in oklch, var(--primary) 28%, black);
@@ -946,31 +943,20 @@
   --table-fixed-left-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.45);
   --table-fixed-right-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.45);
   --column-toggler-menu-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --control-disabled-bg: var(--fill-10);
-  --control-disabled-color: #d4d6d9;
-  --checkbox-bg: #17202d;
-  --checkbox-icon-color: #f7f8fa;
-  --checkbox-disabled-icon: #b8bbbf;
-  --checkbox-border: #5c6066;
+  --control-disabled-color: var(--colors-neutral-text-5);
+  --checkbox-icon-color: var(--colors-neutral-text-2);
+  --checkbox-disabled-icon: var(--colors-neutral-text-6);
   /* Amis 深色选中 hover = brand-6 `#0061f2`（比 brand-5 `#1677ff` 深）。默认勾选盒与按钮模式共用。 */
   --checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h);
   --checkbox-checked-active: oklch(from var(--primary) calc(l + 0.08) c h);
-  --radio-bg: var(--checkbox-bg);
-  --radio-border: var(--checkbox-border);
-  --radio-disabled-bg: var(--control-disabled-bg);
-  --radio-disabled-icon: var(--checkbox-disabled-icon);
-  --radio-button-disabled-checked-bg: #5c6066;
-  --radio-button-disabled-checked-fg: #b8bbbf;
-  --radio-button-disabled-checked-border: #84878c;
+  --radio-button-disabled-checked-bg: var(--colors-neutral-fill-8);
+  --radio-button-disabled-checked-border: var(--colors-neutral-line-7);
   /* Amis 深色：轨道 neutral-fill-7 / hover fill-6，滑块浅色；选中仍走主题 primary。 */
-  --switch-bg: #84878c;
-  --switch-bg-hover: #b8bbbf;
-  --switch-thumb-bg: #f7f8fa;
-  --switch-text-color: #f7f8fa;
+  --switch-thumb-bg: var(--colors-neutral-fill-2);
+  --switch-text-color: var(--colors-neutral-text-2);
   --switch-checked-hover-bg: var(--primary-hover);
   --switch-checked-active-bg: var(--primary-active);
   --switch-spinner-color: #151b26;
-  --switch-option-color: var(--foreground);
 }
 
 @supports (color: oklch(0 0 0)) {
@@ -1028,7 +1014,7 @@
     width: 100%;
     height: 0.375rem;
     background: var(--muted);
-    border-radius: 999px;
+    border-radius: var(--borderRadiusFull);
     outline: none;
     accent-color: var(--primary);
   }
@@ -1037,7 +1023,7 @@
     -webkit-appearance: none;
     width: 1rem;
     height: 1rem;
-    border-radius: 999px;
+    border-radius: var(--borderRadiusFull);
     background: var(--primary);
     border: 2px solid var(--card);
     box-shadow: 0 0 0 1px var(--border);
@@ -1047,7 +1033,7 @@
   input[type="range"][data-slot="range"]::-moz-range-thumb {
     width: 1rem;
     height: 1rem;
-    border-radius: 999px;
+    border-radius: var(--borderRadiusFull);
     background: var(--primary);
     border: 2px solid var(--card);
     box-shadow: 0 0 0 1px var(--border);
@@ -1286,9 +1272,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    font-size: var(--fontSizeBase, 14px);
+    font-size: var(--fontSizeBase);
     line-height: var(--lineHeightBase, 1.5);
-    font-weight: 400;
+    font-weight: var(--fontWeightNormal);
     word-break: break-word;
     margin-bottom: 0;
   }
@@ -1456,7 +1442,7 @@
     background: none;
     color: var(--primary);
     cursor: pointer;
-    font-size: var(--fontSizeBase, 14px);
+    font-size: var(--fontSizeBase);
     line-height: 1.5;
     vertical-align: baseline;
   }
@@ -1471,7 +1457,7 @@
     border-radius: var(--radius);
     background: var(--muted);
     padding: 12px;
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     line-height: 1.5;
     white-space: pre-wrap;
     word-break: break-all;
@@ -1541,7 +1527,7 @@
     padding: 1px 6px;
     border-width: 2px;
     border-style: outset;
-    border-color: #000;
+    border-color: var(--black);
     background-color: transparent;
     line-height: 1.15;
     cursor: pointer;
@@ -1615,7 +1601,7 @@
     pointer-events: none;
     position: absolute;
     content: attr(data-tooltip);
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     line-height: 1.5;
     text-align: left;
     white-space: normal;
@@ -1737,13 +1723,13 @@
   text-align: left;
 }
 [data-vamis-confirm] [data-slot='dialog-title'] {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
   line-height: 21px;
   height: 21px;
 }
 .vamis-confirm-body {
-  font-size: 14px;
+  font-size: var(--fontSizeBase);
   line-height: 1.5;
   color: var(--foreground);
   padding: 0 24px;
@@ -1972,10 +1958,10 @@
     margin-left: auto;
     padding: 0;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--borderRadiusFull);
     background: transparent;
     color: var(--input-password-icon-color);
-    font-size: 14px;
+    font-size: var(--fontSizeBase);
     line-height: 1;
     cursor: pointer;
   }
@@ -2039,7 +2025,7 @@
     flex: 0 0 auto;
     margin-left: 6px;
     color: var(--muted-foreground);
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     line-height: 1;
     white-space: nowrap;
   }
@@ -2051,9 +2037,9 @@
     align-items: center;
     margin: 2px 3px;
     padding: 0 8px;
-    border-radius: 2px;
+    border-radius: var(--borderRadiusSm);
     background: var(--muted);
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     line-height: 20px;
   }
   .vamis-text-control__chip-label {
@@ -2070,7 +2056,7 @@
     overflow: auto;
     padding: 4px 0;
     border: 1px solid var(--select-menu-border);
-    border-radius: 2px;
+    border-radius: var(--borderRadiusSm);
     background: var(--select-menu-bg);
     color: var(--select-menu-color);
     box-shadow: var(--select-menu-shadow);
@@ -2245,18 +2231,18 @@
     margin-left: var(--gap-sm);
     height: 24px;
     padding: 0 8px;
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     border-radius: var(--radius);
     border: 1px solid transparent;
     cursor: pointer;
   }
   .vamis-list__save {
-    background: var(--success, #30bf13);
-    color: #fff;
+    background: var(--success);
+    color: var(--white);
   }
   .vamis-list__reset {
-    background: var(--danger, #f23d3d);
-    color: #fff;
+    background: var(--destructive);
+    color: var(--white);
   }
   .vamis-list__header,
   .vamis-list__footer {
@@ -2380,8 +2366,8 @@
     height: 16px;
     padding: 0;
     border: 1px solid var(--checkbox-border, var(--border));
-    border-radius: 9999px;
-    background: var(--checkbox-bg, #fff);
+    border-radius: var(--borderRadiusFull);
+    background: var(--checkbox-bg);
     vertical-align: middle;
     cursor: pointer;
     transition: border-color 0.2s ease, background-color 0.2s ease;
@@ -2398,7 +2384,7 @@
     width: 8px;
     height: 8px;
     margin: 3px auto;
-    border-radius: 9999px;
+    border-radius: var(--borderRadiusFull);
     background: var(--primary);
   }
   .vamis-radio-dot:disabled {
@@ -2406,7 +2392,7 @@
     opacity: 0.5;
   }
   .vamis-list__empty {
-    color: var(--control-placeholder, #b8babf);
+    color: var(--control-placeholder);
     text-align: center;
     min-height: 30px;
     line-height: 30px;
@@ -2425,11 +2411,11 @@
     flex-direction: column;
     align-self: flex-start;
     overflow-y: auto;
-    font-size: var(--fontSizeSm, 12px);
+    font-size: var(--fontSizeSm);
     line-height: 1.5;
   }
   .vamis-list__index-letter {
-    font-size: var(--fontSizeSm, 12px);
+    font-size: var(--fontSizeSm);
     line-height: 1.5;
     padding: 2px 4px;
     cursor: pointer;
@@ -2439,16 +2425,16 @@
     color: var(--primary);
   }
   .vamis-list__index-letter.is-active {
-    color: var(--primary-foreground, #fff);
+    color: var(--primary-foreground);
     background: var(--primary);
-    border-radius: 2px;
+    border-radius: var(--borderRadiusSm);
   }
   /* 对齐 Amis `.Each`：块级壳、不 flex 竖排；占位走 muted + gap-sm。 */
   .vamis-each {
     display: block;
   }
   .vamis-each__placeholder {
-    color: var(--control-placeholder, #b8babf);
+    color: var(--control-placeholder);
     text-align: left;
     padding: var(--gap-sm);
   }
@@ -2464,11 +2450,11 @@
     padding: 0;
     font-size: var(--fontSizeBase);
     color: var(--text-loud);
-    font-weight: 400;
+    font-weight: var(--fontWeightNormal);
   }
   .vamis-list-item__subtitle {
     margin: 0;
-    font-size: var(--fontSizeSm, 12px);
+    font-size: var(--fontSizeSm);
     color: var(--form-item-color);
   }
   .vamis-list-item__actions {
@@ -2523,7 +2509,7 @@
   .vamis-list-field__label {
     width: 150px;
     flex: 0 0 150px;
-    color: var(--control-placeholder, #b8babf);
+    color: var(--control-placeholder);
   }
   .vamis-list-field__value {
     position: relative;
@@ -2561,7 +2547,7 @@
     margin-top: calc(var(--crud-toolbar-gap, 10px) * -1);
     flex: 1 1 0%;
     min-width: 0;
-    color: var(--text-loud, #151b26);
+    color: var(--text-loud);
   }
   .vamis-crud-toolbar::before,
   .vamis-crud-toolbar::after {
@@ -2646,8 +2632,8 @@
   .vamis-popover-layer__title {
     padding: var(--popover-layer-title-pad);
     border-bottom: 1px solid var(--border);
-    font-size: 12px;
-    font-weight: 400;
+    font-size: var(--fontSizeSm);
+    font-weight: var(--fontWeightNormal);
     line-height: 1.5;
   }
   .vamis-popover-layer__body {
@@ -2712,7 +2698,7 @@
     padding: var(--tooltip-title-padding);
     margin: 0;
     font-size: var(--fontSizeBase);
-    font-weight: 700;
+    font-weight: var(--fontWeightBold);
     color: inherit;
   }
   .vamis-tooltip__title:empty {
@@ -3100,11 +3086,11 @@
     max-width: var(--select-chip-max-width);
     min-height: var(--select-chip-height);
     padding: 0 6px;
-    border-radius: 2px;
+    border-radius: var(--borderRadiusSm);
     background: var(--select-chip-bg);
     color: var(--select-chip-color);
-    font-size: 12px;
-    font-weight: 400;
+    font-size: var(--fontSizeSm);
+    font-weight: var(--fontWeightNormal);
     line-height: 20px;
     align-items: center;
     box-sizing: border-box;
@@ -3124,8 +3110,8 @@
     border: 0;
     background: transparent;
     color: var(--select-chip-close);
-    font-size: 12px;
-    line-height: 1;
+    display: flex;
+    align-items: center;
     cursor: pointer;
   }
   .vamis-select__chip-close:hover {
@@ -3264,7 +3250,7 @@
     background: transparent;
     color: var(--select-search-icon-color);
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--fontSizeBase);
     line-height: 1;
   }
   .vamis-select__create-form {
@@ -3348,7 +3334,7 @@
     box-sizing: border-box;
     font: inherit;
     font-size: var(--fontSizeBase);
-    font-weight: 400;
+    font-weight: var(--fontWeightNormal);
     line-height: var(--select-option-line-height);
     text-align: left;
     cursor: pointer;
@@ -3557,7 +3543,7 @@
     border: 0;
     background: none;
     color: var(--primary);
-    font-size: 12px;
+    font-size: var(--fontSizeSm);
     line-height: 20px;
     cursor: pointer;
   }
@@ -3601,8 +3587,8 @@
     background: var(--cal-bg);
     color: var(--cal-fg);
     font-family: var(--fontFamilyBase);
-    font-size: 16px;
-    font-weight: 400;
+    font-size: var(--fontSizeLg);
+    font-weight: var(--fontWeightNormal);
     line-height: var(--lineHeightBase);
     border: 1px solid var(--popup-border);
     border-radius: var(--radius);
@@ -3657,8 +3643,8 @@
   }
   .vamis-date-sheet__title {
     max-width: 50%;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: var(--fontSizeLg);
+    font-weight: var(--fontWeightMd);
     line-height: 1.5;
     color: var(--cal-picker-title);
     text-align: center;
@@ -3721,8 +3707,8 @@
     background: var(--select-menu-bg);
     color: var(--select-menu-color);
     font-family: var(--fontFamilyBase);
-    font-size: 16px;
-    font-weight: 400;
+    font-size: var(--fontSizeLg);
+    font-weight: var(--fontWeightNormal);
     line-height: var(--lineHeightBase);
     border: 1px solid var(--popup-border);
     border-radius: var(--radius);
@@ -3782,7 +3768,7 @@
     border: 0;
     background: none;
     font-size: var(--fontSizeBase);
-    font-weight: 400;
+    font-weight: var(--fontWeightNormal);
     line-height: var(--button-h);
     cursor: pointer;
     color: var(--cal-picker-cancel);
@@ -3804,8 +3790,8 @@
   }
   .vamis-popup__title {
     max-width: 50%;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: var(--fontSizeLg);
+    font-weight: var(--fontWeightMd);
     line-height: 1.5;
     color: var(--cal-picker-title);
     text-align: center;
@@ -3948,7 +3934,7 @@
 .vamis-dropdown-group-title {
   height: auto;
   padding: var(--gap-xs) var(--gap-xs) var(--gap-xs) var(--gap-sm);
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   line-height: 1;
   color: var(--dropdown-group-color);
   cursor: default;
@@ -4144,7 +4130,7 @@
   white-space: nowrap;
   font-size: var(--spinner-tip-font-size);
   color: var(--spinner-color);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
 }
 .vamis-spinner--top .vamis-spinner__tip {
   margin: 0 0 var(--spinner-tip-gap);
@@ -4261,7 +4247,7 @@
 */
 .vamis-form-item__label {
   font-size: var(--form-item-font-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: calc(var(--form-item-font-size) * var(--lineHeightBase));
   color: var(--form-item-color);
 }
@@ -4271,7 +4257,7 @@
   display: block;
   word-break: break-word;
   color: var(--form-description-color);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: var(--lineHeightBase);
   margin-top: var(--form-description-gap);
   font-size: var(--form-description-font-size);
@@ -4422,7 +4408,7 @@
   }
   .vamis-form-panel [data-slot="card-title"] {
     font-size: var(--fontSizeLg);
-    font-weight: 400;
+    font-weight: var(--fontWeightNormal);
     line-height: 24px;
   }
   /* 对齐 Amis Panel-body：四边 12px（--sizes-size-7）。不要 CardContent px-4。 */
@@ -4610,6 +4596,39 @@
 }
 
 /* Amis `.Table`：标题栏 40 / 序号 50 / 勾选列，tableLayout:fixed。 */
+/* 表格原语的配方（Amis `_table.scss`）：表头 14 / 数据格 12、表头灰底、行悬停 brand-10。
+   打在 `data-slot` 上，凡用 `<Table>` 的渲染器（table / crud / input-table / tasks）同一把标尺；
+   不要在原语上写 `text-sm` / `text-xs` / `bg-muted`（那是 shadcn 配方：表头 12、数据格 14，正好反过来）。 */
+[data-slot="table"] {
+  font-size: var(--table-font-size);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+[data-slot="table-cell"] {
+  font-size: var(--table-font-size);
+  line-height: var(--lineHeightBase);
+}
+[data-slot="table-head"] {
+  background: var(--table-thead-bg);
+  color: var(--text-color);
+  font-size: var(--table-thead-font-size);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--lineHeightBase);
+}
+tbody [data-slot="table-head"] {
+  font-size: var(--table-font-size);
+}
+tbody > [data-slot="table-row"]:hover {
+  background: var(--table-hover-bg);
+}
+tbody > [data-slot="table-row"].is-checked,
+tbody > [data-slot="table-row"].is-checked:hover {
+  background: var(--table-checked-bg);
+}
+/* 整行只有一格跨列（空状态 / 占位）不跟悬停，对齐 Amis `.Table-placeholder:hover`。 */
+tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
+  background: transparent;
+}
 .vamis-table-wrap {
   position: relative;
   width: 100%;
@@ -4632,8 +4651,6 @@
 .vamis-table-wrap [data-slot="table"] {
   width: 100%;
   min-width: 100%;
-  font-size: var(--table-font-size);
-  line-height: 1.5;
 }
 /* Amis `td`：paddingY/X、首末 edge、white-space 默认 normal、vertical-align middle。
    覆盖 shadcn TableCell 的 `py-0` / `text-sm` / `whitespace-nowrap` / 钉死 40 高。 */
@@ -4641,8 +4658,6 @@
   height: auto;
   min-height: var(--table-row-h);
   padding: var(--table-cell-py) var(--table-cell-px);
-  font-size: var(--table-font-size);
-  line-height: 1.5;
   white-space: normal;
   vertical-align: middle;
 }
@@ -4682,7 +4697,7 @@
   min-width: auto;
 }
 .vamis-table-wrap [data-slot="table-cell"] .vamis-mapping {
-  font-size: var(--fontSizeBase, 14px);
+  font-size: var(--fontSizeBase);
   line-height: 1.5;
   vertical-align: middle;
 }
@@ -4707,11 +4722,6 @@
   height: auto;
   min-height: var(--table-row-h);
   padding: var(--table-cell-py) var(--table-cell-px);
-  background: var(--table-thead-bg);
-  color: var(--colors-neutral-text-2);
-  font-size: var(--table-thead-font-size);
-  font-weight: 400;
-  line-height: 1.5;
   white-space: nowrap;
   overflow: visible;
   border-bottom: var(--table-thead-sep-width) solid var(--table-thead-sep);
@@ -4851,7 +4861,7 @@
   border-radius: var(--radius);
   background: var(--card);
   color: var(--foreground);
-  font-size: var(--fontSizeBase, 14px);
+  font-size: var(--fontSizeBase);
   line-height: 1.5;
   cursor: pointer;
 }
@@ -4871,7 +4881,7 @@
 .vamis-column-toggler__btn.is-sm.is-icon {
   height: var(--table-toolbar-btn-h);
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
 }
 .vamis-column-toggler__icon {
   width: 14px;
@@ -4970,7 +4980,6 @@
 .vamis-table-wrap tbody [data-slot="table-head"] {
   border-top: 1px solid var(--border);
   border-bottom: 0;
-  font-size: var(--table-font-size);
 }
 /* Amis 的 tbody th 上下各一条线（白 + 灰），所以非末行比数据行高 1px。 */
 .vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"] {
@@ -5175,7 +5184,7 @@
   width: var(--table-foot-label-w);
   padding: var(--table-cell-py) var(--table-cell-px);
   text-align: right;
-  font-weight: 700;
+  font-weight: var(--fontWeightBold);
 }
 .vamis-table__foot-table > tbody > tr > td {
   padding: var(--table-cell-py) var(--table-cell-px);
@@ -5502,7 +5511,7 @@
   vertical-align: middle;
   text-align: center;
   white-space: normal;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   line-height: 1.5;
   color: var(--colors-neutral-text-6);
   background: transparent;
@@ -5641,7 +5650,7 @@
   bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   white-space: nowrap;
 }
 /* Amis Checkbox：盒在 i / [data-slot=checkbox]，不要 shadcn size-4 + opacity。 */
@@ -5653,7 +5662,7 @@
   position: relative;
   margin: 0;
   font-size: var(--checkbox-font-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: var(--lineHeightBase);
   color: var(--checkbox-text);
   cursor: pointer;
@@ -5798,7 +5807,7 @@
   background-color: transparent;
   color: var(--checkbox-text);
   font-size: var(--checkbox-font-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: 21px;
   cursor: pointer;
 }
@@ -5846,7 +5855,7 @@
   overflow: hidden;
   background: var(--primary);
   clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-  color: #fff;
+  color: var(--primary-foreground);
   pointer-events: none;
 }
 .vamis-checkbox--button.is-checked .vamis-checkbox__corner {
@@ -5867,7 +5876,7 @@
   position: relative;
   margin: 0;
   font-size: var(--checkbox-font-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: var(--lineHeightBase);
   color: var(--checkbox-text);
   cursor: pointer;
@@ -5958,7 +5967,7 @@
   background-color: transparent;
   color: var(--checkbox-text);
   font-size: var(--checkbox-font-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: 21px;
   cursor: pointer;
 }
@@ -6156,7 +6165,7 @@
   margin: 0 0 0 var(--switch-option-gap);
   color: var(--switch-option-color);
   font-size: var(--switch-option-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   line-height: var(--switch-option-line-height);
   vertical-align: middle;
 }
@@ -6185,13 +6194,13 @@
     0px 4px 6px 0px rgba(8, 14, 26, 0.06),
     0px 1px 10px 0px rgba(8, 14, 26, 0.05),
     0px 2px 4px -1px rgba(8, 14, 26, 0.04);
-  border-radius: 4px;
-  border: 1px solid #fff;
-  color: #151b26;
-  background: #fff;
+  border-radius: var(--borderRadius);
+  border: 1px solid var(--toast-border);
+  color: var(--toast-color);
+  background: var(--toast-bg);
   position: relative;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
   opacity: 1;
   transform: translateZ(0);
 }
@@ -6243,9 +6252,9 @@
   align-items: flex-start;
 }
 .vamis-toast__title {
-  color: #151b26;
+  color: var(--toast-color);
   font-size: var(--fontSizeBase);
-  font-weight: 500;
+  font-weight: var(--fontWeightMd);
   line-height: var(--gap-xl);
   margin-bottom: var(--gap-xs);
 }
@@ -6263,10 +6272,10 @@
 }
 .vamis-toast__close {
   display: inline-flex;
-  font-size: 16px;
+  font-size: var(--fontSizeLg);
   line-height: var(--gap-xl);
   height: var(--gap-xl);
-  color: #84878c;
+  color: var(--toast-close-color);
   margin-left: var(--gap-sm);
   align-items: center;
   cursor: pointer;
@@ -6281,9 +6290,9 @@
 
 .vamis-toast-wrap.is-mobile .vamis-toast {
   background-color: rgba(0, 0, 0, 0.9);
-  border-radius: 4px;
+  border-radius: var(--borderRadius);
   border-color: transparent;
-  color: #fff;
+  color: var(--toast-mobile-color);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -6294,19 +6303,19 @@
   box-shadow: none;
 }
 .vamis-toast-wrap.is-mobile .vamis-toast__title {
-  color: #fff;
+  color: var(--toast-mobile-color);
   width: 100%;
 }
 .vamis-toast-wrap.is-mobile .vamis-toast__body {
   line-height: 18px;
-  font-size: 14px;
+  font-size: var(--fontSizeBase);
 }
 .vamis-toast-wrap.is-mobile .vamis-toast__icon {
   margin-right: 0;
   margin: var(--gap-base) 0;
   width: 40px;
   height: 40px;
-  color: #fff;
+  color: var(--toast-mobile-color);
 }
 .vamis-toast-wrap.is-mobile .vamis-toast__icon > svg {
   width: 40px;
@@ -6558,7 +6567,7 @@
   display: none;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: var(--white);
 }
 .vamis-image-thumbWrap:hover .vamis-image-overlay {
   display: flex;
@@ -6567,7 +6576,7 @@
   display: inline-flex;
   padding: 0 5px;
   line-height: 1;
-  color: #fff;
+  color: var(--white);
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -6584,7 +6593,7 @@
   justify-content: center;
   width: var(--image-thumb);
   height: var(--image-thumb);
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   color: var(--muted-foreground);
   text-align: center;
   padding: 8px;
@@ -6650,7 +6659,7 @@
   overflow: visible;
 }
 .vamis-image-gallery__close:hover {
-  color: #fff;
+  color: var(--image-gallery-fg);
 }
 .vamis-image-gallery__close .vamis-close {
   width: 16px;
@@ -6661,7 +6670,7 @@
   flex: 0 0 auto;
   height: 18px;
   line-height: 18px;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   color: var(--image-gallery-fg);
   text-align: center;
   margin-bottom: 18px;
@@ -6713,7 +6722,7 @@
   height: var(--image-gallery-tool);
   padding: var(--image-gallery-tool-pad);
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--borderRadius);
   background: transparent;
   color: var(--image-gallery-tool-fg);
   cursor: pointer;
@@ -6756,10 +6765,15 @@
   border: 0;
   background: transparent;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 32px;
-  line-height: 1;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+}
+.vamis-image-gallery__nav > svg {
+  display: block;
+  width: var(--image-gallery-nav-size);
+  height: var(--image-gallery-nav-size);
 }
 .vamis-image-gallery__nav.is-prev {
   left: 16px;
@@ -6784,7 +6798,7 @@
   overflow: hidden;
 }
 .vamis-image-gallery__thumb.is-active {
-  border-color: #fff;
+  border-color: var(--image-gallery-fg);
 }
 .vamis-image-gallery__thumb img {
   display: block;
@@ -6971,7 +6985,7 @@ html.theme-changing *::after {
   right: 10px;
   bottom: 4px;
   color: var(--select-clear-color);
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   line-height: 15px;
   pointer-events: none;
 }
@@ -7000,13 +7014,13 @@ html.theme-changing *::after {
   vertical-align: baseline;
 }
 .vamis-file__select span {
-  font-size: var(--fontSizeSm, 12px);
+  font-size: var(--fontSizeSm);
   line-height: 20px;
 }
 .vamis-file__size {
   margin-top: 4px;
   line-height: 20px;
-  font-size: var(--fontSizeSm, 12px);
+  font-size: var(--fontSizeSm);
   color: var(--file-size-color);
 }
 .vamis-file__list {
@@ -7019,11 +7033,11 @@ html.theme-changing *::after {
 }
 .vamis-file__list > li {
   margin-bottom: 4px;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   background: var(--file-list-bg);
 }
 .vamis-file__list > li:hover {
-  border-radius: 2px;
+  border-radius: var(--borderRadiusSm);
   background: var(--file-list-hover-bg);
 }
 .vamis-file__item {
@@ -7103,7 +7117,7 @@ html.theme-changing *::after {
 .vamis-file__progress > span {
   display: inline-block;
   padding: 0 4px 0 10px;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
 }
 .vamis-file__bar {
   height: var(--file-progress-h);
@@ -7114,7 +7128,7 @@ html.theme-changing *::after {
 .vamis-file__bar > span {
   display: block;
   background: var(--file-progress-fill);
-  border-radius: 2px;
+  border-radius: var(--borderRadiusSm);
   height: 100%;
 }
 .vamis-file__tip {
@@ -7149,7 +7163,7 @@ html.theme-changing *::after {
   margin-top: var(--file-drag-icon-gap);
   line-height: 20px;
   font-size: var(--file-drag-size);
-  font-weight: 400;
+  font-weight: var(--fontWeightNormal);
   color: var(--file-drag-color);
 }
 .vamis-file__tip-click {
@@ -7157,14 +7171,14 @@ html.theme-changing *::after {
 }
 .vamis-file__help a {
   color: var(--file-clear-color);
-  font-size: var(--fontSizeSm, 12px);
+  font-size: var(--fontSizeSm);
 }
 .vamis-file__sum {
-  font-size: var(--fontSizeSm, 12px);
+  font-size: var(--fontSizeSm);
 }
 .vamis-file__sum > a {
   cursor: pointer;
-  font-size: var(--fontSizeSm, 12px);
+  font-size: var(--fontSizeSm);
 }
 .vamis-file__upload-btn {
   margin-top: 8px;
@@ -7217,7 +7231,7 @@ html.theme-changing *::after {
   height: 100%;
   padding: 0 4px;
   color: var(--input-image-danger);
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
   text-align: center;
 }
 .vamis-image-control__fallback-name {
@@ -7227,7 +7241,7 @@ html.theme-changing *::after {
   text-overflow: ellipsis;
 }
 .vamis-image-control__fallback-error {
-  font-size: 10px;
+  font-size: var(--input-image-error-font-size);
   line-height: 1.3;
 }
 .vamis-image-control__error {
@@ -7238,10 +7252,10 @@ html.theme-changing *::after {
   max-height: 30px;
   overflow: hidden;
   padding: 0 4px;
-  border-radius: 2px;
+  border-radius: var(--borderRadiusSm);
   background: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
-  color: #fff;
-  font-size: 10px;
+  color: var(--white);
+  font-size: var(--input-image-error-font-size);
   line-height: 15px;
 }
 .vamis-image-control__remove {
@@ -7255,7 +7269,7 @@ html.theme-changing *::after {
   height: 18px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  color: var(--white);
 }
 .vamis-image-control__remove .vamis-close {
   width: 10px;
@@ -7293,8 +7307,8 @@ html.theme-changing *::after {
   border-radius: var(--input-image-radius);
   background: var(--input-image-bg);
   color: var(--input-image-add-color);
-  font-size: 12px;
-  font-weight: 400;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
   cursor: pointer;
 }
 .vamis-image-control__add:hover:not(.is-disabled) {
@@ -7306,11 +7320,13 @@ html.theme-changing *::after {
   background: var(--control-disabled-bg);
   color: var(--control-disabled-color);
 }
+/* Amis `--inputImage-base-default-icon-size`（sizes-base-12）：plus-fine 线图，不是「+」字符 */
 .vamis-image-control__plus {
   position: relative;
   z-index: 1;
-  font-size: 24px;
-  line-height: 1;
+  display: block;
+  width: var(--input-image-add-icon-size);
+  height: var(--input-image-add-icon-size);
 }
 .vamis-image-control__add-text {
   position: relative;
@@ -7574,7 +7590,7 @@ html.theme-changing *::after {
   display: inline;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
-  font-weight: 700;
+  font-weight: var(--fontWeightBold);
   line-height: 1;
   color: var(--label-fg);
   text-align: center;
@@ -7692,7 +7708,7 @@ html.theme-changing *::after {
 .vamis-date-range__ranger {
   flex: 0 0 auto;
   margin: 0;
-  font-size: 12px;
+  font-size: var(--fontSizeSm);
 }
 .vamis-date-range__ranger a {
   cursor: pointer;
@@ -7852,8 +7868,8 @@ svg.vamis-tag-default-icon {
   padding: 0 0 8px;
   margin: 0 3px 0 0;
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
   line-height: 1.5;
   color: var(--tabs-line-color);
   cursor: pointer;
@@ -7977,8 +7993,8 @@ svg.vamis-tag-default-icon {
   flex: none;
   color: var(--tabs-line-color);
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
   line-height: 1.5;
   cursor: pointer;
   padding: 0 0 8px;
@@ -8321,10 +8337,10 @@ svg.vamis-tag-default-icon {
 .vamis-tabs--sidebar .vamis-tabs__icon,
 .vamis-tabs--sidebar .vamis-tabs__icon.icon,
 .vamis-tabs--sidebar .vamis-tabs__link i {
-  width: 24px;
-  height: 24px;
-  font-size: 24px;
-  line-height: 24px;
+  width: var(--tabs-sidebar-icon-size);
+  height: var(--tabs-sidebar-icon-size);
+  font-size: var(--tabs-sidebar-icon-size);
+  line-height: var(--tabs-sidebar-icon-size);
   margin: 0;
   display: inline-block;
 }
@@ -8399,3 +8415,1766 @@ svg.vamis-tag-default-icon {
   --tabs-close: #84878c;
 }
 
+/* ---- Card.vue（原组件内 <style>，2026-11 迁入） ---- */
+.vamis-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border);
+  border-radius: var(--card-radius);
+  margin-bottom: var(--gap-base);
+  position: relative;
+}
+.vamis-node.border-0 > .vamis-card,
+.vamis-node.border-none > .vamis-card {
+  border-width: 0;
+}
+.vamis-card.is-link {
+  cursor: pointer;
+}
+.vamis-card.is-checked {
+  border-color: var(--card-checked-border);
+  background: var(--card-checked-bg);
+  color: var(--card-checked-color);
+}
+.vamis-card.is-checked .vamis-card-actions,
+.vamis-card.is-checked .vamis-card-action {
+  border-color: var(--card-checked-border);
+  color: var(--card-checked-color);
+}
+.vamis-card.is-modified {
+  border-color: var(--card-modified-border);
+  background: var(--card-modified-bg);
+  color: var(--card-modified-color);
+}
+.vamis-card.is-modified .vamis-card-actions,
+.vamis-card.is-modified .vamis-card-action {
+  border-color: var(--card-modified-border);
+  color: var(--card-modified-color);
+}
+.vamis-card-checkbox {
+  margin: 0 8px;
+}
+.vamis-card.is-media-left,
+.vamis-card.is-media-right {
+  flex-direction: row;
+  align-items: stretch;
+}
+.vamis-card.is-media-right {
+  flex-direction: row-reverse;
+}
+.vamis-card.is-media-bottom {
+  flex-direction: column-reverse;
+}
+.vamis-card-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.vamis-card.is-media .vamis-card-main {
+  justify-content: center;
+}
+.vamis-card-heading {
+  display: flex;
+  padding: var(--gap-md);
+}
+.vamis-card-heading.p-0,
+.vamis-card-heading.p-none {
+  padding: 0;
+}
+.vamis-card-heading.pb-2 {
+  padding-bottom: 8px;
+}
+.vamis-card-heading.items-center {
+  align-items: center;
+}
+.vamis-card-avatar {
+  flex-shrink: 0;
+  margin-right: 12px;
+  max-width: 200px;
+}
+.vamis-card-avatar img {
+  max-width: 100%;
+}
+.vamis-card-avatar-text {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  margin-right: var(--gap-base);
+  border-radius: var(--borderRadiusFull);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  line-height: 50px;
+  text-align: center;
+  font-size: var(--fontSizeXl);
+  overflow: hidden;
+  text-transform: uppercase;
+}
+.vamis-card-meta {
+  flex: 1;
+  min-width: 0;
+}
+.vamis-card-title {
+  color: var(--text-loud);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: 21px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vamis-card-title + .vamis-card-subTitle,
+.vamis-card-title + .vamis-card-placeholder {
+  margin-top: var(--gap-xs);
+}
+.vamis-card-subTitle,
+.vamis-card-placeholder {
+  max-height: calc(var(--fontSizeBase) * var(--lineHeightBase) * 2);
+  overflow: hidden;
+  color: var(--card-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.vamis-card-desc {
+  color: var(--text-loud);
+}
+.vamis-card-highlight {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 100%;
+  background: var(--success);
+  vertical-align: middle;
+}
+.vamis-card-toolbar {
+  margin-left: var(--gap-md);
+  text-align: right;
+  line-height: normal;
+}
+.vamis-card-drag {
+  display: inline-block;
+  cursor: grab;
+  padding: 0 var(--gap-sm);
+  color: var(--card-muted);
+}
+.vamis-card-drag svg.icon {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+.vamis-card-body {
+  padding: var(--gap-md);
+  flex: 1 0 auto;
+}
+.vamis-card-body.p-0,
+.vamis-card-body.p-none {
+  padding: 0;
+}
+.vamis-card-heading + .vamis-card-body {
+  padding-top: 0;
+}
+.vamis-card-heading + .vamis-card-body.p-0,
+.vamis-card-heading + .vamis-card-body.p-none {
+  padding-top: 0;
+}
+.vamis-card-field {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.vamis-card-fieldLabel {
+  flex: 0 0 40%;
+  color: var(--card-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+}
+.vamis-card.is-checked .vamis-card-fieldLabel {
+  color: var(--card-checked-fieldLabel);
+}
+.vamis-card.is-modified .vamis-card-fieldLabel {
+  color: var(--card-modified-fieldLabel);
+}
+.vamis-card-fieldValue {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-loud);
+}
+.vamis-card-fieldValue .vamis-form-item {
+  margin-bottom: 0;
+}
+.vamis-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.vamis-card-secondary {
+  max-width: 200px;
+  padding: 0 var(--gap-md);
+  color: var(--card-secondary);
+  font-size: var(--fontSizeBase);
+  line-height: 21px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vamis-card-actions-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.vamis-card-actions {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-top: 1px solid var(--card-action-border);
+  align-items: center;
+  white-space: nowrap;
+}
+.vamis-card.is-media-left .vamis-card-actions {
+  margin-left: var(--gap-md);
+  border-left: 1px solid var(--card-action-border);
+}
+.vamis-card.has-secondary .vamis-card-secondary + .vamis-card-actions-wrap .vamis-card-actions,
+.vamis-card.is-media .vamis-card-actions-wrap .vamis-card-actions {
+  margin-left: unset;
+  border: none;
+  width: auto;
+}
+.vamis-card-actions > .vamis-node:has(.vamis-card-action) {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  border-right: 1px solid var(--card-action-border);
+  line-height: 40px;
+}
+.vamis-card-actions > .vamis-node:has(.vamis-card-action):last-child {
+  border-right: none;
+}
+.vamis-card.has-secondary .vamis-card-actions > .vamis-node:has(.vamis-card-action),
+.vamis-card.is-media .vamis-card-actions > .vamis-node:has(.vamis-card-action) {
+  flex: none;
+  border: none;
+}
+a.vamis-card-action {
+  display: block;
+  background: transparent;
+  color: var(--card-action-color);
+  font-size: var(--card-action-font-size);
+  font-weight: var(--fontWeightNormal);
+  line-height: 40px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.vamis-card-action.is-disabled {
+  color: var(--card-muted);
+  cursor: not-allowed;
+}
+a.vamis-card-action:not(.is-disabled):hover {
+  background: var(--card-action-hover-bg);
+  color: var(--card-action-hover-color);
+  text-decoration: none;
+}
+a.vamis-card-action > i:first-child:not(:last-child),
+a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
+  margin-right: 4px;
+}
+.vamis-card-media {
+  flex-shrink: 0;
+}
+.vamis-card-media-img {
+  display: block;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+.vamis-card.is-media-left .vamis-card-media-img,
+.vamis-card.is-media-left .vamis-card-media-video {
+  margin: 16px 0 16px 16px;
+}
+.vamis-card.is-media-right .vamis-card-media-img,
+.vamis-card.is-media-right .vamis-card-media-video {
+  margin: 16px 16px 16px 0;
+}
+.vamis-card-media-video,
+.vamis-card-media-iframe {
+  width: 180px;
+  height: 120px;
+  border: 0;
+  border-radius: var(--radius);
+}
+
+/* ---- Cards.vue（原组件内 <style>，2026-11 迁入） ---- */
+.vamis-cards-wrap {
+  width: 100%;
+}
+.vamis-cards-title {
+  padding: var(--gap-xs) 0;
+  font-size: inherit;
+  font-weight: var(--fontWeightNormal);
+  line-height: inherit;
+}
+.vamis-cards-wrap.is-unsaved .vamis-cards-title {
+  background: var(--cards-unsaved-heading-bg);
+  color: var(--cards-unsaved-heading-color);
+  padding: var(--gap-xs) var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+.vamis-cards-title [data-slot='button'] svg.icon {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+.vamis-cards-header {
+  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x);
+}
+.vamis-cards-toolbar {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--cards-toolbar-margin-y) var(--cards-toolbar-margin-x)
+    var(--cards-toolbar-margin-y);
+}
+.vamis-cards-header + .vamis-cards-toolbar {
+  padding-top: 0;
+}
+.vamis-cards-actions {
+  display: inline-block;
+}
+.vamis-cards-actions > * {
+  margin-right: var(--crud-toolbar-gap, 10px);
+}
+@media (min-width: 576px) {
+  .vamis-cards-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.vamis-cards-dragTip {
+  width: 100%;
+  color: var(--info, var(--primary));
+  clear: both;
+  margin-top: 4px;
+}
+.vamis-cards {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 576px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vamis-cards.is-count {
+    grid-template-columns: repeat(var(--cards-cols, 1), minmax(0, 1fr));
+  }
+}
+@media (min-width: 768px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 992px) {
+  .vamis-cards:not(.is-count):not(.is-masonry) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.vamis-cards.is-masonry {
+  display: block;
+  width: 100%;
+  column-count: 1;
+  column-gap: 12px;
+}
+.vamis-cards.is-masonry.is-count {
+  column-count: var(--cards-cols, 1);
+}
+@media (min-width: 576px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 2;
+  }
+}
+@media (min-width: 768px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 3;
+  }
+}
+@media (min-width: 992px) {
+  .vamis-cards.is-masonry:not(.is-count) {
+    column-count: 4;
+  }
+}
+.vamis-cards:not(.is-masonry) .vamis-cards-item {
+  display: flex;
+  min-width: 0;
+}
+.vamis-cards:not(.is-masonry) .vamis-cards-item > .vamis-node {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+.vamis-cards:not(.is-masonry) .vamis-card {
+  height: 100%;
+}
+.vamis-cards.is-masonry .vamis-cards-item {
+  display: inline-block;
+  width: 100%;
+  max-width: unset;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 12px;
+}
+.vamis-cards.is-masonry .vamis-cards-item > .vamis-node {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.vamis-cards-item.is-dragging {
+  opacity: 0.6;
+}
+.vamis-cards-placeholder {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  color: var(--muted-foreground);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ---- Divider.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-divider] {
+  margin: 12px 0;
+  font-size: 0;
+}
+[data-vamis-divider][data-dir='horizontal'] {
+  position: relative;
+  height: 2px;
+  border-bottom: 1px solid var(--border);
+  transform-origin: 0 center;
+  clear: both;
+}
+[data-vamis-divider][data-dir='horizontal'][data-line='dashed'] {
+  border-bottom-style: dashed;
+}
+[data-vamis-divider][data-dir='vertical'] {
+  display: inline-block;
+  height: 30px;
+  border-left: 1px solid var(--border);
+  transform-origin: center bottom;
+}
+[data-vamis-divider][data-dir='vertical'][data-line='dashed'] {
+  border-left-style: dashed;
+}
+[data-vamis-divider][data-title] {
+  display: flex;
+  align-items: center;
+  height: unset;
+  border-bottom-width: 0 !important;
+}
+[data-vamis-divider][data-title]::before,
+[data-vamis-divider][data-title]::after {
+  content: '';
+  height: 0;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  border-bottom: inherit;
+  border-bottom-width: 1px;
+}
+[data-vamis-divider][data-title='left']::before,
+[data-vamis-divider][data-title='right']::after {
+  flex-basis: 5%;
+  flex-grow: 0;
+}
+[data-vamis-divider] [data-vamis-divider-text] {
+  margin: 0 16px;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
+  line-height: 1;
+  color: var(--foreground);
+  box-sizing: border-box;
+}
+
+/* ---- Grid.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-grid] {
+  width: 100%;
+  min-width: 0;
+}
+[data-vamis-grid] > [data-col] {
+  min-height: 1px;
+  box-sizing: border-box;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+@media (min-width: 576px) {
+  [data-vamis-grid] {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    min-height: 0;
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+}
+[data-vamis-grid] > [data-col~='xs'] {
+  flex-basis: 0;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 100%;
+}
+[data-vamis-grid] > [data-col~='xsAuto'] {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+[data-vamis-grid] > [data-col~='xs1'] { flex: 0 0 calc(100% * 1 / 12); max-width: calc(100% * 1 / 12); }
+[data-vamis-grid] > [data-col~='xs2'] { flex: 0 0 calc(100% * 2 / 12); max-width: calc(100% * 2 / 12); }
+[data-vamis-grid] > [data-col~='xs3'] { flex: 0 0 calc(100% * 3 / 12); max-width: calc(100% * 3 / 12); }
+[data-vamis-grid] > [data-col~='xs4'] { flex: 0 0 calc(100% * 4 / 12); max-width: calc(100% * 4 / 12); }
+[data-vamis-grid] > [data-col~='xs5'] { flex: 0 0 calc(100% * 5 / 12); max-width: calc(100% * 5 / 12); }
+[data-vamis-grid] > [data-col~='xs6'] { flex: 0 0 calc(100% * 6 / 12); max-width: calc(100% * 6 / 12); }
+[data-vamis-grid] > [data-col~='xs7'] { flex: 0 0 calc(100% * 7 / 12); max-width: calc(100% * 7 / 12); }
+[data-vamis-grid] > [data-col~='xs8'] { flex: 0 0 calc(100% * 8 / 12); max-width: calc(100% * 8 / 12); }
+[data-vamis-grid] > [data-col~='xs9'] { flex: 0 0 calc(100% * 9 / 12); max-width: calc(100% * 9 / 12); }
+[data-vamis-grid] > [data-col~='xs10'] { flex: 0 0 calc(100% * 10 / 12); max-width: calc(100% * 10 / 12); }
+[data-vamis-grid] > [data-col~='xs11'] { flex: 0 0 calc(100% * 11 / 12); max-width: calc(100% * 11 / 12); }
+[data-vamis-grid] > [data-col~='xs12'] { flex: 0 0 calc(100% * 12 / 12); max-width: calc(100% * 12 / 12); }
+
+@media (min-width: 576px) {
+  [data-vamis-grid] > [data-col~='sm'] {
+    flex-basis: 0;
+    flex-grow: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='smAuto'] {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='sm1'] { flex: 0 0 calc(100% * 1 / 12); max-width: calc(100% * 1 / 12); }
+  [data-vamis-grid] > [data-col~='sm2'] { flex: 0 0 calc(100% * 2 / 12); max-width: calc(100% * 2 / 12); }
+  [data-vamis-grid] > [data-col~='sm3'] { flex: 0 0 calc(100% * 3 / 12); max-width: calc(100% * 3 / 12); }
+  [data-vamis-grid] > [data-col~='sm4'] { flex: 0 0 calc(100% * 4 / 12); max-width: calc(100% * 4 / 12); }
+  [data-vamis-grid] > [data-col~='sm5'] { flex: 0 0 calc(100% * 5 / 12); max-width: calc(100% * 5 / 12); }
+  [data-vamis-grid] > [data-col~='sm6'] { flex: 0 0 calc(100% * 6 / 12); max-width: calc(100% * 6 / 12); }
+  [data-vamis-grid] > [data-col~='sm7'] { flex: 0 0 calc(100% * 7 / 12); max-width: calc(100% * 7 / 12); }
+  [data-vamis-grid] > [data-col~='sm8'] { flex: 0 0 calc(100% * 8 / 12); max-width: calc(100% * 8 / 12); }
+  [data-vamis-grid] > [data-col~='sm9'] { flex: 0 0 calc(100% * 9 / 12); max-width: calc(100% * 9 / 12); }
+  [data-vamis-grid] > [data-col~='sm10'] { flex: 0 0 calc(100% * 10 / 12); max-width: calc(100% * 10 / 12); }
+  [data-vamis-grid] > [data-col~='sm11'] { flex: 0 0 calc(100% * 11 / 12); max-width: calc(100% * 11 / 12); }
+  [data-vamis-grid] > [data-col~='sm12'] { flex: 0 0 calc(100% * 12 / 12); max-width: calc(100% * 12 / 12); }
+}
+
+@media (min-width: 768px) {
+  [data-vamis-grid] > [data-col~='md'] {
+    flex-basis: 0;
+    flex-grow: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='mdAuto'] {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='md1'] { flex: 0 0 calc(100% * 1 / 12); max-width: calc(100% * 1 / 12); }
+  [data-vamis-grid] > [data-col~='md2'] { flex: 0 0 calc(100% * 2 / 12); max-width: calc(100% * 2 / 12); }
+  [data-vamis-grid] > [data-col~='md3'] { flex: 0 0 calc(100% * 3 / 12); max-width: calc(100% * 3 / 12); }
+  [data-vamis-grid] > [data-col~='md4'] { flex: 0 0 calc(100% * 4 / 12); max-width: calc(100% * 4 / 12); }
+  [data-vamis-grid] > [data-col~='md5'] { flex: 0 0 calc(100% * 5 / 12); max-width: calc(100% * 5 / 12); }
+  [data-vamis-grid] > [data-col~='md6'] { flex: 0 0 calc(100% * 6 / 12); max-width: calc(100% * 6 / 12); }
+  [data-vamis-grid] > [data-col~='md7'] { flex: 0 0 calc(100% * 7 / 12); max-width: calc(100% * 7 / 12); }
+  [data-vamis-grid] > [data-col~='md8'] { flex: 0 0 calc(100% * 8 / 12); max-width: calc(100% * 8 / 12); }
+  [data-vamis-grid] > [data-col~='md9'] { flex: 0 0 calc(100% * 9 / 12); max-width: calc(100% * 9 / 12); }
+  [data-vamis-grid] > [data-col~='md10'] { flex: 0 0 calc(100% * 10 / 12); max-width: calc(100% * 10 / 12); }
+  [data-vamis-grid] > [data-col~='md11'] { flex: 0 0 calc(100% * 11 / 12); max-width: calc(100% * 11 / 12); }
+  [data-vamis-grid] > [data-col~='md12'] { flex: 0 0 calc(100% * 12 / 12); max-width: calc(100% * 12 / 12); }
+}
+
+@media (min-width: 992px) {
+  [data-vamis-grid] > [data-col~='lg'] {
+    flex-basis: 0;
+    flex-grow: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='lgAuto'] {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+  [data-vamis-grid] > [data-col~='lg1'] { flex: 0 0 calc(100% * 1 / 12); max-width: calc(100% * 1 / 12); }
+  [data-vamis-grid] > [data-col~='lg2'] { flex: 0 0 calc(100% * 2 / 12); max-width: calc(100% * 2 / 12); }
+  [data-vamis-grid] > [data-col~='lg3'] { flex: 0 0 calc(100% * 3 / 12); max-width: calc(100% * 3 / 12); }
+  [data-vamis-grid] > [data-col~='lg4'] { flex: 0 0 calc(100% * 4 / 12); max-width: calc(100% * 4 / 12); }
+  [data-vamis-grid] > [data-col~='lg5'] { flex: 0 0 calc(100% * 5 / 12); max-width: calc(100% * 5 / 12); }
+  [data-vamis-grid] > [data-col~='lg6'] { flex: 0 0 calc(100% * 6 / 12); max-width: calc(100% * 6 / 12); }
+  [data-vamis-grid] > [data-col~='lg7'] { flex: 0 0 calc(100% * 7 / 12); max-width: calc(100% * 7 / 12); }
+  [data-vamis-grid] > [data-col~='lg8'] { flex: 0 0 calc(100% * 8 / 12); max-width: calc(100% * 8 / 12); }
+  [data-vamis-grid] > [data-col~='lg9'] { flex: 0 0 calc(100% * 9 / 12); max-width: calc(100% * 9 / 12); }
+  [data-vamis-grid] > [data-col~='lg10'] { flex: 0 0 calc(100% * 10 / 12); max-width: calc(100% * 10 / 12); }
+  [data-vamis-grid] > [data-col~='lg11'] { flex: 0 0 calc(100% * 11 / 12); max-width: calc(100% * 11 / 12); }
+  [data-vamis-grid] > [data-col~='lg12'] { flex: 0 0 calc(100% * 12 / 12); max-width: calc(100% * 12 / 12); }
+}
+
+[data-vamis-grid][data-gap='none'] {
+  margin-left: 0;
+  margin-right: 0;
+}
+[data-vamis-grid][data-gap='none'] > [data-col] {
+  padding-left: 0;
+  padding-right: 0;
+}
+[data-vamis-grid][data-gap='xs'] {
+  margin-left: calc(var(--gap-xs) * -0.5);
+  margin-right: calc(var(--gap-xs) * -0.5);
+}
+[data-vamis-grid][data-gap='xs'] > [data-col] {
+  padding-left: calc(var(--gap-xs) * 0.5);
+  padding-right: calc(var(--gap-xs) * 0.5);
+}
+[data-vamis-grid][data-gap='sm'] {
+  margin-left: calc(var(--gap-sm) * -0.5);
+  margin-right: calc(var(--gap-sm) * -0.5);
+}
+[data-vamis-grid][data-gap='sm'] > [data-col] {
+  padding-left: calc(var(--gap-sm) * 0.5);
+  padding-right: calc(var(--gap-sm) * 0.5);
+}
+[data-vamis-grid][data-gap='base'] {
+  margin-left: calc(var(--gap-base) * -0.5);
+  margin-right: calc(var(--gap-base) * -0.5);
+}
+[data-vamis-grid][data-gap='base'] > [data-col] {
+  padding-left: calc(var(--gap-base) * 0.5);
+  padding-right: calc(var(--gap-base) * 0.5);
+}
+[data-vamis-grid][data-gap='md'] {
+  margin-left: calc(var(--gap-md) * -0.5);
+  margin-right: calc(var(--gap-md) * -0.5);
+}
+[data-vamis-grid][data-gap='md'] > [data-col] {
+  padding-left: calc(var(--gap-md) * 0.5);
+  padding-right: calc(var(--gap-md) * 0.5);
+}
+[data-vamis-grid][data-gap='lg'] {
+  margin-left: calc(var(--gap-lg) * -0.5);
+  margin-right: calc(var(--gap-lg) * -0.5);
+}
+[data-vamis-grid][data-gap='lg'] > [data-col] {
+  padding-left: calc(var(--gap-lg) * 0.5);
+  padding-right: calc(var(--gap-lg) * 0.5);
+}
+
+@media (min-width: 576px) {
+  [data-vamis-grid][data-align='right'] { justify-content: flex-end; }
+  [data-vamis-grid][data-align='center'] { justify-content: center; }
+  [data-vamis-grid][data-align='between'] { justify-content: space-between; }
+  [data-vamis-grid][data-valign='middle'] > [data-col],
+  [data-vamis-grid] > [data-col][data-col-valign='middle'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  [data-vamis-grid][data-valign='bottom'] > [data-col],
+  [data-vamis-grid] > [data-col][data-col-valign='bottom'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  [data-vamis-grid][data-valign='between'] > [data-col],
+  [data-vamis-grid] > [data-col][data-col-valign='between'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  [data-vamis-grid] > [data-col][data-col-valign='top'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+/* ---- Icon.vue（原组件内 <style>，2026-11 迁入） ---- */
+.vamis-icon-svg svg {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
+}
+/* Amis registerIcon SVG 没有 svg.icon 的 1em；包含块有定宽时跟文字撑开（按钮卡片 plus）。 */
+.vamis-node:has(.vamis-icon-host.is-builtin) {
+  display: block;
+}
+.vamis-icon-host.is-builtin {
+  display: block;
+}
+.vamis-icon-host.is-builtin .vamis-icon-svg svg {
+  display: inline;
+  width: auto;
+  height: auto;
+  vertical-align: unset;
+}
+
+/* ---- Pagination.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+/* Amis `.Pagination-wrap`：块级 + 子项 inline-block/inline-flex，不要 flex+align-items 去对 -8px 底边距。 */
+[data-vamis-pagination] {
+  display: inline-block;
+  font-size: 0;
+  line-height: 0;
+  white-space: nowrap;
+  color: var(--text-loud);
+}
+[data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > a,
+[data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > span {
+  min-width: 24px;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 4px;
+}
+[data-pagination='pager'] {
+  display: inline-block;
+  padding: 0;
+  margin: 0 0 -8px;
+  list-style: none;
+  vertical-align: top;
+  /* 字号/行高打在 a/span 上。ul 自己 12/32 会多出 ~1.4px strut，统计和前往看起来偏上。 */
+  font-size: 0;
+  line-height: 0;
+}
+[data-pagination='pager'] > li {
+  display: inline-flex;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+}
+[data-pagination='pager'] > li > a,
+[data-pagination='pager'] > li > span {
+  user-select: none;
+  position: relative;
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 8px;
+  text-align: center;
+  color: var(--form-item-color);
+  font-size: var(--fontSizeSm);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-pagination='pager'] > li:hover > a,
+[data-pagination='pager'] > li:hover > span {
+  color: var(--primary);
+}
+[data-pagination='pager'] > li.is-active > a {
+  background: var(--card);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+}
+[data-pagination='pager'] > li.is-disabled {
+  cursor: not-allowed;
+}
+[data-pagination='pager'] > li.is-disabled > a,
+[data-pagination='pager'] > li.is-disabled > span {
+  color: var(--pagination-disabled-color);
+  cursor: not-allowed;
+}
+[data-pagination='pager'] > li[data-pager='ellipsis'] > a {
+  position: relative;
+}
+[data-pagination='pager'] > li[data-pager='ellipsis'] > span.icon {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+[data-pagination='pager'] > li[data-pager='ellipsis']:hover > a {
+  opacity: 0;
+}
+[data-pagination='pager'] > li[data-pager='ellipsis']:hover > span.icon {
+  opacity: 1;
+}
+[data-pagination='total'] {
+  display: inline-block;
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+  color: var(--form-item-color);
+  vertical-align: top;
+}
+[data-pagination='perpage'] {
+  height: 32px;
+  min-width: 96px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--form-item-color);
+  padding: 0 8px;
+  font-size: var(--fontSizeSm);
+  vertical-align: top;
+}
+[data-vamis-pagination][data-size='sm'] [data-pagination='perpage'] {
+  height: 24px;
+  min-height: 24px;
+}
+[data-pagination='go'] {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  flex-wrap: nowrap;
+  vertical-align: top;
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+  color: var(--text-loud);
+}
+[data-pagination='go-left'] {
+  color: var(--form-item-color);
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+}
+[data-pagination='go'] input {
+  width: 50px;
+  min-width: 50px;
+  height: 32px;
+  margin-left: 8px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius) 0 0 var(--radius);
+  text-align: center;
+  background: var(--card);
+  color: var(--form-item-color);
+  font-size: var(--fontSizeBase);
+  /* border-box 32 含 1px 边，行高跟内容区 30，避免字比格子低 1px。 */
+  line-height: 30px;
+  box-sizing: border-box;
+}
+[data-pagination='go'] input:focus,
+[data-pagination='go'] input:hover {
+  outline: none;
+  border-color: var(--primary);
+}
+[data-pagination='go-btn'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-left: none;
+  margin-left: -1px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: var(--fontSizeSm);
+  color: var(--text-loud);
+  box-sizing: border-box;
+}
+[data-pagination='go-btn']:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  border-left: 1px solid var(--primary);
+}
+[data-vamis-pagination].disabled,
+[data-vamis-pagination].disabled [data-pagination='pager'] > li {
+  cursor: not-allowed;
+}
+[data-vamis-pagination].disabled [data-pagination='pager'] > li > a,
+[data-vamis-pagination].disabled [data-pagination='pager'] > li > span {
+  color: color-mix(in oklch, var(--foreground) 40%, transparent);
+  cursor: not-allowed;
+}
+
+/* ---- Panel.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-panel] {
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 var(--panel-margin-bottom, 20px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+[data-vamis-panel-heading] {
+  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
+  background: color-mix(in oklch, var(--muted) 55%, var(--card));
+  color: color-mix(in oklch, var(--foreground) 72%, transparent);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-sizing: border-box;
+}
+[data-vamis-panel-heading].is-collapsible {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+[data-vamis-panel-title] {
+  margin: 0;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  line-height: 1.5;
+  color: inherit;
+}
+[data-vamis-panel-arrow] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transform: rotate(180deg);
+  transition: transform 0.1s ease-in;
+}
+[data-vamis-panel-arrow][data-collapsed] {
+  transform: rotate(0deg);
+}
+[data-vamis-panel-body] {
+  padding: var(--gap-base, 12px);
+  box-sizing: border-box;
+}
+[data-vamis-panel-footer],
+[data-vamis-panel-actions] {
+  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
+  border-top: 1px solid var(--border);
+  background: transparent;
+  box-sizing: border-box;
+  clear: both;
+}
+[data-vamis-panel-actions] {
+  text-align: right;
+}
+[data-vamis-panel-actions] > * {
+  margin-left: var(--gap-sm, 8px);
+}
+[data-vamis-panel-footer-wrap][data-affix] {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--card);
+}
+
+/* ---- Progress.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+.vamis-progress__stripe {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 32px 32px;
+}
+.vamis-progress__animate {
+  transition: width 0.3s ease;
+}
+
+/* ---- Wrapper.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-wrapper] {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* ---- calendar/DateCalendarPanel.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+/* 对齐 Amis DateCalendar + rdtPicker。不用 helper grid-cols-7（那是 6 列）。 */
+.vamis-cal {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  overflow: visible;
+  /* 对齐 Amis `_date.scss` `.rdt .rdtPicker { padding: 0 }`，弹层内日历 240×290。 */
+  padding: 0;
+  border: 0;
+  background: var(--cal-bg);
+  font-size: var(--fontSizeSm);
+  color: var(--cal-fg);
+  user-select: none;
+}
+.vamis-cal.is-framed {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.vamis-cal.is-large {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: visible;
+}
+.vamis-cal table {
+  width: 100%;
+  margin: 0;
+  padding: 0 12px;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  table-layout: auto;
+}
+.vamis-cal.is-large table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+/* Tailwind preflight 把 td/th padding 清成 0；Amis 吃 UA `padding: 1px` + content-box，格子才是 26px。 */
+.vamis-cal:not(.is-large) th,
+.vamis-cal:not(.is-large) td {
+  box-sizing: content-box;
+  padding: 1px;
+}
+/* 对齐 Amis `.rdtHeader`：table + table-cell middle。不要 flex 对 24px 行盒居中，汉字实际只有 ~16.5px。 */
+.vamis-cal-header {
+  display: table;
+  table-layout: fixed;
+  border-collapse: separate;
+  width: 100%;
+  height: 40px;
+  margin-top: -8px;
+}
+.vamis-cal-header > * {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.vamis-cal.is-large .vamis-cal-header {
+  margin-top: 0;
+}
+.vamis-cal-switch {
+  font-weight: var(--fontWeightNormal);
+  font-size: var(--fontSizeBase);
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+.vamis-cal-switch + .vamis-cal-switch {
+  margin-left: 4px;
+}
+.vamis-cal-switch:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+.vamis-cal-nav {
+  width: 16px;
+  padding: 0;
+  color: var(--select-caret-color);
+  cursor: pointer;
+  text-decoration: none;
+  font-size: var(--fontSizeXl);
+  font-family: auto;
+  font-weight: var(--fontWeightNormal);
+}
+.vamis-cal-nav:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+.vamis-cal-line {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--border);
+}
+.vamis-cal-dow {
+  width: 14.2857%;
+  height: 24px;
+  line-height: 24px;
+  font-weight: var(--fontWeightNormal);
+  color: var(--muted-foreground);
+  text-align: center;
+}
+.vamis-cal.is-large .vamis-cal-dow {
+  height: 40px;
+}
+.vamis-cal td {
+  position: relative;
+  text-align: center;
+  vertical-align: top;
+  height: 24px;
+  cursor: pointer;
+}
+.vamis-cal.is-large td {
+  overflow: visible;
+  height: 110px;
+  padding: 1px;
+  border: 1px solid var(--border);
+  background: var(--cal-bg);
+}
+.vamis-cal-day {
+  position: relative;
+  display: inline-block;
+  box-sizing: content-box;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: var(--radius);
+}
+.vamis-cal td.is-other .vamis-cal-day,
+.vamis-cal td.is-other.vamis-cal-pick,
+.vamis-cal.is-large td.is-other .vamis-cal-head {
+  /* Amis rdtOld/rdtNew：--inputDate-disabled-option-color */
+  color: var(--cal-other);
+}
+.vamis-cal td.is-today .vamis-cal-day,
+.vamis-cal.is-large td.is-today .vamis-cal-head span {
+  border: 1px solid var(--primary);
+}
+.vamis-cal td.is-range {
+  background: var(--cal-between-bg);
+}
+.vamis-cal td.is-other.is-range,
+.vamis-cal td.is-other.is-range-start,
+.vamis-cal td.is-other.is-range-end {
+  background: transparent;
+}
+.vamis-cal td.is-range-start {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 50%,
+    var(--cal-between-bg) 51%,
+    var(--cal-between-bg) 100%
+  );
+}
+.vamis-cal td.is-range-end {
+  background: linear-gradient(
+    to right,
+    var(--cal-between-bg) 0%,
+    var(--cal-between-bg) 50%,
+    transparent 51%,
+    transparent 100%
+  );
+}
+.vamis-cal td.is-active .vamis-cal-day,
+.vamis-cal td.is-active.vamis-cal-pick span,
+.vamis-cal.is-large td.is-active .vamis-cal-head span {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+.vamis-cal td:not(.is-disabled):hover .vamis-cal-day,
+.vamis-cal td.vamis-cal-pick:not(.is-disabled):hover span,
+.vamis-cal.is-large td:not(.is-disabled):hover .vamis-cal-head span {
+  background: var(--cal-cell-hover-bg);
+  color: var(--cal-cell-hover-fg);
+}
+.vamis-cal td.is-active:not(.is-disabled):hover .vamis-cal-day,
+.vamis-cal td.is-active.vamis-cal-pick:not(.is-disabled):hover span,
+.vamis-cal.is-large td.is-active:not(.is-disabled):hover .vamis-cal-head span {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.vamis-cal td.is-disabled {
+  cursor: not-allowed;
+}
+.vamis-cal td.is-disabled .vamis-cal-day,
+.vamis-cal td.is-disabled:hover .vamis-cal-day,
+.vamis-cal td.is-disabled.vamis-cal-pick span,
+.vamis-cal td.is-disabled.vamis-cal-pick:hover span {
+  color: var(--cal-other);
+  background: transparent;
+  opacity: 0.55;
+}
+.vamis-cal-pick {
+  height: 40px;
+  vertical-align: middle;
+}
+.vamis-cal-pick span {
+  display: inline-block;
+  min-width: 40px;
+  line-height: 24px;
+  padding: 0 6px;
+}
+.vamis-cal-dot-hit {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  z-index: 10;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+.vamis-cal-dot-hit::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+}
+.vamis-cal-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--borderRadiusFull);
+}
+/* Amis --secondary 是 text-5；shadcn --secondary 太浅，白字看不见。只盖日历条/点，走 --cal-bar。 */
+.vamis-cal-chip.bg-secondary,
+.vamis-cal-dot.bg-secondary {
+  background-color: var(--cal-bar);
+}
+.vamis-cal-wrap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 100%;
+  overflow: visible;
+  text-align: center;
+}
+.vamis-cal-head {
+  height: 24px;
+  line-height: 24px;
+}
+.vamis-cal-head span {
+  display: inline-block;
+  min-width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: var(--radius);
+}
+.vamis-cal-chip {
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  height: 20px;
+  margin: 1px 0;
+  padding: 0 4px;
+  border-radius: var(--radius);
+  font-size: var(--fontSizeSm);
+  line-height: 20px;
+  color: var(--cal-chip-fg);
+  text-align: left;
+  cursor: pointer;
+}
+/* 对齐 Amis .ScheduleCalendar-text-overflow：绝对定位抽出文字，父级宽度才钉在格子上，ellipsis 才会出现。 */
+.vamis-cal-chip-text {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 对齐 Amis 占位：bg-transparent，不能 visibility:hidden，否则点到后一天会点中前一天溢出的条。 */
+.vamis-cal-chip.is-ph {
+  z-index: 11;
+  background-color: transparent;
+  cursor: pointer;
+}
+.vamis-cal-more {
+  padding: 0 4px;
+  font-size: var(--fontSizeSm);
+  line-height: 20px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.vamis-cal-picker {
+  overflow: hidden;
+  background: var(--cal-bg);
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightNormal);
+}
+.vamis-cal-picker-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+}
+.vamis-cal-picker-cancel,
+.vamis-cal-picker-ok {
+  height: 100%;
+  padding: 0 16px;
+  line-height: 50px;
+  font-size: var(--fontSizeLg);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--cal-picker-cancel);
+}
+.vamis-cal-picker-ok {
+  color: var(--primary);
+}
+.vamis-cal-picker-title {
+  max-width: 50%;
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightMd);
+  line-height: 1.5;
+  color: var(--cal-picker-title);
+  text-align: center;
+}
+.vamis-cal-picker-columns {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  touch-action: none;
+}
+.vamis-cal-picker-frame {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  left: 16px;
+  z-index: 2;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+.vamis-cal-picker-frame::after {
+  position: absolute;
+  inset: -50%;
+  content: "";
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: scale(0.5);
+}
+
+/* ---- data/Table2.vue（原组件内 <style>，2026-11 迁入） ---- */
+.vamis-table2 {
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.vamis-table2 [data-slot="table-container"] {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.vamis-table2 table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  line-height: 1.5;
+  color: var(--foreground);
+}
+.vamis-table2 th,
+.vamis-table2 td {
+  height: var(--table-row-h);
+  padding: 10px;
+  font-weight: var(--fontWeightNormal);
+  vertical-align: middle;
+}
+.vamis-table2 th:first-child,
+.vamis-table2 td:first-child {
+  padding-left: 12px;
+}
+.vamis-table2 th:last-child,
+.vamis-table2 td:last-child {
+  padding-right: 12px;
+}
+.vamis-table2 th {
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  background: color-mix(in oklch, var(--muted) 70%, var(--card));
+  border-right: 1px solid color-mix(in oklch, var(--border) 70%, white);
+}
+.vamis-table2 th:last-child {
+  border-right: 0;
+}
+.vamis-table2 td {
+  font-size: var(--fontSizeSm);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.vamis-table2 tbody tr:last-child td {
+  border-bottom: 1px solid var(--border);
+}
+.vamis-table2-title,
+.vamis-table2-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
+  line-height: 1.5;
+  color: var(--foreground);
+}
+.vamis-table2-head-cell {
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
+}
+.vamis-table2-sort {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.vamis-table2-sort-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 13px;
+  height: 21px;
+  font-style: normal;
+  cursor: pointer;
+  fill: currentColor;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+}
+.vamis-table2-sort-icon.is-active {
+  display: flex;
+}
+.vamis-table2-sort-icon svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+.vamis-table2-sort-icon.is-default.is-active {
+  color: var(--text-muted);
+}
+.vamis-table2-sort-icon.is-default.is-active:hover {
+  color: var(--text-color);
+}
+.vamis-table2-sort-icon.is-up.is-active,
+.vamis-table2-sort-icon.is-down.is-active {
+  color: var(--primary);
+}
+.vamis-table2 tr.is-disabled {
+  color: var(--muted-foreground);
+  background: color-mix(in oklch, var(--muted) 50%, var(--card));
+}
+.vamis-table2.is-small th,
+.vamis-table2.is-small td {
+  height: 33px;
+  padding: 6px 4px;
+}
+.vamis-table2.is-large th,
+.vamis-table2.is-large td {
+  height: 61px;
+  padding: 20px 12px;
+}
+.vamis-table2.is-bordered {
+  border: 1px solid var(--border);
+}
+.vamis-table2.is-bordered .vamis-table2-title {
+  border-bottom: 1px solid var(--border);
+}
+.vamis-table2.is-bordered .vamis-table2-footer {
+  border-top: 1px solid var(--border);
+}
+.vamis-table2.is-bordered th,
+.vamis-table2.is-bordered td {
+  border: 1px solid var(--border);
+}
+
+/* ---- display/CalendarWheel.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+.vamis-cal-wheel {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+.vamis-cal-wheel-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.68, 1);
+}
+.vamis-cal-wheel-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: var(--vamis-wheel-item-h, 48px);
+  line-height: var(--vamis-wheel-item-h, 48px);
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightNormal);
+  color: var(--cal-fg, var(--foreground));
+  cursor: pointer;
+}
+.vamis-cal-wheel-item > * {
+  flex: 0 1 auto;
+  max-width: 100%;
+  text-align: center;
+}
+.vamis-cal-wheel-item.is-on {
+  color: var(--cal-picker-title, var(--foreground));
+}
+
+/* ---- display/Code.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+.vamis-code--editor {
+  min-height: 1.5rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.vamis-code--editor .cursor,
+.vamis-code--editor .cursors-layer {
+  display: none !important;
+}
+.vamis-code--editor textarea.inputarea {
+  pointer-events: none;
+  caret-color: transparent;
+}
+.vamis-code--dark {
+  background-color: var(--code-dark-bg);
+}
+
+/* ---- layout/HBox.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-hbox] {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+[data-vamis-hbox] > [data-hbox-col] {
+  flex-basis: 0;
+  flex-grow: 1;
+  min-height: 1px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+[data-vamis-hbox][data-list-field] > [data-hbox-col] {
+  min-width: 0;
+  width: auto;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-width='custom'] {
+  flex-grow: unset;
+  flex-basis: unset;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-width='auto'] {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+[data-vamis-hbox][data-align='right'] { justify-content: flex-end; }
+[data-vamis-hbox][data-align='center'] { justify-content: center; }
+[data-vamis-hbox][data-align='between'] { justify-content: space-between; }
+
+[data-vamis-hbox][data-valign='middle'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='middle'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+[data-vamis-hbox][data-valign='bottom'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='bottom'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+[data-vamis-hbox][data-valign='between'] > [data-hbox-col],
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='between'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+[data-vamis-hbox] > [data-hbox-col][data-hbox-valign='top'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+[data-vamis-hbox][data-gap='xs'] {
+  margin-left: calc(var(--gap-xs) * -0.5);
+  margin-right: calc(var(--gap-xs) * -0.5);
+}
+[data-vamis-hbox][data-gap='xs'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-xs) * 0.5);
+  padding-right: calc(var(--gap-xs) * 0.5);
+}
+[data-vamis-hbox][data-gap='sm'] {
+  margin-left: calc(var(--gap-sm) * -0.5);
+  margin-right: calc(var(--gap-sm) * -0.5);
+}
+[data-vamis-hbox][data-gap='sm'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-sm) * 0.5);
+  padding-right: calc(var(--gap-sm) * 0.5);
+}
+[data-vamis-hbox][data-gap='base'] {
+  margin-left: calc(var(--gap-base) * -0.5);
+  margin-right: calc(var(--gap-base) * -0.5);
+}
+[data-vamis-hbox][data-gap='base'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-base) * 0.5);
+  padding-right: calc(var(--gap-base) * 0.5);
+}
+[data-vamis-hbox][data-gap='md'] {
+  margin-left: calc(var(--gap-md) * -0.5);
+  margin-right: calc(var(--gap-md) * -0.5);
+}
+[data-vamis-hbox][data-gap='md'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-md) * 0.5);
+  padding-right: calc(var(--gap-md) * 0.5);
+}
+[data-vamis-hbox][data-gap='lg'] {
+  margin-left: calc(var(--gap-lg) * -0.5);
+  margin-right: calc(var(--gap-lg) * -0.5);
+}
+[data-vamis-hbox][data-gap='lg'] > [data-hbox-col] {
+  padding-left: calc(var(--gap-lg) * 0.5);
+  padding-right: calc(var(--gap-lg) * 0.5);
+}
+
+/* ---- layout/PaginationWrapper.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-pagination-wrapper-pager] {
+  text-align: right;
+}
+[data-vamis-pagination-wrapper-pager]:first-child {
+  margin-bottom: var(--gap-sm, 8px);
+}
+
+/* ---- layout/Portlet.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
+[data-vamis-portlet] {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap-base);
+}
+[data-vamis-portlet-head] {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+[data-vamis-portlet-links] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  border-bottom: 1px solid var(--border);
+}
+[data-vamis-portlet][data-divider='none'] [data-vamis-portlet-links] {
+  border-bottom: 0;
+}
+[data-vamis-portlet-links] > button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 8px 16px;
+  font-size: var(--fontSizeBase);
+  line-height: 20px;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-vamis-portlet-links] > button[data-active] {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: var(--fontWeightMd);
+}
+[data-vamis-portlet][data-solo] [data-vamis-portlet-links] > button[data-active] {
+  color: inherit;
+  border-bottom-color: transparent;
+  font-weight: inherit;
+  cursor: default;
+}
+[data-vamis-portlet-links] > button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+[data-vamis-portlet-icon] {
+  width: 14px;
+  height: 14px;
+}
+[data-vamis-portlet-desc] {
+  margin-left: var(--gap-base);
+  font-size: var(--fontSizeSm);
+  color: var(--muted-foreground);
+}
+[data-vamis-portlet-toolbar] {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+[data-vamis-portlet-body] {
+  padding-top: 12px;
+}
+[data-vamis-portlet][data-header='hidden'] [data-vamis-portlet-body] {
+  padding-top: 0;
+}
+
+/* ---- 图标收口（2026-11）：原先拿字符当图标的几处 ---- */
+.vamis-carousel__arrow {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-input-tag__remove {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--icon-color);
+  cursor: pointer;
+}
+.vamis-input-tag__remove:hover:not(:disabled) {
+  color: var(--icon-hover-color);
+}
+.vamis-transfer__tree-caret {
+  width: 12px;
+  margin-right: var(--gap-xs);
+  color: var(--icon-color);
+}
+.vamis-nested-select__caret {
+  color: var(--icon-color);
+}
+
+/* ---- 原先写在 JS / 行内 style 里的默认皮肤 ---- */
+[data-vamis-avatar] {
+  background: var(--avatar-bg);
+}
+.vamis-number__unit-menu {
+  min-width: var(--number-unit-menu-min-width);
+}
+.vamis-switch-container__body {
+  display: inline;
+}

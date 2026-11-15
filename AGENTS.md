@@ -57,7 +57,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 ## 架构约定
 
 - Schema 字段名与 Amis 语义不改写；扩展只加新字段或新 IR `kind`。
-- 包分工对齐 Amis 三层（core / ui / 渲染器）：`@vamis/ui` 不依赖 `@vamis/core`；渲染器默认皮肤和 chrome 图标归 `@vamis/ui`，读 schema / env 的子件留在 `packages/vamis`。新渲染器不要自带 `<style>`。规则：`.cursor/rules/packages.mdc`，`pnpm test` 里的 `package-boundary.test.ts` 守着。
+- 包分工对齐 Amis 三层（core / ui / 渲染器）：`@vamis/ui` 不依赖 `@vamis/core`；渲染器默认皮肤和 chrome 图标归 `@vamis/ui`，读 schema / env 的子件留在 `packages/vamis`。渲染器不带 `<style>`。规则：`.cursor/rules/packages.mdc`，`pnpm test` 里的 `package-boundary.test.ts` 守着。
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
@@ -76,6 +76,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 | [运行时语义](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md) | D1–D12 kernel 决策 |
 | [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) | type 覆盖率（与语义进度分开） |
 | [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md) | Amis 水标 × shadcn token |
+| [样式规范](docs/superpowers/specs/2026-11-15-vamis-style-standard.md) | 标尺（字号 / 色号 / 圆角）、图标通道、`:style`、原语配方、守卫上限；写组件样式照它做 |
 | [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md) | 与 Playground 同端口的文档结构 |
 | [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md) | 任意 HTML `vamis.embed`；与 `VamisRoot` 同一内核 |
 | [历史教训](.cursor/rules/lessons.mdc) | 稳定开发经验；组件修复后必须去重回写 |

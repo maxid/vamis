@@ -149,7 +149,10 @@ describe('table2 columns and chrome', () => {
 describe('table2 renderer pins Amis main-path markup', () => {
   it('uses table2 helpers, placeholder chips, size vars, rowClick', () => {
     const here = dirname(fileURLToPath(import.meta.url))
-    const vue = readFileSync(resolve(here, '../../vamis/src/renderers/data/Table2.vue'), 'utf8')
+    // 皮肤在 @vamis/ui 的 styles.css，渲染器不带 <style>
+    const vue =
+      readFileSync(resolve(here, '../../vamis/src/renderers/data/Table2.vue'), 'utf8') +
+      readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     expect(vue).toContain('table2Source')
     expect(vue).toContain('table2SelectionType')
     expect(vue).toContain('vamis-table2')
@@ -170,7 +173,7 @@ describe('table2 renderer pins Amis main-path markup', () => {
     expect(vue).toContain('height: 21px')
     expect(vue).toContain('position: absolute')
     expect(vue).toContain('translate(-50%, -50%)')
-    expect(vue).toContain('#151b26')
+    expect(vue).toContain('.vamis-table2-sort-icon.is-default.is-active:hover {\n  color: var(--text-color);')
     expect(vue).toContain('@click.stop="toggleSort(col)"')
     expect(vue).not.toMatch(/<TableHead[\s\S]{0,180}@click="toggleSort/)
     expect(vue).toContain('vamis-radio-dot')

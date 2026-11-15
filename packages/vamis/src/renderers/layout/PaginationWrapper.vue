@@ -76,12 +76,3 @@ function onPageChange(next: number, nextPerPage?: number) {
     </div>
   </div>
 </template>
-
-<style scoped>
-[data-vamis-pagination-wrapper-pager] {
-  text-align: right;
-}
-[data-vamis-pagination-wrapper-pager]:first-child {
-  margin-bottom: var(--gap-sm, 8px);
-}
-</style>

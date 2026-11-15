@@ -19,7 +19,7 @@ import {
   useData,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisSpinnerMark } from '@vamis/ui'
+import { VamisSpinnerMark, VamisIcon } from '@vamis/ui'
 import IconMark from './IconMark.vue'
 
 const props = defineProps<{
@@ -150,18 +150,7 @@ onBeforeUnmount(() => {
         >
           <div class="vamis-spinner__icon" :class="[sizeClass, iconKindClass, iconClass]">
             <VamisSpinnerMark v-if="icon.kind === 'default'" />
-            <svg
-              v-else-if="icon.kind === 'builtin' && icon.name === 'reload'"
-              class="icon"
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                fill="currentColor"
-                d="M8.05 14.056a6.041 6.041 0 0 1-5.132-2.82l2.113-2.042H0v4.862l1.409-1.362C2.919 14.736 5.333 16 8.05 16c4.025 0 7.447-2.82 7.95-6.708L13.987 9c-.402 2.917-2.918 5.056-5.937 5.056Zm6.541-10.75C13.081 1.264 10.667 0 7.95 0 3.925 0 .503 2.82 0 6.708L2.013 7C2.415 4.083 4.93 1.944 7.95 1.944a6.041 6.041 0 0 1 5.132 2.82l-2.113 2.042H16V1.944l-1.409 1.362Z"
-              />
-            </svg>
+            <VamisIcon name="reload" v-else-if="icon.kind === 'builtin' && icon.name === 'reload'" class="icon" />
             <IconMark
               v-else-if="icon.kind === 'url' || icon.kind === 'class' || icon.kind === 'svg'"
               :icon="icon"
@@ -186,18 +175,7 @@ onBeforeUnmount(() => {
         >
           <div class="vamis-spinner__icon" :class="[sizeClass, iconKindClass, iconClass]">
             <VamisSpinnerMark v-if="icon.kind === 'default'" />
-            <svg
-              v-else-if="icon.kind === 'builtin' && icon.name === 'reload'"
-              class="icon"
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                fill="currentColor"
-                d="M8.05 14.056a6.041 6.041 0 0 1-5.132-2.82l2.113-2.042H0v4.862l1.409-1.362C2.919 14.736 5.333 16 8.05 16c4.025 0 7.447-2.82 7.95-6.708L13.987 9c-.402 2.917-2.918 5.056-5.937 5.056Zm6.541-10.75C13.081 1.264 10.667 0 7.95 0 3.925 0 .503 2.82 0 6.708L2.013 7C2.415 4.083 4.93 1.944 7.95 1.944a6.041 6.041 0 0 1 5.132 2.82l-2.113 2.042H16V1.944l-1.409 1.362Z"
-              />
-            </svg>
+            <VamisIcon name="reload" v-else-if="icon.kind === 'builtin' && icon.name === 'reload'" class="icon" />
             <IconMark
               v-else-if="icon.kind === 'url' || icon.kind === 'class' || icon.kind === 'svg'"
               :icon="icon"

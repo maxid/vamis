@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VamisIcon } from '@vamis/ui'
 import { computed, ref, watch } from 'vue'
 import {
   createVamisEvent,
@@ -153,7 +154,7 @@ function onPerPage(e: Event) {
       <ul data-pagination="pager">
         <li data-pager="prev" :class="{ 'is-disabled': page < 2 }" @click="onPrev">
           <span aria-label="上一页">
-            <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 2 4 6l4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+            <VamisIcon name="page-prev" width="12" height="12" />
           </span>
         </li>
         <li data-pager="simple">
@@ -165,7 +166,7 @@ function onPerPage(e: Event) {
           @click="onNext"
         >
           <span aria-label="下一页">
-            <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+            <VamisIcon name="page-next" width="12" height="12" />
           </span>
         </li>
       </ul>
@@ -205,15 +206,15 @@ function onPerPage(e: Event) {
             <template v-else-if="item.kind === 'ellipsis'">
               <a role="button">...</a>
               <span class="icon">
-                <svg v-if="item.dir === 'backward'" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M10 2 6 6l4 4M6 2 2 6l4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
-                <svg v-else viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l4 4-4 4M6 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+                <VamisIcon name="page-backward" v-if="item.dir === 'backward'" width="12" height="12" />
+                <VamisIcon name="page-forward" v-else width="12" height="12" />
               </span>
             </template>
             <span v-else-if="item.kind === 'prev'" aria-label="上一页">
-              <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 2 4 6l4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+              <VamisIcon name="page-prev" width="12" height="12" />
             </span>
             <span v-else aria-label="下一页">
-              <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+              <VamisIcon name="page-next" width="12" height="12" />
             </span>
           </li>
         </ul>
@@ -232,177 +233,3 @@ function onPerPage(e: Event) {
     </template>
   </div>
 </template>
-
-<style scoped>
-/* Amis `.Pagination-wrap`：块级 + 子项 inline-block/inline-flex，不要 flex+align-items 去对 -8px 底边距。 */
-[data-vamis-pagination] {
-  display: inline-block;
-  font-size: 0;
-  line-height: 0;
-  white-space: nowrap;
-  color: var(--text-loud, #151b26);
-}
-[data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > a,
-[data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > span {
-  min-width: 24px;
-  height: 24px;
-  line-height: 24px;
-  padding: 0 4px;
-}
-[data-pagination='pager'] {
-  display: inline-block;
-  padding: 0;
-  margin: 0 0 -8px;
-  list-style: none;
-  vertical-align: top;
-  /* 字号/行高打在 a/span 上。ul 自己 12/32 会多出 ~1.4px strut，统计和前往看起来偏上。 */
-  font-size: 0;
-  line-height: 0;
-}
-[data-pagination='pager'] > li {
-  display: inline-flex;
-  cursor: pointer;
-  position: relative;
-  vertical-align: middle;
-}
-[data-pagination='pager'] > li > a,
-[data-pagination='pager'] > li > span {
-  user-select: none;
-  position: relative;
-  min-width: 32px;
-  height: 32px;
-  line-height: 32px;
-  padding: 0 8px;
-  text-align: center;
-  color: var(--form-item-color, #5c5f66);
-  font-size: 12px;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-[data-pagination='pager'] > li:hover > a,
-[data-pagination='pager'] > li:hover > span {
-  color: var(--primary);
-}
-[data-pagination='pager'] > li.is-active > a {
-  background: var(--card, #fff);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-}
-[data-pagination='pager'] > li.is-disabled {
-  cursor: not-allowed;
-}
-[data-pagination='pager'] > li.is-disabled > a,
-[data-pagination='pager'] > li.is-disabled > span {
-  color: #ccc;
-  cursor: not-allowed;
-}
-[data-pagination='pager'] > li[data-pager='ellipsis'] > a {
-  position: relative;
-}
-[data-pagination='pager'] > li[data-pager='ellipsis'] > span.icon {
-  position: absolute;
-  inset: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-}
-[data-pagination='pager'] > li[data-pager='ellipsis']:hover > a {
-  opacity: 0;
-}
-[data-pagination='pager'] > li[data-pager='ellipsis']:hover > span.icon {
-  opacity: 1;
-}
-[data-pagination='total'] {
-  display: inline-block;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--form-item-color, #5c5f66);
-  vertical-align: top;
-}
-[data-pagination='perpage'] {
-  height: 32px;
-  min-width: 96px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card, #fff);
-  color: var(--form-item-color, #5c5f66);
-  padding: 0 8px;
-  font-size: 12px;
-  vertical-align: top;
-}
-[data-vamis-pagination][data-size='sm'] [data-pagination='perpage'] {
-  height: 24px;
-  min-height: 24px;
-}
-[data-pagination='go'] {
-  display: inline-flex;
-  align-items: center;
-  height: 32px;
-  flex-wrap: nowrap;
-  vertical-align: top;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-loud, #151b26);
-}
-[data-pagination='go-left'] {
-  color: var(--form-item-color, #5c5f66);
-  font-size: 14px;
-  line-height: 1.5;
-}
-[data-pagination='go'] input {
-  width: 50px;
-  min-width: 50px;
-  height: 32px;
-  margin-left: 8px;
-  padding: 0 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius) 0 0 var(--radius);
-  text-align: center;
-  background: var(--card, #fff);
-  color: var(--form-item-color, #5c5f66);
-  font-size: 14px;
-  /* border-box 32 含 1px 边，行高跟内容区 30，避免字比格子低 1px。 */
-  line-height: 30px;
-  box-sizing: border-box;
-}
-[data-pagination='go'] input:focus,
-[data-pagination='go'] input:hover {
-  outline: none;
-  border-color: var(--primary);
-}
-[data-pagination='go-btn'] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  border-left: none;
-  margin-left: -1px;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  font-size: 12px;
-  color: var(--text-loud, #151b26);
-  box-sizing: border-box;
-}
-[data-pagination='go-btn']:hover {
-  color: var(--primary);
-  border-color: var(--primary);
-  border-left: 1px solid var(--primary);
-}
-[data-vamis-pagination].disabled,
-[data-vamis-pagination].disabled [data-pagination='pager'] > li {
-  cursor: not-allowed;
-}
-[data-vamis-pagination].disabled [data-pagination='pager'] > li > a,
-[data-vamis-pagination].disabled [data-pagination='pager'] > li > span {
-  color: color-mix(in oklch, var(--foreground) 40%, transparent);
-  cursor: not-allowed;
-}
-</style>

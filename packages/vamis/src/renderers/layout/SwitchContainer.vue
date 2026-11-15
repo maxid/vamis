@@ -18,7 +18,7 @@ const body = computed(() => {
 
 <template>
   <div data-vamis-switch-container class="w-full min-w-0">
-    <div v-if="body.length" style="display: inline">
+    <div v-if="body.length" class="vamis-switch-container__body">
       <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
     </div>
   </div>

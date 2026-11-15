@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Button } from '@vamis/ui'
+import { Button, VamisCaret } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
@@ -61,7 +61,7 @@ function toggle() {
               @click="pick(item, depth)"
             >
               <span>{{ item.label }}</span>
-              <span v-if="item.children?.length" class="text-xs text-muted-foreground">›</span>
+              <VamisCaret v-if="item.children?.length" variant="tree" class="vamis-nested-select__caret" />
             </button>
           </li>
         </ul>

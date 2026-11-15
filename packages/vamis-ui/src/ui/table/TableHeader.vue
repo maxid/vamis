@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@vamis/ui/lib/utils"
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -10,7 +9,7 @@ const props = defineProps<{
 <template>
   <thead
     data-slot="table-header"
-    :class="cn('bg-muted/60', props.class)"
+    :class="props.class"
   >
     <slot />
   </thead>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { Button } from '@vamis/ui'
+import { Button, VamisCaret } from '@vamis/ui'
 import {
   isApiOutdated,
   isEffectiveApi,
@@ -149,7 +149,7 @@ watch(
               :disabled="disabled"
               @click="treeOnClick(node)"
             >
-              <span v-if="treeExpandable(node)" class="mr-1 inline-block w-3 text-xs">{{ treeIsExpanded(node) ? '▾' : '▸' }}</span>
+              <VamisCaret v-if="treeExpandable(node)" variant="tree" :open="treeIsExpanded(node)" class="vamis-transfer__tree-caret" />
               {{ node.label }}
             </button>
           </li>

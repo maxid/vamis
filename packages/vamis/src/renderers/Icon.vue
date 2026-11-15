@@ -31,26 +31,3 @@ const resolved = computed(() => {
     <IconMark v-else :icon="resolved" />
   </BadgeHost>
 </template>
-
-<style>
-.vamis-icon-svg svg {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  fill: currentColor;
-  vertical-align: -0.125em;
-}
-/* Amis registerIcon SVG 没有 svg.icon 的 1em；包含块有定宽时跟文字撑开（按钮卡片 plus）。 */
-.vamis-node:has(.vamis-icon-host.is-builtin) {
-  display: block;
-}
-.vamis-icon-host.is-builtin {
-  display: block;
-}
-.vamis-icon-host.is-builtin .vamis-icon-svg svg {
-  display: inline;
-  width: auto;
-  height: auto;
-  vertical-align: unset;
-}
-</style>
