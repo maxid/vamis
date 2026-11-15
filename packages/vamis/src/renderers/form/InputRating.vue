@@ -17,20 +17,20 @@ const value = computed({
 
 <template>
   <FormItem :schema="schema">
-    <div class="flex items-center gap-1">
+    <div class="vamis-rating">
       <Button
         v-for="n in count"
         :key="n"
         type="button"
         variant="ghost"
         size="icon-xs"
-        class="text-lg"
+        class="vamis-rating__btn"
         :disabled="disabled"
         @click="value = n"
       >
-        <span :class="n <= value ? 'text-amber-500' : 'text-muted-foreground'">★</span>
+        <span class="vamis-rating__star" :class="{ 'is-on': n <= value }">★</span>
       </Button>
-      <span class="text-xs text-muted-foreground">{{ value }}/{{ count }}</span>
+      <span class="vamis-rating__value">{{ value }}/{{ count }}</span>
     </div>
   </FormItem>
 </template>

@@ -65,7 +65,7 @@ const endQuarter = computed({
           <option value="4">Q4</option>
         </select>
       </div>
-      <span class="text-xs text-muted-foreground">至</span>
+      <span class="vamis-date-part-range__sep">至</span>
       <div class="flex items-center gap-2">
         <Input
           :model-value="endQuarter.year"
@@ -101,7 +101,7 @@ const endQuarter = computed({
         class="w-full"
         @update:model-value="range = { ...range, start: String($event) }"
       />
-      <span class="text-xs text-muted-foreground">至</span>
+      <span class="vamis-date-part-range__sep">至</span>
       <Input
         :model-value="range.end"
         :type="inputType"

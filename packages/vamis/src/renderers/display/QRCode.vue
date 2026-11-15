@@ -32,8 +32,8 @@ const logo = computed(() => {
 
 <template>
   <div data-slot="qrcode" class="inline-block">
-    <p v-if="!value" class="text-sm text-muted-foreground">{{ schema.placeholder || '-' }}</p>
-    <p v-else-if="!modules" class="text-sm text-destructive">内容过长，无法生成二维码</p>
+    <p v-if="!value" class="vamis-qrcode__empty">{{ schema.placeholder || '-' }}</p>
+    <p v-else-if="!modules" class="vamis-qrcode__error">内容过长，无法生成二维码</p>
     <svg
       v-else
       xmlns="http://www.w3.org/2000/svg"

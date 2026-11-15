@@ -10904,3 +10904,85 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-viewer-stub__hint {
   margin: var(--gap-sm) 0 0;
 }
+
+/* ---- 皮肤迁出模板（2026-11 第七刀） ---- */
+.vamis-fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusMd);
+  background: var(--card);
+}
+.vamis-fieldset--legend {
+  background: transparent;
+  padding: var(--gap-base);
+}
+.vamis-fieldset__title {
+  padding: var(--gap-sm) var(--gap-base);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+  cursor: pointer;
+}
+.vamis-fieldset__legend {
+  padding: 0 var(--gap-xs);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-fieldset__body {
+  border-top: 1px solid var(--border);
+  padding: var(--gap-base);
+}
+
+.vamis-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+.vamis-rating__star {
+  font-size: var(--fontSizeXl);
+  line-height: 1;
+  color: var(--text-muted);
+}
+.vamis-rating__star.is-on {
+  color: var(--warning);
+}
+.vamis-rating__value {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-rich-text {
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-rich-text__hint {
+  margin-top: var(--gap-xs);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-date-part-range__sep {
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+
+.vamis-barcode__empty,
+.vamis-qrcode__empty {
+  margin: 0;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-muted);
+}
+.vamis-barcode__error,
+.vamis-qrcode__error {
+  margin: 0;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--destructive);
+}

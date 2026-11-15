@@ -20,8 +20,8 @@ const value = computed({
       v-model="value"
       :placeholder="schema.placeholder || '输入 HTML / 纯文本（精简富文本，未引入 TinyMCE）'"
       :disabled="disabled"
-      class="min-h-32 w-full font-mono text-sm"
+      class="vamis-rich-text min-h-32 w-full"
     />
-    <p class="mt-1 text-xs text-muted-foreground">精简实现：多行文本，不加载 TinyMCE / Froala。</p>
+    <p class="vamis-rich-text__hint">精简实现：多行文本，不加载 TinyMCE / Froala。</p>
   </FormItem>
 </template>

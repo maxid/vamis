@@ -22,8 +22,8 @@ const encoded = computed(() => {
 
 <template>
   <div data-slot="barcode" data-testid="barcode" class="inline-block">
-    <p v-if="!value" class="text-sm text-muted-foreground">未配置条码内容</p>
-    <p v-else-if="!encoded" class="text-sm text-destructive">条码内容无法编码（Code 128 仅支持 ASCII 32–127）</p>
+    <p v-if="!value" class="vamis-barcode__empty">未配置条码内容</p>
+    <p v-else-if="!encoded" class="vamis-barcode__error">条码内容无法编码（Code 128 仅支持 ASCII 32–127）</p>
     <div v-else v-html="encoded.svg" />
   </div>
 </template>
