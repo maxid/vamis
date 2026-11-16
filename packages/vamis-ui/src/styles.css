@@ -854,7 +854,7 @@
   --accent-h: 27;
 }
 
-/* 顶栏 / 链接 / accent hover 跟当前主题包色相走。浅色画布钉 250、深色钉 258，不要跟 accent-h 染色。 */
+/* 顶栏 / 链接 / accent hover 跟当前主题包色相走。浅色和深色画布都不跟 accent-h 染色。 */
 [data-theme="cxd"] {
   --accent-h: 258;
 }
@@ -876,47 +876,51 @@
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.2 0.025 258);
-  /* 升高面（卡片、下拉、提示、勾选盒）。色阶 fill-11 在深色是 #070d14，太黑，不用。 */
-  --card: #17202d;
+  /* 画布 → Page → 面板逐层提亮，不再让升高面比画布更黑。 */
+  --background: var(--colors-neutral-fill-canvas);
+  --card: var(--colors-neutral-fill-11);
   /* 辅助 / 弱文字在深色共用 text-6：色阶 text-5 太亮，会和正文混在一起。 */
   --text-tertiary: var(--colors-neutral-text-6);
-  --primary-foreground: var(--colors-neutral-text-1);
-  --primary-hover: var(--colors-brand-4);
-  --primary-active: var(--colors-brand-6);
+  /* 实色按钮保留主题 brand-5；暗底文字链接在 @supports 里单独提亮。 */
+  --primary: var(--colors-brand-5);
+  --primary-foreground: var(--white);
+  --primary-hover: var(--colors-brand-6);
+  --primary-active: var(--colors-brand-4);
+  --link-color: var(--primary);
   --link-hover-color: var(--colors-brand-6);
-  --secondary: oklch(0.3 0.025 258);
-  --secondary-foreground: oklch(0.93 0.015 258);
-  --muted: oklch(0.3 0.025 258);
+  --secondary: var(--colors-neutral-fill-9);
+  --secondary-foreground: var(--colors-neutral-text-2);
+  --muted: var(--colors-neutral-fill-10);
   --muted-foreground: var(--colors-neutral-text-6);
-  --cal-between-bg: #0040bf;
-  --date-range-sep: #5c5f66;
+  --cal-between-bg: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --date-range-sep: var(--colors-neutral-line-7);
   --cal-picker-cancel: var(--colors-neutral-text-7);
   --cal-picker-title: var(--colors-neutral-text-2);
   --cal-bar: var(--colors-neutral-text-7);
-  --select-option-hover-bg: color-mix(in oklch, var(--primary) 50%, black);
+  --select-option-hover-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+  --select-option-active-color: var(--link-color);
   --dropdown-item-disabled: var(--colors-neutral-text-6);
   --dropdown-group-color: var(--colors-neutral-text-7);
   --select-group-color: var(--colors-neutral-text-7);
   --select-search-icon-color: var(--colors-neutral-text-7);
-  --select-check-border: #5c5f66;
-  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, black);
+  --select-check-border: var(--colors-neutral-line-8);
+  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
   --select-chip-close: var(--colors-neutral-text-7);
-  --tooltip-border: 1px solid #303640;
+  --tooltip-border: 1px solid var(--colors-neutral-line-9);
   --tag-rounded-border: var(--colors-neutral-line-8);
   --tag-checkable-bg: var(--colors-neutral-fill-9);
-  --tag-checkable-hover: #3d4450;
+  --tag-checkable-hover: var(--colors-neutral-fill-8);
   --file-list-hover-bg: var(--colors-neutral-fill-10);
   --file-icon-color: var(--colors-neutral-text-4);
   --file-clear-color: var(--colors-neutral-text-7);
   --file-drag-bg: var(--background);
   --file-drag-hover-bg: var(--card);
   --file-drag-color: var(--colors-neutral-text-6);
-  --file-drag-icon-color: #5c5f66;
+  --file-drag-icon-color: var(--colors-neutral-line-7);
   --file-progress-bg: var(--colors-neutral-fill-9);
   --number-enhance-color: var(--colors-neutral-text-4);
-  --accent: oklch(0.32 0.03 var(--accent-h));
-  --accent-foreground: oklch(0.93 0.015 258);
+  --accent: color-mix(in oklch, var(--primary) 18%, var(--card));
+  --accent-foreground: var(--colors-neutral-text-2);
   --destructive: oklch(0.65 0.19 25);
   --destructive-foreground: oklch(0.99 0.01 20);
   --success: oklch(0.68 0.14 145);
@@ -925,15 +929,15 @@
   --warning-foreground: oklch(0.22 0.05 55);
   --info: oklch(0.7 0.1 230);
   --info-foreground: oklch(0.18 0.04 230);
-  --ring: oklch(0.7 0.13 var(--accent-h));
-  --sidebar: oklch(0.18 0.03 258);
-  --sidebar-foreground: oklch(0.93 0.015 258);
-  --sidebar-primary: oklch(0.7 0.13 var(--accent-h));
-  --sidebar-accent: oklch(0.28 0.03 258);
-  --sidebar-accent-foreground: oklch(0.93 0.015 258);
-  --sidebar-ring: oklch(0.7 0.13 var(--accent-h));
-  --code: oklch(0.16 0.03 258);
-  --code-foreground: oklch(0.88 0.03 258);
+  --ring: var(--primary);
+  --sidebar: var(--colors-neutral-fill-canvas);
+  --sidebar-foreground: var(--colors-neutral-text-2);
+  --sidebar-primary: var(--primary);
+  --sidebar-accent: var(--colors-neutral-fill-10);
+  --sidebar-accent-foreground: var(--colors-neutral-text-2);
+  --sidebar-ring: var(--primary);
+  --code: var(--colors-neutral-fill-canvas);
+  --code-foreground: var(--colors-neutral-text-4);
   --success-bg: oklch(0.28 0.05 145);
   --success-border: oklch(0.4 0.08 145);
   --warning-bg: oklch(0.3 0.05 70);
@@ -946,17 +950,19 @@
   --image-caption-color: var(--colors-neutral-text-4);
   --button-secondary-foreground: #151b26;
   --button-dark-foreground: #151b26;
-  --button-light: #0040bf;
-  --button-light-foreground: var(--colors-neutral-text-1);
-  --button-light-hover: var(--colors-brand-5);
-  --button-light-active: var(--colors-brand-6);
+  --button-light: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --button-light-foreground: var(--link-color);
+  --button-light-hover: color-mix(in oklch, var(--primary) 42%, var(--card));
+  --button-light-active: color-mix(in oklch, var(--primary) 52%, var(--card));
   --list-bg: var(--card);
-  --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, black);
+  --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
+  --list-item-checked-color: var(--link-color);
+  --list-item-checked-border: var(--primary);
   --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
   --table-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
-  --table-modified-bg: color-mix(in oklch, var(--primary) 18%, black);
-  --table-modified-border: color-mix(in oklch, var(--primary) 28%, black);
-  --table-modified-color: oklch(0.7 0.13 var(--accent-h));
+  --table-modified-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+  --table-modified-border: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --table-modified-color: var(--link-color);
   --table-unsaved-heading-bg: var(--fill-10);
   --table-fixed-left-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.45);
   --table-fixed-right-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.45);
@@ -964,9 +970,8 @@
   --control-disabled-color: var(--colors-neutral-text-5);
   --checkbox-icon-color: var(--colors-neutral-text-2);
   --checkbox-disabled-icon: var(--colors-neutral-text-6);
-  /* Amis 深色选中 hover = brand-6 `#0061f2`（比 brand-5 `#1677ff` 深）。默认勾选盒与按钮模式共用。 */
-  --checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h);
-  --checkbox-checked-active: oklch(from var(--primary) calc(l + 0.08) c h);
+  --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.08) c h);
+  --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
   --radio-button-disabled-checked-bg: var(--colors-neutral-fill-8);
   --radio-button-disabled-checked-border: var(--colors-neutral-line-7);
   /* Amis 深色：轨道 neutral-fill-7 / hover fill-6，滑块浅色；选中仍走主题 primary。 */
@@ -975,6 +980,15 @@
   --switch-checked-hover-bg: var(--primary-hover);
   --switch-checked-active-bg: var(--primary-active);
   --switch-spinner-color: #151b26;
+  --card-action-hover-color: var(--link-color);
+  --card-modified-color: var(--link-color);
+  --card-modified-fieldLabel: var(--link-color);
+}
+
+/* Amis dark 包自己的 brand 阶方向相反：brand-4 更亮、brand-6 更深。 */
+.dark[data-theme="dark"] {
+  --primary-hover: var(--colors-brand-4);
+  --primary-active: var(--colors-brand-6);
 }
 
 @supports (color: oklch(0 0 0)) {
@@ -985,10 +999,10 @@
     --ring: var(--primary);
     --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
   }
-  /* 深色主色抬亮，对齐线上 bit.uscan.cn：浅色 brand-5，深色 oklch(.7 .13 accent-h)。翠绿深色是薄荷绿，不是浅色那档 #007617。 */
+  /* 暗底文字链接需要比实色按钮更亮；只提升文字，不改品牌主色本身。 */
   .dark {
-    --primary: oklch(0.7 0.13 var(--accent-h));
-    --primary-foreground: oklch(0.2 0.03 var(--accent-h));
+    --link-color: oklch(from var(--primary) calc(l + 0.16) c h);
+    --link-hover-color: oklch(from var(--primary) calc(l + 0.24) c h);
     --ring: var(--primary);
   }
 }

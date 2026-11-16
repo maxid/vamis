@@ -317,7 +317,7 @@ describe('input-date popover box model', () => {
     expect(css).toMatch(/--cal-bg:\s*var\(--select-menu-bg\)/)
     expect(css).toMatch(/--cal-cell-hover-bg:\s*var\(--colors-neutral-fill-10\)/)
     expect(css).toMatch(/--select-menu-bg:\s*var\(--card\)/)
-    expect(css).toMatch(/\.dark[\s\S]*--card:\s*#17202d/)
+    expect(css).toMatch(/\.dark[\s\S]*--card:\s*var\(--colors-neutral-fill-11\)/)
     expect(cal).toMatch(/background:\s*var\(--cal-bg\)/)
     expect(cal).toMatch(/color:\s*var\(--cal-other\)/)
     expect(cal).toMatch(/background:\s*var\(--cal-cell-hover-bg\)/)

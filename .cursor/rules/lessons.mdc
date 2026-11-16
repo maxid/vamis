@@ -368,7 +368,7 @@ alwaysApply: true
 
 ### 链接走 --link-*，不要 UA 下划线
 - 踩过：表单 label 里的 `<a>` 吃浏览器默认蓝+下划线，或 `.doc-prose a:hover` 再加下划线。`type: link` 曾叠 `hover:underline` / `text-muted-foreground`；修下划线时又把 `--link-color` 钉成云舍蓝，顶栏切色带不动。
-- 稳定做法：`--link-color` 跟 `--primary`。hover 变浅：`--link-hover-color` 走 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 `#528eff`），不要绑 `--primary-hover`（混黑几乎看不出）。禁用才钉 `--link-disabled-color` `#b8babf`（深色 `#b8bbbf`）。`.vamis-root a` 放 `@layer base`。`type: link` 走 `.vamis-link` + `is-disabled`。Button `level: link` 共用这套 token。
+- 稳定做法：`--link-color` 跟 `--primary`。hover 变浅：`--link-hover-color` 走 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 `#528eff`），不要绑 `--primary-hover`（混黑几乎看不出）。禁用才钉 `--link-disabled-color` `#b8babf`（深色 `#788595`）。`.vamis-root a` 放 `@layer base`。`type: link` 走 `.vamis-link` + `is-disabled`。Button `level: link` 共用这套 token。
 - 触及：FormItem `tpl` `html` `link` `action` `button`
 - 规则：`.cursor/rules/style.mdc`；Amis `scss/base/_typography.scss` / `components/_link.scss`；`buttonVariants` `link`
 
@@ -378,15 +378,15 @@ alwaysApply: true
 - 触及：Button 等控件、SDK 根、`tooltip-wrapper` `badge` `avatar` `input-number`
 - 规则：`.cursor/rules/style.mdc`「标尺」；`docs/superpowers/specs/2026-11-15-vamis-style-standard.md`
 
-### 组件色 alias `--colors-*` 主题阶，不要写死 hex
-- 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。顶栏一度并排「云舍 ▾」和下方 5 色点，看起来像两套主题。配整套 brand 阶时用了顶栏色点 swatch（翠绿 `oklch(0.52 0.14 145)` → `#267d30`），浅色 applied 其实是 `oklch(0.49 0.16 145)`（`#007617`）；深色却把 `--primary` 钉成同一档 brand-5，线上 bit.uscan.cn 深色是 `oklch(.7 .13 accent-h)` 薄荷绿。文档预览再刷 fill-11 / `--background`，井和外壳 `--card` 不是一色。
-- 稳定做法：浅色 `--primary` alias brand-5；**深色**在 `@supports oklch` 里抬成 `oklch(0.7 0.13 var(--accent-h))`，foreground `oklch(0.2 0.03 var(--accent-h))`，不要深色还用浅色那档 `#007617`。`--ring` / focus glow 跟 `--primary`，`@supports :root` 不要再钉 `brand-5`（会压过 `.dark --ring`，翠绿深色 focus 仍是森林绿）。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）。文档 `.doc-play__preview` 加 `bg-card`，不要 `--page-main-bg`。对线上以 bit.uscan.cn 同路径为准，不要只对 5173。
-- 触及：`tag` Button FormItem 主题包 文档预览
-- 规则：`packages/vamis-ui/src/styles.css` `@supports .dark --primary`；`playground/src/components/SchemaPreview.vue`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
+### 组件色 alias `--colors-*` 主题阶，暗底文字与品牌实色分开提亮
+- 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。深色一度把 `--primary` 改成固定 `oklch(0.7 0.13 accent-h)`，品牌实色按钮变成浅底深字，和当前 brand-5 对不上；卡片、Page、画布也都偏黑，层级关系不清楚。
+- 稳定做法：深浅主题的 `--primary` 都 alias 当前 brand-5，实色按钮用 `--primary-foreground` 白字；暗底链接和选中文字需要提亮时只改 `--link-color`（相对主色 `l + 0.16`，hover 再抬），不要改品牌主色本身。hover / active 沿品牌阶走，Amis dark 包的反向色阶单独覆盖。深色画布 / Page / 面板依次提亮（fill-canvas → page-main-bg → fill-11），`--ring` / focus glow 跟 `--primary`。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）。文档 `.doc-play__preview` 加 `bg-card`，不要拿页面画布冒充升高面。
+- 触及：`tag` Button FormItem 主题包 文档预览 `select` `tooltip-wrapper` `dialog`
+- 规则：`packages/vamis-ui/src/styles.css` `.dark`；`packages/vamis-ui/src/themes.css`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
 
 ### 浅色/深色切换不要让 border 插值 hex↔oklch
 - 踩过：线框按钮（尤其「编辑 Schema」）切主题时边框 黑→白→灰，过程约 150ms 肉眼可见。浅色 `--input` 是 hex、深色是 `oklch(... var(--accent-h))`，Button `transition: border-color 0.15s` 插值对不上，边先跳成近白，底还是深色。
-- 稳定做法：`--border` / `--input` 两边都 alias `--colors-neutral-line-8`（浅 `#e8e9eb` / 深 `#5c6066`）。切 `html.dark` 前加 `theme-changing`（`transition: none`），两帧后再摘掉。hover 边框动画仍在，只是换主题不走过渡。
+- 稳定做法：`--border` / `--input` 两边都 alias `--colors-neutral-line-8`（浅 `#e8e9eb` / 深 `#46536a`）。切 `html.dark` 前加 `theme-changing`（`transition: none`），两帧后再摘掉。hover 边框动画仍在，只是换主题不走过渡。
 - 触及：Button `outline` 文档壳
 - 规则：`packages/vamis-ui/src/styles.css` `html.theme-changing`；`playground/src/docs/preview-frame.ts` `withoutThemeTransition`
 
@@ -454,7 +454,7 @@ alwaysApply: true
 
 ### placeholder 走 --control-placeholder，不要 --muted-foreground
 - 踩过：Select / input `::placeholder` 用 shadcn `--muted-foreground`（oklch 0.5，偏深）。Amis `--Form-input-placeholderColor` = `--text--muted-color` = `--colors-neutral-text-6` `#b8babf`。
-- 稳定做法：`:root --control-placeholder: #b8babf`（深色 `#b8bbbf`）。选择器只 `var()`：`.vamis-select__placeholder`、`.vamis-text-control__native::placeholder`、`.vamis-root input/textarea::placeholder`、静态空态。不要用 `placeholder:text-muted-foreground`（会压过 components 层）。
+- 稳定做法：`:root --control-placeholder: #b8babf`（深色 `#788595`）。选择器只 `var()`：`.vamis-select__placeholder`、`.vamis-text-control__native::placeholder`、`.vamis-root input/textarea::placeholder`、静态空态。不要用 `placeholder:text-muted-foreground`（会压过 components 层）。
 - 触及：`select` `input-text` `textarea` `input-date` FormItem
 - 规则：本文；Amis `_properties.scss` `--Form-input-placeholderColor`
 
@@ -496,13 +496,13 @@ alwaysApply: true
 
 ### PopOver 走 VamisOverlay + token，不要 Tailwind 冒充
 - 踩过：PopOverHost 自写 Teleport + `z-50` / `bg-popover` / `p-3`，lucide ZoomIn，`center` 被映射到触发器下方。
-- 稳定做法：`VamisOverlay` + `--popover-layer-*`（min 320 / max 640 / `--z-popover` 1400）。`placement: center` 盖在触发器上（gap 0）。图标 `VamisGalleryToolIcon name="zoom-in"`。`textOverflow: ellipsis` 无 `popOver` 也启用，溢出才开、无放大镜；`noWrap` 永不弹。深色 `--popover-layer-bg: #17202d`（跟 `--select-menu-bg`，不要 fill-11 `#070d14`）。不要用 Panel 渲染器包 body（scoped CSS 会压过剥离边框）。`textOverflow` 溢出检测打在正文 wrap 上，不要打在放大镜按钮上。
+- 稳定做法：`VamisOverlay` + `--popover-layer-*`（min 320 / max 640 / `--z-popover` 1400）。`placement: center` 盖在触发器上（gap 0）。图标 `VamisGalleryToolIcon name="zoom-in"`。`textOverflow: ellipsis` 无 `popOver` 也启用，溢出才开、无放大镜；`noWrap` 永不弹。深色 `--popover-layer-bg` 跟 `--select-menu-bg` 一起 alias `--card`（= fill-11），不要再另写面板 hex。不要用 Panel 渲染器包 body（scoped CSS 会压过剥离边框）。`textOverflow` 溢出检测打在正文 wrap 上，不要打在放大镜按钮上。
 - 触及：`popOver` `static` `table` `tpl` `list` `cards`
 - 规则：本文；`.cursor/rules/reuse-overlay.mdc`；Amis `PopOver.tsx` / `_popover.scss`
 
 ### 深色浮层靠 `.dark` 换 token，不要写死浅色底
 - 踩过：Select 标签 tooltip / `maxTagCount` 溢出层在深色页仍白底；`--tooltip-bg: #fff` 只在 `:root`。日期弹层、桌面 Toast、`--remark-bg` 也曾写死 `#fff`。对照不切深色、不探 hover，先前组件没核到。
-- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。升高面的底统一 alias `--card`（深色 `#17202d`），不要每个组件各起一个带 hex 的 `--xxx-bg` 再到 `.dark` 里各盖一次：token 引用色阶 / `--card` 之后深色自动跟，`.dark` 只留色阶翻转后不对的那几条。删 `.dark` 覆盖前先看 `@supports` 块：那里重写过 `:root` 的 token（`--primary-hover` / `--link-hover-color`），`.dark` 的覆盖不能删。
+- 稳定做法：浮层底/边/字走 token。`:root` 浅色，`.dark` 覆盖同一批。下拉走 `--select-menu-*`，提示走 `--tooltip-*`，月历弹层走 `--cal-*`（底/边 alias `--select-menu-*`，格子 hover `--cal-cell-hover-*`，非本月 `--cal-other`）。收工切 Playground「深色」打开 tooltip / popover / 下拉。禁止在 `.vamis-xxx` 写死 `#fff` 当 Teleport 面板底。升高面的底统一 alias `--card`（深色 fill-11 `#182230`），不要每个组件各起一个带 hex 的 `--xxx-bg` 再到 `.dark` 里各盖一次：token 引用色阶 / `--card` 之后深色自动跟，`.dark` 只留色阶翻转后不对的那几条。删 `.dark` 覆盖前先看 `@supports` 块：那里重写过 `:root` 的 token（`--primary-hover` / `--link-hover-color`），`.dark` 的覆盖不能删。
 - 触及：`select` `tooltip-wrapper` `remark` `toast` `input-date` `calendar` `dropdown-button` `dialog` `action` `popOver`
 - 规则：`.cursor/rules/style.mdc`「深色主题」
 
@@ -666,7 +666,7 @@ alwaysApply: true
 
 ### 下拉选项 hover / active 拆开，弹层不要写死白底
 - 踩过：Select 选项把 hover 和 `is-active` 都刷成 `--accent`，选中项看起来像灰底块；弹层 `background: #fff` / `border-color: #f2f3f5`，深色主题仍是白盒。Amis 选中是 brand 字色 + 菜单底，悬停才是 brand-10 底。控件与弹层之间 Amis 是 `PopOver--v-top { margin-top: 4px }`，Vamis Overlay 默认 gap 2 看起来像贴死。
-- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。下拉 PopOver 默认 `OVERLAY_POPOVER_GAP = 4`（下翻 = margin-top 4 / margin-bottom 0，上翻反过来）。auto 只上下翻，不对左右开；左右是 Tooltip 的 placement（`TOOLTIP_OVERLAY_GAP` 6）。不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 `#17202d`，不要抄 fill-11 `#070d14`（太黑）。菜单底/边只跟浅深色；选中字色 / 悬停底绑 `--primary`。悬停用 `color-mix(... white/black)` 保色相，不要 mix 进菜单底（深色 `#17202d` 会把翠绿拉成青）。不要写死云舍蓝，否则切翠绿选中还是蓝。
+- 稳定做法：量进 `:root` / `.dark` 的 `--select-menu-*` / `--select-option-*`，选择器只 `var()`。`is-active` 先写，`:hover` 后写（悬停覆盖选中，对齐 `&-option.is-highlight`）。禁用单独盖住 hover。下拉 PopOver 默认 `OVERLAY_POPOVER_GAP = 4`（下翻 = margin-top 4 / margin-bottom 0，上翻反过来）。auto 只上下翻，不对左右开；左右是 Tooltip 的 placement（`TOOLTIP_OVERLAY_GAP` 6）。不要再叠 CSS `margin-top` 否则会变成 8px。深色菜单底用 fill-11 `#182230`，不要另写一套浮层色。菜单底/边只跟浅深色；选中文字用单独提亮的 `--link-color`，实色勾选与焦点仍绑 `--primary`。悬停底用 `color-mix(in oklch, var(--primary) 18%, var(--card))` 保色相，不要再 mix 纯黑或写死云舍蓝。
 - 触及：`select` Options `input-text` `input-date` `dropdown-button`
 - 规则：本文；Amis `_select.scss` `&-option` / `PopOver--v-top`；`.cursor/rules/style.mdc` / `reuse-overlay.mdc`
 
@@ -805,7 +805,7 @@ alwaysApply: true
 
 ### 表单勾选走 `--checkbox-*`，不要 shadcn size-4 + Button
 - 踩过：默认勾选用 shadcn Checkbox（圆角 4、`disabled:opacity-50`、lucide 勾）；`optionType: button` 走实心/描边 Button，和 Amis 32×min80 描边钮 + 左上角三角勾对不上。
-- 稳定做法：量进 `:root` / `.dark` 的 `--checkbox-*`（16 盒、圆角 2、勾 14、浅底 `#fff` / 深底 `#17202d`）。选择器只 `var()`。禁用灰底 opacity 1。option 宿主是 **inline-block**，勾选盒 `vertical-align: text-bottom`（Amis `> i`）；不要 `inline-flex` + `align-items: center`，span 会变成 21px flex item，16 盒相对字形光学不居中。按钮模式宿主是 **label**（不要 `<button>` / shadcn `Button`），背景 **transparent**（Amis `rgba(0,0,0,0)`），选中只改描边/字色 + 左上角三角勾；用 `--checkbox-bg` 会在深色变成整块黑钮、浅色也可能被 button 样式刷成实心。hover 对齐 Amis `.Checkbox:hover > i`：打在 **label（含文字）**，样式只落到勾选盒，**不要改 option 文案色**（Amis hover text 也是 text-2；Select 另用 `> span { color: option-color }` 锁住）。Select 菜单里 Amis Checkbox 是 option **整行** `width:100%`，所以 `.vamis-select__item:hover .vamis-select__check`；不要只给 14px 空盒子绑 `:hover`。色号走 `--checkbox-checked-hover`：浅色 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 变浅且不掉饱和），深色 `calc(l - 0.08)` 变深。表单勾、Checkboxes、Select 菜单勾共用。**不要**用 `--primary-hover`（浅色混黑会变深），也不要 `color-mix(..., white)`（会发灰）。隐藏原生勾选框**不要**写 `name`：Amis 渲染器也不把 `name` 传给底层 input；一对上对照会命中 `display:none` 的 UA 盒（12px / weight 500），Amis 找不到节点就假红。表单值走 store。`badge` 包 `BadgeHost`。菜单里的 14px 勾仍是 `--select-check-*`，不要和表单 16 盒混用。
+- 稳定做法：量进 `:root` / `.dark` 的 `--checkbox-*`（16 盒、圆角 2、勾 14、浅底 `#fff` / 深底 fill-11 `#182230`）。选择器只 `var()`。禁用灰底 opacity 1。option 宿主是 **inline-block**，勾选盒 `vertical-align: text-bottom`（Amis `> i`）；不要 `inline-flex` + `align-items: center`，span 会变成 21px flex item，16 盒相对字形光学不居中。按钮模式宿主是 **label**（不要 `<button>` / shadcn `Button`），背景 **transparent**（Amis `rgba(0,0,0,0)`），选中只改描边/字色 + 左上角三角勾；用 `--checkbox-bg` 会在深色变成整块黑钮、浅色也可能被 button 样式刷成实心。hover 对齐 Amis `.Checkbox:hover > i`：打在 **label（含文字）**，样式只落到勾选盒，**不要改 option 文案色**（Amis hover text 也是 text-2；Select 另用 `> span { color: option-color }` 锁住）。Select 菜单里 Amis Checkbox 是 option **整行** `width:100%`，所以 `.vamis-select__item:hover .vamis-select__check`；不要只给 14px 空盒子绑 `:hover`。色号走 `--checkbox-checked-hover`：浅色 `oklch(from var(--primary) calc(l + 0.16) c h)`（Amis brand-6 变浅且不掉饱和），深色 `calc(l + 0.08)` 变浅、active `calc(l - 0.08)` 变深。表单勾、Checkboxes、Select 菜单勾共用。**不要**用 `--primary-hover`（浅色混黑会变深），也不要 `color-mix(..., white)`（会发灰）。隐藏原生勾选框**不要**写 `name`：Amis 渲染器也不把 `name` 传给底层 input；一对上对照会命中 `display:none` 的 UA 盒（12px / weight 500），Amis 找不到节点就假红。表单值走 store。`badge` 包 `BadgeHost`。菜单里的 14px 勾仍是 `--select-check-*`，不要和表单 16 盒混用。
 - 触及：`checkbox` `checkboxes` `select` Options `radio`
 - 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
 

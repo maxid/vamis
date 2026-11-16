@@ -1,7 +1,7 @@
 # Vamis 样式规范
 
 - 日期：2026-11-15
-- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减
+- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减。2026-11-16 已统一深色画布 / Page / 面板层级，深浅主题的主色都 alias 当前品牌 `brand-5`
 - 范围：`@vamis/ui` 的 token 与默认皮肤、`packages/vamis` 渲染器模板与内联样式。不管作者 `className`（helper 的行为精度见 [样式系统](./2026-10-21-vamis-style-system.md) §0.1）
 - 关联：
   - [样式系统（设计由来）](./2026-10-21-vamis-style-system.md)、[主题 token](./2026-10-21-vamis-theme-shadcn.md)
@@ -64,10 +64,10 @@ shadcn 的 `--foreground` / `--muted-foreground` 只是这几档的别名，不�
 | token | 取值 | 用在 |
 |----|----|----|
 | `--background` | 页面底 | Page、窄屏表单面板 |
-| `--card`（= `--popover`） | fill-11；深色 `#17202d` | 升高面：卡片、下拉菜单、Tooltip、PopOver、勾选盒底、日期弹层 |
-| `--fill-10` | fill-10 | 表头底、禁用底、斑马纹 |
-| `--border` / `--input` | line-8 | 边线、控件描边 |
-| `--primary` / `-hover` / `-active` | brand-5 / 4 / 3 | 品牌色。深色在 `@supports oklch` 里抬亮 |
+| `--card`（= `--popover`） | fill-11；深色 `#182230` | 升高面：卡片、下拉菜单、Tooltip、PopOver、勾选盒底、日期弹层 |
+| `--fill-10` | fill-10；深色 `#202b3a` | 表头底、禁用底、斑马纹 |
+| `--border` / `--input` | line-8；深色 `#46536a` | 边线、控件描边 |
+| `--primary` / `-hover` / `-active` | brand-5 / 6 / 4 | 深浅主题都保留品牌实色；暗底文字链接由 `--link-color` 单独提亮 |
 | `--success` / `--warning` / `--destructive` / `--info` | 各色阶第 5 档 | 状态 |
 | `--white` / `--black` | `#ffffff` / `#000000` | 不跟浅深色翻转的黑白：色块上的字、图片预览舞台 |
 

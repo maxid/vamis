@@ -379,7 +379,7 @@ describe('select uses the shared contract', () => {
     expect(css).not.toContain('--select-option-active-color: #1677ff')
     expect(css).toContain('--select-menu-bg')
     expect(css).toContain('--select-menu-bg: var(--card)')
-    expect(css).toContain('--card: #17202d')
+    expect(css).toContain('--card: var(--colors-neutral-fill-11)')
     expect(css).toContain('--select-popover-gap: 4px')
     expect(css).toContain('.vamis-select__item.is-active')
     expect(css).toContain('.vamis-select__input.is-focused')

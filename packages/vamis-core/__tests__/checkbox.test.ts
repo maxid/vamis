@@ -67,9 +67,9 @@ describe('checkbox chrome', () => {
     expect(css).toContain('--checkbox-size: 16px')
     expect(css).toContain('--checkbox-radius: var(--borderRadiusSm)')
     expect(css).toContain('--checkbox-icon-size: 14px')
-    // 勾选盒底走升高面 --card（浅色 fill-11，深色 #17202d），不再单独写 hex
+    // 勾选盒底走升高面 --card（浅色白色，深色 fill-11），不再单独写 hex
     expect(css).toContain('--checkbox-bg: var(--card)')
-    expect(css).toContain('--card: #17202d')
+    expect(css).toContain('--card: var(--colors-neutral-fill-11)')
     expect(css).toContain('--checkbox-button-min-w: 80px')
     expect(css).toContain('--checkbox-button-h: 32px')
     expect(css).toContain('opacity: 1')
@@ -80,7 +80,7 @@ describe('checkbox chrome', () => {
     expect(css).toContain('vertical-align: text-bottom')
     expect(css).not.toMatch(/\.vamis-checkbox-option \{[^}]*display: inline-flex/)
     expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h)')
-    expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l - 0.08) c h)')
+    expect(css).toContain('--checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.08) c h)')
     expect(css).toContain('--checkbox-checked-hover-bg: var(--checkbox-checked-hover)')
     expect(css).toContain('color: var(--checkbox-checked-hover)')
     expect(css).toContain('.vamis-checkbox-option:hover:not(.is-disabled) > .vamis-checkbox__mark.is-checked')

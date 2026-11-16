@@ -88,17 +88,17 @@
 | type | 浮层 | 深色 | 备注 |
 |------|------|------|------|
 | `select` | 下拉 + tag tooltip + `+N` 溢出 | 已核 | 2026-11-07。溢出走 `--select-menu-*`，tooltip 走 `--tooltip-*` |
-| `tooltip-wrapper` | Tooltip | 未核 | `.dark` 已覆盖 `--tooltip-*`，文档十字示例仍要手开 |
+| `tooltip-wrapper` | Tooltip | 已核 | 2026-11-16。基本配置 hover 浮层：升高面 / 文字 / 边框都走深色 token，Teleport 正常 |
 | `remark` | Tooltip | 未核 | `--remark-bg` 仍 `#fff` |
 | `action` / `button` | tooltip / disabledTip；confirm Dialog | 未核 | |
 | `dropdown-button` | 下拉菜单 | 未核 | 贴触发器 `VamisOverlay`（窄屏也是），深色菜单 / tooltip 仍要手开 |
 | `input-text` | 选择器建议下拉 | 未核 | 贴输入框 `VamisOverlay`（窄屏也是），深色建议仍要手开 |
 | `input-password` | 同 input-text | 未核 | |
 | `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 已核 2026-11-07 | `--cal-*` alias `--select-menu-*`，`.dark` 覆盖格子 hover / 非本月 |
-| `dialog` | Modal | 未核 | |
+| `dialog` | Modal | 已核 | 2026-11-16。基本用法打开弹框：面板、遮罩、取消 / 确认按钮和主色均正常 |
 | `drawer` | 抽屉 | 未核 | |
 | `toast` | 轻提示 | 未核 | 桌面写死 `#fff` / `#151b26` |
-| `popOver` | 字段弹出 | 已核 | 2026-11-10。浅 320 白底 / 深 `--popover-layer-bg: #17202d`，表格列 `center` 盖整格 td，`--z-popover` 1400 |
+| `popOver` | 字段弹出 | 已核 | 2026-11-10。浅 320 白底 / 深 `--popover-layer-bg: #182230`，表格列 `center` 盖整格 td，`--z-popover` 1400 |
 | `breadcrumb` | 文档记缺 tooltip 浮层 | 未核 | 有下拉项时核 |
 | `page` | remark / spinner overlay | 未核 | |
 | `form` / FormItem / Options | labelRemark；Options 下拉 | 未核 | form 75%，对照过 |
@@ -112,7 +112,7 @@
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
 | `picker` | 弹层多选 | 未核 | 50%，有浮层但主路径未齐，可后置 |
-| `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#17202d`），无独立 tooltip |
+| `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#182230`），无独立 tooltip |
 
 ### 已推进、无独立浮层（切深色看默认皮）
 
@@ -126,7 +126,7 @@
 | `input-image` | 80% | 已核 | 2026-11-12。`--input-image-*` 走 `--card` / `--border` / `--primary`；无浮层（点击缩略图新窗口） |
 | `textarea` | 85% | 已核 | 2026-11-12。textarea 走 `--card` / `--input` / `--foreground`；无浮层 |
 | `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
-| `collapse` / `tabs` / `portlet` | 85% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#17202d` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
+| `collapse` / `tabs` / `portlet` | 85% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#182230` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
 | `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
 | `divider` `pagination` `pagination-wrapper` `switch-container` | 90% | 未核 | |
 | `button-group` | 92% | 已核 | 邻钮 1px 负缝打在 `.vamis-node`，hover 抬 wrapper；无独立浮层 |
@@ -199,7 +199,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-color` | InputColor 颜色选择器 | `/components/form/input-color` | `/zh-CN/components/form/input-color` | 进行中 | 50% | 能选色；预设/格式未齐 | P0 |
 | `combo` | Combo 组合 | `/components/form/combo` | `/zh-CN/components/form/combo` | 进行中 | 55% | 默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式 | P0 |
 | `condition-builder` | ConditionBuilder 条件组合 | `/components/form/condition-builder` | `/zh-CN/components/form/condition-builder` | 进行中 | 35% | **精简**：基础规则组；缺公式/嵌套组/日期控件 | P0 |
-| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 92% | 日历点选、format/inputFormat、相对值、minDate/maxDate（日 + 年/月面板都禁范围外）、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。弹层 `--cal-*`（深色 alias Select 菜单 `#17202d`）。窄屏默认滚轮 PopUp（320px / 年/月/日 / 取消确认；PopUp height 进出动画）。缺 `mobileCalendarMode: calendar`、schedules | P0 |
+| `input-date` | InputDate 日期选择器 | `/components/form/input-date` | `/zh-CN/components/form/input-date` | 进行中 | 92% | 日历点选、format/inputFormat、相对值、minDate/maxDate（日 + 年/月面板都禁范围外）、shortcuts、utc/embed、change/focus/blur、clear/reset/setValue 已接。弹层 Teleport 到 body（z-index 1000 / popOverContainerSelector）；Amis auto 翻转（下左→下右→上左→上右）；日历层 240×290，popover padding 0。与 calendar 共用 DateCalendarPanel。弹层 `--cal-*`（深色 alias Select 菜单 `#182230`）。窄屏默认滚轮 PopUp（320px / 年/月/日 / 取消确认；PopUp height 进出动画）。缺 `mobileCalendarMode: calendar`、schedules | P0 |
 | `input-datetime` | InputDatetime 日期时间 | `/components/form/input-datetime` | `/zh-CN/components/form/input-datetime` | 进行中 | 62% | `input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐 | P0 |
 | `input-month` | InputMonth 月份选择器 | `/components/form/input-month` | `/zh-CN/components/form/input-month` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-date-range` | InputDateRange 日期范围 | `/components/form/input-date-range` | `/zh-CN/components/form/input-date-range` | 进行中 | 90% | 主路径已对齐：双输入框 + 左右双月历、区间高亮只打当月格子、快捷条居中、桌面取消/确认、点年/月标题进面板、左右不同月（内侧箭头隐藏 + `clampApart`）、`valueFormat` / `displayFormat` / `delimiter`、默认值 / 相对值 / 公式、`shortcuts`、`embed`、`extraName`、`minDuration` / `maxDuration`、`timeFormat` 对齐、`transform`（trusted）；`change` / `focus` / `blur`、`clear` / `reset` / `setValue`。文档按 Amis 章节改写。对照桌面 **11/13**、移动 **11/13**（P0 0；#4/#5 公式 value Amis 仍是模板串、Vamis 已求值）。余项：`animation` 游标、`popOverContainerSelector`、窄屏 CalendarMobile | P0 |
