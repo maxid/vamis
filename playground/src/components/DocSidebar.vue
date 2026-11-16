@@ -2,6 +2,13 @@
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import FilterInput from './FilterInput.vue'
+import {
+  formatStage,
+  matchesRange,
+  minPriority,
+  parseSidebarFilter,
+  stageTitle,
+} from '../docs/component-priority'
 import { averageProgress, progressTone } from '../docs/doc-progress'
 import { showDocProgress } from '../docs/doc-progress-pref'
 import type { SideGroup, SideLink } from '../docs/sidebar'
@@ -26,7 +33,29 @@ function linkMatches(link: string, path: string, allowPrefix: boolean) {
 }
 
 function itemHaystack(item: SideLink) {
-  return `${item.text} ${item.link} ${item.progress ?? ''}`.toLowerCase()
+  const stage = item.priority != null ? formatStage(item.priority) : ''
+  const rank = item.rank != null ? `#${item.rank}` : ''
+  return `${item.text} ${item.link} ${item.progress ?? ''} ${stage} ${rank}`.toLowerCase()
+}
+
+function itemMatches(item: SideLink, q: ReturnType<typeof parseSidebarFilter>) {
+  if (!matchesRange(item.priority, q.stage)) return false
+  if (!matchesRange(item.rank, q.rank)) return false
+  if (!q.text) return true
+  return itemHaystack(item).includes(q.text)
+}
+
+function withFilteredMeta(items: SideLink[]) {
+  const priority = minPriority(items.map((item) => item.priority))
+  return {
+    progress: averageProgress(items.map((item) => item.progress)),
+    priority,
+    rank: minPriority(items.filter((item) => item.priority === priority).map((item) => item.rank)),
+  }
+}
+
+function rankClass(stage: number | undefined) {
+  return stage == null ? 'doc-side-rank' : `doc-side-rank doc-side-rank--p${stage}`
 }
 
 watch(
@@ -43,16 +72,23 @@ watch(
 )
 
 const visible = computed(() => {
-  const q = filter.value.trim().toLowerCase()
-  if (!q) return props.groups
+  const q = parseSidebarFilter(filter.value)
+  if (!q.text && !q.stage && !q.rank) return props.groups
   return props.groups
     .map((group) => {
       if (isFlat(group)) {
-        return `${group.text} ${group.link} ${group.progress ?? ''}`.toLowerCase().includes(q) ? group : null
+        const fake: SideLink = {
+          text: group.text,
+          link: group.link || '',
+          progress: group.progress,
+          priority: group.priority,
+          rank: group.rank,
+        }
+        return itemMatches(fake, q) ? group : null
       }
-      const items = (group.items || []).filter((item) => itemHaystack(item).includes(q))
+      const items = (group.items || []).filter((item) => itemMatches(item, q))
       if (!items.length) return null
-      return { ...group, items, progress: averageProgress(items.map((item) => item.progress)) }
+      return { ...group, items, ...withFilteredMeta(items) }
     })
     .filter((group): group is SideGroup => group != null)
 })
@@ -74,7 +110,7 @@ function pctClass(percent: number) {
 
 <template>
   <div class="flex h-full min-h-0 flex-col gap-3">
-    <FilterInput v-model="filter" class="h-8" placeholder="筛选文档 / 组件" />
+    <FilterInput v-model="filter" class="h-8" placeholder="筛选名称、P0、P1" />
     <nav v-auto-hide-scroll class="min-h-0 flex-1 overflow-auto pr-1 text-sm">
       <template v-for="group in visible" :key="group.link || group.text">
         <div v-if="isFlat(group) && group.link" class="mb-1">
@@ -84,8 +120,15 @@ function pctClass(percent: number) {
             :class="isActive(group.link) ? 'bg-primary text-primary-foreground hover:bg-primary' : ''"
           >
             <span class="min-w-0 flex-1">{{ group.text }}</span>
-            <span v-if="showDocProgress && group.progress != null" :class="pctClass(group.progress)">
-              {{ group.progress }}%
+            <span class="flex shrink-0 items-center gap-1.5">
+              <span v-if="showDocProgress && group.progress != null" :class="pctClass(group.progress)">
+                {{ group.progress }}%
+              </span>
+              <span
+                v-if="group.priority != null"
+                :class="rankClass(group.priority)"
+                :title="stageTitle(group.priority, group.rank)"
+              >{{ formatStage(group.priority) }}</span>
             </span>
           </RouterLink>
         </div>
@@ -100,6 +143,11 @@ function pctClass(percent: number) {
               <span v-if="showDocProgress && group.progress != null" :class="pctClass(group.progress)">
                 {{ group.progress }}%
               </span>
+              <span
+                v-if="group.priority != null"
+                :class="rankClass(group.priority)"
+                :title="stageTitle(group.priority, group.rank, true)"
+              >{{ formatStage(group.priority) }}</span>
               <span>{{ isOpen(group.text) ? '–' : '+' }}</span>
             </span>
           </button>
@@ -111,8 +159,15 @@ function pctClass(percent: number) {
                 :class="isActive(item.link) ? 'bg-primary text-primary-foreground hover:bg-primary' : ''"
               >
                 <span class="min-w-0 flex-1">{{ item.text }}</span>
-                <span v-if="showDocProgress && item.progress != null" :class="pctClass(item.progress)">
-                  {{ item.progress }}%
+                <span class="flex shrink-0 items-center gap-1.5">
+                  <span v-if="showDocProgress && item.progress != null" :class="pctClass(item.progress)">
+                    {{ item.progress }}%
+                  </span>
+                  <span
+                    v-if="item.priority != null"
+                    :class="rankClass(item.priority)"
+                    :title="stageTitle(item.priority, item.rank)"
+                  >{{ formatStage(item.priority) }}</span>
                 </span>
               </RouterLink>
             </li>

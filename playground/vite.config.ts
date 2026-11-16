@@ -15,6 +15,7 @@ const playground = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(playground, '..')
 const websiteSrc = path.join(repo, 'website', 'src')
 const formulaDoc = path.join(repo, 'packages', 'vamis-formula', 'src', 'doc.md')
+const componentTodo = path.join(repo, 'docs', 'superpowers', 'specs', '2026-10-20-vamis-component-todo.md')
 const pkg = (name: string) => path.join(repo, 'packages', name, 'src')
 
 /** `pnpm dev -- --host` / `--host 0.0.0.0` 绑所有网卡，方便手机连局域网。默认仍只听 localhost。 */
@@ -103,6 +104,7 @@ function staticSite(): Plugin {
       // website/src 与公式手册在 playground 根目录外；不加入 watcher 时 glob ?raw 不会随 md 失效。
       server.watcher.add(websiteSrc)
       server.watcher.add(formulaDoc)
+      server.watcher.add(componentTodo)
     },
     closeBundle() {
       const dist = path.join(playground, 'dist')

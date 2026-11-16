@@ -175,6 +175,29 @@ body,
 .doc-side-pct--danger {
   color: var(--destructive);
 }
+.doc-side-rank {
+  flex-shrink: 0;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1.5;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--text-tertiary);
+}
+.doc-side-rank--p0 {
+  color: var(--destructive);
+}
+.doc-side-rank--p1 {
+  color: var(--warning);
+}
+.doc-side-rank--p2 {
+  color: var(--text-tertiary);
+}
+a.bg-primary .doc-side-rank {
+  color: inherit;
+}
 .doc-play {
   position: relative;
 }

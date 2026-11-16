@@ -7,6 +7,8 @@ import {
   styleNav,
   typeNav,
 } from '../../../website/nav.mjs'
+import { minPriority, typeFromNavItem } from './component-priority'
+import { priorityForType, rankForType } from './priority-catalog'
 import { averageProgress } from './doc-progress'
 import { playgroundHref } from './pages'
 import { progressForLink } from './progress-catalog'
@@ -15,6 +17,10 @@ export interface SideLink {
   text: string
   link: string
   progress?: number
+  /** 侧栏档 0/1/2 = P0/P1/P2。文档 / 样式页没有。 */
+  priority?: number
+  /** 全量顺序 `#N`，越小越先做。 */
+  rank?: number
 }
 
 export interface SideGroup {
@@ -24,22 +30,43 @@ export interface SideGroup {
   /** Ungrouped top-level link (e.g. 组件介绍). */
   link?: string
   progress?: number
+  priority?: number
+  rank?: number
 }
 
-function mapLink(item: { text: string; link: string }): SideLink {
+function mapLink(item: { text: string; link: string; type?: string }): SideLink {
   const link = playgroundHref(item.link)
-  return { text: item.text, link, progress: progressForLink(link) }
+  const type = typeFromNavItem(item)
+  return {
+    text: item.text,
+    link,
+    progress: progressForLink(link),
+    priority: priorityForType(type),
+    rank: rankForType(type),
+  }
 }
 
-function mapItems(items: { text: string; link: string }[]): SideLink[] {
+function mapItems(items: { text: string; link: string; type?: string }[]): SideLink[] {
   return items.map(mapLink)
+}
+
+function groupRank(items: SideLink[], stage: number | undefined): number | undefined {
+  if (stage == null) return undefined
+  return minPriority(items.filter((item) => item.priority === stage).map((item) => item.rank))
 }
 
 function withGroupProgress(group: SideGroup): SideGroup {
   if (group.link && !group.items?.length) {
-    return { ...group, progress: progressForLink(group.link) }
+    return { ...group, progress: progressForLink(group.link), priority: group.priority, rank: group.rank }
   }
-  return { ...group, progress: averageProgress((group.items || []).map((item) => item.progress)) }
+  const items = group.items || []
+  const priority = minPriority(items.map((item) => item.priority))
+  return {
+    ...group,
+    progress: averageProgress(items.map((item) => item.progress)),
+    priority,
+    rank: groupRank(items, priority),
+  }
 }
 
 export const docsGroups: SideGroup[] = [

@@ -473,12 +473,12 @@ function overview(ranked) {
   const last = ranked[ranked.length - 1]
   return `### 速览
 
-| 段 | 序号 | 代表 |
-|----|------|------|
-| 解锁主干 | #1–#10 | ${top.map(typeLabel).join('、')} |
-| 主路径容器 | #11–#${zeroAt - 1} | ${mid} |
-| 零被依赖 | #${zeroAt}–#${ranked.length - 1} | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
-| 最后 | #${last.rank} | ${typeLabel(last)} |
+| 段 | 序号 | 侧栏 | 代表 |
+|----|------|------|------|
+| 解锁主干 | #1–#10 | **P0** | ${top.map(typeLabel).join('、')} |
+| 主路径容器 | #11–#${zeroAt - 1} | **P1** | ${mid} |
+| 零被依赖 | #${zeroAt}–#${ranked.length - 1} | **P2** | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
+| 最后 | #${last.rank} | **P2** | ${typeLabel(last)} |
 
 \`#\` 是**拓扑就绪后**按解锁分 U 再按 S 的序，不是全局 S 序：例如 \`action\` 的 S 高于 \`tooltip-wrapper\`，但必须等 tooltip chrome 做完才能开工。`
 }
@@ -498,7 +498,7 @@ function renderSection(result) {
 - **被依赖**：有多少个本表节点的构建依赖直接列出该 type。
 - **综合分** \`S = 被依赖 × ${weight} + 深度\`（${weight} = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 \`pdf-viewer\` 这类无人依赖的叶子排在 \`action\` / \`form\` 前面。
 - **解锁分** \`U(n) = max(S(n), max U(依赖 n 的节点))\`。就绪集先比 U 再比 S，避免 \`tooltip-wrapper\`（被依赖少、S 低）堵住 \`action\`（被依赖多、S 高）。同分再按深度降序、原文档序。
-- 优先级 \`#1\` 最先做，\`#${count}\` 最后做。\`P\` 列仍是阶段 P0；**执行顺序看本表**。
+- 优先级 \`#1\` 最先做，\`#${count}\` 最后做。分类表 \`P\` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+\`app\`）；**执行顺序看全量顺序**。
 - \`FormItem\` / \`Options\` 是契约节点；\`toast\` 是动作；\`badge\` / \`popOver\` 是属性型节点，均按组件计入。
 - \`office-viewer\` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 ${count} 个 type 节点。
 - 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：${next}。

@@ -349,7 +349,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - **被依赖**：有多少个本表节点的构建依赖直接列出该 type。
 - **综合分** `S = 被依赖 × 13 + 深度`（13 = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 `pdf-viewer` 这类无人依赖的叶子排在 `action` / `form` 前面。
 - **解锁分** `U(n) = max(S(n), max U(依赖 n 的节点))`。就绪集先比 U 再比 S，避免 `tooltip-wrapper`（被依赖少、S 低）堵住 `action`（被依赖多、S 高）。同分再按深度降序、原文档序。
-- 优先级 `#1` 最先做，`#154` 最后做。`P` 列仍是阶段 P0；**执行顺序看本表**。
+- 优先级 `#1` 最先做，`#154` 最后做。分类表 `P` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+`app`）；**执行顺序看全量顺序**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
 - 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（示例 Tag / `.label-*` 已对齐；余项 source 缓存，不挡）；`input-date-range` #29 已到 90%（缺 animation / CalendarMobile，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
@@ -358,12 +358,12 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ### 速览
 
-| 段 | 序号 | 代表 |
-|----|------|------|
-| 解锁主干 | #1–#10 | `icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`、`container`、Options |
-| 主路径容器 | #11–#65 | #16 `image`、#31 `service`、#37 `table`、#33 `list`、#27 `form`、#44 `dialog`、#64 `crud`、#65 `page` |
-| 零被依赖 | #66–#153 | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
-| 最后 | #154 | `app` |
+| 段 | 序号 | 侧栏 | 代表 |
+|----|------|------|------|
+| 解锁主干 | #1–#10 | **P0** | `icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`、`container`、Options |
+| 主路径容器 | #11–#65 | **P1** | #16 `image`、#31 `service`、#37 `table`、#33 `list`、#27 `form`、#44 `dialog`、#64 `crud`、#65 `page` |
+| 零被依赖 | #66–#153 | **P2** | 展示叶子与其余组合件（含 Custom / office / pdf，实施时跳过） |
+| 最后 | #154 | **P2** | `app` |
 
 `#` 是**拓扑就绪后**按解锁分 U 再按 S 的序，不是全局 S 序：例如 `action` 的 S 高于 `tooltip-wrapper`，但必须等 tooltip chrome 做完才能开工。
 

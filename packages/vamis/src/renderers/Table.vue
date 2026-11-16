@@ -1678,7 +1678,7 @@ function setDragBtnEl(el: unknown) {
       </div>
     </DefineTop>
     <DefineHead>
-      <TableHeader>
+    <TableHeader>
         <TableRow v-for="(cells, ri) in headRows" :key="ri" :class="{ 'is-fake-hide': fakeHide && ri === headRows.length - 1 }">
           <template v-for="cell in cells" :key="cell.key">
             <TableHead
@@ -1703,7 +1703,7 @@ function setDragBtnEl(el: unknown) {
                 >
               </label>
               <template v-else>&nbsp;</template>
-            </TableHead>
+        </TableHead>
             <TableHead
               v-else-if="cell.kind === 'expand'"
               :rowspan="cell.rowSpan > 1 ? cell.rowSpan : undefined"
@@ -1799,8 +1799,8 @@ function setDragBtnEl(el: unknown) {
               />
             </TableHead>
           </template>
-        </TableRow>
-      </TableHeader>
+      </TableRow>
+    </TableHeader>
     </DefineHead>
     <div v-if="affixHeader" class="vamis-table__fixed-top" :class="{ 'is-fake-hide': fakeHide }">
       <ReuseTop />
@@ -1827,7 +1827,7 @@ function setDragBtnEl(el: unknown) {
           <col v-for="col in columns" :key="colKey(col)">
         </colgroup>
         <ReuseHead />
-        <TableBody>
+    <TableBody>
           <TableRow
             v-for="(summary, si) in prefixRows"
             :key="'prefix-' + si"
@@ -1848,8 +1848,8 @@ function setDragBtnEl(el: unknown) {
             <TableCell :colspan="colSpan" class="vamis-table__empty">
               <VamisTableEmptyIcon />
               {{ schema.placeholder || '暂无数据' }}
-            </TableCell>
-          </TableRow>
+        </TableCell>
+      </TableRow>
           <tr v-if="virtualPad.lead > 0" class="vamis-table__virtual-pad is-lead" aria-hidden="true">
             <td :colspan="colSpan" :style="{ height: virtualPad.lead + 'px' }" />
           </tr>
@@ -1898,7 +1898,7 @@ function setDragBtnEl(el: unknown) {
                     >
                   </label>
                 </template>
-              </TableCell>
+        </TableCell>
               <TableCell
                 v-if="footColumns.length"
                 :class="['vamis-table__expand-cell', leadSticky('expand').className]"
@@ -2009,9 +2009,9 @@ function setDragBtnEl(el: unknown) {
             >
               <SchemaRenderer :schema="summarySchema(cell)" :extra-data="summaryData" />
             </component>
-          </TableRow>
-        </TableBody>
-      </Table>
+      </TableRow>
+    </TableBody>
+  </Table>
       <div
         v-if="hover && itemActions.length && !dragging"
         class="vamis-table__item-actions-wrap"

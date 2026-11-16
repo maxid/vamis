@@ -3,6 +3,12 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
+  lookupPriority,
+  parsePriorityTable,
+  parseSidebarFilter,
+  stageFromRank,
+} from '../../../playground/src/docs/component-priority'
+import {
   averageProgress,
   mdRelToPaths,
   parseDocProgress,
@@ -62,7 +68,64 @@ describe('doc progress chrome', () => {
     expect(app).toContain('off-text="隐藏"')
     expect(app).toContain('setShowDocProgress')
     expect(sidebar).toContain('doc-side-pct')
+    expect(sidebar).toContain('doc-side-rank')
     expect(sidebar).toContain('showDocProgress')
+    expect(sidebar).toContain('parseSidebarFilter')
+    expect(sidebar).toContain('筛选名称、P0、P1')
     expect(pref).toContain("DOC_PROGRESS_KEY = 'vamis-doc-progress'")
+  })
+})
+
+describe('component priority', () => {
+  const todo = readFileSync(
+    resolve(repo, 'docs/superpowers/specs/2026-10-20-vamis-component-todo.md'),
+    'utf8',
+  )
+  const table = parsePriorityTable(todo)
+
+  it('reads the 全量顺序 ranks', () => {
+    expect(table.get('icon')).toBe(1)
+    expect(table.get('formitem')).toBe(6)
+    expect(table.get('toast')).toBe(7)
+    expect(table.get('action')).toBe(8)
+    expect(table.get('popover')).toBe(17)
+    expect(table.get('collapse-group')).toBe(95)
+    expect(table.get('datetime')).toBe(70)
+    expect(table.get('office-viewer-excel')).toBe(77)
+    expect(table.get('app')).toBe(154)
+    expect(table.size).toBeGreaterThanOrEqual(154)
+  })
+
+  it('looks up nav types case-insensitively', () => {
+    expect(lookupPriority(table, 'popOver')).toBe(17)
+    expect(lookupPriority(table, 'FormItem')).toBe(6)
+  })
+
+  it('maps 全量顺序 ranks onto P0/P1/P2 速览 buckets', () => {
+    expect(stageFromRank(1)).toBe(0)
+    expect(stageFromRank(10)).toBe(0)
+    expect(stageFromRank(11)).toBe(1)
+    expect(stageFromRank(65)).toBe(1)
+    expect(stageFromRank(66)).toBe(2)
+    expect(stageFromRank(154)).toBe(2)
+  })
+
+  it('parses P0/P1 and leftover #N ranges out of the filter box', () => {
+    expect(parseSidebarFilter('P0')).toEqual({ text: '', stage: { min: 0, max: 0 } })
+    expect(parseSidebarFilter('p1')).toEqual({ text: '', stage: { min: 1, max: 1 } })
+    expect(parseSidebarFilter('P0-P1')).toEqual({ text: '', stage: { min: 0, max: 1 } })
+    expect(parseSidebarFilter('form P0')).toEqual({
+      text: 'form',
+      stage: { min: 0, max: 0 },
+    })
+    expect(parseSidebarFilter('#8')).toEqual({ text: '', rank: { min: 8, max: 8 } })
+    expect(parseSidebarFilter('#1-10')).toEqual({ text: '', rank: { min: 1, max: 10 } })
+    expect(parseSidebarFilter('#1–#10')).toEqual({ text: '', rank: { min: 1, max: 10 } })
+    expect(parseSidebarFilter('#<=10')).toEqual({ text: '', rank: { min: 1, max: 10 } })
+    expect(parseSidebarFilter('form #27')).toEqual({
+      text: 'form',
+      rank: { min: 27, max: 27 },
+    })
+    expect(parseSidebarFilter('icon')).toEqual({ text: 'icon' })
   })
 })

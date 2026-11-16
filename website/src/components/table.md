@@ -22,11 +22,11 @@ body:
   - type: table
     title: 表格1
     source: $rows
-    columns:
-      - name: engine
-        label: Engine
-      - name: version
-        label: Version
+columns:
+  - name: engine
+    label: Engine
+  - name: version
+    label: Version
 ```
 
 ## 数据需求
@@ -53,7 +53,7 @@ body:
   - type: table
     title: 表格1
     source: []
-    columns:
+columns:
       - name: engine
         label: Engine
       - name: version
@@ -327,9 +327,9 @@ body:
   - type: table
     source: $rows
     tableLayout: fixed
-    columns:
-      - name: id
-        label: ID
+columns:
+  - name: id
+    label: ID
       - name: engine
         label: Rendering engine
         width: 150
@@ -370,7 +370,7 @@ body:
       - name: engine
         label: Engine
       - label: Version
-        type: tpl
+    type: tpl
         tpl: ${version | number}
         align: right
 ```
@@ -388,10 +388,10 @@ body:
   - type: table
     title: 表格1
     source: $rows
-    columns:
-      - name: engine
+columns:
+  - name: engine
         label: Engine
-      - name: version
+  - name: version
         label: Version
         className: text-primary
 ```
@@ -472,9 +472,9 @@ data:
 body:
   - type: table
     source: $rows
-    columns:
-      - name: engine
-        label: Engine
+columns:
+  - name: engine
+    label: Engine
       - name: version
         label: Version
         backgroundScale:
@@ -509,8 +509,8 @@ body:
         label: Grade
       - name: version
         label: Version
-      - name: browser
-        label: Browser
+  - name: browser
+    label: Browser
       - name: id
         label: ID
         toggled: false
@@ -548,8 +548,8 @@ body:
             fixed: left
           - name: grade
             label: Grade
-          - name: version
-            label: Version
+  - name: version
+    label: Version
           - name: browser
             label: Browser
             groupName: Group-2
@@ -572,9 +572,9 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-    columns:
-      - name: id
-        label: ID
+columns:
+  - name: id
+    label: ID
       - name: engine
         label: Rendering engine
         copyable: true
@@ -612,7 +612,7 @@ data:
 body:
   - type: table
     source: ${table}
-    columns:
+columns:
       - name: id
         label: ID
       - type: container
@@ -677,7 +677,7 @@ body:
         label: ""
       - name: platform
         label: ""
-      - name: version
+  - name: version
         label: ""
       - name: grade
         label: ""
@@ -791,7 +791,7 @@ body:
     source: $rows
     className: m-b-none
     columnsTogglable: false
-    columns:
+columns:
       - name: engine
         label: Engine
       - name: grade
@@ -955,7 +955,7 @@ body:
     className: m-b-none
     columnsTogglable: false
     showIndex: true
-    columns:
+columns:
       - name: engine
         label: Engine
       - name: grade
@@ -964,8 +964,8 @@ body:
         label: Version
       - name: browser
         label: Browser
-      - name: id
-        label: ID
+  - name: id
+    label: ID
       - name: platform
         label: Platform
 ```
@@ -983,12 +983,12 @@ body:
     className: m-b-none
     columnsTogglable: false
     footable: true
-    columns:
+columns:
       - name: engine
         label: Engine
       - name: grade
         label: Grade
-      - name: version
+  - name: version
         label: Version
         breakpoint: "*"
       - name: browser
@@ -1082,11 +1082,11 @@ body:
     className: m-b-none
     combineNum: 3
     columnsTogglable: false
-    columns:
-      - name: engine
+columns:
+  - name: engine
         label: Rendering engine
-      - name: browser
-        label: Browser
+  - name: browser
+    label: Browser
       - name: platform
         label: Platform(s)
       - name: version
@@ -1158,7 +1158,7 @@ body:
     className: m-b-none
     combineNum: $combineNum
     columnsTogglable: false
-    columns:
+columns:
       - name: engine
         label: Rendering engine
       - name: browser
@@ -1195,8 +1195,8 @@ body:
       - name: browser
         label: Browser
         groupName: 分组2
-      - name: id
-        label: ID
+  - name: id
+    label: ID
         toggled: false
         groupName: 分组2
       - name: platform
@@ -1218,12 +1218,12 @@ body:
     source: $rows
     rowClassNameExpr: "${id % 2 ? 'bg-success' : 'bg-blue-50'}"
     columns:
-      - name: engine
-        label: Engine
+  - name: engine
+    label: Engine
       - name: grade
         label: Grade
-      - name: version
-        label: Version
+  - name: version
+    label: Version
       - name: browser
         label: Browser
       - name: id
@@ -1244,15 +1244,15 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-    columns:
-      - name: browser
-        label: Browser
-      - name: version
-        label: Version
-    affixRow:
-      - type: text
-        text: 总计
-      - type: tpl
+columns:
+  - name: browser
+    label: Browser
+  - name: version
+    label: Version
+affixRow:
+  - type: text
+    text: 总计
+  - type: tpl
         tpl: ${rows|pick:version|sum}
 ```
 
@@ -1287,7 +1287,7 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-    columns:
+columns:
       - name: id
         label: ID
       - name: browser
@@ -1343,8 +1343,8 @@ body:
     itemActions:
       - label: 编辑
         type: button
-        actionType: dialog
-        dialog:
+    actionType: dialog
+    dialog:
           title: 编辑
           body: 这是个简单的编辑弹框
       - label: 删除
@@ -1369,13 +1369,13 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-    itemAction:
+itemAction:
       type: button
-      actionType: dialog
-      dialog:
-        title: 详情
+  actionType: dialog
+  dialog:
+    title: 详情
         body: "当前行的数据 browser: ${browser}, version: ${version}"
-    columns:
+columns:
       - name: browser
         label: Browser
       - name: version

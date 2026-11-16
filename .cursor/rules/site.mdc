@@ -23,7 +23,7 @@ alwaysApply: true
 - **已注册 ≠ 已完成**。只有文档主路径对齐才能标「已完成」/ 100%
 - 组件页由 `website/scripts/gen-component-pages.mjs` 读 P0 TODO 生成；手写页（`page` / `container`、types、concepts、start、style、extend）手改本条
 - 被 kernel 挡住时进度可以升，状态保持「进行中」，原因写清决策号
-- Playground 左侧菜单显示同一套百分比（分组是子项平均）。着色跟档位：100% `--success`、≥80 `--info`、≥40 `--warning`、其余 `--destructive`。顶栏「进度」开关控制显隐，默认开，写入 `vamis-doc-progress`。目录页没有 banner 的不显示数字
+- Playground 左侧菜单显示同一套百分比（分组是子项平均）。着色跟档位：100% `--success`、≥80 `--info`、≥40 `--warning`、其余 `--destructive`。组件页进度右侧再跟 **P0 / P1 / P2**（TODO「依赖与优先级」速览：解锁主干 #1–#10 = P0，主路径容器 #11–#65 = P1，零被依赖 + `app` = P2；分组显示子项最高档）。顶栏「进度」开关只控制百分比，默认开，写入 `vamis-doc-progress`。目录页没有 banner 的不显示数字。筛选框支持名称、`P0` / `P1` / `P0-P1`；全量顺序 `#8` / `#1-10` 仍可筛
 
 禁止：只有标题没有进度条；banner 放到文末或只写在 spec / CONTEXT。
 
