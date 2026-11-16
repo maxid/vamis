@@ -10,6 +10,31 @@ const here = dirname(fileURLToPath(import.meta.url))
 const packagesDir = resolve(here, '../..')
 const css = readFileSync(join(packagesDir, 'vamis-ui/src/styles.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
 
+function stripSupportsOklch(src: string): string {
+  const needle = '@supports (color: oklch(0 0 0))'
+  let out = src
+  let start = out.indexOf(needle)
+  while (start !== -1) {
+    const brace = out.indexOf('{', start)
+    if (brace < 0) break
+    let depth = 0
+    let end = brace
+    for (; end < out.length; end++) {
+      if (out[end] === '{') depth++
+      else if (out[end] === '}') {
+        depth--
+        if (depth === 0) {
+          end++
+          break
+        }
+      }
+    }
+    out = out.slice(0, start) + out.slice(end)
+    start = out.indexOf(needle)
+  }
+  return out
+}
+
 function vueFiles(dir: string): string[] {
   const out: string[] = []
   for (const name of readdirSync(dir)) {
@@ -89,6 +114,12 @@ describe('style ruler: styles.css', () => {
     // 色阶之外的 Amis 字面量（存量，只许减）。新增色先找 --colors-* 色阶。
     const hexTokens = css.match(/^[ \t]*--[\w-]+:\s*#[0-9a-fA-F]{3,8};/gm) ?? []
     expect(hexTokens.length).toBeLessThanOrEqual(HEX_TOKEN_CEILING)
+  })
+
+  it('oklch and color-mix(in oklch) only live inside @supports', () => {
+    const stripped = stripSupportsOklch(css)
+    expect(stripped.match(/oklch\(/g) ?? []).toEqual([])
+    expect(stripped.match(/color-mix\(in oklch/g) ?? []).toEqual([])
   })
 })
 

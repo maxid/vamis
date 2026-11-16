@@ -20,30 +20,91 @@ function appendFontAwesome(dest: string) {
   if (extra) fs.appendFileSync(path.join(dest, 'sdk.css'), `\n${extra}`)
 }
 
-/** lightningcss 可能把 @supports 拆掉，旧 WebView 只剩 oklch，提交钮掉成描边。打包后再垫一层 hex。 */
+/**
+ * lightningcss 可能把源码里的 @supports 拆掉、把 oklch 抬到 :root。
+ * 打包后再垫一层 `@supports not`：只 alias 色阶（hex 在 themes.css），不要钉云舍蓝，
+ * 否则 6 色包在旧 WebView 会被盖回 #2468f2。
+ */
 function appendLegacyPrimary(dest: string) {
-  const css = `/* old WebView: oklch(--primary) invalid → 云舍蓝 hex */
+  const css = `/* old WebView: oklch token invalid → hex 色阶 alias */
 @supports not (color: oklch(0 0 0)) {
-  :root {
-    --colors-brand-5: #2468f2;
-    --primary: #2468f2;
-    --primary-foreground: #ffffff;
-    --primary-hover: #1c5bd6;
-    --primary-active: #144bcc;
-    --ring: #2468f2;
+  :root, [data-theme] {
+    --background: var(--colors-neutral-fill-10);
+    --secondary: var(--colors-neutral-fill-9);
+    --secondary-foreground: var(--colors-neutral-text-3);
+    --muted: var(--colors-neutral-fill-10);
+    --accent: var(--colors-brand-10);
+    --accent-foreground: var(--colors-brand-2);
+    --primary: var(--colors-brand-5);
+    --primary-foreground: var(--colors-neutral-text-11);
+    --primary-hover: var(--colors-brand-4);
+    --primary-active: var(--colors-brand-3);
+    --link-color: var(--primary);
+    --link-hover-color: var(--colors-brand-6);
+    --ring: var(--colors-brand-5);
+    --select-option-hover-bg: var(--colors-brand-10);
+    --select-chip-hover-bg: var(--colors-brand-10);
+    --list-item-hover-bg: var(--colors-brand-10);
+    --control-focus-glow: 0 0 0 3px var(--colors-brand-8);
+    --checkbox-checked-hover: var(--colors-brand-6);
+    --checkbox-checked-active: var(--colors-brand-4);
+    --success-bg: var(--colors-success-10);
+    --warning-bg: var(--colors-warning-10);
+    --info-bg: var(--colors-info-10);
+    --error-bg: var(--colors-error-10);
   }
   .dark {
-    --colors-brand-5: #1677ff;
-    --primary: #1677ff;
-    --primary-foreground: #ffffff;
-    --primary-hover: #2486ff;
-    --primary-active: #0061f2;
-    --ring: #1677ff;
+    --background: var(--colors-neutral-fill-canvas);
+    --primary: var(--colors-brand-5);
+    --primary-foreground: var(--white);
+    --primary-hover: var(--colors-brand-6);
+    --primary-active: var(--colors-brand-4);
+    --link-color: var(--primary);
+    --link-hover-color: var(--colors-brand-6);
+    --ring: var(--primary);
+    --destructive: var(--colors-error-5);
+    --success: var(--colors-success-5);
+    --warning: var(--colors-warning-5);
+    --info: var(--colors-info-5);
+    --select-option-hover-bg: var(--colors-neutral-fill-9);
+    --control-focus-glow: 0 0 0 3px var(--colors-brand-7);
+    --checkbox-checked-hover: var(--colors-brand-6);
+    --checkbox-checked-active: var(--colors-brand-4);
+  }
+  .dark[data-theme="dark"] {
+    --primary-hover: var(--colors-brand-4);
+    --primary-active: var(--colors-brand-6);
+    --checkbox-checked-hover: var(--colors-brand-4);
+    --checkbox-checked-active: var(--colors-brand-6);
   }
 }
 `
   const file = path.join(dest, 'sdk.css')
   if (fs.existsSync(file)) fs.appendFileSync(file, `\n${css}`)
+}
+
+/** lightningcss 会拆掉源码里的 `@supports (color: oklch)`，现代浏览器也就丢了相对色。从 styles.css 原样垫回。 */
+function appendOklchSupports(dest: string) {
+  const src = fs.readFileSync(path.join(pkg('vamis-ui'), 'styles.css'), 'utf8')
+  const needle = '@supports (color: oklch(0 0 0))'
+  const start = src.indexOf(needle)
+  if (start < 0) return
+  const brace = src.indexOf('{', start)
+  if (brace < 0) return
+  let depth = 0
+  let end = brace
+  for (; end < src.length; end++) {
+    if (src[end] === '{') depth++
+    else if (src[end] === '}') {
+      depth--
+      if (depth === 0) {
+        end++
+        break
+      }
+    }
+  }
+  const file = path.join(dest, 'sdk.css')
+  if (fs.existsSync(file)) fs.appendFileSync(file, `\n${src.slice(start, end)}\n`)
 }
 
 function copySdkStatic(): Plugin {
@@ -67,6 +128,7 @@ function copySdkStatic(): Plugin {
       }
       appendFontAwesome(dest)
       appendLegacyPrimary(dest)
+      appendOklchSupports(dest)
       stampSdkHtmlFiles(sdk, dest)
     },
   }

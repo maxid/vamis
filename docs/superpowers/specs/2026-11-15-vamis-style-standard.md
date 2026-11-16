@@ -1,7 +1,7 @@
 # Vamis 样式规范
 
 - 日期：2026-11-15
-- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减。2026-11-16 已统一深色画布 / Page / 面板层级，深浅主题的主色都 alias 当前品牌 `brand-5`；同日新增金色品牌包，并让语义 token 在 SDK 主题宿主上重新求值
+- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减。2026-11-16 已统一深色画布 / Page / 面板层级，深浅主题的主色都 alias 当前品牌 `brand-5`；同日新增金色品牌包，并让语义 token 在 SDK 主题宿主上重新求值。同日 token 默认改 hex 色阶，`oklch` / `color-mix(in oklch)` 只进 `@supports`
 - 范围：`@vamis/ui` 的 token 与默认皮肤、`packages/vamis` 渲染器模板与内联样式。不管作者 `className`（helper 的行为精度见 [样式系统](./2026-10-21-vamis-style-system.md) §0.1）
 - 关联：
   - [样式系统（设计由来）](./2026-10-21-vamis-style-system.md)、[主题 token](./2026-10-21-vamis-theme-shadcn.md)
@@ -93,6 +93,7 @@ Vamis chrome 的直角 / 圆角用**全局开关**切（见 [主题 spec §4](./
 4. `.dark` 里只留「色阶翻转后不对」的覆盖。组件 token 已经引用色阶 / `--card` 的，深色不再重复写
 5. 带 alpha 的色不进 CSS 变量，写 Vue inline style 的字面 `rgba()` / `hsla()`（旧 WebView 会把 8 位 hex 当实心色）
 6. 渲染器 JS 里的 hex 只允许「色号本身是数据」：取色器预设、条码 / 二维码 / 签名的墨色、色块回退。名单在守卫里（6 个文件）
+7. **双轨**：默认 token 只 alias `--colors-*` hex 色阶。`oklch()` / `color-mix(in oklch, …)` / `oklch(from …)` 只写在 `@supports (color: oklch(0 0 0))` 里；浅色选择器带 `:not(.dark)`，避免 `[data-theme]` 把深色宿主盖回浅色画布。选择器本身不写 oklch。SDK 打包后再垫 `@supports not` 的色阶 alias（`appendLegacyPrimary`），不要钉死某一包 hex
 
 ## 4. 图标
 

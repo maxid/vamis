@@ -105,6 +105,7 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - **文字色四档**：`--text-color` 正文、`--text-secondary` 标签、`--text-tertiary` 说明、`--text-muted` 占位禁用。shadcn 的 `--foreground` / `--muted-foreground` 是它们的别名
 - **升高面**（卡片 / 下拉 / Tooltip / PopOver / 勾选盒底）一律 `var(--card)`。不写 `#fff`，不各起带 hex 的 `--xxx-bg`
 - **hex** 只在 `themes.css` 色阶和少数色阶上没有的 Amis 字面量 token 里。`.dark` 只留色阶翻转后不对的覆盖
+- **双轨**：默认 token alias hex 色阶；`oklch()` / `color-mix(in oklch)` 只进 `@supports (color: oklch(0 0 0))`（浅色 `:not(.dark)`）。选择器不写 oklch。SDK `@supports not` 只再垫色阶 alias，不钉某一包 hex
 - **`:style`** 只放作者在 schema 里写的值、运行时量出来的几何、带 alpha 的字面色。默认皮肤常量写 class + token；作者没写时给 `undefined`，不要回落一个 hex。模板不写静态 `style="…"`
 - **原语配方打在原语上**（`[data-slot="…"]`），不要挂在某一个渲染器的外壳下。表格 th 14 / td 12 在 `[data-slot="table-head"]` / `[data-slot="table-cell"]`，`Table` / `CRUD` / `InputTable` / `Tasks` 共用
 - 守卫：`packages/vamis-core/__tests__/style-system.test.ts`。上限只许减

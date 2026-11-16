@@ -464,12 +464,16 @@ describe('schema-tree', () => {
     expect(html).toContain('forceMobile ? { mobileUI: true } : {}')
   })
 
-  it('sdk build appends hex --primary for WebViews without oklch', () => {
+  it('sdk build appends hex-stair aliases for WebViews without oklch', () => {
     const vite = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../vite.config.ts'), 'utf8')
     expect(vite).toContain('function appendLegacyPrimary')
     expect(vite).toContain('appendLegacyPrimary(dest)')
+    expect(vite).toContain('function appendOklchSupports')
+    expect(vite).toContain('appendOklchSupports(dest)')
     expect(vite).toContain('@supports not (color: oklch(0 0 0))')
-    expect(vite).toContain('--primary: #2468f2')
+    expect(vite).toContain('--primary: var(--colors-brand-5)')
+    expect(vite).toContain('--background: var(--colors-neutral-fill-10)')
+    expect(vite).not.toContain('--primary: #2468f2')
   })
 
   it('embed-case resolves sdk.css under /sdk/ not site root', () => {

@@ -554,11 +554,11 @@ alwaysApply: true
 - 触及：`calendar` `input-date` `input-datetime` `input-time`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
-### `--primary` 先写 6 位 hex，oklch 放进 @supports
-- 踩过：`--primary: oklch(.49 .16 var(--accent-h))` 在旧 WebView 里整段无效，`bg-primary` / 确认钮掉成描边灰。手机对照看起来像「主题没生效」。
-- 稳定做法：`:root` 默认云舍蓝 `#2468f2`。6 色切色的 oklch / `color-mix` 只放 `@supports (color: oklch(0 0 0))`。SDK 打包后再追加 `@supports not` hex（lightningcss 可能拆掉源码里的 @supports）。
-- 触及：`action` `button` `form` `input-date`
-- 规则：本文；`packages/vamis-ui/src/styles.css`；`packages/vamis-sdk/vite.config.ts` `appendLegacyPrimary`
+### token 默认 hex 色阶，oklch / color-mix 只进 @supports
+- 踩过：`--primary: oklch(.49 .16 var(--accent-h))` 在旧 WebView 里整段无效，`bg-primary` / 确认钮掉成描边灰。后来只垫了 `--primary`，`--background` / `--accent` / `color-mix(in oklch)` / `oklch(from …)` 仍只有 oklch，旧内核上空掉。SDK 曾在 `@supports not` 里钉云舍 `#2468f2`，6 色包被盖回蓝。
+- 稳定做法：默认 token alias `--colors-*` hex 色阶（checkbox hover = brand-6，画布 = fill-10）。`oklch()` / `color-mix(in oklch)` / 相对色只写进 `@supports (color: oklch(0 0 0))`；浅色用 `:not(.dark)`，避免 `[data-theme]` 把深色宿主盖回浅色画布。选择器只 `var()`。SDK `appendLegacyPrimary` 再垫 `@supports not` 的色阶 alias，不要钉死某一包 hex。
+- 触及：`action` `button` `form` `input-date` `select` `checkbox` `table` `panel`
+- 规则：本文；`packages/vamis-ui/src/styles.css`；`packages/vamis-sdk/vite.config.ts` `appendLegacyPrimary`；样式规范 §3
 
 ### 带 alpha 的色不要写进 CSS 变量
 - 踩过：滚轮遮罩 `--cal-mask-from: hsla(0,0%,100%,0.9)` 被 Tailwind/lightningcss 编成 `#ffffffe6`；旧 WebView 把 8 位 hex 当实心 `#ffffff`，上下 96px 全白，只剩中间一行。改成 opacity 实心带后又丢掉 Amis 渐变。Amis 产物里仍是字面 `hsla()`，所以同一台机能渐变。

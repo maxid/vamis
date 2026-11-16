@@ -147,15 +147,12 @@ body,
   margin: 0 0 0.35rem;
   font-weight: 600;
 }
-.doc-callout--warning {
-  border-color: color-mix(in oklch, var(--warning) 40%, var(--border));
-}
-.doc-callout--danger {
-  border-color: color-mix(in oklch, var(--destructive) 40%, var(--border));
-}
+.doc-callout--warning,
+.doc-callout--danger,
 .doc-callout--tip,
 .doc-callout--info {
-  border-color: color-mix(in oklch, var(--info) 40%, var(--border));
+  /* 旧内核不认 color-mix；兜底跟默认 callout 同色，不要拿 *-8 浅填充当边。 */
+  border-color: var(--border);
 }
 .doc-play {
   position: relative;
@@ -198,7 +195,7 @@ body,
   justify-content: center;
   align-items: center;
   padding: 24px 16px;
-  background: color-mix(in oklch, var(--muted) 40%, var(--background));
+  background: var(--fill-10);
 }
 .doc-play__phone {
   --doc-phone-bezel: #4a4e57;
@@ -255,7 +252,7 @@ body,
   scrollbar-color: transparent transparent;
 }
 .auto-hide-scroll.is-scrolling {
-  scrollbar-color: color-mix(in oklch, var(--foreground) 28%, transparent) transparent;
+  scrollbar-color: var(--colors-neutral-text-6) transparent;
 }
 .auto-hide-scroll::-webkit-scrollbar {
   width: 8px;
@@ -269,7 +266,7 @@ body,
   border-radius: 999px;
 }
 .auto-hide-scroll.is-scrolling::-webkit-scrollbar-thumb {
-  background-color: color-mix(in oklch, var(--foreground) 28%, transparent);
+  background-color: var(--colors-neutral-text-6);
 }
 .doc-play .vamis-root {
   min-width: 0;
@@ -322,4 +319,26 @@ html.theme-changing .doc-chrome-switch .vamis-switch__slider::before {
 .doc-theme-dot:hover::after,
 .doc-theme-dot:focus-visible::after {
   opacity: 1;
+}
+
+@supports (color: oklch(0 0 0)) {
+  .doc-callout--warning {
+    border-color: color-mix(in oklch, var(--warning) 40%, var(--border));
+  }
+  .doc-callout--danger {
+    border-color: color-mix(in oklch, var(--destructive) 40%, var(--border));
+  }
+  .doc-callout--tip,
+  .doc-callout--info {
+    border-color: color-mix(in oklch, var(--info) 40%, var(--border));
+  }
+  .doc-play__canvas--mobile {
+    background: color-mix(in oklch, var(--muted) 40%, var(--background));
+  }
+  .auto-hide-scroll.is-scrolling {
+    scrollbar-color: color-mix(in oklch, var(--foreground) 28%, transparent) transparent;
+  }
+  .auto-hide-scroll.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--foreground) 28%, transparent);
+  }
 }

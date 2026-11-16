@@ -133,7 +133,7 @@
   --icon-color: var(--colors-neutral-text-5);
   --icon-hover-color: var(--primary);
   --icon-size: 14px;
-  --background: oklch(0.97 0.008 250);
+  --background: var(--colors-neutral-fill-10);
   /* shadcn 名只是别名：正文色、升高面都落在主题色阶上，和组件 token 是同一套灰。 */
   --foreground: var(--text-color);
   --card: var(--colors-neutral-fill-11);
@@ -183,12 +183,12 @@
   --tabs-chrome-hover: var(--colors-neutral-fill-10);
   --tabs-chrome-active: var(--card);
   --tabs-add-icon: 15px;
-  --secondary: oklch(0.945 0.01 250);
-  --secondary-foreground: oklch(0.28 0.03 258);
-  --muted: oklch(0.955 0.01 250);
+  --secondary: var(--colors-neutral-fill-9);
+  --secondary-foreground: var(--colors-neutral-text-3);
+  --muted: var(--colors-neutral-fill-10);
   --muted-foreground: var(--text-secondary);
-  --accent: oklch(0.94 0.018 var(--accent-h));
-  --accent-foreground: oklch(0.28 0.04 var(--accent-h));
+  --accent: var(--colors-brand-10);
+  --accent-foreground: var(--colors-brand-2);
   --destructive: var(--colors-error-5);
   --destructive-foreground: var(--colors-neutral-text-11);
   --success: var(--colors-success-5);
@@ -204,16 +204,16 @@
   --popup-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --input: var(--colors-neutral-line-8);
   --ring: var(--colors-brand-5);
-  --sidebar: oklch(0.22 0.04 258);
-  --sidebar-foreground: oklch(0.93 0.015 250);
-  --sidebar-primary: oklch(0.72 0.12 var(--accent-h));
-  --sidebar-primary-foreground: oklch(0.2 0.03 258);
-  --sidebar-accent: oklch(0.3 0.035 258);
-  --sidebar-accent-foreground: oklch(0.93 0.015 250);
-  --sidebar-border: oklch(0.32 0.03 258);
-  --sidebar-ring: oklch(0.72 0.12 var(--accent-h));
-  --code: oklch(0.22 0.03 258);
-  --code-foreground: oklch(0.88 0.03 250);
+  --sidebar: var(--colors-neutral-fill-2);
+  --sidebar-foreground: var(--colors-neutral-text-10);
+  --sidebar-primary: var(--colors-brand-6);
+  --sidebar-primary-foreground: var(--colors-neutral-fill-2);
+  --sidebar-accent: var(--colors-neutral-fill-3);
+  --sidebar-accent-foreground: var(--colors-neutral-text-10);
+  --sidebar-border: var(--colors-neutral-fill-3);
+  --sidebar-ring: var(--colors-brand-6);
+  --code: var(--colors-neutral-fill-2);
+  --code-foreground: var(--colors-neutral-text-7);
   /* Monaco vs-dark 的编辑区底色：代码块深色主题固定这块，不跟页面浅深色走。 */
   --code-dark-bg: #1e1e1e;
   /* Amis `_pagination.scss` 禁用页码写的是字面量 #ccc，不在色阶上。 */
@@ -255,7 +255,7 @@
   --select-option-color: var(--colors-neutral-text-2);
   --select-option-bg: transparent;
   --select-option-hover-color: var(--colors-neutral-text-2);
-  --select-option-hover-bg: color-mix(in oklch, var(--primary) 20%, white);
+  --select-option-hover-bg: var(--colors-brand-10);
   --select-option-active-color: var(--primary);
   --select-option-active-bg: var(--select-menu-bg);
   --select-option-disabled-color: var(--colors-neutral-text-6);
@@ -291,7 +291,7 @@
   --select-check-checked-bg: var(--primary);
   --select-check-checked-color: var(--white);
   --select-chip-bg: var(--colors-neutral-fill-9);
-  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 12%, white);
+  --select-chip-hover-bg: var(--colors-brand-10);
   --select-chip-color: var(--colors-neutral-text-2);
   --select-chip-close: var(--colors-neutral-text-5);
   --select-chip-close-hover: var(--colors-neutral-fill-2);
@@ -461,6 +461,8 @@
   /* cxd --Panel-marginBottom (sizes-base-10 = 20px)；圆角 --Panel-borderRadius = radius-3。 */
   --panel-margin-bottom: var(--gap-lg);
   --panel-radius: var(--radius);
+  --panel-heading-bg: var(--fill-10);
+  --panel-heading-color: var(--text-secondary);
   /* Amis $zindex-* 阶梯。浮层 Teleport 到 body 后仍吃 :root。 */
   --z-dropdown: 1000;
   --z-sticky: 900;
@@ -496,7 +498,7 @@
   --list-item-checked-bg: var(--colors-brand-10);
   --list-item-checked-color: var(--colors-brand-4);
   --list-item-checked-border: var(--colors-brand-4);
-  --list-item-hover-bg: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --list-item-hover-bg: var(--colors-brand-10);
   --list-heading-unsaved-bg: var(--table-modified-bg);
   --list-heading-unsaved-color: var(--table-modified-color);
   /* Amis `--Crud-toolbar-gap` size-6 / `--Crud-toolbar-height`。 */
@@ -512,7 +514,7 @@
   /* hover 走主题色；focus 边仍用 --ring，3px glow 是 Vamis 原风格（不跟 Amis boxShadow:none）。 */
   --control-hover-border: var(--primary);
   --control-focus-border: var(--ring);
-  --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+  --control-focus-glow: 0 0 0 3px var(--colors-brand-8);
   --control-focus-addon-color: var(--primary);
   /* Amis `_checks.scss` / cxd checkbox：16 盒、2px 圆角、勾 14。选择器只 var()。 */
   --checkbox-size: 16px;
@@ -537,8 +539,8 @@
   --checkbox-button-pad-x: 12px;
   --checkbox-button-radius: var(--radius);
   /* Amis 浅色选中 hover = brand-6 `#528eff`（比 brand-5 浅、饱和度不掉）。默认勾选盒底/边和按钮模式字/边/三角共用。不要用 `--primary-hover`（浅色混黑会变深），也不要 mix 白（会发灰）。 */
-  --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h);
-  --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
+  --checkbox-checked-hover: var(--colors-brand-6);
+  --checkbox-checked-active: var(--colors-brand-4);
   --checkbox-font-size: var(--fontSizeBase);
   /* Amis `_checks.scss` radio：18 圆、10 实心点、缝 10。选中只改边和点，底仍 fill-11。按钮模式选中是实心 brand，不是 checkbox 透明+角标。 */
   --radio-size: 18px;
@@ -586,6 +588,7 @@
   --switch-text-on-margin-right: 24px;
   --switch-spinner-size: 14px;
   --switch-spinner-color: var(--colors-neutral-text-4);
+  --switch-spinner-track: var(--colors-neutral-text-7);
   --switch-option-color: var(--foreground);
   --switch-option-size: var(--fontSizeSm);
   --switch-option-line-height: 1.5;
@@ -785,6 +788,7 @@
   --input-image-add-hover-border: var(--primary);
   --input-image-add-hover-color: var(--primary);
   --input-image-danger: var(--destructive);
+  --input-image-error-bg: var(--colors-error-5);
   --input-image-error-font-size: 10px;
   --input-image-add-icon-size: 24px;
   --input-image-gap: var(--gap-base);
@@ -811,14 +815,14 @@
   --tooltip-attr-fg: var(--white);
   --tooltip-attr-gap: var(--gap-sm);
 
-  --success-bg: oklch(0.96 0.03 145);
-  --success-border: oklch(0.84 0.07 145);
-  --warning-bg: oklch(0.97 0.03 75);
-  --warning-border: oklch(0.86 0.08 75);
-  --info-bg: oklch(0.96 0.02 230);
-  --info-border: oklch(0.84 0.05 230);
-  --error-bg: oklch(0.97 0.02 25);
-  --error-border: oklch(0.86 0.07 25);
+  --success-bg: var(--colors-success-10);
+  --success-border: var(--colors-success-8);
+  --warning-bg: var(--colors-warning-10);
+  --warning-border: var(--colors-warning-8);
+  --info-bg: var(--colors-info-10);
+  --info-border: var(--colors-info-8);
+  --error-bg: var(--colors-error-10);
+  --error-border: var(--colors-error-8);
 }
 
 [data-density="compact"] {
@@ -899,19 +903,19 @@
   --secondary-foreground: var(--colors-neutral-text-2);
   --muted: var(--colors-neutral-fill-10);
   --muted-foreground: var(--colors-neutral-text-6);
-  --cal-between-bg: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --cal-between-bg: var(--colors-neutral-fill-8);
   --date-range-sep: var(--colors-neutral-line-7);
   --cal-picker-cancel: var(--colors-neutral-text-7);
   --cal-picker-title: var(--colors-neutral-text-2);
   --cal-bar: var(--colors-neutral-text-7);
-  --select-option-hover-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+  --select-option-hover-bg: var(--colors-neutral-fill-9);
   --select-option-active-color: var(--link-color);
   --dropdown-item-disabled: var(--colors-neutral-text-6);
   --dropdown-group-color: var(--colors-neutral-text-7);
   --select-group-color: var(--colors-neutral-text-7);
   --select-search-icon-color: var(--colors-neutral-text-7);
   --select-check-border: var(--colors-neutral-line-8);
-  --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
+  --select-chip-hover-bg: var(--colors-neutral-fill-9);
   --select-chip-close: var(--colors-neutral-text-7);
   --tooltip-border: 1px solid var(--colors-neutral-line-9);
   --tag-rounded-border: var(--colors-neutral-line-8);
@@ -926,16 +930,16 @@
   --file-drag-icon-color: var(--colors-neutral-line-7);
   --file-progress-bg: var(--colors-neutral-fill-9);
   --number-enhance-color: var(--colors-neutral-text-4);
-  --accent: color-mix(in oklch, var(--primary) 18%, var(--card));
+  --accent: var(--colors-neutral-fill-9);
   --accent-foreground: var(--colors-neutral-text-2);
-  --destructive: oklch(0.65 0.19 25);
-  --destructive-foreground: oklch(0.99 0.01 20);
-  --success: oklch(0.68 0.14 145);
-  --success-foreground: oklch(0.18 0.04 145);
-  --warning: oklch(0.76 0.14 70);
-  --warning-foreground: oklch(0.22 0.05 55);
-  --info: oklch(0.7 0.1 230);
-  --info-foreground: oklch(0.18 0.04 230);
+  --destructive: var(--colors-error-5);
+  --destructive-foreground: var(--white);
+  --success: var(--colors-success-5);
+  --success-foreground: var(--black);
+  --warning: var(--colors-warning-5);
+  --warning-foreground: var(--black);
+  --info: var(--colors-info-5);
+  --info-foreground: var(--black);
   --ring: var(--primary);
   --sidebar: var(--colors-neutral-fill-canvas);
   --sidebar-foreground: var(--colors-neutral-text-2);
@@ -945,30 +949,30 @@
   --sidebar-ring: var(--primary);
   --code: var(--colors-neutral-fill-canvas);
   --code-foreground: var(--colors-neutral-text-4);
-  --success-bg: oklch(0.28 0.05 145);
-  --success-border: oklch(0.4 0.08 145);
-  --warning-bg: oklch(0.3 0.05 70);
-  --warning-border: oklch(0.42 0.08 70);
-  --info-bg: oklch(0.28 0.04 230);
-  --info-border: oklch(0.4 0.06 230);
-  --error-bg: oklch(0.28 0.05 25);
-  --error-border: oklch(0.42 0.08 25);
+  --success-bg: var(--colors-success-10);
+  --success-border: var(--colors-success-8);
+  --warning-bg: var(--colors-warning-10);
+  --warning-border: var(--colors-warning-8);
+  --info-bg: var(--colors-info-10);
+  --info-border: var(--colors-info-8);
+  --error-bg: var(--colors-error-10);
+  --error-border: var(--colors-error-8);
   --image-title-color: var(--colors-neutral-text-4);
   --image-caption-color: var(--colors-neutral-text-4);
   --button-secondary-foreground: #151b26;
   --button-dark-foreground: #151b26;
-  --button-light: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --button-light: var(--colors-neutral-fill-8);
   --button-light-foreground: var(--link-color);
-  --button-light-hover: color-mix(in oklch, var(--primary) 42%, var(--card));
-  --button-light-active: color-mix(in oklch, var(--primary) 52%, var(--card));
+  --button-light-hover: var(--colors-neutral-fill-7);
+  --button-light-active: var(--colors-neutral-fill-6);
   --list-bg: var(--card);
-  --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
+  --list-item-checked-bg: var(--colors-neutral-fill-8);
   --list-item-checked-color: var(--link-color);
   --list-item-checked-border: var(--primary);
-  --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
-  --table-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
-  --table-modified-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
-  --table-modified-border: color-mix(in oklch, var(--primary) 32%, var(--card));
+  --list-item-hover-bg: var(--colors-neutral-fill-9);
+  --table-hover-bg: var(--colors-neutral-fill-9);
+  --table-modified-bg: var(--colors-neutral-fill-9);
+  --table-modified-border: var(--colors-neutral-fill-8);
   --table-modified-color: var(--link-color);
   --table-unsaved-heading-bg: var(--fill-10);
   --table-fixed-left-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.45);
@@ -977,8 +981,13 @@
   --control-disabled-color: var(--colors-neutral-text-5);
   --checkbox-icon-color: var(--colors-neutral-text-2);
   --checkbox-disabled-icon: var(--colors-neutral-text-6);
-  --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.08) c h);
-  --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
+  --checkbox-checked-hover: var(--colors-brand-6);
+  --checkbox-checked-active: var(--colors-brand-4);
+  --control-focus-glow: 0 0 0 3px var(--colors-brand-7);
+  --switch-spinner-track: var(--colors-neutral-text-6);
+  --panel-heading-bg: var(--colors-neutral-fill-9);
+  --panel-heading-color: var(--colors-neutral-text-4);
+  --input-image-error-bg: var(--colors-error-5);
   --radio-button-disabled-checked-bg: var(--colors-neutral-fill-8);
   --radio-button-disabled-checked-border: var(--colors-neutral-line-7);
   /* Amis 深色：轨道 neutral-fill-7 / hover fill-6，滑块浅色；选中仍走主题 primary。 */
@@ -996,21 +1005,95 @@
 .dark[data-theme="dark"] {
   --primary-hover: var(--colors-brand-4);
   --primary-active: var(--colors-brand-6);
+  --checkbox-checked-hover: var(--colors-brand-4);
+  --checkbox-checked-active: var(--colors-brand-6);
 }
 
+/*
+ * 双轨：默认 token 全是 hex 色阶（旧 WebView）。oklch / color-mix 只在能解析时覆盖。
+ * 浅色选择器带 :not(.dark)，避免 [data-theme] 把深色宿主盖回浅色画布。
+ */
 @supports (color: oklch(0 0 0)) {
-  :root {
+  :root:not(.dark),
+  [data-theme]:not(.dark) {
+    --background: oklch(0.97 0.008 250);
+    --secondary: oklch(0.945 0.01 250);
+    --secondary-foreground: oklch(0.28 0.03 258);
+    --muted: oklch(0.955 0.01 250);
+    --accent: oklch(0.94 0.018 var(--accent-h));
+    --accent-foreground: oklch(0.28 0.04 var(--accent-h));
+    --sidebar: oklch(0.22 0.04 258);
+    --sidebar-foreground: oklch(0.93 0.015 250);
+    --sidebar-primary: oklch(0.72 0.12 var(--accent-h));
+    --sidebar-primary-foreground: oklch(0.2 0.03 258);
+    --sidebar-accent: oklch(0.3 0.035 258);
+    --sidebar-accent-foreground: oklch(0.93 0.015 250);
+    --sidebar-border: oklch(0.32 0.03 258);
+    --sidebar-ring: oklch(0.72 0.12 var(--accent-h));
+    --code: oklch(0.22 0.03 258);
+    --code-foreground: oklch(0.88 0.03 250);
+    --select-option-hover-bg: color-mix(in oklch, var(--primary) 20%, white);
+    --select-chip-hover-bg: color-mix(in oklch, var(--primary) 12%, white);
+    --list-item-hover-bg: color-mix(in oklch, var(--primary) 8%, var(--card));
+    --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+    --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.16) c h);
+    --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
+    --success-bg: oklch(0.96 0.03 145);
+    --success-border: oklch(0.84 0.07 145);
+    --warning-bg: oklch(0.97 0.03 75);
+    --warning-border: oklch(0.86 0.08 75);
+    --info-bg: oklch(0.96 0.02 230);
+    --info-border: oklch(0.84 0.05 230);
+    --error-bg: oklch(0.97 0.02 25);
+    --error-border: oklch(0.86 0.07 25);
+    --switch-spinner-track: color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
+    --input-image-error-bg: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
+    --panel-heading-bg: color-mix(in oklch, var(--muted) 55%, var(--card));
+    --panel-heading-color: color-mix(in oklch, var(--foreground) 72%, transparent);
     --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
     --primary-active: color-mix(in oklch, var(--primary) 82%, black);
-    /* focus glow / ring 跟 applied `--primary`，不要钉 brand-5：@supports :root 会压过 `.dark --ring`。 */
     --ring: var(--primary);
     --link-hover-color: oklch(from var(--primary) calc(l + 0.16) c h);
   }
-  /* 暗底文字链接需要比实色按钮更亮；只提升文字，不改品牌主色本身。 */
   .dark {
     --link-color: oklch(from var(--primary) calc(l + 0.16) c h);
     --link-hover-color: oklch(from var(--primary) calc(l + 0.24) c h);
     --ring: var(--primary);
+    --cal-between-bg: color-mix(in oklch, var(--primary) 32%, var(--card));
+    --select-option-hover-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+    --select-chip-hover-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
+    --accent: color-mix(in oklch, var(--primary) 18%, var(--card));
+    --destructive: oklch(0.65 0.19 25);
+    --destructive-foreground: oklch(0.99 0.01 20);
+    --success: oklch(0.68 0.14 145);
+    --success-foreground: oklch(0.18 0.04 145);
+    --warning: oklch(0.76 0.14 70);
+    --warning-foreground: oklch(0.22 0.05 55);
+    --info: oklch(0.7 0.1 230);
+    --info-foreground: oklch(0.18 0.04 230);
+    --success-bg: oklch(0.28 0.05 145);
+    --success-border: oklch(0.4 0.08 145);
+    --warning-bg: oklch(0.3 0.05 70);
+    --warning-border: oklch(0.42 0.08 70);
+    --info-bg: oklch(0.28 0.04 230);
+    --info-border: oklch(0.4 0.06 230);
+    --error-bg: oklch(0.28 0.05 25);
+    --error-border: oklch(0.42 0.08 25);
+    --button-light: color-mix(in oklch, var(--primary) 32%, var(--card));
+    --button-light-hover: color-mix(in oklch, var(--primary) 42%, var(--card));
+    --button-light-active: color-mix(in oklch, var(--primary) 52%, var(--card));
+    --list-item-checked-bg: color-mix(in oklch, var(--primary) 22%, var(--card));
+    --list-item-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+    --table-hover-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+    --table-modified-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+    --table-modified-border: color-mix(in oklch, var(--primary) 32%, var(--card));
+    --checkbox-checked-hover: oklch(from var(--primary) calc(l + 0.08) c h);
+    --checkbox-checked-active: oklch(from var(--primary) calc(l - 0.08) c h);
+    --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+    --switch-spinner-track: color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
+    --input-image-error-bg: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
+    --panel-heading-bg: color-mix(in oklch, var(--muted) 55%, var(--card));
+    --panel-heading-color: color-mix(in oklch, var(--foreground) 72%, transparent);
   }
 }
 
@@ -6182,7 +6265,7 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   display: block;
   width: var(--switch-spinner-size);
   height: var(--switch-spinner-size);
-  border: 2px solid color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
+  border: 2px solid var(--switch-spinner-track);
   border-top-color: var(--switch-spinner-color);
   border-radius: 50%;
   animation: vamis-spinner-spin 1s linear infinite;
@@ -7292,7 +7375,7 @@ html.theme-changing *::after {
   overflow: hidden;
   padding: 0 4px;
   border-radius: var(--borderRadiusSm);
-  background: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
+  background: var(--input-image-error-bg);
   color: var(--white);
   font-size: var(--input-image-error-font-size);
   line-height: 15px;
@@ -9344,7 +9427,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 [data-vamis-pagination].disabled [data-pagination='pager'] > li > a,
 [data-vamis-pagination].disabled [data-pagination='pager'] > li > span {
-  color: color-mix(in oklch, var(--foreground) 40%, transparent);
+  color: var(--pagination-disabled-color);
   cursor: not-allowed;
 }
 
@@ -9360,8 +9443,8 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 [data-vamis-panel-heading] {
   padding: var(--gap-sm, 8px) var(--gap-base, 12px);
-  background: color-mix(in oklch, var(--muted) 55%, var(--card));
-  color: color-mix(in oklch, var(--foreground) 72%, transparent);
+  background: var(--panel-heading-bg);
+  color: var(--panel-heading-color);
   border-bottom: 1px solid var(--border);
   border-radius: var(--radius) var(--radius) 0 0;
   box-sizing: border-box;
