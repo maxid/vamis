@@ -154,6 +154,27 @@ body,
   /* 旧内核不认 color-mix；兜底跟默认 callout 同色，不要拿 *-8 浅填充当边。 */
   border-color: var(--border);
 }
+.doc-side-pct {
+  flex-shrink: 0;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1.5;
+  text-transform: none;
+}
+.doc-side-pct--success {
+  color: var(--success);
+}
+.doc-side-pct--info {
+  color: var(--info);
+}
+.doc-side-pct--warning {
+  color: var(--warning);
+}
+.doc-side-pct--danger {
+  color: var(--destructive);
+}
 .doc-play {
   position: relative;
 }

@@ -446,6 +446,8 @@ describe('Amis width helpers', () => {
     const app = readFileSync(resolve(here, '../../../playground/src/App.vue'), 'utf8')
     expect(app).toContain('aria-label="预览视口"')
     expect(app).toContain("setDocViewport($event ? 'mobile' : 'desktop')")
+    expect(app).toContain('aria-label="侧栏进度"')
+    expect(app).toContain('setShowDocProgress')
     expect(readFileSync(resolve(here, '../../../playground/src/docs/doc-viewport.ts'), 'utf8')).toContain("ref<DocViewport>")
     expect(preview).not.toContain("path: '/preview-frame'")
     const frame = readFileSync(resolve(here, '../../../playground/src/views/PreviewFrame.vue'), 'utf8')

@@ -5,6 +5,7 @@ import { Button } from '@vamis/ui'
 import ChromeSwitch from './components/ChromeSwitch.vue'
 import SiteSearch from './components/SiteSearch.vue'
 import { withBase } from './docs/base'
+import { hydrateDocProgress, setShowDocProgress, showDocProgress } from './docs/doc-progress-pref'
 import { docViewport, hydrateDocViewport, setDocViewport } from './docs/doc-viewport'
 import { publishPreviewChrome, withoutThemeTransition } from './docs/preview-frame'
 
@@ -75,6 +76,7 @@ onMounted(() => {
   density.value = localStorage.getItem(DENSITY_KEY) === 'comfortable' ? 'comfortable' : 'compact'
   pack.value = parsePack(localStorage.getItem(PACK_KEY))
   hydrateDocViewport()
+  hydrateDocProgress()
   applyChrome()
 })
 
@@ -151,6 +153,13 @@ watch(
               on-text="移动"
               aria-label="预览视口"
               @update:model-value="setDocViewport($event ? 'mobile' : 'desktop')"
+            />
+            <ChromeSwitch
+              :model-value="showDocProgress"
+              off-text="隐藏"
+              on-text="进度"
+              aria-label="侧栏进度"
+              @update:model-value="setShowDocProgress($event)"
             />
           </div>
           <nav class="flex gap-2 text-sm">

@@ -2,7 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import FilterInput from './FilterInput.vue'
-import type { SideGroup } from '../docs/sidebar'
+import { averageProgress, progressTone } from '../docs/doc-progress'
+import { showDocProgress } from '../docs/doc-progress-pref'
+import type { SideGroup, SideLink } from '../docs/sidebar'
 
 const props = defineProps<{
   groups: SideGroup[]
@@ -21,6 +23,10 @@ function linkMatches(link: string, path: string, allowPrefix: boolean) {
   if (!allowPrefix) return false
   if (link === '/' || link === '/components' || link === '/style') return false
   return path.startsWith(`${link}/`)
+}
+
+function itemHaystack(item: SideLink) {
+  return `${item.text} ${item.link} ${item.progress ?? ''}`.toLowerCase()
 }
 
 watch(
@@ -42,12 +48,11 @@ const visible = computed(() => {
   return props.groups
     .map((group) => {
       if (isFlat(group)) {
-        return `${group.text} ${group.link}`.toLowerCase().includes(q) ? group : null
+        return `${group.text} ${group.link} ${group.progress ?? ''}`.toLowerCase().includes(q) ? group : null
       }
-      const items = (group.items || []).filter((item) =>
-        `${item.text} ${item.link}`.toLowerCase().includes(q),
-      )
-      return items.length ? { ...group, items } : null
+      const items = (group.items || []).filter((item) => itemHaystack(item).includes(q))
+      if (!items.length) return null
+      return { ...group, items, progress: averageProgress(items.map((item) => item.progress)) }
     })
     .filter((group): group is SideGroup => group != null)
 })
@@ -61,6 +66,10 @@ function isActive(link: string) {
   if (link === '/' || link === '/docs') return route.path === '/' || route.path === '/docs'
   return linkMatches(link, route.path, false)
 }
+
+function pctClass(percent: number) {
+  return `doc-side-pct doc-side-pct--${progressTone(percent)}`
+}
 </script>
 
 <template>
@@ -71,29 +80,40 @@ function isActive(link: string) {
         <div v-if="isFlat(group) && group.link" class="mb-1">
           <RouterLink
             :to="group.link"
-            class="block rounded-md px-2 py-1 text-foreground/80 hover:bg-accent"
+            class="flex items-center justify-between gap-2 rounded-md px-2 py-1 text-foreground/80 hover:bg-accent"
             :class="isActive(group.link) ? 'bg-primary text-primary-foreground hover:bg-primary' : ''"
           >
-            {{ group.text }}
+            <span class="min-w-0 flex-1">{{ group.text }}</span>
+            <span v-if="showDocProgress && group.progress != null" :class="pctClass(group.progress)">
+              {{ group.progress }}%
+            </span>
           </RouterLink>
         </div>
         <div v-else class="mb-3">
           <button
-            class="flex w-full items-center justify-between rounded-md px-2 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase"
+            class="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase"
             type="button"
             @click="open[group.text] = !isOpen(group.text)"
           >
-            {{ group.text }}
-            <span>{{ isOpen(group.text) ? '–' : '+' }}</span>
+            <span class="min-w-0 flex-1 truncate text-left">{{ group.text }}</span>
+            <span class="flex shrink-0 items-center gap-1.5">
+              <span v-if="showDocProgress && group.progress != null" :class="pctClass(group.progress)">
+                {{ group.progress }}%
+              </span>
+              <span>{{ isOpen(group.text) ? '–' : '+' }}</span>
+            </span>
           </button>
           <ul v-show="isOpen(group.text)" class="mt-1 space-y-0.5">
             <li v-for="item in group.items" :key="item.link">
               <RouterLink
                 :to="item.link"
-                class="block rounded-md px-2 py-1 text-foreground/80 hover:bg-accent"
+                class="flex items-center justify-between gap-2 rounded-md px-2 py-1 text-foreground/80 hover:bg-accent"
                 :class="isActive(item.link) ? 'bg-primary text-primary-foreground hover:bg-primary' : ''"
               >
-                {{ item.text }}
+                <span class="min-w-0 flex-1">{{ item.text }}</span>
+                <span v-if="showDocProgress && item.progress != null" :class="pctClass(item.progress)">
+                  {{ item.progress }}%
+                </span>
               </RouterLink>
             </li>
           </ul>
