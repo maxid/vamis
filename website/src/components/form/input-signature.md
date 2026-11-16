@@ -5,7 +5,7 @@ outline: deep
 
 # InputSignature 签名面板
 
-::: warning 实现进度 35% · 进行中
+::: danger 实现进度 35% · 进行中
 **精简**：canvas 涂鸦，无压感/导出配置
 :::
 

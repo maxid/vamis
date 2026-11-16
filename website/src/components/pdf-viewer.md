@@ -5,7 +5,7 @@ outline: deep
 
 # PDFViewer
 
-::: warning 实现进度 10% · 进行中
+::: danger 实现进度 10% · 进行中
 **占位**：ViewerStub
 :::
 

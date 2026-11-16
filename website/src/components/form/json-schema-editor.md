@@ -5,7 +5,7 @@ outline: deep
 
 # JsonSchema Editor
 
-::: warning 实现进度 30% · 进行中
+::: danger 实现进度 30% · 进行中
 `json-schema` 别名，无 schema 编辑器
 :::
 

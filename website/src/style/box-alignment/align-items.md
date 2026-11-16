@@ -6,7 +6,7 @@ title: Align Items
 
 # Align Items
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Align Items：`items-start` / `end` / `center` / `baseline` / `stretch` 落在同一元素的 `align-items`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。stretch 高 112px。
 :::
 

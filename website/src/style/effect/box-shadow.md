@@ -6,7 +6,7 @@ title: Box Shadow
 
 # Box Shadow
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Box Shadow：`shadow` / `md` / `lg` 的层数和 alpha 与 helper 一致（不是 TW v4）。独立样例 + 组合；补 `shadow-xl` / `2xl` / `inner` 与 `m:` / `pc:`。Amis 做了 hover 矩阵。
 :::
 

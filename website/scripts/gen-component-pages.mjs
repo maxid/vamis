@@ -459,14 +459,17 @@ function pageMarkdown(item, group) {
   const progress = rec?.progress || '—'
   const reason = rec?.reason || '已按 type 注册；文档主路径仍在补齐。'
   const yaml = wrapPage(widgetYaml(type || 'tpl', role), type || 'tpl', role)
+  const pct = Number.parseInt(progress, 10)
   const callout =
     status === '已完成'
       ? 'tip'
       : status === '未开始'
         ? 'danger'
-        : Number.parseInt(progress, 10) >= 50
+        : Number.isFinite(pct) && pct >= 80
           ? 'info'
-          : 'warning'
+          : Number.isFinite(pct) && pct >= 40
+            ? 'warning'
+            : 'danger'
 
   return `---
 title: ${item.text}

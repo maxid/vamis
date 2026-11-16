@@ -6,7 +6,7 @@ title: List Style Type
 
 # List Style Type
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis List Style：`list-none` / `disc` / `decimal` 改 `list-style-type`，`list-inside` / `outside` 改 `list-style-position`。独立样例 + 组合；`m:` / `pc:` 已进 helper。
 :::
 

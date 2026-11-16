@@ -5,7 +5,7 @@ outline: deep
 
 # InputFormula 公式编辑器
 
-::: warning 实现进度 30% · 进行中
+::: danger 实现进度 30% · 进行中
 **精简**：复用 Formula，无公式编辑器 UI
 :::
 

@@ -5,7 +5,7 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: info 实现进度 82% · 进行中
+::: warning 实现进度 65% · 进行中
 主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
 :::
 

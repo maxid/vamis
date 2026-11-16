@@ -6,7 +6,7 @@ title: Justify Content
 
 # Justify Content
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Justify Content：`justify-start` / `end` / `center` / `between` / `around` / `evenly` 落在同一元素的 `justify-content`（`flex-start` / `flex-end`，不是 Tailwind `start` / `end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

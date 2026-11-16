@@ -6,7 +6,7 @@ title: Flex Direction
 
 # Flex Direction
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Flex Direction：`flex-row` / `flex-row-reverse` / `flex-col` / `flex-col-reverse` 落在同一元素的 `flex-direction`。独立样例 + 四向组合；`m:` / `pc:`（含 reverse）已进 helper，不支持状态前缀。
 :::
 

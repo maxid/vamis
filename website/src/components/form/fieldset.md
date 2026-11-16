@@ -5,7 +5,7 @@ outline: deep
 
 # FieldSet 表单项集合
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能分组折叠
 :::
 

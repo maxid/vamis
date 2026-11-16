@@ -5,8 +5,8 @@ outline: deep
 
 # Wizard 向导
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`steps` 的 title/body、默认「上一步 / 下一步 / 完成」、最后一步改完成、`startStep` 从 1 计、`mode` 默认 horizontal、步骤表单 `wrapWithPanel: false`。缺 `initApi` / `api` 提交、自定义 `actions` 接到 prev/next、`jumpableOn` 像素级步骤条。
+::: warning 实现进度 50% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`steps` 的 title/body、默认「上一步 / 下一步 / 完成」、最后一步改完成、`startStep` 从 1 计、`mode` 默认 horizontal、步骤表单 `wrapWithPanel: false`。缺 `initApi` / `api` 提交、自定义 `actions` 接到 prev/next、`jumpableOn` 像素级步骤条。
 :::
 
 表单向导。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

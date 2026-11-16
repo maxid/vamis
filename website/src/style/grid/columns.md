@@ -6,7 +6,7 @@ title: Grid Template Columns
 
 # Grid Template Columns
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Grid Template Columns：`grid-cols-1`…`12` / `grid-cols-none` 落在同一元素的 `grid-template-columns`。独立样例 + 四行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

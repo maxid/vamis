@@ -5,8 +5,8 @@ outline: deep
 
 # Panel 面板
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、`Panel--primary` 等色档、移动端 `Panel--form`。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、`Panel--primary` 等色档、移动端 `Panel--form`。
 :::
 
 可以把相关信息以面板的形式展示到一块。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

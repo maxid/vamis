@@ -5,7 +5,7 @@ outline: deep
 
 # InputKV 键值对
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能增删 KV
 :::
 

@@ -15,7 +15,7 @@ Amis 是百度开源的 JSON 低代码框架：用一份 schema 描述后台页�
 过去三周，我把这套运行时用 Vue 3 重写了一遍，取名 **Vamis**，今天开源 alpha：
 
 - Amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 和 `navigation` 1 个别名；
-- 侧栏 155 个组件，**语义平均 67%**，`container` / `toast` 两个到 100%；
+- 侧栏 155 个组件，**语义平均 62%**，`container` / `hidden` / `toast` 三个到 100%；
 - `VamisRoot`（Vue）和 `vamis.embed`（任意 HTML）两条入口，同一套内核；
 - YAML 与 JSON 双作者态，信封对齐 LCDP IR；
 - 941 个单测，1386 条 Playwright 并排对照用例，P0 8 条 helper 差异（均为 `m-l-*`）；
@@ -215,7 +215,7 @@ pnpm dev        # http://127.0.0.1:5173
 
 这一节建议所有 alpha 项目都写，而且写在显眼位置。
 
-- **平均语义 67%，不是 100%。** 155 个侧栏组件里只有 `container` 和 `toast` 到 100%；`table` 55%、`crud` 65%、`diff-editor` 65%。
+- **平均语义 62%，不是 100%。** 155 个侧栏组件里只有 `container` / `hidden` / `toast` 到 100%；大量布局壳停在 40–70%，不要把「主路径 + 缺 themeCss」说成 80%+。
 - **还有 3 个 Amis type 和 2 个别名没注册。** 未知 type 会显示占位，不会崩，但也不是实现。
 - **D6 的 combo 独立数据域、D8 的诊断/错误边界、D7 的渲染器 API 余项仍缺。** 复杂表单路径值、调试面板、动作日志都不完整。
 - **没有插件市场。** `@vamis/editor` 只是可视化骨架，不是 amis-editor。

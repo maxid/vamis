@@ -5,7 +5,7 @@ outline: deep
 
 # Formula 公式
 
-::: info 实现进度 65% · 进行中
+::: warning 实现进度 65% · 进行中
 `formula` 表达式求值并写回 `name` 字段、`initSet` 初始化应用、`autoSet` 自动监听字段变化、`condition` 条件应用、`id` + 按钮 `target` 手动应用。缺表达式层与 Formula 编辑器（input-formula）统一（D2）。
 :::
 

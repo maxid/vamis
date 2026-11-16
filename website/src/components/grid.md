@@ -5,8 +5,8 @@ outline: deep
 
 # Grid 水平分栏
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal`。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal`。
 :::
 
 12 栏水平分栏，对齐 Amis 同名 schema（flex 栅格，不是 CSS `display:grid`）。未写 `md` 时各列均分。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

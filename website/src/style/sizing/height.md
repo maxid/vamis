@@ -6,7 +6,7 @@ title: Height
 
 # Height
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Height：`h-*` / `min-h-*` / `max-h-*` 落在同一元素的 `height` / `min-height` / `max-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`h-none` / `h-18` 已对齐；`max-h-none` 与 Amis 一样是 `max-height: 0`。
 :::
 

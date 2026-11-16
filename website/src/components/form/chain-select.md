@@ -5,7 +5,7 @@ outline: deep
 
 # ChainedSelect 链式下拉框
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能链式选；api 级联精简
 :::
 

@@ -5,7 +5,7 @@ outline: deep
 
 # Picker 列表选择器
 
-::: info 实现进度 84% · 进行中
+::: warning 实现进度 65% · 进行中
 静态 `options`、`multiple`、弹层搜索 / 确认 / 取消、`embed` 内嵌、`maxTagCount`、`clearable`、`joinValues` / `delimiter`、`labelField` / `valueField`。缺 `pickerSchema` 自定义弹层、远程 `source`、分页 / 分组 / 树选择。
 :::
 

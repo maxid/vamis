@@ -5,7 +5,7 @@ outline: deep
 
 # Log 实时日志
 
-::: warning 实现进度 25% · 进行中
+::: danger 实现进度 25% · 进行中
 **精简**：静态分行，无轮询/ANSI
 :::
 

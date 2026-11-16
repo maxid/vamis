@@ -6,7 +6,7 @@ title: Align Content
 
 # Align Content
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Align Content：`content-start` / `end` / `center` / `between` / `around` / `evenly` 落在同一元素的 `align-content`（`flex-start` / `flex-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `content-stretch`。
 :::
 

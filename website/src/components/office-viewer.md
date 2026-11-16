@@ -5,7 +5,7 @@ outline: deep
 
 # OfficeViewer Word
 
-::: warning 实现进度 10% · 进行中
+::: danger 实现进度 10% · 进行中
 **占位**：同一 type + `excelOptions`，同样未接入
 :::
 

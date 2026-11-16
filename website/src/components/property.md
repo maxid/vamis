@@ -5,7 +5,7 @@ outline: deep
 
 # Property 属性表
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能出 label/content
 :::
 

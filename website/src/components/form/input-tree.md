@@ -5,7 +5,7 @@ outline: deep
 
 # InputTree 树形选择框
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能勾树；懒加载/检索未齐
 :::
 

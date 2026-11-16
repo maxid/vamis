@@ -6,7 +6,7 @@ title: Justify Items
 
 # Justify Items
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Justify Items：`justify-items-auto` / `start` / `end` / `center` / `stretch` 落在同一元素的 `justify-items`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。auto 与 stretch 格宽 152px。
 :::
 

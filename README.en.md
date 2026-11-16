@@ -15,7 +15,7 @@ Vamis is an **Amis-compatible** JSON/YAML low-code runtime, reimplemented in Vue
 ![Vamis editor: component tree, live preview, properties and YAML/IR](assets/readme/editor.png)
 
 > [!WARNING]
-> **Early alpha. Unofficial project, not affiliated with Baidu.** 185/189 Amis component types are registered, but average semantic parity across the 155 sidebar components is **67%**. Use it for evaluation and feedback, not for critical production yet.
+> **Early alpha. Unofficial project, not affiliated with Baidu.** 185/189 Amis component types are registered, but average semantic parity across the 155 sidebar components is **62%**. Use it for evaluation and feedback, not for critical production yet.
 
 ## Why Vamis
 
@@ -153,10 +153,10 @@ Playwright mounts the same schema with `amis.embed` and `vamis.embed` side by si
 
 Progress is public: docs pages show implementation percentages, and every task updates `CONTEXT.md`.
 
-## Status (2026-11-15)
+## Status (2026-11-16)
 
 - Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
-- 155 sidebar components: **3 complete** (`container`, `hidden`, `toast`), 152 in progress, **67% average** semantic parity.
+- 155 sidebar components: **3 complete** (`container`, `hidden`, `toast`), 152 in progress, **62% average** semantic parity (47 at ≥80%).
 - Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 error boundary and D8 diagnostics are still missing.
 - Tests: formula 185 + core 676 + sdk 80 = **941 passing**; `pnpm typecheck` still reports 68 errors.
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.

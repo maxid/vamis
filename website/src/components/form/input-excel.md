@@ -5,7 +5,7 @@ outline: deep
 
 # InputExcel Excel 解析
 
-::: warning 实现进度 20% · 进行中
+::: danger 实现进度 20% · 进行中
 **精简**：只记文件名/大小，不解析表格
 :::
 

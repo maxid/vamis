@@ -4,7 +4,7 @@ title: 样式
 
 # 样式
 
-::: info 实现进度 75% · 进行中
+::: warning 实现进度 75% · 进行中
 文档主路径已对齐 Amis「样式」基本使用：`className` helper、`cssVars`、密度、FormItem `size`、默认自适应、指向 `/style` 辅助类。JSON 与 YAML 同等有效。色盘表、Panel 像素级、`registerTheme` 仍是 D12。
 :::
 

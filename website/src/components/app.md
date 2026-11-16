@@ -5,8 +5,8 @@ outline: deep
 
 # App 多页应用
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`pages` 分组 / 相对 `url` 拼父级、`schema` 内嵌、`link` 外链、`visible: false` 不进菜单、`isDefaultPage` 当 404、`brandName` / `logo`、`header` / `asideBefore` / `asideAfter` / `footer`。缺 hash 路由、`keepPageHistory`、`schemaApi` / `api` 拉 pages、`redirect` / `rewrite`。
+::: warning 实现进度 55% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`pages` 分组 / 相对 `url` 拼父级、`schema` 内嵌、`link` 外链、`visible: false` 不进菜单、`isDefaultPage` 当 404、`brandName` / `logo`、`header` / `asideBefore` / `asideAfter` / `footer`。缺 hash 路由、`keepPageHistory`、`schemaApi` / `api` 拉 pages、`redirect` / `rewrite`。
 :::
 
 用于实现多页应用，适合全屏模式；只做局部渲染请用 [Page](/components/page)。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

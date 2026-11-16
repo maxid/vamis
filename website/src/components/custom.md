@@ -5,7 +5,7 @@ outline: deep
 
 # Custom 自定义组件
 
-::: warning 实现进度 15% · 进行中
+::: danger 实现进度 15% · 进行中
 **占位**：`html` 直通或渲染 `body`，不执行 onMount JS
 :::
 

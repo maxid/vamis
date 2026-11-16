@@ -5,7 +5,7 @@ outline: deep
 
 # API
 
-::: tip 实现进度 92% · 已完成
+::: info 实现进度 92% · 已完成
 kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。P1：`qsOptions`、全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
 :::
 

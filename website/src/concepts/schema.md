@@ -4,7 +4,7 @@ title: 配置与组件
 
 # 配置与组件
 
-::: tip 实现进度 95% · 已完成
+::: info 实现进度 95% · 已完成
 文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。`LazyComponent` 用法写在本页。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
 :::
 

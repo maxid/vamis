@@ -5,7 +5,7 @@ outline: deep
 
 # Date 日期时间
 
-::: info 实现进度 60% · 进行中
+::: warning 实现进度 60% · 进行中
 StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐
 :::
 

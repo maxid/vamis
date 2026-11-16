@@ -11,11 +11,11 @@ export function parseDocProgress(raw: string): number | undefined {
   return Number.isFinite(n) ? n : undefined
 }
 
-/** 对齐站点 banner：100% 成功、≥50 info、不足 50 warning、0 danger。 */
+/** 对齐进度档位：100% 成功、≥80 接近标准、≥40 主路径、其余占位/精简。 */
 export function progressTone(percent: number): ProgressTone {
   if (percent >= 100) return 'success'
-  if (percent >= 50) return 'info'
-  if (percent > 0) return 'warning'
+  if (percent >= 80) return 'info'
+  if (percent >= 40) return 'warning'
   return 'danger'
 }
 

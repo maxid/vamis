@@ -5,8 +5,8 @@ outline: deep
 
 # Collapse 折叠器
 
-::: info 实现进度 85% · 进行中
-文档主路径已对齐：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。Form 里 `enableFieldSetStyle` 只切 class。缺 `mountOnEnter` / `unmountOnExit`、`expand`·`collapse` 动作、FieldSet 像素级。
+::: warning 实现进度 70% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。Form 里 `enableFieldSetStyle` 只切 class。缺 `mountOnEnter` / `unmountOnExit`、`expand`·`collapse` 动作、FieldSet 像素级。
 :::
 
 一组可展开的面板。对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

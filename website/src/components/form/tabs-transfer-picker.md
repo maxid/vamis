@@ -5,7 +5,7 @@ outline: deep
 
 # TabsTransferPicker
 
-::: warning 实现进度 35% · 进行中
+::: danger 实现进度 35% · 进行中
 `tabs-transfer` 别名
 :::
 

@@ -4,7 +4,7 @@ title: 辅助类-状态样式
 
 # 辅助类-状态样式
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis `/style/state`：`hover:` / `active:`（含 `.is-active`）/ `focus:` / `disabled:` / `group-hover:`，以及 `pc:hover:` / `m:hover:`。色值走 Amis helper 色阶（`text-light` `#f8f9fa`、`bg-pink-400` `#f472b6`）。HTML 岛内 `<button class="Button">` 还原 UA 边框，不搬 `cxd-Button`。
 :::
 

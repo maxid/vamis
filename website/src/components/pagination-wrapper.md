@@ -5,8 +5,8 @@ outline: deep
 
 # PaginationWrapper 分页容器
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`inputName` / `outputName` 客户端切片、`perPage`、`position`（top / bottom / none）、内嵌 `pagination`、`currentPage` / `lastPage` 下发。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`inputName` / `outputName` 客户端切片、`perPage`、`position`（top / bottom / none）、内嵌 `pagination`、`currentPage` / `lastPage` 下发。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10。
 :::
 
 分页容器，对已有列表做客户端切片。默认读作用域里的 `items`，切完写回 `outputName`（默认也是 `items`）。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

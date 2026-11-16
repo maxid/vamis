@@ -6,7 +6,7 @@ title: Width
 
 # Width
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Width：`w-*` / `min-w-*` / `max-w-*` 落在同一元素的 `width` / `min-width` / `max-width`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`w-none` / `w-18` / `w-1x` 已对齐；`w-16` = 64px，`w-1/2` 在 `w-80` 舞台里 160px。
 :::
 

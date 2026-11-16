@@ -5,7 +5,7 @@ outline: deep
 
 # Table View 表格视图
 
-::: info 实现进度 85% · 进行中
+::: warning 实现进度 65% · 进行中
 对照 7 例盒模型已齐：边框/内边距 token、`colspan`/`rowspan`、`caption` 居中。缺编辑器拖格子。
 :::
 

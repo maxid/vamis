@@ -6,7 +6,7 @@ title: Text Overflow
 
 # Text Overflow
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Text Overflow：`truncate` / `overflow-ellipsis` / `overflow-clip` 落在同一元素的 `text-overflow`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `text-clip`。
 :::
 

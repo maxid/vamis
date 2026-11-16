@@ -4,7 +4,7 @@ title: 联动
 
 # 联动
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 文档主路径已对齐 Amis「联动」：`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、`name?a=${a}`、逗号多目标、动态 `target` / `name`、`clearValueOnHidden`。JSON 与 YAML 同等有效。
 :::
 

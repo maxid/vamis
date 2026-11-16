@@ -5,8 +5,8 @@ outline: deep
 
 # switch-container 状态容器
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`items[].body` / `visibleOn` 取首个命中状态、`style`、宿主 `click` / `mouseenter` / `mouseleave`。缺 `themeCss`、`switchTo` 动作。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`items[].body` / `visibleOn` 取首个命中状态、`style`、宿主 `click` / `mouseenter` / `mouseleave`。缺 `themeCss`、`switchTo` 动作。
 :::
 
 状态容器按动态数据只渲染**一种**状态：扫描 `items`，显示第一个 `visibleOn` 命中的项。不同状态是各自的展示配置，可任意嵌套。外观和指针事件与 [Container](/components/container) 同类。

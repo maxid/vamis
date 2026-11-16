@@ -5,7 +5,7 @@ outline: deep
 
 # ButtonGroupSelect 按钮点选
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能选值；多选/自适应未齐
 :::
 

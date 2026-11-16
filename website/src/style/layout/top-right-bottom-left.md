@@ -6,7 +6,7 @@ title: Top / Right / Bottom / Left
 
 # Top / Right / Bottom / Left
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Top / Right / Bottom / Left：`top|right|bottom|left|inset|inset-x|inset-y` 落在同一元素、同一计算值。独立样例 + 含块边/角组合；档位与 Amis `$inset` 同表；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

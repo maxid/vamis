@@ -6,7 +6,7 @@ title: Floats
 
 # Floats
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Floats：`w-32 m-4` + `pc:float-left|right|none`，盒模型为 128px 宽、margin 1rem、≥768px 才 float。支持 `m:` / `pc:`，不支持状态前缀。
 :::
 

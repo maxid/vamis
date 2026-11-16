@@ -5,8 +5,8 @@ outline: deep
 
 # AnchorNav 锚点导航
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`links[].title` / `body`、垂直方向 `children` 展平、`direction: horizontal`、`active` 用 href 或索引。缺滚动监听自动高亮、区域默认 `className` 皮肤。
+::: warning 实现进度 55% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`links[].title` / `body`、垂直方向 `children` 展平、`direction: horizontal`、`active` 用 href 或索引。缺滚动监听自动高亮、区域默认 `className` 皮肤。
 :::
 
 锚点导航容器：左侧（或顶部）点一项，内容区滚到对应块。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

@@ -5,8 +5,8 @@ outline: deep
 
 # Flex 布局
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、树级 `envOverwrite`（只合本节点 `mobile`）。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、树级 `envOverwrite`（只合本节点 `mobile`）。
 :::
 
 基于 CSS Flex 的布局。对齐 Amis 同名 schema。默认主轴 `center`、交叉轴 `stretch`（与 Amis `defaultProps` 一致）。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

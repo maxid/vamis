@@ -6,7 +6,7 @@ title: Text Decoration
 
 # Text Decoration
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Text Decoration：`underline` / `line-through` / `no-underline` 用简写 `text-decoration`。独立样例 + 组合；`m:` / `pc:` 已进 helper。Amis 没有 `overline`。
 :::
 

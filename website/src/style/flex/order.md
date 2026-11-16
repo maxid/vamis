@@ -6,7 +6,7 @@ title: Flex Order
 
 # Flex Order
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Flex Order：`order-1`…`order-12` / `order-first` / `order-last` 落在同一元素的 `order`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

@@ -5,8 +5,8 @@ outline: deep
 
 # Card 卡片
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`header` / `body` / `actions` / `href` / `itemAction` / `media` / `toolbar` / `secondary`、标签 / 按钮 / 文本 / 单元格章节与配置工具栏。缺 `themeCss`、Cards 拖拽排序。
+::: warning 实现进度 70% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`header` / `body` / `actions` / `href` / `itemAction` / `media` / `toolbar` / `secondary`、标签 / 按钮 / 文本 / 单元格章节与配置工具栏。缺 `themeCss`、Cards 拖拽排序。
 :::
 
 单张卡片。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

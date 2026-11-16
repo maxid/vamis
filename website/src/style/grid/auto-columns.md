@@ -6,7 +6,7 @@ title: Grid Auto Columns
 
 # Grid Auto Columns
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Grid Auto Columns：`auto-cols-auto` / `min` / `max` / `fr` 落在同一元素的 `grid-auto-columns`。独立样例 + 四档组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`auto-cols-fr` 三列均分 96px。
 :::
 

@@ -6,7 +6,7 @@ title: Grid Column Start / End
 
 # Grid Column Start / End
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Grid Column Start / End：`col-span-*` / `col-start-*` / `col-end-*` 落在同一元素的 `grid-column` / `grid-column-start` / `grid-column-end`。独立样例 + 组合；`col-span-11` 与 Amis 一样是 `span 11 / span 1`；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

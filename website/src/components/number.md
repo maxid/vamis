@@ -5,7 +5,7 @@ outline: deep
 
 # Number 展示
 
-::: info 实现进度 60% · 进行中
+::: warning 实现进度 60% · 进行中
 StaticValue；number / percent 过滤器已接，组件自身精度档未齐
 :::
 

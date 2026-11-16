@@ -5,7 +5,7 @@ outline: deep
 
 # ButtonToolbar 按钮工具栏
 
-::: info 实现进度 60% · 进行中
+::: warning 实现进度 60% · 进行中
 能排按钮
 :::
 

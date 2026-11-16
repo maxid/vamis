@@ -5,7 +5,7 @@ outline: deep
 
 # SearchBox 搜索框
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能输入搜索；历史/增强未齐
 :::
 

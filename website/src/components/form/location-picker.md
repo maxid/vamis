@@ -5,7 +5,7 @@ outline: deep
 
 # LocationPicker 地理位置
 
-::: warning 实现进度 25% · 进行中
+::: danger 实现进度 25% · 进行中
 **精简**：地址/经/纬三个输入框，无地图
 :::
 

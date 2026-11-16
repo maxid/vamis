@@ -6,7 +6,7 @@ title: Font Size
 
 # Font Size
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。档位是 Amis `$fontSizes`（`text-lg` = 20px），不是 Tailwind v3。
 :::
 

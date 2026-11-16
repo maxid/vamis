@@ -5,7 +5,7 @@ outline: deep
 
 # Steps 步骤条
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能展示步骤
 :::
 

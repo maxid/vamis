@@ -6,7 +6,7 @@ title: Place Content
 
 # Place Content
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Place Content：`place-content-start` / `end` / `center` / `between` / `around` / `evenly` / `stretch` 落在同一元素的 `place-content`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。around / evenly 已补齐。
 :::
 

@@ -6,7 +6,7 @@ title: Border Style
 
 # Border Style
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Border Style：`border-solid` / `dashed` / `dotted` / `double` / `none` 落在同一元素的 `border-style`。独立样例 + 组合；补 `border-double` 与 `m:` / `pc:`。
 :::
 

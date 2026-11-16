@@ -6,7 +6,7 @@ title: Flex Grow
 
 # Flex Grow
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Flex Grow：`flex-grow` / `flex-grow-0` 落在同一元素的 `flex-grow`。独立样例 + 三行组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

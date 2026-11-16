@@ -6,7 +6,7 @@ title: Visibility
 
 # Visibility
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Visibility：`visible` / `invisible` 落在同一元素的 `visibility`。独立样例 + 与 `hidden` 占位对比；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

@@ -6,7 +6,7 @@ title: Grid Auto Flow
 
 # Grid Auto Flow
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Grid Auto Flow：`grid-flow-row` / `col` / `row-dense` / `col-dense` 落在同一元素的 `grid-auto-flow`。独立样例 + 行列组合；`m:` / `pc:` 已进 helper，不支持状态前缀。Amis 没有 `grid-flow-dense`。
 :::
 

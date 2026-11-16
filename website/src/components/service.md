@@ -5,7 +5,7 @@ outline: deep
 
 # Service 功能型容器
 
-::: info 实现进度 92% · 进行中
+::: warning 实现进度 70% · 进行中
 主路径已对齐：独立 Scope、`api` / `schemaApi`、接口联动（url `${}` 随父域变化重拉）、轮询、错误 Alert、`reload` / `rebuild` / `setValue`。文档章节对标 Amis。未接 `dataProvider` / `ws` / jsonp / `js:` schemaApi。
 :::
 

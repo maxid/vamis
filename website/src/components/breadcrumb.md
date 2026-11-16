@@ -5,8 +5,8 @@ outline: deep
 
 # Breadcrumb 面包屑
 
-::: info 实现进度 85% · 进行中
-文档主路径已对齐：`items` / `source`、默认分隔符 `>`、`separatorClassName`、`dropdown`、中间项 `labelMaxLength`（默认 16）。缺 tooltip 浮层位置、fontawesome。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`items` / `source`、默认分隔符 `>`、`separatorClassName`、`dropdown`、中间项 `labelMaxLength`（默认 16）。缺 tooltip 浮层位置、fontawesome。
 :::
 
 展示当前位置路径。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

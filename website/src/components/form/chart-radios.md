@@ -5,7 +5,7 @@ outline: deep
 
 # ChartRadios 图表单选框
 
-::: warning 实现进度 35% · 进行中
+::: danger 实现进度 35% · 进行中
 **精简**：无真实图表点选
 :::
 

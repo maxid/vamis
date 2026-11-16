@@ -5,7 +5,7 @@ outline: deep
 
 # DiffEditor 对比编辑器
 
-::: info 实现进度 65% · 进行中
+::: warning 实现进度 65% · 进行中
 主路径已接 Monaco Diff：左侧 `diffValue`（只读，支持模板），右侧绑 `name`。`disabled` 只关右侧。`change` / `focus` / `blur` 已发。`options` 可传。组件动作仍缺 D7。
 :::
 

@@ -5,7 +5,7 @@ outline: deep
 
 # InputVerificationCode 验证码
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能分格输入
 :::
 

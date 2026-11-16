@@ -5,8 +5,8 @@ outline: deep
 
 # Web Component
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`tag`（默认 `div`）、`props` 字符串走 `${}`、`body` 子节点。缺宿主 `customElements.define` 生命周期、自定义事件回写。
+::: danger 实现进度 35% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`tag`（默认 `div`）、`props` 字符串走 `${}`、`body` 子节点。缺宿主 `customElements.define` 生命周期、自定义事件回写。
 :::
 
 专门用来渲染 Web Component，用来扩展组件（比如接 Angular 自定义元素）。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

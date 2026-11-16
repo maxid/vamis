@@ -5,8 +5,8 @@ outline: deep
 
 # Alert 提示
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`level` info/success/warning/danger（默认 info）、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert。
+::: warning 实现进度 60% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`level` info/success/warning/danger（默认 info）、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert。
 :::
 
 用来做文字特殊提示。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

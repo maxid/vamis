@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-11-15）
+- 日期：2026-10-21（进度核对：2026-11-16）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-15（示例收割仍为 2026-11-04：docs ```schema 1882 份 + examples 112。主干仍 `icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`form` #27、`dialog` #44、`crud` #64、`page` #65。汇总 **67%**、≥50% **114** 项；已完成 3）
+- 最近核对：2026-11-16（进度打回：禁止用「主路径 + 缺 themeCss」进 80%。汇总 **62%**、≥80% **47**、≥50% **111**；已完成 3）
 
 ## 怎么读
 
@@ -25,8 +25,8 @@
    | 0% | 未开始 |
    | 10–15% | 占位（明确未接入、html 直通、空壳） |
    | 20–35% | 精简（能绑值渲染，缺真实能力：Monaco / 地图 / 城市库 / Excel 解析 / 实时日志等） |
-   | 40–70% | 主路径可交互，缺文档高级项或 P0 契约（Scope / 表达式过滤器 / API 管线 / 事件对象 / 表单路径） |
-   | 80–90% | 接近实现标准，仅剩差异记录 / 增强或少量高级项 |
+   | 40–70% | 主路径可交互，缺文档高级项、对照未齐、或未逐章节两站核完 |
+   | 80–90% | 接近实现标准：**必须**双站逐章节核过，剩余只是可数的差异 / 增强。禁止用「文档主路径已对齐 + 缺 themeCss」进这档 |
    | 100% | 满足实现标准（组件 + 文档对标或超越 amis） |
 5. 本清单不另起分类。侧栏未收录但 `docs/zh-CN` 有独立页的，在对应类末尾用脚注标出。
 6. **文档地址**：`vamis 文档` 是相对 `http://localhost:5173` 的路径，`amis 文档` 是相对 `http://localhost:8888` 的路径。例如 `table-view`：vamis `/components/table-view`（完整 `http://localhost:5173/components/table-view`），amis `/zh-CN/components/table-view`（完整 `http://localhost:8888/zh-CN/components/table-view`）。`—` 表示没有独立文档页。
@@ -63,17 +63,17 @@
 
 ## 分类汇总
 
-| 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） |
-|------|---------------|--------|--------|----------|-------------------|
-| 布局 | 1 / 15 | 14 | 0 | 91% | 15 |
-| 功能 | 0 / 12 | 12 | 0 | 82% | 11 |
-| 数据输入 | 1 / 72 | 71 | 0 | 58% | 44 |
-| 数据展示 | 0 / 44 | 44 | 0 | 64% | 32 |
-| 反馈 | 1 / 5 | 4 | 0 | 90% | 5 |
-| 其他 | 0 / 7 | 7 | 0 | 84% | 7 |
-| **合计** | **3 / 155** | **152** | **0** | **67%** | **114** |
+| 分类 | 已完成 / 总数 | 进行中 | 未开始 | 平均进度 | ≥50%（主路径可用） | ≥80%（接近标准） |
+|------|---------------|--------|--------|----------|-------------------|------------------|
+| 布局 | 1 / 15 | 14 | 0 | 73% | 15 | 4 |
+| 功能 | 0 / 12 | 12 | 0 | 72% | 11 | 6 |
+| 数据输入 | 1 / 72 | 71 | 0 | 57% | 44 | 17 |
+| 数据展示 | 0 / 44 | 44 | 0 | 62% | 32 | 14 |
+| 反馈 | 1 / 5 | 4 | 0 | 86% | 5 | 4 |
+| 其他 | 0 / 7 | 7 | 0 | 58% | 4 | 2 |
+| **合计** | **3 / 155** | **152** | **0** | **62%** | **111** | **47** |
 
-侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`；`page` 因 `pullRefresh` 未接按标准降为进行中。反馈五件均 ≥80%（`toast` 100%）；其他类均 ≥80%（`avatar` 90%）；`popOver` 属性 90%。
+侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
 
@@ -136,7 +136,7 @@
 
 ---
 
-## 布局（1/15，均 91%）
+## 布局（1/15，均 73%）
 
 侧栏 14 项 + 文档有页但未进侧栏的 `switch-container`。
 
@@ -144,48 +144,48 @@
 |------|------|------|------|------|------|------|------|
 | `page` | Page 页面 | `/components/page` | `/zh-CN/components/page` | 进行中 | 95% | 主路径对齐：独立 Scope、URL 查询种子、initApi overlay（GET 不把数据域拼进 query）、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。按实现标准：`pullRefresh` 未接（移动端），未达 100% | P0 |
 | `container` | Container 容器 | `/components/container` | `/zh-CN/components/container` | 已完成 | 100% | 主路径对齐：`wrapperBody` 默认包一层（flex 也包，同级子项换行）、`style` / `wrapperComponent` / `bodyClassName`、click/mouseenter/mouseleave。沿用父 Scope。`draggable` 非运行时主路径 | P0 |
-| `collapse` / `collapse-group` | Collapse 折叠器 | `/components/collapse` | `/zh-CN/components/collapse` | 进行中 | 85% | 文档主路径已对齐：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。窄屏 &lt;768 去边框、底部分割线、箭头靠右（Amis `is-mobile` / `media-breakpoint-down(sm)`），默认箭头走 `VamisCaret` tree。缺 `mountOnEnter`、`expand`·`collapse` 动作、FieldSet 像素级 | P0 |
-| `divider` | Divider 分割线 | `/components/divider` | `/zh-CN/components/divider` | 进行中 | 90% | 文档主路径已对齐：`lineStyle` / `direction` / `color` / `rotate` / `title` / `titlePosition`。缺 `themeCss`、窄屏 `scaleY(0.5)` | P0 |
-| `flex` | Flex 布局 | `/components/flex` | `/zh-CN/components/flex` | 进行中 | 90% | 文档主路径已对齐：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、整树 `envOverwrite` | P0 |
-| `grid` | Grid 水平分栏 | `/components/grid` | `/zh-CN/components/grid` | 进行中 | 90% | 文档主路径已对齐：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
-| `grid-2d` | Grid 2D 布局 | `/components/grid-2d` | `/zh-CN/components/grid-2d` | 进行中 | 90% | 文档主路径已对齐：`x/y/w/h`、`cols`、列宽/行高、`height: auto`、`gap` / `gapRow`、`align` / `valign`。缺格子 `themeCss` | P0 |
-| `hbox` | HBox 布局 | `/components/hbox` | `/zh-CN/components/hbox` | 进行中 | 90% | 文档主路径已对齐：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
+| `collapse` / `collapse-group` | Collapse 折叠器 | `/components/collapse` | `/zh-CN/components/collapse` | 进行中 | 70% | 主路径可交互（未逐章节两站核完，不进 80%）：`activeKey` / 手风琴 / 禁用 / `showArrow` / 图标位置 / `change` 事件。窄屏 &lt;768 去边框、底部分割线、箭头靠右（Amis `is-mobile` / `media-breakpoint-down(sm)`），默认箭头走 `VamisCaret` tree。缺 `mountOnEnter`、`expand`·`collapse` 动作、FieldSet 像素级 | P0 |
+| `divider` | Divider 分割线 | `/components/divider` | `/zh-CN/components/divider` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`lineStyle` / `direction` / `color` / `rotate` / `title` / `titlePosition`。缺 `themeCss`、窄屏 `scaleY(0.5)` | P0 |
+| `flex` | Flex 布局 | `/components/flex` | `/zh-CN/components/flex` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`justify` / `alignItems` / `alignContent` / `direction` / `items` / `mobile`。缺 `themeCss`、整树 `envOverwrite` | P0 |
+| `grid` | Grid 水平分栏 | `/components/grid` | `/zh-CN/components/grid` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
+| `grid-2d` | Grid 2D 布局 | `/components/grid-2d` | `/zh-CN/components/grid-2d` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`x/y/w/h`、`cols`、列宽/行高、`height: auto`、`gap` / `gapRow`、`align` / `valign`。缺格子 `themeCss` | P0 |
+| `hbox` | HBox 布局 | `/components/hbox` | `/zh-CN/components/hbox` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `pagination` | Pagination 分页 | `/components/pagination` | `/zh-CN/components/pagination` | 进行中 | 92% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`。文档补 change 事件示例与 llipsis/perPageAvailable/showPageInput/onPageChange 属性；缺 `themeCss`、移动端 `mobileUI` | P0 |
-| `pagination-wrapper` | PaginationWrapper 分页容器 | `/components/pagination-wrapper` | `/zh-CN/components/pagination-wrapper` | 进行中 | 90% | 文档主路径已对齐：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
-| `panel` | Panel 面板 | `/components/panel` | `/zh-CN/components/panel` | 进行中 | 90% | 文档主路径已对齐：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、色档、移动端 `Panel--form` | P0 |
+| `pagination-wrapper` | PaginationWrapper 分页容器 | `/components/pagination-wrapper` | `/zh-CN/components/pagination-wrapper` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
+| `panel` | Panel 面板 | `/components/panel` | `/zh-CN/components/panel` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、色档、移动端 `Panel--form` | P0 |
 | `tabs` | Tabs 选项卡 | `/components/tabs` | `/zh-CN/components/tabs` | 进行中 | 95% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、九种 `tabsMode`（`mode` 别名）、工具栏、图标、`showTip`、表单 `name`、增删改拖（Sortable 250ms，拖完按对象重绑选中）、折叠「更多」/`collapseBtnLabel`、默认按容器溢出（不用写字段）、地址栏 `#hash` 来回同步、sidebar 内侧竖线、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 未激活文字矮 1px；切页下划线滑动（优化，非 Amis）。缺 `swipeable`、chrome 耳朵 SVG、`themeCss`、单项 `unmountOnExit` | P0 |
-| `wrapper` | Wrapper 包裹容器 | `/components/wrapper` | `/zh-CN/components/wrapper` | 进行中 | 90% | 文档主路径已对齐：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss` | P0 |
-| `portlet` | Portlet 门户栏目 | `/components/portlet` | `/zh-CN/components/portlet` | 进行中 | 85% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`description`、`hideHeader`、默认分隔线 / `divider: false`、全局与 tab 级 `toolbar`、`mountOnEnter` 默认 false、`change`。缺 `themeCss`、icon 像素、`scrollable` | P0 |
-| `switch-container` | switch-container 状态容器 | `/components/switch-container` | `/zh-CN/components/switch-container` | 进行中 | 90% | 文档主路径已对齐：`items[].body` / `visibleOn` 取首个命中、`style`、宿主 click/mouseenter/mouseleave。缺 `themeCss`、`switchTo` 动作。侧栏未收录，docs 有独立页 | P0 |
+| `wrapper` | Wrapper 包裹容器 | `/components/wrapper` | `/zh-CN/components/wrapper` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss` | P0 |
+| `portlet` | Portlet 门户栏目 | `/components/portlet` | `/zh-CN/components/portlet` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`tabs[].body` / `tab`、`source`、`description`、`hideHeader`、默认分隔线 / `divider: false`、全局与 tab 级 `toolbar`、`mountOnEnter` 默认 false、`change`。缺 `themeCss`、icon 像素、`scrollable` | P0 |
+| `switch-container` | switch-container 状态容器 | `/components/switch-container` | `/zh-CN/components/switch-container` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`items[].body` / `visibleOn` 取首个命中、`style`、宿主 click/mouseenter/mouseleave。缺 `themeCss`、`switchTo` 动作。侧栏未收录，docs 有独立页 | P0 |
 
 ---
 
-## 功能（0/12，均 82%）
+## 功能（0/12，均 72%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 95% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`（默认 32×32，xs/sm/md/lg 跟档位，`level: link` 除外；`level: link` 无下划线、`--link-color`）、`confirmText` / `confirmTitle`（Amis `Alert.confirm` Modal：默认标题「系统消息」、无 X、Esc/点遮罩不关、确认 danger）、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器（`tooltip` 走 `VamisOverlay` `--z-tooltip` 1600，不裁切）、`tooltip` / `disabledTip`（字符串或 TooltipObject：title/content/theme/arrow/delay/trigger/offset，不含 type/body/wrapperComponent/className/inline）/ `tooltipPlacement`、click / mouseenter / mouseleave 事件活示例、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
-| `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 80% | 文档主路径已对齐：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
+| `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 55% | 主路径可交互（未逐章节两站核完，不进 80%）：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
 | `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 96% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写；空 label + icon 默认 32×32。复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | `/components/button-group` | `/zh-CN/components/button-group` | 进行中 | 92% | `buttons` / `body`、`vertical`、`tiled`、`btnLevel`；相邻 `.vamis-node` 1px 负缝 + 首尾圆角；hover/focus 抬 wrapper 避免缺边。`btnActiveLevel` 归 ButtonGroupSelect。对照桌面 **4/4**、移动 **4/4**（P0 0） | P0 |
-| `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 85% | 文档主路径已对齐：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
+| `breadcrumb` | Breadcrumb 面包屑 | `/components/breadcrumb` | `/zh-CN/components/breadcrumb` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层 | P0 |
 | `custom` | Custom 自定义组件 | `/components/custom` | `/zh-CN/components/custom` | 进行中 | 15% | **占位**：`html` 直通或渲染 `body`，不执行 onMount JS | P0 |
 | `dropdown-button` | DropDownButton 下拉按钮 | `/components/dropdown-button` | `/zh-CN/components/dropdown-button` | 进行中 | 88% | 文档主路径已对齐：`buttons` 分组、`closeOnClick` / `closeOnOutside`、`trigger: hover`、`hideCaret`、`defaultIsOpened`、`tooltip` / `placement` / `disabledTip`。菜单 `ul>li` + Action `isMenuItem`（不是完整 Button），贴触发器 `VamisOverlay`。缺菜单进出动画 | P0 |
-| `service` | Service 功能型容器 | `/components/service` | `/zh-CN/components/service` | 进行中 | 92% | 主路径已对齐：独立 Scope、静态 `data`、`api` 拉数、`schemaApi` 子 schema（含 `controls` 表单项）、`initFetch` / `initFetchSchema`、`reload` / `rebuild` / `setValue`、接口联动（`isApiOutdated` 只比父域，请求 `{ ...store, ...props.data }` 父域后写）、`interval` 轮询 / `silentPolling` / `stopAutoRefreshWhen`、顶部错误 Alert、`init` / `fetchInited` / `fetchSchemaInited`。Spinner overlay 绝对定位，不改已渲染盒模型。文档章节对标 Amis（jsonp / js / ws / dataProvider 未接占位）。对照桌面 **8/14**、移动 **8/14**（P0 0）。缺 `dataProvider` / `ws` / jsonp / `js:` schemaApi | P0 |
-| `nav` | Nav 导航 | `/components/nav` | `/zh-CN/components/nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
-| `anchor-nav` | AnchorNav 锚点导航 | `/components/anchor-nav` | `/zh-CN/components/anchor-nav` | 进行中 | 80% | 文档主路径已对齐：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
+| `service` | Service 功能型容器 | `/components/service` | `/zh-CN/components/service` | 进行中 | 70% | 主路径已对齐：独立 Scope、静态 `data`、`api` 拉数、`schemaApi` 子 schema（含 `controls` 表单项）、`initFetch` / `initFetchSchema`、`reload` / `rebuild` / `setValue`、接口联动（`isApiOutdated` 只比父域，请求 `{ ...store, ...props.data }` 父域后写）、`interval` 轮询 / `silentPolling` / `stopAutoRefreshWhen`、顶部错误 Alert、`init` / `fetchInited` / `fetchSchemaInited`。Spinner overlay 绝对定位，不改已渲染盒模型。文档章节对标 Amis（jsonp / js / ws / dataProvider 未接占位）。对照桌面 **8/14**、移动 **8/14**（P0 0）。缺 `dataProvider` / `ws` / jsonp / `js:` schemaApi | P0 |
+| `nav` | Nav 导航 | `/components/nav` | `/zh-CN/components/nav` | 进行中 | 55% | 主路径可交互（未逐章节两站核完，不进 80%）：`links` / `source`、默认 stacked、横排、多级 `children`。缺 overflow / 缩起 / 搜索 | P0 |
+| `anchor-nav` | AnchorNav 锚点导航 | `/components/anchor-nav` | `/zh-CN/components/anchor-nav` | 进行中 | 55% | 主路径可交互（未逐章节两站核完，不进 80%）：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮 | P0 |
 | `tooltip-wrapper` | TooltipWrapper 文字提示容器 | `/components/tooltip` | `/zh-CN/components/tooltip-wrapper` | 进行中 | 92% | 文档主路径已对齐：`content` / `title`、`trigger` hover/click/focus、`placement`、`tooltipTheme`、`offset`、`showArrow`、`inline`、`wrapperComponent`。活示例对标 Amis（图标十字布局 / trash / 长文本省略）。浮层 `VamisOverlay` Teleport、`--z-tooltip` 1600、盒 240 / 8×12 / 圆角 8 / 8×4 箭头。`placement` 主轴放不下翻对面（箭头跟边）。缺 `themeCss` | P0 |
 | `popOver` | PopOver 弹出提示 | `/components/popover` | `/zh-CN/components/popover` | 进行中 | 90% | 不是独立 type。文档主路径已对齐 Amis 同名页。表格列浮层相对整格 `td` 居中；表单 static 默认 `position: right` 锚放大镜。CRUD 底栏 40px float+clearfix（item 30 + mt 10），statistics + Pagination（cxd `maxButtons: 9`，mock 1710 条）。缺 CRUD 默认 header 像素、list 其余皮肤 | P0 |
 
 ---
 
-## 数据输入（1/72，均 58%）
+## 数据输入（1/72，均 57%）
 
 Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表单项（D6），必须进清单。
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 88% | 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、`initApiFinished` / `inited` / `change` / `validateSucc` / `validateError` / `submit` / `submitSucc` / `submitFail` / `formItemValidate*` 事件、`rules` 组合校验（`data.x` 表达式 + `name` 高亮）、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项，父域其它字段不进本域）。文档按 Amis `form/index` 全章节改写。`submitText: ""` 去默认提交；`wrapWithPanel: false` 时 title/actions 失效。对照桌面 **41/58**、移动 **41/58**（P0 0）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域 | P0 |
+| `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 72% | 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、`initApiFinished` / `inited` / `change` / `validateSucc` / `validateError` / `submit` / `submitSucc` / `submitFail` / `formItemValidate*` 事件、`rules` 组合校验（`data.x` 表达式 + `name` 高亮）、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项，父域其它字段不进本域）。文档按 Amis `form/index` 全章节改写。`submitText: ""` 去默认提交；`wrapWithPanel: false` 时 title/actions 失效。对照桌面 **41/58**、移动 **41/58**（P0 0）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域 | P0 |
 | （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 90% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`（选择器 `limit` → `tags`/`words`）、事件动作 `static`/`nonstatic`（status-store 按 id/name）、禁用/显隐、默认间距 24px、`mode: inline`（项并排、项内左右）、默认 `normal` 标签在上（窄屏 ≤767 改 28% 同行）、未写 label 仍占标签列、`button-toolbar` 包 FormItem、`validateApi`、提交 `errors`、`autoFill`（映射/`api`+`fillMapping`，无弹层）、form `debug`、label HTML、description HTML、`validations`/`validationErrors`（对象/字符串/`$1`/`isUrl.schemes`/默认 `validate.*` key）。属性表四列 +「支持静态展示的表单项」。缺 combo/table 路径级报错、`autoFill.showSuggestion` 族、`autoFill.silent`、`staticClassName` 三件、`labelAlign` | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
 | （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 88% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。缺 deferApi、虚拟列表。select 已接入 | P0 |
@@ -225,7 +225,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 88% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue。缺 themeCss | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
-| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 84% | 基本用法对标 Amis：`saveForm` + label `picker` + A/B/C。对照桌面 **1/1**（P0 0）。补远程 source / 分页 / pickerSchema 文档活示例；缺树选择 | P0 |
+| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 65% | 基本用法对标 Amis：`saveForm` + label `picker` + A/B/C。对照桌面 **1/1**（P0 0）。补远程 source / 分页 / pickerSchema 文档活示例；缺树选择 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |
@@ -245,7 +245,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `textarea` | Textarea 多行输入框 | `/components/form/textarea` | `/zh-CN/components/form/textarea` | 进行中 | 85% | 主路径已对齐：`minRows` / `maxRows` 自适应高度（默认 3/20）、`trimContents` 失焦裁剪、`readOnly`、`showCounter` / `maxLength` 计数器、`clearable` / `resetValue`（清除钮回填 resetValue；动作 clear 写空串）、`borderMode`、静态 `multiline-text`；`change` / `focus` / `blur`、`clear` / `reset` / `focus` / `setValue`；清空时高度 0.2s 过渡，清空后 **Ctrl/⌘+Z** 撤销（Vamis 增强）。文档按 Amis 章节改写。对照桌面 **8/8**、移动 **8/8**（P0 0）。缺 `themeCss` | P0 |
 | `input-time` | InputTime 时间 | `/components/form/input-time` | `/zh-CN/components/form/input-time` | 进行中 | 60% | `input-date` 别名，已接时间面板与窄屏滚轮；桌面仍是下拉，时间约束未齐 | P0 |
 | `input-time-range` | InputTimeRange 时间范围 | `/components/form/input-time-range` | `/zh-CN/components/form/input-time-range` | 进行中 | 45% | 已注册 | P0 |
-| `transfer` | Transfer 穿梭器 | `/components/form/transfer` | `/zh-CN/components/form/transfer` | 进行中 | 82% | 基本用法对标 Amis：诸葛亮/曹操… + `value: zhugeliang,libai`。搜索章改活示例。对照桌面 **2/2**（P0 0）。缺 chained、分页/排序/拖拽 | P0 |
+| `transfer` | Transfer 穿梭器 | `/components/form/transfer` | `/zh-CN/components/form/transfer` | 进行中 | 65% | 基本用法对标 Amis：诸葛亮/曹操… + `value: zhugeliang,libai`。搜索章改活示例。对照桌面 **2/2**（P0 0）。缺 chained、分页/排序/拖拽 | P0 |
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
@@ -260,17 +260,17 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 数据展示（0/44，均 64%）
+## 数据展示（0/44，均 62%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 84% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
+| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 65% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
 | `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 88% | 2026-11-15 按 Amis 整体重做一轮并验证：列类型、工具栏、选择默认多选、快速编辑、Footable、`deferApi`、`affixHeader` / `affixFooter`、`lazyRenderAfter`、`persistKey`、单元格表单项写回行数据（开关改了同行状态列跟着变）。对照桌面 63/63，移动无失败；`deferApi` / 固定表头（浅色 + 深色）/ 懒渲染在浏览器核过。未接 `reUseRow`、`export-excel`；逐章节的深色双站核对没做完 | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
-| `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 85% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
+| `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 65% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
 | `calendar` | Calendar 日历日程 | `/components/calendar` | `/zh-CN/components/calendar` | 进行中 | 88% | 周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue | P0 |
-| `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 90% | 文档主路径已对齐：header/body/actions、href 优先于 itemAction、media、toolbar、标签/按钮/文本/单元格、配置工具栏、属性表四列。actions 走 Card-action `<a>`，dropdown 跟 `--primary`；副标题 text-6。缺 `themeCss`、Cards 拖拽排序 | P0 |
-| `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 92% | 文档主路径已对齐：基本用法、CRUD 勾选/Cards-toolbar 注入 bulkActions/顶栏+底栏全选/`checkOnItemClick`、瀑布流 `h-stretch`/`cover`、属性表、事件表 selectedChange/selected/rowClick/orderChange、动作表 select/selectAll/clearAll/initDrag/setValue（含指定行 `index`/`condition` 与「修改了内容」未保存条）。`title` / toolbar 全选左缘 / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。拖动手柄 `stroke`。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss` | P0 |
+| `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 70% | 主路径可交互（未逐章节两站核完，不进 80%）：header/body/actions、href 优先于 itemAction、media、toolbar、标签/按钮/文本/单元格、配置工具栏、属性表四列。actions 走 Card-action `<a>`，dropdown 跟 `--primary`；副标题 text-6。缺 `themeCss`、Cards 拖拽排序 | P0 |
+| `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 70% | 主路径可交互（未逐章节两站核完，不进 80%）：基本用法、CRUD 勾选/Cards-toolbar 注入 bulkActions/顶栏+底栏全选/`checkOnItemClick`、瀑布流 `h-stretch`/`cover`、属性表、事件表 selectedChange/selected/rowClick/orderChange、动作表 select/selectAll/clearAll/initDrag/setValue（含指定行 `index`/`condition` 与「修改了内容」未保存条）。`title` / toolbar 全选左缘 / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。拖动手柄 `stroke`。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss` | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
 | `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 62% | 基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch` | P0 |
 | `code` | Code 代码高亮 | `/components/code` | `/zh-CN/components/code` | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
@@ -311,11 +311,11 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（1/5，均 90%）
+## 反馈（1/5，均 86%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `alert` | Alert 提示 | `/components/alert` | `/zh-CN/components/alert` | 进行中 | 80% | 文档主路径已对齐：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
+| `alert` | Alert 提示 | `/components/alert` | `/zh-CN/components/alert` | 进行中 | 60% | 主路径可交互（未逐章节两站核完，不进 80%）：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
 | `dialog` | Dialog 对话框 | `/components/dialog` | `/zh-CN/components/dialog` | 进行中 | 88% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。body 是 form 时默认 `mode: horizontal`、`wrapWithPanel: false`、无默认「提交」。窄屏 &lt;576 弹层拉满、底栏横排均分（对照「移动」/ `m:`；均分要打穿 Action 的 `span.inline-block`，不能只给 `.vamis-node` 设 flex:1）。浮层 data 按层压栈。默认弹层 `top: 60px`。关闭按钮 hover「关闭」提示。补数据映射 / close / 弹层表单章节；缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal | P0 |
 | `drawer` | Drawer 抽屉 | `/components/drawer` | `/zh-CN/components/drawer` | 进行中 | 88% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover「关闭」提示。补动作后关闭 / 配置按钮 / resizable 未接说明；缺多级错位递减、像素级 cxd Drawer | P0 |
 | `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 进行中 | 95% | 文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，不是 Amis hex）、`show` / `showOn`、`size` sm \| lg \| 空、`icon`（`reload` / fa / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。Page / Service / CRUD 表格区已挂同一套。缺 Dialog / Form / Select 宿主细项 | P0 |
@@ -323,17 +323,17 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 其他（0/7，均 84%）
+## 其他（0/7，均 58%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `avatar` | Avatar 头像 | `/components/avatar` | `/zh-CN/components/avatar` | 进行中 | 90% | 文档主路径已对齐：src 真图 > text > icon（默认 fa fa-user）、$var 降级、shape/size/fit、gap 像素缩放、onError（trusted）、draggable、badge 含 ribbon。对照 **13/13**。其它 fa-* 需宿主字体 | P0 |
-| `audio` | Audio 音频 | `/components/audio` | `/zh-CN/components/audio` | 进行中 | 80% | 文档主路径已对齐：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
-| `tasks` | Tasks 任务操作集合 | `/components/tasks` | `/zh-CN/components/tasks` | 进行中 | 80% | 文档主路径已对齐：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
+| `audio` | Audio 音频 | `/components/audio` | `/zh-CN/components/audio` | 进行中 | 50% | 主路径可交互（未逐章节两站核完，不进 80%）：inline 默认 true、loop/autoPlay 默认 false、controls、rates 显示 x1.0。缺皮肤像素、直播流 | P0 |
+| `tasks` | Tasks 任务操作集合 | `/components/tasks` | `/zh-CN/components/tasks` | 进行中 | 45% | 主路径可交互（未逐章节两站核完，不进 80%）：items 的 status 0–5、列名、就绪上线 / 可重试。缺 checkApi 轮询、submitApi | P0 |
 | `badge` | Badge 角标 | `/components/badge` | `/zh-CN/components/badge` | 进行中 | 95% | 不是独立 type。文档主路径已对齐：dot/text/ribbon、position、offset、overflowCount、visibleOn、size、level、animation、style。盒模型转写 `_badge.scss`（`--badge-*`）。缺 `themeCss` | P0 |
-| `wizard` | Wizard 向导 | `/components/wizard` | `/zh-CN/components/wizard` | 进行中 | 80% | 文档主路径已对齐：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
-| `web-component` | Web Component | `/components/web-component` | `/zh-CN/components/web-component` | 进行中 | 80% | 文档主路径已对齐：`tag` 默认 div、`props` 字符串走 `${}`、`body` 子节点。缺宿主 customElements.define 生命周期、自定义事件回写 | P0 |
-| `amis` | amis 渲染器 | `/components/amis` | `/zh-CN/components/amis` | 进行中 | 80% | 文档主路径已对齐：`schema` / `value` / `name`（对象或 JSON 字符串）、`props` 盖到内层。缺 editor 同 name 实时编辑、非法 JSON 诊断 | P0 |
+| `wizard` | Wizard 向导 | `/components/wizard` | `/zh-CN/components/wizard` | 进行中 | 50% | 主路径可交互（未逐章节两站核完，不进 80%）：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线 | P0 |
+| `web-component` | Web Component | `/components/web-component` | `/zh-CN/components/web-component` | 进行中 | 35% | 主路径可交互（未逐章节两站核完，不进 80%）：`tag` 默认 div、`props` 字符串走 `${}`、`body` 子节点。缺宿主 customElements.define 生命周期、自定义事件回写 | P0 |
+| `amis` | amis 渲染器 | `/components/amis` | `/zh-CN/components/amis` | 进行中 | 40% | 主路径可交互（未逐章节两站核完，不进 80%）：`schema` / `value` / `name`（对象或 JSON 字符串）、`props` 盖到内层。缺 editor 同 name 实时编辑、非法 JSON 诊断 | P0 |
 
 ---
 
@@ -438,7 +438,7 @@ flowchart LR
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | 进行中 | 92% |
 | 16 | `image` | — | 12 | 5 | 77 | 134 | 进行中 | 90% |
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | 进行中 | 90% |
-| 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 90% |
+| 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | 进行中 | 65% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
 | 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | 进行中 | 88% |
@@ -447,11 +447,11 @@ flowchart LR
 | 24 | `input-image` | FormItem、`image` | 6 | 1 | 19 | 134 | 进行中 | 80% |
 | 25 | `textarea` | FormItem | 6 | 1 | 19 | 134 | 进行中 | 85% |
 | 26 | `static` | FormItem、`popOver`、`tpl` | 6 | 1 | 19 | 134 | 进行中 | 85% |
-| 27 | `form` | FormItem、Options、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image`、`panel`、`spinner` | 4 | 10 | 134 | 134 | 进行中 | 88% |
+| 27 | `form` | FormItem、Options、`action`、`container`、`input-text`、`textarea`、`input-number`、`select`、`checkbox`、`radio`、`switch`、`hidden`、`static`、`input-date`、`input-file`、`input-image`、`panel`、`spinner` | 4 | 10 | 134 | 134 | 进行中 | 72% |
 | 28 | `mapping` | — | 12 | 5 | 77 | 77 | 进行中 | 85% |
 | 29 | `input-date-range` | `input-date`、FormItem | 5 | 5 | 70 | 70 | 进行中 | 90% |
 | 30 | `link` | `icon`、`badge` | 10 | 4 | 62 | 62 | 进行中 | 85% |
-| 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 92% |
+| 31 | `service` | `container`、`action`、`tpl`、`spinner` | 7 | 4 | 59 | 59 | 进行中 | 70% |
 | 32 | `each` | `tpl` | 9 | 1 | 22 | 59 | 进行中 | 90% |
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 90% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
@@ -459,21 +459,21 @@ flowchart LR
 | 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 88% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
-| 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 90% |
+| 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 70% |
 | 40 | `button` | `action` | 7 | 1 | 20 | 32 | 进行中 | 96% |
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | 进行中 | 92% |
-| 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | 进行中 | 82% |
-| 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 84% |
+| 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | 进行中 | 65% |
+| 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | 进行中 | 65% |
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
 | 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 62% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 85% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |
-| 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
-| 51 | `grid` | `container` | 8 | 1 | 21 | 21 | 进行中 | 90% |
-| 52 | `nav` | `icon`、`action`、`tpl`、`link`、`badge` | 7 | 1 | 20 | 20 | 进行中 | 80% |
-| 53 | `cards` | `card`、`list`、`popOver` | 6 | 1 | 19 | 19 | 进行中 | 92% |
+| 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 65% |
+| 51 | `grid` | `container` | 8 | 1 | 21 | 21 | 进行中 | 65% |
+| 52 | `nav` | `icon`、`action`、`tpl`、`link`、`badge` | 7 | 1 | 20 | 20 | 进行中 | 55% |
+| 53 | `cards` | `card`、`list`、`popOver` | 6 | 1 | 19 | 19 | 进行中 | 70% |
 | 54 | `input-datetime` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 62% |
 | 55 | `input-month` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 56 | `input-quarter` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
@@ -484,9 +484,9 @@ flowchart LR
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | 进行中 | 30% |
 | 63 | `tabs-transfer` | `transfer`、`tabs` | 4 | 1 | 17 | 17 | 进行中 | 40% |
-| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | 进行中 | 84% |
+| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | 进行中 | 65% |
 | 65 | `page` | `container`、`panel`、`flex`、`grid`、`tabs`、`action`、`service`、`dialog`、`drawer`、`crud`、`form`、`tpl`、`spinner`、`remark` | 1 | 1 | 14 | 14 | 进行中 | 95% |
-| 66 | `divider` | — | 12 | 0 | 12 | 12 | 进行中 | 90% |
+| 66 | `divider` | — | 12 | 0 | 12 | 12 | 进行中 | 65% |
 | 67 | `custom` | — | 12 | 0 | 12 | 12 | 进行中 | 15% |
 | 68 | `code` | — | 12 | 0 | 12 | 12 | 进行中 | 92% |
 | 69 | `color` | — | 12 | 0 | 12 | 12 | 进行中 | 50% |
@@ -505,26 +505,26 @@ flowchart LR
 | 82 | `video` | — | 12 | 0 | 12 | 12 | 进行中 | 45% |
 | 83 | `shape` | — | 12 | 0 | 12 | 12 | 进行中 | 40% |
 | 84 | `slider` | — | 12 | 0 | 12 | 12 | 进行中 | 45% |
-| 85 | `audio` | — | 12 | 0 | 12 | 12 | 进行中 | 80% |
-| 86 | `web-component` | — | 12 | 0 | 12 | 12 | 进行中 | 80% |
-| 87 | `amis` | — | 12 | 0 | 12 | 12 | 进行中 | 80% |
+| 85 | `audio` | — | 12 | 0 | 12 | 12 | 进行中 | 50% |
+| 86 | `web-component` | — | 12 | 0 | 12 | 12 | 进行中 | 35% |
+| 87 | `amis` | — | 12 | 0 | 12 | 12 | 进行中 | 40% |
 | 88 | `images` | `image` | 11 | 0 | 11 | 11 | 进行中 | 50% |
-| 89 | `table-view` | `tpl`、`mapping`、`tag` | 9 | 0 | 9 | 9 | 进行中 | 85% |
+| 89 | `table-view` | `tpl`、`mapping`、`tag` | 9 | 0 | 9 | 9 | 进行中 | 65% |
 | 90 | `steps` | `icon`、`tpl` | 9 | 0 | 9 | 9 | 进行中 | 55% |
 | 91 | `property` | `tpl`、`mapping` | 9 | 0 | 9 | 9 | 进行中 | 50% |
-| 92 | `breadcrumb` | `link`、`icon` | 9 | 0 | 9 | 9 | 进行中 | 85% |
-| 93 | `anchor-nav` | `link`、`icon` | 9 | 0 | 9 | 9 | 进行中 | 80% |
+| 92 | `breadcrumb` | `link`、`icon` | 9 | 0 | 9 | 9 | 进行中 | 65% |
+| 93 | `anchor-nav` | `link`、`icon` | 9 | 0 | 9 | 9 | 进行中 | 55% |
 | 94 | `grid-nav` | `icon`、`link`、`tpl` | 9 | 0 | 9 | 9 | 进行中 | 50% |
 | 95 | `collapse` / `collapse-group` | `container`、`tpl` | 8 | 0 | 8 | 8 | 进行中 | 85% |
-| 96 | `grid-2d` | `container` | 8 | 0 | 8 | 8 | 进行中 | 90% |
-| 97 | `hbox` | `container` | 8 | 0 | 8 | 8 | 进行中 | 90% |
-| 98 | `wrapper` | `container` | 8 | 0 | 8 | 8 | 进行中 | 90% |
-| 99 | `switch-container` | `container` | 8 | 0 | 8 | 8 | 进行中 | 90% |
+| 96 | `grid-2d` | `container` | 8 | 0 | 8 | 8 | 进行中 | 65% |
+| 97 | `hbox` | `container` | 8 | 0 | 8 | 8 | 进行中 | 65% |
+| 98 | `wrapper` | `container` | 8 | 0 | 8 | 8 | 进行中 | 65% |
+| 99 | `switch-container` | `container` | 8 | 0 | 8 | 8 | 进行中 | 65% |
 | 100 | `button-toolbar` | `action`、`container` | 7 | 0 | 7 | 7 | 进行中 | 60% |
 | 101 | `carousel` | `image`、`tpl`、`action` | 7 | 0 | 7 | 7 | 进行中 | 45% |
 | 102 | `search-box` | `action`、`icon` | 7 | 0 | 7 | 7 | 进行中 | 50% |
-| 103 | `alert` | `action`、`icon` | 7 | 0 | 7 | 7 | 进行中 | 80% |
-| 104 | `tasks` | `action`、`progress`、`status` | 7 | 0 | 7 | 7 | 进行中 | 80% |
+| 103 | `alert` | `action`、`icon` | 7 | 0 | 7 | 7 | 进行中 | 60% |
+| 104 | `tasks` | `action`、`progress`、`status` | 7 | 0 | 7 | 7 | 进行中 | 45% |
 | 105 | `timeline` | `icon`、`tpl`、`card` | 6 | 0 | 6 | 6 | 进行中 | 50% |
 | 106 | `control` | FormItem | 6 | 0 | 6 | 6 | 进行中 | 40% |
 | 107 | `input-color` | FormItem | 6 | 0 | 6 | 6 | 进行中 | 50% |
@@ -537,8 +537,8 @@ flowchart LR
 | 114 | `input-signature` | FormItem | 6 | 0 | 6 | 6 | 进行中 | 35% |
 | 115 | `fieldset` | FormItem、`container` | 6 | 0 | 6 | 6 | 进行中 | 55% |
 | 116 | `group` | FormItem、`container` | 6 | 0 | 6 | 6 | 进行中 | 70% |
-| 117 | `pagination-wrapper` | `pagination`、`container` | 6 | 0 | 6 | 6 | 进行中 | 90% |
-| 118 | `portlet` | `tabs`、`action`、`container` | 6 | 0 | 6 | 6 | 进行中 | 85% |
+| 117 | `pagination-wrapper` | `pagination`、`container` | 6 | 0 | 6 | 6 | 进行中 | 65% |
+| 118 | `portlet` | `tabs`、`action`、`container` | 6 | 0 | 6 | 6 | 进行中 | 65% |
 | 119 | `checkboxes` | `checkbox`、Options、FormItem | 5 | 0 | 5 | 5 | 进行中 | 55% |
 | 120 | `input-excel` | FormItem、`input-file` | 5 | 0 | 5 | 5 | 进行中 | 20% |
 | 121 | `matrix-checkboxes` | `checkbox` | 5 | 0 | 5 | 5 | 进行中 | 40% |
@@ -571,10 +571,10 @@ flowchart LR
 | 148 | `input-sub-form` | `form`、`action`、`service`、`container` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 149 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 150 | `json-schema-editor` | `json-schema`、`form`、`action` | 3 | 0 | 3 | 3 | 进行中 | 30% |
-| 151 | `wizard` | `form`、`action`、`panel` | 3 | 0 | 3 | 3 | 进行中 | 80% |
+| 151 | `wizard` | `form`、`action`、`panel` | 3 | 0 | 3 | 3 | 进行中 | 50% |
 | 152 | `transfer-picker` | `transfer`、`picker` | 3 | 0 | 3 | 3 | 进行中 | 45% |
 | 153 | `tabs-transfer-picker` | `tabs-transfer`、`picker` | 3 | 0 | 3 | 3 | 进行中 | 35% |
-| 154 | `app` | `page`、`nav`、`service` | 0 | 0 | 0 | 0 | 进行中 | 80% |
+| 154 | `app` | `page`、`nav`、`service` | 0 | 0 | 0 | 0 | 进行中 | 55% |
 
 
 ## 附录：侧栏没有、Vamis 已注册
@@ -622,6 +622,7 @@ flowchart LR
 - 优先级重算（2026-11-04）：**全表**按构建依赖补边，不是只改 Action。补 `withBadge` 宿主、`FormItem.labelRemark`→`remark`→`tooltip-wrapper`、Form `wrapWithPanel`→`panel`、Spinner 宿主、Table `itemBadge`、`input-text` 选择器+`addOn`、`calendar` extends `input-date`。互开（action↔dialog、icon↔badge、popOver↔dialog）不写回边。就绪集先比解锁分 U。
 - 优先级重算（2026-11-04 示例核对）：`scripts/audit-amis-examples.mjs` 收割 Amis 文档 ```schema **1882** 份（失败 2）+ examples 112。按专章/主路径示例修正：加 `nav.itemBadge`、`page.remark`、list/cards `popOver`、timeline→`card`、transfer/input-tree→Options、`dropdown-button`→icon；删 checkbox/radio `withBadge`（badge.md 未列）、`table → checkbox`（`selectable` 不是 `type: checkbox`）。主干序号未变：`icon` #1 → `badge` #2 → `tpl` #3 → `tooltip-wrapper` #4 → `remark` #5 → FormItem #6 → `action` #8；`spinner` #12、`form` #27、`dialog` #44、`crud` #64、`page` #65。百分比未改。
 - 同步（2026-11-15）：按 155 行重算汇总为 **3 已完成 / 152 进行中 / 0 未开始，平均 67%，≥50% 114**；分类均：布局 91%、功能 82%、数据输入 58%、数据展示 64%、反馈 90%、其他 84%。同步优先级表 3 行（FormItem 88→90、select 90→92、chart 60→62）与 4 个页面 banner（input-datetime / group / input-time / chart）。
+- 打回（2026-11-16）：禁止「主路径 + 缺 themeCss」进 80%。布局壳 / 包装器 / 对照大面积失败从 80–90 打回 40–70。汇总 **67% → 62%**，≥80% **47**，≥50% **111**。分类均：布局 73%、功能 72%、数据输入 57%、数据展示 62%、反馈 86%、其他 58%。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 ---

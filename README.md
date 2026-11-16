@@ -15,7 +15,7 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 ![Vamis 编辑器：左侧组件树、中间实时预览、右侧属性与 YAML/IR](assets/readme/editor.png)
 
 > [!WARNING]
-> **早期 alpha，非百度官方项目，与百度无关联。** 185 / 189 个 Amis type 名称已注册，侧栏组件语义平均 **67%**；适合评估、试用和参与共建，不建议直接用于关键生产。
+> **早期 alpha，非百度官方项目，与百度无关联。** 185 / 189 个 Amis type 名称已注册，侧栏组件语义平均 **62%**；适合评估、试用和参与共建，不建议直接用于关键生产。
 
 ## 为什么是 Vamis
 
@@ -176,10 +176,10 @@ spec:
 
 type 覆盖复算：`pnpm status -- --amis ../amis`。
 
-## 项目状态（2026-11-15）
+## 项目状态（2026-11-16）
 
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
-- 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **67%**。
+- 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **62%**（≥80% 47 项）。
 - kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 错误边界、D8 诊断仍缺。
 - 测试：formula 185 + core 676 + sdk 80 = **941**，全部通过；`pnpm typecheck` 仍有 68 个错误。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。

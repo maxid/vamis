@@ -6,7 +6,7 @@ title: Font Weight
 
 # Font Weight
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Font Weight：`font-thin`～`font-black` 落在同一元素的 `font-weight`。独立样例 + 组合；补 `extralight` / `extrabold` / `black` 与 `m:` / `pc:`。
 :::
 

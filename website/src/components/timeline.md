@@ -5,7 +5,7 @@ outline: deep
 
 # Timeline 时间轴
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能列节点
 :::
 

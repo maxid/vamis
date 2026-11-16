@@ -5,7 +5,7 @@ outline: deep
 
 # InputCity 城市选择器
 
-::: warning 实现进度 25% · 进行中
+::: danger 实现进度 25% · 进行中
 **精简**：内置 3 省示例，非全国数据
 :::
 

@@ -6,7 +6,7 @@ title: Display
 
 # Display
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Display：各 `display` 落在同一元素、同一计算值。独立样例覆盖 block / inline / flex / grid / contents / hidden / flow-root / table；table-* 组合钉列宽；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

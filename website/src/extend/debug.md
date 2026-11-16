@@ -4,7 +4,7 @@ title: 调试
 
 # 调试
 
-::: warning 实现进度 20% · 进行中
+::: danger 实现进度 20% · 进行中
 kernel D8 未落地。现在靠 Playground IR Tab、Vue/Pinia devtools、未知 type 占位。没有 `env.debug` 动作日志。
 :::
 

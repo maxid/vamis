@@ -4,7 +4,7 @@ title: JS SDK
 
 # JS SDK
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByName` / `doAction` 已落地。`registerTheme` / locale 仍 P1。
 :::
 

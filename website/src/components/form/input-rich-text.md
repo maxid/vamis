@@ -5,7 +5,7 @@ outline: deep
 
 # InputRichText 富文本
 
-::: warning 实现进度 25% · 进行中
+::: danger 实现进度 25% · 进行中
 **精简**：多行文本，未接 TinyMCE/Froala（设计非目标）
 :::
 

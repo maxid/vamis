@@ -5,7 +5,7 @@ outline: deep
 
 # InputTime 时间
 
-::: info 实现进度 60% · 进行中
+::: warning 实现进度 60% · 进行中
 `input-date` 别名，已接时间面板与窄屏滚轮；桌面仍是下拉，时间约束未齐
 :::
 

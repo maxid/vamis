@@ -5,7 +5,7 @@ outline: deep
 
 # Form 表单
 
-::: info 实现进度 88% · 进行中
+::: warning 实现进度 72% · 进行中
 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、生命周期事件、`rules` 组合校验、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项；父域其它字段不进 debug / 提交）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
 :::
 

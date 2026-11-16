@@ -6,7 +6,7 @@ title: Space Between
 
 # Space Between
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Space Between：`space-x-*` / `space-y-*` 落在**后续兄弟**的 `margin-left` / `margin-top`（不是 Tailwind v4 的 `margin-inline-end`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`space-x-6` 第二枚 margin-left 24px。
 :::
 

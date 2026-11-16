@@ -5,7 +5,7 @@ outline: deep
 
 # Checkboxes 复选框
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能多选；列数/全选未齐
 :::
 

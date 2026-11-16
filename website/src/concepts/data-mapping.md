@@ -4,7 +4,7 @@ title: 数据映射
 
 # 数据映射
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 文档主路径已对齐 Amis「数据映射」：模板字符串、链式取值、转义、`api.data`、`&` 展开、`$rows` 数组提取、namespace、P0 过滤器与串联。JSON 与 YAML 同等有效。Amis 其余过滤器（`split` / `map` / `bytes` 等）仍 P1。
 :::
 

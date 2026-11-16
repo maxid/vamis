@@ -5,8 +5,8 @@ outline: deep
 
 # Audio 音频
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`inline` 默认 true、`loop` / `autoPlay` 默认 false、`controls` 默认 rates/play/time/process/volume、`rates` 显示 `x1.0`。缺原生皮肤像素、直播流 duration Infinity。
+::: warning 实现进度 50% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`inline` 默认 true、`loop` / `autoPlay` 默认 false、`controls` 默认 rates/play/time/process/volume、`rates` 显示 `x1.0`。缺原生皮肤像素、直播流 duration Infinity。
 :::
 
 音频播放器。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

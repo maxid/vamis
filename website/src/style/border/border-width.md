@@ -6,7 +6,7 @@ title: Border Width
 
 # Border Width
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Border Width：`border` = 1px、`border-4` = 4px，只设 width。独立样例 + 组合；补 `border-8` / `border-t-4` 与 `m:` / `pc:`。
 :::
 

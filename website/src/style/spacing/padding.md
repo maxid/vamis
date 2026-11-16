@@ -6,7 +6,7 @@ title: Padding
 
 # Padding
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Padding：`p-*` / `px` / `py` / `pt` / `pr` / `pb` / `pl` 落在同一元素的 `padding-*`（Tailwind rem 档，不是 `--gap-xs`）。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。`p-none` / `p-18` 已补齐。
 :::
 

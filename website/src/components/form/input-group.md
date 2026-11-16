@@ -5,7 +5,7 @@ outline: deep
 
 # InputGroup 输入框组合
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能并排控件
 :::
 

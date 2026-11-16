@@ -6,7 +6,7 @@ title: Place Self
 
 # Place Self
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Place Self：`place-self-auto` / `start` / `end` / `center` / `stretch` 落在同一子项的 `place-self`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。只改第一枚。
 :::
 

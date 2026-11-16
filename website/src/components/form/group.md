@@ -5,7 +5,7 @@ outline: deep
 
 # Group 表单项组
 
-::: info 实现进度 70% · 进行中
+::: warning 实现进度 70% · 进行中
 ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项。缺 `columnRatio` / gap 档 / 组标签
 :::
 

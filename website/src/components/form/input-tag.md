@@ -5,7 +5,7 @@ outline: deep
 
 # InputTag 标签选择器
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能回车加标签
 :::
 

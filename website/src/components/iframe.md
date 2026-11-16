@@ -5,7 +5,7 @@ outline: deep
 
 # iFrame
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能嵌页
 :::
 

@@ -6,7 +6,7 @@ title: Font style
 
 # Font style
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Font Style：`italic` / `not-italic` 落在同一元素的 `font-style`。独立样例 + 组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

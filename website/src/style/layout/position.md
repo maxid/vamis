@@ -6,7 +6,7 @@ title: Position
 
 # Position
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Position：`static` / `fixed` / `absolute` / `relative` / `sticky` 落在同一元素的 `position`。独立样例 + 相对含块四角组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

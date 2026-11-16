@@ -18,11 +18,12 @@ alwaysApply: true
 ```
 
 - 状态：`已完成` / `进行中` / `未开始`
-- callout：已完成 → `tip`；未开始 → `danger`；进行中且进度 ≥50 → `info`；否则 `warning`
+- callout：已完成 → `tip`；未开始 → `danger`；进行中且 ≥80 → `info`（接近标准）；≥40 → `warning`（主路径）；否则 `danger`（占位/精简）
+- **80% 门槛**：必须双站逐章节核过，剩余缺口可数。禁止用「文档主路径已对齐 + 缺 themeCss」进 80。对照条数全过也不能当 80%
 - **已注册 ≠ 已完成**。只有文档主路径对齐才能标「已完成」/ 100%
 - 组件页由 `website/scripts/gen-component-pages.mjs` 读 P0 TODO 生成；手写页（`page` / `container`、types、concepts、start、style、extend）手改本条
 - 被 kernel 挡住时进度可以升，状态保持「进行中」，原因写清决策号
-- Playground 左侧菜单显示同一套百分比（分组是子项平均）。着色跟 banner：100% `--success`、≥50 `--info`、不足 50 `--warning`、0 `--destructive`。顶栏「进度」开关控制显隐，默认开，写入 `vamis-doc-progress`。目录页没有 banner 的不显示数字
+- Playground 左侧菜单显示同一套百分比（分组是子项平均）。着色跟档位：100% `--success`、≥80 `--info`、≥40 `--warning`、其余 `--destructive`。顶栏「进度」开关控制显隐，默认开，写入 `vamis-doc-progress`。目录页没有 banner 的不显示数字
 
 禁止：只有标题没有进度条；banner 放到文末或只写在 spec / CONTEXT。
 

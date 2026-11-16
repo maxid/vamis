@@ -4,7 +4,7 @@ title: CSS 变量
 
 # CSS 变量
 
-::: info 实现进度 70% · 进行中
+::: warning 实现进度 70% · 进行中
 `:root` / `[data-theme]` / `.dark` 换 `--colors-*` 色阶（云舍 / 仿 AntD / ang / dark）。`--primary` / `--success` / `--tag-*` 只 alias。`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis line-8。完整 Amis 变量表未一一对照；JS `registerTheme` 仍是 D12 P1。
 :::
 

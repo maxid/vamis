@@ -5,7 +5,7 @@ outline: deep
 
 # InputArray 数组输入框
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能增删行；子域/校验未齐
 :::
 

@@ -5,7 +5,7 @@ outline: deep
 
 # Combo 组合
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 默认 `multiple: false`、内嵌 `mode: row` 横排。缺 multiLine / 拖拽 / 子项 api / 扁平模式。
 :::
 

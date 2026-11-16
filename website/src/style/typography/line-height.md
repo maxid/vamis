@@ -6,7 +6,7 @@ title: Line Height
 
 # Line Height
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Line Height：`leading-*` 落在同一元素的 `line-height`。独立样例 + 组合；补 `leading-3`～`leading-10` 与 `m:` / `pc:`。
 :::
 

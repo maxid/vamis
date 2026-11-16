@@ -5,8 +5,8 @@ outline: deep
 
 # Nav 导航
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐：`links` / `source`、默认 `stacked`、`stacked: false` 横排、多级 `children` / `unfolded`、`active`、URL `icon`。缺 overflow 收纳、缩起、搜索、拖拽排序、itemBadge。
+::: warning 实现进度 55% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`links` / `source`、默认 `stacked`、`stacked: false` 横排、多级 `children` / `unfolded`、`active`、URL `icon`。缺 overflow 收纳、缩起、搜索、拖拽排序、itemBadge。
 :::
 
 用来展示链接导航。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

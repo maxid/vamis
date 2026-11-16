@@ -75,7 +75,7 @@ json
 
 1. 一句话定位（Amis 的 Schema，原生跑在 Vue 3 上）。
 2. 一张真实产品截图（编辑器 / CRUD / 对照页三选一，不要放 logo 墙）。
-3. 状态说明：alpha、185/189 type、语义 67%、非官方。
+3. 状态说明：alpha、185/189 type、语义 62%、非官方。
 4. 三个入口：Demo、文档、对照页。
 
 徽章建议（npm 发布前不要放 npm 徽章，会显示 package not found）：
@@ -117,7 +117,7 @@ v0.1.0-alpha.1 — 第一次公开 alpha
 
 ## 这次有什么
 
-- 185 / 189 个 Amis type 名称已注册，组件语义平均 67%
+- 185 / 189 个 Amis type 名称已注册，组件语义平均 62%
 - Vue `VamisRoot` + 任意 HTML `vamis.embed` 两条入口
 - YAML / JSON 双作者态，信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）
 - 941 个单测通过；Playwright 对照用例 1386 条，P0 8 条 helper 差异（均为 `m-l-*`）

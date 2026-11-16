@@ -5,7 +5,7 @@ outline: deep
 
 # Radios 单选框
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 组单选
 :::
 

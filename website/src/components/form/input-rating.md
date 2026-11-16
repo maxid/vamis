@@ -5,7 +5,7 @@ outline: deep
 
 # InputRating 评分
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 能打分；半星/自定义字符未齐
 :::
 

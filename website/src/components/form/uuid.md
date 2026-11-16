@@ -5,7 +5,7 @@ outline: deep
 
 # UUID 随机 ID
 
-::: info 实现进度 70% · 进行中
+::: warning 实现进度 70% · 进行中
 能生成；仍走扁平 name
 :::
 

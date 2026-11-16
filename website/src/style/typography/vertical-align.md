@@ -6,7 +6,7 @@ title: Vertical Alignment
 
 # Vertical Alignment
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Vertical Align：`align-*` 落在同一元素的 `vertical-align`。独立样例 + 组合；补 `align-text-top` / `align-text-bottom` 与 `m:` / `pc:`。
 :::
 

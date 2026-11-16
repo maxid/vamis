@@ -6,7 +6,7 @@ title: Font Family
 
 # Font Family
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Font Family：`font-sans` / `serif` / `mono` 落在同一元素的 `font-family`，字栈与 Amis helper 硬编码一致。独立样例 + 组合。本页与 Amis 一样没有 `m:` / `pc:`，不支持状态前缀。
 :::
 

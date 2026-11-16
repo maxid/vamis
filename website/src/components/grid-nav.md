@@ -5,7 +5,7 @@ outline: deep
 
 # GridNav 宫格导航
 
-::: info 实现进度 50% · 进行中
+::: warning 实现进度 50% · 进行中
 能宫格；仅此处读了 `badge`
 :::
 

@@ -5,7 +5,7 @@ outline: deep
 
 # Status 状态
 
-::: info 实现进度 75% · 进行中
+::: warning 实现进度 75% · 进行中
 默认状态列表（成功 / 失败 / 运行中 / 排队中 / 调度中 / 警告 / 信息）、`value` / `name`、`map`（图标）、`labelMap`（文本）、`source` 自定义（label / icon / color / className）、`placeholder`。文档按 Amis 章节重写。
 :::
 

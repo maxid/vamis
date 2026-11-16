@@ -5,7 +5,7 @@ outline: deep
 
 # JsonSchema
 
-::: warning 实现进度 30% · 进行中
+::: danger 实现进度 30% · 进行中
 **精简**：只渲染 string/number/boolean 属性
 :::
 

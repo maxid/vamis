@@ -6,7 +6,7 @@ title: Text Transform
 
 # Text Transform
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Text Transform：`uppercase` / `lowercase` / `capitalize` / `normal-case` 落在同一元素的 `text-transform`。独立样例 + 组合；`m:` / `pc:` 已进 helper。
 :::
 

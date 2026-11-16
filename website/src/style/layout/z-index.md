@@ -6,7 +6,7 @@ title: Z-Index
 
 # Z-Index
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Z-Index：`z-0`…`z-50` / `z-auto` 落在同一元素的 `z-index`。独立样例 + 五卡叠层组合；`m:` / `pc:` 已进 helper，不支持状态前缀。
 :::
 

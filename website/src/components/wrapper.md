@@ -5,8 +5,8 @@ outline: deep
 
 # Wrapper 包裹容器
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss`。`className` / `style` 打在宿主 `div.vamis-node`。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`body`、默认 `size: md` 内边距、`xs`–`lg` / `none`、`style` 对象与 `${style}`、`wrap`。缺 `themeCss`。`className` / `style` 打在宿主 `div.vamis-node`。
 :::
 
 简单的包裹容器，相当于用 `div` 包一层，最大用处是配合 css 布局。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

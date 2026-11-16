@@ -4,7 +4,7 @@ title: 自定义组件
 
 # 自定义组件
 
-::: info 实现进度 55% · 进行中
+::: warning 实现进度 55% · 进行中
 `registerRenderer` 可用，D7 的 `test` / `weight` / `isolateScope` 已接。插件市场、错误边界仍缺。
 :::
 

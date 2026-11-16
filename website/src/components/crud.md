@@ -5,7 +5,7 @@ outline: deep
 
 # CRUD 增删改查
 
-::: info 实现进度 84% · 进行中
+::: warning 实现进度 65% · 进行中
 文档介绍页用 `/api/mock2/sample` 真跑（筛选/批量/删除/重置）；`api` 按 `isApiOutdated` 刷新；`title` / `headerToolbar: []` 可用。补 `loadDataOnce`（本地分页/筛选/排序）/ `syncLocation` / quickEdit 多控件 / 表达式 matchFunc；缺 Amis JS 函数式 matchFunc（D10）
 :::
 

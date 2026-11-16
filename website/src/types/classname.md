@@ -4,7 +4,7 @@ title: ClassName
 
 # ClassName
 
-::: info 实现进度 70% · 进行中
+::: warning 实现进度 70% · 进行中
 `resolveClassName` 已接字符串 / 对象 / 模板 / `m-t-xs` / `w-*` / `h-*` / 布局 helper / `m:` `pc:`。表单项 `className` 会落到标签（对齐 Amis `/style` 的 `text-green-700`）。Page / Form / FormItem / Container / Panel 的常用 `xxxClassName` 已打到子节点。其余组件、hover 前缀全矩阵与 `registerTheme` 仍是 D12 P1。
 :::
 

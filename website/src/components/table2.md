@@ -5,7 +5,7 @@ outline: deep
 
 # Table2 表格
 
-::: info 实现进度 70% · 进行中
+::: warning 实现进度 70% · 进行中
 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto（叶列 > 5）。缺展开行、树、固定列、表头分组、拖拽、总结栏、列宽拖、quickEdit、行悬浮操作、粘性头、列搜索。
 :::
 

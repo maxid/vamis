@@ -38,8 +38,8 @@ alwaysApply: true
 
 ### 已注册 ≠ 已完成
 - 踩过：`registerRenderer` 有调用就标完成；`page` 因 `pullRefresh` 未接从 100% 打回进行中。
-- 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。 进度数字只按「逐章节两站核过」算：`table` 对照 33/33 时标 99%，被用户打回，实际还缺十几项。对照条数全过不能当百分比。
-- 触及：`page` `container` `table`
+- 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。进度数字只按「逐章节两站核过」算：`table` 对照 33/33 时标 99%，被用户打回，实际还缺十几项。对照条数全过不能当百分比。**80% 同样**：只写「文档主路径已对齐 + 缺 themeCss」的布局壳 / 包装器不得进 80（2026-11-16 把 flex/grid/web-component/amis 等从 80–90 打回 40–70）。侧栏着色跟档位：≥80 才 info。
+- 触及：`page` `container` `table` `flex` `grid` `web-component` `amis`
 - 规则：组件 P0 TODO「实现标准」；`.cursor/rules/update-progress.mdc`
 
 ### 文档移动预览 iframe 不要打进站点壳 CSS

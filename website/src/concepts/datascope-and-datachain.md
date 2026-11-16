@@ -4,7 +4,7 @@ title: 数据域与数据链
 
 # 数据域与数据链
 
-::: info 实现进度 75% · 进行中
+::: warning 实现进度 75% · 进行中
 文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。JSON 与 YAML 同等有效。`trackExpression`（D9）、CRUD filter 独立域（D10）、表单项写到 page 域（D6）仍缺。
 :::
 

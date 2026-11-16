@@ -6,7 +6,7 @@ title: Box Sizing
 
 # Box Sizing
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis：左侧 `box-border` 128px，右侧 `box-content` 128 + padding 32 = 160px。`border-4` 未配 `border-solid` 时不画边、不占尺寸（Amis helper 同款）。本页不支持响应式 / 状态前缀。
 :::
 

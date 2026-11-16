@@ -23,8 +23,10 @@ describe('doc progress parser', () => {
   it('colors by completion like the page banner', () => {
     expect(progressTone(100)).toBe('success')
     expect(progressTone(92)).toBe('info')
-    expect(progressTone(50)).toBe('info')
-    expect(progressTone(49)).toBe('warning')
+    expect(progressTone(80)).toBe('info')
+    expect(progressTone(79)).toBe('warning')
+    expect(progressTone(40)).toBe('warning')
+    expect(progressTone(39)).toBe('danger')
     expect(progressTone(0)).toBe('danger')
   })
 

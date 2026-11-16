@@ -5,8 +5,8 @@ outline: deep
 
 # HBox 布局
 
-::: info 实现进度 90% · 进行中
-文档主路径已对齐：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal`。
+::: warning 实现进度 65% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal`。
 :::
 
 水平分栏，对齐 Amis 同名 schema（CSS flex，默认不换行）。未写 `width` 时各列均分。默认间距 `gap: xs`。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

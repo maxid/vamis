@@ -5,7 +5,7 @@ outline: deep
 
 # ConditionBuilder 条件组合
 
-::: warning 实现进度 35% · 进行中
+::: danger 实现进度 35% · 进行中
 **精简**：基础规则组；缺公式/嵌套组/日期控件
 :::
 

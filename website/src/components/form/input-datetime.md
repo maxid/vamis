@@ -5,7 +5,7 @@ outline: deep
 
 # InputDatetime 日期时间选择器
 
-::: info 实现进度 62% · 进行中
+::: warning 实现进度 62% · 进行中
 `input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐
 :::
 

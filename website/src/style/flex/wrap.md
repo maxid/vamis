@@ -6,7 +6,7 @@ title: Flex Wrap
 
 # Flex Wrap
 
-::: tip 实现进度 90% · 已完成
+::: info 实现进度 90% · 已完成
 活示例对标 Amis Flex Wrap：`flex-wrap` / `flex-wrap-reverse` / `flex-nowrap` 落在同一元素的 `flex-wrap`。独立样例 + 三向组合；`m:` / `pc:`（含 reverse / nowrap）已进 helper，不支持状态前缀。
 :::
 
