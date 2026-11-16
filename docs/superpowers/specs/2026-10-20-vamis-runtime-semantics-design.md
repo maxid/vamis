@@ -149,9 +149,13 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
 
 验收：`page > service > tpl` 的变量遮蔽、`__super` 读取、URL `?word=myquery`、`data` + `initApi` 合并、`trackExpression: none` 均与 amis 文档示例一致。
 
+<a id="d1-scope-table"></a>
+
 ### 具备数据域的组件（实现现状）
 
 站点概念页只给使用者列名单。做对应 type 时看这张表：独立 Scope = 写 `data` / `initApi` 会建本层；行 / 浮层 = 组件自己的 `data` 不建域，子节点能读写行记录或 overlay。
+
+**回写（强制）**：名单里的 type 一旦接上独立 Scope 或行 / 浮层数据链，当轮必须改本表的 ✓ / × 和注意，不要只改组件 TODO。概念页 `/concepts/datascope-and-datachain` 的实现进度按本表缺口重算（`trackExpression` 仍属 D9，单独记）。独立 Scope 现 **6 / 18**（含 Card），行 / 浮层现 **10**。
 
 | 组件 | 独立 Scope | 行 / 浮层 | 注意 |
 |------|:----------:|:---------:|------|

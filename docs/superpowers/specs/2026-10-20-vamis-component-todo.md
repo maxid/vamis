@@ -44,6 +44,7 @@
 3. **示例**：amis 文档主路径的每个场景至少有一份 vamis 活示例（可合并，但不能缺）；示例必须可运行。
 4. **差异**：允许 vamis 新增字段 / 增强（超越）；但 amis 已有能力缺失时，必须逐条写入组件页「与 Amis 的差异」和 TODO 行「缺 …」。差异不得用“设计不同 / 非目标”掩盖。
 5. **验证**：组件 / 示例改动按 `.cursor/rules/compare.mdc` 跑 `pnpm compare --page <type>`；文档改动至少通过 `pnpm docs:build` 或生成器校验；未验证不得标 100%。
+6. **数据域名单**：type 在「具备数据域的组件」里（App / Page / Cards / Chart / CRUD / CRUD2 / Dialog / Drawer / List / Form / PaginationWrapper / Service / Wizard / Combo / InputArray / Table / Table2，以及 `card`）。接上独立 Scope 或行 / 浮层数据链后，当轮回写 [运行时语义 D1 实现表](./2026-10-20-vamis-runtime-semantics-design.md#d1-scope-table)，并按缺口重算概念页数据域 banner。
 
 ### 判定
 
