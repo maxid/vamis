@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { Button } from '@vamis/ui'
+import ChromeSwitch from './components/ChromeSwitch.vue'
 import SiteSearch from './components/SiteSearch.vue'
 import { withBase } from './docs/base'
 import { docViewport, hydrateDocViewport, setDocViewport } from './docs/doc-viewport'
@@ -81,8 +82,21 @@ watch([dark, density, pack], () => {
   localStorage.setItem(THEME_KEY, dark.value ? 'dark' : 'light')
   localStorage.setItem(DENSITY_KEY, density.value)
   localStorage.setItem(PACK_KEY, pack.value)
-  applyChrome()
 })
+
+watch(density, () => {
+  document.documentElement.dataset.density = density.value
+  publishPreviewChrome()
+})
+
+/** 等 switch 先画出滑块过渡，再关色/边动画。否则 theme-changing 会把密度/外观开关掐成瞬切。 */
+watch(
+  [dark, pack],
+  () => {
+    requestAnimationFrame(() => applyChrome())
+  },
+  { flush: 'post' },
+)
 </script>
 
 <template>
@@ -116,45 +130,28 @@ watch([dark, density, pack], () => {
               />
             </button>
           </div>
-          <div class="flex rounded-md border p-0.5">
-            <Button
-              size="xs"
-              :variant="density === 'compact' ? 'default' : 'ghost'"
-              @click="density = 'compact'"
-            >
-              紧凑
-            </Button>
-            <Button
-              size="xs"
-              :variant="density === 'comfortable' ? 'default' : 'ghost'"
-              @click="density = 'comfortable'"
-            >
-              舒适
-            </Button>
-          </div>
-          <div class="flex rounded-md border p-0.5">
-            <Button size="xs" :variant="!dark ? 'default' : 'ghost'" @click="dark = false">浅色</Button>
-            <Button size="xs" :variant="dark ? 'default' : 'ghost'" @click="dark = true">深色</Button>
-          </div>
-          <div class="flex rounded-md border p-0.5" role="radiogroup" aria-label="预览视口">
-            <Button
-              size="xs"
-              :variant="docViewport === 'desktop' ? 'default' : 'ghost'"
-              role="radio"
-              :aria-checked="docViewport === 'desktop'"
-              @click="setDocViewport('desktop')"
-            >
-              桌面
-            </Button>
-            <Button
-              size="xs"
-              :variant="docViewport === 'mobile' ? 'default' : 'ghost'"
-              role="radio"
-              :aria-checked="docViewport === 'mobile'"
-              @click="setDocViewport('mobile')"
-            >
-              移动
-            </Button>
+          <div class="flex items-center gap-2">
+            <ChromeSwitch
+              :model-value="density === 'comfortable'"
+              off-text="紧凑"
+              on-text="舒适"
+              aria-label="密度"
+              @update:model-value="density = $event ? 'comfortable' : 'compact'"
+            />
+            <ChromeSwitch
+              :model-value="dark"
+              off-text="浅色"
+              on-text="深色"
+              aria-label="外观"
+              @update:model-value="dark = $event"
+            />
+            <ChromeSwitch
+              :model-value="docViewport === 'mobile'"
+              off-text="桌面"
+              on-text="移动"
+              aria-label="预览视口"
+              @update:model-value="setDocViewport($event ? 'mobile' : 'desktop')"
+            />
           </div>
           <nav class="flex gap-2 text-sm">
             <RouterLink to="/" class="rounded-md px-3 py-1.5 hover:bg-accent" :class="docsNavClass()">

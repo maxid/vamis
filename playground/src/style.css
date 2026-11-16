@@ -275,6 +275,30 @@ body,
   min-width: 0;
 }
 
+.doc-chrome-switch.vamis-switch,
+.doc-chrome-switch.vamis-switch.is-checked {
+  min-width: 52px;
+  background: var(--primary);
+}
+.doc-chrome-switch.vamis-switch:hover,
+.doc-chrome-switch.vamis-switch.is-checked:hover {
+  background: var(--colors-brand-4);
+}
+.doc-chrome-switch.vamis-switch .vamis-switch__text,
+.doc-chrome-switch.vamis-switch.is-checked .vamis-switch__text {
+  color: var(--primary-foreground);
+  text-transform: none;
+}
+.doc-chrome-switch.vamis-switch:has(:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+/* 切浅深色会给 html 加 theme-changing（transition:none），否则密度/外观开关滑块被掐掉，只剩桌面/移动有动画。 */
+html.theme-changing .doc-chrome-switch,
+html.theme-changing .doc-chrome-switch .vamis-switch__text,
+html.theme-changing .doc-chrome-switch .vamis-switch__slider::before {
+  transition: var(--switch-transition) !important;
+}
 .doc-theme-dot {
   position: relative;
 }
