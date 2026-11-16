@@ -149,6 +149,33 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
 
 验收：`page > service > tpl` 的变量遮蔽、`__super` 读取、URL `?word=myquery`、`data` + `initApi` 合并、`trackExpression: none` 均与 amis 文档示例一致。
 
+### 具备数据域的组件（实现现状）
+
+站点概念页只给使用者列名单。做对应 type 时看这张表：独立 Scope = 写 `data` / `initApi` 会建本层；行 / 浮层 = 组件自己的 `data` 不建域，子节点能读写行记录或 overlay。
+
+| 组件 | 独立 Scope | 行 / 浮层 | 注意 |
+|------|:----------:|:---------:|------|
+| App | × | × | 沿用父域 |
+| Page | ✓ | — | `registerRenderer` `scope: self`；脱离表单的表单项写进本层 |
+| Cards | × | ✓ | 集合不建域。每张卡走 `card` 的独立 Scope，行 ValueHost 写回该项 |
+| Chart | × | × | option 读父域，接口结果不进本层 Scope |
+| CRUD | ✓ | — | `scope: self`。`filter` 默认渲成 form，是第二层 |
+| CRUD2 | ✓ | — | `scope: self` |
+| Dialog | × | ✓ | 打开后 overlay 压栈，关掉恢复上一层。触发器节点本身不建域 |
+| Drawer | × | ✓ | 同 Dialog |
+| List | × | ✓ | 集合不建域。每行 extraData + RowValueHost |
+| Form | ✓ | — | `scope: self`。store 只收本域，查找才沿 `__super` |
+| PaginationWrapper | × | ✓ | 切片结果和页码 extraData 下发 |
+| Service | ✓ | — | `scope: self` |
+| Wizard | × | ✓ | 自身只下发 `currentStep`；步骤内容包 form |
+| Combo | × | ✓ | 行 NestedFormScope 写回数组项；独立 Scope 仍缺（D6） |
+| InputArray | × | ✓ | 同行 NestedFormScope |
+| Table | × | ✓ | 集合不建域。单元格 extraData 是行记录 |
+| Table2 | × | ✓ | 同 Table |
+| Card | ✓ | — | Amis 名单没有 Card。Vamis `scope: self`，Cards 里每张卡是这一层 |
+
+CRUD filter 已随内嵌 form 拆开。D10 余项是 `matchFunc` 的 JS 函数字符串等，不是「filter 没有独立域」。`trackExpression` 仍属 D9。
+
 ## 6. 表达式、模板与过滤器（D2）
 
 amis 语义：

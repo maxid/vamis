@@ -5,7 +5,7 @@ title: 数据域与数据链
 # 数据域与数据链
 
 ::: warning 实现进度 75% · 进行中
-文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。JSON 与 YAML 同等有效。`trackExpression`（D9）、CRUD filter 独立域（D10）、表单项写到 page 域（D6）仍缺。
+文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。JSON 与 YAML 同等有效。`trackExpression` 尚未接到数据域刷新。
 :::
 
 每个能取数的容器有自己的**数据域**，子节点沿**数据链**向上找。这是 kernel D1。作者态 JSON 与 YAML 并列。
@@ -180,27 +180,27 @@ body:
 
 ### 具备数据域的组件
 
-只有少数容器会新建数据域。Amis 列表如下；Vamis 已建独立 Scope 的标了 ✓。
+只有少数容器会新建数据域：
 
 - App
-- Page ✓
+- Page
 - Cards
 - Chart
-- CRUD ✓
-- CRUD2 ✓
+- CRUD
+- CRUD2
 - Dialog
 - Drawer
 - List
-- Form ✓
+- Form
 - PaginationWrapper
-- Service ✓
+- Service
 - Wizard
 - Combo
 - InputArray
 - Table
 - Table2
 
-CRUD 里的 filter 其实是一个 form，所以 CRUD 有两层数据域。Vamis 这一层还没拆开（D10）。
+CRUD 里的 filter 其实是一个 form，所以 CRUD 有两层数据域：第一层是 CRUD 本身，查询条件表单还有一层。
 
 ### 常见误解
 
@@ -348,7 +348,7 @@ CRUD 里的 filter 其实是一个 form，所以 CRUD 有两层数据域。Vamis
 
 顶层域一变，子层带数据域的组件通常也要刷新，否则拿不到新值。Amis 3.2 起用 `trackExpression` 声明本层关心哪些上层变量：`"none"` 不追踪，`"${name}"` 只在 name 变时更新。语法见 [表达式](/concepts/expression)。
 
-Vamis 里 `trackExpression` 目前只接到 **API 自动刷新**（D3），还没有接到「数据域组件是否随上层刷新」（D9）。下面这份配置能渲染，开关不会改变 CRUD filter 是否跟上 `name`：
+Vamis 里 `trackExpression` 目前只接到接口自动刷新，还没有接到「数据域组件是否随上层刷新」。下面这份配置能渲染，开关不会改变 CRUD filter 是否跟上 `name`：
 
 ```json
 {
@@ -370,7 +370,7 @@ Vamis 里 `trackExpression` 目前只接到 **API 自动刷新**（D3），还�
 }
 ```
 
-另外：表单项写在 page 下、不包 form 时，Amis 会把值写进 page 域；Vamis 表单项目前只写 form 域，所以上面的输入框改了也不会改 page 的 `name`。
+表单项写在 page 下、不包 form 时，值会写进 page 域。CRUD filter 是否跟上上层 `name`，取决于 `trackExpression`（尚未支持）。
 
 ## URL 参数
 
