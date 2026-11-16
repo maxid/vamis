@@ -30,7 +30,7 @@ const THEME_KEY = 'vamis-theme'
 const DENSITY_KEY = 'vamis-density'
 const PACK_KEY = 'vamis-theme-pack'
 
-type ThemePack = 'cxd' | 'antd' | 'ang' | 'green' | 'amber'
+type ThemePack = 'cxd' | 'antd' | 'ang' | 'green' | 'amber' | 'gold'
 
 const packs: { id: ThemePack; label: string; color: string }[] = [
   { id: 'cxd', label: '云舍', color: '#2468f2' },
@@ -38,6 +38,7 @@ const packs: { id: ThemePack; label: string; color: string }[] = [
   { id: 'ang', label: 'ang', color: '#7266ba' },
   { id: 'green', label: '翠绿', color: '#007617' },
   { id: 'amber', label: '琥珀', color: '#9b4500' },
+  { id: 'gold', label: '金色', color: '#8f6a00' },
 ]
 
 const ACCENT_BY_PACK: Record<ThemePack, string> = {
@@ -46,6 +47,7 @@ const ACCENT_BY_PACK: Record<ThemePack, string> = {
   ang: 'blue',
   green: 'green',
   amber: 'amber',
+  gold: 'gold',
 }
 
 const dark = ref(false)

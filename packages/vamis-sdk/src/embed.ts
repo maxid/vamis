@@ -19,7 +19,7 @@ export type EmbedProps = {
   locale?: string
 }
 
-const THEME_PACKS = new Set(['cxd', 'antd', 'ang', 'dark', 'green', 'amber'])
+const THEME_PACKS = new Set(['cxd', 'antd', 'ang', 'dark', 'green', 'amber', 'gold'])
 const LEGACY_THEME: Record<string, string> = {
   blue: 'cxd',
   sky: 'antd',
@@ -32,7 +32,7 @@ function applyEmbedTheme(host: HTMLElement, theme: string | undefined) {
   if (!pack) return
   host.dataset.theme = pack
   host.classList.toggle('dark', pack === 'dark')
-  host.dataset.accent = pack === 'green' || pack === 'amber' ? pack : 'blue'
+  host.dataset.accent = pack === 'green' || pack === 'amber' || pack === 'gold' ? pack : 'blue'
 }
 
 export type EmbedEnv = Partial<RendererEnv> & {

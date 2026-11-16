@@ -274,7 +274,7 @@ alwaysApply: true
 
 ### 输入框 hover 走 --primary，focus glow 包整组
 - 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。Select 触发器写成 `box-shadow: 0 0 0 1px`，和 InputText 的 3px glow 两套。addOn 文案和无边框 focus 字色没跟 `--primary`。
-- 稳定做法：hover `border-color: var(--primary)`（5 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），量进 `--control-focus-glow`，InputText 打在 `.vamis-text-control` 整组，**Select 触发器共用同一 token**（Amis cxd Select 是 `shadow-none`，不要各写 1px）。focus 时文字 addOn 字色 `--control-focus-addon-color`（= `--primary`，对齐 `--Form-input-onFocus-addOnColor`）；`borderMode: none` 无 glow，原生字色改 `--primary`。无边框示例用 `focus:text-primary`，不要 Amis 的 `focus:text-indigo-700`。压过 Button utilities 用 unlayered。
+- 稳定做法：hover `border-color: var(--primary)`（6 色跟着走）。half 只清 L/R/T 色，圆角仍 `--radius`，背景仍 `--card`；原生 input 要 `appearance: none`，否则深色半边框会露出 UA 白底。不要清 input 右边框；**文字 addOn 和按钮 addOn 都 `transition: none`**，输入区才 0.2s，先亮附加区。focus **保留 Vamis 3px glow**（不要改成 Amis 的 `boxShadow: none`），量进 `--control-focus-glow`，InputText 打在 `.vamis-text-control` 整组，**Select 触发器共用同一 token**（Amis cxd Select 是 `shadow-none`，不要各写 1px）。focus 时文字 addOn 字色 `--control-focus-addon-color`（= `--primary`，对齐 `--Form-input-onFocus-addOnColor`）；`borderMode: none` 无 glow，原生字色改 `--primary`。无边框示例用 `focus:text-primary`，不要 Amis 的 `focus:text-indigo-700`。压过 Button utilities 用 unlayered。
 - 触及：`input-text` `input-password` `select` Options `input-number`
 - 规则：本文；Amis `_text.scss` 只对 hover/竖缝/圆角/addOn 字色；focus glow 跟 Vamis 原风格
 
@@ -380,7 +380,7 @@ alwaysApply: true
 
 ### 组件色 alias `--colors-*` 主题阶，暗底文字与品牌实色分开提亮
 - 踩过：Tag `--tag-active: #2468f2` 等钉死云舍，切仿 AntD / ang 都不跟；成功/警告/危险也曾是另一套 oklch。深色一度把 `--primary` 改成固定 `oklch(0.7 0.13 accent-h)`，品牌实色按钮变成浅底深字，和当前 brand-5 对不上；卡片、Page、画布也都偏黑，层级关系不清楚。
-- 稳定做法：深浅主题的 `--primary` 都 alias 当前 brand-5，实色按钮用 `--primary-foreground` 白字；暗底链接和选中文字需要提亮时只改 `--link-color`（相对主色 `l + 0.16`，hover 再抬），不要改品牌主色本身。hover / active 沿品牌阶走，Amis dark 包的反向色阶单独覆盖。深色画布 / Page / 面板依次提亮（fill-canvas → page-main-bg → fill-11），`--ring` / focus glow 跟 `--primary`。顶栏 5 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀）。文档 `.doc-play__preview` 加 `bg-card`，不要拿页面画布冒充升高面。
+- 稳定做法：深浅主题的 `--primary` 都 alias 当前 brand-5，实色按钮用 `--primary-foreground` 白字；暗底链接和选中文字需要提亮时只改 `--link-color`（相对主色 `l + 0.16`，hover 再抬），不要改品牌主色本身。`[data-theme]` 宿主必须同时重算语义 token（`:root, [data-theme]`），不能只改 brand 阶让 SDK 继续继承 root 主色；hover / active 沿品牌阶走，Amis dark 包的反向色阶单独覆盖。深色画布 / Page / 面板依次提亮（fill-canvas → page-main-bg → fill-11），`--ring` / focus glow 跟 `--primary`。顶栏 6 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色）。文档 `.doc-play__preview` 加 `bg-card`，不要拿页面画布冒充升高面。
 - 触及：`tag` Button FormItem 主题包 文档预览 `select` `tooltip-wrapper` `dialog`
 - 规则：`packages/vamis-ui/src/styles.css` `.dark`；`packages/vamis-ui/src/themes.css`；`docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md`
 
@@ -556,7 +556,7 @@ alwaysApply: true
 
 ### `--primary` 先写 6 位 hex，oklch 放进 @supports
 - 踩过：`--primary: oklch(.49 .16 var(--accent-h))` 在旧 WebView 里整段无效，`bg-primary` / 确认钮掉成描边灰。手机对照看起来像「主题没生效」。
-- 稳定做法：`:root` 默认云舍蓝 `#2468f2`。5 色切色的 oklch / `color-mix` 只放 `@supports (color: oklch(0 0 0))`。SDK 打包后再追加 `@supports not` hex（lightningcss 可能拆掉源码里的 @supports）。
+- 稳定做法：`:root` 默认云舍蓝 `#2468f2`。6 色切色的 oklch / `color-mix` 只放 `@supports (color: oklch(0 0 0))`。SDK 打包后再追加 `@supports not` hex（lightningcss 可能拆掉源码里的 @supports）。
 - 触及：`action` `button` `form` `input-date`
 - 规则：本文；`packages/vamis-ui/src/styles.css`；`packages/vamis-sdk/vite.config.ts` `appendLegacyPrimary`
 

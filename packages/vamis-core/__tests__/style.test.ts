@@ -257,6 +257,7 @@ describe('Amis width helpers', () => {
   it('pins widget root to Amis font token, 14px/1.5, and line-8 border', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain(':root,\n[data-theme] {')
     expect(css).toContain('--border: var(--colors-neutral-line-8)')
     expect(css).toContain('--fontSizeBase: 14px')
     expect(css).toContain('--lineHeightBase: 1.5')
@@ -286,6 +287,10 @@ describe('Amis width helpers', () => {
     expect(themes).toContain('--colors-brand-5: #007617')
     expect(themes).toContain('[data-theme="amber"]')
     expect(themes).toContain('--colors-brand-5: #9b4500')
+    expect(themes).toContain('[data-theme="gold"]')
+    expect(themes).toContain('--colors-brand-5: #8f6a00')
+    expect(css).toContain('[data-theme="gold"]')
+    expect(css).toContain('--accent-h: 50')
     expect(themes).toContain('[data-theme="dark"]')
     expect(css).not.toContain('--fonts-ui-family')
     expect(css).not.toMatch(/html \{\s*@apply font-sans/)

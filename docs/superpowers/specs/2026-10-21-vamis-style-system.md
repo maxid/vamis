@@ -119,7 +119,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 3. 缺的原语拷进 `packages/vamis-ui`（本轮补 `Slider`；Tooltip 已有）。渲染器组合它们。
 4. 亮暗主题同一套语义名。
 5. 禁止输出 `cxd-` 前缀，禁止引入 Amis SCSS。cxd 能力尽量像素级落到 token / utility / variants。
-6. 身份：Amis `--fonts-base-family` 系统栈（不嵌入 webfont）。密度与盒子对齐 cxd；主色走 `--primary`。顶栏主题是 **云舍 / 仿 AntD / ang**（`html[data-theme]`）+ 浅色/深色。`cssVars` 仍可覆盖。
+6. 身份：Amis `--fonts-base-family` 系统栈（不嵌入 webfont）。密度与盒子对齐 cxd；主色走 `--primary`。顶栏主题是 **云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色** 六色点（`html[data-theme]`）+ 浅色/深色。`cssVars` 仍可覆盖。
 
 ## 3. Token 对照：哪些直接映射，哪些要扩展
 
@@ -247,7 +247,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 
 ## 6. Playground
 
-- 顶栏可切 **云舍 / 仿 AntD / ang**（`html[data-theme]`）、**浅色 / 深色**、**紧凑 / 舒适**，写入 `html.dark` 与 `html[data-density]`，localStorage 记住。不要再并排 5 色点。
+- 顶栏可切 **云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色** 六色点（`html[data-theme]`）、**浅色 / 深色**、**紧凑 / 舒适**，写入 `html.dark` 与 `html[data-density]`，localStorage 记住。
 - 预览区 `bg-background`（画布），源码区 `bg-card`（面板）。
 
 ## 7. 验收标准

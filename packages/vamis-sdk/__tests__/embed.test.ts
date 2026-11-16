@@ -11,10 +11,10 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-function mount(schema: unknown, props?: Parameters<typeof embed>[2]) {
+function mount(schema: unknown, props?: Parameters<typeof embed>[2], env?: Parameters<typeof embed>[3]) {
   const host = document.createElement('div')
   document.body.appendChild(host)
-  const scoped = embed(host, schema, props)
+  const scoped = embed(host, schema, props, env)
   mounts.push(scoped)
   return { host, scoped }
 }
@@ -52,6 +52,13 @@ describe('embed', () => {
     expect(document.body.firstElementChild).not.toBeNull()
     expect(document.body.firstElementChild?.classList.contains('vamis-sdk')).toBe(false)
     expect(document.body.querySelector('.vamis-sdk')).toBeTruthy()
+  })
+
+  it('applies the gold theme and accent to the embed host', () => {
+    const { host } = mount({ type: 'page', body: 'ok' }, undefined, { theme: 'gold' })
+    expect(host.dataset.theme).toBe('gold')
+    expect(host.dataset.accent).toBe('gold')
+    expect(host.classList.contains('dark')).toBe(false)
   })
 
   it('keeps two page-body buttons as inline-block siblings (Amis style 基本使用)', async () => {

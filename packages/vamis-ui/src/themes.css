@@ -287,7 +287,7 @@
 }
 
 /*
- * 翠绿 / 琥珀：顶栏另外两套完整 brand 阶（成功/警告/危险仍跟当前浅色或深色语义色）。
+ * 翠绿 / 琥珀 / 金色：顶栏另外三套完整 brand 阶（成功/警告/危险仍跟当前浅色或深色语义色）。
  * 云舍 / 仿 AntD / ang 三套已在上面。
  */
 [data-theme="green"] {
@@ -327,6 +327,31 @@
   --colors-brand-8: #edb886;
   --colors-brand-9: #f6d8bc;
   --colors-brand-10: #fdebda;
+  --colors-info-1: var(--colors-brand-1);
+  --colors-info-2: var(--colors-brand-2);
+  --colors-info-3: var(--colors-brand-3);
+  --colors-info-4: var(--colors-brand-4);
+  --colors-info-5: var(--colors-brand-5);
+  --colors-info-6: var(--colors-brand-6);
+  --colors-info-7: var(--colors-brand-7);
+  --colors-info-8: var(--colors-brand-8);
+  --colors-info-9: var(--colors-brand-9);
+  --colors-info-10: var(--colors-brand-10);
+  --primary-hover: var(--colors-brand-4);
+  --primary-active: var(--colors-brand-3);
+}
+
+[data-theme="gold"] {
+  --colors-brand-1: #2e2100;
+  --colors-brand-2: #473300;
+  --colors-brand-3: #614600;
+  --colors-brand-4: #785900;
+  --colors-brand-5: #8f6a00;
+  --colors-brand-6: #aa8318;
+  --colors-brand-7: #c49d3f;
+  --colors-brand-8: #d9ba70;
+  --colors-brand-9: #ead8a9;
+  --colors-brand-10: #f8f0d9;
   --colors-info-1: var(--colors-brand-1);
   --colors-info-2: var(--colors-brand-2);
   --colors-info-3: var(--colors-brand-3);

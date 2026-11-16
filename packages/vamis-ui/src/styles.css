@@ -87,7 +87,8 @@
   24px form gap, 98px horizontal label, 40px table row.
   No .cxd- prefix, no Amis SCSS; capabilities live in tokens / Tailwind.
 */
-:root {
+:root,
+[data-theme] {
   color-scheme: light;
   --accent-h: 258;
   --radius: var(--borders-radius-3);
@@ -144,7 +145,7 @@
   --primary-foreground: var(--colors-neutral-text-11);
   --primary-hover: var(--colors-brand-4);
   --primary-active: var(--colors-brand-3);
-  /* 链接色跟 `--primary`（顶栏 5 色）。hover 变浅（Amis brand-6），不要绑 `--primary-hover`（混黑几乎看不出）。 */
+  /* 链接色跟 `--primary`（顶栏 6 色）。hover 变浅（Amis brand-6），不要绑 `--primary-hover`（混黑几乎看不出）。 */
   --link-color: var(--primary);
   --link-hover-color: var(--colors-brand-6);
   --link-active-color: var(--primary-active);
@@ -686,7 +687,7 @@
   --label-danger-bg: var(--colors-error-5);
   /*
    * Card 转写 Amis `--Card-*`。选择器只 var()。
-   * actions 默认字 `--text-loud`，hover 字 `--primary`（跟 5 色包）；
+   * actions 默认字 `--text-loud`，hover 字 `--primary`（跟 6 色包）；
    * hover 底对齐 `--Card-actions-onHover-bg` fill-11。
    */
   --card-bg: var(--card);
@@ -847,6 +848,9 @@
 [data-accent="amber"] {
   --accent-h: 65;
 }
+[data-accent="gold"] {
+  --accent-h: 50;
+}
 [data-accent="sky"] {
   --accent-h: 230;
 }
@@ -869,6 +873,9 @@
 }
 [data-theme="amber"] {
   --accent-h: 65;
+}
+[data-theme="gold"] {
+  --accent-h: 50;
 }
 [data-theme="dark"] {
   --accent-h: 255;

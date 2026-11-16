@@ -1,7 +1,7 @@
 # Vamis 样式规范
 
 - 日期：2026-11-15
-- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减。2026-11-16 已统一深色画布 / Page / 面板层级，深浅主题的主色都 alias 当前品牌 `brand-5`
+- 状态：部分落地。标尺、色号、图标、`:style`、表格原语、渲染器 `<style>` 已清到 0；lucide chrome 图标已清到 0；选择器里的数字 `font-weight` 已清到 0。模板里的 Tailwind 字号工具类已清到 0；语义色工具类（1 处，Progress 的 Amis `bg-primary` map 键）是存量，按 §9 的上限只许减。2026-11-16 已统一深色画布 / Page / 面板层级，深浅主题的主色都 alias 当前品牌 `brand-5`；同日新增金色品牌包，并让语义 token 在 SDK 主题宿主上重新求值
 - 范围：`@vamis/ui` 的 token 与默认皮肤、`packages/vamis` 渲染器模板与内联样式。不管作者 `className`（helper 的行为精度见 [样式系统](./2026-10-21-vamis-style-system.md) §0.1）
 - 关联：
   - [样式系统（设计由来）](./2026-10-21-vamis-style-system.md)、[主题 token](./2026-10-21-vamis-theme-shadcn.md)

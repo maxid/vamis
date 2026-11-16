@@ -16,7 +16,7 @@ title: CSS 变量
 |------|------|
 | `--background` / `--foreground` | 画布与正文 |
 | `--card` / `--card-foreground` | 面板 |
-| `--primary` / `--primary-foreground` | 主色、主按钮。alias `--colors-brand-5`。顶栏 5 色点换整套色阶，站点壳跟主色走 |
+| `--primary` / `--primary-foreground` | 主色、主按钮。alias `--colors-brand-5`。顶栏 6 色点（云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色）换整套色阶，站点壳跟主色走 |
 | `--primary-hover` / `--primary-active` | 主按钮悬停 / 按下。Amis `--primary-onHover` / `--primary-onActive` 会映射过来 |
 | `--secondary` / `--muted` | 次要底 |
 | `--destructive` | 危险（Amis `danger`） |
