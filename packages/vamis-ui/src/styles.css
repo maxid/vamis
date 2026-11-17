@@ -1830,6 +1830,14 @@
   max-width: none;
 }
 
+/* 原语 Dialog / Sheet 模板仍带 Tailwind z-50（50）。sticky 表头/底栏是 --z-sticky 900，
+   不抬到 --z-modal 时「编辑 Schema」遮罩会被吸顶层盖住。 */
+[data-slot='dialog-overlay'],
+[data-slot='dialog-content'],
+[data-slot='sheet-overlay'],
+[data-slot='sheet-content'] {
+  z-index: var(--z-modal);
+}
 /* Amis Alert.confirm：无关闭 X 的 Modal。盒模型对齐 `_modal.scss`，不要停在 DialogContent 的 z-50 / p-5。 */
 .vamis-confirm-overlay,
 [data-vamis-confirm] {
@@ -4707,17 +4715,11 @@
   background: var(--table-checked-bg);
 }
 [data-slot="table-cell"] {
-  border-top: 1px solid var(--border);
-  /* Amis th/td 的 border-bottom：无外边框不等于末行没线。 */
-  border-bottom: 1px solid var(--border);
-}
-/* 行间只留一条：首行 top 当表头下那根灰线，后续行吃自己的 bottom。 */
-tbody > tr + tr > [data-slot="table-cell"] {
+  /* Amis `th, td { border-color: transparent; border-bottom }`：没有顶边。
+     表头底是 `--table-thead-sep`（fill-11，跟行底同色，表头/首行之间看不见线）。
+     不要用首行 `border-top` 冒充那根灰线。空态同理。 */
   border-top-width: 0;
-}
-[data-slot="table-row"][data-state="selected"] + [data-slot="table-row"] > [data-slot="table-cell"],
-[data-slot="table-row"].is-checked + [data-slot="table-row"] > [data-slot="table-cell"] {
-  border-top-color: var(--table-checked-border);
+  border-bottom: 1px solid var(--border);
 }
 [data-slot="table-head"] [data-slot="checkbox"],
 [data-slot="table-cell"] [data-slot="checkbox"] {
@@ -4727,7 +4729,8 @@ tbody > tr + tr > [data-slot="table-cell"] {
 /* Amis `.Table`：标题栏 40 / 序号 50 / 勾选列，tableLayout:fixed。 */
 /* 表格原语的配方（Amis `_table.scss`）：表头 14 / 数据格 12、表头灰底、行悬停 brand-10。
    打在 `data-slot` 上，凡用 `<Table>` 的渲染器（table / crud / input-table / tasks）同一把标尺；
-   不要在原语上写 `text-sm` / `text-xs` / `bg-muted`（那是 shadcn 配方：表头 12、数据格 14，正好反过来）。 */
+   不要在原语上写 `text-sm` / `text-xs` / `bg-muted`（那是 shadcn 配方：表头 12、数据格 14，正好反过来）。
+   Table2 也走 `<Table>`，但 Amis `_table2.scss` 行间是 td 顶边而不是底边：外壳必须 `border-bottom: unset`。 */
 [data-slot="table"] {
   font-size: var(--table-font-size);
   line-height: var(--lineHeightBase);
@@ -4767,6 +4770,49 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   font-size: var(--table-font-size);
   line-height: 1.5;
   color: var(--colors-neutral-text-2);
+}
+/* 作者 className 打在 `.vamis-node`。`b` / `b-a` 出边后内层 margin 会落在框里，挪到包装层外。 */
+.vamis-node.b:has(> .vamis-table-wrap),
+.vamis-node.b-a:has(> .vamis-table-wrap) {
+  margin-bottom: var(--gap-md);
+}
+.vamis-node.b > .vamis-table-wrap,
+.vamis-node.b-a > .vamis-table-wrap {
+  margin-bottom: 0;
+}
+/* Vamis 优化：`bordered: true` 恢复早期内容区卡片外框（原语曾是 `rounded-lg border bg-card`）。
+   默认仍无外边框（对齐 Amis `.Table`）。不是 Table2 的单元格网格。 */
+.vamis-table-wrap.is-bordered [data-slot="table-container"] {
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusLg);
+  background: var(--card);
+}
+.vamis-table-wrap.is-bordered.is-affix-header .vamis-table__affix-head {
+  border: 1px solid var(--border);
+  border-bottom-width: 0;
+  border-radius: var(--borderRadiusLg) var(--borderRadiusLg) 0 0;
+}
+.vamis-table-wrap.is-bordered.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] {
+  border-top-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+/* 卡片外框时表头/首行只留一根分隔，画在 thead 底（`--border`）。不要画在首行顶：
+   SDK 默认 `affixHeader` 会克隆表头，首行顶边会和克隆底（以及吸顶 inset 影）叠成两条。
+   文档预览 `env.affixHeader: false` 看不到这个问题。末行底边仍交给容器描边。
+   默认无外框仍走 Amis：表头底 fill-11、无顶边、末行留底。 */
+.vamis-table-wrap.is-bordered thead [data-slot="table-head"] {
+  border-bottom: 1px solid var(--border);
+}
+.vamis-table-wrap.is-bordered tbody > tr:first-child > [data-slot="table-cell"],
+.vamis-table-wrap.is-bordered tbody > tr:first-child > [data-slot="table-head"] {
+  border-top-width: 0;
+}
+.vamis-table-wrap.is-bordered tbody > tr:last-child > [data-slot="table-cell"],
+.vamis-table-wrap.is-bordered tbody > tr:last-child > [data-slot="table-head"],
+.vamis-table-wrap.is-bordered tbody > tr:has(+ .vamis-table__virtual-pad) > [data-slot="table-cell"],
+.vamis-table-wrap.is-bordered tbody > tr:has(+ .vamis-table__virtual-pad) > [data-slot="table-head"] {
+  border-bottom-width: 0;
 }
 /* 对齐 Amis `.Table-content { overflow-x: auto }`。table `width/min-width: 100%`，列可收缩；
    只有内容 min-width 超出容器才出横向滚动。禁止给单元格节点钉 `min-content`（列类型会永远溢出）。 */
@@ -5127,10 +5173,14 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   position: relative;
   z-index: 0;
 }
-/* Amis `tbody > tr > th`（列 `isHead` / 总结行表头格）：表头底色，线跟数据格走。 */
+/* Amis `tbody > tr > th`（列 `isHead` / 总结行表头格）：表头底色，线跟数据格走。
+   顶边只打在 `tr + tr > th` 上，而且是 fill-11（和 thead 底一样看不见）；第一行 th 没有顶边。 */
 .vamis-table-wrap tbody [data-slot="table-head"] {
-  border-top: 1px solid var(--border);
+  border-top-width: 0;
   border-bottom: 0;
+}
+.vamis-table-wrap tbody > tr + tr > [data-slot="table-head"] {
+  border-top: 1px solid var(--table-thead-sep);
 }
 /* Amis 的 tbody th 上下各一条线（白 + 灰），所以非末行比数据行高 1px。 */
 .vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"] {
@@ -5593,7 +5643,7 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 
 /* ---- 表头吸顶（Amis `Table-fixedTop` + `Table-table--affixHeader`）----
    工具栏 / 标题 / 只有 thead 的表一起 sticky；表体自己的 thead 只负责撑列宽，藏起来并用负 margin 收掉高度。
-   卡片描边拆成两段：吸顶表头带上、左、右边和上圆角，表体容器去掉上边。 */
+   Amis `&-fixedTop` 没有描边、没有圆角；默认表格同样无外边框。不要再给吸顶壳画卡片边。 */
 .vamis-table__fixed-top {
   position: sticky;
   top: var(--affix-offset-top, 0px);
@@ -5602,10 +5652,6 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 }
 .vamis-table__affix-head {
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-bottom-width: 0;
-  /* 和表体容器的 `rounded-lg` 同一档（helper 是 0.5rem）。 */
-  border-radius: 0.5rem 0.5rem 0 0;
   background: var(--table-bg);
 }
 .vamis-table__fixed-top.is-fake-hide > .vamis-table__affix-head {
@@ -5626,11 +5672,6 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   height: 30px;
   margin-top: -2px;
   pointer-events: none;
-}
-.vamis-table-wrap.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] {
-  border-top-width: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }
 .vamis-table-wrap.is-affix-header .vamis-table__content-wrap > [data-slot="table-container"] > table {
   margin-top: calc(var(--table-thead-height, 0px) * -1);
@@ -9968,10 +10009,17 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-table2 th:last-child {
   border-right: 0;
 }
+.vamis-table2 tbody > tr {
+  border-top: unset;
+}
 .vamis-table2 td {
   font-size: var(--table-font-size);
   line-height: var(--lineHeightBase);
+  /* Amis `_table2.scss`：td 只画顶边、`border-bottom: unset`，末行才补底。
+     表格原语 `[data-slot="table-cell"]` 是 Table 的 `border-bottom`；table2 也走同一原语，
+     不 unset 就会顶+底叠成 2px（对照 SDK 看起来像双边）。 */
   border-top: 1px solid var(--border);
+  border-bottom: unset;
 }
 .vamis-table2 tbody tr:last-child td {
   border-bottom: 1px solid var(--border);

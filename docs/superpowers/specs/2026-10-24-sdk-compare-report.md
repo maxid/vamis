@@ -3,26 +3,27 @@
 - 日期：2026-11-17
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **64** · 通过 **64** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **65** · 通过 **65** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 7 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 8 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 8 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 9 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（7）
+### 全局（8）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 - `src-components-table-0` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-table-1` fontSize: Amis `14px` / Vamis `12px`
-- `src-components-table-5` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-table-2` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-table-6` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-table-7` fontSize: Amis `14px` / Vamis `12px`
-- `src-components-table-33` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-table-8` fontSize: Amis `14px` / Vamis `12px`
+- `src-components-table-34` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-table-view-7` fontSize: Amis `12px` / Vamis `14px`
 
 整改：
@@ -34,16 +35,17 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（8）
+### 组件（9）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
 - `src-components-table-0` lineHeight: Amis `21px` / Vamis `18px`
 - `src-components-table-1` lineHeight: Amis `21px` / Vamis `18px`
-- `src-components-table-5` lineHeight: Amis `21px` / Vamis `18px`
+- `src-components-table-2` lineHeight: Amis `21px` / Vamis `18px`
 - `src-components-table-6` lineHeight: Amis `21px` / Vamis `18px`
 - `src-components-table-7` lineHeight: Amis `21px` / Vamis `18px`
-- `src-components-table-33` lineHeight: Amis `21px` / Vamis `18px`
+- `src-components-table-8` lineHeight: Amis `21px` / Vamis `18px`
+- `src-components-table-34` lineHeight: Amis `21px` / Vamis `18px`
 - `src-components-table-view-7` lineHeight: Amis `18px` / Vamis `14px`
 - `src-components-table-view-7` fontWeight: Amis `400` / Vamis `500`
 
@@ -56,7 +58,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 64 | 0 |
+| 组件 | 65 | 0 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -65,7 +67,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据展示 | 64 | 0 |
+| 组件 / 数据展示 | 65 | 0 |
 
 ## P0 失败（驱动下一刀）
 

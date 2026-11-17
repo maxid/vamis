@@ -2,6 +2,7 @@ const HIDE_MS = 800
 
 type ScrollEl = HTMLElement & { __autoHideScroll?: () => void }
 
+/** 只藏指令挂上的那条栏。scrollbar-color 会继承，子级滚动条靠 `.auto-hide-scroll > *` 打断。 */
 export const vAutoHideScroll = {
   mounted(el: ScrollEl) {
     el.classList.add('auto-hide-scroll')

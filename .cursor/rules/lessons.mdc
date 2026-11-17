@@ -555,9 +555,9 @@ alwaysApply: true
 - 规则：本文；Amis `DropDownButton.tsx` `TooltipWrapper`
 
 ### z-index 用 token，不要用 Tailwind 档冒充
-- 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。
-- 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer `--z-modal` / `--z-popover` 1400；提示 `--z-tooltip` 1600；Toast `--z-toast` 2000。token 打在 `:root`。
-- 触及：`input-date` `dialog` `drawer` `toast` `action` `tooltip-wrapper`
+- 踩过：用 `z-20` / `z-50` 近似浮层高度，Teleport 到 body 后盖不住或乱盖。Sheet / Dialog 原语模板 `z-50`（50）低于 `--z-sticky` 900，`affixHeader` / `affixFooter` 的表头、底栏会浮在「编辑 Schema」遮罩上面。
+- 稳定做法：下拉 `--z-dropdown` 1000；Dialog/Drawer/Sheet `--z-modal` / `--z-popover` 1400；提示 `--z-tooltip` 1600；Toast `--z-toast` 2000。token 打在 `:root`。原语模板即使仍写 `z-50`，unlayered `[data-slot="sheet-overlay"]` / `sheet-content` / `dialog-overlay` / `dialog-content` 必须盖成 `var(--z-modal)`。不要把 `--z-sticky` 降到 50 以下去迁就遮罩。
+- 触及：`input-date` `dialog` `drawer` `toast` `action` `tooltip-wrapper` `table`
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### Action tooltip 是 TooltipObject，不要压成一句纯文本
@@ -762,8 +762,8 @@ alwaysApply: true
 - 规则：`.cursor/rules/style.mdc`「标尺」；`docs/superpowers/specs/2026-11-15-vamis-style-standard.md`
 
 ### 原语的 Amis 配方打在原语上，不要挂在某个渲染器的外壳下
-- 踩过：CRUD 的表格数据 14px、表头 12px，Table 是表头 14、数据 12。表格的 Amis 配方全写在 `.vamis-table-wrap [data-slot=…]` 下，只有 `Table` 渲染器带这个外壳；`CRUD` / `InputTable` / `Tasks` 直接用 `<Table>` 原语，吃到的是原语模板里 shadcn 的 `text-sm` / `text-xs` / `bg-muted`，正好和 Amis 相反。
-- 稳定做法：字号、字色、表头底、行悬停这类「这个原语在 Amis 里长什么样」写在 `[data-slot="…"]` 上，原语模板里不留字号和颜色的工具类。渲染器外壳下只放它独有的盒模型。两个组件同一种元素字号不一样时，先查它们是不是走了同一个原语、配方挂在谁身上，不要在第二个渲染器里再抄一遍。
+- 踩过：CRUD 的表格数据 14px、表头 12px，Table 是表头 14、数据 12。表格的 Amis 配方全写在 `.vamis-table-wrap [data-slot=…]` 下，只有 `Table` 渲染器带这个外壳；`CRUD` / `InputTable` / `Tasks` 直接用 `<Table>` 原语，吃到的是原语模板里 shadcn 的 `text-sm` / `text-xs` / `bg-muted`，正好和 Amis 相反。后来原语 `[data-slot="table-cell"]` 改成 Table 的 `border-bottom` 后，table2 自己还画 `border-top`，两套叠成 2px；对照 SDK 看起来像双边，文档站 table 页只有 1px。
+- 稳定做法：字号、字色、表头底、行悬停这类「这个原语在 Amis 里长什么样」写在 `[data-slot="…"]` 上，原语模板里不留字号和颜色的工具类。渲染器外壳下只放它独有的盒模型。两个组件同一种元素字号不一样时，先查它们是不是走了同一个原语、配方挂在谁身上，不要在第二个渲染器里再抄一遍。Amis Table2 行间是 `td { border-top; border-bottom: unset }`、末行才补底，table2 外壳必须显式 unset 原语底边。对照 iframe 吃的是 `sdk.css`，改 CSS 必须 `pnpm sdk:build`。
 - 触及：`table` `crud` `input-table` `tasks` `table2`
 - 规则：`.cursor/rules/style.mdc`「标尺」；`packages/vamis-ui/src/ui/table/`；`style-system.test.ts`
 
@@ -1006,7 +1006,7 @@ alwaysApply: true
 
 ### Table 田在 toolbar，不要塞进 heading
 - 踩过：ColumnToggler 画在 `.vamis-table__title`（heading 灰底 40px）。Amis `render()` 是 header → heading → content → footer；田走 `renderActions('header')` → `Table-toolbar Table-headToolbar` / `Table-actions`。列类型无 title 时 Amis 只有 toolbar，没有 heading。表体一度套 shadcn `rounded-lg border`，再抄 Amis 左右 4px 田会比卡片左缘缩进去。
-- 稳定做法：heading 只放 `title`。`columnsTogglable` auto 注入 `column-toggler` size sm 进 toolbar。表默认**无外边框**（对齐 Amis `.Table`，原语不要 `rounded-lg border`），toolbar padding 走 `--table-toolbar-margin-y/x`（**12×4**）。无外边框不等于末行没线：Amis `th, td { border-bottom }`，行间用 `td` 的 `border-top`，**末行再补 `border-bottom`**。`draggable` 且行 >1 注入 drag-toggler，点了才 `dragging`；`initDrag` / `cancelDrag` 同开关。`header` / `footer` / `actions` 是 SchemaNode。CRUD 以后走 `#headerToolbar` slot，不要再把 田 塞进标题栏。
+- 稳定做法：heading 只放 `title`。`columnsTogglable` auto 注入 `column-toggler` size sm 进 toolbar。表默认**无外边框**（对齐 Amis `.Table`，原语不要 `rounded-lg border`），toolbar padding 走 `--table-toolbar-margin-y/x`（**12×4**）。吸顶壳 `.vamis-table__affix-head` 也不要再画卡片描边/上圆角：文档预览 `env.affixHeader: false` 看不到，正式 SDK 默认吸顶就会把表头框起来。要外框走 Vamis `bordered: true`（内容区 `[data-slot="table-container"]` + token，吸顶时才把上半拆到 affix-head），不要 helper 冒充、也不要和 Table2 单元格网格同义。无外边框不等于末行没线：Amis `th, td` **只画 `border-bottom`**（行间、末行都靠这一条）；表头底是 `--table-thead-sep`（fill-11，跟行底同色，表头/首行之间看不见）。禁止用首行 `border-top` 冒充表头底边，空态同样。默认表头没有阴影；只有 `affixHeader` 吸顶才有 `Table-fixedTop::after` 的 inset 影（Vamis `.vamis-table__fixed-shadow`）。`draggable` 且行 >1 注入 drag-toggler，点了才 `dragging`；`initDrag` / `cancelDrag` 同开关。`header` / `footer` / `actions` 是 SchemaNode。CRUD 以后走 `#headerToolbar` slot，不要再把 田 塞进标题栏。
 - 触及：`table`
 - 规则：Amis `Table/index.tsx` `renderHeader` / `renderActions`；`_table.scss` `&-toolbar` `&-heading`；本文
 
@@ -1015,6 +1015,12 @@ alwaysApply: true
 - 稳定做法：始终读 `visibility[key]`（`undefined` 再回落 `toggled` / persist）。菜单项用 label `@click.prevent` 切换，勾选盒 `pointer-events: none` 只做展示。
 - 触及：`table` `column-toggler`
 - 规则：`packages/vamis/src/renderers/data/crudHost.ts` `useColumnToggle`
+
+### 表格行间只画 td 底边，不要用首行顶边冒充表头线
+- 踩过：Vamis 给所有 td 加 `border-top`，再用 `tr + tr` 清掉后续行，首行顶边变成表头下那根灰线。Amis `th, td` 只有 `border-bottom`；thead 底是 fill-11（跟行底同色），第一行和空态都没有顶边，所以表头/首行之间看不见线。
+- 稳定做法：数据格 `border-top-width: 0` + `border-bottom`。表头底走 `--table-thead-sep`。tbody th 的顶边只打在 `tr + tr` 上，也是 fill-11。默认表头没有 `box-shadow`；吸顶才用 `.vamis-table__fixed-shadow` 的 inset。Vamis `bordered: true` 的表头/首行分隔画在 **thead 底** `--border`，不要画在首行顶：SDK 默认 `affixHeader` 会克隆表头，首行顶边会和克隆底叠成两条（文档 `env.affixHeader: false` 看不出来）。末行底边仍 `0`（外框已经有底）。
+- 触及：`table` `crud` `input-table` `tasks`
+- 规则：Amis `_table.scss` `th, td { border-bottom }` / `--Table-thead-borderColor`；本文
 
 ### 表格行默认底放 @layer components，否则 sticky 透底或压过 helper
 - 踩过：unlayered `.vamis-table__tr { background }` 压过 `rowClassNameExpr` 的 `.bg-success`。拿掉后又让 sticky `background: inherit` 变透明，滚动列文字穿过来像盖在固定列上。
@@ -1090,6 +1096,12 @@ alwaysApply: true
 - 稳定做法：预览井 overflow visible。索引条 `align-self: flex-start; height: fit-content`，滚动/自动定位跟最近 overflow 祖先（文档 `article`），点字母 `scrollIntoView`。不要给 list 再开内部 scroller。
 - 触及：`list` 文档预览
 - 规则：Amis `_list.scss` AlphabetIndexer；`playground/src/components/SchemaPreview.vue`
+
+### 站点自动隐藏滚动条不要遗传进组件
+- 踩过：文档 `article` 用 `scrollbar-color: transparent` 做滚动才显示。`scrollbar-color` / `scrollbar-width` 会继承，table 列类型 / 固定列自己的 `overflow-x: auto`、代码块 `pre` 的条也被涂成透明；滚动发生在子级，article 加不上 `is-scrolling`，条永远不出现。
+- 稳定做法：自动隐藏只打在指令挂上的那条栏；`.auto-hide-scroll > *` 立刻 `scrollbar-color: auto` / `scrollbar-width: auto` 打断继承。不要写成 `.auto-hide-scroll *::-webkit-scrollbar`。
+- 触及：文档预览 `table` `pre`
+- 规则：本文；`playground/src/style.css` `.auto-hide-scroll``
 
 ### List initDrag 整行可拖，手柄只是视觉
 - 踩过：只给 drag-bar `draggable`，内层 `.vamis-node[draggable=false]` 把行内容拖拽吃掉，只能抓 8 点手柄。只用行内 reorder、没有 ghost 时，拖出列表看不见跟随层。

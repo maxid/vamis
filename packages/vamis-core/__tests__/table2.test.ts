@@ -182,6 +182,10 @@ describe('table2 renderer pins Amis main-path markup', () => {
     expect(vue).toContain("'is-checked': isSelected(row, ri)")
     expect(vue).toContain('border-collapse: separate')
     expect(vue).toContain('border-spacing: 0')
+    expect(ui).toMatch(
+      /\.vamis-table2 td \{[\s\S]*?border-top: 1px solid var\(--border\);[\s\S]*?border-bottom: unset/,
+    )
+    expect(ui).toContain('.vamis-table2 tbody tr:last-child td {\n  border-bottom: 1px solid var(--border);')
     const table = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/Table.vue'), 'utf8')
     const row = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/TableRow.vue'), 'utf8')
     const cell = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/TableCell.vue'), 'utf8')

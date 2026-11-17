@@ -290,10 +290,16 @@ a.bg-primary .doc-side-rank {
   background: var(--doc-phone-slot);
 }
 
-/* 滚动条默认透明，滚动时才显出来，不占布局、不切栏 */
+/* 滚动条默认透明，滚动时才显出来，不占布局、不切栏。
+   scrollbar-color / scrollbar-width 会继承，必须在直接子级打断，
+   否则文档预览里 table / pre 自己的滚动条也被涂成透明（列类型、固定列）。 */
 .auto-hide-scroll {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
+}
+.auto-hide-scroll > * {
+  scrollbar-width: auto;
+  scrollbar-color: auto;
 }
 .auto-hide-scroll.is-scrolling {
   scrollbar-color: var(--colors-neutral-text-6) transparent;

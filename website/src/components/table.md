@@ -29,6 +29,23 @@ body:
         label: Version
 ```
 
+默认没有外边框。`bordered: true` 给表格内容区画一圈圆角描边（Vamis 优化，对齐早期卡片外框）：
+
+```schema: scope="body"
+type: service
+api: /api/mock2/sample?perPage=5
+body:
+  - type: table
+    bordered: true
+    title: 表格1
+    source: $rows
+    columns:
+      - name: engine
+        label: Engine
+      - name: version
+        label: Version
+```
+
 ## 数据需求
 
 数据是对象数组，比如前面例子中 `rows` 的值类似：
@@ -1635,6 +1652,7 @@ body:
 | columnsTogglable | `auto` 或 `boolean` | `auto` | 是否显示「自定义列」开关。`auto` 表示列数超过 5 列时自动开启 |
 | placeholder | `string` | `暂无数据` | 没有数据时的文字提示 |
 | className | [ClassName](/types/classname) | | 外层 CSS 类名 |
+| bordered | `boolean` | `false` | **Vamis 优化**。给表格内容区画一圈圆角描边（`--border` + `--borderRadiusLg`）。不是 [Table2](/components/table2) 的单元格网格。默认仍无外边框。作者 helper `className: b` / `b-a` 仍可用 |
 | tableClassName | [ClassName](/types/classname) | | 表格 CSS 类名 |
 | headerClassName | [ClassName](/types/classname) | | 顶部外层 CSS 类名 |
 | footerClassName | [ClassName](/types/classname) | | 底部外层 CSS 类名 |
@@ -2560,7 +2578,7 @@ body:
 - 表头排序、搜索、过滤是本地处理（只动当前已有的行）。要走接口，在 `columnSort` / `columnSearch` / `columnFilter` 事件里刷新数据。
 - 快速编辑是 Vamis 在 Table 上直接提供的能力，控件只有 `input-text` / `input-number` / `select` / `textarea`；提交事件叫 `quickEditSubmit`。
 - 拖拽排序只支持顶层行，嵌套表格不出现「开始排序」。
-- 表格画在带圆角描边的容器里，工具栏左右贴齐容器边。
+- 默认没有外边框（对齐 Amis `.Table`）。`bordered: true` 是 Vamis 优化，给内容区画圆角卡片外框（不是 Table2 的单元格网格）。作者 helper `className: b` / `b-a` 仍可用。
 - `persistKey` 没写时不缓存列的显示状态（Amis 会按页面路径自动生成一个 key）；缓存的只有哪些列被收起。
 - 本站示例预览把 `affixHeader` 的默认值关掉了（Amis 文档站同样如此），正式嵌入时默认开启；需要整棵树默认关闭可以给 `env.affixHeader` 传 `false`。
 - 未接：`reUseRow`（Vamis 始终按行对象 / 主键识别同一行）、工具栏的 `export-excel` / `export-excel-template`（需要额外的 Excel 依赖）。

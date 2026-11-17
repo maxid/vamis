@@ -526,6 +526,11 @@ export function tableFilterOptions(column: PlainObject, rows: PlainObject[], dat
   return out
 }
 
+/** Vamis 优化：`bordered: true` 给表格内容区画圆角外框。不是 Table2 的单元格网格。 */
+export function tableBordered(schema: unknown): boolean {
+  return asRecord(schema).bordered === true
+}
+
 /** `autoFillHeight`：`true` 吃满剩余高度；`{height}` 固定；`{maxHeight}` 封顶。 */
 export function tableAutoFillHeight(schema: unknown): { enabled: boolean; height?: number; maxHeight?: number } {
   const raw = asRecord(schema).autoFillHeight

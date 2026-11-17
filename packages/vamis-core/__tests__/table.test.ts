@@ -7,6 +7,7 @@ import { getByPath, setByPathCopy } from '../src/scope'
 import {
   tableAutoFillHeight,
   tableBackgroundScale,
+  tableBordered,
   tableBreakpointMatch,
   tableBuildRows,
   tableColorScale,
@@ -323,11 +324,54 @@ describe('data chain for form items outside a form', () => {
     expect(primitive).toContain('data-slot="table-container"')
   })
 
+  it('tableBordered is opt-in outer chrome, not Table2 cell grid', () => {
+    expect(tableBordered({})).toBe(false)
+    expect(tableBordered({ bordered: true })).toBe(true)
+    expect(tableBordered({ bordered: false })).toBe(false)
+    const table = read('../../vamis/src/renderers/Table.vue')
+    expect(table).toContain('is-bordered')
+    expect(table).toContain('tableBordered')
+    const css = read('../../vamis-ui/src/styles.css')
+    expect(css).toContain('.vamis-table-wrap.is-bordered [data-slot="table-container"]')
+    expect(css).toContain('border-radius: var(--borderRadiusLg)')
+    expect(css).toContain('.vamis-table-wrap.is-bordered thead [data-slot="table-head"]')
+    expect(css).toContain(
+      '.vamis-table-wrap.is-bordered tbody > tr:first-child > [data-slot="table-cell"]',
+    )
+    expect(css).toContain(
+      '.vamis-table-wrap.is-bordered tbody > tr:last-child > [data-slot="table-cell"]',
+    )
+  })
+
+  it('affix header clone has no leftover card border (docs env turns affix off, SDK default is on)', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const block = css.match(/^\.vamis-table__affix-head \{[^}]*\}/m)?.[0] ?? ''
+    expect(block).toContain('.vamis-table__affix-head {')
+    expect(block).not.toContain('border:')
+    expect(block).not.toContain('border-radius')
+    expect(css).toContain('.vamis-table-wrap.is-bordered.is-affix-header .vamis-table__affix-head')
+  })
+
+  it('sheet and dialog overlays sit above sticky table chrome', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    expect(css).toMatch(/\[data-slot='sheet-overlay'\][\s\S]*?z-index: var\(--z-modal\)/)
+    expect(css).toContain("[data-slot='sheet-content']")
+    expect(css).toContain("[data-slot='dialog-overlay']")
+  })
+
   it('last data row keeps a bottom border even without outer chrome', () => {
     const css = read('../../vamis-ui/src/styles.css')
     expect(css).toContain('border-bottom: 1px solid var(--border)')
-    expect(css).toContain('tbody > tr + tr > [data-slot="table-cell"]')
     expect(css).toContain('border-top-width: 0')
+  })
+
+  it('first data row has no top border; header bottom uses thead-sep', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    expect(css).toContain('border-top-width: 0')
+    expect(css).toContain('border-bottom: var(--table-thead-sep-width) solid var(--table-thead-sep)')
+    expect(css).not.toMatch(
+      /\[data-slot="table-cell"\] \{\s*border-top: 1px solid var\(--border\)/,
+    )
   })
 
   it('sticky columns inherit an opaque row bg and sit above scrolling cells', () => {
