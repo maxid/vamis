@@ -113,7 +113,7 @@ const remarkSchema = computed<SchemaObject | null>(() => {
 const cssText = computed(() => buildCssBlock(props.schema.css))
 const spinnerSchema = computed<SchemaObject>(() => ({
   type: 'spinner',
-  show: loading.value,
+  show: loading.value && !silentLoading.value,
   overlay: true,
   size: 'lg',
   loadingConfig: props.schema.loadingConfig,
@@ -142,6 +142,7 @@ function setData(values: PlainObject, replace = false) {
 
 let mounted = false
 const loading = ref(false)
+const silentLoading = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
 let dragStartX = 0
 let dragStartWidth = DEFAULT_ASIDE_WIDTH
@@ -172,6 +173,7 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
   if (!allowed) return
   if (loading.value) return
   loading.value = true
+  silentLoading.value = !!options.silent
   clearTimer()
   try {
     const result = await requestApi(initApi, { env, data: viewData.value, reason: 'init' })
@@ -211,6 +213,7 @@ async function fetchInit(options: { silent?: boolean; initial?: boolean } = {}) 
     if (!options.silent) env.notify('error', msg)
   } finally {
     loading.value = false
+    silentLoading.value = false
   }
 }
 

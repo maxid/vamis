@@ -83,6 +83,7 @@ flowchart LR
 
 **最近交付**
 
+- **Page `silentPolling` 隐藏轮询遮罩（2026-11-17）**：Page 默认 `initApi` 遮罩 + Spinner 保留；静默轮询不再显示加载层，首次加载与手动 `reload` 仍显示。真实 SDK 验证三种场景均正确；`pnpm test` **1030**、`typecheck` 0，Page 桌面/移动对照均 **16/16**（P0 0）。同步修正文档中「Page 暂无全页 loading」的过时说明，进度仍 **95%**。
 - **P0 数据链余项：FormItem 静态值 / Tabs / Pagination 脱离 Form（2026-11-17）**：三处统一走 `useFieldValue()`；FormItem 静态值读当前数据链，Tabs 按 `name` 初值选中标签并在切换时写回，Pagination 页码同样读写当前数据域。新增 Tabs 双端活示例；真实 SDK 验证初值与点击同步，无 pageerror。`pnpm test` **1030**、`typecheck` 0；Tabs 桌面/移动 **33/34**（P0 0，新增例只差 Amis `named=false` 探针），FormItem 桌面 **29/30**、移动整轮 **28/30** 后失败项单跑通过，Pagination 桌面/移动 **5/5**。进度保持 FormItem 90% / Tabs 95% / Pagination 92%。
 - **Form 文档对标收口（2026-11-17）**：并排核 `/components/form` 与 Amis `form/index`。必填星改包在 `inline-block` 内层，贴「邮箱」左侧，不再相对 98px 列。body 已有 `submit`/`button`/`reset`/`toolbar` 时不注入默认底栏（内联「登录」不再多一个「提交」）；`type: submit` 无 `primary` 走描边，不再被 `levelToVariant(..., 'submit')` 刷成实心。水平 / 两端对齐 / labelAlign / 去边框 / 底栏 / debug 主路径已对齐。对照桌面/移动仍 **41/58**（P0 0）。进度仍 **75%**。
 - **Form 文档对标：horizontal 比例 + heading 色（2026-11-17）**：并排核 `/components/form`。云舍默认仍 `leftFixed` 98px；作者 `horizontal.left/right` 走 12 栏、`leftFixed` 档宽、`justify` / `labelAlign` / 表单项 `labelWidth` 已接。标题色改 `--colors-neutral-text-3`，去掉 `@supports` 72% mix。进度 **72% → 75%**。

@@ -6,7 +6,7 @@ outline: deep
 # Page 页面
 
 ::: info 实现进度 95% · 进行中
-文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。根 / header / aside 用 `div` 组装（对齐 Amis）。按实现标准：`pullRefresh` 未接（Amis 仅移动端），未达 100%。
+文档主路径已对齐：独立数据域、URL 查询种子、`initApi` overlay、轮询（`silentPolling` 只隐藏轮询加载层）、aside、reload / setValue（含 override）、`css` / remark、完整事件对象（`event.data` / `__rendererData` / `preventDefault` / `stopPropagation` / `setData`）。根 / header / aside 用 `div` 组装（对齐 Amis）。按实现标准：`pullRefresh` 未接（Amis 仅移动端），未达 100%。
 :::
 
 `page` 是页面入口容器，对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -111,7 +111,7 @@ Page 默认分成内容区（`body`）、侧边栏（`aside`）和工具栏（`t
 1. 配置 `initApi`；
 2. 配置 `interval`：单位毫秒，最小 1000。
 
-请求成功后才会继续下一轮。`silentPolling` 在 Vamis 里表示轮询出错不弹 notify（Amis 原意是隐藏加载动画；Page 暂无全页 loading）。
+请求成功后才会继续下一轮。Page 默认在 `initApi` 请求期间显示遮罩 + Spinner；`silentPolling: true` 只让轮询请求隐藏加载层并不弹错误通知，首次加载与手动 `reload` 仍显示加载层。
 
 ```schema
 {
@@ -270,7 +270,7 @@ Amis 的 `pullRefresh` 仅移动端。**Vamis 未接**，配置会被忽略，�
 | `initFetch` | `boolean` | `true` | 是否首次拉取 |
 | `initFetchOn` | [表达式](/concepts/expression) | | 是否首次拉取 |
 | `interval` | `number` | | 轮询间隔（最小 1000） |
-| `silentPolling` | `boolean` | `false` | 轮询失败时不 notify |
+| `silentPolling` | `boolean` | `false` | 轮询时隐藏加载层，失败时不 notify；不影响首次加载与手动 `reload` |
 | `stopAutoRefreshWhen` | [表达式](/concepts/expression) | | 为真则停止轮询 |
 | `pullRefresh` | `object` | `{disabled: true}` | **Vamis 未接**（Amis 仅移动端） |
 | `data` | `object` | | 静态数据，写入本页 Scope，覆盖父级与 URL 同名键 |
