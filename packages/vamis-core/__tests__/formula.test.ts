@@ -115,6 +115,19 @@ describe('D2 runtime filters', () => {
       'Option A',
     )
   })
+
+  it('|sum adds array numbers, optionally by field', () => {
+    expect(filterTpl('${rows|pick:version|sum}', { rows: [{ version: 4.0 }, { version: 1.7 }, { version: 522.1 }] })).toBe(
+      '527.8',
+    )
+    expect(filterTpl('${rows|sum:version}', { rows: [{ version: '1.5' }, { version: 2 }] })).toBe('3.5')
+    expect(filterTpl('${n|sum}', { n: 8 })).toBe('8')
+  })
+
+  it('evaluates table rowClassNameExpr ternary', () => {
+    expect(filterTpl("${id % 2 ? 'bg-success' : 'bg-blue-50'}", { id: 1 })).toBe('bg-success')
+    expect(filterTpl("${id % 2 ? 'bg-success' : 'bg-blue-50'}", { id: 2 })).toBe('bg-blue-50')
+  })
 })
 
 describe('D2 expression main path', () => {

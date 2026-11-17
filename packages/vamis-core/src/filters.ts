@@ -37,6 +37,19 @@ registerFilter('pick', (input: unknown, field = 'label') => {
   return input
 })
 
+/** Amis `|sum` / `|sum:field`：数组求和。总结行 `${rows|pick:version|sum}`。 */
+registerFilter('sum', (input: unknown, field?: unknown) => {
+  if (!Array.isArray(input)) return input
+  const key = field == null || field === '' ? '' : String(field)
+  const total = input.reduce((sum: number, item: unknown) => {
+    const raw = key && itemIsRecord(item) ? item[key] : item
+    const n = typeof raw === 'number' ? raw : parseFloat(String(raw ?? ''))
+    return sum + (Number.isFinite(n) ? n : 0)
+  }, 0)
+  if (!Number.isFinite(total) || Number.isInteger(total)) return total
+  return Number.parseFloat(total.toPrecision(12))
+})
+
 function itemIsRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object' && !Array.isArray(value)
 }

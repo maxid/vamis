@@ -54,7 +54,9 @@ export function useColumnToggle(
 
   function isVisible(col: SchemaObject, index?: number) {
     const key = keyOf(col, index)
-    if (Object.prototype.hasOwnProperty.call(visibility, key)) return visibility[key]
+    // 必须读 `visibility[key]`：hasOwnProperty 不会收集依赖，点了显隐表格不重绘。
+    const stored = visibility[key]
+    if (stored !== undefined) return stored
     if (preset && col.toggable !== false) {
       const at = columns.value.indexOf(col)
       const saved = preset(col, at >= 0 ? at : index ?? 0)

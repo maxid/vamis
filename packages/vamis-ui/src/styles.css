@@ -4692,6 +4692,7 @@
 [data-slot="table"] {
   border-collapse: separate;
   border-spacing: 0;
+  background: var(--table-bg);
 }
 [data-slot="table-row"] {
   border-bottom-width: 0;
@@ -4707,6 +4708,12 @@
 }
 [data-slot="table-cell"] {
   border-top: 1px solid var(--border);
+  /* Amis th/td 的 border-bottom：无外边框不等于末行没线。 */
+  border-bottom: 1px solid var(--border);
+}
+/* 行间只留一条：首行 top 当表头下那根灰线，后续行吃自己的 bottom。 */
+tbody > tr + tr > [data-slot="table-cell"] {
+  border-top-width: 0;
 }
 [data-slot="table-row"][data-state="selected"] + [data-slot="table-row"] > [data-slot="table-cell"],
 [data-slot="table-row"].is-checked + [data-slot="table-row"] > [data-slot="table-cell"] {
@@ -4765,10 +4772,10 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
    只有内容 min-width 超出容器才出横向滚动。禁止给单元格节点钉 `min-content`（列类型会永远溢出）。 */
 .vamis-table-wrap [data-slot="table-container"] {
   overflow-x: auto;
-  overflow-y: hidden;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  background: var(--table-bg);
 }
 .vamis-table-wrap [data-slot="table"] {
   width: 100%;
@@ -4908,12 +4915,11 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 .vamis-table__header > * + .vamis-node {
   margin-left: var(--crud-toolbar-gap);
 }
-/* Amis toolbar 左右 4px，因为它的表没有独立描边。Vamis 表在 `rounded-lg border`
-   卡片里，再垫 4px 田会比表体左缘缩进去。左右 0 贴齐卡片边。 */
+/* Amis `.Table-toolbar`：`padding: marginY marginX`（12×4）。表没有独立描边。 */
 .vamis-table__toolbar {
   display: flex;
   flex-wrap: wrap;
-  padding: var(--table-toolbar-margin-y) 0;
+  padding: var(--table-toolbar-margin-y) var(--table-toolbar-margin-x);
 }
 .vamis-table__header + .vamis-table__toolbar {
   padding-top: 0;
@@ -5065,14 +5071,19 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   flex-basis: var(--column-toggler-check-size);
   width: var(--column-toggler-check-size);
   height: var(--column-toggler-check-size);
+  pointer-events: none;
 }
 .vamis-column-toggler__item:hover {
   background: var(--select-option-hover-bg);
 }
-/* ---- Table：行状态。对齐 Amis `tbody > tr`：默认底、悬停、勾选、修改 / 移动。 ---- */
+/* ---- Table：行状态。对齐 Amis `tbody > tr`：默认不要写 background，否则会压过
+   作者 `rowClassNameExpr` 的 helper（`.bg-success` 在 @layer utilities）。
+   悬停 / 勾选 / 修改再盖。td inherit 让 tr 底透进格。 ---- */
 .vamis-table-wrap tbody > tr.vamis-table__tr {
-  background: var(--table-bg);
   transition: none;
+}
+.vamis-table-wrap tbody > tr.vamis-table__tr > [data-slot="table-cell"] {
+  background-color: inherit;
 }
 .vamis-table-wrap tbody > tr.vamis-table__tr:hover,
 .vamis-table-wrap tbody > tr.vamis-table__tr.is-hovered {
@@ -5098,7 +5109,7 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   background: var(--table-hover-bg);
 }
 .vamis-table-wrap tbody > tr.vamis-table__tr.is-summary:hover {
-  background: var(--table-bg);
+  background: transparent;
 }
 .vamis-table-wrap tbody > tr.has-item-action,
 .vamis-table-wrap.is-check-on-click tbody > tr.vamis-table__tr {
@@ -5116,6 +5127,9 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 /* Amis 的 tbody th 上下各一条线（白 + 灰），所以非末行比数据行高 1px。 */
 .vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"] {
   border-bottom: 1px solid var(--table-thead-sep);
+}
+.vamis-table-wrap tbody > tr:last-child > [data-slot="table-head"] {
+  border-bottom: 1px solid var(--border);
 }
 .vamis-table-wrap tbody tr > [data-slot="table-head"]:first-child {
   padding-left: var(--table-cell-edge-px);

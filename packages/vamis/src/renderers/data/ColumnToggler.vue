@@ -50,6 +50,11 @@ const allState = computed<boolean | 'indeterminate'>(() => {
 function toggleAll() {
   toggle.setAll(shown.value !== columns.value.length)
 }
+
+function toggleCol(col: SchemaObject, index: number) {
+  if (col.toggable === false) return
+  toggle.setVisible(col, !toggle.isVisible(col, index), index)
+}
 </script>
 
 <template>
@@ -81,18 +86,14 @@ function toggleAll() {
     >
       <ul class="vamis-column-toggler__menu" @click.stop>
         <li class="vamis-column-toggler__item">
-          <label>
-            <Checkbox :model-value="allState" @update:model-value="toggleAll" />
+          <label @click.prevent="toggleAll">
+            <Checkbox :model-value="allState" />
             <span>全选</span>
           </label>
         </li>
         <li v-for="(col, i) in columns" :key="colKey(col, i)" class="vamis-column-toggler__item">
-          <label>
-            <Checkbox
-              :model-value="toggle.isVisible(col, i)"
-              :disabled="col.toggable === false"
-              @update:model-value="toggle.setVisible(col, $event === true, i)"
-            />
+          <label @click.prevent="toggleCol(col, i)">
+            <Checkbox :model-value="toggle.isVisible(col, i)" :disabled="col.toggable === false" />
             <span>{{ col.title || col.label || col.name }}</span>
           </label>
         </li>

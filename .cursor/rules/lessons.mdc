@@ -999,16 +999,34 @@ alwaysApply: true
 - 触及：`progress`
 
 ### Table 表头默认可拖列宽；空状态要 desk-empty 图
-- 踩过：文档基本用法 Amis `th` 右侧有 `.Table-content-colDragLine`（7px / hover `--primary`），Vamis 没有；空状态只有一行灰字，缺 200px 高、12px / text-6、74px `desk-empty` SVG。拖拽条默认无底色，用户看不见热区。
-- 稳定做法：`resizable !== false` 时每个数据列 `th` 绝对定位拖拽条（末列 4px `right:0`），mousedown 记宽、mousemove `Math.max(30, start+delta)` 写进 `colWidths`，拖过之后 `table-layout:fixed`。可见分隔不要画在 resizer 上：thead `th:not(:last-child)` 走 `--table-thead-sep`（= fill-11 白）+ `--table-thead-bg`（fill-10 灰），对齐 `--Table-thead-borderColor`。空状态 `tr.vamis-table__placeholder` 打穿 TableCell 的 40px 行高，SVG 从 Amis `desk-empty.svg` 原样拷，渐变 id 用 `useId()` 防多实例冲突。
+- 踩过：文档基本用法 Amis `th` 右侧有 `.Table-content-colDragLine`（7px / hover `--primary`），Vamis 没有；空状态只有一行灰字，缺 200px 高、12px / text-6、74px `desk-empty` SVG。拖拽条默认无底色，用户看不见热区。超级表头有 `groupName` colspan 时，只把 width 写在第二行 `th` 上，浏览器按第一行合并格算列宽，看起来 resizer 拖不动。
+- 稳定做法：`resizable !== false` 时每个数据列 `th` 绝对定位拖拽条（末列 4px `right:0`），mousedown 记宽、mousemove `Math.max(30, start+delta)` 写进 `colWidths`，拖过之后 `table-layout:fixed`。**列宽同时打在 `<col>` 上**（`colGroupStyle`），超级表头 colspan 才吃得到。可见分隔不要画在 resizer 上：thead `th:not(:last-child)` 走 `--table-thead-sep`（= fill-11 白）+ `--table-thead-bg`（fill-10 灰），对齐 `--Table-thead-borderColor`。空状态 `tr.vamis-table__placeholder` 打穿 TableCell 的 40px 行高，SVG 从 Amis `desk-empty.svg` 原样拷，渐变 id 用 `useId()` 防多实例冲突。
 - 触及：`table`
 - 规则：Amis `handleColResizeMouseDown` / `_table.scss` `&-content-colDragLine` / `thead th:not(:last-child)` / `&-placeholder`；本文
 
 ### Table 田在 toolbar，不要塞进 heading
-- 踩过：ColumnToggler 画在 `.vamis-table__title`（heading 灰底 40px）。Amis `render()` 是 header → heading → content → footer；田走 `renderActions('header')` → `Table-toolbar Table-headToolbar` / `Table-actions`。列类型无 title 时 Amis 只有 toolbar，没有 heading。工具栏再抄 Amis 左右 4px 时，田会比 Vamis 带 `rounded-lg border` 的表体左缘缩进去。
-- 稳定做法：heading 只放 `title`。`columnsTogglable` auto 注入 `column-toggler` size sm 进 toolbar（padding **12×0**，贴齐表体卡片边；Amis 那 4px 是因为表没有独立描边）。`draggable` 且行 >1 注入 drag-toggler，点了才 `dragging`；`initDrag` / `cancelDrag` 同开关。`header` / `footer` / `actions` 是 SchemaNode。CRUD 以后走 `#headerToolbar` slot，不要再把 田 塞进标题栏。
+- 踩过：ColumnToggler 画在 `.vamis-table__title`（heading 灰底 40px）。Amis `render()` 是 header → heading → content → footer；田走 `renderActions('header')` → `Table-toolbar Table-headToolbar` / `Table-actions`。列类型无 title 时 Amis 只有 toolbar，没有 heading。表体一度套 shadcn `rounded-lg border`，再抄 Amis 左右 4px 田会比卡片左缘缩进去。
+- 稳定做法：heading 只放 `title`。`columnsTogglable` auto 注入 `column-toggler` size sm 进 toolbar。表默认**无外边框**（对齐 Amis `.Table`，原语不要 `rounded-lg border`），toolbar padding 走 `--table-toolbar-margin-y/x`（**12×4**）。无外边框不等于末行没线：Amis `th, td { border-bottom }`，行间用 `td` 的 `border-top`，**末行再补 `border-bottom`**。`draggable` 且行 >1 注入 drag-toggler，点了才 `dragging`；`initDrag` / `cancelDrag` 同开关。`header` / `footer` / `actions` 是 SchemaNode。CRUD 以后走 `#headerToolbar` slot，不要再把 田 塞进标题栏。
 - 触及：`table`
 - 规则：Amis `Table/index.tsx` `renderHeader` / `renderActions`；`_table.scss` `&-toolbar` `&-heading`；本文
+
+### 列显隐要读 reactive 的 key，不要 hasOwnProperty
+- 踩过：田图标下拉点列无响应。`useColumnToggle` 用 `hasOwnProperty` 判断有没有点过，从未读 `visibility[key]`，Vue 建不成依赖；`setVisible` 写了新 key 表格不重绘。浮层里再绑 Checkbox `@update:model-value` 也容易和 label 抢点击。
+- 稳定做法：始终读 `visibility[key]`（`undefined` 再回落 `toggled` / persist）。菜单项用 label `@click.prevent` 切换，勾选盒 `pointer-events: none` 只做展示。
+- 触及：`table` `column-toggler`
+- 规则：`packages/vamis/src/renderers/data/crudHost.ts` `useColumnToggle`
+
+### 表格行不要写默认 background，否则压过 rowClassNameExpr
+- 踩过：高亮行 `${id % 2 ? 'bg-success' : 'bg-blue-50'}` 看不到绿色。unlayered `.vamis-table__tr { background: var(--table-bg) }` 压过 `@layer utilities` 的 `.bg-success`。
+- 稳定做法：tbody 行默认不写 `background`；悬停 / 勾选 / 修改再盖。`td` `background-color: inherit` 让 tr 上的 helper 透进格。底走 table / container 的 `--table-bg`。
+- 触及：`table`
+- 规则：`.cursor/rules/style.mdc` helper 层；本文
+
+### 总结行 `|sum` 要注册成 filter，缺了会原样显示模板
+- 踩过：`${rows|pick:version|sum}` 直接画出模板。`pick` 有、`sum` 没有，formula 抛 `filter not exists`，`filterTpl` catch 后把原文留下。
+- 稳定做法：对齐 Amis `tpl-builtin` 注册 `|sum` / `|sum:field`。总结行 `extra-data` 带 `rows` / `items`。
+- 触及：`table` `tpl`
+- 规则：`packages/vamis-core/src/filters.ts`；Amis `amis-core/src/utils/filter.ts` `sum`
 
 ### Table 单元格走列 type + getPropValue，不要当 FormItem 再画 label
 - 踩过：列类型示例被收成 4 列 Chrome/Safari stub；`type: progress` 只读 `schema.value ?? 0` 画出 0%；`type: list` 默认 `${items}` 吃不到行上的 `name: list`；`type: switch` 在表外没有 form，值空且 FormItem 再画「开关」；`type: status` 的 boolean 没折成 0/1。Amis `TableCell` 用 `inputOnly` 渲列 type，组件自己 `getPropValue`。后来进度条用 `flex-1` 无 min-width，列一挤轨道宽变 0，只剩「22%」；`status` 给 `0`/`1` 也写了「失败/成功」，Amis `labelMap` 没有数字键所以 boolean 列只有图标；开关仍吃 `--switch-control-pad-top`（为 32 槽居中），单元格里偏下；layout-slot 的 `min-w-0` 让 list 缩进容器，横向滚动出不来。

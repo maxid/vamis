@@ -916,6 +916,15 @@ function colWidthStyle(col: SchemaObject) {
   return { width: value, maxWidth: value, overflow: 'hidden' }
 }
 
+/** 超级表头有 colspan 时，列宽必须打在 `<col>` 上，th 上的 width 会被第一行合并格吃掉。 */
+function colGroupStyle(col: SchemaObject) {
+  const dragged = colWidths.value[colKey(col)]
+  if (dragged != null) return { width: `${dragged}px` }
+  const w = col.width
+  if (w == null || w === '') return undefined
+  return { width: typeof w === 'number' ? `${w}px` : String(w) }
+}
+
 type LeadKind = 'drag' | 'check' | 'expand' | 'index'
 const leadKinds = computed<LeadKind[]>(() => {
   const list: LeadKind[] = []
@@ -1824,7 +1833,7 @@ function setDragBtnEl(el: unknown) {
       <Table ref="tableRef" :class="tableClass">
         <colgroup>
           <col v-for="kind in leadKinds" :key="'lead-' + kind" :data-col="kind">
-          <col v-for="col in columns" :key="colKey(col)">
+          <col v-for="col in columns" :key="colKey(col)" :style="colGroupStyle(col)">
         </colgroup>
         <ReuseHead />
     <TableBody>

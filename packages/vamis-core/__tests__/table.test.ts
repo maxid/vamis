@@ -310,4 +310,23 @@ describe('data chain for form items outside a form', () => {
     expect(renderer).toContain('provideValueHost')
     expect(renderer).toContain('parentValueHost.setValue')
   })
+
+  it('writes dragged column width onto colgroup so super-header colspan cannot swallow it', () => {
+    const table = read('../../vamis/src/renderers/Table.vue')
+    expect(table).toContain('function colGroupStyle')
+    expect(table).toContain(':style="colGroupStyle(col)"')
+  })
+
+  it('table primitive has no card chrome (Amis Table has no outer border)', () => {
+    const primitive = read('../../vamis-ui/src/ui/table/Table.vue')
+    expect(primitive).not.toMatch(/rounded-lg border/)
+    expect(primitive).toContain('data-slot="table-container"')
+  })
+
+  it('last data row keeps a bottom border even without outer chrome', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    expect(css).toContain('border-bottom: 1px solid var(--border)')
+    expect(css).toContain('tbody > tr + tr > [data-slot="table-cell"]')
+    expect(css).toContain('border-top-width: 0')
+  })
 })
