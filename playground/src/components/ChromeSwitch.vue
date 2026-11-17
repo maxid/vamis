@@ -1,9 +1,10 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   modelValue: boolean
   onText: string
   offText: string
-  ariaLabel: string
+  ariaLabel?: string
+  'aria-label'?: string
 }>()
 
 const emit = defineEmits<{
@@ -17,7 +18,7 @@ const emit = defineEmits<{
       class="vamis-switch__input"
       type="checkbox"
       :checked="modelValue"
-      :aria-label="ariaLabel"
+      :aria-label="props.ariaLabel || props['aria-label']"
       @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
     />
     <span class="vamis-switch__text">{{ modelValue ? onText : offText }}</span>

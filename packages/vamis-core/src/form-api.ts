@@ -3,14 +3,14 @@ import type { ChangeReason } from './scope'
 import type { PlainObject } from './types'
 
 export interface FormApiLike {
-  getValue?: (name: string) => unknown
-  setValue?: (name: string, value: unknown) => void
-  setData?: (values: PlainObject, replace?: boolean, reason?: ChangeReason) => void
-  getData?: () => PlainObject
-  submit?: () => Promise<void> | void
-  reset?: () => void
-  clear?: () => void
-  validate?: (extraRequired?: string[]) => boolean
+  getValue?(name: string): unknown
+  setValue?(name: string, value: unknown): void
+  setData?(values: PlainObject, replace?: boolean, reason?: ChangeReason): void
+  getData?(): PlainObject
+  submit?(): Promise<void> | void
+  reset?(): void
+  clear?(): void
+  validate?(extraRequired?: string[]): boolean
 }
 
 export const FormApiKey: InjectionKey<FormApiLike> = Symbol('vamis-form-api')

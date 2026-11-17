@@ -36,6 +36,12 @@ alwaysApply: true
 
 ### 对标与验收
 
+### schema 帮手用 PlainObject，接口回调写成方法
+- 踩过：`{ clearable?: unknown }` 这类全 optional 弱类型和 `SchemaObject` 没有已知交集，TS2559；`doAction?: (action: unknown) => void` 属性函数在 strictFunctionTypes 下逆变，渲染器具体参数对不上。`let x: unknown` 赋值后再 `typeof x === 'number'` 也会丢收窄。
+- 稳定做法：帮手参数用 `PlainObject` / `SchemaObject`。`ScopedComponent` / `FormApiLike` 写成方法 `doAction?(action: unknown): void`。收窄用局部 `const` / `let n = x`，不要回写同一个 `unknown` 变量。`useScope()` 是 ComputedRef，动作上下文传 `scope.value`。
+- 触及：`checkbox` `radio` `input-date` `spinner` `form` `image` `tpl`
+- 规则：本文；`packages/vamis-core/src/scoped.ts`
+
 ### 改写 Amis 文档不要动围栏里的 URL
 - 踩过：`rewriteLinks` 把 `github.com/baidu/amis` 整段删掉，打在全文上，JSON 里 `"src": "https://github.com/baidu/amis"` 变成 `"src": "`，iframe / carousel / timeline 活示例解析失败。
 - 稳定做法：链接改写只走围栏外正文；围栏里的 Amis 仓库 URL 换成 `https://github.com/maxid/vamis`，不要删成空串。标题匹配要转义括号（`底部展示 (Footable)`），否则会重复插入。
@@ -910,6 +916,10 @@ alwaysApply: true
 ### Picker source 支持变量与 API，归一到 options/items/records
 - 稳定做法：source 以 `$` 开头用 resolveValue 直接拿数组；API 走 requestApi，依次取 data.options/items/records/数组；remoteOptions 覆盖 schema.options；watch source 与 schema.data 用 isApiOutdated。
 - 触及：`picker`
+
+### Group columnRatio 用 12 等分 flex-basis，作者值才走 inline style
+- 稳定做法：`columnRatio` 1–12 钳制，`:style` 给 `flex/max-width/width` 百分比；未写则不输出样式，避免默认皮肤进 inline；横排仍由 `.vamis-form-group--hor` 的 gutter 负责。
+- 触及：`group`
 
 ### Table 本地数据域用 localRows 覆盖 source
 - 稳定做法：localRows 非空时优先于 items/source/data；未写 source 时默认 `${items}`（复用 `table2Source`，含 `schema.data.items`）。setData 接受数组或 {items}/{rows} 并清空选择；getData 返回 items/rows/total/selectedItems，供 setValue 组件动作使用。

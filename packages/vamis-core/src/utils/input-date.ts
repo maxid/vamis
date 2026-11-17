@@ -135,7 +135,7 @@ export function inputDatePlaceholder(schema: { placeholder?: unknown; type?: str
   return '请选择日期'
 }
 
-export function inputDateClearable(schema: { clearable?: unknown }): boolean {
+export function inputDateClearable(schema: PlainObject): boolean {
   return schema.clearable !== false
 }
 
@@ -168,15 +168,17 @@ export function filterDate(
   if (value instanceof Date) return mm(value)
 
   let next: unknown = value
-  if (typeof next === 'string') {
-    next = next.trim()
-    if (!next) return undefined
-    if (next.startsWith('$') && !next.startsWith('${')) {
-      const resolved = lookupDollar(next, data)
+  if (typeof value === 'string') {
+    const text = value.trim()
+    if (!text) return undefined
+    if (text.startsWith('$') && !text.startsWith('${')) {
+      const resolved = lookupDollar(text, data)
       if (resolved == null || resolved === '') return undefined
       next = resolved
-    } else if (next.includes('${')) {
-      next = resolveValue(next, { ...data, now: origin.toDate(), today: origin.clone().startOf('day').toDate() })
+    } else if (text.includes('${')) {
+      next = resolveValue(text, { ...data, now: origin.toDate(), today: origin.clone().startOf('day').toDate() })
+    } else {
+      next = text
     }
   }
 
@@ -613,7 +615,7 @@ export function inputDateSetDataValue(
   return undefined
 }
 
-export function inputDateResetValue(schema: { resetValue?: unknown; value?: unknown }, pristine: unknown): unknown {
+export function inputDateResetValue(schema: PlainObject, pristine: unknown): unknown {
   if (pristine !== undefined) return pristine
   if (schema.resetValue !== undefined) return schema.resetValue
   if (schema.value !== undefined) return schema.value
@@ -672,7 +674,7 @@ export function dateRangeTimeUnit(timeFormat: unknown): ManipulateType {
   if (/ss/.test(raw)) return 'second'
   if (/mm/.test(raw)) return 'minute'
   if (/HH/i.test(raw)) return 'hour'
-  if (/Q/i.test(raw)) return 'quarter'
+  if (/Q/i.test(raw)) return 'quarter' as ManipulateType
   return 'day'
 }
 

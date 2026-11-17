@@ -14,7 +14,7 @@ const scoped = useScoped()
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
 const applying = ref(false)
 
-const result = computed(() => {
+const result = computed((): string | number => {
   const formula = String(props.schema.formula || props.schema.value || '')
   if (!formula) return ''
   const ctx = { ...data.value, ...(form?.store.data || {}) }
@@ -22,7 +22,8 @@ const result = computed(() => {
   const value = evalFormula(formula, ctx)
   // 两边都空时公式引擎是 NaN；Amis evalJS 缺变量抛错后留下 schema value 0。
   if (typeof value === 'number' && Number.isNaN(value)) return 0
-  return value == null ? '' : value
+  if (typeof value === 'number' || typeof value === 'string') return value
+  return value == null ? '' : String(value)
 })
 
 function apply() {

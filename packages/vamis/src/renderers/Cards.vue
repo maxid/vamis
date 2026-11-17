@@ -141,12 +141,12 @@ function dataOf(row: Record<string, any>) {
 
 function stampOrigin(row: Record<string, any>, orig?: Record<string, any>) {
   const copy = dataOf(row)
-  copy[ORIGIN] = orig ? dataOf(orig) : dataOf(row)
+  ;(copy as Record<PropertyKey, unknown>)[ORIGIN] = orig ? dataOf(orig) : dataOf(row)
   return copy
 }
 
 function originOf(row: Record<string, any>) {
-  return row[ORIGIN] as Record<string, any> | undefined
+  return (row as Record<PropertyKey, unknown>)[ORIGIN] as Record<string, any> | undefined
 }
 
 function rowIsModified(row: Record<string, any>) {

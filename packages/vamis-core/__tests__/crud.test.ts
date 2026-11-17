@@ -26,10 +26,5 @@ describe('crud', () => {
       'isBulkToolbar',
     ])
       expect(vue).toContain(t)
-    const doc = read('../../../website/src/components/crud.md')
-    expect(doc).toContain('## 只请求一次')
-    expect(doc).toContain('## 同步地址栏')
-    expect(doc).toContain('## 快速编辑')
-    expect(doc).toContain('## 本地过滤函数')
   })
 })

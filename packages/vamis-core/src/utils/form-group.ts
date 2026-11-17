@@ -1,6 +1,6 @@
 /** Amis Group：把 `mode` / `subFormMode` 传给未写 mode 的子项。 */
 
-import type { SchemaObject } from '../types'
+import type { SchemaNode, SchemaObject } from '../types'
 
 export function groupFormMode(group: SchemaObject, formMode?: string): string {
   return String(group.subFormMode || group.mode || formMode || 'normal')
@@ -10,7 +10,7 @@ export function groupFormMode(group: SchemaObject, formMode?: string): string {
  * Amis Form mode=row / Group--hor：hidden、formula、inline 不包列盒。
  * 其余包 Form-col / Form-groupColumn，flex:1 均分。
  */
-export function formLayoutSkipCol(node: SchemaObject | undefined): boolean {
+export function formLayoutSkipCol(node: SchemaNode | undefined): boolean {
   if (!node || typeof node !== 'object') return true
   const type = String(node.type || '')
   return node.inline === true || String(node.mode || '') === 'inline' || type === 'hidden' || type === 'formula'
@@ -42,7 +42,7 @@ export function comboApplyRadio(
   }))
 }
 
-export function comboChildSchema(node: SchemaObject, itemMode: string): SchemaObject {
+export function comboChildSchema(node: SchemaNode, itemMode: string): SchemaNode {
   if (!node || typeof node !== 'object') return node
   if (node.mode || node.inline === true) return node
   if (!itemMode || itemMode === 'normal') return node
@@ -51,10 +51,10 @@ export function comboChildSchema(node: SchemaObject, itemMode: string): SchemaOb
 
 /** 子项已写 `mode` / `inline: true` 则不覆盖；否则继承 group 的 formMode。 */
 export function groupChildSchema(
-  node: SchemaObject,
+  node: SchemaNode,
   group: SchemaObject,
   formMode?: string,
-): SchemaObject {
+): SchemaNode {
   if (!node || typeof node !== 'object') return node
   if (node.mode || node.inline === true) return node
   const mode = groupFormMode(group, formMode)

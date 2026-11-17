@@ -1,5 +1,7 @@
 /** 浮层容器 / 定位。对齐 Amis Overlay + getModalContainer，不搬 cxd-。 */
 
+import type { PlainObject } from '../types'
+
 export const Z_INDEX = {
   dropdown: 1000,
   sticky: 900,
@@ -34,8 +36,8 @@ export function resolveOverlayContainer(input?: OverlayContainer): string | HTML
 
 /** schema.popOverContainerSelector > env.getModalContainer > body。 */
 export function overlayContainerFrom(
-  schema?: { popOverContainerSelector?: unknown },
-  env?: { getModalContainer?: () => HTMLElement | undefined },
+  schema?: PlainObject | null,
+  env?: { getModalContainer?: () => HTMLElement | undefined } | null,
 ): string | HTMLElement {
   const sel = schema?.popOverContainerSelector
   if (typeof sel === 'string' && sel.trim()) return sel.trim()
@@ -55,8 +57,8 @@ export const SELECT_PICKER_ITEM_HEIGHT = 40
  * 对照桌面 iframe ~768 / 1100 不进 PopUp；`?vp=mobile` 靠 env.mobileUI。
  */
 export function overlayIsMobile(
-  schema?: { mobileUI?: unknown } | null,
-  env?: { mobileUI?: unknown } | null,
+  schema?: PlainObject | null,
+  env?: PlainObject | null,
 ): boolean {
   if (schema?.mobileUI === true) return true
   if (schema?.mobileUI === false) return false

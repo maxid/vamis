@@ -15,6 +15,7 @@ import {
   wizardStartIndex,
   wizardStepTitle,
   wizardSteps,
+  type SchemaCollection,
   type SchemaObject,
 } from '@vamis/core'
 import { Button, VamisIcon } from '@vamis/ui'
@@ -39,7 +40,7 @@ const formSchema = computed<SchemaObject>(() => ({
   title: false,
   actions: [],
   mode: current.value.mode,
-  body: current.value.body,
+  body: current.value.body as SchemaCollection | undefined,
 }))
 const customActions = computed(() =>
   wizardHasCustomActions(current.value) ? asArray(current.value.actions as SchemaObject[]) : [],

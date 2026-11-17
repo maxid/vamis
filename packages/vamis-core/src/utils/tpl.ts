@@ -1,6 +1,8 @@
 /** Tpl / Html：行数截断与原生 title。对齐 Amis Tpl.tsx `maxLine` / `showNativeTitle`。 */
 
-export function tplMaxLine(schema: { maxLine?: unknown } | null | undefined): number {
+import type { PlainObject } from '../types'
+
+export function tplMaxLine(schema: PlainObject | null | undefined): number {
   const n = Number(schema?.maxLine)
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0
 }

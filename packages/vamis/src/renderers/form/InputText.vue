@@ -177,7 +177,9 @@ const filteredOptions = computed(() => {
   })
   return appendCreatableOption(filtered, keyword, selectedValues.value, creatable.value, multiple.value)
 })
-const showSuggest = computed(() => suggest.value && open.value && (filteredOptions.value.length || loading.value))
+const showSuggest = computed(
+  () => !!(suggest.value && open.value && (filteredOptions.value.length || loading.value)),
+)
 /** 对齐 Amis InputText：`loading` 时控件右侧 `Spinner icon=reload size=sm`。 */
 const loadingSpinnerSchema = computed(() => ({
   show: loading.value,

@@ -1,6 +1,8 @@
 /** Spinner 父子 loading 互斥。对齐 Amis `SpinnerSharedStore`：祖先在转时子级不画。 */
 
-export type SpinnerParent = { contains(other: SpinnerParent): boolean }
+export interface SpinnerParent {
+  contains(other: any): boolean
+}
 
 const spinningParents = new Set<SpinnerParent>()
 const listeners = new Set<() => void>()

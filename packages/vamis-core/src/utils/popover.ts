@@ -163,7 +163,7 @@ export function popOverOverlaySchema(schema: unknown, data: PlainObject = {}): S
     actions: [{ label: '关闭', type: 'button', actionType: 'cancel' }],
     ...obj,
     type: mode,
-    title: title || obj.title,
+    title: title || (typeof obj.title === 'string' || obj.title === false ? obj.title : undefined),
     body,
   }
 }

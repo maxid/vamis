@@ -181,7 +181,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
 - 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **62%**（≥80% 47 项）。
 - kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 错误边界、D8 诊断仍缺。
-- 测试：formula 185 + core 676 + sdk 80 = **941**，全部通过；`pnpm typecheck` 仍有 68 个错误。
+- 测试：formula 185 + core 737 + sdk 81 = **1003**，全部通过；`pnpm typecheck` **0 错误**。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 ## 开发
@@ -198,7 +198,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 
 ```bash
 pnpm test        # formula + core + sdk
-pnpm typecheck   # vue-tsc（仓内仍有既有报错）
+pnpm typecheck   # vue-tsc --noEmit
 pnpm sdk:build   # 打 packages/vamis-sdk/dist/sdk.js
 pnpm build       # SDK + playground 生产构建
 pnpm compare     # Amis / Vamis Playwright 对照；--page <type> / --mobile

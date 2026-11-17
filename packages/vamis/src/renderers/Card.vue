@@ -154,7 +154,7 @@ function asSchema(node: unknown): SchemaObject {
 
 function fieldSchema(node: unknown) {
   const schema = popOverFieldSchema(cardFieldValueSchema(node))
-  const withLabel = useLabel.value && cardFieldLabel(node) ? { ...schema, label: false } : schema
+  const withLabel = useLabel.value && cardFieldLabel(node) ? { ...schema, label: false as const } : schema
   const { className: _className, ...rest } = withLabel
   return rest
 }

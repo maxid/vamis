@@ -25,6 +25,8 @@
     "**/node_modules",
     "../packages/**/__tests__",
     "../packages/**/*.test.ts",
-    "../packages/**/*.spec.ts"
+    "../packages/**/*.spec.ts",
+    "../packages/**/vite.config.ts",
+    "../packages/**/*.mjs"
   ]
 }

@@ -9,11 +9,11 @@ export interface ScopedComponent {
   id?: string
   /** 子组件注册表。`my_form.select` 这类点号路径会走进来。 */
   context?: ScopedContext
-  reload?: (extra?: PlainObject, replace?: boolean) => Promise<void> | void
-  getData?: () => PlainObject
-  setData?: (values: PlainObject, replace?: boolean, index?: unknown, condition?: unknown) => void
-  submit?: () => Promise<void> | void
-  doAction?: (actions: unknown, ctx?: PlainObject) => Promise<void> | void
+  reload?(extra?: PlainObject, replace?: boolean): Promise<void> | void
+  getData?(): PlainObject
+  setData?(values: PlainObject, replace?: boolean, index?: unknown, condition?: unknown): void
+  submit?(): Promise<void> | void
+  doAction?(actions: unknown, ctx?: PlainObject): Promise<void> | void
 }
 
 export type ResolvedTarget = {

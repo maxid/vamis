@@ -114,7 +114,7 @@ async function onClick(event: MouseEvent) {
     scoped,
     overlay,
     form: formApi,
-    scope,
+    scope: scope.value,
     event: vamiss,
   })
   if (vamiss.prevented) {
@@ -129,7 +129,7 @@ async function onClick(event: MouseEvent) {
       scoped,
       overlay,
       form: formApi,
-      scope,
+      scope: scope.value,
       event: vamiss,
     })
   }

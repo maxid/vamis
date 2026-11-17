@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { SchemaRenderer, formLayoutSkipCol, resolveClassName, type SchemaObject } from '@vamis/core'
+import { SchemaRenderer, formLayoutSkipCol, resolveClassName, type SchemaNode } from '@vamis/core'
 
 const props = defineProps<{
-  nodes: SchemaObject[]
+  nodes: SchemaNode[]
   extraData?: Record<string, any>
 }>()
 
-function colClass(node: SchemaObject) {
+function colClass(node: SchemaNode) {
+  if (!node || typeof node !== 'object') return undefined
   return resolveClassName(node.columnClassName, props.extraData || {})
 }
 </script>

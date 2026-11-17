@@ -1,26 +1,22 @@
 /** Checkbox 真假值：对齐 Amis `value == trueValue`（宽松相等）。 */
 
-export function checkboxTrueValue(schema: { trueValue?: unknown }): unknown {
+import type { PlainObject } from '../types'
+
+export function checkboxTrueValue(schema: PlainObject): unknown {
   return schema.trueValue ?? true
 }
 
-export function checkboxFalseValue(schema: { falseValue?: unknown }): unknown {
+export function checkboxFalseValue(schema: PlainObject): unknown {
   return schema.falseValue ?? false
 }
 
 /** `checked` 强制展示；否则 `value == trueValue`。 */
-export function checkboxIsChecked(
-  value: unknown,
-  schema: { trueValue?: unknown; checked?: unknown },
-): boolean {
+export function checkboxIsChecked(value: unknown, schema: PlainObject): boolean {
   if (schema.checked !== undefined) return !!schema.checked
   return value == checkboxTrueValue(schema)
 }
 
-export function checkboxWriteValue(
-  checked: boolean,
-  schema: { trueValue?: unknown; falseValue?: unknown },
-): unknown {
+export function checkboxWriteValue(checked: boolean, schema: PlainObject): unknown {
   return checked ? checkboxTrueValue(schema) : checkboxFalseValue(schema)
 }
 
@@ -30,7 +26,7 @@ export function checkboxClearValue(): unknown {
 }
 
 /** 源码：pristine ?? resetValue ?? ''。 */
-export function checkboxResetValue(schema: { resetValue?: unknown }, pristine: unknown): unknown {
+export function checkboxResetValue(schema: PlainObject, pristine: unknown): unknown {
   if (pristine !== undefined) return pristine
   if (schema.resetValue !== undefined) return schema.resetValue
   return ''

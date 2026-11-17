@@ -158,23 +158,24 @@ export function normalizeNumberValue(
   clearValueOnEmpty?: boolean,
   isBig?: boolean,
 ): unknown {
-  if (!numberIsNumeric(value)) {
-    if (!numberIsNumeric(resetValue)) return clearValueOnEmpty ? undefined : ''
-    value = resetValue
+  let next: unknown = numberIsNumeric(value) ? value : resetValue
+  if (!numberIsNumeric(next)) return clearValueOnEmpty ? undefined : ''
+  if (typeof next === 'number') {
+    let n = next
+    if (typeof min === 'number') n = Math.max(n, min)
+    if (typeof max === 'number') n = Math.min(n, max)
+    next = n
+  } else if (typeof next === 'string') {
+    let s: NumberValue = next
+    if (min !== undefined && decimalCompare(s, min) < 0) s = min
+    if (max !== undefined && decimalCompare(max, s) < 0) s = max
+    next = s
   }
-  if (typeof value === 'number') {
-    if (typeof min === 'number') value = Math.max(value, min)
-    if (typeof max === 'number') value = Math.min(value, max)
+  if (!isBig && getNumberPrecision(next) !== precision) {
+    const truncated = truncDecimal(next as NumberValue, precision)
+    next = isBig ? truncated : Number(truncated)
   }
-  if (typeof value === 'string') {
-    if (min !== undefined && decimalCompare(value, min) < 0) value = min
-    if (max !== undefined && decimalCompare(max, value) < 0) value = max
-  }
-  if (!isBig && getNumberPrecision(value) !== precision) {
-    const truncated = truncDecimal(value as NumberValue, precision)
-    value = isBig ? truncated : Number(truncated)
-  }
-  return value
+  return next
 }
 
 /** min / max / precision / step 支持模板。大数模式不转 Number。 */
