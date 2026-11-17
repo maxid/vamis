@@ -351,6 +351,64 @@ body:
     draggable: true
 ```
 
+## 支持裁剪
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-image",
+      "name": "image",
+      "label": "上传后裁剪",
+      "receiver": "/api/upload/file",
+      "crop": true
+    }
+  ]
+}
+```
+
+设置裁剪比例等配置，具体细节可以参考[这里](https://github.com/fengyuanchen/cropperjs#options)。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-image",
+      "name": "image",
+      "label": "上传后裁剪",
+      "receiver": "/api/upload/file",
+      "crop": {
+        "aspectRatio": 1.7777
+      }
+    }
+  ]
+}
+```
+
+默认情况下裁剪结果是 `png` 格式，如果要支持其它格式，请设置 `cropFormat`，比如下面设置为 `jpeg` 格式，同时设置质量为 `0.9`
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-image",
+      "name": "image",
+      "label": "上传后裁剪",
+      "receiver": "/api/upload/file",
+      "crop": true,
+      "cropFormat": "image/jpeg",
+      "cropQuality": 0.9
+    }
+  ]
+}
+```
+
 ## 属性表
 
 除了支持 [普通表单项属性表](./formitem#属性表) 中的配置以外，还支持：
@@ -434,7 +492,6 @@ body:
 ```
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 上传管线复用 InputFile：`receiver` 返回 `data.value` / `data.url` 作为图片地址；`change` / `remove` / `success` / `fail` 与 `clear` 对齐。
 - **未接**：`crop` 系列（Vamis 不内置 cropper）、`allowInput`（手填图片地址）、图片预览画廊（点击缩略图目前是新窗口打开原图）；`uploadBtnText` 只收字符串（SchemaNode 未接），`fixedSize` 只加类名、未按占位图换算宽度。

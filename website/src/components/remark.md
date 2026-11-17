@@ -6,24 +6,24 @@ outline: deep
 # Remark 标记
 
 ::: info 实现进度 92% · 进行中
-文档主路径已对齐：`content` 文本 / `{ title, body }`、`shape`、变量、`placement`、自定义 `icon`。浮层走 `VamisOverlay` Teleport（`--z-tooltip` 1600），徽标转写 Amis `_remark.scss`（`--remark-*`）。`mobileUI` 点击走 Dialog。缺 `themeCss`。
+文档主路径已对齐：content 文本 / `{ title, body }`、shape、变量、placement。浮层走 `VamisOverlay`（`--z-tooltip` 1600），徽标转写 `_remark.scss`（`--remark-*`）。自定义 icon / `mobileUI` Dialog 已接。缺 `themeCss`
 :::
 
-用于展示提示文本，和表单项中的 `labelRemark` 属性类型。
+`remark` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-作者态 YAML 与 JSON 同等有效。字段名不改写。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+用于展示提示文本，和表单项中的 remark 属性类型。
 
 ## 基本用法
 
 ```schema
 {
-    "type": "page",
-    "body": {
-        "type": "remark",
-        "content": "这是一段提醒"
-    }
+  "type": "page",
+  "body": {
+    "type": "remark",
+    "content": "这是一段提醒"
+  }
 }
 ```
 
@@ -31,27 +31,26 @@ outline: deep
 
 ```schema
 {
-    "type": "page",
-    "body": {
-        "type": "remark",
-        "content": "这是一段提醒",
-        "shape": "circle"
-    }
+  "type": "page",
+  "body": {
+    "type": "remark",
+    "content": "这是一段提醒",
+    "shape": "circle"
+  }
 }
 ```
-
 ## 可配置标题
 
 ```schema
 {
-    "type": "page",
-    "body": {
-        "type": "remark",
-        "content": {
-            "title": "标题",
-            "body": "这是一段提醒"
-        }
+  "type": "page",
+  "body": {
+    "type": "remark",
+    "content": {
+      "title": "标题",
+      "body": "这是一段提醒"
     }
+  }
 }
 ```
 
@@ -59,23 +58,23 @@ outline: deep
 
 ```schema
 {
-    "type": "page",
-    "data": {
-        "github": "https://github.com/"
+  "type": "page",
+  "data": {
+    "github": "https://github.com/"
+  },
+  "body": [
+    {
+      "type": "remark",
+      "content": "${github}"
     },
-    "body": [
-        {
-            "type": "remark",
-            "content": "${github}"
-        },
-        {
-            "type": "remark",
-            "content": {
-                "title": "${github|raw}",
-                "body": "${github}"
-            }
-        }
-    ]
+    {
+      "type": "remark",
+      "content": {
+        "title": "${github|raw}",
+        "body": "${github}"
+      }
+    }
+  ]
 }
 ```
 
@@ -83,40 +82,43 @@ outline: deep
 
 ```schema: scope="body"
 [
-    {
-        "type": "remark",
-        "content": "向上",
-        "placement": "top"
-    },
-    {
-        "type": "remark",
-        "content": "向下",
-        "placement": "bottom"
-    },
-    {
-        "type": "remark",
-        "content": "向左",
-        "placement": "left"
-    },
-    {
-        "type": "remark",
-        "content": "向右",
-        "placement": "right"
-    }
+  {
+    "type": "remark",
+    "content": "向上",
+    "placement": "top"
+  },
+  {
+    "type": "remark",
+    "content": "向下",
+    "placement": "bottom"
+  },
+  {
+    "type": "remark",
+    "content": "向左",
+    "placement": "left"
+  },
+  {
+    "type": "remark",
+    "content": "向右",
+    "placement": "right"
+  }
 ]
 ```
 
 ## 属性表
 
-| 属性名    | 类型                    | 默认值                  | 说明          |
-| --------- | ----------------------- | ----------------------- | ------------- |
-| type      | `string`                |                         | `remark`      |
-| className | [ClassName](/types/classname) |                    | 外层 CSS 类名 |
-| content   | `string` \| `object`    |                         | 提示文本；对象可带 `title` / `body` |
-| placement | `string`                | `top`                   | 弹出位置      |
-| trigger   | `string` \| `string[]`  | `['hover', 'focus']`    | 触发条件      |
-| icon      | `string`                | 内置问号 SVG            | 图标          |
-| shape     | `'circle' \| 'square'`  |                         | 图标形状；`circle` 才圆 |
-| label     | `string`                |                         | 问号旁文案    |
-| tooltip   | `string` \| `object`    |                         | 同 `content`，对象可覆盖 `icon` / `placement` |
-| mobileUI  | `boolean`               |                         | `true` 时点击走 Dialog |
+| 属性名    | 类型     | 默认值                  | 说明          |
+| --------- | -------- | ----------------------- | ------------- |
+| type      | `string` |                         | `remark`      |
+| className | `string` |                         | 外层 CSS 类名 |
+| content   | `string` |                         | 提示文本      |
+| placement | `string` |                         | 弹出位置      |
+| trigger   | `string` | `['hover', 'focus']`    | 触发条件      |
+| icon      | `string` | `fa fa-question-circle` | 图标          |
+| shape     | `'circle' \| 'square'`             | 图标形状       |
+
+## 和 Amis 文档的差异
+
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
+- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
+- 当前实现：文档主路径已对齐：content 文本 / `{ title, body }`、shape、变量、placement。浮层走 `VamisOverlay`（`--z-tooltip` 1600），徽标转写 `_remark.scss`（`--remark-*`）。自定义 icon / `mobileUI` Dialog 已接。缺 `themeCss`。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

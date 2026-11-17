@@ -11,29 +11,199 @@ outline: deep
 
 `iframe` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-## 基本用法
+## 基本使用
 
-```schema
-type: page
-title: iframe
-body:
-  - type: iframe
+内嵌外部站点，可用 iframe 来实现。
+
+```schema: scope="body"
+{
+  "type": "iframe",
+  "src": "https://github.com/maxid/vamis",
+  "height": 300
+}
 ```
 
-## 常用属性
+## src 使用动态数据
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+### 数据域变量
+
+> 1.1.6
+
+```schema:
+{
+  "type": "page",
+  "data": {
+    "iframeSrc": "https://github.com/maxid/vamis"
+  },
+  "body": {
+    "type": "iframe",
+    "src": "${iframeSrc}",
+    "height": 300
+  }
+}
+```
+
+## 其它原生 iframe 属性
+
+还支持以下原生 iframe 属性，具体配置项请[参考](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/iframe)。
+
+- name
+- allow
+- sandbox
+- referrerpolicy
+
+## 支持 base64 格式
+
+`src`属性支持传入符合 base64 编码标准的 [MIME 类型](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types)字符串，具体效果参考[示例](../../../examples/iframe)
+
+## 如何和 iframe 通信
+
+#### amis 向 iframe 通信
+
+在 iframe 页面中添加`message`事件监听器，在 iframe 初始化、更新或者接收到其他组件发送数据的时候，会通过 `postMessage` 发送当前数据域数据，iframe 页面的事件监听器中可以通过`e.data`进行获取：
+
+```js
+window.addEventListener('message', e => {
+  // e.data 获取当前数据域数据，进行使用
+});
+```
+
+`e.data` 格式及参数说明：
+
+```json
+{
+  "type": "amis:init", // 当前事件类型
+  "data": {
+    //... 当前数据域数据
+  }
+}
+```
+
+- **type**: 当前事件类型
+  - amis:init：初始化的时候触发
+  - amis:update：组件更新时触发
+  - amis:receive：组件通过 target 接收到其他组件发送来数据的时候
+- **data**：当前数据源数据
+
+> 如果是 webpack 开发环境，注意过滤掉`webpackOk`类型消息
+
+#### iframe 页面向 amis 通信
+
+可以通过以下两种方式实现 iframe 页面向 amis 通信：
+
+- 方式一：通过 events 属性，基于[Action](./action)实现，有一定的局限性。
+- 方式二：通过 onEvent 属性，基于[事件动作](/concepts/event-action)实现，更灵活。
+
+> 注意：如果同时配置了 events 和 onEvent，amis 都会执行，且 onEvent 配置的动作行为会先于 events 执行。
+
+步骤如下：
+
+1. 在 iframe 页面中定义消息名称和需要传递的数据。获取父级 window，并使用`postMessage`传递数据，格式如下，：
+
+```js
+window.parent.postMessage(
+  {
+    type: 'amis:detail',
+    data: {
+      iframeId: '111'
+    }
+  },
+  '*'
+);
+```
+
+`message`格式：
+
+- `type`: 标识要触发的 amis 行为，请使用 `amis:xxx` 的格式，这里我们设置为配置好的`detail`事件
+- `data`: 传给 amis 的数据，amis 会将该数据与当前数据域进行合并进行使用
+
+2. 在 amis 的 iframe 组件中指明需要监听的消息名称，以及需要执行的动作。
+
+```json
+// 方式一：即在 amis 的 iframe 配置项中配置 events 对象
+{
+  "type": "iframe",
+  "src": "http://www.xxx.com",
+  "events": {
+    "detail": {
+      "actionType": "dialog", // 弹窗动作
+      "dialog": {
+        "title": "弹框",
+        "body": "iframe 传给 amis 的 id 是：${iframeId}" // 在弹框中渲染`"iframe 传给 amis 的 id 是：${iframeId}"`这段模板，即111
+      }
+    }
+  }
+}
+
+// 方式二：即在 amis 的 iframe 配置项中配置 onEvent 对象
+{
+  "type": "iframe",
+  "src": "http://www.xxx.com",
+  "onEvent": {
+    "detail": {
+      "actions": [
+        // 动作 1，弹窗动作
+        {
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "iframe 传给 amis 的 id 是：${iframeId}" // 在弹框中渲染`"iframe 传给 amis 的 id 是：${iframeId}"`这段模板，即111
+          }
+        },
+        // 动作 2，触发指定组件的特性动作
+        {
+          "actionType": "crud",
+          "componentId": "form01",
+          "data": {
+            "iframeId": "${iframeId}" // 刷新请求参数为`"iframe 传给 amis 的 id 是：${iframeId}"`这段模板，即111
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## 设置高度自适应
+
+默认 amis 中只支持给 iframe 配置固定高度，我们可以通过上面说到的通信机制实现高度自适应。
+
+1. 首先在 iframe 页面中获取到页面高度
+2. 通过`amis:resize`事件，将高度信息发送给 amis
+
+```js
+window.parent.postMessage(
+  {
+    type: 'amis:resize',
+    data: {
+      height: 400
+    }
+  },
+  '*'
+);
+```
+
+这样就可以动态设置 iframe 组件高度
+
+## 属性表
+
+| 属性名         | 类型               | 默认值     | 说明                 |
+| -------------- | ------------------ | ---------- | -------------------- |
+| type           | `string`           | `"iframe"` | 指定为 iFrame 渲染器 |
+| className      | `string`           |            | iFrame 的类名        |
+| frameBorder    | `Array`            |            | frameBorder          |
+| style          | `object`           |            | 样式对象             |
+| src            | `string`           |            | iframe 地址          |
+| allow          | `string`           |            | allow 配置           |
+| sandbox        | `string`           |            | sandbox 配置         |
+| referrerpolicy | `string`           |            | referrerpolicy 配置  |
+| height         | `number`或`string` | `"100%"`   | iframe 高度          |
+| width          | `number`或`string` | `"100%"`   | iframe 宽度          |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能嵌页。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

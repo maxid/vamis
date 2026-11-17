@@ -60,6 +60,29 @@ body:
     diffValue: "${value1}"
 ```
 
+## diff 数据域中的两个变量
+
+如下例，左侧编辑器中的值，通过`"diffValue": "${value1}"`获取，右侧编辑器的值，通过设置`"name": "value2"`，自动映射数据域中`value2`的值
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "data": {
+    "value1": "hello world",
+    "value2": "hello wrold"
+  },
+  "body": [
+    {
+      "type": "diff-editor",
+      "name": "value2",
+      "label": "Diff-Editor",
+      "diffValue": "${value1}"
+    }
+  ]
+}
+```
+
 ## 属性表
 
 除 [FormItem](/components/form/formitem) 通用配置外：
@@ -92,7 +115,6 @@ body:
 | `setValue` | `value: string` | **未齐**（应更新右侧） |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON。
 - 走 monaco `createDiffEditor`，不再是左右 textarea。
 - 组件动作仍缺 D7。

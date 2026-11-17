@@ -11,40 +11,289 @@ outline: deep
 
 `input-rating` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
 ## 基本用法
 
-```schema
-type: page
-title: input-rating
-body:
-  - type: form
-    title: input-rating
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: input-rating
-        name: input_rating
-        label: input-rating
+默认颜色
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3
+    }
+  ]
+}
 ```
 
-## 常用属性
+自定义颜色。支持各种颜色形式，如 CSS 预定义颜色，十六进制颜色，RGB 颜色，HSL 颜色。
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3,
+      "colors": {
+        "1": "gray",
+        "2": "#678f8d",
+        "3": "rgb(119, 168, 141)",
+        "4": "hsl(147, 22%, 56%)",
+        "5": "#ff6670"
+      }
+    }
+  ]
+}
+```
+
+## 半星
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3.5,
+      "half": true
+    }
+  ]
+}
+```
+
+## 带有文字
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3,
+      "texts": {
+        "1": "很差",
+        "2": "较差",
+        "3": "一般",
+        "4": "较好",
+        "5": "很好"
+      },
+      "textClassName": "okde"
+    }
+  ]
+}
+```
+
+## 自定义字符
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3,
+      "char": "好"
+    }
+  ]
+}
+```
+
+## 只读
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3.6,
+      "half": true,
+      "readOnly": true,
+      "texts": {
+        "5": "3.6"
+      }
+    }
+  ]
+}
+```
+
+## 属性表
+
+当做选择器表单项使用时，除了支持 [普通表单项属性表](./formitem#%E5%B1%9E%E6%80%A7%E8%A1%A8) 中的配置以外，还支持下面一些配置
+
+| 属性名        | 类型                | 默认值                                              | 说明                                                                                                            |
+| ------------- | ------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| value         | `number`            | -                                                   | 当前值                                                                                                          |
+| half          | `boolean`           | `false`                                             | 是否使用半星选择                                                                                                |
+| count         | `number`            | `5`                                                 | 总星数                                                                                                          |
+| readOnly      | `boolean`           | `false`                                             | 只读                                                                                                            |
+| allowClear    | `boolean`           | `true`                                              | 是否允许再次点击后清除                                                                                          |
+| colors        | `string` / `object` | `{'2': '#abadb1', '3': '#787b81', '5': '#ffa900' }` | 星星被选中的颜色。 若传入字符串，则只有一种颜色。若传入对象，可自定义分段，键名为分段的界限值，键值为对应的类名 |
+| inactiveColor | `string`            | `#e7e7e8`                                           | 未被选中的星星的颜色                                                                                            |
+| texts         | `object`            | -                                                   | 星星被选中时的提示文字。可自定义分段，键名为分段的界限值，键值为对应的类名                                      |
+| textPosition  | `right` / `left`    | `right`                                             | 文字的位置                                                                                                      |
+| char          | `string`            | `★`                                                 | 自定义字符                                                                                                      |
+| className     | `string`            | -                                                   | 自定义样式类名                                                                                                  |
+| charClassName | `string`            | -                                                   | 自定义字符类名                                                                                                  |
+| textClassName | `string`            | -                                                   | 自定义文字类名                                                                                                  |
+
+## 事件表
+
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+> `[name]`表示当前组件绑定的名称，即`name`属性，如果没有配置`name`属性，则通过`value`取值。
+
+| 事件名称 | 事件参数                  | 说明           |
+| -------- | ------------------------- | -------------- |
+| change   | `[name]: number` 组件的值 | 分值变化时触发 |
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定`actionType: 动作名称`、`componentId: 该组件id`来触发这些动作，动作配置可以通过`args: {动作配置项名称: xxx}`来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称 | 动作配置                 | 说明                                             |
+| -------- | ------------------------ | ------------------------------------------------ |
+| clear    | -                        | 清空                                             |
+| reset    | -                        | 将值重置为初始值。否则为`resetValue` |
+| setValue | `value: number` 更新的值 | 更新数据                                         |
+
+### clear
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3.5,
+      "half": true,
+      "id": "clear_text"
+    },
+    {
+      "type": "button",
+      "label": "清空",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "clear",
+              "componentId": "clear_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### reset
+
+如果配置了`resetValue`，则重置时使用`resetValue`的值，否则使用初始值。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3.5,
+      "half": true,
+      "id": "reset_text"
+    },
+    {
+      "type": "button",
+      "label": "重置",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reset",
+              "componentId": "reset_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### setValue
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "type": "input-rating",
+      "name": "rating",
+      "label": "评分",
+      "count": 5,
+      "value": 3.5,
+      "half": true,
+      "id": "setvalue_text"
+    },
+    {
+      "type": "button",
+      "label": "赋值",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "setValue",
+              "componentId": "setvalue_text",
+              "args": {
+                "value": 4
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能打分；半星/自定义字符未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

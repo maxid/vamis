@@ -11,29 +11,266 @@ outline: deep
 
 `json` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+JSON 展示组件
 
 ## 基本用法
 
+可以配置 `value` 展示 `json` 格式数据
+
 ```schema
-type: page
-title: json
-body:
-  - type: json
+{
+  "type": "page",
+  "body": {
+    "type": "json",
+    "value": {
+      "a": "a",
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  }
+}
 ```
 
-## 常用属性
+## 获取数据链值
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+也可以通过配置 `source` 获取数据链中的值
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "json": {
+      "a": "a",
+      "b": {
+        "c": "c"
+      }
+    }
+  },
+  "body": {
+    "type": "json",
+    "source": "${json}"
+  }
+}
+```
+
+## 用作 Field 时
+
+当用在 Table 的列配置 Column、List 的内容、Card 卡片的内容和表单的 Static-XXX 中时，可以设置`name`属性，映射同名变量
+
+### Table 中的列类型
+
+```schema: scope="body"
+{
+  "type": "table",
+  "data": {
+    "items": [
+      {
+        "id": "1",
+        "json": {
+          "a": "a1",
+          "b": {
+            "c": "c1"
+          }
+        }
+      },
+      {
+        "id": "2",
+        "json": {
+          "a": "a2",
+          "b": {
+            "c": "c2"
+          }
+        }
+      },
+      {
+        "id": "3",
+        "json": {
+          "a": "a3",
+          "b": {
+            "c": "c3"
+          }
+        }
+      }
+    ]
+  },
+  "columns": [
+    {
+      "name": "id",
+      "label": "Id"
+    },
+    {
+      "name": "json",
+      "label": "颜色",
+      "type": "json"
+    }
+  ]
+}
+```
+
+List 的内容、Card 卡片的内容配置同上
+
+### Form 中静态展示
+
+```schema: scope="body"
+{
+  "type": "form",
+  "data": {
+    "json": {
+      "a": "a",
+      "b": {
+        "c": "c"
+      }
+    }
+  },
+  "body": [
+    {
+      "type": "control",
+      "name": "json",
+      "label": "Json",
+      "body": {
+        "type": "json"
+      }
+    }
+  ]
+}
+```
+
+## 主题
+
+可配置`jsonTheme`，指定显示主题，可选`twilight`和`eighties`，默认为`twilight`。
+
+```schema: scope="body"
+[
+  {
+    "type": "json",
+    "value": {
+      "a": "a",
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  },
+  {
+    "type": "divider"
+  },
+  {
+    "type": "json",
+    "jsonTheme": "eighties",
+    "value": {
+      "a": "a",
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  }
+]
+```
+
+## 配置默认展开层级
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "json",
+    "levelExpand": 0,
+    "value": {
+      "a": "a",
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  }
+}
+```
+
+如上，`levelExpand`配置为`0`，则默认不展开。
+
+## 开启 json 修改
+
+> since 1.2.3
+
+可配置`mutable` 为 true，展示 json 的同时支持修改。记得配置 name 属性。
+
+```schema: scope="body"
+[
+  {
+    "type": "json",
+    "name": "json",
+    "mutable": true,
+    "value": {
+      "a": "a",
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  }
+]
+```
+
+## 显示数据类型显示
+
+还可以使用 `displayDataTypes` 开启数据类型显示
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "json",
+    "displayDataTypes": true,
+    "value": {
+      "a": 1,
+      "b": "b",
+      "c": {
+        "d": "d"
+      }
+    }
+  }
+}
+```
+
+## 文本过长自动处理
+
+设置`ellipsisThreshold`可以设置字符串的最大展示长度，点击字符串可以切换全量/部分展示方式，默认展示全量字符串。
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "json",
+    "ellipsisThreshold": 80,
+    "value": {
+      "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+    }
+  }
+}
+```
+
+## 属性表
+
+| 属性名            | 类型              | 默认值     | 说明                                                                                 |
+| ----------------- | ----------------- | ---------- | ------------------------------------------------------------------------------------ |
+| type              | `string`          |            | 如果在 Table、Card 和 List 中，为`"json"`；在 Form 中用作静态展示，为`"static-json"` |
+| className         | `string`          |            | 外层 CSS 类名                                                                        |
+| value             | `object`/`string` |            | json 值，如果是 string 会自动 parse                                                  |
+| source            | `string`          | `''`       | 通过数据映射获取数据链中的值                                                         |
+| placeholder       | `string`          | `-`        | 占位文本                                                                             |
+| levelExpand       | `number`          | `1`        | 默认展开的层级                                                                       |
+| jsonTheme         | `string`          | `twilight` | 主题，可选`twilight`和`eighties`                                                     |
+| mutable           | `boolean`         | `false`    | 是否可修改                                                                           |
+| displayDataTypes  | `boolean`         | `false`    | 是否显示数据类型                                                                     |
+| ellipsisThreshold | `number`          | `false`    | 设置字符串的最大展示长度，点击字符串可以切换全量/部分展示方式，默认展示全量字符串    |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能展开 JSON。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

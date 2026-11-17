@@ -386,6 +386,30 @@ outline: deep
 }
 ```
 
+## 延迟打开&关闭
+
+`mouseEnterDelay` 为延迟展示, `mouseLeaveDelay` 为延迟隐藏，
+
+```schema: scope="body"
+[
+  {
+    "type": "tooltip-wrapper",
+    "title": "标题",
+    "content": "提示内容",
+    "mouseEnterDelay": 1000,
+    "mouseLeaveDelay": 2000,
+    "inline": true,
+    "className": "mr-2",
+    "body": [
+      {
+        "type": "tpl",
+        "tpl": "延迟1s展示，延迟2s隐藏"
+      }
+    ]
+  }
+]
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -422,7 +446,6 @@ outline: deep
 | click | 点击宿主 |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 浮层出现用 opacity 0.2s（对齐 Amis `tooltipIn` 的淡入）。`wrapperComponent` 不在白名单时回退 `div` / `span`。未接 `themeCss`。

@@ -128,6 +128,104 @@ body:
 
 圆 / 仪表盘模式暂不画刻度线。
 
+## 用作 Field 时
+
+当用在 Table 的列配置 Column、List 的内容、Card 卡片的内容和表单的 Static-XXX 中时，可以设置`name`属性，映射同名变量
+
+### Table 中的列类型
+
+```schema: scope="body"
+{
+  "type": "table",
+  "data": {
+    "items": [
+      {
+        "id": "1",
+        "progress": 20
+      },
+      {
+        "id": "2",
+        "progress": 40
+      },
+      {
+        "id": "3",
+        "progress": 60
+      }
+    ]
+  },
+  "columns": [
+    {
+      "name": "id",
+      "label": "Id"
+    },
+    {
+      "name": "progress",
+      "label": "进度",
+      "type": "progress"
+    }
+  ]
+}
+```
+
+List 的内容、Card 卡片的内容配置同上
+
+### Form 中静态展示
+
+```schema: scope="body"
+{
+  "type": "form",
+  "data": {
+    "progress": 60
+  },
+  "body": [
+    {
+      "type": "static-progress",
+      "name": "progress",
+      "label": "进度"
+    }
+  ]
+}
+```
+
+## 显示背景间隔
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "progress",
+    "stripe": true,
+    "value": 60
+  }
+}
+```
+
+## 显示动画
+
+需要条形进度条才生效
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "progress",
+      "animate": true,
+      "value": 60
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "progress",
+      "animate": true,
+      "value": 60,
+      "stripe": true
+    }
+  ]
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -154,7 +252,6 @@ body:
 | `setValue` | `args.value` | 更新进度 |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 已接：三种模式、颜色映射、线宽、缺口、文本模板、条纹 / 动画、reset/setValue。
 - `threshold` / `showThresholdText` 已接 line 模式；圆 / 仪表盘刻度线与 `gapPosition` 精确弧线偏移未接。

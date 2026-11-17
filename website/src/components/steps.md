@@ -11,29 +11,410 @@ outline: deep
 
 `steps` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+步骤条组件
 
 ## 基本用法
 
 ```schema
-type: page
-title: steps
-body:
-  - type: steps
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "steps",
+      "value": 1,
+      "steps": [
+        {
+          "title": "First",
+          "subTitle": "this is subTitle",
+          "description": "this is description"
+        },
+        {
+          "title": "Second"
+        },
+        {
+          "title": "Last"
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 设置状态
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "steps",
+    "value": 1,
+    "status": "error",
+    "steps": [
+      {
+        "title": "First"
+      },
+      {
+        "title": "Second",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Last"
+      }
+    ]
+  }
+}
+```
+
+## 指定步骤条方向
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "steps",
+    "mode": "vertical",
+    "value": 1,
+    "steps": [
+      {
+        "title": "First",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Second",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Last",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      }
+    ]
+  }
+}
+```
+
+## 指定标签放置位置
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "steps",
+    "value": 1,
+    "labelPlacement": "vertical",
+    "steps": [
+      {
+        "title": "First",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Second",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Last",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      }
+    ]
+  }
+}
+```
+
+## 点状步骤条
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "steps",
+    "value": 1,
+    "progressDot": true,
+    "steps": [
+      {
+        "title": "First",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Second",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Last",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      }
+    ]
+  }
+}
+```
+
+## 简单模式
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "steps",
+      "value": 1,
+      "mode": "simple",
+      "steps": [
+        {
+          "title": "First"
+        },
+        {
+          "title": "Second"
+        },
+        {
+          "title": "Last"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## 数据映射
+
+当前处于第几步统一通过 `name` 关联变量名，其他配置可通过 `"${xxx}"` 关联上下文变量。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "step": 1,
+    "status": "error",
+    "secondTitle": "Second"
+  },
+  "body": [
+    {
+      "type": "steps",
+      "name": "step",
+      "status": "${status}",
+      "steps": [
+        {
+          "title": "First",
+          "subTitle": "this is subTitle",
+          "description": "this is description"
+        },
+        {
+          "title": "${secondTitle}"
+        },
+        {
+          "title": "Last"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## 接口映射
+
+接口返回的数据也是一样，都会在同一个数据域，所以取值方式是一样的。
+
+```schema
+{
+  "type": "page",
+  "initApi": "/api/mock2/steps/get",
+  "body": [
+    {
+      "type": "steps",
+      "name": "step",
+      "status": "${status}",
+      "steps": [
+        {
+          "title": "First",
+          "subTitle": "this is subTitle",
+          "description": "this is description"
+        },
+        {
+          "title": "Secord"
+        },
+        {
+          "title": "Last"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Form 中静态展示
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "form",
+    "initApi": "/api/mock2/steps/steps",
+    "body": [
+      {
+        "type": "steps",
+        "source": "${steps}",
+        "name": "current"
+      }
+    ]
+  }
+}
+```
+
+## 动态数据
+
+### 远程拉取
+
+除了可以通过数据映射获取当前数据域中的变量以外，source 还支持配置接口，格式为 API，用于动态返回选项组。
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "form",
+    "body": [
+      {
+        "type": "steps",
+        "name": "steps",
+        "source": "/api/mock2/steps/steps"
+      }
+    ]
+  }
+}
+```
+
+远程拉取接口时，返回的数据结构除了需要满足 amis 接口要求的基本数据结构 以外，必须用"steps"作为选项组的 key 值，如下：
+
+```json
+{
+  "status": 0,
+  "msg": "",
+  "data": {
+    "steps": [
+      {
+        "title": "First",
+        "subTitle": "this is sub title",
+        "value": "first"
+      },
+      {
+        "title": "Secord",
+        "description": "this is description",
+        "value": "secord"
+      },
+      {
+        "title": "Last",
+        "value": "last"
+      }
+    ],
+    "value": "secord",
+    "status": "error"
+  }
+}
+```
+
+### 数据域变量配置
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "steps": [
+      {
+        "title": "First",
+        "subTitle": "this is subTitle",
+        "description": "this is description"
+      },
+      {
+        "title": "Second"
+      },
+      {
+        "title": "Last"
+      }
+    ]
+  },
+  "body": [
+    {
+      "type": "steps",
+      "name": "step",
+      "source": "${steps}"
+    }
+  ]
+}
+```
+
+## 自定义不同步骤以及状态
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "steps",
+    "value": "b",
+    "status": {
+      "a": "finish",
+      "b": "error",
+      "c": "wait"
+    },
+    "steps": [
+      {
+        "title": "First",
+        "value": "a"
+      },
+      {
+        "title": "Second",
+        "subTitle": "this is subTitle",
+        "description": "this is description",
+        "value": "b"
+      },
+      {
+        "title": "Third",
+        "value": "c"
+      }
+    ]
+  }
+}
+```
+
+## 属性表
+
+| 属性名         | 类型                                                                              | 默认值       | 说明                                                                             |
+| -------------- | --------------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------- |
+| type           | `string`                                                                          |              | `"steps"` 指定为 步骤条 渲染器                                                   |
+| steps          | Array<[step](#step)>                                                              | []           | 数组，配置步骤信息                                                               |
+| source         | [API](/types/api) 或 [数据映射](/concepts/data-mapping) |              | 选项组源，可通过数据映射获取当前数据域变量、或者配置 API 对象                    |
+| name           | `string`                                                                          |              | 关联上下文变量                                                                   |
+| value          | `string` \| `number`                                                              | `-`          | 设置默认值，注意不支持表达式                                                     |
+| status         | [StepStatus](#StepStatus) \| {[propName: string]: stepStatus;}                    | `-`          | 状态                                                                             |
+| className      | `string`                                                                          | `-`          | 自定义类名                                                                       |
+| mode           | `horizontal` \| `vertical` \| `simple`                                            | `horizontal` | 指定步骤条模式。目前支持水平（horizontal）、竖直（vertical）和简单（simple）模式 |
+| labelPlacement | `horizontal` \| `vertical`                                                        | `horizontal` | 指定标签放置位置，默认水平放图标右侧，可选 (vertical) 放图标下方                 |
+| progressDot    | `boolean`                                                                         | `false`      | 点状步骤条                                                                       |
+
+### step
+
+| 属性名      | 类型                                                  | 默认值 | 说明                                    |
+| ----------- | ----------------------------------------------------- | ------ | --------------------------------------- |
+| title       | `string` \| [SchemaNode](/types/schemanode) |        | 标题                                    |
+| subTitle    | `string` \| [SchemaNode](/types/schemanode) |        | 子标题                                  |
+| description | `string` \| [SchemaNode](/types/schemanode) |        | 详细描述                                |
+| icon        | `string`                                              |        | icon 名，支持 fontawesome v4 或使用 url |
+| value       | `string`                                              |        | value                                   |
+| className   | `string`                                              |        | 自定义类名                              |
+
+### StepStatus
+
+`wait` | `process` | `finish` | `error`
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能展示步骤。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

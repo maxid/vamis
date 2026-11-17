@@ -11,40 +11,49 @@ outline: deep
 
 `uuid` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
 ## 基本用法
 
-```schema
-type: page
-title: uuid
-body:
-  - type: form
-    title: uuid
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: uuid
-        name: uuid
-        label: uuid
+随机生成一个 id，可以用于防止表单重复提交。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "debug": true,
+  "body": [
+    {
+      "type": "uuid",
+      "name": "uuid"
+    }
+  ]
+}
 ```
 
-## 常用属性
+这个字段是不显示的，上面这个例子之所以显示是因为加了 `debug: true`。
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+## length
+
+目前 uuid 的唯一可设置参数是 length，用于生成短随机数
+
+```schema:height="200" scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "debug": true,
+  "body": [
+    {
+      "type": "uuid",
+      "name": "uuid",
+      "length": 8
+    }
+  ]
+}
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能生成；仍走扁平 name。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

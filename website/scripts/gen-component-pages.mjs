@@ -3,10 +3,22 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { componentNav } from '../nav.mjs'
+import {
+  SKIP_TYPES,
+  buildSyncedPage,
+  diffSection,
+  extractH2,
+  hasH2,
+  insertBeforeDiff,
+  replaceH2,
+  resolveAmisDoc,
+  rewriteAmisBody,
+} from './rewrite-amis-doc.mjs'
 
 const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const srcDir = path.join(root, 'website/src')
 const todoPath = path.join(root, 'docs/superpowers/specs/2026-10-20-vamis-component-todo.md')
+const amisComponentsDir = path.resolve(root, '../amis/docs/zh-CN/components')
 
 const OPTION_TYPES = new Set([
   'select',
@@ -61,8 +73,6 @@ const HANDWRITTEN = new Set([
   '/components/form/input-password',
   '/components/form/input-date',
   '/components/form/input-date-range',
-  '/components/form/input-datetime',
-  '/components/form/input-time',
   '/components/form/checkbox',
   // radio / switch / hidden 已按 Amis 章节手写，跑 `pnpm docs:build` 不能被生成器覆盖。
   '/components/form/radio',
@@ -451,10 +461,18 @@ function lookupTodo(type) {
   return null
 }
 
-function pageMarkdown(item, group) {
+function readAmisSource(item) {
+  const rels = resolveAmisDoc(amisComponentsDir, item.link, item.type)
+  for (const rel of rels) {
+    const file = path.join(amisComponentsDir, rel)
+    if (fs.existsSync(file)) return fs.readFileSync(file, 'utf8')
+  }
+  return ''
+}
+
+function stubMarkdown(item, group, rec) {
   const type = item.type
   const role = item.role || 'widget'
-  const rec = type ? lookupTodo(type) : lookupTodo(item.text)
   const status = rec?.status || '进行中'
   const progress = rec?.progress || '—'
   const reason = rec?.reason || '已按 type 注册；文档主路径仍在补齐。'
@@ -496,12 +514,174 @@ ${yaml}
 
 ${propsTable(role)}${extraProps(type)}
 
-## 和 Amis 文档的差异
+${diffSection(reason)}`
+}
 
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（\`yes\` / \`On\` / \`012\` 当字符串）。
-- 可包在 IR 信封 \`apiVersion: lcdp.ir/v1\` + \`kind: UiPage\` 里，\`spec\` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
-`
+function pageMarkdown(item, group) {
+  const type = item.type
+  const rec = type ? lookupTodo(type) : lookupTodo(item.text)
+  const status = rec?.status || '进行中'
+  const progress = rec?.progress || '—'
+  const reason = rec?.reason || '已按 type 注册；文档主路径仍在补齐。'
+  if (type && SKIP_TYPES.has(type)) return stubMarkdown(item, group, rec)
+  const amisMd = readAmisSource(item)
+  if (amisMd) {
+    return buildSyncedPage({
+      title: item.text,
+      group,
+      type: type || item.text,
+      status,
+      progress,
+      reason,
+      amisMd,
+    })
+  }
+  return stubMarkdown(item, group, rec)
+}
+
+/** 本轮才从 Amis 补上事件/动作表的手写页：每次 gen 用改写后的表覆盖，避免分列修复不同步。 */
+const REFRESH_EVENT_ACTION = new Set([
+  '/components/calendar',
+  '/components/dialog',
+  '/components/drawer',
+  '/components/dropdown-button',
+  '/components/form/transfer',
+  '/components/nav',
+  '/components/table2',
+  '/components/wizard',
+])
+
+const H2_ALIASES = {
+  基本使用: ['基本用法', '基础用法'],
+  基本用法: ['基本使用', '基础用法'],
+}
+
+function hasSection(md, title) {
+  if (hasH2(md, title)) return true
+  return (H2_ALIASES[title] || []).some((alt) => hasH2(md, alt))
+}
+
+function h2Title(part) {
+  const line = (String(part).split('\n', 1)[0] || '').trim()
+  const m = line.match(/^##\s+(.+)$/)
+  return m ? m[1].trim() : ''
+}
+
+function isTableHeading(title) {
+  return /属性表|事件表|动作表/.test(title)
+}
+
+function insertBeforeTables(md, section) {
+  if (!section) return md
+  const text = String(md || '').replace(/\s+$/, '')
+  const block = `\n\n${section.trim()}\n`
+  if (/^## 属性表\s*$/m.test(text)) return text.replace(/^## 属性表\s*$/m, `${block}\n## 属性表`)
+  return insertBeforeDiff(text, section)
+}
+
+/** 补进来的示例章节应在属性表之前，不要堆到动作表后面。 */
+function placeExampleSectionsBeforeTables(md) {
+  const parts = String(md || '').split(/(?=^## )/m)
+  if (parts.length < 3) return md
+  const head = []
+  const examples = []
+  const tables = []
+  const rest = []
+  let stage = 'head'
+  for (const part of parts) {
+    const title = h2Title(part)
+    if (!title) {
+      if (stage === 'head') head.push(part)
+      else rest.push(part)
+      continue
+    }
+    if (title === '和 Amis 文档的差异' || title.startsWith('和 Amis')) {
+      stage = 'rest'
+      rest.push(part)
+      continue
+    }
+    if (isTableHeading(title)) {
+      stage = 'tables'
+      tables.push(part)
+      continue
+    }
+    if (stage === 'tables' || stage === 'examples-after') {
+      stage = 'examples-after'
+      examples.push(part)
+      continue
+    }
+    head.push(part)
+  }
+  if (!examples.length || !tables.length) return md
+  const next = [...head, ...examples, ...tables, ...rest].join('')
+  return next.replace(/\n{3,}/g, '\n\n')
+}
+
+function dedupeExampleH2(md) {
+  const parts = String(md || '').split(/(?=^## )/m)
+  const seen = new Set()
+  const out = []
+  for (const part of parts) {
+    const title = h2Title(part)
+    if (title && !isTableHeading(title) && !title.startsWith('和 Amis') && seen.has(title)) continue
+    if (title) seen.add(title)
+    out.push(part)
+  }
+  return out.join('')
+}
+
+function mergeMissingExampleSections(file, item, current) {
+  const amisMd = readAmisSource(item)
+  if (!amisMd) return { text: current, changed: false }
+  const rewritten = rewriteAmisBody(amisMd)
+  let next = current
+  let changed = false
+  const skip = new Set(['属性表', '事件表', '动作表'])
+  for (const part of rewritten.split(/(?=^## )/m)) {
+    const title = h2Title(part)
+    if (!title || skip.has(title) || hasSection(next, title)) continue
+    next = insertBeforeTables(next, part.trim())
+    changed = true
+  }
+  const ordered = placeExampleSectionsBeforeTables(next)
+  if (ordered !== next) {
+    next = ordered
+    changed = true
+  }
+  const deduped = dedupeExampleH2(next)
+  if (deduped !== next) {
+    next = deduped
+    changed = true
+  }
+  return { text: next, changed }
+}
+
+function appendMissingTables(file, item) {
+  const amisMd = readAmisSource(item)
+  if (!amisMd) return false
+  const current = fs.readFileSync(file, 'utf8')
+  const rewritten = rewriteAmisBody(amisMd)
+  const refresh = REFRESH_EVENT_ACTION.has(item.link)
+  let next = current
+  let changed = false
+  for (const title of ['属性表', '事件表', '动作表']) {
+    const section = extractH2(rewritten, title)
+    if (!section) continue
+    if (title === '属性表') {
+      if (hasH2(next, title)) continue
+      next = insertBeforeDiff(next, section)
+      changed = true
+      continue
+    }
+    if (hasH2(next, title) && !refresh) continue
+    next = hasH2(next, title) ? replaceH2(next, title, section) : insertBeforeDiff(next, section)
+    changed = true
+  }
+  const merged = mergeMissingExampleSections(file, item, next)
+  next = merged.text
+  changed = changed || merged.changed
+  if (changed) fs.writeFileSync(file, next.endsWith('\n') ? next : `${next}\n`)
+  return changed
 }
 
 function ensureDir(file) {
@@ -509,14 +689,18 @@ function ensureDir(file) {
 }
 
 let written = 0
+let patched = 0
 for (const group of componentNav) {
   if (!group.items) continue
   for (const item of group.items) {
-    if (HANDWRITTEN.has(item.link) || item.role === 'docs' && !item.type) continue
+    if (item.role === 'docs' && !item.type) continue
     if (!item.type && item.role === 'docs') continue
-    if (HANDWRITTEN.has(item.link)) continue
     const rel = item.link.replace(/^\//, '').replace(/\/$/, '/index') + '.md'
     const file = path.join(srcDir, rel)
+    if (HANDWRITTEN.has(item.link)) {
+      if (fs.existsSync(file) && appendMissingTables(file, item)) patched += 1
+      continue
+    }
     ensureDir(file)
     fs.writeFileSync(file, pageMarkdown(item, group.text))
     written += 1
@@ -524,3 +708,4 @@ for (const group of componentNav) {
 }
 
 console.log(`generated ${written} component pages → website/src/components`)
+console.log(`patched ${patched} handwritten pages with missing 章节/三表`)

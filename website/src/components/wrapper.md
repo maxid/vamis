@@ -129,6 +129,12 @@ className: b
 ]
 ```
 
+## style
+
+> 1.1.5 版本
+
+wrapper 可以设置 style，当成一个 `div` 标签来用
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -141,7 +147,6 @@ className: b
 | wrap | `boolean` | `true` | `false` 时不再包一层（表单内部用法） |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `className` / `style` 落在 SchemaRenderer 宿主上；`size` 内边距打在内部 `div`。未接 `themeCss`。

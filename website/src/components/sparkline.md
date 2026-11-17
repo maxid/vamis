@@ -11,29 +11,92 @@ svg 折线精简
 
 `sparkline` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-## 基本用法
+简单走势图，只做简单的展示，详细展示请采用 Chart 来完成。
+
+## 基本使用
+
+配置类型，然后设置值即可，值为数组格式。
+
+当前例子为静态值，通常你会需要配置成 `name` 与当前环境数据关联。
 
 ```schema
-type: page
-title: sparkline
-body:
-  - type: sparkline
+{
+  "type": "page",
+  "body": {
+    "type": "sparkline",
+    "height": 30,
+    "value": [
+      3,
+      5,
+      2,
+      4,
+      1,
+      8,
+      3,
+      7
+    ]
+  }
+}
 ```
 
-## 常用属性
+## 点击行为
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+可以通过配置`"clickAction": {}`，来指定图表节点的点击行为，支持 amis 的 [行为](./action)。
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "sparkline",
+    "value": [
+      3,
+      5,
+      2,
+      4,
+      1,
+      8,
+      3,
+      7
+    ],
+    "clickAction": {
+      "actionType": "dialog",
+      "dialog": {
+        "title": "走势详情",
+        "body": "这里你可以放个 chart 来展示详情。"
+      }
+    }
+  }
+}
+```
+
+## 空数据显示
+
+通过 `placeholder` 可以设置空数据时显示的内容
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "sparkline",
+    "value": [],
+    "placeholder": "无数据"
+  }
+}
+```
+
+## 属性表
+
+| 属性名      | 类型     | 默认值 | 说明                 |
+| ----------- | -------- | ------ | -------------------- |
+| name        | `string` |        | 关联的变量           |
+| width       | `number` |        | 宽度                 |
+| height      | `number` |        | 高度                 |
+| placeholder | `string` |        | 数据为空时显示的内容 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：svg 折线精简。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

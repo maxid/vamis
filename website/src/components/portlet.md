@@ -161,6 +161,57 @@ tabs:
 }
 ```
 
+## 图标
+
+通过 icon 可以设置 tab 的图标，可以是 fontawesome 或 URL 地址。
+
+```schema: scope="body"
+{
+  "type": "portlet",
+  "tabs": [
+    {
+      "title": "Tab 1",
+      "tab": "Content 1",
+      "icon": "https://suda.cdn.bcebos.com/images%2F2021-01%2Fdiamond.svg"
+    },
+    {
+      "title": "Tab 2",
+      "tab": "Content 2"
+    }
+  ]
+}
+```
+
+## mountOnEnter
+
+只有在点击卡片的时候才会渲染，在内容较多的时候可以提升性能，但第一次点击的时候会有卡顿。
+
+## unmountOnExit
+
+如果你想在切换 tab 时，自动销毁掉隐藏的 tab，请配置`"unmountOnExit": true`。
+
+## 监听切换事件
+
+```schema: scope="body"
+{
+  "type": "portlet",
+  "activeKey": 1,
+  "onSelect": "alert(key)",
+  "tabs": [
+    {
+      "title": "Tab 1",
+      "tab": "Content 1"
+    },
+    {
+      "title": "Tab 2",
+      "tab": "Content 2"
+    }
+  ]
+}
+```
+
+会传递 key 参数和 props
+
 ## 事件表
 
 | 事件名称 | 事件参数 | 说明 |
@@ -207,7 +258,6 @@ tabs:
 | unmountOnExit | `boolean` | false | 切走卸载 |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 未接栏目拖拽、`scrollable` 溢出滚动、fontawesome 图标；URL 图标只在 `icon` 含 `/` 时当图片。

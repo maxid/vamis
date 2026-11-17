@@ -11,40 +11,123 @@ outline: deep
 
 `input-signature` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
 ## 基本用法
 
-```schema
-type: page
-title: input-signature
-body:
-  - type: form
-    title: input-signature
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: input-signature
-        name: input_signature
-        label: input-signature
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "signature",
+      "type": "input-signature",
+      "label": "手写签名",
+      "height": 200
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 自定义按钮名称
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "signature",
+      "type": "input-signature",
+      "height": 160,
+      "confirmBtnLabel": "确定",
+      "undoBtnLabel": "上一步",
+      "clearBtnLabel": "重置"
+    }
+  ]
+}
+```
+
+## 自定义颜色
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "signature",
+      "type": "input-signature",
+      "label": "手写签名",
+      "height": 200,
+      "color": "#ff0000",
+      "bgColor": "#fff"
+    }
+  ]
+}
+```
+
+## 配合图片组件实现实时预览
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "signature",
+      "type": "input-signature",
+      "label": "手写签名",
+      "height": 200
+    },
+    {
+      "type": "image",
+      "name": "signature"
+    }
+  ]
+}
+```
+
+## 内嵌模式
+
+在内嵌模式下，组件会以按钮的形式展示，点击按钮后弹出一个容器，用户可以在容器中完成签名。更适合在移动端使用。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "signature",
+      "type": "input-signature",
+      "label": "手写签名",
+      "embed": true
+    }
+  ]
+}
+```
+
+## 属性表
+
+| 属性名            | 类型                           | 默认值     | 说明                                 |
+| ----------------- | ------------------------------ | ---------- | ------------------------------------ |
+| width             | `number`                       |            | 组件宽度，最小 300                   |
+| height            | `number`                       |            | 组件高度，最小 160                   |
+| color             | `string`                       | `#000`     | 手写字体颜色                         |
+| bgColor           | `string`                       | `#EFEFEF`  | 面板背景颜色                         |
+| clearBtnLabel     | `string`                       | `清空`     | 清空按钮名称                         |
+| undoBtnLabel      | `string`                       | `撤销`     | 撤销按钮名称                         |
+| confirmBtnLabel   | `string`                       | `确认`     | 确认按钮名称                         |
+| embed             | `boolean`                      |            | 是否内嵌                             |
+| embedConfirmLabel | `string`                       | `确认`     | 内嵌容器确认按钮名称                 |
+| ebmedCancelLabel  | `string`                       | `取消`     | 内嵌容器取消按钮名称                 |
+| embedBtnIcon      | `string`                       |            | 内嵌按钮图标                         |
+| embedBtnLabel     | `string`                       | `点击签名` | 内嵌按钮文案                         |
+| uploadApi         | [API](/types/api) |            | 上传签名图片接口，仅在内嵌模式下生效 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：**精简**：canvas 涂鸦，无压感/导出配置。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

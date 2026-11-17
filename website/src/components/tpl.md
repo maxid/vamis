@@ -6,102 +6,125 @@ outline: deep
 # Tpl 模板
 
 ::: info 实现进度 92% · 进行中
-对齐 Amis：始终 HTML 插入，插值默认转义，`|raw` 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。标题/列表/链接在 html 岛内补回。P0 过滤器可用。其余运行时过滤器仍 P1。
+对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1
 :::
 
-输出 [模板](/concepts/template) 的常用组件。`html` 是同一渲染器。作者态 YAML 与 JSON 同等有效。
+`tpl` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
+
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+输出 [模板](/concepts/template) 的常用组件
 
 ## 基本用法
 
 ```schema
-type: page
-data:
-  text: World!
-body:
-  type: tpl
-  tpl: Hello ${text}
+{
+  "data": {
+    "text": "World!"
+  },
+  "type": "page",
+  "body": {
+    "type": "tpl",
+    "tpl": "Hello ${text}"
+  }
+}
 ```
 
-更多模板相关配置请看 [模板文档](/concepts/template)。
+更多模板相关配置请看[模板文档](/concepts/template)
 
 ## 属性表
 
-| 属性 | 说明 |
-|------|------|
-| `type` | `tpl`（`html` / `plain` 同渲染器） |
-| `className` | 外层 class，打在 `div.vamis-node` |
-| `tpl` / `html` | 模板。标签会渲染；插值默认转义 |
-| `text` | 纯文本，整段转义 |
-| `showNativeTitle` | `true` 时把纯文本写到外层 `title` |
-| `maxLine` | 大于 0 时按行截断（源码有，Amis 属性表未列） |
-| `inline` | 默认 true（span）；`false` 时块级 |
-| `wrapperComponent` | `div` 或 `span` |
+| 属性名          | 类型                                 | 默认值  | 说明                                         |
+| --------------- | ------------------------------------ | ------- | -------------------------------------------- |
+| type            | `string`                             | `"tpl"` | 指定为 Tpl 组件                              |
+| className       | `string`                             |         | 外层 Dom 的类名                              |
+| tpl             | [模板](/concepts/template) |         | 配置模板                                     |
+| showNativeTitle | `boolean`                            |         | 是否设置外层 DOM 节点的 title 属性为文本内容 |
 
 ## 事件表
 
-宿主 `div.vamis-node` 派发。动作里可用 `${event.context.nativeEvent.type}`。
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细查看[事件动作](/concepts/event-action)。
 
-| 事件 | 说明 |
-|------|------|
-| `click` | 点击 |
-| `mouseenter` | 鼠标移入 |
-| `mouseleave` | 鼠标移出 |
+| 事件名称   | 事件参数 | 说明           |
+| ---------- | -------- | -------------- |
+| click      | -        | 点击时触发     |
+| mouseenter | -        | 鼠标移入时触发 |
+| mouseleave | -        | 鼠标移出时触发 |
 
 ### click
 
+鼠标点击。可以尝试通过`${event.context.nativeEvent}`获取鼠标事件对象。
+
 ```schema: scope="body"
-type: tpl
-tpl: Hello
-onEvent:
-  click:
-    actions:
-      - actionType: toast
-        args:
-          msgType: info
-          msg: "${event.context.nativeEvent.type}"
+{
+  "type": "tpl",
+  "tpl": "Hello",
+  "onEvent": {
+    "click": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "${event.context.nativeEvent.type}"
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
 ### mouseenter
 
+鼠标移入。可以尝试通过`${event.context.nativeEvent}`获取鼠标事件对象。
+
 ```schema: scope="body"
-type: tpl
-tpl: Hello
-onEvent:
-  mouseenter:
-    actions:
-      - actionType: toast
-        args:
-          msgType: info
-          msg: "${event.context.nativeEvent.type}"
+{
+  "type": "tpl",
+  "tpl": "Hello",
+  "onEvent": {
+    "mouseenter": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "${event.context.nativeEvent.type}"
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
 ### mouseleave
 
-```schema: scope="body"
-type: tpl
-tpl: Hello
-onEvent:
-  mouseleave:
-    actions:
-      - actionType: toast
-        args:
-          msgType: info
-          msg: "${event.context.nativeEvent.type}"
-```
-
-## 限制行数
-
-`maxLine` 用 `-webkit-line-clamp` 截断。悬停可开 `showNativeTitle` 看全文。
+鼠标移出。可以尝试通过`${event.context.nativeEvent}`获取鼠标事件对象。
 
 ```schema: scope="body"
-type: tpl
-maxLine: 2
-showNativeTitle: true
-tpl: 这是一段比较长的模板文本，超过两行时会被截断并显示省略号。把窗口收窄更容易看出效果。
+{
+  "type": "tpl",
+  "tpl": "Hello",
+  "onEvent": {
+    "mouseleave": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "${event.context.nativeEvent.type}"
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- `maxLine` / `showNativeTitle` 已接。Amis 其余运行时过滤器（`map` / `bytes` 等）仍 P1。
+- 当前实现：对齐 Amis：始终 HTML 插入，插值默认转义，raw 才插入变量 HTML。`showNativeTitle`、`maxLine`、click / mouseenter / mouseleave 已接。P0 过滤器可用。其余过滤器仍 P1。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

@@ -307,6 +307,95 @@ body:
     "*": 其他
 ```
 
+## 渲染 自定义模板
+
+> since 2.5.2
+
+可配置`itemSchema` 渲染自定义模板，支持`HTML`或`schema`；  
+当映射值是`非object`时，可使用`${item}`获取映射值；
+
+### html 或字符串模板
+
+使用`${item}` 获取映射值
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "mapping",
+    "value": "1",
+    "map": {
+      "1": "第一",
+      "2": "第二",
+      "3": "第三",
+      "*": "其他"
+    },
+    "itemSchema": "自定义模板：<span style='color: red'>${item}</span>"
+  }
+}
+```
+
+### SchemaNode 模板
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "mapping",
+    "value": "1",
+    "map": {
+      "1": "第一",
+      "2": "第二",
+      "3": "第三",
+      "*": "其他"
+    },
+    "itemSchema": {
+      "type": "tag",
+      "label": "${item}"
+    }
+  }
+}
+```
+
+### 在模板中渲染数据
+
+- 当映射值是`object`时，使用模板语法可获取`object`属性值
+- 当映射值是`非object`时，使用`${item}` 获取映射值
+- 也可以获取数据域中的其他数据
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "myName": "cat"
+  },
+  "body": {
+    "type": "mapping",
+    "value": "1",
+    "map": {
+      "1": {
+        "label": "开心",
+        "color": "red"
+      },
+      "2": {
+        "label": "伤心",
+        "color": "blue"
+      },
+      "3": {
+        "label": "冷漠",
+        "color": "gray"
+      },
+      "*": "其他"
+    },
+    "itemSchema": {
+      "type": "tag",
+      "label": "${myName} ${label}",
+      "color": "${color}"
+    }
+  }
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -323,7 +412,6 @@ body:
 | `style` | `object` | | 外层样式 |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 与 Amis 一致：k-v / 对象数组 / 多 key 数组、`source` 变量与 API、`itemSchema` 字符串与 SchemaNode、数组多值、布尔 `1`/`0`、`placeholder`。
 - `labelField` 配置后映射值不再作为 schema 渲染。映射到 `type: tag` 时把 `label` 落到 Tag 的 `value`（对齐 Amis 渲染 tag 时 `value: null`，避免从表单域抢值）。

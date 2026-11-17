@@ -11,29 +11,346 @@ outline: deep
 
 `carousel` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
 ## 基本用法
 
-```schema
-type: page
-title: carousel
-body:
-  - type: carousel
+```schema: scope="body"
+{
+  "type": "carousel",
+  "auto": false,
+  "thumbMode": "cover",
+  "animation": "slide",
+  "height": 300,
+  "options": [
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+    },
+    {
+      "html": "<div style=\"width: 100%; height: 300px; background: #e3e3e3; text-align: center; line-height: 300px;\">carousel data</div>"
+    },
+    {
+      "thumbMode": "contain",
+      "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 动态列表
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+轮播图组件目前没有获取数据的配置，因此需要依赖 `service` 来获取数据。
+
+```schema: scope="body"
+{
+  "type": "page",
+  "body": {
+    "type": "service",
+    "api": "/api/mock2/options/carousel",
+    "body": {
+      "type": "carousel",
+      "name": "imageList"
+    }
+  }
+}
+```
+
+目前数据关联是通过 name 的方式，因此 api 返回应该是类似这样的：
+
+```
+{
+    status: 0,
+    msg: '',
+    data: {
+        imageList: [{
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+        }]
+    }
+}
+```
+
+其中的 `imageList` 要和配置的 `name` 值对应。
+
+## 点击图片打开外部链接
+
+需要放回的字段中除了前面的 image，还有 href 属性
+
+```schema: scope="body"
+{
+  "type": "page",
+  "data": {
+    "imageList": [
+      {
+        "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png",
+        "href": "https://github.com/maxid/vamis"
+      }
+    ]
+  },
+  "body": {
+    "type": "carousel",
+    "name": "imageList"
+  }
+}
+```
+
+## 自定义轮播图的展现
+
+通过配置 `itemSchema` 可以自定义轮播图的展现，比如图片默认背景配置是 contain，可以改成 cover：
+
+```
+itemSchema: {
+    type: 'tpl',
+    tpl: '<div style="background-image: url("${image}"); background-size: cover; background-repeat: no-repeat; background-position: center center;" class="image ${imageClassName}"></div>'
+}
+```
+
+## 多图展示
+
+> `2.8.1` 及以上版本
+
+```schema: scope="body"
+{
+  "type": "carousel",
+  "auto": false,
+  "thumbMode": "cover",
+  "animation": "slide",
+  "multiple": {
+    "count": 3
+  },
+  "interval": 1000,
+  "duration": 5000,
+  "height": 300,
+  "options": [
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+    },
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692942/d8e4992057f9.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+    },
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395693148/1314a2a3d3f6.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+    },
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395693379/8f2e79f82be0.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+    }
+  ]
+}
+```
+
+## 属性表
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| ---------------------------- | ----------------------------------------------------- | ---------------------- | ------------------------------------------------------- |
+| type | `string` | `"carousel"` | 指定为 Carousel 渲染器 |
+| className | `string` | `"panel-default"` | 外层 Dom 的类名 |
+| options | `array` | `[]` | 轮播面板数据 |
+| options.image | `string` |  | 图片链接 |
+| options.href | `string` |  | 图片打开网址的链接 |
+| options.imageClassName | `string` |  | 图片类名 |
+| options.title | `string` |  | 图片标题 |
+| options.titleClassName | `string` |  | 图片标题类名 |
+| options.description | `string` |  | 图片描述 |
+| options.descriptionClassName | `string` |  | 图片描述类名 |
+| options.html | `string` |  | HTML 自定义，同[Tpl](./tpl)一致 |
+| itemSchema | `object` |  | 自定义`schema`来展示数据 |
+| auto | `boolean` | `true` | 是否自动轮播 |
+| interval | `string` | `5s` | 切换动画间隔 |
+| duration | `number` | `500` | 切换动画时长（ms） |
+| width | `string` | `auto` | 宽度 |
+| height | `string` | `200px` | 高度 |
+| controls | `array` | `['dots', 'arrows']` | 显示左右箭头、底部圆点索引 |
+| controlsTheme | `string` | `light` | 左右箭头、底部圆点索引颜色，默认`light`，另有`dark`模式 |
+| animation | `string` | fade | 切换动画效果，默认`fade`，另有`slide`模式，`marquee`跑马灯模式 |
+| thumbMode | `string` | `"cover" \| "contain"` | 图片默认缩放模式 |
+| multiple | `object` | `{count: 1}` | 多图展示，count 表示展示的数量 |
+| alwaysShowArrow | `boolean` | `false` | 是否一直显示箭头，为 false 时鼠标 hover 才会显示 |
+| icons | {prev: `SchemaCollection`; next: `SchemaCollection`;} |  | 自定义箭头图标 |
+
+## 事件表
+
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+| 事件名称 | 事件参数                                                                         | 说明             |
+| -------- | -------------------------------------------------------------------------------- | ---------------- |
+| change   | `activeIndex: number` 激活图片的索引 <br /> `prevIndex: number` 上一张图片的索引 | 轮播图切换时触发 |
+
+### change
+
+```schema: scope="body"
+{
+  "type": "carousel",
+  "auto": false,
+  "thumbMode": "cover",
+  "animation": "slide",
+  "height": 300,
+  "options": [
+    {
+      "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+    },
+    {
+      "html": "<div style=\"width: 100%; height: 300px; background: #e3e3e3; text-align: center; line-height: 300px;\">carousel data</div>"
+    },
+    {
+      "thumbMode": "contain",
+      "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+    }
+  ],
+  "onEvent": {
+    "change": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msg": "滚动至${activeIndex}"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定`actionType: 动作名称`、`componentId: 该组件id`来触发这些动作，动作配置可以通过`args: {动作配置项名称: xxx}`来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称   | 动作配置                             | 说明       |
+| ---------- | ------------------------------------ | ---------- |
+| next       | -                                    | 下一张     |
+| prev       | -                                    | 上一张     |
+| goto-image | `activeIndex: number` 切换图片的索引 | 切换轮播图 |
+
+### next
+
+```schema: scope="body"
+[
+  {
+    "type": "action",
+    "label": "下一张",
+    "className": "mr-3 mb-3",
+    "onEvent": {
+      "click": {
+        "actions": [
+          {
+            "actionType": "next",
+            "componentId": "carousel_001"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "carousel",
+    "id": "carousel_001",
+    "auto": false,
+    "thumbMode": "cover",
+    "animation": "slide",
+    "height": 300,
+    "options": [
+      {
+        "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+      },
+      {
+        "html": "<div style=\"width: 100%; height: 300px; background: #e3e3e3; text-align: center; line-height: 300px;\">carousel data</div>"
+      },
+      {
+        "thumbMode": "contain",
+        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+      }
+    ]
+  }
+]
+```
+
+### prev
+
+```schema: scope="body"
+[
+  {
+    "type": "action",
+    "label": "上一张",
+    "className": "mr-3 mb-3",
+    "onEvent": {
+      "click": {
+        "actions": [
+          {
+            "actionType": "prev",
+            "componentId": "carousel_002"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "carousel",
+    "id": "carousel_002",
+    "auto": false,
+    "thumbMode": "cover",
+    "animation": "slide",
+    "height": 300,
+    "options": [
+      {
+        "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+      },
+      {
+        "html": "<div style=\"width: 100%; height: 300px; background: #e3e3e3; text-align: center; line-height: 300px;\">carousel data</div>"
+      },
+      {
+        "thumbMode": "contain",
+        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+      }
+    ]
+  }
+]
+```
+
+### goto-image
+
+```schema: scope="body"
+[
+  {
+    "type": "action",
+    "label": "滚动到第三张",
+    "className": "mr-3 mb-3",
+    "onEvent": {
+      "click": {
+        "actions": [
+          {
+            "actionType": "goto-image",
+            "componentId": "carousel_003",
+            "args": {
+              "activeIndex": "${index}"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "carousel",
+    "id": "carousel_003",
+    "auto": false,
+    "thumbMode": "cover",
+    "animation": "slide",
+    "height": 300,
+    "options": [
+      {
+        "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png"
+      },
+      {
+        "html": "<div style=\"width: 100%; height: 300px; background: #e3e3e3; text-align: center; line-height: 300px;\">carousel data</div>"
+      },
+      {
+        "thumbMode": "contain",
+        "image": "https://suda.cdn.bcebos.com/amis/images/alice-macaw.jpg"
+      }
+    ]
+  }
+]
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能轮播。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

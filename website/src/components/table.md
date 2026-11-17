@@ -22,11 +22,11 @@ body:
   - type: table
     title: 表格1
     source: $rows
-columns:
-  - name: engine
-    label: Engine
-  - name: version
-    label: Version
+    columns:
+      - name: engine
+        label: Engine
+      - name: version
+        label: Version
 ```
 
 ## 数据需求
@@ -53,7 +53,7 @@ body:
   - type: table
     title: 表格1
     source: []
-columns:
+    columns:
       - name: engine
         label: Engine
       - name: version
@@ -327,9 +327,9 @@ body:
   - type: table
     source: $rows
     tableLayout: fixed
-columns:
-  - name: id
-    label: ID
+    columns:
+      - name: id
+        label: ID
       - name: engine
         label: Rendering engine
         width: 150
@@ -369,8 +369,9 @@ body:
     columns:
       - name: engine
         label: Engine
-      - label: Version
-    type: tpl
+      - name: version
+        label: Version
+        type: tpl
         tpl: ${version | number}
         align: right
 ```
@@ -388,10 +389,10 @@ body:
   - type: table
     title: 表格1
     source: $rows
-columns:
-  - name: engine
+    columns:
+      - name: engine
         label: Engine
-  - name: version
+      - name: version
         label: Version
         className: text-primary
 ```
@@ -472,9 +473,9 @@ data:
 body:
   - type: table
     source: $rows
-columns:
-  - name: engine
-    label: Engine
+    columns:
+      - name: engine
+        label: Engine
       - name: version
         label: Version
         backgroundScale:
@@ -509,8 +510,8 @@ body:
         label: Grade
       - name: version
         label: Version
-  - name: browser
-    label: Browser
+      - name: browser
+        label: Browser
       - name: id
         label: ID
         toggled: false
@@ -548,8 +549,8 @@ body:
             fixed: left
           - name: grade
             label: Grade
-  - name: version
-    label: Version
+          - name: version
+            label: Version
           - name: browser
             label: Browser
             groupName: Group-2
@@ -572,9 +573,9 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-columns:
-  - name: id
-    label: ID
+    columns:
+      - name: id
+        label: ID
       - name: engine
         label: Rendering engine
         copyable: true
@@ -612,7 +613,7 @@ data:
 body:
   - type: table
     source: ${table}
-columns:
+    columns:
       - name: id
         label: ID
       - type: container
@@ -677,7 +678,7 @@ body:
         label: ""
       - name: platform
         label: ""
-  - name: version
+      - name: version
         label: ""
       - name: grade
         label: ""
@@ -791,7 +792,7 @@ body:
     source: $rows
     className: m-b-none
     columnsTogglable: false
-columns:
+    columns:
       - name: engine
         label: Engine
       - name: grade
@@ -955,7 +956,7 @@ body:
     className: m-b-none
     columnsTogglable: false
     showIndex: true
-columns:
+    columns:
       - name: engine
         label: Engine
       - name: grade
@@ -964,8 +965,8 @@ columns:
         label: Version
       - name: browser
         label: Browser
-  - name: id
-    label: ID
+      - name: id
+        label: ID
       - name: platform
         label: Platform
 ```
@@ -983,12 +984,12 @@ body:
     className: m-b-none
     columnsTogglable: false
     footable: true
-columns:
+    columns:
       - name: engine
         label: Engine
       - name: grade
         label: Grade
-  - name: version
+      - name: version
         label: Version
         breakpoint: "*"
       - name: browser
@@ -1082,11 +1083,11 @@ body:
     className: m-b-none
     combineNum: 3
     columnsTogglable: false
-columns:
-  - name: engine
+    columns:
+      - name: engine
         label: Rendering engine
-  - name: browser
-    label: Browser
+      - name: browser
+        label: Browser
       - name: platform
         label: Platform(s)
       - name: version
@@ -1158,7 +1159,7 @@ body:
     className: m-b-none
     combineNum: $combineNum
     columnsTogglable: false
-columns:
+    columns:
       - name: engine
         label: Rendering engine
       - name: browser
@@ -1195,8 +1196,8 @@ body:
       - name: browser
         label: Browser
         groupName: 分组2
-  - name: id
-    label: ID
+      - name: id
+        label: ID
         toggled: false
         groupName: 分组2
       - name: platform
@@ -1218,12 +1219,12 @@ body:
     source: $rows
     rowClassNameExpr: "${id % 2 ? 'bg-success' : 'bg-blue-50'}"
     columns:
-  - name: engine
-    label: Engine
+      - name: engine
+        label: Engine
       - name: grade
         label: Grade
-  - name: version
-    label: Version
+      - name: version
+        label: Version
       - name: browser
         label: Browser
       - name: id
@@ -1244,15 +1245,15 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-columns:
-  - name: browser
-    label: Browser
-  - name: version
-    label: Version
-affixRow:
-  - type: text
-    text: 总计
-  - type: tpl
+    columns:
+      - name: browser
+        label: Browser
+      - name: version
+        label: Version
+    affixRow:
+      - type: text
+        text: 总计
+      - type: tpl
         tpl: ${rows|pick:version|sum}
 ```
 
@@ -1287,7 +1288,7 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-columns:
+    columns:
       - name: id
         label: ID
       - name: browser
@@ -1343,8 +1344,8 @@ body:
     itemActions:
       - label: 编辑
         type: button
-    actionType: dialog
-    dialog:
+        actionType: dialog
+        dialog:
           title: 编辑
           body: 这是个简单的编辑弹框
       - label: 删除
@@ -1369,13 +1370,13 @@ api: /api/mock2/sample?perPage=10
 body:
   - type: table
     source: $rows
-itemAction:
+    itemAction:
       type: button
-  actionType: dialog
-  dialog:
-    title: 详情
+      actionType: dialog
+      dialog:
+        title: 详情
         body: "当前行的数据 browser: ${browser}, version: ${version}"
-columns:
+    columns:
       - name: browser
         label: Browser
       - name: version
@@ -1625,7 +1626,6 @@ body:
 表格注册了组件 API：`getData()` 返回 `items` / `rows` / `total` / `selectedItems` / `unSelectedItems`；`setValue` 动作可以整表替换，也可以只改某几行，见 [setValue](#setvalue)。表格需要配置 `id`。
 
 ## 属性表
-
 | 属性名 | 类型 | 默认值 | 说明 |
 | ------ | ---- | ------ | ---- |
 | type | `string` | | `"type"` 指定为 table 渲染器 |
@@ -2555,7 +2555,6 @@ body:
 ```
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON，本页示例用 YAML 书写，换成 JSON 等价；YAML 字面量遵循 1.2 Core。
 - Amis 文档里列宽、可复制、表头样式、弹出框偏移的示例用的是 `crud`，本页换成 `service` + `table`，只展示 Table 自己的能力。
 - 表头排序、搜索、过滤是本地处理（只动当前已有的行）。要走接口，在 `columnSort` / `columnSearch` / `columnFilter` 事件里刷新数据。

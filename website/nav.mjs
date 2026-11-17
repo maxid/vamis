@@ -153,6 +153,7 @@ export const styleNav = [
 export const typeNav = [
   { text: 'API', link: '/types/api' },
   { text: 'ClassName', link: '/types/classname' },
+  { text: 'Definitions', link: '/types/definitions' },
   { text: 'SchemaNode', link: '/types/schemanode' },
 ]
 

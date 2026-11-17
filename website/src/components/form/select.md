@@ -392,6 +392,292 @@ body:
     maxTagCount: 2
 ```
 
+## 与 Amis 的差异
+
+- 作者态 YAML 与 JSON 并列。
+- `selectMode` 只接分组；table / tree / chained / associated、`deferApi`、人员点选未接。
+- `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
+- 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
+- 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
+- `addConfirm` / `editConfirm` / `deleteConfirm` 未接。
+- 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。
+
+## 关联选择模式
+
+分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
+
+_单选_
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "关联选择模式",
+      "type": "select",
+      "name": "b",
+      "sortable": true,
+      "searchable": true,
+      "deferApi": "/api/mock2/form/deferOptions?label=${label}",
+      "selectMode": "associated",
+      "leftMode": "tree",
+      "leftOptions": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "ref": "zhugeliang",
+          "children": [
+            {
+              "label": "A",
+              "value": "a"
+            }
+          ]
+        },
+        {
+          "ref": "caocao",
+          "children": [
+            {
+              "label": "B",
+              "value": "b"
+            },
+            {
+              "label": "C",
+              "value": "c"
+            }
+          ]
+        },
+        {
+          "ref": "zhongwuyan",
+          "children": [
+            {
+              "label": "D",
+              "value": "d"
+            },
+            {
+              "label": "E",
+              "value": "e"
+            }
+          ]
+        },
+        {
+          "ref": "libai",
+          "defer": true
+        },
+        {
+          "ref": "hanxin",
+          "defer": true
+        },
+        {
+          "ref": "yunzhongjun",
+          "defer": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+_多选_
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "关联选择模式",
+      "type": "select",
+      "name": "b",
+      "multiple": true,
+      "sortable": true,
+      "searchable": true,
+      "deferApi": "/api/mock2/form/deferOptions?label=${label}",
+      "selectMode": "associated",
+      "leftMode": "tree",
+      "leftOptions": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "ref": "zhugeliang",
+          "children": [
+            {
+              "label": "A",
+              "value": "a"
+            }
+          ]
+        },
+        {
+          "ref": "caocao",
+          "children": [
+            {
+              "label": "B",
+              "value": "b"
+            },
+            {
+              "label": "C",
+              "value": "c"
+            }
+          ]
+        },
+        {
+          "ref": "zhongwuyan",
+          "children": [
+            {
+              "label": "D",
+              "value": "d"
+            },
+            {
+              "label": "E",
+              "value": "e"
+            }
+          ]
+        },
+        {
+          "ref": "libai",
+          "defer": true
+        },
+        {
+          "ref": "hanxin",
+          "defer": true
+        },
+        {
+          "ref": "yunzhongjun",
+          "defer": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+leftOptions 动态加载，默认 source 接口是返回 options 部分，而 leftOptions 是没有对应的接口可以动态返回了。为了方便，目前如果 source 接口返回的选项中，第一个 option 是以下这种格式则也会把 options[0].leftOptions 当成 leftOptions, options[0].children 当 options。同时 options[0].leftDefaultValue 可以用来配置左侧选项的默认值。
+
+```
+{
+    status: 0,
+    msg: '',
+    data: {
+        options: [
+            {
+                leftOptions: [],
+                children: [],
+                leftDefaultValue: ''
+            }
+        ]
+    }
+}
+```
+
+### 人员点选
+
+> 请通过网络面板查看接口请求返回。
+
+实际上就是采用的[「关联选择模式」](#关联选择模式)的 select，注意要看那一部分文档，需要知道怎么动态加载 leftOptions。左侧部分和人员都是通过 source 接口返回。需要懒加载的项通过设置 `defer` 为 true 来标记。左右两部分都支持懒加载。
+都是通过 deferApi 来实现，后端根据传过来的参数决定是懒加载树，还是栏加载人员。
+
+- 有 dep 值则是懒加载部门树
+- 有 ref 值则是懒加载人员
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "人员选择",
+      "type": "select",
+      "name": "b",
+      "multiple": true,
+      "sortable": true,
+      "searchable": true,
+      "selectMode": "associated",
+      "leftMode": "tree",
+      "source": "/api/mock2/form/departUser",
+      "searchApi": "/api/mock2/form/departUserSearch?term=${term}",
+      "deferApi": "/api/mock2/form/departUser?ref=${ref}&dep=${value}"
+    }
+  ]
+}
+```
 ## 属性表
 
 除了 [普通表单项属性表](./formitem#属性表) 以外，还支持：
@@ -636,12 +922,3 @@ body:
               value: b
 ```
 
-## 与 Amis 的差异
-
-- 作者态 YAML 与 JSON 并列。
-- `selectMode` 只接分组；table / tree / chained / associated、`deferApi`、人员点选未接。
-- `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
-- 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
-- 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
-- `addConfirm` / `editConfirm` / `deleteConfirm` 未接。
-- 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。

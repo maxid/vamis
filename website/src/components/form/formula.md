@@ -6,148 +6,259 @@ outline: deep
 # Formula 公式
 
 ::: warning 实现进度 65% · 进行中
-`formula` 表达式求值并写回 `name` 字段、`initSet` 初始化应用、`autoSet` 自动监听字段变化、`condition` 条件应用、`id` + 按钮 `target` 手动应用。缺表达式层与 Formula 编辑器（input-formula）统一（D2）。
+基本用法对标 Amis 自动 A+B（隐藏 formula + 只读和）。对照桌面 **2/3**（P0 0；空值示例 Amis `rendered` 常假红）。缺 input-formula 编辑器与表达式层统一（D2）
 :::
 
-公式表单项：按表达式计算结果写回表单字段。属于普通表单项，通用属性见 [FormItem](./formitem)。
+`formula` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+可以设置公式，将公式结果设置到指定表单项上。
+
+> 该表单项是隐藏的
 
 ## 基本用法
 
-公式字段本身隐藏，把结果写到指定表单项。
-
 ```schema: scope="body"
-type: form
-body:
-  - type: input-number
-    name: a
-    label: A
-  - type: input-number
-    name: b
-    label: B
-  - type: input-number
-    name: sum
-    label: 和
-    disabled: true
-    description: 自动计算 A + B
-  - type: formula
-    name: sum
-    value: 0
-    formula: "a + b"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-number",
+      "name": "a",
+      "label": "A"
+    },
+    {
+      "type": "input-number",
+      "name": "b",
+      "label": "B"
+    },
+    {
+      "type": "input-number",
+      "name": "sum",
+      "label": "和",
+      "disabled": true,
+      "description": "自动计算 A + B"
+    },
+    {
+      "type": "formula",
+      "name": "sum",
+      "value": 0,
+      "formula": "a + b"
+    }
+  ]
+}
 ```
 
 ## 自动应用
 
-默认 `autoSet: true`，依赖字段变化时重算；`initSet` 默认 true，挂载即应用一次。
-
 ```schema: scope="body"
-type: form
-body:
-  - type: input-number
-    name: a
-    label: A
-  - type: input-number
-    name: b
-    label: B
-  - type: input-number
-    name: sum
-    label: 和
-    disabled: true
-    description: 自动计算 A + B
-  - type: formula
-    name: sum
-    value: 0
-    formula: "a + b"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-number",
+      "name": "a",
+      "label": "A"
+    },
+    {
+      "type": "input-number",
+      "name": "b",
+      "label": "B"
+    },
+    {
+      "type": "input-number",
+      "name": "sum",
+      "label": "和",
+      "disabled": true,
+      "description": "自动计算 A + B"
+    },
+    {
+      "type": "formula",
+      "name": "sum",
+      "value": 0,
+      "formula": "a + b"
+    }
+  ]
+}
 ```
 
 ## 手动应用
 
-`autoSet: false` + `initSet: false`，用按钮 `target` 指向 formula 的 `id` 触发：
+配置`"autoSet": false`，然后按钮上配置`target`，配置值为`formula`的`id`值，就可以实现手动触发公式应用
 
 ```schema: scope="body"
-type: form
-body:
-  - type: input-number
-    name: a
-    label: A
-  - type: input-number
-    name: b
-    label: B
-  - type: input-number
-    name: sum
-    label: 和
-    disabled: true
-  - type: formula
-    name: sum
-    id: theFormula
-    value: 0
-    formula: "a + b"
-    autoSet: false
-    initSet: false
-  - type: button
-    label: 计算
-    target: theFormula
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-number",
+      "name": "a",
+      "label": "A"
+    },
+    {
+      "type": "input-number",
+      "name": "b",
+      "label": "B"
+    },
+    {
+      "type": "group",
+      "body": [
+        {
+          "type": "input-number",
+          "name": "sum",
+          "label": "和",
+          "disabled": true,
+          "columnClassName": "col-sm-11"
+        },
+        {
+          "type": "button",
+          "label": "计算",
+          "columnClassName": "col-sm-1 v-bottom",
+          "target": "theFormula"
+        }
+      ]
+    },
+    {
+      "type": "formula",
+      "name": "sum",
+      "id": "theFormula",
+      "value": 0,
+      "formula": "a + b",
+      "initSet": false,
+      "autoSet": false
+    }
+  ]
+}
 ```
+
+> 为什么设置`id`而不是设置`name`?
+>
+> 因为`name`值已经用来设置目标变量名了，这个表单项肯定已经存在了，所以不是唯一了，不能够被按钮指定。
 
 ## 条件应用
 
-`condition` 命中才应用；可写 tpl 依赖字段或表达式：
+可以配置`condition`用来指定作用条件，有两种写法：
+
+- 用 tpl 语法，把关联的字段写上如： `${xxx} ${yyy}` 意思是当 xxx 和 yyy 的取值结果变化了就再应用一次公式结果。
+- 自己写判断如: `this.xxx == "a" && this.xxx !== this.__prev.xxx` 当 xxx 变化了，且新的值是字符 "a" 时应用，可以写更加复杂的判断。
 
 ```schema: scope="body"
-type: form
-body:
-  - type: radios
-    name: radios
-    label: radios
-    options:
-      - label: a
-        value: a
-      - label: b
-        value: b
-  - type: input-text
-    name: b
-    label: B
-  - type: formula
-    name: b
-    formula: "''"
-    condition: "${radios}"
-    initSet: false
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "radios",
+      "name": "radios",
+      "label": "radios",
+      "options": [
+        {
+          "label": "a",
+          "value": "a"
+        },
+        {
+          "label": "b",
+          "value": "b"
+        }
+      ],
+      "description": "radios 变化会自动清空 B"
+    },
+    {
+      "type": "input-text",
+      "name": "b",
+      "label": "B"
+    },
+    {
+      "type": "formula",
+      "name": "b",
+      "value": "some string",
+      "formula": "''",
+      "condition": "${radios}",
+      "initSet": false
+    }
+  ]
+}
 ```
 
 ## 使用新表达式语法
 
-`${...}` 模板可直接拼接字符串；不带 `${}` 的表达式走公式引擎：
+通过新的[表达式](/concepts/expression)语法，可以调用其中的函数，比如
 
-```yaml
-type: form
-body:
-  - type: input-text
-    name: name
-    label: 名称
-    value: amis
-  - type: input-text
-    name: greet
-    label: 问候
-    disabled: true
-  - type: formula
-    name: greet
-    formula: "你好，${name}"
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "type": "static",
+      "value": "这个表单没有内容，通过上面的 debug 可以看到输出当前日期"
+    },
+    {
+      "type": "formula",
+      "name": "date",
+      "formula": "${DATETOSTR(NOW(), 'YYYY-MM-DD')}"
+    }
+  ]
+}
+```
+
+这种写法默认会解决浮点数计算问题（需要更新到 amis 1.6.4 及以上版本），比如
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "input-number",
+      "name": "a",
+      "value": 0.1,
+      "label": "A"
+    },
+    {
+      "type": "input-number",
+      "name": "b",
+      "value": 0.2,
+      "label": "B"
+    },
+    {
+      "type": "input-number",
+      "name": "sum",
+      "label": "直接相加",
+      "disabled": true
+    },
+    {
+      "type": "formula",
+      "name": "sum",
+      "formula": "a + b"
+    },
+    {
+      "type": "input-number",
+      "name": "sum-new",
+      "label": "使用新表达式",
+      "disabled": true
+    },
+    {
+      "type": "formula",
+      "name": "sum-new",
+      "formula": "${a + b}"
+    }
+  ]
+}
 ```
 
 ## 属性表
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `name` | `string` | | 写回的表单字段 |
-| `formula` | `string` | | 表达式 / 模板 |
-| `value` | `any` | | 初始显示值 |
-| `initSet` | `boolean` | `true` | 挂载时应用一次 |
-| `autoSet` | `boolean` | `true` | 监听依赖字段自动应用 |
-| `condition` | `string` | | 条件表达式 / tpl |
-| `id` | `string` | | 手动 target 的组件 id |
+| 属性名    | 类型                                        | 默认值 | 说明                                                                                                           |
+| --------- | ------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------- |
+| name      | `string`                                    |        | 需要应用的表单项`name`值，公式结果将作用到此处指定的变量中去。                                                 |
+| formula   | [表达式](/concepts/expression) |        | 应用的公式                                                                                                     |
+| condition | [表达式](/concepts/expression) |        | 公式作用条件                                                                                                   |
+| initSet   | `boolean`                                   | `true` | 初始化时是否设置                                                                                               |
+| autoSet   | `boolean`                                   | `true` | 观察公式结果，如果计算结果有变化，则自动应用到变量上                                                           |
+| id        | `string`                                    |        | 定义个名字，当某个按钮的目标指定为此值后，会触发一次公式应用。这个机制可以在 `autoSet` 为 false 时用来手动触发 |
 
 ## 和 Amis 文档的差异
 
-- 与 Amis 一致：`formula` / `value`、`initSet`、`autoSet`、`condition`、`id` + `target` 手动应用。
-- 未接：`input-formula` 可视化公式编辑器、表达式层与 D2 完全统一、`formula` 的 `evalMode` 细节。
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
+- 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
+- 当前实现：基本用法对标 Amis 自动 A+B（隐藏 formula + 只读和）。对照桌面 **2/3**（P0 0；空值示例 Amis `rendered` 常假红）。缺 input-formula 编辑器与表达式层统一（D2）。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

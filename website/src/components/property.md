@@ -11,29 +11,384 @@ outline: deep
 
 `property` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+使用表格的方式显示只读信息，如产品详情页。
 
 ## 基本用法
 
-```schema
-type: page
-title: property
-body:
-  - type: property
+```schema: scope="body"
+{
+  "type": "property",
+  "title": "机器配置",
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G"
+    },
+    {
+      "label": "disk",
+      "content": "80G"
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    },
+    {
+      "label": "IDC",
+      "content": "beijing"
+    },
+    {
+      "label": "Note",
+      "content": "其它说明",
+      "span": 3
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 简易模式
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+默认是表格模式，还可以通过 `"mode"="simple"` 改成简易模式，在这种模式下没有边框，属性名和值是通过 `separator` 来分隔
+
+```schema: scope="body"
+{
+  "type": "property",
+  "mode": "simple",
+  "separator": "：",
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G"
+    },
+    {
+      "label": "disk",
+      "content": "80G"
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    },
+    {
+      "label": "IDC",
+      "content": "beijing"
+    },
+    {
+      "label": "Note",
+      "content": "其它说明",
+      "span": 3
+    }
+  ]
+}
+```
+
+## 使用其它展现
+
+`label` 和 `content` 均支持使用 `amis` 其它渲染组件，比如
+
+```schema: scope="body"
+{
+  "type": "property",
+  "items": [
+    {
+      "label": "tpl",
+      "content": {
+        "type": "tpl",
+        "tpl": "1 <b>Core</b>"
+      }
+    },
+    {
+      "label": "icon",
+      "content": {
+        "type": "icon",
+        "icon": "microchip"
+      }
+    },
+    {
+      "label": "图片",
+      "content": {
+        "type": "image",
+        "src": "https://internal-amis-res.cdn.bcebos.com/images/2020-1/1578395692722/4f3cb4202335.jpeg@s_0,w_216,l_1,f_jpg,q_80"
+      }
+    }
+  ]
+}
+```
+
+## 动态内容
+
+属性表本身没有数据获取功能，需要结合 [service](./service) 来获取数据，下面的例子为了方便就直接放 page 下的 data 中了，它的效果和用 service 是一样的。
+
+动态内容有两种情况：
+
+1. label 固定、content 不同
+2. label 和 content 都不确定
+
+第一种情况只需要在 content 里使用变量即可，因为可以用任意 amis 节点。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "cpu": "1 core",
+    "memory": "4G",
+    "disk": "80G"
+  },
+  "body": {
+    "type": "property",
+    "items": [
+      {
+        "label": "cpu",
+        "content": "${cpu}"
+      },
+      {
+        "label": "memory",
+        "content": "${memory}"
+      },
+      {
+        "label": "disk",
+        "content": "${disk}"
+      }
+    ]
+  }
+}
+```
+
+第二种情况需要使用 `source` 属性来获取上下文中的内容。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "title": "title1",
+    "items": [
+      {
+        "label": "cpu",
+        "content": "1 core"
+      },
+      {
+        "label": "memory",
+        "content": "4G"
+      },
+      {
+        "label": "disk",
+        "content": "80G"
+      },
+      {
+        "label": "network",
+        "content": "4M",
+        "span": 2
+      },
+      {
+        "label": "IDC",
+        "content": "beijing"
+      },
+      {
+        "label": "Note",
+        "content": "其它说明",
+        "span": 3
+      }
+    ]
+  },
+  "body": {
+    "type": "property",
+    "title": "${title}",
+    "source": "${items}"
+  }
+}
+```
+
+## 样式控制
+
+通过 `labelStyle` 和 `contentStyle` 来控制属性名和属性值的样式，比如水平及垂直方向的对齐方式：
+
+```schema: scope="body"
+{
+  "type": "property",
+  "labelStyle": {
+    "textAlign": "left",
+    "verticalAlign": "top"
+  },
+  "contentStyle": {
+    "verticalAlign": "top"
+  },
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G"
+    },
+    {
+      "label": "disk",
+      "content": {
+        "type": "tpl",
+        "tpl": "C: 80G<br/>D: 1T<br/>E: 2T</pre>"
+      }
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    },
+    {
+      "label": "IDC",
+      "content": "beijing"
+    },
+    {
+      "label": "Note",
+      "content": "其它说明",
+      "span": 3
+    }
+  ]
+}
+```
+
+如果是简易模式，因为合并到一个单元格中了，因此只能通过 `contentStyle` 设置单元格样式，`labelStyle` 只能设置属性名文本的样式。
+
+```schema: scope="body"
+{
+  "type": "property",
+  "mode": "simple",
+  "labelStyle": {
+    "fontWeight": "bold",
+    "textTransform": "capitalize"
+  },
+  "contentStyle": {
+    "verticalAlign": "top"
+  },
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G"
+    },
+    {
+      "label": "disk",
+      "content": {
+        "type": "tpl",
+        "tpl": "C: 80G<br/>D: 1T<br/>E: 2T</pre>"
+      }
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    },
+    {
+      "label": "IDC",
+      "content": "beijing"
+    },
+    {
+      "label": "Note",
+      "content": "其它说明",
+      "span": 3
+    }
+  ]
+}
+```
+
+## 显示列数
+
+通过 `column` 来控制一行显示几列，默认是 3 列，下面示例是改成 2 列的效果
+
+```schema: scope="body"
+{
+  "type": "property",
+  "column": 2,
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G"
+    },
+    {
+      "label": "disk",
+      "content": "80G"
+    },
+    {
+      "label": "IDC",
+      "content": "beijing"
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    },
+    {
+      "label": "Note",
+      "content": "其它说明",
+      "span": 2
+    }
+  ]
+}
+```
+
+## 隐藏某个属性值
+
+items 里的属性还支持 `visibleOn` 和 `hiddenOn` 表达式，能隐藏部分属性，如果有空间后续组件会自动补上来，如下示例的 memory 隐藏了：
+
+```schema: scope="body"
+{
+  "type": "property",
+  "items": [
+    {
+      "label": "cpu",
+      "content": "1 core"
+    },
+    {
+      "label": "memory",
+      "content": "4G",
+      "visibleOn": "data.cpu > 1"
+    },
+    {
+      "label": "network",
+      "content": "4M",
+      "span": 2
+    }
+  ]
+}
+```
+
+## 属性表
+
+| 属性名            | 类型                                     | 默认值  | 说明                                   |
+| ----------------- | ---------------------------------------- | ------- | -------------------------------------- |
+| className         | `string`                                 |         | 外层 dom 的类名                        |
+| style             | `object`                                 |         | 外层 dom 的样式                        |
+| labelStyle        | `object`                                 |         | 属性名的样式                           |
+| contentStyle      | `object`                                 |         | 属性值的样式                           |
+| column            | `number`                                 | 3       | 每行几列                               |
+| mode              | `string`                                 | 'table' | 显示模式，目前只有 'table' 和 'simple' |
+| separator         | `string`                                 | ','     | 'simple' 模式下属性名和值之间的分隔符  |
+| title             | `string`                                 |         | 标题                                   |
+| source            | `string`                                 |         | 数据源                                 |
+| items[].label     | `SchemaTpl`                              |         | 属性名                                 |
+| items[].content   | `SchemaTpl`                              |         | 属性值                                 |
+| items[].span      | `SchemaTpl`                              |         | 属性值跨几列                           |
+| items[].visibleOn | [表达式](/concepts/expression) |         | 显示表达式                             |
+| items[].hiddenOn  | [表达式](/concepts/expression) |         | 隐藏表达式                             |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能出 label/content。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

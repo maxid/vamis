@@ -118,6 +118,128 @@ labelField: label
 valueField: value
 ```
 
+## 分页
+
+> `3.6.0`及以上版本
+
+当数据量庞大时，可以开启数据源分页，此时左侧列表底部会出现分页控件，相关配置参考属性表。通常在提交表单中使用分页场景，处理数据量较大的数据源。如果需要在表单中回显已选值，建议同时设置`{"joinValues": false, "extractValue": false}`，因为已选数据可能位于不同的分页，如果仅使用 value 值作为提交值，可能会导致右侧结果区无法正确渲染。
+
+> 仅列表（list）和表格（table）展示模式支持分页，接口的数据结构参考[CRUD 数据源接口格式](../crud#数据结构)
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "joinValues": false,
+      "extractValue": false,
+      "source": "/api/mock2/options/transfer?page=${page}&perPage=${perPage}",
+      "pagination": {
+        "enable": true,
+        "layout": [
+          "pager",
+          "perpage",
+          "total"
+        ],
+        "popOverContainerSelector": ".cxd-Panel--form"
+      },
+      "value": [
+        {
+          "label": "Laura Lewis",
+          "value": "1",
+          "id": 1
+        },
+        {
+          "label": "Christopher Rodriguez",
+          "value": "3",
+          "id": 3
+        },
+        {
+          "label": "Laura Miller",
+          "value": "12",
+          "id": 12
+        },
+        {
+          "label": "Patricia Robinson",
+          "value": "14",
+          "id": 14
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 前端分页
+
+> `3.6.0`及以上版本
+
+当使用数据域变量作为数据源时，支持实现前端一次性加载并分页
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "type": "service",
+      "api": {
+        "url": "/api/mock2/options/loadDataOnce",
+        "method": "get",
+        "responseData": {
+          "transferOptions": "${items}"
+        }
+      },
+      "body": [
+        {
+          "label": "默认",
+          "type": "transfer",
+          "name": "transfer",
+          "joinValues": false,
+          "extractValue": false,
+          "source": "${transferOptions}",
+          "pagination": {
+            "enable": true,
+            "layout": [
+              "pager",
+              "perpage",
+              "total"
+            ],
+            "popOverContainerSelector": ".cxd-Panel--form"
+          },
+          "value": [
+            {
+              "label": "Laura Lewis",
+              "value": "1",
+              "id": 1
+            },
+            {
+              "label": "Christopher Rodriguez",
+              "value": "3",
+              "id": 3
+            },
+            {
+              "label": "Laura Miller",
+              "value": "12",
+              "id": 12
+            },
+            {
+              "label": "Patricia Robinson",
+              "value": "14",
+              "id": 14
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -132,8 +254,295 @@ valueField: value
 | `mode` | `string` | `list` | `list` / `table` / `tree`（扁平缩进）；chained 未接 |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
-## 和 Amis 文档的差异
+## 事件表
 
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+> `[name]`表示当前组件绑定的名称，即`name`属性，如果没有配置`name`属性，则通过`value`取值。
+
+| 事件名称  | 事件参数                                                                                  | 说明             |
+| --------- | ----------------------------------------------------------------------------------------- | ---------------- |
+| change    | `[name]: string` 组件的值<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`） | 选中值变化时触发 |
+| selectAll | `items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                               | 全选时触发       |
+
+### change
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "value": "zhugeliang",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan"
+        }
+      ],
+      "onEvent": {
+        "change": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "${event.data.value|json}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### selectAll
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "value": "zhugeliang",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan"
+        }
+      ],
+      "onEvent": {
+        "selectAll": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "${event.data.items|json}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定`actionType: 动作名称`、`componentId: 该组件id`来触发这些动作，动作配置可以通过`args: {动作配置项名称: xxx}`来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称    | 动作配置                                          | 说明                                                                                                      |
+| ----------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| clear       | -                                                 | 清空                                                                                                      |
+| reset       | -                                                 | 将值重置为初始值。否则为`resetValue`                                                          |
+| clearSearch | `left: boolean` 左侧搜索、`right:boolean`右侧搜索 | 默认清除所有搜索态，可以单独配置`left`、`right`为`true`来清空对应左侧或者右侧面板(`3.4.0`及以上版本支持） |
+| selectAll   | -                                                 | 全选                                                                                                      |
+| setValue    | `value: string` \| `string[]` 更新的值            | 更新数据，开启`multiple`支持设置多项，开启`joinValues`时，多值用`,`分隔，否则多值用数组                   |
+
+### clear
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "value": "zhugeliang",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan"
+        },
+        {
+          "label": "李白",
+          "value": "libai"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun"
+        }
+      ],
+      "id": "clear_text"
+    },
+    {
+      "type": "button",
+      "label": "清空",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "clear",
+              "componentId": "clear_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### reset
+
+如果配置了`resetValue`，则重置时使用`resetValue`的值，否则使用初始值。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "value": "zhugeliang",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan"
+        },
+        {
+          "label": "李白",
+          "value": "libai"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun"
+        }
+      ],
+      "id": "reset_text"
+    },
+    {
+      "type": "button",
+      "label": "重置",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reset",
+              "componentId": "reset_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### setValue
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "value": "zhugeliang",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan"
+        },
+        {
+          "label": "李白",
+          "value": "libai"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun"
+        }
+      ],
+      "id": "setvalue_text"
+    },
+    {
+      "type": "button",
+      "label": "赋值",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "setValue",
+              "componentId": "setvalue_text",
+              "args": {
+                "value": "yunzhongjun"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## 和 Amis 文档的差异
 - 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
 - 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
 - 未接：chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。

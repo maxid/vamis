@@ -157,6 +157,29 @@ body:
         tpl: 弹出内容
 ```
 
+## 快速编辑
+
+通过 `quickEdit` 开启快速编辑功能，比如
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "name": "static",
+      "type": "static",
+      "label": "静态展示",
+      "value": "aaa",
+      "quickEdit": {
+        "type": "number"
+      }
+    }
+  ]
+}
+```
+
+其他配置项参考 [快速编辑](../crud#快速编辑)
+
 ## 属性表
 
 除了支持 [普通表单项属性表](./formitem#属性表) 中的配置以外，还支持：
@@ -180,7 +203,6 @@ body:
 `static` 没有专属动作。
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 与 Amis 一致：`name` 数据域映射、`text` / `tpl`、`static-xxx` 泛型、`copyable`（默认 `${name | raw}`）、`popOver` 右侧、`borderMode`、空值 `-`。
 - **未接**：`quickEdit` 快速编辑（含 `saveImmediately` / `mode` / `reload`）；文档保留章节说明，不给不可用的活示例。

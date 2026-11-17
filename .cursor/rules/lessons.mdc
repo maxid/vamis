@@ -36,6 +36,18 @@ alwaysApply: true
 
 ### 对标与验收
 
+### 改写 Amis 文档不要动围栏里的 URL
+- 踩过：`rewriteLinks` 把 `github.com/baidu/amis` 整段删掉，打在全文上，JSON 里 `"src": "https://github.com/baidu/amis"` 变成 `"src": "`，iframe / carousel / timeline 活示例解析失败。
+- 稳定做法：链接改写只走围栏外正文；围栏里的 Amis 仓库 URL 换成 `https://github.com/maxid/vamis`，不要删成空串。标题匹配要转义括号（`底部展示 (Footable)`），否则会重复插入。
+- 触及：`iframe` `carousel` `timeline` `table` 事件动作
+- 规则：`website/scripts/rewrite-amis-doc.mjs`
+
+### 未接契约用 json 围栏，不要一次挂几十个活 schema
+- 踩过：事件动作页把 Amis 循环/并行/触发指定组件动作整段改成 ` ```schema `，DocView 首屏空白挂死；Chart / Table2 补齐几十个活示例后首屏也要等数秒才出内容。
+- 稳定做法：运行时未接的章节用 ` ```json ` 列契约。已接的才 ` ```schema `。手写页补 Amis 缺章时把新章节插在属性表前，不要堆到动作表后面。`custom` / office / pdf 继续占位。
+- 触及：事件动作 `chart` `table2` `nav`
+- 规则：`.cursor/rules/site.mdc`；`website/scripts/rewrite-amis-doc.mjs`
+
 ### 已注册 ≠ 已完成
 - 踩过：`registerRenderer` 有调用就标完成；`page` 因 `pullRefresh` 未接从 100% 打回进行中。
 - 稳定做法：组件 + 文档必须对标或超越 Amis 属性/事件/动作/章节，缺一不得 100%。被 D1–D8 挡住时进度可升、状态保持「进行中」，原因写决策号。进度数字只按「逐章节两站核过」算：`table` 对照 33/33 时标 99%，被用户打回，实际还缺十几项。对照条数全过不能当百分比。**80% 同样**：只写「文档主路径已对齐 + 缺 themeCss」的布局壳 / 包装器不得进 80（2026-11-16 把 flex/grid/web-component/amis 等从 80–90 打回 40–70）。侧栏着色跟档位：≥80 才 info。

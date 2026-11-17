@@ -207,6 +207,189 @@ drawer:
 
 Amis 的 `resizable` 暂未接；需要固定尺寸请用 `width` / `height`。
 
+## 多级弹框
+
+可以嵌套使用。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "多级抽屉",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "提示",
+    "body": "这是个简单的抽屉",
+    "actions": [
+      {
+        "type": "button",
+        "actionType": "confirm",
+        "label": "确认",
+        "primary": true
+      },
+      {
+        "type": "button",
+        "actionType": "drawer",
+        "label": "再弹一个",
+        "drawer": {
+          "title": "抽屉中的抽屉",
+          "body": "如果你想，可以继续弹下去",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "drawer",
+              "label": "来吧",
+              "level": "info",
+              "drawer": {
+                "title": "抽屉中的抽屉",
+                "body": "如果你想，可以无限弹下去",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹了",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## 自定义抽屉尺寸
+
+通过设置 `width`（`position` 为 `left` 或 `right` 时生效）和 `height`（`position` 为 `top` 或 `bottom` 时生效）来控制抽屉的尺寸。
+
+值如果是数字类型，单位默认使用 `px`, 如果是字符串类型，可以使用自定义 css 宽度变量，如：`%`、`vw`、`px` 等。
+
+```schema: scope="body"
+{
+  "type": "button-toolbar",
+  "buttons": [
+    {
+      "type": "button",
+      "label": "自定义宽度",
+      "actionType": "drawer",
+      "drawer": {
+        "position": "right",
+        "width": 300,
+        "title": "提示",
+        "body": "这是一个自定义 300px 宽度的抽屉"
+      }
+    },
+    {
+      "type": "button",
+      "label": "自定义高度",
+      "actionType": "drawer",
+      "drawer": {
+        "position": "bottom",
+        "height": 300,
+        "title": "提示",
+        "body": "这是一个自定义 300px 高度的抽屉"
+      }
+    }
+  ]
+}
+```
+
+## 是否展示关闭按钮
+
+配置 `"showCloseButton": false`，可以隐藏关闭按钮。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "无关闭按钮",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "提示",
+    "body": "这是一个没有关闭按钮的抽屉",
+    "showCloseButton": false
+  }
+}
+```
+
+## 蒙层显示
+
+通过配置 `overlay`，来控制是否显示蒙层。默认为 `true`。
+
+```schema: scope="body"
+{
+  "type": "button-toolbar",
+  "buttons": [
+    {
+      "type": "button",
+      "label": "默认",
+      "actionType": "drawer",
+      "drawer": {
+        "overlay": true,
+        "title": "提示",
+        "body": "这是一个有蒙层的抽屉"
+      }
+    },
+    {
+      "type": "button",
+      "label": "不显示",
+      "actionType": "drawer",
+      "drawer": {
+        "overlay": false,
+        "title": "提示",
+        "body": "这是一个没有蒙层的抽屉"
+      }
+    }
+  ]
+}
+```
+
+## 关闭方式
+
+通过配置 `closeOnOutside`，即可在点击抽屉外部时，直接关闭抽屉。
+
+同时可以配置 `closeOnEsc`，让抽屉支持 <kbd>Esc</kbd> 键关闭。
+
+```schema: scope="body"
+{
+  "type": "button-toolbar",
+  "buttons": [
+    {
+      "type": "button",
+      "label": "点击抽屉外自动关闭（有蒙层）",
+      "actionType": "drawer",
+      "drawer": {
+        "closeOnOutside": true,
+        "title": "提示",
+        "body": "这是一个简单的抽屉"
+      }
+    },
+    {
+      "type": "button",
+      "label": "点击抽屉外自动关闭（无蒙层）",
+      "actionType": "drawer",
+      "drawer": {
+        "overlay": false,
+        "closeOnOutside": true,
+        "title": "提示",
+        "body": "这是一个简单的抽屉"
+      }
+    },
+    {
+      "type": "button",
+      "label": "按键关闭",
+      "actionType": "drawer",
+      "drawer": {
+        "closeOnEsc": true,
+        "title": "提示",
+        "body": "试试按下 Esc"
+      }
+    }
+  ]
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -225,8 +408,360 @@ Amis 的 `resizable` 暂未接；需要固定尺寸请用 `width` / `height`。
 | `actions` | `Array<Action>` | 取消 + 确认 | `[]` 隐藏底部 |
 | `data` | `object` | | 抽屉数据域 |
 
-## 和 Amis 文档的差异
+## 事件表
 
+当前组件会对外派发以下事件，可以通过 `onEvent` 来监听这些事件，并通过 `actions` 来配置执行的动作，在 `actions` 中可以通过 `${事件参数名}` 或 `${event.data.[事件参数名]}` 来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+| 事件名称 | 事件参数                                                                 | 说明               |
+| -------- | ------------------------------------------------------------------------ | ------------------ |
+| confirm  | `event.data: object` 抽屉数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击确认提交时触发 |
+| cancel   | `event.data: object` 抽屉数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击取消时触发     |
+
+### confirm
+
+```schema: scope="body"
+[
+  {
+    "label": "打开",
+    "type": "button",
+    "onEvent": {
+      "click": {
+        "actions": [
+          {
+            "actionType": "drawer",
+            "drawer": {
+              "title": "标题",
+              "body": "这是一个抽屉",
+              "onEvent": {
+                "confirm": {
+                  "actions": [
+                    {
+                      "actionType": "toast",
+                      "args": {
+                        "msg": "confirm"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+]
+```
+
+### cancel
+
+```schema: scope="body"
+[
+  {
+    "label": "打开",
+    "type": "button",
+    "onEvent": {
+      "click": {
+        "actions": [
+          {
+            "actionType": "drawer",
+            "drawer": {
+              "title": "标题",
+              "body": "这是一个抽屉",
+              "onEvent": {
+                "cancel": {
+                  "actions": [
+                    {
+                      "actionType": "toast",
+                      "args": {
+                        "msg": "cancel"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+]
+```
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定 `actionType: 动作名称`、`componentId: 该组件id` 来触发这些动作，动作配置可以通过 `args: {动作配置项名称: xxx}` 来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称 | 动作配置                   | 说明         |
+| -------- | -------------------------- | ------------ |
+| confirm  | -                          | 确认（提交） |
+| cancel   | -                          | 取消（关闭） |
+| setValue | `value: object` 更新的数据 | 更新数据     |
+
+### confirm 动作
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "在抽屉中的表单",
+    "id": "drawer_confirm",
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "username",
+          "required": true,
+          "placeholder": "请输入用户名",
+          "label": "用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "button",
+        "label": "触发确认",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "confirm",
+                "componentId": "drawer_confirm"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### cancel 动作
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "在抽屉中的表单",
+    "id": "drawer_cancel",
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "username",
+          "required": true,
+          "placeholder": "请输入用户名",
+          "label": "用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "button",
+        "label": "触发取消",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "cancel",
+                "componentId": "drawer_cancel"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### setValue 动作
+
+通过 `setValue` 更新指定抽屉的数据。
+
+#### 合并数据
+
+默认 `setValue` 会将新数据与目标组件数据进行合并。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "在抽屉中的表单",
+    "id": "drawer_setvalue",
+    "data": {
+      "username": "amis",
+      "password": "amis@baidu.com"
+    },
+    "body": [
+      {
+        "type": "alert",
+        "body": "初始化时，抽屉的数据 data 为 {username: 'amis', password: 'fex'}，表单内或者表单外都可以读取这些数据，当点击【更新抽屉数据】按钮后，抽屉的数据被更新为 {username: 'aisuda', password: 'aisuda@baidu.com'}"
+      },
+      {
+        "type": "input-text",
+        "label": "表单外的密码",
+        "name": "password"
+      },
+      {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm?waitSeconds=2",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "username",
+            "required": true,
+            "placeholder": "请输入用户名",
+            "label": "用户名"
+          },
+          {
+            "type": "input-password",
+            "name": "password",
+            "label": "密码",
+            "required": true,
+            "placeholder": "请输入密码"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "type": "button",
+        "label": "更新抽屉数据",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "setValue",
+                "componentId": "drawer_setvalue",
+                "args": {
+                  "value": {
+                    "username": "aisuda",
+                    "password": "aisuda@baidu.com"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+#### 覆盖数据
+
+可以通过 `"dataMergeMode": "override"` 来覆盖目标组件数据。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "drawer",
+  "drawer": {
+    "title": "在抽屉中的表单",
+    "id": "drawer_setvalue2",
+    "data": {
+      "username": "amis",
+      "password": "amis@baidu.com"
+    },
+    "body": [
+      {
+        "type": "alert",
+        "body": "初始化时，抽屉的数据 data 为 {username: 'amis', password: 'fex'}，表单内或者表单外都可以读取这些数据，当点击【更新抽屉数据】按钮后，抽屉的数据被更新为 {username: 'aisuda'}，即 password 将被删除"
+      },
+      {
+        "type": "input-text",
+        "label": "表单外的密码",
+        "name": "password"
+      },
+      {
+        "type": "form",
+        "debug": true,
+        "api": "/api/mock2/form/saveForm?waitSeconds=2",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "username",
+            "required": true,
+            "placeholder": "请输入用户名",
+            "label": "用户名"
+          },
+          {
+            "type": "input-password",
+            "name": "password",
+            "label": "密码",
+            "required": true,
+            "placeholder": "请输入密码"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "type": "button",
+        "label": "更新抽屉数据",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "setValue",
+                "componentId": "drawer_setvalue2",
+                "args": {
+                  "value": {
+                    "username": "aisuda"
+                  }
+                },
+                "dataMergeMode": "override"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+## 和 Amis 文档的差异
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 嵌套抽屉按栈替换顶层，不按层递减宽度。

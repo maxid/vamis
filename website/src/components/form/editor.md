@@ -143,6 +143,55 @@ body:
           tpl: Hello
 ```
 
+## 编辑器展现控制
+
+通过 `options` 来控制编辑器展现，比如下面的配置可以关闭行号
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "editor",
+      "name": "editor",
+      "label": "编辑器",
+      "options": {
+        "lineNumbers": "off"
+      }
+    }
+  ]
+}
+```
+
+## 编辑器自定义开发
+
+amis 的编辑器是基于 monaco 开发的，如果想进行深度定制，比如自动完成功能，可以通过自定义 `editorDidMount` 属性来获取到 monaco 实例，它有两种写法，一种是在 JS 中直接用函数，示例如下：
+
+```javascript
+{
+    "type": "form",
+    "api": "/api/mock2/form/saveForm",
+    "body": [
+        {
+            "type": "editor",
+            "name": "editor",
+            "label": "编辑器",
+            "language": "myLan",
+            "editorDidMount": (editor, monaco) => {
+                // editor 是 monaco 实例，monaco 是全局的名称空间
+                const dispose = monaco.languages.registerCompletionItemProvider('myLan', {
+                    /// 其他细节参考 monaco 手册
+                });
+
+                // 如果返回一个函数，这个函数会在编辑器组件卸载的时候调用，主要用于清理资源
+                return dispose;
+            }
+        }
+    ]
+}
+```
+
 ## 属性表
 
 除 [FormItem](/components/form/formitem) 通用配置外：
@@ -221,7 +270,6 @@ body:
 | `setValue` | `value: string` | **未齐**（打到表单 `name` 可以改值，`componentId` 指本编辑器不生效） |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 展示组件是 `code`，编辑器是 `editor`。`code` 不收 `options`。
 - 文档「编辑 Schema」用本组件（`yaml-editor` / `json-editor` + `hideButtons` + `intellisense: schema`），不是 textarea。感知来自 `registerRenderer` 自述，站点只消费。

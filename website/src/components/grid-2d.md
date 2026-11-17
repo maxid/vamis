@@ -207,6 +207,74 @@ grids:
 }
 ```
 
+## 布局基础
+
+`grids` 中可以是任意组件，这里为了简化使用 tpl 组件，通过 x/y/h/w 这四个属性来控制格子的位置和大小。
+
+首先看下图示例，它就是前面基本用法的示例加上标注：
+
+![grid](../../../examples/static/grid-2d.png)
+
+默认水平方向会平分为 12 列，可以通过 `cols` 来调整，比如只分为 3 栏。
+
+先看 `[grid-1]`，它的 `x/y/h/w` 值分别是 `1,1,1,6`：
+
+- `x,y` 决定这个格子的位置，`1,1` 就是最左上角的位置，如图所示
+- `w` 代表宽度占几格，因为水平方向一共 12 列，所以 6 就意味着占水平空间一半
+- `h` 代表高度占几格，默认每行高度可以使用 `rowHeight` 来控制，也可以设置 `height` 来单独控制这一行的高度
+
+其它格子也可以参照这张图推理出来，比如 `[grid-2]` 起始 x 位置是 `7`，宽度是 6，因此它和 `[grid-]` 平分了第一行。
+
+## 格子间距 gap / rowGap
+
+通过 grip 上的 gap 属性来控制间距，默认包含水平和垂直间距
+
+```schema: scope="body"
+{
+  "type": "grid-2d",
+  "gap": 10,
+  "gapRow": 5,
+  "grids": [
+    {
+      "x": 1,
+      "y": 1,
+      "h": 1,
+      "w": 6,
+      "gridClassName": "bg-green-300",
+      "type": "tpl",
+      "tpl": "[grid-1] x:1 y:1 h:1 w:6"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "h": 1,
+      "w": 6,
+      "gridClassName": "bg-blue-300",
+      "type": "tpl",
+      "tpl": "[grid-2] x:7 y:1 h:1 w:6"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "h": 2,
+      "w": 4,
+      "gridClassName": "bg-red-300",
+      "type": "tpl",
+      "tpl": "[grid-3] x:1 y:2 h:2 w:4"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "h": 1,
+      "w": 8,
+      "gridClassName": "bg-purple-300",
+      "type": "tpl",
+      "tpl": "[grid-4] x:5 y:2 h:1 w:8"
+    }
+  ]
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -229,7 +297,6 @@ grids:
 | grids[x].gridClassName | `string` | | 格子容器 class |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 不搬 `.cxd-` 前缀；格子不再套一层 muted 边框，颜色走 `gridClassName`。

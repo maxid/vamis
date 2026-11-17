@@ -11,47 +11,561 @@ outline: deep
 
 `tabs-transfer-picker` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-## 基本用法
+在[TabsTransfer 组合穿梭器](./tabs-transfer)的基础上扩充了弹窗选择模式，展示值用的是简单的 input 框，但是编辑的操作是弹窗个穿梭框来完成。
 
-```schema
-type: page
-title: tabs-transfer-picker
-body:
-  - type: form
-    title: tabs-transfer-picker
-    mode: horizontal
-    api: /api/mock2/form/saveForm
-    body:
-      - type: tabs-transfer-picker
-        name: tabs_transfer_picker
-        label: tabs-transfer-picker
-        options:
-          - label: 选项 A
-        value: a
-      - label: 选项 B
-        value: b
-      - label: 选项 C
-        value: c
+适合用来做复杂选人组件。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "选人",
+      "type": "tabs-transfer-picker",
+      "name": "a",
+      "sortable": true,
+      "selectMode": "tree",
+      "pickerSize": "md",
+      "menuTpl": "<div class='flex justify-between'><span>${label}</span>${email ? `<div class='text-muted m-r-xs text-sm text-right'>${email}<br />${phone}</div>`: ''}</div>",
+      "valueTpl": "${label}(${value})",
+      "options": [
+        {
+          "label": "成员",
+          "selectMode": "tree",
+          "searchable": true,
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang",
+                  "email": "zhugeliang@timi.com",
+                  "phone": 13111111111
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao",
+                  "email": "caocao@timi.com",
+                  "phone": 13111111111
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan",
+                  "email": "zhongwuyan@timi.com",
+                  "phone": 13111111111
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai",
+                  "email": "libai@timi.com",
+                  "phone": 13111111111
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin",
+                  "email": "hanxin@timi.com",
+                  "phone": 13111111111
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun",
+                  "email": "yunzhongjun@timi.com",
+                  "phone": 13111111111
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "角色",
+          "selectMode": "list",
+          "children": [
+            {
+              "label": "角色 1",
+              "value": "role1"
+            },
+            {
+              "label": "角色 2",
+              "value": "role2"
+            },
+            {
+              "label": "角色 3",
+              "value": "role3"
+            },
+            {
+              "label": "角色 4",
+              "value": "role4"
+            }
+          ]
+        },
+        {
+          "label": "部门",
+          "selectMode": "tree",
+          "children": [
+            {
+              "label": "总部",
+              "value": "dep0",
+              "children": [
+                {
+                  "label": "部门 1",
+                  "value": "dep1",
+                  "children": [
+                    {
+                      "label": "部门 4",
+                      "value": "dep4"
+                    },
+                    {
+                      "label": "部门 5",
+                      "value": "dep5"
+                    }
+                  ]
+                },
+                {
+                  "label": "部门 2",
+                  "value": "dep2"
+                },
+                {
+                  "label": "部门 3",
+                  "value": "dep3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 常用属性
+## 属性表
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 表单项种类 |
-| `name` | 写入表单数据的字段名 |
-| `label` | 标签 |
-| `value` | 默认值 |
-| `required` | 必填 |
-| `disabled` / `disabledOn` | 禁用 |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `validations` / `validationErrors` | 校验（部分落地） |
-| `description` | 说明文案 |
+更多配置请参考[TabsTransfer 组合穿梭器](./tabs-transfer)。
+
+## 事件表
+
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+> `[name]`表示当前组件绑定的名称，即`name`属性，如果没有配置`name`属性，则通过`value`取值。
+
+| 事件名称 | 事件参数                                                 | 说明                      |
+| -------- | -------------------------------------------------------- | ------------------------- |
+| change   | `[name]: string` 组件的值<br/>`items: object[]` 选项集合 | picker 弹窗确认提交时触发 |
+| focus    | `[name]: string` 组件的值                                | 获取焦点(非内嵌模式)      |
+| blur     | `[name]: string` 组件的值                                | 失去焦点(非内嵌模式)      |
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定`actionType: 动作名称`、`componentId: 该组件id`来触发这些动作，动作配置可以通过`args: {动作配置项名称: xxx}`来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称 | 动作配置                               | 说明                                                                                    |
+| -------- | -------------------------------------- | --------------------------------------------------------------------------------------- |
+| clear    | -                                      | 清空                                                                                    |
+| reset    | -                                      | 将值重置为初始值。否则为`resetValue`                                        |
+| setValue | `value: string` \| `string[]` 更新的值 | 更新数据，开启`multiple`支持设置多项，开启`joinValues`时，多值用`,`分隔，否则多值用数组 |
+
+### clear
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "穿梭选择器",
+      "type": "tabs-transfer-picker",
+      "name": "a",
+      "sortable": true,
+      "selectMode": "tree",
+      "options": [
+        {
+          "label": "成员",
+          "selectMode": "tree",
+          "searchable": true,
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "用户",
+          "selectMode": "chained",
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang2"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao2"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan2"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai2"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin2"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun2"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "value": "zhugeliang",
+      "id": "clear_text"
+    },
+    {
+      "type": "button",
+      "label": "清空",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "clear",
+              "componentId": "clear_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### reset
+
+如果配置了`resetValue`，则重置时使用`resetValue`的值，否则使用初始值。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "穿梭选择器",
+      "type": "tabs-transfer-picker",
+      "name": "a",
+      "sortable": true,
+      "selectMode": "tree",
+      "options": [
+        {
+          "label": "成员",
+          "selectMode": "tree",
+          "searchable": true,
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "用户",
+          "selectMode": "chained",
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang2"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao2"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan2"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai2"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin2"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun2"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "value": "zhugeliang",
+      "id": "reset_text"
+    },
+    {
+      "type": "button",
+      "label": "重置",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reset",
+              "componentId": "reset_text"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### setValue
+
+```schema: scope="body"
+{
+  "type": "form",
+  "debug": true,
+  "body": [
+    {
+      "label": "穿梭选择器",
+      "type": "tabs-transfer-picker",
+      "name": "a",
+      "sortable": true,
+      "selectMode": "tree",
+      "options": [
+        {
+          "label": "成员",
+          "selectMode": "tree",
+          "searchable": true,
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "用户",
+          "selectMode": "chained",
+          "children": [
+            {
+              "label": "法师",
+              "children": [
+                {
+                  "label": "诸葛亮",
+                  "value": "zhugeliang2"
+                }
+              ]
+            },
+            {
+              "label": "战士",
+              "children": [
+                {
+                  "label": "曹操",
+                  "value": "caocao2"
+                },
+                {
+                  "label": "钟无艳",
+                  "value": "zhongwuyan2"
+                }
+              ]
+            },
+            {
+              "label": "打野",
+              "children": [
+                {
+                  "label": "李白",
+                  "value": "libai2"
+                },
+                {
+                  "label": "韩信",
+                  "value": "hanxin2"
+                },
+                {
+                  "label": "云中君",
+                  "value": "yunzhongjun2"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "value": "zhugeliang",
+      "id": "setvalue_text"
+    },
+    {
+      "type": "button",
+      "label": "赋值",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "setValue",
+              "componentId": "setvalue_text",
+              "args": {
+                "value": "yunzhongjun2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：`tabs-transfer` 别名。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

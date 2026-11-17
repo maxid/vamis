@@ -90,6 +90,45 @@ data:
   state: pending
 ```
 
+## 自定义状态图标和文本
+
+> 推荐使用新属性`source`配置
+
+> 如果默认提供的状态无法满足业务需求，可以使用`map` 和 `labelMap`属性分别配置状态组件的**图标**和**展示文案**。用户自定义的`map` 和 `labelMap`会和默认属性进行 merge，如果只需要修改某一项配置时，无需全量覆盖。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "status",
+      "map": {
+        "0": "fa fa-check-circle",
+        "1": "fa fa-times-circle"
+      },
+      "labelMap": {
+        "0": "正常",
+        "1": "异常"
+      },
+      "value": 0,
+      "className": "mr-3"
+    },
+    {
+      "type": "status",
+      "map": {
+        "0": "fas fa-check-circle",
+        "1": "fas fa-times-circle"
+      },
+      "labelMap": {
+        "0": "正常",
+        "1": "异常"
+      },
+      "value": 1
+    }
+  ]
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -103,7 +142,6 @@ data:
 | `className` | `string` | | 外层 class |
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
 - 与 Amis 一致：默认状态、`map` / `labelMap`、`source` 自定义、`placeholder`。
 - 图标名映射到 Font Awesome 常用图标；非默认 `fa-*` 依赖宿主字体。

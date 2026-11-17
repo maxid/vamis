@@ -258,6 +258,337 @@ trs:
           tpl: 底部
 ```
 
+## 设置项
+
+table view 的设置项有三层，可以分别对表格级别、行级别、单元格级别进行设置。
+
+### 表格设置项
+
+| 属性名      | 类型            | 默认值                                                | 说明             |
+| ----------- | --------------- | ----------------------------------------------------- | ---------------- |
+| width       | `number/string` | '100%'                                                |                  |
+| padding     | `number/string` | 'var(--TableCell-paddingY) var(--TableCell-paddingX)' | 单元格默认内间距 |
+| border      | `boolean`       | true                                                  | 是否显示边框     |
+| borderColor | `string`        | `var(--borderColor)`                                  | 边框颜色         |
+| trs         |                 |                                                       | 参考下面的行设置 |
+
+### 行设置
+
+| 属性名     | 类型            | 默认值 | 说明                 |
+| ---------- | --------------- | ------ | -------------------- |
+| height     | `number/string` |        |                      |
+| background | `string`        |        | 行背景色             |
+| tds        |                 |        | 参考下面的单元格设置 |
+
+### 单元格设置
+
+| 属性名     | 类型                                      | 默认值         | 说明                                                             |
+| ---------- | ----------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| background | `string`                                  |                | 单元格背景色                                                     |
+| color      | `string`                                  |                | 单元格文字颜色                                                   |
+| bold       | `boolean`                                 | false          | 单元格文字是否加粗                                               |
+| width      | `number/string`                           |                | 单元格宽度，只需要设置第一行                                     |
+| padding    | `number/string`                           | 集成表格的设置 | 单元格内间距                                                     |
+| align      | `string`                                  | `left`         | 单元格内的水平对齐，可以是 `left`、`center`、`right`             |
+| valign     | `string`                                  | `middle`       | 单元格内的垂直对齐，可以是 `top`、`middle`、`bottom`、`baseline` |
+| colspan    | `number`                                  |                | 单元格水平跨几行                                                 |
+| rowspan    | `number`                                  |                | 单元格垂直跨几列                                                 |
+| body       | [SchemaNode](/types/schemanode) |                | 其它 amis 设置                                                   |
+
+#### 单元格样式示例
+
+比如将其它两列的单元格边框设置为 0，就能实现特殊的展现效果
+
+```schema: scope="body"
+{
+  "type": "table-view",
+  "trs": [
+    {
+      "background": "#F7F7F7",
+      "tds": [
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "地区"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "城市"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "销量"
+          }
+        }
+      ]
+    },
+    {
+      "tds": [
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": ""
+          },
+          "style": {
+            "borderBottomWidth": 0,
+            "borderLeftWidth": 0
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "北京"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": ""
+          },
+          "style": {
+            "borderBottomWidth": 0,
+            "borderRightWidth": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 列设置项
+
+列设置项主要是用于控制整列的样式，比如
+
+```schema: scope="body"
+{
+  "type": "table-view",
+  "cols": [
+    {},
+    {
+      "style": {
+        "background": "#F7F7F7"
+      }
+    }
+  ],
+  "trs": [
+    {
+      "tds": [
+        {
+          "rowspan": 2,
+          "body": {
+            "type": "tpl",
+            "tpl": "华北"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "北京"
+          }
+        }
+      ]
+    },
+    {
+      "tds": [
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "天津"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+| 属性名 | 类型     | 默认值 | 说明                 |
+| ------ | -------- | ------ | -------------------- |
+| span   | `number` |        | 这是个跨几列的设置项 |
+| style  | `object` |        | 列样式               |
+
+### 标题设置
+
+可以通过 `caption` 来添加段标题文本，并通过 `captionSide` 来控制显示在底部还是顶部。
+
+```schema: scope="body"
+{
+  "type": "table-view",
+  "caption": "标题",
+  "captionSide": "bottom",
+  "trs": [
+    {
+      "tds": [
+        {
+          "rowspan": 2,
+          "body": {
+            "type": "tpl",
+            "tpl": "华北"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "北京"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "${beijing}"
+          }
+        }
+      ]
+    },
+    {
+      "tds": [
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "天津"
+          }
+        },
+        {
+          "body": {
+            "type": "tpl",
+            "tpl": "${tianjing}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 支持变量及表达式
+
+table-view 的所有属性都支持变量，比如下面的例子通过表达式实现了针对数据进行不同展示
+
+```schema
+{
+  "type": "page",
+  "title": "标题",
+  "data": {
+    "score": 40
+  },
+  "body": {
+    "type": "table-view",
+    "trs": [
+      {
+        "tds": [
+          {
+            "background": "${score>50 ? '#fef1d2': '#d7f8ff'}",
+            "body": {
+              "type": "tpl",
+              "tpl": "分数>50"
+            }
+          },
+          {
+            "background": "${score<100 ? '#fef1d2': '#d7f8ff'}",
+            "body": {
+              "type": "tpl",
+              "tpl": "分数<100"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### tr 和 td 支持 visibleOn
+
+> 6.5 及以后版本
+
+可以在行和列上配置 visibleOn 或 hiddenOn 属性来实现根据数据动态渲染界面。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "name": "firstRow",
+      "type": "switch",
+      "label": "显示第一行",
+      "value": true
+    },
+    {
+      "name": "displayBeijing",
+      "type": "switch",
+      "label": "显示北京",
+      "value": true
+    },
+    {
+      "type": "table-view",
+      "trs": [
+        {
+          "background": "#F7F7F7",
+          "visibleOn": "firstRow",
+          "tds": [
+            {
+              "body": {
+                "type": "tpl",
+                "tpl": "地区"
+              }
+            },
+            {
+              "body": {
+                "type": "tpl",
+                "tpl": "城市"
+              }
+            },
+            {
+              "body": {
+                "type": "tpl",
+                "tpl": "销量"
+              }
+            }
+          ]
+        },
+        {
+          "tds": [
+            {
+              "body": {
+                "type": "tpl",
+                "tpl": ""
+              },
+              "style": {
+                "borderBottomWidth": 0,
+                "borderLeftWidth": 0
+              }
+            },
+            {
+              "visibleOn": "displayBeijing",
+              "body": {
+                "type": "tpl",
+                "tpl": "北京"
+              }
+            },
+            {
+              "body": {
+                "type": "tpl",
+                "tpl": ""
+              },
+              "style": {
+                "borderBottomWidth": 0,
+                "borderRightWidth": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## 属性表
 
 表格：
@@ -279,7 +610,6 @@ trs:
 单元格：`background` / `color` / `bold` / `width` / `padding` / `align` / `valign` / `colspan` / `rowspan` / `body` / `style` / `visibleOn`。
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `className` 打在宿主 `div.vamis-node`，不是 `<table>`。

@@ -242,6 +242,52 @@ body:
 }
 ```
 
+## 类FieldSet样式
+
+当Collapse组件作为Form组件的子元素时，`enableFieldSetStyle`属性可以控制Collapse组件样式风格，开启后转换为类似[FieldSet组件](./form/fieldset)的样式，默认开启。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "type": "switch",
+      "name": "enableFieldSetStyle",
+      "label": "切换展示方式",
+      "mode": "horizontal",
+      "value": true
+    },
+    {
+      "type": "collapse-group",
+      "activeKey": [
+        "1"
+      ],
+      "enableFieldSetStyle": "${enableFieldSetStyle}",
+      "body": [
+        {
+          "type": "collapse",
+          "key": "1",
+          "header": "标题1",
+          "body": "这里是内容1"
+        },
+        {
+          "type": "collapse",
+          "key": "2",
+          "header": "标题2",
+          "body": "这里是内容2"
+        },
+        {
+          "type": "collapse",
+          "key": "3",
+          "header": "标题3",
+          "body": "这里是内容3"
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## CollapseGroup 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -353,7 +399,6 @@ body:
 Amis 源码里 Collapse 还收 `expand` / `collapse` 组件动作。Vamis 尚未注册（D7）。本页用点击标题切换，不挡主路径。
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 不搬 `.cxd-Collapse` 前缀；标题行高和箭头用 token / 工具类近似。

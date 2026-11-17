@@ -111,6 +111,69 @@ buttons:
 }
 ```
 
+## 设置图标
+
+通过 `icon` 可以设置左侧图标
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "dropdown-button",
+    "label": "下拉菜单",
+    "trigger": "hover",
+    "icon": "fa fa-home",
+    "buttons": [
+      {
+        "type": "button",
+        "label": "按钮1",
+        "disabled": true
+      },
+      {
+        "type": "button",
+        "label": "按钮2"
+      },
+      {
+        "type": "button",
+        "label": "按钮3"
+      }
+    ]
+  }
+}
+```
+
+## 设置右侧图标
+
+通过 `rightIcon` 设置右侧图标，同时通过 `hideCaret` 隐藏右侧下拉图标
+
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "dropdown-button",
+    "label": "下拉菜单",
+    "trigger": "hover",
+    "rightIcon": "fa fa-ellipsis-v",
+    "hideCaret": true,
+    "buttons": [
+      {
+        "type": "button",
+        "label": "按钮1",
+        "disabled": true
+      },
+      {
+        "type": "button",
+        "label": "按钮2"
+      },
+      {
+        "type": "button",
+        "label": "按钮3"
+      }
+    ]
+  }
+}
+```
+
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -136,13 +199,84 @@ buttons:
 
 ## 事件表
 
-| 事件名称 | 说明 |
-|----------|------|
-| mouseenter | hover 模式下移入。宿主也会派一次 |
-| mouseleave | hover 模式下移出 |
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`或`${event.data.[事件参数名]}`来获取事件产生的数据，详细请查看[事件动作](/concepts/event-action)。
+
+| 事件名称   | 事件参数                     | 说明                                    |
+| ---------- | ---------------------------- | --------------------------------------- |
+| mouseenter | items: Array<DropdownButton> | 触发方式为 hover 模式下，鼠标移入时触发 |
+| mouseleave | items: Array<DropdownButton> | 触发方式为 hover 模式下，鼠标移出时触发 |
+
+### mouseenter
+
+```schema: scope="body"
+{
+  "type": "dropdown-button",
+  "label": "下拉按钮",
+  "trigger": "hover",
+  "onEvent": {
+    "mouseenter": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "mouseenter ${event.data.items.length}"
+          }
+        }
+      ]
+    }
+  },
+  "buttons": [
+    {
+      "type": "button",
+      "label": "按钮1"
+    },
+    {
+      "type": "button",
+      "label": "按钮2"
+    }
+  ]
+}
+```
+
+### mouseleave
+
+```schema: scope="body"
+{
+  "type": "dropdown-button",
+  "label": "下拉按钮",
+  "trigger": "hover",
+  "onEvent": {
+    "mouseleave": {
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "mouseleave ${event.data.items.length}"
+          }
+        }
+      ]
+    }
+  },
+  "buttons": [
+    {
+      "type": "button",
+      "label": "按钮1"
+    },
+    {
+      "type": "button",
+      "label": "按钮2"
+    }
+  ]
+}
+```
+
+## 动作表
+
+暂无
 
 ## 和 Amis 文档的差异
-
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 未接菜单进出动画。菜单贴触发器走 `VamisOverlay`（窄屏也是），不要接到 `VamisPopUp`。`tooltip` 不是原生 `title`。

@@ -11,29 +11,371 @@ outline: deep
 
 `grid-nav` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
-属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。
+属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+宫格菜单导航，不支持配置初始化接口初始化数据域，所以需要搭配类似像`Service`、`Form`或`CRUD`这样的，具有配置接口初始化数据域功能的组件，或者手动进行数据域初始化，然后通过`source`属性，获取数据链中的数据，完成菜单展示。
 
 ## 基本用法
 
+通过 source 关联上下文数据，或者通过 name 关联。
+
 ```schema
-type: page
-title: grid-nav
-body:
-  - type: grid-nav
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": [
+    {
+      "type": "grid-nav",
+      "source": "${items}"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "grid-nav",
+      "name": "items"
+    }
+  ]
+}
 ```
 
-## 常用属性
+也可以静态展示，即不关联数据固定显示。
 
-| 属性 | 说明 |
-|------|------|
-| `type` | 组件种类，与 Amis 同名 |
-| `className` | 附加 class；Vamis 走 Tailwind，暂不解析 `m:` / `pc:` |
-| `visibleOn` / `hiddenOn` | 显隐表达式 |
-| `onEvent` | 事件到动作（D4 精简，尚未事件对象） |
-| `data` | 静态数据，当前多与父级浅合并 |
+```schema
+{
+  "type": "page",
+  "body": {
+    "type": "grid-nav",
+    "options": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  }
+}
+```
+
+## 自定义列数
+
+默认一行展示四个格子，可以通过 `columnNum` 自定义列数
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "columnNum": 3,
+    "source": "${items}"
+  }
+}
+```
+
+## 正方形格子
+
+设置 `square` 属性后，格子的高度会和宽度保持一致。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "source": "${items}",
+    "square": true
+  }
+}
+```
+
+## 格子间距
+
+通过 `gutter` 属性设置格子之间的距离。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "source": "${items}",
+    "gutter": 20
+  }
+}
+```
+
+## 内容横排
+
+将 `direction` 属性设置为 `horizontal`，可以让宫格的内容呈横向排列。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "direction": "horizontal",
+    "source": "${items}"
+  }
+}
+```
+
+## 图标占比
+
+设置 `iconRatio` 可以控制图标宽度占比，默认 60%，设置 1-100 的数字。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "iconRatio": "40",
+    "source": "${items}"
+  }
+}
+```
+
+## 角标提示
+
+设置 badge 属性后，会在图标右上角展示相应的角标，支持红点、数字、彩带模式。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "导航1",
+        "badge": {
+          "mode": "text",
+          "text": "10"
+        }
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "导航2",
+        "badge": {
+          "mode": "dot"
+        }
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "导航3",
+        "badge": {
+          "mode": "ribbon",
+          "text": "热销"
+        }
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "source": "${items}",
+    "border": false
+  }
+}
+```
+
+## 点击交互
+
+设置 clickAction 属性支持通用点击交互，详见 [Action](./action) 配置
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "items": [
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-1.png",
+        "text": "外部跳转",
+        "link": "https://www.baidu.com",
+        "blank": true
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-2.png",
+        "text": "弹框",
+        "clickAction": {
+          "actionType": "dialog",
+          "dialog": {
+            "title": "弹框",
+            "body": "这是个简单的弹框。"
+          }
+        }
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-3.png",
+        "text": "内部跳转",
+        "link": "/docs/index"
+      },
+      {
+        "icon": "https://aisuda-public-images.bj.bcebos.com/amis/icon-4.png",
+        "text": "导航4"
+      }
+    ]
+  },
+  "body": {
+    "type": "grid-nav",
+    "source": "${items}",
+    "border": false
+  }
+}
+```
+
+## 属性表
+
+| 属性名              | 类型            | 默认值     | 说明                                                     |
+| ------------------- | --------------- | ---------- | -------------------------------------------------------- |
+| type                | `string`        | `grid-nav` |                                                          |
+| className           | `string`        |            | 外层 CSS 类名                                            |
+| itemClassName       | `string`        |            | 列表项 css 类名                                          |
+| contentClassName    | `string`        |            | 列表项内容 css 类名                                      |
+| value               | `Array<object>` |            | 图片数组                                                 |
+| source              | `string`        |            | 数据源                                                   |
+| square              | `boolean`       |            | 是否将列表项固定为正方形                                 |
+| center              | `boolean`       | `true`     | 是否将列表项内容居中显示                                 |
+| border              | `boolean`       | `true`     | 是否显示列表项边框                                       |
+| gutter              | `number`        |            | 列表项之间的间距，默认单位为`px`                         |
+| reverse             | `boolean`       |            | 是否调换图标和文本的位置                                 |
+| iconRatio           | `number`        | 60         | 图标宽度占比，单位%                                      |
+| direction           | `string`        | `vertical` | 列表项内容排列的方向，可选值为 `horizontal` 、`vertical` |
+| columnNum           | `number`        | 4          | 列数                                                     |
+| options.icon        | `string`        |            | 列表项图标                                               |
+| options.text        | `string`        |            | 列表项文案                                               |
+| options.badge       | `BadgeSchema`   |            | 列表项角标，详见 [Badge](./badge)                        |
+| options.link        | `string`        |            | 内部页面路径或外部跳转 URL 地址，优先级高于 clickAction  |
+| options.blank       | `boolean`       |            | 是否新页面打开，link 为 url 时有效                       |
+| options.clickAction | `ActionSchema`  |            | 列表项点击交互 详见 [Action](./action)                   |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 数据域（D1）、表达式过滤器（D2）、完整 API 管线（D3）和事件对象（D4）尚未落地，高级示例可能与 Amis 官网行为不一致。
+- 当前实现：能宫格；仅此处读了 `badge`。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

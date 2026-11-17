@@ -157,8 +157,39 @@ schedules:
 | largeMode | `boolean` | `false` | 放大模式，格子里直接出内容 |
 | todayActiveStyle | `object` | | 今日格子的自定义样式 |
 
-## 和 Amis 文档的差异
+## 事件表
 
+当前组件会对外派发以下事件，可以通过`onEvent`来监听这些事件，并通过`actions`来配置执行的动作，在`actions`中可以通过`${事件参数名}`来获取事件产生的数据（`< 2.3.2 及以下版本 为 ${event.data.[事件参数名]}`），详细请查看[事件动作](/concepts/event-action)。
+
+| 事件名称   | 事件参数                 | 说明               |
+| ---------- | ------------------------ | ------------------ |
+| change     | `value: string` 组件的值 | 时间值变化时触发   |
+| click      | `value: string` 组件的值 | 点击日期时触发     |
+| mouseenter | `value: string` 组件的值 | 鼠标移入日期时触发 |
+| mouseleave | `value: string` 组件的值 | 鼠标移出日期时触发 |
+
+## 动作表
+
+当前组件对外暴露以下特性动作，其他组件可以通过指定`actionType: 动作名称`、`componentId: 该组件id`来触发这些动作，动作配置可以通过`args: {动作配置项名称: xxx}`来配置具体的参数，详细请查看[事件动作](/concepts/event-action#触发其他组件的动作)。
+
+| 动作名称 | 动作配置                 | 说明                                             |
+| -------- | ------------------------ | ------------------------------------------------ |
+| clear    | -                        | 清空                                             |
+| reset    | -                        | 将值重置为初始值。否则为`resetValue` |
+| setValue | `value: string` 更新的值 | 更新数据                                         |
+
+## Calendar 属性表
+
+| 属性名             | 类型                                                                                      | 默认值                                                                 | 说明                                                                                                                                                                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type               | `string`                                                                                  | `"calendar"`                                                           | 指定为 calendar 渲染器                                                                                                                                                                                                          |
+| schedules          | `Array<{startTime: string, endTime: string, content: any, className?: string}> \| string` |                                                                        | 日历中展示日程，可设置静态数据或从上下文中取数据，startTime 和 endTime 格式参考[文档](https://momentjs.com/docs/#/parsing/string/)，className 参考[背景色](https://baidu.gitee.io/amis/zh-CN/style/background/background-color) |
+| scheduleClassNames | `Array<string>`                                                                           | `['bg-warning', 'bg-danger', 'bg-success', 'bg-info', 'bg-secondary']` | 日历中展示日程的颜色，参考[背景色](https://baidu.gitee.io/amis/zh-CN/style/background/background-color)                                                                                                                         |
+| scheduleAction     | `SchemaNode`                                                                              |                                                                        | 自定义日程展示                                                                                                                                                                                                                  |
+| largeMode          | `boolean`                                                                                 | `false`                                                                | 放大模式                                                                                                                                                                                                                        |
+| todayActiveStyle   | `Record<string, any>`                                                                     |                                                                        | 今日激活时的自定义样式                                                                                                                                                                                                          |
+
+## 和 Amis 文档的差异
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 不是表单项日期选择器，只做展示月历。click/change 事件、`setValue` 未接。
