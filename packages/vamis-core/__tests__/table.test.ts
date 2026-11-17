@@ -329,4 +329,18 @@ describe('data chain for form items outside a form', () => {
     expect(css).toContain('tbody > tr + tr > [data-slot="table-cell"]')
     expect(css).toContain('border-top-width: 0')
   })
+
+  it('sticky columns inherit an opaque row bg and sit above scrolling cells', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    // 默认行底必须在 @layer components，helper `.bg-success` 才能压过；禁止 unlayered 写死。
+    expect(css).toMatch(
+      /@layer components \{[\s\S]*?\.vamis-table-wrap tbody > tr\.vamis-table__tr \{[\s\S]*?background-color: var\(--table-bg\)/,
+    )
+    expect(css).not.toMatch(
+      /^\.vamis-table-wrap tbody > tr\.vamis-table__tr \{\s*background/m,
+    )
+    expect(css).toContain('z-index: var(--table-fixed-z)')
+    expect(css).toContain('.vamis-table-wrap td.is-sticky')
+    expect(css).toContain('background: inherit')
+  })
 })

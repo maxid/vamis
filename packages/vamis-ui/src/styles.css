@@ -5076,10 +5076,17 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 .vamis-column-toggler__item:hover {
   background: var(--select-option-hover-bg);
 }
-/* ---- Table：行状态。对齐 Amis `tbody > tr`：默认不要写 background，否则会压过
-   作者 `rowClassNameExpr` 的 helper（`.bg-success` 在 @layer utilities）。
-   悬停 / 勾选 / 修改再盖。td inherit 让 tr 底透进格。 ---- */
+/* ---- Table：行状态。对齐 Amis `.Table-table-tr { background: var(--Table-bg) }`。
+   默认行底必须放 @layer components：helper `.bg-success` 在 @layer utilities 才能压过
+   （unlayered `tr { background }` 会盖掉 rowClassNameExpr）。悬停 / 勾选 / 修改仍 unlayered。
+   sticky 格 inherit 这一层不透明底，滚动列文字才不会透出来像盖在固定列上。 ---- */
+@layer components {
+  .vamis-table-wrap tbody > tr.vamis-table__tr {
+    background-color: var(--table-bg);
+  }
+}
 .vamis-table-wrap tbody > tr.vamis-table__tr {
+  position: relative;
   transition: none;
 }
 .vamis-table-wrap tbody > tr.vamis-table__tr > [data-slot="table-cell"] {
@@ -5118,6 +5125,7 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 .vamis-table-wrap [data-slot="table-cell"],
 .vamis-table-wrap [data-slot="table-head"] {
   position: relative;
+  z-index: 0;
 }
 /* Amis `tbody > tr > th`（列 `isHead` / 总结行表头格）：表头底色，线跟数据格走。 */
 .vamis-table-wrap tbody [data-slot="table-head"] {
@@ -5466,7 +5474,8 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   cursor: pointer;
 }
 
-/* ---- 固定列。对齐 Amis `is-sticky*`：sticky + 继承行底色，滚动后才出阴影。 ---- */
+/* ---- 固定列。对齐 Amis `is-sticky*`：sticky z-index 20 + 继承行底，滚动后才出阴影。
+   非 sticky 格已是 z-index 0；这里必须再抬一层，否则 position:relative 的后格会盖住固定列。 ---- */
 .vamis-table-wrap .is-sticky {
   position: sticky;
   z-index: var(--table-fixed-z);

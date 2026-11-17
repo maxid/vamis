@@ -83,6 +83,7 @@ flowchart LR
 
 **最近交付**
 
+- **table 固定列滚动文字不再盖住 sticky（2026-11-17）**：高亮行那刀拿掉 unlayered 行底后，sticky `background: inherit` 变透明，横向滚动时后格文字穿过来。默认行底改放 `@layer components` 的 `--table-bg`（helper `.bg-success` 仍能压过），非 sticky 格 `z-index: 0`、sticky 仍 20。CRUD / InputTable / Tasks 不走 `.vamis-table-wrap`、无固定列；table2 文档有固定列但未接。对照桌面 **64/64**（P0 0）。进度仍 **88%**。
 - **table 五处对标修复（2026-11-17）**：列显隐（`visibility[key]` 收集依赖 + 菜单 label 点击）；超级表头 resizer 把宽度写到 `<col>`；行默认底不再压过 `rowClassNameExpr` 的 `.bg-success`；注册 `|sum` 让总结行 `${rows|pick:version|sum}` 能算；表原语去掉 `rounded-lg border`（无外边框），**末行 `td` 仍留 `border-bottom`**（对齐 Amis `th, td { border-bottom }`，不要当成「连底边也去掉」）。toolbar 恢复 Amis 12×4。
 - **`.label` / `.label-*` 对齐 Amis 盒模型（2026-11-17）**：utility 保持 `display:inline` + `line-height:1` + `0.2em 0.6em 0.3em`；表格列跟 `td .label { font-size: 90% }`；mapping 不再在单元格里抬到 14px / 1.5（那会把 chip 行盒撑出正文带，看起来没垂直居中）。`type: mapping` 包装层改 inline。对照 `table` 桌面 **64/64**、`mapping` **14/14**（P0 0）。`pnpm typecheck` 0。
 - **typecheck=0 写成研发门禁（2026-11-17）**：所有研发收工必须 `pnpm typecheck` 为 0。规则 `.cursor/rules/typecheck.mdc`；AGENTS / 收工清单 / PR 模板 / CONTRIBUTING 同步；CI（`.github/workflows/ci.yml`）和 Pages 构建都跑 typecheck。未动运行时。
