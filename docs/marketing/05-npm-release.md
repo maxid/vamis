@@ -21,7 +21,7 @@
 | `@vamis/sdk` | `exports` 只有 `sdk.js` loader；`sdk.esm.js` 没导出 | npm 用户不能按 ESM 导入 |
 | scope | `@vamis` 未确认占用 | npm 上 `@vamis/core` / `vamis` 当前 404，需要先注册/占名 |
 
-另外：`pnpm typecheck` 目前仍有既有报错（Card / Tpl / Wizard 等，见 `CONTEXT.md`），**声明文件（.d.ts）构建会受影响**。要么先修到干净，要么这一版只发 JS（不带类型），在 README 里标注"类型待补"。
+`pnpm typecheck` 已清零，CI 按 0 门禁。发 npm 时声明文件（.d.ts）仍受「入口指向 `src/*.ts`、没有 dist 构建」挡住，不是 typecheck。
 
 ## 2. 推荐方案：先做完整构建，再发 alpha
 

@@ -9,7 +9,7 @@
 ## 验证
 
 - [ ] `pnpm test` 通过
-- [ ] `pnpm typecheck`（没有新增报错；既有报错说明）
+- [ ] `pnpm typecheck` 为 **0**（禁止带着错误合入）
 - [ ] 组件改动：`pnpm sdk:build` + `pnpm compare --page <type>`，附前后结果
 - [ ] 全局 token / 样式改动：跑了全量 `pnpm compare`
 - [ ] 移动端相关：跑了 `pnpm compare --mobile` 或手动 375 视口

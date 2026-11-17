@@ -158,7 +158,7 @@ Progress is public: docs pages show implementation percentages, and every task u
 - Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
 - 155 sidebar components: **3 complete** (`container`, `hidden`, `toast`), 152 in progress, **62% average** semantic parity (47 at ≥80%).
 - Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 error boundary and D8 diagnostics are still missing.
-- Tests: formula 185 + core 676 + sdk 80 = **941 passing**; `pnpm typecheck` still reports 68 errors.
+- Tests: formula 185 + core 737 + sdk 81 = **1003 passing**; `pnpm typecheck` is **0** (CI gate).
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.
 
 ## Development
@@ -175,7 +175,7 @@ Progress is public: docs pages show implementation percentages, and every task u
 
 ```bash
 pnpm test        # formula + core + sdk
-pnpm typecheck   # vue-tsc (existing errors remain)
+pnpm typecheck   # vue-tsc --noEmit; must stay 0
 pnpm sdk:build   # build packages/vamis-sdk/dist/sdk.js
 pnpm build       # SDK + playground production build
 pnpm compare     # Playwright parity run; --page <type> / --mobile

@@ -38,9 +38,9 @@ alwaysApply: true
 
 ### schema 帮手用 PlainObject，接口回调写成方法
 - 踩过：`{ clearable?: unknown }` 这类全 optional 弱类型和 `SchemaObject` 没有已知交集，TS2559；`doAction?: (action: unknown) => void` 属性函数在 strictFunctionTypes 下逆变，渲染器具体参数对不上。`let x: unknown` 赋值后再 `typeof x === 'number'` 也会丢收窄。
-- 稳定做法：帮手参数用 `PlainObject` / `SchemaObject`。`ScopedComponent` / `FormApiLike` 写成方法 `doAction?(action: unknown): void`。收窄用局部 `const` / `let n = x`，不要回写同一个 `unknown` 变量。`useScope()` 是 ComputedRef，动作上下文传 `scope.value`。
+- 稳定做法：帮手参数用 `PlainObject` / `SchemaObject`。`ScopedComponent` / `FormApiLike` 写成方法 `doAction?(action: unknown): void`。收窄用局部 `const` / `let n = x`，不要回写同一个 `unknown` 变量。`useScope()` 是 ComputedRef，动作上下文传 `scope.value`。改完跑 `pnpm typecheck`，必须保持 **0**，不要用「既有报错」交差。
 - 触及：`checkbox` `radio` `input-date` `spinner` `form` `image` `tpl`
-- 规则：本文；`packages/vamis-core/src/scoped.ts`
+- 规则：`.cursor/rules/typecheck.mdc`；`packages/vamis-core/src/scoped.ts`
 
 ### 改写 Amis 文档不要动围栏里的 URL
 - 踩过：`rewriteLinks` 把 `github.com/baidu/amis` 整段删掉，打在全文上，JSON 里 `"src": "https://github.com/baidu/amis"` 变成 `"src": "`，iframe / carousel / timeline 活示例解析失败。

@@ -83,6 +83,7 @@ flowchart LR
 
 **最近交付**
 
+- **typecheck=0 写成研发门禁（2026-11-17）**：所有研发收工必须 `pnpm typecheck` 为 0。规则 `.cursor/rules/typecheck.mdc`；AGENTS / 收工清单 / PR 模板 / CONTRIBUTING 同步；CI（`.github/workflows/ci.yml`）和 Pages 构建都跑 typecheck。未动运行时。
 - **typecheck 清零（2026-11-17）**：`pnpm typecheck` 72 → **0**。schema 帮手从弱类型 `{ field?: unknown }` 改成 `PlainObject`；`ScopedComponent` / `FormApiLike` 改方法签名避开逆变；Spinner 接收 HTMLElement；`unknown` 赋值后再 `typeof` 收窄改用局部变量。顺手把 Image 动作上下文的 `scope` 从 ComputedRef 改成 `scope.value`。core 单测 **737** 全过。对照 `image` 桌面 **17/19**（P0 0，与基线相同）。
 - **Group `columnRatio`（2026-11-17）**：按 12 等分给 `vamis-form-group-col` 设 flex-basis/max-width，作者指定才输出 inline style；文档/TODO 70% → **75%**，对照桌面/移动 **5/5**。同时修复 crud 测试残留的已下线文档章节断言，`pnpm test` **1002 全过**。
 - **修活示例 YAML 缩进与被删空的 GitHub URL（2026-11-17）**：改写脚本不再把围栏里的 `github.com/baidu/amis` 删成空串（iframe / carousel / timeline 解析失败），改成 `github.com/maxid/vamis`。`table.md` 包进 service 后掉到根上的 `columns` / `itemAction` 缩进已收回。全站 2693 个 ` ```schema ` 围栏均可解析。未抬进度。
@@ -554,7 +555,7 @@ flowchart LR
 
 ## 后续计划
 
-按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。
+按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。**每一刀收工 `pnpm typecheck` 必须仍为 0**（规则 `.cursor/rules/typecheck.mdc`）。
 
 0. **样式系统统一 · 皮肤迁出模板（已完）**：第十二刀已把 Dialog / Drawer / DiffEditor / InputColor / InputSignature / Shape 收掉。模板 Tailwind 字号 **0**，语义色 **1**（Progress 脚本里的 Amis `bg-primary` map 键，永远不迁）。`SelectItem` 里 lucide `Check` 仍是 shadcn 原语内部，不进渲染器守卫。TreeSelect / NestedSelect 下拉仍是 `absolute`，要对齐 Amis Overlay 另刀。评分仍用字符 ★，没换成 Amis SVG。
 1. **数据链余项**：`FormItem` 静态展示、`Tabs` / `Pagination` 的 `name` 仍直接读写 `form`，没有表单时不生效。List 行内同字段、Drawer overlay 松散表单项本刀没手核。

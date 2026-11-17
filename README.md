@@ -198,7 +198,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 
 ```bash
 pnpm test        # formula + core + sdk
-pnpm typecheck   # vue-tsc --noEmit
+pnpm typecheck   # vue-tsc --noEmit；必须 0 错误
 pnpm sdk:build   # 打 packages/vamis-sdk/dist/sdk.js
 pnpm build       # SDK + playground 生产构建
 pnpm compare     # Amis / Vamis Playwright 对照；--page <type> / --mobile

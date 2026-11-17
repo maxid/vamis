@@ -31,10 +31,10 @@
 |------|------|------|
 | 单元测试 | `pnpm test` | 源码用例：formula 185 + core 676 + sdk 80 = **941**，全绿 |
 | 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
-| 类型检查 | `pnpm typecheck` | **失败：68 个错误**（Checkbox / Radio / InputDate / Spinner / Tpl / Wizard 等） |
+| 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
 | 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |
 
-结论：`dev` / `build` / `test` 可用；`typecheck` 当前 68 错，暂不能作为 CI 门禁。
+结论：`dev` / `build` / `test` / `typecheck` 可用；`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 
@@ -108,7 +108,7 @@
 > 运行时语义与实现顺序见 [语义设计](2026-10-20-vamis-runtime-semantics-design.md)；本节只列同步动作。
 
 1. **补齐 4 个遗漏**：`navigation` 是一行别名；`cascader-select` 复用 `NestedSelect`；`card-item-field` / `cell-field` 并进 `cell`。
-2. **提交门禁**：先清 68 个 `pnpm typecheck` 错误，再把 `pnpm test + typecheck + build` 组合成 CI。
+2. **提交门禁**：`pnpm typecheck` 已清零；CI（`.github/workflows/ci.yml`）跑 `pnpm test` + `pnpm typecheck`，Pages 构建同样先过 typecheck。后续研发必须保持 0。
 3. **补深度而不是补数量**：
    - CRUD：`loadDataOnce`、`quickEdit`、`syncLocation`；
    - 表单：`combo` / `input-table` 的子表单 `api`、更多校验规则；

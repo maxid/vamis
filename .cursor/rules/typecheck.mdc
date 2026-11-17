@@ -1,0 +1,22 @@
+---
+description: 所有研发活动收工前 pnpm typecheck 必须为 0
+alwaysApply: true
+---
+
+# typecheck 必须为 0
+
+`pnpm typecheck`（playground `vue-tsc --noEmit`）基线是 **0 错误**。改代码、改类型、改 Vue、改 playground tsconfig、改文档生成器——凡会进这份检查的，**声称完成前必须再跑一遍且仍为 0**。CI 同样按 0 门禁，不许带着错误合入。
+
+## 必须
+
+- 本轮动过 `packages/`、`playground/`、`website/` 里会被 `vue-tsc` 扫到的文件：收工跑 `pnpm typecheck`，exit 非 0 就先修，不要写「既有报错」
+- 接口回调写成 **方法**（`doAction?(x: unknown): void`），不要写成属性函数，避免逆变
+- schema 帮手参数用 `PlainObject` / `SchemaObject` / `SchemaNode`，不要弱类型 `{ field?: unknown }`
+- `let x: unknown` 收窄后不要再赋回 `x`；用局部 `const n = x` 再算
+- 不要为了过检查把实现改成 `as any` 扫楼，也不要把文件踢出 tsconfig 除非它本来就不该被 playground 扫（如 `vite.config.ts`、`*.mjs`）
+
+## 禁止
+
+- 用「仓内一直有既有报错」交差
+- 只跑 `pnpm test` / `pnpm build` 就声称完成
+- 把 typecheck 失败留给下一刀或 CI

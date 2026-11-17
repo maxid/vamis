@@ -19,7 +19,7 @@
 pnpm install
 pnpm dev            # http://127.0.0.1:5173
 pnpm test           # formula + core + sdk
-pnpm typecheck      # vue-tsc；仓内仍有既有报错
+pnpm typecheck      # vue-tsc --noEmit；必须 0 错误
 pnpm sdk:build      # packages/vamis-sdk/dist/sdk.js
 pnpm compare        # Amis / Vamis Playwright 对照
 ```
@@ -47,7 +47,7 @@ Amis 语义差异请用「Amis 语义差异」模板，附 Amis 文档链接或�
 ## 提交 PR
 
 - 一个 PR 只做一件事；组件修复附**修复前后截图**和对照结果。
-- 跑过的命令写进 PR 模板；没跑的说明原因。
+- 跑过的命令写进 PR 模板；没跑的说明原因。`pnpm typecheck` 必须为 0，禁止带着错误合入。
 - 组件改动：先 `pnpm sdk:build`，再 `pnpm compare --page <type>`；全局 token / 样式改动跑全量 `pnpm compare`。
 - `compare-cases.js`、`dist/`、对照产物**不进 git**。
 - 按 [AGENTS.md](AGENTS.md) 的要求回写 `CONTEXT.md` 的完成状态和后续计划；修复组件后把可复用经验去重回写 `.cursor/rules/lessons.mdc`。

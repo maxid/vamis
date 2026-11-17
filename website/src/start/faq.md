@@ -42,4 +42,4 @@ title: 常见问题
 
 ## typecheck 过了吗？
 
-过了。`pnpm typecheck`（playground `vue-tsc --noEmit`）已清零。`pnpm test` 应保持通过。
+过了。`pnpm typecheck`（playground `vue-tsc --noEmit`）必须保持 **0**，CI 按此门禁。`pnpm test` 应保持通过。

@@ -9,6 +9,7 @@ alwaysApply: true
 
 ## 必须更新
 
+0. **`pnpm typecheck` 必须为 0。** 动过 `packages/` / `playground/` / 会被 `vue-tsc` 扫到的文件时，收工再跑一遍；非 0 先修，禁止「既有报错」交差。口径见 [typecheck.mdc](./typecheck.mdc)。CI 同样按 0 门禁。
 1. [CONTEXT.md](../../CONTEXT.md)
    - 「当前进度」表格与日期
    - 「最近交付」：本轮实际做了什么（一句）
