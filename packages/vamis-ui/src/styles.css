@@ -1444,9 +1444,16 @@
     display: inline-flex;
     vertical-align: top;
   }
-  .vamis-form-static > .vamis-node:has(> .vamis-words) {
+  .vamis-form-static > .vamis-node:has(> .vamis-words),
+  .vamis-form-static > .vamis-node:has(.vamis-progress) {
     min-width: 0;
     width: 100%;
+    flex: 1 1 auto;
+  }
+  /* form-static 是 flex，包装层不拉满时 Progress 线 `width:100%` 相对不定宽解成 0，只剩「60%」字。 */
+  .vamis-form-static .vamis-progress {
+    width: 100%;
+    min-width: 0;
   }
   .vamis-words {
     max-width: 100%;

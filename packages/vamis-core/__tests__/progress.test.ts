@@ -70,5 +70,7 @@ describe('progress', () => {
     expect(css).toContain('.vamis-progress__bar.bg-warning')
     expect(css).toContain('background: var(--progress-map-warning)')
     expect(css).toContain('.vamis-progress__bar.bg-info')
+    expect(css).toContain('.vamis-form-static > .vamis-node:has(.vamis-progress)')
+    expect(css).toContain('.vamis-form-static .vamis-progress')
   })
 })

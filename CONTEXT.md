@@ -83,6 +83,7 @@ flowchart LR
 
 **最近交付**
 
+- **Form 里 `static-progress` 画出进度条（2026-11-17）**：`.vamis-form-static` 是 flex，包装 `.vamis-node` shrink-wrap 后线 `width:100%` 解成 0，对照「Form 中静态展示」只剩「60%」字。包装层拉满 + `.vamis-progress { width:100% }`，和表格列同一根因。
 - **表头样式行线 / Progress 配色 / 密度 / mock API（2026-11-17）**：① `isHead` 列表头底边从 fill-11 白线改回 `--border` 灰线（`6aced7b` 误杀「表头样式」示例）。② Progress `map` 对齐 Amis `getLevelColor`（阈值 `(i+1)*span`）；line 的 `bg-warning` 走 helper `#fad733`，不再用主题橙。③ table2 / CRUD 行高、padding、toolbar、small/large 改 token，紧凑/舒适可切；规则要求每个组件都检密度。④ 文档缺失 mock（`/api/sample`、timeline、chainedOptions、departUser、chart2、pages…）已补。
 - **table 指定行 setValue 不再把格子清空（2026-11-17）**：不是样式。Amis 行更新始终 merge；Vamis 把 `args.replace: true` 做成整行替换，version 被丢掉。指定行改走 `tableMergeRowData`，并记下 pristine（有 title 时出现未保存栏）。对照桌面 **65/65**（P0 0）。
 - **站点滚动条自动隐藏不再误杀组件条（2026-11-17）**：文档 `article` 的 `scrollbar-color: transparent` 会继承进预览，table 列类型 / 固定列自己的横向条、代码块 `pre` 都被涂透明。在 `.auto-hide-scroll > *` 打断继承。未动运行时，没跑对照。
