@@ -65,7 +65,7 @@ flowchart LR
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-11-17）
+## 当前进度（2026-11-18）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -79,10 +79,11 @@ flowchart LR
 | JS SDK | P0 embed 已落地 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。日期走 **dayjs**（打进 bundle），不再依赖 moment。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「表达式 / 数据映射 / 联动」**90% 已完成**、「事件动作」**85% 进行中**（文档已补 Amis 动作章节）、「行为」**80% 进行中**、「样式 / 数据域」**75% 进行中**；类型页 SchemaNode **92% 进行中**、Definitions **20%**（`$ref` 未接）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；顶栏可切桌面 / 移动（默认桌面，管整页示例；移动 **375×812** iframe + 手机壳）；文档/组件/样式页标题下「实现进度 · 状态」；**左侧菜单同步百分比**（顶栏可关）；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 782 + sdk 81 = **1048** | `pnpm test` 全绿；`pnpm typecheck` **0**。SDK 对照目录 **2171**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
+| 测试 | 源码用例 formula 185 + core 786 + sdk 81 = **1052** | `pnpm test` 全绿；`pnpm typecheck` **0**。SDK 对照目录 **2171**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
 
 **最近交付**
 
+- **InputTree / TreeSelect `autoCheckChildren` 勾选语义对齐 Amis（2026-11-18）**：默认 `autoCheckChildren: true` + `cascade: false` 勾父节点只把父写入值（`tree1: "b"`），子节点 UI 勾上且禁用、无 brand-10 底；`autoCheckChildren: false` 只勾点过的节点。`cascade` / `withChildren` 才把子孙写进值，`onlyChildren` 只留叶子。文档站手核「选中父节点是否自动选中子节点」。对照桌面/移动 input-tree **27/31**、treeselect **14/16**（均 P0 0）。`pnpm test` **1052**、`typecheck` 0。进度仍 **78%**。未进 80%：仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。
 - **InputTree / TreeSelect `addControls` 走 Dialog（2026-11-18）**：有 `addControls` / `editControls` 时新增/编辑对齐 Amis `handleOptionAdd` / `handleOptionEdit` 弹「新增选项」/「编辑选项」表单，不再用行内输入或 Popover 冒充。文档站手核：「控制添加/编辑的表单」点「添加一级节点」出 Dialog（节点名称 + 节点值），确认后根上插入 New Folder；无 `addControls` 的「可编辑」仍是行内输入。对照桌面/移动 input-tree **27/31**、treeselect **14/16**（均 P0 0）。`pnpm test` **1048**、`typecheck` 0。进度 **75%→78%**。未进 80%：仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。
 - **InputTree / TreeSelect 补齐多选复选框、SearchBox、内联增删改（2026-11-18）**：多选 / `showRadio` 在节点上画 14px sm Checkbox（子节点部分选中 `partial`）；检索改成 TreeControl 内的 SearchBox（placeholder「请输入」、图标在右、可清除、`searchConfig.sticky` / `searchApi`）；`creatable` / `editable` / `removable` 走 hover 加减改图标 + 行内输入（builtin CUD，`rootCreatable` / 节点级开关已接）。文档站手核：勾父节点 B 会级联勾 B-1/B-2/B-3；SearchBox 滤「file A」只留 Folder A + 高亮 file A；「添加一级节点」出内联输入。对照桌面/移动 input-tree **27/31**、treeselect **14/16**（均 P0 0）。`pnpm test` **1047**、`typecheck` 0。进度 **70%→75%** / **70%→75%**。未进 80%：仍缺虚拟列表、`enableNodePath`、`itemActions`、`addControls` 弹层、拖拽。
 - **InputTree / TreeSelect 主路径对标，并清掉组件文档里的 Amis 产品版本号（2026-11-17）**：树勾选抽到 `useTreeField` + core `utils/tree.ts`。InputTree 接检索 / `showOutline` / `onlyLeaf` / `initiallyOpen` / `unfoldedLevel` / 多选 `autoCheckChildren`。TreeSelect 下拉改 `VamisOverlay`（`--z-dropdown` 1000，Teleport body），移动端 `VamisPopUp`，触发器复用 Select chrome，`hideNodePathLabel` 显示路径或仅节点。文档 `website/src/components` 去掉版本列、`> 1.1.6 版本`、行内 `(3.6.0 及以上版本)` 等 Amis 产品号（围栏里的「版本号」字段和「Mini 版本」留下）。对照桌面/移动 input-tree **27/31**、treeselect **14/16**（均 P0 0）。进度 **60%→70%** / **50%→70%**。未进 80%：仍缺节点增删改、虚拟列表、`enableNodePath`。
@@ -580,7 +581,7 @@ flowchart LR
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。**每一刀收工 `pnpm typecheck` 必须仍为 0**（规则 `.cursor/rules/typecheck.mdc`）。
 
 0. **样式系统统一 · 皮肤迁出模板（已完）**：第十二刀已把 Dialog / Drawer / DiffEditor / InputColor / InputSignature / Shape 收掉。模板 Tailwind 字号 **0**，语义色 **1**（Progress 脚本里的 Amis `bg-primary` map 键，永远不迁）。`SelectItem` 里 lucide `Check` 仍是 shadcn 原语内部，不进渲染器守卫。TreeSelect 下拉已走 Overlay；NestedSelect 仍可能是 `absolute`，要对齐 Amis Overlay 另刀。评分仍用字符 ★，没换成 Amis SVG。
-1. **数据链与 Options 余项**：FormItem 静态展示、Tabs / Pagination 脱离 Form 已接统一数据链；List 行内同字段与 Drawer overlay 松散表单项已真实核过。Options 的 `deferApi` 与 InputTree 多选复选框 / SearchBox / 内联 CUD / `addControls` Dialog 已接。下一刀评估虚拟列表 `virtualThreshold` / `itemHeight`、`enableNodePath`、`itemActions`，其他树/穿梭器按各自组件任务复用，不在本刀虚抬 Options 进度。
+1. **数据链与 Options 余项**：FormItem 静态展示、Tabs / Pagination 脱离 Form 已接统一数据链；List 行内同字段与 Drawer overlay 松散表单项已真实核过。Options 的 `deferApi` 与 InputTree 多选复选框 / SearchBox / 内联 CUD / `addControls` Dialog / `autoCheckChildren` 勾选语义已接。下一刀评估虚拟列表 `virtualThreshold` / `itemHeight`、`enableNodePath`、`itemActions`，其他树/穿梭器按各自组件任务复用，不在本刀虚抬 Options 进度。
 2. **包分工余项**（规则见 `.cursor/rules/packages.mdc`）：几个只有零星引用的 shadcn 原语要按「原语配方闸门」重核是不是该换成 Amis 配方：`Switch`（只剩 `JsonSchema`）、`Select`（`InputRepeat` / `InputCity` / `ChainedSelect`）、`Badge`（`InputTag` / `Picker` / `Tasks` / `StaticValue` / `GridNav` / `JsonNode`）。`CRUD` 仍自己画单元格，长期应复用 `Table`（Amis 也是 CRUD 套 Table）；字号已经跟表格原语走齐，单元格 padding、首末列 16 这些盒模型还没有。
 3. **组件同步按全表构建依赖 + 解锁分 U 推进**：文档主路径（活示例 / 三表）已按 Amis 6.13.0 补进站点；YAML 缩进与围栏 GitHub URL 已核过（2693 条可解析）。Form `/components/form` 文档对标本轮已收口（75%，对照 41/58）。页上仍缺 `columnCount` / `affixFooter` / `debugConfig`（JSON 树）/ `interval` 族，静态 `input-color` 色块是控件缺口不是 Form 壳。主干 `icon` #1（90%）→ `badge` #2（95%）→ `tpl` #3（92%）→ `tooltip-wrapper` #4（92%）→ `remark` #5（92%）→ FormItem #6（90%）→ `toast` #7（100%）→ `action` #8（95%）。`table` #37 **88%**。**不要自动开 `crud` 深化**（现 65%；需用户点名）。`cards` 70%。**80% 必须双站逐章节核过**。跳过 Custom 与 office/pdf。做完 `pnpm sdk:build` + `pnpm compare --page …`，再开两边同路径页。
 4. **P0 kernel D6 余项**：路径值 / `clearValueOnHidden` / `requiredOn` / `validateOnChange` / `validateApi` / 提交 `errors` / `autoFill` 已接到 Form。还缺 combo 独立域。数据域页里「表单项写到 page 域」仍可能卡 Scope。

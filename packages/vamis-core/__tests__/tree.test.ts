@@ -4,6 +4,8 @@ import {
   collectOptionDescendants,
   findOptionPath,
   hasTreeAbility,
+  isTreeItemCheckDisabled,
+  isTreeItemChecked,
   isTreeNodeDefaultExpanded,
   toggleTreeSelection,
   treeItemPartial,
@@ -49,10 +51,39 @@ describe('tree path labels', () => {
 })
 
 describe('tree toggle', () => {
-  it('checks descendants when autoCheckChildren is on', () => {
-    expect(toggleTreeSelection([], tree[0], { multiple: true })).toEqual([1, 2, 3])
-    expect(toggleTreeSelection([1, 2, 3], tree[0], { multiple: true })).toEqual([])
-    expect(toggleTreeSelection([2], tree[0], { multiple: true, autoCheckChildren: false })).toEqual([2, 1])
+  const cascadeOff = { multiple: true as const, options: tree }
+
+  it('keeps only the parent in value when autoCheckChildren is the default', () => {
+    expect(toggleTreeSelection([], tree[0], cascadeOff)).toEqual([1])
+    expect(isTreeItemChecked(tree[0].children![0], [1], cascadeOff)).toBe(true)
+    expect(isTreeItemCheckDisabled(tree[0].children![0], [1], cascadeOff)).toBe(true)
+    expect(toggleTreeSelection([1], tree[0], cascadeOff)).toEqual([])
+    expect(toggleTreeSelection([2], tree[0], { ...cascadeOff, autoCheckChildren: false })).toEqual([2, 1])
+  })
+
+  it('puts descendants in the value when cascade or withChildren is on', () => {
+    expect(toggleTreeSelection([], tree[0], { ...cascadeOff, cascade: true })).toEqual([1, 2, 3])
+    expect(toggleTreeSelection([], tree[0], { ...cascadeOff, withChildren: true })).toEqual([1, 2, 3])
+    expect(isTreeItemCheckDisabled(tree[0].children![0], [1, 2, 3], { ...cascadeOff, cascade: true })).toBe(false)
+  })
+
+  it('keeps only leaves when onlyChildren is on', () => {
+    expect(toggleTreeSelection([], tree[0], { ...cascadeOff, onlyChildren: true })).toEqual([2, 3])
+    expect(isTreeItemChecked(tree[0], [2, 3], { ...cascadeOff, onlyChildren: true })).toBe(true)
+  })
+
+  it('folds sibling picks back into the parent', () => {
+    expect(toggleTreeSelection([2], tree[0].children![1], cascadeOff)).toEqual([1])
+  })
+
+  it('drops ancestors when autoCancelParent and cascade are on', () => {
+    expect(
+      toggleTreeSelection([1, 2, 3], tree[0].children![0], {
+        ...cascadeOff,
+        cascade: true,
+        autoCancelParent: true,
+      }),
+    ).toEqual([3])
   })
 
   it('ignores parent picks when onlyLeaf is set', () => {
@@ -62,7 +93,7 @@ describe('tree toggle', () => {
 
   it('uses the folder label as value after normalize', () => {
     expect(tree[2].value).toBe('Folder E')
-    expect(toggleTreeSelection([], tree[2], { multiple: true })).toEqual(['Folder E', 6])
+    expect(toggleTreeSelection([], tree[2], { multiple: true, options: tree })).toEqual(['Folder E'])
   })
 })
 
@@ -77,6 +108,7 @@ describe('tree partial and ability', () => {
     expect(treeItemPartial(tree[0], [])).toBe(false)
     expect(treeItemPartial(tree[0], [2])).toBe(true)
     expect(treeItemPartial(tree[0], [2, 3])).toBe(false)
+    expect(treeItemPartial(tree[0], [1], { multiple: true, options: tree })).toBe(false)
     expect(treeItemPartial(tree[1], [4])).toBe(false)
   })
 

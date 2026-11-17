@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<{
   editTip?: string
   removeTip?: string
   rootCreateTip?: string
+  checkDisabled?: (item: OptionItem) => boolean
 }>(), {
   deferField: 'defer',
   showIcon: true,
@@ -38,6 +39,7 @@ const props = withDefaults(defineProps<{
   editTip: '编辑该节点',
   removeTip: '移除该节点',
   rootCreateTip: '添加一级节点',
+  checkDisabled: () => false,
 })
 
 const emit = defineEmits<{
@@ -89,14 +91,23 @@ function showRemove(item: OptionItem) {
   return props.removable && hasTreeAbility(item, 'removable')
 }
 
+function checkLocked(item: OptionItem) {
+  return props.disabled || !!item.disabled || !!props.checkDisabled(item)
+}
+
 function markClass(item: OptionItem) {
   const mixed = props.partial(item)
   const on = props.checked(item)
   return {
     'is-checked': on && !mixed,
     'is-partial': mixed,
-    'is-disabled': props.disabled || item.disabled,
+    'is-disabled': checkLocked(item),
   }
+}
+
+function onPick(item: OptionItem) {
+  if (checkLocked(item) || busy.value) return
+  emit('pick', item)
 }
 
 function onDraft(event: Event) {
@@ -185,7 +196,10 @@ watch(
           <div
             v-else
             class="vamis-tree__label"
-            :class="{ 'is-disabled': disabled || row.item.disabled }"
+            :class="{
+              'is-disabled': checkLocked(row.item),
+              'is-checked': checked(row.item) && !partial(row.item),
+            }"
           >
             <div
               v-if="canExpand(row.item)"
@@ -209,8 +223,8 @@ watch(
               :class="markClass(row.item)"
               role="checkbox"
               :aria-checked="partial(row.item) ? 'mixed' : checked(row.item)"
-              :aria-disabled="disabled || row.item.disabled ? 'true' : undefined"
-              @click.stop="emit('pick', row.item)"
+              :aria-disabled="checkLocked(row.item) ? 'true' : undefined"
+              @click.stop="onPick(row.item)"
             >
               <VamisIcon name="checkbox-check" class="vamis-checkbox__icon vamis-checkbox__icon--check" />
               <VamisIcon name="checkbox-partial" class="vamis-checkbox__icon vamis-checkbox__icon--partial" />
@@ -219,10 +233,10 @@ watch(
               class="vamis-tree__content"
               :class="{ 'is-checked': checked(row.item) }"
               role="button"
-              :tabindex="disabled || row.item.disabled ? -1 : 0"
-              @click="emit('pick', row.item)"
-              @keydown.enter.prevent="emit('pick', row.item)"
-              @keydown.space.prevent="emit('pick', row.item)"
+              :tabindex="checkLocked(row.item) ? -1 : 0"
+              @click="onPick(row.item)"
+              @keydown.enter.prevent="onPick(row.item)"
+              @keydown.space.prevent="onPick(row.item)"
             >
               <span v-if="showIcon" class="vamis-tree__node-icon" aria-hidden="true">
                 <VamisIcon :name="canExpand(row.item) ? 'folder' : 'file'" />

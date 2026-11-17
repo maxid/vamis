@@ -6,7 +6,7 @@ outline: deep
 # InputTree 树形选择框
 
 ::: warning 实现进度 78% · 进行中
-多选 sm 复选框 / SearchBox / 内联增删改已接；`addControls` / `editControls` 走 Dialog。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。
+多选 sm 复选框 / SearchBox / 内联增删改已接；`addControls` Dialog；`autoCheckChildren` / `cascade` 勾选语义对齐 Amis。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。
 :::
 
 `input-tree` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -2140,4 +2140,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能勾树；普通节点展开/收起、`deferApi`、检索 SearchBox、`showOutline`、`onlyLeaf`、`initiallyOpen` / `unfoldedLevel`、多选 `autoCheckChildren` 与 sm 复选框 / 半选、内联 `creatable` / `editable` / `removable` 已接。有 `addControls` / `editControls` 时新增/编辑走 Dialog（默认标题「新增选项」/「编辑选项」），无自定义表单才行内输入。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能勾树；普通节点展开/收起、`deferApi`、检索 SearchBox、`showOutline`、`onlyLeaf`、`initiallyOpen` / `unfoldedLevel`、多选 `autoCheckChildren` / `cascade` / `withChildren` / `onlyChildren` 已按 Amis 勾选语义接上（默认值只留父节点，子节点 UI 勾上且禁止反选）、sm 复选框 / 半选、内联 `creatable` / `editable` / `removable` 已接。有 `addControls` / `editControls` 时新增/编辑走 Dialog（默认标题「新增选项」/「编辑选项」），无自定义表单才行内输入。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

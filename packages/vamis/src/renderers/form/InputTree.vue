@@ -28,6 +28,7 @@ const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
         :nodes="tree.filteredOptions.value"
         :checked="(item) => tree.checked(item)"
         :partial="(item) => tree.partial(item)"
+        :check-disabled="(item) => tree.checkDisabled(item)"
         :disabled="!!disabled"
         :expanded="tree.isExpanded"
         :deferring="tree.isDeferring"

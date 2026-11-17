@@ -11708,6 +11708,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   background: var(--tree-checked-bg);
   border-radius: var(--borderRadiusSm);
 }
+.vamis-tree__label.is-disabled .vamis-tree__content.is-checked,
+.vamis-tree__label.is-disabled {
+  background: none;
+}
 .vamis-tree__text {
   cursor: pointer;
   display: inline-flex;

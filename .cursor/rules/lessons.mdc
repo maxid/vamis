@@ -694,6 +694,12 @@ alwaysApply: true
 - 触及：`input-tree` `tree-select`
 - 规则：本文；Amis `Tree.tsx` `Checkbox size=sm` / `InputTree.renderSearch`
 
+### 树勾选 cascade 默认只把父节点写入值
+- 踩过：`autoCheckChildren` 默认 true 时把子孙都推进值，文档「选中父节点是否自动选中子节点」debug 变成 `A, B, B-1…`，整棵子树一块 brand-10 底；Amis 值只留点过的父节点，子节点靠祖先勾上且禁止反选、没有选中底。
+- 稳定做法：对齐 `Tree.handleCheck` / `isItemChecked` / `isItemDisabled`。`cascade` / `withChildren` 关着时值只留父，UI 用祖先在值里判断勾选并把子节点 disabled；`cascade` 或 `withChildren` 才把子孙写入值；`onlyChildren` 只留叶子。禁用子节点清掉 checked 底（Amis `.is-disabled { background: none }`）。
+- 触及：`input-tree` `tree-select`
+- 规则：本文；Amis `packages/amis-ui/src/components/Tree.tsx` `handleCheck`
+
 ### 下拉 caret 走 right-arrow-bold 线图，不要 CSS 实心三角
 - 踩过：Select / DropdownButton 用 `border-top` 画实心三角，Table2 / Json 用 `▾`/`▸`；关开瞬间翻转、没有 `transition`。Amis 是 `Icon icon="right-arrow-bold"` 10×10，Select 外壳 90°、展开时 svg `rotate(180deg)` 且 `transition: transform var(--animation-duration)`（0.2s）；DropDown 是 svg 90° → 270°。
 - 稳定做法：chrome 箭头共用 `VamisCaret`（Amis 路径）。作者 `icon` / FA 仍走 `resolveIcon`。Tooltip 三角仍按 `_tooltip.scss`。不要再写 CSS `border` 三角或 unicode 块箭头。

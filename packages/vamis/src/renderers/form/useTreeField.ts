@@ -9,6 +9,8 @@ import {
   insertOptionInTree,
   isEffectiveApi,
   isOptionsVariableSource,
+  isTreeItemCheckDisabled,
+  isTreeItemChecked,
   isTreeNodeDefaultExpanded,
   optionNeedsDefer,
   optionsAddDialogSchema,
@@ -250,14 +252,23 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     }
   }
 
-  function applyToggle(item: OptionItem, current: unknown[]): unknown[] | null {
-    if (disabled?.value || item.disabled) return null
-    return toggleTreeSelection(current, item, {
+  function checkOpts() {
+    return {
       multiple: multiple.value,
       onlyLeaf: onlyLeaf.value,
       autoCheckChildren: autoCheckChildren.value,
       cascade: cascade.value,
-    })
+      withChildren: !!schema.value.withChildren,
+      onlyChildren: !!schema.value.onlyChildren,
+      autoCancelParent: !!schema.value.autoCancelParent,
+      valueField: valueField.value,
+      options: options.value,
+    }
+  }
+
+  function applyToggle(item: OptionItem, current: unknown[]): unknown[] | null {
+    if (disabled?.value || item.disabled) return null
+    return toggleTreeSelection(current, item, checkOpts())
   }
 
   function toggle(item: OptionItem) {
@@ -267,11 +278,15 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   }
 
   function checked(item: OptionItem, values: unknown[] = selected.value) {
-    return values.some((value) => optionValuesEqual(value, item.value))
+    return isTreeItemChecked(item, values, checkOpts())
+  }
+
+  function checkDisabled(item: OptionItem, values: unknown[] = selected.value) {
+    return isTreeItemCheckDisabled(item, values, checkOpts())
   }
 
   function partial(item: OptionItem, values: unknown[] = selected.value) {
-    return treeItemPartial(item, values)
+    return treeItemPartial(item, values, checkOpts())
   }
 
   function commitOptions(next: OptionItem[]) {
@@ -426,6 +441,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     toggle,
     applyToggle,
     checked,
+    checkDisabled,
     partial,
     startAdd,
     startEdit,
