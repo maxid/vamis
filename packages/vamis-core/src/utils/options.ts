@@ -119,6 +119,78 @@ export function optionsEditDialogTitle(schema: PlainObject = {}): string {
   return `编辑${optionsKindLabel(schema)}`
 }
 
+/** 有 addControls / editControls 时 Tree 关掉 builtin 行内输入，改走 Dialog。对齐 Amis `bultinCUD={!addControls && !editControls}`。 */
+export function optionsHasCustomControls(schema: PlainObject = {}): boolean {
+  const add = schema.addControls
+  const edit = schema.editControls
+  return (Array.isArray(add) && add.length > 0) || (Array.isArray(edit) && edit.length > 0)
+}
+
+function optionsNameControl(schema: PlainObject, required: boolean): PlainObject {
+  return {
+    type: 'input-text',
+    name: optionsLabelField(schema),
+    label: false,
+    placeholder: '请输入名称',
+    ...(required ? { required: true } : {}),
+  }
+}
+
+function overlayDialogFrom(schema: PlainObject, key: 'addDialog' | 'editDialog'): PlainObject {
+  const raw = schema[key]
+  return isPlainObject(raw) ? raw : {}
+}
+
+function optionsFormControls(schema: PlainObject, key: 'addControls' | 'editControls', requiredDefault: boolean): unknown[] {
+  const raw = schema[key]
+  if (Array.isArray(raw) && raw.length) return raw
+  return [optionsNameControl(schema, requiredDefault)]
+}
+
+/** Options / InputTree 新增弹层。对齐 Amis `handleOptionAdd`：默认标题「新增选项」，无 addControls 时补 label 输入。 */
+export function optionsAddDialogSchema(schema: PlainObject = {}): SchemaObject {
+  return {
+    type: 'dialog',
+    title: optionsCreateBtnLabel(schema),
+    ...overlayDialogFrom(schema, 'addDialog'),
+    body: {
+      type: 'form',
+      ...(schema.addApi != null ? { api: schema.addApi } : {}),
+      body: optionsFormControls(schema, 'addControls', true),
+    },
+  }
+}
+
+/** Options / InputTree 编辑弹层。对齐 Amis `handleOptionEdit`。 */
+export function optionsEditDialogSchema(schema: PlainObject = {}): SchemaObject {
+  return {
+    type: 'dialog',
+    title: optionsEditDialogTitle(schema),
+    ...overlayDialogFrom(schema, 'editDialog'),
+    body: {
+      type: 'form',
+      ...(schema.editInitApi != null ? { initApi: schema.editInitApi } : {}),
+      ...(schema.editApi != null ? { api: schema.editApi } : {}),
+      body: optionsFormControls(schema, 'editControls', false),
+    },
+  }
+}
+
+/** 弹层表单结果收成选项。没写 value 时用 label，对齐 Amis `result[valueField] = result[labelField]`。 */
+export function optionsOptionFromDialog(result: PlainObject, schema: PlainObject = {}): OptionItem {
+  const labelField = optionsLabelField(schema)
+  const valueField = optionsValueField(schema)
+  const next: PlainObject = { ...result }
+  delete next.idx
+  if (isPlainObject(next.parent)) delete next.parent
+  if (!Object.prototype.hasOwnProperty.call(next, valueField)) {
+    next[valueField] = next[labelField]
+  }
+  const label = String(next[labelField] ?? next.label ?? '')
+  const value = next[valueField] ?? next.value ?? label
+  return { ...next, label, value, [labelField]: label, [valueField]: value } as OptionItem
+}
+
 export function optionsDeferField(schema: PlainObject = {}): string {
   return schema.deferField != null && String(schema.deferField) ? String(schema.deferField) : 'defer'
 }
@@ -146,6 +218,25 @@ export function resolveDeferredOption(
         ...item,
         children: resolveDeferredOption(item.children, origin, rawChildren, config, deferField),
       }
+    }
+    return item
+  })
+}
+
+/** 在选项树里插入子项，对齐 Amis `spliceTree` 添加。`parent` 为 null 时插到根前。 */
+export function insertOptionInTree(
+  list: OptionItem[],
+  parent: OptionItem | null,
+  child: OptionItem,
+  valueField = 'value',
+): OptionItem[] {
+  if (!parent) return [child, ...list]
+  return list.map((item) => {
+    if (item === parent || matchOptionValue(parent.value, item, valueField)) {
+      return { ...item, children: [child, ...(item.children || [])] }
+    }
+    if (item.children?.length) {
+      return { ...item, children: insertOptionInTree(item.children, parent, child, valueField) }
     }
     return item
   })

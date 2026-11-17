@@ -521,6 +521,15 @@
   --tree-arrow-size: var(--gap-md);
   --tree-hover-bg: var(--fill-10);
   --tree-checked-bg: var(--colors-brand-10);
+  --tree-check-size: var(--select-check-size);
+  --tree-check-icon-size: 10px;
+  --tree-icon-gap: var(--gap-sm);
+  --tree-action-icon-size: 12px;
+  --search-box-icon-color: var(--colors-neutral-text-5);
+  --search-box-hover-color: var(--primary);
+  --search-box-focus-color: var(--colors-brand-4);
+  --search-box-btn-pad-y: 5px;
+  --search-box-btn-pad-x: 10px;
   /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
   --fill-9: var(--colors-neutral-fill-9);
   --fill-10: var(--colors-neutral-fill-10);
@@ -11714,6 +11723,124 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-muted);
   cursor: not-allowed;
 }
+.vamis-tree__check.vamis-checkbox__mark {
+  flex: 0 0 var(--tree-check-size);
+  width: var(--tree-check-size);
+  height: var(--tree-check-size);
+  margin-right: var(--tree-icon-gap);
+  margin-top: 0;
+  cursor: pointer;
+}
+.vamis-tree__check.vamis-checkbox__mark.is-disabled {
+  cursor: not-allowed;
+}
+.vamis-tree__check.vamis-checkbox__mark .vamis-checkbox__icon {
+  width: var(--tree-check-icon-size);
+  height: var(--tree-check-icon-size);
+}
+.vamis-tree__text .is-matched {
+  color: var(--select-option-active-color);
+  font-weight: var(--fontWeightBold);
+}
+.vamis-tree__icons {
+  visibility: hidden;
+  display: inline-flex;
+  align-items: center;
+  height: var(--tree-content-height);
+  margin-left: var(--tree-icon-gap);
+  padding-right: var(--tree-icon-gap);
+  flex-shrink: 0;
+}
+.vamis-tree__label:hover .vamis-tree__icons,
+.vamis-tree__content.is-checked .vamis-tree__icons {
+  visibility: visible;
+}
+.vamis-tree__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--tree-icon-gap);
+  color: var(--icon-color);
+  cursor: pointer;
+}
+.vamis-tree__icon-btn svg {
+  display: block;
+  width: var(--tree-action-icon-size);
+  height: var(--tree-action-icon-size);
+}
+.vamis-tree__icon-btn:hover {
+  color: var(--icon-hover-color);
+}
+.vamis-tree__add-top {
+  display: flex;
+  align-items: center;
+  height: var(--tree-content-height);
+  line-height: var(--tree-content-height);
+  padding-left: var(--gap-sm);
+  color: var(--text-color);
+  cursor: pointer;
+}
+.vamis-tree__add-top svg {
+  display: inline;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  margin-right: var(--tree-icon-gap);
+  vertical-align: middle;
+}
+.vamis-tree__add-top:hover {
+  color: var(--icon-hover-color);
+  text-decoration: none;
+}
+.vamis-tree__add-top.is-disabled {
+  pointer-events: none;
+  color: var(--text-muted);
+}
+.vamis-tree__item-input {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.vamis-tree__native {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  height: var(--control-h);
+  outline: none;
+  background: var(--card);
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  padding: 0 var(--select-pad-x);
+  font: inherit;
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-tree__native::placeholder {
+  color: var(--control-placeholder);
+}
+.vamis-tree__native:focus {
+  border-color: var(--control-focus-border);
+  box-shadow: var(--control-focus-glow);
+}
+.vamis-tree__input-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--tree-icon-gap);
+  color: var(--icon-color);
+  cursor: pointer;
+}
+.vamis-tree__input-action svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-tree__input-action:hover {
+  color: var(--icon-hover-color);
+}
 
 .vamis-collapse {
   background: var(--card);
@@ -11850,25 +11977,56 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding: var(--tree-control-padding-y) var(--tree-control-padding-x);
   border-radius: var(--borderRadiusSm);
 }
-.vamis-input-tree__search {
-  display: flex;
+.vamis-input-tree__control.is-sticky {
+  max-height: none;
+  overflow: visible;
+}
+.vamis-input-tree__control > .vamis-search-box,
+.vamis-tree-select__search .vamis-search-box,
+.vamis-popup .vamis-search-box {
+  width: 100%;
+  margin-top: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+}
+.vamis-search-box {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   height: var(--control-h);
-  margin-bottom: var(--gap-sm);
-  padding: 0 var(--select-pad-x);
-  border: 1px solid var(--input);
+  padding-left: var(--gap-sm);
+  box-sizing: border-box;
+  border: 1px solid transparent;
   border-radius: var(--radius);
-  background: var(--card);
+  background: transparent;
   color: var(--text-color);
 }
-.vamis-input-tree__search-icon {
-  flex: 0 0 auto;
-  margin-right: var(--gap-xs);
-  color: var(--icon-color);
+.vamis-search-box.is-active {
+  width: 100%;
+  background: var(--card);
+  border-color: var(--input);
 }
-.vamis-input-tree__search-input {
+.vamis-search-box.is-active:hover {
+  border-color: var(--search-box-hover-color);
+}
+.vamis-search-box.is-focused {
+  border-color: var(--search-box-focus-color);
+}
+.vamis-search-box.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--card);
+}
+.vamis-search-box.is-disabled {
+  background: var(--control-disabled-bg);
+  color: var(--control-disabled-color);
+  cursor: not-allowed;
+}
+.vamis-search-box__input {
   flex: 1 1 auto;
   min-width: 0;
+  width: 0;
   height: 100%;
   border: 0;
   outline: none;
@@ -11878,8 +12036,49 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--text-color);
 }
-.vamis-input-tree__search-input::placeholder {
+.vamis-search-box__input::placeholder {
   color: var(--control-placeholder);
+}
+.vamis-search-box.is-disabled .vamis-search-box__input {
+  cursor: not-allowed;
+}
+.vamis-search-box__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--icon-size);
+  width: var(--icon-size);
+  height: var(--icon-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--select-clear-color);
+  cursor: pointer;
+}
+.vamis-search-box__clear:hover {
+  color: var(--select-clear-hover-color);
+}
+.vamis-search-box__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: var(--search-box-btn-pad-y) var(--search-box-btn-pad-x);
+  color: var(--search-box-icon-color);
+  cursor: pointer;
+}
+.vamis-search-box__btn svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-search-box__btn:hover {
+  color: var(--icon-hover-color);
+}
+.vamis-search-box.is-disabled .vamis-search-box__btn {
+  color: var(--text-muted);
+  pointer-events: none;
 }
 
 /* ---- 皮肤迁出模板（2026-11 第十一刀） ---- */

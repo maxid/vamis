@@ -3,8 +3,10 @@ import { normalizeOptions } from '../src/utils/options'
 import {
   collectOptionDescendants,
   findOptionPath,
+  hasTreeAbility,
   isTreeNodeDefaultExpanded,
   toggleTreeSelection,
+  treeItemPartial,
   treeNodeLabel,
 } from '../src/utils/tree'
 
@@ -67,5 +69,19 @@ describe('tree toggle', () => {
 describe('tree descendants', () => {
   it('walks nested children without the node itself', () => {
     expect(collectOptionDescendants(tree[0]).map((item) => item.value)).toEqual([2, 3])
+  })
+})
+
+describe('tree partial and ability', () => {
+  it('marks a parent partial when only some children are selected', () => {
+    expect(treeItemPartial(tree[0], [])).toBe(false)
+    expect(treeItemPartial(tree[0], [2])).toBe(true)
+    expect(treeItemPartial(tree[0], [2, 3])).toBe(false)
+    expect(treeItemPartial(tree[1], [4])).toBe(false)
+  })
+
+  it('treats missing ability flags as enabled', () => {
+    expect(hasTreeAbility(tree[0], 'creatable')).toBe(true)
+    expect(hasTreeAbility({ ...tree[0], creatable: false }, 'creatable')).toBe(false)
   })
 })

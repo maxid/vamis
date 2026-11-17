@@ -29,9 +29,14 @@ import {
   optionNeedsDefer,
   optionsControlConfig,
   optionsDeferField,
+  optionsAddDialogSchema,
   optionsCreateBtnLabel,
+  optionsEditDialogSchema,
   optionsEditDialogTitle,
+  optionsHasCustomControls,
+  optionsOptionFromDialog,
   optionsFromPayload,
+  insertOptionInTree,
   removeOptionFromTree,
   resolveDeferredOption,
   updateOptionInTree,
@@ -292,6 +297,30 @@ describe('schema helpers', () => {
     expect(optionsCreateBtnLabel({ optionLabel: '员工' })).toBe('新增员工')
     expect(optionsCreateBtnLabel({ createBtnLabel: '添加' })).toBe('添加')
     expect(optionsEditDialogTitle({ optionLabel: '员工' })).toBe('编辑员工')
+    expect(optionsHasCustomControls({})).toBe(false)
+    expect(optionsHasCustomControls({ addControls: [] })).toBe(false)
+    expect(optionsHasCustomControls({ addControls: [{ type: 'input-text', name: 'label' }] })).toBe(true)
+    expect(optionsHasCustomControls({ editControls: [{ type: 'input-text', name: 'label' }] })).toBe(true)
+    expect(optionsAddDialogSchema({}).title).toBe('新增选项')
+    expect(optionsAddDialogSchema({ createBtnLabel: '添加节点' }).title).toBe('添加节点')
+    expect(optionsAddDialogSchema({ addDialog: { title: '自定义新增' } }).title).toBe('自定义新增')
+    expect((optionsAddDialogSchema({}).body as { body: { name?: string; required?: boolean }[] }).body[0]).toMatchObject({
+      type: 'input-text',
+      name: 'label',
+      required: true,
+    })
+    expect(
+      (optionsAddDialogSchema({
+        addControls: [{ type: 'input-text', name: 'label' }, { type: 'input-text', name: 'value' }],
+      }).body as { body: { name?: string }[] }).body.map((item) => item.name),
+    ).toEqual(['label', 'value'])
+    expect(optionsEditDialogSchema({ optionLabel: '节点' }).title).toBe('编辑节点')
+    expect(optionsOptionFromDialog({ label: 'Folder' }, {})).toMatchObject({ label: 'Folder', value: 'Folder' })
+    expect(optionsOptionFromDialog({ label: 'A', value: 1, idx: [0], parent: { label: 'P' } }, {})).toMatchObject({
+      label: 'A',
+      value: 1,
+    })
+    expect(optionsOptionFromDialog({ label: 'A', value: 1, idx: [0], parent: { label: 'P' } }, {}).idx).toBeUndefined()
     expect(optionsControlConfig({ editable: true, removable: true })).toMatchObject({
       editable: true,
       removable: true,
@@ -366,6 +395,17 @@ describe('edit / delete tree', () => {
     expect(nested[1].children?.[0]).toMatchObject({ label: 'B1x', value: 'b1' })
     expect(removeOptionFromTree(tree, tree[2]).map((item) => item.value)).toEqual(['a', 'b'])
     expect(removeOptionFromTree(tree, tree[1].children![0])[1].children).toEqual([])
+  })
+
+  it('inserts at the root or as the first child', () => {
+    const tree = normalizeOptions([
+      { label: 'A', value: 'a' },
+      { label: 'B', value: 'b', children: [{ label: 'B1', value: 'b1' }] },
+    ])
+    const rooted = insertOptionInTree(tree, null, { label: 'Z', value: 'z' })
+    expect(rooted.map((item) => item.value)).toEqual(['z', 'a', 'b'])
+    const nested = insertOptionInTree(tree, tree[1], { label: 'B0', value: 'b0' })
+    expect(nested[1].children?.map((item) => item.value)).toEqual(['b0', 'b1'])
   })
 })
 
@@ -481,9 +521,22 @@ describe('tree-select uses overlay chrome', () => {
 
   it('InputTree.vue keeps searchable chrome on tokens', () => {
     const src = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputTree.vue'), 'utf8')
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     expect(src).toContain('useTreeField')
-    expect(src).toContain('vamis-input-tree__search')
+    expect(src).toContain('TreeSearchBox')
     expect(src).not.toContain('rounded-md')
     expect(src).toContain(':outline="tree.showOutline.value"')
+    expect(css).toContain('.vamis-search-box')
+    expect(css).toContain('var(--search-box-icon-color)')
+  })
+
+  it('tree CUD opens Dialog when addControls / editControls is set', () => {
+    const src = readFileSync(resolve(here, '../../vamis/src/renderers/form/useTreeField.ts'), 'utf8')
+    expect(src).toContain('optionsHasCustomControls')
+    expect(src).toContain('optionsAddDialogSchema')
+    expect(src).toContain('optionsEditDialogSchema')
+    expect(src).toContain('openDialog')
+    expect(src).toContain('addConfirm')
+    expect(src).toContain('editConfirm')
   })
 })

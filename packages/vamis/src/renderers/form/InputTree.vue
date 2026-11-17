@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
-import { VamisIcon } from '@vamis/ui'
 import type { SchemaObject } from '@vamis/core'
 import FormItem from '../FormItem.vue'
 import TreeBranch from './TreeBranch.vue'
+import TreeSearchBox from './TreeSearchBox.vue'
 import { useTreeField } from './useTreeField'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
@@ -13,29 +13,50 @@ const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
 <template>
   <FormItem :schema="schema">
     <div
-      v-if="tree.searchable.value"
-      class="vamis-input-tree__search"
+      class="vamis-input-tree__control"
+      :class="{ 'is-sticky': tree.searchable.value && tree.searchSticky.value }"
     >
-      <VamisIcon name="search" class="vamis-input-tree__search-icon" />
-      <input
+      <TreeSearchBox
+        v-if="tree.searchable.value"
         v-model="tree.query.value"
-        class="vamis-input-tree__search-input"
-        type="text"
-        placeholder="搜索"
-      >
-    </div>
-    <div class="vamis-input-tree__control">
+        :placeholder="tree.searchPlaceholder.value"
+        :disabled="!!disabled"
+        :sticky="tree.searchSticky.value"
+        :search-immediately="tree.searchImmediately.value"
+      />
       <TreeBranch
         :nodes="tree.filteredOptions.value"
         :checked="(item) => tree.checked(item)"
+        :partial="(item) => tree.partial(item)"
         :disabled="!!disabled"
         :expanded="tree.isExpanded"
         :deferring="tree.isDeferring"
         :defer-field="tree.deferField.value"
         :outline="tree.showOutline.value"
         :show-icon="tree.showIcon.value"
+        :multiple="tree.multiple.value"
+        :show-radio="tree.showRadio.value"
+        :query="tree.query.value"
+        :creatable="tree.creatable.value"
+        :editable="tree.editable.value"
+        :removable="tree.removable.value"
+        :root-creatable="tree.rootCreatable.value"
+        :is-adding="tree.isAdding.value"
+        :adding-parent="tree.addingParent.value"
+        :editing-item="tree.editingItem.value"
+        :draft-label="tree.draftLabel.value"
+        :create-tip="tree.createTip.value"
+        :edit-tip="tree.editTip.value"
+        :remove-tip="tree.removeTip.value"
+        :root-create-tip="tree.rootCreateTip.value"
         @pick="tree.toggle"
         @expand="tree.toggleExpand"
+        @add="tree.startAdd"
+        @edit="tree.startEdit"
+        @remove="tree.removeItem"
+        @confirm="tree.confirmEdit"
+        @cancel="tree.cancelEdit"
+        @update:draft-label="tree.draftLabel.value = $event"
       />
     </div>
   </FormItem>

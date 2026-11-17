@@ -685,8 +685,14 @@ alwaysApply: true
 ### 表单清除钮共用 VamisClear / `.vamis-select__clear`
 - 踩过：Select 是 16px 圆底叉 + `--select-clear-*` hover；`input-text` / `input-date` 用文字 `×` 和 `--muted-foreground`，颜色和动效两套。
 - 稳定做法：图标抽 `VamisClear`（Amis `input-clear`），按钮 class 一律 `.vamis-select__clear`，hover/active 走 `--select-clear-*` + `transition: color`。标签上的小叉走 `VamisClose`（Amis `close.svg` 10px 线图），不要文字 `×`，不要混进清除钮。Select chip / input-tag / Transfer 结果区后续共用 `VamisClose`。
-- 触及：`select` `input-text` `input-date`
+- 触及：`select` `input-text` `input-date` `input-tree` `tree-select`
 - 规则：本文；`packages/vamis-ui/src/ui/VamisClear.vue`；`packages/vamis-ui/src/ui/VamisClose.vue`
+
+### 树多选画 sm 复选框，检索走 SearchBox
+- 踩过：`autoCheckChildren` 只改值，节点仍是 brand-10 高亮，文档「选中父节点是否自动选中子节点」看不到勾选盒；`searchable` 做成左侧图标 +「搜索」，和 Amis SearchBox 对不上。
+- 稳定做法：`multiple` / `showRadio` 在箭头后、内容前画 14px sm Checkbox（子节点部分选中走 `partial`）；检索挂在 TreeControl **里面**，SearchBox `mini=false`、placeholder「请输入」、图标在右、`clearable`。无 `addControls` / `editControls` 才走 hover `plus` / `minus` / `new-edit` + 行内输入（Amis `bultinCUD`）。有自定义表单必须 `openDialog`（标题「新增选项」/「编辑选项」），不要用行内输入或 Popover 冒充弹层。
+- 触及：`input-tree` `tree-select`
+- 规则：本文；Amis `Tree.tsx` `Checkbox size=sm` / `InputTree.renderSearch`
 
 ### 下拉 caret 走 right-arrow-bold 线图，不要 CSS 实心三角
 - 踩过：Select / DropdownButton 用 `border-top` 画实心三角，Table2 / Json 用 `▾`/`▸`；关开瞬间翻转、没有 `transition`。Amis 是 `Icon icon="right-arrow-bold"` 10×10，Select 外壳 90°、展开时 svg `rotate(180deg)` 且 `transition: transform var(--animation-duration)`（0.2s）；DropDown 是 svg 90° → 270°。

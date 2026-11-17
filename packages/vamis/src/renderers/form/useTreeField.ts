@@ -1,4 +1,4 @@
-/** InputTree / TreeSelect 共用：展开、懒加载、检索、勾选。 */
+/** InputTree / TreeSelect 共用：展开、懒加载、检索、勾选、增删改。 */
 
 import { computed, ref, watch, type Ref } from 'vue'
 import {
@@ -6,16 +6,24 @@ import {
   eventEvalData,
   filterOptionTree,
   findOption,
+  insertOptionInTree,
   isEffectiveApi,
   isOptionsVariableSource,
   isTreeNodeDefaultExpanded,
   optionNeedsDefer,
+  optionsAddDialogSchema,
   optionsDeferField,
+  optionsEditDialogSchema,
   optionsFromPayload,
+  optionsHasCustomControls,
+  optionsOptionFromDialog,
+  removeOptionFromTree,
   requestApi,
   resolveDeferredOption,
   runOnEvent,
   toggleTreeSelection,
+  treeItemPartial,
+  updateOptionInTree,
   useData,
   useEnv,
   useFormApi,
@@ -23,6 +31,7 @@ import {
   useScope,
   useScoped,
   type OptionItem,
+  type PlainObject,
   type SchemaApi,
   type SchemaObject,
 } from '@vamis/core'
@@ -39,8 +48,13 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   const scope = useScope()
   const query = ref('')
   const localOptions = ref<OptionItem[] | null>(null)
+  const remoteFiltered = ref<OptionItem[] | null>(null)
   const expanded = ref(new Map<OptionItem, boolean>())
   const deferring = ref(new Set<OptionItem>())
+  const isAdding = ref(false)
+  const addingParent = ref<OptionItem | null>(null)
+  const editingItem = ref<OptionItem | null>(null)
+  const draftLabel = ref('')
   const labelField = computed(() => String(schema.value.labelField || 'label'))
   const valueField = computed(() => String(schema.value.valueField || 'value'))
   const deferField = computed(() => optionsDeferField(schema.value))
@@ -48,6 +62,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     localOptions.value ?? normalizeOptions(schema.value.options, labelField.value, valueField.value),
   )
   const multiple = computed(() => !!schema.value.multiple)
+  const showRadio = computed(() => !!schema.value.showRadio)
   const onlyLeaf = computed(() => !!schema.value.onlyLeaf)
   const autoCheckChildren = computed(() => schema.value.autoCheckChildren !== false)
   const cascade = computed(() => !!schema.value.cascade)
@@ -58,7 +73,35 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   const pathSeparator = computed(() =>
     schema.value.pathSeparator == null ? '/' : String(schema.value.pathSeparator),
   )
-  const filteredOptions = computed(() => filterOptionTree(options.value, query.value))
+  const searchConfig = computed(() => {
+    const raw = schema.value.searchConfig
+    return raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as PlainObject) : {}
+  })
+  const searchPlaceholder = computed(() =>
+    searchConfig.value.placeholder != null ? String(searchConfig.value.placeholder) : '请输入',
+  )
+  const searchSticky = computed(() => !!searchConfig.value.sticky)
+  const searchImmediately = computed(() => searchConfig.value.searchImediately !== false)
+  const creatable = computed(() => !!schema.value.creatable)
+  const editable = computed(() => !!schema.value.editable)
+  const removable = computed(() => !!schema.value.removable)
+  const rootCreatable = computed(() => schema.value.rootCreatable !== false)
+  const createTip = computed(() =>
+    schema.value.createTip != null ? String(schema.value.createTip) : '添加子节点',
+  )
+  const editTip = computed(() =>
+    schema.value.editTip != null ? String(schema.value.editTip) : '编辑该节点',
+  )
+  const removeTip = computed(() =>
+    schema.value.removeTip != null ? String(schema.value.removeTip) : '移除该节点',
+  )
+  const rootCreateTip = computed(() =>
+    schema.value.rootCreateTip != null ? String(schema.value.rootCreateTip) : '添加一级节点',
+  )
+  const filteredOptions = computed(() => {
+    if (remoteFiltered.value) return remoteFiltered.value
+    return filterOptionTree(options.value, query.value)
+  })
   const selected = computed({
     get: () =>
       parseJoined(
@@ -92,11 +135,20 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     () => schema.value.options,
     () => {
       localOptions.value = null
+      remoteFiltered.value = null
       deferring.value = new Set()
+      cancelEdit()
       seedExpanded(normalizeOptions(schema.value.options, labelField.value, valueField.value))
     },
     { deep: true, immediate: true },
   )
+
+  watch(query, (keyword) => {
+    if (!keyword) remoteFiltered.value = null
+    const api = schema.value.searchApi as SchemaApi | undefined
+    if (!api || !keyword) return
+    void searchRemote(keyword, api)
+  })
 
   function isExpanded(item: OptionItem) {
     if (optionNeedsDefer(item, deferField.value)) return false
@@ -117,6 +169,26 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     const next = new Map(expanded.value)
     next.set(item, !isExpanded(item))
     expanded.value = next
+  }
+
+  async function searchRemote(keyword: string, api: SchemaApi) {
+    const ctx = { ...data.value, term: keyword }
+    if (isOptionsVariableSource(api) || !isEffectiveApi(api, ctx)) return
+    try {
+      const result = await requestApi(api, { env, data: ctx, reason: 'action' })
+      if (result.skipped) return
+      if (!result.ok) {
+        env.notify('error', result.payload.msg || '选项加载失败')
+        return
+      }
+      remoteFiltered.value = normalizeOptions(
+        optionsFromPayload(result.data).list,
+        labelField.value,
+        valueField.value,
+      )
+    } catch (error) {
+      env.notify('error', error instanceof Error ? error.message : '选项加载失败')
+    }
   }
 
   async function deferLoad(item: OptionItem) {
@@ -198,24 +270,167 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     return values.some((value) => optionValuesEqual(value, item.value))
   }
 
+  function partial(item: OptionItem, values: unknown[] = selected.value) {
+    return treeItemPartial(item, values)
+  }
+
+  function commitOptions(next: OptionItem[]) {
+    localOptions.value = next
+    seedExpanded(next)
+  }
+
+  function cancelEdit() {
+    isAdding.value = false
+    addingParent.value = null
+    editingItem.value = null
+    draftLabel.value = ''
+  }
+
+  function builtinCUD() {
+    return !optionsHasCustomControls(schema.value)
+  }
+
+  async function emitOptionEvent(name: string, item: OptionItem) {
+    const payload = { ...data.value, item }
+    const event = createVamisEvent(name, payload)
+    await runOnEvent(schema.value, name, {
+      env,
+      data: eventEvalData(payload, event),
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+      event,
+    })
+    return !event.prevented
+  }
+
+  async function openAddDialog(parent: OptionItem | null) {
+    if (!overlay) return
+    const result = await overlay.openDialog(optionsAddDialogSchema(schema.value), {
+      ...data.value,
+      ...(parent ? { parent } : {}),
+    })
+    if (!result) return
+    const item = optionsOptionFromDialog(result, schema.value)
+    if (!(await emitOptionEvent('addConfirm', item))) return
+    if (parent) {
+      const next = new Map(expanded.value)
+      next.set(parent, true)
+      expanded.value = next
+    }
+    commitOptions(insertOptionInTree(options.value, parent, item, valueField.value))
+  }
+
+  async function openEditDialog(item: OptionItem) {
+    if (!overlay) return
+    const result = await overlay.openDialog(optionsEditDialogSchema(schema.value), {
+      ...data.value,
+      ...item,
+    })
+    if (!result) return
+    const patch = optionsOptionFromDialog({ ...item, ...result }, schema.value)
+    if (!(await emitOptionEvent('editConfirm', patch))) return
+    commitOptions(updateOptionInTree(options.value, item, patch, valueField.value))
+  }
+
+  function startAdd(parent: OptionItem | null = null) {
+    if (disabled?.value) return
+    if (!builtinCUD()) {
+      void openAddDialog(parent)
+      return
+    }
+    isAdding.value = true
+    addingParent.value = parent
+    editingItem.value = null
+    draftLabel.value = ''
+    if (parent) {
+      const next = new Map(expanded.value)
+      next.set(parent, true)
+      expanded.value = next
+    }
+  }
+
+  function startEdit(item: OptionItem) {
+    if (disabled?.value || item.disabled) return
+    if (!builtinCUD()) {
+      void openEditDialog(item)
+      return
+    }
+    isAdding.value = false
+    addingParent.value = null
+    editingItem.value = item
+    draftLabel.value = item.label
+  }
+
+  async function removeItem(item: OptionItem) {
+    if (disabled?.value || item.disabled) return
+    const confirmText =
+      schema.value.deleteConfirmText != null ? String(schema.value.deleteConfirmText) : '确认要删除？'
+    if (confirmText) {
+      const ok = await env.confirm(confirmText)
+      if (!ok) return
+    }
+    const nextSelected = selected.value.filter((value) => !optionValuesEqual(value, item.value))
+    commitOptions(removeOptionFromTree(options.value, item, valueField.value))
+    selected.value = nextSelected
+    cancelEdit()
+  }
+
+  function confirmEdit() {
+    const label = draftLabel.value.trim()
+    if (!label || disabled?.value) return
+    if (editingItem.value) {
+      commitOptions(
+        updateOptionInTree(options.value, editingItem.value, { [labelField.value]: label, label }, valueField.value),
+      )
+    } else if (isAdding.value) {
+      const child: OptionItem = { label, value: label, [labelField.value]: label, [valueField.value]: label }
+      commitOptions(insertOptionInTree(options.value, addingParent.value, child, valueField.value))
+    }
+    cancelEdit()
+  }
+
   return {
     query,
     options,
     filteredOptions,
     selected,
     multiple,
+    showRadio,
     deferField,
     valueField,
     showOutline,
     showIcon,
     searchable,
+    searchPlaceholder,
+    searchSticky,
+    searchImmediately,
     hideNodePathLabel,
     pathSeparator,
+    creatable,
+    editable,
+    removable,
+    rootCreatable,
+    createTip,
+    editTip,
+    removeTip,
+    rootCreateTip,
+    isAdding,
+    addingParent,
+    editingItem,
+    draftLabel,
     isExpanded,
     isDeferring,
     toggleExpand,
     toggle,
     applyToggle,
     checked,
+    partial,
+    startAdd,
+    startEdit,
+    removeItem,
+    confirmEdit,
+    cancelEdit,
   }
 }

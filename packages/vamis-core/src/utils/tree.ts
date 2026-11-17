@@ -68,6 +68,23 @@ function hasSelectableValue(item: OptionItem): boolean {
   return item.value != null && item.value !== ''
 }
 
+/** 子节点部分勾选时父节点走 Amis Checkbox `partial`。 */
+export function treeItemPartial(item: OptionItem, selected: unknown[]): boolean {
+  if (!item.children?.length) return false
+  const descendants = collectOptionDescendants(item).filter(hasSelectableValue)
+  if (!descendants.length) return false
+  let n = 0
+  for (const node of descendants) {
+    if (selected.some((value) => optionValuesEqual(value, node.value))) n++
+  }
+  return n > 0 && n < descendants.length
+}
+
+/** 对齐 Amis `hasAbility`：节点上 `false` 才关掉该项能力。 */
+export function hasTreeAbility(item: OptionItem, ability: string): boolean {
+  return item[ability] !== false
+}
+
 export function toggleTreeSelection(
   selected: unknown[],
   item: OptionItem,

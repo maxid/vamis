@@ -8,9 +8,10 @@ import {
   useEnv,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisCaret, VamisClear, VamisClose, VamisIcon } from '@vamis/ui'
+import { VamisCaret, VamisClear, VamisClose } from '@vamis/ui'
 import FormItem from '../FormItem.vue'
 import TreeBranch from './TreeBranch.vue'
+import TreeSearchBox from './TreeSearchBox.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
 import { useTreeField } from './useTreeField'
@@ -156,28 +157,46 @@ watch(open, (show) => {
         @cancel="closeMenu"
         @confirm="confirmMobile"
       >
-        <div v-if="tree.searchable.value" class="vamis-select__search vamis-select__search--sheet">
-          <div class="vamis-select__search-inner">
-            <VamisIcon name="search" class="vamis-select__search-icon" />
-            <input
-              :value="tree.query.value"
-              class="vamis-select__search-input"
-              placeholder="搜索"
-              @input="tree.query.value = ($event.target as HTMLInputElement).value"
-            >
-          </div>
-        </div>
+        <TreeSearchBox
+          v-if="tree.searchable.value"
+          v-model="tree.query.value"
+          :placeholder="tree.searchPlaceholder.value"
+          :disabled="locked"
+          :search-immediately="tree.searchImmediately.value"
+        />
         <TreeBranch
           :nodes="tree.filteredOptions.value"
           :checked="(item) => tree.checked(item, workingValues)"
+          :partial="(item) => tree.partial(item, workingValues)"
           :disabled="locked"
           :expanded="tree.isExpanded"
           :deferring="tree.isDeferring"
           :defer-field="tree.deferField.value"
           :outline="tree.showOutline.value"
           :show-icon="tree.showIcon.value"
+          :multiple="tree.multiple.value"
+          :show-radio="tree.showRadio.value"
+          :query="tree.query.value"
+          :creatable="tree.creatable.value"
+          :editable="tree.editable.value"
+          :removable="tree.removable.value"
+          :root-creatable="tree.rootCreatable.value"
+          :is-adding="tree.isAdding.value"
+          :adding-parent="tree.addingParent.value"
+          :editing-item="tree.editingItem.value"
+          :draft-label="tree.draftLabel.value"
+          :create-tip="tree.createTip.value"
+          :edit-tip="tree.editTip.value"
+          :remove-tip="tree.removeTip.value"
+          :root-create-tip="tree.rootCreateTip.value"
           @pick="onPick"
           @expand="tree.toggleExpand"
+          @add="tree.startAdd"
+          @edit="tree.startEdit"
+          @remove="tree.removeItem"
+          @confirm="tree.confirmEdit"
+          @cancel="tree.cancelEdit"
+          @update:draft-label="tree.draftLabel.value = $event"
         />
       </VamisPopUp>
       <VamisOverlay
@@ -190,32 +209,47 @@ watch(open, (show) => {
         @outside="closeMenu"
       >
         <div class="vamis-select__popover vamis-tree-select__popover" :style="popoverStyle">
-          <div
-            v-if="tree.searchable.value"
-            class="vamis-select__search vamis-select__search--line"
-            @mousedown.stop
-          >
-            <div class="vamis-select__search-inner">
-              <VamisIcon name="search" class="vamis-select__search-icon" />
-              <input
-                :value="tree.query.value"
-                class="vamis-select__search-input"
-                placeholder="搜索"
-                @input="tree.query.value = ($event.target as HTMLInputElement).value"
-              >
-            </div>
+          <div v-if="tree.searchable.value" class="vamis-tree-select__search" @mousedown.stop>
+            <TreeSearchBox
+              v-model="tree.query.value"
+              :placeholder="tree.searchPlaceholder.value"
+              :disabled="locked"
+              :search-immediately="tree.searchImmediately.value"
+            />
           </div>
           <TreeBranch
             :nodes="tree.filteredOptions.value"
             :checked="(item) => tree.checked(item, workingValues)"
+            :partial="(item) => tree.partial(item, workingValues)"
             :disabled="locked"
             :expanded="tree.isExpanded"
             :deferring="tree.isDeferring"
             :defer-field="tree.deferField.value"
             :outline="tree.showOutline.value"
             :show-icon="tree.showIcon.value"
+            :multiple="tree.multiple.value"
+            :show-radio="tree.showRadio.value"
+            :query="tree.query.value"
+            :creatable="tree.creatable.value"
+            :editable="tree.editable.value"
+            :removable="tree.removable.value"
+            :root-creatable="tree.rootCreatable.value"
+            :is-adding="tree.isAdding.value"
+            :adding-parent="tree.addingParent.value"
+            :editing-item="tree.editingItem.value"
+            :draft-label="tree.draftLabel.value"
+            :create-tip="tree.createTip.value"
+            :edit-tip="tree.editTip.value"
+            :remove-tip="tree.removeTip.value"
+            :root-create-tip="tree.rootCreateTip.value"
             @pick="onPick"
             @expand="tree.toggleExpand"
+            @add="tree.startAdd"
+            @edit="tree.startEdit"
+            @remove="tree.removeItem"
+            @confirm="tree.confirmEdit"
+            @cancel="tree.cancelEdit"
+            @update:draft-label="tree.draftLabel.value = $event"
           />
         </div>
       </VamisOverlay>
