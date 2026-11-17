@@ -481,9 +481,9 @@ outline: deep
 | 事件名称                         | 事件参数                                                                                  | 说明               |
 | -------------------------------- | ----------------------------------------------------------------------------------------- | ------------------ |
 | change                           | `[name]: string` 选中值                                                                   | 选中值变化时触发   |
-| addConfirm (3.6.4 及以上版本)    | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合 | 新增节点提交时触发 |
-| editConfirm (3.6.4 及以上版本)   | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合 | 编辑节点提交时触发 |
-| deleteConfirm (3.6.4 及以上版本) | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合 | 删除节点提交时触发 |
+| addConfirm    | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合 | 新增节点提交时触发 |
+| editConfirm   | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合 | 编辑节点提交时触发 |
+| deleteConfirm | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合 | 删除节点提交时触发 |
 
 ### change
 
@@ -872,4 +872,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能多选；列数/全选未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能多选；列数/全选未齐。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

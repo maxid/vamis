@@ -1109,8 +1109,6 @@ selectMode 为`chained`时，使用`source`字段
 
 ## 配合公式编辑器
 
-> `3.2.0` 及以上版本
-
 可以配置`formula`属性，将字段输入控件变成公式编辑器。
 
 ```schema: scope="body"
@@ -1448,7 +1446,7 @@ selectMode 为`chained`时，使用`source`字段
 | showNot | `boolean` |  | 是否显示「非」按钮 |
 | draggable | `boolean` | true | 是否可拖拽 |
 | searchable | `boolean` |  | 字段是否可搜索 |
-| selectMode | `'list'` \| `'tree'` \| `'chained'` | `'list'` | 组合条件左侧选项类型。`'chained'`模式需要`3.2.0及以上版本` |
+| selectMode | `'list'` \| `'tree'` \| `'chained'` | `'list'` | 组合条件左侧选项类型。`'chained'`模式需要` |
 | addBtnVisibleOn | `string` |  | 表达式：控制按钮“添加条件”的显示。参数为`depth`、`breadth`，分别代表深度、长度。表达式需要返回`boolean`类型 |
 | addGroupBtnVisibleOn | `string` |  | 表达式：控制按钮“添加条件组”的显示。参数为`depth`、`breadth`，分别代表深度、长度。表达式需要返回`boolean`类型 |
 | inputSettings | `InputSettings` |  | 开启公式编辑模式时的输入控件类型 |
@@ -1493,4 +1491,4 @@ interface InputSettings {
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：**精简**：基础规则组；缺公式/嵌套组/日期控件。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：**精简**：基础规则组；缺公式/嵌套组/日期控件。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

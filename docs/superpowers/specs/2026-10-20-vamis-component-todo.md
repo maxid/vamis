@@ -68,7 +68,7 @@
 |------|---------------|--------|--------|----------|-------------------|------------------|
 | 布局 | 1 / 15 | 14 | 0 | 73% | 15 | 4 |
 | 功能 | 0 / 12 | 12 | 0 | 72% | 11 | 6 |
-| 数据输入 | 1 / 72 | 71 | 0 | 57% | 44 | 17 |
+| 数据输入 | 1 / 72 | 71 | 0 | 58% | 44 | 17 |
 | 数据展示 | 0 / 44 | 44 | 0 | 62% | 32 | 14 |
 | 反馈 | 1 / 5 | 4 | 0 | 86% | 5 | 4 |
 | 其他 | 0 / 7 | 7 | 0 | 58% | 4 | 2 |
@@ -250,8 +250,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
-| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 60% | 能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简 | P0 |
-| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 50% | 能下拉树 | P0 |
+| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 70% | 检索 / `showOutline` / `onlyLeaf` / `initiallyOpen` / `unfoldedLevel` / 多选 `autoCheckChildren`、`deferApi` 已接。可见节点拍平 `ul > li`，行高 32。仍缺节点增删改、虚拟列表、`enableNodePath`、`itemActions` | P0 |
+| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 70% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板；`hideNodePathLabel` / 检索 / 多选已接。仍缺 `enableNodePath`、节点增删改、虚拟列表 | P0 |
 | `input-year` | InputYear 年输入 | `/components/form/input-year` | `/zh-CN/components/form/input-year` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-year-range` | InputYearRange 年份范围 | `/components/form/input-year-range` | `/zh-CN/components/form/input-year-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `json-schema` | JsonSchema | `/components/form/json-schema` | `/zh-CN/components/form/json-schema` | 进行中 | 30% | **精简**：只渲染 string/number/boolean 属性 | P0 |
@@ -480,7 +480,7 @@ flowchart LR
 | 56 | `input-quarter` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 57 | `radios` | `radio`、Options | 5 | 1 | 18 | 18 | 进行中 | 55% |
 | 58 | `input-time` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 60% |
-| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | 进行中 | 60% |
+| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | 进行中 | 70% |
 | 60 | `input-year` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | 进行中 | 30% |
@@ -563,7 +563,7 @@ flowchart LR
 | 139 | `chart-radios` | `radios`、`chart` | 4 | 0 | 4 | 4 | 进行中 | 35% |
 | 140 | `input-tag` | `select`、`tag` | 4 | 0 | 4 | 4 | 进行中 | 50% |
 | 141 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 4 | 4 | 进行中 | 45% |
-| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | 进行中 | 50% |
+| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | 进行中 | 70% |
 | 143 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 4 | 4 | 进行中 | 45% |
 | 144 | `list-select` | `select`、`list` | 4 | 0 | 4 | 4 | 进行中 | 50% |
 | 145 | `input-kvs` | `input-kv`、`action` | 3 | 0 | 3 | 3 | 进行中 | 45% |

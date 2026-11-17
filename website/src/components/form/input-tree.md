@@ -5,8 +5,8 @@ outline: deep
 
 # InputTree 树形选择框
 
-::: warning 实现进度 60% · 进行中
-能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简
+::: warning 实现进度 70% · 进行中
+检索 / 大纲线 / `onlyLeaf` / `initiallyOpen` / 多选联动子节点已接。仍缺节点增删改、虚拟列表、`enableNodePath`。
 :::
 
 `input-tree` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -109,8 +109,6 @@ outline: deep
 
 ## 是否显示展开线
 
-> 1.1.6 版本
-
 通过 `showOutline` 来控制是否显示展开线。
 
 ```schema: scope="body"
@@ -163,8 +161,6 @@ outline: deep
 ```
 
 ## 选中父节点是否自动选中子节点
-
-> since 1.9.0
 
 `autoCheckChildren`默认为 true，选中父节点会自动选中子节点，可以设置`"autoCheckChildren": false`，不自动选中子节点
 
@@ -252,9 +248,9 @@ outline: deep
 
 ## 选中父节点自动选中子节点，数据是否包含父子节点的值
 
-`cascade`默认为 false，子节点禁止反选，值不包含子节点值，配置`"cascade": true`，子节点可以反选，值包含父子节点值（1.9.0 之前的版本 cascade 配置为 true 的效果为：选中父节点不默认选中子节点）
+`cascade`默认为 false，子节点禁止反选，值不包含子节点值，配置`"cascade": true`，子节点可以反选，值包含父子节点值
 
-> 6.9.0 以上版本 autoCancelParent 配置为 true 的效果为：取消子节点，自动去除父节点的值（仅在多选和 cascade 为 true 时生效）
+> autoCancelParent 配置为 true 的效果为：取消子节点，自动去除父节点的值（仅在多选和 cascade 为 true 时生效）
 
 ```schema: scope="body"
 {
@@ -878,8 +874,6 @@ outline: deep
 
 ## 懒加载
 
-> since 1.1.6
-
 需要懒加载的选项请配置 `defer` 为 true，然后配置 `deferApi` 即可完成懒加载。如果不配置 `deferApi` 会使用 `source` 接口。
 `deferApi` 中可以用到当前选项中的任何字段，比如以下这个例子是把 label 传给了 defer 接口
 
@@ -926,8 +920,6 @@ outline: deep
 ```
 
 ## 节点路径模式
-
-> since 1.2.4
 
 配置`enableNodePath: true`后, 可以将`value`格式转换成节点路径模式，`pathSeparator`设置路径分隔符，建议将该属性的值和拼接符`delimiter`区分开。节点路径模式下，`value`中所有节点的父节点都会自动加载数据并回显。不同配置属性的节点路径模式`value`如下:
 
@@ -994,8 +986,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ## 自定义选项渲染
 
-> `2.8.0` 及以上版本
-
 使用`menuTpl`属性，自定义下拉选项的渲染内容。
 
 ```schema: scope="body"
@@ -1043,8 +1033,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 ```
 
 ## 选项搜索
-
-> `2.8.0` 及以上版本
 
 开启`"searchable": true`后，支持搜索当前数据源内的选项
 
@@ -1095,8 +1083,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ### searchApi
 
-> `3.6.0` 及以上版本
-
 **发送**
 
 默认 GET，携带 term 变量，值为搜索框输入的文字，可从上下文中取数据设置进去。
@@ -1131,8 +1117,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 适用于需选择的数据/信息源较多时，用户可直观的知道自己所选择的数据/信息的场景。未配置 searchApi 是前端检索，配置之后就只能通过后端检索。
 
 ## 节点行为配置
-
-> 6.9.0 以上版本
 
 设置`nodeBehavior`属性，可以更改节点的行为，默认为选中行为，支持配置多个行为。
 
@@ -1217,8 +1201,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ## 自定义选项操作
 
-> 6.9.0 以上版本
-
 > 使用`itemActions`属性，自定义下拉选项的操作。
 
 ```schema: scope="body"
@@ -1293,7 +1275,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ## 工具栏区域
 
-> 6.9.0 以上版本
 > 使用`toolbar`属性，自定义工具栏区域。（仅开启检索时生效）
 
 ```schema: scope="body"
@@ -1372,7 +1353,7 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ## 虚拟列表
 
-> 6.9.0 以上版本, 若设置 固定高度 时，虚拟列表将自适应高度
+> 若设置 固定高度 时，虚拟列表将自适应高度
 
 ```schema: scope="body"
 {
@@ -1533,16 +1514,16 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 | 事件名称                             | 事件参数                                                                                                                                                                                                                                                                                       | 说明                         |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| change                               | `value: any`表单项的值，值格式取决于具体配置<br/>`items: object[]`选项集合（3.6.0 及以上版本）<br/>`item: object`选中的节点（6.2.0 及以上版本）单选时才有值<br/> `selectedItems: object[]` 当前选中的项，单选多选都值，且值格式始终是数组（6.4.0 及以上版本） <br /> `[name]: string` 组件的值 | 选中值变化时触发             |
-| addConfirm (3.6.4 及以上版本)        | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 新增节点提交时触发           |
-| editConfirm (3.6.4 及以上版本)       | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 编辑节点提交时触发           |
-| deleteConfirm (3.6.4 及以上版本)     | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 删除节点提交时触发           |
-| deferLoadFinished (3.6.4 及以上版本) | `[name]: object` 组件的值<br/>`result: object` deferApi 懒加载远程请求成功后返回的数据 <br/>`items: object[]`选项集合                                                                                                                                                                          | 懒加载接口远程请求成功时触发 |
-| itemClick (6.9.0 以上版本)           | `item: Option` 所点击的选项 息                                                                                                                                                                                                                                                                 | 节点点击时触发               |
-| staticItemClick (6.13.0 以上版本)    | `item: Option` 所点击的选项 息                                                                                                                                                                                                                                                                 | 静态展示节点点击时触发       |
-| add（不推荐）                        | `[name]: object` 新增的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                                                                                                                                                                                                | 新增节点提交时触发           |
-| edit（不推荐）                       | `[name]: object` 编辑的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                                                                                                                                                                                                | 编辑节点提交时触发           |
-| delete（不推荐）                     | `[name]: object` 删除的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                                                                                                                                                                                                | 删除节点提交时触发           |
+| change                               | `value: any`表单项的值，值格式取决于具体配置<br/>`items: object[]`选项集合<br/>`item: object`选中的节点单选时才有值<br/> `selectedItems: object[]` 当前选中的项，单选多选都值，且值格式始终是数组 <br /> `[name]: string` 组件的值 | 选中值变化时触发             |
+| addConfirm        | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 新增节点提交时触发           |
+| editConfirm       | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 编辑节点提交时触发           |
+| deleteConfirm     | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合                                                                                                                                                                                                      | 删除节点提交时触发           |
+| deferLoadFinished | `[name]: object` 组件的值<br/>`result: object` deferApi 懒加载远程请求成功后返回的数据 <br/>`items: object[]`选项集合                                                                                                                                                                          | 懒加载接口远程请求成功时触发 |
+| itemClick           | `item: Option` 所点击的选项 息                                                                                                                                                                                                                                                                 | 节点点击时触发               |
+| staticItemClick    | `item: Option` 所点击的选项 息                                                                                                                                                                                                                                                                 | 静态展示节点点击时触发       |
+| add（不推荐）                        | `[name]: object` 新增的节点信息<br/>`items: object[]`选项集合 为`options`）                                                                                                                                                                                                | 新增节点提交时触发           |
+| edit（不推荐）                       | `[name]: object` 编辑的节点信息<br/>`items: object[]`选项集合 为`options`）                                                                                                                                                                                                | 编辑节点提交时触发           |
+| delete（不推荐）                     | `[name]: object` 删除的节点信息<br/>`items: object[]`选项集合 为`options`）                                                                                                                                                                                                | 删除节点提交时触发           |
 | loadFinished（不推荐）               | `[name]: object` deferApi 懒加载远程请求成功后返回的数据                                                                                                                                                                                                                                       | 懒加载接口远程请求成功时触发 |
 
 ### change
@@ -1885,8 +1866,6 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 ### staticItemClick
 
-> 6.13.0 起支持
-
 ```schema: scope="body"
 {
   "type": "form",
@@ -2161,4 +2140,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能勾树；普通节点展开/收起、`deferApi`、检索、`showOutline`、`onlyLeaf`、`initiallyOpen` / `unfoldedLevel`、多选 `autoCheckChildren` 已接。仍缺节点增删改、虚拟列表、`enableNodePath`、`itemActions`。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

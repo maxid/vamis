@@ -207,8 +207,6 @@ CRUD 组件对数据源接口的数据结构要求如下：
 
 ### 解析 Query 原始类型
 
-> `3.5.0`及以上版本
-
 `syncLocation`开启后，CRUD 在初始化数据域时，将会对 url 中的 Query 进行转换，将原始类型的字符串格式的转化为同位类型。现已支持对象格式，该配置默认开启，且默认仅转化布尔值。
 
 #### ParsePrimitiveQueryOptions
@@ -1342,7 +1340,7 @@ amis 只负责生成下拉选择器组件，并将搜索参数传递给接口，
 
 #### 下拉数据源
 
-过滤器的数据域支持 API 接口和上下文数据(`3.6.0`及以上版本)
+过滤器的数据域支持 API 接口和上下文数据()
 
 ```schema
 {
@@ -2166,8 +2164,6 @@ crud 组件支持通过配置`headerToolbar`和`footerToolbar`属性，实现在
 
 ##### 匹配函数
 
-> `3.5.0` 及以上版本
-
 支持自定义匹配函数`matchFunc`，当开启`loadDataOnce`时，会基于该函数计算的匹配结果进行过滤，主要用于处理列字段类型较为复杂或者字段值格式和后端返回不一致的场景，函数签名如下：
 
 ```typescript
@@ -2194,7 +2190,7 @@ interface CRUDMatchFunc {
 }
 ```
 
-具体效果请参考[示例](../../../examples/crud/match-func)，从`3.6.0`版本开始，`options`中支持使用`matchSorter`函数处理复杂的过滤场景，比如前缀匹配、模糊匹配等，更多详细内容推荐查看[match-sorter](https://github.com/kentcdodds/match-sorter)。
+具体效果请参考[示例](../../../examples/crud/match-func)，`options`中支持使用`matchSorter`函数处理复杂的过滤场景，比如前缀匹配、模糊匹配等，更多详细内容推荐查看[match-sorter](https://github.com/kentcdodds/match-sorter)。
 
 ### 显示序号
 
@@ -3370,7 +3366,7 @@ interface CRUDMatchFunc {
 
 #### 通过 api 导出 Excel
 
-> 1.1.6 以上版本支持
+>支持
 
 除了前面的用法，还可以配置 api 来通过数据请求来导出 Excel，实现类似全量导出的功能
 
@@ -3416,7 +3412,7 @@ interface CRUDMatchFunc {
 
 #### 自定义导出 Excel 的文件名
 
-> 1.1.7 以上版本支持
+>支持
 
 通过 filename 自定义导出文件名（支持模板变量）
 
@@ -4168,13 +4164,11 @@ CRUD 中不限制有多少个单条操作、添加一个操作对应的添加一
 > 本文中的例子为了不相互影响都关闭了这个功能。
 > 另外如果需要使用接口联动，需要设置`syncLocation: false`
 
-`syncLocation`开启后，数据域经过地址栏同步后，原始值被转化为字符串同步回数据域，但布尔值（boolean）同步后不符合预期数据结构，导致组件渲染出错。比如查询条件表单中包含[Checkbox](./form/checkbox)组件，此时可以设置`{"trueValue": "1", "falseValue": "0"}`，将真值和假值设置为字符串格式规避。从`3.5.0`版本开始，已经支持[`parsePrimitiveQuery`](#解析query原始类型)，该配置默认开启。
+`syncLocation`开启后，数据域经过地址栏同步后，原始值被转化为字符串同步回数据域，但布尔值（boolean）同步后不符合预期数据结构，导致组件渲染出错。比如查询条件表单中包含[Checkbox](./form/checkbox)组件，此时可以设置`{"trueValue": "1", "falseValue": "0"}`，将真值和假值设置为字符串格式规避。已经支持[`parsePrimitiveQuery`](#解析query原始类型)，该配置默认开启。
 
 ## 动态列
 
-> since 1.1.6
-
-在 1.1.6 之前的版本，只能通过 service + schemaApi 让后端返回 schema 配置来实现，1.1.6 版本之后可以直接通过 crud 的数据接口返回了。
+以前只能通过 service + schemaApi 让后端返回 schema 配置来实现，现在可以直接通过 crud 的数据接口返回了。
 用这种方式可以简化动态列的实现，与 items 并列返回 columns 数组即即可。
 
 ```schema: scope="body"
@@ -5865,8 +5859,6 @@ value 结构说明：
 
 #### 局部刷新（仅刷新指定行）
 
-> `6.3.0`及以上版本
-
 需要搭配 `deferApi` 属性使用，同时刷新动作指定 `args.index` 或者 `args.condition` 来指定刷新哪一行。
 
 ```schema
@@ -5944,15 +5936,11 @@ value 结构说明：
 
 ### toggleExpanded
 
-> `6.3.0`及以上版本
-
 切换展开状态。通过指定 `args.index` 或者 `args.condition` 来指定切换哪一行。
 
 参考局部刷新里面的示例。
 
 ### setExpanded
-
-> `6.3.0`及以上版本
 
 设置展开状态。通过指定 `args.index` 或者 `args.condition` 来指定切换哪一行，通过 `args.value` 来设置是展开还是收起。
 
@@ -6494,4 +6482,4 @@ value 结构说明：
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

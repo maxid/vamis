@@ -149,7 +149,7 @@ outline: deep
 
 还能通过 `copyable` 来增加一个复制按钮来复制当前行
 
-> 6.6.0 起支持配置 `copyData` 属性，来指定复制的数据。默认值为 `{&: "$$"}`
+> 支持配置 `copyData` 属性，来指定复制的数据。默认值为 `{&: "$$"}`
 
 ```schema: scope="body"
 {
@@ -350,7 +350,7 @@ outline: deep
 
 ## 可编辑内容
 
-> 这是 1.2.3 新增的合并写法，1.2.2 之前请用后面提到的 quickEdit
+> 这是合并写法，以前请用后面提到的 quickEdit
 
 每一列的都可以通过 type 来将其改造成可编辑的列，比如下面的例子（建议配合 `"needConfirm": false` 来改成[非确认模式](#非确认模式)）
 
@@ -842,8 +842,6 @@ outline: deep
 }
 ```
 
-> since 6.15.0
-
 也可以配置表达式，根据行数据来决定可否添加子节点 `${a === 'a1' || index === 0}`
 
 ```schema: scope="body"
@@ -1067,8 +1065,6 @@ outline: deep
 ```
 
 ## 支持 Range extraName 属性
-
-> 6.10.0 以上版本
 
 ```schema: scope="body"
 {
@@ -2833,7 +2829,7 @@ outline: deep
 
 ### initDrag & cancelDrag
 
-> 6.4.0 版本开始支持
+> 支持
 
 ```schema: scope="body"
 {
@@ -2932,4 +2928,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能行内编辑；子 api、增删校验未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能行内编辑；子 api、增删校验未齐。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

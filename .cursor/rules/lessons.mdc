@@ -152,9 +152,9 @@ alwaysApply: true
 
 ### 对标文档要改写成 Vamis，不要整节粘贴
 - 踩过：格式校验整节 splice Amis `formitem.md`，把 `2.2.0` / `1.4.0`、`github.com/baidu/amis`、「amis 会有默认的报错信息」带进 Vamis 文档。Vamis 没有 Amis 的版本线，也不是 Amis 仓库。
-- 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。Amis 旧示例里的 `type: text` 在 6.13 已不是注册 type（Amis 渲染不出来），改写时换 `input-text`，不要照抄旧别名。
-- 触及：FormItem `input-image` `form`
-- 规则：`.cursor/rules/site.mdc`
+- 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。`rewriteProse` 还要清 `> 1.1.6 版本`、`> since 1.1.6`、行内 `(3.6.0 及以上版本)`，不要只匹配「及以上版本」独占一行。围栏里的「版本号」字段名和「Mini 版本」功能名留下。Amis 旧示例里的 `type: text` 在 6.13 已不是注册 type（Amis 渲染不出来），改写时换 `input-text`，不要照抄旧别名。
+- 触及：FormItem `input-image` `form` `input-tree` `tree-select`
+- 规则：`.cursor/rules/site.mdc`；`website/scripts/rewrite-amis-doc.mjs`
 
 ### 文档 json 围栏必须是合法 JSON 才能高亮
 - 踩过：默认校验信息标 ` ```json ` 却写 JS 对象（无引号 key、单引号、注释）。文档 `type: code` 的 JSON monarch 只认 `"key":` / `"value"`，整段没有颜色。
@@ -521,7 +521,7 @@ alwaysApply: true
 ### 非 embed 浮层必须逃出裁切
 - 踩过：日期下拉 `position: absolute; z-index: 20` 挂在 overflow 父级，文档预览框裁切。
 - 稳定做法：`VamisOverlay` Teleport 到 `env.getModalContainer()`（默认 `document.body`）或 `popOverContainerSelector`。点击外部关闭时 overlay 与 trigger 都算内部。打开后先 `visibility:hidden` 再 `place()`，避免 page 坐标 0,0 闪到视口左上。
-- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` `popOver` 以及一切走下拉的控件
+- 触及：`input-date` `select` `calendar` `action` `button` `tooltip-wrapper` `remark` `input-text` `input-password` `popOver` `tree-select` 以及一切走下拉的控件
 - 规则：`.cursor/rules/reuse-overlay.mdc`
 
 ### PopOver 走 VamisOverlay + token，不要 Tailwind 冒充

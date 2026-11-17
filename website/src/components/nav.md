@@ -729,8 +729,6 @@ links:
 
 ## 搜索导航项
 
-> `3.5.0` 及以上版本
-
 开启`"searchable": true`后，支持搜索当前数据源内的导航项，支持自定义匹配函数[`NavMatchFunc`](#navmatchfunc)，如果不设置默认模糊匹配导航对象中的`label`, `title` 和 `key` 字段。
 
 ```schema: scope="body"

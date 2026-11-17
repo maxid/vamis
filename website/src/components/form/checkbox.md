@@ -162,7 +162,7 @@ body:
 | 动作名称 | 动作配置 | 说明 |
 |------|------|------|
 | clear | - | 清空 |
-| reset | - | 将值重置为初始值。6.3.0 及以下版本为 `resetValue` |
+| reset | - | 将值重置为初始值。否则为 `resetValue` |
 | setValue | `value: string \| number \| boolean` 更新的值 | 更新数据 |
 
 ### clear

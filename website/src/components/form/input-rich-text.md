@@ -35,7 +35,7 @@ outline: deep
 
 通过设置 `receiver` 来支持文件上传，如果是 tinymce，它会将图片放在 `file` 字段中
 
-> 1.6.1 及以上版本可以通过 fileField 字段修改
+>可以通过 fileField 字段修改
 
 它的返回值类似如下：
 
@@ -76,7 +76,7 @@ outline: deep
 
 可以设置 options 属性来自定义编辑器的展现，详细配置项请参考[官方文档](https://www.tiny.cloud/docs/tinymce/6/basic-setup/)。
 
-> amis 2.1.0 版本升级到了 tinymce 6，导致 plugins 的写法有变化
+>升级到了 tinymce 6，导致 plugins 的写法有变化
 
 注意在下面的编辑器里修改 JSON 配置后不会实时生效。
 
@@ -288,4 +288,4 @@ froala 可以通过设置 buttons 参数来控制显示哪些按钮，默认是�
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：**精简**：多行文本，未接 TinyMCE/Froala（设计非目标）。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：**精简**：多行文本，未接 TinyMCE/Froala（设计非目标）。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

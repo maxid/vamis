@@ -134,7 +134,7 @@ outline: deep
 
 ## 只允许选中叶子节点
 
-> 1.8.0 及以上版本，如果是之前版本可以在对应的节点上不设置 value 实现
+> 如果是之前版本可以在对应的节点上不设置 value 实现
 
 在单选时，可以通过 `onlyLeaf` 来设置只允许选择叶子节点，即便分支节点有 `value` 也不会被选中。
 
@@ -1123,4 +1123,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能级联；`cascader-select` 别名未注册。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能级联；`cascader-select` 别名未注册。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

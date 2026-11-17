@@ -543,8 +543,6 @@ combo 还有一个作用是增加层级，比如返回的数据是一个深层�
 
 ## 显示分页
 
-> 6.13.0 起支持
-
 当配置 `perPage` 为正整数时，combo 将以分页模式输入。
 
 ```schema: scope="body"
@@ -1278,7 +1276,7 @@ combo 还有一个作用是增加层级，比如返回的数据是一个深层�
 | addItem  | `item: object` 新增项的值                                                                                 | 只有开启`multiple`模式才能使用, `multiple`模式下，给新增项添加默认值                              |
 | clear    | -                                                                                                         | 清空                                                                                              |
 | reset    | -                                                                                                         | 将值重置为初始值。否则为`resetValue`                                                  |
-| setValue | `value: object \| Array<object>` 更新的值<br/>`index?: number` 指定更新的数据索引， 1.10.1 及以上版本引入 | 更新数据，对象数组针对开启`multiple`模式, `multiple`模式下可以通过指定`index`来更新指定索引的数据 |
+| setValue | `value: object \| Array<object>` 更新的值<br/>`index?: number` 指定更新的数据索引，引入 | 更新数据，对象数组针对开启`multiple`模式, `multiple`模式下可以通过指定`index`来更新指定索引的数据 |
 
 ### clear
 
@@ -2066,4 +2064,4 @@ combo 还有一个作用是增加层级，比如返回的数据是一个深层�
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

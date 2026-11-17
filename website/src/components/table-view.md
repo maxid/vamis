@@ -504,8 +504,6 @@ table-view 的所有属性都支持变量，比如下面的例子通过表达式
 
 ### tr 和 td 支持 visibleOn
 
-> 6.5 及以后版本
-
 可以在行和列上配置 visibleOn 或 hiddenOn 属性来实现根据数据动态渲染界面。
 
 ```schema: scope="body"

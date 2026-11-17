@@ -11,8 +11,11 @@ const props = withDefaults(defineProps<{
   deferring: (item: OptionItem) => boolean
   deferField?: string
   disabled?: boolean
+  outline?: boolean
+  showIcon?: boolean
 }>(), {
   deferField: 'defer',
+  showIcon: true,
 })
 
 const emit = defineEmits<{
@@ -28,7 +31,7 @@ function canExpand(node: OptionItem) {
 </script>
 
 <template>
-  <div class="vamis-tree">
+  <div class="vamis-tree" :class="{ 'is-outline': outline }">
     <ul class="vamis-tree__list">
       <li
         v-for="(row, index) in rows"
@@ -66,7 +69,7 @@ function canExpand(node: OptionItem) {
             @keydown.enter.prevent="emit('pick', row.item)"
             @keydown.space.prevent="emit('pick', row.item)"
           >
-            <span class="vamis-tree__node-icon" aria-hidden="true">
+            <span v-if="showIcon" class="vamis-tree__node-icon" aria-hidden="true">
               <VamisIcon :name="canExpand(row.item) ? 'folder' : 'file'" />
             </span>
             <span class="vamis-tree__text" :title="row.item.label">{{ row.item.label }}</span>

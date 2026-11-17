@@ -309,8 +309,6 @@ body:
 
 ## 渲染 自定义模板
 
-> since 2.5.2
-
 可配置`itemSchema` 渲染自定义模板，支持`HTML`或`schema`；  
 当映射值是`非object`时，可使用`${item}`获取映射值；
 

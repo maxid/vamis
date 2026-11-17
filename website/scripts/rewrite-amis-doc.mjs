@@ -161,14 +161,38 @@ export function rewriteLinks(md) {
 
 export function rewriteProse(md) {
   return String(md || '')
-    .replace(/^>\s*\d+\.\d+(?:\.\d+)?\s*及以上版本\s*$/gm, '')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*(及以上版本|以上版本|及以下版本|及以后版本|版本开始|版本支持|版本|起支持)\s*$/gm, '')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*$/gm, '')
+    .replace(/^>\s*since\s+v?\d+\.\d+(?:\.\d+)?\s*$/gim, '')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*(及以上版本|以上版本|版本开始|版本|起支持)\s*[，,]\s*/gm, '> ')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*起支持/gm, '> 支持')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*及之前版本/gm, '> 以前')
+    .replace(/^>\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*开始支持/gm, '> 支持')
+    .replace(/^>\s*amis\s+`?v?\d+\.\d+(?:\.\d+)?`?\s*版本/gim, '>')
+    .replace(/^>\s*这是\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*新增的/gm, '> 这是')
+    .replace(/[ \t]*[（(]<?\s*v?\d+\.\d+(?:\.\d+)?\s*(及以上版本|以上版本|及以下版本|版本支持|版本开始|以前版本[^）)]*|之后支持|及以上|以上)[）)]?/g, '')
+    .replace(/（`?v?\d+\.\d+(?:\.\d+)?`?\s*之前的版本[^）]*）/g, '')
+    .replace(/[ \t]*`?v?\d+\.\d+(?:\.\d+)?`?\s*及以上版本/g, '')
+    .replace(/[ \t]*`?v?\d+\.\d+(?:\.\d+)?`?\s*以上版本/g, '')
+    .replace(/从`?v?\d+\.\d+(?:\.\d+)?`?版本开始[，,]?/g, '')
+    .replace(/`?v?\d+\.\d+(?:\.\d+)?`?\s*版本开始/g, '')
+    .replace(/在\s*`?v?\d+\.\d+(?:\.\d+)?`?\s*之前的版本[，,]?/g, '以前')
+    .replace(/`?v?\d+\.\d+(?:\.\d+)?`?\s*版本之后/g, '现在')
+    .replace(/`?v?\d+\.\d+(?:\.\d+)?`?\s*之前请用/g, '以前请用')
     .replace(/`?\d+\.\d+(?:\.\d+)?`?\s*版本后/g, '现已')
     .replace(/`?\d+\.\d+(?:\.\d+)?`?\s*后支持/g, '支持')
     .replace(/（\d+\.\d+(?:\.\d+)?\s*及以上）/g, '')
     .replace(/\d+\.\d+(?:\.\d+)?\s*及以下版本为/g, '否则为')
+    .replace(/\bsince\s+v?\d+\.\d+(?:\.\d+)?\b/gi, '')
+    .replace(/按 Amis 6\.13\.0 主路径/g, '按 Amis 主路径')
     .replace(/amis 会有/gi, 'Vamis 会有')
     .replace(/Amis 官网/g, 'Amis 文档')
+    .replace(/^>\s+$/gm, '')
     .replace(/\n{3,}/g, '\n\n')
+}
+
+export function stripProductVersions(md) {
+  return mapOutsideFences(md, (text) => rewriteProse(rewriteLinks(dropVersionColumns(text))))
 }
 
 export function rewriteAmisBody(md) {
@@ -222,8 +246,8 @@ export function replaceH2(md, title, section) {
 
 export function diffSection(reason) {
   const extra = reason
-    ? `- 当前实现：${reason}。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。`
-    : '- 属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出；运行时尚未接上的字段预览可能无对应行为。'
+    ? `- 当前实现：${reason}。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。`
+    : '- 属性 / 事件 / 动作表按 Amis 主路径列出；运行时尚未接上的字段预览可能无对应行为。'
   return `## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（\`yes\` / \`On\` / \`012\` 当字符串）。

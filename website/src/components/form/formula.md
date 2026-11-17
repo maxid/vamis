@@ -202,7 +202,7 @@ outline: deep
 }
 ```
 
-这种写法默认会解决浮点数计算问题（需要更新到 amis 1.6.4 及以上版本），比如
+这种写法默认会解决浮点数计算问题（需要更新到 amis），比如
 
 ```schema: scope="body"
 {
@@ -261,4 +261,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：基本用法对标 Amis 自动 A+B（隐藏 formula + 只读和）。对照桌面 **2/3**（P0 0；空值示例 Amis `rendered` 常假红）。缺 input-formula 编辑器与表达式层统一（D2）。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：基本用法对标 Amis 自动 A+B（隐藏 formula + 只读和）。对照桌面 **2/3**（P0 0；空值示例 Amis `rendered` 常假红）。缺 input-formula 编辑器与表达式层统一（D2）。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

@@ -11606,14 +11606,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--destructive);
 }
 
-.vamis-tree-select__hint {
-  font-size: var(--fontSizeSm);
-  line-height: var(--lineHeightBase);
-  color: var(--text-muted);
+.vamis-tree-select__popover {
+  padding: 0;
 }
-.vamis-tree-select__menu {
-  background: var(--select-menu-bg);
-  border-color: var(--select-menu-border);
+.vamis-tree-select__popover .vamis-tree {
+  max-height: none;
 }
 .vamis-tree {
   max-height: var(--tree-max-height);
@@ -11631,6 +11628,14 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-tree__item:hover {
   background: var(--tree-hover-bg);
+}
+.vamis-tree.is-outline .vamis-tree__item.is-leaf.is-child::before {
+  position: absolute;
+  top: -8px;
+  left: calc(var(--tree-depth) * var(--tree-indent));
+  bottom: 0;
+  border-left: 1px solid var(--border);
+  content: '';
 }
 .vamis-tree__label {
   display: flex;
@@ -11846,11 +11851,35 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   border-radius: var(--borderRadiusSm);
 }
 .vamis-input-tree__search {
+  display: flex;
+  align-items: center;
+  height: var(--control-h);
+  margin-bottom: var(--gap-sm);
+  padding: 0 var(--select-pad-x);
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text-color);
+}
+.vamis-input-tree__search-icon {
+  flex: 0 0 auto;
+  margin-right: var(--gap-xs);
+  color: var(--icon-color);
+}
+.vamis-input-tree__search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
   font: inherit;
   font-size: var(--fontSizeBase);
   line-height: var(--lineHeightBase);
   color: var(--text-color);
-  background: var(--background);
+}
+.vamis-input-tree__search-input::placeholder {
+  color: var(--control-placeholder);
 }
 
 /* ---- 皮肤迁出模板（2026-11 第十一刀） ---- */

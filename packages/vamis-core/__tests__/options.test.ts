@@ -465,3 +465,25 @@ describe('select uses the shared contract', () => {
     expect(css).not.toMatch(/\.vamis-select__popover \{[^}]*background: #fff/)
   })
 })
+
+describe('tree-select uses overlay chrome', () => {
+  it('TreeSelect.vue Teleports through VamisOverlay and does not pin z-20', () => {
+    const src = readFileSync(resolve(here, '../../vamis/src/renderers/form/TreeSelect.vue'), 'utf8')
+    expect(src).toContain('VamisOverlay')
+    expect(src).toContain('VamisPopUp')
+    expect(src).toContain('overlayIsMobile')
+    expect(src).toContain('useTreeField')
+    expect(src).toContain('hideNodePathLabel')
+    expect(src).toContain(':gap="4"')
+    expect(src).not.toContain('absolute z-20')
+    expect(src).not.toContain('树选择')
+  })
+
+  it('InputTree.vue keeps searchable chrome on tokens', () => {
+    const src = readFileSync(resolve(here, '../../vamis/src/renderers/form/InputTree.vue'), 'utf8')
+    expect(src).toContain('useTreeField')
+    expect(src).toContain('vamis-input-tree__search')
+    expect(src).not.toContain('rounded-md')
+    expect(src).toContain(':outline="tree.showOutline.value"')
+  })
+})

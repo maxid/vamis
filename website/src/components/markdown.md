@@ -13,8 +13,6 @@ outline: deep
 
 属于侧栏分类 **数据展示**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
 
-> 1.1.6 版本开始
-
 ## 基本用法
 
 ```schema
@@ -141,4 +139,4 @@ markdown 中的 `$` 或 `$$` 包裹的内容就能以公式展现，比如 `$\sq
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

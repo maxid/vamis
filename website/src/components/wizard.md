@@ -78,7 +78,7 @@ steps:
 
 ## 自定义按钮
 
-可以在每个 `step` 中配置 `actions` 来自定义按钮。按钮所在数据域查看`WizardActionData`定义（`3.5.0`及以上版本支持）
+可以在每个 `step` 中配置 `actions` 来自定义按钮。按钮所在数据域查看`WizardActionData`定义（支持）
 
 ```typescript
 interface WizardActionData {

@@ -36,8 +36,6 @@ outline: deep
 
 ## 禁用样式
 
-> `6.0.0`及以上版本
-
 ```schema
 {
   "type": "page",
@@ -70,8 +68,6 @@ outline: deep
 ```
 
 ## 加载状态
-
-> `6.0.0` 及以上版本
 
 设置`"loading": true`, 标识开关操作的异步任务仍在执行中。另外`loadingOn`支持表达式，配合`ajax`动作，实现搜索操作时的loading状态。
 
@@ -230,8 +226,6 @@ outline: deep
 ```
 
 ### 清除后立即搜索
-
-> `2.8.0` 及以上版本
 
 设置`"clearAndSubmit": true`后，清空搜索框内容后立即执行搜索，与`searchImediately`不同的是，`clearAndSubmit`仅作用于清空输入框的动作，而`searchImediately`会影响所有搜索动作。
 
@@ -578,4 +572,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能输入搜索；历史/增强未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能输入搜索；历史/增强未齐。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

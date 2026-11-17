@@ -5,8 +5,8 @@ outline: deep
 
 # TreeSelect 树形选择器
 
-::: warning 实现进度 50% · 进行中
-能下拉树
+::: warning 实现进度 70% · 进行中
+下拉走 `VamisOverlay`，移动端 `VamisPopUp`；`hideNodePathLabel` / 检索 / 多选已接。仍缺 `enableNodePath`、节点增删改、虚拟列表。
 :::
 
 `tree-select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -305,8 +305,6 @@ outline: deep
 
 ## 搜索选项
 
-> `2.7.1` 及以上版本
-
 配置`autoComplete`接口可以实现从远程数据搜索目标结果，搜索的关键字段为`term`，注意搜索的逻辑需要在服务端实现。
 
 ```schema: scope="body"
@@ -326,8 +324,6 @@ outline: deep
 ```
 
 ## 自定义选项渲染
-
-> `2.8.0` 及以上版本
 
 使用`menuTpl`属性，自定义下拉选项的渲染内容。
 
@@ -414,18 +410,18 @@ outline: deep
 
 | 事件名称                             | 事件参数                                                                                                                      | 说明                         |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| change                               | `[name]: string` 组件的值 <br/>`item: object`选中的节点（6.2.0 及以上版本）<br/>`items: object[]`选项集合（3.6.0 及以上版本） | 选中值变化时触发             |
-| blur                                 | `[name]: string` 组件的值 <br/>``item: object`选中的节点（6.2.0 及以上版本）<br/>items: object[]`选项集合（3.6.4 及以上版本） | 输入框失去焦点时触发         |
-| focus                                | `[name]: string` 组件的值 <br/>`item: object`选中的节点（6.2.0 及以上版本）<br/>`items: object[]`选项集合（3.6.4 及以上版本） | 输入框获取焦点时触发         |
-| addConfirm (3.6.4 及以上版本)        | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合                                     | 新增节点提交时触发           |
-| editConfirm (3.6.4 及以上版本)       | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合                                     | 编辑节点提交时触发           |
-| deleteConfirm (3.6.4 及以上版本)     | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合                                     | 删除节点提交时触发           |
-| deferLoadFinished (3.6.4 及以上版本) | `[name]: object` 组件的值<br/>`result: object` deferApi 懒加载远程请求成功后返回的数据 <br/>`items: object[]`选项集合         | 懒加载接口远程请求成功时触发 |
-| itemClick (6.9.0 以上版本)           | `item: Option` 所点击的选项                                                                                                   | 节点点击时触发               |
-| staticItemClick (6.13.0 以上版本)    | `item: Option` 所点击的选项                                                                                                   | 静态展示时节点点击时触发     |
-| add（不推荐）                        | `[name]: object` 新增的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                               | 新增节点提交时触发           |
-| edit（不推荐）                       | `[name]: object` 编辑的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                               | 编辑节点提交时触发           |
-| delete（不推荐）                     | `[name]: object` 删除的节点信息<br/>`items: object[]`选项集合（< 2.3.2 及以下版本 为`options`）                               | 删除节点提交时触发           |
+| change                               | `[name]: string` 组件的值 <br/>`item: object`选中的节点<br/>`items: object[]`选项集合 | 选中值变化时触发             |
+| blur                                 | `[name]: string` 组件的值 <br/>``item: object`选中的节点<br/>items: object[]`选项集合 | 输入框失去焦点时触发         |
+| focus                                | `[name]: string` 组件的值 <br/>`item: object`选中的节点<br/>`items: object[]`选项集合 | 输入框获取焦点时触发         |
+| addConfirm        | `[name]: string` 组件的值<br/>`item: object` 新增的节点信息<br/>`items: object[]`选项集合                                     | 新增节点提交时触发           |
+| editConfirm       | `[name]: object` 组件的值<br/>`item: object` 编辑的节点信息<br/>`items: object[]`选项集合                                     | 编辑节点提交时触发           |
+| deleteConfirm     | `[name]: string` 组件的值<br/>`item: object` 删除的节点信息<br/>`items: object[]`选项集合                                     | 删除节点提交时触发           |
+| deferLoadFinished | `[name]: object` 组件的值<br/>`result: object` deferApi 懒加载远程请求成功后返回的数据 <br/>`items: object[]`选项集合         | 懒加载接口远程请求成功时触发 |
+| itemClick           | `item: Option` 所点击的选项                                                                                                   | 节点点击时触发               |
+| staticItemClick    | `item: Option` 所点击的选项                                                                                                   | 静态展示时节点点击时触发     |
+| add（不推荐）                        | `[name]: object` 新增的节点信息<br/>`items: object[]`选项集合 为`options`）                               | 新增节点提交时触发           |
+| edit（不推荐）                       | `[name]: object` 编辑的节点信息<br/>`items: object[]`选项集合 为`options`）                               | 编辑节点提交时触发           |
+| delete（不推荐）                     | `[name]: object` 删除的节点信息<br/>`items: object[]`选项集合 为`options`）                               | 删除节点提交时触发           |
 | loadFinished（不推荐）               | `[name]: object` deferApi 懒加载远程请求成功后返回的数据                                                                      | 懒加载接口远程请求成功时触发 |
 
 ### change
@@ -1081,4 +1077,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能下拉树。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：下拉走 `VamisOverlay`（移动端 `VamisPopUp`），复用 InputTree 面板；`hideNodePathLabel`、检索、`onlyLeaf`、`autoCheckChildren` 已接。仍缺 `enableNodePath`、节点增删改、虚拟列表。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

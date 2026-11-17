@@ -386,8 +386,6 @@ outline: deep
 
 ## 确认模式
 
-> `3.6.0`及以上版本
-
 设置`"closeOnSelect": false`，点选日期时间后，不会自动关闭浮层，需要点击底部工具栏的确认才会关闭。点击**取消按钮**或者**浮层外部区域**也会关闭浮层，并将值重置为初始状态。
 
 > 注意：该特性仅对`input-datetime`有效，其他日期时间组件无效。开启内嵌模式后，该特性无效。
@@ -463,4 +461,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：`input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：`input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
