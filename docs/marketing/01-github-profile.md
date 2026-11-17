@@ -84,7 +84,7 @@ json
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-184%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-941%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1030%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 ```
 
@@ -120,7 +120,7 @@ v0.1.0-alpha.1 — 第一次公开 alpha
 - 185 / 189 个 Amis type 名称已注册，组件语义平均 62%
 - Vue `VamisRoot` + 任意 HTML `vamis.embed` 两条入口
 - YAML / JSON 双作者态，信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）
-- 941 个单测通过；Playwright 对照用例 1386 条，P0 8 条 helper 差异（均为 `m-l-*`）
+- 1030 个单测通过；Playwright 对照用例 2171 条，P0 8 条 helper 差异（均为 `m-l-*`）
 - 在线 Demo / 组件文档 / Amis 并排对照页
 
 ## 现在能跑

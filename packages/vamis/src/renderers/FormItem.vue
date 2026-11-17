@@ -20,16 +20,19 @@ import {
   isControlSize,
   resolveClassName,
   statusStaticOf,
+  useData,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../formContext'
+import { useFieldValue, useForm } from '../formContext'
 
 const props = defineProps<{
   schema: SchemaObject
 }>()
 
 const form = useForm()
-const itemData = computed(() => form?.store.data ?? {})
+const field = useFieldValue()
+const data = useData()
+const itemData = computed(() => form?.store.data ?? data.value)
 const error = computed(() =>
   props.schema.name ? form?.store.errors[String(props.schema.name)] : '',
 )
@@ -95,12 +98,12 @@ const staticNodes = computed(() => (isStatic.value ? formItemStaticSchema(props.
 const selectorStatic = computed(() => {
   if (!isStatic.value || staticNodes.value) return null
   const name = props.schema.name
-  const raw = (name ? form?.getValue(String(name)) : undefined) ?? props.schema.value
+  const raw = (name ? field.getValue(String(name)) : undefined) ?? props.schema.value
   return formItemStaticSelectorNode(props.schema, raw)
 })
 const staticText = computed(() => {
   const name = props.schema.name
-  const raw = name ? form?.getValue(String(name)) : undefined
+  const raw = name ? field.getValue(String(name)) : undefined
   if (raw == null || raw === '') return ''
   return String(raw)
 })

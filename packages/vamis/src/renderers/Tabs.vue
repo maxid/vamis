@@ -26,7 +26,9 @@ import {
   tabsHiddenIndexesByBox,
   tabsIndexesEqual,
   tabsInitialActive,
+  tabsKeyByValue,
   tabsMode,
+  tabsNamedValue,
   tabsMountOnEnter,
   tabsNormalizeActive,
   tabsRemapAfterReorder,
@@ -44,7 +46,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { VamisCaret, VamisClose, VamisIcon } from '@vamis/ui'
-import { useForm } from '../formContext'
+import { useFieldValue } from '../formContext'
 import IconMark from './IconMark.vue'
 import VamisOverlay from '../overlay/VamisOverlay.vue'
 import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
@@ -56,7 +58,7 @@ const scoped = useScoped()
 const overlay = useOverlay()
 const formApi = useFormApi()
 const scope = useScope()
-const form = useForm()
+const field = useFieldValue()
 
 const mode = computed(() => tabsMode(props.schema, data.value))
 const sidePosition = computed(() => tabsSidePosition(props.schema))
@@ -118,6 +120,17 @@ watch(
 )
 
 watch(
+  () => tabsNamedValue(props.schema, data.value),
+  (value, prev) => {
+    if (!inited.value || value === prev || value == null || value === '') return
+    const key = tabsKeyByValue(tabs.value, value, data.value)
+    if (key == null || key === active.value) return
+    active.value = key
+    seedVisited(key)
+  },
+)
+
+watch(
   () => data.value.key,
   (key, prev) => {
     if (!inited.value || key === prev) return
@@ -141,9 +154,9 @@ function titleOf(tab: (typeof tabs.value)[number]) {
   return String(raw)
 }
 
-function writeForm(tab: (typeof tabs.value)[number] | undefined, index: number, key: string) {
-  if (!tab || typeof props.schema.name !== 'string' || !props.schema.name) return
-  form?.setValue(props.schema.name, tabFormValue(tab, key, scopeOf(tab)))
+function writeValue(tab: (typeof tabs.value)[number] | undefined, index: number, key: string) {
+  if (!tab || typeof props.schema.name !== 'string' || !props.schema.name || props.schema.source) return
+  field.setValue(props.schema.name, tabFormValue(tab, key, scopeOf(tab)))
 }
 
 function syncHash(tab: (typeof tabs.value)[number] | undefined, key: string) {
@@ -180,7 +193,7 @@ async function onSelect(tab: (typeof tabs.value)[number], index: number) {
   const next = unmountOnExit.value ? new Set<string>() : new Set(visited.value)
   next.add(key)
   visited.value = next
-  writeForm(tab, index, key)
+  writeValue(tab, index, key)
   moreOpen.value = false
   void nextTick(() => {
     scrollActiveIntoView()
@@ -530,13 +543,13 @@ function onHashChange() {
   if (key === active.value) return
   active.value = key
   seedVisited(key)
-  writeForm(tabs.value[found], found, key)
+  writeValue(tabs.value[found], found, key)
   void nextTick(() => placeInk(true))
 }
 
 onMounted(() => {
   const index = tabs.value.findIndex((tab, i) => keyOf(tab, i) === active.value)
-  if (index >= 0) writeForm(tabs.value[index], index, active.value)
+  if (index >= 0) writeValue(tabs.value[index], index, active.value)
   window.addEventListener('hashchange', onHashChange)
   window.addEventListener('popstate', onHashChange)
   void nextTick(() => {

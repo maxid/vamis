@@ -7,7 +7,7 @@ Vamis is an **Amis-compatible** JSON/YAML low-code runtime, reimplemented in Vue
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-941%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1030%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [Live demo](https://maxid.github.io/vamis/) · [Component docs](https://maxid.github.io/vamis/components) · [Amis side-by-side](https://maxid.github.io/vamis/sdk/compare.html) · [中文](README.md)
@@ -149,16 +149,16 @@ Unknown `type` / unimplemented `kind` renders a placeholder instead of crashing.
 
 ## How parity is verified
 
-Playwright mounts the same schema with `amis.embed` and `vamis.embed` side by side, then compares schema-tree nodes — rendered or not, runtime `value`, `getComponentByName`, and action results — rather than whole-page screenshots. There are currently **1,386 comparison cases**; the last full run passed **1,252** with 64 failures (8 P0, all `m-l-*` helpers). The same harness also checks box model and 375px mobile behavior.
+Playwright mounts the same schema with `amis.embed` and `vamis.embed` side by side, then compares schema-tree nodes — rendered or not, runtime `value`, `getComponentByName`, and action results — rather than whole-page screenshots. There are currently **2,171 comparison cases**; the last full run passed **1,869** with 300 failures (8 P0, all `m-l-*` helpers). The same harness also checks box model and 375px mobile behavior.
 
 Progress is public: docs pages show implementation percentages, and every task updates `CONTEXT.md`.
 
-## Status (2026-11-16)
+## Status (2026-11-17)
 
 - Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
 - 155 sidebar components: **3 complete** (`container`, `hidden`, `toast`), 152 in progress, **62% average** semantic parity (47 at ≥80%).
 - Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 error boundary and D8 diagnostics are still missing.
-- Tests: formula 185 + core 737 + sdk 81 = **1003 passing**; `pnpm typecheck` is **0** (CI gate).
+- Tests: formula 185 + core 764 + sdk 81 = **1030 passing**; `pnpm typecheck` is **0** (CI gate).
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.
 
 ## Development

@@ -9,7 +9,9 @@ import {
   tabsHiddenIndexesByBox,
   tabsIndexesEqual,
   tabsInitialActive,
+  tabsKeyByValue,
   tabsMode,
+  tabsNamedValue,
   tabsRemapAfterReorder,
   tabsResolveActiveKey,
   tabsUseAutoOverflow,
@@ -81,6 +83,18 @@ describe('tabs', () => {
     expect(tabsMode({})).toBe('line')
     expect(tabFormValue({ title: 'Tab 1' }, '0')).toBe('Tab 1')
     expect(tabFormValue({ title: 'Tab 1', value: 1 }, '0')).toBe(1)
+  })
+
+  it('selects a tab from the named data-chain value, including paths', () => {
+    const tabs = [
+      { title: 'Tab 1', value: 'a' },
+      { title: 'Tab 2', value: 'b', hash: 'second' },
+    ]
+    expect(tabsNamedValue({ name: 'meta.current' }, { meta: { current: 'b' } })).toBe('b')
+    expect(tabsNamedValue({ name: 'current', source: '${items}' }, { current: 'b' })).toBeUndefined()
+    expect(tabsKeyByValue(tabs, 'b')).toBe('second')
+    expect(tabsInitialActive({ name: 'meta.current' }, tabs, { meta: { current: 'b' } })).toBe('second')
+    expect(tabsInitialActive({ name: 'current', activeKey: 0 }, tabs, { current: 'b' })).toBe('second')
   })
 
   it('toInt filter keeps number and parses string', () => {

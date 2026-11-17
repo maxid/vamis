@@ -19,6 +19,14 @@ describe('static', () => {
     expect(vue).toContain('borderMode')
   })
 
+  it('reads static form item values through the shared data chain', () => {
+    const vue = read('../../vamis/src/renderers/FormItem.vue')
+    expect(vue).toContain('useFieldValue')
+    expect(vue).toContain('form?.store.data ?? data.value')
+    expect(vue).toContain('field.getValue(String(name))')
+    expect(vue).not.toContain('form?.getValue')
+  })
+
   it('doc covers the Amis static chapters and the quickEdit gap', () => {
     const doc = read('../../../website/src/components/form/static.md')
     for (const heading of [

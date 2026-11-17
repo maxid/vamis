@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
-- 同步时间：2026-11-15
-- Vamis 基线：`3d09081`（`main`，与 `origin/main` 一致）
+- 同步时间：2026-11-17
+- Vamis 基线：`8418893`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -11,7 +11,7 @@
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
 2. **type 名称覆盖 185 / 189（97.9%）**：还剩 3 个真实 type 和 `navigation` 1 个别名。
-3. **语义进度（2026-11-16）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **62%**（≥80% **47**）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域），D7 错误边界 / D8 诊断仍缺。
+3. **语义进度（2026-11-17）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **62%**（≥80% **47**）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域），D7 错误边界 / D8 诊断仍缺。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 管线、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
 ## 1. 上游对齐
@@ -20,7 +20,7 @@
 |----|----|
 | amis 本地 master | `43a33ee06`，2026-03-18 |
 | amis 包版本 | 6.13.0 |
-| Vamis HEAD | `f7aa2bb`，2026-10-21，`main` = `origin/main` |
+| Vamis HEAD | `8418893`，2026-11-17，`main` = `origin/main` |
 | Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；内置过滤器目前只有 `raw` / `html` |
 
 结论：Vamis 以 amis master 源码为参考基线，版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
@@ -29,7 +29,7 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 676 + sdk 80 = **941**，全绿 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 764 + sdk 81 = **1030**，全绿 |
 | 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
 | 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
 | 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |

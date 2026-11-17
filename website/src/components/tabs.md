@@ -231,6 +231,26 @@ outline: deep
 }
 ```
 
+不在表单里时，`name` 读写当前数据域；已有值会选中对应标签：
+
+```schema: scope="body"
+type: page
+data:
+  current: b
+body:
+  - type: tabs
+    name: current
+    tabs:
+      - title: Tab 1
+        value: a
+        tab: Content 1
+      - title: Tab 2
+        value: b
+        tab: Content 2
+  - type: tpl
+    tpl: 当前值：${current}
+```
+
 ## 展示模式
 
 `tabsMode` 默认 `line`。也可写 `mode`（动作示例里常见）。

@@ -27,7 +27,7 @@ import {
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useForm } from '../formContext'
+import { useFieldValue } from '../formContext'
 
 const props = defineProps<{ schema: SchemaObject }>()
 const emit = defineEmits<{
@@ -39,7 +39,7 @@ const scoped = useScoped()
 const overlay = useOverlay()
 const formApi = useFormApi()
 const scope = useScope()
-const form = useForm()
+const field = useFieldValue()
 
 function resolvedNum(value: unknown, fallback: number): number {
   return paginationNum(resolveValue(value, data.value), fallback) ?? fallback
@@ -56,7 +56,7 @@ const perPage = ref(10)
 const goInput = ref('')
 
 function syncFromSchema() {
-  const named = props.schema.name ? form?.getValue(props.schema.name) : undefined
+  const named = props.schema.name ? field.getValue(props.schema.name) : undefined
   page.value = paginationNum(named, resolvedNum(props.schema.activePage ?? props.schema.value, paginationActivePage(props.schema))) ?? 1
   perPage.value = resolvedNum(props.schema.perPage, paginationPerPage(props.schema))
 }
@@ -111,7 +111,7 @@ async function emitChange(nextPage: number, nextPerPage = perPage.value, dir?: s
   if (event.prevented) return
   page.value = next
   perPage.value = nextPerPage
-  if (props.schema.name) form?.setValue(props.schema.name, next)
+  if (props.schema.name) field.setValue(props.schema.name, next)
   emit('pageChange', next, nextPerPage, dir)
 }
 

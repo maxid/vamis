@@ -1,6 +1,7 @@
 /** Tabs。对齐 Amis：hash / 索引作 key，source 重复模板，body 或 tab。 */
 
 import { filterTpl, isDisabled, isVisible, resolveValue } from '../formula'
+import { getByPath } from '../scope'
 import type { SchemaNode, SchemaObject } from '../types'
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -231,8 +232,33 @@ export function tabsResolveActiveKey(
   return tabsNormalizeActive(raw, tabs, data)
 }
 
+export function tabsKeyByValue(
+  tabs: TabItem[],
+  value: unknown,
+  data: Record<string, unknown> = {},
+): string | undefined {
+  const index = tabs.findIndex((tab, i) => {
+    const scope = tabScope(tab, data)
+    return tabFormValue(tab, tabKey(tab, i, scope), scope) === value
+  })
+  if (index < 0) return undefined
+  const tab = tabs[index]
+  return tabKey(tab, index, tabScope(tab, data))
+}
+
+export function tabsNamedValue(schema: unknown, data: Record<string, unknown> = {}): unknown {
+  const rec = asRecord(schema)
+  if (typeof rec.name !== 'string' || !rec.name || rec.source) return undefined
+  return getByPath(data, rec.name)
+}
+
 export function tabsInitialActive(schema: unknown, tabs: TabItem[], data: Record<string, unknown> = {}): string {
   const rec = asRecord(schema)
+  const named = tabsNamedValue(rec, data)
+  if (named != null && named !== '') {
+    const key = tabsKeyByValue(tabs, named, data)
+    if (key != null) return key
+  }
   const fromActive = tabsResolveActiveKey(schema, tabs, data)
   if (fromActive != null) return fromActive
   const hash = tabsLocationHash()
