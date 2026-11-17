@@ -3,6 +3,7 @@ export {
   dumpOptionsValue,
   filterOptions,
   flattenOptions,
+  flattenVisibleOptions,
   getSelectedOptions,
   isOptionsVariableSource,
   matchOptionValue,

@@ -204,7 +204,7 @@ describe('style ruler: renderers (legacy ceilings, shrink only)', () => {
     const used = new Set<string>()
     for (const file of renderers) for (const m of file.text.matchAll(/<VamisIcon\s+name="([\w-]+)"/g)) used.add(m[1])
     expect(used.size).toBeGreaterThan(20)
-    for (const name of used) expect(registry, name).toMatch(new RegExp(`^  '?${name}'?: \\{`, 'm'))
+    for (const name of used) expect(registry, name).toMatch(new RegExp(`^  ["']?${name}["']?: \\{`, 'm'))
   })
 
   it('lucide icons in renderers', () => {

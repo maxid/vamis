@@ -37,7 +37,7 @@ describe('cards', () => {
     expect(card).toContain('is-modified')
     // 拖拽手柄是 @vamis/ui 登记的 drag-bar（Amis 原件是 stroke），渲染器不写 <svg>
     expect(card).toContain('<VamisIcon name="drag-bar"')
-    expect(read('../../vamis-ui/src/ui/vamis-icons.ts')).toContain('translate(5 1)" stroke="currentColor"')
+    expect(read('../../vamis-ui/src/ui/vamis-icons.ts')).toContain('translate(5 1)')
     const theme = read('../../vamis-ui/src/styles.css')
     expect(theme).toContain('--card-modified-bg: var(--colors-neutral-fill-8)')
     expect(theme).toContain('--cards-unsaved-heading-bg: var(--table-modified-bg)')

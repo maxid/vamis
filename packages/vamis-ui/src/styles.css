@@ -512,6 +512,15 @@
   --spinner-tip-gap: 12px;
   --spinner-tip-font-size: var(--fontSizeSm);
   --spinner-overlay-bg: rgba(255, 255, 255, 0.1);
+  --tree-control-padding-y: 6px;
+  --tree-control-padding-x: var(--gap-base);
+  --tree-max-height: 300px;
+  --tree-indent: var(--gap-md);
+  --tree-item-height: var(--gap-xl);
+  --tree-content-height: var(--control-h);
+  --tree-arrow-size: var(--gap-md);
+  --tree-hover-bg: var(--fill-10);
+  --tree-checked-bg: var(--colors-brand-10);
   /* Amis fill-9 / fill-10 / text-color。Tooltip 边框不是 --border（line-8）。 */
   --fill-9: var(--colors-neutral-fill-9);
   --fill-10: var(--colors-neutral-fill-10);
@@ -956,6 +965,7 @@
   --muted: var(--colors-neutral-fill-10);
   --muted-foreground: var(--colors-neutral-text-6);
   --cal-between-bg: var(--colors-neutral-fill-8);
+  --tree-checked-bg: var(--colors-brand-3);
   --date-range-sep: var(--colors-neutral-line-7);
   --cal-picker-cancel: var(--colors-neutral-text-7);
   --cal-picker-title: var(--colors-neutral-text-2);
@@ -11605,30 +11615,98 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   background: var(--select-menu-bg);
   border-color: var(--select-menu-border);
 }
-.vamis-tree-select__item {
-  display: block;
-  width: 100%;
-  padding: var(--gap-xs) var(--gap-sm);
-  font: inherit;
-  font-size: var(--fontSizeBase);
-  line-height: var(--lineHeightBase);
-  color: var(--select-option-color);
-  text-align: left;
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius);
+.vamis-tree {
+  max-height: var(--tree-max-height);
+  overflow: auto;
+}
+.vamis-tree__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.vamis-tree__item {
+  line-height: var(--tree-item-height);
+  padding-left: calc(var(--tree-depth) * var(--tree-indent));
+  position: relative;
+}
+.vamis-tree__item:hover {
+  background: var(--tree-hover-bg);
+}
+.vamis-tree__label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  user-select: none;
+  padding-left: var(--gap-sm);
+  color: var(--text-color);
+}
+.vamis-tree__arrow,
+.vamis-tree__arrow-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--tree-arrow-size);
+  width: var(--tree-arrow-size);
+  height: var(--tree-arrow-size);
+  margin-right: var(--gap-xs);
+  color: var(--icon-color);
+}
+.vamis-tree__arrow {
   cursor: pointer;
 }
-.vamis-tree-select__item:hover {
-  background: var(--select-option-hover-bg);
+.vamis-tree__arrow svg {
+  display: block;
+  width: var(--tree-arrow-size);
+  height: var(--tree-arrow-size);
 }
-.vamis-tree-select__item.is-active,
-.vamis-tree-select__item.is-active:hover {
-  background: var(--primary);
-  color: var(--primary-foreground);
+.vamis-tree__arrow .vamis-spinner {
+  width: var(--tree-arrow-size);
+  height: var(--tree-arrow-size);
 }
-.vamis-tree-select__item:disabled {
-  color: var(--select-option-disabled-color);
+.vamis-tree__arrow-icon {
+  display: inline-flex;
+  transition: transform var(--animation-duration);
+}
+.vamis-tree__arrow-icon.is-folded {
+  transform: rotate(-90deg);
+}
+.vamis-tree__node-icon {
+  display: inline-flex;
+  margin-right: var(--gap-sm);
+  flex: 0 0 var(--icon-size);
+}
+.vamis-tree__node-icon > svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-tree__content {
+  padding-left: var(--gap-xs);
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  overflow: hidden;
+  height: var(--tree-content-height);
+  position: relative;
+  cursor: pointer;
+}
+.vamis-tree__content.is-checked {
+  background: var(--tree-checked-bg);
+  border-radius: var(--borderRadiusSm);
+}
+.vamis-tree__text {
+  cursor: pointer;
+  display: inline-flex;
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vamis-tree__label.is-disabled .vamis-tree__text,
+.vamis-tree__label.is-disabled .vamis-tree__arrow {
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -11762,6 +11840,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-muted);
 }
 
+.vamis-input-tree__control {
+  border: 1px solid var(--input);
+  padding: var(--tree-control-padding-y) var(--tree-control-padding-x);
+  border-radius: var(--borderRadiusSm);
+}
 .vamis-input-tree__search {
   font: inherit;
   font-size: var(--fontSizeBase);

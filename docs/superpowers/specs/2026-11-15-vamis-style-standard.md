@@ -102,14 +102,14 @@ Vamis chrome 的直角 / 圆角用**全局开关**切（见 [主题 spec §4](./
 | 通道 | 入口 | 什么时候用 |
 |----|----|----|
 | 作者图标 | `@vamis/core` `resolveIcon` + `IconMark` | schema 的 `icon` / `rightIcon`（FA class、URL、SVG 串、sprite） |
-| chrome 图标 | `<VamisIcon name="…">`，字形登记在 `packages/vamis-ui/src/ui/vamis-icons.ts` | 组件自带的静态图标：勾、叉、翻页、拖拽手柄、搜索、上传、日历… 现登记 32 个 |
+| chrome 图标 | `<VamisIcon name="…">`，字形登记在 `packages/vamis-ui/src/ui/vamis-icons.ts` | 组件自带的静态图标：勾、叉、翻页、拖拽手柄、搜索、上传、日历… 已合并 amis-r 全部 103 个 SVG，加 Vamis 专用项共 115 个 |
 | 带状态的 chrome 图标 | 专用组件 `VamisCaret` / `VamisClear` / `VamisClose` / `VamisDateArrow` / `VamisPasswordToggle` / `VamisSpinnerMark` / `VamisTableIcon` / `VamisTableEmptyIcon` / `VamisGalleryToolIcon` | 有展开翻转、动画、明暗两态，或一族图标共用一套盒模型 |
 | 数据图形 | 渲染器里的 `<svg>` | 画的是数据：进度环、迷你图、二维码、形状。只有 5 个文件 |
 
 - 渲染器模板不写 chrome 的 `<svg>`，不拿 `×` `›` `▾` `+` 这类字符当图标（字符吃宿主字族，粗细和基线都不稳）
-- 加图标：先找 Amis `packages/amis-ui/src/icons/<name>.svg`，把 `viewBox` 和 path 登记进 `vamis-icons.ts`，沿用 Amis 的名字并在注释里写出处。Amis 没有的才自己画
+- 加图标：先找 `amis-r/packages/amis-ui/src/icons/<name>.svg`，把 `viewBox` 和字形内容登记进 `vamis-icons.ts`，沿用上游名字并在注释里写出处。上游没有的才自己画
 - 字形用 `currentColor`。尺寸和颜色写在调用处的 class 上，量走 `--icon-size` / `--icon-color` 或组件 token
-- lucide 是存量（9 处：Toast / Alert 关闭、Wizard 勾、Select 编辑与删除、`Audio` 的播放 / 暂停 / 音量），新代码不再引入，动到就换成 `VamisIcon`
+- 渲染器中的 lucide chrome 已清零；不要再引入，统一用 `VamisIcon`
 
 ## 5. 模板里的 class
 

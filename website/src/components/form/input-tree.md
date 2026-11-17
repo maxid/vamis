@@ -5,8 +5,8 @@ outline: deep
 
 # InputTree 树形选择框
 
-::: warning 实现进度 50% · 进行中
-能勾树；懒加载/检索未齐
+::: warning 实现进度 60% · 进行中
+能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简
 :::
 
 `input-tree` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -2161,4 +2161,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能勾树；懒加载/检索未齐。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简。属性 / 事件 / 动作表按 Amis 6.13.0 主路径列出，运行时尚未接上的字段预览可能无对应行为。

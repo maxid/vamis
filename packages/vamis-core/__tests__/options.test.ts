@@ -17,6 +17,7 @@ import {
   selectPopupHeight,
   splitOverflowTags,
   flattenOptions,
+  flattenVisibleOptions,
   getSelectedOptions,
   isAllSelected,
   isOptionsEmpty,
@@ -25,11 +26,14 @@ import {
   normalizeOptions,
   optionValuesEqual,
   optionsAutoFillContext,
+  optionNeedsDefer,
   optionsControlConfig,
+  optionsDeferField,
   optionsCreateBtnLabel,
   optionsEditDialogTitle,
   optionsFromPayload,
   removeOptionFromTree,
+  resolveDeferredOption,
   updateOptionInTree,
   optionsValueConfig,
   parseJoined,
@@ -302,6 +306,49 @@ describe('schema helpers', () => {
     expect(flattenOptions([{ label: 'P', value: 'p', children: [{ label: 'C', value: 'c' }] }]).map((item) => item.label)).toEqual([
       'P / C',
     ])
+  })
+})
+
+describe('deferred option children', () => {
+  it('loads a deferred node once and merges normalized children without dropping siblings', () => {
+    const tree = normalizeOptions([
+      { label: 'A', value: 'a', defer: true },
+      { label: 'B', value: 'b', children: [{ label: 'B1', value: 'b1', defer: true }] },
+      { label: 'C', value: 'c' },
+    ])
+    expect(optionsDeferField({})).toBe('defer')
+    expect(optionsDeferField({ deferField: 'lazy' })).toBe('lazy')
+    expect(optionNeedsDefer(tree[0])).toBe(true)
+    expect(optionNeedsDefer({ label: 'A', value: 'a', defer: true, loaded: true })).toBe(false)
+
+    const loaded = resolveDeferredOption(tree, tree[0], [
+      { text: 'A1', id: 'a1' },
+      { text: 'A2', id: 'a2', defer: true },
+    ])
+    expect(loaded[0].loaded).toBe(true)
+    expect(loaded[0].children?.map((item) => item.value)).toEqual(['a1', 'a2'])
+    expect(loaded[0].children?.[1].defer).toBe(true)
+    expect(loaded[2].value).toBe('c')
+
+    const nested = resolveDeferredOption(tree, tree[1].children![0], [{ label: 'B1-1', value: 'b1-1' }])
+    expect(nested[1].children?.[0].children?.[0].value).toBe('b1-1')
+    expect(nested[1].children?.[0].loaded).toBe(true)
+    expect(nested[0].children).toBeUndefined()
+  })
+
+  it('flattens only expanded descendants into one visible list', () => {
+    const tree = normalizeOptions([
+      { label: 'A', value: 'a', children: [{ label: 'A1', value: 'a1', children: [{ label: 'A1-1', value: 'a1-1' }] }] },
+      { label: 'B', value: 'b' },
+    ])
+    const expanded = (item: typeof tree[number]) => item.value !== 'a1'
+    expect(flattenVisibleOptions(tree, expanded).map((row) => [row.item.value, row.depth])).toEqual([
+      ['a', 0],
+      ['a1', 1],
+      ['b', 0],
+    ])
+    expect(flattenVisibleOptions(tree, () => false).map((row) => row.item.value)).toEqual(['a', 'b'])
+    expect(flattenVisibleOptions(tree, () => true).map((row) => row.depth)).toEqual([0, 1, 2, 0])
   })
 })
 

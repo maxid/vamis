@@ -29,7 +29,7 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 764 + sdk 81 = **1030**，全绿 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 766 + sdk 81 = **1032**，全绿 |
 | 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
 | 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
 | 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |

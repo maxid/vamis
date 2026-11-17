@@ -20,6 +20,18 @@ const fieldApi = useFieldValue()
 const open = ref(false)
 const multiple = computed(() => !!props.schema.multiple)
 const tree = computed(() => normalizeOptions(props.schema.options))
+const expanded = ref(new Map<OptionItem, boolean>())
+function isExpanded(item: OptionItem) {
+  return expanded.value.get(item) ?? true
+}
+function toggleExpand(item: OptionItem) {
+  const next = new Map(expanded.value)
+  next.set(item, !isExpanded(item))
+  expanded.value = next
+}
+function isDeferring(_item: OptionItem) {
+  return false
+}
 const selected = computed({
   get: () =>
     parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', multiple.value, props.schema.joinValues !== false),
@@ -58,7 +70,15 @@ function checked(item: OptionItem) {
         <span class="vamis-tree-select__hint">树选择</span>
       </Button>
       <div v-if="open" class="vamis-tree-select__menu absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md border py-1 shadow-md">
-        <TreeBranch :nodes="tree" :checked="checked" :disabled="!!disabled" @pick="toggle" />
+        <TreeBranch
+          :nodes="tree"
+          :checked="checked"
+          :disabled="!!disabled"
+          :expanded="isExpanded"
+          :deferring="isDeferring"
+          @pick="toggle"
+          @expand="toggleExpand"
+        />
       </div>
     </div>
   </FormItem>

@@ -119,6 +119,38 @@ export function optionsEditDialogTitle(schema: PlainObject = {}): string {
   return `编辑${optionsKindLabel(schema)}`
 }
 
+export function optionsDeferField(schema: PlainObject = {}): string {
+  return schema.deferField != null && String(schema.deferField) ? String(schema.deferField) : 'defer'
+}
+
+export function optionNeedsDefer(item: OptionItem, deferField = 'defer'): boolean {
+  return !!item[deferField] && item.loaded !== true
+}
+
+export function resolveDeferredOption(
+  list: OptionItem[],
+  origin: OptionItem,
+  rawChildren: unknown,
+  config: OptionsValueConfig = {},
+  deferField = 'defer',
+): OptionItem[] {
+  const labelField = config.labelField || 'label'
+  const valueField = config.valueField || 'value'
+  const children = normalizeOptions(rawChildren, labelField, valueField)
+  return list.map((item) => {
+    if (item === origin || matchOptionValue(origin.value, item, valueField)) {
+      return { ...item, children, loaded: true, [deferField]: item[deferField] }
+    }
+    if (item.children?.length) {
+      return {
+        ...item,
+        children: resolveDeferredOption(item.children, origin, rawChildren, config, deferField),
+      }
+    }
+    return item
+  })
+}
+
 /** 在选项树里按 value 合并一项，对齐 Amis `spliceTree` 编辑。 */
 export function updateOptionInTree(
   list: OptionItem[],
@@ -255,6 +287,26 @@ export function normalizeOptions(
     }))
   }
   return []
+}
+
+export interface VisibleOption {
+  item: OptionItem
+  depth: number
+}
+
+export function flattenVisibleOptions(
+  options: OptionItem[],
+  expanded: (item: OptionItem) => boolean,
+  depth = 0,
+): VisibleOption[] {
+  const out: VisibleOption[] = []
+  for (const item of options) {
+    out.push({ item, depth })
+    if (item.children?.length && expanded(item)) {
+      out.push(...flattenVisibleOptions(item.children, expanded, depth + 1))
+    }
+  }
+  return out
 }
 
 export function flattenOptions(options: OptionItem[], prefix = ''): OptionItem[] {

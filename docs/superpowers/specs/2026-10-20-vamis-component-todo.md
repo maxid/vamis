@@ -189,7 +189,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 75% | 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、`initApiFinished` / `inited` / `change` / `validateSucc` / `validateError` / `submit` / `submitSucc` / `submitFail` / `formItemValidate*` 事件、`rules` 组合校验（`data.x` 表达式 + `name` 高亮）、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项，父域其它字段不进本域）、`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign` / 表单项 `labelWidth`。文档按 Amis `form/index` 全章节改写。`submitText: ""` 去默认提交；body 已有 `submit`/`button`/`reset`/`toolbar` 也不注入底栏；`type: submit` 无 `primary` 是描边。`wrapWithPanel: false` 时 title/actions 失效。桌面 heading **35px**（12/400/1.5 + 8×12 / text-3）/ footerWrap > toolbar 8×12 右对齐，对齐 Amis Panel。水平必填星贴文案（内层 relative span）。对照桌面 **41/58**、移动 **41/58**（P0 0）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域 | P0 |
 | （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 90% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`（选择器 `limit` → `tags`/`words`；脱离 Form 也读当前数据链）、事件动作 `static`/`nonstatic`（status-store 按 id/name）、禁用/显隐、默认间距 24px、`mode: inline`（项并排、项内左右）、默认 `normal` 标签在上（窄屏 ≤767 改 28% 同行）、未写 label 仍占标签列、`button-toolbar` 包 FormItem、`validateApi`、提交 `errors`、`autoFill`（映射/`api`+`fillMapping`，无弹层）、form `debug`、label HTML、description HTML、`validations`/`validationErrors`（对象/字符串/`$1`/`isUrl.schemes`/默认 `validate.*` key）。属性表四列 +「支持静态展示的表单项」。缺 combo/table 路径级报错、`autoFill.showSuggestion` 族、`autoFill.silent`、`staticClassName` 三件 | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
-| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 88% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。缺 deferApi、虚拟列表。select 已接入 | P0 |
+| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 88% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。InputTree 已接 deferApi/deferField 懒加载、子树合并与 deferLoadFinished；其他树/穿梭器待复用。缺虚拟列表。select 已接入 | P0 |
 | `input-array` | InputArray 数组输入框 | `/components/form/input-array` | `/zh-CN/components/form/input-array` | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |
 | `button-toolbar` | ButtonToolbar 按钮工具栏 | `/components/form/button-toolbar` | `/zh-CN/components/form/button-toolbar` | 进行中 | 60% | 能排按钮 | P0 |
 | `button-group-select` | ButtonGroupSelect 按钮点选 | `/components/form/button-group-select` | `/zh-CN/components/form/button-group-select` | 进行中 | 55% | 能选值；多选/自适应未齐 | P0 |
@@ -250,7 +250,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
-| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 50% | 能勾树；懒加载/检索未齐 | P0 |
+| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 60% | 能勾树；普通节点展开/收起、`deferApi` / `deferField` 懒加载、请求 loading、子树合并、`deferLoadFinished` 已接，重复展开不重复请求。可见节点按 Amis 拍平到单层 `ul > li`，行高 32、深度缩进 16、选中 brand-10；箭头用 `down-arrow-bold`，节点按类型用 folder/file，SVG path 与尺寸实测一致。检索、节点路径、增删改等高级能力仍精简 | P0 |
 | `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 50% | 能下拉树 | P0 |
 | `input-year` | InputYear 年输入 | `/components/form/input-year` | `/zh-CN/components/form/input-year` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-year-range` | InputYearRange 年份范围 | `/components/form/input-year-range` | `/zh-CN/components/form/input-year-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
@@ -480,7 +480,7 @@ flowchart LR
 | 56 | `input-quarter` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 57 | `radios` | `radio`、Options | 5 | 1 | 18 | 18 | 进行中 | 55% |
 | 58 | `input-time` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 60% |
-| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | 进行中 | 50% |
+| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | 进行中 | 60% |
 | 60 | `input-year` | `input-date` | 5 | 1 | 18 | 18 | 进行中 | 45% |
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | 进行中 | 30% |
@@ -625,6 +625,8 @@ flowchart LR
 - 同步（2026-11-15）：按 155 行重算汇总为 **3 已完成 / 152 进行中 / 0 未开始，平均 67%，≥50% 114**；分类均：布局 91%、功能 82%、数据输入 58%、数据展示 64%、反馈 90%、其他 84%。同步优先级表 3 行（FormItem 88→90、select 90→92、chart 60→62）与 4 个页面 banner（input-datetime / group / input-time / chart）。
 - 打回（2026-11-16）：禁止「主路径 + 缺 themeCss」进 80%。布局壳 / 包装器 / 对照大面积失败从 80–90 打回 40–70。汇总 **67% → 62%**，≥80% **47**，≥50% **111**。分类均：布局 73%、功能 72%、数据输入 57%、数据展示 62%、反馈 86%、其他 58%。
 - 同步（2026-11-17）：优先级表 `form` 72→75、`collapse` 85→70；汇总维持 **62% / ≥80% 47 / ≥50% 111**。测试 **1030**、`typecheck` 0；type 覆盖 **185/189**。
+- 推进（2026-11-17）：InputTree 50→55，Options 保持 88%；测试 **1031**、`typecheck` 0；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
+- 树盒模型对齐（2026-11-17）：InputTree 55→60；测试 **1032**、`typecheck` 0；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 ---

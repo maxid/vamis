@@ -678,8 +678,8 @@ alwaysApply: true
 
 ### chrome 图标只有一个登记表，不要在渲染器里内联 svg 或用字符
 - 踩过：同一个勾 / 叉 / 翻页箭头在 24 个渲染器里各抄一份 `<svg>`，另有 8 个文件拿 `×` `›` `▾` `+` 当图标（吃宿主字族，粗细和基线不稳），再加 lucide，四套并存。改一个字形要找十几处。
-- 稳定做法：静态 chrome 图标走 `<VamisIcon name>`，字形登记在 `@vamis/ui` 的 `vamis-icons.ts`（转写 Amis `amis-ui/src/icons/*.svg`，沿用 Amis 的名字）。有展开 / 动画 / 两态的才写专用 `Vamis*` 组件。渲染器里的 `<svg>` 只留数据图形（进度环、迷你图、二维码、形状）。尺寸和颜色写在调用处的 class 上，字形用 `currentColor`。`font-size: 0` + 固定盒的热区里放 SVG 时，SVG 自己要有宽高，不要靠 `1em`。
-- 触及：`select` `pagination` `input-number` `cards` `card` `tabs` `input-file` `input-image` `image` `checkbox` `radio` `input-date` `input-date-range` `tag` `remark` `table2` `carousel` `input-tag` `transfer` `nested-select` `toast` `alert` `wizard` `audio` `crud`
+- 稳定做法：静态 chrome 图标走 `<VamisIcon name>`，字形登记在 `@vamis/ui` 的 `vamis-icons.ts`（已合并 amis-r `amis-ui/src/icons/*.svg` 全部 103 个，加 Vamis 专用项共 115；沿用上游名字）。有展开 / 动画 / 两态的才写专用 `Vamis*` 组件。渲染器里的 `<svg>` 只留数据图形（进度环、迷你图、二维码、形状）。尺寸和颜色写在调用处的 class 上，字形用 `currentColor`。`font-size: 0` + 固定盒的热区里放 SVG 时，SVG 自己要有宽高，不要靠 `1em`。树箭头用 `down-arrow-bold`（折叠 -90°），节点按 folder/file 选图标，不要用通用 caret 或漏掉节点图标。
+- 触及：`select` `pagination` `input-number` `cards` `card` `tabs` `input-file` `input-image` `image` `checkbox` `radio` `input-date` `input-date-range` `tag` `remark` `table2` `carousel` `input-tag` `transfer` `nested-select` `toast` `alert` `wizard` `audio` `crud` `input-tree` `tree-select`
 - 规则：`.cursor/rules/style.mdc`「图标」；`packages/vamis-core/__tests__/style-system.test.ts`
 
 ### 表单清除钮共用 VamisClear / `.vamis-select__clear`
@@ -808,6 +808,12 @@ alwaysApply: true
 - 稳定做法：Action 只认 schema `loading` / `loadingOn`。`source` / `autoComplete` 的 loading 挂该控件自己的 Spinner（`icon: reload` `size: sm`），不要再画一套 `animate-spin` 圆环，也不要让触发按钮冒充。
 - 触及：`action` `button` `input-text`
 - 规则：本文；Amis `InputText.tsx` Spinner；`Action.tsx` `loading` 来自 props
+
+### deferApi 是树节点展开加载，不是 Select 打开拉源
+- 踩过：Options 只写了字段名，没有接节点展开与加载态；树子项若直接替换整棵树会丢兄弟，加载后重复展开还会重复请求。
+- 稳定做法：API 优先级 `option.deferApi > schema.deferApi > source`，请求上下文 `{...data, ...option}`；`deferField` 默认 `defer`，`loaded` 防重复。用 `resolveDeferredOption` 只合并当前节点 children，保留兄弟并支持嵌套；成功后展开并派发 `deferLoadFinished`。普通节点默认展开。共享 TreeBranch 的调用方都要接 `expanded` / `deferring`，别让另一个树控件类型检查或交互断掉。DOM 不要递归 `ul`：Amis 用 `flattenVisibleOptions` 把可见节点铺在同一层 `ul > li`，`li` 的深度变量算 16px 缩进；内容行 32px、选中 brand-10 浅底，不要用按钮实心主色冒充。
+- 触及：Options `input-tree` `tree-select`
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/InputTree.vue`；Amis `Options.tsx` `deferLoad`
 
 ### Select 分组检索保树，filterOption 只 trusted
 - 踩过：`filterOptions` 拍扁 `children`，分组检索丢组头。组名命中且 `children` 被滤空时，`children?.length` 为 0，组头变成可选项。`filterOption` 字符串 `Function` 未开 trusted 会当 XSS。

@@ -1,39 +1,78 @@
 <script setup lang="ts">
-import type { OptionItem } from '../../options'
+import { computed } from 'vue'
+import { VamisIcon } from '@vamis/ui'
+import { flattenVisibleOptions, type OptionItem } from '../../options'
+import Spinner from '../Spinner.vue'
 
-defineProps<{
+const props = withDefaults(defineProps<{
   nodes: OptionItem[]
   checked: (item: OptionItem) => boolean
+  expanded: (item: OptionItem) => boolean
+  deferring: (item: OptionItem) => boolean
+  deferField?: string
   disabled?: boolean
-  depth?: number
-}>()
+}>(), {
+  deferField: 'defer',
+})
 
 const emit = defineEmits<{
   pick: [item: OptionItem]
+  expand: [item: OptionItem]
 }>()
+
+const rows = computed(() => flattenVisibleOptions(props.nodes, props.expanded))
+
+function canExpand(node: OptionItem) {
+  return !!node.children?.length || !!node[props.deferField]
+}
 </script>
 
 <template>
-  <ul>
-    <li v-for="node in nodes" :key="String(node.value)">
-      <button
-        type="button"
-        class="vamis-tree-select__item"
-        :class="{ 'is-active': checked(node) }"
-        :style="{ paddingLeft: `${8 + (depth || 0) * 12}px` }"
-        :disabled="disabled || node.disabled"
-        @click="emit('pick', node)"
+  <div class="vamis-tree">
+    <ul class="vamis-tree__list">
+      <li
+        v-for="(row, index) in rows"
+        :key="`${index}:${String(row.item.value)}`"
+        class="vamis-tree__item"
+        :class="{ 'is-child': row.depth > 0, 'is-leaf': !canExpand(row.item) }"
+        :style="{ '--tree-depth': row.depth }"
       >
-        {{ node.label }}
-      </button>
-      <TreeBranch
-        v-if="node.children?.length"
-        :nodes="node.children"
-        :checked="checked"
-        :disabled="disabled"
-        :depth="(depth || 0) + 1"
-        @pick="emit('pick', $event)"
-      />
-    </li>
-  </ul>
+        <div
+          class="vamis-tree__label"
+          :class="{ 'is-disabled': disabled || row.item.disabled }"
+        >
+          <div
+            v-if="canExpand(row.item)"
+            class="vamis-tree__arrow"
+            role="button"
+            :tabindex="disabled || row.item.disabled ? -1 : 0"
+            :aria-label="expanded(row.item) ? '收起' : '展开'"
+            @click.stop="emit('expand', row.item)"
+            @keydown.enter.prevent="emit('expand', row.item)"
+            @keydown.space.prevent="emit('expand', row.item)"
+          >
+            <Spinner v-if="deferring(row.item)" :schema="{ type: 'spinner', show: true, size: 'sm' }" />
+            <span v-else class="vamis-tree__arrow-icon" :class="{ 'is-folded': !expanded(row.item) }">
+              <VamisIcon name="down-arrow-bold" />
+            </span>
+          </div>
+          <span v-else class="vamis-tree__arrow-placeholder" aria-hidden="true" />
+          <div
+            class="vamis-tree__content"
+            :class="{ 'is-checked': checked(row.item) }"
+            role="button"
+            :tabindex="disabled || row.item.disabled ? -1 : 0"
+            @click="emit('pick', row.item)"
+            @keydown.enter.prevent="emit('pick', row.item)"
+            @keydown.space.prevent="emit('pick', row.item)"
+          >
+            <span class="vamis-tree__node-icon" aria-hidden="true">
+              <VamisIcon :name="canExpand(row.item) ? 'folder' : 'file'" />
+            </span>
+            <span class="vamis-tree__text" :title="row.item.label">{{ row.item.label }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
