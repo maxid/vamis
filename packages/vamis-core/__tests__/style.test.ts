@@ -774,6 +774,7 @@ describe('isInlineSchema', () => {
   it('treats tpl/html as inline unless inline: false', () => {
     expect(isInlineSchema({ type: 'tpl' })).toBe(true)
     expect(isInlineSchema({ type: 'html' })).toBe(true)
+    expect(isInlineSchema({ type: 'mapping' })).toBe(true)
     expect(isInlineSchema({ type: 'tpl', inline: false })).toBe(false)
     expect(isInlineSchema({ type: 'each' })).toBe(false)
     expect(isInlineSchema({ type: 'each', inline: true })).toBe(true)
@@ -798,6 +799,7 @@ describe('schemaNodeDisplayClass', () => {
     expect(schemaNodeDisplayClass({ type: 'image', imageMode: 'original' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'button', inline: false })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'tpl' })).toBe('inline')
+    expect(schemaNodeDisplayClass({ type: 'mapping' })).toBe('inline')
     expect(schemaNodeDisplayClass({ type: 'form' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'divider' })).toBe('')
     expect(schemaNodeDisplayClass({ type: 'divider', direction: 'vertical' })).toBe('inline-block')

@@ -853,8 +853,8 @@ alwaysApply: true
 
 ### Amis `.label-*` 是 utility，不是 Badge；放在 `.vamis-root` / `.vamis-sdk` 内兼容
 - 踩过：mapping / tpl / static 的 HTML 经常写 `<span class='label label-info'>`。Vamis 只有 shadcn Badge，没有 Amis `_utilities.scss` 的 `.label-*`，这些映射直接退化成纯文本。后来绑 `--badge-success-bg` / `--success` oklch，开心绿比 Amis `#30bf13` 深，`display:inline-block` 盒模型也偏。
-- 稳定做法：在 `styles.css` 补 `.vamis-root .label` / `.vamis-sdk .label`，`display: inline`、padding `0.2em 0.6em 0.3em`、75% 字号、字重 700、`0.25em` 圆角。色号走 `--label-*` hex（success `#30bf13` / info `#2468f2` / warning `#ff9326` / danger `#f23d3d` / default `#303540`），不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。只挂在渲染根下，别污染文档站 / 宿主自己的 `.label`。
-- 触及：`mapping` `tpl` `static` `html`
+- 稳定做法：在 `styles.css` 补 `.vamis-root .label` / `.vamis-sdk .label`，`display: inline`、padding `0.2em 0.6em 0.3em`、75% 字号、**`line-height: 1`**、字重 700、`0.25em` 圆角。表格里再跟 Amis `td .label { font-size: 90% }`，mapping 包装层 `inline` + 继承 td 的 12px，**不要**把 `.vamis-mapping` 抬到 14px / 1.5（行盒会高出正文带，chip 看起来没垂直居中）。色号走 `--label-*`（success 绑 `--colors-success-5` = `#30bf13`），不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。只挂在渲染根下，别污染文档站 / 宿主自己的 `.label`。
+- 触及：`mapping` `tpl` `static` `html` `table`
 - 规则：`packages/vamis-ui/src/styles.css`；Amis `_utilities.scss` `.label-*`
 
 ### CRUD quickEdit 按 type 切 select/textarea/number

@@ -682,7 +682,7 @@
    * 不要绑 `--success` oklch，也不要改 Overlay Badge 的 `--badge-*-bg`。
    */
   --label-fg: var(--colors-neutral-fill-11);
-  --label-default-bg: var(--colors-neutral-text-3);
+  --label-default-bg: var(--colors-neutral-fill-3);
   --label-primary-bg: var(--colors-brand-5);
   --label-success-bg: var(--colors-success-5);
   --label-info-bg: var(--colors-info-5);
@@ -4818,16 +4818,26 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
 .vamis-table-wrap [data-slot="table-cell"] .vamis-form-item .min-w-0 {
   min-width: auto;
 }
-.vamis-table-wrap [data-slot="table-cell"] .vamis-mapping {
-  font-size: var(--fontSizeBase);
-  line-height: 1.5;
-  vertical-align: middle;
+/* Amis MappingField 是 td 里的 inline span。不要把 mapping 抬到 14px / 1.5，
+   否则 75% 的 `.label` 行盒变成 21px，比表格 12px 正文带高出一截、看起来没垂直居中。 */
+.vamis-table-wrap [data-slot="table-cell"] > .vamis-node:has(> .vamis-mapping) {
+  display: inline;
+  vertical-align: baseline;
 }
 .vamis-table-wrap [data-slot="table-cell"] .vamis-mapping,
 .vamis-table-wrap [data-slot="table-cell"] .vamis-mapping__item,
 .vamis-table-wrap [data-slot="table-cell"] .vamis-mapping .vamis-node,
 .vamis-table-wrap [data-slot="table-cell"] .vamis-mapping .vamis-html {
   display: inline;
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+/* Amis `.Table-table td .label { font-size: 90% }`；line-height 仍是 utility 的 1。 */
+.vamis-table-wrap [data-slot="table-cell"] .label {
+  font-size: 90%;
+  line-height: 1;
+  vertical-align: baseline;
 }
 .vamis-table-wrap [data-slot="table-cell"] .vamis-status,
 .vamis-table-wrap [data-slot="table-cell"] .vamis-progress,
@@ -7723,6 +7733,14 @@ html.theme-changing *::after {
 .vamis-root .label:empty,
 .vamis-sdk .label:empty {
   display: none;
+}
+.vamis-root a.label:hover,
+.vamis-root a.label:focus,
+.vamis-sdk a.label:hover,
+.vamis-sdk a.label:focus {
+  color: var(--label-fg);
+  text-decoration: none;
+  cursor: pointer;
 }
 .vamis-root .label-default,
 .vamis-sdk .label-default {

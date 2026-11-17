@@ -61769,17 +61769,17 @@ window.VAMIS_COMPARE_CASES = [
           {
             "type": "table",
             "title": "表格1",
-            "source": "$rows"
-          }
-        ],
-        "columns": [
-          {
-            "name": "engine",
-            "label": "Engine"
-          },
-          {
-            "name": "version",
-            "label": "Version"
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
           }
         ]
       }
@@ -61798,6 +61798,47 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Table 表格 #2",
+    "heading": "空状态展示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "title": "表格1",
+            "source": [],
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ],
+            "placeholder": "您还没有创建任何实例"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-2",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #3",
     "heading": "列类型",
     "expect": "",
     "schema": {
@@ -62045,7 +62086,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-2",
+    "id": "src-components-table-3",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62053,7 +62094,52 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #3",
+    "title": "Table 表格 #4",
+    "heading": "列宽",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "tableLayout": "fixed",
+            "columns": [
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "engine",
+                "label": "Rendering engine",
+                "width": 150
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-4",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #5",
     "heading": "列宽",
     "expect": "",
     "schema": {
@@ -62085,7 +62171,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-3",
+    "id": "src-components-table-5",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62093,7 +62179,91 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #4",
+    "title": "Table 表格 #6",
+    "heading": "列对齐方式",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "type": "tpl",
+                "tpl": "${version | number}",
+                "align": "right"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-6",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #7",
+    "heading": "列样式",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "title": "表格1",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "className": "text-primary"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-7",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #8",
     "heading": "列样式",
     "expect": "",
     "schema": {
@@ -62127,7 +62297,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-4",
+    "id": "src-components-table-8",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62135,7 +62305,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #5",
+    "title": "Table 表格 #9",
     "heading": "单元格样式",
     "expect": "",
     "schema": {
@@ -62171,7 +62341,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-5",
+    "id": "src-components-table-9",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62179,7 +62349,274 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #6",
+    "title": "Table 表格 #10",
+    "heading": "背景色阶",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "rows": [
+            {
+              "engine": "Trident",
+              "version": "1",
+              "grade": "A"
+            },
+            {
+              "engine": "Trident",
+              "version": "7",
+              "grade": "B"
+            },
+            {
+              "engine": "Trident",
+              "version": "4",
+              "grade": "C"
+            },
+            {
+              "engine": "Trident",
+              "version": "3",
+              "grade": "A"
+            },
+            {
+              "engine": "Trident",
+              "version": "4",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "version": "6",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "version": "2",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "version": "5",
+              "grade": "B"
+            },
+            {
+              "engine": "Gecko",
+              "version": "10",
+              "grade": "D"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "backgroundScale": {
+                  "min": 0,
+                  "max": 10,
+                  "colors": [
+                    "#FFEF9C",
+                    "#FF7127"
+                  ]
+                }
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-10",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #11",
+    "heading": "默认是否显示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "className": "m-b-none",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "id",
+                "label": "ID",
+                "toggled": false
+              },
+              {
+                "name": "platform",
+                "label": "Platform"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-11",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #12",
+    "heading": "固定列",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "className": "flex justify-center",
+        "body": [
+          {
+            "type": "wrapper",
+            "className": "w-xxl border-2 border-solid border-indigo-400",
+            "body": [
+              {
+                "type": "table",
+                "source": "$rows",
+                "className": "m-b-none",
+                "columnsTogglable": false,
+                "columns": [
+                  {
+                    "name": "id",
+                    "label": "ID",
+                    "fixed": "left"
+                  },
+                  {
+                    "name": "engine",
+                    "label": "Engine",
+                    "groupName": "Group-1",
+                    "fixed": "left"
+                  },
+                  {
+                    "name": "grade",
+                    "label": "Grade"
+                  },
+                  {
+                    "name": "version",
+                    "label": "Version"
+                  },
+                  {
+                    "name": "browser",
+                    "label": "Browser",
+                    "groupName": "Group-2",
+                    "fixed": "right"
+                  },
+                  {
+                    "name": "platform",
+                    "label": "Platform",
+                    "groupName": "Group-2",
+                    "fixed": "right"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-12",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #13",
+    "heading": "可复制",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "engine",
+                "label": "Rendering engine",
+                "copyable": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-13",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #14",
     "heading": "可复制",
     "expect": "",
     "schema": {
@@ -62213,7 +62650,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-6",
+    "id": "src-components-table-14",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62221,7 +62658,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #7",
+    "title": "Table 表格 #15",
     "heading": "弹出框（popOver）",
     "expect": "",
     "schema": {
@@ -62243,34 +62680,34 @@ window.VAMIS_COMPARE_CASES = [
         "body": [
           {
             "type": "table",
-            "source": "${table}"
-          }
-        ],
-        "columns": [
-          {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "type": "container",
-            "label": "long text",
-            "style": {
-              "display": "inline-block"
-            },
-            "body": {
-              "type": "tpl",
-              "name": "text",
-              "className": "text-ellipsis",
-              "style": {
-                "max-width": "300px"
+            "source": "${table}",
+            "columns": [
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "type": "container",
+                "label": "long text",
+                "style": {
+                  "display": "inline-block"
+                },
+                "body": {
+                  "type": "tpl",
+                  "name": "text",
+                  "className": "text-ellipsis",
+                  "style": {
+                    "max-width": "300px"
+                  }
+                },
+                "popOver": {
+                  "body": {
+                    "type": "tpl",
+                    "tpl": "${text}"
+                  }
+                }
               }
-            },
-            "popOver": {
-              "body": {
-                "type": "tpl",
-                "tpl": "${text}"
-              }
-            }
+            ]
           }
         ]
       }
@@ -62280,7 +62717,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-7",
+    "id": "src-components-table-15",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62288,7 +62725,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #8",
+    "title": "Table 表格 #16",
     "heading": "弹出框（popOver）",
     "expect": "",
     "schema": {
@@ -62328,7 +62765,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-8",
+    "id": "src-components-table-16",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62336,7 +62773,60 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #9",
+    "title": "Table 表格 #17",
+    "heading": "表头样式",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "combineNum": 1,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "",
+                "isHead": true
+              },
+              {
+                "name": "browser",
+                "label": ""
+              },
+              {
+                "name": "platform",
+                "label": ""
+              },
+              {
+                "name": "version",
+                "label": ""
+              },
+              {
+                "name": "grade",
+                "label": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-17",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #18",
     "heading": "嵌套",
     "expect": "",
     "schema": {
@@ -62482,33 +62972,33 @@ window.VAMIS_COMPARE_CASES = [
             "type": "table",
             "source": "$rows",
             "className": "m-b-none",
-            "columnsTogglable": false
-          }
-        ],
-        "columns": [
-          {
-            "name": "engine",
-            "label": "Engine"
-          },
-          {
-            "name": "grade",
-            "label": "Grade"
-          },
-          {
-            "name": "version",
-            "label": "Version"
-          },
-          {
-            "name": "browser",
-            "label": "Browser"
-          },
-          {
-            "name": "id",
-            "label": "ID"
-          },
-          {
-            "name": "platform",
-            "label": "Platform"
+            "columnsTogglable": false,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "platform",
+                "label": "Platform"
+              }
+            ]
           }
         ]
       }
@@ -62518,7 +63008,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-9",
+    "id": "src-components-table-18",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62526,7 +63016,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #10",
+    "title": "Table 表格 #19",
     "heading": "懒加载子行",
     "expect": "",
     "schema": {
@@ -62562,7 +63052,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-10",
+    "id": "src-components-table-19",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62570,7 +63060,387 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #11",
+    "title": "Table 表格 #20",
+    "heading": "显示序号",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "rows": [
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 4.0",
+              "platform": "Win 95+",
+              "version": "4",
+              "grade": "X",
+              "id": 1,
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0",
+                  "platform": "Win 95+",
+                  "version": "4",
+                  "grade": "X",
+                  "id": 1001
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0",
+                  "platform": "Win 95+",
+                  "version": "5",
+                  "grade": "C",
+                  "id": 1002
+                }
+              ]
+            },
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 5.0",
+              "platform": "Win 95+",
+              "version": "5",
+              "grade": "C",
+              "id": 2,
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0",
+                  "platform": "Win 95+",
+                  "version": "4",
+                  "grade": "X",
+                  "id": 2001
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0",
+                  "platform": "Win 95+",
+                  "version": "5",
+                  "grade": "C",
+                  "id": 2002
+                }
+              ]
+            },
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 5.5",
+              "platform": "Win 95+",
+              "version": "5.5",
+              "grade": "A",
+              "id": 3,
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0",
+                  "platform": "Win 95+",
+                  "version": "4",
+                  "grade": "X",
+                  "id": 3001
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0",
+                  "platform": "Win 95+",
+                  "version": "5",
+                  "grade": "C",
+                  "id": 3002
+                }
+              ]
+            },
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 6",
+              "platform": "Win 98+",
+              "version": "6",
+              "grade": "A",
+              "id": 4,
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0",
+                  "platform": "Win 95+",
+                  "version": "4",
+                  "grade": "X",
+                  "id": 4001
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0",
+                  "platform": "Win 95+",
+                  "version": "5",
+                  "grade": "C",
+                  "id": 4002
+                }
+              ]
+            },
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 7",
+              "platform": "Win XP SP2+",
+              "version": "7",
+              "grade": "A",
+              "id": 5,
+              "children": [
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 4.0",
+                  "platform": "Win 95+",
+                  "version": "4",
+                  "grade": "X",
+                  "id": 5001
+                },
+                {
+                  "engine": "Trident",
+                  "browser": "Internet Explorer 5.0",
+                  "platform": "Win 95+",
+                  "version": "5",
+                  "grade": "C",
+                  "id": 5002
+                }
+              ]
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "className": "m-b-none",
+            "columnsTogglable": false,
+            "showIndex": true,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "platform",
+                "label": "Platform"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-20",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #21",
+    "heading": "底部展示 (Footable)",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "className": "m-b-none",
+            "columnsTogglable": false,
+            "footable": true,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "breakpoint": "*"
+              },
+              {
+                "name": "browser",
+                "label": "Browser",
+                "breakpoint": "*"
+              },
+              {
+                "name": "id",
+                "label": "ID",
+                "breakpoint": "*"
+              },
+              {
+                "name": "platform",
+                "label": "Platform",
+                "breakpoint": "*"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-21",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #22",
+    "heading": "合并单元格",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "data": {
+          "rows": [
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 4.2",
+              "platform": "Win 95+",
+              "version": "4",
+              "grade": "A"
+            },
+            {
+              "engine": "Trident",
+              "browser": "Internet Explorer 4.2",
+              "platform": "Win 95+",
+              "version": "4",
+              "grade": "B"
+            },
+            {
+              "engine": "Trident",
+              "browser": "AOL browser (AOL desktop)",
+              "platform": "Win 95+",
+              "version": "4",
+              "grade": "C"
+            },
+            {
+              "engine": "Trident",
+              "browser": "AOL browser (AOL desktop)",
+              "platform": "Win 98",
+              "version": "3",
+              "grade": "A"
+            },
+            {
+              "engine": "Trident",
+              "browser": "AOL browser (AOL desktop)",
+              "platform": "Win 98",
+              "version": "4",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 1.0",
+              "platform": "Win 98+ / OSX.2+",
+              "version": "4",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 1.0",
+              "platform": "Win 98+ / OSX.2+",
+              "version": "5",
+              "grade": "A"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 2.0",
+              "platform": "Win 98+ / OSX.2+",
+              "version": "5",
+              "grade": "B"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 2.0",
+              "platform": "Win 98+ / OSX.2+",
+              "version": "5",
+              "grade": "C"
+            },
+            {
+              "engine": "Gecko",
+              "browser": "Firefox 2.0",
+              "platform": "Win 98+ / OSX.2+",
+              "version": "5",
+              "grade": "D"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "className": "m-b-none",
+            "combineNum": 3,
+            "columnsTogglable": false,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Rendering engine"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "platform",
+                "label": "Platform(s)"
+              },
+              {
+                "name": "version",
+                "label": "Engine version"
+              },
+              {
+                "name": "grade",
+                "label": "CSS grade"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-22",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #23",
     "heading": "合并单元格",
     "expect": "",
     "schema": {
@@ -62658,29 +63528,29 @@ window.VAMIS_COMPARE_CASES = [
             "source": "$rows",
             "className": "m-b-none",
             "combineNum": "$combineNum",
-            "columnsTogglable": false
-          }
-        ],
-        "columns": [
-          {
-            "name": "engine",
-            "label": "Rendering engine"
-          },
-          {
-            "name": "browser",
-            "label": "Browser"
-          },
-          {
-            "name": "platform",
-            "label": "Platform(s)"
-          },
-          {
-            "name": "version",
-            "label": "Engine version"
-          },
-          {
-            "name": "grade",
-            "label": "CSS grade"
+            "columnsTogglable": false,
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Rendering engine"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "platform",
+                "label": "Platform(s)"
+              },
+              {
+                "name": "version",
+                "label": "Engine version"
+              },
+              {
+                "name": "grade",
+                "label": "CSS grade"
+              }
+            ]
           }
         ]
       }
@@ -62690,7 +63560,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-11",
+    "id": "src-components-table-23",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62698,7 +63568,175 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #12",
+    "title": "Table 表格 #24",
+    "heading": "超级表头",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=5",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "className": "m-b-none",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine",
+                "groupName": "分组1"
+              },
+              {
+                "name": "grade",
+                "label": "Grade",
+                "groupName": "分组1"
+              },
+              {
+                "name": "version",
+                "label": "Version",
+                "groupName": "分组2"
+              },
+              {
+                "name": "browser",
+                "label": "Browser",
+                "groupName": "分组2"
+              },
+              {
+                "name": "id",
+                "label": "ID",
+                "toggled": false,
+                "groupName": "分组2"
+              },
+              {
+                "name": "platform",
+                "label": "Platform",
+                "groupName": "分组2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-24",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #25",
+    "heading": "高亮行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "rowClassNameExpr": "${id % 2 ? 'bg-success' : 'bg-blue-50'}",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Engine"
+              },
+              {
+                "name": "grade",
+                "label": "Grade"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "platform",
+                "label": "Platform"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-25",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #26",
+    "heading": "总结行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ],
+            "affixRow": [
+              {
+                "type": "text",
+                "text": "总计"
+              },
+              {
+                "type": "tpl",
+                "tpl": "${rows|pick:version|sum}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-26",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #27",
     "heading": "总结行",
     "expect": "",
     "schema": {
@@ -62740,7 +63778,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-12",
+    "id": "src-components-table-27",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62748,7 +63786,61 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #13",
+    "title": "Table 表格 #28",
+    "heading": "配置合并单元格",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "columns": [
+              {
+                "name": "id",
+                "label": "ID"
+              },
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ],
+            "affixRow": [
+              {
+                "type": "text",
+                "text": "总计",
+                "colSpan": 2
+              },
+              {
+                "type": "tpl",
+                "tpl": "${rows|pick:version|sum}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-28",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #29",
     "heading": "配置多行",
     "expect": "",
     "schema": {
@@ -62801,7 +63893,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-13",
+    "id": "src-components-table-29",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62809,7 +63901,111 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #14",
+    "title": "Table 表格 #30",
+    "heading": "行操作按钮",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "itemActions": [
+              {
+                "label": "编辑",
+                "type": "button",
+                "actionType": "dialog",
+                "dialog": {
+                  "title": "编辑",
+                  "body": "这是个简单的编辑弹框"
+                }
+              },
+              {
+                "label": "删除",
+                "type": "button",
+                "actionType": "ajax",
+                "confirmText": "确认要删除？",
+                "api": "/api/mock2/form/saveForm"
+              }
+            ],
+            "columns": [
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-30",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #31",
+    "heading": "单行点击操作",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "service",
+        "api": "/api/mock2/sample?perPage=10",
+        "body": [
+          {
+            "type": "table",
+            "source": "$rows",
+            "itemAction": {
+              "type": "button",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "详情",
+                "body": "当前行的数据 browser: ${browser}, version: ${version}"
+              }
+            },
+            "columns": [
+              {
+                "name": "browser",
+                "label": "Browser"
+              },
+              {
+                "name": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-table-31",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Table 表格",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Table 表格 #32",
     "heading": "行角标",
     "expect": "",
     "schema": {
@@ -62909,7 +64105,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-14",
+    "id": "src-components-table-32",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62917,7 +64113,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #15",
+    "title": "Table 表格 #33",
     "heading": "表格内容高度自适应",
     "expect": "",
     "schema": {
@@ -62967,7 +64163,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-15",
+    "id": "src-components-table-33",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -62975,7 +64171,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #16",
+    "title": "Table 表格 #34",
     "heading": "固定表头与底栏",
     "expect": "",
     "schema": {
@@ -63022,7 +64218,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-16",
+    "id": "src-components-table-34",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63030,7 +64226,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #17",
+    "title": "Table 表格 #35",
     "heading": "选择模式",
     "expect": "",
     "schema": {
@@ -63069,7 +64265,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-17",
+    "id": "src-components-table-35",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63077,7 +64273,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #18",
+    "title": "Table 表格 #36",
     "heading": "表头排序、搜索与过滤",
     "expect": "",
     "schema": {
@@ -63126,7 +64322,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-18",
+    "id": "src-components-table-36",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63134,7 +64330,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #19",
+    "title": "Table 表格 #37",
     "heading": "拖拽排序",
     "expect": "",
     "schema": {
@@ -63170,7 +64366,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-19",
+    "id": "src-components-table-37",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63178,7 +64374,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #20",
+    "title": "Table 表格 #38",
     "heading": "快速编辑",
     "expect": "",
     "schema": {
@@ -63223,7 +64419,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-20",
+    "id": "src-components-table-38",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63231,69 +64427,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #21",
-    "heading": "底部展示 (Footable)",
-    "expect": "",
-    "schema": {
-      "type": "page",
-      "body": {
-        "type": "service",
-        "api": "/api/mock2/sample?perPage=5",
-        "body": [
-          {
-            "type": "table",
-            "source": "$rows",
-            "className": "m-b-none",
-            "columnsTogglable": false,
-            "footable": true,
-            "columns": [
-              {
-                "name": "engine",
-                "label": "Engine"
-              },
-              {
-                "name": "grade",
-                "label": "Grade"
-              },
-              {
-                "name": "version",
-                "label": "Version",
-                "breakpoint": "*"
-              },
-              {
-                "name": "browser",
-                "label": "Browser",
-                "breakpoint": "*"
-              },
-              {
-                "name": "id",
-                "label": "ID",
-                "breakpoint": "*"
-              },
-              {
-                "name": "platform",
-                "label": "Platform",
-                "breakpoint": "*"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "measure": {
-      "type": "tree"
-    }
-  },
-  {
-    "id": "src-components-table-21",
-    "group": "组件 / 数据展示",
-    "bucket": "components",
-    "section": "数据展示",
-    "page": "Table 表格",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "Table 表格 #22",
+    "title": "Table 表格 #39",
     "heading": "selectedChange",
     "expect": "",
     "schema": {
@@ -63353,7 +64487,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-22",
+    "id": "src-components-table-39",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63361,7 +64495,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #23",
+    "title": "Table 表格 #40",
     "heading": "columnSort",
     "expect": "",
     "schema": {
@@ -63429,7 +64563,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-23",
+    "id": "src-components-table-40",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63437,7 +64571,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #24",
+    "title": "Table 表格 #41",
     "heading": "columnFilter",
     "expect": "",
     "schema": {
@@ -63505,7 +64639,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-24",
+    "id": "src-components-table-41",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63513,7 +64647,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #25",
+    "title": "Table 表格 #42",
     "heading": "columnSearch",
     "expect": "",
     "schema": {
@@ -63581,7 +64715,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-25",
+    "id": "src-components-table-42",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63589,7 +64723,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #26",
+    "title": "Table 表格 #43",
     "heading": "columnToggled",
     "expect": "",
     "schema": {
@@ -63657,7 +64791,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-26",
+    "id": "src-components-table-43",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63665,7 +64799,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #27",
+    "title": "Table 表格 #44",
     "heading": "orderChange",
     "expect": "",
     "schema": {
@@ -63734,7 +64868,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-27",
+    "id": "src-components-table-44",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63742,7 +64876,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #28",
+    "title": "Table 表格 #45",
     "heading": "rowClick",
     "expect": "",
     "schema": {
@@ -63811,7 +64945,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-28",
+    "id": "src-components-table-45",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63819,7 +64953,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #29",
+    "title": "Table 表格 #46",
     "heading": "rowDbClick",
     "expect": "",
     "schema": {
@@ -63887,7 +65021,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-29",
+    "id": "src-components-table-46",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63895,7 +65029,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #30",
+    "title": "Table 表格 #47",
     "heading": "rowMouseEnter",
     "expect": "",
     "schema": {
@@ -63963,7 +65097,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-30",
+    "id": "src-components-table-47",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -63971,7 +65105,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #31",
+    "title": "Table 表格 #48",
     "heading": "rowMouseLeave",
     "expect": "",
     "schema": {
@@ -64039,7 +65173,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-31",
+    "id": "src-components-table-48",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64047,7 +65181,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #32",
+    "title": "Table 表格 #49",
     "heading": "列的事件表",
     "expect": "",
     "schema": {
@@ -64139,7 +65273,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-32",
+    "id": "src-components-table-49",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64147,7 +65281,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #33",
+    "title": "Table 表格 #50",
     "heading": "select",
     "expect": "",
     "schema": {
@@ -64212,7 +65346,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-33",
+    "id": "src-components-table-50",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64220,7 +65354,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #34",
+    "title": "Table 表格 #51",
     "heading": "selectAll",
     "expect": "",
     "schema": {
@@ -64283,7 +65417,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-34",
+    "id": "src-components-table-51",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64291,7 +65425,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #35",
+    "title": "Table 表格 #52",
     "heading": "clearAll",
     "expect": "",
     "schema": {
@@ -64354,7 +65488,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-35",
+    "id": "src-components-table-52",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64362,7 +65496,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #36",
+    "title": "Table 表格 #53",
     "heading": "initDrag & cancelDrag",
     "expect": "",
     "schema": {
@@ -64440,7 +65574,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-36",
+    "id": "src-components-table-53",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64448,7 +65582,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #37",
+    "title": "Table 表格 #54",
     "heading": "toggleExpanded & setExpanded",
     "expect": "",
     "schema": {
@@ -64548,7 +65682,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-37",
+    "id": "src-components-table-54",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64556,7 +65690,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #38",
+    "title": "Table 表格 #55",
     "heading": "setValue",
     "expect": "",
     "schema": {
@@ -64658,7 +65792,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-table-38",
+    "id": "src-components-table-55",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -64666,7 +65800,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Table 表格 #39",
+    "title": "Table 表格 #56",
     "heading": "setValue",
     "expect": "",
     "schema": {
@@ -73485,6 +74619,37 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Carousel 轮播图 #3",
+    "heading": "点击图片打开外部链接",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "imageList": [
+          {
+            "image": "https://internal-amis-res.cdn.bcebos.com/images/2019-12/1577157239810/da6376bf988c.png",
+            "href": "https://github.com/maxid/vamis"
+          }
+        ]
+      },
+      "body": {
+        "type": "carousel",
+        "name": "imageList"
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-carousel-3",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Carousel 轮播图",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Carousel 轮播图 #4",
     "heading": "多图展示",
     "expect": "",
     "schema": {
@@ -73521,7 +74686,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-carousel-3",
+    "id": "src-components-carousel-4",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -73529,7 +74694,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Carousel 轮播图 #4",
+    "title": "Carousel 轮播图 #5",
     "heading": "change",
     "expect": "",
     "schema": {
@@ -73571,7 +74736,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-carousel-4",
+    "id": "src-components-carousel-5",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -73579,7 +74744,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Carousel 轮播图 #5",
+    "title": "Carousel 轮播图 #6",
     "heading": "next",
     "expect": "",
     "schema": {
@@ -73627,7 +74792,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-carousel-5",
+    "id": "src-components-carousel-6",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -73635,7 +74800,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Carousel 轮播图 #6",
+    "title": "Carousel 轮播图 #7",
     "heading": "prev",
     "expect": "",
     "schema": {
@@ -73683,7 +74848,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-carousel-6",
+    "id": "src-components-carousel-7",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -73691,7 +74856,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Carousel 轮播图 #7",
+    "title": "Carousel 轮播图 #8",
     "heading": "goto-image",
     "expect": "",
     "schema": {
@@ -84324,6 +85489,128 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "Timeline 时间轴 #15",
+    "heading": "时间轴内容支持卡片展示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "timeline",
+          "mode": "alternate",
+          "direction": "horizontal",
+          "items": [
+            {
+              "cardSchema": {
+                "type": "card",
+                "href": "https://github.com/maxid/vamis",
+                "header": {
+                  "title": "标题",
+                  "subTitle": "副标题",
+                  "description": "这是一段描述",
+                  "avatarText": "AMIS"
+                },
+                "body": "这里是内容"
+              }
+            },
+            {
+              "time": "2019-02-08",
+              "cardSchema": {
+                "type": "card",
+                "href": "https://github.com/maxid/vamis",
+                "header": {
+                  "title": "标题",
+                  "subTitle": "副标题",
+                  "description": "这是一段描述",
+                  "avatarText": "AMIS"
+                },
+                "body": "这里是内容"
+              }
+            },
+            {
+              "time": "2019-02-09",
+              "title": "表格展现说明",
+              "detail": "通过表格的方式来展现数据，和 table 的不同之处：数据源要求不同：table 的数据源需要是多行的数据，最典型的就是来自某个数据库的表，table view 的数据源可以来自各种固定的数据，比如单元格的某一列是来自某个变量。功能不同：table 只能用来做数据表的展现，table view 除了展现复杂的报表，还能用来进行布局。合并单元格方式不同：table 的合并单元格需要依赖数据，table view 的合并单元格是手动指定的，因此可以支持不规则的数据格式。"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-timeline-15",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Timeline 时间轴",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Timeline 时间轴 #16",
+    "heading": "时间轴内容支持卡片展示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "content": "这里是卡片主体内容，在所有的卡片都会展示"
+      },
+      "body": {
+        "type": "timeline",
+        "mode": "alternate",
+        "direction": "horizontal",
+        "cardSchema": {
+          "type": "card",
+          "href": "https://github.com/maxid/vamis",
+          "header": {
+            "title": "${title}",
+            "subTitle": "${time}",
+            "description": "${detail}"
+          },
+          "body": "${content}"
+        },
+        "items": [
+          {
+            "cardSchema": {
+              "type": "card",
+              "href": "https://github.com/maxid/vamis",
+              "header": {
+                "title": "标题",
+                "subTitle": "副标题",
+                "description": "这是一段描述",
+                "avatarText": "AMIS"
+              },
+              "body": "这里是内容"
+            }
+          },
+          {
+            "time": "2019-02-08",
+            "title": "卡片组说明",
+            "detail": "Content"
+          },
+          {
+            "time": "2019-02-09",
+            "title": "表格展现说明",
+            "detail": "Content"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "tree"
+    }
+  },
+  {
+    "id": "src-components-timeline-16",
+    "group": "组件 / 数据展示",
+    "bucket": "components",
+    "section": "数据展示",
+    "page": "Timeline 时间轴",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Timeline 时间轴 #17",
     "heading": "远程数据",
     "expect": "",
     "schema": {
@@ -84343,7 +85630,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-timeline-15",
+    "id": "src-components-timeline-17",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -84351,7 +85638,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Timeline 时间轴 #16",
+    "title": "Timeline 时间轴 #18",
     "heading": "数据域变量配置",
     "expect": "",
     "schema": {
@@ -84383,7 +85670,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-components-timeline-16",
+    "id": "src-components-timeline-18",
     "group": "组件 / 数据展示",
     "bucket": "components",
     "section": "数据展示",
@@ -84391,7 +85678,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "Timeline 时间轴 #17",
+    "title": "Timeline 时间轴 #19",
     "heading": "数据域变量配置",
     "expect": "",
     "schema": {

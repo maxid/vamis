@@ -106,7 +106,7 @@ export function fillsLayoutSlot(type?: string): boolean {
 }
 
 /** Amis Tpl 默认 inline（span）。block 外层会把 each 的 item 竖起来。 */
-const INLINE_SCHEMA_TYPES = new Set(['tpl', 'html', 'plain'])
+const INLINE_SCHEMA_TYPES = new Set(['tpl', 'html', 'plain', 'mapping'])
 
 /** 按钮 / 徽标不占满一行，和 Amis 一样并排。className（如 m-l）打在这层盒子上。 */
 const INLINE_BLOCK_SCHEMA_TYPES = new Set([
