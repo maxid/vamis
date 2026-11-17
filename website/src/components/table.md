@@ -2472,7 +2472,7 @@ body:
 
 #### 更新指定行记录
 
-指定 `index` 或 `condition`，可以分别更新指定索引的行记录，或者满足条件（条件表达式或者 ConditionBuilder 的条件组合）的行记录。`replace` 同样生效：写了就整行替换，没写是和原来的行数据合并。
+指定 `index` 或 `condition`，可以分别更新指定索引的行记录，或者满足条件（条件表达式或者 ConditionBuilder 的条件组合）的行记录。指定行时始终和原来的行数据合并（对齐 Amis `IRow.updateData`）；`args.replace` 不会把没写的字段清掉。
 
 ```schema
 type: page
@@ -2581,5 +2581,6 @@ body:
 - 默认没有外边框（对齐 Amis `.Table`）。`bordered: true` 是 Vamis 优化，给内容区画圆角卡片外框（不是 Table2 的单元格网格）。作者 helper `className: b` / `b-a` 仍可用。
 - `persistKey` 没写时不缓存列的显示状态（Amis 会按页面路径自动生成一个 key）；缓存的只有哪些列被收起。
 - 本站示例预览把 `affixHeader` 的默认值关掉了（Amis 文档站同样如此），正式嵌入时默认开启；需要整棵树默认关闭可以给 `env.affixHeader` 传 `false`。
+- 指定行 `setValue` 对齐 Amis 源码：始终把 `value` 合并进原行。文档示例里的 `replace: true` 不会丢掉 version 等没写的字段（Amis `CmptAction` 也不把 `args.replace` 传给 `setData`）。
 - 未接：`reUseRow`（Vamis 始终按行对象 / 主键识别同一行）、工具栏的 `export-excel` / `export-excel-template`（需要额外的 Excel 依赖）。
 - Vamis 额外支持 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage`。

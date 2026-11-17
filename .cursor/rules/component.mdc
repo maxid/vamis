@@ -43,6 +43,17 @@ Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody`
 
 禁止：把「铺满」做成作者必须记住的开关；为了 Playground 好看而收窄整页表单；新组件默认宽度写成固定 px（除非对齐 Amis 该 type 的 `size` 档，且未写 size 时仍自适应）。
 
+## 密度（每个组件都要检）
+
+新接或改 chrome 的 type，声称完成前检查是否需要支持顶栏「紧凑 / 舒适」：
+
+1. 有没有钉死的行高、控件高、单元格 padding、工具栏 / heading 高？
+2. 有 → 改 token（`--table-row-h` / `--control-h` / `--crud-toolbar-h` …），并在 `[data-density]` 覆盖
+3. 作者 `size: sm|lg` 是另一档，走 `--*-sm` / `--*-lg`，密度切的是档位的值
+4. 没有独立盒子的展示叶子（`tpl` / `plain`）可以跳过，但要写进原因
+
+细则见 `.cursor/rules/style.mdc`「密度」。禁止只给 Table 接密度、table2 / CRUD 继续写死 px。
+
 ## 图标字段
 
 `icon` / `rightIcon`（Action、Icon、Avatar、Nav、Breadcrumb、DropDownButton）走 `@vamis/core` 的 `resolveIcon`，不要各写一套 URL 判断。class 用 `<i>`，URL 用 `<img>`。未写 `label` 的按钮只留图标，不补「按钮」。规则细节见 `.cursor/rules/style.mdc`「图标」。

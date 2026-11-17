@@ -1,3 +1,4 @@
+import { handleMockExtras } from './extras'
 import { cloneRows, createSampleRows, type SampleRow } from './sample'
 
 export type MockFile = {
@@ -184,9 +185,18 @@ export function handleMockApi(input: {
   body?: Record<string, any>
 }): MockPayload {
   const method = (input.method || 'GET').toUpperCase()
-  const pathname = (input.pathname || '').split('?')[0]
+  let pathname = (input.pathname || '').split('?')[0]
   const query = input.query || {}
   const body = input.body || {}
+
+  if (pathname.startsWith('/api/amis-mock/mock2/')) {
+    pathname = `/api/mock2/${pathname.slice('/api/amis-mock/mock2/'.length)}`
+  } else if (pathname === '/api/amis-mock/sample' || pathname === '/api/sample') {
+    pathname = '/api/mock2/sample'
+  }
+
+  const extra = handleMockExtras({ method, pathname, query, body })
+  if (extra) return extra
 
   if (pathname === '/api/mapping') {
     return { status: 0, data: { id: 1 } }
@@ -223,8 +233,26 @@ export function handleMockApi(input: {
     }
   }
 
-  if (pathname === '/api/mock2/crud/table') {
-    return listPayload(filterSample(query), { ...query, perPage: '10' })
+  if (pathname === '/api/mock2/crud/table' || pathname === '/api/mock2/crud/table2' || pathname === '/api/mock2/crud/table4') {
+    return listPayload(filterSample(query), { ...query, perPage: query.perPage || '10' })
+  }
+
+  if (pathname === '/api/crud/dynamic') {
+    const payload = listPayload(filterSample(query), query) as MockJson
+    const data = (payload.data || {}) as Record<string, unknown>
+    return {
+      status: 0,
+      msg: 'ok',
+      data: {
+        ...data,
+        columns: [
+          { label: 'ID', name: 'id' },
+          { label: '引擎', name: 'engine' },
+          { label: '浏览器', name: 'browser' },
+          { label: '平台', name: 'platform' },
+        ],
+      },
+    }
   }
 
   // 对齐 Amis `mock/cfc/mock/crud/table6.js`：列表只给顶层行并标 `defer`，带 `parentId` 时返回该行详情 + children。
@@ -581,6 +609,10 @@ export function handleMockApi(input: {
     const ok = ids.every((id) => applyPatch(id, body))
     if (!ok) return { status: 404, msg: '保存失败，数据可能已被删除！' }
     return { status: 0, msg: '保存成功' }
+  }
+
+  if (pathname.startsWith('/api/xxx') || pathname.startsWith('/api/xxxx')) {
+    return { status: 0, msg: 'ok', data: { ...(method === 'GET' ? query : body), ok: true } }
   }
 
   return { status: 404, msg: `未实现的 mock：${method} ${pathname}` }

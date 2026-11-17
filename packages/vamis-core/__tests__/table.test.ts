@@ -21,6 +21,7 @@ import {
   tableFootable,
   tableIndexText,
   tableMatchRows,
+  tableMergeRowData,
   tableRowByPath,
   tableRowPasses,
   tableSortRows,
@@ -110,6 +111,19 @@ describe('table action targets', () => {
     expect(tableMatchRows(rows, {}, undefined, '${engine === "Trident"}').map((row) => row.data.id)).toEqual([1, 11])
     expect(tableMatchRows(rows, { engine: 'Gecko' }, undefined, '${engine === "Gecko"}').map((row) => row.data.id)).toEqual([2])
     expect(tableMatchRows(rows, {})).toEqual([])
+  })
+
+  it('row setData always merges, even if replace is true', () => {
+    const row = { engine: 'Trident', version: '4', id: 1 }
+    expect(tableMergeRowData(row, { engine: 'amis', id: 1234 })).toEqual({
+      engine: 'amis',
+      version: '4',
+      id: 1234,
+    })
+    const table = read('../../vamis/src/renderers/Table.vue')
+    expect(table).toContain('tableMergeRowData')
+    expect(table).not.toContain('replace ? { ...patch }')
+    expect(table).toContain('hasQuickEditColumn.value || !!headingText.value')
   })
 })
 
@@ -371,6 +385,16 @@ describe('data chain for form items outside a form', () => {
     expect(css).toContain('border-bottom: var(--table-thead-sep-width) solid var(--table-thead-sep)')
     expect(css).not.toMatch(
       /\[data-slot="table-cell"\] \{\s*border-top: 1px solid var\(--border\)/,
+    )
+  })
+
+  it('isHead tbody th keeps a gray bottom line (not thead-sep white)', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const block = css.match(/\.vamis-table-wrap tbody \[data-slot="table-head"\] \{[^}]+\}/)?.[0] ?? ''
+    expect(block).toContain('border-bottom: 1px solid var(--border)')
+    expect(block).not.toContain('border-bottom: 0')
+    expect(css).not.toContain(
+      '.vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"]',
     )
   })
 

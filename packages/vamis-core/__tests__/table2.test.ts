@@ -186,6 +186,12 @@ describe('table2 renderer pins Amis main-path markup', () => {
       /\.vamis-table2 td \{[\s\S]*?border-top: 1px solid var\(--border\);[\s\S]*?border-bottom: unset/,
     )
     expect(ui).toContain('.vamis-table2 tbody tr:last-child td {\n  border-bottom: 1px solid var(--border);')
+    expect(ui).toContain('padding: var(--table-cell-py) var(--table-cell-px)')
+    expect(ui).toContain('height: var(--table-row-h-sm)')
+    expect(ui).toContain('height: var(--table-row-h-lg)')
+    expect(ui).toContain('[data-density="comfortable"]')
+    expect(ui).toMatch(/\[data-density="comfortable"\][\s\S]*?--table-row-h: 52px/)
+    expect(ui).toMatch(/\[data-density="comfortable"\][\s\S]*?--crud-toolbar-h: 36px/)
     const table = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/Table.vue'), 'utf8')
     const row = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/TableRow.vue'), 'utf8')
     const cell = readFileSync(resolve(here, '../../vamis-ui/src/ui/table/TableCell.vue'), 'utf8')

@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { eachResolvedValue, filterTpl, resolveValue, useData, useScoped, type SchemaObject } from '@vamis/core'
+import {
+  eachResolvedValue,
+  filterTpl,
+  isProgressBgClass,
+  progressCircleStroke,
+  progressMapColor,
+  resolveValue,
+  useData,
+  useScoped,
+  type SchemaObject,
+} from '@vamis/core'
 
 const props = defineProps<{ schema: SchemaObject; data?: Record<string, any> }>()
 const viewData = useData()
@@ -28,35 +38,11 @@ const label = computed(() => {
   if (props.schema.valueTpl != null) return filterTpl(String(props.schema.valueTpl), { ...data.value, value: value.value })
   return `${Math.round(value.value)}%`
 })
-/** 对齐 Amis Progress defaultProps.map；`bg-*` 是 class 名，转成 token 当 bar 底。 */
-const DEFAULT_MAP = ['bg-danger', 'bg-warning', 'bg-info', 'bg-success', 'bg-success']
-const BG_COLORS: Record<string, string> = {
-  'bg-danger': 'var(--destructive)',
-  'bg-warning': 'var(--warning)',
-  'bg-info': 'var(--info)',
-  'bg-success': 'var(--success)',
-  'bg-primary': 'var(--primary)',
-}
-function resolveBarColor(raw: string) {
-  return BG_COLORS[raw] || raw
-}
-const color = computed(() => {
-  const map = props.schema.map == null ? DEFAULT_MAP : props.schema.map
-  if (typeof map === 'string' && map) return resolveBarColor(map)
-  if (Array.isArray(map)) {
-    const numeric = map.filter((item) => item && typeof item === 'object') as Array<Record<string, unknown>>
-    if (numeric.length) {
-      const hit = [...numeric].sort((a, b) => Number(a.value) - Number(b.value)).find((item) => value.value <= Number(item.value))
-      if (hit && typeof hit.color === 'string') return resolveBarColor(hit.color)
-    }
-    const strings = map.filter((item): item is string => typeof item === 'string')
-    if (strings.length) {
-      const idx = Math.min(strings.length - 1, Math.floor(value.value / (100 / strings.length)))
-      return resolveBarColor(strings[idx])
-    }
-  }
-  return 'var(--primary)'
-})
+/** 对齐 Amis Progress.getLevelColor：字符串档位阈值 `(index+1)*span`，不是 floor。`bg-*` 是 class。 */
+const mapColor = computed(() => progressMapColor(props.schema.map, value.value))
+const barClass = computed(() => (isProgressBgClass(mapColor.value) ? mapColor.value : ''))
+const barBackground = computed(() => (isProgressBgClass(mapColor.value) ? undefined : mapColor.value))
+const circleStroke = computed(() => progressCircleStroke(mapColor.value))
 const gapDegree = computed(() => {
   if (mode.value !== 'dashboard') return 0
   const n = Number(props.schema.gapDegree)
@@ -117,8 +103,8 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
         <div class="vamis-progress__inter">
           <div
             class="vamis-progress__bar"
-            :class="{ 'vamis-progress__stripe': stripe, 'vamis-progress__animate': animate }"
-            :style="{ width: `${value}%`, height: `${strokeWidth}px`, background: color }"
+            :class="[barClass, { 'vamis-progress__stripe': stripe, 'vamis-progress__animate': animate }]"
+            :style="{ width: `${value}%`, height: `${strokeWidth}px`, background: barBackground }"
             :title="`${Math.round(value)}%`"
           />
         </div>
@@ -134,7 +120,7 @@ onBeforeUnmount(() => scoped?.unregister(progressApi as never))
             :cy="svgSize / 2"
             :r="radius"
             fill="none"
-            :stroke="color"
+            :stroke="circleStroke"
             :stroke-width="strokeWidth"
             stroke-linecap="round"
             :stroke-dasharray="`${arcLength} ${circumference}`"

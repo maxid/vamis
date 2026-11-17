@@ -372,6 +372,13 @@
   --table-row-h-sm: 33px;
   --table-row-h-lg: 61px;
   --table-cell-px: 10px;
+  --table-cell-px-sm: 4px;
+  --table-cell-py-sm: 6px;
+  --table-cell-px-lg: 12px;
+  --table-cell-py-lg: 20px;
+  --table2-title-py: 10px;
+  --table2-title-px: 8px;
+  --table2-edge-px: 12px;
   /* Amis `--Table-fontSize` = fonts-size-8；`--TableCell-paddingY` = (height - 12*1.5)/2。 */
   --table-font-size: var(--fontSizeSm);
   --table-cell-py: calc((var(--table-row-h) - var(--table-font-size) * 1.5) / 2);
@@ -436,6 +443,10 @@
   --progress-radius: var(--radius);
   --progress-min-width: 50px;
   --progress-text-gap: 8px;
+  /* Amis helper `$colors`：line `map` 的 `bg-danger/warning/success`，不是主题 --warning。`bg-info` 走品牌主色。 */
+  --progress-map-danger: var(--colors-progress-danger);
+  --progress-map-warning: var(--colors-progress-warning);
+  --progress-map-success: var(--colors-progress-success);
   /* Amis table-view 内联样式用这些名字；未定义则 border/padding 整段失效。 */
   --borderColor: var(--border);
   --TableCell-paddingX: var(--table-cell-px);
@@ -832,6 +843,19 @@
   --form-item-gap: 24px;
   --form-label-width: 98px;
   --table-row-h: 40px;
+  --table-row-h-sm: 33px;
+  --table-row-h-lg: 61px;
+  --table-heading-height: 40px;
+  --table-cell-px: 10px;
+  --table-cell-px-sm: 4px;
+  --table-cell-py-sm: 6px;
+  --table-cell-px-lg: 12px;
+  --table-cell-py-lg: 20px;
+  --table2-title-py: 10px;
+  --table2-title-px: 8px;
+  --table2-edge-px: 12px;
+  --crud-toolbar-h: 30px;
+  --column-toggler-item-h: 32px;
 }
 
 [data-density="comfortable"] {
@@ -841,6 +865,19 @@
   --form-item-gap: 28px;
   --form-label-width: 136px;
   --table-row-h: 52px;
+  --table-row-h-sm: 40px;
+  --table-row-h-lg: 72px;
+  --table-heading-height: 52px;
+  --table-cell-px: 12px;
+  --table-cell-px-sm: 6px;
+  --table-cell-py-sm: 8px;
+  --table-cell-px-lg: 16px;
+  --table-cell-py-lg: 24px;
+  --table2-title-py: 12px;
+  --table2-title-px: 10px;
+  --table2-edge-px: 16px;
+  --crud-toolbar-h: 36px;
+  --column-toggler-item-h: 36px;
 }
 
 [data-accent="blue"] {
@@ -5177,17 +5214,11 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
    顶边只打在 `tr + tr > th` 上，而且是 fill-11（和 thead 底一样看不见）；第一行 th 没有顶边。 */
 .vamis-table-wrap tbody [data-slot="table-head"] {
   border-top-width: 0;
-  border-bottom: 0;
+  /* Amis th/td 底边 Table-borderColor：列表头底是灰线，不是 thead 的 fill-11。 */
+  border-bottom: 1px solid var(--border);
 }
 .vamis-table-wrap tbody > tr + tr > [data-slot="table-head"] {
   border-top: 1px solid var(--table-thead-sep);
-}
-/* Amis 的 tbody th 上下各一条线（白 + 灰），所以非末行比数据行高 1px。 */
-.vamis-table-wrap tbody > tr:not(:last-child) > [data-slot="table-head"] {
-  border-bottom: 1px solid var(--table-thead-sep);
-}
-.vamis-table-wrap tbody > tr:last-child > [data-slot="table-head"] {
-  border-bottom: 1px solid var(--border);
 }
 .vamis-table-wrap tbody tr > [data-slot="table-head"]:first-child {
   padding-left: var(--table-cell-edge-px);
@@ -5824,6 +5855,20 @@ tbody > [data-slot="table-row"]:has(> [colspan]:only-child):hover {
   background: var(--primary);
   border-radius: var(--progress-radius);
   transition: width var(--animation-duration, 0.3s) ease;
+}
+/* Amis `_progress.scss` line-bar：`bg-info` 绑品牌主色；danger/warning/success 走 helper `$colors`。 */
+.vamis-progress__bar.bg-danger {
+  background: var(--progress-map-danger);
+}
+.vamis-progress__bar.bg-warning {
+  background: var(--progress-map-warning);
+}
+.vamis-progress__bar.bg-success {
+  background: var(--progress-map-success);
+}
+.vamis-progress__bar.bg-info,
+.vamis-progress__bar.bg-primary {
+  background: var(--primary);
 }
 .vamis-progress__text {
   display: inline-block;
@@ -9987,17 +10032,17 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-table2 th,
 .vamis-table2 td {
   height: var(--table-row-h);
-  padding: 10px;
+  padding: var(--table-cell-py) var(--table-cell-px);
   font-weight: var(--fontWeightNormal);
   vertical-align: middle;
 }
 .vamis-table2 th:first-child,
 .vamis-table2 td:first-child {
-  padding-left: 12px;
+  padding-left: var(--table2-edge-px);
 }
 .vamis-table2 th:last-child,
 .vamis-table2 td:last-child {
-  padding-right: 12px;
+  padding-right: var(--table2-edge-px);
 }
 .vamis-table2 th {
   font-size: var(--table-thead-font-size);
@@ -10029,7 +10074,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 8px;
+  padding: var(--table2-title-py) var(--table2-title-px);
   font-size: var(--fontSizeBase);
   font-weight: var(--fontWeightNormal);
   line-height: var(--lineHeightBase);
@@ -10090,13 +10135,13 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-table2.is-small th,
 .vamis-table2.is-small td {
-  height: 33px;
-  padding: 6px 4px;
+  height: var(--table-row-h-sm);
+  padding: var(--table-cell-py-sm) var(--table-cell-px-sm);
 }
 .vamis-table2.is-large th,
 .vamis-table2.is-large td {
-  height: 61px;
-  padding: 20px 12px;
+  height: var(--table-row-h-lg);
+  padding: var(--table-cell-py-lg) var(--table-cell-px-lg);
 }
 .vamis-table2.is-bordered {
   border: 1px solid var(--border);

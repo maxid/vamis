@@ -37,6 +37,7 @@ import {
   tableFootable,
   tableIndexText,
   tableMatchRows,
+  tableMergeRowData,
   tableRowPasses,
   tableSortRows,
   tableSummaryRow,
@@ -744,12 +745,15 @@ const headingText = computed(() => {
   return filterTpl(String(title), ctx.value)
 })
 /**
- * 「有 N 条记录修改但没有提交」只在表格有快速编辑列时出现。单元格里直接放表单项（开关等）改了值，
- * 行照样标成已修改、`submitQuickEdit` 也带上它，但不凭空多出一条提交栏（Amis 没有 `quickSaveApi` 时同样不出）。
+ * Amis heading 有 title 就会画出来，里面再按 `store.modified` 换成提交栏，不要求 `quickEdit` / `quickSaveApi`。
+ * 没有 title 时 Amis 要 `quickSaveApi` 才出栏；Vamis 用「有快速编辑列」近似这条。
+ * 单元格里直接放开关等仍会记 pristine，但没 title、也没 quickEdit 时不凭空多一条提交栏。
  */
 const hasQuickEditColumn = computed(() => columns.value.some((col) => !!col.quickEdit))
 const unsavedMode = computed<'' | 'modified' | 'moved'>(() =>
-  modifiedRows.value.length && hasQuickEditColumn.value && props.schema.hideQuickSaveBtn !== true
+  modifiedRows.value.length &&
+  props.schema.hideQuickSaveBtn !== true &&
+  (hasQuickEditColumn.value || !!headingText.value)
     ? 'modified'
     : movedIds.value.size
       ? 'moved'
@@ -1380,11 +1384,19 @@ const tableApi = {
     }
   },
   /** Amis `setData(values, replace, index, condition)`：给了 index / condition 就只改命中的行。 */
-  setData(values: unknown, replace = false, index?: unknown, condition?: unknown) {
+  setData(values: unknown, _replace = false, index?: unknown, condition?: unknown) {
     if (index !== undefined || condition !== undefined) {
       if (!values || typeof values !== 'object' || Array.isArray(values)) return
       const patch = values as Row
-      patchRows(matchRows(index, condition), (data) => (replace ? { ...patch } : { ...data, ...patch }))
+      const targets = matchRows(index, condition)
+      if (!targets.length) return
+      const map = new Map(pristine.value)
+      for (const row of targets) {
+        if (!map.has(row.id)) map.set(row.id, row.data)
+      }
+      pristine.value = map
+      // 指定行对齐 Amis `IRow.updateData`：始终 merge。`replace` 只作用于整表。
+      patchRows(targets, (data) => tableMergeRowData(data, patch))
       return
     }
     const next = Array.isArray(values)

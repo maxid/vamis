@@ -990,6 +990,18 @@ alwaysApply: true
 - 稳定做法：DEFAULTS 表给 0/1/success/pending/queue/schedule/fail/warning/info 的文本/图标/颜色；`source[value]` 优先（label 支持模板），其次 `labelMap[value]`、`map[value]`；icon 走 resolveIcon + IconMark；无值/无匹配显示 `placeholder`（默认 -）。
 - 触及：`status`
 
+### Progress map 档位用 getLevelColor，line 的 bg-* 走 helper 色
+- 踩过：`floor(value / (100/len))` 在 20/40/60/80 边界和 Amis 差一档；line 条又把 `bg-warning` 编成主题 `--warning`（`#ff9326`），Amis helper `$colors` 是 `#fad733`，表格列类型示例颜色对不上。
+- 稳定做法：阈值 `(index+1) * (100/len)`，第一个 `value >= progress` 命中（`progressMapColor`）。line 条打 `bg-*` class：danger/warning/success 走 `--progress-map-*`（bootstrap helper 色，hex 在 `themes.css`），`bg-info` 绑 `--primary`。圆 / 仪表盘才用主题 `--warning/--destructive/--info/--success`。不要改全局 helper `.bg-warning`。
+- 触及：`progress` `table`
+- 规则：Amis `Progress.getColorArray` / `_progress.scss` `&-bar.bg-info`；`packages/vamis-core/src/utils/progress.ts`
+
+### 密度走 token，组件不要写死行高 padding
+- 踩过：table 行高吃 `--table-row-h`，切舒适会变 52；table2 写死 `padding: 10px` / `is-small` 33、CRUD toolbar `--crud-toolbar-h` 钉 30，顶栏切密度看起来没接。
+- 稳定做法：每个组件收工问：有没有钉死的行高 / 控件高 / 间距？有就改 token，并在 `[data-density=compact|comfortable]` 覆盖。紧凑对齐 cxd（行 40、toolbar 30）；舒适再放一档。文档预览继承 `html` 密度（默认 compact）；SDK embed 仍默认 compact。
+- 触及：`table` `table2` `crud`
+- 规则：`.cursor/rules/style.mdc`「密度」；`.cursor/rules/component.mdc`
+
 ### Progress threshold 只画 line 模式绝对刻度
 - 稳定做法：threshold 解析 `30%`/数字为 0-100，line 轨道 relative 定位 2px 竖线，showThresholdText 额外显示文本；circle/dashboard 不画假刻度。
 - 触及：`progress`
@@ -1018,9 +1030,15 @@ alwaysApply: true
 
 ### 表格行间只画 td 底边，不要用首行顶边冒充表头线
 - 踩过：Vamis 给所有 td 加 `border-top`，再用 `tr + tr` 清掉后续行，首行顶边变成表头下那根灰线。Amis `th, td` 只有 `border-bottom`；thead 底是 fill-11（跟行底同色），第一行和空态都没有顶边，所以表头/首行之间看不见线。
-- 稳定做法：数据格 `border-top-width: 0` + `border-bottom`。表头底走 `--table-thead-sep`。tbody th 的顶边只打在 `tr + tr` 上，也是 fill-11。默认表头没有 `box-shadow`；吸顶才用 `.vamis-table__fixed-shadow` 的 inset。Vamis `bordered: true` 的表头/首行分隔画在 **thead 底** `--border`，不要画在首行顶：SDK 默认 `affixHeader` 会克隆表头，首行顶边会和克隆底叠成两条（文档 `env.affixHeader: false` 看不出来）。末行底边仍 `0`（外框已经有底）。
+- 稳定做法：数据格 `border-top-width: 0` + `border-bottom`。表头底走 `--table-thead-sep`。tbody th（列 `isHead`）**底边仍是灰 `--border`**（和 td 同一条 `th, td { border-bottom }`）；白 fill-11 只打在 `tr + tr > th` 的**顶边**。不要把 tbody th 底也改成 thead-sep，灰底表头格上白线会看不见（「表头样式」示例）。默认表头没有 `box-shadow`；吸顶才用 `.vamis-table__fixed-shadow` 的 inset。Vamis `bordered: true` 的表头/首行分隔画在 **thead 底** `--border`，不要画在首行顶：SDK 默认 `affixHeader` 会克隆表头，首行顶边会和克隆底叠成两条（文档 `env.affixHeader: false` 看不出来）。末行底边仍 `0`（外框已经有底）。
 - 触及：`table` `crud` `input-table` `tasks`
 - 规则：Amis `_table.scss` `th, td { border-bottom }` / `--Table-thead-borderColor`；本文
+
+### 指定行 setValue 始终 merge，不要看 args.replace
+- 踩过：table 最后一个 setValue 示例点「替换」后 Version 等格子空了。Vamis 把 `args.replace: true` 做成整行替换；Amis `CmptAction` 只把 `dataMergeMode === 'override'` 传给 `setData`，指定行再走 `IRow.updateData` 始终 `{...self.data, ...rest}`。对照两边同一份 schema，Amis 格子还在、Vamis 像被样式盖没。
+- 稳定做法：指定行 `setData` 只 merge。`replace` 只作用于整表。有 title 时 Amis heading 里会换成「有 N 条记录被修改过」提交栏，不要求 `quickEdit`。
+- 触及：`table` `setValue`
+- 规则：Amis `CmptAction.ts` / `store/table.ts` `IRow.updateData`；`tableMergeRowData`
 
 ### 表格行默认底放 @layer components，否则 sticky 透底或压过 helper
 - 踩过：unlayered `.vamis-table__tr { background }` 压过 `rowClassNameExpr` 的 `.bg-success`。拿掉后又让 sticky `background: inherit` 变透明，滚动列文字穿过来像盖在固定列上。

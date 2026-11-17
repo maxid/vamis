@@ -123,6 +123,19 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 
 禁止：只看浅色文档站就标完成；只给 Select 补 `.dark`、别的浮层继续白盒。
 
+## 密度（紧凑 / 舒适）
+
+顶栏切「紧凑 / 舒适」= `html[data-density]` 换同一批 token，不是另写一套选择器。默认 **compact** 对齐 Amis cxd（控件 32、表行 40）。
+
+每个组件收工都要问：**这个 type 有没有钉死的行高 / 控件高 / 内边距 / 工具栏高？** 有就改成 token，并在 `[data-density="compact"]` / `[data-density="comfortable"]` 覆盖。不要只给 Table 接 `--table-row-h`，table2 / CRUD 底栏 / heading 漏掉。
+
+- 选择器只 `var(--table-row-h)` / `var(--control-h)` / `var(--crud-toolbar-h)` …
+- 组件 `size: small|large` 走 `--table-row-h-sm` / `--table-row-h-lg`，密度切的是这三档的值，不是再写一套 px
+- SDK embed 默认 `dataset.density ||= 'compact'`（对照对齐 Amis）；Playground 顶栏写入 `html`，文档预览继承，不要在预览井再钉 `data-density="compact"`
+- 舒适不是第三套设计语言：只把已有量放宽一档（行 40→52、toolbar 30→36），不要另起色相
+
+禁止：在 `.vamis-xxx` 写死 `height: 40px` / `padding: 10px` 当默认行盒；只核 Table 不核 table2 / CRUD。
+
 ## 图标
 
 组件自带的 chrome 图标（勾 / 叉 / 翻页 / 拖拽手柄 / 搜索…）只有一个来源：`<VamisIcon name>`，字形登记在 `packages/vamis-ui/src/ui/vamis-icons.ts`（转写 Amis `amis-ui/src/icons/*.svg`）；带展开、动画的用专用 `Vamis*` 组件。渲染器模板不写 chrome 的 `<svg>`，不拿 `×` `›` `▾` `+` 当图标，不再新引 lucide。下面说的是作者 `icon` 字段。

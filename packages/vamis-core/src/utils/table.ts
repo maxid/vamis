@@ -200,6 +200,15 @@ export function tableMatchRows(
   return targets
 }
 
+/**
+ * 指定行 `setData`：对齐 Amis `IRow.updateData`，始终 merge。
+ * `args.replace` 不会从 Amis `CmptAction` 传进来（那边只认 `dataMergeMode`），
+ * 即便传了也不能把没写的字段清掉，否则 version 等格子会空。
+ */
+export function tableMergeRowData(data: PlainObject, patch: PlainObject): PlainObject {
+  return { ...data, ...patch }
+}
+
 /** `combineNum` 支持数字、数字串、`${var}`。 */
 export function tableCombineNum(value: unknown, data: PlainObject = {}): number {
   const raw = typeof value === 'string' && value.includes('$') ? resolveValue(value, data) : value

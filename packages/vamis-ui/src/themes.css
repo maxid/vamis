@@ -88,6 +88,10 @@
   --colors-neutral-line-9: #f2f3f5;
   --colors-neutral-line-10: #f7f8fa;
   --colors-neutral-line-11: #ffffff;
+  /* Amis helper `$colors`（Progress line `map` 的 bg-*），不跟品牌包走。 */
+  --colors-progress-danger: #dc3545;
+  --colors-progress-warning: #fad733;
+  --colors-progress-success: #28a745;
   --borders-radius-1: 0px;
   --borders-radius-2: 2px;
   --borders-radius-3: 4px;
