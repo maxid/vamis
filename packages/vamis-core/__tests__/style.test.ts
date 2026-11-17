@@ -226,8 +226,14 @@ describe('Amis width helpers', () => {
     expect(css).toContain('.vamis-form-item .vamis-date-picker .vamis-text-control__input')
     expect(css).toContain('--page-body-padding: 16px')
     expect(css).toContain('.vamis-form-panel [data-slot="card-content"]')
-    expect(css).toContain('padding: 8px 12px')
-    expect(css).toContain('padding: 0 12px 12px')
+    expect(css).toContain('--panel-heading-padding-y: var(--gap-sm)')
+    expect(css).toContain('--panel-heading-font-size: var(--fontSizeSm)')
+    expect(css).toContain('--panel-heading-color: var(--colors-neutral-text-3)')
+    expect(css).toContain('.vamis-form-col--normal')
+    expect(css).toContain('.vamis-form-col--2')
+    expect(css).toContain('.vamis-form-item--horizontal-justify')
+    expect(css).toContain('--panel-footer-padding-y: var(--gap-sm)')
+    expect(css).toContain('.vamis-form-footer-wrap')
     expect(css).toContain('margin: 0 -12px 10px')
     expect(css).toContain('.vamis-select.is-mobile .vamis-select__input')
     expect(css).toContain('.vamis-select__search--sheet')
@@ -635,6 +641,7 @@ describe('Amis width helpers', () => {
     const formVue = readFileSync(resolve(here, '../../vamis/src/renderers/Form.vue'), 'utf8')
     expect(formVue).toContain('schemaHidesButtons')
     expect(formVue).toContain('hideButtons === true')
+    expect(formVue).toContain('formBodyHidesDefaultActions')
     const schemaEditor = readFileSync(
       resolve(here, '../../../playground/src/components/SchemaSourceEditor.vue'),
       'utf8',
@@ -725,6 +732,8 @@ describe('Amis width helpers', () => {
     expect(form).toContain('schema.titleClassName')
     expect(form).toContain('schema.bodyClassName')
     expect(form).toContain('schema.actionsClassName')
+    expect(form).toContain('schema.footerWrapClassName')
+    expect(form).toContain('vamis-form-footer-wrap')
     expect(form).toContain("wrapWithPanel.value ? '表单' : ''")
     expect(form).toContain('if (!wrapWithPanel.value) return false')
     expect(form).toContain('schema.reset === true')

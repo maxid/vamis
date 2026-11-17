@@ -56,11 +56,10 @@ export type ButtonVariants = VariantProps<typeof buttonVariants>
 /** Map Amis `level` / actionType onto shadcn button variants. */
 export function levelToVariant(
   level?: unknown,
-  actionType?: unknown,
+  _actionType?: unknown,
 ): NonNullable<ButtonVariants["variant"]> {
   const lv = String(level || "")
-  const at = String(actionType || "")
-  if (at === "submit" || lv === "primary") return "default"
+  if (lv === "primary") return "default"
   if (lv === "danger" || lv === "error") return "destructive"
   if (lv === "success") return "success"
   if (lv === "warning") return "warning"

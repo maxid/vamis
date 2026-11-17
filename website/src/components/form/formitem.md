@@ -1010,7 +1010,7 @@ body:
 | name | `string` | | 字段名，指定该表单项提交时的 key，支持 `a.b` / `a.b[0].c` |
 | value | `any` | | 表单默认值；含 `${}` 时优先于 name 映射 |
 | label | [模板](/concepts/template) 或 `false` | | 表单项标签。`false` 去掉占位；未写仍占水平表单标签列 |
-| labelAlign | `"right" \| "left"` | `"right"` | 标签对齐，仅 `mode` 为 `horizontal` 时生效。**未接**；当前水平标签固定左对齐，不是 Amis 默认右对齐 |
+| labelAlign | `"right" \| "left"` | `"right"` | 标签对齐，仅 `mode` 为 `horizontal` 时生效。优先级：表单项 > 表单 |
 | labelRemark | [Remark](/components/remark) | | 表单项标签描述 |
 | description | [模板](/concepts/template) | | 表单项描述。也认 `desc`。字符串按 HTML 渲染（可含 `text-danger` 等 helper），对象当 SchemaNode |
 | placeholder | `string` | | 占位符 |
@@ -1109,4 +1109,4 @@ body:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 已接路径值、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、`static` / `staticOn` / `staticSchema`（选择器 `limit` → `tags` / `words`）、事件动作 `static` / `nonstatic`、`disabled` / `hidden`、`validateApi`、提交 `errors`、`autoFill`（无弹层）、`debug`、`validations` / `validationErrors`（对象与逗号字符串、`$1`、默认 `validate.*` key、中文文案、`isUrl.schemes`）。未写 `label` 仍占水平表单标签列；`button-toolbar` 是表单项，`button` / `action` 不是。默认 `mode: normal` 标签在上；`mode: inline` 项并排且项内左右；`type: group` 把 `mode` 传给子项。链接走 `--link-color` `#2468f2`、无下划线。属性表四列对齐 Amis（类型链到 `/types/`、`/concepts/`），并保留 Vamis 字段（`mode` / `size` / `staticOn` / `hidden` / `validationErrors` 等）。没有 Amis 版本列，也不链到 Amis 示例页。
-- 未接：`autoFill.showSuggestion` 参照录入（含 `trigger` / `mode` / `labelField` / `position` / `size` / `columns` / `filter`）、`autoFill.silent`、Combo/Table 路径级服务端报错、`staticClassName` / `staticLabelClassName` / `staticInputClassName`、`labelAlign`（水平标签现固定左对齐）。
+- 未接：`autoFill.showSuggestion` 参照录入（含 `trigger` / `mode` / `labelField` / `position` / `size` / `columns` / `filter`）、`autoFill.silent`、Combo/Table 路径级服务端报错、`staticClassName` / `staticLabelClassName` / `staticInputClassName`。

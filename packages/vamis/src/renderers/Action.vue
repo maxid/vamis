@@ -82,6 +82,7 @@ const isActive = computed(() => actionActive(props.schema))
 const activeLevel = computed(() => actionActiveLevel(props.schema))
 const variant = computed(() => {
   const level = isActive.value && activeLevel.value ? activeLevel.value : actionLevel(props.schema)
+  // type:submit 本身不是 primary，只有 schema.primary / level 才实心（Amis Action）
   return levelToVariant(level, kind.value)
 })
 const size = computed(() => sizeToButtonSize(props.schema.size, !inCountDown.value && actionIconOnly(props.schema)))

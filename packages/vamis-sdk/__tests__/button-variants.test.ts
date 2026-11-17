@@ -5,7 +5,7 @@ describe('levelToVariant', () => {
   it('maps Amis button levels onto cxd-like variants', () => {
     expect(levelToVariant()).toBe('outline')
     expect(levelToVariant('primary')).toBe('default')
-    expect(levelToVariant(undefined, 'submit')).toBe('default')
+    expect(levelToVariant(undefined, 'submit')).toBe('outline')
     expect(levelToVariant('secondary')).toBe('secondary')
     expect(levelToVariant('enhance')).toBe('enhance')
     expect(levelToVariant('info')).toBe('info')

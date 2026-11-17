@@ -4,6 +4,10 @@ import { Label, cn } from '@vamis/ui'
 import {
   SchemaRenderer,
   filterTpl,
+  formHorizontalItemClass,
+  formHorizontalLabelClass,
+  formHorizontalOf,
+  formHorizontalValueClass,
   formItemDescriptionHtml,
   formItemDescriptionNode,
   formItemHideLabel,
@@ -11,6 +15,8 @@ import {
   formItemStatic,
   formItemStaticSchema,
   formItemStaticSelectorNode,
+  formLabelAlignOf,
+  formLabelWidthCss,
   isControlSize,
   resolveClassName,
   statusStaticOf,
@@ -45,16 +51,34 @@ const descriptionNode = computed(() => formItemDescriptionNode(props.schema))
 const itemLayoutClass = computed(() => {
   if (inline.value) return 'vamis-form-item--inline'
   if (row.value) return 'vamis-form-item--row'
-  if (horizontal.value) return hideLabel.value ? 'vamis-form-item--horizontal vamis-form-item--no-label' : 'vamis-form-item--horizontal'
+  if (horizontal.value) {
+    const h = formHorizontalOf(props.schema, form?.horizontal)
+    return cn(
+      'vamis-form-item--horizontal',
+      hideLabel.value && 'vamis-form-item--no-label',
+      formHorizontalItemClass(h),
+    )
+  }
   return 'vamis-form-item--normal'
 })
 const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema.size : ''))
-const labelClass = computed(() =>
-  cn(
+const horizontalConfig = computed(() =>
+  horizontal.value ? formHorizontalOf(props.schema, form?.horizontal) : null,
+)
+const labelAlign = computed(() => formLabelAlignOf(props.schema, form?.labelAlign))
+const labelWidthStyle = computed(() => formLabelWidthCss(props.schema))
+const labelClass = computed(() => {
+  const h = horizontalConfig.value
+  return cn(
     resolveClassName(props.schema.className, itemData.value),
     resolveClassName(props.schema.labelClassName, itemData.value),
-  ),
-)
+    h ? formHorizontalLabelClass(h, labelAlign.value) : '',
+  )
+})
+const valueClass = computed(() => {
+  const h = horizontalConfig.value
+  return h ? formHorizontalValueClass(h) : ''
+})
 const inputClass = computed(() => resolveClassName(props.schema.inputClassName, itemData.value))
 const descriptionClass = computed(() =>
   resolveClassName(props.schema.descriptionClassName, itemData.value),
@@ -113,12 +137,15 @@ const paintLabel = computed(() => {
       v-if="paintLabel"
       class="vamis-form-item__label"
       :class="labelClass"
+      :style="labelWidthStyle"
     >
-      <span v-if="required && (showLabel || labelRemark)" class="vamis-form-item__star">*</span>
-      <span v-if="showLabel" v-html="labelText" />
-      <SchemaRenderer v-if="labelRemark" :schema="labelRemark" :extra-data="itemData" />
+      <span class="vamis-form-item__label-inner">
+        <span v-if="showLabel" v-html="labelText" />
+        <span v-if="required && (showLabel || labelRemark)" class="vamis-form-item__star">*</span>
+        <SchemaRenderer v-if="labelRemark" :schema="labelRemark" :extra-data="itemData" />
+      </span>
     </Label>
-    <div class="vamis-form-item__value min-w-0">
+    <div class="vamis-form-item__value min-w-0" :class="valueClass">
       <div
         v-if="isStatic"
         class="vamis-form-static"

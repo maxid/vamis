@@ -363,6 +363,9 @@
   --form-label-width-sm: 70px;
   --form-label-width-md: 136px;
   --form-label-width-lg: 200px;
+  --form-horizontal-justify-label-align: left;
+  --form-horizontal-justify-value-align: right;
+  --form-horizontal-justify-label-white-space: nowrap;
   --form-control-width-xs: 80px;
   --form-control-width-sm: 160px;
   --form-control-width: 200px;
@@ -473,7 +476,19 @@
   --panel-margin-bottom: var(--gap-lg);
   --panel-radius: var(--radius);
   --panel-heading-bg: var(--fill-10);
-  --panel-heading-color: var(--text-secondary);
+  --panel-heading-color: var(--colors-neutral-text-3);
+  /* Amis `--Panel-headingPadding` size-5/7 = 8×12；标题 fonts-size-8 / weight-6 / lineHeight-2 → 12/400/1.5，盒 35。 */
+  --panel-heading-padding-y: var(--gap-sm);
+  --panel-heading-padding-x: var(--gap-base);
+  --panel-heading-font-size: var(--fontSizeSm);
+  --panel-heading-font-weight: var(--fontWeightNormal);
+  --panel-heading-line-height: var(--lineHeightBase);
+  /* Amis `--Panel-bodyPadding` size-7 四边 12。 */
+  --panel-body-padding: var(--gap-base);
+  /* Amis `--Panel-footerPadding` 同 8×12；btnToolbar 钮间距 size-5。 */
+  --panel-footer-padding-y: var(--gap-sm);
+  --panel-footer-padding-x: var(--gap-base);
+  --panel-footer-button-gap: var(--gap-sm);
   /* Amis $zindex-* 阶梯。浮层 Teleport 到 body 后仍吃 :root。 */
   --z-dropdown: 1000;
   --z-sticky: 900;
@@ -1023,7 +1038,7 @@
   --control-focus-glow: 0 0 0 3px var(--colors-brand-7);
   --switch-spinner-track: var(--colors-neutral-text-6);
   --panel-heading-bg: var(--colors-neutral-fill-9);
-  --panel-heading-color: var(--colors-neutral-text-4);
+  --panel-heading-color: var(--colors-neutral-text-3);
   --input-image-error-bg: var(--colors-error-5);
   --radio-button-disabled-checked-bg: var(--colors-neutral-fill-8);
   --radio-button-disabled-checked-border: var(--colors-neutral-line-7);
@@ -1085,8 +1100,6 @@
     --error-border: oklch(0.86 0.07 25);
     --switch-spinner-track: color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
     --input-image-error-bg: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
-    --panel-heading-bg: color-mix(in oklch, var(--muted) 55%, var(--card));
-    --panel-heading-color: color-mix(in oklch, var(--foreground) 72%, transparent);
     --primary-hover: color-mix(in oklch, var(--primary) 90%, black);
     --primary-active: color-mix(in oklch, var(--primary) 82%, black);
     --ring: var(--primary);
@@ -1129,8 +1142,6 @@
     --control-focus-glow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
     --switch-spinner-track: color-mix(in oklch, var(--switch-spinner-color) 25%, transparent);
     --input-image-error-bg: color-mix(in oklch, var(--input-image-danger) 85%, transparent);
-    --panel-heading-bg: color-mix(in oklch, var(--muted) 55%, var(--card));
-    --panel-heading-color: color-mix(in oklch, var(--foreground) 72%, transparent);
   }
 }
 
@@ -1207,7 +1218,7 @@
   /*
     Form 布局对齐 Amis Item.tsx / Form.tsx / _form.scss / _group.scss，不要用 horizontal 28% 去冒充别的 mode。
     - normal（表单默认）：标签在上，项块级 100% 竖排
-    - horizontal：标签左 28%/labelWidth，项竖排
+    - horizontal：cxd 默认 leftFixed 98px；作者 horizontal.left/right 走 12 栏，leftFixed xs/sm/md/lg 走档宽
     - inline：项 inline-block 并排，项内标签在左
     - row：Form-row flex + Form-col flex:1；项内标签贴控件左（不是 28%）。Combo 默认走这条
     Group--hor：≥768 才 flex；子项包 Form-groupColumn，width:100% 相对列不是相对整表
@@ -1425,6 +1436,11 @@
   .vamis-control--full {
     width: 100%;
     max-width: 100%;
+  }
+  .vamis-control--fluid.is-inline,
+  .vamis-control--full.is-inline {
+    display: inline-block;
+    width: auto;
   }
   .vamis-form-static {
     min-height: var(--control-h);
@@ -4457,16 +4473,91 @@
 }
 
 @media (min-width: 576px) {
+  /* 对齐 Amis Form-item--horizontal：flex + Form-itemColumn，不要钉死 98px。 */
   .vamis-form-item--horizontal {
-    grid-template-columns: var(--form-label-width) minmax(0, 1fr);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    grid-template-columns: unset;
+    column-gap: 0;
   }
   .vamis-form-item--horizontal.vamis-form-item--no-label {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: unset;
   }
-  .vamis-form-item--horizontal .vamis-form-item__label {
+  .vamis-form-item--horizontal > .vamis-form-item__label {
+    position: relative;
+    flex-shrink: 0;
+    margin-right: var(--form-label-gap);
+    padding-top: var(--form-label-padding-top);
+  }
+  .vamis-form-item--horizontal > .vamis-form-item__label .vamis-form-item__label-inner {
+    position: relative;
+    display: inline-block;
+  }
+  .vamis-form-item--horizontal > .vamis-form-item__label .vamis-form-item__star {
+    position: absolute;
+    left: -6px;
+    top: 3px;
+  }
+  .vamis-form-item--horizontal > .vamis-form-item__value {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .vamis-form-item--horizontal > .vamis-form-col--xs,
+  .vamis-form-item--horizontal > .vamis-form-col--sm,
+  .vamis-form-item--horizontal > .vamis-form-col--normal,
+  .vamis-form-item--horizontal > .vamis-form-col--md,
+  .vamis-form-item--horizontal > .vamis-form-col--lg,
+  .vamis-form-item--horizontal > .vamis-form-col--auto {
+    flex-grow: unset;
+    flex-basis: unset;
+  }
+  .vamis-form-item--horizontal > .vamis-form-col--xs { width: var(--form-label-width-xs); }
+  .vamis-form-item--horizontal > .vamis-form-col--sm { width: var(--form-label-width-sm); }
+  .vamis-form-item--horizontal > .vamis-form-col--normal { width: var(--form-label-width); }
+  .vamis-form-item--horizontal > .vamis-form-col--md { width: var(--form-label-width-md); }
+  .vamis-form-item--horizontal > .vamis-form-col--lg { width: var(--form-label-width-lg); }
+  .vamis-form-item--horizontal > .vamis-form-col--auto { width: auto; }
+  .vamis-form-item--horizontal > .vamis-form-col--1 { flex: 0 0 calc(100% / 12); max-width: calc(100% / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--2 { flex: 0 0 calc(100% * 2 / 12); max-width: calc(100% * 2 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--3 { flex: 0 0 calc(100% * 3 / 12); max-width: calc(100% * 3 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--4 { flex: 0 0 calc(100% * 4 / 12); max-width: calc(100% * 4 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--5 { flex: 0 0 calc(100% * 5 / 12); max-width: calc(100% * 5 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--6 { flex: 0 0 50%; max-width: 50%; }
+  .vamis-form-item--horizontal > .vamis-form-col--7 { flex: 0 0 calc(100% * 7 / 12); max-width: calc(100% * 7 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--8 { flex: 0 0 calc(100% * 8 / 12); max-width: calc(100% * 8 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--9 { flex: 0 0 75%; max-width: 75%; }
+  .vamis-form-item--horizontal > .vamis-form-col--10 { flex: 0 0 calc(100% * 10 / 12); max-width: calc(100% * 10 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--11 { flex: 0 0 calc(100% * 11 / 12); max-width: calc(100% * 11 / 12); }
+  .vamis-form-item--horizontal > .vamis-form-col--12 { flex: 0 0 100%; max-width: 100%; }
+  .vamis-form-item--horizontal > .vamis-form-item__label--right {
     justify-content: flex-end;
     text-align: right;
-    padding-top: calc((var(--control-h) - 1rem) / 2);
+  }
+  .vamis-form-item--horizontal > .vamis-form-item__label--left {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .vamis-form-item--horizontal-justify {
+    justify-content: space-between;
+  }
+  .vamis-form-item--horizontal-justify > .vamis-form-item__label {
+    text-align: var(--form-horizontal-justify-label-align);
+    justify-content: flex-start;
+    white-space: var(--form-horizontal-justify-label-white-space);
+  }
+  .vamis-form-item--horizontal-justify > .vamis-form-item__value {
+    text-align: var(--form-horizontal-justify-value-align);
+  }
+  .vamis-form-item--horizontal-justify > .vamis-form-item__value > * {
+    text-align: initial;
+  }
+  .vamis-form-item--horizontal-justify .vamis-control--fluid.is-inline,
+  .vamis-form-item--horizontal-justify .vamis-control--full.is-inline {
+    display: inline-block;
+    width: auto;
   }
   .vamis-control--xs {
     width: var(--form-control-width-xs);
@@ -4539,6 +4630,18 @@
     text-align: left;
     white-space: normal;
   }
+  /* 压过桌面 Form-itemColumn 档宽 / 12 栏，窄屏一律 28%。 */
+  .vamis-form-item.vamis-form-item--horizontal > .vamis-form-item__label {
+    flex: 0 0 28%;
+    max-width: 28%;
+    width: auto;
+    margin-right: 0;
+  }
+  .vamis-form-item.vamis-form-item--horizontal > .vamis-form-item__value {
+    flex: 1 1 auto;
+    max-width: calc(100% - 28%);
+    width: auto;
+  }
   .vamis-form-item__label > span {
     display: inline-block;
     line-height: var(--control-h);
@@ -4576,8 +4679,8 @@
     background: none;
     border: none;
     border-bottom-width: 0;
-    /* 对齐 Amis Panel-heading：8 12（size-5 / size-7），盒 40px。 */
-    padding: 8px 12px;
+    /* 窄屏仍 8×12；标题抬到 16/24（Amis Panel--form heading fontSizeLg），盒 40。 */
+    padding: var(--panel-heading-padding-y) var(--panel-heading-padding-x);
     gap: 0;
   }
   .vamis-form-panel [data-slot="card-title"] {
@@ -4587,17 +4690,25 @@
   }
   /* 对齐 Amis Panel-body：四边 12px（--sizes-size-7）。不要 CardContent px-4。 */
   .vamis-form-panel [data-slot="card-content"] {
-    padding: 12px;
+    padding: var(--panel-body-padding);
+  }
+  /* 窄屏 footerWrap padding-bottom 12；toolbar 水平 12、去顶边、钮拉满。 */
+  .vamis-form-footer-wrap {
+    padding-bottom: var(--panel-footer-padding-x);
   }
   /* label 仍 14（--Form-item-fontSize = fonts-size-7）。不要跟 title 一起抬到 16。 */
   .vamis-form-panel [data-slot="card-footer"],
   .vamis-form-actions {
     display: flex;
     justify-content: stretch;
-    /* 对齐 Amis footer 0 12 + footerWrap padding-bottom 12 → 44px。 */
-    padding: 0 12px 12px;
+    padding: 0 var(--panel-footer-padding-x);
     border-top: none;
     border-top-width: 0;
+    text-align: unset;
+  }
+  .vamis-form-panel [data-slot="card-footer"] > .vamis-node,
+  .vamis-form-panel [data-slot="card-footer"] > [data-slot="button"] {
+    margin-left: 0;
   }
   /*
     对齐 Dialog：Action 包在 span[data-vamis-action].inline-block，
@@ -9576,7 +9687,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   box-sizing: border-box;
 }
 [data-vamis-panel-heading] {
-  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
+  padding: var(--panel-heading-padding-y) var(--panel-heading-padding-x);
   background: var(--panel-heading-bg);
   color: var(--panel-heading-color);
   border-bottom: 1px solid var(--border);
@@ -9590,9 +9701,9 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 [data-vamis-panel-title] {
   margin: 0;
-  font-size: var(--fontSizeSm);
-  font-weight: var(--fontWeightNormal);
-  line-height: 1.5;
+  font-size: var(--panel-heading-font-size);
+  font-weight: var(--panel-heading-font-weight);
+  line-height: var(--panel-heading-line-height);
   color: inherit;
 }
 [data-vamis-panel-arrow] {
@@ -9611,12 +9722,12 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   transform: rotate(0deg);
 }
 [data-vamis-panel-body] {
-  padding: var(--gap-base, 12px);
+  padding: var(--panel-body-padding);
   box-sizing: border-box;
 }
 [data-vamis-panel-footer],
 [data-vamis-panel-actions] {
-  padding: var(--gap-sm, 8px) var(--gap-base, 12px);
+  padding: var(--panel-footer-padding-y) var(--panel-footer-padding-x);
   border-top: 1px solid var(--border);
   background: transparent;
   box-sizing: border-box;
@@ -9626,7 +9737,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   text-align: right;
 }
 [data-vamis-panel-actions] > * {
-  margin-left: var(--gap-sm, 8px);
+  margin-left: var(--panel-footer-button-gap);
 }
 [data-vamis-panel-footer-wrap][data-affix] {
   position: sticky;
@@ -11210,9 +11321,51 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   cursor: not-allowed;
 }
 
+/* 桌面 Form 面板对齐 Amis Panel-heading / Panel-footer + Panel-btnToolbar。不要吃 CardHeader/Footer 的 px-4 py-3。 */
+.vamis-form-panel [data-slot="card-header"],
 .vamis-form-panel__header {
+  display: block;
+  padding: var(--panel-heading-padding-y) var(--panel-heading-padding-x);
+  gap: 0;
   border-bottom: 1px solid var(--border);
-  background: var(--fill-10);
+  background: var(--panel-heading-bg);
+  color: var(--panel-heading-color);
+  box-sizing: border-box;
+}
+.vamis-form-panel [data-slot="card-title"] {
+  margin: 0;
+  font-size: var(--panel-heading-font-size);
+  font-weight: var(--panel-heading-font-weight);
+  line-height: var(--panel-heading-line-height);
+  color: var(--panel-heading-color);
+}
+.vamis-form-panel [data-slot="card-content"] {
+  padding: var(--panel-body-padding);
+  box-sizing: border-box;
+}
+.vamis-form-footer-wrap {
+  box-sizing: border-box;
+}
+.vamis-form-panel [data-slot="card-footer"],
+.vamis-form-panel .vamis-form-actions {
+  display: block;
+  width: 100%;
+  padding: var(--panel-footer-padding-y) var(--panel-footer-padding-x);
+  border-top: 1px solid var(--border);
+  background: transparent;
+  text-align: right;
+  box-sizing: border-box;
+  gap: 0;
+}
+.vamis-form-panel [data-slot="card-footer"] > .vamis-node,
+.vamis-form-panel [data-slot="card-footer"] > [data-slot="button"],
+.vamis-form-panel .vamis-form-actions > .vamis-node,
+.vamis-form-panel .vamis-form-actions > [data-slot="button"] {
+  display: inline-block;
+  vertical-align: top;
+  width: auto;
+  margin-left: var(--panel-footer-button-gap);
+  flex: none;
 }
 /* 压过 Card `rounded-lg`（helper 8px）。Amis Panel 是 radius-3 = 4px。 */
 .vamis-form-panel[data-slot="card"],
@@ -11228,9 +11381,51 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   .vamis-form-panel {
     border-radius: 0;
   }
+  /* 后写 unlayered 桌面 heading/footer 会压过前面 767 块，窄屏必须在这里再声明一次。 */
+  .vamis-form-panel [data-slot="card-header"],
   .vamis-form-panel__header {
     background: none;
+    border: none;
     border-bottom: none;
+    padding: var(--panel-heading-padding-y) var(--panel-heading-padding-x);
+  }
+  .vamis-form-panel [data-slot="card-title"] {
+    font-size: var(--fontSizeLg);
+    font-weight: var(--fontWeightNormal);
+    line-height: 24px;
+    color: var(--text-color);
+  }
+  .vamis-form-footer-wrap {
+    padding-bottom: var(--panel-footer-padding-x);
+  }
+  .vamis-form-panel [data-slot="card-footer"],
+  .vamis-form-panel .vamis-form-actions {
+    display: flex;
+    justify-content: stretch;
+    padding: 0 var(--panel-footer-padding-x);
+    border-top: none;
+    border-top-width: 0;
+    text-align: unset;
+  }
+  .vamis-form-panel [data-slot="card-footer"] > .vamis-node,
+  .vamis-form-panel [data-slot="card-footer"] [data-vamis-action],
+  .vamis-form-panel [data-slot="card-footer"] > [data-slot="button"],
+  .vamis-form-panel .vamis-form-actions > .vamis-node,
+  .vamis-form-panel .vamis-form-actions [data-vamis-action],
+  .vamis-form-panel .vamis-form-actions > [data-slot="button"] {
+    display: block;
+    flex: 1 1 0%;
+    min-width: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+  .vamis-form-panel [data-slot="card-footer"] [data-slot="button"],
+  .vamis-form-panel .vamis-form-actions [data-slot="button"] {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
   }
 }
 .vamis-form__error {

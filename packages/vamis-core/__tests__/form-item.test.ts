@@ -15,6 +15,7 @@ import {
   formItemStatic,
   formItemStaticSchema,
   formItemStaticSelectorNode,
+  formBodyHidesDefaultActions,
   formItemStaticWords,
   formItemSubmitOnChange,
   formItemValidateOnChange,
@@ -365,5 +366,16 @@ describe('server errors / autoFill', () => {
       v: '${version}',
     })
     expect(autoFillMapping({ autoFill: { type: '${type}' } })).toEqual({ type: '${type}' })
+  })
+})
+
+describe('formBodyHidesDefaultActions', () => {
+  it('hides the default footer when body already has a button', () => {
+    expect(formBodyHidesDefaultActions([{ type: 'input-text' }])).toBe(false)
+    expect(formBodyHidesDefaultActions([{ type: 'submit', label: '登录' }])).toBe(true)
+    expect(formBodyHidesDefaultActions([{ type: 'button' }, { type: 'input-text' }])).toBe(true)
+    expect(formBodyHidesDefaultActions([{ type: 'button-toolbar' }])).toBe(true)
+    expect(formBodyHidesDefaultActions([{ type: 'group', body: [{ type: 'submit' }] }])).toBe(true)
+    expect(formBodyHidesDefaultActions([{ type: 'group', body: [{ type: 'input-text' }] }])).toBe(false)
   })
 })

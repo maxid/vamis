@@ -16,6 +16,8 @@ import {
   dataMapping,
   evalExpression,
   filterTpl,
+  formBodyHidesDefaultActions,
+  formHorizontalFromSchema,
   formItemStatic,
   formItemSubmitOnChange,
   formItemValidateOnChange,
@@ -151,6 +153,8 @@ const showActionBar = computed(() => {
   if (hideDefaultSubmit.value && props.schema.reset !== true) return false
   const items = body.value.filter((node) => node && typeof node === 'object')
   if (items.length > 0 && items.every(schemaHidesButtons)) return false
+  // Amis buildActions：body 已有 submit/button/reset/toolbar 时不注入默认提交
+  if (formBodyHidesDefaultActions(items)) return false
   return true
 })
 const lazyLoad = computed(() => props.schema.lazyLoad === true)
@@ -180,9 +184,15 @@ const bodyClass = computed(() =>
     resolveClassName(props.schema.bodyClassName, props.data),
   ),
 )
+const footerWrapClass = computed(() =>
+  cn(
+    'vamis-form-footer-wrap',
+    resolveClassName(props.schema.footerWrapClassName, props.data),
+  ),
+)
 const actionsClass = computed(() =>
   cn(
-    'vamis-form-actions w-full justify-end border-t',
+    'vamis-form-actions',
     resolveClassName(props.schema.actionsClassName, props.data),
   ),
 )
@@ -587,6 +597,8 @@ const formApi = {
 provideForm({
   store,
   mode: String(props.schema.mode || 'normal'),
+  horizontal: formHorizontalFromSchema(props.schema),
+  labelAlign: props.schema.labelAlign === 'left' ? 'left' : 'right',
   isStatic: () =>
     formItemStatic(
       props.schema,
@@ -696,24 +708,26 @@ onBeforeUnmount(() => {
         </CardContent>
         <p v-if="store.errors.__form" class="vamis-form__error">{{ store.errors.__form }}</p>
         <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
-        <CardFooter v-if="showActionBar" :class="actionsClass">
-          <template v-if="hasCustomActions">
-            <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
-          </template>
-          <template v-else>
-            <Button
-              v-if="!hideDefaultSubmit"
-              :type="submitButtonType"
-              :disabled="store.saving"
-              @click="onDefaultSubmitClick"
-            >
-              {{ store.saving ? '提交中…' : defaultSubmitLabel }}
-            </Button>
-            <Button v-if="showReset" type="button" variant="outline" @click="reset">
-              重置
-            </Button>
-          </template>
-        </CardFooter>
+        <div v-if="showActionBar" :class="footerWrapClass">
+          <CardFooter :class="actionsClass">
+            <template v-if="hasCustomActions">
+              <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
+            </template>
+            <template v-else>
+              <Button
+                v-if="!hideDefaultSubmit"
+                :type="submitButtonType"
+                :disabled="store.saving"
+                @click="onDefaultSubmitClick"
+              >
+                {{ store.saving ? '提交中…' : defaultSubmitLabel }}
+              </Button>
+              <Button v-if="showReset" type="button" variant="outline" @click="reset">
+                重置
+              </Button>
+            </template>
+          </CardFooter>
+        </div>
       </Card>
       <template v-else>
         <div :class="bodyClass">

@@ -5,8 +5,8 @@ outline: deep
 
 # Form 表单
 
-::: warning 实现进度 72% · 进行中
-主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、生命周期事件、`rules` 组合校验、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项；父域其它字段不进 debug / 提交）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`horizontal` 比例 / `labelAlign`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
+::: warning 实现进度 75% · 进行中
+主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、生命周期事件、`rules` 组合校验、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`、`canAccessSuperData`（默认 true，只映射同名表单项；父域其它字段不进 debug / 提交）、`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign` / 表单项 `labelWidth`。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
 :::
 
 表单是数据输入的根，主要作用是提交或者展示表单数据。子节点是表单项（`name` 写入表单数据）。提交走 `api` + `env.fetcher`。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。默认吃满布局槽，不必先写 `size` / `w-full`。
@@ -49,7 +49,7 @@ body:
 
 ### 水平模式
 
-水平模式，左右摆放。
+水平模式，左右摆放，左右比率分配。
 
 ```schema: scope="body"
 type: form
@@ -79,8 +79,6 @@ body:
   }
 }
 ```
-
-**未接**：`horizontal.left` / `right` / `offset` 不会改标签列宽（当前水平模式走 `--form-label-width` 98px）。下面示例仍可渲染。
 
 ```schema: scope="body"
 type: form
@@ -113,7 +111,7 @@ body:
 }
 ```
 
-也可以直接配置 `xs` | `sm` | `md` | `lg` 来定义左侧 label 的宽度。**未接** `leftFixed`。
+也可以直接配置 `xs` | `sm` | `md` | `lg` 来定义左侧 label 的宽度。未写 `horizontal` 时走云舍默认 `leftFixed: true`（98px）。
 
 ```schema: scope="body"
 type: form
@@ -136,7 +134,7 @@ body:
 
 #### 两端对齐
 
-有时表单内容需要两端对齐，可在 `horizontal` 中增加 `justify`，注意只对内联控件生效。**未接** `justify`。
+有时表单内容需要两端对齐，可在 `horizontal` 中增加 `justify`，注意只对内联控件生效。
 
 ```schema: scope="body"
 type: container
@@ -169,7 +167,7 @@ body:
 
 #### label 对齐模式
 
-水平模式下 `labelAlign` 可以设置标签文本的对齐方式，支持 `right` 和 `left`，默认为 `right`。该属性的优先级：表单项 > 表单。**未接**。
+水平模式下 `labelAlign` 可以设置标签文本的对齐方式，支持 `right` 和 `left`，默认为 `right`。该属性的优先级：表单项 > 表单。
 
 ```schema: scope="body"
 type: form
@@ -211,7 +209,7 @@ body:
 
 ### 自定义 label 宽度
 
-水平模式下 `labelWidth` 可以设置标签文本的自定义宽度，默认单位为 `px`。表单级 `labelWidth` 已接（写入 `--form-label-width`）。表单项级 `labelWidth` **未接**。
+水平模式下 `labelWidth` 可以设置标签文本的自定义宽度，默认单位为 `px`。表单级写入 `--form-label-width`；表单项级打在该行 label 上。
 
 ```schema: scope="body"
 type: form
@@ -983,9 +981,9 @@ body:
 | type | `string` | | `"form"` 指定为 Form 渲染器 |
 | name | `string` | | 设置一个名字后，方便其他组件与其通信 |
 | mode | `string` | `normal` | 表单展示方式：`normal`、`horizontal` 或者 `inline` |
-| horizontal | `Object` | `{"left":2, "right":10, "justify": false}` | **未接**。当 mode 为 `horizontal` 时用来控制 label 占比 |
-| labelAlign | `"right"` \| `"left"` | `"right"` | **未接**。表单项标签对齐，仅 `horizontal` 生效 |
-| labelWidth | `number` \| `string` | | 表单级标签自定义宽度（已接）。表单项级 **未接** |
+| horizontal | `Object` | `{"left":2, "right":10, "justify": false}` | `mode: horizontal` 时控制标签列。未写时走云舍 `leftFixed: true`（98px）；`left` / `right` 按 12 栏；`leftFixed` 为 `true` / `xs` / `sm` / `md` / `lg`；`justify` 两端对齐。`offset` 对齐 Amis 源码（未启用） |
+| labelAlign | `"right"` \| `"left"` | `"right"` | 表单项标签对齐，仅 `horizontal` 生效。优先级：表单项 > 表单 |
+| labelWidth | `number` \| `string` | | 标签自定义宽度。表单级改 `--form-label-width`，表单项级打在该行 label 上 |
 | title | `string` | `"表单"` | Form 的标题。`false` 或 `""` 隐藏 |
 | submitText | `string` | `"提交"` | 默认提交按钮名称，设置成空则去掉默认按钮 |
 | className | [`ClassName`](/types/classname) | | 外层 Dom 的类名 |
@@ -1785,7 +1783,7 @@ onEvent:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `submit` 事件不会拦掉默认提交；Vamis 先校验并保存，再发事件。
-- 未接：`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign`、表单项级 `labelWidth`、`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。
+- 未接：`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。 `horizontal.offset` 对齐 Amis 源码（注释掉未启用）。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
 - 默认 panel 圆角对齐 Amis（`--radius` 4px），不是 shadcn Card 的 `rounded-lg` 8px。schema `rounded` / `panelClassName: rounded-lg` 是过渡写法；直角 / 圆角将改成 Vamis chrome 全局开关，不再按 type 声明。
 

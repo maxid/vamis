@@ -489,10 +489,22 @@ alwaysApply: true
 - 规则：本文；Amis `_form.scss` `.Form-label`；`_components.scss` `--Form-item-*`
 
 ### 窄屏表单面板盒模型跟 Amis Panel，不要留 Card px-4
-- 踩过：Options 对照里 Select 箭头停在 212px 盒右侧。根因是 CardHeader/Content `px-4 py-3`（16px）+ page-body 12px，面板比 Amis 窄一截；标题 `text-sm font-medium` 14/500，Amis heading 40px / 16/24/400。只改 padding 后 heading 仍 319：`w-full` 钉死内容区，Amis `Panel--form` 还有 `margin: 0 -12px 10px` 吃进 page padding。
-- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading `padding: 8px 12px`、title 16/24/400；**label 仍 14 / `#5c5f66`**（`--Form-item-fontSize` / `--Form-item-color`，桌面移动同一套，不要跟 title 一起抬到 16，也不要 `text-foreground`）。body `padding: 12px`；footer `padding: 0 12px 12px`（wrap 44）。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。**窄屏面板底用 `--background`，不要 `--card`**（Amis Panel--form 去边框后跟 Page，灰包白卡是 iOS Settings 不是 Amis）。文档手机预览壳走同一 token 当 Page padding，不要 Tailwind `p-4`。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。
+- 踩过：Options 对照里 Select 箭头停在 212px 盒右侧。根因是 CardHeader/Content `px-4 py-3`（16px）+ page-body 12px，面板比 Amis 窄一截；标题 `text-sm font-medium` 14/500。**窄屏** Amis heading 是 40px / 16/24/400（`fontSizeLg`），桌面才是 **35px / 12/400/1.5**。只改 padding 后 heading 仍 319：`w-full` 钉死内容区，Amis `Panel--form` 还有 `margin: 0 -12px 10px` 吃进 page padding。
+- 稳定做法：`max-width: 767px` 时 `--page-body-padding: 16px`（Amis `--gap-md`）。heading padding 走 `--panel-heading-padding-*`（8×12）、title 16/24/400；**label 仍 14 / `#5c5f66`**（`--Form-item-fontSize` / `--Form-item-color`，桌面移动同一套，不要跟 title 一起抬到 16，也不要 `text-foreground`）。body 12px；footerWrap `padding-bottom` 12、toolbar 水平 12、去顶边、钮 `flex:1`。面板 `width: auto; margin: 0 -12px 10px`（对照 iframe 351-32+24=343）。**窄屏面板底用 `--background`，不要 `--card`**（Amis Panel--form 去边框后跟 Page，灰包白卡是 iOS Settings 不是 Amis）。文档手机预览壳走同一 token 当 Page padding，不要 Tailwind `p-4`。不要写 `margin-bottom` 进桌面 `.vamis-form-panel`（`panelClassName: mb-0` 靠 Tailwind 覆盖）。`.vamis-select.is-mobile` 触发器 `padding: 0` 无边框，箭头贴控件右缘。桌面 heading/footer 见下条，不要只在 767 覆盖 Card。
 - 触及：`form` FormItem `select` Options
 - 规则：`.cursor/rules/component.mdc`；Amis `_panel.scss` `Panel--form` / `_properties.scss` `--Page-body-padding`
+
+### Form 桌面 heading / footer toolbar 不要吃 Card px-4 py-3
+- 踩过：窄屏已覆盖 heading 8×12，桌面仍是 CardHeader `px-4 py-3` + CardTitle `text-sm font-medium leading-none`（14/500/1），对照 heading 不是 Amis **35px / 12/400/1.5**。footer 直接用 CardFooter flex `px-4 py-3`，没有 `Panel-footerWrap > Panel-btnToolbar`（8×12、`text-align: right`、钮 `margin-left` 8）。后写 unlayered 桌面规则还会压过前面 767 块。
+- 稳定做法：桌面 `.vamis-form-panel [data-slot=card-header/title/footer]` 走 `--panel-heading-*` / `--panel-footer-*`。标题 12/400/1.5 + fill-10 + 1px 底边 = 35。标题色 `--colors-neutral-text-3`（Amis `--Panel-heading-color`），不要 `--text-secondary` 或 `@supports` 72% mix。底栏外包 `.vamis-form-footer-wrap`，toolbar 才是 footer+btnToolbar。窄屏覆盖必须写在这段 unlayered **后面** 的 `@media (max-width: 767px)` 里再声明一次。
+- 触及：`form` `panel`
+- 规则：本文；Amis `_panel.scss` / `_components.scss` `--Panel-headingPadding` / `--Panel-heading-color`
+
+### 水平表单默认 leftFixed 98px，作者 horizontal 才走 12 栏
+- 踩过：文档第二例 `left: 2` 仍是 98px。云舍主题默认 `form.horizontal.leftFixed: true`，未写 `horizontal` 才是 `--form-label-width` 98；写了 `left` / `right` 要按 12 栏 flex，`leftFixed: sm` 走档宽。
+- 稳定做法：无 `horizontal` → `{ leftFixed: true }`。有 `leftFixed` 用 `vamis-form-col--xs|sm|normal|md|lg`；否则 `vamis-form-col--N`。`labelAlign` 表单项覆盖表单，默认 right。表单项 `labelWidth` 打在 label 上。窄屏 767 仍一律 28%，压过档宽。必填星包在 `position:relative; display:inline-block` 的内层 span 里再 `absolute; left:-6px`，贴在文案左侧，不要相对 98px 列。
+- 触及：`form` FormItem
+- 规则：Amis `Item.tsx` / `cxd.ts` `renderers.form.horizontal`；`packages/vamis-core/src/utils/form-horizontal.ts`
 
 ### 移动端 PopUp 边框与取消确认钮全仓共用
 - 踩过：Select `VamisPopUp` 用 `--border` + Amis `--boxShadow`，日期 sheet 用 `--cal-shadow`（下拉菜单那档浅影）；取消/确认写成 16px、拉满 60px 高，没有 link hover。Amis 是 `Button--link --size-default`（14px / 32px，hover `#528eff`）。
@@ -1172,10 +1184,10 @@ alwaysApply: true
 - 规则：`packages/vamis/src/renderers/Mapping.vue`；`packages/vamis/src/renderers/rest/Tag.vue`
 
 ### `submitText: ""` 去掉默认提交；`wrapWithPanel: false` 时 title/actions 失效
-- 踩过：`submitText || '提交'` 把空串当 falsy，Amis「通过 submitText 去掉提交按钮」仍画出「提交」。`wrapWithPanel: false` 还画 h2 标题和自定义 actions，Amis 文档写明两者都失效。
-- 稳定做法：只把 `submitText === ''` 当隐藏默认钮；`false` / 未写仍是「提交」。无 panel 时 `showActionBar` 恒 false，不要在非 panel 分支补标题。
-- 触及：`form`
-- 规则：本文；Amis `Form.tsx` `submitText` / `wrapWithPanel`
+- 踩过：`submitText || '提交'` 把空串当 falsy，Amis「通过 submitText 去掉提交按钮」仍画出「提交」。`wrapWithPanel: false` 还画 h2 标题和自定义 actions，Amis 文档写明两者都失效。内联示例 body 已有 `type: submit`「登录」，Vamis 仍画底栏「提交」，登录还被 `levelToVariant(..., 'submit')` 刷成实心主色；Amis `buildActions` 见 body 里的 submit/button/reset/toolbar 就不注入默认钮，body 里的 submit 没有 `primary` 是描边。
+- 稳定做法：只把 `submitText === ''` 当隐藏默认钮；`false` / 未写仍是「提交」。无 panel 时 `showActionBar` 恒 false。body 已有 `submit` / `button` / `button-group` / `reset` / `button-toolbar`（含 `body[0].type`）也不画默认底栏。`type: submit` 本身不是 primary，只有 schema `primary` / `level: primary` 或 Form 注入的默认钮才实心。
+- 触及：`form` `action` `button`
+- 规则：本文；Amis `Form.tsx` `buildActions` / `submitText` / `wrapWithPanel`
 
 ### form 的 `schema.data` 要走 dataMapping，`\\${}` 转义成字面 `${}`
 - 踩过：Form 初始化直接 `{...schema.data}`，文档「不想映射就转义」示例 Vamis 显示 `\${rick}`，Amis 是 `${rick}`。

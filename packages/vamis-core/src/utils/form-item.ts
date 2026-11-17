@@ -339,3 +339,27 @@ export function autoFillMapping(schema: SchemaObject): PlainObject | null {
   if ('api' in rec) return { '&': '$$' }
   return rec
 }
+
+/** Amis Form.buildActions：body 里已有这些 type 时不注入默认「提交」。 */
+const FORM_BODY_ACTION_TYPES = new Set(['submit', 'button', 'button-group', 'reset', 'button-toolbar'])
+
+function formBodyNodeType(node: unknown): string {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return ''
+  const rec = node as PlainObject
+  const body = rec.body
+  if (Array.isArray(body) && body[0] && typeof body[0] === 'object' && !Array.isArray(body[0])) {
+    const nested = (body[0] as PlainObject).type
+    if (typeof nested === 'string' && nested) return nested
+  }
+  if (body && typeof body === 'object' && !Array.isArray(body)) {
+    const nested = (body as PlainObject).type
+    if (typeof nested === 'string' && nested) return nested
+  }
+  return typeof rec.type === 'string' ? rec.type : ''
+}
+
+/** 对齐 Amis `buildActions`：body 已有按钮时返回 true，调用方不要画默认底栏。 */
+export function formBodyHidesDefaultActions(body: unknown): boolean {
+  const items = Array.isArray(body) ? body : body != null ? [body] : []
+  return items.some((item) => FORM_BODY_ACTION_TYPES.has(formBodyNodeType(item)))
+}

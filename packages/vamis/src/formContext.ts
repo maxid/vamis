@@ -1,11 +1,13 @@
 import { inject, provide, type InjectionKey } from 'vue'
 import { getByPath, useData, useScope, useValueHost } from '@vamis/core'
-import type { NodeState } from '@vamis/core'
+import type { FormHorizontal, NodeState } from '@vamis/core'
 import type { PlainObject } from '@vamis/core'
 
 export interface FormContext {
   store: NodeState
   mode?: string
+  horizontal?: FormHorizontal | null
+  labelAlign?: string
   isStatic?: () => boolean
   getValue: (name: string) => unknown
   setValue: (name: string, value: unknown) => void
