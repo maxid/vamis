@@ -222,16 +222,14 @@ window.enableVamisDebug = true
 // 3. 或在 URL 上临时加 ?vamisDebug=1
 ```
 
-Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，包含动作配置、求值后的数据、事件对象和结束标记。
+Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，只包含求值后的参数、公开数据和结束事件；不展开完整 schema 或 Scope 内部字段，没有实际处理器的普通 Button 空动作不会记日志。
 
 注意：表单上的 `schema.debug: true` 只显示**表单数据域**，不会开启动作日志。
 
 ```
-[vamis] action ajax
-  action {actionType: 'ajax', args: {…}, …}
-  data {api: {…}, …}
-  event {type: 'click', prevented: false, stopped: false, …}
-  end {…}
+[vamis] run action ajax
+  [ajax] action args, data {api: {…}, …}, {…}
+  [ajax] action end event {type: 'click', prevented: false, stopped: false, …}
 ```
 
 事件对象里的数据可以作为后续动作参数；日志只用于调试，不要把生产环境中的敏感数据交给 `env.debug`。

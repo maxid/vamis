@@ -158,12 +158,14 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     return false
   }
   const handler = getAction(type)
-  const debug = isVamisDebugEnabled(ctx.env) && typeof console !== 'undefined'
+  const hasTarget = !!(action.componentId || action.componentName || action.target)
+  const debug = isVamisDebugEnabled(ctx.env) && typeof console !== 'undefined' && (!!handler || hasTarget)
   if (debug) {
-    console.groupCollapsed?.(`[vamis] action ${type || 'component'}`)
-    console.debug('action', action)
-    console.debug('data', data)
-    console.debug('event', ctx.event)
+    const args = action.args && typeof action.args === 'object' ? dataMapping(action.args, data) : {}
+    const logData = publicScopeData(data)
+    delete logData.event
+    console.group?.(`[vamis] run action ${type}`)
+    console.debug(`[${type}] action args, data`, args, logData)
   }
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
@@ -173,7 +175,7 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     if (!action.ignoreError) throw error
   } finally {
     if (debug) {
-      console.debug('end', ctx.event)
+      console.debug(`[${type}] action end event`, ctx.event)
       console.groupEnd?.()
     }
   }

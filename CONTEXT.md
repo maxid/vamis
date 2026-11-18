@@ -84,6 +84,9 @@ flowchart LR
 
 **最近交付**
 
+- **Form / LazyComponent 的 `disabled` fallthrough 报警（2026-11-18）**：关 React DevTools 后仍见 warn，根因是 Form 单根 `LazyComponent` 在 `defaultVisible` 时为 slot fragment。`LazyComponent` `inheritAttrs: false`，Form 声明但不使用 `disabled`。不改 DOM、不影响表单控件禁用。未跑对照。
+- **Tpl / BadgeHost 不再因 `disabled` fallthrough 报警（2026-11-18）**：`SchemaRenderer` 一律传入的 `disabled` 对无角标 `BadgeHost`（根是 slot fragment）无法 inherit。宿主改 `inheritAttrs: false`，`Tpl` 声明但不使用该 prop。不改 DOM、不影响表单控件禁用。未跑对照。
+- **动作日志可读性修正（2026-11-18）**：改为 Amis 风格「参数 + 公开数据 / 结束事件」两条内容，不展开完整动作 schema，过滤 `__*` 与事件循环引用；无处理器的普通 Button 空动作不再记日志。真实浏览器输出已核，`pnpm test` **1092**、`typecheck` 0，事件动作对照 **52/52**。
 - **宿主 API 品牌修正（2026-11-18）**：动作与诊断开关统一为 `enableVamisDebug` / `window.enableVamisDebug` / URL `vamisDebug=1`，不再把 Amis 产品名暴露为 Vamis 主接口；文档、测试与站点规则同步。Schema 兼容字段不改名。
 - **数据映射过滤器收口（2026-11-18）**：按 Amis `filter.ts` 补齐序列化、日期、字符串、URL、数组、结构转换、算术、时长 / 字节、Base64、条件、map / filter；新增四组真实求值测试与组合活示例。数据映射 **90%→100%**，表达式与配置章节随 D8 诊断 / 错误边界同步到 **100%**。测试 **1090**；对照：数据映射 22/22、表达式 8/8、配置 4/4、事件动作 52/52、行为 / Action 38/38。另补 `qsOptions` 常用数组格式与编码控制，API 类型页同步。
 - **D8 运行时诊断与错误边界（2026-11-18）**：新增 `env.onDiagnostic` 与 API / 表达式 / 未知 type / 渲染器诊断；渲染异常显示带路径错误块。控制台由 Vamis 的三种开关激活，`extend/debug` 已更新。测试 **1087**、`typecheck` 0；可视化 Debug 面板与数据链检查器留作独立 UI 任务。

@@ -26,6 +26,9 @@ import {
 import { VamisGalleryToolIcon } from '@vamis/ui'
 import VamisOverlay from '../overlay/VamisOverlay.vue'
 
+/** 未启用时根是 `<slot />` fragment，不能 inherit 落下的 disabled。 */
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps<{
   schema: SchemaObject
   data?: Record<string, any>

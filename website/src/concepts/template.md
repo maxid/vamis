@@ -112,7 +112,7 @@ body:
 |--------|------|
 | `raw` | 不转义，Tpl 才按 HTML 插入 |
 | `html` | 转义 `<` `>` `&` 等 |
-| `json` | `JSON.stringify` |
+| `json` | 默认紧凑序列化；`json:2` 才按两格缩进格式化 |
 | `date` / `datetime` | 时间格式化（`date` 默认按 Unix 秒） |
 | `number` | 千分位 |
 | `percent` | 乘 100 加 `%` |
@@ -134,7 +134,11 @@ body:
     tpl: "数字 ${n|number} · 比例 ${ratio|percent:2}"
   - type: tpl
     tpl: "截断 ${title|truncate:5} · JSON ${obj|json} · 空值 ${age|default:'-'}"
+  - type: tpl
+    tpl: "<pre>${obj|json:2}</pre>"
 ```
+
+`json` 默认输出紧凑文本；只有 `${obj|json:2}` 才带换行和两格缩进。Toast 正文会保留这些换行；其它 HTML 场景可用 `<pre>` 包裹。
 
 写法：`${name|raw}`、`${n|percent:2}`、`${d|date:'YYYY-MM-DD':'YYYY-MM-DD'}`。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
 

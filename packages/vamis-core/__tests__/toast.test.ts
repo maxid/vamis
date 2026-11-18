@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
 import { pushToast, resetToasts, useToastState } from '../src/toast-store'
 import {
   isMobileToast,
@@ -168,3 +169,11 @@ describe('toast notices', () => {
   })
 })
 
+
+
+describe('toast formatting', () => {
+  it('preserves explicit json:2 whitespace in the real stylesheet', () => {
+    const css = readFileSync(new URL('../../vamis-ui/src/styles.css', import.meta.url), 'utf8')
+    expect(css).toMatch(/\.vamis-toast__body\s*\{[^}]*white-space:\s*pre-wrap/)
+  })
+})

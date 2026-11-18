@@ -612,6 +612,29 @@ describe('embed', () => {
     }))
   })
 
+  it('preserves explicit json:2 formatting in toast bodies', async () => {
+    const { host } = mount({
+      type: 'page',
+      data: { payload: { name: 'Vamis' } },
+      body: {
+        type: 'button',
+        label: '格式化 JSON',
+        onEvent: {
+          click: { actions: [{ actionType: 'toast', args: { msg: '${payload|json:2}' } }] },
+        },
+      },
+    })
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('格式化 JSON'))
+    button?.click()
+    let body: HTMLElement | null = null
+    await vi.waitFor(() => {
+      body = document.querySelector('.vamis-toast__body')
+      expect(body).not.toBeNull()
+    })
+    expect(body!.textContent).toContain('{\n  "name": "Vamis"\n}')
+  })
+
   it('prints a target component and cleans up temporary classes', async () => {
     const print = vi.fn()
     vi.stubGlobal('print', print)

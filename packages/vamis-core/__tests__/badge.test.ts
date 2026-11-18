@@ -66,6 +66,7 @@ describe('badge overlay skin', () => {
       'utf8',
     )
     expect(host).toContain('vamis-badge')
+    expect(host).toContain('inheritAttrs: false')
     expect(host).toContain('vamis-badge__ribbon-out')
     expect(host).toContain('vamis-badge__anim')
     expect(host).not.toContain('inline-flex')

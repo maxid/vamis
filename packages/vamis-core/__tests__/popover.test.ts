@@ -100,6 +100,7 @@ describe('popOver renderer / docs', () => {
     const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
     const docs = readFileSync(resolve(here, '../../../website/src/components/popover.md'), 'utf8')
     expect(host).toContain('VamisOverlay')
+    expect(host).toContain('inheritAttrs: false')
     expect(host).toContain('popOverPositionTarget')
     expect(host).toContain('defaultPosition')
     const staticVue = readFileSync(resolve(here, '../../vamis/src/renderers/form/Static.vue'), 'utf8')

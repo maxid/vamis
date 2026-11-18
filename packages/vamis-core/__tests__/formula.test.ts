@@ -73,6 +73,12 @@ describe('D2 runtime filters', () => {
     expect(filterTpl('${obj|json}', { obj: { a: 1 } })).toBe('{"a":1}')
   })
 
+  it('|json formats only when tabSize is provided', () => {
+    const data = { obj: { a: 1, nested: { b: 2 } } }
+    expect(filterTpl('${obj|json}', data)).toBe('{"a":1,"nested":{"b":2}}')
+    expect(filterTpl('${obj|json:2}', data)).toBe('{\n  "a": 1,\n  "nested": {\n    "b": 2\n  }\n}')
+  })
+
   it('|json does not turn undefined into null', () => {
     expect(filterTpl('${v|json}', {})).toBe('')
     expect(filterTpl('${event.data.value|json}', { event: { data: {} } })).toBe('')

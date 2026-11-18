@@ -611,11 +611,42 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #10",
-    "heading": "URL 参数",
+    "heading": "更新数据链",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": "${word}"
+      "data": {
+        "name": "vamis"
+      },
+      "body": [
+        {
+          "type": "input-text",
+          "name": "name",
+          "label": "请修改输入框"
+        },
+        {
+          "type": "switch",
+          "name": "syncSwitch",
+          "label": "同步更新"
+        },
+        {
+          "type": "crud",
+          "filter": {
+            "trackExpression": "${syncSwitch ? name : ''}",
+            "body": [
+              {
+                "type": "input-text",
+                "name": "name",
+                "label": "筛选条件中的名称"
+              },
+              {
+                "type": "tpl",
+                "tpl": "my name is ${name}"
+              }
+            ]
+          }
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -631,6 +662,26 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #11",
+    "heading": "URL 参数",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": "${word}"
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-datascope-and-datachain-11",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据域与数据链",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据域与数据链 #12",
     "heading": "隐藏数据",
     "expect": "",
     "schema": {
@@ -853,6 +904,10 @@ window.VAMIS_COMPARE_CASES = [
         {
           "type": "tpl",
           "tpl": "截断 ${title|truncate:5} · JSON ${obj|json} · 空值 ${age|default:'-'}"
+        },
+        {
+          "type": "tpl",
+          "tpl": "<pre>${obj|json:2}</pre>"
         }
       ]
     },
@@ -1683,6 +1738,45 @@ window.VAMIS_COMPARE_CASES = [
       "body": {
         "type": "tpl",
         "tpl": "${array|first|default:-}"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-data-mapping-21",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据映射",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据映射 #22",
+    "heading": "扩展过滤器",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "items": [
+          {
+            "name": "alpha",
+            "value": 2
+          },
+          {
+            "name": "beta",
+            "value": 1
+          },
+          {
+            "name": "alpha",
+            "value": 2
+          }
+        ]
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "${items|unique:name|sortBy:value:numerical:desc|pick:name|map:upperCase|join:' / '}"
       }
     },
     "measure": {
@@ -2685,46 +2779,48 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "尝试点击、鼠标移入/移出",
-        "level": "primary",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msgType": "info",
-                  "msg": "派发点击事件"
+      "body": [
+        {
+          "type": "button",
+          "label": "尝试点击、鼠标移入/移出",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "派发点击事件"
+                  }
                 }
-              }
-            ]
-          },
-          "mouseenter": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msgType": "info",
-                  "msg": "派发鼠标移入事件"
+              ]
+            },
+            "mouseenter": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "派发鼠标移入事件"
+                  }
                 }
-              }
-            ]
-          },
-          "mouseleave": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msgType": "info",
-                  "msg": "派发鼠标移出事件"
+              ]
+            },
+            "mouseleave": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "派发鼠标移出事件"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -2740,22 +2836,82 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #2",
-    "heading": "onEvent",
+    "heading": "上下文",
     "expect": "",
     "schema": {
       "type": "page",
+      "data": {
+        "p1": "p1"
+      },
       "body": {
-        "type": "button",
-        "label": "尝试点击",
-        "level": "primary",
+        "type": "form",
+        "debug": true,
+        "api": {
+          "url": "/api/mock2/form/saveForm",
+          "method": "post",
+          "data": {
+            "&": "$$",
+            "job": "coder"
+          }
+        },
+        "data": {
+          "job": "hr"
+        },
+        "body": [
+          {
+            "type": "alert",
+            "body": "监听姓名值变化，执行动作时读取输入的内容；监听年龄值变化，执行动作时读取input-text组件当前数据域（表单数据）",
+            "level": "info",
+            "className": "mb-1"
+          },
+          {
+            "type": "input-text",
+            "name": "name",
+            "label": "姓名：",
+            "onEvent": {
+              "change": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "${name}"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "input-text",
+            "name": "age",
+            "label": "年龄：",
+            "onEvent": {
+              "change": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "${__rendererData|json}"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
         "onEvent": {
-          "click": {
+          "submitSucc": {
             "actions": [
               {
                 "actionType": "toast",
                 "args": {
-                  "msgType": "info",
-                  "msg": "派发点击事件"
+                  "msg": "${event.data|json}"
+                }
+              },
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "${__rendererData|json}"
                 }
               }
             ]
@@ -2782,31 +2938,47 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "data": {
-        "name": "vamis"
+        "name": "lll"
       },
-      "body": {
-        "type": "button",
-        "label": "发送 Ajax 请求",
-        "level": "primary",
-        "confirmText": "确认要发出这个请求？",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "ajax",
-                "api": "/api/mock2/form/saveForm"
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msgType": "success",
-                  "msg": "请求已发出"
+      "body": [
+        {
+          "type": "button",
+          "id": "b_001",
+          "label": "发送 Ajax 请求",
+          "level": "primary",
+          "confirmText": "确认要发出这个请求？",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "ajax",
+                  "api": {
+                    "url": "/api/mock2/form/saveForm?name=${name}",
+                    "method": "post",
+                    "responseData": {
+                      "resId": "${id}"
+                    },
+                    "messages": {
+                      "success": "成功了！欧耶",
+                      "failed": "失败了呢。。"
+                    }
+                  },
+                  "data": {
+                    "age": 18
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "expression": "${event.data.responseResult.responseStatus === 0}",
+                  "args": {
+                    "msg": "${event.data.responseResult|json}"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -2822,31 +2994,51 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #4",
-    "heading": "发送 http 请求",
+    "heading": "静默模式",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "忽略错误继续",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "ajax",
-                "api": "/api/mock2/does-not-exist",
-                "ignoreError": true
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "请求失败了，但这句还是会弹出"
+      "data": {
+        "name": "lll"
+      },
+      "body": [
+        {
+          "type": "button",
+          "id": "b_001",
+          "label": "发送 Ajax 请求（静默模式）",
+          "level": "primary",
+          "confirmText": "确认要发出这个请求？",
+          "className": "m",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "ajax",
+                  "api": {
+                    "url": "/api/initData",
+                    "method": "post",
+                    "messages": {
+                      "success": "成功了！欧耶",
+                      "failed": "失败了呢。。"
+                    },
+                    "silent": true
+                  },
+                  "data": {
+                    "age": 18
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "expression": "${event.data.responseResult.responseStatus === 0}",
+                  "args": {
+                    "msg": "${event.data.responseResult|json}"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -2862,58 +3054,97 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #5",
-    "heading": "弹窗",
+    "heading": "可读取的数据",
     "expect": "",
     "schema": {
       "type": "page",
       "body": [
         {
           "type": "button",
-          "label": "打开弹窗",
+          "label": "表单外的校验按钮",
+          "className": "mb-2",
           "level": "primary",
           "onEvent": {
             "click": {
               "actions": [
                 {
-                  "actionType": "dialog",
-                  "dialog": {
-                    "title": "说明",
-                    "body": {
-                      "type": "tpl",
-                      "tpl": "对话框内容 ${name|default:'-'}"
-                    }
-                  }
+                  "componentId": "form_validate",
+                  "outputVar": "validateResult",
+                  "actionType": "validate"
                 },
                 {
-                  "actionType": "toast",
-                  "args": {
-                    "msgType": "info",
-                    "msg": "弹窗已打开"
+                  "outputVar": "responseResult",
+                  "actionType": "ajax",
+                  "api": {
+                    "method": "post",
+                    "url": "/api/mock2/form/saveForm",
+                    "data": {
+                      "name": "${name}",
+                      "email": "${email}"
+                    }
                   }
                 }
               ]
             }
-          }
+          },
+          "id": "u:bd7adb583ec8"
         },
         {
-          "type": "button",
-          "className": "m-l",
-          "label": "打开抽屉",
-          "onEvent": {
-            "click": {
-              "actions": [
-                {
-                  "actionType": "drawer",
-                  "drawer": {
-                    "title": "抽屉",
-                    "body": "抽屉内容"
-                  }
-                }
-              ]
+          "type": "form",
+          "id": "form_validate",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "name",
+              "label": "姓名：",
+              "required": true,
+              "id": "u:fbbc02500df6"
+            },
+            {
+              "name": "email",
+              "type": "input-text",
+              "label": "邮箱：",
+              "required": true,
+              "validations": {
+                "isEmail": true
+              },
+              "id": "u:830d0bad3e6a"
             }
-          }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "label": "表单内的校验按钮",
+              "level": "primary",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "componentId": "form_validate",
+                      "outputVar": "validateResult",
+                      "actionType": "validate"
+                    },
+                    {
+                      "outputVar": "responseResult",
+                      "actionType": "ajax",
+                      "api": {
+                        "method": "post",
+                        "url": "/api/mock2/form/saveForm",
+                        "data": {
+                          "name": "${name}",
+                          "email": "${email}"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "id": "u:bd7adb583ec8"
+            }
+          ]
         }
-      ]
+      ],
+      "id": "u:d79af3431de1"
     },
     "measure": {
       "type": "smoke"
@@ -2929,25 +3160,79 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #6",
-    "heading": "跳转链接",
+    "heading": "打开弹窗（模态）",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "跳到快速开始",
-        "level": "link",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "link",
-                "link": "/start/getting-started"
-              }
-            ]
+      "body": [
+        {
+          "type": "button",
+          "className": "ml-2",
+          "label": "打开弹窗（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "dialog",
+                  "dialog": {
+                    "type": "dialog",
+                    "title": "模态弹窗",
+                    "id": "dialog_001",
+                    "data": {
+                      "myage": "22"
+                    },
+                    "body": [
+                      {
+                        "type": "tpl",
+                        "tpl": "<p>对，你打开了模态弹窗</p>",
+                        "inline": false
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "myname",
+                        "mode": "horizontal",
+                        "onEvent": {
+                          "change": {
+                            "actions": [
+                              {
+                                "actionType": "confirm",
+                                "componentId": "dialog_001"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "onEvent": {
+                      "confirm": {
+                        "actions": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "confirm"
+                            }
+                          }
+                        ]
+                      },
+                      "cancel": {
+                        "actions": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "cancel"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -2963,53 +3248,81 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #7",
-    "heading": "刷新组件 / 改数据",
+    "heading": "关闭弹窗（模态）",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "form",
-        "id": "profile",
-        "data": {
-          "name": "Ada"
-        },
-        "body": [
-          {
-            "type": "input-text",
-            "name": "name",
-            "label": "姓名"
-          },
-          {
-            "type": "tpl",
-            "tpl": "当前值 ${name}"
-          },
-          {
-            "type": "button",
-            "label": "设成 Bob",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "setValue",
-                    "componentId": "profile",
-                    "args": {
-                      "value": {
-                        "name": "Bob"
+      "body": [
+        {
+          "type": "button",
+          "id": "b_003",
+          "label": "打开弹窗（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "dialog",
+                  "dialog": {
+                    "type": "dialog",
+                    "id": "dialog_002",
+                    "title": "模态弹窗",
+                    "body": [
+                      {
+                        "type": "button",
+                        "label": "打开子弹窗，然后关闭它的父亲",
+                        "onEvent": {
+                          "click": {
+                            "actions": [
+                              {
+                                "actionType": "dialog",
+                                "dialog": {
+                                  "type": "dialog",
+                                  "title": "模态子弹窗",
+                                  "body": [
+                                    {
+                                      "type": "button",
+                                      "label": "关闭指定弹窗（关闭父弹窗）",
+                                      "onEvent": {
+                                        "click": {
+                                          "actions": [
+                                            {
+                                              "actionType": "closeDialog",
+                                              "componentId": "dialog_002"
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "button",
+                        "label": "关闭当前弹窗",
+                        "className": "ml-2",
+                        "onEvent": {
+                          "click": {
+                            "actions": [
+                              {
+                                "actionType": "closeDialog"
+                              }
+                            ]
+                          }
+                        }
                       }
-                    }
-                  },
-                  {
-                    "actionType": "toast",
-                    "args": {
-                      "msg": "已写入 Bob"
-                    }
+                    ]
                   }
-                ]
-              }
+                }
+              ]
             }
           }
-        ]
-      }
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3025,29 +3338,60 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #8",
-    "heading": "事件上下文",
+    "heading": "打开抽屉（模态）",
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "role": "dev"
-      },
-      "body": {
-        "type": "button",
-        "label": "看 __rendererData",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "角色是 ${__rendererData.role}，事件 ${event.context.nativeEvent.type}"
+      "body": [
+        {
+          "type": "button",
+          "id": "b_004",
+          "level": "primary",
+          "label": "打开抽屉（模态）",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "drawer",
+                  "drawer": {
+                    "type": "drawer",
+                    "title": "模态抽屉",
+                    "body": [
+                      {
+                        "type": "tpl",
+                        "tpl": "<p>对，你打开了模态抽屉</p>",
+                        "inline": false
+                      }
+                    ],
+                    "onEvent": {
+                      "confirm": {
+                        "actions": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "confirm"
+                            }
+                          }
+                        ]
+                      },
+                      "cancel": {
+                        "actions": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "cancel"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3063,29 +3407,80 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #9",
-    "heading": "阻止默认行为",
+    "heading": "关闭抽屉（模态）",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "只跑 onEvent，不跑按钮自身动作",
-        "actionType": "toast",
-        "msg": "这句不该出现",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "来自 onEvent"
-                },
-                "preventDefault": true
-              }
-            ]
+      "body": [
+        {
+          "type": "button",
+          "label": "打开抽屉（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "drawer",
+                  "drawer": {
+                    "type": "drawer",
+                    "id": "drawer_1",
+                    "title": "模态抽屉",
+                    "body": [
+                      {
+                        "type": "button",
+                        "label": "打开子抽屉，然后关闭它的父亲",
+                        "onEvent": {
+                          "click": {
+                            "actions": [
+                              {
+                                "actionType": "drawer",
+                                "drawer": {
+                                  "type": "drawer",
+                                  "title": "模态子抽屉",
+                                  "body": [
+                                    {
+                                      "type": "button",
+                                      "label": "关闭指定抽屉(关闭父抽屉)",
+                                      "onEvent": {
+                                        "click": {
+                                          "actions": [
+                                            {
+                                              "actionType": "closeDrawer",
+                                              "componentId": "drawer_1"
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "button",
+                        "label": "关闭当前抽屉",
+                        "className": "ml-2",
+                        "onEvent": {
+                          "click": {
+                            "actions": [
+                              {
+                                "actionType": "closeDrawer"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3101,40 +3496,40 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #10",
-    "heading": "停止后续动作",
+    "heading": "打开确认弹窗",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "只弹出前两句",
-        "level": "primary",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "动作1"
-                }
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "动作2"
+      "data": {
+        "title": "操作确认",
+        "msg": "要删除它吗？"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "确认对话框（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "confirmDialog",
+                  "dialog": {
+                    "title": "${title}",
+                    "msg": "<span style=\"color:red\">${msg}</span>"
+                  }
                 },
-                "stopPropagation": true
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "动作3 不会出现"
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "确认ok啦！"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3150,46 +3545,70 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #11",
-    "heading": "条件执行",
+    "heading": "打开确认弹窗",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "form",
-        "data": {
-          "ok": false
-        },
-        "body": [
-          {
-            "type": "switch",
-            "name": "ok",
-            "label": "允许提示"
-          },
-          {
-            "type": "button",
-            "label": "尝试提示",
-            "onEvent": {
-              "click": {
-                "actions": [
-                  {
-                    "actionType": "toast",
-                    "expression": "${ok}",
-                    "args": {
-                      "msg": "开关打开才会看到"
-                    }
-                  },
-                  {
-                    "actionType": "toast",
-                    "args": {
-                      "msg": "这条总会弹出"
-                    }
+      "data": {
+        "title": "操作确认",
+        "msg": "确认提交吗？"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "自定义确认对话框（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "confirmDialog",
+                  "dialog": {
+                    "type": "dialog",
+                    "title": "${title}",
+                    "confirmText": "确认",
+                    "cancelText": "取消",
+                    "confirmBtnLevel": "primary",
+                    "data": {
+                      "&": "$$",
+                      "title": "确认"
+                    },
+                    "body": [
+                      {
+                        "type": "form",
+                        "initApi": "/api/mock2/form/initData",
+                        "title": "编辑用户信息",
+                        "body": [
+                          {
+                            "type": "input-text",
+                            "name": "name",
+                            "label": "姓名"
+                          },
+                          {
+                            "type": "input-text",
+                            "name": "email",
+                            "label": "邮箱"
+                          },
+                          {
+                            "type": "tpl",
+                            "tpl": "${msg}"
+                          }
+                        ]
+                      }
+                    ]
                   }
-                ]
-              }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "确认ok啦！"
+                  }
+                }
+              ]
             }
           }
-        ]
-      }
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3205,32 +3624,33 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #12",
-    "heading": "条件执行",
+    "heading": "提示对话框",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "button",
-        "label": "等一秒再提示",
-        "onEvent": {
-          "click": {
-            "actions": [
-              {
-                "actionType": "wait",
-                "args": {
-                  "timeMs": 1000
+      "data": {
+        "msg": "去吃饭了"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "提示对话框（模态）",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "alert",
+                  "dialog": {
+                    "title": "提示",
+                    "msg": "<a href=\"http://www.baidu.com\" target=\"_blank\">${msg}~</a>"
+                  }
                 }
-              },
-              {
-                "actionType": "toast",
-                "args": {
-                  "msg": "1 秒到了"
-                }
-              }
-            ]
+              ]
+            }
           }
         }
-      }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -3246,6 +3666,451 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "事件动作 #13",
+    "heading": "toast 提示",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "警告",
+          "level": "warning",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "warning",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "成功",
+          "level": "success",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "success",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "错误",
+          "level": "danger",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "error",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "提示",
+          "level": "info",
+          "className": "mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "tpl",
+          "tpl": "<br>"
+        },
+        {
+          "type": "button",
+          "label": "左上",
+          "className": "mr-2 mt-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-left"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "中上",
+          "className": "mr-2 mt-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-center"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "右上",
+          "className": "mt-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "tpl",
+          "tpl": "<br>"
+        },
+        {
+          "type": "button",
+          "label": "屏幕的中央",
+          "className": "ml-10 mt-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "center"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "tpl",
+          "tpl": "<br>"
+        },
+        {
+          "type": "button",
+          "label": "左下",
+          "className": "mr-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "bottom-left"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "中下",
+          "className": "mr-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "bottom-center"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "右下",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                    "position": "bottom-right"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-13",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #14",
+    "heading": "打开页面",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "myname": "lvxj",
+        "myjon": "player"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "百度一下",
+          "level": "primary",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "url",
+                  "args": {
+                    "url": "http://www.baidu.com",
+                    "blank": true,
+                    "params": {
+                      "name": "jack",
+                      "jon": "${myjon}"
+                    },
+                    "name": "${myname}",
+                    "age": 18
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-14",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #15",
+    "heading": "打开单页",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "跳转至「表达式」",
+          "level": "primary",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "link",
+                  "args": {
+                    "link": "./expression"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-15",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #16",
+    "heading": "浏览器回退",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "回退",
+          "level": "primary",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "goBack"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-16",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #17",
+    "heading": "前进/后退到指定页面",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "后退到上上个页面",
+          "level": "primary",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "goPage",
+                  "args": {
+                    "delta": -2
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-17",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #18",
+    "heading": "浏览器刷新",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新页面",
+          "level": "primary",
+          "className": "ml-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "refresh"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-18",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #19",
     "heading": "复制",
     "expect": "",
     "schema": {
@@ -3294,7 +4159,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-event-action-13",
+    "id": "src-concepts-event-action-19",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -3302,7 +4167,78 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "事件动作 #14",
+    "title": "事件动作 #20",
+    "heading": "打印",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "打印",
+          "level": "primary",
+          "className": "mr-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "print",
+                  "args": {
+                    "id": "mycrud"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "crud",
+          "api": "/api/mock2/sample",
+          "id": "mycrud",
+          "syncLocation": false,
+          "columns": [
+            {
+              "name": "id",
+              "label": "ID"
+            },
+            {
+              "name": "engine",
+              "label": "Rendering engine"
+            },
+            {
+              "name": "browser",
+              "label": "Browser"
+            },
+            {
+              "name": "platform",
+              "label": "Platform(s)"
+            },
+            {
+              "name": "version",
+              "label": "Engine version"
+            },
+            {
+              "name": "grade",
+              "label": "CSS grade"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-20",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #21",
     "heading": "发送邮件",
     "expect": "",
     "schema": {
@@ -3335,7 +4271,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-event-action-14",
+    "id": "src-concepts-event-action-21",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -3343,7 +4279,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "事件动作 #15",
+    "title": "事件动作 #22",
     "heading": "更新事件上下文数据",
     "expect": "",
     "schema": {
@@ -3382,7 +4318,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-event-action-15",
+    "id": "src-concepts-event-action-22",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -3390,7 +4326,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "事件动作 #16",
+    "title": "事件动作 #23",
     "heading": "等待",
     "expect": "",
     "schema": {
@@ -3429,6 +4365,2177 @@ window.VAMIS_COMPARE_CASES = [
           }
         }
       ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-23",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #24",
+    "heading": "自定义 JS",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "发送一个 http 请求",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "custom",
+                  "script": "doAction({actionType: 'ajax', args: {api: '/api/mock2/form/saveForm'}});\n //event.stopPropagation();"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-24",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #25",
+    "heading": "支持异步",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "form",
+          "title": "表单",
+          "body": [
+            {
+              "label": "编号",
+              "type": "input-text",
+              "name": "pId",
+              "id": "u:e47e2c8e6be8",
+              "mode": "horizontal",
+              "addOn": {
+                "label": "自动获取",
+                "type": "button",
+                "onEvent": {
+                  "click": {
+                    "actions": [
+                      {
+                        "componentId": "u:52cd013e120f",
+                        "actionType": "disabled"
+                      },
+                      {
+                        "script": "return new Promise((resolve, reject) => {setTimeout(() => {event.setData({...event.data, pId: '01027359'});resolve();}, 3000)})",
+                        "actionType": "custom"
+                      },
+                      {
+                        "componentId": "u:e47e2c8e6be8",
+                        "args": {
+                          "value": "${pId}"
+                        },
+                        "actionType": "setValue"
+                      },
+                      {
+                        "componentId": "u:52cd013e120f",
+                        "actionType": "enabled"
+                      }
+                    ],
+                    "weight": 0
+                  }
+                },
+                "id": "u:52cd013e120f"
+              }
+            }
+          ],
+          "apiFromAPICenter": false,
+          "id": "u:76203156676b"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-25",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #26",
+    "heading": "支持异步",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "form",
+          "title": "表单",
+          "body": [
+            {
+              "label": "编号",
+              "type": "input-text",
+              "name": "pId",
+              "id": "u:e47e2c8e6be7",
+              "mode": "horizontal",
+              "addOn": {
+                "label": "自动获取",
+                "type": "button",
+                "onEvent": {
+                  "click": {
+                    "actions": [
+                      {
+                        "componentId": "u:52cd013e120e",
+                        "actionType": "disabled"
+                      },
+                      {
+                        "script": "return (callback) => { setTimeout(() => {event.setData({...event.data, pId: '01027359' });callback();}, 3000) };",
+                        "actionType": "custom"
+                      },
+                      {
+                        "componentId": "u:e47e2c8e6be7",
+                        "args": {
+                          "value": "${pId}"
+                        },
+                        "actionType": "setValue"
+                      },
+                      {
+                        "componentId": "u:52cd013e120e",
+                        "actionType": "enabled"
+                      }
+                    ],
+                    "weight": 0
+                  }
+                },
+                "id": "u:52cd013e120e"
+              }
+            }
+          ],
+          "apiFromAPICenter": false,
+          "id": "u:76203156676a"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-26",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #27",
+    "heading": "更新组件数据",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "更新表单数据",
+      "data": {
+        "globalData": {
+          "myrole": "法官",
+          "mymsg": "该吃饭了!"
+        }
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "更新",
+          "level": "primary",
+          "className": "mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "setValue",
+                  "componentId": "form_data",
+                  "args": {
+                    "value": "${globalData}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "id": "form_data",
+          "title": "表单",
+          "debug": true,
+          "data": {
+            "myrole": "预言家",
+            "age": "18"
+          },
+          "initApi": "/api/mock2/form/initData",
+          "body": [
+            {
+              "type": "input-text",
+              "label": "角色",
+              "name": "myrole",
+              "disabled": false,
+              "mode": "horizontal"
+            },
+            {
+              "type": "input-text",
+              "label": "年龄",
+              "name": "age",
+              "disabled": false,
+              "mode": "horizontal"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-27",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #28",
+    "heading": "刷新组件请求",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新下拉框",
+          "className": "mb-2",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "select-reload"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "title": "表单",
+          "body": [
+            {
+              "type": "select",
+              "id": "select-reload",
+              "name": "select",
+              "label": "选项",
+              "source": "/api/mock2/form/getOptions?waitSeconds=1"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-28",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #29",
+    "heading": "刷新组件请求",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "name": "amis",
+        "age": 18,
+        "date": "2023-6-6"
+      },
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新CRUD数据加载请求，同时追加参数",
+          "level": "primary",
+          "className": "mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "crud_reload",
+                  "actionType": "reload",
+                  "data": {
+                    "author": "${author}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "crud",
+          "api": "/api/mock2/sample",
+          "id": "crud_reload",
+          "syncLocation": false,
+          "columns": [
+            {
+              "name": "id",
+              "label": "ID"
+            },
+            {
+              "name": "engine",
+              "label": "Rendering engine"
+            },
+            {
+              "name": "browser",
+              "label": "Browser"
+            },
+            {
+              "name": "platform",
+              "label": "Platform(s)"
+            },
+            {
+              "name": "version",
+              "label": "Engine version"
+            },
+            {
+              "name": "grade",
+              "label": "CSS grade"
+            },
+            {
+              "type": "operation",
+              "label": "操作",
+              "buttons": [
+                {
+                  "label": "详情",
+                  "type": "button",
+                  "level": "link",
+                  "actionType": "dialog",
+                  "dialog": {
+                    "title": "查看详情",
+                    "body": {
+                      "type": "form",
+                      "body": [
+                        {
+                          "type": "input-text",
+                          "name": "engine",
+                          "label": "Engine"
+                        },
+                        {
+                          "type": "input-text",
+                          "name": "browser",
+                          "label": "Browser"
+                        },
+                        {
+                          "type": "input-text",
+                          "name": "platform",
+                          "label": "platform"
+                        },
+                        {
+                          "type": "input-text",
+                          "name": "version",
+                          "label": "version"
+                        },
+                        {
+                          "type": "control",
+                          "label": "grade",
+                          "body": {
+                            "type": "tag",
+                            "label": "${grade}",
+                            "displayMode": "normal",
+                            "color": "active"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "label": "删除",
+                  "type": "button",
+                  "level": "link",
+                  "className": "text-danger",
+                  "disabledOn": "this.grade === 'A'"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-29",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #30",
+    "heading": "刷新组件请求",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新Service数据加载请求，同时把年龄更新为18",
+          "level": "primary",
+          "className": "mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "service_reload",
+                  "actionType": "reload",
+                  "data": {
+                    "age": "18"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "api": "/api/mock2/form/initData",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "我的名字：${name}, 我的年龄：${age|default:'-'}",
+              "wrapperComponent": "",
+              "inline": false
+            }
+          ],
+          "id": "service_reload"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-30",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #31",
+    "heading": "刷新组件请求",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "刷新Service数据",
+          "level": "primary",
+          "className": "mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "service_reload",
+                  "actionType": "reload",
+                  "outputVar": "service1"
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "service 的数据返回为： ${service1|json}"
+                  }
+                },
+                {
+                  "componentId": "service_reload2",
+                  "actionType": "reload",
+                  "data": {
+                    "date": "${service1.date}"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "service",
+          "api": {
+            "method": "get",
+            "url": "/api/mock2/form/initData",
+            "trackExpression": "none"
+          },
+          "body": [],
+          "initFetch": false,
+          "id": "service_reload"
+        },
+        {
+          "type": "service",
+          "api": {
+            "method": "get",
+            "url": "/api/mock2/form/initData?date=${date}",
+            "trackExpression": "none"
+          },
+          "body": [],
+          "initFetch": false,
+          "id": "service_reload2"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-31",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #32",
+    "heading": "修改组件状态",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "显示表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "show",
+                  "componentId": "form_hidden"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "隐藏表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "hidden",
+                  "componentId": "form_hidden"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "id": "form_hidden",
+          "title": "表单",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "text",
+              "label": "输入框",
+              "mode": "horizontal",
+              "value": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-32",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #33",
+    "heading": "修改组件状态",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "id": "b_dis",
+          "label": "禁用表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "disabled": true,
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "disabled",
+                  "componentId": "form_disable"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "启用表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "enabled",
+                  "componentId": "form_disable"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "id": "form_disable",
+          "title": "表单",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "text",
+              "label": "输入框",
+              "mode": "horizontal",
+              "value": "text"
+            },
+            {
+              "type": "group",
+              "body": [
+                {
+                  "type": "button",
+                  "className": "ml-2",
+                  "label": "禁用【禁用】",
+                  "level": "primary",
+                  "onEvent": {
+                    "click": {
+                      "actions": [
+                        {
+                          "actionType": "disabled",
+                          "componentId": "b_dis"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "button",
+                  "className": "ml-2",
+                  "label": "启用【禁用】",
+                  "level": "primary",
+                  "onEvent": {
+                    "click": {
+                      "actions": [
+                        {
+                          "actionType": "enabled",
+                          "componentId": "b_dis"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-33",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #34",
+    "heading": "修改组件状态",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "静态展示表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "static",
+                  "componentId": "form_static"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "非静态展示表单",
+          "level": "primary",
+          "className": "mr-2 mb-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "nonstatic",
+                  "componentId": "form_static"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "id": "form_static",
+          "title": "表单",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "text",
+              "label": "输入框",
+              "mode": "horizontal",
+              "value": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-34",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #35",
+    "heading": "执行目标组件的动作",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "选中选项卡2",
+          "level": "primary",
+          "className": "mr-3 mb-3",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "changeActiveKey",
+                  "componentId": "tabs-change-receiver",
+                  "args": {
+                    "activeKey": 2
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "tabs-change-receiver",
+          "type": "tabs",
+          "mode": "line",
+          "tabs": [
+            {
+              "title": "选项卡1",
+              "body": "选项卡内容1"
+            },
+            {
+              "title": "选项卡2",
+              "body": "选项卡内容2"
+            },
+            {
+              "title": "选项卡3",
+              "body": "选项卡内容3"
+            }
+          ]
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-35",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #36",
+    "heading": "触发广播",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "name": "role",
+          "type": "select",
+          "label": "广播一下",
+          "mode": "row",
+          "options": [
+            {
+              "label": "海贼王的男人",
+              "value": "路飞"
+            },
+            {
+              "label": "海上华佗",
+              "value": "乔巴"
+            },
+            {
+              "label": "海上食神",
+              "value": "山治"
+            }
+          ],
+          "onEvent": {
+            "change": {
+              "actions": [
+                {
+                  "actionType": "broadcast",
+                  "args": {
+                    "eventName": "broadcast_1"
+                  },
+                  "data": {
+                    "myrole": "${role}",
+                    "age": 18
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "id": "form_001",
+          "title": "表单1（优先级低）",
+          "name": "sub-form1",
+          "body": [
+            {
+              "type": "input-text",
+              "label": "昵称",
+              "name": "myname",
+              "disabled": false,
+              "mode": "horizontal"
+            }
+          ],
+          "onEvent": {
+            "broadcast_1": {
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "form_001",
+                  "data": {
+                    "myname": "${myrole}"
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "表单1刷新完成"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "name": "form2",
+          "id": "form_002",
+          "title": "表单2（优先级中）",
+          "body": [
+            {
+              "type": "input-text",
+              "label": "角色",
+              "name": "myrole",
+              "disabled": false,
+              "mode": "horizontal"
+            },
+            {
+              "type": "input-text",
+              "label": "年龄",
+              "name": "age",
+              "disabled": false,
+              "mode": "horizontal"
+            }
+          ],
+          "onEvent": {
+            "broadcast_1": {
+              "weight": 2,
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "form_002",
+                  "data": {
+                    "myrole": "${myrole}",
+                    "age": "${age}"
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "表单2刷新完成"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "name": "form3",
+          "id": "form_003",
+          "title": "表单3（优先级高）",
+          "body": [
+            {
+              "type": "input-text",
+              "id": "form_003_text_01",
+              "label": "职业",
+              "name": "job",
+              "disabled": false,
+              "mode": "horizontal"
+            }
+          ],
+          "api": "/api/form/form3",
+          "onEvent": {
+            "broadcast_1": {
+              "weight": 3,
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "form_003",
+                  "data": {
+                    "job": "${myrole}"
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "表单3刷新完成"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-36",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #37",
+    "heading": "条件",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "expression": "okk",
+          "name": "amis",
+          "features": [
+            "flexible",
+            "powerful"
+          ],
+          "tool": "amis-editor",
+          "platform": "aisuda",
+          "detail": {
+            "version": "2.8.0",
+            "github": "https://github.com/maxid/vamis"
+          }
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "符合条件的执行",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msgType": "success",
+                      "msg": "expression表达式 ok~"
+                    },
+                    "expression": "expression === \"okk\""
+                  },
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "1"
+                    },
+                    "expression": "expression === \"nono\""
+                  },
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msgType": "success",
+                      "msg": "conditin-builder条件组合 也ok~"
+                    },
+                    "expression": {
+                      "id": "b6434ead40cc",
+                      "conjunction": "and",
+                      "children": [
+                        {
+                          "id": "e92b93840f37",
+                          "left": {
+                            "type": "field",
+                            "field": "name"
+                          },
+                          "op": "equal",
+                          "right": "amis"
+                        },
+                        {
+                          "id": "3779845521db",
+                          "left": {
+                            "type": "field",
+                            "field": "features"
+                          },
+                          "op": "select_any_in",
+                          "right": "${[LAST(features)]}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-37",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #38",
+    "heading": "单层循环",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "loopName": "loopData",
+          "loopData": [
+            {
+              "name": "lv",
+              "age": "19"
+            },
+            {
+              "name": "xj",
+              "age": "21"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "循环发送两次请求，且每次携带了循环的数据",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "loop",
+                    "args": {
+                      "loopName": "${loopName}"
+                    },
+                    "children": [
+                      {
+                        "actionType": "ajax",
+                        "args": {
+                          "api": "/api/mock2/form/saveForm?name=${name}&age=${age}"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-38",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #39",
+    "heading": "嵌套循环",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "loopName": "loopData",
+          "loopData": [
+            {
+              "name": "lv",
+              "age": "19"
+            },
+            {
+              "name": "xj",
+              "age": "21"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "循环",
+            "className": "m-2",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "loop",
+                    "preventDefault": false,
+                    "stopPropagation": false,
+                    "args": {
+                      "loopName": "${loopName}"
+                    },
+                    "children": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "第1层循环动作1${name}"
+                        },
+                        "preventDefault": false,
+                        "stopPropagation": false
+                      },
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "第1层循环动作2${name}"
+                        }
+                      },
+                      {
+                        "actionType": "loop",
+                        "args": {
+                          "loopName": "${loopName}"
+                        },
+                        "children": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "第2层循环动作1${name}"
+                            }
+                          },
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "第2层循环动作2${name}"
+                            },
+                            "preventDefault": false,
+                            "stopPropagation": false
+                          },
+                          {
+                            "actionType": "continue"
+                          },
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "第2层循环动作3${name}"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-39",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #40",
+    "heading": "Break 动作",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "loopName": "loopData",
+          "loopData": [
+            {
+              "name": "lv",
+              "age": "19"
+            },
+            {
+              "name": "xj",
+              "age": "21"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "只执行了第一个动作就跳出了循环",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "loop",
+                    "args": {
+                      "loopName": "${loopName}"
+                    },
+                    "children": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "success",
+                          "msg": "第 1 个动作",
+                          "position": "top-right"
+                        }
+                      },
+                      {
+                        "actionType": "break"
+                      },
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "success",
+                          "msg": "第 2 个动作",
+                          "position": "top-right"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-40",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #41",
+    "heading": "Continue 动作",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "loopName": "loopData",
+          "loopData": [
+            {
+              "name": "lv",
+              "age": "19"
+            },
+            {
+              "name": "xj",
+              "age": "21"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "只循环执行第一个动作",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "loop",
+                    "args": {
+                      "loopName": "${loopName}",
+                      "level": 3
+                    },
+                    "children": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "success",
+                          "msg": "第 1 个动作",
+                          "position": "top-right"
+                        }
+                      },
+                      {
+                        "actionType": "continue"
+                      },
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "success",
+                          "msg": "最后的动作",
+                          "position": "top-right"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-41",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #42",
+    "heading": "排他（switch）",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "branchCont": 18
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "只执行动作2",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "switch",
+                    "children": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "info",
+                          "msg": "动作1",
+                          "position": "top-right"
+                        },
+                        "expression": "this.branchCont > 19",
+                        "stopPropagation": true
+                      },
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "info",
+                          "msg": "动作2",
+                          "position": "top-right"
+                        },
+                        "expression": "this.branchCont > 17"
+                      },
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msgType": "info",
+                          "msg": "动作3",
+                          "position": "top-right"
+                        },
+                        "expression": "this.branchCont > 16"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-42",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #43",
+    "heading": "并行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "wrapWithPanel": false,
+        "data": {
+          "name": "lvxj",
+          "age": "kkkk"
+        },
+        "body": [
+          {
+            "type": "button",
+            "label": "同时发送两个ajax请求，并显示请求返回",
+            "level": "primary",
+            "onEvent": {
+              "click": {
+                "actions": [
+                  {
+                    "actionType": "parallel",
+                    "children": [
+                      {
+                        "actionType": "ajax",
+                        "args": {
+                          "api": {
+                            "url": "/api/mock2/form/initData?name=${name}",
+                            "method": "get"
+                          },
+                          "messages": {
+                            "success": "请求1成功了！欧耶",
+                            "failed": "失败了呢。。"
+                          }
+                        },
+                        "outputVar": "var1"
+                      },
+                      {
+                        "actionType": "ajax",
+                        "args": {
+                          "api": {
+                            "url": "/api/mock2/form/saveForm?name=${name}",
+                            "method": "get"
+                          },
+                          "messages": {
+                            "success": "请求2成功了！欧耶",
+                            "failed": "失败了呢。。"
+                          }
+                        },
+                        "outputVar": "var2"
+                      },
+                      {
+                        "actionType": "ajax",
+                        "args": {
+                          "api": {
+                            "url": "/api/mock2/form/saveForm?name=${name}",
+                            "method": "get"
+                          },
+                          "messages": {
+                            "success": "请求3成功了！欧耶",
+                            "failed": "失败了呢。。"
+                          }
+                        },
+                        "outputVar": "var3"
+                      }
+                    ]
+                  },
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "var1:${event.data.var1|json}, var2:${event.data.var2|json}, var3:${event.data.var3|json}"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-43",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #44",
+    "heading": "并行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "id": "b_001",
+          "label": "发一个广播，携带动作参数",
+          "className": "mb-2",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "broadcast",
+                  "args": {
+                    "eventName": "broadcast_1"
+                  },
+                  "data": {
+                    "name": "lvxj",
+                    "age": 18
+                  },
+                  "description": "一个按钮的点击事件"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "form",
+          "name": "form1",
+          "id": "form_001",
+          "title": "接收广播事件的参数",
+          "debug": true,
+          "body": [
+            {
+              "type": "input-text",
+              "id": "form_001_text_01",
+              "label": "年龄",
+              "name": "age",
+              "disabled": false,
+              "mode": "horizontal"
+            }
+          ],
+          "data": {
+            "name": "amis"
+          },
+          "onEvent": {
+            "broadcast_1": {
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "data": {
+                    "age": "${age}",
+                    "name": "${name}"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-44",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #45",
+    "heading": "并行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "button",
+          "label": "发送Ajax请求，并把返回数据传给弹窗",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "ajax",
+                  "args": {
+                    "api": "/api/mock2/form/saveForm"
+                  }
+                },
+                {
+                  "actionType": "dialog",
+                  "data": {
+                    "id": "${event.data.responseResult.responseData.id}"
+                  },
+                  "dialog": {
+                    "type": "dialog",
+                    "id": "dialog_005",
+                    "title": "弹框标题1",
+                    "data": {
+                      "id": "${id}"
+                    },
+                    "body": [
+                      {
+                        "type": "form",
+                        "body": [
+                          {
+                            "type": "tpl",
+                            "tpl": "<p>请求返回的数据：id=${id}</p>",
+                            "inline": false
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-45",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #46",
+    "heading": "并行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "form",
+          "id": "form_get_render",
+          "wrapWithPanel": false,
+          "data": {
+            "name": "amis",
+            "age": "18"
+          },
+          "body": [
+            {
+              "type": "input-text",
+              "name": "name",
+              "label": "name"
+            },
+            {
+              "type": "input-text",
+              "name": "age",
+              "label": "age"
+            }
+          ],
+          "className": "mb-2"
+        },
+        {
+          "type": "button",
+          "className": "mt-2",
+          "label": "获取表单相关数据",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "name:${GETRENDERERDATA(\"form_get_render\", \"name\")},type:${GETRENDERERPROP(\"form_get_render\", \"type\")}"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-46",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #47",
+    "heading": "阻止事件默认行为",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "弹窗确认后执行其他动作并阻止默认关闭",
+      "body": [
+        {
+          "type": "button",
+          "className": "ml-2",
+          "label": "打开弹窗",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "dialog",
+                  "dialog": {
+                    "type": "dialog",
+                    "title": "提示",
+                    "id": "dialog_001",
+                    "data": {
+                      "myage": "22"
+                    },
+                    "body": [
+                      {
+                        "type": "alert",
+                        "body": "输入Do not close，确认后将不关闭弹窗",
+                        "level": "warning"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "command"
+                      }
+                    ],
+                    "onEvent": {
+                      "confirm": {
+                        "actions": [
+                          {
+                            "actionType": "toast",
+                            "args": {
+                              "msg": "不关闭"
+                            },
+                            "preventDefault": "command === \"Do not close\""
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-47",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #48",
+    "heading": "阻止事件默认行为",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "弹窗确认后执行其他动作并阻止默认关闭",
+      "body": [
+        {
+          "type": "button",
+          "className": "ml-2",
+          "label": "打开弹窗",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "dialog",
+                  "dialog": {
+                    "type": "dialog",
+                    "title": "提示",
+                    "id": "dialog_001",
+                    "data": {
+                      "myage": "22"
+                    },
+                    "body": [
+                      {
+                        "type": "alert",
+                        "body": "输入Do not close，确认后将不关闭弹窗",
+                        "level": "warning"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "command"
+                      }
+                    ],
+                    "onEvent": {
+                      "confirm": {
+                        "actions": [
+                          {
+                            "actionType": "preventDefault",
+                            "expression": "${command === 'Do not close'}"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-48",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #49",
+    "heading": "停止后续动作执行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "只执行3个动作中的前两个动作",
+      "body": [
+        {
+          "type": "button",
+          "label": "弹出2个提示",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "动作1"
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "动作2"
+                  },
+                  "stopPropagation": true
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "动作3",
+                    "position": "top-right"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-49",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #50",
+    "heading": "停止后续动作执行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "只执行第一个动作",
+      "body": [
+        {
+          "type": "button",
+          "label": "弹出一个提示",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "后续的动作将不会执行"
+                  }
+                },
+                {
+                  "actionType": "stopPropagation",
+                  "expression": "${true}"
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "动作2"
+                  }
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msgType": "info",
+                    "msg": "动作3"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-50",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #51",
+    "heading": "忽略动作报错继续执行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "title": "第一个按钮发生错误直接阻塞执行，第二个按钮发生错误后仍然执行",
+      "body": [
+        {
+          "type": "button",
+          "label": "无法弹出提示",
+          "level": "primary",
+          "className": "mr-2",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "notfound"
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "okk"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "button",
+          "label": "可以弹出提示",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "actionType": "reload",
+                  "componentId": "notfound",
+                  "ignoreError": true
+                },
+                {
+                  "actionType": "toast",
+                  "args": {
+                    "msg": "okk"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-event-action-51",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "事件动作",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "事件动作 #52",
+    "heading": "忽略动作报错继续执行",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "input-text",
+        "name": "keyword",
+        "label": "搜索关键字",
+        "onEvent": {
+          "change": {
+            "debounce": {
+              "wait": 300,
+              "maxWait": 1000
+            },
+            "track": {
+              "id": "search",
+              "name": "搜索输入"
+            },
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "当前输入：${keyword}"
+                }
+              }
+            ]
+          }
+        }
+      }
     },
     "measure": {
       "type": "smoke"

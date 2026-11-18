@@ -517,6 +517,7 @@ describe('Amis width helpers', () => {
     expect(docView).toContain('scrollWithin')
     expect(docView).not.toMatch(/\.scrollIntoView\s*\(/)
     expect(lazy).toContain('defaultVisible: false')
+    expect(lazy).toContain('inheritAttrs: false')
     expect(lazy).toContain('unMountOnHidden: false')
     expect(lazy).toContain('partialVisibility: true')
     expect(lazy).not.toContain('rootMargin')

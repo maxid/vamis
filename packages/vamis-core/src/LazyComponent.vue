@@ -7,7 +7,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
  * 不是 Page 内核开关；Page / Form 的 initApi 仍走自身 `onMounted`。
  *
  * 文档栏是 overflow 容器：观察 root 用最近的 scroll 祖先（Amis 文档同样是内层滚动）。
+ *
+ * `defaultVisible` 时根是 `<slot />` fragment。Form 是单根 LazyComponent，
+ * SchemaRenderer 的 `disabled` 会 fallthrough 进来，不能 inherit。
  */
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(
   defineProps<{
     defaultVisible?: boolean

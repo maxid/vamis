@@ -144,7 +144,7 @@ describe('control flow and browser actions', () => {
   })
 
   it('logs action args, data and event only when env.debug is enabled', async () => {
-    const group = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => undefined)
+    const group = vi.spyOn(console, 'group').mockImplementation(() => undefined)
     const debug = vi.spyOn(console, 'debug').mockImplementation(() => undefined)
     const end = vi.spyOn(console, 'groupEnd').mockImplementation(() => undefined)
     try {
@@ -152,18 +152,24 @@ describe('control flow and browser actions', () => {
       expect(group).not.toHaveBeenCalled()
       const event = createVamisEvent('click', { name: 'Vamis' })
       await runAction({ actionType: 'toast', args: { msg: 'logged' } }, ctx({ event, env: { ...ctx().env, debug: true } }))
-      expect(group).toHaveBeenCalledWith('[vamis] action toast')
-      expect(debug).toHaveBeenCalledWith('action', expect.objectContaining({ actionType: 'toast' }))
-      expect(debug).toHaveBeenCalledWith('data', expect.objectContaining({ msg: 'logged' }))
-      expect(debug).toHaveBeenCalledWith('event', event)
+      expect(group).toHaveBeenCalledWith('[vamis] run action toast')
+      expect(debug).toHaveBeenCalledWith(
+        '[toast] action args, data',
+        { msg: 'logged' },
+        expect.not.objectContaining({ event: expect.anything(), __super: expect.anything() }),
+      )
+      expect(debug).toHaveBeenCalledWith('[toast] action end event', event)
       expect(end).toHaveBeenCalledOnce()
+      group.mockClear()
+      await runAction({ type: 'button', actionType: 'button' }, ctx({ env: { ...ctx().env, debug: true } }))
+      expect(group).not.toHaveBeenCalled()
     } finally {
       vi.restoreAllMocks()
     }
   })
 
   it('supports Amis env, global and URL debug activation', async () => {
-    const group = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => undefined)
+    const group = vi.spyOn(console, 'group').mockImplementation(() => undefined)
     vi.spyOn(console, 'debug').mockImplementation(() => undefined)
     vi.spyOn(console, 'groupEnd').mockImplementation(() => undefined)
     try {

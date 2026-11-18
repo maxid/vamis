@@ -7,6 +7,8 @@ import BadgeHost from './BadgeHost.vue'
 const props = defineProps<{
   schema: SchemaObject
   data: Record<string, any>
+  /** SchemaRenderer 一律传入；tpl 无禁用外观，声明以免落到 BadgeHost fragment。 */
+  disabled?: boolean
 }>()
 
 const tag = computed(() => {

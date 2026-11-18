@@ -48,6 +48,12 @@ alwaysApply: true
 - 触及：`action` `button` `chart` SDK 广播 控制流
 - 规则：`packages/vamis-core/src/actions/run.ts`；`packages/vamis-core/src/event-bus.ts`
 
+### 动作日志只留参数、公开数据和结束事件
+- 踩过：把完整 action schema、`scope.resolved()`、event 分多行输出，动作嵌套和 `__*` 内部对象淹没关键信息；普通 Button 没有处理器也留下空分组。
+- 稳定做法：每组只输出 `[type] action args, data` 与 `[type] action end event`。数据先过 `publicScopeData` 并去掉 event；无内置 handler 且无组件目标的空动作不记日志。
+- 触及：`action` `button` D8 调试
+- 规则：`packages/vamis-core/src/actions/run.ts`
+
 ### onEvent 高级配置下沉到 runOnEvent，不要只挂宿主 DOM
 - 踩过：`debounce` / `track` 只写 SchemaRenderer 的 click 宿主时，InputText 等组件自己派发的 change 完全绕过，配置不生效。
 - 稳定做法：`runOnEvent` 统一读取监听器的 debounce / track；按 schema + eventName 保存去抖器，卸载时取消。普通组件事件、宿主事件、广播都走这里。`track` 每次事件都上报，动作按配置去抖。
@@ -295,6 +301,12 @@ alwaysApply: true
 - 稳定做法：`RendererConfig` 加 `wrap?: boolean`；`registerRenderer({ type: 'hidden', wrap: false })`；SchemaRenderer 在 `wrap === false` 时直接挂组件（不落包装层、不可拖拽选中）。组件返回 null/注释，值仍由表单域初始化与提交。
 - 触及：`hidden`
 - 规则：`packages/vamis-core/src/SchemaRenderer.vue`；`packages/vamis-core/src/types.ts`
+
+### 无 chrome 的宿主 fragment 根要 inheritAttrs: false
+- 踩过：`SchemaRenderer` 一律传 `disabled`。字符串 `body` 收成 `tpl` 落到 `BadgeHost`；Form 单根是 `LazyComponent`，`defaultVisible` 时根也是 `<slot />` fragment。Vue 报警，来源常被 React DevTools 的 `installHook.js` 抢走。
+- 稳定做法：`BadgeHost` / `PopOverHost` / `LazyComponent` 这类「未启用就只 slot」的宿主 `inheritAttrs: false`。渲染器声明但不用 `disabled`（`Tpl` / `Form`）。不要为了消 warn 再包一层 span。表单控件自己的 `disabled` prop 不受影响。
+- 触及：`tpl` `badge` `popOver` `form` LazyComponent
+- 规则：本文；`packages/vamis-core/src/LazyComponent.vue`
 
 ### 禁止嵌套 HTML form
 - 踩过：嵌套 `type: form` 仍输出 `<form>`，Enter 提交祖先表单。

@@ -53,6 +53,8 @@ import FormRow from './form/FormRow.vue'
 const props = defineProps<{
   schema: SchemaObject
   data: Record<string, any>
+  /** SchemaRenderer 一律传入；声明以免落到根上的 LazyComponent fragment。 */
+  disabled?: boolean
 }>()
 
 const env = useEnv()

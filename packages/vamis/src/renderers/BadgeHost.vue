@@ -19,6 +19,9 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 
+/** 无 badge 时根是 `<slot />` fragment，不能 inherit SchemaRenderer 经 Tpl 落下的 disabled。 */
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps<{
   schema: SchemaObject
   data?: Record<string, any>
