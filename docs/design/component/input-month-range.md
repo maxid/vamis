@@ -1,82 +1,104 @@
 # InputMonthRange 月份范围 · `input-month-range` 设计
 
-> 状态：**进行中 45%** · 复杂度：**M 中**
-> 文档：[/components/form/input-month-range](/components/form/input-month-range) · Amis 文档：`/zh-CN/components/form/input-month-range`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 60%** · 复杂度：**M 中**
+> 文档：[在线 API 手册](/components/form/input-month-range) · Amis：`/zh-CN/components/form/input-month-range`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputMonthRange **没有独立渲染器**：`extras/form.ts` 把 month/quarter/year range 都注册到 `DatePartRange.vue`。当前是两个原生输入 + “至”分隔；`readRangeValue/writeRangeValue` 支持 delimiter/对象。没有日历、范围校验、格式转换、事件/动作。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **共享组件**：month-range/quarter-range/year-range 共用；改一个确认另外两个。
+2. **值形态**：`readRangeValue` / `writeRangeValue` 决定对象 `{start,end}` 或 delimiter 字符串；不要手写 join。
+3. **原生控件**：month `type=month`；year `type=number`；quarter 年+Q 两组。
+4. **顺序**：start > end 当前不拦截；是否交换/校验未定义，不能声称已限制。
+5. **写回**：无 name 不写；空串保持空。
+6. **包边界**：无 `<style>`、无 fetch；输入/下拉 token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空值/只填一端/start>end/同年同月/跨年
+- delimiter 字符串/对象/空 delimiter
+- month/quarter/year 类型
+- disabled/static、FormItem 错误
+- 外部 setValue/reset
+- 窄屏/深色
+- 日历/范围校验/事件动作（未接）
+
+### 1.3 优先级
+
+1. 值形态/两输入
+2. start/end 顺序
+3. 类型/禁用/校验
+4. 事件/动作/样式
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**95** 行；Vamis 实现：**116** 行；依赖：**2** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 116 行 + Amis 95 行 + 2 依赖 + form
+- 等级：**M 中**（Amis 系列；Vamis DatePartRange 116 行，共享）
+- 依赖：`FormItem`、range 工具、quarter 工具
+- 风险：三类共用 + 顺序未校验
 
 ## 3. Amis 契约
 
-- 入口 type：`input-month-range`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputMonthRange.tsx`
-- 依赖：`input-date-range`, `input-month`
-- 文档章节：`/zh-CN/components/form/input-month-range`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 范围 | 已接 |
+| `delimiter` | 字符串分隔 | 已接 |
+| `type` | month/quarter/year | 共享 DatePartRange |
+| `min` / `max` | 范围 | year 原生 1900–2100 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/DatePartRange.vue`](../../../packages/vamis/src/renderers/form/DatePartRange.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`extras/form.ts`](../../../packages/vamis/src/extras/form.ts)：三种 range 注册。
+- [`form/DatePartRange.vue`](../../../packages/vamis/src/renderers/form/DatePartRange.vue)：kind/range/quarter。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验/状态。
+
+### 数据流
+
+```text
+field value → readRangeValue(delimiter) → {start,end}
+输入 → range → writeRangeValue(delimiter) → setValue
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-date-part-range__sep`, `.vamis-native-select`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 两输入 + 至；无专属皮肤类、无 `<style>`。
+- 窄屏并排/换行；深色原生控件单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：DatePartRange 精简
-- 状态：进行中，进度 45%；如进度未到 100，按上条缺口补齐。
+- 已接：month/quarter/year 三种范围、delimiter、两输入写回、year 1900–2100。
+- 未接：start/end 顺序校验、日历、格式转换、事件/动作、深色/窄屏。
+- 对照：TODO 60%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-month-range`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] 共享 DatePartRange 注册已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前无）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（DatePartRange 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- [ ] `pnpm compare --page input-month-range` 桌面
+- [ ] `pnpm compare --page input-month-range --mobile`
+- [ ] 深色 / 375px 窄屏
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 三类共享测试 + start/end 顺序策略。
+2. 格式/校验/事件动作若需要，先改共享设计。
+3. 深色/窄屏专项。
 
 ---
+
 返回 [组件设计索引](README.md)
