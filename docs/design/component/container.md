@@ -1,83 +1,77 @@
 # Container 容器 · `container` 设计
 
-> 状态：**已完成 100%** · 复杂度：**L 重**
-> 文档：[/components/container](/components/container) · Amis 文档：`/zh-CN/components/container`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**已完成 100%** · 复杂度：**M 中**
+> 文档：[在线 API 手册](/components/container) · Amis：`/zh-CN/components/container`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Container 是**布局/包装容器**：body 子 schema、wrapperComponent 白名单、wrapperBody、bodyClassName、可选作者 style。协议简单但边界清楚：div 默认 `display: contents` 扁平化，非 div 才成为真实语义容器。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **wrapperComponent**：仅白名单（div/section/article/main/header/footer/aside/nav/pre/span）；非法回落 div。
+2. **扁平化**：tag=div 时 `display: contents`，不产生额外盒子；非 div 才 `w-full min-w-0`。
+3. **wrapperBody**：默认包 `.vamis-container-body`；false 直接渲染 body。
+4. **bodyClassName**：只落内层 body 容器，不污染根。
+5. **事件/动作**：组件自身不注册事件；外层 SchemaRenderer/宿主负责。不要声称 click 事件一定由 Container 派发。
+6. **包边界**：无 `<style>`、无 fetch；布局/间距 token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **布局**：空 body、嵌套布局、`className` / `style` 只影响当前节点、窄屏与密度不写死 px。
-- **边界用例（至少覆盖）**：空 body、嵌套同类布局；className / style 覆盖边界；窄屏与密度 token；未知子节点。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空 body/单/多节点；wrapperBody true/false
+- wrapperComponent 白名单/非法/大写；style 覆盖
+- bodyClassName/父级宽度/嵌套容器
+- 窄屏/深色
+
+### 优先级
+
+1. 白名单/扁平化；2. wrapperBody/class；3. 嵌套/响应式；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**275** 行；Vamis 实现：**54** 行；依赖：**1** 个
-- 集成面：数据域、子 Schema
-- 判定依据：Vamis 54 行 + Amis 275 行 + 1 依赖 + data/schema
+- 等级：**M 中**（Amis 275 行；Vamis 54 行）；依赖 container 语义。
+- 风险：div contents 的盒模型/嵌套。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`container`
-- Amis 源文件：`packages/amis/src/renderers/Container.tsx`
-- 依赖：`tpl`
-- 文档章节：`/zh-CN/components/container`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `body` | 子 schema | 已接 |
+| `wrapperComponent` | 语义标签 | 白名单 |
+| `wrapperBody` | 内层包装 | 已接 |
+| `bodyClassName` | 内层类 | 已接 |
+| `style` | 作者样式 | 透传 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/Container.vue`](../../../packages/vamis/src/renderers/Container.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+- [`Container.vue`](../../../packages/vamis/src/renderers/Container.vue)：tag/body/wrapperBody/class。
+- [`SchemaRenderer`](../../../packages/vamis-core/src/SchemaRenderer.vue)：body 递归。
 
-## 5. 样式与边界
+### 数据流
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+```text
+schema.body → 可选 .vamis-container-body → SchemaRenderer
+tag=div → display:contents；其它 → 真实标签
+```
 
-## 6. 当前状态与缺口
+## 5. 样式
 
-- TODO 记录：主路径对齐：`wrapperBody` 默认包一层（flex 也包，同级子项换行）、`style` / `wrapperComponent` / `bodyClassName`、click/mouseenter/mouseleave。沿用父 Scope。`draggable` 非运行时主路径
-- 状态：已完成，进度 100%；如进度未到 100，按上条缺口补齐。
+- 根 div 扁平；非 div w-full；bodyClassName 只内层；无 `<style>`。
+- 嵌套/窄屏/深色单独核。
 
-## 7. 验收计划与完成度
+## 6. 缺口
 
-- 组件页对照：`pnpm compare --page container`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+无功能缺口；深色/嵌套盒模型可继续核。
 
-### 验收清单（文档核对：3 / 12）
+## 7. 验收
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 白名单/非法标签/wrapperBody/bodyClassName/空 body/嵌套；不误标页面级事件。
 
 ## 8. 后续
 
-- 已标记完成；后续回归时复核 Amis 6.13.0 对等章节与深色/窄屏。
+保持薄；不要给 Container 加页面级布局逻辑（交给 Page/Grid/Flex）。
 
 ---
+
 返回 [组件设计索引](README.md)
