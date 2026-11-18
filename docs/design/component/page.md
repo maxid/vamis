@@ -1,90 +1,87 @@
 # Page 页面 · `page` 设计
 
 > 状态：**进行中 95%** · 复杂度：**XL 特重**
-> 文档：[/components/page](/components/page) · Amis 文档：`/zh-CN/components/page`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/page) · Amis：`/zh-CN/components/page`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+Page 是**页面级独立 Scope + 布局壳**：title/subTitle/remark、toolbar、aside（可拖拽宽度）、body、initApi/轮询、page API。主路径已成熟；唯一明确缺口是移动端 `pullRefresh`，所以停在 95%。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **独立 Scope**：Page 建 scope；body 读 Page 域，不是父域；`reload/setValue/getData` 通过 scope。
+2. **URL 查询种子**：首屏把 URL query 合并进 scope；不要覆盖已有 schema data，顺序需固定。
+3. **initApi**：GET 不把整个数据域拼 query；`initFetch/initFetchOn` 决定首屏；失败 notify、inited 事件仍发。
+4. **轮询**：interval ≥1000；stopAutoRefreshWhen 命中停止；silentPolling 只隐藏轮询遮罩，首次/手动 reload 仍显示。
+5. **布局**：无 title 时 toolbar 吃满；header/toolbar/body/aside 全 div；aside 可拖拽 min/max，拖拽监听卸载清理。
+6. **事件**：init、inited；payload 含 responseData/Status/Msg + 当前域；不要漏失败路径。
+7. **包边界**：无 `<style>`、无 fetch；Page/panel/toolbar token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **布局**：空 body、嵌套布局、`className` / `style` 只影响当前节点、窄屏与密度不写死 px。
-- **边界用例（至少覆盖）**：空 body、嵌套同类布局；className / style 覆盖边界；窄屏与密度 token；未知子节点。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空 body/title/toolbar/aside；aside 左/右、sticky、min/max 拖拽
+- initApi 成功/失败/skipped/initFetch false/变量 URL
+- interval/stopAutoRefreshWhen/silentPolling；卸载清 timer
+- URL query 种子/覆盖顺序
+- reload(extra,replace)/setValue
+- 窄屏/深色/pullRefresh（未接）
+
+### 优先级
+
+1. Scope/URL 种子/initApi；2. 布局/aside；3. 轮询/事件；4. 移动 pullRefresh/样式。
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**1329** 行；Vamis 实现：**355** 行；依赖：**14** 个
-- 集成面：数据域、浮层、API、事件/动作、子 Schema
-- 判定依据：Vamis 355 行 + Amis 1329 行 + 14 依赖 + data/overlay/api/action/schema
+- 等级：**XL 特重**（Amis 1329 行；Vamis 355 行）；依赖 container/panel/flex/grid/tabs/action/service/dialog/drawer/crud/form/tpl/spinner/remark。
+- 风险：Scope/API/轮询/aside 拖拽多状态。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`page`
-- Amis 源文件：`packages/amis/src/renderers/Page.tsx`
-- 依赖：`action`, `container`, `crud`, `dialog`, `drawer`, `flex`, `form`, `grid`, `panel`, `remark`, `service`, `spinner`, `tabs`, `tpl`
-- 文档章节：`/zh-CN/components/page`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `title`/`subTitle`/`remark` | 头部 | 已接 |
+| `toolbar` / `body` / `aside` | 布局 | 已接 |
+| `asidePosition`/`asideSticky`/min/max | 侧栏 | 已接 |
+| `initApi`/`initFetch`/`initFetchOn` | 初始化 | 已接 |
+| `interval`/`stopAutoRefreshWhen`/`silentPolling` | 轮询 | 已接 |
+| `css` / 区域 class | 样式 | 已接 |
+| `pullRefresh` | 移动 | **未接** |
 
-## 4. Vamis 设计与源码
+### 事件/API
 
-- 渲染器文件：[`packages/vamis/src/renderers/Page.vue`](../../../packages/vamis/src/renderers/Page.vue)
-- 注册形态：独立 Scope
-- 项目模式：
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+事件：`init`、`inited`。API：`reload(extra,replace)`、`getData`、`setData`；scoped 注册。
 
-## 5. 样式与边界
+## 4. 架构
 
-- 相关默认皮肤类：`.vamis-page`, `.vamis-page--aside-sticky`, `.vamis-page--right-aside`, `.vamis-page--with-sidebar`, `.vamis-page__aside`, `.vamis-page__aside--with-width`, `.vamis-page__aside-tpl`, `.vamis-page__body`, `.vamis-page__content`, `.vamis-page__header`, `.vamis-page__header-row`, `.vamis-page__main`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- [`Page.vue`](../../../packages/vamis/src/renderers/Page.vue)：scope/布局/aside/initApi/轮询/API。
+- [`page.ts`](../../../packages/vamis-core/src/utils/page.ts)：title/布局/尺寸纯函数。
+- [`SchemaRenderer`](../../../packages/vamis-core/src/SchemaRenderer.vue)：body/toolbar/aside。
 
-## 6. 当前状态与缺口
+### 数据流
 
-- TODO 记录：主路径对齐：独立 Scope、URL 查询种子、initApi overlay（GET 不把数据域拼进 query）、`silentPolling` 只隐藏轮询遮罩（首次/手动 reload 仍显示）、reload/setValue、完整事件对象；无标题时 toolbar 吃满上级；根/header/aside 用 div 组装。按实现标准：`pullRefresh` 未接（移动端），未达 100%
-- 状态：进行中，进度 95%；如进度未到 100，按上条缺口补齐。
+```text
+URL query + props.data → scope
+initApi(initial) → merge scope → inited → schedulePoll
+reload(extra,replace) → scope.merge → initApi
+```
 
-## 7. 验收计划与完成度
+## 5. 样式
 
-- 组件页对照：`pnpm compare --page page`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+- page/header/toolbar/aside/body token；无 `<style>`；窄屏/深色单独核。
 
-### 验收清单（文档核对：3 / 12）
+## 6. 缺口
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
+pullRefresh（移动端）；深色/窄屏逐项；aside 拖拽触控。
 
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+## 7. 验收
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- Scope/URL/initApi/轮询/aside/拖拽/事件/窄屏；pullRefresh 不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+补 pullRefresh 前先定移动端刷新交互；其余保持稳定，不与页面级重构混刀。
 
 ---
+
 返回 [组件设计索引](README.md)
