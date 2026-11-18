@@ -60,7 +60,7 @@ Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody`
 
 ## 实现复杂度评估（2026-11-18）
 
-盘点输入：Amis 6.13.0 入口源码（`@Renderer` / `@FormItem` / `OptionsControl`）行数、TODO 全量顺序依赖数、Vamis 源码实际集成面。Vamis LOC 只作现状参考，不用于降低复杂度；自动盘点结果见 [组件 TODO「实现复杂度评估」](../../docs/superpowers/specs/2026-10-20-vamis-component-todo.md)，逐组件设计见 [docs/design/component](../../docs/design/component/README.md)。
+盘点输入：Amis 6.13.0 入口源码（`@Renderer` / `@FormItem` / `OptionsControl`）行数、TODO 全量顺序依赖数、Vamis 源码实际集成面。Vamis LOC 只作现状参考，不用于降低复杂度；自动盘点结果见 [组件 TODO「实现复杂度评估」](../../docs/superpowers/specs/2026-10-20-vamis-component-todo.md)，逐组件设计见 [docs/design/component](../../docs/design/component/README.md)，按 layout / functional / form / display / feedback / other 分目录。
 
 | 等级 | 判定 | 当前数量 | 施工粒度 |
 |---|---|---:|---|

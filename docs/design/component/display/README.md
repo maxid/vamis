@@ -1,0 +1,48 @@
+# 数据展示组件设计
+
+> 返回 [组件设计文档总索引](../README.md)。目录按功能分组，本组共 44 篇。
+
+- [CRUD 增删改查](crud.md) — `crud` · XL 特重 · 65%
+- [Table 表格](table.md) — `table` · XL 特重 · 88%
+- [Table2 表格](table2.md) — `table2` · XL 特重 · 70%
+- [Table View 表格视图](table-view.md) — `table-view` · M 中 · 65%
+- [Calendar 日历日程](calendar.md) — `calendar` · M 中 · 88%
+- [Card 卡片](card.md) — `card` · XL 特重 · 70%
+- [Cards 卡片组](cards.md) — `cards` · XL 特重 · 70%
+- [Carousel 轮播图](carousel.md) — `carousel` · XL 特重 · 45%
+- [Chart 图表](chart.md) — `chart` · XL 特重 · 65%
+- [Code 代码高亮](code.md) — `code` · M 中 · 92%
+- [Color 颜色](color.md) — `color` · S 轻 · 50%
+- [Date 日期时间](date.md) — `date` · M 中 · 60%
+- [Each 循环渲染器](each.md) — `each` · M 中 · 90%
+- [Html](html.md) — `html` · L 重 · 90%
+- [Icon 图标](icon.md) — `icon` · M 中 · 90%
+- [iFrame](iframe.md) — `iframe` · M 中 · 55%
+- [Image 图片](image.md) — `image` · L 重 · 90%
+- [Images 图片集](images.md) — `images` · XL 特重 · 50%
+- [GridNav 宫格导航](grid-nav.md) — `grid-nav` · M 中 · 50%
+- [Json](json.md) — `json` · M 中 · 50%
+- [Link 链接](link.md) — `link` · M 中 · 85%
+- [List 列表](list.md) — `list` · XL 特重 · 90%
+- [Log 实时日志](log.md) — `log` · L 重 · 25%
+- [Mapping 映射](mapping.md) — `mapping` · M 中 · 85%
+- [Number 展示](number.md) — `number` · M 中 · 60%
+- [Markdown 渲染](markdown.md) — `markdown` · M 中 · 45%
+- [OfficeViewer Word 渲染](office-viewer.md) — `office-viewer` · M 中 · 10%
+- [OfficeViewer Excel 渲染](office-viewer-excel.md) — `office-viewer` · M 中 · 10%
+- [PDFViewer 渲染](pdf-viewer.md) — `pdf-viewer` · M 中 · 10%
+- [Progress 进度条](progress.md) — `progress` · L 重 · 85%
+- [Steps 步骤条](steps.md) — `steps` · L 重 · 55%
+- [Property 属性表](property.md) — `property` · M 中 · 50%
+- [QRCode 二维码](qrcode.md) — `qrcode` · M 中 · 45%
+- [BarCode 条形码](barcode.md) — `barcode` · S 轻 · 45%
+- [Remark 标记](remark.md) — `remark` · M 中 · 92%
+- [SearchBox 搜索框](search-box.md) — `search-box` · M 中 · 50%
+- [Sparkline 走势图](sparkline.md) — `sparkline` · M 中 · 45%
+- [Status 状态](status.md) — `status` · M 中 · 75%
+- [Tpl 模板](tpl.md) — `tpl` · L 重 · 92%
+- [Tag 标签](tag.md) — `tag` · M 中 · 90%
+- [Video 视频](video.md) — `video` · XL 特重 · 45%
+- [Timeline 时间轴](timeline.md) — `timeline` · M 中 · 50%
+- [Shape 形状](shape.md) — `shape` · S 轻 · 40%
+- [Slider 滑动条](slider.md) — `slider` · S 轻 · 45%

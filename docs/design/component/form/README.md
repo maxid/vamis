@@ -1,0 +1,76 @@
+# 数据输入组件设计
+
+> 返回 [组件设计文档总索引](../README.md)。目录按功能分组，本组共 72 篇。
+
+- [Form 表单](form.md) — `form` · XL 特重 · 75%
+- [FormItem 表单项通用](formitem.md) — `formitem` · XL 特重 · 90%
+- [Control 表单项包裹](control.md) — `control` · S 轻 · 40%
+- [Options 选择器表单项](options.md) — `options` · XL 特重 · 88%
+- [InputArray 数组输入框](input-array.md) — `input-array` · M 中 · 50%
+- [ButtonToolbar 按钮工具栏](button-toolbar.md) — `button-toolbar` · M 中 · 60%
+- [ButtonGroupSelect 按钮点选](button-group-select.md) — `button-group-select` · M 中 · 55%
+- [ChainedSelect 链式下拉框](chain-select.md) — `chained-select` · L 重 · 50%
+- [Checkbox 勾选框](checkbox.md) — `checkbox` · L 重 · 90%
+- [Checkboxes 复选框](checkboxes.md) — `checkboxes` · L 重 · 55%
+- [InputCity 城市选择器](input-city.md) — `input-city` · L 重 · 25%
+- [InputColor 颜色选择器](input-color.md) — `input-color` · M 中 · 50%
+- [Combo 组合](combo.md) — `combo` · XL 特重 · 55%
+- [ConditionBuilder 条件组合](condition-builder.md) — `condition-builder` · XL 特重 · 35%
+- [InputDate 日期选择器](input-date.md) — `input-date` · XL 特重 · 92%
+- [InputDatetime 日期时间](input-datetime.md) — `input-datetime` · XL 特重 · 62%
+- [InputMonth 月份选择器](input-month.md) — `input-month` · XL 特重 · 45%
+- [InputDateRange 日期范围](input-date-range.md) — `input-date-range` · L 重 · 90%
+- [InputDatetimeRange 日期时间范围](input-datetime-range.md) — `input-datetime-range` · L 重 · 45%
+- [InputMonthRange 月份范围](input-month-range.md) — `input-month-range` · M 中 · 45%
+- [InputKV 键值对](input-kv.md) — `input-kv` · XL 特重 · 50%
+- [InputKVS 键值对象](input-kvs.md) — `input-kvs` · XL 特重 · 45%
+- [InputFormula 公式编辑器](input-formula.md) — `input-formula` · L 重 · 30%
+- [DiffEditor 对比编辑器](diff-editor.md) — `diff-editor` · XL 特重 · 65%
+- [Editor 代码编辑器](editor.md) — `editor` · XL 特重 · 85%
+- [FieldSet 表单项集合](fieldset.md) — `fieldset` · M 中 · 55%
+- [InputExcel Excel 解析](input-excel.md) — `input-excel` · XL 特重 · 20%
+- [InputFile 文件上传](input-file.md) — `input-file` · XL 特重 · 88%
+- [Formula 公式](formula.md) — `formula` · M 中 · 65%
+- [Group 表单项组](group.md) — `group` · M 中 · 75%
+- [Hidden 隐藏字段](hidden.md) — `hidden` · M 中 · 100%
+- [InputImage 图片](input-image.md) — `input-image` · XL 特重 · 80%
+- [InputGroup 输入框组合](input-group.md) — `input-group` · M 中 · 55%
+- [ListSelect 选择器](list-select.md) — `list-select` · M 中 · 50%
+- [LocationPicker 地理位置](location-picker.md) — `location-picker` · L 重 · 25%
+- [UUID 随机 ID](uuid.md) — `uuid` · M 中 · 70%
+- [MatrixCheckboxes 矩阵勾选](matrix-checkboxes.md) — `matrix-checkboxes` · L 重 · 40%
+- [NestedSelect 级联选择器](nestedselect.md) — `nested-select` · XL 特重 · 45%
+- [InputNumber 数字输入](input-number.md) — `input-number` · L 重 · 88%
+- [InputPassword 密码](input-password.md) — `input-password` · XL 特重 · 90%
+- [Picker 列表选择器](picker.md) — `picker` · XL 特重 · 65%
+- [InputQuarter 季度](input-quarter.md) — `input-quarter` · XL 特重 · 45%
+- [InputQuarterRange 季度范围](input-quarter-range.md) — `input-quarter-range` · M 中 · 45%
+- [Radio 单选框](radio.md) — `radio` · M 中 · 88%
+- [Radios 单选框](radios.md) — `radios` · L 重 · 55%
+- [ChartRadios 图表单选框](chart-radios.md) — `chart-radios` · L 重 · 35%
+- [InputRating 评分](input-rating.md) — `input-rating` · M 中 · 55%
+- [InputRange 滑块](input-range.md) — `input-range` · XL 特重 · 50%
+- [InputRepeat 重复频率](input-repeat.md) — `input-repeat` · M 中 · 40%
+- [InputRichText 富文本](input-rich-text.md) — `input-rich-text` · XL 特重 · 25%
+- [Select 下拉框](select.md) — `select` · XL 特重 · 92%
+- [InputSubForm 子表单](input-sub-form.md) — `input-sub-form` · L 重 · 45%
+- [Switch 开关](switch.md) — `switch` · M 中 · 88%
+- [Static 静态展示](static.md) — `static` · M 中 · 85%
+- [InputTable 表格](input-table.md) — `input-table` · XL 特重 · 45%
+- [InputTag 标签选择器](input-tag.md) — `input-tag` · L 重 · 50%
+- [InputText 输入框](input-text.md) — `input-text` · XL 特重 · 92%
+- [Textarea 多行输入框](textarea.md) — `textarea` · L 重 · 85%
+- [InputTime 时间](input-time.md) — `input-time` · XL 特重 · 60%
+- [InputTimeRange 时间范围](input-time-range.md) — `input-time-range` · L 重 · 45%
+- [Transfer 穿梭器](transfer.md) — `transfer` · XL 特重 · 65%
+- [TransferPicker 穿梭选择器](transfer-picker.md) — `transfer-picker` · L 重 · 45%
+- [TabsTransfer 组合穿梭器](tabs-transfer.md) — `tabs-transfer` · L 重 · 40%
+- [TabsTransferPicker](tabs-transfer-picker.md) — `tabs-transfer-picker` · L 重 · 35%
+- [InputTree 树形选择框](input-tree.md) — `input-tree` · XL 特重 · 78%
+- [TreeSelect 树形选择器](treeselect.md) — `tree-select` · XL 特重 · 78%
+- [InputYear 年输入](input-year.md) — `input-year` · XL 特重 · 45%
+- [InputYearRange 年份范围](input-year-range.md) — `input-year-range` · M 中 · 45%
+- [JsonSchema](json-schema.md) — `json-schema` · L 重 · 30%
+- [JsonSchema Editor](json-schema-editor.md) — `json-schema-editor` · M 中 · 30%
+- [InputSignature 签名面板](input-signature.md) — `input-signature` · M 中 · 35%
+- [InputVerificationCode 验证码](input-verification-code.md) — `input-verification-code` · M 中 · 50%
