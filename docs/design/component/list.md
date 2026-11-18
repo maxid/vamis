@@ -1,87 +1,161 @@
 # List 列表 · `list` 设计
 
 > 状态：**进行中 90%** · 复杂度：**XL 特重**
-> 文档：[/components/list](/components/list) · Amis 文档：`/zh-CN/components/list`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/list) · Amis：`/zh-CN/components/list`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+List 是“行数据 → listItem schema”的列表容器，和 Cards 类似但单列、带字母索引条、行拖拽和本地行值。主路径已较完整；真正容易回归的是**选择/点击优先级、字母索引滚动、拖拽重排、行内表单项写回、itemClick 与 itemAction 互斥**。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+1. **数据层**：`source` / `items` → `rows`；行内修改/拖拽用 `localRows` 覆盖；`rowData` 给行加 `index`，不要改源行。
+2. **点击优先级**：内部控件（button/a/input/select/toolbar/actions）不触发行点击；有 `onEvent` / clickAction 时 **itemClick 优先并覆盖 itemAction**；否则 itemAction；最后才是 checkOnItemClick。
+3. **选择**：`selectable` + `multiple`；selected 是行索引数组，拖拽/排序后索引要同步；`selectedItems` 从 rows 派生。
+4. **字母索引条**：`showIndexBar` 时用 IntersectionObserver + 滚动监听；点击字母 smooth scroll 到首行；用户点击期间暂停滚动同步；卸载清理 observer/listener。
+5. **拖拽**：`draggable` 才启用；pointer 拖拽生成 ghost；重排 localRows 并同步 selection 索引；cancel/reset 回 snapshot；saveOrder 清拖拽态。
+6. **行内表单项**：`onRowChange` 写 localRows，不直接改源；`init` 值不触发 dirty。
+7. **包边界**：无 `<style>`、无 fetch；列表/索引条/ghost 走 token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空 source / 空数组 / 单行 / 非对象行
+- `listItem` 空 / 只有 body / 自定义 item 类型
+- header/footer / title / empty
+- `selectable` + `multiple` + `checkOnItemClick` + 内部按钮
+- itemClick vs itemAction vs clickAction 互斥
+- 字母索引：无字母字段 / 中文 / 滚动同步 / 点击跳转 / 卸载
+- draggable：拖拽中选中、取消、保存、越过边界
+- 行内 input/select 写回；外部 setValue/reset
+- 窄屏/深色/长列表
+
+### 1.3 优先级
+
+1. 数据/点击优先级/选择
+2. 字母索引生命周期
+3. 拖拽/本地行
+4. 行内表单项/API
+5. 样式/窄屏/深色
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**1882** 行；Vamis 实现：**504** 行；依赖：**4** 个
-- 集成面：浮层、事件/动作、子 Schema
-- 判定依据：Vamis 504 行 + Amis 1882 行 + 4 依赖 + overlay/action/schema
+- 等级：**XL 特重**（Amis `List.tsx` 1882 行；Vamis 504 行）
+- 依赖：`list-item`、`action`、`each`、`service` 等
+- 风险：点击/选择/拖拽/索引条四套交互叠加
 
 ## 3. Amis 契约
 
-- 入口 type：`list`
-- Amis 源文件：`packages/amis/src/renderers/List.tsx`
-- 依赖：`action`, `each`, `popOver`, `tpl`
-- 文档章节：`/zh-CN/components/list`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'list'`
+- Amis 渲染器：`packages/amis/src/renderers/List.tsx`
+- 在线文档：[Vamis `/components/list`](/components/list)
 
-- 渲染器文件：[`packages/vamis/src/renderers/List.vue`](../../../packages/vamis/src/renderers/List.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 注意 |
+|---|---|---|
+| `source` / `items` | 行数据 | 默认 `${items}` |
+| `listItem` | 行 schema | 每行 SchemaRenderer；无 item 时默认 list-item |
+| `selectable` / `multiple` | 选择 | 索引数组；跨刷新需同步 |
+| `checkOnItemClick` | 点行勾选 | 与 itemAction/itemClick 互斥 |
+| `itemAction` | 行动作 | 有 itemClick 监听时被覆盖 |
+| `showIndexBar` / `indexField` | 字母索引 | IntersectionObserver；图标/字母 |
+| `draggable` | 拖拽 | ghost + localRows + selection 索引 |
+| `header` / `footer` | 头尾 | SchemaNode |
+| `size` / `bordered` | 外观 | token |
+| `itemClassName` | 行 class | 作者覆盖 |
+| `empty` / placeholder | 空态 | 文本/SchemaNode |
+
+### 3.3 事件/动作
+
+已接：`itemClick`（item.data/index；可 preventDefault）、`selectedChange`（如选择路径已接）。
+
+动作：`select` / `selectAll` / `clearAll` / `initDrag` / `cancelDrag` / `setValue`（含 index/condition）；`submitQuickEdit` 未接。
+
+组件 API：`getData()`（items/rows/selectedItems）、`setData(values, replace, index, condition)`。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`List.vue`](../../../packages/vamis/src/renderers/List.vue) | 数据/选择/点击/索引条/拖拽/本地行/API |
+| [`list.ts`](../../../packages/vamis-core/src/utils/list.ts) | letter/matchListRows/row helpers |
+| [`NestedFormScope`](../../../packages/vamis/src/NestedFormScope.vue) | 行内表单项作用域 |
+| [`styles.css`](../../../packages/vamis-ui/src/styles.css) | list/索引条/ghost token |
+
+### 4.2 状态
+
+```text
+source/items ──> rows（localRows 优先）
+      ├─ selected: number[]
+      ├─ itemEls + IntersectionObserver → currentLetter
+      ├─ dragging + ghost + snapshot
+      └─ onRowChange → localRows
+```
+
+- `ensureLocal` 在首次修改/拖拽时复制 rows。
+- 拖拽移动后 selection 索引按 from/to 调整。
+- `saveOrder` 只清 moved/dragging，不自动写远端；外部 API 由动作/服务承担。
+- 索引条滚动监听元素 + window，卸载必须清。
+
+### 4.3 点击链
+
+```text
+click → dragging/control? return
+      → has itemClick? emit itemClick → return
+      → itemAction? runAction
+      → selectable + checkOnItemClick? toggle
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-list`, `.vamis-list__check`, `.vamis-list__drag`, `.vamis-list__drag-tip`, `.vamis-list__empty`, `.vamis-list__footer`, `.vamis-list__header`, `.vamis-list__heading`, `.vamis-list__index`, `.vamis-list__index-letter`, `.vamis-list__item`, `.vamis-list__item-float`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 默认类：`.vamis-list`、`.vamis-list__item`、`.vamis-list__item-float`、索引条相关。
+- 行间距/索引条/ghost 走 token；无 `<style>`。
+- 窄屏/深色/长列表/空态单独核；ghost 的 z-index 2000 不要与浮层冲突。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：文档主路径已对齐：Service `source`、选择 / `itemAction`、字母索引条、`itemClick`、`select` / `selectAll` / `clearAll` / `initDrag` / `setValue`。行 flex 垂直居中；勾选与 Table2 共用 Checkbox / `.vamis-radio-dot`；点行可选；索引条 sticky 随页面滚动并自动定位（不要 400px 内部滚动）；`initDrag` 整行可拖。对照桌面 **20/20**、移动 **20/20**（P0 0，含 typography list-style；字母索引条已收割）。缺 `submitQuickEdit`、CRUD list 模式联动
-- 状态：进行中，进度 90%；如进度未到 100，按上条缺口补齐。
+- 已对齐：source/listItem、选择/点击、itemClick、字母索引条、拖拽、header/footer、行内表单项、setData/动作主路径。
+- 缺口：`submitQuickEdit` 未接；itemClassName 像素级；深色/窄屏未逐章；拖拽与滚动/索引条组合需实测。
+- 对照：TODO 90%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page list`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis List / list 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（List 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page list` 桌面
+- [ ] `pnpm compare --page list --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- itemClick/itemAction/checkOnItemClick 互斥
+- 字母索引 observer 清理
+- 拖拽 selection 索引
+- 行内表单项写回
+- 空态/窄屏
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 补 submitQuickEdit（列表行内编辑）或明确不做。
+2. 字母索引 + 拖拽/滚动组合专项。
+3. 深色/窄屏/长列表性能。
 
 ---
+
 返回 [组件设计索引](README.md)
