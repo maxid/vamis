@@ -5,7 +5,7 @@ title: CSS 变量
 # CSS 变量
 
 ::: warning 实现进度 70% · 进行中
-`:root` / `[data-theme]` / `.dark` 换 `--colors-*` 色阶（云舍 / 仿 AntD / ang / dark）。`--primary` / `--success` / `--tag-*` 只 alias。`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis line-8。完整 Amis 变量表未一一对照；JS `registerTheme` 仍是 D12 P1。
+`:root` / `[data-theme]` / `.dark` 换 `--colors-*` 色阶（云舍 / 仿 AntD / ang / dark）。`--primary` / `--success` / `--tag-*` 只 alias。`page.cssVars` 与 IR `cssVars` 能改画布、主色（含 `--primary-onHover` / `--primary-onActive`）、控件高、间距。`.vamis-root` 走 `--fonts-base-family`、`14px` / `line-height: 1.5`；浅色 `--border` 对齐 Amis line-8。完整 Amis 变量表未一一对照；JS `registerTheme` 已接，可注册 token 后用 `env.theme` 选择。
 :::
 
 主题切包 = 换 `[data-theme]` / `.dark` 的 `--colors-*` 色阶，不是换 class 前缀。`page.cssVars` 与 IR `metadata.style.cssVars` 都会写到根节点 style。实现见 `@vamis/core` 的 `resolveCssVars`。

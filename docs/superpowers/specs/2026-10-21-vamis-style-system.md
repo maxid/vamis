@@ -1,7 +1,7 @@
 # Vamis 样式系统（Amis 水标 × shadcn 哲学）
 
 - 日期：2026-10-23
-- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全页 / Spacing 全页 / Sizing 全页 / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`text-color` / `background-color` / `border-color` 仍 55%。`registerTheme`、其余 `xxxClassName` 仍 P1）
+- 状态：部分落地（目录已齐；`/style` 活示例按 **计算样式 / 盒模型** 对标，不是截图近似。进度按盒模型对齐程度，不是按「有 helper」。`box-sizing` / `display` / `overflow` / `position` / `float` / `clear` / `top-right-bottom-left` / `visibility` / `z-index` / `flex-direction` / `flex-wrap` / `flex` / `flex-grow` / `flex-shrink` / `flex-order` / `grid-cols` / `grid/column-start-end` / `grid-rows` / `grid/row-start-end` / `grid-flow` / `grid-auto-columns` / `grid-auto-rows` / `gap` / Box Alignment 全页 / Spacing 全页 / Sizing 全页 / Typography（除色） / Border Radius·Width·Style / Box Shadow / Opacity / `state` 已按该口径对齐（hover 全矩阵已进 SDK）。`text-color` / `background-color` / `border-color` 仍 55%。`registerTheme` 已接；其余 `xxxClassName` 仍 P1）
 - 关联：
   - [样式规范](./2026-11-15-vamis-style-standard.md)：写组件样式照着做的条款（标尺 / 色号 / 图标 / `:style` / 守卫）。本文是设计由来
   - [运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md) §13
@@ -110,7 +110,7 @@ Amis `level`：`primary | secondary | success | info | warning | danger | light 
 - 响应式只保留 `m:` / `pc:`（不是 Tailwind 的 `sm:`/`md:`）；宽度 helper `w-full` / `w-1/2` 同样带这两档
 - 另有 `xxxClassName`（`panelClassName`、`bodyClassName`…）打在子节点
 
-`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `h-*` / 布局 helper / `m:` `pc:`（间距、宽高、display/flex、语义色）。Page / Form / FormItem / Container / Panel 的 `xxxClassName` 已打到子节点；其余组件与 `registerTheme` 仍是 D12 P1。作者也可继续写普通 Tailwind 字符串。
+`resolveClassName` 已进内核：字符串 / 对象表达式 / 模板 / `m-t-xs` 阶 / `w-*` / `h-*` / 布局 helper / `m:` `pc:`（间距、宽高、display/flex、语义色）。Page / Form / FormItem / Container / Panel 的 `xxxClassName` 已打到子节点；其余组件的 `xxxClassName` 仍是 D12 P1；`registerTheme` 已接。作者也可继续写普通 Tailwind 字符串。
 
 ## 2. shadcn 落地原则
 
@@ -198,7 +198,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 | 不搬的载体 | 转写到 |
 |------|------------|
 | `$ns: cxd-` 及所有 BEM | shadcn `data-slot` + utility + token |
-| 主题 CSS 包 cxd/antd/ang/dark | `:root` / `.dark` + 未来 `registerTheme` |
+| 主题 CSS 包 cxd/antd/ang/dark | `:root` / `.dark` + `registerTheme` |
 | `--Form-*` / `--Table-*` / `--Button--*` 里颜色/阴影私有项 | 语义 token（`--primary` / `--destructive` / `--success`…）；盒子已在 3.3 抽出 |
 | 辅助类文件 helper.css 整包 | Tailwind + `@vamis/ui` 的 `m-t-xs` / `w-*` / `h-*`；`m:`/`pc:` 按 cxd 语义 |
 | SCSS mixin / 选择器结构 | `cva` variants |
@@ -263,7 +263,7 @@ cxd 尺寸阶：`--sizes-base-n = n × 2px`，`--sizes-size-3…9 = 4/6/8/10/12/
 7. **主题**：`.dark` 对比足够；紧凑/舒适切换时控件高度一起变；产物无 `cxd-` 前缀。
 8. **默认自适应**：无 `size` 的横排表单控件吃满值列；form 自身吃满 page，不靠 `w-full` / `size: full`。
 
-未纳入本轮：`xxxClassName` 子节点、antd/ang 命名主题、`registerTheme`（D12 P1）。
+未纳入本轮：`xxxClassName` 子节点全量覆盖、antd/ang 命名主题的完整视觉对齐。`registerTheme` 已接（D12）。
 
 ## 8. 本轮落地清单
 

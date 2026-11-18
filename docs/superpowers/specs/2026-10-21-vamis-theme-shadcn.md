@@ -1,7 +1,7 @@
 # Vamis 主题：Amis 样式系统 → shadcn token
 
 - 日期：2026-10-21
-- 状态：落地（token / 盒子辅助类 / IR metadata.style / 四套基础 `--colors-*` 主题包 + 翠绿 / 琥珀 / 金色扩展；2026-11-16 深色层级与品牌主色 alias 已统一，并新增金色包；JS `registerTheme` 仍 P1）
+- 状态：落地（token / 盒子辅助类 / IR metadata.style / 四套基础 `--colors-*` 主题包 + 翠绿 / 琥珀 / 金色扩展；2026-11-16 深色层级与品牌主色 alias 已统一，并新增金色包；JS `registerTheme` 已接（挂载前注册 token，`env.theme` 选择））
 - 范围：token、密度、按钮/表单/表格/卡片/对话框。**盒子尽量像素级对齐 cxd**；主色走 `--primary`（云舍 pack 的 brand-5）；不搬 `cxd-` 前缀
 - 关联：`2026-10-20-vamis-runtime-semantics-design.md` §13（D12）；标尺与条款见 [样式规范](./2026-11-15-vamis-style-standard.md)
 
@@ -79,7 +79,7 @@ Amis 用 **CSS 变量主题** + 可选 **helper.css 辅助类**，不是组件�
 | `m:` / `pc:` | 已接到间距 + 宽度 helper（&lt;768 / ≥768）；作者也可写 Tailwind `max-md:` / `md:` |
 | `.cxd-Form` 等 | **禁止前缀**（盒子走 token，不走 BEM） |
 
-组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `[data-theme]` / `.dark` 的 `--colors-*` 色阶，不是换 class 前缀。`--primary` / `--success` / `--tag-*` 只 alias 色阶，禁止组件再写死 hex。Playground 顶栏只有一套主题控件：**云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色** 六色点（`html[data-theme]`）+ 浅色/深色（Amis 第四包 dark 的明暗机制）。金色使用偏金属黄的 `#8f6a00`，与琥珀的橙棕 `#9b4500` 分开。`registerTheme` JS API 仍 P1。
+组件变体是唯一皮肤入口。主题切换 = 换 `:root` / `[data-theme]` / `.dark` 的 `--colors-*` 色阶，不是换 class 前缀。`--primary` / `--success` / `--tag-*` 只 alias 色阶，禁止组件再写死 hex。Playground 顶栏只有一套主题控件：**云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色** 六色点（`html[data-theme]`）+ 浅色/深色（Amis 第四包 dark 的明暗机制）。金色使用偏金属黄的 `#8f6a00`，与琥珀的橙棕 `#9b4500` 分开。`registerTheme` JS API 已接，自定义 token 在 `.vamis-root` 上生效，IR 页面级 `cssVars` 优先。
 
 ## 3. 视觉方向（后台产品水标）
 

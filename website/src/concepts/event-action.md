@@ -4,8 +4,8 @@ title: 事件动作
 
 # 事件动作
 
-::: info 实现进度 85% · 进行中
-文档已按 Amis「事件动作」补齐章节与活示例：`onEvent`、常用 `actionType`、`event` / `__rendererData`、`preventDefault` / `stopPropagation` / `ignoreError` / `expression`、SDK `doAction`，以及复制 / 邮件 / 等待 / 组件动作。JSON 与 YAML 同等有效。控制流（switch / loop / parallel）、广播、自定义 JS、浏览器前进后退刷新仍 **未接**，契约已列出。
+::: tip 实现进度 95% · 已完成
+文档主路径已对齐 Amis「事件动作」：`onEvent`、事件上下文、常用动作、条件表达式 / ConditionBuilder、循环 / 排他 / 并行、广播、受信任自定义 JS、浏览器与打印动作、动作间数据传递、SDK `doAction` 均可运行。JSON 与 YAML 同等有效；监听器的 debounce / track 高级配置仍未接。
 :::
 
 上一节 [联动](/concepts/linkage) 解决显隐、禁用、接口重拉这类「表达式驱动」的场景。事件动作更灵活：渲染器抛事件，动作表按顺序响应，不必关心组件层级。作者态 **JSON 与 YAML 并列**。
@@ -90,7 +90,7 @@ body:
 事件分两类：
 
 - **渲染器事件**：由具体组件抛出，见该组件文档的事件表，例如 [Page](/components/page)
-- **广播事件**：自定义 `eventName`，其它组件监听同一名字。Vamis **还未接**
+- **广播事件**：自定义 `eventName`，其它组件监听同一名字；当前根实例内按 `weight` 降序执行
 
 动作分：通用动作、组件动作、广播、自定义。用 `actionType` 指定。通用动作走内核注册表；组件动作通过 `componentId` / `target` 找到实例再 `setValue` / `reload` / `submit`。
 
@@ -339,15 +339,12 @@ onEvent:
 
 ## 浏览器
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 ### 浏览器回退
 
 通过配置`actionType: 'goBack'`实现页面回退。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -374,7 +371,7 @@ onEvent:
 
 通过配置`actionType: 'goPage'`实现浏览器页面的前进/后退。只有当历史记录中存在目标页面时才会生效。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -412,7 +409,7 @@ onEvent:
 
 通过配置`actionType: 'refresh'`实现浏览器刷新。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -494,9 +491,6 @@ onEvent:
 
 ## 打印
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 > 6.2.0 及以后版本
 
@@ -504,7 +498,7 @@ onEvent:
 
 > breaking：在 6.2.0 版本中配置是 testid，但这个配置会导致性能问题，所以新版使用 id 作为标识。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -703,9 +697,6 @@ onEvent:
 
 ## 自定义 JS
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 通过配置`actionType: 'custom'`实现自定义 JS。JS 中可以访问以下对象和方法：
 
@@ -713,9 +704,9 @@ onEvent:
 - doAction() 动作执行方法，用于调用任何 actionType 指定的动作
 - event，事件对象，可以调用 setData()、stopPropagation()、preventDefault()分别实现事件上下文设置、动作干预、事件干预，可以通过 event.data 获取事件上下文
 
-自定义函数签名： `script:(context,doAction,event)=>{}`
+自定义函数签名： `script:(context,doAction,event)=>{}`。字符串脚本仅在 `env.trusted: true` 时执行；文档预览默认开启，正式 SDK 默认关闭。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -866,13 +857,10 @@ onEvent:
 
 ## 触发广播
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
-通过配置`actionType: 'broadcast'`实现触发一个广播。
+通过配置`actionType: 'broadcast'`实现触发一个广播。监听器按 `weight` 从大到小执行；每个 `VamisRoot` 使用独立总线，不会跨嵌入实例串消息。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -1006,7 +994,7 @@ onEvent:
           "mode": "horizontal"
         }
       ],
-      "api": "https://api/form/form3",
+      "api": "/api/mock2/form/saveForm",
       "onEvent": {
         "broadcast_1": {
           "weight": 3,
@@ -1049,13 +1037,10 @@ onEvent:
 
 ## 条件
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 通过配置`expression: 表达式或ConditionBuilder组合条件`来实现条件逻辑。
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1145,15 +1130,12 @@ onEvent:
 | expression | `boolean`\|[表达式](../concepts/expression) | -      | 执行条件，不设置表示默认执行 |
 
 ## 循环
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 通过配置`actionType: 'loop'`实现循环逻辑。
 
 ### 单层循环
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1316,7 +1298,7 @@ onEvent:
 
 通过配置`actionType: 'loop'`和`actionType: 'break'`实现循环跳出。
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1449,13 +1431,10 @@ onEvent:
 
 ## 排他（switch）
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
 通过配置`actionType: 'switch'`实现排他逻辑。
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1522,13 +1501,10 @@ onEvent:
 
 ## 并行
 
-::: danger 未接
-该动作尚未进 Vamis 动作表。下面按 Amis 6.13.0 列出契约与活示例，预览可能无对应行为。
-:::
 
-通过配置`actionType: 'parallel'`实现并行执逻辑。
+通过配置`actionType: 'parallel'`实现并行执行逻辑。子动作同时启动，通过 `outputVar` 写入同一个事件上下文，后续动作可读取。
 
-```json
+```schema
 {
   "type": "page",
   "body": {

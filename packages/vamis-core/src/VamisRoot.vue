@@ -3,6 +3,7 @@ import { computed, provide, watch } from 'vue'
 import { compileIrToWidget, jsonToIr } from './ir'
 import { resolveCssVars } from './style'
 import { createDefaultEnv } from './env'
+import { themeTokens } from './theme'
 import { provideEnv, provideData, provideScope, ParentStoreIdKey } from './context'
 import { createScope, parseSearch } from './scope'
 import { provideScoped } from './scoped'
@@ -57,7 +58,10 @@ defineExpose({ scoped })
 const ir = computed(() => jsonToIr(props.schema))
 const widget = computed<SchemaNode>(() => compileIrToWidget(ir.value))
 const density = computed(() => ir.value.metadata.style?.density)
-const rootVars = computed(() => resolveCssVars(ir.value.metadata.style?.cssVars))
+const rootVars = computed(() => resolveCssVars({
+  ...themeTokens(env.value.theme),
+  ...(ir.value.metadata.style?.cssVars || {}),
+}))
 </script>
 
 <template>

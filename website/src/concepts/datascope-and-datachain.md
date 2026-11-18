@@ -4,8 +4,8 @@ title: 数据域与数据链
 
 # 数据域与数据链
 
-::: warning 实现进度 75% · 进行中
-文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`。JSON 与 YAML 同等有效。`trackExpression` 尚未接到数据域刷新。
+::: tip 实现进度 90% · 已完成
+文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`、接口与表单数据域的 `trackExpression`。JSON 与 YAML 同等有效。其它数据容器的独立 Scope 仍按运行时 D1 表逐项推进。
 :::
 
 每个能取数的容器有自己的**数据域**，子节点沿**数据链**向上找。这是 kernel D1。作者态 JSON 与 YAML 并列。
@@ -348,9 +348,9 @@ CRUD 里的 filter 其实是一个 form，所以 CRUD 有两层数据域：第�
 
 顶层域一变，子层带数据域的组件通常也要刷新，否则拿不到新值。Amis 3.2 起用 `trackExpression` 声明本层关心哪些上层变量：`"none"` 不追踪，`"${name}"` 只在 name 变时更新。语法见 [表达式](/concepts/expression)。
 
-Vamis 里 `trackExpression` 目前只接到接口自动刷新，还没有接到「数据域组件是否随上层刷新」。下面这份配置能渲染，开关不会改变 CRUD filter 是否跟上 `name`：
+Vamis 的接口自动刷新和表单数据域都支持 `trackExpression`。表达式结果变化时，表单会同步其中已声明的同名字段；`"none"` 不追踪，未声明的父域字段不会摊进表单。下面的开关关闭时，修改 `name` 不会更新 CRUD filter；打开后再修改才会同步：
 
-```json
+```schema
 {
   "type": "page",
   "data": {
@@ -363,14 +363,17 @@ Vamis 里 `trackExpression` 目前只接到接口自动刷新，还没有接到�
       "type": "crud",
       "filter": {
         "trackExpression": "${syncSwitch ? name : ''}",
-        "body": ["my name is ${name}"]
+        "body": [
+          { "type": "input-text", "name": "name", "label": "筛选条件中的名称" },
+          { "type": "tpl", "tpl": "my name is ${name}" }
+        ]
       }
     }
   ]
 }
 ```
 
-表单项写在 page 下、不包 form 时，值会写进 page 域。CRUD filter 是否跟上上层 `name`，取决于 `trackExpression`（尚未支持）。
+表单项写在 page 下、不包 form 时，值会写进 page 域。CRUD filter 是否跟上上层 `name`，取决于 `trackExpression` 的结果是否发生变化。
 
 ## URL 参数
 

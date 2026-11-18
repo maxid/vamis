@@ -1,6 +1,9 @@
 import type { ActionSchema, PlainObject, RendererEnv, SchemaObject } from '../types'
 import { apiMessage, requestApi } from '../utils/api'
-import { evalExpression, filterTpl } from '../formula'
+import { evalExpression, filterTpl, resolveValue } from '../formula'
+import { tableConditionMatch } from '../utils/table'
+import { dataMapping } from '../utils/data-mapping'
+import { printElements } from './print'
 import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
@@ -24,6 +27,8 @@ export type { VamisEvent } from './event'
 export { createVamisEvent, eventEvalData } from './event'
 export { registerAction, getAction, unregisterAction } from './registry'
 
+type LoopFlow = { status: 'normal' | 'break' | 'continue' }
+
 export interface ActionContext {
   env: RendererEnv
   data: PlainObject
@@ -32,6 +37,7 @@ export interface ActionContext {
   form?: FormApiLike
   scope?: Scope
   event?: VamisEvent
+  loopFlow?: LoopFlow
 }
 
 function asActions(value: unknown): ActionSchema[] {
@@ -40,13 +46,16 @@ function asActions(value: unknown): ActionSchema[] {
   if (typeof value === 'object' && Array.isArray((value as { actions?: ActionSchema[] }).actions)) {
     return (value as { actions: ActionSchema[] }).actions
   }
+  if (typeof value === 'object') return [value as ActionSchema]
   return []
 }
 
 function actionData(action: ActionSchema, ctx: ActionContext): PlainObject {
-  const extra = (action.data && typeof action.data === 'object' ? action.data : {}) as PlainObject
-  const args = (action.args && typeof action.args === 'object' ? action.args : {}) as PlainObject
-  return { ...ctx.data, ...extra, ...args }
+  const base = { ...ctx.data, ...(ctx.event?.data || {}) }
+  const extra = action.data && typeof action.data === 'object' ? dataMapping(action.data, base) as PlainObject : {}
+  const args = action.args && typeof action.args === 'object' ? dataMapping(action.args, base) as PlainObject : {}
+  if (action.actionType === 'custom' && action.args?.script != null) args.script = action.args.script
+  return { ...base, ...extra, ...args }
 }
 
 function truthyFlag(value: unknown, data: PlainObject): boolean {
@@ -82,7 +91,13 @@ export async function runActions(actions: ActionSchema[] | undefined, ctx: Actio
 
 export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<boolean> {
   const data = actionData(action, ctx)
-  if (typeof action.expression === 'string' && !evalExpression(action.expression, data)) return false
+  if (action.expression != null) {
+    const pass =
+      typeof action.expression === 'boolean'
+        ? action.expression
+        : tableConditionMatch(action.expression, data)
+    if (!pass) return false
+  }
   if (action.confirmText) {
     const title = typeof action.confirmTitle === 'string' ? filterTpl(action.confirmTitle, data) : undefined
     if (!(await ctx.env.confirm(filterTpl(action.confirmText, data), title))) return false
@@ -181,11 +196,11 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
     ctx.scope?.merge(values, replace ? 'override' : 'merge')
   }
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
-    assign(raw as PlainObject)
+    assign(dataMapping(raw, data) as PlainObject)
     return
   }
   if (target) {
-    assign({ value: raw })
+    assign({ value: resolveValue(raw, data) })
     return
   }
   if (action.name) {
@@ -214,17 +229,34 @@ function registerBuiltinActions() {
   builtins = true
 
   registerAction('ajax', async (action, ctx) => {
-    if (!action.api) return
+    const api = action.api || action.args?.api
+    if (!api) return
     const data = actionData(action, ctx)
-    const result = await requestApi(action.api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
+    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
     if (result.skipped) return
     if (!result.ok) {
-      throw new Error(apiMessage(action.api, result.payload, 'failed'))
+      throw new Error(apiMessage(api, result.payload, 'failed'))
     }
     const success =
       (action.messages && (action.messages as PlainObject).success) ||
-      apiMessage(action.api, result.payload, 'success')
+      (action.args?.messages && (action.args.messages as PlainObject).success) ||
+      apiMessage(api, result.payload, 'success')
     ctx.env.notify('success', String(success))
+    const responseData = result.data
+    const responseObject =
+      responseData && typeof responseData === 'object' && !Array.isArray(responseData)
+        ? (responseData as PlainObject)
+        : {}
+    ctx.event?.setData({
+      ...responseObject,
+      responseData,
+      [action.outputVar || 'responseResult']: {
+        ...responseObject,
+        responseData,
+        responseStatus: result.payload.status,
+        responseMsg: result.payload.msg,
+      },
+    })
     if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
       if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
       else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')
@@ -233,16 +265,17 @@ function registerBuiltinActions() {
   })
 
   registerAction('download', async (action, ctx) => {
-    if (!action.api) return
+    const rawApi = action.api || action.args?.api
+    if (!rawApi) return
     const data = actionData(action, ctx)
     const api =
-      typeof action.api === 'string'
-        ? { url: action.api, responseType: 'blob' as const, downloadFileName: action.downloadFileName }
-        : { ...action.api, responseType: 'blob' as const, downloadFileName: action.downloadFileName || action.api.downloadFileName }
+      typeof rawApi === 'string'
+        ? { url: rawApi, responseType: 'blob' as const, downloadFileName: action.downloadFileName }
+        : { ...rawApi, responseType: 'blob' as const, downloadFileName: action.downloadFileName || rawApi.downloadFileName }
     const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
     if (result.skipped) return
     if (!result.ok) {
-      throw new Error(apiMessage(action.api, result.payload, 'failed'))
+      throw new Error(apiMessage(rawApi, result.payload, 'failed'))
     }
     const blob = result.data instanceof Blob ? result.data : new Blob([result.data == null ? '' : String(result.data)])
     const name = filterTpl(String(action.downloadFileName || result.payload.fileName || 'download'), data)
@@ -300,7 +333,7 @@ function registerBuiltinActions() {
     const data = actionData(action, ctx)
     const extra =
       action.data && typeof action.data === 'object' && !Array.isArray(action.data)
-        ? (action.data as PlainObject)
+        ? dataMapping(action.data, data) as PlainObject
         : undefined
     await ctx.scoped?.reload(
       action.target || action.componentId || action.componentName || action.args?.target,
@@ -371,6 +404,27 @@ function registerBuiltinActions() {
     })
   })
 
+  registerAction('goBack', async () => {
+    if (typeof window !== 'undefined') window.history.back()
+  })
+  registerAction('goPage', async (action) => {
+    if (typeof window === 'undefined') return
+    const delta = Number(action.args?.delta ?? 0)
+    window.history.go(Number.isFinite(delta) ? delta : 0)
+  })
+  registerAction('refresh', async () => {
+    if (typeof window !== 'undefined') window.location.reload()
+  })
+  registerAction('print', async (action) => {
+    if (typeof document === 'undefined') return
+    const ids = action.args?.ids || (action.args?.id ? [action.args.id] : [])
+    if (!Array.isArray(ids)) return
+    const elements = ids
+      .map((id) => document.getElementById(String(id)) || document.querySelector(`[data-id="${String(id)}"]`))
+      .filter((element): element is Element => !!element)
+    printElements(elements)
+  })
+
   registerAction('copy', async (action, ctx) => {
     const data = actionData(action, ctx)
     const text = filterTpl(action.copy || action.content || action.args?.content || '', data)
@@ -378,7 +432,39 @@ function registerBuiltinActions() {
   })
 
   registerAction('email', async (action, ctx) => {
-    ctx.env.jumpTo(actionMailto(action, actionData(action, ctx)))
+    const data = actionData(action, ctx)
+    ctx.env.jumpTo(actionMailto({ ...action, ...action.args }, data))
+  })
+
+  registerAction('broadcast', async (action, ctx) => {
+    const eventName = String(action.args?.eventName || action.eventName || '')
+    if (!eventName) return
+    const patch = action.data && typeof action.data === 'object' ? dataMapping(action.data, actionData(action, ctx)) as PlainObject : {}
+    ctx.event?.setData(patch)
+    await ctx.env.bus?.emit(eventName, { ...(ctx.event?.data || ctx.data), ...patch })
+  })
+
+  registerAction('custom', async (action, ctx) => {
+    const raw = action.args?.script ?? action.script
+    if (typeof raw !== 'function' && !ctx.env.trusted) return
+    if (typeof raw !== 'string' && typeof raw !== 'function') return
+    const script = typeof raw === 'string'
+      ? new Function('context', 'doAction', 'event', `return (async () => { ${raw}\n })()`)
+      : null
+    const fn = (script || raw) as (
+      context: ActionContext,
+      doAction: (next: unknown) => Promise<void>,
+      event?: VamisEvent,
+    ) => unknown
+    const proxy = new Proxy({}, {
+      get(_target, key) {
+        return typeof key === 'string' ? ctx.scoped?.getComponentByName(key) : undefined
+      },
+    })
+    const doAction = async (next: unknown) => {
+      await runActions(asActions(next), ctx)
+    }
+    await fn.call(proxy, ctx, doAction, ctx.event)
   })
 
   registerAction('static', async (action) => {
@@ -392,6 +478,47 @@ function registerBuiltinActions() {
     const ms = Number(action.args?.timeMs ?? action.time ?? 0)
     if (!Number.isFinite(ms) || ms <= 0) return
     await new Promise((resolve) => setTimeout(resolve, ms))
+  })
+
+  registerAction('loop', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const loopName = String(action.args?.loopName || '')
+    const items = resolveValue(loopName, data)
+    if (!Array.isArray(items) || !action.children?.length) return
+    const originalEventData = ctx.event ? { ...ctx.event.data } : undefined
+    for (const item of items) {
+      const loopFlow: LoopFlow = { status: 'normal' }
+      const itemData = item && typeof item === 'object' && !Array.isArray(item) ? item as PlainObject : { item }
+      ctx.event?.setData(itemData)
+      const loopCtx: ActionContext = { ...ctx, data: { ...data, ...itemData }, loopFlow }
+      for (const child of action.children) {
+        await runAction(child, loopCtx)
+        if (loopFlow.status !== 'normal' || ctx.event?.stopped) break
+      }
+      if (loopFlow.status === 'break') {
+        ctx.event?.stopPropagation()
+        break
+      }
+      if (ctx.event?.stopped) break
+    }
+    if (ctx.event && originalEventData) {
+      ctx.event.data = originalEventData
+    }
+  })
+  registerAction('break', async (_action, ctx) => {
+    if (ctx.loopFlow) ctx.loopFlow.status = 'break'
+  })
+  registerAction('continue', async (_action, ctx) => {
+    if (ctx.loopFlow) ctx.loopFlow.status = 'continue'
+  })
+  registerAction('switch', async (action, ctx) => {
+    for (const branch of action.children || []) {
+      if (branch.expression == null) continue
+      if (await runAction(branch, ctx)) break
+    }
+  })
+  registerAction('parallel', async (action, ctx) => {
+    await Promise.all((action.children || []).map((child: ActionSchema) => runAction(child, ctx)))
   })
 
   registerAction('preventDefault', async (_action, ctx) => {

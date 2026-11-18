@@ -5,8 +5,8 @@ outline: deep
 
 # Chart 图表
 
-::: warning 实现进度 62% · 进行中
-基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch`。
+::: warning 实现进度 65% · 进行中
+基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`、click 与 `clickAction`、API `trackExpression` 已接。缺 `mapURL` / `dataFilter` / `initFetch` 与其它 ECharts 事件。
 :::
 
 图表走 echarts，配置格式与 echarts 相同。对齐 Amis 同名 schema；YAML 与 JSON 同等有效。属于侧栏分类 **数据展示**。
@@ -687,7 +687,7 @@ echarts 的 config 一般是静态配置的，支持简单的数据映射。如�
 | `interval` | `number` | | 刷新间隔（毫秒），小于 1000 不轮询。对齐 Amis：每次拉完再 `setTimeout` |
 | `source` | 数据映射 | | 从数据域取 echarts option |
 | `replaceChartOption` | `boolean` | `false` | setOption 时替换而非合并 |
-| `trackExpression` | `string` | | **未接**（url 含 `$` 才随数据重拉） |
+| `trackExpression` | `string` | | 已接；按表达式结果变化重拉，未写时跟踪 url |
 | `dataFilter` | `string` | | **未接** |
 | `mapURL` / `mapName` / `loadBaiduMap` | | | **未接** |
 | `data` | `object` | | 静态数据，当前多与父级浅合并 |
@@ -707,7 +707,7 @@ Amis Chart 通过 `onEvent` 派发以下事件。Vamis **尚未把这些接到 C
 | 事件名称 | 事件参数 | 说明 |
 |----------|----------|------|
 | `init` | — | **未接**。Amis：插入 DOM 时 |
-| `click` | ECharts 事件 | **未接** |
+| `click` | ECharts 事件参数 | 已接；未阻止时继续执行 `clickAction` |
 | `mouseover` | ECharts 事件 | **未接** |
 | `legendselectchanged` | ECharts 事件 | **未接** |
 | `finished` | `{ echarts }` | **未接** |
@@ -724,9 +724,10 @@ Amis Chart 通过 `onEvent` 派发以下事件。Vamis **尚未把这些接到 C
 
 | 动作名称 | 动作配置 | 说明 |
 |----------|----------|------|
-| `reload` | — | **未接**。Amis：重新拉 `api` |
-| `setValue` | `value: object` | **未接**。Amis：更新图表依赖的数据域 |
-| ECharts 组件行为 | `actionType` 为行为名 | **未接** |
+| `reload` | — | 已接。重新拉 `api` / 读取 `config` |
+| `setValue` | `value: object` | 已接。更新当前 ECharts option |
+| `reset` | — | 已接。重新读取原始配置 |
+| `clickAction` | 行为对象 | 已接。`onEvent.click` 未阻止时执行 |
 
 要对图表换数据，先给上层 Page / Form 发 `setValue` / `reload`，再等 Chart 自己的 `isApiOutdated`（url 含 `$` 时）。
 

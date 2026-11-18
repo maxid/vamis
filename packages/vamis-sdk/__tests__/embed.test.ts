@@ -1,7 +1,7 @@
 import { nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { embed, normalizeEmbedSchema } from '../src/embed'
-import { IR_API_VERSION } from '@vamis/core'
+import { IR_API_VERSION, registerTheme } from '@vamis/core'
 import 'vamis'
 
 const mounts: Array<ReturnType<typeof embed>> = []
@@ -59,6 +59,16 @@ describe('embed', () => {
     expect(host.dataset.theme).toBe('gold')
     expect(host.dataset.accent).toBe('gold')
     expect(host.classList.contains('dark')).toBe(false)
+  })
+
+  it('applies registered theme tokens to the runtime root', async () => {
+    registerTheme('embed-test', { '--primary': '#123456', '--primary-onHover': '#654321' })
+    const { host } = mount({ type: 'page', body: 'ok' }, undefined, { theme: 'embed-test' })
+    await nextTick()
+    const root = host.querySelector('.vamis-root') as HTMLElement
+    expect(host.dataset.theme).toBe('embed-test')
+    expect(root.style.getPropertyValue('--primary')).toBe('#123456')
+    expect(root.style.getPropertyValue('--primary-hover')).toBe('#654321')
   })
 
   it('keeps two page-body buttons as inline-block siblings (Amis style 基本使用)', async () => {
@@ -429,5 +439,72 @@ describe('embed', () => {
     buttons[2].click()
     await nextTick()
     expect(String(form?.getData?.()?.date)).toBe('1714233600')
+  })
+
+  it('syncs same-named form fields when trackExpression changes', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      data: { name: 'before' },
+      body: [
+        { type: 'input-text', name: 'name', label: '上层' },
+        {
+          type: 'form',
+          id: 'trackedForm',
+          trackExpression: '${name}',
+          body: [{ type: 'input-text', name: 'name', label: '表单内' }],
+        },
+      ],
+    })
+    await nextTick()
+    const input = host.querySelector('input[name="name"]') as HTMLInputElement
+    input.value = 'after'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      const form = scoped.getComponentByName('trackedForm') as { getData?: () => Record<string, unknown> }
+      expect(form?.getData?.()?.name).toBe('after')
+    })
+  })
+
+  it('prints a target component and cleans up temporary classes', async () => {
+    const print = vi.fn()
+    vi.stubGlobal('print', print)
+    const { host } = mount({
+      type: 'page',
+      body: [
+        { type: 'button', label: '打印', onEvent: { click: { actions: [{ actionType: 'print', args: { id: 'printTarget' } }] } } },
+        { type: 'container', id: 'printTarget', body: '打印内容' },
+      ],
+    })
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('打印'))
+    button?.click()
+    await vi.waitFor(() => expect(print).toHaveBeenCalledOnce())
+    expect(document.querySelector('.pe-no-print')).toBeNull()
+    vi.unstubAllGlobals()
+  })
+
+  it('dispatches broadcast actions to onEvent listeners in the same root', async () => {
+    const notify = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      onEvent: {
+        customReady: {
+          actions: [{ actionType: 'toast', args: { msg: '收到 ${name}' } }],
+        },
+      },
+      body: {
+        type: 'button',
+        label: '广播',
+        onEvent: {
+          click: {
+            actions: [{ actionType: 'broadcast', args: { eventName: 'customReady' }, data: { name: '${name}' } }],
+          },
+        },
+      },
+    }, { data: { name: 'Vamis' } }, { notify })
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('广播'))
+    button?.click()
+    await vi.waitFor(() => expect(notify).toHaveBeenCalledWith('info', '收到 Vamis', expect.any(Object)))
   })
 })

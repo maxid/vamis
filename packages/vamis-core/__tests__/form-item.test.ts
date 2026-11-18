@@ -21,6 +21,7 @@ import {
   formItemValidateOnChange,
   hiddenFieldsToClear,
   initFormStoreData,
+  syncFormItemsOnTrack,
   validateApiMessage,
 } from '../src/utils/form-item'
 import { comboApplyRadio, comboChildSchema, comboItemMode, formLayoutSkipCol, groupChildSchema, groupFormMode } from '../src/utils/form-group'
@@ -366,6 +367,26 @@ describe('server errors / autoFill', () => {
       v: '${version}',
     })
     expect(autoFillMapping({ autoFill: { type: '${type}' } })).toEqual({ type: '${type}' })
+  })
+})
+
+describe('syncFormItemsOnTrack', () => {
+  it('syncs declared fields only when the tracked value changes', () => {
+    const target = { name: 'old', age: 1 }
+    const items = [{ name: 'name' }, { name: 'age' }]
+    expect(syncFormItemsOnTrack(items, target, '${sync ? name : ""}', { sync: false, name: 'a' }, { sync: false, name: 'b' })).toBe(false)
+    expect(target).toEqual({ name: 'old', age: 1 })
+    expect(syncFormItemsOnTrack(items, target, '${sync ? name : ""}', { sync: false, name: 'b' }, { sync: true, name: 'b' })).toBe(true)
+    expect(target).toEqual({ name: 'b', age: 1 })
+    expect(syncFormItemsOnTrack(items, target, '${sync ? name : ""}', { sync: true, name: 'b' }, { sync: true, name: 'c', age: 2 })).toBe(true)
+    expect(target).toEqual({ name: 'c', age: 2 })
+  })
+
+  it('supports none and nested field paths', () => {
+    const target: Record<string, unknown> = {}
+    expect(syncFormItemsOnTrack([{ name: 'user.name' }], target, 'none', { user: { name: 'a' } }, { user: { name: 'b' } })).toBe(false)
+    expect(syncFormItemsOnTrack([{ name: 'user.name' }], target, '${user.name}', { user: { name: 'a' } }, { user: { name: 'b' } })).toBe(true)
+    expect(getPathValue(target, 'user.name')).toBe('b')
   })
 })
 

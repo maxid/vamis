@@ -5,7 +5,7 @@ title: JS SDK
 # JS SDK
 
 ::: info 实现进度 90% · 已完成
-P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByName` / `doAction` 已落地。`registerTheme` / locale 仍 P1。
+P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByName` / `doAction` 已落地；`registerTheme` 已接。locale 仍 P1。
 :::
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
@@ -55,7 +55,7 @@ vamis.embed(container, schema, props?, env?) → VamisScoped
 | `getComponentByName(name)` | 按 `name` / `id` 取已注册组件；找不到返回 `undefined` |
 | `doAction(actions, ctx?)` | 跑动作列表（`toast` / `reload` / `setValue` 等） |
 
-全局辅助：`vamis.registerRenderer`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。
+全局辅助：`vamis.registerRenderer`、`vamis.registerTheme`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。主题注册用法见[样式](/concepts/style#注册运行时主题)。
 
 不传 `env.fetcher` 时，SDK 用 `window.fetch`，按 `{ status, msg, data }` 解析。`notify` / `alert` / `confirm` / `jumpTo` 有默认实现，宿主可覆盖。
 

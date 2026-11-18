@@ -2,11 +2,13 @@ import type { NotifyConf, RendererEnv } from './types'
 import { defaultFetcher } from './utils/api'
 import { hasConfirmHost, openConfirm, type ConfirmOptions } from './confirm-store'
 import { pushToast } from './toast-store'
+import { createEventBus } from './event-bus'
 
 export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): RendererEnv {
   return {
     session: 'global',
     theme: 'vamis',
+    bus: createEventBus(),
     fetcher: defaultFetcher,
     notify(type, msg, conf?: NotifyConf) {
       pushToast(type, msg, conf)

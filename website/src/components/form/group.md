@@ -6,7 +6,7 @@ outline: deep
 # Group 表单项组
 
 ::: warning 实现进度 75% · 进行中
-≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 12 等分宽度。缺 gap 档 / 组标签
+≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 按 12 等分控制宽度。缺 gap 档 / 组标签
 :::
 
 `group` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -239,4 +239,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 12 等分宽度。缺 gap 档 / 组标签。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 按 12 等分控制宽度。缺 gap 档 / 组标签。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

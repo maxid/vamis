@@ -4,8 +4,8 @@ title: 样式
 
 # 样式
 
-::: warning 实现进度 75% · 进行中
-文档主路径已对齐 Amis「样式」基本使用：`className` helper、`cssVars`、密度、FormItem `size`、默认自适应、指向 `/style` 辅助类。JSON 与 YAML 同等有效。色盘表、Panel 像素级、`registerTheme` 仍是 D12。
+::: tip 实现进度 90% · 已完成
+文档主路径已对齐 Amis「样式」基本使用：`className` helper、`cssVars`、密度、FormItem `size`、默认自适应、`registerTheme` 与 `/style` 辅助类。JSON 与 YAML 同等有效。色盘表、Panel 像素级和其余组件的 `xxxClassName` 仍在对应组件任务推进。
 :::
 
 Vamis 和 Amis 一样：绝大多数观感用 **className 辅助类** 就能调，不必手写 CSS。作者态 **JSON 与 YAML 并列**。
@@ -152,11 +152,28 @@ tpl: hover 时背景会加深
 
 圆角档位与主题 token 不是同一件事：组件默认用 `rounded`（4px = `--radius`）；作者写 `className: rounded-md` 才是 Amis helper 的 6px。不要把 helper 类名填进 shadcn 原语当默认皮肤。
 
+## 注册运行时主题
+
+Vue 与 JS SDK 都可以注册一份 token，再用 `env.theme` 选择。请在挂载前注册；IR `metadata.style.cssVars` 的页面级覆盖优先级更高。
+
+```js
+import { registerTheme } from 'vamis'
+
+registerTheme('brand-purple', {
+  '--primary': '#7266ba',
+  '--colors-brand-5': '#7266ba',
+  '--primary-onHover': '#8c7cc8'
+})
+```
+
+```js
+vamis.embed('#root', schema, {}, { theme: 'brand-purple' })
+```
+
 ## 还缺什么
 
-Layout / Flex / Grid / 间距 / 宽高 / 排版（除色）/ 边框半径宽度样式 / 阴影 / 透明度 / 状态前缀已按盒模型对齐，进度写在各 `/style` 页上。仍缺：
+Layout / Flex / Grid / 间距 / 宽高 / 排版（除色）/ 边框半径宽度样式 / 阴影 / 透明度 / 状态前缀已按盒模型对齐，进度写在各 `/style` 页上。`registerTheme` 已接。仍缺：
 
 - 色盘表逐项核对（`text-color` / `background-color` / `border-color`）
 - Panel 像素级
 - 其余组件的 `xxxClassName`
-- `registerTheme` 运行时换肤

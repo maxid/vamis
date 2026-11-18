@@ -32,6 +32,7 @@ export {
   parse as parseFormula,
   registerFilter,
   registerFunction,
+  registerTheme,
   runActions,
   SCHEMA_PROPERTY_DOCS,
   SCHEMA_TYPE_DOCS,

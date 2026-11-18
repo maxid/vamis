@@ -72,6 +72,32 @@ export function formItemSubmitOnChange(item: SchemaObject, form: SchemaObject): 
   return form.submitOnChange === true
 }
 
+export function formTrackExpressionValue(expression: unknown, data: PlainObject): string {
+  if (typeof expression !== 'string' || !expression || expression === 'none') return ''
+  return filterTpl(expression, data)
+}
+
+export function syncFormItemsOnTrack(
+  items: SchemaObject[],
+  target: PlainObject,
+  expression: unknown,
+  prevData: PlainObject,
+  nextData: PlainObject,
+): boolean {
+  const prev = formTrackExpressionValue(expression, prevData)
+  const next = formTrackExpressionValue(expression, nextData)
+  if (!next || prev === next) return false
+  for (const item of items) {
+    if (!item.name) continue
+    const name = String(item.name)
+    const value = getPathValue(nextData, name)
+    if (value !== undefined && getPathValue(target, name) !== value) {
+      setPathValue(target, name, value)
+    }
+  }
+  return true
+}
+
 /**
  * 水平表单里标签列：只有 `label: false` 才去掉。
  * 未写 label / 空字符串仍占位，对齐 Amis `label !== false`。

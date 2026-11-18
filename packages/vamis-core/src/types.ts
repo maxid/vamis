@@ -1,4 +1,5 @@
 import type { Component } from 'vue'
+import type { VamisEventBus } from './event-bus'
 
 export type PlainObject = Record<string, any>
 
@@ -30,7 +31,7 @@ export interface SchemaObject extends PlainObject {
   staticOn?: string
   staticSchema?: unknown
   staticPlaceholder?: string
-  onEvent?: Record<string, { actions: ActionSchema[] }>
+  onEvent?: Record<string, { actions: ActionSchema[]; weight?: number }>
 }
 
 export interface JumpToOptions {
@@ -202,6 +203,8 @@ export interface RendererEnv {
    */
   parseLocation?: boolean
   debug?: boolean
+  /** 当前 VamisRoot 的广播总线；多实例之间不共享。 */
+  bus?: VamisEventBus
   /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */
   trusted?: boolean
   /** 浮层挂载点。对齐 Amis `env.getModalContainer`，默认 `document.body`。 */

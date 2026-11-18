@@ -42,6 +42,12 @@ alwaysApply: true
 - 触及：`checkbox` `radio` `input-date` `spinner` `form` `image` `tpl`
 - 规则：`.cursor/rules/typecheck.mdc`；`packages/vamis-core/src/scoped.ts`
 
+### 动作控制流共享事件数据，广播总线按根实例隔离
+- 踩过：`loopName` 先过 `filterTpl` 会把数组字符串化；自定义动作 / AJAX 改了 `event.data`，后续动作却仍读旧 `ctx.data`。全局单例广播还会让多个 embed 实例互相收消息。
+- 稳定做法：`loopName` 直接交 `resolveValue`；每次动作合并最新 `event.data`，`outputVar` 也写回事件。循环用每层的 flow 状态实现 break/continue。广播 bus 挂在 `env`（每个 VamisRoot 一份），监听按 weight 降序并在卸载时解绑；自定义字符串脚本仅 `env.trusted`。
+- 触及：`action` `button` `chart` SDK 广播 控制流
+- 规则：`packages/vamis-core/src/actions/run.ts`；`packages/vamis-core/src/event-bus.ts`
+
 ### 改写 Amis 文档不要动围栏里的 URL
 - 踩过：`rewriteLinks` 把 `github.com/baidu/amis` 整段删掉，打在全文上，JSON 里 `"src": "https://github.com/baidu/amis"` 变成 `"src": "`，iframe / carousel / timeline 活示例解析失败。
 - 稳定做法：链接改写只走围栏外正文；围栏里的 Amis 仓库 URL 换成 `https://github.com/maxid/vamis`，不要删成空串。标题匹配要转义括号（`底部展示 (Footable)`），否则会重复插入。
@@ -634,8 +640,8 @@ alwaysApply: true
 
 ### Image 放大走独立 Gallery，不要 Dialog 塞一张图
 - 踩过：用普通 Dialog 预览对不上 Amis ImageGallery（黑底舞台、标题/说明、工具栏、Esc/点遮罩关）。`href` 和 `enlargeAble` 叠在一起还会抢点击。黑舞台一度按图片缩成 320px 矮条，关闭钮贴在条上，和 Amis `Modal size=full` 的 1010×（视口-60）对不上。
-- 稳定做法：`enlargeAble` 开独立 Teleport 层（`--z-modal`，永远黑底白字，不跟 `.dark` 换肤）。盒模型对齐 `Modal--full` + `.ImageGallery`：外边距 30、宽 `min(1010, 100%-60)`、高吃满视口减 60；舞台 `flex-grow:1; height:0`；关闭钮绝对定位在这块面板右上（标题行始终占 18+18，即使没文案）。关闭钮（含 Dialog / Drawer）走 Amis `[data-tooltip="关闭"][data-position=left]` + `tooltipIn`（从 margin:0 滑到左侧 gap），不要原生 `title`。工具栏是白底 4px 圆角条、40×40 SVG（rotate/zoom/scale-origin），标签只进 tooltip，不要中文当按钮。`href` 与放大互斥。`click` 由组件自己派（宿主 `SELF_CLICK` 跳过），先 `onEvent` 再 `clickAction`。`type: images` 要做图集也挂同一层。
-- 触及：`image` `static-image`
+- 稳定做法：`enlargeAble` 开独立 Teleport 层（`--z-modal`，永远黑底白字，不跟 `.dark` 换肤）。盒模型对齐 `Modal--full` + `.ImageGallery`：外边距 30、宽 `min(1010, 100%-60)`、高吃满视口减 60；舞台 `flex-grow:1; height:0`；关闭钮绝对定位在这块面板右上（标题行始终占 18+18，即使没文案）。关闭钮（含 Dialog / Drawer）走 Amis `[data-tooltip="关闭"][data-position=left]` + `tooltipIn`（从 margin:0 滑到左侧 gap），不要原生 `title`。工具栏是白底 4px 圆角条、40×40 SVG（rotate/zoom/scale-origin），标签只进 tooltip，不要中文当按钮。`href` 与放大互斥。`click` 由组件自己派（宿主 `SELF_CLICK` 跳过），先 `onEvent` 再 `clickAction`；动作上下文要同时带 `overlay`，否则 `clickAction: dialog` 会空过。`type: images` 要做图集也挂同一层。
+- 触及：`image` `static-image` `chart`
 - 规则：本文；Amis `ImageGallery.tsx` `size="full"` / `_modal.scss` `Modal--full` / `_image-gallery.scss`
 
 ### 未注册的 actionType + componentId 要落到目标 doAction
@@ -1221,7 +1227,7 @@ alwaysApply: true
 
 ### 表单 store 只收本域，不要摊父域
 - 踩过：`{...parentData, ...mappedSchemaData}` 把 page `arr` 写进 `store.data`，动态表单项 debug / persist / 提交都带上父域结构。Amis FormStore 是 `createObject(super, own)`，debug「只会展示当前表单的数据域」。
-- 稳定做法：`initFormStoreData`：own = `dataMapping(schema.data, parent)`；`canAccessSuperData !== false` 只拷**同名**表单项；`applyFormItemDefaults` 写 own，表达式 lookup 才叠父域。Each `${arr}` 靠 SchemaRenderer 父域 overlay，不要把 `arr` 变成表单字段。`inheritData: false`（共用上层域提交）仍未接。
+- 稳定做法：`initFormStoreData`：own = `dataMapping(schema.data, parent)`；`canAccessSuperData !== false` 只拷**同名**表单项；`applyFormItemDefaults` 写 own，表达式 lookup 才叠父域。Each `${arr}` 靠 SchemaRenderer 父域 overlay，不要把 `arr` 变成表单字段。`trackExpression` 同步也只在表达式结果变化时写已声明的同名字段，不要摊整份父域。`inheritData: false`（共用上层域提交）仍未接。
 - 触及：`form` `each`
 - 规则：本文；Amis `FormStore` `canAccessSuperData` / `createObject`；`packages/vamis-core/src/utils/form-item.ts` `initFormStoreData`
 

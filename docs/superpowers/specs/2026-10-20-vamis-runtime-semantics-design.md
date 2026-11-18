@@ -47,16 +47,16 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
-| Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有 | `trackExpression` 仍 P1；其余 Amis 列表容器尚未全部 `scope: self` |
+| Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有；接口与表单数据域 `trackExpression` 已接 | 通用 `Scope.track` 去抖仍属 D9；其余 Amis 列表容器尚未全部 `scope: self` |
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
-| Actions | `registerAction` + `VamisEvent`（`preventDefault`/`stopPropagation`/`setData`/`__rendererData`）；P0 动作在注册表；`expression`/`ignoreError` 已接 | 无循环/switch/parallel/`outputVar`/广播；无动作日志 |
+| Actions | `registerAction` + `VamisEvent`；P0 动作、循环 / switch / parallel、广播、受信任自定义 JS、浏览器 / 打印、`outputVar` 已接 | 组件 setState、监听器 debounce / track、动作日志仍缺 |
 | Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；点号 `form.select`；Form `target`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口去抖仍属 D9；`clearValueOnHidden` 已接；combo 独立域仍等 D6 |
 | Form | 表单 store、路径值、`initApi`、`validate/submit/reset`、提交合并、`target`；`validateOnChange` / `requiredOn` / `clearValueOnHidden` / `validateApi` / `autoFill` 已接；校验可用 `addRule` 扩展 | Combo 独立域与嵌套路径级报错仍缺；异步自定义规则未齐 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑；`loadDataOnce` / `syncLocation` / `quickEdit` / 表达式 `matchFunc` 已接；filter 是内嵌独立表单域 | `autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API 仍缺 |
 | Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无 `dispatch/api/reload`、无错误边界；未知 type 仍占位 |
-| Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule`；SDK 暴露 `registerRenderer` / `addRule` | SDK 尚未暴露 action/filter 注册；无 locale/theme 注册与插件生命周期 |
-| Theme/i18n | Tailwind + shadcn token | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText/`registerTheme` |
+| Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule` / `registerTheme`；SDK 暴露 `registerRenderer` / `addRule` / `registerTheme` | SDK 尚未暴露 action/filter 注册；无 locale 注册与插件生命周期 |
+| Theme/i18n | Tailwind + shadcn token + `registerTheme` | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText |
 | Diagnostics | `Placeholder` | 无 debug 开关、无动作日志、无 schema path 报错 |
 | IR/作者态 | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与 JSON 都是一等输入 |
 
@@ -145,7 +145,7 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
   - `self`：创建子 Scope 并在卸载时销毁；
   - `isolate`：子 Scope 不向上查找（`isolateScope: true` 的真正语义）。
 - `data` 属性统一走 `scope.merge(schema.data)`。
-- `trackExpression` P1：`"none"` 不追踪；`${a},${b}` 提取依赖，比较序列化值后决定是否刷新。
+- `trackExpression`：`"none"` 不追踪；接口与表单已按模板结果比较决定是否刷新，表单只同步声明过的同名字段。通用 `Scope.track` 依赖收集与去抖仍属 D9。
 
 验收：`page > service > tpl` 的变量遮蔽、`__super` 读取、URL `?word=myquery`、`data` + `initApi` 合并、`trackExpression: none` 均与 amis 文档示例一致。
 
@@ -315,7 +315,7 @@ export type ActionHandler = (action: ActionSchema, ctx: ActionContext) => Promis
 - 调试：每次动作打印 `actionType/args/event`，由 `env.debug` 控制。
 
 P0 内置动作：ajax、toast、alert、confirm、dialog、drawer、close、setValue、setData、reload、submit、reset、link/url、copy、wait。
-P1：循环/switch/parallel、broadcast、组件 setState、动态 target、outputVar。
+P1 余项：组件 setState、监听器 debounce / track。循环 / switch / parallel、broadcast、动态 target、outputVar 已接。
 P2：custom script、print、email、browser forward/back/refresh、tracker。
 
 ## 9. 表单（D6）
@@ -443,7 +443,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 - **默认自适应**：page / form / crud / 未写 `size` 的表单控件吃满布局槽，作者不必先写 `w-full` / `size: full`。`size` 与 `className` 只是收窄或覆盖。见 [样式系统](./2026-10-21-vamis-style-system.md) §0。
 - `className` 解析：字符串 / 对象（`{ 'text-danger': "${status == 1}" }`）/ 模板字符串；统一 `resolveClassName(schema.className)`，由 `SchemaRenderer` 挂到节点根。gap 辅助类 `m-t-xs`、宽度 `w-*`、高度 `h-full` / `h-1/2` 与 `m:`/`pc:` 已接；`xxxClassName` 打子节点仍 P1。
-- 主题：沿用 Tailwind/shadcn token；不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 仍 P1。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
+- 主题：沿用 Tailwind/shadcn token；不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 已接，IR 页面覆盖优先。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
 - 响应式：`m:` / `pc:` 前缀走 CSS 媒体查询（&lt;768 / ≥768），作用在间距和宽度 helper；表单 `size` 档位断点是 576px（对齐 Amis form SCSS）。不引入 Tailwind 五档作为作者态。
 - i18n：
   - `env.locale` + `registerLocale` 负责内置文案；
@@ -475,7 +475,7 @@ export function usePlugin(plugin: VamisPlugin): void
 
 | 能力 | amis | Vamis 现状 | 决策 | 阶段 |
 |------|------|-----------|------|------|
-| 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；`trackExpression` 未做 | D1 | P0 骨架完成 |
+| 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；接口与表单 `trackExpression` 已接，通用 Scope.track 去抖仍缺 | D1/D9 | P0 骨架完成 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |
 | 模板过滤器 | `\|raw`/`\|json` 等 | P0 过滤器已接；`map`/`bytes` 等仍 P1 | D2 | P0 完成 |
 | HTML 安全 | 默认转义 + raw | Tpl 始终 HTML 插入；插值默认转义，`\|raw` 不转义 | D2 | P0 完成 |
@@ -483,9 +483,9 @@ export function usePlugin(plugin: VamisPlugin): void
 | API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
 | 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source`、crud/chart/markdown 已按 Amis `isApiOutdated`（无 `$` 只初始化拉一次）；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
-| 动作控制流 | 条件/循环/并行/错误策略 | 无 | D4 | P1 |
+| 动作控制流 | 条件/循环/并行/错误策略 | 条件、循环（break/continue）、switch、parallel、ignoreError 已接 | D4 | 主路径完成 |
 | 组件联动 | 动态 target/多目标/数据合并 | `resolveTargets` + 点号 `form.select` + Form `target` 已接；SDK `getComponentByName`/`doAction` 可用 | D5 | P0 完成 |
-| 广播/自定义动作 | 有 | 无 | D4 | P1 |
+| 广播/自定义动作 | 有 | 当前根广播总线 + 权重监听已接；自定义字符串脚本仅 trusted | D4 | 主路径完成 |
 | 表单值路径 | `a.b[0]` | `getPathValue` / `setPathValue` | D6 | P0 完成 |
 | 提交合并 | payload.data 入表单域 | `mergeApiData` 已写入表单域 | D3/D6 | P0 完成 |
 | 表单校验 | 规则注册/异步/服务端 | 内置规则 + `addRule` + `validateApi` + 提交 `errors` | D6 | P0 部分（combo 路径报错 / 异步规则仍缺） |
@@ -494,7 +494,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | 渲染器 API | dispatch/reload/doAction | `test`/`weight`/`isolateScope` 已接；仍无注入 dispatch | D7 | P0 部分 |
 | 扩展注册 | action/filter/validator/locale | core 有 action/filter/validator 注册；SDK 暴露 renderer/validator；locale/theme 仍缺 | D11 | P1 部分完成 |
 | JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 与 `getComponentByName` / `doAction` 已落地 | D11 | P0 完成 |
-| className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` 已接；部分 `xxxClassName` 已接；`registerTheme` / locale 仍缺 | D12 | 进行中 |
+| className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` + `registerTheme` 已接；部分 `xxxClassName` 已接；locale 仍缺 | D12 | 进行中 |
 | i18n | locale/replaceText/覆盖 | 无 | D12 | P1 |
 | 诊断 | debug/日志/tracker | 无 | D8 | P0/P2 |
 
@@ -515,17 +515,17 @@ export function usePlugin(plugin: VamisPlugin): void
 
 ### P1（深度对齐）
 
-- 自动刷新依赖收集 + `trackExpression`。
-- 动作：循环/switch/parallel/broadcast/`outputVar`/组件 setState。
+- 通用 `Scope.track` 依赖收集与去抖；接口 / 表单 `trackExpression` 已接。
+- 动作：组件 setState、监听器 debounce / track；控制流 / 广播 / `outputVar` 已接。
 - 表单：异步自定义校验、Combo 独立域与嵌套路径级报错。
 - CRUD：`autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API。
-- 扩展：插件 API；SDK 暴露 action/filter 注册；locale / theme 注册。
-- 主题/i18n：`xxxClassName` 子节点、locale 覆盖、`replaceText`、`registerTheme`。
+- 扩展：插件 API；SDK 暴露 action/filter 注册；locale 注册；`registerTheme` 已接。
+- 主题/i18n：其余 `xxxClassName` 子节点、locale 覆盖、`replaceText`。
 - 错误边界与诊断面板。
 
 ### P2（非核心）
 
-- 自定义 JS 动作、tracker、移动端专用 UI、富文本 TinyMCE、office/pdf 真实预览、编辑器插件体系。
+- tracker、移动端专用 UI、富文本 TinyMCE、office/pdf 真实预览、编辑器插件体系。自定义 JS 动作已在 trusted 模式接入。
 
 ## 18. 文档歧义与取舍
 

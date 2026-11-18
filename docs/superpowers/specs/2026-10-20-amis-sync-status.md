@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
 - 同步时间：2026-11-18
-- Vamis 基线：`9f9aac5`（`main`，与 `origin/main` 一致）
+- Vamis 基线：`3eadd73`（`main`，本地领先 `origin/main` 3 个提交）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -20,7 +20,7 @@
 |----|----|
 | amis 本地 master | `43a33ee06`，2026-03-18 |
 | amis 包版本 | 6.13.0 |
-| Vamis HEAD | `9f9aac5`，2026-11-18，`main` = `origin/main` |
+| Vamis HEAD | `3eadd73`，2026-11-18，本地 `main` 领先 `origin/main` 3 个提交 |
 | Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；core 已接 P0 过滤器及 `first` / `last` / `pick` / `sum` 等扩展 |
 
 结论：Vamis 以 amis master 源码为参考基线，版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
@@ -29,10 +29,10 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 786 + sdk 81 = **1052**，全绿（2026-11-18 复核） |
-| 构建 | `pnpm build` | 未本轮重跑；上次记录通过，主 JS chunk 偏大（Vite >500 kB 警告） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 800 + sdk 85 = **1070**，全绿（2026-11-18 复核） |
+| 构建 | `pnpm sdk:build` | 通过；`pnpm docs:build` 仍被 Combo 页既有未闭合标签阻断 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
-| 工作区 | `git status` | 同步时 clean，`main` 与 `origin/main` 一致 |
+| 工作区 | `git status` | 本次 concepts 实现有未提交改动；基线本地 `main` 领先 `origin/main` 3 个提交 |
 
 结论：`dev` / `build` / `test` / `typecheck` 可用；`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 

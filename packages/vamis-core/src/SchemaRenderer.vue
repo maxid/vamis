@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef, watch } from 'vue'
+import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
@@ -190,6 +190,38 @@ async function onHostEvent(native: Event, eventName: string) {
   if (event.prevented) native.preventDefault()
   if (event.stopped) native.stopPropagation()
 }
+
+let unlistenBroadcasts: Array<() => void> = []
+watch(
+  () => normalized.value?.onEvent,
+  (listeners) => {
+    for (const unlisten of unlistenBroadcasts) unlisten()
+    unlistenBroadcasts = []
+    if (!listeners || !env.bus) return
+    for (const [eventName, conf] of Object.entries(listeners)) {
+      if (!conf?.actions?.length) continue
+      unlistenBroadcasts.push(env.bus.on(eventName, async (payload) => {
+        const schema = normalized.value
+        if (!schema) return
+        const event = createVamisEvent(eventName, payload)
+        await runOnEvent(schema, eventName, {
+          env,
+          data: eventEvalData(data.value, event),
+          scoped,
+          overlay,
+          form,
+          scope: currentScope.value,
+          event,
+        })
+      }, conf.weight || 0))
+    }
+  },
+  { immediate: true },
+)
+onBeforeUnmount(() => {
+  for (const unlisten of unlistenBroadcasts) unlisten()
+  unlistenBroadcasts = []
+})
 </script>
 
 <template>

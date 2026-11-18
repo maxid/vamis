@@ -28,7 +28,7 @@ const LEGACY_THEME: Record<string, string> = {
 
 function applyEmbedTheme(host: HTMLElement, theme: string | undefined) {
   if (!theme) return
-  const pack = THEME_PACKS.has(theme) ? theme : LEGACY_THEME[theme]
+  const pack = THEME_PACKS.has(theme) ? theme : LEGACY_THEME[theme] || theme
   if (!pack) return
   host.dataset.theme = pack
   host.classList.toggle('dark', pack === 'dark')

@@ -7,8 +7,10 @@ import {
   LazyComponent,
   requestApi,
   resolveValue,
+  runAction,
   runOnEvent,
   useEnv,
+  useOverlay,
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
@@ -16,6 +18,7 @@ import {
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const env = useEnv()
 const scoped = useScoped()
+const overlay = useOverlay()
 const el = ref<HTMLDivElement>()
 const missing = ref('')
 let chart: {
@@ -73,7 +76,11 @@ async function applyOption(option: unknown) {
     chart.on?.('click', async (params: unknown) => {
       const payload = { ...props.data, ...(params && typeof params === 'object' ? (params as Record<string, unknown>) : {}) }
       const event = createVamisEvent('click', payload)
-      await runOnEvent(props.schema, 'click', { env, data: eventEvalData(payload, event), scoped, event })
+      const actionCtx = { env, data: eventEvalData(payload, event), scoped, overlay, event }
+      await runOnEvent(props.schema, 'click', actionCtx)
+      if (!event.prevented && props.schema.clickAction) {
+        await runAction(props.schema.clickAction, actionCtx)
+      }
     })
     if (!listeningResize) {
       window.addEventListener('resize', onResize)

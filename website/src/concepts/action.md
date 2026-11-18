@@ -4,8 +4,8 @@ title: 行为
 
 # 行为
 
-::: info 实现进度 80% · 进行中
-文档主路径已对齐 Amis「行为」：`type: action` 配 `actionType` 后 ajax / dialog / drawer / toast / link / confirm / copy 可跑。JSON 与 YAML 同等有效。Chart `clickAction`、`toast.items`、浏览器前进后退刷新、控制流仍缺。
+::: tip 实现进度 90% · 已完成
+文档主路径已对齐 Amis「行为」：`type: action` 配 `actionType` 后请求、浮层、Toast、复制、跳转、浏览器、打印与控制流均可跑；Chart `clickAction` 已接。JSON 与 YAML 同等有效。
 :::
 
 页面上的交互——提交表单、弹出对话框、跳转、复制一段文字——都可以看成一种**行为**。作者态 **JSON 与 YAML 并列**。
@@ -66,7 +66,7 @@ dialog:
 | `ajax` | 发请求，走 `requestApi` | 已接；`qsOptions` 仍 P1 |
 | `dialog` / `drawer` | 打开弹窗 / 抽屉 | OverlayHost 已接 |
 | `closeDialog` / `closeDrawer` / `close` / `cancel` | 关掉当前浮层 | 已接 |
-| `toast` | 轻提示 | `msg` / `args.msg` / `args.msgType` 已接；`toast.items` 未齐 |
+| `toast` | 轻提示 | `msg` / `args.msg` / `args.msgType` / `toast.items` 已接 |
 | `alert` / `confirm` | 提示 / 确认 | `confirm` 走 Amis `Alert.confirm` Modal（`env.confirm`）；`alert` 仍是 `env.alert` |
 | `link` / `url` | 跳转 | 走 `env.jumpTo` |
 | `copy` | 复制到剪贴板 | 已接 |
@@ -75,8 +75,8 @@ dialog:
 | `submit` / `reset` | 提交 / 重置当前表单 | 已接 |
 | `wait` | 等待毫秒再继续 | 已接 |
 | `email` | 拼 `mailto:` | 已接 |
-| `goBack` / `refresh` / `print` | 浏览器其它能力 | 未接 |
-| 控制流 `switch` / `loop` / `parallel` | 逻辑编排 | 未接 |
+| `goBack` / `goPage` / `refresh` / `print` | 浏览器历史、刷新与组件打印 | 已接 |
+| 控制流 `switch` / `loop` / `parallel` | 逻辑编排 | 已接，含 `break` / `continue` / `outputVar` |
 
 ```schema: scope="body"
 - type: action
@@ -115,4 +115,4 @@ api: /api/mock2/form/saveForm
 
 ### 组件所支持的行为
 
-Amis 里部分组件可以直接配行为对象，例如 Chart 的 `clickAction`。Vamis **还没接到**这条；图表点击不会弹出动作。请改用该组件的 `onEvent`，见 [事件动作](/concepts/event-action)。
+部分组件可以直接配行为对象，例如 Chart 的 `clickAction`。图表点击会先派发 `onEvent.click`；未被 `preventDefault` 阻止时，再执行 `clickAction`。两种写法共用同一动作注册表，见 [事件动作](/concepts/event-action)。

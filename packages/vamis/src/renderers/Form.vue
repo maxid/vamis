@@ -33,6 +33,7 @@ import {
   runOnEvent,
   setPathValue,
   statusStaticOf,
+  syncFormItemsOnTrack,
   validateApiMessage,
   useEnv,
   useOverlay,
@@ -660,6 +661,14 @@ watch(
   () => {
     clearHiddenFormValues(formItems(), store.data)
     persistNow()
+  },
+  { deep: true },
+)
+watch(
+  () => [props.schema.trackExpression, props.data] as const,
+  (curr, prev) => {
+    if (!prev || props.schema.canAccessSuperData === false) return
+    syncFormItemsOnTrack(formItems(), store.data, curr[0], prev[1] || {}, curr[1] || {})
   },
   { deep: true },
 )

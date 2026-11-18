@@ -165,7 +165,7 @@
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 95% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`（默认 32×32，xs/sm/md/lg 跟档位，`level: link` 除外；`level: link` 无下划线、`--link-color`）、`confirmText` / `confirmTitle`（Amis `Alert.confirm` Modal：默认标题「系统消息」、无 X、Esc/点遮罩不关、确认 danger）、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器（`tooltip` 走 `VamisOverlay` `--z-tooltip` 1600，不裁切）、`tooltip` / `disabledTip`（字符串或 TooltipObject：title/content/theme/arrow/delay/trigger/offset，不含 type/body/wrapperComponent/className/inline）/ `tooltipPlacement`、click / mouseenter / mouseleave 事件活示例、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。缺控制流 `switch` / `loop` / `parallel`（D4 P1）、按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
+| `action` | Action 行为按钮 | `/components/action` | `/zh-CN/components/action` | 进行中 | 95% | 文档主路径已对齐：`actionType`、`level` / `primary`、`size`、`icon` / 空 label 正方形 `iconOnly`（默认 32×32，xs/sm/md/lg 跟档位，`level: link` 除外；`level: link` 无下划线、`--link-color`）、`confirmText` / `confirmTitle`（Amis `Alert.confirm` Modal：默认标题「系统消息」、无 X、Esc/点遮罩不关、确认 danger）、dialog / drawer / ajax（`redirect` / `feedback`）/ toast / copy（`copyFormat`）/ link / url（`blank`）/ email / download / saveAs、`countDown` / `hotKey`、Action 当容器（`tooltip` 走 `VamisOverlay` `--z-tooltip` 1600，不裁切）、`tooltip` / `disabledTip`（字符串或 TooltipObject：title/content/theme/arrow/delay/trigger/offset，不含 type/body/wrapperComponent/className/inline）/ `tooltipPlacement`、click / mouseenter / mouseleave 事件活示例、`loading` / `loadingOn`、`active` / `activeLevel`、`clear` / `clear-and-submit` / `reset-and-submit`。`secondary` 实心中灰白字、`dark` 实心炭灰、`light` 浅底深字；尺寸 xs/sm/md/lg = 22/30/32/38px（cxd）。主题/尺寸活示例并排。控制流 `switch` / `loop` / `parallel` 已接；仍缺按名字关祖先浮层、`nextCondition`、input-table 增行 | P0 |
 | `app` | App 多页应用 | `/components/app` | `/zh-CN/components/app` | 进行中 | 55% | 主路径可交互（未逐章节两站核完，不进 80%）：`pages` 分组 / 相对 `url`、`schema` 内嵌、`link`、`visible: false`、`isDefaultPage` 当 404、`brandName` / 槽位。缺 hash 路由、`schemaApi` / `api`、`redirect` / `rewrite` | P0 |
 | `button` | Button 按钮 | `/components/button` | `/zh-CN/components/button` | 进行中 | 96% | `action` 别名，同一渲染器。文档主路径已对齐 `level` / `size` / `block`、`loading` / `loadingOn`、`tooltip` / `disabledTip` / `tooltipPlacement`。`secondary` / `dark` / `light` 与尺寸阶梯按 cxd 转写；空 label + icon 默认 32×32。复杂行为见 Action | P0 |
 | `button-group` | ButtonGroup 按钮组 | `/components/button-group` | `/zh-CN/components/button-group` | 进行中 | 92% | `buttons` / `body`、`vertical`、`tiled`、`btnLevel`；相邻 `.vamis-node` 1px 负缝 + 首尾圆角；hover/focus 抬 wrapper 避免缺边。`btnActiveLevel` 归 ButtonGroupSelect。对照桌面 **4/4**、移动 **4/4**（P0 0） | P0 |
@@ -215,7 +215,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-excel` | InputExcel Excel 解析 | `/components/form/input-excel` | `/zh-CN/components/form/input-excel` | 进行中 | 20% | **精简**：只记文件名/大小，不解析表格 | P0 |
 | `input-file` | InputFile 文件上传 | `/components/form/input-file` | `/zh-CN/components/form/input-file` | 进行中 | 88% | 主路径已对齐：receiver POST form-data、默认 autoUpload、accept/maxSize、多选 joinValues、asBlob/asBase64、拖拽、分片 start/chunk/finish、change/success/fail/remove、clear。缺 themeCss、提交时未等 pending 传完 | P0 |
 | `formula` | Formula 公式 | `/components/form/formula` | `/zh-CN/components/form/formula` | 进行中 | 65% | 基本用法对标 Amis 自动 A+B（隐藏 formula + 只读和）。对照桌面 **2/3**（P0 0；空值示例 Amis `rendered` 常假红）。缺 input-formula 编辑器与表达式层统一（D2） | P0 |
-| `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 75% | ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 12 等分宽度。缺 gap 档 / 组标签 | P0 |
+| `group` | Group 表单项组 | `/components/form/group` | `/zh-CN/components/form/group` | 进行中 | 75% | ≥768 横排 `Form-groupColumn` 均分，`mode` / `subFormMode` 传给未写 mode 的子项；`columnRatio` 按 12 等分控制宽度。缺 gap 档 / 组标签 | P0 |
 | `hidden` | Hidden 隐藏字段 | `/components/form/hidden` | `/zh-CN/components/form/hidden` | 已完成 | 100% | 与 Amis 一致：渲染 null、`wrap: false`（SchemaRenderer 直接挂组件，不落 `.vamis-node`）、值随表单初始化/提交、`name` 支持 `a.b[0]` 路径、`value` 支持 `${}` 表达式；文档覆盖基本用法 / 属性 / 事件 / 动作表。对照桌面 **1/1**、移动 **1/1**（P0 0） | P0 |
 | `input-image` | InputImage 图片 | `/components/form/input-image` | `/zh-CN/components/form/input-image` | 进行中 | 80% | 主路径已对齐：复用 InputFile 上传管线（receiver POST form-data、`data.value`/`data.url` 回填）、`autoUpload` / 手动上传 / `hideUploadButton`、`multiple` / `joinValues` / `extractValue` / `delimiter`、`accept` / `capture`、`maxSize` / `maxLength`、`limit` 尺寸校验、`frameImage` / `fixedSize`、`uploadBtnText`、`autoFill` / `initAutoFill`（源码默认 true）、`draggable` 排序、`change` / `remove` / `success` / `fail`、`clear`；缩略图 120 方块（`--input-image-*`）。文档按 Amis 章节改写，手动上传 / 隐藏上传按钮 / 多选 autoFill / 其他表单项填充 / initAutoFill / 拖拽排序示例均按 Amis 原例对齐。对照桌面 **12/12**、移动 **12/12**（P0 0）。缺 `crop` 系列 / `allowInput` / 图片预览画廊；`uploadBtnText` 只收字符串、`fixedSize` 只加类名 | P0 |
 | `input-group` | InputGroup 输入框组合 | `/components/form/input-group` | `/zh-CN/components/form/input-group` | 进行中 | 55% | 能并排控件 | P0 |
@@ -273,7 +273,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `card` | Card 卡片 | `/components/card` | `/zh-CN/components/card` | 进行中 | 70% | 主路径可交互（未逐章节两站核完，不进 80%）：header/body/actions、href 优先于 itemAction、media、toolbar、标签/按钮/文本/单元格、配置工具栏、属性表四列。actions 走 Card-action `<a>`，dropdown 跟 `--primary`；副标题 text-6。缺 `themeCss`、Cards 拖拽排序 | P0 |
 | `cards` | Cards 卡片组 | `/components/cards` | `/zh-CN/components/cards` | 进行中 | 70% | 主路径可交互（未逐章节两站核完，不进 80%）：基本用法、CRUD 勾选/Cards-toolbar 注入 bulkActions/顶栏+底栏全选/`checkOnItemClick`、瀑布流 `h-stretch`/`cover`、属性表、事件表 selectedChange/selected/rowClick/orderChange、动作表 select/selectAll/clearAll/initDrag/setValue（含指定行 `index`/`condition` 与「修改了内容」未保存条）。`title` / toolbar 全选左缘 / 选中 fieldLabel / 拖拽未保存条已跟 `_cards.scss`。拖动手柄 `stroke`。缺 `submitQuickEdit`、`itemClassName` 像素级栅格、`themeCss` | P0 |
 | `carousel` | Carousel 轮播图 | `/components/carousel` | `/zh-CN/components/carousel` | 进行中 | 45% | 能轮播 | P0 |
-| `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 62% | 基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `trackExpression` / `initFetch` | P0 |
+| `chart` | Chart 图表 | `/components/chart` | `/zh-CN/components/chart` | 进行中 | 65% | 基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`、click 事件与 `clickAction`（先 onEvent，未阻止再执行行为）、API `trackExpression` 已接。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `initFetch` 与 mouseover / legendselectchanged / finished 事件 | P0 |
 | `code` | Code 代码高亮 | `/components/code` | `/zh-CN/components/code` | 进行中 | 92% | 只读 monaco 展示（无编辑光标）；行号/折叠/感知默认关；wordWrap 按容器宽度折行。不收 `options`。customLang inherit 共享主题，滚动不丢高亮。YAML 多行 `value` 用 `\|` | P0 |
 | `color` | Color 颜色 | `/components/color` | `/zh-CN/components/color` | 进行中 | 50% | StaticValue 展示 | P0 |
 | `date` / `datetime` / `time` / `month` | Date 日期时间 | `/components/date` | `/zh-CN/components/date` | 进行中 | 60% | StaticValue 展示；date / datetime 过滤器已接，组件自身格式档未齐 | P0 |
@@ -468,7 +468,7 @@ flowchart LR
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
-| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 62% |
+| 47 | `chart` | — | 12 | 1 | 25 | 25 | 进行中 | 65% |
 | 48 | `progress` | — | 12 | 1 | 25 | 25 | 进行中 | 85% |
 | 49 | `status` | `icon` | 11 | 1 | 24 | 24 | 进行中 | 75% |
 | 50 | `flex` | `container` | 8 | 1 | 21 | 21 | 进行中 | 65% |
@@ -631,7 +631,9 @@ flowchart LR
 - 推进（2026-11-18）：InputTree / TreeSelect 75→78（`addControls` / `editControls` Dialog）；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 勾选语义与文档复核（2026-11-18）：InputTree / TreeSelect 保持 78%；测试 **1052**、`typecheck` 0。修正数据输入分类标题、深色回归表与附录别名进度；主表 / 全量顺序 / 页面 banner 一致，依赖图由 `component-priority.mjs` 重生。
 - 复杂度盘点与设计文档（2026-11-18）：155 项按 Amis 入口源码 LOC + 依赖 + 集成面分为 S 轻 7 / M 中 60 / L 重 40 / XL 特重 48，新增 155 篇 [组件设计文档](../../design/component/README.md) 与本文件「实现复杂度评估」表；汇总仍 **62% / ≥80% 47 / ≥50% 111**，测试 **1062**、`typecheck` 0。
+- 概念章节收口（2026-11-18）：Action 控制流已接，进度保持 95%；Chart 接 click / `clickAction`，62→65。同步主表、全量顺序、组件设计文档与依赖图。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
+
 
 ## 实现复杂度评估（2026-11-18）
 
@@ -800,9 +802,6 @@ flowchart LR
 | 155 | 其他 | amis 渲染器 | `amis` | S 轻 | 58 | 11 | 1 | 子 Schema | [设计](../../design/component/amis.md) |
 
 > 自动盘点的局限：Amis 入口文件 LOC 会包含共享基类/变体；`office-viewer` 等 HOC/占位按注册与源码量评估，不等同于运行能力。逐项人工复核时请同步本表与设计文档。
-
----
-
 
 ---
 
