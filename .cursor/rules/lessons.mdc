@@ -334,9 +334,9 @@ alwaysApply: true
 
 ### 表单禁用用灰底，不要 opacity
 - 踩过：shadcn `disabled:opacity-50` 让禁用输入框仍像白底可填，肉眼几乎看不出禁用。Amis 是 `--Form-input-onDisabled-bg` fill-10 `#f7f8fa`、字色 `#b8babf`、边框仍 line-8，opacity 1。
-- 稳定做法：token `--control-disabled-bg` / `--control-disabled-color` 挂 `:root`，控件选择器只 `var()`。原生 `input:disabled` 要 `opacity: 1` 和 `-webkit-text-fill-color`，否则 UA 会再淡一层。按钮继续可以用 opacity，不要把这条套到 Button。
-- 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number` `checkbox`
-- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*`
+- 稳定做法：token `--control-disabled-bg` / `--control-disabled-color` 挂 `:root`，控件选择器只 `var()`。原生 `input:disabled` 要 `opacity: 1` 和 `-webkit-text-fill-color`，否则 UA 会再淡一层。Button 同理：`disabled` 优先级高于 `level`，不能只降透明度让 level 色透出来；Amis 所有实心 level 的 disabled 都落到 fill-10 / text-6 / line-10，link 保持透明底。token `--button-disabled-*`，unlayered 规则压过 variant utilities。
+- 触及：FormItem `input-text` `textarea` `select` `input-date` `input-number` `checkbox` `button` `action`
+- 规则：`.cursor/rules/style.mdc`；`packages/vamis-ui/src/styles.css` `:root --control-disabled-*` / `--button-disabled-*`
 
 ### 输入框 hover 走 --primary，focus glow 包整组
 - 踩过：input hover 用灰黑 `color-mix`；`borderMode: half` 写成 `border-radius: 0`；addOn 把 input `border-right-width: 0` 去掉竖缝；focus 3px ring 只打在 `__input--full`，附加按钮还是灰边。Select 触发器写成 `box-shadow: 0 0 0 1px`，和 InputText 的 3px glow 两套。addOn 文案和无边框 focus 字色没跟 `--primary`。

@@ -65,7 +65,7 @@ flowchart LR
 | **占位 / 精简** | 占位：明确未接入；精简：能绑值渲染但缺真实能力（`editor` Monaco 编辑器、地图、Office 预览等） |
 | **JS SDK** | 任意 HTML 用 `vamis.embed` 挂运行时（对齐 Amis `amis.embed`）。规格见 [JS SDK](docs/superpowers/specs/2026-10-21-vamis-js-sdk.md)；P0 已落地 |
 
-## 当前进度（2026-11-18）
+## 当前进度（2026-11-19）
 
 回写时更新日期，并同步组件 TODO 汇总行、同步状态里的覆盖数字（若 type 有增减）。
 
@@ -80,10 +80,11 @@ flowchart LR
 | JS SDK | P0 embed 已落地；`registerTheme` 已接 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。日期走 **dayjs**（打进 bundle），不再依赖 moment。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；9 篇概念页按剩余实现缺口为 **90–95% · 进行中**（配置 / 模板 / 表达式 / 事件动作 95%，其余 90%）；类型页 SchemaNode **92% 进行中**、ClassName **70%**、API **92%**；Definitions **100% 已完成**（已接 `$ref`）；开始页保持 90–95%，扩展保持 15–90%，文档核对不提升实现进度；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；顶栏可切桌面 / 移动（默认桌面，管整页示例；移动 **375×812** iframe + 手机壳）；文档/组件/样式页标题下「实现进度 · 状态」；**左侧菜单同步百分比**（顶栏可关）；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 843 + sdk 100 = **1128** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2217**（2026-11-18）；P0 专项 **15/15**；最近全量 **2216 例 / 1901 过 / 315 败（P0 1：form-default，单跑已通过）**。文档 **156/156**、样式 **471/471**、概念 **133/133**；其余为组件既有对照缺口，见报告与 TODO。 |
+| 测试 | 源码用例 formula 185 + core 844 + sdk 101 = **1130** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2217**（2026-11-18）；P0 专项 **15/15**；最近全量 **2216 例 / 1901 过 / 315 败（P0 1：form-default，单跑已通过）**。文档 **156/156**、样式 **471/471**、概念 **133/133**；其余为组件既有对照缺口，见报告与 TODO。 |
 
 **最近交付**
 
+- **Button 禁用态压过 level，并同步 Amis 禁用色（2026-11-19）**：`disabled` 不再走 `disabled:opacity-50` 把 level 色透出来。新增 `--button-disabled-bg` / `--button-disabled-color` / `--button-disabled-border`（fill-10 / text-6 / line-10，对齐 Amis 各实心 level 的 disabled token），unlayered 规则覆盖 `:disabled` / `.is-disabled` / `[aria-disabled=true]`；link 保持透明底、0 边框。浏览器实测 outline / primary / danger 禁用后都落到 `#f7f8fa / #b8babf / opacity 1`，link 透明。`pnpm test` 通过、`typecheck` 0、按钮页对照 **9/9**。
 - **SDK 页桌面窄屏不再误进移动表单（2026-11-18）**：`/docs/start/sdk` 的 hello iframe 在页宽 &lt; 768 且顶栏为桌面时，布局宽撑到 768 再 scale 进外框，内部 `@media (max-width: 767px)` 不再命中。顶栏切回移动不撑宽。未动运行时，没跑对照。
 - **项目状态同步（2026-11-18）**：重跑 type 覆盖与测试。amis `origin/master` 仍是 `43a33ee06` / 6.13.0，无新提交。覆盖仍 **185/189**。测试 **1128**（formula 185 + core 843 + sdk 100）全绿，`typecheck` 0。Vamis `21da3a7` 与 `origin/main` 一致。组件百分比不改（155 行均值 62.6%，公布汇总仍 **62%** / ≥80% 47 / ≥50% 111）；主表、全量顺序、组件页 banner 一致。本机对照目录 **2217**（文档 157 / 组件 1589 / 样式 471），HEAD 里的 `compare-cases.js` 仍是 2209；最近全量报告仍是 **2216 / 1901 / 315（P0 1：form-default，单跑已通过）**，本轮未重跑对照。修正同步状态、README、SDK spec、运行时语义与发布材料里的旧测试数、旧基线和「D7/D8 仍缺 / P0 8 条 `m-l-*`」过时声明。未动运行时。
 - **Concepts 进度纠偏（2026-11-18）**：9 篇不再统一 100%；配置 / 模板 / 表达式 / 事件动作 95%，数据域 / 数据映射 / 联动 / 行为 / 样式 90%，均为进行中。事件动作控制流恢复与可视化面板、数据映射缓存、表达式定位、配置诊断展示等缺口仍在；文档与对照通过不提升实现完成度。
