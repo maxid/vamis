@@ -140,7 +140,7 @@ body:
 - `form` 的 `initApi`
 - `select` 的 `source`（`url` 含 `$` 才会自动刷新；对象里配了 `data` 则默认不跟踪 URL，要主动 `reload`）
 - `service` 的 `api` / `schemaApi`
-- `crud` 的 `api`（Amis 默认跟地址栏联动；Vamis 尚未接 `syncLocation`，文档示例不必关它）
+- `crud` 的 `api`（Vamis 已接 `syncLocation` 的 `page` / `perPage` 同步；筛选参数暂不同步）
 
 > 如果 api 地址里有变量，比如 `/api/mock2/sample/${id}`，分页参数不会自动带上，需要自己写成 `/api/mock2/sample/${id}?page=${page}&perPage=${perPage}`。
 

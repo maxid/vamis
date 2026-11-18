@@ -6,7 +6,7 @@ outline: deep
 # Progress 进度条
 
 ::: info 实现进度 85% · 进行中
-`mode` line / circle / dashboard、`value`、`map` 颜色（单色 / 数组 / 阈值对象）、`strokeWidth`、`gapDegree` / `gapPosition`、`showLabel` / `valueTpl`、`stripe` / `animate`、`placeholder`、`reset` / `setValue` 动作。阈值刻度（`threshold`）暂未接。
+`mode` line / circle / dashboard、`value`、`map` 颜色（单色 / 数组 / 阈值对象）、`strokeWidth`、`gapDegree` / `gapPosition`、`showLabel` / `valueTpl`、`stripe` / `animate`、`placeholder`、`reset` / `setValue` 动作。line 模式已接 `threshold` / `showThresholdText`；圆 / 仪表盘刻度线与 `gapPosition` 精确弧线偏移未接。
 :::
 
 进度条展示百分比进度。Vamis 用 YAML 或 JSON 书写，字段名不改写。

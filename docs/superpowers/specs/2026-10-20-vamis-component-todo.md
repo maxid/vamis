@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-11-17）
+- 日期：2026-10-21（进度核对：2026-11-18）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-17（进度打回：禁止用「主路径 + 缺 themeCss」进 80%。汇总 **62%**、≥80% **47**、≥50% **111**；已完成 3）
+- 最近核对：2026-11-18（进度打回：禁止用「主路径 + 缺 themeCss」进 80%。汇总 **62%**、≥80% **47**、≥50% **111**；已完成 3）
 
 ## 怎么读
 
@@ -90,7 +90,7 @@
 |------|------|------|------|
 | `select` | 下拉 + tag tooltip + `+N` 溢出 | 已核 | 2026-11-07。溢出走 `--select-menu-*`，tooltip 走 `--tooltip-*` |
 | `tooltip-wrapper` | Tooltip | 已核 | 2026-11-16。基本配置 hover 浮层：升高面 / 文字 / 边框都走深色 token，Teleport 正常 |
-| `remark` | Tooltip | 未核 | `--remark-bg` 仍 `#fff` |
+| `remark` | Tooltip | 未核 | 浮层已复用 `--tooltip-*`，仍需深色手核 |
 | `action` / `button` | tooltip / disabledTip；confirm Dialog | 未核 | |
 | `dropdown-button` | 下拉菜单 | 未核 | 贴触发器 `VamisOverlay`（窄屏也是），深色菜单 / tooltip 仍要手开 |
 | `input-text` | 选择器建议下拉 | 未核 | 贴输入框 `VamisOverlay`（窄屏也是），深色建议仍要手开 |
@@ -98,7 +98,7 @@
 | `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 已核 2026-11-07 | `--cal-*` alias `--select-menu-*`，`.dark` 覆盖格子 hover / 非本月 |
 | `dialog` | Modal | 已核 | 2026-11-16。基本用法打开弹框：面板、遮罩、取消 / 确认按钮和主色均正常 |
 | `drawer` | 抽屉 | 未核 | |
-| `toast` | 轻提示 | 未核 | 桌面写死 `#fff` / `#151b26` |
+| `toast` | 轻提示 | 未核 | 桌面浮层已走 token，仍需深色手核 |
 | `popOver` | 字段弹出 | 已核 | 2026-11-10。浅 320 白底 / 深 `--popover-layer-bg: #182230`，表格列 `center` 盖整格 td，`--z-popover` 1400 |
 | `breadcrumb` | 文档记缺 tooltip 浮层 | 未核 | 有下拉项时核 |
 | `page` | remark / spinner overlay | 未核 | |
@@ -112,7 +112,7 @@
 | `avatar` | badge | 未核 | |
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
-| `picker` | 弹层多选 | 未核 | 50%，有浮层但主路径未齐，可后置 |
+| `picker` | 弹层多选 | 未核 | 65%，有浮层但主路径未齐，可后置 |
 | `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#182230`），无独立 tooltip |
 
 ### 已推进、无独立浮层（切深色看默认皮）
@@ -126,14 +126,14 @@
 | `hidden` | 100% | 无需核 | 2026-11-12。`wrap: false` 不落 DOM，无可视默认皮与浮层 |
 | `input-image` | 80% | 已核 | 2026-11-12。`--input-image-*` 走 `--card` / `--border` / `--primary`；无浮层（点击缩略图新窗口） |
 | `textarea` | 85% | 已核 | 2026-11-12。textarea 走 `--card` / `--input` / `--foreground`；无浮层 |
-| `editor` `code` `diff-editor` | 65–92% | 未核 | Monaco 有自己的 vs-dark |
-| `collapse` / `tabs` / `portlet` | 85% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#182230` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
-| `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 90% | 未核 | |
-| `divider` `pagination` `pagination-wrapper` `switch-container` | 90% | 未核 | |
+| `editor` `code` `diff-editor` | 85% / 92% / 65% | 未核 | Monaco 有自己的 vs-dark |
+| `collapse` / `tabs` / `portlet` | 70% / 95% / 65% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#182230` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
+| `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 均为 65% | 未核 | |
+| `divider` `pagination` `pagination-wrapper` `switch-container` | 65% / 92% / 65% / 65% | 未核 | |
 | `button-group` | 92% | 已核 | 邻钮 1px 负缝打在 `.vamis-node`，hover 抬 wrapper；无独立浮层 |
-| `table-view` | 85% | 未核 | |
-| `app` `anchor-nav` `service` | 80–92% | 未核 | `service` 2026-11-13。接口联动用父域做 isApiOutdated；Spinner overlay 不改盒模型 |
-| `audio` `tasks` `web-component` `amis` | 80% | 未核 | |
+| `table-view` | 65% | 未核 | |
+| `app` `anchor-nav` `service` | 55% / 55% / 70% | 未核 | `service` 2026-11-13。接口联动用父域做 isApiOutdated；Spinner overlay 不改盒模型 |
+| `audio` | 50% | 未核 | |
 
 ---
 
@@ -180,7 +180,7 @@
 
 ---
 
-## 数据输入（1/72，均 57%）
+## 数据输入（1/72，均 58%）
 
 Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表单项（D6），必须进清单。
 
@@ -353,7 +353,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。分类表 `P` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+`app`）；**执行顺序看全量顺序**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。`checkbox` #14 已到 90%（缺 themeCss，不挡）。`input-date` #15 已到 92%（窄屏默认滚轮 PopUp 已接；缺 `mobileCalendarMode: calendar`、schedules，CalendarMobile 不挡）。`image` #16 已到 90%（缺 CRUD 图集 / hoverMode / themeCss）。`popOver` #17 已到 90%（缺 crud 远程列）。`switch` #22 已到 88%（缺 themeCss，不挡）；`hidden` #23 已完成 100%；`input-image` #24 已到 80%（缺 crop / allowInput / 预览画廊，不挡）；`textarea` #25 已到 85%（缺 themeCss，不挡）；`static` #26 已到 85%（缺 quickEdit，不挡）；当前建议下一批：`form` #27 已到 88%（缺轮询 / 异步提交 / 部分动作，不挡）；`mapping` #28 已到 85%（示例 Tag / `.label-*` 已对齐；余项 source 缓存，不挡）；`input-date-range` #29 已到 90%（缺 animation / CalendarMobile，不挡）；当前建议下一批：`link` #30（60%）。`radio` #21 已到 88%（缺 themeCss / input-table 互斥，不挡）。`input-number` #20 已到 88%（缺 themeCss）。`input-file` #19 已到 88%（缺 themeCss / 提交等 pending）。`select` #13 已到 90%（缺 table/tree/chained/associated / deferApi，不挡）。`spinner` #12 已到 95%。`input-text` #11 已到 92%（缺 `themeCss`，不挡）。Options #10 已到 88%（缺 deferApi / 虚拟列表，不挡）。FormItem 90% 余项是 `showSuggestion` / combo 路径报错。`remark` 92% / `badge` 95% 余项是 `themeCss`。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：Options（#10，88%）、`panel`（#18，65%）、`input-file`（#19，88%）、`input-number`（#20，88%）、`radio`（#21，88%）、`switch`（#22，88%）、`input-image`（#24，80%）、`textarea`（#25，85%）。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -594,20 +594,20 @@ flowchart LR
 | `users-select` | 数据输入 | **精简**：内置 3 个用户 | 25% | — | — |
 | `icon-picker` / `icon-select` | 数据输入 | **精简**：8 个字符图标 | 25% | — | — |
 | `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 92% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
-| `multi-select` | 数据输入 | `select` 别名 | 55% | `/components/form/select` | `/zh-CN/components/form/select` |
+| `multi-select` | 数据输入 | `select` 别名 | 92% | `/components/form/select` | `/zh-CN/components/form/select` |
 | `qr-code` | 数据展示 | `qrcode` 别名 | 45% | `/components/qrcode` | `/zh-CN/components/qrcode` |
 | `static-json` / `static-table` | 数据展示 | json/table 别名 | 50% | `/components/json、/components/table` | `/zh-CN/components/json、/zh-CN/components/table` |
 | `password` / `multiline-text` / `date-range` | 数据展示 | StaticValue | 50% | `/components/form/input-password、/components/form/input-text、/components/date` | `/zh-CN/components/form/input-password、/zh-CN/components/form/input-text、/zh-CN/components/date` |
-| `tooltip` | 功能 | `tooltip-wrapper` 别名 | 50% | `/components/tooltip` | `/zh-CN/components/tooltip-wrapper` |
+| `tooltip` | 功能 | `tooltip-wrapper` 别名 | 92% | `/components/tooltip` | `/zh-CN/components/tooltip-wrapper` |
 | `fieldSet` | 数据输入 | `fieldset` 别名 | 55% | `/components/form/fieldset` | `/zh-CN/components/form/fieldset` |
 | `tags` | 数据展示 | 已注册为 Words（`inTag`），不是 `tag` 别名 | 55% | `/components/tag` | `/zh-CN/components/tag` |
-| editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`）；`yaml-editor`/`json-editor` 可开 schema 感知 | 78% | `/components/form/editor` | `/zh-CN/components/form/editor` |
+| editor 语言族（`javascript-editor` 等） | 数据输入 | 全部指向 Monaco Editor（含 `js-editor` / `ts-editor`）；`yaml-editor`/`json-editor` 可开 schema 感知 | 85% | `/components/form/editor` | `/zh-CN/components/form/editor` |
 
-同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`map`→mapping、`navigation`→nav。`pager` 已并入 `pagination` 别名；`js-editor` / `ts-editor` 已并入 `editor` 别名。
+同步状态里尚未注册的遗漏（不在侧栏，但影响别名对齐）：`cascader-select`、`card-item-field`、`cell-field`、`navigation`→nav。`map` 已并入 `mapping`、`pager` 已并入 `pagination` 别名；`js-editor` / `ts-editor` 已并入 `editor` 别名。
 
 ---
 
-## 进度核对（更新至 2026-11-17）
+## 进度核对（更新至 2026-11-18）
 
 - 范围：本清单 155 个侧栏条目；附录 17 项只登记别名/子节点，不参与百分比。
 - 核对内容：
@@ -629,6 +629,7 @@ flowchart LR
 - 树盒模型对齐（2026-11-17）：InputTree 55→60；测试 **1032**、`typecheck` 0；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 推进（2026-11-18）：InputTree / TreeSelect 70→75（sm 复选框 / SearchBox / 内联 CUD）；测试 **1047**、`typecheck` 0；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 推进（2026-11-18）：InputTree / TreeSelect 75→78（`addControls` / `editControls` Dialog）；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
+- 勾选语义与文档复核（2026-11-18）：InputTree / TreeSelect 保持 78%；测试 **1052**、`typecheck` 0。修正数据输入分类标题、深色回归表与附录别名进度；主表 / 全量顺序 / 页面 banner 一致，依赖图由 `component-priority.mjs` 重生。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 ---
@@ -639,7 +640,7 @@ flowchart LR
 
 | 组件 | 挡住它的决策 |
 |------|----------------|
-| `service` / `form` / `crud` / `wizard` | D1 已有 Scope 内核；这些容器还要把 overlay 切到 Scope（page 已切） |
+| `service` / `form` / `crud` / `wizard` / `combo` | D1：Service / Form / CRUD 独立 Scope 已接；Wizard 只下发当前步骤，Combo 独立域仍缺 |
 | `tpl` / `html` / Date/Number 展示 | D2 P0 已接；其余过滤器仍 P1 |
 | `service` / `form` / `crud` / `action` ajax | D3 API 管线 |
 | `action` / `button` / `toast` / `dialog` | D4/D5 事件与目标 |

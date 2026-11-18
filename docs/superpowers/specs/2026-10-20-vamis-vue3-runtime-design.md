@@ -78,4 +78,4 @@ SDK 把 Vue/Pinia/渲染器打进 IIFE（`sdk.js` + `sdk.css`），**不是**第
 
 ## 4. 非目标（第一期）
 
-`.cxd-*` 前缀 / Amis 主题 SCSS 包、MST、office/pdf 真实预览、TinyMCE 全家桶、Amis `amisRequire` AMD、IE11。cxd 能力转写到 shadcn-vue / Tailwind 属于目标。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。** Monaco：`code` 走 `colorize`；`editor` / `diff-editor` 本阶段待接。
+`.cxd-*` 前缀 / Amis 主题 SCSS 包、MST、office/pdf 真实预览、TinyMCE 全家桶、Amis `amisRequire` AMD、IE11。cxd 能力转写到 shadcn-vue / Tailwind 属于目标。Amis type 继续补齐。**JS SDK 属于目标，不是非目标。** Monaco 已接 `code` 只读展示、`editor` 与 `diff-editor`；`editorDidMount` 和部分组件动作仍属后续契约。

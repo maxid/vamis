@@ -1,6 +1,6 @@
 # Amis 只能 React？我用 Vue 3 重写了整套低代码运行时
 
-> 同一份 schema，185/189 个 Amis type，1032 个测试，2171 条并排对照用例。
+> 同一份 schema，185/189 个 Amis type，1052 个测试，2171 条并排对照用例。
 >
 > 利益相关：我是 Vamis 作者。本文是项目首发文，含完整的限制说明。
 
@@ -18,7 +18,7 @@ Amis 是百度开源的 JSON 低代码框架：用一份 schema 描述后台页�
 - 侧栏 155 个组件，**语义平均 62%**，`container` / `hidden` / `toast` 三个到 100%；
 - `VamisRoot`（Vue）和 `vamis.embed`（任意 HTML）两条入口，同一套内核；
 - YAML 与 JSON 双作者态，信封对齐 LCDP IR；
-- 1032 个单测，2171 条 Playwright 并排对照用例，P0 8 条 helper 差异（均为 `m-l-*`）；
+- 1052 个单测，2171 条 Playwright 并排对照用例，P0 8 条 helper 差异（均为 `m-l-*`）；
 - **alpha，不建议直接上关键生产。**
 
 这篇文章讲三件事：为什么重写而不是封装、怎么保证像 Amis、以及现在还不能做什么。
@@ -171,7 +171,7 @@ app.mount('#app')
 
 - 对照用例 **2171** 条，P0 8 条 helper 差异（均为 `m-l-*`）；
 - 最近一次全量：**1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**（差异在收敛，不是"全绿"）；
-- 单测 **1032** 个（formula 185 + core 766 + sdk 81）；
+- 单测 **1052** 个（formula 185 + core 786 + sdk 81）；
 - 桌面与 375 移动端都能跑，对照页可切视口。
 
 这套对照方法论本身也可能是项目除了运行时之外最有价值的产出：它把"像不像"从审美问题变成了可回归的测试问题。
@@ -184,13 +184,13 @@ app.mount('#app')
 
 | 能力 | 状态 | 说明 |
 |------|------|------|
-| 表单 | 80% | 布局、校验、联动、提交、`static`、窄屏 375 |
+| 表单 | 75% | 布局、校验、联动、提交、`static`、窄屏 375 |
 | FormItem | 90% | 规则表、`$1`、`validate.*`、`addRule` |
 | CRUD | 65% | 查询、分页、批量、弹窗编辑、切页 Spinner |
-| Table / Table2 | 55% / 70% | 列、选择、排序、固定列在补 |
+| Table / Table2 | 88% / 70% | Table 主路径与固定列已接；Table2 仍缺固定列等 |
 | 日期 | 92% | 桌面月历 + 移动端滚轮、范围、`minDate` / `maxDate` |
 | Select / Checkbox / InputText | 92% / 90% / 92% | 桌面 + 移动、搜索、多选、分组 |
-| 向导 / Dialog / Drawer / Toast | 80–100% | 动作与浮层主路径 |
+| 向导 / Dialog / Drawer / Toast | 50% / 88% / 88% / 100% | 向导仍缺 API 主路径；弹层与 Toast 已推进 |
 | JS SDK | 90% | `vamis.embed` / `updateSchema` / `updateProps` / `doAction` |
 | 编辑器 | 骨架 | 组件树 / 画布 / 属性 / YAML，无插件市场 |
 | 样式 | 部分 | 辅助类、token、深色；色盘表仍在补 |

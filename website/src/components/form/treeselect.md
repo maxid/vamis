@@ -6,7 +6,7 @@ outline: deep
 # TreeSelect 树形选择器
 
 ::: warning 实现进度 78% · 进行中
-下拉走 `VamisOverlay`，移动端 `VamisPopUp`；多选 sm 复选框 / SearchBox / 内联 CUD / `addControls` Dialog / `autoCheckChildren` 勾选语义已接。仍缺 `enableNodePath`、虚拟列表、`itemActions`。
+下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / SearchBox / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`hideNodePathLabel` 已接。仍缺 `enableNodePath`、虚拟列表、`itemActions`
 :::
 
 `tree-select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -1077,4 +1077,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：下拉走 `VamisOverlay`（移动端 `VamisPopUp`），复用 InputTree 面板；`hideNodePathLabel`、SearchBox 检索、`onlyLeaf`、`autoCheckChildren` / `cascade` / `withChildren` / `onlyChildren` 勾选语义、多选 sm 复选框、内联增删改已接。有 `addControls` / `editControls` 时新增/编辑走 Dialog。仍缺 `enableNodePath`、虚拟列表、`itemActions`、拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / SearchBox / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`hideNodePathLabel` 已接。仍缺 `enableNodePath`、虚拟列表、`itemActions`。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

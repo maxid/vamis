@@ -34,7 +34,7 @@
 
 **摘要**（不超过 120 字）：
 
-> Amis 的 schema 能不能直接跑在 Vue 3 里？我把运行时重写了一遍：185/189 个 type、1032 个单测、2171 条 Amis 并排对照用例。现在 alpha 开源，表单/CRUD/移动端已可用。本文讲为什么重写、怎么保证像、以及现在还不能做什么。
+> Amis 的 schema 能不能直接跑在 Vue 3 里？我把运行时重写了一遍：185/189 个 type、1052 个单测、2171 条 Amis 并排对照用例。现在 alpha 开源，表单/CRUD/移动端已可用。本文讲为什么重写、怎么保证像、以及现在还不能做什么。
 
 **标签**：`前端`、`Vue.js`、`低代码`、`开源`
 
@@ -100,7 +100,7 @@
 项目叫 Vamis。三周时间，目前：
 - 185/189 个 Amis type 名称已注册，组件语义平均 62%（每个文档页标了进度）
 - 同一份 schema 可以和 Amis 并排跑，2171 条 Playwright 对照用例，P0 8 条 helper 差异（均为 `m-l-*`）
-- 1032 个单测；YAML / JSON 双作者态；Vue VamisRoot + 任意 HTML vamis.embed 两条入口
+- 1052 个单测；YAML / JSON 双作者态；Vue VamisRoot + 任意 HTML vamis.embed 两条入口
 - UI 用 shadcn-vue 重新实现，不搬 cxd 前缀
 
 现在能跑：表单、CRUD、表格、日期（含 375 移动端滚轮）、向导、SDK 嵌入、编辑器骨架。
@@ -133,7 +133,7 @@ Demo：https://maxid.github.io/vamis/
 我是 Vamis 的作者。Vamis 用 Vue 3 原样渲染 Amis 的 JSON/YAML schema，
 解决的是"Vue 团队想用 amis，但不想在页面里套 React"这个问题。
 
-目前：185/189 个 Amis type 已注册，组件语义平均 62%，1032 个单测，
+目前：185/189 个 Amis type 已注册，组件语义平均 62%，1052 个单测，
 与 Amis 并排对照 2171 条用例（P0 8 条 helper 差异（均为 `m-l-*`）），表单/CRUD/移动端已可用。
 
 文章约 4000 字，含架构、对照方法和诚实的限制清单，配 3 张截图。
@@ -242,7 +242,7 @@ I reimplemented the runtime in Vue 3 instead:
 - YAML or JSON authoring; optional LCDP IR envelope
 - shadcn-vue + Tailwind UI (no cxd prefix)
 - Vue component (`VamisRoot`) and embeddable SDK (`vamis.embed`)
-- 1032 unit tests; 2,171 Playwright cases comparing Amis and Vamis on the same schema
+- 1052 unit tests; 2,171 Playwright cases comparing Amis and Vamis on the same schema
 
 Status: alpha. Average semantic parity is ~62%, with per-component progress in
 the docs. Forms, CRUD, tables, mobile date picker, wizard and SDK embedding are
@@ -280,7 +280,7 @@ Running Amis schemas natively in Vue 3: why I rewrote the runtime instead of emb
 1. `Amis (Baidu's JSON low-code framework) is React-only. I reimplemented its runtime natively in Vue 3. Same schemas, no React under the hood. Open-sourced an alpha today. 🧵`
 2. `Why not just embed the Amis JS SDK in Vue? You can — but you still ship React, and theme/component/debug/upgrade paths stay React-shaped. I wanted the renderer itself to be Vue.`
 3. `What's in the alpha: 185/189 Amis types registered, YAML or JSON authoring, shadcn-vue UI, VamisRoot + vamis.embed. Forms, CRUD, mobile date picker, wizard work.`
-4. `How I know it's close: 2,171 Playwright cases render the same schema in Amis and Vamis side by side, comparing node values/names/actions. 1032 unit tests. P0 8 helper diffs.`
+4. `How I know it's close: 2,171 Playwright cases render the same schema in Amis and Vamis side by side, comparing node values/names/actions. 1052 unit tests. P0 8 helper diffs.`
 5. `Status is alpha: ~62% average semantic parity, per-component progress public in the docs. Not production-ready. The point is to get real schemas in and fix the gaps.`
 6. `Demo / compare / repo: <links>. Feedback welcome — especially Amis schemas that break. Disclosure: I'm the author.`
 
@@ -288,7 +288,7 @@ Running Amis schemas natively in Vue 3: why I rewrote the runtime instead of emb
 
 1. `Amis 是 React 低代码运行时。我用 Vue 3 把它重写了一遍，同一份 JSON/YAML schema，不再套 React。开源 alpha：185/189 个 type 已注册。`
 2. `不是封装 SDK，也不是 iframe：渲染器、数据域、动作都在 Vue 里；UI 用 shadcn-vue 重新实现，不搬 cxd 前缀。`
-3. `怎么证明像 Amis：2171 条 Playwright 对照用例，同一份 schema 左右跑，按 schema 树结点比值/name/动作；1032 个单测。P0 8 条 helper 差异（均为 `m-l-*`）。`
+3. `怎么证明像 Amis：2171 条 Playwright 对照用例，同一份 schema 左右跑，按 schema 树结点比值/name/动作；1052 个单测。P0 8 条 helper 差异（均为 `m-l-*`）。`
 4. `现在平均语义 62%，每个文档页公开进度，alpha 不上生产。Demo/源码见评论。非百度官方项目，求拍砖。`
 
 ### awesome-vue
