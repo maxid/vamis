@@ -1,90 +1,71 @@
-# Textarea 多行输入框 · `textarea` 设计
+# Textarea 多行输入 · `textarea` 设计
 
 > 状态：**进行中 85%** · 复杂度：**L 重**
-> 文档：[/components/form/textarea](/components/form/textarea) · Amis 文档：`/zh-CN/components/form/textarea`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/textarea) · Amis：`/zh-CN/components/form/textarea`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性/事件/动作表以在线文档为准。
+
+## 0. 一页结论
+
+Textarea 当前是**多行文本**（320 行）：minRows/maxRows 自适应、trim、clear、counter、maxLength、focus/blur/change/clear、reset/undo。主路径较完整；themeCss/深色/无障碍缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值**：form/scope 字符串；trimContents 失焦裁剪；clearValueOnEmpty 未定义。
+2. **自适应高度**：minRows/maxRows + resize；内容/宽度变化重算。
+3. **清空/撤销**：clear 事件可阻止；undoStack 记录？实现按源码为准。
+4. **计数器**：showCounter/maxLength；超限只提示，是否阻止由校验。
+5. **包边界**：无 `<style>`、无 fetch；textarea token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **选项/输入**：远程/变量 options、空选项、重复 value、禁用项、多选与标签折叠、输入法组合态。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/多行/超长/trim/clear
+- minRows/maxRows/resize/计数器
+- focus/blur/change/clear/undo
+- disabled/static/readOnly
+- themeCss/深色/窄屏
+
+### 优先级
+
+1. 值/trim/清空；2. 自适应/计数；3. 事件/撤销；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**258** 行；Vamis 实现：**320** 行；依赖：**1** 个
-- 集成面：表单/FormItem、数据域、浮层、事件/动作
-- 判定依据：Vamis 320 行 + Amis 258 行 + 1 依赖 + form/data/overlay/action
+- 等级：**L 重**（Amis 258 行；Vamis 320 行）；依赖 textarea/input-text。
+- 风险：高度自适应/撤销/清空。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`textarea`
-- Amis 源文件：`packages/amis/src/renderers/Form/Textarea.tsx`
-- 依赖：`FormItem`
-- 文档章节：`/zh-CN/components/form/textarea`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| value/name | 值 | 已接 |
+| minRows/maxRows | 高度 | 已接 |
+| trimContents/clearable/showCounter | 行为 | 已接 |
+| change/focus/blur/clear | 事件 | 已接 |
+| clear/reset/focus | 动作 | 已接 |
+| themeCss | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/Textarea.vue`](../../../packages/vamis/src/renderers/form/Textarea.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+- [`form/Textarea.vue`](../../../packages/vamis/src/renderers/form/Textarea.vue)：值/高度/清空/事件/API。
+- [`input-text.ts`](../../../packages/vamis-core/src/utils/input-text.ts)：trim/empty/transform。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-select__clear`, `.vamis-textarea-control`, `.vamis-textarea-control__clear`, `.vamis-textarea-control__counter`, `.vamis-textarea-control__native`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- textarea/计数器 token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：主路径已对齐：`minRows` / `maxRows` 自适应高度（默认 3/20）、`trimContents` 失焦裁剪、`readOnly`、`showCounter` / `maxLength` 计数器、`clearable` / `resetValue`（清除钮回填 resetValue；动作 clear 写空串）、`borderMode`、静态 `multiline-text`；`change` / `focus` / `blur`、`clear` / `reset` / `focus` / `setValue`；清空时高度 0.2s 过渡，清空后 **Ctrl/⌘+Z** 撤销（Vamis 增强）。文档按 Amis 章节改写。对照桌面 **8/8**、移动 **8/8**（P0 0）。缺 `themeCss`
-- 状态：进行中，进度 85%；如进度未到 100，按上条缺口补齐。
+themeCss/深色/无障碍。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page textarea`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 值/高度/trim/clear/事件/disabled/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+themeCss/无障碍随主题批次；保持自动高度。
 
 ---
+
 返回 [组件设计索引](README.md)
