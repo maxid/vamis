@@ -1,87 +1,83 @@
 # Pagination 分页 · `pagination` 设计
 
 > 状态：**进行中 92%** · 复杂度：**M 中**
-> 文档：[/components/pagination](/components/pagination) · Amis 文档：`/zh-CN/components/pagination`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/pagination) · Amis：`/zh-CN/components/pagination`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Pagination 是**分页状态/事件**组件：page/perPage/lastPage/total/hasNext、layout/mode/size、省略号/跳页/每页条数、change 事件与 ValueHost 写值。主路径已较完整；缺口是 `themeCss` 与移动端 `mobileUI`。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **页码/每页**：page ≥1；perPage 正数；total/lastPage/hasNext 决定 lastPage；越界回 1。
+2. **写值**：有 name 时经 `useFieldValue` 写当前数据域；change 事件可 preventDefault，阻止后不写 page/值。
+3. **模式**：simple/normal；layout 决定左右区块（total/pager/go/perPage 等）；不要各模式各写状态。
+4. **省略号/跳页**：maxButtons/ellipsisPageGap 计算 pagerItems；跳页非法数忽略，Enter 触发。
+5. **每页条数**：perPageAvailable；切换 perPage 回到 page=1。
+6. **禁用**：isDisabled(schema,data)；禁用时所有操作 no-op。
+7. **包边界**：无 `<style>`、无 fetch；分页 token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **布局**：空 body、嵌套布局、`className` / `style` 只影响当前节点、窄屏与密度不写死 px。
-- **边界用例（至少覆盖）**：空 body、嵌套同类布局；className / style 覆盖边界；窄屏与密度 token；未知子节点。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- total=0/1/lastPage=1/多页；hasNext。
+- page 越界/0/负数；perPage 0/非法。
+- 省略号/跳页 Enter/非法输入；perPage 切换回第一页。
+- 有 name/无 name；change 阻止；disabled。
+- simple/normal、layout 组合。
+- 窄屏/深色/mobileUI（未接）。
+
+### 优先级
+
+1. 页码/写值/事件；2. 模式/layout/省略号；3. perPage/跳页/禁用；4. 移动/样式。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**143** 行；Vamis 实现：**235** 行；依赖：**1** 个
-- 集成面：数据域、浮层、事件/动作
-- 判定依据：Vamis 235 行 + Amis 143 行 + 1 依赖 + data/overlay/action
+- 等级：**M 中**（Amis 143 行；Vamis 235 行）；依赖 `action`。
+- 风险：多 layout/模式组合。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`pagination`
-- Amis 源文件：`packages/amis/src/renderers/Pagination.tsx`
-- 依赖：`action`
-- 文档章节：`/zh-CN/components/pagination`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `total` / `lastPage` / `hasNext` | 总页 | 已接 |
+| `activePage` / `value` / `name` | 当前页 | 已接 |
+| `perPage` / `perPageAvailable` | 每页 | 已接 |
+| `layout` / `mode` / `size` / `maxButtons` | 外观 | 已接 |
+| `showPageInput` / 跳页 | 交互 | 已接 |
+| `change` | 事件 | 已接，可阻止 |
+| `themeCss` / `mobileUI` | 皮肤/移动 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/Pagination.vue`](../../../packages/vamis/src/renderers/Pagination.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+- [`Pagination.vue`](../../../packages/vamis/src/renderers/Pagination.vue)：page/perPage/pagerItems/change/事件。
+- [`pagination.ts`](../../../packages/vamis-core/src/utils/pagination.ts)：lastPage/pager/layout/perPage。
+- [`FormItem`/FieldValue]：name 写当前数据域。
 
-## 5. 样式与边界
+### 数据流
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+```text
+schema/data → syncFromSchema → page/perPage
+prev/next/go/perPage → emitChange → change 事件 → prevented? stop → page/值/emit
+```
 
-## 6. 当前状态与缺口
+## 5. 样式
 
-- TODO 记录：文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`；`name` 脱离 Form 也经统一 ValueHost 读写当前数据域（Vamis 数据链扩展）。文档补 change 事件示例与 llipsis/perPageAvailable/showPageInput/onPageChange 属性；缺 `themeCss`、移动端 `mobileUI`
-- 状态：进行中，进度 92%；如进度未到 100，按上条缺口补齐。
+- data-mode/data-size/layout；分页 token；无 `<style>`。
+- 窄屏/深色/mobileUI 单独核。
 
-## 7. 验收计划与完成度
+## 6. 缺口
 
-- 组件页对照：`pnpm compare --page pagination`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+themeCss、mobileUI、深色/窄屏逐项。
 
-### 验收清单（文档核对：3 / 12）
+## 7. 验收
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- total/page/perPage/省略号/跳页/change/禁用/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+补 themeCss/mobileUI；不要和 PaginationWrapper 的客户端切片混用。
 
 ---
+
 返回 [组件设计索引](README.md)
