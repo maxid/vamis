@@ -1297,6 +1297,12 @@ alwaysApply: true
 - 触及：`form` `formitem` `combo`
 - 规则：`packages/vamis/src/renderers/Form.vue`
 
+### Form submitSucc 要先派事件再 toast「保存成功」；result 是接口 data
+- 踩过：`emitFormEvent` 不创建 `VamisEvent`，`${event.data}` 空着，上下文示例 toast 只剩表单字段；`env.notify('保存成功')` 写在 `submitSucc` 前面，看起来像接口返回前就成功了。saveForm mock 把请求体摊进 `data`，Amis `saveForm.json` 只回 `{id:1}`。
+- 稳定做法：对齐 Amis `saveRemote` `onSuccess`：`createVamisEvent` + `eventEvalData`，`event.data.result = result.data`（不是整份 `payload`）；merge 后再派 `submitSucc`；`prevented` 才跳过「保存成功」。`__rendererData` 仍走 `form.getData()`，不要把 `result` 写进数据域快照。mock 对齐 `{status:0,msg:'保存成功',data:{id:1}}`。不要把 `submit` 挪到 API 前面（与 Amis「有 actions 就跳过默认提交」的差异已写在文档）。
+- 触及：`form` 事件动作
+- 规则：Amis `Form.tsx` `onSuccess` / `form.ts` `saveRemote`；`packages/vamis/src/renderers/Form.vue`
+
 ### static-xxx 用 renderer test 兜底，不要逐个注册；copyable 走默认 `${name | raw}`
 - 踩过：`static-datetime` / `static-mapping` / `static-progress` / `static-images` 没有精确注册就落到未知 type；`static` 自己做一份文本展示又和 `static-json` / `static-image` 的现成渲染器分叉。
 - 稳定做法：`registerRenderer({ type: 'static', test: /(^|\/)static(-[^/]+)?$/, weight: -90 })`，Static 里 `subType = suffix || (tpl ? 'tpl' : 'plain')`，其余交给 `SchemaRenderer` 渲染目标 type（json/date/mapping/progress/images…），并注入 `value` + 按 name 覆盖的 data。`text` 是纯文本、`tpl` 是 HTML；空值占位 `-`；`copyable` 默认 `${name | raw}`、支持 content/tooltip；`borderMode` full/half 套输入框外观。FormItem 传 `static: false`，整表单 static 时仍由 Static 自己展示。quickEdit 未接要写进差异。

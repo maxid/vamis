@@ -25,6 +25,18 @@ describe('form lifecycle / submission', () => {
     }
   })
 
+  it('submitSucc puts API data on event.data.result and toasts 保存成功 after the event', () => {
+    expect(vue).toContain('createVamisEvent')
+    expect(vue).toContain('eventEvalData')
+    expect(vue).toContain("emitFormEvent('submitSucc', { result: result.data })")
+    expect(vue).not.toContain("emitFormEvent('submitSucc', { result: result.payload })")
+    const succAt = vue.indexOf("emitFormEvent('submitSucc', { result: result.data })")
+    const notifyAt = vue.indexOf("env.notify('success', messageOf('saveSuccess'")
+    expect(succAt).toBeGreaterThan(-1)
+    expect(notifyAt).toBeGreaterThan(succAt)
+    expect(vue).toContain('if (!succ.prevented)')
+  })
+
   it('supports persistence, enter guard, autofocus and submit aftermath', () => {
     expect(vue).toContain('readPersisted')
     expect(vue).toContain('persistDataKeys')

@@ -341,8 +341,8 @@ export function handleMockApi(input: {
   }
 
   if (pathname === '/api/mock2/form/saveForm') {
-    const data = method === 'GET' ? query : body
-    return { status: 0, msg: '保存成功', data: { ...data, id: 1 } }
+    // 对齐 Amis `mock/cfc/mock/form/saveForm.json`：只回 `{ id: 1 }`，不要把请求体再摊进 data。
+    return { status: 0, msg: '保存成功', data: { id: 1 } }
   }
 
   if (pathname === '/api/upload/file' || pathname === '/api/mock2/upload/file') {

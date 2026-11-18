@@ -127,4 +127,32 @@ describe('VamisEvent', () => {
     const event = createVamisEvent('click', {}, { type: 'click', target: { className: 'fa fa-cloud' } })
     expect(event.context.nativeEvent?.target?.className).toBe('fa fa-cloud')
   })
+
+  it('submitSucc toast can read event.data.result together with form fields', async () => {
+    const formData = { job: 'hr', name: 'test', age: '20', id: 1 }
+    const event = createVamisEvent('submitSucc', { ...formData, result: { id: 1 } })
+    const context = ctx({
+      event,
+      data: eventEvalData(formData, event),
+      form: { getData: () => formData },
+    })
+    await runOnEvent(
+      {
+        type: 'form',
+        onEvent: {
+          submitSucc: { actions: [{ actionType: 'toast', args: { msg: '${event.data|json:2}' } }] },
+        },
+      },
+      'submitSucc',
+      context,
+    )
+    const message = (context.env.notify as ReturnType<typeof vi.fn>).mock.calls[0]?.[1] as string
+    expect(JSON.parse(message)).toEqual({
+      job: 'hr',
+      name: 'test',
+      age: '20',
+      id: 1,
+      result: { id: 1 },
+    })
+  })
 })

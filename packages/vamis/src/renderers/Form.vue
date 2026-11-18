@@ -13,6 +13,8 @@ import {
   collectFormItems,
   createObject,
   createStoreId,
+  createVamisEvent,
+  eventEvalData,
   dataMapping,
   evalExpression,
   filterTpl,
@@ -334,19 +336,26 @@ function setError(name: string, message: string) {
   store.errors[name] = message
 }
 
-function formEventCtx(extra: Record<string, unknown> = {}) {
+function formEventCtx(eventName: string, extra: Record<string, unknown> = {}) {
+  const own = { ...store.data, ...extra }
+  const event = createVamisEvent(eventName, own)
   return {
     env,
-    data: { ...props.data, ...store.data, ...extra },
+    // __rendererData 走 form.getData()（不含 result）；公式里的 event.data 才带接口 data。
+    data: eventEvalData({ ...props.data, ...store.data }, event),
     scoped,
     overlay,
     form: formApi,
+    scope: scope.value,
+    event,
   }
 }
 
 /** 对齐 Amis onEvent：inited / change / validate* / submit* / initApiFinished。 */
 async function emitFormEvent(eventName: string, extra: Record<string, unknown> = {}) {
-  await runOnEvent(props.schema, eventName, formEventCtx(extra))
+  const ctx = formEventCtx(eventName, extra)
+  await runOnEvent(props.schema, eventName, ctx)
+  return ctx.event
 }
 
 function messageOf(key: 'saveSuccess' | 'saveFailed' | 'validateFailed' | 'fetchSuccess' | 'fetchFailed', fallback: string) {
@@ -464,13 +473,7 @@ async function submit() {
   const target = typeof props.schema.target === 'string' ? props.schema.target.trim() : ''
   if (target) {
     await scoped.reload(target, store.data)
-    await runOnEvent(props.schema, 'submit', {
-      env,
-      data: { ...props.data, ...store.data },
-      scoped,
-      overlay,
-      form: formApi,
-    })
+    await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
     closeOverlayDialog(store.data)
     return
   }
@@ -481,13 +484,7 @@ async function submit() {
     } else if (!dialogFormBound) {
       env.notify('success', '已提交（未配置 api）')
     }
-    await runOnEvent(props.schema, 'submit', {
-      env,
-      data: { ...props.data, ...store.data },
-      scoped,
-      overlay,
-      form: formApi,
-    })
+    await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
     closeOverlayDialog(store.data)
     return
   }
@@ -506,18 +503,15 @@ async function submit() {
     if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
       scope.value?.merge(result.data as Record<string, unknown>, result.replaceData ? 'override' : 'merge', 'api')
     }
-    env.notify('success', messageOf('saveSuccess', apiMessage(api, result.payload, 'success')))
     if (props.schema.reload) {
       await scoped.reload(props.schema.reload, store.data)
     }
-    await runOnEvent(props.schema, 'submit', {
-      env,
-      data: { ...props.data, ...store.data },
-      scoped,
-      overlay,
-      form: formApi,
-    })
-    await emitFormEvent('submitSucc', { result: result.payload })
+    await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
+    // 对齐 Amis saveRemote onSuccess：先 submitSucc（event.data.result = 接口 data），prevented 才跳过「保存成功」。
+    const succ = await emitFormEvent('submitSucc', { result: result.data })
+    if (!succ.prevented) {
+      env.notify('success', messageOf('saveSuccess', apiMessage(api, result.payload, 'success')))
+    }
     if (props.schema.clearPersistDataAfterSubmit !== false) clearPersisted()
     if (props.schema.resetAfterSubmit === true) reset()
     const redirect = props.schema.redirect
@@ -528,8 +522,8 @@ async function submit() {
     closeOverlayDialog(store.data)
   } catch (error) {
     const message = error instanceof Error ? error.message : '提交失败'
-    env.notify('error', messageOf('saveFailed', message))
     void emitFormEvent('submitFail', { error })
+    env.notify('error', messageOf('saveFailed', message))
   } finally {
     store.saving = false
   }
