@@ -1,82 +1,81 @@
 # InputRepeat 重复频率 · `input-repeat` 设计
 
 > 状态：**进行中 40%** · 复杂度：**M 中**
-> 文档：[/components/form/input-repeat](/components/form/input-repeat) · Amis 文档：`/zh-CN/components/form/input-repeat`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-repeat) · Amis：`/zh-CN/components/form/input-repeat`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputRepeat 当前是**四档频率 + 原始字符串输入**（32 行）：none/daily/weekly/monthly，value 直接写字符串。没有 cron/周期配置、周几/几号、时区、事件/动作；40% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **值**：字符串；空值显示 none；`daily` 等写回原字符串；不要擅自转对象/cron。
+2. **频率**：当前 4 档 + 自由输入；`daily` 前缀特殊处理，其他按原值。
+3. **联动**：选 none 隐藏输入；切换到其他档显示输入。
+4. **校验/事件**：当前无；不要把自由字符串当合法 cron 校验。
+5. **包边界**：无 `<style>`、无 fetch；Select/Input token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空/daily/weekly/monthly/cron 字符串/非法字符串
+- 切 none/非 none
+- disabled/static
+- 外部 setValue/reset
+- 事件动作/校验（未接）
+- 窄屏/深色
+
+### 1.3 优先级
+
+1. 值/频率切换
+2. 输入合法性
+3. 周期配置/事件动作
+4. 样式
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**252** 行；Vamis 实现：**32** 行；依赖：**2** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 32 行 + Amis 252 行 + 2 依赖 + form
+- 等级：**M 中**（Amis 252 行；Vamis 32 行）
+- 依赖：`FormItem`、`select`、`input-text`
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`input-repeat`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputRepeat.tsx`
-- 依赖：`FormItem`, `input-text`
-- 文档章节：`/zh-CN/components/form/input-repeat`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 频率字符串 | 已接 |
+| 频率档 | none/daily/weekly/monthly | 已接 |
+| cron/周期配置 | 目标 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputRepeat.vue`](../../../packages/vamis/src/renderers/form/InputRepeat.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`form/InputRepeat.vue`](../../../packages/vamis/src/renderers/form/InputRepeat.vue)：value + Select + Input。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验。
 
-## 5. 样式与边界
+### 数据流
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+```text
+field value → string（默认 none）
+select/input → setValue(string)
+```
 
-## 6. 当前状态与缺口
+## 5. 样式
 
-- TODO 记录：已注册，选项精简
-- 状态：进行中，进度 40%；如进度未到 100，按上条缺口补齐。
+- Select+Input；无专属类、无 `<style>`；窄屏/深色单独核。
 
-## 7. 验收计划与完成度
+## 6. 缺口
 
-- 组件页对照：`pnpm compare --page input-repeat`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+cron/周几/几号/时区/校验/事件动作。
 
-### 验收清单（文档核对：3 / 12）
+## 7. 验收
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 值/频率切换/空值/disabled；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+先定频率模型（字符串 vs 结构），再做 cron 配置；否则保持精简并明确。
 
 ---
+
 返回 [组件设计索引](README.md)
