@@ -1,82 +1,78 @@
-# InputKVS 键值对象 · `input-kvs` 设计
+# InputKVS 键值组 · `input-kvs` 设计
 
 > 状态：**进行中 45%** · 复杂度：**XL 特重**
-> 文档：[/components/form/input-kvs](/components/form/input-kvs) · Amis 文档：`/zh-CN/components/form/input-kvs`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-kvs) · Amis：`/zh-CN/components/form/input-kvs`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputKVS 当前是**键值行数组**（31 行）：`{key,value}` 行、增删、写数组。没有分组 keyField/valueField、类型、批量、拖拽、校验、事件/动作；45% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值**：数组 `{key,value}`；空数组显示一行空；无 name 不写。
+2. **不可变更新**：update/add/remove 返回新数组；key 重复会覆盖/冲突，需校验。
+3. **key/value 类型**：当前字符串；value 数字/布尔未接。
+4. **行身份**：index；拖拽/删除需同步值。
+5. **包边界**：无 `<style>`、无 fetch；Input/按钮 token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单行/多行/空 key/重复 key
+- value 字符串/数字/布尔
+- 增删/删除最后一行
+- disabled/static、FormItem 校验
+- 拖拽/批量（未接）
+- 窄屏/深色
+
+### 优先级
+
+1. 值/不可变更新/空行；2. key 唯一/类型；3. 拖拽/批量；4. 事件动作。
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**2154** 行；Vamis 实现：**31** 行；依赖：**2** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 31 行 + Amis 2154 行 + 2 依赖 + form；Amis 源码 >800 行，按超重档
+- 等级：**XL 特重**（Amis 2154 行；Vamis 31 行）；依赖 `input-kv`、`action`。
+- 风险：与 InputKV 重叠；当前更精简。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`input-kvs`
-- Amis 源文件：`packages/amis/src/renderers/Form/Combo.tsx`
-- 依赖：`action`, `input-kv`
-- 文档章节：`/zh-CN/components/form/input-kvs`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 数组 | 已接 |
+| key/value 字段 | 固定 | key/value |
+| 增删 | 基础 | 已接 |
+| 类型/唯一/拖拽/批量 | 目标 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputKvs.vue`](../../../packages/vamis/src/renderers/form/InputKvs.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`form/InputKVS.vue`](../../../packages/vamis/src/renderers/form/InputKVS.vue)：groups + Input/Button。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验。
+- 无 scoped API。
 
-## 5. 样式与边界
+### 数据流
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+```text
+field value → groups[]（空则一行）
+输入/增删 → setValue(array)
+```
 
-## 6. 当前状态与缺口
+## 5. 样式
 
-- TODO 记录：结构精简
-- 状态：进行中，进度 45%；如进度未到 100，按上条缺口补齐。
+- 行 flex；无专属类、无 `<style>`；窄屏/深色单独核。
 
-## 7. 验收计划与完成度
+## 6. 缺口
 
-- 组件页对照：`pnpm compare --page input-kvs`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+key 唯一/类型/拖拽/批量/事件动作/深色。
 
-### 验收清单（文档核对：3 / 12）
+## 7. 验收
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 值/空行/重复 key/增删/disabled；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+与 InputKV 统一值/校验模型，避免两套；先做唯一/类型，再做拖拽/批量。
 
 ---
+
 返回 [组件设计索引](README.md)
