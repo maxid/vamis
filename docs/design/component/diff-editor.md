@@ -1,88 +1,133 @@
 # DiffEditor 对比编辑器 · `diff-editor` 设计
 
 > 状态：**进行中 65%** · 复杂度：**XL 特重**
-> 文档：[/components/form/diff-editor](/components/form/diff-editor) · Amis 文档：`/zh-CN/components/form/diff-editor`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/diff-editor) · Amis：`/zh-CN/components/form/diff-editor`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+DiffEditor 是 Monaco DiffEditor 容器：左侧 `diffValue` 只读、右侧绑定 `name` 修改值；语言/主题/高度/options 与 Editor 共用 `code-highlight`。核心风险是**只读原值模板、modified 值同步、语言推断、主题/dispose**。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **两栏语义**：`diffValue` 是左侧只读原文；`name` 字段是右侧可编辑值；不要把两者混写或把左侧写回表单。
+2. **值同步**：右侧 `fieldApi.getValue(name)` 优先，schema.value 兜底；外部 setValue 要同步 Monaco modified model。
+3. **seed**：仅字段值 undefined 且 schema.value 非空时写一次；diffValue 不参与 seed。
+4. **language**：从 schema.language（支持变量）解析；未知兜底；左右两侧同语言。
+5. **主题**：跟随 `.dark` observer / `editorTheme`；卸载断开，dispose diff session。
+6. **只读/禁用**：右侧只读/disabled 时不能编辑；左侧始终只读。
+7. **包边界**：无 `<style>`、无直接 fetch；Monaco 按需加载。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空 diffValue / 空 name / 两者都有
+- diffValue 模板 `${...}` / 非字符串
+- language 变量/未知；editorTheme 覆盖
+- 外部 setValue / 表单 reset
+- disabled/readOnly
+- 暗色切换/卸载/布局
+- 长文本/窄屏/全屏（若支持）
+- 动作/editorDidMount（未接）
+
+### 1.3 优先级
+
+1. 两栏值语义/seed/同步
+2. language/主题
+3. dispose/布局/只读
+4. 事件/动作
+5. 样式/深色/窄屏
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**265** 行；Vamis 实现：**207** 行；依赖：**1** 个
-- 集成面：表单/FormItem、数据域、浮层、事件/动作
-- 判定依据：Vamis 207 行 + Amis 265 行 + 1 依赖 + form/data/overlay/action
+- 等级：**XL 特重**（Amis `Form/DiffEditor.tsx` 265 行；Vamis 207 行 + Monaco）
+- 依赖：`Monaco DiffEditor`、`FormItem`、`code-highlight`
+- 风险：左右 model 与表单值双向同步
 
 ## 3. Amis 契约
 
-- 入口 type：`diff-editor`
-- Amis 源文件：`packages/amis/src/renderers/Form/DiffEditor.tsx`
-- 依赖：`FormItem`
-- 文档章节：`/zh-CN/components/form/diff-editor`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'diff-editor'`
+- Amis 渲染器：`packages/amis/src/renderers/Form/DiffEditor.tsx`
+- 在线文档：[Vamis `/components/form/diff-editor`](/components/form/diff-editor)
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/DiffEditor.vue`](../../../packages/vamis/src/renderers/form/DiffEditor.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `diffValue` | 左侧只读原值 | 已接，支持模板 |
+| `name` / `value` | 右侧修改值 | 已接 |
+| `language` | 语言 | 已接，支持变量 |
+| `editorTheme` / options / height | 外观 | 已接 |
+| `disabled` / `readOnly` | 只读 | 部分 |
+| `editorDidMount` | 挂载回调 | 未接 |
+| 动作 | 目标 | 未接（D7） |
+
+### 3.3 事件/API
+
+文档目标事件：change/focus/blur；当前实现路径与 Editor 类似，具体事件是否全部派发由 code-highlight/session 决定，补测试后再宣称完整。动作/editorDidMount 未接。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`form/DiffEditor.vue`](../../../packages/vamis/src/renderers/form/DiffEditor.vue) | diffValue/name、language/theme、挂载/事件 |
+| [`display/code-highlight.ts`](../../../packages/vamis/src/renderers/display/code-highlight.ts) | Monaco Diff 动态加载、mount、主题、normalize |
+| [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue) | label/校验/静态/错误 |
+
+### 4.2 状态
+
+```text
+diffValue (filterTpl) → 左侧只读 model
+field value/schema.value → 右侧 modified model
+Monaco change → 写 name（如果可编辑）
+dark observer/theme → 两侧主题
+dispose → 销毁左右 model/session
+```
+
+- 左侧不写值；右侧是唯一表单值。
+- seed 只对右侧；模板 diffValue 只渲染。
+- 语言变化需要重建/更新 model；不要在旧 model 上换语言。
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-monaco`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 容器高度/差异色/主题走 Monaco + token；无 `<style>`。
+- 深色 diff 高亮、只读侧、窄屏宽度单独核。
+- 作者 className 只落节点。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：Monaco Diff：左侧 `diffValue` 只读，右侧绑 `name`；`options` / 事件已接。动作仍缺 D7
-- 状态：进行中，进度 65%；如进度未到 100，按上条缺口补齐。
+- 已接：diffValue/name、language、theme、height/options、Monaco Diff 挂载/销毁。
+- 未接/未核：editorDidMount、动作、完整事件、disabled/readOnly 细节、深色/窄屏。
+- 对照：TODO 65%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page diff-editor`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis DiffEditor / code-highlight 已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（DiffEditor 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- [ ] `pnpm compare --page diff-editor` 桌面
+- [ ] `pnpm compare --page diff-editor --mobile`
+- [ ] 深色 / 375px 窄屏
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 补 editorDidMount/事件完整性。
+2. 验证 disabled/readOnly 与外部 setValue。
+3. 深色/窄屏专项。
 
 ---
+
 返回 [组件设计索引](README.md)

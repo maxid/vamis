@@ -1,88 +1,136 @@
 # Editor 代码编辑器 · `editor` 设计
 
 > 状态：**进行中 85%** · 复杂度：**XL 特重**
-> 文档：[/components/form/editor](/components/form/editor) · Amis 文档：`/zh-CN/components/form/editor`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/editor) · Amis：`/zh-CN/components/form/editor`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Editor 是 Monaco 的容器：语言/值/主题/主题切换、全屏、schema 智能提示、事件与组件 API。它不直接处理网络；Monaco 通过 `code-highlight` 动态挂载。核心风险是 **value ↔ editor session 同步、dispose、主题 observer、language 推断、intellisense schema**。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **值同步**：`fieldApi.getValue(name)` 优先，schema.value 兜底；无 name 不写；外部 setValue 要同步 editor model，不能只改 Monaco 不写表单。
+2. **初始化 seed**：仅当字段值 undefined 且 schema.value 非空时写一次；不能覆盖已有值。
+3. **language**：`type` 后缀（js-editor/ts-editor/xxx-editor）优先于 `language`；`language` 支持 `$` 变量；未知语言要有兜底。
+4. **主题**：跟随 `.dark` MutationObserver；`editorTheme` 显式优先；卸载断开 observer，不泄漏。
+5. **Monaco 生命周期**：mount 一次，dispose 时销毁 session/layout；全屏切换只改布局，不重建。
+6. **智能提示**：`intellisense: schema` 按组件树/JSON Schema 提供提示；不要把整个 schema 塞进 model。
+7. **包边界**：无 `<style>`；Monaco 按需加载；不直接 fetch。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空值 / schema.value / 已有字段值 / 外部 setValue
+- js/ts/json/yaml language，变量 language
+- 暗色切换、编辑器主题覆盖
+- 全屏切换/尺寸变化/卸载
+- disabled/readOnly、hideButtons、size: full
+- schema 智能提示（有/无 renderer 定义）
+- 事件 change/focus/blur
+- 未接 editorDidMount / 动作
+- 窄屏、长文本
+
+### 1.3 优先级
+
+1. 值双向同步/seed
+2. language/主题
+3. Monaco dispose/全屏/布局
+4. 智能提示
+5. 事件/动作/样式
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**455** 行；Vamis 实现：**283** 行；依赖：**1** 个
-- 集成面：表单/FormItem、数据域、浮层、事件/动作
-- 判定依据：Vamis 283 行 + Amis 455 行 + 1 依赖 + form/data/overlay/action
+- 等级：**XL 特重**（Amis `Form/Editor.tsx` 455 行；Vamis 283 行 + Monaco）
+- 依赖：`Monaco`、`FormItem`、`code-highlight`、`schema-type-catalogs`
+- 风险：Monaco 外部依赖 + 值/主题/布局生命周期
 
 ## 3. Amis 契约
 
-- 入口 type：`editor`
-- Amis 源文件：`packages/amis/src/renderers/Form/Editor.tsx`
-- 依赖：`FormItem`
-- 文档章节：`/zh-CN/components/form/editor`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'editor'`；变体 `js-editor` / `ts-editor` / `*-editor`
+- Amis 渲染器：`packages/amis/src/renderers/Form/Editor.tsx`
+- 在线文档：[Vamis `/components/form/editor`](/components/form/editor)
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/Editor.vue`](../../../packages/vamis/src/renderers/form/Editor.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 字段/初始值 | 已接 |
+| `language` | 语言 | 已接，含变量 |
+| `editorTheme` | 主题 | 已接；默认 vs/vs-dark |
+| `options` | Monaco options | 已接 |
+| `height` | 高度 | 已接 |
+| `hideButtons` | 隐藏按钮 | 已接 |
+| `size: full` | 全屏 | 已接 |
+| `intellisense: schema` | schema 提示 | 已接 |
+| `editorDidMount` | 挂载回调 | **未接** |
+| 动作 | 目标 | 未接（D7） |
+
+### 3.3 事件/API
+
+已接：`change`、`focus`、`blur`（emit + runOnEvent）。组件 API 未完整注册；editorDidMount 未接。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`form/Editor.vue`](../../../packages/vamis/src/renderers/form/Editor.vue) | 值/语言/主题/全屏/挂载/事件 |
+| [`display/code-highlight.ts`](../../../packages/vamis/src/renderers/display/code-highlight.ts) | Monaco 动态加载、mount、主题、高度、值 normalize |
+| [`schema-type-catalogs.ts`](../../../packages/vamis-core/src/schema-type-catalogs.ts) | schema 智能提示数据 |
+| [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue) | label/校验/静态/错误 |
+
+### 4.2 状态
+
+```text
+field value / schema.value → normalizeEditorValue → Monaco model
+Monaco change → emit/change → fieldApi.setValue
+dark class MutationObserver → editorTheme
+size: full → CSS 全屏（不重建）
+```
+
+- seed 仅一次；外部值变化 watch 同步 model（避免回环）。
+- dispose 时销毁 session、断开 observer、释放 layout。
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-monaco`, `.vamis-monaco__full`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 编辑器容器高度/全屏/按钮走 token；无 `<style>`。
+- Monaco 主题 vs/vs-dark；作者覆盖 `editorTheme`。
+- 窄屏宽度/全屏按钮、深色单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：Monaco 编辑器：`hideButtons`、`size: full`、`intellisense: schema`（`registerRenderer` 自述即感知；按组件树定位 type，JSON Schema `$defs`+`if/then`）。文档「编辑 Schema」只消费。`editorDidMount` 未接；动作仍缺 D7
-- 状态：进行中，进度 85%；如进度未到 100，按上条缺口补齐。
+- 已接：Monaco、language、值 seed/同步、主题、全屏、hideButtons、intellisense schema、change/focus/blur。
+- 未接：`editorDidMount`、组件动作（D7）、部分布局/错误态；深色/窄屏未逐项。
+- 对照：TODO 85%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page editor`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis Editor / code-highlight 已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（editorDidMount/动作未接）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（Editor 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- [ ] `pnpm compare --page editor` 桌面
+- [ ] `pnpm compare --page editor --mobile`
+- [ ] 深色 / 375px 窄屏
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 补 editorDidMount 与基础动作/API。
+2. 深色/全屏/窄屏专项。
+3. Monaco 体积/按需加载评估。
 
 ---
+
 返回 [组件设计索引](README.md)
