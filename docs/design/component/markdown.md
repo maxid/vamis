@@ -1,82 +1,68 @@
 # Markdown 渲染 · `markdown` 设计
 
 > 状态：**进行中 45%** · 复杂度：**M 中**
-> 文档：[/components/markdown](/components/markdown) · Amis 文档：`/zh-CN/components/markdown`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/markdown) · Amis：`/zh-CN/components/markdown`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Markdown 当前是**精简 Markdown → HTML**（43 行）：内容字段或远程 `src`，按 isApiOutdated 重载；渲染库精简。45% 是真实缺口：表格/代码块/任务列表/安全清洗等取决于渲染库。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **内容来源**：schema 内容字段优先；否则远程 src 拉文本；失败保留空/旧内容。
+2. **重载**：src 变化按 isApiOutdated；卸载不清空但不再请求。
+3. **渲染**：renderMarkdown 输出 HTML；信任边界由渲染库决定，不能默认 raw 用户输入。
+4. **包边界**：无 `<style>`、无 fetch（src 走 requestApi）；markdown token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/纯文本/标题/列表/代码块/表格/链接
+- src 成功/失败/变化/慢返回
+- 不可信 HTML/脚本（清洗）
+- 深色/窄屏
+
+### 优先级
+
+1. 内容/src；2. 渲染覆盖；3. 安全清洗；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**118** 行；Vamis 实现：**43** 行；依赖：**1** 个
-- 集成面：API
-- 判定依据：Vamis 43 行 + Amis 118 行 + 1 依赖 + api
+- 等级：**M 中**（Amis 118 行；Vamis 43 行）；依赖 markdown 渲染库/API。
+- 风险：渲染库能力/安全。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`markdown`
-- Amis 源文件：`packages/amis/src/renderers/Markdown.tsx`
-- 依赖：`—`
-- 文档章节：`/zh-CN/components/markdown`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| 内容字段 | Markdown | 已接 |
+| `src` | 远程 | 已接 |
+| 表格/代码块/任务列表 | 渲染 | 取决于库 |
+| 安全清洗 | 目标 | 未单实现 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/display/Markdown.vue`](../../../packages/vamis/src/renderers/display/Markdown.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
+- [`display/Markdown.vue`](../../../packages/vamis/src/renderers/display/Markdown.vue)：content/src/load/renderMarkdown。
+- [`markdown.ts`](../../../packages/vamis-core/src/utils/markdown.ts)：渲染。
+- [`requestApi`](../../../packages/vamis-core/src/utils/api.ts)：src。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-markdown`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- markdown 内容 token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：已注册；远程 `src` 按 `isApiOutdated` 拉。渲染库精简
-- 状态：进行中，进度 45%；如进度未到 100，按上条缺口补齐。
+完整 Markdown 能力/安全清洗/事件动作/深色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page markdown`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 内容/src/失败/常见语法/深色；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+先定渲染库与清洗策略，再补语法覆盖；事件动作后置。
 
 ---
+
 返回 [组件设计索引](README.md)
