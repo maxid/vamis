@@ -81,6 +81,29 @@ describe('VamisEvent', () => {
     expect(context.env.notify).toHaveBeenCalledWith('info', 'after', expect.any(Object))
   })
 
+  it('does not copy event payload value onto __rendererData', async () => {
+    const formData = { job: 'hr', name: 'tt', age: '1' }
+    const event = createVamisEvent('change', { ...formData, value: '2', age: '2' })
+    const context = ctx({
+      event,
+      data: eventEvalData(formData, event),
+      form: { getData: () => formData },
+    })
+    await runOnEvent(
+      {
+        type: 'input-text',
+        name: 'age',
+        onEvent: {
+          change: { actions: [{ actionType: 'toast', msg: '${__rendererData|json}' }] },
+        },
+      },
+      'change',
+      context,
+    )
+    const message = (context.env.notify as ReturnType<typeof vi.fn>).mock.calls[0]?.[1] as string
+    expect(JSON.parse(message)).toEqual({ job: 'hr', name: 'tt', age: '2' })
+  })
+
   it('exposes __rendererData to onEvent formulas', async () => {
     const event = createVamisEvent('click', { name: 'Ada' })
     const context = ctx({

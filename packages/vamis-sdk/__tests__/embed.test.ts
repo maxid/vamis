@@ -490,7 +490,7 @@ describe('embed', () => {
     await vi.waitFor(() => expect(notify).toHaveBeenCalled())
     const message = notify.mock.calls.at(-1)?.[1] as string
     const data = JSON.parse(message)
-    expect(data).toEqual({ name: 'Ada', age: '2000', value: '2000' })
+    expect(data).toEqual({ name: 'Ada', age: '2000' })
     expect(message).not.toContain('parentSecret')
     expect(message).not.toContain('__super')
     expect(message).not.toContain('__prev')

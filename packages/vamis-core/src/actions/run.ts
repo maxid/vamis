@@ -108,12 +108,10 @@ export async function runOnEvent(
   const ownData = ctx.form?.getData?.() || ctx.scope?.data
   if (ownData) {
     let rendererData = publicScopeData(ownData)
-    if (ctx.event?.data && Object.prototype.hasOwnProperty.call(ctx.event.data, 'value')) {
-      rendererData.value = ctx.event.data.value
-      const name = typeof schema.name === 'string' ? schema.name : ''
-      if (name && Object.prototype.hasOwnProperty.call(ctx.event.data, name)) {
-        rendererData = setByPathCopy(rendererData, name, ctx.event.data[name])
-      }
+    // 对齐 Amis `resolveEventData`：`__rendererData` 只补当前 `name`，不要把事件 payload 的 `value` 写进数据域快照。
+    const name = typeof schema.name === 'string' ? schema.name : ''
+    if (name && ctx.event?.data && Object.prototype.hasOwnProperty.call(ctx.event.data, name)) {
+      rendererData = setByPathCopy(rendererData, name, ctx.event.data[name])
     }
     ctx = { ...ctx, data: { ...ctx.data, __rendererData: rendererData } }
   }

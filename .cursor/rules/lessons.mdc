@@ -133,10 +133,10 @@ alwaysApply: true
 - 规则：`packages/vamis-sdk/embed-case.html` `dialogOpen`
 
 ### `__rendererData` 只给公开自有数据，不要给整条 resolved 数据链
-- 踩过：事件上下文直接挂 `scope.resolved()`，把 `__super` / `__prev` / `__changeReason` 和父域字段带进 Toast / 日志；表单 change 在写 store 前派发时，当前字段还可能停在旧值。
-- 稳定做法：`__rendererData` 用 `publicScopeData` 过滤 `__*`；`runOnEvent` 优先取 `form.getData()` / 当前 `scope.data`，再从事件 payload 补当前 `name` 与 `value`。显式 `${__super}` 数据链不变；API 请求也复用同一个公开数据过滤。
+- 踩过：事件上下文直接挂 `scope.resolved()`，把 `__super` / `__prev` / `__changeReason` 和父域字段带进 Toast / 日志；表单 change 在写 store 前派发时，当前字段还可能停在旧值。后又把事件 payload 的 `value` 写进 `__rendererData`，年龄 change 的 `${__rendererData|json}` 多出 `"value":"2"`，Amis `resolveEventData` 没有这一项。
+- 稳定做法：`__rendererData` 用 `publicScopeData` 过滤 `__*`；`runOnEvent` 优先取 `form.getData()` / 当前 `scope.data`，只按 `name` 从事件 payload 补当前字段（change 写 store 前也能读到新值）。`value` 留在 `event.data`，不要摊进数据域快照。显式 `${__super}` 数据链不变；API 请求也复用同一个公开数据过滤。
 - 触及：FormItem `input-text` 事件动作 SDK
-- 规则：`packages/vamis-core/src/actions/event.ts`；`packages/vamis-core/src/actions/run.ts`
+- 规则：`packages/vamis-core/src/actions/event.ts`；`packages/vamis-core/src/actions/run.ts`；Amis `resolveEventData`
 
 ### 渲染器自己派发的事件，宿主不要再派一次
 - 踩过：Action 在按钮/容器上绑 `mouseenter` / `mouseleave` 并 `runOnEvent`（兼 tooltip）；`SchemaRenderer` 外层 `div.vamis-node` 也对同一 schema 走 `onHostEvent`。悬停一次 toast 两条。click 早已用 `SELF_CLICK_TYPES` 跳过宿主。

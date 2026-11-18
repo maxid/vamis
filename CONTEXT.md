@@ -80,10 +80,11 @@ flowchart LR
 | JS SDK | P0 embed 已落地；`registerTheme` 已接 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。日期走 **dayjs**（打进 bundle），不再依赖 moment。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**；「配置与组件 / 事件动作 / 表达式 / 数据映射」**100% 已完成**；「联动 / 行为 / 样式 / 数据域」**90% 已完成**；类型页 SchemaNode **92% 进行中**、Definitions **20%**（`$ref` 未接）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；顶栏可切桌面 / 移动（默认桌面，管整页示例；移动 **375×812** iframe + 手机壳）；文档/组件/样式页标题下「实现进度 · 状态」；**左侧菜单同步百分比**（顶栏可关）；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 817 + sdk 90 = **1092** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2209**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**；本轮设计文档盘点后未重跑全量。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
+| 测试 | 源码用例 formula 185 + core 818 + sdk 90 = **1093** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2209**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**；本轮设计文档盘点后未重跑全量。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
 
 **最近交付**
 
+- **`__rendererData` 不再带上事件 payload 的 `value`（2026-11-18）**：事件动作「上下文」示例年龄 change 的 toast 曾是 `{"job":"hr","name":"tt","age":"2","value":"2"}`。不是表单域写进了 `value`（debug / 提交仍只有字段名），是 `runOnEvent` 把 `event.data.value` 摊进了 `__rendererData`。对齐 Amis `resolveEventData`：快照只补当前 `name`。对照事件动作 **52/52**（P0 0）。`pnpm typecheck` 0。
 - **Form / LazyComponent 的 `disabled` fallthrough 报警（2026-11-18）**：关 React DevTools 后仍见 warn，根因是 Form 单根 `LazyComponent` 在 `defaultVisible` 时为 slot fragment。`LazyComponent` `inheritAttrs: false`，Form 声明但不使用 `disabled`。不改 DOM、不影响表单控件禁用。未跑对照。
 - **Tpl / BadgeHost 不再因 `disabled` fallthrough 报警（2026-11-18）**：`SchemaRenderer` 一律传入的 `disabled` 对无角标 `BadgeHost`（根是 slot fragment）无法 inherit。宿主改 `inheritAttrs: false`，`Tpl` 声明但不使用该 prop。不改 DOM、不影响表单控件禁用。未跑对照。
 - **动作日志可读性修正（2026-11-18）**：改为 Amis 风格「参数 + 公开数据 / 结束事件」两条内容，不展开完整动作 schema，过滤 `__*` 与事件循环引用；无处理器的普通 Button 空动作不再记日志。真实浏览器输出已核，`pnpm test` **1092**、`typecheck` 0，事件动作对照 **52/52**。
