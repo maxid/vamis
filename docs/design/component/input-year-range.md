@@ -67,6 +67,21 @@ InputYearRange **没有独立渲染器**：month/quarter/year range 共用 `Date
 
 - 值形态/顺序/空值/disabled/窄屏深色；未接能力不误标。
 
+### 验收清单（文档核对：3 / 12）
+
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis 渲染器或注册文件已定位
+- [x] 复杂度、依赖、集成面已盘点
+- [ ] schema 属性 / 默认值逐项核对
+- [ ] 事件 / 动作逐项核对
+- [ ] 边界用例逐项核对
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（组件相关）
+- [ ] `pnpm typecheck` 0
+- [ ] `pnpm compare --page <type>` 桌面
+- [ ] `pnpm compare --page <type> --mobile`
+- [ ] 深色 / 375px 窄屏核对
+
 ## 8. 后续
 
 三类共享测试 + 顺序策略；格式/事件动作先改共享设计。

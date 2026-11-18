@@ -47,6 +47,21 @@ Control 当前是**FormItem + 单个子 schema 的薄包装**（14 行）：body
 
 保持薄；不要扩成第二套 FormItem。
 
+### 验收清单（文档核对：3 / 12）
+
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis 渲染器或注册文件已定位
+- [x] 复杂度、依赖、集成面已盘点
+- [ ] schema 属性 / 默认值逐项核对
+- [ ] 事件 / 动作逐项核对
+- [ ] 边界用例逐项核对
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（组件相关）
+- [ ] `pnpm typecheck` 0
+- [ ] `pnpm compare --page <type>` 桌面
+- [ ] `pnpm compare --page <type> --mobile`
+- [ ] 深色 / 375px 窄屏核对
+
 ---
 
 返回 [组件设计索引](README.md)

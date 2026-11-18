@@ -56,6 +56,21 @@ themeCss/深色逐项。
 
 - 无/文本/数字/点/偏移/裁切/深色；不按独立组件验收。
 
+### 验收清单（文档核对：3 / 12）
+
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis 渲染器或注册文件已定位
+- [x] 复杂度、依赖、集成面已盘点
+- [ ] schema 属性 / 默认值逐项核对
+- [ ] 事件 / 动作逐项核对
+- [ ] 边界用例逐项核对
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（组件相关）
+- [ ] `pnpm typecheck` 0
+- [ ] `pnpm compare --page <type>` 桌面
+- [ ] `pnpm compare --page <type> --mobile`
+- [ ] 深色 / 375px 窄屏核对
+
 ## 8. 后续
 
 随目标组件/主题批次补 themeCss；保持 HOC。
