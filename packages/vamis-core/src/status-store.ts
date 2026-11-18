@@ -4,6 +4,8 @@ import { reactive } from 'vue'
 
 const state = reactive({
   staticState: {} as Record<string, boolean>,
+  disabledState: {} as Record<string, boolean>,
+  visibleState: {} as Record<string, boolean>,
 })
 
 function keyOf(value: unknown): string {
@@ -33,6 +35,36 @@ export function statusStaticOf(schema: { id?: unknown; name?: unknown } | null |
   return undefined
 }
 
+export function setStatusDisabled(key: unknown, value: boolean): void {
+  const id = keyOf(key)
+  if (id) state.disabledState[id] = value
+}
+
+export function setStatusVisible(key: unknown, value: boolean): void {
+  const id = keyOf(key)
+  if (id) state.visibleState[id] = value
+}
+
+function readStatus(stateMap: Record<string, boolean>, schema: { id?: unknown; name?: unknown } | null | undefined): boolean | undefined {
+  if (!schema) return undefined
+  for (const key of [keyOf(schema.id), keyOf(schema.name)]) {
+    if (!key) continue
+    const value = stateMap[key]
+    if (typeof value === 'boolean') return value
+  }
+  return undefined
+}
+
+export function statusDisabledOf(schema: { id?: unknown; name?: unknown } | null | undefined): boolean | undefined {
+  return readStatus(state.disabledState, schema)
+}
+
+export function statusVisibleOf(schema: { id?: unknown; name?: unknown } | null | undefined): boolean | undefined {
+  return readStatus(state.visibleState, schema)
+}
+
 export function resetStatusStore(): void {
   state.staticState = {}
+  state.disabledState = {}
+  state.visibleState = {}
 }

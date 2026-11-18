@@ -1,78 +1,205 @@
 ---
 title: 事件动作
+outline: deep
 ---
 
 # 事件动作
 
-::: tip 实现进度 95% · 已完成
-文档主路径已对齐 Amis「事件动作」：`onEvent`、事件上下文、常用动作、条件表达式 / ConditionBuilder、循环 / 排他 / 并行、广播、受信任自定义 JS、浏览器与打印动作、动作间数据传递、SDK `doAction` 均可运行。JSON 与 YAML 同等有效；监听器的 debounce / track 高级配置仍未接。
+::: tip 实现进度 98% · 已完成
+文档章节与示例顺序已对齐 Amis「事件动作」。事件上下文、请求（含静默）、组件校验与状态、控制流、广播、受信任自定义 JS、浏览器与打印、GETRENDERERDATA / GETRENDERERPROP 均可运行；监听器 debounce / track 高级配置仍缺。JSON 与 YAML 同等有效。
 :::
 
-上一节 [联动](/concepts/linkage) 解决显隐、禁用、接口重拉这类「表达式驱动」的场景。事件动作更灵活：渲染器抛事件，动作表按顺序响应，不必关心组件层级。作者态 **JSON 与 YAML 并列**。
+上一节我们介绍了如何实现联动，是比较基础和局限的，而事件动作是更简单、更灵活、更高级的用法，可以解决复杂的 UI 交互场景，支持渲染器事件监听和响应设计，无需关心组件层级关系。例如：
 
-kernel 决策是 **D4**：事件对象 + 动作注册表。新动作应 `registerAction`，不要在某个 Vue 文件里再开 `if (actionType === ...)`。
-
-已经能做的：
-
-- http 请求：`ajax`
-- 弹窗：`dialog` / `drawer` / `toast` / `alert` / `confirm`
-- 跳转：`link` / `url`
-- 刷新组件：`reload`
-- 组件数据：`setValue` / `setData`
-- 表单：`submit` / `reset`
-- 复制 / 等待：`copy` / `wait`
-- 干预执行：`preventDefault` / `stopPropagation` / `ignoreError` / `expression`
-
-还没齐的：广播、自定义 JS 片段、逻辑编排（条件循环排他并行）、浏览器前进后退刷新、打印、发邮件。
+- http 请求：发送 http 请求
+- 弹窗提示：执行弹窗、抽屉打开和 toast 提示
+- 页面跳转：页面链接跳转
+- 浏览器相关：回退、前进、后退、刷新
+- 刷新组件：联动刷新表单数据，即数据重新加载
+- 组件状态：控制指定组件的显示/隐藏、启用/禁用、展示态/编辑态
+- 组件特性动作：执行指定组件的专有动作，例如执行表单的提交动作
+- 组件数据：更新指定组件的数据域
+- 广播：多个组件监听同一个事件做出不同响应
+- JS 脚本：通过编写 JS 代码片段实现所需逻辑，同时支持 JS 代码内执行动作
+- 逻辑编排：条件、循环、排他、并行
 
 ## 基本使用
 
 ### onEvent
 
-用 `onEvent` 把渲染器事件绑到动作列表。键是该 type 自己的事件名（按钮是 `click` / `mouseenter` / `mouseleave`），值里的 `actions` 按顺序执行。
+通过`onEvent`属性实现渲染器事件与响应动作的绑定。`onEvent`内配置事件和动作映射关系，`actions`是事件对应的响应动作的集合。
 
-```schema
-type: page
-body:
-  type: button
-  label: 尝试点击、鼠标移入/移出
-  level: primary
-  onEvent:
-    click:
-      actions:
-        - actionType: toast
-          args:
-            msgType: info
-            msg: 派发点击事件
-    mouseenter:
-      actions:
-        - actionType: toast
-          args:
-            msgType: info
-            msg: 派发鼠标移入事件
-    mouseleave:
-      actions:
-        - actionType: toast
-          args:
-            msgType: info
-            msg: 派发鼠标移出事件
+```javascript
+{
+  "type": "button",
+  "label": "尝试点击、鼠标移入/移出",
+  "level": "primary",
+  "onEvent": {
+    "click": { // 监听点击事件
+      "actions": [ // 执行的动作列表
+        {
+          "actionType": "toast", // 执行toast提示动作
+          "args": { // 动作参数
+            "msgType": "info",
+            "msg": "派发点击事件"
+          }
+        }
+      ]
+    },
+    "mouseenter": { // 监听鼠标移入事件
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "派发鼠标移入事件"
+          }
+        }
+      ]
+    },
+    "mouseleave": { // 监听鼠标移出事件
+      "actions": [
+        {
+          "actionType": "toast",
+          "args": {
+            "msgType": "info",
+            "msg": "派发鼠标移出事件"
+          }
+        }
+      ]
+    }
+  }
+}
 ```
-
-同一份 JSON 也有效：
 
 ```schema
 {
   "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "尝试点击、鼠标移入/移出",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "派发点击事件"
+              }
+            }
+          ]
+        },
+        "mouseenter": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "派发鼠标移入事件"
+              }
+            }
+          ]
+        },
+        "mouseleave": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "派发鼠标移出事件"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### 上下文
+
+执行动作时，可以通过`${event.data}`获取事件对象的数据、通过`${__rendererData}`获取组件当前数据域，例如：
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "p1": "p1"
+  },
   "body": {
-    "type": "button",
-    "label": "尝试点击",
-    "level": "primary",
+    "type": "form",
+    "debug": true,
+    "api": {
+      "url": "/api/mock2/form/saveForm",
+      "method": "post",
+      "data": {
+        "&": "$$",
+        "job": "coder"
+      }
+    },
+    "data": {
+      "job": "hr"
+    },
+    "body": [
+      {
+        "type": "alert",
+        "body": "监听姓名值变化，执行动作时读取输入的内容；监听年龄值变化，执行动作时读取input-text组件当前数据域（表单数据）",
+        "level": "info",
+        "className": "mb-1"
+      },
+      {
+        "type": "input-text",
+        "name": "name",
+        "label": "姓名：",
+        "onEvent": {
+          "change": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "${name}"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "input-text",
+        "name": "age",
+        "label": "年龄：",
+        "onEvent": {
+          "change": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "${__rendererData|json}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
     "onEvent": {
-      "click": {
+      "submitSucc": {
         "actions": [
           {
             "actionType": "toast",
-            "args": { "msgType": "info", "msg": "派发点击事件" }
+            "args": {
+              "msg": "${event.data|json}"
+            }
+          },
+          {
+            "actionType": "toast",
+            "args": {
+              "msg": "${__rendererData|json}"
+            }
           }
         ]
       }
@@ -81,264 +208,1107 @@ body:
 }
 ```
 
-按钮自己处理 `click`（避免和外壳重复派发）。`mouseenter` / `mouseleave` 由 `SchemaRenderer` 外壳接到。
+### 运行日志
 
-动作参数可以写在顶层（`msg` / `dialog` / `api`），也可以放进 `args`（对齐 Amis 2.x）。模板 `${}` 会按当前数据域 + 事件上下文求值。
+默认不输出动作日志。与 Amis 一样，可以用下面三种方式开启：
+
+```javascript
+// 1. 当前嵌入实例的 env
+vamis.embed('#root', schema, {}, { enableAMISDebug: true })
+
+// 2. 当前页面全局开启
+window.enableAMISDebug = true
+
+// 3. 或在 URL 上临时加 ?amisDebug=1
+```
+
+Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，包含动作配置、求值后的数据、事件对象和结束标记。
+
+注意：表单上的 `schema.debug: true` 只显示**表单数据域**，不会开启动作日志。
+
+```
+[vamis] action ajax
+  action {actionType: 'ajax', args: {…}, …}
+  data {api: {…}, …}
+  event {type: 'click', prevented: false, stopped: false, …}
+  end {…}
+```
+
+事件对象里的数据可以作为后续动作参数；日志只用于调试，不要把生产环境中的敏感数据交给 `env.debug`。
 
 ## 分类
 
-事件分两类：
+事件包含`渲染器事件`和`广播事件`。
 
-- **渲染器事件**：由具体组件抛出，见该组件文档的事件表，例如 [Page](/components/page)
-- **广播事件**：自定义 `eventName`，其它组件监听同一名字；当前根实例内按 `weight` 降序执行
+- 渲染器事件，由具体的渲染器组件提供，每个渲染器组件暴露的事件可以查看具体的[组件文档的事件表](/components/page#事件表)；
+- 广播事件，即自定义事件，可以自定义派发的事件名称`eventName`，其他渲染器可以监听该自定义事件并配置响应动作。
 
-动作分：通用动作、组件动作、广播、自定义。用 `actionType` 指定。通用动作走内核注册表；组件动作通过 `componentId` / `target` 找到实例再 `setValue` / `reload` / `submit`。
+动作包含`通用动作`、`组件动作`、`广播动作`、`自定义动作`，可以通过配置`actionType`来指定具体执行什么动作。
 
 ## 发送 http 请求
 
-`actionType: ajax` 走 `requestApi`（D3），需要 `env.fetcher`。Playground 默认有 mock。
+通过配置`actionType: 'ajax'`实现 http 请求发送，该动作需实现 `env.fetcher` 请求器。
 
 ```schema
-type: page
-data:
-  name: vamis
-body:
-  type: button
-  label: 发送 Ajax 请求
-  level: primary
-  confirmText: 确认要发出这个请求？
-  onEvent:
-    click:
-      actions:
-        - actionType: ajax
-          api: /api/mock2/form/saveForm
-        - actionType: toast
-          args:
-            msgType: success
-            msg: 请求已发出
+{
+  "type": "page",
+  "data": {
+    "name": "lll"
+  },
+  "body": [
+    {
+      "type": "button",
+      "id": "b_001",
+      "label": "发送 Ajax 请求",
+      "level": "primary",
+      "confirmText": "确认要发出这个请求？",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "ajax",
+              "api": {
+                "url": "/api/mock2/form/saveForm?name=${name}",
+                "method": "post",
+                "responseData": {
+                  "resId": "${id}"
+                },
+                "messages": {
+                  "success": "成功了！欧耶",
+                  "failed": "失败了呢。。"
+                }
+              },
+              "data": {
+                "age": 18
+              }
+            },
+            {
+              "actionType": "toast",
+              "expression": "${event.data.responseResult.responseStatus === 0}",
+              "args": {
+                "msg": "${event.data.responseResult|json}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
 
-`confirmText` 写在按钮或动作上都可以：先 `env.confirm`，取消则整条链停掉。请求成功会把返回的 `data` merge 进当前域（有 form 就写 form）。同一条 `actions` 里后面的模板仍读派发时的 `ctx.data` 快照；要在页面上看到 `id`，请用表单项或 `tpl` 绑当前域，见 [数据域与数据链](/concepts/datascope-and-datachain)。
+### 静默模式
 
-失败默认中断后续动作。加上 `ignoreError: true` 会继续走：
 
-```schema: scope="body"
-type: button
-label: 忽略错误继续
-onEvent:
-  click:
-    actions:
-      - actionType: ajax
-        api: /api/mock2/does-not-exist
-        ignoreError: true
-      - actionType: toast
-        args:
-          msg: 请求失败了，但这句还是会弹出
+当配置`silent: true`时，请求完成后不会弹出提示信息。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "name": "lll"
+  },
+  "body": [
+    {
+      "type": "button",
+      "id": "b_001",
+      "label": "发送 Ajax 请求（静默模式）",
+      "level": "primary",
+      "confirmText": "确认要发出这个请求？",
+      "className": "m",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "ajax",
+              "api": {
+                "url": "/api/initData",
+                "method": "post",
+                "messages": {
+                  "success": "成功了！欧耶",
+                  "failed": "失败了呢。。"
+                },
+                "silent": true
+              },
+              "data": {
+                "age": 18
+              }
+            },
+            {
+              "actionType": "toast",
+              "expression": "${event.data.responseResult.responseStatus === 0}",
+              "args": {
+                "msg": "${event.data.responseResult|json}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+### 可读取的数据
+
+
+请求配置中可读取的数据包含事件源所在数据域和动作执行产生的数据。可以通过`api.data`配置数据映射来读取所需数据。例如：
+
+- 取所在数据域的数据：通过`"name": "${name}", "email": "${email}"`来映射表单校验数据（只适用于事件源在表单内的情况）
+- 取动作产生的数据：通过`"name": "${event.data.validateResult.payload.name}", "email": "${event.data.validateResult.payload.email}"`来映射表单校验数据，这种是获取前面表单校验动作的校验结果数据。通过`"&": "${event.data.validateResult.payload}"`展开表单校验数据，结果相同，这是一个数据映射小技巧
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "表单外的校验按钮",
+      "className": "mb-2",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "componentId": "form_validate",
+              "outputVar": "validateResult",
+              "actionType": "validate"
+            },
+            {
+              "outputVar": "responseResult",
+              "actionType": "ajax",
+              "api": {
+                "method": "post",
+                "url": "/api/mock2/form/saveForm",
+                "data": {
+                  "name": "${name}",
+                  "email": "${email}"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "id": "u:bd7adb583ec8"
+    },
+    {
+      "type": "form",
+      "id": "form_validate",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "name",
+          "label": "姓名：",
+          "required": true,
+          "id": "u:fbbc02500df6"
+        },
+        {
+          "name": "email",
+          "type": "input-text",
+          "label": "邮箱：",
+          "required": true,
+          "validations": {
+            "isEmail": true
+          },
+          "id": "u:830d0bad3e6a"
+        }
+      ],
+      "actions": [
+        {
+          "type": "button",
+          "label": "表单内的校验按钮",
+          "level": "primary",
+          "onEvent": {
+            "click": {
+              "actions": [
+                {
+                  "componentId": "form_validate",
+                  "outputVar": "validateResult",
+                  "actionType": "validate"
+                },
+                {
+                  "outputVar": "responseResult",
+                  "actionType": "ajax",
+                  "api": {
+                    "method": "post",
+                    "url": "/api/mock2/form/saveForm",
+                    "data": {
+                      "name": "${name}",
+                      "email": "${email}"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "id": "u:bd7adb583ec8"
+        }
+      ]
+    }
+  ],
+  "id": "u:d79af3431de1"
+}
+```
+
+**动作属性**
+
+| 属性名   | 类型                                | 默认值 | 说明                      |
+| -------- | ----------------------------------- | ------ | ------------------------- |
+| api      | [API](/types/api)      | -      | 接口配置                  |
+| options  | `object`                            | -      | 其他配置                  |
+| messages | `{success: string, failed: string}` | -      | 请求成功/失败后的提示信息 |
+
+**其他属性**
+
+| 属性名    | 类型     | 默认值 | 说明                                                                          |
+| --------- | -------- | ------ | ----------------------------------------------------------------------------- |
+| outputVar | `string` | -      | 请求响应结果缓存在`${event.data.responseResult}`或`${event.data.{outputVar}}` |
+
+请求响应结果的结构如下：
+
+```javascript
+{
+  // 状态码
+  "responseStatus": 0,
+  // 响应数据
+  "responseData": {
+    "xxx": "xxx"
+  },
+  // 响应消息
+  "responseMsg": "ok"
+}
 ```
 
 ## 弹窗
 
-```schema: scope="body"
-- type: button
-  label: 打开弹窗
-  level: primary
-  onEvent:
-    click:
-      actions:
-        - actionType: dialog
-          dialog:
-            title: 说明
-            body:
-              type: tpl
-              tpl: 对话框内容 ${name|default:'-'}
-        - actionType: toast
-          args:
-            msgType: info
-            msg: 弹窗已打开
-- type: button
-  className: m-l
-  label: 打开抽屉
-  onEvent:
-    click:
-      actions:
-        - actionType: drawer
-          drawer:
-            title: 抽屉
-            body: 抽屉内容
+### 打开弹窗（模态）
+
+通过配置`actionType: 'dialog'`实现 Dialog 弹窗。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "className": "ml-2",
+      "label": "打开弹窗（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "dialog",
+              "dialog": {
+                "type": "dialog",
+                "title": "模态弹窗",
+                "id": "dialog_001",
+                "data": {
+                  "myage": "22"
+                },
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "<p>对，你打开了模态弹窗</p>",
+                    "inline": false
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "myname",
+                    "mode": "horizontal",
+                    "onEvent": {
+                      "change": {
+                        "actions": [
+                          {
+                            "actionType": "confirm",
+                            "componentId": "dialog_001"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "onEvent": {
+                  "confirm": {
+                    "actions": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "confirm"
+                        }
+                      }
+                    ]
+                  },
+                  "cancel": {
+                    "actions": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "cancel"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
 
-在弹窗里可以用 `closeDialog` / `close` 关掉当前浮层。
+**动作属性**
+
+| 属性名        | 类型                    | 默认值 | 说明                                                                                                 |
+| ------------- | ----------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| dialog        | `string`/`DialogObject` | -      | 指定弹框内容，格式可参考[Dialog](/components/dialog)                                            |
+| waitForAction | `boolean`               | -      | 是否等待弹窗响应，开启后将等待弹窗操作                                                               |
+| outputVar     | `string`                | -      | 输出数据变量名, 输出数据格式为 `{confirmed: boolean; value: any[]}`，当 `waitForAction` 开启时才有用 |
+
+### 关闭弹窗（模态）
+
+通过配置`actionType: 'closeDialog'`实现关闭当前弹窗；附加配置`componentId`可以实现关闭指定弹窗。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "id": "b_003",
+      "label": "打开弹窗（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "dialog",
+              "dialog": {
+                "type": "dialog",
+                "id": "dialog_002",
+                "title": "模态弹窗",
+                "body": [
+                  {
+                    "type": "button",
+                    "label": "打开子弹窗，然后关闭它的父亲",
+                    "onEvent": {
+                      "click": {
+                        "actions": [
+                          {
+                            "actionType": "dialog",
+                            "dialog": {
+                              "type": "dialog",
+                              "title": "模态子弹窗",
+                              "body": [
+                                {
+                                  "type": "button",
+                                  "label": "关闭指定弹窗（关闭父弹窗）",
+                                  "onEvent": {
+                                    "click": {
+                                      "actions": [
+                                        {
+                                          "actionType": "closeDialog",
+                                          "componentId": "dialog_002"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "label": "关闭当前弹窗",
+                    "className": "ml-2",
+                    "onEvent": {
+                      "click": {
+                        "actions": [
+                          {
+                            "actionType": "closeDialog"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**其他属性**
+
+| 属性名      | 类型     | 默认值 | 说明            |
+| ----------- | -------- | ------ | --------------- |
+| componentId | `string` | -      | 指定弹框组件 id |
+
+### 打开抽屉（模态）
+
+通过配置`actionType: 'drawer'`实现 Drawer 抽屉打开。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "id": "b_004",
+      "level": "primary",
+      "label": "打开抽屉（模态）",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "drawer",
+              "drawer": {
+                "type": "drawer",
+                "title": "模态抽屉",
+                "body": [
+                  {
+                    "type": "tpl",
+                    "tpl": "<p>对，你打开了模态抽屉</p>",
+                    "inline": false
+                  }
+                ],
+                "onEvent": {
+                  "confirm": {
+                    "actions": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "confirm"
+                        }
+                      }
+                    ]
+                  },
+                  "cancel": {
+                    "actions": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "cancel"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**动作属性**
+
+| 属性名        | 类型                    | 默认值 | 说明                                                                                                 |
+| ------------- | ----------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| drawer        | `string`/`DrawerObject` | -      | 指定弹框内容，格式可参考[Drawer](/components/drawer)                                            |
+| waitForAction | `boolean`               | -      | 是否等待弹窗响应，开启后将等待弹窗操作                                                               |
+| outputVar     | `string`                | -      | 输出数据变量名, 输出数据格式为 `{confirmed: boolean; value: any[]}`，当 `waitForAction` 开启时才有用 |
+
+### 关闭抽屉（模态）
+
+通过配置`actionType: 'closeDrawer'`实现关闭当前抽屉；附加配置`componentId`可以实现关闭指定抽屉。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "打开抽屉（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "drawer",
+              "drawer": {
+                "type": "drawer",
+                "id": "drawer_1",
+                "title": "模态抽屉",
+                "body": [
+                  {
+                    "type": "button",
+                    "label": "打开子抽屉，然后关闭它的父亲",
+                    "onEvent": {
+                      "click": {
+                        "actions": [
+                          {
+                            "actionType": "drawer",
+                            "drawer": {
+                              "type": "drawer",
+                              "title": "模态子抽屉",
+                              "body": [
+                                {
+                                  "type": "button",
+                                  "label": "关闭指定抽屉(关闭父抽屉)",
+                                  "onEvent": {
+                                    "click": {
+                                      "actions": [
+                                        {
+                                          "actionType": "closeDrawer",
+                                          "componentId": "drawer_1"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "label": "关闭当前抽屉",
+                    "className": "ml-2",
+                    "onEvent": {
+                      "click": {
+                        "actions": [
+                          {
+                            "actionType": "closeDrawer"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**其他属性**
+
+| 属性名      | 类型     | 默认值 | 说明            |
+| ----------- | -------- | ------ | --------------- |
+| componentId | `string` | -      | 指定抽屉组件 id |
+
+### 打开确认弹窗
+
+通过配置`actionType: 'confirmDialog'`打开确认对话框。确认对话框弹出后，如果选择取消操作，将不会执行该动作后面的动作。如下面的例子，点击确认之后将弹出`toast`提示，点击取消则不会提示。
+
+**普通文本内容**
+
+动作需要实现 env.confirm: (msg: string, title?: string) => boolean | Promise&lt;boolean&gt;。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "title": "操作确认",
+    "msg": "要删除它吗？"
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "确认对话框（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "confirmDialog",
+              "dialog": {
+                "title": "${title}",
+                "msg": "<span style=\"color:red\">${msg}</span>"
+              }
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "确认ok啦！"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**自定义弹窗内容**
+
+可以通过`body`像配置弹窗一样配置确认弹窗的内容。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "title": "操作确认",
+    "msg": "确认提交吗？"
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "自定义确认对话框（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "confirmDialog",
+              "dialog": {
+                "type": "dialog",
+                "title": "${title}",
+                "confirmText": "确认",
+                "cancelText": "取消",
+                "confirmBtnLevel": "primary",
+                "data": {
+                  "&": "$$",
+                  "title": "确认"
+                },
+                "body": [
+                  {
+                    "type": "form",
+                    "initApi": "/api/mock2/form/initData",
+                    "title": "编辑用户信息",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "name",
+                        "label": "姓名"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "email",
+                        "label": "邮箱"
+                      },
+                      {
+                        "type": "tpl",
+                        "tpl": "${msg}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "确认ok啦！"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**动作属性**
+
+| 属性名 | 类型                          | 默认值 | 说明                                                                |
+| ------ | ----------------------------- | ------ | ------------------------------------------------------------------- |
+| dialog | {msg:`string`}/`DialogObject` | -      | 指定弹框内容。自定义弹窗内容可参考[Dialog](/components/dialog) |
+
+### 提示对话框
+
+通过配置`actionType: 'alert'`打开提示对话框，该对话框只有确认按钮。该动作需要实现 env.alert: (msg: string) => void。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "msg": "去吃饭了"
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "提示对话框（模态）",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "alert",
+              "dialog": {
+                "title": "提示",
+                "msg": "<a href=\"http://www.baidu.com\" target=\"_blank\">${msg}~</a>"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**动作属性**
+
+| 属性名 | 类型                             | 默认值                       | 说明       |
+| ------ | -------------------------------- | ---------------------------- | ---------- |
+| dialog | {title:`string`<br>msg:`string`} | {title: '系统提示', msg: ''} | 对话框配置 |
+
+### toast 提示
+
+通过配置`actionType: 'toast'`实现弹出 toast 提示，该动作需实现 env.notify(type: ToastLevel, msg: string, conf?: ToastConf) => void 方法。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "警告",
+      "level": "warning",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "warning",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "成功",
+      "level": "success",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "success",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "错误",
+      "level": "danger",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "error",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "提示",
+      "level": "info",
+      "className": "mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tpl",
+      "tpl": "<br>"
+    },
+    {
+      "type": "button",
+      "label": "左上",
+      "className": "mr-2 mt-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-left"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "中上",
+      "className": "mr-2 mt-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-center"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "右上",
+      "className": "mt-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tpl",
+      "tpl": "<br>"
+    },
+    {
+      "type": "button",
+      "label": "屏幕的中央",
+      "className": "ml-10 mt-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "center"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tpl",
+      "tpl": "<br>"
+    },
+    {
+      "type": "button",
+      "label": "左下",
+      "className": "mr-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "bottom-left"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "中下",
+      "className": "mr-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "bottom-center"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "右下",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "我是全局警告消息，可以配置不同类型和弹出位置~",
+                "position": "bottom-right"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+**动作属性（args）**
+
+> `< 1.8.0 及以下版本`，以下属性与 args 同级。
+
+| 属性名      | 类型      | 默认值                                  | 说明                                                                                             |
+| ----------- | --------- | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| msgType     | `string`  | `"info"`                                | 消息类型 `info\|success\|error\|warning`                                                         |
+| msg         | `string`  | -                                       | 消息内容                                                                                         |
+| position    | `string`  | `top-center（移动端为center）`          | 提示显示位置 `top-right\|top-center\|top-left\|bottom-center\|bottom-left\|bottom-right\|center` |
+| closeButton | `boolean` | `false`                                 | 是否展示关闭按钮                                                                                 |
+| showIcon    | `boolean` | `true`                                  | 是否展示图标                                                                                     |
+| timeout     | `number`  | `5000（error类型为6000，移动端为3000）` | 持续时间                                                                                         |
 
 ## 跳转链接
 
-```schema: scope="body"
-type: button
-label: 跳到快速开始
-level: link
-onEvent:
-  click:
-    actions:
-      - actionType: link
-        link: /start/getting-started
-```
+通过配置`actionType: 'url'`或`actionType: 'link'`实现链接跳转，该动作需实现 env.jumpTo(to: string, action?: any) => void 方法。
 
-`url` 与 `link` 一样，都走 `env.jumpTo`。
-
-## 刷新组件 / 改数据
-
-给目标组件一个 `id` 或 `name`，动作里写 `componentId` / `target`。
+### 打开页面
 
 ```schema
-type: page
-body:
-  type: form
-  id: profile
-  data:
-    name: Ada
-  body:
-    - type: input-text
-      name: name
-      label: 姓名
-    - type: tpl
-      tpl: 当前值 ${name}
-    - type: button
-      label: 设成 Bob
-      onEvent:
-        click:
-          actions:
-            - actionType: setValue
-              componentId: profile
-              args:
-                value:
-                  name: Bob
-            - actionType: toast
-              args:
-                msg: 已写入 Bob
+{
+  "type": "page",
+  "data": {
+    "myname": "lvxj",
+    "myjon": "player"
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "百度一下",
+      "level": "primary",
+      "className": "ml-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "url",
+              "args": {
+                "url": "http://www.baidu.com",
+                "blank": true,
+                "params": {
+                  "name": "jack",
+                  "jon": "${myjon}"
+                },
+                "name": "${myname}",
+                "age": 18
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
 
-`reload` 会让目标按自己的 `api` / `initApi` 再拉一次，也可以顺带塞 `data`。详见 [联动](/concepts/linkage)。
+**动作属性（args）**
 
-## 事件上下文
+> `< 1.8.0 及以下版本`，以下属性与 args 同级。
 
-每条动作求值时能读：
+| 属性名 | 类型      | 默认值  | 说明                                                       |
+| ------ | --------- | ------- | ---------------------------------------------------------- |
+| url    | `string`  | -       | 按钮点击后，会打开指定页面。可用 `${xxx}` 取值             |
+| blank  | `boolean` | `false` | 如果为 `true` 将在新 tab 页面打开                          |
+| params | `object`  | -       | 页面参数`{key:value}`，支持数据映射，`>` |
 
-| 变量 | 含义 |
-|------|------|
-| 当前数据域 | 普通 `${name}` |
-| `event.data` | 这次事件带出来的数据（点击、接口返回等） |
-| `event.context.nativeEvent` | 原生事件（有的话） |
-| `__rendererData` | 派发时那一层数据域的快照 |
+### 打开单页
 
 ```schema
-type: page
-data:
-  role: dev
-body:
-  type: button
-  label: 看 __rendererData
-  onEvent:
-    click:
-      actions:
-        - actionType: toast
-          args:
-            msg: 角色是 ${__rendererData.role}，事件 ${event.context.nativeEvent.type}
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "跳转至「表达式」",
+      "level": "primary",
+      "className": "ml-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "link",
+              "args": {
+                "link": "./expression"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
 
-后续动作还能读到前面 `ajax` 写回域里的字段。Amis 的 `event.setData` 内核已接，文档示例先用 `setValue` 改组件域。
+**动作属性（args）**
 
-## 干预执行
+> `< 1.8.0 及以下版本`，以下属性与 args 同级。
 
-动作跑完可以改事件默认逻辑、截断后面的动作。
-
-### 阻止默认行为
-
-按钮在 `onEvent` 之后还会跑自己的 `actionType`（没写就是普通按钮）。`preventDefault: true` 会跳过这步。表达式字符串按数据域求值。
-
-```schema: scope="body"
-type: button
-label: 只跑 onEvent，不跑按钮自身动作
-actionType: toast
-msg: 这句不该出现
-onEvent:
-  click:
-    actions:
-      - actionType: toast
-        args:
-          msg: 来自 onEvent
-        preventDefault: true
-```
-
-也可以单独写一条 `actionType: preventDefault`。
-
-### 停止后续动作
-
-`stopPropagation: true` 之后的 `actions` 不再执行（对齐 Amis 字段名：这里停的是动作链，不是 DOM 冒泡）。
-
-```schema: scope="body"
-type: button
-label: 只弹出前两句
-level: primary
-onEvent:
-  click:
-    actions:
-      - actionType: toast
-        args:
-          msg: 动作1
-      - actionType: toast
-        args:
-          msg: 动作2
-        stopPropagation: true
-      - actionType: toast
-        args:
-          msg: 动作3 不会出现
-```
-
-### 条件执行
-
-动作上的 `expression` 为假就跳过这一条，后面的继续。
-
-```schema: scope="body"
-type: form
-data:
-  ok: false
-body:
-  - type: switch
-    name: ok
-    label: 允许提示
-  - type: button
-    label: 尝试提示
-    onEvent:
-      click:
-        actions:
-          - actionType: toast
-            expression: "${ok}"
-            args:
-              msg: 开关打开才会看到
-          - actionType: toast
-            args:
-              msg: 这条总会弹出
-```
-
-`wait` 用来在两条动作之间停一会儿：
-
-```schema: scope="body"
-type: button
-label: 等一秒再提示
-onEvent:
-  click:
-    actions:
-      - actionType: wait
-        args:
-          timeMs: 1000
-      - actionType: toast
-        args:
-          msg: 1 秒到了
-```
-
-
+| 属性名     | 类型     | 默认值 | 说明                                                                                                                          |
+| ---------- | -------- | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| link       | `string` | `link` | 用来指定跳转地址，跟 url 不同的是，这是单页跳转方式，不会渲染浏览器，请指定 amis 平台内的页面。可用 `${xxx}` 取值             |
+| params     | `object` | -      | 页面参数`{key:value}`，支持数据映射，`>`                                                                     |
+| targetType | `string` | `page` | 默认为内容区打开`page`，可设置为新窗口打开`blank`，当前页签打开`self`，`blank\|self` 方式会重新渲染浏览器`>` |
 
 ## 浏览器
-
 
 ### 浏览器回退
 
@@ -490,9 +1460,6 @@ onEvent:
 | content    | [模板](/concepts/template) | -      | 指定复制的内容。可用 `${xxx}` 取值 |
 
 ## 打印
-
-
-> 6.2.0 及以后版本
 
 打印页面中的某个组件，对应的组件需要配置 `id`，如果要打印多个，可以使用 `"ids": ["x", "y"]` 来打印多个组件，只支持主要是容器类组件 `crud`、`crud2`、`form`、`table`、`wrapper`、`container`、`flex`、`grid`、`grid2d`、`tableview`
 
@@ -697,14 +1664,13 @@ onEvent:
 
 ## 自定义 JS
 
-
-通过配置`actionType: 'custom'`实现自定义 JS。JS 中可以访问以下对象和方法：
+通过配置`actionType: 'custom'`实现自定义 JS。字符串脚本仅在 `env.trusted: true` 时执行，文档预览默认开启，正式 SDK 默认关闭。JS 中可以访问以下对象和方法：
 
 - context，渲染器上下文
 - doAction() 动作执行方法，用于调用任何 actionType 指定的动作
 - event，事件对象，可以调用 setData()、stopPropagation()、preventDefault()分别实现事件上下文设置、动作干预、事件干预，可以通过 event.data 获取事件上下文
 
-自定义函数签名： `script:(context,doAction,event)=>{}`。字符串脚本仅在 `env.trusted: true` 时执行；文档预览默认开启，正式 SDK 默认关闭。
+自定义函数签名： `script:(context,doAction,event)=>{}`
 
 ```schema
 {
@@ -737,9 +1703,10 @@ onEvent:
 
 ### 支持异步
 
+
 - 方式一：通过返回 Promise 实例的方式
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -795,7 +1762,7 @@ onEvent:
 
 - 方式二：通过返回 Thunk 的方式
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -855,10 +1822,645 @@ onEvent:
 
 > 注意：直接调用`event.setData()`将修改事件的原有上下文，如果不希望覆盖可以通过`event.setData({...event.data, ...{xxx: xxx}})`来进行数据的合并。
 
+## 触发指定组件动作
+
+通过配置`componentId`或`componentName`来触发指定组件的动作（不配置将调用当前组件自己的动作），组件动作配置通过`args`传入`(>)`，动作参数请查看对应的组件的[动作表](/components/form/index#动作表)，更多示例请查看[组件事件动作示例](../../../examples/event/form)。
+
+### 更新组件数据
+
+更新数据即更新指定组件数据域中的数据（data），通过配置`actionType: 'setValue'`实现组件`数据域变量更新`，通过它可以实现`组件间联动更新`、`数据回填`，更多示例请查看[更新数据示例](../../../examples/action/setdata/form)。
+
+**注意事项**
+
+- 这个动作是异步的，所以不能直接通过`${xxx}`来获取更新后的数据，如果需要请更新事件上下文数据，然后通过`${event.data.xxx}`来获取。
+- 数据类型支持范围：`基础类型`、`对象类型`、`数组类型`，数据类型取决于目标组件所需数据值类型
+- 目标组件支持范围：`form`、`dialog`、`drawer`、`wizard`、`service`、`page`、`app`、`chart`，以及数据`输入类`组件
+- < 2.3.2 及以下版本，虽然更新数据可以实现对组件数据域的更新，但如果更新数据动作的数据值来自前面的异步动作（例如 发送 http 请求、自定义 JS（异步）），则后面的动作只能通过事件变量`${event.data.xxx}`来获取异步动作产生的数据，无法通过当前数据域`${xxx}`直接获取更新后的数据。
+- 它的值通常都是对象形式，比如 form 传递的值应该是类似 `{"user": "amis"}`，这时就会更新表单里的 `user` 字段值为 `amis`
+
+```schema
+{
+  "type": "page",
+  "title": "更新表单数据",
+  "data": {
+    "globalData": {
+      "myrole": "法官",
+      "mymsg": "该吃饭了!"
+    }
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "更新",
+      "level": "primary",
+      "className": "mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "setValue",
+              "componentId": "form_data",
+              "args": {
+                "value": "${globalData}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "form",
+      "id": "form_data",
+      "title": "表单",
+      "debug": true,
+      "data": {
+        "myrole": "预言家",
+        "age": "18"
+      },
+      "initApi": "/api/mock2/form/initData",
+      "body": [
+        {
+          "type": "input-text",
+          "label": "角色",
+          "name": "myrole",
+          "disabled": false,
+          "mode": "horizontal"
+        },
+        {
+          "type": "input-text",
+          "label": "年龄",
+          "name": "age",
+          "disabled": false,
+          "mode": "horizontal"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 刷新组件请求
+
+通过配置`actionType: 'reload'`刷新指定组件的数据请求，支持数据容器类组件（`form`、`wizard`、`service`、`page`、`app`、`chart`、`crud`）以及支持动态数据的`输入类`组件，详见组件的`动作表`。更多示例请查看[刷新示例](../../../examples/action/reload/form)。
+
+#### 刷新输入类组件
+
+针对支持远程数据的输入类组件，支持刷新目标组件的数据请求。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "刷新下拉框",
+      "className": "mb-2",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reload",
+              "componentId": "select-reload"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "form",
+      "title": "表单",
+      "body": [
+        {
+          "type": "select",
+          "id": "select-reload",
+          "name": "select",
+          "label": "选项",
+          "source": "/api/mock2/form/getOptions?waitSeconds=1"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 刷新 CRUD
+
+刷新 CRUD 时，如果配置了`data`，将发送`data`给目标 CRUD 组件，并将该数据合并到目标 CRUD 组件的数据域中，然后触发目标组件的刷新操作，即 CRUD 数据拉取接口将自动追加`data`参数到请求中，更多示例可以查看[CRUD reload](/components/crud#reload)。
+
+```schema
+{
+  "type": "page",
+  "data": {
+    "name": "amis",
+    "age": 18,
+    "date": "2023-6-6"
+  },
+  "body": [
+    {
+      "type": "button",
+      "label": "刷新CRUD数据加载请求，同时追加参数",
+      "level": "primary",
+      "className": "mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "componentId": "crud_reload",
+              "actionType": "reload",
+              "data": {
+                "author": "${author}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "crud",
+      "api": "/api/mock2/sample",
+      "id": "crud_reload",
+      "syncLocation": false,
+      "columns": [
+        {
+          "name": "id",
+          "label": "ID"
+        },
+        {
+          "name": "engine",
+          "label": "Rendering engine"
+        },
+        {
+          "name": "browser",
+          "label": "Browser"
+        },
+        {
+          "name": "platform",
+          "label": "Platform(s)"
+        },
+        {
+          "name": "version",
+          "label": "Engine version"
+        },
+        {
+          "name": "grade",
+          "label": "CSS grade"
+        },
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "label": "详情",
+              "type": "button",
+              "level": "link",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "type": "input-text",
+                      "name": "engine",
+                      "label": "Engine"
+                    },
+                    {
+                      "type": "input-text",
+                      "name": "browser",
+                      "label": "Browser"
+                    },
+                    {
+                      "type": "input-text",
+                      "name": "platform",
+                      "label": "platform"
+                    },
+                    {
+                      "type": "input-text",
+                      "name": "version",
+                      "label": "version"
+                    },
+                    {
+                      "type": "control",
+                      "label": "grade",
+                      "body": {
+                        "type": "tag",
+                        "label": "${grade}",
+                        "displayMode": "normal",
+                        "color": "active"
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "label": "删除",
+              "type": "button",
+              "level": "link",
+              "className": "text-danger",
+              "disabledOn": "this.grade === 'A'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 刷新其他数据容器类组件
+
+刷新容器类组件（`form`、`wizard`、`service`、`page`、`app`、`chart`）时，如果配置了`data`，将发送`data`给目标组件，并将该数据合并到目标组件的数据域中。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "刷新Service数据加载请求，同时把年龄更新为18",
+      "level": "primary",
+      "className": "mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "componentId": "service_reload",
+              "actionType": "reload",
+              "data": {
+                "age": "18"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "service",
+      "api": "/api/mock2/form/initData",
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "我的名字：${name}, 我的年龄：${age|default:'-'}",
+          "wrapperComponent": "",
+          "inline": false
+        }
+      ],
+      "id": "service_reload"
+    }
+  ]
+}
+```
+
+#### 获得刷新后的结果
+
+通过配置 outputVar 可以拿到刷新后的结果，例如以下示例，点击按钮后，会串行按顺序刷新 service 1 和 service2， 同时 service2 可以拿到 service1 的返回值。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "刷新Service数据",
+      "level": "primary",
+      "className": "mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "componentId": "service_reload",
+              "actionType": "reload",
+              "outputVar": "service1"
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "service 的数据返回为： ${service1|json}"
+              }
+            },
+            {
+              "componentId": "service_reload2",
+              "actionType": "reload",
+              "data": {
+                "date": "${service1.date}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "service",
+      "api": {
+        "method": "get",
+        "url": "/api/mock2/form/initData",
+        "trackExpression": "none"
+      },
+      "body": [],
+      "initFetch": false,
+      "id": "service_reload"
+    },
+    {
+      "type": "service",
+      "api": {
+        "method": "get",
+        "url": "/api/mock2/form/initData?date=${date}",
+        "trackExpression": "none"
+      },
+      "body": [],
+      "initFetch": false,
+      "id": "service_reload2"
+    }
+  ]
+}
+```
+
+**动作属性**
+
+| 属性名    | 类型      | 默认值 | 说明                                                               |
+| --------- | --------- | ------ | ------------------------------------------------------------------ |
+| resetPage | `boolean` | true   | 当目标组件为 `crud` 时，可以控制是否重置页码，`>` |
+
+**其他属性**
+
+| 属性名      | 类型     | 默认值 | 说明                  |
+| ----------- | -------- | ------ | --------------------- |
+| componentId | `string` | -      | 指定刷新的目标组件 id |
+
+### 修改组件状态
+
+
+通过配置`actionType: 'show'`或`'hidden'`或`'enabled'`或`'disabled'`或`'static'`或`'nonstatic'`实现对指定组件的显示、隐藏、启用、禁用，仅支持实现了对应状态控制功能的数据`输入类`组件。
+
+#### 显示与隐藏
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "显示表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "show",
+              "componentId": "form_hidden"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "隐藏表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "hidden",
+              "componentId": "form_hidden"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "form",
+      "id": "form_hidden",
+      "title": "表单",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "label": "输入框",
+          "mode": "horizontal",
+          "value": "text"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 启用与禁用
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "id": "b_dis",
+      "label": "禁用表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "disabled": true,
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "disabled",
+              "componentId": "form_disable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "启用表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "enabled",
+              "componentId": "form_disable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "form",
+      "id": "form_disable",
+      "title": "表单",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "label": "输入框",
+          "mode": "horizontal",
+          "value": "text"
+        },
+        {
+          "type": "group",
+          "body": [
+            {
+              "type": "button",
+              "className": "ml-2",
+              "label": "禁用【禁用】",
+              "level": "primary",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "disabled",
+                      "componentId": "b_dis"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "className": "ml-2",
+              "label": "启用【禁用】",
+              "level": "primary",
+              "onEvent": {
+                "click": {
+                  "actions": [
+                    {
+                      "actionType": "enabled",
+                      "componentId": "b_dis"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 静态展示与编辑态
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "静态展示表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "static",
+              "componentId": "form_static"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "非静态展示表单",
+      "level": "primary",
+      "className": "mr-2 mb-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "nonstatic",
+              "componentId": "form_static"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "form",
+      "id": "form_static",
+      "title": "表单",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "label": "输入框",
+          "mode": "horizontal",
+          "value": "text"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**其他属性**
+
+| 属性名      | 类型     | 默认值 | 说明                                 |
+| ----------- | -------- | ------ | ------------------------------------ |
+| componentId | `string` | -      | 指定启用/禁用/显示/隐藏的目标组件 id |
+
+### 执行目标组件的动作
+
+例如，点击按钮后，切换选项卡。
+
+```schema
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "button",
+      "label": "选中选项卡2",
+      "level": "primary",
+      "className": "mr-3 mb-3",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "changeActiveKey",
+              "componentId": "tabs-change-receiver",
+              "args": {
+                "activeKey": 2
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tabs-change-receiver",
+      "type": "tabs",
+      "mode": "line",
+      "tabs": [
+        {
+          "title": "选项卡1",
+          "body": "选项卡内容1"
+        },
+        {
+          "title": "选项卡2",
+          "body": "选项卡内容2"
+        },
+        {
+          "title": "选项卡3",
+          "body": "选项卡内容3"
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## 触发广播
 
-
-通过配置`actionType: 'broadcast'`实现触发一个广播。监听器按 `weight` 从大到小执行；每个 `VamisRoot` 使用独立总线，不会跨嵌入实例串消息。
+通过配置`actionType: 'broadcast'`实现触发一个广播。监听器按 `weight` 从大到小执行；每个 `VamisRoot` 使用独立总线。
 
 ```schema
 {
@@ -994,7 +2596,7 @@ onEvent:
           "mode": "horizontal"
         }
       ],
-      "api": "/api/mock2/form/saveForm",
+      "api": "/api/form/form3",
       "onEvent": {
         "broadcast_1": {
           "weight": 3,
@@ -1035,8 +2637,33 @@ onEvent:
 | ------ | -------- | ------ | -------------------------------------------------------- |
 | weight | `number` | 0      | 可以通过配置动作执行优先级来控制所有监听者的动作执行顺序 |
 
-## 条件
+## 注册自定义动作
 
+除了内置动作，还可以通过同一张注册表扩展动作。处理器接收动作与当前上下文，无需模拟 Amis 的 React 类接口。
+
+```javascript
+import { registerAction } from '@vamis/core'
+
+registerAction('my-action', async (action, ctx) => {
+  const { param1, param2 } = action.args || {}
+  ctx.env.notify('info', `${param1} ${param2}`)
+})
+```
+
+### 从外部触发
+
+JS SDK 的 `doAction` 走同一张动作表：
+
+```javascript
+const scoped = vamis.embed('#root', schema)
+scoped.doAction({ actionType: 'toast', msg: '外部触发' })
+```
+
+# 编排动作
+
+通过配置不同的逻辑动作实现动作编排，支持嵌套。
+
+## 条件
 
 通过配置`expression: 表达式或ConditionBuilder组合条件`来实现条件逻辑。
 
@@ -1171,7 +2798,7 @@ onEvent:
                   {
                     "actionType": "ajax",
                     "args": {
-                      "api": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm?name=${name}&age=${age}"
+                      "api": "/api/mock2/form/saveForm?name=${name}&age=${age}"
                     }
                   }
                 ]
@@ -1187,7 +2814,7 @@ onEvent:
 
 ### 嵌套循环
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1365,7 +2992,7 @@ onEvent:
 
 通过配置`actionType: 'loop'`和`actionType: 'continue'`实现循环跳过。
 
-```json
+```schema
 {
   "type": "page",
   "body": {
@@ -1430,7 +3057,6 @@ onEvent:
 ```
 
 ## 排他（switch）
-
 
 通过配置`actionType: 'switch'`实现排他逻辑。
 
@@ -1501,8 +3127,7 @@ onEvent:
 
 ## 并行
 
-
-通过配置`actionType: 'parallel'`实现并行执行逻辑。子动作同时启动，通过 `outputVar` 写入同一个事件上下文，后续动作可读取。
+通过配置`actionType: 'parallel'`实现并行执逻辑。
 
 ```schema
 {
@@ -1529,7 +3154,7 @@ onEvent:
                     "actionType": "ajax",
                     "args": {
                       "api": {
-                        "url": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/initData?name=${name}",
+                        "url": "/api/mock2/form/initData?name=${name}",
                         "method": "get"
                       },
                       "messages": {
@@ -1543,7 +3168,7 @@ onEvent:
                     "actionType": "ajax",
                     "args": {
                       "api": {
-                        "url": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm?name=${name}",
+                        "url": "/api/mock2/form/saveForm?name=${name}",
                         "method": "get"
                       },
                       "messages": {
@@ -1557,7 +3182,7 @@ onEvent:
                     "actionType": "ajax",
                     "args": {
                       "api": {
-                        "url": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm?name=${name}",
+                        "url": "/api/mock2/form/saveForm?name=${name}",
                         "method": "get"
                       },
                       "messages": {
@@ -1598,7 +3223,7 @@ onEvent:
 
 通过 `data` 指定输入的参数数据（`< 2.3.2 及以下版本`通过`args`传递数据），它是一个键值对。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -1669,7 +3294,7 @@ http 请求动作执行结束后，后面的动作可以通过 `${responseResult
 
 > `< 2.3.2 及以下版本 需要通过 ${event.data.{xxx}}`来获取以上信息，例如：${event.data.responseResult}
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -1683,7 +3308,7 @@ http 请求动作执行结束后，后面的动作可以通过 `${responseResult
             {
               "actionType": "ajax",
               "args": {
-                "api": "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/saveForm"
+                "api": "/api/mock2/form/saveForm"
               }
             },
             {
@@ -1722,9 +3347,10 @@ http 请求动作执行结束后，后面的动作可以通过 `${responseResult
 
 #### 获取组件相关数据
 
+
 可以通过表达式函数`GETRENDERERDATA(id, path)`和`GETRENDERERPROP(id, path)`分别获取指定组件的数据和属性。
 
-```json
+```schema
 {
   "type": "page",
   "body": [
@@ -1783,24 +3409,304 @@ http 请求动作执行结束后，后面的动作可以通过 `${responseResult
 
 事件动作干预是指执行完当前动作后，干预所监听事件默认处理逻辑和后续其他动作的执行。通过`preventDefault`、`stopPropagation`分别阻止监听事件默认行为和停止下一个动作执行。
 
-## 从外部触发
-JS SDK 的 `doAction` 走同一张动作表，不是另一套：
+## 阻止事件默认行为
 
-```js
-const scoped = vamis.embed('#root', schema)
-scoped.doAction({ actionType: 'toast', msg: '外部触发' })
+有些组件内置了一些逻辑来帮助用户降低配置成本，但可能这些逻辑并不符合设计者的业务需求，这时可以通过`onEvent`来监听对应的事件，并通过`preventDefault`来阻止那些默认处理逻辑来达到想要的最终效果。更多示例请查看[阻止组件默认行为示例](../../../examples/action/prevent/form)。
+
+```schema
+{
+  "type": "page",
+  "title": "弹窗确认后执行其他动作并阻止默认关闭",
+  "body": [
+    {
+      "type": "button",
+      "className": "ml-2",
+      "label": "打开弹窗",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "dialog",
+              "dialog": {
+                "type": "dialog",
+                "title": "提示",
+                "id": "dialog_001",
+                "data": {
+                  "myage": "22"
+                },
+                "body": [
+                  {
+                    "type": "alert",
+                    "body": "输入Do not close，确认后将不关闭弹窗",
+                    "level": "warning"
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "command"
+                  }
+                ],
+                "onEvent": {
+                  "confirm": {
+                    "actions": [
+                      {
+                        "actionType": "toast",
+                        "args": {
+                          "msg": "不关闭"
+                        },
+                        "preventDefault": "command === \"Do not close\""
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
 
-组件实例也可以 `getComponentByName('form1').doAction(...)`。见 [JS SDK](/start/sdk)。
+> 支持
 
-## 注册自定义动作
+或者直接通过动作来阻止
 
-```js
-import { registerAction } from '@vamis/core'
-
-registerAction('myLog', async (action, ctx) => {
-  console.log(action.args?.msg, ctx.data)
-})
+```json
+{
+  "actionType": "preventDefault",
+  "expression": "${command === 'Do not close'}"
+}
 ```
 
-然后 schema 里写 `actionType: myLog`。不要把逻辑写进某个渲染器的 click 分支。
+```schema
+{
+  "type": "page",
+  "title": "弹窗确认后执行其他动作并阻止默认关闭",
+  "body": [
+    {
+      "type": "button",
+      "className": "ml-2",
+      "label": "打开弹窗",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "dialog",
+              "dialog": {
+                "type": "dialog",
+                "title": "提示",
+                "id": "dialog_001",
+                "data": {
+                  "myage": "22"
+                },
+                "body": [
+                  {
+                    "type": "alert",
+                    "body": "输入Do not close，确认后将不关闭弹窗",
+                    "level": "warning"
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "command"
+                  }
+                ],
+                "onEvent": {
+                  "confirm": {
+                    "actions": [
+                      {
+                        "actionType": "preventDefault",
+                        "expression": "${command === 'Do not close'}"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## 停止后续动作执行
+
+通过`onEvent`可以对监听的事件配置一组动作，这些动作是顺序执行的，有时间设计者希望执行某个/些动作后就停止继续执行后面的动作，这时候可以通过`stopPropagation`来停止执行后面配置的所有动作。
+
+```schema
+{
+  "type": "page",
+  "title": "只执行3个动作中的前两个动作",
+  "body": [
+    {
+      "type": "button",
+      "label": "弹出2个提示",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "动作1"
+              }
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "动作2"
+              },
+              "stopPropagation": true
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "动作3",
+                "position": "top-right"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+> 支持
+
+或者直接通过动作来跳过后续逻辑
+
+```json
+{
+  "actionType": "stopPropagation",
+  "expression": "${command === 'Do not close'}"
+}
+```
+
+```schema
+{
+  "type": "page",
+  "title": "只执行第一个动作",
+  "body": [
+    {
+      "type": "button",
+      "label": "弹出一个提示",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "后续的动作将不会执行"
+              }
+            },
+            {
+              "actionType": "stopPropagation",
+              "expression": "${true}"
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "动作2"
+              }
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msgType": "info",
+                "msg": "动作3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## 忽略动作报错继续执行
+
+默认情况下，尝试执行一个不存在的目标组件动作、JS 脚本执行错误等程序错误都会导致动作执行终止，可以通过`ignoreError: true`来忽略动作报错继续执行后面的动作。
+
+```schema
+{
+  "type": "page",
+  "title": "第一个按钮发生错误直接阻塞执行，第二个按钮发生错误后仍然执行",
+  "body": [
+    {
+      "type": "button",
+      "label": "无法弹出提示",
+      "level": "primary",
+      "className": "mr-2",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reload",
+              "componentId": "notfound"
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "okk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "button",
+      "label": "可以弹出提示",
+      "level": "primary",
+      "onEvent": {
+        "click": {
+          "actions": [
+            {
+              "actionType": "reload",
+              "componentId": "notfound",
+              "ignoreError": true
+            },
+            {
+              "actionType": "toast",
+              "args": {
+                "msg": "okk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+# 自定义组件接入事件动作
+
+需求场景主要是想要自定义组件的内部事件暴露出去，能够通过对事件的监听来执行所需动作，并希望自定义组件自身的动作能够被其他组件调用。接入方法是通过`props.dispatchEvent`派发自身的各种事件，使其具备更灵活的交互设计能力；通过实现`doAction`方法实现其他组件对其专属动作的调用，需要注意的是，此处依赖内部的 `Scoped Context`来实现自身的注册，可以参考 [组件间通信](/extend/custom-react#组件间通信)。
+
+# 属性表
+
+| 属性名          | 类型                                                                                                     | 默认值  | 说明                                                                                                          |
+| --------------- | -------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| actionType      | `string`                                                                                                 | -       | 动作名称                                                                                                      |
+| args            | `object`                                                                                                 | -       | 动作属性`{key:value}`，支持数据映射                                                                           |
+| data            | `object`                                                                                                 | -       | 追加数据`{key:value}`，支持数据映射，如果是触发其他组件的动作，则该数据会传递给目标组件，`>` |
+| dataMergeMode   | `string`                                                                                                 | 'merge' | 当配置了 data 的时候，可以控制数据追加方式，支持合并(`merge`)和覆盖(`override`)两种模式，`>` |
+| preventDefault  | `boolean`\|[表达式](../concepts/expression)\|[ConditionBuilder](/components/form/condition-builder) | false   | 阻止事件默认行为，`>支持表达式，>支持ConditionBuilder`                     |
+| stopPropagation | `boolean`\|[表达式](../concepts/expression)\|[ConditionBuilder](/components/form/condition-builder) | false   | 停止后续动作执行，`>支持表达式，>支持ConditionBuilder`                     |
+| expression      | `boolean`\|[表达式](../concepts/expression)\|[ConditionBuilder](/components/form/condition-builder) | -       | 执行条件，不设置表示默认执行，`>支持表达式，>支持ConditionBuilder`         |
+| outputVar       | `string`                                                                                                 | -       | 输出数据变量名                                                                                                |
+| ignoreError     | `boolean`                                                                                                | false   | 当动作执行出错后，是否忽略错误继续执行。支持`                                                |

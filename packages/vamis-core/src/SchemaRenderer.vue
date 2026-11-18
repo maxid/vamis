@@ -10,6 +10,7 @@ import { useOverlay } from './overlay'
 import { useFormApi } from './form-api'
 import { createVamisEvent, eventEvalData, runOnEvent } from './actions/run'
 import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
+import { statusDisabledOf, statusVisibleOf } from './status-store'
 import Placeholder from './Placeholder.vue'
 import type { SchemaNode, SchemaObject } from './types'
 
@@ -116,15 +117,20 @@ const data = computed(() => {
   const base = needsChildScope.value
     ? (currentScope.value?.resolved() ?? parentData.value)
     : parentData.value
-  return { ...base, ...overlay }
+  return { ...base, ...overlay, __scoped: scoped }
 })
 provideData(data)
 
-const visible = computed(() => (normalized.value ? isVisible(normalized.value, data.value) : false))
+const visible = computed(() => {
+  if (!normalized.value) return false
+  return statusVisibleOf(normalized.value) ?? isVisible(normalized.value, data.value)
+})
 /** Amis `wrap: false`：功能性组件（hidden）没有 DOM 包装，也不能拖拽选中。 */
 const rendererWrap = computed(() => renderer.value?.wrap !== false)
 const disabled = computed(() =>
-  normalized.value ? isDisabled(normalized.value, data.value) : false,
+  normalized.value
+    ? (statusDisabledOf(normalized.value) ?? isDisabled(normalized.value, data.value))
+    : false,
 )
 function shouldHandleHostEvent(eventName: string): boolean {
   const schema = normalized.value

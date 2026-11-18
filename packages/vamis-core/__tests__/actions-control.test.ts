@@ -116,6 +116,59 @@ describe('control flow and browser actions', () => {
     expect(setData).toHaveBeenCalledWith({ value: 'Vamis' }, false)
   })
 
+  it('supports silent ajax and validate output variables', async () => {
+    const event = createVamisEvent('click', {})
+    const scoped = new ScopedContext()
+    scoped.register({
+      name: 'form',
+      validate: () => false,
+      getData: () => ({ name: 'Ada' }),
+    })
+    const context = ctx({ scoped, event })
+    await runAction({ actionType: 'ajax', api: { url: '/api/silent', silent: true } }, context)
+    expect(context.env.notify).not.toHaveBeenCalled()
+    await runAction({ actionType: 'validate', componentName: 'form', outputVar: 'result' }, context)
+    expect(event.data.result).toEqual({ error: true, payload: { name: 'Ada' } })
+  })
+
+  it('logs action args, data and event only when env.debug is enabled', async () => {
+    const group = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => undefined)
+    const debug = vi.spyOn(console, 'debug').mockImplementation(() => undefined)
+    const end = vi.spyOn(console, 'groupEnd').mockImplementation(() => undefined)
+    try {
+      await runAction({ actionType: 'toast', args: { msg: 'quiet' } }, ctx())
+      expect(group).not.toHaveBeenCalled()
+      const event = createVamisEvent('click', { name: 'Vamis' })
+      await runAction({ actionType: 'toast', args: { msg: 'logged' } }, ctx({ event, env: { ...ctx().env, debug: true } }))
+      expect(group).toHaveBeenCalledWith('[vamis] action toast')
+      expect(debug).toHaveBeenCalledWith('action', expect.objectContaining({ actionType: 'toast' }))
+      expect(debug).toHaveBeenCalledWith('data', expect.objectContaining({ msg: 'logged' }))
+      expect(debug).toHaveBeenCalledWith('event', event)
+      expect(end).toHaveBeenCalledOnce()
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('supports Amis env, global and URL debug activation', async () => {
+    const group = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => undefined)
+    vi.spyOn(console, 'debug').mockImplementation(() => undefined)
+    vi.spyOn(console, 'groupEnd').mockImplementation(() => undefined)
+    try {
+      await runAction({ actionType: 'toast', args: { msg: 'env' } }, ctx({ env: { ...ctx().env, enableAMISDebug: true } }))
+      expect(group).toHaveBeenCalledTimes(1)
+      vi.stubGlobal('window', { enableAMISDebug: true, location: { search: '' } })
+      await runAction({ actionType: 'toast', args: { msg: 'global' } }, ctx())
+      expect(group).toHaveBeenCalledTimes(2)
+      vi.stubGlobal('window', { enableAMISDebug: false, location: { search: '?amisDebug=1' } })
+      await runAction({ actionType: 'toast', args: { msg: 'url' } }, ctx())
+      expect(group).toHaveBeenCalledTimes(3)
+    } finally {
+      vi.unstubAllGlobals()
+      vi.restoreAllMocks()
+    }
+  })
+
   it('calls browser history and refresh APIs', async () => {
     const back = vi.fn()
     const go = vi.fn()

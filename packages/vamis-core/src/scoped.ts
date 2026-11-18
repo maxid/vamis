@@ -13,6 +13,9 @@ export interface ScopedComponent {
   getData?(): PlainObject
   setData?(values: PlainObject, replace?: boolean, index?: unknown, condition?: unknown): void
   submit?(): Promise<void> | void
+  validate?(): boolean | Promise<boolean>
+  type?: string
+  schema?: PlainObject
   doAction?(actions: unknown, ctx?: PlainObject): Promise<void> | void
 }
 

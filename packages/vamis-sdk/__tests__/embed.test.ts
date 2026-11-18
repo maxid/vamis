@@ -465,6 +465,103 @@ describe('embed', () => {
     })
   })
 
+  it('keeps parent and scope internals out of __rendererData in field events', async () => {
+    const notify = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      data: { parentSecret: 'do-not-leak' },
+      body: {
+        type: 'form',
+        data: { name: 'Ada' },
+        body: {
+          type: 'input-text',
+          name: 'age',
+          label: '年龄',
+          onEvent: {
+            change: { actions: [{ actionType: 'toast', args: { msg: '${__rendererData|json}' } }] },
+          },
+        },
+      },
+    }, undefined, { notify })
+    await nextTick()
+    const input = host.querySelector('input[name="age"]') as HTMLInputElement
+    input.value = '2000'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(notify).toHaveBeenCalled())
+    const message = notify.mock.calls.at(-1)?.[1] as string
+    const data = JSON.parse(message)
+    expect(data).toEqual({ name: 'Ada', age: '2000', value: '2000' })
+    expect(message).not.toContain('parentSecret')
+    expect(message).not.toContain('__super')
+    expect(message).not.toContain('__prev')
+    expect(message).not.toContain('__changeReason')
+  })
+
+  it('supports validate output and component status actions', async () => {
+    const notify = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      body: [
+        {
+          type: 'form',
+          id: 'statusForm',
+          body: [{ type: 'input-text', id: 'requiredName', name: 'name', label: '姓名', required: true }],
+        },
+        {
+          type: 'button',
+          label: '校验并提示',
+          onEvent: {
+            click: {
+              actions: [
+                { actionType: 'validate', componentId: 'statusForm', outputVar: 'result' },
+                { actionType: 'toast', args: { msg: '${event.data.result.error|json}' } },
+                { actionType: 'disabled', componentId: 'requiredName' },
+                { actionType: 'hidden', componentId: 'requiredName' },
+              ],
+            },
+          },
+        },
+      ],
+    }, undefined, { notify })
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('校验并提示'))
+    button?.click()
+    await vi.waitFor(() => expect(notify).toHaveBeenCalledWith('info', 'true', expect.any(Object)))
+    const field = host.querySelector('#requiredName')
+    expect(field).toBeNull()
+  })
+
+  it('reads renderer data and schema properties from formulas', async () => {
+    const notify = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      body: [
+        {
+          type: 'form',
+          id: 'formulaForm',
+          data: { name: 'Vamis' },
+          body: [{ type: 'input-text', name: 'name', label: '名称' }],
+        },
+        {
+          type: 'button',
+          label: '读取组件',
+          onEvent: {
+            click: {
+              actions: [{
+                actionType: 'toast',
+                args: { msg: '${GETRENDERERDATA("formulaForm", "name")}:${GETRENDERERPROP("formulaForm", "type")}' },
+              }],
+            },
+          },
+        },
+      ],
+    }, undefined, { notify })
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('读取组件'))
+    button?.click()
+    await vi.waitFor(() => expect(notify).toHaveBeenCalledWith('info', 'Vamis:form', expect.any(Object)))
+  })
+
   it('prints a target component and cleans up temporary classes', async () => {
     const print = vi.fn()
     vi.stubGlobal('print', print)

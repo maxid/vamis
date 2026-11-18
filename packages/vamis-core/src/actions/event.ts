@@ -1,4 +1,5 @@
 import type { PlainObject } from '../types'
+import { publicScopeData } from '../scope'
 
 export type NativeEventLike = {
   type: string
@@ -59,10 +60,15 @@ export function createVamisEvent(
 export function eventEvalData(scopeData: PlainObject, event: VamisEvent): PlainObject {
   const rest = { ...scopeData }
   delete rest.event
+  const rendererData = publicScopeData(scopeData)
+  const superData = scopeData.__super
+  if (superData && typeof superData === 'object') {
+    for (const key of Object.keys(superData)) delete rendererData[key]
+  }
   return {
     ...rest,
     ...event.data,
     event,
-    __rendererData: scopeData,
+    __rendererData: rendererData,
   }
 }

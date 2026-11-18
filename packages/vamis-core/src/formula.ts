@@ -1,5 +1,6 @@
-import { evaluate } from '@vamis/formula'
+import { evaluate, registerFunction, type Evaluator } from '@vamis/formula'
 import type { PlainObject } from './types'
+import { getByPath } from './scope'
 import './filters'
 
 export {
@@ -28,6 +29,19 @@ function formulaData(data: PlainObject = {}): PlainObject {
   if (!data || typeof data !== 'object') return { this: data }
   return { ...data, this: data }
 }
+
+registerFunction('GETRENDERERDATA', function (this: Evaluator, id: string, path?: string) {
+  const scoped = this.context?.__scoped
+  const component = scoped?.getComponentById?.(id) || scoped?.getComponentByName?.(id)
+  const data = component?.getData?.()
+  return path ? getByPath(data, path) : data
+})
+
+registerFunction('GETRENDERERPROP', function (this: Evaluator, id: string, path: string) {
+  const scoped = this.context?.__scoped
+  const component = scoped?.getComponentById?.(id) || scoped?.getComponentByName?.(id)
+  return getByPath(component?.schema || component, path)
+})
 
 function collectTplFilters(tpl: string): string[] {
   const names: string[] = []

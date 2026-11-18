@@ -120,6 +120,12 @@ alwaysApply: true
 - 触及：`input-text` `dropdown-button` `select` `input-date`
 - 规则：`packages/vamis-sdk/embed-case.html` `dialogOpen`
 
+### `__rendererData` 只给公开自有数据，不要给整条 resolved 数据链
+- 踩过：事件上下文直接挂 `scope.resolved()`，把 `__super` / `__prev` / `__changeReason` 和父域字段带进 Toast / 日志；表单 change 在写 store 前派发时，当前字段还可能停在旧值。
+- 稳定做法：`__rendererData` 用 `publicScopeData` 过滤 `__*`；`runOnEvent` 优先取 `form.getData()` / 当前 `scope.data`，再从事件 payload 补当前 `name` 与 `value`。显式 `${__super}` 数据链不变；API 请求也复用同一个公开数据过滤。
+- 触及：FormItem `input-text` 事件动作 SDK
+- 规则：`packages/vamis-core/src/actions/event.ts`；`packages/vamis-core/src/actions/run.ts`
+
 ### 渲染器自己派发的事件，宿主不要再派一次
 - 踩过：Action 在按钮/容器上绑 `mouseenter` / `mouseleave` 并 `runOnEvent`（兼 tooltip）；`SchemaRenderer` 外层 `div.vamis-node` 也对同一 schema 走 `onHostEvent`。悬停一次 toast 两条。click 早已用 `SELF_CLICK_TYPES` 跳过宿主。
 - 稳定做法：组件自己处理的指针事件，宿主 `shouldHandleHostEvent` 必须跳过。`tpl` / `icon` 这类自己不绑指针的仍由宿主派发。mouseenter 不冒泡，子节点 `stopPropagation` 挡不住父级自己的 mouseenter。
@@ -292,7 +298,7 @@ alwaysApply: true
 
 ### 全局 status 字典要直接读 key
 - 踩过：`static` / `nonstatic` 写入 reactive 字典后，FormItem computed 不切展示态。`statusStaticOf` 用 `hasOwnProperty` 短路，从未读 `staticState[id]`，新 key 建不成 Vue 依赖。
-- 稳定做法：直接读 `state.staticState[id]`；用 `typeof value === 'boolean'` 区分未写入和 `false`。单测先 `computed(() => statusStaticOf(schema))` 再 set。对齐 Amis `statusStore`，不要给每个控件做 `doAction`。
+- 稳定做法：直接读对应状态字典的 key；用 `typeof value === 'boolean'` 区分未写入和 `false`。单测先 `computed(() => statusStaticOf(schema))` 再 set。`show` / `hidden` / `enabled` / `disabled` 也走同一 status store，由 SchemaRenderer 统一读，不要给每个控件做一套 `doAction`。
 - 触及：FormItem `form` `action`
 - 规则：`packages/vamis-core/src/status-store.ts`
 

@@ -32,6 +32,20 @@ describe('VamisEvent', () => {
     expect(typeof bag.event.setData).toBe('function')
   })
 
+  it('keeps scope internals and parent-only data out of __rendererData', () => {
+    const parent = createScope({ parentSecret: 'do-not-leak' })
+    const scope = createScope({ name: 'Ada' }, parent)
+    scope.set('name', 'Bob', 'input')
+    const event = createVamisEvent('change', { value: 'Bob' })
+    const bag = eventEvalData(scope.resolved(), event)
+    expect(bag.__rendererData).toEqual({ name: 'Bob' })
+    expect(bag.__rendererData).not.toHaveProperty('__super')
+    expect(bag.__rendererData).not.toHaveProperty('__prev')
+    expect(bag.__rendererData).not.toHaveProperty('__changeReason')
+    expect(bag.__rendererData).not.toHaveProperty('parentSecret')
+    expect(bag.__super.parentSecret).toBe('do-not-leak')
+  })
+
   it('setData patches event.data for later actions', () => {
     const event = createVamisEvent('inited', { date: 'old' })
     event.setData({ date: 'now' })

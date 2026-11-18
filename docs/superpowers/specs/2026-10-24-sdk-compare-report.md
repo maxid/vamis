@@ -3,23 +3,21 @@
 - 日期：2026-11-18
 - 视口：桌面 1100×800
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **7** · 通过 **7** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
+- 合计 **51** · 通过 **51** · 失败 **0**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 3 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 1 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 3 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 1 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（3）
+### 全局（1）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
-- `src-concepts-style-3` fontSize: Amis `14px` / Vamis `12px`
-- `src-style-index-0` fontSize: Amis `14px` / Vamis `12px`
-- `src-style-index-1` fontSize: Amis `14px` / Vamis `12px`
+- `src-concepts-event-action-1` fontSize: Amis `14px` / Vamis `12px`
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -30,13 +28,11 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（3）
+### 组件（1）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `src-concepts-style-3` lineHeight: Amis `21px` / Vamis `18px`
-- `src-style-index-0` lineHeight: Amis `21px` / Vamis `18px`
-- `src-style-index-1` lineHeight: Amis `21px` / Vamis `18px`
+- `src-concepts-event-action-1` lineHeight: Amis `21px` / Vamis `18px`
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。
@@ -45,9 +41,9 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 | 面 | 合计 | 失败 |
 |----|------|------|
-| 文档 | 4 | 0 |
+| 文档 | 51 | 0 |
 | 组件 | 0 | 0 |
-| 样式 | 3 | 0 |
+| 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
 
@@ -55,8 +51,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 文档 / 概念 | 4 | 0 |
-| 样式 / 开始 | 3 | 0 |
+| 文档 / 概念 | 51 | 0 |
 
 ## P0 失败（驱动下一刀）
 

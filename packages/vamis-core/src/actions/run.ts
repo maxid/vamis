@@ -4,6 +4,7 @@ import { evalExpression, filterTpl, resolveValue } from '../formula'
 import { tableConditionMatch } from '../utils/table'
 import { dataMapping } from '../utils/data-mapping'
 import { printElements } from './print'
+import { publicScopeData, setByPathCopy } from '../scope'
 import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
 import type { FormApiLike } from '../form-api'
@@ -19,7 +20,7 @@ import {
   triggerSaveAs,
 } from '../utils/action'
 import { notifyToasts } from '../utils/toast'
-import { setStatusStatic } from '../status-store'
+import { setStatusDisabled, setStatusStatic, setStatusVisible } from '../status-store'
 import { createVamisEvent, eventEvalData, type VamisEvent } from './event'
 import { getAction, registerAction } from './registry'
 
@@ -65,6 +66,13 @@ function truthyFlag(value: unknown, data: PlainObject): boolean {
   return Boolean(value)
 }
 
+function actionDebugEnabled(env: RendererEnv): boolean {
+  if (env.debug === true || env.enableAMISDebug === true) return true
+  if (typeof window === 'undefined') return false
+  if ((window as unknown as { enableAMISDebug?: boolean }).enableAMISDebug === true) return true
+  return new URLSearchParams(window.location.search).get('amisDebug') === '1'
+}
+
 /** D4：`event` + `__rendererData`。无 native 时仍带空 context。 */
 export function withNativeEvent(data: PlainObject, nativeEvent?: { type: string }): PlainObject {
   const event = createVamisEvent(nativeEvent?.type || '', data, nativeEvent)
@@ -78,6 +86,18 @@ export async function runOnEvent(
 ): Promise<void> {
   if (!schema?.onEvent) return
   const conf = schema.onEvent[eventName]
+  const ownData = ctx.form?.getData?.() || ctx.scope?.data
+  if (ownData) {
+    let rendererData = publicScopeData(ownData)
+    if (ctx.event?.data && Object.prototype.hasOwnProperty.call(ctx.event.data, 'value')) {
+      rendererData.value = ctx.event.data.value
+      const name = typeof schema.name === 'string' ? schema.name : ''
+      if (name && Object.prototype.hasOwnProperty.call(ctx.event.data, name)) {
+        rendererData = setByPathCopy(rendererData, name, ctx.event.data[name])
+      }
+    }
+    ctx = { ...ctx, data: { ...ctx.data, __rendererData: rendererData } }
+  }
   await runActions(asActions(conf), ctx)
 }
 
@@ -111,12 +131,24 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     return false
   }
   const handler = getAction(type)
+  const debug = actionDebugEnabled(ctx.env) && typeof console !== 'undefined'
+  if (debug) {
+    console.groupCollapsed?.(`[vamis] action ${type || 'component'}`)
+    console.debug('action', action)
+    console.debug('data', data)
+    console.debug('event', ctx.event)
+  }
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
     if (handler) await handler(action, ctx)
     else await runComponentAction(action, ctx)
   } catch (error) {
     if (!action.ignoreError) throw error
+  } finally {
+    if (debug) {
+      console.debug('end', ctx.event)
+      console.groupEnd?.()
+    }
   }
 
   if (truthyFlag(action.preventDefault, data)) ctx.event?.preventDefault()
@@ -241,7 +273,7 @@ function registerBuiltinActions() {
       (action.messages && (action.messages as PlainObject).success) ||
       (action.args?.messages && (action.args.messages as PlainObject).success) ||
       apiMessage(api, result.payload, 'success')
-    ctx.env.notify('success', String(success))
+    if (typeof api !== 'object' || api.silent !== true) ctx.env.notify('success', String(success))
     const responseData = result.data
     const responseObject =
       responseData && typeof responseData === 'object' && !Array.isArray(responseData)
@@ -371,6 +403,20 @@ function registerBuiltinActions() {
   registerAction('submit', async (_action, ctx) => {
     await ctx.form?.submit?.()
   })
+  registerAction('validate', async (action, ctx) => {
+    const target = action.componentId || action.componentName || action.target
+    const components = target
+      ? resolveTargets(target, actionData(action, ctx)).map((item) => findTargetComponent(ctx, action, item.name))
+      : [ctx.form]
+    for (const component of components) {
+      if (!component?.validate) continue
+      const valid = await component.validate()
+      const payload = component.getData?.() || {}
+      ctx.event?.setData({
+        [action.outputVar || 'validateResult']: { error: !valid, payload },
+      })
+    }
+  })
   registerAction('reset', async (action, ctx) => {
     if (!(await runComponentAction(action, ctx))) ctx.form?.reset?.()
   })
@@ -472,6 +518,18 @@ function registerBuiltinActions() {
   })
   registerAction('nonstatic', async (action) => {
     setStatusStatic(action.componentId || action.componentName, false)
+  })
+  registerAction('show', async (action) => {
+    setStatusVisible(action.componentId || action.componentName, true)
+  })
+  registerAction('hidden', async (action) => {
+    setStatusVisible(action.componentId || action.componentName, false)
+  })
+  registerAction('enabled', async (action) => {
+    setStatusDisabled(action.componentId || action.componentName, false)
+  })
+  registerAction('disabled', async (action) => {
+    setStatusDisabled(action.componentId || action.componentName, true)
   })
 
   registerAction('wait', async (action) => {

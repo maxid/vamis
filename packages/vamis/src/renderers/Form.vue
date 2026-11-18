@@ -575,6 +575,8 @@ async function runInitApi(
 
 const formApi = {
   name: String(props.schema.id || props.schema.name || ''),
+  type: 'form',
+  schema: props.schema,
   context: scoped,
   getValue,
   setValue,

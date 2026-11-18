@@ -93,6 +93,7 @@ export interface ApiObject {
   replaceData?: boolean
   convertKeyToPath?: boolean
   autoRefresh?: boolean
+  silent?: boolean
   trackExpression?: string
   qsOptions?: PlainObject | string
   graphql?: string
@@ -203,6 +204,8 @@ export interface RendererEnv {
    */
   parseLocation?: boolean
   debug?: boolean
+  /** Amis 调试开关；也支持 window.enableAMISDebug 与 URL amisDebug=1。 */
+  enableAMISDebug?: boolean
   /** 当前 VamisRoot 的广播总线；多实例之间不共享。 */
   bus?: VamisEventBus
   /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */

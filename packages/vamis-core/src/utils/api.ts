@@ -11,6 +11,7 @@ import { evalExpression, filterTpl } from '../formula'
 import { createObject } from '../context'
 import { parseContentDisposition } from './action'
 import { dataMapping } from './data-mapping'
+import { publicScopeData } from '../scope'
 
 export interface ApiContext {
   env: RendererEnv
@@ -96,15 +97,7 @@ function appendQuery(url: string, query: PlainObject): string {
   return `${url}${url.includes('?') ? '&' : '?'}${parts.join('&')}`
 }
 
-/** 发给接口的数据不要带 Scope 内部字段，否则会变成 `__super=[object Object]`。 */
-function omitInternal(data: PlainObject): PlainObject {
-  const out: PlainObject = {}
-  for (const [key, value] of Object.entries(data)) {
-    if (key.startsWith('__')) continue
-    out[key] = value
-  }
-  return out
-}
+
 
 function rawUrlOf(api: SchemaApi): string {
   if (typeof api === 'string') {
@@ -327,7 +320,7 @@ export async function requestApi(
   const convertKeyToPath = built.convertKeyToPath
   const customData = hasCustomData(api)
   const method = (built.method || 'get').toLowerCase()
-  const payload = omitInternal(ctx.data)
+  const payload = publicScopeData(ctx.data)
 
   if (customData && built.data && typeof built.data === 'object') {
     built.data = dataMapping(built.data, ctx.data, convertKeyToPath)

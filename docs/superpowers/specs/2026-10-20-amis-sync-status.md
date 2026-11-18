@@ -29,7 +29,7 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 800 + sdk 85 = **1070**，全绿（2026-11-18 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 803 + sdk 88 = **1076**，全绿（2026-11-18 复核） |
 | 构建 | `pnpm sdk:build` | 通过；`pnpm docs:build` 仍被 Combo 页既有未闭合标签阻断 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
 | 工作区 | `git status` | 本次 concepts 实现有未提交改动；基线本地 `main` 领先 `origin/main` 3 个提交 |

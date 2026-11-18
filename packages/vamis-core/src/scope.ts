@@ -69,6 +69,14 @@ export function parseSearch(search?: string): PlainObject {
   return out
 }
 
+export function publicScopeData(data: PlainObject): PlainObject {
+  const out: PlainObject = {}
+  for (const [key, value] of Object.entries(data)) {
+    if (!key.startsWith('__')) out[key] = value
+  }
+  return out
+}
+
 export function createScope(
   init: PlainObject = {},
   parent?: Scope,

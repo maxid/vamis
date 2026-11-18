@@ -50,7 +50,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有；接口与表单数据域 `trackExpression` 已接 | 通用 `Scope.track` 去抖仍属 D9；其余 Amis 列表容器尚未全部 `scope: self` |
 | Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
 | API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
-| Actions | `registerAction` + `VamisEvent`；P0 动作、循环 / switch / parallel、广播、受信任自定义 JS、浏览器 / 打印、`outputVar` 已接 | 组件 setState、监听器 debounce / track、动作日志仍缺 |
+| Actions | `registerAction` + `VamisEvent`；P0 动作、控制流、广播、受信任自定义 JS、浏览器 / 打印、`outputVar`、静默 AJAX、validate、显示 / 启用状态、GETRENDERERDATA / GETRENDERERPROP 已接 | 组件 setState、监听器 debounce / track、API / 表达式诊断仍缺；动作日志已接 env.debug |
 | Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；点号 `form.select`；Form `target`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口去抖仍属 D9；`clearValueOnHidden` 已接；combo 独立域仍等 D6 |
 | Form | 表单 store、路径值、`initApi`、`validate/submit/reset`、提交合并、`target`；`validateOnChange` / `requiredOn` / `clearValueOnHidden` / `validateApi` / `autoFill` 已接；校验可用 `addRule` 扩展 | Combo 独立域与嵌套路径级报错仍缺；异步自定义规则未齐 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑；`loadDataOnce` / `syncLocation` / `quickEdit` / 表达式 `matchFunc` 已接；filter 是内嵌独立表单域 | `autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API 仍缺 |
@@ -496,7 +496,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 与 `getComponentByName` / `doAction` 已落地 | D11 | P0 完成 |
 | className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` + `registerTheme` 已接；部分 `xxxClassName` 已接；locale 仍缺 | D12 | 进行中 |
 | i18n | locale/replaceText/覆盖 | 无 | D12 | P1 |
-| 诊断 | debug/日志/tracker | 无 | D8 | P0/P2 |
+| 诊断 | debug/日志/tracker | `env.debug` 动作日志已接；API / 表达式诊断、错误边界、tracker 仍缺 | D8 | 部分完成 |
 
 ## 17. 路线图
 
