@@ -80,7 +80,7 @@ flowchart LR
 | JS SDK | P0 embed 已落地；`registerTheme` 已接 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。monaco / echarts 按需。日期走 **dayjs**（打进 bundle），不再依赖 moment。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 可用骨架 | 色板+树+画布点选/拖拽；无插件市场 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；概念页「模板」**95% 已完成**、「事件动作」**98% 已完成**，「表达式 / 数据映射 / 联动 / 行为 / 样式 / 数据域」**90% 已完成**（配置与组件 **95% 已完成**）；类型页 SchemaNode **92% 进行中**、Definitions **20%**（`$ref` 未接）；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；顶栏可切桌面 / 移动（默认桌面，管整页示例；移动 **375×812** iframe + 手机壳）；文档/组件/样式页标题下「实现进度 · 状态」；**左侧菜单同步百分比**（顶栏可关）；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 803 + sdk 88 = **1076** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2207**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**；本轮设计文档盘点后未重跑全量。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
+| 测试 | 源码用例 formula 185 + core 804 + sdk 88 = **1077** | `pnpm typecheck` **0**。新增 `mock-brand` 守卫已过。SDK 对照目录 **2207**（2026-11-18）；最近全量 **2169 例 / 1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**；本轮设计文档盘点后未重跑全量。失败集中在批量文档同步后的示例探针，组件专项见最近交付与 TODO。 |
 
 **最近交付**
 
