@@ -1,82 +1,118 @@
-# Checkboxes 复选框 · `checkboxes` 设计
+# Checkboxes 复选框组 · `checkboxes` 设计
 
 > 状态：**进行中 55%** · 复杂度：**L 重**
-> 文档：[/components/form/checkboxes](/components/form/checkboxes) · Amis 文档：`/zh-CN/components/form/checkboxes`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/checkboxes) · Amis：`/zh-CN/components/form/checkboxes`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Checkboxes 当前是**最小多选组**（52 行）：options 数组 + Checkbox、值数组。没有列数/全选/按钮模式/单选互斥/disabled option/远程 source/校验/事件/动作；55% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **值形态**：值是数组；无 name 不写；初始非数组要兜底成 `[]`。
+2. **选项映射**：对象 `{label,value}` / 标量 `label`；value 缺省用 label；重复 value 要明确。
+3. **toggle**：用 Set 增删，不能用 index；顺序保持插入顺序。
+4. **禁用**：当前仅整体 disabled；单 option disabled/readOnlyOn 未接。
+5. **校验**：必选/最少选未接；不要声称 FormItem 自动处理。
+6. **包边界**：无 `<style>`、无 fetch；Checkbox/token 由 UI。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空 options / 空数组 / 非数组值
+- 标量/对象 option、重复 value、value=0/false
+- 全选/取消全选（未接）
+- disabled option / 整体 disabled
+- 列数/按钮模式（未接）
+- 远程 source/分组（未接）
+- 窄屏换行、深色、错误态
+
+### 1.3 优先级
+
+1. 值/选项/toggle
+2. 禁用/校验
+3. 全选/列数/按钮模式
+4. 远程/事件动作
+5. 样式/无障碍
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**544** 行；Vamis 实现：**52** 行；依赖：**3** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 52 行 + Amis 544 行 + 3 依赖 + form
+- 等级：**L 重**（Amis 544 行；Vamis 52 行）
+- 依赖：`checkbox`、Options、FormItem
+- 风险：当前只有基础多选，Amis 能力多未接
 
 ## 3. Amis 契约
 
-- 入口 type：`checkboxes`
-- Amis 源文件：`packages/amis/src/renderers/Form/Checkboxes.tsx`
-- 依赖：`FormItem`, `Options`, `checkbox`
-- 文档章节：`/zh-CN/components/form/checkboxes`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `options` | 选项 | 已接基础 |
+| `name` / `value` | 数组值 | 已接 |
+| `columns` | 列数 | 未接 |
+| `checkAll` | 全选 | 未接 |
+| `optionType: button` | 按钮组 | 未接 |
+| `disabled` / `disabledOn` | 禁用 | 仅整体 |
+| `source` / 远程 | 选项 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/Checkboxes.vue`](../../../packages/vamis/src/renderers/form/Checkboxes.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`form/Checkboxes.vue`](../../../packages/vamis/src/renderers/form/Checkboxes.vue)：options/selected/toggle。
+- [`checkbox`](checkbox.md)：单盒视觉/值语义。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验/状态。
+- 目前未注册 scoped API。
+
+### 数据流
+
+```text
+options → 标准化 {label,value}
+field value → selected[]
+toggle → Set 增删 → setValue
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-checkbox-option`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- flex wrap gap；无专属皮肤类、无 `<style>`。
+- 窄屏换行、深色勾选、按钮模式（未接）。
+- option 内 Schema 未接。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：能多选；列数/全选未齐
-- 状态：进行中，进度 55%；如进度未到 100，按上条缺口补齐。
+- 已接：options 基础、值数组、toggle、整体 disabled。
+- 未接：columns/checkAll/按钮模式/disabled option/远程/校验/事件动作/scoped API。
+- 对照：TODO 55%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page checkboxes`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis Checkboxes / checkbox 依赖已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前无）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（Checkboxes 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page checkboxes` 桌面
+- [ ] `pnpm compare --page checkboxes --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- 值数组/toggle 顺序
+- 重复/0/false value
+- 整体 vs 单 option 禁用
+- 缺口不要误标
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补 columns/checkAll/按钮模式（不改值模型）。
+2. 再做 disabledOn/校验/远程 source。
+3. 最后事件动作/无障碍。
 
 ---
+
 返回 [组件设计索引](README.md)
