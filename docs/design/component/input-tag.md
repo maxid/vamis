@@ -1,82 +1,122 @@
-# InputTag 标签选择器 · `input-tag` 设计
+# InputTag 标签选择 · `input-tag` 设计
 
 > 状态：**进行中 50%** · 复杂度：**L 重**
-> 文档：[/components/form/input-tag](/components/form/input-tag) · Amis 文档：`/zh-CN/components/form/input-tag`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-tag) · Amis：`/zh-CN/components/form/input-tag`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputTag 当前是**可输入标签 + 建议**（91 行）：回车/批量分隔添加、去重、max、maxTagLength、joinValues、options 建议。没有 allowCreate=false 只选、远程 source、maxTagCount、拖拽排序、事件/动作；50% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **值形态**：`joinValues` 默认 true 写分隔字符串；false 写数组；`parseJoined/dumpJoined` 必须成对。
+2. **添加规则**：trim、空值忽略、去重、max、maxTagLength；`enableBatchAdd` 按 separator 切分。
+3. **建议**：options 建议只是辅助；当前允许自由输入（无 allowCreate=false）。
+4. **删除**：按 index 过滤并写回；不能只删 DOM。
+5. **事件/校验**：当前无 change 事件；必填/长度校验未接。
+6. **包边界**：无 `<style>`、无 fetch；标签/输入/按钮走 token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空 / 多标签 / joinValues false / 重复 / 空格 / 超长 / max
+- 批量分隔（逗号/自定义 separator）
+- options 建议无匹配/空 options
+- 删除中间/最后一个
+- disabled/static
+- 远程 source/allowCreate false/maxTagCount/拖拽（未接）
+- 窄屏/深色
+
+### 1.3 优先级
+
+1. 值形态/添加/删除
+2. 去重/max/长度/批量
+3. allowCreate/远程/建议
+4. maxTagCount/拖拽/事件动作
+5. 样式/无障碍
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**786** 行；Vamis 实现：**91** 行；依赖：**2** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 91 行 + Amis 786 行 + 2 依赖 + form
+- 等级：**L 重**（Amis 786 行；Vamis 91 行）
+- 依赖：`FormItem`、`Badge`、`select`/`tag`
+- 风险：输入自由文本 vs 只选预设的语义
 
 ## 3. Amis 契约
 
-- 入口 type：`input-tag`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputTag.tsx`
-- 依赖：`select`, `tag`
-- 文档章节：`/zh-CN/components/form/input-tag`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 标签值 | 已接 |
+| `joinValues` / `delimiter` | 值形态 | 已接 |
+| `max` / `maxTagLength` | 上限 | 已接 |
+| `enableBatchAdd` / `separator` | 批量 | 已接 |
+| `options` | 建议 | 已接 |
+| `allowCreate` | 只选预设 | 未接（当前总是可创建） |
+| `source` / 远程 | 选项 | 未接 |
+| `maxTagCount` | 折叠 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+### 事件/动作
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputTag.vue`](../../../packages/vamis/src/renderers/form/InputTag.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+当前无 change 事件/动作，也没有 scoped API。
+
+## 4. 架构
+
+- [`form/InputTag.vue`](../../../packages/vamis/src/renderers/form/InputTag.vue)：tags、add/remove、suggestions。
+- [`options.ts`](../../../packages/vamis-core/src/utils/options.ts)：normalize/parse/dump。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验/状态。
+
+### 数据流
+
+```text
+field value → parseJoined → tags[]
+add → trim/batch/去重/max/长度 → dumpJoined → setValue
+remove(index) → filter → setValue
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-input-tag__remove`, `.vamis-input-tag__suggestion`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 标签 Badge、移除按钮、建议按钮；无 `<style>`。
+- 窄屏换行/长标签溢出；深色标签/移除 hover 单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：能回车加标签
-- 状态：进行中，进度 50%；如进度未到 100，按上条缺口补齐。
+- 已接：标签添加/删除、去重、max/maxTagLength、批量、建议、joinValues。
+- 未接：allowCreate=false、远程 source、maxTagCount、拖拽、事件/动作、校验/深色。
+- 对照：TODO 50%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-tag`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis InputTag / options 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前无）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（InputTag 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page input-tag` 桌面
+- [ ] `pnpm compare --page input-tag --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- joinValues 两种值形态
+- 去重/max/长度/批量
+- 自由输入 vs allowCreate
+- 删除/空标签
+- 事件/动作缺口
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补 allowCreate=false 与远程 source。
+2. 再做 maxTagCount/拖拽/事件动作。
+3. 深色/无障碍最后做。
 
 ---
+
 返回 [组件设计索引](README.md)
