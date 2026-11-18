@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
 - 同步时间：2026-11-18
-- Vamis 基线：`3eadd73`（`main`，本地领先 `origin/main` 3 个提交）
+- Vamis 基线：`21da3a7`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -11,7 +11,7 @@
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
 2. **type 名称覆盖 185 / 189（97.9%）**：还剩 3 个真实 type 和 `navigation` 1 个别名。
-3. **语义进度（2026-11-18）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **62%**（≥80% **47**）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域），D7 错误边界 / D8 诊断仍缺。
+3. **语义进度（2026-11-18）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **62%**（≥80% **47**；155 行均值 62.6%，未改档）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域）；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 高级项、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
 ## 1. 上游对齐
@@ -20,8 +20,8 @@
 |----|----|
 | amis 本地 master | `43a33ee06`，2026-03-18 |
 | amis 包版本 | 6.13.0 |
-| Vamis HEAD | `3eadd73`，2026-11-18，本地 `main` 领先 `origin/main` 3 个提交 |
-| Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；core 已接 P0 过滤器及 `first` / `last` / `pick` / `sum` 等扩展 |
+| Vamis HEAD | `21da3a7`，2026-11-18，`main` 与 `origin/main` 一致 |
+| Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；P0 与 Amis 扩展过滤器已接 |
 
 结论：Vamis 以 amis master 源码为参考基线，版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
 
@@ -29,12 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 817 + sdk 90 = **1092**，全绿（2026-11-18 复核） |
-| 构建 | `pnpm sdk:build` | 通过；`pnpm docs:build` 仍被 Combo 页既有未闭合标签阻断 |
-| 类型检查 | `pnpm typecheck` | **0 错误**（CI 门禁；收工必须保持） |
-| 工作区 | `git status` | 本次 concepts 实现有未提交改动；基线本地 `main` 领先 `origin/main` 3 个提交 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 843 + sdk 100 = **1128**，全绿（2026-11-18 复核） |
+| 构建 | `pnpm sdk:build` | 本轮未重跑。`pnpm docs:build` 上次被 Combo 页阻断；`combo.md` 正文仍有未闭合的 `<Condition>` / `<string>` / `<object>` |
+| 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-18 复核；CI 门禁） |
+| 工作区 | `git status` | `main` 与 `origin/main` 一致。仅 `packages/vamis-sdk/compare-cases.js` 有本地改动（生成目录，HEAD 2209 / 工作区 2217） |
+| 对照 | 报告 + 本机目录 | 目录 **2217**（文档 157 / 组件 1589 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）。本轮未重跑 |
 
-结论：`dev` / `build` / `test` / `typecheck` 可用；`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck` 复核通过；`sdk:build` / `docs:build` 未重跑。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 
@@ -80,7 +81,7 @@
 - **条件显隐**：`visibleOn` / `hiddenOn` / `disabledOn` 在 core（`formula.ts` + `SchemaRenderer.vue`）统一处理。
 - **数据**：`crud` 支持 `api`、分页、`filter`、排序、多选 / `bulkActions`、`headerToolbar`、弹窗编辑；配套 `table` / `table2`、`operation`、`column-toggler`、`cell`。
 - **动作**：`ajax`、`toast`、`setValue`、`reload`、`dialog`、`drawer`、`closeDialog` / `closeDrawer` / `cancel`、`submit`；支持 `onEvent`。
-- **公式**：仓内 `@vamis/formula`；模板 `${}` 走 parser；P0 过滤器与 `first` / `last` / `pick` / `sum` 等已接，Amis 其余过滤器仍未齐。
+- **公式**：仓内 `@vamis/formula`；模板 `${}` 走 parser；P0 过滤器与 Amis 扩展过滤器（序列化、日期、字符串、URL、数组、结构转换、算术、时长 / 字节、Base64、条件、`map` / `filter` 等）已接。
 - **布局 / 展示**：`page`（initApi overlay 已接，95%）、`container`（100%）、`flex`、`grid`、`tabs`、`wizard`、`panel`、`collapse`、`nav`、`cards`、`chart`（需 `config` / `api`）等。
 
 ### 4.2 深度分级
@@ -97,7 +98,7 @@
 
 - **作者态**：YAML 1.2 Core 与 JSON 并列；`On` / `yes` / `012` 在 YAML 里当字符串；JSON → IR → YAML 往返可用。
 - **IR**：`UiPage`、`FormDef`、`TableDef` 可编译为 widget 树；未知 kind / 未知 type 显示占位，不崩。
-- **公式**：`@vamis/formula` 已替代 npm `amis-formula`；`filterTpl` 走 parser，`${name|raw}` / `${name|html}` 可用；`|date` / `|json` 等 P0 过滤器已接，Amis 其余过滤器仍未齐。
+- **公式**：`@vamis/formula` 已替代 npm `amis-formula`；`filterTpl` 走 parser，`${name|raw}` / `${name|html}` 可用；P0 与 Amis 扩展过滤器已接。
 - **Playground**：`/` 文档、`/components` 组件、`/examples` 示例（15 个样例文件）；`/editor` 仍在。
 - **JS SDK**：`vamis.embed` P0 已有；`getComponentByName` / `doAction` 已接，等更多组件动作覆盖。
 - **编辑器**：树 + 预览 + 属性 + YAML/JSON；无插件市场。

@@ -7,7 +7,7 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1052%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1128%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [在线 Demo](https://maxid.github.io/vamis/) · [组件文档](https://maxid.github.io/vamis/components) · [与 Amis 并排对照](https://maxid.github.io/vamis/sdk/compare.html) · [English](README.en.md)
@@ -171,17 +171,17 @@ spec:
 
 - **不是 fork，不复制 Amis 源码。** Amis 是 Apache-2.0，Vamis 只做 schema 语义兼容；公式引擎从 MIT 的 `amis-formula@6.13.0` 移植，署名见 [NOTICE](NOTICE)。
 - **不是"像素复制"。** 对齐的是盒模型、密度、交互和语义；UI 用 shadcn-vue / Tailwind 重新实现。
-- **对照是工程，不是感觉。** Playwright 用同一份 schema 在 Amis 与 Vamis 两边挂 iframe，按 schema 树结点比较渲染、`value`、`getComponentByName`、动作结果；当前 **2171** 条用例；最近一次全量 **1869 过 / 300 败（P0 8，均为 `m-l-*` helper）**。
+- **对照是工程，不是感觉。** Playwright 用同一份 schema 在 Amis 与 Vamis 两边挂 iframe，按 schema 树结点比较渲染、`value`、`getComponentByName`、动作结果；当前本机目录 **2217** 条；最近一次全量 **2216 例 / 1901 过 / 315 败（P0 1：`form-default`，单跑已通过）**。
 - **进度公开。** 文档页显示实现进度，任务收工必须回写 `CONTEXT.md`；上游对齐 6.13.0。
 
 type 覆盖复算：`pnpm status -- --amis ../amis`。
 
-## 项目状态（2026-11-17）
+## 项目状态（2026-11-18）
 
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
 - 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **62%**（≥80% 47 项）。
-- kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 错误边界、D8 诊断仍缺。
-- 测试：formula 185 + core 786 + sdk 81 = **1052**，全部通过；`pnpm typecheck` **0 错误**。
+- kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
+- 测试：formula 185 + core 843 + sdk 100 = **1128**，全部通过；`pnpm typecheck` **0 错误**。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 ## 开发

@@ -14,7 +14,7 @@ title: JS SDK
 
 下面 iframe 跑打包后的 `sdk.js`：
 
-<iframe src="/sdk/hello.html" title="Vamis JS SDK hello" style="width:100%;height:420px;border:1px solid var(--border, #e5e7eb);border-radius:8px;background:var(--card, #fff)"></iframe>
+<iframe class="doc-sdk-hello" data-visual-height="420" src="/sdk/hello.html" title="Vamis JS SDK hello"></iframe>
 
 ## 用法
 

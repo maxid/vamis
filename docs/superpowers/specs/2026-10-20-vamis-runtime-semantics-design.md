@@ -54,7 +54,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；点号 `form.select`；Form `target`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口去抖仍属 D9；`clearValueOnHidden` 已接；combo 独立域仍等 D6 |
 | Form | 表单 store、路径值、`initApi`、`validate/submit/reset`、提交合并、`target`；`validateOnChange` / `requiredOn` / `clearValueOnHidden` / `validateApi` / `autoFill` 已接；校验可用 `addRule` 扩展 | Combo 独立域与嵌套路径级报错仍缺；异步自定义规则未齐 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑；`loadDataOnce` / `syncLocation` / `quickEdit` / 表达式 `matchFunc` 已接；filter 是内嵌独立表单域 | `autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API 仍缺 |
-| Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无 `dispatch/api/reload`、无错误边界；未知 type 仍占位 |
+| Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无注入 `dispatch` / `reload`；渲染错误边界已接（D8）；未知 type 仍占位 |
 | Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule` / `registerTheme`；SDK 暴露 `registerRenderer` / `addRule` / `registerTheme` | SDK 尚未暴露 action/filter 注册；无 locale 注册与插件生命周期 |
 | Theme/i18n | Tailwind + shadcn token + `registerTheme` | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText |
 | Diagnostics | `env.onDiagnostic` + 渲染错误边界 | 动作 / API / 表达式 / 未知 type 与动作已接；可视化 Debug 面板待补 |

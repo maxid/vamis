@@ -6,6 +6,8 @@ import DocCode from '../components/DocCode.vue'
 import DocSidebar from '../components/DocSidebar.vue'
 import DocToc from '../components/DocToc.vue'
 import { isStaticAssetHref } from '../docs/base'
+import { fitDesktopEmbedFrames } from '../docs/desktop-frame'
+import { docViewport } from '../docs/doc-viewport'
 import { resolveDoc } from '../docs/pages'
 import { parseDoc } from '../docs/render'
 import { groupsForPath } from '../docs/sidebar'
@@ -129,8 +131,12 @@ function bindArticleScroll() {
   const root = articleEl.value
   if (!root) return
   const onScroll = () => syncActiveFromScroll()
+  const fitFrames = () => fitDesktopEmbedFrames(root, docViewport.value === 'desktop')
   root.addEventListener('scroll', onScroll, { passive: true })
-  const observer = new ResizeObserver(onScroll)
+  const observer = new ResizeObserver(() => {
+    onScroll()
+    fitFrames()
+  })
   observer.observe(root)
   stopScroll = () => {
     root.removeEventListener('scroll', onScroll)
@@ -153,6 +159,10 @@ watch(
   { flush: 'pre' },
 )
 
+watch(docViewport, () => {
+  if (articleEl.value) fitDesktopEmbedFrames(articleEl.value, docViewport.value === 'desktop')
+})
+
 watch(
   () => [route.path, parsed.value, articleEl.value] as const,
   async () => {
@@ -160,6 +170,7 @@ watch(
     await nextTick()
     if (n !== watchGen) return
     bindArticleScroll()
+    if (articleEl.value) fitDesktopEmbedFrames(articleEl.value, docViewport.value === 'desktop')
     const hash = decodeHash(route.hash || window.location.hash)
     if (hash && headingEl(hash)) {
       scrollToId(hash, false)

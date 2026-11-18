@@ -90,6 +90,12 @@ alwaysApply: true
 - 触及：文档移动预览 GitHub Pages
 - 规则：`.cursor/rules/site.mdc`；`playground/src/components/SchemaPreview.vue`
 
+### 直接嵌的运行时 iframe 桌面模式要用 scale 撑过 767
+- 踩过：SDK 页 `<iframe src="/sdk/hello.html" width:100%>` 跟外框走。浏览器宽 &lt; 768 时，顶栏仍是桌面，iframe 视口也 &lt; 768，表单 `@media (max-width: 767px)` 画成移动横排。顶栏开关不管这条裸 iframe。
+- 稳定做法：顶栏桌面且外框宽 &lt; 768 时，iframe 布局宽设为 768，高度按 `视觉高度 / scale` 加长，再用 `transform: scale(外框/768)` 缩回原视觉高度。`transform` 不改变 iframe 内部视口。边框画在外框，避免 1px 被一起缩小。顶栏移动不撑宽。
+- 触及：SDK hello iframe
+- 规则：`.cursor/rules/site.mdc`；`playground/src/docs/desktop-frame.ts`
+
 ### 文档移动预览整页只挂一个 iframe
 - 踩过：每个进过视口的示例自己挂 iframe 且 `opened` 永真。DevTools「资源」按解码累加：空帧约 5–7MB，两个框就是约 11MB。后来改成单例却 `appendChild` 搬进手机壳，滚出再滚进会把 preview-frame **整页重载**。
 - 稳定做法：iframe 固定挂 `body`（`position:fixed` 对齐当前 `.doc-play__phone-screen`），用 clip-path 裁进滚动容器。禁止把 iframe 在壳之间搬来搬去。同一 schema 不要再 postMessage。helper `m:` 仍要真实 375 视口。

@@ -14,45 +14,6 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "title": "Hello",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "你好，点下面提交会打 mock API"
-        },
-        {
-          "type": "form",
-          "api": "/api/mock2/form/saveForm",
-          "body": [
-            {
-              "type": "input-text",
-              "name": "name",
-              "label": "名称",
-              "value": "Vamis",
-              "required": true
-            }
-          ]
-        }
-      ]
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-start-getting-started-1",
-    "group": "文档 / 开始",
-    "bucket": "docs",
-    "section": "开始",
-    "page": "快速开始",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "快速开始 #2",
-    "heading": "作者态：YAML 或 JSON",
-    "expect": "",
-    "schema": {
-      "type": "page",
       "title": "Hello JSON",
       "body": [
         {
@@ -469,6 +430,100 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "数据域与数据链 #6",
+    "heading": "数据链",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "shared": "来自 Page"
+      },
+      "body": [
+        {
+          "type": "service",
+          "data": {
+            "shared": "来自 Service"
+          },
+          "body": [
+            {
+              "type": "input-text",
+              "name": "localOnly",
+              "label": "Service 私有值"
+            },
+            {
+              "type": "tpl",
+              "tpl": "Service 内：${shared}；${localOnly}"
+            }
+          ]
+        },
+        {
+          "type": "tpl",
+          "tpl": "Page 内：${shared}；localOnly=[${localOnly}]"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-datascope-and-datachain-6",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据域与数据链",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据域与数据链 #7",
+    "heading": "`name` 路径读写",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "debug": true,
+        "data": {
+          "user": {
+            "name": "Ada"
+          },
+          "members": [
+            {
+              "name": "Grace"
+            }
+          ]
+        },
+        "body": [
+          {
+            "type": "input-text",
+            "name": "user.name",
+            "label": "用户名称"
+          },
+          {
+            "type": "input-text",
+            "name": "members[0].name",
+            "label": "第一位成员"
+          },
+          {
+            "type": "tpl",
+            "tpl": "当前用户：${user.name}；第一位成员：${members[0].name}"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-datascope-and-datachain-7",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "数据域与数据链",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "数据域与数据链 #8",
     "heading": "常见误解",
     "expect": "",
     "schema": {
@@ -498,7 +553,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-6",
+    "id": "src-concepts-datascope-and-datachain-8",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -506,7 +561,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #7",
+    "title": "数据域与数据链 #9",
     "heading": "常见误解",
     "expect": "",
     "schema": {
@@ -539,7 +594,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-7",
+    "id": "src-concepts-datascope-and-datachain-9",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -547,7 +602,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #8",
+    "title": "数据域与数据链 #10",
     "heading": "2. 显式配置 data",
     "expect": "",
     "schema": {
@@ -563,7 +618,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-8",
+    "id": "src-concepts-datascope-and-datachain-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -571,7 +626,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #9",
+    "title": "数据域与数据链 #11",
     "heading": "更新数据域",
     "expect": "",
     "schema": {
@@ -602,7 +657,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-9",
+    "id": "src-concepts-datascope-and-datachain-11",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -610,7 +665,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #10",
+    "title": "数据域与数据链 #12",
     "heading": "更新数据链",
     "expect": "",
     "schema": {
@@ -653,7 +708,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-10",
+    "id": "src-concepts-datascope-and-datachain-12",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -661,7 +716,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #11",
+    "title": "数据域与数据链 #13",
     "heading": "URL 参数",
     "expect": "",
     "schema": {
@@ -673,7 +728,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-datascope-and-datachain-11",
+    "id": "src-concepts-datascope-and-datachain-13",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -681,7 +736,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "数据域与数据链 #12",
+    "title": "数据域与数据链 #14",
     "heading": "隐藏数据",
     "expect": "",
     "schema": {
@@ -755,14 +810,34 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #1",
-    "heading": "渲染 html",
+    "heading": "文本中获取变量",
     "expect": "",
     "schema": {
       "type": "page",
       "data": {
-        "text": "World!"
+        "missingValue": null,
+        "user": {
+          "name": "Ada"
+        },
+        "tags": [
+          "A",
+          "B"
+        ]
       },
-      "body": "<h1>Hello</h1> <span>${text}</span>"
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "缺失=[${missing}]；null=[${missingValue}]"
+        },
+        {
+          "type": "tpl",
+          "tpl": "对象=[${user}]；数组=[${tags}]"
+        },
+        {
+          "type": "tpl",
+          "tpl": "对象 JSON=${user|json}；数组 JSON=${tags|json}"
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -783,9 +858,9 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "data": {
-        "text": "<b>World!</b>"
+        "text": "World!"
       },
-      "body": "<h1>Hello</h1> <span>${text|raw}</span>"
+      "body": "<h1>Hello</h1> <span>${text}</span>"
     },
     "measure": {
       "type": "smoke"
@@ -806,18 +881,9 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "data": {
-        "name": "<b>Ada</b>"
+        "text": "<b>World!</b>"
       },
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "默认转义：${name}"
-        },
-        {
-          "type": "tpl",
-          "tpl": "raw 才当 HTML：${name|raw}"
-        }
-      ]
+      "body": "<h1>Hello</h1> <span>${text|raw}</span>"
     },
     "measure": {
       "type": "smoke"
@@ -837,11 +903,24 @@ window.VAMIS_COMPARE_CASES = [
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tpl",
-        "inline": false,
-        "tpl": "<p>段落里的 <a href=\"#\">链接</a></p>\n<ul>\n  <li>一项</li>\n  <li>二项</li>\n</ul>\n"
-      }
+      "data": {
+        "name": "<b>Ada</b>",
+        "unsafe": "<img src=x onerror=\"alert('不应执行')\">"
+      },
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "默认转义：${name}"
+        },
+        {
+          "type": "tpl",
+          "tpl": "raw 才当 HTML：${name|raw}"
+        },
+        {
+          "type": "tpl",
+          "tpl": "用户输入保持文本：${unsafe}"
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -857,6 +936,30 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "模板 #5",
+    "heading": "渲染 html",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "tpl",
+        "inline": false,
+        "tpl": "<p>段落里的 <a href=\"#\">链接</a></p>\n<ul>\n  <li>一项</li>\n  <li>二项</li>\n</ul>\n"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-template-5",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "模板",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "模板 #6",
     "heading": "表达式",
     "expect": "",
     "schema": {
@@ -874,7 +977,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-template-5",
+    "id": "src-concepts-template-6",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -882,7 +985,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "模板 #6",
+    "title": "模板 #7",
     "heading": "过滤器",
     "expect": "",
     "schema": {
@@ -916,7 +1019,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-template-6",
+    "id": "src-concepts-template-7",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -924,7 +1027,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "模板 #7",
+    "title": "模板 #8",
     "heading": "JavaScript 模板引擎",
     "expect": "",
     "schema": {
@@ -985,7 +1088,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-template-7",
+    "id": "src-concepts-template-8",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -993,7 +1096,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "模板 #8",
+    "title": "模板 #9",
     "heading": "1. 不要写成 ${data.xxx}",
     "expect": "",
     "schema": {
@@ -1011,7 +1114,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-template-8",
+    "id": "src-concepts-template-9",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -1019,7 +1122,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "模板 #9",
+    "title": "模板 #10",
     "heading": "1. 不要写成 ${data.xxx}",
     "expect": "",
     "schema": {
@@ -2133,42 +2236,38 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #2",
-    "heading": "接口联动",
+    "heading": "组件配置联动",
     "expect": "",
     "schema": {
       "type": "page",
       "body": {
         "type": "form",
-        "mode": "horizontal",
-        "actions": [],
+        "data": {
+          "price": 10,
+          "count": 2
+        },
         "body": [
           {
-            "type": "radios",
-            "name": "a",
-            "label": "选项1",
-            "inline": true,
-            "options": [
-              {
-                "label": "选项A",
-                "value": 1
-              },
-              {
-                "label": "选项B",
-                "value": 2
-              },
-              {
-                "label": "选项C",
-                "value": 3
-              }
-            ]
+            "type": "input-number",
+            "name": "price",
+            "label": "单价"
           },
           {
-            "type": "select",
-            "name": "b",
-            "label": "选项2",
-            "size": "sm",
-            "source": "/api/mock2/options/level2?a=${a}",
-            "description": "切换「选项1」会重新拉取「选项2」的 source"
+            "type": "input-number",
+            "name": "count",
+            "label": "数量"
+          },
+          {
+            "type": "formula",
+            "name": "total",
+            "label": "总价",
+            "formula": "${price * count}",
+            "initSet": true,
+            "autoSet": true
+          },
+          {
+            "type": "tpl",
+            "tpl": "提交时会带上 total=${total}"
           }
         ]
       }
@@ -2221,12 +2320,8 @@ window.VAMIS_COMPARE_CASES = [
             "name": "b",
             "label": "选项2",
             "size": "sm",
-            "source": {
-              "method": "get",
-              "url": "/api/mock2/options/level2?a=${a}",
-              "sendOn": "${a === 2}"
-            },
-            "description": "只有选「选项B」时才拉取「选项2」"
+            "source": "/api/mock2/options/level2?a=${a}",
+            "description": "切换「选项1」会重新拉取「选项2」的 source"
           }
         ]
       }
@@ -2245,6 +2340,64 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "联动 #4",
+    "heading": "接口联动",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "mode": "horizontal",
+        "actions": [],
+        "body": [
+          {
+            "type": "radios",
+            "name": "a",
+            "label": "选项1",
+            "inline": true,
+            "options": [
+              {
+                "label": "选项A",
+                "value": 1
+              },
+              {
+                "label": "选项B",
+                "value": 2
+              },
+              {
+                "label": "选项C",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "name": "b",
+            "label": "选项2",
+            "size": "sm",
+            "source": {
+              "method": "get",
+              "url": "/api/mock2/options/level2?a=${a}",
+              "sendOn": "${a === 2}"
+            },
+            "description": "只有选「选项B」时才拉取「选项2」"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-linkage-4",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "联动",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "联动 #5",
     "heading": "接口联动",
     "expect": "",
     "schema": {
@@ -2283,7 +2436,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-4",
+    "id": "src-concepts-linkage-5",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2291,7 +2444,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #5",
+    "title": "联动 #6",
     "heading": "表单提交返回数据",
     "expect": "",
     "schema": {
@@ -2332,7 +2485,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-5",
+    "id": "src-concepts-linkage-6",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2340,7 +2493,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #6",
+    "title": "联动 #7",
     "heading": "组件间联动",
     "expect": "",
     "schema": {
@@ -2392,7 +2545,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-6",
+    "id": "src-concepts-linkage-7",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2400,7 +2553,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #7",
+    "title": "联动 #8",
     "heading": "组件间联动",
     "expect": "",
     "schema": {
@@ -2454,7 +2607,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-7",
+    "id": "src-concepts-linkage-8",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2462,7 +2615,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #8",
+    "title": "联动 #9",
     "heading": "发送指定数据",
     "expect": "",
     "schema": {
@@ -2530,7 +2683,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-8",
+    "id": "src-concepts-linkage-9",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2538,7 +2691,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #9",
+    "title": "联动 #10",
     "heading": "配置多个目标",
     "expect": "",
     "schema": {
@@ -2590,7 +2743,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-9",
+    "id": "src-concepts-linkage-10",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2598,7 +2751,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #10",
+    "title": "联动 #11",
     "heading": "动态目标",
     "expect": "",
     "schema": {
@@ -2700,7 +2853,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-linkage-10",
+    "id": "src-concepts-linkage-11",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -2708,7 +2861,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "联动 #11",
+    "title": "联动 #12",
     "heading": "动态目标",
     "expect": "",
     "schema": {
@@ -6670,6 +6823,55 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-concepts-action-4",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "行为",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "行为 #5",
+    "heading": "常用动作",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "action",
+        "label": "确认并提示",
+        "confirmText": "要继续吗？",
+        "onEvent": {
+          "click": {
+            "actions": [
+              {
+                "actionType": "toast",
+                "args": {
+                  "msgType": "success",
+                  "msg": "已确认，开始执行动作链"
+                }
+              },
+              {
+                "actionType": "wait",
+                "args": {
+                  "time": 300
+                }
+              },
+              {
+                "actionType": "toast",
+                "args": {
+                  "msg": "等待结束后继续"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
     "id": "src-concepts-style-1",
     "group": "文档 / 概念",
     "bucket": "docs",
@@ -6719,6 +6921,38 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "样式 #2",
+    "heading": "基本使用",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": {
+        "type": "form",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "account",
+            "label": "账号",
+            "className": "m-t-md",
+            "inputClassName": "border-danger",
+            "description": "外层 className 增加顶部间距，inputClassName 只改输入框边框"
+          }
+        ]
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-style-3",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "样式",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "样式 #3",
     "heading": "CSS 变量",
     "expect": "",
     "schema": {
@@ -6749,7 +6983,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-style-3",
+    "id": "src-concepts-style-4",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -6757,7 +6991,37 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #3",
+    "title": "样式 #4",
+    "heading": "行内 style",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "emphasis": "#CD3632"
+      },
+      "body": {
+        "type": "tpl",
+        "tpl": "单个节点的行内样式",
+        "style": {
+          "color": "${emphasis}",
+          "padding": 8
+        }
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-concepts-style-5",
+    "group": "文档 / 概念",
+    "bucket": "docs",
+    "section": "概念",
+    "page": "样式",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "样式 #5",
     "heading": "表单项宽度",
     "expect": "",
     "schema": {
@@ -6791,7 +7055,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-concepts-style-4",
+    "id": "src-concepts-style-6",
     "group": "文档 / 概念",
     "bucket": "docs",
     "section": "概念",
@@ -6799,7 +7063,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "样式 #4",
+    "title": "样式 #6",
     "heading": "状态与响应式",
     "expect": "",
     "schema": {
@@ -7370,6 +7634,40 @@ window.VAMIS_COMPARE_CASES = [
       },
       "body": [
         {
+          "type": "tpl",
+          "className": "m-t-md text-sm",
+          "tpl": "字符串直接配置多个类名"
+        },
+        {
+          "type": "tpl",
+          "className": "text-${status == 1 ? 'danger' : 'success'}",
+          "tpl": "类名中的 ${} 也会求值"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-classname-1",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "ClassName",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "ClassName #2",
+    "heading": "",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "data": {
+        "status": 1
+      },
+      "body": [
+        {
           "type": "radios",
           "name": "status",
           "label": "状态",
@@ -7399,7 +7697,7 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
-    "id": "src-types-classname-1",
+    "id": "src-types-classname-2",
     "group": "文档 / 类型",
     "bucket": "docs",
     "section": "类型",
@@ -7407,7 +7705,7 @@ window.VAMIS_COMPARE_CASES = [
     "extra": false,
     "origin": "vamis",
     "layer": "docs",
-    "title": "ClassName #2",
+    "title": "ClassName #3",
     "heading": "",
     "expect": "",
     "schema": {
@@ -7445,6 +7743,86 @@ window.VAMIS_COMPARE_CASES = [
           }
         ]
       }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-types-definitions-0",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "Definitions",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "Definitions #1",
+    "heading": "树形结构",
+    "expect": "",
+    "schema": {
+      "definitions": {
+        "options": {
+          "type": "combo",
+          "multiple": true,
+          "multiLine": true,
+          "name": "options",
+          "items": [
+            {
+              "type": "group",
+              "body": [
+                {
+                  "label": "名称",
+                  "name": "label",
+                  "type": "input-text",
+                  "required": true
+                },
+                {
+                  "label": "值",
+                  "name": "value",
+                  "type": "input-text",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "label": "包含子选项",
+              "type": "switch",
+              "name": "hasChildren",
+              "value": false,
+              "mode": "inline",
+              "className": "block"
+            },
+            {
+              "$ref": "options",
+              "label": "子选项",
+              "name": "children",
+              "visibleOn": "${hasChildren === true}",
+              "addButtonText": "新增子选项"
+            }
+          ]
+        }
+      },
+      "type": "page",
+      "title": "引用",
+      "body": [
+        {
+          "type": "form",
+          "api": "api/xxx",
+          "actions": [],
+          "body": [
+            {
+              "$ref": "options",
+              "label": "选项"
+            },
+            {
+              "type": "static",
+              "label": "当前值",
+              "tpl": "<pre>${options|json}</pre>"
+            }
+          ]
+        }
+      ]
     },
     "measure": {
       "type": "smoke"
@@ -7594,7 +7972,7 @@ window.VAMIS_COMPARE_CASES = [
     "schema": {
       "type": "page",
       "data": {
-        "name": "amis",
+        "name": "vamis",
         "age": 1
       },
       "body": [
@@ -7613,6 +7991,36 @@ window.VAMIS_COMPARE_CASES = [
     }
   },
   {
+    "id": "src-types-schemanode-5",
+    "group": "文档 / 类型",
+    "bucket": "docs",
+    "section": "类型",
+    "page": "SchemaNode",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "SchemaNode #6",
+    "heading": "不渲染与失败态",
+    "expect": "",
+    "schema": {
+      "type": "page",
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "前面的节点正常显示"
+        },
+        false,
+        {
+          "type": "tpl",
+          "tpl": "false 节点没有占位"
+        }
+      ]
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
     "id": "src-extend-i18n-0",
     "group": "文档 / 扩展",
     "bucket": "docs",
@@ -7622,43 +8030,23 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "国际化 #1",
-    "heading": "全局文本替换",
+    "heading": "当前可用的做法",
     "expect": "",
     "schema": {
       "type": "page",
-      "body": {
-        "type": "tpl",
-        "tpl": "VAMIS_HOST"
-      }
-    },
-    "measure": {
-      "type": "smoke"
-    }
-  },
-  {
-    "id": "src-extend-i18n-1",
-    "group": "文档 / 扩展",
-    "bucket": "docs",
-    "section": "扩展",
-    "page": "国际化",
-    "extra": false,
-    "origin": "vamis",
-    "layer": "docs",
-    "title": "国际化 #2",
-    "heading": "JSON 配置中设置多语言",
-    "expect": "",
-    "schema": {
-      "type": "page",
+      "data": {
+        "text": {
+          "title": "表单页面",
+          "name": "名称"
+        }
+      },
       "body": {
         "type": "form",
         "body": [
           {
             "type": "input-text",
             "name": "name",
-            "label": "姓名：",
-            "en-US": {
-              "label": "username: "
-            }
+            "label": "${text.name}"
           }
         ]
       }
