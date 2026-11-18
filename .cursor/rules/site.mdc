@@ -1,5 +1,5 @@
 ---
-description: 文档站点：进度条、YAML/JSON 并列作者态、编辑 Schema 双 Tab
+description: 文档站点：进度条、YAML/JSON 并列作者态、编辑 Schema 双 Tab、Mock API 品牌
 alwaysApply: true
 ---
 
@@ -42,3 +42,20 @@ alwaysApply: true
 - YAML 字面量按 1.2 Core：`yes` / `On` / `012` 当字符串。这只约束 YAML，不否定 JSON
 
 禁止：写成「作者态是 YAML，不是 JSON」；把贴 JSON 当成二类导入；单框只收 YAML，或两个 Tab 不同步；活示例为对照去重改成甲/乙文案；把 Amis markdown 整节粘进 Vamis（含产品版本号、`github.com/baidu/amis`）。
+
+## Mock API 品牌
+
+`playground/src/mock/` 返回给页面的模拟数据是用户可见文案，必须用本项目品牌 **Vamis**。从 Amis mock 抄接口时先换品牌再落地，不要把产品自称带进响应。
+
+必须：
+
+- 响应 JSON 里的名称、作者、说明、假 URL 主机名一律 `vamis` / `Vamis`（`Amis Renderer` → `Vamis Renderer`，`https://amis.example/...` → `https://vamis.example/...`，`author: fex` → `vamis`）
+- 新增 `/api/mock2` 条目时同步检查字符串字面量，不要残留 `Amis` / `amis.example` / `amis.bj.bcebos.com`
+
+允许留下：
+
+- 入站路径别名 `/api/amis-mock/`（文档 schema 仍写这条，handler 转成 `/api/mock2/`）
+- 源码注释「对齐 Amis `mock/cfc/...`」
+- 真图床 URL（`internal-amis-res.cdn.bcebos.com`、`suda.cdn.bcebos.com/amis/images`），改了图会 404
+
+禁止：响应 payload 里出现 Amis 产品自称或假主机。守卫 `packages/vamis-core/__tests__/mock-brand.test.ts`。

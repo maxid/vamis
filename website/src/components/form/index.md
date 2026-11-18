@@ -500,15 +500,15 @@ body:
   "status": 0,
   "msg": "",
   "data": {
-    "name": "Amis Renderer",
-    "author": "fex",
+    "name": "Vamis Renderer",
+    "author": "vamis",
     "date": 1615978757,
     "info": ""
   }
 }
 ```
 
-第一个表单项的 `name` 配置为 `name`，所以这个表单初始化完毕后展示 `Amis Renderer`。
+第一个表单项的 `name` 配置为 `name`，所以这个表单初始化完毕后展示 `Vamis Renderer`。
 
 > 表单项的 `value` 不支持表达式，所以不要尝试用 `value: "${xxx}"` 来关联数据。
 

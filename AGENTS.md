@@ -65,6 +65,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 组件同步按复杂度串行分批：轻 2–3、中 2、重（`action` 行为枢纽、`table` / `table2` / `crud` / `form` / `chart`）1 个。一批做完再对照。口径见 `.cursor/rules/component.mdc`「串行分批」。依赖顺序按解锁分 U + 综合分，见组件 TODO「依赖与优先级」。
 - 图标对齐 Amis：`icon` 落到 `<i>` / `<img>` / SVG，字形走 Font Awesome（打进 `sdk.css`），不要用 CSS mask 画 `fa-*`。规则：`.cursor/rules/style.mdc`「图标」。
 - **`pnpm typecheck` 必须保持 0。** 改 TS / Vue / playground 收工前再跑；非 0 不许声称完成、不许合入。规则：`.cursor/rules/typecheck.mdc`。
+- Mock API 响应文案用 Vamis 品牌，不要出现 Amis 自称或 `amis.example` 假主机。入站 `/api/amis-mock/` 别名和真 CDN 图床可留。规则：`.cursor/rules/site.mdc`「Mock API 品牌」。
 - 站点 / 样式 / 组件 / 对照约定见项目规则：`.cursor/rules/site.mdc`、`style.mdc`、`component.mdc`、`compare.mdc`。Amis 对照仓位置与查阅见 `amis-lookup.mdc`。包分工见 `packages.mdc`。日期/日历复用链与浮层 z-index 见 `reuse-overlay.mdc`。任务收工见 `update-progress.mdc`。组件修复后的稳定经验见 `lessons.mdc`（去重回写，不要另起流水账）。
 
 ## 关键文档

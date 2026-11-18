@@ -150,6 +150,12 @@ alwaysApply: true
 - 触及：文档活示例（`badge` `nav` `wizard` `service` `button-group` `each` `list` `pagination` `chart` `picker` `transfer` `formula` `table` `tag` `crud`）
 - 规则：`.cursor/rules/site.mdc`
 
+### mock 响应文案用 Vamis，不要抄 Amis 品牌
+- 踩过：从 Amis mock 原样搬 `Amis Renderer` / `https://amis.example/` / `amis.bj.bcebos.com`，文档活示例看起来像还在用 Amis。
+- 稳定做法：payload 名称、作者、假 URL 换成 `vamis` / `Vamis`。入站 `/api/amis-mock/` 别名和真 CDN 图床留下；注释「对齐 Amis mock」不算响应文案。
+- 触及：mock API
+- 规则：`.cursor/rules/site.mdc`「Mock API 品牌」
+
 ### 对标文档要改写成 Vamis，不要整节粘贴
 - 踩过：格式校验整节 splice Amis `formitem.md`，把 `2.2.0` / `1.4.0`、`github.com/baidu/amis`、「amis 会有默认的报错信息」带进 Vamis 文档。Vamis 没有 Amis 的版本线，也不是 Amis 仓库。
 - 稳定做法：先读两边 markdown 对比差什么。业务、示例、规则说明对齐；产品版本列、Amis GitHub、产品自称改写成 Vamis（locale 链 `@vamis/core` 的 `validateLocaleZh`）。没有对应版本就删列，不要空着或填 Amis 号。`rewriteProse` 还要清 `> 1.1.6 版本`、`> since 1.1.6`、行内 `(3.6.0 及以上版本)`，不要只匹配「及以上版本」独占一行。围栏里的「版本号」字段名和「Mini 版本」功能名留下。Amis 旧示例里的 `type: text` 在 6.13 已不是注册 type（Amis 渲染不出来），改写时换 `input-text`，不要照抄旧别名。

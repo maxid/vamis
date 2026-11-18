@@ -353,7 +353,7 @@ export function handleMockApi(input: {
         : typeof file === 'string'
           ? file
           : 'fis3-react.md'
-    const url = `https://amis.example/upload/${encodeURIComponent(filename)}`
+    const url = `https://vamis.example/upload/${encodeURIComponent(filename)}`
     return {
       status: 0,
       msg: 'ok',
@@ -364,7 +364,7 @@ export function handleMockApi(input: {
   if (pathname === '/api/mock2/upload/random') {
     const n = Math.floor(Math.random() * 10) + 1
     if (n <= 5) return { status: 500, msg: '上传失败', data: null }
-    const url = `http://amis.bj.bcebos.com/amis/random/${n}`
+    const url = `https://vamis.example/random/${n}`
     return {
       status: 0,
       msg: '上传成功',
@@ -460,7 +460,7 @@ export function handleMockApi(input: {
     const tpl = String(query.tpl || body.tpl || 'tpl1')
     const now = new Date()
     const names: Record<string, { name: string; author: string }> = {
-      tpl1: { name: 'Amis Renderer', author: 'fex' },
+      tpl1: { name: 'Vamis Renderer', author: 'vamis' },
       tpl2: { name: 'Vamis Runtime', author: 'vamis' },
       tpl3: { name: 'LCDP IR', author: 'lcdp' },
     }
