@@ -1,85 +1,69 @@
-# Calendar 日历日程 · `calendar` 设计
+# Calendar 日历 · `calendar` 设计
 
-> 状态：**进行中 88%** · 复杂度：**M 中**
-> 文档：[/components/calendar](/components/calendar) · Amis 文档：`/zh-CN/components/calendar`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 60%** · 复杂度：**L 重**
+> 文档：[在线 API 手册](/components/calendar) · Amis：`/zh-CN/components/calendar`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Calendar 当前是**月历展示/日程**（188 行）：cursor、large、schedules、周/月/年切换、移动滚轮、年月选择、schedule 打开。没有拖拽建日程/多日跨周条/编辑 API；60% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **cursor/值**：calendarParseDate/calendarRawValue；无效值回落今天。
+2. **schedules**：calendarSchedules；按日期映射；跨周日程 lanes。
+3. **视图**：days/months/years；large/移动滚轮；切换不清选中。
+4. **交互**：schedule 打开/关闭；拖拽建/改未接；事件/动作未接。
+5. **包边界**：无 `<style>`、无 fetch；calendar token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单日程/多日程/跨周/跨月/跨年
+- large/移动/days/months/years
+- schedule 打开/关闭/拖拽（未接）
+- 窄屏/深色
+
+### 优先级
+
+1. cursor/schedules；2. 视图/移动；3. schedule/交互；4. 拖拽/API。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**59** 行；Vamis 实现：**188** 行；依赖：**2** 个
-- 集成面：数据域、浮层
-- 判定依据：Vamis 188 行 + Amis 59 行 + 2 依赖 + data/overlay
+- 等级：**L 重**（Amis 59 行包装 + calendar；Vamis 188 行）；依赖 calendar 工具。
+- 风险：跨周 lanes/移动滚轮。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`calendar`
-- Amis 源文件：`packages/amis/src/renderers/Calendar.tsx`
-- 依赖：`input-date`, `tpl`
-- 文档章节：`/zh-CN/components/calendar`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| value/cursor | 当前月 | 已接 |
+| schedules | 日程 | 已接 |
+| large/view | 展示 | 已接 |
+| schedule 打开 | 交互 | 已接 |
+| 拖拽/API/事件 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/display/Calendar.vue`](../../../packages/vamis/src/renderers/display/Calendar.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+- [`display/Calendar.vue`](../../../packages/vamis/src/renderers/display/Calendar.vue)：cursor/schedules/weeks/lanes/视图。
+- [`calendar.ts`](../../../packages/vamis-core/src/utils/calendar.ts)：月格/weekLanes/年月。
+- [`InputDate`](input-date.md)：日期组件（非日历）。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 日历格/日程条/移动滚轮 token；无 `<style>`；窄屏/深色单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：周一 7 列紧凑月历，与 input-date 共用 DateCalendarPanel。SVG 箭头；点年/月切换（窄屏 取消/确认）；点击日程点弹出内容（默认 dialog，可 scheduleAction）。largeMode 跨日连条；后一天透明占位可点，payload 是当天重叠日程。面板 `--cal-*`（深色跟 Select 菜单）。缺 change/click / setValue
-- 状态：进行中，进度 88%；如进度未到 100，按上条缺口补齐。
+拖拽建/改/删除日程、事件动作、深色/窄屏。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page calendar`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- cursor/schedules/跨周/视图/移动/打开；拖拽不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+拖拽/API 单独立项；保持日历只展示。
 
 ---
+
 返回 [组件设计索引](README.md)
