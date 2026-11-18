@@ -1,81 +1,67 @@
 # Log 实时日志 · `log` 设计
 
 > 状态：**进行中 25%** · 复杂度：**L 重**
-> 文档：[/components/log](/components/log) · Amis 文档：`/zh-CN/components/log`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/log) · Amis：`/zh-CN/components/log`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Log 当前是**静态分行展示**（20 行）：数组/字符串按换行拆行，ScrollArea。没有轮询/ANSI 颜色/自动滚动/过滤/行号；25% 是真实缺口，“实时”未实现。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值**：value/data 或 schema.source；数组逐项 String，字符串按换行；空显示“暂无日志”。
+2. **无实时**：没有 interval/WebSocket/自动追加；不要按实时日志验收。
+3. **无 ANSI**：颜色/控制字符不解析。
+4. **滚动**：ScrollArea 展示；自动滚到底/暂停未接。
+5. **包边界**：无 `<style>`、无 fetch；log token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单行/多行/数组/对象
+- 长日志/自动滚动/过滤（未接）
+- ANSI/错误高亮（未接）
+- 深色/窄屏
+
+### 优先级
+
+1. 值/分行；2. 滚动/大日志；3. 实时/ANSI/过滤；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**555** 行；Vamis 实现：**20** 行；依赖：**1** 个
-- 集成面：无额外集成
-- 判定依据：Vamis 20 行 + Amis 555 行 + 1 依赖 + 无额外集成；Amis 源码较大而 Vamis 仍精简，按重档
+- 等级：**L 重**（Amis 555 行；Vamis 20 行）；依赖 ScrollArea。
+- 风险：被误认为实时日志。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`log`
-- Amis 源文件：`packages/amis/src/renderers/Log.tsx`
-- 依赖：`—`
-- 文档章节：`/zh-CN/components/log`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| value/source | 日志文本 | 已接 |
+| interval/实时 | 目标 | 未接 |
+| ANSI/过滤/行号 | 目标 | 未接 |
+| 自动滚动 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/rest/Log.vue`](../../../packages/vamis/src/renderers/rest/Log.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 纯展示/薄包装：只消费 schema/data/env，不持有业务状态。
+- [`rest/Log.vue`](../../../packages/vamis/src/renderers/rest/Log.vue)：lines + ScrollArea。
+- [`format.ts`](../../../packages/vamis/src/renderers/rest/format.ts)：readValue。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-log`, `.vamis-log__empty`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- log 行/token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：**精简**：静态分行，无轮询/ANSI
-- 状态：进行中，进度 25%；如进度未到 100，按上条缺口补齐。
+实时/ANSI/过滤/行号/自动滚动/深色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page log`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 值/分行/空/长日志/窄屏；不要测实时。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+实时/ANSI 单独立项；先定数据源与背压，再做自动滚动。
 
 ---
+
 返回 [组件设计索引](README.md)
