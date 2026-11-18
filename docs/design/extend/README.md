@@ -23,10 +23,10 @@ Extend 描述 Vamis 的**扩展边界**：自定义渲染器、编辑器、国�
 
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
-| [自定义组件](../../../website/src/extend/custom.md) | registerRenderer、test/weight/isolateScope、SDK 注册 | 55% |
-| [编辑器](../../../website/src/extend/editor.md) | 树/画布/属性/Schema、写回契约 | 35% |
-| [国际化](../../../website/src/extend/i18n.md) | locale、内置文案、replaceText | 15% |
-| [调试](../../../website/src/extend/debug.md) | env/全局/URL 开关、诊断对象、日志分组 | 90% |
+| [自定义组件](custom.md) | registerRenderer、test/weight/isolateScope、SDK 注册 | 55% |
+| [编辑器](editor.md) | 树/画布/属性/Schema、写回契约 | 35% |
+| [国际化](i18n.md) | locale、内置文案、replaceText | 15% |
+| [调试](debug.md) | env/全局/URL 开关、诊断对象、日志分组 | 90% |
 
 ## 2. 文档契约
 
@@ -42,7 +42,7 @@ Extend 描述 Vamis 的**扩展边界**：自定义渲染器、编辑器、国�
 - [Vamis 渲染器入口](../../../packages/vamis/src/index.ts)：注册表与公共 API。
 - [编辑器包](../../../packages/vamis-editor/src)：树、属性面板、Schema 面板。
 - [JS SDK](../../../packages/vamis-sdk/src)：`vamis.embed` / `vamis.registerRenderer`。
-- [调试文档源](../../../website/src/extend/debug.md)：env / window / URL 三种开关。
+- [调试文档源](debug.md)：env / window / URL 三种开关。
 
 ```text
 宿主 / SDK

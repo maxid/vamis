@@ -25,15 +25,15 @@ Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数�
 
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
-| [配置与组件](../../../website/src/concepts/schema.md) | type、组件树、YAML/JSON/IR、LazyComponent | 100% |
-| [数据域与数据链](../../../website/src/concepts/datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 90% |
-| [模板](../../../website/src/concepts/template.md) | 插值、转义、raw、过滤器、嵌套 | 95% |
-| [数据映射](../../../website/src/concepts/data-mapping.md) | `source`/`map`/字段映射/字典 | 100% |
-| [表达式](../../../website/src/concepts/expression.md) | 变量、运算、函数、过滤器 | 100% |
-| [联动](../../../website/src/concepts/linkage.md) | 条件显隐/禁用/值联动 | 90% |
-| [事件动作](../../../website/src/concepts/event-action.md) | onEvent、动作表、上下文、控制流 | 100% |
-| [行为](../../../website/src/concepts/action.md) | actionType、confirm、请求、跳转 | 90% |
-| [样式](../../../website/src/concepts/style.md) | cssVars、className、token、主题 | 90% |
+| [配置与组件](schema.md) | type、组件树、YAML/JSON/IR、LazyComponent | 100% |
+| [数据域与数据链](datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 90% |
+| [模板](template.md) | 插值、转义、raw、过滤器、嵌套 | 95% |
+| [数据映射](data-mapping.md) | `source`/`map`/字段映射/字典 | 100% |
+| [表达式](expression.md) | 变量、运算、函数、过滤器 | 100% |
+| [联动](linkage.md) | 条件显隐/禁用/值联动 | 90% |
+| [事件动作](event-action.md) | onEvent、动作表、上下文、控制流 | 100% |
+| [行为](action.md) | actionType、confirm、请求、跳转 | 90% |
+| [样式](style.md) | cssVars、className、token、主题 | 90% |
 
 ## 2. 文档契约
 

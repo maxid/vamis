@@ -23,10 +23,10 @@ Start 是**首次成功路径**：介绍 → 快速开始 → JS SDK → FAQ。�
 
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
-| [介绍](../../../website/src/index.md) | 定位、能力边界、首屏 CRUD 示例 | — |
-| [快速开始](../../../website/src/start/getting-started.md) | Vue 入口、安装、最小 schema | 95% |
-| [JS SDK](../../../website/src/start/sdk.md) | sdk.js、embed、registerRenderer、样式 | 90% |
-| [常见问题](../../../website/src/start/faq.md) | 环境/渲染/请求/样式/迁移 | 90% |
+| [介绍](intro.md) | 定位、能力边界、首屏 CRUD 示例 | — |
+| [快速开始](getting-started.md) | Vue 入口、安装、最小 schema | 95% |
+| [JS SDK](sdk.md) | sdk.js、embed、registerRenderer、样式 | 90% |
+| [常见问题](faq.md) | 环境/渲染/请求/样式/迁移 | 90% |
 
 ## 2. 文档契约
 
@@ -41,7 +41,7 @@ Start 是**首次成功路径**：介绍 → 快速开始 → JS SDK → FAQ。�
 - [VamisRoot](../../../packages/vamis/src/index.ts)：Vue 入口；`createPinia` + 样式。
 - [SDK embed](../../../packages/vamis-sdk/src)：`sdk.js` loader、`vamis.embed`、`registerRenderer`。
 - [Playground 启动](../../../README.md)：`pnpm dev` 同端口文档/组件/示例。
-- [站点首页](../../../website/src/index.md)：首屏 CRUD 活示例。
+- [站点首页](intro.md)：首屏 CRUD 活示例。
 
 ```text
 Vue 宿主 → VamisRoot(schema) ─┐

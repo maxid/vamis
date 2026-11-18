@@ -23,10 +23,10 @@ Types 是作者/扩展者的**契约层**：API、ClassName、Definitions、Sche
 
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
-| [API](../../../website/src/types/api.md) | 请求管线、方法、返回、适配器、GraphQL | 92% |
-| [ClassName](../../../website/src/types/classname.md) | resolveClassName、helper、状态/响应式前缀 | 70% |
-| [Definitions](../../../website/src/types/definitions.md) | 顶级 definitions、$ref、树形复用 | 20% |
-| [SchemaNode](../../../website/src/types/schemanode.md) | 模板/Schema/SchemaArray、false、数组展开 | 92% |
+| [API](api.md) | 请求管线、方法、返回、适配器、GraphQL | 92% |
+| [ClassName](classname.md) | resolveClassName、helper、状态/响应式前缀 | 70% |
+| [Definitions](definitions.md) | 顶级 definitions、$ref、树形复用 | 20% |
+| [SchemaNode](schemanode.md) | 模板/Schema/SchemaArray、false、数组展开 | 92% |
 
 ## 2. 文档契约
 

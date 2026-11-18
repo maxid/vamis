@@ -4,9 +4,12 @@
 
 ## 目录
 
+> 站点文档域按 `website/src` 逐页建立设计文档，设计内容在 `docs/design/` 内；站点只作为内容真源。
+
 | 域 | 覆盖 | 设计文档 |
 |---|---|---|
 | 组件 | 155 个组件（另 CollapseGroup 配套篇） | [component/README.md](component/README.md)（layout / functional / form / display / feedback / other） |
+| 站点文档 | website/src 84 页逐页设计 | concepts 9 / style 63 / extend 4 / start 4 / types 4 |
 | 概念 | schema / 数据域 / 模板 / 映射 / 表达式 / 联动 / 事件动作 / 行为 / 样式 | [concepts/README.md](concepts/README.md) |
 | 样式 | CSS 变量、响应式、状态、Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography / Background / Border / Effect | [style/README.md](style/README.md) |
 | 扩展 | 自定义组件 / 编辑器 / 国际化 / 调试 | [extend/README.md](extend/README.md) |
