@@ -10,7 +10,7 @@
 - **契约可追溯**：Amis 入口源码、依赖、文档章节、Vamis 渲染器/注册文件必须可点。
 - **验收分层**：功能清单与工程清单分开；未核对项必须保留 `[ ]`，不能用实现百分比代替验收。
 - **样板**：[Table 设计](table.md) 已完成首轮核对（功能 13/15、工程 4/8）。
-- **已深化**：[Form](form.md)、[CRUD](crud.md)、[Action](action.md)、[Select](select.md)、[InputText](input-text.md)、[InputDate](input-date.md)、[Picker](picker.md)、[Transfer](transfer.md)、[InputTree](input-tree.md)、[Combo](combo.md)、[Table2](table2.md)、[Dialog](dialog.md)、[Drawer](drawer.md) 已按边界/契约/状态机/验收结构展开；其余 141 篇完成边界优先结构统一，验收清单为 3/12 的**文档定位核对**，功能/对照/深色仍需按实现刀逐项勾。
+- **已深化**：[Form](form.md)、[CRUD](crud.md)、[Action](action.md)、[Select](select.md)、[InputText](input-text.md)、[InputDate](input-date.md)、[Picker](picker.md)、[Transfer](transfer.md)、[InputTree](input-tree.md)、[Combo](combo.md)、[Table2](table2.md)、[Dialog](dialog.md)、[Drawer](drawer.md)、[Service](service.md) 已按边界/契约/状态机/验收结构展开；其余 140 篇完成边界优先结构统一，验收清单为 3/12 的**文档定位核对**，功能/对照/深色仍需按实现刀逐项勾。
 
 > 本索引的复杂度统计是源码盘点，不是功能验收；组件进度以 [组件 P0 TODO](../../superpowers/specs/2026-10-20-vamis-component-todo.md) 为准。
 
