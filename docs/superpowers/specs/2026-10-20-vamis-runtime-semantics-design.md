@@ -48,9 +48,9 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | 模块 | 现在有什么 | 关键缺口 |
 |------|-----------|----------|
 | Scope | 显式 `Scope`：根吃 URL query；`page`/`form`/`service`/`crud` 建子域；inherit 节点（含 container `data`）不建域；`__super` / `__prev` / `__changeReason` 已有；接口与表单数据域 `trackExpression` 已接 | 通用 `Scope.track` 去抖仍属 D9；其余 Amis 列表容器尚未全部 `scope: self` |
-| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 其余过滤器（`map`/`bytes` 等）仍 P1 |
-| API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions`、全局 adaptor、blob 附件头仍 P1 |
-| Actions | `registerAction` + `VamisEvent`；P0 动作、控制流、广播、受信任自定义 JS、浏览器 / 打印、`outputVar`、静默 AJAX、validate、显示 / 启用状态、GETRENDERERDATA / GETRENDERERPROP 已接 | 组件 setState、监听器 debounce / track、API / 表达式诊断仍缺；动作日志已接 env.debug |
+| Expression | `evalFormula` + `evalExpression` + `filterTpl` + `evalTemplate` + `resolveValue`，引擎是仓内 `@vamis/formula` | D2 P0：Tpl 对齐 Amis，始终 HTML 插入，插值默认 `|html` 转义，`\|raw` 才不转义；过滤器 `raw/html/json/date/datetime/number/percent/default/truncate/first`。Amis 扩展过滤器（`map`/`bytes` 等）已接 |
+| API | 字符串/对象、method/url/data/headers、GET 拼 query、`normalizePayload` | `requestApi` 已接 sendOn/cache/adaptor/`responseData`/`replaceData`/`messages`/`responseType`/`dataType`/GET `api.data`；page/form/service/select 已接 url 自动刷新。`qsOptions` 常用数组格式已接；全局 adaptor、blob 附件头仍 P1 |
+| Actions | `registerAction` + `VamisEvent`；P0 动作、控制流、广播、受信任自定义 JS、浏览器 / 打印、`outputVar`、静默 AJAX、validate、显示 / 启用状态、GETRENDERERDATA / GETRENDERERPROP 已接 | 动作 / API / 表达式 / 渲染器诊断已接；监听器 debounce / track 与组件 setState 已接；可视化 Debug 面板仍缺 |
 | Linkage | `resolveTargets`：动态名 / 逗号多目标 / `name?a=${a}`；点号 `form.select`；Form `target`；`reload`/`setValue` 已接；SDK `getComponentByName`/`doAction` 可调用 | 接口去抖仍属 D9；`clearValueOnHidden` 已接；combo 独立域仍等 D6 |
 | Form | 表单 store、路径值、`initApi`、`validate/submit/reset`、提交合并、`target`；`validateOnChange` / `requiredOn` / `clearValueOnHidden` / `validateApi` / `autoFill` 已接；校验可用 `addRule` 扩展 | Combo 独立域与嵌套路径级报错仍缺；异步自定义规则未齐 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑；`loadDataOnce` / `syncLocation` / `quickEdit` / 表达式 `matchFunc` 已接；filter 是内嵌独立表单域 | `autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API 仍缺 |
@@ -315,7 +315,7 @@ export type ActionHandler = (action: ActionSchema, ctx: ActionContext) => Promis
 - 调试：每次动作打印 `actionType/args/event`，由 `env.debug` 控制。
 
 P0 内置动作：ajax、toast、alert、confirm、dialog、drawer、close、setValue、setData、reload、submit、reset、link/url、copy、wait。
-P1 余项：组件 setState、监听器 debounce / track。循环 / switch / parallel、broadcast、动态 target、outputVar 已接。
+控制流、broadcast、动态 target、outputVar、组件 setState、监听器 debounce / track 均已接。
 P2：custom script、print、email、browser forward/back/refresh、tracker。
 
 ## 9. 表单（D6）
@@ -477,10 +477,10 @@ export function usePlugin(plugin: VamisPlugin): void
 |------|------|-----------|------|------|
 | 数据域/链 | 显式作用域 + `__super` + URL | 显式 Scope + URL 种子已接；接口与表单 `trackExpression` 已接，通用 Scope.track 去抖仍缺 | D1/D9 | P0 骨架完成 |
 | 显隐/禁用联动 | `visibleOn` 等全节点 | 已有（core） | 保持 | 完成 |
-| 模板过滤器 | `\|raw`/`\|json` 等 | P0 过滤器已接；`map`/`bytes` 等仍 P1 | D2 | P0 完成 |
+| 模板过滤器 | `\|raw`/`\|json` 等 | P0 与 Amis 扩展过滤器均已接 | D2 | 完成 |
 | HTML 安全 | 默认转义 + raw | Tpl 始终 HTML 插入；插值默认转义，`\|raw` 不转义 | D2 | P0 完成 |
 | API 基础 | method/url/data/headers | method/url/data/headers 与 GET data 已接 | D3 | P0 完成 |
-| API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 已接；`qsOptions` / 全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
+| API 高级 | sendOn/cache/adaptor/responseData | `requestApi` P0 与 `qsOptions` 常用数组格式已接；全局 adaptor / blob 下载动作 P1 | D3 | P0 完成 |
 | 接口自动刷新 | 依赖跟踪 | page/form `initApi`、service、select `source`、crud/chart/markdown 已按 Amis `isApiOutdated`（无 `$` 只初始化拉一次）；未做 Scope.track 去抖 | D9 | P0 部分 |
 | 事件上下文 | `event.data`/`__rendererData` | `VamisEvent` + `__rendererData` 已接 | D4 | P0 完成 |
 | 动作控制流 | 条件/循环/并行/错误策略 | 条件、循环（break/continue）、switch、parallel、ignoreError 已接 | D4 | 主路径完成 |
@@ -496,7 +496,7 @@ export function usePlugin(plugin: VamisPlugin): void
 | JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 与 `getComponentByName` / `doAction` 已落地 | D11 | P0 完成 |
 | className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` + `registerTheme` 已接；部分 `xxxClassName` 已接；locale 仍缺 | D12 | 进行中 |
 | i18n | locale/replaceText/覆盖 | 无 | D12 | P1 |
-| 诊断 | debug/日志/tracker | `env.debug` 动作日志已接；API / 表达式诊断、错误边界、tracker 仍缺 | D8 | 部分完成 |
+| 诊断 | debug/日志/tracker | 动作 / API / 表达式 / 渲染器诊断与 `env.onDiagnostic` 已接；可视化 Debug 面板仍缺 | D8 | 运行时完成 |
 
 ## 17. 路线图
 
@@ -516,7 +516,7 @@ export function usePlugin(plugin: VamisPlugin): void
 ### P1（深度对齐）
 
 - 通用 `Scope.track` 依赖收集与去抖；接口 / 表单 `trackExpression` 已接。
-- 动作：组件 setState、监听器 debounce / track；控制流 / 广播 / `outputVar` 已接。
+- 动作主路径与监听器高级配置已接；后续主要是诊断与可观测性。
 - 表单：异步自定义校验、Combo 独立域与嵌套路径级报错。
 - CRUD：`autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API。
 - 扩展：插件 API；SDK 暴露 action/filter 注册；locale 注册；`registerTheme` 已接。

@@ -4,8 +4,8 @@ title: 表达式
 
 # 表达式
 
-::: info 实现进度 90% · 已完成
-文档主路径已对齐 Amis「表达式」：使用场景、`${}` 语法、公式函数、箭头函数、函数手册均可跑。JSON 与 YAML 同等有效。旧版纯 JS 仅兼容，不写入新示例（D2）。表达式诊断（D8）仍缺。
+::: tip 实现进度 100% · 已完成
+文档主路径已对齐 Amis「表达式」：使用场景、`${}` 语法、公式函数、箭头函数、函数手册均可跑。JSON 与 YAML 同等有效。旧版纯 JS 仅兼容，不写入新示例（D2）。表达式异常已接入 `env.onDiagnostic`，调试日志由 Vamis 的 env / 全局变量 / URL 开关控制。
 :::
 
 表达式用来从当前数据域算出一个值。引擎是仓内 `@vamis/formula`（从 `amis-formula@6.13.0` 搬运）。作者态 **JSON 与 YAML 并列**，解析后进同一套求值器。
@@ -212,7 +212,7 @@ body:
       tpl: "${DATETOSTR(NOW(), 'YYYY-MM-DD')}"
 ```
 
-`${expr|filter}` 是同一套 parser 上的过滤器，详见 [模板](/concepts/template)。P0 已接 `raw` / `html` / `json` / `date` / `datetime` / `number` / `percent` / `default` / `truncate` / `first`。Amis 其余运行时过滤器（`map` / `bytes` 等）仍 P1。
+`${expr|filter}` 是同一套 parser 上的过滤器，详见 [模板](/concepts/template)。P0 已接 `raw` / `html` / `json` / `date` / `datetime` / `number` / `percent` / `default` / `truncate` / `first`。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
 
 下面是目前支持的函数手册（来自 `@vamis/formula`，与引擎同源）。
 

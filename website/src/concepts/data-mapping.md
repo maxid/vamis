@@ -4,8 +4,8 @@ title: 数据映射
 
 # 数据映射
 
-::: info 实现进度 90% · 已完成
-文档主路径已对齐 Amis「数据映射」：模板字符串、链式取值、转义、`api.data`、`&` 展开、`$rows` 数组提取、namespace、P0 过滤器与串联。JSON 与 YAML 同等有效。Amis 其余过滤器（`split` / `map` / `bytes` 等）仍 P1。
+::: tip 实现进度 100% · 已完成
+文档主路径已对齐 Amis「数据映射」：模板字符串、链式取值、转义、`api.data`、`&` 展开、`$rows` 数组提取、namespace、过滤器与串联。JSON 与 YAML 同等有效。Amis 扩展过滤器已接入。
 :::
 
 数据映射用 `${xxx}` 从当前数据链取值，写进模板、接口发送体、`responseData` 等。作者态 **JSON 与 YAML 并列**，解析后走同一套 `dataMapping`。
@@ -228,7 +228,7 @@ body: "当前页面标题为：${window:document[title]}"
 
 `${xxx | filter1 | filter2}`：先取值，再依次处理。1.5.0 起 Amis 更推荐函数调用，如 `${html(xxx)}`；`|filter` 在公式解析里兼容，Vamis 同样。
 
-P0 已接的过滤器下面都有活示例。Amis 其余过滤器见文末表，仍 P1。
+P0 与扩展过滤器下面都有活示例；完整清单见文末表。
 
 ### html
 
@@ -433,9 +433,9 @@ registerFilter('my_replace', (input: string, search: string, replaceWith: string
 
 用法 `${xxxx|my_replace:aaaa:bbbb}`。
 
-## 尚未接入的过滤器（P1）
+## 扩展过滤器
 
-Amis 数据映射页其余过滤器 Vamis **尚未注册**。公式函数（`LEFT` / `UPPER` / `AVG` 等）请走 [表达式](/concepts/expression) 的函数手册，不要用下面这些 `|filter` 名去替代。
+Amis 数据映射页的其余过滤器也已注册。公式函数（`LEFT` / `UPPER` / `AVG` 等）仍请走 [表达式](/concepts/expression) 的函数手册。
 
 | 过滤器 | 用途 |
 |--------|------|
@@ -452,3 +452,15 @@ Amis 数据映射页其余过滤器 Vamis **尚未注册**。公式函数（`LEF
 | `map` / `filter` | 数组上再套过滤器 |
 
 P0 已接：`raw` / `html` / `json` / `date` / `datetime` / `number` / `percent` / `default` / `truncate` / `first`。
+
+```schema
+type: page
+data:
+  items:
+    - { name: alpha, value: 2 }
+    - { name: beta, value: 1 }
+    - { name: alpha, value: 2 }
+body:
+  type: tpl
+  tpl: "${items|unique:name|sortBy:value:numerical:desc|pick:name|map:upperCase|join:' / '}"
+```

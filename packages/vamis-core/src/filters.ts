@@ -1,5 +1,6 @@
 import { registerFilter } from '@vamis/formula'
 import { parseDate } from './utils/dayjs'
+import './filters-extra'
 
 registerFilter('json', (input: unknown, tabSize: number | string = 0) => {
   try {

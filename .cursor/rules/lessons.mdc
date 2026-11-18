@@ -48,6 +48,12 @@ alwaysApply: true
 - 触及：`action` `button` `chart` SDK 广播 控制流
 - 规则：`packages/vamis-core/src/actions/run.ts`；`packages/vamis-core/src/event-bus.ts`
 
+### onEvent 高级配置下沉到 runOnEvent，不要只挂宿主 DOM
+- 踩过：`debounce` / `track` 只写 SchemaRenderer 的 click 宿主时，InputText 等组件自己派发的 change 完全绕过，配置不生效。
+- 稳定做法：`runOnEvent` 统一读取监听器的 debounce / track；按 schema + eventName 保存去抖器，卸载时取消。普通组件事件、宿主事件、广播都走这里。`track` 每次事件都上报，动作按配置去抖。
+- 触及：FormItem 事件动作 广播 SDK
+- 规则：`packages/vamis-core/src/actions/run.ts`；`packages/vamis-core/src/event-debounce.ts`
+
 ### 改写 Amis 文档不要动围栏里的 URL
 - 踩过：`rewriteLinks` 把 `github.com/baidu/amis` 整段删掉，打在全文上，JSON 里 `"src": "https://github.com/baidu/amis"` 变成 `"src": "`，iframe / carousel / timeline 活示例解析失败。
 - 稳定做法：链接改写只走围栏外正文；围栏里的 Amis 仓库 URL 换成 `https://github.com/maxid/vamis`，不要删成空串。标题匹配要转义括号（`底部展示 (Footable)`），否则会重复插入。

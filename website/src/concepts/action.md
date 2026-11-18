@@ -63,7 +63,7 @@ dialog:
 
 | actionType | 作用 | 现状 |
 |------------|------|------|
-| `ajax` | 发请求，走 `requestApi` | 已接；`qsOptions` 仍 P1 |
+| `ajax` | 发请求，走 `requestApi` | 已接；`qsOptions` 支持常用数组格式与编码控制 |
 | `dialog` / `drawer` | 打开弹窗 / 抽屉 | OverlayHost 已接 |
 | `closeDialog` / `closeDrawer` / `close` / `cancel` | 关掉当前浮层 | 已接 |
 | `toast` | 轻提示 | `msg` / `args.msg` / `args.msgType` / `toast.items` 已接 |

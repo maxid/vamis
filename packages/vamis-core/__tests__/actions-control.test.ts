@@ -131,6 +131,18 @@ describe('control flow and browser actions', () => {
     expect(event.data.result).toEqual({ error: true, payload: { name: 'Ada' } })
   })
 
+  it('treats setState as the component setData alias', async () => {
+    const scoped = new ScopedContext()
+    const setData = vi.fn()
+    scoped.register({ name: 'target', setData })
+    await runAction({
+      actionType: 'setState',
+      componentName: 'target',
+      args: { value: { enabled: true } },
+    }, ctx({ scoped }))
+    expect(setData).toHaveBeenCalledWith({ enabled: true }, false)
+  })
+
   it('logs action args, data and event only when env.debug is enabled', async () => {
     const group = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => undefined)
     const debug = vi.spyOn(console, 'debug').mockImplementation(() => undefined)
@@ -155,12 +167,12 @@ describe('control flow and browser actions', () => {
     vi.spyOn(console, 'debug').mockImplementation(() => undefined)
     vi.spyOn(console, 'groupEnd').mockImplementation(() => undefined)
     try {
-      await runAction({ actionType: 'toast', args: { msg: 'env' } }, ctx({ env: { ...ctx().env, enableAMISDebug: true } }))
+      await runAction({ actionType: 'toast', args: { msg: 'env' } }, ctx({ env: { ...ctx().env, enableVamisDebug: true } }))
       expect(group).toHaveBeenCalledTimes(1)
-      vi.stubGlobal('window', { enableAMISDebug: true, location: { search: '' } })
+      vi.stubGlobal('window', { enableVamisDebug: true, location: { search: '' } })
       await runAction({ actionType: 'toast', args: { msg: 'global' } }, ctx())
       expect(group).toHaveBeenCalledTimes(2)
-      vi.stubGlobal('window', { enableAMISDebug: false, location: { search: '?amisDebug=1' } })
+      vi.stubGlobal('window', { enableVamisDebug: false, location: { search: '?vamisDebug=1' } })
       await runAction({ actionType: 'toast', args: { msg: 'url' } }, ctx())
       expect(group).toHaveBeenCalledTimes(3)
     } finally {

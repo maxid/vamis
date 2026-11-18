@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
 import type { VamisEventBus } from './event-bus'
+import type { VamisDiagnostic } from './diagnostic'
 
 export type PlainObject = Record<string, any>
 
@@ -31,7 +32,12 @@ export interface SchemaObject extends PlainObject {
   staticOn?: string
   staticSchema?: unknown
   staticPlaceholder?: string
-  onEvent?: Record<string, { actions: ActionSchema[]; weight?: number }>
+  onEvent?: Record<string, {
+    actions: ActionSchema[]
+    weight?: number
+    debounce?: { maxWait?: number; wait?: number; leading?: boolean; trailing?: boolean }
+    track?: { id: string; name: string }
+  }>
 }
 
 export interface JumpToOptions {
@@ -204,8 +210,12 @@ export interface RendererEnv {
    */
   parseLocation?: boolean
   debug?: boolean
-  /** Amis 调试开关；也支持 window.enableAMISDebug 与 URL amisDebug=1。 */
-  enableAMISDebug?: boolean
+  /** Vamis 调试开关；也支持 window.enableVamisDebug 与 URL vamisDebug=1。 */
+  enableVamisDebug?: boolean
+  /** 结构化诊断回调；无论是否开启控制台调试都会调用。 */
+  onDiagnostic?: (diagnostic: VamisDiagnostic) => void
+  /** onEvent.track 的埋点回调。 */
+  tracker?: (event: { eventType: string; eventData: { trackId: string; trackName: string } }) => void
   /** 当前 VamisRoot 的广播总线；多实例之间不共享。 */
   bus?: VamisEventBus
   /** 允许 schema 里的 requestAdaptor / adaptor 字符串函数体。Playground 文档预览默认开。 */

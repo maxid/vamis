@@ -12,6 +12,7 @@ import { createObject } from '../context'
 import { parseContentDisposition } from './action'
 import { dataMapping } from './data-mapping'
 import { publicScopeData } from '../scope'
+import { reportDiagnostic } from '../diagnostic'
 
 export interface ApiContext {
   env: RendererEnv
@@ -120,18 +121,60 @@ function hasFile(value: unknown): boolean {
   return false
 }
 
-function toFormBody(data: PlainObject, dataType: ApiObject['dataType']): BodyInit {
-  if (dataType === 'form') {
-    const params = new URLSearchParams()
-    for (const [key, value] of Object.entries(data)) {
-      if (value === undefined || value === null) continue
-      params.set(key, String(value))
+type FormQsOptions = { arrayFormat?: 'indices' | 'repeat' | 'brackets' | 'comma'; encodeValuesOnly?: boolean }
+
+function parseQsOptions(raw: ApiObject['qsOptions']): FormQsOptions {
+  if (!raw) return {}
+  if (typeof raw === 'object') return raw
+  if (raw.trim().startsWith('{')) {
+    try { return JSON.parse(raw) } catch { return {} }
+  }
+  const out: PlainObject = {}
+  for (const [key, value] of new URLSearchParams(raw).entries()) {
+    out[key] = value === 'true' ? true : value === 'false' ? false : value
+  }
+  return out
+}
+
+function formEntries(data: PlainObject, options: FormQsOptions): Array<[string, unknown]> {
+  const entries: Array<[string, unknown]> = []
+  const visit = (key: string, value: unknown) => {
+    if (value === undefined || value === null) return
+    if (Array.isArray(value)) {
+      const arrayFormat = options.arrayFormat || 'indices'
+      if (arrayFormat === 'comma') {
+        entries.push([key, value.join(',')])
+        return
+      }
+      value.forEach((item, index) => {
+        const suffix = arrayFormat === 'repeat' ? '' : arrayFormat === 'brackets' ? '[]' : `[${index}]`
+        visit(`${key}${suffix}`, item)
+      })
+      return
     }
+    if (isPlainObject(value) && !(value instanceof Blob)) {
+      for (const [childKey, child] of Object.entries(value)) visit(`${key}[${childKey}]`, child)
+      return
+    }
+    entries.push([key, value])
+  }
+  for (const [key, value] of Object.entries(data)) visit(key, value)
+  return entries
+}
+
+function toFormBody(data: PlainObject, dataType: ApiObject['dataType'], rawOptions?: ApiObject['qsOptions']): BodyInit {
+  const options = parseQsOptions(rawOptions)
+  const entries = formEntries(data, options)
+  if (dataType === 'form') {
+    if (options.encodeValuesOnly === false) {
+      return entries.map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`).join('&')
+    }
+    const params = new URLSearchParams()
+    for (const [key, value] of entries) params.append(key, String(value))
     return params.toString()
   }
   const form = new FormData()
-  for (const [key, value] of Object.entries(data)) {
-    if (value === undefined || value === null) continue
+  for (const [key, value] of entries) {
     if (typeof File !== 'undefined' && value instanceof File) form.append(key, value)
     else if (typeof Blob !== 'undefined' && value instanceof Blob) form.append(key, value)
     else form.append(key, String(value))
@@ -356,6 +399,11 @@ export async function requestApi(
 
   built = await runRequestAdaptor(built.requestAdaptor, built, ctx.data, ctx.env.trusted)
   built.context = ctx.data
+  reportDiagnostic(ctx.env, {
+    type: 'api',
+    message: `request ${String(built.method || 'get').toUpperCase()} ${built.url}`,
+    detail: { api: built },
+  })
 
   if (built.mockResponse) {
     const raw = built.mockResponse?.data ?? built.mockResponse
@@ -375,8 +423,24 @@ export async function requestApi(
 }
 
 async function fetchAndFinalize(api: ApiObject, ctx: ApiContext): Promise<ApiResult> {
-  const raw = await ctx.env.fetcher(api, isPlainObject(api.data) ? api.data : ctx.data)
-  return finalize(raw, api, ctx)
+  try {
+    const raw = await ctx.env.fetcher(api, isPlainObject(api.data) ? api.data : ctx.data)
+    const result = await finalize(raw, api, ctx)
+    reportDiagnostic(ctx.env, {
+      type: 'api',
+      message: `response ${api.url}`,
+      detail: { status: result.payload.status, data: result.data },
+      error: result.ok ? undefined : result.payload,
+    })
+    return result
+  } catch (error) {
+    reportDiagnostic(ctx.env, {
+      type: 'api',
+      message: `request failed ${api.url}`,
+      error,
+    })
+    throw error
+  }
 }
 
 async function finalize(raw: unknown, api: ApiObject, ctx: ApiContext): Promise<ApiResult> {
@@ -416,7 +480,7 @@ export async function defaultFetcher(api: ApiObject, data?: PlainObject): Promis
   if (!isGet && payloadData) {
     const dataType = api.dataType || (hasFile(payloadData) ? 'form-data' : 'json')
     if (dataType === 'form' || dataType === 'form-data') {
-      body = toFormBody(payloadData, dataType)
+      body = toFormBody(payloadData, dataType, api.qsOptions)
       if (dataType === 'form' && !headers['Content-Type']) {
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
       }

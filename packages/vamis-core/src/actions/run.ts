@@ -4,6 +4,8 @@ import { evalExpression, filterTpl, resolveValue } from '../formula'
 import { tableConditionMatch } from '../utils/table'
 import { dataMapping } from '../utils/data-mapping'
 import { printElements } from './print'
+import { createEventDebounce, type EventDebounceConfig } from '../event-debounce'
+import { isVamisDebugEnabled } from '../diagnostic'
 import { publicScopeData, setByPathCopy } from '../scope'
 import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
@@ -66,17 +68,34 @@ function truthyFlag(value: unknown, data: PlainObject): boolean {
   return Boolean(value)
 }
 
-function actionDebugEnabled(env: RendererEnv): boolean {
-  if (env.debug === true || env.enableAMISDebug === true) return true
-  if (typeof window === 'undefined') return false
-  if ((window as unknown as { enableAMISDebug?: boolean }).enableAMISDebug === true) return true
-  return new URLSearchParams(window.location.search).get('amisDebug') === '1'
-}
-
 /** D4：`event` + `__rendererData`。无 native 时仍带空 context。 */
 export function withNativeEvent(data: PlainObject, nativeEvent?: { type: string }): PlainObject {
   const event = createVamisEvent(nativeEvent?.type || '', data, nativeEvent)
   return eventEvalData(data, event)
+}
+
+const listenerDebouncers = new WeakMap<SchemaObject, Map<string, ReturnType<typeof createEventDebounce>>>()
+
+function listenerDebounce(schema: SchemaObject, eventName: string, config?: EventDebounceConfig) {
+  if (!config) return undefined
+  let handlers = listenerDebouncers.get(schema)
+  if (!handlers) {
+    handlers = new Map()
+    listenerDebouncers.set(schema, handlers)
+  }
+  let handler = handlers.get(eventName)
+  if (!handler) {
+    handler = createEventDebounce(config)
+    handlers.set(eventName, handler)
+  }
+  return handler
+}
+
+export function cancelEventDebounce(schema: SchemaObject): void {
+  const handlers = listenerDebouncers.get(schema)
+  if (!handlers) return
+  for (const handler of handlers.values()) handler.cancel()
+  listenerDebouncers.delete(schema)
 }
 
 export async function runOnEvent(
@@ -98,7 +117,15 @@ export async function runOnEvent(
     }
     ctx = { ...ctx, data: { ...ctx.data, __rendererData: rendererData } }
   }
-  await runActions(asActions(conf), ctx)
+  if (conf?.track) {
+    ctx.env.tracker?.({
+      eventType: eventName,
+      eventData: { trackId: conf.track.id, trackName: conf.track.name },
+    })
+  }
+  const debouncer = listenerDebounce(schema, eventName, conf?.debounce)
+  if (debouncer) await debouncer.run(() => runActions(asActions(conf), ctx))
+  else await runActions(asActions(conf), ctx)
 }
 
 export async function runActions(actions: ActionSchema[] | undefined, ctx: ActionContext): Promise<void> {
@@ -131,7 +158,7 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     return false
   }
   const handler = getAction(type)
-  const debug = actionDebugEnabled(ctx.env) && typeof console !== 'undefined'
+  const debug = isVamisDebugEnabled(ctx.env) && typeof console !== 'undefined'
   if (debug) {
     console.groupCollapsed?.(`[vamis] action ${type || 'component'}`)
     console.debug('action', action)
@@ -358,6 +385,9 @@ function registerBuiltinActions() {
     applySetValue(action, actionData(action, ctx), ctx)
   })
   registerAction('setData', async (action, ctx) => {
+    applySetValue(action, actionData(action, ctx), ctx)
+  })
+  registerAction('setState', async (action, ctx) => {
     applySetValue(action, actionData(action, ctx), ctx)
   })
 

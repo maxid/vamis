@@ -5,7 +5,7 @@ title: 模板
 # 模板
 
 ::: info 实现进度 95% · 已完成
-文档主路径已对齐 Amis「模板」：`tpl`/`html` 按 HTML 插入（插值默认转义、标题/列表/链接在 `.vamis-html` 岛内补回）、`${}`、`|raw`、表达式、注意事项均可跑。JSON 与 YAML 同等有效。不实现 lodash `<% %>`（D2）。Amis 其余运行时过滤器（`map` / `bytes` 等）仍 P1。
+文档主路径已对齐 Amis「模板」：`tpl`/`html` 按 HTML 插入（插值默认转义、标题/列表/链接在 `.vamis-html` 岛内补回）、`${}`、`|raw`、表达式、注意事项均可跑。JSON 与 YAML 同等有效。不实现 lodash `<% %>`（D2）。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
 :::
 
 模板用来把数据域里的值填进文本。主路径是 `${name}` 插值，由 `@vamis/formula` 求值。作者态 **JSON 与 YAML 并列**，解析后进同一引擎。
@@ -136,7 +136,7 @@ body:
     tpl: "截断 ${title|truncate:5} · JSON ${obj|json} · 空值 ${age|default:'-'}"
 ```
 
-写法：`${name|raw}`、`${n|percent:2}`、`${d|date:'YYYY-MM-DD':'YYYY-MM-DD'}`。Amis 其余运行时过滤器（`map` / `bytes` 等）仍 P1。
+写法：`${name|raw}`、`${n|percent:2}`、`${d|date:'YYYY-MM-DD':'YYYY-MM-DD'}`。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
 
 ## JavaScript 模板引擎
 

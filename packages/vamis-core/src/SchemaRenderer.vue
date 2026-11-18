@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onErrorCaptured, ref, shallowRef, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
@@ -8,9 +8,11 @@ import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
 import { useFormApi } from './form-api'
-import { createVamisEvent, eventEvalData, runOnEvent } from './actions/run'
+import { cancelEventDebounce, createVamisEvent, eventEvalData, runOnEvent } from './actions/run'
+import { reportDiagnostic } from './diagnostic'
 import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
 import { statusDisabledOf, statusVisibleOf } from './status-store'
+
 import Placeholder from './Placeholder.vue'
 import type { SchemaNode, SchemaObject } from './types'
 
@@ -117,7 +119,7 @@ const data = computed(() => {
   const base = needsChildScope.value
     ? (currentScope.value?.resolved() ?? parentData.value)
     : parentData.value
-  return { ...base, ...overlay, __scoped: scoped }
+  return { ...base, ...overlay, __scoped: scoped, __env: env }
 })
 provideData(data)
 
@@ -225,21 +227,42 @@ watch(
   { immediate: true },
 )
 onBeforeUnmount(() => {
+  if (normalized.value) cancelEventDebounce(normalized.value)
   for (const unlisten of unlistenBroadcasts) unlisten()
   unlistenBroadcasts = []
+})
+
+const renderError = ref('')
+const schemaPath = computed(() => editorPath.value || normalized.value?.type || '(unknown)')
+watch(normalized, () => {
+  renderError.value = ''
+})
+onErrorCaptured((error) => {
+  renderError.value = error instanceof Error ? error.message : String(error)
+  reportDiagnostic(env, {
+    type: 'renderer',
+    message: '渲染器执行错误',
+    path: schemaPath.value,
+    error,
+  })
+  return false
 })
 </script>
 
 <template>
+  <div v-if="renderError" class="vamis-renderer-error" role="alert">
+    <strong>渲染失败：{{ schemaPath }}</strong>
+    <span>{{ renderError }}</span>
+  </div>
   <component
     :is="renderer.component"
-    v-if="visible && normalized && renderer && !rendererWrap"
+    v-else-if="visible && normalized && renderer && !rendererWrap"
     :schema="normalized"
     :data="data"
     :disabled="disabled"
   />
   <div
-    v-else-if="visible && normalized"
+    v-else-if="visible && normalized && !renderError"
     :id="nodeId"
     :data-editor-path="editorPath"
     :draggable="canDrag || undefined"

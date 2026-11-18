@@ -59,3 +59,9 @@ alwaysApply: true
 - 真图床 URL（`internal-amis-res.cdn.bcebos.com`、`suda.cdn.bcebos.com/amis/images`），改了图会 404
 
 禁止：响应 payload 里出现 Amis 产品自称或假主机。守卫 `packages/vamis-core/__tests__/mock-brand.test.ts`。
+
+## 宿主 API 品牌
+
+宿主 API、env、全局变量、URL 开关与函数签名默认使用 **Vamis** 命名，例如 `enableVamisDebug`、`vamisDebug=1`、`vamis.embed`。不要把 Amis 的宿主产品名直接暴露成 Vamis 的主接口。
+
+Schema 字段是兼容契约，不在此改名范围内；文档中用于说明对标的 Amis 名称也可以保留。

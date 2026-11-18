@@ -1,7 +1,7 @@
-import { nextTick } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { embed, normalizeEmbedSchema } from '../src/embed'
-import { IR_API_VERSION, registerTheme } from '@vamis/core'
+import { IR_API_VERSION, registerRenderer, registerTheme } from '@vamis/core'
 import 'vamis'
 
 const mounts: Array<ReturnType<typeof embed>> = []
@@ -560,6 +560,56 @@ describe('embed', () => {
     const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('读取组件'))
     button?.click()
     await vi.waitFor(() => expect(notify).toHaveBeenCalledWith('info', 'Vamis:form', expect.any(Object)))
+  })
+
+  it('tracks listener events and debounces their actions', async () => {
+    const notify = vi.fn()
+    const tracker = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'input-text',
+        name: 'keyword',
+        onEvent: {
+          change: {
+            debounce: { wait: 80 },
+            track: { id: 'search', name: '搜索输入' },
+            actions: [{ actionType: 'toast', args: { msg: '${keyword}' } }],
+          },
+        },
+      },
+    }, undefined, { notify, tracker })
+    await nextTick()
+    const input = host.querySelector('input[name="keyword"]') as HTMLInputElement
+    input.value = 'a'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    input.value = 'ab'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    expect(tracker).toHaveBeenCalledTimes(2)
+    expect(tracker).toHaveBeenCalledWith({ eventType: 'change', eventData: { trackId: 'search', trackName: '搜索输入' } })
+    await vi.waitFor(() => expect(notify).toHaveBeenCalledTimes(1))
+    expect(notify).toHaveBeenCalledWith('info', 'ab', expect.any(Object))
+  })
+
+  it('captures renderer errors and reports the schema path', async () => {
+    const onDiagnostic = vi.fn()
+    registerRenderer({
+      type: 'broken-diagnostic',
+      component: defineComponent({
+        setup() {
+          throw new Error('boom')
+        },
+      }),
+    })
+    const { host } = mount({ type: 'page', body: { type: 'broken-diagnostic' } }, undefined, { onDiagnostic })
+    await nextTick()
+    expect(host.textContent).toContain('渲染失败：broken-diagnostic')
+    expect(host.textContent).toContain('boom')
+    expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'renderer',
+      path: 'broken-diagnostic',
+      message: '渲染器执行错误',
+    }))
   })
 
   it('prints a target component and cleans up temporary classes', async () => {

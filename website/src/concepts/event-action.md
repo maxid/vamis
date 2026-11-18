@@ -5,8 +5,8 @@ outline: deep
 
 # 事件动作
 
-::: tip 实现进度 98% · 已完成
-文档章节与示例顺序已对齐 Amis「事件动作」。事件上下文、请求（含静默）、组件校验与状态、控制流、广播、受信任自定义 JS、浏览器与打印、GETRENDERERDATA / GETRENDERERPROP 均可运行；监听器 debounce / track 高级配置仍缺。JSON 与 YAML 同等有效。
+::: tip 实现进度 100% · 已完成
+文档章节与示例顺序已对齐 Amis「事件动作」。事件上下文、请求、组件校验与状态、控制流、广播、自定义 JS、浏览器与打印、组件数据公式、监听器去抖与埋点、动作日志均可运行；Vamis 另补 `setState` 兼容别名。JSON 与 YAML 同等有效。
 :::
 
 上一节我们介绍了如何实现联动，是比较基础和局限的，而事件动作是更简单、更灵活、更高级的用法，可以解决复杂的 UI 交互场景，支持渲染器事件监听和响应设计，无需关心组件层级关系。例如：
@@ -214,12 +214,12 @@ outline: deep
 
 ```javascript
 // 1. 当前嵌入实例的 env
-vamis.embed('#root', schema, {}, { enableAMISDebug: true })
+vamis.embed('#root', schema, {}, { enableVamisDebug: true })
 
 // 2. 当前页面全局开启
-window.enableAMISDebug = true
+window.enableVamisDebug = true
 
-// 3. 或在 URL 上临时加 ?amisDebug=1
+// 3. 或在 URL 上临时加 ?vamisDebug=1
 ```
 
 Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，包含动作配置、求值后的数据、事件对象和结束标记。
@@ -3692,6 +3692,31 @@ http 请求动作执行结束后，后面的动作可以通过 `${responseResult
   ]
 }
 ```
+
+# 监听器高级配置
+
+`onEvent` 的每个监听器都可以配置 `debounce` 和 `track`。去抖默认 `wait: 100`、`leading: false`、`trailing: true`、`maxWait: 10000`；连续输入时只执行最后一次动作，同时每次事件都会调用 `env.tracker`。
+
+```schema: scope="body"
+{
+  "type": "input-text",
+  "name": "keyword",
+  "label": "搜索关键字",
+  "onEvent": {
+    "change": {
+      "debounce": { "wait": 300, "maxWait": 1000 },
+      "track": { "id": "search", "name": "搜索输入" },
+      "actions": [
+        { "actionType": "toast", "args": { "msg": "当前输入：${keyword}" } }
+      ]
+    }
+  }
+}
+```
+
+`track.id` / `track.name` 会以 `eventData.trackId` / `eventData.trackName` 发给 `env.tracker({ eventType, eventData })`。
+
+组件动作 `setState` 是 `setData` 的兼容别名：用 `componentId` / `componentName` / `target` 定位，把 `args.value` 合并到目标组件数据域。
 
 # 自定义组件接入事件动作
 

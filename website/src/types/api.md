@@ -6,7 +6,7 @@ outline: deep
 # API
 
 ::: info 实现进度 92% · 已完成
-kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。P1：`qsOptions`、全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
+kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。`qsOptions` 已接常用数组格式；P1：全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
 :::
 
 接口配置与 Amis 同形：字符串或对象。所有数据请求走同一条 D3 管线 `requestApi`（normalize → sendOn → requestAdaptor → cache → fetch → payload → adaptor → responseData），由 `env.fetcher` 发出。渲染器禁止自己 `fetch`。
@@ -419,4 +419,4 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 | mockResponse | 适配器里拦截真实请求 | 对象 |
 | convertKeyToPath | 映射 key 是否转路径，默认 true | 布尔 |
 
-P1 未齐：`qsOptions` 细项、全局 `addApiRequestAdaptor`、blob 附件头的完整下载动作。自动刷新已接 page / form `initApi`、service、select `source`、crud / crud2 `api`、chart `api`、markdown `src`。wizard / mapping / nav / log / tasks / app 的远程接口尚未接入，不走这条生命周期。
+`qsOptions` 已支持 `indices` / `repeat` / `brackets` / `comma` 与 `encodeValuesOnly`。P1 未齐：全局 `addApiRequestAdaptor`、blob 附件头的完整下载动作。自动刷新已接 page / form `initApi`、service、select `source`、crud / crud2 `api`、chart `api`、markdown `src`。wizard / mapping / nav / log / tasks / app 的远程接口尚未接入，不走这条生命周期。

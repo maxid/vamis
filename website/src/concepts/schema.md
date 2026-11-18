@@ -4,8 +4,8 @@ title: 配置与组件
 
 # 配置与组件
 
-::: info 实现进度 95% · 已完成
-文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。`LazyComponent` 用法写在本页。渲染器 `test` / `weight` / `isolateScope` 已接；错误边界仍属 D8。
+::: tip 实现进度 100% · 已完成
+文档主路径已对齐 Amis「配置与组件」：`type` + 属性、组件树、`page` 唯一顶级、树形布局示例可跑。JSON / YAML / IR 走同一渲染管线。`LazyComponent` 用法写在本页。渲染器 `test` / `weight` / `isolateScope` 已接；渲染错误边界与 `env.onDiagnostic` 已接。
 :::
 
 一份 Vamis 页面是一棵 **widget 树**。节点靠 `type` 选渲染器，其余字段名与 Amis 相同。作者态 **JSON 与 YAML 并列**，解析后进同一运行时。

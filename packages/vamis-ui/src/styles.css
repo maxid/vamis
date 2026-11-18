@@ -12154,3 +12154,15 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
     box-shadow: none !important;
   }
 }
+
+.vamis-renderer-error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-base);
+  border: 1px solid var(--destructive);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--destructive);
+  font-size: var(--fontSizeBase);
+}

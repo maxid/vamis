@@ -4,35 +4,49 @@ title: 调试
 
 # 调试
 
-::: danger 实现进度 20% · 进行中
-kernel D8 未落地。现在靠 Playground IR Tab、Vue/Pinia devtools、未知 type 占位。没有 `env.debug` 动作日志。
+::: tip 实现进度 90% · 已完成
+动作、API、表达式和渲染器诊断已落地；支持 Vamis 的 env / 全局变量 / URL 激活方式。可视化 Debug 面板与数据链检查器仍未接。
 :::
 
-kernel **D8** 预留诊断通道，未落地。现在可以：
-
-- Playground 的 **IR** Tab 看规范化后的信封
-- 浏览器 Vue / Pinia devtools 看 hub store
-- 未知 type 会渲染占位，而不是白屏
-
-不要对 schema 做 `eval` 来「方便调试」。
-
-Amis 文档站右侧的 Debug 面板对应下面契约，Vamis **尚未接**。
-
-Amis 内置了调试工具，可以查看组件内部运行日志，方便分析问题，目前在文档右侧就有显示。
+Vamis 的调试分为**控制台日志**与**结构化诊断**。默认不输出日志；宿主始终可以通过 `env.onDiagnostic` 接收诊断对象。
 
 ## 开启方法
 
-默认不会开启这个功能，可以通过下面三种方式开启：
+可以用下面三种方式开启控制台日志：
 
-1. render 的 env 里设置 `enableVamisDebug`。
-1. 配置全局变量 `enableVamisDebug` 的值为 `true`，比如 `window.enableVamisDebug = true`。
-1. 在页面 URL 参数中加上 `vamisDebug=1`，比如 `http://xxx.com/?vamisDebug=1`。
+1. 在 env 中设置 `enableVamisDebug: true`。
+2. 设置 `window.enableVamisDebug = true`。
+3. 在页面 URL 参数中加 `vamisDebug=1`，例如 `http://localhost:5173/?vamisDebug=1`。
 
-开启之后，在页面右侧就会显示。
+Vamis 也支持 `env.debug: true` 作为简写。表单上的 `schema.debug: true` 只显示表单数据域，不开启动作日志。
 
-## 目前功能
+## 运行日志
 
-目前 Debug 工具提供了两个功能:
+日志按动作或诊断类型分组，包含：
 
-1. 运行日志，主要是 api 及数据转换的日志
-2. 查看组件数据链，Debug 工具展开后，点击任意组件就能看到这个组件的数据链
+- 动作配置、求值后的数据、事件对象与结束标记
+- API 请求方法、URL、响应状态与数据
+- 表达式文本与异常
+- 未知类型和渲染器错误路径
+
+## 结构化诊断
+
+```javascript
+const scoped = vamis.embed('#root', schema, {}, {
+  onDiagnostic(diagnostic) {
+    // type: api | expression | renderer | action
+    // message / path / detail / error
+    console.log(diagnostic)
+  }
+})
+```
+
+渲染器异常会显示带组件路径的错误块，不再让子树错误扩散成整页白屏。生产环境请通过 `onDiagnostic` 接入自己的监控，不要默认开启控制台调试。
+
+## 尚未接入
+
+- 页面右侧的可视化 Debug 面板
+- 点击组件查看完整数据链的检查器
+- Amis 风格的 MobX 内部状态检查
+
+不要为了方便调试在 schema 中执行任意 JS；自定义脚本仍受 `env.trusted` 限制。

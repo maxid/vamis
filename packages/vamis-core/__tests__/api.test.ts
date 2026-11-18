@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { isEffectiveApi, normalizeApi, normalizePayload, requestApi, apiTrackKey, isApiOutdated } from '../src/utils/api'
+import { defaultFetcher, isEffectiveApi, normalizeApi, normalizePayload, requestApi, apiTrackKey, isApiOutdated } from '../src/utils/api'
 import type { RendererEnv } from '../src/types'
 
 function env(fetcher: RendererEnv['fetcher'], extra: Partial<RendererEnv> = {}): RendererEnv {
@@ -262,5 +262,42 @@ describe('isApiOutdated', () => {
         { tpl: 'b' },
       ),
     ).toBe(false)
+  })
+})
+
+
+describe('qsOptions', () => {
+  it('serializes form arrays and nested objects with the selected array format', async () => {
+    const fetch = vi.fn(async () => ({ json: async () => ({ status: 0, data: {} }) }))
+    vi.stubGlobal('fetch', fetch)
+    try {
+      await defaultFetcher({
+        url: '/api/form', method: 'post', dataType: 'form',
+        data: { tags: ['a', 'b'], nested: { value: '中文' } }, qsOptions: { arrayFormat: 'repeat' },
+      })
+      expect(fetch.mock.calls[0][1].body).toBe('tags=a&tags=b&nested%5Bvalue%5D=%E4%B8%AD%E6%96%87')
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('supports indices, brackets, comma and encodeValuesOnly false', async () => {
+    const seen: string[] = []
+    vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
+      seen.push(options.body)
+      return { json: async () => ({ status: 0, data: {} }) }
+    }))
+    try {
+      for (const arrayFormat of ['indices', 'brackets', 'comma'] as const) {
+        await defaultFetcher({ url: '/api/form', method: 'post', dataType: 'form', data: { tags: ['a', 'b'] }, qsOptions: { arrayFormat } })
+      }
+      await defaultFetcher({
+        url: '/api/form', method: 'post', dataType: 'form', data: { tags: ['a'] },
+        qsOptions: { arrayFormat: 'brackets', encodeValuesOnly: false },
+      })
+      expect(seen).toEqual(['tags%5B0%5D=a&tags%5B1%5D=b', 'tags%5B%5D=a&tags%5B%5D=b', 'tags=a%2Cb', 'tags[]=a'])
+    } finally {
+      vi.unstubAllGlobals()
+    }
   })
 })

@@ -1,6 +1,7 @@
 import { evaluate, registerFunction, type Evaluator } from '@vamis/formula'
 import type { PlainObject } from './types'
 import { getByPath } from './scope'
+import { reportDiagnostic } from './diagnostic'
 import './filters'
 
 export {
@@ -57,7 +58,13 @@ function collectTplFilters(tpl: string): string[] {
 export function evalFormula(expression: string, data: PlainObject = {}): unknown {
   try {
     return evaluate(expression, formulaData(data), { evalMode: true, defaultFilter: 'raw' })
-  } catch {
+  } catch (error) {
+    reportDiagnostic(data?.__env, {
+      type: 'expression',
+      message: '表达式求值失败',
+      detail: { expression },
+      error,
+    })
     return undefined
   }
 }

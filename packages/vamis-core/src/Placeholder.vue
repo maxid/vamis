@@ -1,10 +1,22 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { reportDiagnostic } from './diagnostic'
+import { useEnv } from './context'
 import type { SchemaObject } from './types'
 
-defineProps<{
+const props = defineProps<{
   schema: SchemaObject
   reason?: string
 }>()
+
+const env = useEnv()
+onMounted(() => {
+  reportDiagnostic(env, {
+    type: 'renderer',
+    message: `未知类型：${props.schema.type || '(missing type)'}`,
+    path: typeof props.schema.__editorPath === 'string' ? props.schema.__editorPath : props.schema.type,
+  })
+})
 </script>
 
 <template>
