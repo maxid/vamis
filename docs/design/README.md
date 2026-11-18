@@ -16,6 +16,8 @@
 | 开始 | 介绍 / 快速开始 / JS SDK / FAQ | [start/README.md](start/README.md) |
 | 类型 | API / ClassName / Definitions / SchemaNode | [types/README.md](types/README.md) |
 
+> **Amis 核对状态**：84 篇站点设计尚未逐篇核对 Amis 6.13.0；已完成的目录/抽样核对与未核对项见 [AMIS-AUDIT.md](AMIS-AUDIT.md)。
+
 ## 统一标准
 
 - 先写边界与优先级，再写信息架构、契约、实现与缺口。
