@@ -1,83 +1,184 @@
-# InputTree 树形选择框 · `input-tree` 设计
+# InputTree 树形选择器 · `input-tree` 设计
 
 > 状态：**进行中 78%** · 复杂度：**XL 特重**
-> 文档：[/components/form/input-tree](/components/form/input-tree) · Amis 文档：`/zh-CN/components/form/input-tree`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-tree) · Amis：`/zh-CN/components/form/input-tree`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只有 64 行，真正逻辑在 `useTreeField.ts`（452 行）+ `TreeBranch` / `TreeSearchBox`，并与 TreeSelect 共用。设计时按**组合式状态**审，不要只改 InputTree.vue。
+
+当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **选项/输入**：远程/变量 options、空选项、重复 value、禁用项、多选与标签折叠、输入法组合态。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **父子勾选语义**：`autoCheckChildren`（默认 true）、`cascade`、`onlyLeaf`、`withChildren`、`onlyChildren`、`autoCancelParent` 组合决定写父还是写子；所有入口（节点点击/全选/搜索/API）必须走 `toggleTreeSelection`。
+2. **值形态**：`multiple` + `joinValues` + `delimiter` 决定 string/array；单选写单值；`valueField` 决定节点值。
+3. **树选项**：`options` / `source` 归一为树；懒加载节点用 `deferField`；本地 CUD 修改 `localOptions` 后要重新 seedExpanded，不能丢展开器。
+4. **搜索**：本地搜索保留匹配分支；远程 `searchApi` 结果只放 `remoteFiltered`，清搜索后回到本地树；搜索不改变选中值。
+5. **懒加载**：`deferLoad` 用节点 `deferApi` 或 schema `deferApi/source`；成功后合并子节点、展开，派发 `deferLoadFinished`；失败保留原树。
+6. **值写回**：统一 `fieldApi.setValue(name, dumpJoined(...))`；无 name 不写；树 CUD 删除节点要同步剔除选中值。
+7. **包边界**：无 `<style>`、无直接 fetch；`requestApi` 统一；树样式在 `@vamis/ui` token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 单选/多选、`joinValues` / `delimiter` / `withChildren` / `onlyChildren`
+- `autoCheckChildren` / `cascade` / `onlyLeaf` / `autoCancelParent` 组合
+- 父节点 disabled、子节点部分选中、父节点无 value
+- 多层树、`childrenColumnName` 自定义、空 children
+- 搜索（本地/远程）、搜索后全选、清搜索
+- `deferApi` 节点/整表、失败、重复展开、懒加载后 CUD
+- 路径模式 `enableNodePath` / `pathSeparator` / `hideNodePathLabel`
+- 增加/编辑/删除（内联 / `addControls` 弹层）、删除已选节点
+- 工具栏、虚拟列表、`showOutline` / `showIcon` / `showRadio`
+- disabled/static、窄屏、深色
+
+### 1.3 优先级
+
+1. 父子勾选语义与值形态
+2. 树选项/搜索/懒加载
+3. CUD / 路径模式 / 工具栏
+4. 事件补齐（change / CUD）
+5. 样式/虚拟/深色/窄屏
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**744** 行；Vamis 实现：**64** 行；依赖：**3** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 64 行 + Amis 744 行 + 3 依赖 + form
+- 等级：**XL 特重**（Amis `Form/InputTree.tsx` 744 行；Vamis `useTreeField` 452 + `TreeBranch` 316 + `TreeSearchBox` 95 + 薄壳）
+- 依赖：`Options`、`FormItem`、`dialog`（addControls/editControls）、`checkbox`/`radio`
+- 风险：父子勾选/值形态/懒加载/CUD 共享一套组合式状态，树组件与 TreeSelect 必须同步
 
 ## 3. Amis 契约
 
-- 入口 type：`input-tree`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputTree.tsx`
-- 依赖：`FormItem`, `Options`, `checkbox`
-- 文档章节：`/zh-CN/components/form/input-tree`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'input-tree'`
+- Amis 渲染器：`packages/amis/src/renderers/Form/InputTree.tsx`
+- 在线文档：[Vamis `/components/form/input-tree`](/components/form/input-tree)
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputTree.vue`](../../../packages/vamis/src/renderers/form/InputTree.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 注意 |
+|---|---|---|
+| `options` / `source` | 树选项 | `children` 递归；`source` 远程/变量 |
+| `multiple` / `showRadio` | 多选/单选外观 | radio 是单选 UI；`multiple` 决定值数组 |
+| `joinValues` / `delimiter` | 值形态 | 同 Options 族 |
+| `autoCheckChildren` / `cascade` / `onlyLeaf` / `withChildren` / `onlyChildren` / `autoCancelParent` | 父子勾选 | 全部走 `toggleTreeSelection` |
+| `searchable` / `searchConfig` / `searchApi` | 搜索 | sticky/immediately/placeholder；远程结果仅过滤 |
+| `deferApi` / `deferField` | 懒加载 | 节点优先于 schema；成功后展开 |
+| `creatable` / `editable` / `removable` / `rootCreatable` | CUD | 内联 CUD 与 `addControls`/`editControls` 弹层两条路 |
+| `initiallyOpen` / `unfoldedLevel` | 展开 | 默认层级/全开 |
+| `enableNodePath` / `pathSeparator` | 路径模式 | 值/标签是否带路径 |
+| `showOutline` / `showIcon` | 视觉 | 展开线/图标 |
+| `onlyLeaf` | 只选叶子 | 父节点不可选 |
+| `disabled` / `static` | 状态 | FormItem 统一 |
+| `virtualThreshold` / `itemHeight` | 虚拟列表 | 不要与懒加载混为一谈 |
+
+### 3.3 事件
+
+- 文档目标：`change`、`addConfirm`、`editConfirm`、`deleteConfirm`、`deferLoadFinished`、`itemClick`、`staticItemClick` 等。
+- **当前实现**：`deferLoadFinished`；自定义 `addControls` / `editControls` 弹层路径可派发 `addConfirm` / `editConfirm`；**内联 CUD 和节点选择未派发 `change`/`deleteConfirm`**。
+- 不能按在线事件表声称全部已支持；补事件前先定 payload/preventDefault。
+
+### 3.4 动作
+
+文档目标：`expand` / `collapse` / `add` / `edit` / `delete` / `reload` / `clear` / `reset` / `setValue` / `search`。
+
+当前 `useTreeField` 未注册 scoped API/动作处理；TreeSelect 同。不要把动作表当已实现。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`InputTree.vue`](../../../packages/vamis/src/renderers/form/InputTree.vue) | FormItem 壳 + TreeSearchBox + TreeBranch；仅 64 行 |
+| [`useTreeField.ts`](../../../packages/vamis/src/renderers/form/useTreeField.ts) | 值/树/搜索/懒加载/CUD/展开/勾选语义 |
+| [`TreeBranch.vue`](../../../packages/vamis/src/renderers/form/TreeBranch.vue) | 递归节点、checkbox/radio、增删改内联 UI、缩进/展开线 |
+| [`TreeSelect.vue`](../../../packages/vamis/src/renderers/form/TreeSelect.vue) | 复用 useTreeField 的弹层树 |
+| [`tree.ts`](../../../packages/vamis-core/src/utils/tree.ts) | `toggleTreeSelection` / `isTreeItemChecked` / defer 合并等纯函数 |
+| [`styles.css`](../../../packages/vamis-ui/src/styles.css) | tree 节点/缩进/展开线/搜索框 token |
+
+### 4.2 状态
+
+```text
+options/source ──normalize──> options/tree
+        │                         │
+        ├─ query / searchApi ───> filteredOptions
+        ├─ expanded Map ────────> isExpanded
+        ├─ deferring Set ──────> isDeferring / deferLoad
+        └─ selected ───────────> checked/partial/checkDisabled
+
+selected: parseJoined(fieldApi.getValue(name)) ↔ dumpJoined(values)
+```
+
+- `selected` 是唯一值入口；`toggle` / `applyToggle` 都走 `toggleTreeSelection`。
+- `localOptions` 覆盖 options（本地 CUD）；`remoteFiltered` 只覆盖展示，不改本地树。
+- `expanded` 以 OptionItem 对象为 key；`seedExpanded` 在 options/CUD 后重建。
+- `deferring` 防止重复请求；懒加载失败不写入。
+
+### 4.3 勾选语义
+
+`toggleTreeSelection(current, item, opts)` 负责：
+
+- `onlyLeaf`：父节点不可选；
+- `autoCheckChildren`：切父节点是否带上子；
+- `cascade`：是否父子联动；
+- `withChildren` / `onlyChildren`：写值是否含父/只写子；
+- `autoCancelParent`：全选后再取消子节点是否清父。
+
+任何新入口（如搜索全选、工具栏全选、动作）都必须复用这一函数，不能手写数组过滤。
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-input-tree__control`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 默认类：`.vamis-input-tree__control`、tree 节点/缩进/展开线/搜索框等，位于 `@vamis/ui/styles.css`。
+- 渲染器无 `<style>`；缩进/图标/展开线/选中态走 token。
+- 窄屏、深色、虚拟列表、搜索 sticky 需单独核。
+- 作者 className 只落 `div.vamis-node`。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline` 已接。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽
-- 状态：进行中，进度 78%；如进度未到 100，按上条缺口补齐。
+- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、路径模式、自定义渲染、工具栏、虚拟列表、TreeSelect 复用。
+- 未接/风险：
+  - `change` 事件未派发；内联 CUD 的 add/edit/delete 事件不一致；
+  - scoped 动作（expand/collapse/add/edit/delete/reload/clear/reset/setValue/search）未注册；
+  - 树级全选/搜索全选的 `change` 语义未定；
+  - 深色/窄屏/虚拟列表组合未专项核。
+- 对照：TODO 记录 input-tree 桌面/移动；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-tree`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis useTreeField / TreeBranch / tree.ts 已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前明确不完整）
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] `pnpm test`（tree 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page input-tree` 桌面
+- [ ] `pnpm compare --page input-tree --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- 勾选矩阵：autoCheckChildren × cascade × onlyLeaf × with/only × autoCancelParent
+- 懒加载/CUD 后展开与选择不丢
+- 搜索后全选范围
+- 事件/动作缺口不要误标
+- TreeSelect 同步
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补 `change` 与内联 CUD 的 `addConfirm`/`editConfirm`/`deleteConfirm`，统一 payload/preventDefault。
+2. 再注册 scoped 动作（expand/collapse/reload/clear/setValue/search），add/edit/delete 另定边界。
+3. 虚拟列表 + 懒加载 + 深色组合单独立项。
+4. TreeSelect 与本组件共用测试矩阵，避免两套勾选语义。
 
 ---
+
 返回 [组件设计索引](README.md)
