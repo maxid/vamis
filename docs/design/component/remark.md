@@ -1,85 +1,63 @@
 # Remark 标记 · `remark` 设计
 
 > 状态：**进行中 92%** · 复杂度：**M 中**
-> 文档：[/components/remark](/components/remark) · Amis 文档：`/zh-CN/components/remark`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/remark) · Amis：`/zh-CN/components/remark`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
-## 1. 边界与优先级（先读）
+## 0. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **内容**：content 文本或 `{title,body}`；无内容不弹；模板变量。
+2. **触发**：hover/click/focus；disabled 不弹；mobile 走 Dialog，不显示 tooltip。
+3. **形态**：shape circle/默认、icon 自定义、placement；浮层 VamisOverlay `--z-tooltip`。
+4. **关闭/卸载**：hover timer、外部关闭、卸载清理；移动端 Dialog 关闭。
+5. **包边界**：无 `<style>`、无 fetch；`--remark-*` token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/文本/对象 content/变量/自定义 icon
+- shape/placement/triggers/mobile Dialog
+- disabled/卸载/深色/窄屏
+
+### 优先级
+
+1. content/triggers；2. shape/icon/placement；3. mobile/关闭；4. themeCss。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**182** 行；Vamis 实现：**179** 行；依赖：**3** 个
-- 集成面：数据域、浮层
-- 判定依据：Vamis 179 行 + Amis 182 行 + 3 依赖 + data/overlay
+- 等级：**M 中**（Amis 182 行；Vamis 179 行）；依赖 tooltip-wrapper/icon/tpl。
+- 风险：移动端 Dialog/timer。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`remark`
-- Amis 源文件：`packages/amis/src/renderers/Remark.tsx`
-- 依赖：`icon`, `tooltip-wrapper`, `tpl`
-- 文档章节：`/zh-CN/components/remark`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| content/title/body | 内容 | 已接 |
+| shape/icon/placement | 外观 | 已接 |
+| triggers/mobileUI | 交互 | 已接 |
+| themeCss | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/rest/Remark.vue`](../../../packages/vamis/src/renderers/rest/Remark.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 图标走 `resolveIcon` + `IconMark`，class 落 `<i>`、URL 落 `<img>`，不按组件各写一套判断。
+- [`rest/Remark.vue`](../../../packages/vamis/src/renderers/rest/Remark.vue)：content/icon/triggers/mobile。
+- [`VamisTooltipLayer.vue`](../../../packages/vamis/src/overlay/VamisTooltipLayer.vue)：浮层。
+- [`remark.ts`](../../../packages/vamis-core/src/utils/remark.ts)：content/shape/placement/dialog。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-remark`, `.vamis-remark__icon`, `.vamis-remark__icon--circle`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- mark 徽标/浮层 token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：文档主路径已对齐：content 文本 / `{ title, body }`、shape、变量、placement。浮层走 `VamisOverlay`（`--z-tooltip` 1600），徽标转写 `_remark.scss`（`--remark-*`）。自定义 icon / `mobileUI` Dialog 已接。缺 `themeCss`
-- 状态：进行中，进度 92%；如进度未到 100，按上条缺口补齐。
+themeCss、深色手核。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page remark`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- content/triggers/shape/mobile/卸载/深色；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+themeCss 随主题批次；深色手核。
 
 ---
+
 返回 [组件设计索引](README.md)
