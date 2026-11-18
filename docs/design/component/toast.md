@@ -1,80 +1,70 @@
 # Toast 轻提示 · `toast` 设计
 
-> 状态：**已完成 100%** · 复杂度：**L 重**
-> 文档：[/components/toast](/components/toast) · Amis 文档：`/zh-CN/components/toast`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 100%** · 复杂度：**L 重**
+> 文档：[在线 API 手册](/components/toast) · Amis：`/zh-CN/components/toast`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Toast 是**全局轻提示**：由 `actionType: toast` 触发，ToastHost 挂在 VamisApp/Teleport body，按 position 分组、mobile 样式、自动关闭/点击关闭、hover 暂停。桌面/移动差异已对齐 Amis；深色手核是余项。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **Host**：claimToastHost 只允许一个 primary；卸载 release；Teleport body，不跟随组件。
+2. **位置**：position 分组（top-center/center/...）；mobile 标记切换暗底居中。
+3. **生命周期**：自动关闭/点击关闭/hover 暂停；多条叠加；卸载清 timer。
+4. **内容**：msg/title/level/icon；HTML 信任边界由调用方。
+5. **包边界**：无 `<style>`、无 fetch；toast token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **反馈**：层级、自动关闭、重复触发、焦点与可访问名称。
-- **边界用例（至少覆盖）**：重复触发 / 叠层 / 自动关闭；关闭后焦点恢复；深色与可访问名称。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/多条/不同 position/mobile
+- 自动关闭/点击/hover 暂停/重复触发
+- 深色/窄屏/长文本
+- 无 Host 降级（如有）
+
+### 优先级
+
+1. Host/生命周期；2. 位置/移动；3. 内容/关闭；4. 深色。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**433** 行；Vamis 实现：**133** 行；依赖：**2** 个
-- 集成面：无额外集成
-- 判定依据：Vamis 133 行 + Amis 433 行 + 2 依赖 + 无额外集成
+- 等级：**L 重**（Amis 433 行；Vamis ToastHost+ToastMessage）；依赖 toast-store。
+- 风险：全局 Host/多实例/timer。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`toast`
-- Amis 源文件：`packages/amis-ui/src/components/Toast.tsx`
-- 依赖：`icon`, `tpl`
-- 文档章节：`/zh-CN/components/toast`
+| 能力 | 现状 |
+|---|---|
+| position 分组 | 已接 |
+| mobile 暗底居中 | 已接 |
+| 自动/点击关闭/hover 暂停 | 已接 |
+| 多条叠加 | 已接 |
+| 深色 | 未逐项 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/ToastHost.vue`](../../../packages/vamis/src/ToastHost.vue)<br>[`packages/vamis-core/src/toast-store.ts`](../../../packages/vamis-core/src/toast-store.ts)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 纯展示/薄包装：只消费 schema/data/env，不持有业务状态。
+- [`ToastHost.vue`](../../../packages/vamis/src/ToastHost.vue)：Teleport/分组/primary。
+- [`toast-store.ts`](../../../packages/vamis-core/src/toast-store.ts)：items/位置/自动关闭。
+- [`ToastMessage.vue`](../../../packages/vamis/src/ToastMessage.vue)：单条 UI。
+- action `toast` 在 core actions/run.ts。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-toast`, `.vamis-toast-wrap`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- toast 层/暗底/状态图标 token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：文档主路径已对齐：`toast.items` / `body` / `title`（字符串或 SchemaNode）、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px` 暗底居中、40px 图标、一次一条、3000ms。有 `type` 的 `title`/`body` 走 `SchemaRenderer`，点击当时 data 快照
-- 状态：已完成，进度 100%；如进度未到 100，按上条缺口补齐。
+深色手核；无 Host 降级需确认。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page toast`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 多条/位置/mobile/关闭/hover/重复/深色；未接不误标。
 
 ## 8. 后续
 
-- 已标记完成；后续回归时复核 Amis 6.13.0 对等章节与深色/窄屏。
+深色手核；保持单 primary Host。
 
 ---
+
 返回 [组件设计索引](README.md)
