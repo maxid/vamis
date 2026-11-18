@@ -1,81 +1,66 @@
 # Breadcrumb 面包屑 · `breadcrumb` 设计
 
 > 状态：**进行中 65%** · 复杂度：**M 中**
-> 文档：[/components/breadcrumb](/components/breadcrumb) · Amis 文档：`/zh-CN/components/breadcrumb`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/breadcrumb) · Amis：`/zh-CN/components/breadcrumb`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 1. 一页结论
+
+Breadcrumb 当前是**扁平面包屑**（93 行）：items、separator、label 截断、icon、href 跳转、dropdown 菜单。没有折叠/路由联动/分隔符 Schema；65% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **items**：数组；最后一项不可点击；空不崩。
+2. **label**：breadcrumbDisplayLabel 截断+title；maxLength。
+3. **链接**：href 走 env.jumpTo；dropdown 项也可跳；disabled 未接。
+4. **图标**：iconSrc/iconClass；分隔符字符串。
+5. **包边界**：无 `<style>`、无 fetch；breadcrumb token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **边界用例（至少覆盖）**：未注册 type 的降级；动作目标不存在 / 已卸载；事件 preventDefault 与本地状态顺序。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单/多/最后一项/href/dropdown
+- label 截断/maxLength/分隔符/icon
+- 窄屏/深色
+
+### 优先级
+
+1. items/链接；2. label/截断；3. dropdown/图标；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**168** 行；Vamis 实现：**93** 行；依赖：**2** 个
-- 集成面：数据域
-- 判定依据：Vamis 93 行 + Amis 168 行 + 2 依赖 + data
+- 等级：**M 中**（Amis 168 行；Vamis 93 行）；依赖 icon。
+- 风险：截断/最后一项/dropdown。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`breadcrumb`
-- Amis 源文件：`packages/amis/src/renderers/Breadcrumb.tsx`
-- 依赖：`icon`, `link`
-- 文档章节：`/zh-CN/components/breadcrumb`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| items | 路径 | 已接 |
+| separator/maxLength | 展示 | 已接 |
+| href/dropdown | 跳转 | 已接 |
+| 折叠/路由联动 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/Breadcrumb.vue`](../../../packages/vamis/src/renderers/Breadcrumb.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
+- [`Breadcrumb.vue`](../../../packages/vamis/src/renderers/Breadcrumb.vue)：items/display/go/dropdown。
+- [`breadcrumb.ts`](../../../packages/vamis-core/src/utils/breadcrumb.ts)：items/label/separator/display。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-breadcrumb`, `.vamis-breadcrumb__item`, `.vamis-breadcrumb__menu`, `.vamis-breadcrumb__option`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 面包屑/分隔符/dropdown token；无 `<style>`；窄屏/深色单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：主路径可交互（未逐章节两站核完，不进 80%）：`items` / `source`、默认 `>`、`dropdown`、中间项 `labelMaxLength`。缺 tooltip 浮层
-- 状态：进行中，进度 65%；如进度未到 100，按上条缺口补齐。
+折叠/路由联动/disabled/深色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page breadcrumb`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- items/链接/截断/dropdown/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+先做折叠，再做路由联动；保持最后一项不可点。
 
 ---
+
 返回 [组件设计索引](README.md)

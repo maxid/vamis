@@ -1,81 +1,65 @@
 # Badge 角标 · `badge` 设计
 
-> 状态：**进行中 95%** · 复杂度：**L 重**
-> 文档：[/components/badge](/components/badge) · Amis 文档：`/zh-CN/components/badge`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 95%** · 复杂度：**S 轻**
+> 文档：[在线 API 手册](/components/badge) · Amis：`/zh-CN/components/badge`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Badge **不是独立渲染器**：通过 `BadgeHost` HOC 给目标组件加角标；`badge` 对象/布尔控制。主路径成熟；缺口 themeCss/深色逐项。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **HOC**：badge 挂在目标组件上，不单独输出；目标/位置/偏移由 badge schema。
+2. **内容**：文本/数字/点；mode/level 等由 badge 配置。
+3. **层级**：角标在目标上方，不能裁切；`--badge-*` token。
+4. **包边界**：无 `<style>`、无 fetch；badge token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **边界用例（至少覆盖）**：别名与注册表一致；空 schema / 未知 type；移动端与深色。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 无 badge/文本/数字/点/偏移
+- 目标尺寸/裁切/深色/窄屏
+- 自定义 className/themeCss（未接）
+
+### 优先级
+
+1. HOC/内容；2. 位置/偏移；3. 深色/themeCss。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**253** 行；Vamis 实现：**100** 行；依赖：**1** 个
-- 集成面：数据域
-- 判定依据：Vamis 100 行 + Amis 253 行 + 1 依赖 + data
+- 等级：**S 轻**（Amis 253 行；Vamis BadgeHost 共享）；依赖目标组件。
+- 风险：裁切/偏移。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`badge`
-- Amis 源文件：`packages/amis-ui/src/components/Badge.tsx`<br>`packages/amis-ui/src/components/withBadge.tsx`
-- 依赖：`icon`
-- 文档章节：`/zh-CN/components/badge`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| badge 文本/数字/点 | 内容 | 已接 |
+| 位置/偏移 | 布局 | 已接 |
+| themeCss | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/BadgeHost.vue`](../../../packages/vamis/src/renderers/BadgeHost.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
+- [`BadgeHost.vue`](../../../packages/vamis/src/renderers/BadgeHost.vue)：HOC 包装/角标。
+- [`badge.ts`](../../../packages/vamis-core/src/utils/badge.ts)：配置/位置。
+- [`styles.css`](../../../packages/vamis-ui/src/styles.css)：`--badge-*`。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-badge`, `.vamis-badge__`, `.vamis-badge__anim`, `.vamis-badge__ribbon`, `.vamis-badge__ribbon-out`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 角标色/尺寸/偏移 token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：不是独立 type。文档主路径已对齐：dot/text/ribbon、position、offset、overflowCount、visibleOn、size、level、animation、style。盒模型转写 `_badge.scss`（`--badge-*`）。缺 `themeCss`
-- 状态：进行中，进度 95%；如进度未到 100，按上条缺口补齐。
+themeCss/深色逐项。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page badge`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 无/文本/数字/点/偏移/裁切/深色；不按独立组件验收。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+随目标组件/主题批次补 themeCss；保持 HOC。
 
 ---
+
 返回 [组件设计索引](README.md)
