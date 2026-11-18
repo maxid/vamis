@@ -6,7 +6,7 @@
 
 ## 0. 一页结论
 
-Combo 当前是**最小实现**：`multiple` 单条/多条、`mode: row` 横排、增删行、radio 互斥写回。Combo.vue 只有 124 行，而 Amis `Form/Combo.tsx` 有 2154 行；多行、拖拽、tabs、分页、唯一校验、子项 api、扁平模式、事件/动作都未接。
+Combo 当前是**最小实现**：`multiple` 单条/多条、`mode: row` 横排、增删行、radio 互斥写回；每行应用 items 默认值，支持 Definitions 条件递归。Combo.vue 只有 124 行，而 Amis `Form/Combo.tsx` 有 2154 行；多行、拖拽、tabs、分页、唯一校验、子项 api、扁平模式、事件/动作都未接。
 
 因此本设计文档的重点不是“如何补样式”，而是**先定义 Combo 的数据域/行作用域**，再按能力分批补齐；不要按在线属性表声称已支持。
 
@@ -101,7 +101,7 @@ rows ──add/remove/radio──> persist：
 persist ──> fieldApi.setValue(name)
 ```
 
-- `rows` 为空时用 `[{}]`；删除最后一行仍保留空行。
+- `rows` 为空时用 `[{}]`；删除最后一行仍保留空行；每行先 `applyFormItemDefaults(items)`，避免递归条件继承父行开关。
 - `rowNodes` 每次从 items/columns 派生；`NestedFormScope` 提供行数据与 persist。
 - `handleRadioChange` 仅 multiple 时用 `comboApplyRadio` 写回整列并返回 false 阻止默认 radio 写值。
 

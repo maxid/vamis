@@ -1,6 +1,6 @@
 # Schema 配置与组件设计
 
-> 状态：**已完成** · 对应站点：`/concepts/schema` · 源码：[website/src/concepts/schema.md](../../../website/src/concepts/schema.md)
+> 状态：**进行中 95%** · 仍有诊断展示 / token 余项 · 对应站点：`/concepts/schema` · 源码：[website/src/concepts/schema.md](../../../website/src/concepts/schema.md)
 > 盘点日期：2026-11-18。
 
 ## 0. 设计结论

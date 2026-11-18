@@ -5,7 +5,7 @@ title: JS SDK
 # JS SDK
 
 ::: info 实现进度 90% · 已完成
-P0 `vamis.embed` / `updateSchema` / `updateProps` / `unmount` / `getComponentByName` / `doAction` 已落地；`registerTheme` 已接。locale 仍 P1。
+嵌入、更新、卸载、组件查询 / 动作、主题与加载失败排查均已按 SDK 源码核对；`updateProps` 当前只合并 `data`，locale 仍属未接能力。
 :::
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
@@ -49,15 +49,24 @@ vamis.embed(container, schema, props?, env?) → VamisScoped
 
 | 方法 | 说明 |
 |------|------|
-| `updateProps(props)` | 改 `data` / `context` / `locale`，不重挂应用 |
-| `updateSchema(schema, props?)` | 换整页 schema |
-| `unmount()` | 卸 Vue app |
+| `updateProps(props)` | 合并 `data`，不重挂应用；当前不应用 `context` / `locale` |
+| `updateSchema(schema, props?)` | 换整页 schema，可同时合并 `data` |
+| `unmount()` | 卸 Vue app；之后不能再调用实例方法 |
 | `getComponentByName(name)` | 按 `name` / `id` 取已注册组件；找不到返回 `undefined` |
+| `getComponents()` | 返回当前根实例已注册组件数组 |
 | `doAction(actions, ctx?)` | 跑动作列表（`toast` / `reload` / `setValue` 等） |
 
 全局辅助：`vamis.registerRenderer`、`vamis.registerTheme`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。主题注册用法见[样式](/concepts/style#注册运行时主题)。
 
 不传 `env.fetcher` 时，SDK 用 `window.fetch`，按 `{ status, msg, data }` 解析。`notify` / `alert` / `confirm` / `jumpTo` 有默认实现，宿主可覆盖。
+
+## 加载失败怎么排查
+
+- `vamis is not defined`：确认先加载 `sdk.js`，并等待脚本执行后再调用 `embed`；loader 会再加载同目录的 ESM chunks，不能只复制单个 `sdk.js`。
+- 页面没有样式：确认同目录的 `sdk.css` 已加载，且资源路径与 HTML 的相对位置正确。
+- `container not found`：先确认容器元素已经存在；选择器找不到时 `embed` 会直接抛错。
+- 未知 type：先检查内置 `vamis` 注册是否加载；自定义 type 还要在 `embed` 前调用 `vamis.registerRenderer`。
+- 接口失败：检查网络状态、CORS 与 `{ status, msg, data }` 返回格式；需要自定义请求时注入 `env.fetcher`。
 
 ## 和 Vue 的关系
 

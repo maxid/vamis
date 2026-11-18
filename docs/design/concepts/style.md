@@ -1,6 +1,6 @@
 # 概念-样式设计
 
-> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/style` · 源码：[website/src/concepts/style.md](../../../website/src/concepts/style.md)
+> 状态：**进行中 90%** · Amis 核对：主路径 + Vamis 源码 / 活示例；色盘 / 组件样式余项未齐 · 对应站点：`/concepts/style` · 源码：[website/src/concepts/style.md](../../../website/src/concepts/style.md)
 
 ## 0. 设计结论
 

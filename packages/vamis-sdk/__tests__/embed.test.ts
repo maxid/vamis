@@ -1,7 +1,7 @@
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { embed, normalizeEmbedSchema } from '../src/embed'
-import { IR_API_VERSION, registerRenderer, registerTheme } from '@vamis/core'
+import { IR_API_VERSION, registerRenderer, registerTheme, useEnv } from '@vamis/core'
 import 'vamis'
 
 const mounts: Array<ReturnType<typeof embed>> = []
@@ -441,6 +441,65 @@ describe('embed', () => {
     expect(String(form?.getData?.()?.date)).toBe('1714233600')
   })
 
+  it('resolves top-level definitions with local fields overriding the reference', async () => {
+    const { host } = mount({
+      type: 'page',
+      definitions: {
+        nameField: { type: 'input-text', name: 'name', value: 'ref value', label: '定义标签' },
+      },
+      body: {
+        type: 'form',
+        actions: [],
+        body: { $ref: 'nameField', label: '本地标签' },
+      },
+    })
+    await nextTick()
+    const input = host.querySelector('input[name="name"]') as HTMLInputElement
+    expect(input?.value).toBe('ref value')
+    expect(host.textContent).toContain('本地标签')
+    expect(host.textContent).not.toContain('定义标签')
+  })
+
+  it('reports unknown definition references without rendering a placeholder component', async () => {
+    const onDiagnostic = vi.fn()
+    const { host } = mount({
+      type: 'page',
+      definitions: {},
+      body: { $ref: 'missing' },
+    }, undefined, { onDiagnostic })
+    await nextTick()
+    expect(host.querySelector('.vamis-page__body .vamis-node')).toBeNull()
+    expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'renderer',
+      message: '未知 definitions 引用 missing',
+      detail: { $ref: 'missing' },
+    }))
+  })
+
+  it('expands recursive definitions only when the current combo row enables children', async () => {
+    const { host } = mount({
+      type: 'page',
+      definitions: {
+        options: {
+          type: 'combo',
+          multiple: true,
+          name: 'options',
+          items: [
+            { type: 'switch', name: 'hasChildren', value: false, label: '包含子选项' },
+            { $ref: 'options', name: 'children', label: '子选项', visibleOn: '${hasChildren === true}' },
+          ],
+        },
+      },
+      body: { type: 'form', actions: [], body: { $ref: 'options', label: '选项' } },
+    })
+    await nextTick()
+    const toggle = host.querySelector('input[type="checkbox"]') as HTMLInputElement
+    toggle.click()
+    await vi.waitFor(() => expect(host.textContent).toContain('子选项'))
+    expect(host.querySelector('.vamis-renderer-error')).toBeNull()
+    expect(host.textContent).toContain('新增一项')
+  })
+
   it('syncs same-named form fields when trackExpression changes', async () => {
     const { host, scoped } = mount({
       type: 'page',
@@ -674,6 +733,32 @@ describe('embed', () => {
     expect(tracker).toHaveBeenCalledWith({ eventType: 'change', eventData: { trackId: 'search', trackName: '搜索输入' } })
     await vi.waitFor(() => expect(notify).toHaveBeenCalledTimes(1))
     expect(notify).toHaveBeenCalledWith('info', 'ab', expect.any(Object))
+  })
+
+  it('gives custom renderers schema/data props and injected env', async () => {
+    const notify = vi.fn()
+    registerRenderer({
+      type: 'docs-hello',
+      component: defineComponent({
+        props: { schema: { type: Object, required: true }, data: { type: Object, required: true } },
+        setup(props) {
+          const env = useEnv()
+          return () => h('button', {
+            onClick: () => env.notify('info', `你好 ${props.data.name}`),
+          }, String(props.schema.text))
+        },
+      }),
+    })
+    const { host } = mount({
+      type: 'page',
+      data: { name: 'Vamis' },
+      body: { type: 'docs-hello', text: '自定义节点' },
+    }, undefined, { notify })
+    await nextTick()
+    const button = host.querySelector('button') as HTMLButtonElement
+    expect(button.textContent).toBe('自定义节点')
+    button.click()
+    expect(notify).toHaveBeenCalledWith('info', '你好 Vamis')
   })
 
   it('captures renderer errors and reports the schema path', async () => {

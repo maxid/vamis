@@ -1,6 +1,6 @@
 # 模板设计
 
-> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/template` · 源码：[website/src/concepts/template.md](../../../website/src/concepts/template.md)
+> 状态：**进行中 95%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/template` · 源码：[website/src/concepts/template.md](../../../website/src/concepts/template.md)
 
 ## 0. 设计结论
 

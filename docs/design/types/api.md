@@ -1,6 +1,6 @@
 # API 类型设计
 
-> 状态：**已完成 92%** · 对应站点：`/types/api` · 源码：[website/src/types/api.md](../../../website/src/types/api.md)
+> 状态：**已完成 92%** · Amis 核对：类型主路径 + Vamis 源码 / 活示例 · 对应站点：`/types/api` · 源码：[website/src/types/api.md](../../../website/src/types/api.md)
 
 ## 0. 设计结论
 
@@ -31,15 +31,15 @@ API 类型页定义**唯一请求管线**：normalize → sendOn → requestAdap
 
 ## 4. 缺口
 
-- 全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载未接。
+- 全局 `addApiRequestAdaptor` 未接；Blob 的 `Content-Disposition` 文件名解析已接。
 - 错误对象结构未完全统一。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] 管线/形态/返回边界已盘点
 - [x] requestApi/env/action 已定位
-- [ ] 字符串/对象配置可运行
-- [ ] 返回/错误形态逐项核对
-- [ ] 管线阶段示例可观察
-- [ ] GET 域拼接边界可复现
-- [ ] P1 缺口标注
+- [x] 字符串/对象配置可运行
+- [x] 返回/错误形态逐项核对
+- [x] 管线阶段示例可观察
+- [x] GET 域拼接边界可复现
+- [x] P1 缺口标注

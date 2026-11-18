@@ -1,6 +1,6 @@
 # JS SDK 设计
 
-> 状态：**已完成 90%** · 对应站点：`/start/sdk` · 源码：[website/src/start/sdk.md](../../../website/src/start/sdk.md)
+> 状态：**已完成 90%** · Amis 核对：入口主路径 + Vamis 源码 / 活示例 · 对应站点：`/start/sdk` · 源码：[website/src/start/sdk.md](../../../website/src/start/sdk.md)
 
 ## 0. 设计结论
 
@@ -33,12 +33,12 @@ SDK 页定义**任意 HTML 嵌入**：`sdk.js` loader + `vamis.embed('#root', sc
 - npm/CDN 版本口径未稳定。
 - locale 参数未注入。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] 产物/嵌入/注册边界已盘点
 - [x] SDK 源码/spec 已定位
-- [ ] 最小 HTML 按文档跑通
-- [ ] 构建产物路径/说明核对
-- [ ] 失败态可复现
-- [ ] API 表与导出一致
-- [ ] 与 getting-started/i18n 互链
+- [x] 最小 HTML 按文档跑通
+- [x] 构建产物路径/说明核对
+- [x] 失败态可复现
+- [x] API 表与导出一致
+- [x] 与 getting-started/i18n 互链

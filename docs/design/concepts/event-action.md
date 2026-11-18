@@ -1,6 +1,6 @@
 # 事件动作设计
 
-> 状态：**已完成** · 对应站点：`/concepts/event-action` · 源码：[website/src/concepts/event-action.md](../../../website/src/concepts/event-action.md)
+> 状态：**进行中 95%** · 控制流恢复与可视化面板余项未齐 · 对应站点：`/concepts/event-action` · 源码：[website/src/concepts/event-action.md](../../../website/src/concepts/event-action.md)
 
 ## 0. 设计结论
 

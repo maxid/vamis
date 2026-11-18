@@ -32,6 +32,7 @@ import {
   provideFormApi,
   requestApi,
   resolveClassName,
+  resolveSchemaRef,
   runOnEvent,
   setPathValue,
   statusStaticOf,
@@ -40,11 +41,13 @@ import {
   useEnv,
   useOverlay,
   useRendererHub,
+  useDefinitions,
   useScope,
   useScoped,
   provideScoped,
   validateValue,
   type ChangeReason,
+  type SchemaCollection,
   type SchemaObject,
 } from '@vamis/core'
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
@@ -65,6 +68,7 @@ const parentScoped = useScoped()
 const scoped = provideScoped(parentScoped)
 const overlay = useOverlay()
 const scope = useScope()
+const definitions = useDefinitions()
 const PERSIST_KEY = typeof props.schema.persistData === 'string' ? props.schema.persistData : ''
 
 /** Amis persistData：localStorage 恢复 + 只存 persistDataKeys（缺省全存）。 */
@@ -111,9 +115,13 @@ function clearPersisted() {
   }
 }
 
+function formItemsFrom(nodes: SchemaCollection | null | undefined) {
+  return collectFormItems(asArray(nodes).map((node) => resolveSchemaRef(node, definitions?.value)))
+}
+
 const parentData = { ...(props.data || {}) }
 const initialFormData = initFormStoreData(
-  collectFormItems(asArray(props.schema.body || props.schema.controls)),
+  formItemsFrom(props.schema.body || props.schema.controls),
   parentData,
   props.schema.data,
   props.schema.canAccessSuperData !== false,
@@ -249,7 +257,7 @@ function onDefaultSubmitClick() {
 }
 
 function formItems() {
-  return collectFormItems(body.value)
+  return formItemsFrom(body.value)
 }
 
 function itemByName(name: string) {

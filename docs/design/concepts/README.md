@@ -1,11 +1,11 @@
 # Concepts 概念文档设计
 
-> 状态：**已完成** · 覆盖 [website/src/concepts](../../../website/src/concepts) · 9 篇主路径均 100%
+> 状态：**进行中** · 覆盖 [website/src/concepts](../../../website/src/concepts) · 9 篇按剩余实现缺口为 90–95%
 > 盘点日期：2026-11-18。本文是站点文档域的设计，不替代各页正文。
 
 ## 0. 一页结论
 
-Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数据域/数据链 → 模板/映射/表达式 → 联动/事件动作 → 行为 → 样式。9 篇概念正文均为 100%；联动循环、模板 raw、数据域隔离与动作失败边界都由正文和活示例约束。
+Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数据域/数据链 → 模板/映射/表达式 → 联动/事件动作 → 行为 → 样式。9 篇主路径与文档反例已核对，但仍有运行时缺口，实现进度为 90–95%，不再统一标 100%。
 
 ## 1. 边界与优先级（先读）
 
@@ -25,15 +25,15 @@ Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数�
 
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
-| [配置与组件](schema.md) | type、组件树、YAML/JSON/IR、LazyComponent | 100% |
-| [数据域与数据链](datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 100% |
-| [模板](template.md) | 插值、转义、raw、过滤器、嵌套 | 100% |
-| [数据映射](data-mapping.md) | `source`/`map`/字段映射/字典 | 100% |
-| [表达式](expression.md) | 变量、运算、函数、过滤器 | 100% |
-| [联动](linkage.md) | 条件显隐/禁用/值联动 | 100% |
-| [事件动作](event-action.md) | onEvent、动作表、上下文、控制流 | 100% |
-| [行为](action.md) | actionType、confirm、请求、跳转 | 100% |
-| [样式](style.md) | cssVars、className、token、主题 | 100% |
+| [配置与组件](schema.md) | type、组件树、YAML/JSON/IR、LazyComponent | 95% |
+| [数据域与数据链](datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 90% |
+| [模板](template.md) | 插值、转义、raw、过滤器、嵌套 | 95% |
+| [数据映射](data-mapping.md) | `source`/`map`/字段映射/字典 | 90% |
+| [表达式](expression.md) | 变量、运算、函数、过滤器 | 95% |
+| [联动](linkage.md) | 条件显隐/禁用/值联动 | 90% |
+| [事件动作](event-action.md) | onEvent、动作表、上下文、控制流 | 95% |
+| [行为](action.md) | actionType、confirm、请求、跳转 | 90% |
+| [样式](style.md) | cssVars、className、token、主题 | 90% |
 
 ## 2. 文档契约
 
@@ -61,7 +61,7 @@ website/src/concepts/*.md
 
 ## 4. 后续边界
 
-- 概念页 100% 只表示概念主路径与示例完成；组件高级能力仍按组件 TODO 验收。
+- 概念页按实际剩余缺口标 90–95%；主路径 / 文档核对完成不等于运行时完成。
 - 模板 raw、数据域隔离、联动循环、事件 confirm / 失败态均已补正文或反例。
 - 跨页链接已按语义补齐；新增示例继续进入 SDK 对照，不为对照复制 JSON/YAML 孪生围栏。
 

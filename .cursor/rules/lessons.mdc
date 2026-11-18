@@ -252,6 +252,12 @@ alwaysApply: true
 - 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards` `card` `dialog` `drawer` `tabs` `pagination` `formula`
 - 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；`packages/vamis/src/renderers/data/RowValueHost.vue`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange` / `Table/TableCell.tsx` `inputOnly`
 
+### Definitions 按实际节点浅解析，Combo 每行先有自己的默认值
+- 踩过：递归 `$ref` 若在初始化时深展开会无限递归；只在 SchemaRenderer 解析又让 Form 收集不到默认值。递归 Combo 的新行没有自己的开关值，还会沿父链继承 `true` 并无限建行。
+- 稳定做法：顶级 definitions 通过 provide 注入；每个实际节点合并定义与本地字段，本地覆盖。Form 收集默认值时做同样的浅解析；Combo 每行先 `applyFormItemDefaults`，递归只在作者条件展开时继续。未知引用走诊断，不渲染占位。
+- 触及：Definitions `form` `combo` SDK
+- 规则：`packages/vamis-core/src/utils/definitions.ts`；`packages/vamis/src/renderers/form/Combo.vue`
+
 ### Amis 文档站给示例传 `affixHeader: false`，生产默认才是 true
 - 踩过：对着 Amis 文档页看不到固定表头，以为默认关。文档站 env 统一传了 `affixHeader: false`；组件默认是开，结构是 sticky 的 `Table-fixedTop`（工具栏 + 标题 + 只有 thead 的定宽表），表体自己的 thead 用负 margin 藏起来。
 - 稳定做法：默认值看组件源码，不看文档站渲染结果。Vamis 用 `env.affixHeader` 给文档预览 / 对照关掉，schema 上写了仍以 schema 为准。固定表头的列宽从表体量出来写进 `<colgroup>`，阴影这类带 alpha 的色写 inline style。
@@ -305,7 +311,7 @@ alwaysApply: true
 ### 无 chrome 的宿主 fragment 根要 inheritAttrs: false
 - 踩过：`SchemaRenderer` 一律传 `disabled`。字符串 `body` 收成 `tpl` 落到 `BadgeHost`；Form 单根是 `LazyComponent`，`defaultVisible` 时根也是 `<slot />` fragment。Vue 报警，来源常被 React DevTools 的 `installHook.js` 抢走。
 - 稳定做法：`BadgeHost` / `PopOverHost` / `LazyComponent` 这类「未启用就只 slot」的宿主 `inheritAttrs: false`。渲染器声明但不用 `disabled`（`Tpl` / `Form`）。不要为了消 warn 再包一层 span。表单控件自己的 `disabled` prop 不受影响。
-- 触及：`tpl` `badge` `popOver` `form` LazyComponent
+- 触及：`tpl` `badge` `popOver` `form` `remark` LazyComponent
 - 规则：本文；`packages/vamis-core/src/LazyComponent.vue`
 
 ### 禁止嵌套 HTML form

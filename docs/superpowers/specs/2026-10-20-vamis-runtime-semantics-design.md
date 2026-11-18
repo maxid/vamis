@@ -172,7 +172,7 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
 | PaginationWrapper | × | ✓ | 切片结果和页码 extraData 下发 |
 | Service | ✓ | — | `scope: self`；私有字段写入本层，不进 Page；行宿主需显式 `forwardFromChildScope` 才允许子域回写 |
 | Wizard | × | ✓ | 自身只下发 `currentStep`；步骤内容包 form |
-| Combo | × | ✓ | 行 NestedFormScope 写回数组项；独立 Scope 仍缺（D6） |
+| Combo | × | ✓ | 行 NestedFormScope 写回数组项；每行应用 items 默认值，支持 Definitions 条件递归；独立 Scope 仍缺（D6） |
 | InputArray | × | ✓ | 同行 NestedFormScope |
 | Table | × | ✓ | 集合不建域。单元格 extraData 是行记录 |
 | Table2 | × | ✓ | 同 Table |

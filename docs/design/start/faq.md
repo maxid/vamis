@@ -1,6 +1,6 @@
 # FAQ 设计
 
-> 状态：**已完成 90%** · 对应站点：`/start/faq` · 源码：[website/src/start/faq.md](../../../website/src/start/faq.md)
+> 状态：**已完成 90%** · Amis 核对：排障主路径 + Vamis 源码 · 对应站点：`/start/faq` · 源码：[website/src/start/faq.md](../../../website/src/start/faq.md)
 
 ## 0. 设计结论
 
@@ -28,17 +28,17 @@ FAQ 是**排障索引**：每条先给可执行结论，再给原因/链接。�
 - [pages.ts](../../../playground/src/docs/pages.ts)：路由加载。
 - [diagnostic](../../../packages/vamis-core/src/env.ts)：诊断链接。
 
-## 4. 缺口
+## 4. 边界
 
-- 缺“文档示例跑不起来”排查树。
-- 版本/平台差异未集中。
+- 已覆盖环境、样式、未知 type、404/CORS、YAML 解析与迁移。
+- 未确认的平台差异不编造；引导到诊断与同路径实现文档。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] 分类/先结论边界已盘点
 - [x] FAQ 源/路由/诊断已定位
-- [ ] 五类问题各至少一条
-- [ ] 每条可复现/可执行
-- [ ] 错误文案与 Vamis 一致
-- [ ] 与 getting-started/sdk 互链
-- [ ] 不编造未确认原因
+- [x] 五类问题各至少一条
+- [x] 每条可复现/可执行
+- [x] 错误文案与 Vamis 一致
+- [x] 与 getting-started/sdk 互链
+- [x] 不编造未确认原因

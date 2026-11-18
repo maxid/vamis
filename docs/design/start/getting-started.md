@@ -1,6 +1,6 @@
 # 快速开始设计
 
-> 状态：**已完成 95%** · 对应站点：`/start/getting-started` · 源码：[website/src/start/getting-started.md](../../../website/src/start/getting-started.md)
+> 状态：**已完成 95%** · Amis 核对：入口主路径 + Vamis 源码 / 活示例 · 对应站点：`/start/getting-started` · 源码：[website/src/start/getting-started.md](../../../website/src/start/getting-started.md)
 
 ## 0. 设计结论
 
@@ -28,17 +28,17 @@
 - [Playground](../../../README.md)：`pnpm dev`。
 - [SDK](../../../packages/vamis-sdk/src)：另一入口。
 
-## 4. 缺口
+## 4. 边界
 
-- 环境前提（Node/pnpm/浏览器）未集中。
-- npm 发布状态未写清。
+- Node/pnpm/浏览器前提已集中；npm / CDN 未发布，不写成现有下载地址。
+- Vue / SDK 共用内核；首次成功路径和失败排查均已覆盖。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] Vue 路径/样式前置已盘点
 - [x] VamisRoot/Playground 已定位
-- [ ] 从零按文档跑通
-- [ ] YAML/JSON/IR 示例核对
-- [ ] 缺样式/未注册/404 排查
-- [ ] 与 sdk/FAQ 互链
-- [ ] 版本承诺与现状一致
+- [x] 从零按文档跑通
+- [x] YAML/JSON/IR 示例核对
+- [x] 缺样式/未注册/404 排查
+- [x] 与 sdk/FAQ 互链
+- [x] 版本承诺与现状一致

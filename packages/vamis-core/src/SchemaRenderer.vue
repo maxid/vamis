@@ -3,13 +3,14 @@ import { computed, onBeforeUnmount, onErrorCaptured, ref, shallowRef, watch } fr
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
-import { provideData, provideScope, provideValueHost, useData, useEnv, useScope, useValueHost } from './context'
+import { provideData, provideScope, provideValueHost, useData, useDefinitions, useEnv, useScope, useValueHost } from './context'
 import { createScope, type Scope } from './scope'
 import { useScoped } from './scoped'
 import { useOverlay } from './overlay'
 import { useFormApi } from './form-api'
 import { cancelEventDebounce, createVamisEvent, eventEvalData, runOnEvent } from './actions/run'
 import { reportDiagnostic } from './diagnostic'
+import { resolveSchemaRef } from './utils/definitions'
 import { EDITOR_PATH_MIME, useEditorSelection } from './editor-selection'
 import { statusDisabledOf, statusVisibleOf } from './status-store'
 
@@ -44,6 +45,7 @@ const props = defineProps<{
 
 const parentData = useData()
 const parentScope = useScope()
+const definitions = useDefinitions()
 const env = useEnv()
 const scoped = useScoped()
 const overlay = useOverlay()
@@ -53,7 +55,18 @@ const normalized = computed<SchemaObject | null>(() => {
   if (schema == null || schema === false) return null
   if (typeof schema === 'string') return { type: 'tpl', tpl: schema }
   if (typeof schema !== 'object') return { type: 'tpl', tpl: String(schema) }
-  return schema as SchemaObject
+  const node = schema as SchemaObject
+  if (!node.$ref) return node
+  const ref = node.$ref
+  const resolved = resolveSchemaRef(node, definitions?.value)
+  if (resolved) return resolved
+  reportDiagnostic(env, {
+    type: 'renderer',
+    message: `未知 definitions 引用 ${ref}`,
+    path: ref,
+    detail: { $ref: ref },
+  })
+  return null
 })
 const renderer = computed(() => resolveRenderer(normalized.value?.type, normalized.value || undefined))
 const schemaData = computed(() => {

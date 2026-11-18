@@ -1,6 +1,6 @@
 # 自定义组件设计
 
-> 状态：**进行中 55%** · 对应站点：`/extend/custom` · 源码：[website/src/extend/custom.md](../../../website/src/extend/custom.md)
+> 状态：**进行中 55%** · Amis 核对：custom-sdk 主路径 + Vamis 源码 / SDK 示例 · 对应站点：`/extend/custom` · 源码：[website/src/extend/custom.md](../../../website/src/extend/custom.md)
 
 ## 0. 设计结论
 
@@ -10,7 +10,7 @@
 
 1. **注册键**：`type` 精确匹配；`test` 正则/权重决定冲突优先级。
 2. **隔离域**：`isolateScope` 影响数据域可见性，默认 false；不能拿它替代安全隔离。
-3. **组件契约**：只吃 `schema` / `data` / `env`；禁止直接 fetch；请求走 `requestApi`。
+3. **组件契约**：props 收 `schema` / `data`，`env` 用 `useEnv()` 注入；禁止直接 fetch，请求走统一 API 管线。
 4. **双入口**：Vue `registerRenderer` 与 SDK `vamis.registerRenderer` 同注册表。
 5. **懒加载**：重组件用 LazyComponent 包，不改变注册协议。
 6. **错误**：渲染异常进诊断；插件市场/远程加载不在本期。
@@ -32,14 +32,14 @@
 ## 4. 缺口
 
 - 重复 type/权重冲突的提示未统一。
-- 插件市场/错误边界仍是缺口。
+- 插件市场 / 远程加载不在范围；渲染错误边界与 `env.onDiagnostic` 已接。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] 注册协议/优先级/双入口已盘点
 - [x] registerRenderer/SchemaRenderer/SDK 已定位
-- [ ] hello 示例在 Vue 与 SDK 双入口跑通
-- [ ] type/test/weight 冲突示例可复现
-- [ ] 无 fetch 约束与反例
-- [ ] 未注册/重复/抛错失败态可复现
-- [ ] 与 concepts/schema、start/sdk 互链
+- [x] hello 示例在 Vue 与 SDK 双入口跑通
+- [x] type/test/weight 冲突示例可复现
+- [x] 无 fetch 约束与反例
+- [x] 未注册/重复/抛错失败态可复现
+- [x] 与 concepts/schema、start/sdk 互链

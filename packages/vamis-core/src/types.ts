@@ -11,6 +11,8 @@ export type SchemaNode = string | number | boolean | SchemaObject
 
 export interface SchemaObject extends PlainObject {
   type?: string
+  $ref?: string
+  definitions?: Record<string, SchemaObject>
   name?: string
   id?: string
   /** Amis 表单/面板：`false` 隐藏标题；对象走子渲染器。 */

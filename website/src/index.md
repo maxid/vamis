@@ -90,7 +90,7 @@ body:
           api: "delete:/api/mock2/sample/${id}"
 ```
 
-尚未对齐：列冻结、拖拽排序、导出 Excel、`autoGenerateFilter`、数据域 D1。
+示例使用本地 mock；接口失败时会显示错误，不会把失败响应当成有效列表。CRUD 与其它组件的高级能力仍以各页实现进度为准，不把“已注册 type”当成全部语义完成。
 
 ## 下一步
 

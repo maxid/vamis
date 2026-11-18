@@ -1,6 +1,6 @@
 # 数据映射设计
 
-> 状态：**已完成** · 对应站点：`/concepts/data-mapping` · 源码：[website/src/concepts/data-mapping.md](../../../website/src/concepts/data-mapping.md)
+> 状态：**进行中 90%** · source 缓存等余项未齐 · 对应站点：`/concepts/data-mapping` · 源码：[website/src/concepts/data-mapping.md](../../../website/src/concepts/data-mapping.md)
 
 ## 0. 设计结论
 

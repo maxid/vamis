@@ -1,6 +1,6 @@
 # 行为设计
 
-> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/action` · 源码：[website/src/concepts/action.md](../../../website/src/concepts/action.md)
+> 状态：**进行中 90%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/action` · 源码：[website/src/concepts/action.md](../../../website/src/concepts/action.md)
 
 ## 0. 设计结论
 

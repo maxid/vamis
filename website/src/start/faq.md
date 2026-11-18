@@ -5,7 +5,7 @@ title: 常见问题
 # 常见问题
 
 ::: info 实现进度 90% · 已完成
-口径文档：YAML/JSON 并列、已注册 ≠ 已完成、默认自适应、不搬 `cxd-` 前缀（能力转写到 shadcn-vue / Tailwind）。随实现更新，不是运行时功能页。
+已覆盖环境、作者态、渲染、请求、样式、主题、迁移与调试的常见排查；所有结论均链接到对应实现文档，不是运行时功能页。
 :::
 
 ## 和 Amis 是什么关系？
@@ -15,6 +15,26 @@ title: 常见问题
 ## 作者态必须用 YAML 吗？
 
 不必。**YAML 与 JSON 都是一等作者态**，`parseSchemaText` / `VamisRoot` / `vamis.embed` 都收。YAML 注释和多行模板更舒服；JSON 更方便从 Amis 直接搬。写 YAML 时字面量按 **1.2 Core**：不要把 `yes` / `On` / `012` 当成布尔或八进制。
+
+## 本地环境用什么版本？
+
+Node.js 至少 **20**，仓库 `.nvmrc` 当前为 **24.14.1**；pnpm 按根目录 `packageManager` 使用 **10.33.3**。先执行 `pnpm install`，再执行 `pnpm dev`。不支持 IE。
+
+## 示例只有文字、没有正常样式怎么办？
+
+Vue 入口确认加载 `@vamis/ui/styles.css`；JS SDK 确认加载 `sdk.css`，并保留 `sdk.js` 同目录的 ESM chunks。仍异常时检查构建工具是否把 CSS 排除，以及浏览器控制台是否有资源 404。
+
+## 页面出现未知组件或类型怎么办？
+
+先确认 `type` 拼写和当前页面的实现进度。自定义组件要在渲染前调用 `registerRenderer`；SDK 使用 `vamis.registerRenderer`。需要定位原因时，用 [调试](/extend/debug) 的 `env.onDiagnostic` 接收带路径的诊断。
+
+## initApi / form 请求失败怎么排查？
+
+先看请求是否 404、跨域是否被浏览器拦截，再核对返回是否为 `{ status, msg, data }`。文档的 `/api/mock2/*` 只在 Playground 有本地 mock；搬到自己的页面时必须换成真实接口或注入 `env.fetcher`。字符串适配器还受 `env.trusted` 限制。
+
+## YAML 编辑后预览没有更新怎么办？
+
+先检查缩进、引号和 YAML 1.2 Core 字面量。编辑器解析失败时会保留上一份有效预览，不会把半棵错误树写进运行时；也可以切到 JSON Tab 对照结构。仍不生效时按 [配置与组件](/concepts/schema) 检查字段是否放在正确的容器层级。
 
 ## 已注册是不是就能当 Amis 用？
 
@@ -38,7 +58,7 @@ title: 常见问题
 
 ## 主题能换成云舍 / 仿 AntD / ang 吗？
 
-可以切色阶，不换 `.cxd-` 前缀。顶栏 6 色点写 `html[data-theme]`（云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色），悬停显示名称；浅色/深色是第四包（对齐 Amis dark）。顶栏 / 链接 / 按钮跟当前 `--primary`（翠绿 `#007617`、琥珀 `#9b4500`、金色 `#8f6a00`），深浅实色按钮都保留 brand-5 和白字，暗底文字链接由 `--link-color` 单独提亮。画布不跟品牌色相染色。文档活示例预览井跟 `--card`，不要另刷 Page fill。`--success` / Tag 预设色都 alias `--colors-*`，组件不要自己再写一套 hex。`page.cssVars` 仍可覆盖单页。
+可以切色阶，不换 `.cxd-` 前缀。顶栏 6 色点写 `html[data-theme]`（云舍 / 仿 AntD / ang / 翠绿 / 琥珀 / 金色），悬停显示名称；浅色 / 深色是独立的明暗模式，不是第七个品牌色包。顶栏 / 链接 / 按钮跟当前 `--primary`（翠绿 `#007617`、琥珀 `#9b4500`、金色 `#8f6a00`），深浅实色按钮都保留 brand-5 和白字，暗底文字链接由 `--link-color` 单独提亮。画布不跟品牌色相染色。文档活示例预览井跟 `--card`，不要另刷 Page fill。`--success` / Tag 预设色都 alias `--colors-*`，组件不要自己再写一套 hex。`page.cssVars` 仍可覆盖单页。
 
 ## typecheck 过了吗？
 

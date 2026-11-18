@@ -1,6 +1,6 @@
 # 表达式设计
 
-> 状态：**已完成** · 对应站点：`/concepts/expression` · 源码：[website/src/concepts/expression.md](../../../website/src/concepts/expression.md)
+> 状态：**进行中 95%** · 错误定位 / 展示余项未齐 · 对应站点：`/concepts/expression` · 源码：[website/src/concepts/expression.md](../../../website/src/concepts/expression.md)
 
 ## 0. 设计结论
 

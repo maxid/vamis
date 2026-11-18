@@ -1,6 +1,6 @@
 # ClassName 类型设计
 
-> 状态：**进行中 70%** · 对应站点：`/types/classname` · 源码：[website/src/types/classname.md](../../../website/src/types/classname.md)
+> 状态：**进行中 70%** · Amis 核对：类型主路径 + Vamis 源码 / 活示例 · 对应站点：`/types/classname` · 源码：[website/src/types/classname.md](../../../website/src/types/classname.md)
 
 ## 0. 设计结论
 
@@ -33,12 +33,12 @@ ClassName 页定义**作者类名解析**：字符串/对象/模板，`resolveCl
 - 其余组件 `xxxClassName` 未全覆盖。
 - hover/响应式全矩阵未齐。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（已核对）
 
 - [x] 三形态/落点/前缀边界已盘点
 - [x] resolve/SchemaRenderer/helpers 已定位
-- [ ] 三形态示例可运行
-- [ ] 对象/模板/空值规则核对
-- [ ] 外层/内层落点可复现
-- [ ] P1 覆盖缺口标注
-- [ ] 与 style 文档互链
+- [x] 三形态示例可运行
+- [x] 对象/模板/空值规则核对
+- [x] 外层/内层落点可复现
+- [x] P1 覆盖缺口标注
+- [x] 与 style 文档互链

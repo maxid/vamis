@@ -38,7 +38,7 @@
 
 ## 4. 架构
 
-- [`rest/Remark.vue`](../../../../packages/vamis/src/renderers/rest/Remark.vue)：content/icon/triggers/mobile。
+- [`rest/Remark.vue`](../../../../packages/vamis/src/renderers/rest/Remark.vue)：content/icon/triggers/mobile；fragment 宿主 `inheritAttrs: false` 并声明 disabled，避免 fallthrough 警告。
 - [`VamisTooltipLayer.vue`](../../../../packages/vamis/src/overlay/VamisTooltipLayer.vue)：浮层。
 - [`remark.ts`](../../../../packages/vamis-core/src/utils/remark.ts)：content/shape/placement/dialog。
 

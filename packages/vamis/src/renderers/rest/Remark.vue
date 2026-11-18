@@ -29,7 +29,8 @@ import {
 import VamisTooltipLayer from '../../overlay/VamisTooltipLayer.vue'
 import IconMark from '../IconMark.vue'
 
-const props = defineProps<{ schema: SchemaObject; data?: Record<string, any> }>()
+defineOptions({ inheritAttrs: false })
+const props = defineProps<{ schema: SchemaObject; data?: Record<string, any>; disabled?: boolean }>()
 const injected = useData()
 const env = useEnv()
 const overlay = useOverlay()

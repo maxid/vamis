@@ -5,14 +5,14 @@ title: 自定义组件
 # 自定义组件
 
 ::: warning 实现进度 55% · 进行中
-`registerRenderer` 可用，D7 的 `test` / `weight` / `isolateScope` 已接。插件市场、错误边界仍缺。
+注册、匹配优先级、作用域、Vue / SDK 同注册表、校验扩展与渲染错误边界均已按源码核对；插件市场和远程加载不在当前范围。
 :::
 
-用 `registerRenderer` 注册 Vue 组件。渲染器只吃 `schema` / `data` / `env`。
+用 `registerRenderer` 注册 Vue 组件。渲染器通过 props 接收 `schema` / `data`；`env` 不是在 SchemaRenderer 上逐项转发的普通 prop，而是在组件内用 `useEnv()` 注入。
 
 ```ts
 import { defineComponent, h } from 'vue'
-import { registerRenderer } from '@vamis/core'
+import { registerRenderer, useEnv } from '@vamis/core'
 
 registerRenderer({
   type: 'hello',
@@ -20,22 +20,43 @@ registerRenderer({
   weight: 0,
   isolateScope: false,
   component: defineComponent({
-    props: { schema: { type: Object, required: true } },
+    props: {
+      schema: { type: Object, required: true },
+      data: { type: Object, required: true },
+    },
     setup(props) {
-      return () => h('p', { class: 'text-sm' }, String(props.schema.text || 'hello'))
+      const env = useEnv()
+      return () => h('button', {
+        class: 'text-sm',
+        onClick: () => env.notify('info', `你好 ${props.data.name || ''}`),
+      }, String(props.schema.text || 'hello'))
     },
   }),
 })
 ```
 
 ```yaml
-type: hello
-text: 自定义节点
+type: page
+data:
+  name: Vamis
+body:
+  type: hello
+  text: 自定义节点
 ```
 
-不要在组件里 `fetch`。需要请求就走 `env.fetcher`，或包在 `service` 里。重组件（图表、编辑器）可以包一层 [LazyComponent](/concepts/schema#lazycomponent)，默认进视口再挂。
+不要在组件里直接 `fetch`。需要请求就通过注入的 `env` 走统一管线，或包在 `service` 里。重组件（图表、编辑器）可以包一层 [LazyComponent](/concepts/schema#lazycomponent)，默认进视口再挂。
+
+`type` 精确匹配优先；没有精确命中时再按 `weight` 从高到低检查 `test`。重复注册同一个 `type` 会更新既有注册，不会叠加两个组件。`isolateScope: true` 会截断父域查找，只用于数据隔离，不是安全沙箱。
 
 JS SDK 宿主用同一套注册表：`vamis.registerRenderer({ type, component })`。不要把函数写进 YAML。非 Vue 页面也可以用已有 `custom` 的 `onMount` 往 DOM 插节点。不提供 `amisRequire('react')`。
+
+## 失败态
+
+- 未注册 type 会显示占位并进入诊断；先检查注册是否发生在 `VamisRoot` / `embed` 之前。
+- 重复 `type` 是覆盖更新；需要多个匹配规则时用 `test` / `weight`，不要依赖注册顺序猜结果。
+- 组件抛错会由 [SchemaRenderer 错误边界](/concepts/schema) 显示带路径的错误块，并调用 `env.onDiagnostic`；不需要每个扩展组件另写一套全局错误处理。
+
+调试与诊断字段见 [调试](/extend/debug)，SDK 加载顺序见 [JS SDK](/start/sdk)。
 
 ## 扩展表单验证
 

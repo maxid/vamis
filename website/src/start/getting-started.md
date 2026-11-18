@@ -5,7 +5,7 @@ title: 快速开始
 # 快速开始
 
 ::: info 实现进度 95% · 已完成
-Vue `VamisRoot` 与 JS SDK `vamis.embed` 两条入口都能跑；YAML / JSON / IR 并列。`getComponentByName` / `doAction` 已接（D5）。
+Vue 与 JS SDK 双入口、环境前提、YAML / JSON / IR、env 注入和失败排查均已核对；不包含未发布的 npm / CDN 承诺。
 :::
 
 Vamis 有两种用法，和 Amis 一样：
@@ -16,6 +16,13 @@ Vamis 有两种用法，和 Amis 一样：
 作者态同时支持 YAML 与 JSON（IR 信封也能进）。两条入口走同一套渲染器，不是两套运行时。
 
 两条现在都能跑。JS SDK 先 `pnpm --filter @vamis/sdk build`，产物在 `packages/vamis-sdk/dist/`。
+
+## 环境前提
+
+- Node.js **≥20**；仓库 `.nvmrc` 当前指定 **24.14.1**。
+- pnpm 按根目录 `packageManager` 使用 **10.33.3**。
+- 使用支持现代 ESM 的浏览器，不支持 IE。
+- 当前按 pnpm workspace 使用本仓库包；不要假设已经存在稳定的 npm / CDN 发布地址。发布状态见仓库发布材料。
 
 ## Vue
 
@@ -33,7 +40,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { VamisRoot } from 'vamis'
 import '@vamis/ui/styles.css'
-import 'vamis'
 
 const app = createApp({
   components: { VamisRoot },
@@ -51,7 +57,7 @@ app.use(createPinia())
 app.mount('#app')
 ```
 
-必须挂 Pinia：内部状态 hub 用它，不引入 MST。
+必须挂 Pinia：内部状态 hub 用它，不引入 MST。运行后应显示标题 `Hello` 和正文「来自 schema 的页面」。如果只有文字没有控件皮肤，先检查 `@vamis/ui/styles.css` 是否被构建工具实际加载；其它失败见 [常见问题](/start/faq)。
 
 ## JS SDK
 
@@ -74,7 +80,7 @@ app.mount('#app')
 
 两种写法同等有效，都交给 `parseSchemaText`（以 `{` / `[` 开头当 JSON）。
 
-```schema
+```yaml
 type: page
 title: Hello
 body:

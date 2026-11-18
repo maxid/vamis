@@ -6,10 +6,10 @@ outline: deep
 # API
 
 ::: info 实现进度 92% · 已完成
-kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。`qsOptions` 已接常用数组格式；P1：全局 `addApiRequestAdaptor`、blob `Content-Disposition` 下载。
+kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `responseData` / `replaceData` / `messages` / `dataType` / GraphQL）与文档主路径对齐。GET `initApi` 不把数据域拼进 query（对齐 Amis `buildApi`）。`qsOptions` 已接常用数组格式；P1：全局 `addApiRequestAdaptor`。Blob 响应已解析 `Content-Disposition` 文件名。
 :::
 
-接口配置与 Amis 同形：字符串或对象。所有数据请求走同一条 D3 管线 `requestApi`（normalize → sendOn → requestAdaptor → cache → fetch → payload → adaptor → responseData），由 `env.fetcher` 发出。渲染器禁止自己 `fetch`。
+接口配置与 Amis 同形：字符串或对象。所有数据请求走同一条 D3 管线 `requestApi`（normalize → sendOn → requestAdaptor → cache → fetch → payload → adaptor → responseData），由 `env.fetcher` 发出。渲染器禁止自己 `fetch`。数据取值见 [数据映射](/concepts/data-mapping)，按钮主动请求见 [事件动作](/concepts/event-action)。
 
 ## 简单配置
 
@@ -23,10 +23,10 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 - **url**：支持模板字符串。
 
 ```json
-{
-  "api": "get:/api/initData",
-  "api": "post:/api/initData"
-}
+[
+  { "api": "get:/api/initData" },
+  { "api": "post:/api/initData" }
+]
 ```
 
 ## 接口返回格式
@@ -419,4 +419,4 @@ kernel D3 P0 已落地：`requestApi` 管线（sendOn / cache / adaptor / `respo
 | mockResponse | 适配器里拦截真实请求 | 对象 |
 | convertKeyToPath | 映射 key 是否转路径，默认 true | 布尔 |
 
-`qsOptions` 已支持 `indices` / `repeat` / `brackets` / `comma` 与 `encodeValuesOnly`。P1 未齐：全局 `addApiRequestAdaptor`、blob 附件头的完整下载动作。自动刷新已接 page / form `initApi`、service、select `source`、crud / crud2 `api`、chart `api`、markdown `src`。wizard / mapping / nav / log / tasks / app 的远程接口尚未接入，不走这条生命周期。
+`qsOptions` 已支持 `indices` / `repeat` / `brackets` / `comma` 与 `encodeValuesOnly`。P1 未齐：全局 `addApiRequestAdaptor`。Blob 响应已支持从 `Content-Disposition` 解析文件名；自定义 fetcher 仍需返回对应 Blob / fileName。自动刷新已接 page / form `initApi`、service、select `source`、crud / crud2 `api`、chart `api`、markdown `src`。wizard / mapping / nav / log / tasks / app 的远程接口尚未接入，不走这条生命周期。

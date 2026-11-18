@@ -95,7 +95,7 @@ body:
 ```schema
 type: page
 data:
-  name: amis
+  name: vamis
   age: 1
 body:
   - type: tpl
@@ -104,4 +104,20 @@ body:
     tpl: I am ${age} years old
 ```
 
-给 `body` 配数组，就会在这一层渲染两个 `tpl`。
+给 `body` 配数组，就会在这一层渲染两个 `tpl`。空数组不创建子节点，数组里每个成员仍按字符串 / 对象规则分派。
+
+## 不渲染与失败态
+
+`false` 和 `null` 都表示不渲染，也不会留下空的 `.vamis-node` 包装。对象未写 `type` 且无法被其它渲染器的 `test` 命中时，会进入占位与诊断，不要依赖它猜测组件。
+
+```schema
+type: page
+body:
+  - type: tpl
+    tpl: 前面的节点正常显示
+  - false
+  - type: tpl
+    tpl: false 节点没有占位
+```
+
+需要复用同一份 Schema 时，使用顶级的 [Definitions](/types/definitions) 与 `$ref`；本地字段覆盖定义字段，递归引用按实际展开创建。

@@ -4,13 +4,13 @@ import { compileIrToWidget, jsonToIr } from './ir'
 import { resolveCssVars } from './style'
 import { createDefaultEnv } from './env'
 import { themeTokens } from './theme'
-import { provideEnv, provideData, provideScope, ParentStoreIdKey } from './context'
+import { provideEnv, provideData, provideScope, provideDefinitions, ParentStoreIdKey } from './context'
 import { createScope, parseSearch } from './scope'
 import { provideScoped } from './scoped'
 import { provideOverlay } from './overlay'
 import { useRendererHub, createStoreId } from './store/hub'
 import SchemaRenderer from './SchemaRenderer.vue'
-import type { PlainObject, RendererEnv, SchemaNode } from './types'
+import type { PlainObject, RendererEnv, SchemaNode, SchemaObject } from './types'
 
 const props = defineProps<{
   schema: unknown
@@ -57,6 +57,13 @@ defineExpose({ scoped })
 
 const ir = computed(() => jsonToIr(props.schema))
 const widget = computed<SchemaNode>(() => compileIrToWidget(ir.value))
+const definitions = computed<Record<string, SchemaObject>>(() => {
+  const current = widget.value
+  if (!current || typeof current !== 'object') return {}
+  const source = (current as SchemaObject).definitions
+  return source && typeof source === 'object' && !Array.isArray(source) ? source : {}
+})
+provideDefinitions(definitions)
 const density = computed(() => ir.value.metadata.style?.density)
 const rootVars = computed(() => resolveCssVars({
   ...themeTokens(env.value.theme),

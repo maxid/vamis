@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import {
   SchemaRenderer,
+  applyFormItemDefaults,
   asArray,
   comboApplyRadio,
   comboChildSchema,
@@ -25,10 +26,15 @@ const rowNodes = computed(() => fields.value.map((node) => comboChildSchema(node
 
 const rows = computed<Record<string, any>[]>(() => {
   const value = props.schema.name ? fieldApi.getValue(props.schema.name) : undefined
+  const withDefaults = (row: Record<string, any>) => applyFormItemDefaults(
+    fields.value.filter((node): node is SchemaObject => !!node && typeof node === 'object'),
+    row,
+  )
   if (multiple.value) {
-    return Array.isArray(value) && value.length ? (value as Record<string, any>[]) : [{}]
+    const list = Array.isArray(value) && value.length ? (value as Record<string, any>[]) : [{}]
+    return list.map(withDefaults)
   }
-  return [value && typeof value === 'object' ? (value as Record<string, any>) : {}]
+  return [withDefaults(value && typeof value === 'object' ? (value as Record<string, any>) : {})]
 })
 
 function persist(next: Record<string, any>[]) {
