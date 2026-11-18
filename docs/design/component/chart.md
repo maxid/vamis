@@ -1,85 +1,163 @@
 # Chart 图表 · `chart` 设计
 
 > 状态：**进行中 65%** · 复杂度：**XL 特重**
-> 文档：[/components/chart](/components/chart) · Amis 文档：`/zh-CN/components/chart`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/chart) · Amis：`/zh-CN/components/chart`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+Chart 是“ECharts option 的数据适配层”：不实现图表类型，只负责 config/source/api 取 option、懒加载 echarts、setOption、轮询、resize、click 事件与组件 API。核心风险是**echarts 可选依赖、option 生命周期、轮询/重载竞态、事件/动作缺口**。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+1. **option 来源**：`config` / `chart` → `source`（数据域变量）→ `api`（requestApi）依次取；返回非对象显示占位，不抛崩溃。
+2. **echarts 可选依赖**：动态 `import('echarts')`；未安装显示占位、保留 chart 类型，不让整页白屏。
+3. **实例生命周期**：`el` 出现才 init；卸载/元素消失 dispose；`setOption(option, replaceChartOption===true)` 决定 merge/replace；reset 重新读原始 option。
+4. **轮询**：`interval >= 1000` 才启动；每次 load 后 schedule；卸载清 timer；api/data 变化按 isApiOutdated 重载。
+5. **resize**：窗口 resize 只绑一次并清理；容器尺寸变化（LazyComponent/隐藏）不能只靠 window。
+6. **click**：先 `runOnEvent('click')`，未 prevented 才执行 `clickAction`；payload = 数据域 + echarts params。
+7. **包边界**：无 `<style>`；高度/style 由 schema/作者；echarts 不进主包，按需加载。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- config / source / api 三者优先级与空 option
+- echarts 未安装 / 动态 import 失败
+- API 失败/慢返回/返回 `{config}` 或裸 option
+- interval <1000、轮询中 api 变化、卸载
+- replaceChartOption true/false；setValue/reset
+- click 参数、preventDefault、clickAction
+- 容器隐藏/显示、resize、LazyComponent unMountOnHidden
+- 高度/宽度 0、深色主题、窄屏
+- 未接：mouseover/legendselectchanged/finished/init、mapURL/dataFilter/trackExpression/initFetch
+
+### 1.3 优先级
+
+1. option 来源/生命周期
+2. echarts 可选依赖/占位
+3. 轮询/重载/resize
+4. click 事件/动作
+5. 深色/窄屏/主题
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**935** 行；Vamis 实现：**164** 行；依赖：**1** 个
-- 集成面：API、事件/动作
-- 判定依据：Vamis 164 行 + Amis 935 行 + 1 依赖 + api/action
+- 等级：**XL 特重**（Amis `Chart.tsx` 935 行；Vamis 171 行 + echarts 运行时）
+- 依赖：`echarts`（按需）、`LazyComponent`、`action`、`page/service` 数据域
+- 风险：图表库外部依赖 + 轮询/事件/动作组合
 
 ## 3. Amis 契约
 
-- 入口 type：`chart`
-- Amis 源文件：`packages/amis/src/renderers/Chart.tsx`<br>`packages/amis/src/renderers/Form/ChartRadios.tsx`
-- 依赖：`—`
-- 文档章节：`/zh-CN/components/chart`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'chart'`
+- Amis 渲染器：`packages/amis/src/renderers/Chart.tsx`
+- 在线文档：[Vamis `/components/chart`](/components/chart)
 
-- 渲染器文件：[`packages/vamis/src/renderers/Chart.vue`](../../../packages/vamis/src/renderers/Chart.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `config` / `chart` | ECharts option | 已接 |
+| `source` | 数据域变量 option | 已接 |
+| `api` | 远程 option | 已接；返回 `{config}` 或裸 option |
+| `interval` | 轮询 | 已接，≥1000ms |
+| `replaceChartOption` | setOption replace | 已接 |
+| `height` / `style` | 尺寸 | 已接（height 默认 16rem） |
+| `unMountOnHidden` | 隐藏卸载 | 已接（Vamis 扩展） |
+| `clickAction` | 点击行为 | 已接 |
+| `mapURL` / `dataFilter` / `trackExpression` / `initFetch` | Amis 能力 | **未接** |
+| `theme` / `map` | 主题/地图 | 未完整（需 echarts 资源） |
+
+### 3.3 事件
+
+已接：`click`（echarts params + 数据域；可 preventDefault 阻止 clickAction）。
+
+未接：`init`、`mouseover`、`legendselectchanged`、`finished`。文档中未接项必须标注，不要按 Amis 事件表声称全部可用。
+
+### 3.4 动作/API
+
+已接：`reload`、`setValue`、`reset`（Chart.vue 注册 chartApi）；`clickAction` 在 click 未阻止时执行。
+
+组件 API：`getData() → { option }`；`setData({ option })`；`doAction(reload|setValue|reset)`。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`Chart.vue`](../../../packages/vamis/src/renderers/Chart.vue) | option 获取、echarts 懒加载、setOption、轮询、resize、click/API |
+| [`LazyComponent`](https://github.com/baidu/amis) | 可见时才渲染 echarts 容器；unMountOnHidden |
+| [`styles.css`](../../../packages/vamis-ui/src/styles.css) | `.vamis-chart__empty` 占位 |
+| `echarts` | 可选 peer/动态依赖；未安装降级 |
+
+### 4.2 状态
+
+```text
+config/source/api → option
+   → lastOption
+   → el 就绪 → echarts.init → setOption(option, replace)
+   → resize/click/interval
+   → unload dispose + clear timer + remove resize
+```
+
+- `lastOption` 用于元素重建时恢复；reset 重新 fetchOption。
+- 轮询是 `setTimeout` 链，不是 setInterval；避免请求堆叠。
+- `missing` 显示错误/占位，不影响其他组件。
+
+### 4.3 事件/动作顺序
+
+```text
+echarts click → payload(data+params) → runOnEvent('click')
+  → prevented? stop
+  → clickAction? runAction
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-chart__empty`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 容器宽度吃满；height 由 schema.height 或 16rem；style 透传。
+- 占位 `.vamis-chart__empty` 用 token；无 `<style>`。
+- 深色主题需 echarts theme/option 颜色适配；当前未自动换主题。
+- 窄屏图表 resize/高度；地图/大屏需单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：基本用法对标 Amis：`api: /api/mock2/chart/chart` + `interval: 5000`（拉完再 `setTimeout`，≥1000ms）。`config` / `source`、LazyComponent、`reload` / `setValue` / `reset`、click 事件与 `clickAction`、API `trackExpression` 已接。对照 SKIP_TYPES，双站手核。缺 `mapURL` / `dataFilter` / `initFetch` 与 mouseover / legendselectchanged / finished 事件
-- 状态：进行中，进度 65%；如进度未到 100，按上条缺口补齐。
+- 已接：config/source/api、echarts 懒加载/占位、setOption/replace、interval、click/clickAction、reload/setValue/reset、unMountOnHidden。
+- 未接/风险：mapURL/dataFilter/trackExpression/initFetch、mouseover/legendselectchanged/finished/init 事件、主题/地图资源、容器尺寸变化（非 window resize）、轮询竞态。
+- 对照：chart 在 compare `SKIP_TYPES`，只能双站手核；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page chart`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis Chart / LazyComponent / echarts 边界已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（部分未接）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（Chart 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] 双站手核（compare SKIP）
+- [ ] 深色 / 375px 窄屏
+- [ ] echarts 未安装降级
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- option 来源优先级
+- echarts 缺失/加载失败
+- setOption replace/merge、reset
+- 轮询清理/竞态
+- click preventDefault/clickAction
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补容器尺寸监听（ResizeObserver）与轮询竞态。
+2. 再补 mouseover/legendselectchanged/finished 事件与 dataFilter/trackExpression。
+3. 主题/地图属资源能力，单独设计。
 
 ---
+
 返回 [组件设计索引](README.md)
