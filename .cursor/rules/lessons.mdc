@@ -716,6 +716,12 @@ alwaysApply: true
 - 触及：事件动作 `ajax` `download`
 - 规则：Amis `AjaxAction.ts`；`packages/vamis-core/src/utils/api.ts` `emptyDataIfUnset`
 
+### ajax silent 失败不要 throw，后续 toast 靠 expression
+- 踩过：静默模式示例 Vamis 弹出 `responseResult` JSON，Amis 没有。`silent` 只该跳过 ajax 自己的 success/failed；Amis CFC `/api/amis-mock/initData` 回 `{status:404}`，下一条 toast `responseStatus === 0` 不成立。Vamis 把 URL 收成会成功的 `/api/initData`，而且 silent + !ok 仍 throw。
+- 稳定做法：对齐 `AjaxAction`：先 `setData` `responseResult`，silent 时 !ok 不 throw、不 notify，后续动作自己用 expression 判断。文档静默示例走本地 `/api/amis-mock/initData` 404 mock，不要用会成功的 `/api/initData`。
+- 触及：事件动作 `ajax` toast
+- 规则：Amis `AjaxAction.ts` silent；`packages/vamis-core/src/actions/run.ts`
+
 ### 文档页多个 VamisApp 的 Toast / Confirm Host 要重选 primary
 - 踩过：每个 SchemaPreview 一份 `VamisApp`，`claimToastHost` / `claimConfirmHost` 只把第一个当 primary。文档事件动作页 `LazyComponent` 进视口才挂预览，首个 Host 若已卸掉，后续预览 `notify` / `confirm` 写进 store 却没人画。
 - 稳定做法：Host 登记 id，`primaryHost` 放进 reactive state；卸掉当前 primary 后把绘画权交给还活着的实例。Confirm 完全受控：不要绑 Dialog `@update:open`，确认/取消走 `@pointerdown.prevent` 自己 `settle()`。点确认时 reka Dialog 会先发 `update:open=false`，`@click` 还没跑 Promise 就已经是取消。

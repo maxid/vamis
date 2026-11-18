@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createVamisEvent, runAction, type ActionContext } from '../src/actions/run'
+import { createVamisEvent, runAction, runActions, type ActionContext } from '../src/actions/run'
+import { eventEvalData } from '../src/actions/event'
 import { ScopedContext } from '../src/scoped'
 
 function ctx(partial: Partial<ActionContext> = {}): ActionContext {
@@ -129,6 +130,42 @@ describe('control flow and browser actions', () => {
     expect(context.env.notify).not.toHaveBeenCalled()
     await runAction({ actionType: 'validate', componentName: 'form', outputVar: 'result' }, context)
     expect(event.data.result).toEqual({ error: true, payload: { name: 'Ada' } })
+  })
+
+  it('silent ajax still writes responseResult and does not throw on !ok', async () => {
+    const event = createVamisEvent('click', {})
+    const context = ctx({
+      event,
+      data: eventEvalData({}, event),
+      env: {
+        fetcher: vi.fn(async () => ({ status: 404, msg: 'Not Found!', data: {} })),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+    })
+    await runActions(
+      [
+        {
+          actionType: 'ajax',
+          api: {
+            url: '/api/amis-mock/initData',
+            method: 'post',
+            silent: true,
+            messages: { success: '成功了！欧耶', failed: '失败了呢。。' },
+          },
+        },
+        {
+          actionType: 'toast',
+          expression: '${event.data.responseResult.responseStatus === 0}',
+          args: { msg: '${event.data.responseResult|json}' },
+        },
+      ],
+      context,
+    )
+    expect(context.env.notify).not.toHaveBeenCalled()
+    expect(event.data.responseResult).toMatchObject({ responseStatus: 404, responseMsg: 'Not Found!' })
   })
 
   it('treats setState as the component setData alias', async () => {

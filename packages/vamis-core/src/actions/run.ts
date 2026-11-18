@@ -328,19 +328,6 @@ function registerBuiltinActions() {
       action.options?.silent === true || (typeof api === 'object' && api.silent === true)
     const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true, emptyDataIfUnset: true })
     if (result.skipped) return
-    if (!result.ok) {
-      const failed =
-        (action.messages && (action.messages as PlainObject).failed) ||
-        (action.args?.messages && (action.args.messages as PlainObject).failed) ||
-        apiMessage(api, result.payload, 'failed')
-      if (!silent) ctx.env.notify('error', String(failed))
-      throw new Error(String(failed))
-    }
-    const success =
-      (action.messages && (action.messages as PlainObject).success) ||
-      (action.args?.messages && (action.args.messages as PlainObject).success) ||
-      apiMessage(api, result.payload, 'success')
-    if (!silent) ctx.env.notify('success', String(success))
     const responseData = result.data
     const responseObject =
       responseData && typeof responseData === 'object' && !Array.isArray(responseData)
@@ -356,6 +343,22 @@ function registerBuiltinActions() {
         responseMsg: result.payload.msg,
       },
     })
+    if (!result.ok) {
+      const failed =
+        (action.messages && (action.messages as PlainObject).failed) ||
+        (action.args?.messages && (action.args.messages as PlainObject).failed) ||
+        apiMessage(api, result.payload, 'failed')
+      if (!silent) {
+        ctx.env.notify('error', String(failed))
+        throw new Error(String(failed))
+      }
+      return
+    }
+    const success =
+      (action.messages && (action.messages as PlainObject).success) ||
+      (action.args?.messages && (action.args.messages as PlainObject).success) ||
+      apiMessage(api, result.payload, 'success')
+    if (!silent) ctx.env.notify('success', String(success))
     if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
       if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
       else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')

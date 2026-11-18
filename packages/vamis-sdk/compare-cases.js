@@ -3015,7 +3015,7 @@ window.VAMIS_COMPARE_CASES = [
                 {
                   "actionType": "ajax",
                   "api": {
-                    "url": "/api/initData",
+                    "url": "/api/amis-mock/initData",
                     "method": "post",
                     "messages": {
                       "success": "成功了！欧耶",

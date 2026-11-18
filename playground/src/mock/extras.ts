@@ -557,6 +557,11 @@ export function handleMockExtras(input: Input): MockPayload | null {
     return ok({ ...(method === 'GET' ? query : body) })
   }
 
+  // 对齐 Amis 文档静默示例 CFC `/api/amis-mock/initData`：HTTP 200 + `{status:404,msg:'Not Found!'}`。
+  if (pathname === '/api/amis-mock/initData') {
+    return { status: 404, msg: 'Not Found!' }
+  }
+
   if (pathname === '/api/xxx' || pathname === '/api/xxx/save' || pathname === '/api/xxxx' || pathname === '/api/upload') {
     return ok({ ...(method === 'GET' ? query : body), ok: true })
   }

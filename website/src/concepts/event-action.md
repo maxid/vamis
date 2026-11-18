@@ -320,7 +320,7 @@ Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，只包�
             {
               "actionType": "ajax",
               "api": {
-                "url": "/api/initData",
+                "url": "/api/amis-mock/initData",
                 "method": "post",
                 "messages": {
                   "success": "成功了！欧耶",
