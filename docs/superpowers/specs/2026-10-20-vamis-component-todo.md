@@ -630,7 +630,179 @@ flowchart LR
 - 推进（2026-11-18）：InputTree / TreeSelect 70→75（sm 复选框 / SearchBox / 内联 CUD）；测试 **1047**、`typecheck` 0；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 推进（2026-11-18）：InputTree / TreeSelect 75→78（`addControls` / `editControls` Dialog）；汇总仍 **62% / ≥80% 47 / ≥50% 111**。
 - 勾选语义与文档复核（2026-11-18）：InputTree / TreeSelect 保持 78%；测试 **1052**、`typecheck` 0。修正数据输入分类标题、深色回归表与附录别名进度；主表 / 全量顺序 / 页面 banner 一致，依赖图由 `component-priority.mjs` 重生。
+- 复杂度盘点与设计文档（2026-11-18）：155 项按 Amis 入口源码 LOC + 依赖 + 集成面分为 S 轻 7 / M 中 60 / L 重 40 / XL 特重 48，新增 155 篇 [组件设计文档](../../design/component/README.md) 与本文件「实现复杂度评估」表；汇总仍 **62% / ≥80% 47 / ≥50% 111**，测试 **1062**、`typecheck` 0。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
+
+## 实现复杂度评估（2026-11-18）
+
+口径：**Amis 源码复杂度优先**。入口 `@Renderer` / `@FormItem` / `OptionsControl` 源文件行数（不含 Amis UI 内部实现）+ TODO 全量顺序表的依赖数 + Vamis 源码实际出现的集成面（表单/数据域/浮层/API/动作/子 Schema）。Vamis 当前 LOC 只作实现现状参考，**不因为它已写得少而降级**。逐组件设计见 [docs/design/component](../../design/component/README.md)。
+
+汇总：**155** 项 · S 轻 **7** · M 中 **60** · L 重 **40** · XL 特重 **48**。
+
+分级：S ≤120 行且无/单依赖且无数据域/浮层/API；M 120–399 行或 2–4 依赖或有单一集成；L 400–799 行或 ≥5 依赖或 Amis 250+ 且带数据域/浮层；XL ≥800 行或 ≥8 依赖或表单/表格/CRUD/页面/编辑器等枢纽。
+
+| # | 分类 | 组件 | type | 等级 | Amis LOC | Vamis LOC | 依赖 | 集成面 | 设计 |
+|---:|---|---|---|---|---:|---:|---:|---|---|
+| 1 | 布局 | Page 页面 | `page` | XL 特重 | 1329 | 355 | 14 | 数据域/浮层/API/动作/子 Schema | [设计](../../design/component/page.md) |
+| 2 | 布局 | Container 容器 | `container` | L 重 | 275 | 54 | 1 | 数据域/子 Schema | [设计](../../design/component/container.md) |
+| 3 | 布局 | Collapse 折叠器 | `collapse/collapse-group` | L 重 | 537 | 264 | 2 | 数据域/浮层/动作/子 Schema | [设计](../../design/component/collapse.md) |
+| 4 | 布局 | Divider 分割线 | `divider` | M 中 | 194 | 57 | 1 | 数据域/子 Schema | [设计](../../design/component/divider.md) |
+| 5 | 布局 | Flex 布局 | `flex` | M 中 | 252 | 45 | 1 | 子 Schema | [设计](../../design/component/flex.md) |
+| 6 | 布局 | Grid 水平分栏 | `grid` | L 重 | 333 | 58 | 1 | 数据域/子 Schema | [设计](../../design/component/grid.md) |
+| 7 | 布局 | Grid 2D 布局 | `grid-2d` | M 中 | 232 | 34 | 1 | 数据域/子 Schema | [设计](../../design/component/grid-2d.md) |
+| 8 | 布局 | HBox 布局 | `hbox` | M 中 | 226 | 79 | 1 | 数据域/子 Schema | [设计](../../design/component/hbox.md) |
+| 9 | 布局 | Pagination 分页 | `pagination` | M 中 | 143 | 235 | 1 | 数据域/浮层/动作 | [设计](../../design/component/pagination.md) |
+| 10 | 布局 | PaginationWrapper 分页容器 | `pagination-wrapper` | M 中 | 143 | 78 | 2 | 数据域/子 Schema | [设计](../../design/component/pagination-wrapper.md) |
+| 11 | 布局 | Panel 面板 | `panel` | L 重 | 435 | 99 | 3 | 数据域/子 Schema | [设计](../../design/component/panel.md) |
+| 12 | 布局 | Tabs 选项卡 | `tabs` | XL 特重 | 1182 | 780 | 3 | 数据域/浮层/动作/子 Schema | [设计](../../design/component/tabs.md) |
+| 13 | 布局 | Wrapper 包裹容器 | `wrapper` | M 中 | 84 | 35 | 1 | 数据域/子 Schema | [设计](../../design/component/wrapper.md) |
+| 14 | 布局 | Portlet 门户栏目 | `portlet` | L 重 | 424 | 180 | 3 | 数据域/浮层/动作/子 Schema | [设计](../../design/component/portlet.md) |
+| 15 | 布局 | switch-container 状态容器 | `switch-container` | M 中 | 200 | 25 | 1 | 数据域/子 Schema | [设计](../../design/component/switch-container.md) |
+| 16 | 功能 | Action 行为按钮 | `action` | XL 特重 | 781 | 391 | 5 | 数据域/浮层/动作/子 Schema | [设计](../../design/component/action.md) |
+| 17 | 功能 | App 多页应用 | `app` | L 重 | 582 | 95 | 3 | 数据域/子 Schema | [设计](../../design/component/app.md) |
+| 18 | 功能 | Button 按钮 | `button` | XL 特重 | 1005 | 391 | 1 | 数据域/浮层/动作/子 Schema | [设计](../../design/component/button.md) |
+| 19 | 功能 | ButtonGroup 按钮组 | `button-group` | M 中 | 94 | 29 | 2 | 子 Schema | [设计](../../design/component/button-group.md) |
+| 20 | 功能 | Breadcrumb 面包屑 | `breadcrumb` | M 中 | 168 | 93 | 2 | 数据域 | [设计](../../design/component/breadcrumb.md) |
+| 21 | 功能 | Custom 自定义组件 | `custom` | M 中 | 235 | 14 | 1 | 子 Schema | [设计](../../design/component/custom.md) |
+| 22 | 功能 | DropDownButton 下拉按钮 | `dropdown-button` | L 重 | 608 | 251 | 4 | 数据域/浮层/子 Schema | [设计](../../design/component/dropdown-button.md) |
+| 23 | 功能 | Service 功能型容器 | `service` | XL 特重 | 932 | 303 | 4 | 数据域/浮层/API/动作/子 Schema | [设计](../../design/component/service.md) |
+| 24 | 功能 | Nav 导航 | `nav` | XL 特重 | 1688 | 80 | 5 | 数据域 | [设计](../../design/component/nav.md) |
+| 25 | 功能 | AnchorNav 锚点导航 | `anchor-nav` | L 重 | 252 | 65 | 2 | 数据域/子 Schema | [设计](../../design/component/anchor-nav.md) |
+| 26 | 功能 | TooltipWrapper 文字提示容器 | `tooltip-wrapper` | L 重 | 338 | 146 | 1 | 数据域/浮层/子 Schema | [设计](../../design/component/tooltip.md) |
+| 27 | 功能 | PopOver 弹出提示 | `popOver` | L 重 | 356 | 448 | 1 | 数据域/浮层/子 Schema | [设计](../../design/component/popover.md) |
+| 28 | 数据输入 | Form 表单 | `form` | XL 特重 | 2657 | 761 | 18 | 数据域/浮层/API/动作/子 Schema | [设计](../../design/component/form.md) |
+| 29 | 数据输入 | FormItem 表单项通用 | `formitem` | XL 特重 | 2438 | 196 | 0 | 表单/数据域/子 Schema | [设计](../../design/component/formitem.md) |
+| 30 | 数据输入 | Control 表单项包裹 | `control` | S 轻 | 53 | 14 | 1 | 子 Schema | [设计](../../design/component/control.md) |
+| 31 | 数据输入 | Options 选择器表单项 | `options` | XL 特重 | 1487 | 791 | 0 | 表单/数据域/浮层/API/动作/子 Schema | [设计](../../design/component/options.md) |
+| 32 | 数据输入 | InputArray 数组输入框 | `input-array` | M 中 | 70 | 57 | 4 | 表单/子 Schema | [设计](../../design/component/input-array.md) |
+| 33 | 数据输入 | ButtonToolbar 按钮工具栏 | `button-toolbar` | M 中 | 72 | 19 | 2 | 子 Schema | [设计](../../design/component/button-toolbar.md) |
+| 34 | 数据输入 | ButtonGroupSelect 按钮点选 | `button-group-select` | M 中 | 219 | 46 | 3 | 表单 | [设计](../../design/component/button-group-select.md) |
+| 35 | 数据输入 | ChainedSelect 链式下拉框 | `chained-select` | L 重 | 491 | 93 | 1 | 表单 | [设计](../../design/component/chain-select.md) |
+| 36 | 数据输入 | Checkbox 勾选框 | `checkbox` | L 重 | 316 | 219 | 1 | 表单/数据域/浮层/动作/子 Schema | [设计](../../design/component/checkbox.md) |
+| 37 | 数据输入 | Checkboxes 复选框 | `checkboxes` | L 重 | 544 | 52 | 3 | 表单 | [设计](../../design/component/checkboxes.md) |
+| 38 | 数据输入 | InputCity 城市选择器 | `input-city` | L 重 | 633 | 50 | 2 | 表单 | [设计](../../design/component/input-city.md) |
+| 39 | 数据输入 | InputColor 颜色选择器 | `input-color` | M 中 | 118 | 48 | 1 | 表单 | [设计](../../design/component/input-color.md) |
+| 40 | 数据输入 | Combo 组合 | `combo` | XL 特重 | 2154 | 124 | 3 | 表单/子 Schema | [设计](../../design/component/combo.md) |
+| 41 | 数据输入 | ConditionBuilder 条件组合 | `condition-builder` | XL 特重 | 257 | 121 | 5 | 表单 | [设计](../../design/component/condition-builder.md) |
+| 42 | 数据输入 | InputDate 日期选择器 | `input-date` | XL 特重 | 824 | 552 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-date.md) |
+| 43 | 数据输入 | InputDatetime 日期时间 | `input-datetime` | XL 特重 | 824 | 552 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-datetime.md) |
+| 44 | 数据输入 | InputMonth 月份选择器 | `input-month` | XL 特重 | 824 | 77 | 1 | 表单 | [设计](../../design/component/input-month.md) |
+| 45 | 数据输入 | InputDateRange 日期范围 | `input-date-range` | L 重 | 408 | 711 | 2 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-date-range.md) |
+| 46 | 数据输入 | InputDatetimeRange 日期时间范围 | `input-datetime-range` | L 重 | 408 | 711 | 2 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-datetime-range.md) |
+| 47 | 数据输入 | InputMonthRange 月份范围 | `input-month-range` | M 中 | 95 | 116 | 2 | 表单 | [设计](../../design/component/input-month-range.md) |
+| 48 | 数据输入 | InputKV 键值对 | `input-kv` | XL 特重 | 2154 | 57 | 3 | 表单 | [设计](../../design/component/input-kv.md) |
+| 49 | 数据输入 | InputKVS 键值对象 | `input-kvs` | XL 特重 | 2154 | 31 | 2 | 表单 | [设计](../../design/component/input-kvs.md) |
+| 50 | 数据输入 | InputFormula 公式编辑器 | `input-formula` | L 重 | 257 | 79 | 2 | 表单/数据域/动作 | [设计](../../design/component/input-formula.md) |
+| 51 | 数据输入 | DiffEditor 对比编辑器 | `diff-editor` | XL 特重 | 265 | 207 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/diff-editor.md) |
+| 52 | 数据输入 | Editor 代码编辑器 | `editor` | XL 特重 | 455 | 283 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/editor.md) |
+| 53 | 数据输入 | FieldSet 表单项集合 | `fieldset` | M 中 | 164 | 30 | 2 | 表单/子 Schema | [设计](../../design/component/fieldset.md) |
+| 54 | 数据输入 | InputExcel Excel 解析 | `input-excel` | XL 特重 | 975 | 22 | 2 | 表单 | [设计](../../design/component/input-excel.md) |
+| 55 | 数据输入 | InputFile 文件上传 | `input-file` | XL 特重 | 1657 | 938 | 1 | 表单/数据域/浮层/API/动作 | [设计](../../design/component/input-file.md) |
+| 56 | 数据输入 | Formula 公式 | `formula` | M 中 | 181 | 79 | 1 | 表单/数据域/动作 | [设计](../../design/component/formula.md) |
+| 57 | 数据输入 | Group 表单项组 | `group` | M 中 | 277 | 43 | 2 | 表单/子 Schema | [设计](../../design/component/group.md) |
+| 58 | 数据输入 | Hidden 隐藏字段 | `hidden` | M 中 | 35 | 9 | 1 | 表单 | [设计](../../design/component/hidden.md) |
+| 59 | 数据输入 | InputImage 图片 | `input-image` | XL 特重 | 2187 | 938 | 2 | 表单/数据域/浮层/API/动作 | [设计](../../design/component/input-image.md) |
+| 60 | 数据输入 | InputGroup 输入框组合 | `input-group` | M 中 | 297 | 30 | 2 | 表单/子 Schema | [设计](../../design/component/input-group.md) |
+| 61 | 数据输入 | ListSelect 选择器 | `list-select` | M 中 | 272 | 45 | 2 | 表单 | [设计](../../design/component/list-select.md) |
+| 62 | 数据输入 | LocationPicker 地理位置 | `location-picker` | L 重 | 216 | 29 | 2 | 表单 | [设计](../../design/component/location-picker.md) |
+| 63 | 数据输入 | UUID 随机 ID | `uuid` | M 中 | 54 | 24 | 2 | 表单 | [设计](../../design/component/uuid.md) |
+| 64 | 数据输入 | MatrixCheckboxes 矩阵勾选 | `matrix-checkboxes` | L 重 | 587 | 54 | 1 | 表单 | [设计](../../design/component/matrix-checkboxes.md) |
+| 65 | 数据输入 | NestedSelect 级联选择器 | `nested-select` | XL 特重 | 1120 | 71 | 1 | 表单 | [设计](../../design/component/nestedselect.md) |
+| 66 | 数据输入 | InputNumber 数字输入 | `input-number` | L 重 | 703 | 549 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-number.md) |
+| 67 | 数据输入 | InputPassword 密码 | `input-password` | XL 特重 | 1387 | 656 | 1 | 表单/数据域/浮层/API/动作/子 Schema | [设计](../../design/component/input-password.md) |
+| 68 | 数据输入 | Picker 列表选择器 | `picker` | XL 特重 | 911 | 280 | 2 | 表单/数据域/浮层/API/子 Schema | [设计](../../design/component/picker.md) |
+| 69 | 数据输入 | InputQuarter 季度 | `input-quarter` | XL 特重 | 824 | 77 | 1 | 表单 | [设计](../../design/component/input-quarter.md) |
+| 70 | 数据输入 | InputQuarterRange 季度范围 | `input-quarter-range` | M 中 | 93 | 116 | 2 | 表单 | [设计](../../design/component/input-quarter-range.md) |
+| 71 | 数据输入 | Radio 单选框 | `radio` | M 中 | 186 | 219 | 1 | 表单/数据域/浮层/动作/子 Schema | [设计](../../design/component/radio.md) |
+| 72 | 数据输入 | Radios 单选框 | `radios` | L 重 | 300 | 49 | 2 | 表单/数据域 | [设计](../../design/component/radios.md) |
+| 73 | 数据输入 | ChartRadios 图表单选框 | `chart-radios` | L 重 | 183 | 10 | 2 | 表单 | [设计](../../design/component/chart-radios.md) |
+| 74 | 数据输入 | InputRating 评分 | `input-rating` | M 中 | 240 | 36 | 2 | 表单 | [设计](../../design/component/input-rating.md) |
+| 75 | 数据输入 | InputRange 滑块 | `input-range` | XL 特重 | 803 | 93 | 1 | 表单 | [设计](../../design/component/input-range.md) |
+| 76 | 数据输入 | InputRepeat 重复频率 | `input-repeat` | M 中 | 252 | 32 | 2 | 表单 | [设计](../../design/component/input-repeat.md) |
+| 77 | 数据输入 | InputRichText 富文本 | `input-rich-text` | XL 特重 | 464 | 27 | 1 | 表单 | [设计](../../design/component/input-rich-text.md) |
+| 78 | 数据输入 | Select 下拉框 | `select` | XL 特重 | 812 | 832 | 3 | 表单/数据域/浮层/子 Schema | [设计](../../design/component/select.md) |
+| 79 | 数据输入 | InputSubForm 子表单 | `input-sub-form` | L 重 | 648 | 71 | 4 | 表单/子 Schema | [设计](../../design/component/input-sub-form.md) |
+| 80 | 数据输入 | Switch 开关 | `switch` | M 中 | 207 | 260 | 1 | 表单/数据域/浮层/动作/子 Schema | [设计](../../design/component/switch.md) |
+| 81 | 数据输入 | Static 静态展示 | `static` | M 中 | 236 | 139 | 3 | 表单/数据域/浮层/子 Schema | [设计](../../design/component/static.md) |
+| 82 | 数据输入 | InputTable 表格 | `input-table` | XL 特重 | 2412 | 68 | 6 | 表单/子 Schema | [设计](../../design/component/input-table.md) |
+| 83 | 数据输入 | InputTag 标签选择器 | `input-tag` | L 重 | 786 | 91 | 2 | 表单 | [设计](../../design/component/input-tag.md) |
+| 84 | 数据输入 | InputText 输入框 | `input-text` | XL 特重 | 1387 | 656 | 3 | 表单/数据域/浮层/API/动作/子 Schema | [设计](../../design/component/input-text.md) |
+| 85 | 数据输入 | Textarea 多行输入框 | `textarea` | L 重 | 258 | 320 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/textarea.md) |
+| 86 | 数据输入 | InputTime 时间 | `input-time` | XL 特重 | 824 | 552 | 1 | 表单/数据域/浮层/动作 | [设计](../../design/component/input-time.md) |
+| 87 | 数据输入 | InputTimeRange 时间范围 | `input-time-range` | L 重 | 408 | 25 | 2 | 表单 | [设计](../../design/component/input-time-range.md) |
+| 88 | 数据输入 | Transfer 穿梭器 | `transfer` | XL 特重 | 773 | 204 | 3 | 表单/API | [设计](../../design/component/transfer.md) |
+| 89 | 数据输入 | TransferPicker 穿梭选择器 | `transfer-picker` | L 重 | 230 | 26 | 2 | 表单/浮层 | [设计](../../design/component/transfer-picker.md) |
+| 90 | 数据输入 | TabsTransfer 组合穿梭器 | `tabs-transfer` | L 重 | 377 | 30 | 2 | 表单 | [设计](../../design/component/tabs-transfer.md) |
+| 91 | 数据输入 | TabsTransferPicker | `tabs-transfer-picker` | L 重 | 177 | 30 | 2 | 表单 | [设计](../../design/component/tabs-transfer-picker.md) |
+| 92 | 数据输入 | InputTree 树形选择框 | `input-tree` | XL 特重 | 744 | 64 | 3 | 表单 | [设计](../../design/component/input-tree.md) |
+| 93 | 数据输入 | TreeSelect 树形选择器 | `tree-select` | XL 特重 | 970 | 260 | 2 | 表单/浮层 | [设计](../../design/component/treeselect.md) |
+| 94 | 数据输入 | InputYear 年输入 | `input-year` | XL 特重 | 824 | 77 | 1 | 表单 | [设计](../../design/component/input-year.md) |
+| 95 | 数据输入 | InputYearRange 年份范围 | `input-year-range` | M 中 | 91 | 116 | 2 | 表单 | [设计](../../design/component/input-year-range.md) |
+| 96 | 数据输入 | JsonSchema | `json-schema` | L 重 | 77 | 43 | 6 | 表单 | [设计](../../design/component/json-schema.md) |
+| 97 | 数据输入 | JsonSchema Editor | `json-schema-editor` | M 中 | 156 | 43 | 3 | 表单 | [设计](../../design/component/json-schema-editor.md) |
+| 98 | 数据输入 | InputSignature 签名面板 | `input-signature` | M 中 | 219 | 68 | 1 | 表单 | [设计](../../design/component/input-signature.md) |
+| 99 | 数据输入 | InputVerificationCode 验证码 | `input-verification-code` | M 中 | 103 | 37 | 2 | 表单 | [设计](../../design/component/input-verification-code.md) |
+| 100 | 数据展示 | CRUD 增删改查 | `crud` | XL 特重 | 3359 | 692 | 11 | 浮层/API/动作/子 Schema | [设计](../../design/component/crud.md) |
+| 101 | 数据展示 | Table 表格 | `table` | XL 特重 | 3223 | 2074 | 5 | 浮层/API/动作/子 Schema | [设计](../../design/component/table.md) |
+| 102 | 数据展示 | Table2 表格 | `table2` | XL 特重 | 2352 | 373 | 6 | 子 Schema | [设计](../../design/component/table2.md) |
+| 103 | 数据展示 | Table View 表格视图 | `table-view` | M 中 | 352 | 59 | 3 | 子 Schema | [设计](../../design/component/table-view.md) |
+| 104 | 数据展示 | Calendar 日历日程 | `calendar` | M 中 | 59 | 188 | 2 | 数据域/浮层 | [设计](../../design/component/calendar.md) |
+| 105 | 数据展示 | Card 卡片 | `card` | XL 特重 | 940 | 319 | 5 | 浮层/子 Schema | [设计](../../design/component/card.md) |
+| 106 | 数据展示 | Cards 卡片组 | `cards` | XL 特重 | 1318 | 500 | 3 | 动作/子 Schema | [设计](../../design/component/cards.md) |
+| 107 | 数据展示 | Carousel 轮播图 | `carousel` | XL 特重 | 976 | 127 | 3 | 子 Schema | [设计](../../design/component/carousel.md) |
+| 108 | 数据展示 | Chart 图表 | `chart` | XL 特重 | 935 | 164 | 1 | API/动作 | [设计](../../design/component/chart.md) |
+| 109 | 数据展示 | Code 代码高亮 | `code` | M 中 | 377 | 159 | 1 | — | [设计](../../design/component/code.md) |
+| 110 | 数据展示 | Color 颜色 | `color` | S 轻 | 71 | 51 | 1 | — | [设计](../../design/component/color.md) |
+| 111 | 数据展示 | Date 日期时间 | `date/datetime/time/month` | M 中 | 250 | 51 | 1 | — | [设计](../../design/component/date.md) |
+| 112 | 数据展示 | Each 循环渲染器 | `each` | M 中 | 193 | 43 | 1 | 子 Schema | [设计](../../design/component/each.md) |
+| 113 | 数据展示 | Html | `html` | L 重 | 284 | 74 | 1 | 浮层 | [设计](../../design/component/html.md) |
+| 114 | 数据展示 | Icon 图标 | `icon` | M 中 | 129 | 33 | 1 | 数据域 | [设计](../../design/component/icon.md) |
+| 115 | 数据展示 | iFrame | `iframe` | M 中 | 329 | 40 | 1 | — | [设计](../../design/component/iframe.md) |
+| 116 | 数据展示 | Image 图片 | `image` | L 重 | 798 | 212 | 1 | 数据域/浮层/动作 | [设计](../../design/component/image.md) |
+| 117 | 数据展示 | Images 图片集 | `images` | XL 特重 | 998 | 32 | 1 | — | [设计](../../design/component/images.md) |
+| 118 | 数据展示 | GridNav 宫格导航 | `grid-nav` | M 中 | 224 | 76 | 3 | — | [设计](../../design/component/grid-nav.md) |
+| 119 | 数据展示 | Json | `json` | M 中 | 199 | 54 | 1 | — | [设计](../../design/component/json.md) |
+| 120 | 数据展示 | Link 链接 | `link` | M 中 | 131 | 76 | 2 | 子 Schema | [设计](../../design/component/link.md) |
+| 121 | 数据展示 | List 列表 | `list` | XL 特重 | 1882 | 504 | 4 | 浮层/动作/子 Schema | [设计](../../design/component/list.md) |
+| 122 | 数据展示 | Log 实时日志 | `log` | L 重 | 555 | 20 | 1 | — | [设计](../../design/component/log.md) |
+| 123 | 数据展示 | Mapping 映射 | `mapping` | M 中 | 362 | 195 | 1 | API/子 Schema | [设计](../../design/component/mapping.md) |
+| 124 | 数据展示 | Number 展示 | `number` | M 中 | 163 | 51 | 1 | — | [设计](../../design/component/number.md) |
+| 125 | 数据展示 | Markdown 渲染 | `markdown` | M 中 | 118 | 43 | 1 | API | [设计](../../design/component/markdown.md) |
+| 126 | 数据展示 | OfficeViewer Word 渲染 | `office-viewer` | M 中 | 396 | 14 | 1 | — | [设计](../../design/component/office-viewer.md) |
+| 127 | 数据展示 | OfficeViewer Excel 渲染 | `office-viewer` | M 中 | 396 | 14 | 1 | — | [设计](../../design/component/office-viewer-excel.md) |
+| 128 | 数据展示 | PDFViewer 渲染 | `pdf-viewer` | M 中 | 315 | 14 | 1 | — | [设计](../../design/component/pdf-viewer.md) |
+| 129 | 数据展示 | Progress 进度条 | `progress` | L 重 | 263 | 135 | 1 | 数据域/动作 | [设计](../../design/component/progress.md) |
+| 130 | 数据展示 | Steps 步骤条 | `steps` | L 重 | 493 | 22 | 2 | — | [设计](../../design/component/steps.md) |
+| 131 | 数据展示 | Property 属性表 | `property` | M 中 | 253 | 31 | 2 | — | [设计](../../design/component/property.md) |
+| 132 | 数据展示 | QRCode 二维码 | `qrcode` | M 中 | 318 | 58 | 1 | — | [设计](../../design/component/qrcode.md) |
+| 133 | 数据展示 | BarCode 条形码 | `barcode` | S 轻 | 73 | 29 | 1 | — | [设计](../../design/component/barcode.md) |
+| 134 | 数据展示 | Remark 标记 | `remark` | M 中 | 182 | 179 | 3 | 数据域/浮层 | [设计](../../design/component/remark.md) |
+| 135 | 数据展示 | SearchBox 搜索框 | `search-box` | M 中 | 255 | 47 | 2 | — | [设计](../../design/component/search-box.md) |
+| 136 | 数据展示 | Sparkline 走势图 | `sparkline` | M 中 | 134 | 56 | 1 | — | [设计](../../design/component/sparkline.md) |
+| 137 | 数据展示 | Status 状态 | `status` | M 中 | 239 | 85 | 1 | — | [设计](../../design/component/status.md) |
+| 138 | 数据展示 | Tpl 模板 | `tpl` | L 重 | 284 | 74 | 1 | 浮层 | [设计](../../design/component/tpl.md) |
+| 139 | 数据展示 | Tag 标签 | `tag` | M 中 | 205 | 152 | 1 | 动作 | [设计](../../design/component/tag.md) |
+| 140 | 数据展示 | Video 视频 | `video` | XL 特重 | 863 | 25 | 1 | — | [设计](../../design/component/video.md) |
+| 141 | 数据展示 | Timeline 时间轴 | `timeline` | M 中 | 312 | 68 | 3 | 子 Schema | [设计](../../design/component/timeline.md) |
+| 142 | 数据展示 | Shape 形状 | `shape` | S 轻 | 92 | 15 | 1 | — | [设计](../../design/component/shape.md) |
+| 143 | 数据展示 | Slider 滑动条 | `slider` | S 轻 | 106 | 35 | 1 | 子 Schema | [设计](../../design/component/slider.md) |
+| 144 | 反馈 | Alert 提示 | `alert` | M 中 | 109 | 82 | 2 | 数据域/子 Schema | [设计](../../design/component/alert.md) |
+| 145 | 反馈 | Dialog 对话框 | `dialog` | XL 特重 | 1226 | 34 | 5 | 浮层/子 Schema | [设计](../../design/component/dialog.md) |
+| 146 | 反馈 | Drawer 抽屉 | `drawer` | XL 特重 | 1059 | 34 | 5 | 浮层/子 Schema | [设计](../../design/component/drawer.md) |
+| 147 | 反馈 | Spinner 加载中 | `spinner` | M 中 | 96 | 190 | 1 | 数据域/浮层/子 Schema | [设计](../../design/component/spinner.md) |
+| 148 | 反馈 | Toast 轻提示 | `toast` | L 重 | 433 | 133 | 2 | — | [设计](../../design/component/toast.md) |
+| 149 | 其他 | Avatar 头像 | `avatar` | M 中 | 194 | 150 | 3 | 数据域 | [设计](../../design/component/avatar.md) |
+| 150 | 其他 | Audio 音频 | `audio` | L 重 | 510 | 172 | 1 | 数据域 | [设计](../../design/component/audio.md) |
+| 151 | 其他 | Tasks 任务操作集合 | `tasks` | L 重 | 480 | 82 | 3 | 数据域 | [设计](../../design/component/tasks.md) |
+| 152 | 其他 | Badge 角标 | `badge` | L 重 | 253 | 100 | 1 | 数据域 | [设计](../../design/component/badge.md) |
+| 153 | 其他 | Wizard 向导 | `wizard` | XL 特重 | 1369 | 120 | 3 | 数据域/子 Schema | [设计](../../design/component/wizard.md) |
+| 154 | 其他 | Web Component | `web-component` | S 轻 | 71 | 34 | 1 | 子 Schema | [设计](../../design/component/web-component.md) |
+| 155 | 其他 | amis 渲染器 | `amis` | S 轻 | 58 | 11 | 1 | 子 Schema | [设计](../../design/component/amis.md) |
+
+> 自动盘点的局限：Amis 入口文件 LOC 会包含共享基类/变体；`office-viewer` 等 HOC/占位按注册与源码量评估，不等同于运行能力。逐项人工复核时请同步本表与设计文档。
+
+---
+
 
 ---
 
@@ -646,5 +818,7 @@ flowchart LR
 | `action` / `button` / `toast` / `dialog` | D4/D5 事件与目标 |
 | 所有表单项 + FormItem/Options | D6 路径值与校验 |
 | `crud` / `table` | D10（设计标 P1，本清单仍 P0）。`pagination-wrapper` 客户端切片已对齐，不挡文档主路径 |
+
+逐组件设计文档见 [docs/design/component](../../design/component/README.md)；复杂度评估见「实现复杂度评估」。
 
 更新规则：改渲染器深度时只改本文件的状态/进度/原因；不要改侧栏分类。覆盖率数字仍只写在 [同步状态](./2026-10-20-amis-sync-status.md)。任务结束还必须回写 [CONTEXT.md](../../../CONTEXT.md) 的进度与后续计划（见 `AGENTS.md` / `.cursor/rules/update-progress.mdc`）。组件约定见 `.cursor/rules/component.mdc`。

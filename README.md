@@ -223,6 +223,7 @@ packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档 / 组件 / 样式 / 示例 / 编辑器（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
 docs/superpowers/       specs / plans
+docs/design/            组件设计文档（复杂度 / Amis 契约 / Vamis 实现）
 docs/marketing/         发布材料（首发文案 / 检查清单 / 截图）
 ```
 
@@ -233,6 +234,7 @@ docs/marketing/         发布材料（首发文案 / 检查清单 / 截图）
 - [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)
 - [运行时语义](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md)（D1–D12）
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)
+- [组件设计文档](docs/design/component/README.md)（155 篇 · 复杂度 / 契约 / Vamis 实现）
 - [Amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
 - [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)
 - [在线文档](docs/superpowers/specs/2026-10-21-vamis-online-docs.md)

@@ -58,6 +58,19 @@ Dialog / Drawer 的 `body` 若是 `type: form`，对齐 Amis `Dialog.renderBody`
 
 `icon` / `rightIcon`（Action、Icon、Avatar、Nav、Breadcrumb、DropDownButton）走 `@vamis/core` 的 `resolveIcon`，不要各写一套 URL 判断。class 用 `<i>`，URL 用 `<img>`。未写 `label` 的按钮只留图标，不补「按钮」。规则细节见 `.cursor/rules/style.mdc`「图标」。
 
+## 实现复杂度评估（2026-11-18）
+
+盘点输入：Amis 6.13.0 入口源码（`@Renderer` / `@FormItem` / `OptionsControl`）行数、TODO 全量顺序依赖数、Vamis 源码实际集成面。Vamis LOC 只作现状参考，不用于降低复杂度；自动盘点结果见 [组件 TODO「实现复杂度评估」](../../docs/superpowers/specs/2026-10-20-vamis-component-todo.md)，逐组件设计见 [docs/design/component](../../docs/design/component/README.md)。
+
+| 等级 | 判定 | 当前数量 | 施工粒度 |
+|---|---|---:|---|
+| S 轻 | Amis ≤120 行、无/单依赖、无数据域/浮层/API | **7** | 可 2–3 个串行 |
+| M 中 | Amis 120–399 行、或 2–4 依赖、或单一 form/data/api/overlay 集成 | **60** | 2 个串行 |
+| L 重 | Amis 400–799 行、或 ≥5 依赖、或 250+ 且带数据域/浮层 | **40** | 1 个 |
+| XL 特重 | Amis ≥800 行、或 ≥8 依赖、或表单/表格/CRUD/页面/编辑器等枢纽 | **48** | 1 个，先拆设计 |
+
+本表是**实现复杂度盘点**，不替代下面的「串行分批」经验表；L/XL 都按重组件 1 个串行。新增组件或改动 Amis 对等范围后，任务收工必须同步复杂度表与对应设计文档。
+
 ## 串行分批
 
 按 **复杂度** 决定一次做几个，不要无脑「一批三个」。一批内串行做完，再 `pnpm sdk:build` + `pnpm compare --page a && --page b`（见 `.cursor/rules/compare.mdc`）。

@@ -28,6 +28,7 @@ packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档（`/`）+ 组件 + 样式 + 示例 + 编辑器 + 对照（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
 docs/superpowers/       specs / plans
+docs/design/            组件设计文档（复杂度 / 契约 / Vamis 实现）
 docs/marketing/         发布材料（首发文案 / 检查清单 / 截图；非运行时）
 ```
 
@@ -74,7 +75,8 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 |------|------|
 | [CONTEXT.md](CONTEXT.md) | 术语 + **进度 / 后续计划**（每任务必改） |
 | [发布材料](docs/marketing/README.md) | 首发文案 / 检查清单 / 截图 / npm 清单（推广用，非运行时） |
-| [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md) | 155 项侧栏组件状态与百分比 |
+| [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md) | 155 项侧栏组件状态、百分比与实现复杂度表 |
+| [组件设计文档](docs/design/component/README.md) | 155 篇逐组件复杂度 / Amis 契约 / Vamis 实现设计 |
 | [运行时语义](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md) | D1–D12 kernel 决策 |
 | [同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md) | type 覆盖率（与语义进度分开） |
 | [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md) | Amis 水标 × shadcn token |
