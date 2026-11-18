@@ -1,82 +1,78 @@
-# JsonSchema · `json-schema` 设计
+# JsonSchema 表单 · `json-schema` 设计
 
 > 状态：**进行中 30%** · 复杂度：**L 重**
-> 文档：[/components/form/json-schema](/components/form/json-schema) · Amis 文档：`/zh-CN/components/form/json-schema`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/json-schema) · Amis：`/zh-CN/components/form/json-schema`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+JsonSchema 当前是**顶层属性精简渲染**（43 行）：只读 `schema.properties` 的 string/number/boolean，值写对象。没有嵌套/object/array/required/enum/oneOf/format、校验、事件/动作；30% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值**：对象；每个字段写回整个对象；无 name 不写。
+2. **schema 来源**：`schema` / `jsonSchema` 二选一；properties 缺失显示空，不崩。
+3. **类型**：当前 string/number/boolean；object/array/enum/format 未接。
+4. **校验**：required/type 校验未接；不要声称自动。
+5. **包边界**：无 `<style>`、无 fetch；Input/Switch token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空 properties/string/number/boolean/对象/数组
+- 外部 setValue/reset/字段缺省
+- required/enum/format（未接）
+- disabled/static、FormItem 错误
+- 窄屏/深色
+
+### 优先级
+
+1. 值/顶层属性；2. 类型覆盖；3. 嵌套/校验；4. 事件动作/样式。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**77** 行；Vamis 实现：**43** 行；依赖：**6** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 43 行 + Amis 77 行 + 6 依赖 + form
+- 等级：**L 重**（Amis 77 行 + JSON Schema 语义；Vamis 43 行）；依赖 `FormItem`、input/switch/select。
+- 风险：JSON Schema 语义远大于当前实现。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`json-schema`
-- Amis 源文件：`packages/amis/src/renderers/Form/JSONSchema.tsx`
-- 依赖：`FormItem`, `checkbox`, `input-number`, `input-text`, `select`, `switch`
-- 文档章节：`/zh-CN/components/form/json-schema`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `schema` / `jsonSchema` | JSON Schema | 已接 properties |
+| `name` / `value` | 对象值 | 已接 |
+| string/number/boolean | 基础类型 | 已接 |
+| object/array/enum/format | 类型 | 未接 |
+| required/校验 | 目标 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/JsonSchema.vue`](../../../packages/vamis/src/renderers/form/JsonSchema.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`form/JsonSchema.vue`](../../../packages/vamis/src/renderers/form/JsonSchema.vue)：fields + Input/Switch。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验。
+- 无 scoped API。
 
-## 5. 样式与边界
+### 数据流
 
-- 相关默认皮肤类：`.vamis-json-schema`, `.vamis-json-schema__label`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+```text
+jsonSchema.properties → fields[{name,label,kind}]
+字段输入 → {...currentObject,[name]:value} → setValue
+```
 
-## 6. 当前状态与缺口
+## 5. 样式
 
-- TODO 记录：**精简**：只渲染 string/number/boolean 属性
-- 状态：进行中，进度 30%；如进度未到 100，按上条缺口补齐。
+- label + 控件；无专属类、无 `<style>`；窄屏/深色单独核。
 
-## 7. 验收计划与完成度
+## 6. 缺口
 
-- 组件页对照：`pnpm compare --page json-schema`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
+object/array/enum/format、required/校验、嵌套、事件动作、深色。
 
-### 验收清单（文档核对：3 / 12）
+## 7. 验收
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 顶层 string/number/boolean/空 schema/disabled；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+先抽 JSON Schema 类型映射，再补 object/array/required；完整支持前保持“精简”标注。
 
 ---
+
 返回 [组件设计索引](README.md)
