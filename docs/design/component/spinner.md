@@ -1,87 +1,73 @@
 # Spinner 加载中 · `spinner` 设计
 
 > 状态：**进行中 95%** · 复杂度：**M 中**
-> 文档：[/components/spinner](/components/spinner) · Amis 文档：`/zh-CN/components/spinner`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/spinner) · Amis：`/zh-CN/components/spinner`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacement、delay、overlay、body、loadingConfig.root、父子 loading 互斥。主路径成熟；缺 Dialog/Form/Select 宿主细项。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **show/showOn**：表达式/布尔；false 不触发；delay 内不显示。
+2. **overlay**：源码默认 false；true 覆盖父级；父子 loading 互斥由 spinnerCheckLoading/spinnerPushParent 维护。
+3. **body/容器**：body 存在即容器；无 body 只遮罩；loadingConfig.root 可 Teleport 到根。
+4. **图标/tip**：default 菱形/fa/URL；tipPlacement top/right/bottom/left。
+5. **卸载**：timer 清理、parent push/remove 成对；不能残留全局 loading。
+6. **包边界**：无 `<style>`、无 fetch；spinner token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **反馈**：层级、自动关闭、重复触发、焦点与可访问名称。
-- **边界用例（至少覆盖）**：重复触发 / 叠层 / 自动关闭；关闭后焦点恢复；深色与可访问名称。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- show true/false/showOn/delay 0/正数
+- overlay true/false/body/root
+- default/fa/URL 图标、tip 位置
+- 父子同时 loading/卸载/快速切换
+- Dialog/Form/Select 宿主（未核）
+- 窄屏/深色
+
+### 优先级
+
+1. show/delay/overlay；2. 父子互斥/卸载；3. 图标/tip；4. 宿主/深色。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**96** 行；Vamis 实现：**190** 行；依赖：**1** 个
-- 集成面：数据域、浮层、子 Schema
-- 判定依据：Vamis 190 行 + Amis 96 行 + 1 依赖 + data/overlay/schema
+- 等级：**M 中**（Amis 96 行；Vamis 190 行）；依赖 spinner store。
+- 风险：父子 loading/全局宿主。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`spinner`
-- Amis 源文件：`packages/amis/src/renderers/Spinner.tsx`
-- 依赖：`tpl`
-- 文档章节：`/zh-CN/components/spinner`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| show/showOn | 显示 | 已接 |
+| size/icon/tip/tipPlacement | 外观 | 已接 |
+| delay/overlay/body | 行为 | 已接 |
+| loadingConfig.root | 宿主 | 已接 |
+| 父子互斥 | 状态 | 已接 |
+| Dialog/Form 细项 | 宿主 | 未核 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/Spinner.vue`](../../../packages/vamis/src/renderers/Spinner.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
-  - 图标走 `resolveIcon` + `IconMark`，class 落 `<i>`、URL 落 `<img>`，不按组件各写一套判断。
+- [`Spinner.vue`](../../../packages/vamis/src/renderers/Spinner.vue)：show/delay/overlay/parent/icon。
+- [`spinner-store.ts`](../../../packages/vamis-core/src/spinner-store.ts)：push/remove/check/订阅。
+- [`spinner.ts`](../../../packages/vamis-core/src/utils/spinner.ts)：show/body/icon/tip。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-spinner`, `.vamis-spinner--bottom`, `.vamis-spinner--left`, `.vamis-spinner--overlay`, `.vamis-spinner--right`, `.vamis-spinner--top`, `.vamis-spinner-mark`, `.vamis-spinner-wrap`, `.vamis-spinner__icon`, `.vamis-spinner__icon--default`, `.vamis-spinner__icon--lg`, `.vamis-spinner__icon--simple`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 菱形/遮罩/tip token；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，不是 Amis hex）、`show` / `showOn`、`size` sm \
-- 状态：进行中，进度 95%；如进度未到 100，按上条缺口补齐。
+Dialog/Form/Select 宿主细项；深色/窄屏逐项。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page spinner`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- show/delay/overlay/父子互斥/root/卸载/图标；宿主缺口不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+宿主细项按需补；保持 push/remove 成对。
 
 ---
+
 返回 [组件设计索引](README.md)
