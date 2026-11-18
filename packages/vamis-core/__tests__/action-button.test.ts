@@ -243,6 +243,25 @@ describe('countDown / hotKey / body / active / loading', () => {
   })
 })
 
+describe('button disabled color', () => {
+  it('overrides level color with Amis disabled tokens', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/styles.css'), 'utf8')
+    expect(css).toContain("[data-slot='button']:disabled")
+    expect(css).toContain("[data-slot='button'].is-disabled")
+    expect(css).toContain('background: var(--button-disabled-bg)')
+    expect(css).toContain('color: var(--button-disabled-color)')
+    expect(css).toContain('border-color: var(--button-disabled-border)')
+    expect(css).toContain('opacity: 1')
+    expect(css).toContain("[data-variant='link'][data-slot='button']:disabled")
+    expect(css).toContain('background: transparent')
+    expect(css).toContain('border-width: 0')
+    expect(css).toContain('--button-disabled-bg: var(--colors-neutral-fill-10)')
+    expect(css).toContain('--button-disabled-color: var(--colors-neutral-text-6)')
+    expect(css).toContain('--button-disabled-border: var(--colors-neutral-line-10)')
+  })
+})
+
 describe('action tooltip overlay', () => {
   it('teleports TooltipObject via VamisTooltipLayer at --z-tooltip', () => {
     const here = dirname(fileURLToPath(import.meta.url))

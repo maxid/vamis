@@ -18,6 +18,12 @@ describe('levelToVariant', () => {
   })
 })
 
+describe('button disabled', () => {
+  it('does not fade level color with opacity', () => {
+    expect(buttonVariants()).not.toContain('disabled:opacity-50')
+  })
+})
+
 describe('buttonVariants link', () => {
   it('matches Amis Button--link: --link-color and no underline', () => {
     const link = buttonVariants({ variant: 'link' })

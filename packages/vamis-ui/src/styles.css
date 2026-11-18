@@ -325,6 +325,10 @@
   --button-h-sm: 30px;
   --button-h-md: 32px;
   --button-h-lg: 38px;
+  /* Amis 各 level 的 disabled 都落到同一组中性色，优先级高于 level。link 除外，见下方选择器。 */
+  --button-disabled-bg: var(--colors-neutral-fill-10);
+  --button-disabled-color: var(--colors-neutral-text-6);
+  --button-disabled-border: var(--colors-neutral-line-10);
   /* cxd `--colors-neutral-fill-6/3`、`--colors-brand-10`、info=brand-5。不改全局 `--secondary`（helper / Badge 仍用浅底）。 */
   --button-secondary: var(--colors-neutral-text-6);
   --button-secondary-foreground: var(--white);
@@ -1873,6 +1877,26 @@
     opacity: 0;
     margin: 0;
   }
+}
+
+/* unlayered：压过 Button variant utilities。disabled 高于 level，实心钮落到 Amis 中性灰，link 保持透明底。 */
+[data-slot='button']:disabled,
+[data-slot='button'].is-disabled,
+[data-slot='button'][aria-disabled='true'] {
+  opacity: 1;
+  background: var(--button-disabled-bg);
+  color: var(--button-disabled-color);
+  border-color: var(--button-disabled-border);
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+[data-variant='link'][data-slot='button']:disabled,
+[data-variant='link'][data-slot='button'].is-disabled,
+[data-variant='link'][data-slot='button'][aria-disabled='true'] {
+  background: transparent;
+  border-color: transparent;
+  border-width: 0;
 }
 
 /* unlayered：Teleport 关闭钮 / 工具栏 hover 不被 @layer components 丢掉滑入。 */
