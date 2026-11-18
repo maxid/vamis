@@ -1,84 +1,161 @@
 # Wizard 向导 · `wizard` 设计
 
 > 状态：**进行中 50%** · 复杂度：**XL 特重**
-> 文档：[/components/wizard](/components/wizard) · Amis 文档：`/zh-CN/components/wizard`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/wizard) · Amis：`/zh-CN/components/wizard`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+Wizard 当前是**步骤导航 + 单步 Form** 的最小实现（120 行）：步骤条、上一步/下一步、纵向模式、自定义按钮、当前步校验门。**initApi、step 提交、全部提交、步骤事件、scoped 动作均未接**；文档中的事件/动作表是 Amis 目标，不能当已实现。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **边界用例（至少覆盖）**：别名与注册表一致；空 schema / 未知 type；移动端与深色。
+1. **单步数据域**：只渲染当前 step 的 `body`，但表单数据/校验属于整份 wizard 数据域；切步不能丢已填值，也不能把其他 step 字段错误地渲染出来。
+2. **切换顺序**：向前切必须 `gate.validateCurrent()` 全部通过；向后切必须 `jumpable`（schema 限制）通过；不能绕过校验/跳转限制。
+3. **当前步索引**：`startStep` / `initFetch` 决定初始 index；切步用 0-based index，事件 `currentStep` 是 1-based，二者不要混。
+4. **表单壳**：每步用 `form`（wrapWithPanel false、actions []）承载；不要为 Wizard 自建第二套输入/校验。
+5. **按钮**：自定义 `actions` 优先，否则默认上一步/下一步；最后一步默认 next 文案由 `wizardNextButtonLabel` 决定。
+6. **校验门**：`provideWizardGate` 可注册多个 validate；当前步任一失败就阻止前进并 notify。
+7. **包边界**：无 `<style>`、无直接 fetch；步骤条/图标走 token；作者 className 只落节点。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 1 步 / 多步 / `startStep` / 最后一步
+- 向前/向后跳、`jumpable` 限制、校验失败
+- 每步 form body 为空 / 多字段 / 自带 actions
+- 自定义 actions、prev/next 文案
+- vertical / horizontal 模式
+- 数据在步骤间保留；切步后校验状态
+- 移动端步骤条换行/横向滚动
+- 深色、步骤完成图标
+
+### 1.3 优先级
+
+1. 切换/校验/索引
+2. 数据域与表单壳
+3. 按钮/自定义 actions
+4. initApi/step 提交/事件/动作（后补）
+5. 样式/窄屏/深色
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**1369** 行；Vamis 实现：**120** 行；依赖：**3** 个
-- 集成面：数据域、子 Schema
-- 判定依据：Vamis 120 行 + Amis 1369 行 + 3 依赖 + data/schema
+- 等级：**XL 特重**（Amis `Wizard.tsx` 1369 行；Vamis 120 行）
+- 依赖：`form`、`action`、`button`、`SchemaRenderer`、wizardGate
+- 风险：当前只有导航基座；事件/动作/初始化/提交缺口大
 
 ## 3. Amis 契约
 
-- 入口 type：`wizard`
-- Amis 源文件：`packages/amis/src/renderers/Wizard.tsx`
-- 依赖：`action`, `form`, `panel`
-- 文档章节：`/zh-CN/components/wizard`
+### 3.1 入口
 
-## 4. Vamis 设计与源码
+- 入口：`type: 'wizard'`
+- Amis 渲染器：`packages/amis/src/renderers/Wizard.tsx`
+- 在线文档：[Vamis `/components/wizard`](/components/wizard)
 
-- 渲染器文件：[`packages/vamis/src/renderers/Wizard.vue`](../../../packages/vamis/src/renderers/Wizard.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
-  - 校验复用 core 的 `validateValue` / `validations` 约定，错误回填表单 `errors`。
+### 3.2 核心属性（目标 / 现状）
+
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `steps` | 步骤数组（title/body/actions） | 已接 |
+| `mode` | horizontal / vertical | 已接 |
+| `startStep` / `initFetch` | 初始步 | 部分接 |
+| `prevText` / `nextText` | 按钮文案 | 已接 |
+| `actions`（step） | 自定义按钮 | 已接 |
+| `initApi` / `api` | 初始化/最终提交 | **未接** |
+| step `api` | 单步提交 | **未接** |
+| `jumpableOn` / 跳转限制 | 步骤条跳转 | 部分接 |
+| `reload` / `setValue` / step-submit / next / prev / goto-step | 动作 | **未接 scoped API** |
+
+### 3.3 事件（目标 / 现状）
+
+文档目标：`inited`、`stepChange`、`change`、`stepSubmitSucc`、`stepSubmitFail`、`finished`、`submitSucc`、`submitFail`。
+
+当前 **均未派发**（没有 createVamisEvent/runOnEvent）；不要按事件表声称已支持。
+
+### 3.4 动作
+
+目标：`submit`、`step-submit`、`next`、`prev`、`goto-step`、`reload`、`setValue`。
+
+当前只实现内部 prev/next/goto 函数，**未注册 scoped API/动作**。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`Wizard.vue`](../../../packages/vamis/src/renderers/Wizard.vue) | 步骤条、当前 step、form 壳、prev/next/goto、自定义 actions |
+| [`wizardGate.ts`](../../../packages/vamis/src/wizardGate.ts) | 当前步校验注册/汇总 |
+| [`wizard.ts`](../../../packages/vamis-core/src/utils/wizard.ts) | steps/startIndex/mode/labels/jumpable 纯函数 |
+| [`styles.css`](../../../packages/vamis-ui/src/styles.css) | wizard nav/step/完成图标 token |
+
+### 4.2 状态
+
+```text
+schema.steps ──> steps
+startStep/initFetch ──> index
+index ──> current step + currentStep（1-based）
+formSchema = form(body=current.body, actions=[])
+gate.validateCurrent() ──> prev/next 前进
+```
+
+- 数据域来自父级/Form；Wizard 不另建 store。
+- 切换只改 index，不清表单值；校验状态由各步 form/Field 注册。
+- `extra = { currentStep }` 传给 schema 渲染。
+
+### 4.3 交互
+
+- 点击步骤条：`jumpable` 才 goto；向前跳要校验当前步。
+- 上一步：`wizardShowPrev(index)` 才显示；goto 校验。
+- 下一步：最后一步不前进（目标应改为最终提交）。
+- 自定义 actions：不再画默认 prev/next；actions 的 onEvent 自行处理页面流转。
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-wizard`, `.vamis-wizard__done-icon`, `.vamis-wizard__nav`, `.vamis-wizard__step`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 默认类：`.vamis-wizard__nav`、`.vamis-wizard__step`、`__done-icon`。
+- 步骤条/完成态/按钮走 token；无 `<style>`。
+- 窄屏步骤条换行/滚动；深色完成/激活态单独核。
+- 作者 className 只落节点。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：主路径可交互（未逐章节两站核完，不进 80%）：steps title/body、上一步/下一步/完成、startStep 字符串、mode。缺 initApi/api 提交、自定义 actions 接线
-- 状态：进行中，进度 50%；如进度未到 100，按上条缺口补齐。
+- 已接：步骤条、prev/next、vertical、自定义 actions、startStep 基础、当前步校验门。
+- 未接：initApi/api/stepApi、全部/分步提交、事件、scoped 动作、reload/setValue、stepSubmitted 状态、移动端专项。
+- 对照：TODO 记录 wizard 主路径；本轮未重跑。
+- 50% 是真实缺口。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page wizard`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis Wizard / wizardGate 已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前未接）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（Wizard 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page wizard` 桌面
+- [ ] `pnpm compare --page wizard --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- 向前校验、向后 jumpable
+- 数据跨步保留
+- 最后一步提交（未接）
+- 自定义 actions 与默认按钮互斥
+- 窄屏步骤条
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补 scoped 动作（next/prev/goto-step）与 stepChange 事件（低风险）。
+2. 再补 initApi / step api / 最终提交与 stepSubmit* / finished / submit* 事件。
+3. 移动端步骤条/深色最后做。
 
 ---
+
 返回 [组件设计索引](README.md)
