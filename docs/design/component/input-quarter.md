@@ -1,82 +1,104 @@
 # InputQuarter 季度 · `input-quarter` 设计
 
-> 状态：**进行中 45%** · 复杂度：**XL 特重**
-> 文档：[/components/form/input-quarter](/components/form/input-quarter) · Amis 文档：`/zh-CN/components/form/input-quarter`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 45%** · 复杂度：**XL 特重**（Amis 824 行系列，共享 77 行）
+> 文档：[在线 API 手册](/components/form/input-quarter) · Amis：`/zh-CN/components/form/input-quarter`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputQuarter 与 year/month 共用 `DatePart.vue`：年 number + Q1–Q4 select，值 `YYYY-Qn`（`formatQuarter/parseQuarter`）。没有季度历、格式/值格式、范围表达式、事件/动作；45% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **共享组件**：quarter/month/year 共用 DatePart；改 quarter 回归另外两个。
+2. **值格式**：`YYYY-Qn`；`parseQuarter` 对非法值兜底；不要写 `{year,quarter}` 对象。
+3. **年/季**：年 1900–2100；季度 1–4；年空或季空时不要拼出半合法值。
+4. **写回**：无 name 不写；FormItem/校验负责 required。
+5. **包边界**：无 `<style>`、无 fetch；输入/select token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空/合法季度/非法季度/年越界/季空
+- 值 `/`、`-` 分隔、大小写 Q
+- month/year 类型切换
+- disabled/static/readOnly
+- 外部 setValue/reset
+- 目标季度历/格式/事件动作（未接）
+- 窄屏/深色
+
+### 1.3 优先级
+
+1. 共享组件/值格式
+2. 年季组合/空值
+3. 格式/季度历
+4. 事件/动作/样式
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**824** 行；Vamis 实现：**77** 行；依赖：**1** 个
-- 集成面：表单/FormItem
-- 判定依据：Vamis 77 行 + Amis 824 行 + 1 依赖 + form；Amis 源码 >800 行，按超重档
+- 等级：**XL 特重**（Amis 824 行；Vamis DatePart 77 行，共享）
+- 依赖：`FormItem`、`formatQuarter/parseQuarter`
+- 风险：共享组件 + 字符串格式
 
 ## 3. Amis 契约
 
-- 入口 type：`input-quarter`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputDate.tsx`
-- 依赖：`input-date`
-- 文档章节：`/zh-CN/components/form/input-quarter`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | `YYYY-Qn` | 已接 |
+| `min` / `max` | 年范围 | 原生 1900–2100 |
+| `format` / `valueFormat` | 格式 | 未接 |
+| 季度历 | 目标 | 未接 |
+| 事件/动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/DatePart.vue`](../../../packages/vamis/src/renderers/form/DatePart.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
+- [`extras/form.ts`](../../../packages/vamis/src/extras/form.ts)：注册。
+- [`form/DatePart.vue`](../../../packages/vamis/src/renderers/form/DatePart.vue)：kind=quarter、quarter computed。
+- [`quarter.ts`](../../../packages/vamis-core/src/utils/quarter.ts)：format/parse。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验/状态。
+
+### 数据流
+
+```text
+field value → parseQuarter → {year,quarter}
+输入年/季 → formatQuarter → setValue('YYYY-Qn')
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-native-select`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 年 input + 季度 native select；无专属类、无 `<style>`。
+- 窄屏年/季并排；深色 select 单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：DatePart 精简
-- 状态：进行中，进度 45%；如进度未到 100，按上条缺口补齐。
+- 已接：年+季度输入、`YYYY-Qn`、1900–2100。
+- 未接：季度历/格式/范围表达式/事件动作/深色。
+- 对照：TODO 45%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-quarter`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] 共享 DatePart / quarter 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
+- [ ] 事件 / 动作逐项核对（当前无）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（quarter 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- [ ] `pnpm compare --page input-quarter` 桌面
+- [ ] `pnpm compare --page input-quarter --mobile`
+- [ ] 深色 / 375px 窄屏
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 三类共享测试。
+2. 季度历/格式/事件动作若需要，先改 DatePart。
+3. 深色/窄屏专项。
 
 ---
+
 返回 [组件设计索引](README.md)
