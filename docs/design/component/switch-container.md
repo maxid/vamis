@@ -1,84 +1,67 @@
-# switch-container 状态容器 · `switch-container` 设计
+# SwitchContainer 状态容器 · `switch-container` 设计
 
 > 状态：**进行中 65%** · 复杂度：**M 中**
-> 文档：[/components/switch-container](/components/switch-container) · Amis 文档：`/zh-CN/components/switch-container`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/switch-container) · Amis：`/zh-CN/components/switch-container`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+SwitchContainer 当前是**按 visibleOn 选首个 items 渲染**（25 行）：无动画/切换动作/状态缓存；65% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **items**：数组；switchContainerActive 返回首个 visibleOn 命中；无命中 body 空。
+2. **数据域**：visibleOn 基于当前 data；data 变化重新选择。
+3. **body**：active.body 渲染；空不画。
+4. **switchTo 动作**：未接；当前只靠数据域驱动。
+5. **包边界**：无 `<style>`、无 fetch；container token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **布局**：空 body、嵌套布局、`className` / `style` 只影响当前节点、窄屏与密度不写死 px。
-- **边界用例（至少覆盖）**：空 body、嵌套同类布局；className / style 覆盖边界；窄屏与密度 token；未知子节点。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单/多 items、无命中、多个命中
+- data 变化切换、空 body
+- switchTo 动作（未接）
+- 窄屏/深色
+
+### 优先级
+
+1. items/visibleOn；2. body/数据；3. 动画/动作；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**200** 行；Vamis 实现：**25** 行；依赖：**1** 个
-- 集成面：数据域、子 Schema
-- 判定依据：Vamis 25 行 + Amis 200 行 + 1 依赖 + data/schema
+- 等级：**M 中**（Amis 200 行；Vamis 25 行）；依赖 container。
+- 风险：visibleOn 解析/动作缺口。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`switch-container`
-- Amis 源文件：`packages/amis/src/renderers/SwitchContainer.tsx`
-- 依赖：`container`
-- 文档章节：`/zh-CN/components/switch-container`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| items[].body | 内容 | 已接 |
+| visibleOn | 选择 | 已接 |
+| style | 样式 | 透传 |
+| switchTo 动作 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/layout/SwitchContainer.vue`](../../../packages/vamis/src/renderers/layout/SwitchContainer.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+- [`layout/SwitchContainer.vue`](../../../packages/vamis/src/renderers/layout/SwitchContainer.vue)：active/body。
+- [`switch-container.ts`](../../../packages/vamis-core/src/utils/switch-container.ts)：active/body。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-switch-container`, `.vamis-switch-container__body`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 容器 w-full；无 `<style>`；窄屏/深色单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：主路径可交互（未逐章节两站核完，不进 80%）：`items[].body` / `visibleOn` 取首个命中、`style`、宿主 click/mouseenter/mouseleave。缺 `themeCss`、`switchTo` 动作。侧栏未收录，docs 有独立页
-- 状态：进行中，进度 65%；如进度未到 100，按上条缺口补齐。
+switchTo 动作/动画/深色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page switch-container`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- items/visibleOn/无命中/空 body/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+补 switchTo 动作（需 scoped API）；动画/深色后置。
 
 ---
+
 返回 [组件设计索引](README.md)

@@ -1,83 +1,67 @@
 # AnchorNav 锚点导航 · `anchor-nav` 设计
 
 > 状态：**进行中 55%** · 复杂度：**L 重**
-> 文档：[/components/anchor-nav](/components/anchor-nav) · Amis 文档：`/zh-CN/components/anchor-nav`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/anchor-nav) · Amis：`/zh-CN/components/anchor-nav`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+AnchorNav 当前是**锚点导航**（65 行）：links/children 展平、点击 scrollIntoView、active href/索引、横向/纵向。没有滚动自动高亮/吸顶/嵌套深度；55% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **sections**：anchorNavSections 展平 links/children；key/title/body；空数组不崩。
+2. **current**：chosen 点击优先，否则 schema.active（href/索引）解析。
+3. **点击**：CSS.escape key 找 data-anchor，scrollIntoView smooth；找不到不报错。
+4. **方向**：horizontal 横排，否则 lg 两栏；窄屏单栏。
+5. **包边界**：无 `<style>`、无 fetch；anchor token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **边界用例（至少覆盖）**：未注册 type 的降级；动作目标不存在 / 已卸载；事件 preventDefault 与本地状态顺序。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单/多锚点、children 展平、active href/索引
+- 点击不存在的 key、重复 key
+- 横向/纵向/窄屏/深色
+- 滚动自动高亮（未接）
+
+### 优先级
+
+1. sections/current；2. 点击/scroll；3. 方向/响应式；4. 自动高亮。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**252** 行；Vamis 实现：**65** 行；依赖：**2** 个
-- 集成面：数据域、子 Schema
-- 判定依据：Vamis 65 行 + Amis 252 行 + 2 依赖 + data/schema
+- 等级：**L 重**（Amis 252 行；Vamis 65 行）；依赖 link/icon。
+- 风险：key/滚动/自动高亮。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`anchor-nav`
-- Amis 源文件：`packages/amis/src/renderers/AnchorNav.tsx`
-- 依赖：`icon`, `link`
-- 文档章节：`/zh-CN/components/anchor-nav`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| links/children | 锚点 | 已接 |
+| active | 当前 | 已接 |
+| direction | 横向/纵向 | 已接 |
+| 滚动高亮 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/layout/AnchorNav.vue`](../../../packages/vamis/src/renderers/layout/AnchorNav.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+- [`layout/AnchorNav.vue`](../../../packages/vamis/src/renderers/layout/AnchorNav.vue)：sections/current/go。
+- [`anchor-nav.ts`](../../../packages/vamis-core/src/utils/anchor-nav.ts)：展平/active/direction。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-anchor-nav`, `.vamis-anchor-nav__link`, `.vamis-anchor-nav__title`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 链接/内容区/滚动；无 `<style>`；窄屏/深色单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：主路径可交互（未逐章节两站核完，不进 80%）：`links` / `children` 展平、`direction`、`active` href 或索引。缺滚动自动高亮
-- 状态：进行中，进度 55%；如进度未到 100，按上条缺口补齐。
+滚动自动高亮/吸顶/key 去重/深色浅色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page anchor-nav`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- sections/active/点击/方向/空/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+补 IntersectionObserver 自动高亮；再评估吸顶/嵌套。
 
 ---
+
 返回 [组件设计索引](README.md)
