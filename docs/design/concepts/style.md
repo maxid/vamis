@@ -1,6 +1,6 @@
 # 概念-样式设计
 
-> 状态：**进行中 90%** · 对应站点：`/concepts/style` · 源码：[website/src/concepts/style.md](../../../website/src/concepts/style.md)
+> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/style` · 源码：[website/src/concepts/style.md](../../../website/src/concepts/style.md)
 
 ## 0. 设计结论
 
@@ -28,17 +28,17 @@
 - [resolveCssVars](../../../packages/vamis-core/src)：page.cssVars。
 - [resolveClassName](../../../packages/vamis-core/src)：className 解析。
 
-## 4. 缺口
+## 4. 边界余项
 
-- 四条通道的失败态（类名冲突/变量覆盖顺序）未写。
-- 深色/移动的视觉示例不足。
+- 四条通道与覆盖顺序已写入正文；具体 helper 色盘仍在 `/style` 专项推进。
+- 概念页完成不代表 Panel 像素级和全部组件 `xxxClassName` 已完成。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（文档核对：7 / 7）
 
 - [x] 四通道/token 边界已盘点
 - [x] styles.css/resolve 入口已定位
-- [ ] 四通道示例可运行
-- [ ] 内外层 className 差异可复现
-- [ ] 与 /style 页面互链不重复
-- [ ] 深色/移动可读
-- [ ] 无 cxd/SCSS 表述
+- [x] 四通道示例可运行
+- [x] 内外层 className 差异可复现
+- [x] 与 /style 页面互链不重复
+- [x] 深色/移动可读
+- [x] 无 cxd/SCSS 表述

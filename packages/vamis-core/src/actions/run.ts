@@ -5,7 +5,7 @@ import { tableConditionMatch } from '../utils/table'
 import { dataMapping } from '../utils/data-mapping'
 import { printElements } from './print'
 import { createEventDebounce, type EventDebounceConfig } from '../event-debounce'
-import { isVamisDebugEnabled } from '../diagnostic'
+import { isVamisDebugEnabled, reportDiagnostic } from '../diagnostic'
 import { publicScopeData, setByPathCopy } from '../scope'
 import { resolveTargets, type ScopedContext } from '../scoped'
 import type { OverlayApi } from '../overlay'
@@ -185,7 +185,21 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
     if (handler) actionResult = await handler(action, ctx)
-    else actionResult = await runComponentAction(action, ctx)
+    else {
+      actionResult = await runComponentAction(action, ctx)
+      if (type && actionResult === false) {
+        reportDiagnostic(ctx.env, {
+          type: 'action',
+          message: `未处理的动作 ${type}`,
+          detail: {
+            actionType: type,
+            componentId: action.componentId,
+            componentName: action.componentName,
+            target: action.target,
+          },
+        })
+      }
+    }
   } catch (error) {
     if (action.ignoreError) return false
     // 对齐 Amis runActions：默认停后续、不把异常抛出页面。

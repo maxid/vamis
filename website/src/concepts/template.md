@@ -4,8 +4,8 @@ title: 模板
 
 # 模板
 
-::: info 实现进度 95% · 已完成
-文档主路径已对齐 Amis「模板」：`tpl`/`html` 按 HTML 插入（插值默认转义、标题/列表/链接在 `.vamis-html` 岛内补回）、`${}`、`|raw`、表达式、注意事项均可跑。JSON 与 YAML 同等有效。不实现 lodash `<% %>`（D2）。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
+::: tip 实现进度 100% · 已完成
+已对齐并核完 Amis「模板」主路径：插值、缺失 / 空值与对象转换、HTML / `raw` 信任边界、表达式、过滤器及注意事项均有活示例。`json` 默认紧凑，`json:2` 由作者显式选择格式化。不实现 lodash `<% %>`（D2）。
 :::
 
 模板用来把数据域里的值填进文本。主路径是 `${name}` 插值，由 `@vamis/formula` 求值。作者态 **JSON 与 YAML 并列**，解析后进同一引擎。
@@ -23,15 +23,6 @@ type: page
 body: Hello World!
 ```
 
-同一份 JSON 也有效：
-
-```schema
-{
-  "type": "page",
-  "body": "Hello World!"
-}
-```
-
 ### 文本中获取变量
 
 在普通文本里用数据映射语法 `${xxx}` 取当前数据域的值：
@@ -43,7 +34,27 @@ data:
 body: Hello ${text}
 ```
 
-找不到的变量会变成空字符串。更多 `${xxx}` 写法见 [数据映射](/concepts/data-mapping)。
+找不到的变量会变成空字符串。`null` 也输出为空；对象和数组若直接插值，会按普通字符串转换。需要稳定、可读的 JSON 时显式使用 `json` 过滤器。
+
+```schema
+type: page
+data:
+  missingValue: null
+  user:
+    name: Ada
+  tags:
+    - A
+    - B
+body:
+  - type: tpl
+    tpl: "缺失=[${missing}]；null=[${missingValue}]"
+  - type: tpl
+    tpl: "对象=[${user}]；数组=[${tags}]"
+  - type: tpl
+    tpl: "对象 JSON=${user|json}；数组 JSON=${tags|json}"
+```
+
+更多 `${xxx}` 写法见 [数据映射](/concepts/data-mapping)。
 
 ### 渲染 html
 
@@ -56,7 +67,7 @@ data:
 body: "<h1>Hello</h1> <span>${text}</span>"
 ```
 
-变量本身已经是 HTML 时，加上 `|raw`：
+变量本身已经是可信 HTML 时，加上 `|raw`：
 
 ```schema
 type: page
@@ -69,12 +80,17 @@ body: "<h1>Hello</h1> <span>${text|raw}</span>"
 type: page
 data:
   name: <b>Ada</b>
+  unsafe: <img src=x onerror="alert('不应执行')">
 body:
   - type: tpl
     tpl: 默认转义：${name}
   - type: tpl
     tpl: raw 才当 HTML：${name|raw}
+  - type: tpl
+    tpl: "用户输入保持文本：${unsafe}"
 ```
+
+`|raw` 会关闭插值转义，只能用于可信作者内容。不要把用户输入、URL 参数或接口返回的未消毒 HTML 交给它；上面的 `unsafe` 没有 `raw`，因此只显示标签文本，不创建图片，也不会执行事件处理器。
 
 ```schema
 type: page
@@ -106,7 +122,7 @@ body:
 
 ### 过滤器
 
-`${expr|filter:arg}`：先求值表达式，再依次过过滤器。P0 已接：
+`${expr|filter:arg}`：先求值表达式，再依次过过滤器。常用过滤器：
 
 | 过滤器 | 作用 |
 |--------|------|
@@ -140,7 +156,7 @@ body:
 
 `json` 默认输出紧凑文本；只有 `${obj|json:2}` 才带换行和两格缩进。Toast 正文会保留这些换行；其它 HTML 场景可用 `<pre>` 包裹。
 
-写法：`${name|raw}`、`${n|percent:2}`、`${d|date:'YYYY-MM-DD':'YYYY-MM-DD'}`。Amis 扩展运行时过滤器（`map` / `bytes` 等）也已接入。
+写法：`${name|raw}`、`${n|percent:2}`、`${d|date:'YYYY-MM-DD':'YYYY-MM-DD'}`。完整映射、链式调用和扩展过滤器见 [数据映射 · 过滤器](/concepts/data-mapping#过滤器)；公式函数见 [表达式](/concepts/expression)。需要组件而不是一段 HTML 时，使用 [SchemaNode](/types/schemanode)，不要在模板字符串里嵌 schema。
 
 ## JavaScript 模板引擎
 

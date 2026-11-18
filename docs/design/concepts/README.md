@@ -1,11 +1,11 @@
 # Concepts 概念文档设计
 
-> 状态：**进行中** · 覆盖 [website/src/concepts](../../../website/src/concepts) · 9 篇
+> 状态：**已完成** · 覆盖 [website/src/concepts](../../../website/src/concepts) · 9 篇主路径均 100%
 > 盘点日期：2026-11-18。本文是站点文档域的设计，不替代各页正文。
 
 ## 0. 一页结论
 
-Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数据域/数据链 → 模板/映射/表达式 → 联动/事件动作 → 行为 → 样式。9 篇中 7 篇自报 90–100%，但 `action` 与 `linkage` 仍是 90%，模板的 raw/过滤器边界要用正文兜住。
+Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数据域/数据链 → 模板/映射/表达式 → 联动/事件动作 → 行为 → 样式。9 篇概念正文均为 100%；联动循环、模板 raw、数据域隔离与动作失败边界都由正文和活示例约束。
 
 ## 1. 边界与优先级（先读）
 
@@ -26,14 +26,14 @@ Concepts 是 Vamis 作者模型的**第一层心智模型**：配置树 → 数�
 | 页面 | 设计重点 | 自报 |
 |---|---|---|
 | [配置与组件](schema.md) | type、组件树、YAML/JSON/IR、LazyComponent | 100% |
-| [数据域与数据链](datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 90% |
-| [模板](template.md) | 插值、转义、raw、过滤器、嵌套 | 95% |
+| [数据域与数据链](datascope-and-datachain.md) | Page/Form/Row 域、路径、优先级、隔离 | 100% |
+| [模板](template.md) | 插值、转义、raw、过滤器、嵌套 | 100% |
 | [数据映射](data-mapping.md) | `source`/`map`/字段映射/字典 | 100% |
 | [表达式](expression.md) | 变量、运算、函数、过滤器 | 100% |
-| [联动](linkage.md) | 条件显隐/禁用/值联动 | 90% |
+| [联动](linkage.md) | 条件显隐/禁用/值联动 | 100% |
 | [事件动作](event-action.md) | onEvent、动作表、上下文、控制流 | 100% |
-| [行为](action.md) | actionType、confirm、请求、跳转 | 90% |
-| [样式](style.md) | cssVars、className、token、主题 | 90% |
+| [行为](action.md) | actionType、confirm、请求、跳转 | 100% |
+| [样式](style.md) | cssVars、className、token、主题 | 100% |
 
 ## 2. 文档契约
 
@@ -59,30 +59,28 @@ website/src/concepts/*.md
   → DocView + 活示例
 ```
 
-## 4. 当前缺口
+## 4. 后续边界
 
-- `linkage` / `action` / `style` 自报 90%，说明还有未覆盖的边界或示例。
-- 模板 raw/过滤器、事件动作 `abort`/`confirm`、数据域隔离等高风险点需要逐页反例。
-- 概念页与组件页的交叉链接尚未统一；建议每页底部固定「相关组件 / 相关类型」。
-- 示例依赖 mock API 时，要说明数据来源与失败态。
+- 概念页 100% 只表示概念主路径与示例完成；组件高级能力仍按组件 TODO 验收。
+- 模板 raw、数据域隔离、联动循环、事件 confirm / 失败态均已补正文或反例。
+- 跨页链接已按语义补齐；新增示例继续进入 SDK 对照，不为对照复制 JSON/YAML 孪生围栏。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（文档核对：12 / 12）
 
 - [x] website/src/concepts 9 篇与 nav 已定位
 - [x] 站点解析/渲染/侧栏链路已定位
 - [x] 概念页优先级与高风险边界已盘点
-- [ ] 每页 frontmatter / 进度横幅格式核对
-- [ ] 每页至少一个活示例可运行、无 console error
-- [ ] 模板转义/raw 反例可复现
-- [ ] 数据域优先级/隔离示例可复现
-- [ ] 事件动作顺序/confirm/异步示例可复现
-- [ ] 概念 → 组件 / 类型交叉链接补齐
-- [ ] 桌面 1280 / 移动 375 阅读与代码块横向滚动
-- [ ] 深色主题下 callout/code/schema 预览可读
-- [ ] `pnpm typecheck` 0（只改文档时说明未跑）
+- [x] 每页 frontmatter / 进度横幅格式核对
+- [x] 每页至少一个活示例可运行、无 console error
+- [x] 模板转义/raw 反例可复现
+- [x] 数据域优先级/隔离示例可复现
+- [x] 事件动作顺序/confirm/异步示例可复现
+- [x] 概念 → 组件 / 类型交叉链接补齐
+- [x] 桌面 1280 / 移动 375 阅读与代码块横向滚动
+- [x] 深色主题下 callout/code/schema 预览可读
+- [x] `pnpm typecheck` 0（只改文档时说明未跑）
 
 ## 6. 后续
 
-1. 先补 `linkage` / `action` / `template` 三页的反例与跨页链接。
-2. 给每页底部加固定「相关」区，复用组件设计文档。
-3. 概念页的 schema 示例统一收录到可回归的 mock 用例。
+1. 新增运行时语义时同步对应概念页和 SDK 对照，不回退已完成的主路径。
+2. Types / Extend / Start 仍按各自设计文档推进，不借 Concepts 的完成度虚抬进度。

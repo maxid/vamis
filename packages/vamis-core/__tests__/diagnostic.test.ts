@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { evalFormula } from '../src/formula'
 import { reportDiagnostic } from '../src/diagnostic'
+import { runAction } from '../src/actions/run'
 import { requestApi } from '../src/utils/api'
 import type { RendererEnv } from '../src/types'
 
@@ -31,6 +32,19 @@ describe('diagnostics', () => {
     await requestApi('/api/example', { env: context, data: {} })
     expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({ type: 'api', message: 'request GET /api/example' }))
     expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({ type: 'api', message: 'response /api/example' }))
+  })
+
+  it('reports an unhandled actionType instead of silently accepting it', async () => {
+    const onDiagnostic = vi.fn()
+    await runAction(
+      { actionType: 'notRegistered', componentId: 'missing' },
+      { env: env({ onDiagnostic }), data: {} },
+    )
+    expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'action',
+      message: '未处理的动作 notRegistered',
+      detail: expect.objectContaining({ actionType: 'notRegistered', componentId: 'missing' }),
+    }))
   })
 
   it('reports expression errors with the expression text', () => {

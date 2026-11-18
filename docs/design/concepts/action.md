@@ -1,6 +1,6 @@
 # 行为设计
 
-> 状态：**进行中 90%** · 对应站点：`/concepts/action` · 源码：[website/src/concepts/action.md](../../../website/src/concepts/action.md)
+> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/action` · 源码：[website/src/concepts/action.md](../../../website/src/concepts/action.md)
 
 ## 0. 设计结论
 
@@ -28,17 +28,17 @@
 - [run.ts](../../../packages/vamis-core/src/actions/run.ts)：动作执行。
 - [types.ts](../../../packages/vamis-core/src/types.ts)：ActionSchema。
 
-## 4. 缺口
+## 4. 边界余项
 
-- 组件专有动作清单未集中。
-- 未知 actionType 的诊断展示未统一。
+- 组件专有动作仍在各组件文档维护；本页只列通用动作并链接事件动作。
+- 未知 actionType 通过 `env.onDiagnostic` 报告；失败默认停止后续动作。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（文档核对：7 / 7）
 
 - [x] actionType/confirm/参数边界已盘点
 - [x] Action/run/types 已定位
-- [ ] 各 actionType 最小例可运行
-- [ ] confirm/onEvent 时序示例可复现
-- [ ] 未知类型/失败态可复现
-- [ ] 与事件动作/Button 互链
-- [ ] 深色/移动可读
+- [x] 各 actionType 最小例可运行
+- [x] confirm/onEvent 时序示例可复现
+- [x] 未知类型/失败态可复现
+- [x] 与事件动作/Button 互链
+- [x] 深色/移动可读

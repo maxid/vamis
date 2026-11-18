@@ -465,6 +465,91 @@ describe('embed', () => {
     })
   })
 
+  it('keeps service field writes in the child scope instead of leaking them to page', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      id: 'scopePage',
+      data: { shared: 'page' },
+      body: [
+        {
+          type: 'service',
+          data: { shared: 'service' },
+          body: [
+            { type: 'input-text', name: 'localOnly', label: '私有值' },
+            { type: 'tpl', tpl: 'Service=${localOnly}' },
+          ],
+        },
+        { type: 'tpl', tpl: 'Page=[${localOnly}]' },
+      ],
+    })
+    await nextTick()
+    const input = host.querySelector('input[name="localOnly"]') as HTMLInputElement
+    input.value = 'private'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(host.textContent).toContain('Service=private'))
+    expect(host.textContent).toContain('Page=[]')
+    const page = scoped.getComponentByName('scopePage') as { getData?: () => Record<string, unknown> }
+    expect(page?.getData?.()?.localOnly).toBeUndefined()
+    expect(page?.getData?.()?.shared).toBe('page')
+  })
+
+  it('still forwards card child-scope writes to the current cards row', async () => {
+    const { host, scoped } = mount({
+      type: 'cards',
+      id: 'rowCards',
+      data: { items: [{ version: '4' }] },
+      card: {
+        body: { type: 'input-text', name: 'version', label: 'Version' },
+      },
+    })
+    await nextTick()
+    const input = host.querySelector('input[name="version"]') as HTMLInputElement
+    input.value = '5'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      const cards = scoped.getComponentByName('rowCards') as {
+        getData?: () => { items?: Array<Record<string, unknown>> }
+      }
+      expect(cards?.getData?.()?.items?.[0]?.version).toBe('5')
+    })
+  })
+
+  it('records formula writes as formula changes', async () => {
+    const { host } = mount({
+      type: 'form',
+      data: { price: 2, count: 3 },
+      body: [
+        { type: 'input-number', name: 'price', label: '单价' },
+        { type: 'input-number', name: 'count', label: '数量' },
+        { type: 'formula', name: 'total', formula: '${price * count}' },
+        { type: 'tpl', tpl: '${total}:${__changeReason.type}' },
+      ],
+    })
+    await vi.waitFor(() => expect(host.textContent).toContain('6:formula'))
+  })
+
+  it('clears hidden values from both form data and scope with hide reason', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      id: 'hiddenReasonForm',
+      debug: true,
+      data: { hide: false, secret: 'keep' },
+      body: [
+        { type: 'switch', name: 'hide', label: '隐藏' },
+        { type: 'input-text', name: 'secret', visibleOn: '${!hide}', clearValueOnHidden: true },
+        { type: 'tpl', tpl: 'secret=[${secret}]；${__changeReason.type}' },
+      ],
+    })
+    await nextTick()
+    const toggle = host.querySelector('input[type="checkbox"]') as HTMLInputElement
+    toggle.click()
+    await vi.waitFor(() => {
+      expect(host.textContent).toContain('secret=[]；hide')
+      const form = scoped.getComponentByName('hiddenReasonForm') as { getData?: () => Record<string, unknown> }
+      expect(form?.getData?.()).not.toHaveProperty('secret')
+    })
+  })
+
   it('keeps parent and scope internals out of __rendererData in field events', async () => {
     const notify = vi.fn()
     const { host } = mount({

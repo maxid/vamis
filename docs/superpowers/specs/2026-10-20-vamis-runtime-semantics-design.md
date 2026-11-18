@@ -24,7 +24,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | D5 | 组件间联动用组件注册表 + 动态 target，支持多目标、数据合并、reload/setValue/setState/doAction | P0 已落地 |
 | D6 | 表单值支持路径（`a.b[0].c`），提交返回数据合并进表单域，校验走可注册规则 | P0 |
 | D7 | 渲染器契约固定为 `schema/data/env/api`，注册信息包含 `scope/test/weight`，`isolateScope` 真正生效 | P0 部分落地 |
-| D8 | 调试能力内建：`env.debug`、动作日志、未知 type 带 schema path 报告 | P0 |
+| D8 | 调试能力内建：`enableVamisDebug` / `vamisDebug=1`、动作日志、未知 type 与动作带 schema path / actionType 报告 | P0 |
 | D9 | 接口联动与 `trackExpression` 用依赖收集实现自动刷新 | P1 |
 | D10 | CRUD 语义补齐：filter 独立作用域、`loadDataOnce`、`syncLocation`、`quickEdit`、`matchFunc` | P1 |
 | D11 | 插件化：renderer/action/filter/validator/locale/theme 都可注册；**JS SDK `embed` 是必须的产品入口** | P0（SDK 外壳）/ P1（注册表补齐） |
@@ -57,7 +57,7 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无 `dispatch/api/reload`、无错误边界；未知 type 仍占位 |
 | Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule` / `registerTheme`；SDK 暴露 `registerRenderer` / `addRule` / `registerTheme` | SDK 尚未暴露 action/filter 注册；无 locale 注册与插件生命周期 |
 | Theme/i18n | Tailwind + shadcn token + `registerTheme` | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText |
-| Diagnostics | `Placeholder` | 无 debug 开关、无动作日志、无 schema path 报错 |
+| Diagnostics | `env.onDiagnostic` + 渲染错误边界 | 动作 / API / 表达式 / 未知 type 与动作已接；可视化 Debug 面板待补 |
 | IR/作者态 | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与 JSON 都是一等输入 |
 
 ## 3. 设计原则
@@ -160,8 +160,8 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
 | 组件 | 独立 Scope | 行 / 浮层 | 注意 |
 |------|:----------:|:---------:|------|
 | App | × | × | 沿用父域 |
-| Page | ✓ | — | `registerRenderer` `scope: self`；脱离表单的表单项写进本层 |
-| Cards | × | ✓ | 集合不建域。每张卡走 `card` 的独立 Scope，行 ValueHost 写回该项 |
+| Page | ✓ | — | `registerRenderer` `scope: self`；脱离表单的表单项写进本层，子域写值不反冒泡 |
+| Cards | × | ✓ | 集合不建域。每张卡走 `card` 的独立 Scope，行 ValueHost 通过 `forwardFromChildScope` 写回该项 |
 | Chart | × | × | option 读父域，接口结果不进本层 Scope |
 | CRUD | ✓ | — | `scope: self`。`filter` 默认渲成 form，是第二层 |
 | CRUD2 | ✓ | — | `scope: self` |
@@ -170,7 +170,7 @@ export type ChangeReason = 'init' | 'input' | 'api' | 'formula' | 'hide' | 'acti
 | List | × | ✓ | 集合不建域。每行 extraData + RowValueHost |
 | Form | ✓ | — | `scope: self`。store 只收本域，查找才沿 `__super` |
 | PaginationWrapper | × | ✓ | 切片结果和页码 extraData 下发 |
-| Service | ✓ | — | `scope: self` |
+| Service | ✓ | — | `scope: self`；私有字段写入本层，不进 Page；行宿主需显式 `forwardFromChildScope` 才允许子域回写 |
 | Wizard | × | ✓ | 自身只下发 `currentStep`；步骤内容包 form |
 | Combo | × | ✓ | 行 NestedFormScope 写回数组项；独立 Scope 仍缺（D6） |
 | InputArray | × | ✓ | 同行 NestedFormScope |

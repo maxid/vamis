@@ -4,8 +4,8 @@ title: 数据域与数据链
 
 # 数据域与数据链
 
-::: tip 实现进度 90% · 已完成
-文档主路径已对齐 Amis 同名页：`initApi` / `data` 进数据域、发生了什么、page → service 变量遮蔽、`__super`、URL 查询种子、非容器上的 `data` 不建域、表单提交 merge、`__prev` / `__changeReason`、接口与表单数据域的 `trackExpression`。JSON 与 YAML 同等有效。其它数据容器的独立 Scope 仍按运行时 D1 表逐项推进。
+::: tip 实现进度 100% · 已完成
+已对齐并核完 Amis 同名页主路径：初始化、变量遮蔽与子域隔离、`__super`、路径读写、初始化优先级、URL 参数、提交合并、`trackExpression` 与隐藏数据均有说明或活示例。其它容器的高级能力仍按运行时 D1 表逐项推进。
 :::
 
 每个能取数的容器有自己的**数据域**，子节点沿**数据链**向上找。这是 kernel D1。作者态 JSON 与 YAML 并列。
@@ -178,6 +178,51 @@ body:
     tpl: 本层 ${name}，上层年龄 ${__super.age}
 ```
 
+子域能读父域，反过来不成立。下面 Service 内的 `localOnly` 不写入 Page，所以外层模板只能读 `shared`，读不到 `localOnly`：
+
+```schema
+type: page
+data:
+  shared: 来自 Page
+body:
+  - type: service
+    data:
+      shared: 来自 Service
+    body:
+      - type: input-text
+        name: localOnly
+        label: Service 私有值
+      - type: tpl
+        tpl: "Service 内：${shared}；${localOnly}"
+  - type: tpl
+    tpl: "Page 内：${shared}；localOnly=[${localOnly}]"
+```
+
+### `name` 路径读写
+
+表单项 `name` 支持点路径和数组下标。读写都使用同一条路径，不需要先把对象摊平：
+
+```schema
+type: form
+debug: true
+data:
+  user:
+    name: Ada
+  members:
+    - name: Grace
+body:
+  - type: input-text
+    name: user.name
+    label: 用户名称
+  - type: input-text
+    name: members[0].name
+    label: 第一位成员
+  - type: tpl
+    tpl: "当前用户：${user.name}；第一位成员：${members[0].name}"
+```
+
+Form 初始化时，同名字段的取值优先级为：`value` 表达式 > 表单 `data` > 父域同名字段 > 普通 `value` 默认值。初始化以后，用户输入和显式动作写值覆盖初值；父域是否继续同步由 [`trackExpression`](#更新数据链) 决定。
+
 ### 具备数据域的组件
 
 只有少数容器会新建数据域：
@@ -344,6 +389,8 @@ CRUD 里的 filter 其实是一个 form，所以 CRUD 有两层数据域：第�
 
 提交返回会 **merge** 进当前 form 域。`Formula` 等组件也有类似行为。
 
+需要主动读写某个组件时，不要把它的数据复制成全局变量。通过 `componentId` / `target` 找到组件，再调用组件动作：`setValue` 写字段，`reload` 合并数据并刷新；公式里可用 `GETRENDERERDATA` 读取公开数据。完整写法见 [事件动作 · 组件动作](/concepts/event-action#组件动作)。
+
 ## 更新数据链
 
 顶层域一变，子层带数据域的组件通常也要刷新，否则拿不到新值。Amis 3.2 起用 `trackExpression` 声明本层关心哪些上层变量：`"none"` 不追踪，`"${name}"` 只在 name 变时更新。语法见 [表达式](/concepts/expression)。
@@ -374,6 +421,8 @@ Vamis 的接口自动刷新和表单数据域都支持 `trackExpression`。表�
 ```
 
 表单项写在 page 下、不包 form 时，值会写进 page 域。CRUD filter 是否跟上上层 `name`，取决于 `trackExpression` 的结果是否发生变化。
+
+`trackExpression` 可以监听多个值，例如 `${xxx1},${xxx2}`。它比较的是表达式结果：不要写随机数或当前时间，否则每次都会更新；对象 / 数组建议显式转成 `${xxxObject|json}` 再比较。表达式读的是上层数据链，不要依赖当前层私有字段。
 
 ## URL 参数
 
@@ -458,4 +507,4 @@ Vamis 的接口自动刷新和表单数据域都支持 `trackExpression`。表�
 }
 ```
 
-输入框改值会记 `input`。`setValue` 记 `action`；`ajax` 记 `api`。`formula` / `hide` 仍精简。
+输入框改值会记 `input`。`setValue` 记 `action`；`ajax` 记 `api`；`formula` 写值记 `formula`；`clearValueOnHidden` 清值记 `hide`。这些内部字段可显式读取，但不会进入 `__rendererData`、事件日志的公开数据或表单提交。

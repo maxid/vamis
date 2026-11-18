@@ -4,8 +4,8 @@ title: 联动
 
 # 联动
 
-::: info 实现进度 90% · 已完成
-文档主路径已对齐 Amis「联动」：`visibleOn` / `disabledOn`、select `source` 自动刷新、`sendOn`、主动 `reload`、提交回写、`form.target`、`name?a=${a}`、逗号多目标、动态 `target` / `name`、`clearValueOnHidden`。JSON 与 YAML 同等有效。
+::: tip 实现进度 100% · 已完成
+已对齐并核完 Amis「联动」主路径：条件显隐 / 禁用、Formula 值联动、接口刷新条件、主动 `reload`、提交回写、单 / 多 / 动态目标与隐藏清值；补齐优先级和循环边界。JSON 与 YAML 同等有效。
 :::
 
 上一节介绍了 [表达式](/concepts/expression)。表达式用得最多的场景，就是页面联动。作者态 **JSON 与 YAML 并列**，解析后走同一套 Scope / 组件注册表。
@@ -48,43 +48,44 @@ body:
     disabledOn: "${foo == 2}"
 ```
 
-同一份 JSON 也有效：
-
-```schema: scope="body"
-{
-  "type": "form",
-  "body": [
-    {
-      "type": "radios",
-      "name": "foo",
-      "label": false,
-      "options": [
-        { "label": "类型1", "value": 1 },
-        { "label": "类型2", "value": 2 }
-      ]
-    },
-    {
-      "type": "input-text",
-      "name": "text1",
-      "label": false,
-      "placeholder": "选中 类型1 时可见",
-      "visibleOn": "${foo == 1}"
-    },
-    {
-      "type": "input-text",
-      "name": "text2",
-      "label": false,
-      "placeholder": "选中 类型2 时不可点",
-      "disabledOn": "${foo == 2}"
-    }
-  ]
-}
-```
-
 效果：
 
 1. 选中「类型1」时才显示第一项输入
 2. 选中「类型2」时第二项输入禁用
+
+需要把计算结果持续写回当前表单域时，用 `formula`。它和普通插值不同：不仅显示结果，还会把结果写到 `name` 指定的字段。
+
+```schema: scope="body"
+type: form
+data:
+  price: 10
+  count: 2
+body:
+  - type: input-number
+    name: price
+    label: 单价
+  - type: input-number
+    name: count
+    label: 数量
+  - type: formula
+    name: total
+    label: 总价
+    formula: "${price * count}"
+    initSet: true
+    autoSet: true
+  - type: tpl
+    tpl: "提交时会带上 total=${total}"
+```
+
+`formula` 默认初始化并自动应用；`initSet: false` 可关闭首次写入，`autoSet: false` 则改为通过组件动作手动应用。普通表单项的 `value: "${...}"` 只在初始化时求值，不要把它当成持续联动。
+
+条件配置的优先级保持明确：
+
+- 显隐：`hidden: true` / `visible: false` 先排除；`hiddenOn` 命中后隐藏；最后计算 `visibleOn`。
+- 禁用：`disabled: true` 始终禁用；否则由 `disabledOn` 决定。
+- 动作：组件动作写入的显隐 / 禁用状态优先于对应表达式；表达式只读数据，不产生隐式请求或跳转。
+
+联动表达式不应互相写回形成 A → B → A 的循环。`formula` 有应用中的重入保护，但多个字段互相推导仍会让结果难以预测；此时应改为一个明确输入，或用 [事件动作](/concepts/event-action) 写清执行顺序。
 
 > **注意：**
 >

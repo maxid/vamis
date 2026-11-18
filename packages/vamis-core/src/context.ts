@@ -1,5 +1,5 @@
 import { computed, inject, provide, unref, type ComputedRef, type InjectionKey, type MaybeRef, type Ref } from 'vue'
-import type { Scope } from './scope'
+import type { ChangeReason, Scope } from './scope'
 import type { PlainObject, RendererEnv, SchemaCollection, SchemaNode } from './types'
 
 export const EnvKey: InjectionKey<RendererEnv> = Symbol('vamis-env')
@@ -46,7 +46,8 @@ export function useScope(): ComputedRef<Scope | undefined> {
  * 取值不走这里：行记录、本层数据域都已经在 `useData()` 里。
  */
 export interface ValueHost {
-  setValue: (name: string, value: unknown) => void
+  setValue: (name: string, value: unknown, reason?: ChangeReason) => void
+  forwardFromChildScope?: boolean
 }
 
 export const ValueHostKey: InjectionKey<ValueHost> = Symbol('vamis-value-host')

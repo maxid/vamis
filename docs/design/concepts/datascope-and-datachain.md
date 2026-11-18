@@ -1,6 +1,6 @@
 # 数据域与数据链设计
 
-> 状态：**进行中 90%** · 对应站点：`/concepts/datascope-and-datachain` · 源码：[website/src/concepts/datascope-and-datachain.md](../../../website/src/concepts/datascope-and-datachain.md)
+> 状态：**已完成 100%** · Amis 核对：主路径 + Vamis 源码 / 活示例 · 对应站点：`/concepts/datascope-and-datachain` · 源码：[website/src/concepts/datascope-and-datachain.md](../../../website/src/concepts/datascope-and-datachain.md)
 
 ## 0. 设计结论
 
@@ -11,7 +11,7 @@
 1. **域层级**：Page → Form → Row；每层独立 scope，子域读父域，父域不自动读子域。
 2. **路径**：`a.b[0]` 统一按 path 读写；空 name 不写。
 3. **优先级**：当前域优先，再向上；同层冲突按表单字段定义。
-4. **隔离**：`isolateScope` 只影响渲染器，不改变作者数据链。
+4. **隔离**：`isolateScope` 会截断父域查找；普通 `scope: self` 仍可读父域，但子域写值不反冒泡。
 5. **响应**：值变化驱动模板/表达式/联动重算；避免循环写值。
 6. **组件边界**：组件不得直接改父域；通过 fieldApi/scope。
 
@@ -29,17 +29,17 @@
 - [SchemaRenderer](../../../packages/vamis-core/src/SchemaRenderer.vue)：域创建/透传。
 - [解析工具](../../../packages/vamis-core/src/utils)：路径读写。
 
-## 4. 缺口
+## 4. 边界余项
 
-- 多级 Row 嵌套/表格行域的边界示例不足。
-- `isolateScope` 与 combo 独立域的边界仍未收口。
+- 子域写值不冒泡到 Page / Service；只有行宿主显式允许时才回写行记录。
+- Combo 独立 Scope 仍属 D6 组件任务，不影响本页概念主路径完成状态。
 
-## 5. 验收清单（文档核对：3 / 12）
+## 5. 验收清单（文档核对：7 / 7）
 
 - [x] 域层级/路径/优先级已盘点
 - [x] formContext 与 SchemaRenderer 已定位
-- [ ] 三层域示例可复现
-- [ ] 路径读写/数组/点路径示例可复现
-- [ ] 隔离/不冒泡反例可复现
-- [ ] 与 linkage/event-action 的边界链接
-- [ ] 桌面/移动/深色可读
+- [x] 三层域示例可复现
+- [x] 路径读写/数组/点路径示例可复现
+- [x] 隔离/不冒泡反例可复现
+- [x] 与 linkage/event-action 的边界链接
+- [x] 桌面/移动/深色可读

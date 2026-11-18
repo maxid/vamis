@@ -50,7 +50,7 @@ alwaysApply: true
 
 ### 动作日志只留参数、公开数据和结束事件
 - 踩过：把完整 action schema、`scope.resolved()`、event 分多行输出，动作嵌套和 `__*` 内部对象淹没关键信息；普通 Button 没有处理器也留下空分组。
-- 稳定做法：每组只输出 `[type] action args, data` 与 `[type] action end event`。数据先过 `publicScopeData` 并去掉 event；无内置 handler 且无组件目标的空动作不记日志。
+- 稳定做法：每组只输出 `[type] action args, data` 与 `[type] action end event`。数据先过 `publicScopeData` 并去掉 event；无内置 handler 且无组件目标的空动作不记日志；有 actionType 但内置与组件都未处理时走 `env.onDiagnostic`，不要静默成功。
 - 触及：`action` `button` D8 调试
 - 规则：`packages/vamis-core/src/actions/run.ts`
 
@@ -248,8 +248,8 @@ alwaysApply: true
 
 ### 脱离表单的表单项走 useFieldValue，不要 `form?.setValue`
 - 踩过：表格列类型示例里开关和状态是同一个字段，开关改了状态列不动。不是 Table 或 Switch 单点：表单项只会 `form?.getValue` / `form?.setValue`，没有祖先表单时读不到数据链、写的值直接丢掉（约 130 处），Switch 退回组件本地态所以自己会动。Amis `wrapControl` 没有 formStore 时把变化交给最近的 `onChange`：`TableRow` 写回行，`Page` / `Service` / `Dialog` 写进本层 store；`TableCell` 也保留列 `name`。
-- 稳定做法：表单项及带 `name` 的 Tabs / Pagination 一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。FormItem 的静态值与选择器静态态也走同一口，不要只修输入态。Tabs 还要按 `name` 读初值、匹配 tab 的 `value` / `title` 后选中，并在数据域变化时同步。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主必须 `provideValueHost`：表格单元格自己提供，其它地方包一层 `data/RowValueHost.vue`（CRUD / List / Cards 行、Dialog / Drawer overlay body 已接）。`card` 的 `scope: 'self'` 会截断 ValueHost，不要拆 isolateScope；`SchemaRenderer` 要同时写 `childScope` 并冒泡到 `parentValueHost`，外层宿主才能换行。Overlay 帧用 `setByPathCopy` + `sync()`，不要原地改 `state.data`。同一个 `name` 每行注册一次，行内表单项要收进本行自己的 scoped（`provideScoped(useScoped())`）并带 `inputOnly`，否则页面那层 `getComponentByName` 会捞到某一行的控件，对照 `named` / `rendered` 也假红（Amis `TableCell` 是 `inputOnly: true`，没有表单项外壳）。禁止用组件本地 ref 冒充值。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。
-- 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards` `card` `dialog` `drawer` `tabs` `pagination`
+- 稳定做法：表单项及带 `name` 的 Tabs / Pagination 一律 `const fieldApi = useFieldValue()`。有表单就是表单；没有表单时读 `useData()`、写最近的 `ValueHost`（表格单元格 → 行记录，有自己数据域的渲染器 → 本层 scope）。FormItem 的静态值与选择器静态态也走同一口，不要只修输入态。Tabs 还要按 `name` 读初值、匹配 tab 的 `value` / `title` 后选中，并在数据域变化时同步。行记录整体换新（`setByPathCopy`），不要原地改。新增「行」类宿主必须 `provideValueHost`：表格单元格自己提供，其它地方包一层 `data/RowValueHost.vue`（CRUD / List / Cards 行、Dialog / Drawer overlay body 已接）。`card` 的 `scope: 'self'` 会截断 ValueHost，不要拆 isolateScope；`SchemaRenderer` 先写 `childScope`，只有 `parentValueHost.forwardFromChildScope` 的行宿主才继续冒泡换行，Page / Service 的普通子域写值不得泄露到父域。Overlay 帧用 `setByPathCopy` + `sync()`，不要原地改 `state.data`。同一个 `name` 每行注册一次，行内表单项要收进本行自己的 scoped（`provideScoped(useScoped())`）并带 `inputOnly`，否则页面那层 `getComponentByName` 会捞到某一行的控件，对照 `named` / `rendered` 也假红（Amis `TableCell` 是 `inputOnly: true`，没有表单项外壳）。禁止用组件本地 ref 冒充值。`setValue` 的 `reason` 要穿过 ValueHost / FormContext，Formula 写值记 `formula`，隐藏清值同步 store 与 Scope 并记 `hide`。一个示例里两个组件读同一字段不同步时，先查数据链，不要先修那个组件。
+- 触及：`table` `switch` FormItem `page` `service` `crud` `list` `cards` `card` `dialog` `drawer` `tabs` `pagination` `formula`
 - 规则：`packages/vamis/src/formContext.ts` `useFieldValue`；`packages/vamis-core/src/context.ts` `ValueHost`；`packages/vamis/src/renderers/data/RowValueHost.vue`；Amis `wrapControl.tsx` `handleChange` / `Table/TableRow.tsx` `handleChange` / `Table/TableCell.tsx` `inputOnly`
 
 ### Amis 文档站给示例传 `affixHeader: false`，生产默认才是 true
@@ -410,7 +410,7 @@ alwaysApply: true
 
 ### 同一 class 对计算样式，不要对截图
 - 踩过：用 `gap` 近似 Amis `space-x`（后盒 `margin-left`）；同名 utility Amis/TW 两套叠加，缝加倍。
-- 稳定做法：先读 Amis 选择器再写 CSS。同一 class 落在同一元素、同一属性、同一计算值。语义不同就清掉 TW 那侧。收工核宽高、`margin-*`/`padding-*`/`border-width`/`box-sizing`、缝宽。
+- 稳定做法：先读 Amis 选择器再写 CSS。同一 class 落在同一元素、同一属性、同一计算值。语义不同就清掉 TW 那侧。旧 `m-l` 系列是固定 5/10/15/20/30/40/50px（含负值），不要复用组件内部的 `--gap-*`。收工核宽高、`margin-*`/`padding-*`/`border-width`/`box-sizing`、缝宽。
 - 触及：`/style` helper 页、带 `className` 的组件
 - 规则：`.cursor/rules/style.mdc`
 

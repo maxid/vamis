@@ -1,7 +1,7 @@
 import { inject, provide, type InjectionKey } from 'vue'
 import { getByPath, useData, useScope, useValueHost } from '@vamis/core'
 import type { FormHorizontal, NodeState } from '@vamis/core'
-import type { PlainObject } from '@vamis/core'
+import type { ChangeReason, PlainObject } from '@vamis/core'
 
 export interface FormContext {
   store: NodeState
@@ -10,7 +10,7 @@ export interface FormContext {
   labelAlign?: string
   isStatic?: () => boolean
   getValue: (name: string) => unknown
-  setValue: (name: string, value: unknown) => void
+  setValue: (name: string, value: unknown, reason?: ChangeReason) => void
   submit: () => Promise<void>
   reset: () => void
   clear: () => void
@@ -29,7 +29,7 @@ export function useForm(): FormContext | undefined {
 
 export interface FieldValueApi {
   getValue: (name: string) => unknown
-  setValue: (name: string, value: unknown) => void
+  setValue: (name: string, value: unknown, reason?: ChangeReason) => void
 }
 
 /**
@@ -46,10 +46,10 @@ export function useFieldValue(): FieldValueApi {
   const scope = useScope()
   return {
     getValue: (name) => (name ? getByPath(data.value, name) : undefined),
-    setValue(name, value) {
+    setValue(name, value, reason = 'input') {
       if (!name) return
-      if (host) host.setValue(name, value)
-      else scope.value?.set(name, value, 'input')
+      if (host) host.setValue(name, value, reason)
+      else scope.value?.set(name, value, reason)
     },
   }
 }

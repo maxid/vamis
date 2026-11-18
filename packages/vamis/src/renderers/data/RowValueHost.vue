@@ -26,6 +26,7 @@ onMounted(() => {
   })
 })
 provideValueHost({
+  forwardFromChildScope: true,
   setValue(name, value) {
     emit('change', { name, value, init: !settled.value })
   },

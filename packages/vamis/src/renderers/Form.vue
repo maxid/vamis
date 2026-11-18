@@ -260,9 +260,9 @@ function getValue(name: string) {
   return getPathValue(store.data, name)
 }
 
-function setValue(name: string, value: unknown) {
+function setValue(name: string, value: unknown, reason: ChangeReason = 'input') {
   setPathValue(store.data, name, value)
-  scope.value?.set(name, value, 'input')
+  scope.value?.set(name, value, reason)
   const item = itemByName(name)
   if (item && formItemValidateOnChange(item, props.schema)) {
     const message = validateValue(item, getPathValue(store.data, name), store.data)
@@ -657,7 +657,8 @@ onMounted(async () => {
 watch(
   () => store.data,
   () => {
-    clearHiddenFormValues(formItems(), store.data)
+    const cleared = clearHiddenFormValues(formItems(), store.data)
+    for (const name of cleared) scope.value?.set(name, undefined, 'hide')
     persistNow()
   },
   { deep: true },

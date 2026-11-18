@@ -96,16 +96,17 @@ watch(
 const currentScope = computed(() => childScope.value ?? parentScope.value)
 provideScope(currentScope)
 /**
- * 脱离表单的表单项写值：有自己数据域的渲染器（page / service / card…）先写进本层；
- * 若上层还有 ValueHost（Cards / List 的行、Dialog 浮层）再往上交，行记录才能换新。
+ * 脱离表单的表单项写值：有自己数据域的渲染器（page / service / card…）只写本层；
+ * 只有行宿主显式允许时，card 等子域才继续上交给外层 ValueHost 换新行记录。
  * 对齐 Amis `Page.handleChange` + `Cards.handleQuickChange` / `Dialog.handleFormChange`。
  */
 const parentValueHost = useValueHost()
 provideValueHost({
-  setValue(name, value) {
-    if (childScope.value) childScope.value.set(name, value, 'input')
-    if (parentValueHost) parentValueHost.setValue(name, value)
-    else if (!childScope.value) parentScope.value?.set(name, value, 'input')
+  setValue(name, value, reason = 'input') {
+    if (childScope.value) childScope.value.set(name, value, reason)
+    if (parentValueHost && (!childScope.value || parentValueHost.forwardFromChildScope)) {
+      parentValueHost.setValue(name, value, reason)
+    } else if (!childScope.value) parentScope.value?.set(name, value, reason)
   },
 })
 const data = computed(() => {

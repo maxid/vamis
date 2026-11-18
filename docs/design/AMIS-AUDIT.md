@@ -1,13 +1,13 @@
 # 站点设计 vs Amis 6.13.0 源码核对
 
 > 日期：2026-11-18。范围：`docs/design/{concepts,style,extend,start,types}` 共 84 篇逐页设计。
-> 结论先行：**没有逐篇核对 Amis 源码实现**。目前只完成目录映射、清单对照和少量源码抽样；不能称为“已按 Amis 实现核对”。
+> 结论先行：**84 篇站点设计尚未全部逐篇核对 Amis 源码实现**。Concepts 本轮 5 篇已做主路径、Vamis 源码与活示例核对；其余页面仍按表中的审计等级理解，不能统称为“已按 Amis 实现逐条核对”。
 
 ## 1. 核对到什么程度
 
 | 域 | 页面映射 | 源码抽样 | 逐条核对 | 结论 |
 |---|---|---|---|---|
-| concepts | 9/9 与 `../amis/docs/zh-CN/concepts` 同名 | schema / action / event-action 主路径 | 未做 | 目录对齐；语义未逐条 |
+| concepts | 9/9 与 `../amis/docs/zh-CN/concepts` 同名 | 9 篇主路径均已核对；本轮 linkage / template / datascope / action / style 另核 Vamis 源码与活示例 | 本轮 5 篇逐条，其余为主路径 | 9 篇概念正文 100%；设计审计仍区分逐条与主路径 |
 | style | 59/59 helper 页对应 `../amis/packages/amis-ui/scss/helper/*`；另 4 篇 start 对应 Amis style 根页 | display 18 个类名与 Amis helper 表一致；margin 展开数不同 | 未做 | 类族对齐；生成展开未 diff |
 | extend | Vamis 4 篇是 Amis 11 篇的子集 | custom/editor/i18n/debug 主路径 | 未做 | 范围是子集，缺 7 篇 |
 | start | Vamis 4 篇（含 intro/sdk） | 入口/构建契约 | 未做 | 与 Amis start 结构不同 |
@@ -23,7 +23,7 @@
 
 ## 3. 高风险未核对项
 
-1. Concepts 每页的字段/默认值/事件顺序是否与 Amis 6.13.0 一致。
+1. Concepts 其余 4 篇尚未达到本轮 5 篇的逐条审计强度；五篇已完成页也要随运行时变更复核。
 2. Style 59 个 helper 页的完整类名、值、响应式/状态前缀是否与 Amis SCSS 逐项一致。
 3. Extend 4 篇的 API 形态是否与 Amis registerRenderer / editor / i18n 契约一致。
 4. Start 的构建/入口承诺是否与 Amis 用法一致，以及 Vamis 自身差异。
@@ -38,6 +38,6 @@
 
 ## 5. 诚实状态
 
-- 这 84 篇是**基于 website 正文 + Vamis 运行时**写的页面级设计，不是 Amis 源码逐条核对结果。
+- 这 84 篇起初是**基于 website 正文 + Vamis 运行时**写的页面级设计；除已标明本轮逐条 / 主路径核对的页面外，其余不是 Amis 源码逐条核对结果。
 - 组件设计文档此前做过部分 Amis 入口源码盘点；站点五域没有同等强度的核对。
 - 在完成第 4 节前，不应对外声称“站点设计已按 Amis 源码核对”。

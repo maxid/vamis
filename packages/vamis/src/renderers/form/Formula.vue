@@ -38,7 +38,7 @@ function apply() {
   }
   applying.value = true
   try {
-    fieldApi.setValue(name.value, result.value)
+    fieldApi.setValue(name.value, result.value, 'formula')
   } finally {
     applying.value = false
   }

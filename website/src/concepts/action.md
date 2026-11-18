@@ -4,8 +4,8 @@ title: 行为
 
 # 行为
 
-::: tip 实现进度 90% · 已完成
-文档主路径已对齐 Amis「行为」：`type: action` 配 `actionType` 后请求、浮层、Toast、复制、跳转、浏览器、打印与控制流均可跑；Chart `clickAction` 已接。JSON 与 YAML 同等有效。
+::: tip 实现进度 100% · 已完成
+已对齐并核完 Amis「行为」主路径：动作配置、常用 `actionType`、确认与动作链顺序、失败 / 未知动作诊断、Chart `clickAction` 均有说明或活示例；复杂流程链接到事件动作。JSON 与 YAML 同等有效。
 :::
 
 页面上的交互——提交表单、弹出对话框、跳转、复制一段文字——都可以看成一种**行为**。作者态 **JSON 与 YAML 并列**。
@@ -27,17 +27,6 @@ type: action
 label: 发出一个请求
 actionType: ajax
 api: /api/mock2/form/saveForm
-```
-
-同一份 JSON 也有效：
-
-```schema: scope="body"
-{
-  "type": "action",
-  "label": "发出一个请求",
-  "actionType": "ajax",
-  "api": "/api/mock2/form/saveForm"
-}
 ```
 
 1. 在 `page` 内容区放一个 `action`
@@ -112,6 +101,31 @@ actionType: ajax
 confirmText: 确认要发出这个请求？
 api: /api/mock2/form/saveForm
 ```
+
+按钮自身的 `confirmText` 和动作链中某一步的 `confirmText` 使用同一规则：取消后不执行该动作。按钮级确认先发生，通过后才进入 `onEvent.click`；事件上下文会在后续动作间继续传递。
+
+```schema: scope="body"
+type: action
+label: 确认并提示
+confirmText: 要继续吗？
+onEvent:
+  click:
+    actions:
+      - actionType: toast
+        args:
+          msgType: success
+          msg: 已确认，开始执行动作链
+      - actionType: wait
+        args:
+          time: 300
+      - actionType: toast
+        args:
+          msg: 等待结束后继续
+```
+
+需要条件分支、并行、循环、广播或多个动作时，直接使用 [事件动作](/concepts/event-action)，不要把多步流程拆成互不相关的按钮。各动作的最小配置、失败后的中断规则和 `ignoreError` 也在该页。
+
+未注册的 `actionType` 不会静默冒充成功：可以通过 `env.onDiagnostic` 收到 `type: action` 的诊断；请求或组件动作失败会停止后续动作，除非显式配置 `ignoreError`。开发调试见 [调试](/extend/debug)。
 
 ### 组件所支持的行为
 

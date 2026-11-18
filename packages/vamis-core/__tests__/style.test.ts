@@ -191,6 +191,22 @@ describe('Amis width helpers', () => {
     expect(css).toContain('@media (min-width: 768px)')
   })
 
+  it('matches the legacy Amis m-l spacing ladder and negative helpers', () => {
+    const here = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(here, '../../vamis-ui/src/helpers.css'), 'utf8')
+    for (const rule of [
+      '.m-l-xs { margin-left: 5px; }',
+      '.m-l-sm { margin-left: 10px; }',
+      '.m-l { margin-left: 15px; }',
+      '.m-l-md { margin-left: 20px; }',
+      '.m-l-lg { margin-left: 30px; }',
+      '.m-l-xl { margin-left: 40px; }',
+      '.m-l-xxl { margin-left: 50px; }',
+      '.m-l-n { margin-left: -15px; }',
+      '.m-l-n-xxl { margin-left: -50px; }',
+    ]) expect(css).toContain(rule)
+  })
+
   it('ships h-* / m: / pc: matching helper.css Height', () => {
     const here = dirname(fileURLToPath(import.meta.url))
     const css = readFileSync(resolve(here, '../../vamis-ui/src/helpers-height.css'), 'utf8')
