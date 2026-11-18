@@ -57,6 +57,8 @@ export interface ActionSchema extends SchemaObject {
   blank?: boolean
   confirmText?: string
   confirmTitle?: string
+  /** Action 按钮已确认过后，原生动作不再弹第二次。对齐 Amis `ignoreConfirm`。 */
+  ignoreConfirm?: boolean
   dataMergeMode?: 'merge' | 'override'
   redirect?: string
   feedback?: SchemaObject | string
@@ -192,7 +194,7 @@ export interface RendererEnv {
   jumpTo: (to: string, opts?: JumpToOptions) => void
   /** 对齐 Amis `env.updateLocation`。Tabs `hash` 写 `#key`；`replace` 走 `history.replaceState`。 */
   updateLocation?: (to: string, replace?: boolean) => void
-  alert: (msg: string, title?: string) => void
+  alert: (msg: string, title?: string, className?: string) => void
   /** 对齐 Amis `Alert.confirm`：默认 Modal，不是 `window.confirm`。第三参为按钮文案 / Esc / size。 */
   confirm: (
     msg: string,

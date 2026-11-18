@@ -31,6 +31,8 @@ export interface ApiResult {
 export interface RequestApiOptions {
   defaultMethod?: ApiObject['method']
   autoAppend?: boolean
+  /** ajax 动作：未写 `data` 时不要把当前数据域当请求体（对齐 Amis AjaxAction）。 */
+  emptyDataIfUnset?: boolean
 }
 
 type CacheEntry = { expires: number; result: ApiResult }
@@ -367,6 +369,8 @@ export async function requestApi(
 
   if (customData && built.data && typeof built.data === 'object') {
     built.data = dataMapping(built.data, ctx.data, convertKeyToPath)
+  } else if (options.emptyDataIfUnset) {
+    built.data = {}
   } else if (
     (method === 'post' || method === 'put' || method === 'patch' || method === 'delete') &&
     options.autoAppend &&
@@ -385,12 +389,17 @@ export async function requestApi(
   if (method === 'get' || method === 'jsonp' || method === 'js') {
     const raw = rawUrlOf(api)
     if (
+      !options.emptyDataIfUnset &&
       !customData &&
       ((raw.indexOf('$') < 0 && options.autoAppend) || built.forceAppendDataToQuery)
     ) {
       built.data = payload
     }
-    if (isPlainObject(built.data) && built.attachDataToQuery !== false) {
+    if (
+      isPlainObject(built.data) &&
+      Object.keys(built.data).length &&
+      built.attachDataToQuery !== false
+    ) {
       built.query = { ...(built.query || {}), ...built.data }
       built.url = appendQuery(built.url, built.data)
       delete built.data

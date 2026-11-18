@@ -653,6 +653,37 @@ describe('embed', () => {
     vi.unstubAllGlobals()
   })
 
+  it('waits for button confirmText before onEvent ajax', async () => {
+    const fetcher = vi.fn(async () => ({ status: 0, msg: 'ok', data: { id: 1 } }))
+    const confirm = vi.fn(async () => false)
+    const { host } = mount(
+      {
+        type: 'page',
+        data: { name: 'lll' },
+        body: {
+          type: 'button',
+          label: '发送 Ajax 请求',
+          confirmText: '确认要发出这个请求？',
+          onEvent: {
+            click: {
+              actions: [{ actionType: 'ajax', api: '/api/mock2/form/saveForm' }],
+            },
+          },
+        },
+      },
+      undefined,
+      { fetcher, confirm },
+    )
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find((item) => item.textContent?.includes('发送 Ajax 请求'))
+    button?.click()
+    await vi.waitFor(() => expect(confirm).toHaveBeenCalledWith('确认要发出这个请求？', undefined))
+    expect(fetcher).not.toHaveBeenCalled()
+    confirm.mockResolvedValue(true)
+    button?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+  })
+
   it('dispatches broadcast actions to onEvent listeners in the same root', async () => {
     const notify = vi.fn()
     const { host } = mount({

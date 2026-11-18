@@ -128,6 +128,16 @@ describe('requestApi', () => {
     expect(fetcher.mock.calls[0][0].url).not.toContain('extra=')
   })
 
+  it('emptyDataIfUnset keeps ajax POST from sending the data domain', async () => {
+    const fetcher = vi.fn(async () => ({ status: 0, msg: 'ok', data: {} }))
+    await requestApi(
+      { method: 'post', url: '/api/mock2/form/saveForm' },
+      { env: env(fetcher), data: { name: 'Ada' } },
+      { autoAppend: true, emptyDataIfUnset: true },
+    )
+    expect(fetcher.mock.calls[0][0].data).toEqual({})
+  })
+
   it('maps responseData with & flatten', async () => {
     const fetcher = vi.fn(async () => ({ status: 0, data: { items: [{ a: 1 }, { a: 2 }] } }))
     const result = await requestApi(

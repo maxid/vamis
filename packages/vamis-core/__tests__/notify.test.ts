@@ -32,15 +32,16 @@ describe('env.notify / toast', () => {
     resetToasts()
   })
 
-  it('only the first ToastHost is primary', () => {
-    expect(claimToastHost()).toBe(true)
-    expect(claimToastHost()).toBe(false)
-    expect(claimToastHost()).toBe(false)
-    releaseToastHost()
-    releaseToastHost()
-    releaseToastHost()
-    expect(claimToastHost()).toBe(true)
-    releaseToastHost()
+  it('re-elects a remaining ToastHost after the primary unmounts', () => {
+    const first = claimToastHost()
+    const second = claimToastHost()
+    expect(useToastState().primaryHost).toBe(first)
+    releaseToastHost(first)
+    expect(useToastState().primaryHost).toBe(second)
+    releaseToastHost(second)
+    const third = claimToastHost()
+    expect(useToastState().primaryHost).toBe(third)
+    releaseToastHost(third)
   })
 
   it('routes info/success/warning/error onto the toast bus', () => {

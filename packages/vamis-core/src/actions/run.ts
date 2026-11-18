@@ -14,6 +14,7 @@ import type { Scope } from '../scope'
 import {
   actionBlank,
   actionCopyFormat,
+  actionJumpUrl,
   actionMailto,
   actionRequiredNames,
   copyToClipboard,
@@ -41,6 +42,21 @@ export interface ActionContext {
   scope?: Scope
   event?: VamisEvent
   loopFlow?: LoopFlow
+}
+
+function asRecord(value: unknown): PlainObject {
+  return value && typeof value === 'object' && !Array.isArray(value) ? (value as PlainObject) : {}
+}
+
+function dialogConfig(action: ActionSchema): PlainObject {
+  const dialog = action.dialog
+  if (dialog && typeof dialog === 'object' && !Array.isArray(dialog)) return dialog as PlainObject
+  return asRecord(action.args)
+}
+
+function tplText(value: unknown, data: PlainObject): string {
+  if (value == null || value === false) return ''
+  return filterTpl(String(value), data)
 }
 
 function asActions(value: unknown): ActionSchema[] {
@@ -143,7 +159,7 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
         : tableConditionMatch(action.expression, data)
     if (!pass) return false
   }
-  if (action.confirmText) {
+  if (action.confirmText && !action.ignoreConfirm) {
     const title = typeof action.confirmTitle === 'string' ? filterTpl(action.confirmTitle, data) : undefined
     if (!(await ctx.env.confirm(filterTpl(action.confirmText, data), title))) return false
   }
@@ -165,17 +181,34 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     console.group?.(`[vamis] run action ${type}`)
     console.debug(`[${type}] action args, data`, args, logData)
   }
+  let actionResult: unknown = true
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
-    if (handler) await handler(action, ctx)
-    else await runComponentAction(action, ctx)
+    if (handler) actionResult = await handler(action, ctx)
+    else actionResult = await runComponentAction(action, ctx)
   } catch (error) {
-    if (!action.ignoreError) throw error
+    if (action.ignoreError) return false
+    // 对齐 Amis runActions：默认停后续、不把异常抛出页面。
+    ctx.event?.preventDefault()
+    ctx.event?.stopPropagation()
+    if (typeof console !== 'undefined') {
+      console.error(
+        `${type} 动作执行失败，原因：${error instanceof Error ? error.message : '未知'}`,
+      )
+    }
+    return false
   } finally {
     if (debug) {
       console.debug(`[${type}] action end event`, ctx.event)
       console.groupEnd?.()
     }
+  }
+
+  // 对齐 Amis Action.ts：confirmDialog 取消则 preventDefault + 停后续。
+  if (type === 'confirmDialog' && !actionResult) {
+    ctx.event?.preventDefault()
+    ctx.event?.stopPropagation()
+    return false
   }
 
   if (truthyFlag(action.preventDefault, data)) ctx.event?.preventDefault()
@@ -291,16 +324,23 @@ function registerBuiltinActions() {
     const api = action.api || action.args?.api
     if (!api) return
     const data = actionData(action, ctx)
-    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
+    const silent =
+      action.options?.silent === true || (typeof api === 'object' && api.silent === true)
+    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true, emptyDataIfUnset: true })
     if (result.skipped) return
     if (!result.ok) {
-      throw new Error(apiMessage(api, result.payload, 'failed'))
+      const failed =
+        (action.messages && (action.messages as PlainObject).failed) ||
+        (action.args?.messages && (action.args.messages as PlainObject).failed) ||
+        apiMessage(api, result.payload, 'failed')
+      if (!silent) ctx.env.notify('error', String(failed))
+      throw new Error(String(failed))
     }
     const success =
       (action.messages && (action.messages as PlainObject).success) ||
       (action.args?.messages && (action.args.messages as PlainObject).success) ||
       apiMessage(api, result.payload, 'success')
-    if (typeof api !== 'object' || api.silent !== true) ctx.env.notify('success', String(success))
+    if (!silent) ctx.env.notify('success', String(success))
     const responseData = result.data
     const responseObject =
       responseData && typeof responseData === 'object' && !Array.isArray(responseData)
@@ -331,10 +371,12 @@ function registerBuiltinActions() {
       typeof rawApi === 'string'
         ? { url: rawApi, responseType: 'blob' as const, downloadFileName: action.downloadFileName }
         : { ...rawApi, responseType: 'blob' as const, downloadFileName: action.downloadFileName || rawApi.downloadFileName }
-    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true })
+    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true, emptyDataIfUnset: true })
     if (result.skipped) return
     if (!result.ok) {
-      throw new Error(apiMessage(rawApi, result.payload, 'failed'))
+      const failed = apiMessage(rawApi, result.payload, 'failed')
+      ctx.env.notify('error', String(failed))
+      throw new Error(String(failed))
     }
     const blob = result.data instanceof Blob ? result.data : new Blob([result.data == null ? '' : String(result.data)])
     const name = filterTpl(String(action.downloadFileName || result.payload.fileName || 'download'), data)
@@ -357,20 +399,48 @@ function registerBuiltinActions() {
 
   registerAction('alert', async (action, ctx) => {
     const data = actionData(action, ctx)
+    const modal = dialogConfig(action)
     ctx.env.alert(
-      filterTpl(action.msg || action.message || action.args?.msg || '', data),
-      typeof action.title === 'string' ? action.title : undefined,
+      tplText(modal.msg ?? action.msg ?? action.message ?? action.args?.msg, data),
+      tplText(modal.title ?? action.title ?? action.args?.title, data) || undefined,
+      tplText(modal.className ?? action.args?.className, data) || undefined,
     )
+  })
+
+  registerAction('confirmDialog', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    const modal = dialogConfig(action)
+    let confirmed = false
+    if (!modal.type) {
+      confirmed = await ctx.env.confirm(
+        tplText(modal.msg ?? action.args?.msg, data),
+        tplText(modal.title ?? action.args?.title, data) || undefined,
+        {
+          closeOnEsc: modal.closeOnEsc === true || action.args?.closeOnEsc === true,
+          size: String(modal.size ?? action.args?.size ?? ''),
+          confirmText: tplText(modal.confirmText ?? action.args?.confirmText, data) || undefined,
+          cancelText: tplText(modal.cancelText ?? action.args?.cancelText, data) || undefined,
+          confirmBtnLevel: String(modal.confirmBtnLevel ?? action.args?.confirmBtnLevel ?? '') || undefined,
+          cancelBtnLevel: String(modal.cancelBtnLevel ?? action.args?.cancelBtnLevel ?? '') || undefined,
+          className: tplText(modal.className, data),
+        },
+      )
+    } else {
+      const result = await ctx.overlay?.openDialog(modal as SchemaObject, data)
+      confirmed = result !== false
+      if (result && typeof result === 'object') ctx.event?.setData(result)
+    }
+    return confirmed
   })
 
   registerAction('confirm', async (action, ctx) => {
     if (ctx.overlay?.state.dialog) {
       if (await ctx.overlay.submitDialogForm?.()) return
-      ctx.overlay.closeDialog()
+      ctx.overlay.closeDialog({})
       return
     }
     if (ctx.overlay?.state.drawer) {
-      ctx.overlay.closeDrawer()
+      ctx.overlay.closeDrawer(ctx.overlay.state.data || {})
       return
     }
     const data = actionData(action, ctx)
@@ -407,19 +477,41 @@ function registerBuiltinActions() {
 
   registerAction('dialog', async (action, ctx) => {
     const dialog = (action.dialog || action.args?.dialog || action) as SchemaObject
-    ctx.overlay?.openDialog(dialog, actionData(action, ctx))
+    const pending = ctx.overlay?.openDialog(dialog, actionData(action, ctx))
+    if (!action.waitForAction || !pending) return
+    const value = await pending
+    const confirmed = value !== false
+    ctx.event?.setData({
+      [action.outputVar || 'dialogResponse']: {
+        confirmed,
+        value: confirmed ? value : undefined,
+      },
+    })
   })
 
   registerAction('drawer', async (action, ctx) => {
     const drawer = (action.drawer || action.args?.drawer || action) as SchemaObject
-    ctx.overlay?.openDrawer(drawer, actionData(action, ctx))
+    const pending = ctx.overlay?.openDrawer(drawer, actionData(action, ctx))
+    if (!action.waitForAction || !pending) return
+    const value = await pending
+    const confirmed = value !== false
+    ctx.event?.setData({
+      [action.outputVar || 'drawerResponse']: {
+        confirmed,
+        value: confirmed ? value : undefined,
+      },
+    })
   })
 
-  registerAction('closeDialog', async (_action, ctx) => {
-    ctx.overlay?.closeDialog()
+  registerAction('closeDialog', async (action, ctx) => {
+    const id = action.componentId
+    if (id) ctx.overlay?.closeById(String(id))
+    else ctx.overlay?.closeDialog()
   })
-  registerAction('closeDrawer', async (_action, ctx) => {
-    ctx.overlay?.closeDrawer()
+  registerAction('closeDrawer', async (action, ctx) => {
+    const id = action.componentId
+    if (id) ctx.overlay?.closeById(String(id))
+    else ctx.overlay?.closeDrawer()
   })
   registerAction('cancel', async (_action, ctx) => {
     if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
@@ -467,16 +559,23 @@ function registerBuiltinActions() {
 
   registerAction('link', async (action, ctx) => {
     const data = actionData(action, ctx)
-    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data), {
+    ctx.env.jumpTo(actionJumpUrl(action, data) || '#', {
       blank: actionBlank(action),
       actionType: 'link',
     })
   })
   registerAction('url', async (action, ctx) => {
     const data = actionData(action, ctx)
-    ctx.env.jumpTo(filterTpl(action.link || action.url || action.args?.url || '#', data), {
+    ctx.env.jumpTo(actionJumpUrl(action, data) || '#', {
       blank: actionBlank(action),
       actionType: 'url',
+    })
+  })
+  registerAction('jump', async (action, ctx) => {
+    const data = actionData(action, ctx)
+    ctx.env.jumpTo(actionJumpUrl(action, data) || '#', {
+      blank: actionBlank(action),
+      actionType: 'jump',
     })
   })
 
@@ -491,12 +590,22 @@ function registerBuiltinActions() {
   registerAction('refresh', async () => {
     if (typeof window !== 'undefined') window.location.reload()
   })
-  registerAction('print', async (action) => {
+  registerAction('print', async (action, ctx) => {
+    if (action.componentId) {
+      await runComponentAction(action, ctx)
+      return
+    }
     if (typeof document === 'undefined') return
     const ids = action.args?.ids || (action.args?.id ? [action.args.id] : [])
     if (!Array.isArray(ids)) return
     const elements = ids
-      .map((id) => document.getElementById(String(id)) || document.querySelector(`[data-id="${String(id)}"]`))
+      .map((id) => {
+        const key = String(id)
+        return (
+          document.querySelector(`[data-id="${key}"]`) ||
+          document.getElementById(key)
+        )
+      })
       .filter((element): element is Element => !!element)
     printElements(elements)
   })
@@ -504,7 +613,7 @@ function registerBuiltinActions() {
   registerAction('copy', async (action, ctx) => {
     const data = actionData(action, ctx)
     const text = filterTpl(action.copy || action.content || action.args?.content || '', data)
-    await copyToClipboard(text, actionCopyFormat(action))
+    await copyToClipboard(text, actionCopyFormat({ ...action, copyFormat: action.args?.copyFormat ?? action.copyFormat }))
   })
 
   registerAction('email', async (action, ctx) => {
@@ -561,9 +670,23 @@ function registerBuiltinActions() {
   registerAction('disabled', async (action) => {
     setStatusDisabled(action.componentId || action.componentName, true)
   })
+  registerAction('visibility', async (action) => {
+    setStatusVisible(action.componentId || action.componentName, action.args?.value !== false)
+  })
+  registerAction('usability', async (action) => {
+    setStatusDisabled(action.componentId || action.componentName, action.args?.value === false)
+  })
+
+  registerAction('setEventData', async (action, ctx) => {
+    const key = String(action.args?.key ?? action.key ?? '')
+    if (!key || !ctx.event) return
+    let value: unknown = action.args?.value ?? action.value
+    if (typeof value === 'string') value = filterTpl(value, actionData(action, ctx))
+    ctx.event.setData(setByPathCopy(ctx.event.data, key, value))
+  })
 
   registerAction('wait', async (action) => {
-    const ms = Number(action.args?.timeMs ?? action.time ?? 0)
+    const ms = Number(action.args?.time ?? action.args?.timeMs ?? action.time ?? 0)
     if (!Number.isFinite(ms) || ms <= 0) return
     await new Promise((resolve) => setTimeout(resolve, ms))
   })
@@ -613,6 +736,9 @@ function registerBuiltinActions() {
     ctx.event?.preventDefault()
   })
   registerAction('stop', async (_action, ctx) => {
+    ctx.event?.stopPropagation()
+  })
+  registerAction('stopPropagation', async (_action, ctx) => {
     ctx.event?.stopPropagation()
   })
 }

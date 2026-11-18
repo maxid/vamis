@@ -1,7 +1,7 @@
 import type { ActionSchema } from '../types'
 import type { ActionContext } from './run'
 
-export type ActionHandler = (action: ActionSchema, ctx: ActionContext) => Promise<void> | void
+export type ActionHandler = (action: ActionSchema, ctx: ActionContext) => Promise<unknown> | unknown
 
 const handlers = new Map<string, ActionHandler>()
 

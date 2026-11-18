@@ -84,6 +84,8 @@ flowchart LR
 
 **最近交付**
 
+- **事件动作全页活示例核对（2026-11-18）**：对照 Amis `registerAction` 把缺口补齐——`url`/`link` 认 `args.blank`/`params`、ajax 未写 `data` 不把数据域当 POST 体、失败先 toast 再停后续（`ignoreError` 才继续）、`drawer.waitForAction` 等关闭结果、`visibility`/`usability`、`print` 的 `componentId`。文档页多个 `VamisApp` 的 Toast/Confirm Host 卸掉 primary 后重选；Confirm 完全受控，确认钮走 `pointerdown`，避免 Dialog `update:open=false` 把确认当成取消。真实浏览器核过：ajax 先确认再请求并 toast「成功了！欧耶」、`confirmDialog` 确认后 toast「确认ok啦！」、`alert` 只有确认钮、Dialog 能打开。对照事件动作 **52/52**。`pnpm typecheck` 0。
+- **事件动作活示例对齐 Amis 动作表（2026-11-18）**：不止按钮 `confirmText` 抢跑。`confirmDialog` / `setEventData` / `stopPropagation` 未注册会空过，后续 toast 不等确认就出；`wait` 只认 `timeMs`、`alert` 不读 `dialog.msg`。现按 `amis-core/src/actions` 补齐：`confirmDialog` 取消停后续、`alert` 走 ConfirmHost 仅确认钮、`wait` 认 `args.time`、`closeDialog` 可按 `componentId` 关指定层。按钮 `confirmText` 仍先于 `onEvent`。
 - **`__rendererData` 不再带上事件 payload 的 `value`（2026-11-18）**：事件动作「上下文」示例年龄 change 的 toast 曾是 `{"job":"hr","name":"tt","age":"2","value":"2"}`。不是表单域写进了 `value`（debug / 提交仍只有字段名），是 `runOnEvent` 把 `event.data.value` 摊进了 `__rendererData`。对齐 Amis `resolveEventData`：快照只补当前 `name`。对照事件动作 **52/52**（P0 0）。`pnpm typecheck` 0。
 - **Form / LazyComponent 的 `disabled` fallthrough 报警（2026-11-18）**：关 React DevTools 后仍见 warn，根因是 Form 单根 `LazyComponent` 在 `defaultVisible` 时为 slot fragment。`LazyComponent` `inheritAttrs: false`，Form 声明但不使用 `disabled`。不改 DOM、不影响表单控件禁用。未跑对照。
 - **Tpl / BadgeHost 不再因 `disabled` fallthrough 报警（2026-11-18）**：`SchemaRenderer` 一律传入的 `disabled` 对无角标 `BadgeHost`（根是 slot fragment）无法 inherit。宿主改 `inheritAttrs: false`，`Tpl` 声明但不使用该 prop。不改 DOM、不影响表单控件禁用。未跑对照。

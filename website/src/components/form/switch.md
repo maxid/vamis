@@ -342,5 +342,5 @@ body:
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `loadingOn` 在 Vamis 按表达式求值（Amis 6.13.0 的开关源码只读 `loading`，文档里的 `loadingOn` 不生效）；这是 Vamis 的增强，不改变 `loading` 语义。
 - `static` 静态态显示 `onText` / `offText`，都没配时显示「开 / 关」。
-- 动作表 `clear` / `reset` / `setValue` 与 Amis 一致走 `componentId`（按 id 跨数据域），也支持 `componentName`。Amis `change` 示例用 CRUD + `confirmDialog`；Vamis 尚未接 `confirmDialog`，本页该示例改成 form + `toast` 展示同一事件。
+- 动作表 `clear` / `reset` / `setValue` 与 Amis 一致走 `componentId`（按 id 跨数据域），也支持 `componentName`。Amis `change` 示例用 CRUD + `confirmDialog`；本页该示例改成 form + `toast` 展示同一事件。
 - 未接 `themeCss`；`size` 文档值只支持 `sm` / `md`（Amis UI 的 `lg` 不在 schema 类型里）。

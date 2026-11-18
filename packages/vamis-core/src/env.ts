@@ -55,8 +55,17 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
       }
       window.location.assign(to)
     },
-    alert(msg) {
-      window.alert(msg)
+    alert(msg, title?: string, className?: string) {
+      if (hasConfirmHost()) {
+        void openConfirm(msg, title ?? '系统提示', {
+          showCancel: false,
+          confirmBtnLevel: 'primary',
+          className,
+        })
+        return
+      }
+      const text = title ? `${title}\n\n${msg}` : msg
+      window.alert(text)
     },
     async confirm(msg, title, options?: ConfirmOptions) {
       if (hasConfirmHost()) return openConfirm(msg, title, options)

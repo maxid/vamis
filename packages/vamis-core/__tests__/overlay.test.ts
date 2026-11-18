@@ -46,6 +46,14 @@ describe('overlay stack', () => {
     expect(api.state.data).toEqual({})
   })
 
+  it('resolves openDrawer when waitForAction callers close with values', async () => {
+    const api = createOverlay()
+    const pending = api.openDrawer({ title: '右' }, { name: 'Ada' })
+    api.closeDrawer({ name: 'Bob' })
+    await expect(pending).resolves.toEqual({ name: 'Bob' })
+    expect(api.state.drawer).toBeNull()
+  })
+
   it('resolves openDialog when closeDialog passes form values', async () => {
     const api = createOverlay()
     const pending = api.openDialog({ title: '编辑选项' }, { label: 'A' })
@@ -58,6 +66,15 @@ describe('overlay stack', () => {
     expect(submitted).toBe(true)
     await expect(pending).resolves.toEqual({ label: 'AA', value: 'a' })
     expect(api.state.dialog).toBeNull()
+  })
+
+  it('closeById pops the target dialog and nested children', () => {
+    const api = createOverlay()
+    api.openDialog({ id: 'dialog_002', title: '父' })
+    api.openDialog({ title: '子弹窗' })
+    api.closeById('dialog_002')
+    expect(api.state.dialog).toBeNull()
+    expect(api.state.drawer).toBeNull()
   })
 
   it('resolves false when the dialog is cancelled', async () => {

@@ -2891,7 +2891,7 @@ window.VAMIS_COMPARE_CASES = [
                   {
                     "actionType": "toast",
                     "args": {
-                      "msg": "${__rendererData|json}"
+                      "msg": "${__rendererData|json:2}"
                     }
                   }
                 ]
@@ -2905,13 +2905,13 @@ window.VAMIS_COMPARE_CASES = [
               {
                 "actionType": "toast",
                 "args": {
-                  "msg": "${event.data|json}"
+                  "msg": "${event.data|json:2}"
                 }
               },
               {
                 "actionType": "toast",
                 "args": {
-                  "msg": "${__rendererData|json}"
+                  "msg": "${__rendererData|json:2}"
                 }
               }
             ]
@@ -2971,7 +2971,7 @@ window.VAMIS_COMPARE_CASES = [
                   "actionType": "toast",
                   "expression": "${event.data.responseResult.responseStatus === 0}",
                   "args": {
-                    "msg": "${event.data.responseResult|json}"
+                    "msg": "${event.data.responseResult|json:2}"
                   }
                 }
               ]
@@ -3031,7 +3031,7 @@ window.VAMIS_COMPARE_CASES = [
                   "actionType": "toast",
                   "expression": "${event.data.responseResult.responseStatus === 0}",
                   "args": {
-                    "msg": "${event.data.responseResult|json}"
+                    "msg": "${event.data.responseResult|json:2}"
                   }
                 }
               ]
@@ -4883,7 +4883,7 @@ window.VAMIS_COMPARE_CASES = [
                   "actionType": "toast",
                   "args": {
                     "msgType": "info",
-                    "msg": "service 的数据返回为： ${service1|json}"
+                    "msg": "service 的数据返回为： ${service1|json:2}"
                   }
                 },
                 {
@@ -5965,7 +5965,7 @@ window.VAMIS_COMPARE_CASES = [
                   {
                     "actionType": "toast",
                     "args": {
-                      "msg": "var1:${event.data.var1|json}, var2:${event.data.var2|json}, var3:${event.data.var3|json}"
+                      "msg": "var1:${event.data.var1|json:2}, var2:${event.data.var2|json:2}, var3:${event.data.var3|json:2}"
                     }
                   }
                 ]

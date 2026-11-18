@@ -12,6 +12,8 @@ export type ConfirmOptions = {
   confirmText?: string
   cancelText?: string
   className?: string
+  /** false = Alert.alert，只留确认钮。 */
+  showCancel?: boolean
 }
 
 export type ConfirmRequest = {
@@ -25,6 +27,7 @@ export type ConfirmRequest = {
   closeOnEsc: boolean
   size: ConfirmSize
   className: string
+  showCancel: boolean
 }
 
 type PendingConfirm = ConfirmRequest & { resolve: (ok: boolean) => void }
@@ -33,9 +36,10 @@ const SIZES = new Set<ConfirmSize>(['', 'xs', 'sm', 'md', 'lg', 'xl', 'full'])
 
 const queue: PendingConfirm[] = []
 const pendingById = new Map<string, PendingConfirm>()
-const state = reactive({ current: null as ConfirmRequest | null })
+const state = reactive({ current: null as ConfirmRequest | null, primaryHost: 0 })
 let seq = 0
-let liveHosts = 0
+let nextHost = 0
+const liveHosts = new Set<number>()
 
 function asSize(value: unknown): ConfirmSize {
   const size = String(value ?? '') as ConfirmSize
@@ -54,6 +58,7 @@ function publicView(item: PendingConfirm): ConfirmRequest {
     closeOnEsc: item.closeOnEsc,
     size: item.size,
     className: item.className,
+    showCancel: item.showCancel,
   }
 }
 
@@ -68,18 +73,25 @@ export function useConfirmState() {
 }
 
 export function hasConfirmHost() {
-  return liveHosts > 0
+  return liveHosts.size > 0
 }
 
-export function claimConfirmHost() {
-  const primary = liveHosts === 0
-  liveHosts += 1
-  return primary
+/** 文档页每个预览一份 VamisApp：卸掉当前 primary 后把绘画权交给还活着的 Host。 */
+export function claimConfirmHost(): number {
+  const id = ++nextHost
+  liveHosts.add(id)
+  if (!state.primaryHost) state.primaryHost = id
+  return id
 }
 
-export function releaseConfirmHost() {
-  liveHosts = Math.max(0, liveHosts - 1)
-  if (liveHosts === 0) resetConfirms()
+export function releaseConfirmHost(id?: number): void {
+  const target = id ?? liveHosts.values().next().value
+  if (target == null) return
+  liveHosts.delete(target)
+  if (state.primaryHost === target) {
+    state.primaryHost = liveHosts.values().next().value ?? 0
+  }
+  if (liveHosts.size === 0) resetConfirms()
 }
 
 /** 未写 title 时 Amis 回落到 `Alert.info` → 中文「系统消息」。空字符串不画标题。 */
@@ -100,6 +112,7 @@ export function openConfirm(msg: string, title?: string, options?: ConfirmOption
       closeOnEsc: options?.closeOnEsc === true,
       size: asSize(options?.size),
       className: options?.className ? String(options.className) : '',
+      showCancel: options?.showCancel !== false,
       resolve,
     }
     pendingById.set(item.id, item)

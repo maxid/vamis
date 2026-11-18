@@ -6,6 +6,8 @@ import {
   actionActiveClassName,
   actionActiveLevel,
   actionBody,
+  actionConfirmText,
+  actionConfirmTitle,
   actionCountDown,
   actionCountDownTpl,
   actionHotKey,
@@ -195,10 +197,18 @@ async function onClick(native?: Event) {
   if (isDisabled.value || inCountDown.value) return
   if (native && !(await runSchemaOnClick(native))) return
   const ctx = makeCtx(native)
+  const confirmText = actionConfirmText(props.schema, data.value)
+  if (confirmText) {
+    const title = actionConfirmTitle(props.schema, data.value)
+    if (!(await env.confirm(confirmText, title))) return
+  }
   try {
     await runOnEvent(props.schema, 'click', ctx)
     if (!ctx.event.prevented) {
-      const ran = await runAction({ ...props.schema, actionType: kind.value }, ctx)
+      const ran = await runAction(
+        { ...props.schema, actionType: kind.value, ignoreConfirm: true },
+        ctx,
+      )
       if (ran) startCountDown()
     }
   } catch (error) {

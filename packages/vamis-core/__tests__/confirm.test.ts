@@ -32,6 +32,17 @@ describe('env.confirm / Alert.confirm', () => {
     expect(confirmTitleOf('')).toBe('')
   })
 
+  it('re-elects a remaining ConfirmHost after the primary unmounts', () => {
+    const first = claimConfirmHost()
+    const second = claimConfirmHost()
+    expect(useConfirmState().primaryHost).toBe(first)
+    releaseConfirmHost(first)
+    expect(useConfirmState().primaryHost).toBe(second)
+    expect(hasConfirmHost()).toBe(true)
+    releaseConfirmHost(second)
+    expect(hasConfirmHost()).toBe(false)
+  })
+
   it('queues a modal request instead of window.confirm when a host is live', async () => {
     const native = vi.fn(() => true)
     vi.stubGlobal('confirm', native)
@@ -48,6 +59,7 @@ describe('env.confirm / Alert.confirm', () => {
       cancelBtnLevel: 'default',
       closeOnEsc: false,
       size: '',
+      showCancel: true,
     })
     expect(native).not.toHaveBeenCalled()
     settleConfirm(true)
@@ -111,8 +123,11 @@ describe('env.confirm / Alert.confirm', () => {
     expect(host).toContain('pointer-down-outside')
     expect(host).toContain('escape-key-down')
     expect(host).toContain('levelToVariant')
-    expect(host).toContain('settleConfirm(true)')
-    expect(host).toContain('settleConfirm(false)')
+    expect(host).toContain('settle(true)')
+    expect(host).toContain('settle(false)')
+    expect(host).toContain('@pointerdown.prevent')
+    expect(host).not.toContain('@update:open')
+    expect(host).toContain('settleConfirm(ok)')
     expect(host).toContain('v-html')
     expect(envSrc).toContain('openConfirm')
     expect(envSrc).toContain('hasConfirmHost')

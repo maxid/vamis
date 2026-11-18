@@ -178,7 +178,7 @@ outline: deep
               {
                 "actionType": "toast",
                 "args": {
-                  "msg": "${__rendererData|json}"
+                  "msg": "${__rendererData|json:2}"
                 }
               }
             ]
@@ -192,13 +192,13 @@ outline: deep
           {
             "actionType": "toast",
             "args": {
-              "msg": "${event.data|json}"
+              "msg": "${event.data|json:2}"
             }
           },
           {
             "actionType": "toast",
             "args": {
-              "msg": "${__rendererData|json}"
+              "msg": "${__rendererData|json:2}"
             }
           }
         ]
@@ -284,7 +284,7 @@ Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，只包�
               "actionType": "toast",
               "expression": "${event.data.responseResult.responseStatus === 0}",
               "args": {
-                "msg": "${event.data.responseResult|json}"
+                "msg": "${event.data.responseResult|json:2}"
               }
             }
           ]
@@ -336,7 +336,7 @@ Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，只包�
               "actionType": "toast",
               "expression": "${event.data.responseResult.responseStatus === 0}",
               "args": {
-                "msg": "${event.data.responseResult|json}"
+                "msg": "${event.data.responseResult|json:2}"
               }
             }
           ]
@@ -2136,7 +2136,7 @@ Vamis 也保留 `env.debug: true` 作为简写。日志按动作分组，只包�
               "actionType": "toast",
               "args": {
                 "msgType": "info",
-                "msg": "service 的数据返回为： ${service1|json}"
+                "msg": "service 的数据返回为： ${service1|json:2}"
               }
             },
             {
@@ -3195,7 +3195,7 @@ scoped.doAction({ actionType: 'toast', msg: '外部触发' })
               {
                 "actionType": "toast",
                 "args": {
-                  "msg": "var1:${event.data.var1|json}, var2:${event.data.var2|json}, var3:${event.data.var3|json}"
+                  "msg": "var1:${event.data.var1|json:2}, var2:${event.data.var2|json:2}, var3:${event.data.var3|json:2}"
                 }
               }
             ]

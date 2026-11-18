@@ -19,35 +19,49 @@ import {
 } from '@vamis/ui'
 
 const state = useConfirmState()
-const primary = ref(false)
-const current = computed(() => (primary.value ? state.current : null))
+const hostId = ref(0)
+const current = computed(() => (state.primaryHost === hostId.value ? state.current : null))
+let settling = false
 
 onMounted(() => {
-  primary.value = claimConfirmHost()
+  hostId.value = claimConfirmHost()
 })
 onUnmounted(() => {
-  releaseConfirmHost()
+  releaseConfirmHost(hostId.value)
 })
 
-function setOpen(open: boolean) {
-  if (!open) settleConfirm(false)
+function settle(ok: boolean) {
+  if (!current.value || settling) return
+  settling = true
+  settleConfirm(ok)
+  queueMicrotask(() => {
+    settling = false
+  })
 }
 
-function preventIf(condition: boolean, event: Event) {
-  if (condition) event.preventDefault()
+function onEscape(event: Event) {
+  if (!current.value?.closeOnEsc) {
+    event.preventDefault()
+    return
+  }
+  settle(false)
+}
+
+function preventOutside(event: Event) {
+  event.preventDefault()
 }
 </script>
 
 <template>
-  <Dialog :open="!!current" @update:open="setOpen">
+  <Dialog :open="!!current">
     <DialogContent
       v-if="current"
       data-vamis-confirm
       overlay-class="vamis-confirm-overlay"
       :class="[dialogSizeClass({ size: current.size }), current.className]"
       :show-close-button="false"
-      @pointer-down-outside="preventIf(true, $event)"
-      @escape-key-down="preventIf(!current.closeOnEsc, $event)"
+      @pointer-down-outside="preventOutside"
+      @escape-key-down="onEscape"
     >
       <DialogHeader v-if="current.title" class="text-left">
         <DialogTitle>{{ current.title }}</DialogTitle>
@@ -57,16 +71,17 @@ function preventIf(condition: boolean, event: Event) {
       <div class="vamis-confirm-body" v-html="current.msg" aria-hidden="true" />
       <DialogFooter>
         <Button
+          v-if="current.showCancel"
           type="button"
           :variant="levelToVariant(current.cancelBtnLevel)"
-          @click="settleConfirm(false)"
+          @pointerdown.prevent="settle(false)"
         >
           {{ current.cancelText }}
         </Button>
         <Button
           type="button"
           :variant="levelToVariant(current.confirmBtnLevel)"
-          @click="settleConfirm(true)"
+          @pointerdown.prevent="settle(true)"
         >
           {{ current.confirmText }}
         </Button>

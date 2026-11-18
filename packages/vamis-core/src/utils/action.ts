@@ -22,6 +22,18 @@ function tplField(value: unknown, data: Record<string, unknown>): string {
   return filterTpl(String(value), data)
 }
 
+/** 对齐 Amis Action `handleAction`：按钮上的 confirmText 先于 onEvent。 */
+export function actionConfirmText(schema: unknown, data: Record<string, unknown> = {}): string {
+  return tplField(asRecord(schema).confirmText, data)
+}
+
+export function actionConfirmTitle(schema: unknown, data: Record<string, unknown> = {}): string | undefined {
+  const rec = asRecord(schema)
+  if (rec.confirmTitle == null) return undefined
+  const text = filterTpl(String(rec.confirmTitle), data)
+  return text || undefined
+}
+
 export function actionKind(schema: unknown): string {
   const rec = asRecord(schema)
   if (typeof rec.actionType === 'string' && rec.actionType) return rec.actionType
@@ -218,7 +230,41 @@ export function actionBody(schema: unknown): SchemaNode[] {
 }
 
 export function actionBlank(schema: unknown): boolean {
-  return asRecord(schema).blank === true
+  const rec = asRecord(schema)
+  if (rec.blank === true) return true
+  return asRecord(rec.args).blank === true
+}
+
+const JUMP_QUERY_SKIP = new Set(['url', 'link', 'blank', 'params', 'targetType'])
+
+function appendJumpQuery(url: string, query: Record<string, unknown>): string {
+  const parts: string[] = []
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null || typeof value === 'object') continue
+    parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+  }
+  if (!parts.length) return url
+  return `${url}${url.includes('?') ? '&' : '?'}${parts.join('&')}`
+}
+
+/** 对齐 Amis LinkAction：`args.url/link` + `params` + 其余 args 拼进 query。 */
+export function actionJumpUrl(schema: unknown, data: Record<string, unknown> = {}): string {
+  const rec = asRecord(schema)
+  const args = asRecord(rec.args)
+  const url = tplField(args.url || args.link || rec.url || rec.link || '', data)
+  if (!url) return ''
+  const query: Record<string, unknown> = {}
+  const params = args.params
+  if (params && typeof params === 'object' && !Array.isArray(params)) {
+    for (const [key, value] of Object.entries(params as Record<string, unknown>)) {
+      query[key] = typeof value === 'string' ? filterTpl(value, data) : value
+    }
+  }
+  for (const [key, value] of Object.entries(args)) {
+    if (JUMP_QUERY_SKIP.has(key)) continue
+    query[key] = typeof value === 'string' ? filterTpl(value, data) : value
+  }
+  return appendJumpQuery(url, query)
 }
 
 export function actionCopyFormat(schema: unknown): string {

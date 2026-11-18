@@ -11,13 +11,14 @@ import {
 import ToastMessage from './ToastMessage.vue'
 
 const state = useToastState()
-const primary = ref(false)
+const hostId = ref(0)
+const primary = computed(() => state.primaryHost === hostId.value)
 
 onMounted(() => {
-  primary.value = claimToastHost()
+  hostId.value = claimToastHost()
 })
 onUnmounted(() => {
-  releaseToastHost()
+  releaseToastHost(hostId.value)
 })
 
 const groups = computed(() => {

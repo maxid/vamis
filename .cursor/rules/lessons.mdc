@@ -692,6 +692,42 @@ alwaysApply: true
 - 触及：`action` `button` `dialog`
 - 规则：`.cursor/rules/component.mdc`
 
+### Action 按钮 confirmText 先于 onEvent
+- 踩过：事件动作「发送 http 请求」把 `confirmText` 写在按钮上、ajax 写在 `onEvent.click.actions`。Vamis 先 `runOnEvent` 再 `runAction`，请求已发出确认框才弹出。Amis `Action.handleAction` 是先 `env.confirm`，确认后才 `dispatchEvent`，原生动作带 `ignoreConfirm`。
+- 稳定做法：`Action.vue` 点按先 `actionConfirmText` / `env.confirm`；取消直接 return。通过后再 `runOnEvent`，原生 `runAction` 传 `ignoreConfirm: true`，避免二次确认。链里某一项自己的 `confirmText` 仍由 `run.ts` 处理。
+- 触及：`action` `button` 事件动作
+- 规则：Amis `Action.tsx` `handleAction`；`packages/vamis/src/renderers/Action.vue`
+
+### 事件动作按 Amis 动作表注册，文档活示例的 actionType 不能空过
+- 踩过：事件动作页标 100%，但 `confirmDialog` / `setEventData` / `stopPropagation` 未注册，`wait` 只读 `timeMs`、`alert` 不读 `dialog.msg`。未知类型走 `runComponentAction` 空过，后续 toast / ajax 不等确认就执行。
+- 稳定做法：对标 `amis-core/src/actions` 的 `registerAction` 名单。文档活示例里出现的 `actionType` 必须有处理器；`confirmDialog` 取消要返回 false，由 `runAction` `preventDefault` + `stopPropagation`（对齐 Amis `Action.ts` `!actionResult`）；`alert` / `confirmDialog` 读 `dialog`（无 `type` 走 ConfirmHost，有 `type` 等 `openDialog` 结果）；`wait` 认 `args.time`。
+- 触及：事件动作 `action` `button` `confirmDialog` `alert` `setEventData`
+- 规则：Amis `packages/amis-core/src/actions/`；`packages/vamis-core/src/actions/run.ts`
+
+### url / link 走 LinkAction 的 args，不要只读顶层 url
+- 踩过：文档「百度一下」把 `blank` / `params` / 额外 query 写在 `args` 里。Vamis 只读 `action.url` 和顶层 `blank`，同一页跳走且不带 `name`/`jon`。
+- 稳定做法：`actionJumpUrl` 拼 `args.url|link` + `params` + 其余 args（跳过 url/link/blank/params）；`actionBlank` 同时认 `args.blank`。`jump` 与 `url` 同处理器。
+- 触及：事件动作 `action` `url` `link`
+- 规则：Amis `LinkAction.ts`；`packages/vamis-core/src/utils/action.ts` `actionJumpUrl`
+
+### ajax 动作未写 data 时不要把当前数据域当请求体
+- 踩过：`requestApi(..., { autoAppend: true })` 在 POST 且 api 没写 `data` 时把 page/event 整份域塞进 body。Amis AjaxAction 这时显式 `data: {}`，query 仍走 URL 模板。
+- 稳定做法：ajax / download 传 `emptyDataIfUnset: true`。作者写了 `api.data` 才 mapping。
+- 触及：事件动作 `ajax` `download`
+- 规则：Amis `AjaxAction.ts`；`packages/vamis-core/src/utils/api.ts` `emptyDataIfUnset`
+
+### 文档页多个 VamisApp 的 Toast / Confirm Host 要重选 primary
+- 踩过：每个 SchemaPreview 一份 `VamisApp`，`claimToastHost` / `claimConfirmHost` 只把第一个当 primary。文档事件动作页 `LazyComponent` 进视口才挂预览，首个 Host 若已卸掉，后续预览 `notify` / `confirm` 写进 store 却没人画。
+- 稳定做法：Host 登记 id，`primaryHost` 放进 reactive state；卸掉当前 primary 后把绘画权交给还活着的实例。Confirm 完全受控：不要绑 Dialog `@update:open`，确认/取消走 `@pointerdown.prevent` 自己 `settle()`。点确认时 reka Dialog 会先发 `update:open=false`，`@click` 还没跑 Promise 就已经是取消。
+- 触及：事件动作 `toast` `confirmDialog` `alert` `ajax`
+- 规则：`packages/vamis-core/src/toast-store.ts`；`packages/vamis-core/src/confirm-store.ts`
+
+### 动作失败默认停后续，不要把异常抛出页面
+- 踩过：ajax 失败 `throw` 后 `Action.vue` 再 toast 一次，且 Amis `runActions` 是 `preventDefault` + `stopPropagation` + `console.error`，`ignoreError` 才继续。
+- 稳定做法：处理器里先 `env.notify('error', messages.failed)`；`runAction` catch 默认停链不重抛，`ignoreError` 才吞掉并继续。`drawer` `waitForAction` 等 `openDrawer` 的 Promise（确认 `closeDrawer(data)`，取消 / 点遮罩 `closeDrawer()` → false）。
+- 触及：事件动作 `ajax` `drawer` `ignoreError`
+- 规则：Amis `Action.ts` `runActions` / `DrawerAction.ts`；`packages/vamis-core/src/actions/run.ts`
+
 ### 浮层里的 Form 与数据栈
 - 踩过：Dialog body 是 `type: form` 时画出默认「提交」；关掉后上一张卡片字段留在 `state.data`。footer 的确认钮在 form 外面，`useFormApi` 拿不到内层表单，点确认只会关层、带不回值；无 api 的浮层表单还会 toast「已提交」。
 - 稳定做法：对齐 Amis `renderBody`：默认 `mode: horizontal`、`wrapWithPanel: false`；未写 `actions` 不要默认提交。浮层 `data` 按层压栈，关掉恢复上一层。`openDialog` 返回 Promise；Form 挂进 overlay 时 `registerDialogForm(submit)`，确认钮先 `submitDialogForm`，把 `store.data` 交给 `closeDialog(result)`。无 Host 表单才 toast。

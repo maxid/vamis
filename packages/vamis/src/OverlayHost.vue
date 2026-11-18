@@ -51,7 +51,7 @@ function setDialogOpen(open: boolean) {
 }
 
 function setDrawerOpen(open: boolean) {
-  if (!open) overlay?.closeDrawer()
+  if (!open && overlay?.state.drawer) overlay.closeDrawer()
 }
 
 function preventIf(condition: boolean, event: Event) {

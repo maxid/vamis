@@ -12,9 +12,11 @@ export interface OverlayState {
 export interface OverlayApi {
   state: OverlayState
   openDialog: (schema: SchemaObject, data?: PlainObject) => Promise<PlainObject | false>
-  openDrawer: (schema: SchemaObject, data?: PlainObject) => void
+  openDrawer: (schema: SchemaObject, data?: PlainObject) => Promise<PlainObject | false>
   closeDialog: (result?: PlainObject | false) => void
-  closeDrawer: () => void
+  closeDrawer: (result?: PlainObject | false) => void
+  /** 对齐 Amis `scoped.closeById`：关掉指定 id 及其之上的嵌套层。 */
+  closeById: (id: string) => void
   close: () => void
   /** 浮层里脱离表单的表单项写回当前层 data。对齐 Amis `Dialog.handleFormChange`。 */
   setValue: (name: string, value: unknown) => void
@@ -75,22 +77,41 @@ export function createOverlay(): OverlayApi {
       return done
     },
     openDrawer(schema, data = {}) {
-      drawers.push({ schema, data: mergeFrame(drawers.at(-1)?.data, data) })
+      let resolve!: (value: PlainObject | false) => void
+      const done = new Promise<PlainObject | false>((r) => {
+        resolve = r
+      })
+      drawers.push({ schema, data: mergeFrame(drawers.at(-1)?.data, data), resolve })
       state.seq += 1
       sync()
+      return done
     },
     closeDialog(result) {
       const frame = dialogs.pop()
       frame?.resolve?.(result === undefined ? false : result)
       sync()
     },
-    closeDrawer() {
-      drawers.pop()
+    closeDrawer(result) {
+      const frame = drawers.pop()
+      frame?.resolve?.(result === undefined ? false : result)
+      sync()
+    },
+    closeById(id) {
+      if (!id) return
+      const dialogIndex = dialogs.findIndex((frame) => String(frame.schema.id || '') === id)
+      if (dialogIndex >= 0) {
+        while (dialogs.length > dialogIndex) dialogs.pop()?.resolve?.(false)
+        sync()
+        return
+      }
+      const drawerIndex = drawers.findIndex((frame) => String(frame.schema.id || '') === id)
+      if (drawerIndex < 0) return
+      while (drawers.length > drawerIndex) drawers.pop()?.resolve?.(false)
       sync()
     },
     close() {
       while (dialogs.length) dialogs.pop()?.resolve?.(false)
-      drawers.length = 0
+      while (drawers.length) drawers.pop()?.resolve?.(false)
       state.data = {}
       sync()
     },

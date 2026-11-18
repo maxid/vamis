@@ -8,11 +8,14 @@ import {
   actionActiveLevel,
   actionBlank,
   actionBody,
+  actionConfirmText,
+  actionConfirmTitle,
   actionCopyFormat,
   actionCountDown,
   actionCountDownTpl,
   actionDisabledTip,
   actionHotKey,
+  actionJumpUrl,
   actionIconClass,
   actionIconOnly,
   actionIconSrc,
@@ -195,6 +198,7 @@ describe('countDown / hotKey / body / active / loading', () => {
 
   it('reads blank / copyFormat / active / loadingOn / required', () => {
     expect(actionBlank({ blank: true })).toBe(true)
+    expect(actionBlank({ args: { blank: true } })).toBe(true)
     expect(actionBlank({})).toBe(false)
     expect(actionCopyFormat({})).toBe('text/plain')
     expect(actionCopyFormat({ copyFormat: 'text/html' })).toBe('text/html')
@@ -205,6 +209,30 @@ describe('countDown / hotKey / body / active / loading', () => {
     expect(actionSchemaLoading({ loadingOn: '${busy}' }, { busy: true })).toBe(true)
     expect(actionSchemaLoading({ loadingOn: '${busy}' }, { busy: false })).toBe(false)
     expect(actionRequiredNames({ required: ['b', 'c'] })).toEqual(['b', 'c'])
+    expect(
+      actionJumpUrl(
+        {
+          actionType: 'url',
+          args: {
+            url: 'http://www.baidu.com',
+            blank: true,
+            params: { name: 'jack', jon: '${myjon}' },
+            name: '${myname}',
+            age: 18,
+          },
+        },
+        { myname: 'lvxj', myjon: 'player' },
+      ),
+    ).toBe('http://www.baidu.com?name=lvxj&jon=player&age=18')
+  })
+
+  it('resolves confirmText / confirmTitle before onEvent ajax', () => {
+    expect(actionConfirmText({ confirmText: '确认要发出这个请求？' })).toBe('确认要发出这个请求？')
+    expect(actionConfirmText({ confirmText: '删 ${name}？' }, { name: 'Ada' })).toBe('删 Ada？')
+    expect(actionConfirmText({})).toBe('')
+    expect(actionConfirmTitle({})).toBeUndefined()
+    expect(actionConfirmTitle({ confirmTitle: '炸弹' })).toBe('炸弹')
+    expect(actionConfirmTitle({ confirmTitle: '' })).toBeUndefined()
   })
 
   it('parses Content-Disposition and url file names', () => {
@@ -227,6 +255,11 @@ describe('action tooltip overlay', () => {
     expect(vue).toContain('data-vamis-action')
     expect(vue.match(/data-vamis-action/g)?.length).toBeGreaterThanOrEqual(2)
     expect(vue).toContain("runOnEvent(props.schema, name, ctx)")
+    expect(vue).toContain('actionConfirmText')
+    expect(vue).toContain('ignoreConfirm: true')
+    const onClick = vue.slice(vue.indexOf('async function onClick'), vue.indexOf('function onHotKey'))
+    expect(onClick.indexOf('actionConfirmText')).toBeGreaterThan(-1)
+    expect(onClick.indexOf('actionConfirmText')).toBeLessThan(onClick.indexOf("runOnEvent(props.schema, 'click'"))
     expect(vue).not.toContain('loading.value = true')
     expect(vue).toContain('useDropdownMenuItem')
     expect(vue).toContain('vamis-dropdown-action')

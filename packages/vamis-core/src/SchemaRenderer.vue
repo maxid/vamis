@@ -264,6 +264,7 @@ onErrorCaptured((error) => {
   <div
     v-else-if="visible && normalized && !renderError"
     :id="nodeId"
+    :data-id="nodeId"
     :data-editor-path="editorPath"
     :draggable="canDrag || undefined"
     :class="[

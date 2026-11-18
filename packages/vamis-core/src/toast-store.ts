@@ -27,18 +27,26 @@ export type ToastItem = {
   mobile: boolean
 }
 
-const state = reactive({ items: [] as ToastItem[] })
+const state = reactive({ items: [] as ToastItem[], primaryHost: 0 })
 let seq = 0
-let liveHosts = 0
+let nextHost = 0
+const liveHosts = new Set<number>()
 
-export function claimToastHost() {
-  const primary = liveHosts === 0
-  liveHosts += 1
-  return primary
+/** 文档页每个预览一份 VamisApp：卸掉当前 primary 后把绘画权交给还活着的 Host。 */
+export function claimToastHost(): number {
+  const id = ++nextHost
+  liveHosts.add(id)
+  if (!state.primaryHost) state.primaryHost = id
+  return id
 }
 
-export function releaseToastHost() {
-  liveHosts = Math.max(0, liveHosts - 1)
+export function releaseToastHost(id?: number): void {
+  const target = id ?? liveHosts.values().next().value
+  if (target == null) return
+  liveHosts.delete(target)
+  if (state.primaryHost === target) {
+    state.primaryHost = liveHosts.values().next().value ?? 0
+  }
 }
 
 export function useToastState() {

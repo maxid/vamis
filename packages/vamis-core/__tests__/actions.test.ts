@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { runAction, runOnEvent, withNativeEvent } from '../src/actions/run'
+import { createVamisEvent, eventEvalData, runAction, runActions, runOnEvent, withNativeEvent } from '../src/actions/run'
 import type { ActionContext } from '../src/actions/run'
 import { ScopedContext } from '../src/scoped'
-import { resetStatusStore, statusStaticOf } from '../src/status-store'
+import { resetStatusStore, statusDisabledOf, statusStaticOf, statusVisibleOf } from '../src/status-store'
 
 function ctx(partial: Partial<ActionContext> = {}): ActionContext {
   return {
@@ -182,6 +182,7 @@ describe('onEvent actions', () => {
     await runAction({ actionType: 'ajax', api: '/api/mock2/form/saveForm' }, context)
     expect(context.env.fetcher).toHaveBeenCalled()
     expect(context.env.notify).toHaveBeenCalledWith('success', 'ok')
+    expect((context.env.fetcher as ReturnType<typeof vi.fn>).mock.calls[0][0].data).toEqual({})
   })
 
   it('ajax merges the payload into the form with api reason', async () => {
@@ -209,6 +210,7 @@ describe('onEvent actions', () => {
         openDrawer: vi.fn(),
         closeDialog: vi.fn(),
         closeDrawer: vi.fn(),
+        closeById: vi.fn(),
         close: vi.fn(),
       },
     })
@@ -242,6 +244,7 @@ describe('onEvent actions', () => {
         openDrawer: vi.fn(),
         closeDialog,
         closeDrawer: vi.fn(),
+        closeById: vi.fn(),
         close: vi.fn(),
       },
     })
@@ -260,6 +263,7 @@ describe('onEvent actions', () => {
         openDrawer: vi.fn(),
         closeDialog,
         closeDrawer: vi.fn(),
+        closeById: vi.fn(),
         close: vi.fn(),
         submitDialogForm,
       },
@@ -380,6 +384,154 @@ describe('onEvent actions', () => {
     expect(context.env.confirm).toHaveBeenCalledWith('确认要发出这个请求？', '炸弹')
   })
 
+  it('canceling confirmText does not fetch', async () => {
+    const context = ctx()
+    context.env.confirm = vi.fn(async () => false)
+    await runAction(
+      { actionType: 'ajax', api: '/api/mock2/form/saveForm', confirmText: '确认要发出这个请求？' },
+      context,
+    )
+    expect(context.env.fetcher).not.toHaveBeenCalled()
+  })
+
+  it('ignoreConfirm skips env.confirm so Action-level confirm is not doubled', async () => {
+    const context = ctx()
+    await runAction(
+      {
+        actionType: 'ajax',
+        api: '/api/mock2/form/saveForm',
+        confirmText: '确认要发出这个请求？',
+        ignoreConfirm: true,
+      },
+      context,
+    )
+    expect(context.env.confirm).not.toHaveBeenCalled()
+    expect(context.env.fetcher).toHaveBeenCalled()
+  })
+
+  it('confirmDialog cancel stops later actions', async () => {
+    const event = createVamisEvent('click')
+    const context = ctx({ event, data: { title: '操作确认', msg: '要删除它吗？' } })
+    context.env.confirm = vi.fn(async () => false)
+    await runActions(
+      [
+        { actionType: 'confirmDialog', dialog: { title: '${title}', msg: '${msg}' } },
+        { actionType: 'toast', args: { msg: '确认ok啦！' } },
+      ],
+      context,
+    )
+    expect(context.env.confirm).toHaveBeenCalledWith('要删除它吗？', '操作确认', expect.any(Object))
+    expect(context.env.notify).not.toHaveBeenCalled()
+    expect(event.stopped).toBe(true)
+    expect(event.prevented).toBe(true)
+  })
+
+  it('confirmDialog confirm continues later actions', async () => {
+    const event = createVamisEvent('click')
+    const context = ctx({ event })
+    await runActions(
+      [
+        { actionType: 'confirmDialog', dialog: { title: '操作确认', msg: '要删除它吗？' } },
+        { actionType: 'toast', args: { msg: '确认ok啦！' } },
+      ],
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', '确认ok啦！', expect.any(Object))
+  })
+
+  it('custom confirmDialog waits for overlay result', async () => {
+    const event = createVamisEvent('click')
+    const openDialog = vi.fn(async () => false)
+    const context = ctx({
+      event,
+      overlay: {
+        state: { dialog: null, drawer: null, data: {} },
+        openDialog,
+        openDrawer: vi.fn(),
+        closeDialog: vi.fn(),
+        closeDrawer: vi.fn(),
+        closeById: vi.fn(),
+        close: vi.fn(),
+      },
+    })
+    await runActions(
+      [
+        { actionType: 'confirmDialog', dialog: { type: 'dialog', title: '操作确认', body: { type: 'tpl', tpl: 'hi' } } },
+        { actionType: 'toast', args: { msg: '确认ok啦！' } },
+      ],
+      context,
+    )
+    expect(openDialog).toHaveBeenCalled()
+    expect(context.env.notify).not.toHaveBeenCalled()
+    openDialog.mockResolvedValue({ name: 'Ada' })
+    event.stopped = false
+    event.prevented = false
+    await runActions(
+      [
+        { actionType: 'confirmDialog', dialog: { type: 'dialog', title: '操作确认' } },
+        { actionType: 'toast', args: { msg: '确认ok啦！' } },
+      ],
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', '确认ok啦！', expect.any(Object))
+    expect(event.data.name).toBe('Ada')
+  })
+
+  it('alert reads dialog.msg and title', async () => {
+    const context = ctx({ data: { msg: '去吃饭了' } })
+    await runAction(
+      { actionType: 'alert', dialog: { title: '提示', msg: '<a href="#">${msg}~</a>' } },
+      context,
+    )
+    expect(context.env.alert).toHaveBeenCalledWith('<a href="#">去吃饭了~</a>', '提示', undefined)
+  })
+
+  it('setEventData writes into event.data for later actions', async () => {
+    const event = createVamisEvent('click')
+    const context = ctx({ event, data: eventEvalData({ name: 'Ada' }, event) })
+    await runActions(
+      [
+        { actionType: 'setEventData', args: { key: 'title', value: '页面标题：${name}' } },
+        { actionType: 'toast', args: { msg: '${title}' } },
+      ],
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('info', '页面标题：Ada', expect.any(Object))
+  })
+
+  it('wait uses args.time before later actions', async () => {
+    vi.useFakeTimers()
+    const context = ctx()
+    const pending = runActions(
+      [
+        { actionType: 'wait', args: { time: 3000 } },
+        { actionType: 'toast', args: { msg: 'done' } },
+      ],
+      context,
+    )
+    await vi.advanceTimersByTimeAsync(2999)
+    expect(context.env.notify).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(1)
+    await pending
+    expect(context.env.notify).toHaveBeenCalledWith('info', 'done', expect.any(Object))
+    vi.useRealTimers()
+  })
+
+  it('stopPropagation actionType skips later actions', async () => {
+    const event = createVamisEvent('click')
+    const context = ctx({ event })
+    await runActions(
+      [
+        { actionType: 'toast', args: { msg: '后续的动作将不会执行' } },
+        { actionType: 'stopPropagation' },
+        { actionType: 'toast', args: { msg: '动作2' } },
+      ],
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledTimes(1)
+    expect(context.env.notify).toHaveBeenCalledWith('info', '后续的动作将不会执行', expect.any(Object))
+  })
+
   it('opens a mailto link for email actions', async () => {
     const context = ctx()
     await runAction(
@@ -405,6 +557,7 @@ describe('onEvent actions', () => {
         openDrawer: vi.fn(),
         closeDialog: vi.fn(),
         closeDrawer: vi.fn(),
+        closeById: vi.fn(),
         close: vi.fn(),
       },
     })
@@ -428,6 +581,24 @@ describe('onEvent actions', () => {
     const context = ctx()
     await runAction({ actionType: 'url', url: 'https://www.baidu.com', blank: true }, context)
     expect(context.env.jumpTo).toHaveBeenCalledWith('https://www.baidu.com', { blank: true, actionType: 'url' })
+    const jumpCtx = ctx({ data: { myname: 'lvxj', myjon: 'player' } })
+    await runAction(
+      {
+        actionType: 'url',
+        args: {
+          url: 'http://www.baidu.com',
+          blank: true,
+          params: { jon: '${myjon}' },
+          name: '${myname}',
+          age: 18,
+        },
+      },
+      jumpCtx,
+    )
+    expect(jumpCtx.env.jumpTo).toHaveBeenCalledWith('http://www.baidu.com?jon=player&name=lvxj&age=18', {
+      blank: true,
+      actionType: 'url',
+    })
     await runAction({ actionType: 'link', link: '/start/getting-started' }, context)
     expect(context.env.jumpTo).toHaveBeenCalledWith('/start/getting-started', { blank: false, actionType: 'link' })
   })
@@ -505,5 +676,80 @@ describe('onEvent actions', () => {
     expect(ran).toBe(false)
     expect(context.env.notify).toHaveBeenCalledWith('error', '请检查表单')
     expect(context.form?.submit).not.toHaveBeenCalled()
+  })
+
+  it('ajax failure notifies and stops later actions unless ignoreError', async () => {
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const event = createVamisEvent('click')
+    const context = ctx({
+      event,
+      env: {
+        fetcher: vi.fn(async () => ({ status: 500, msg: 'boom', data: {} })),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+    })
+    await runActions(
+      [
+        { actionType: 'ajax', api: '/fail', messages: { failed: '失败了呢。。' } },
+        { actionType: 'toast', args: { msg: '后续' } },
+      ],
+      context,
+    )
+    expect(context.env.notify).toHaveBeenCalledWith('error', '失败了呢。。')
+    expect(context.env.notify).not.toHaveBeenCalledWith('info', '后续', expect.any(Object))
+    expect(event.stopped).toBe(true)
+    errors.mockRestore()
+  })
+
+  it('drawer waitForAction writes drawerResponse after close', async () => {
+    const event = createVamisEvent('click')
+    let close: ((value: Record<string, unknown> | false) => void) | undefined
+    const openDrawer = vi.fn(
+      () =>
+        new Promise<Record<string, unknown> | false>((resolve) => {
+          close = resolve
+        }),
+    )
+    const context = ctx({
+      event,
+      overlay: {
+        state: { dialog: null, drawer: null, data: {} },
+        openDialog: vi.fn(),
+        openDrawer,
+        closeDialog: vi.fn(),
+        closeDrawer: vi.fn(),
+        closeById: vi.fn(),
+        close: vi.fn(),
+      },
+    })
+    const pending = runAction(
+      { actionType: 'drawer', waitForAction: true, drawer: { title: '右' } },
+      context,
+    )
+    close?.({ name: 'Ada' })
+    await pending
+    expect(event.data.drawerResponse).toEqual({ confirmed: true, value: { name: 'Ada' } })
+  })
+
+  it('visibility / usability write the status store', async () => {
+    resetStatusStore()
+    await runAction({ actionType: 'visibility', componentId: 'u:field', args: { value: false } }, ctx())
+    expect(statusVisibleOf({ id: 'u:field' })).toBe(false)
+    await runAction({ actionType: 'usability', componentId: 'u:field', args: { value: false } }, ctx())
+    expect(statusDisabledOf({ id: 'u:field' })).toBe(true)
+    resetStatusStore()
+  })
+
+  it('print with componentId calls the target doAction', async () => {
+    const doAction = vi.fn()
+    const scoped = new ScopedContext()
+    scoped.register({ name: 'mycrud', doAction })
+    const context = ctx({ scoped })
+    const print = { actionType: 'print', componentId: 'mycrud' }
+    await runAction(print, context)
+    expect(doAction).toHaveBeenCalledWith(print, expect.any(Object))
   })
 })
