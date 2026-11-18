@@ -1,84 +1,72 @@
 # Mapping 映射 · `mapping` 设计
 
 > 状态：**进行中 85%** · 复杂度：**M 中**
-> 文档：[/components/mapping](/components/mapping) · Amis 文档：`/zh-CN/components/mapping`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/mapping) · Amis：`/zh-CN/components/mapping`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+Mapping 是**值 → 展示**的映射组件：map 支持 k-v、单 key 对象数组、多 key 对象数组；source 支持变量/远程字典；label 支持字符串/HTML/Schema；数组多值、tag/itemSchema、placeholder。主路径较完整；风险在映射来源优先级、HTML 信任边界与多值。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值来源**：schema.value 或 data[name]；数组按多值匹配；空值 placeholder。
+2. **map 形态**：k-v / `[{key,label}]` / 多 key 对象；valueField/labelField；匹配优先精确、再字符串。
+3. **source**：变量映射或远程字典；远程失败保留空 map，不崩。
+4. **label**：字符串模板 / HTML / SchemaNode；itemSchema 决定项渲染；tagFriendly 处理 tag。
+5. **安全**：HTML/`.label-*` 是作者可信内容；不要把用户输入 raw 插入；普通模板默认转义。
+6. **包边界**：无 `<style>`、无 fetch（source 走 requestApi）；styles token。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **展示**：空值/空数组、`source` 未就绪、长文本、模板转义、`tpl` 与 `html` 的信任边界。
-- **边界用例（至少覆盖）**：source 未就绪、空数组、null 行；tpl 转义与 raw 信任边界；超长文本 / 窄屏 / 深色；错误数据不白屏。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（M 中）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/单值/数组/布尔 1/0/未知值
+- k-v/对象数组/多 key/重复 key
+- source 变量/远程/失败；valueField/labelField
+- label HTML/tag/Schema/itemSchema/多值
+- 窄屏/深色/表格内 label
+
+### 优先级
+
+1. 值/匹配；2. map/source；3. label/HTML/tag；4. 多值/样式。
 
 ## 2. 复杂度
 
-- 等级：**M 中**；Amis 源码 120–399 行，或 2–4 个依赖，或有 form/data/api/overlay 单一集成。
-- Amis 源码：**362** 行；Vamis 实现：**195** 行；依赖：**1** 个
-- 集成面：API、子 Schema
-- 判定依据：Vamis 195 行 + Amis 362 行 + 1 依赖 + api/schema
+- 等级：**M 中**（Amis 362 行；Vamis 195 行）；依赖 tpl/tag。
+- 风险：映射形态/多值/HTML 信任。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`mapping`
-- Amis 源文件：`packages/amis/src/renderers/Mapping.tsx`
-- 依赖：`—`
-- 文档章节：`/zh-CN/components/mapping`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `map` | 三种形态 | 已接 |
+| `source` | 变量/远程 | 已接 |
+| valueField/labelField | 字段 | 已接 |
+| label/itemSchema/tag | 展示 | 已接 |
+| placeholder/多值 | 空/数组 | 已接 |
+| 30s source 缓存 | 性能 | 未单实现 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/Mapping.vue`](../../../packages/vamis/src/renderers/Mapping.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+- [`Mapping.vue`](../../../packages/vamis/src/renderers/Mapping.vue)：normalizeMap/source/match/label/schema。
+- [`mapping.ts`](../../../packages/vamis-core/src/utils/mapping.ts)：映射匹配/形态。
+- [`Tpl`](tpl.md)/[`Tag`](tag.md)：label/html/tag 渲染。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-mapping`, `.vamis-mapping__item`, `.vamis-mapping__placeholder`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- `.vamis-mapping`/`.label-*`/tag token；无 `<style>`；表格内/深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：主路径已对齐：`map` 的 k-v / 单 key 对象数组 / 多 key 对象数组（`valueField` / `labelField`）、`source`（纯变量 / 远程字典）、字符串 / HTML 模板、schema 组件值、`itemSchema`（字符串 / SchemaNode）、数组多值、布尔 `1` / `0`、`placeholder`；文档按 Amis 章节改写。HTML `.label-*` 走 `--label-*`（success `#30bf13`，`line-height:1`，表格 `td` 内 90%）；`type: tag` 走 `.vamis-tag`（rounded `#4096ff` 描边）。对照桌面 **14/14**、移动 **14/14**（P0 0）。余项：30s source 缓存未单实现
-- 状态：进行中，进度 85%；如进度未到 100，按上条缺口补齐。
+30s source 缓存未单实现；深色/表格内 label 逐项；HTML 信任边界需保持。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page mapping`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- map 三形态/source/多值/html/tag/itemSchema/空值/窄屏；未接不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（M 中）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+补 source 缓存（如需）；保持 HTML 只给可信作者内容。
 
 ---
+
 返回 [组件设计索引](README.md)
