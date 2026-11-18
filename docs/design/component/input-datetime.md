@@ -1,89 +1,118 @@
 # InputDatetime 日期时间 · `input-datetime` 设计
 
 > 状态：**进行中 62%** · 复杂度：**XL 特重**
-> 文档：[/components/form/input-datetime](/components/form/input-datetime) · Amis 文档：`/zh-CN/components/form/input-datetime`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-datetime) · Amis：`/zh-CN/components/form/input-datetime`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputDatetime **不是独立渲染器**：`register.ts` 把 `input-datetime` 作为 `input-date` 的别名，行为在 `InputDate.vue`。当前已接日期+时分秒与窄屏滚轮；**时分秒约束与 `mobileCalendarMode: calendar` 未齐**，62% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **选项/输入**：远程/变量 options、空选项、重复 value、禁用项、多选与标签折叠、输入法组合态。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **别名映射**：`input-datetime` → InputDate；改日期时间只改 InputDate/日期工具，不要新建重复组件。
+2. **时间部分**：datetime 显示时间；`timeFormat` / `showSeconds` 决定精度；时间与日期同 dayjs 实例。
+3. **时分秒约束**：min/max 同时限制日期与时间；当前约束未齐，不能声称完整。
+4. **值格式**：`valueFormat`/`format`/timezone/utc 与 InputDate 共用；不要另写序列化。
+5. **移动端**：窄屏滚轮已接；`mobileCalendarMode: calendar`（日历模式）未齐。
+6. **包边界**：无 `<style>`、无 fetch；日历/时间列走 token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空值/日期无时间/只有时间部分/秒
+- timeFormat/showSeconds 组合
+- min/max 日期边界与时间边界
+- mobile 滚轮/calendar 模式
+- valueFormat/utc/时区
+- disabled/static/readOnly
+- 窄屏/深色
+
+### 1.3 优先级
+
+1. 别名/时间部分/值格式
+2. min/max 时间约束
+3. mobileCalendarMode / 窄屏
+4. 深色/事件动作
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**824** 行；Vamis 实现：**552** 行；依赖：**1** 个
-- 集成面：表单/FormItem、数据域、浮层、事件/动作
-- 判定依据：Vamis 552 行 + Amis 824 行 + 1 依赖 + form/data/overlay/action
+- 等级：**XL 特重**（Amis 824 行；Vamis 复用 InputDate 552 行）
+- 依赖：`InputDate`、`input-date` 工具、`calendar`
+- 风险：别名复用导致“以为有独立逻辑”
 
 ## 3. Amis 契约
 
-- 入口 type：`input-datetime`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputDate.tsx`
-- 依赖：`input-date`
-- 文档章节：`/zh-CN/components/form/input-datetime`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| `name` / `value` | 日期时间 | 已接 |
+| `timeFormat` / `showSeconds` | 时间精度 | 已接 |
+| `min` / `max` | 约束 | 日期已接；时分秒约束未齐 |
+| `mobileCalendarMode` | 移动模式 | 未齐 |
+| `valueFormat` / `utc` / `timezone` | 格式/时区 | 已接共享 |
+| 事件/动作 | 目标 | 与 InputDate 共享 |
 
-## 4. Vamis 设计与源码
+### 事件/动作
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputDate.vue`](../../../packages/vamis/src/renderers/form/InputDate.vue)
-- 注册形态：普通渲染器（无独立 Scope/API 标记）
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
+与 input-date 相同：change/focus/blur；clear/reset/setValue/focus。
+
+## 4. 架构
+
+- [`register.ts`](../../../packages/vamis/src/register.ts) 别名 → [`form/InputDate.vue`](../../../packages/vamis/src/renderers/form/InputDate.vue)。
+- [`input-date.ts`](../../../packages/vamis-core/src/utils/input-date.ts)：时间格式/解析/移动列。
+- [`calendar.ts`](../../../packages/vamis-core/src/utils/calendar.ts)：日历格/禁用。
+- [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)：label/校验/状态。
+
+### 数据流
+
+```text
+value → parse datetime → date + time
+日历/滚轮/输入 → commit(valueFormat/utc)
+min/max 当前主要限制日期；时间约束待补
+```
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-date-picker`, `.vamis-date-picker__icon`, `.vamis-date-picker__popover`, `.vamis-date-picker__shortcut`, `.vamis-date-picker__shortcuts`, `.vamis-date-picker__time`, `.vamis-form-static`, `.vamis-select__clear`, `.vamis-text-control`, `.vamis-text-control__input`, `.vamis-text-control__native`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 时间列/滚轮/日历 token；无 `<style>`。
+- 窄屏滚轮切换/深色时间列单独核。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：`input-date` 别名，已接日期+时分秒与窄屏滚轮；时分秒约束与 `mobileCalendarMode: calendar` 未齐
-- 状态：进行中，进度 62%；如进度未到 100，按上条缺口补齐。
+- 已接：别名、日期+时分秒、窄屏滚轮、valueFormat/utc/timezone、change/focus/blur、clear/reset/setValue。
+- 缺口：时分秒 min/max 约束、`mobileCalendarMode: calendar`、深色逐章。
+- 对照：TODO 62%；本轮未重跑。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-datetime`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] register 别名 / InputDate 已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] 组件页活示例运行、无 console error
+- [ ] `pnpm test`（datetime 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page input-datetime` 桌面
+- [ ] `pnpm compare --page input-datetime --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- 时间部分/精度
+- min/max 时间约束
+- mobileCalendarMode
+- 别名确实复用 InputDate
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 补时分秒约束（min/max 与时间列禁用）。
+2. 补 mobileCalendarMode calendar。
+3. 深色/窄屏专项。
 
 ---
+
 返回 [组件设计索引](README.md)
