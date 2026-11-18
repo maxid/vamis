@@ -1,0 +1,20 @@
+# Vamis 设计文档
+
+> 2026-11-18。设计文档按“运行时组件”和“站点文档域”分开：组件设计按功能分目录；站点域设计按 website/src 的章节分目录。
+
+## 目录
+
+| 域 | 覆盖 | 设计文档 |
+|---|---|---|
+| 组件 | 155 个组件（另 CollapseGroup 配套篇） | [component/README.md](component/README.md)（layout / functional / form / display / feedback / other） |
+| 概念 | schema / 数据域 / 模板 / 映射 / 表达式 / 联动 / 事件动作 / 行为 / 样式 | [concepts/README.md](concepts/README.md) |
+| 样式 | CSS 变量、响应式、状态、Layout / Flex / Grid / Box Alignment / Spacing / Sizing / Typography / Background / Border / Effect | [style/README.md](style/README.md) |
+| 扩展 | 自定义组件 / 编辑器 / 国际化 / 调试 | [extend/README.md](extend/README.md) |
+| 开始 | 介绍 / 快速开始 / JS SDK / FAQ | [start/README.md](start/README.md) |
+| 类型 | API / ClassName / Definitions / SchemaNode | [types/README.md](types/README.md) |
+
+## 统一标准
+
+- 先写边界与优先级，再写信息架构、契约、实现与缺口。
+- 文档必须能追溯到 `website/src/**/*.md`、`website/nav.mjs` 与相关运行时源码。
+- 未实现的能力标为缺口；不把文档进度当成功能验收。

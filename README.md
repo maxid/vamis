@@ -234,6 +234,7 @@ docs/marketing/         发布材料（首发文案 / 检查清单 / 截图）
 - [运行时与 IR 设计](docs/superpowers/specs/2026-10-20-vamis-vue3-runtime-design.md)
 - [运行时语义](docs/superpowers/specs/2026-10-20-vamis-runtime-semantics-design.md)（D1–D12）
 - [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)
+- [设计文档总索引](docs/design/README.md)（组件 + 概念 / 样式 / 扩展 / 开始 / 类型）
 - [组件设计文档](docs/design/component/README.md)（155 篇 · 按功能分组 · 复杂度 / 契约 / Vamis 实现）
 - [Amis 同步状态](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
 - [主题 / 样式](docs/superpowers/specs/2026-10-21-vamis-theme-shadcn.md)
