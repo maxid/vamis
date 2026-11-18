@@ -1,95 +1,182 @@
 # InputText 输入框 · `input-text` 设计
 
 > 状态：**进行中 92%** · 复杂度：**XL 特重**
-> 文档：[/components/form/input-text](/components/form/input-text) · Amis 文档：`/zh-CN/components/form/input-text`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/input-text) · Amis：`/zh-CN/components/form/input-text`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+
+## 0. 一页结论
+
+InputText 同时承担三种形态：**普通输入**、**选择器模式**（`options` / `source` / `suggest`）和**多选标签输入**。它的复杂度不在输入框本身，而在：
+
+1. 输入值 / 选择值 / 多选序列化的统一写回；
+2. 受控输入与 IME 组合态、trim、transform、clearValueOnEmpty；
+3. 选择器模式的远程 source、自动补全、键盘导航；
+4. 密码显隐、addOn、前后缀、计数器、校验与事件拦截。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+### 1.1 P0 不可破坏边界
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **选项/输入**：远程/变量 options、空选项、重复 value、禁用项、多选与标签折叠、输入法组合态。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+1. **值写回**：统一走 `fieldApi.setValue(name, value)`；有 Form 走 Form，无 Form 走 ValueHost/Scope。没有 `name` 时不写值。
+2. **三种形态的提交时机不同**：
+   - 普通输入：input 事件 `change` 通过后写值；
+   - 选择器模式（`suggest` 或 `multiple` / 非 `creatable`）：draft 先输入，选择项才写正式值；
+   - 多选：`dumpTextValue` 决定 string / array；`joinValues` / `extractValue` / `delimiter` 是同一矩阵。
+3. **事件先于写值**：`change` / `focus` / `blur` / `enter` / `clear` / `review` / `encrypt` 都先 `runOnEvent`，`prevented` 时不写状态。
+4. **IME 与 keydown**：组合输入（`isComposing`）不能用 Enter/方向键提前提交；选择器键盘导航只处理上下/Enter/Esc。
+5. **trim / transform / empty**：提交前 `transformInputText` → `trimContents` → `applyTextEmptyValue(clearValueOnEmpty)`；失焦 trim 只对普通输入。
+6. **密码/浏览器能力**：`input-password` 的 reveal 走 `review` / `encrypt` 事件；不把明文写进 schema 或日志。
+7. **包边界**：渲染器无 `<style>`、无直接 fetch；`source` 远程只走 `requestApi`；计数器/addOn 走控件 token。
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+### 1.2 边界用例
+
+- 空值 / `clearValueOnEmpty` / `resetValue` / 初始值
+- 空 `name`、路径 `a.b[0]`、父域同名/不同名
+- `multiple` × `joinValues` × `extractValue` × `delimiter`
+- `suggest` 本地/远程、`creatable: false`、只选预设、搜索无结果
+- `autoComplete` 慢返回/竞态/清空
+- IME 组合态、Enter、Esc、上下键、Tab 失焦
+- `trimContents`、`transform`、`maxLength/minLength`、计数器超限
+- `addOn` 按钮/文本、前后缀、密码 reveal、disabled/static/readOnly
+- 选择器多选标签移除、重复值、禁用 option
+- 移动端键盘/弹层、深色、校验错误态
+
+### 1.3 优先级
+
+1. 值序列化与写回时序
+2. 选择器模式/draft/远程/键盘
+3. trim/transform/empty/密码
+4. addOn/计数器/样式/窄屏
+5. 对照与深色
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**1387** 行；Vamis 实现：**656** 行；依赖：**3** 个
-- 集成面：表单/FormItem、数据域、浮层、API、事件/动作、子 Schema
-- 判定依据：Vamis 656 行 + Amis 1387 行 + 3 依赖 + form/data/overlay/api/action/schema
+- 等级：**XL 特重**（Amis `Form/InputText.tsx` 1387 行；Vamis 656 行）
+- 依赖：`FormItem`、`Options`、`mapping`、`popOver`、`button` 等（suggest/addOn）
+- 风险：普通输入与选择器共用同一个 input，状态分支容易写错
 
 ## 3. Amis 契约
 
-- 入口 type：`input-text`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputText.tsx`
-- 依赖：`FormItem`, `Options`, `action`
-- 文档章节：`/zh-CN/components/form/input-text`
+### 3.1 入口与源码
 
-## 4. Vamis 设计与源码
+- 入口：`input-text`；密码/邮箱/URL 等是 Amis 的 InputText 变体（本设计只覆盖 input-text 主渲染器）
+- Amis 渲染器：`packages/amis/src/renderers/Form/InputText.tsx`
+- 在线文档：[Vamis `/components/form/input-text`](/components/form/input-text) / Amis `/zh-CN/components/form/input-text`
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/InputText.vue`](../../../packages/vamis/src/renderers/form/InputText.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
-  - 图标走 `resolveIcon` + `IconMark`，class 落 `<i>`、URL 落 `<img>`，不按组件各写一套判断。
+### 3.2 核心属性（摘要）
+
+| 属性 | 语义 | 注意 |
+|---|---|---|
+| `name` / `value` | 字段绑定 | 无 name 不写值；路径值按 FormItem |
+| `type` | 原生 input 类型 | password 支持 reveal；number/email/url 只换原生类型，不替代 input-number |
+| `multiple` / `joinValues` / `extractValue` / `delimiter` | 多选形态 | 与 Select 共用序列化矩阵 |
+| `options` / `source` / `labelField` / `valueField` | 选择器选项 | suggest/只选预设；远程走 requestApi |
+| `suggest` / `creatable` | 选择器模式 | creatable false 只能选预设；multiple 时 draft + 标签 |
+| `autoComplete` | 自动补全 | 远程建议，防竞态 |
+| `clearable` / `clearValueOnEmpty` | 清除 | clear 事件可阻止；空串→undefined |
+| `trimContents` / `transform` | 输入清洗 | transform 先于 trim；提交/失焦都按此 |
+| `prefix` / `suffix` / `addOn` | 附加内容 | addOn 有按钮/文本 schema；不要写死样式 |
+| `showCounter` / `maxLength` / `minLength` | 计数/长度 | 计数超限只提示，是否阻止由校验决定 |
+| `borderMode` | 边框风格 | 走控件 token |
+| `resetValue` | reset 动作值 | 与 clear 区分 |
+| `disabled` / `static` / `readOnly` | 状态 | 禁用/静态由 FormItem 统一；静态不触发输入 |
+
+### 3.3 事件
+
+`change` / `focus` / `blur` / `click` / `enter` / `clear` / `review` / `encrypt`。参数含 `value` 与 `[name]`。
+
+- `click` / `enter` 只针对选择器模式（有 suggest/options）。
+- `review` / `encrypt` 只针对密码 reveal；事件被阻止时不切换。
+- 任何事件被 `prevented`，不写值/不切换/不关闭。
+
+### 3.4 动作/API
+
+已接：`clear`、`reset`、`focus`、`reload`、`setValue`。
+
+组件 API：`getData()` 返回 `{ value }`；`setData({ value })` 或 `{ [name]: value }` 写值；`doAction(clear|reset|focus)`。
+
+## 4. Vamis 架构
+
+### 4.1 文件
+
+| 文件 | 职责 |
+|---|---|
+| [`InputText.vue`](../../../packages/vamis/src/renderers/form/InputText.vue) | input/选择器双形态、draft、键盘、suggest/autoComplete、标签、密码、addOn、计数器 |
+| [`optionsControl.ts`](../../../packages/vamis/src/optionsControl.ts) / [`options.ts`](../../../packages/vamis-core/src/utils/options.ts) | 选项归一、选中项、序列化、过滤 |
+| [`FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue) | label/校验/静态/错误 |
+| [`text.ts`](../../../packages/vamis-core/src/utils/input-text.ts) | `inputNativeType` / `transformInputText` / `applyTextEmptyValue` / `dumpTextValue` / `showPasswordReveal` 等纯函数 |
+
+### 4.2 状态
+
+```text
+rawValue(name) ──> displayValue / selected
+input draft ──> suggest/multiple ? draft : commitNormal
+                    │
+                    ├─ emit change (prevented → 停)
+                    ├─ writeValue(serialized)
+                    └─ options/suggest/autoComplete 更新
+```
+
+- `selected` 从 options + rawValue 派生；多选标签移除也用同一序列化。
+- `draft` 只在 suggest/multiple 模式存在；选择 option 后清空。
+- `remote` 只存 source 结果，不能覆盖本地 `options` 的优先级（以 options 工具为准）。
+
+### 4.3 交互
+
+- **普通输入**：input → transform/trim/empty → change 事件 → 写值；blur 再 trim。
+- **选择器**：focus/click 打开；输入 draft；上下键 highlight；Enter 选中；Esc 关闭；outside 关闭。
+- **多选**：已选项显示标签；选择/移除均派发 change；`joinValues`/`extractValue` 决定值形态。
+- **密码**：`review`/`encrypt` 先事件后切换；disabled 不 reveal。
+- **addOn**：按 schema 渲染 button/text；addOn 点击不能冒泡成 input click。
 
 ## 5. 样式与边界
 
-- 相关默认皮肤类：`.vamis-select__clear`, `.vamis-text-control`, `.vamis-text-control--with-addon`, `.vamis-text-control__addon`, `.vamis-text-control__addon--button`, `.vamis-text-control__addon--text`, `.vamis-text-control__addon-text`, `.vamis-text-control__affix`, `.vamis-text-control__chip`, `.vamis-text-control__chip-label`, `.vamis-text-control__chip-remove`, `.vamis-text-control__counter`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 默认类：`.vamis-text-control`、`__addon`、`__affix`、`__counter`、`__chip` 等，位于 `@vamis/ui/styles.css`。
+- 输入框/前后缀/addOn/计数器/标签走 token；渲染器无 `<style>`。
+- 选择器弹层复用 `VamisOverlay` / popup 样式，不写第二套。
+- 窄屏、密码 reveal、深色、错误态需单独截图核对。
 
 ## 6. 当前状态与缺口
 
-- TODO 记录：主路径已齐（addOn/清值/计数/边框/事件动作）；hover 走 `--primary`、half 保留圆角、addOn 1px 竖缝；focus 3px glow 包整组；选择器 CONTAINS 排序+高亮，贴输入框 `VamisOverlay`（窄屏也是）；`creatable: false` 选中 focus 仍显示 `TextControl-value`；多选 tag 小叉 `VamisClose`、label 60px 才省略；`revealPassword` 已接；`source` reload 时控件右侧 `Spinner icon=reload size=sm`。缺 `themeCss`
-- 状态：进行中，进度 92%；如进度未到 100，按上条缺口补齐。
+- 已对齐：普通输入、clearing、trim/transform、空值、计数器、前后缀、addOn、选择器 suggest/远程/自动补全、多选标签、密码 reveal、鼠标/键盘事件、clear/reset/focus 动作。
+- 对照：TODO 记录 input-text 主路径；本轮未重跑。
+- 风险/缺口：
+  - `multiple` 与 `options` / `source` 组合的边界需补测试；
+  - `autoComplete` 竞态、IME、`creatable: false` 只选预设；
+  - addOn 按钮与点击事件冒泡；
+  - 密码 reveal 在 disabled/static 下不出现。
 
 ## 7. 验收计划与完成度
 
-- 组件页对照：`pnpm compare --page input-text`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
 ### 验收清单（文档核对：3 / 12）
 
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
+- [x] Amis 入口 / 文档章节已定位
+- [x] Vamis 渲染器 / text 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
+- [ ] `pnpm test`（InputText/Options 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [ ] `pnpm compare --page input-text` 桌面
+- [ ] `pnpm compare --page input-text --mobile`
+- [ ] 深色 / 375px 窄屏
 
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+### 验收重点
+
+- change 被阻止时不写值
+- 多选序列化矩阵
+- suggest 远程竞态 / IME
+- clearValueOnEmpty / resetValue
+- addOn 点击不误触输入框
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+1. 先补多选 × source 的值/标签/远程边界测试。
+2. autoComplete 竞态与 IME 单独立项（与 Select 共用）。
+3. addOn/按钮/密码 reveal 走交互专项，不混在样式刀。
 
 ---
+
 返回 [组件设计索引](README.md)
