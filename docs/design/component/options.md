@@ -1,92 +1,72 @@
-# Options 选择器表单项 · `options` 设计
+# Options 选择器契约 · `options`（契约）设计
 
 > 状态：**进行中 88%** · 复杂度：**XL 特重**
-> 文档：[/components/form/options](/components/form/options) · Amis 文档：`/zh-CN/components/form/options`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 文档：[在线 API 手册](/components/form/options) · Amis：`/zh-CN/components/form/options`
+> 盘点日期：2026-11-18。本文是研发设计文档；options 是选择器基类契约，不是独立业务 type。
+
+## 0. 一页结论
+
+Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/远程 source 状态机**（optionsControl.ts + options.ts）。改 Options 会影响整个选择器族；必须用统一 API，不在控件里各写。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **值**：name 写入/读取统一 useFieldValue；multiple/joinValues/extractValue/delimiter 序列化。
+2. **选项**：本地 options / source 变量/API；labelField/valueField；children 递归。
+3. **搜索**：filterOption/searchApi/autoComplete；远程竞态/空结果。
+4. **选择**：selected/toggle/toggleAll/commit；只叶子可选；disabled。
+5. **创建/编辑**：addControls/editControls/create 选项；与 select 的 allowCreate 区分。
+6. **包边界**：无 `<style>`、无 fetch；requestApi 统一。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **浮层**：复用 `VamisOverlay` / `PopOverHost`，层级走 `--z-*`；关闭、焦点、嵌套数据回退由浮层壳负责，不另起 Teleport。
-- **网络**：只走 `requestApi(env)`；loading / error / skipped / 竞态取消由 API 管线统一，组件内不写 fetch。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **子 schema**：`SchemaRenderer` 递归渲染；未知 type、空 body、错误边界不能把整棵组件树打断。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（XL 特重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/本地/远程/变量 source/失败
+- multiple/joinValues/extractValue/delimiter
+- 搜索/自动补全/竞态/全选
+- disabled/只叶子/新增/编辑
+- 窄屏/深色
+
+### 优先级
+
+1. 值序列化；2. options/source；3. 搜索/选择；4. 创建/编辑/样式。
 
 ## 2. 复杂度
 
-- 等级：**XL 特重**；Amis 源码 ≥800 行，或 ≥8 个依赖，或表单/表格/CRUD/页面/编辑器等枢纽组件。
-- Amis 源码：**1487** 行；Vamis 实现：**791** 行；依赖：**0** 个
-- 集成面：表单/FormItem、数据域、浮层、API、事件/动作、子 Schema
-- 判定依据：Vamis 791 行 + Amis 1487 行 + 0 依赖 + form/data/overlay/api/action/schema
+- 等级：**XL 特重**（Amis Options 1487 行；Vamis optionsControl 570 + options 805）；依赖全部选择器。
+- 风险：全族共享，改一处影响多控件。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口：kernel 契约（不是 Amis 独立 type；由表单项复用）
-- Amis 源文件：`packages/amis-core/src/renderers/Options.tsx`
-- 依赖：—
-- 文档章节：`/zh-CN/components/form/options`
+| 能力 | 现状 |
+|---|---|
+| 值序列化 | 已接 |
+| 本地/远程 options | 已接 |
+| 搜索/filterOption/searchApi | 已接 |
+| selected/toggle/toggleAll | 已接 |
+| add/edit controls | 已接（部分控件） |
+| 分组/树 | 部分（由控件决定） |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/optionsControl.ts`](../../../packages/vamis/src/optionsControl.ts)<br>[`packages/vamis/src/options.ts`](../../../packages/vamis/src/options.ts)<br>[`packages/vamis/src/renderers/FormItem.vue`](../../../packages/vamis/src/renderers/FormItem.vue)
-- 注册形态：kernel 契约
-- 项目模式：
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
-  - 网络只走 `requestApi(env)`，`api` / `initApi` 由 env fetcher 注入；禁止渲染器内直接 `fetch`。
-  - 事件经 `createVamisEvent` / `runOnEvent` 走 D4 事件动作链，动作由 `Action` 注册表统一执行。
-  - 浮层复用 `VamisOverlay` / `PopOverHost`，层级与定位走统一 overlay 工具和 `--z-*` token，不另起 Teleport。
-  - 子节点交给 `SchemaRenderer` 递归渲染；自身只负责容器、循环或字段级包装。
+- [`optionsControl.ts`](../../../packages/vamis/src/optionsControl.ts)：useOptionsControl 状态机。
+- [`options.ts`](../../../packages/vamis-core/src/utils/options.ts)：normalize/selected/toggle/serialize。
+- 消费方：[Select](select.md)、[Picker](picker.md)、[Transfer](transfer.md)、[Checkboxes](checkboxes.md)、[InputTree](input-tree.md)。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 相关默认皮肤类：`.vamis-control--fluid`, `.vamis-form-description`, `.vamis-form-item`, `.vamis-form-item--horizontal`, `.vamis-form-item--inline`, `.vamis-form-item--no-label`, `.vamis-form-item--normal`, `.vamis-form-item--row`, `.vamis-form-item__label`, `.vamis-form-item__label-inner`, `.vamis-form-item__star`, `.vamis-form-item__value`（定义在 `@vamis/ui/styles.css`）
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 选择器皮肤由消费控件提供；Options 无独立 `<style>`。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。InputTree 已接 deferApi/deferField 懒加载、子树合并与 deferLoadFinished；其他树/穿梭器待复用。缺虚拟列表。select 已接入
-- 状态：进行中，进度 88%；如进度未到 100，按上条缺口补齐。
+各控件 selectMode/树/分页差异；远程缓存；深色由控件负责。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page options`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 序列化矩阵/远程/搜索/选择/全选/创建；至少覆盖 Select/Picker/Transfer 三消费方。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（XL 特重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+Options 改动必须跑选择器族回归；不要为单控件加私有状态。
 
 ---
+
 返回 [组件设计索引](README.md)

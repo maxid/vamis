@@ -1,86 +1,66 @@
 # InputFormula 公式编辑器 · `input-formula` 设计
 
-> 状态：**进行中 30%** · 复杂度：**L 重**
-> 文档：[/components/form/input-formula](/components/form/input-formula) · Amis 文档：`/zh-CN/components/form/input-formula`
-> 盘点日期：2026-11-18；自动从 Amis 6.13.0 源码、Vamis 注册表与组件 TODO 提取；边界优先结构已统一，人工设计取舍待补。
+> 状态：**进行中 45%** · 复杂度：**M 中**
+> 文档：[在线 API 手册](/components/form/input-formula) · Amis：`/zh-CN/components/form/input-formula`
+> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+
+## 0. 一页结论
+
+InputFormula **没有独立渲染器**：`extras/rest.ts` 把它注册到 `Formula.vue`，只是可编辑外观（type=input-formula 时 Input 非只读）。没有公式编辑器/函数提示/校验；45% 是真实缺口。
 
 ## 1. 边界与优先级（先读）
 
-> 先过边界，再谈属性/样式。以下 P0 项任一被破坏，后面的功能都不算完成。
+1. **别名**：input-formula → Formula；行为/值/API 继承。
+2. **编辑外观**：type=input-formula 时 Input 可输入；普通 formula 只读。
+3. **无编辑器**：没有语法高亮/函数补全/错误提示；不要按公式编辑器验收。
+4. **计算**：仍走 formula/value + autoSet/condition。
+5. **包边界**：无 `<style>`、无 fetch。
 
-- **契约边界**：只消费 `schema` / `data` / `env`；字段名与 Amis 对齐，扩展只加新字段，不改写作者 schema。
-- **包边界**：默认皮肤与 chrome 图标归 `@vamis/ui`；渲染器不带 `<style>`、不直接 `fetch`；作者 `className` 不能替代默认皮肤。
-- **表单边界**：值走 `FormItem` / `formContext` 的路径值；校验、静态态、禁用、显隐由表单壳统一，组件不要自建提交或第二套 value。
-- **数据域**：用 `useData` / `useScoped` 读取/提供数据；离开数据域时不能残留旧值或旧 scope。
-- **事件/动作**：事件先 `dispatch` 再提交本地状态；可阻止事件必须检查 `prevented`；组件动作通过 scoped API 暴露。
-- **表单项**：路径名（`a.b[0]`）、空值、默认值、`disabled` / `static` / `readOnly`、初始化顺序都按 FormItem 契约。
-- **边界用例（至少覆盖）**：空值 / null / undefined 与默认值；`name` 路径、初始化与 reset；disabled / static / readonly / 隐藏；校验失败与 error 回填；远程 options 慢返回 / 空结果 / 竞态。
+### 边界用例
 
-**施工顺序**：主路径 → 属性/事件 → 边界用例 → 对照/深色。复杂项（L 重）一次只做一个切片，不把样式修补和运行时语义混刀。
+- 空/模板/表达式/可编辑/只读
+- autoSet/condition/卸载
+- 公式编辑器能力（未接）
+- 窄屏/深色
+
+### 优先级
+
+1. 别名/可编辑；2. 计算/autoSet；3. 编辑器/提示；4. 样式。
 
 ## 2. 复杂度
 
-- 等级：**L 重**；Amis 源码 400–799 行，或 ≥5 个依赖，或 Amis 250+ 且带数据域/浮层；含地图/图表/树等外设。
-- Amis 源码：**257** 行；Vamis 实现：**79** 行；依赖：**2** 个
-- 集成面：表单/FormItem、数据域、事件/动作
-- 判定依据：Vamis 79 行 + Amis 257 行 + 2 依赖 + form/data/action
+- 等级：**M 中**（Amis 257 行；Vamis 复用 Formula 79 行）；依赖 formula/form/action。
+- 风险：被误认为完整编辑器。
 
-## 3. Amis 契约
+## 3. 契约
 
-- 入口 type：`input-formula`
-- Amis 源文件：`packages/amis/src/renderers/Form/InputFormula.tsx`
-- 依赖：`FormItem`, `formula`
-- 文档章节：`/zh-CN/components/form/input-formula`
+| 属性 | 语义 | 现状 |
+|---|---|---|
+| formula/value | 公式 | 继承 Formula |
+| 可编辑 | Input | 已接 |
+| 函数提示/校验 | 目标 | 未接 |
 
-## 4. Vamis 设计与源码
+## 4. 架构
 
-- 渲染器文件：[`packages/vamis/src/renderers/form/Formula.vue`](../../../packages/vamis/src/renderers/form/Formula.vue)
-- 注册形态：表单渲染器（`isFormItem`）
-- 项目模式：
-  - 表单值走 `FormItem` + `formContext`（`form.getValue` / `setValue`），校验、显隐、静态态由表单壳统一处理，渲染器不自建提交。
-  - 用 `useData()` 读取当前数据域；数据变化由 `SchemaRenderer` 的响应式 data 驱动。
-  - 通过 `useScoped` / `provideScoped` 注册组件 API，供 `componentId` 动作与父级联动调用。
+- [`extras/rest.ts`](../../../packages/vamis/src/extras/rest.ts) → [`Formula.vue`](../../../packages/vamis/src/renderers/form/Formula.vue)。
+- [`formula`](formula.md)：全部行为。
 
-## 5. 样式与边界
+## 5. 样式
 
-- 无专属默认皮肤类；沿用 `@vamis/ui` 原语与标尺 token，或仅使用作者 `className`。
-- 渲染器不得带 `<style>`；颜色/字号/圆角/间距用 `--*` token，不写死 hex/px。
-- `@vamis/ui` 不反向依赖 core；schema/env 读取留在 `packages/vamis`；不直接 `fetch`。
+- 同 Formula；无 `<style>`；深色/窄屏单独核。
 
-## 6. 当前状态与缺口
+## 6. 缺口
 
-- TODO 记录：**精简**：复用 Formula，无公式编辑器 UI
-- 状态：进行中，进度 30%；如进度未到 100，按上条缺口补齐。
+编辑器/函数提示/校验/深色。
 
-## 7. 验收计划与完成度
+## 7. 验收
 
-- 组件页对照：`pnpm compare --page input-formula`（桌面）；窄屏：`--mobile`。
-- 改渲染器/活示例/样式后先 `pnpm sdk:build`；跑 `pnpm test` + `pnpm typecheck`（0 错误门禁）。
-- 组件页 markdown 活示例须能运行；Diff 以 Amis 同路径页为准。
-
-### 验收清单（文档核对：3 / 12）
-
-> 只勾“本轮文档核对已具备”的项；功能、测试、对照必须由实现刀逐项勾，未勾不等于未实现。
-
-- [x] Amis 入口源码 / 文档章节已定位
-- [x] Vamis 渲染器或注册文件已定位
-- [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
-
-> 未勾项按“当前状态与缺口”逐条处理；完成后再把本清单改成实现刀的实际结果。
+- 确认走 Formula；可编辑/只读/自动计算；编辑器不误标。
 
 ## 8. 后续
 
-- 先补第 6 节列出的缺口，再按第 7 节对照到通过；复杂项（L 重）按串行分批一次只做 1 个。
-- 设计取舍（数据域拆分、浮层复用、性能/懒加载）需在此文档补充后再动实现。
+编辑器单独立项；先保持只读展示/简单输入。
 
 ---
+
 返回 [组件设计索引](README.md)
