@@ -106,6 +106,82 @@ const isGroupMenu = computed(() => {
   if (mode === 'group') return true
   return ctl.options.value.some((item) => isGroupOption(item))
 })
+/** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
+const VIRTUAL_BUFFER = 4
+const VIRTUAL_MAX_HEIGHT = 266
+const virtualListEl = ref<HTMLElement | null>(null)
+const virtualScrollTop = ref(0)
+const virtualThreshold = computed(() => ctl.config.value.virtualThreshold)
+const itemHeight = computed(() => ctl.config.value.itemHeight)
+const virtualEnabled = computed(
+  () => !isMobile.value && !isGroupMenu.value && ctl.filtered.value.length > virtualThreshold.value,
+)
+const virtualViewportHeight = computed(() => {
+  const count = ctl.filtered.value.length
+  return count > 8 ? VIRTUAL_MAX_HEIGHT : Math.max(count, 1) * itemHeight.value
+})
+const virtualStart = computed(() => {
+  if (!virtualEnabled.value) return 0
+  const count = ctl.filtered.value.length
+  if (!count) return 0
+  return Math.min(
+    Math.max(0, Math.floor(virtualScrollTop.value / itemHeight.value) - VIRTUAL_BUFFER),
+    count - 1,
+  )
+})
+const virtualEnd = computed(() => {
+  const count = ctl.filtered.value.length
+  if (!virtualEnabled.value) return count
+  return Math.min(
+    count,
+    Math.ceil((virtualScrollTop.value + virtualViewportHeight.value) / itemHeight.value) + VIRTUAL_BUFFER,
+  )
+})
+const virtualOffset = computed(() => (virtualEnabled.value ? virtualStart.value : 0))
+const visibleOptions = computed(() =>
+  virtualEnabled.value ? ctl.filtered.value.slice(virtualStart.value, virtualEnd.value) : ctl.filtered.value,
+)
+const virtualPadTop = computed(() => (virtualEnabled.value ? virtualStart.value * itemHeight.value : 0))
+const virtualPadBottom = computed(() =>
+  virtualEnabled.value ? Math.max(0, (ctl.filtered.value.length - virtualEnd.value) * itemHeight.value) : 0,
+)
+function onVirtualScroll(event: Event) {
+  if (!virtualEnabled.value) return
+  virtualScrollTop.value = (event.currentTarget as HTMLElement).scrollTop
+}
+function resetVirtualScroll() {
+  virtualScrollTop.value = 0
+  if (virtualListEl.value) virtualListEl.value.scrollTop = 0
+}
+watch(
+  () => ctl.keyword.value,
+  () => nextTick(resetVirtualScroll),
+)
+watch(
+  () => ctl.open.value,
+  (open) => {
+    if (open) nextTick(resetVirtualScroll)
+  },
+)
+watch(
+  () => [ctl.config.value.virtualThreshold, ctl.config.value.itemHeight] as const,
+  () => nextTick(resetVirtualScroll),
+)
+watch(
+  () => ctl.filtered.value.length,
+  () => {
+    if (!virtualEnabled.value) return
+    void nextTick(() => {
+      const el = virtualListEl.value
+      if (!el) return
+      const max = Math.max(0, ctl.filtered.value.length * itemHeight.value - virtualViewportHeight.value)
+      if (el.scrollTop > max) {
+        el.scrollTop = max
+        virtualScrollTop.value = max
+      }
+    })
+  },
+)
 /** 对齐 Amis：普通单选才走 Picker 滚轮；multiple / selectMode:group 走列表。 */
 const useMobileWheel = computed(
   () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value,
@@ -665,7 +741,11 @@ watch(
         :placement="overlayPlacement"
         @outside="closeMenu"
       >
-        <div class="vamis-select__popover" :style="popoverStyle">
+        <div
+          class="vamis-select__popover"
+          :class="{ 'is-virtual': virtualEnabled }"
+          :style="popoverStyle"
+        >
           <div
             v-if="showSearch"
             class="vamis-select__search"
@@ -703,8 +783,20 @@ watch(
             </span>
             <span>{{ checkAllLabel }}</span>
           </button>
-          <div class="vamis-select__list">
-            <template v-for="(opt, index) in ctl.filtered.value" :key="String(opt.value ?? opt.label) + '-' + index">
+          <div
+            ref="virtualListEl"
+            class="vamis-select__list"
+            :class="{ 'is-virtual': virtualEnabled }"
+            :style="virtualEnabled ? { height: virtualViewportHeight + 'px' } : undefined"
+            @scroll="onVirtualScroll"
+          >
+            <div
+              v-if="virtualPadTop > 0"
+              class="vamis-select__virtual-pad"
+              :style="{ height: virtualPadTop + 'px' }"
+              aria-hidden="true"
+            />
+            <template v-for="(opt, index) in visibleOptions" :key="String(opt.value ?? opt.label) + '-' + (virtualOffset + index)">
               <div v-if="isGroupOption(opt)" class="vamis-select__group">
                 <div class="vamis-select__group-label">{{ opt.label }}</div>
                 <div
@@ -738,6 +830,7 @@ watch(
                 role="option"
                 class="vamis-select__item"
                 :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
+                :style="virtualEnabled ? { height: itemHeight + 'px' } : undefined"
                 :title="opt.label"
                 @mousedown.prevent
                   @click.stop="onPick(opt)"
@@ -753,7 +846,7 @@ watch(
                   v-if="menuTpl != null"
                   class="vamis-select__item-label"
                   :schema="menuTpl"
-                  :extra-data="menuData(opt, index)"
+                  :extra-data="menuData(opt, virtualOffset + index)"
                 />
                 <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
                 <span
@@ -785,6 +878,12 @@ watch(
                 </span>
               </div>
             </template>
+            <div
+              v-if="virtualPadBottom > 0"
+              class="vamis-select__virtual-pad"
+              :style="{ height: virtualPadBottom + 'px' }"
+              aria-hidden="true"
+            />
             <div v-if="ctl.loading.value && !ctl.filtered.value.length" class="vamis-select__loading">
               <Spinner :schema="{ type: 'spinner', show: true, size: 'sm' }" />
             </div>

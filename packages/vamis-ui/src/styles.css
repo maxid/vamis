@@ -3402,6 +3402,18 @@
     color: var(--select-menu-color);
     box-shadow: var(--select-menu-shadow);
   }
+  /* 虚拟列表自己滚动；外层不再限制 300，否则 search + 266 会被裁掉。 */
+  .vamis-select__popover.is-virtual {
+    max-height: none;
+    overflow: visible;
+  }
+  .vamis-select__list.is-virtual {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .vamis-select__virtual-pad {
+    pointer-events: none;
+  }
   .vamis-select__search--line {
     margin: 0 10px;
     height: var(--select-search-height);

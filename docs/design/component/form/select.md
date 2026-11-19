@@ -132,7 +132,7 @@ options ── searchable ──> filtered
 
 ## 6. 当前状态与缺口
 
-- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（单选滚轮 / 多选草稿 / 搜索 / 确认写入）、`selectMode: group`、全选、`autoComplete`。
+- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（单选滚轮 / 多选草稿 / 搜索 / 确认写入）、`selectMode: group`、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高）。
 - 对照：TODO 记录桌面/移动 select 主路径；本轮未重跑。
 - 缺：`selectMode` table/tree/chained/associated、`deferApi`、人员点选；`addConfirm` / `editConfirm` / `deleteConfirm` 事件；`allowCreate` 的完整边界。
 - 已接新增/编辑/删除选项 UI，但不要与 `*Confirm` 事件混为一谈。
@@ -168,6 +168,7 @@ options ── searchable ──> filtered
 2. `selectMode: table/tree/chained/associated` 单独立项，优先复用 Table/Tree 能力，不复制三套。
 3. `deferApi` 与人员点选按 Options 族统一收口。
 4. 值序列化矩阵补组件级测试后再动样式。
+5. 虚拟列表只覆盖桌面平铺选项；分组菜单保持整表渲染，后续若接需同时处理分组行高与选中回滚。
 
 ---
 

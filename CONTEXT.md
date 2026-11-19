@@ -84,6 +84,7 @@ flowchart LR
 
 **最近交付**
 
+- **Options 虚拟列表接入 Select（2026-11-19）**：Options 契约新增 `virtualThreshold`（默认 100）/ `itemHeight`（默认 32），Select 桌面平铺选项按 266 视口切片、固定行高滚动；搜索回落整表并回顶部，选中/关闭主路径正常。真机与 Amis 实测同视口 / 行高 / 200 项滚动高 6400；Options 页对照 **38/39**（既有 `selectFirst` 值差，非本刀）。Options 保持 88%（分组菜单、Picker/Transfer/树未复用，远程缓存未接），Select 保持 92%。`pnpm test` **1153**、`typecheck` 0；未跑移动 / 深色对照。
 - **侧栏优先级同步到组件 TODO 两张表（2026-11-19）**：站点左侧导航栏的 P0 / P1 / P2 写入「全量顺序」与「实现复杂度评估」各新增的「侧栏」列，口径与 `playground/src/docs/component-priority.ts` 的 `STAGE_RANK_MAX` 一致；`scripts/component-priority.mjs` 生成全量顺序的该列，复杂度表按同一档位映射 155 行；新增解析守卫测试确保 154 个 type 的档位与 `stageFromRank` 一致。百分比与汇总不变。`pnpm typecheck` 0、`pnpm test` **1153**。未动运行时，没跑对照。
 
 - **Pagination 移动、跳页与 perPage 全面对齐（2026-11-19）**：新增 `mobileUI` 的 prev / 输入 / next，支持方向键 / Enter 和 blur 恢复；补 `buttonType: text`、跳页 lastPage 上限、setValue / reload 双联动。新增 `PaginationPerPage` 适配器复用真实 Vamis Select，根容器改块级，perPage 14px / text-loud / 10px padding / 8px 左距 / baseline 均按 Amis 实测。CRUD 仍复用同一 Pagination，仅 maxButtons 与 layout 配置不同。对照目录 **2220**，Pagination 桌面 / 移动均 **7/7**；CRUD 既有对照 **60/92**、P0 0，失败项不含 Pagination 差异，本刀未扩大处理。`pnpm test` **1152**、`typecheck` 0。进度 **92%→98%**，余 `themeCss`。

@@ -977,6 +977,12 @@ alwaysApply: true
 - 触及：`checkbox` `checkboxes` `select` Options `radio`
 - 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
 
+### Options 虚拟列表：固定行高 + 上下 spacer，分组菜单不虚拟化
+- 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。直接沿用 Table 的行虚拟会把分组头/子项缩进混进固定行高。
+- 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被 300 裁掉。
+- 触及：`select` Options
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `virtual-list`
+
 ### Radio 是圆点布尔，不要 RadioGroup / checkbox 方盒
 - 踩过：占位用 shadcn RadioGroup，空 `option` 补「选项」；按钮模式若套 checkbox 透明底 + 角标三角，和 Amis 实心 brand 底对不上。
 - 稳定做法：`type: radio` 是 Combo / input-table 里的布尔圆点（18 / 内点 10，`--radio-*`），不是 `radios` 组。真假值复用 checkbox helpers。未写 `option` 只画圆点。按钮选中 `--primary` 实心底 + `--primary-foreground` 字，不要角标。Combo `multiple` 且数组 ≥2 且首项对象才 `comboApplyRadio`（当前行 trueValue、其余 falseValue），返回 `false` 时 Radio 不再自己写字段、也不派 `change`。隐藏 native 不要 `name`。`input-table` 互斥另刀。

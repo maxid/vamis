@@ -6,7 +6,7 @@ outline: deep
 # Options 选择器表单项
 
 ::: info 实现进度 88% · 进行中
-已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；其他树/穿梭器待复用。缺虚拟列表。
+已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；其他树/穿梭器待复用。Select 桌面平铺选项已接虚拟列表（`virtualThreshold` / `itemHeight`）；分组菜单与其他消费方仍整表渲染。
 :::
 
 **选择器表单项** 是指那些（例如下拉选择框）具有选择器特性的表单项。它派生自 [表单项](./formitem)，拥有表单项所有的特性。
@@ -969,7 +969,7 @@ body:
 
 ## 控制选项高度
 
-下拉选项很多时（默认超过 100 条，可用 `virtualThreshold` 调）会切到虚拟渲染；选项文案过长会重叠，这时要设 `itemHeight`。**Vamis 本轮尚未接入虚拟列表**，长列表仍整表渲染；字段先挂在属性表里。
+下拉选项很多时（默认超过 100 条，可用 `virtualThreshold` 调）会切到虚拟渲染；选项文案过长会重叠，这时要设 `itemHeight`。Vamis 已在 Select 桌面平铺选项接入：固定行高滚动、按视口切片渲染；分组菜单暂不虚拟化。
 
 ```schema: scope="body"
 type: form
@@ -1018,8 +1018,8 @@ body:
 | deferField | `string` | `"defer"` | 哪一列是延时加载标记；InputTree 已接 |
 | joinValues | `boolean` | `true` | 是否拼接 value |
 | extractValue | `boolean` | `false` | `joinValues` 为 false 时是否只抽 value |
-| itemHeight | `number` | `32` | 虚拟渲染行高（尚未接入） |
-| virtualThreshold | `number` | `100` | 超过多少条开虚拟渲染（尚未接入） |
+| itemHeight | `number` | `32` | 虚拟渲染行高；文案换行时按实际高度调 |
+| virtualThreshold | `number` | `100` | 超过多少条开虚拟渲染；`0` 表示有选项就开 |
 | valuesNoWrap | `boolean` | `false` | 多选值不折行 |
 | clearValueOnSourceChange | `boolean` | | 数据域 source 变化后是否清空 |
 | selectFirst | `boolean` | `false` | 默认选第一项 |
@@ -1060,5 +1060,5 @@ body:
 
 - 作者态 YAML / JSON 并列。
 - 新增选项当前是下拉内简易表单，不是独立 Dialog；`addDialog` 尺寸等未接。
-- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`virtualThreshold` / `itemHeight` 尚未接入。
+- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`virtualThreshold` / `itemHeight` 已接 Select 桌面平铺选项，分组菜单与其他消费方待复用。
 - 树形 / 级联 / 穿梭器已能复用值形状与 `normalizeOptions`，完整 UI 仍在各自组件页。

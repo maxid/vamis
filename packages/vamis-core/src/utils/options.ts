@@ -40,6 +40,10 @@ export interface OptionsControlConfig extends OptionsValueConfig {
   optionLabel?: string
   clearValueOnSourceChange?: boolean
   initAutoFill?: boolean | 'fillIfNotSet'
+  /** 选项数超过该值切虚拟列表；对齐 Amis Select 默认 100。 */
+  virtualThreshold: number
+  /** 虚拟列表行高；对齐 Amis Select 默认 32。 */
+  itemHeight: number
 }
 
 function isPlainObject(value: unknown): value is PlainObject {
@@ -74,6 +78,21 @@ export function optionsResetValue(schema: PlainObject = {}): unknown {
   return schema.resetValue !== undefined ? schema.resetValue : ''
 }
 
+export const OPTIONS_VIRTUAL_THRESHOLD = 100
+export const OPTIONS_ITEM_HEIGHT = 32
+
+/** 虚拟列表阈值：0 表示只要有选项就虚拟化；非法/负数回落 100。 */
+export function optionsVirtualThreshold(schema: PlainObject = {}): number {
+  const value = Number(schema.virtualThreshold)
+  return Number.isFinite(value) && value >= 0 ? value : OPTIONS_VIRTUAL_THRESHOLD
+}
+
+/** 虚拟列表行高：非正数回落 32。 */
+export function optionsItemHeight(schema: PlainObject = {}): number {
+  const value = Number(schema.itemHeight)
+  return Number.isFinite(value) && value > 0 ? value : OPTIONS_ITEM_HEIGHT
+}
+
 export function optionsValueConfig(schema: PlainObject = {}): OptionsValueConfig {
   return {
     multiple: optionsMultiple(schema),
@@ -103,6 +122,8 @@ export function optionsControlConfig(schema: PlainObject = {}): OptionsControlCo
     optionLabel: schema.optionLabel != null ? String(schema.optionLabel) : undefined,
     clearValueOnSourceChange: schema.clearValueOnSourceChange === true,
     initAutoFill: schema.initAutoFill as boolean | 'fillIfNotSet' | undefined,
+    virtualThreshold: optionsVirtualThreshold(schema),
+    itemHeight: optionsItemHeight(schema),
   }
 }
 

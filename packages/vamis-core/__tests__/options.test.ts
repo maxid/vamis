@@ -29,6 +29,8 @@ import {
   optionNeedsDefer,
   optionsControlConfig,
   optionsDeferField,
+  optionsItemHeight,
+  optionsVirtualThreshold,
   optionsAddDialogSchema,
   optionsCreateBtnLabel,
   optionsEditDialogSchema,
@@ -330,6 +332,18 @@ describe('schema helpers', () => {
     expect(optionsControlConfig({ editApi: '/api/edit' }).editable).toBe(true)
     expect(optionsControlConfig({ deleteApi: '/api/del' }).removable).toBe(true)
     expect(optionsControlConfig({ editable: false, editApi: '/api/edit' }).editable).toBe(false)
+    expect(optionsControlConfig({}).virtualThreshold).toBe(100)
+    expect(optionsControlConfig({}).itemHeight).toBe(32)
+    expect(optionsControlConfig({ virtualThreshold: 5, itemHeight: 48 })).toMatchObject({
+      virtualThreshold: 5,
+      itemHeight: 48,
+    })
+    expect(optionsVirtualThreshold({ virtualThreshold: 0 })).toBe(0)
+    expect(optionsVirtualThreshold({ virtualThreshold: -1 })).toBe(100)
+    expect(optionsVirtualThreshold({ virtualThreshold: 'x' })).toBe(100)
+    expect(optionsItemHeight({ itemHeight: 0 })).toBe(32)
+    expect(optionsItemHeight({ itemHeight: -8 })).toBe(32)
+    expect(optionsItemHeight({ itemHeight: 44 })).toBe(44)
     expect(matchOptionValue('a', { label: 'A', value: 'a' })).toBe(true)
     expect(optionValuesEqual('1', 1)).toBe(true)
     expect(flattenOptions([{ label: 'P', value: 'p', children: [{ label: 'C', value: 'c' }] }]).map((item) => item.label)).toEqual([
