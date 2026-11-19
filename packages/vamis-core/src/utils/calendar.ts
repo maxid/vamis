@@ -2,6 +2,7 @@
 
 import { evalFormula, resolveValue } from '../formula'
 import type { PlainObject } from '../types'
+import { makeTranslator, type TranslateFn } from '../locale'
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -80,12 +81,12 @@ export function calendarMonthTitle(cursor: Date): string {
   return `${cursor.getFullYear()}年${cursor.getMonth() + 1}月`
 }
 
-export function calendarYearLabel(cursor: Date): string {
-  return `${cursor.getFullYear()}年`
+export function calendarYearLabel(cursor: Date, translate: TranslateFn = makeTranslator()): string {
+  return translate('Calendar.year').replaceAll('YYYY', String(cursor.getFullYear()))
 }
 
-export function calendarMonthLabel(cursor: Date): string {
-  return `${cursor.getMonth() + 1}月`
+export function calendarMonthLabel(cursor: Date, translate: TranslateFn = makeTranslator()): string {
+  return translate('Calendar.month', { month: cursor.getMonth() + 1 })
 }
 
 export const CALENDAR_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const

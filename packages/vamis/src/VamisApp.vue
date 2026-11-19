@@ -4,11 +4,13 @@ import { VamisRoot } from '@vamis/core'
 import OverlayHost from './OverlayHost.vue'
 import ConfirmHost from './ConfirmHost.vue'
 import ToastHost from './ToastHost.vue'
-import type { PlainObject, RendererEnv, ScopedContext } from '@vamis/core'
+import type { PlainObject, RendererEnv, ScopedContext, TranslateFn } from '@vamis/core'
 
 defineProps<{
   schema: unknown
   data?: PlainObject
+  locale?: string
+  translate?: TranslateFn
   env?: Partial<RendererEnv>
 }>()
 
@@ -21,7 +23,7 @@ defineExpose({
 </script>
 
 <template>
-  <VamisRoot ref="rootRef" :schema="schema" :data="data" :env="env">
+  <VamisRoot ref="rootRef" :schema="schema" :data="data" :locale="locale" :translate="translate" :env="env">
     <OverlayHost />
     <ConfirmHost />
     <ToastHost />

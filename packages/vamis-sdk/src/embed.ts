@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import {
   VamisRoot,
   createDefaultEnv,
+  getDefaultLocale,
   parseSchemaText,
   runActions,
   type ApiObject,
@@ -102,6 +103,7 @@ export function embed(
   const state = reactive({
     schema: normalizeEmbedSchema(schema),
     data: { ...(props?.data || {}) } as PlainObject,
+    locale: props?.locale || getDefaultLocale(),
     env: makeEnv(env),
   })
   const rootRef = ref<{ scoped?: ScopedContext } | null>(null)
@@ -115,6 +117,7 @@ export function embed(
             ref: rootRef,
             schema: state.schema,
             data: state.data,
+            locale: state.locale,
             env: state.env,
           }),
         ])
@@ -146,12 +149,14 @@ export function embed(
     updateProps(next, callback) {
       assertAlive()
       if (next.data) Object.assign(state.data, next.data)
+      if (next.locale !== undefined) state.locale = next.locale
       if (callback) void nextTick(callback)
     },
     updateSchema(nextSchema, nextProps) {
       assertAlive()
       state.schema = normalizeEmbedSchema(nextSchema)
       if (nextProps?.data) Object.assign(state.data, nextProps.data)
+      if (nextProps?.locale !== undefined) state.locale = nextProps.locale
     },
     unmount() {
       if (!alive) return

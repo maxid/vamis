@@ -156,7 +156,7 @@ function schemaHidesButtons(node: unknown): boolean {
 const hideDefaultSubmit = computed(() => props.schema.submitText === '')
 const defaultSubmitLabel = computed(() => {
   const text = props.schema.submitText
-  if (text == null || text === false) return '提交'
+  if (text == null || text === false) return env.translate('Form.submit')
   return String(text)
 })
 const showActionBar = computed(() => {
@@ -176,7 +176,7 @@ const isRow = computed(() => String(props.schema.mode || '') === 'row')
 const panelTitle = computed(() => {
   const title = props.schema.title
   if (title === false || title === '') return ''
-  if (title == null) return wrapWithPanel.value ? '表单' : ''
+  if (title == null) return wrapWithPanel.value ? env.translate('Form.title') : ''
   return String(title)
 })
 const showReset = computed(() => props.schema.reset === true)
@@ -273,7 +273,7 @@ function setValue(name: string, value: unknown, reason: ChangeReason = 'input') 
   scope.value?.set(name, value, reason)
   const item = itemByName(name)
   if (item && formItemValidateOnChange(item, props.schema)) {
-    const message = validateValue(item, getPathValue(store.data, name), store.data)
+    const message = validateValue(item, getPathValue(store.data, name), store.data, env.translate)
     if (message) store.errors[name] = message
     else {
       delete store.errors[name]
@@ -396,7 +396,7 @@ function validate(extraRequired: string[] = []): boolean {
     const itemName = String(item.name)
     const itemValue = getPathValue(store.data, itemName)
     const schema = extra.has(itemName) ? { ...item, required: true } : item
-    const message = validateValue(schema, itemValue, store.data)
+    const message = validateValue(schema, itemValue, store.data, env.translate)
     if (message) {
       store.errors[itemName] = message
       ok = false
@@ -490,7 +490,7 @@ async function submit() {
     if (props.schema.reload) {
       await scoped.reload(props.schema.reload, store.data)
     } else if (!dialogFormBound) {
-      env.notify('success', '已提交（未配置 api）')
+      env.notify('success', env.translate('Form.submitWithoutApi'))
     }
     await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
     closeOverlayDialog(store.data)
@@ -529,7 +529,7 @@ async function submit() {
     }
     closeOverlayDialog(store.data)
   } catch (error) {
-    const message = error instanceof Error ? error.message : '提交失败'
+    const message = error instanceof Error ? error.message : env.translate('Form.saveFailed')
     void emitFormEvent('submitFail', { error })
     env.notify('error', messageOf('saveFailed', message))
   } finally {
@@ -736,10 +736,10 @@ onBeforeUnmount(() => {
                 :disabled="store.saving"
                 @click="onDefaultSubmitClick"
               >
-                {{ store.saving ? '提交中…' : defaultSubmitLabel }}
+                {{ store.saving ? env.translate('Form.submitting') : defaultSubmitLabel }}
               </Button>
               <Button v-if="showReset" type="button" variant="outline" @click="reset">
-                重置
+                {{ env.translate('reset') }}
               </Button>
             </template>
           </CardFooter>
@@ -764,10 +764,10 @@ onBeforeUnmount(() => {
               :disabled="store.saving"
               @click="onDefaultSubmitClick"
             >
-              {{ store.saving ? '提交中…' : defaultSubmitLabel }}
+              {{ store.saving ? env.translate('Form.submitting') : defaultSubmitLabel }}
             </Button>
             <Button v-if="showReset" type="button" variant="outline" @click="reset">
-              重置
+              {{ env.translate('reset') }}
             </Button>
           </template>
         </div>

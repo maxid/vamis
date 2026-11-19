@@ -91,6 +91,7 @@ const totalText = computed(() =>
       lastPage: resolveValue(props.schema.lastPage, data.value),
     },
     lastPage.value,
+    env.translate,
   ),
 )
 
@@ -181,7 +182,7 @@ function onPerPage(e: Event) {
           :value="perPage"
           @change="onPerPage"
         >
-          <option v-for="n in perPageOptions" :key="n" :value="n">{{ n }}条/页</option>
+          <option v-for="n in perPageOptions" :key="n" :value="n">{{ env.translate('Pagination.select', { count: n }) }}</option>
         </select>
         <ul v-else-if="widget === 'pager'" data-pagination="pager">
           <li
@@ -219,7 +220,7 @@ function onPerPage(e: Event) {
           </li>
         </ul>
         <div v-else-if="widget === 'go'" data-pagination="go">
-          <span data-pagination="go-left">跳转至</span>
+          <span data-pagination="go-left">{{ env.translate('Pagination.goto') }}</span>
           <input
             :disabled="locked"
             :value="goInput"
@@ -227,7 +228,7 @@ function onPerPage(e: Event) {
             @keyup="onGoKey"
             @focus="($event.target as HTMLInputElement).select()"
           />
-          <span data-pagination="go-btn" @click="onGo">前往</span>
+          <span data-pagination="go-btn" @click="onGo">{{ env.translate('Pagination.go') }}</span>
         </div>
       </template>
     </template>

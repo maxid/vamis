@@ -751,7 +751,7 @@ describe('Amis width helpers', () => {
     expect(form).toContain('schema.actionsClassName')
     expect(form).toContain('schema.footerWrapClassName')
     expect(form).toContain('vamis-form-footer-wrap')
-    expect(form).toContain("wrapWithPanel.value ? '表单' : ''")
+    expect(form).toContain("wrapWithPanel.value ? env.translate('Form.title') : ''")
     expect(form).toContain('if (!wrapWithPanel.value) return false')
     expect(form).toContain('schema.reset === true')
     expect(form).toContain('vamis-form-panel__header')

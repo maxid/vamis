@@ -7,6 +7,7 @@ import { getPathValue } from './path-value'
 import { overlayIsMobile } from './overlay-layer'
 import { calendarMonthCells, calendarWeeks, isoDay, type CalendarCell, type CalendarPickerOption } from './calendar'
 import type { PlainObject, SchemaObject } from '../types'
+import { makeTranslator, type TranslateFn } from '../locale'
 
 export type InputDateView = 'days' | 'months' | 'years' | 'time'
 
@@ -127,12 +128,15 @@ export function inputDateViewMode(schema: { type?: string; viewMode?: unknown })
   return 'days'
 }
 
-export function inputDatePlaceholder(schema: { placeholder?: unknown; type?: string }): string {
+export function inputDatePlaceholder(
+  schema: { placeholder?: unknown; type?: string },
+  translate: TranslateFn = makeTranslator(),
+): string {
   if (schema.placeholder != null && schema.placeholder !== '') return String(schema.placeholder)
   const type = inputDateType(schema)
-  if (type === 'input-datetime') return '请选择日期以及时间'
-  if (type === 'input-time') return '请选择时间'
-  return '请选择日期'
+  if (type === 'input-datetime') return translate('DateTime.placeholder')
+  if (type === 'input-time') return translate('Time.placeholder')
+  return translate('Date.placeholder')
 }
 
 export function inputDateClearable(schema: PlainObject): boolean {

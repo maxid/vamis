@@ -7,6 +7,7 @@ import {
   CALENDAR_WEEKDAYS,
   calendarLaneMore,
   calendarStyleEntries,
+  useEnv,
   type CalendarCell,
   type CalendarLane,
   type CalendarPickerOption,
@@ -71,6 +72,8 @@ const emit = defineEmits<{
 }>()
 
 const pickerHeight = CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const env = useEnv()
+const weekdays = computed(() => CALENDAR_WEEKDAYS.map((_, index) => env.translate(`Date.weekday.${index + 1}`)))
 const rootClass = computed(() => ({
   'is-large': props.large,
   'is-framed': props.framed !== false,
@@ -141,9 +144,9 @@ function applyTodayStyle(el: Element | null) {
   <div class="vamis-cal" :class="rootClass" @mousedown.prevent>
     <div v-if="view === 'picker-year' || view === 'picker-month'" class="vamis-cal-picker">
       <div class="vamis-cal-picker-bar">
-        <a class="vamis-cal-picker-cancel" @click.prevent="emit('cancel-picker')">取消</a>
-        <div class="vamis-cal-picker-title">{{ view === 'picker-year' ? '选择年' : '选择年月' }}</div>
-        <a class="vamis-cal-picker-ok" @click.prevent="emit('confirm-picker')">确认</a>
+        <a class="vamis-cal-picker-cancel" @click.prevent="emit('cancel-picker')">{{ env.translate('cancel') }}</a>
+        <div class="vamis-cal-picker-title">{{ env.translate(view === 'picker-year' ? 'Date.titleYear' : 'Date.titleMonth') }}</div>
+        <a class="vamis-cal-picker-ok" @click.prevent="emit('confirm-picker')">{{ env.translate('confirm') }}</a>
       </div>
       <div class="vamis-cal-picker-columns" :style="{ height: `${pickerHeight}px` }">
         <CalendarWheel :model-value="tempYear" :options="pickerYears" @update:model-value="emit('update:tempYear', $event)" />
@@ -210,7 +213,7 @@ function applyTodayStyle(el: Element | null) {
           </th>
         </tr>
         <tr v-if="view === 'days'">
-          <th v-for="w in CALENDAR_WEEKDAYS" :key="w" class="vamis-cal-dow">{{ w }}</th>
+          <th v-for="w in weekdays" :key="w" class="vamis-cal-dow">{{ w }}</th>
         </tr>
       </thead>
       <tbody v-if="view === 'days'">

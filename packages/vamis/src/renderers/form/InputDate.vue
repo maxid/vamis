@@ -99,15 +99,15 @@ const timeOnly = computed(() => inputDateViewMode(props.schema) === 'time' || pr
 const timeFormat = computed(() => inputDateTimeFormat(props.schema))
 const showSeconds = computed(() => /s/i.test(timeFormat.value))
 const inputForbid = computed(() => props.schema.inputForbid === true)
-const placeholder = computed(() => filterTpl(inputDatePlaceholder(props.schema), data.value))
+const placeholder = computed(() => filterTpl(inputDatePlaceholder(props.schema, env.translate), data.value))
 const borderMode = computed(() => {
   const raw = String(props.schema.borderMode || 'full')
   return raw === 'half' || raw === 'none' ? raw : 'full'
 })
 const shortcuts = computed(() => resolveInputDateShortcuts(props.schema.shortcuts, data.value))
 const weeks = computed(() => inputDateMonthCells(cursor.value.toDate(), new Date()))
-const yearLabel = computed(() => calendarYearLabel(cursor.value.toDate()))
-const monthLabel = computed(() => calendarMonthLabel(cursor.value.toDate()))
+const yearLabel = computed(() => calendarYearLabel(cursor.value.toDate(), env.translate))
+const monthLabel = computed(() => calendarMonthLabel(cursor.value.toDate(), env.translate))
 const decade = computed(() => calendarDecade(cursor.value.toDate()))
 const overlayContainer = computed(() => overlayContainerFrom(props.schema, env))
 const isMobile = computed(() => {

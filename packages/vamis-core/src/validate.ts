@@ -5,6 +5,7 @@ import type { PlainObject } from './types'
 import { filterTpl } from './formula'
 import { formItemRequired } from './utils/form-item'
 import { dayjs } from './utils/dayjs'
+import { makeTranslator, registerLocale, type TranslateFn } from './locale'
 
 export type ValidationRules = Record<string, unknown>
 type RuleArgs = unknown[]
@@ -203,7 +204,7 @@ export const validateMessageKeys: Record<string, string> = {
   isVariableName: 'validate.isVariableName',
 }
 
-/** 默认校验信息：Amis `validateMessages` 的 key。实际中文由 `translateValidateMessage` 解。 */
+/** 默认校验信息：Amis `validateMessages` 的 key。由当前 locale 的 `translateValidateMessage` 解。 */
 export const validateMessages: Record<string, string> = {
   ...validateMessageKeys,
   required: 'validate.isRequired',
@@ -255,8 +256,10 @@ export const validateLocaleZh: Record<string, string> = {
     '请输入合法的变量名，变量名只能以字母或下划线开头，后续可包含字母、数字和下划线',
 }
 
-export function translateValidateMessage(raw: string): string {
-  return validateLocaleZh[raw] || raw
+registerLocale('zh-CN', validateLocaleZh)
+
+export function translateValidateMessage(raw: string, translate: TranslateFn = makeTranslator()): string {
+  return translate(raw)
 }
 
 const validations: Record<string, ValidateFn> = {
@@ -394,14 +397,14 @@ function interpolate(msg: string, args: RuleArgs): string {
   return out
 }
 
-function messageOf(schema: SchemaObject, key: string, args: RuleArgs, value?: unknown): string {
+function messageOf(schema: SchemaObject, key: string, args: RuleArgs, translate: TranslateFn, value?: unknown): string {
   const custom = schema.validationErrors
   const msgKey = Array.isArray(value) ? `${key}Array` : key
   const raw =
     custom && typeof custom === 'object' && custom[key] != null
       ? String(custom[key])
       : validateMessages[msgKey] || validateMessages[key] || '格式不正确'
-  return interpolate(translateValidateMessage(raw), args)
+  return interpolate(translateValidateMessage(raw, translate), args)
 }
 
 function resolveArg(arg: unknown, data: PlainObject): unknown {
@@ -414,7 +417,12 @@ export function addRule(ruleName: string, fn: ValidateFn, message = '') {
   if (message) validateMessages[ruleName] = message
 }
 
-export function validateValue(schema: SchemaObject, value: unknown, data: PlainObject = {}): string | null {
+export function validateValue(
+  schema: SchemaObject,
+  value: unknown,
+  data: PlainObject = {},
+  translate: TranslateFn = makeTranslator(),
+): string | null {
   const rules = parseValidations(schema)
   if (formItemRequired(schema, data) && !rules.isRequired && !rules.required) {
     rules.isRequired = true
@@ -435,8 +443,8 @@ export function validateValue(schema: SchemaObject, value: unknown, data: PlainO
     }
     if (!validateRes || fnResErrorMsg) {
       const key = ruleName === 'required' ? 'isRequired' : ruleName
-      if (fnResErrorMsg) return interpolate(translateValidateMessage(fnResErrorMsg), args)
-      return messageOf(schema, key, args, value)
+      if (fnResErrorMsg) return interpolate(translateValidateMessage(fnResErrorMsg, translate), args)
+      return messageOf(schema, key, args, translate, value)
     }
   }
   return null

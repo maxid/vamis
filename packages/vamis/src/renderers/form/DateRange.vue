@@ -131,11 +131,11 @@ const rangeEndIso = computed(() => {
 })
 const startWeeks = computed(() => inputDateMonthCells(cursorStart.value.toDate(), new Date()))
 const endWeeks = computed(() => inputDateMonthCells(cursorEnd.value.toDate(), new Date()))
-const startYearLabel = computed(() => calendarYearLabel(cursorStart.value.toDate()))
-const startMonthLabel = computed(() => calendarMonthLabel(cursorStart.value.toDate()))
+const startYearLabel = computed(() => calendarYearLabel(cursorStart.value.toDate(), env.translate))
+const startMonthLabel = computed(() => calendarMonthLabel(cursorStart.value.toDate(), env.translate))
 const startDecade = computed(() => calendarDecade(cursorStart.value.toDate()))
-const endYearLabel = computed(() => calendarYearLabel(cursorEnd.value.toDate()))
-const endMonthLabel = computed(() => calendarMonthLabel(cursorEnd.value.toDate()))
+const endYearLabel = computed(() => calendarYearLabel(cursorEnd.value.toDate(), env.translate))
+const endMonthLabel = computed(() => calendarMonthLabel(cursorEnd.value.toDate(), env.translate))
 const endDecade = computed(() => calendarDecade(cursorEnd.value.toDate()))
 const canConfirm = computed(() => {
   const start = draftStart.value

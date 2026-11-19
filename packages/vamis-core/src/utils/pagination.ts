@@ -1,5 +1,7 @@
 /** Pagination。对齐 Amis layout / mode / lastPage / maxButtons / 省略号跳页。 */
 
+import { makeTranslator, type TranslateFn } from '../locale'
+
 export type PaginationMode = 'normal' | 'simple'
 export type PaginationSize = 'sm' | 'md'
 export type PaginationWidget = 'pager' | 'perpage' | 'total' | 'go'
@@ -140,13 +142,17 @@ export function paginationPagerItems(opts: {
   ]
 }
 
-export function paginationTotalText(schema: unknown, lastPage: number): string | undefined {
+export function paginationTotalText(
+  schema: unknown,
+  lastPage: number,
+  translate: TranslateFn = makeTranslator(),
+): string | undefined {
   const rec = asRecord(schema)
   const total = paginationNum(rec.total)
   if (total != null && rec.total !== '' && rec.total !== false) {
-    if (total || total === 0) return `共 ${total} 条`
+    if (total || total === 0) return translate('Pagination.totalCount', { total })
   }
   const last = paginationNum(rec.lastPage)
-  if (last) return `共 ${lastPage} 页`
+  if (last) return translate('Pagination.totalPage', { lastPage })
   return undefined
 }

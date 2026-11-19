@@ -63,6 +63,12 @@
   var stub = {
     embed: bind('embed'),
     registerRenderer: bind('registerRenderer'),
+    registerLocale: bind('registerLocale'),
+    extendLocale: bind('extendLocale'),
+    removeLocaleData: bind('removeLocaleData'),
+    setDefaultLocale: bind('setDefaultLocale'),
+    getDefaultLocale: bind('getDefaultLocale'),
+    makeTranslator: bind('makeTranslator'),
     parseSchemaText: bind('parseSchemaText'),
     yamlFromUnknown: bind('yamlFromUnknown'),
     jsonToIr: bind('jsonToIr'),

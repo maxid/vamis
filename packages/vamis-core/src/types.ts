@@ -1,6 +1,8 @@
 import type { Component } from 'vue'
 import type { VamisEventBus } from './event-bus'
 import type { VamisDiagnostic } from './diagnostic'
+import type { ReplaceTextIgnoreKeys } from './utils/schema-locale'
+import type { TranslateFn } from './locale'
 
 export type PlainObject = Record<string, any>
 
@@ -205,6 +207,12 @@ export interface RendererEnv {
   ) => Promise<boolean>
   session?: string
   theme?: string
+  locale?: string
+  translate: TranslateFn
+  /** 对 schema 字符串做全局替换；locale 覆盖之后执行。 */
+  replaceText?: Record<string, unknown>
+  /** 默认排除 type/name/mode/target/reload/persistData。 */
+  replaceTextIgnoreKeys?: ReplaceTextIgnoreKeys
   initialData?: PlainObject
   /**
    * 是否把 `location.search` 并进根数据域（对齐 Amis `parseQuery`）。

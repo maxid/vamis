@@ -392,11 +392,17 @@ alwaysApply: true
 - 触及：`page` `form` `crud` `table` `grid` `flex` `container`
 - 规则：`.cursor/rules/component.mdc`
 
-### validations 默认文案和 $1 对齐 locale
-- 踩过：格式校验章节收成一条自造 YAML；默认文案带 label 前缀，和 Amis `请输入数字` / `validationErrors` 的 `$1` 对不上。
-- 稳定做法：对象 / 逗号字符串 / 自定义文案 / `$1` / 规则表 / 默认 key 表按 Amis formitem.md 主路径。`validateMessages` 存 `validate.isNumeric` 这类 key，展示时解 zh-CN。`validationErrors` 可写中文或同一套 key。多规则按写入顺序，中途失败即停。
-- 触及：FormItem `form`
-- 规则：本文；Amis `packages/amis-core/src/utils/validations.ts`
+### validations 默认文案和 $1 走当前 locale
+- 踩过：格式校验章节收成一条自造 YAML；默认文案带 label 前缀，和 Amis `请输入数字` / `validationErrors` 的 `$1` 对不上。i18n 接入后，纯函数若仍直接解 zh-CN，会把英文根实例的校验错误留在中文。
+- 稳定做法：对象 / 逗号字符串 / 自定义文案 / `$1` / 规则表 / 默认 key 表按 Amis formitem.md 主路径。`validateMessages` 存 `validate.isNumeric` 这类 key；`validateValue` 接收当前 `env.translate`，依次回退默认语言、中文和原 key，再做 `$1` 插值。`validationErrors` 可写中文或同一套 key。多规则按写入顺序，中途失败即停。
+- 触及：FormItem `form` i18n
+- 规则：本文；`packages/vamis-core/src/locale.ts`；Amis `packages/amis-core/src/utils/validations.ts`
+
+### locale 覆盖先于文本替换，内置文案统一走当前翻译器
+- 踩过：SDK `makeEnv` 先建的默认中文 `translate` 盖过 `props.locale`，结果 schema 字段已经切成英文，Form / Select / 日期内置文案仍是中文；只处理根 schema 还会漏掉 `schemaApi` 返回的远程 schema。
+- 稳定做法：根实例只保留一个 `currentLocale`，显式 `props.translate` 优先，否则由它创建翻译器；schema 先 `applySchemaLocale` 再 `replaceSchemaText`，然后才进 IR，`schemaApi` 复用同一顺序。内置默认文案写 locale key，不要在渲染器里另写一套语言判断。动态切语言要不重挂 app，并用真实打包 SDK 验证。
+- 触及：`form` `select` `input-date` `pagination` `service` i18n SDK
+- 规则：`packages/vamis-core/src/VamisRoot.vue`；`packages/vamis-core/src/utils/schema-locale.ts`；`packages/vamis-sdk/src/embed.ts`
 
 ### 表单 mode:row 是 Combo 横排，不要用 horizontal 28% 冒充
 - 踩过：`clearValueOnEmpty` 示例里 group 两项竖排、combo 姓名/性别/年龄各占一行。根因是缺 Amis 的 `mode: row`（Form-row + Form-col flex:1，项内标签贴控件左），又用 `.vamis-node { width:100% }` 把 Group 子项撑成整表宽。Combo 还把 `multiple` 默认成 true，画出卡片 +「新增一项」。

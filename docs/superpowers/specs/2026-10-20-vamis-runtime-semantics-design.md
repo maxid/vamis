@@ -55,8 +55,8 @@ amis 文档真正定义的不是“组件清单”，而是一套**运行时语�
 | Form | 表单 store、路径值、`initApi`、`validate/submit/reset`、提交合并、`target`；`validateOnChange` / `requiredOn` / `clearValueOnHidden` / `validateApi` / `autoFill` 已接；校验可用 `addRule` 扩展 | Combo 独立域与嵌套路径级报错仍缺；异步自定义规则未齐 |
 | CRUD | api/分页/filter/sort/selection/bulkActions/headerToolbar/弹窗编辑；`loadDataOnce` / `syncLocation` / `quickEdit` / 表达式 `matchFunc` 已接；filter 是内嵌独立表单域 | `autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API 仍缺 |
 | Renderer | `registerRenderer({type, alias, component, isFormItem, scope, test, weight, isolateScope})`；`isolateScope` 不再向上查 | 无注入 `dispatch` / `reload`；渲染错误边界已接（D8）；未知 type 仍占位 |
-| Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule` / `registerTheme`；SDK 暴露 `registerRenderer` / `addRule` / `registerTheme` | SDK 尚未暴露 action/filter 注册；无 locale 注册与插件生命周期 |
-| Theme/i18n | Tailwind + shadcn token + `registerTheme` | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；无 locale/replaceText |
+| Extension | core 已接 `registerRenderer` / `registerAction` / `registerFilter` / `addRule` / `registerTheme` / `registerLocale`；SDK 暴露 `registerRenderer` / `addRule` / `registerTheme` / `registerLocale` | SDK 尚未暴露 action/filter 注册与插件生命周期 |
+| Theme/i18n | Tailwind + shadcn token + `registerTheme`；locale 注册、`replaceText` 与 schema 语言覆盖已接 | `className` 对象/模板/`m-t-xs`/`m:`/`pc:` 已解析；`cssVars` + IR `metadata.style` 已接；内置英文覆盖主路径，其余组件文案待抽取 |
 | Diagnostics | `env.onDiagnostic` + 渲染错误边界 | 动作 / API / 表达式 / 未知 type 与动作已接；可视化 Debug 面板待补 |
 | IR/作者态 | `UiPage`/`FormDef`/`TableDef` 编译；未知 kind 占位 | `PageDef` 仅透传；YAML 与 JSON 都是一等输入 |
 
@@ -446,10 +446,10 @@ export function usePlugin(plugin: VamisPlugin): void
 - 主题：沿用 Tailwind/shadcn token；不搬 `cxd-` 前缀，cxd 能力尽量像素级转写。`page.cssVars` 与 IR `metadata.style.cssVars` 映射到根节点 CSS 变量；`registerTheme` 已接，IR 页面覆盖优先。视觉基线见 [样式系统](./2026-10-21-vamis-style-system.md)。
 - 响应式：`m:` / `pc:` 前缀走 CSS 媒体查询（&lt;768 / ≥768），作用在间距和宽度 helper；表单 `size` 档位断点是 576px（对齐 Amis form SCSS）。不引入 Tailwind 五档作为作者态。
 - i18n：
-  - `env.locale` + `registerLocale` 负责内置文案；
-  - schema 级语言覆盖（`en-US: { label: 'Name' }`）在 normalize 时按 locale 合并；
-  - `env.replaceText` 全局文本替换，默认跳过 `type/name/mode/target/reload`；
-  - 默认 `zh-CN`，不内置英文包（P2 可补）。
+  - `props.locale` + `registerLocale` 负责内置文案，SDK `updateProps({ locale })` 可动态切换；
+  - schema 级语言覆盖（`en-US: { label: 'Name' }`）在进入 IR 前递归合并，`schemaApi` 返回的 schema 同口径；
+  - `env.replaceText` 在语言覆盖后做全局文本替换，默认跳过 `type/name/mode/target/reload/persistData`；
+  - 默认 `zh-CN`，内置 `en-US` 主路径语言包；缺失 key 依次回退默认语言、中文、原 key。
 
 ## 14. 诊断与可观测性（D8）
 
@@ -492,10 +492,10 @@ export function usePlugin(plugin: VamisPlugin): void
 | 隐藏清值 | clearValueOnHidden | Form 已接 | D6 | P0 完成 |
 | CRUD 高级 | loadDataOnce/syncLocation/quickEdit | 三项及表达式 `matchFunc` 已接；`autoGenerateFilter`、JS 函数 `matchFunc`、完整 quickSave API 仍缺 | D10 | P1 部分完成 |
 | 渲染器 API | dispatch/reload/doAction | `test`/`weight`/`isolateScope` 已接；仍无注入 dispatch | D7 | P0 部分 |
-| 扩展注册 | action/filter/validator/locale | core 有 action/filter/validator 注册；SDK 暴露 renderer/validator；locale/theme 仍缺 | D11 | P1 部分完成 |
-| JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 与 `getComponentByName` / `doAction` 已落地 | D11 | P0 完成 |
-| className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` + `registerTheme` 已接；部分 `xxxClassName` 已接；locale 仍缺 | D12 | 进行中 |
-| i18n | locale/replaceText/覆盖 | 无 | D12 | P1 |
+| 扩展注册 | action/filter/validator/locale | core 有 action/filter/validator/locale 注册；SDK 暴露 renderer/validator/locale/theme | D11 | P1 部分完成 |
+| JS SDK | `amis.embed` / `sdk.js` | P0 `vamis.embed` 与 `getComponentByName` / `doAction` 已落地；`updateProps` 支持 locale | D11 | P0 完成 |
+| className/主题 | 对象 + 表达式 + CSS 变量 | `resolveClassName` + `cssVars` + IR `metadata.style` + `registerTheme` 已接；部分 `xxxClassName` 已接 | D12 | 进行中 |
+| i18n | locale/replaceText/覆盖 | 四条主路径已落地；内置英文覆盖表单/校验/选择/日期/分页主路径，其余组件与 RTL 待补 | D12 | 主路径完成 |
 | 诊断 | debug/日志/tracker | 动作 / API / 表达式 / 渲染器诊断与 `env.onDiagnostic` 已接；可视化 Debug 面板仍缺 | D8 | 运行时完成 |
 
 ## 17. 路线图
@@ -519,8 +519,8 @@ export function usePlugin(plugin: VamisPlugin): void
 - 动作主路径与监听器高级配置已接；后续主要是诊断与可观测性。
 - 表单：异步自定义校验、Combo 独立域与嵌套路径级报错。
 - CRUD：`autoGenerateFilter`、Amis JS 函数 `matchFunc`、完整 quickSave API。
-- 扩展：插件 API；SDK 暴露 action/filter 注册；locale 注册；`registerTheme` 已接。
-- 主题/i18n：其余 `xxxClassName` 子节点、locale 覆盖、`replaceText`。
+- 扩展：插件 API；SDK 暴露 action/filter 注册；locale/theme 注册已接。
+- 主题/i18n：其余 `xxxClassName` 子节点、剩余组件内置文案抽取与 RTL。
 - 错误边界与诊断面板。
 
 ### P2（非核心）

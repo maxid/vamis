@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   SchemaRenderer,
+  applySchemaLocale,
   asArray,
   evalExpression,
   runOnEvent,
@@ -9,6 +10,7 @@ import {
   filterTpl,
   isApiOutdated,
   requestApi,
+  replaceSchemaText,
   serviceRemoteSchema,
   useEnv,
   useFormApi,
@@ -40,7 +42,12 @@ const store = hub.add({
     ...((props.schema.data && typeof props.schema.data === 'object' ? props.schema.data : {}) as Record<string, any>),
   },
 })
-const remoteSchema = ref<SchemaNode[]>([])
+const remoteSchemaRaw = ref<SchemaNode[]>([])
+const remoteSchema = computed(() => replaceSchemaText(
+  applySchemaLocale(remoteSchemaRaw.value, env.locale),
+  env.replaceText,
+  env.replaceTextIgnoreKeys,
+))
 const errorKey = ref(0)
 let pollTimer: ReturnType<typeof setInterval> | undefined
 const firedInit = ref(false)
@@ -111,7 +118,7 @@ function applyFetchedData(data: unknown, replace = false) {
 }
 
 function applySchemaResult(data: unknown) {
-  remoteSchema.value = serviceRemoteSchema(data)
+  remoteSchemaRaw.value = serviceRemoteSchema(data)
   if (!data || typeof data !== 'object' || Array.isArray(data)) return
   const nested = (data as Record<string, unknown>).data
   if (nested && typeof nested === 'object' && !Array.isArray(nested)) {

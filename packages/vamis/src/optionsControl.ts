@@ -72,7 +72,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     overlayContainerFrom({ popOverContainerSelector: schema.value.popOverContainerSelector }, env),
   )
   const placeholder = computed(() =>
-    schema.value.placeholder != null ? String(schema.value.placeholder) : '请选择',
+    schema.value.placeholder != null ? String(schema.value.placeholder) : env.translate('Select.placeholder'),
   )
   const createLabel = computed(() => optionsCreateBtnLabel(schema.value))
   const autoComplete = computed(() => isOptionsAutoComplete(schema.value))

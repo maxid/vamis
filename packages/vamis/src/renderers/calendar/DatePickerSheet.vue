@@ -4,6 +4,7 @@ import {
   CALENDAR_PICKER_ITEM_HEIGHT,
   CALENDAR_PICKER_VISIBLE,
   resolveOverlayContainer,
+  useEnv,
   type CalendarPickerOption,
 } from '@vamis/core'
 import CalendarWheel from '../display/CalendarWheel.vue'
@@ -24,6 +25,7 @@ const emit = defineEmits<{
 }>()
 
 const pickerHeight = CALENDAR_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const env = useEnv()
 const target = computed(() => resolveOverlayContainer(props.container))
 const visible = ref(false)
 const phase = ref<'in' | 'out' | ''>('')
@@ -106,9 +108,9 @@ onBeforeUnmount(() => {
         @animationend="onPanelAnimEnd"
       >
         <div class="vamis-date-sheet__bar">
-          <button type="button" class="vamis-date-sheet__cancel" @click="emit('cancel')">取消</button>
+          <button type="button" class="vamis-date-sheet__cancel" @click="emit('cancel')">{{ env.translate('cancel') }}</button>
           <div class="vamis-date-sheet__title">{{ title }}</div>
-          <button type="button" class="vamis-date-sheet__ok" @click="emit('confirm')">确认</button>
+          <button type="button" class="vamis-date-sheet__ok" @click="emit('confirm')">{{ env.translate('confirm') }}</button>
         </div>
         <div class="vamis-date-sheet__columns" :style="{ height: `${pickerHeight}px` }">
           <CalendarWheel

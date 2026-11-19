@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 843 + sdk 100 = **1128**，全绿（2026-11-18 复核） |
-| 构建 | `pnpm sdk:build` | 本轮未重跑。`pnpm docs:build` 上次被 Combo 页阻断；`combo.md` 正文仍有未闭合的 `<Condition>` / `<string>` / `<object>` |
-| 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-18 复核；CI 门禁） |
-| 工作区 | `git status` | `main` 与 `origin/main` 一致。仅 `packages/vamis-sdk/compare-cases.js` 有本地改动（生成目录，HEAD 2209 / 工作区 2217） |
-| 对照 | 报告 + 本机目录 | 目录 **2217**（文档 157 / 组件 1589 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）。本轮未重跑 |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 851 + sdk 106 = **1142**，全绿（2026-11-19 复核） |
+| 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
+| 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
+| 工作区 | `git status` | 本轮 i18n 运行时、文档、测试与生成对照目录有本地改动，未提交 |
+| 对照 | 报告 + 本机目录 | 目录 **2218**（文档 158 / 组件 1589 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）；本轮 i18n 与受影响组件专项已跑，均 P0 0 |
 
-结论：本轮 `test` / `typecheck` 复核通过；`sdk:build` / `docs:build` 未重跑。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck` / `build` 复核通过；i18n 与受影响组件专项对照已更新。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 

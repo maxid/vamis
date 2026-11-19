@@ -5,7 +5,7 @@ title: JS SDK
 # JS SDK
 
 ::: info 实现进度 90% · 已完成
-嵌入、更新、卸载、组件查询 / 动作、主题与加载失败排查均已按 SDK 源码核对；`updateProps` 当前只合并 `data`，locale 仍属未接能力。
+嵌入、更新、卸载、组件查询 / 动作、主题、locale 与加载失败排查均已按 SDK 源码核对；`updateProps` 可合并 `data` 并切换 `locale`，`context` 仍不参与运行时更新。
 :::
 
 任意 HTML 页面用 `<script>` 嵌入 Vamis，对齐 Amis 的 `amis.embed`。内部仍是 `VamisRoot`，不是第二套运行时。
@@ -49,14 +49,14 @@ vamis.embed(container, schema, props?, env?) → VamisScoped
 
 | 方法 | 说明 |
 |------|------|
-| `updateProps(props)` | 合并 `data`，不重挂应用；当前不应用 `context` / `locale` |
-| `updateSchema(schema, props?)` | 换整页 schema，可同时合并 `data` |
+| `updateProps(props)` | 合并 `data`、切换 `locale`，不重挂应用；当前不应用 `context` |
+| `updateSchema(schema, props?)` | 换整页 schema，可同时合并 `data`、切换 `locale` |
 | `unmount()` | 卸 Vue app；之后不能再调用实例方法 |
 | `getComponentByName(name)` | 按 `name` / `id` 取已注册组件；找不到返回 `undefined` |
 | `getComponents()` | 返回当前根实例已注册组件数组 |
 | `doAction(actions, ctx?)` | 跑动作列表（`toast` / `reload` / `setValue` 等） |
 
-全局辅助：`vamis.registerRenderer`、`vamis.registerTheme`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。主题注册用法见[样式](/concepts/style#注册运行时主题)。
+全局辅助：`vamis.registerRenderer`、`vamis.registerTheme`、`vamis.registerLocale`、`vamis.parseSchemaText`、`vamis.yamlFromUnknown`。主题注册用法见[样式](/concepts/style#注册运行时主题)，多语言见[国际化](/extend/i18n)。
 
 不传 `env.fetcher` 时，SDK 用 `window.fetch`，按 `{ status, msg, data }` 解析。`notify` / `alert` / `confirm` / `jumpTo` 有默认实现，宿主可覆盖。
 

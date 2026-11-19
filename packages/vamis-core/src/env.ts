@@ -3,11 +3,16 @@ import { defaultFetcher } from './utils/api'
 import { hasConfirmHost, openConfirm, type ConfirmOptions } from './confirm-store'
 import { pushToast } from './toast-store'
 import { createEventBus } from './event-bus'
+import { getDefaultLocale, makeTranslator } from './locale'
+import { DEFAULT_REPLACE_TEXT_IGNORE_KEYS } from './utils/schema-locale'
 
 export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): RendererEnv {
-  return {
+  const env: RendererEnv = {
     session: 'global',
     theme: 'vamis',
+    locale: getDefaultLocale(),
+    replaceTextIgnoreKeys: DEFAULT_REPLACE_TEXT_IGNORE_KEYS,
+    translate: (str, data) => makeTranslator(env.locale)(str, data),
     bus: createEventBus(),
     fetcher: defaultFetcher,
     notify(type, msg, conf?: NotifyConf) {
@@ -81,4 +86,5 @@ export function createDefaultEnv(overrides: Partial<RendererEnv> = {}): Renderer
     },
     ...overrides,
   }
+  return env
 }

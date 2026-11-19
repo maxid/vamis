@@ -44,7 +44,7 @@ onUnmounted(() => {
     <VamisRoot
       v-if="schema"
       :schema="schema"
-      :env="{ trusted: true, mobileUI: true, parseLocation: false, affixHeader: false }"
+      :env="{ trusted: true, mobileUI: true, parseLocation: false, affixHeader: false, replaceText: { VAMIS_HOST: 'https://maxid.github.io/vamis/' } }"
     />
   </div>
 </template>
