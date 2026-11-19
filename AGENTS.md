@@ -62,7 +62,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 - 渲染器只消费 `schema` / `data` / `env`；禁止组件内直接 `fetch`。
 - 状态用 Pinia hub，不引入 MST。
 - 嵌入必须两条入口：Vue `VamisRoot` 和 JS SDK `vamis.embed`。SDK 不另做渲染器，不搬 `amisRequire`。 `pnpm --filter @vamis/sdk build` 打 `sdk.js`。
-- 对照重跑：`compare-cases.js` / `dist/sdk.js` **不进 git**。改完组件必须本机更新对照，换机器不会自动带上。改运行时先 `pnpm sdk:build`；再 `pnpm compare --page <type>`（内部重收割完整目录）。全局 token/字体才 `pnpm compare` 全量。动到窄屏 / `m:` 再 `--mobile`。规则：`.cursor/rules/compare.mdc`。
+- 对照重跑：`compare-cases.js` **入库但只由脚本生成，禁止手改**；`dist/sdk.js` 等构建产物仍不进 git。改完组件必须本机更新对照并提交最新目录。改运行时先 `pnpm sdk:build`；再 `pnpm compare --page <type>`（内部重收割完整目录）。全局 token/字体才 `pnpm compare` 全量。动到窄屏 / `m:` 再 `--mobile`。规则：`.cursor/rules/compare.mdc`。
 - 组件同步按复杂度串行分批：轻 2–3、中 2、重（`action` 行为枢纽、`table` / `table2` / `crud` / `form` / `chart`）1 个。一批做完再对照。口径见 `.cursor/rules/component.mdc`「串行分批」。依赖顺序按解锁分 U + 综合分，见组件 TODO「依赖与优先级」。
 - 图标对齐 Amis：`icon` 落到 `<i>` / `<img>` / SVG，字形走 Font Awesome（打进 `sdk.css`），不要用 CSS mask 画 `fa-*`。规则：`.cursor/rules/style.mdc`「图标」。
 - **`pnpm typecheck` 必须保持 0。** 改 TS / Vue / playground 收工前再跑；非 0 不许声称完成、不许合入。规则：`.cursor/rules/typecheck.mdc`。
@@ -96,7 +96,7 @@ pnpm status -- --amis ../amis   # 复算 type 覆盖（默认对照仓是同级 
 1. **`pnpm typecheck` 必须为 0**（动过会被 `vue-tsc` 扫到的文件时必跑）。非 0 不许声称完成。见 `.cursor/rules/typecheck.mdc`。
 2. 回写完成状态与进度（禁止代码已合入仍写「未开始」，禁止未做写成「已完成」）。
 3. 规划并写下一条后续计划（下一刀做什么、为何、卡在哪）。
-4. 若动了渲染器 / 活示例 / 样式 helper：先按需 `pnpm sdk:build`，再 `pnpm compare --page <type>`。对照产物不进 git，不跑这一步对照页不会更新。见 `.cursor/rules/compare.mdc`。
+4. 若动了渲染器 / 活示例 / 样式 helper：先按需 `pnpm sdk:build`，再 `pnpm compare --page <type>`。提交生成的 `compare-cases.js`，不要提交 `dist/sdk.js`；不跑这一步对照页不会更新。见 `.cursor/rules/compare.mdc`。
 5. 若修复过组件：把可复用经验去重回写 `.cursor/rules/lessons.mdc`（先搜已有条目，同一根因只追加 `触及` 或改「稳定做法」）。
 6. 具体改哪些文件见项目规则 `.cursor/rules/update-progress.mdc`。
 

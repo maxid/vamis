@@ -126,9 +126,9 @@ alwaysApply: true
 - 触及：`form` 对照 文档移动预览
 - 规则：`VamisRoot` `parseLocation`；`packages/vamis-core/src/types.ts`
 
-### 对照产物不进 git，本机必须重打
-- 踩过：换机器 / 新会话 / 只 `pnpm dev`，对照页仍是旧 `sdk.js` 和上一份收割。
-- 稳定做法：改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录）。只改 md 且已有 dist 可跳过 build。全局 token/字体才全量 `pnpm compare`。
+### 对照目录入库，构建产物不入库
+- 踩过：`compare-cases.js` 已被 Git 跟踪，但旧规则又把它 gitignore，生成后长期 dirty；换机器也容易拿不到最新目录。
+- 稳定做法：改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录），把脚本生成的 `compare-cases.js` 随本轮提交；`dist/sdk.js` / `sdk.css` / chunks 仍不入库。只改 md 且已有 dist 可跳过 build。全局 token/字体才全量 `pnpm compare`。禁止手改生成目录。
 - 触及：所有对照过的 type
 - 规则：`.cursor/rules/compare.mdc`
 

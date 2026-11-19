@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 对照（SDK compare）
 
-对照页 `/sdk/compare.html` **不读 git 里的现成目录**。`packages/vamis-sdk/compare-cases.js` 和 `dist/sdk.js` 都 gitignore。换机器、新会话、只 `pnpm dev` **不会**带上本轮组件改动。别的电脑改完组件，对照不会自己更新。
+`packages/vamis-sdk/compare-cases.js` 是**入库的生成目录**，由 `pnpm compare` / `pnpm sdk:build` 从 `website/src` 收割；禁止手改。它保证换机器、新会话和静态 Pages 有同一份对照目录。`dist/sdk.js`、`dist/sdk.css`、chunks 等构建产物仍不进 git，运行时改动必须重建但不提交 dist。
 
 ## 收工必须做
 
@@ -18,7 +18,7 @@ alwaysApply: true
 | 全局 token / 默认字体 / helper 行为 | `pnpm sdk:build` | `pnpm compare` 全量 |
 | 窄屏 / `m:` / 移动端表单 | 同上 | 再加 `--mobile` |
 
-`pnpm compare` 会从 `website/src` **重收割完整目录**写入 `compare-cases.js`（并拷进 dist），再按 `--page` / `--bucket` 过滤 Playwright。不要手改 `compare-cases.js`。一批组件串行 `--page a && --page b`。一批几个由复杂度定，不要无脑三个：轻 2–3、中 2、重（`table` / `table2` / `crud` / `form` / `chart`）**1 个**。口径见 `.cursor/rules/component.mdc`「串行分批」。
+`pnpm compare` 会从 `website/src` **重收割完整目录**写入 `compare-cases.js`（并拷进 dist），再按 `--page` / `--bucket` 过滤 Playwright。生成的 `compare-cases.js` 进入本轮提交；只审生成结果，不手改。一批组件串行 `--page a && --page b`。一批几个由复杂度定，不要无脑三个：轻 2–3、中 2、重（`table` / `table2` / `crud` / `form` / `chart`）**1 个**。口径见 `.cursor/rules/component.mdc`「串行分批」。
 
 运行时改了却只跑 `--page`、不 `sdk:build`：对照页仍是旧内核。只改 md 却不跑 compare：对照下拉仍是上一份收割。对照页是静态 HTML + 打好的 `sdk.js`，**没有** Playground 那种 HMR；`sdk:build` 后要刷新 `/sdk/compare.html`。iframe 的 `?v=` 由产物 mtime 自动换戳（`__VAMIS_SDK_V__`），不要再手改 `embed-case.html` 里的日期。
 
@@ -34,7 +34,8 @@ PLAYWRIGHT_BROWSERS_PATH="$HOME/Library/Caches/ms-playwright" pnpm compare --pag
 
 - 改完组件文档或渲染器就标完成，对照页还停在上一份收割 / 上一份 `sdk.js`
 - 为对照去重改甲/乙文案（见 `.cursor/rules/site.mdc`）
-- 把 `compare-cases.js` 提交进 git
+- 提交 `dist/sdk.js`、`dist/sdk.css`、chunks 等构建产物
+- 手改 `compare-cases.js` 冒充重新收割
 - 对照过了就当深色浮层也过了（对照不切 `.dark`、不探 tooltip）
 
 ## 回写
