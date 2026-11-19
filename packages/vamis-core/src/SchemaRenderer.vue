@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onErrorCaptured, ref, shallowRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onErrorCaptured, ref, shallowRef, unref, watch } from 'vue'
 import { rendererScopeMode, resolveRenderer } from './factory'
 import { isDisabled, isVisible } from './formula'
 import { fillsLayoutSlot, resolveClassName, resolveCssVars, resolveInlineStyle, schemaNodeDisplayClass } from './style'
@@ -159,8 +159,12 @@ function shouldHandleHostEvent(eventName: string): boolean {
 const editor = useEditorSelection()
 const editorPath = computed(() => {
   const schema = normalized.value
-  if (!editor || !schema) return undefined
+  if (!editor || !unref(editor.enabled) || !schema) return undefined
   return typeof schema.__editorPath === 'string' ? (schema.__editorPath as string) : undefined
+})
+const editorId = computed(() => {
+  const id = normalized.value?.$$id
+  return editor && unref(editor.enabled) && typeof id === 'string' ? id : undefined
 })
 const editorSelected = computed(
   () => !!editor && editorPath.value != null && editor.selectedPath.value === editorPath.value,
@@ -280,6 +284,7 @@ onErrorCaptured((error) => {
     :id="nodeId"
     :data-id="nodeId"
     :data-editor-path="editorPath"
+    :data-editor-id="editorId"
     :draggable="canDrag || undefined"
     :class="[
       'vamis-node',

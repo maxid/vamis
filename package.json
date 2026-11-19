@@ -11,7 +11,7 @@
     "sdk:build": "pnpm --filter @vamis/sdk build",
     "build": "pnpm --filter @vamis/sdk build && pnpm --filter @vamis/playground build",
     "preview": "pnpm --filter @vamis/playground preview --",
-    "test": "pnpm --filter @vamis/formula test && pnpm --filter @vamis/core test && pnpm --filter @vamis/sdk test",
+    "test": "pnpm --filter @vamis/formula test && pnpm --filter @vamis/core test && pnpm --filter @vamis/editor test && pnpm --filter @vamis/sdk test",
     "compare": "node scripts/sdk-compare.mjs",
     "compare:p0": "node scripts/sdk-compare.mjs --p0",
     "compare:mobile": "node scripts/sdk-compare.mjs --mobile",

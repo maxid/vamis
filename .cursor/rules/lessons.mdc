@@ -42,6 +42,12 @@ alwaysApply: true
 - 触及：`checkbox` `radio` `input-date` `spinner` `form` `image` `tpl`
 - 规则：`.cursor/rules/typecheck.mdc`；`packages/vamis-core/src/scoped.ts`
 
+### 编辑器节点缓存要跟随 Schema 版本失效
+- 踩过：管理器提交后重建了 `Map<id, node>`，但 Vue 的选中计算只读 `activeId`，画布已经换新，属性面板仍拿旧节点；撤销后面板不回填，后续编辑还可能覆盖新值。
+- 稳定做法：从缓存取当前节点时同时读响应式 `state.version`（或直接把节点索引做成响应式），增删改、撤销、重做都递增版本。内部 `$$id` / `__editorPath` 只用于 DOM 关联，对外输出统一 `JSONPipeOut` 清理。真实浏览器要核「修改 → 撤销 → 重做后面板与画布一致」，不能只测管理器数据。
+- 触及：`@vamis/editor` `SchemaRenderer`
+- 规则：`packages/vamis-editor/src/VamisEditor.vue`；`packages/vamis-editor/src/manager.ts`
+
 ### 动作控制流共享事件数据，广播总线按根实例隔离
 - 踩过：`loopName` 先过 `filterTpl` 会把数组字符串化；自定义动作 / AJAX 改了 `event.data`，后续动作却仍读旧 `ctx.data`。全局单例广播还会让多个 embed 实例互相收消息。
 - 稳定做法：`loopName` 直接交 `resolveValue`；每次动作合并最新 `event.data`，`outputVar` 也写回事件。循环用每层的 flow 状态实现 break/continue。广播 bus 挂在 `env`（每个 VamisRoot 一份），监听按 weight 降序并在卸载时解绑；自定义字符串脚本仅 `env.trusted`。

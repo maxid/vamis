@@ -1,4 +1,12 @@
-export { default as VamisEditor } from './VamisEditor.vue'
+import './builtins'
+
+export { default, default as Editor, default as VamisEditor } from './VamisEditor.vue'
+export { default as MiniEditor } from './MiniEditor.vue'
+export * from './manager'
+export * from './plugin'
+export * from './types'
+export * from './util'
+export { BasicToolbarPlugin } from './builtins'
 export { buildSchemaTree } from './tree'
 export type { SchemaTreeNode } from './tree'
 export { paletteGroups, snippetByType } from './palette'

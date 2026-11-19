@@ -16,6 +16,10 @@ function labelOf(schema: SchemaObject): string {
   return schema.name || schema.type || 'node'
 }
 
+function objectId(schema: SchemaNode): string {
+  return schema && typeof schema === 'object' ? String(schema.$$id || '') : ''
+}
+
 function walk(schema: SchemaNode, path: string): SchemaTreeNode | null {
   if (schema == null) return null
   if (typeof schema === 'string') {
@@ -30,7 +34,7 @@ function walk(schema: SchemaNode, path: string): SchemaTreeNode | null {
   }
   const object = schema as SchemaObject
   const node: SchemaTreeNode = {
-    id: path || 'root',
+    id: objectId(object) || path || 'root',
     type: object.type || 'object',
     label: labelOf(object),
     path,

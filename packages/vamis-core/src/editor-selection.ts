@@ -6,7 +6,7 @@ export interface EditorSelection {
   selectedPath: Ref<string>
   dropPath?: Ref<string>
   select: (path: string) => void
-  enabled: boolean
+  enabled: boolean | Ref<boolean>
 }
 
 export const EditorSelectionKey: InjectionKey<EditorSelection> = Symbol('vamis-editor-selection')

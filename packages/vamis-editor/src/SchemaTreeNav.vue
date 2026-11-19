@@ -13,6 +13,7 @@ const emit = defineEmits<{
   select: [path: string]
   drop: [path: string, type: string]
   move: [fromPath: string, toPath: string]
+  contextmenu: [path: string, event: MouseEvent]
 }>()
 
 function onDragOver(event: DragEvent) {
@@ -48,6 +49,7 @@ function onDrop(event: DragEvent, path: string) {
         :class="selectedPath === node.path ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''"
         :style="{ paddingLeft: `${8 + (depth || 0) * 12}px` }"
         @click="emit('select', node.path)"
+        @contextmenu.prevent="emit('contextmenu', node.path, $event)"
         @dragstart="onDragStart($event, node.path)"
         @dragover="onDragOver"
         @drop="onDrop($event, node.path)"
@@ -67,6 +69,7 @@ function onDrop(event: DragEvent, path: string) {
         @select="emit('select', $event)"
         @drop="(childPath, type) => emit('drop', childPath, type)"
         @move="(from, to) => emit('move', from, to)"
+        @contextmenu="(path, event) => emit('contextmenu', path, event)"
       />
     </div>
   </div>

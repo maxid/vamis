@@ -7,12 +7,12 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1142%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1150%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [在线 Demo](https://maxid.github.io/vamis/) · [组件文档](https://maxid.github.io/vamis/components) · [与 Amis 并排对照](https://maxid.github.io/vamis/sdk/compare.html) · [English](README.en.md)
 
-![Vamis 编辑器：左侧组件树、中间实时预览、右侧属性与 YAML/IR](assets/readme/editor.png)
+![Vamis 编辑器：左侧组件树、中间实时预览、右侧属性与 YAML/JSON](assets/readme/editor.png)
 
 > [!WARNING]
 > **早期 alpha，非百度官方项目，与百度无关联。** 185 / 189 个 Amis type 名称已注册，侧栏组件语义平均 **62%**；适合评估、试用和参与共建，不建议直接用于关键生产。
@@ -37,7 +37,7 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 | 数据展示 | 56%（均） | Card / List / Image / Calendar / Table View 等 |
 | 反馈 / 导航 | 89% / 84%（均） | Dialog、Drawer、Toast、Tabs、Collapse、Nav |
 | JS SDK | 90% | `vamis.embed`、`updateSchema`、`updateProps`、`doAction` |
-| 可视化编辑器 | 骨架 | 组件树 / 画布 / 属性 / YAML，无插件市场 |
+| 可视化编辑器 | 主路径 | 组件树 / 画布 / 插件面板 / 事件钩子 / YAML+JSON，无插件市场 |
 | 样式 | 部分 | 辅助类、CSS 变量、深色；色盘表仍在补 |
 
 每个组件文档页标题下都标了真实进度；`已注册 ≠ 语义完成`。完整状态见 [CONTEXT.md](CONTEXT.md) 与 [组件 P0 TODO](docs/superpowers/specs/2026-10-20-vamis-component-todo.md)。
@@ -181,7 +181,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
 - 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **62%**（≥80% 47 项）。
 - kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
-- 测试：formula 185 + core 851 + sdk 106 = **1142**，全部通过；`pnpm typecheck` **0 错误**。
+- 测试：formula 185 + core 851 + editor 8 + sdk 106 = **1150**，全部通过；`pnpm typecheck` **0 错误**。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 ## 开发
@@ -192,7 +192,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 | `/components` | 组件文档（侧栏对齐 Amis，YAML / JSON 实时预览） |
 | `/style` | 样式（CSS 变量 / 辅助类目录） |
 | `/examples` | 示例：分类树 + 预览 + Schema |
-| `/editor` | 编辑器骨架：左树 / 中预览 / 右属性 + Schema |
+| `/editor` | 可视化编辑器：组件 / 大纲 / 画布 / 插件属性面板 + YAML/JSON Schema |
 | `/sdk/compare.html` | Amis / Vamis SDK 对照。`?case=<id>&vp=mobile` 定位用例 |
 | `/sdk/embed-case.html` | 单引擎真机页 |
 
@@ -218,7 +218,7 @@ packages/vamis-core     工厂、IR、公式封装、Pinia hub、SchemaRenderer�
 packages/vamis-formula  表达式 / 过滤器 / 内置函数（amis-formula 6.13.0 MIT）
 packages/vamis-ui       shadcn-vue 原语、chrome 图标、主题 token / helper、所有渲染器的默认皮肤（不依赖其它包）
 packages/vamis          Amis type 渲染器（register.ts + extras/*.ts）、带 env 的共享浮层件、全局 Host
-packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / Schema）
+packages/vamis-editor   可视化编辑器（插件管理器 / 树 / 预览 / 属性 / YAML+JSON Schema）
 packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档 / 组件 / 样式 / 示例 / 编辑器（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
