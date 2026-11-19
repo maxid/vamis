@@ -219,12 +219,32 @@ export function hasH2(md, title) {
   return new RegExp(`^##\\s+${escapeRe(title)}\\s*$`, 'm').test(String(md || ''))
 }
 
+export function isDiffHeading(title) {
+  return /^(?:与|和)\s*Amis(?:\s*文档)?\s*的差异$/.test(String(title || '').trim())
+}
+
+export function moveDiffToEnd(md) {
+  const text = String(md || '')
+  const parts = text.split(/(?=^## )/m)
+  const body = []
+  const diffs = []
+  for (const part of parts) {
+    const line = (part.split('\n', 1)[0] || '').trim()
+    const title = line.match(/^##\s+(.+)$/)?.[1]
+    if (title && isDiffHeading(title)) diffs.push(part.trim())
+    else body.push(part)
+  }
+  if (!diffs.length) return text
+  const before = body.join('').replace(/\s+$/, '')
+  return `${before}${before ? '\n\n' : ''}${diffs.join('\n\n')}\n`
+}
+
 export function insertBeforeDiff(md, section) {
   if (!section) return md
   const text = String(md || '').replace(/\s+$/, '')
   const block = `\n\n${section.trim()}\n`
-  const marker = /^## 和 Amis 文档的差异\s*$/m
-  if (marker.test(text)) return text.replace(marker, `${block}\n## 和 Amis 文档的差异`)
+  const marker = /^##\s+(?:与|和)\s*Amis(?:\s*文档)?\s*的差异\s*$/m
+  if (marker.test(text)) return text.replace(marker, (heading) => `${block}\n${heading}`)
   return `${text}${block}`
 }
 

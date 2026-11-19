@@ -80,10 +80,11 @@ flowchart LR
 | JS SDK | P0 embed 已落地；`registerTheme` / i18n 已接 | `pnpm sdk:build` → `sdk.js`（小 loader）+ `sdk.esm.js` + chunks + `sdk.css`；`<script src="sdk.js">` / `vamis.embed` 契约不变。`locale` / `updateProps({ locale })` / `registerLocale` / `replaceText` / schema 语言覆盖已接。monaco / echarts 按需。日期走 **dayjs**（打进 bundle），不再依赖 moment。对照报告 [SDK 对照报告](docs/superpowers/specs/2026-10-24-sdk-compare-report.md) |
 | 编辑器 | 工作区与插件主路径可用（55%） | 外壳使用独立的 `@vamis/ui`，属性 / 外观 / 事件面板由 Vamis `SchemaRenderer` 自驱；组件 / 大纲、画布、按需源码弹窗、对象 Schema、`EditorManager`、历史栈与 MiniEditor 已接。完整内置面板库、iframe 移动隔离、拖拽改宽高与插件市场未接；此前 65% 为口径虚高，本轮纠正 |
 | 在线文档 | 已并入 playground | 顶栏「样式」`/style` 已对齐 Amis CssDocs（开始 + Layout…Effect）；9 篇概念页按剩余实现缺口为 **90–95% · 进行中**（配置 / 模板 / 表达式 / 事件动作 95%，其余 90%）；类型页 SchemaNode **92% 进行中**、ClassName **70%**、API **92%**；Definitions **100% 已完成**（已接 `$ref`）；开始页保持 90–95%，扩展保持 15–90%（i18n **85%**），文档核对不提升实现进度；`pnpm dev` 首页即文档；` ```schema ` 进 `VamisRoot`；编辑 Schema 为 YAML/JSON 双 Tab 实时同步；顶栏可切桌面 / 移动（默认桌面，管整页示例；移动 **375×812** iframe + 手机壳）；文档/组件/样式页标题下「实现进度 · 状态」；**左侧菜单同步百分比**（顶栏可关）；右侧「内容」TOC（lg 以下隐藏，无左边框）；正文滚动条滚动时才显示 |
-| 测试 | 源码用例 formula 185 + core 853 + editor 8 + sdk 106 = **1152** | `pnpm typecheck` **0**。新增分页移动页码回归。SDK 对照目录 **2220**（2026-11-19）；P0 专项 **15/15**；最近全量 **2216 例 / 1901 过 / 315 败（P0 1：form-default，单跑已通过）**。本轮 Pagination 桌面 / 移动均 **7/7**；其余既有对照缺口见报告与 TODO。 |
+| 测试 | 源码用例 formula 185 + core 858 + editor 8 + sdk 106 = **1157** | `pnpm typecheck` **0**。新增分页移动页码与文档差异章节位置回归。SDK 对照目录 **2220**（2026-11-19）；P0 专项 **15/15**；最近全量 **2216 例 / 1901 过 / 315 败（P0 1：form-default，单跑已通过）**。本轮 Pagination 桌面 / 移动均 **7/7**；其余既有对照缺口见报告与 TODO。 |
 
 **最近交付**
 
+- **Select 文档章节顺序对齐 Amis（2026-11-19）**：去掉重复的「关联选择 / 人员点选」摘要标题，把完整的「关联选择模式」及「人员点选」子节放回「延时加载」之后，后续章节顺延为限制标签数量、下拉宽度、全选、自动补全。生成器新增 `moveDiffToEnd`，同时识别「与 Amis 的差异」和「和 Amis 文档的差异」，差异节固定为属性 / 事件 / 动作表后的最后一节；同名写法的 Image 页也同步归位。新增结构回归测试，`pnpm test` **1157**、`pnpm typecheck` 0。未动运行时，没跑对照。
 - **Options 虚拟列表接入 Select（2026-11-19）**：Options 契约新增 `virtualThreshold`（默认 100）/ `itemHeight`（默认 32），Select 桌面平铺选项按 266 视口切片、固定行高滚动；搜索回落整表并回顶部，选中/关闭主路径正常。真机与 Amis 实测同视口 / 行高 / 200 项滚动高 6400；Options 页对照 **38/39**（既有 `selectFirst` 值差，非本刀）。Options 保持 88%（分组菜单、Picker/Transfer/树未复用，远程缓存未接），Select 保持 92%。`pnpm test` **1153**、`typecheck` 0；未跑移动 / 深色对照。
 - **侧栏优先级同步到组件 TODO 两张表（2026-11-19）**：站点左侧导航栏的 P0 / P1 / P2 写入「全量顺序」与「实现复杂度评估」各新增的「侧栏」列，口径与 `playground/src/docs/component-priority.ts` 的 `STAGE_RANK_MAX` 一致；`scripts/component-priority.mjs` 生成全量顺序的该列，复杂度表按同一档位映射 155 行；新增解析守卫测试确保 154 个 type 的档位与 `stageFromRank` 一致。百分比与汇总不变。`pnpm typecheck` 0、`pnpm test` **1153**。未动运行时，没跑对照。
 
@@ -618,7 +619,7 @@ flowchart LR
 按「契约先于组件数量」排序。做完当前刀立刻改本段，把已完成的挪到「最近交付」。**每一刀收工 `pnpm typecheck` 必须仍为 0**（规则 `.cursor/rules/typecheck.mdc`）。
 
 0. **样式系统统一 · 皮肤迁出模板（已完）**：第十二刀已把 Dialog / Drawer / DiffEditor / InputColor / InputSignature / Shape 收掉。模板 Tailwind 字号 **0**，语义色 **1**（Progress 脚本里的 Amis `bg-primary` map 键，永远不迁）。`SelectItem` 里 lucide `Check` 仍是 shadcn 原语内部，不进渲染器守卫。TreeSelect 下拉已走 Overlay；NestedSelect 仍可能是 `absolute`，要对齐 Amis Overlay 另刀。评分仍用字符 ★，没换成 Amis SVG。
-0a. **文档主线**：Concepts / Start / Types / Extend 的主路径与活示例均已完成；Definitions `$ref` 已落地。下一刀回到 D6 Combo 独立 Scope，先保证普通 Combo 数据链不回归，再处理更深层嵌套；文档完成度不代替组件验收。
+0a. **文档主线**：Concepts / Start / Types / Extend 的主路径与活示例均已完成；Definitions `$ref` 已落地。组件页章节顺序继续按 Amis 同名页对齐，差异章节已由生成器统一归底。下一刀回到 D6 Combo 独立 Scope，先保证普通 Combo 数据链不回归，再处理更深层嵌套；文档完成度不代替组件验收。
 0b. **i18n 余项**：四条主路径已交付；下一轮按组件继续抽取硬编码中文，优先日期移动滚轮单位 / 快捷选项和 Confirm / Dialog 等共享件，再补完整 dayjs 区域格式化。RTL 单独立项，不把「主路径英文已接」写成所有组件 100%。
 0c. **可视化编辑器余项**：插件协议、工作区和 Page 主面板已交付；下一刀补 Form / CRUD 的专用面板、更完整的事件动作设计器与区域占位，再做 iframe 移动隔离和拖拽改宽高。当前自定义面板只支持文档列出的常用控件，不能写成完整 amis-editor 已复刻。
 1. **数据链与 Options 余项**：FormItem 静态展示、Tabs / Pagination 脱离 Form 已接统一数据链；List 行内同字段与 Drawer overlay 松散表单项已真实核过。Options 的 `deferApi` 与 InputTree 多选复选框 / SearchBox / 内联 CUD / `addControls` Dialog / `autoCheckChildren` 勾选语义已接。下一刀评估虚拟列表 `virtualThreshold` / `itemHeight`、`enableNodePath`、`itemActions`，其他树/穿梭器按各自组件任务复用，不在本刀虚抬 Options 进度。

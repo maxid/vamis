@@ -254,12 +254,6 @@ body:
   showToolbar: true
 ```
 
-## 与 Amis 的差异
-
-- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
-- `thumbMode: h-stretch` 是 Vamis 增强：按高度拉伸、宽度吃满。
-- **未接** `enlargeWithGallary`：CRUD / Table 放大不收集行内其它图片。
-- **未接** `hoverMode`、`themeCss`。
 ## 属性表
 
 | 属性名 | 类型 | 默认值 | 说明 |
@@ -406,3 +400,9 @@ body:
               componentId: zoomImage
 ```
 
+## 与 Amis 的差异
+
+- 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core。
+- `thumbMode: h-stretch` 是 Vamis 增强：按高度拉伸、宽度吃满。
+- **未接** `enlargeWithGallary`：CRUD / Table 放大不收集行内其它图片。
+- **未接** `hoverMode`、`themeCss`。

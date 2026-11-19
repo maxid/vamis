@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   dropVersionColumns,
+  insertBeforeDiff,
+  isDiffHeading,
+  moveDiffToEnd,
   rewriteProse,
   stripProductVersions,
 } from '../../../website/scripts/rewrite-amis-doc.mjs'
@@ -51,5 +54,44 @@ describe('strip Amis product versions', () => {
   it('dropVersionColumns only removes 版本 header', () => {
     const md = '| 属性 | 版本 |\n| --- | --- |\n| a | 2.2.0 |\n'
     expect(dropVersionColumns(md)).toBe('| 属性 |\n| --- |\n| a |\n')
+  })
+})
+
+describe('Amis difference section placement', () => {
+  it('recognizes both Vamis difference headings', () => {
+    expect(isDiffHeading('与 Amis 的差异')).toBe(true)
+    expect(isDiffHeading('和 Amis 文档的差异')).toBe(true)
+    expect(isDiffHeading('Amis 差异')).toBe(false)
+  })
+
+  it('moves the difference section after the action table', () => {
+    const md = [
+      '# Select',
+      '',
+      '## 与 Amis 的差异',
+      '',
+      '- 差异',
+      '',
+      '## 属性表',
+      '',
+      '| 属性 |',
+      '| --- |',
+      '',
+      '## 动作表',
+      '',
+      '### setValue',
+    ].join('\n')
+    const out = moveDiffToEnd(md)
+    expect(out.indexOf('## 动作表')).toBeLessThan(out.indexOf('## 与 Amis 的差异'))
+    expect(out.match(/## 与 Amis 的差异/g)).toHaveLength(1)
+  })
+
+  it('inserts a section before either difference heading', () => {
+    expect(insertBeforeDiff('## 与 Amis 的差异\n', '## 属性表')).toContain(
+      '## 属性表\n\n## 与 Amis 的差异',
+    )
+    expect(insertBeforeDiff('## 和 Amis 文档的差异\n', '## 属性表')).toContain(
+      '## 属性表\n\n## 和 Amis 文档的差异',
+    )
   })
 })

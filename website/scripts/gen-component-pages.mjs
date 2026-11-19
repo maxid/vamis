@@ -10,6 +10,8 @@ import {
   extractH2,
   hasH2,
   insertBeforeDiff,
+  isDiffHeading,
+  moveDiffToEnd,
   replaceH2,
   resolveAmisDoc,
   rewriteAmisBody,
@@ -587,6 +589,7 @@ function placeExampleSectionsBeforeTables(md) {
   const examples = []
   const tables = []
   const rest = []
+  const diffs = []
   let stage = 'head'
   for (const part of parts) {
     const title = h2Title(part)
@@ -595,9 +598,8 @@ function placeExampleSectionsBeforeTables(md) {
       else rest.push(part)
       continue
     }
-    if (title === '和 Amis 文档的差异' || title.startsWith('和 Amis')) {
-      stage = 'rest'
-      rest.push(part)
+    if (isDiffHeading(title)) {
+      diffs.push(part)
       continue
     }
     if (isTableHeading(title)) {
@@ -612,8 +614,8 @@ function placeExampleSectionsBeforeTables(md) {
     }
     head.push(part)
   }
-  if (!examples.length || !tables.length) return md
-  const next = [...head, ...examples, ...tables, ...rest].join('')
+  if (!diffs.length && (!examples.length || !tables.length)) return md
+  const next = [...head, ...examples, ...tables, ...rest, ...diffs].join('')
   return next.replace(/\n{3,}/g, '\n\n')
 }
 
@@ -623,7 +625,7 @@ function dedupeExampleH2(md) {
   const out = []
   for (const part of parts) {
     const title = h2Title(part)
-    if (title && !isTableHeading(title) && !title.startsWith('和 Amis') && seen.has(title)) continue
+    if (title && !isTableHeading(title) && !isDiffHeading(title) && seen.has(title)) continue
     if (title) seen.add(title)
     out.push(part)
   }
@@ -680,6 +682,11 @@ function appendMissingTables(file, item) {
   const merged = mergeMissingExampleSections(file, item, next)
   next = merged.text
   changed = changed || merged.changed
+  const placed = moveDiffToEnd(next)
+  if (placed !== next) {
+    next = placed
+    changed = true
+  }
   if (changed) fs.writeFileSync(file, next.endsWith('\n') ? next : `${next}\n`)
   return changed
 }

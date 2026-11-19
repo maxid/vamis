@@ -211,200 +211,11 @@ body:
 
 选项上标 `defer: true`，配合组件层 `deferApi`。**未接**。
 
-## 关联选择 / 人员点选
-
-`selectMode: associated` 以及人员点选（`source` + `deferApi` + `searchApi` 懒加载部门/人员）**未接**。
-
-## 限制标签最大展示数量
-
-`maxTagCount` 限制标签最多展示几个，超出的收到 Popover 里。会按剩余宽度尽量多摆，但不会超过这个上限，所以文档示例把上限设大一点。可见标签悬停显示其 `label`。悬停 `+ N ...` 弹出剩余标签（可点 × 移除），`overflowTagPopover` 配标题等 Tooltip 属性。
-
-```schema: scope="body"
-type: form
-api: /api/mock2/form/saveForm
-body:
-  - label: 水果
-    type: select
-    name: select
-    multiple: true
-    maxTagCount: 100
-    checkAll: true
-    defaultCheckAll: true
-    overflowTagPopover:
-      title: 水果
-    options:
-      - label: 苹果
-        value: Apple
-      - label: 香蕉
-        value: Banana
-      - label: 黑莓
-        value: Blackberry
-      - label: 蓝莓
-        value: Blueberry
-      - label: 樱桃
-        value: Cherry
-      - label: 杨桃
-        value: Carambola
-      - label: 椰子
-        value: Coconut
-      - label: 猕猴桃
-        value: Kiwifruit
-      - label: 柠檬
-        value: Lemon
-      - label: 菠萝
-        value: Pineapple
-      - label: 葡萄
-        value: Grape
-      - label: 石榴
-        value: Pomegranate
-      - label: 芒果
-        value: Mango
-      - label: 木瓜
-        value: Papaya
-      - label: 山竹
-        value: Mangosteen
-      - label: 榴莲
-        value: Durian
-      - label: 龙眼
-        value: Longan
-      - label: 荔枝
-        value: Litchi
-      - label: 枇杷
-        value: Loquat
-      - label: 柿子
-        value: Persimmon
-      - label: 柚子
-        value: Pomelo
-      - label: 橙子
-        value: Orange
-      - label: 橘子
-        value: Tangerine
-      - label: 金桔
-        value: Kumquat
-      - label: 李子
-        value: Plum
-      - label: 杏子
-        value: Apricot
-      - label: 桃子
-        value: Peach
-      - label: 梨子
-        value: Pear
-      - label: 草莓
-        value: Strawberry
-```
-
-## 自定义下拉区域宽度与对齐方式
-
-`overlay.width` 可用数字（单位 px）或带单位的字符串：`%` / `px` / `rem` / `em` / `vw`。`overlay.align` 为 `left` / `center` / `right`。移动端底栏高度默认 **320px**（对齐 Amis `.Select-popup`；通用 PopUp 默认 400）；可用 `overlay.height` 覆盖。
-
-相对值如 `-100px` 相当于触发器宽度减 100px（`calc(${trigger}px - 100px)`）；`+10vw` 同理。
-
-```schema: scope="body"
-type: form
-body:
-  - label: 80% 宽度靠右对齐
-    type: select
-    name: select-right
-    menuTpl: "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>"
-    overlay:
-      width: 80%
-      align: right
-    options:
-      - label: A
-        value: a
-      - label: B
-        value: b
-      - label: C
-        value: c
-  - label: 300px 宽度中间对齐
-    type: select
-    name: select-center
-    menuTpl: "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>"
-    overlay:
-      width: 300
-      align: center
-    options:
-      - label: A
-        value: a
-      - label: B
-        value: b
-      - label: C
-        value: c
-```
-
-```schema: scope="body"
-type: form
-body:
-  - label: 相对窄 100px 向左对齐
-    type: select
-    name: select
-    overlay:
-      width: "-100px"
-      align: left
-    options:
-      - label: A
-        value: a
-      - label: B
-        value: b
-      - label: C
-        value: c
-```
-
-## 多选全选
-
-开启 `checkAll` 后，默认 `checkAllBySearch: true`：检索时全选只作用于当前过滤结果。设成 `false` 则无论是否在检索，全选都针对全部数据源。
-
-```schema: scope="body"
-type: form
-body:
-  - label: 多选
-    type: select
-    name: select2
-    searchable: true
-    checkAll: true
-    multiple: true
-    clearable: true
-    source: /api/mock2/form/getOptions
-```
-
-## 自动补全 autoComplete
-
-`autoComplete` 里用数据映射取变量 `term`，即当前输入的关键字。
-
-```schema: scope="body"
-type: form
-body:
-  - name: select1
-    type: select
-    label: 选项自动补全（单选）
-    autoComplete: /api/mock2/options/autoComplete3?delay=true&term=${term}&waitSeconds=2
-    placeholder: 请输入
-    clearable: true
-  - name: select2
-    type: select
-    label: 选项自动补全（多选）
-    autoComplete: /api/mock2/options/autoComplete?labelField=name&valueField=id&term=${term}
-    placeholder: 请输入
-    labelField: name
-    valueField: id
-    clearable: true
-    multiple: true
-    maxTagCount: 2
-```
-
-## 与 Amis 的差异
-
-- 作者态 YAML 与 JSON 并列。
-- `selectMode` 只接分组；table / tree / chained / associated、`deferApi`、人员点选未接。
-- `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
-- 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
-- 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
-- `addConfirm` / `editConfirm` / `deleteConfirm` 未接。
-- 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。
-
 ## 关联选择模式
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
+
+Vamis 当前未接 `selectMode: associated` 与人员懒加载；以下保留 Amis 契约与示例。
 
 _单选_
 
@@ -678,6 +489,184 @@ leftOptions 动态加载，默认 source 接口是返回 options 部分，而 le
   ]
 }
 ```
+
+## 限制标签最大展示数量
+
+`maxTagCount` 限制标签最多展示几个，超出的收到 Popover 里。会按剩余宽度尽量多摆，但不会超过这个上限，所以文档示例把上限设大一点。可见标签悬停显示其 `label`。悬停 `+ N ...` 弹出剩余标签（可点 × 移除），`overflowTagPopover` 配标题等 Tooltip 属性。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - label: 水果
+    type: select
+    name: select
+    multiple: true
+    maxTagCount: 100
+    checkAll: true
+    defaultCheckAll: true
+    overflowTagPopover:
+      title: 水果
+    options:
+      - label: 苹果
+        value: Apple
+      - label: 香蕉
+        value: Banana
+      - label: 黑莓
+        value: Blackberry
+      - label: 蓝莓
+        value: Blueberry
+      - label: 樱桃
+        value: Cherry
+      - label: 杨桃
+        value: Carambola
+      - label: 椰子
+        value: Coconut
+      - label: 猕猴桃
+        value: Kiwifruit
+      - label: 柠檬
+        value: Lemon
+      - label: 菠萝
+        value: Pineapple
+      - label: 葡萄
+        value: Grape
+      - label: 石榴
+        value: Pomegranate
+      - label: 芒果
+        value: Mango
+      - label: 木瓜
+        value: Papaya
+      - label: 山竹
+        value: Mangosteen
+      - label: 榴莲
+        value: Durian
+      - label: 龙眼
+        value: Longan
+      - label: 荔枝
+        value: Litchi
+      - label: 枇杷
+        value: Loquat
+      - label: 柿子
+        value: Persimmon
+      - label: 柚子
+        value: Pomelo
+      - label: 橙子
+        value: Orange
+      - label: 橘子
+        value: Tangerine
+      - label: 金桔
+        value: Kumquat
+      - label: 李子
+        value: Plum
+      - label: 杏子
+        value: Apricot
+      - label: 桃子
+        value: Peach
+      - label: 梨子
+        value: Pear
+      - label: 草莓
+        value: Strawberry
+```
+
+## 自定义下拉区域宽度与对齐方式
+
+`overlay.width` 可用数字（单位 px）或带单位的字符串：`%` / `px` / `rem` / `em` / `vw`。`overlay.align` 为 `left` / `center` / `right`。移动端底栏高度默认 **320px**（对齐 Amis `.Select-popup`；通用 PopUp 默认 400）；可用 `overlay.height` 覆盖。
+
+相对值如 `-100px` 相当于触发器宽度减 100px（`calc(${trigger}px - 100px)`）；`+10vw` 同理。
+
+```schema: scope="body"
+type: form
+body:
+  - label: 80% 宽度靠右对齐
+    type: select
+    name: select-right
+    menuTpl: "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>"
+    overlay:
+      width: 80%
+      align: right
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+  - label: 300px 宽度中间对齐
+    type: select
+    name: select-center
+    menuTpl: "<div>${label} 值：${value}, 当前是否选中: ${checked}</div>"
+    overlay:
+      width: 300
+      align: center
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+```schema: scope="body"
+type: form
+body:
+  - label: 相对窄 100px 向左对齐
+    type: select
+    name: select
+    overlay:
+      width: "-100px"
+      align: left
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+## 多选全选
+
+开启 `checkAll` 后，默认 `checkAllBySearch: true`：检索时全选只作用于当前过滤结果。设成 `false` 则无论是否在检索，全选都针对全部数据源。
+
+```schema: scope="body"
+type: form
+body:
+  - label: 多选
+    type: select
+    name: select2
+    searchable: true
+    checkAll: true
+    multiple: true
+    clearable: true
+    source: /api/mock2/form/getOptions
+```
+
+## 自动补全 autoComplete
+
+`autoComplete` 里用数据映射取变量 `term`，即当前输入的关键字。
+
+```schema: scope="body"
+type: form
+body:
+  - name: select1
+    type: select
+    label: 选项自动补全（单选）
+    autoComplete: /api/mock2/options/autoComplete3?delay=true&term=${term}&waitSeconds=2
+    placeholder: 请输入
+    clearable: true
+  - name: select2
+    type: select
+    label: 选项自动补全（多选）
+    autoComplete: /api/mock2/options/autoComplete?labelField=name&valueField=id&term=${term}
+    placeholder: 请输入
+    labelField: name
+    valueField: id
+    clearable: true
+    multiple: true
+    maxTagCount: 2
+```
+
 ## 属性表
 
 除了 [普通表单项属性表](./formitem#属性表) 以外，还支持：
@@ -922,3 +911,12 @@ body:
               value: b
 ```
 
+## 与 Amis 的差异
+
+- 作者态 YAML 与 JSON 并列。
+- `selectMode` 只接分组；table / tree / chained / associated、`deferApi`、人员点选未接。
+- `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
+- 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
+- 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
+- `addConfirm` / `editConfirm` / `deleteConfirm` 未接。
+- 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。
