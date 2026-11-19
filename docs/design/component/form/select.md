@@ -1,8 +1,9 @@
 # Select 下拉选择器 · `select` 设计
 
-> 状态：**进行中 92%** · 复杂度：**XL 特重**
+> 状态：**进行中 93%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/select) · Amis：`/zh-CN/components/form/select`
-> 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+> 盘点日期：2026-11-19。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+> 剩余语义实现规格：[Select 剩余语义完成设计](../../../superpowers/specs/component/form/2026-11-19-vamis-select-completion-design.md)
 
 ## 0. 一页结论
 
@@ -15,7 +16,7 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 1. **值序列化**：`multiple` / `joinValues` / `extractValue` / `delimiter` 决定写回 string 还是 array；`labelField` / `valueField` 决定选项映射。改任一都同时影响表单值、`selectedItems`、事件参数和 remote 回填。
 2. **值来源**：有 Form 走 `useFieldValue`（Form 或 ValueHost/Scope）；无 Form 也不能直接写 `props.data`。`name` 路径按 FormItem 契约。
 3. **选项来源**：本地 `options` / 远程 `source` / `deferApi` / 搜索 API / `autoComplete` 的优先级由 `useOptionsControl` 决定，Select.vue 不另建选项缓存。
-4. **事件时序**：值变化先完成写值/选项状态，再派发 `change`；`focus` / `blur` 对应打开/关闭；新增/编辑/删除的 `*Confirm` 目前**未接**，不能声称已支持。
+4. **事件时序**：值变化先完成写值/选项状态，再派发 `change`；`focus` / `blur` 对应打开/关闭；新增/编辑/删除的 `*Confirm` 先于本地选项写入和 CUD API，`preventDefault()` 必须同时阻断两者。
 5. **移动端**：窄屏 `VamisPopUp` 底部弹层；滚轮/多选草稿在 `confirmMobile` 才写回，不能边滚边提交。
 6. **标签折叠**：宽度测量决定可见标签 + `+N`；测量在 mount/resize/值变化后进行，不能在模板里硬编码数量。
 7. **包边界**：渲染器无 `<style>`、无直接 fetch；`requestApi` 只在 `useOptionsControl`/工具层；样式走 token。
@@ -67,7 +68,7 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 | `selectMode` | 普通/分组/表格/树/链式/人员 | 当前只覆盖主路径；table/tree/chained/associated 未接 |
 | `menuTpl` | 自定义选项 | SchemaRenderer 渲染，数据含 option |
 | `maxTagCount` / 标签折叠 | 多选标签 | 测量 + `+N` tooltip |
-| `addControls` / `editControls` / `deleteControls` | 选项增删改 | 现有新增/编辑/删除路径；`*Confirm` 事件未接 |
+| `addControls` / `editControls` / `deleteControls` | 选项增删改 | 现有新增/编辑/删除路径；`*Confirm` 事件先于本地写入和 CUD API |
 | `checkAll` / `checkAllBySearch` | 全选 | 只对可选叶子；搜索时是否只全选当前结果 |
 | `resetValue` | 清空值 | clear 动作写它 |
 | `disabled` / `static` / `readOnly` | 状态 | 由 FormItem/控件统一，禁用项不能选 |
@@ -75,9 +76,9 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 
 ### 3.3 事件
 
-已接：`change`、`focus`、`blur`。
+已接：`change`、`focus`、`blur`、`addConfirm`、`editConfirm`、`deleteConfirm`。
 
-未接：`addConfirm`、`editConfirm`、`deleteConfirm`（新增/编辑/删除选项的确认事件）。事件参数以 `[name]` / `selectedItems` / `items` 为主，不要自造第二套。
+`addConfirm` / `editConfirm` / `deleteConfirm` 的 payload 对齐 Amis：当前公开数据、`value`、`options`、`items`、`item` 和 `[name]`。三个确认事件都在本地选项写入以及 `addApi` / `editApi` / `deleteApi` 之前触发；`preventDefault()` 后不写本地、不发请求。Select 新增与编辑都打开 Dialog，新增 Dialog 提交后才触发 `addConfirm`；新增 / 编辑事件 `item` 只带本次 label/value，原选项的其他字段在事件通过后才合并；`deleteConfirmText` 先于 `deleteConfirm`，未配置时不自造默认确认文案。
 
 ### 3.4 动作
 
@@ -93,6 +94,8 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 |---|---|
 | [`Select.vue`](../../../../packages/vamis/src/renderers/form/Select.vue) | 下拉弹层、搜索、标签、移动端 wheel/多选、新增/编辑/删除、menuTpl |
 | [`optionsControl.ts`](../../../../packages/vamis/src/optionsControl.ts) | 值/选项/远程 source/搜索/全选/提交的统一状态机 |
+| [`options-event.ts`](../../../../packages/vamis-core/src/actions/options-event.ts) | 选项确认事件 payload 与 `runOptionConfirm` |
+| [`option-mutation.ts`](../../../../packages/vamis-core/src/utils/option-mutation.ts) | 确认事件后的 CUD API 持久化 |
 | [`options.ts`](../../../../packages/vamis-core/src/utils/options.ts) | normalizeOptions、selected、toggle、加入/移除、label/value 映射 |
 | [`FormItem.vue`](../../../../packages/vamis/src/renderers/FormItem.vue) | label/校验/静态/错误展示 |
 | [`TableHeadFilter.vue`](../../../../packages/vamis/src/renderers/table/TableHeadFilter.vue) 等 | 复用 Options 的筛选/搜索样式与逻辑 |
@@ -122,6 +125,7 @@ options ── searchable ──> filtered
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
 - **标签折叠**：`measureTags` 计算可见数量；`maxTagCount` / 宽度变化 / 值变化触发；`+N` tooltip 不能裁切。
+- **选项 CUD**：确认事件先于本地写入与 API；弹层 Form 不再内挂 add / edit API，由 `useOptionsControl` / `useTreeField` 在事件后统一提交。
 
 ## 5. 样式与边界
 
@@ -132,10 +136,9 @@ options ── searchable ──> filtered
 
 ## 6. 当前状态与缺口
 
-- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（单选滚轮 / 多选草稿 / 搜索 / 确认写入）、`selectMode: group`、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高）。
-- 对照：TODO 记录桌面/移动 select 主路径；本轮未重跑。
-- 缺：`selectMode` table/tree/chained/associated、`deferApi`、人员点选；`addConfirm` / `editConfirm` / `deleteConfirm` 事件；`allowCreate` 的完整边界。
-- 已接新增/编辑/删除选项 UI，但不要与 `*Confirm` 事件混为一谈。
+- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（单选滚轮 / 多选草稿 / 搜索 / 确认写入）、`selectMode: group`、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。
+- 对照：Select 桌面 / 移动均 **19/24**（P0 0）；余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
+- 缺：`selectMode` table/tree/chained/associated、`deferApi`、人员点选。
 
 ## 7. 验收计划与完成度
 
@@ -164,8 +167,8 @@ options ── searchable ──> filtered
 
 ## 8. 后续
 
-1. 先补 `addConfirm` / `editConfirm` / `deleteConfirm` 事件（需定 payload 与 preventDefault 语义）。
-2. `selectMode: table/tree/chained/associated` 单独立项，优先复用 Table/Tree 能力，不复制三套。
+1. `selectMode: tree` 对齐 TransferDropDown + Tree，复用共享 tree state / TreeBranch，不直接挂完整 TreeSelect。
+2. `selectMode: table/chained/associated` 分片实现，优先复用选择面板与现有值模型。
 3. `deferApi` 与人员点选按 Options 族统一收口。
 4. 值序列化矩阵补组件级测试后再动样式。
 5. 虚拟列表只覆盖桌面平铺选项；分组菜单保持整表渲染，后续若接需同时处理分组行高与选中回滚。

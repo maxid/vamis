@@ -53,7 +53,7 @@ const emit = defineEmits<{
   'update:draftLabel': [value: string]
 }>()
 
-const inputEl = ref<HTMLInputElement | null>(null)
+const inputEl = ref<HTMLInputElement | HTMLInputElement[] | null>(null)
 const rows = computed(() => flattenVisibleOptions(props.nodes, props.expanded))
 const showCheck = computed(() => props.multiple || props.showRadio)
 const addingRoot = computed(() => props.isAdding && props.addingParent == null)
@@ -117,7 +117,10 @@ function onDraft(event: Event) {
 watch(
   () => [props.isAdding, props.editingItem],
   () => {
-    void nextTick(() => inputEl.value?.focus())
+    void nextTick(() => {
+      const current = Array.isArray(inputEl.value) ? inputEl.value[0] : inputEl.value
+      if (current && typeof current.focus === 'function') current.focus()
+    })
   },
 )
 </script>

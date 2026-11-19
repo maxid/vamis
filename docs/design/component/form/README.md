@@ -5,7 +5,7 @@
 - [Form 表单](form.md) — `form` · XL 特重 · 75%
 - [FormItem 表单项通用](formitem.md) — `formitem` · XL 特重 · 90%
 - [Control 表单项包裹](control.md) — `control` · S 轻 · 40%
-- [Options 选择器表单项](options.md) — `options` · XL 特重 · 88%
+- [Options 选择器表单项](options.md) — `options` · XL 特重 · 89%
 - [InputArray 数组输入框](input-array.md) — `input-array` · M 中 · 50%
 - [ButtonToolbar 按钮工具栏](button-toolbar.md) — `button-toolbar` · M 中 · 60%
 - [ButtonGroupSelect 按钮点选](button-group-select.md) — `button-group-select` · M 中 · 55%
@@ -52,7 +52,7 @@
 - [InputRange 滑块](input-range.md) — `input-range` · XL 特重 · 50%
 - [InputRepeat 重复频率](input-repeat.md) — `input-repeat` · M 中 · 40%
 - [InputRichText 富文本](input-rich-text.md) — `input-rich-text` · XL 特重 · 25%
-- [Select 下拉框](select.md) — `select` · XL 特重 · 92%
+- [Select 下拉框](select.md) — `select` · XL 特重 · 93%
 - [InputSubForm 子表单](input-sub-form.md) — `input-sub-form` · L 重 · 45%
 - [Switch 开关](switch.md) — `switch` · M 中 · 88%
 - [Static 静态展示](static.md) — `static` · M 中 · 85%

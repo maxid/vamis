@@ -2,7 +2,6 @@
 
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import {
-  apiMessage,
   applyOptionsAutoFill,
   autoFillMapping,
   createVamisEvent,
@@ -10,6 +9,7 @@ import {
   eventEvalData,
   filterOptionTree,
   filterTpl,
+  findOption,
   firstEnabledOption,
   getSelectedOptions,
   isApiOutdated,
@@ -22,15 +22,18 @@ import {
   optionsClearValue,
   optionsControlConfig,
   optionsCreateBtnLabel,
+  optionsAddDialogSchema,
   optionsEditDialogTitle,
   optionsFromPayload,
   optionsSetDataValue,
+  persistOptionMutation,
   omitSelectedOptions,
   runSelectFilterOption,
   overlayContainerFrom,
   removeOptionFromTree,
   requestApi,
   resolveOptionsSource,
+  runOptionConfirm,
   runOnEvent,
   toggleAllOptions,
   toggleOption,
@@ -222,27 +225,30 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     ]
   }
 
-  async function persistOptionApi(api: unknown, payload: Record<string, unknown>, method: 'post' | 'delete') {
-    if (!api || !isEffectiveApi(api as any, payload)) return { ok: true, data: payload }
-    try {
-      const result = await requestApi(api as any, { env, data: payload, reason: 'action' }, {
-        defaultMethod: method,
-        autoAppend: true,
-      })
-      if (result.skipped) return { ok: true, data: payload }
-      if (!result.ok) {
-        env.notify('error', apiMessage(api as any, result.payload, 'failed'))
-        return { ok: false, data: payload }
-      }
-      const data =
-        result.data && typeof result.data === 'object' && !Array.isArray(result.data)
-          ? { ...payload, ...result.data }
-          : payload
-      return { ok: true, data }
-    } catch (error) {
-      env.notify('error', error instanceof Error ? error.message : method === 'delete' ? '删除选项失败' : '编辑选项失败')
-      return { ok: false, data: payload }
-    }
+  async function openAddDialog() {
+    if (disabled?.value || !overlay) return
+    const result = await overlay.openDialog(
+      optionsAddDialogSchema(schema.value),
+      { ...data.value },
+    )
+    if (!result) return
+    await createOption(result)
+  }
+
+  async function persistOptionApi(
+    api: unknown,
+    data: Record<string, unknown>,
+    payload: Record<string, unknown>,
+    method: 'post' | 'delete',
+  ) {
+    return persistOptionMutation({
+      api,
+      method,
+      env,
+      data,
+      payload,
+      failureMessage: method === 'delete' ? '删除选项失败' : '编辑选项失败',
+    })
   }
 
   async function reloadAfterMutate() {
@@ -251,9 +257,22 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     await loadOptionsFromSource()
   }
 
-  function shouldReloadSource() {
-    const source = schema.value.source
-    return !!source && !isOptionsVariableSource(source)
+  function hasSource() {
+    return !!schema.value.source
+  }
+
+  async function syncEditedSelection(
+    selectedItems: OptionItem[],
+    originValue: unknown,
+    nextPatch: OptionItem,
+    valueField: string,
+  ) {
+    if (!selectedItems.some((item) => matchOptionValue(originValue, item, valueField))) return
+    const replacement = findOption(options.value, nextPatch.value, valueField) ?? nextPatch
+    const nextSelected = selectedItems.map((item) =>
+      matchOptionValue(originValue, item, valueField) ? replacement : item,
+    )
+    await commit(nextSelected)
   }
 
   async function editOption(origin: OptionItem) {
@@ -276,7 +295,6 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
         body: {
           type: 'form',
           initApi: schema.value.editInitApi,
-          api: schema.value.editApi,
           body: editControls,
         },
       },
@@ -287,20 +305,44 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       ...origin,
       ...result,
       label: String(result[labelField] ?? result.label ?? origin.label),
-      value: result[valueField] ?? result.value ?? result[labelField] ?? origin.value,
+      value: result[valueField] ?? result.value ?? origin[valueField] ?? origin.value ?? result[labelField] ?? origin.label,
     } as OptionItem
-    if (shouldReloadSource() && schema.value.editApi) {
+    const eventItem = {
+      [labelField]: patch[labelField],
+      [valueField]: patch[valueField],
+    } as OptionItem
+    const allowed = await runOptionConfirm({
+      schema: schema.value,
+      eventName: 'editConfirm',
+      data: data.value,
+      value: rawValue.value,
+      options: options.value,
+      item: eventItem,
+      env,
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+    })
+    if (!allowed) return
+    const selectedBefore = selected.value
+    const saved = await persistOptionMutation({
+      api: schema.value.editApi,
+      method: 'post',
+      env,
+      data: patch,
+      payload: { ...data.value, ...patch },
+      failureMessage: '编辑选项失败',
+    })
+    if (!saved.ok) return
+    const nextPatch = saved.data as OptionItem
+    if (hasSource() && schema.value.editApi) {
       await reloadAfterMutate()
+      await syncEditedSelection(selectedBefore, origin.value, nextPatch, valueField)
       return
     }
-    applyTree(updateOptionInTree(options.value, origin, patch, valueField))
-    const selectedHit = selected.value.some((item) => matchOptionValue(origin.value, item, valueField))
-    if (selectedHit) {
-      const nextSelected = selected.value.map((item) =>
-        matchOptionValue(origin.value, item, valueField) ? { ...item, ...patch } : item,
-      )
-      await commit(nextSelected)
-    }
+    applyTree(updateOptionInTree(options.value, origin, nextPatch, valueField))
+    await syncEditedSelection(selectedBefore, origin.value, nextPatch, valueField)
   }
 
   async function deleteOption(origin: OptionItem) {
@@ -312,11 +354,23 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       const ok = await env.confirm(filterTpl(String(confirmText), ctx))
       if (!ok) return
     }
-    if (schema.value.deleteApi) {
-      const saved = await persistOptionApi(schema.value.deleteApi, ctx, 'delete')
-      if (!saved.ok) return
-    }
-    if (shouldReloadSource() && schema.value.source) {
+    const allowed = await runOptionConfirm({
+      schema: schema.value,
+      eventName: 'deleteConfirm',
+      data: data.value,
+      value: rawValue.value,
+      options: options.value,
+      item: origin,
+      env,
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+    })
+    if (!allowed) return
+    const saved = await persistOptionApi(schema.value.deleteApi, origin, ctx, 'delete')
+    if (!saved.ok) return
+    if (hasSource()) {
       await reloadAfterMutate()
     } else {
       applyTree(removeOptionFromTree(options.value, origin, valueField))
@@ -331,21 +385,47 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     const label = String(values[labelField] ?? values.label ?? '')
     const value = values[valueField] ?? values.value ?? label
     if (!label && value == null) return
-    const item = addLocalOption({
+    const item: OptionItem = {
       ...values,
       label: label || String(value ?? ''),
       value,
-    })
-    const api = schema.value.addApi
-    if (api && isEffectiveApi(api as any, { ...data.value, ...values })) {
-      try {
-        const result = await requestApi(api as any, { env, data: { ...data.value, ...values }, reason: 'action' })
-        if (result.ok && schema.value.source) await loadOptionsFromSource()
-      } catch (error) {
-        env.notify('error', error instanceof Error ? error.message : '新增选项失败')
-      }
     }
-    await toggle(item)
+    const eventItem = {
+      [labelField]: item[labelField],
+      [valueField]: item[valueField],
+    } as OptionItem
+    const allowed = await runOptionConfirm({
+      schema: schema.value,
+      eventName: 'addConfirm',
+      data: data.value,
+      value: rawValue.value,
+      options: options.value,
+      item: eventItem,
+      env,
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+    })
+    if (!allowed) return
+    const saved = await persistOptionMutation({
+      api: schema.value.addApi,
+      method: 'post',
+      env,
+      data: item,
+      payload: { ...data.value, ...values },
+      failureMessage: '新增选项失败',
+    })
+    if (!saved.ok) return
+    const nextItem = saved.data as OptionItem
+    if (hasSource() && schema.value.addApi) {
+      await reloadAfterMutate()
+      const reloaded = findOption(options.value, nextItem.value, valueField)
+      if (reloaded) await toggle(reloaded)
+      return
+    }
+    addLocalOption(nextItem)
+    await toggle(nextItem)
   }
 
   function applyDefaultSelection(list: OptionItem[], sourceValue?: unknown) {
@@ -366,7 +446,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     }
   }
 
-  async function loadOptionsFromSource() {
+  async function loadOptionsFromSource(): Promise<void> {
     const source = schema.value.source
     const labelField = config.value.labelField || 'label'
     const valueField = config.value.valueField || 'value'
@@ -553,6 +633,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     clear,
     reset,
     commit,
+    openAddDialog,
     createOption,
     addLocalOption,
     editOption,

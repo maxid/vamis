@@ -7,7 +7,7 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1157%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1177%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [在线 Demo](https://maxid.github.io/vamis/) · [组件文档](https://maxid.github.io/vamis/components) · [与 Amis 并排对照](https://maxid.github.io/vamis/sdk/compare.html) · [English](README.en.md)
@@ -182,7 +182,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
 - 侧栏 155 个组件：已完成 **3**（`container` / `hidden` / `toast`），进行中 152，平均 **62%**（≥80% 47 项）。
 - kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
-- 测试：formula 185 + core 858 + editor 8 + sdk 106 = **1157**，全部通过；`pnpm typecheck` **0 错误**。
+- 测试：formula 185 + core 863 + editor 8 + sdk 121 = **1177**，全部通过；`pnpm typecheck` **0 错误**。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 ## 开发
@@ -223,7 +223,7 @@ packages/vamis-editor   可视化编辑器（插件管理器 / 树 / 预览 / �
 packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档 / 组件 / 样式 / 示例 / 编辑器（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
-docs/superpowers/       specs / plans
+docs/superpowers/       specs / plans；组件增量规格在 specs/component/<分类>/
 docs/design/            组件设计文档（复杂度 / Amis 契约 / Vamis 实现）
 docs/marketing/         发布材料（首发文案 / 检查清单 / 截图）
 ```

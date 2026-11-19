@@ -35,6 +35,7 @@ import {
   optionsCreateBtnLabel,
   optionsEditDialogSchema,
   optionsEditDialogTitle,
+  optionsEventPayload,
   optionsHasCustomControls,
   optionsOptionFromDialog,
   optionsFromPayload,
@@ -352,6 +353,40 @@ describe('schema helpers', () => {
   })
 })
 
+describe('optionsEventPayload', () => {
+  it('builds the public option event payload', () => {
+    const payload = optionsEventPayload({
+      data: {
+        role: 'admin',
+        __super: { hidden: true },
+        __prev: { role: 'guest' },
+        __changeReason: { type: 'api' },
+      },
+      name: 'owner',
+      value: 'a',
+      options: [{ label: 'A', value: 'a' }],
+      item: { label: 'A', value: 'a' },
+    })
+    expect(payload).toEqual({
+      role: 'admin',
+      value: 'a',
+      options: [{ label: 'A', value: 'a' }],
+      items: [{ label: 'A', value: 'a' }],
+      owner: 'a',
+      item: { label: 'A', value: 'a' },
+    })
+    expect(payload).not.toHaveProperty('__prev')
+    expect(payload).not.toHaveProperty('__changeReason')
+  })
+})
+
+describe('option mutation dialog schemas', () => {
+  it('does not run add/edit APIs before confirm events', () => {
+    expect(optionsAddDialogSchema({ addApi: '/api/add' }).body).not.toHaveProperty('api')
+    expect(optionsEditDialogSchema({ editApi: '/api/edit' }).body).not.toHaveProperty('api')
+  })
+})
+
 describe('deferred option children', () => {
   it('loads a deferred node once and merges normalized children without dropping siblings', () => {
     const tree = normalizeOptions([
@@ -470,6 +505,7 @@ describe('select uses the shared contract', () => {
     expect(hook).toContain('isApiOutdated')
     expect(hook).toContain('editOption')
     expect(hook).toContain('deleteOption')
+    expect(hook).toContain('persistOptionMutation')
   })
 
   it('select option styles use tokens and split hover from active', () => {

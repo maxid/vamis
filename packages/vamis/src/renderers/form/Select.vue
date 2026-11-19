@@ -48,8 +48,6 @@ const overflowTip = ref(false)
 const tagTip = ref(false)
 const tagTipEl = ref<HTMLElement | null>(null)
 const tagTipLabel = ref('')
-const creating = ref(false)
-const createDraft = ref<Record<string, string>>({})
 let foldObserver: ResizeObserver | undefined
 let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
 let tagTipHideTimer: ReturnType<typeof setTimeout> | undefined
@@ -74,7 +72,6 @@ const mobileWheelIndex = ref(0)
 const checkAllLabel = computed(() =>
   props.schema.checkAllLabel != null ? String(props.schema.checkAllLabel) : '全选',
 )
-const addControls = computed(() => (Array.isArray(props.schema.addControls) ? props.schema.addControls : []))
 function leafOptions(list: OptionItem[]): OptionItem[] {
   const out: OptionItem[] = []
   for (const item of list) {
@@ -333,29 +330,11 @@ function removeTag(item: OptionItem, event: Event) {
   void ctl.toggle(item)
 }
 
-function startCreate() {
-  creating.value = true
-  const labelField = ctl.config.value.labelField || 'label'
-  createDraft.value = { [labelField]: '' }
-  for (const item of addControls.value) {
-    if (item && typeof item === 'object' && (item as SchemaObject).name) {
-      createDraft.value[String((item as SchemaObject).name)] = ''
-    }
-  }
-}
-
-async function confirmCreate() {
-  const values = { ...createDraft.value }
-  const labelField = ctl.config.value.labelField || 'label'
-  if (!String(values[labelField] ?? values.label ?? '').trim() && !addControls.value.length) return
-  creating.value = false
-  await ctl.createOption(values)
-  createDraft.value = {}
-}
-
-function cancelCreate() {
-  creating.value = false
-  createDraft.value = {}
+async function onAdd(event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  ctl.open.value = false
+  await ctl.openAddDialog()
 }
 
 function isSelected(value: unknown) {
@@ -891,38 +870,14 @@ watch(
           </div>
           <div v-if="ctl.config.value.creatable" class="vamis-select__create">
             <button
-              v-if="!creating"
               type="button"
               class="vamis-select__create-btn"
               :disabled="locked"
               @mousedown.prevent
-              @click.stop="startCreate"
+              @click="onAdd"
             >
               {{ ctl.createLabel.value }}
             </button>
-            <div v-else class="vamis-select__create-form" @mousedown.stop>
-              <template v-if="addControls.length">
-                <input
-                  v-for="item in addControls"
-                  :key="String((item as SchemaObject).name)"
-                  class="vamis-select__create-input"
-                  :placeholder="String((item as SchemaObject).label || (item as SchemaObject).placeholder || (item as SchemaObject).name || '')"
-                  :value="createDraft[String((item as SchemaObject).name)]"
-                  @input="createDraft[String((item as SchemaObject).name)] = ($event.target as HTMLInputElement).value"
-                >
-              </template>
-              <input
-                v-else
-                class="vamis-select__create-input"
-                placeholder="请输入名称"
-                :value="createDraft[ctl.config.value.labelField || 'label']"
-                @input="createDraft[ctl.config.value.labelField || 'label'] = ($event.target as HTMLInputElement).value"
-              >
-              <div class="vamis-select__create-actions">
-                <button type="button" class="vamis-select__create-btn" @click="confirmCreate">确定</button>
-                <button type="button" class="vamis-select__create-btn is-muted" @click="cancelCreate">取消</button>
-              </div>
-            </div>
           </div>
         </div>
       </VamisOverlay>

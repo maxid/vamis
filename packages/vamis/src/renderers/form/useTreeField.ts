@@ -5,6 +5,7 @@ import {
   createVamisEvent,
   eventEvalData,
   filterOptionTree,
+  filterTpl,
   findOption,
   insertOptionInTree,
   isEffectiveApi,
@@ -19,9 +20,11 @@ import {
   optionsFromPayload,
   optionsHasCustomControls,
   optionsOptionFromDialog,
+  persistOptionMutation,
   removeOptionFromTree,
   requestApi,
   resolveDeferredOption,
+  runOptionConfirm,
   runOnEvent,
   toggleTreeSelection,
   treeItemPartial,
@@ -115,6 +118,10 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
       schema.value.name &&
       fieldApi.setValue(schema.value.name, dumpJoined(values, multiple.value, schema.value.joinValues !== false)),
   })
+
+  function currentValue() {
+    return schema.value.name ? fieldApi.getValue(schema.value.name) : schema.value.value
+  }
 
   function seedExpanded(nodes: OptionItem[]) {
     const next = new Map<OptionItem, boolean>()
@@ -306,18 +313,19 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   }
 
   async function emitOptionEvent(name: string, item: OptionItem) {
-    const payload = { ...data.value, item }
-    const event = createVamisEvent(name, payload)
-    await runOnEvent(schema.value, name, {
+    return runOptionConfirm({
+      schema: schema.value,
+      eventName: name as 'addConfirm' | 'editConfirm' | 'deleteConfirm',
+      data: data.value,
+      value: currentValue(),
+      options: options.value,
+      item,
       env,
-      data: eventEvalData(payload, event),
       scoped,
       overlay,
       form: formApi,
       scope: scope.value,
-      event,
     })
-    return !event.prevented
   }
 
   async function openAddDialog(parent: OptionItem | null) {
@@ -329,12 +337,21 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     if (!result) return
     const item = optionsOptionFromDialog(result, schema.value)
     if (!(await emitOptionEvent('addConfirm', item))) return
+    const saved = await persistOptionMutation({
+      api: schema.value.addApi,
+      method: 'post',
+      env,
+      data: item,
+      payload: { ...data.value, ...result },
+      failureMessage: '新增选项失败',
+    })
+    if (!saved.ok) return
     if (parent) {
       const next = new Map(expanded.value)
       next.set(parent, true)
       expanded.value = next
     }
-    commitOptions(insertOptionInTree(options.value, parent, item, valueField.value))
+    commitOptions(insertOptionInTree(options.value, parent, { ...item, ...saved.data }, valueField.value))
   }
 
   async function openEditDialog(item: OptionItem) {
@@ -345,8 +362,21 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     })
     if (!result) return
     const patch = optionsOptionFromDialog({ ...item, ...result }, schema.value)
-    if (!(await emitOptionEvent('editConfirm', patch))) return
-    commitOptions(updateOptionInTree(options.value, item, patch, valueField.value))
+    const eventItem = {
+      [labelField.value]: patch[labelField.value],
+      [valueField.value]: patch[valueField.value],
+    } as OptionItem
+    if (!(await emitOptionEvent('editConfirm', eventItem))) return
+    const saved = await persistOptionMutation({
+      api: schema.value.editApi,
+      method: 'post',
+      env,
+      data: patch,
+      payload: { ...data.value, ...result },
+      failureMessage: '编辑选项失败',
+    })
+    if (!saved.ok) return
+    commitOptions(updateOptionInTree(options.value, item, { ...patch, ...saved.data }, valueField.value))
   }
 
   function startAdd(parent: OptionItem | null = null) {
@@ -381,27 +411,57 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   async function removeItem(item: OptionItem) {
     if (disabled?.value || item.disabled) return
     const confirmText =
-      schema.value.deleteConfirmText != null ? String(schema.value.deleteConfirmText) : '确认要删除？'
+      schema.value.deleteConfirmText != null ? String(schema.value.deleteConfirmText) : ''
     if (confirmText) {
-      const ok = await env.confirm(confirmText)
+      const ok = await env.confirm(filterTpl(confirmText, { ...data.value, ...item }))
       if (!ok) return
     }
+    if (!(await emitOptionEvent('deleteConfirm', item))) return
+    const saved = await persistOptionMutation({
+      api: schema.value.deleteApi,
+      method: 'delete',
+      env,
+      data: item,
+      payload: { ...data.value, ...item },
+      failureMessage: '删除选项失败',
+    })
+    if (!saved.ok) return
     const nextSelected = selected.value.filter((value) => !optionValuesEqual(value, item.value))
     commitOptions(removeOptionFromTree(options.value, item, valueField.value))
     selected.value = nextSelected
     cancelEdit()
   }
 
-  function confirmEdit() {
+  async function confirmEdit() {
     const label = draftLabel.value.trim()
     if (!label || disabled?.value) return
+    let item: OptionItem | null = null
     if (editingItem.value) {
-      commitOptions(
-        updateOptionInTree(options.value, editingItem.value, { [labelField.value]: label, label }, valueField.value),
-      )
+      item = {
+        ...editingItem.value,
+        [labelField.value]: label,
+        label,
+      }
     } else if (isAdding.value) {
-      const child: OptionItem = { label, value: label, [labelField.value]: label, [valueField.value]: label }
-      commitOptions(insertOptionInTree(options.value, addingParent.value, child, valueField.value))
+      item = { label, value: label, [labelField.value]: label, [valueField.value]: label }
+    }
+    if (!item) return
+    const eventName = editingItem.value ? 'editConfirm' : 'addConfirm'
+    if (!(await emitOptionEvent(eventName, item))) return
+    const saved = await persistOptionMutation({
+      api: editingItem.value ? schema.value.editApi : schema.value.addApi,
+      method: 'post',
+      env,
+      data: item,
+      payload: { ...data.value, ...item },
+      failureMessage: editingItem.value ? '编辑选项失败' : '新增选项失败',
+    })
+    if (!saved.ok) return
+    const nextItem = { ...item, ...saved.data } as OptionItem
+    if (editingItem.value) {
+      commitOptions(updateOptionInTree(options.value, editingItem.value, nextItem, valueField.value))
+    } else {
+      commitOptions(insertOptionInTree(options.value, addingParent.value, nextItem, valueField.value))
     }
     cancelEdit()
   }

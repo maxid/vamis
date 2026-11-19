@@ -27,7 +27,7 @@ packages/vamis-editor   可视化编辑器（树 / 预览 / 属性 / Schema）
 packages/vamis-sdk      JS SDK（sdk.js + vamis.embed）
 playground              文档（`/`）+ 组件 + 样式 + 示例 + 编辑器 + 对照（同一 Vite，5173）
 website                 文档 Markdown 真源（可选 VitePress 静态导出）
-docs/superpowers/       specs / plans
+docs/superpowers/       specs / plans；组件增量规格在 specs/component/<分类>/
 docs/design/            组件设计文档（复杂度 / 契约 / Vamis 实现）
 docs/marketing/         发布材料（首发文案 / 检查清单 / 截图；非运行时）
 ```

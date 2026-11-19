@@ -5,8 +5,8 @@ outline: deep
 
 # Select 下拉框
 
-::: info 实现进度 92% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur。移动端从底部滑入（单选滚轮 itemHeight 40 / 多选列表；箭头朝右不翻转）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
+::: info 实现进度 93% · 进行中
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。移动端从底部滑入（单选滚轮 itemHeight 40 / 多选列表；箭头朝右不翻转）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -729,9 +729,9 @@ body:
 | change | `[name]` 当前值；`selectedItems` 选中项；`items` 选项集合 | 值变化 |
 | focus | `[name]` 当前值；`items` 选项集合 | 打开下拉 |
 | blur | `[name]` 当前值；`items` 选项集合 | 关闭下拉 |
-| addConfirm | `[name]`；`item` 新增项；`items` | 新增提交。**未接** |
-| editConfirm | `[name]`；`item` 编辑项；`items` | 编辑提交。**未接** |
-| deleteConfirm | `[name]`；`item` 删除项；`items` | 删除提交。**未接** |
+| addConfirm | `[name]`；`item` 新增项；`items` | 新增提交；在本地写入与 `addApi` 前触发 |
+| editConfirm | `[name]`；`item` 编辑项（仅本次 label/value）；`items` | 编辑提交；在本地更新与 `editApi` 前触发 |
+| deleteConfirm | `[name]`；`item` 删除项；`items` | 删除提交；在本地移除与 `deleteApi` 前触发 |
 
 ### change
 
@@ -799,6 +799,94 @@ body:
           - actionType: toast
             args:
               msg: "${event.data.tree|json}"
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+### addConfirm
+
+配置 `creatable` 后，点击“新增选项”会先打开 Dialog，提交时触发 `addConfirm`。调用 `preventDefault()` 会阻止本地写入与 `addApi`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: select
+    name: tree
+    label: Tree
+    creatable: true
+    editable: true
+    removable: true
+    onEvent:
+      addConfirm:
+        actions:
+          - actionType: toast
+            args:
+              msg: "${event.data.item|json}"
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+### editConfirm
+
+配置 `editable` 后，编辑选项提交时触发。调用 `preventDefault()` 会阻止本地更新与 `editApi`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: select
+    name: tree
+    label: Tree
+    creatable: true
+    editable: true
+    removable: true
+    onEvent:
+      editConfirm:
+        actions:
+          - actionType: toast
+            args:
+              msg: "${event.data.item|json}"
+    options:
+      - label: A
+        value: a
+      - label: B
+        value: b
+      - label: C
+        value: c
+```
+
+### deleteConfirm
+
+配置 `removable` 后，删除选项提交时触发。`deleteConfirmText` 先确认；随后 `deleteConfirm` 可决定是否继续删除与调用 `deleteApi`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - type: select
+    name: tree
+    label: Tree
+    creatable: true
+    editable: true
+    removable: true
+    deleteConfirmText: 确认删除？
+    onEvent:
+      deleteConfirm:
+        actions:
+          - actionType: toast
+            args:
+              msg: "${event.data.item|json}"
     options:
       - label: A
         value: a
@@ -918,5 +1006,5 @@ body:
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
 - 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
-- `addConfirm` / `editConfirm` / `deleteConfirm` 未接。
+- Select 新增 / 编辑按 Amis 打开 Dialog。`addConfirm` / `editConfirm` / `deleteConfirm` 在本地写入和 CUD API 之前触发；`preventDefault()` 会同时阻止本地变更与请求。新增 / 编辑弹层的 `item` 只带本次 label/value；`deleteConfirmText` 未配置时不弹默认确认框。
 - 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。

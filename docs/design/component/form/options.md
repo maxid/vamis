@@ -1,6 +1,6 @@
 # Options 选择器契约 · `options`（契约）设计
 
-> 状态：**进行中 88%** · 复杂度：**XL 特重**
+> 状态：**进行中 89%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/options) · Amis：`/zh-CN/components/form/options`
 > 盘点日期：2026-11-18；虚拟列表核对：2026-11-19。本文是研发设计文档；options 是选择器基类契约，不是独立业务 type。
 
@@ -44,6 +44,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 | 搜索/filterOption/searchApi | 已接 |
 | selected/toggle/toggleAll | 已接 |
 | add/edit controls | 已接（部分控件） |
+| addConfirm / editConfirm / deleteConfirm | 已接；先于本地变更与 CUD API |
 | 分组/树 | 部分（由控件决定） |
 | 虚拟列表 | Select 桌面平铺选项已接；分组菜单 / Picker / Transfer / 树待复用 |
 
@@ -62,6 +63,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 - 分组菜单（`selectMode: group` / group options）仍整表渲染；Picker / Transfer / 其他树未接虚拟列表。
 - 远程缓存未接；各控件 selectMode/树/分页差异仍由消费控件负责。
 - 深色由控件负责；虚拟列表滚动条与分组行高仍要按控件核。
+- 剩余 CUD 缺口是各消费控件是否完整暴露对应 UI；共享事件与 API 顺序已收口。
 
 ## 7. 验收
 

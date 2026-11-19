@@ -947,6 +947,12 @@ alwaysApply: true
 - 触及：Options `input-tree` `tree-select`
 - 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/InputTree.vue`；Amis `Options.tsx` `deferLoad`
 
+### Options CUD 确认事件先于本地写入和 API
+- 踩过：新增、编辑、删除先把选项写进本地或调用 `addApi` / `editApi` / `deleteApi`，再派发确认事件；`preventDefault()` 已经无法回滚本地状态，而且自定义弹层会把原选项私有字段整包塞进 `editConfirm.item`。
+- 稳定做法：Select 与 InputTree 共用 `runOptionConfirm` / `persistOptionMutation`，统一 payload 的公开数据、`value`、`options`、`items`、`item` 和 `[name]`；顺序固定为 `deleteConfirmText`（若配置）-> `deleteConfirm` / `editConfirm` / `addConfirm` -> API -> 本地写入。Select 新增 / 编辑必须和 Amis 一样走 `overlay.openDialog`，不要在下拉里另做内联表单；弹层路径的 `item` 只传本次编辑的 label/value，原选项字段只在本地合并；`deleteConfirmText` 先做 `filterTpl`，未配置时不要自造默认确认框。
+- 触及：`select` Options `input-tree` `tree-select`
+- 规则：`packages/vamis-core/src/actions/options-event.ts`；`packages/vamis-core/src/utils/option-mutation.ts`；Amis `Options.tsx` `dispatchOptionEvent` / `handleOption(Add|Edit|Delete)`
+
 ### Select 分组检索保树，filterOption 只 trusted
 - 踩过：`filterOptions` 拍扁 `children`，分组检索丢组头。组名命中且 `children` 被滤空时，`children?.length` 为 0，组头变成可选项。`filterOption` 字符串 `Function` 未开 trusted 会当 XSS。
 - 稳定做法：检索走 `filterOptionTree`；组名命中时保留全部子项，模板用 `Array.isArray(children)` 判断组。`filterOption` 只 `env.trusted` 编译。全选检索默认 `checkAllBySearch`。

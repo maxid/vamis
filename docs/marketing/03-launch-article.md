@@ -189,7 +189,7 @@ app.mount('#app')
 | CRUD | 65% | 查询、分页、批量、弹窗编辑、切页 Spinner |
 | Table / Table2 | 88% / 70% | Table 主路径与固定列已接；Table2 仍缺固定列等 |
 | 日期 | 92% | 桌面月历 + 移动端滚轮、范围、`minDate` / `maxDate` |
-| Select / Checkbox / InputText | 92% / 90% / 92% | 桌面 + 移动、搜索、多选、分组 |
+| Select / Checkbox / InputText | 93% / 90% / 92% | 桌面 + 移动、搜索、多选、分组 |
 | 向导 / Dialog / Drawer / Toast | 50% / 88% / 88% / 100% | 向导仍缺 API 主路径；弹层与 Toast 已推进 |
 | JS SDK | 90% | `vamis.embed` / `updateSchema` / `updateProps` / `doAction` |
 | 编辑器 | 骨架 | 组件树 / 画布 / 属性 / YAML，无插件市场 |

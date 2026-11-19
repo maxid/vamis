@@ -46,8 +46,33 @@ export interface OptionsControlConfig extends OptionsValueConfig {
   itemHeight: number
 }
 
+export interface OptionsEventPayloadInput {
+  data?: PlainObject
+  name?: string
+  value?: unknown
+  options?: OptionItem[]
+  item?: OptionItem
+}
+
 function isPlainObject(value: unknown): value is PlainObject {
   return !!value && typeof value === 'object' && !Array.isArray(value)
+}
+
+/** 对齐 Amis `dispatchOptionEvent`：公开数据 + 当前值 + options/items + 当前 item。 */
+export function optionsEventPayload(input: OptionsEventPayloadInput = {}): PlainObject {
+  const options = input.options || []
+  const payload: PlainObject = {}
+  for (const [key, value] of Object.entries(input.data || {})) {
+    if (!key.startsWith('__')) payload[key] = value
+  }
+  return {
+    ...payload,
+    value: input.value,
+    options,
+    items: options,
+    item: input.item,
+    ...(input.name ? { [input.name]: input.value } : {}),
+  }
 }
 
 export function optionsLabelField(schema: PlainObject = {}): string {
@@ -176,7 +201,6 @@ export function optionsAddDialogSchema(schema: PlainObject = {}): SchemaObject {
     ...overlayDialogFrom(schema, 'addDialog'),
     body: {
       type: 'form',
-      ...(schema.addApi != null ? { api: schema.addApi } : {}),
       body: optionsFormControls(schema, 'addControls', true),
     },
   }
@@ -191,7 +215,6 @@ export function optionsEditDialogSchema(schema: PlainObject = {}): SchemaObject 
     body: {
       type: 'form',
       ...(schema.editInitApi != null ? { initApi: schema.editInitApi } : {}),
-      ...(schema.editApi != null ? { api: schema.editApi } : {}),
       body: optionsFormControls(schema, 'editControls', false),
     },
   }

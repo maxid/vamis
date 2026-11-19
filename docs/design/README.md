@@ -23,3 +23,4 @@
 - 先写边界与优先级，再写信息架构、契约、实现与缺口。
 - 文档必须能追溯到 `website/src/**/*.md`、`website/nav.mjs` 与相关运行时源码。
 - 未实现的能力标为缺口；不把文档进度当成功能验收。
+- `docs/design/component/<分类>/` 是组件长期设计和当前状态真源；组件剩余工作的增量执行规格放到 `docs/superpowers/specs/component/<分类>/`，不在这里再建第二份进度或契约真源。
