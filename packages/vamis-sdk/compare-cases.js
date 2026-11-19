@@ -8030,23 +8030,43 @@ window.VAMIS_COMPARE_CASES = [
     "origin": "vamis",
     "layer": "docs",
     "title": "国际化 #1",
-    "heading": "当前可用的做法",
+    "heading": "全局文本替换",
     "expect": "",
     "schema": {
       "type": "page",
-      "data": {
-        "text": {
-          "title": "表单页面",
-          "name": "名称"
-        }
-      },
+      "body": {
+        "type": "tpl",
+        "tpl": "VAMIS_HOST"
+      }
+    },
+    "measure": {
+      "type": "smoke"
+    }
+  },
+  {
+    "id": "src-extend-i18n-1",
+    "group": "文档 / 扩展",
+    "bucket": "docs",
+    "section": "扩展",
+    "page": "国际化",
+    "extra": false,
+    "origin": "vamis",
+    "layer": "docs",
+    "title": "国际化 #2",
+    "heading": "schema 按语言覆盖字段",
+    "expect": "",
+    "schema": {
+      "type": "page",
       "body": {
         "type": "form",
         "body": [
           {
             "type": "input-text",
             "name": "name",
-            "label": "${text.name}"
+            "label": "姓名：",
+            "en-US": {
+              "label": "username: "
+            }
           }
         ]
       }
