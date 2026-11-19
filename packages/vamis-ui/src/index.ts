@@ -23,6 +23,7 @@ export { Badge, badgeVariants } from './ui/badge'
 export {
   Dialog,
   DialogClose,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogFooter,

@@ -12,7 +12,7 @@ export interface ScopedComponent {
   reload?(extra?: PlainObject, replace?: boolean): Promise<void> | void
   getData?(): PlainObject
   setData?(values: PlainObject, replace?: boolean, index?: unknown, condition?: unknown): void
-  submit?(): Promise<void> | void
+  submit?(closeDialog?: boolean): Promise<boolean | void> | boolean | void
   validate?(): boolean | Promise<boolean>
   type?: string
   schema?: PlainObject

@@ -3,6 +3,7 @@ import { createVamisEvent, eventEvalData, runAction, runActions, runOnEvent, wit
 import type { ActionContext } from '../src/actions/run'
 import { ScopedContext } from '../src/scoped'
 import { resetStatusStore, statusDisabledOf, statusStaticOf, statusVisibleOf } from '../src/status-store'
+import { createOverlay } from '../src/overlay'
 
 function ctx(partial: Partial<ActionContext> = {}): ActionContext {
   return {
@@ -271,6 +272,139 @@ describe('onEvent actions', () => {
     await runAction({ actionType: 'confirm' }, context)
     expect(submitDialogForm).toHaveBeenCalled()
     expect(closeDialog).not.toHaveBeenCalled()
+  })
+
+  it('dispatches dialog confirm/cancel events and honors preventDefault', async () => {
+    const overlay = createOverlay()
+    const notify = vi.fn()
+    const context = ctx({
+      overlay,
+      env: {
+        fetcher: vi.fn(async () => ({ status: 0, msg: 'ok', data: {} })),
+        notify,
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+      event: createVamisEvent('click', {}),
+    })
+    void overlay.openDialog({
+      title: '阻止',
+      onEvent: {
+        confirm: { actions: [{ actionType: 'toast', args: { msg: '确认事件' } }, { actionType: 'preventDefault' }] },
+        cancel: { actions: [{ actionType: 'toast', args: { msg: '取消事件' } }, { actionType: 'preventDefault' }] },
+      },
+    }, { name: 'Ada' })
+    await runAction({ actionType: 'confirm' }, context)
+    expect(overlay.state.dialog).not.toBeNull()
+    await runAction({ actionType: 'cancel' }, context)
+    expect(overlay.state.dialog).not.toBeNull()
+    expect(notify).toHaveBeenCalledWith('info', '确认事件', expect.any(Object))
+    expect(notify).toHaveBeenCalledWith('info', '取消事件', expect.any(Object))
+  })
+
+  it('keeps a dialog open when confirm has close false and respects the submit close flag', async () => {
+    const closeDialog = vi.fn()
+    const submitDialogFormResult = vi.fn(async () => ({ found: true, ok: true }))
+    const context = ctx({
+      overlay: {
+        state: { dialog: { title: '编辑' }, drawer: null, data: { name: 'Ada' } },
+        openDialog: vi.fn(),
+        openDrawer: vi.fn(),
+        closeDialog,
+        closeDrawer: vi.fn(),
+        closeById: vi.fn(),
+        close: vi.fn(),
+        submitDialogFormResult,
+      },
+    })
+    await runAction({ actionType: 'confirm', close: false }, context)
+    expect(submitDialogFormResult).toHaveBeenCalledWith(false)
+    expect(closeDialog).not.toHaveBeenCalled()
+  })
+
+  it('targets dialog setValue by id and applies override mode', async () => {
+    const overlay = createOverlay()
+    void overlay.openDialog({ id: 'dialog_setvalue', title: '数据' }, { username: 'amis', password: 'x' })
+    const context = ctx({ overlay })
+    await runAction({
+      actionType: 'setValue',
+      componentId: 'dialog_setvalue',
+      args: { value: { username: 'vamis' } },
+      dataMergeMode: 'override',
+    }, context)
+    expect(overlay.state.data).toEqual({ username: 'vamis' })
+  })
+
+  it('closes a named dialog after a generic button action', async () => {
+    const overlay = createOverlay()
+    void overlay.openDialog({ name: 'dialog_1', title: '父' })
+    void overlay.openDialog({ title: '子' })
+    const context = ctx({ overlay })
+    await runAction({ type: 'button', close: 'dialog_1' }, context)
+    expect(overlay.state.dialog).toBeNull()
+    expect(overlay.state.dialogs).toHaveLength(0)
+  })
+
+  it('awaits ajax feedback and stops remaining actions on skipRestOnCancel', async () => {
+    const event = createVamisEvent('click')
+    const openDialog = vi.fn(async () => false as const)
+    const context = ctx({
+      event,
+      overlay: {
+        state: { dialog: null, drawer: null, data: {} },
+        openDialog,
+        openDrawer: vi.fn(),
+        closeDialog: vi.fn(),
+        closeDrawer: vi.fn(),
+        closeById: vi.fn(),
+        close: vi.fn(),
+      },
+    })
+    await runActions([
+      {
+        actionType: 'ajax',
+        api: '/api/mock2/form/saveForm',
+        feedback: { body: '已保存', skipRestOnCancel: true },
+      },
+      { actionType: 'toast', args: { msg: '不应执行' } },
+    ], context)
+    expect(openDialog).toHaveBeenCalledTimes(1)
+    expect(context.env.notify).toHaveBeenCalledTimes(1)
+    expect(context.env.notify).toHaveBeenCalledWith('success', 'ok')
+  })
+
+  it('marks the current dialog busy while ajax is pending', async () => {
+    let resolveFetch!: (value: any) => void
+    const fetchPromise = new Promise((resolve) => {
+      resolveFetch = resolve
+    })
+    const setDialogStatus = vi.fn()
+    const context = ctx({
+      env: {
+        fetcher: vi.fn(() => fetchPromise),
+        notify: vi.fn(),
+        jumpTo: vi.fn(),
+        alert: vi.fn(),
+        confirm: vi.fn(async () => true),
+      },
+      overlay: {
+        state: { dialog: { title: '提交' }, drawer: null, data: {} },
+        openDialog: vi.fn(),
+        openDrawer: vi.fn(),
+        closeDialog: vi.fn(),
+        closeDrawer: vi.fn(),
+        closeById: vi.fn(),
+        close: vi.fn(),
+        getActiveDialogKey: () => 7,
+        setDialogStatus,
+      },
+    })
+    const pending = runAction({ actionType: 'ajax', api: '/api/mock2/form/saveForm' }, context)
+    expect(setDialogStatus).toHaveBeenCalledWith(7, { loading: true, error: '' })
+    resolveFetch({ status: 0, msg: 'ok', data: {} })
+    await pending
+    expect(setDialogStatus).toHaveBeenLastCalledWith(7, { loading: false })
   })
 
   it('interpolates nativeEvent.type from the D4 event subset', async () => {

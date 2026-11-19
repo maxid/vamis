@@ -11,7 +11,7 @@ export interface FormContext {
   isStatic?: () => boolean
   getValue: (name: string) => unknown
   setValue: (name: string, value: unknown, reason?: ChangeReason) => void
-  submit: () => Promise<void>
+  submit: (closeDialog?: boolean) => Promise<boolean>
   reset: () => void
   clear: () => void
   setError: (name: string, message: string) => void

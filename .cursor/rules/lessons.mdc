@@ -680,6 +680,18 @@ alwaysApply: true
 - 触及：`dialog` `action` `button` `drawer` `form`
 - 规则：本文；`packages/vamis-ui/src/styles.css` Dialog `<576` / Form `767`；Amis `_modal.scss` `Modal-footer > .Button { flex: 1 }`
 
+### Dialog 盒模型用 Amis Modal 的 flex column，不要留 shadcn grid
+- 踩过：DialogContent 沿用 shadcn `grid + gap-3 + p-5`，全屏时 auto 行被 grid 拉伸，标题居中、正文跑到纵向中部；body 无内边距，和 `_modal.scss` 的 header / body / footer 完全对不上。
+- 稳定做法：DialogContent 固定 `display:flex; flex-direction:column; gap:0; padding:24px 0; radius:6px; shadow:none`；header/title 左对齐、14/21，body `16/24` 外距 + `0 24px` 横向 padding，footer `0 24px`。关闭控件只有现有的一枚 `dialog-close`，结构上必须放 `DialogHeader` 内，盒模型钉成 Amis 的 `16×22`、图标 16px、padding/border 0；无标题也保留 header，不要另加第二枚图标。Vamis 3px 输入 focus glow 不能删：body 用 `padding:3px 24px`、margin 改成 `13px 0 21px`，视觉起点仍等价 Amis 的 16/24。AJAX / submit 时 body 内放默认 32px `Spinner` + 独立遮罩，遮罩 `rgba(255,255,255,.1)`、`blur(1px)`、0.2s 淡入；footer 不再放 spinner，避免直接 SVG 被 flex 撑成大菱形。
+- 触及：`dialog` Form Item 输入控件 SDK 对照
+- 规则：`packages/vamis-ui/src/styles.css` `[data-vamis-overlay='dialog']`；`packages/vamis/src/OverlayHost.vue`；Amis `_modal.scss`
+
+### Dialog 拖拽存视口绝对坐标，不要驱动 transform / transition
+- 踩过：用 `translate(calc(-50% + x), y)` 改拖拽会覆盖 reka/shadcn 的 enter/zoom transform；`duration-200` 又让 left/top 滞后。第二次拖拽把当前 rect 当基准继续叠 offset，会累计漂移；resize 后仍停在旧视口坐标。
+- 稳定做法：Dialog 去掉 enter/zoom/transition。拖拽态保存每层 `{left, top}` 视口绝对值，pointermove 固定 clamp 到 `10..innerWidth-width-10` / `10..innerHeight-height-10`，同时清 `transform:none; translate:none`。每次拖拽从当前 rect 重新起算，不做 offset 累加；window resize 用 rAF 按当前元素尺寸重新回夹。只改 transform 或用 `calc(50% + offset)` 会产生跟手误差和越界。
+- 触及：`dialog`
+- 规则：`packages/vamis/src/OverlayHost.vue` `startDialogDrag` / `moveDialog` / `clampDraggedDialogs`
+
 ### 手机「桌面式网站」会把 CSS 视口撑过 768
 - 踩过：对照 `embed-case` 在手机上画出桌面月历 + 标签在上。浏览器 Desktop site / 桌面式把 layout viewport 设成 ~980，`matchMedia('(max-width: 768px)')` 为 false。Amis `isMobile()` 同样只认 CSS 视口，不认 UA。
 - 稳定做法：运行时继续认 CSS 视口（对齐 Amis）。测滚轮请关掉桌面式。顶层 `embed-case?vp=mobile` 才写 `env.mobileUI: true` 并钉 viewport 375，不要用 UA / `screen.width` 去对抗桌面式。对照 iframe 本身已是 375；`frameUrl` 也带上 `vp=mobile`，以免桌面式把 iframe 视口报宽。

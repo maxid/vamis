@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
-- 同步时间：2026-11-18
-- Vamis 基线：`21da3a7`（`main`，与 `origin/main` 一致）
+- 同步时间：2026-11-20
+- Vamis 基线：`9bc50a8`（`main`，与 `origin/main` 一致）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -11,7 +11,7 @@
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
 2. **type 名称覆盖 185 / 189（97.9%）**：还剩 3 个真实 type 和 `navigation` 1 个别名。
-3. **语义进度（2026-11-18）**：侧栏 155 项已完成 **3**（`container`、`hidden`、`toast`）/ 进行中 152 / 未开始 0，平均 **62%**（≥80% **47**；155 行均值 62.6%，未改档）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域）；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
+3. **语义进度（2026-11-20）**：侧栏 155 项已完成 **4**（`container`、`hidden`、`toast`、`dialog`）/ 进行中 151 / 未开始 0，平均 **62%**（≥80% **47**；155 行均值 62.8%，未改档）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域）；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 高级项、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
 ## 1. 上游对齐
@@ -20,7 +20,7 @@
 |----|----|
 | amis 本地 master | `43a33ee06`，2026-03-18 |
 | amis 包版本 | 6.13.0 |
-| Vamis HEAD | `21da3a7`，2026-11-18，`main` 与 `origin/main` 一致 |
+| Vamis HEAD | `9bc50a8`，2026-11-19，`main` 与 `origin/main` 一致 |
 | Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；P0 与 Amis 扩展过滤器已接 |
 
 结论：Vamis 以 amis master 源码为参考基线，版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 863 + editor 8 + sdk 121 = **1177**，全绿（2026-11-19 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 873 + editor 8 + sdk 121 = **1187**，全绿（2026-11-20 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
-| 工作区 | `git status` | 本轮 i18n 运行时、文档、测试与生成对照目录有本地改动，未提交 |
-| 对照 | 报告 + 本机目录 | 目录 **2223**（文档 158 / 组件 1594 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）；本轮 i18n 与受影响组件专项已跑，均 P0 0 |
+| 工作区 | `git status` | 本轮 Dialog 运行时、样式、测试与文档有改动，未提交 |
+| 对照 | 报告 + 本机目录 | 目录 **2233**（文档 159 / 组件 1603 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）；Dialog 桌面 / 移动 **24/25**（P0 0，余 1 条 CRUD 列 Action schema-tree 定位假阴性）。本轮未重跑全量对照 |
 
-结论：本轮 `test` / `typecheck` / `build` 复核通过；i18n 与受影响组件专项对照已更新。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck` 与 Dialog 专项复核通过，生成目录为 **2233**；未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 
@@ -102,7 +102,7 @@
 - **Playground**：`/` 文档、`/components` 组件、`/examples` 示例（15 个样例文件）；`/editor` 仍在。
 - **JS SDK**：`vamis.embed` P0 已有；`getComponentByName` / `doAction` 已接，等更多组件动作覆盖。
 - **编辑器**：树 + 预览 + 属性 + YAML/JSON；无插件市场。
-- **测试**：formula / core / sdk 有单测；core 已覆盖多类渲染器行为，SDK 另有 embed 与对照目录用例。
+- **测试**：formula / core / editor / sdk 有单测；core 已覆盖多类渲染器行为，SDK 另有 embed 与对照目录用例。
 
 ## 6. 下一阶段建议（按性价比）
 

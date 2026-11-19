@@ -501,6 +501,7 @@
   --z-popover: 1400;
   --z-tooltip: 1600;
   --z-toast: 2000;
+  --modal-overlay-bg: rgba(0, 0, 0, 0.7);
   /* Amis $zindex-spinner-overlay：叠在宿主内容上，不是全局浮层阶梯。 */
   --z-spinner: 11;
   /* 桌面 Toast：Amis `--Toast-bg` / `--Toast-color` 跟主题；移动端是暗底白字，不翻转。 */
@@ -1909,6 +1910,91 @@
 }
 
 /* Dialog 桌面默认 500px（Amis Modal）。窄屏 100% 只写在下面 `<576`，不要把 DialogContent 默认改成 max-w-none。 */
+[data-vamis-overlay='dialog'] {
+  padding: 24px 0;
+  border-color: var(--colors-neutral-line-9);
+  border-radius: 6px;
+  box-shadow: none;
+  font-size: var(--fontSizeBase);
+  line-height: 21px;
+  transition: none;
+}
+[data-vamis-overlay='dialog'] [data-slot='dialog-header'] {
+  flex: 0 0 auto;
+  gap: 0;
+  padding: 0 24px;
+  text-align: left;
+}
+[data-vamis-overlay='dialog'] [data-slot='dialog-title'] {
+  height: 21px;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: 21px;
+}
+[data-vamis-overlay-body='dialog'] {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Vamis 保留 3px focus glow；内侧留 3px，margin 同步减 3px，视觉起点仍与 Amis 16/24 一致。 */
+  margin: 13px 0 21px;
+  padding: 3px 24px;
+  overflow: auto;
+  font-size: var(--fontSizeBase);
+  line-height: 21px;
+}
+.vamis-dialog-body-loading {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-spinner);
+  display: grid;
+  place-items: center;
+  pointer-events: all;
+}
+.vamis-dialog-body-loading-mask {
+  position: absolute;
+  inset: 0;
+  background: var(--spinner-overlay-bg);
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+  filter: blur(1px);
+  animation: vamis-dialog-loading-mask-in var(--animation-duration) ease-out forwards;
+}
+.vamis-dialog-body-loading .vamis-spinner-v {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  color: var(--primary);
+}
+@keyframes vamis-dialog-loading-mask-in {
+  from {
+    opacity: 0;
+  }
+}
+[data-vamis-overlay='dialog'] [data-slot='dialog-footer'] {
+  flex: 0 0 auto;
+  padding: 0 24px;
+}
+[data-vamis-overlay='dialog'] [data-slot='dialog-close'] {
+  display: inline-flex;
+  width: 16px;
+  height: 22px;
+  min-width: 16px;
+  min-height: 22px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--colors-neutral-text-6);
+  line-height: 22px;
+  top: 16px;
+  right: 24px;
+}
+[data-slot='dialog-overlay'] {
+  background: var(--modal-overlay-bg);
+}
 .vamis-dialog--default {
   max-width: 500px;
 }
@@ -1931,6 +2017,23 @@
   width: calc(100% - 60px);
   height: calc(100% - 60px);
   max-width: none;
+}
+.vamis-dialog--custom {
+  max-width: none;
+}
+.vamis-dialog-info {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+.vamis-dialog-error {
+  color: var(--danger);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* 原语 Dialog / Sheet 模板仍带 Tailwind z-50（50）。sticky 表头/底栏是 --z-sticky 900，

@@ -53,7 +53,7 @@ provideForm({
   mode: props.mode,
   getValue,
   setValue,
-  submit: async () => undefined,
+  submit: async () => true,
   reset: () => undefined,
   clear: () => undefined,
   setError,

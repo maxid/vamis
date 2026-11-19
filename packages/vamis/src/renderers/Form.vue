@@ -454,20 +454,33 @@ function clear() {
 }
 
 let dialogFormBound = false
+let dialogFormKey: number | undefined
 
-function closeOverlayDialog(values: Record<string, unknown>) {
-  if (!dialogFormBound || !overlay?.state.dialog) return false
+function closeOverlayDialog(values: Record<string, unknown>, close = true) {
+  if (!close || !dialogFormBound || !overlay?.state.dialog) return false
+  if (
+    dialogFormKey != null &&
+    overlay.getActiveDialogKey &&
+    overlay.getActiveDialogKey() !== dialogFormKey
+  ) return false
   overlay.closeDialog({ ...values })
   return true
 }
 
-async function submit() {
+function setDialogStatus(status: { loading?: boolean; error?: string }) {
+  if (dialogFormKey == null) return
+  overlay?.setDialogStatus?.(dialogFormKey, status)
+}
+
+async function submit(closeDialog = true): Promise<boolean> {
+  setDialogStatus({ loading: true, error: '' })
   if (props.schema.trimValues === true) {
     store.data = trimDeep(store.data) as Record<string, any>
   }
   if (!validate()) {
+    setDialogStatus({ loading: false, error: messageOf('validateFailed', '请检查表单') })
     env.notify('error', messageOf('validateFailed', '请检查表单'))
-    return
+    return false
   }
   let remoteOk = true
   for (const item of formItems()) {
@@ -475,15 +488,16 @@ async function submit() {
     if (!(await runValidateApi(item))) remoteOk = false
   }
   if (!remoteOk) {
+    setDialogStatus({ loading: false, error: messageOf('validateFailed', '请检查表单') })
     env.notify('error', messageOf('validateFailed', '请检查表单'))
-    return
+    return false
   }
   const target = typeof props.schema.target === 'string' ? props.schema.target.trim() : ''
   if (target) {
     await scoped.reload(target, store.data)
     await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
-    closeOverlayDialog(store.data)
-    return
+    closeOverlayDialog(store.data, closeDialog)
+    return true
   }
   const api = props.schema.api
   if (!api) {
@@ -493,8 +507,8 @@ async function submit() {
       env.notify('success', env.translate('Form.submitWithoutApi'))
     }
     await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
-    closeOverlayDialog(store.data)
-    return
+    closeOverlayDialog(store.data, closeDialog)
+    return true
   }
   store.saving = true
   try {
@@ -502,7 +516,10 @@ async function submit() {
       defaultMethod: 'post',
       autoAppend: true,
     })
-    if (result.skipped) return
+    if (result.skipped) {
+      setDialogStatus({ loading: false, error: '' })
+      return false
+    }
     if (!result.ok) {
       applyServerErrors(result.payload.errors, store.errors)
       throw new Error(apiMessage(api, result.payload, 'failed'))
@@ -527,13 +544,17 @@ async function submit() {
       const payload = (result.payload || {}) as unknown as Record<string, unknown>
       env.jumpTo(filterTpl(redirect, { ...store.data, ...payload }))
     }
-    closeOverlayDialog(store.data)
+    closeOverlayDialog(store.data, closeDialog)
+    return true
   } catch (error) {
     const message = error instanceof Error ? error.message : env.translate('Form.saveFailed')
+    setDialogStatus({ loading: false, error: messageOf('saveFailed', message) })
     void emitFormEvent('submitFail', { error })
     env.notify('error', messageOf('saveFailed', message))
+    return false
   } finally {
     store.saving = false
+    setDialogStatus({ loading: false })
   }
 }
 
@@ -640,7 +661,7 @@ function focusFirstField() {
 
 onMounted(async () => {
   if (overlay?.state.dialog) {
-    overlay.registerDialogForm(submit)
+    dialogFormKey = overlay.registerDialogForm(submit) || undefined
     dialogFormBound = true
   }
   let initResult: Record<string, unknown> | null = null
@@ -691,6 +712,7 @@ watch(
 onBeforeUnmount(() => {
   if (dialogFormBound) overlay?.unregisterDialogForm(submit)
   dialogFormBound = false
+  dialogFormKey = undefined
   parentScoped?.unregister(formApi)
   hub.remove(store.id)
   for (const timer of autoFillTimers.values()) clearTimeout(timer)

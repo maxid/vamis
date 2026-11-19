@@ -1,6 +1,6 @@
 # Dialog 对话框 · `dialog` 设计
 
-> 状态：**进行中 88%** · 复杂度：**XL 特重**
+> 状态：**已完成 100%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/dialog) · Amis：`/zh-CN/components/dialog`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -113,28 +113,33 @@ actionType: dialog
 - z-index `--z-modal` 1400；深色遮罩/边框/按钮单独核。
 - 作者 className 只落 `vamis-node`；不要给 DialogContent 写死 `max-w-none`。
 
-## 6. 当前状态与缺口
+## 6. 当前状态
 
-- 已对齐：打开/关闭/压栈、data 合并、标题/内容/actions、尺寸/窄屏、Esc/遮罩开关、弹层表单确认。
-- 缺口：confirm/cancel 事件未统一派发；feedback 未完整；多级弹层同时错位/焦点、拖拽、像素级 cModal 未核；深色未逐章。
-- 对照：TODO 记录 dialog 主路径；本轮未重跑。
+- 打开/关闭/压栈、data 映射、标题/内容/actions、尺寸/窄屏、Esc/遮罩开关、弹层表单确认与 `close: false` 已对齐。
+- 多级弹层同时保留可见层，按 Amis `Modal--Nth` 30px 步进；`close: "name"` 可关闭目标层及子层。
+- 关闭控件只有 1 枚，DOM 位于 `DialogHeader` 内，盒模型对齐 Amis `Modal-close` 的 16×22 / 16px 图标；无标题时 header 仍保留关闭控件。
+- confirm/cancel 事件统一派发并支持 `preventDefault()`；feedback 会等待关闭，并支持 `skipRestOnCancel` / `skipRestOnConfirm`。
+- `setValue` 可按 Dialog id 更新弹层数据，支持覆盖；AJAX / submit / confirm 期间只在 body 显示 32px Spinner overlay，footer 不重复放大 spinner。
+- 拖拽使用视口绝对坐标与 10px 安全边距，连续拖拽不累计、不越界；resize 后自动回夹。Dialog 拖拽关闭 shadcn enter/zoom/transition，pointer 与盒子 1:1 跟手。
+- 盒模型实测对齐 `_modal.scss`：flex column、content 24px 纵向 padding、header/title 21px、body 16/24 margin 与 24px 横向 padding、6px 圆角、背景遮罩 0.7。Vamis 的 3px focus glow 通过 body 内侧 3px 呼吸位保留。
+- 对照：桌面 / 移动均 **24 / 25**，P0 0；剩余 1 条是 CRUD 列按钮的 schema-tree 定位假阴性，页面实际可点击。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] OverlayHost / overlay / actions 文件已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对（confirm/cancel 未统一）
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（Dialog 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page dialog` 桌面
-- [ ] `pnpm compare --page dialog --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
+- [x] 组件页活示例运行、无 console error
+- [x] `pnpm test`（Dialog 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page dialog` 桌面
+- [x] `pnpm compare --page dialog --mobile`
+- [x] 深色 / 375px 窄屏
 
 ### 验收重点
 
@@ -146,9 +151,8 @@ actionType: dialog
 
 ## 8. 后续
 
-1. 统一 confirm/cancel 事件（payload + preventDefault）。
-2. feedback / 表单提交回写单独立项。
-3. 多级弹层焦点/错位与深色专项。
+1. 修复对照 harness 对 CRUD 列内 Action 的 schema-tree 定位，消除最后 1 条假阴性。
+2. 在 Dialog 稳定后继续 Select 的 `selectMode` / `deferApi`。
 
 ---
 

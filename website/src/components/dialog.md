@@ -5,8 +5,8 @@ outline: deep
 
 # Dialog 对话框
 
-::: info 实现进度 88% · 进行中
-文档主路径已对齐：`actionType: dialog` 打开 overlay、`title` / `body`、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton`（默认 true）、`closeOnEsc` / `closeOnOutside`（默认 false）、未写 `actions` 则取消+确认、嵌套弹层按栈弹出。body 是 form 时默认横排、无面板、无默认「提交」。窄屏（&lt;576 / 对照「移动」）弹层拉满、底栏取消+确认横排均分。关闭按钮 hover 出「关闭」提示。缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal。
+::: info 实现进度 100% · 已完成
+`actionType: dialog` 打开 overlay、`title` / `body` / `data`、`size` xs / sm / md / lg / xl / full / custom、`showCloseButton` / `closeOnEsc` / `closeOnOutside` 默认值与文字一致、底部 actions、多级弹层同时可见并按 30px 错位、表单确认提交与 `close: false`、confirm / cancel 事件、feedback、`setValue`、draggable、loading / error 底栏信息和窄屏 44px 均分按钮均已接入。
 :::
 
 Dialog 主要由 [Action](./action) 的 `actionType: dialog` 触发。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -28,7 +28,7 @@ dialog:
 
 ## 配置尺寸
 
-`size` 不是表单项宽度。空值 500px，`xs` 200px，`sm` 350px，`md` 800px，`lg` 1100px，`xl` 90%，`full` 尽量铺满。也可用 `width` / `height`。
+`size` 不是表单项宽度。空值 500px，`xs` 200px，`sm` 350px，`md` 800px，`lg` 1100px，`xl` 90%，`full` 尽量铺满；`custom` 使用 `width` / `height`。
 
 ```schema: scope="body"
 type: button-toolbar
@@ -47,6 +47,20 @@ buttons:
       title: 提示
       body: 这是个简单的弹框
   - type: button
+    label: 较大的弹框
+    actionType: dialog
+    dialog:
+      size: lg
+      title: 提示
+      body: 这是个简单的弹框
+  - type: button
+    label: 很大的弹框
+    actionType: dialog
+    dialog:
+      size: xl
+      title: 提示
+      body: 这是个简单的弹框
+  - type: button
     label: 占满屏幕的弹框
     actionType: dialog
     dialog:
@@ -55,150 +69,639 @@ buttons:
       body: 弹框尽可能占满，内容部分滚动。
 ```
 
-## 多级弹框
-
-再开一层会压栈，关当前层回到上一层。多层不会同时错位叠出。
-
-```schema: scope="body"
-type: button
-label: 多级弹框
-actionType: dialog
-dialog:
-  title: 提示
-  body: 这是个简单的弹框
-  actions:
-    - type: button
-      actionType: confirm
-      label: 确认
-      primary: true
-    - type: button
-      actionType: dialog
-      label: 再弹一个
-      dialog:
-        title: 弹框中的弹框
-        body: 如果你想，可以继续弹下去
-        actions:
-          - type: button
-            actionType: confirm
-            label: 关闭
-            primary: true
-```
-
-## 配置弹窗的按钮
-
-默认底部「取消」+「确认」。写了 `actions` 就用配置的；`[]` 不要底部按钮。
-
-```schema: scope="body"
-type: button-toolbar
-buttons:
-  - type: button
-    label: 无底部按钮
-    actionType: dialog
-    dialog:
-      title: 提示
-      actions: []
-      body: 没有底部按钮
-  - type: button
-    label: 只有确认
-    actionType: dialog
-    dialog:
-      title: 提示
-      actions:
-        - type: button
-          actionType: confirm
-          label: 确认
-          primary: true
-      body: 只有一个确认按钮
-```
-
-## 关闭方式
-
-`showCloseButton: false` 隐藏右上角关闭，底部按钮仍在。`closeOnEsc` / `closeOnOutside` 要显式 `true`。
-
-```schema: scope="body"
-type: button-toolbar
-buttons:
-  - type: button
-    label: 无右上关闭
-    actionType: dialog
-    dialog:
-      title: 提示
-      body: 没有右上角关闭
-      showCloseButton: false
-  - type: button
-    label: Esc 与点遮罩
-    actionType: dialog
-    dialog:
-      title: 提示
-      body: Esc 或点遮罩可关闭
-      closeOnEsc: true
-      closeOnOutside: true
-```
-
 ## 弹框与数据映射
 
-弹层共享当前数据域，`body` 里可直接用变量：
+默认弹框内由于数据链的存在，会自动映射父级同名变量，例如下例：
 
 ```schema: scope="body"
-type: page
-data:
-  name: amis
-body:
-  - type: button
-    label: 查看详情
-    actionType: dialog
-    dialog:
-      title: 详情
-      body: "当前名称：${name}"
+{
+  "type": "crud",
+  "api": "/api/mock2/sample",
+  "draggable": true,
+  "columns": [
+    { "name": "id", "label": "ID" },
+    { "name": "engine", "label": "Rendering engine" },
+    { "name": "browser", "label": "Browser" },
+    { "name": "platform", "label": "Platform(s)" },
+    { "name": "version", "label": "Engine version" },
+    { "name": "grade", "label": "CSS grade" },
+    {
+      "type": "button",
+      "label": "一个弹框",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "一个弹框",
+        "body": [
+          {
+            "type": "form",
+            "api": "/api/mock2/sample/$id",
+            "body": [
+              { "type": "input-text", "name": "engine", "label": "Engine" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+上例弹框中的表单项 `Engine` 会自动映射到父级数据中的 `engine` 变量，如果想调整当前特性，如你想调整父级映射变量的字段，可以利用[数据映射](/concepts/data-mapping)，例如：
+
+```schema: scope="body"
+{
+  "type": "crud",
+  "api": "/api/mock2/sample",
+  "draggable": true,
+  "syncLocation": false,
+  "filter": {
+    "title": "过滤器",
+    "body": [
+      {
+        "type": "select",
+        "label": "状态",
+        "name": "status",
+        "options": [
+          { "label": "运行中", "value": "running" },
+          { "label": "创建中", "value": "creating" }
+        ],
+        "checkAll": true,
+        "multiple": true,
+        "joinValues": true,
+        "defaultCheckAll": true,
+        "checkAllLabel": "全选",
+        "valuesNoWrap": false
+      }
+    ]
+  },
+  "headerToolbar": [
+    {
+      "label": "新增",
+      "type": "button",
+      "actionType": "dialog",
+      "level": "primary",
+      "dialog": {
+        "type": "dialog",
+        "title": "新增",
+        "closeOnEsc": false,
+        "closeOnOutside": false,
+        "showCloseButton": true,
+        "data": {
+          "&": "$$",
+          "status": "__undefined"
+        },
+        "body": [
+          {
+            "type": "form",
+            "api": "/api/mock2/form/saveForm",
+            "debug": true,
+            "body": [
+              {
+                "type": "select",
+                "name": "status",
+                "label": "状态",
+                "options": [
+                  { "label": "运行中", "value": "running" },
+                  { "label": "创建中", "value": "creating" }
+                ],
+                "disabled": false,
+                "selectFirst": false
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "columns": [
+    { "name": "id", "label": "ID" },
+    { "name": "engine", "label": "Rendering engine" },
+    { "name": "browser", "label": "Browser" },
+    { "name": "platform", "label": "Platform(s)" },
+    { "name": "version", "label": "Engine version" },
+    { "name": "grade", "label": "CSS grade" },
+    {
+      "type": "button",
+      "label": "一个弹框",
+      "actionType": "dialog",
+      "dialog": {
+        "data": {
+          "engine2": "${engine}"
+        },
+        "title": "一个弹框",
+        "body": [
+          {
+            "type": "form",
+            "api": "/api/mock2/sample/$id",
+            "body": [
+              { "type": "input-text", "name": "engine2", "label": "Engine" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+上例给 `dialog` 中配置 `data` 属性，可以将上层的 `engine` 变量映射为 `engine2`。点击「新增」后 dialog 内 form 会继承 CRUD 所在的数据域；如果 CRUD 过滤器与 dialog 表单存在同名字段，需要用 `{"&": "$$", "status": "__undefined"}` 删除外部查询字段。
+
+## 多级弹框
+
+再开一层会压栈，下面各层仍保留可见，每层向下错位 30px；关当前层回到上一层。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "多级弹框",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "提示",
+    "body": "这是个简单的弹框",
+    "actions": [
+      {
+        "type": "button",
+        "actionType": "confirm",
+        "label": "确认",
+        "primary": true
+      },
+      {
+        "type": "button",
+        "actionType": "dialog",
+        "label": "再弹一个",
+        "dialog": {
+          "title": "弹框中的弹框",
+          "body": "如果你想，可以无限弹下去",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "dialog",
+              "label": "来吧",
+              "level": "info",
+              "dialog": {
+                "title": "弹框中的弹框",
+                "body": "如果你想，可以无限弹下去",
+                "actions": [
+                  {
+                    "type": "button",
+                    "actionType": "confirm",
+                    "label": "不弹了",
+                    "primary": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 ## 动作后关闭弹框
 
-弹层内按钮配 `actionType: close` 关闭当前层：
+在弹框中配置行为按钮，可以在按钮上配置 `"close": true`，在行为完成后关闭当前弹框。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个框",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "弹框",
+    "body": [
+      {
+        "type": "button",
+        "label": "默认的 ajax 请求",
+        "actionType": "ajax",
+        "api": "/api/mock2/form/saveForm?waitSeconds=1"
+      },
+      {
+        "type": "button",
+        "label": "ajax 请求成功后关闭弹框",
+        "actionType": "ajax",
+        "api": "/api/mock2/form/saveForm?waitSeconds=1",
+        "close": true
+      }
+    ]
+  }
+}
+```
+
+以上例子是关闭当前弹窗，如果希望关闭上层弹窗，则需要给目标弹窗设置 `name` 属性，然后配置按钮 `close` 属性为目标 `name` 属性，例如：
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "多级弹框",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "提示",
+    "body": "这是个简单的弹框",
+    "name": "dialog_1",
+    "actions": [
+      {
+        "type": "button",
+        "actionType": "confirm",
+        "label": "确认",
+        "primary": true
+      },
+      {
+        "type": "button",
+        "actionType": "dialog",
+        "label": "再弹一个",
+        "dialog": {
+          "title": "弹框中的弹框",
+          "body": "关闭当前弹窗的时候把外层的弹窗一起关了",
+          "actions": [
+            {
+              "type": "button",
+              "label": "关闭所有",
+              "level": "info",
+              "close": "dialog_1"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## 配置弹窗的按钮
+
+默认弹窗会自动生成两个按钮，一个取消，一个确认。如果通过 `actions` 来自定义配置，则以配置的为准。
+
+```schema: scope="body"
+{
+  "type": "button-toolbar",
+  "buttons": [
+    {
+      "type": "button",
+      "label": "无按钮",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "提示",
+        "actions": [],
+        "body": "无按钮的弹框"
+      }
+    },
+    {
+      "type": "button",
+      "label": "只有一个确认按钮",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "提示",
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "confirm",
+            "label": "OK",
+            "primary": true
+          }
+        ],
+        "body": "只有一个 OK 的弹框"
+      }
+    }
+  ]
+}
+```
+
+## 拖拽弹框
+
+`draggable: true` 时标题栏可拖动；移动端不启用拖拽，避免遮住整页手势。拖动范围限制在视口内。
 
 ```schema: scope="body"
 type: button
-label: 打开并关闭
+label: 拖拽弹框
 actionType: dialog
 dialog:
-  title: 提示
-  body:
-    type: container
-    body:
-      type: button
-      label: 关闭
-      actionType: close
+  title: 按住标题栏拖动
+  draggable: true
+  body: 弹框位置被限制在视口内。
 ```
 
 ## 弹框中配置表单
 
-`body` 用 `form` 时默认横向、无面板、无默认提交按钮；按钮由弹层 `actions` 提供：
+### 基本使用
 
 ```schema: scope="body"
-type: button
-label: 编辑
-actionType: dialog
-dialog:
-  title: 编辑
-  body:
-    type: form
-    body:
-      - type: input-text
-        name: name
-        label: 名称
-  actions:
-    - type: button
-      label: 取消
-      actionType: close
-    - type: button
-      label: 保存
-      level: primary
-      actionType: close
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "在弹框中的表单",
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "username",
+          "required": true,
+          "placeholder": "请输入用户名",
+          "label": "用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    }
+  }
+}
+```
+
+### 提交表单 或 ajax 请求
+
+弹框中通过配置 `form` 或 `ajax` 行为按钮，可以实现 `form` 提交和 `ajax` 请求操作。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "在弹框中的表单",
+    "actions": [
+      {
+        "label": "提交表单",
+        "actionType": "submit",
+        "primary": true,
+        "type": "button"
+      },
+      {
+        "label": "ajax请求",
+        "actionType": "ajax",
+        "primary": true,
+        "type": "button",
+        "api": "/api/mock2/form/saveForm?waitSeconds=2"
+      }
+    ],
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "required": true,
+          "label": "用户名",
+          "placeholder": "请输入用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "placeholder": "请输入密码",
+          "required": true
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    }
+  }
+}
+```
+
+### 提交表单 或 ajax 请求后不关闭弹框
+
+默认情况下，当弹框中配置了 form 并进行了**提交表单操作（confirm）**或进行了 **`ajax` 请求**，请求成功后会自动关闭当前弹框；可以通过按钮 `"close": false` 禁止该默认特性。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "弹个表单",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "在弹框中的表单",
+    "actions": [
+      {
+        "label": "提交表单后不关闭",
+        "actionType": "submit",
+        "close": false,
+        "primary": true,
+        "type": "button"
+      },
+      {
+        "label": "ajax请求后不关闭",
+        "actionType": "ajax",
+        "primary": true,
+        "type": "button",
+        "api": "/api/mock2/form/saveForm?waitSeconds=2"
+      }
+    ],
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "required": true,
+          "label": "用户名",
+          "placeholder": "请输入用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    }
+  }
+}
 ```
 
 ## feedback 反馈弹框
 
-Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可用 `submitSucc` 事件 + `dialog` 动作组合。
+AJAX 成功后可以用 `feedback` 打开第二层弹框。Vamis 会等待 feedback 关闭，再继续执行后续动作。
+
+### feedback 基本使用
+
+```schema: scope="body"
+type: button
+label: Feedback
+actionType: ajax
+api: /api/mock2/form/initData?waitSeconds=1
+feedback:
+  title: 操作成功
+  body: 服务器已返回结果。
+```
+
+### 弹框中配置 feedback
+
+#### 关闭 feedback 弹框时，同时关闭上层弹框
+
+feedback 可以叠加在 Dialog 内。`actions` 中使用 `actionType: close` 只关闭 feedback；触发按钮写 `close: true` 时再关闭上层 Dialog。
+
+##### 1. 不请求接口，直接关闭
+
+```schema: scope="body"
+type: button
+label: 弹一个框
+actionType: dialog
+dialog:
+  title: 提示
+  body: 提交后打开反馈层。
+  actions:
+    - type: button
+      label: 提交表单
+      actionType: confirm
+      feedback:
+        body: feedback 弹框直接关闭。
+        actions:
+          - type: button
+            actionType: close
+            label: 关闭
+    - type: button
+      label: AJAX
+      actionType: ajax
+      close: true
+      api: /api/mock2/form/initData?waitSeconds=1
+      feedback:
+        body: AJAX 成功后显示反馈层。
+        actions:
+          - type: button
+            actionType: close
+            label: 关闭
+```
+
+##### 2. 请求接口，请求成功后，关闭所有弹框
+
+feedback 的 `body` 使用 Form 并把确认按钮设为 `actionType: confirm` 时，feedback 表单提交成功后会关闭 feedback，再按上层触发按钮的 `close` 配置关闭 Dialog。
+
+```schema: scope="body"
+{
+  "type": "button",
+  "label": "提交接口后关闭",
+  "actionType": "dialog",
+  "dialog": {
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "required": true,
+          "label": "用户名"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "button",
+        "label": "confirm Feedback",
+        "actionType": "confirm",
+        "feedback": {
+          "body": {
+            "type": "form",
+            "api": "/api/mock2/form/saveForm?waitSeconds=1",
+            "body": [
+              {
+                "type": "tpl",
+                "tpl": "点击确认，请求接口，接口请求成功后，关闭弹框"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "确认",
+              "primary": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+#### 取消 feedback 弹框时，不同时关闭上层弹框
+
+feedback 写 `skipRestOnCancel: true`，取消反馈时中断原按钮后续动作，保留上层 Dialog。
+
+```schema: scope="body"
+type: button
+label: 取消时保留
+actionType: dialog
+dialog:
+  title: 提示
+  body: 提交后显示 feedback。
+  actions:
+    - type: button
+      actionType: confirm
+      label: Feedback
+      feedback:
+        body: 取消这个层时，上层仍保留。
+        skipRestOnCancel: true
+        actions:
+          - type: button
+            actionType: close
+            label: 关闭
+```
+
+#### 确认 feedback 弹框时，不同时关闭上层弹框
+
+feedback 写 `skipRestOnConfirm: true`，确认反馈时中断原按钮后续动作，需要重新提交。
+
+```schema: scope="body"
+type: button
+label: 确认时保留
+actionType: dialog
+dialog:
+  title: 提示
+  body: 确认 feedback 后保留当前层。
+  actions:
+    - type: button
+      actionType: confirm
+      label: Feedback
+      feedback:
+        body: 确认后上层仍保留。
+        skipRestOnConfirm: true
+        actions:
+          - type: button
+            actionType: confirm
+            label: 确认
+```
+
+### 根据条件显示 feedback
+
+feedback 支持 `visibleOn`，条件不成立时不会打开。
+
+```schema: scope="body"
+type: button
+label: 条件 Feedback
+actionType: ajax
+api: /api/mock2/form/initData?waitSeconds=1
+feedback:
+  visibleOn: "!(this.date % 2)"
+  title: 操作成功
+  body: 当前时间戳：${date}
+```
 
 ## 配置 Esc 键和点击外部关闭弹框
 
@@ -250,12 +753,17 @@ Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可�
 | `type` | `string` | | 内嵌预览才写 `"dialog"`。弹层用 Action 的 `actionType: dialog` |
 | `title` | `SchemaNode` | | 标题，可模板 |
 | `body` | `SchemaNode` | | 内容 |
-| `size` | `string` | | `xs` / `sm` / `md` / `lg` / `xl` / `full`。空值 500px |
-| `width` | `number \| string` | | 自定义宽度 |
-| `height` | `number \| string` | | 自定义高度 |
+| `bodyClassName` | `string` | `modal-body` | 内容区 class |
+| `size` | `string` | | `xs` / `sm` / `md` / `lg` / `xl` / `full` / `custom`。空值 500px |
+| `width` | `number \| string` | | `size: custom` 时的宽度 |
+| `height` | `number \| string` | | `size: custom` 时的高度 |
 | `showCloseButton` | `boolean` | `true` | 右上角关闭 |
 | `closeOnEsc` | `boolean` | `false` | Esc 关闭 |
 | `closeOnOutside` | `boolean` | `false` | 点遮罩关闭 |
+| `showErrorMsg` | `boolean` | `true` | 在底栏左侧显示表单提交错误 |
+| `showLoading` | `boolean` | `true` | 在底栏左侧显示提交 loading |
+| `disabled` | `boolean` | `false` | 禁用内容和底部动作 |
+| `draggable` | `boolean` | `false` | 允许拖动标题栏移动弹层；移动端关闭 |
 | `actions` | `Array<Action>` | 取消 + 确认 | `[]` 隐藏底部 |
 | `data` | `object` | | 弹层数据域，会并进 overlay |
 
@@ -268,7 +776,7 @@ Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可�
 | 事件名称 | 事件参数                                                                 | 说明               |
 | -------- | ------------------------------------------------------------------------ | ------------------ |
 | confirm  | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击确认提交时触发 |
-| cancel   | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击取消时触发     |
+| cancel   | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 取消、关闭 X、Esc 或点遮罩时触发 |
 
 ### confirm
 
@@ -372,9 +880,9 @@ Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可�
 
 | 动作名称 | 动作配置                   | 说明         |
 | -------- | -------------------------- | ------------ |
-| confirm  | -                          | 确认（提交） |
-| cancel   | -                          | 取消（关闭） |
-| setValue | `value: object` 更新的数据 | 更新数据     |
+| confirm  | -                          | 确认；有表单时先提交，失败不关闭 |
+| cancel   | -                          | 取消并关闭当前层 |
+| setValue | `value: object` 更新的数据 | 按 `componentId` 更新弹层数据；`dataMergeMode: override` 覆盖 |
 
 ### confirm 动作
 
@@ -641,6 +1149,6 @@ Amis 的 `feedback`（提交后把返回数据渲染成弹层）暂未接；可�
 ## 和 Amis 文档的差异
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 嵌套弹层按栈替换顶层，不像素级错位叠出。
-- 补数据映射 / 动作后关闭 / 弹层表单章节；不接 `draggable`、`feedback`、弹层内表单提交、`close:name` 关指定层。
-- 视觉走 shadcn Dialog token，不是 cxd Modal 皮肤。
+- 多级弹层同时保留可见层，并按 Amis `Modal--Nth` 的 30px 步进错位；关闭当前层恢复上一层。
+- 输入控件保留 Vamis 的 3px focus glow。Dialog body 增加 3px 内呼吸位并用 margin 相抵，视觉起点仍对齐 Amis 的 16px / 24px 间距。
+- UI 用 shadcn-vue / reka-ui + token 实现，不搬 `cxd-` class；Modal 的 flex column、24px 横向 padding、6px 圆角、标题 14/21、正文 14/21 和底栏高度跟 Amis 实测。

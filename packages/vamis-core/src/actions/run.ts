@@ -1,6 +1,6 @@
 import type { ActionSchema, PlainObject, RendererEnv, SchemaObject } from '../types'
 import { apiMessage, requestApi } from '../utils/api'
-import { evalExpression, filterTpl, resolveValue } from '../formula'
+import { evalExpression, filterTpl, isVisible, resolveValue } from '../formula'
 import { tableConditionMatch } from '../utils/table'
 import { dataMapping } from '../utils/data-mapping'
 import { printElements } from './print'
@@ -75,6 +75,88 @@ function actionData(action: ActionSchema, ctx: ActionContext): PlainObject {
   const args = action.args && typeof action.args === 'object' ? dataMapping(action.args, base) as PlainObject : {}
   if (action.actionType === 'custom' && action.args?.script != null) args.script = action.args.script
   return { ...base, ...extra, ...args }
+}
+
+function feedbackDialog(raw: ActionSchema['feedback']): SchemaObject | null {
+  if (!raw) return null
+  return (typeof raw === 'string' ? { title: raw } : raw) as SchemaObject
+}
+
+async function openActionFeedback(
+  action: ActionSchema,
+  ctx: ActionContext,
+  data: PlainObject,
+): Promise<boolean | null> {
+  const feedback = feedbackDialog(action.feedback)
+  if (!feedback || !ctx.overlay || !isVisible(feedback, data)) return null
+  return (await ctx.overlay.openDialog(feedback, data)) !== false
+}
+
+function skipAfterFeedback(
+  action: ActionSchema,
+  ctx: ActionContext,
+  confirmed: boolean,
+): boolean {
+  const feedback = feedbackDialog(action.feedback) as PlainObject | null
+  if (!feedback) return false
+  const skip =
+    (feedback.skipRestOnCancel === true && !confirmed) ||
+    (feedback.skipRestOnConfirm === true && confirmed)
+  if (skip) ctx.event?.stopPropagation()
+  return skip
+}
+
+async function dispatchDialogEvent(
+  eventName: 'confirm' | 'cancel',
+  ctx: ActionContext,
+): Promise<VamisEvent | undefined> {
+  const schema = ctx.overlay?.state.dialog
+  if (!schema) return undefined
+  const data = ctx.overlay?.state.data || {}
+  const event = createVamisEvent(eventName, data)
+  await runOnEvent(schema, eventName, {
+    env: ctx.env,
+    data: eventEvalData(data, event),
+    scoped: ctx.scoped,
+    overlay: ctx.overlay,
+    event,
+  })
+  return event
+}
+
+async function submitDialogAction(
+  action: ActionSchema,
+  ctx: ActionContext,
+  eventName?: 'confirm',
+): Promise<boolean | undefined> {
+  if (!ctx.overlay?.state.dialog) return undefined
+  if (eventName) {
+    const event = await dispatchDialogEvent(eventName, ctx)
+    if (event?.prevented) return false
+  }
+
+  const close = action.close !== false
+  const data = { ...(ctx.overlay.state.data || {}) }
+  const feedback = feedbackDialog(action.feedback)
+  let found = false
+  let ok = true
+  if (ctx.overlay.submitDialogFormResult) {
+    const result = await ctx.overlay.submitDialogFormResult(feedback ? false : close)
+    found = result.found
+    ok = result.ok
+  } else {
+    found = (await ctx.overlay.submitDialogForm?.()) === true
+  }
+  if (found && !ok) return false
+
+  const confirmed = await openActionFeedback(action, ctx, data)
+  if (confirmed != null && skipAfterFeedback(action, ctx, confirmed)) return false
+  if (found) {
+    if (feedback && close) ctx.overlay.closeDialog({ ...data })
+    return true
+  }
+  if (close) ctx.overlay.closeDialog({ ...data })
+  return true
 }
 
 function truthyFlag(value: unknown, data: PlainObject): boolean {
@@ -181,13 +263,19 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     console.group?.(`[vamis] run action ${type}`)
     console.debug(`[${type}] action args, data`, args, logData)
   }
+  const dialogKey =
+    ctx.overlay?.state.dialog && ['ajax', 'submit', 'confirm'].includes(type)
+      ? ctx.overlay.getActiveDialogKey?.()
+      : undefined
+  if (dialogKey != null) ctx.overlay?.setDialogStatus?.(dialogKey, { loading: true, error: '' })
   let actionResult: unknown = true
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
     if (handler) actionResult = await handler(action, ctx)
     else {
       actionResult = await runComponentAction(action, ctx)
-      if (type && actionResult === false) {
+      if (action.close) closeAfterAction(action, ctx)
+      if (type && actionResult === false && !action.close) {
         reportDiagnostic(ctx.env, {
           type: 'action',
           message: `未处理的动作 ${type}`,
@@ -212,6 +300,7 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     }
     return false
   } finally {
+    if (dialogKey != null) ctx.overlay?.setDialogStatus?.(dialogKey, { loading: false })
     if (debug) {
       console.debug(`[${type}] action end event`, ctx.event)
       console.groupEnd?.()
@@ -240,9 +329,13 @@ function findTargetComponent(ctx: ActionContext, action: ActionSchema, name: str
 }
 
 function closeAfterAction(action: ActionSchema, ctx: ActionContext) {
-  if (action.close !== true) return
-  if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
-  else ctx.overlay?.closeDrawer()
+  if (!action.close) return
+  if (action.close === true) {
+    if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
+    else ctx.overlay?.closeDrawer()
+    return
+  }
+  ctx.overlay?.closeById(filterTpl(String(action.close), actionData(action, ctx)))
 }
 
 async function reloadAfterAction(action: ActionSchema, data: PlainObject, ctx: ActionContext) {
@@ -262,11 +355,8 @@ async function finishAjax(action: ActionSchema, data: PlainObject, resultData: u
   if (action.redirect) {
     ctx.env.jumpTo(filterTpl(String(action.redirect), merged), { blank: actionBlank(action) })
   }
-  if (action.feedback && ctx.overlay) {
-    const raw = action.feedback
-    const dialog = (typeof raw === 'string' ? { title: raw } : raw) as SchemaObject
-    ctx.overlay.openDialog(dialog, merged)
-  }
+  const confirmed = await openActionFeedback(action, ctx, merged)
+  if (confirmed != null && skipAfterFeedback(action, ctx, confirmed)) return
   await reloadAfterAction(action, merged, ctx)
   closeAfterAction(action, ctx)
 }
@@ -279,7 +369,19 @@ function applySetValue(action: ActionSchema, data: PlainObject, ctx: ActionConte
   const target = action.componentId || action.componentName || action.target
   const args = (action.args && typeof action.args === 'object' ? action.args : {}) as PlainObject
   const replace = action.dataMergeMode === 'override' || args.replace === true
+  const dialog = ctx.overlay?.state.dialog
+  const dialogTarget =
+    target && dialog
+      ? resolveTargets(target, data).some((item) =>
+          [dialog.id, dialog.name].some((name) => name != null && String(name) === item.name),
+        )
+      : false
   const assign = (values: PlainObject) => {
+    if (dialogTarget) {
+      if (ctx.overlay?.setData) ctx.overlay.setData(values, replace)
+      else Object.entries(values).forEach(([key, value]) => ctx.overlay?.setValue(key, value))
+      return
+    }
     if (target) {
       for (const item of resolveTargets(target, data)) {
         const component = findTargetComponent(ctx, action, item.name)
@@ -451,11 +553,8 @@ function registerBuiltinActions() {
   })
 
   registerAction('confirm', async (action, ctx) => {
-    if (ctx.overlay?.state.dialog) {
-      if (await ctx.overlay.submitDialogForm?.()) return
-      ctx.overlay.closeDialog({})
-      return
-    }
+    const dialogResult = await submitDialogAction(action, ctx, 'confirm')
+    if (dialogResult !== undefined) return dialogResult
     if (ctx.overlay?.state.drawer) {
       ctx.overlay.closeDrawer(ctx.overlay.state.data || {})
       return
@@ -531,15 +630,23 @@ function registerBuiltinActions() {
     else ctx.overlay?.closeDrawer()
   })
   registerAction('cancel', async (_action, ctx) => {
-    if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
-    else ctx.overlay?.closeDrawer()
+    if (ctx.overlay?.state.dialog) {
+      const event = await dispatchDialogEvent('cancel', ctx)
+      if (event?.prevented) return false
+      ctx.overlay.closeDialog()
+    } else ctx.overlay?.closeDrawer()
   })
   registerAction('close', async (_action, ctx) => {
-    if (ctx.overlay?.state.dialog) ctx.overlay.closeDialog()
-    else ctx.overlay?.closeDrawer()
+    if (ctx.overlay?.state.dialog) {
+      const event = await dispatchDialogEvent('cancel', ctx)
+      if (event?.prevented) return false
+      ctx.overlay.closeDialog()
+    } else ctx.overlay?.closeDrawer()
   })
 
-  registerAction('submit', async (_action, ctx) => {
+  registerAction('submit', async (action, ctx) => {
+    const dialogResult = await submitDialogAction(action, ctx)
+    if (dialogResult !== undefined) return dialogResult
     await ctx.form?.submit?.()
   })
   registerAction('validate', async (action, ctx) => {
@@ -567,11 +674,13 @@ function registerBuiltinActions() {
   })
   registerAction('clear-and-submit', async (_action, ctx) => {
     ctx.form?.clear?.()
-    await ctx.form?.submit?.()
+    if (ctx.overlay?.state.dialog) await submitDialogAction(_action, ctx)
+    else await ctx.form?.submit?.()
   })
   registerAction('reset-and-submit', async (_action, ctx) => {
     ctx.form?.reset?.()
-    await ctx.form?.submit?.()
+    if (ctx.overlay?.state.dialog) await submitDialogAction(_action, ctx)
+    else await ctx.form?.submit?.()
   })
 
   registerAction('link', async (action, ctx) => {

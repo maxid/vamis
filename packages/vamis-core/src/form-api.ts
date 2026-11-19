@@ -7,7 +7,7 @@ export interface FormApiLike {
   setValue?(name: string, value: unknown): void
   setData?(values: PlainObject, replace?: boolean, reason?: ChangeReason): void
   getData?(): PlainObject
-  submit?(): Promise<void> | void
+  submit?(closeDialog?: boolean): Promise<boolean | void> | boolean | void
   reset?(): void
   clear?(): void
   validate?(extraRequired?: string[]): boolean

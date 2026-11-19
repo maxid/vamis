@@ -7,9 +7,9 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
 }
 
-export type DialogSize = '' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+export type DialogSize = '' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full' | 'custom'
 
-const DIALOG_SIZES = new Set<DialogSize>(['xs', 'sm', 'md', 'lg', 'xl', 'full'])
+const DIALOG_SIZES = new Set<DialogSize>(['xs', 'sm', 'md', 'lg', 'xl', 'full', 'custom'])
 
 export function dialogSize(schema: unknown): DialogSize {
   const value = String(asRecord(schema).size ?? '')
@@ -24,6 +24,7 @@ export function dialogSize(schema: unknown): DialogSize {
 export function dialogSizeClass(schema: unknown): string {
   const size = dialogSize(schema)
   if (size === 'full') return 'vamis-dialog--full w-[calc(100%-60px)] h-[calc(100%-60px)] max-w-none'
+  if (size === 'custom') return 'w-full vamis-dialog--custom'
   if (size === 'xs') return 'w-full max-w-[200px] vamis-dialog--xs'
   if (size === 'sm') return 'w-full max-w-[350px] vamis-dialog--sm'
   if (size === 'md') return 'w-full max-w-[800px] vamis-dialog--md'
@@ -42,6 +43,22 @@ export function dialogCloseOnEsc(schema: unknown): boolean {
 
 export function dialogCloseOnOutside(schema: unknown): boolean {
   return asRecord(schema).closeOnOutside === true
+}
+
+export function dialogShowError(schema: unknown): boolean {
+  return asRecord(schema).showErrorMsg !== false
+}
+
+export function dialogShowLoading(schema: unknown): boolean {
+  return asRecord(schema).showLoading !== false
+}
+
+export function dialogDisabled(schema: unknown): boolean {
+  return asRecord(schema).disabled === true
+}
+
+export function dialogDraggable(schema: unknown): boolean {
+  return asRecord(schema).draggable === true
 }
 
 export function dialogTitle(schema: unknown, data: PlainObject = {}): string {
@@ -71,11 +88,15 @@ export function overlayEmbedForm(node: SchemaNode): SchemaNode {
   } as SchemaNode
 }
 
-export function dialogBody(schema: unknown): SchemaNode[] {
+export function dialogBody(schema: unknown, disabled = false): SchemaNode[] {
   const body = asRecord(schema).body
   if (body == null || body === false || body === '') return []
   const nodes = Array.isArray(body) ? (body as SchemaNode[]) : [body as SchemaNode]
-  return nodes.map(overlayEmbedForm)
+  return nodes.map((node) => {
+    const embedded = overlayEmbedForm(node)
+    if (!disabled || !embedded || typeof embedded !== 'object' || Array.isArray(embedded)) return embedded
+    return { disabled: true, ...embedded } as SchemaNode
+  })
 }
 
 export function overlayFooterActions(
@@ -95,8 +116,13 @@ export function overlayFooterActions(
   return out
 }
 
-export function dialogActions(schema: unknown): SchemaNode[] {
-  return overlayFooterActions(schema, 'cancel')
+export function dialogActions(schema: unknown, disabled = false): SchemaNode[] {
+  const actions = overlayFooterActions(schema, 'cancel')
+  if (!disabled) return actions
+  return actions.map((node) => {
+    if (!node || typeof node !== 'object' || Array.isArray(node)) return node
+    return { ...node, disabled: true } as SchemaNode
+  })
 }
 
 function cssLen(value: unknown): string {
@@ -125,6 +151,11 @@ export function overlayFrameStyle(
       style.width = 'calc(100% - 60px)'
       style.height = 'calc(100% - 60px)'
       style.maxWidth = 'none'
+    }
+    if (size === 'custom') {
+      if (rec.width != null && rec.width !== '') style.width = cssLen(rec.width)
+      if (rec.height != null && rec.height !== '') style.height = cssLen(rec.height)
+      return style
     }
     if (rec.width != null && rec.width !== '') style.maxWidth = cssLen(rec.width)
     if (rec.height != null && rec.height !== '') style.height = cssLen(rec.height)

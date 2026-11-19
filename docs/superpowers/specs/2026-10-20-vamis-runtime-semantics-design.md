@@ -590,4 +590,4 @@ export function usePlugin(plugin: VamisPlugin): void
 
 逐 type 的完成状态、进度和原因见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)。
 
-口径与本文一致：**已注册 ≠ 语义完成**；占位与精简实现单独标注；该清单阶段仍是 P0，实施顺序按依赖链拓扑 + 解锁分 U + 综合分（见组件 TODO「依赖与优先级」）。当前 155 项已完成 3（`container`、`hidden`、`toast`）、进行中 152、未开始 0，平均进度 62%；`page` 因 `pullRefresh` 未接按实现标准降为进行中。80% 必须双站逐章节核过。type 名称覆盖率仍只记在同步状态里。
+口径与本文一致：**已注册 ≠ 语义完成**；占位与精简实现单独标注；该清单阶段仍是 P0，实施顺序按依赖链拓扑 + 解锁分 U + 综合分（见组件 TODO「依赖与优先级」）。当前 155 项已完成 4（`container`、`hidden`、`toast`、`dialog`）、进行中 151、未开始 0，平均进度 62%；`page` 因 `pullRefresh` 未接按实现标准降为进行中。80% 必须双站逐章节核过。type 名称覆盖率仍只记在同步状态里。

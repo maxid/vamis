@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-11-18；侧栏同步 / Options 虚拟列表：2026-11-19）
+- 日期：2026-10-21（进度核对：2026-11-20；侧栏同步 / Options 虚拟列表 / Dialog：2026-11-19–20）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）；「全量顺序」与「实现复杂度评估」的「侧栏」列同步站点左侧导航 P0 / P1 / P2
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-18（进度打回：禁止用「主路径 + 缺 themeCss」进 80%。汇总 **62%**、≥80% **47**、≥50% **111**；已完成 3）
+- 最近核对：2026-11-20（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 4；测试 **1187**、`typecheck` 0；Dialog 桌面 / 移动 **24/25**、P0 0）
 
 ## 怎么读
 
@@ -18,7 +18,7 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但未达到「实现标准」：占位 / 精简 / 缺 amis 已有能力或文档章节 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **3 项**（`container` / `hidden` / `toast`）；`page` 因 `pullRefresh` 未接降为进行中。
+   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **4 项**（`container` / `hidden` / `toast` / `dialog`）；`page` 因 `pullRefresh` 未接降为进行中。
 4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 97.9% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|
@@ -70,11 +70,11 @@
 | 功能 | 0 / 12 | 12 | 0 | 72% | 11 | 6 |
 | 数据输入 | 1 / 72 | 71 | 0 | 58% | 44 | 17 |
 | 数据展示 | 0 / 44 | 44 | 0 | 62% | 32 | 14 |
-| 反馈 | 1 / 5 | 4 | 0 | 86% | 5 | 4 |
+| 反馈 | 2 / 5 | 3 | 0 | 88% | 5 | 4 |
 | 其他 | 0 / 7 | 7 | 0 | 58% | 4 | 2 |
-| **合计** | **3 / 155** | **152** | **0** | **62%** | **111** | **47** |
+| **合计** | **4 / 155** | **151** | **0** | **62%** | **111** | **47** |
 
-侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
+侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`、`dialog`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
 
@@ -96,7 +96,7 @@
 | `input-text` | 选择器建议下拉 | 未核 | 贴输入框 `VamisOverlay`（窄屏也是），深色建议仍要手开 |
 | `input-password` | 同 input-text | 未核 | |
 | `input-date` / `input-datetime` / `calendar` | 日期 PopOver | 已核 2026-11-07 | `--cal-*` alias `--select-menu-*`，`.dark` 覆盖格子 hover / 非本月 |
-| `dialog` | Modal | 已核 | 2026-11-16。基本用法打开弹框：面板、遮罩、取消 / 确认按钮和主色均正常 |
+| `dialog` | Modal | 已核 | 2026-11-20。盒模型、0.7 遮罩、Spinner overlay、拖拽与 375px 均分按钮已复核 |
 | `drawer` | 抽屉 | 未核 | |
 | `toast` | 轻提示 | 未核 | 桌面浮层已走 token，仍需深色手核 |
 | `popOver` | 字段弹出 | 已核 | 2026-11-10。浅 320 白底 / 深 `--popover-layer-bg: #182230`，表格列 `center` 盖整格 td，`--z-popover` 1400 |
@@ -312,14 +312,14 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（1/5，均 86%）
+## 反馈（2/5，均 88%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `alert` | Alert 提示 | `/components/alert` | `/zh-CN/components/alert` | 进行中 | 60% | 主路径可交互（未逐章节两站核完，不进 80%）：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。缺 fa / 内置 icon 名、关闭事件、像素级 cxd Alert | P0 |
-| `dialog` | Dialog 对话框 | `/components/dialog` | `/zh-CN/components/dialog` | 进行中 | 88% | 文档主路径已对齐：`actionType: dialog` 打开 overlay、`size` xs–full（默认 500px，仅 ≥576）、`showCloseButton` 默认 true、`closeOnEsc` / `closeOnOutside` 默认 false、未写 `actions` 则取消+确认、嵌套压栈。body 是 form 时默认 `mode: horizontal`、`wrapWithPanel: false`、无默认「提交」。窄屏 &lt;576 弹层拉满、底栏横排均分（对照「移动」/ `m:`；均分要打穿 Action 的 `span.inline-block`，不能只给 `.vamis-node` 设 flex:1）。浮层 data 按层压栈。默认弹层 `top: 60px`。关闭按钮 hover「关闭」提示。补数据映射 / close / 弹层表单章节；缺拖拽、`feedback`、弹层内表单提交回写、多级同时错位可见、像素级 cxd Modal | P0 |
+| `dialog` | Dialog 对话框 | `/components/dialog` | `/zh-CN/components/dialog` | 已完成 | 100% | Amis 同名章节与示例已对齐：尺寸 xs–full/custom、数据映射、多级 30px 错位、close 当前层 / 指定 name 整栈、动作按钮、表单提交 / AJAX / `close: false`、feedback / skip、confirm / cancel 事件、confirm / cancel / setValue 动作、Esc / 外点。弹层表单确认先提交，失败不关；AJAX / submit / confirm 只在 body 渲染 32px Spinner + 独立 0.1 白遮罩 blur(1px) 0.2s 淡入，footer 不重复画大 spinner。盒模型对齐 flex column、24px 纵向 content padding、21px header/title、16/24 body margin、24px 横向 padding、6px 圆角、0.7 遮罩；关闭钮只有 1 枚且位于 header，16×22 / 16px 图标，无标题时保留空 header。保留 Vamis 3px focus glow。拖拽使用绝对视口坐标、10px 安全边距、resize 回夹，去掉 shadcn enter/zoom/transition 后 1:1 跟手。桌面 / 移动对照 24/25，P0 0；余 1 条 CRUD 列内 Action 的 schema-tree 定位假阴性 | P0 |
 | `drawer` | Drawer 抽屉 | `/components/drawer` | `/zh-CN/components/drawer` | 进行中 | 88% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover「关闭」提示。补动作后关闭 / 配置按钮 / resizable 未接说明；缺多级错位递减、像素级 cxd Drawer | P0 |
-| `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 进行中 | 95% | 文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，不是 Amis hex）、`show` / `showOn`、`size` sm \| lg \| 空、`icon`（`reload` / fa / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。Page / Service / CRUD 表格区已挂同一套。缺 Dialog / Form / Select 宿主细项 | P0 |
+| `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 进行中 | 95% | 文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，不是 Amis hex）、`show` / `showOn`、`size` sm \| lg \| 空、`icon`（`reload` / fa / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。Page / Service / CRUD 表格区与 Dialog AJAX / submit 已挂同一套。缺 Form / Select 宿主细项 | P0 |
 | （动作 `toast`） | Toast 轻提示 | `/components/toast` | `/zh-CN/components/toast` | 已完成 | 100% | 文档主路径已对齐：`toast.items` / `body` / `title`（字符串或 SchemaNode）、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px` 暗底居中、40px 图标、一次一条、3000ms。有 `type` 的 `title`/`body` 走 `SchemaRenderer`，点击当时 data 快照 | P0 |
 
 ---
@@ -465,7 +465,7 @@ flowchart LR
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | P1 | 进行中 | 92% |
 | 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | P1 | 进行中 | 65% |
 | 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | P1 | 进行中 | 65% |
-| 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | P1 | 进行中 | 88% |
+| 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | P1 | 已完成 | 100% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | P1 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | P1 | 进行中 | 65% |
 | 47 | `chart` | — | 12 | 1 | 25 | 25 | P1 | 进行中 | 65% |
@@ -635,6 +635,8 @@ flowchart LR
 - 状态同步（2026-11-18）：重跑覆盖与测试，type **185/189**、测试 **1128**、`typecheck` 0。主表 / 全量顺序 / 组件页 banner 一致，未重生依赖图，百分比不改（155 行均值 62.6%，公布汇总仍 **62%** / ≥80% 47 / ≥50% 111）。
 - 侧栏优先级同步（2026-11-19）：站点左侧导航栏的 P0 / P1 / P2 写入「全量顺序」新增「侧栏」列（`component-priority.mjs` 生成，与 `playground/src/docs/component-priority.ts` 的 `STAGE_RANK_MAX` 同口径）与「实现复杂度评估」新增「侧栏」列；155 行全部映射，优先级分档与百分比不变。依赖图随脚本重生（`pagination` 进度同步为 98%）。
 - Options 虚拟列表（2026-11-19）：`optionsControlConfig` 新增 `virtualThreshold`（默认 100）/ `itemHeight`（默认 32）；Select 桌面平铺选项按 266 视口切片、固定行高滚动，搜索回落整表并回顶部。Amis 实测同为 32 行高 / 266 视口 / 200 项滚动高 6400。Options 保持 88%（分组菜单、Picker/Transfer/树未复用，远程缓存未接），Select 保持 92%；对照 Options 页 **38/39**（既有 `selectFirst` 值差，非本刀），测试 **1153**、`typecheck` 0。
+- 状态同步（2026-11-19）：重跑覆盖、全量单测、typecheck 与构建；type **185/189**、测试 **1177**、`typecheck` 0、静态路由 **242**。155 行均值 **62.7%**，公布汇总仍 **62% / ≥80% 47 / ≥50% 111**，百分比不改。
+- Dialog（2026-11-20）：事件、feedback、close:name、Spinner overlay、盒模型、连续拖拽 / resize 回夹和文档示例对齐。进度 88%→100%；测试 **1187**、`typecheck` 0；桌面 / 移动各 **24/25**（P0 0，余 1 条 schema-tree 定位假阴性）。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 

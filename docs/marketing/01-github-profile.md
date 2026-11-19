@@ -84,7 +84,7 @@ json
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1128%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1187%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 ```
 
@@ -120,7 +120,7 @@ v0.1.0-alpha.1 — 第一次公开 alpha
 - 185 / 189 个 Amis type 名称已注册，组件语义平均 62%
 - Vue `VamisRoot` + 任意 HTML `vamis.embed` 两条入口
 - YAML / JSON 双作者态，信封对齐 LCDP IR（`apiVersion: lcdp.ir/v1`）
-- 1128 个单测通过；本机对照目录 2217 条。最近一次全量 2216 例 / 1901 过 / 315 败（P0 1：`form-default`，单跑已通过）
+- 1187 个单测通过；本机对照目录 2233 条。最近一次全量 2216 例 / 1901 过 / 315 败（P0 1：`form-default`，单跑已通过）
 - 在线 Demo / 组件文档 / Amis 并排对照页
 
 ## 现在能跑
@@ -130,7 +130,7 @@ v0.1.0-alpha.1 — 第一次公开 alpha
 ## 已知限制
 
 - `table` / `crud` / `diff-editor` 等语义仍在补，详见 CONTEXT.md
-- combo 独立数据域、D8 诊断、D7 渲染器 API 余项未完成
+- combo 独立数据域、D8 可视化调试面板、D7 渲染器 API 余项未完成
 - npm 包（如果这次还没发）：本 release 仅提供源码运行
 
 ## 链接
