@@ -4,11 +4,11 @@ title: 可视化编辑器
 
 # 可视化编辑器
 
-::: warning 实现进度 65% · 进行中
-已接 Amis 风格的插件注册、节点信息、面板/工具栏/右键扩展、脚手架与事件钩子；支持对象 Schema 和 YAML/JSON 双 Tab。完整内置面板库、iframe 移动预览与拖拽改宽高未接。
+::: warning 实现进度 55% · 进行中
+已接插件协议与组件/大纲/画布/属性工作区，Page 区域和通用外观/事件面板可用；源码为按需弹窗。完整内置面板库、iframe 移动预览与拖拽改宽高未接。
 :::
 
-`@vamis/editor` 基于 Vamis 运行时提供可视化编辑器。它沿用 Amis Editor 的插件协议主路径，但实现使用 Vue 响应式状态，不依赖 React、MST 或 `amis-editor-core`。
+`@vamis/editor` 基于 Vamis 运行时提供可视化编辑器。它沿用 Amis Editor 的插件协议主路径，但实现使用 Vue 响应式状态，不依赖 React、MST 或 `amis-editor-core`。编辑器外壳使用可独立的 `@vamis/ui`，属性面板直接通过 Vamis `SchemaRenderer` 渲染表单项，与业务页面共用组件、数据宿主和校验行为。
 
 本地执行 `pnpm dev`，打开 `/editor`。
 
@@ -281,7 +281,7 @@ import { MiniEditor } from '@vamis/editor'
 
 ## 源码与失败态
 
-右侧源码面板使用 Vamis 的 Monaco 表单项，提供 **YAML / JSON 两个 Tab** 并实时同步。YAML 使用 1.2 Core Schema。
+顶部「源码」或左侧源码入口打开按需加载的 Monaco 弹窗，提供 **YAML / JSON 两个 Tab** 并实时同步，不与右侧属性面板争夺常驻空间。YAML 使用 1.2 Core Schema。
 
 解析失败时显示具体错误，画布和另一格式保留上一份有效内容，不会把半棵错误树交给运行时。对象输出会经过 `isHiddenProps` 和内部字段清理。
 

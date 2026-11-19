@@ -1,4 +1,5 @@
-import { canInsertChild, type SchemaObject } from '@vamis/core'
+import { canInsertChild, registerRenderer, type SchemaObject } from '@vamis/core'
+import EventEditorRenderer from './EventEditorRenderer.vue'
 import {
   BasePlugin,
   type BaseEventContext,
@@ -30,6 +31,44 @@ function regionsFor(scaffold: SchemaObject): RegionConfig[] | undefined {
   return [{ key, label: key === 'body' ? '内容区' : key }]
 }
 
+function group(title: string, body: SchemaObject[]): SchemaObject {
+  return { type: 'collapse', title, body, collapsed: false }
+}
+
+function editorTabs(properties: SchemaObject[], appearance?: SchemaObject[]): SchemaObject[] {
+  return [
+    {
+      type: 'tabs',
+      tabsMode: 'line',
+      tabs: [
+        { title: '属性', body: properties },
+        {
+          title: '外观',
+          body: appearance || [
+            group('基本样式', [
+              { type: 'input-text', name: 'className', label: 'CSS 类名' },
+              { type: 'input-text', name: 'style.width', label: '宽度', placeholder: 'auto / 100% / 320px' },
+              { type: 'input-text', name: 'style.height', label: '高度', placeholder: 'auto / 240px' },
+              { type: 'input-text', name: 'style.background', label: '背景' },
+              { type: 'input-text', name: 'style.color', label: '文字颜色' },
+            ]),
+            group('状态', [
+              { type: 'switch', name: 'hidden', label: '隐藏' },
+              { type: 'switch', name: 'disabled', label: '禁用' },
+              { type: 'input-text', name: 'visibleOn', label: '显隐表达式' },
+              { type: 'input-text', name: 'disabledOn', label: '禁用表达式' },
+            ]),
+          ],
+        },
+        {
+          title: '事件',
+          body: [group('事件动作', [{ type: 'event-editor', name: 'onEvent', label: '事件配置' }])],
+        },
+      ],
+    },
+  ]
+}
+
 function panelFor(type: string): SchemaObject[] {
   const fields = fieldsForType(type).map((field) => ({
     type:
@@ -46,21 +85,67 @@ function panelFor(type: string): SchemaObject[] {
     label: field.label,
     options: field.options,
   }))
-  return [
-    {
-      type: 'tabs',
-      tabsMode: 'line',
-      tabs: [
-        {
-          title: '属性',
-          body: [{ type: 'input-text', name: 'type', label: 'type' }, ...fields],
-        },
-        {
-          title: '事件',
-          body: [{ type: 'event-editor', name: 'onEvent', label: '点击事件' }],
-        },
-      ],
-    },
+  return editorTabs([group('基本', [{ type: 'input-text', name: 'type', label: '组件类型' }, ...fields])])
+}
+
+function pagePanel(): SchemaObject[] {
+  return editorTabs([
+    group('基本', [
+      {
+        type: 'checkboxes',
+        name: 'regions',
+        label: '区域展示',
+        value: ['body', 'toolbar', 'aside', 'header'],
+        options: [
+          { label: '内容区', value: 'body' },
+          { label: '标题栏', value: 'header' },
+          { label: '工具栏', value: 'toolbar' },
+          { label: '边栏', value: 'aside' },
+        ],
+      },
+      { type: 'input-text', name: 'title', label: '页面标题' },
+      { type: 'textarea', name: 'subTitle', label: '副标题' },
+      { type: 'input-text', name: 'remark', label: '标题提示', hiddenOn: `!title` },
+      { type: 'switch', name: 'asideResizor', label: '边栏宽度可调节', hiddenOn: `regions && !regions.includes('aside')` },
+      { type: 'input-number', name: 'asideMinWidth', label: '边栏最小宽度', min: 0, hiddenOn: `regions && !regions.includes('aside')` },
+      { type: 'input-number', name: 'asideMaxWidth', label: '边栏最大宽度', min: 0, hiddenOn: `regions && !regions.includes('aside')` },
+      { type: 'switch', name: 'asideSticky', label: '边栏固定', value: true, hiddenOn: `regions && !regions.includes('aside')` },
+      {
+        type: 'button-group-select',
+        name: 'asidePosition',
+        label: '边栏位置',
+        value: 'left',
+        options: [{ label: '左', value: 'left' }, { label: '右', value: 'right' }],
+        hiddenOn: `regions && !regions.includes('aside')`,
+      },
+    ]),
+    group('数据', [
+      { type: 'json', name: 'data', label: '组件静态数据', placeholder: '{ "key": "value" }' },
+      { type: 'input-text', name: 'initApi', label: '初始化接口', placeholder: 'http://' },
+    ]),
+    group('移动端', [
+      { type: 'switch', name: 'pullRefresh.disabled', label: '禁用下拉刷新', value: true },
+      { type: 'input-text', name: 'pullRefresh.pullingText', label: '下拉文案' },
+      { type: 'input-text', name: 'pullRefresh.loosingText', label: '释放文案' },
+    ]),
+  ])
+}
+
+export class PagePlugin extends BasePlugin {
+  static id = 'VamisPagePlugin'
+  static scene = ['global', 'layout']
+  name = '页面'
+  description = '页面容器'
+  rendererName = 'page'
+  scaffold = { type: 'page', body: [] }
+  isBaseComponent = true
+  disabledRendererPlugin = true
+  panelTitle = '页面'
+  panelBody = pagePanel()
+  regions: RegionConfig[] = [
+    { key: 'toolbar', label: '工具栏' },
+    { key: 'aside', label: '边栏', placeholder: '边栏内容' },
+    { key: 'body', label: '内容区', placeholder: '页面内容' },
   ]
 }
 
@@ -207,5 +292,12 @@ export class OutlinePlugin extends BasePlugin {
 
 type PanelItemLike = Parameters<NonNullable<PluginInterface['buildEditorPanel']>>[1][number]
 
+registerRenderer({
+  type: 'event-editor',
+  name: '事件动作编辑器',
+  component: EventEditorRenderer,
+})
+
 registerEditorPlugin(BasicToolbarPlugin)
+registerEditorPlugin(PagePlugin)
 registerPalettePlugins()

@@ -59,6 +59,29 @@ app.mount('#app')
 
 必须挂 Pinia：内部状态 hub 用它，不引入 MST。运行后应显示标题 `Hello` 和正文「来自 schema 的页面」。如果只有文字没有控件皮肤，先检查 `@vamis/ui/styles.css` 是否被构建工具实际加载；其它失败见 [常见问题](/start/faq)。
 
+### 只使用 UI 组件
+
+`@vamis/ui` 可脱离低代码运行时单独使用。它不依赖 `@vamis/core`、`vamis` 或 Pinia；按钮、输入框、对话框等原语可以直接用于普通 Vue 页面，Vamis 编辑器自身外壳也使用这一层。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Input } from '@vamis/ui'
+import '@vamis/ui/styles.css'
+
+const name = ref('')
+</script>
+
+<template>
+  <div class="flex gap-2">
+    <Input v-model="name" placeholder="名称" />
+    <Button>保存</Button>
+  </div>
+</template>
+```
+
+需要 Schema 表单、数据域和动作时再引入 `vamis` / `VamisRoot`；只使用 UI 原语不必挂载运行时。`@vamis/editor` 的属性面板则复用完整 Vamis 渲染器，证明两条使用方式可以组合。
+
 ## JS SDK
 
 无 npm、无 Vite 的页面用 SDK。见 [JS SDK](/start/sdk)。外链 `sdk.js` / `sdk.css`：

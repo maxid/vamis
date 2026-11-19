@@ -37,6 +37,7 @@ Vamis 是用 Vue 3 + shadcn-vue 重实现的 **Amis 兼容** JSON/YAML 低代码
 | 数据展示 | 56%（均） | Card / List / Image / Calendar / Table View 等 |
 | 反馈 / 导航 | 89% / 84%（均） | Dialog、Drawer、Toast、Tabs、Collapse、Nav |
 | JS SDK | 90% | `vamis.embed`、`updateSchema`、`updateProps`、`doAction` |
+| UI 原语 | 可独立使用 | `@vamis/ui` 直接提供 Vue Button / Input / Dialog 等，无 core / Pinia 依赖 |
 | 可视化编辑器 | 主路径 | 组件树 / 画布 / 插件面板 / 事件钩子 / YAML+JSON，无插件市场 |
 | 样式 | 部分 | 辅助类、CSS 变量、深色；色盘表仍在补 |
 

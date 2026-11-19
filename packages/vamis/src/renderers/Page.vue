@@ -44,7 +44,13 @@ const asideWidth = ref(DEFAULT_ASIDE_WIDTH)
 const body = computed(() => asArray(props.schema.body || props.schema.children))
 const toolbar = computed(() => asArray(props.schema.toolbar))
 const aside = computed(() => asArray(props.schema.aside))
-const hasAside = computed(() => aside.value.length > 0)
+const configuredRegions = computed(() =>
+  Array.isArray(props.schema.regions) ? props.schema.regions.map(String) : null,
+)
+function regionEnabled(region: string): boolean {
+  return !configuredRegions.value || configuredRegions.value.includes(region)
+}
+const hasAside = computed(() => regionEnabled('aside') && aside.value.length > 0)
 const asideOnLeft = computed(() => props.schema.asidePosition !== 'right')
 const asideSticky = computed(() => props.schema.asideSticky !== false)
 const asideMinWidth = computed(() => {
@@ -60,9 +66,9 @@ const cssVars = computed(() =>
   resolveCssVars(props.schema.cssVars as Record<string, string> | undefined),
 )
 const hasTitleBlock = computed(
-  () => !!(props.schema.title || props.schema.subTitle || props.schema.remark),
+  () => regionEnabled('header') && !!(props.schema.title || props.schema.subTitle || props.schema.remark),
 )
-const hasToolbar = computed(() => toolbar.value.length > 0)
+const hasToolbar = computed(() => regionEnabled('toolbar') && toolbar.value.length > 0)
 const hasHeaderRow = computed(() => hasTitleBlock.value && hasToolbar.value)
 const rootClass = computed(() =>
   cn(
@@ -345,7 +351,7 @@ onBeforeUnmount(() => {
         <div v-else-if="hasToolbar" :class="toolbarClass">
           <SchemaRenderer v-for="(node, i) in toolbar" :key="'t' + i" :schema="node" />
         </div>
-        <div :class="bodyClass">
+        <div v-if="regionEnabled('body')" :class="bodyClass">
           <Spinner :schema="spinnerSchema" />
           <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
         </div>

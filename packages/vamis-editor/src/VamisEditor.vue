@@ -74,6 +74,10 @@ const sourceText = ref(initial.text || formatSchemaAs(initial.root, sourceFormat
 const sourceError = ref('')
 const dropPath = ref('')
 const paletteSearch = ref('')
+const leftPanel = ref<'components' | 'outline'>('components')
+const paletteScope = ref<'base' | 'custom'>('base')
+const rightTab = ref<'属性' | '外观' | '事件'>('属性')
+const sourceOpen = ref(false)
 const activePanelKey = ref('config')
 const internalPreview = ref(!!props.preview)
 const internalMobile = ref(!!props.isMobile)
@@ -131,6 +135,20 @@ const panels = computed(() => manager.state.panels.filter((panel) => panel.posit
 const currentPanel = computed<PanelItem | undefined>(
   () => panels.value.find((panel) => panel.key === activePanelKey.value) || panels.value[0],
 )
+const currentPanelBody = computed(() => {
+  const body = currentPanel.value?.body
+  if (body == null) return []
+  const nodes = Array.isArray(body) ? body : [body]
+  for (const node of nodes) {
+    if (!node || typeof node !== 'object' || node.type !== 'tabs') continue
+    const tabs = Array.isArray(node.tabs) ? node.tabs : []
+    const tab = tabs.find(
+      (item) => item && typeof item === 'object' && item.title === rightTab.value,
+    )
+    if (tab && typeof tab === 'object') return tab.body || []
+  }
+  return rightTab.value === '属性' ? body : []
+})
 const panelComponent = computed(() => {
   const panel = currentPanel.value
   const node = selected.value
@@ -151,6 +169,7 @@ const palette = computed(() => {
   const query = paletteSearch.value.trim().toLowerCase()
   const groups = new Map<string, SubRendererInfo[]>()
   for (const renderer of manager.state.availableRenderers) {
+    if (paletteScope.value === 'base' ? renderer.isBaseComponent === false : renderer.isBaseComponent) continue
     const haystack = `${renderer.name} ${renderer.rendererName || ''} ${renderer.searchKeywords || ''}`.toLowerCase()
     if (query && !haystack.includes(query)) continue
     const tags = Array.isArray(renderer.tags) ? renderer.tags : [renderer.tags || '自定义']
@@ -398,8 +417,12 @@ function togglePreview() {
 }
 
 function toggleMobile() {
-  internalMobile.value = !internalMobile.value
-  emit('update:isMobile', internalMobile.value)
+  setMobile(!internalMobile.value)
+}
+
+function setMobile(value: boolean) {
+  internalMobile.value = value
+  emit('update:isMobile', value)
 }
 
 function onKeydown(event: KeyboardEvent) {
@@ -466,48 +489,90 @@ function patchQuickEdit(field: string, value: unknown) {
 
 <template>
   <div
-    class="flex h-[70vh] min-h-[36rem] overflow-hidden rounded-lg border bg-card outline-none"
+    class="flex h-full min-h-[36rem] overflow-hidden border bg-card text-card-foreground outline-none"
     :class="props.className"
     tabindex="0"
     @keydown="onKeydown"
     @click="manager.closeContextMenu()"
   >
     <template v-if="!isPreview">
-      <aside v-if="!mini" class="flex w-72 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground">
-        <div class="border-b border-sidebar-border px-3 py-2">
-          <p class="font-mono text-[10px] tracking-[0.2em] text-sidebar-primary">COMPONENTS</p>
-          <h2 class="text-sm font-medium">组件</h2>
+      <aside v-if="!mini" class="flex w-10 shrink-0 flex-col items-center border-r bg-card py-2">
+        <button
+          type="button"
+          class="flex h-12 w-full flex-col items-center justify-center gap-1 border-l-2 text-[11px]"
+          :class="leftPanel === 'components' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground'"
+          title="组件"
+          @click="leftPanel = 'components'"
+        >
+          <span class="text-base leading-none">▦</span><span>组件</span>
+        </button>
+        <button
+          type="button"
+          class="flex h-12 w-full flex-col items-center justify-center gap-1 border-l-2 text-[11px]"
+          :class="leftPanel === 'outline' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground'"
+          title="大纲"
+          @click="leftPanel = 'outline'"
+        >
+          <span class="text-base leading-none">☷</span><span>大纲</span>
+        </button>
+        <button
+          type="button"
+          class="mt-auto flex h-12 w-full flex-col items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary"
+          title="源码"
+          @click="sourceOpen = true"
+        >
+          <span class="font-mono text-xs leading-none">&lt;/&gt;</span><span>源码</span>
+        </button>
+      </aside>
+
+      <aside v-if="!mini" class="flex w-64 shrink-0 flex-col border-r bg-card">
+        <div class="flex h-12 items-center border-b px-4">
+          <h2 class="text-sm font-medium">{{ leftPanel === 'components' ? '组件' : '页面大纲' }}</h2>
         </div>
-        <div class="border-b border-sidebar-border p-2">
-          <Input v-model="paletteSearch" placeholder="搜索组件" aria-label="搜索组件" />
-        </div>
-        <ScrollArea class="h-[42%] border-b">
-          <div class="space-y-3 p-2">
-            <div v-for="group in palette" :key="group.title">
-              <p class="mb-1 px-1 font-mono text-[10px] tracking-wider text-sidebar-foreground/60">{{ group.title }}</p>
-              <div class="grid grid-cols-2 gap-1">
-                <button
-                  v-for="item in group.items"
-                  :key="item.id"
-                  type="button"
-                  draggable="true"
-                  :title="item.description"
-                  class="cursor-pointer rounded-md border border-sidebar-border bg-sidebar-accent/50 px-2 py-1 text-left text-[11px] text-sidebar-foreground hover:border-sidebar-primary hover:bg-sidebar-accent focus-visible:ring-sidebar-primary outline-none focus-visible:ring-2"
-                  @click="onPaletteClick(item)"
-                  @dragstart="onPaletteDragStart($event, item)"
-                >
-                  {{ item.name }}
-                </button>
-              </div>
-            </div>
-            <p v-if="!palette.length" class="p-2 text-xs text-muted-foreground">没有匹配的组件</p>
+        <template v-if="leftPanel === 'components'">
+          <div class="grid grid-cols-2 border-b text-sm">
+            <button
+              type="button"
+              class="border-b-2 py-2"
+              :class="paletteScope === 'base' ? 'border-primary text-primary' : 'border-transparent'"
+              @click="paletteScope = 'base'"
+            >系统组件</button>
+            <button
+              type="button"
+              class="border-b-2 py-2"
+              :class="paletteScope === 'custom' ? 'border-primary text-primary' : 'border-transparent'"
+              @click="paletteScope = 'custom'"
+            >自定义组件</button>
           </div>
-        </ScrollArea>
-        <div class="border-b border-sidebar-border px-3 py-2">
-          <p class="font-mono text-[10px] tracking-[0.2em] text-sidebar-primary">OUTLINE</p>
-          <h2 class="text-sm font-medium">大纲</h2>
-        </div>
-        <ScrollArea class="flex-1">
+          <div class="border-b p-3">
+            <Input v-model="paletteSearch" placeholder="输入关键字查询组件" aria-label="搜索组件" />
+          </div>
+          <ScrollArea class="min-h-0 flex-1">
+            <div class="space-y-4 p-3">
+              <section v-for="group in palette" :key="group.title">
+                <h3 class="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
+                  {{ group.title }}<span>⌄</span>
+                </h3>
+                <div class="grid grid-cols-2 gap-2">
+                  <button
+                    v-for="item in group.items"
+                    :key="item.id"
+                    type="button"
+                    draggable="true"
+                    :title="item.description"
+                    class="flex h-8 items-center gap-1.5 rounded-sm border bg-card px-2 text-left text-xs hover:border-primary hover:text-primary"
+                    @click="onPaletteClick(item)"
+                    @dragstart="onPaletteDragStart($event, item)"
+                  >
+                    <span class="text-muted-foreground">▣</span><span class="truncate">{{ item.name }}</span>
+                  </button>
+                </div>
+              </section>
+              <p v-if="!palette.length" class="py-8 text-center text-xs text-muted-foreground">没有匹配的组件</p>
+            </div>
+          </ScrollArea>
+        </template>
+        <ScrollArea v-else class="min-h-0 flex-1">
           <nav class="p-2 text-sm">
             <SchemaTreeNav
               :nodes="tree"
@@ -521,25 +586,41 @@ function patchQuickEdit(field: string, value: unknown) {
         </ScrollArea>
       </aside>
 
-      <section class="flex min-w-0 flex-1 flex-col">
-        <div class="flex min-h-12 items-center justify-between gap-2 border-b px-3 py-2">
+      <section class="flex min-w-0 flex-1 flex-col bg-muted/30">
+        <div class="flex h-12 shrink-0 items-center justify-between gap-2 border-b bg-card px-3">
           <div class="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
-            <span>页面</span>
-            <template v-if="selected">
-              <span>/</span>
-              <span class="truncate text-foreground">{{ selected.info?.name || selected.label }}</span>
-            </template>
+            <span class="font-medium text-foreground">Vamis 可视化编辑器</span>
+            <template v-if="selected"><span>/</span><span class="truncate">{{ selected.info?.name || selected.label }}</span></template>
           </div>
           <div class="flex shrink-0 items-center gap-1">
-            <Button size="sm" variant="ghost" :disabled="!manager.canUndo" title="撤销" @click="manager.undo()">撤销</Button>
-            <Button size="sm" variant="ghost" :disabled="!manager.canRedo" title="重做" @click="manager.redo()">重做</Button>
-            <Button size="sm" variant="outline" @click="toggleMobile">{{ internalMobile ? '桌面' : '移动' }}</Button>
-            <Button size="sm" variant="outline" @click="togglePreview">预览</Button>
+            <Button size="sm" variant="ghost" :disabled="!manager.canUndo" title="撤销" @click="manager.undo()">↶</Button>
+            <Button size="sm" variant="ghost" :disabled="!manager.canRedo" title="重做" @click="manager.redo()">↷</Button>
+            <div class="mx-2 flex rounded-sm bg-muted p-0.5">
+              <button type="button" class="rounded-sm px-2 py-1 text-xs" :class="!internalMobile ? 'bg-primary text-primary-foreground' : ''" title="桌面" @click="setMobile(false)">▣</button>
+              <button type="button" class="rounded-sm px-2 py-1 text-xs" :class="internalMobile ? 'bg-primary text-primary-foreground' : ''" title="移动" @click="setMobile(true)">▯</button>
+            </div>
+            <Button size="sm" variant="ghost" @click="sourceOpen = true">&lt;/&gt; 源码</Button>
+            <Button size="sm" @click="togglePreview">预览</Button>
           </div>
         </div>
-        <ScrollArea class="flex-1 bg-background">
+        <div v-if="selected" class="flex min-h-9 shrink-0 items-center gap-1 border-b bg-card px-3 text-xs">
+          <Badge variant="default">{{ selected.info?.name || selected.label }}</Badge>
+          <span class="font-mono text-muted-foreground">{{ selected.type }}</span>
+          <div class="ml-auto flex gap-1" v-if="!props.readonly">
+            <Button
+              v-for="item in manager.state.toolbars"
+              :key="item.id"
+              size="sm"
+              variant="ghost"
+              :disabled="item.disabled"
+              :title="item.tooltip"
+              @click="item.onClick?.($event)"
+            >{{ item.label || item.tooltip || item.id }}</Button>
+          </div>
+        </div>
+        <ScrollArea class="min-h-0 flex-1">
           <div
-            class="min-h-full p-4"
+            class="min-h-full p-5"
             @click.capture="onCanvasClick"
             @dragover="onCanvasDragOver"
             @dragleave="onCanvasDragLeave"
@@ -551,59 +632,47 @@ function patchQuickEdit(field: string, value: unknown) {
               <AlertDescription class="font-mono text-xs">{{ sourceError }}</AlertDescription>
             </Alert>
             <div
-              class="mx-auto min-h-96 bg-card transition-[width]"
-              :class="internalMobile ? 'w-[375px] max-w-full rounded-2xl border p-2 shadow-sm' : 'w-full'"
+              class="mx-auto min-h-full border bg-card shadow-sm transition-[width]"
+              :class="internalMobile ? 'w-[375px] max-w-full rounded-xl p-2' : 'w-full'"
             >
               <VamisRoot :schema="previewWidget" :env="previewEnv" />
             </div>
           </div>
         </ScrollArea>
-        <div v-if="selected && manager.state.toolbars.length && !props.readonly" class="flex flex-wrap gap-1 border-t px-3 py-2">
-          <Button
-            v-for="item in manager.state.toolbars"
-            :key="item.id"
-            size="sm"
-            variant="outline"
-            :disabled="item.disabled"
-            :title="item.tooltip"
-            @click="item.onClick?.($event)"
-          >
-            {{ item.label || item.tooltip || item.id }}
-          </Button>
-        </div>
       </section>
 
-      <aside v-if="!mini" class="flex w-96 shrink-0 flex-col border-l">
-        <div class="flex items-center justify-between border-b px-3 py-2">
-          <div>
-            <p class="font-mono text-[10px] tracking-[0.2em] text-primary">PROPERTIES</p>
-            <h2 class="text-sm font-medium">{{ selected?.info?.name || selected?.label || '属性' }}</h2>
-          </div>
-          <Badge v-if="selected" variant="outline">{{ selected.type }}</Badge>
+      <aside v-if="!mini" class="flex w-80 shrink-0 flex-col border-l bg-card">
+        <div class="grid h-12 shrink-0 grid-cols-3 border-b text-sm">
+          <button
+            v-for="tab in ['属性', '外观', '事件']"
+            :key="tab"
+            type="button"
+            class="border-b-2"
+            :class="rightTab === tab ? 'border-primary text-primary' : 'border-transparent'"
+            @click="rightTab = tab as '属性' | '外观' | '事件'"
+          >{{ tab }}</button>
         </div>
-        <div v-if="panels.length" class="flex gap-1 border-b px-3 py-2">
+        <div v-if="panels.length > 1" class="flex shrink-0 gap-1 border-b px-3 py-2">
           <Button
             v-for="panel in panels"
             :key="panel.key"
             size="sm"
             :variant="currentPanel?.key === panel.key ? 'default' : 'ghost'"
             @click="activePanelKey = panel.key"
-          >
-            {{ panel.title || panel.key }}
-          </Button>
+          >{{ panel.title || panel.key }}</Button>
         </div>
-        <ScrollArea class="max-h-[45%] min-h-48 border-b">
-          <div v-if="selected" class="p-3">
-            <component :is="panelComponent" v-if="panelComponent" />
+        <ScrollArea class="min-h-0 flex-1">
+          <div v-if="selected" class="p-4">
+            <component :is="panelComponent" v-if="panelComponent && rightTab === '属性'" />
             <SchemaControls
-              v-else-if="currentPanel?.body"
-              :nodes="currentPanel.body"
+              v-else-if="currentPanelBody.length"
+              :nodes="currentPanelBody"
               :value="selected.schema"
               :readonly="readonly"
               @patch="patchPanel"
             />
-            <p v-else class="text-xs text-muted-foreground">该组件没有注册编辑器面板，可在 JSON / YAML 中编辑。</p>
-            <div v-if="selected.schema.options" class="mt-3 grid gap-1.5 border-t pt-3">
+            <p v-else class="py-8 text-center text-xs text-muted-foreground">当前组件暂无{{ rightTab }}配置。</p>
+            <div v-if="rightTab === '属性' && selected.schema.options" class="mt-3 grid gap-1.5 border-t pt-3">
               <label class="text-sm font-medium">options（每行 label:value）</label>
               <Textarea
                 :model-value="optionsText"
@@ -614,26 +683,6 @@ function patchQuickEdit(field: string, value: unknown) {
             </div>
           </div>
         </ScrollArea>
-        <div class="flex items-center justify-between border-b px-3 py-2">
-          <span class="text-sm font-medium">Schema</span>
-          <Button
-            v-if="typeof modelValue === 'string'"
-            size="sm"
-            variant="ghost"
-            :disabled="readonly"
-            @click="normalizeToIr"
-          >
-            规范化为 IR
-          </Button>
-        </div>
-        <EditorSourcePanel
-          :source="sourceText"
-          :format="sourceFormat"
-          :readonly="readonly"
-          @update:source="onSourceUpdate"
-          @update:format="sourceFormat = $event"
-          @error="sourceError = $event"
-        />
       </aside>
     </template>
     <div v-else class="relative min-w-0 flex-1 bg-background p-4">
@@ -658,18 +707,34 @@ function patchQuickEdit(field: string, value: unknown) {
             :class="item.className"
             :disabled="item.disabled"
             @click="runMenu(item)"
-          >
-            {{ item.label }}
-          </button>
+          >{{ item.label }}</button>
         </template>
       </div>
     </Teleport>
 
+    <Dialog :open="sourceOpen" @update:open="sourceOpen = $event">
+      <DialogContent class="flex h-[80vh] max-w-5xl flex-col">
+        <DialogHeader>
+          <DialogTitle>Schema 源码</DialogTitle>
+        </DialogHeader>
+        <EditorSourcePanel
+          :source="sourceText"
+          :format="sourceFormat"
+          :readonly="readonly"
+          @update:source="onSourceUpdate"
+          @update:format="sourceFormat = $event"
+          @error="sourceError = $event"
+        />
+        <DialogFooter>
+          <Button v-if="typeof modelValue === 'string'" variant="outline" :disabled="readonly" @click="normalizeToIr">规范化为 IR</Button>
+          <Button @click="sourceOpen = false">完成</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
     <Dialog :open="!!manager.state.scaffoldRequest" @update:open="!$event && manager.cancelScaffold()">
       <DialogContent class="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{{ manager.state.scaffoldRequest?.form.title || '配置组件' }}</DialogTitle>
-        </DialogHeader>
+        <DialogHeader><DialogTitle>{{ manager.state.scaffoldRequest?.form.title || '配置组件' }}</DialogTitle></DialogHeader>
         <SchemaControls :nodes="scaffoldBody" :value="scaffoldValues" @patch="patchScaffold" />
         <DialogFooter>
           <Button variant="outline" @click="manager.cancelScaffold()">取消</Button>
@@ -680,18 +745,9 @@ function patchQuickEdit(field: string, value: unknown) {
 
     <Dialog :open="!!quickEditNode" @update:open="!$event && manager.closeNodePopOverForm()">
       <DialogContent class="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{{ quickEditNode?.info?.name || '快速配置' }}</DialogTitle>
-        </DialogHeader>
-        <SchemaControls
-          v-if="quickEditNode"
-          :nodes="quickEditBody"
-          :value="quickEditNode.schema"
-          @patch="patchQuickEdit"
-        />
-        <DialogFooter>
-          <Button @click="manager.closeNodePopOverForm()">完成</Button>
-        </DialogFooter>
+        <DialogHeader><DialogTitle>{{ quickEditNode?.info?.name || '快速配置' }}</DialogTitle></DialogHeader>
+        <SchemaControls v-if="quickEditNode" :nodes="quickEditBody" :value="quickEditNode.schema" @patch="patchQuickEdit" />
+        <DialogFooter><Button @click="manager.closeNodePopOverForm()">完成</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   </div>
