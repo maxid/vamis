@@ -5,8 +5,8 @@ outline: deep
 
 # Pagination 分页
 
-::: info 实现进度 92% · 进行中
-文档主路径已对齐：`layout`、`mode`（normal / simple）、`size: sm`、`maxButtons`、`total` / `perPage` / `activePage`、`showPerPage` / `showPageInput`、`ellipsisPageGap`、`change` 事件。缺 `themeCss`、移动端 `mobileUI`。
+::: info 实现进度 98% · 进行中
+文档主路径已对齐：`layout`、`mode`、`size`、`maxButtons`、`total` / `perPage` / `activePage`、省略号跳页、`buttonType`、`mobileUI` 简洁输入与 `change` 联动。perPage 复用 Vamis Select；缺 `themeCss`。
 :::
 
 分页。对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -75,7 +75,7 @@ showPageInput: true
 
 ## 简洁模式
 
-`mode: simple` 只显示左右箭头和当前页。配合 `hasNext` 使用。
+`mode: simple` 只显示左右箭头和当前页，配合 `hasNext` 使用。`mobileUI: true` 时中间变为页码输入框，支持上下方向键和回车跳页；普通分页在移动端也收成左右箭头与输入框。
 
 ```schema: scope="body"
 {
@@ -114,22 +114,26 @@ body:
 | --- | --- | --- |
 | change | `page: number` 当前页<br/>`perPage: number` 每页条数 | 页码或每页条数改变时 |
 
-点页码会派发 `change`。和表格联动时，用 `setValue` 把 `event.data.page` 写回 service 数据域（与 Amis 文档同构）：
+点页码会派发 `change`。和表格联动时，用 `setValue` 把 `event.data.page` 写回 service 数据域；接口 URL 中的 `${page}` 随数据更新并重新加载：
 
-```yaml
+```schema: scope="body"
 type: service
 id: service_01
+api: /api/mock2/crud/table?page=${page}
 data:
   page: 1
 body:
   - type: table
+    title: 表格1
     source: $rows
     columns:
       - name: engine
         label: Engine
+      - name: version
+        label: Version
   - type: pagination
     activePage: ${page}
-    lastPage: 8
+    hasNext: true
     onEvent:
       change:
         actions:
@@ -138,6 +142,35 @@ body:
             args:
               value:
                 page: ${event.data.page}
+```
+
+也可以直接对 service 执行 `reload`，把新页码作为本次请求数据：
+
+```schema: scope="body"
+type: service
+id: service_02
+api: /api/mock2/crud/table?page=${page}
+data:
+  page: 1
+body:
+  - type: table
+    title: 表格1
+    source: $rows
+    columns:
+      - name: engine
+        label: Engine
+      - name: version
+        label: Version
+  - type: pagination
+    activePage: ${page}
+    hasNext: true
+    onEvent:
+      change:
+        actions:
+          - actionType: reload
+            componentId: service_02
+            data:
+              page: ${event.data.page}
 ```
 
 JSON 同等有效。`activePage: ${page}` 会跟着数据域走。
@@ -160,10 +193,12 @@ JSON 同等有效。`activePage: ${page}` 会跟着数据域走。
 | showPageInput | `boolean` | false | 是否显示快速跳转；`layout` 也能控制 |
 | disabled | `boolean` | false | 是否禁用 |
 | hasNext | `boolean` | | 简洁模式是否还有下一页 |
+| buttonType | `'icon'` \| `'text'` | `icon` | 上一页 / 下一页使用图标或文字 |
+| mobileUI | `boolean` | 跟随 `env.mobileUI` | 移动端只保留箭头和页码输入，支持方向键 / 回车 |
 
 ## 和 Amis 文档的差异
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - 不搬 `.cxd-Pagination` 前缀；用 `data-vamis-pagination` 转写页码按钮与 layout 槽。
-- `themeCss`、移动端 `mobileUI` 未接。别名 `pager` 已注册。
+- perPage 复用 Vamis Select，支持浮层与 `popOverContainerSelector`；CRUD 与本组件共用同一分页实现。`themeCss` 未接。别名 `pager` 已注册。

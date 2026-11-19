@@ -1,16 +1,16 @@
 # Pagination 分页 · `pagination` 设计
 
-> 状态：**进行中 92%** · 复杂度：**M 中**
+> 状态：**进行中 98%** · 复杂度：**M 中**
 > 文档：[在线 API 手册](/components/pagination) · Amis：`/zh-CN/components/pagination`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-Pagination 是**分页状态/事件**组件：page/perPage/lastPage/total/hasNext、layout/mode/size、省略号/跳页/每页条数、change 事件与 ValueHost 写值。主路径已较完整；缺口是 `themeCss` 与移动端 `mobileUI`。
+Pagination 是**分页状态/事件**组件：page/perPage/lastPage/total/hasNext、layout/mode/size/buttonType、省略号/跳页/每页条数、change 事件与 ValueHost 写值。mobileUI 已收为箭头 + 输入并支持方向键 / 回车；perPage 通过 `PaginationPerPage` 复用 Vamis Select，缺口只剩 `themeCss`。
 
 ## 1. 边界与优先级（先读）
 
-1. **页码/每页**：page ≥1；perPage 正数；total/lastPage/hasNext 决定 lastPage；越界回 1。
+1. **页码/每页**：page ≥1；perPage 正数；total/lastPage/hasNext 决定 lastPage；负数 / 非法页回 1，跳页超过 lastPage 时收至末页。
 2. **写值**：有 name 时经 `useFieldValue` 写当前数据域；change 事件可 preventDefault，阻止后不写 page/值。
 3. **模式**：simple/normal；layout 决定左右区块（total/pager/go/perPage 等）；不要各模式各写状态。
 4. **省略号/跳页**：maxButtons/ellipsisPageGap 计算 pagerItems；跳页非法数忽略，Enter 触发。
@@ -25,7 +25,7 @@ Pagination 是**分页状态/事件**组件：page/perPage/lastPage/total/hasNex
 - 省略号/跳页 Enter/非法输入；perPage 切换回第一页。
 - 有 name/无 name；change 阻止；disabled。
 - simple/normal、layout 组合。
-- 窄屏/深色/mobileUI（未接）。
+- 窄屏/深色/mobileUI：输入支持 ArrowUp / ArrowDown / Enter，blur 恢复当前页。
 
 ### 优先级
 
@@ -46,7 +46,9 @@ Pagination 是**分页状态/事件**组件：page/perPage/lastPage/total/hasNex
 | `layout` / `mode` / `size` / `maxButtons` | 外观 | 已接 |
 | `showPageInput` / 跳页 | 交互 | 已接 |
 | `change` | 事件 | 已接，可阻止 |
-| `themeCss` / `mobileUI` | 皮肤/移动 | 未接 |
+| `buttonType` / `mobileUI` | 文字按钮/移动输入 | 已接 |
+| perPage / `popOverContainerSelector` | Vamis Select 浮层 | 已接 |
+| `themeCss` | 皮肤 | 未接 |
 
 ## 4. 架构
 
@@ -68,30 +70,30 @@ prev/next/go/perPage → emitChange → change 事件 → prevented? stop → pa
 
 ## 6. 缺口
 
-themeCss、mobileUI、深色/窄屏逐项。
+themeCss；Select 浮层、盒模型、文字色号、深色 / 375px 已核。
 
 ## 7. 验收
 
 - total/page/perPage/省略号/跳页/change/禁用/窄屏；未接不误标。
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（文档核对：12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis 渲染器或注册文件已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
+- [x] 组件页活示例运行、无 console error
+- [x] `pnpm test`（组件相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page <type>` 桌面
+- [x] `pnpm compare --page <type> --mobile`
+- [x] 深色 / 375px 窄屏核对
 
 ## 8. 后续
 
-补 themeCss/mobileUI；不要和 PaginationWrapper 的客户端切片混用。
+补 themeCss；CRUD 复用 Pagination，不要另写分页逻辑或皮肤。
 
 ---
 

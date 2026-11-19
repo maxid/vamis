@@ -9549,9 +9549,9 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 /* ---- Pagination.vue（原组件内 <style scoped>，2026-11 迁入） ---- */
 /* Amis `.Pagination-wrap`：块级 + 子项 inline-block/inline-flex，不要 flex+align-items 去对 -8px 底边距。 */
 [data-vamis-pagination] {
-  display: inline-block;
-  font-size: 0;
-  line-height: 0;
+  display: block;
+  font-size: var(--fontSizeBase);
+  line-height: 1.5;
   white-space: nowrap;
   color: var(--text-loud);
 }
@@ -9637,19 +9637,45 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   vertical-align: top;
 }
 [data-pagination='perpage'] {
+  display: inline-block;
   height: 32px;
-  min-width: 96px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
-  color: var(--form-item-color);
-  padding: 0 8px;
-  font-size: var(--fontSizeSm);
-  vertical-align: top;
+  min-width: 0;
+  margin-left: 8px;
+  color: var(--text-loud);
+  font-size: var(--fontSizeBase);
+  vertical-align: baseline;
+}
+[data-pagination='perpage']:first-child {
+  margin-left: 0;
+}
+[data-pagination='perpage'] .vamis-form-item,
+[data-pagination='perpage'] .vamis-form-item__value,
+[data-pagination='perpage'] .vamis-select {
+  width: auto;
+  margin: 0;
+}
+[data-pagination='perpage'] .vamis-form-item__value {
+  flex: none;
+}
+[data-pagination='perpage'] .vamis-select__input {
+  height: 32px;
+  min-height: 32px;
+  padding: 0 10px;
+  color: var(--text-loud);
+  font-size: var(--fontSizeBase);
 }
 [data-vamis-pagination][data-size='sm'] [data-pagination='perpage'] {
   height: 24px;
   min-height: 24px;
+  margin-left: 4px;
+}
+[data-vamis-pagination][data-size='sm'] [data-pagination='perpage']:first-child {
+  margin-left: 0;
+}
+[data-vamis-pagination][data-size='sm'] [data-pagination='perpage'] .vamis-select__input {
+  height: 24px;
+  min-height: 24px;
+  padding: 0 6px;
 }
 [data-pagination='go'] {
   display: inline-flex;
@@ -9708,6 +9734,34 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--primary);
   border-color: var(--primary);
   border-left: 1px solid var(--primary);
+}
+[data-pager='simple'] .vamis-pagination__simple-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+[data-pagination='simple-input'] {
+  width: 48px;
+  min-width: 48px;
+  height: 24px;
+  padding: 0 var(--gap-xs);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-loud);
+  font-size: var(--fontSizeSm);
+  line-height: 1.5;
+  text-align: center;
+  outline: none;
+}
+[data-pagination='simple-input']:focus,
+[data-pagination='simple-input']:hover {
+  border-bottom-color: var(--primary);
+}
+.vamis-pagination__simple-last {
+  color: var(--text-secondary);
+  font-size: var(--fontSizeSm);
 }
 [data-vamis-pagination].disabled,
 [data-vamis-pagination].disabled [data-pagination='pager'] > li {

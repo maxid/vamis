@@ -252,6 +252,12 @@ alwaysApply: true
 - 触及：`crud` `pagination` `list` `popOver`
 - 规则：本文；Amis `CRUD.tsx` `footerToolbar`；`cxd.ts` `pagination.maxButtons`；`List.tsx` `itemRender`
 
+### Pagination 移动态复用页码算法，输入交互不要冒泡跳页
+- 踩过：只画 simple 当前页数字会漏掉 Amis 移动端的输入、方向键与回车；把输入项目塞进通用 click 分支还会因没有 `page` 而跳回第一页。
+- 稳定做法：`paginationPagerItems` 在 mobileUI 下统一返回 prev / simple / next，桌面 normal 与 simple 共用 page / lastPage 状态。输入单独处理 input、ArrowUp / ArrowDown / Enter 和 blur，click 分支显式跳过 simple；普通移动布局隐藏 total / perPage / go。跳页输入在 input 时收至 lastPage，按钮文字走 `buttonType`，不要新增第二套分页算法。perPage 通过 `PaginationPerPage` 直接复用 Vamis Select 并提供局部 ValueHost，不用原生 select；根容器块级，Select 字号 / 文字色 / padding / 左距 / baseline 按 Amis 计算样式。CRUD 继续复用 Pagination，配置差异不要复制成新皮肤。
+- 触及：`pagination` `crud`
+- 规则：`packages/vamis-core/src/utils/pagination.ts`；`packages/vamis/src/renderers/Pagination.vue`
+
 ### List-items 是带 15px 右边距的 div，不要用 ul/li 冒充
 - 踩过：用 `ul > li` 再给内层 padding，对照 `div.List-items` 宽高对不上。Amis 该项是 `div`，`margin-right: 15px`、`margin-bottom: gap-sm`，行 padding / 斑马纹 / 顶边打在同一层 ListItem。List 行里的 popOver 宿主做成 flex、放大镜 `svg { display:block; height:14px }` 会吃掉 Amis `svg.icon` 的 inline + `top: 0.125em` 行盒（行高低 ~1.4px，五项合计 List-items 矮约 7px）。
 - 稳定做法：`[data-vamis-list-items]` 对齐 `_list.scss` `&-items`。行 chrome（padding / 斑马 / 顶边）打在直接子 `.vamis-node` **和** `.vamis-list__item`（List 为了 click / checkbox 还包一层行壳，选择器只认 `.vamis-node` 时 5 行会叠在一起）。行上 `overflow: hidden` 清 `actions` 的 `float: right`。空态走独立 placeholder。list 字段里的 popOver 宿主 `display:block; width:100%`，放大镜走 `svg.icon`。

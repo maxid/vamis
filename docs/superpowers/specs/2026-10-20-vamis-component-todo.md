@@ -129,7 +129,7 @@
 | `editor` `code` `diff-editor` | 85% / 92% / 65% | 未核 | Monaco 有自己的 vs-dark |
 | `collapse` / `tabs` / `portlet` | 70% / 95% / 65% | tabs 已核 | 2026-11-13。`showTip` 深色 tooltip 底 `#182230` / 字 `#f7f8fa`，不写死白盒。collapse / portlet 未核 |
 | `panel` `wrapper` `flex` `grid` `grid-2d` `hbox` | 均为 65% | 未核 | |
-| `divider` `pagination` `pagination-wrapper` `switch-container` | 65% / 92% / 65% / 65% | 未核 | |
+| `divider` `pagination` `pagination-wrapper` `switch-container` | 65% / 98% / 65% / 65% | pagination 已核；其余未核 | |
 | `button-group` | 92% | 已核 | 邻钮 1px 负缝打在 `.vamis-node`，hover 抬 wrapper；无独立浮层 |
 | `table-view` | 65% | 未核 | |
 | `app` `anchor-nav` `service` | 55% / 55% / 70% | 未核 | `service` 2026-11-13。接口联动用父域做 isApiOutdated；Spinner overlay 不改盒模型 |
@@ -151,7 +151,7 @@
 | `grid` | Grid 水平分栏 | `/components/grid` | `/zh-CN/components/grid` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：均分列、`md`/`xs`/`sm`/`lg` 1–12 与 `auto`、`gap`、`align` / `valign`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
 | `grid-2d` | Grid 2D 布局 | `/components/grid-2d` | `/zh-CN/components/grid-2d` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`x/y/w/h`、`cols`、列宽/行高、`height: auto`、`gap` / `gapRow`、`align` / `valign`。缺格子 `themeCss` | P0 |
 | `hbox` | HBox 布局 | `/components/hbox` | `/zh-CN/components/hbox` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：列均分、`width` / `auto`、默认 `gap: xs`、`align` / `valign`、`columnClassName`。缺 `themeCss`、列 `mode` / `horizontal` | P0 |
-| `pagination` | Pagination 分页 | `/components/pagination` | `/zh-CN/components/pagination` | 进行中 | 92% | 文档主路径已对齐：`layout` / `mode` / `size` / `maxButtons` / `total`·`perPage` / 省略号跳页 / `change`；`name` 脱离 Form 也经统一 ValueHost 读写当前数据域（Vamis 数据链扩展）。文档补 change 事件示例与 llipsis/perPageAvailable/showPageInput/onPageChange 属性；缺 `themeCss`、移动端 `mobileUI` | P0 |
+| `pagination` | Pagination 分页 | `/components/pagination` | `/zh-CN/components/pagination` | 进行中 | 98% | 主路径与双站已核：layout / mode / size / buttonType、total·perPage、省略号与跳页上限、change 的 setValue / reload 联动；mobileUI 使用箭头 + 输入，支持方向键 / 回车。perPage 复用 Vamis Select，盒模型 / 文字 / 色号已核；缺 `themeCss` | P0 |
 | `pagination-wrapper` | PaginationWrapper 分页容器 | `/components/pagination-wrapper` | `/zh-CN/components/pagination-wrapper` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`inputName` / `outputName` 客户端切片、`perPage`、`position`、内嵌 `pagination`。缺 `themeCss`；CRUD `loadDataOnce` 仍属 D10 | P0 |
 | `panel` | Panel 面板 | `/components/panel` | `/zh-CN/components/panel` | 进行中 | 65% | 主路径可交互（未逐章节两站核完，不进 80%）：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、色档、移动端 `Panel--form` | P0 |
 | `tabs` | Tabs 选项卡 | `/components/tabs` | `/zh-CN/components/tabs` | 进行中 | 95% | 文档主路径已对齐：`tabs[].body` / `tab`、`source`、`activeKey` / `defaultKey`、`disabled`、九种 `tabsMode`（`mode` 别名）、工具栏、图标、`showTip`、表单及独立数据域 `name`（已有值选中标签、切换写回）、增删改拖（Sortable 250ms，拖完按对象重绑选中）、折叠「更多」/`collapseBtnLabel`、默认按容器溢出（不用写字段）、地址栏 `#hash` 来回同步、sidebar 内侧竖线、`change` / `delete`、`changeActiveKey` / `deleteTab`。line 未激活文字矮 1px；切页下划线滑动（优化，非 Amis）。缺 `swipeable`、chrome 耳朵 SVG、`themeCss`、单项 `unmountOnExit` | P0 |
@@ -457,7 +457,7 @@ flowchart LR
 | 33 | `list` | `each`、`tpl`、`action`、`popOver` | 7 | 4 | 59 | 59 | 进行中 | 90% |
 | 34 | `tag` | — | 12 | 3 | 51 | 51 | 进行中 | 90% |
 | 35 | `tabs` | `container`、`action`、`tpl` | 7 | 3 | 46 | 46 | 进行中 | 95% |
-| 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 92% |
+| 36 | `pagination` | `action` | 7 | 2 | 33 | 33 | 进行中 | 98% |
 | 37 | `table` | `tpl`、`mapping`、`action`、`popOver`、`badge` | 7 | 2 | 33 | 33 | 进行中 | 88% |
 | 38 | `avatar` | `image`、`icon`、`badge` | 10 | 1 | 23 | 33 | 进行中 | 90% |
 | 39 | `card` | `image`、`avatar`、`action`、`tag`、`tpl` | 7 | 2 | 33 | 33 | 进行中 | 70% |

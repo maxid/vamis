@@ -28,6 +28,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { useFieldValue } from '../formContext'
+import PaginationPerPage from './PaginationPerPage.vue'
 
 const props = defineProps<{ schema: SchemaObject }>()
 const emit = defineEmits<{
@@ -50,10 +51,13 @@ const size = computed(() => paginationSize(props.schema))
 const layout = computed(() => paginationLayout(props.schema))
 const locked = computed(() => isDisabled(props.schema, data.value))
 const hasNext = computed(() => Boolean(props.schema.hasNext))
+const mobileUI = computed(() => props.schema.mobileUI ?? env.mobileUI === true)
+const buttonType = computed(() => props.schema.buttonType === 'text' ? 'text' : 'icon')
 
 const page = ref(1)
 const perPage = ref(10)
 const goInput = ref('')
+const simpleInput = ref('1')
 
 function syncFromSchema() {
   const named = props.schema.name ? field.getValue(props.schema.name) : undefined
@@ -62,6 +66,9 @@ function syncFromSchema() {
 }
 
 watch(() => [props.schema, data.value] as const, syncFromSchema, { immediate: true, deep: true })
+watch(page, value => {
+  simpleInput.value = String(value)
+})
 
 const lastPage = computed(() =>
   paginationLastPage(
@@ -81,6 +88,7 @@ const pagerItems = computed(() =>
     maxButtons: paginationMaxButtons(props.schema),
     ellipsisPageGap: paginationEllipsisGap(props.schema),
     hasNext: hasNext.value,
+    mobileUI: mobileUI.value,
   }),
 )
 const perPageOptions = computed(() => paginationPerPageAvailable(props.schema))
@@ -130,7 +138,14 @@ function onGo() {
   const n = paginationNum(goInput.value)
   if (!n) return
   goInput.value = ''
-  void emitChange(n)
+  void emitChange(Math.min(n, lastPage.value))
+}
+
+function onGoInput(event: Event) {
+  const input = event.target as HTMLInputElement
+  const value = input.value
+  const n = paginationNum(value)
+  goInput.value = /^\d+$/.test(value) && n ? String(Math.min(n, lastPage.value)) : value
 }
 
 function onGoKey(e: KeyboardEvent) {
@@ -138,9 +153,32 @@ function onGoKey(e: KeyboardEvent) {
   onGo()
 }
 
-function onPerPage(e: Event) {
-  const n = paginationNum((e.target as HTMLSelectElement).value, perPage.value) ?? 10
-  void emitChange(1, n)
+function updateSimpleInput(raw: string) {
+  const n = paginationNum(raw)
+  simpleInput.value = /^\d+$/.test(raw) && n ? String(Math.min(n, lastPage.value)) : raw
+}
+
+function onSimpleKey(event: KeyboardEvent) {
+  if (!['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) return
+  const input = event.target as HTMLInputElement
+  let value = paginationNum(input.value) ?? 0
+  if (event.key === 'ArrowUp') value += 1
+  if (event.key === 'ArrowDown') value = value < 2 ? 1 : value - 1
+  if (!value) {
+    simpleInput.value = ''
+    return
+  }
+  value = Math.min(value, lastPage.value)
+  simpleInput.value = String(value)
+  void emitChange(value, perPage.value)
+}
+
+function onSimpleBlur() {
+  simpleInput.value = String(page.value)
+}
+
+function onPerPage(value: number) {
+  void emitChange(1, value)
 }
 </script>
 
@@ -149,17 +187,32 @@ function onPerPage(e: Event) {
     data-vamis-pagination
     :data-mode="mode"
     :data-size="size"
+    :data-mobile="mobileUI || undefined"
+    :data-button-type="buttonType"
     :class="{ disabled: locked }"
   >
     <template v-if="mode === 'simple'">
       <ul data-pagination="pager">
         <li data-pager="prev" :class="{ 'is-disabled': page < 2 }" @click="onPrev">
           <span aria-label="上一页">
-            <VamisIcon name="page-prev" width="12" height="12" />
+            <span v-if="buttonType === 'text'">上一页</span>
+            <VamisIcon v-else name="page-prev" width="12" height="12" />
           </span>
         </li>
         <li data-pager="simple">
-          <span>{{ page }}</span>
+          <span v-if="!mobileUI" class="vamis-pagination__simple-number">{{ page }}</span>
+          <template v-else>
+            <input
+              data-pagination="simple-input"
+              type="text"
+              :disabled="locked"
+              :value="simpleInput"
+              @input="updateSimpleInput(($event.target as HTMLInputElement).value)"
+              @keyup="onSimpleKey"
+              @blur="onSimpleBlur"
+            />
+            <span class="vamis-pagination__simple-last">/ {{ lastPage }}</span>
+          </template>
         </li>
         <li
           data-pager="next"
@@ -167,23 +220,23 @@ function onPerPage(e: Event) {
           @click="onNext"
         >
           <span aria-label="下一页">
-            <VamisIcon name="page-next" width="12" height="12" />
+            <span v-if="buttonType === 'text'">下一页</span>
+            <VamisIcon v-else name="page-next" width="12" height="12" />
           </span>
         </li>
       </ul>
     </template>
     <template v-else>
       <template v-for="widget in layout" :key="widget">
-        <div v-if="widget === 'total' && totalText" data-pagination="total">{{ totalText }}</div>
-        <select
-          v-else-if="widget === 'perpage'"
-          data-pagination="perpage"
-          :disabled="locked"
+        <div v-if="widget === 'total' && totalText && !mobileUI" data-pagination="total">{{ totalText }}</div>
+        <PaginationPerPage
+          v-else-if="widget === 'perpage' && !mobileUI"
           :value="perPage"
+          :options="perPageOptions"
+          :disabled="locked"
+          :pop-over-container-selector="schema.popOverContainerSelector"
           @change="onPerPage"
-        >
-          <option v-for="n in perPageOptions" :key="n" :value="n">{{ env.translate('Pagination.select', { count: n }) }}</option>
-        </select>
+        />
         <ul v-else-if="widget === 'pager'" data-pagination="pager">
           <li
             v-for="(item, i) in pagerItems"
@@ -194,7 +247,9 @@ function onPerPage(e: Event) {
               'is-disabled': (item.kind === 'prev' || item.kind === 'next') && item.disabled,
             }"
             @click="
-              item.kind === 'prev'
+              item.kind === 'simple'
+                ? undefined
+                : item.kind === 'prev'
                 ? onPrev()
                 : item.kind === 'next'
                   ? onNext()
@@ -211,20 +266,34 @@ function onPerPage(e: Event) {
                 <VamisIcon name="page-forward" v-else width="12" height="12" />
               </span>
             </template>
+            <span v-else-if="item.kind === 'simple'" class="vamis-pagination__simple-editor">
+              <input
+                data-pagination="simple-input"
+                type="text"
+                :disabled="locked"
+                :value="simpleInput"
+                @input="updateSimpleInput(($event.target as HTMLInputElement).value)"
+                @keyup="onSimpleKey"
+                @blur="onSimpleBlur"
+              />
+              <span class="vamis-pagination__simple-last">/ {{ lastPage }}</span>
+            </span>
             <span v-else-if="item.kind === 'prev'" aria-label="上一页">
-              <VamisIcon name="page-prev" width="12" height="12" />
+              <span v-if="buttonType === 'text'">上一页</span>
+            <VamisIcon v-else name="page-prev" width="12" height="12" />
             </span>
             <span v-else aria-label="下一页">
-              <VamisIcon name="page-next" width="12" height="12" />
+              <span v-if="buttonType === 'text'">下一页</span>
+            <VamisIcon v-else name="page-next" width="12" height="12" />
             </span>
           </li>
         </ul>
-        <div v-else-if="widget === 'go'" data-pagination="go">
+        <div v-else-if="widget === 'go' && !mobileUI" data-pagination="go">
           <span data-pagination="go-left">{{ env.translate('Pagination.goto') }}</span>
           <input
             :disabled="locked"
             :value="goInput"
-            @input="goInput = ($event.target as HTMLInputElement).value"
+            @input="onGoInput"
             @keyup="onGoKey"
             @focus="($event.target as HTMLInputElement).select()"
           />

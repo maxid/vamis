@@ -11,6 +11,7 @@ export type PaginationPagerItem =
   | { kind: 'next'; disabled: boolean }
   | { kind: 'page'; page: number; active: boolean }
   | { kind: 'ellipsis'; dir: 'backward' | 'forward'; page: number }
+  | { kind: 'simple' }
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
@@ -109,11 +110,19 @@ export function paginationPagerItems(opts: {
   maxButtons: number
   ellipsisPageGap?: number
   hasNext?: boolean
+  mobileUI?: boolean
 }): PaginationPagerItem[] {
   const activePage = Math.max(1, opts.activePage || 1)
   const lastPage = Math.max(1, opts.lastPage || 1)
   const maxButtons = opts.maxButtons > 0 ? opts.maxButtons : 5
   const gap = opts.ellipsisPageGap != null && opts.ellipsisPageGap >= 1 ? opts.ellipsisPageGap : 5
+  if (opts.mobileUI) {
+    return [
+      { kind: 'prev', disabled: activePage < 2 },
+      { kind: 'simple' },
+      { kind: 'next', disabled: activePage >= lastPage && !opts.hasNext },
+    ]
+  }
   let pages: PaginationPagerItem[] = []
 
   if (lastPage <= maxButtons) {
