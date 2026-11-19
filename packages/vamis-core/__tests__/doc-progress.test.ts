@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   lookupPriority,
+  parsePriorityStages,
   parsePriorityTable,
   parseSidebarFilter,
   stageFromRank,
@@ -108,6 +109,14 @@ describe('component priority', () => {
     expect(stageFromRank(65)).toBe(1)
     expect(stageFromRank(66)).toBe(2)
     expect(stageFromRank(154)).toBe(2)
+  })
+
+  it('keeps the 侧栏 column in sync with the site P0/P1/P2 buckets', () => {
+    const stages = parsePriorityStages(todo)
+    expect(stages.size).toBe(table.size)
+    for (const [key, rank] of table) {
+      expect(stages.get(key), key).toBe(stageFromRank(rank))
+    }
   })
 
   it('parses P0/P1 and leftover #N ranges out of the filter box', () => {

@@ -18,6 +18,15 @@ const depsPath = path.join(root, 'docs/superpowers/specs/2026-10-20-vamis-compon
 const SECTION_HEAD = '## 依赖与优先级（基于 amis）'
 const SECTION_END = '\n## 附录：侧栏没有、Vamis 已注册'
 
+/** 站点左侧导航栏优先级档位；与 playground/src/docs/component-priority.ts 的 STAGE_RANK_MAX 一致。 */
+const STAGE_RANK_MAX = [10, 65]
+
+function stageOf(rank) {
+  if (rank <= STAGE_RANK_MAX[0]) return 'P0'
+  if (rank <= STAGE_RANK_MAX[1]) return 'P1'
+  return 'P2'
+}
+
 function nodeKeys(label) {
   const keys = []
   if (/\bFormItem\b/.test(label) || label.includes('FormItem')) keys.push('FormItem')
@@ -120,7 +129,7 @@ function parseNodes(text) {
   const rows = []
   for (const line of section.slice(tableStart).split('\n')) {
     const m = line.match(
-      /^\| (\d+) \| (.+?) \| (.+?) \| (?:\d+ \| )+(未开始|进行中|已完成) \| (\d+%) \|$/,
+      /^\| (\d+) \| (.+?) \| (.+?) \| (?:\d+ \| )+(?:P[012] \| )?(未开始|进行中|已完成) \| (\d+%) \|$/,
     )
     if (!m) continue
     rows.push({
@@ -427,12 +436,12 @@ function renderPerTypeDeps(ranked) {
 
 function orderTable(ranked) {
   const lines = [
-    '| # | type | 依赖 | 深度 | 被依赖 | S | U | 状态 | 进度 |',
-    '|---|------|------|------|--------|---|---|------|------|',
+    '| # | type | 依赖 | 深度 | 被依赖 | S | U | 侧栏 | 状态 | 进度 |',
+    '|---|------|------|------|--------|---|---|------|------|------|',
   ]
   for (const r of ranked) {
     lines.push(
-      `| ${r.rank} | ${r.label} | ${r.depCell} | ${r.depth} | ${r.fanIn} | ${r.score} | ${r.unlock} | ${r.status} | ${r.progress} |`,
+      `| ${r.rank} | ${r.label} | ${r.depCell} | ${r.depth} | ${r.fanIn} | ${r.score} | ${r.unlock} | ${stageOf(r.rank)} | ${r.status} | ${r.progress} |`,
     )
   }
   return lines.join('\n')
@@ -498,7 +507,7 @@ function renderSection(result) {
 - **被依赖**：有多少个本表节点的构建依赖直接列出该 type。
 - **综合分** \`S = 被依赖 × ${weight} + 深度\`（${weight} = max深度 + 1）。多 1 次被依赖就超过整段深度差，避免 \`pdf-viewer\` 这类无人依赖的叶子排在 \`action\` / \`form\` 前面。
 - **解锁分** \`U(n) = max(S(n), max U(依赖 n 的节点))\`。就绪集先比 U 再比 S，避免 \`tooltip-wrapper\`（被依赖少、S 低）堵住 \`action\`（被依赖多、S 高）。同分再按深度降序、原文档序。
-- 优先级 \`#1\` 最先做，\`#${count}\` 最后做。分类表 \`P\` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+\`app\`）；**执行顺序看全量顺序**。
+- 优先级 \`#1\` 最先做，\`#${count}\` 最后做。分类表 \`P\` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+\`app\`）；全量顺序的「侧栏」列与站点左侧导航同口径（\`playground/src/docs/component-priority.ts\` 的 \`STAGE_RANK_MAX\`）；**执行顺序看全量顺序**。
 - \`FormItem\` / \`Options\` 是契约节点；\`toast\` 是动作；\`badge\` / \`popOver\` 是属性型节点，均按组件计入。
 - \`office-viewer\` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 ${count} 个 type 节点。
 - 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：${next}。

@@ -25,13 +25,16 @@ export const STAGE_HINT: Record<PriorityStage, string> = {
   2: '零被依赖',
 }
 
-export function parsePriorityTable(raw: string): Map<string, number> {
-  const map = new Map<string, number>()
+function prioritySection(raw: string): string {
   const start = raw.indexOf('### 全量顺序')
   const body = start < 0 ? raw : raw.slice(start)
   const end = body.search(/\n## /)
-  const section = end < 0 ? body : body.slice(0, end)
-  for (const line of section.split('\n')) {
+  return end < 0 ? body : body.slice(0, end)
+}
+
+export function parsePriorityTable(raw: string): Map<string, number> {
+  const map = new Map<string, number>()
+  for (const line of prioritySection(raw).split('\n')) {
     const m = line.match(/^\| (\d+) \| (.+?) \|/)
     if (!m) continue
     if (!/进行中|已完成|未开始/.test(line)) continue
@@ -39,6 +42,26 @@ export function parsePriorityTable(raw: string): Map<string, number> {
     if (!Number.isFinite(rank)) continue
     for (const key of typeKeys(m[2])) {
       if (!map.has(key)) map.set(key, rank)
+    }
+  }
+  return map
+}
+
+/** 「全量顺序」的「侧栏」列 = 站点左侧导航栏优先级。 */
+export function parsePriorityStages(raw: string): Map<string, PriorityStage> {
+  const map = new Map<string, PriorityStage>()
+  for (const line of prioritySection(raw).split('\n')) {
+    const m = line.match(/^\| (\d+) \| (.+?) \|/)
+    if (!m) continue
+    if (!/进行中|已完成|未开始/.test(line)) continue
+    const stage = line
+      .split('|')
+      .map((cell) => cell.trim())
+      .find((cell) => /^P[012]$/.test(cell))
+    if (!stage) continue
+    const value = Number.parseInt(stage.slice(1), 10) as PriorityStage
+    for (const key of typeKeys(m[2])) {
+      if (!map.has(key)) map.set(key, value)
     }
   }
   return map
