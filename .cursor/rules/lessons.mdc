@@ -126,9 +126,9 @@ alwaysApply: true
 - 触及：`form` 对照 文档移动预览
 - 规则：`VamisRoot` `parseLocation`；`packages/vamis-core/src/types.ts`
 
-### 对照目录入库，构建产物不入库
-- 踩过：`compare-cases.js` 已被 Git 跟踪，但旧规则又把它 gitignore，生成后长期 dirty；换机器也容易拿不到最新目录。
-- 稳定做法：改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录），把脚本生成的 `compare-cases.js` 随本轮提交；`dist/sdk.js` / `sdk.css` / chunks 仍不入库。只改 md 且已有 dist 可跳过 build。全局 token/字体才全量 `pnpm compare`。禁止手改生成目录。
+### 对照目录是生成运行资产，不入库
+- 踩过：`compare-cases.js` 曾先作为 56 行手写文件入库，后来改由脚本生成并加入 ignore；但 Git 已跟踪的文件不会自动退出，规则又写成“不要提交”，导致它长期 dirty。它也误被描述成“临时文件”，实际是 `/sdk/compare.html` 必需的运行资产。
+- 稳定做法：源码真源是 `website/src` 与 `p0-cases.mjs`。`pnpm dev` / `pnpm docs` 先跑 `pnpm compare:cases`；`pnpm sdk:build`、`pnpm compare` 和 Pages build 也会重建。生成后浏览器可直接访问对照页，但文件本身不入库，禁止手改。改运行时先 `pnpm sdk:build`，再 `pnpm compare --page <type>`（内部重收割完整目录）；`dist/sdk.js` / `sdk.css` / chunks 同样不入库。
 - 触及：所有对照过的 type
 - 规则：`.cursor/rules/compare.mdc`
 

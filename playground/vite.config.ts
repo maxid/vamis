@@ -10,6 +10,7 @@ import { collectPlaygroundRoutes, writeStaticPages } from './static-pages'
 import { copyFontAwesomeWebfonts, fontAwesomeCss, resolveFontAwesome } from '../packages/vamis-ui/fontawesome-build.mjs'
 import { workspaceBareResolve } from '../scripts/vite-workspace-bare-resolve.mjs'
 import { applySdkStamp, sdkCacheStamp } from '../packages/vamis-sdk/compare/sdk-stamp.mjs'
+import { buildCases } from '../packages/vamis-sdk/compare/build-cases.mjs'
 
 const playground = fileURLToPath(new URL('.', import.meta.url))
 const repo = path.resolve(playground, '..')
@@ -212,6 +213,7 @@ function serveSdk(): Plugin {
   return {
     name: 'vamis-sdk-assets',
     configureServer(server) {
+      buildCases()
       // 手机 WebView 会把 `./sdk.css` 解析成站点根 `/sdk.css`（对照 iframe 报 css …/sdk.css）。
       server.middlewares.use((req, res, next) => {
         const url = (req.url || '').split('?')[0]
