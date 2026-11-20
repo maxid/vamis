@@ -6,7 +6,7 @@ outline: deep
 # CRUD 增删改查
 
 ::: warning 实现进度 65% · 进行中
-文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字
+文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。operation 按钮逐项进入 `SchemaRenderer`，共用 `visibleOn` / `hiddenOn` / `disabledOn` 与 `runAction`，不再由手写 `runColumnAction` 绕过动作传播；AJAX 默认刷新内部 `crudTarget`。桌面 / 移动对照 **60/92**（P0 0）。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字
 :::
 
 `crud` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -6482,4 +6482,4 @@ value 结构说明：
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。对照桌面 **1/1**。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。operation 按钮逐项进入 `SchemaRenderer`，共用 `visibleOn` / `hiddenOn` / `disabledOn` 与 `runAction`，不再由手写 `runColumnAction` 绕过动作传播；AJAX 默认刷新内部 `crudTarget`。桌面 / 移动对照 **60/92**（P0 0）。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

@@ -848,7 +848,7 @@ feedback 支持 `visibleOn`，条件不成立时不会打开。
 | 事件名称 | 事件参数                                                                 | 说明               |
 | -------- | ------------------------------------------------------------------------ | ------------------ |
 | confirm  | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击确认提交时触发 |
-| cancel   | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 取消、关闭 X、Esc 或点遮罩时触发 |
+| cancel   | `event.data: object` 弹窗数据<br/>`[name]: any` 当前数据域中指定字段的值 | 点击取消时触发     |
 
 ### confirm
 
@@ -952,9 +952,9 @@ feedback 支持 `visibleOn`，条件不成立时不会打开。
 
 | 动作名称 | 动作配置                   | 说明         |
 | -------- | -------------------------- | ------------ |
-| confirm  | -                          | 确认；有表单时先提交，失败不关闭 |
-| cancel   | -                          | 取消并关闭当前层 |
-| setValue | `value: object` 更新的数据 | 按 `componentId` 更新弹层数据；`dataMergeMode: override` 覆盖 |
+| confirm  | -                          | 确认（提交） |
+| cancel   | -                          | 取消（关闭） |
+| setValue | `value: object` 更新的数据 | 更新数据     |
 
 ### confirm 动作
 

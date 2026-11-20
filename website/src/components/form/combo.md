@@ -6,7 +6,7 @@ outline: deep
 # Combo 组合
 
 ::: warning 实现进度 55% · 进行中
-默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式
+默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）；每行应用 items 默认值，支持 Definitions 条件递归展开。缺 multiLine / 拖拽 / 子项 api / 扁平模式、独立 Scope
 :::
 
 `combo` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -2064,4 +2064,4 @@ combo 还有一个作用是增加层级，比如返回的数据是一个深层�
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）。缺 multiLine / 拖拽 / 子项 api / 扁平模式。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：默认 `multiple: false`、内嵌 `mode: row` 横排（对齐 Amis Combo）；每行应用 items 默认值，支持 Definitions 条件递归展开。缺 multiLine / 拖拽 / 子项 api / 扁平模式、独立 Scope。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
