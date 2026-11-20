@@ -752,6 +752,12 @@ alwaysApply: true
 - 触及：`toast` `alert`
 - 规则：`.cursor/rules/component.mdc`
 
+### Alert 用 Amis flex/content 盒模型，warning 文案不能走白字 utility
+- 踩过：Vamis 直接套 shadcn Alert grid / `text-sm` / `rounded-lg`；warning variant 用 `text-warning-foreground`，文案变白。正常态 padding、标题字号、正文行高、底边距和关闭钮位置都与 Amis 不一致。
+- 稳定做法：根节点固定 flex row + `align-items:flex-start`；无标题 `4×16` padding，有标题 `16`；font 12/400、标题 14/500。无标题 title/desc 均 24px 行高；有标题 title 22px / desc 20px。默认 margin-bottom 16、radius 4；Amis 文档示例用 `className: mb-1` / `mb-3` 调成 4 / 12。四档背景走 brand / success / warning / error fill-10，文字统一 neutral-text-2，warning 不得用 white / warning-foreground。图标槽是 `16×24` flex 居中，16px SVG 上下各余 4px，右缝 8；`icon` 先查 `VAMIS_ICONS`，再走 URL / `resolveIcon`，不要把非 URL 一律回落 level 图标。自定义 glyph 沿用 neutral-text-2，只有默认 level 图标按级别着色。关闭钮正常流内黑字 opacity 0.2 / hover 0.5，不用绝对定位和额外 `pr-8`。
+- 触及：`alert` `warning` `close`
+- 规则：Amis `_alert.scss` / `_components.scss` `Alert-*`；`packages/vamis/src/renderers/Alert.vue`；`packages/vamis-ui/src/styles.css`
+
 ### SchemaNode 内容不要抽成纯文本
 - 踩过：Toast `title`/`body` 经 `toastText` 递归抽 `tpl`/`html`，`{ type: tpl, className }` 丢掉 class 和子树。Amis `RootRenderer` 是 `render('body', body)`。
 - 稳定做法：有 `type` 的对象或节点数组当 SchemaNode 留下，弹出时 `SchemaRenderer` + 点击当时的 data 快照。无 type 的 `{ tpl }` 才抽字符串。数组包 `{ type: wrapper, body }`。
@@ -1380,6 +1386,12 @@ alwaysApply: true
 - 稳定做法：`initFormStoreData`：own = `dataMapping(schema.data, parent)`；`canAccessSuperData !== false` 只拷**同名**表单项；`applyFormItemDefaults` 写 own，表达式 lookup 才叠父域。Each `${arr}` 靠 SchemaRenderer 父域 overlay，不要把 `arr` 变成表单字段。`trackExpression` 同步也只在表达式结果变化时写已声明的同名字段，不要摊整份父域。`inheritData: false`（共用上层域提交）仍未接。
 - 触及：`form` `each`
 - 规则：本文；Amis `FormStore` `canAccessSuperData` / `createObject`；`packages/vamis-core/src/utils/form-item.ts` `initFormStoreData`
+
+### Form debug 走 json SchemaRenderer，不要 `<pre>` 绕过 JSON 树
+- 踩过：Vamis 把 `schema.debug` 渲染成表单项之后的 `<pre>{{ JSON.stringify }}</pre>`，而 Amis 在 form body 顶部 `render('form-debug-json', { type: 'json', ...debugConfig })`；结果既错位，也没有 key / string / number / boolean / null 的语法着色。
+- 稳定做法：`debug` 生成 `type: json` schema，值取当前公开表单域，默认 `ellipsisThreshold: 120`，再展开 `debugConfig`；在 Form body 最前面用 `SchemaRenderer` 渲染，内层复用 `JsonNode`，不加载 Monaco。JSON 树按 `react-json-view rjv-default` 对齐方形 `+/-` 折叠、`{ N items` / `{ ... } N items` 摘要、闭合括号、14px / 21px 等宽行和 key / string / integer / boolean / null 色号；`Form--debug` 只做 Amis 盒子。内层 `[data-slot=json]` 的黑框必须用 unlayered 规则压掉 utilities 层的 `.border`，scroll-area 的 `p-3` 也要清零。
+- 触及：`form` `json` `json-node` debug
+- 规则：Amis `Form.tsx` `renderBody` / `Json.tsx`；`packages/vamis/src/renderers/Form.vue`；`packages/vamis/src/renderers/display/Json.vue`；`packages/vamis/src/renderers/display/JsonNode.vue`
 
 ### Form 重置要 clone 初始数据；生命周期事件按 Amis 语义分发
 - 踩过：`store.data` 直接引用 `initialFormData`，用户输入原地改动后 `reset()` 把同一个对象赋回去，值没变；`resetAfterSubmit` 看着完全没生效。`persistData` 恢复同理，必须 clone，否则默认值被污染。

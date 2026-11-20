@@ -738,6 +738,12 @@ describe('Amis width helpers', () => {
     expect(theme).toMatch(/\.vamis-form-item--inline \{[^}]*inline-flex/)
     expect(theme).toContain('.vamis-form-static')
     expect(theme).toContain('.vamis-form-debug')
+    expect(theme).toContain(".vamis-form-debug [data-slot='json']")
+    expect(theme).toContain('.vamis-form-debug .vamis-json-node')
+    expect(theme).toContain('.vamis-json-node__toggle-box')
+    expect(theme).toContain('.vamis-json-node__ellipsis')
+    expect(theme).toContain('.vamis-json-node__value.is-boolean')
+    expect(theme).toContain('.vamis-json-node__value.is-null')
   })
 
   it('wires Form / FormItem / Panel xxxClassName onto child regions', () => {
@@ -768,6 +774,9 @@ describe('Amis width helpers', () => {
     expect(form).toContain('schema.labelWidth')
     expect(form).toContain('formItemStatic')
     expect(form).toContain('schema.debug')
+    expect(form).toContain('debugSchema')
+    expect(form).toContain("type: 'json'")
+    expect(form).not.toContain('<pre v-if="schema.debug"')
     expect(form).toContain('validateApi')
     expect(form).toContain('autoFill')
     expect(panel).toContain('schema.headerClassName')

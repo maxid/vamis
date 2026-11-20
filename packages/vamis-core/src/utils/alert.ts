@@ -55,9 +55,13 @@ export function alertActions(schema: unknown): SchemaNode[] {
   return Array.isArray(actions) ? (actions as SchemaNode[]) : [actions as SchemaNode]
 }
 
-export function alertIconSrc(schema: unknown, data: PlainObject = {}): string {
+export function alertIcon(schema: unknown, data: PlainObject = {}): string {
   const raw = asRecord(schema).icon
-  const icon = raw == null || raw === '' ? '' : String(resolveValue(raw, data) ?? '')
+  return raw == null || raw === '' ? '' : String(resolveValue(raw, data) ?? '')
+}
+
+export function alertIconSrc(schema: unknown, data: PlainObject = {}): string {
+  const icon = alertIcon(schema, data)
   if (!icon) return ''
   if (icon.includes('/') || icon.startsWith('data:')) return icon
   return ''

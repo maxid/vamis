@@ -404,6 +404,53 @@ describe('embed', () => {
     })
   })
 
+  it('renders Form debug at the top as a highlighted JSON tree', async () => {
+    const longText = 'debug-value-'.repeat(12)
+    const { host } = mount({
+      type: 'form',
+      debug: true,
+      debugConfig: {
+        displayDataTypes: true,
+        levelExpand: 2,
+      },
+      data: {
+        name: 'Ada',
+        age: 18,
+        active: true,
+        nothing: null,
+        long: longText,
+      },
+      body: [{ type: 'input-text', name: 'name', label: '名称' }],
+    })
+
+    await nextTick()
+    await vi.waitFor(() => {
+      expect(host.querySelector('.vamis-form-debug [data-slot="json"]')).toBeTruthy()
+    })
+    const debug = host.querySelector('.vamis-form-debug')
+    const item = host.querySelector('.vamis-form-item')
+    expect(debug).toBeTruthy()
+    expect(item).toBeTruthy()
+    expect(
+      !!debug &&
+        !!item &&
+        (debug.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+    ).toBe(true)
+    expect(host.querySelector('.vamis-form-debug pre')).toBeNull()
+    expect(host.querySelector('.vamis-json-node__value.is-string')).toBeTruthy()
+    expect(host.querySelector('.vamis-json-node__value.is-number')).toBeTruthy()
+    expect(host.querySelector('.vamis-json-node__value.is-boolean')).toBeTruthy()
+    expect(host.querySelector('.vamis-json-node__value.is-null')).toBeTruthy()
+    expect(host.querySelector('.vamis-json-node__key')?.textContent).toContain('"name" :')
+    expect(host.querySelector('.vamis-json-node__toggle-box')).toBeTruthy()
+    expect(host.querySelector('.vamis-form-debug')?.textContent).toContain('5 items')
+    expect(host.querySelector('.vamis-form-debug')?.textContent).toContain('...')
+    expect(host.querySelector('.vamis-form-debug [data-slot="badge"]')).toBeTruthy()
+    ;(host.querySelector('.vamis-json-node__toggle') as HTMLButtonElement | null)?.click()
+    await nextTick()
+    expect(host.querySelector('.vamis-json-node__ellipsis')?.textContent).toBe('...')
+  })
+
   it('shows the Page spinner overlay while a root ajax action is pending', async () => {
     let resolveFetch!: (value: unknown) => void
     const fetcher = vi.fn(

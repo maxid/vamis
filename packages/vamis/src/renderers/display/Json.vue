@@ -24,6 +24,13 @@ const levelExpand = computed(() => {
   const n = Number(props.schema.levelExpand)
   return Number.isFinite(n) ? n : 1
 })
+const ellipsisThreshold = computed(() => {
+  const value = props.schema.ellipsisThreshold
+  if (value === false || value == null) return false
+  const n = Number(value)
+  return Number.isFinite(n) && n >= 0 ? n : false
+})
+const quotesOnKeys = computed(() => props.schema.quotesOnKeys !== false)
 
 async function copy() {
   try {
@@ -48,6 +55,8 @@ async function copy() {
         :level-expand="levelExpand"
         :display-data-types="schema.displayDataTypes === true"
         :sort-keys="schema.sortKeys === true"
+        :ellipsis-threshold="ellipsisThreshold"
+        :quotes-on-keys="quotesOnKeys"
       />
     </ScrollArea>
   </div>

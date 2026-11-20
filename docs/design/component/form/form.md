@@ -80,7 +80,7 @@ Form 是 Vamis 表单项的根数据域与提交/校验壳。它自身不画具�
 | `persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit` | 本地持久化 | localStorage key / 字段；提交后默认清 |
 | `canAccessSuperData` | 父域映射 | 默认 true，只映射同名表单项；不把父域其它字段带进提交 |
 | `trackExpression` | 数据链联动 | 表达式变化时同步表单项；依赖 `canAccessSuperData` |
-| `debug` | 数据域调试 | 只读展示，不参与提交 |
+| `debug` | 数据域调试 | 表单内容顶部以 `type: json` 展示当前公开数据域；支持 `debugConfig`，不参与提交 |
 | `static` / `staticOn` / `staticSchema` | 静态态 | 由 FormItem 静态展示；Form 壳负责切换 |
 
 ### 3.3 事件
@@ -145,6 +145,7 @@ props.data + schema.data + initFormStoreData
 - `validate()`：先清 `store.errors`，遍历可见且有 `name` 的表单项，`validateValue` → `store.errors[name]`；`rules` 表达式失败按 `name` / `__form` 回填；派发 `formItemValidate*` 和 `validateSucc/Error`。
 - `submit()`：`trimValues` → `validate()` → 逐项 `validateApi` → `target` / `api`；远程成功 `mergeApiData` + Scope merge，派发 `submit` / `submitSucc`；失败回填字段错误并派发 `submitFail`。
 - 成功提示遵循 Amis `FormStore.saveRemote`：优先非空接口 `msg`，其次显式 `messages.saveSuccess`，最后 `defaultMsg`；三者都为空时不生成“保存成功”。feedback 的 `visibleOn` 只控制二级反馈弹框，不能替代 Form 的消息判定。
+- `debug` 对齐 Amis `renderBody`：在 Form body 顶部渲染 `type: json`，传入当前公开数据、`ellipsisThreshold: 120` 和 `debugConfig`。使用轻量递归 `JsonNode`，不加载 Monaco；语法 token、键引号、类型徽标和折叠由普通 Json 渲染器负责。debug 内文字使用 14px / 21px 等宽排版，根对象展开显示 `{ N items` 与闭合括号，收起显示 `{ ... } N items`，折叠钮对齐 `rjv-default` 的方形 `+/-`，内层 JSON 不再叠加边框或 12px scroll padding。
 
 `/api/mock2/form/initData` 对齐 Amis：`date` 是 Unix 秒整数，另带 `infoId` / `info`；成功响应 `msg: ""`，Action AJAX 不应因空 msg 自动弹成功 toast。Vamis 品牌名保留在 `name` / `author`。
 - `reset()` 回到 `initialFormData`；`clear()` 清空各 `name` 并同步 Scope；`static` / `nonstatic` 由 FormItem 状态读取。
@@ -167,7 +168,7 @@ props.data + schema.data + initFormStoreData
 ## 6. 当前状态与缺口
 
 - TODO：主路径已对齐（initApi / 提交 API / 校验 / 重置 / 调试 / 生命周期事件 / rules / submitOnInit / submitOnChange / resetAfterSubmit / redirect / messages / trimValues / persistData / preventEnterSubmit / autoFocus / static / target / reload / debug / canAccessSuperData / 水平比例与 labelWidth）。
-- 对照记录：桌面 **41/58**、移动 **41/58**（P0 0，TODO 2026-11-18 记录，本轮未重跑）。
+- 对照记录：桌面 **40/58**（P0 0，`components-form-index-0` 的 Amis rendered 探针偶发 false）、移动 **41/58**（P0 0，2026-11-20 重跑；Debug 改用顶部 JSON 树）。
 - 缺：`interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域。
 - 文档已标：`submit` 事件在 Vamis 是先校验保存后触发，与 Amis 不同；`submitText: ""` / body 自带动作 / `wrapWithPanel: false` 的按钮规则。
 
@@ -184,10 +185,10 @@ props.data + schema.data + initFormStoreData
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（Form 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page form` 桌面
-- [ ] `pnpm compare --page form --mobile`
+- [x] `pnpm test`（Form 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page form` 桌面
+- [x] `pnpm compare --page form --mobile`
 - [ ] 深色 / 375px 窄屏核对
 
 ### 验收重点

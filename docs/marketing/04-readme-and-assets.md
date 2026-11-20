@@ -25,7 +25,7 @@
 
 - 首屏只放"是什么 / 给谁 / 能跑什么 / 怎么试"，设计文档、包结构、LCDP 细节全部后移。
 - 不写"复刻"作为第一句；用"兼容实现 / 原生重写"，减少"换皮"误读。
-- 状态数字（185/189、62%、1201、2231）必须与 `CONTEXT.md` 同步；每次发版改 README 时一起改。
+- 状态数字（185/189、62%、1203、2231）必须与 `CONTEXT.md` 同步；每次发版改 README 时一起改。
 - 英文 README 与中文结构一致，但不要把中文长文全量翻译；链接到中文文档即可。
 
 ## 2. 徽章
@@ -36,7 +36,7 @@ npm 发布前：
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1201%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1203%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 ```
 
@@ -152,7 +152,7 @@ ffmpeg -i recording.webm -vf "fps=8,scale=1200:-1:flags=lanczos,split[a][b];[a]p
 - [ ] 首屏图片路径正确，手机宽度下不溢出
 - [ ] 所有链接可点：Demo / 文档 / 对照 / English / License
 - [ ] 徽章没有坏图（尤其 npm 未发布时）
-- [ ] 数字与 `CONTEXT.md` 一致（185/189、62%、1201、2231）
+- [ ] 数字与 `CONTEXT.md` 一致（185/189、62%、1203、2231）
 - [ ] 有 alpha 声明 + 非官方声明
 - [ ] 英文 README 顶部有互链
 - [ ] 不出现公开的 `localhost` 链接（开发命令里的 `127.0.0.1` 除外）、`{{占位}}`、本地绝对路径

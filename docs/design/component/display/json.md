@@ -6,14 +6,14 @@
 
 ## 0. 一页结论
 
-Json 当前是**递归 JSON 树展示**（54 行）：readRaw/JSON.parse、levelExpand、displayDataTypes、sortKeys、复制。没有编辑/搜索/路径复制/大对象虚拟化；50% 是真实缺口。
+Json 当前是**轻量递归 JSON 树展示**：readRaw/JSON.parse、levelExpand、displayDataTypes、sortKeys、enableClipboard、quotesOnKeys、ellipsisThreshold，以及对齐 `react-json-view rjv-default` 的方形 `+/-` 折叠、`{ N items` / `{ ... } N items` 摘要、闭合括号和 key / string / integer / boolean / null 色号。没有编辑/搜索/路径复制/大对象虚拟化；50% 是真实缺口。Form `debug` 复用本渲染器，不加载 Monaco。
 
 ## 1. 边界与优先级（先读）
 
 1. **值**：readRaw；字符串尝试 JSON.parse，失败按字符串；null 空态。
 2. **非对象**：包装 `{type: value}`；数组/对象递归。
 3. **levelExpand**：默认 1；仅影响初始展开，不改变数据。
-4. **展示**：displayDataTypes/sortKeys；复制 JSON.stringify；剪贴板失败静默。
+4. **展示**：displayDataTypes/sortKeys/quotesOnKeys；字符串按 ellipsisThreshold 截断；key / string / integer / boolean / null 走 `rjv-default` token；对象摘要显示 `{ N items` 并有闭合括号；折叠钮是方形 `+/-`；Form debug 使用 14px / 21px 等宽行。复制 JSON.stringify，剪贴板失败静默。
 5. **包边界**：无 `<style>`、无 fetch；json token。
 
 ### 边界用例
@@ -39,6 +39,7 @@ Json 当前是**递归 JSON 树展示**（54 行）：readRaw/JSON.parse、level
 | 值/raw | JSON | 已接 |
 | levelExpand | 初始展开 | 已接 |
 | displayDataTypes/sortKeys | 展示 | 已接 |
+| quotesOnKeys / ellipsisThreshold | 键引号 / 长字符串截断 | 已接 |
 | enableClipboard | 复制 | 已接 |
 | 编辑/搜索/路径 | 目标 | 未接 |
 
@@ -69,10 +70,10 @@ Json 当前是**递归 JSON 树展示**（54 行）：readRaw/JSON.parse、level
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
+- [x] `pnpm test`（组件相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page json` 桌面
+- [x] `pnpm compare --page json --mobile`
 - [ ] 深色 / 375px 窄屏核对
 
 ## 8. 后续

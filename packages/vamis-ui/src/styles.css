@@ -102,6 +102,16 @@
   --fontFamilyBase: var(--fonts-base-family);
   --fontFamilyMonospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  /* react-json-view `rjv-default` 的语义 token，仅 JSON 树使用。 */
+  --json-rjv-key: #002b36;
+  --json-rjv-string: #cb4b16;
+  --json-rjv-integer: #268bd2;
+  --json-rjv-boolean: #2aa198;
+  --json-rjv-null: #dc322f;
+  --json-rjv-expanded: #586e75;
+  --json-rjv-collapsed: #2aa198;
+  --json-rjv-object-size: rgba(0, 0, 0, 0.3);
+  --json-rjv-object-border: rgba(0, 0, 0, 0.2);
   --fontSizeBase: 14px;
   --lineHeightBase: 1.5;
   /*
@@ -1659,19 +1669,14 @@
     color: var(--primary-hover, var(--primary));
   }
   .vamis-form-debug {
-    margin: 0 16px 16px;
-    max-height: 240px;
-    overflow: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--muted);
-    padding: 12px;
-    font-size: var(--fontSizeSm);
-    line-height: 1.5;
-    white-space: pre-wrap;
+    display: block;
+    margin: 0 0 var(--gap-sm);
+    padding: var(--gap-sm);
+    background: var(--colors-neutral-fill-11);
+    border-radius: var(--borderRadius);
+    word-wrap: break-word;
     word-break: break-all;
   }
-
   /*
     HTML island for tpl / html v-html hosts only.
 
@@ -10942,6 +10947,130 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   width: var(--fontSizeSm);
   height: var(--fontSizeSm);
 }
+/* Amis Alert: flex row, 12/400, 4×16 body padding, 16×16 titled padding, bottom 16. */
+.vamis-alert {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 0;
+  padding: var(--gap-xs) var(--gap-md);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: none;
+  color: var(--colors-neutral-text-2);
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--lineHeightBase);
+}
+@layer components {
+  /* 默认跟 Amis 的 Alert margin token；className 的 mb-* 应留在 utilities 层覆盖。 */
+  .vamis-alert {
+    margin-bottom: var(--gap-md);
+  }
+}
+.vamis-alert--has-title {
+  padding: var(--gap-md);
+}
+.vamis-alert[data-variant='info'] {
+  background: var(--colors-brand-10);
+}
+.vamis-alert[data-variant='success'] {
+  background: var(--colors-success-10);
+}
+.vamis-alert[data-variant='warning'] {
+  background: var(--colors-warning-10);
+}
+.vamis-alert[data-variant='destructive'] {
+  background: var(--colors-error-10);
+}
+.vamis-alert__icon {
+  display: flex;
+  width: var(--fontSizeLg);
+  height: var(--gap-xl);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--gap-sm);
+  color: var(--colors-neutral-text-2);
+  font-size: var(--fontSizeLg);
+}
+.vamis-alert__icon:not(.vamis-alert__icon--custom) {
+  color: var(--primary);
+}
+.vamis-alert[data-variant='success'] .vamis-alert__icon:not(.vamis-alert__icon--custom) {
+  color: var(--success);
+}
+.vamis-alert[data-variant='warning'] .vamis-alert__icon:not(.vamis-alert__icon--custom) {
+  color: var(--warning);
+}
+.vamis-alert[data-variant='destructive'] .vamis-alert__icon:not(.vamis-alert__icon--custom) {
+  color: var(--destructive);
+}
+.vamis-alert__icon img,
+.vamis-alert__icon svg {
+  display: block;
+  width: var(--fontSizeLg);
+  height: var(--fontSizeLg);
+}
+.vamis-alert__content {
+  min-width: 0;
+  flex: 1;
+}
+.vamis-alert .vamis-alert__content [data-slot='alert-title'] {
+  display: block;
+  overflow: visible;
+  min-height: 0;
+  margin-bottom: var(--gap-xs);
+  color: var(--colors-neutral-text-2);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--gap-xl);
+  letter-spacing: 0;
+}
+.vamis-alert--has-title .vamis-alert__content [data-slot='alert-title'] {
+  line-height: 22px;
+}
+.vamis-alert .vamis-alert__content [data-slot='alert-description'] {
+  min-height: var(--gap-xl);
+  color: var(--colors-neutral-text-2);
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--gap-xl);
+}
+.vamis-alert--has-title .vamis-alert__content [data-slot='alert-description'] {
+  line-height: 20px;
+}
+.vamis-alert__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  margin-right: var(--gap-sm);
+}
+.vamis-alert__close {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+  align-items: center;
+  align-self: flex-start;
+  margin-left: var(--gap-sm);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--black);
+  cursor: pointer;
+  line-height: var(--gap-xl);
+  opacity: 0.2;
+}
+.vamis-alert__close:hover {
+  color: var(--black);
+  opacity: 0.5;
+}
 .vamis-alert__close-icon {
   display: block;
   width: var(--icon-size);
@@ -11120,23 +11249,68 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-json-node__toggle:hover {
   color: var(--primary);
 }
-.vamis-json-node__caret {
-  color: var(--text-muted);
+.vamis-json-node__toggle-box {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid var(--json-rjv-collapsed);
+  color: var(--json-rjv-collapsed);
+}
+.vamis-json-node__toggle-box.is-open {
+  border-color: var(--json-rjv-expanded);
+  color: var(--json-rjv-expanded);
+}
+.vamis-json-node__toggle-glyph {
+  width: 9px;
+  height: 9px;
 }
 .vamis-json-node__key {
-  color: var(--primary);
+  color: var(--json-rjv-key);
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+}
+.vamis-json-node__key:hover {
+  opacity: 1;
 }
 .vamis-json-node__preview {
-  color: var(--text-muted);
+  margin-right: 6px;
+  color: var(--json-rjv-object-size);
+  font-style: italic;
+}
+.vamis-json-node__ellipsis {
+  color: var(--json-rjv-string);
+  font-size: var(--fontSizeLg);
+  line-height: 1;
+}
+.vamis-json-node__brace {
+  color: var(--json-rjv-key);
+  font-weight: var(--fontWeightBold);
+}
+.vamis-json-node__children {
+  margin-left: 6px;
+}
+.vamis-json-node__children > .vamis-json-node {
+  padding: 3px 5px 3px 4px;
+  border-left: 1px solid var(--json-rjv-object-border);
 }
 .vamis-json-node__value {
   color: var(--text-color);
 }
 .vamis-json-node__value.is-string {
-  color: var(--success);
+  color: var(--json-rjv-string);
 }
 .vamis-json-node__value.is-number {
-  color: var(--info);
+  color: var(--json-rjv-integer);
+}
+.vamis-json-node__value.is-boolean {
+  color: var(--json-rjv-boolean);
+}
+.vamis-json-node__value.is-null {
+  color: var(--json-rjv-null);
 }
 
 /* ---- 皮肤迁出模板（2026-11 第五刀） ---- */
@@ -12372,4 +12546,19 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   background: var(--card);
   color: var(--destructive);
   font-size: var(--fontSizeBase);
+}
+
+/* unlayered：JSON utility 的 .border 在 utilities 层，debug 内层必须压掉它，只保留外层浅色盒子。 */
+.vamis-form-debug [data-slot='json'] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.vamis-form-debug [data-slot='scroll-area'] {
+  max-height: none;
+  padding: 0;
+}
+.vamis-form-debug .vamis-json-node {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
 }

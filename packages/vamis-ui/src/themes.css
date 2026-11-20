@@ -424,6 +424,15 @@
   --colors-neutral-fill-9: #334155;
   --colors-neutral-fill-10: #202b3a;
   --colors-neutral-fill-11: #182230;
+  --json-rjv-key: #f2f0ec;
+  --json-rjv-string: #f99157;
+  --json-rjv-integer: #d27b53;
+  --json-rjv-boolean: #cc99cc;
+  --json-rjv-null: #ffcc66;
+  --json-rjv-expanded: #6699cc;
+  --json-rjv-collapsed: #cc99cc;
+  --json-rjv-object-size: #a09f93;
+  --json-rjv-object-border: #515151;
   --colors-neutral-fill-canvas: #0f151e;
   --colors-neutral-line-1: #ffffff;
   --colors-neutral-line-2: #f7f8fa;

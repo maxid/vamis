@@ -6,7 +6,7 @@ outline: deep
 # Json
 
 ::: warning 实现进度 50% · 进行中
-能展开 JSON
+轻量递归树：JSON.parse / levelExpand / displayDataTypes / sortKeys / enableClipboard / quotesOnKeys / ellipsisThreshold；折叠、`{ N items` 摘要和 key / string / integer / boolean / null 色号对齐 `rjv-default`。Form debug 复用本渲染器；缺编辑、搜索、路径复制、大对象虚拟化
 :::
 
 `json` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -271,4 +271,4 @@ List 的内容、Card 卡片的内容配置同上
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：能展开 JSON。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：轻量递归树：JSON.parse / levelExpand / displayDataTypes / sortKeys / enableClipboard / quotesOnKeys / ellipsisThreshold；方形 `+/-` 折叠、`{ N items` 摘要和 key / string / integer / boolean / null 色号对齐 `react-json-view rjv-default`。Form debug 复用本渲染器；缺编辑、搜索、路径复制、大对象虚拟化。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

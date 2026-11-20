@@ -4,24 +4,30 @@ import {
   SchemaRenderer,
   alertActions,
   alertBody,
+  alertIcon,
   alertIconSrc,
   alertLevel,
   alertShowClose,
   alertShowIcon,
   alertTitle,
   alertTitleNode,
+  resolveIcon,
   resolveClassName,
   useData,
+  type ResolvedIcon,
   type SchemaObject,
 } from '@vamis/core'
 import {
   Alert,
   AlertDescription,
   AlertTitle,
+  VAMIS_ICONS,
   VamisIcon,
   levelToAlertVariant,
   levelToFeedbackIcon,
+  type VamisIconName,
 } from '@vamis/ui'
+import IconMark from './IconMark.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -44,7 +50,19 @@ const body = computed(() => alertBody(props.schema))
 const actions = computed(() => alertActions(props.schema))
 const showIcon = computed(() => alertShowIcon(props.schema, data.value))
 const showClose = computed(() => alertShowClose(props.schema))
+const icon = computed(() => alertIcon(props.schema, data.value))
 const iconSrc = computed(() => alertIconSrc(props.schema, data.value))
+/* Amis Icon 顺序：注册 SVG 优先，其次 URL，最后按 class（含 Font Awesome）。 */
+const builtinIcon = computed<VamisIconName | null>(() => {
+  const name = icon.value
+  return name && Object.prototype.hasOwnProperty.call(VAMIS_ICONS, name) ? (name as VamisIconName) : null
+})
+const resolvedIcon = computed<ResolvedIcon | null>(() => {
+  if (!icon.value) return null
+  if (iconSrc.value) return { kind: 'url', src: iconSrc.value }
+  return resolveIcon(icon.value)
+})
+const rootClass = computed(() => resolveClassName(props.schema.className, data.value))
 const iconClass = computed(() => resolveClassName(props.schema.iconClassName, data.value))
 const closeClass = computed(() => resolveClassName(props.schema.closeButtonClassName, data.value))
 const levelIcon = computed(() => levelToFeedbackIcon(level.value))
@@ -55,23 +73,39 @@ function close() {
 </script>
 
 <template>
-  <Alert v-if="open" data-vamis-alert :variant="variant" :class="showClose ? 'pr-8' : ''">
-    <img v-if="showIcon && iconSrc" :src="iconSrc" alt="" :class="['size-4 object-contain', iconClass]" />
-    <component v-else-if="showIcon" :is="levelIcon" :class="iconClass" />
-    <AlertTitle v-if="title || titleNode">
-      <SchemaRenderer v-if="titleNode" :schema="titleNode" />
-      <template v-else>{{ title }}</template>
-    </AlertTitle>
-    <AlertDescription v-if="body.length">
-      <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
-    </AlertDescription>
-    <div v-if="actions.length" class="col-start-2 mt-1 flex flex-wrap items-center gap-2">
+  <Alert
+    v-if="open"
+    data-vamis-alert
+    :variant="variant"
+    :data-variant="variant"
+    class="vamis-alert"
+    :class="[rootClass, { 'vamis-alert--has-title': !!title || !!titleNode }]"
+  >
+    <div
+      v-if="showIcon"
+      class="vamis-alert__icon"
+      :class="{ 'vamis-alert__icon--custom': !!icon }"
+    >
+      <VamisIcon v-if="builtinIcon" :name="builtinIcon" :class="iconClass" />
+      <IconMark v-else-if="resolvedIcon" :icon="resolvedIcon" :img-class="iconClass" />
+      <component v-else :is="levelIcon" :class="iconClass" />
+    </div>
+    <div class="vamis-alert__content">
+      <AlertTitle v-if="title || titleNode">
+        <SchemaRenderer v-if="titleNode" :schema="titleNode" />
+        <template v-else>{{ title }}</template>
+      </AlertTitle>
+      <AlertDescription v-if="body.length">
+        <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" />
+      </AlertDescription>
+    </div>
+    <div v-if="actions.length" class="vamis-alert__actions">
       <SchemaRenderer v-for="(node, i) in actions" :key="i" :schema="node" />
     </div>
     <button
       v-if="showClose"
       type="button"
-      class="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded text-current opacity-40 hover:opacity-70"
+      class="vamis-alert__close"
       :class="closeClass"
       aria-label="关闭提示"
       @click.stop="close"

@@ -768,7 +768,7 @@ actions:
 
 ## 表单数据域调试
 
-配置 `debug: true` 可以查看当前表单的数据域，方便数据映射、表达式等功能调试。`debugConfig` 可以额外配置 debug 区域，具体见 [Json 属性表](/components/json#%E5%B1%9E%E6%80%A7%E8%A1%A8)。**未接** `debugConfig`（下面仍画 JSON 文本）。
+配置 `debug: true` 可以查看当前表单的数据域，方便数据映射、表达式等功能调试。Vamis 在表单内容顶部用轻量 JSON 树展示，和 Amis 一样不加载 Monaco。`debugConfig` 可以额外配置 JSON 属性，具体见 [Json 属性表](/components/json#%E5%B1%9E%E6%80%A7%E8%A1%A8)。
 
 ```schema: scope="body"
 type: form
@@ -1032,8 +1032,8 @@ body:
 | static | `boolean` | | 整个表单静态方式展示 |
 | staticClassName | [`ClassName`](/types/classname) | | 表单静态展示时使用的类名 |
 | closeDialogOnSubmit | `boolean` | | **未接**。提交时是否关闭弹窗 |
-| debug | `boolean` | `false` | 展示当前数据域 |
-| debugConfig | `object` | | **未接**。debug 区域配置，见 [Json](/components/json) |
+| debug | `boolean` | `false` | 在表单顶部展示当前公开数据域的 JSON 树 |
+| debugConfig | `object` | | debug JSON 配置，支持 `levelExpand` / `displayDataTypes` / `enableClipboard` / `sortKeys` / `quotesOnKeys` / `ellipsisThreshold` |
 | lazyLoad | `boolean` | `false` | 源码已接。进视口再绘制；`initApi` 仍在挂载时发。Amis 属性表未列 |
 | wrapperComponent | `"form"` / `"div"` | 顶层 `form`，嵌套 `div` | 禁止嵌套 HTML form |
 | reset | `boolean` | `false` | 默认底栏显示重置钮 |
@@ -1783,7 +1783,6 @@ onEvent:
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
 - `submit` 事件不会拦掉默认提交；Vamis 先校验并保存，再发事件。
-- 未接：`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`debugConfig`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。 `horizontal.offset` 对齐 Amis 源码（注释掉未启用）。
+- 未接：`columnCount`、`affixFooter`、`interval` / `silentPolling` / `stopAutoRefreshWhen`、`asyncApi` / `initAsyncApi`、`promptPageLeave`、`inheritData`、`closeDialogOnSubmit`、`validate` / `validateFormItem` / `clearError` 动作、`submit`/`validate` 的 `outputVar`；combo 独立数据域（D6）。 `horizontal.offset` 对齐 Amis 源码（注释掉未启用）。
 - 动作控制流（循环 / switch / parallel / 广播）仍是 D4 P1。
 - 默认 panel 圆角对齐 Amis（`--radius` 4px），不是 shadcn Card 的 `rounded-lg` 8px。schema `rounded` / `panelClassName: rounded-lg` 是过渡写法；直角 / 圆角将改成 Vamis chrome 全局开关，不再按 type 声明。
-

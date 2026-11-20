@@ -29,6 +29,7 @@ import {
   isEffectiveApi,
   isVisible,
   mergeApiData,
+  publicScopeData,
   provideFormApi,
   requestApi,
   resolveClassName,
@@ -211,13 +212,18 @@ const actionsClass = computed(() =>
     resolveClassName(props.schema.actionsClassName, props.data),
   ),
 )
-const debugJson = computed(() => {
-  const out: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(store.data)) {
-    if (key.startsWith('__')) continue
-    out[key] = value
+const debugSchema = computed<SchemaObject>(() => {
+  const config = props.schema.debugConfig
+  const overrides = config && typeof config === 'object' && !Array.isArray(config)
+    ? config as SchemaObject
+    : {}
+  return {
+    type: 'json',
+    value: publicScopeData(store.data),
+    ellipsisThreshold: 120,
+    className: 'vamis-form-debug',
+    ...overrides,
   }
-  return JSON.stringify(out, null, 2)
 })
 const actionLoadingCount = ref(0)
 const actionLoading = computed(() => actionLoadingCount.value > 0)
@@ -782,13 +788,17 @@ onBeforeUnmount(() => {
           <CardTitle :class="titleClass">{{ panelTitle }}</CardTitle>
         </CardHeader>
         <CardContent :class="bodyClass">
+          <SchemaRenderer
+            v-if="schema.debug"
+            :schema="debugSchema"
+            :extra-data="store.data"
+          />
           <FormRow v-if="isRow" :nodes="body" :extra-data="store.data" />
           <template v-else>
             <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
           </template>
         </CardContent>
         <p v-if="store.errors.__form" class="vamis-form__error">{{ store.errors.__form }}</p>
-        <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <div v-if="showActionBar" :class="footerWrapClass">
           <CardFooter :class="actionsClass">
             <template v-if="hasCustomActions">
@@ -812,12 +822,16 @@ onBeforeUnmount(() => {
       </Card>
       <template v-else>
         <div :class="bodyClass">
+          <SchemaRenderer
+            v-if="schema.debug"
+            :schema="debugSchema"
+            :extra-data="store.data"
+          />
           <FormRow v-if="isRow" :nodes="body" :extra-data="store.data" />
           <template v-else>
             <SchemaRenderer v-for="(node, i) in body" :key="i" :schema="node" :extra-data="store.data" />
           </template>
         </div>
-        <pre v-if="schema.debug" class="vamis-form-debug">{{ debugJson }}</pre>
         <div v-if="showActionBar" :class="cn(actionsClass, 'flex gap-2 border-t-0 pt-3')">
           <template v-if="hasCustomActions">
             <SchemaRenderer v-for="(node, i) in actions" :key="'a'+i" :schema="node" :extra-data="store.data" />
