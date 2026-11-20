@@ -72,6 +72,12 @@ alwaysApply: true
 - 触及：`action` `button` D8 调试
 - 规则：`packages/vamis-core/src/actions/run.ts`
 
+### 成功 toast 必须有文案来源，Form / AJAX 都不能补默认“保存成功”
+- 踩过：`apiMessage(..., 'success')` 的默认文案让 `feedback.visibleOn` 为 false、甚至 feedback 未打开时仍弹 toast；外层 Form 提交 `/api/mock2/form/initData` 的 `msg: ''` 时，截图里 Vamis 比 Amis 多一条“保存成功”。
+- 稳定做法：Action AJAX 按 `action.messages.success → args.messages.success → payload.msg → payload.defaultMsg → 空` 取；Form 提交按 `payload.msg → schema.messages.saveSuccess → payload.defaultMsg → 空` 取，空串不 `notify`。`feedback.visibleOn` 只决定二级 feedback 弹框，不能耦合成功提示；mock 契约要保持 `initData.msg = ''`。
+- 触及：`action` `button` `dialog` `form` `ajax` mock
+- 规则：Amis `ServiceStore.saveRemote` / `AjaxAction`；`packages/vamis-core/src/actions/run.ts`；`packages/vamis/src/renderers/Form.vue`
+
 ### onEvent 高级配置下沉到 runOnEvent，不要只挂宿主 DOM
 - 踩过：`debounce` / `track` 只写 SchemaRenderer 的 click 宿主时，InputText 等组件自己派发的 change 完全绕过，配置不生效。
 - 稳定做法：`runOnEvent` 统一读取监听器的 debounce / track；按 schema + eventName 保存去抖器，卸载时取消。普通组件事件、宿主事件、广播都走这里。`track` 每次事件都上报，动作按配置去抖。
@@ -239,6 +245,12 @@ alwaysApply: true
 - 稳定做法：CRUD 普通列和 Table 一样包 `PopOverHost`；`type: tpl` 仍走 SchemaRenderer（Tpl 自己包）。卡片字段合成 tpl 时拷走 `popOver*` / `textOverflow`。文档活示例对标 Amis 主路径 CRUD / list / cards，不要为对照改成本地小表。
 - 触及：`popOver` `table` `crud` `cards` `list`
 - 规则：本文；`.cursor/rules/site.mdc`
+
+### 动作可见性要在执行入口兜底，不能只靠 SchemaRenderer 的 v-if
+- 踩过：CRUD operation 列手工画 `<Button>` + `runColumnAction`，`visibleOn: false` 的按钮仍渲染，点击照样 toast；`itemAction` / `clickAction` 等旁路也可能直接调 `runAction`。这不是单个按钮的属性缺失，而是动作传播链被组件旁路。
+- 稳定做法：operation 列和 Amis `OperationField` 一样逐项再走 `SchemaRenderer`；`runAction` / `runOnEvent` 入口先按当前数据执行 `isVisible`，隐藏动作返回 false。不要在每个渲染器里复制一套 `visibleOn` 判断，也不要在手工 action 分支里直接 `notify`。
+- 触及：`crud` `operation` `action` `button` `table` `list` `card` `chart` `calendar`
+- 规则：Amis `Operation.tsx` / `Action.ts`；`packages/vamis-core/src/actions/run.ts`；`packages/vamis/src/renderers/CRUD.vue`
 
 ### 表格列 PopOver 定位目标是整格 td；表单 static 是 right + 放大镜
 - 踩过：Amis `TableCell` `@PopOverable({ targetOutter: true })` 把 Overlay target 钉在单元格上，`placement: center` 相对列宽居中。Vamis 有 icon 时曾跟点击点走。后来又把表单 static 锚到 `width:100%` 的 host 上 `center`，320 层盖住整行控件槽，看起来像输入框。Amis `StaticFieldRenderer` 是 `@PopOver({ position: 'right' })`，target 仍是 14px 放大镜，层贴图标右缘。
@@ -682,9 +694,15 @@ alwaysApply: true
 
 ### Dialog 盒模型用 Amis Modal 的 flex column，不要留 shadcn grid
 - 踩过：DialogContent 沿用 shadcn `grid + gap-3 + p-5`，全屏时 auto 行被 grid 拉伸，标题居中、正文跑到纵向中部；body 无内边距，和 `_modal.scss` 的 header / body / footer 完全对不上。
-- 稳定做法：DialogContent 固定 `display:flex; flex-direction:column; gap:0; padding:24px 0; radius:6px; shadow:none`；header/title 左对齐、14/21，body `16/24` 外距 + `0 24px` 横向 padding，footer `0 24px`。关闭控件只有现有的一枚 `dialog-close`，结构上必须放 `DialogHeader` 内，盒模型钉成 Amis 的 `16×22`、图标 16px、padding/border 0；无标题也保留 header，不要另加第二枚图标。Vamis 3px 输入 focus glow 不能删：body 用 `padding:3px 24px`、margin 改成 `13px 0 21px`，视觉起点仍等价 Amis 的 16/24。AJAX / submit 时 body 内放默认 32px `Spinner` + 独立遮罩，遮罩 `rgba(255,255,255,.1)`、`blur(1px)`、0.2s 淡入；footer 不再放 spinner，避免直接 SVG 被 flex 撑成大菱形。
+- 稳定做法：DialogContent 固定 `display:flex; flex-direction:column; gap:0; padding:24px 0; radius:6px; shadow:none`；header/title 左对齐、14/21，body `16/24` 外距 + `0 24px` 横向 padding，footer `0 24px`。关闭控件只有现有的一枚 `dialog-close`，结构上必须放 `DialogHeader` 内，盒模型钉成 Amis 的 `16×22`、图标 16px、padding/border 0；无标题也保留 header，不要另加第二枚图标。Vamis 3px 输入 focus glow 不能删：body 用 `padding:3px 24px`、margin 改成 `13px 0 21px`，视觉起点仍等价 Amis 的 16/24。Dialog footer 的 AJAX / confirm 在 body 有 Form 时先委派给 Form，表现为 Form body overlay + Dialog-info；Form body 内的 Action 由 Form 自己接管，只显示 Form overlay；无 Form 的 Dialog body Action 才由 Dialog sensor 显示 `Dialog-info`。Form body Spinner 跟请求生命周期结束；Dialog-info 的 `busying` 跟完整 action Promise，feedback 未关闭时第一层 footer spinner 不能先撤。一个 Action 可以产生两枚 Spinner，遮罩按宿主而不是 Action 数量生成；loading 期间 footer actions disabled、关闭按钮隐藏。
 - 触及：`dialog` Form Item 输入控件 SDK 对照
 - 规则：`packages/vamis-ui/src/styles.css` `[data-vamis-overlay='dialog']`；`packages/vamis/src/OverlayHost.vue`；Amis `_modal.scss`
+
+### Dialog title 未设置时走 Amis locale 默认值“弹框”
+- 踩过：把 `title === undefined` 当成无标题，Vamis 显示空 header，Amis 显示默认“弹框”；把 `title: ''` 也套默认值又会破坏作者显式关闭标题的语义。
+- 稳定做法：`dialogTitle(schema, data, fallback)` 只在 `title === undefined` 时使用 `env.translate('Dialog.title')`；`title: false` / `title: ''` 明确保持空。OverlayHost 的条件和正文都走同一个 helper。
+- 触及：`dialog`
+- 规则：Amis `Dialog.defaultProps.title = 'Dialog.title'`；`packages/vamis-core/src/utils/dialog.ts`；`packages/vamis/src/OverlayHost.vue`
 
 ### Dialog 拖拽存视口绝对坐标，不要驱动 transform / transition
 - 踩过：用 `translate(calc(-50% + x), y)` 改拖拽会覆盖 reka/shadcn 的 enter/zoom transform；`duration-200` 又让 left/top 滞后。第二次拖拽把当前 rect 当基准继续叠 offset，会累计漂移；resize 后仍停在旧视口坐标。
@@ -949,7 +967,7 @@ alwaysApply: true
 
 ### Action 不要在 onClick 里自动转圈；控件 loading 画在控件上
 - 踩过：`reload` 输入框 `source` 时 Vamis 把整段 click 设 `loading=true`，按钮变成 CSS 圆环 +「重新加载」；Amis 按钮不动，InputText 右侧才是 `Spinner icon=reload size=sm`。
-- 稳定做法：Action 只认 schema `loading` / `loadingOn`。`source` / `autoComplete` 的 loading 挂该控件自己的 Spinner（`icon: reload` `size: sm`），不要再画一套 `animate-spin` 圆环，也不要让触发按钮冒充。
+- 稳定做法：Action 自身只认 schema `loading` / `loadingOn`。执行 Action 时由**最近宿主**注入 action-loading：Page 根级请求显示 Page body overlay；Dialog 没有 Form 时的请求显示 `Dialog-info`；Dialog footer 的 AJAX / confirm 有 Form 时，Form body overlay 与 Dialog-info 同时显示；Form body 内的 Action 只显示 Form overlay。Form body Spinner 在请求完成时撤；Dialog-info 绑完整 action/feedback Promise，feedback 未关闭不能先撤。`source` / `autoComplete` 的 loading 挂该控件自己的 Spinner（`icon: reload` `size: sm`），不要再画一套 `animate-spin` 圆环，也不要让触发按钮冒充。
 - 触及：`action` `button` `input-text`
 - 规则：本文；Amis `InputText.tsx` Spinner；`Action.tsx` `loading` 来自 props
 
@@ -1374,6 +1392,12 @@ alwaysApply: true
 - 稳定做法：对齐 Amis `saveRemote` `onSuccess`：`createVamisEvent` + `eventEvalData`，`event.data.result = result.data`（不是整份 `payload`）；merge 后再派 `submitSucc`；`prevented` 才跳过「保存成功」。`__rendererData` 仍走 `form.getData()`，不要把 `result` 写进数据域快照。mock 对齐 `{status:0,msg:'保存成功',data:{id:1}}`。不要把 `submit` 挪到 API 前面（与 Amis「有 actions 就跳过默认提交」的差异已写在文档）。
 - 触及：`form` 事件动作
 - 规则：Amis `Form.tsx` `onSuccess` / `form.ts` `saveRemote`；`packages/vamis/src/renderers/Form.vue`
+
+### Form 验证错误用一个 is-error 契约驱动控件和 Dialog
+- 踩过：只在 FormItem 下显示错误文字，控件仍是普通边框；Dialog footer 用不存在的 `--danger`，错误信息不红；各控件分别判断 valid 会再次出现不一致。
+- 稳定做法：`store.errors[name]` 是唯一数据源，FormItem 根节点加 `is-error`；控件边框统一由该父级选择器驱动，错误文案继续用 `--destructive`。Dialog 动态 `Dialog-info` 的 `Dialog-error` 也必须使用同一 destructive 色。失败摘要用 `env.translate('Form.validateFailed')`，中文水标为“依赖的部分字段没有通过验证”；字段修改会清掉对应 error。Dialog error 按层启动 3 秒 timer 自动清空，关闭/重开/卸载时取消旧 timer，不能误清其它层。
+- 触及：`form` `formitem` `input-text` `input-password` `dialog`
+- 规则：Amis `Item.tsx` `is-error` / `_form.scss`、`Dialog.tsx` `Dialog-error`；`packages/vamis/src/renderers/FormItem.vue`；`packages/vamis-ui/src/styles.css`
 
 ### static-xxx 用 renderer test 兜底，不要逐个注册；copyable 走默认 `${name | raw}`
 - 踩过：`static-datetime` / `static-mapping` / `static-progress` / `static-images` 没有精确注册就落到未知 type；`static` 自己做一份文本展示又和 `static-json` / `static-image` 的现成渲染器分叉。

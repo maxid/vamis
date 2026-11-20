@@ -6,7 +6,7 @@
 
 ## 0. 一页结论
 
-Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacement、delay、overlay、body、loadingConfig.root、父子 loading 互斥。主路径成熟；缺 Dialog/Form/Select 宿主细项。
+Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacement、delay、overlay、body、loadingConfig.root、父子 loading 互斥。主路径成熟；Page / Service / CRUD / Dialog / Form 宿主已接，Select 细项仍待核。
 
 ## 1. 边界与优先级（先读）
 
@@ -23,7 +23,7 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 - overlay true/false/body/root
 - default/fa/URL 图标、tip 位置
 - 父子同时 loading/卸载/快速切换
-- Dialog/Form/Select 宿主（未核）
+- Dialog/Form/Select 宿主（Select 未核；Dialog footer 有 Form 时 body + Dialog-info 双层已核）
 - 窄屏/深色
 
 ### 优先级
@@ -44,11 +44,12 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 | delay/overlay/body | 行为 | 已接 |
 | loadingConfig.root | 宿主 | 已接 |
 | 父子互斥 | 状态 | 已接 |
-| Dialog/Form 细项 | 宿主 | 未核 |
+| Dialog/Form 细项 | 宿主 | 已接；footer AJAX / confirm 委派 Form 时 body overlay + Dialog-info，Form body Action 只占 Form |
 
 ## 4. 架构
 
 - [`Spinner.vue`](../../../../packages/vamis/src/renderers/Spinner.vue)：show/delay/overlay/parent/icon。
+- [`Form.vue`](../../../../packages/vamis/src/renderers/Form.vue)：Form 自己按 `saving/fetching` 渲染一枚 body overlay，不跟随 Action 数量。
 - [`spinner-store.ts`](../../../../packages/vamis-core/src/spinner-store.ts)：push/remove/check/订阅。
 - [`spinner.ts`](../../../../packages/vamis-core/src/utils/spinner.ts)：show/body/icon/tip。
 
@@ -58,7 +59,7 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 
 ## 6. 缺口
 
-Dialog/Form/Select 宿主细项；深色/窄屏逐项。
+Select 宿主细项；深色/窄屏逐项。
 
 ## 7. 验收
 

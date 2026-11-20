@@ -42,8 +42,13 @@ export interface OverlayApi {
   setData?: (values: PlainObject, replace?: boolean) => void
   setDataAt?: (key: number, values: PlainObject, replace?: boolean) => void
   setDialogStatus?: (key: number, status: { loading?: boolean; error?: string }) => void
+  beginDialogFormLoading?: (key: number) => () => void
+  hasDialogForm?: (key: number) => boolean
   getActiveDialogKey?: () => number | undefined
-  registerDialogForm: (submit: (close?: boolean) => Promise<boolean | void> | boolean | void) => number | void
+  registerDialogForm: (
+    submit: (close?: boolean) => Promise<boolean | void> | boolean | void,
+    beginLoading?: () => () => void,
+  ) => number | void
   unregisterDialogForm: (submit: (close?: boolean) => Promise<boolean | void> | boolean | void) => void
   submitDialogForm: () => Promise<boolean>
   submitDialogFormResult?: (close?: boolean) => Promise<OverlaySubmitResult>
@@ -59,6 +64,7 @@ interface OverlayFrame {
   error: string
   resolve?: (value: PlainObject | false) => void
   submitForm?: (close?: boolean) => Promise<boolean | void> | boolean | void
+  beginFormLoading?: () => () => void
 }
 
 function overlayPayload(data: PlainObject = {}): PlainObject {
@@ -243,18 +249,28 @@ export function createOverlay(): OverlayApi {
       if (typeof status.error === 'string') frame.error = status.error
       sync()
     },
+    beginDialogFormLoading(key) {
+      return findFrame(key)?.beginFormLoading?.() ?? (() => {})
+    },
+    hasDialogForm(key) {
+      return !!findFrame(key)?.beginFormLoading
+    },
     getActiveDialogKey() {
       return dialogs.at(-1)?.key
     },
-    registerDialogForm(submit) {
+    registerDialogForm(submit, beginLoading) {
       const top = dialogs.at(-1)
       if (!top) return
       top.submitForm = submit
+      top.beginFormLoading = beginLoading
       return top.key
     },
     unregisterDialogForm(submit) {
       const bound = [...dialogs].reverse().find((frame) => frame.submitForm === submit)
-      if (bound) bound.submitForm = undefined
+      if (bound) {
+        bound.submitForm = undefined
+        bound.beginFormLoading = undefined
+      }
     },
     async submitDialogForm() {
       return (await submitTopDialog()).found

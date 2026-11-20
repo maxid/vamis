@@ -133,7 +133,7 @@ const paintLabel = computed(() => {
 <template>
   <div
     class="vamis-form-item"
-    :class="itemLayoutClass"
+    :class="[itemLayoutClass, { 'is-error': !!error }]"
     :data-name="schema.inputOnly ? undefined : schema.name"
   >
     <Label
@@ -173,7 +173,11 @@ const paintLabel = computed(() => {
       <div
         v-else
         class="min-w-0"
-        :class="cn(sizeName ? `vamis-control--${sizeName}` : 'vamis-control--fluid', inputClass)"
+        :class="cn(
+          sizeName ? `vamis-control--${sizeName}` : 'vamis-control--fluid',
+          inputClass,
+          error && 'is-error',
+        )"
       >
         <slot />
       </div>

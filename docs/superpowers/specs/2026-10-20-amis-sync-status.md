@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 873 + editor 8 + sdk 121 = **1187**，全绿（2026-11-20 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 876 + editor 8 + sdk 132 = **1201**，全绿（2026-11-20 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
 | 工作区 | `git status` | 本轮 Dialog 运行时、样式、测试与文档有改动，未提交 |
-| 对照 | 报告 + 本机目录 | 目录 **2233**（文档 159 / 组件 1603 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）；Dialog 桌面 / 移动 **24/25**（P0 0，余 1 条 CRUD 列 Action schema-tree 定位假阴性）。本轮未重跑全量对照 |
+| 对照 | 报告 + 本机目录 | 目录 **2231**（文档 159 / 组件 1603 / 样式 471）。最近全量报告 **2216 / 1901 / 315**（P0 1：`form-default`，单跑已通过）；Dialog 桌面 / 移动 **22/23**（P0 0，余 1 条 CRUD 列 Action schema-tree 定位假阴性）。本轮未重跑全量对照 |
 
-结论：本轮 `test` / `typecheck` 与 Dialog 专项复核通过，生成目录为 **2233**；未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck` 与 Dialog 专项复核通过，生成目录为 **2231**；未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 

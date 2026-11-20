@@ -458,20 +458,21 @@ export function handleMockApi(input: {
 
   if (pathname === '/api/mock2/form/initData') {
     const tpl = String(query.tpl || body.tpl || 'tpl1')
-    const now = new Date()
     const names: Record<string, { name: string; author: string }> = {
       tpl1: { name: 'Vamis Renderer', author: 'vamis' },
       tpl2: { name: 'Vamis Runtime', author: 'vamis' },
       tpl3: { name: 'LCDP IR', author: 'lcdp' },
     }
     const picked = names[tpl] || names.tpl1
+    const info = query.keywords ? `你输入的关键子是 ${query.keywords}` : ''
     return {
       status: 0,
-      msg: 'ok',
+      msg: '',
       data: {
         ...picked,
-        tpl,
-        date: now.toISOString(),
+        infoId: query.id,
+        date: Math.round(Date.now() / 1000),
+        info,
       },
     }
   }

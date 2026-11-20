@@ -52,8 +52,10 @@ import {
 } from '@vamis/core'
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, cn } from '@vamis/ui'
 import { provideForm, useForm } from '../formContext'
+import { provideActionLoading } from '../actionLoadingContext'
 import { registerWizardValidate } from '../wizardGate'
 import FormRow from './form/FormRow.vue'
+import Spinner from './Spinner.vue'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -217,6 +219,14 @@ const debugJson = computed(() => {
   }
   return JSON.stringify(out, null, 2)
 })
+const actionLoadingCount = ref(0)
+const actionLoading = computed(() => actionLoadingCount.value > 0)
+const formSpinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: store.saving || store.fetching || actionLoading.value,
+  overlay: true,
+  loadingConfig: props.schema.loadingConfig,
+}))
 const labelWidthStyle = computed(() => {
   const w = props.schema.labelWidth
   if (w == null || w === '' || w === false) return undefined
@@ -375,6 +385,19 @@ function messageOf(key: 'saveSuccess' | 'saveFailed' | 'validateFailed' | 'fetch
   return fallback
 }
 
+function validationFailedMessage() {
+  return messageOf('validateFailed', env.translate('Form.validateFailed'))
+}
+
+/**
+ * 对齐 Amis FormStore.saveRemote：
+ * 服务端 msg 优先，其次是显式 messages.saveSuccess，最后才是 defaultMsg。
+ * 没有成功文案时保持沉默，不能生成默认“保存成功”。
+ */
+function successMessage(payload: { msg?: string; defaultMsg?: string }): string {
+  return payload.msg || messageOf('saveSuccess', '') || payload.defaultMsg || ''
+}
+
 function trimDeep(value: unknown): unknown {
   if (typeof value === 'string') return value.trim()
   if (Array.isArray(value)) return value.map(trimDeep)
@@ -456,6 +479,24 @@ function clear() {
 let dialogFormBound = false
 let dialogFormKey: number | undefined
 
+function beginActionLoading() {
+  actionLoadingCount.value += 1
+  let active = true
+  return () => {
+    if (!active) return
+    active = false
+    actionLoadingCount.value = Math.max(0, actionLoadingCount.value - 1)
+  }
+}
+
+provideActionLoading({
+  begin(actionType) {
+    if (actionType !== 'ajax') return { end() {} }
+    const end = beginActionLoading()
+    return { end, endRequest: end }
+  },
+})
+
 function closeOverlayDialog(values: Record<string, unknown>, close = true) {
   if (!close || !dialogFormBound || !overlay?.state.dialog) return false
   if (
@@ -478,8 +519,8 @@ async function submit(closeDialog = true): Promise<boolean> {
     store.data = trimDeep(store.data) as Record<string, any>
   }
   if (!validate()) {
-    setDialogStatus({ loading: false, error: messageOf('validateFailed', '请检查表单') })
-    env.notify('error', messageOf('validateFailed', '请检查表单'))
+    setDialogStatus({ loading: false, error: validationFailedMessage() })
+    env.notify('error', validationFailedMessage())
     return false
   }
   let remoteOk = true
@@ -488,8 +529,8 @@ async function submit(closeDialog = true): Promise<boolean> {
     if (!(await runValidateApi(item))) remoteOk = false
   }
   if (!remoteOk) {
-    setDialogStatus({ loading: false, error: messageOf('validateFailed', '请检查表单') })
-    env.notify('error', messageOf('validateFailed', '请检查表单'))
+    setDialogStatus({ loading: false, error: validationFailedMessage() })
+    env.notify('error', validationFailedMessage())
     return false
   }
   const target = typeof props.schema.target === 'string' ? props.schema.target.trim() : ''
@@ -534,8 +575,9 @@ async function submit(closeDialog = true): Promise<boolean> {
     await runOnEvent(props.schema, 'submit', formEventCtx('submit'))
     // 对齐 Amis saveRemote onSuccess：先 submitSucc（event.data.result = 接口 data），prevented 才跳过「保存成功」。
     const succ = await emitFormEvent('submitSucc', { result: result.data })
-    if (!succ.prevented) {
-      env.notify('success', messageOf('saveSuccess', apiMessage(api, result.payload, 'success')))
+    const success = successMessage(result.payload)
+    if (!succ.prevented && success) {
+      env.notify('success', success)
     }
     if (props.schema.clearPersistDataAfterSubmit !== false) clearPersisted()
     if (props.schema.resetAfterSubmit === true) reset()
@@ -661,7 +703,7 @@ function focusFirstField() {
 
 onMounted(async () => {
   if (overlay?.state.dialog) {
-    dialogFormKey = overlay.registerDialogForm(submit) || undefined
+    dialogFormKey = overlay.registerDialogForm(submit, beginActionLoading) || undefined
     dialogFormBound = true
   }
   let initResult: Record<string, unknown> | null = null
@@ -731,6 +773,7 @@ onBeforeUnmount(() => {
       @submit.prevent="submit"
       @keydown.enter="onNestedEnter"
     >
+      <Spinner :schema="formSpinnerSchema" />
       <Card
         v-if="wrapWithPanel"
         :class="panelClass"

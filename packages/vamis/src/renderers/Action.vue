@@ -50,6 +50,7 @@ import { Button, cn, levelToVariant, sizeToButtonSize } from '@vamis/ui'
 import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
 import BadgeHost from './BadgeHost.vue'
 import IconMark from './IconMark.vue'
+import { useActionLoading } from '../actionLoadingContext'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -62,6 +63,7 @@ const env = useEnv()
 const scoped = useScoped()
 const scope = useScope()
 const overlay = useOverlay()
+const actionLoading = useActionLoading()
 const form = useFormApi()
 const isMenuItem = useDropdownMenuItem()
 const isCardAction = computed(() => props.schema.__cardAction === true)
@@ -163,6 +165,7 @@ function makeCtx(native?: Event, type = 'click') {
     data: eventEvalData(data.value, event),
     scoped,
     overlay,
+    loading: actionLoading,
     form,
     scope: scope.value,
     event,

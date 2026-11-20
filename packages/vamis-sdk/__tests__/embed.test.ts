@@ -19,6 +19,63 @@ function mount(schema: unknown, props?: Parameters<typeof embed>[2], env?: Param
   return { host, scoped }
 }
 
+function dialogFeedbackSchema() {
+  return {
+    type: 'page',
+    body: {
+      type: 'button',
+      label: '弹一个框',
+      actionType: 'dialog',
+      dialog: {
+        title: '提示',
+        body: {
+          type: 'form',
+          api: '/api/mock2/form/saveForm?waitSeconds=2',
+          body: [
+            {
+              type: 'input-text',
+              name: 'text',
+              required: true,
+              label: '用户名',
+              placeholder: '请输入用户名',
+            },
+            {
+              type: 'input-password',
+              name: 'password',
+              required: true,
+              label: '密码',
+              placeholder: '请输入密码',
+            },
+            { type: 'checkbox', name: 'rememberMe', label: '记住登录' },
+          ],
+        },
+        actions: [
+          {
+            type: 'button',
+            label: '提交表单 Feedback',
+            actionType: 'confirm',
+            feedback: {
+              body: 'feedback弹框中，不请求接口了，直接点击按钮关闭',
+              actions: [{ type: 'button', actionType: 'close', label: '关闭' }],
+            },
+          },
+          {
+            type: 'button',
+            label: 'ajax请求 Feedback',
+            actionType: 'ajax',
+            close: true,
+            api: '/api/mock2/form/initData?waitSeconds=1',
+            feedback: {
+              body: 'feedback弹框中，不请求接口了，直接点击按钮关闭',
+              actions: [{ type: 'button', actionType: 'close', label: '关闭' }],
+            },
+          },
+        ],
+      },
+    },
+  }
+}
+
 describe('normalizeEmbedSchema', () => {
   it('parses YAML strings', () => {
     expect(normalizeEmbedSchema('type: page\ntitle: YAML\nbody: hi')).toEqual({
@@ -95,6 +152,75 @@ describe('embed', () => {
     expect(wraps[1]?.className.split(/\s+/)).toContain('m-l')
   })
 
+  it('uses the Amis Dialog.title default when title is omitted', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'button',
+        label: '打开',
+        actionType: 'dialog',
+        dialog: { body: '内容' },
+      },
+    })
+
+    await nextTick()
+    const open = [...host.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '打开',
+    )
+    open?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-title"]')?.textContent?.trim()).toBe('弹框')
+    })
+  })
+
+  it('opens ajax feedback only when visibleOn sees the numeric Unix second', async () => {
+    let date = 1646323200
+    const notify = vi.fn()
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: { date },
+    }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'button',
+          label: '条件feedback',
+          actionType: 'ajax',
+          api: '/api/mock2/form/initData?waitSeconds=1',
+          feedback: {
+            visibleOn: '!(this.date % 2)',
+            title: '操作成功',
+            body: '当前时间戳: <code>${date}</code>',
+          },
+        },
+      },
+      undefined,
+      { fetcher, notify },
+    )
+
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '条件feedback',
+    )
+    button?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-content"]')).not.toBeNull()
+    })
+    ;(document.querySelector('[data-slot="dialog-close"]') as HTMLButtonElement | null)?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-content"]')).toBeNull()
+    })
+
+    date = 1646323201
+    button?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2))
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(document.querySelector('[data-slot="dialog-content"]')).toBeNull()
+    expect(notify).not.toHaveBeenCalledWith('success', expect.anything())
+  })
+
   it('maps Amis button level and size onto data-variant / data-size', async () => {
     const { host } = mount({
       type: 'page',
@@ -116,6 +242,406 @@ describe('embed', () => {
     expect(byLabel('信息')?.getAttribute('data-variant')).toBe('info')
     expect(byLabel('极小')?.getAttribute('data-size')).toBe('xs')
     expect(byLabel('中等')?.getAttribute('data-size')).toBe('md')
+  })
+
+  it('routes CRUD operation buttons through SchemaRenderer visibility', async () => {
+    const notify = vi.fn()
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'crud',
+          source: '$items',
+          columns: [
+            { name: 'name', label: '名称' },
+            {
+              type: 'operation',
+              label: '操作',
+              buttons: [
+                {
+                  type: 'button',
+                  label: '隐藏操作',
+                  visibleOn: '${false}',
+                  actionType: 'toast',
+                  toast: { items: [{ body: '不应出现' }] },
+                },
+                {
+                  type: 'button',
+                  label: '可见操作',
+                  actionType: 'toast',
+                  toast: { items: [{ body: '正常操作' }] },
+                },
+              ],
+            },
+          ],
+        },
+      },
+      { data: { items: [{ id: 1, name: '记录 A' }] } },
+      { notify },
+    )
+
+    await nextTick()
+    await vi.waitFor(() => {
+      expect([...host.querySelectorAll('button')].some((btn) => btn.textContent?.trim() === '可见操作')).toBe(true)
+    })
+    expect([...host.querySelectorAll('button')].some((btn) => btn.textContent?.trim() === '隐藏操作')).toBe(false)
+
+    const visible = [...host.querySelectorAll('button')].find(
+      (btn) => btn.textContent?.trim() === '可见操作',
+    )
+    visible?.click()
+    await vi.waitFor(() => {
+      expect(notify).toHaveBeenCalledWith('info', '正常操作', expect.anything())
+    })
+  })
+
+  it('does not invent a Form save toast when response msg is empty', async () => {
+    const notify = vi.fn()
+    const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: { id: 1 } }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          api: '/api/mock2/form/initData?waitSeconds=1',
+          body: [{ type: 'input-text', name: 'name', label: '名称' }],
+          actions: [{ type: 'button', label: '提交', actionType: 'submit' }],
+        },
+      },
+      undefined,
+      { fetcher, notify },
+    )
+
+    await nextTick()
+    const submit = [...host.querySelectorAll('button')].find(
+      (btn) => btn.textContent?.trim() === '提交',
+    )
+    submit?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(notify).not.toHaveBeenCalledWith('success', expect.anything())
+  })
+
+  it('keeps Dialog confirm feedback silent when the outer Form response msg is empty', async () => {
+    const notify = vi.fn()
+    const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: { id: 1 } }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'button',
+          label: '打开',
+          actionType: 'dialog',
+          dialog: {
+            title: '提示',
+            body: {
+              type: 'form',
+              api: '/api/mock2/form/initData?waitSeconds=1',
+              body: [{ type: 'input-text', name: 'name', label: '名称' }],
+            },
+            actions: [
+              {
+                type: 'button',
+                label: 'Feedback',
+                actionType: 'confirm',
+                feedback: {
+                  body: '这是一个feedback弹框',
+                  skipRestOnCancel: true,
+                },
+              },
+            ],
+          },
+        },
+      },
+      undefined,
+      { fetcher, notify },
+    )
+
+    await nextTick()
+    ;[...host.querySelectorAll('button')]
+      .find((btn) => btn.textContent?.trim() === '打开')
+      ?.click()
+    const feedback = await vi.waitFor(() => {
+      const button = [...document.querySelectorAll('button')].find(
+        (item) => item.textContent?.trim() === 'Feedback',
+      )
+      expect(button).toBeTruthy()
+      return button as HTMLButtonElement
+    })
+    feedback.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('[data-slot="dialog-content"]')).toHaveLength(2)
+    })
+    expect(notify).not.toHaveBeenCalledWith('success', expect.anything())
+  })
+
+  it('uses an explicit Form messages.saveSuccess when the response has no msg', async () => {
+    const notify = vi.fn()
+    const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: { id: 1 } }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          api: '/api/mock2/form/initData?waitSeconds=1',
+          messages: { saveSuccess: '自定义成功' },
+          body: [{ type: 'input-text', name: 'name', label: '名称' }],
+          actions: [{ type: 'button', label: '提交', actionType: 'submit' }],
+        },
+      },
+      undefined,
+      { fetcher, notify },
+    )
+
+    await nextTick()
+    const submit = [...host.querySelectorAll('button')].find(
+      (btn) => btn.textContent?.trim() === '提交',
+    )
+    submit?.click()
+    await vi.waitFor(() => {
+      expect(notify).toHaveBeenCalledWith('success', '自定义成功')
+    })
+  })
+
+  it('shows the Page spinner overlay while a root ajax action is pending', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'button',
+          label: 'Feedback',
+          actionType: 'ajax',
+          api: '/api/mock2/form/initData?waitSeconds=2',
+          feedback: {
+            title: '操作成功',
+            body: '服务器已返回结果。',
+          },
+        },
+      },
+      undefined,
+      { fetcher, notify: vi.fn() },
+    )
+
+    await nextTick()
+    const button = [...host.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === 'Feedback',
+    )
+    button?.click()
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(host.querySelector('.vamis-page__body .vamis-spinner--overlay')).not.toBeNull()
+    })
+
+    resolveFetch({ status: 0, msg: '', data: {} })
+    await vi.waitFor(() => {
+      expect(host.querySelector('.vamis-page__body .vamis-spinner--overlay')).toBeNull()
+    })
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-content"]')).not.toBeNull()
+    })
+  })
+
+  it('shows Form body and Dialog-info while the exact dialog ajax action is pending', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(dialogFeedbackSchema(), undefined, { fetcher, notify: vi.fn() })
+
+    await nextTick()
+    const open = [...host.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '弹一个框',
+    )
+    open?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-content"]')).not.toBeNull()
+    })
+
+    const ajax = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === 'ajax请求 Feedback',
+    )
+    ajax?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-form .vamis-spinner--overlay')).toHaveLength(1)
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(1)
+    })
+    expect(document.querySelector('.vamis-dialog-body-loading')).toBeNull()
+
+    resolveFetch({ status: 0, msg: '', data: {} })
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('[data-slot="dialog-content"]')).toHaveLength(2)
+    })
+  })
+
+  it('keeps a Form body Action on the Form host when a footer Action also exists', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'button',
+          label: '弹一个框',
+          actionType: 'dialog',
+          dialog: {
+            title: '提示',
+            body: {
+              type: 'form',
+              body: [
+                {
+                  type: 'button',
+                  label: 'body action',
+                  actionType: 'ajax',
+                  api: '/api/mock2/form/initData?waitSeconds=1',
+                },
+              ],
+            },
+            actions: [
+              {
+                type: 'button',
+                label: 'footer action',
+                actionType: 'ajax',
+                api: '/api/mock2/form/initData?waitSeconds=1',
+              },
+            ],
+          },
+        },
+      },
+      undefined,
+      { fetcher, notify: vi.fn() },
+    )
+
+    await nextTick()
+    const open = [...host.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '弹一个框',
+    )
+    open?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('[data-slot="dialog-content"]')).not.toBeNull()
+    })
+    expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(0)
+
+    const bodyAction = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === 'body action',
+    )
+    bodyAction?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-form .vamis-spinner--overlay')).toHaveLength(1)
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(0)
+    })
+
+    resolveFetch({ status: 0, msg: '', data: {} })
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-form .vamis-spinner--overlay')).toHaveLength(0)
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(0)
+    })
+  })
+
+  it('renders one Form overlay plus one Dialog-info Spinner for the exact dialog form submit', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    mount(dialogFeedbackSchema(), undefined, { fetcher, notify: vi.fn() })
+
+    await nextTick()
+    const open = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '弹一个框',
+    )
+    open?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('.vamis-form')).not.toBeNull()
+    })
+
+    for (const [selector, value] of [
+      ['input[placeholder="请输入用户名"]', 'vamis'],
+      ['input[placeholder="请输入密码"]', 'secret'],
+    ]) {
+      const input = document.querySelector(selector) as HTMLInputElement
+      input.value = value
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+    }
+    await nextTick()
+
+    const submit = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '提交表单 Feedback',
+    )
+    submit?.click()
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-form .vamis-spinner--overlay')).toHaveLength(1)
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(1)
+      expect(document.querySelectorAll('.vamis-spinner--overlay')).toHaveLength(1)
+    })
+
+    resolveFetch({ status: 0, msg: '', data: {} })
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-form .vamis-spinner--overlay')).toHaveLength(0)
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(1)
+      expect(document.querySelectorAll('[data-slot="dialog-content"]')).toHaveLength(2)
+    })
+    const closeFeedback = [...document.querySelectorAll('button')]
+      .reverse()
+      .find((item) => (item.textContent || '').trim() === '关闭')
+    closeFeedback?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('.vamis-dialog-info .vamis-spinner')).toHaveLength(0)
+    })
+  })
+
+  it('marks dialog form items and Dialog-error with the Amis validation level', async () => {
+    const notify = vi.fn()
+    const fetcher = vi.fn()
+    mount(dialogFeedbackSchema(), undefined, { fetcher, notify })
+
+    await nextTick()
+    const open = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '弹一个框',
+    )
+    open?.click()
+    await vi.waitFor(() => {
+      expect(document.querySelector('.vamis-form')).not.toBeNull()
+    })
+
+    const submit = [...document.querySelectorAll('button')].find(
+      (item) => (item.textContent || '').trim() === '提交表单 Feedback',
+    )
+    submit?.click()
+
+    await vi.waitFor(() => {
+      expect(fetcher).not.toHaveBeenCalled()
+      expect(document.querySelectorAll('.vamis-form-item.is-error')).toHaveLength(2)
+      expect(document.querySelectorAll('.vamis-form-item.is-error .vamis-text-control__input')).toHaveLength(2)
+      expect(document.querySelector('.vamis-dialog-error')?.textContent?.trim()).toBe(
+        '依赖的部分字段没有通过验证',
+      )
+    })
+    expect(notify).toHaveBeenCalledWith('error', '依赖的部分字段没有通过验证')
+    await new Promise((resolve) => setTimeout(resolve, 3100))
+    await nextTick()
+    expect(document.querySelector('.vamis-dialog-error')).toBeNull()
   })
 
   it('maps empty-label / iconOnly buttons onto square icon sizes without touching labelled ones', async () => {

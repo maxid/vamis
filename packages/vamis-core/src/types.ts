@@ -124,6 +124,7 @@ export interface ApiObject {
 export interface Payload {
   status: number
   msg?: string
+  defaultMsg?: string
   data?: any
   ok?: boolean
   msgTimeout?: number

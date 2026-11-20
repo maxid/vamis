@@ -38,10 +38,29 @@ export interface ActionContext {
   data: PlainObject
   scoped?: ScopedContext
   overlay?: OverlayApi
+  loading?: {
+    begin(actionType?: string): {
+      end(): void
+      endRequest?(): void
+    }
+  }
   form?: FormApiLike
   scope?: Scope
   event?: VamisEvent
   loopFlow?: LoopFlow
+}
+
+async function withActionLoading<T>(
+  ctx: ActionContext,
+  actionType: string,
+  task: (endRequest?: () => void) => Promise<T>,
+): Promise<T> {
+  const handle = ctx.loading?.begin(actionType)
+  try {
+    return await task(() => handle?.endRequest?.())
+  } finally {
+    handle?.end()
+  }
 }
 
 function asRecord(value: unknown): PlainObject {
@@ -202,6 +221,8 @@ export async function runOnEvent(
   ctx: ActionContext,
 ): Promise<void> {
   if (!schema?.onEvent) return
+  // 隐藏节点仍可能被父级广播或组件事件命中，事件监听也必须走同一可见性闸门。
+  if (!isVisible(schema, ctx.data)) return
   const conf = schema.onEvent[eventName]
   const ownData = ctx.form?.getData?.() || ctx.scope?.data
   if (ownData) {
@@ -234,6 +255,8 @@ export async function runActions(actions: ActionSchema[] | undefined, ctx: Actio
 
 export async function runAction(action: ActionSchema, ctx: ActionContext): Promise<boolean> {
   const data = actionData(action, ctx)
+  // itemAction / clickAction / doAction 等旁路可能绕过 SchemaRenderer，动作入口统一再校验一次。
+  if (!isVisible(action, data)) return false
   if (action.expression != null) {
     const pass =
       typeof action.expression === 'boolean'
@@ -250,7 +273,7 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     action.actionType || (action.type === 'submit' ? 'submit' : action.type === 'reset' ? 'reset' : '')
   const required = actionRequiredNames(action)
   if (required.length && ctx.form?.validate && !ctx.form.validate(required)) {
-    ctx.env.notify('error', '请检查表单')
+    ctx.env.notify('error', ctx.env.translate?.('Form.validateFailed') || '依赖的部分字段没有通过验证')
     return false
   }
   const handler = getAction(type)
@@ -263,11 +286,6 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     console.group?.(`[vamis] run action ${type}`)
     console.debug(`[${type}] action args, data`, args, logData)
   }
-  const dialogKey =
-    ctx.overlay?.state.dialog && ['ajax', 'submit', 'confirm'].includes(type)
-      ? ctx.overlay.getActiveDialogKey?.()
-      : undefined
-  if (dialogKey != null) ctx.overlay?.setDialogStatus?.(dialogKey, { loading: true, error: '' })
   let actionResult: unknown = true
   try {
     // 对齐 Amis runActions：找不到内置动作时走组件专有 doAction（preview / zoom / … + componentId）。
@@ -300,7 +318,6 @@ export async function runAction(action: ActionSchema, ctx: ActionContext): Promi
     }
     return false
   } finally {
-    if (dialogKey != null) ctx.overlay?.setDialogStatus?.(dialogKey, { loading: false })
     if (debug) {
       console.debug(`[${type}] action end event`, ctx.event)
       console.groupEnd?.()
@@ -442,44 +459,55 @@ function registerBuiltinActions() {
     const data = actionData(action, ctx)
     const silent =
       action.options?.silent === true || (typeof api === 'object' && api.silent === true)
-    const result = await requestApi(api, { env: ctx.env, data, reason: 'action' }, { autoAppend: true, emptyDataIfUnset: true })
-    if (result.skipped) return
-    const responseData = result.data
-    const responseObject =
-      responseData && typeof responseData === 'object' && !Array.isArray(responseData)
-        ? (responseData as PlainObject)
-        : {}
-    ctx.event?.setData({
-      ...responseObject,
-      responseData,
-      [action.outputVar || 'responseResult']: {
+    const loading = ctx.loading?.begin('ajax')
+    try {
+      const result = await requestApi(
+        api,
+        { env: ctx.env, data, reason: 'action' },
+        { autoAppend: true, emptyDataIfUnset: true },
+      )
+      loading?.endRequest?.()
+      if (result.skipped) return
+      const responseData = result.data
+      const responseObject =
+        responseData && typeof responseData === 'object' && !Array.isArray(responseData)
+          ? (responseData as PlainObject)
+          : {}
+      ctx.event?.setData({
         ...responseObject,
         responseData,
-        responseStatus: result.payload.status,
-        responseMsg: result.payload.msg,
-      },
-    })
-    if (!result.ok) {
-      const failed =
-        (action.messages && (action.messages as PlainObject).failed) ||
-        (action.args?.messages && (action.args.messages as PlainObject).failed) ||
-        apiMessage(api, result.payload, 'failed')
-      if (!silent) {
-        ctx.env.notify('error', String(failed))
-        throw new Error(String(failed))
+        [action.outputVar || 'responseResult']: {
+          ...responseObject,
+          responseData,
+          responseStatus: result.payload.status,
+          responseMsg: result.payload.msg,
+        },
+      })
+      if (!result.ok) {
+        const failed =
+          (action.messages && (action.messages as PlainObject).failed) ||
+          (action.args?.messages && (action.args.messages as PlainObject).failed) ||
+          apiMessage(api, result.payload, 'failed')
+        if (!silent) {
+          ctx.env.notify('error', String(failed))
+          throw new Error(String(failed))
+        }
+        return
       }
-      return
+      const success =
+        (action.messages && (action.messages as PlainObject).success) ||
+        (action.args?.messages && (action.args.messages as PlainObject).success) ||
+        result.payload.msg ||
+        ''
+      if (!silent && success) ctx.env.notify('success', String(success))
+      if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+        if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
+        else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')
+      }
+      await finishAjax(action, data, result.data, ctx)
+    } finally {
+      loading?.end()
     }
-    const success =
-      (action.messages && (action.messages as PlainObject).success) ||
-      (action.args?.messages && (action.args.messages as PlainObject).success) ||
-      apiMessage(api, result.payload, 'success')
-    if (!silent) ctx.env.notify('success', String(success))
-    if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
-      if (ctx.form?.setData) ctx.form.setData(result.data as PlainObject, false, 'api')
-      else ctx.scope?.merge(result.data as PlainObject, 'merge', 'api')
-    }
-    await finishAjax(action, data, result.data, ctx)
   })
 
   registerAction('download', async (action, ctx) => {
@@ -553,18 +581,24 @@ function registerBuiltinActions() {
   })
 
   registerAction('confirm', async (action, ctx) => {
-    const dialogResult = await submitDialogAction(action, ctx, 'confirm')
-    if (dialogResult !== undefined) return dialogResult
-    if (ctx.overlay?.state.drawer) {
-      ctx.overlay.closeDrawer(ctx.overlay.state.data || {})
-      return
+    const runConfirm = async () => {
+      const dialogResult = await submitDialogAction(action, ctx, 'confirm')
+      if (dialogResult !== undefined) return dialogResult
+      if (ctx.overlay?.state.drawer) {
+        ctx.overlay.closeDrawer(ctx.overlay.state.data || {})
+        return
+      }
+      const data = actionData(action, ctx)
+      const ok = await ctx.env.confirm(
+        filterTpl(action.msg || action.confirmText || '', data),
+        typeof action.title === 'string' ? action.title : undefined,
+      )
+      if (!ok) ctx.event?.stopPropagation()
     }
-    const data = actionData(action, ctx)
-    const ok = await ctx.env.confirm(
-      filterTpl(action.msg || action.confirmText || '', data),
-      typeof action.title === 'string' ? action.title : undefined,
-    )
-    if (!ok) ctx.event?.stopPropagation()
+    if (ctx.overlay?.state.dialog) {
+      return withActionLoading(ctx, 'confirm', runConfirm)
+    }
+    return runConfirm()
   })
 
   registerAction('setValue', async (action, ctx) => {

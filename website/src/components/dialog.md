@@ -368,20 +368,6 @@ buttons:
 }
 ```
 
-## 拖拽弹框
-
-`draggable: true` 时标题栏可拖动；移动端不启用拖拽，避免遮住整页手势。拖动范围限制在视口内。
-
-```schema: scope="body"
-type: button
-label: 拖拽弹框
-actionType: dialog
-dialog:
-  title: 按住标题栏拖动
-  draggable: true
-  body: 弹框位置被限制在视口内。
-```
-
 ## 弹框中配置表单
 
 ### 基本使用
@@ -540,13 +526,17 @@ AJAX 成功后可以用 `feedback` 打开第二层弹框。Vamis 会等待 feedb
 ### feedback 基本使用
 
 ```schema: scope="body"
-type: button
-label: Feedback
-actionType: ajax
-api: /api/mock2/form/initData?waitSeconds=1
-feedback:
-  title: 操作成功
-  body: 服务器已返回结果。
+{
+  "type": "button",
+  "label": "Feedback",
+  "actionType": "ajax",
+  "api": "/api/mock2/form/initData?waitSeconds=2",
+  "tooltip": "点击我后会发送一个请求，请求回来后，弹出一个框。",
+  "feedback": {
+    "title": "操作成功",
+    "body": "xxx 已操作成功"
+  }
+}
 ```
 
 ### 弹框中配置 feedback
@@ -558,33 +548,73 @@ feedback 可以叠加在 Dialog 内。`actions` 中使用 `actionType: close` �
 ##### 1. 不请求接口，直接关闭
 
 ```schema: scope="body"
-type: button
-label: 弹一个框
-actionType: dialog
-dialog:
-  title: 提示
-  body: 提交后打开反馈层。
-  actions:
-    - type: button
-      label: 提交表单
-      actionType: confirm
-      feedback:
-        body: feedback 弹框直接关闭。
-        actions:
-          - type: button
-            actionType: close
-            label: 关闭
-    - type: button
-      label: AJAX
-      actionType: ajax
-      close: true
-      api: /api/mock2/form/initData?waitSeconds=1
-      feedback:
-        body: AJAX 成功后显示反馈层。
-        actions:
-          - type: button
-            actionType: close
-            label: 关闭
+{
+  "type": "button",
+  "label": "弹一个框",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "提示",
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/saveForm?waitSeconds=2",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "text",
+          "required": true,
+          "label": "用户名",
+          "placeholder": "请输入用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "button",
+        "label": "提交表单 Feedback",
+        "actionType": "confirm",
+        "feedback": {
+          "body": "feedback弹框中，不请求接口了，直接点击按钮关闭",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "close",
+              "label": "关闭"
+            }
+          ]
+        }
+      },
+      {
+        "type": "button",
+        "label": "ajax请求 Feedback",
+        "actionType": "ajax",
+        "close": true,
+        "api": "/api/mock2/form/initData?waitSeconds=1",
+        "feedback": {
+          "body": "feedback弹框中，不请求接口了，直接点击按钮关闭",
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "close",
+              "label": "关闭"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 ##### 2. 请求接口，请求成功后，关闭所有弹框
@@ -594,7 +624,7 @@ feedback 的 `body` 使用 Form 并把确认按钮设为 `actionType: confirm` �
 ```schema: scope="body"
 {
   "type": "button",
-  "label": "提交接口后关闭",
+  "label": "弹一个框",
   "actionType": "dialog",
   "dialog": {
     "body": {
@@ -605,7 +635,20 @@ feedback 的 `body` 使用 Form 并把确认按钮设为 `actionType: confirm` �
           "type": "input-text",
           "name": "text",
           "required": true,
-          "label": "用户名"
+          "label": "用户名",
+          "placeholder": "请输入用户名"
+        },
+        {
+          "type": "input-password",
+          "name": "password",
+          "label": "密码",
+          "required": true,
+          "placeholder": "请输入密码"
+        },
+        {
+          "type": "checkbox",
+          "name": "rememberMe",
+          "label": "记住登录"
         }
       ]
     },
@@ -614,6 +657,33 @@ feedback 的 `body` 使用 Form 并把确认按钮设为 `actionType: confirm` �
         "type": "button",
         "label": "confirm Feedback",
         "actionType": "confirm",
+        "feedback": {
+          "body": {
+            "type": "form",
+            "api": "/api/mock2/form/saveForm?waitSeconds=1",
+            "body": [
+              {
+                "type": "tpl",
+                "tpl": "点击确认，请求接口，接口请求成功后，关闭弹框"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "confirm",
+              "label": "确认",
+              "primary": true
+            }
+          ]
+        }
+      },
+      {
+        "type": "button",
+        "label": "ajax Feedback",
+        "actionType": "ajax",
+        "close": true,
+        "api": "/api/mock2/form/saveForm?waitSeconds=1",
         "feedback": {
           "body": {
             "type": "form",
@@ -645,62 +715,64 @@ feedback 的 `body` 使用 Form 并把确认按钮设为 `actionType: confirm` �
 feedback 写 `skipRestOnCancel: true`，取消反馈时中断原按钮后续动作，保留上层 Dialog。
 
 ```schema: scope="body"
-type: button
-label: 取消时保留
-actionType: dialog
-dialog:
-  title: 提示
-  body: 提交后显示 feedback。
-  actions:
-    - type: button
-      actionType: confirm
-      label: Feedback
-      feedback:
-        body: 取消这个层时，上层仍保留。
-        skipRestOnCancel: true
-        actions:
-          - type: button
-            actionType: close
-            label: 关闭
+{
+  "type": "button",
+  "label": "弹一个框",
+  "actionType": "dialog",
+  "dialog": {
+    "title": "提示",
+    "body": {
+      "type": "form",
+      "api": "/api/mock2/form/initData?waitSeconds=1",
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "这是一个简单的弹框"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "button",
+        "actionType": "confirm",
+        "label": "Feedback",
+        "feedback": {
+          "body": "这是一个feedback弹框",
+          "skipRestOnCancel": true,
+          "actions": [
+            {
+              "type": "button",
+              "actionType": "close",
+              "label": "关闭"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
 ```
 
 #### 确认 feedback 弹框时，不同时关闭上层弹框
 
 feedback 写 `skipRestOnConfirm: true`，确认反馈时中断原按钮后续动作，需要重新提交。
 
-```schema: scope="body"
-type: button
-label: 确认时保留
-actionType: dialog
-dialog:
-  title: 提示
-  body: 确认 feedback 后保留当前层。
-  actions:
-    - type: button
-      actionType: confirm
-      label: Feedback
-      feedback:
-        body: 确认后上层仍保留。
-        skipRestOnConfirm: true
-        actions:
-          - type: button
-            actionType: confirm
-            label: 确认
-```
-
 ### 根据条件显示 feedback
 
 feedback 支持 `visibleOn`，条件不成立时不会打开。
 
 ```schema: scope="body"
-type: button
-label: 条件 Feedback
-actionType: ajax
-api: /api/mock2/form/initData?waitSeconds=1
-feedback:
-  visibleOn: "!(this.date % 2)"
-  title: 操作成功
-  body: 当前时间戳：${date}
+{
+  "type": "button",
+  "label": "条件feedback",
+  "actionType": "ajax",
+  "api": "/api/mock2/form/initData?waitSeconds=1",
+  "feedback": {
+    "visibleOn": "!(this.date % 2)",
+    "title": "操作成功",
+    "body": "当前时间戳: <code>${date}</code>"
+  }
+}
 ```
 
 ## 配置 Esc 键和点击外部关闭弹框

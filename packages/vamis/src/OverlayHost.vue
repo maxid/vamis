@@ -47,9 +47,10 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  VamisSpinnerMark,
 } from '@vamis/ui'
 import RowValueHost from './renderers/data/RowValueHost.vue'
+import Spinner from './renderers/Spinner.vue'
+import { provideActionLoading } from './actionLoadingContext'
 
 const overlay = useOverlay()
 const env = useEnv()
@@ -80,6 +81,8 @@ interface DragSession {
 }
 
 const dragPositions = reactive<Record<number, DragOffset>>({})
+const dialogActionLoadingCounts = reactive<Record<number, number>>({})
+const dialogErrorTimers = new Map<number, { error: string; timer: ReturnType<typeof setTimeout> }>()
 let dragSession: DragSession | null = null
 let resizeFrame = 0
 const registeredDialogs = new Map<number, ScopedComponent>()
@@ -88,6 +91,45 @@ function onOverlayFieldChange(layerKey: number, payload: { name: string; value: 
   if (!payload.name) return
   overlay?.setValueAt?.(layerKey, payload.name, payload.value)
 }
+
+provideActionLoading({
+  begin(actionType) {
+    const key = overlay?.getActiveDialogKey?.()
+    if (key == null) return { end() {} }
+    dialogActionLoadingCounts[key] = (dialogActionLoadingCounts[key] || 0) + 1
+    const hasForm = overlay?.hasDialogForm?.(key) === true
+    const endFormLoading =
+      actionType === 'ajax' && hasForm
+        ? overlay?.beginDialogFormLoading?.(key)
+        : undefined
+    let dialogActive = true
+    let formActive = !!endFormLoading
+    const endDialog = () => {
+      if (!dialogActive) return
+      dialogActive = false
+      const next = Math.max(0, (dialogActionLoadingCounts[key] || 0) - 1)
+      if (next) dialogActionLoadingCounts[key] = next
+      else delete dialogActionLoadingCounts[key]
+    }
+    const endForm = () => {
+      if (!formActive) return
+      formActive = false
+      endFormLoading?.()
+    }
+    return {
+      end() {
+        endForm()
+        endDialog()
+      },
+      endRequest:
+        actionType === 'ajax'
+          ? hasForm
+            ? endForm
+            : endDialog
+          : undefined,
+    }
+  },
+})
 
 function onTopOverlayFieldChange(payload: { name: string; value: unknown }) {
   if (payload.name) overlay?.setValue(payload.name, payload.value)
@@ -170,12 +212,25 @@ function dialogBodyClass(layer: OverlayLayerState): string {
   return typeof layer.schema.bodyClassName === 'string' ? layer.schema.bodyClassName : ''
 }
 
+function overlayDialogTitle(layer: OverlayLayerState): string {
+  return dialogTitle(layer.schema, layer.data, env.translate('Dialog.title'))
+}
+
 function dialogInfo(layer: OverlayLayerState): boolean {
-  return dialogShowError(layer.schema) && !!layer.error
+  return (dialogShowLoading(layer.schema) && dialogBusy(layer)) ||
+    (dialogShowError(layer.schema) && !!layer.error)
+}
+
+function dialogActionLoading(layer: OverlayLayerState): boolean {
+  return (dialogActionLoadingCounts[layer.key] || 0) > 0
+}
+
+function dialogBusy(layer: OverlayLayerState): boolean {
+  return layer.loading || dialogActionLoading(layer)
 }
 
 function layerDisabled(layer: OverlayLayerState): boolean {
-  return dialogDisabled(layer.schema) || layer.loading
+  return dialogDisabled(layer.schema) || dialogBusy(layer)
 }
 
 function stopDragging() {
@@ -198,7 +253,7 @@ function moveDialog(event: PointerEvent) {
 }
 
 function startDialogDrag(layer: OverlayLayerState, event: PointerEvent) {
-  if (!dialogDraggable(layer.schema) || event.button !== 0) return
+  if (dialogBusy(layer) || !dialogDraggable(layer.schema) || event.button !== 0) return
   if ((event.target as HTMLElement | null)?.closest('[data-slot="dialog-close"]')) return
   if (typeof window === 'undefined' || window.matchMedia('(max-width: 768px)').matches) return
   const content = (event.currentTarget as HTMLElement | null)?.closest<HTMLElement>(
@@ -227,12 +282,39 @@ function syncDialogRegistry(layers: OverlayLayerState[]) {
   for (const key of Object.keys(dragPositions)) {
     if (!active.has(Number(key))) delete dragPositions[Number(key)]
   }
+  for (const key of Object.keys(dialogActionLoadingCounts)) {
+    if (!active.has(Number(key))) delete dialogActionLoadingCounts[Number(key)]
+  }
+  for (const [key, record] of dialogErrorTimers) {
+    if (active.has(key)) continue
+    clearTimeout(record.timer)
+    dialogErrorTimers.delete(key)
+  }
   for (const [key, component] of registeredDialogs) {
     if (active.has(key)) continue
     scoped?.unregister(component)
     registeredDialogs.delete(key)
   }
   for (const layer of layers) {
+    if (!layer.error) {
+      const record = dialogErrorTimers.get(layer.key)
+      if (record) {
+        clearTimeout(record.timer)
+        dialogErrorTimers.delete(layer.key)
+      }
+    } else {
+      const current = dialogErrorTimers.get(layer.key)
+      if (!current || current.error !== layer.error) {
+        if (current) clearTimeout(current.timer)
+        const timer = setTimeout(() => {
+          const pending = dialogErrorTimers.get(layer.key)
+          if (!pending || pending.error !== layer.error) return
+          dialogErrorTimers.delete(layer.key)
+          overlay?.setDialogStatus?.(layer.key, { error: '' })
+        }, 3000)
+        dialogErrorTimers.set(layer.key, { error: layer.error, timer })
+      }
+    }
     if (registeredDialogs.has(layer.key)) continue
     if (layer.schema.id == null && layer.schema.name == null) continue
     const component: ScopedComponent = {
@@ -283,6 +365,8 @@ onBeforeUnmount(() => {
   stopDragging()
   for (const component of registeredDialogs.values()) scoped?.unregister(component)
   registeredDialogs.clear()
+  for (const record of dialogErrorTimers.values()) clearTimeout(record.timer)
+  dialogErrorTimers.clear()
 })
 </script>
 
@@ -305,23 +389,23 @@ onBeforeUnmount(() => {
       <DialogHeader
         v-if="
           dialogTitleNode(layer.schema) ||
-          dialogTitle(layer.schema, layer.data) ||
-          (dialogShowClose(layer.schema) && !layer.loading)
+          overlayDialogTitle(layer) ||
+          (dialogShowClose(layer.schema) && !dialogBusy(layer))
         "
         :class="dialogDraggable(layer.schema) && 'cursor-move select-none'"
         @pointerdown="startDialogDrag(layer, $event)"
       >
-        <DialogTitle v-if="dialogTitleNode(layer.schema) || dialogTitle(layer.schema, layer.data)">
+        <DialogTitle v-if="dialogTitleNode(layer.schema) || overlayDialogTitle(layer)">
           <SchemaRenderer
             v-if="dialogTitleNode(layer.schema)"
             :schema="dialogTitleNode(layer.schema)"
             :extra-data="layer.data"
           />
-          <template v-else>{{ dialogTitle(layer.schema, layer.data) }}</template>
+          <template v-else>{{ overlayDialogTitle(layer) }}</template>
         </DialogTitle>
         <DialogTitle v-else class="sr-only">对话框</DialogTitle>
         <DialogCloseButton
-          v-if="dialogShowClose(layer.schema) && !layer.loading"
+          v-if="dialogShowClose(layer.schema) && !dialogBusy(layer)"
         />
       </DialogHeader>
       <div
@@ -329,14 +413,6 @@ onBeforeUnmount(() => {
         class="min-h-0 flex-1 overflow-auto"
         :class="dialogBodyClass(layer)"
       >
-        <div
-          v-if="dialogShowLoading(layer.schema) && layer.loading"
-          class="vamis-dialog-body-loading"
-          aria-busy="true"
-        >
-          <div class="vamis-dialog-body-loading-mask" />
-          <VamisSpinnerMark />
-        </div>
         <RowValueHost @change="onOverlayFieldChange(layer.key, $event)">
           <SchemaRenderer
             v-for="(node, i) in dialogBody(layer.schema, layerDisabled(layer))"
@@ -348,6 +424,10 @@ onBeforeUnmount(() => {
       </div>
       <DialogFooter v-if="dialogActions(layer.schema).length || dialogInfo(layer)">
         <div v-if="dialogInfo(layer)" class="vamis-dialog-info">
+          <Spinner
+            v-if="dialogShowLoading(layer.schema) && dialogBusy(layer)"
+            :schema="{ type: 'spinner', show: true, size: 'sm' }"
+          />
           <span v-if="dialogShowError(layer.schema) && layer.error" class="vamis-dialog-error">
             {{ layer.error }}
           </span>

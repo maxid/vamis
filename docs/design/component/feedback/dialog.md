@@ -119,10 +119,16 @@ actionType: dialog
 - 多级弹层同时保留可见层，按 Amis `Modal--Nth` 30px 步进；`close: "name"` 可关闭目标层及子层。
 - 关闭控件只有 1 枚，DOM 位于 `DialogHeader` 内，盒模型对齐 Amis `Modal-close` 的 16×22 / 16px 图标；无标题时 header 仍保留关闭控件。
 - confirm/cancel 事件统一派发并支持 `preventDefault()`；feedback 会等待关闭，并支持 `skipRestOnCancel` / `skipRestOnConfirm`。
-- `setValue` 可按 Dialog id 更新弹层数据，支持覆盖；AJAX / submit / confirm 期间只在 body 显示 32px Spinner overlay，footer 不重复放大 spinner。
+- feedback 的 `visibleOn`、confirm/cancel 和关闭层级只决定二级弹框是否出现；外层 Form 的成功 toast 由 Form 提交结果决定。`/api/mock2/form/initData` 的空 `msg` 不应被补成“保存成功”，否则会在 Amis 无提示的 feedback 示例中多出一条 toast。
+- `setValue` 可按 Dialog id 更新弹层数据，支持覆盖；Dialog body 有 Form 时，footer 的 AJAX / confirm Action 会先委派给 Form，Form body overlay 与 `Dialog-info` 小 Spinner 同时出现。没有 Form 时才只有 `Dialog-info`；Action 数量不能决定 Spinner 数量。
+- 未设置 `title` 时按 Amis `Dialog.defaultProps.title` 使用 locale 默认“弹框”；显式 `title: false` / `title: ''` 才关闭标题。
+- Form 自己的 body Action 由 `Form.handleAction` 接管，只显示 Form body overlay，不额外点亮 Dialog-info；Dialog body 直接挂的、Form 外部的 Action 才由 Dialog sensor 接管。
+- Amis 6.13.0 调用链：`ActionRenderer.handleAction` 返回 Promise → `Dialog.handleAction` 的 `tryChildrenToHandle` 优先找 Form/CRUD/Wizard → `Form.doAction/handleAction` 的 AJAX/API 分支设置 `FormStore.saving`，同时 Dialog 设置 `ModalStore.busying` → Form body `Spinner show={store.loading}` + Dialog footer `Dialog-info` `Spinner size="sm"`。confirm 分支则先转成 `actionType: submit` 后走同一条 Form 链。Form body Spinner 在接口请求结束时结束；Dialog `busying` 覆盖整个 Form Promise，包含 feedback Dialog 的等待，因此二级弹框未关闭时第一层 `Dialog-info` 必须继续显示。
+- 验证失败时 `store.errors[name]` 落 FormItem 的 `is-error`，控件红框由 `--destructive` 驱动；Dialog footer 动态生成 `Dialog-error`，文案使用 `Form.validateFailed` locale（中文“依赖的部分字段没有通过验证”）。与 Amis `tryChildrenToHandle.catch` 一致，error 设置后 3 秒自动清空 `Dialog-info`，每层独立 timer，关闭 / 重开 / 卸载时取消旧 timer。
 - 拖拽使用视口绝对坐标与 10px 安全边距，连续拖拽不累计、不越界；resize 后自动回夹。Dialog 拖拽关闭 shadcn enter/zoom/transition，pointer 与盒子 1:1 跟手。
 - 盒模型实测对齐 `_modal.scss`：flex column、content 24px 纵向 padding、header/title 21px、body 16/24 margin 与 24px 横向 padding、6px 圆角、背景遮罩 0.7。Vamis 的 3px focus glow 通过 body 内侧 3px 呼吸位保留。
-- 对照：桌面 / 移动均 **24 / 25**，P0 0；剩余 1 条是 CRUD 列按钮的 schema-tree 定位假阴性，页面实际可点击。
+- 文档 23 个 schema 围栏按 Amis 顺序核查：feedback、表单内反馈、取消 / 确认中断、条件 feedback 和 Esc / 外部关闭均使用 Amis 原始 schema；独立“拖拽弹框”示例归回 `draggable` 属性与数据映射示例。
+- 对照：桌面 / 移动均 **22 / 23**，P0 0；剩余 1 条是 CRUD 列按钮的 schema-tree 定位假阴性，页面实际可点击。
 
 ## 7. 验收计划与完成度
 

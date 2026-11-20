@@ -12,7 +12,7 @@ Page 是**页面级独立 Scope + 布局壳**：title/subTitle/remark、toolbar�
 
 1. **独立 Scope**：Page 建 scope；body 读 Page 域，不是父域；`reload/setValue/getData` 通过 scope。
 2. **URL 查询种子**：首屏把 URL query 合并进 scope；不要覆盖已有 schema data，顺序需固定。
-3. **initApi**：GET 不把整个数据域拼 query；`initFetch/initFetchOn` 决定首屏；失败 notify、inited 事件仍发。
+3. **initApi / 根级 Action**：initApi 的 GET 不把整个数据域拼 query，`initFetch/initFetchOn` 决定首屏；Page 内根级 `ajax` Action 在请求期间复用同一 Page overlay，请求结束即撤罩，feedback Dialog 在其后打开。
 4. **轮询**：interval ≥1000；stopAutoRefreshWhen 命中停止；silentPolling 只隐藏轮询遮罩，首次/手动 reload 仍显示。
 5. **布局**：无 title 时 toolbar 吃满；header/toolbar/body/aside 全 div；aside 可拖拽 min/max，拖拽监听卸载清理。
 6. **事件**：init、inited；payload 含 responseData/Status/Msg + 当前域；不要漏失败路径。
@@ -44,6 +44,7 @@ Page 是**页面级独立 Scope + 布局壳**：title/subTitle/remark、toolbar�
 | `toolbar` / `body` / `aside` | 布局 | 已接 |
 | `asidePosition`/`asideSticky`/min/max | 侧栏 | 已接 |
 | `initApi`/`initFetch`/`initFetchOn` | 初始化 | 已接 |
+| 根级 `ajax` Action | Page loading overlay | 已接；请求期间显示，feedback 打开前关闭 |
 | `interval`/`stopAutoRefreshWhen`/`silentPolling` | 轮询 | 已接 |
 | `css` / 区域 class | 样式 | 已接 |
 | `pullRefresh` | 移动 | **未接** |

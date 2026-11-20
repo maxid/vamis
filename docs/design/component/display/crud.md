@@ -131,8 +131,9 @@ store.items ──> 手写 table / Cards
 
 ### 4.3 行操作与弹层
 
-- `openDialog(schema)` 把 operation 的 `dialog` 放到受控 Dialog；`withDialogReload` 把提交后的 reload 包进弹层表单。
-- 行内 button 的 `onEvent` 先于 CRUD 操作；复杂行为应下沉到 Action。
+- operation 列的每个 button 都重新进入 `SchemaRenderer`，并按 Amis `OperationField` 的规则补 `type: button` / `size: sm`；`visibleOn` / `hiddenOn` / `disabledOn` 在这一层统一生效。
+- button 的 `actionType` 走共享 `runAction`，不再由 CRUD 手写 toast / dialog / ajax 分支；操作列 AJAX 默认 reload 到内部 `crudTarget`（schema name / id / store id），显式 `reload: none` 才关闭自动刷新。
+- 行内 button 的 `onEvent` 先于 CRUD 操作；`itemAction` / `clickAction` / `doAction` 等旁路也由 `runAction` / `runOnEvent` 入口的可见性闸门兜底，避免隐藏动作被程序调用。
 - 弹层表单关闭后不能把 row 数据写到错误数据域；当前 `RowValueHost` 负责行内值。
 
 ## 5. 样式与边界
@@ -144,8 +145,8 @@ store.items ──> 手写 table / Cards
 
 ## 6. 当前状态与缺口
 
-- 已对齐主路径：api + sample 列、查询、分页、行详情/删除、bulk、cards 模式、loadDataOnce、syncLocation、quickEdit（文本/数字/select/textarea）、表达式 matchFunc。
-- 对照记录：桌面 **1/1**（TODO 2026-11-18；本轮未重跑）。
+- 已对齐主路径：api + sample 列、查询、分页、行详情/删除、bulk、cards 模式、loadDataOnce、syncLocation、quickEdit（文本/数字/select/textarea）、表达式 matchFunc；operation 列与共享 Action 宿主对齐。
+- 对照记录：桌面 / 移动 **60/92**（2026-11-20，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。
   - **事件/动作**：quickSave\*、saveOrder\*、部分 Table 动作未接。
@@ -164,10 +165,10 @@ store.items ──> 手写 table / Cards
 - [ ] 事件 / 动作逐项核对（当前明确不完整）
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（CRUD 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page crud` 桌面（TODO 1/1，未重跑）
-- [ ] `pnpm compare --page crud --mobile`
+- [x] `pnpm test`（CRUD 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page crud` 桌面
+- [x] `pnpm compare --page crud --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点

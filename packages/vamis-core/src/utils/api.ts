@@ -255,6 +255,7 @@ export function normalizePayload(raw: unknown): Payload {
     return {
       status: body.status,
       msg: body.msg || body.message,
+      defaultMsg: body.defaultMsg,
       data: body.data,
       ok: body.status === 0,
       msgTimeout: body.msgTimeout,
@@ -262,7 +263,7 @@ export function normalizePayload(raw: unknown): Payload {
     }
   }
   if (Array.isArray(body.items) || Array.isArray(body.rows) || Array.isArray(body.list)) {
-    return { status: 0, ok: true, data: body }
+    return { status: 0, ok: true, defaultMsg: body.defaultMsg, data: body }
   }
   return { status: 0, ok: true, data: body }
 }

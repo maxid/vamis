@@ -2,34 +2,25 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import {
   SchemaRenderer,
-  apiMessage,
   asArray,
   createStoreId,
   createVamisEvent,
   evalExpression,
   eventEvalData,
-  filterTpl,
   getByPath,
   isApiOutdated,
   isFormItemType,
-  overlayEmbedForm,
-  notifyToasts,
   requestApi,
   runOnEvent,
   setByPathCopy,
   useEnv,
   useRendererHub,
   useScoped,
-  type SchemaNode,
   type SchemaObject,
 } from '@vamis/core'
 import {
   Button,
   Checkbox,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   Table,
   TableBody,
   TableCell,
@@ -66,15 +57,14 @@ const store = hub.add({
   name: props.schema.name,
   perPage: Number(props.schema.perPage || 10),
 })
+const crudTarget = String(props.schema.name || props.schema.id || store.id)
 
 const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
 const filterSchema = computed(() => props.schema.filter as SchemaObject | undefined)
 const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
-const dialogOpen = ref(false)
 const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
-const dialogSchema = ref<SchemaObject | null>(null)
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
 const selectable = computed(
@@ -246,8 +236,8 @@ function seedLocalItems() {
 
 function toolbarNode(node: unknown): SchemaObject {
   const next = asToolbarSchema(node)
-  if ((next.actionType === 'ajax' || next.actionType === 'dialog') && !next.reload && props.schema.name) {
-    return { ...next, reload: props.schema.name }
+  if ((next.actionType === 'ajax' || next.actionType === 'dialog') && !next.reload) {
+    return { ...next, reload: crudTarget }
   }
   return next
 }
@@ -263,7 +253,7 @@ function bulkActionSchema(btn: SchemaObject): SchemaObject {
   return {
     ...btn,
     disabled: !store.selectedItems.length || btn.disabled,
-    reload: btn.reload || props.schema.name,
+    reload: btn.reload || crudTarget,
   }
 }
 
@@ -356,58 +346,26 @@ async function reload(extra: Record<string, any> = {}) {
   }
 }
 
-function openDialog(schema: SchemaObject) {
-  dialogSchema.value = schema
-  dialogOpen.value = true
+function operationButtons(col: SchemaObject): SchemaObject[] {
+  return asArray(col.buttons || col.body)
+    .filter((node) => node != null)
+    .map((node) => (typeof node === 'object' && !Array.isArray(node)
+      ? node as SchemaObject
+      : { type: 'button', label: String(node) }))
 }
 
-function asDialogBody(schema: SchemaObject | null) {
-  const body = schema?.body || schema
-  if (body && typeof body === 'object' && !Array.isArray(body)) {
-    return overlayEmbedForm(body as SchemaNode)
+/**
+ * Operation 列必须像 Amis OperationField 一样再走一次 SchemaRenderer。
+ * 这样 visibleOn / hiddenOn / disabledOn、动作上下文和 loading 都只维护一套规则。
+ */
+function operationButtonSchema(button: SchemaObject): SchemaObject {
+  const next: SchemaObject = {
+    type: 'button',
+    size: 'sm',
+    ...button,
   }
-  return body
-}
-
-function operationClass(btn: SchemaObject) {
-  const destructive = btn.level === 'danger' || !!btn.confirmText
-  return destructive ? 'vamis-crud-op vamis-crud-op--danger' : 'vamis-crud-op'
-}
-
-function withDialogReload(body: unknown, reloadTarget: unknown, row: Record<string, any>) {
-  if (!reloadTarget || !body || typeof body !== 'object' || Array.isArray(body)) return body
-  const node = body as SchemaObject
-  if (node.type !== 'form' || node.reload) return body
-  return { ...node, reload: filterTpl(String(reloadTarget), row) }
-}
-
-async function runColumnAction(button: SchemaObject, row: Record<string, any>) {
-  const actionType = button.actionType
-  if (actionType === 'toast') {
-    notifyToasts(env.notify, button, row)
-    return
-  }
-  if (actionType === 'dialog' || button.dialog) {
-    const dialog = button.dialog || {}
-    openDialog({
-      ...dialog,
-      body: withDialogReload(dialog.body || dialog, button.reload, row),
-      data: row,
-    })
-    return
-  }
-  if (actionType === 'ajax' && button.api) {
-    if (button.confirmText && !(await env.confirm(button.confirmText))) return
-    try {
-      const result = await requestApi(button.api, { env, data: row, reason: 'action' }, { autoAppend: true })
-      if (result.skipped) return
-      if (!result.ok) throw new Error(apiMessage(button.api, result.payload, 'failed'))
-      env.notify('success', apiMessage(button.api, result.payload, 'success'))
-      await reload()
-    } catch (error) {
-      env.notify('error', error instanceof Error ? error.message : '失败')
-    }
-  }
+  if (next.actionType === 'ajax' && next.reload == null) next.reload = crudTarget
+  return next
 }
 
 function toggleSort(col: SchemaObject) {
@@ -483,7 +441,11 @@ provide(CrudHostKey, {
   },
 })
 
-const crudApi = { name: props.schema.name, reload }
+const crudApi = {
+  name: crudTarget,
+  id: props.schema.id ? String(props.schema.id) : undefined,
+  reload,
+}
 scoped?.register(crudApi)
 onMounted(() => {
   syncFromLocation()
@@ -604,17 +566,12 @@ onBeforeUnmount(() => {
           <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
             <template v-if="col.type === 'operation'">
               <div class="flex gap-1">
-                <Button
-                  v-for="(btn, bi) in asArray(col.buttons || col.body)"
+                <SchemaRenderer
+                  v-for="(btn, bi) in operationButtons(col)"
                   :key="bi"
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  :class="operationClass(btn as SchemaObject)"
-                  @click="runColumnAction(btn as SchemaObject, row)"
-                >
-                  {{ (btn as SchemaObject).label }}
-                </Button>
+                  :schema="operationButtonSchema(btn)"
+                  :extra-data="row"
+                />
               </div>
             </template>
             <RowValueHost
@@ -680,13 +637,5 @@ onBeforeUnmount(() => {
       </div>
     </div>
     </div>
-    <Dialog v-model:open="dialogOpen">
-      <DialogContent class="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{{ dialogSchema?.title || '编辑' }}</DialogTitle>
-        </DialogHeader>
-        <SchemaRenderer v-if="dialogSchema" :schema="asDialogBody(dialogSchema)" :extra-data="dialogSchema.data" />
-      </DialogContent>
-    </Dialog>
   </div>
 </template>

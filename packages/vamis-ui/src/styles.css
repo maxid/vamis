@@ -351,6 +351,9 @@
   /* 对齐 Amis `--Form-item-fontSize` / `--Form-item-color`（text-4）。桌面移动同一套，不要跟 title 16 或 `--foreground`。 */
   --form-item-font-size: var(--fontSizeBase);
   --form-item-color: var(--text-secondary);
+  --form-item-on-error-color: var(--text-secondary);
+  --form-item-on-error-border-color: var(--destructive);
+  --form-item-on-error-bg: var(--colors-neutral-fill-11);
   /* 对齐 Amis `--Form-description-*`（text-5 / size-8 / gap-xs）。 */
   --form-description-color: var(--text-tertiary);
   --form-description-font-size: var(--fontSizeSm);
@@ -1942,35 +1945,6 @@
   font-size: var(--fontSizeBase);
   line-height: 21px;
 }
-.vamis-dialog-body-loading {
-  position: absolute;
-  inset: 0;
-  z-index: var(--z-spinner);
-  display: grid;
-  place-items: center;
-  pointer-events: all;
-}
-.vamis-dialog-body-loading-mask {
-  position: absolute;
-  inset: 0;
-  background: var(--spinner-overlay-bg);
-  -webkit-backdrop-filter: blur(1px);
-  backdrop-filter: blur(1px);
-  filter: blur(1px);
-  animation: vamis-dialog-loading-mask-in var(--animation-duration) ease-out forwards;
-}
-.vamis-dialog-body-loading .vamis-spinner-v {
-  position: relative;
-  z-index: 1;
-  width: 32px;
-  height: 32px;
-  color: var(--primary);
-}
-@keyframes vamis-dialog-loading-mask-in {
-  from {
-    opacity: 0;
-  }
-}
 [data-vamis-overlay='dialog'] [data-slot='dialog-footer'] {
   flex: 0 0 auto;
   padding: 0 24px;
@@ -2030,7 +2004,7 @@
   text-align: left;
 }
 .vamis-dialog-error {
-  color: var(--danger);
+  color: var(--destructive);
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -4593,11 +4567,51 @@
   压过 Label 的 `text-sm leading-none` 和曾经的 `text-foreground`。
   移动端 title 才是 16；label 不要跟 `--fontSizeBase` 抬到 16。
 */
+/* Amis `.Form { position: relative }`；Form 自己的 Spinner overlay 以表单为宿主。 */
+.vamis-form {
+  position: relative;
+}
+
 .vamis-form-item__label {
   font-size: var(--form-item-font-size);
   font-weight: var(--fontWeightNormal);
   line-height: calc(var(--form-item-font-size) * var(--lineHeightBase));
   color: var(--form-item-color);
+}
+
+/*
+ * Amis `Form-item.is-error` 是验证态的唯一传递点：
+ * 控件边框 / focus 跟 `--Form-item-onError-*` 走，错误文案继续用 destructive。
+ */
+.vamis-form-item.is-error .vamis-text-control__input,
+.vamis-form-item.is-error .vamis-textarea-control__native,
+.vamis-form-item.is-error .vamis-select__input,
+.vamis-form-item.is-error .vamis-number,
+.vamis-form-item.is-error .vamis-date-range__input,
+.vamis-form-item.is-error .vamis-input-tree__control,
+.vamis-form-item.is-error .vamis-search-box__input,
+.vamis-form-item.is-error [data-slot='input'],
+.vamis-form-item.is-error [data-slot='textarea'],
+.vamis-form-item.is-error [data-slot='select-trigger'] {
+  border: 1px solid var(--form-item-on-error-border-color) !important;
+  background-color: var(--form-item-on-error-bg);
+}
+.vamis-form-item.is-error > .vamis-form-item__label {
+  color: var(--form-item-on-error-color);
+}
+
+.vamis-form-item.is-error .vamis-text-control__input:focus-within,
+.vamis-form-item.is-error .vamis-textarea-control__native:focus,
+.vamis-form-item.is-error .vamis-select__input.is-focused,
+.vamis-form-item.is-error .vamis-number.is-focused,
+.vamis-form-item.is-error .vamis-date-range__input:focus-within,
+.vamis-form-item.is-error .vamis-input-tree__control:focus-within,
+.vamis-form-item.is-error .vamis-search-box__input:focus-within,
+.vamis-form-item.is-error [data-slot='input']:focus,
+.vamis-form-item.is-error [data-slot='textarea']:focus,
+.vamis-form-item.is-error [data-slot='select-trigger']:focus-visible {
+  border-color: var(--form-item-on-error-border-color) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--form-item-on-error-border-color) 18%, transparent);
 }
 
 /* 对齐 Amis `.Form-description`：字符串 description 走 innerHTML，不要 muted 工具类。 */

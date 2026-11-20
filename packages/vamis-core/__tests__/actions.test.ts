@@ -30,6 +30,37 @@ describe('onEvent actions', () => {
     )
   })
 
+  it('skips hidden actions even when invoked outside SchemaRenderer', async () => {
+    const context = ctx()
+    await runAction(
+      {
+        actionType: 'toast',
+        visibleOn: '${show}',
+        msg: '不应执行',
+      },
+      { ...context, data: { ...context.data, show: false } },
+    )
+    expect(context.env.notify).not.toHaveBeenCalled()
+  })
+
+  it('skips event actions on a hidden renderer', async () => {
+    const context = ctx()
+    await runOnEvent(
+      {
+        type: 'button',
+        visible: false,
+        onEvent: {
+          click: {
+            actions: [{ actionType: 'toast', msg: '不应执行' }],
+          },
+        },
+      },
+      'click',
+      context,
+    )
+    expect(context.env.notify).not.toHaveBeenCalled()
+  })
+
   it('setValue writes into the form', async () => {
     const setData = vi.fn()
     const context = ctx({ form: { setData } })
@@ -374,12 +405,15 @@ describe('onEvent actions', () => {
     expect(context.env.notify).toHaveBeenCalledWith('success', 'ok')
   })
 
-  it('marks the current dialog busy while ajax is pending', async () => {
+  it('uses the action loading host while ajax is pending', async () => {
     let resolveFetch!: (value: any) => void
     const fetchPromise = new Promise((resolve) => {
       resolveFetch = resolve
     })
     const setDialogStatus = vi.fn()
+    const end = vi.fn()
+    const endRequest = vi.fn()
+    const begin = vi.fn(() => ({ end, endRequest }))
     const context = ctx({
       env: {
         fetcher: vi.fn(() => fetchPromise),
@@ -399,12 +433,17 @@ describe('onEvent actions', () => {
         getActiveDialogKey: () => 7,
         setDialogStatus,
       },
+      loading: { begin },
     })
     const pending = runAction({ actionType: 'ajax', api: '/api/mock2/form/saveForm' }, context)
-    expect(setDialogStatus).toHaveBeenCalledWith(7, { loading: true, error: '' })
+    expect(begin).toHaveBeenCalledTimes(1)
+    expect(end).not.toHaveBeenCalled()
+    expect(endRequest).not.toHaveBeenCalled()
+    expect(setDialogStatus).not.toHaveBeenCalled()
     resolveFetch({ status: 0, msg: 'ok', data: {} })
     await pending
-    expect(setDialogStatus).toHaveBeenLastCalledWith(7, { loading: false })
+    expect(endRequest).toHaveBeenCalledTimes(1)
+    expect(end).toHaveBeenCalledTimes(1)
   })
 
   it('interpolates nativeEvent.type from the D4 event subset', async () => {
@@ -808,7 +847,7 @@ describe('onEvent actions', () => {
     const ran = await runAction({ actionType: 'submit', required: ['b'] }, context)
     expect(validate).toHaveBeenCalledWith(['b'])
     expect(ran).toBe(false)
-    expect(context.env.notify).toHaveBeenCalledWith('error', '请检查表单')
+    expect(context.env.notify).toHaveBeenCalledWith('error', '依赖的部分字段没有通过验证')
     expect(context.form?.submit).not.toHaveBeenCalled()
   })
 

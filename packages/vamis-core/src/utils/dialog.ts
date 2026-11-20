@@ -61,8 +61,9 @@ export function dialogDraggable(schema: unknown): boolean {
   return asRecord(schema).draggable === true
 }
 
-export function dialogTitle(schema: unknown, data: PlainObject = {}): string {
+export function dialogTitle(schema: unknown, data: PlainObject = {}, fallback = ''): string {
   const title = asRecord(schema).title
+  if (title === undefined) return fallback
   if (title == null || title === false || typeof title === 'object') return ''
   return filterTpl(title, data)
 }

@@ -24,7 +24,7 @@ Form 是 Vamis 表单项的根数据域与提交/校验壳。它自身不画具�
 2. **数据域边界**：初始值 = 父数据 + `schema.data` + `initFormStoreData`（`canAccessSuperData !== false` 才映射同名父字段）；提交/调试不能把父域其它字段带进本表单。
 3. **值路径**：所有子项通过 `formContext` / `useFieldValue` 读写；有 Form 走 `form.getValue/setValue`，脱离 Form（表格单元格、Page/Service 内）走 ValueHost / Scope，不能只写 Form 而丢值。
 4. **提交时序**：`trimValues` → 本地校验 → 异步 `validateApi` → `target` / `api` → 数据合并 → `submit` 事件 → `submitSucc` / `submitFail` → `clearPersistDataAfterSubmit` / `resetAfterSubmit` / `redirect` / 关闭弹层。不要把事件放到 API 前面（与 Amis 的差异已写在在线文档）。
-5. **错误形状**：`store.errors` 以字段名为键；`rules` 命中 `name` 时高亮对应项，否则错误挂 `__form`；远程提交错误按字段回填。
+5. **错误形状**：`store.errors` 以字段名为键；`rules` 命中 `name` 时高亮对应项，否则错误挂 `__form`；远程提交错误按字段回填。FormItem 的错误态统一落到 `is-error`，控件边框和 Dialog footer 的 `Dialog-error` 共用 `--destructive`，摘要走 `Form.validateFailed` locale。
 6. **Scope / 持久化**：`persistData` / `persistDataKeys` 只持久化指定表单数据；`clearPersistDataAfterSubmit` 默认清；从 Scope 合并/替换要区分 `merge` / `override`。
 7. **包边界**：渲染器无 `<style>`、无直接 `fetch`；`requestApi(env)` 统一网络；`@vamis/ui` 不依赖 core。
 
@@ -144,6 +144,9 @@ props.data + schema.data + initFormStoreData
 
 - `validate()`：先清 `store.errors`，遍历可见且有 `name` 的表单项，`validateValue` → `store.errors[name]`；`rules` 表达式失败按 `name` / `__form` 回填；派发 `formItemValidate*` 和 `validateSucc/Error`。
 - `submit()`：`trimValues` → `validate()` → 逐项 `validateApi` → `target` / `api`；远程成功 `mergeApiData` + Scope merge，派发 `submit` / `submitSucc`；失败回填字段错误并派发 `submitFail`。
+- 成功提示遵循 Amis `FormStore.saveRemote`：优先非空接口 `msg`，其次显式 `messages.saveSuccess`，最后 `defaultMsg`；三者都为空时不生成“保存成功”。feedback 的 `visibleOn` 只控制二级反馈弹框，不能替代 Form 的消息判定。
+
+`/api/mock2/form/initData` 对齐 Amis：`date` 是 Unix 秒整数，另带 `infoId` / `info`；成功响应 `msg: ""`，Action AJAX 不应因空 msg 自动弹成功 toast。Vamis 品牌名保留在 `name` / `author`。
 - `reset()` 回到 `initialFormData`；`clear()` 清空各 `name` 并同步 Scope；`static` / `nonstatic` 由 FormItem 状态读取。
 - 弹层里的 Form：`onMounted` 绑定 `overlay.registerDialogForm(submit)`，提交成功 `closeDialog({...values})`；关闭后恢复上一层数据域。
 

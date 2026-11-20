@@ -55,6 +55,14 @@ describe('normalizePayload', () => {
     })
   })
 
+  it('keeps defaultMsg separate from an empty response msg', () => {
+    expect(normalizePayload({ status: 0, msg: '', defaultMsg: 'fallback' })).toMatchObject({
+      status: 0,
+      defaultMsg: 'fallback',
+      ok: true,
+    })
+  })
+
   it('maps errorCode / errno / error variants', () => {
     expect(normalizePayload({ errorCode: 2, errorMessage: 'boom' })).toMatchObject({
       status: 2,

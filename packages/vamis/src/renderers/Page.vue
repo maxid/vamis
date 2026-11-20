@@ -25,6 +25,7 @@ import {
 import { cn } from '@vamis/ui'
 import Remark from './rest/Remark.vue'
 import Spinner from './Spinner.vue'
+import { provideActionLoading } from '../actionLoadingContext'
 
 const DEFAULT_ASIDE_MIN = 160
 const DEFAULT_ASIDE_MAX = 400
@@ -117,13 +118,34 @@ const remarkSchema = computed<SchemaObject | null>(() => {
   return null
 })
 const cssText = computed(() => buildCssBlock(props.schema.css))
+const actionLoadingCount = ref(0)
+const actionLoading = computed(() => actionLoadingCount.value > 0)
 const spinnerSchema = computed<SchemaObject>(() => ({
   type: 'spinner',
-  show: loading.value && !silentLoading.value,
+  show: (loading.value && !silentLoading.value) || actionLoading.value,
   overlay: true,
   size: 'lg',
   loadingConfig: props.schema.loadingConfig,
 }))
+
+provideActionLoading({
+  begin() {
+    actionLoadingCount.value += 1
+    let active = true
+    return {
+      end() {
+        if (!active) return
+        active = false
+        actionLoadingCount.value = Math.max(0, actionLoadingCount.value - 1)
+      },
+      endRequest() {
+        if (!active) return
+        active = false
+        actionLoadingCount.value = Math.max(0, actionLoadingCount.value - 1)
+      },
+    }
+  },
+})
 
 function isNodeObject(value: unknown): value is SchemaObject {
   return !!value && typeof value === 'object' && !Array.isArray(value)

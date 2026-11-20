@@ -11,7 +11,7 @@ FormItem 是**表单项外壳契约**：label/description/required/校验/静态
 ## 1. 边界与优先级（先读）
 
 1. **路径值**：name 支持 `a.b[0]`；通过 form/useFieldValue 读写；不要直接 props.data。
-2. **校验**：required/validations/validateApi 错误写 `form.errors[name]`；label/star/error 显示。
+2. **校验**：required/validations/validateApi 错误写 `form.errors[name]`；FormItem 根节点加 `is-error`，控件边框统一用 destructive，label/star/错误文案显示。Dialog 的 `Dialog-error` 复用同一验证等级。
 3. **静态**：static/staticOn/staticSchema；选择器静态走 selectorStatic；不要各控件自写。
 4. **布局**：horizontal/inline/row/normal；labelWidth/labelAlign/horizontal 比例；窄屏 ≤767 切 28% 同行。
 5. **描述/remark**：description HTML/Schema；labelRemark 走 Remark。
