@@ -61,6 +61,36 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it('focuses the search input after opening a searchable Select', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          options: [
+            { label: '诸葛亮', value: 'zhugeliang' },
+            { label: '曹操', value: 'caocao' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
   it('uses the Select placeholder for grouped search', async () => {
     const { host } = mount({
       type: 'page',

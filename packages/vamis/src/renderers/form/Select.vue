@@ -44,6 +44,7 @@ const triggerEl = ref<HTMLElement | null>(null)
 const valueEl = ref<HTMLElement | null>(null)
 const measureEl = ref<HTMLElement | null>(null)
 const overflowEl = ref<HTMLElement | null>(null)
+const searchInputEl = ref<HTMLInputElement | null>(null)
 const triggerWidth = ref(0)
 const visibleByWidth = ref(Number.POSITIVE_INFINITY)
 const overflowTip = ref(false)
@@ -53,6 +54,8 @@ const tagTipLabel = ref('')
 let foldObserver: ResizeObserver | undefined
 let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
 let tagTipHideTimer: ReturnType<typeof setTimeout> | undefined
+let searchFocusTimer: ReturnType<typeof setTimeout> | undefined
+const SEARCH_FOCUS_DELAY = 500
 
 const ctl = useOptionsControl(schemaRef, disabledRef)
 const env = useEnv()
@@ -297,6 +300,21 @@ function closeMenu() {
   ctl.open.value = false
 }
 
+function scheduleSearchFocus() {
+  if (searchFocusTimer) clearTimeout(searchFocusTimer)
+  searchFocusTimer = setTimeout(() => {
+    searchFocusTimer = undefined
+    if (
+      !ctl.open.value ||
+      !showSearch.value ||
+      isTransferSearch.value ||
+      locked.value ||
+      isMobile.value
+    ) return
+    searchInputEl.value?.focus()
+  }, SEARCH_FOCUS_DELAY)
+}
+
 function clearSearch(event: Event) {
   event.preventDefault()
   event.stopPropagation()
@@ -462,6 +480,7 @@ onBeforeUnmount(() => {
   foldObserver?.disconnect()
   if (overflowHideTimer) clearTimeout(overflowHideTimer)
   if (tagTipHideTimer) clearTimeout(tagTipHideTimer)
+  if (searchFocusTimer) clearTimeout(searchFocusTimer)
   if (media && onMedia) media.removeEventListener('change', onMedia)
 })
 
@@ -473,7 +492,13 @@ watch(
 watch(
   () => ctl.open.value,
   (open) => {
-    if (open && isMobile.value) syncMobileDraft()
+    if (searchFocusTimer) {
+      clearTimeout(searchFocusTimer)
+      searchFocusTimer = undefined
+    }
+    if (!open) return
+    if (isMobile.value) syncMobileDraft()
+    scheduleSearchFocus()
   },
 )
 
@@ -630,6 +655,7 @@ watch(
           <div class="vamis-select__search-inner">
             <VamisIcon name="search" v-if="!isTransferSearch" class="vamis-select__search-icon" />
             <input
+              ref="searchInputEl"
               :value="ctl.keyword.value"
               class="vamis-select__search-input"
               :placeholder="searchPlaceholder"
@@ -785,6 +811,7 @@ watch(
             <div class="vamis-select__search-inner">
               <VamisIcon name="search" v-if="!isTransferSearch" class="vamis-select__search-icon" />
               <input
+                ref="searchInputEl"
                 :value="ctl.keyword.value"
                 class="vamis-select__search-input"
                 :placeholder="searchPlaceholder"

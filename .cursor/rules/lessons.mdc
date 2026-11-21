@@ -1013,6 +1013,12 @@ alwaysApply: true
 - 触及：`select` Options
 - 规则：`packages/vamis-core/src/utils/options.ts` `filterOptionTree` / `runSelectFilterOption`
 
+### searchable Select 打开后延迟聚焦检索框
+- 踩过：下拉已经打开，但焦点仍停在 `body`，用户必须再点一次搜索框才能输入。Amis 普通 searchable Select 在 toggle 后 `setTimeout(this.focus, 500)`，`focus()` 优先落到搜索 input；Vamis 没有搜索框 ref 和延迟任务。
+- 稳定做法：桌面普通 Select 打开后 500ms 聚焦 `.vamis-select__search-input`。Grouped / Tree 的 TransferDropDown 搜索框不套这条普通 Select 行为；移动 PopUp 也不抢焦点。关闭或卸载时取消 timer，避免异步聚焦到已卸载节点。
+- 触及：`select`
+- 规则：Amis `Select.tsx` `toggle` / `focus`；`packages/vamis/src/renderers/form/Select.vue` `scheduleSearchFocus`
+
 ### Select overlay 走 PopOverContainer 算法
 - 踩过：`overlay.width` 的 `±Npx` 要对触发器做 `calc`；`align` 映射 left/right/center placement，不能只往下开。
 - 稳定做法：`calcSelectOverlayWidth` / `selectOverlayPlacement`，弹层仍走 `VamisOverlay`。百分比宽度按触发器换算成 px（Teleport 后父级没有参照宽）。`maxTagCount` 只有 `Number.isFinite` 且 `> 0` 才截断（`Number(undefined)` 是 `NaN`，会把标签全收成 `+N`）。触发器滚出视口时不要把浮层平移进视口底部，跟着触发器一起滚走。多选折行后触发器变高，`VamisOverlay` 必须 ResizeObserver 触发器，PopOver 跟着底边走。单行/多行共用 `--select-pad-y` / `--select-pad-x`（4 / 10），不要靠 value `min-height: 30` 冒充上内边距（折行后会消失）。清除钮用 16px 图标和箭头放进 `__suffix` 一起 `align-items: center`，不要用文字 `×`。清除色对齐 Amis `--Form-input-clearBtn-color`（浅 `#d4d6d9` / 深 `#84878c`），hover 才到 text-4（浅 `#5c5f66` / 深 `#e8e9eb`），不要 `--muted-foreground` / `--foreground`。多选可见 tag 悬停走 `TooltipWrapper`（`label` / `placement: top` / hover），共用一层 `VamisTooltipLayer`；`+N` 溢出表格和折叠项不要再包。

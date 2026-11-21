@@ -13,6 +13,7 @@ alwaysApply: true
 
 - 新 spec 命名：`YYYY-MM-DD-<type>-<topic>.md`，例如 Form 的 Select 规格在 `specs/component/form/`，Spinner 的完成规格在 `specs/component/feedback/`。
 - 组件专用 spec 不要直接放在 `docs/superpowers/specs/` 根目录；根目录只放跨组件的 TODO、运行时、主题、SDK、同步状态等全局规格。
+- 新增或迁移 spec 时，代理必须自行判断分类并完成目录移动、命名和引用同步，不要让用户提醒。根目录新增全局 spec 时同步更新 `spec-layout.test.ts` 的白名单，证明它确实跨组件。
 - 执行计划仍放 `docs/superpowers/plans/`；计划里的 `Spec` 链接必须指向上述分类目录。
 - 长期设计文档 `docs/design/component/<分类>/<type>.md` 要链接对应增量 spec，迁移或改名时同步更新所有引用。
 

@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-21（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 5；测试 **1226**、`typecheck` 0；Select 桌面 / 移动 **22/27**；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-21（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 5；测试 **1229**、`typecheck` 0；Select 桌面 / 移动 **22/27**；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 

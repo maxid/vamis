@@ -431,6 +431,8 @@ _多选_
 
 `searchable: true` 在下拉里出检索框，按 `label` / `value` 过滤；分组会保留组头。
 
+桌面普通检索模式对齐 Amis：下拉打开后约 500ms 自动将焦点移入检索框。分组 / 树形使用 TransferDropDown 搜索形态，移动端 PopUp 不自动抢焦点。
+
 ```schema: scope="body"
 type: form
 api: /api/mock2/form/saveForm

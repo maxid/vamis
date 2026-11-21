@@ -126,6 +126,7 @@ options ── searchable ──> filtered
 
 - **多选**：toggle 只改 draft/值；`joinValues` 时按 `delimiter` 拼字符串，`extractValue` 时只留 value；标签移除用同一序列化。
 - **搜索**：本地 `filterOption` 优先；`searchApi` / `autoComplete` 需序号/Abort 防竞态；搜索无结果不改变当前值。
+- **搜索焦点**：桌面普通 searchable Select 打开后按 Amis 延迟 500ms 聚焦检索框；Grouped / Tree 的 TransferDropDown 搜索框与移动 PopUp 不套这条规则。
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。

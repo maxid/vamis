@@ -29,7 +29,7 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 881 + editor 8 + sdk 152 = **1226**，全绿（2026-11-21 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 883 + editor 8 + sdk 153 = **1229**，全绿（2026-11-21 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
 | 工作区 | `git status` | Spinner 批次已提交为 `a173e53`；Select 树模式 / defer / 共享树状态增量在 working tree |
