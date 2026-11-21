@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import {
   findOption,
   optionValuesEqual,
@@ -15,6 +15,7 @@ const props = defineProps<{
   leftOptions: OptionItem[]
   nodes: OptionItem[]
   selectedValues: unknown[]
+  leftValue?: unknown
   leftDefaultValue?: unknown
   disabled?: boolean
 }>()
@@ -23,18 +24,14 @@ const emit = defineEmits<{
   pick: [item: OptionItem]
   toggle: [values: unknown[]]
   'toggle-all': []
+  'update:leftValue': [value: unknown]
 }>()
 
-const leftValue = ref<unknown>(props.leftDefaultValue)
-
-watch(
-  () => props.leftDefaultValue,
-  (value) => {
-    leftValue.value = value
-  },
-)
-
 const leftValueField = computed(() => String(props.schema.valueField || 'value'))
+const leftValue = computed(() => props.leftValue ?? props.leftDefaultValue)
+const leftSelectedValues = computed(() =>
+  leftValue.value == null || leftValue.value === '' ? [] : [leftValue.value],
+)
 const leftMode = computed(() => String(props.schema.leftMode || 'list'))
 const rightMode = computed(() => String(props.schema.rightMode || 'list'))
 const leftSchema = computed<SchemaObject>(() => ({
@@ -65,13 +62,13 @@ function isLeftActive(item: OptionItem) {
 
 function selectLeft(item: OptionItem) {
   if (props.disabled || item.disabled) return
-  leftValue.value = item.value
+  emit('update:leftValue', item.value)
 }
 
 function selectLeftTree(values: unknown[]) {
   const value = values[0]
   const item = findOption(props.leftOptions, value, leftValueField.value)
-  if (item) leftValue.value = item.value
+  if (item) emit('update:leftValue', item.value)
 }
 
 function selectRight(item: OptionItem) {
@@ -88,7 +85,7 @@ function selectRight(item: OptionItem) {
         :schema="leftSchema"
         :nodes="leftOptions"
         :visible-nodes="leftOptions"
-        :selected-values="[leftValue]"
+        :selected-values="leftSelectedValues"
         :value="leftValue"
         :disabled="disabled"
         @toggle="selectLeftTree"

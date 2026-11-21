@@ -143,6 +143,16 @@ const associatedRightOptions = computed(() =>
 const associatedLeftDefaultValue = computed(
   () => associatedSourceMeta.value?.leftDefaultValue ?? props.schema.leftDefaultValue,
 )
+const associatedLeftValue = ref<unknown>(undefined)
+watch(
+  () => associatedLeftDefaultValue.value,
+  (value) => {
+    if (associatedLeftValue.value == null || associatedLeftValue.value === '') {
+      associatedLeftValue.value = value
+    }
+  },
+  { immediate: true },
+)
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
   if (selectMode.value === 'group') return true
@@ -818,6 +828,7 @@ watch(
             :left-options="associatedLeftOptions"
             :nodes="associatedRightOptions"
             :selected-values="treeSelectedValues"
+            v-model:left-value="associatedLeftValue"
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
             @pick="onPick"
@@ -984,6 +995,7 @@ watch(
             :left-options="associatedLeftOptions"
             :nodes="associatedRightOptions"
             :selected-values="treeSelectedValues"
+            v-model:left-value="associatedLeftValue"
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
             @pick="onPick"

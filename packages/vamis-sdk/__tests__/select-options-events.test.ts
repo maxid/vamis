@@ -294,6 +294,63 @@ describe('Select option mutation events', () => {
     expect(form?.getData?.()?.hero).toBe('a')
   })
 
+  it('keeps the associated left branch after reopening', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'list',
+          leftDefaultValue: 'mage',
+          leftOptions: [
+            { label: '法师', value: 'mage' },
+            { label: '战士', value: 'warrior' },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+            {
+              ref: 'warrior',
+              children: [{ label: 'B', value: 'b' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeTruthy(),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-left-item')].find(
+        (item) => item.textContent?.trim() === '战士',
+      ) as HTMLElement,
+    )
+    click(document.querySelector('.vamis-select__associated-right-item') as HTMLElement)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeFalsy(),
+    )
+
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('B'),
+    )
+    expect(
+      [...document.querySelectorAll('.vamis-select__associated-left-item.is-active')].map(
+        (item) => item.textContent?.trim(),
+      ),
+    ).toEqual(['战士'])
+  })
+
   it('renders an associated left tree without writing the outer value', async () => {
     const { host, scoped } = mount({
       type: 'page',
@@ -350,6 +407,44 @@ describe('Select option mutation events', () => {
       expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A'),
     )
     expect(form?.getData?.()?.hero).toBeUndefined()
+  })
+
+  it('does not mark associated left groups active before selection', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'tree',
+          leftOptions: [
+            {
+              label: '阵营',
+              children: [{ label: '法师', value: 'mage' }],
+            },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-left .vamis-tree')).toBeTruthy(),
+    )
+    expect(
+      document.querySelectorAll('.vamis-select__associated-left .vamis-tree__label.is-checked'),
+    ).toHaveLength(0)
   })
 
   it.each([
