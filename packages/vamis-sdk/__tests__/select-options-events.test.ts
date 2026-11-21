@@ -291,6 +291,108 @@ describe('Select option mutation events', () => {
         (item) => item.textContent?.trim(),
       ),
     ).toEqual(['战士'])
+    expect(form?.getData?.()?.hero).toBe('a')
+  })
+
+  it('renders an associated left tree without writing the outer value', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'associatedTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'tree',
+          leftOptions: [
+            {
+              label: '阵营',
+              children: [
+                { label: '法师', value: 'mage' },
+                { label: '战士', value: 'warrior' },
+              ],
+            },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+            {
+              ref: 'warrior',
+              children: [{ label: 'B', value: 'b' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-left .vamis-tree')).toBeTruthy(),
+    )
+
+    const form = scoped.getComponentByName('associatedTreeForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__content')].find(
+        (item) => item.textContent?.trim() === '法师',
+      ) as HTMLElement,
+    )
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A'),
+    )
+    expect(form?.getData?.()?.hero).toBeUndefined()
+  })
+
+  it.each([
+    ['table', '.vamis-select__associated-right .vamis-select__table tbody tr'],
+    ['tree', '.vamis-select__associated-right .vamis-tree__content'],
+    ['chained', '.vamis-select__associated-right .vamis-select__chained-item'],
+  ])('writes a right value in associated %s mode', async (rightMode, selector) => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: `associated-${rightMode}-form`,
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'list',
+          rightMode,
+          leftDefaultValue: 'mage',
+          leftOptions: [{ label: '法师', value: 'mage' }],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector(selector)).toBeTruthy(),
+    )
+    click(document.querySelector(selector) as HTMLElement)
+
+    const form = scoped.getComponentByName(`associated-${rightMode}-form`) as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
   })
 
   it('renders Select chained mode and writes only a leaf selection', async () => {

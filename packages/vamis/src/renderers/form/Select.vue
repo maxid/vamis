@@ -821,6 +821,8 @@ watch(
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
             @pick="onPick"
+            @toggle="onTreeToggle"
+            @toggle-all="onToggleAll"
           />
           <SelectTreePane
             v-else-if="isTreeMenu"
@@ -985,6 +987,8 @@ watch(
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
             @pick="onPick"
+            @toggle="onTreeToggle"
+            @toggle-all="onToggleAll"
           />
           <SelectTreePane
             v-else-if="isTreeMenu"
