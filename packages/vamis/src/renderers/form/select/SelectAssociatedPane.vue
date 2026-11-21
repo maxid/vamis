@@ -23,7 +23,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   pick: [item: OptionItem]
   toggle: [values: unknown[]]
-  'toggle-all': []
+  'toggle-all': [items: OptionItem[]]
   'update:leftValue': [value: unknown]
 }>()
 
@@ -50,6 +50,26 @@ const selectedLeft = computed(() => {
 })
 
 const rightOptions = computed(() => selectedLeft.value?.children ?? [])
+type RightListRow =
+  | { kind: 'group'; key: string; label: string; depth: number }
+  | { kind: 'item'; key: string; item: OptionItem; depth: number }
+
+const rightListRows = computed(() => {
+  const rows: RightListRow[] = []
+  const walk = (items: OptionItem[], depth: number) => {
+    for (const [index, item] of items.entries()) {
+      const key = `${depth}:${index}:${String(item.value ?? item.label)}`
+      if (item.children?.length) {
+        rows.push({ kind: 'group', key, label: item.label, depth })
+        walk(item.children, depth + 1)
+      } else {
+        rows.push({ kind: 'item', key, item, depth })
+      }
+    }
+  }
+  walk(rightOptions.value, 0)
+  return rows
+})
 const rightTreeSchema = computed<SchemaObject>(() => ({
   ...props.schema,
   selectMode: 'tree',
@@ -88,6 +108,7 @@ function selectRight(item: OptionItem) {
         :selected-values="leftSelectedValues"
         :value="leftValue"
         :disabled="disabled"
+        show-icon
         @toggle="selectLeftTree"
       />
       <template v-else>
@@ -113,7 +134,7 @@ function selectRight(item: OptionItem) {
         :selected-values="selectedValues"
         :disabled="disabled"
         @pick="selectRight"
-        @toggle-all="emit('toggle-all')"
+        @toggle-all="emit('toggle-all', rightOptions)"
       />
       <SelectTreePane
         v-else-if="rightMode === 'tree'"
@@ -123,6 +144,7 @@ function selectRight(item: OptionItem) {
         :selected-values="selectedValues"
         :value="selectedValues[0]"
         :disabled="disabled"
+        show-icon
         @toggle="emit('toggle', $event)"
       />
       <SelectChainedPane
@@ -132,23 +154,32 @@ function selectRight(item: OptionItem) {
         :selected-values="selectedValues"
         :disabled="disabled"
         @pick="selectRight"
-        @toggle-all="emit('toggle-all')"
+        @toggle-all="emit('toggle-all', rightOptions)"
       />
       <template v-else>
-        <div
-          v-for="item in rightOptions"
-          :key="String(item.value ?? item.label)"
-          class="vamis-select__associated-right-item"
-          :class="{
-            'is-disabled': disabled || item.disabled,
-            'is-active': selectedValues.some((value) =>
-              optionValuesEqual(value, item.value, leftValueField)
-            ),
-          }"
-          @click="selectRight(item)"
-        >
-          {{ item.label }}
-        </div>
+        <template v-for="row in rightListRows" :key="row.key">
+          <div
+            v-if="row.kind === 'group'"
+            class="vamis-select__associated-right-group"
+            :style="{ '--associated-depth': row.depth }"
+          >
+            {{ row.label }}
+          </div>
+          <div
+            v-else
+            class="vamis-select__associated-right-item"
+            :class="{
+              'is-disabled': disabled || row.item.disabled,
+              'is-active': selectedValues.some((value) =>
+                optionValuesEqual(value, row.item.value, leftValueField)
+              ),
+            }"
+            :style="{ '--associated-depth': row.depth }"
+            @click="selectRight(row.item)"
+          >
+            {{ row.item.label }}
+          </div>
+        </template>
       </template>
     </div>
   </div>

@@ -23,8 +23,10 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   query?: string
   loadingConfig?: { root?: string; show?: boolean }
+  showIcon?: boolean
 }>(), {
   query: '',
+  showIcon: false,
 })
 
 const emit = defineEmits<{
@@ -169,7 +171,7 @@ function toggleAll() {
       :defer-field="tree.deferField.value"
       :loading-config="loadingConfig"
       :disabled="disabled"
-      :show-icon="false"
+      :show-icon="showIcon"
       :multiple="multiple"
       :query="query"
       :check-disabled="checkDisabled"

@@ -101,6 +101,48 @@ describe('select docs', () => {
     expect(treeRule).toContain('overflow: visible')
   })
 
+  it('uses equal associated columns inside one popover scroll host', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const popoverRule = cssRule(css, '.vamis-select__popover.is-associated')
+    const leftRule = cssRule(css, '.vamis-select__associated-left')
+    const rightRule = cssRule(css, '.vamis-select__associated-right')
+
+    expect(popoverRule).toContain('display: flex')
+    expect(popoverRule).toContain('overflow: hidden')
+    expect(popoverRule).toContain('max-height: 350px')
+    expect(leftRule).toContain('flex: 1 1 0')
+    expect(leftRule).toContain('width: 0')
+    expect(leftRule).toContain('overflow: auto')
+    expect(rightRule).toContain('flex: 1 1 0')
+    expect(rightRule).toContain('width: 0')
+    expect(rightRule).toContain('overflow: auto')
+  })
+
+  it('keeps associated tree content inside the column scroll host', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const leftTreePane = cssRule(
+      css,
+      '.vamis-select__popover.is-associated .vamis-select__associated-left .vamis-select__tree-pane',
+    )
+    const rightTreePane = cssRule(
+      css,
+      '.vamis-select__popover.is-associated .vamis-select__associated-right .vamis-select__tree-pane',
+    )
+    const leftTree = cssRule(
+      css,
+      '.vamis-select__popover.is-associated .vamis-select__associated-left .vamis-tree',
+    )
+    const rightTree = cssRule(
+      css,
+      '.vamis-select__popover.is-associated .vamis-select__associated-right .vamis-tree',
+    )
+
+    for (const rule of [leftTreePane, rightTreePane, leftTree, rightTree]) {
+      expect(rule).toContain('overflow: visible')
+      expect(rule).toContain('max-height: none')
+    }
+  })
+
   it('uses Amis table header separators instead of a gray bottom border on each th', () => {
     const css = read('../../vamis-ui/src/styles.css')
     const headRule = cssRule(css, '.vamis-select__table [data-slot="table-head"]')

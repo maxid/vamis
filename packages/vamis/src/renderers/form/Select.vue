@@ -361,6 +361,10 @@ function measureTags() {
   })
 }
 
+function syncTriggerWidth() {
+  triggerWidth.value = rootEl.value?.offsetWidth || 0
+}
+
 function scheduleMeasure() {
   void nextTick(measureTags)
 }
@@ -369,7 +373,7 @@ function toggleOpen() {
   if (locked.value) return
   const next = !ctl.open.value
   ctl.open.value = next
-  triggerWidth.value = rootEl.value?.offsetWidth || 0
+  syncTriggerWidth()
   if (next && (ctl.autoComplete.value || props.schema.searchApi)) {
     ctl.scheduleAutoComplete(ctl.keyword.value)
   }
@@ -488,7 +492,22 @@ function onPick(item: OptionItem) {
   void ctl.toggle(item)
 }
 
-async function onToggleAll() {
+async function onToggleAll(pool?: OptionItem[]) {
+  if (isAssociatedMenu.value) {
+    const candidates = pool ?? []
+    if (isMobile.value) {
+      mobileDraft.value = toggleAllOptions(
+        mobileDraft.value,
+        candidates,
+        ctl.config.value.valueField,
+      )
+      return
+    }
+    await ctl.commit(
+      toggleAllOptions(ctl.selected.value, candidates, ctl.config.value.valueField),
+    )
+    return
+  }
   if (isChainedMenu.value) {
     const pool = leafOptions(ctl.filtered.value)
     if (isMobile.value) {
@@ -576,9 +595,16 @@ let media: MediaQueryList | undefined
 let onMedia: (() => void) | undefined
 
 onMounted(() => {
-  foldObserver = new ResizeObserver(() => measureTags())
+  foldObserver = new ResizeObserver(() => {
+    syncTriggerWidth()
+    measureTags()
+  })
+  if (rootEl.value) foldObserver.observe(rootEl.value)
   if (valueEl.value) foldObserver.observe(valueEl.value)
   scheduleMeasure()
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', syncTriggerWidth)
+  }
   if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
     media = window.matchMedia('(max-width: 768px)')
     onMedia = () => {
@@ -593,6 +619,9 @@ onBeforeUnmount(() => {
   if (overflowHideTimer) clearTimeout(overflowHideTimer)
   if (tagTipHideTimer) clearTimeout(tagTipHideTimer)
   if (searchFocusTimer) clearTimeout(searchFocusTimer)
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', syncTriggerWidth)
+  }
   if (media && onMedia) media.removeEventListener('change', onMedia)
 })
 

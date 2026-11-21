@@ -1013,6 +1013,12 @@ alwaysApply: true
 - 触及：`tree-select` `input-tree` `select`
 - 规则：Amis `Tree.tsx` `checkedInValue` / `isItemChecked`；`packages/vamis/src/renderers/form/TreeBranch.vue`
 
+### Tree 展开态按稳定路径存，不按节点对象身份存
+- 踩过：先收缩第一个树分组，再收缩第二个分组时，第一个分组会重新展开；`InputTree` / `TreeSelect` / associated 左树都会复现。根因是 `useTreeState` 用 `Map<OptionItem, boolean>` 记录展开态，树行经过渲染/重排后节点对象身份可能变化，状态便会落到另一个键上。
+- 稳定做法：展开态统一用 `Map<string, boolean>`，键由 `nodePath` 生成（值优先，无值时用路径 / label）；`seedExpanded`、`ensureExpanded`、`isExpanded`、`toggleExpand` 和 deferred 合并后的展开都必须使用同一个 `nodeKey`。不要再按对象引用、label 或数组下标裸存。
+- 触及：`input-tree` `tree-select` `select`
+- 规则：`packages/vamis/src/renderers/form/useTreeState.ts`；回归 `select-options-events.test.ts` 的 InputTree / TreeSelect / associated sibling expansion 用例
+
 ### Options CUD 确认事件先于本地写入和 API
 - 踩过：新增、编辑、删除先把选项写进本地或调用 `addApi` / `editApi` / `deleteApi`，再派发确认事件；`preventDefault()` 已经无法回滚本地状态，而且自定义弹层会把原选项私有字段整包塞进 `editConfirm.item`。
 - 稳定做法：Select 与 InputTree 共用 `runOptionConfirm` / `persistOptionMutation`，统一 payload 的公开数据、`value`、`options`、`items`、`item` 和 `[name]`；顺序固定为 `deleteConfirmText`（若配置）-> `deleteConfirm` / `editConfirm` / `addConfirm` -> API -> 本地写入。Select 新增 / 编辑必须和 Amis 一样走 `overlay.openDialog`，不要在下拉里另做内联表单；弹层路径的 `item` 只传本次编辑的 label/value，原选项字段只在本地合并；`deleteConfirmText` 先做 `filterTpl`，未配置时不要自造默认确认框。
@@ -1034,6 +1040,7 @@ alwaysApply: true
 ### Select overlay 走 PopOverContainer 算法
 - 踩过：`overlay.width` 的 `±Npx` 要对触发器做 `calc`；`align` 映射 left/right/center placement，不能只往下开。
 - 稳定做法：`calcSelectOverlayWidth` / `selectOverlayPlacement`，弹层仍走 `VamisOverlay`。百分比宽度按触发器换算成 px（Teleport 后父级没有参照宽）。`maxTagCount` 只有 `Number.isFinite` 且 `> 0` 才截断（`Number(undefined)` 是 `NaN`，会把标签全收成 `+N`）。触发器滚出视口时不要把浮层平移进视口底部，跟着触发器一起滚走。多选折行后触发器变高，`VamisOverlay` 必须 ResizeObserver 触发器，PopOver 跟着底边走。单行/多行共用 `--select-pad-y` / `--select-pad-x`（4 / 10），不要靠 value `min-height: 30` 冒充上内边距（折行后会消失）。清除钮用 16px 图标和箭头放进 `__suffix` 一起 `align-items: center`，不要用文字 `×`。清除色对齐 Amis `--Form-input-clearBtn-color`（浅 `#d4d6d9` / 深 `#84878c`），hover 才到 text-4（浅 `#5c5f66` / 深 `#e8e9eb`），不要 `--muted-foreground` / `--foreground`。多选可见 tag 悬停走 `TooltipWrapper`（`label` / `placement: top` / hover），共用一层 `VamisTooltipLayer`；`+N` 溢出表格和折叠项不要再包。
+- 稳定做法（续）：`triggerWidth` 不能只在打开时测一次；必须同时由 root `ResizeObserver` 和 window `resize` 刷新，否则视口/容器宽度变化后 inline `minWidth` 仍是旧值，`VamisOverlay` 只能重新定位一个旧宽度弹层。关联桌面弹层高度使用 Amis 的 350px 上限，左树 `showIcon` 保持 folder/file 图标；不要用默认 300px 或隐藏图标。
 - 触及：`select`
 - 规则：本文；Amis `PopOverContainer.calcOverlayWidth` / `alignToPlacement`
 

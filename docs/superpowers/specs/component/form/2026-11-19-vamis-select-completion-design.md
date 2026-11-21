@@ -162,6 +162,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 - 已完成 2026-11-21：新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection` 主路径。
 - 左栏：
   - `leftMode: tree` 使用共享树状态和 `TreeBranch`，对应 Amis `Tree`。
+- 树分组显示 folder/file 图标；展开态按路径键存在 `useTreeState`，不能按节点对象引用存，避免兄弟节点收缩互相重置。
   - `leftMode: list` 使用列表选择面板，对应 Amis `GroupedSelection`。
   - 左栏使用局部 `ValueHost` 保存当前左节点，不写入外层 Select 字段。
 - 右栏按 `rightMode` 分派：
@@ -170,6 +171,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
   - `chained` → `SelectChainedPane.vue`
   - `list` / `group` → 列表选择面板
 - 左节点通过 `ref` 匹配 `options[].ref`；`options[].children` 是右栏候选。
+- 桌面 Popover 高度上限对齐 Amis `Transfer-selection-maxHeight: 350px`；左右列等分，列内滚动，外层不叠滚动条。
 - 左右树节点需要懒加载时，复用共享 tree state 的 `deferApi`；当前仅完成静态与 source-shaped 数据，动态左栏 defer、人员点选仍待后续。
 - source 返回 `options[0].leftOptions` / `options[0].children` / `leftDefaultValue` 时，在进入面板前拆出左右数据。
 

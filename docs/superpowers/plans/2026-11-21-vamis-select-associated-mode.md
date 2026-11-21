@@ -188,11 +188,11 @@ git commit -m "fix(select): 收口关联选择数据与移动草稿"
 - Modify: `CONTEXT.md`
 - Modify: `website/src/components/form/select.md`
 
-- [ ] **Step 1: Update the component contract and live docs**
+- [x] **Step 1: Update the component contract and live docs**
 
 Mark associated main path as implemented, list deferred items (dynamic left defer, personnel picker, search result mode), and keep the page section order aligned with Amis.
 
-- [ ] **Step 2: Run the full checks**
+- [x] **Step 2: Run the full checks**
 
 ```bash
 pnpm test
@@ -205,7 +205,7 @@ git diff --check
 
 Expected: tests pass, typecheck exits 0, SDK build succeeds, Select compare remains P0 0, and whitespace check is clean.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs CONTEXT.md README.md README.en.md website/src/components/form/select.md

@@ -42,6 +42,7 @@
 - 单选：父项均无 `value` 时，点不同父项必须切换对应子列，当前列只能有一个父项 active。
 - 多选：checkAll 只写入叶子，不写父值。
 - 焦点：普通、级联和移动级联在 `searchable: true` 时聚焦检索框并在打开期间失焦后恢复；非 searchable 的 autoComplete 不抢焦点。
+- 关联左树：显示 folder/file 图标；桌面 Popover 高度上限 350，左右列等分，列内滚动；InputTree / TreeSelect / Select 共用稳定路径展开态。
 - 真实页列展开、列边框、单滚动宿主。
 - 桌面 / 移动 Select 对照。
 

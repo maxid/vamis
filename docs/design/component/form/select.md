@@ -135,8 +135,8 @@ options ── searchable ──> filtered
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **表格**：`SelectTablePane` 使用 Table / Checkbox 原语；`columns` 为空回落 label，列 schema 可进 SchemaRenderer。单选点整行；多选表头全选排除禁用项；移动端只改 draft，确认才提交。
 - **级联**：`SelectChainedPane` 维护列内索引路径；打开时默认展开第一个有子项的分组，父节点只展开下一列，叶子才写值。父项 active 看路径，叶子 active 看选中值，父项没有 `value` 也能正确切列。最多三列、列内滚动，多选 checkAll 只选叶子，移动端只改 draft。
-- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。移动端只写 draft，确认才提交。
-- **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。
+- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。左树显示 folder/file 图标，桌面 Popover 高度上限对齐 Amis 350，左右列等分且各自滚动。移动端只写 draft，确认才提交。
+- **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。InputTree / TreeSelect / Select 树模式统一用稳定路径键存展开态，避免对象身份变化导致收缩一个节点时其他节点被重置。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
 - **标签折叠**：`measureTags` 计算可见数量；`maxTagCount` / 宽度变化 / 值变化触发；`+N` tooltip 不能裁切。

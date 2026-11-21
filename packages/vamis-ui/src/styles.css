@@ -12267,19 +12267,47 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-select__associated {
   display: flex;
-  min-height: 100%;
-}
-.vamis-select__associated-left,
-.vamis-select__associated-right {
-  min-width: 0;
-  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 .vamis-select__associated-left {
-  flex: 0 0 38%;
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  overflow: auto;
   border-right: 1px solid var(--border);
 }
 .vamis-select__associated-right {
   flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  overflow: auto;
+}
+.vamis-select__popover.is-associated {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 350px;
+}
+.vamis-select__popover.is-associated.vamis-select__popover--sheet {
+  max-height: none;
+}
+.vamis-select__popover.is-associated .vamis-select__associated-left .vamis-select__tree-pane {
+  max-height: none;
+  overflow: visible;
+}
+.vamis-select__popover.is-associated .vamis-select__associated-right .vamis-select__tree-pane {
+  max-height: none;
+  overflow: visible;
+}
+.vamis-select__popover.is-associated .vamis-select__associated-left .vamis-tree {
+  max-height: none;
+  overflow: visible;
+}
+.vamis-select__popover.is-associated .vamis-select__associated-right .vamis-tree {
+  max-height: none;
+  overflow: visible;
 }
 .vamis-select__associated-left-item,
 .vamis-select__associated-right-item {
@@ -12292,6 +12320,24 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   font-weight: var(--fontWeightNormal);
   line-height: var(--select-option-line-height);
   cursor: pointer;
+}
+.vamis-select__associated-right-item {
+  padding-left: calc(
+    var(--select-option-padding-x) + var(--associated-depth, 0) * var(--tree-indent)
+  );
+}
+.vamis-select__associated-right-group {
+  display: flex;
+  min-height: var(--select-group-line-height);
+  align-items: center;
+  padding: 0 var(--select-option-padding-x);
+  color: var(--select-group-color);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--select-group-line-height);
+  padding-left: calc(
+    var(--select-option-padding-x) + var(--associated-depth, 0) * var(--tree-indent)
+  );
 }
 .vamis-select__associated-left-item.is-active,
 .vamis-select__associated-left-item.is-active:hover,

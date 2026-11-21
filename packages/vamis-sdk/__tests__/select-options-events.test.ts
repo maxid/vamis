@@ -392,6 +392,9 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() =>
       expect(document.querySelector('.vamis-select__associated-left .vamis-tree')).toBeTruthy(),
     )
+    expect(
+      document.querySelectorAll('.vamis-select__associated-left .vamis-tree__node-icon').length,
+    ).toBeGreaterThan(0)
 
     const form = scoped.getComponentByName('associatedTreeForm') as {
       getData?: () => Record<string, unknown>
@@ -447,6 +450,58 @@ describe('Select option mutation events', () => {
     ).toHaveLength(0)
   })
 
+  it('keeps sibling expansion state when collapsing associated tree groups', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'tree',
+          leftOptions: [
+            {
+              label: '法师',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+            {
+              label: '战士',
+              children: [{ label: '曹操', value: 'caocao' }],
+            },
+          ],
+          options: [
+            { ref: 'zhugeliang', children: [] },
+            { ref: 'caocao', children: [] },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-left .vamis-tree')).toBeTruthy(),
+    )
+
+    const arrows = () => [
+      ...document.querySelectorAll(
+        '.vamis-select__associated-left .vamis-tree__item:not(.is-child) .vamis-tree__arrow-icon',
+      ),
+    ]
+    click(arrows()[0]?.parentElement as HTMLElement)
+    await nextTick()
+    expect(arrows()[0]?.classList.contains('is-folded')).toBe(true)
+    expect(arrows()[1]?.classList.contains('is-folded')).toBe(false)
+
+    click(arrows()[1]?.parentElement as HTMLElement)
+    await nextTick()
+    expect(arrows()[0]?.classList.contains('is-folded')).toBe(true)
+    expect(arrows()[1]?.classList.contains('is-folded')).toBe(true)
+  })
+
   it.each([
     ['table', '.vamis-select__associated-right .vamis-select__table tbody tr'],
     ['tree', '.vamis-select__associated-right .vamis-tree__content'],
@@ -488,6 +543,66 @@ describe('Select option mutation events', () => {
       getData?: () => Record<string, unknown>
     }
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
+  it.each([
+    [
+      'table',
+      '.vamis-select__associated-right .vamis-select__table thead [data-slot="checkbox"]',
+    ],
+    [
+      'chained',
+      '.vamis-select__associated-right .vamis-select__chained-checkall',
+    ],
+  ])('checks only the active associated branch in %s mode', async (rightMode, selector) => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: `associated-${rightMode}-checkall`,
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          checkAll: true,
+          selectMode: 'associated',
+          leftMode: 'list',
+          rightMode,
+          leftDefaultValue: 'mage',
+          leftOptions: [
+            { label: '法师', value: 'mage' },
+            { label: '战士', value: 'warrior' },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [
+                { label: 'A', value: 'a' },
+                { label: 'B', value: 'b' },
+              ],
+            },
+            {
+              ref: 'warrior',
+              children: [{ label: 'C', value: 'c' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector(selector)).toBeTruthy(),
+    )
+    click(document.querySelector(selector) as HTMLElement)
+
+    const form = scoped.getComponentByName(`associated-${rightMode}-checkall`) as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.heroes).toBe('a,b'))
   })
 
   it('reads associated left options from source-shaped options', async () => {
@@ -540,6 +655,59 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
   })
 
+  it('renders grouped children in associated list mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'associatedGroupForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'list',
+          rightMode: 'list',
+          leftDefaultValue: 'mage',
+          leftOptions: [{ label: '法师', value: 'mage' }],
+          options: [
+            {
+              ref: 'mage',
+              children: [
+                {
+                  label: '分组',
+                  children: [
+                    { label: 'A', value: 'a' },
+                    { label: 'B', value: 'b' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right-group')?.textContent).toContain(
+        '分组',
+      ),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-right-item')].find(
+        (item) => item.textContent?.trim() === 'A',
+      ) as HTMLElement,
+    )
+
+    const form = scoped.getComponentByName('associatedGroupForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
   it('keeps associated right selections in the mobile draft until confirm', async () => {
     const { host, scoped } = mount(
       {
@@ -573,6 +741,11 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() =>
       expect(document.querySelector('.vamis-popup .vamis-select__associated')).toBeTruthy(),
     )
+    click(document.querySelector('.vamis-select__associated-left-item') as HTMLElement)
+    expect(
+      (scoped.getComponentByName('associatedMobileForm') as { getData?: () => Record<string, unknown> })
+        ?.getData?.()?.hero,
+    ).toBeUndefined()
     click(
       [...document.querySelectorAll('.vamis-select__associated-right-item')][0] as HTMLElement,
     )
@@ -774,6 +947,43 @@ describe('Select option mutation events', () => {
     })
 
     await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('updates popover min width after the trigger resizes', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          options: [{ label: '诸葛亮', value: 'zhugeliang' }],
+        },
+      },
+    })
+
+    let width = 240
+    const root = host.querySelector('.vamis-select') as HTMLElement
+    Object.defineProperty(root, 'offsetWidth', {
+      configurable: true,
+      get: () => width,
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__popover')).toBeTruthy())
+    expect((document.querySelector('.vamis-select__popover') as HTMLElement).style.minWidth).toBe(
+      '240px',
+    )
+
+    width = 360
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    expect((document.querySelector('.vamis-select__popover') as HTMLElement).style.minWidth).toBe(
+      '360px',
+    )
   })
 
   it('focuses the search input after opening a searchable chained Select', async () => {
@@ -2207,5 +2417,81 @@ describe('InputTree option mutation events', () => {
       label: 'AA',
       value: 'a',
     })
+  })
+})
+
+describe('Tree expansion state', () => {
+  const arrowItems = (rootSelector: string) => [
+    ...document.querySelectorAll(
+      `${rootSelector} .vamis-tree__item:not(.is-child) .vamis-tree__arrow`,
+    ),
+  ]
+
+  it('keeps InputTree sibling expansion state', async () => {
+    mount({
+      type: 'page',
+      body: {
+        type: 'input-tree',
+        name: 'tree',
+        options: [
+          {
+            label: '法师',
+            children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+          {
+            label: '战士',
+            children: [{ label: '曹操', value: 'caocao' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    click(arrowItems('.vamis-input-tree__control')[0] as HTMLElement)
+    await nextTick()
+    expect(arrowItems('.vamis-input-tree__control')[0]?.querySelector('.is-folded')).toBeTruthy()
+    expect(arrowItems('.vamis-input-tree__control')[1]?.querySelector('.is-folded')).toBeNull()
+
+    click(arrowItems('.vamis-input-tree__control')[1] as HTMLElement)
+    await nextTick()
+    expect(arrowItems('.vamis-input-tree__control')[0]?.querySelector('.is-folded')).toBeTruthy()
+    expect(arrowItems('.vamis-input-tree__control')[1]?.querySelector('.is-folded')).toBeTruthy()
+  })
+
+  it('keeps TreeSelect sibling expansion state', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        options: [
+          {
+            label: '法师',
+            children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+          {
+            label: '战士',
+            children: [{ label: '曹操', value: 'caocao' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+
+    click(arrowItems('.vamis-tree-select__popover')[0] as HTMLElement)
+    await nextTick()
+    expect(arrowItems('.vamis-tree-select__popover')[0]?.querySelector('.is-folded')).toBeTruthy()
+    expect(arrowItems('.vamis-tree-select__popover')[1]?.querySelector('.is-folded')).toBeNull()
+
+    click(arrowItems('.vamis-tree-select__popover')[1] as HTMLElement)
+    await nextTick()
+    expect(arrowItems('.vamis-tree-select__popover')[0]?.querySelector('.is-folded')).toBeTruthy()
+    expect(arrowItems('.vamis-tree-select__popover')[1]?.querySelector('.is-folded')).toBeTruthy()
   })
 })

@@ -42,7 +42,7 @@ export function useTreeState(context: TreeStateContext) {
   const overlay = useOverlay()
   const formApi = useFormApi()
   const scope = useScope()
-  const expanded = ref(new Map<OptionItem, boolean>())
+  const expanded = ref(new Map<string, boolean>())
   const deferring = ref(new Set<string>())
   const deferField = computed(() => optionsDeferField(context.schema.value))
 
@@ -69,7 +69,7 @@ export function useTreeState(context: TreeStateContext) {
   }
 
   function seedExpanded(nodes: OptionItem[]) {
-    const next = new Map<OptionItem, boolean>()
+    const next = new Map<string, boolean>()
     const initiallyOpen = context.schema.value.initiallyOpen !== false
     const unfoldedLevelRaw = Number(context.schema.value.unfoldedLevel)
     const unfoldedLevel =
@@ -77,7 +77,10 @@ export function useTreeState(context: TreeStateContext) {
     const walk = (list: OptionItem[], depth: number) => {
       for (const item of list) {
         if (item.children?.length || optionNeedsDefer(item, deferField.value)) {
-          next.set(item, isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }))
+          next.set(
+            nodeKey(item),
+            isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }),
+          )
         }
         if (item.children?.length) walk(item.children, depth + 1)
       }
@@ -96,9 +99,12 @@ export function useTreeState(context: TreeStateContext) {
       for (const item of list) {
         if (
           (item.children?.length || optionNeedsDefer(item, deferField.value)) &&
-          !next.has(item)
+          !next.has(nodeKey(item))
         ) {
-          next.set(item, isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }))
+          next.set(
+            nodeKey(item),
+            isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }),
+          )
         }
         if (item.children?.length) walk(item.children, depth + 1)
       }
@@ -110,7 +116,7 @@ export function useTreeState(context: TreeStateContext) {
   function isExpanded(item: OptionItem) {
     if (optionNeedsDefer(item, deferField.value)) return false
     if (context.query?.value) return true
-    return expanded.value.get(item) ?? true
+    return expanded.value.get(nodeKey(item)) ?? true
   }
 
   function isDeferring(item: OptionItem) {
@@ -119,7 +125,7 @@ export function useTreeState(context: TreeStateContext) {
 
   function expandItem(item: OptionItem) {
     const next = new Map(expanded.value)
-    next.set(item, true)
+    next.set(nodeKey(item), true)
     expanded.value = next
   }
 
@@ -130,7 +136,7 @@ export function useTreeState(context: TreeStateContext) {
       return
     }
     const next = new Map(expanded.value)
-    next.set(item, !isExpanded(item))
+    next.set(nodeKey(item), !isExpanded(item))
     expanded.value = next
   }
 
@@ -168,7 +174,7 @@ export function useTreeState(context: TreeStateContext) {
       const loaded = findOption(next, item.value, String(context.schema.value.valueField || 'value'))
       if (loaded) {
         const nextExpanded = new Map(expanded.value)
-        nextExpanded.set(loaded, true)
+        nextExpanded.set(nodeKey(loaded), true)
         expanded.value = nextExpanded
       }
       const name = context.schema.value.name ? String(context.schema.value.name) : ''
