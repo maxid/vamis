@@ -5,8 +5,8 @@ outline: deep
 
 # Select 选择器
 
-::: info 实现进度 96% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选和移动草稿确认。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 树和表格模式草稿确认；箭头朝右不翻转）。`selectMode` 的 chained / associated、`searchResultMode` 与人员点选未接。
+::: info 实现进度 97% · 进行中
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选和移动草稿确认。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，并支持多选叶子全选。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联和树模式草稿确认；箭头朝右不翻转）。`selectMode` 的 associated、`searchResultMode` 与人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -39,7 +39,7 @@ body:
 
 ## 展示模式
 
-`selectMode` 可选 `group` / `table` / `tree` / `chained` / `associated`。当前接 **分组**、**表格** 与 **树形**；不写 `selectMode` 时，普通选择器遇到 `children` 仍按分组展示。级联保留 Amis 契约示例，关联见「关联选择模式」。
+`selectMode` 可选 `group` / `table` / `tree` / `chained` / `associated`。当前接 **分组**、**表格**、**树形** 与 **级联**；不写 `selectMode` 时，普通选择器遇到 `children` 仍按分组展示。关联见「关联选择模式」。
 
 ### 分组展示模式
 
@@ -304,11 +304,9 @@ body:
 
 按列来点选。
 
-**当前状态：未接。** 需要级联形态时可暂时使用独立组件 `chained-select`；以下保留 Amis schema 契约。
-
 _单选_
 
-```json
+```schema: scope="body"
 {
   "type": "form",
   "api": "/api/mock2/form/saveForm",
@@ -367,7 +365,7 @@ _单选_
 
 _多选_
 
-```json
+```schema: scope="body"
 {
   "type": "form",
   "api": "/api/mock2/form/saveForm",
@@ -429,7 +427,7 @@ _多选_
 
 `searchable: true` 在下拉里出检索框，按 `label` / `value` 过滤；分组会保留组头。
 
-桌面普通检索模式对齐 Amis：下拉打开后约 500ms 自动将焦点移入检索框。分组 / 树形使用 TransferDropDown 搜索形态，移动端 PopUp 不自动抢焦点。
+只有启用 `searchable` 的 Select 才会在下拉打开后约 500ms 自动将焦点移入检索框；普通、分组、表格、树形、级联和移动端统一。下拉仍打开时，检索框失焦后会恢复聚焦；点击外部关闭下拉后不抢焦点。`autoComplete` / `searchApi` 单独使用时不触发自动聚焦。
 
 ```schema: scope="body"
 type: form
@@ -1044,7 +1042,7 @@ body:
 | menuTpl | `string` 或 [SchemaNode](/types/schemanode) | | 自定义菜单项模板，数据含 `label` / `value` / `checked` |
 | clearable | `boolean` | `false` | 显示清除 |
 | hideSelected | `boolean` | `false` | 下拉里隐藏已选项 |
-| selectMode | `string` | | `group` / `table` / `tree` 已接。`chained` / `associated` **未接** |
+| selectMode | `string` | | `group` / `table` / `tree` / `chained` 已接。`associated` **未接** |
 | onlyChildren | `boolean` | 树模式按 defer 自动决定 | 树多选是否只提交叶子；未设置时无 defer 为 true，有 defer 节点为 false |
 | autoCheckChildren | `boolean` | `true` | 树模式勾父节点时是否联动子节点 |
 | initiallyOpen | `boolean` | `true` | 树模式初始是否展开全部节点 |
@@ -1350,7 +1348,7 @@ body:
 ## 与 Amis 的差异
 
 - 作者态 YAML 与 JSON 并列。
-- `selectMode` 已接分组、表格与树形；chained / associated、`searchResultMode`、人员点选未接。
+- `selectMode` 已接分组、表格、树形与级联；associated、`searchResultMode`、人员点选未接。
 - 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。

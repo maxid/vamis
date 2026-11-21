@@ -3,7 +3,7 @@
 - 日期：2026-11-21
 - 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **29** · 通过 **24** · 失败 **5**（P0 0）· Vamis 多出 extra **0**
+- 合计 **31** · 通过 **26** · 失败 **5**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -29,13 +29,13 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `components-form-select-14` page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
-- `components-form-select-25` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-26` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
+- `components-form-select-16` page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
 - `components-form-select-27` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-27` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
 - `components-form-select-28` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-28` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- `components-form-select-29` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
+- `components-form-select-29` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- `components-form-select-30` page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
+- `components-form-select-30` page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
 
 整改：
 - 运行时值应对齐 Amis：schema.value / 表单域 / 控件当前值，不要只看能不能画出。
@@ -46,7 +46,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 29 | 5 |
+| 组件 | 31 | 5 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -55,7 +55,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据输入 | 29 | 5 |
+| 组件 / 数据输入 | 31 | 5 |
 
 ## P0 失败（驱动下一刀）
 
@@ -63,11 +63,11 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `components-form-select-14` Select 下拉框 #15 — page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
-- `components-form-select-25` Select 下拉框 #26 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-26` Select 下拉框 #27 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
-- `components-form-select-27` Select 下拉框 #28 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
-- `components-form-select-28` Select 下拉框 #29 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- `components-form-select-16` Select 下拉框 #17 — page/body/0:form/body/0:select.value: Amis `` / Vamis `Apple,Banana,Blackberry,Blueberry,Cherry,Carambola,Coconut,Kiwifruit,Lemon,Pineapple,Grape,Pomegranate,Mango,Papaya,Mangosteen,Durian,Longan,Litchi,Loquat,Persimmon,Pomelo,Orange,Tangerine,Kumquat,Plum,Apricot,Peach,Pear,Strawberry`
+- `components-form-select-27` Select 下拉框 #28 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
+- `components-form-select-28` Select 下拉框 #29 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`
+- `components-form-select-29` Select 下拉框 #30 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
+- `components-form-select-30` Select 下拉框 #31 — page/body/0:form/body/0:select.rendered: Amis `false` / Vamis `true`；page/body/0:form/body/0:select.value: Amis `` / Vamis `选项请选择`
 
 ## 重跑口径
 
@@ -75,9 +75,9 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "components-form-select-14" --mobile` — 只重跑「components-form-select-14」自身
-- `pnpm compare --page "components-form-select-25" --mobile` — 只重跑「components-form-select-25」自身
-- `pnpm compare --page "components-form-select-26" --mobile` — 只重跑「components-form-select-26」自身
+- `pnpm compare --page "components-form-select-16" --mobile` — 只重跑「components-form-select-16」自身
 - `pnpm compare --page "components-form-select-27" --mobile` — 只重跑「components-form-select-27」自身
 - `pnpm compare --page "components-form-select-28" --mobile` — 只重跑「components-form-select-28」自身
+- `pnpm compare --page "components-form-select-29" --mobile` — 只重跑「components-form-select-29」自身
+- `pnpm compare --page "components-form-select-30" --mobile` — 只重跑「components-form-select-30」自身
 

@@ -31,6 +31,9 @@ describe('select docs', () => {
     const tableStart = doc.indexOf('### 表格模式')
     const tableEnd = doc.indexOf('### 树形模式')
     const tableSection = doc.slice(tableStart, tableEnd)
+    const chainedStart = doc.indexOf('### 级联选择')
+    const chainedEnd = doc.indexOf('## 支持搜索')
+    const chainedSection = doc.slice(chainedStart, chainedEnd)
 
     expect(doc).toContain('\ntitle: Select 选择器\n')
     expect(doc).toContain('\n# Select 选择器\n')
@@ -53,6 +56,8 @@ describe('select docs', () => {
     expect(displayHeadings).toEqual(['分组展示模式', '表格模式', '树形模式', '级联选择'])
     expect(tableSection).not.toContain('当前状态：未接')
     expect([...tableSection.matchAll(/```schema/g)]).toHaveLength(2)
+    expect(chainedSection).not.toContain('当前状态：未接')
+    expect([...chainedSection.matchAll(/```schema/g)]).toHaveLength(2)
     expect(h3).toContain('刷新数据源 reload')
     expect(h2[h2.length - 1]).toBe('与 Amis 的差异')
   })

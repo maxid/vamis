@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 884 + editor 8 + sdk 157 = **1234**，全绿（2026-11-21 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 884 + editor 8 + sdk 163 = **1240**，全绿（2026-11-21 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
-| 工作区 | `git status` | Spinner 批次已提交为 `a173e53`；Select 树模式 / defer / 共享树状态增量在 working tree |
-| 对照 | 报告 + 本机目录 | 目录 **2235**（文档 158 / 组件 1604 / 样式 471）。Select 桌面 / 移动 **24/29**、Spinner **7/7**、Dialog **22/23**，P0 0。本轮未重跑全量对照 |
+| 工作区 | `git status` | Table 模式已提交为 `f278409`；Select 级联模式增量在 working tree |
+| 对照 | 报告 + 本机目录 | 目录 **2237**（文档 158 / 组件 1604 / 样式 471）。Select 桌面 / 移动 **26/31**、Spinner **7/7**、Dialog **22/23**，P0 0。本轮未重跑全量对照 |
 
-结论：本轮 `test` / `typecheck`、Select tree/table/defer 专项与 Spinner 共享宿主复核通过，生成目录为 **2235**；Select 桌面 / 移动专项 **24/29、P0 0**，未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck`、Select tree/table/chained/defer 专项与 Spinner 共享宿主复核通过，生成目录为 **2237**；Select 桌面 / 移动专项 **26/31、P0 0**，未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 

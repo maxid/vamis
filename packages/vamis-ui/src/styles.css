@@ -12177,6 +12177,94 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-muted);
   text-align: center;
 }
+.vamis-select__popover.is-chained {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.vamis-select__popover.is-chained:not(.vamis-select__popover--sheet) {
+  max-height: 300px;
+}
+.vamis-select__chained-pane {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.vamis-select__chained-checkall {
+  display: flex;
+  width: 100%;
+  min-height: var(--select-option-line-height);
+  align-items: center;
+  gap: 10px;
+  padding: 0 var(--select-option-padding-x);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--select-option-color);
+  font-size: var(--fontSizeBase);
+  text-align: left;
+  cursor: pointer;
+}
+.vamis-select__chained-checkall:disabled {
+  cursor: not-allowed;
+  color: var(--select-option-disabled-color);
+}
+.vamis-select__chained {
+  display: flex;
+  min-height: 100%;
+  flex-flow: row wrap;
+}
+.vamis-select__chained-col {
+  position: relative;
+  flex: 1 1 0;
+  width: 0;
+  min-width: 150px;
+  overflow: auto;
+}
+.vamis-select__chained-col:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+.vamis-select__chained-item {
+  display: flex;
+  min-height: var(--select-option-line-height);
+  align-items: center;
+  gap: 10px;
+  padding: 0 var(--select-option-padding-x);
+  background: var(--select-option-bg);
+  color: var(--select-option-color);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--select-option-line-height);
+  cursor: pointer;
+}
+.vamis-select__chained-item.is-active,
+.vamis-select__chained-item.is-active:hover {
+  color: var(--select-option-active-color);
+  background: var(--select-option-active-bg);
+}
+.vamis-select__chained-item:hover {
+  color: var(--select-option-hover-color);
+  background: var(--select-option-hover-bg);
+}
+.vamis-select__chained-item.is-disabled,
+.vamis-select__chained-item.is-disabled:hover {
+  color: var(--select-option-disabled-color);
+  background: var(--select-option-disabled-bg);
+  cursor: not-allowed;
+}
+.vamis-select__chained-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+}
+.vamis-select__chained-empty {
+  padding: var(--gap-xl) var(--gap-base);
+  color: var(--text-muted);
+  text-align: center;
+}
 .vamis-tree__list {
   list-style: none;
   padding: 0;

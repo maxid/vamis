@@ -1001,6 +1001,12 @@ alwaysApply: true
 - 触及：`select` table dropdown
 - 规则：Amis `TableSelection.tsx` / `_selection.scss`；`packages/vamis/src/renderers/form/select/SelectTablePane.vue`
 
+### Select 级联模式是“路径 + 叶子”，不是多个原生 Select
+- 踩过：直接用多个 shadcn Select 拼列，会把父节点也写成表单值；多选全选也会误收父节点 `value`，与 Amis ChainedSelection 不符。
+- 稳定做法：`SelectChainedPane` 内部只维护列路径，父节点点击只展开下一列，叶子才发 `pick`；路径必须存**列内索引**（如 `[0, 1]`），不能存 `value`。Amis 的文档父节点本来就没有 `value`，用 `undefined` 比较会让所有父项同时 active，且后续列永远取第一项。打开时默认展开第一组，路径不写表单值；父节点 active 看当前索引路径，叶子 active 看表单选中值。多选 checkAll 通过父层 `onToggleAll` 只取递归叶子。最多三列、每列独立滚动，非末列 1px 分隔，item 行高 32、14 / 400、`0 10px`。当前候选来自 `ctl.filtered`，值序列化与移动草稿仍由 Select 父层负责。
+- 触及：`select` chained dropdown
+- 规则：Amis `ChainedSelection.tsx` / `_selection.scss`；`packages/vamis/src/renderers/form/select/SelectChainedPane.vue`
+
 ### Tree 行选中态与聚合勾选态必须分离
 - 踩过：TreeBranch 用 `isTreeItemChecked` 同时画复选框和整行 `is-checked`。单选时一个 folder 的唯一子项被选中，聚合判断把 folder 也判为 checked，父行和叶子一起高亮；Amis 单选只认 `value.indexOf(item)` 的精确节点。
 - 稳定做法：`checked` 继续给复选框 / partial 用；行样式单独用 `selected`，只比值里是否精确存在当前节点。Select tree pane 必须传 exact selected；InputTree 不需要聚合父行背景时同理。移动单选草稿也要只高亮叶子。
@@ -1021,7 +1027,7 @@ alwaysApply: true
 
 ### searchable Select 打开后延迟聚焦检索框
 - 踩过：下拉已经打开，但焦点仍停在 `body`，用户必须再点一次搜索框才能输入。Amis 普通 searchable Select 在 toggle 后 `setTimeout(this.focus, 500)`，`focus()` 优先落到搜索 input；Vamis 没有搜索框 ref 和延迟任务。
-- 稳定做法：桌面普通 Select 打开后 500ms 聚焦 `.vamis-select__search-input`。Grouped / Tree 的 TransferDropDown 搜索框不套这条普通 Select 行为；移动 PopUp 也不抢焦点。关闭或卸载时取消 timer，避免异步聚焦到已卸载节点。
+- 稳定做法：只有 `searchable: true` 时，Select 打开后统一 500ms 聚焦 `.vamis-select__search-input`；普通、分组、表格、树形、级联和移动端同一个判据。下拉仍打开时搜索框 blur 会重新排一次聚焦，点击外部先关闭下拉，因此不会把焦点抢回来。`autoComplete` / `searchApi` 单独存在只负责显示检索能力，不触发自动聚焦，否则会误抢焦点。关闭或卸载时取消 timer，避免异步聚焦到已卸载节点。
 - 触及：`select`
 - 规则：Amis `Select.tsx` `toggle` / `focus`；`packages/vamis/src/renderers/form/Select.vue` `scheduleSearchFocus`
 

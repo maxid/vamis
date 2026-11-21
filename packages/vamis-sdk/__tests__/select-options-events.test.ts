@@ -225,6 +225,132 @@ describe('Select option mutation events', () => {
     ).toContain('诸葛亮')
   })
 
+  it('renders Select chained mode and writes only a leaf selection', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'chainedForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'chained',
+          options: [
+            {
+              label: '法师',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+            {
+              label: '战士',
+              children: [
+                { label: '曹操', value: 'caocao' },
+                { label: '钟无艳', value: 'zhongwuyan' },
+              ],
+            },
+            {
+              label: '打野',
+              children: [{ label: '李白', value: 'libai' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__chained')).toBeTruthy(),
+    )
+    const initialBranches = [...document.querySelectorAll(
+      '.vamis-select__chained-col:first-child .vamis-select__chained-item.is-active',
+    )]
+    expect(initialBranches).toHaveLength(1)
+    expect(initialBranches[0]?.textContent).toContain('法师')
+    expect(
+      [...document.querySelectorAll('.vamis-select__chained-col')][1]?.textContent,
+    ).toContain('诸葛亮')
+
+    const form = scoped.getComponentByName('chainedForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(
+      [...document.querySelectorAll('.vamis-select__chained-col')][0]?.querySelectorAll(
+        '.vamis-select__chained-item',
+      )[1] as HTMLElement,
+    )
+    await nextTick()
+    const warriorBranches = [...document.querySelectorAll(
+      '.vamis-select__chained-col:first-child .vamis-select__chained-item.is-active',
+    )]
+    expect(warriorBranches).toHaveLength(1)
+    expect(warriorBranches[0]?.textContent).toContain('战士')
+    expect(
+      [...document.querySelectorAll('.vamis-select__chained-col')][1]?.textContent,
+    ).toContain('曹操')
+    expect(
+      [...document.querySelectorAll('.vamis-select__chained-col')][1]?.textContent,
+    ).toContain('钟无艳')
+
+    click(
+      [...document.querySelectorAll('.vamis-select__chained-col')][1]?.querySelector(
+        '.vamis-select__chained-item',
+      ) as HTMLElement,
+    )
+
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('caocao'))
+    expect(host.querySelector('.vamis-select__single')?.textContent).toBe('曹操')
+  })
+
+  it('checks leaf values in multiple Select chained mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'chainedMultiForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          checkAll: true,
+          selectMode: 'chained',
+          options: [
+            {
+              label: '法师',
+              value: 'mage',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+            {
+              label: '战士',
+              value: 'warrior',
+              children: [{ label: '曹操', value: 'caocao' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__chained')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__chained-checkall') as HTMLElement)
+
+    const form = scoped.getComponentByName('chainedMultiForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('zhugeliang,caocao'),
+    )
+  })
+
   it('focuses the search input after opening a searchable Select', async () => {
     const { host } = mount({
       type: 'page',
@@ -253,6 +379,138 @@ describe('Select option mutation events', () => {
     })
 
     await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('focuses the search input after opening a searchable chained Select', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'chained',
+          options: [
+            {
+              label: '法师',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('focuses the search input in a searchable mobile chained Select', async () => {
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            searchable: true,
+            selectMode: 'chained',
+            options: [
+              {
+                label: '法师',
+                children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+              },
+            ],
+          },
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-popup .vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('restores focus after a searchable chained search input blurs', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'chained',
+          options: [
+            {
+              label: '法师',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+
+    search.blur()
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('does not focus a non-searchable autoComplete Select search input', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          autoComplete: true,
+          options: [{ label: '诸葛亮', value: 'zhugeliang' }],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 650))
+    expect(document.activeElement).not.toBe(search)
   })
 
   it('uses the Select placeholder for grouped search', async () => {

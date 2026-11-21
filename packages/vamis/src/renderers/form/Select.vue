@@ -33,6 +33,7 @@ import CalendarWheel from '../display/CalendarWheel.vue'
 import PickerFade from '../calendar/PickerFade.vue'
 import Spinner from '../Spinner.vue'
 import { useOptionsControl } from '../../optionsControl'
+import SelectChainedPane from './select/SelectChainedPane.vue'
 import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
 
@@ -68,12 +69,16 @@ const isMobile = computed(() => {
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
 const selectMode = computed(() => String(props.schema.selectMode || ''))
+const isChainedMenu = computed(() => selectMode.value === 'chained')
 const isTableMenu = computed(() => selectMode.value === 'table')
 const isTreeMenu = computed(() => selectMode.value === 'tree')
 const popupHeight = computed(() =>
   selectPopupHeight(
     props.schema.overlay,
-    isGroupMenu.value || isTreeMenu.value || isTableMenu.value
+    isGroupMenu.value ||
+      isTreeMenu.value ||
+      isTableMenu.value ||
+      isChainedMenu.value
       ? POPUP_DEFAULT_HEIGHT
       : undefined,
   ),
@@ -116,11 +121,15 @@ const noResultsText = computed(() =>
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
   if (selectMode.value === 'group') return true
-  if (isTreeMenu.value || isTableMenu.value) return false
+  if (isTreeMenu.value || isTableMenu.value || isChainedMenu.value) return false
   return ctl.options.value.some((item) => isGroupOption(item))
 })
 const isTransferSearch = computed(
-  () => isGroupMenu.value || isTreeMenu.value || isTableMenu.value,
+  () =>
+    isGroupMenu.value ||
+    isTreeMenu.value ||
+    isTableMenu.value ||
+    isChainedMenu.value,
 )
 /** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
 const VIRTUAL_BUFFER = 4
@@ -134,6 +143,7 @@ const virtualEnabled = computed(
     !isMobile.value &&
     !isGroupMenu.value &&
     !isTableMenu.value &&
+    !isChainedMenu.value &&
     ctl.filtered.value.length > virtualThreshold.value,
 )
 const virtualViewportHeight = computed(() => {
@@ -209,7 +219,8 @@ const useMobileWheel = computed(
     !ctl.config.value.multiple &&
     !isGroupMenu.value &&
     !isTreeMenu.value &&
-    !isTableMenu.value,
+    !isTableMenu.value &&
+    !isChainedMenu.value,
 )
 /** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
 const useMobileTick = computed(
@@ -218,7 +229,8 @@ const useMobileTick = computed(
     !!ctl.config.value.multiple &&
     !isGroupMenu.value &&
     !isTreeMenu.value &&
-    !isTableMenu.value,
+    !isTableMenu.value &&
+    !isChainedMenu.value,
 )
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
@@ -329,13 +341,16 @@ function scheduleSearchFocus() {
     searchFocusTimer = undefined
     if (
       !ctl.open.value ||
-      !showSearch.value ||
-      isTransferSearch.value ||
-      locked.value ||
-      isMobile.value
+      !ctl.config.value.searchable ||
+      locked.value
     ) return
     searchInputEl.value?.focus()
   }, SEARCH_FOCUS_DELAY)
+}
+
+function onSearchBlur() {
+  if (!ctl.open.value || !ctl.config.value.searchable) return
+  scheduleSearchFocus()
 }
 
 function clearSearch(event: Event) {
@@ -430,6 +445,21 @@ function onPick(item: OptionItem) {
 }
 
 async function onToggleAll() {
+  if (isChainedMenu.value) {
+    const pool = leafOptions(ctl.filtered.value)
+    if (isMobile.value) {
+      mobileDraft.value = toggleAllOptions(
+        mobileDraft.value,
+        pool,
+        ctl.config.value.valueField,
+      )
+      return
+    }
+    await ctl.commit(
+      toggleAllOptions(ctl.selected.value, pool, ctl.config.value.valueField),
+    )
+    return
+  }
   if (isTableMenu.value) {
     const pool = ctl.filteredCandidates.value
     if (isMobile.value) {
@@ -568,6 +598,7 @@ watch(
         'is-group': isGroupMenu,
         'is-tree': isTreeMenu,
         'is-table': isTableMenu,
+        'is-chained': isChainedMenu,
         'is-mobile': isMobile,
       }"
     >
@@ -699,6 +730,7 @@ watch(
               class="vamis-select__search-input"
               :placeholder="searchPlaceholder"
               @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
+              @blur="onSearchBlur"
             >
             <button
               v-if="ctl.keyword.value"
@@ -741,6 +773,7 @@ watch(
             'is-tick': useMobileTick,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
+            'is-chained': isChainedMenu,
           }"
         >
           <SelectTreePane
@@ -763,6 +796,15 @@ watch(
             :selected-values="tableSelectedValues"
             :disabled="locked"
             :query="ctl.keyword.value"
+            @pick="onPick"
+            @toggle-all="onToggleAll"
+          />
+          <SelectChainedPane
+            v-else-if="isChainedMenu"
+            :schema="schema"
+            :nodes="ctl.filtered.value"
+            :selected-values="treeSelectedValues"
+            :disabled="locked"
             @pick="onPick"
             @toggle-all="onToggleAll"
           />
@@ -856,6 +898,7 @@ watch(
             'is-virtual': virtualEnabled,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
+            'is-chained': isChainedMenu,
           }"
           :style="popoverStyle"
         >
@@ -873,6 +916,7 @@ watch(
                 class="vamis-select__search-input"
                 :placeholder="searchPlaceholder"
                 @input="ctl.keyword.value = ($event.target as HTMLInputElement).value"
+                @blur="onSearchBlur"
               >
               <button
                 v-if="ctl.keyword.value"
@@ -905,6 +949,15 @@ watch(
             :selected-values="tableSelectedValues"
             :disabled="locked"
             :query="ctl.keyword.value"
+            @pick="onPick"
+            @toggle-all="onToggleAll"
+          />
+          <SelectChainedPane
+            v-else-if="isChainedMenu"
+            :schema="schema"
+            :nodes="ctl.filtered.value"
+            :selected-values="treeSelectedValues"
+            :disabled="locked"
             @pick="onPick"
             @toggle-all="onToggleAll"
           />
