@@ -372,6 +372,7 @@
 
 .dark,
 [data-theme="dark"] {
+  --spinner-color-on-dark: var(--colors-neutral-fill-2);
   --colors-error-1: #ff8875;
   --colors-error-2: #ff7869;
   --colors-error-3: #ff675c;

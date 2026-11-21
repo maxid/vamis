@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-20（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 4；测试 **1203**、`typecheck` 0；Alert 桌面 / 移动 **6/6**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-21（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 5；测试 **1211**、`typecheck` 0；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -70,13 +70,13 @@
 | 功能 | 0 / 12 | 12 | 0 | 72% | 11 | 6 |
 | 数据输入 | 1 / 72 | 71 | 0 | 58% | 44 | 17 |
 | 数据展示 | 0 / 44 | 44 | 0 | 62% | 32 | 14 |
-| 反馈 | 2 / 5 | 3 | 0 | 88% | 5 | 4 |
+| 反馈 | 3 / 5 | 2 | 0 | 92% | 5 | 4 |
 | 其他 | 0 / 7 | 7 | 0 | 58% | 4 | 2 |
-| **合计** | **4 / 155** | **151** | **0** | **62%** | **111** | **47** |
+| **合计** | **5 / 155** | **150** | **0** | **62%** | **111** | **47** |
 
-侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`、`dialog`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
+侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`、`dialog`、`spinner`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
 
-执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。chrome（badge / tooltip / remark / spinner）未齐不要切 `select`。
+执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。`spinner` 已齐；继续补 badge / tooltip-wrapper / remark，避免把剩余选择器依赖当成已解锁。
 
 ## 深色浮层回归（已推进组件）
 
@@ -107,7 +107,7 @@
 | `card` / `cards` | 卡片操作/弹出 | 未核 | 对照过 |
 | `image` | 预览 | 已核 | 2026-11-10。放大层永远黑底白字，不跟 `.dark` 换肤 |
 | `alert` | 关闭等 | 未核 | |
-| `spinner` | overlay | 未核 | |
+| `spinner` | overlay | 已核 | 2026-11-21。桌面 / 移动、深色和 375px 已核 |
 | `badge` | 角标宿主 | 未核 | |
 | `avatar` | badge | 未核 | |
 | `nav` | overflow / itemBadge | 未核 | |
@@ -312,14 +312,14 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 ---
 
-## 反馈（2/5，均 88%）
+## 反馈（3/5，均 92%）
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
 | `alert` | Alert 提示 | `/components/alert` | `/zh-CN/components/alert` | 进行中 | 70% | 主路径可交互：`level` info/success/warning/danger、`title` / `body`、`showIcon`（默认 false）、`showCloseButton`、`actions`、表达式 `level`。5 个活示例 schema 与 Amis 结构化对齐；属性表保持四列，不搬 Amis 版本列 / 产品版本号。字号 12/400、标题 14/500；无标题 title/desc 24px 行高，有标题 title 22px / desc 20px；`4×16` / 有标题 `16` padding、默认 bottom 16，示例 `mb-1` / `mb-3` 实际为 4 / 12，4px radius；图标槽 `16×24`、16px 图标垂直居中、右缝 8；icon 按内置 SVG → URL → Font Awesome class 解析，自定义图标文字色 neutral-text-2；四档 fill-10 背景和 neutral-text-2 文字已对齐 Amis；warning 不再白字。对照桌面 / 移动 **5/5**（P0 0）。缺关闭事件 | P0 |
 | `dialog` | Dialog 对话框 | `/components/dialog` | `/zh-CN/components/dialog` | 已完成 | 100% | Amis 同名章节与示例已对齐：尺寸 xs–full/custom、数据映射、多级 30px 错位、close 当前层 / 指定 name 整栈、动作按钮、表单提交 / AJAX / `close: false`、feedback / skip、confirm / cancel 事件、confirm / cancel / setValue 动作、Esc / 外点。弹层表单确认先提交，失败不关；Dialog body 有 Form 时，AJAX / confirm 由 Form 宿主显示 body overlay，并同时保留 footer `Dialog-info` 小 Spinner；无 Form 时才只有 info。Form body Spinner 跟请求结束，Dialog-info 跟完整 action Promise，二级 feedback 未关闭前不撤第一层 info。遮罩按宿主而非 Action 数量生成，footer actions 在忙时禁用。盒模型对齐 flex column、24px 纵向 content padding、21px header/title、16/24 body margin、24px 横向 padding、6px 圆角、0.7 遮罩；关闭钮只有 1 枚且位于 header，16×22 / 16px 图标，无标题时保留空 header。保留 Vamis 3px focus glow。拖拽使用绝对视口坐标、10px 安全边距、resize 回夹，去掉 shadcn enter/zoom/transition 后 1:1 跟手。桌面 / 移动对照 22/23，P0 0；余 1 条 CRUD 列内 Action 的 schema-tree 定位假阴性 | P0 |
 | `drawer` | Drawer 抽屉 | `/components/drawer` | `/zh-CN/components/drawer` | 进行中 | 88% | 文档主路径已对齐：`actionType: drawer`、`position` 默认 right、`size` xs–xl（空值 400px）、`width` / `height`、`overlay` 默认 true、默认取消+确认、嵌套压栈。body 是 form 时默认横排、无面板、无默认「提交」。关闭按钮 hover「关闭」提示。补动作后关闭 / 配置按钮 / resizable 未接说明；缺多级错位递减、像素级 cxd Drawer | P0 |
-| `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 进行中 | 95% | 文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，不是 Amis hex）、`show` / `showOn`、`size` sm \| lg \| 空、`icon`（`reload` / fa / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。Page / Service / CRUD 表格区、Form submit 与 Dialog AJAX / Form-info 已挂同一套。缺 Select 宿主细项 | P0 |
+| `spinner` | Spinner 加载中 | `/components/spinner` | `/zh-CN/components/spinner` | 已完成 | 100% | 文档主路径已对齐：默认中心对称菱形 SVG（`--primary`，2.7s 无限循环，Amis 六边形是明确不采用的产品化差异）、`show` / `showOn`、`size` sm \| lg \| 空、`icon`（`reload` / fa / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、根 className / 16px / 24px 字体 / disabled / 深色背景识别、父子 loading 互斥、`loadingConfig.root`（非法 / 延迟 selector 安全回退与重定位）。Page / Service / CRUD 表格区、Form submit、Dialog AJAX / Form-info、Select trigger / 显式 overlay、InputText / InputTree / TreeSelect 已统一复用。桌面 / 移动 **7/7**（P0 0）；共享宿主无 Spinner P0 回归。对照报告剩余 page-body 字体盘是全局正文基线，不是 Spinner 结点 | P0 |
 | （动作 `toast`） | Toast 轻提示 | `/components/toast` | `/zh-CN/components/toast` | 已完成 | 100% | 文档主路径已对齐：`toast.items` / `body` / `title`（字符串或 SchemaNode）、`level`、`position`（含 `center`）、`timeout`、`closeButton` / `showIcon`、`allowHtml`。桌面 400px 白底 bounce、状态色图标、可叠多条、点击关闭、hover 暂停。`isMobile()` = `max-width: 768px` 暗底居中、40px 图标、一次一条、3000ms。有 `type` 的 `title`/`body` 走 `SchemaRenderer`，点击当时 data 快照 | P0 |
 
 ---
@@ -433,7 +433,7 @@ flowchart LR
 | 9 | `container` | `tpl` | 9 | 23 | 308 | 308 | P0 | 已完成 | 100% |
 | 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | P0 | 进行中 | 89% |
 | 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | P1 | 进行中 | 92% |
-| 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | P1 | 进行中 | 95% |
+| 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | P1 | 已完成 | 100% |
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | P1 | 进行中 | 93% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | P1 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | P1 | 进行中 | 92% |

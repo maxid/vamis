@@ -128,6 +128,84 @@ describe('embed', () => {
     expect(root.style.getPropertyValue('--primary-hover')).toBe('#654321')
   })
 
+  it('aligns Spinner root semantics and visual states', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'spinner',
+        show: true,
+        icon: 'reload',
+        disabled: true,
+        className: 'my-spinner',
+        style: { backgroundColor: '#001529' },
+      },
+    })
+
+    await nextTick()
+    await nextTick()
+
+    const spinner = host.querySelector('.vamis-spinner.my-spinner')
+    expect(spinner).toBeTruthy()
+    const wrapper = spinner?.closest('.vamis-node') as HTMLElement | null
+    expect(wrapper?.style.backgroundColor).toBe('#001529')
+    expect(spinner?.querySelector('.vamis-spinner__icon--disabled')).toBeTruthy()
+    expect(spinner?.querySelector('.vamis-spinner__icon--dark-bg')).toBeTruthy()
+  })
+
+  it('falls back inline when Spinner portal root is missing', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const { host } = mount({
+      type: 'spinner',
+      show: true,
+      loadingConfig: { root: '#missing-spinner-root' },
+    })
+
+    await nextTick()
+    await nextTick()
+
+    expect(host.querySelector('.vamis-spinner--overlay')).toBeTruthy()
+    expect(warn.mock.calls.some((args) => args.join(' ').includes('Teleport target'))).toBe(false)
+    warn.mockRestore()
+  })
+
+  it('falls back inline for an invalid Spinner portal selector', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const { host } = mount({
+      type: 'spinner',
+      show: true,
+      loadingConfig: { root: '[' },
+    })
+
+    await nextTick()
+    await nextTick()
+
+    expect(host.querySelector('.vamis-spinner--overlay')).toBeTruthy()
+    expect(warn.mock.calls.some((args) => args.join(' ').includes('Teleport target'))).toBe(false)
+    warn.mockRestore()
+  })
+
+  it('moves Spinner into a portal root mounted after the renderer', async () => {
+    const { host } = mount({
+      type: 'spinner',
+      show: true,
+      loadingConfig: { root: '#late-spinner-root' },
+    })
+
+    await nextTick()
+    await nextTick()
+    expect(host.querySelector('.vamis-spinner--overlay')).toBeTruthy()
+
+    const target = document.createElement('div')
+    target.id = 'late-spinner-root'
+    document.body.appendChild(target)
+
+    await new Promise((resolve) => setTimeout(resolve, 250))
+    await vi.waitFor(() => {
+      expect(target.querySelector('.vamis-spinner--overlay')).toBeTruthy()
+    })
+    expect(host.querySelector('.vamis-spinner--overlay')).toBeNull()
+  })
+
   it('keeps two page-body buttons as inline-block siblings (Amis style 基本使用)', async () => {
     const { host } = mount({
       type: 'page',

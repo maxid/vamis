@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
   expanded: (item: OptionItem) => boolean
   deferring: (item: OptionItem) => boolean
   deferField?: string
+  loadingConfig?: { root?: string; show?: boolean }
   disabled?: boolean
   outline?: boolean
   showIcon?: boolean
@@ -58,6 +59,12 @@ const rows = computed(() => flattenVisibleOptions(props.nodes, props.expanded))
 const showCheck = computed(() => props.multiple || props.showRadio)
 const addingRoot = computed(() => props.isAdding && props.addingParent == null)
 const busy = computed(() => props.isAdding || !!props.editingItem)
+const deferSpinnerSchema = computed(() => ({
+  type: 'spinner',
+  show: true,
+  size: 'sm',
+  loadingConfig: props.loadingConfig,
+}))
 
 function canExpand(node: OptionItem) {
   return !!node.children?.length || !!node[props.deferField]
@@ -214,7 +221,7 @@ watch(
               @keydown.enter.prevent="emit('expand', row.item)"
               @keydown.space.prevent="emit('expand', row.item)"
             >
-              <Spinner v-if="deferring(row.item)" :schema="{ type: 'spinner', show: true, size: 'sm' }" />
+              <Spinner v-if="deferring(row.item)" :schema="deferSpinnerSchema" />
               <span v-else class="vamis-tree__arrow-icon" :class="{ 'is-folded': !expanded(row.item) }">
                 <VamisIcon name="down-arrow-bold" />
               </span>

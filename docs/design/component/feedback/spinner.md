@@ -1,12 +1,13 @@
 # Spinner 加载中 · `spinner` 设计
 
-> 状态：**进行中 95%** · 复杂度：**M 中**
+> 状态：**已完成 100%** · 复杂度：**M 中**
 > 文档：[在线 API 手册](/components/spinner) · Amis：`/zh-CN/components/spinner`
-> 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
+> 完成规格：[Spinner 完成设计](../../../superpowers/specs/component/feedback/2026-11-20-vamis-spinner-completion-design.md)
+> 盘点日期：2026-11-21。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacement、delay、overlay、body、loadingConfig.root、父子 loading 互斥。主路径成熟；Page / Service / CRUD / Dialog / Form 宿主已接，Select 细项仍待核。
+Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacement、delay、overlay、body、loadingConfig.root、父子 loading 互斥。主路径完整；Page / Service / CRUD / Dialog / Form / Select / InputText / InputTree / TreeSelect 已回归。默认中心对称菱形是 Vamis 有意保留的产品化视觉，不跟 Amis 六边形重合。
 
 ## 1. 边界与优先级（先读）
 
@@ -23,7 +24,7 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 - overlay true/false/body/root
 - default/fa/URL 图标、tip 位置
 - 父子同时 loading/卸载/快速切换
-- Dialog/Form/Select 宿主（Select 未核；Dialog footer 有 Form 时 body + Dialog-info 双层已核）
+- Dialog / Form / Select / InputText / InputTree / TreeSelect 宿主（footer 有 Form 时 body overlay + Dialog-info 双层已核）
 - 窄屏/深色
 
 ### 优先级
@@ -32,7 +33,7 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 
 ## 2. 复杂度
 
-- 等级：**M 中**（Amis 96 行；Vamis 190 行）；依赖 spinner store。
+- 等级：**M 中**（Amis 96 行；Vamis 约 300 行）；依赖 spinner store。
 - 风险：父子 loading/全局宿主。
 
 ## 3. 契约
@@ -44,7 +45,7 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 | delay/overlay/body | 行为 | 已接 |
 | loadingConfig.root | 宿主 | 已接 |
 | 父子互斥 | 状态 | 已接 |
-| Dialog/Form 细项 | 宿主 | 已接；footer AJAX / confirm 委派 Form 时 body overlay + Dialog-info，Form body Action 只占 Form |
+| Dialog / Form / Select / Tree 细项 | 宿主 | 已接；footer AJAX / confirm 委派 Form 时 body overlay + Dialog-info，Form body Action 只占 Form；Select trigger 与显式 overlay 分离，树懒加载透传 `loadingConfig` |
 
 ## 4. 架构
 
@@ -55,34 +56,34 @@ Spinner 是**加载遮罩/容器**：show/showOn、size、icon、tip/tipPlacemen
 
 ## 5. 样式
 
-- 菱形/遮罩/tip token；无 `<style>`；深色/窄屏单独核。
+- 菱形/遮罩/tip token；无 `<style>`；深色与 375px 已核。
 
 ## 6. 缺口
 
-Select 宿主细项；深色/窄屏逐项。
+无。默认菱形为有意产品化差异，不属于实现缺口。SDK 对照报告里的 page-body `14/16px` 字体差是全局正文基线；实测 `.vamis-spinner` 自身为 `16px / 24px`，与 Amis 一致。
 
 ## 7. 验收
 
 - show/delay/overlay/父子互斥/root/卸载/图标；宿主缺口不误标。
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis 渲染器或注册文件已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（组件相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page <type>` 桌面
-- [ ] `pnpm compare --page <type> --mobile`
-- [ ] 深色 / 375px 窄屏核对
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
+- [x] 组件页活示例运行、无 console error
+- [x] `pnpm test`（组件相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page spinner` 桌面
+- [x] `pnpm compare --page spinner --mobile`
+- [x] 深色 / 375px 窄屏核对
 
 ## 8. 后续
 
-宿主细项按需补；保持 push/remove 成对。
+后续仅维护宿主接入契约；新增 loading 宿主时必须继续复用 `Spinner.vue` 并保持 push/remove 成对。
 
 ---
 

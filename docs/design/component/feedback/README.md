@@ -5,5 +5,5 @@
 - [Alert 提示](alert.md) — `alert` · M 中 · 60%
 - [Dialog 对话框](dialog.md) — `dialog` · XL 特重 · 100%
 - [Drawer 抽屉](drawer.md) — `drawer` · XL 特重 · 88%
-- [Spinner 加载中](spinner.md) — `spinner` · M 中 · 95%
+- [Spinner 加载中](spinner.md) — `spinner` · M 中 · 100%
 - [Toast 轻提示](toast.md) — `toast` · L 重 · 100%

@@ -225,7 +225,7 @@ Amis LOC 是 `@Renderer`/`@FormItem`/`OptionsControl` 入口文件行数（不�
 - [Alert 提示](feedback/alert.md) — `alert` · M 中 · 60%
 - [Dialog 对话框](feedback/dialog.md) — `dialog` · XL 特重 · 100%
 - [Drawer 抽屉](feedback/drawer.md) — `drawer` · XL 特重 · 88%
-- [Spinner 加载中](feedback/spinner.md) — `spinner` · M 中 · 95%
+- [Spinner 加载中](feedback/spinner.md) — `spinner` · M 中 · 100%
 - [Toast 轻提示](feedback/toast.md) — `toast` · L 重 · 100%
 
 ### 其他

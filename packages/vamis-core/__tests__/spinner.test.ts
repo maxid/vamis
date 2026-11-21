@@ -97,7 +97,14 @@ describe('spinner defaults', () => {
     expect(css).toContain('--spinner-size-sm: 16px')
     expect(css).toContain('--spinner-size-lg: 48px')
     expect(css).toContain('--spinner-color: var(--primary)')
+    expect(css).toContain('--spinner-overlay-bg: rgba(255, 255, 255, 0.1)')
     expect(css).toContain('--z-spinner: 11')
+    expect(css).toMatch(
+      /\.vamis-spinner \{\s*display: inline-flex;\s*flex-direction: column;\s*align-items: center;\s*justify-content: center;\s*font-size: var\(--fontSizeLg\);\s*line-height: var\(--lineHeightBase\);\s*\}/,
+    )
+    expect(css).toMatch(
+      /\.vamis-node:has\(> \[data-vamis-spinner\]\) \{\s*font-size: var\(--fontSizeLg\);\s*line-height: var\(--lineHeightBase\);\s*\}/,
+    )
     expect(css).toContain('animation: vamis-spinner-spin 2s linear infinite')
     expect(css).toContain('.vamis-spinner__icon--default')
     const vue = readFileSync(resolve(here, '../../vamis/src/renderers/Spinner.vue'), 'utf8')
@@ -110,5 +117,33 @@ describe('spinner defaults', () => {
     expect(mark).toContain('points="32 10 54 32 32 54 10 32"')
     expect(mark).not.toContain('49.6902503')
     expect(css).toContain('.vamis-spinner-v')
+    const themes = readFileSync(resolve(here, '../../vamis-ui/src/themes.css'), 'utf8')
+    expect(themes).not.toContain('--spinner-overlay-bg:')
+  })
+
+  it('keeps every shared Spinner host on the shared renderer', () => {
+    const consumers = [
+      '../../vamis/src/renderers/Page.vue',
+      '../../vamis/src/renderers/Service.vue',
+      '../../vamis/src/renderers/CRUD.vue',
+      '../../vamis/src/renderers/Form.vue',
+      '../../vamis/src/OverlayHost.vue',
+      '../../vamis/src/renderers/form/Select.vue',
+      '../../vamis/src/renderers/form/InputText.vue',
+      '../../vamis/src/renderers/form/TreeBranch.vue',
+    ]
+    for (const consumer of consumers) {
+      expect(readFileSync(resolve(here, consumer), 'utf8')).toMatch(/import Spinner from ['"].*Spinner\.vue['"]/)
+    }
+    for (const consumer of consumers.slice(0, 4).concat(consumers.slice(5, 7))) {
+      expect(readFileSync(resolve(here, consumer), 'utf8')).toMatch(/loadingConfig/)
+    }
+    expect(readFileSync(resolve(here, consumers[7]), 'utf8')).toContain('loadingConfig')
+    expect(readFileSync(resolve(here, '../../vamis/src/renderers/form/InputTree.vue'), 'utf8')).toContain(
+      ':loading-config="schema.loadingConfig"',
+    )
+    expect(readFileSync(resolve(here, '../../vamis/src/renderers/form/TreeSelect.vue'), 'utf8')).toContain(
+      ':loading-config="schema.loadingConfig"',
+    )
   })
 })

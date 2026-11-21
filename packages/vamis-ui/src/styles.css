@@ -527,6 +527,8 @@
   --spinner-size-sm: 16px;
   --spinner-size-lg: 48px;
   --spinner-color: var(--primary);
+  --spinner-color-disabled: rgba(0, 0, 0, 0.65);
+  --spinner-color-on-dark: var(--colors-neutral-text-11);
   --spinner-tip-gap: 12px;
   --spinner-tip-font-size: var(--fontSizeSm);
   --spinner-overlay-bg: rgba(255, 255, 255, 0.1);
@@ -3470,6 +3472,9 @@
     margin-left: 0;
     color: var(--select-caret-color);
   }
+  .vamis-select__spinner {
+    line-height: calc(var(--fontSizeSm) * var(--lineHeightBase));
+  }
   .vamis-select:hover .vamis-select__caret {
     color: var(--select-caret-hover-color);
   }
@@ -4352,6 +4357,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: var(--fontSizeLg);
+  line-height: var(--lineHeightBase);
+}
+.vamis-node:has(> [data-vamis-spinner]) {
+  font-size: var(--fontSizeLg);
+  line-height: var(--lineHeightBase);
 }
 .vamis-spinner--top {
   flex-direction: column-reverse;
@@ -4427,6 +4438,12 @@
   align-items: center;
   justify-content: center;
   animation: vamis-spinner-spin 2s linear infinite;
+}
+.vamis-spinner__icon--simple.vamis-spinner__icon--disabled {
+  color: var(--spinner-color-disabled);
+}
+.vamis-spinner__icon--simple.vamis-spinner__icon--dark-bg {
+  color: var(--spinner-color-on-dark);
 }
 .vamis-spinner__icon--simple .icon,
 .vamis-spinner__icon--simple svg {

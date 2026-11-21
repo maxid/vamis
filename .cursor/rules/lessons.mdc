@@ -971,6 +971,12 @@ alwaysApply: true
 - 触及：`spinner` `page` `service` `select` `input-text` `crud`
 - 规则：本文；Amis `amis-ui` `Spinner.tsx` / `_spinner.scss`
 
+### Spinner 根语义和 Select 加载态要分宿主，不能用一个 loading 驱动所有挂点
+- 踩过：`className` 只落 `.vamis-node`，Spinner 根本身不生效；`disabled` / 深色父背景未接。Select 用同一个选项加载状态同时画 trigger 和 overlay，祖先 Spinner 互斥会把 trigger 小标吞掉；深色 overlay 还继承了 `:root` 已解析的白色 token。
+- 稳定做法：Spinner 根同时接 schema `className`，根字体跟 Amis 实测 16 / 24；`disabled` / darkBg 只作用 simple icon。overlay 底色跟 Amis 运行时 `rgba(255,255,255,0.1)`，不要误用源码里未被消费的小写 `--spinner-overlay-bg` 色阶变量。Amis 实测：source / autoComplete loading 显示 Select trigger `reload + sm`，显式 `loading` 显示控件 overlay；两者分开，避免父子互斥。`loadingConfig.root` 必须容忍延迟挂载和非法 selector；InputTree / TreeSelect 的 defer Spinner 也要透传。新增宿主必须进共享宿主矩阵回归。
+- 触及：`spinner` `select` `input-text` `page` `service` `crud` `form` `dialog` `input-tree` `tree-select`
+- 规则：Amis `Spinner.tsx` / `SpinnerRenderer.tsx` / `Select.tsx`；`packages/vamis/src/renderers/Spinner.vue`；`packages/vamis/src/renderers/form/Select.vue`
+
 ### Action 不要在 onClick 里自动转圈；控件 loading 画在控件上
 - 踩过：`reload` 输入框 `source` 时 Vamis 把整段 click 设 `loading=true`，按钮变成 CSS 圆环 +「重新加载」；Amis 按钮不动，InputText 右侧才是 `Spinner icon=reload size=sm`。
 - 稳定做法：Action 自身只认 schema `loading` / `loadingOn`。执行 Action 时由**最近宿主**注入 action-loading：Page 根级请求显示 Page body overlay；Dialog 没有 Form 时的请求显示 `Dialog-info`；Dialog footer 的 AJAX / confirm 有 Form 时，Form body overlay 与 Dialog-info 同时显示；Form body 内的 Action 只显示 Form overlay。Form body Spinner 在请求完成时撤；Dialog-info 绑完整 action/feedback Promise，feedback 未关闭不能先撤。`source` / `autoComplete` 的 loading 挂该控件自己的 Spinner（`icon: reload` `size: sm`），不要再画一套 `animate-spin` 圆环，也不要让触发按钮冒充。

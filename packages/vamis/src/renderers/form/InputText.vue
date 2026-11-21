@@ -186,6 +186,7 @@ const loadingSpinnerSchema = computed(() => ({
   icon: 'reload',
   size: 'sm',
   spinnerClassName: 'vamis-text-control__spinner',
+  loadingConfig: props.schema.loadingConfig,
 }))
 const inputControlClass = computed(() =>
   cn(

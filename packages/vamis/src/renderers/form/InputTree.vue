@@ -33,6 +33,7 @@ const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
         :expanded="tree.isExpanded"
         :deferring="tree.isDeferring"
         :defer-field="tree.deferField.value"
+        :loading-config="schema.loadingConfig"
         :outline="tree.showOutline.value"
         :show-icon="tree.showIcon.value"
         :multiple="tree.multiple.value"

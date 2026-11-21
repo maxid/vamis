@@ -5,15 +5,16 @@ outline: deep
 
 # Spinner 加载中
 
-::: info 实现进度 95% · 进行中
-文档主路径已对齐：默认中心对称菱形 SVG（色走 `--primary`，2.7s 无限循环）、`show` / `showOn`、`size` sm|lg|空、`icon`（内置 `reload` / `fa` / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。Page / Service 已挂同一套 Spinner。缺 Dialog / Form / Select 宿主细项。
+::: tip 实现进度 100% · 已完成
+文档主路径已对齐：默认中心对称菱形 SVG（色走 `--primary`，2.7s 无限循环）、`show` / `showOn`、`size` sm|lg|空、`icon`（内置 `reload` / `fa` / URL）、`tip` / `tipPlacement`、`delay`、`body` 容器、`overlay`（源码默认 false）、父子 loading 互斥、`loadingConfig.root`。
+Page / Service / CRUD / Form / Dialog / Select / InputText / InputTree / TreeSelect 共用同一套 Spinner；Select 的选项加载显示 trigger `reload` 小标，显式 `loading` 显示控件 overlay。
 :::
 
 一般用来做 loading。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token。
 
 属于侧栏分类 **反馈**。对照进度以仓库组件 P0 TODO 为准。
 
-`className` / `style` 打在宿主 `div.vamis-node`。裸 spinner 是 `inline-block`，和 Amis `inline-flex` 一样并排。有 `body` 时当容器，指示器叠在内容中间。
+`className` 同时落到宿主 `div.vamis-node` 和实际 `.vamis-spinner` 根；`style` 打在宿主 `div.vamis-node`。裸 spinner 是 `inline-block`，和 Amis `inline-flex` 一样并排。有 `body` 时当容器，指示器叠在内容中间。
 
 源码里 `overlay` 默认 **false**（文档有的写成 true）。`size` 空值是 32px，`sm` 16px，`lg` 48px。未写 `icon` 时用 Vamis 中心对称 loading 标（不是 Amis 六边形）：一枚原点向四向裂开，再沿菱形依次连线、依次消失、收回原点，2.7s 无限循环。色绑 `--primary`（跟主题包 brand）。
 
@@ -46,7 +47,7 @@ items:
     size: lg
 ```
 
-`className` 打在最外层（`div.vamis-node`）。`spinnerClassName` 打在 icon 上。`spinnerWrapClassName` 只在作为容器时打在包裹层。
+`className` 同时落在宿主 `div.vamis-node` 与实际指示器根，作者样式可直接命中 `.vamis-spinner`。`spinnerClassName` 打在 icon 上。`spinnerWrapClassName` 只在作为容器时打在包裹层。
 
 ```schema: scope="body"
 type: spinner
@@ -130,7 +131,7 @@ body:
 
 ## Spinner 在组件树中的默认表现
 
-父组件和子组件同时 loading 时，只画父级；父级结束后才轮到子级。Page / Service 共用这一套 Spinner。
+父组件和子组件同时 loading 时，只画父级；父级结束后才轮到子级。Page / Service / CRUD / Form / Dialog 等都共用这一套 Spinner。
 
 ```schema
 type: service
@@ -165,11 +166,11 @@ body:
 | type | `string` | `spinner` | 指定为 Spinner 渲染器 |
 | show | `boolean` | `true` | 是否显示 |
 | showOn | [表达式](/concepts/expression) | | 是否显示的条件，优先于 `show` |
-| className | [ClassName](/types/classname) | | 打在宿主 `div.vamis-node` |
+| className | [ClassName](/types/classname) | | 同时落在宿主 `div.vamis-node` 与实际 `.vamis-spinner` 根 |
 | spinnerClassName | [ClassName](/types/classname) | | 打在 icon 上 |
 | spinnerWrapClassName | [ClassName](/types/classname) | | 作为容器时打在包裹层 |
 | size | `string` | | `sm` / `lg` / 空（32px） |
-| icon | `string` | | 内置名（如 `reload`）、字体 class、或带 `.` 的图片 URL。写了 `loadingConfig.root` 时强制默认 V 标 |
+| icon | `string` | | 内置名（如 `reload`）、字体 class、或带 `.` 的图片 URL。写了 `loadingConfig.root` 时强制默认菱形标 |
 | tip | `string` | | 文案，可模板 |
 | tipPlacement | `top` / `right` / `bottom` / `left` | `bottom` | 文案相对 icon 的位置 |
 | delay | `number` | `0` | 延迟显示毫秒 |
@@ -185,4 +186,4 @@ body:
 - 默认指示器是中心对称菱形（原点裂开 → 连线 → 收回），不是 Amis 六边形，也不是开口 V。色走 `--primary`，不是写死 `#2468F2`。同一时钟 `repeatCount="indefinite"`，loading 期间一直转。
 - 内置 icon 目前文档主路径接了 `reload`；Amis `icons.tsx` 全表未搬。
 - `/examples/static/logo.png` 在 Amis 文档站有静态文件；Vamis playground 没有同路径时图片会空。
-- Dialog / Form / Select 的 loading 宿主还没全部换成这套 Spinner。
+- 默认菱形是 Vamis 有意保留的产品化差异；尺寸、方向、延迟、遮罩和父子互斥继续对齐 Amis。

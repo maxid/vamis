@@ -231,6 +231,20 @@ const foldTags = computed(() => {
   return Number.isFinite(maxTag) && maxTag > 0
 })
 const overlayPlacement = computed(() => selectOverlayPlacement(props.schema.overlay))
+const triggerSpinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: ctl.loading.value,
+  icon: 'reload',
+  size: 'sm',
+  spinnerClassName: 'vamis-select__spinner',
+  loadingConfig: props.schema.loadingConfig,
+}))
+const controlSpinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: props.schema.loading === true,
+  overlay: true,
+  loadingConfig: props.schema.loadingConfig,
+}))
 const popoverStyle = computed(() => {
   const width = calcSelectOverlayWidth(props.schema.overlay, triggerWidth.value)
   if (width != null) return { width: typeof width === 'number' ? `${width}px` : width }
@@ -537,9 +551,11 @@ watch(
           >
             <VamisClear />
           </button>
+          <Spinner :schema="triggerSpinnerSchema" />
           <VamisCaret class="vamis-select__caret" :open="!isMobile && ctl.open.value" />
         </span>
       </div>
+      <Spinner :schema="controlSpinnerSchema" />
       <VamisTooltipLayer
         :show="tagTip && !!tagTipLabel"
         :target="tagTipEl"

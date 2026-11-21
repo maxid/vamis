@@ -61,6 +61,70 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it('shows Select trigger and control Spinner while source loads', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'choice',
+          label: '选项',
+          source: '/api/options',
+        },
+      },
+      { fetcher },
+    )
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      const trigger = host.querySelector('.vamis-select__input .vamis-spinner')
+      expect(trigger).toBeTruthy()
+      expect(trigger?.querySelector('.vamis-spinner__icon--sm')).toBeTruthy()
+      expect(trigger?.querySelector('svg')).toBeTruthy()
+      expect(host.querySelector('.vamis-select > .vamis-spinner--overlay')).toBeNull()
+    })
+
+    resolveFetch({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: 'A', value: 'a' }] },
+    })
+    await vi.waitFor(() => {
+      expect(host.querySelector('.vamis-select__input .vamis-spinner')).toBeNull()
+      expect(host.querySelector('.vamis-select > .vamis-spinner--overlay')).toBeNull()
+    })
+  })
+
+  it('shows Select control Spinner only for explicit loading', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'select',
+        name: 'choice',
+        label: '选项',
+        loading: true,
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    await nextTick()
+    expect(host.querySelector('.vamis-select__input .vamis-spinner--overlay')).toBeNull()
+    expect(host.querySelector('.vamis-select > .vamis-spinner--overlay')).toBeTruthy()
+  })
+
   it('opens an add dialog and emits addConfirm payload', async () => {
     const notify = vi.fn()
     const { host } = mount({
@@ -532,6 +596,42 @@ describe('Select option mutation events', () => {
 })
 
 describe('InputTree option mutation events', () => {
+  it('forwards loadingConfig to deferred node Spinner', async () => {
+    const target = document.createElement('div')
+    target.id = 'tree-spinner-root'
+    document.body.appendChild(target)
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    mount({
+      type: 'page',
+      body: {
+        type: 'input-tree',
+        name: 'tree',
+        deferApi: '/api/tree-defer',
+        loadingConfig: { root: '#tree-spinner-root' },
+        options: [{ label: 'A', value: 'a', defer: true }],
+      },
+    }, { fetcher })
+
+    await nextTick()
+    click(document.querySelector('.vamis-tree__arrow'))
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    await vi.waitFor(() => {
+      expect(target.querySelector('.vamis-spinner--overlay')).toBeTruthy()
+    })
+
+    resolveFetch({ status: 0, msg: '', data: { options: [] } })
+    await vi.waitFor(() => {
+      expect(target.querySelector('.vamis-spinner--overlay')).toBeNull()
+    })
+  })
+
   it('does not add or call addApi when addConfirm prevents default', async () => {
     const fetcher = vi.fn(async () => ({
       status: 0,

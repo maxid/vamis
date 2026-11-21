@@ -7,6 +7,15 @@ alwaysApply: true
 
 合并自原 `assembly-containers`、`adaptive-default`。约束 widget 树 / 渲染器，不约束 Playground / 编辑器外壳。Amis 组件文档与 `renderers` 源码怎么查见 `.cursor/rules/amis-lookup.mdc`。
 
+## 组件增量规格目录
+
+组件增量 spec 按侧栏分类落到 `docs/superpowers/specs/component/<分类>/`，分类与 `docs/design/component/<分类>/` 保持一致：`layout` / `functional` / `form` / `display` / `feedback` / `other`。
+
+- 新 spec 命名：`YYYY-MM-DD-<type>-<topic>.md`，例如 Form 的 Select 规格在 `specs/component/form/`，Spinner 的完成规格在 `specs/component/feedback/`。
+- 组件专用 spec 不要直接放在 `docs/superpowers/specs/` 根目录；根目录只放跨组件的 TODO、运行时、主题、SDK、同步状态等全局规格。
+- 执行计划仍放 `docs/superpowers/plans/`；计划里的 `Spec` 链接必须指向上述分类目录。
+- 长期设计文档 `docs/design/component/<分类>/<type>.md` 要链接对应增量 spec，迁移或改名时同步更新所有引用。
+
 ## 组装容器：div 优先
 
 Amis 布局壳几乎全是 `div`。schema 渲染的组装容器同样用 `div`，不要为「语义化」改成 `header` / `aside` / `section`。作者 `className` 打在 SchemaRenderer 外层 **`div.vamis-node`**。
