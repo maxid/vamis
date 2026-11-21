@@ -182,7 +182,7 @@ type 覆盖复算：`pnpm status -- --amis ../amis`。
 - amis type 名称覆盖 **185 / 189（97.9%）**，剩 3 个 type 与 `navigation` 1 个别名。
 - 侧栏 155 个组件：已完成 **5**（`container` / `hidden` / `toast` / `dialog` / `spinner`），进行中 150，平均 **62%**（≥80% 47 项）。
 - kernel D1–D5 P0 已落地；D6 P0（路径值 / `validateApi` / 提交 `errors` / `autoFill`）已接，余 combo 独立域；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
-- 测试：formula 185 + core 884 + editor 8 + sdk 180 = **1259**，全部通过；`pnpm typecheck` **0 错误**。
+- 测试：formula 185 + core 886 + editor 8 + sdk 180 = **1259**，全部通过；`pnpm typecheck` **0 错误**。
 - Amis 上游自 2026-03-18 无新提交，仍对齐 6.13.0。
 
 ## 开发

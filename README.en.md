@@ -158,7 +158,7 @@ Progress is public: docs pages show implementation percentages, and every task u
 - Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
 - 155 sidebar components: **5 complete** (`container`, `hidden`, `toast`, `dialog`, `spinner`), 150 in progress, **62% average** semantic parity (47 at ≥80%).
 - Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 registration metadata is in, RendererApi injection remains; D8 diagnostics and the render error boundary are in, the visual debug panel is not.
-- Tests: formula 185 + core 884 + editor 8 + sdk 180 = **1259 passing**; `pnpm typecheck` is **0** (CI gate).
+- Tests: formula 185 + core 886 + editor 8 + sdk 180 = **1259 passing**; `pnpm typecheck` is **0** (CI gate).
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.
 
 ## Development
