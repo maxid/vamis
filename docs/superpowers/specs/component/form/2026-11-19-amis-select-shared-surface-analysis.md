@@ -71,14 +71,14 @@ flowchart TD
 | `AMISSelectSchema` | Select schema 契约 | Select / multi-select | `SchemaObject` + schema catalog | core 类型与 schema catalog |
 | `amis-ui Select.tsx` | 普通桌面下拉、标签、CUD UI、键盘、虚拟列表 | Select / multi-select | `Select.vue` 主路径已实现 | 拆出结果框、普通列表 pane、搜索状态 |
 | `SelectMobile.tsx` | 移动端滚轮/列表 PopUp | 普通 Select | `Select.vue` + `CalendarWheel` + `VamisPopUp` | 共享移动选择 pane |
-| `TransferDropDown.tsx` | 非普通模式触发器、PopOver/PopUp、确认提交 | table/tree/chained/associated | 未实现 | `SelectTransferShell` |
+| `TransferDropDown.tsx` | 非普通模式触发器、PopOver/PopUp、确认提交 | table/tree/chained/associated | `Select.vue` 共用外壳 + 模式 pane | `SelectTransferShell` |
 | `Transfer.tsx` | 模式分派、搜索、结果区、分页、全选 | 所有 TransferDropDown 模式 | 部分能力散落在 Select / Transfer | `SelectModeController` / 共享 mode props |
 | `Selection.tsx` | 选择值数组、itemRender、基础选择 API | 所有 Selection | 逻辑分散在 `options.ts` 和多个组件 | core selection helpers + renderer base props |
 | `GroupedSelection` | 分组列表选择 | list/group/associated 右栏 | Select 分组 + Transfer/Picker 各自实现 | `SelectGroupedPane` |
 | `TableSelection` | 表格候选与表头全选 | table/associated 右栏 | Table / Picker / Transfer 有局部实现 | `SelectTablePane` |
 | `Tree` | 树候选、展开、勾选、搜索高亮、懒加载、虚拟化 | tree/searchResult/associated 左右栏 | `useTreeField` + `TreeBranch` + InputTree/TreeSelect | `SelectTreePane` + 共享 tree state |
 | `ChainedSelection` | 无限极级联选择 | chained/associated 右栏 | `ChainedSelect.vue` 精简实现 | `SelectChainedPane` / `useChainedOptions` |
-| `AssociatedSelection` | 左节点联动右栏 | associated | 未实现 | `SelectAssociatedPane` |
+| `AssociatedSelection` | 左节点联动右栏 | associated | 主路径已实现 | `SelectAssociatedPane` |
 | `ResultBox` | 单选显示、多选标签、清空、箭头 | 普通 Select / TransferDropDown | Select 与 TreeSelect 各写一份 | `@vamis/ui` 的 `SelectResultBox` 或 UI 等价原语 |
 | `AutoFoldedList` | 标签按宽度折叠、`+N` Tooltip | ResultBox | `countVisibleTagsByWidth` + Select 模板 | 抽出可复用折叠列表 |
 | `ResultList / ResultTreeList / ResultTableList` | 已选结果区、排序、搜索、结构模式 | Transfer / TransferDropDown | 仅 Select 内标签，Transfer 有局部结果区 | 后续 Transfer 组件共享 |

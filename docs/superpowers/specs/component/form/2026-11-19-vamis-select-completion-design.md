@@ -1,7 +1,7 @@
 # Select 剩余语义完成设计
 
 - 日期：2026-11-19
-- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi`、`table`、`chained` 2026-11-21 已落地）
+- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi`、`table`、`chained`、`associated` 主路径 2026-11-21 已落地）
 - 范围：`select` 的 Options CUD 事件、`deferApi`、`selectMode: table / tree / chained / associated`、`searchResultMode`
 - Amis 基线：6.13.0
 - 关联文档：
@@ -159,7 +159,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 ### 6.4 `selectMode: associated`
 
-- 新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection`。
+- 已完成 2026-11-21：新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection` 主路径。
 - 左栏：
   - `leftMode: tree` 使用共享树状态和 `TreeBranch`，对应 Amis `Tree`。
   - `leftMode: list` 使用列表选择面板，对应 Amis `GroupedSelection`。
@@ -170,7 +170,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
   - `chained` → `SelectChainedPane.vue`
   - `list` / `group` → 列表选择面板
 - 左节点通过 `ref` 匹配 `options[].ref`；`options[].children` 是右栏候选。
-- 左右树节点需要懒加载时，复用共享 tree state 的 `deferApi`。
+- 左右树节点需要懒加载时，复用共享 tree state 的 `deferApi`；当前仅完成静态与 source-shaped 数据，动态左栏 defer、人员点选仍待后续。
 - source 返回 `options[0].leftOptions` / `options[0].children` / `leftDefaultValue` 时，在进入面板前拆出左右数据。
 
 ### 6.5 `selectMode: table`
@@ -204,7 +204,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
 3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化与 `searchResultMode` 另列后续。
 4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列与虚拟化另列后续。
-5. `selectMode: associated` 与人员点选。
+5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；人员点选、动态左栏 defer 另列后续。
 6. `searchResultMode` 全模式收口。
 
 每个切片单独跑测试和 Select 对照，不把五个模式压成一个不可审查的提交。

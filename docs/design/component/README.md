@@ -150,7 +150,7 @@ Amis LOC 是 `@Renderer`/`@FormItem`/`OptionsControl` 入口文件行数（不�
 - [InputRange 滑块](form/input-range.md) — `input-range` · XL 特重 · 50%
 - [InputRepeat 重复频率](form/input-repeat.md) — `input-repeat` · M 中 · 40%
 - [InputRichText 富文本](form/input-rich-text.md) — `input-rich-text` · XL 特重 · 25%
-- [Select 下拉框](form/select.md) — `select` · XL 特重 · 97%
+- [Select 下拉框](form/select.md) — `select` · XL 特重 · 98%
 - [InputSubForm 子表单](form/input-sub-form.md) — `input-sub-form` · L 重 · 45%
 - [Switch 开关](form/switch.md) — `switch` · M 中 · 88%
 - [Static 静态展示](form/static.md) — `static` · M 中 · 85%
