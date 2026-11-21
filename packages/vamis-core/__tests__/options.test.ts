@@ -81,6 +81,30 @@ describe('normalizeOptions', () => {
     expect(list[0].children?.[0]).toMatchObject({ label: 'A1', value: 'a1' })
   })
 
+  it('keeps an omitted object value undefined like Amis normalizeOptions', () => {
+    const list = normalizeOptions([
+      { label: 'Parent', children: [{ label: 'Child' }] },
+      { label: 'Leaf', id: 'legacy-id' },
+    ])
+    expect(list[0]?.value).toBeUndefined()
+    expect(list[0]?.children?.[0]?.value).toBeUndefined()
+    expect(list[1]?.value).toBeUndefined()
+    expect(
+      normalizeOptions(
+        [{ label: 'Mapped', value: 'legacy-value', mapped: 'mapped-value' }],
+        'label',
+        'mapped',
+      )[0]?.value,
+    ).toBe('mapped-value')
+    expect(
+      normalizeOptions(
+        [{ label: 'No mapped value', value: 'legacy-value' }],
+        'label',
+        'mapped',
+      )[0]?.value,
+    ).toBeUndefined()
+  })
+
   it('does not invent a label when labelField is missing', () => {
     const list = normalizeOptions([{ text: 'A', value: 'a' }])
     expect(list[0].label).toBe('')
@@ -399,10 +423,15 @@ describe('deferred option children', () => {
     expect(optionNeedsDefer(tree[0])).toBe(true)
     expect(optionNeedsDefer({ label: 'A', value: 'a', defer: true, loaded: true })).toBe(false)
 
-    const loaded = resolveDeferredOption(tree, tree[0], [
-      { text: 'A1', id: 'a1' },
-      { text: 'A2', id: 'a2', defer: true },
-    ])
+    const loaded = resolveDeferredOption(
+      tree,
+      tree[0],
+      [
+        { text: 'A1', id: 'a1' },
+        { text: 'A2', id: 'a2', defer: true },
+      ],
+      { labelField: 'text', valueField: 'id' },
+    )
     expect(loaded[0].loaded).toBe(true)
     expect(loaded[0].children?.map((item) => item.value)).toEqual(['a1', 'a2'])
     expect(loaded[0].children?.[1].defer).toBe(true)
@@ -522,6 +551,14 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('.vamis-select__input.is-focused')
     expect(css).toContain('--select-search-height: 30px')
     expect(css).toContain('--select-check-size: 14px')
+    expect(css).toContain('--select-group-color: var(--colors-neutral-text-5)')
+    expect(css).toContain('--select-group-font-size: var(--fontSizeBase)')
+    expect(css).toContain('--select-group-font-weight: var(--fontWeightNormal)')
+    expect(css).toContain(
+      '--select-group-line-height: calc(var(--fontSizeBase) * var(--lineHeightBase))',
+    )
+    expect(css).toContain('color: var(--select-group-color)')
+    expect(css).toContain('font-size: var(--select-group-font-size)')
     expect(css).toContain('.vamis-select__check.is-checked:hover')
     expect(css).toContain('background: var(--checkbox-checked-hover)')
     expect(css).not.toContain('.vamis-select__item:hover .vamis-select__check:not(.is-checked)')
@@ -537,6 +574,9 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('color: var(--control-placeholder)')
     expect(css).toContain('.vamis-select__placeholder')
     expect(css).toContain('.vamis-select__suffix')
+    expect(css).toContain(
+      'background: var(--page-main-bg);\n    background-color: var(--page-main-bg);',
+    )
     expect(css).not.toContain('min-height: calc(var(--control-h) - 2px)')
     // 清除钮色走色阶 text-7 / text-4，深色跟色阶翻转，不再单独覆盖
     expect(css).toContain('--select-clear-color: var(--colors-neutral-text-7)')

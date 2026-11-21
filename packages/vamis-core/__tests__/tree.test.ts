@@ -91,9 +91,9 @@ describe('tree toggle', () => {
     expect(toggleTreeSelection([], tree[0].children![0], { onlyLeaf: true })).toEqual([2])
   })
 
-  it('uses the folder label as value after normalize', () => {
-    expect(tree[2].value).toBe('Folder E')
-    expect(toggleTreeSelection([], tree[2], { multiple: true, options: tree })).toEqual(['Folder E'])
+  it('keeps a folder without explicit value unselectable after normalize', () => {
+    expect(tree[2].value).toBeUndefined()
+    expect(toggleTreeSelection([], tree[2], { multiple: true, options: tree })).toBeNull()
   })
 })
 

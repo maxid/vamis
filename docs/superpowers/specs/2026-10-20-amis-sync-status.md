@@ -1,7 +1,7 @@
 # Vamis × amis 同步状态
 
-- 同步时间：2026-11-20
-- Vamis 基线：`9bc50a8`（`main`，与 `origin/main` 一致）
+- 同步时间：2026-11-21
+- Vamis 基线：`a173e53`（`main`；另有 Select 树模式增量待提交）
 - amis 基线：`43a33ee06`（`master`，2026-03-18）
 - amis 版本：6.13.0（`packages/amis/package.json`）
 - amis 本地路径：`../amis`（相对本仓库根；仓不在旁时用 `--amis <相对路径>`）
@@ -20,7 +20,7 @@
 |----|----|
 | amis 本地 master | `43a33ee06`，2026-03-18 |
 | amis 包版本 | 6.13.0 |
-| Vamis HEAD | `9bc50a8`，2026-11-19，`main` 与 `origin/main` 一致 |
+| Vamis HEAD | `a173e53`，2026-11-21，`main`；Select 树模式增量在 working tree |
 | Vamis 公式引擎 | 仓内 `@vamis/formula`，从 amis-formula 6.13.0 源码搬运；P0 与 Amis 扩展过滤器已接 |
 
 结论：Vamis 以 amis master 源码为参考基线，版本语义仍是 6.13.0。**本轮同步没有新增待搬运组件。**
@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 878 + editor 8 + sdk 140 = **1211**，全绿（2026-11-21 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 881 + editor 8 + sdk 152 = **1226**，全绿（2026-11-21 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
-| 工作区 | `git status` | 本次 Form debug / Alert 运行时、样式、测试与文档改动已提交；另保留 5 个既有组件文档改动未纳入 |
-| 对照 | 报告 + 本机目录 | 目录 **2230**（文档 159 / 组件 1602 / 样式 471）。历史全量报告基线见自动生成报告；Spinner 桌面 / 移动 **7/7**，Dialog **22/23**。本轮未重跑全量对照 |
+| 工作区 | `git status` | Spinner 批次已提交为 `a173e53`；Select 树模式 / defer / 共享树状态增量在 working tree |
+| 对照 | 报告 + 本机目录 | 目录 **2233**（文档 158 / 组件 1604 / 样式 471）。Select 桌面 / 移动 **22/27**、Spinner **7/7**、Dialog **22/23**，P0 0。本轮未重跑全量对照 |
 
-结论：本轮 `test` / `typecheck`、Spinner 与共享宿主专项复核通过，生成目录为 **2230**；未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck`、Select 树模式 / defer 专项与 Spinner 共享宿主复核通过，生成目录为 **2233**；未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 

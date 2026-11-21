@@ -442,7 +442,7 @@ flowchart LR
 
 ## select
 
-#13 · H=7 · 前置 8 · 直接依赖 3 · 被依赖 11 · 93% 进行中
+#13 · H=7 · 前置 8 · 直接依赖 3 · 被依赖 11 · 95% 进行中
 
 直接依赖：`FormItem`、`Options`、`spinner`
 

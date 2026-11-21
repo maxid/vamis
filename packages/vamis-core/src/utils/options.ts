@@ -364,14 +364,11 @@ function readLabel(node: PlainObject, labelField: string): string {
   return ''
 }
 
-function readValue(node: PlainObject, valueField: string, label: string): unknown {
+function readValue(node: PlainObject, valueField: string): unknown {
   if (Object.prototype.hasOwnProperty.call(node, valueField) && node[valueField] !== undefined) {
     return node[valueField]
   }
-  if (valueField !== 'value' && node.value !== undefined) return node.value
-  if (node.id !== undefined) return node.id
-  if (label !== '') return label
-  return ''
+  return undefined
 }
 
 function asOptionItem(item: unknown, labelField: string, valueField: string): OptionItem {
@@ -381,7 +378,7 @@ function asOptionItem(item: unknown, labelField: string, valueField: string): Op
   }
   const node = item as PlainObject
   const label = readLabel(node, labelField)
-  const value = readValue(node, valueField, label)
+  const value = readValue(node, valueField)
   const children = Array.isArray(node.children)
     ? normalizeOptions(node.children, labelField, valueField)
     : undefined

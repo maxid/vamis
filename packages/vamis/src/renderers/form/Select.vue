@@ -7,6 +7,7 @@ import {
   calcSelectOverlayWidth,
   countVisibleTagsByWidth,
   filterTpl,
+  getSelectedOptions,
   isAllSelected,
   isGroupOption,
   overlayIsMobile,
@@ -32,6 +33,7 @@ import CalendarWheel from '../display/CalendarWheel.vue'
 import PickerFade from '../calendar/PickerFade.vue'
 import Spinner from '../Spinner.vue'
 import { useOptionsControl } from '../../optionsControl'
+import SelectTreePane from './select/SelectTreePane.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const schemaRef = toRef(props, 'schema')
@@ -61,10 +63,12 @@ const isMobile = computed(() => {
   return overlayIsMobile(props.schema, env)
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
+const selectMode = computed(() => String(props.schema.selectMode || ''))
+const isTreeMenu = computed(() => selectMode.value === 'tree')
 const popupHeight = computed(() =>
   selectPopupHeight(
     props.schema.overlay,
-    isGroupMenu.value ? POPUP_DEFAULT_HEIGHT : undefined,
+    isGroupMenu.value || isTreeMenu.value ? POPUP_DEFAULT_HEIGHT : undefined,
   ),
 )
 const mobileDraft = ref<OptionItem[]>([])
@@ -90,6 +94,7 @@ const mobileWheelOptions = computed((): CalendarPickerOption[] =>
 function selectedPool() {
   return isMobile.value && ctl.open.value ? mobileDraft.value : ctl.selected.value
 }
+const treeSelectedValues = computed(() => selectedPool().map((item) => item.value))
 const allChecked = computed(() =>
   isAllSelected(selectedPool(), ctl.filtered.value, ctl.config.value.valueField),
 )
@@ -99,10 +104,11 @@ const noResultsText = computed(() =>
 )
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
-  const mode = String(props.schema.selectMode || '')
-  if (mode === 'group') return true
+  if (selectMode.value === 'group') return true
+  if (isTreeMenu.value) return false
   return ctl.options.value.some((item) => isGroupOption(item))
 })
+const isTransferSearch = computed(() => isGroupMenu.value || isTreeMenu.value)
 /** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
 const VIRTUAL_BUFFER = 4
 const VIRTUAL_MAX_HEIGHT = 266
@@ -181,20 +187,19 @@ watch(
 )
 /** 对齐 Amis：普通单选才走 Picker 滚轮；multiple / selectMode:group 走列表。 */
 const useMobileWheel = computed(
-  () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value,
+  () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value && !isTreeMenu.value,
 )
 /** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
 const useMobileTick = computed(
-  () => isMobile.value && !!ctl.config.value.multiple && !isGroupMenu.value,
+  () => isMobile.value && !!ctl.config.value.multiple && !isGroupMenu.value && !isTreeMenu.value,
 )
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
 )
 const searchPlaceholder = computed(() => {
   if (props.schema.searchPlaceholder != null) return String(props.schema.searchPlaceholder)
-  if (isGroupMenu.value) {
-    return isMobile.value ? filterTpl(ctl.placeholder.value, data.value) : '请输入关键字'
-  }
+  if (isTreeMenu.value) return filterTpl(ctl.placeholder.value, data.value)
+  if (isGroupMenu.value) return filterTpl(ctl.placeholder.value, data.value)
   return '搜索'
 })
 const visibleTags = computed(() => {
@@ -395,6 +400,20 @@ async function onToggleAll() {
   await ctl.toggleAll()
 }
 
+async function onTreeToggle(values: unknown[]) {
+  const selectedItems = getSelectedOptions(
+    values,
+    [...ctl.filtered.value, ...ctl.options.value],
+    ctl.config.value,
+  )
+  if (isMobile.value) {
+    mobileDraft.value = selectedItems
+    return
+  }
+  await ctl.commit(selectedItems)
+  if (!ctl.config.value.multiple) closeMenu()
+}
+
 async function confirmMobile() {
   if (useMobileWheel.value) {
     const item = mobileLeaves.value[mobileWheelIndex.value] ?? mobileLeaves.value[0]
@@ -484,6 +503,7 @@ watch(
         'is-fold': foldTags,
         'is-nowrap': ctl.config.value.valuesNoWrap,
         'is-group': isGroupMenu,
+        'is-tree': isTreeMenu,
         'is-mobile': isMobile,
       }"
     >
@@ -605,10 +625,10 @@ watch(
         <div
           v-if="showSearch"
           class="vamis-select__search"
-          :class="isGroupMenu ? 'vamis-select__search--sheet' : 'vamis-select__search--line'"
+          :class="isTransferSearch ? 'vamis-select__search--sheet' : 'vamis-select__search--line'"
         >
           <div class="vamis-select__search-inner">
-            <VamisIcon name="search" v-if="!isGroupMenu" class="vamis-select__search-icon" />
+            <VamisIcon name="search" v-if="!isTransferSearch" class="vamis-select__search-icon" />
             <input
               :value="ctl.keyword.value"
               class="vamis-select__search-input"
@@ -622,7 +642,7 @@ watch(
               aria-label="清除检索"
               @click="clearSearch"
             ><VamisClose /></button>
-            <VamisIcon name="search" v-else-if="isGroupMenu" class="vamis-select__search-icon" />
+            <VamisIcon name="search" v-else-if="isTransferSearch" class="vamis-select__search-icon" />
           </div>
         </div>
         <div
@@ -652,79 +672,94 @@ watch(
         <div
           v-else
           class="vamis-select__popover vamis-select__popover--sheet"
-          :class="{ 'is-tick': useMobileTick }"
+          :class="{ 'is-tick': useMobileTick, 'is-tree': isTreeMenu }"
         >
-          <button
-            v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
-            type="button"
-            class="vamis-select__checkall"
-            @click="onToggleAll()"
-          >
-            <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
-              <VamisIcon name="menu-check" v-if="allChecked" />
-            </span>
-            <span>{{ checkAllLabel }}</span>
-          </button>
-          <div class="vamis-select__list">
-            <template v-for="(opt, index) in ctl.filtered.value" :key="'m-' + String(opt.value ?? opt.label) + '-' + index">
-              <div v-if="isGroupOption(opt)" class="vamis-select__group">
-                <div class="vamis-select__group-label">{{ opt.label }}</div>
+          <SelectTreePane
+            v-if="isTreeMenu"
+            :schema="schema"
+            :nodes="ctl.options.value"
+            :visible-nodes="ctl.filtered.value"
+            :selected-values="treeSelectedValues"
+            :value="ctl.rawValue.value"
+            :disabled="locked"
+            :query="ctl.keyword.value"
+            :loading-config="schema.loadingConfig"
+            @update:nodes="ctl.replaceOptions"
+            @toggle="onTreeToggle"
+          />
+          <template v-else>
+            <button
+              v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
+              type="button"
+              class="vamis-select__checkall"
+              @click="onToggleAll()"
+            >
+              <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
+                <VamisIcon name="menu-check" v-if="allChecked" />
+              </span>
+              <span>{{ checkAllLabel }}</span>
+            </button>
+            <div class="vamis-select__list">
+              <template v-for="(opt, index) in ctl.filtered.value" :key="'m-' + String(opt.value ?? opt.label) + '-' + index">
+                <div v-if="isGroupOption(opt)" class="vamis-select__group">
+                  <div class="vamis-select__item-label vamis-select__group-label">{{ opt.label }}</div>
+                  <div
+                    v-for="(child, ci) in opt.children"
+                    :key="'m-' + String(child.value) + '-' + ci"
+                    role="option"
+                    class="vamis-select__item vamis-select__item--child"
+                    :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
+                    @click="onPick(child)"
+                  >
+                    <span
+                      v-if="ctl.config.value.multiple"
+                      class="vamis-select__check"
+                      :class="{ 'is-checked': isSelected(child.value) }"
+                    >
+                      <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
+                    </span>
+                    <SchemaRenderer
+                      v-if="menuTpl != null"
+                      class="vamis-select__item-label"
+                      :schema="menuTpl"
+                      :extra-data="menuData(child, ci)"
+                    />
+                    <span v-else class="vamis-select__item-label">{{ child.label }}</span>
+                  </div>
+                </div>
                 <div
-                  v-for="(child, ci) in opt.children"
-                  :key="'m-' + String(child.value) + '-' + ci"
+                  v-else
                   role="option"
-                  class="vamis-select__item vamis-select__item--child"
-                  :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
-                  @click="onPick(child)"
+                  class="vamis-select__item"
+                  :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
+                  @click="onPick(opt)"
                 >
                   <span
-                    v-if="ctl.config.value.multiple"
-                    class="vamis-select__check"
-                    :class="{ 'is-checked': isSelected(child.value) }"
+                    v-if="useMobileTick && isSelected(opt.value)"
+                    class="vamis-select__mcheck"
+                    aria-hidden="true"
                   >
-                    <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
+                    <VamisIcon name="check" />
+                  </span>
+                  <span
+                    v-else-if="!useMobileTick && ctl.config.value.multiple"
+                    class="vamis-select__check"
+                    :class="{ 'is-checked': isSelected(opt.value) }"
+                  >
+                    <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
                   </span>
                   <SchemaRenderer
                     v-if="menuTpl != null"
                     class="vamis-select__item-label"
                     :schema="menuTpl"
-                    :extra-data="menuData(child, ci)"
+                    :extra-data="menuData(opt, index)"
                   />
-                  <span v-else class="vamis-select__item-label">{{ child.label }}</span>
+                  <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
                 </div>
-              </div>
-              <div
-                v-else
-                role="option"
-                class="vamis-select__item"
-                :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
-                @click="onPick(opt)"
-              >
-                <span
-                  v-if="useMobileTick && isSelected(opt.value)"
-                  class="vamis-select__mcheck"
-                  aria-hidden="true"
-                >
-                  <VamisIcon name="check" />
-                </span>
-                <span
-                  v-else-if="!useMobileTick && ctl.config.value.multiple"
-                  class="vamis-select__check"
-                  :class="{ 'is-checked': isSelected(opt.value) }"
-                >
-                  <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
-                </span>
-                <SchemaRenderer
-                  v-if="menuTpl != null"
-                  class="vamis-select__item-label"
-                  :schema="menuTpl"
-                  :extra-data="menuData(opt, index)"
-                />
-                <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
-              </div>
-            </template>
-            <div v-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
-          </div>
+              </template>
+              <div v-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
+            </div>
+          </template>
         </div>
       </VamisPopUp>
       <VamisOverlay
@@ -738,17 +773,17 @@ watch(
       >
         <div
           class="vamis-select__popover"
-          :class="{ 'is-virtual': virtualEnabled }"
+          :class="{ 'is-virtual': virtualEnabled, 'is-tree': isTreeMenu }"
           :style="popoverStyle"
         >
           <div
             v-if="showSearch"
             class="vamis-select__search"
-            :class="isGroupMenu ? 'vamis-select__search--box' : 'vamis-select__search--line'"
+            :class="isTransferSearch ? 'vamis-select__search--box' : 'vamis-select__search--line'"
             @mousedown.stop
           >
             <div class="vamis-select__search-inner">
-              <VamisIcon name="search" v-if="!isGroupMenu" class="vamis-select__search-icon" />
+              <VamisIcon name="search" v-if="!isTransferSearch" class="vamis-select__search-icon" />
               <input
                 :value="ctl.keyword.value"
                 class="vamis-select__search-input"
@@ -763,138 +798,153 @@ watch(
                 @mousedown.prevent
                 @click="clearSearch"
               ><VamisClose /></button>
-              <VamisIcon name="search" v-else-if="isGroupMenu" class="vamis-select__search-icon" />
+              <VamisIcon name="search" v-else-if="isTransferSearch" class="vamis-select__search-icon" />
             </div>
           </div>
-          <button
-            v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
-            type="button"
-            class="vamis-select__checkall"
-            @mousedown.prevent
-            @click.stop="onToggleAll()"
-          >
-            <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
-              <VamisIcon name="menu-check" v-if="allChecked" />
-            </span>
-            <span>{{ checkAllLabel }}</span>
-          </button>
-          <div
-            ref="virtualListEl"
-            class="vamis-select__list"
-            :class="{ 'is-virtual': virtualEnabled }"
-            :style="virtualEnabled ? { height: virtualViewportHeight + 'px' } : undefined"
-            @scroll="onVirtualScroll"
-          >
+          <SelectTreePane
+            v-if="isTreeMenu"
+            :schema="schema"
+            :nodes="ctl.options.value"
+            :visible-nodes="ctl.filtered.value"
+            :selected-values="treeSelectedValues"
+            :value="ctl.rawValue.value"
+            :disabled="locked"
+            :query="ctl.keyword.value"
+            :loading-config="schema.loadingConfig"
+            @update:nodes="ctl.replaceOptions"
+            @toggle="onTreeToggle"
+          />
+          <template v-else>
+            <button
+              v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
+              type="button"
+              class="vamis-select__checkall"
+              @mousedown.prevent
+              @click.stop="onToggleAll()"
+            >
+              <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
+                <VamisIcon name="menu-check" v-if="allChecked" />
+              </span>
+              <span>{{ checkAllLabel }}</span>
+            </button>
             <div
-              v-if="virtualPadTop > 0"
-              class="vamis-select__virtual-pad"
-              :style="{ height: virtualPadTop + 'px' }"
-              aria-hidden="true"
-            />
-            <template v-for="(opt, index) in visibleOptions" :key="String(opt.value ?? opt.label) + '-' + (virtualOffset + index)">
-              <div v-if="isGroupOption(opt)" class="vamis-select__group">
-                <div class="vamis-select__group-label">{{ opt.label }}</div>
+              ref="virtualListEl"
+              class="vamis-select__list"
+              :class="{ 'is-virtual': virtualEnabled }"
+              :style="virtualEnabled ? { height: virtualViewportHeight + 'px' } : undefined"
+              @scroll="onVirtualScroll"
+            >
+              <div
+                v-if="virtualPadTop > 0"
+                class="vamis-select__virtual-pad"
+                :style="{ height: virtualPadTop + 'px' }"
+                aria-hidden="true"
+              />
+              <template v-for="(opt, index) in visibleOptions" :key="String(opt.value ?? opt.label) + '-' + (virtualOffset + index)">
+                <div v-if="isGroupOption(opt)" class="vamis-select__group">
+                  <div class="vamis-select__item-label vamis-select__group-label">{{ opt.label }}</div>
+                  <div
+                    v-for="(child, ci) in opt.children"
+                    :key="String(child.value) + '-' + ci"
+                    role="option"
+                    class="vamis-select__item vamis-select__item--child"
+                    :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
+                    :title="child.label"
+                    @mousedown.prevent
+                    @click.stop="onPick(child)"
+                  >
+                    <span
+                      v-if="ctl.config.value.multiple"
+                      class="vamis-select__check"
+                      :class="{ 'is-checked': isSelected(child.value) }"
+                    >
+                      <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
+                    </span>
+                    <SchemaRenderer
+                      v-if="menuTpl != null"
+                      class="vamis-select__item-label"
+                      :schema="menuTpl"
+                      :extra-data="menuData(child, ci)"
+                    />
+                    <span v-else class="vamis-select__item-label">{{ child.label }}</span>
+                  </div>
+                </div>
                 <div
-                  v-for="(child, ci) in opt.children"
-                  :key="String(child.value) + '-' + ci"
+                  v-else
                   role="option"
-                  class="vamis-select__item vamis-select__item--child"
-                  :class="[optionClassName, { 'is-active': isSelected(child.value), 'is-disabled': child.disabled || locked, 'has-tpl': !!menuTpl }]"
-                  :title="child.label"
+                  class="vamis-select__item"
+                  :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
+                  :style="virtualEnabled ? { height: itemHeight + 'px' } : undefined"
+                  :title="opt.label"
                   @mousedown.prevent
-                  @click.stop="onPick(child)"
+                    @click.stop="onPick(opt)"
                 >
                   <span
                     v-if="ctl.config.value.multiple"
                     class="vamis-select__check"
-                    :class="{ 'is-checked': isSelected(child.value) }"
+                    :class="{ 'is-checked': isSelected(opt.value) }"
                   >
-                    <VamisIcon name="menu-check" v-if="isSelected(child.value)" />
+                    <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
                   </span>
                   <SchemaRenderer
                     v-if="menuTpl != null"
                     class="vamis-select__item-label"
                     :schema="menuTpl"
-                    :extra-data="menuData(child, ci)"
+                    :extra-data="menuData(opt, virtualOffset + index)"
                   />
-                  <span v-else class="vamis-select__item-label">{{ child.label }}</span>
+                  <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
+                  <span
+                    v-if="ctl.config.value.editable || ctl.config.value.removable"
+                    class="vamis-select__item-ops"
+                  >
+                    <button
+                      v-if="ctl.config.value.editable"
+                      type="button"
+                      class="vamis-select__item-op"
+                      aria-label="编辑"
+                      :disabled="!!opt.disabled || locked"
+                      @mousedown.prevent
+                      @click="onEdit(opt, $event)"
+                    >
+                      <VamisIcon name="pencil" />
+                    </button>
+                    <button
+                      v-if="ctl.config.value.removable"
+                      type="button"
+                      class="vamis-select__item-op"
+                      aria-label="删除"
+                      :disabled="!!opt.disabled || locked"
+                      @mousedown.prevent
+                      @click="onDelete(opt, $event)"
+                    >
+                      <VamisIcon name="close" />
+                    </button>
+                  </span>
                 </div>
-              </div>
+              </template>
               <div
-                v-else
-                role="option"
-                class="vamis-select__item"
-                :class="[optionClassName, { 'is-active': isSelected(opt.value), 'is-disabled': opt.disabled || locked, 'has-tpl': !!menuTpl }]"
-                :style="virtualEnabled ? { height: itemHeight + 'px' } : undefined"
-                :title="opt.label"
-                @mousedown.prevent
-                  @click.stop="onPick(opt)"
-              >
-                <span
-                  v-if="ctl.config.value.multiple"
-                  class="vamis-select__check"
-                  :class="{ 'is-checked': isSelected(opt.value) }"
-                >
-                  <VamisIcon name="menu-check" v-if="isSelected(opt.value)" />
-                </span>
-                <SchemaRenderer
-                  v-if="menuTpl != null"
-                  class="vamis-select__item-label"
-                  :schema="menuTpl"
-                  :extra-data="menuData(opt, virtualOffset + index)"
-                />
-                <span v-else class="vamis-select__item-label">{{ opt.label }}</span>
-                <span
-                  v-if="ctl.config.value.editable || ctl.config.value.removable"
-                  class="vamis-select__item-ops"
-                >
-                  <button
-                    v-if="ctl.config.value.editable"
-                    type="button"
-                    class="vamis-select__item-op"
-                    aria-label="编辑"
-                    :disabled="!!opt.disabled || locked"
-                    @mousedown.prevent
-                    @click="onEdit(opt, $event)"
-                  >
-                    <VamisIcon name="pencil" />
-                  </button>
-                  <button
-                    v-if="ctl.config.value.removable"
-                    type="button"
-                    class="vamis-select__item-op"
-                    aria-label="删除"
-                    :disabled="!!opt.disabled || locked"
-                    @mousedown.prevent
-                    @click="onDelete(opt, $event)"
-                  >
-                    <VamisIcon name="close" />
-                  </button>
-                </span>
+                v-if="virtualPadBottom > 0"
+                class="vamis-select__virtual-pad"
+                :style="{ height: virtualPadBottom + 'px' }"
+                aria-hidden="true"
+              />
+              <div v-if="ctl.loading.value && !ctl.filtered.value.length" class="vamis-select__loading">
+                <Spinner :schema="{ type: 'spinner', show: true, size: 'sm' }" />
               </div>
-            </template>
-            <div
-              v-if="virtualPadBottom > 0"
-              class="vamis-select__virtual-pad"
-              :style="{ height: virtualPadBottom + 'px' }"
-              aria-hidden="true"
-            />
-            <div v-if="ctl.loading.value && !ctl.filtered.value.length" class="vamis-select__loading">
-              <Spinner :schema="{ type: 'spinner', show: true, size: 'sm' }" />
+              <div v-else-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
             </div>
-            <div v-else-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
-          </div>
-          <div v-if="ctl.config.value.creatable" class="vamis-select__create">
-            <button
-              type="button"
-              class="vamis-select__create-btn"
-              :disabled="locked"
-              @mousedown.prevent
-              @click="onAdd"
-            >
-              {{ ctl.createLabel.value }}
-            </button>
-          </div>
+            <div v-if="ctl.config.value.creatable" class="vamis-select__create">
+              <button
+                type="button"
+                class="vamis-select__create-btn"
+                :disabled="locked"
+                @mousedown.prevent
+                @click="onAdd"
+              >
+                {{ ctl.createLabel.value }}
+              </button>
+            </div>
+          </template>
         </div>
       </VamisOverlay>
     </div>

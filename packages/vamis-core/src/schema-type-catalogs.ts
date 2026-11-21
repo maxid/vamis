@@ -190,13 +190,19 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     hideSelected: '下拉里隐藏已选项。',
     noResultsText: '无结果文案，默认「未找到任何结果」。',
     checkAllBySearch: '检索时全选只作用于过滤结果，默认 true。',
-    selectMode: 'group 已接。table / tree / chained / associated 未接。',
+    selectMode: 'group / tree 已接。table / chained / associated 未接。',
+    onlyChildren: '树模式是否只提交叶子；未设置时按是否存在 defer 节点决定。',
+    autoCheckChildren: '树模式勾父节点时是否联动子节点，默认 true。',
+    initiallyOpen: '树模式初始是否展开，默认 true。',
+    deferApi: '树节点懒加载接口；节点自身 deferApi 优先。',
+    deferField: '标记树节点需要懒加载的字段名，默认 defer。',
   }, {
     formItem: true,
     events: {
       change: '值变化。event.data.value / selectedItems / items。',
       focus: '打开下拉。',
       blur: '关闭下拉。',
+      deferLoadFinished: '树节点懒加载成功并合并 children 后触发。',
     },
     actions: {
       clear: '清空为 resetValue，默认空串。',

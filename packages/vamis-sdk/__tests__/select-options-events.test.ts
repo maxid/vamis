@@ -61,6 +61,524 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it('uses the Select placeholder for grouped search', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'group',
+          options: [
+            { label: '法师', children: [{ label: '诸葛亮', value: 'zhugeliang' }] },
+            { label: '战士', children: [{ label: '曹操', value: 'caocao' }] },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__group')).toBeTruthy())
+
+    expect(
+      document.querySelector('.vamis-select__group-label')?.classList.contains(
+        'vamis-select__item-label',
+      ),
+    ).toBe(true)
+    expect(
+      document.querySelector('.vamis-select__item--child .vamis-select__item-label'),
+    ).toBeTruthy()
+    expect(
+      (document.querySelector('.vamis-select__search-input') as HTMLInputElement | null)?.placeholder,
+    ).toBe('请选择')
+  })
+
+  it('renders Select tree mode and writes a leaf selection', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'treeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'tree',
+          options: [
+            { label: '法师', children: [{ label: '诸葛亮', value: 'zhugeliang' }] },
+            {
+              label: '战士',
+              children: [
+                { label: '曹操', value: 'caocao' },
+                { label: '钟无艳', value: 'zhongwuyan' },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-tree')).toBeTruthy())
+
+    expect(document.querySelector('.vamis-select__group')).toBeNull()
+    expect(document.querySelector('.vamis-select__popover')?.classList.contains('is-tree')).toBe(
+      true,
+    )
+    expect(document.querySelector('.vamis-select__search--box')).toBeTruthy()
+    expect(
+      (document.querySelector('.vamis-select__search-input') as HTMLInputElement | null)?.placeholder,
+    ).toBe('请选择')
+    const form = scoped.getComponentByName('treeForm') as { getData?: () => Record<string, unknown> }
+    click(treeItem('法师')?.querySelector('.vamis-tree__content') || null)
+    await nextTick()
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(treeItem('曹操')?.querySelector('.vamis-tree__content') || null)
+    await nextTick()
+
+    expect(form).toBeTruthy()
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('caocao'))
+    expect(host.querySelector('.vamis-select__single')?.textContent).toBe('曹操')
+  })
+
+  it('selects only tree leaves by default in multiple mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'leafTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          selectMode: 'tree',
+          options: [
+            {
+              label: '战士',
+              value: 'war',
+              children: [
+                { label: '曹操', value: 'caocao' },
+                { label: '钟无艳', value: 'zhongwuyan' },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-tree')).toBeTruthy())
+    click(treeItem('战士')?.querySelector('.vamis-tree__content') || null)
+
+    const form = scoped.getComponentByName('leafTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('caocao,zhongwuyan'),
+    )
+  })
+
+  it('keeps parent and child values when onlyChildren is disabled', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'cascadeTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          onlyChildren: false,
+          selectMode: 'tree',
+          options: [
+            {
+              label: '战士',
+              value: 'war',
+              children: [
+                { label: '曹操', value: 'caocao' },
+                { label: '钟无艳', value: 'zhongwuyan' },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-tree')).toBeTruthy())
+    click(treeItem('战士')?.querySelector('.vamis-tree__content') || null)
+
+    const form = scoped.getComponentByName('cascadeTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('war,caocao,zhongwuyan'),
+    )
+  })
+
+  it('derives onlyChildren from the full tree while searching', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'filteredTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          searchable: true,
+          selectMode: 'tree',
+          options: [
+            {
+              label: '法师',
+              value: 'mage',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+            { label: '战士', value: 'war', defer: true },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(treeItem('法师')).toBeTruthy())
+    const search = document.querySelector('.vamis-select__search-input') as HTMLInputElement
+    search.value = '法师'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(treeTexts()).not.toContain('战士'))
+    click(treeItem('法师')?.querySelector('.vamis-tree__content') || null)
+
+    const form = scoped.getComponentByName('filteredTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('mage,zhugeliang'),
+    )
+  })
+
+  it('honors initiallyOpen false in Select tree mode', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'tree',
+          initiallyOpen: false,
+          options: [
+            {
+              label: '战士',
+              children: [{ label: '曹操', value: 'caocao' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(treeTexts()).toContain('战士'))
+    expect(treeTexts()).not.toContain('曹操')
+  })
+
+  it('checks all leaf nodes in multiple tree mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'checkAllTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          checkAll: true,
+          selectMode: 'tree',
+          options: [
+            {
+              label: '战士',
+              value: 'war',
+              children: [
+                { label: '曹操', value: 'caocao' },
+                { label: '钟无艳', value: 'zhongwuyan' },
+              ],
+            },
+            {
+              label: '法师',
+              value: 'mage',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__tree-checkall')).toBeTruthy())
+    click(treeItem('曹操')?.querySelector('.vamis-tree__content') || null)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__tree-checkall .vamis-select__check.is-partial')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__tree-checkall'))
+
+    const form = scoped.getComponentByName('checkAllTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('caocao,zhongwuyan,zhugeliang'),
+    )
+  })
+
+  it('keeps mobile tree selection in the draft until confirm', async () => {
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'mobileTreeForm',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'tree',
+            options: [
+              {
+                label: '战士',
+                value: 'war',
+                children: [{ label: '曹操', value: 'caocao' }],
+              },
+            ],
+          },
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-popup .vamis-tree')).toBeTruthy())
+    click(treeItem('曹操')?.querySelector('.vamis-tree__content') || null)
+    await nextTick()
+    expect(treeItem('曹操')?.querySelector('.vamis-tree__content')?.classList.contains('is-checked')).toBe(true)
+    expect(treeItem('战士')?.querySelector('.vamis-tree__content')?.classList.contains('is-checked')).toBe(false)
+
+    const form = scoped.getComponentByName('mobileTreeForm') as { getData?: () => Record<string, unknown> }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+    click(document.querySelector('.vamis-popup__ok'))
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('caocao'))
+  })
+
+  it('keeps custom valueField and joinValues false in tree mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'objectTreeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'tree',
+          joinValues: false,
+          valueField: 'id',
+          options: [
+            {
+              label: '战士',
+              id: 'war',
+              children: [{ label: '曹操', id: 'caocao' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-tree')).toBeTruthy())
+    click(treeItem('曹操')?.querySelector('.vamis-tree__content') || null)
+
+    const form = scoped.getComponentByName('objectTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.hero).toMatchObject({ label: '曹操', id: 'caocao' }),
+    )
+  })
+
+  it('keeps searchApi result metadata in tree mode', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: {
+        options: [{ label: '搜索曹操', id: 'search-caocao' }],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'searchTreeForm',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'tree',
+            searchable: true,
+            searchApi: '/api/search',
+            joinValues: false,
+            valueField: 'id',
+            options: [],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__search-input')).toBeTruthy())
+    const search = document.querySelector('.vamis-select__search-input') as HTMLInputElement
+    search.value = '曹操'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(treeItem('搜索曹操')).toBeTruthy())
+    click(treeItem('搜索曹操')?.querySelector('.vamis-tree__content') || null)
+
+    const form = scoped.getComponentByName('searchTreeForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.hero).toMatchObject({
+        label: '搜索曹操',
+        id: 'search-caocao',
+      }),
+    )
+  })
+
+  it('defers only the expanded tree node', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            multiple: true,
+            selectMode: 'tree',
+            deferApi: '/api/defer',
+            options: [
+              { label: '战士', defer: true },
+              { label: '法师', defer: true },
+            ],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(treeItem('战士')).toBeTruthy())
+    click(treeItem('战士')?.querySelector('.vamis-tree__arrow') || null)
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1))
+    expect(treeItem('战士')?.querySelector('.vamis-spinner')).toBeTruthy()
+    expect(treeItem('法师')?.querySelector('.vamis-spinner')).toBeNull()
+    resolveFetch({ status: 0, msg: '', data: { options: [] } })
+  })
+
+  it('defers Select tree nodes and emits deferLoadFinished once', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const notify = vi.fn()
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          data: { hero: 'caocao' },
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            multiple: true,
+            searchable: true,
+            selectMode: 'tree',
+            deferApi: '/api/defer',
+            onEvent: {
+              deferLoadFinished: {
+                actions: [{ actionType: 'toast', args: { msg: '${event.data.value}' } }],
+              },
+            },
+            options: [
+              { label: '法师', children: [{ label: '诸葛亮', value: 'zhugeliang' }] },
+              { label: '战士', value: 'war', defer: true },
+            ],
+          },
+        },
+      },
+      { fetcher, notify },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(treeItem('战士')).toBeTruthy())
+    const search = document.querySelector('.vamis-select__search-input') as HTMLInputElement
+    search.value = '战士'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await nextTick()
+    click(treeItem('战士')?.querySelector('.vamis-tree__arrow') || null)
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1))
+    expect(fetcher.mock.calls[0]?.[1]).toMatchObject({ label: '战士', value: 'war' })
+    expect(document.querySelector('.vamis-select__tree-pane .vamis-spinner')).toBeTruthy()
+
+    resolveFetch({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: '曹操', value: 'caocao' }] },
+    })
+    await vi.waitFor(() => expect(treeTexts()).toContain('曹操'))
+    expect(notify.mock.calls[0]?.slice(0, 2)).toEqual(['info', 'caocao'])
+    search.value = ''
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(treeTexts()).toContain('法师'))
+
+    click(treeItem('战士')?.querySelector('.vamis-tree__arrow') || null)
+    click(treeItem('战士')?.querySelector('.vamis-tree__arrow') || null)
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
   it('shows Select trigger and control Spinner while source loads', async () => {
     let resolveFetch!: (value: unknown) => void
     const fetcher = vi.fn(

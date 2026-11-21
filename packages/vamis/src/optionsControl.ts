@@ -213,6 +213,10 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     extra.value = []
   }
 
+  function replaceOptions(next: OptionItem[]) {
+    applyTree(next)
+  }
+
   function defaultEditControls() {
     const labelField = config.value.labelField || 'label'
     return [
@@ -636,6 +640,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     openAddDialog,
     createOption,
     addLocalOption,
+    replaceOptions,
     editOption,
     deleteOption,
     loadOptionsFromSource,

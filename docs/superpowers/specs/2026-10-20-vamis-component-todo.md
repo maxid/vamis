@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-11-20；侧栏同步 / Options 虚拟列表 / Dialog：2026-11-19–20）
+- 日期：2026-10-21（进度核对：2026-11-21；侧栏同步 / Options 虚拟列表 / Dialog / Select 树模式：2026-11-19–21）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）；「全量顺序」与「实现复杂度评估」的「侧栏」列同步站点左侧导航 P0 / P1 / P2
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-21（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 5；测试 **1211**、`typecheck` 0；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-21（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 5；测试 **1226**、`typecheck` 0；Select 桌面 / 移动 **22/27**；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -18,7 +18,7 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但未达到「实现标准」：占位 / 精简 / 缺 amis 已有能力或文档章节 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **4 项**（`container` / `hidden` / `toast` / `dialog`）；`page` 因 `pullRefresh` 未接降为进行中。
+   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **5 项**（`container` / `hidden` / `toast` / `dialog` / `spinner`）；`page` 因 `pullRefresh` 未接降为进行中。
 4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 97.9% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|
@@ -236,7 +236,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-range` | InputRange 滑块 | `/components/form/input-range` | `/zh-CN/components/form/input-range` | 进行中 | 50% | 能滑；双滑块/刻度未齐 | P0 |
 | `input-repeat` | InputRepeat 重复频率 | `/components/form/input-repeat` | `/zh-CN/components/form/input-repeat` | 进行中 | 40% | 已注册，选项精简 | P0 |
 | `input-rich-text` | InputRichText 富文本 | `/components/form/input-rich-text` | `/zh-CN/components/form/input-rich-text` | 进行中 | 25% | **精简**：多行文本，未接 TinyMCE/Froala（设计非目标） | P0 |
-| `select` | Select 下拉框 | `/components/form/select` | `/zh-CN/components/form/select` | 进行中 | 93% | 主路径已对齐：分组 Transfer 检索框 / 小复选框 / 多选 tag hover tooltip / 按宽度 `+ N ...`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（含移动端 `height` 默认 320）、全选、`autoComplete` mock、focus/blur。移动端 `VamisPopUp` 底部滑入（普通单选才滚轮 itemHeight 40 + `menuTpl` slot 居中；普通多选右侧勾不是左侧 Checkbox，行高 37px 内层 `content-box` 1px 以免 100% 缩放丢线；`searchable` 在上方；`selectMode: group` 组头 12 / 子项 24；确认才写入；箭头朝右不翻转）。桌面平铺选项虚拟列表已接（`virtualThreshold` 默认 100 / `itemHeight` 默认 32，视口 266；分组菜单仍整表渲染）。Select 新增 / 编辑打开 Dialog；`addConfirm` / `editConfirm` / `deleteConfirm` 已接，payload 与 Amis 对齐，事件先于本地写入和 CUD API，`preventDefault()` 可完整阻断；source 无 `addApi` 保留临时选项，source 成功 CUD 后重载并同步值。Select 桌面 / 移动对照均 **19/24**（P0 0）。`selectMode` table/tree/chained/associated、`deferApi`、人员点选未接 | P0 |
+| `select` | Select 下拉框 | `/components/form/select` | `/zh-CN/components/form/select` | 进行中 | 95% | 主路径已对齐：分组 Transfer 检索框 / 小复选框 / 多选 tag hover tooltip / 按宽度 `+ N ...`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（含移动端 `height` 默认 320）、全选、`autoComplete` mock、focus/blur。移动端 `VamisPopUp` 底部滑入（普通单选才滚轮 itemHeight 40 + `menuTpl` slot 居中；普通多选右侧勾不是左侧 Checkbox，行高 37px 内层 `content-box` 1px 以免 100% 缩放丢线；`searchable` 在上方；`selectMode: group` 组头 12 / 子项 24；确认才写入；箭头朝右不翻转）。桌面平铺选项虚拟列表已接（`virtualThreshold` 默认 100 / `itemHeight` 默认 32，视口 266；分组菜单仍整表渲染）。`selectMode: tree` 通过共享 `useTreeState` + `SelectTreePane` 复用 `TreeBranch`，支持单选 / 多选 / 搜索 / 全选 / `onlyChildren` / 移动草稿 / 节点 `deferApi` 与 `deferLoadFinished`，不挂完整 TreeSelect。Select 新增 / 编辑打开 Dialog；`addConfirm` / `editConfirm` / `deleteConfirm` 已接，payload 与 Amis 对齐，事件先于本地写入和 CUD API，`preventDefault()` 可完整阻断；source 无 `addApi` 保留临时选项，source 成功 CUD 后重载并同步值。余 `selectMode` table/chained/associated、`searchResultMode`、人员点选 | P0 |
 | `input-sub-form` | InputSubForm 子表单 | `/components/form/input-sub-form` | `/zh-CN/components/form/input-sub-form` | 进行中 | 45% | 能嵌表单；弹层/多选未齐 | P0 |
 | `switch` | Switch 开关 | `/components/form/switch` | `/zh-CN/components/form/switch` | 进行中 | 88% | 主路径已对齐：`trueValue` / `falseValue`（宽松相等，默认 true/false）、`option` 右侧说明、`onText` / `offText`（字符串 / IconSchema / SchemaCollection）、`size` sm/md（44×20 / 28×16，滑块 16/12 + 2px 边、30 圆角，`--switch-*`）、`loading` / `loadingOn`（不可操作，转圈画在滑块位）、`change`、`clear` / `reset` / `setValue`（`componentId` 按 id 跨数据域，form 外按钮可点 form 内；`componentName` 沿父链）、静态态。文档按 Amis 章节改写（含 `id` + `componentId` 动作示例、`loadingOn` + ajax 异步链），属性 / 事件 / 动作表齐全。对照桌面 **14/14**、移动 **14/14**（P0 0）。缺 `themeCss` | P0 |
 | `static` | Static 静态展示 | `/components/form/static` | `/zh-CN/components/form/static` | 进行中 | 85% | 主路径已对齐：`value` / `name` 数据域映射、`text` / `tpl`、`static-xxx` 泛型（`static-json` / `static-date` / `static-datetime` / `static-mapping` / `static-progress` / `static-images` 等经 test 兜底）、`copyable`（默认 `${name \| raw}`，content/tooltip）、`popOver` 右侧、`borderMode` full/half/none、空值 `-`、整表单 `static` 仍展示。文档按 Amis 章节改写。对照桌面 **5/5**、移动 **5/5**（P0 0）。缺 `quickEdit`（快速编辑 / saveImmediately / mode） | P0 |
@@ -434,7 +434,7 @@ flowchart LR
 | 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | P0 | 进行中 | 89% |
 | 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | P1 | 进行中 | 92% |
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | P1 | 已完成 | 100% |
-| 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | P1 | 进行中 | 93% |
+| 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | P1 | 进行中 | 95% |
 | 14 | `checkbox` | FormItem | 6 | 8 | 110 | 134 | P1 | 进行中 | 90% |
 | 15 | `input-date` | FormItem | 6 | 8 | 110 | 134 | P1 | 进行中 | 92% |
 | 16 | `image` | — | 12 | 5 | 77 | 134 | P1 | 进行中 | 90% |
@@ -594,7 +594,7 @@ flowchart LR
 | `users-select` | 数据输入 | **精简**：内置 3 个用户 | 25% | — | — |
 | `icon-picker` / `icon-select` | 数据输入 | **精简**：8 个字符图标 | 25% | — | — |
 | `input-email` / `input-url` / `text` / `native-*` | 数据输入 | `input-text` 别名 | 92% | `/components/form/input-text` | `/zh-CN/components/form/input-text` |
-| `multi-select` | 数据输入 | `select` 别名 | 93% | `/components/form/select` | `/zh-CN/components/form/select` |
+| `multi-select` | 数据输入 | `select` 别名 | 95% | `/components/form/select` | `/zh-CN/components/form/select` |
 | `qr-code` | 数据展示 | `qrcode` 别名 | 45% | `/components/qrcode` | `/zh-CN/components/qrcode` |
 | `static-json` / `static-table` | 数据展示 | json/table 别名 | 50% | `/components/json、/components/table` | `/zh-CN/components/json、/zh-CN/components/table` |
 | `password` / `multiline-text` / `date-range` | 数据展示 | StaticValue | 50% | `/components/form/input-password、/components/form/input-text、/components/date` | `/zh-CN/components/form/input-password、/zh-CN/components/form/input-text、/zh-CN/components/date` |

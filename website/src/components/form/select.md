@@ -1,12 +1,12 @@
 ---
-title: Select 下拉框
+title: Select 选择器
 outline: deep
 ---
 
-# Select 下拉框
+# Select 选择器
 
-::: info 实现进度 93% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。移动端从底部滑入（单选滚轮 itemHeight 40 / 多选列表；箭头朝右不翻转）。`selectMode` 的 table / tree / chained / associated、`deferApi`、人员点选未接。
+::: info 实现进度 95% · 进行中
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 树模式草稿确认；箭头朝右不翻转）。`selectMode` 的 table / chained / associated、`searchResultMode` 与人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -39,7 +39,7 @@ body:
 
 ## 展示模式
 
-`selectMode` 可选 `group` / `table` / `tree` / `chained` / `associated`。当前只接 **分组**（选项带 `children` 即按组渲染，不必写 `selectMode: group`）。表格 / 树 / 级联 / 关联见文末差异表。
+`selectMode` 可选 `group` / `table` / `tree` / `chained` / `associated`。当前接 **分组** 与 **树形**；不写 `selectMode` 时，普通选择器遇到 `children` 仍按分组展示。表格与级联保留 Amis 契约示例，关联见「关联选择模式」。
 
 ### 分组展示模式
 
@@ -108,9 +108,324 @@ body:
             value: yunzhongjun
 ```
 
-### 表格 / 树 / 级联 / 关联
+### 表格模式
 
-`selectMode: table`（配 `columns`）、`tree`、`chained`、`associated`（配 `leftOptions` / `leftMode` / `rightMode`）**未接**。需要这些形态请用独立组件：`tree-select`、`chained-select`、`nested-select`。
+需要额外配置 `columns`，参考 [Table](/components/table) 中的说明。
+
+**当前状态：未接。** 以下保留 Amis schema 契约。
+
+_单选_
+
+```json
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "表格形式",
+      "type": "select",
+      "name": "a",
+      "searchable": true,
+      "selectMode": "table",
+      "columns": [
+        {
+          "name": "label",
+          "label": "英雄"
+        },
+        {
+          "name": "position",
+          "label": "位置"
+        }
+      ],
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang",
+          "position": "中单"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao",
+          "position": "上单"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan",
+          "position": "上单"
+        },
+        {
+          "label": "李白",
+          "value": "libai",
+          "position": "打野"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin",
+          "position": "打野"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun",
+          "position": "打野"
+        }
+      ]
+    }
+  ]
+}
+```
+
+_多选_
+
+```json
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "表格形式",
+      "type": "select",
+      "name": "a",
+      "searchable": true,
+      "selectMode": "table",
+      "multiple": true,
+      "columns": [
+        {
+          "name": "label",
+          "label": "英雄"
+        },
+        {
+          "name": "position",
+          "label": "位置"
+        }
+      ],
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang",
+          "position": "中单"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao",
+          "position": "上单"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan",
+          "position": "上单"
+        },
+        {
+          "label": "李白",
+          "value": "libai",
+          "position": "打野"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin",
+          "position": "打野"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun",
+          "position": "打野"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 树形模式
+
+_单选_
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - label: 树型展示
+    type: select
+    name: a
+    searchable: true
+    selectMode: tree
+    options:
+      - label: 法师
+        children:
+          - label: 诸葛亮
+            value: zhugeliang
+      - label: 战士
+        children:
+          - label: 曹操
+            value: caocao
+          - label: 钟无艳
+            value: zhongwuyan
+      - label: 打野
+        children:
+          - label: 李白
+            value: libai
+          - label: 韩信
+            value: hanxin
+          - label: 云中君
+            value: yunzhongjun
+```
+
+_多选_
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - label: 树型展示
+    type: select
+    name: a
+    searchable: true
+    multiple: true
+    selectMode: tree
+    options:
+      - label: 法师
+        children:
+          - label: 诸葛亮
+            value: zhugeliang
+      - label: 战士
+        children:
+          - label: 曹操
+            value: caocao
+          - label: 钟无艳
+            value: zhongwuyan
+      - label: 打野
+        children:
+          - label: 李白
+            value: libai
+          - label: 韩信
+            value: hanxin
+          - label: 云中君
+            value: yunzhongjun
+```
+
+### 级联选择
+
+按列来点选。
+
+**当前状态：未接。** 需要级联形态时可暂时使用独立组件 `chained-select`；以下保留 Amis schema 契约。
+
+_单选_
+
+```json
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "级联选择",
+      "type": "select",
+      "name": "a",
+      "searchable": true,
+      "selectMode": "chained",
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+_多选_
+
+```json
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "级联选择",
+      "type": "select",
+      "name": "a",
+      "searchable": true,
+      "selectMode": "chained",
+      "multiple": true,
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## 支持搜索
 
@@ -209,7 +524,34 @@ body:
 
 ## 延时加载
 
-选项上标 `defer: true`，配合组件层 `deferApi`。**未接**。
+选项上标 `defer: true`，配合组件层 `deferApi`。节点展开时按 `{...data, ...option}` 请求子选项；加载期间箭头位置显示 Spinner，成功后合并子树并触发 `deferLoadFinished`。
+
+```schema: scope="body"
+type: form
+api: /api/mock2/form/saveForm
+body:
+  - label: 延时加载
+    type: select
+    name: a
+    multiple: true
+    selectMode: tree
+    deferApi: /api/mock2/form/deferOptions?label=${label}&waitSeconds=2
+    options:
+      - label: 法师
+        children:
+          - label: 诸葛亮
+            value: zhugeliang
+      - label: 战士
+        defer: true
+      - label: 打野
+        children:
+          - label: 李白
+            value: libai
+          - label: 韩信
+            value: hanxin
+          - label: 云中君
+            value: yunzhongjun
+```
 
 ## 关联选择模式
 
@@ -702,7 +1044,12 @@ body:
 | menuTpl | `string` 或 [SchemaNode](/types/schemanode) | | 自定义菜单项模板，数据含 `label` / `value` / `checked` |
 | clearable | `boolean` | `false` | 显示清除 |
 | hideSelected | `boolean` | `false` | 下拉里隐藏已选项 |
-| selectMode | `string` | | `group` 已接。`table` / `tree` / `chained` / `associated` **未接** |
+| selectMode | `string` | | `group` / `tree` 已接。`table` / `chained` / `associated` **未接** |
+| onlyChildren | `boolean` | 树模式按 defer 自动决定 | 树多选是否只提交叶子；未设置时无 defer 为 true，有 defer 节点为 false |
+| autoCheckChildren | `boolean` | `true` | 树模式勾父节点时是否联动子节点 |
+| initiallyOpen | `boolean` | `true` | 树模式初始是否展开全部节点 |
+| deferApi | [API](/types/api) | | 树节点懒加载接口；节点可用自身 `deferApi` 覆盖 |
+| deferField | `string` | `"defer"` | 标记节点需要懒加载的字段名 |
 | searchResultMode | `string` | | **未接**。不设时跟 `selectMode` |
 | columns | `Array` | | `selectMode: table` 时的列。**未接** |
 | leftOptions | `Array` | | `associated` 左侧选项。**未接** |
@@ -718,7 +1065,7 @@ body:
 | valuesNoWrap | `boolean` | `false` | 多选值不折行 |
 | selectFirst | `boolean` | `false` | 无值时选第一项 |
 | clearValueOnSourceChange | `boolean` | | 数据域 source 变化后是否清空 |
-| searchPlaceholder | `string` | | 检索框占位。普通检索默认「搜索」，分组默认「请输入关键字」 |
+| searchPlaceholder | `string` | | 检索框占位。普通检索默认「搜索」，分组默认沿用 Select 的「请选择」 |
 
 ## 事件表
 
@@ -732,6 +1079,7 @@ body:
 | addConfirm | `[name]`；`item` 新增项；`items` | 新增提交；在本地写入与 `addApi` 前触发 |
 | editConfirm | `[name]`；`item` 编辑项（仅本次 label/value）；`items` | 编辑提交；在本地更新与 `editApi` 前触发 |
 | deleteConfirm | `[name]`；`item` 删除项；`items` | 删除提交；在本地移除与 `deleteApi` 前触发 |
+| deferLoadFinished | `[name]` 当前值；`result` 接口响应；`items` 合并后的选项树 | 树节点懒加载成功并合并 children 后触发 |
 
 ### change
 
@@ -953,7 +1301,7 @@ body:
             componentId: reset-select
 ```
 
-### reload
+### 刷新数据源 reload
 
 ```schema: scope="body"
 type: form
@@ -1002,9 +1350,10 @@ body:
 ## 与 Amis 的差异
 
 - 作者态 YAML 与 JSON 并列。
-- `selectMode` 只接分组；table / tree / chained / associated、`deferApi`、人员点选未接。
+- `selectMode` 已接分组与树形；table / chained / associated、`searchResultMode`、人员点选未接。
+- 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
-- 分组下拉检索对齐 Transfer `InputBox`（「请输入关键字」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
+- 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
 - 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。`selectMode: table` 仍未接。
 - Select 新增 / 编辑按 Amis 打开 Dialog。`addConfirm` / `editConfirm` / `deleteConfirm` 在本地写入和 CUD API 之前触发；`preventDefault()` 会同时阻止本地变更与请求。新增 / 编辑弹层的 `item` 只带本次 label/value；`deleteConfirmText` 未配置时不弹默认确认框。
 - 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。

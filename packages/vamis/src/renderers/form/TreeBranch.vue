@@ -7,6 +7,7 @@ import Spinner from '../Spinner.vue'
 const props = withDefaults(defineProps<{
   nodes: OptionItem[]
   checked: (item: OptionItem) => boolean
+  selected?: (item: OptionItem) => boolean
   partial?: (item: OptionItem) => boolean
   expanded: (item: OptionItem) => boolean
   deferring: (item: OptionItem) => boolean
@@ -112,6 +113,10 @@ function markClass(item: OptionItem) {
   }
 }
 
+function isSelected(item: OptionItem) {
+  return props.selected ? props.selected(item) : props.checked(item)
+}
+
 function onPick(item: OptionItem) {
   if (checkLocked(item) || busy.value) return
   emit('pick', item)
@@ -208,7 +213,7 @@ watch(
             class="vamis-tree__label"
             :class="{
               'is-disabled': checkLocked(row.item),
-              'is-checked': checked(row.item) && !partial(row.item),
+              'is-checked': isSelected(row.item),
             }"
           >
             <div
@@ -241,7 +246,7 @@ watch(
             </i>
             <div
               class="vamis-tree__content"
-              :class="{ 'is-checked': checked(row.item) }"
+              :class="{ 'is-checked': isSelected(row.item) }"
               role="button"
               :tabindex="checkLocked(row.item) ? -1 : 0"
               @click="onPick(row.item)"

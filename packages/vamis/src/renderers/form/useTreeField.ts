@@ -2,20 +2,14 @@
 
 import { computed, ref, watch, type Ref } from 'vue'
 import {
-  createVamisEvent,
-  eventEvalData,
   filterOptionTree,
   filterTpl,
-  findOption,
   insertOptionInTree,
   isEffectiveApi,
   isOptionsVariableSource,
   isTreeItemCheckDisabled,
   isTreeItemChecked,
-  isTreeNodeDefaultExpanded,
-  optionNeedsDefer,
   optionsAddDialogSchema,
-  optionsDeferField,
   optionsEditDialogSchema,
   optionsFromPayload,
   optionsHasCustomControls,
@@ -23,9 +17,7 @@ import {
   persistOptionMutation,
   removeOptionFromTree,
   requestApi,
-  resolveDeferredOption,
   runOptionConfirm,
-  runOnEvent,
   toggleTreeSelection,
   treeItemPartial,
   updateOptionInTree,
@@ -42,6 +34,7 @@ import {
 } from '@vamis/core'
 import { dumpJoined, normalizeOptions, optionValuesEqual, parseJoined } from '../../options'
 import { useFieldValue } from '../../formContext'
+import { useTreeState } from './useTreeState'
 
 export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean | undefined>) {
   const fieldApi = useFieldValue()
@@ -54,18 +47,26 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   const query = ref('')
   const localOptions = ref<OptionItem[] | null>(null)
   const remoteFiltered = ref<OptionItem[] | null>(null)
-  const expanded = ref(new Map<OptionItem, boolean>())
-  const deferring = ref(new Set<OptionItem>())
   const isAdding = ref(false)
   const addingParent = ref<OptionItem | null>(null)
   const editingItem = ref<OptionItem | null>(null)
   const draftLabel = ref('')
   const labelField = computed(() => String(schema.value.labelField || 'label'))
   const valueField = computed(() => String(schema.value.valueField || 'value'))
-  const deferField = computed(() => optionsDeferField(schema.value))
   const options = computed(() =>
     localOptions.value ?? normalizeOptions(schema.value.options, labelField.value, valueField.value),
   )
+  const treeState = useTreeState({
+    schema,
+    nodes: options,
+    setNodes: (nodes) => {
+      localOptions.value = nodes
+    },
+    disabled,
+    query,
+    currentValue,
+  })
+  const { deferField, isExpanded, isDeferring, expandItem, toggleExpand, seedExpanded } = treeState
   const multiple = computed(() => !!schema.value.multiple)
   const showRadio = computed(() => !!schema.value.showRadio)
   const onlyLeaf = computed(() => !!schema.value.onlyLeaf)
@@ -123,29 +124,11 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     return schema.value.name ? fieldApi.getValue(schema.value.name) : schema.value.value
   }
 
-  function seedExpanded(nodes: OptionItem[]) {
-    const next = new Map<OptionItem, boolean>()
-    const initiallyOpen = schema.value.initiallyOpen !== false
-    const unfoldedLevelRaw = Number(schema.value.unfoldedLevel)
-    const unfoldedLevel = Number.isFinite(unfoldedLevelRaw) && unfoldedLevelRaw >= 1 ? unfoldedLevelRaw : 1
-    const walk = (list: OptionItem[], depth: number) => {
-      for (const item of list) {
-        if (item.children?.length || optionNeedsDefer(item, deferField.value)) {
-          next.set(item, isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }))
-        }
-        if (item.children?.length) walk(item.children, depth + 1)
-      }
-    }
-    walk(nodes, 0)
-    expanded.value = next
-  }
-
   watch(
     () => schema.value.options,
     () => {
       localOptions.value = null
       remoteFiltered.value = null
-      deferring.value = new Set()
       cancelEdit()
       seedExpanded(normalizeOptions(schema.value.options, labelField.value, valueField.value))
     },
@@ -158,27 +141,6 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     if (!api || !keyword) return
     void searchRemote(keyword, api)
   })
-
-  function isExpanded(item: OptionItem) {
-    if (optionNeedsDefer(item, deferField.value)) return false
-    if (query.value) return true
-    return expanded.value.get(item) ?? true
-  }
-
-  function isDeferring(item: OptionItem) {
-    return deferring.value.has(item)
-  }
-
-  function toggleExpand(item: OptionItem) {
-    if (disabled?.value || item.disabled || isDeferring(item)) return
-    if (optionNeedsDefer(item, deferField.value)) {
-      void deferLoad(item)
-      return
-    }
-    const next = new Map(expanded.value)
-    next.set(item, !isExpanded(item))
-    expanded.value = next
-  }
 
   async function searchRemote(keyword: string, api: SchemaApi) {
     const ctx = { ...data.value, term: keyword }
@@ -197,65 +159,6 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
       )
     } catch (error) {
       env.notify('error', error instanceof Error ? error.message : '选项加载失败')
-    }
-  }
-
-  async function deferLoad(item: OptionItem) {
-    const api = (item.deferApi || schema.value.deferApi || schema.value.source) as SchemaApi | undefined
-    const ctx = { ...data.value, ...item }
-    if (!api || isOptionsVariableSource(api) || !isEffectiveApi(api, ctx)) {
-      env.notify('error', '请在选项中设置 deferApi，或在表单项中设置 deferApi，用来加载子选项')
-      return
-    }
-    const pending = new Set(deferring.value)
-    pending.add(item)
-    deferring.value = pending
-    try {
-      const result = await requestApi(api, { env, data: ctx, reason: 'action' })
-      if (result.skipped) return
-      if (!result.ok) {
-        env.notify('error', result.payload.msg || '选项加载失败')
-        return
-      }
-      const next = resolveDeferredOption(
-        options.value,
-        item,
-        optionsFromPayload(result.data).list,
-        { labelField: labelField.value, valueField: valueField.value },
-        deferField.value,
-      )
-      localOptions.value = next
-      const loaded = findOption(next, item.value, valueField.value)
-      if (loaded) {
-        const nextExpanded = new Map(expanded.value)
-        nextExpanded.set(loaded, true)
-        expanded.value = nextExpanded
-      }
-      const name = schema.value.name ? String(schema.value.name) : ''
-      const value = name ? fieldApi.getValue(name) : undefined
-      const payload = {
-        ...data.value,
-        result: result.payload,
-        items: next,
-        value,
-        ...(name ? { [name]: value } : {}),
-      }
-      const event = createVamisEvent('deferLoadFinished', payload)
-      await runOnEvent(schema.value, 'deferLoadFinished', {
-        env,
-        data: eventEvalData(payload, event),
-        scoped,
-        overlay,
-        form: formApi,
-        scope: scope.value,
-        event,
-      })
-    } catch (error) {
-      env.notify('error', error instanceof Error ? error.message : '选项加载失败')
-    } finally {
-      const done = new Set(deferring.value)
-      done.delete(item)
-      deferring.value = done
     }
   }
 
@@ -347,9 +250,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     })
     if (!saved.ok) return
     if (parent) {
-      const next = new Map(expanded.value)
-      next.set(parent, true)
-      expanded.value = next
+      expandItem(parent)
     }
     commitOptions(insertOptionInTree(options.value, parent, { ...item, ...saved.data }, valueField.value))
   }
@@ -390,9 +291,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     editingItem.value = null
     draftLabel.value = ''
     if (parent) {
-      const next = new Map(expanded.value)
-      next.set(parent, true)
-      expanded.value = next
+      expandItem(parent)
     }
   }
 

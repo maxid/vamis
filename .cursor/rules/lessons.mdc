@@ -182,7 +182,7 @@ alwaysApply: true
 
 ### 表单窄屏靠 CSS 改 layout，不要按 type 各写一套
 - 踩过：对照 375 上 Vamis 标签在上、提交钮靠右小块；Amis 是 label 28% 与控件同行、底栏按钮 `flex:1` 拉满。只给 `.vamis-node` / 直接子 Button 设 `flex:1` 时，Action 的 `span.inline-block` 和 shadcn `shrink-0` 仍把提交收成左小块。
-- 稳定做法：对齐 `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`。`.vamis-form-item` 一律 flex + 标签 28% + 底部分割线；日期/文本/Select 去边框；`.vamis-form-panel` 去标题灰底与描边。footer 同时拉满 `.vamis-node`、`[data-vamis-action]`、`[data-slot="button"]`（同 Dialog）。所有表单控件自动吃到，不要给 `input-date` / `select` 再做一套移动 layout。JS `mobileUI` 768 只给 picker / Toast / Select PopUp。
+- 稳定做法：对齐 `_form.scss` / `_panel.scss` `media-breakpoint-down(sm)`。`.vamis-form-item` 一律 flex + 标签 28% + 底部分割线；日期/文本/Select 去边框；`.vamis-form-panel` 去标题灰底与描边，面板底跟 Page 的 `--page-main-bg`，不要用全局画布 `--background` 把表单画灰。footer 同时拉满 `.vamis-node`、`[data-vamis-action]`、`[data-slot="button"]`（同 Dialog）。所有表单控件自动吃到，不要给 `input-date` / `select` 再做一套移动 layout。JS `mobileUI` 768 只给 picker / Toast / Select PopUp。
 - 触及：`form` FormItem `input-date` `select` `action`
 - 规则：本文；Amis `_form.scss` 562+ / `_panel.scss` `Panel--form`
 
@@ -984,10 +984,22 @@ alwaysApply: true
 - 规则：本文；Amis `InputText.tsx` Spinner；`Action.tsx` `loading` 来自 props
 
 ### deferApi 是树节点展开加载，不是 Select 打开拉源
-- 踩过：Options 只写了字段名，没有接节点展开与加载态；树子项若直接替换整棵树会丢兄弟，加载后重复展开还会重复请求。
-- 稳定做法：API 优先级 `option.deferApi > schema.deferApi > source`，请求上下文 `{...data, ...option}`；`deferField` 默认 `defer`，`loaded` 防重复。用 `resolveDeferredOption` 只合并当前节点 children，保留兄弟并支持嵌套；成功后展开并派发 `deferLoadFinished`。普通节点默认展开。共享 TreeBranch 的调用方都要接 `expanded` / `deferring`，别让另一个树控件类型检查或交互断掉。DOM 不要递归 `ul`：Amis 用 `flattenVisibleOptions` 把可见节点铺在同一层 `ul > li`，`li` 的深度变量算 16px 缩进；内容行 32px、选中 brand-10 浅底，不要用按钮实心主色冒充。
-- 触及：Options `input-tree` `tree-select`
-- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/InputTree.vue`；Amis `Options.tsx` `deferLoad`
+- 踩过：Options 只写了字段名，没有接节点展开与加载态；树子项若直接替换整棵树会丢兄弟，加载后重复展开还会重复请求。Select 树模式若直接挂 `TreeSelect`，会把独立 FormItem、触发器与 CUD 外壳带进 TransferDropDown。
+- 稳定做法：API 优先级 `option.deferApi > schema.deferApi > source`，请求上下文 `{...data, ...option}`；`deferField` 默认 `defer`，`loaded` 防重复。用 `resolveDeferredOption` 只合并当前节点 children，保留兄弟并支持嵌套；成功后展开并派发 `deferLoadFinished`。共享展开 / 懒加载状态放 `useTreeState`，InputTree / TreeSelect / Select 树面板只通过 `TreeBranch` 展示；Select 不直接挂完整 `TreeSelect`。普通节点默认展开。共享 TreeBranch 的调用方都要接 `expanded` / `deferring`，别让另一个树控件类型检查或交互断掉。deferring 不能用 option 对象或单独 value 做键：无 value 的 folder 会全部命中；按完整树路径 key 匹配，search 克隆节点也能定位唯一节点。搜索结果与完整树必须分开传：懒加载只更新完整 `nodes`，`visibleNodes` 只负责当前检索展示，否则 search 期间加载会把隐藏分支覆盖掉。DOM 不要递归 `ul`：Amis 用 `flattenVisibleOptions` 把可见节点铺在同一层 `ul > li`，`li` 的深度变量算 16px 缩进；内容行 32px、选中 brand-10 浅底，不要用按钮实心主色冒充。
+- 触及：Options `input-tree` `tree-select` `select`
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/useTreeState.ts`；`packages/vamis/src/renderers/form/select/SelectTreePane.vue`；Amis `Options.tsx` `deferLoad` / `Transfer.tsx` `renderOptions`
+
+### 下拉里的树只能有一个滚动宿主
+- 踩过：Select 树模式外层 `vamis-select__popover` 已经 `overflow:auto`，通用 `.vamis-tree` 又带 `max-height + overflow:auto`；后者在 unlayered 样式里覆盖了 Select 分层规则，延时加载展开后右侧出现两条滚动条。
+- 稳定做法：对齐 Amis `TransferDropDown-content > Transfer-selection`。Select 树模式给外层加 `is-tree` 并固定 flex column、`overflow:hidden`；`.vamis-select__tree-pane` 是唯一 `overflow:auto` 宿主；其内部 `.vamis-tree` 设 `max-height:none; overflow:visible`。搜索框固定，树内容单独滚动；桌面和移动 sheet 共用同一条规则。
+- 触及：`select` tree dropdown
+- 规则：Amis `_transfer.scss` `.TransferDropDown-content > .Transfer-selection`；`packages/vamis-ui/src/styles.css` `.vamis-select__popover.is-tree`
+
+### Tree 行选中态与聚合勾选态必须分离
+- 踩过：TreeBranch 用 `isTreeItemChecked` 同时画复选框和整行 `is-checked`。单选时一个 folder 的唯一子项被选中，聚合判断把 folder 也判为 checked，父行和叶子一起高亮；Amis 单选只认 `value.indexOf(item)` 的精确节点。
+- 稳定做法：`checked` 继续给复选框 / partial 用；行样式单独用 `selected`，只比值里是否精确存在当前节点。Select tree pane 必须传 exact selected；InputTree 不需要聚合父行背景时同理。移动单选草稿也要只高亮叶子。
+- 触及：`tree-select` `input-tree` `select`
+- 规则：Amis `Tree.tsx` `checkedInValue` / `isItemChecked`；`packages/vamis/src/renderers/form/TreeBranch.vue`
 
 ### Options CUD 确认事件先于本地写入和 API
 - 踩过：新增、编辑、删除先把选项写进本地或调用 `addApi` / `editApi` / `deleteApi`，再派发确认事件；`preventDefault()` 已经无法回滚本地状态，而且自定义弹层会把原选项私有字段整包塞进 `editConfirm.item`。
@@ -1008,8 +1020,8 @@ alwaysApply: true
 - 规则：本文；Amis `PopOverContainer.calcOverlayWidth` / `alignToPlacement`
 
 ### 分组 Select 下拉是 TransferDropDown，不是 Select-input
-- 踩过：文档「分组」示例走 Amis `selectMode: group` → `TransferDropDown`（InputBox 32px、「请输入关键字」、搜索图标在右、GroupedSelection 小复选框、ResultBox 标签）。Vamis 用了普通 Select 检索条（32px 全边框、「搜索」、无图标）和 shadcn Checkbox，多选 `Number(undefined)` 还收成 `+1`。组头/子项一度跟普通 option 写成 10 / 20。
-- 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。组头 padding 走 `--select-group-padding-x` **12**（`--select-group-paddingLeft: size-7`）；子项 `--select-group-item-indent: calc(var(--gap-base) * 2)` **24**（`GroupedSelection-group > items > item`）。普通 option 仍 10。检索外层 Transfer-search **10**、内层 InputBox **4×10**（`--Form-input-paddingY/X`），不要跟组头 12 混。
+- 踩过：文档「分组」示例走 Amis `selectMode: group` → `TransferDropDown`（InputBox 32px、「请选择」、搜索图标在右、GroupedSelection 小复选框、ResultBox 标签）。Vamis 曾把检索占位写成「请输入关键字」，又把组头与子项统一成 14 / 21px、`neutral-text-5`；实测 Amis 子项是正文色、32px 行高。组头/子项还一度跟普通 option 写成 10 / 20。
+- 稳定做法：有 `children` / `selectMode: group` 用 Transfer 检索形态；占位沿用 Select 的 `placeholder`（默认「请选择」），普通 `searchable` 才是 30px 底边 + 左图标「搜索」。菜单复选框只在 `multiple` 时画 14px sm 盒（对齐 `GroupedSelection`），分组单选只靠 `is-active`，不要在右侧再塞勾选。多选标签只有 `maxTagCount > 0` 才按宽度 `countVisibleTagsByWidth` 收成 `+ N ...`（AutoFoldedList）；没写上限时跟 Amis 一样折行铺开。溢出层用同一套可关闭标签表格，不要拼纯文本。溢出层皮肤跟下拉 `--select-menu-*`（不是默认白底 Tooltip）；标签 hover tooltip 走 `--tooltip-*`，深色由 `.dark` 换变量。溢出网格保持 `--tooltip-max-width`（240），不要 `max-width: none`。`autoComplete` mock 要对齐 `labelField`/`valueField` 映射，并单独提供 `autoComplete3`。`/api/mock2/form/getOptions` 默认 A–Q（17 项），不要只留 A–F。组头 padding 走 `--select-group-padding-x` **12**（`--select-group-paddingLeft: size-7`）；子项 `--select-group-item-indent: calc(var(--gap-base) * 2)` **24**（`GroupedSelection-group > items > item`）。普通 option 仍 10。检索外层 Transfer-search **10**、内层 InputBox **4×10**（`--Form-input-paddingY/X`），不要跟组头 12 混。组头与子项文字共用 `itemLabel` 基类：基类显式落 option 的 **14 / 32px / 400 / neutral-text-2（#151b26）**，组头 modifier 再覆写成 **14 / 21px / 400 / neutral-text-5（#84878c）**；选中 hover 仍保持 primary，别把颜色只挂在行容器上靠继承碰运气。
 - 触及：`select`
 - 规则：本文；Amis `TransferDropDown` / `GroupedSelection` / `_selection.scss` / `AutoFoldedList` / `mock/options/autoComplete.js`
 

@@ -1,7 +1,7 @@
 # Select 剩余语义完成设计
 
 - 日期：2026-11-19
-- 状态：进行中（Options CUD 事件切片已落地，2026-11-19）
+- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi` 2026-11-21 已落地）
 - 范围：`select` 的 Options CUD 事件、`deferApi`、`selectMode: table / tree / chained / associated`、`searchResultMode`
 - Amis 基线：6.13.0
 - 关联文档：
@@ -197,7 +197,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 ## 7. 交付切片
 
 1. Options CUD 事件与 API 顺序。**已完成 2026-11-19**：扩展既有 `useOptionsControl` / `useTreeField`，新增 core `runOptionConfirm` / `persistOptionMutation`，未重建 CUD 状态机。
-2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。
+2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
 3. `selectMode: table`。
 4. `selectMode: chained`。
 5. `selectMode: associated` 与人员点选。
