@@ -286,6 +286,15 @@
   /* Amis `--select-group-paddingLeft: size-7` 12；子项 `padding-left: gap-base * 2` 24。不要跟 option 10 混用。 */
   --select-group-padding-x: 12px;
   --select-group-item-indent: calc(var(--gap-base) * 2);
+  --select-table-header-pad-y: 8px;
+  --select-table-header-pad-left: 12px;
+  --select-table-header-pad-right: 18px;
+  --select-table-option-pad-top: 6px;
+  --select-table-option-pad-bottom: 8px;
+  --select-table-option-pad-left: 12px;
+  --select-table-option-pad-right: 18px;
+  --select-table-font-size: var(--fontSizeSm);
+  --select-table-line-height: calc(var(--select-table-font-size) * var(--lineHeightBase));
   --select-search-height: 30px;
   --select-search-icon-size: 14px;
   --select-search-icon-color: #999999;
@@ -12078,6 +12087,95 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-select__popover.is-tree .vamis-select__tree-pane .vamis-tree {
   max-height: none;
   overflow: visible;
+}
+.vamis-select__popover.is-table {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.vamis-select__popover.is-table:not(.vamis-select__popover--sheet) {
+  max-height: 300px;
+}
+.vamis-select__table-pane {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.vamis-select__table {
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+.vamis-select__table [data-slot="table-container"] {
+  overflow: visible;
+}
+.vamis-select__table [data-slot="table"] {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.vamis-select__table [data-slot="table-head"],
+.vamis-select__table [data-slot="table-cell"] {
+  height: auto;
+  color: var(--select-option-color);
+  font-size: var(--select-table-font-size);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--select-table-line-height);
+  white-space: nowrap;
+}
+.vamis-select__table [data-slot="table-head"] {
+  padding: var(--select-table-header-pad-y) var(--select-table-header-pad-left);
+  border-right: 1px solid var(--card);
+  border-bottom: 1px solid var(--card);
+}
+.vamis-select__table [data-slot="table-cell"] {
+  padding: var(--select-table-option-pad-top) var(--select-table-option-pad-left)
+    var(--select-table-option-pad-bottom);
+  border-bottom: 1px solid var(--border);
+}
+.vamis-select__table thead [data-slot="table-row"] {
+  background: var(--table-thead-bg);
+  border-bottom: 1px solid var(--border);
+}
+.vamis-select__table [data-slot="table-head"]:last-child,
+.vamis-select__table [data-slot="table-cell"]:last-child {
+  padding-right: var(--select-table-option-pad-right);
+}
+.vamis-select__table [data-slot="table-head"]:last-child {
+  border-right: 0;
+}
+.vamis-select__table tbody [data-slot="table-row"] {
+  cursor: pointer;
+}
+.vamis-select__table tbody [data-slot="table-row"].is-active > [data-slot="table-cell"] {
+  color: var(--select-option-active-color);
+  background: var(--select-option-active-bg);
+}
+.vamis-select__table tbody [data-slot="table-row"]:hover > [data-slot="table-cell"] {
+  color: var(--select-option-hover-color);
+  background: var(--select-option-hover-bg);
+}
+.vamis-select__table tbody [data-slot="table-row"].is-disabled {
+  cursor: not-allowed;
+}
+.vamis-select__table tbody [data-slot="table-row"].is-disabled > [data-slot="table-cell"] {
+  color: var(--select-option-disabled-color);
+  background: var(--select-option-disabled-bg);
+}
+.vamis-select__table [data-slot="table-head"].vamis-select__table-check,
+.vamis-select__table [data-slot="table-cell"].vamis-select__table-check {
+  width: 34px;
+  padding-right: 0;
+}
+.vamis-select__table-check [data-slot="checkbox"] {
+  width: var(--select-check-size);
+  height: var(--select-check-size);
+  border-radius: var(--select-check-radius);
+}
+.vamis-select__table [data-slot="table-cell"].vamis-select__table-empty {
+  padding: var(--gap-xl) var(--gap-base);
+  color: var(--text-muted);
+  text-align: center;
 }
 .vamis-tree__list {
   list-style: none;

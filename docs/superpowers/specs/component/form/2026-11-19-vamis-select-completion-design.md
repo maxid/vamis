@@ -1,13 +1,14 @@
 # Select 剩余语义完成设计
 
 - 日期：2026-11-19
-- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi` 2026-11-21 已落地）
+- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi` 2026-11-21、`selectMode: table` 2026-11-21 已落地）
 - 范围：`select` 的 Options CUD 事件、`deferApi`、`selectMode: table / tree / chained / associated`、`searchResultMode`
 - Amis 基线：6.13.0
 - 关联文档：
   - [Select 组件设计](../../../../design/component/form/select.md)
   - [Options 组件设计](../../../../design/component/form/options.md)
   - [Amis Select 关联组件与共享能力测绘](2026-11-19-amis-select-shared-surface-analysis.md)
+  - [Select 表格模式完成设计](2026-11-21-vamis-select-table-mode.md)
   - [运行时语义](../../2026-10-20-vamis-runtime-semantics-design.md)
   - [组件 P0 TODO](../../2026-10-20-vamis-component-todo.md)
 
@@ -173,6 +174,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 ### 6.5 `selectMode: table`
 
+- **已落地 2026-11-21**：新增 `SelectTablePane.vue`，复用 Table / Checkbox 原语和父层值状态；主路径支持 columns、单选、多选、禁用、表头全选、移动草稿和单一滚动宿主。
 - 新建 `SelectTablePane.vue`。
 - 使用 `@vamis/ui` Table 原语，不复制 Table 渲染器的完整数据域。
 - `columns` 只用于展示；选择状态仍由 Select 的值序列化决定。
@@ -198,7 +200,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 1. Options CUD 事件与 API 顺序。**已完成 2026-11-19**：扩展既有 `useOptionsControl` / `useTreeField`，新增 core `runOptionConfirm` / `persistOptionMutation`，未重建 CUD 状态机。
 2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
-3. `selectMode: table`。
+3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化与 `searchResultMode` 另列后续。
 4. `selectMode: chained`。
 5. `selectMode: associated` 与人员点选。
 6. `searchResultMode` 全模式收口。

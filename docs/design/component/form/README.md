@@ -52,7 +52,7 @@
 - [InputRange 滑块](input-range.md) — `input-range` · XL 特重 · 50%
 - [InputRepeat 重复频率](input-repeat.md) — `input-repeat` · M 中 · 40%
 - [InputRichText 富文本](input-rich-text.md) — `input-rich-text` · XL 特重 · 25%
-- [Select 下拉框](select.md) — `select` · XL 特重 · 95%
+- [Select 下拉框](select.md) — `select` · XL 特重 · 96%
 - [InputSubForm 子表单](input-sub-form.md) — `input-sub-form` · L 重 · 45%
 - [Switch 开关](switch.md) — `switch` · M 中 · 88%
 - [Static 静态展示](static.md) — `static` · M 中 · 85%

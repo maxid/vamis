@@ -28,6 +28,9 @@ describe('select docs', () => {
     const displayHeadings = [
       ...doc.slice(displayStart, displayEnd).matchAll(/^### (.+)$/gm),
     ].map((match) => match[1])
+    const tableStart = doc.indexOf('### 表格模式')
+    const tableEnd = doc.indexOf('### 树形模式')
+    const tableSection = doc.slice(tableStart, tableEnd)
 
     expect(doc).toContain('\ntitle: Select 选择器\n')
     expect(doc).toContain('\n# Select 选择器\n')
@@ -48,6 +51,8 @@ describe('select docs', () => {
       '与 Amis 的差异',
     ])
     expect(displayHeadings).toEqual(['分组展示模式', '表格模式', '树形模式', '级联选择'])
+    expect(tableSection).not.toContain('当前状态：未接')
+    expect([...tableSection.matchAll(/```schema/g)]).toHaveLength(2)
     expect(h3).toContain('刷新数据源 reload')
     expect(h2[h2.length - 1]).toBe('与 Amis 的差异')
   })
@@ -89,5 +94,19 @@ describe('select docs', () => {
     expect(paneRule).toContain('overflow: auto')
     expect(treeRule).toContain('max-height: none')
     expect(treeRule).toContain('overflow: visible')
+  })
+
+  it('uses Amis table header separators instead of a gray bottom border on each th', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const headRule = cssRule(css, '.vamis-select__table [data-slot="table-head"]')
+    const headerRowRule = cssRule(
+      css,
+      '.vamis-select__table thead [data-slot="table-row"]',
+    )
+
+    expect(headRule).toContain('border-right: 1px solid var(--card)')
+    expect(headRule).toContain('border-bottom: 1px solid var(--card)')
+    expect(headerRowRule).toContain('background: var(--table-thead-bg)')
+    expect(headerRowRule).toContain('border-bottom: 1px solid var(--border)')
   })
 })

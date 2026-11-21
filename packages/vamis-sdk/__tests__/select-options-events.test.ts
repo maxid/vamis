@@ -61,6 +61,170 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it('renders Select table mode and writes a row selection', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'tableForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'table',
+          columns: [
+            { name: 'label', label: '英雄' },
+            {
+              name: 'position',
+              label: '位置',
+              type: 'tpl',
+              tpl: '${label} · ${position}',
+            },
+          ],
+          options: [
+            { label: '诸葛亮', value: 'zhugeliang', position: '中单' },
+            { label: '曹操', value: 'caocao', position: '上单' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeTruthy())
+
+    const rows = document.querySelectorAll('.vamis-select__table tbody tr')
+    expect(rows).toHaveLength(2)
+    expect(rows[0]?.textContent).toContain('诸葛亮')
+    expect(rows[0]?.textContent).toContain('诸葛亮 · 中单')
+
+    click(rows[0] as HTMLElement)
+    const form = scoped.getComponentByName('tableForm') as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('zhugeliang'))
+    expect(host.querySelector('.vamis-select__single')?.textContent).toBe('诸葛亮')
+  })
+
+  it('checks all available rows in multiple Select table mode', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'tableMultiForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          selectMode: 'table',
+          columns: [{ name: 'label', label: '英雄' }],
+          options: [
+            { label: '诸葛亮', value: 'zhugeliang' },
+            { label: '曹操', value: 'caocao' },
+            { label: '禁用', value: 'disabled', disabled: true },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeTruthy())
+
+    click(
+      document.querySelector(
+        '.vamis-select__table thead [data-slot="checkbox"]',
+      ) as HTMLElement,
+    )
+    const form = scoped.getComponentByName('tableMultiForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('zhugeliang,caocao'),
+    )
+  })
+
+  it('keeps mobile table selection in the draft until confirm', async () => {
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'mobileTableForm',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'heroes',
+            label: '英雄',
+            multiple: true,
+            selectMode: 'table',
+            columns: [{ name: 'label', label: '英雄' }],
+            options: [
+              { label: '诸葛亮', value: 'zhugeliang' },
+              { label: '曹操', value: 'caocao' },
+            ],
+          },
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-popup .vamis-select__table')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__table tbody tr') as HTMLElement)
+
+    const form = scoped.getComponentByName('mobileTableForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.heroes).toBeUndefined()
+
+    click(document.querySelector('.vamis-popup__ok') as HTMLElement)
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.heroes).toBe('zhugeliang'),
+    )
+  })
+
+  it('keeps the selected row visible in table mode when hideSelected is true', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'table',
+          hideSelected: true,
+          value: 'zhugeliang',
+          columns: [{ name: 'label', label: '英雄' }],
+          options: [
+            { label: '诸葛亮', value: 'zhugeliang' },
+            { label: '曹操', value: 'caocao' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeTruthy())
+
+    expect(
+      document.querySelectorAll('.vamis-select__table tbody [data-slot="table-row"]'),
+    ).toHaveLength(2)
+    expect(
+      document
+        .querySelector('.vamis-select__table tbody [data-slot="table-row"].is-active')
+        ?.textContent,
+    ).toContain('诸葛亮')
+  })
+
   it('focuses the search input after opening a searchable Select', async () => {
     const { host } = mount({
       type: 'page',

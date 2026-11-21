@@ -96,7 +96,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
 
   const selected = computed(() => getSelectedOptions(rawValue.value, options.value, config.value))
 
-  const filtered = computed(() => {
+  const filteredCandidates = computed(() => {
     let list = searchResults.value ?? options.value
     if (!searchResults.value && !autoComplete.value && config.value.searchable && keyword.value.trim()) {
       const custom = runSelectFilterOption(
@@ -107,6 +107,11 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
       )
       list = custom ?? filterOptionTree(options.value, keyword.value)
     }
+    return list
+  })
+
+  const filtered = computed(() => {
+    let list = filteredCandidates.value
     if (schema.value.hideSelected === true) {
       list = omitSelectedOptions(list, selected.value, config.value.valueField)
     }
@@ -621,6 +626,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     name,
     config,
     options,
+    filteredCandidates,
     filtered,
     selected,
     rawValue,

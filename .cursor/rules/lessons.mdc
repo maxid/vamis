@@ -995,6 +995,12 @@ alwaysApply: true
 - 触及：`select` tree dropdown
 - 规则：Amis `_transfer.scss` `.TransferDropDown-content > .Transfer-selection`；`packages/vamis-ui/src/styles.css` `.vamis-select__popover.is-tree`
 
+### Select 表格模式是 TableSelection，不是完整 Table 渲染器
+- 踩过：把 `type: table` 整个挂进 Select 会把行数据域、quickEdit、PopOver、分页和独立值写回一起带进来；`hideSelected` 也会错误把已选行从表格中删掉。Amis TableSelection 只是网格 + 选择状态。
+- 稳定做法：`SelectTablePane` 只接收当前候选、选中值、columns 和 disabled，发 `pick` / `toggle-all`；值序列化、搜索和移动草稿继续由 Select 父层负责。多选表头全选独立于 `checkAll`，排除禁用 / 空值项。table 使用 `filteredCandidates`，不消费 `hideSelected`、`menuTpl`、`deferApi`。列带 `type` / `tpl` / `body` / `schema` 时走 SchemaRenderer。表格自身是唯一滚动宿主，字体 12 / 18，padding 按 Amis `select-table-*` token。
+- 触及：`select` table dropdown
+- 规则：Amis `TableSelection.tsx` / `_selection.scss`；`packages/vamis/src/renderers/form/select/SelectTablePane.vue`
+
 ### Tree 行选中态与聚合勾选态必须分离
 - 踩过：TreeBranch 用 `isTreeItemChecked` 同时画复选框和整行 `is-checked`。单选时一个 folder 的唯一子项被选中，聚合判断把 folder 也判为 checked，父行和叶子一起高亮；Amis 单选只认 `value.indexOf(item)` 的精确节点。
 - 稳定做法：`checked` 继续给复选框 / partial 用；行样式单独用 `selected`，只比值里是否精确存在当前节点。Select tree pane 必须传 exact selected；InputTree 不需要聚合父行背景时同理。移动单选草稿也要只高亮叶子。

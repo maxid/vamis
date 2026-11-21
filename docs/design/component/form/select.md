@@ -1,9 +1,10 @@
 # Select 下拉选择器 · `select` 设计
 
-> 状态：**进行中 95%** · 复杂度：**XL 特重**
+> 状态：**进行中 96%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/select) · Amis：`/zh-CN/components/form/select`
 > 盘点日期：2026-11-21。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 > 剩余语义实现规格：[Select 剩余语义完成设计](../../../superpowers/specs/component/form/2026-11-19-vamis-select-completion-design.md)
+> 表格模式完成规格：[Select 表格模式完成设计](../../../superpowers/specs/component/form/2026-11-21-vamis-select-table-mode.md)
 
 ## 0. 一页结论
 
@@ -28,6 +29,7 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 - 本地 options / 远程 source 慢返回 / 失败 / 空结果 / 变量 `${...}`
 - `searchable` 本地过滤 / `filterOption` / `searchApi` / `autoComplete` 竞态
 - 分组 `children`、`menuTpl`、`selectMode: group`
+- 表格模式 `selectMode: table`：columns、单选 / 多选、禁用行、表头全选、移动草稿
 - 树模式 `selectMode: tree`：`multiple` / `onlyChildren` / `autoCheckChildren` / 全选 / 搜索保留父路径
 - 节点 defer：父级 `deferApi`、option 级 `deferApi`、请求上下文、Spinner、`deferLoadFinished`、重复展开
 - 多选全选、`checkAllBySearch`、搜索后全选
@@ -67,7 +69,7 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 | `source` | 远程选项 | `requestApi` 拉取；变量 source 按数据域解析 |
 | `multiple` / `joinValues` / `extractValue` / `delimiter` | 多选/值形态 | 决定表单值 string vs array；不要只改 UI |
 | `searchable` / `filterOption` / `searchApi` / `autoComplete` | 搜索 | 本地/远程/自动补全的优先级和竞态 |
-| `selectMode` | 普通/分组/表格/树/链式/人员 | 普通 / group / tree 已接；table/chained/associated 未接 |
+| `selectMode` | 普通/分组/表格/树/链式/人员 | 普通 / group / table / tree 已接；chained/associated 未接 |
 | `menuTpl` | 自定义选项 | SchemaRenderer 渲染，数据含 option |
 | `maxTagCount` / 标签折叠 | 多选标签 | 测量 + `+N` tooltip |
 | `addControls` / `editControls` / `deleteControls` | 选项增删改 | 现有新增/编辑/删除路径；`*Confirm` 事件先于本地写入和 CUD API |
@@ -128,6 +130,7 @@ options ── searchable ──> filtered
 - **搜索**：本地 `filterOption` 优先；`searchApi` / `autoComplete` 需序号/Abort 防竞态；搜索无结果不改变当前值。
 - **搜索焦点**：桌面普通 searchable Select 打开后按 Amis 延迟 500ms 聚焦检索框；Grouped / Tree 的 TransferDropDown 搜索框与移动 PopUp 不套这条规则。
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
+- **表格**：`SelectTablePane` 使用 Table / Checkbox 原语；`columns` 为空回落 label，列 schema 可进 SchemaRenderer。单选点整行；多选表头全选排除禁用项；移动端只改 draft，确认才提交。
 - **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
@@ -139,15 +142,16 @@ options ── searchable ──> filtered
 - 默认类：`.vamis-select`、`.vamis-select-overflow`、`.vamis-select__chip`、`.vamis-select__caret`、`.vamis-popup__picker` 等，位于 `@vamis/ui/styles.css`。
 - 弹层/标签/tooltip 走 token；渲染器无 `<style>`；深色只替换 token。
 - 分组组头与组内子项共用 `.vamis-select__item-label`：基类显式落普通 option 的 14 / 32px、400、`neutral-text-2`；组头 modifier 覆写为 14 / 21px、400、`neutral-text-5` + padding 4×12，子项只额外缩进 24，选中态再用 primary。
+- 表格面板对齐 Amis `TableSelection`：12 / 18px，表头 padding 8×12，数据行 top 6 / bottom 8 / left 12 / right 18，末列右 18；行 hover / active / disabled 复用 `select-option-*`。`.vamis-select__table-pane` 是唯一滚动宿主。
 - 树模式对齐 Amis `TransferDropDown-content > Transfer-selection`：`.vamis-select__popover.is-tree` 是固定 flex 外壳，`.vamis-select__tree-pane` 是唯一滚动宿主，内部 `.vamis-tree` 设 `max-height:none` / `overflow:visible`，避免延时加载展开后出现双滚动条。
 - 窄屏：选择器底部弹层高度、滚轮行高、多选确认栏；不要用桌面 dropdown 直接缩窄。
 - 作者 `className` 只落 `div.vamis-node`；不要用 Tailwind 默认类代替控件皮肤。
 
 ## 6. 当前状态与缺口
 
-- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `tree`、树节点 `deferApi`、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。在线文档标题与「展示模式」章节顺序已和 Amis 一致：分组、表格、树形、级联；未接的表格 / 级联保留静态 schema 契约。
-- 对照：Select 桌面 / 移动均 **22/27**（P0 0）；新增树单选 / 多选 / defer 用例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
-- 缺：`selectMode` table/chained/associated、`searchResultMode`、人员点选。
+- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree`、树节点 `deferApi`、表格列与行选择、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。在线文档表格章节已切为活示例；级联仍保留静态 schema 契约。
+- 对照：Select 桌面 / 移动均 **24/29**（P0 0）；树单选 / 多选 / defer 与 table 两份活示例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
+- 缺：`selectMode` chained/associated、`searchResultMode`、人员点选；table 虚拟化与 `searchResultColumns` 未接。
 
 ## 7. 验收计划与完成度
 
@@ -176,8 +180,8 @@ options ── searchable ──> filtered
 
 ## 8. 后续
 
-1. `selectMode: table/chained/associated` 分片实现，优先复用选择面板与现有值模型。
-2. `searchResultMode` 在 tree/table/chained 共用模式分派上收口。
+1. `selectMode: chained/associated` 分片实现，优先复用表格 / 树选择面板与现有值模型。
+2. table 虚拟化、`searchResultColumns` 与 `searchResultMode` 在 tree/table/chained 共用模式分派上收口。
 3. 人员点选按 associated 与 Options 族统一收口。
 4. 值序列化矩阵补组件级测试后再动样式。
 5. 虚拟列表只覆盖桌面平铺选项；树、分组与 future table 的虚拟窗口需共享。

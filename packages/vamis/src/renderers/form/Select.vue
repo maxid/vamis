@@ -33,6 +33,7 @@ import CalendarWheel from '../display/CalendarWheel.vue'
 import PickerFade from '../calendar/PickerFade.vue'
 import Spinner from '../Spinner.vue'
 import { useOptionsControl } from '../../optionsControl'
+import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
@@ -67,11 +68,14 @@ const isMobile = computed(() => {
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
 const selectMode = computed(() => String(props.schema.selectMode || ''))
+const isTableMenu = computed(() => selectMode.value === 'table')
 const isTreeMenu = computed(() => selectMode.value === 'tree')
 const popupHeight = computed(() =>
   selectPopupHeight(
     props.schema.overlay,
-    isGroupMenu.value || isTreeMenu.value ? POPUP_DEFAULT_HEIGHT : undefined,
+    isGroupMenu.value || isTreeMenu.value || isTableMenu.value
+      ? POPUP_DEFAULT_HEIGHT
+      : undefined,
   ),
 )
 const mobileDraft = ref<OptionItem[]>([])
@@ -98,6 +102,10 @@ function selectedPool() {
   return isMobile.value && ctl.open.value ? mobileDraft.value : ctl.selected.value
 }
 const treeSelectedValues = computed(() => selectedPool().map((item) => item.value))
+const tableSelectedValues = computed(() => selectedPool().map((item) => item.value))
+const tableOptions = computed(() =>
+  isTableMenu.value ? ctl.filteredCandidates.value : ctl.filtered.value,
+)
 const allChecked = computed(() =>
   isAllSelected(selectedPool(), ctl.filtered.value, ctl.config.value.valueField),
 )
@@ -108,10 +116,12 @@ const noResultsText = computed(() =>
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
   if (selectMode.value === 'group') return true
-  if (isTreeMenu.value) return false
+  if (isTreeMenu.value || isTableMenu.value) return false
   return ctl.options.value.some((item) => isGroupOption(item))
 })
-const isTransferSearch = computed(() => isGroupMenu.value || isTreeMenu.value)
+const isTransferSearch = computed(
+  () => isGroupMenu.value || isTreeMenu.value || isTableMenu.value,
+)
 /** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
 const VIRTUAL_BUFFER = 4
 const VIRTUAL_MAX_HEIGHT = 266
@@ -120,7 +130,11 @@ const virtualScrollTop = ref(0)
 const virtualThreshold = computed(() => ctl.config.value.virtualThreshold)
 const itemHeight = computed(() => ctl.config.value.itemHeight)
 const virtualEnabled = computed(
-  () => !isMobile.value && !isGroupMenu.value && ctl.filtered.value.length > virtualThreshold.value,
+  () =>
+    !isMobile.value &&
+    !isGroupMenu.value &&
+    !isTableMenu.value &&
+    ctl.filtered.value.length > virtualThreshold.value,
 )
 const virtualViewportHeight = computed(() => {
   const count = ctl.filtered.value.length
@@ -190,19 +204,28 @@ watch(
 )
 /** 对齐 Amis：普通单选才走 Picker 滚轮；multiple / selectMode:group 走列表。 */
 const useMobileWheel = computed(
-  () => isMobile.value && !ctl.config.value.multiple && !isGroupMenu.value && !isTreeMenu.value,
+  () =>
+    isMobile.value &&
+    !ctl.config.value.multiple &&
+    !isGroupMenu.value &&
+    !isTreeMenu.value &&
+    !isTableMenu.value,
 )
 /** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
 const useMobileTick = computed(
-  () => isMobile.value && !!ctl.config.value.multiple && !isGroupMenu.value && !isTreeMenu.value,
+  () =>
+    isMobile.value &&
+    !!ctl.config.value.multiple &&
+    !isGroupMenu.value &&
+    !isTreeMenu.value &&
+    !isTableMenu.value,
 )
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
 )
 const searchPlaceholder = computed(() => {
   if (props.schema.searchPlaceholder != null) return String(props.schema.searchPlaceholder)
-  if (isTreeMenu.value) return filterTpl(ctl.placeholder.value, data.value)
-  if (isGroupMenu.value) return filterTpl(ctl.placeholder.value, data.value)
+  if (isTransferSearch.value) return filterTpl(ctl.placeholder.value, data.value)
   return '搜索'
 })
 const visibleTags = computed(() => {
@@ -407,6 +430,21 @@ function onPick(item: OptionItem) {
 }
 
 async function onToggleAll() {
+  if (isTableMenu.value) {
+    const pool = ctl.filteredCandidates.value
+    if (isMobile.value) {
+      mobileDraft.value = toggleAllOptions(
+        mobileDraft.value,
+        pool,
+        ctl.config.value.valueField,
+      )
+      return
+    }
+    await ctl.commit(
+      toggleAllOptions(ctl.selected.value, pool, ctl.config.value.valueField),
+    )
+    return
+  }
   if (isMobile.value) {
     const pool =
       ctl.config.value.checkAllBySearch !== false && ctl.keyword.value.trim()
@@ -529,6 +567,7 @@ watch(
         'is-nowrap': ctl.config.value.valuesNoWrap,
         'is-group': isGroupMenu,
         'is-tree': isTreeMenu,
+        'is-table': isTableMenu,
         'is-mobile': isMobile,
       }"
     >
@@ -698,7 +737,11 @@ watch(
         <div
           v-else
           class="vamis-select__popover vamis-select__popover--sheet"
-          :class="{ 'is-tick': useMobileTick, 'is-tree': isTreeMenu }"
+          :class="{
+            'is-tick': useMobileTick,
+            'is-tree': isTreeMenu,
+            'is-table': isTableMenu,
+          }"
         >
           <SelectTreePane
             v-if="isTreeMenu"
@@ -712,6 +755,16 @@ watch(
             :loading-config="schema.loadingConfig"
             @update:nodes="ctl.replaceOptions"
             @toggle="onTreeToggle"
+          />
+          <SelectTablePane
+            v-else-if="isTableMenu"
+            :schema="schema"
+            :nodes="tableOptions"
+            :selected-values="tableSelectedValues"
+            :disabled="locked"
+            :query="ctl.keyword.value"
+            @pick="onPick"
+            @toggle-all="onToggleAll"
           />
           <template v-else>
             <button
@@ -799,7 +852,11 @@ watch(
       >
         <div
           class="vamis-select__popover"
-          :class="{ 'is-virtual': virtualEnabled, 'is-tree': isTreeMenu }"
+          :class="{
+            'is-virtual': virtualEnabled,
+            'is-tree': isTreeMenu,
+            'is-table': isTableMenu,
+          }"
           :style="popoverStyle"
         >
           <div
@@ -840,6 +897,16 @@ watch(
             :loading-config="schema.loadingConfig"
             @update:nodes="ctl.replaceOptions"
             @toggle="onTreeToggle"
+          />
+          <SelectTablePane
+            v-else-if="isTableMenu"
+            :schema="schema"
+            :nodes="tableOptions"
+            :selected-values="tableSelectedValues"
+            :disabled="locked"
+            :query="ctl.keyword.value"
+            @pick="onPick"
+            @toggle-all="onToggleAll"
           />
           <template v-else>
             <button
