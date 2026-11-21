@@ -10,6 +10,7 @@ import {
   getSelectedOptions,
   isAllSelected,
   isGroupOption,
+  normalizeOptions,
   overlayIsMobile,
   POPUP_DEFAULT_HEIGHT,
   resolveClassName,
@@ -33,6 +34,7 @@ import CalendarWheel from '../display/CalendarWheel.vue'
 import PickerFade from '../calendar/PickerFade.vue'
 import Spinner from '../Spinner.vue'
 import { useOptionsControl } from '../../optionsControl'
+import SelectAssociatedPane from './select/SelectAssociatedPane.vue'
 import SelectChainedPane from './select/SelectChainedPane.vue'
 import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
@@ -69,6 +71,7 @@ const isMobile = computed(() => {
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
 const selectMode = computed(() => String(props.schema.selectMode || ''))
+const isAssociatedMenu = computed(() => selectMode.value === 'associated')
 const isChainedMenu = computed(() => selectMode.value === 'chained')
 const isTableMenu = computed(() => selectMode.value === 'table')
 const isTreeMenu = computed(() => selectMode.value === 'tree')
@@ -78,7 +81,8 @@ const popupHeight = computed(() =>
     isGroupMenu.value ||
       isTreeMenu.value ||
       isTableMenu.value ||
-      isChainedMenu.value
+      isChainedMenu.value ||
+      isAssociatedMenu.value
       ? POPUP_DEFAULT_HEIGHT
       : undefined,
   ),
@@ -118,10 +122,36 @@ const menuTpl = computed(() => props.schema.menuTpl as SchemaNode | undefined)
 const noResultsText = computed(() =>
   props.schema.noResultsText != null ? String(props.schema.noResultsText) : '未找到任何结果',
 )
+const associatedSourceMeta = computed(() => {
+  const first = ctl.options.value[0]
+  return first && Array.isArray(first.leftOptions) ? first : undefined
+})
+const associatedLeftOptions = computed(() =>
+  normalizeOptions(
+    associatedSourceMeta.value?.leftOptions ?? props.schema.leftOptions,
+    String(props.schema.labelField || 'label'),
+    String(props.schema.valueField || 'value'),
+  ),
+)
+const associatedRightOptions = computed(() =>
+  normalizeOptions(
+    associatedSourceMeta.value?.children ?? ctl.options.value,
+    String(props.schema.labelField || 'label'),
+    String(props.schema.valueField || 'value'),
+  ),
+)
+const associatedLeftDefaultValue = computed(
+  () => associatedSourceMeta.value?.leftDefaultValue ?? props.schema.leftDefaultValue,
+)
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
   if (selectMode.value === 'group') return true
-  if (isTreeMenu.value || isTableMenu.value || isChainedMenu.value) return false
+  if (
+    isTreeMenu.value ||
+    isTableMenu.value ||
+    isChainedMenu.value ||
+    isAssociatedMenu.value
+  ) return false
   return ctl.options.value.some((item) => isGroupOption(item))
 })
 const isTransferSearch = computed(
@@ -129,7 +159,8 @@ const isTransferSearch = computed(
     isGroupMenu.value ||
     isTreeMenu.value ||
     isTableMenu.value ||
-    isChainedMenu.value,
+    isChainedMenu.value ||
+    isAssociatedMenu.value,
 )
 /** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
 const VIRTUAL_BUFFER = 4
@@ -144,6 +175,7 @@ const virtualEnabled = computed(
     !isGroupMenu.value &&
     !isTableMenu.value &&
     !isChainedMenu.value &&
+    !isAssociatedMenu.value &&
     ctl.filtered.value.length > virtualThreshold.value,
 )
 const virtualViewportHeight = computed(() => {
@@ -220,7 +252,8 @@ const useMobileWheel = computed(
     !isGroupMenu.value &&
     !isTreeMenu.value &&
     !isTableMenu.value &&
-    !isChainedMenu.value,
+    !isChainedMenu.value &&
+    !isAssociatedMenu.value,
 )
 /** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
 const useMobileTick = computed(
@@ -230,7 +263,8 @@ const useMobileTick = computed(
     !isGroupMenu.value &&
     !isTreeMenu.value &&
     !isTableMenu.value &&
-    !isChainedMenu.value,
+    !isChainedMenu.value &&
+    !isAssociatedMenu.value,
 )
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
@@ -599,6 +633,7 @@ watch(
         'is-tree': isTreeMenu,
         'is-table': isTableMenu,
         'is-chained': isChainedMenu,
+        'is-associated': isAssociatedMenu,
         'is-mobile': isMobile,
       }"
     >
@@ -774,10 +809,21 @@ watch(
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
+            'is-associated': isAssociatedMenu,
           }"
         >
+          <SelectAssociatedPane
+            v-if="isAssociatedMenu"
+            :schema="schema"
+            :left-options="associatedLeftOptions"
+            :nodes="associatedRightOptions"
+            :selected-values="treeSelectedValues"
+            :left-default-value="associatedLeftDefaultValue"
+            :disabled="locked"
+            @pick="onPick"
+          />
           <SelectTreePane
-            v-if="isTreeMenu"
+            v-else-if="isTreeMenu"
             :schema="schema"
             :nodes="ctl.options.value"
             :visible-nodes="ctl.filtered.value"
@@ -899,6 +945,7 @@ watch(
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
+            'is-associated': isAssociatedMenu,
           }"
           :style="popoverStyle"
         >
@@ -929,8 +976,18 @@ watch(
               <VamisIcon name="search" v-else-if="isTransferSearch" class="vamis-select__search-icon" />
             </div>
           </div>
+          <SelectAssociatedPane
+            v-if="isAssociatedMenu"
+            :schema="schema"
+            :left-options="associatedLeftOptions"
+            :nodes="associatedRightOptions"
+            :selected-values="treeSelectedValues"
+            :left-default-value="associatedLeftDefaultValue"
+            :disabled="locked"
+            @pick="onPick"
+          />
           <SelectTreePane
-            v-if="isTreeMenu"
+            v-else-if="isTreeMenu"
             :schema="schema"
             :nodes="ctl.options.value"
             :visible-nodes="ctl.filtered.value"

@@ -12265,6 +12265,52 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-muted);
   text-align: center;
 }
+.vamis-select__associated {
+  display: flex;
+  min-height: 100%;
+}
+.vamis-select__associated-left,
+.vamis-select__associated-right {
+  min-width: 0;
+  overflow: auto;
+}
+.vamis-select__associated-left {
+  flex: 0 0 38%;
+  border-right: 1px solid var(--border);
+}
+.vamis-select__associated-right {
+  flex: 1 1 0;
+}
+.vamis-select__associated-left-item,
+.vamis-select__associated-right-item {
+  display: flex;
+  min-height: var(--select-option-line-height);
+  align-items: center;
+  padding: 0 var(--select-option-padding-x);
+  color: var(--select-option-color);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightNormal);
+  line-height: var(--select-option-line-height);
+  cursor: pointer;
+}
+.vamis-select__associated-left-item.is-active,
+.vamis-select__associated-left-item.is-active:hover,
+.vamis-select__associated-right-item.is-active,
+.vamis-select__associated-right-item.is-active:hover {
+  color: var(--select-option-active-color);
+  background: var(--select-option-active-bg);
+}
+.vamis-select__associated-left-item:hover,
+.vamis-select__associated-right-item:hover {
+  color: var(--select-option-hover-color);
+  background: var(--select-option-hover-bg);
+}
+.vamis-select__associated-left-item.is-disabled,
+.vamis-select__associated-right-item.is-disabled {
+  color: var(--select-option-disabled-color);
+  background: var(--select-option-disabled-bg);
+  cursor: not-allowed;
+}
 .vamis-tree__list {
   list-style: none;
   padding: 0;

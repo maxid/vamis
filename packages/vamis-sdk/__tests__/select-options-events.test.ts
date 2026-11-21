@@ -225,6 +225,74 @@ describe('Select option mutation events', () => {
     ).toContain('诸葛亮')
   })
 
+  it('renders associated mode and writes only a right-side selection', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'associatedForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'associated',
+          leftMode: 'list',
+          leftDefaultValue: 'mage',
+          leftOptions: [
+            { label: '法师', value: 'mage' },
+            { label: '战士', value: 'warrior' },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+            {
+              ref: 'warrior',
+              children: [{ label: 'B', value: 'b' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeTruthy(),
+    )
+    expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A')
+
+    const form = scoped.getComponentByName('associatedForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-right-item')][0] as HTMLElement,
+    )
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeTruthy(),
+    )
+
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-left-item')].find(
+        (item) => item.textContent?.trim() === '战士',
+      ) as HTMLElement,
+    )
+    await nextTick()
+    expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('B')
+    expect(
+      [...document.querySelectorAll('.vamis-select__associated-left-item.is-active')].map(
+        (item) => item.textContent?.trim(),
+      ),
+    ).toEqual(['战士'])
+  })
+
   it('renders Select chained mode and writes only a leaf selection', async () => {
     const { host, scoped } = mount({
       type: 'page',
