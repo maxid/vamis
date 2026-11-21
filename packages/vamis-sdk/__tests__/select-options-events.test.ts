@@ -395,6 +395,136 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
   })
 
+  it('reads associated left options from source-shaped options', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'associatedSourceForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          options: [
+            {
+              leftDefaultValue: 'mage',
+              leftOptions: [
+                { label: '法师', value: 'mage' },
+                { label: '战士', value: 'warrior' },
+              ],
+              children: [
+                {
+                  ref: 'mage',
+                  children: [{ label: 'A', value: 'a' }],
+                },
+                {
+                  ref: 'warrior',
+                  children: [{ label: 'B', value: 'b' }],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A'),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-right-item')][0] as HTMLElement,
+    )
+
+    const form = scoped.getComponentByName('associatedSourceForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
+  it('keeps associated right selections in the mobile draft until confirm', async () => {
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'associatedMobileForm',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'associated',
+            leftMode: 'list',
+            leftDefaultValue: 'mage',
+            leftOptions: [{ label: '法师', value: 'mage' }],
+            options: [
+              {
+                ref: 'mage',
+                children: [{ label: 'A', value: 'a' }],
+              },
+            ],
+          },
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-popup .vamis-select__associated')).toBeTruthy(),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-right-item')][0] as HTMLElement,
+    )
+
+    const form = scoped.getComponentByName('associatedMobileForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(document.querySelector('.vamis-popup__ok') as HTMLElement)
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
+  it('focuses the search input in searchable associated mode', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          searchable: true,
+          selectMode: 'associated',
+          leftDefaultValue: 'mage',
+          leftOptions: [{ label: '法师', value: 'mage' }],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
   it('renders Select chained mode and writes only a leaf selection', async () => {
     const { host, scoped } = mount({
       type: 'page',
