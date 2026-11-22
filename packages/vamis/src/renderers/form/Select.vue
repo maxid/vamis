@@ -271,6 +271,7 @@ const useMobileWheel = computed(
   () =>
     isMobile.value &&
     !ctl.config.value.multiple &&
+    !ctl.config.value.creatable &&
     !isGroupMenu.value &&
     !isTreeMenu.value &&
     !isTableMenu.value &&
@@ -860,6 +861,7 @@ watch(
           :class="{
             'is-tick': useMobileTick,
             'is-transfer': isTransferMenu,
+            'is-creatable': ctl.config.value.creatable,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
@@ -912,6 +914,16 @@ watch(
             @toggle-all="onToggleAll"
           />
           <template v-else>
+            <div v-if="ctl.config.value.creatable" class="vamis-select__create">
+              <button
+                type="button"
+                class="vamis-select__create-btn"
+                :disabled="locked"
+                @click="onAdd"
+              >
+                {{ ctl.createLabel.value }}
+              </button>
+            </div>
             <button
               v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
               type="button"
@@ -1000,6 +1012,7 @@ watch(
           :class="{
             'is-virtual': virtualEnabled,
             'is-transfer': isTransferMenu,
+            'is-creatable': ctl.config.value.creatable,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
@@ -1080,6 +1093,17 @@ watch(
             @toggle-all="onToggleAll"
           />
           <template v-else>
+            <div v-if="ctl.config.value.creatable" class="vamis-select__create">
+              <button
+                type="button"
+                class="vamis-select__create-btn"
+                :disabled="locked"
+                @mousedown.prevent
+                @click="onAdd"
+              >
+                {{ ctl.createLabel.value }}
+              </button>
+            </div>
             <button
               v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
               type="button"
@@ -1197,17 +1221,6 @@ watch(
                 <Spinner :schema="{ type: 'spinner', show: true, size: 'sm' }" />
               </div>
               <div v-else-if="!ctl.filtered.value.length" class="vamis-select__empty">{{ noResultsText }}</div>
-            </div>
-            <div v-if="ctl.config.value.creatable" class="vamis-select__create">
-              <button
-                type="button"
-                class="vamis-select__create-btn"
-                :disabled="locked"
-                @mousedown.prevent
-                @click="onAdd"
-              >
-                {{ ctl.createLabel.value }}
-              </button>
             </div>
           </template>
         </div>

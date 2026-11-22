@@ -1068,6 +1068,12 @@ alwaysApply: true
 - 触及：`select` Options
 - 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `TransferDropDown.tsx` / `_transfer.scss` / `virtual-list`
 
+### creatable 新增入口固定头部是 Vamis 有意差异
+- 踩过：Amis `Select-addBtn` 和候选菜单同处滚动区，长列表滚到底后新增入口也离开视口；Vamis 若照 DOM 顺序放在 `.vamis-select__list` 后，则会固定在底部，仍不符合“顶部随时可新增”的产品诉求。
+- 稳定做法：`creatable` 的 `.vamis-select__create` 必须是 `.vamis-select__popover` 直接子项，并排在搜索框之后、滚动列表之前；只有 `.vamis-select__list` 承担 `overflow:auto`。外层加 `is-creatable` 变 flex column，入口固定，桌面和移动 sheet 共用。该行为明确属于 **Vamis 相对 Amis 的优化项**，不要为了提高 Amis DOM 相似度把按钮塞回滚动区。
+- 触及：`select`
+- 规则：`packages/vamis/src/renderers/form/Select.vue`；`packages/vamis-ui/src/styles.css`；Amis `Select.tsx` `Select-addBtn`
+
 ### Table / Chained 的虚拟窗口是各自滚动，不是整块表格切片
 - 踩过：把 table 和 chained 当成普通平铺列表，只按总 `scrollTop` 截一段行；table 表头会跟首段行一起滚走，chained 切换列后错误地复用上一列的窗口和绝对索引。
 - 稳定做法：`SelectTablePane` 由 table pane 承担唯一滚动，表头 `sticky top:0`，行按 `virtualThreshold` / `itemHeight` 生成上下 spacer；虚拟行的点击回调仍用完整 `nodes` 的绝对索引。`SelectChainedPane` 每一列各自维护 `scrollTop` / viewport，列内切片，跨列选择把相对窗口起点还原成完整列绝对索引；不要把 chained 的列虚拟状态合并成一个全局窗口。两者都只渲染窗口 + spacer，完整候选仍交给父层做值、全选和 schema 事件。

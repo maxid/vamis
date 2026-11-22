@@ -6,7 +6,7 @@ outline: deep
 # Select 选择器
 
 ::: info 实现进度 99% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选、移动草稿和窗口虚拟化。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，支持多选叶子全选和逐列窗口虚拟化。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选；TransferDropDown 桌面选择内容区上限为 **350px**，搜索框另计；普通 Select 菜单仍是 **300px**。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`creatable` 新增入口固定在 Popover 顶部，候选列表单独滚动，是 Vamis 的有意交互优化。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选、移动草稿和窗口虚拟化。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，支持多选叶子全选和逐列窗口虚拟化。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选；TransferDropDown 桌面选择内容区上限为 **350px**，搜索框另计；普通 Select 菜单仍是 **300px**。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -1157,7 +1157,7 @@ body:
 
 ### addConfirm
 
-配置 `creatable` 后，点击“新增选项”会先打开 Dialog，提交时触发 `addConfirm`。调用 `preventDefault()` 会阻止本地写入与 `addApi`。
+配置 `creatable` 后，点击“新增选项”会先打开 Dialog，提交时触发 `addConfirm`。调用 `preventDefault()` 会阻止本地写入与 `addApi`。Vamis 将新增入口固定在 Popover 顶部；只有选项列表滚动，入口不会跟随列表滚走。
 
 ```schema: scope="body"
 type: form
@@ -1352,6 +1352,7 @@ body:
 - `selectMode` 已接分组、表格、树形、级联、关联与人员点选；`searchResultMode` / `searchResultColumns` 已接。
 - 桌面普通 Select 菜单上限 **300px**；`group` / `list` / `table` / `tree` / `chained` / `associated` 走 TransferDropDown，选择内容区上限 **350px**，搜索框高度另计。
 - 关联左右栏最小高度 **200px**；右侧未选择、配置错误有独立空态。
+- `creatable` 的“新增选项”改为固定在 Popover 顶部，候选列表单独滚动。这是 Vamis 相对 Amis 的有意交互优化；Amis 的 `Select-addBtn` 位于菜单滚动内容内。
 - 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。

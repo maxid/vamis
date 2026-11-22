@@ -149,6 +149,21 @@ describe('select docs', () => {
     }
   })
 
+  it('keeps the creatable action outside the scrolling option list', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const popoverRule = cssRule(css, '.vamis-select__popover.is-creatable')
+    const listRule = cssRule(
+      css,
+      '.vamis-select__popover.is-creatable > .vamis-select__list',
+    )
+    const createRule = cssRule(css, '.vamis-select__create')
+
+    expect(popoverRule).toContain('display: flex')
+    expect(popoverRule).toContain('overflow: hidden')
+    expect(listRule).toContain('overflow: auto')
+    expect(createRule).toContain('border-bottom')
+  })
+
   it('uses Amis table header separators instead of a gray bottom border on each th', () => {
     const css = read('../../vamis-ui/src/styles.css')
     const headRule = cssRule(css, '.vamis-select__table [data-slot="table-head"]')

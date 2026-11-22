@@ -130,6 +130,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 - Select 新增 / 编辑入口按 Amis 调用共享 `overlay.openDialog`；默认新增 Dialog 在提交后才触发 `addConfirm`，不在下拉内维护第二套内联新增表单。
 - mutation helper 的本地基准是当前 `item` / `patch`，请求 payload 只负责请求，不能把整个表单域或 `__super` / `__prev` 合并进选项。
 - 成功后可合并接口返回数据；source + `addApi` / `editApi` 重新加载 source，source 无 `addApi` 的临时新增留在本地；新增 / 编辑后按重载结果同步 selected item，删除后按 source 结果同步值。
+- `creatable` 新增入口固定在 Popover 头部，作为 Vamis 对 Amis 菜单内 `Select-addBtn` 的有意交互优化；搜索、新增入口和滚动候选列表分层。
 
 ### 6.2 TransferDropDown 外壳
 

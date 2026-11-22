@@ -141,7 +141,7 @@ options ── searchable ──> filtered
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
 - **标签折叠**：`measureTags` 计算可见数量；`maxTagCount` / 宽度变化 / 值变化触发；`+N` tooltip 不能裁切。
-- **选项 CUD**：确认事件先于本地写入与 API；弹层 Form 不再内挂 add / edit API，由 `useOptionsControl` / `useTreeField` 在事件后统一提交。
+- **选项 CUD**：确认事件先于本地写入与 API；弹层 Form 不再内挂 add / edit API，由 `useOptionsControl` / `useTreeField` 在事件后统一提交。Vamis 有意将 `creatable` 入口提升到 Popover 固定头部，与搜索框同层；候选列表单独滚动，入口不跟随内容滚走。这是相对 Amis 把 `Select-addBtn` 放在菜单滚动内容内的优化。
 
 ## 5. 样式与边界
 
@@ -157,7 +157,7 @@ options ── searchable ──> filtered
 
 ## 6. 当前状态与缺口
 
-- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`searchable` 与 `autoComplete` 统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、`searchResultMode` / `searchResultColumns` 搜索结果面板覆盖、树节点 `deferApi`、关联左右树 deferred `update:nodes` 回写、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高）、TransferDropDown 选择内容区 350px 与 table / chained 窗口虚拟化，以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
+- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`searchable` 与 `autoComplete` 统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、`searchResultMode` / `searchResultColumns` 搜索结果面板覆盖、树节点 `deferApi`、关联左右树 deferred `update:nodes` 回写、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高）、TransferDropDown 选择内容区 350px 与 table / chained 窗口虚拟化、creatable 固定顶部入口，以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
 - 对照：Select 桌面 / 移动均 **26/31**（P0 0）；树单选 / 多选 / defer、table 与 chained 各两份活示例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
 - 缺：级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
 

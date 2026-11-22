@@ -2289,6 +2289,86 @@ describe('Select option mutation events', () => {
     expect(host.querySelector('.vamis-select > .vamis-spinner--overlay')).toBeTruthy()
   })
 
+  it('keeps the creatable action outside the scrolling option list', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'select',
+        name: 'choice',
+        label: '选项',
+        searchable: true,
+        creatable: true,
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__popover.is-creatable')).toBeTruthy(),
+    )
+
+    const popover = document.querySelector('.vamis-select__popover') as HTMLElement
+    const search = popover.querySelector(':scope > .vamis-select__search')
+    const create = popover.querySelector(':scope > .vamis-select__create')
+    const list = popover.querySelector(':scope > .vamis-select__list')
+    expect(search).toBeTruthy()
+    expect(create).toBeTruthy()
+    expect(list).toBeTruthy()
+    expect(list?.contains(create as Node)).toBe(false)
+    expect(
+      search?.compareDocumentPosition(create as Node) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(
+      create?.compareDocumentPosition(list as Node) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('keeps the creatable action in the mobile fixed header', async () => {
+    const { host } = mount(
+      {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'choice',
+          label: '选项',
+          searchable: true,
+          creatable: true,
+          options: [
+            { label: 'A', value: 'a' },
+            { label: 'B', value: 'b' },
+          ],
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-popup .vamis-select__popover.is-creatable'),
+      ).toBeTruthy(),
+    )
+
+    const popover = document.querySelector(
+      '.vamis-popup .vamis-select__popover',
+    ) as HTMLElement
+    const create = popover.querySelector(':scope > .vamis-select__create')
+    const list = popover.querySelector(':scope > .vamis-select__list')
+    expect(create).toBeTruthy()
+    expect(list).toBeTruthy()
+    expect(list?.contains(create as Node)).toBe(false)
+    expect(
+      create?.compareDocumentPosition(list as Node) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
   it('opens an add dialog and emits addConfirm payload', async () => {
     const notify = vi.fn()
     const { host } = mount({
