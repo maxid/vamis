@@ -151,6 +151,7 @@ options ── searchable ──> filtered
 - 表格面板对齐 Amis `TableSelection`：12 / 18px，表头 padding 8×12，数据行 top 6 / bottom 8 / left 12 / right 18，末列右 18；行 hover / active / disabled 复用 `select-option-*`。`.vamis-select__table-pane` 是唯一滚动宿主。
 - 级联面板对齐 Amis `ChainedSelection`：最多三列，非末列右 1px 分隔；item 行高 32、14 / 400、`0 10px`；每列独立滚动，外层不叠第二条滚动。
 - 关联面板对齐 Amis `AssociatedSelection`：左右两栏独立滚动，38% / 剩余宽度分栏，左右栏 `min-height: 200px`，左栏右缝 1px，item 行高 32、14 / 400、复用 `select-option-*`。
+- multiple 勾选统一使用 `--select-check-*` → Popover `--checkbox-*` 映射：14×14 盒、12px 图标、2px 圆角、`--input` 边框。checkbox 到 label 的间距统一以级联多选为基准固定 8px；Amis 各结构原值不同，这里是 Vamis 的显式一致性优化。全选半选态显示横线；关联列表必须使用共享 Checkbox，树形 mark 必须在 Select tree pane 内覆写同一套盒子尺寸。Teleport 到根节点后变量从 `.vamis-select__popover` 继承。
 - 树模式对齐 Amis `TransferDropDown-content > Transfer-selection`：`.vamis-select__popover.is-tree` 是固定 flex 外壳，`.vamis-select__tree-pane` 是唯一滚动宿主，内部 `.vamis-tree` 设 `max-height:none` / `overflow:visible`，避免延时加载展开后出现双滚动条。
 - 窄屏：选择器底部弹层高度、滚轮行高、多选确认栏；不要用桌面 dropdown 直接缩窄。
 - 作者 `className` 只落 `div.vamis-node`；不要用 Tailwind 默认类代替控件皮肤。

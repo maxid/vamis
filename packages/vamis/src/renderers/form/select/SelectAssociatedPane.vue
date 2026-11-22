@@ -8,7 +8,7 @@ import {
   type OptionItem,
   type SchemaObject,
 } from '@vamis/core'
-import { VamisIcon } from '@vamis/ui'
+import { Checkbox } from '@vamis/ui'
 import SelectChainedPane from './SelectChainedPane.vue'
 import SelectTablePane from './SelectTablePane.vue'
 import SelectTreePane from './SelectTreePane.vue'
@@ -280,14 +280,15 @@ function isRightSelected(item: OptionItem) {
             :aria-selected="isRightSelected(row.item)"
             @click="selectRight(row.item)"
           >
-            <span
+            <Checkbox
               v-if="schema.multiple"
-              class="vamis-select__check"
-              :class="{ 'is-checked': isRightSelected(row.item) }"
-              aria-hidden="true"
-            >
-              <VamisIcon name="menu-check" v-if="isRightSelected(row.item)" />
-            </span>
+              class="vamis-select__associated-check"
+              :model-value="isRightSelected(row.item)"
+              :disabled="disabled || row.item.disabled"
+              :aria-label="row.item.label"
+              @click.stop
+              @update:model-value="selectRight(row.item)"
+            />
             {{ row.item.label }}
           </div>
         </template>

@@ -1062,6 +1062,12 @@ alwaysApply: true
 - 触及：`checkbox` `checkboxes` `select` Options `radio`
 - 规则：本文；Amis `_checks.scss`；`packages/vamis-ui/src/styles.css` `:root --checkbox-*`
 
+### Select 各模式 multiple 共用盒模型，间距按 Amis 结构区分
+- 踩过：关联列表用自定义 `.vamis-select__check`，级联/表格用 shadcn Checkbox，树形用 `.vamis-checkbox__mark`。结果同一 Select 出现 14/16 盒、10/14 图标、4/8/10 label 间距和两套边框色。把变量只写在 `.vamis-select` 还不够，因为 Popover Teleport 到根节点，16px 仍会残留。
+- 稳定做法：以 Amis `Checkbox--sm` 为标尺，统一 **14×14 盒、12px 图标、2px 圆角、`--input` 边框**。`--select-check-*` 同时映射到 `.vamis-select` 与 `.vamis-select__popover` 的 `--checkbox-*`；关联列表直接复用共享 Checkbox，树形 mark 在 Select tree pane 内覆写为同尺寸。checkbox 到 label 的间距按级联多选基准统一为 **8px**；Amis 各结构原值不同，这是 Vamis 的显式一致性优化；自定义 `.vamis-select__check` 不再叠旧 `margin-right`。表格可保留自己的 12px 字体 / 单元格 padding，但勾选盒仍走同一配方。
+- 触及：`select` `table` `tree` `chained` `associated`
+- 规则：`packages/vamis-ui/src/styles.css`；`packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue`；Amis `_checks.scss` `Checkbox--sm` / `ChainedSelection.tsx` / `GroupedSelection.tsx`
+
 ### Options 虚拟列表：固定行高 + 上下 spacer，分组菜单不虚拟化
 - 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。直接沿用 Table 的行虚拟会把分组头/子项缩进混进固定行高。
 - 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。

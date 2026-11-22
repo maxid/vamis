@@ -163,6 +163,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 - 已完成 2026-11-21：新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection` 主路径。
 - 关联左右栏对齐 Amis 的 `min-height: 200px`；右栏未选左侧时显示 `Transfer.selectFromLeft`，ref 无法匹配候选时显示 `Transfer.configError`。
 - 右根树 deferred 结果要回写父层 Options，并保留 `leftOptions/children/leftDefaultValue` source-shaped 元数据；左树展开缓存按 source 树签名重置，不能因右根回写时重新 normalize 而丢失。默认列表 multiple 显示复选框并覆盖所有部门 ref/dep 分支。
+- associated list multiple 直接复用 `@vamis/ui` Checkbox；Popover 作为 Teleport 根承载统一 `--select-check-*` 映射。所有 Select mode 的 multiple 勾选盒共用 Amis sm 尺寸；checkbox 到 label 的间距统一以级联多选为基准固定 8px；Amis 各结构原值不同，这是 Vamis 的显式一致性优化。表格的 12px 字体 / 单元格 padding 仍按 TableSelection 单独保留。
 - 左栏：
   - `leftMode: tree` 使用共享树状态和 `TreeBranch`，对应 Amis `Tree`。
 - 树分组显示 folder/file 图标；展开态按路径键存在 `useTreeState`，不能按节点对象引用存，避免兄弟节点收缩互相重置。

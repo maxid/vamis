@@ -164,6 +164,81 @@ describe('select docs', () => {
     expect(createRule).toContain('border-bottom')
   })
 
+  it('uses one checkbox recipe across Select list, table, tree, chained and associated modes', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const selectRule = cssRule(css, '.vamis-select')
+    const popoverRule = cssRule(css, '.vamis-select__popover')
+    const associatedRule = cssRule(
+      css,
+      '.vamis-select__associated-left-item,\n.vamis-select__associated-right-item',
+    )
+    const treeCheckRule = cssRule(
+      css,
+      '.vamis-select__tree-pane .vamis-tree__check.vamis-checkbox__mark',
+    )
+    const treeCheckIconRule = cssRule(
+      css,
+      '.vamis-select__tree-pane .vamis-tree__check.vamis-checkbox__mark .vamis-checkbox__icon',
+    )
+    const listRowRule = cssRule(
+      css,
+      '.vamis-select__checkall,\n  .vamis-select__item,\n  .vamis-select__create-btn',
+    )
+    const listCheckRule = cssRule(css, '.vamis-select__check')
+    const chainedCheckallRule = cssRule(
+      css,
+      '.vamis-select__chained-checkall',
+    )
+    const groupCheckboxRule = cssRule(
+      css,
+      '.vamis-select__item--child',
+    )
+    const groupCheckallRule = cssRule(
+      css,
+      '.vamis-select__popover.is-group .vamis-select__checkall',
+    )
+    const treeCheckallRule = cssRule(
+      css,
+      '.vamis-select__tree-checkall',
+    )
+    const selectVue = read('../../vamis/src/renderers/form/Select.vue')
+
+    expect(css).toContain('--select-check-size: 14px')
+    expect(css).toContain('--select-check-icon-size: 12px')
+    expect(css).toContain('--select-check-gap: 8px')
+    expect(css).not.toContain('--select-group-check-gap')
+    expect(css).not.toContain('--select-tree-check-gap')
+    expect(css).not.toContain('--select-chained-check-gap')
+    expect(css).not.toContain('--select-associated-check-gap')
+    expect(selectRule).toContain('--checkbox-size: var(--select-check-size)')
+    expect(selectRule).toContain(
+      '--checkbox-icon-size: var(--select-check-icon-size)',
+    )
+    expect(selectRule).toContain('--checkbox-gap: var(--select-check-gap)')
+    expect(popoverRule).toContain('--checkbox-size: var(--select-check-size)')
+    expect(popoverRule).toContain(
+      '--checkbox-icon-size: var(--select-check-icon-size)',
+    )
+    expect(popoverRule).toContain('--checkbox-gap: var(--select-check-gap)')
+    expect(associatedRule).toContain('gap: var(--select-check-gap)')
+    expect(treeCheckRule).toContain(
+      'calc(var(--select-check-gap) - var(--gap-xs))',
+    )
+    expect(treeCheckIconRule).toContain('width: var(--select-check-icon-size)')
+    expect(treeCheckIconRule).toContain('height: var(--select-check-icon-size)')
+    expect(listRowRule).toContain('gap: var(--select-check-gap)')
+    expect(listCheckRule).not.toContain('margin-right')
+    expect(css).not.toContain('.vamis-select.is-group .vamis-select__check {')
+    expect(groupCheckboxRule).toContain('gap: var(--select-check-gap)')
+    expect(groupCheckallRule).toContain('gap: var(--select-check-gap)')
+    expect(treeCheckallRule).toContain('gap: var(--select-check-gap)')
+    expect(chainedCheckallRule).toContain('gap: var(--select-check-gap)')
+    expect(css).toMatch(
+      /\.vamis-select__chained-item\s*\{[^}]*display:\s*flex;[^}]*gap:\s*var\(--select-check-gap\)/,
+    )
+    expect(selectVue.match(/'is-group': isGroupMenu/g)).toHaveLength(3)
+  })
+
   it('uses Amis table header separators instead of a gray bottom border on each th', () => {
     const css = read('../../vamis-ui/src/styles.css')
     const headRule = cssRule(css, '.vamis-select__table [data-slot="table-head"]')

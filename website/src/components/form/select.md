@@ -1353,6 +1353,7 @@ body:
 - 桌面普通 Select 菜单上限 **300px**；`group` / `list` / `table` / `tree` / `chained` / `associated` 走 TransferDropDown，选择内容区上限 **350px**，搜索框高度另计。
 - 关联左右栏最小高度 **200px**；右侧未选择、配置错误有独立空态。
 - `creatable` 的“新增选项”改为固定在 Popover 顶部，候选列表单独滚动。这是 Vamis 相对 Amis 的有意交互优化；Amis 的 `Select-addBtn` 位于菜单滚动内容内。
+- `multiple` 复选框在普通、分组、表格、树形、级联、关联模式共用 Amis `Checkbox--sm` 盒模型：**14×14 / 图标 12 / 2px 圆角 / #e8e9eb 边框**。checkbox 到 label 的间距统一以级联多选为基准，固定为 **8px**；Amis 各结构原值并不一致，这里是 Vamis 的显式一致性优化；全选在半选时显示横线，表格按 TableSelection 使用独立的 12px 排版。
 - 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。

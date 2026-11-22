@@ -14,6 +14,7 @@ import {
   overlayIsMobile,
   POPUP_DEFAULT_HEIGHT,
   resolveClassName,
+  selectableOptions,
   selectOverlayPlacement,
   selectPopupHeight,
   toggleAllOptions,
@@ -132,6 +133,14 @@ const tablePaneSchema = computed(() =>
 const allChecked = computed(() =>
   isAllSelected(selectedPool(), ctl.filtered.value, ctl.config.value.valueField),
 )
+const checkAllPartial = computed(() => {
+  if (allChecked.value) return false
+  const selected = selectedPool()
+  const valueField = ctl.config.value.valueField
+  return selectableOptions(ctl.filtered.value).some((option) =>
+    isAllSelected(selected, [option], valueField),
+  )
+})
 const menuTpl = computed(() => props.schema.menuTpl as SchemaNode | undefined)
 const noResultsText = computed(() =>
   props.schema.noResultsText != null ? String(props.schema.noResultsText) : '未找到任何结果',
@@ -866,6 +875,7 @@ watch(
             'is-tick': useMobileTick,
             'is-transfer': isTransferMenu,
             'is-creatable': ctl.config.value.creatable,
+            'is-group': isGroupMenu,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
@@ -935,8 +945,12 @@ watch(
               class="vamis-select__checkall"
               @click="onToggleAll()"
             >
-              <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
+              <span
+                class="vamis-select__check"
+                :class="{ 'is-checked': allChecked, 'is-partial': checkAllPartial }"
+              >
                 <VamisIcon name="menu-check" v-if="allChecked" />
+                <VamisIcon name="checkbox-partial" v-else-if="checkAllPartial" />
               </span>
               <span>{{ checkAllLabel }}</span>
             </button>
@@ -1018,6 +1032,7 @@ watch(
             'is-virtual': virtualEnabled,
             'is-transfer': isTransferMenu,
             'is-creatable': ctl.config.value.creatable,
+            'is-group': isGroupMenu,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
@@ -1117,8 +1132,12 @@ watch(
               @mousedown.prevent
               @click.stop="onToggleAll()"
             >
-              <span class="vamis-select__check" :class="{ 'is-checked': allChecked }">
+              <span
+                class="vamis-select__check"
+                :class="{ 'is-checked': allChecked, 'is-partial': checkAllPartial }"
+              >
                 <VamisIcon name="menu-check" v-if="allChecked" />
+                <VamisIcon name="checkbox-partial" v-else-if="checkAllPartial" />
               </span>
               <span>{{ checkAllLabel }}</span>
             </button>

@@ -384,7 +384,9 @@ describe('Select option mutation events', () => {
       expect(document.querySelectorAll('.vamis-select__associated-right-item')).toHaveLength(2),
     )
     expect(
-      document.querySelectorAll('.vamis-select__associated-right-item .vamis-select__check'),
+      document.querySelectorAll(
+        '.vamis-select__associated-right-item [data-slot="checkbox"]',
+      ),
     ).toHaveLength(2)
 
     const items = document.querySelectorAll('.vamis-select__associated-right-item')
@@ -397,7 +399,7 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() => expect(form.getData?.().heroes).toBe('a,b'))
     expect(
       document.querySelectorAll(
-        '.vamis-select__associated-right-item .vamis-select__check.is-checked',
+        '.vamis-select__associated-right-item [data-slot="checkbox"][data-state="checked"]',
       ),
     ).toHaveLength(2)
   })
@@ -2067,6 +2069,44 @@ describe('Select option mutation events', () => {
     const form = scoped.getComponentByName('checkAllTreeForm') as { getData?: () => Record<string, unknown> }
     await vi.waitFor(() =>
       expect(form?.getData?.()?.heroes).toBe('caocao,zhongwuyan,zhugeliang'),
+    )
+  })
+
+  it('shows the Amis partial state on ordinary multiple check-all', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          checkAll: true,
+          options: [
+            { label: '曹操', value: 'caocao' },
+            { label: '诸葛亮', value: 'zhugeliang' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__checkall')).toBeTruthy(),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__list .vamis-select__item')]
+        .find((item) => item.textContent?.includes('曹操')) as HTMLElement,
+    )
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector(
+          '.vamis-select__checkall .vamis-select__check.is-partial',
+        ),
+      ).toBeTruthy(),
     )
   })
 

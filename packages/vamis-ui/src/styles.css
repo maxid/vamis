@@ -306,8 +306,10 @@
   --select-search-input-pad-x: 10px;
   --select-mcheck-size: 16px;
   --select-check-size: 14px;
+  --select-check-icon-size: 12px;
+  --select-check-gap: 8px;
   --select-check-radius: var(--borderRadiusSm);
-  --select-check-border: var(--colors-neutral-line-7);
+  --select-check-border: var(--input);
   --select-check-bg: var(--card);
   --select-check-checked-bg: var(--primary);
   --select-check-checked-color: var(--white);
@@ -3336,6 +3338,15 @@
     flex-direction: column;
     width: 100%;
     max-width: 100%;
+    /* Select 各模式共用一套 Amis Checkbox--sm 配方。 */
+    --checkbox-size: var(--select-check-size);
+    --checkbox-icon-size: var(--select-check-icon-size);
+    --checkbox-gap: var(--select-check-gap);
+    --checkbox-border: var(--select-check-border);
+    --checkbox-bg: var(--select-check-bg);
+    --checkbox-checked-bg: var(--select-check-checked-bg);
+    --checkbox-icon-color: var(--select-check-checked-color);
+    --checkbox-radius: var(--select-check-radius);
   }
   .vamis-select__input {
     position: relative;
@@ -3499,6 +3510,14 @@
     background: var(--select-menu-bg);
     color: var(--select-menu-color);
     box-shadow: var(--select-menu-shadow);
+    --checkbox-size: var(--select-check-size);
+    --checkbox-icon-size: var(--select-check-icon-size);
+    --checkbox-gap: var(--select-check-gap);
+    --checkbox-border: var(--select-check-border);
+    --checkbox-bg: var(--select-check-bg);
+    --checkbox-checked-bg: var(--select-check-checked-bg);
+    --checkbox-icon-color: var(--select-check-checked-color);
+    --checkbox-radius: var(--select-check-radius);
   }
   .vamis-select__popover.is-transfer {
     display: flex;
@@ -3524,6 +3543,7 @@
   }
   .vamis-select__tree-checkall {
     flex: 0 0 auto;
+    gap: var(--select-check-gap);
   }
   .vamis-select__popover--sheet .vamis-select__tree-pane {
     flex: 1 1 auto;
@@ -3671,19 +3691,15 @@
     justify-content: center;
     width: var(--select-check-size);
     height: var(--select-check-size);
-    margin-right: 4px;
     box-sizing: border-box;
     border: 1px solid var(--select-check-border);
     border-radius: var(--select-check-radius);
     background: var(--select-check-bg);
     color: var(--select-check-checked-color);
   }
-  .vamis-select.is-group .vamis-select__check {
-    margin-right: 10px;
-  }
   .vamis-select__check svg {
-    width: 10px;
-    height: 10px;
+    width: var(--select-check-icon-size);
+    height: var(--select-check-icon-size);
   }
   .vamis-select__check.is-checked {
     background: var(--select-check-checked-bg);
@@ -3722,7 +3738,7 @@
   .vamis-select__create-btn {
     display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: var(--select-check-gap);
     width: 100%;
     height: var(--select-option-line-height);
     padding: 0 var(--select-option-padding-x);
@@ -3877,7 +3893,11 @@
     line-height: var(--select-group-line-height);
   }
   .vamis-select__item--child {
+    gap: var(--select-check-gap);
     padding-left: var(--select-group-item-indent);
+  }
+  .vamis-select__popover.is-group .vamis-select__checkall {
+    gap: var(--select-check-gap);
   }
   .vamis-select__item.has-tpl {
     height: auto;
@@ -12241,7 +12261,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   width: 100%;
   min-height: var(--select-option-line-height);
   align-items: center;
-  gap: 10px;
+  gap: var(--select-check-gap);
   padding: 0 var(--select-option-padding-x);
   border: 0;
   border-bottom: 1px solid var(--border);
@@ -12282,7 +12302,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: flex;
   min-height: var(--select-option-line-height);
   align-items: center;
-  gap: 10px;
+  gap: var(--select-check-gap);
   padding: 0 var(--select-option-padding-x);
   background: var(--select-option-bg);
   color: var(--select-option-color);
@@ -12389,12 +12409,16 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: flex;
   min-height: var(--select-option-line-height);
   align-items: center;
+  gap: var(--select-check-gap);
   padding: 0 var(--select-option-padding-x);
   color: var(--select-option-color);
   font-size: var(--fontSizeBase);
   font-weight: var(--fontWeightNormal);
   line-height: var(--select-option-line-height);
   cursor: pointer;
+}
+.vamis-select__associated-check {
+  flex: 0 0 auto;
 }
 .vamis-select__associated-right-item {
   padding-left: calc(
@@ -12413,6 +12437,15 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding-left: calc(
     var(--select-option-padding-x) + var(--associated-depth, 0) * var(--tree-indent)
   );
+}
+
+.vamis-select__tree-pane .vamis-tree__check.vamis-checkbox__mark {
+  margin-right: calc(var(--select-check-gap) - var(--gap-xs));
+}
+
+.vamis-select__tree-pane .vamis-tree__check.vamis-checkbox__mark .vamis-checkbox__icon {
+  width: var(--select-check-icon-size);
+  height: var(--select-check-icon-size);
 }
 .vamis-select__associated-left-item.is-active,
 .vamis-select__associated-left-item.is-active:hover,
