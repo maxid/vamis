@@ -33,7 +33,8 @@
 - [x] Add chained column / item tokens and styles.
 - [x] Switch chained documentation examples to live schema.
 - [x] Add component spec and update progress.
-- [ ] Deferred parent loading, `defaultSelectedIndex`, virtualization and `searchResultMode` remain.
+- [x] Add `children: []` branch, `subTitle` / placeholder, option classes and label + tip rendering.
+- [x] Add deferred parent loading, node Spinner and `update:nodes` write-back.
 
 ### Task 5: Verification
 

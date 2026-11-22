@@ -61,6 +61,328 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it.each([
+    {
+      name: 'joins selected values with a custom delimiter',
+      schema: {
+        multiple: true,
+        valueField: 'id',
+        delimiter: '|',
+      },
+      picks: ['A', 'B'],
+      expected: 'a|b',
+    },
+    {
+      name: 'extracts selected values when joinValues is false',
+      schema: {
+        multiple: true,
+        valueField: 'id',
+        joinValues: false,
+        extractValue: true,
+      },
+      picks: ['A', 'B'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps full option objects when joinValues and extractValue are false',
+      schema: {
+        multiple: true,
+        valueField: 'id',
+        joinValues: false,
+        extractValue: false,
+      },
+      picks: ['A', 'B'],
+      expected: [
+        { label: 'A', value: 'a', id: 'a', meta: 'alpha' },
+        { label: 'B', value: 'b', id: 'b', meta: 'beta' },
+      ],
+    },
+    {
+      name: 'keeps one full option object for single select',
+      schema: {
+        multiple: false,
+        valueField: 'id',
+        joinValues: false,
+        extractValue: false,
+      },
+      picks: ['B'],
+      expected: { label: 'B', value: 'b', id: 'b', meta: 'beta' },
+    },
+  ])('$name', async ({ schema, picks, expected }) => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'valueShapeForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'choice',
+          label: '选项',
+          ...schema,
+          options: [
+            { label: 'A', value: 'a', id: 'a', meta: 'alpha' },
+            { label: 'B', value: 'b', id: 'b', meta: 'beta' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(menuLabels()).toContain('A'))
+    for (const label of picks) click(optionItem(label))
+
+    const form = scoped.getComponentByName('valueShapeForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.choice).toEqual(expected))
+  })
+
+  it.each([
+    { showInvalidMatch: true, invalid: true },
+    { showInvalidMatch: false, invalid: false },
+  ])(
+    'marks unmatched select values only when showInvalidMatch=$showInvalidMatch',
+    async ({ showInvalidMatch, invalid }) => {
+      const { host } = mount({
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'choice',
+            label: '选项',
+            value: 'missing',
+            showInvalidMatch,
+            options: [{ label: 'A', value: 'a' }],
+          },
+        },
+      })
+
+      await nextTick()
+      expect(
+        host
+          .querySelector('.vamis-select__single')
+          ?.classList.contains('is-invalid'),
+      ).toBe(invalid)
+    },
+  )
+
+  it('marks unmatched tags when showInvalidMatch is enabled', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'choice',
+          label: '选项',
+          multiple: true,
+          value: 'missing,a',
+          showInvalidMatch: true,
+          options: [{ label: 'A', value: 'a' }],
+        },
+      },
+    })
+
+    await nextTick()
+    const chips = [...host.querySelectorAll('.vamis-select__chip')]
+    expect(
+      chips.find((chip) => chip.textContent?.includes('missing'))
+        ?.classList.contains('is-invalid'),
+    ).toBe(true)
+    expect(
+      chips.find((chip) => chip.textContent?.includes('A'))
+        ?.classList.contains('is-invalid'),
+    ).toBe(false)
+  })
+
+  it('applies mobileClassName to the mobile Select popup', async () => {
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'choice',
+            label: '选项',
+            mobileClassName: 'custom-mobile-select',
+            options: [{ label: 'A', value: 'a' }],
+          },
+        },
+      },
+      { mobileUI: true },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-popup.custom-mobile-select'),
+      ).toBeTruthy(),
+    )
+  })
+
+  it('emits focus, change and blur in Select interaction order', async () => {
+    const notify = vi.fn()
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          data: { choice: 'a' },
+          body: {
+            type: 'select',
+            name: 'choice',
+            label: '选项',
+            onEvent: {
+              focus: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'focus:${event.data.choice}' } },
+                ],
+              },
+              change: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'change:${event.data.choice}' } },
+                ],
+              },
+              blur: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'blur:${event.data.choice}' } },
+                ],
+              },
+            },
+            options: [
+              { label: 'A', value: 'a' },
+              { label: 'B', value: 'b' },
+            ],
+          },
+        },
+      },
+      { notify },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(menuLabels()).toContain('B'))
+    click(optionItem('B'))
+
+    await vi.waitFor(() =>
+      expect(notify.mock.calls.map((call) => call[1])).toEqual([
+        'focus:a',
+        'change:b',
+        'blur:b',
+      ]),
+    )
+  })
+
+  it('runs Select clear, reset, reload and setValue actions', async () => {
+    let sourceLoads = 0
+    const fetcher = vi.fn(async () => {
+      sourceLoads += 1
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options: [
+            { label: 'A', value: 'a' },
+            { label: 'B', value: 'b' },
+          ],
+        },
+      }
+    })
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'selectActionForm',
+          actions: [],
+          body: [
+            {
+              type: 'select',
+              id: 'action-select',
+              name: 'choice',
+              label: '选项',
+              value: 'a',
+              source: '/api/select-options',
+            },
+            {
+              type: 'button',
+              label: '设为 B',
+              onEvent: {
+                click: {
+                  actions: [
+                    {
+                      actionType: 'setValue',
+                      componentId: 'action-select',
+                      args: { value: 'b' },
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '清空',
+              onEvent: {
+                click: {
+                  actions: [
+                    { actionType: 'clear', componentId: 'action-select' },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '重置',
+              onEvent: {
+                click: {
+                  actions: [
+                    { actionType: 'reset', componentId: 'action-select' },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '刷新',
+              onEvent: {
+                click: {
+                  actions: [
+                    { actionType: 'reload', componentId: 'action-select' },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const form = scoped.getComponentByName('selectActionForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(sourceLoads).toBe(1))
+
+    click(buttonWithText('设为 B'))
+    await vi.waitFor(() => expect(form?.getData?.()?.choice).toBe('b'))
+    click(buttonWithText('清空'))
+    await vi.waitFor(() => expect(form?.getData?.()?.choice).toBe(''))
+    click(buttonWithText('重置'))
+    await vi.waitFor(() => expect(form?.getData?.()?.choice).toBe('a'))
+    click(buttonWithText('刷新'))
+    await vi.waitFor(() => expect(sourceLoads).toBe(2))
+  })
+
   it('renders Select table mode and writes a row selection', async () => {
     const { host, scoped } = mount({
       type: 'page',
@@ -462,7 +784,7 @@ describe('Select option mutation events', () => {
     )
   })
 
-  it('keeps the associated left branch after reopening', async () => {
+  it('resets the associated left branch to its default after reopening', async () => {
     const { host } = mount({
       type: 'page',
       body: {
@@ -503,6 +825,9 @@ describe('Select option mutation events', () => {
         (item) => item.textContent?.trim() === '战士',
       ) as HTMLElement,
     )
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right-item')).toBeTruthy(),
+    )
     click(document.querySelector('.vamis-select__associated-right-item') as HTMLElement)
     await vi.waitFor(() =>
       expect(document.querySelector('.vamis-select__associated')).toBeFalsy(),
@@ -510,13 +835,92 @@ describe('Select option mutation events', () => {
 
     click(host.querySelector('.vamis-select__input'))
     await vi.waitFor(() =>
-      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('B'),
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A'),
     )
     expect(
       [...document.querySelectorAll('.vamis-select__associated-left-item.is-active')].map(
         (item) => item.textContent?.trim(),
       ),
-    ).toEqual(['战士'])
+    ).toEqual(['法师'])
+  })
+
+  it('clears the associated left branch on reopening without a default', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftMode: 'tree',
+          leftOptions: [
+            {
+              label: '总公司',
+              children: [
+                { label: '法师', value: 'mage' },
+                { label: '战士', value: 'warrior' },
+              ],
+            },
+          ],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+            {
+              ref: 'warrior',
+              children: [{ label: 'B', value: 'b' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeTruthy(),
+    )
+    let warrior: HTMLElement | undefined
+    await vi.waitFor(() => {
+      warrior = [
+        ...document.querySelectorAll<HTMLElement>(
+          '.vamis-select__associated-left .vamis-tree__text',
+        ),
+      ].find((item) => item.textContent?.trim() === '战士')
+      expect(warrior).toBeTruthy()
+    })
+    click(warrior || null)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right-item')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__associated-left .vamis-tree__arrow'))
+    await nextTick()
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__text')]
+          .some((item) => item.textContent?.trim() === '战士'),
+      ).toBe(false),
+    )
+    click(document.querySelector('.vamis-select__associated-right-item') as HTMLElement)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeFalsy(),
+    )
+
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain(
+        '请选择左侧数据',
+      ),
+    )
+    expect(
+      [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__text')].map(
+        (item) => item.textContent?.trim(),
+      ),
+    ).toEqual(['总公司', '法师', '战士'])
   })
 
   it('renders an associated left tree without writing the outer value', async () => {
@@ -1078,6 +1482,20 @@ describe('Select option mutation events', () => {
 
     expect(calls.some((url) => url.includes('dep=1'))).toBe(true)
     expect(calls.some((url) => url.includes('dep=3'))).toBe(true)
+
+    click(host.querySelector('.vamis-select__input'))
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain(
+        '请选择左侧数据',
+      ),
+    )
+    expect(
+      [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__text')].map(
+        (item) => item.textContent?.trim(),
+      ),
+    ).toEqual(['总公司'])
   })
 
   it.each([
@@ -1121,6 +1539,70 @@ describe('Select option mutation events', () => {
       getData?: () => Record<string, unknown>
     }
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
+  it('loads a deferred associated chained parent into the right pane', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'associated',
+            leftMode: 'list',
+            rightMode: 'chained',
+            deferApi: '/api/defer',
+            leftDefaultValue: 'mage',
+            leftOptions: [{ label: '法师', value: 'mage' }],
+            options: [
+              {
+                ref: 'mage',
+                children: [{ label: '战士', value: 'war', defer: true }],
+              },
+            ],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-select__associated-right .vamis-select__chained-item'),
+      ).toBeTruthy(),
+    )
+    const warrior = document.querySelector(
+      '.vamis-select__associated-right .vamis-select__chained-item',
+    ) as HTMLElement
+    click(warrior)
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1))
+    expect(warrior.querySelector('.vamis-spinner')).toBeTruthy()
+    resolveFetch({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: '曹操', value: 'caocao' }] },
+    })
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll(
+          '.vamis-select__associated-right .vamis-select__chained-col',
+        )][1]?.textContent,
+      ).toContain('曹操'),
+    )
   })
 
   it.each([
@@ -1231,6 +1713,93 @@ describe('Select option mutation events', () => {
       getData?: () => Record<string, unknown>
     }
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
+  })
+
+  it('refreshes associated source metadata and defaults on dependency change', async () => {
+    let sourceLoads = 0
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      sourceLoads += 1
+      const dep = new URL(api.url || '', 'http://localhost').searchParams.get('dep')
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options: [
+            dep === 'two'
+              ? {
+                  leftDefaultValue: 'two-left',
+                  leftOptions: [{ label: '第二组', value: 'two-left' }],
+                  children: [
+                    {
+                      ref: 'two-left',
+                      children: [{ label: 'B', value: 'b' }],
+                    },
+                  ],
+                }
+              : {
+                  leftDefaultValue: 'one-left',
+                  leftOptions: [{ label: '第一组', value: 'one-left' }],
+                  children: [
+                    {
+                      ref: 'one-left',
+                      children: [{ label: 'A', value: 'a' }],
+                    },
+                  ],
+                },
+          ],
+        },
+      }
+    })
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'associatedLifecycleForm',
+          data: { dep: 'one' },
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'associated',
+            leftMode: 'list',
+            source: '/api/associated?dep=${dep}',
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    await vi.waitFor(() => expect(sourceLoads).toBe(1))
+    const trigger = host.querySelector('.vamis-select__input') as HTMLElement
+    click(trigger)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('A'),
+    )
+    expect(
+      document.querySelector('.vamis-select__associated-left-item.is-active')?.textContent,
+    ).toContain('第一组')
+    click(trigger)
+    await nextTick()
+
+    const form = scoped.getComponentByName('associatedLifecycleForm') as {
+      setValue?: (name: string, value: unknown) => void
+    }
+    form?.setValue?.('dep', 'two')
+    await vi.waitFor(() => expect(sourceLoads).toBe(2))
+
+    click(trigger)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain('B'),
+    )
+    expect(
+      [...document.querySelectorAll('.vamis-select__associated-left-item.is-active')].map(
+        (item) => item.textContent?.trim(),
+      ),
+    ).toEqual(['第二组'])
+    expect(document.body.textContent).not.toContain('第一组')
   })
 
   it('renders grouped children in associated list mode', async () => {
@@ -1450,6 +2019,134 @@ describe('Select option mutation events', () => {
 
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('caocao'))
     expect(host.querySelector('.vamis-select__single')?.textContent).toBe('曹操')
+  })
+
+  it('renders chained subTitle, placeholder and option classes', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'chainedPresentationForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          multiple: true,
+          checkAll: true,
+          selectMode: 'chained',
+          optionClassName: 'chained-option',
+          options: [
+            {
+              label: '战士',
+              value: 'warrior',
+              className: 'chained-warrior',
+              subTitle: '战士英雄',
+              placeholder: '暂无战士英雄',
+              children: [],
+            },
+            {
+              label: '法师',
+              value: 'mage',
+              children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelectorAll('.vamis-select__chained-col')).toHaveLength(2),
+    )
+
+    const columns = document.querySelectorAll('.vamis-select__chained-col')
+    const warrior = columns[0]?.querySelector('.vamis-select__chained-item')
+    expect(warrior?.classList.contains('chained-option')).toBe(true)
+    expect(warrior?.classList.contains('chained-warrior')).toBe(true)
+    expect(
+      columns[1]?.querySelector('.vamis-select__chained-sub-title')?.textContent,
+    ).toBe('战士英雄')
+    expect(
+      columns[1]?.querySelector('.vamis-select__chained-placeholder')?.textContent,
+    ).toBe('暂无战士英雄')
+
+    click(warrior as HTMLElement)
+    await nextTick()
+    const form = scoped.getComponentByName('chainedPresentationForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.hero).toBeUndefined()
+
+    click(document.querySelector('.vamis-select__chained-checkall') as HTMLElement)
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.hero).toBe('zhugeliang'),
+    )
+  })
+
+  it('defers only the clicked Select chained parent', async () => {
+    let resolveFetch!: (value: unknown) => void
+    const fetcher = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'chained',
+            deferApi: '/api/defer',
+            options: [
+              { label: '战士', value: 'war', defer: true },
+              { label: '法师', value: 'mage', defer: true },
+            ],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelectorAll('.vamis-select__chained-col')).toHaveLength(2),
+    )
+
+    const firstColumn = [...document.querySelectorAll('.vamis-select__chained-col')][0]
+    const warrior = [...(firstColumn?.querySelectorAll('.vamis-select__chained-item') || [])]
+      .find((item) => item.textContent?.includes('战士')) as HTMLElement
+    const mage = [...(firstColumn?.querySelectorAll('.vamis-select__chained-item') || [])]
+      .find((item) => item.textContent?.includes('法师')) as HTMLElement
+
+    click(warrior)
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1))
+    expect(fetcher.mock.calls[0]?.[1]).toMatchObject({ label: '战士', value: 'war' })
+    expect(warrior.querySelector('.vamis-spinner')).toBeTruthy()
+    expect(mage.querySelector('.vamis-spinner')).toBeNull()
+
+    resolveFetch({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: '曹操', value: 'caocao' }] },
+    })
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__chained-col')][1]?.textContent,
+      ).toContain('曹操'),
+    )
+
+    click(warrior)
+    await nextTick()
+    expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
   it('virtualizes each long Select chained column and keeps later branches selectable', async () => {

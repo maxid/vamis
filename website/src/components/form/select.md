@@ -5,8 +5,8 @@ outline: deep
 
 # Select 选择器
 
-::: info 实现进度 99% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`creatable` 新增入口固定在 Popover 顶部，候选列表单独滚动，是 Vamis 的有意交互优化。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选、移动草稿和窗口虚拟化。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，支持多选叶子全选和逐列窗口虚拟化。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选；TransferDropDown 桌面选择内容区上限为 **350px**，搜索框另计；普通 Select 菜单仍是 **300px**。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
+::: info 实现进度 100% · 已完成
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`creatable` 新增入口固定在 Popover 顶部，候选列表单独滚动，是 Vamis 的有意交互优化。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选、移动草稿和窗口虚拟化。`selectMode: chained` 使用列路径面板，父节点只展开，`children: []` 仍是分支，叶子才写入值，支持 `subTitle` / 单列 `placeholder`、option 类名、多选叶子全选、deferred 父列 Spinner 和逐列窗口虚拟化。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选；TransferDropDown 桌面选择内容区上限为 **350px**，搜索框另计；普通 Select 菜单仍是 **300px**。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -423,6 +423,8 @@ _多选_
 }
 ```
 
+级联选项可用 `subTitle` 给下一列加说明，用 `placeholder` 定义该列无子项时的空态；`children: []` 仍是可展开分支，不会写入表单值。`defer: true` 的父项只在该节点点击时通过 `deferApi` / 表单 `deferApi` 加载，节点内显示 Spinner。选项自身的 `className` 与 Select 的 `optionClassName` 都会落到级联 item。
+
 ## 支持搜索
 
 `searchable: true` 在下拉里出检索框，按 `label` / `value` 过滤；分组会保留组头。
@@ -555,7 +557,7 @@ body:
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
 
-`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。总公司、部门与子部门的 `dep/ref` 懒加载都会落到对应右侧人员；右根树结果会回写父层选项，保证 multiple 标签使用真实 label。左右栏保持 Amis 的 200px 最小高度；未选左侧显示“请选择左侧数据”，ref 对不上选项时显示配置错误。以下保留 Amis 契约与示例。
+`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。关闭后再次打开会像 Amis 重建关联面板一样恢复 `leftDefaultValue`；没有默认值时右栏回到“请选择左侧数据”，树展开也回到默认层级但保留已加载数据。总公司、部门与子部门的 `dep/ref` 懒加载都会落到对应右侧人员；右根树结果会回写父层选项，保证 multiple 标签使用真实 label。左右栏保持 Amis 的 200px 最小高度；未选左侧显示“请选择左侧数据”，ref 对不上选项时显示配置错误。以下保留 Amis 契约与示例。
 
 _单选_
 
@@ -1058,9 +1060,9 @@ body:
 | optionClassName | [ClassName](/types/classname) | | 选项 CSS 类名 |
 | popOverContainerSelector | `string` | | 弹层挂载选择器 |
 | overlay | `{ width, align, height }` | | 桌面：弹层宽度与对齐（`align` 为 `left` / `center` / `right`）。移动端：`height` 覆盖底栏高度，默认 320（Amis `.Select-popup`；未写 `overlay.height` 时走这档，通用 PopUp 默认 400） |
-| showInvalidMatch | `boolean` | `false` | 值对不上选项时飘红。**未接** |
+| showInvalidMatch | `boolean` | `false` | 值对不上选项时结果标签 / 单值使用 error 级文字色 |
 | noResultsText | `string` | `"未找到任何结果"` | 无结果文案 |
-| mobileClassName | `string` | | 移动端浮层类名。**未接** |
+| mobileClassName | `string` | | 移动端 PopUp 根类名 |
 | valuesNoWrap | `boolean` | `false` | 多选值不折行 |
 | selectFirst | `boolean` | `false` | 无值时选第一项 |
 | clearValueOnSourceChange | `boolean` | | 数据域 source 变化后是否清空 |
@@ -1358,5 +1360,7 @@ body:
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
 - 多选只有写了 `maxTagCount`（> 0）才按宽度收成 `+ N ...`；未写则折行铺开。可见标签悬停显示 label tooltip；溢出 Popover 是可关闭的标签表格。
+- 值序列化矩阵已覆盖单选 / 多选 × `joinValues` × `extractValue` × `delimiter` × 自定义 `valueField`；不匹配值保留 `__unmatched`，仅在 `showInvalidMatch` 开启时使用 error 色。
+- 移动端 PopUp 根支持 `mobileClassName`；多选连续点击的写入通过队列串行，异步 `change` 事件不会覆盖后一次选择。
 - Select 新增 / 编辑按 Amis 打开 Dialog。`addConfirm` / `editConfirm` / `deleteConfirm` 在本地写入和 CUD API 之前触发；`preventDefault()` 会同时阻止本地变更与请求。新增 / 编辑弹层的 `item` 只带本次 label/value；`deleteConfirmText` 未配置时不弹默认确认框。
 - 下拉加载指示器复用 `Spinner`（菱形循环标），不另画一套圆环。

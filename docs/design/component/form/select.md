@@ -1,6 +1,6 @@
 # Select 下拉选择器 · `select` 设计
 
-> 状态：**进行中 99%** · 复杂度：**XL 特重**
+> 状态：**已完成 100%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/select) · Amis：`/zh-CN/components/form/select`
 > 盘点日期：2026-11-21。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 > 剩余语义实现规格：[Select 剩余语义完成设计](../../../superpowers/specs/component/form/2026-11-19-vamis-select-completion-design.md)
@@ -136,7 +136,7 @@ options ── searchable ──> filtered
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **表格**：`SelectTablePane` 使用 Table / Checkbox 原语；`columns` 为空回落 label，列 schema 可进 SchemaRenderer。单选点整行；多选表头全选排除禁用项；移动端只改 draft，确认才提交。
 - **级联**：`SelectChainedPane` 维护列内索引路径；打开时默认展开第一个有子项的分组，父节点只展开下一列，叶子才写值。父项 active 看路径，叶子 active 看选中值，父项没有 `value` 也能正确切列。最多三列、列内滚动，多选 checkAll 只选叶子，移动端只改 draft。
-- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。人员点选仍走同一 source-shaped 数据：`leftOptions` / `children` 拆左右候选，右侧根节点 `defer` 在左侧选中时加载。右根树的懒加载结果必须回写父层 `useOptionsControl`，并保留 source-shaped 元数据，否则 multiple 标签只能回退到 value；左侧切换只清当前右树视图，不整体清空右根缓存。左树 source 是否变化按树签名判断，避免右根回写触发重新 normalize 时丢失已展开部门。默认关联列表 multiple 显示复选框；未选左侧时右栏显示「请选择左侧数据」，ref 对不上时显示配置错误。左树显示 folder/file 图标，桌面关联选择内容区对齐 Amis Transfer-selection 的 350px 上限，搜索框另计；左右列有 200px 最小高度、等分且各自滚动。移动端只写 draft，确认才提交。
+- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。关闭后重开等同 Amis 重建 `AssociatedSelection`：左值恢复 `leftDefaultValue`，无默认则回到未选择状态；左/右树通过重开 token 重新 seed 默认展开，但不销毁已加载子项。人员点选仍走同一 source-shaped 数据：`leftOptions` / `children` 拆左右候选，右侧根节点 `defer` 在左侧选中时加载。右根树的懒加载结果必须回写父层 `useOptionsControl`，并保留 source-shaped 元数据，否则 multiple 标签只能回退到 value；左侧切换只清当前右树视图，不整体清空右根缓存。左树 source 是否变化按树签名判断，避免右根回写触发重新 normalize 时丢失已展开部门。默认关联列表 multiple 显示复选框；未选左侧时右栏显示「请选择左侧数据」，ref 对不上时显示配置错误。左树显示 folder/file 图标，桌面关联选择内容区对齐 Amis Transfer-selection 的 350px 上限，搜索框另计；左右列有 200px 最小高度、等分且各自滚动。移动端只写 draft，确认才提交。
 - **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。InputTree / TreeSelect / Select 树模式统一用稳定路径键存展开态，避免对象身份变化导致收缩一个节点时其他节点被重置。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
@@ -160,24 +160,25 @@ options ── searchable ──> filtered
 
 - 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`searchable` 与 `autoComplete` 统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、`searchResultMode` / `searchResultColumns` 搜索结果面板覆盖、树节点 `deferApi`、关联左右树 deferred `update:nodes` 回写、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高）、TransferDropDown 选择内容区 350px 与 table / chained 窗口虚拟化、creatable 固定顶部入口，以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
 - 对照：Select 桌面 / 移动均 **26/31**（P0 0）；树单选 / 多选 / defer、table 与 chained 各两份活示例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
-- 缺：级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
+- 已补：级联的 `children: []` 分支语义、`subTitle` / 单列 `placeholder`、`option.className` / `optionClassName`、默认 label + tip，以及 deferred 父列加载、单节点 Spinner 和 `update:nodes` 回写。`defaultSelectedIndex` 在 Amis 6.13 属于 `TabsTransfer` 的 option 契约，Select 的 TransferDropDown 没有向 `ChainedSelection` 透传，不能计作 Select 缺口。
+- 属性 / 默认值、事件动作、值序列化矩阵与关联 source lifecycle 已逐项验收；`showInvalidMatch` / `mobileClassName` 两个剩余属性也已接入。Select 收口为 **100%**。对照中 5 条差异均为已核实的 Amis 空渲染 / 既有探针差异，P0 为 0。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（文档核对：12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Select/optionsControl/options 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（Select/Options 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page select` 桌面
-- [ ] `pnpm compare --page select --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
+- [x] 组件页活示例运行、无控制台 error
+- [x] `pnpm test`（Select/Options 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page select` 桌面
+- [x] `pnpm compare --page select --mobile`
+- [x] 深色 / 375px 窄屏
 
 ### 验收重点
 

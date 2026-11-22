@@ -521,10 +521,10 @@ function optionFromRaw(raw: unknown, options: OptionItem[], valueField: string):
     const hit = key !== undefined ? findOption(options, key, valueField) : undefined
     if (hit) return hit
     const label = raw.label != null ? String(raw.label) : String(key ?? '')
-    return { ...raw, label, value: key ?? raw.label ?? '' }
+    return { ...raw, label, value: key ?? raw.label ?? '', __unmatched: true }
   }
   const hit = findOption(options, raw, valueField)
-  return hit || { label: String(raw ?? ''), value: raw }
+  return hit || { label: String(raw ?? ''), value: raw, __unmatched: true }
 }
 
 export function getSelectedOptions(

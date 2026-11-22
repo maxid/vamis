@@ -15,6 +15,16 @@ function cssRule(css: string, selector: string) {
 }
 
 describe('select docs', () => {
+  it('keeps the completed Select status without unsupported property markers', () => {
+    const doc = read('../../../website/src/components/form/select.md')
+    const design = read('../../../docs/design/component/form/select.md')
+
+    expect(doc).toContain('::: info 实现进度 100% · 已完成')
+    expect(doc).not.toContain('**未接**')
+    expect(design).toContain('> 状态：**已完成 100%**')
+    expect(design).toContain('验收清单（文档核对：12 / 12）')
+  })
+
   it('keeps the Amis section order and difference section at the bottom', () => {
     const doc = read('../../../website/src/components/form/select.md')
     const headings = [...doc.matchAll(/^(#{1,3}) (.+)$/gm)].map((match) => ({
@@ -147,6 +157,28 @@ describe('select docs', () => {
       expect(rule).toContain('overflow: visible')
       expect(rule).toContain('max-height: none')
     }
+  })
+
+  it('uses Amis chained subTitle and placeholder metrics', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const subTitleRule = cssRule(css, '.vamis-select__chained-sub-title')
+    const placeholderRule = cssRule(
+      css,
+      '.vamis-select__chained-placeholder',
+    )
+    const spinnerRule = cssRule(
+      css,
+      '.vamis-select__chained-item > .vamis-spinner',
+    )
+
+    expect(subTitleRule).toContain('padding: var(--gap-xs)')
+    expect(subTitleRule).toContain('color: var(--text-muted)')
+    expect(subTitleRule).toContain('font-size: var(--fontSizeSm)')
+    expect(placeholderRule).toContain('height: var(--control-h)')
+    expect(placeholderRule).toContain('color: var(--text-muted)')
+    expect(placeholderRule).toContain('font-size: var(--fontSizeBase)')
+    expect(spinnerRule).toContain('flex: 0 0 auto')
+    expect(spinnerRule).toContain('margin-left: var(--gap-sm)')
   })
 
   it('keeps the creatable action outside the scrolling option list', () => {

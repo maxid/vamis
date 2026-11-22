@@ -155,6 +155,21 @@ describe('value join / extract', () => {
     expect(isOptionsEmpty([])).toBe(true)
     expect(isOptionsEmpty('a')).toBe(false)
   })
+
+  it('marks selected values that do not match loaded options', () => {
+    expect(getSelectedOptions('missing', options)).toEqual([
+      { label: 'missing', value: 'missing', __unmatched: true },
+    ])
+    expect(
+      getSelectedOptions({ label: 'Legacy', value: 'legacy' }, options),
+    ).toEqual([
+      {
+        label: 'Legacy',
+        value: 'legacy',
+        __unmatched: true,
+      },
+    ])
+  })
 })
 
 describe('toggle / checkAll / selectFirst', () => {
@@ -551,6 +566,7 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('.vamis-select__input.is-focused')
     expect(css).toContain('--select-search-height: 30px')
     expect(css).toContain('--select-check-size: 14px')
+    expect(css).toContain('--select-invalid-color: var(--destructive)')
     expect(css).toContain('--select-group-color: var(--colors-neutral-text-5)')
     expect(css).toContain('--select-group-font-size: var(--fontSizeBase)')
     expect(css).toContain('--select-group-font-weight: var(--fontWeightNormal)')
@@ -564,6 +580,8 @@ describe('select uses the shared contract', () => {
     expect(css).not.toContain('.vamis-select__item:hover .vamis-select__check:not(.is-checked)')
     expect(css).toContain('.vamis-select__search--box')
     expect(css).toContain('.vamis-select__chip-close')
+    expect(css).toContain('.vamis-select__single.is-invalid')
+    expect(css).toContain('.vamis-select__chip.is-invalid')
     expect(css).toContain('--select-pad-y: 4px')
     expect(css).toContain('padding: var(--select-pad-y) var(--select-pad-x)')
     expect(css).toContain('.vamis-popup__cancel,\n  .vamis-popup__ok,\n  .vamis-date-sheet__cancel,\n  .vamis-date-sheet__ok')

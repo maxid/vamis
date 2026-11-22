@@ -10,8 +10,9 @@ const props = withDefaults(
     showConfirm?: boolean
     /** 底栏高度。默认 400（Amis `.PopUp`）；Select 传 320（`.Select-popup`）。 */
     height?: number | string
+    panelClassName?: string
   }>(),
-  { title: '', showConfirm: true, height: POPUP_DEFAULT_HEIGHT },
+  { title: '', showConfirm: true, height: POPUP_DEFAULT_HEIGHT, panelClassName: '' },
 )
 
 const emit = defineEmits<{ cancel: []; confirm: [] }>()
@@ -86,7 +87,10 @@ onBeforeUnmount(() => {
     <div
       v-if="visible"
       class="vamis-popup"
-      :class="{ 'is-in': phase === 'in', 'is-out': phase === 'out' }"
+      :class="[
+        panelClassName,
+        { 'is-in': phase === 'in', 'is-out': phase === 'out' },
+      ]"
       :style="heightStyle"
       role="dialog"
       aria-modal="true"

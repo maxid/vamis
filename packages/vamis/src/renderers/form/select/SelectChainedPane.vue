@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import {
   SchemaRenderer,
+  optionNeedsDefer,
   optionValuesEqual,
+  resolveClassName,
   type OptionItem,
   type SchemaObject,
 } from '@vamis/core'
 import { Checkbox } from '@vamis/ui'
+import Spinner from '../../Spinner.vue'
+import { useTreeState } from '../useTreeState'
 
 const props = defineProps<{
   schema: SchemaObject
   nodes: OptionItem[]
   selectedValues: unknown[]
+  optionClassName?: string
   disabled?: boolean
+  loadingConfig?: { root?: string; show?: boolean }
 }>()
 
 const emit = defineEmits<{
   pick: [item: OptionItem]
   'toggle-all': []
+  'update:nodes': [nodes: OptionItem[]]
 }>()
 
 const VIRTUAL_BUFFER = 4
@@ -25,6 +32,26 @@ const VIRTUAL_VIEWPORT = 266
 
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 const multiple = computed(() => props.schema.multiple === true)
+const schemaRef = toRef(props, 'schema')
+const nodesRef = toRef(props, 'nodes')
+const disabledRef = toRef(props, 'disabled')
+const tree = useTreeState({
+  schema: schemaRef,
+  nodes: nodesRef,
+  setNodes: (nodes) => emit('update:nodes', nodes),
+  disabled: disabledRef,
+  currentValue: () => props.selectedValues,
+})
+const deferSpinnerSchema = computed<SchemaObject>(() => ({
+  type: 'spinner',
+  show: true,
+  size: 'sm',
+  spinnerClassName: 'vamis-select__chained-spinner',
+  loadingConfig: props.loadingConfig,
+}))
+const resolvedOptionClassName = computed(() =>
+  props.optionClassName || resolveClassName(props.schema.optionClassName),
+)
 const path = ref<Array<number | null>>([])
 const columnScrollTop = ref<Record<number, number>>({})
 const columnViewportHeight = ref<Record<number, number>>({})
@@ -52,7 +79,7 @@ watch(
     const current = path.value[0]
     if (
       typeof current !== 'number' ||
-      !nodes[current]?.children?.length
+      !Array.isArray(nodes[current]?.children)
     ) {
       path.value = defaultPath(nodes)
     }
@@ -63,7 +90,11 @@ watch(
 function maxDepth(list: OptionItem[], depth = 1): number {
   let max = depth
   for (const item of list) {
-    if (item.children?.length) max = Math.max(max, maxDepth(item.children, depth + 1))
+    if (Array.isArray(item.children)) {
+      max = Math.max(max, maxDepth(item.children, depth + 1))
+    } else if (item[tree.deferField.value]) {
+      max = Math.max(max, depth + 1)
+    }
   }
   return max
 }
@@ -82,15 +113,47 @@ function childrenAt(depth: number) {
   return list
 }
 
-const columns = computed(() =>
-  Array.from({ length: columnCount.value }, (_, depth) => childrenAt(depth)),
+function selectedOptionAt(depth: number) {
+  if (depth <= 0) return undefined
+  let list = props.nodes
+  let current: OptionItem | undefined
+  for (let index = 0; index < depth; index += 1) {
+    const selectedIndex = path.value[index]
+    if (typeof selectedIndex !== 'number') return undefined
+    current = list[selectedIndex]
+    if (!current) return undefined
+    list = current.children ?? []
+  }
+  return current
+}
+
+const columnDefinitions = computed(() =>
+  Array.from({ length: columnCount.value }, (_, depth) => {
+    const parent = selectedOptionAt(depth)
+    return {
+      items: childrenAt(depth),
+      subTitle:
+        depth > 0 && parent?.subTitle != null
+          ? String(parent.subTitle)
+          : '',
+      placeholder:
+        depth > 0 && parent?.placeholder != null
+          ? String(parent.placeholder)
+          : depth === 0
+            ? emptyText.value
+            : '',
+    }
+  }),
 )
 const columnViews = computed(() =>
-  columns.value.map((items, depth) => {
+  columnDefinitions.value.map((column, depth) => {
+    const items = column.items
     const virtual = items.length > virtualThreshold.value
     if (!virtual) {
       return {
         items,
+        subTitle: column.subTitle,
+        placeholder: column.placeholder,
         virtual,
         start: 0,
         lead: 0,
@@ -115,6 +178,8 @@ const columnViews = computed(() =>
     )
     return {
       items: items.slice(start, end),
+      subTitle: column.subTitle,
+      placeholder: column.placeholder,
       virtual,
       start,
       lead: start * virtualItemHeight.value,
@@ -126,7 +191,8 @@ const leaves = computed(() => {
   const out: OptionItem[] = []
   const walk = (items: OptionItem[]) => {
     for (const item of items) {
-      if (item.children?.length) walk(item.children)
+      if (Array.isArray(item.children)) walk(item.children)
+      else if (item[tree.deferField.value] && item.loaded !== true) continue
       else if (!item.disabled && item.value != null && item.value !== '') out.push(item)
     }
   }
@@ -161,17 +227,29 @@ function isDisabled(item: OptionItem) {
 }
 
 function canExpand(item: OptionItem) {
-  return !!item.children?.length
+  return Array.isArray(item.children) || !!item[tree.deferField.value]
 }
 
 function select(item: OptionItem, depth: number, index: number) {
   if (isDisabled(item)) return
   path.value = [...path.value.slice(0, depth), index]
+  if (tree.isDeferring(item)) return
+  if (optionNeedsDefer(item, tree.deferField.value)) {
+    void tree.deferLoad(item)
+    return
+  }
   if (!canExpand(item)) emit('pick', item)
 }
 
 function labelValue(item: OptionItem) {
-  return item.label
+  return `${item.label ?? ''}${item.tip ?? ''}`
+}
+
+function itemClass(item: OptionItem) {
+  return [
+    resolvedOptionClassName.value,
+    resolveClassName(item.className, item),
+  ]
 }
 
 function onColumnScroll(depth: number, event: Event) {
@@ -204,6 +282,7 @@ watch(
       v-if="multiple && schema.checkAll"
       type="button"
       class="vamis-select__chained-checkall"
+      :class="resolvedOptionClassName"
       :disabled="disabled"
       @click.stop="emit('toggle-all')"
     >
@@ -231,7 +310,19 @@ watch(
         @scroll="onColumnScroll(depth, $event)"
       >
         <div
-          v-if="view.lead > 0"
+          v-if="view.subTitle"
+          class="vamis-select__chained-sub-title"
+        >
+          {{ view.subTitle }}
+        </div>
+        <div
+          v-if="!view.items.length"
+          class="vamis-select__chained-placeholder"
+        >
+          {{ view.placeholder }}
+        </div>
+        <div
+          v-if="view.items.length && view.lead > 0"
           class="vamis-select__chained-virtual-pad"
           :style="{ height: `${view.lead}px` }"
           aria-hidden="true"
@@ -240,13 +331,17 @@ watch(
           v-for="(item, index) in view.items"
           :key="String(item[valueField] ?? view.start + index)"
           class="vamis-select__chained-item"
-          :class="{
-            'is-active': canExpand(item)
-              ? isActive(depth, view.start + index)
-              : isSelected(item),
-            'is-disabled': isDisabled(item),
-            'is-branch': canExpand(item),
-          }"
+          :class="[
+            itemClass(item),
+            {
+              'is-active': canExpand(item)
+                ? isActive(depth, view.start + index)
+                : isSelected(item),
+              'is-disabled': isDisabled(item),
+              'is-branch': canExpand(item),
+            },
+          ]"
+          :aria-busy="tree.isDeferring(item) || undefined"
           @click="select(item, depth, view.start + index)"
         >
           <Checkbox
@@ -265,9 +360,13 @@ watch(
           <span v-else class="vamis-select__chained-item-label">
             {{ labelValue(item) }}
           </span>
+          <Spinner
+            v-if="tree.isDeferring(item)"
+            :schema="deferSpinnerSchema"
+          />
         </div>
         <div
-          v-if="view.trail > 0"
+          v-if="view.items.length && view.trail > 0"
           class="vamis-select__chained-virtual-pad"
           :style="{ height: `${view.trail}px` }"
           aria-hidden="true"

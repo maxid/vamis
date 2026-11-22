@@ -103,7 +103,7 @@ const checkAllLabel = computed(() =>
 function leafOptions(list: OptionItem[]): OptionItem[] {
   const out: OptionItem[] = []
   for (const item of list) {
-    if (Array.isArray(item.children) && item.children.length) out.push(...leafOptions(item.children))
+    if (Array.isArray(item.children)) out.push(...leafOptions(item.children))
     else out.push(item)
   }
   return out
@@ -171,6 +171,7 @@ function replaceAssociatedRightNodes(nodes: OptionItem[]) {
   ctl.replaceOptions(meta ? [{ ...meta, children: nodes }] : nodes)
 }
 const associatedLeftValue = ref<unknown>(undefined)
+const associatedResetToken = ref(0)
 watch(
   () => associatedLeftDefaultValue.value,
   (value) => {
@@ -181,6 +182,9 @@ watch(
   { immediate: true },
 )
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
+const mobileClassName = computed(() =>
+  resolveClassName(props.schema.mobileClassName, data.value),
+)
 const isGroupMenu = computed(() => {
   if (activeSelectMode.value === 'group') return true
   if (
@@ -666,6 +670,10 @@ watch(
       searchFocusTimer = undefined
     }
     if (!open) return
+    if (isAssociatedMenu.value) {
+      associatedLeftValue.value = associatedLeftDefaultValue.value
+      associatedResetToken.value += 1
+    }
     if (isMobile.value) syncMobileDraft()
     scheduleSearchFocus()
   },
@@ -716,6 +724,10 @@ watch(
               v-for="(item, index) in visibleTags"
               :key="`${item.value}-${index}`"
               class="vamis-select__chip"
+              :class="{
+                'is-invalid':
+                  schema.showInvalidMatch === true && item.__unmatched === true,
+              }"
               @mouseenter="showTagTip($event, item.label)"
               @mouseleave="hideTagTip"
             >
@@ -737,7 +749,15 @@ watch(
               @mouseleave="hideOverflow"
             >+ {{ restTags.length }} ...</span>
           </template>
-          <span v-else-if="ctl.selected.value[0]" class="vamis-select__single">{{ ctl.selected.value[0].label }}</span>
+          <span
+            v-else-if="ctl.selected.value[0]"
+            class="vamis-select__single"
+            :class="{
+              'is-invalid':
+                schema.showInvalidMatch === true &&
+                ctl.selected.value[0].__unmatched === true,
+            }"
+          >{{ ctl.selected.value[0].label }}</span>
           <span v-else class="vamis-select__placeholder">{{ filterTpl(ctl.placeholder.value, data) }}</span>
         </div>
         <div
@@ -797,6 +817,10 @@ watch(
               v-for="(item, index) in restTags"
               :key="`rest-${item.value}-${index}`"
               class="vamis-select__chip"
+              :class="{
+                'is-invalid':
+                  schema.showInvalidMatch === true && item.__unmatched === true,
+              }"
             >
               <span class="vamis-select__chip-label">{{ item.label }}</span>
               <button
@@ -816,6 +840,7 @@ watch(
         :show="ctl.open.value"
         :height="popupHeight"
         :container="ctl.overlayContainer.value"
+        :panel-class-name="mobileClassName"
         @cancel="closeMenu"
         @confirm="confirmMobile"
       >
@@ -888,6 +913,9 @@ watch(
             :left-options="associatedLeftOptions"
             :nodes="associatedRightOptions"
             :selected-values="treeSelectedValues"
+            :option-class-name="optionClassName"
+            :loading-config="schema.loadingConfig"
+            :reset-token="associatedResetToken"
             v-model:left-value="associatedLeftValue"
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
@@ -924,9 +952,12 @@ watch(
             :schema="schema"
             :nodes="ctl.filtered.value"
             :selected-values="treeSelectedValues"
+            :option-class-name="optionClassName"
+            :loading-config="schema.loadingConfig"
             :disabled="locked"
             @pick="onPick"
             @toggle-all="onToggleAll"
+            @update:nodes="ctl.replaceOptions"
           />
           <template v-else>
             <div v-if="ctl.config.value.creatable" class="vamis-select__create">
@@ -1073,6 +1104,9 @@ watch(
             :left-options="associatedLeftOptions"
             :nodes="associatedRightOptions"
             :selected-values="treeSelectedValues"
+            :option-class-name="optionClassName"
+            :loading-config="schema.loadingConfig"
+            :reset-token="associatedResetToken"
             v-model:left-value="associatedLeftValue"
             :left-default-value="associatedLeftDefaultValue"
             :disabled="locked"
@@ -1109,9 +1143,12 @@ watch(
             :schema="schema"
             :nodes="ctl.filtered.value"
             :selected-values="treeSelectedValues"
+            :option-class-name="optionClassName"
+            :loading-config="schema.loadingConfig"
             :disabled="locked"
             @pick="onPick"
             @toggle-all="onToggleAll"
+            @update:nodes="ctl.replaceOptions"
           />
           <template v-else>
             <div v-if="ctl.config.value.creatable" class="vamis-select__create">

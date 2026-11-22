@@ -19,6 +19,9 @@ const props = defineProps<{
   leftOptions: OptionItem[]
   nodes: OptionItem[]
   selectedValues: unknown[]
+  optionClassName?: string
+  loadingConfig?: { root?: string; show?: boolean }
+  resetToken?: number
   leftValue?: unknown
   leftDefaultValue?: unknown
   disabled?: boolean
@@ -196,6 +199,7 @@ function isRightSelected(item: OptionItem) {
         :visible-nodes="leftTreeOptions"
         :selected-values="leftSelectedValues"
         :value="leftValue"
+        :reset-token="resetToken"
         :disabled="disabled"
         show-icon
         @update:nodes="leftNodesOverride = $event"
@@ -245,6 +249,7 @@ function isRightSelected(item: OptionItem) {
         :visible-nodes="rightTreeOptions"
         :selected-values="selectedValues"
         :value="selectedValues[0]"
+        :reset-token="resetToken"
         :disabled="disabled"
         show-icon
         @update:nodes="updateRightTreeNodes"
@@ -255,9 +260,12 @@ function isRightSelected(item: OptionItem) {
         :schema="schema"
         :nodes="rightOptions"
         :selected-values="selectedValues"
+        :option-class-name="optionClassName"
+        :loading-config="loadingConfig"
         :disabled="disabled"
         @pick="selectRight"
         @toggle-all="emit('toggle-all', rightOptions)"
+        @update:nodes="updateRightTreeNodes"
       />
       <template v-else>
         <template v-for="row in rightListRows" :key="row.key">

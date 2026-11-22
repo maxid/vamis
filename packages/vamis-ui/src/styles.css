@@ -313,6 +313,7 @@
   --select-check-bg: var(--card);
   --select-check-checked-bg: var(--primary);
   --select-check-checked-color: var(--white);
+  --select-invalid-color: var(--destructive);
   --select-chip-bg: var(--colors-neutral-fill-9);
   --select-chip-hover-bg: var(--colors-brand-10);
   --select-chip-color: var(--colors-neutral-text-2);
@@ -3412,6 +3413,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: var(--select-chip-height);
+  }
+  .vamis-select__single.is-invalid,
+  .vamis-select__chip.is-invalid {
+    color: var(--select-invalid-color);
   }
   .vamis-select__suffix {
     display: flex;
@@ -12333,6 +12338,24 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: inherit;
+}
+.vamis-select__chained-item > .vamis-spinner {
+  flex: 0 0 auto;
+  margin-left: var(--gap-sm);
+}
+.vamis-select__chained-sub-title {
+  padding: var(--gap-xs);
+  color: var(--text-muted);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+}
+.vamis-select__chained-placeholder {
+  height: var(--control-h);
+  padding: calc((var(--control-h) - var(--lineHeightBase) * var(--fontSizeBase)) / 2)
+    var(--gap-sm);
+  color: var(--text-muted);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
 }
 .vamis-select__chained-empty {
   padding: var(--gap-xl) var(--gap-base);

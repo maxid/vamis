@@ -1,7 +1,7 @@
 # Select 剩余语义完成设计
 
 - 日期：2026-11-19
-- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi`、`table`、`chained`、`associated` 主路径、`searchResultMode` 2026-11-21/22 已落地）
+- 状态：已完成（Options CUD、全部 Select mode、关联 source lifecycle、属性 / 事件 / 动作 / 值矩阵已于 2026-11-22 收口）
 - 范围：`select` 的 Options CUD 事件、`deferApi`、`selectMode: table / tree / chained / associated`、`searchResultMode`
 - Amis 基线：6.13.0
 - 关联文档：
@@ -190,7 +190,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 ### 6.6 `selectMode: chained`
 
-- **已落地 2026-11-21**：新增 `SelectChainedPane.vue`，最多三列、路径展开、叶子写值、叶子全选和移动草稿已接；deferred 列、`defaultSelectedIndex` 与逐列虚拟化留后续。
+- **已落地 2026-11-21**：新增 `SelectChainedPane.vue`，最多三列、路径展开、叶子写值、叶子全选和移动草稿已接；逐列虚拟化、`children: []` 分支、`subTitle` / placeholder、option 类名、label + tip、deferred 父列与单节点 Spinner 已于 2026-11-22 接上，级联已知功能缺口清零。
 - **已完成 2026-11-22**：每列独立滚动并按 `virtualThreshold` / `itemHeight` 切片；虚拟列用上下 spacer 维持总高，跨列选择仍使用绝对索引路径。
 - 新建 `SelectChainedPane.vue` 或从 `ChainedSelect.vue` 抽出共享组合函数。
 - 层级路径由“当前左栏链”决定，叶子写入 Select 值。
@@ -212,7 +212,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 1. Options CUD 事件与 API 顺序。**已完成 2026-11-19**：扩展既有 `useOptionsControl` / `useTreeField`，新增 core `runOptionConfirm` / `persistOptionMutation`，未重建 CUD 状态机。
 2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
 3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化已于 2026-11-22 接上。
-4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列留后续，虚拟化已于 2026-11-22 接上。
+4. `selectMode: chained`。**已完成 2026-11-22**：列路径 / 叶子值 / 多选叶子全选 / 移动草稿 / 虚拟化 / `children: []` 分支 / `subTitle` / placeholder / option 类名 / label + tip / deferred 父列 Spinner 已全部接上。`defaultSelectedIndex` 属于 `TabsTransfer` option，Amis Select 未透传，不纳入本切片。
 5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；左右树 deferred 回写和人员 source + 右栏列表 deferred 已接。
 6. `searchResultMode` 全模式收口。**已完成 2026-11-22**：searchApi 结果面板按 `searchResultMode` 切换，清空搜索恢复主模式，表格结果支持独立列。
 

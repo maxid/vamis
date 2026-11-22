@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRef, watch } from 'vue'
+import { computed, nextTick, toRef, watch } from 'vue'
 import {
   isTreeItemCheckDisabled,
   isTreeItemChecked,
@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<{
   query?: string
   loadingConfig?: { root?: string; show?: boolean }
   showIcon?: boolean
+  resetToken?: number
 }>(), {
   query: '',
   showIcon: false,
@@ -95,6 +96,15 @@ watch(
   () => [props.schema.initiallyOpen, props.schema.unfoldedLevel] as const,
   () => tree.seedExpanded(props.nodes),
   { immediate: true },
+)
+watch(
+  () => props.resetToken,
+  () => {
+    void nextTick(() => {
+      tree.seedExpanded(props.nodes)
+      expansionSeeded = true
+    })
+  },
 )
 
 function checkOptions() {

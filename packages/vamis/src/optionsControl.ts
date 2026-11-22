@@ -69,6 +69,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   const searchResults = ref<OptionItem[] | null>(null)
   let autoCompleteTimer: ReturnType<typeof setTimeout> | undefined
   let autoCompleteSeq = 0
+  let mutationQueue: Promise<void> = Promise.resolve()
   const name = computed(() => (schema.value.name ? String(schema.value.name) : ''))
   const config = computed((): OptionsControlConfig => optionsControlConfig(schema.value))
   const overlayContainer = computed(() =>
@@ -172,34 +173,54 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     write(next, true)
   }
 
+  function enqueueMutation<T>(task: () => Promise<T>): Promise<T> {
+    const next = mutationQueue.then(task, task)
+    mutationQueue = next.then(
+      () => undefined,
+      () => undefined,
+    )
+    return next
+  }
+
   async function toggle(option: OptionItem) {
     if (option.disabled || disabled?.value) return
     if (Array.isArray(option.children)) return
-    const nextItems = toggleOption(option, selected.value, config.value)
-    await commit(nextItems)
-    if (!config.value.multiple) open.value = false
+    await enqueueMutation(async () => {
+      const nextItems = toggleOption(option, selected.value, config.value)
+      await commit(nextItems)
+      if (!config.value.multiple) open.value = false
+    })
   }
 
   async function toggleAll() {
     if (!config.value.multiple) return
-    const pool =
-      config.value.checkAllBySearch !== false && keyword.value.trim() ? filtered.value : options.value
-    await commit(toggleAllOptions(selected.value, pool, config.value.valueField))
+    await enqueueMutation(async () => {
+      const pool =
+        config.value.checkAllBySearch !== false && keyword.value.trim() ? filtered.value : options.value
+      await commit(toggleAllOptions(selected.value, pool, config.value.valueField))
+    })
   }
 
   async function clear() {
-    const next = optionsClearValue(schema.value)
-    const event = await emitChange(next)
-    if (event.prevented) return
-    write(next, true)
-    keyword.value = ''
+    await enqueueMutation(async () => {
+      const next = optionsClearValue(schema.value)
+      const event = await emitChange(next)
+      if (event.prevented) return
+      write(next, true)
+      keyword.value = ''
+    })
   }
 
   async function reset() {
-    const next = pristine.value !== undefined ? pristine.value : schema.value.value ?? optionsClearValue(schema.value)
-    const event = await emitChange(next)
-    if (event.prevented) return
-    write(next, true)
+    await enqueueMutation(async () => {
+      const next =
+        pristine.value !== undefined
+          ? pristine.value
+          : schema.value.value ?? optionsClearValue(schema.value)
+      const event = await emitChange(next)
+      if (event.prevented) return
+      write(next, true)
+    })
   }
 
   function setData(values: Record<string, unknown>) {

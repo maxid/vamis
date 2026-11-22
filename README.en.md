@@ -7,7 +7,7 @@ Vamis is an **Amis-compatible** JSON/YAML low-code runtime, reimplemented in Vue
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](CONTEXT.md)
 [![Amis types](https://img.shields.io/badge/Amis%20types-185%2F189-brightgreen.svg)](docs/superpowers/specs/2026-10-20-amis-sync-status.md)
-[![Tests](https://img.shields.io/badge/tests-1279%20passing-brightgreen.svg)](package.json)
+[![Tests](https://img.shields.io/badge/tests-1297%20passing-brightgreen.svg)](package.json)
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)](https://vuejs.org/)
 
 [Live demo](https://maxid.github.io/vamis/) · [Component docs](https://maxid.github.io/vamis/components) · [Amis side-by-side](https://maxid.github.io/vamis/sdk/compare.html) · [中文](README.md)
@@ -156,9 +156,9 @@ Progress is public: docs pages show implementation percentages, and every task u
 ## Status (2026-11-20)
 
 - Amis type names covered: **185 / 189 (97.9%)**; 3 types and the `navigation` alias remain.
-- 155 sidebar components: **5 complete** (`container`, `hidden`, `toast`, `dialog`, `spinner`), 150 in progress, **62% average** semantic parity (47 at ≥80%).
+- 155 sidebar components: **6 complete** (`container`, `hidden`, `toast`, `dialog`, `spinner`, `select`), 149 in progress, **62% average** semantic parity (47 at ≥80%).
 - Kernel D1–D5 P0 landed; D6 P0 (path values / `validateApi` / submit `errors` / `autoFill`) is in, except the combo scope; D7 registration metadata is in, RendererApi injection remains; D8 diagnostics and the render error boundary are in, the visual debug panel is not.
-- Tests: formula 185 + core 888 + editor 8 + sdk 198 = **1279 passing**; `pnpm typecheck` is **0** (CI gate).
+- Tests: formula 185 + core 891 + editor 8 + sdk 213 = **1297 passing**; `pnpm typecheck` is **0** (CI gate).
 - Upstream Amis has had no new commits since 2026-03-18; Vamis tracks 6.13.0.
 
 ## Development

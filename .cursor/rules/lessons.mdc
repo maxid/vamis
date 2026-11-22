@@ -1068,6 +1068,18 @@ alwaysApply: true
 - 触及：`select` `table` `tree` `chained` `associated`
 - 规则：`packages/vamis-ui/src/styles.css`；`packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue`；Amis `_checks.scss` `Checkbox--sm` / `ChainedSelection.tsx` / `GroupedSelection.tsx`
 
+### Chained 的空 children 是分支，列说明取已选父项
+- 踩过：用 `children.length > 0` 判断分支，把 `children: []` 当成叶子并写入表单值；下一列只显示全局空文案，忽略父项的 `subTitle` / `placeholder`，option className 也只落普通列表。
+- 稳定做法：`Array.isArray(children)` 即分支，空数组仍算一层并显示该列 placeholder；列 `subTitle` / `placeholder` 从当前路径上一层的已选项读取，根空态才用 `noResultsText`。`option.className` 与 Select `optionClassName` 都要落到 item，默认文案按 label + tip。deferred 父项复用 `useTreeState` 的 `deferLoad` / `isDeferring`，加载结果经 `update:nodes` 回写；同一节点加载中禁止重复请求，未加载 defer 分支也不进全选叶子。`defaultSelectedIndex` 是 `TabsTransfer` option 契约，Amis Select 没有透传给 `ChainedSelection`，不要把它补成 Select 私有字段。
+- 触及：`select` `chained`
+- 规则：`packages/vamis/src/renderers/form/select/SelectChainedPane.vue`；Amis `ChainedSelection.tsx` / `_selection.scss`
+
+### 选择写值先串行 `change`，未匹配值保留 `__unmatched`
+- 踩过：多选快速点 A、B 时，第一次 `change` 的 `onEvent` 尚未完成，第二次仍从旧 store 计算，最终只写 B；值不在 options 中时又丢失 Amis `__unmatched`，`showInvalidMatch` 无法标红。
+- 稳定做法：`toggle / toggleAll / clear / reset` 通过 mutation queue 串行执行，任务内部再读取当前 `selected`，不能提前算好旧值。`getSelectedOptions` 对找不到 option 的原始值返回带 `__unmatched: true` 的临时项；Select 只在 `showInvalidMatch: true` 时把单值和 tag 标成 error 色。移动 PopUp 根类由 `mobileClassName` 显式透传。
+- 触及：`select` `multi-select` Options
+- 规则：`packages/vamis/src/optionsControl.ts`；`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`
+
 ### Options 虚拟列表：固定行高 + 上下 spacer，分组菜单不虚拟化
 - 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。直接沿用 Table 的行虚拟会把分组头/子项缩进混进固定行高。
 - 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。
@@ -1088,7 +1100,7 @@ alwaysApply: true
 
 ### Associated 右根懒加载要回写父层，左树缓存看结构签名
 - 踩过：人员点选只测“总公司”时正常；展开左树后点“部门 A/B/C”右栏为空。根因有两层：左侧值变化会清空 `rightRootOverride`，把右根树已加载 children 丢掉；右根回写父层后 `leftOptions` 被重新 normalize 成新数组，又触发 watch 清空 `leftNodesOverride`，部门子树消失。多选值虽能写入，但父层 Options 不知道懒加载叶子，标签显示成 `userk/userj` 而不是真实 label。
-- 稳定做法：`props.nodes` 真正变化时才清右根缓存；左侧值变化只清当前右树视图。左树重置用 label/value/ref/defer/children 的结构签名，不比较 normalize 后的数组身份。右根 deferred 新树通过 `update:nodes` 回写父层 `useOptionsControl`，source-shaped 情况下包回 `{...meta, children: next}` 保留 `leftOptions/leftDefaultValue`。默认关联列表 `multiple` 必须画复选框。回归不能只点总公司，要逐一覆盖部门 A/B/C、部门 B 子部门和 `dep/ref` 请求。
+- 稳定做法：`props.nodes` 真正变化时才清右根缓存；左侧值变化只清当前右树视图。左树重置用 label/value/ref/defer/children 的结构签名，不比较 normalize 后的数组身份。右根 deferred 新树通过 `update:nodes` 回写父层 `useOptionsControl`，source-shaped 情况下包回 `{...meta, children: next}` 保留 `leftOptions/leftDefaultValue`。关联左侧选择是弹层局部状态：每次重开都恢复 `leftDefaultValue`（无默认则清空），并通过 reset token 重新 seed 左/右树默认展开，不要把它长期留在 `Select.vue` 造成“记住上次点击”。默认关联列表 `multiple` 必须画复选框。回归不能只点总公司，要逐一覆盖部门 A/B/C、部门 B 子部门和 `dep/ref` 请求。
 - 触及：`select`
 - 规则：`packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue`；`packages/vamis/src/renderers/form/Select.vue`；Amis `AssociatedSelection.tsx` / `GroupedSelection.tsx`
 
