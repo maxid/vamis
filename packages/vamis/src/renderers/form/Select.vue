@@ -157,6 +157,10 @@ const associatedRightOptions = computed(() =>
 const associatedLeftDefaultValue = computed(
   () => associatedSourceMeta.value?.leftDefaultValue ?? props.schema.leftDefaultValue,
 )
+function replaceAssociatedRightNodes(nodes: OptionItem[]) {
+  const meta = associatedSourceMeta.value
+  ctl.replaceOptions(meta ? [{ ...meta, children: nodes }] : nodes)
+}
 const associatedLeftValue = ref<unknown>(undefined)
 watch(
   () => associatedLeftDefaultValue.value,
@@ -880,6 +884,7 @@ watch(
             @pick="onPick"
             @toggle="onTreeToggle"
             @toggle-all="onToggleAll"
+            @update:nodes="replaceAssociatedRightNodes"
           />
           <SelectTreePane
             v-else-if="isTreeMenu"
@@ -1059,6 +1064,7 @@ watch(
             @pick="onPick"
             @toggle="onTreeToggle"
             @toggle-all="onToggleAll"
+            @update:nodes="replaceAssociatedRightNodes"
           />
           <SelectTreePane
             v-else-if="isTreeMenu"

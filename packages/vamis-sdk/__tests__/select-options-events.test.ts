@@ -349,6 +349,59 @@ describe('Select option mutation events', () => {
     expect(form?.getData?.()?.hero).toBe('a')
   })
 
+  it('renders and toggles multiple associated right-list selections', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'associatedMultipleForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'heroes',
+          label: '英雄',
+          multiple: true,
+          selectMode: 'associated',
+          leftMode: 'list',
+          leftDefaultValue: 'mage',
+          leftOptions: [{ label: '法师', value: 'mage' }],
+          options: [
+            {
+              ref: 'mage',
+              children: [
+                { label: 'A', value: 'a' },
+                { label: 'B', value: 'b' },
+              ],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelectorAll('.vamis-select__associated-right-item')).toHaveLength(2),
+    )
+    expect(
+      document.querySelectorAll('.vamis-select__associated-right-item .vamis-select__check'),
+    ).toHaveLength(2)
+
+    const items = document.querySelectorAll('.vamis-select__associated-right-item')
+    click(items[0] as HTMLElement)
+    const form = scoped.getComponentByName('associatedMultipleForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form.getData?.().heroes).toBe('a'))
+    click(items[1] as HTMLElement)
+    await vi.waitFor(() => expect(form.getData?.().heroes).toBe('a,b'))
+    expect(
+      document.querySelectorAll(
+        '.vamis-select__associated-right-item .vamis-select__check.is-checked',
+      ),
+    ).toHaveLength(2)
+  })
+
   it('shows associated guidance before a left option is selected', async () => {
     const { host } = mount({
       type: 'page',
@@ -828,6 +881,201 @@ describe('Select option mutation events', () => {
       ).toBe(true),
     )
     expect(fetcher).toHaveBeenCalled()
+  })
+
+  it('loads personnel for every department branch in the associated tree', async () => {
+    const calls: string[] = []
+    const usersByRef: Record<string, Array<{ label: string; value: string }>> = {
+      '1': [
+        { label: '用户 1', value: 'user1' },
+        { label: '用户 2', value: 'user2' },
+      ],
+      '2': [
+        { label: '用户 a', value: 'usera' },
+        { label: '用户 b', value: 'userb' },
+      ],
+      '3': [
+        { label: '用户 x', value: 'userx' },
+        { label: '用户 y', value: 'usery' },
+      ],
+      '4': [
+        { label: '用户 I', value: 'useri' },
+        { label: '用户 II', value: 'userii' },
+      ],
+      '5': [
+        { label: '用户一', value: 'useryi' },
+        { label: '用户二', value: 'userer' },
+      ],
+      '6': [
+        { label: '用户k', value: 'userk' },
+        { label: '用户j', value: 'userj' },
+      ],
+    }
+    const departmentsByValue: Record<string, Array<{
+      label: string
+      value: number
+      defer?: boolean
+    }>> = {
+      '1': [
+        { label: '部门 A', value: 2 },
+        { label: '部门 B', value: 3, defer: true },
+        { label: '部门 C', value: 4 },
+      ],
+      '3': [
+        { label: '子部门1', value: 5 },
+        { label: '子部门2', value: 6 },
+      ],
+    }
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      const raw = api.url || ''
+      calls.push(raw)
+      const url = new URL(raw, 'http://localhost')
+      const ref = url.searchParams.get('ref')
+      const dep = url.searchParams.get('dep')
+      if (ref) {
+        return {
+          status: 0,
+          msg: '',
+          data: { options: usersByRef[ref] || [] },
+        }
+      }
+      if (dep) {
+        return {
+          status: 0,
+          msg: '',
+          data: { options: departmentsByValue[dep] || [] },
+        }
+      }
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options: [
+            {
+              leftOptions: [{ label: '总公司', value: 1, defer: true }],
+              children: Object.keys(usersByRef).map((value) => ({
+                ref: Number(value),
+                defer: true,
+              })),
+            },
+          ],
+        },
+      }
+    })
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'associated-branch-form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'users',
+            label: '人员',
+            multiple: true,
+            searchable: true,
+            selectMode: 'associated',
+            leftMode: 'tree',
+            source: '/api/departUser',
+            deferApi: '/api/departUser?ref=${ref}&dep=${value}',
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const leftTree = await vi.waitFor(() => {
+      const tree = document.querySelector('.vamis-select__associated-left .vamis-tree')
+      expect(tree).toBeTruthy()
+      return tree as HTMLElement
+    })
+
+    const clickLeft = async (label: string) => {
+      const item = await vi.waitFor(() => {
+        const found = [...leftTree.querySelectorAll('.vamis-tree__content')].find(
+          (node) => node.textContent?.trim() === label,
+        )
+        expect(found, `missing left node: ${label}`).toBeTruthy()
+        return found as HTMLElement
+      })
+      click(item)
+      await nextTick()
+    }
+    const expectUsers = async (labels: string[]) => {
+      await vi.waitFor(() => {
+        const actual = [...document.querySelectorAll('.vamis-select__associated-right-item')].map(
+          (node) => node.textContent?.trim(),
+        )
+        expect(actual).toEqual(labels)
+      })
+    }
+    const expectRef = async (ref: number) => {
+      await vi.waitFor(() =>
+        expect(calls.some((url) => url.includes(`ref=${ref}`))).toBe(true),
+      )
+    }
+    const clickArrow = async (label: string) => {
+      const row = await vi.waitFor(() => {
+        const found = [...leftTree.querySelectorAll('.vamis-tree__item')].find(
+          (node) => node.querySelector('.vamis-tree__text')?.textContent?.trim() === label,
+        )
+        expect(found).toBeTruthy()
+        return found as HTMLElement
+      })
+      click(row.querySelector('.vamis-tree__arrow') as HTMLElement)
+    }
+
+    await clickLeft('总公司')
+    await expectRef(1)
+    await expectUsers(['用户 1', '用户 2'])
+
+    await clickArrow('总公司')
+    await vi.waitFor(() =>
+      expect(leftTree.textContent).toContain('部门 A'),
+    )
+    await clickLeft('部门 A')
+    await expectRef(2)
+    await expectUsers(['用户 a', '用户 b'])
+
+    await clickLeft('部门 B')
+    await expectRef(3)
+    await expectUsers(['用户 x', '用户 y'])
+    await clickArrow('部门 B')
+    await vi.waitFor(() =>
+      expect(leftTree.textContent).toContain('子部门1'),
+    )
+    await clickLeft('部门 C')
+    await expectRef(4)
+    await expectUsers(['用户 I', '用户 II'])
+
+    await clickLeft('子部门1')
+    await expectRef(5)
+    await expectUsers(['用户一', '用户二'])
+    await clickLeft('子部门2')
+    await expectRef(6)
+    await expectUsers(['用户k', '用户j'])
+
+    const users = document.querySelectorAll('.vamis-select__associated-right-item')
+    click(users[0] as HTMLElement)
+    const form = scoped.getComponentByName(
+      'associated-branch-form',
+    ) as { getData?: () => Record<string, unknown> }
+    await vi.waitFor(() => expect(form.getData?.().users).toBe('userk'))
+    click(users[1] as HTMLElement)
+    await vi.waitFor(() => expect(form.getData?.().users).toBe('userk,userj'))
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__chip-label')].map(
+          (node) => node.textContent?.trim(),
+        ),
+      ).toEqual(expect.arrayContaining(['用户k', '用户j'])),
+    )
+
+    expect(calls.some((url) => url.includes('dep=1'))).toBe(true)
+    expect(calls.some((url) => url.includes('dep=3'))).toBe(true)
   })
 
   it.each([

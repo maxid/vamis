@@ -555,7 +555,7 @@ body:
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
 
-`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。左右栏保持 Amis 的 200px 最小高度；未选左侧显示“请选择左侧数据”，ref 对不上选项时显示配置错误。以下保留 Amis 契约与示例。
+`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。总公司、部门与子部门的 `dep/ref` 懒加载都会落到对应右侧人员；右根树结果会回写父层选项，保证 multiple 标签使用真实 label。左右栏保持 Amis 的 200px 最小高度；未选左侧显示“请选择左侧数据”，ref 对不上选项时显示配置错误。以下保留 Amis 契约与示例。
 
 _单选_
 

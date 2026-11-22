@@ -1080,6 +1080,12 @@ alwaysApply: true
 - 触及：`select` `table` `chained`
 - 规则：`packages/vamis/src/renderers/form/select/SelectTablePane.vue`；`packages/vamis/src/renderers/form/select/SelectChainedPane.vue`；Amis `TableSelection.tsx` / `ChainedSelection.tsx`
 
+### Associated 右根懒加载要回写父层，左树缓存看结构签名
+- 踩过：人员点选只测“总公司”时正常；展开左树后点“部门 A/B/C”右栏为空。根因有两层：左侧值变化会清空 `rightRootOverride`，把右根树已加载 children 丢掉；右根回写父层后 `leftOptions` 被重新 normalize 成新数组，又触发 watch 清空 `leftNodesOverride`，部门子树消失。多选值虽能写入，但父层 Options 不知道懒加载叶子，标签显示成 `userk/userj` 而不是真实 label。
+- 稳定做法：`props.nodes` 真正变化时才清右根缓存；左侧值变化只清当前右树视图。左树重置用 label/value/ref/defer/children 的结构签名，不比较 normalize 后的数组身份。右根 deferred 新树通过 `update:nodes` 回写父层 `useOptionsControl`，source-shaped 情况下包回 `{...meta, children: next}` 保留 `leftOptions/leftDefaultValue`。默认关联列表 `multiple` 必须画复选框。回归不能只点总公司，要逐一覆盖部门 A/B/C、部门 B 子部门和 `dep/ref` 请求。
+- 触及：`select`
+- 规则：`packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue`；`packages/vamis/src/renderers/form/Select.vue`；Amis `AssociatedSelection.tsx` / `GroupedSelection.tsx`
+
 ### Radio 是圆点布尔，不要 RadioGroup / checkbox 方盒
 - 踩过：占位用 shadcn RadioGroup，空 `option` 补「选项」；按钮模式若套 checkbox 透明底 + 角标三角，和 Amis 实心 brand 底对不上。
 - 稳定做法：`type: radio` 是 Combo / input-table 里的布尔圆点（18 / 内点 10，`--radio-*`），不是 `radios` 组。真假值复用 checkbox helpers。未写 `option` 只画圆点。按钮选中 `--primary` 实心底 + `--primary-foreground` 字，不要角标。Combo `multiple` 且数组 ≥2 且首项对象才 `comboApplyRadio`（当前行 trueValue、其余 falseValue），返回 `false` 时 Radio 不再自己写字段、也不派 `change`。隐藏 native 不要 `name`。`input-table` 互斥另刀。

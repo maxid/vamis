@@ -162,6 +162,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 - 已完成 2026-11-21：新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection` 主路径。
 - 关联左右栏对齐 Amis 的 `min-height: 200px`；右栏未选左侧时显示 `Transfer.selectFromLeft`，ref 无法匹配候选时显示 `Transfer.configError`。
+- 右根树 deferred 结果要回写父层 Options，并保留 `leftOptions/children/leftDefaultValue` source-shaped 元数据；左树展开缓存按 source 树签名重置，不能因右根回写时重新 normalize 而丢失。默认列表 multiple 显示复选框并覆盖所有部门 ref/dep 分支。
 - 左栏：
   - `leftMode: tree` 使用共享树状态和 `TreeBranch`，对应 Amis `Tree`。
 - 树分组显示 folder/file 图标；展开态按路径键存在 `useTreeState`，不能按节点对象引用存，避免兄弟节点收缩互相重置。

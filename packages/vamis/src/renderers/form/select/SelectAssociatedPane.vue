@@ -8,6 +8,7 @@ import {
   type OptionItem,
   type SchemaObject,
 } from '@vamis/core'
+import { VamisIcon } from '@vamis/ui'
 import SelectChainedPane from './SelectChainedPane.vue'
 import SelectTablePane from './SelectTablePane.vue'
 import SelectTreePane from './SelectTreePane.vue'
@@ -27,6 +28,7 @@ const emit = defineEmits<{
   pick: [item: OptionItem]
   toggle: [values: unknown[]]
   'toggle-all': [items: OptionItem[]]
+  'update:nodes': [nodes: OptionItem[]]
   'update:leftValue': [value: unknown]
 }>()
 
@@ -53,19 +55,36 @@ const rightRootOverride = ref<OptionItem[] | null>(null)
 const rightNodesOverride = ref<OptionItem[] | null>(null)
 const env = useEnv()
 
+function optionsSignature(options: OptionItem[]): string {
+  return options
+    .map((item) =>
+      [
+        String(item.value ?? ''),
+        String(item.label ?? ''),
+        String(item.ref ?? ''),
+        item.defer ? '1' : '0',
+        item.children?.length ? optionsSignature(item.children) : '',
+      ].join(':'),
+    )
+    .join('|')
+}
+
 watch(
-  () => props.leftOptions,
+  () => optionsSignature(props.leftOptions),
   () => {
     leftNodesOverride.value = null
   },
 )
 watch(
-  () => [props.nodes, leftValue.value] as const,
+  () => props.nodes,
   () => {
     rightRootOverride.value = null
     rightNodesOverride.value = null
   },
 )
+watch(leftValue, () => {
+  rightNodesOverride.value = null
+})
 
 const rightRootNodes = computed(() => rightRootOverride.value ?? props.nodes)
 const rightTree = useTreeState({
@@ -73,6 +92,7 @@ const rightTree = useTreeState({
   nodes: rightRootNodes,
   setNodes: (nodes) => {
     rightRootOverride.value = nodes
+    emit('update:nodes', nodes)
   },
   disabled: toRef(props, 'disabled'),
   currentValue: () => props.selectedValues[0],
@@ -148,6 +168,22 @@ function selectRight(item: OptionItem) {
   if (props.disabled || item.disabled) return
   emit('pick', item)
 }
+
+function updateRightTreeNodes(nodes: OptionItem[]) {
+  rightNodesOverride.value = nodes
+  if (!selectedLeft.value) return
+  const roots = rightRootNodes.value.map((item) =>
+    item === selectedLeft.value ? { ...item, children: nodes } : item,
+  )
+  rightRootOverride.value = roots
+  emit('update:nodes', roots)
+}
+
+function isRightSelected(item: OptionItem) {
+  return props.selectedValues.some((value) =>
+    optionValuesEqual(value, item.value, leftValueField.value),
+  )
+}
 </script>
 
 <template>
@@ -211,7 +247,7 @@ function selectRight(item: OptionItem) {
         :value="selectedValues[0]"
         :disabled="disabled"
         show-icon
-        @update:nodes="rightNodesOverride = $event"
+        @update:nodes="updateRightTreeNodes"
         @toggle="emit('toggle', $event)"
       />
       <SelectChainedPane
@@ -237,13 +273,21 @@ function selectRight(item: OptionItem) {
             class="vamis-select__associated-right-item"
             :class="{
               'is-disabled': disabled || row.item.disabled,
-              'is-active': selectedValues.some((value) =>
-                optionValuesEqual(value, row.item.value, leftValueField)
-              ),
+              'is-active': isRightSelected(row.item),
             }"
             :style="{ '--associated-depth': row.depth }"
+            role="option"
+            :aria-selected="isRightSelected(row.item)"
             @click="selectRight(row.item)"
           >
+            <span
+              v-if="schema.multiple"
+              class="vamis-select__check"
+              :class="{ 'is-checked': isRightSelected(row.item) }"
+              aria-hidden="true"
+            >
+              <VamisIcon name="menu-check" v-if="isRightSelected(row.item)" />
+            </span>
             {{ row.item.label }}
           </div>
         </template>

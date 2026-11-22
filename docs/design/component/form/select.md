@@ -136,7 +136,7 @@ options ── searchable ──> filtered
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **表格**：`SelectTablePane` 使用 Table / Checkbox 原语；`columns` 为空回落 label，列 schema 可进 SchemaRenderer。单选点整行；多选表头全选排除禁用项；移动端只改 draft，确认才提交。
 - **级联**：`SelectChainedPane` 维护列内索引路径；打开时默认展开第一个有子项的分组，父节点只展开下一列，叶子才写值。父项 active 看路径，叶子 active 看选中值，父项没有 `value` 也能正确切列。最多三列、列内滚动，多选 checkAll 只选叶子，移动端只改 draft。
-- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。人员点选仍走同一 source-shaped 数据：`leftOptions` / `children` 拆左右候选，右侧根节点 `defer` 在左侧选中时加载。未选左侧时右栏显示「请选择左侧数据」，ref 对不上时显示配置错误。左树显示 folder/file 图标，桌面关联选择内容区对齐 Amis Transfer-selection 的 350px 上限，搜索框另计；左右列有 200px 最小高度、等分且各自滚动。移动端只写 draft，确认才提交。
+- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。人员点选仍走同一 source-shaped 数据：`leftOptions` / `children` 拆左右候选，右侧根节点 `defer` 在左侧选中时加载。右根树的懒加载结果必须回写父层 `useOptionsControl`，并保留 source-shaped 元数据，否则 multiple 标签只能回退到 value；左侧切换只清当前右树视图，不整体清空右根缓存。左树 source 是否变化按树签名判断，避免右根回写触发重新 normalize 时丢失已展开部门。默认关联列表 multiple 显示复选框；未选左侧时右栏显示「请选择左侧数据」，ref 对不上时显示配置错误。左树显示 folder/file 图标，桌面关联选择内容区对齐 Amis Transfer-selection 的 350px 上限，搜索框另计；左右列有 200px 最小高度、等分且各自滚动。移动端只写 draft，确认才提交。
 - **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。InputTree / TreeSelect / Select 树模式统一用稳定路径键存展开态，避免对象身份变化导致收缩一个节点时其他节点被重置。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
