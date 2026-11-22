@@ -212,6 +212,7 @@ export function useTreeState(context: TreeStateContext) {
     isDeferring,
     expandItem,
     toggleExpand,
+    deferLoad,
     seedExpanded,
     ensureExpanded,
   }

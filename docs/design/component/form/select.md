@@ -72,7 +72,7 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 | `source` | 远程选项 | `requestApi` 拉取；变量 source 按数据域解析 |
 | `multiple` / `joinValues` / `extractValue` / `delimiter` | 多选/值形态 | 决定表单值 string vs array；不要只改 UI |
 | `searchable` / `filterOption` / `searchApi` / `autoComplete` | 搜索 | 本地/远程/自动补全的优先级和竞态 |
-| `selectMode` | 普通/分组/表格/树/链式/关联/人员 | 普通 / group / table / tree / chained / associated 已接；人员未接 |
+| `selectMode` | 普通/分组/表格/树/链式/关联 | 普通 / group / table / tree / chained / associated 已接；人员点选复用 associated |
 | `searchResultMode` / `searchResultColumns` | 搜索结果面板覆盖 | 支持 list / group / table / tree / chained，未写时继承 `selectMode` |
 | `menuTpl` | 自定义选项 | SchemaRenderer 渲染，数据含 option |
 | `maxTagCount` / 标签折叠 | 多选标签 | 测量 + `+N` tooltip |
@@ -136,7 +136,7 @@ options ── searchable ──> filtered
 - **分组**：`children` 只作展示/组头，叶子才可选；`selectMode: group` 的组头样式与全选边界单独测。
 - **表格**：`SelectTablePane` 使用 Table / Checkbox 原语；`columns` 为空回落 label，列 schema 可进 SchemaRenderer。单选点整行；多选表头全选排除禁用项；移动端只改 draft，确认才提交。
 - **级联**：`SelectChainedPane` 维护列内索引路径；打开时默认展开第一个有子项的分组，父节点只展开下一列，叶子才写值。父项 active 看路径，叶子 active 看选中值，父项没有 `value` 也能正确切列。最多三列、列内滚动，多选 checkAll 只选叶子，移动端只改 draft。
-- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。左树显示 folder/file 图标，桌面 Popover 高度上限对齐 Amis 350，左右列等分且各自滚动。移动端只写 draft，确认才提交。
+- **关联**：`SelectAssociatedPane` 本地保存左栏值，不写外层字段；左栏 `list/tree` 通过 `leftDefaultValue` 初始化，按 `options[].ref` 找到右栏候选，右栏复用 table/tree/chained/list。人员点选仍走同一 source-shaped 数据：`leftOptions` / `children` 拆左右候选，右侧根节点 `defer` 在左侧选中时加载。左树显示 folder/file 图标，桌面 Popover 高度上限对齐 Amis 350，左右列等分且各自滚动。移动端只写 draft，确认才提交。
 - **树模式**：`SelectTreePane` 复用 `TreeBranch` 和共享 `useTreeState`；不挂完整 `TreeSelect`，不另建树状态。多选默认叶子值，`onlyChildren: false` 时由 `cascade: true` 写入父子值。InputTree / TreeSelect / Select 树模式统一用稳定路径键存展开态，避免对象身份变化导致收缩一个节点时其他节点被重置。
 - **树懒加载**：`option.deferApi > schema.deferApi > source`；请求上下文包含当前数据域和节点字段，成功后只替换目标节点 children，保留兄弟并触发 `deferLoadFinished`。
 - **移动端**：单选滚轮在 confirm 时 `commit([item])`；多选维护 `mobileDraft`，确认才写回；关闭不提交。
@@ -159,7 +159,7 @@ options ── searchable ──> filtered
 
 - 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、只有 `searchable: true` 才统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、`searchResultMode` / `searchResultColumns` 搜索结果面板覆盖、树节点 `deferApi`、关联左右树 deferred `update:nodes` 回写、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
 - 对照：Select 桌面 / 移动均 **26/31**（P0 0）；树单选 / 多选 / defer、table 与 chained 各两份活示例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
-- 缺：人员点选；table / chained 虚拟化。级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
+- 缺：table / chained 虚拟化。级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
 
 ## 7. 验收计划与完成度
 
@@ -188,10 +188,9 @@ options ── searchable ──> filtered
 
 ## 8. 后续
 
-1. 人员点选按 associated 与 Options 族统一收口。
-2. table / chained 虚拟化；关联空态与 source 元数据补 lifecycle 回归。
-3. 值序列化矩阵补组件级测试后再动样式。
-4. 虚拟列表只覆盖桌面平铺选项；树、分组与 future table 的虚拟窗口需共享。
+1. table / chained 虚拟化；关联空态与 source 元数据补 lifecycle 回归。
+2. 值序列化矩阵补组件级测试后再动样式。
+3. 虚拟列表只覆盖桌面平铺选项；树、分组与 future table 的虚拟窗口需共享。
 
 ---
 

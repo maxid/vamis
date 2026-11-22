@@ -598,6 +598,125 @@ describe('Select option mutation events', () => {
     )
   })
 
+  it('loads a deferred associated right list from the selected left ref', async () => {
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      expect(api.url).toContain('/api/defer')
+      return {
+        status: 0,
+        msg: '',
+        data: { options: [{ label: '用户 A', value: 'user-a' }] },
+      }
+    })
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'users',
+            label: '人员',
+            selectMode: 'associated',
+            leftMode: 'list',
+            deferApi: '/api/defer',
+            leftOptions: [{ label: '部门 A', value: 'dep-a' }],
+            options: [{ ref: 'dep-a', defer: true }],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__associated-left-item') as HTMLElement)
+
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__associated-right-item')].some(
+          (item) => item.textContent?.trim() === '用户 A',
+        ),
+      ).toBe(true),
+    )
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
+  it('loads personnel from associated source and deferred right list', async () => {
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      if (api.url?.includes('departUser')) {
+        return {
+          status: 0,
+          msg: '',
+          data: {
+            options: [
+              {
+                leftOptions: [
+                  {
+                    label: '总公司',
+                    value: 1,
+                    defer: true,
+                  },
+                ],
+                children: [{ ref: 1, defer: true }],
+              },
+            ],
+          },
+        }
+      }
+      return {
+        status: 0,
+        msg: '',
+        data: { options: [{ label: '用户 1', value: 'user1' }] },
+      }
+    })
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'users',
+            label: '人员',
+            multiple: true,
+            searchable: true,
+            selectMode: 'associated',
+            leftMode: 'tree',
+            source: '/api/mock2/form/departUser',
+            deferApi: '/api/mock2/form/defer?ref=${ref}&dep=${value}',
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-left')?.textContent).toContain(
+        '总公司',
+      ),
+    )
+    click(
+      [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__content')].find(
+        (item) => item.textContent?.trim() === '总公司',
+      ) as HTMLElement,
+    )
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__associated-right-item')].some(
+          (item) => item.textContent?.trim() === '用户 1',
+        ),
+      ).toBe(true),
+    )
+    expect(fetcher).toHaveBeenCalled()
+  })
+
   it.each([
     ['table', '.vamis-select__associated-right .vamis-select__table tbody tr'],
     ['tree', '.vamis-select__associated-right .vamis-tree__content'],

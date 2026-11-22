@@ -190,7 +190,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     hideSelected: '下拉里隐藏已选项。',
     noResultsText: '无结果文案，默认「未找到任何结果」。',
     checkAllBySearch: '检索时全选只作用于过滤结果，默认 true。',
-    selectMode: 'group / table / tree / chained / associated 已接。人员点选未接。',
+    selectMode: 'group / table / tree / chained / associated 已接；人员点选复用 associated。',
     searchResultMode: '搜索结果面板：list / group / table / tree / chained，未写时继承 selectMode。',
     searchResultColumns: '搜索结果使用 table 面板时的展示列；未写时回落 columns。',
     onlyChildren: '树模式是否只提交叶子；未设置时按是否存在 defer 节点决定。',

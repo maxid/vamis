@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import {
   findOption,
+  optionNeedsDefer,
   optionValuesEqual,
   type OptionItem,
   type SchemaObject,
@@ -9,6 +10,7 @@ import {
 import SelectChainedPane from './SelectChainedPane.vue'
 import SelectTablePane from './SelectTablePane.vue'
 import SelectTreePane from './SelectTreePane.vue'
+import { useTreeState } from '../useTreeState'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -43,6 +45,7 @@ const leftSchema = computed<SchemaObject>(() => ({
   onlyChildren: false,
 }))
 const leftNodesOverride = ref<OptionItem[] | null>(null)
+const rightRootOverride = ref<OptionItem[] | null>(null)
 const rightNodesOverride = ref<OptionItem[] | null>(null)
 
 watch(
@@ -54,12 +57,24 @@ watch(
 watch(
   () => [props.nodes, leftValue.value] as const,
   () => {
+    rightRootOverride.value = null
     rightNodesOverride.value = null
   },
 )
 
+const rightRootNodes = computed(() => rightRootOverride.value ?? props.nodes)
+const rightTree = useTreeState({
+  schema: toRef(props, 'schema'),
+  nodes: rightRootNodes,
+  setNodes: (nodes) => {
+    rightRootOverride.value = nodes
+  },
+  disabled: toRef(props, 'disabled'),
+  currentValue: () => props.selectedValues[0],
+})
+
 const selectedLeft = computed(() => {
-  return props.nodes.find((item) =>
+  return rightRootNodes.value.find((item) =>
     optionValuesEqual(item.ref, leftValue.value, leftValueField.value),
   )
 })
@@ -100,12 +115,28 @@ function isLeftActive(item: OptionItem) {
 function selectLeft(item: OptionItem) {
   if (props.disabled || item.disabled) return
   emit('update:leftValue', item.value)
+  triggerRightDefer(item.value)
 }
 
 function selectLeftTree(values: unknown[]) {
   const value = values[0]
   const item = findOption(leftTreeOptions.value, value, leftValueField.value)
-  if (item) emit('update:leftValue', item.value)
+  if (item) {
+    emit('update:leftValue', item.value)
+    triggerRightDefer(item.value)
+  }
+}
+
+function triggerRightDefer(value: unknown) {
+  const descriptor = rightRootNodes.value.find((item) =>
+    optionValuesEqual(item.ref, value, leftValueField.value),
+  )
+  if (
+    descriptor &&
+    optionNeedsDefer(descriptor, rightTree.deferField.value)
+  ) {
+    void rightTree.deferLoad(descriptor)
+  }
 }
 
 function selectRight(item: OptionItem) {
