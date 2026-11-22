@@ -71,10 +71,16 @@ const isMobile = computed(() => {
 })
 const pickerHeight = SELECT_PICKER_ITEM_HEIGHT * CALENDAR_PICKER_VISIBLE
 const selectMode = computed(() => String(props.schema.selectMode || ''))
-const isAssociatedMenu = computed(() => selectMode.value === 'associated')
-const isChainedMenu = computed(() => selectMode.value === 'chained')
-const isTableMenu = computed(() => selectMode.value === 'table')
-const isTreeMenu = computed(() => selectMode.value === 'tree')
+const searchResultMode = computed(() =>
+  String(props.schema.searchResultMode || selectMode.value),
+)
+const activeSelectMode = computed(() =>
+  ctl.searchResults.value !== null ? searchResultMode.value : selectMode.value,
+)
+const isAssociatedMenu = computed(() => activeSelectMode.value === 'associated')
+const isChainedMenu = computed(() => activeSelectMode.value === 'chained')
+const isTableMenu = computed(() => activeSelectMode.value === 'table')
+const isTreeMenu = computed(() => activeSelectMode.value === 'tree')
 const popupHeight = computed(() =>
   selectPopupHeight(
     props.schema.overlay,
@@ -114,6 +120,13 @@ const treeSelectedValues = computed(() => selectedPool().map((item) => item.valu
 const tableSelectedValues = computed(() => selectedPool().map((item) => item.value))
 const tableOptions = computed(() =>
   isTableMenu.value ? ctl.filteredCandidates.value : ctl.filtered.value,
+)
+const tablePaneSchema = computed(() =>
+  isTableMenu.value &&
+  ctl.searchResults.value !== null &&
+  Array.isArray(props.schema.searchResultColumns)
+    ? { ...props.schema, columns: props.schema.searchResultColumns }
+    : props.schema,
 )
 const allChecked = computed(() =>
   isAllSelected(selectedPool(), ctl.filtered.value, ctl.config.value.valueField),
@@ -155,7 +168,7 @@ watch(
 )
 const optionClassName = computed(() => resolveClassName(props.schema.optionClassName, data.value))
 const isGroupMenu = computed(() => {
-  if (selectMode.value === 'group') return true
+  if (activeSelectMode.value === 'group') return true
   if (
     isTreeMenu.value ||
     isTableMenu.value ||
@@ -879,7 +892,7 @@ watch(
           />
           <SelectTablePane
             v-else-if="isTableMenu"
-            :schema="schema"
+            :schema="tablePaneSchema"
             :nodes="tableOptions"
             :selected-values="tableSelectedValues"
             :disabled="locked"
@@ -1046,7 +1059,7 @@ watch(
           />
           <SelectTablePane
             v-else-if="isTableMenu"
-            :schema="schema"
+            :schema="tablePaneSchema"
             :nodes="tableOptions"
             :selected-values="tableSelectedValues"
             :disabled="locked"

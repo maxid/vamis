@@ -72,7 +72,8 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 | `source` | 远程选项 | `requestApi` 拉取；变量 source 按数据域解析 |
 | `multiple` / `joinValues` / `extractValue` / `delimiter` | 多选/值形态 | 决定表单值 string vs array；不要只改 UI |
 | `searchable` / `filterOption` / `searchApi` / `autoComplete` | 搜索 | 本地/远程/自动补全的优先级和竞态 |
-| `selectMode` | 普通/分组/表格/树/链式/关联/人员 | 普通 / group / table / tree / chained / associated 已接；人员与 `searchResultMode` 未接 |
+| `selectMode` | 普通/分组/表格/树/链式/关联/人员 | 普通 / group / table / tree / chained / associated 已接；人员未接 |
+| `searchResultMode` / `searchResultColumns` | 搜索结果面板覆盖 | 支持 list / group / table / tree / chained，未写时继承 `selectMode` |
 | `menuTpl` | 自定义选项 | SchemaRenderer 渲染，数据含 option |
 | `maxTagCount` / 标签折叠 | 多选标签 | 测量 + `+N` tooltip |
 | `addControls` / `editControls` / `deleteControls` | 选项增删改 | 现有新增/编辑/删除路径；`*Confirm` 事件先于本地写入和 CUD API |
@@ -156,9 +157,9 @@ options ── searchable ──> filtered
 
 ## 6. 当前状态与缺口
 
-- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、只有 `searchable: true` 才统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、树节点 `deferApi`、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
+- 已对齐：分组 Transfer 检索框、小复选框、多选 tag hover tooltip、按宽度 `+ N`、溢出标签表格、`menuTpl`、`searchable` / `filterOption` / `searchApi`、只有 `searchable: true` 才统一延迟聚焦检索框（普通、分组、表格、树形、级联、关联和移动端）、移动端底部弹层（普通单选滚轮 / 普通多选草稿 / 表格、级联、关联与树模式草稿 / 搜索 / 确认写入）、`selectMode: group` / `table` / `tree` / `chained` / `associated`、`searchResultMode` / `searchResultColumns` 搜索结果面板覆盖、树节点 `deferApi`、表格列与行选择、级联叶子选择、关联左右栏、全选、`autoComplete`、桌面平铺选项虚拟列表（`virtualThreshold` / `itemHeight`，对齐 Amis 266 视口 / 32 行高），以及三个选项确认事件与 CUD API 顺序。在线文档表格与级联章节已切为活示例。
 - 对照：Select 桌面 / 移动均 **26/31**（P0 0）；树单选 / 多选 / defer、table 与 chained 各两份活示例通过，余 5 条为既有多选值探针与 clear / reset / reload / setValue 的 Amis 空渲染差异。
-- 缺：`searchResultMode`、人员点选、associated 动态左栏 defer；table / chained 虚拟化。级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
+- 缺：人员点选、associated 动态左栏 defer；table / chained 虚拟化。级联还缺 schema 驱动的 `defaultSelectedIndex`、deferred 父列与 Spinner、`subTitle` / 单列 `placeholder`、`option.className` / `itemClassName` / `itemRender` 覆写。
 
 ## 7. 验收计划与完成度
 
@@ -187,8 +188,8 @@ options ── searchable ──> filtered
 
 ## 8. 后续
 
-1. `searchResultMode` 与 `searchResultColumns` 在 tree/table/chained/associated 共用模式分派上收口。
-2. table / chained 虚拟化；人员点选按 associated 与 Options 族统一收口。
+1. 人员点选按 associated 与 Options 族统一收口。
+2. table / chained 虚拟化；关联 deferred 右树 update 回写。
 3. associated 动态左栏 defer、空态与 source 元数据补 lifecycle 回归。
 4. 值序列化矩阵补组件级测试后再动样式。
 5. 虚拟列表只覆盖桌面平铺选项；树、分组与 future table 的虚拟窗口需共享。

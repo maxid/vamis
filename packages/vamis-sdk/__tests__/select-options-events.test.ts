@@ -1526,6 +1526,174 @@ describe('Select option mutation events', () => {
     )
   })
 
+  it('uses searchResultMode to switch the search result pane', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: {
+        options: [{ label: '搜索结果', value: 'search-result' }],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'searchResultForm',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'group',
+            searchResultMode: 'table',
+            searchable: true,
+            searchApi: '/api/search',
+            columns: [{ name: 'label', label: '英雄' }],
+            searchResultColumns: [{ name: 'label', label: '搜索结果列' }],
+            options: [],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+    search.value = '搜索'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeTruthy())
+    expect(document.querySelector('.vamis-select__table thead')?.textContent).toContain('搜索结果列')
+    click(document.querySelector('.vamis-select__table tbody tr') as HTMLElement)
+
+    const form = scoped.getComponentByName('searchResultForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('search-result'))
+  })
+
+  it('restores the base pane when a search result mode is cleared', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: {
+        options: [{ label: '搜索结果', value: 'search-result' }],
+      },
+    }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            multiple: true,
+            selectMode: 'group',
+            searchResultMode: 'table',
+            searchable: true,
+            searchApi: '/api/search',
+            columns: [{ name: 'label', label: '英雄' }],
+            options: [
+              { label: '分组', children: [{ label: '项', value: 'item' }] },
+            ],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+    search.value = '搜索'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeTruthy())
+
+    search.value = ''
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__table')).toBeFalsy())
+    await vi.waitFor(() => expect(document.querySelector('.vamis-select__group')).toBeTruthy())
+  })
+
+  it.each([
+    ['tree', '.vamis-tree__content'],
+    ['chained', '.vamis-select__chained-item'],
+  ])('switches search results to %s pane', async (searchResultMode, selector) => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: {
+        options: [
+          {
+            label: '搜索结果组',
+            children: [{ label: '搜索结果', value: 'search-result' }],
+          },
+        ],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: `search-result-${searchResultMode}-form`,
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            selectMode: 'group',
+            searchResultMode,
+            searchable: true,
+            searchApi: '/api/search',
+            options: [],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+    search.value = '搜索'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll(selector)].find(
+          (item) => item.textContent?.trim() === '搜索结果',
+        ),
+      ).toBeTruthy(),
+    )
+    click(
+      [...document.querySelectorAll(selector)].find(
+        (item) => item.textContent?.trim() === '搜索结果',
+      ) as HTMLElement,
+    )
+
+    const form = scoped.getComponentByName(`search-result-${searchResultMode}-form`) as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('search-result'))
+  })
+
   it('defers only the expanded tree node', async () => {
     let resolveFetch!: (value: unknown) => void
     const fetcher = vi.fn(

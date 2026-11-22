@@ -1,7 +1,7 @@
 # Select 剩余语义完成设计
 
 - 日期：2026-11-19
-- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi`、`table`、`chained`、`associated` 主路径 2026-11-21 已落地）
+- 状态：进行中（Options CUD 事件 2026-11-19、`selectMode: tree` + `deferApi`、`table`、`chained`、`associated` 主路径、`searchResultMode` 2026-11-21/22 已落地）
 - 范围：`select` 的 Options CUD 事件、`deferApi`、`selectMode: table / tree / chained / associated`、`searchResultMode`
 - Amis 基线：6.13.0
 - 关联文档：
@@ -193,6 +193,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 ### 6.7 `searchResultMode`
 
 - 未写时继承 `selectMode`。
+- 已完成 2026-11-22：搜索返回结果存在时切换为对应 pane，清空检索后恢复主模式；`searchResultColumns` 覆盖 table 搜索结果列。
 - 搜索返回结果后，使用对应模式面板渲染：
   - `list`
   - `table`
@@ -207,7 +208,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化与 `searchResultMode` 另列后续。
 4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列与虚拟化另列后续。
 5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；人员点选、动态左栏 defer 另列后续。
-6. `searchResultMode` 全模式收口。
+6. `searchResultMode` 全模式收口。**已完成 2026-11-22**：searchApi 结果面板按 `searchResultMode` 切换，清空搜索恢复主模式，表格结果支持独立列。
 
 每个切片单独跑测试和 Select 对照，不把五个模式压成一个不可审查的提交。
 

@@ -634,6 +634,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     loading,
     keyword,
     open,
+    searchResults,
     overlayContainer,
     placeholder,
     createLabel,

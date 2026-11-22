@@ -6,7 +6,7 @@ outline: deep
 # Select 选择器
 
 ::: info 实现进度 98% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选和移动草稿确认。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，并支持多选叶子全选。`selectMode: associated` 已接左右栏、`leftMode: tree/list` 与 `rightMode: table/tree/chained/list`。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` 与人员点选未接。
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选和移动草稿确认。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，并支持多选叶子全选。`selectMode: associated` 已接左右栏、`leftMode: tree/list` 与 `rightMode: table/tree/chained/list`。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接；人员点选未接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -555,7 +555,7 @@ body:
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
 
-`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配以及 `rightMode: table/tree/chained/list`。人员点选、左栏动态 defer 与 `searchResultMode` 仍是后续缺口；以下保留 Amis 契约与示例。
+`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配以及 `rightMode: table/tree/chained/list`。人员点选与左栏动态 defer 仍是后续缺口；以下保留 Amis 契约与示例。
 
 _单选_
 
@@ -1048,7 +1048,8 @@ body:
 | initiallyOpen | `boolean` | `true` | 树模式初始是否展开全部节点 |
 | deferApi | [API](/types/api) | | 树节点懒加载接口；节点可用自身 `deferApi` 覆盖 |
 | deferField | `string` | `"defer"` | 标记节点需要懒加载的字段名 |
-| searchResultMode | `string` | | **未接**。不设时跟 `selectMode` |
+| searchResultMode | `string` | | 搜索结果面板；支持 `list` / `group` / `table` / `tree` / `chained`，不设时跟 `selectMode` |
+| searchResultColumns | `Array` | | `searchResultMode: table` 时的搜索结果列；未写时回落 `columns` |
 | columns | `Array` | | `selectMode: table` 时的展示列；空配置回落 `label` 列 |
 | leftOptions | `Array` | | `associated` 左侧选项。**未接** |
 | leftMode / rightMode | `string` | | `associated` 左右形态。**未接** |
@@ -1348,7 +1349,7 @@ body:
 ## 与 Amis 的差异
 
 - 作者态 YAML 与 JSON 并列。
-- `selectMode` 已接分组、表格、树形、级联与关联；`searchResultMode`、人员点选未接。
+- `selectMode` 已接分组、表格、树形、级联与关联；`searchResultMode` / `searchResultColumns` 已接；人员点选未接。
 - 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。
