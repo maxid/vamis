@@ -22,7 +22,7 @@
 - 新增 `SelectChainedPane.vue`。
 - pane 内部维护列路径 `path`，元素是每列选中项的下标，不写表单值；不可用父项 `value` 做路径，Amis 文档中的父项通常没有 `value`。
 - 打开面板时默认展开第一个有子项的分组；默认路径只负责列展示，不写表单值。
-- `searchable: true` 时沿用 Select 统一焦点策略，500ms 后聚焦检索框，打开期间检索框 blur 后恢复聚焦；关闭下拉后不抢焦点。`autoComplete` / `searchApi` 单独存在不触发自动聚焦。
+- `searchable: true` 或 `autoComplete` 时沿用 Select 统一焦点策略，500ms 后聚焦检索框，打开期间检索框 blur 后恢复聚焦；关闭下拉后不抢焦点。只有 `searchApi` 时不触发自动聚焦。
 - 有 `children` 的节点 active 只匹配当前索引路径；叶子 active 只匹配表单中已选值，避免多选时把当前浏览路径误当选中态。
 - 父层 `Select.vue` 继续负责 `onPick`、`joinValues` / `extractValue`、change 和移动草稿。
 - 多选全选由 `onToggleAll` 的 chained 分支只取叶子，再复用现有值序列化。
@@ -41,7 +41,7 @@
 - 单选：点父节点不写值，点叶子写入并关闭。
 - 单选：父项均无 `value` 时，点不同父项必须切换对应子列，当前列只能有一个父项 active。
 - 多选：checkAll 只写入叶子，不写父值。
-- 焦点：普通、级联和移动级联在 `searchable: true` 时聚焦检索框并在打开期间失焦后恢复；非 searchable 的 autoComplete 不抢焦点。
+- 焦点：普通、级联和移动级联在 `searchable` 或 `autoComplete` 时聚焦检索框并在打开期间失焦后恢复；只有 searchApi 不抢焦点。
 - 关联左树：显示 folder/file 图标；桌面 Popover 高度上限 350，左右列等分，列内滚动；InputTree / TreeSelect / Select 共用稳定路径展开态。
 - 真实页列展开、列边框、单滚动宿主。
 - 桌面 / 移动 Select 对照。

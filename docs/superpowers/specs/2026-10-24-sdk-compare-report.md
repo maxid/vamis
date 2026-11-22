@@ -1,7 +1,7 @@
 # SDK 对照报告
 
 - 日期：2026-11-22
-- 视口：桌面 1100×800
+- 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
 - 合计 **31** · 通过 **26** · 失败 **5**（P0 0）· Vamis 多出 extra **0**
 
@@ -75,9 +75,9 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "components-form-select-16"` — 只重跑「components-form-select-16」自身
-- `pnpm compare --page "components-form-select-27"` — 只重跑「components-form-select-27」自身
-- `pnpm compare --page "components-form-select-28"` — 只重跑「components-form-select-28」自身
-- `pnpm compare --page "components-form-select-29"` — 只重跑「components-form-select-29」自身
-- `pnpm compare --page "components-form-select-30"` — 只重跑「components-form-select-30」自身
+- `pnpm compare --page "components-form-select-16" --mobile` — 只重跑「components-form-select-16」自身
+- `pnpm compare --page "components-form-select-27" --mobile` — 只重跑「components-form-select-27」自身
+- `pnpm compare --page "components-form-select-28" --mobile` — 只重跑「components-form-select-28」自身
+- `pnpm compare --page "components-form-select-29" --mobile` — 只重跑「components-form-select-29」自身
+- `pnpm compare --page "components-form-select-30" --mobile` — 只重跑「components-form-select-30」自身
 

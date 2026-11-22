@@ -5,8 +5,8 @@ outline: deep
 
 # Select 选择器
 
-::: info 实现进度 98% · 进行中
-主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选和移动草稿确认。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，并支持多选叶子全选。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
+::: info 实现进度 99% · 进行中
+主路径已对齐：分组检索框（Transfer InputBox 形态）、选项 hover / 小复选框、多选可见 tag 悬停 tooltip、按宽度收成 `+N`（hover 明细）、`autoComplete` mock、`menuTpl`、`searchable` / `filterOption` / `searchApi`、`overlay`（移动端高度默认 320，可写 `overlay.height`）、全选、focus/blur，以及 `addConfirm` / `editConfirm` / `deleteConfirm` 的 Amis 事件顺序。`selectMode: tree` 已复用共享树状态与 `TreeBranch`，支持单选、多选、搜索、全选、`onlyChildren` 与节点 `deferApi`。`selectMode: table` 使用独立表格面板，支持列展示、单选、多选、禁用行、表头全选、移动草稿和窗口虚拟化。`selectMode: chained` 使用列路径面板，父节点只展开，叶子才写入值，支持多选叶子全选和逐列窗口虚拟化。`selectMode: associated` 已接左右栏、`leftMode: tree/list`、`rightMode: table/tree/chained/list` 与人员点选；TransferDropDown 桌面选择内容区上限为 **350px**，搜索框另计；普通 Select 菜单仍是 **300px**。移动端从底部滑入（普通单选滚轮 / 普通多选列表 / 表格、级联、关联和树模式草稿确认；箭头朝右不翻转）。`searchResultMode` / `searchResultColumns` 已接。
 :::
 
 `select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；JSON 同等有效。UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -427,7 +427,7 @@ _多选_
 
 `searchable: true` 在下拉里出检索框，按 `label` / `value` 过滤；分组会保留组头。
 
-只有启用 `searchable` 的 Select 才会在下拉打开后约 500ms 自动将焦点移入检索框；普通、分组、表格、树形、级联和移动端统一。下拉仍打开时，检索框失焦后会恢复聚焦；点击外部关闭下拉后不抢焦点。`autoComplete` / `searchApi` 单独使用时不触发自动聚焦。
+`searchable: true` 或配置了 `autoComplete` 的 Select 会在下拉打开后约 500ms 自动将焦点移入检索框；普通、分组、表格、树形、级联和移动端统一。下拉仍打开时，检索框失焦后会恢复聚焦；点击外部关闭下拉后不抢焦点。只有 `searchApi` 时仍不自动聚焦。
 
 ```schema: scope="body"
 type: form
@@ -555,7 +555,7 @@ body:
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
 
-`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。以下保留 Amis 契约与示例。
+`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写、人员 source + 右栏列表 deferred 以及 `rightMode: table/tree/chained/list`。左右栏保持 Amis 的 200px 最小高度；未选左侧显示“请选择左侧数据”，ref 对不上选项时显示配置错误。以下保留 Amis 契约与示例。
 
 _单选_
 
@@ -1042,7 +1042,7 @@ body:
 | menuTpl | `string` 或 [SchemaNode](/types/schemanode) | | 自定义菜单项模板，数据含 `label` / `value` / `checked` |
 | clearable | `boolean` | `false` | 显示清除 |
 | hideSelected | `boolean` | `false` | 下拉里隐藏已选项 |
-| selectMode | `string` | | `group` / `table` / `tree` / `chained` 已接。`associated` **未接** |
+| selectMode | `string` | | `group` / `table` / `tree` / `chained` / `associated` 已接；人员点选复用 `associated` |
 | onlyChildren | `boolean` | 树模式按 defer 自动决定 | 树多选是否只提交叶子；未设置时无 defer 为 true，有 defer 节点为 false |
 | autoCheckChildren | `boolean` | `true` | 树模式勾父节点时是否联动子节点 |
 | initiallyOpen | `boolean` | `true` | 树模式初始是否展开全部节点 |
@@ -1051,8 +1051,8 @@ body:
 | searchResultMode | `string` | | 搜索结果面板；支持 `list` / `group` / `table` / `tree` / `chained`，不设时跟 `selectMode` |
 | searchResultColumns | `Array` | | `searchResultMode: table` 时的搜索结果列；未写时回落 `columns` |
 | columns | `Array` | | `selectMode: table` 时的展示列；空配置回落 `label` 列 |
-| leftOptions | `Array` | | `associated` 左侧选项。**未接** |
-| leftMode / rightMode | `string` | | `associated` 左右形态。**未接** |
+| leftOptions | `Array` | | `associated` 左侧选项 |
+| leftMode / rightMode | `string` | | `associated` 左右形态 |
 | maxTagCount | `number` | | 多选标签最多展示几个。须大于 0 才按宽度收成 `+ N ...`；未写则折行铺开 |
 | overflowTagPopover | [TooltipObject](/components/tooltip) | | 悬停 `+ N ...` 的溢出浮层。剩余项按标签表格渲染（可关），可配 `title` / `placement` / `tooltipClassName` |
 | optionClassName | [ClassName](/types/classname) | | 选项 CSS 类名 |
@@ -1350,6 +1350,8 @@ body:
 
 - 作者态 YAML 与 JSON 并列。
 - `selectMode` 已接分组、表格、树形、级联、关联与人员点选；`searchResultMode` / `searchResultColumns` 已接。
+- 桌面普通 Select 菜单上限 **300px**；`group` / `list` / `table` / `tree` / `chained` / `associated` 走 TransferDropDown，选择内容区上限 **350px**，搜索框高度另计。
+- 关联左右栏最小高度 **200px**；右侧未选择、配置错误有独立空态。
 - 树模式复用共享 `useTreeState` / `TreeBranch`，不挂载完整 `tree-select`；多选无 defer 时 `onlyChildren` 默认 true，存在 defer 节点时默认 false，对齐 Amis `onlyChildren ?? !isTreeDeferLoad`。
 - `filterOption` 只在 `env.trusted` 编译，SDK 默认关。
 - 分组下拉检索对齐 Transfer `InputBox`（「请选择」+ 右侧搜索图标）；普通 `searchable` 仍是底边检索条（「搜索」+ 左侧图标）。

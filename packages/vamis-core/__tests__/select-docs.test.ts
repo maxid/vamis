@@ -101,20 +101,26 @@ describe('select docs', () => {
     expect(treeRule).toContain('overflow: visible')
   })
 
-  it('uses equal associated columns inside one popover scroll host', () => {
+  it('uses equal associated columns inside one selection scroll host', () => {
     const css = read('../../vamis-ui/src/styles.css')
     const popoverRule = cssRule(css, '.vamis-select__popover.is-associated')
+    const associatedRule = cssRule(css, '.vamis-select__associated')
     const leftRule = cssRule(css, '.vamis-select__associated-left')
     const rightRule = cssRule(css, '.vamis-select__associated-right')
 
     expect(popoverRule).toContain('display: flex')
     expect(popoverRule).toContain('overflow: hidden')
-    expect(popoverRule).toContain('max-height: 350px')
+    expect(associatedRule).toContain(
+      'max-height: var(--transfer-selection-max-height)',
+    )
+    expect(css).toContain('--transfer-selection-max-height: 350px')
     expect(leftRule).toContain('flex: 1 1 0')
     expect(leftRule).toContain('width: 0')
+    expect(leftRule).toContain('min-height: 200px')
     expect(leftRule).toContain('overflow: auto')
     expect(rightRule).toContain('flex: 1 1 0')
     expect(rightRule).toContain('width: 0')
+    expect(rightRule).toContain('min-height: 200px')
     expect(rightRule).toContain('overflow: auto')
   })
 

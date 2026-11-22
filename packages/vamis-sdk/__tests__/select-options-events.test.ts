@@ -225,6 +225,61 @@ describe('Select option mutation events', () => {
     ).toContain('诸葛亮')
   })
 
+  it('virtualizes long Select table rows and keeps later rows selectable', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'virtualTableForm',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'table',
+          virtualThreshold: 4,
+          itemHeight: 20,
+          columns: [{ name: 'label', label: '英雄' }],
+          options: Array.from({ length: 80 }, (_, index) => ({
+            label: `英雄 ${index + 1}`,
+            value: `hero-${index + 1}`,
+          })),
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__table-pane.is-virtual')).toBeTruthy(),
+    )
+    expect(
+      document.querySelector('.vamis-select__popover')?.classList.contains('is-transfer'),
+    ).toBe(true)
+
+    const pane = document.querySelector('.vamis-select__table-pane') as HTMLElement
+    expect(
+      pane.querySelectorAll(
+        'tbody [data-slot="table-row"]:not(.vamis-select__table-virtual-pad)',
+      ).length,
+    ).toBeLessThan(80)
+    expect(pane.querySelector('.vamis-select__table-virtual-pad')).toBeTruthy()
+
+    pane.scrollTop = 1200
+    pane.dispatchEvent(new Event('scroll'))
+    await vi.waitFor(() => expect(pane.textContent).toContain('英雄 60'))
+    click(
+      [...pane.querySelectorAll('[data-slot="table-row"]')].find((row) =>
+        row.textContent?.includes('英雄 60'),
+      ) as HTMLElement,
+    )
+
+    const form = scoped.getComponentByName('virtualTableForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('hero-60'))
+  })
+
   it('renders associated mode and writes only a right-side selection', async () => {
     const { host, scoped } = mount({
       type: 'page',
@@ -292,6 +347,64 @@ describe('Select option mutation events', () => {
       ),
     ).toEqual(['战士'])
     expect(form?.getData?.()?.hero).toBe('a')
+  })
+
+  it('shows associated guidance before a left option is selected', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftOptions: [{ label: '法师', value: 'mage' }],
+          options: [
+            {
+              ref: 'mage',
+              children: [{ label: 'A', value: 'a' }],
+            },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain(
+        '请选择左侧数据',
+      ),
+    )
+  })
+
+  it('shows an associated config error when the selected ref has no option', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'associated',
+          leftDefaultValue: 'missing',
+          leftOptions: [{ label: '法师', value: 'missing' }],
+          options: [],
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right')?.textContent).toContain(
+        '配置错误，选项无法与左侧选项对应',
+      ),
+    )
   })
 
   it('keeps the associated left branch after reopening', async () => {
@@ -1089,6 +1202,61 @@ describe('Select option mutation events', () => {
     expect(host.querySelector('.vamis-select__single')?.textContent).toBe('曹操')
   })
 
+  it('virtualizes each long Select chained column and keeps later branches selectable', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'hero',
+          label: '英雄',
+          selectMode: 'chained',
+          virtualThreshold: 4,
+          itemHeight: 20,
+          options: Array.from({ length: 60 }, (_, index) => ({
+            label: `分组 ${index + 1}`,
+            children: [
+              {
+                label: `成员 ${index + 1}`,
+                value: `member-${index + 1}`,
+              },
+            ],
+          })),
+        },
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__chained-col.is-virtual')).toBeTruthy(),
+    )
+
+    const firstColumn = document.querySelector(
+      '.vamis-select__chained-col',
+    ) as HTMLElement
+    expect(
+      firstColumn.querySelectorAll('.vamis-select__chained-item').length,
+    ).toBeLessThan(60)
+    expect(firstColumn.querySelector('.vamis-select__chained-virtual-pad')).toBeTruthy()
+
+    firstColumn.scrollTop = 700
+    firstColumn.dispatchEvent(new Event('scroll'))
+    await vi.waitFor(() => expect(firstColumn.textContent).toContain('分组 40'))
+    click(
+      [...firstColumn.querySelectorAll('.vamis-select__chained-item')].find((item) =>
+        item.textContent?.includes('分组 40'),
+      ) as HTMLElement,
+    )
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__chained-col')][1]?.textContent,
+      ).toContain('成员 40'),
+    )
+  })
+
   it('checks leaf values in multiple Select chained mode', async () => {
     const { host, scoped } = mount({
       type: 'page',
@@ -1305,7 +1473,7 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
   })
 
-  it('does not focus a non-searchable autoComplete Select search input', async () => {
+  it('focuses the search input in autoComplete mode', async () => {
     const { host } = mount({
       type: 'page',
       body: {
@@ -1320,6 +1488,44 @@ describe('Select option mutation events', () => {
         },
       },
     })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const search = await vi.waitFor(() => {
+      const input = document.querySelector('.vamis-select__search-input')
+      expect(input).toBeTruthy()
+      return input as HTMLInputElement
+    })
+
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+    search.blur()
+    await vi.waitFor(() => expect(document.activeElement).toBe(search), { timeout: 1000 })
+  })
+
+  it('does not focus a searchApi-only Select search input', async () => {
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'hero',
+            label: '英雄',
+            searchApi: '/api/search',
+            options: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+        },
+      },
+      {
+        fetcher: async () => ({
+          status: 0,
+          msg: '',
+          data: { options: [{ label: '诸葛亮', value: 'zhugeliang' }] },
+        }),
+      },
+    )
 
     await nextTick()
     click(host.querySelector('.vamis-select__input'))

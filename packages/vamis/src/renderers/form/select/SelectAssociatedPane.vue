@@ -4,6 +4,7 @@ import {
   findOption,
   optionNeedsDefer,
   optionValuesEqual,
+  useEnv,
   type OptionItem,
   type SchemaObject,
 } from '@vamis/core'
@@ -31,6 +32,9 @@ const emit = defineEmits<{
 
 const leftValueField = computed(() => String(props.schema.valueField || 'value'))
 const leftValue = computed(() => props.leftValue ?? props.leftDefaultValue)
+const hasLeftSelection = computed(
+  () => leftValue.value != null && leftValue.value !== '',
+)
 const leftSelectedValues = computed(() =>
   leftValue.value == null || leftValue.value === '' ? [] : [leftValue.value],
 )
@@ -47,6 +51,7 @@ const leftSchema = computed<SchemaObject>(() => ({
 const leftNodesOverride = ref<OptionItem[] | null>(null)
 const rightRootOverride = ref<OptionItem[] | null>(null)
 const rightNodesOverride = ref<OptionItem[] | null>(null)
+const env = useEnv()
 
 watch(
   () => props.leftOptions,
@@ -176,8 +181,20 @@ function selectRight(item: OptionItem) {
       </template>
     </div>
     <div class="vamis-select__associated-right">
+      <div
+        v-if="!hasLeftSelection"
+        class="vamis-select__associated-box"
+      >
+        {{ env.translate('Transfer.selectFromLeft') }}
+      </div>
+      <div
+        v-else-if="!selectedLeft"
+        class="vamis-select__associated-box"
+      >
+        {{ env.translate('Transfer.configError') }}
+      </div>
       <SelectTablePane
-        v-if="rightMode === 'table'"
+        v-else-if="rightMode === 'table'"
         :schema="schema"
         :nodes="rightOptions"
         :selected-values="selectedValues"

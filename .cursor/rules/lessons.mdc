@@ -1031,16 +1031,16 @@ alwaysApply: true
 - 触及：`select` Options
 - 规则：`packages/vamis-core/src/utils/options.ts` `filterOptionTree` / `runSelectFilterOption`
 
-### searchable Select 打开后延迟聚焦检索框
-- 踩过：下拉已经打开，但焦点仍停在 `body`，用户必须再点一次搜索框才能输入。Amis 普通 searchable Select 在 toggle 后 `setTimeout(this.focus, 500)`，`focus()` 优先落到搜索 input；Vamis 没有搜索框 ref 和延迟任务。
-- 稳定做法：只有 `searchable: true` 时，Select 打开后统一 500ms 聚焦 `.vamis-select__search-input`；普通、分组、表格、树形、级联和移动端同一个判据。下拉仍打开时搜索框 blur 会重新排一次聚焦，点击外部先关闭下拉，因此不会把焦点抢回来。`autoComplete` / `searchApi` 单独存在只负责显示检索能力，不触发自动聚焦，否则会误抢焦点。关闭或卸载时取消 timer，避免异步聚焦到已卸载节点。
+### searchable / autoComplete Select 打开后延迟聚焦检索框
+- 踩过：下拉已经打开，但焦点仍停在 `body`，用户必须再点一次搜索框才能输入。Amis 普通 searchable Select 在 toggle 后 `setTimeout(this.focus, 500)`，`focus()` 优先落到搜索 input；Vamis 没有搜索框 ref 和延迟任务。另一个偏差是把聚焦守卫只写成 `searchable`，导致 `autoComplete` 虽渲染输入框却不聚焦。
+- 稳定做法：聚焦判据跟 Amis `SelectControl` 一致，是 `searchable || !!autoComplete`；`searchApi` 单独存在仍不自动聚焦。Select 打开后统一 500ms 聚焦 `.vamis-select__search-input`；普通、分组、表格、树形、级联和移动端同一个判据。下拉仍打开时搜索框 blur 会重新排一次聚焦，点击外部先关闭下拉，因此不会把焦点抢回来。关闭或卸载时取消 timer，避免异步聚焦到已卸载节点。
 - 触及：`select`
-- 规则：Amis `Select.tsx` `toggle` / `focus`；`packages/vamis/src/renderers/form/Select.vue` `scheduleSearchFocus`
+- 规则：Amis `Select.tsx` `searchable={searchable || !!autoComplete}` / `toggle` / `focus`；`packages/vamis/src/renderers/form/Select.vue` `scheduleSearchFocus`
 
 ### Select overlay 走 PopOverContainer 算法
 - 踩过：`overlay.width` 的 `±Npx` 要对触发器做 `calc`；`align` 映射 left/right/center placement，不能只往下开。
 - 稳定做法：`calcSelectOverlayWidth` / `selectOverlayPlacement`，弹层仍走 `VamisOverlay`。百分比宽度按触发器换算成 px（Teleport 后父级没有参照宽）。`maxTagCount` 只有 `Number.isFinite` 且 `> 0` 才截断（`Number(undefined)` 是 `NaN`，会把标签全收成 `+N`）。触发器滚出视口时不要把浮层平移进视口底部，跟着触发器一起滚走。多选折行后触发器变高，`VamisOverlay` 必须 ResizeObserver 触发器，PopOver 跟着底边走。单行/多行共用 `--select-pad-y` / `--select-pad-x`（4 / 10），不要靠 value `min-height: 30` 冒充上内边距（折行后会消失）。清除钮用 16px 图标和箭头放进 `__suffix` 一起 `align-items: center`，不要用文字 `×`。清除色对齐 Amis `--Form-input-clearBtn-color`（浅 `#d4d6d9` / 深 `#84878c`），hover 才到 text-4（浅 `#5c5f66` / 深 `#e8e9eb`），不要 `--muted-foreground` / `--foreground`。多选可见 tag 悬停走 `TooltipWrapper`（`label` / `placement: top` / hover），共用一层 `VamisTooltipLayer`；`+N` 溢出表格和折叠项不要再包。
-- 稳定做法（续）：`triggerWidth` 不能只在打开时测一次；必须同时由 root `ResizeObserver` 和 window `resize` 刷新，否则视口/容器宽度变化后 inline `minWidth` 仍是旧值，`VamisOverlay` 只能重新定位一个旧宽度弹层。关联桌面弹层高度使用 Amis 的 350px 上限，左树 `showIcon` 保持 folder/file 图标；不要用默认 300px 或隐藏图标。
+- 稳定做法（续）：`triggerWidth` 不能只在打开时测一次；必须同时由 root `ResizeObserver` 和 window `resize` 刷新，否则视口/容器宽度变化后 inline `minWidth` 仍是旧值，`VamisOverlay` 只能重新定位一个旧宽度弹层。关联桌面选择内容区使用 Amis `Transfer-selection` 的 350px 上限，搜索框高度另计；左右栏自身有 Amis `AssociatedSelection-left/right` 的 200px 最小高度，不能只给外层最大高度。未选左侧时右栏显示“请选择左侧数据”，选中 ref 却找不到对应 option 时显示“配置错误，选项无法与左侧选项对应”；空态盒需要垂直居中，不能留白。左树 `showIcon` 保持 folder/file 图标，不要用普通 Select 的 300px 或隐藏图标。
 - 触及：`select`
 - 规则：本文；Amis `PopOverContainer.calcOverlayWidth` / `alignToPlacement`
 
@@ -1064,9 +1064,15 @@ alwaysApply: true
 
 ### Options 虚拟列表：固定行高 + 上下 spacer，分组菜单不虚拟化
 - 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。直接沿用 Table 的行虚拟会把分组头/子项缩进混进固定行高。
-- 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被 300 裁掉。
+- 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。
 - 触及：`select` Options
-- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `virtual-list`
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `TransferDropDown.tsx` / `_transfer.scss` / `virtual-list`
+
+### Table / Chained 的虚拟窗口是各自滚动，不是整块表格切片
+- 踩过：把 table 和 chained 当成普通平铺列表，只按总 `scrollTop` 截一段行；table 表头会跟首段行一起滚走，chained 切换列后错误地复用上一列的窗口和绝对索引。
+- 稳定做法：`SelectTablePane` 由 table pane 承担唯一滚动，表头 `sticky top:0`，行按 `virtualThreshold` / `itemHeight` 生成上下 spacer；虚拟行的点击回调仍用完整 `nodes` 的绝对索引。`SelectChainedPane` 每一列各自维护 `scrollTop` / viewport，列内切片，跨列选择把相对窗口起点还原成完整列绝对索引；不要把 chained 的列虚拟状态合并成一个全局窗口。两者都只渲染窗口 + spacer，完整候选仍交给父层做值、全选和 schema 事件。
+- 触及：`select` `table` `chained`
+- 规则：`packages/vamis/src/renderers/form/select/SelectTablePane.vue`；`packages/vamis/src/renderers/form/select/SelectChainedPane.vue`；Amis `TableSelection.tsx` / `ChainedSelection.tsx`
 
 ### Radio 是圆点布尔，不要 RadioGroup / checkbox 方盒
 - 踩过：占位用 shadcn RadioGroup，空 `option` 补「选项」；按钮模式若套 checkbox 透明底 + 角标三角，和 Amis 实心 brand 底对不上。

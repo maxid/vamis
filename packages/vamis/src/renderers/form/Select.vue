@@ -81,14 +81,15 @@ const isAssociatedMenu = computed(() => activeSelectMode.value === 'associated')
 const isChainedMenu = computed(() => activeSelectMode.value === 'chained')
 const isTableMenu = computed(() => activeSelectMode.value === 'table')
 const isTreeMenu = computed(() => activeSelectMode.value === 'tree')
+const isTransferMenu = computed(() =>
+  ['list', 'group', 'table', 'tree', 'chained', 'associated'].includes(
+    activeSelectMode.value,
+  ),
+)
 const popupHeight = computed(() =>
   selectPopupHeight(
     props.schema.overlay,
-    isGroupMenu.value ||
-      isTreeMenu.value ||
-      isTableMenu.value ||
-      isChainedMenu.value ||
-      isAssociatedMenu.value
+    isTransferMenu.value
       ? POPUP_DEFAULT_HEIGHT
       : undefined,
   ),
@@ -178,12 +179,10 @@ const isGroupMenu = computed(() => {
   return ctl.options.value.some((item) => isGroupOption(item))
 })
 const isTransferSearch = computed(
-  () =>
-    isGroupMenu.value ||
-    isTreeMenu.value ||
-    isTableMenu.value ||
-    isChainedMenu.value ||
-    isAssociatedMenu.value,
+  () => isTransferMenu.value || isGroupMenu.value,
+)
+const focusSearchable = computed(
+  () => ctl.config.value.searchable || !!ctl.autoComplete.value,
 )
 /** 对齐 Amis VirtualList：固定视口 266，行高默认 32；分组菜单暂不虚拟化。 */
 const VIRTUAL_BUFFER = 4
@@ -276,7 +275,8 @@ const useMobileWheel = computed(
     !isTreeMenu.value &&
     !isTableMenu.value &&
     !isChainedMenu.value &&
-    !isAssociatedMenu.value,
+    !isAssociatedMenu.value &&
+    !isTransferMenu.value,
 )
 /** 普通多选移动端：右侧勾，不要左侧勾选盒（分组仍走 GroupedSelection）。 */
 const useMobileTick = computed(
@@ -287,7 +287,8 @@ const useMobileTick = computed(
     !isTreeMenu.value &&
     !isTableMenu.value &&
     !isChainedMenu.value &&
-    !isAssociatedMenu.value,
+    !isAssociatedMenu.value &&
+    !isTransferMenu.value,
 )
 const showSearch = computed(
   () => !!(ctl.config.value.searchable || ctl.autoComplete.value || props.schema.searchApi),
@@ -402,7 +403,7 @@ function scheduleSearchFocus() {
     searchFocusTimer = undefined
     if (
       !ctl.open.value ||
-      !ctl.config.value.searchable ||
+      !focusSearchable.value ||
       locked.value
     ) return
     searchInputEl.value?.focus()
@@ -410,7 +411,7 @@ function scheduleSearchFocus() {
 }
 
 function onSearchBlur() {
-  if (!ctl.open.value || !ctl.config.value.searchable) return
+  if (!ctl.open.value || !focusSearchable.value) return
   scheduleSearchFocus()
 }
 
@@ -858,6 +859,7 @@ watch(
           class="vamis-select__popover vamis-select__popover--sheet"
           :class="{
             'is-tick': useMobileTick,
+            'is-transfer': isTransferMenu,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,
@@ -997,6 +999,7 @@ watch(
           class="vamis-select__popover"
           :class="{
             'is-virtual': virtualEnabled,
+            'is-transfer': isTransferMenu,
             'is-tree': isTreeMenu,
             'is-table': isTableMenu,
             'is-chained': isChainedMenu,

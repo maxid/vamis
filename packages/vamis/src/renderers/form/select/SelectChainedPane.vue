@@ -20,9 +20,22 @@ const emit = defineEmits<{
   'toggle-all': []
 }>()
 
+const VIRTUAL_BUFFER = 4
+const VIRTUAL_VIEWPORT = 266
+
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 const multiple = computed(() => props.schema.multiple === true)
 const path = ref<Array<number | null>>([])
+const columnScrollTop = ref<Record<number, number>>({})
+const columnViewportHeight = ref<Record<number, number>>({})
+const virtualThreshold = computed(() => {
+  const value = Number(props.schema.virtualThreshold)
+  return Number.isFinite(value) && value >= 0 ? value : 100
+})
+const virtualItemHeight = computed(() => {
+  const value = Number(props.schema.itemHeight)
+  return Number.isFinite(value) && value > 0 ? value : 38
+})
 
 function defaultPath(list: OptionItem[]) {
   const index = list.findIndex((item) => canExpand(item))
@@ -71,6 +84,43 @@ function childrenAt(depth: number) {
 
 const columns = computed(() =>
   Array.from({ length: columnCount.value }, (_, depth) => childrenAt(depth)),
+)
+const columnViews = computed(() =>
+  columns.value.map((items, depth) => {
+    const virtual = items.length > virtualThreshold.value
+    if (!virtual) {
+      return {
+        items,
+        virtual,
+        start: 0,
+        lead: 0,
+        trail: 0,
+      }
+    }
+    const scrollTop = columnScrollTop.value[depth] ?? 0
+    const viewportHeight =
+      columnViewportHeight.value[depth] ?? VIRTUAL_VIEWPORT
+    const start = Math.min(
+      Math.max(
+        0,
+        Math.floor(scrollTop / virtualItemHeight.value) - VIRTUAL_BUFFER,
+      ),
+      Math.max(0, items.length - 1),
+    )
+    const end = Math.min(
+      items.length,
+      Math.ceil(
+        (scrollTop + viewportHeight) / virtualItemHeight.value,
+      ) + VIRTUAL_BUFFER,
+    )
+    return {
+      items: items.slice(start, end),
+      virtual,
+      start,
+      lead: start * virtualItemHeight.value,
+      trail: Math.max(0, (items.length - end) * virtualItemHeight.value),
+    }
+  }),
 )
 const leaves = computed(() => {
   const out: OptionItem[] = []
@@ -123,6 +173,29 @@ function select(item: OptionItem, depth: number, index: number) {
 function labelValue(item: OptionItem) {
   return item.label
 }
+
+function onColumnScroll(depth: number, event: Event) {
+  if (!columnViews.value[depth]?.virtual) return
+  const el = event.currentTarget as HTMLElement
+  columnScrollTop.value = {
+    ...columnScrollTop.value,
+    [depth]: el.scrollTop,
+  }
+  if (el.clientHeight > 0) {
+    columnViewportHeight.value = {
+      ...columnViewportHeight.value,
+      [depth]: el.clientHeight,
+    }
+  }
+}
+
+watch(
+  () => [props.nodes, virtualThreshold.value, virtualItemHeight.value] as const,
+  () => {
+    columnScrollTop.value = {}
+    columnViewportHeight.value = {}
+  },
+)
 </script>
 
 <template>
@@ -146,27 +219,42 @@ function labelValue(item: OptionItem) {
     </div>
     <div v-else class="vamis-select__chained">
       <div
-        v-for="(options, depth) in columns"
+        v-for="(view, depth) in columnViews"
         :key="depth"
         class="vamis-select__chained-col"
+        :class="{ 'is-virtual': view.virtual }"
+        :style="
+          view.virtual
+            ? { '--select-chained-item-height': `${virtualItemHeight}px` }
+            : undefined
+        "
+        @scroll="onColumnScroll(depth, $event)"
       >
         <div
-          v-for="(item, index) in options"
-          :key="String(item[valueField] ?? item.label)"
+          v-if="view.lead > 0"
+          class="vamis-select__chained-virtual-pad"
+          :style="{ height: `${view.lead}px` }"
+          aria-hidden="true"
+        />
+        <div
+          v-for="(item, index) in view.items"
+          :key="String(item[valueField] ?? view.start + index)"
           class="vamis-select__chained-item"
           :class="{
-            'is-active': canExpand(item) ? isActive(depth, index) : isSelected(item),
+            'is-active': canExpand(item)
+              ? isActive(depth, view.start + index)
+              : isSelected(item),
             'is-disabled': isDisabled(item),
             'is-branch': canExpand(item),
           }"
-          @click="select(item, depth, index)"
+          @click="select(item, depth, view.start + index)"
         >
           <Checkbox
             v-if="multiple && !canExpand(item)"
             :model-value="isSelected(item)"
             :disabled="isDisabled(item)"
             @click.stop
-            @update:model-value="select(item, depth, index)"
+            @update:model-value="select(item, depth, view.start + index)"
           />
           <SchemaRenderer
             v-if="item.schema || item.tpl || item.type"
@@ -178,6 +266,12 @@ function labelValue(item: OptionItem) {
             {{ labelValue(item) }}
           </span>
         </div>
+        <div
+          v-if="view.trail > 0"
+          class="vamis-select__chained-virtual-pad"
+          :style="{ height: `${view.trail}px` }"
+          aria-hidden="true"
+        />
       </div>
     </div>
   </div>

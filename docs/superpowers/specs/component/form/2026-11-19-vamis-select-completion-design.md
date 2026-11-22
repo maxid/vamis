@@ -160,6 +160,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 ### 6.4 `selectMode: associated`
 
 - 已完成 2026-11-21：新建 `SelectAssociatedPane.vue`，行为对齐 `AssociatedSelection` 主路径。
+- 关联左右栏对齐 Amis 的 `min-height: 200px`；右栏未选左侧时显示 `Transfer.selectFromLeft`，ref 无法匹配候选时显示 `Transfer.configError`。
 - 左栏：
   - `leftMode: tree` 使用共享树状态和 `TreeBranch`，对应 Amis `Tree`。
 - 树分组显示 folder/file 图标；展开态按路径键存在 `useTreeState`，不能按节点对象引用存，避免兄弟节点收缩互相重置。
@@ -178,6 +179,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 ### 6.5 `selectMode: table`
 
 - **已落地 2026-11-21**：新增 `SelectTablePane.vue`，复用 Table / Checkbox 原语和父层值状态；主路径支持 columns、单选、多选、禁用、表头全选、移动草稿和单一滚动宿主。
+- **已完成 2026-11-22**：表头保持固定，行按 `virtualThreshold` / `itemHeight` 切片，上下 spacer 补总高；阈值默认 100，虚拟行窗口保留已选行语义。
 - 新建 `SelectTablePane.vue`。
 - 使用 `@vamis/ui` Table 原语，不复制 Table 渲染器的完整数据域。
 - `columns` 只用于展示；选择状态仍由 Select 的值序列化决定。
@@ -185,7 +187,8 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 ### 6.6 `selectMode: chained`
 
-- **已落地 2026-11-21**：新增 `SelectChainedPane.vue`，最多三列、路径展开、叶子写值、叶子全选和移动草稿已接；deferred 列、`defaultSelectedIndex` 与虚拟化留后续。
+- **已落地 2026-11-21**：新增 `SelectChainedPane.vue`，最多三列、路径展开、叶子写值、叶子全选和移动草稿已接；deferred 列、`defaultSelectedIndex` 与逐列虚拟化留后续。
+- **已完成 2026-11-22**：每列独立滚动并按 `virtualThreshold` / `itemHeight` 切片；虚拟列用上下 spacer 维持总高，跨列选择仍使用绝对索引路径。
 - 新建 `SelectChainedPane.vue` 或从 `ChainedSelect.vue` 抽出共享组合函数。
 - 层级路径由“当前左栏链”决定，叶子写入 Select 值。
 - 不在 Select 内复制一套远程 source；候选树由 `useOptionsControl` 提供。
@@ -205,8 +208,8 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 
 1. Options CUD 事件与 API 顺序。**已完成 2026-11-19**：扩展既有 `useOptionsControl` / `useTreeField`，新增 core `runOptionConfirm` / `persistOptionMutation`，未重建 CUD 状态机。
 2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
-3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化与 `searchResultMode` 另列后续。
-4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列与虚拟化另列后续。
+3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化已于 2026-11-22 接上。
+4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列留后续，虚拟化已于 2026-11-22 接上。
 5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；左右树 deferred 回写和人员 source + 右栏列表 deferred 已接。
 6. `searchResultMode` 全模式收口。**已完成 2026-11-22**：searchApi 结果面板按 `searchResultMode` 切换，清空搜索恢复主模式，表格结果支持独立列。
 

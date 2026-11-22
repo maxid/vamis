@@ -244,6 +244,7 @@
   --select-menu-border: var(--colors-neutral-line-9);
   --select-menu-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+  --transfer-selection-max-height: 350px;
   /* 对齐 Amis `--DatePicker-*` / `--Calendar-cell-*` / `--inputDate-*`。弹层底跟 Select 菜单，不要写死 #fff。 */
   --cal-bg: var(--select-menu-bg);
   --cal-fg: var(--select-menu-color);
@@ -3498,6 +3499,21 @@
     background: var(--select-menu-bg);
     color: var(--select-menu-color);
     box-shadow: var(--select-menu-shadow);
+  }
+  .vamis-select__popover.is-transfer {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: none;
+  }
+  .vamis-select__popover.is-transfer > .vamis-select__search {
+    flex: 0 0 auto;
+  }
+  .vamis-select__popover.is-transfer > .vamis-select__list {
+    min-height: 0;
+    max-height: var(--transfer-selection-max-height);
+    overflow: auto;
+    flex: 1 1 auto;
   }
   .vamis-select__tree-pane {
     min-width: 0;
@@ -12075,12 +12091,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   flex-direction: column;
   overflow: hidden;
 }
-.vamis-select__popover.is-tree:not(.vamis-select__popover--sheet) {
-  max-height: 300px;
-}
 .vamis-select__popover.is-tree .vamis-select__tree-pane {
   flex: 1 1 auto;
   min-height: 0;
+  max-height: var(--transfer-selection-max-height);
   overflow: auto;
   overscroll-behavior: contain;
 }
@@ -12093,12 +12107,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   flex-direction: column;
   overflow: hidden;
 }
-.vamis-select__popover.is-table:not(.vamis-select__popover--sheet) {
-  max-height: 300px;
-}
 .vamis-select__table-pane {
   flex: 1 1 auto;
   min-height: 0;
+  max-height: var(--transfer-selection-max-height);
   overflow: auto;
   overscroll-behavior: contain;
 }
@@ -12162,6 +12174,24 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--select-option-disabled-color);
   background: var(--select-option-disabled-bg);
 }
+.vamis-select__table-pane.is-virtual {
+  overflow: auto;
+}
+.vamis-select__table-pane.is-virtual thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.vamis-select__table-pane.is-virtual tbody > tr > [data-slot="table-cell"] {
+  height: var(--select-table-item-height, 38px);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.vamis-select__table-pane.is-virtual .vamis-select__table-virtual-pad > [data-slot="table-cell"] {
+  height: 0;
+  padding: 0;
+  border: 0;
+}
 .vamis-select__table [data-slot="table-head"].vamis-select__table-check,
 .vamis-select__table [data-slot="table-cell"].vamis-select__table-check {
   width: 34px;
@@ -12182,12 +12212,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   flex-direction: column;
   overflow: hidden;
 }
-.vamis-select__popover.is-chained:not(.vamis-select__popover--sheet) {
-  max-height: 300px;
-}
 .vamis-select__chained-pane {
   flex: 1 1 auto;
   min-height: 0;
+  max-height: var(--transfer-selection-max-height);
   overflow: hidden;
 }
 .vamis-select__chained-checkall {
@@ -12220,6 +12248,14 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   width: 0;
   min-width: 150px;
   overflow: auto;
+}
+.vamis-select__chained-col.is-virtual .vamis-select__chained-item {
+  height: var(--select-chained-item-height, 38px);
+  min-height: var(--select-chained-item-height, 38px);
+  box-sizing: border-box;
+}
+.vamis-select__chained-virtual-pad {
+  pointer-events: none;
 }
 .vamis-select__chained-col:not(:last-child) {
   border-right: 1px solid var(--border);
@@ -12269,11 +12305,13 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
+  max-height: var(--transfer-selection-max-height);
   overflow: hidden;
 }
 .vamis-select__associated-left {
   flex: 1 1 0;
   width: 0;
+  min-height: 200px;
   min-width: 0;
   overflow: auto;
   border-right: 1px solid var(--border);
@@ -12281,16 +12319,35 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-select__associated-right {
   flex: 1 1 0;
   width: 0;
+  min-height: 200px;
   min-width: 0;
   overflow: auto;
+}
+.vamis-select__associated-box {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  text-align: center;
 }
 .vamis-select__popover.is-associated {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  max-height: 350px;
 }
 .vamis-select__popover.is-associated.vamis-select__popover--sheet {
+  max-height: none;
+}
+.vamis-select__popover--sheet .vamis-select__tree-pane,
+.vamis-select__popover--sheet .vamis-select__table-pane,
+.vamis-select__popover--sheet .vamis-select__chained-pane,
+.vamis-select__popover--sheet .vamis-select__associated,
+.vamis-select__popover--sheet > .vamis-select__list {
   max-height: none;
 }
 .vamis-select__popover.is-associated .vamis-select__associated-left .vamis-select__tree-pane {
