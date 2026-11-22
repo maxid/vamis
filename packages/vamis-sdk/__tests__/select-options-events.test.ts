@@ -502,6 +502,102 @@ describe('Select option mutation events', () => {
     expect(arrows()[1]?.classList.contains('is-folded')).toBe(true)
   })
 
+  it('keeps deferred associated left-tree children after loading', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: '子部门', value: 'child' }] },
+    }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'dept',
+            label: '部门',
+            selectMode: 'associated',
+            leftMode: 'tree',
+            deferApi: '/api/defer',
+            leftOptions: [
+              {
+                label: '部门',
+                children: [{ label: '待加载', value: 'dept', defer: true }],
+              },
+            ],
+            options: [{ ref: 'dept', children: [] }],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-left .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('待加载')?.querySelector('.vamis-tree__arrow') || null)
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__associated-left .vamis-tree__text')].some(
+          (item) => item.textContent?.trim() === '子部门',
+        ),
+      ).toBe(true),
+    )
+  })
+
+  it('keeps deferred associated right-tree children after loading', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      msg: '',
+      data: { options: [{ label: '子项', value: 'child' }] },
+    }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'select',
+            name: 'dept',
+            label: '部门',
+            selectMode: 'associated',
+            leftMode: 'list',
+            rightMode: 'tree',
+            deferApi: '/api/defer',
+            leftDefaultValue: 'dept',
+            leftOptions: [{ label: '部门', value: 'dept' }],
+            options: [
+              {
+                ref: 'dept',
+                children: [{ label: '待加载', value: 'parent', defer: true }],
+              },
+            ],
+          },
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select__associated-right .vamis-tree')).toBeTruthy(),
+    )
+    click(document.querySelector('.vamis-select__associated-right .vamis-tree__arrow') as HTMLElement)
+    await vi.waitFor(() =>
+      expect(
+        [...document.querySelectorAll('.vamis-select__associated-right .vamis-tree__text')].some(
+          (item) => item.textContent?.trim() === '子项',
+        ),
+      ).toBe(true),
+    )
+  })
+
   it.each([
     ['table', '.vamis-select__associated-right .vamis-select__table tbody tr'],
     ['tree', '.vamis-select__associated-right .vamis-tree__content'],

@@ -172,7 +172,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
   - `list` / `group` → 列表选择面板
 - 左节点通过 `ref` 匹配 `options[].ref`；`options[].children` 是右栏候选。
 - 桌面 Popover 高度上限对齐 Amis `Transfer-selection-maxHeight: 350px`；左右列等分，列内滚动，外层不叠滚动条。
-- 左右树节点需要懒加载时，复用共享 tree state 的 `deferApi`；当前仅完成静态与 source-shaped 数据，动态左栏 defer、人员点选仍待后续。
+- 左右树节点需要懒加载时，复用共享 tree state 的 `deferApi`；左右树的 `update:nodes` 已回写到 pane，人员点选仍待后续。
 - source 返回 `options[0].leftOptions` / `options[0].children` / `leftDefaultValue` 时，在进入面板前拆出左右数据。
 
 ### 6.5 `selectMode: table`
@@ -207,7 +207,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 2. `selectMode: tree` + `deferApi` / `deferLoadFinished`。**已完成 2026-11-21**：抽出共享 `useTreeState`，新增 `SelectTreePane` 复用 `TreeBranch`；单选 / 多选 / 全选 / 搜索 / 移动草稿 / 节点懒加载已接。
 3. `selectMode: table`。**已完成 2026-11-21**：新增 `SelectTablePane`，columns 可走 `SchemaRenderer`，单选 / 多选 / 表头全选 / 禁用行 / 移动草稿已接；虚拟化与 `searchResultMode` 另列后续。
 4. `selectMode: chained`。**已完成 2026-11-21**：新增 `SelectChainedPane`，列路径 / 叶子值 / 多选叶子全选 / 移动草稿已接；deferred 列与虚拟化另列后续。
-5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；人员点选、动态左栏 defer 另列后续。
+5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；左右树 deferred 回写已接，人员点选另列后续。
 6. `searchResultMode` 全模式收口。**已完成 2026-11-22**：searchApi 结果面板按 `searchResultMode` 切换，清空搜索恢复主模式，表格结果支持独立列。
 
 每个切片单独跑测试和 Select 对照，不把五个模式压成一个不可审查的提交。

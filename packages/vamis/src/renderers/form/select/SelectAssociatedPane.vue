@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   findOption,
   optionValuesEqual,
@@ -42,6 +42,21 @@ const leftSchema = computed<SchemaObject>(() => ({
   initiallyOpen: true,
   onlyChildren: false,
 }))
+const leftNodesOverride = ref<OptionItem[] | null>(null)
+const rightNodesOverride = ref<OptionItem[] | null>(null)
+
+watch(
+  () => props.leftOptions,
+  () => {
+    leftNodesOverride.value = null
+  },
+)
+watch(
+  () => [props.nodes, leftValue.value] as const,
+  () => {
+    rightNodesOverride.value = null
+  },
+)
 
 const selectedLeft = computed(() => {
   return props.nodes.find((item) =>
@@ -49,7 +64,9 @@ const selectedLeft = computed(() => {
   )
 })
 
+const leftTreeOptions = computed(() => leftNodesOverride.value ?? props.leftOptions)
 const rightOptions = computed(() => selectedLeft.value?.children ?? [])
+const rightTreeOptions = computed(() => rightNodesOverride.value ?? rightOptions.value)
 type RightListRow =
   | { kind: 'group'; key: string; label: string; depth: number }
   | { kind: 'item'; key: string; item: OptionItem; depth: number }
@@ -87,7 +104,7 @@ function selectLeft(item: OptionItem) {
 
 function selectLeftTree(values: unknown[]) {
   const value = values[0]
-  const item = findOption(props.leftOptions, value, leftValueField.value)
+  const item = findOption(leftTreeOptions.value, value, leftValueField.value)
   if (item) emit('update:leftValue', item.value)
 }
 
@@ -103,12 +120,13 @@ function selectRight(item: OptionItem) {
       <SelectTreePane
         v-if="leftMode === 'tree'"
         :schema="leftSchema"
-        :nodes="leftOptions"
-        :visible-nodes="leftOptions"
+        :nodes="leftTreeOptions"
+        :visible-nodes="leftTreeOptions"
         :selected-values="leftSelectedValues"
         :value="leftValue"
         :disabled="disabled"
         show-icon
+        @update:nodes="leftNodesOverride = $event"
         @toggle="selectLeftTree"
       />
       <template v-else>
@@ -139,12 +157,13 @@ function selectRight(item: OptionItem) {
       <SelectTreePane
         v-else-if="rightMode === 'tree'"
         :schema="rightTreeSchema"
-        :nodes="rightOptions"
-        :visible-nodes="rightOptions"
+        :nodes="rightTreeOptions"
+        :visible-nodes="rightTreeOptions"
         :selected-values="selectedValues"
         :value="selectedValues[0]"
         :disabled="disabled"
         show-icon
+        @update:nodes="rightNodesOverride = $event"
         @toggle="emit('toggle', $event)"
       />
       <SelectChainedPane

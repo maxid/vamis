@@ -555,7 +555,7 @@ body:
 
 分为左右两部分，左边点选后关联出现右边。左右都可以配置展示模式。
 
-`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配以及 `rightMode: table/tree/chained/list`。人员点选与左栏动态 defer 仍是后续缺口；以下保留 Amis 契约与示例。
+`selectMode: associated` 已接左栏本地选择、`leftMode: tree/list`、`leftDefaultValue`、`options[].ref` 匹配、左右树 deferred 回写以及 `rightMode: table/tree/chained/list`。人员点选仍是后续缺口；以下保留 Amis 契约与示例。
 
 _单选_
 
