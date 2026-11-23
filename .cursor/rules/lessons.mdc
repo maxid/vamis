@@ -1039,7 +1039,7 @@ alwaysApply: true
 
 ### Options CUD 确认事件先于本地写入和 API
 - 踩过：新增、编辑、删除先把选项写进本地或调用 `addApi` / `editApi` / `deleteApi`，再派发确认事件；`preventDefault()` 已经无法回滚本地状态，而且自定义弹层会把原选项私有字段整包塞进 `editConfirm.item`。
-- 稳定做法：Select 与 InputTree 共用 `runOptionConfirm` / `persistOptionMutation`，统一 payload 的公开数据、`value`、`options`、`items`、`item` 和 `[name]`；顺序固定为 `deleteConfirmText`（若配置）-> `deleteConfirm` / `editConfirm` / `addConfirm` -> API -> 本地写入。Select 新增 / 编辑必须和 Amis 一样走 `overlay.openDialog`，不要在下拉里另做内联表单；弹层路径的 `item` 只传本次编辑的 label/value，原选项字段只在本地合并；`deleteConfirmText` 先做 `filterTpl`，未配置时不要自造默认确认框。
+- 稳定做法：Select / InputTree / TreeSelect 共用 `runOptionConfirm` / `persistOptionMutation`，统一 payload 的公开数据、`value`、`options`、`items`、`item` 和 `[name]`；顺序固定为删除确认 -> `deleteConfirm` / `editConfirm` / `addConfirm` -> API -> 本地写入。`deleteConfirmText` 未配置时对齐 OptionsControl 默认 `deleteConfirm`，中文为「确认要删除？」；显式 `false` / `null` / 空串才关闭确认。自定义文案先 `translate` 再 `filterTpl`。Select 新增 / 编辑必须和 Amis 一样走 `overlay.openDialog`，不要在下拉里另做内联表单；弹层路径的 `item` 只传本次编辑的 label/value，原选项字段只在本地合并。
 - 触及：`select` Options `input-tree` `tree-select`
 - 规则：`packages/vamis-core/src/actions/options-event.ts`；`packages/vamis-core/src/utils/option-mutation.ts`；Amis `Options.tsx` `dispatchOptionEvent` / `handleOption(Add|Edit|Delete)`
 

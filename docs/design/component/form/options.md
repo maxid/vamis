@@ -35,6 +35,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 - 风险：全族共享，改一处影响多控件。
 - 2026-11-19：Select 桌面平铺选项接入虚拟列表（`virtualThreshold` 默认 100 / `itemHeight` 默认 32）；分组菜单与其他消费方仍整表渲染。
 - 2026-11-23：InputTree / TreeSelect 通过共享 `TreeBranch` 接入树窗口；行高首行实测、实际视口优先、上下 spacer 补总高，检索缩表回顶部。分组菜单、Picker / Transfer 仍待复用。
+- 2026-11-23：删除确认对齐 OptionsControl 默认 `deleteConfirm`；未配置也弹「确认要删除？」，显式 `false` / 空串才关闭，Select / InputTree / TreeSelect 共用。
 
 ## 3. 契约
 

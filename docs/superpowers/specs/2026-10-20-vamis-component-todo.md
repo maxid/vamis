@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 7；测试 **1339**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 7；测试 **1341**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -645,6 +645,7 @@ flowchart LR
 - TreeSelect 节点行为与标签溢出（2026-11-23）：`nodeBehavior` check/unfold 与空行为、`maxTagCount` / `overflowTagPopover` 已接；heightAuto 在 Amis TreeSelect 未透传，不计缺口。TreeSelect 87→89；测试 **1324**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。余虚拟列表。
 - 树虚拟列表（2026-11-23）：共享 `TreeBranch` 按 Amis Tree 的 `virtualThreshold` 对可见行窗口化；首行实测行高、实际滚动视口优先、上下 spacer 补总高，检索缩表回顶部，后部窗口仍按完整树绝对索引写值。InputTree 80→82、TreeSelect 89→92；测试 **1329**、`typecheck` 0，对照桌面 / 移动 InputTree **26/31**、TreeSelect **14/16**（均 P0 0）。真实浏览器核过 160px 视口 / 8 行窗口 / 416px 总高与滚动换窗。
 - TreeSelect 100% 收口（2026-11-23）：补齐 `itemClick`、`staticItemClick`、`minLength` / `maxLength` 选中数量限制与 Amis 专用校验文案、`hideRoot` / `rootLabel` / `rootValue` 根节点、`optionsPlaceholder` 空态和 `deferLoadFinished` 回归；`reset` / `clear` 按 Amis 源码分别使用 pristine / resetValue。TreeSelect 92→100、InputTree 82→85；测试 **1339**、`typecheck` 0，对照桌面 / 移动 TreeSelect **14/16**、InputTree **26/31**（均 P0 0）。
+- Options 默认删除确认（2026-11-23）：对齐 OptionsControl 默认 `deleteConfirmText = 'deleteConfirm'`，Select / InputTree / TreeSelect 未配置时也弹「确认要删除？」；显式 `false` / `null` / 空串关闭。修正旧回归“未配置不确认”。测试 **1341**、`typecheck` 0。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 

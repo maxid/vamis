@@ -13,6 +13,7 @@ import {
   isTreeItemCheckDisabled,
   isTreeItemChecked,
   optionsAddDialogSchema,
+  optionsDeleteConfirmText,
   optionsEditDialogSchema,
   optionsFromPayload,
   optionsHasCustomControls,
@@ -591,8 +592,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
 
   async function removeItem(item: OptionItem): Promise<boolean> {
     if (disabled?.value || item.disabled) return false
-    const confirmText =
-      schema.value.deleteConfirmText != null ? String(schema.value.deleteConfirmText) : ''
+    const confirmText = optionsDeleteConfirmText(schema.value, env.translate)
     if (confirmText) {
       const ok = await env.confirm(filterTpl(confirmText, { ...data.value, ...item }))
       if (!ok) return false

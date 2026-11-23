@@ -103,6 +103,16 @@ export function optionsResetValue(schema: PlainObject = {}): unknown {
   return schema.resetValue !== undefined ? schema.resetValue : ''
 }
 
+export function optionsDeleteConfirmText(
+  schema: PlainObject = {},
+  translate: (key: string) => string = (key) => key,
+): string {
+  const raw = schema.deleteConfirmText
+  if (raw === undefined) return translate('deleteConfirm')
+  if (raw == null || raw === false || raw === '') return ''
+  return translate(String(raw))
+}
+
 export const OPTIONS_VIRTUAL_THRESHOLD = 100
 export const OPTIONS_ITEM_HEIGHT = 32
 

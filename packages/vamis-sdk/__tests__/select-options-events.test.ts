@@ -3886,6 +3886,7 @@ describe('Select option mutation events', () => {
         },
       }
     })
+    const confirm = vi.fn(async () => true)
     const { host } = mount({
       type: 'form',
       actions: [],
@@ -3898,7 +3899,7 @@ describe('Select option mutation events', () => {
         removable: true,
         deleteApi: '/api/delete',
       },
-    }, { fetcher })
+    }, { confirm, fetcher })
 
     await nextTick()
     click(host.querySelector('.vamis-select__input'))
@@ -4067,8 +4068,8 @@ describe('InputTree option mutation events', () => {
     expect(treeTexts()).toContain('A')
   })
 
-  it('does not ask for confirmation when deleteConfirmText is absent', async () => {
-    const confirm = vi.fn(async () => true)
+  it('asks for the default confirmation when deleteConfirmText is absent', async () => {
+    const confirm = vi.fn(async () => false)
     const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: {} }))
     mount({
       type: 'page',
@@ -4087,8 +4088,9 @@ describe('InputTree option mutation events', () => {
     await nextTick()
     click(treeItem('A')?.querySelector('[aria-label="移除该节点"]') || null)
 
-    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
-    expect(confirm).not.toHaveBeenCalled()
+    await vi.waitFor(() => expect(confirm).toHaveBeenCalledWith('确认要删除？'))
+    expect(fetcher).not.toHaveBeenCalled()
+    expect(treeTexts()).toContain('A')
   })
 
   it('filters deleteConfirmText with the current option data', async () => {
@@ -4893,6 +4895,7 @@ describe('TreeSelect events and actions', () => {
   })
 
   it('runs TreeSelect add, edit and delete component actions', async () => {
+    const confirm = vi.fn(async () => true)
     const { host } = mount({
       type: 'page',
       body: {
@@ -4965,7 +4968,7 @@ describe('TreeSelect events and actions', () => {
           },
         ],
       },
-    })
+    }, { confirm })
 
     await nextTick()
     const trigger = host.querySelector('.vamis-tree-select .vamis-select__input')
@@ -4991,6 +4994,80 @@ describe('TreeSelect events and actions', () => {
       expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
     )
     await vi.waitFor(() => expect(treeTexts()).not.toContain('CC'))
+  })
+
+  it('asks for the default delete confirmation in TreeSelect', async () => {
+    const confirm = vi.fn(async () => false)
+    const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: {} }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'tree-select',
+            name: 'tree',
+            removable: true,
+            deleteApi: '/api/tree-delete',
+            options: [
+              { label: 'A', value: 'a' },
+              { label: 'B', value: 'b' },
+            ],
+          },
+        },
+      },
+      { confirm, fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('A')?.querySelector('[aria-label="移除该节点"]') || null)
+
+    await vi.waitFor(() => expect(confirm).toHaveBeenCalledWith('确认要删除？'))
+    await settle()
+    expect(fetcher).not.toHaveBeenCalled()
+    expect(treeTexts()).toContain('A')
+  })
+
+  it('allows deleteConfirmText=false to skip the confirmation', async () => {
+    const confirm = vi.fn(async () => true)
+    const fetcher = vi.fn(async () => ({ status: 0, msg: '', data: {} }))
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          body: {
+            type: 'tree-select',
+            name: 'tree',
+            removable: true,
+            deleteConfirmText: false,
+            deleteApi: '/api/tree-delete',
+            options: [
+              { label: 'A', value: 'a' },
+              { label: 'B', value: 'b' },
+            ],
+          },
+        },
+      },
+      { confirm, fetcher },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('A')?.querySelector('[aria-label="移除该节点"]') || null)
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalled())
+    expect(confirm).not.toHaveBeenCalled()
+    await vi.waitFor(() => expect(treeTexts()).not.toContain('A'))
   })
 })
 

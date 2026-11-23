@@ -22,6 +22,7 @@ import {
   optionsClearValue,
   optionsControlConfig,
   optionsCreateBtnLabel,
+  optionsDeleteConfirmText,
   optionsAddDialogSchema,
   optionsEditDialogTitle,
   optionsFromPayload,
@@ -379,7 +380,7 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     if (origin.disabled || disabled?.value) return
     const valueField = config.value.valueField || 'value'
     const ctx = { ...data.value, ...origin }
-    const confirmText = schema.value.deleteConfirmText
+    const confirmText = optionsDeleteConfirmText(schema.value, env.translate)
     if (confirmText) {
       const ok = await env.confirm(filterTpl(String(confirmText), ctx))
       if (!ok) return

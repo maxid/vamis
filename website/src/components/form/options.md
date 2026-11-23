@@ -874,7 +874,7 @@ body:
 
 ### 配置删除接口 deleteApi
 
-配 `deleteApi` 用接口删除。只写 `deleteApi`、不写 `removable` 也会出现删除图标。可另配 `deleteConfirmText`，删除前走确认框。
+配 `deleteApi` 用接口删除。只写 `deleteApi`、不写 `removable` 也会出现删除图标。删除默认先弹「确认要删除？」；可用 `deleteConfirmText` 改文案，显式设为 `false` 可关闭确认。
 
 ```schema: scope="body"
 type: form
@@ -1038,7 +1038,7 @@ body:
 | editDialog | `object` | | 编辑弹框其它属性，见 [Dialog](/components/dialog) |
 | removable | `boolean` | `false` | 可删除；配了 `deleteApi` 也会开 |
 | deleteApi | [API](/types/api) | | 删除接口，默认 method `delete` |
-| deleteConfirmText | `string` | | 删除前确认文案，走 [数据映射](/concepts/data-mapping) |
+| deleteConfirmText | `string` | `"确认要删除？"` | 删除前确认文案，走 [数据映射](/concepts/data-mapping)；`false` 关闭 |
 | autoFill | `object` | | 把选中项映射到其它字段 |
 
 ## 事件 / 动作
