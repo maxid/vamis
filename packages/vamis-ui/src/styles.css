@@ -12183,6 +12183,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   max-height: var(--tree-max-height);
   overflow: auto;
 }
+.vamis-input-tree__control.is-height-auto .vamis-tree {
+  max-height: none;
+  overflow: visible;
+}
 /*
   Amis TransferDropDown 只有一个滚动宿主：外层 content 固定，Tree/Transfer-selection
   自己滚。这里同样让 Select 树面板承担滚动，通用 .vamis-tree 在该组合内不再套第二层。

@@ -84,6 +84,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     expandItem,
     expandPaths,
     toggleExpand,
+    setExpandedLevel,
     seedExpanded,
   } = treeState
   const multiple = computed(() => !!schema.value.multiple)
@@ -184,9 +185,85 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     return joinValues.value ? rootValue.value : []
   }
 
-  function writeRootValue() {
+  function selectedOptionItems(values: unknown[]) {
+    return values
+      .map((value) => findOption(options.value, value, valueField.value))
+      .filter((item): item is OptionItem => !!item)
+  }
+
+  async function emitChangeEvent(
+    value: unknown,
+    values: unknown[],
+    item: OptionItem | null = null,
+  ) {
+    const items = options.value
+    const selectedItems = selectedOptionItems(values)
+    const name = String(schema.value.name || '')
+    const payload = {
+      ...data.value,
+      value,
+      item,
+      items,
+      options: items,
+      selectedItems,
+      ...(name ? { [name]: value } : {}),
+    }
+    const event = createVamisEvent('change', payload)
+    await runOnEvent(schema.value, 'change', {
+      env,
+      data: eventEvalData(payload, event),
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+      event,
+    })
+    return event
+  }
+
+  async function commitSelected(values: unknown[]) {
+    const value = serializeSelected(values)
+    const selectedItems = selectedOptionItems(values)
+    const event = await emitChangeEvent(
+      value,
+      values,
+      multiple.value ? null : selectedItems[0] || null,
+    )
+    if (event.prevented) return false
+    writeSelected(values)
+    return true
+  }
+
+  function valuesFromRawValue(value: unknown) {
+    if (Array.isArray(value)) return value
+    if (value == null || value === '') return []
+    if (value && typeof value === 'object') {
+      return [getOptionValue(value, valueField.value)]
+    }
+    if (multiple.value && typeof value === 'string') {
+      return value.split(delimiter.value).filter((item) => item !== '')
+    }
+    return [value]
+  }
+
+  async function commitRawValue(value: unknown) {
+    const values = valuesFromRawValue(value)
+    const selectedItems = selectedOptionItems(values)
+    const event = await emitChangeEvent(
+      value,
+      values,
+      multiple.value ? null : selectedItems[0] || null,
+    )
+    if (event.prevented) return false
+    if (schema.value.name) fieldApi.setValue(schema.value.name, value)
+    return true
+  }
+
+  async function writeRootValue() {
     if (!schema.value.name) return
-    fieldApi.setValue(schema.value.name, rootClearValue())
+    const value = rootClearValue()
+    const event = await emitChangeEvent(value, [], null)
+    if (!event.prevented) fieldApi.setValue(schema.value.name, value)
   }
 
   const nodePathInput = computed(() =>
@@ -386,9 +463,9 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     return toggleTreeSelection(current, item, checkOpts())
   }
 
-  function toggle(item: OptionItem) {
+  async function toggle(item: OptionItem) {
     const next = applyToggle(item, selected.value)
-    if (next) selected.value = next
+    if (next && !(await commitSelected(next))) return null
     return next
   }
 
@@ -609,7 +686,8 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     if (!saved.ok) return false
     const nextSelected = selected.value.filter((value) => !optionValuesEqual(value, item.value))
     commitOptions(removeOptionFromTree(options.value, item, valueField.value))
-    selected.value = nextSelected
+    if (nextSelected.length !== selected.value.length) await commitSelected(nextSelected)
+    else selected.value = nextSelected
     cancelEdit()
     return true
   }
@@ -660,6 +738,9 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     selected,
     serializeSelected,
     writeSelected,
+    commitSelected,
+    commitRawValue,
+    emitChangeEvent,
     rootClearValue,
     writeRootValue,
     reloadOptions: loadSourceOptions,
@@ -697,6 +778,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     isExpanded,
     isDeferring,
     toggleExpand,
+    setExpandedLevel,
     toggle,
     applyToggle,
     checked,

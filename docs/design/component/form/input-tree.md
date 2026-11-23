@@ -1,6 +1,6 @@
 # InputTree 树形选择器 · `input-tree` 设计
 
-> 状态：**进行中 85%** · 复杂度：**XL 特重**
+> 状态：**已完成 100%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/input-tree) · Amis：`/zh-CN/components/form/input-tree`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -8,7 +8,7 @@
 
 InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只有 64 行，真正逻辑在 `useTreeField.ts`（452 行）+ `TreeBranch` / `TreeSearchBox`，并与 TreeSelect 共用。设计时按**组合式状态**审，不要只改 InputTree.vue。
 
-当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表、`itemClick` / `staticItemClick`、长度限制、根节点与空态。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
+当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、虚拟列表、`change` / `itemClick` / `staticItemClick` / CUD / `deferLoadFinished`、完整动作表、长度限制、根节点、空态、className / heightAuto / highlightTxt / collapsed / unfolded。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。
 
 ## 1. 边界与优先级（先读）
 
@@ -78,14 +78,13 @@ InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只�
 ### 3.3 事件
 
 - 文档目标：`change`、`addConfirm`、`editConfirm`、`deleteConfirm`、`deferLoadFinished`、`itemClick`、`staticItemClick` 等。
-- **当前实现**：`deferLoadFinished`；自定义 `addControls` / `editControls` 弹层路径可派发 `addConfirm` / `editConfirm`；**内联 CUD 和节点选择未派发 `change`/`deleteConfirm`**。
-- 不能按在线事件表声称全部已支持；补事件前先定 payload/preventDefault。
+- **当前实现**：`change`（写值前派发，可 preventDefault）、`addConfirm` / `editConfirm` / `deleteConfirm`、`deferLoadFinished`、`itemClick`、`staticItemClick` 均已接。
 
 ### 3.4 动作
 
 文档目标：`expand` / `collapse` / `add` / `edit` / `delete` / `reload` / `clear` / `reset` / `setValue` / `search`。
 
-当前 `useTreeField` 未注册 scoped API/动作处理；TreeSelect 同。不要把动作表当已实现。
+InputTree 已注册 scoped API：`expand` / `collapse` / `add` / `edit` / `delete` / `reload` / `clear` / `reset` / `setValue` / `search`。
 
 ## 4. Vamis 架构
 
@@ -142,30 +141,25 @@ selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
 
 ## 6. 当前状态与缺口
 
-- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、工具栏、虚拟列表、TreeSelect 复用。
-- 未接/风险：
-  - `change` 事件未派发；内联 CUD 的 add/edit/delete 事件不一致；
-  - scoped 动作（expand/collapse/add/edit/delete/reload/clear/reset/setValue/search）未注册；
-  - 树级全选/搜索全选的 `change` 语义未定；
-  - 深色 / 窄屏虚拟列表组合未专项核。
-- 对照：桌面 / 移动 **26/31**（P0 0）；真实浏览器核过「节点路径模式」两次串行 defer 与兄弟不加载。
+- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、虚拟列表、完整事件/动作、className / heightAuto / highlightTxt / collapsed / unfolded。
+- 对照：桌面 / 移动 **26/31**（P0 0，余 Amis 空渲染探针）；375px 浅 / 深色已核 heightAuto、高亮色与 className。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：8 / 12）
+### 验收清单（文档核对：12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis useTreeField / TreeBranch / tree.ts 已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对（当前明确不完整）
-- [ ] 边界用例逐项核对
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
 - [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（tree 相关）
 - [x] `pnpm typecheck` 0
 - [x] `pnpm compare --page input-tree` 桌面
 - [x] `pnpm compare --page input-tree --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] 深色 / 375px 窄屏
 
 ### 验收重点
 
@@ -177,10 +171,7 @@ selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
 
 ## 8. 后续
 
-1. 先补 `change` 与内联 CUD 的 `addConfirm`/`editConfirm`/`deleteConfirm`，统一 payload/preventDefault。
-2. 再注册 scoped 动作（expand/collapse/reload/clear/setValue/search），add/edit/delete 另定边界。
-3. 虚拟列表 + 懒加载 + 深色 / 窄屏组合单独立项。
-4. TreeSelect 与本组件共用测试矩阵，避免两套勾选语义。
+维护期只跟 Amis 新版本增量；TreeSelect 与本组件继续共用树状态 / 事件矩阵，避免两套勾选语义。
 
 ---
 

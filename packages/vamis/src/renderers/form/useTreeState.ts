@@ -69,6 +69,12 @@ export function useTreeState(context: TreeStateContext) {
     return nodePath(context.nodes.value, item, valueField) ?? `label:${item.label}`
   }
 
+  function optionDefaultExpanded(item: OptionItem, depth: number, initiallyOpen: boolean, unfoldedLevel: number) {
+    if (item.unfolded !== undefined) return item.unfolded !== false
+    if (item.collapsed !== undefined) return item.collapsed === false
+    return isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel })
+  }
+
   function seedExpanded(nodes: OptionItem[]) {
     const next = new Map<string, boolean>()
     const initiallyOpen = context.schema.value.initiallyOpen !== false
@@ -80,7 +86,7 @@ export function useTreeState(context: TreeStateContext) {
         if (item.children?.length || optionNeedsDefer(item, deferField.value)) {
           next.set(
             nodeKey(item),
-            isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }),
+            optionDefaultExpanded(item, depth, initiallyOpen, unfoldedLevel),
           )
         }
         if (item.children?.length) walk(item.children, depth + 1)
@@ -104,7 +110,7 @@ export function useTreeState(context: TreeStateContext) {
         ) {
           next.set(
             nodeKey(item),
-            isTreeNodeDefaultExpanded(depth, { initiallyOpen, unfoldedLevel }),
+            optionDefaultExpanded(item, depth, initiallyOpen, unfoldedLevel),
           )
         }
         if (item.children?.length) walk(item.children, depth + 1)
@@ -138,6 +144,22 @@ export function useTreeState(context: TreeStateContext) {
     }
     const next = new Map(expanded.value)
     next.set(nodeKey(item), !isExpanded(item))
+    expanded.value = next
+  }
+
+  function setExpandedLevel(level: number, folded = false) {
+    if (!Number.isFinite(level)) return
+    const next = new Map(expanded.value)
+    const walk = (list: OptionItem[], depth: number) => {
+      for (const item of list) {
+        if (item.children?.length || optionNeedsDefer(item, deferField.value)) {
+          const itemLevel = depth + 1
+          next.set(nodeKey(item), folded ? itemLevel < level : itemLevel <= level)
+        }
+        if (item.children?.length) walk(item.children, depth + 1)
+      }
+    }
+    walk(context.nodes.value, 0)
     expanded.value = next
   }
 
@@ -253,6 +275,7 @@ export function useTreeState(context: TreeStateContext) {
     isDeferring,
     expandItem,
     toggleExpand,
+    setExpandedLevel,
     deferLoad,
     expandPaths,
     seedExpanded,

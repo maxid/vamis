@@ -35,6 +35,7 @@ const props = withDefaults(defineProps<{
   rootLabel?: string
   rootChecked?: boolean
   placeholder?: string
+  treeClass?: string
   creatable?: boolean
   editable?: boolean
   removable?: boolean
@@ -372,7 +373,7 @@ watch(
   <div
     ref="treeEl"
     class="vamis-tree"
-    :class="{ 'is-outline': outline, 'is-virtual': virtualEnabled }"
+    :class="[treeClass, { 'is-outline': outline, 'is-virtual': virtualEnabled }]"
     :style="virtualEnabled ? { height: virtualViewport + 'px' } : undefined"
     @scroll="onVirtualScroll"
   >
