@@ -12754,12 +12754,14 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
+  box-sizing: border-box;
+  padding-block: var(--gap-xs);
 }
 .vamis-tree__native {
   flex: 1 1 auto;
   min-width: 0;
   width: 100%;
-  height: var(--control-h);
+  height: calc(var(--tree-content-height) - var(--gap-xs) * 2);
   outline: none;
   background: var(--card);
   border: 1px solid var(--input);

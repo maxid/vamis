@@ -6,7 +6,7 @@ outline: deep
 # InputTree 树形选择框
 
 ::: info 实现进度 100% · 已完成
-属性 / 事件 / 动作表已按 Amis InputTree 6.13 源码逐项核完：多选 / 半选、搜索、懒加载、内联与 Dialog CUD、节点路径、虚拟列表、`change` / `itemClick` / `staticItemClick` / CUD 确认 / `deferLoadFinished`，`expand` / `collapse` / `add` / `edit` / `delete` / `reload` / `clear` / `reset` / `setValue` / `search`，`heightAuto` / className / `highlightTxt` / `collapsed` / `unfolded` 均已接。对照桌面 / 移动 **26/31**（P0 0，余 Amis 空渲染探针）
+属性 / 事件 / 动作表已按 Amis InputTree 6.13 源码逐项核完：多选 / 半选、搜索、懒加载、内联与 Dialog CUD、节点路径、虚拟列表、`change` / `itemClick` / `staticItemClick` / CUD 确认 / `deferLoadFinished`，`expand` / `collapse` / `add` / `edit` / `delete` / `reload` / `clear` / `reset` / `setValue` / `search`，`heightAuto` / className / `highlightTxt` / `collapsed` / `unfolded` 均已接；inline CUD 输入在 32px 行内上下留 4px，focus 外框不会压到相邻节点。对照桌面 / 移动 **26/31**（P0 0，余 Amis 空渲染探针）
 :::
 
 `input-tree` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -2140,4 +2140,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表、`itemClick` / `staticItemClick`、`minLength` / `maxLength`、`hideRoot` / `rootLabel` / `rootValue`、空态、`heightAuto`、`treeContainerClassName` / `treeClassName`、`highlightTxt`、`collapsed` / `unfolded` 已接；路径模式会按值中的父链串行加载并回显，兄弟分支不请求。树窗口按首行实测高度、实际滚动视口与上下 spacer 渲染，超过 `virtualThreshold` 后只挂窗口行；`0` 关闭虚拟化。Amis 6.13 文档中的 `toolbar` 未在 InputTree 源码消费，`draggable` 也未透传，因此不计 Vamis 缺口。
+- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表、`itemClick` / `staticItemClick`、`minLength` / `maxLength`、`hideRoot` / `rootLabel` / `rootValue`、空态、`heightAuto`、`treeContainerClassName` / `treeClassName`、`highlightTxt`、`collapsed` / `unfolded` 已接；路径模式会按值中的父链串行加载并回显，兄弟分支不请求。树窗口按首行实测高度、实际滚动视口与上下 spacer 渲染，超过 `virtualThreshold` 后只挂窗口行；`0` 关闭虚拟化。inline CUD 输入框为 24px，wrapper 上下各 4px，保留 3px focus glow 的同时不改变 32px 编辑行。Amis 6.13 文档中的 `toolbar` 未在 InputTree 源码消费，`draggable` 也未透传，因此不计 Vamis 缺口。

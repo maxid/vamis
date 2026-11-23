@@ -8,7 +8,7 @@
 
 InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只有 64 行，真正逻辑在 `useTreeField.ts`（452 行）+ `TreeBranch` / `TreeSearchBox`，并与 TreeSelect 共用。设计时按**组合式状态**审，不要只改 InputTree.vue。
 
-当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、虚拟列表、`change` / `itemClick` / `staticItemClick` / CUD / `deferLoadFinished`、完整动作表、长度限制、根节点、空态、className / heightAuto / highlightTxt / collapsed / unfolded。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。
+当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、虚拟列表、`change` / `itemClick` / `staticItemClick` / CUD / `deferLoadFinished`、完整动作表、长度限制、根节点、空态、className / heightAuto / highlightTxt / collapsed / unfolded。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口；inline CUD 输入在 32px 树行内上下各留 4px，输入框 24px，focus glow 不越行。
 
 ## 1. 边界与优先级（先读）
 
@@ -141,7 +141,7 @@ selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
 
 ## 6. 当前状态与缺口
 
-- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、虚拟列表、完整事件/动作、className / heightAuto / highlightTxt / collapsed / unfolded。
+- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、虚拟列表、完整事件/动作、className / heightAuto / highlightTxt / collapsed / unfolded；inline CUD 行保持 32px，输入框 24px + 上下 4px，容纳 3px focus glow。
 - 对照：桌面 / 移动 **26/31**（P0 0，余 Amis 空渲染探针）；375px 浅 / 深色已核 heightAuto、高亮色与 className。
 
 ## 7. 验收计划与完成度

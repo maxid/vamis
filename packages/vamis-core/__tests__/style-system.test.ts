@@ -110,6 +110,17 @@ describe('style ruler: styles.css', () => {
     expect(css).toContain('--muted-foreground: var(--text-secondary)')
   })
 
+  it('tree inline editing keeps the focus glow inside the 32px row', () => {
+    const itemInput = css.match(/\.vamis-tree__item-input\s*\{([^}]*)\}/)?.[1] ?? ''
+    const nativeInput = css.match(/\.vamis-tree__native\s*\{([^}]*)\}/)?.[1] ?? ''
+
+    expect(itemInput).toMatch(/padding-block:\s*var\(--gap-xs\)/)
+    expect(itemInput).toMatch(/box-sizing:\s*border-box/)
+    expect(nativeInput).toMatch(
+      /height:\s*calc\(var\(--tree-content-height\)\s*-\s*var\(--gap-xs\)\s*\*\s*2\)/,
+    )
+  })
+
   it('hex tokens stay a short, named list', () => {
     // 色阶之外的 Amis 字面量（存量，只许减）。新增色先找 --colors-* 色阶。
     const hexTokens = css.match(/^[ \t]*--[\w-]+:\s*#[0-9a-fA-F]{3,8};/gm) ?? []

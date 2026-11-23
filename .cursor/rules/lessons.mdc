@@ -1001,6 +1001,12 @@ alwaysApply: true
 - 触及：`input-tree` `tree-select` Options
 - 规则：Amis `Tree.tsx` `flattenOptions` / `renderList` / `handleVirtualHeight`；`packages/vamis/src/renderers/form/TreeBranch.vue`；`packages/vamis/src/renderers/form/useTreeField.ts`
 
+### 树内联编辑的 focus glow 要算进固定行高
+- 踩过：InputTree 编辑 / 新增输入框直接使用 32px 控件高，塞进 32px 的 Tree 行；3px focus glow 没有垂直余量，会压住图标和下一节点。树虚拟列表又依赖固定行高，不能只靠编辑行临时撑高。
+- 稳定做法：输入框留在 32px 行内，控件高取 `--tree-content-height - --gap-xs * 2`（当前 24px），wrapper 上下各留 `--gap-xs` 4px、`box-sizing:border-box`；3px glow 仍保留在预留区内，行高不随编辑态变化。CSS 标尺测试锁 wrapper padding / input 高度公式。
+- 触及：`input-tree` `tree-select` `select`
+- 规则：`packages/vamis-ui/src/styles.css` `.vamis-tree__item-input` / `.vamis-tree__native`；`packages/vamis-core/__tests__/style-system.test.ts`
+
 ### TreeSelect 的事件、根节点和长度限制按 Amis 运行时，不按文档猜
 - 踩过：文档写 `reset` 优先 `resetValue`，但 Amis 源码实际是 pristine 优先，`clear` 才使用 `resetValue`；只按文档改会破坏水标。`itemClick` 必须在展开/选择前派发，`staticItemClick` 不能只渲染 words 文本而丢掉原始 option。
 - 稳定做法：`itemClick` 由共享 TreeBranch 在节点行为前发出；静态选择器把 `staticItems` 和原始 `onEvent` 带进 words schema，由 Words 按索引派发。`minLength` / `maxLength` 按分隔后的选中项数量校验，达到上限禁用未选项，达到下限禁用已选项，并使用 Amis Tree 专用文案。`hideRoot: false` 渲染根行，点击写 `joinValues ? rootValue : []`；空树使用 TreeSelect 的 `optionsPlaceholder` / InputTree 的 `placeholder`。`reset` 继续 pristine 优先，`clear` 使用 `resetValue`。
