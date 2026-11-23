@@ -1049,6 +1049,12 @@ alwaysApply: true
 - 触及：`transfer` `picker` `tabs-transfer`
 - 规则：Amis `Form/Transfer.tsx` `handleChange` / `onSelectAll` / `doAction`；`packages/vamis/src/renderers/form/Transfer.vue`
 
+### Transfer 的 chained / associated 复用 Select pane，selectMode 才是水标字段
+- 踩过：Transfer 只认 `mode`，Amis 文档与 schema 主字段却是 `selectMode`；另写两套级联 / 关联 DOM 会导致路径、ref 分支、checkbox 间距和 source 信封继续分叉。
+- 稳定做法：`mode = schema.selectMode || schema.mode || 'list'`。chained 直接挂 `SelectChainedPane`，associated 直接挂 `SelectAssociatedPane`；父层只接 `pick` / `toggle` / `toggle-all` / `update:nodes`，值仍走 `commitSelected`。Transfer pane schema 强制 `multiple: true`。associated source 信封从 `options[0].leftOptions / leftDefaultValue / children` 解包，左栏 ref 只决定右栏，叶子才写值。chained / associated 用等宽 paired 布局，隐藏中间移动列；全选 / 清空放标题行，否则旧按钮列会把选择 pane 和结果面各压窄一半。不要给 chained / associated 复制第三套选择状态。
+- 触及：`transfer` `select` `chained` `associated`
+- 规则：Amis `Transfer.tsx` `selectMode` / `leftOptions` / `leftMode` / `rightMode`；`packages/vamis/src/renderers/form/Transfer.vue`；`packages/vamis/src/renderers/form/select/SelectChainedPane.vue`；`packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue`
+
 ### InputTree 的事件/动作和展开字段按源码，不按文档目录名猜
 - 踩过：只做树 UI 不派发 `change`，setValue/clear/reset/search/expand/collapse 等 scoped 动作不可用；`collapsed` / `unfolded` 字段被默认展开覆盖；`heightAuto`、treeClassName、highlightTxt 只写在文档属性表。Amis 6.13 文档虽列 `toolbar`，InputTree 源码未消费；`draggable` 也未透传。
 - 稳定做法：`change` 在写值前派发，payload 含 value / item / items / selectedItems / name，支持 preventDefault；节点点击、根节点、删除已选节点和 scoped 动作都走同一 commit。InputTree 注册 expand/collapse/add/edit/delete/reload/clear/reset/setValue/search；expand 用 openLevel，collapse 用 closeLevel。展开 seed 先认节点 `unfolded`，再认 `collapsed`，最后才走 initiallyOpen / unfoldedLevel。className、heightAuto、highlightTxt 落 DOM；heightAuto 禁用树窗口滚动。文档-only 的 toolbar / draggable / itemHeight 不计运行缺口。

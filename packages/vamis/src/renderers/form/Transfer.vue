@@ -4,6 +4,7 @@ import { Button, VamisCaret } from '@vamis/ui'
 import {
   createVamisEvent,
   eventEvalData,
+  filterOptionTree,
   isApiOutdated,
   isEffectiveApi,
   requestApi,
@@ -19,6 +20,8 @@ import {
 } from '@vamis/core'
 import { useFieldValue } from '../../formContext'
 import FormItem from '../FormItem.vue'
+import SelectAssociatedPane from './select/SelectAssociatedPane.vue'
+import SelectChainedPane from './select/SelectChainedPane.vue'
 import {
   dumpJoined,
   flattenOptions,
@@ -38,8 +41,31 @@ const overlay = useOverlay()
 const formApi = useFormApi()
 const remoteOptions = ref<unknown[] | null>(null)
 const pristine = ref<unknown>(undefined)
-const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
-const options = computed(() => flattenOptions(rawOptions.value))
+const optionNodesOverride = ref<OptionItem[] | null>(null)
+const associatedNodesOverride = ref<OptionItem[] | null>(null)
+const mode = computed(() => String(props.schema.selectMode || props.schema.mode || 'list'))
+const rawOptions = computed(() =>
+  normalizeOptions(optionNodesOverride.value ?? remoteOptions.value ?? props.schema.options),
+)
+const associatedEnvelope = computed(() => {
+  const first = rawOptions.value[0] as (OptionItem & {
+    leftOptions?: unknown
+    leftDefaultValue?: unknown
+  }) | undefined
+  if (mode.value !== 'associated' || !Array.isArray(first?.leftOptions)) return null
+  return {
+    leftOptions: normalizeOptions(first.leftOptions),
+    leftDefaultValue: first.leftDefaultValue,
+    nodes: Array.isArray(first.children) ? normalizeOptions(first.children) : [],
+  }
+})
+const associatedNodes = computed(
+  () => associatedNodesOverride.value ?? associatedEnvelope.value?.nodes ?? rawOptions.value,
+)
+const displayRawOptions = computed(() =>
+  mode.value === 'associated' ? associatedNodes.value : rawOptions.value,
+)
+const options = computed(() => flattenOptions(displayRawOptions.value))
 type TreeRow = { key: string; label: string; value?: unknown; depth: number; children: TreeRow[] }
 const expandedTree = ref<Set<string>>(new Set())
 
@@ -51,7 +77,7 @@ function buildTree(nodes: any[], depth = 0, prefix = ''): TreeRow[] {
   })
 }
 
-const treeRows = computed(() => buildTree(rawOptions.value as any[]))
+const treeRows = computed(() => buildTree(displayRawOptions.value as any[]))
 function treeExpandable(node: TreeRow) { return node.children.length > 0 }
 function treeIsExpanded(node: TreeRow) { return expandedTree.value.has(node.key) }
 function toggleTree(node: TreeRow) {
@@ -89,11 +115,11 @@ const treeShown = computed(() => flattenTreeRows(treeVisible(treeRows.value)))
 const name = computed(() => String(props.schema.name || ''))
 const joinValues = computed(() => props.schema.joinValues !== false)
 const delimiter = computed(() => String(props.schema.delimiter ?? ','))
+const pairedMode = computed(() => mode.value === 'chained' || mode.value === 'associated')
 function currentValue() {
   return name.value ? fieldApi.getValue(name.value) : props.schema.value
 }
 const selected = computed(() => parseJoined(currentValue(), true, joinValues.value, delimiter.value))
-const mode = computed(() => String(props.schema.mode || 'list'))
 const searchable = computed(() => props.schema.searchable === true)
 const VIRTUAL_ITEM_HEIGHT = 38
 const TREE_ITEM_HEIGHT = 32
@@ -123,6 +149,33 @@ const leftTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const rightTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTreeViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftQuery = ref('')
+const associatedLeftValue = ref<unknown>(undefined)
+const associatedLeftOptions = computed(() =>
+  associatedEnvelope.value
+    ? associatedEnvelope.value.leftOptions
+    : normalizeOptions(props.schema.leftOptions),
+)
+const associatedLeftDefaultValue = computed(() =>
+  associatedEnvelope.value
+    ? associatedEnvelope.value.leftDefaultValue
+    : props.schema.leftDefaultValue,
+)
+const paneSchema = computed<SchemaObject>(() => ({
+  ...props.schema,
+  selectMode: mode.value,
+  multiple: true,
+  checkAll: props.schema.checkAll !== false,
+}))
+const filteredAssociatedLeftOptions = computed(() =>
+  leftQuery.value
+    ? filterOptionTree(associatedLeftOptions.value, leftQuery.value)
+    : associatedLeftOptions.value,
+)
+const filteredChainedNodes = computed(() =>
+  leftQuery.value
+    ? filterOptionTree(displayRawOptions.value, leftQuery.value)
+    : displayRawOptions.value,
+)
 function treeDepth(item: { label?: unknown }) {
   if (mode.value !== 'tree') return 0
   return Math.max(0, String(item.label || '').split(' / ').length - 1)
@@ -323,6 +376,27 @@ function clear() {
   void commitSelected([])
 }
 
+function replacePaneSelection(values: unknown[]) {
+  void commitSelected(values)
+}
+
+function addPaneItems(items?: OptionItem[]) {
+  const candidates = items?.length ? flattenOptions(items) : options.value
+  const next = [...selected.value]
+  for (const item of candidates) {
+    if (item.value == null) continue
+    if (!next.some((value) => optionValuesEqual(value, item.value))) {
+      next.push(item.value)
+    }
+  }
+  void commitSelected(next)
+}
+
+function replaceOptionNodes(nodes: OptionItem[]) {
+  if (mode.value === 'associated') associatedNodesOverride.value = nodes
+  else optionNodesOverride.value = nodes
+}
+
 async function addAll(emitSelectAll = true) {
   const values = options.value.map((item) => item.value)
   if (
@@ -345,7 +419,12 @@ async function loadSource() {
   if (!source) return
   if (typeof source === 'string' && source.trim().startsWith('$')) {
     const resolved = resolveValue(source, data.value)
-    if (Array.isArray(resolved)) remoteOptions.value = resolved
+    if (Array.isArray(resolved)) {
+      remoteOptions.value = resolved
+      optionNodesOverride.value = null
+      associatedNodesOverride.value = null
+      associatedLeftValue.value = undefined
+    }
     return
   }
   if (!isEffectiveApi(source, data.value)) return
@@ -354,7 +433,12 @@ async function loadSource() {
     if (result.skipped || !result.ok) return
     const payload = result.data || {}
     const list = Array.isArray(payload) ? payload : payload.options ?? payload.items ?? payload.records ?? payload
-    if (Array.isArray(list)) remoteOptions.value = list
+    if (Array.isArray(list)) {
+      remoteOptions.value = list
+      optionNodesOverride.value = null
+      associatedNodesOverride.value = null
+      associatedLeftValue.value = undefined
+    }
   } catch {
     /* 保留空选项 */
   }
@@ -480,8 +564,56 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div class="vamis-transfer grid gap-2 sm:grid-cols-[1fr_auto_1fr]">
+    <div
+      class="vamis-transfer grid gap-2 sm:grid-cols-[1fr_auto_1fr]"
+      :class="{ 'vamis-transfer--paired': pairedMode }"
+    >
       <div class="space-y-1">
+        <template v-if="mode === 'associated'">
+          <div class="vamis-transfer__pane-title">
+            <span>{{ leftTitle || '可选' }}</span>
+            <button
+              v-if="schema.checkAll !== false"
+              type="button"
+              class="vamis-transfer__pane-action"
+              @click="addAll()"
+            >
+              全选
+            </button>
+          </div>
+          <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+          <SelectAssociatedPane
+            :schema="paneSchema"
+            :left-options="filteredAssociatedLeftOptions"
+            :nodes="associatedNodes"
+            :selected-values="selected"
+            :left-default-value="associatedLeftDefaultValue"
+            :option-class-name="schema.optionClassName ? String(schema.optionClassName) : undefined"
+            :loading-config="schema.loadingConfig"
+            :disabled="disabled"
+            v-model:left-value="associatedLeftValue"
+            @pick="add($event.value)"
+            @toggle="replacePaneSelection"
+            @toggle-all="addPaneItems"
+            @update:nodes="replaceOptionNodes"
+          />
+        </template>
+        <template v-else-if="mode === 'chained'">
+          <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
+          <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+          <SelectChainedPane
+            :schema="paneSchema"
+            :nodes="filteredChainedNodes"
+            :selected-values="selected"
+            :option-class-name="schema.optionClassName ? String(schema.optionClassName) : undefined"
+            :loading-config="schema.loadingConfig"
+            :disabled="disabled"
+            @pick="add($event.value)"
+            @toggle-all="addPaneItems()"
+            @update:nodes="replaceOptionNodes"
+          />
+        </template>
+        <template v-else>
         <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
         <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
         <ul
@@ -594,13 +726,18 @@ watch(
         />
         <li v-if="!leftShown.length" class="vamis-transfer__empty px-2 py-4">无候选</li>
         </ul>
+        </template>
       </div>
-      <div class="flex flex-col justify-center gap-1">
+      <div v-if="!pairedMode" class="flex flex-col justify-center gap-1">
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="addAll()">全部 &gt;</Button>
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="clear">&lt; 清空</Button>
       </div>
       <div class="space-y-1">
-        <p v-if="rightTitle" class="vamis-transfer__title">{{ rightTitle }}</p>
+        <div v-if="pairedMode" class="vamis-transfer__pane-title">
+          <span>{{ rightTitle || '已选' }}</span>
+          <button type="button" class="vamis-transfer__pane-action" @click="clear">清空</button>
+        </div>
+        <p v-else-if="rightTitle" class="vamis-transfer__title">{{ rightTitle }}</p>
         <input v-if="searchable" v-model="rightQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
         <div
           v-if="mode === 'table'"

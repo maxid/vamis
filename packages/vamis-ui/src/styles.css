@@ -10928,6 +10928,28 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--text-secondary);
 }
+.vamis-transfer__pane-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--control-h);
+  padding: 0 var(--gap-sm);
+  font-size: var(--fontSizeSm);
+  line-height: var(--lineHeightBase);
+  color: var(--text-secondary);
+  background: var(--fill-10);
+}
+.vamis-transfer__pane-action {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--link-color);
+  font: inherit;
+  cursor: pointer;
+}
+.vamis-transfer__pane-action:hover {
+  color: var(--primary);
+}
 .vamis-transfer__search,
 .vamis-transfer__list,
 .vamis-transfer__table,
@@ -10955,6 +10977,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: flex;
   align-items: center;
   box-sizing: border-box;
+}
+@media (min-width: 640px) {
+  .vamis-transfer--paired {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 .vamis-transfer__virtual-pad {
   padding: 0;

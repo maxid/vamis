@@ -1,0 +1,257 @@
+import { nextTick } from 'vue'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { embed } from '../src/embed'
+import 'vamis'
+
+const mounts: Array<ReturnType<typeof embed>> = []
+
+afterEach(() => {
+  while (mounts.length) mounts.pop()?.unmount()
+  document.body.innerHTML = ''
+})
+
+function mount(schema: unknown) {
+  const host = document.createElement('div')
+  document.body.appendChild(host)
+  const scoped = embed(host, schema)
+  mounts.push(scoped)
+  return { host, scoped }
+}
+
+function formData(scoped: ReturnType<typeof embed>, name: string) {
+  const form = scoped.getComponentByName(name) as {
+    getData?: () => Record<string, unknown>
+  }
+  return form?.getData?.() || {}
+}
+
+function click(element: Element | null) {
+  if (!(element instanceof HTMLElement)) throw new Error('element not found')
+  element.click()
+}
+
+describe('Transfer selectMode', () => {
+  it('renders chained mode and writes only the selected leaf', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferChainedForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transfer',
+        selectMode: 'chained',
+        options: [
+          {
+            label: 'A',
+            children: [
+              { label: 'A1', value: 'a1' },
+              { label: 'A2', value: 'a2' },
+            ],
+          },
+          {
+            label: 'B',
+            children: [{ label: 'B1', value: 'b1' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-select__chained')).toBeTruthy()
+    expect(host.querySelector('.vamis-select__chained-checkall')).toBeTruthy()
+    const columns = host.querySelectorAll('.vamis-select__chained-col')
+    const secondColumn = [...columns][1] as HTMLElement
+    expect(secondColumn?.textContent).toContain('A1')
+
+    click(
+      [...columns[0].querySelectorAll('.vamis-select__chained-item')].find(
+        (item) => (item.textContent || '').trim() === 'B',
+      ) || null,
+    )
+    await vi.waitFor(() => expect(secondColumn.textContent).toContain('B1'))
+    click(
+      [...secondColumn.querySelectorAll('.vamis-select__chained-item')].find(
+        (item) => (item.textContent || '').trim() === 'B1',
+      ) || null,
+    )
+
+    await vi.waitFor(() => expect(formData(scoped, 'transferChainedForm').transfer).toBe('b1'))
+  })
+
+  it('renders associated mode and writes only the selected right-side leaf', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferAssociatedForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transfer',
+        selectMode: 'associated',
+        leftOptions: [
+          { label: 'Dept A', value: 'dept-a' },
+          { label: 'Dept B', value: 'dept-b' },
+        ],
+        options: [
+          {
+            ref: 'dept-a',
+            children: [
+              { label: 'A1', value: 'a1' },
+              { label: 'A2', value: 'a2' },
+            ],
+          },
+          {
+            ref: 'dept-b',
+            children: [{ label: 'B1', value: 'b1' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-select__associated')).toBeTruthy()
+    click(
+      [...host.querySelectorAll('.vamis-select__associated-left-item')].find(
+        (item) => (item.textContent || '').trim() === 'Dept B',
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-select__associated-right')?.textContent).toContain('B1'),
+    )
+    click(
+      [...host.querySelectorAll('.vamis-select__associated-right-item')].find(
+        (item) => (item.textContent || '').trim() === 'B1',
+      ) || null,
+    )
+
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferAssociatedForm').transfer).toBe('b1'),
+    )
+  })
+
+  it('extracts source-shaped associated left options and default value', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferAssociatedSourceForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transfer',
+        selectMode: 'associated',
+        options: [
+          {
+            leftOptions: [
+              { label: 'Dept A', value: 'dept-a' },
+              { label: 'Dept B', value: 'dept-b' },
+            ],
+            leftDefaultValue: 'dept-a',
+            children: [
+              {
+                ref: 'dept-a',
+                children: [{ label: 'A1', value: 'a1' }],
+              },
+              {
+                ref: 'dept-b',
+                children: [{ label: 'B1', value: 'b1' }],
+              },
+            ],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-select__associated-left')?.textContent).toContain('Dept A')
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-select__associated-right')?.textContent).toContain('A1'),
+    )
+    click(
+      [...host.querySelectorAll('.vamis-select__associated-left-item')].find(
+        (item) => (item.textContent || '').trim() === 'Dept B',
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-select__associated-right')?.textContent).toContain('B1'),
+    )
+    click(
+      [...host.querySelectorAll('.vamis-select__associated-right-item')][0] as HTMLElement,
+    )
+
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferAssociatedSourceForm').transfer).toBe('b1'),
+    )
+  })
+
+  it('gives associated mode the Amis paired-pane layout', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferAssociatedLayoutForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferAssociatedLayout',
+        selectMode: 'associated',
+        leftOptions: [
+          { label: 'Dept A', value: 'dept-a' },
+          { label: 'Dept B', value: 'dept-b' },
+        ],
+        options: [
+          {
+            ref: 'dept-a',
+            children: [{ label: 'A1', value: 'a1' }],
+          },
+          {
+            ref: 'dept-b',
+            children: [{ label: 'B1', value: 'b1' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-transfer')?.classList.contains('vamis-transfer--paired')).toBe(
+      true,
+    )
+    expect(
+      [...host.querySelectorAll('button')].some(
+        (button) => (button.textContent || '').trim() === '全部 >',
+      ),
+    ).toBe(false)
+    click(
+      [...host.querySelectorAll('button')].find(
+        (button) => (button.textContent || '').trim() === '全选',
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(
+        formData(scoped, 'transferAssociatedLayoutForm').transferAssociatedLayout,
+      ).toBe('a1,b1'),
+    )
+  })
+
+  it('hides the paired select-all action when checkAll is false', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferAssociatedNoCheckAll',
+        selectMode: 'associated',
+        checkAll: false,
+        leftOptions: [{ label: 'Dept A', value: 'dept-a' }],
+        options: [
+          {
+            ref: 'dept-a',
+            children: [{ label: 'A1', value: 'a1' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(
+      [...host.querySelectorAll('button')].some(
+        (button) => (button.textContent || '').trim() === '全选',
+      ),
+    ).toBe(false)
+  })
+})

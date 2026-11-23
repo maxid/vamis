@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 78% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`，三种模式均已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。仍缺 chained / associated、分页、排序、拖拽和移动端专用布局。
+::: warning 实现进度 86% · 进行中
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。仍缺分页、排序、拖拽和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -40,7 +40,7 @@ body:
 
 ## 展示模式
 
-`mode` 支持 `list`（默认）/ `table` / `tree`；`tree` 按 `children` 渲染可展开/折叠的层级（父节点仅展开、不参与选择），`chained` 未接。
+`selectMode`（兼容 `mode`）支持 `list`（默认）/ `table` / `tree` / `chained` / `associated`。`tree` 按 `children` 渲染可展开/折叠的层级（父节点仅展开、不参与选择）。
 
 ```yaml
 type: transfer
@@ -103,6 +103,74 @@ options:
     children:
       - label: Node
         value: node
+```
+
+## 级联选择
+
+`selectMode: chained` 使用共享的级联选择 pane：父节点只展开下一列，叶子才写入值，多选和全选只作用于叶子：
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": {
+    "type": "transfer",
+    "name": "transferChained",
+    "label": "级联选择",
+    "selectMode": "chained",
+    "options": [
+      {
+        "label": "前端",
+        "children": [
+          { "label": "Vue", "value": "vue" },
+          { "label": "React", "value": "react" }
+        ]
+      },
+      {
+        "label": "后端",
+        "children": [
+          { "label": "Node", "value": "node" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## 关联选择
+
+`selectMode: associated` 左侧选择关联键，右侧列表从 `options[].ref` 对应的 `children` 派生；右栏也支持 `list` / `table` / `tree` / `chained`：
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": {
+    "type": "transfer",
+    "name": "transferAssociated",
+    "label": "关联选择",
+    "selectMode": "associated",
+    "leftOptions": [
+      { "label": "前端", "value": "frontend" },
+      { "label": "后端", "value": "backend" }
+    ],
+    "options": [
+      {
+        "ref": "frontend",
+        "children": [
+          { "label": "Vue", "value": "vue" },
+          { "label": "React", "value": "react" }
+        ]
+      },
+      {
+        "ref": "backend",
+        "children": [
+          { "label": "Node", "value": "node" }
+        ]
+      }
+    ]
+  }
+}
 ```
 
 ## 远程选项
@@ -247,7 +315,11 @@ valueField: value
 | `searchable` | `boolean` | `false` | 左右搜索框 |
 | `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
 | `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
-| `mode` | `string` | `list` | `list` / `table` / `tree`（扁平缩进）；chained 未接 |
+| `selectMode` | `string` | `list` | `list` / `table` / `tree` / `chained` / `associated` |
+| `mode` | `string` | `list` | `selectMode` 的兼容别名；两者同时配置时 `selectMode` 优先 |
+| `leftOptions` | `Option[]` | | `associated` 左栏选项 |
+| `leftDefaultValue` | | | `associated` 左栏默认选项值 |
+| `leftMode` / `rightMode` | `string` | `list` | `associated` 左栏 list/tree，右栏 list/table/tree/chained |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 事件表
@@ -539,7 +611,9 @@ valueField: value
 ```
 
 ## 和 Amis 文档的差异
-- 与 Amis 一致：静态 options / 远程 source、list / table / tree、左右移动、全部 / 清空、joinValues / delimiter、左右搜索、标题。
+- 与 Amis 一致：静态 options / 远程 source、list / table / tree / chained / associated、左右移动、全部 / 清空、joinValues / delimiter、左右搜索、标题。
 - 已接：list / table / tree 的 `virtualThreshold` 窗口、实测视口与上下 spacer；list / table 使用 `itemHeight`，tree 按 Amis Tree 固定 32px 行高，不消费 Transfer 的 `itemHeight`。
 - 已接：`change` / `selectAll` 事件，`clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 动作；`change` 在写值前派发并支持 `preventDefault`。
-- 未接：chained / associated、分页、排序、拖拽、移动端专用布局。
+- 已接：`chained` 与 `associated` 复用 Select 的级联 / 关联 pane，支持 `leftOptions`、`leftDefaultValue`、`leftMode`、`rightMode` 和 source 信封。
+- `chained` / `associated` 使用等宽选择面与结果面，全选 / 清空放在标题行，不占中间移动列。
+- 未接：分页、排序、拖拽、移动端专用布局。
