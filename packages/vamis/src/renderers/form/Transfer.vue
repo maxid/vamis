@@ -61,12 +61,17 @@ function treeVisible(nodes: TreeRow[]): TreeRow[] {
   }
   return out
 }
-function treeDisplay(node: TreeRow): boolean {
-  if (leftQuery.value.trim()) return true
-  if (node.depth === 0) return true
-  const parentKey = node.key.split('-').slice(0, -1).join('-')
-  return expandedTree.value.has(parentKey)
+function flattenTreeRows(nodes: TreeRow[]): TreeRow[] {
+  const out: TreeRow[] = []
+  for (const node of nodes) {
+    out.push(node)
+    if (leftQuery.value.trim() || expandedTree.value.has(node.key)) {
+      out.push(...flattenTreeRows(node.children))
+    }
+  }
+  return out
 }
+const treeShown = computed(() => flattenTreeRows(treeVisible(treeRows.value)))
 const selected = computed({
   get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
   set: (values: unknown[]) => props.schema.name && fieldApi.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
@@ -88,14 +93,17 @@ const leftListEl = ref<HTMLElement | null>(null)
 const rightListEl = ref<HTMLElement | null>(null)
 const leftTableEl = ref<HTMLElement | null>(null)
 const rightTableEl = ref<HTMLElement | null>(null)
+const leftTreeEl = ref<HTMLElement | null>(null)
 const leftScrollTop = ref(0)
 const rightScrollTop = ref(0)
 const leftTableScrollTop = ref(0)
 const rightTableScrollTop = ref(0)
+const leftTreeScrollTop = ref(0)
 const leftViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const rightViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const rightTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
+const leftTreeViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftQuery = ref('')
 function treeDepth(item: { label?: unknown }) {
   if (mode.value !== 'tree') return 0
@@ -114,11 +122,11 @@ const leftTitle = computed(() => String(props.schema.leftTitle || ''))
 const rightTitle = computed(() => String(props.schema.rightTitle || ''))
 const searchPlaceholder = computed(() => String(props.schema.searchPlaceholder || '搜索'))
 
-function virtualWindow(
-  rows: Array<{ label?: unknown; value?: unknown }>,
+function virtualWindow<T extends { label?: unknown; value?: unknown }>(
+  rows: T[],
   scrollTop: number,
   viewportHeight: number,
-  targetMode: 'list' | 'table',
+  targetMode: 'list' | 'table' | 'tree',
 ) {
   const enabled = mode.value === targetMode && rows.length > virtualThreshold.value
   if (!enabled) {
@@ -170,6 +178,14 @@ const rightTableWindow = computed(() =>
     'table',
   ),
 )
+const leftTreeWindow = computed(() =>
+  virtualWindow(
+    treeShown.value,
+    leftTreeScrollTop.value,
+    leftTreeViewportHeight.value,
+    'tree',
+  ),
+)
 
 function onLeftScroll(event: Event) {
   const el = event.currentTarget as HTMLElement
@@ -195,6 +211,12 @@ function onRightTableScroll(event: Event) {
   if (el.clientHeight > 0) rightTableViewportHeight.value = el.clientHeight
 }
 
+function onLeftTreeScroll(event: Event) {
+  const el = event.currentTarget as HTMLElement
+  leftTreeScrollTop.value = el.scrollTop
+  if (el.clientHeight > 0) leftTreeViewportHeight.value = el.clientHeight
+}
+
 function measureVirtualViewports() {
   if (leftListEl.value?.clientHeight) {
     leftViewportHeight.value = leftListEl.value.clientHeight
@@ -207,6 +229,9 @@ function measureVirtualViewports() {
   }
   if (rightTableEl.value?.clientHeight) {
     rightTableViewportHeight.value = rightTableEl.value.clientHeight
+  }
+  if (leftTreeEl.value?.clientHeight) {
+    leftTreeViewportHeight.value = leftTreeEl.value.clientHeight
   }
 }
 
@@ -254,6 +279,7 @@ onMounted(() => {
       if (rightListEl.value) listResizeObserver.observe(rightListEl.value)
       if (leftTableEl.value) listResizeObserver.observe(leftTableEl.value)
       if (rightTableEl.value) listResizeObserver.observe(rightTableEl.value)
+      if (leftTreeEl.value) listResizeObserver.observe(leftTreeEl.value)
     }
   })
 })
@@ -274,6 +300,7 @@ watch(
     const right = rightListEl.value
     const leftTable = leftTableEl.value
     const rightTable = rightTableEl.value
+    const leftTree = leftTreeEl.value
     if (!leftWindow.value.enabled || nextMode !== prevMode || nextLeftLength < prevLeftLength) {
       leftScrollTop.value = 0
       if (left) left.scrollTop = 0
@@ -298,6 +325,14 @@ watch(
       rightTableScrollTop.value = 0
       if (rightTable) rightTable.scrollTop = 0
     }
+    if (
+      !leftTreeWindow.value.enabled ||
+      nextMode !== prevMode ||
+      nextLeftLength < prevLeftLength
+    ) {
+      leftTreeScrollTop.value = 0
+      if (leftTree) leftTree.scrollTop = 0
+    }
     measureVirtualViewports()
   },
 )
@@ -309,12 +344,27 @@ watch(
       <div class="space-y-1">
         <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
         <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
-        <ul v-if="mode === 'tree'" class="vamis-transfer__list max-h-48 overflow-auto rounded-md border p-2">
-          <li v-for="node in treeVisible(treeRows)" v-show="treeDisplay(node)" :key="node.key">
+        <ul
+          v-if="mode === 'tree'"
+          ref="leftTreeEl"
+          class="vamis-transfer__list rounded-md border p-2"
+          :class="{ 'is-virtual': leftTreeWindow.enabled }"
+          @scroll="onLeftTreeScroll"
+        >
+          <li
+            v-if="leftTreeWindow.lead > 0"
+            class="vamis-transfer__virtual-pad"
+            :style="{ height: `${leftTreeWindow.lead}px` }"
+            aria-hidden="true"
+          />
+          <li v-for="node in leftTreeWindow.rows" :key="node.key">
             <button
               type="button"
               class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
-              :style="{ paddingLeft: `${8 + node.depth * 12}px` }"
+              :style="{
+                paddingLeft: `${8 + node.depth * 12}px`,
+                height: leftTreeWindow.enabled ? `${virtualItemHeight}px` : undefined,
+              }"
               :disabled="disabled"
               @click="treeOnClick(node)"
             >
@@ -322,6 +372,12 @@ watch(
               {{ node.label }}
             </button>
           </li>
+          <li
+            v-if="leftTreeWindow.trail > 0"
+            class="vamis-transfer__virtual-pad"
+            :style="{ height: `${leftTreeWindow.trail}px` }"
+            aria-hidden="true"
+          />
         </ul>
         <div
           v-else-if="mode === 'table'"
