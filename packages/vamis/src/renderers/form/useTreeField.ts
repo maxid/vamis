@@ -445,6 +445,59 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     commitOptions(updateOptionInTree(options.value, item, { ...patch, ...saved.data }, valueField.value))
   }
 
+  async function addOptionFromAction(raw: unknown, parentValue?: unknown): Promise<boolean> {
+    const item = optionsOptionFromDialog(raw as PlainObject, schema.value)
+    if (!(await emitOptionEvent('addConfirm', item))) return false
+    const saved = await persistOptionMutation({
+      api: schema.value.addApi,
+      method: 'post',
+      env,
+      data: item,
+      payload: { ...data.value, ...item },
+      failureMessage: '新增选项失败',
+    })
+    if (!saved.ok) return false
+    const parent =
+      parentValue === undefined
+        ? null
+        : findOption(options.value, parentValue, valueField.value) || null
+    if (parent) expandItem(parent)
+    commitOptions(
+      insertOptionInTree(
+        options.value,
+        parent,
+        { ...item, ...saved.data },
+        valueField.value,
+      ),
+    )
+    return true
+  }
+
+  async function editOptionFromAction(raw: unknown, originValue: unknown): Promise<boolean> {
+    const origin = findOption(options.value, originValue, valueField.value)
+    if (!origin) return false
+    const item = optionsOptionFromDialog({ ...origin, ...(raw as PlainObject) }, schema.value)
+    if (!(await emitOptionEvent('editConfirm', item))) return false
+    const saved = await persistOptionMutation({
+      api: schema.value.editApi,
+      method: 'post',
+      env,
+      data: item,
+      payload: { ...data.value, ...item },
+      failureMessage: '编辑选项失败',
+    })
+    if (!saved.ok) return false
+    commitOptions(
+      updateOptionInTree(
+        options.value,
+        origin,
+        { ...item, ...saved.data },
+        valueField.value,
+      ),
+    )
+    return true
+  }
+
   function startAdd(parent: OptionItem | null = null) {
     if (disabled?.value) return
     if (!builtinCUD()) {
@@ -472,15 +525,15 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     draftLabel.value = item.label
   }
 
-  async function removeItem(item: OptionItem) {
-    if (disabled?.value || item.disabled) return
+  async function removeItem(item: OptionItem): Promise<boolean> {
+    if (disabled?.value || item.disabled) return false
     const confirmText =
       schema.value.deleteConfirmText != null ? String(schema.value.deleteConfirmText) : ''
     if (confirmText) {
       const ok = await env.confirm(filterTpl(confirmText, { ...data.value, ...item }))
-      if (!ok) return
+      if (!ok) return false
     }
-    if (!(await emitOptionEvent('deleteConfirm', item))) return
+    if (!(await emitOptionEvent('deleteConfirm', item))) return false
     const saved = await persistOptionMutation({
       api: schema.value.deleteApi,
       method: 'delete',
@@ -489,11 +542,17 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
       payload: { ...data.value, ...item },
       failureMessage: '删除选项失败',
     })
-    if (!saved.ok) return
+    if (!saved.ok) return false
     const nextSelected = selected.value.filter((value) => !optionValuesEqual(value, item.value))
     commitOptions(removeOptionFromTree(options.value, item, valueField.value))
     selected.value = nextSelected
     cancelEdit()
+    return true
+  }
+
+  async function deleteOptionFromAction(value: unknown): Promise<boolean> {
+    const item = findOption(options.value, value, valueField.value)
+    return item ? removeItem(item) : false
   }
 
   async function confirmEdit() {
@@ -573,6 +632,9 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     startAdd,
     startEdit,
     removeItem,
+    addOptionFromAction,
+    editOptionFromAction,
+    deleteOptionFromAction,
     confirmEdit,
     cancelEdit,
   }

@@ -4699,4 +4699,105 @@ describe('TreeSelect events and actions', () => {
     click(buttonWithText('刷新'))
     await vi.waitFor(() => expect(sourceLoads).toBe(2))
   })
+
+  it('runs TreeSelect add, edit and delete component actions', async () => {
+    const { host } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        actions: [],
+        body: [
+          {
+            type: 'tree-select',
+            id: 'cud-tree',
+            name: 'tree',
+            label: 'Tree',
+            options: [
+              {
+                label: 'A',
+                value: 'a',
+                children: [{ label: 'B', value: 'b' }],
+              },
+            ],
+          },
+          {
+            type: 'button',
+            label: '新增 C',
+            onEvent: {
+              click: {
+                actions: [
+                  {
+                    actionType: 'add',
+                    componentId: 'cud-tree',
+                    args: {
+                      parentValue: 'a',
+                      item: { label: 'C', value: 'c' },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            type: 'button',
+            label: '编辑 CC',
+            onEvent: {
+              click: {
+                actions: [
+                  {
+                    actionType: 'edit',
+                    componentId: 'cud-tree',
+                    args: {
+                      originValue: 'c',
+                      item: { label: 'CC', value: 'c' },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            type: 'button',
+            label: '删除 CC',
+            onEvent: {
+              click: {
+                actions: [
+                  {
+                    actionType: 'delete',
+                    componentId: 'cud-tree',
+                    args: { value: 'c' },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    const trigger = host.querySelector('.vamis-tree-select .vamis-select__input')
+    click(buttonWithText('新增 C'))
+    click(trigger)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    await vi.waitFor(() => expect(treeTexts()).toContain('C'))
+    click(trigger)
+
+    click(buttonWithText('编辑 CC'))
+    click(trigger)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    await vi.waitFor(() => expect(treeTexts()).toContain('CC'))
+    click(trigger)
+
+    click(buttonWithText('删除 CC'))
+    click(trigger)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    await vi.waitFor(() => expect(treeTexts()).not.toContain('CC'))
+  })
 })

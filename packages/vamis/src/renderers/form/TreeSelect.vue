@@ -235,13 +235,29 @@ const scopedApi = {
   async doAction(action: unknown) {
     const rec =
       action && typeof action === 'object' && !Array.isArray(action)
-        ? (action as { actionType?: string; value?: unknown; args?: { value?: unknown } })
+        ? (action as {
+            actionType?: string
+            value?: unknown
+            args?: {
+              item?: unknown
+              originValue?: unknown
+              parentValue?: unknown
+              value?: unknown
+            }
+          })
         : {}
     const type = String(rec.actionType || '')
     if (type === 'clear') await clearValue()
     else if (type === 'reset') await resetValue()
     else if (type === 'reload') await tree.reloadOptions()
     else if (type === 'setValue') await commitRaw(rec.args?.value ?? rec.value)
+    else if (type === 'add') {
+      await tree.addOptionFromAction(rec.args?.item, rec.args?.parentValue)
+    } else if (type === 'edit') {
+      await tree.editOptionFromAction(rec.args?.item, rec.args?.originValue)
+    } else if (type === 'delete') {
+      await tree.deleteOptionFromAction(rec.args?.value)
+    }
   },
 }
 

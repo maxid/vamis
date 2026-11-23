@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 6；测试 **1320**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 6；测试 **1321**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -251,7 +251,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
 | `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 80% | 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator` 已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。对照桌面 / 移动 **26/31**（P0 0）。仍缺虚拟列表、拖拽 | P0 |
-| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 85% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接；`change` / `focus` / `blur`、`clear` / `reset` / `reload` / `setValue` 已接。对照桌面 / 移动 **14/16**（P0 0）。仍缺虚拟列表与 `add/edit/delete` 组件动作 | P0 |
+| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 87% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接；`change` / `focus` / `blur`、`clear` / `reset` / `reload` / `setValue` / `add` / `edit` / `delete` 已接。对照桌面 / 移动 **14/16**（P0 0）。仍缺虚拟列表、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、`heightAuto` | P0 |
 | `input-year` | InputYear 年输入 | `/components/form/input-year` | `/zh-CN/components/form/input-year` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-year-range` | InputYearRange 年份范围 | `/components/form/input-year-range` | `/zh-CN/components/form/input-year-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `json-schema` | JsonSchema | `/components/form/json-schema` | `/zh-CN/components/form/json-schema` | 进行中 | 30% | **精简**：只渲染 string/number/boolean 属性 | P0 |
@@ -563,7 +563,7 @@ flowchart LR
 | 139 | `chart-radios` | `radios`、`chart` | 4 | 0 | 4 | 4 | P2 | 进行中 | 35% |
 | 140 | `input-tag` | `select`、`tag` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 141 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
-| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 进行中 | 85% |
+| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 进行中 | 87% |
 | 143 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
 | 144 | `list-select` | `select`、`list` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 145 | `input-kvs` | `input-kv`、`action` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |
@@ -641,6 +641,7 @@ flowchart LR
 - TreeSelect searchable / 浮层盒模型（2026-11-22）：Amis TreeSelect 的检索输入属于 ResultBox 触发器，不在 Popover。Vamis 把输入移回触发器并即时过滤；Popup / Popover 不再重复 SearchBox。根宽度 resize 与 Select 同规则，Overlay gap 4；外层 Popover 透明，内层 Tree 对齐 `1px` 边框、`4px 10px` padding、`-1px` 上移和 `400px` 最大高度。TreeSelect 保持 80%，对照 **14/16**（P0 0）；测试 **1315**、`typecheck` 0。
 - TreeSelect 搜索选项 / 自定义节点（2026-11-22）：`source` 初始化树，`autoComplete` 按 `term` 远程替换并恢复 source；URL 内 `$term` 按 Amis tokenize 插值。共享 TreeBranch 支持 `menuTpl` 与 `iconField`，自定义图标走 `resolveIcon`。TreeSelect 80→82，搜索选项与自定义选项渲染示例浏览器核过；测试 **1318**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。
 - TreeSelect 事件与动作（2026-11-23）：`focus → change → blur` 顺序、change preventDefault、pristine reset、reload source 与 setValue 已接；TreeSelect 82→85。测试 **1320**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。余 `add/edit/delete` 组件动作与虚拟列表。
+- TreeSelect CUD 动作（2026-11-23）：`add/edit/delete` 复用 `*Confirm`、CUD API 和树更新，支持 parentValue / originValue 定位。TreeSelect 85→87；测试 **1321**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。余虚拟列表、nodeBehavior、标签溢出与 heightAuto。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 
