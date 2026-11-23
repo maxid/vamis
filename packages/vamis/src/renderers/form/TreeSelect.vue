@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import {
+  createVamisEvent,
+  eventEvalData,
+  findOption,
   overlayContainerFrom,
   overlayIsMobile,
+  optionsResetValue,
   POPUP_DEFAULT_HEIGHT,
+  runOnEvent,
   treeNodeLabel,
+  useData,
   useEnv,
+  useFormApi,
+  useOverlay,
+  useScope,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import { VamisCaret, VamisClear, VamisClose } from '@vamis/ui'
@@ -15,9 +25,16 @@ import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
 import { useTreeField } from './useTreeField'
 import { optionValuesEqual, type OptionItem } from '../../options'
+import { useFieldValue } from '../../formContext'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 const env = useEnv()
+const data = useData()
+const scoped = useScoped()
+const overlay = useOverlay()
+const formApi = useFormApi()
+const scope = useScope()
+const fieldApi = useFieldValue()
 const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
 const open = ref(false)
 const draft = ref<unknown[]>([])
@@ -25,6 +42,7 @@ const rootEl = ref<HTMLElement | null>(null)
 const triggerEl = ref<HTMLElement | null>(null)
 const searchInputEl = ref<HTMLInputElement | null>(null)
 const triggerWidth = ref(0)
+const pristine = ref<unknown>()
 const isMobile = computed(() => overlayIsMobile(props.schema, env))
 const overlayContainer = computed(() =>
   overlayContainerFrom({ popOverContainerSelector: props.schema.popOverContainerSelector }, env),
@@ -55,6 +73,61 @@ const popoverStyle = computed(() =>
   triggerWidth.value ? { minWidth: `${triggerWidth.value}px` } : undefined,
 )
 
+function currentValue(): unknown {
+  return props.schema.name ? fieldApi.getValue(String(props.schema.name)) : props.schema.value
+}
+
+function selectedItemsFrom(values: unknown[]): OptionItem[] {
+  return values
+    .map((value) => findOption(tree.options.value, value, tree.valueField.value))
+    .filter((item): item is OptionItem => !!item)
+}
+
+async function emitTreeEvent(
+  eventName: 'focus' | 'blur' | 'change',
+  value: unknown,
+  values: unknown[] = tree.selected.value,
+) {
+  const items = tree.options.value
+  const name = String(props.schema.name || '')
+  const payload = {
+    ...data.value,
+    value,
+    item: selectedItemsFrom(values)[0],
+    items,
+    options: items,
+    selectedItems: selectedItemsFrom(values),
+    ...(name ? { [name]: value } : {}),
+  }
+  const event = createVamisEvent(eventName, payload)
+  await runOnEvent(props.schema, eventName, {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    overlay,
+    form: formApi,
+    scope: scope.value,
+    event,
+  })
+  return event
+}
+
+async function commitSelected(values: unknown[]): Promise<boolean> {
+  const next = tree.serializeSelected(values)
+  const event = await emitTreeEvent('change', next, values)
+  if (event.prevented) return false
+  tree.writeSelected(values)
+  return true
+}
+
+async function commitRaw(value: unknown): Promise<boolean> {
+  const values = Array.isArray(value) ? value : value === '' || value == null ? [] : [value]
+  const event = await emitTreeEvent('change', value, values)
+  if (event.prevented) return false
+  if (props.schema.name) fieldApi.setValue(String(props.schema.name), value)
+  return true
+}
+
 function measureTrigger() {
   triggerWidth.value = rootEl.value?.offsetWidth ?? 0
 }
@@ -74,36 +147,36 @@ function closeMenu() {
   if (!tree.multiple.value || isMobile.value) tree.query.value = ''
 }
 
-function confirmMobile() {
-  tree.selected.value = [...draft.value]
+async function confirmMobile() {
+  if (!(await commitSelected([...draft.value]))) return
   tree.query.value = ''
   open.value = false
 }
 
-function onPick(item: OptionItem) {
+async function onPick(item: OptionItem) {
   const next = tree.applyToggle(item, workingValues.value)
   if (!next) return
   if (isMobile.value && open.value) {
     draft.value = next
     return
   }
-  tree.selected.value = next
+  if (!(await commitSelected(next))) return
   tree.query.value = ''
   if (!tree.multiple.value) open.value = false
 }
 
-function removeTag(item: { value: unknown }, event: Event) {
+async function removeTag(item: { value: unknown }, event: Event) {
   event.stopPropagation()
   if (locked.value) return
   const next = workingValues.value.filter((value) => !optionValuesEqual(value, item.value))
   if (isMobile.value && open.value) draft.value = next
-  else tree.selected.value = next
+  else await commitSelected(next)
 }
 
-function clearAll(event: Event) {
+async function clearAll(event: Event) {
   event.stopPropagation()
   if (locked.value) return
-  tree.selected.value = []
+  if (!(await commitRaw(optionsResetValue(props.schema)))) return
   draft.value = []
   tree.query.value = ''
 }
@@ -113,17 +186,68 @@ function onSearchInput(event: Event) {
   openMenu()
 }
 
+let wasOpen = false
 watch(open, (show) => {
-  if (!show) return
-  void nextTick(() => {
-    measureTrigger()
-    searchInputEl.value?.focus()
-  })
+  if (show) {
+    void nextTick(() => {
+      measureTrigger()
+      searchInputEl.value?.focus()
+    })
+    if (!wasOpen) void emitTreeEvent('focus', currentValue())
+  } else if (wasOpen) {
+    void emitTreeEvent('blur', currentValue())
+  }
+  wasOpen = show
 })
 
 let resizeObserver: ResizeObserver | undefined
 
+async function clearValue() {
+  await commitRaw(optionsResetValue(props.schema))
+}
+
+async function resetValue() {
+  const next =
+    pristine.value !== undefined
+      ? pristine.value
+      : props.schema.value !== undefined
+        ? props.schema.value
+        : optionsResetValue(props.schema)
+  await commitRaw(next)
+}
+
+const scopedApi = {
+  id: String(props.schema.id || props.schema.name || ''),
+  name: String(props.schema.name || props.schema.id || ''),
+  type: 'tree-select',
+  schema: props.schema,
+  reload: () => tree.reloadOptions(),
+  getData: () => ({ value: currentValue() }),
+  setData(values: Record<string, unknown>) {
+    const name = String(props.schema.name || '')
+    const next = Object.prototype.hasOwnProperty.call(values, 'value')
+      ? values.value
+      : name
+        ? values[name]
+        : undefined
+    if (name && next !== undefined) fieldApi.setValue(name, next)
+  },
+  async doAction(action: unknown) {
+    const rec =
+      action && typeof action === 'object' && !Array.isArray(action)
+        ? (action as { actionType?: string; value?: unknown; args?: { value?: unknown } })
+        : {}
+    const type = String(rec.actionType || '')
+    if (type === 'clear') await clearValue()
+    else if (type === 'reset') await resetValue()
+    else if (type === 'reload') await tree.reloadOptions()
+    else if (type === 'setValue') await commitRaw(rec.args?.value ?? rec.value)
+  },
+}
+
 onMounted(() => {
+  pristine.value = currentValue()
+  scoped?.register(scopedApi)
   if (typeof ResizeObserver !== 'undefined') {
     resizeObserver = new ResizeObserver(measureTrigger)
     if (rootEl.value) resizeObserver.observe(rootEl.value)
@@ -133,6 +257,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  scoped?.unregister(scopedApi)
   resizeObserver?.disconnect()
   if (typeof window !== 'undefined') window.removeEventListener('resize', measureTrigger)
 })

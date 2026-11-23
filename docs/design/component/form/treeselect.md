@@ -1,12 +1,12 @@
 # TreeSelect 树选择 · `treeselect` 设计
 
-> 状态：**进行中 82%** · 复杂度：**XL 特重**
+> 状态：**进行中 85%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/treeselect) · Amis：`/zh-CN/components/form/treeselect`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete` 与 `menuTpl` / `iconField` 已接，change 事件/scoped 动作/虚拟列表仍是缺口。
+TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、`change` / `focus` / `blur` 与基础组件动作已接，虚拟列表和 op-level `add/edit/delete` 动作仍是缺口。
 
 ## 1. 边界与优先级（先读）
 
@@ -46,7 +46,9 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 | `searchable` | 触发输入过滤；桌面自动聚焦，单选取值后显示结果文本 | 已接 |
 | `source` / `autoComplete` | 初始加载树；输入 `term` 后远程替换，清空恢复 source | 已接 |
 | `menuTpl` / `iconField` | 自定义节点内容与 Font Awesome / URL / SVG 图标 | 已接 |
-| change/动作 | 目标 | 未接（同 InputTree） |
+| change / focus / blur | 选值前派发 change，打开/关闭派发 focus/blur | 已接 |
+| clear / reset / reload / setValue | 组件级 scoped 动作 | 已接 |
+| add / edit / delete | 通过动作直接改树选项 | 未接 |
 
 ## 4. 架构
 
@@ -60,7 +62,7 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 6. 缺口
 
-change/scoped 动作、虚拟列表；与 InputTree 同步。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField 与深色浮层已对齐，不再是缺口。
+op-level `add/edit/delete` 动作、虚拟列表；与 InputTree 同步。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、基础事件与动作、深色浮层已对齐，不再是缺口。
 
 ## 7. 验收
 

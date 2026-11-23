@@ -4547,3 +4547,156 @@ describe('TreeSelect remote source and menuTpl', () => {
     await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe('order'))
   })
 })
+
+describe('TreeSelect events and actions', () => {
+  it('emits focus, change and blur in TreeSelect interaction order', async () => {
+    const notify = vi.fn()
+    const { host } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          actions: [],
+          data: { tree: 'a' },
+          body: {
+            type: 'tree-select',
+            name: 'tree',
+            label: 'Tree',
+            onEvent: {
+              focus: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'focus:${event.data.tree}' } },
+                ],
+              },
+              change: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'change:${event.data.tree}' } },
+                ],
+              },
+              blur: {
+                actions: [
+                  { actionType: 'toast', args: { msg: 'blur:${event.data.tree}' } },
+                ],
+              },
+            },
+            options: [
+              { label: 'A', value: 'a' },
+              { label: 'B', value: 'b' },
+            ],
+          },
+        },
+      },
+      { notify },
+    )
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('B')?.querySelector('.vamis-tree__content') || null)
+
+    await vi.waitFor(() =>
+      expect(notify.mock.calls.map((call) => call[1])).toEqual([
+        'focus:a',
+        'change:b',
+        'blur:b',
+      ]),
+    )
+  })
+
+  it('runs TreeSelect clear, reset, reload and setValue actions', async () => {
+    let sourceLoads = 0
+    const fetcher = vi.fn(async () => {
+      sourceLoads += 1
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options: [
+            { label: 'A', value: 'a' },
+            { label: 'B', value: 'b' },
+          ],
+        },
+      }
+    })
+    const { host, scoped } = mount(
+      {
+        type: 'page',
+        body: {
+          type: 'form',
+          name: 'treeActionForm',
+          actions: [],
+          body: [
+            {
+              type: 'tree-select',
+              id: 'action-tree',
+              name: 'tree',
+              label: 'Tree',
+              value: 'a',
+              source: '/api/tree-options',
+            },
+            {
+              type: 'button',
+              label: '设为 B',
+              onEvent: {
+                click: {
+                  actions: [
+                    {
+                      actionType: 'setValue',
+                      componentId: 'action-tree',
+                      args: { value: 'b' },
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '清空',
+              onEvent: {
+                click: {
+                  actions: [{ actionType: 'clear', componentId: 'action-tree' }],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '重置',
+              onEvent: {
+                click: {
+                  actions: [{ actionType: 'reset', componentId: 'action-tree' }],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '刷新',
+              onEvent: {
+                click: {
+                  actions: [{ actionType: 'reload', componentId: 'action-tree' }],
+                },
+              },
+            },
+          ],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const form = scoped.getComponentByName('treeActionForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(sourceLoads).toBe(1))
+
+    click(buttonWithText('设为 B'))
+    await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe('b'))
+    click(buttonWithText('清空'))
+    await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe(''))
+    click(buttonWithText('重置'))
+    await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe('a'))
+    click(buttonWithText('刷新'))
+    await vi.waitFor(() => expect(sourceLoads).toBe(2))
+  })
+})

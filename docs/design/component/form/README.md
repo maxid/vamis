@@ -67,7 +67,7 @@
 - [TabsTransfer 组合穿梭器](tabs-transfer.md) — `tabs-transfer` · L 重 · 40%
 - [TabsTransferPicker](tabs-transfer-picker.md) — `tabs-transfer-picker` · L 重 · 35%
 - [InputTree 树形选择框](input-tree.md) — `input-tree` · XL 特重 · 80%
-- [TreeSelect 树形选择器](treeselect.md) — `tree-select` · XL 特重 · 82%
+- [TreeSelect 树形选择器](treeselect.md) — `tree-select` · XL 特重 · 85%
 - [InputYear 年输入](input-year.md) — `input-year` · XL 特重 · 45%
 - [InputYearRange 年份范围](input-year-range.md) — `input-year-range` · M 中 · 45%
 - [JsonSchema](json-schema.md) — `json-schema` · L 重 · 30%

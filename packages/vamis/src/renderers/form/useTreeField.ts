@@ -131,6 +131,25 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     if (schema.value.autoComplete) return options.value
     return filterOptionTree(options.value, query.value)
   })
+  function serializeSelected(values: unknown[]) {
+    return dumpTreeValue(values, options.value, {
+      enableNodePath: enableNodePath.value,
+      multiple: multiple.value,
+      joinValues: joinValues.value,
+      extractValue: extractValue.value,
+      delimiter: delimiter.value,
+      labelField: labelField.value,
+      valueField: valueField.value,
+      pathSeparator: pathSeparator.value,
+      resetValue: optionsResetValue(schema.value),
+    })
+  }
+
+  function writeSelected(values: unknown[]) {
+    if (!schema.value.name) return
+    fieldApi.setValue(schema.value.name, serializeSelected(values))
+  }
+
   const nodePathInput = computed(() =>
     normalizeNodePath(
       currentValue(),
@@ -155,22 +174,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
         valueField: valueField.value,
       })
     },
-    set: (values: unknown[]) =>
-      schema.value.name &&
-      fieldApi.setValue(
-        schema.value.name,
-        dumpTreeValue(values, options.value, {
-          enableNodePath: enableNodePath.value,
-          multiple: multiple.value,
-          joinValues: joinValues.value,
-          extractValue: extractValue.value,
-          delimiter: delimiter.value,
-          labelField: labelField.value,
-          valueField: valueField.value,
-          pathSeparator: pathSeparator.value,
-          resetValue: optionsResetValue(schema.value),
-        }),
-      ),
+    set: writeSelected,
   })
 
   function currentValue() {
@@ -531,6 +535,9 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     options,
     filteredOptions,
     selected,
+    serializeSelected,
+    writeSelected,
+    reloadOptions: loadSourceOptions,
     multiple,
     showRadio,
     deferField,

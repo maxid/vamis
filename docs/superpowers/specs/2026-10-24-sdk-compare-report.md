@@ -1,6 +1,6 @@
 # SDK 对照报告
 
-- 日期：2026-11-22
+- 日期：2026-11-23
 - 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
 - 合计 **16** · 通过 **14** · 失败 **2**（P0 0）· Vamis 多出 extra **0**
