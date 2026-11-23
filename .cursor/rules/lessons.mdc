@@ -1037,6 +1037,12 @@ alwaysApply: true
 - 触及：`tree-select` `input-tree` `select`
 - 规则：Amis `Tree.tsx` `checkedInValue` / `isItemChecked`；`packages/vamis/src/renderers/form/TreeBranch.vue`
 
+### 全部子节点选中时父级必须是 checked，不是 partial
+- 踩过：`cascade: true` 时值里只有叶子，`isTreeItemChecked(parent)` 只认直接 value，所以全选子节点后父级仍被判为 partial；Transfer / InputTree / TreeSelect / Select tree 都受影响。
+- 稳定做法：`autoCheckChildren !== false` 且启用 `cascade` / `withChildren` / `onlyChildren` 时，排除 disabled 子节点后若全部子节点 checked，则父节点也返回 checked；`treeItemPartial` 先读 checked，checked 后自然不再 partial。全选态和部分态都走共享 tree helper，不在各树控件里各自修正。
+- 触及：`input-tree` `tree-select` `select` `transfer`
+- 规则：`packages/vamis-core/src/utils/tree.ts` `isTreeItemChecked` / `treeItemPartial`；回归 `packages/vamis-core/__tests__/tree.test.ts`
+
 ### Transfer 虚拟化是左右栏各自窗口，tree 行高不跟 itemHeight
 - 踩过：把 Transfer 当成普通 Options 平铺列表，左右任一滚动就重算整页；table 模式若让表头跟着窗口行一起滚，视觉和 Amis 不一致。把 list/table 的 `itemHeight=38` 套到 tree，会让行高和水标 32px 对不上，虚拟 spacer 也会失真。Picker 主渲染器本身没有 `virtualThreshold` / `itemHeight`，直接套 Transfer 规则会制造伪契约。
 - 稳定做法：Transfer list/table/tree 左右栏分别保存 `scrollTop` / 实测视口，默认 `virtualThreshold=100`、list/table `itemHeight=38`，各自用上下 spacer 补总高；搜索缩表或模式切换回顶部。table 由 pane 承担唯一滚动，`thead` sticky，虚拟行点击仍用完整数组值。tree 对齐共享 Amis Tree：行高固定 32px，Amis Transfer 也不向 Tree 透传 `itemHeight`；同一切片函数必须按 mode 选行高。实测 Amis selection 约 258px，101 项只渲染约 10 行。Picker 先走自身 pickerSchema / CRUD 能力，不硬塞 Transfer 虚拟参数。
@@ -1060,6 +1066,18 @@ alwaysApply: true
 - 稳定做法：以 `AMISTransferSchemaBase` 为字段清单同步 `catalogFor('transfer').properties` 与对外属性表；Amis 字段优先，`mode` / `leftTitle` / `rightTitle` 只作 Vamis 兼容别名。未接字段也保留在补全和属性表中，但说明必须写“当前 Vamis 未接”，不能用 schema 列全冒充运行时完成。
 - 触及：`transfer` `transfer-picker` `tabs-transfer`
 - 规则：Amis `Form/Transfer.tsx` `AMISTransferSchemaBase`；`packages/vamis-core/src/schema-type-catalogs.ts`；`website/src/components/form/transfer.md`；`docs/superpowers/specs/component/form/2026-11-23-vamis-transfer-schema-contract.md`
+
+### Transfer list 默认壳是 GroupedSelection + ResultList，不是中间按钮列表
+- 踩过：用“左列表 / 全部 > / < 清空 / 右列表”的简化结构冒充 Transfer，缺少 Amis 的左右标题、数量统计、左侧 header checkbox、分组行、option checkbox、右侧单项移除和清除动作；基础页视觉结构完全对不上。
+- 稳定做法：基础 list 使用两栏等宽 pane，根与 pane 固定 `min-height:300px`、pane `max-height:400px`，正文自己滚动，不能随少量选项缩高。左栏标题显示 `Transfer.available`（可选项）+ `(available/total)`，list/tree 有 header checkbox；正文按 GroupedSelection 展示分组和 option checkbox，**已选项仍留在左栏并显示 checked**，点击是 toggle，不是加入后删除。右栏标题显示 `Transfer.selectd`（已选项）+ selected count，正文是 ResultList：每项 label + 单项 remove，header 提供清除。不要再保留中间“全部 / 清空”按钮列；全选 / 清除放标题行。搜索框用 wrapper + 右侧 icon；tree/table 的 flex child 必须 `min-height:0` 并成为唯一滚动宿主，延时加载不能把外层撑高；chained 不要把 pane 内 checkAll 和标题行全选同时打开；associated 右栏 label 要 nowrap + ellipsis。树/表格模式也复用同一 header 契约。
+- 触及：`transfer` `transfer-picker` `tabs-transfer`
+- 规则：Amis `Transfer.renderSelect` / `GroupedSelection.tsx` / `ResultList.tsx` / `_transfer.scss`；`packages/vamis/src/renderers/form/Transfer.vue`；`packages/vamis-ui/src/styles.css`
+
+### Transfer table/tree 复用 SelectTablePane / SelectTreePane
+- 踩过：Transfer 自己画固定“名称 / 值”两列表，完全忽略 `columns` 和勾选列；树模式只画 caret + 文本，没有 Tree checkboxes，导致 Amis TableSelection / Tree 两套契约在 Transfer 内分叉。
+- 稳定做法：table 左栏挂 `SelectTablePane`，透传 `columns`、`virtualThreshold`、`itemHeight`，由 pane 负责表头全选、行 checkbox、列渲染和虚拟窗口；右侧默认仍是 ResultList，只有 `resultListModeFollowSelect` 才用表格结果。tree 左栏挂 `SelectTreePane`，完整树节点、checkbox、展开态、`initiallyOpen` / `autoCheckChildren` / `onlyChildren`、query 和虚拟窗口复用共享树契约。Transfer 父层只接 `pick` / `toggle` / `update:nodes`。
+- 触及：`transfer` `select` `table` `tree`
+- 规则：Amis `TableSelection.tsx` / `Tree.tsx` / `Transfer.renderOptions`；`packages/vamis/src/renderers/form/select/SelectTablePane.vue`；`packages/vamis/src/renderers/form/select/SelectTreePane.vue`
 
 ### InputTree 的事件/动作和展开字段按源码，不按文档目录名猜
 - 踩过：只做树 UI 不派发 `change`，setValue/clear/reset/search/expand/collapse 等 scoped 动作不可用；`collapsed` / `unfolded` 字段被默认展开覆盖；`heightAuto`、treeClassName、highlightTxt 只写在文档属性表。Amis 6.13 文档虽列 `toolbar`，InputTree 源码未消费；`draggable` 也未透传。
@@ -1457,6 +1475,12 @@ alwaysApply: true
 - 稳定做法：自动隐藏只打在指令挂上的那条栏；`.auto-hide-scroll > *` 立刻 `scrollbar-color: auto` / `scrollbar-width: auto` 打断继承。不要写成 `.auto-hide-scroll *::-webkit-scrollbar`。
 - 触及：文档预览 `table` `pre`
 - 规则：本文；`playground/src/style.css` `.auto-hide-scroll``
+
+### 组件滚动条显式保留是 Vamis 优化项
+- 踩过：Amis 没有主动隐藏滚动条；问题是 macOS overlay scrollbar 在无交互时自动淡出，内容溢出后用户看不出列表、表格、树还能滚。只写 `scrollbar-color` / `::-webkit-scrollbar` / `scrollbar-gutter` 仍不能保证 WebKit 常显。
+- 稳定做法：用 `@vamis/ui` 的 `VamisScrollbar` 读取真实 `scrollHeight / clientHeight / scrollTop`，只有实际溢出才显示应用层 thumb；监听 scroll、ResizeObserver 和子树 MutationObserver，滚动宿主隐藏系统条，thumb 支持轨道点击与拖拽。`:root` 只保留 `--scrollbar-*` 尺寸 / 颜色；出现与否不能靠原生 overlay 虚线上报。
+- 触及：`transfer` list / table / tree；其他组件扩展时复用 `VamisScrollbar` 并逐宿主核盒宽、虚拟列表和深浅主题。
+- 规则：`packages/vamis-ui/src/ui/scrollbar/VamisScrollbar.vue`；Amis 本身未隐藏，此项归 Vamis 可用性优化
 
 ### List initDrag 整行可拖，手柄只是视觉
 - 踩过：只给 drag-bar `draggable`，内层 `.vamis-node[draggable=false]` 把行内容拖拽吃掉，只能抓 8 点手柄。只用行内 reorder、没有 ghost 时，拖出列表看不见跟随层。

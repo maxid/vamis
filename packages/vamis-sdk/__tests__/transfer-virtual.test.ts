@@ -38,7 +38,7 @@ describe('Transfer virtual list', () => {
     await nextTick()
     const pane = host.querySelector('.vamis-transfer__list') as HTMLElement
     expect(pane.classList.contains('is-virtual')).toBe(true)
-    expect(pane.querySelectorAll('.vamis-transfer__item').length).toBeLessThan(101)
+    expect(pane.querySelectorAll('.vamis-transfer__result-item').length).toBeLessThan(101)
     expect(pane.querySelector('.vamis-transfer__virtual-pad')).toBeTruthy()
   })
 
@@ -108,10 +108,10 @@ describe('Transfer virtual list', () => {
     pane.scrollTop = 1200
     pane.dispatchEvent(new Event('scroll'))
     await nextTick()
-    const target = [...pane.querySelectorAll('.vamis-transfer__item')].find(
+    const target = [...pane.querySelectorAll('.vamis-transfer__result-item')].find(
       (item) => item.textContent?.trim() === 'Option 35',
     )
-    ;(target as HTMLButtonElement).click()
+    ;(target?.querySelector('.vamis-transfer__remove') as HTMLButtonElement | null)?.click()
 
     const form = scoped.getComponentByName('transferVirtualForm') as {
       getData?: () => Record<string, unknown>
@@ -168,61 +168,74 @@ describe('Transfer virtual list', () => {
     })
 
     await nextTick()
-    const pane = host.querySelector('.vamis-transfer__table-pane') as HTMLElement
+    const pane = host.querySelector('.vamis-select__table-pane') as HTMLElement
     expect(pane.classList.contains('is-virtual')).toBe(true)
-    expect(pane.querySelectorAll('tbody .vamis-transfer__row').length).toBeLessThan(101)
-    expect(pane.querySelector('.vamis-transfer__virtual-pad')).toBeTruthy()
+    expect(pane.querySelectorAll('tbody tr').length).toBeLessThan(101)
+    expect(pane.querySelector('.vamis-select__table-virtual-pad')).toBeTruthy()
     expect(pane.querySelector('thead')).toBeTruthy()
   })
 
   it('virtualizes the Transfer tree pane', async () => {
-    const { host } = mount({
-      type: 'form',
-      actions: [],
-      body: {
-        type: 'transfer',
-        name: 'transfer',
-        mode: 'tree',
-        virtualThreshold: 4,
-        itemHeight: 38,
-        options: Array.from({ length: 101 }, (_, index) => ({
-          label: `Node ${index + 1}`,
-          value: `value-${index + 1}`,
-        })),
-      },
-    })
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transfer',
+          mode: 'tree',
+          virtualThreshold: 4,
+          itemHeight: 38,
+          options: Array.from({ length: 101 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `value-${index + 1}`,
+          })),
+        },
+      })
 
-    await nextTick()
-    const pane = host.querySelector('.vamis-transfer__list') as HTMLElement
-    expect(pane.classList.contains('is-virtual')).toBe(true)
-    expect(pane.querySelectorAll('.vamis-transfer__item').length).toBeLessThan(101)
-    expect(pane.querySelector('.vamis-transfer__virtual-pad')).toBeTruthy()
+      await nextTick()
+      await nextTick()
+      const pane = host.querySelector('.vamis-select__tree-pane') as HTMLElement
+      expect(pane.querySelector('.vamis-tree')?.classList.contains('is-virtual')).toBe(true)
+      expect(pane.querySelectorAll('.vamis-tree__item').length).toBeLessThan(101)
+      expect(pane.querySelector('.vamis-tree__virtual-pad')).toBeTruthy()
+    } finally {
+      offsetHeight.mockRestore()
+    }
   })
 
-  it('uses the Amis tree row height instead of Transfer itemHeight', async () => {
-    const { host } = mount({
-      type: 'form',
-      actions: [],
-      body: {
-        type: 'transfer',
-        name: 'transfer',
-        mode: 'tree',
-        virtualThreshold: 4,
-        itemHeight: 38,
-        options: Array.from({ length: 101 }, (_, index) => ({
-          label: `Node ${index + 1}`,
-          value: `value-${index + 1}`,
-        })),
-      },
-    })
+  it('uses the shared virtual tree pane instead of Transfer itemHeight', async () => {
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transfer',
+          mode: 'tree',
+          virtualThreshold: 4,
+          itemHeight: 38,
+          options: Array.from({ length: 101 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `value-${index + 1}`,
+          })),
+        },
+      })
 
-    await nextTick()
-    const pane = host.querySelector('.vamis-transfer__list') as HTMLElement
-    const item = pane.querySelector('.vamis-transfer__item') as HTMLElement
-    const pads = pane.querySelectorAll('.vamis-transfer__virtual-pad')
-    const bottomPad = pads[pads.length - 1] as HTMLElement
-
-    expect(item.style.height).toBe('32px')
-    expect(bottomPad.style.height).toBe('2848px')
+      await nextTick()
+      await nextTick()
+      const pane = host.querySelector('.vamis-select__tree-pane') as HTMLElement
+      expect(pane).toBeTruthy()
+      expect(pane.querySelector('.vamis-tree.is-virtual')).toBeTruthy()
+      expect(pane.querySelectorAll('.vamis-transfer__item')).toHaveLength(0)
+    } finally {
+      offsetHeight.mockRestore()
+    }
   })
 })

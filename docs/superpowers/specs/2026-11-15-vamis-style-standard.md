@@ -139,6 +139,8 @@ JS 需要引用主题色时写 `var(--token)` 字符串（`Status` 的状态色�
 
 `@vamis/ui` 的原语保留 shadcn-vue 的 DOM 和 a11y，配方按 Amis 该 type 的契约来，并且**打在原语自己身上**（`[data-slot="…"]`），不打在某一个渲染器的外壳下面。
 
+组件内的“溢出时常显”滚动条不是系统配方：macOS overlay scrollbar 会淡出，`scrollbar-color` / `::-webkit-scrollbar` 也不能保证常显。需要时用 `@vamis/ui` 的 `VamisScrollbar` 读取真实 `scrollHeight > clientHeight`，滚动宿主隐藏系统条，显示可拖拽的应用层 thumb；没有溢出时不渲染可见 thumb。
+
 反例（已修）：表格的 Amis 配方原先全挂在 `.vamis-table-wrap [data-slot="table-cell"]` 下，只有 `Table` 渲染器带这个外壳。`CRUD` / `InputTable` / `Tasks` 直接用 `<Table>` 原语，吃到的是原语上的 shadcn 工具类 `text-sm` / `text-xs`，于是数据格 14、表头 12，正好和 `Table` 的表头 14、数据格 12 反过来。
 
 现在：`[data-slot="table-cell"]` 12、`[data-slot="table-head"]` 14 + 表头灰底、行悬停 `--table-hover-bg`，四个渲染器同一把标尺。原语模板里不再有字号和颜色的工具类。渲染器外壳下只留它独有的盒模型。
@@ -151,6 +153,7 @@ JS 需要引用主题色时写 `var(--token)` 字符串（`Status` 的状态色�
 | 标尺、组件 token、所有渲染器的默认皮肤 | `packages/vamis-ui/src/styles.css` |
 | chrome 图标字形 | `packages/vamis-ui/src/ui/vamis-icons.ts` + `VamisIcon.vue` |
 | 带状态的 chrome 图标 | `packages/vamis-ui/src/ui/Vamis*.vue` |
+| 应用层滚动条 | `packages/vamis-ui/src/ui/scrollbar/VamisScrollbar.vue` |
 | 作者 helper | `packages/vamis-ui/src/helpers*.css` |
 
 渲染器 `.vue` 不带 `<style>` 块（原有 16 个已全部迁入 `styles.css`）。迁移时注意：`scoped` 去掉后选择器变全局，属性选择器要补上自己的宿主前缀（`Grid` 的 `[data-col]` 曾会漏到表格的 `<col data-col>`）；`:deep()` / `:slotted()` 要展开成普通后代选择器。

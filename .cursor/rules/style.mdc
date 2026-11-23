@@ -108,6 +108,7 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - **双轨**：默认 token alias hex 色阶；`oklch()` / `color-mix(in oklch)` 只进 `@supports (color: oklch(0 0 0))`（浅色 `:not(.dark)`）。选择器不写 oklch。SDK `@supports not` 只再垫色阶 alias，不钉某一包 hex
 - **`:style`** 只放作者在 schema 里写的值、运行时量出来的几何、带 alpha 的字面色。默认皮肤常量写 class + token；作者没写时给 `undefined`，不要回落一个 hex。模板不写静态 `style="…"`
 - **原语配方打在原语上**（`[data-slot="…"]`），不要挂在某一个渲染器的外壳下。表格 th 14 / td 12 在 `[data-slot="table-head"]` / `[data-slot="table-cell"]`，`Table` / `CRUD` / `InputTable` / `Tasks` 共用
+- **组件滚动条不依赖系统 overlay**：需要“溢出时常显”时，用 `@vamis/ui` 的 `VamisScrollbar` 读真实溢出并画应用层 thumb；原生 `scrollbar-color` / `::-webkit-scrollbar` 只能算皮肤，不能保证 macOS WebKit 常显。出现条件仍是 `scrollHeight > clientHeight`，不要无条件造滚动内容
 - 守卫：`packages/vamis-core/__tests__/style-system.test.ts`。上限只许减
 
 ## 深色主题（浮层必核）

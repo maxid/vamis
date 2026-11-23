@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, toRef, watch } from 'vue'
+import { computed, nextTick, ref, toRef, watch } from 'vue'
 import {
   isTreeItemCheckDisabled,
   isTreeItemChecked,
@@ -39,6 +39,7 @@ const schemaRef = toRef(props, 'schema')
 const nodesRef = toRef(props, 'nodes')
 const disabledRef = toRef(props, 'disabled')
 const queryRef = toRef(props, 'query')
+const paneEl = ref<HTMLElement | null>(null)
 const tree = useTreeState({
   schema: schemaRef,
   nodes: nodesRef,
@@ -47,6 +48,8 @@ const tree = useTreeState({
   query: queryRef,
   currentValue: () => props.value,
 })
+
+defineExpose({ scrollEl: paneEl })
 
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 const multiple = computed(() => props.schema.multiple === true)
@@ -154,7 +157,7 @@ function toggleAll() {
 </script>
 
 <template>
-  <div class="vamis-select__tree-pane">
+  <div ref="paneEl" class="vamis-select__tree-pane">
     <button
       v-if="multiple && schema.checkAll"
       type="button"
@@ -183,6 +186,7 @@ function toggleAll() {
       :disabled="disabled"
       :show-icon="showIcon"
       :multiple="multiple"
+      :virtual-threshold="Number(schema.virtualThreshold ?? 100)"
       :query="query"
       :check-disabled="checkDisabled"
       :item-actions="schema.itemActions"

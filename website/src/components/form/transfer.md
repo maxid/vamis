@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 86% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`selectTitle` / `resultTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺结果搜索、列配置、menuTpl / valueTpl、统计、分页、排序 / 拖拽和移动端专用布局。
+::: warning 实现进度 89% · 进行中
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`table.columns`、`selectTitle` / `resultTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `resultListModeFollowSelect`、`searchApi`、menuTpl / valueTpl、分页、排序 / 拖拽、showArrow 和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -40,72 +40,182 @@ body:
 
 ## 展示模式
 
-`selectMode`（兼容 `mode`）支持 `list`（默认）/ `table` / `tree` / `chained` / `associated`。`tree` 按 `children` 渲染可展开/折叠的层级（父节点仅展开、不参与选择）。
-
-```yaml
-type: transfer
-name: transfer
-label: 表格模式
-mode: table
-selectTitle: 待选
-resultTitle: 已选
-options:
-  - label: 选项 A
-    value: a
-  - label: 选项 B
-    value: b
-```
-
-## 搜索
-
-`searchable: true` 时左侧出现搜索框；未配 `searchApi` 时按 label / value 本地匹配。
+### 分组
 
 ```schema: scope="body"
-type: form
-api: /api/mock2/form/saveForm
-body:
-  - type: transfer
-    name: transfer
-    label: 带搜索
-    searchable: true
-    options:
-      - label: 诸葛亮
-        value: zhugeliang
-      - label: 曹操
-        value: caocao
-      - label: 钟无艳
-        value: zhongwuyan
-      - label: 李白
-        value: libai
-      - label: 韩信
-        value: hanxin
-      - label: 云中君
-        value: yunzhongjun
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "分组",
+      "type": "transfer",
+      "name": "transfer",
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 树形模式
+### 表格模式
 
-`mode: tree` 时按选项 `children` 渲染树，点击父节点展开/折叠，叶子节点才加入选择：
-
-```yaml
-type: transfer
-name: transfer
-label: 树形穿梭
-mode: tree
-options:
-  - label: 前端
-    children:
-      - label: Vue
-        value: vue
-      - label: React
-        value: react
-  - label: 后端
-    children:
-      - label: Node
-        value: node
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "表格形式",
+      "type": "transfer",
+      "name": "transfer",
+      "selectMode": "table",
+      "columns": [
+        {
+          "name": "label",
+          "label": "英雄"
+        },
+        {
+          "name": "position",
+          "label": "位置"
+        }
+      ],
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang",
+          "position": "中单"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao",
+          "position": "上单"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan",
+          "position": "上单"
+        },
+        {
+          "label": "李白",
+          "value": "libai",
+          "position": "打野"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin",
+          "position": "打野"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun",
+          "position": "打野"
+        }
+      ]
+    }
+  ]
+}
 ```
 
-## 级联选择
+### 树形模式
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "树型展示",
+      "type": "transfer",
+      "name": "transfer4",
+      "selectMode": "tree",
+      "searchable": true,
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 级联选择
 
 `selectMode: chained` 使用共享的级联选择 pane：父节点只展开下一列，叶子才写入值，多选和全选只作用于叶子：
 
@@ -113,23 +223,345 @@ options:
 {
   "type": "form",
   "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "级联选择",
+      "type": "transfer",
+      "name": "transfer5",
+      "selectMode": "chained",
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 关联选择模式
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "关联选择模式",
+      "type": "transfer",
+      "name": "b",
+      "sortable": true,
+      "searchable": true,
+      "deferApi": "/api/mock2/form/deferOptions?label=${label}",
+      "selectMode": "associated",
+      "leftMode": "tree",
+      "leftOptions": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "ref": "zhugeliang",
+          "children": [
+            {
+              "label": "A",
+              "value": "a"
+            }
+          ]
+        },
+        {
+          "ref": "caocao",
+          "children": [
+            {
+              "label": "B",
+              "value": "b"
+            },
+            {
+              "label": "C",
+              "value": "c"
+            }
+          ]
+        },
+        {
+          "ref": "zhongwuyan",
+          "children": [
+            {
+              "label": "D",
+              "value": "d"
+            },
+            {
+              "label": "E",
+              "value": "e"
+            }
+          ]
+        },
+        {
+          "ref": "libai",
+          "defer": true,
+          "label": "lazy-option-libai"
+        },
+        {
+          "ref": "hanxin",
+          "defer": true,
+          "label": "lazy-option-hanxin"
+        },
+        {
+          "ref": "yunzhongjun",
+          "defer": true,
+          "label": "lazy-option-yunzhongjun"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 延时加载
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "延时加载",
+      "type": "transfer",
+      "name": "transfer7",
+      "selectMode": "tree",
+      "deferApi": "/api/mock2/form/deferOptions?label=${label}&waitSeconds=2",
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "defer": true
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 支持搜索
+
+#### 左侧搜索功能
+
+通过 `searchable` 字段控制左侧选项栏搜索。未设置 `searchApi` 时，按选项 `value` / `label` 本地匹配。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "带搜索",
+      "type": "transfer",
+      "name": "transfer6",
+      "selectMode": "chained",
+      "searchable": true,
+      "sortable": true,
+      "options": [
+        {
+          "label": "法师",
+          "children": [
+            {
+              "label": "诸葛亮",
+              "value": "zhugeliang"
+            }
+          ]
+        },
+        {
+          "label": "战士",
+          "children": [
+            {
+              "label": "曹操",
+              "value": "caocao"
+            },
+            {
+              "label": "钟无艳",
+              "value": "zhongwuyan"
+            }
+          ]
+        },
+        {
+          "label": "打野",
+          "children": [
+            {
+              "label": "李白",
+              "value": "libai"
+            },
+            {
+              "label": "韩信",
+              "value": "hanxin"
+            },
+            {
+              "label": "云中君",
+              "value": "yunzhongjun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 右侧结果搜索功能
+
+`resultSearchable: true` 开启右侧结果本地过滤；`resultSearchPlaceholder` 可单独配置提示。
+
+```schema: scope="body"
+{
+  "type": "page",
   "body": {
-    "type": "transfer",
-    "name": "transferChained",
-    "label": "级联选择",
-    "selectMode": "chained",
-    "options": [
+    "type": "form",
+    "api": "/api/mock2/form/saveForm",
+    "body": [
       {
-        "label": "前端",
-        "children": [
-          { "label": "Vue", "value": "vue" },
-          { "label": "React", "value": "react" }
-        ]
-      },
-      {
-        "label": "后端",
-        "children": [
-          { "label": "Node", "value": "node" }
+        "label": "树型展示",
+        "type": "transfer",
+        "name": "transfer4",
+        "selectMode": "tree",
+        "searchable": true,
+        "resultListModeFollowSelect": true,
+        "resultSearchable": true,
+        "options": [
+          {
+            "label": "法师",
+            "children": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang"
+              }
+            ]
+          },
+          {
+            "label": "战士",
+            "children": [
+              {
+                "label": "曹操",
+                "value": "caocao"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              }
+            ]
+          },
+          {
+            "label": "打野",
+            "children": [
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
+              }
+            ]
+          }
         ]
       }
     ]
@@ -137,39 +569,247 @@ options:
 }
 ```
 
-## 关联选择
+#### searchApi
 
-`selectMode: associated` 左侧选择关联键，右侧列表从 `options[].ref` 对应的 `children` 派生；右栏也支持 `list` / `table` / `tree` / `chained`：
+通过 `searchApi` 检索左侧选项；默认 GET，携带 `term`。当前 Vamis 尚未接运行时。
+
+```schema: scope="body"
+{
+  "type": "page",
+  "body": {
+    "type": "form",
+    "api": "/api/mock2/form/saveForm",
+    "body": [
+      {
+        "label": "searchApi",
+        "type": "transfer",
+        "name": "transfer",
+        "searchable": true,
+        "selectMode": "tree",
+        "searchApi": "/api/transfer/search?name=${term}",
+        "options": [
+          {
+            "label": "法师",
+            "children": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang"
+              }
+            ]
+          },
+          {
+            "label": "战士",
+            "value": "zhanshi",
+            "children": [
+              {
+                "label": "曹操",
+                "value": "caocao"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              }
+            ]
+          },
+          {
+            "label": "打野",
+            "children": [
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 结果面板跟随模式
+
+`resultListModeFollowSelect` 开启结果面板跟随模式。当前 Vamis 尚未接运行时，示例保留 Amis schema。
+
+#### 表格跟随模式
 
 ```schema: scope="body"
 {
   "type": "form",
   "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "label": "表格形式",
+      "type": "transfer",
+      "name": "transfer",
+      "selectMode": "table",
+      "resultListModeFollowSelect": true,
+      "columns": [
+        {
+          "name": "label",
+          "label": "英雄"
+        },
+        {
+          "name": "position",
+          "label": "位置"
+        }
+      ],
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang",
+          "position": "中单"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao",
+          "position": "上单"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan",
+          "position": "上单"
+        },
+        {
+          "label": "李白",
+          "value": "libai",
+          "position": "打野"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin",
+          "position": "打野"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun",
+          "position": "打野"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 树形跟随模式
+
+```schema: scope="body"
+{
+  "type": "page",
   "body": {
-    "type": "transfer",
-    "name": "transferAssociated",
-    "label": "关联选择",
-    "selectMode": "associated",
-    "leftOptions": [
-      { "label": "前端", "value": "frontend" },
-      { "label": "后端", "value": "backend" }
-    ],
-    "options": [
+    "type": "form",
+    "api": "/api/mock2/form/saveForm",
+    "body": [
       {
-        "ref": "frontend",
-        "children": [
-          { "label": "Vue", "value": "vue" },
-          { "label": "React", "value": "react" }
-        ]
-      },
-      {
-        "ref": "backend",
-        "children": [
-          { "label": "Node", "value": "node" }
+        "label": "树型展示",
+        "type": "transfer",
+        "name": "transfer4",
+        "selectMode": "tree",
+        "searchable": true,
+        "resultListModeFollowSelect": true,
+        "options": [
+          {
+            "label": "法师",
+            "children": [
+              {
+                "label": "诸葛亮",
+                "value": "zhugeliang"
+              }
+            ]
+          },
+          {
+            "label": "战士",
+            "children": [
+              {
+                "label": "曹操",
+                "value": "caocao"
+              },
+              {
+                "label": "钟无艳",
+                "value": "zhongwuyan"
+              }
+            ]
+          },
+          {
+            "label": "打野",
+            "children": [
+              {
+                "label": "李白",
+                "value": "libai"
+              },
+              {
+                "label": "韩信",
+                "value": "hanxin"
+              },
+              {
+                "label": "云中君",
+                "value": "yunzhongjun"
+              }
+            ]
+          }
         ]
       }
     ]
   }
+}
+```
+
+### 自定义选项展示
+
+`menuTpl` / `valueTpl` 当前 Vamis 尚未接运行时，示例保留 Amis schema。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "body": [
+    {
+      "label": "默认",
+      "type": "transfer",
+      "name": "transfer",
+      "menuTpl": "<div class='flex justify-between'><span>${label}</span><span class='text-muted m-r text-sm'>${tag}</span></div>",
+      "valueTpl": "${label}(${value})",
+      "options": [
+        {
+          "label": "诸葛亮",
+          "value": "zhugeliang",
+          "tag": "法师"
+        },
+        {
+          "label": "曹操",
+          "value": "caocao",
+          "tag": "战士"
+        },
+        {
+          "label": "钟无艳",
+          "value": "zhongwuyan",
+          "tag": "战士"
+        },
+        {
+          "label": "李白",
+          "value": "libai",
+          "tag": "打野"
+        },
+        {
+          "label": "韩信",
+          "value": "hanxin",
+          "tag": "打野"
+        },
+        {
+          "label": "云中君",
+          "value": "yunzhongjun",
+          "tag": "打野"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -325,10 +965,11 @@ valueField: value
 | `leftMode` | `string` | `list` | `associated` 左栏 `list` / `tree` |
 | `rightMode` | `string` | `list` | `associated` 右栏 `list` / `table` / `tree` / `chained` |
 | `searchResultMode` | `string` | | 搜索结果面板模式；当前 Vamis 未接 |
-| `columns` | `Object[]` | | `table` 列配置；当前 Vamis 仍用固定两列 |
+| `columns` | `Object[]` | | `table` 列配置，已接共享 TableSelection |
 | `searchResultColumns` | `Object[]` | | 搜索结果列；当前 Vamis 未接 |
 | `searchable` | `boolean` | `false` | 左侧搜索 |
-| `resultSearchable` | `boolean` | `false` | 右侧结果搜索；当前 Vamis 未接 |
+| `checkAll` | `boolean` | `true` | list / tree 左侧全选；chained / associated 在标题行显示全选 |
+| `resultSearchable` | `boolean` | `false` | 右侧结果本地过滤 |
 | `searchApi` | API | | 左侧远程搜索；当前 Vamis 未接 |
 | `selectTitle` | `string` | `请选择` | 左侧标题 |
 | `resultTitle` | `string` | `当前选择` | 右侧结果标题 |
@@ -336,8 +977,8 @@ valueField: value
 | `menuTpl` | SchemaNode | | 自定义选项展示；当前 Vamis 未接 |
 | `valueTpl` | SchemaNode | | 自定义结果值展示；当前 Vamis 未接 |
 | `searchPlaceholder` | `string` | | 左侧搜索提示 |
-| `resultSearchPlaceholder` | `string` | | 右侧结果搜索提示；当前 Vamis 未接 |
-| `statistics` | `boolean` | `true` | 选择统计；当前 Vamis 未接 |
+| `resultSearchPlaceholder` | `string` | | 右侧结果搜索提示 |
+| `statistics` | `boolean` | `true` | 显示左右选择数量，默认开启 |
 | `itemHeight` | `number` | `38` | list / table 虚拟行高；tree 固定 32 |
 | `virtualThreshold` | `number` | `100` | 开启虚拟窗口的选项阈值 |
 | `showInvalidMatch` | `boolean` | `false` | 未匹配值飘红；当前 Vamis 未接 |
@@ -641,10 +1282,14 @@ valueField: value
 ```
 
 ## 和 Amis 文档的差异
-- 与 Amis 一致：静态 options / 远程 source、list / table / tree / chained / associated、左右移动、全部 / 清空、joinValues / delimiter、左右搜索、标题。
+- 与 Amis 一致：静态 options / 远程 source、list / table / tree / chained / associated、左侧统计 / 全选、右侧清除 / 单项移除、joinValues / delimiter、左右搜索、标题。
+- 默认 list 已对齐 Amis `GroupedSelection + ResultList`：左侧统计 / 全选 / 分组 / option checkbox，已选项保留在左栏并显示 checked；右侧结果 / 清除 / 单项移除。
+- 左右 pane 固定最小高度 **300px**、最大高度 **400px**，内容在 pane 内滚动；不再跟随少量选项缩高。
+- 滚动条可见性是 Vamis 的可用性优化：Amis 未主动隐藏，但 macOS overlay scrollbar 会在组件列表 / 表格 / 树溢出时淡出。Vamis 隐藏不可控系统条，改用应用层 `VamisScrollbar` 计算并显示 thumb，支持轨道点击和拖拽；内容不溢出时仍不显示。
+- 搜索框右侧固定搜索图标；延时加载树在 pane 内滚动，不再撑高组件；关联右栏超长文本显示省略号。
 - 已接：list / table / tree 的 `virtualThreshold` 窗口、实测视口与上下 spacer；list / table 使用 `itemHeight`，tree 按 Amis Tree 固定 32px 行高，不消费 Transfer 的 `itemHeight`。
 - 已接：`change` / `selectAll` 事件，`clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 动作；`change` 在写值前派发并支持 `preventDefault`。
 - 已接：`chained` 与 `associated` 复用 Select 的级联 / 关联 pane，支持 `leftOptions`、`leftDefaultValue`、`leftMode`、`rightMode` 和 source 信封。
 - `chained` / `associated` 使用等宽选择面与结果面，全选 / 清空放在标题行，不占中间移动列。
 - 属性表与编辑器补全已列全 Amis schema；标注“当前 Vamis 未接”的字段尚未实现。
-- 运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`columns`、结果搜索、`searchApi`、`menuTpl` / `valueTpl`、`statistics`、`showInvalidMatch`、`pagination`、部分树属性、移动端专用布局。
+- 运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode` / `searchResultColumns`、`searchApi`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`pagination`、移动端专用布局。

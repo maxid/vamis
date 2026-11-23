@@ -314,8 +314,18 @@ export function isTreeItemChecked(
   opts: TreeCheckOpts = {},
 ): boolean {
   if (selectedHas(selected, item.value)) return true
-  if (opts.onlyChildren && autoCheckOn(opts) && item.children?.length) {
-    if (item.children.every((child) => isTreeItemChecked(child, selected, opts))) return true
+  if (
+    autoCheckOn(opts) &&
+    (opts.onlyChildren || opts.cascade || opts.withChildren) &&
+    item.children?.length
+  ) {
+    const children = item.children.filter((child) => !child.disabled)
+    if (
+      children.length &&
+      children.every((child) => isTreeItemChecked(child, selected, opts))
+    ) {
+      return true
+    }
   }
   if (!opts.multiple || !autoCheckOn(opts) || opts.withChildren || opts.cascade) return false
   return isTreeParentChecked(item, selected, opts)

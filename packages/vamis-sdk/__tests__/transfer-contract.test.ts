@@ -142,7 +142,7 @@ describe('Transfer events', () => {
     )
 
     await nextTick()
-    click(buttonWithText('全部 >'))
+    click(document.querySelector('.vamis-transfer__title [data-slot="checkbox"]'))
 
     await vi.waitFor(() => expect(notify.mock.calls.map((call) => call[1])).toContain('A|B'))
     await vi.waitFor(() => expect(formData(scoped, 'transferSelectAllForm').transfer).toBe('a,b'))
@@ -166,7 +166,7 @@ describe('Transfer events', () => {
     })
 
     await nextTick()
-    click(buttonWithText('< 清空'))
+    click(buttonWithText('清除'))
     await vi.waitFor(() => expect(formData(scoped, 'transferClearArrayForm').transfer).toEqual([]))
   })
 
@@ -189,8 +189,12 @@ describe('Transfer events', () => {
     })
 
     await nextTick()
-    expect(host.querySelectorAll('.vamis-transfer__title')[0]?.textContent).toBe('可选人员')
-    expect(host.querySelectorAll('.vamis-transfer__title')[1]?.textContent).toBe('已选人员')
+    expect(
+      host.querySelectorAll('.vamis-transfer__title-main')[0]?.textContent,
+    ).toContain('可选人员')
+    expect(
+      host.querySelectorAll('.vamis-transfer__title-main')[1]?.textContent,
+    ).toContain('已选人员')
   })
 })
 
@@ -271,6 +275,7 @@ describe('Transfer scoped actions', () => {
             id: 'transfer-search-actions',
             name: 'transfer',
             searchable: true,
+            resultSearchable: true,
             options: [
               { label: 'A', value: 'a' },
               { label: 'B', value: 'b' },

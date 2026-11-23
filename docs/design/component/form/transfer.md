@@ -1,6 +1,6 @@
 # Transfer 穿梭器 · `transfer` 设计
 
-> 状态：**进行中 86%** · 复杂度：**XL 特重**
+> 状态：**进行中 89%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/transfer) · Amis：`/zh-CN/components/form/transfer`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 > Schema 对齐：[Transfer Schema 对齐](../../../superpowers/specs/component/form/2026-11-23-vamis-transfer-schema-contract.md)
@@ -99,7 +99,8 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 | [`SelectAssociatedPane.vue`](../../../../packages/vamis/src/renderers/form/select/SelectAssociatedPane.vue) | associated 左栏 / 右栏与 source 信封复用 |
 | [`options.ts`](../../../../packages/vamis-core/src/utils/options.ts) | option 归一/相等判断/selected 派生 |
 | [`FormItem.vue`](../../../../packages/vamis/src/renderers/FormItem.vue) | label/校验/静态/错误 |
-| [`styles.css`](../../../../packages/vamis-ui/src/styles.css) | transfer 栏/列表/表格/树 token |
+| [`styles.css`](../../../../packages/vamis-ui/src/styles.css) | transfer 栏/列表/表格/树 token；应用层滚动条轨道 / thumb |
+| [`VamisScrollbar.vue`](../../../../packages/vamis-ui/src/ui/scrollbar/VamisScrollbar.vue) | 真实溢出测量、thumb 比例、同步、轨道点击与拖拽 |
 
 ### 4.2 状态
 
@@ -120,6 +121,7 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 - `left/right` 每次都从 options+selected 派生，不要缓存两份数组。
 - 树节点 key 用索引路径；父节点无 value 只展开。
 - chained / associated 的选择状态由共享 pane 维护；父层只接 `pick` / `toggle` / `update:nodes` 并写回统一 `selected`。
+- list 默认界面按 Amis `GroupedSelection + ResultList`：左侧标题统计 + 全选 + 分组 / 叶 checkbox，已选项保留在左栏并显示 checked；右侧结果标题 + 清除 + 单项移除；中间移动按钮列已移除。Transfer 根与左右 pane 固定 300px 最小高度，pane 最大 400px，列表内部滚动。
 
 ### 4.3 交互
 
@@ -142,15 +144,22 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 ## 6. 当前状态与缺口
 
 - 已对齐：list/table/tree/chained/associated、搜索、remote/变量 source、left/right title、tree 展开、值序列化、三模式虚拟窗口、`change` / `selectAll`、五项 scoped 动作。
+- list 主路径已按 Amis `GroupedSelection + ResultList` 对齐默认标题、统计、全选、分组、option checkbox、左栏 checked 保留、结果移除和清除。
 - tree 行高按 Amis Tree 实测 32px，虚拟窗口与上下 spacer 不再使用 list/table 的 38px `itemHeight`。
 - chained 与 associated 已接共享 Select pane；source 信封和 leftDefaultValue 已按 Amis 还原。
 - paired 模式不再被中间按钮列压窄，选择面与结果面等宽；全选 / 清空落在各自标题行。
-- 未接：分页、排序、拖拽、移动端专用布局。
-- 对照：桌面 / 移动 **8/11**（P0 0，余 3 条均为 Amis 侧 `rendered:false` 探针）。
+- table 模式已改用共享 `SelectTablePane`：消费 `columns`、保留行 checkbox 和选中态，右侧默认仍是 ResultList。
+- tree 模式已改用共享 `SelectTreePane`：分组 / 叶子 checkbox、`initiallyOpen`、`autoCheckChildren`、`onlyChildren` 和虚拟树窗口复用现有树契约。
+- 所有搜索框走 `.vamis-transfer__search-wrap`，右侧固定 search icon；pane 内部只有一个滚动宿主。
+- 延时加载树由 flex wrapper 占满剩余高度，tree pane 负责滚动；chained 只保留标题行“全选”，associated 右侧 label 单行 ellipsis。
+- list / table / tree 的滚动宿主隐藏不可控的系统 overlay 条，共用应用层 `VamisScrollbar`。组件监听 `scroll` / resize / content mutation，仅在 `scrollHeight > clientHeight` 时显示按真实比例计算的 thumb；支持轨道点击和拖拽。该行为是 Vamis 相对 Amis/macOS overlay scrollbar 的可用性优化。
+- 树父级勾选态由 `isTreeItemChecked` 统一：全部可选子节点已选时父级 checked，部分选中才 partial。
+- 未接：`resultListModeFollowSelect`、`searchApi`、menuTpl / valueTpl、分页、排序、拖拽、showArrow、移动端专用布局。
+- 对照：桌面 / 移动 **17/20**（P0 0，余 3 条均为 Amis 侧 `rendered:false` 探针）。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：8 / 12）
+### 验收清单（文档核对：9 / 13）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Transfer / options 工具已定位
@@ -164,7 +173,8 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 - [x] `pnpm typecheck` 0
 - [x] `pnpm compare --page transfer` 桌面
 - [x] `pnpm compare --page transfer --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] list / table / tree 内容溢出时滚动条可见，浅色 / 深色已核
+- [ ] 375px 窄屏
 
 ### 验收重点
 

@@ -274,7 +274,7 @@ function isRightSelected(item: OptionItem) {
             class="vamis-select__associated-right-group"
             :style="{ '--associated-depth': row.depth }"
           >
-            {{ row.label }}
+            <span class="vamis-select__associated-right-label">{{ row.label }}</span>
           </div>
           <div
             v-else
@@ -297,7 +297,7 @@ function isRightSelected(item: OptionItem) {
               @click.stop
               @update:model-value="selectRight(row.item)"
             />
-            {{ row.item.label }}
+            <span class="vamis-select__associated-right-label">{{ row.item.label }}</span>
           </div>
         </template>
       </template>

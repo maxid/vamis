@@ -10,7 +10,22 @@ describe('transfer', () => {
     const vue = read('../../vamis/src/renderers/form/Transfer.vue')
     for (const t of ['searchable', 'searchPlaceholder', 'leftTitle', 'rightTitle', 'leftShown', 'loadSource', 'remoteOptions', 'mode', 'treeDepth', 'treeRows', 'toggleTree']) expect(vue).toContain(t)
     const doc = read('../../../website/src/components/form/transfer.md')
-    for (const h of ['## 基本用法','## 树形模式','## 远程选项','## 展示模式','## 搜索','## 属性表','## 和 Amis 文档的差异']) expect(doc).toContain(h)
+    for (const h of [
+      '## 基本用法',
+      '## 展示模式',
+      '### 分组',
+      '### 表格模式',
+      '### 树形模式',
+      '### 级联选择',
+      '### 关联选择模式',
+      '### 延时加载',
+      '### 支持搜索',
+      '### 结果面板跟随模式',
+      '### 自定义选项展示',
+      '## 远程选项',
+      '## 属性表',
+      '## 和 Amis 文档的差异',
+    ]) expect(doc).toContain(h)
   })
 
   it('exposes the Amis Transfer schema fields in editor completions', () => {

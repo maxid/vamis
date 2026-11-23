@@ -64,6 +64,7 @@ export {
 } from './ui/card'
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export { ScrollArea, ScrollBar } from './ui/scroll-area'
+export { VamisScrollbar } from './ui/scrollbar'
 export { Alert, AlertDescription, AlertTitle, levelToAlertVariant, levelToFeedbackIcon } from './ui/alert'
 export { RadioGroup, RadioGroupItem } from './ui/radio-group'
 export {

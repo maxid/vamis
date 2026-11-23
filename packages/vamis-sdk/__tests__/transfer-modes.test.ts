@@ -30,6 +30,12 @@ function click(element: Element | null) {
   element.click()
 }
 
+function buttonWithText(text: string) {
+  return [...document.querySelectorAll('button')].find(
+    (button) => (button.textContent || '').trim() === text,
+  ) || null
+}
+
 describe('Transfer selectMode', () => {
   it('renders chained mode and writes only the selected leaf', async () => {
     const { host, scoped } = mount({
@@ -58,7 +64,8 @@ describe('Transfer selectMode', () => {
 
     await nextTick()
     expect(host.querySelector('.vamis-select__chained')).toBeTruthy()
-    expect(host.querySelector('.vamis-select__chained-checkall')).toBeTruthy()
+    expect(host.querySelector('.vamis-select__chained-checkall')).toBeNull()
+    expect(buttonWithText('全选')).toBeTruthy()
     const columns = host.querySelectorAll('.vamis-select__chained-col')
     const secondColumn = [...columns][1] as HTMLElement
     expect(secondColumn?.textContent).toContain('A1')
@@ -208,8 +215,8 @@ describe('Transfer selectMode', () => {
     })
 
     await nextTick()
-    expect(host.querySelector('.vamis-transfer')?.classList.contains('vamis-transfer--paired')).toBe(
-      true,
+    expect(host.querySelector('.vamis-transfer')?.className).toContain(
+      'sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]',
     )
     expect(
       [...host.querySelectorAll('button')].some(

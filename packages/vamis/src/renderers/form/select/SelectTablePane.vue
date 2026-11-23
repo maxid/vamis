@@ -49,6 +49,8 @@ const virtualEnabled = computed(
 const paneEl = ref<HTMLElement | null>(null)
 const scrollTop = ref(0)
 const viewportHeight = ref(VIRTUAL_VIEWPORT)
+
+defineExpose({ scrollEl: paneEl })
 const virtualStart = computed(() => {
   if (!virtualEnabled.value) return 0
   return Math.min(

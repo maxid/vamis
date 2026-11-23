@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { Button, VamisCaret } from '@vamis/ui'
+import {
+  Checkbox,
+  VamisCaret,
+  VamisClose,
+  VamisIcon,
+  VamisScrollbar,
+} from '@vamis/ui'
 import {
   createVamisEvent,
   eventEvalData,
@@ -22,6 +28,8 @@ import { useFieldValue } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import SelectAssociatedPane from './select/SelectAssociatedPane.vue'
 import SelectChainedPane from './select/SelectChainedPane.vue'
+import SelectTablePane from './select/SelectTablePane.vue'
+import SelectTreePane from './select/SelectTreePane.vue'
 import {
   dumpJoined,
   flattenOptions,
@@ -65,15 +73,37 @@ const associatedNodes = computed(
 const displayRawOptions = computed(() =>
   mode.value === 'associated' ? associatedNodes.value : rawOptions.value,
 )
-const options = computed(() => flattenOptions(displayRawOptions.value))
-type TreeRow = { key: string; label: string; value?: unknown; depth: number; children: TreeRow[] }
+function flattenLeafOptions(nodes: OptionItem[]): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const node of nodes) {
+    if (node.children?.length) out.push(...flattenLeafOptions(node.children))
+    else out.push(node)
+  }
+  return out
+}
+const options = computed(() => flattenLeafOptions(displayRawOptions.value))
+type TreeRow = {
+  key: string
+  label: string
+  value?: unknown
+  depth: number
+  disabled?: boolean
+  children: TreeRow[]
+}
 const expandedTree = ref<Set<string>>(new Set())
 
 function buildTree(nodes: any[], depth = 0, prefix = ''): TreeRow[] {
   return (nodes || []).map((node, index) => {
     const key = `${prefix}${index}`
     const children = Array.isArray(node.children) ? buildTree(node.children, depth + 1, `${key}-`) : []
-    return { key, label: String(node.label ?? node.value ?? ''), value: node.value, depth, children }
+    return {
+      key,
+      label: String(node.label ?? node.value ?? ''),
+      value: node.value,
+      depth,
+      disabled: node.disabled === true,
+      children,
+    }
   })
 }
 
@@ -112,6 +142,23 @@ function flattenTreeRows(nodes: TreeRow[]): TreeRow[] {
   return out
 }
 const treeShown = computed(() => flattenTreeRows(treeVisible(treeRows.value)))
+type ListRow =
+  | { kind: 'group'; key: string; label: string; depth: number }
+  | { kind: 'item'; key: string; item: TreeRow; depth: number }
+function flattenListRows(nodes: TreeRow[], depth = 0): ListRow[] {
+  const out: ListRow[] = []
+  for (const node of nodes) {
+    if (node.children.length) {
+      const children = flattenListRows(node.children, depth + 1)
+      if (!children.length) continue
+      out.push({ kind: 'group', key: node.key, label: node.label, depth })
+      out.push(...children)
+    } else {
+      out.push({ kind: 'item', key: node.key, item: node, depth })
+    }
+  }
+  return out
+}
 const name = computed(() => String(props.schema.name || ''))
 const joinValues = computed(() => props.schema.joinValues !== false)
 const delimiter = computed(() => String(props.schema.delimiter ?? ','))
@@ -121,6 +168,7 @@ function currentValue() {
 }
 const selected = computed(() => parseJoined(currentValue(), true, joinValues.value, delimiter.value))
 const searchable = computed(() => props.schema.searchable === true)
+const resultSearchable = computed(() => props.schema.resultSearchable === true)
 const VIRTUAL_ITEM_HEIGHT = 38
 const TREE_ITEM_HEIGHT = 32
 const VIRTUAL_VIEWPORT_HEIGHT = 258
@@ -135,9 +183,11 @@ const virtualItemHeight = computed(() => {
 })
 const leftListEl = ref<HTMLElement | null>(null)
 const rightListEl = ref<HTMLElement | null>(null)
-const leftTableEl = ref<HTMLElement | null>(null)
+const leftTablePaneRef = ref<{ scrollEl?: HTMLElement | null } | null>(null)
+const leftTreePaneRef = ref<{ scrollEl?: HTMLElement | null } | null>(null)
+const leftTableEl = computed(() => leftTablePaneRef.value?.scrollEl ?? null)
 const rightTableEl = ref<HTMLElement | null>(null)
-const leftTreeEl = ref<HTMLElement | null>(null)
+const leftTreeEl = computed(() => leftTreePaneRef.value?.scrollEl ?? null)
 const leftScrollTop = ref(0)
 const rightScrollTop = ref(0)
 const leftTableScrollTop = ref(0)
@@ -166,6 +216,18 @@ const paneSchema = computed<SchemaObject>(() => ({
   multiple: true,
   checkAll: props.schema.checkAll !== false,
 }))
+const treePaneSchema = computed<SchemaObject>(() => ({
+  ...paneSchema.value,
+  checkAll: false,
+  cascade: true,
+  onlyChildren: props.schema.onlyChildren ?? false,
+  initiallyOpen: props.schema.initiallyOpen !== false,
+  autoCheckChildren: props.schema.autoCheckChildren !== false,
+}))
+const chainedPaneSchema = computed<SchemaObject>(() => ({
+  ...paneSchema.value,
+  checkAll: false,
+}))
 const filteredAssociatedLeftOptions = computed(() =>
   leftQuery.value
     ? filterOptionTree(associatedLeftOptions.value, leftQuery.value)
@@ -175,6 +237,9 @@ const filteredChainedNodes = computed(() =>
   leftQuery.value
     ? filterOptionTree(displayRawOptions.value, leftQuery.value)
     : displayRawOptions.value,
+)
+const tableNodes = computed(() =>
+  options.value.filter((item) => matched(item, leftQuery.value)),
 )
 function treeDepth(item: { label?: unknown }) {
   if (mode.value !== 'tree') return 0
@@ -189,15 +254,30 @@ const left = computed(() => options.value.filter((item) => !selected.value.some(
 const right = computed(() => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
 const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
+const availableListRows = computed(() => flattenListRows(treeVisible(treeRows.value)))
+const selectedCount = computed(
+  () => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))).length,
+)
+const availableCount = computed(() => Math.max(0, options.value.length - selectedCount.value))
+const allSelected = computed(
+  () => options.value.length > 0 && selectedCount.value === options.value.length,
+)
+const partialSelected = computed(() => selectedCount.value > 0 && !allSelected.value)
+const showStatistics = computed(() => props.schema.statistics !== false)
 const leftTitle = computed(() =>
   String(props.schema.selectTitle ?? props.schema.leftTitle ?? ''),
 )
 const rightTitle = computed(() =>
   String(props.schema.resultTitle ?? props.schema.rightTitle ?? ''),
 )
-const searchPlaceholder = computed(() => String(props.schema.searchPlaceholder || '搜索'))
+const searchPlaceholder = computed(() =>
+  String(props.schema.searchPlaceholder || env.translate('Transfer.searchKeyword')),
+)
+const resultSearchPlaceholder = computed(() =>
+  String(props.schema.resultSearchPlaceholder || searchPlaceholder.value),
+)
 
-function virtualWindow<T extends { label?: unknown; value?: unknown }>(
+function virtualWindow<T>(
   rows: T[],
   scrollTop: number,
   viewportHeight: number,
@@ -232,7 +312,7 @@ function virtualWindow<T extends { label?: unknown; value?: unknown }>(
 }
 
 const leftWindow = computed(() =>
-  virtualWindow(leftShown.value, leftScrollTop.value, leftViewportHeight.value, 'list'),
+  virtualWindow(availableListRows.value, leftScrollTop.value, leftViewportHeight.value, 'list'),
 )
 const rightWindow = computed(() =>
   virtualWindow(rightShown.value, rightScrollTop.value, rightViewportHeight.value, 'list'),
@@ -372,6 +452,11 @@ function add(value: unknown) {
   void commitSelected([...selected.value, value])
 }
 
+function toggleValue(value: unknown) {
+  if (selected.value.some((item) => optionValuesEqual(item, value))) remove(value)
+  else add(value)
+}
+
 function remove(value: unknown) {
   void commitSelected(selected.value.filter((item) => !optionValuesEqual(item, value)))
 }
@@ -411,6 +496,11 @@ async function addAll(emitSelectAll = true) {
   }
   if (emitSelectAll) await emitTransferEvent('selectAll', serializeSelected(values), values)
   await commitSelected(values)
+}
+
+async function toggleAll() {
+  if (allSelected.value) await commitSelected([])
+  else await addAll(true)
 }
 
 function clearSearch(target?: { left?: boolean; right?: boolean }) {
@@ -568,24 +658,39 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div
-      class="vamis-transfer grid gap-2 sm:grid-cols-[1fr_auto_1fr]"
-      :class="{ 'vamis-transfer--paired': pairedMode }"
-    >
-      <div class="space-y-1">
+    <div class="vamis-transfer grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div class="vamis-transfer__select">
+        <div class="vamis-transfer__title">
+          <span class="vamis-transfer__title-main">
+            <Checkbox
+              v-if="
+                (mode === 'list' || mode === 'tree') &&
+                schema.checkAll !== false
+              "
+              :model-value="allSelected ? true : partialSelected ? 'indeterminate' : false"
+              :disabled="disabled || !options.length"
+              @click.stop="toggleAll"
+            />
+            <span>
+              {{ leftTitle || env.translate('Transfer.available') }}
+              <span v-if="showStatistics">（{{ availableCount }}/{{ options.length }}）</span>
+            </span>
+          </span>
+          <button
+            v-if="pairedMode && schema.checkAll !== false"
+            type="button"
+            class="vamis-transfer__pane-action"
+            :disabled="disabled || !options.length"
+            @click="toggleAll"
+          >
+            {{ env.translate('Select.checkAll') }}
+          </button>
+        </div>
         <template v-if="mode === 'associated'">
-          <div class="vamis-transfer__pane-title">
-            <span>{{ leftTitle || '可选' }}</span>
-            <button
-              v-if="schema.checkAll !== false"
-              type="button"
-              class="vamis-transfer__pane-action"
-              @click="addAll()"
-            >
-              全选
-            </button>
-          </div>
-          <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+          <label v-if="searchable" class="vamis-transfer__search-wrap">
+            <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+            <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
+          </label>
           <SelectAssociatedPane
             :schema="paneSchema"
             :left-options="filteredAssociatedLeftOptions"
@@ -603,10 +708,12 @@ watch(
           />
         </template>
         <template v-else-if="mode === 'chained'">
-          <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
-          <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+          <label v-if="searchable" class="vamis-transfer__search-wrap">
+            <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+            <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
+          </label>
           <SelectChainedPane
-            :schema="paneSchema"
+            :schema="chainedPaneSchema"
             :nodes="filteredChainedNodes"
             :selected-values="selected"
             :option-class-name="schema.optionClassName ? String(schema.optionClassName) : undefined"
@@ -618,206 +725,217 @@ watch(
           />
         </template>
         <template v-else>
-        <p v-if="leftTitle" class="vamis-transfer__title">{{ leftTitle }}</p>
-        <input v-if="searchable" v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
-        <ul
-          v-if="mode === 'tree'"
-          ref="leftTreeEl"
-          class="vamis-transfer__list rounded-md border p-2"
-          :class="{ 'is-virtual': leftTreeWindow.enabled }"
-          @scroll="onLeftTreeScroll"
-        >
+        <label v-if="searchable" class="vamis-transfer__search-wrap">
+          <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
+          <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
+        </label>
+        <div v-if="mode === 'tree'" class="vamis-transfer__tree-selection">
+          <SelectTreePane
+            ref="leftTreePaneRef"
+            :schema="treePaneSchema"
+            :nodes="displayRawOptions"
+            :visible-nodes="filteredChainedNodes"
+            :selected-values="selected"
+            :value="selected"
+            :disabled="disabled"
+            :query="leftQuery"
+            :loading-config="schema.loadingConfig"
+            @update:nodes="replaceOptionNodes"
+            @toggle="replacePaneSelection"
+          />
+          <VamisScrollbar :target="leftTreeEl" />
+        </div>
+        <div v-else-if="mode === 'table'" class="vamis-transfer__table-selection">
+          <SelectTablePane
+            ref="leftTablePaneRef"
+            :schema="paneSchema"
+            :nodes="tableNodes"
+            :selected-values="selected"
+            :disabled="disabled"
+            :query="leftQuery"
+            @pick="toggleValue($event.value)"
+            @toggle-all="toggleAll"
+          />
+          <VamisScrollbar :target="leftTableEl" />
+        </div>
+        <div v-else class="vamis-transfer__scroll-shell">
+          <ul
+            ref="leftListEl"
+            class="vamis-transfer__list vamis-scrollbar-host"
+            :class="{ 'is-virtual': leftWindow.enabled }"
+            @scroll="onLeftScroll"
+          >
           <li
-            v-if="leftTreeWindow.lead > 0"
+            v-if="leftWindow.lead > 0"
             class="vamis-transfer__virtual-pad"
-            :style="{ height: `${leftTreeWindow.lead}px` }"
+            :style="{ height: `${leftWindow.lead}px` }"
             aria-hidden="true"
           />
-          <li v-for="node in leftTreeWindow.rows" :key="node.key">
-            <button
-              type="button"
-              class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
+          <li v-for="row in leftWindow.rows" :key="row.key">
+            <div
+              v-if="row.kind === 'group'"
+              class="vamis-transfer__group"
               :style="{
-                paddingLeft: `${8 + node.depth * 12}px`,
-                height: `${TREE_ITEM_HEIGHT}px`,
+                paddingLeft: `${8 + row.depth * 16}px`,
+                height: `${virtualItemHeight}px`,
               }"
-              :disabled="disabled"
-              @click="treeOnClick(node)"
             >
-              <VamisCaret v-if="treeExpandable(node)" variant="tree" :open="treeIsExpanded(node)" class="vamis-transfer__tree-caret" />
-              {{ node.label }}
-            </button>
+              {{ row.label }}
+            </div>
+            <div
+              v-else
+              class="vamis-transfer__item"
+              :class="{
+                'is-disabled': disabled || row.item.disabled,
+                'is-checked': selected.some((value) =>
+                  optionValuesEqual(value, row.item.value),
+                ),
+              }"
+              :style="{
+                paddingLeft: `${8 + row.depth * 16}px`,
+                height: `${virtualItemHeight}px`,
+              }"
+              role="checkbox"
+              :aria-checked="
+                selected.some((value) => optionValuesEqual(value, row.item.value))
+              "
+              :aria-disabled="disabled || row.item.disabled ? 'true' : undefined"
+              @click="!(disabled || row.item.disabled) && toggleValue(row.item.value)"
+            >
+              <Checkbox
+                :model-value="
+                  selected.some((value) => optionValuesEqual(value, row.item.value))
+                "
+                :disabled="disabled || row.item.disabled"
+                @click.stop="toggleValue(row.item.value)"
+              />
+              <span class="vamis-transfer__text">{{ row.item.label }}</span>
+            </div>
           </li>
           <li
-            v-if="leftTreeWindow.trail > 0"
+            v-if="leftWindow.trail > 0"
             class="vamis-transfer__virtual-pad"
-            :style="{ height: `${leftTreeWindow.trail}px` }"
+            :style="{ height: `${leftWindow.trail}px` }"
             aria-hidden="true"
           />
-        </ul>
-        <div
-          v-else-if="mode === 'table'"
-          ref="leftTableEl"
-          class="vamis-transfer__table-pane"
-          :class="{ 'is-virtual': leftTableWindow.enabled }"
-          @scroll="onLeftTableScroll"
-        >
-          <table class="vamis-transfer__table w-full border-collapse">
-            <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
-            <tbody>
-              <tr
-                v-if="leftTableWindow.lead > 0"
-                class="vamis-transfer__virtual-pad"
-                :style="{ height: `${leftTableWindow.lead}px` }"
-                aria-hidden="true"
-              >
-                <td colspan="2" />
-              </tr>
-              <tr
-                v-for="item in leftTableWindow.rows"
-                :key="String(item.value)"
-                class="vamis-transfer__row cursor-pointer"
-                :style="leftTableWindow.enabled ? { height: `${virtualItemHeight}px` } : undefined"
-                @click="add(item.value)"
-              >
-                <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
-                <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
-              </tr>
-              <tr
-                v-if="leftTableWindow.trail > 0"
-                class="vamis-transfer__virtual-pad"
-                :style="{ height: `${leftTableWindow.trail}px` }"
-                aria-hidden="true"
-              >
-                <td colspan="2" />
-              </tr>
-              <tr v-if="!leftShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">无候选</td></tr>
-            </tbody>
-          </table>
+          <li v-if="!availableListRows.length" class="vamis-transfer__empty">
+            {{ env.translate('placeholder.noData') }}
+          </li>
+          </ul>
+          <VamisScrollbar :target="leftListEl" />
         </div>
-        <ul
-          v-else
-          ref="leftListEl"
-          class="vamis-transfer__list rounded-md border p-2"
-          :class="{ 'is-virtual': leftWindow.enabled }"
-          @scroll="onLeftScroll"
-        >
-        <li
-          v-if="leftWindow.lead > 0"
-          class="vamis-transfer__virtual-pad"
-          :style="{ height: `${leftWindow.lead}px` }"
-          aria-hidden="true"
-        />
-        <li v-for="item in leftWindow.rows" :key="String(item.value)">
-          <button
-            type="button"
-            class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
-            :style="{
-              paddingLeft: `${8 + treeDepth(item) * 12}px`,
-              height: leftWindow.enabled ? `${virtualItemHeight}px` : undefined,
-            }"
-            :disabled="disabled"
-            @click="add(item.value)"
-          >
-            {{ item.label }}
-          </button>
-        </li>
-        <li
-          v-if="leftWindow.trail > 0"
-          class="vamis-transfer__virtual-pad"
-          :style="{ height: `${leftWindow.trail}px` }"
-          aria-hidden="true"
-        />
-        <li v-if="!leftShown.length" class="vamis-transfer__empty px-2 py-4">无候选</li>
-        </ul>
         </template>
       </div>
-      <div v-if="!pairedMode" class="flex flex-col justify-center gap-1">
-        <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="addAll()">全部 &gt;</Button>
-        <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="clear">&lt; 清空</Button>
-      </div>
-      <div class="space-y-1">
-        <div v-if="pairedMode" class="vamis-transfer__pane-title">
-          <span>{{ rightTitle || '已选' }}</span>
-          <button type="button" class="vamis-transfer__pane-action" @click="clear">清空</button>
-        </div>
-        <p v-else-if="rightTitle" class="vamis-transfer__title">{{ rightTitle }}</p>
-        <input v-if="searchable" v-model="rightQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
-        <div
-          v-if="mode === 'table'"
-          ref="rightTableEl"
-          class="vamis-transfer__table-pane"
-          :class="{ 'is-virtual': rightTableWindow.enabled }"
-          @scroll="onRightTableScroll"
-        >
-          <table class="vamis-transfer__table w-full border-collapse">
-            <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
-            <tbody>
-              <tr
-                v-if="rightTableWindow.lead > 0"
-                class="vamis-transfer__virtual-pad"
-                :style="{ height: `${rightTableWindow.lead}px` }"
-                aria-hidden="true"
-              >
-                <td colspan="2" />
-              </tr>
-              <tr
-                v-for="item in rightTableWindow.rows"
-                :key="String(item.value)"
-                class="vamis-transfer__row cursor-pointer"
-                :style="rightTableWindow.enabled ? { height: `${virtualItemHeight}px` } : undefined"
-                @click="remove(item.value)"
-              >
-                <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
-                <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
-              </tr>
-              <tr
-                v-if="rightTableWindow.trail > 0"
-                class="vamis-transfer__virtual-pad"
-                :style="{ height: `${rightTableWindow.trail}px` }"
-                aria-hidden="true"
-              >
-                <td colspan="2" />
-              </tr>
-              <tr v-if="!rightShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">未选择</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <ul
-          v-else
-          ref="rightListEl"
-          class="vamis-transfer__list rounded-md border p-2"
-          :class="{ 'is-virtual': rightWindow.enabled }"
-          @scroll="onRightScroll"
-        >
-        <li
-          v-if="rightWindow.lead > 0"
-          class="vamis-transfer__virtual-pad"
-          :style="{ height: `${rightWindow.lead}px` }"
-          aria-hidden="true"
-        />
-        <li v-for="item in rightWindow.rows" :key="String(item.value)">
+      <div class="vamis-transfer__result">
+        <div class="vamis-transfer__title">
+          <span class="vamis-transfer__title-main">
+            <span>
+              {{ rightTitle || env.translate('Transfer.selectd') }}
+              <span v-if="showStatistics">（{{ selectedCount }}）</span>
+            </span>
+          </span>
           <button
             type="button"
-            class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
-            :style="{
-              paddingLeft: `${8 + treeDepth(item) * 12}px`,
-              height: rightWindow.enabled ? `${virtualItemHeight}px` : undefined,
-            }"
-            :disabled="disabled"
-            @click="remove(item.value)"
+            class="vamis-transfer__pane-action"
+            :disabled="disabled || !selectedCount"
+            @click="clear"
           >
-            {{ item.label }}
+            清除
           </button>
-        </li>
-        <li
-          v-if="rightWindow.trail > 0"
-          class="vamis-transfer__virtual-pad"
-          :style="{ height: `${rightWindow.trail}px` }"
-          aria-hidden="true"
-        />
-        <li v-if="!rightShown.length" class="vamis-transfer__empty px-2 py-4">未选择</li>
-        </ul>
+        </div>
+        <label v-if="resultSearchable" class="vamis-transfer__search-wrap">
+          <input v-model="rightQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="resultSearchPlaceholder" />
+          <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
+        </label>
+        <div
+          v-if="mode === 'table' && schema.resultListModeFollowSelect === true"
+          class="vamis-transfer__scroll-shell"
+        >
+          <div
+            ref="rightTableEl"
+            class="vamis-transfer__table-pane vamis-scrollbar-host"
+            :class="{ 'is-virtual': rightTableWindow.enabled }"
+            @scroll="onRightTableScroll"
+          >
+            <table class="vamis-transfer__table w-full border-collapse">
+              <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
+              <tbody>
+                <tr
+                  v-if="rightTableWindow.lead > 0"
+                  class="vamis-transfer__virtual-pad"
+                  :style="{ height: `${rightTableWindow.lead}px` }"
+                  aria-hidden="true"
+                >
+                  <td colspan="2" />
+                </tr>
+                <tr
+                  v-for="item in rightTableWindow.rows"
+                  :key="String(item.value)"
+                  class="vamis-transfer__row cursor-pointer"
+                  :style="rightTableWindow.enabled ? { height: `${virtualItemHeight}px` } : undefined"
+                  @click="remove(item.value)"
+                >
+                  <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
+                  <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
+                </tr>
+                <tr
+                  v-if="rightTableWindow.trail > 0"
+                  class="vamis-transfer__virtual-pad"
+                  :style="{ height: `${rightTableWindow.trail}px` }"
+                  aria-hidden="true"
+                >
+                  <td colspan="2" />
+                </tr>
+                <tr v-if="!rightShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">未选择</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <VamisScrollbar :target="rightTableEl" />
+        </div>
+        <div v-else class="vamis-transfer__scroll-shell">
+          <ul
+            ref="rightListEl"
+            class="vamis-transfer__list vamis-scrollbar-host"
+            :class="{ 'is-virtual': rightWindow.enabled }"
+            @scroll="onRightScroll"
+          >
+          <li
+            v-if="rightWindow.lead > 0"
+            class="vamis-transfer__virtual-pad"
+            :style="{ height: `${rightWindow.lead}px` }"
+            aria-hidden="true"
+          />
+          <li v-for="item in rightWindow.rows" :key="String(item.value)">
+            <div
+              class="vamis-transfer__result-item"
+              :style="{
+                height: `${virtualItemHeight}px`,
+              }"
+            >
+              <span class="vamis-transfer__text">{{ item.label }}</span>
+              <button
+                type="button"
+                class="vamis-transfer__remove"
+                :aria-label="`移除 ${item.label}`"
+                :disabled="disabled"
+                @click="remove(item.value)"
+              >
+                <VamisClose />
+              </button>
+            </div>
+          </li>
+          <li
+            v-if="rightWindow.trail > 0"
+            class="vamis-transfer__virtual-pad"
+            :style="{ height: `${rightWindow.trail}px` }"
+            aria-hidden="true"
+          />
+          <li v-if="!rightShown.length" class="vamis-transfer__empty">
+            {{ env.translate('Transfer.selectFromLeft') }}
+          </li>
+          </ul>
+          <VamisScrollbar :target="rightListEl" />
+        </div>
       </div>
     </div>
   </FormItem>

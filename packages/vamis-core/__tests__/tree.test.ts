@@ -260,6 +260,12 @@ describe('tree partial and ability', () => {
     expect(treeItemPartial(tree[1], [4])).toBe(false)
   })
 
+  it('marks a cascade parent checked when all children are selected', () => {
+    const opts = { multiple: true, cascade: true, options: tree }
+    expect(isTreeItemChecked(tree[0], [2, 3], opts)).toBe(true)
+    expect(treeItemPartial(tree[0], [2, 3], opts)).toBe(false)
+  })
+
   it('treats missing ability flags as enabled', () => {
     expect(hasTreeAbility(tree[0], 'creatable')).toBe(true)
     expect(hasTreeAbility({ ...tree[0], creatable: false }, 'creatable')).toBe(false)

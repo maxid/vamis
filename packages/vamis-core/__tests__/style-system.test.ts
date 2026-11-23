@@ -121,6 +121,49 @@ describe('style ruler: styles.css', () => {
     )
   })
 
+  it('Transfer panes use the Amis fixed 300px height and 400px cap', () => {
+    expect(css).toContain('--transfer-min-height: 300px')
+    expect(css).toContain('--transfer-pane-max-height: 400px')
+    expect(css).toMatch(/\.vamis-transfer\s*\{[^}]*min-height:\s*var\(--transfer-min-height\)/)
+    expect(css).toMatch(
+      /\.vamis-transfer__select,\s*\n\.vamis-transfer__result\s*\{[^}]*min-height:\s*var\(--transfer-min-height\)[^}]*max-height:\s*var\(--transfer-pane-max-height\)/,
+    )
+  })
+
+  it('Transfer table and tree panes use the Amis Selection chrome', () => {
+    expect(css).toMatch(
+      /\.vamis-transfer__table-selection \.vamis-select__table \[data-slot="table-head"\][\s\S]*font-size:\s*var\(--fontSizeBase\)/,
+    )
+    expect(css).toMatch(
+      /\.vamis-transfer__tree-selection[\s\S]*?\.vamis-tree__check\.vamis-checkbox__mark\s*\{[^}]*margin-right:\s*var\(--gap-sm\)/,
+    )
+    expect(css).toMatch(
+      /\.vamis-select__associated-right-label\s*\{[^}]*white-space:\s*nowrap[^}]*text-overflow:\s*ellipsis/,
+    )
+    expect(css).toMatch(
+      /\.vamis-transfer__tree-selection\s*\{[^}]*display:\s*flex[^}]*min-height:\s*0/,
+    )
+    expect(css).toMatch(
+      /\.vamis-transfer__tree-selection \.vamis-select__tree-pane\s*\{[^}]*flex:\s*1 1 auto[^}]*min-height:\s*0[^}]*overflow:\s*auto/,
+    )
+    expect(css).toMatch(
+      /\.vamis-transfer__search\s*\{[^}]*width:\s*100%[^}]*border-radius:\s*var\(--radius\)[^}]*background:\s*var\(--card\)/,
+    )
+  })
+
+  it('Transfer delegates visible scroll thumbs to the application scrollbar', () => {
+    expect(css).toContain('--scrollbar-thumb:')
+    expect(css).toMatch(
+      /\.vamis-scrollbar-host,[\s\S]*?\{[^}]*scrollbar-width:\s*none/,
+    )
+    expect(css).toMatch(
+      /\.vamis-scrollbar\.is-visible\s*\{[^}]*opacity:\s*1[^}]*visibility:\s*visible/,
+    )
+    expect(css).toMatch(
+      /\.vamis-scrollbar__thumb\s*\{[^}]*width:\s*calc\(var\(--scrollbar-size\)\s*-\s*2px\)[^}]*background:\s*var\(--scrollbar-thumb\)/,
+    )
+  })
+
   it('hex tokens stay a short, named list', () => {
     // 色阶之外的 Amis 字面量（存量，只许减）。新增色先找 --colors-* 色阶。
     const hexTokens = css.match(/^[ \t]*--[\w-]+:\s*#[0-9a-fA-F]{3,8};/gm) ?? []

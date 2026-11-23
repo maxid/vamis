@@ -236,6 +236,10 @@
   --gap-lg: 20px;
   --gap-xl: 24px;
   --animation-duration: 0.2s;
+  --scrollbar-size: 8px;
+  --scrollbar-thumb: var(--colors-neutral-text-5);
+  --scrollbar-thumb-hover: var(--colors-neutral-text-4);
+  --scrollbar-track: transparent;
   --select-caret-color: var(--colors-neutral-text-5);
   --select-caret-hover-color: var(--colors-neutral-text-5);
   /* 对齐 Amis `--Form-select-menu-*` / `--select-base-*-option-*`（cxd）。 */
@@ -244,6 +248,8 @@
   --select-menu-border: var(--colors-neutral-line-9);
   --select-menu-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+  --transfer-min-height: 300px;
+  --transfer-pane-max-height: 400px;
   --transfer-selection-max-height: 350px;
   /* 对齐 Amis `--DatePicker-*` / `--Calendar-cell-*` / `--inputDate-*`。弹层底跟 Select 菜单，不要写死 #fff。 */
   --cal-bg: var(--select-menu-bg);
@@ -10922,22 +10928,141 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 
 /* ---- 皮肤迁出模板（2026-11 第三刀） ---- */
-.vamis-transfer__title,
 .vamis-transfer-picker__hint {
   font-size: var(--fontSizeSm);
   line-height: var(--lineHeightBase);
   color: var(--text-secondary);
 }
-.vamis-transfer__pane-title {
+.vamis-transfer {
+  min-height: var(--transfer-min-height);
+}
+.vamis-transfer__select,
+.vamis-transfer__result {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--transfer-min-height);
+  max-height: var(--transfer-pane-max-height);
+  overflow: hidden;
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.vamis-transfer__table-selection,
+.vamis-transfer__tree-selection {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.vamis-transfer__table-selection .vamis-select__table-pane {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+.vamis-transfer__tree-selection .vamis-select__tree-pane {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+.vamis-transfer__scroll-shell {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+}
+.vamis-scrollbar-host,
+.vamis-transfer__tree-selection > .vamis-select__tree-pane,
+.vamis-transfer__table-selection > .vamis-select__table-pane {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.vamis-scrollbar-host::-webkit-scrollbar,
+.vamis-transfer__tree-selection
+  > .vamis-select__tree-pane::-webkit-scrollbar,
+.vamis-transfer__table-selection
+  > .vamis-select__table-pane::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.vamis-scrollbar {
+  position: absolute;
+  top: 0;
+  right: 1px;
+  bottom: 0;
+  z-index: 3;
+  width: var(--scrollbar-size);
+  background: var(--scrollbar-track);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  touch-action: none;
+}
+.vamis-scrollbar.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.vamis-scrollbar__thumb {
+  width: calc(var(--scrollbar-size) - 2px);
+  min-height: 24px;
+  margin: 0 auto;
+  border-radius: var(--borderRadiusFull);
+  background: var(--scrollbar-thumb);
+  cursor: default;
+}
+.vamis-scrollbar:hover .vamis-scrollbar__thumb {
+  background: var(--scrollbar-thumb-hover);
+}
+.vamis-transfer__tree-selection .vamis-select__tree-pane .vamis-tree {
+  max-height: none;
+  overflow: visible;
+}
+.vamis-transfer__table-selection .vamis-select__table [data-slot="table-head"],
+.vamis-transfer__table-selection .vamis-select__table [data-slot="table-cell"] {
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-transfer__tree-selection
+  .vamis-select__tree-pane
+  .vamis-tree__check.vamis-checkbox__mark {
+  width: 14px;
+  height: 14px;
+  margin-right: var(--gap-sm);
+}
+.vamis-transfer__tree-selection
+  .vamis-select__tree-pane
+  .vamis-tree__check.vamis-checkbox__mark
+  .vamis-checkbox__icon {
+  width: 12px;
+  height: 12px;
+}
+.vamis-transfer__title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: var(--control-h);
-  padding: 0 var(--gap-sm);
-  font-size: var(--fontSizeSm);
-  line-height: var(--lineHeightBase);
-  color: var(--text-secondary);
+  width: 100%;
+  padding: var(--gap-sm) var(--gap-base);
   background: var(--fill-10);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  color: var(--text-color);
+}
+.vamis-transfer__title-main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--gap-sm);
+}
+.vamis-transfer__title .vamis-checkbox {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
 }
 .vamis-transfer__pane-action {
   padding: 0;
@@ -10950,21 +11075,110 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-transfer__pane-action:hover {
   color: var(--primary);
 }
+.vamis-transfer__pane-action:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
 .vamis-transfer__search,
 .vamis-transfer__list,
 .vamis-transfer__table,
-.vamis-transfer__item {
+.vamis-transfer__item,
+.vamis-transfer__result-item,
+.vamis-transfer__group {
   font-size: var(--fontSizeBase);
   line-height: var(--lineHeightBase);
   color: var(--text-color);
 }
+.vamis-transfer__search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  width: auto;
+  min-width: 0;
+  margin: var(--gap-sm) var(--gap-base);
+}
+.vamis-transfer__search {
+  width: 100%;
+  margin: 0;
+  padding: var(--gap-xs) calc(var(--icon-size) + var(--select-search-input-pad-x) * 2)
+    var(--gap-xs) var(--select-search-input-pad-x);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.vamis-transfer__search-icon {
+  position: absolute;
+  right: var(--select-search-input-pad-x);
+  width: var(--icon-size);
+  height: var(--icon-size);
+  color: var(--select-search-icon-color);
+  pointer-events: none;
+}
+.vamis-transfer__search-icon svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
 .vamis-transfer__list {
-  max-height: 258px;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
   overflow: auto;
+  padding: var(--gap-xs) 0;
+}
+.vamis-transfer__group {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: var(--fontSizeSm);
+  color: var(--text-secondary);
+}
+.vamis-transfer__item,
+.vamis-transfer__result-item {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 var(--gap-base);
+  gap: var(--gap-sm);
+  cursor: pointer;
+}
+.vamis-transfer__item .vamis-checkbox {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+}
+.vamis-transfer__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vamis-transfer__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--icon-size);
+  width: var(--icon-size);
+  height: var(--icon-size);
+  margin-left: auto;
   padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--icon-color);
+  cursor: pointer;
+}
+.vamis-transfer__remove:hover {
+  color: var(--icon-hover-color);
+}
+.vamis-transfer__remove svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 .vamis-transfer__table-pane {
-  max-height: 258px;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
   overflow: auto;
 }
 .vamis-transfer__table-pane thead {
@@ -10972,16 +11186,6 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   top: 0;
   z-index: 1;
   background: var(--card);
-}
-.vamis-transfer__item {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-@media (min-width: 640px) {
-  .vamis-transfer--paired {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
 }
 .vamis-transfer__virtual-pad {
   padding: 0;
@@ -10992,15 +11196,24 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding: 0;
   border: 0;
 }
-.vamis-transfer__item:hover:not(:disabled),
+.vamis-transfer__item:hover:not(.is-disabled),
+.vamis-transfer__result-item:hover,
 .vamis-transfer__row:hover {
   background: var(--select-option-hover-bg);
   color: var(--select-option-hover-color);
+}
+.vamis-transfer__item.is-disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
 }
 .vamis-transfer__value {
   color: var(--text-tertiary);
 }
 .vamis-transfer__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--control-h) * 4);
   font-size: var(--fontSizeSm);
   line-height: var(--lineHeightBase);
   color: var(--text-muted);
@@ -12536,6 +12749,13 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding-left: calc(
     var(--select-option-padding-x) + var(--associated-depth, 0) * var(--tree-indent)
   );
+}
+.vamis-select__associated-right-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .vamis-select__associated-right-group {
   display: flex;
