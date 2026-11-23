@@ -6,7 +6,7 @@ outline: deep
 # Options 选择器表单项
 
 ::: info 实现进度 92% · 进行中
-已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；`itemActions` 已由共享 TreeBranch 接到 InputTree / TreeSelect / Select tree；节点路径值由共享树工具拆叶与父链回写。Select 桌面平铺选项、InputTree 与 TreeSelect 已接虚拟列表；分组菜单、Picker / Transfer 仍整表渲染。
+已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；`itemActions` 已由共享 TreeBranch 接到 InputTree / TreeSelect / Select tree；节点路径值由共享树工具拆叶与父链回写。Select 桌面平铺选项、InputTree、TreeSelect、Transfer list/table 已接虚拟列表；分组菜单、Picker、Transfer tree 仍整表渲染。
 :::
 
 **选择器表单项** 是指那些（例如下拉选择框）具有选择器特性的表单项。它派生自 [表单项](./formitem)，拥有表单项所有的特性。
@@ -969,7 +969,7 @@ body:
 
 ## 控制选项高度
 
-下拉选项很多时（默认超过 100 条，可用 `virtualThreshold` 调）会切到虚拟渲染；选项文案过长会重叠，这时要设 `itemHeight`。Vamis 已在 Select 桌面平铺选项接入：固定行高滚动、按视口切片渲染。InputTree / TreeSelect 走共享树窗口，行高从首行实测，并优先使用实际滚动视口；分组菜单与 Picker / Transfer 暂不虚拟化。
+下拉选项很多时（默认超过 100 条，可用 `virtualThreshold` 调）会切到虚拟渲染；选项文案过长会重叠，这时要设 `itemHeight`。Vamis 已在 Select 桌面平铺选项接入：固定行高滚动、按视口切片渲染。InputTree / TreeSelect 走共享树窗口，行高从首行实测，并优先使用实际滚动视口；Transfer list/table 左右栏各自窗口化。分组菜单、Picker、Transfer tree 暂不虚拟化。
 
 ```schema: scope="body"
 type: form
@@ -1060,5 +1060,5 @@ body:
 
 - 作者态 YAML / JSON 并列。
 - 新增选项当前是下拉内简易表单，不是独立 Dialog；`addDialog` 尺寸等未接。
-- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`itemActions` 已接 InputTree / TreeSelect / Select tree，操作节点拿到当前 option 数据且不会误选整行；`virtualThreshold` 已接 Select 桌面平铺选项、InputTree 与 TreeSelect，分组菜单、Picker / Transfer 待复用。
+- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`itemActions` 已接 InputTree / TreeSelect / Select tree，操作节点拿到当前 option 数据且不会误选整行；`virtualThreshold` 已接 Select 桌面平铺选项、InputTree、TreeSelect 与 Transfer list/table，分组菜单、Picker、Transfer tree 待复用。
 - 树形 / 级联 / 穿梭器已能复用值形状与 `normalizeOptions`，完整 UI 仍在各自组件页。

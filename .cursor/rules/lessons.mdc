@@ -1031,6 +1031,12 @@ alwaysApply: true
 - 触及：`tree-select` `input-tree` `select`
 - 规则：Amis `Tree.tsx` `checkedInValue` / `isItemChecked`；`packages/vamis/src/renderers/form/TreeBranch.vue`
 
+### Transfer 虚拟化是左右栏各自窗口，Picker 没有同名直接契约
+- 踩过：把 Transfer 当成普通 Options 平铺列表，左右任一滚动就重算整页；table 模式若让表头跟着窗口行一起滚，视觉和 Amis 不一致。Picker 主渲染器本身没有 `virtualThreshold` / `itemHeight`，直接套 Transfer 规则会制造伪契约。
+- 稳定做法：Transfer list/table 左右栏分别保存 `scrollTop` / 实测视口，默认 `virtualThreshold=100`、`itemHeight=38`，各自用上下 spacer 补总高；搜索缩表或模式切换回顶部。table 由 pane 承担唯一滚动，`thead` sticky，虚拟行点击仍用完整数组值。实测 Amis selection 约 258px，101 项只渲染约 10 行。Picker 先走自身 pickerSchema / CRUD 能力，不硬塞 Transfer 虚拟参数。
+- 触及：`transfer` `picker` Options
+- 规则：Amis `Transfer.tsx` / `GroupedSelection.tsx` / `TableSelection.tsx` / `_transfer.scss`；`packages/vamis/src/renderers/form/Transfer.vue`
+
 ### Tree 展开态按稳定路径存，不按节点对象身份存
 - 踩过：先收缩第一个树分组，再收缩第二个分组时，第一个分组会重新展开；`InputTree` / `TreeSelect` / associated 左树都会复现。根因是 `useTreeState` 用 `Map<OptionItem, boolean>` 记录展开态，树行经过渲染/重排后节点对象身份可能变化，状态便会落到另一个键上。
 - 稳定做法：展开态统一用 `Map<string, boolean>`，键由 `nodePath` 生成（值优先，无值时用路径 / label）；`seedExpanded`、`ensureExpanded`、`isExpanded`、`toggleExpand` 和 deferred 合并后的展开都必须使用同一个 `nodeKey`。不要再按对象引用、label 或数组下标裸存。

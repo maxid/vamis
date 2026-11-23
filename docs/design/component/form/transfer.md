@@ -1,12 +1,12 @@
 # Transfer 穿梭器 · `transfer` 设计
 
-> 状态：**进行中 82%** · 复杂度：**XL 特重**
+> 状态：**进行中 70%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/transfer) · Amis：`/zh-CN/components/form/transfer`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
 ## 0. 一页结论
 
-Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已经覆盖 list/table/tree、搜索、远程 source 和树展开，但**没有组件事件与 scoped 动作**，也没有分页；文档中的事件/动作/分页章节是按 Amis 目标写的，不能当作已实现。
+Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已经覆盖 list/table/tree、搜索、远程 source、树展开，以及 list/table 虚拟窗口；但**没有组件事件与 scoped 动作**，也没有分页、排序、拖拽和 tree 虚拟化。
 
 ## 1. 边界与优先级（先读）
 
@@ -68,6 +68,8 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 | `disabled` / `static` / `readOnly` | 状态 | 由 FormItem/控件统一 |
 | `perPage` / 分页 | **文档有、实现无** | 不要按已支持写验收 |
 | `resetValue` | reset 值 | 与 clear 区分 |
+| `virtualThreshold` | 默认 100；list / table 窗口阈值 | tree 尚未接 |
+| `itemHeight` | 默认 38；list / table 虚拟行高 | tree 尚未接 |
 
 ### 3.3 事件/动作
 
@@ -119,9 +121,9 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 
 ## 6. 当前状态与缺口
 
-- 已对齐：list/table/tree、搜索、remote/变量 source、left/right title、tree 展开、值序列化。
-- 未接：事件 `change` / `selectAll`、动作 `clear`/`reset`/`clearSearch`/`selectAll`/`setValue`、分页、移动端专用布局。
-- 对照：TODO 记录 transfer 桌面/移动主路径；本轮未重跑。
+- 已对齐：list/table/tree、搜索、remote/变量 source、left/right title、tree 展开、值序列化、list/table 虚拟窗口。
+- 未接：事件 `change` / `selectAll`、动作 `clear`/`reset`/`clearSearch`/`selectAll`/`setValue`、tree 虚拟化、分页、排序、拖拽、移动端专用布局。
+- 对照：桌面 / 移动 **6/9**（P0 0，余 3 条均为 Amis 侧 `rendered:false` 探针）。
 
 ## 7. 验收计划与完成度
 
@@ -134,10 +136,10 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 - [ ] 事件 / 动作逐项核对（当前未接）
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（Transfer 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page transfer` 桌面
-- [ ] `pnpm compare --page transfer --mobile`
+- [x] `pnpm test`（Transfer 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page transfer` 桌面
+- [x] `pnpm compare --page transfer --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点
@@ -152,7 +154,7 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 
 1. 先补 `change` / `selectAll` 事件与 clear/reset/setValue 动作（与 Options 族统一）。
 2. 分页/移动端布局单独立项。
-3. 补左右栏搜索清空动作 `clearSearch`。
+3. 补左右栏搜索清空动作 `clearSearch`，再评估 tree 虚拟化。
 
 ---
 

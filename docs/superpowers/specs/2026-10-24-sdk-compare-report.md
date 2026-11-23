@@ -3,7 +3,7 @@
 - 日期：2026-11-23
 - 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **16** · 通过 **14** · 失败 **2**（P0 0）· Vamis 多出 extra **0**
+- 合计 **9** · 通过 **6** · 失败 **3**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -11,7 +11,7 @@
 |------|------|--------|
 | 全局 | 0 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 2 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 3 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
 ### 全局（0）
 
@@ -25,12 +25,13 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（2）
+### 组件（3）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `components-form-treeselect-14` page/body/0:form/body/0:tree-select.rendered: Amis `false` / Vamis `true`
-- `components-form-treeselect-15` page/body/0:form/body/0:tree-select.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-6` page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-7` page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-8` page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
 
 整改：
 - schema 树该结点要能在 DOM 里定位（name / label）。
@@ -40,7 +41,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 16 | 2 |
+| 组件 | 9 | 3 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -49,7 +50,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据输入 | 16 | 2 |
+| 组件 / 数据输入 | 9 | 3 |
 
 ## P0 失败（驱动下一刀）
 
@@ -57,8 +58,9 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `components-form-treeselect-14` TreeSelect 树形选择器 #15 — page/body/0:form/body/0:tree-select.rendered: Amis `false` / Vamis `true`
-- `components-form-treeselect-15` TreeSelect 树形选择器 #16 — page/body/0:form/body/0:tree-select.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-6` Transfer 穿梭器 #7 — page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-7` Transfer 穿梭器 #8 — page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
+- `components-form-transfer-8` Transfer 穿梭器 #9 — page/body/0:form/body/0:transfer.rendered: Amis `false` / Vamis `true`
 
 ## 重跑口径
 
@@ -66,6 +68,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "components-form-treeselect-14" --mobile` — 只重跑「components-form-treeselect-14」自身
-- `pnpm compare --page "components-form-treeselect-15" --mobile` — 只重跑「components-form-treeselect-15」自身
+- `pnpm compare --page "components-form-transfer-6" --mobile` — 只重跑「components-form-transfer-6」自身
+- `pnpm compare --page "components-form-transfer-7" --mobile` — 只重跑「components-form-transfer-7」自身
+- `pnpm compare --page "components-form-transfer-8" --mobile` — 只重跑「components-form-transfer-8」自身
 

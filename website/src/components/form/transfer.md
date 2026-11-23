@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 65% · 进行中
-主路径：`options` 静态选项、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`。缺 table / tree / chained 模式、远程 `source`、分页、排序、拖拽。
+::: warning 实现进度 70% · 进行中
+主路径：`options` / 远程 `source`、list / table / tree、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`，list 与 table 已接虚拟窗口。仍缺 chained / associated、事件与 scoped 动作、分页、排序、拖拽、tree 虚拟化和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -539,6 +539,6 @@ valueField: value
 ```
 
 ## 和 Amis 文档的差异
-- 与 Amis 一致：静态 options、左右移动、全部 / 清空、joinValues / delimiter。
-- 已加：searchable / searchPlaceholder / leftTitle / rightTitle。
-- 未接：chained 模式、分页、排序、拖拽、属性/事件/动作表完整项。
+- 与 Amis 一致：静态 options / 远程 source、list / table / tree、左右移动、全部 / 清空、joinValues / delimiter、左右搜索、标题。
+- 已接：list / table 的 `virtualThreshold` / `itemHeight` 窗口、实测视口与上下 spacer。
+- 未接：chained / associated、事件 / 动作、分页、排序、拖拽、tree 虚拟化、移动端专用布局。

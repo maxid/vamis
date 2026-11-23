@@ -10936,6 +10936,35 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--text-color);
 }
+.vamis-transfer__list {
+  max-height: 258px;
+  overflow: auto;
+  padding: 0;
+}
+.vamis-transfer__table-pane {
+  max-height: 258px;
+  overflow: auto;
+}
+.vamis-transfer__table-pane thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--card);
+}
+.vamis-transfer__item {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+.vamis-transfer__virtual-pad {
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.vamis-transfer__table-pane .vamis-transfer__virtual-pad > td {
+  padding: 0;
+  border: 0;
+}
 .vamis-transfer__item:hover:not(:disabled),
 .vamis-transfer__row:hover {
   background: var(--select-option-hover-bg);
