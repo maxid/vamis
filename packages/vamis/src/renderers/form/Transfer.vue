@@ -189,8 +189,12 @@ const left = computed(() => options.value.filter((item) => !selected.value.some(
 const right = computed(() => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
 const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
-const leftTitle = computed(() => String(props.schema.leftTitle || ''))
-const rightTitle = computed(() => String(props.schema.rightTitle || ''))
+const leftTitle = computed(() =>
+  String(props.schema.selectTitle ?? props.schema.leftTitle ?? ''),
+)
+const rightTitle = computed(() =>
+  String(props.schema.resultTitle ?? props.schema.rightTitle ?? ''),
+)
 const searchPlaceholder = computed(() => String(props.schema.searchPlaceholder || '搜索'))
 
 function virtualWindow<T extends { label?: unknown; value?: unknown }>(

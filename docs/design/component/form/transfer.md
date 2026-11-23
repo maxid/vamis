@@ -3,6 +3,7 @@
 > 状态：**进行中 86%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/transfer) · Amis：`/zh-CN/components/form/transfer`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
+> Schema 对齐：[Transfer Schema 对齐](../../../superpowers/specs/component/form/2026-11-23-vamis-transfer-schema-contract.md)
 
 ## 0. 一页结论
 
@@ -29,7 +30,7 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 - list / table / tree / chained / associated 五种 selectMode
 - tree 多层 children、父节点不可选、展开/收起、搜索保留分支
 - chained 父节点只展开、associated ref 左栏与 children 右栏、source 信封
-- 左右搜索、`searchPlaceholder`、`leftTitle` / `rightTitle`
+- 左右搜索、`searchPlaceholder`、`selectTitle` / `resultTitle`（旧 `leftTitle` / `rightTitle` 兼容）
 - 远程/变量 source、失败、data 变化重载
 - disabled / static / FormItem 错误态
 - 窄屏双栏换行、深色
@@ -68,12 +69,18 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 | `selectMode` / `mode` | list / table / tree / chained / associated | Amis 主字段 `selectMode`，`mode` 兼容 |
 | `leftOptions` / `leftDefaultValue` / `leftMode` / `rightMode` | associated | 左栏 list/tree，右栏 list/table/tree/chained；source 信封也支持 |
 | `searchable` / `searchPlaceholder` | 搜索 | 左右独立 query |
-| `leftTitle` / `rightTitle` | 栏标题 | 展示，不参与值 |
+| `selectTitle` / `resultTitle` | 栏标题 | Amis 主字段；`leftTitle` / `rightTitle` 仅兼容 |
 | `disabled` / `static` / `readOnly` | 状态 | 由 FormItem/控件统一 |
 | `perPage` / 分页 | **文档有、实现无** | 不要按已支持写验收 |
 | `resetValue` | reset 值 | 与 clear 区分 |
 | `virtualThreshold` | 默认 100；list / table / tree 窗口阈值 | tree 同阈值，但行高规则不同 |
 | `itemHeight` | 默认 38；list / table 虚拟行高 | Amis Transfer tree 不消费 `itemHeight`，tree 固定按 Tree 的 32px |
+
+#### 3.2.1 Schema 对齐状态
+
+- 已列入编辑器补全与文档：Amis `AMISTransferSchemaBase` 的全部字段，包括 `showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode`、`columns`、`searchResultColumns`、`resultSearchable`、`searchApi`、`selectTitle`、`resultTitle`、`menuTpl`、`valueTpl`、`resultSearchPlaceholder`、`statistics`、`showInvalidMatch`、`pagination` 等。
+- 运行时已接：`options/source`、值序列化、`selectMode` 五模式、`leftOptions/leftDefaultValue/leftMode/rightMode`、`selectTitle/resultTitle`、`searchable/searchPlaceholder`、`virtualThreshold/itemHeight`、事件 / 动作。
+- 仅 schema 文档已对齐、运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode/searchResultColumns`、`columns`、`resultSearchable/resultSearchPlaceholder`、`searchApi`、`menuTpl/valueTpl`、`statistics`、`showInvalidMatch`、`pagination`、`onlyChildren/initiallyOpen/autoCheckChildren`。这些字段会在属性表和编辑器补全中出现，但说明必须标记为未接，不能写成已支持。
 
 ### 3.3 事件/动作
 

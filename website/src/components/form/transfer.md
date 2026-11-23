@@ -6,7 +6,7 @@ outline: deep
 # Transfer 穿梭器
 
 ::: warning 实现进度 86% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`leftTitle` / `rightTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。仍缺分页、排序、拖拽和移动端专用布局。
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左右移动 / 全部 / 清空、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`selectTitle` / `resultTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺结果搜索、列配置、menuTpl / valueTpl、统计、分页、排序 / 拖拽和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -47,8 +47,8 @@ type: transfer
 name: transfer
 label: 表格模式
 mode: table
-leftTitle: 待选
-rightTitle: 已选
+selectTitle: 待选
+resultTitle: 已选
 options:
   - label: 选项 A
     value: a
@@ -308,19 +308,49 @@ valueField: value
 
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `options` | `Option[]` | | 静态选项 |
-| `value` / `name` | | | 已选值 |
-| `joinValues` | `boolean` | `true` | 是否用分隔符拼接 |
-| `delimiter` | `string` | `,` | 拼接分隔符 |
-| `searchable` | `boolean` | `false` | 左右搜索框 |
-| `searchPlaceholder` | `string` | `搜索` | 搜索占位 |
-| `leftTitle` / `rightTitle` | `string` | | 左右栏标题 |
-| `selectMode` | `string` | `list` | `list` / `table` / `tree` / `chained` / `associated` |
-| `mode` | `string` | `list` | `selectMode` 的兼容别名；两者同时配置时 `selectMode` 优先 |
-| `leftOptions` | `Option[]` | | `associated` 左栏选项 |
-| `leftDefaultValue` | | | `associated` 左栏默认选项值 |
-| `leftMode` / `rightMode` | `string` | `list` | `associated` 左栏 list/tree，右栏 list/table/tree/chained |
+| `options` | `Option[]` | | 静态选项，支持 `children` |
 | `source` | API / 变量 | | 远程或数据域选项 |
+| `value` / `name` | | | 已选值 |
+| `joinValues` | `boolean` | `true` | 多选是否拼接为字符串 |
+| `delimiter` | `string` | `,` | 多值拼接符 |
+| `extractValue` | `boolean` | `false` | 只提交 option value |
+| `labelField` / `valueField` | `string` | `label` / `value` | 选项字段映射 |
+| `showArrow` | `boolean` | | 中间箭头；当前 Vamis 未接 |
+| `sortable` | `boolean` | `false` | 结果拖拽排序；当前 Vamis 未接 |
+| `selectMode` | `string` | `list` | `list` / `table` / `tree` / `chained` / `associated` |
+| `mode` | `string` | `list` | Vamis 兼容别名；`selectMode` 优先 |
+| `resultListModeFollowSelect` | `boolean` | `false` | 结果区跟随选择模式；当前 Vamis 未接 |
+| `leftOptions` | `Option[]` | | `associated` 左栏选项 |
+| `leftDefaultValue` | | | `associated` 左栏默认值 |
+| `leftMode` | `string` | `list` | `associated` 左栏 `list` / `tree` |
+| `rightMode` | `string` | `list` | `associated` 右栏 `list` / `table` / `tree` / `chained` |
+| `searchResultMode` | `string` | | 搜索结果面板模式；当前 Vamis 未接 |
+| `columns` | `Object[]` | | `table` 列配置；当前 Vamis 仍用固定两列 |
+| `searchResultColumns` | `Object[]` | | 搜索结果列；当前 Vamis 未接 |
+| `searchable` | `boolean` | `false` | 左侧搜索 |
+| `resultSearchable` | `boolean` | `false` | 右侧结果搜索；当前 Vamis 未接 |
+| `searchApi` | API | | 左侧远程搜索；当前 Vamis 未接 |
+| `selectTitle` | `string` | `请选择` | 左侧标题 |
+| `resultTitle` | `string` | `当前选择` | 右侧结果标题 |
+| `leftTitle` / `rightTitle` | `string` | | Vamis 兼容别名 |
+| `menuTpl` | SchemaNode | | 自定义选项展示；当前 Vamis 未接 |
+| `valueTpl` | SchemaNode | | 自定义结果值展示；当前 Vamis 未接 |
+| `searchPlaceholder` | `string` | | 左侧搜索提示 |
+| `resultSearchPlaceholder` | `string` | | 右侧结果搜索提示；当前 Vamis 未接 |
+| `statistics` | `boolean` | `true` | 选择统计；当前 Vamis 未接 |
+| `itemHeight` | `number` | `38` | list / table 虚拟行高；tree 固定 32 |
+| `virtualThreshold` | `number` | `100` | 开启虚拟窗口的选项阈值 |
+| `showInvalidMatch` | `boolean` | `false` | 未匹配值飘红；当前 Vamis 未接 |
+| `onlyChildren` | `boolean` | | 树形只提交叶子 |
+| `initiallyOpen` | `boolean` | | 树形默认展开 |
+| `autoCheckChildren` | `boolean` | `true` | 树形勾选联动 |
+| `pagination` | `object` | | 分页配置；当前 Vamis 未接 |
+| `pagination.enable` | `boolean` | | 是否开启分页 |
+| `pagination.className` | `string` | | 分页 CSS 类名 |
+| `pagination.layout` | `string[]` | `["pager"]` | 分页布局 |
+| `pagination.perPageAvailable` | `number[]` | `[10,20,50,100]` | 每页条数 |
+| `pagination.maxButtons` | `number` | `5` | 最多分页按钮 |
+| `pagination.popOverContainerSelector` | `string` | | 每页切换控件挂载点 |
 
 ## 事件表
 
@@ -616,4 +646,5 @@ valueField: value
 - 已接：`change` / `selectAll` 事件，`clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 动作；`change` 在写值前派发并支持 `preventDefault`。
 - 已接：`chained` 与 `associated` 复用 Select 的级联 / 关联 pane，支持 `leftOptions`、`leftDefaultValue`、`leftMode`、`rightMode` 和 source 信封。
 - `chained` / `associated` 使用等宽选择面与结果面，全选 / 清空放在标题行，不占中间移动列。
-- 未接：分页、排序、拖拽、移动端专用布局。
+- 属性表与编辑器补全已列全 Amis schema；标注“当前 Vamis 未接”的字段尚未实现。
+- 运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`columns`、结果搜索、`searchApi`、`menuTpl` / `valueTpl`、`statistics`、`showInvalidMatch`、`pagination`、部分树属性、移动端专用布局。

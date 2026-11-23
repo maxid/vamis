@@ -169,6 +169,29 @@ describe('Transfer events', () => {
     click(buttonWithText('< 清空'))
     await vi.waitFor(() => expect(formData(scoped, 'transferClearArrayForm').transfer).toEqual([]))
   })
+
+  it('uses Amis selectTitle / resultTitle with legacy leftTitle aliases', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferTitles',
+        selectTitle: '可选人员',
+        resultTitle: '已选人员',
+        leftTitle: '旧左标题',
+        rightTitle: '旧右标题',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelectorAll('.vamis-transfer__title')[0]?.textContent).toBe('可选人员')
+    expect(host.querySelectorAll('.vamis-transfer__title')[1]?.textContent).toBe('已选人员')
+  })
 })
 
 describe('Transfer scoped actions', () => {
