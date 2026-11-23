@@ -39,6 +39,7 @@ const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
         :multiple="tree.multiple.value"
         :show-radio="tree.showRadio.value"
         :query="tree.query.value"
+        :virtual-threshold="tree.virtualThreshold.value"
         :creatable="tree.creatable.value"
         :editable="tree.editable.value"
         :removable="tree.removable.value"

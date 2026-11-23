@@ -24,6 +24,7 @@ import {
   getOptionValue,
   normalizeNodePath,
   optionsResetValue,
+  optionsVirtualThreshold,
   toggleTreeSelection,
   treeItemPartial,
   updateOptionInTree,
@@ -97,6 +98,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   const showOutline = computed(() => !!schema.value.showOutline)
   const showIcon = computed(() => schema.value.showIcon !== false)
   const searchable = computed(() => !!schema.value.searchable)
+  const virtualThreshold = computed(() => optionsVirtualThreshold(schema.value))
   const hideNodePathLabel = computed(() => !!schema.value.hideNodePathLabel)
   const pathSeparator = computed(() =>
     schema.value.pathSeparator == null ? '/' : String(schema.value.pathSeparator),
@@ -604,6 +606,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     showOutline,
     showIcon,
     searchable,
+    virtualThreshold,
     searchPlaceholder,
     searchSticky,
     searchImmediately,

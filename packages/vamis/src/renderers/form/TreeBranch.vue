@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { VamisIcon } from '@vamis/ui'
 import {
   SchemaRenderer,
@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<{
   multiple?: boolean
   showRadio?: boolean
   query?: string
+  virtualThreshold?: number
   creatable?: boolean
   editable?: boolean
   removable?: boolean
@@ -75,7 +76,63 @@ const emit = defineEmits<{
 }>()
 
 const inputEl = ref<HTMLInputElement | HTMLInputElement[] | null>(null)
+const treeEl = ref<HTMLElement | null>(null)
 const rows = computed(() => flattenVisibleOptions(props.nodes, props.expanded))
+const virtualThreshold = computed(() =>
+  typeof props.virtualThreshold === 'number' && Number.isFinite(props.virtualThreshold)
+    ? props.virtualThreshold
+    : 0,
+)
+const virtualCandidate = computed(
+  () => virtualThreshold.value > 0 && rows.value.length > virtualThreshold.value,
+)
+const virtualItemHeight = ref(0)
+const virtualScrollTop = ref(0)
+const virtualMeasuredViewport = ref(0)
+const virtualProbeEl = ref<HTMLElement | null>(null)
+let virtualMeasureTimer: ReturnType<typeof setTimeout> | undefined
+let virtualMeasureFrame = 0
+let virtualProbeObserver: ResizeObserver | undefined
+const virtualThresholdViewport = computed(
+  () => virtualItemHeight.value * Math.min(rows.value.length, virtualThreshold.value),
+)
+const virtualViewport = computed(() =>
+  virtualMeasuredViewport.value > 0
+    ? virtualMeasuredViewport.value
+    : virtualThresholdViewport.value,
+)
+const virtualEnabled = computed(
+  () => virtualCandidate.value && virtualItemHeight.value > 0,
+)
+const virtualStart = computed(() => {
+  if (!virtualEnabled.value) return 0
+  return Math.max(
+    0,
+    Math.floor(virtualScrollTop.value / virtualItemHeight.value) - 3,
+  )
+})
+const virtualEnd = computed(() => {
+  if (!virtualEnabled.value) return rows.value.length
+  return Math.min(
+    rows.value.length,
+    Math.ceil(
+      (virtualScrollTop.value + virtualViewport.value) / virtualItemHeight.value,
+    ) + 3,
+  )
+})
+const renderRows = computed(() => {
+  if (!virtualCandidate.value) return rows.value
+  if (!virtualEnabled.value) return rows.value.slice(0, 1)
+  return rows.value.slice(virtualStart.value, virtualEnd.value)
+})
+const virtualPadTop = computed(() =>
+  virtualEnabled.value ? virtualStart.value * virtualItemHeight.value : 0,
+)
+const virtualPadBottom = computed(() =>
+  virtualEnabled.value
+    ? (rows.value.length - virtualEnd.value) * virtualItemHeight.value
+    : 0,
+)
 const showCheck = computed(() => props.multiple || props.showRadio)
 const itemActionSchemas = computed<SchemaNode[]>(() =>
   Array.isArray(props.itemActions)
@@ -159,6 +216,102 @@ function onDraft(event: Event) {
   emit('update:draftLabel', (event.target as HTMLInputElement).value)
 }
 
+function measureVirtualRow(el: unknown) {
+  if (!virtualCandidate.value || virtualEnabled.value || !(el instanceof HTMLElement)) return
+  virtualProbeEl.value = el
+  measureVirtualRowHeight()
+  if (virtualItemHeight.value > 0) return
+  virtualProbeObserver?.disconnect()
+  if (typeof ResizeObserver !== 'undefined') {
+    virtualProbeObserver = new ResizeObserver(measureVirtualRowHeight)
+    virtualProbeObserver.observe(el)
+  }
+  if (virtualMeasureTimer) clearTimeout(virtualMeasureTimer)
+  virtualMeasureTimer = setTimeout(measureVirtualRowHeight, 0)
+  if (typeof requestAnimationFrame !== 'undefined') {
+    if (virtualMeasureFrame) cancelAnimationFrame(virtualMeasureFrame)
+    virtualMeasureFrame = requestAnimationFrame(measureVirtualRowHeight)
+  }
+}
+
+function measureVirtualRowHeight() {
+  const el = virtualProbeEl.value
+  if (!el || !virtualCandidate.value || virtualEnabled.value) return
+  const height = el.offsetHeight
+  if (height <= 0) return
+  virtualItemHeight.value = height
+  virtualProbeObserver?.disconnect()
+  virtualProbeObserver = undefined
+  if (virtualMeasureTimer) clearTimeout(virtualMeasureTimer)
+  virtualMeasureTimer = undefined
+  if (virtualMeasureFrame) cancelAnimationFrame(virtualMeasureFrame)
+  virtualMeasureFrame = 0
+}
+
+function onVirtualScroll(event: Event) {
+  if (!virtualEnabled.value) return
+  const tree = event.currentTarget as HTMLElement
+  virtualScrollTop.value = tree.scrollTop
+  if (tree.clientHeight > 0) virtualMeasuredViewport.value = tree.clientHeight
+}
+
+let virtualResizeObserver: ResizeObserver | undefined
+
+function measureVirtualViewport() {
+  const height = treeEl.value?.clientHeight ?? 0
+  if (height > 0) virtualMeasuredViewport.value = height
+}
+
+watch(virtualEnabled, async (enabled) => {
+  virtualResizeObserver?.disconnect()
+  virtualResizeObserver = undefined
+  if (!enabled) {
+    virtualMeasuredViewport.value = 0
+    return
+  }
+  await nextTick()
+  measureVirtualViewport()
+  if (typeof ResizeObserver !== 'undefined' && treeEl.value) {
+    virtualResizeObserver = new ResizeObserver(measureVirtualViewport)
+    virtualResizeObserver.observe(treeEl.value)
+  }
+})
+
+watch(
+  () =>
+    [
+      rows.value.length,
+      virtualCandidate.value,
+      virtualItemHeight.value,
+      virtualViewport.value,
+    ] as const,
+  ([nextLength], [previousLength]) => {
+    const tree = treeEl.value
+    if (!virtualEnabled.value) {
+      virtualScrollTop.value = 0
+      if (tree) tree.scrollTop = 0
+      return
+    }
+    const maxScrollTop = Math.max(
+      0,
+      rows.value.length * virtualItemHeight.value - virtualViewport.value,
+    )
+    const nextScrollTop =
+      nextLength < previousLength
+        ? Math.min(virtualScrollTop.value, maxScrollTop)
+        : virtualScrollTop.value
+    virtualScrollTop.value = nextScrollTop
+    if (tree && tree.scrollTop !== nextScrollTop) tree.scrollTop = nextScrollTop
+  },
+)
+
+onBeforeUnmount(() => {
+  virtualResizeObserver?.disconnect()
+  virtualProbeObserver?.disconnect()
+  if (virtualMeasureTimer) clearTimeout(virtualMeasureTimer)
+  if (virtualMeasureFrame) cancelAnimationFrame(virtualMeasureFrame)
+})
+
 function actionData(item: OptionItem, index: number) {
   return {
     ...item,
@@ -188,7 +341,13 @@ watch(
 </script>
 
 <template>
-  <div class="vamis-tree" :class="{ 'is-outline': outline }">
+  <div
+    ref="treeEl"
+    class="vamis-tree"
+    :class="{ 'is-outline': outline, 'is-virtual': virtualEnabled }"
+    :style="virtualEnabled ? { height: virtualViewport + 'px' } : undefined"
+    @scroll="onVirtualScroll"
+  >
     <ul class="vamis-tree__list">
       <li v-if="creatable && rootCreatable" class="vamis-tree__item">
         <a
@@ -221,8 +380,15 @@ watch(
           </div>
         </div>
       </li>
-      <template v-for="(row, index) in rows" :key="`${index}:${String(row.item.value)}`">
+      <li
+        v-if="virtualPadTop > 0"
+        class="vamis-tree__virtual-pad"
+        :style="{ height: virtualPadTop + 'px' }"
+        aria-hidden="true"
+      />
+      <template v-for="(row, index) in renderRows" :key="`${index}:${String(row.item.value)}`">
         <li
+          :ref="virtualCandidate && !virtualEnabled ? measureVirtualRow : undefined"
           class="vamis-tree__item"
           :class="{ 'is-child': row.depth > 0, 'is-leaf': !canExpand(row.item) }"
           :style="{ '--tree-depth': row.depth }"
@@ -406,6 +572,12 @@ watch(
           </div>
         </li>
       </template>
+      <li
+        v-if="virtualPadBottom > 0"
+        class="vamis-tree__virtual-pad"
+        :style="{ height: virtualPadBottom + 'px' }"
+        aria-hidden="true"
+      />
     </ul>
   </div>
 </template>

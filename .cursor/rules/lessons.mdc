@@ -995,6 +995,12 @@ alwaysApply: true
 - 触及：`tree-select` `select` `input-tree`
 - 规则：Amis `TreeSelect.tsx` ResultBox / `_tree-select.scss` / `_result-box.scss`；`packages/vamis/src/renderers/form/TreeSelect.vue`；`packages/vamis-ui/src/styles.css`
 
+### 树虚拟列表按可见行切片，行高从首行实测
+- 踩过：只按 `virtualThreshold` 猜一个固定行高，会把 TreeSelect 面板一次渲染上百行；Vue 首次 ref 回调里 `offsetHeight` 仍可能是 0，若只测一次就永久停在“首行探针”。直接把 Select 的 266 / 32 规则套到树，也不符合 Amis Tree 的阈值视口与实测行高。
+- 稳定做法：共享 `TreeBranch` 先 `flattenVisibleOptions`，超过 `virtualThreshold` 时只渲染窗口行 + 上下 spacer。行高从首行真实 `offsetHeight` 读取；首次为 0 时必须在 `nextTick`、下一 task 和 rAF 重测。窗口优先使用滚动宿主的实际 `clientHeight`，没有可测高度时才回落到 `itemHeight × min(rows, threshold)`。InputTree / TreeSelect 显式传阈值，Select 的 TreeSelection 路径不因共享组件被动启用。检索使可见行变少时重置或夹紧 `scrollTop`，避免清空检索后停留在旧窗口；点击仍使用完整树绝对行索引。Amis Tree 的 `0` 是关闭虚拟化，不要套 Select Options 的“0 表示立即开启”口径。Amis TreeSelect 6.13 没有实际透传 `itemHeight`，不要声称按 schema 锁死树行高。
+- 触及：`input-tree` `tree-select` Options
+- 规则：Amis `Tree.tsx` `flattenOptions` / `renderList` / `handleVirtualHeight`；`packages/vamis/src/renderers/form/TreeBranch.vue`；`packages/vamis/src/renderers/form/useTreeField.ts`
+
 ### 下拉里的树只能有一个滚动宿主
 - 踩过：Select 树模式外层 `vamis-select__popover` 已经 `overflow:auto`，通用 `.vamis-tree` 又带 `max-height + overflow:auto`；后者在 unlayered 样式里覆盖了 Select 分层规则，延时加载展开后右侧出现两条滚动条。
 - 稳定做法：对齐 Amis `TransferDropDown-content > Transfer-selection`。Select 树模式给外层加 `is-tree` 并固定 flex column、`overflow:hidden`；`.vamis-select__tree-pane` 是唯一 `overflow:auto` 宿主；其内部 `.vamis-tree` 设 `max-height:none; overflow:visible`。搜索框固定，树内容单独滚动；桌面和移动 sheet 共用同一条规则。

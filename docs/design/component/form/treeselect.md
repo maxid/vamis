@@ -1,12 +1,12 @@
 # TreeSelect 树选择 · `treeselect` 设计
 
-> 状态：**进行中 89%** · 复杂度：**XL 特重**
+> 状态：**进行中 92%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/treeselect) · Amis：`/zh-CN/components/form/treeselect`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、事件、完整动作、节点行为与标签溢出已接，虚拟列表仍是主要缺口。
+TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、事件、完整动作、节点行为、标签溢出与虚拟列表已接。
 
 ## 1. 边界与优先级（先读）
 
@@ -51,12 +51,13 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 | add / edit / delete | 复用 `*Confirm`、CUD API 与树更新 | 已接 |
 | nodeBehavior | `check` / `unfold` 独立或组合 | 已接 |
 | maxTagCount / overflowTagPopover | 标签上限、`+N` 与可交互溢出浮层 | 已接 |
+| virtualThreshold | 可见节点超过阈值后窗口化；默认 100，`0` 关闭 | 已接 |
 
 ## 4. 架构
 
 - `form/TreeSelect.vue`：trigger/overlay/mobile draft/tags；searchable 输入、根宽度 ResizeObserver 与浮层宽度同步。
 - `form/useTreeField.ts`：值/树/勾选/搜索。
-- `TreeBranch`：树 UI、`menuTpl` / `iconField`；`TreeSearchBox` 只属于 InputTree，不挂 TreeSelect Popover。
+- `TreeBranch`：树 UI、`menuTpl` / `iconField`、虚拟窗口；`TreeSearchBox` 只属于 InputTree，不挂 TreeSelect Popover。
 
 ## 5. 样式
 
@@ -64,7 +65,7 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 6. 缺口
 
-虚拟列表；与 InputTree 同步。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、事件、完整动作、nodeBehavior、标签溢出、深色浮层已对齐。`heightAuto` 在 Amis TreeSelect 6.13 未实际透传，不计 Vamis 缺口。
+无已知主路径能力缺口；剩余工作是全量属性 / 事件 / 动作 / 示例逐项审计后再进 100%。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、事件、完整动作、nodeBehavior、标签溢出、虚拟列表、深色浮层已对齐。`heightAuto` 在 Amis TreeSelect 6.13 未实际透传，不计 Vamis 缺口。
 
 ## 7. 验收
 
@@ -87,7 +88,7 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 8. 后续
 
-随 InputTree 补事件/动作；移动草稿确认单独测试。
+全量属性 / 事件 / 动作表逐项复核；补 TreeSelect 长树活示例，并核虚拟列表与懒加载 / 搜索 / 移动草稿的组合。
 
 ---
 

@@ -12530,6 +12530,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-tree__item:hover {
   background: var(--tree-hover-bg);
 }
+.vamis-tree__virtual-pad {
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
 .vamis-tree.is-outline .vamis-tree__item.is-leaf.is-child::before {
   position: absolute;
   top: -8px;

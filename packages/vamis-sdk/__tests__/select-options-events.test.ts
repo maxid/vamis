@@ -4907,3 +4907,218 @@ describe('TreeSelect tag overflow', () => {
     expect(document.querySelector('.vamis-select-overflow__grid')?.textContent).toContain('D')
   })
 })
+
+describe('TreeSelect virtualization', () => {
+  it('renders only a window of rows after the virtual threshold', async () => {
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'tree-select',
+          name: 'tree',
+          virtualThreshold: 5,
+          options: Array.from({ length: 80 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `node-${index + 1}`,
+          })),
+        },
+      })
+
+      await nextTick()
+      click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+      await vi.waitFor(() => {
+        expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy()
+      })
+
+      const tree = document.querySelector(
+        '.vamis-tree-select__popover .vamis-tree',
+      ) as HTMLElement
+      await vi.waitFor(() => expect(tree.classList.contains('is-virtual')).toBe(true))
+      expect(tree.querySelectorAll('.vamis-tree__text').length).toBeLessThan(80)
+    } finally {
+      offsetHeight.mockRestore()
+    }
+  })
+
+  it('resets the virtual window when search shrinks and restores the list', async () => {
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'tree-select',
+          name: 'tree',
+          searchable: true,
+          virtualThreshold: 5,
+          options: Array.from({ length: 80 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `node-${index + 1}`,
+          })),
+        },
+      })
+
+      await nextTick()
+      const input = host.querySelector(
+        '.vamis-tree-select .vamis-select__input input',
+      ) as HTMLInputElement
+      click(input)
+      await vi.waitFor(() =>
+        expect(
+          document.querySelector('.vamis-tree-select__popover .vamis-tree.is-virtual'),
+        ).toBeTruthy(),
+      )
+
+      const tree = document.querySelector(
+        '.vamis-tree-select__popover .vamis-tree',
+      ) as HTMLElement
+      tree.scrollTop = 2400
+      tree.dispatchEvent(new Event('scroll'))
+      await vi.waitFor(() => expect(tree.textContent).toContain('Node 80'))
+
+      input.value = 'Node 80'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      await vi.waitFor(() => expect(treeTexts()).toEqual(['Node 80']))
+
+      input.value = ''
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      await vi.waitFor(() => {
+        expect(tree.scrollTop).toBe(0)
+        expect(tree.textContent).toContain('Node 1')
+      })
+    } finally {
+      offsetHeight.mockRestore()
+    }
+  })
+
+  it('uses the measured scroll viewport instead of rendering the full threshold', async () => {
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    const clientHeight = vi
+      .spyOn(HTMLElement.prototype, 'clientHeight', 'get')
+      .mockReturnValue(64)
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'tree-select',
+          name: 'tree',
+          virtualThreshold: 100,
+          options: Array.from({ length: 200 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `node-${index + 1}`,
+          })),
+        },
+      })
+
+      await nextTick()
+      click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+      await vi.waitFor(() =>
+        expect(
+          document.querySelector('.vamis-tree-select__popover .vamis-tree.is-virtual'),
+        ).toBeTruthy(),
+      )
+
+      const tree = document.querySelector(
+        '.vamis-tree-select__popover .vamis-tree',
+      ) as HTMLElement
+      await vi.waitFor(() =>
+        expect(tree.querySelectorAll('.vamis-tree__text').length).toBeLessThan(20),
+      )
+    } finally {
+      clientHeight.mockRestore()
+      offsetHeight.mockRestore()
+    }
+  })
+
+  it('keeps later virtual rows selectable after scrolling', async () => {
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockReturnValue(32)
+    try {
+      const { host, scoped } = mount({
+        type: 'form',
+        name: 'virtualTreeForm',
+        actions: [],
+        body: {
+          type: 'tree-select',
+          name: 'tree',
+          virtualThreshold: 5,
+          options: Array.from({ length: 80 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `node-${index + 1}`,
+          })),
+        },
+      })
+
+      await nextTick()
+      click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+      await vi.waitFor(() =>
+        expect(
+          document.querySelector('.vamis-tree-select__popover .vamis-tree.is-virtual'),
+        ).toBeTruthy(),
+      )
+
+      const tree = document.querySelector(
+        '.vamis-tree-select__popover .vamis-tree',
+      ) as HTMLElement
+      tree.scrollTop = 1500
+      tree.dispatchEvent(new Event('scroll'))
+      await vi.waitFor(() => expect(tree.textContent).toContain('Node 50'))
+      click(treeItem('Node 50')?.querySelector('.vamis-tree__content') || null)
+
+      const form = scoped.getComponentByName('virtualTreeForm') as {
+        getData?: () => Record<string, unknown>
+      }
+      await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe('node-50'))
+    } finally {
+      offsetHeight.mockRestore()
+    }
+  })
+
+  it('remeasures the probe row after the initial layout callback', async () => {
+    let laidOut = false
+    setTimeout(() => {
+      laidOut = true
+    }, 0)
+    const offsetHeight = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockImplementation(function (this: HTMLElement) {
+        if (!this.classList.contains('vamis-tree__item')) return 0
+        return laidOut ? 32 : 0
+      })
+    try {
+      const { host } = mount({
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'tree-select',
+          name: 'tree',
+          virtualThreshold: 5,
+          options: Array.from({ length: 80 }, (_, index) => ({
+            label: `Node ${index + 1}`,
+            value: `node-${index + 1}`,
+          })),
+        },
+      })
+
+      await nextTick()
+      click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+      await vi.waitFor(() =>
+        expect(
+          document.querySelector('.vamis-tree-select__popover .vamis-tree.is-virtual'),
+        ).toBeTruthy(),
+      )
+    } finally {
+      offsetHeight.mockRestore()
+    }
+  })
+})

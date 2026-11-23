@@ -1,6 +1,6 @@
 # InputTree 树形选择器 · `input-tree` 设计
 
-> 状态：**进行中 80%** · 复杂度：**XL 特重**
+> 状态：**进行中 82%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/input-tree) · Amis：`/zh-CN/components/form/input-tree`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -8,7 +8,7 @@
 
 InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只有 64 行，真正逻辑在 `useTreeField.ts`（452 行）+ `TreeBranch` / `TreeSearchBox`，并与 TreeSelect 共用。设计时按**组合式状态**审，不要只改 InputTree.vue。
 
-当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
+当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
 
 ## 1. 边界与优先级（先读）
 
@@ -73,7 +73,7 @@ InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只�
 | `showOutline` / `showIcon` | 视觉 | 展开线/图标 |
 | `onlyLeaf` | 只选叶子 | 父节点不可选 |
 | `disabled` / `static` | 状态 | FormItem 统一 |
-| `virtualThreshold` / `itemHeight` | 虚拟列表 | 不要与懒加载混为一谈 |
+| `virtualThreshold` / `itemHeight` | 虚拟列表 | 阈值默认 100、`0` 关闭；行高按 Amis Tree 首行实测，`itemHeight` 在 6.13 源码未透传给 Tree |
 
 ### 3.3 事件
 
@@ -137,17 +137,17 @@ selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
 
 - 默认类：`.vamis-input-tree__control`、tree 节点/缩进/展开线/搜索框等，位于 `@vamis/ui/styles.css`。
 - 渲染器无 `<style>`；缩进/图标/展开线/选中态走 token。
-- 窄屏、深色、虚拟列表、搜索 sticky 需单独核。
+- 窄屏、深色虚拟列表、搜索 sticky 需单独核。
 - 作者 className 只落 `div.vamis-node`。
 
 ## 6. 当前状态与缺口
 
-- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、工具栏、TreeSelect 复用。
+- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、工具栏、虚拟列表、TreeSelect 复用。
 - 未接/风险：
   - `change` 事件未派发；内联 CUD 的 add/edit/delete 事件不一致；
   - scoped 动作（expand/collapse/add/edit/delete/reload/clear/reset/setValue/search）未注册；
   - 树级全选/搜索全选的 `change` 语义未定；
-  - 深色/窄屏/虚拟列表组合未专项核。
+  - 深色 / 窄屏虚拟列表组合未专项核。
 - 对照：桌面 / 移动 **26/31**（P0 0）；真实浏览器核过「节点路径模式」两次串行 defer 与兄弟不加载。
 
 ## 7. 验收计划与完成度
@@ -179,7 +179,7 @@ selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
 
 1. 先补 `change` 与内联 CUD 的 `addConfirm`/`editConfirm`/`deleteConfirm`，统一 payload/preventDefault。
 2. 再注册 scoped 动作（expand/collapse/reload/clear/setValue/search），add/edit/delete 另定边界。
-3. 虚拟列表 + 懒加载 + 深色组合单独立项。
+3. 虚拟列表 + 懒加载 + 深色 / 窄屏组合单独立项。
 4. TreeSelect 与本组件共用测试矩阵，避免两套勾选语义。
 
 ---
