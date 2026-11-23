@@ -352,7 +352,13 @@ watch(
             @update:model-value="select(item, depth, view.start + index)"
           />
           <SchemaRenderer
-            v-if="item.schema || item.tpl || item.type"
+            v-if="schema.menuTpl"
+            class="vamis-select__chained-item-label"
+            :schema="schema.menuTpl"
+            :extra-data="item"
+          />
+          <SchemaRenderer
+            v-else-if="item.schema || item.tpl || item.type"
             class="vamis-select__chained-item-label"
             :schema="item"
             :extra-data="item"

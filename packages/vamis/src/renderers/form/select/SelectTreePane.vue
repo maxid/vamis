@@ -190,6 +190,7 @@ function toggleAll() {
       :query="query"
       :check-disabled="checkDisabled"
       :item-actions="schema.itemActions"
+      :menu-tpl="schema.menuTpl"
       @pick="toggle"
       @expand="tree.toggleExpand"
     />

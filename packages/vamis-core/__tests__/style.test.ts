@@ -915,6 +915,8 @@ describe('style docs surface', () => {
     expect(fa).toContain('@fortawesome/fontawesome-free/css/v4-shims.css')
     const util = readFileSync(resolve(here, '../../vamis-ui/src/helpers-utility.css'), 'utf8')
     expect(util).toMatch(/@layer components\s*\{/)
+    expect(util).toContain('.text-muted { color: var(--text-muted); }')
+    expect(util).toContain('.text-loud { color: var(--text-color); }')
     expect(util).toContain('.flex { display: flex; }')
     expect(util).toContain('.m\\:text-red-500')
     expect(util).toContain('.pc\\:flex')
@@ -1729,9 +1731,11 @@ describe('style docs surface', () => {
       resolve(here, '../../vamis-ui/src/helpers-typography.css'),
       'utf8',
     )
-    expect(typoCss).toContain('.text-md { font-size: 1.125rem; line-height: 1.75rem; }')
-    expect(typoCss).toContain('.text-lg { font-size: 1.25rem; line-height: 1.75rem; }')
-    expect(typoCss).toContain('.text-xl { font-size: 1.5rem; line-height: 2rem; }')
+    expect(typoCss).toContain('.text-sm { font-size: 0.75rem; line-height: 1.25rem; }')
+    expect(typoCss).toContain('.text-base { font-size: 0.875rem; line-height: 1.5rem; }')
+    expect(typoCss).toContain('.text-md { font-size: 0.875rem; line-height: 1.75rem; }')
+    expect(typoCss).toContain('.text-lg { font-size: 1rem; line-height: 1.75rem; }')
+    expect(typoCss).toContain('.text-xl { font-size: 1.125rem; line-height: 2rem; }')
     expect(typoCss).toContain(
       '.font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }',
     )
@@ -1748,7 +1752,7 @@ describe('style docs surface', () => {
     expect(typoCss).toContain('.white-space-nowrap { white-space: nowrap; }')
     expect(typoCss).toContain('.overflow-clip { text-overflow: clip; }')
     expect(typoCss).toContain('.align-text-top { vertical-align: text-top; }')
-    expect(typoCss).toContain('.pc\\:text-xl { font-size: 1.5rem; line-height: 2rem; }')
+    expect(typoCss).toContain('.pc\\:text-xl { font-size: 1.125rem; line-height: 2rem; }')
     expect(typoCss).toContain('.m\\:white-space-nowrap { white-space: nowrap; }')
     expect(typoCss).not.toContain('.pc\\:font-sans')
     const fontSizeDoc = readFileSync(

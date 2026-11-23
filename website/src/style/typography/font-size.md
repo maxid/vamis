@@ -7,21 +7,21 @@ title: Font Size
 # Font Size
 
 ::: info 实现进度 90% · 已完成
-活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。档位是 Amis `$fontSizes`（`text-lg` = 20px），不是 Tailwind v3。
+活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。字号按 Amis `--fontSize*`。
 :::
 
-字号。Amis `text-md` = 18px，`text-lg` = **20px**，`text-xl` = **24px**——比 Tailwind v3 各大一档。每条还带行高（`text-xs` 的 line-height 是 16px）。默认正文 `text-sm` = 14px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
+字号。Amis 的 `text-xs` / `text-sm` 都是 **12px**，`text-base` / `text-md` 是 **14px**，`text-lg` 是 **16px**，`text-xl` 是 **18px**；行高仍按 16 / 20 / 24 / 28 / 28 / 32px 档位。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。
 
 ## 类名
 
 | Class | Properties |
 | --- | --- |
 | `text-xs` | `font-size: 0.75rem; line-height: 1rem;` |
-| `text-sm` | `font-size: 0.875rem; line-height: 1.25rem;` |
-| `text-base` | `font-size: 1rem; line-height: 1.5rem;` |
-| `text-md` | `font-size: 1.125rem; line-height: 1.75rem;` |
-| `text-lg` | `font-size: 1.25rem; line-height: 1.75rem;` |
-| `text-xl` | `font-size: 1.5rem; line-height: 2rem;` |
+| `text-sm` | `font-size: 0.75rem; line-height: 1.25rem;` |
+| `text-base` | `font-size: 0.875rem; line-height: 1.5rem;` |
+| `text-md` | `font-size: 0.875rem; line-height: 1.75rem;` |
+| `text-lg` | `font-size: 1rem; line-height: 1.75rem;` |
+| `text-xl` | `font-size: 1.125rem; line-height: 2rem;` |
 | `text-2xl` | `font-size: 1.875rem; line-height: 2.25rem;` |
 | `text-3xl` | `font-size: 2.25rem; line-height: 2.5rem;` |
 | `text-4xl` | `font-size: 3rem; line-height: 1;` |
@@ -54,7 +54,7 @@ value: |-
 
 ## text-sm
 
-`font-size: 0.875rem` = **14px**，`line-height: 1.25rem` = **20px**。文档默认正文也是这一档。
+Amis `--fontSizeSm` = **12px**，`line-height: 1.25rem` = **20px**。
 
 ```schema
 type: tpl
@@ -76,7 +76,7 @@ value: |-
 
 ## text-base
 
-`font-size: 1rem` = **16px**，`line-height: 1.5rem` = **24px**。
+Amis `--fontSizeBase` = **14px**，`line-height: 1.5rem` = **24px**。
 
 ```schema
 type: tpl
@@ -98,7 +98,7 @@ value: |-
 
 ## text-md
 
-Amis 多出来的档：`font-size: 1.125rem` = **18px**，`line-height: 1.75rem` = **28px**。这是 Tailwind 的 `text-lg`。
+Amis `--fontSizeMd` = **14px**，`line-height: 1.75rem` = **28px**。
 
 ```schema
 type: tpl
@@ -120,7 +120,7 @@ value: |-
 
 ## text-lg
 
-Amis：`font-size: 1.25rem` = **20px**，`line-height: 1.75rem` = **28px**。不是 Tailwind v3 的 1.125rem。
+Amis `--fontSizeLg` = **16px**，`line-height: 1.75rem` = **28px**。
 
 ```schema
 type: tpl
@@ -142,7 +142,7 @@ value: |-
 
 ## text-xl
 
-Amis：`font-size: 1.5rem` = **24px**，`line-height: 2rem` = **32px**。
+Amis `--fontSizeXl` = **18px**，`line-height: 2rem` = **32px**。
 
 ```schema
 type: tpl
@@ -219,10 +219,10 @@ tpl: |
       <p class="text-xs">xs 12px</p>
     </div>
     <div class="bg-gray-200 p-sm rounded-md">
-      <p class="text-md">md 18px</p>
+      <p class="text-md">md 14px</p>
     </div>
     <div class="bg-gray-200 p-sm rounded-md">
-      <p class="text-xl">xl 24px</p>
+      <p class="text-xl">xl 18px</p>
     </div>
   </div>
 ```
@@ -236,17 +236,17 @@ value: |-
       <p class="text-xs">xs 12px</p>
     </div>
     <div class="bg-gray-200 p-sm rounded-md">
-      <p class="text-md">md 18px</p>
+      <p class="text-md">md 14px</p>
     </div>
     <div class="bg-gray-200 p-sm rounded-md">
-      <p class="text-xl">xl 24px</p>
+      <p class="text-xl">xl 18px</p>
     </div>
   </div>
 ```
 
 ## 响应式设计
 
-支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:text-sm` 14px；桌面（≥768px）`pc:text-xl` **24px**。
+支持通过添加设备前缀 `m:` 或者 `pc:` 来分别针对「手机端」或者「pc端」设置样式，更多说明请前往[「辅助类-响应式设计」](/style/responsive-design)。窄屏 `m:text-sm` **12px**；桌面（≥768px）`pc:text-xl` **18px**。
 
 ```schema
 type: tpl

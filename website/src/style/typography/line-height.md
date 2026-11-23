@@ -33,7 +33,7 @@ title: Line Height
 
 ## leading-none
 
-`line-height: 1`。钉 `text-base`（16px）时行高 **16px**。
+`line-height: 1`。钉 `text-base`（14px）时行高 **14px**。
 
 ```schema
 type: tpl
@@ -59,7 +59,7 @@ value: |-
 
 ## leading-tight
 
-`line-height: 1.25` = **20px**（16px 字）。
+`line-height: 1.25` = **17.5px**（14px 字）。
 
 ```schema
 type: tpl

@@ -409,14 +409,14 @@ function writeSpacingCss() {
   fs.writeFileSync(path.join(uiSrc, 'helpers-spacing.css'), `${lines.join('\n')}\n`)
 }
 
-/** Amis helper typography. Font-size ladder is Amis $fontSizes (text-lg = 1.25rem), not TW v3. */
+/** Amis helper typography. Font sizes follow Amis --fontSize* with the documented line-height ladder. */
 const FONT_SIZES = [
   ['xs', '0.75rem', '1rem'],
-  ['sm', '0.875rem', '1.25rem'],
-  ['base', '1rem', '1.5rem'],
-  ['md', '1.125rem', '1.75rem'],
-  ['lg', '1.25rem', '1.75rem'],
-  ['xl', '1.5rem', '2rem'],
+  ['sm', '0.75rem', '1.25rem'],
+  ['base', '0.875rem', '1.5rem'],
+  ['md', '0.875rem', '1.75rem'],
+  ['lg', '1rem', '1.75rem'],
+  ['xl', '1.125rem', '2rem'],
   ['2xl', '1.875rem', '2.25rem'],
   ['3xl', '2.25rem', '2.5rem'],
   ['4xl', '3rem', '1'],
@@ -534,7 +534,7 @@ function emitTypoBlock(lines, device = '') {
 
 function writeTypographyCss() {
   const lines = [
-    '/* Amis helper typography. Font-size is $fontSizes (text-lg = 1.25rem), not TW v3.',
+    '/* Amis helper typography. Font-size follows --fontSize*; line-height uses the documented ladder.',
     '   font-sans/serif/mono are Amis hardcoded stacks, not --font-sans token.',
     '   white-space-* is the Amis class; whitespace-* kept as alias.',
     '   tracking-wide: Amis wrote 0.025 (invalid); computed is normal. Override TW 0.025em.',
@@ -3598,27 +3598,27 @@ function fontSizeExtra() {
       },
       {
         heading: 'text-sm',
-        copy: '`font-size: 0.875rem` = **14px**，`line-height: 1.25rem` = **20px**。文档默认正文也是这一档。',
+        copy: 'Amis `--fontSizeSm` = **12px**，`line-height: 1.25rem` = **20px**。',
         html: typeP('text-sm'),
       },
       {
         heading: 'text-base',
-        copy: '`font-size: 1rem` = **16px**，`line-height: 1.5rem` = **24px**。',
+        copy: 'Amis `--fontSizeBase` = **14px**，`line-height: 1.5rem` = **24px**。',
         html: typeP('text-base'),
       },
       {
         heading: 'text-md',
-        copy: 'Amis 多出来的档：`font-size: 1.125rem` = **18px**，`line-height: 1.75rem` = **28px**。这是 Tailwind 的 `text-lg`。',
+        copy: 'Amis `--fontSizeMd` = **14px**，`line-height: 1.75rem` = **28px**。',
         html: typeP('text-md'),
       },
       {
         heading: 'text-lg',
-        copy: 'Amis：`font-size: 1.25rem` = **20px**，`line-height: 1.75rem` = **28px**。不是 Tailwind v3 的 1.125rem。',
+        copy: 'Amis `--fontSizeLg` = **16px**，`line-height: 1.75rem` = **28px**。',
         html: typeP('text-lg'),
       },
       {
         heading: 'text-xl',
-        copy: 'Amis：`font-size: 1.5rem` = **24px**，`line-height: 2rem` = **32px**。',
+        copy: 'Amis `--fontSizeXl` = **18px**，`line-height: 2rem` = **32px**。',
         html: typeP('text-xl'),
       },
       {
@@ -3637,13 +3637,13 @@ function fontSizeExtra() {
       html: [
         '<div class="space-y-2">',
         `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-xs">xs 12px</p></div>`,
-        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-md">md 18px</p></div>`,
-        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-xl">xl 24px</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-md">md 14px</p></div>`,
+        `  <div class="${DEMO_STAGE} p-sm rounded-md"><p class="text-xl">xl 18px</p></div>`,
         '</div>',
       ],
     },
     responsive: {
-      copy: '窄屏 `m:text-sm` 14px；桌面（≥768px）`pc:text-xl` **24px**。',
+      copy: '窄屏 `m:text-sm` **12px**；桌面（≥768px）`pc:text-xl` **18px**。',
       html: typeP('m:text-sm pc:text-xl', 'm:text-sm pc:text-xl'),
     },
   })
@@ -3793,12 +3793,12 @@ function lineHeightExtra() {
     samples: [
       {
         heading: 'leading-none',
-        copy: '`line-height: 1`。钉 `text-base`（16px）时行高 **16px**。',
+        copy: '`line-height: 1`。钉 `text-base`（14px）时行高 **14px**。',
         html: block('leading-none text-base', 'none'),
       },
       {
         heading: 'leading-tight',
-        copy: '`line-height: 1.25` = **20px**（16px 字）。',
+        copy: '`line-height: 1.25` = **17.5px**（14px 字）。',
         html: block('leading-tight text-base', 'tight'),
       },
       {
@@ -6172,10 +6172,10 @@ tpl: |
     pct: 90,
     status: '已完成',
     reason:
-      '活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。档位是 Amis `$fontSizes`（`text-lg` = 20px），不是 Tailwind v3。',
+      '活示例对标 Amis Font Size：`text-*` 同时改 `font-size` 和 `line-height`。独立样例 + 组合；`m:` / `pc:` 已进 helper。字号按 Amis `--fontSize*`。',
     tableFirst: true,
     intro:
-      '字号。Amis `text-md` = 18px，`text-lg` = **20px**，`text-xl` = **24px**——比 Tailwind v3 各大一档。每条还带行高（`text-xs` 的 line-height 是 16px）。默认正文 `text-sm` = 14px。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
+      '字号。Amis 的 `text-xs` / `text-sm` 都是 **12px**，`text-base` / `text-md` 是 **14px**，`text-lg` 是 **16px**，`text-xl` 是 **18px**；行高仍按 16 / 20 / 24 / 28 / 28 / 32px 档位。Vamis schema `className` 打在外层 `div.vamis-node`；本页用 HTML 岛把类打在内层 `<p>` 上。',
     rows: fontSizeRows,
     extra: fontSizeExtra(),
     footer: TYPE_FOOTER,

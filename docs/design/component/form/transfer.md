@@ -79,8 +79,8 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 #### 3.2.1 Schema 对齐状态
 
 - 已列入编辑器补全与文档：Amis `AMISTransferSchemaBase` 的全部字段，包括 `showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode`、`columns`、`searchResultColumns`、`resultSearchable`、`searchApi`、`selectTitle`、`resultTitle`、`menuTpl`、`valueTpl`、`resultSearchPlaceholder`、`statistics`、`showInvalidMatch`、`pagination` 等。
-- 运行时已接：`options/source`、值序列化、`selectMode` 五模式、`leftOptions/leftDefaultValue/leftMode/rightMode`、`selectTitle/resultTitle`、`searchable/searchPlaceholder`、`virtualThreshold/itemHeight`、事件 / 动作。
-- 仅 schema 文档已对齐、运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode/searchResultColumns`、`columns`、`resultSearchable/resultSearchPlaceholder`、`searchApi`、`menuTpl/valueTpl`、`statistics`、`showInvalidMatch`、`pagination`、`onlyChildren/initiallyOpen/autoCheckChildren`。这些字段会在属性表和编辑器补全中出现，但说明必须标记为未接，不能写成已支持。
+- 运行时已接：`options/source`、值序列化、`selectMode` 五模式、`leftOptions/leftDefaultValue/leftMode/rightMode`、`selectTitle/resultTitle`、`searchable/searchPlaceholder`、`resultSearchable/resultSearchPlaceholder`、`menuTpl/valueTpl`、`showArrow`、`showInvalidMatch`、`statistics`、`virtualThreshold/itemHeight`、事件 / 动作。
+- 仅 schema 文档已对齐、运行时未接：`sortable`、`resultListModeFollowSelect`、`searchResultMode/searchResultColumns`、`searchApi`、`pagination`。这些字段会在属性表和编辑器补全中出现，但说明必须标记为未接，不能写成已支持。
 
 ### 3.3 事件/动作
 
@@ -154,7 +154,8 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 - 延时加载树由 flex wrapper 占满剩余高度，tree pane 负责滚动；chained 只保留标题行“全选”，associated 右侧 label 单行 ellipsis。
 - list / table / tree 的滚动宿主隐藏不可控的系统 overlay 条，共用应用层 `VamisScrollbar`。组件监听 `scroll` / resize / content mutation，仅在 `scrollHeight > clientHeight` 时显示按真实比例计算的 thumb；支持轨道点击和拖拽。该行为是 Vamis 相对 Amis/macOS overlay scrollbar 的可用性优化。
 - 树父级勾选态由 `isTreeItemChecked` 统一：全部可选子节点已选时父级 checked，部分选中才 partial。
-- 未接：`resultListModeFollowSelect`、`searchApi`、menuTpl / valueTpl、分页、排序、拖拽、showArrow、移动端专用布局。
+- 已接：`showArrow` 在双栏之间渲染箭头；`menuTpl` 覆盖 list / tree / chained 左侧选项，`valueTpl` 覆盖右侧结果列表；未匹配已选值保留，`showInvalidMatch` 控制错误色。
+- 未接：`resultListModeFollowSelect`、`searchApi`、分页、排序、拖拽、移动端专用布局。
 - 对照：桌面 / 移动 **17/20**（P0 0，余 3 条均为 Amis 侧 `rendered:false` 探针）。
 
 ## 7. 验收计划与完成度

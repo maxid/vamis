@@ -8,11 +8,11 @@
   .font-serif { font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; }
   .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   .text-xs { font-size: 0.75rem; line-height: 1rem; }
-  .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .text-base { font-size: 1rem; line-height: 1.5rem; }
-  .text-md { font-size: 1.125rem; line-height: 1.75rem; }
-  .text-lg { font-size: 1.25rem; line-height: 1.75rem; }
-  .text-xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-sm { font-size: 0.75rem; line-height: 1.25rem; }
+  .text-base { font-size: 0.875rem; line-height: 1.5rem; }
+  .text-md { font-size: 0.875rem; line-height: 1.75rem; }
+  .text-lg { font-size: 1rem; line-height: 1.75rem; }
+  .text-xl { font-size: 1.125rem; line-height: 2rem; }
   .text-2xl { font-size: 1.875rem; line-height: 2.25rem; }
   .text-3xl { font-size: 2.25rem; line-height: 2.5rem; }
   .text-4xl { font-size: 3rem; line-height: 1; }
@@ -94,11 +94,11 @@
 }
 @media (max-width: 767px) {
   .m\:text-xs { font-size: 0.75rem; line-height: 1rem; }
-  .m\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .m\:text-base { font-size: 1rem; line-height: 1.5rem; }
-  .m\:text-md { font-size: 1.125rem; line-height: 1.75rem; }
-  .m\:text-lg { font-size: 1.25rem; line-height: 1.75rem; }
-  .m\:text-xl { font-size: 1.5rem; line-height: 2rem; }
+  .m\:text-sm { font-size: 0.75rem; line-height: 1.25rem; }
+  .m\:text-base { font-size: 0.875rem; line-height: 1.5rem; }
+  .m\:text-md { font-size: 0.875rem; line-height: 1.75rem; }
+  .m\:text-lg { font-size: 1rem; line-height: 1.75rem; }
+  .m\:text-xl { font-size: 1.125rem; line-height: 2rem; }
   .m\:text-2xl { font-size: 1.875rem; line-height: 2.25rem; }
   .m\:text-3xl { font-size: 2.25rem; line-height: 2.5rem; }
   .m\:text-4xl { font-size: 3rem; line-height: 1; }
@@ -180,11 +180,11 @@
 }
 @media (min-width: 768px) {
   .pc\:text-xs { font-size: 0.75rem; line-height: 1rem; }
-  .pc\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .pc\:text-base { font-size: 1rem; line-height: 1.5rem; }
-  .pc\:text-md { font-size: 1.125rem; line-height: 1.75rem; }
-  .pc\:text-lg { font-size: 1.25rem; line-height: 1.75rem; }
-  .pc\:text-xl { font-size: 1.5rem; line-height: 2rem; }
+  .pc\:text-sm { font-size: 0.75rem; line-height: 1.25rem; }
+  .pc\:text-base { font-size: 0.875rem; line-height: 1.5rem; }
+  .pc\:text-md { font-size: 0.875rem; line-height: 1.75rem; }
+  .pc\:text-lg { font-size: 1rem; line-height: 1.75rem; }
+  .pc\:text-xl { font-size: 1.125rem; line-height: 2rem; }
   .pc\:text-2xl { font-size: 1.875rem; line-height: 2.25rem; }
   .pc\:text-3xl { font-size: 2.25rem; line-height: 2.5rem; }
   .pc\:text-4xl { font-size: 3rem; line-height: 1; }

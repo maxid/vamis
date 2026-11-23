@@ -328,4 +328,85 @@ describe('Transfer list UI', () => {
         ?.querySelector('[data-vamis-scrollbar].is-visible'),
     ).toBeTruthy()
   })
+
+  it('renders showArrow and custom menu/value templates', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferTemplates',
+        showArrow: true,
+        menuTpl: {
+          type: 'tpl',
+          tpl: '${label} · ${tag}',
+        },
+        valueTpl: {
+          type: 'tpl',
+          tpl: '${label} (${value})',
+        },
+        options: [
+          {
+            label: '选项 A',
+            value: 'a',
+            tag: '热门',
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-transfer__arrow')).toBeTruthy()
+    expect(host.querySelector('.vamis-transfer__item')?.textContent).toContain(
+      '选项 A · 热门',
+    )
+
+    click(host.querySelector('.vamis-transfer__item'))
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-transfer__result-item')?.textContent).toContain(
+        '选项 A (a)',
+      ),
+    )
+  })
+
+  it('keeps unmatched values and only marks them invalid when showInvalidMatch is enabled', async () => {
+    const marked = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferInvalidMarked',
+        showInvalidMatch: true,
+        value: 'missing,a',
+        options: [{ label: '选项 A', value: 'a' }],
+      },
+    })
+
+    await nextTick()
+    const markedItems = [...marked.host.querySelectorAll('.vamis-transfer__result-item')]
+    expect(markedItems.map((item) => (item.textContent || '').trim())).toContain('missing')
+    expect(
+      markedItems.find((item) => (item.textContent || '').trim() === 'missing')
+        ?.classList.contains('is-invalid'),
+    ).toBe(true)
+
+    const plain = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferInvalidPlain',
+        value: 'missing,a',
+        options: [{ label: '选项 A', value: 'a' }],
+      },
+    })
+
+    await nextTick()
+    const plainItems = [...plain.host.querySelectorAll('.vamis-transfer__result-item')]
+    expect(plainItems.map((item) => (item.textContent || '').trim())).toContain('missing')
+    expect(
+      plainItems.find((item) => (item.textContent || '').trim() === 'missing')
+        ?.classList.contains('is-invalid'),
+    ).toBe(false)
+  })
 })

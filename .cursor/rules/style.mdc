@@ -82,6 +82,8 @@ unlayered 组件 CSS、`--tooltip-*` / `--form-item-*` / `--checkbox-*`、helper
 - **同一条 class，落在同一个元素、同一条属性、同一个计算值。** 先读 Amis 选择器再写 CSS
 - 范本：`space-x-6` 是后续兄弟 `~` 的 `margin-left: 24px`，不是 TW v4 的 `:not(:last-child)` + `margin-inline-end`
 - **同名 utility 禁止两套叠加。** Amis 与 TW 选择器/属性不同时：清掉 TW 那侧，保留 Amis 行为
+- **语义色同名冲突按 Amis 收口。** Amis `text-muted` 是 `var(--text-muted)`（neutral-text-6），不是 Tailwind `--color-muted` 面底色；`.text-muted` / `.text-loud` 要在 `@layer utilities` 显式覆写
+- **字号 helper 按 Amis 实测档位。** `text-xs` / `text-sm` = 12px，`text-base` / `text-md` = 14px，`text-lg` = 16px，`text-xl` = 18px；对应行高仍是 16 / 20 / 24 / 28 / 28 / 32px。不要照搬 Tailwind `text-sm` 的 14px
 - **helper 复写不得压过站点变体。** `.hidden` / `.flex` 不要放进晚于 Tailwind 的 `@layer utilities`，否则 `hidden lg:block` 失效。复写放 `@layer components`，或只覆盖有分歧的那一条
 - 收工至少核：宽高、`margin-*` / `padding-*` / `border-width` / `box-sizing`、缝宽。未对齐盒模型不得标「已完成」
 

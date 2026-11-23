@@ -813,6 +813,10 @@
 }
 
 @layer utilities {
+  /* Amis `_utilities.scss` 的正文强调色。Tailwind 会把 text-muted 解析成面底色，这里必须校正。 */
+  .text-muted { color: var(--text-muted); }
+  .text-loud { color: var(--text-color); }
+
   /* Amis `_utilities.scss` 的 `.text-ellipsis` 是整套单行省略；helper 同名类只有 `text-overflow`，两条在 Amis 里叠在一起生效。
      放在 utilities 里才压得过包装层上的 `.inline`。 */
   .text-ellipsis {

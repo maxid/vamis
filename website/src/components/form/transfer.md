@@ -6,7 +6,7 @@ outline: deep
 # Transfer 穿梭器
 
 ::: warning 实现进度 89% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`table.columns`、`selectTitle` / `resultTitle`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `resultListModeFollowSelect`、`searchApi`、menuTpl / valueTpl、分页、排序 / 拖拽、showArrow 和移动端专用布局。
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `resultListModeFollowSelect`、`searchApi`、分页、排序 / 拖拽和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -764,7 +764,7 @@ body:
 
 ### 自定义选项展示
 
-`menuTpl` / `valueTpl` 当前 Vamis 尚未接运行时，示例保留 Amis schema。
+`menuTpl` 自定义左侧选项，`valueTpl` 自定义右侧结果；模板数据都包含当前 option。
 
 ```schema: scope="body"
 {
@@ -955,7 +955,7 @@ valueField: value
 | `delimiter` | `string` | `,` | 多值拼接符 |
 | `extractValue` | `boolean` | `false` | 只提交 option value |
 | `labelField` / `valueField` | `string` | `label` / `value` | 选项字段映射 |
-| `showArrow` | `boolean` | | 中间箭头；当前 Vamis 未接 |
+| `showArrow` | `boolean` | `false` | 两栏之间显示箭头 |
 | `sortable` | `boolean` | `false` | 结果拖拽排序；当前 Vamis 未接 |
 | `selectMode` | `string` | `list` | `list` / `table` / `tree` / `chained` / `associated` |
 | `mode` | `string` | `list` | Vamis 兼容别名；`selectMode` 优先 |
@@ -974,14 +974,14 @@ valueField: value
 | `selectTitle` | `string` | `请选择` | 左侧标题 |
 | `resultTitle` | `string` | `当前选择` | 右侧结果标题 |
 | `leftTitle` / `rightTitle` | `string` | | Vamis 兼容别名 |
-| `menuTpl` | SchemaNode | | 自定义选项展示；当前 Vamis 未接 |
-| `valueTpl` | SchemaNode | | 自定义结果值展示；当前 Vamis 未接 |
+| `menuTpl` | SchemaNode | | 自定义左侧选项展示，模板数据含当前 option |
+| `valueTpl` | SchemaNode | | 自定义右侧结果展示，模板数据含当前 option |
 | `searchPlaceholder` | `string` | | 左侧搜索提示 |
 | `resultSearchPlaceholder` | `string` | | 右侧结果搜索提示 |
 | `statistics` | `boolean` | `true` | 显示左右选择数量，默认开启 |
 | `itemHeight` | `number` | `38` | list / table 虚拟行高；tree 固定 32 |
 | `virtualThreshold` | `number` | `100` | 开启虚拟窗口的选项阈值 |
-| `showInvalidMatch` | `boolean` | `false` | 未匹配值飘红；当前 Vamis 未接 |
+| `showInvalidMatch` | `boolean` | `false` | 保留未匹配已选值，并控制是否按错误色标红 |
 | `onlyChildren` | `boolean` | | 树形只提交叶子 |
 | `initiallyOpen` | `boolean` | | 树形默认展开 |
 | `autoCheckChildren` | `boolean` | `true` | 树形勾选联动 |
@@ -1292,4 +1292,5 @@ valueField: value
 - 已接：`chained` 与 `associated` 复用 Select 的级联 / 关联 pane，支持 `leftOptions`、`leftDefaultValue`、`leftMode`、`rightMode` 和 source 信封。
 - `chained` / `associated` 使用等宽选择面与结果面，全选 / 清空放在标题行，不占中间移动列。
 - 属性表与编辑器补全已列全 Amis schema；标注“当前 Vamis 未接”的字段尚未实现。
-- 运行时未接：`showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode` / `searchResultColumns`、`searchApi`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`pagination`、移动端专用布局。
+- 已接：`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`。`menuTpl` 覆盖 list / tree / chained 左侧选项，`valueTpl` 覆盖右侧结果列表；未匹配已选值会保留并按 `showInvalidMatch` 决定是否标红。
+- 运行时未接：`sortable`、`resultListModeFollowSelect`、`searchResultMode` / `searchResultColumns`、`searchApi`、`pagination`、移动端专用布局。

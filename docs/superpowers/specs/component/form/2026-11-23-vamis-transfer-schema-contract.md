@@ -27,16 +27,16 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 | `searchable` / `searchPlaceholder` | 左侧搜索 | 已接 |
 | `checkAll` | 左侧全选 | list / tree 已接；chained / associated 标题行已接 |
 | `virtualThreshold` / `itemHeight` | 虚拟窗口 | list/table 已接；tree 固定 32px，不消费 `itemHeight` |
-| `showArrow` | 中间箭头 | 未接 |
+| `showArrow` | 中间箭头 | 已接 |
 | `sortable` | 结果拖拽排序 | 未接 |
 | `resultListModeFollowSelect` | 结果区跟随模式 | 未接 |
 | `searchResultMode` / `searchResultColumns` | 搜索结果面板 | 未接 |
 | `columns` | table 模式列配置 | 已接 `SelectTablePane` 自定义列 |
 | `resultSearchable` / `resultSearchPlaceholder` | 右侧结果搜索 | 本地过滤已接 |
 | `searchApi` | 左侧远程搜索 | 未接 |
-| `menuTpl` / `valueTpl` | 选项 / 结果自定义渲染 | 未接 |
+| `menuTpl` / `valueTpl` | 选项 / 结果自定义渲染 | 已接 list / tree / chained 左侧与右侧结果列表 |
 | `statistics` | 选择统计 | 已接，默认显示左右数量 |
-| `showInvalidMatch` | 未匹配值飘红 | 未接 |
+| `showInvalidMatch` | 未匹配值飘红 | 已接；未匹配值始终保留 |
 | `onlyChildren` / `initiallyOpen` / `autoCheckChildren` | 树模式行为 | 已接共享 `SelectTreePane` |
 | `pagination` | list/table 分页 | 未接 |
 

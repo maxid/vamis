@@ -8,6 +8,7 @@ import {
   VamisScrollbar,
 } from '@vamis/ui'
 import {
+  SchemaRenderer,
   createVamisEvent,
   eventEvalData,
   filterOptionTree,
@@ -88,6 +89,7 @@ type TreeRow = {
   value?: unknown
   depth: number
   disabled?: boolean
+  option: OptionItem
   children: TreeRow[]
 }
 const expandedTree = ref<Set<string>>(new Set())
@@ -102,6 +104,7 @@ function buildTree(nodes: any[], depth = 0, prefix = ''): TreeRow[] {
       value: node.value,
       depth,
       disabled: node.disabled === true,
+      option: node,
       children,
     }
   })
@@ -169,6 +172,7 @@ function currentValue() {
 const selected = computed(() => parseJoined(currentValue(), true, joinValues.value, delimiter.value))
 const searchable = computed(() => props.schema.searchable === true)
 const resultSearchable = computed(() => props.schema.resultSearchable === true)
+const showArrow = computed(() => props.schema.showArrow === true)
 const VIRTUAL_ITEM_HEIGHT = 38
 const TREE_ITEM_HEIGHT = 32
 const VIRTUAL_VIEWPORT_HEIGHT = 258
@@ -251,18 +255,25 @@ function matched(item: { label?: unknown }, query: string) {
   return String(item.label ?? '').toLowerCase().includes(query.toLowerCase())
 }
 const left = computed(() => options.value.filter((item) => !selected.value.some((value) => optionValuesEqual(value, item.value))))
-const right = computed(() => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))))
+const right = computed(() => selectedOptionItems(selected.value))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
 const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
 const availableListRows = computed(() => flattenListRows(treeVisible(treeRows.value)))
-const selectedCount = computed(
-  () => options.value.filter((item) => selected.value.some((value) => optionValuesEqual(value, item.value))).length,
-)
-const availableCount = computed(() => Math.max(0, options.value.length - selectedCount.value))
+const selectedCount = computed(() => selected.value.length)
+const availableCount = computed(() => left.value.length)
 const allSelected = computed(
-  () => options.value.length > 0 && selectedCount.value === options.value.length,
+  () =>
+    options.value.length > 0 &&
+    options.value.every((item) =>
+      selected.value.some((value) => optionValuesEqual(value, item.value)),
+    ),
 )
-const partialSelected = computed(() => selectedCount.value > 0 && !allSelected.value)
+const partialSelected = computed(
+  () =>
+    selected.value.some((value) =>
+      options.value.some((item) => optionValuesEqual(value, item.value)),
+    ) && !allSelected.value,
+)
 const showStatistics = computed(() => props.schema.statistics !== false)
 const leftTitle = computed(() =>
   String(props.schema.selectTitle ?? props.schema.leftTitle ?? ''),
@@ -393,9 +404,13 @@ function measureVirtualViewports() {
 let listResizeObserver: ResizeObserver | undefined
 
 function selectedOptionItems(values: unknown[]) {
-  return values
-    .map((value) => options.value.find((item) => optionValuesEqual(item.value, value)))
-    .filter((item): item is OptionItem => !!item)
+  return values.map((value) =>
+    options.value.find((item) => optionValuesEqual(item.value, value)) ?? {
+      label: String(value ?? ''),
+      value,
+      __unmatched: true,
+    },
+  )
 }
 
 function serializeSelected(values: unknown[]) {
@@ -658,7 +673,10 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div class="vamis-transfer grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div
+      class="vamis-transfer grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+      :class="{ 'has-arrow': showArrow }"
+    >
       <div class="vamis-transfer__select">
         <div class="vamis-transfer__title">
           <span class="vamis-transfer__title-main">
@@ -809,7 +827,18 @@ watch(
                 :disabled="disabled || row.item.disabled"
                 @click.stop="toggleValue(row.item.value)"
               />
-              <span class="vamis-transfer__text">{{ row.item.label }}</span>
+              <span
+                class="vamis-transfer__text"
+                :class="{ 'is-template': !!schema.menuTpl }"
+                :title="schema.menuTpl ? undefined : row.item.label"
+              >
+                <SchemaRenderer
+                  v-if="schema.menuTpl"
+                  :schema="schema.menuTpl"
+                  :extra-data="row.item.option"
+                />
+                <template v-else>{{ row.item.label }}</template>
+              </span>
             </div>
           </li>
           <li
@@ -826,6 +855,9 @@ watch(
         </div>
         </template>
       </div>
+      <span v-if="showArrow" class="vamis-transfer__arrow" aria-hidden="true">
+        <VamisIcon name="right-arrow" />
+      </span>
       <div class="vamis-transfer__result">
         <div class="vamis-transfer__title">
           <span class="vamis-transfer__title-main">
@@ -872,6 +904,10 @@ watch(
                   v-for="item in rightTableWindow.rows"
                   :key="String(item.value)"
                   class="vamis-transfer__row cursor-pointer"
+                  :class="{
+                    'is-invalid':
+                      schema.showInvalidMatch === true && item.__unmatched === true,
+                  }"
                   :style="rightTableWindow.enabled ? { height: `${virtualItemHeight}px` } : undefined"
                   @click="remove(item.value)"
                 >
@@ -908,11 +944,26 @@ watch(
           <li v-for="item in rightWindow.rows" :key="String(item.value)">
             <div
               class="vamis-transfer__result-item"
+              :class="{
+                'is-invalid':
+                  schema.showInvalidMatch === true && item.__unmatched === true,
+              }"
               :style="{
                 height: `${virtualItemHeight}px`,
               }"
             >
-              <span class="vamis-transfer__text">{{ item.label }}</span>
+              <span
+                class="vamis-transfer__text"
+                :class="{ 'is-template': !!schema.valueTpl }"
+                :title="schema.valueTpl ? undefined : item.label"
+              >
+                <SchemaRenderer
+                  v-if="schema.valueTpl"
+                  :schema="schema.valueTpl"
+                  :extra-data="item"
+                />
+                <template v-else>{{ item.label }}</template>
+              </span>
               <button
                 type="button"
                 class="vamis-transfer__remove"

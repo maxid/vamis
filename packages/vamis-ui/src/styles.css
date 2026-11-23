@@ -10934,7 +10934,30 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-secondary);
 }
 .vamis-transfer {
+  position: relative;
   min-height: var(--transfer-min-height);
+}
+.vamis-transfer__arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusFull);
+  background: var(--card);
+  color: var(--icon-color);
+  transform: translate(-50%, -50%);
+  box-shadow: var(--popup-shadow);
+}
+.vamis-transfer__arrow svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 .vamis-transfer__select,
 .vamis-transfer__result {
@@ -11153,6 +11176,15 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.vamis-transfer__text.is-template {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+}
+.vamis-transfer__text.is-template > .vamis-node {
+  width: 100%;
+  min-width: 0;
+}
 .vamis-transfer__remove {
   display: inline-flex;
   align-items: center;
@@ -11205,6 +11237,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-transfer__item.is-disabled {
   color: var(--text-muted);
   cursor: not-allowed;
+}
+.vamis-transfer__result-item.is-invalid .vamis-transfer__text,
+.vamis-transfer__row.is-invalid > td {
+  color: var(--select-invalid-color);
 }
 .vamis-transfer__value {
   color: var(--text-tertiary);
@@ -11330,6 +11366,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-crud-op--danger,
 .vamis-crud-op--danger:hover {
   color: var(--destructive);
+}
+@media (max-width: 639px) {
+  .vamis-transfer__arrow {
+    display: none;
+  }
 }
 
 .vamis-audio {

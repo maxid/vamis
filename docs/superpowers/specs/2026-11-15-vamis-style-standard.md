@@ -44,6 +44,7 @@
 | `--lineHeightBase` | 1.5 | 正文行高。14 的行盒是 21，不是 Tailwind `text-sm` 的 20 |
 
 - 根上 `.vamis-root` 是 `14px / 1.5`，组件没有特别要求就继承，不重复写
+- Amis helper 的 `text-xs` / `text-sm` = 12px，`text-base` / `text-md` = 14px，`text-lg` = 16px，`text-xl` = 18px；行高档位依次 16 / 20 / 24 / 28 / 28 / 32px。不要直接套 Tailwind 的 14/20 `text-sm`
 - 标尺之外的字号（比如 10px 的图片错误提示）要起组件 token 并注明 Amis 出处，不直接写进选择器
 
 ### 2.2 文字色与图标色
@@ -53,7 +54,7 @@
 | `--text-color`（= `--foreground` / `--text-loud`） | text-2 | `#151b26` | 正文、表头、表格数据 |
 | `--text-secondary`（= `--muted-foreground`） | text-4 | `#5c5f66` | 表单 label、次要文字 |
 | `--text-tertiary` | text-5 | `#84878c` | 说明、描述 |
-| `--text-muted` | text-6 | `#b8babf` | 占位、禁用 |
+| `--text-muted` | text-6 | `#b8babf` | 占位、禁用、`.text-muted` |
 | `--icon-color` / `--icon-hover-color` | text-5 / `--primary` | | chrome 图标默认色与悬停色 |
 | `--icon-size` | 14px | | chrome 图标默认尺寸 |
 
