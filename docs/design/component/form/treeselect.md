@@ -1,12 +1,12 @@
 # TreeSelect 树选择 · `treeselect` 设计
 
-> 状态：**进行中 87%** · 复杂度：**XL 特重**
+> 状态：**进行中 89%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/treeselect) · Amis：`/zh-CN/components/form/treeselect`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、事件与完整基础/CUD 组件动作已接，虚拟列表和若干继承属性仍是缺口。
+TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、事件、完整动作、节点行为与标签溢出已接，虚拟列表仍是主要缺口。
 
 ## 1. 边界与优先级（先读）
 
@@ -49,6 +49,8 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 | change / focus / blur | 选值前派发 change，打开/关闭派发 focus/blur | 已接 |
 | clear / reset / reload / setValue | 组件级 scoped 动作 | 已接 |
 | add / edit / delete | 复用 `*Confirm`、CUD API 与树更新 | 已接 |
+| nodeBehavior | `check` / `unfold` 独立或组合 | 已接 |
+| maxTagCount / overflowTagPopover | 标签上限、`+N` 与可交互溢出浮层 | 已接 |
 
 ## 4. 架构
 
@@ -62,7 +64,7 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 6. 缺口
 
-虚拟列表、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、`heightAuto`；与 InputTree 同步。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、事件、完整基础/CUD 动作、深色浮层已对齐，不再是缺口。
+虚拟列表；与 InputTree 同步。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、事件、完整动作、nodeBehavior、标签溢出、深色浮层已对齐。`heightAuto` 在 Amis TreeSelect 6.13 未实际透传，不计 Vamis 缺口。
 
 ## 7. 验收
 

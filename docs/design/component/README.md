@@ -165,7 +165,7 @@ Amis LOC 是 `@Renderer`/`@FormItem`/`OptionsControl` 入口文件行数（不�
 - [TabsTransfer 组合穿梭器](form/tabs-transfer.md) — `tabs-transfer` · L 重 · 40%
 - [TabsTransferPicker](form/tabs-transfer-picker.md) — `tabs-transfer-picker` · L 重 · 35%
 - [InputTree 树形选择框](form/input-tree.md) — `input-tree` · XL 特重 · 80%
-- [TreeSelect 树形选择器](form/treeselect.md) — `tree-select` · XL 特重 · 87%
+- [TreeSelect 树形选择器](form/treeselect.md) — `tree-select` · XL 特重 · 89%
 - [InputYear 年输入](form/input-year.md) — `input-year` · XL 特重 · 45%
 - [InputYearRange 年份范围](form/input-year-range.md) — `input-year-range` · M 中 · 45%
 - [JsonSchema](form/json-schema.md) — `json-schema` · L 重 · 30%

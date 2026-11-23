@@ -55,6 +55,7 @@ const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
         :menu-tpl="schema.menuTpl"
         :icon-field="schema.iconField"
         :enable-default-icon="schema.enableDefaultIcon"
+        :node-behavior="schema.nodeBehavior"
         @pick="tree.toggle"
         @expand="tree.toggleExpand"
         @add="tree.startAdd"

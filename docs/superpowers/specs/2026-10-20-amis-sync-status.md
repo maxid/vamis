@@ -29,7 +29,7 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 902 + editor 8 + sdk 226 = **1321**，全绿（2026-11-23 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 902 + editor 8 + sdk 229 = **1324**，全绿（2026-11-23 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
 | 工作区 | `git status` | Table 模式已提交为 `f278409`；Select 级联模式增量在 working tree |

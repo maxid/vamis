@@ -4801,3 +4801,109 @@ describe('TreeSelect events and actions', () => {
     await vi.waitFor(() => expect(treeTexts()).not.toContain('CC'))
   })
 })
+
+describe('TreeSelect node behavior', () => {
+  it('expands without selecting when nodeBehavior is unfold', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'unfoldTreeForm',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        nodeBehavior: ['unfold'],
+        options: [
+          {
+            label: 'A',
+            value: 'a',
+            children: [{ label: 'B', value: 'b' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('A')?.querySelector('.vamis-tree__content') || null)
+    await nextTick()
+    expect(treeItem('A')?.querySelector('.vamis-tree__arrow-icon')?.classList.contains('is-folded')).toBe(
+      true,
+    )
+    const form = scoped.getComponentByName('unfoldTreeForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()?.tree).toBeUndefined()
+  })
+
+  it('does not select when nodeBehavior is an empty list', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'readonlyTreeBehaviorForm',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        nodeBehavior: [],
+        options: [{ label: 'A', value: 'a' }],
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    click(treeItem('A')?.querySelector('.vamis-tree__content') || null)
+    const form = scoped.getComponentByName('readonlyTreeBehaviorForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await settle()
+    expect(form?.getData?.()?.tree).toBeUndefined()
+  })
+})
+
+describe('TreeSelect tag overflow', () => {
+  it('folds tags by maxTagCount and shows the rest in overflowTagPopover', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        multiple: true,
+        value: '1,2,3,4',
+        maxTagCount: 2,
+        overflowTagPopover: {
+          tooltipClassName: 'tree-overflow-popover',
+        },
+        options: [
+          { label: 'A', value: 1 },
+          { label: 'B', value: 2 },
+          { label: 'C', value: 3 },
+          { label: 'D', value: 4 },
+        ],
+      },
+    })
+
+    await nextTick()
+    const chips = [
+      ...host.querySelectorAll(
+        '.vamis-tree-select .vamis-select__chip:not(.vamis-select__overflow)',
+      ),
+    ]
+    expect(chips.map((chip) => chip.textContent?.trim())).toEqual(['A', 'B'])
+    const overflow = host.querySelector('.vamis-tree-select .vamis-select__overflow')
+    expect(overflow?.textContent?.trim()).toBe('+ 2 ...')
+
+    overflow?.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-select-overflow__grid')).toBeTruthy(),
+    )
+    expect(document.querySelector('.tree-overflow-popover')).toBeTruthy()
+    expect(document.querySelector('.vamis-select-overflow__grid')?.textContent).toContain('C')
+    expect(document.querySelector('.vamis-select-overflow__grid')?.textContent).toContain('D')
+  })
+})

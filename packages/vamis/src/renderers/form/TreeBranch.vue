@@ -46,12 +46,14 @@ const props = withDefaults(defineProps<{
   menuTpl?: SchemaNode
   iconField?: string
   enableDefaultIcon?: boolean
+  nodeBehavior?: string[]
   checkDisabled?: (item: OptionItem) => boolean
 }>(), {
   deferField: 'defer',
   iconField: 'icon',
   showIcon: true,
   enableDefaultIcon: true,
+  nodeBehavior: () => ['check'],
   partial: () => false,
   query: '',
   createTip: '添加子节点',
@@ -144,6 +146,13 @@ function isSelected(item: OptionItem) {
 function onPick(item: OptionItem) {
   if (checkLocked(item) || busy.value) return
   emit('pick', item)
+}
+
+function onNodeClick(item: OptionItem) {
+  if (checkLocked(item) || busy.value) return
+  const behaviors = Array.isArray(props.nodeBehavior) ? props.nodeBehavior : []
+  if (behaviors.includes('unfold') && canExpand(item)) emit('expand', item)
+  if (behaviors.includes('check')) emit('pick', item)
 }
 
 function onDraft(event: Event) {
@@ -290,9 +299,9 @@ watch(
               :class="{ 'is-checked': isSelected(row.item) }"
               role="button"
               :tabindex="checkLocked(row.item) ? -1 : 0"
-              @click="onPick(row.item)"
-              @keydown.enter.prevent="onPick(row.item)"
-              @keydown.space.prevent="onPick(row.item)"
+              @click="onNodeClick(row.item)"
+              @keydown.enter.prevent="onNodeClick(row.item)"
+              @keydown.space.prevent="onNodeClick(row.item)"
             >
               <span v-if="showIcon" class="vamis-tree__node-icon" aria-hidden="true">
                 <IconMark

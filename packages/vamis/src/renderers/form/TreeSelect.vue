@@ -23,6 +23,7 @@ import FormItem from '../FormItem.vue'
 import TreeBranch from './TreeBranch.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
+import VamisTooltipLayer from '../../overlay/VamisTooltipLayer.vue'
 import { useTreeField } from './useTreeField'
 import { optionValuesEqual, type OptionItem } from '../../options'
 import { useFieldValue } from '../../formContext'
@@ -43,6 +44,9 @@ const triggerEl = ref<HTMLElement | null>(null)
 const searchInputEl = ref<HTMLInputElement | null>(null)
 const triggerWidth = ref(0)
 const pristine = ref<unknown>()
+const overflowEl = ref<HTMLElement | null>(null)
+const overflowTip = ref(false)
+let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
 const isMobile = computed(() => overlayIsMobile(props.schema, env))
 const overlayContainer = computed(() =>
   overlayContainerFrom({ popOverContainerSelector: props.schema.popOverContainerSelector }, env),
@@ -60,6 +64,29 @@ const selectedItems = computed(() =>
     }),
   })),
 )
+const visibleSelectedItems = computed(() => {
+  const maxTag = Number(props.schema.maxTagCount)
+  if (!Number.isFinite(maxTag) || maxTag <= 0) return selectedItems.value
+  return selectedItems.value.slice(0, maxTag)
+})
+const restSelectedItems = computed(() =>
+  selectedItems.value.slice(visibleSelectedItems.value.length),
+)
+const overflowTooltip = computed(() => {
+  const pop = props.schema.overflowTagPopover
+  const extra =
+    pop && typeof pop === 'object' && !Array.isArray(pop) ? { ...(pop as Record<string, unknown>) } : {}
+  delete extra.children
+  delete extra.content
+  const extraClass = extra.tooltipClassName != null ? String(extra.tooltipClassName) : ''
+  return {
+    placement: 'auto',
+    showArrow: false,
+    enterable: true,
+    ...extra,
+    tooltipClassName: ['vamis-select-overflow', extraClass].filter(Boolean).join(' '),
+  }
+})
 const placeholder = computed(() =>
   props.schema.placeholder != null ? String(props.schema.placeholder) : '请选择',
 )
@@ -186,6 +213,18 @@ function onSearchInput(event: Event) {
   openMenu()
 }
 
+function showOverflow() {
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
+  overflowTip.value = true
+}
+
+function hideOverflow() {
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
+  overflowHideTimer = setTimeout(() => {
+    overflowTip.value = false
+  }, 80)
+}
+
 let wasOpen = false
 watch(open, (show) => {
   if (show) {
@@ -275,6 +314,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   scoped?.unregister(scopedApi)
   resizeObserver?.disconnect()
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
   if (typeof window !== 'undefined') window.removeEventListener('resize', measureTrigger)
 })
 
@@ -293,6 +333,7 @@ function scheduleMeasure() {
         'is-disabled': locked,
         'is-multiple': tree.multiple.value,
         'is-mobile': isMobile,
+        'is-fold': restSelectedItems.length > 0,
       }"
     >
       <div
@@ -304,7 +345,7 @@ function scheduleMeasure() {
         <div class="vamis-select__value">
           <template v-if="tree.multiple.value && selectedItems.length">
             <span
-              v-for="(item, index) in selectedItems"
+              v-for="(item, index) in visibleSelectedItems"
               :key="`${String(item.value)}-${index}`"
               class="vamis-select__chip"
             >
@@ -318,6 +359,13 @@ function scheduleMeasure() {
                 @click="removeTag(item, $event)"
               ><VamisClose /></button>
             </span>
+            <span
+              v-if="restSelectedItems.length"
+              ref="overflowEl"
+              class="vamis-select__chip vamis-select__overflow"
+              @mouseenter="showOverflow"
+              @mouseleave="hideOverflow"
+            >+ {{ restSelectedItems.length }} ...</span>
           </template>
           <span v-else-if="!allowTriggerInput && selectedItems[0]" class="vamis-select__single">{{ selectedItems[0].label }}</span>
           <input
@@ -347,6 +395,35 @@ function scheduleMeasure() {
           <VamisCaret class="vamis-select__caret" :open="!isMobile && open" />
         </span>
       </div>
+      <VamisTooltipLayer
+        :show="overflowTip && restSelectedItems.length > 0"
+        :target="overflowEl"
+        :container="overlayContainer"
+        :tooltip="overflowTooltip"
+        :data="data"
+        @enter="showOverflow"
+        @leave="hideOverflow"
+      >
+        <template #body>
+          <div class="vamis-select-overflow__grid">
+            <span
+              v-for="(item, index) in restSelectedItems"
+              :key="`rest-${String(item.value)}-${index}`"
+              class="vamis-select__chip"
+            >
+              <span class="vamis-select__chip-label">{{ item.label }}</span>
+              <button
+                v-if="!locked"
+                type="button"
+                class="vamis-select__chip-close"
+                aria-label="移除"
+                @mousedown.prevent
+                @click="removeTag(item, $event)"
+              ><VamisClose /></button>
+            </span>
+          </div>
+        </template>
+      </VamisTooltipLayer>
       <VamisPopUp
         v-if="isMobile"
         :show="open"
@@ -386,6 +463,7 @@ function scheduleMeasure() {
           :menu-tpl="schema.menuTpl"
           :icon-field="schema.iconField"
           :enable-default-icon="schema.enableDefaultIcon"
+          :node-behavior="schema.nodeBehavior"
           @pick="onPick"
           @expand="tree.toggleExpand"
           @add="tree.startAdd"
@@ -437,6 +515,7 @@ function scheduleMeasure() {
             :menu-tpl="schema.menuTpl"
             :icon-field="schema.iconField"
             :enable-default-icon="schema.enableDefaultIcon"
+            :node-behavior="schema.nodeBehavior"
             @pick="onPick"
             @expand="tree.toggleExpand"
             @add="tree.startAdd"
