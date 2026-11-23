@@ -31,6 +31,10 @@ const props = withDefaults(defineProps<{
   showRadio?: boolean
   query?: string
   virtualThreshold?: number
+  hideRoot?: boolean
+  rootLabel?: string
+  rootChecked?: boolean
+  placeholder?: string
   creatable?: boolean
   editable?: boolean
   removable?: boolean
@@ -54,6 +58,10 @@ const props = withDefaults(defineProps<{
   iconField: 'icon',
   showIcon: true,
   enableDefaultIcon: true,
+  hideRoot: true,
+  rootLabel: '顶级',
+  rootChecked: false,
+  placeholder: '暂无数据',
   nodeBehavior: () => ['check'],
   partial: () => false,
   query: '',
@@ -66,6 +74,8 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   pick: [item: OptionItem]
+  'item-click': [item: OptionItem]
+  'root-pick': []
   expand: [item: OptionItem]
   add: [item: OptionItem | null]
   edit: [item: OptionItem]
@@ -103,6 +113,14 @@ const virtualViewport = computed(() =>
 )
 const virtualEnabled = computed(
   () => virtualCandidate.value && virtualItemHeight.value > 0,
+)
+const rootVisible = computed(() => props.hideRoot === false)
+const showPlaceholder = computed(
+  () =>
+    rows.value.length === 0 &&
+    !(props.creatable && props.rootCreatable) &&
+    !rootVisible.value &&
+    !addingRoot.value,
 )
 const virtualStart = computed(() => {
   if (!virtualEnabled.value) return 0
@@ -152,6 +170,10 @@ const deferSpinnerSchema = computed(() => ({
 
 function canExpand(node: OptionItem) {
   return !!node.children?.length || !!node[props.deferField]
+}
+
+function rowDepth(depth: number) {
+  return depth + (rootVisible.value ? 1 : 0)
 }
 
 function sameItem(a: OptionItem | null | undefined, b: OptionItem) {
@@ -207,9 +229,15 @@ function onPick(item: OptionItem) {
 
 function onNodeClick(item: OptionItem) {
   if (checkLocked(item) || busy.value) return
+  emit('item-click', item)
   const behaviors = Array.isArray(props.nodeBehavior) ? props.nodeBehavior : []
   if (behaviors.includes('unfold') && canExpand(item)) emit('expand', item)
   if (behaviors.includes('check')) emit('pick', item)
+}
+
+function onRootClick() {
+  if (props.disabled || busy.value) return
+  emit('root-pick')
 }
 
 function onDraft(event: Event) {
@@ -348,8 +376,9 @@ watch(
     :style="virtualEnabled ? { height: virtualViewport + 'px' } : undefined"
     @scroll="onVirtualScroll"
   >
-    <ul class="vamis-tree__list">
-      <li v-if="creatable && rootCreatable" class="vamis-tree__item">
+    <div v-if="showPlaceholder" class="vamis-tree__placeholder">{{ placeholder }}</div>
+    <ul v-else class="vamis-tree__list">
+      <li v-if="creatable && rootCreatable && !rootVisible" class="vamis-tree__item">
         <a
           class="vamis-tree__add-top"
           :class="{ 'is-disabled': disabled || busy }"
@@ -359,7 +388,11 @@ watch(
           <span>{{ rootCreateTip }}</span>
         </a>
       </li>
-      <li v-if="addingRoot" class="vamis-tree__item">
+      <li
+        v-if="addingRoot"
+        class="vamis-tree__item"
+        :style="{ '--tree-depth': rootVisible ? 1 : 0 }"
+      >
         <div class="vamis-tree__label">
           <div class="vamis-tree__item-input">
             <input
@@ -381,6 +414,42 @@ watch(
         </div>
       </li>
       <li
+        v-if="rootVisible"
+        class="vamis-tree__item vamis-tree__root-item"
+        :style="{ '--tree-depth': 0 }"
+      >
+        <div class="vamis-tree__label" :class="{ 'is-checked': rootChecked }">
+          <span class="vamis-tree__arrow-placeholder" aria-hidden="true" />
+          <div
+            class="vamis-tree__content"
+            :class="{ 'is-checked': rootChecked }"
+            role="button"
+            :tabindex="disabled ? -1 : 0"
+            @click="onRootClick"
+            @keydown.enter.prevent="onRootClick"
+            @keydown.space.prevent="onRootClick"
+          >
+            <span v-if="showIcon" class="vamis-tree__node-icon" aria-hidden="true">
+              <VamisIcon name="home" />
+            </span>
+            <span class="vamis-tree__text">{{ rootLabel }}</span>
+            <div
+              v-if="creatable && rootCreatable && !disabled && !busy"
+              class="vamis-tree__icons"
+              @click.stop
+            >
+              <a
+                class="vamis-tree__icon-btn"
+                :aria-label="rootCreateTip"
+                @click="emit('add', null)"
+              >
+                <VamisIcon name="plus" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li
         v-if="virtualPadTop > 0"
         class="vamis-tree__virtual-pad"
         :style="{ height: virtualPadTop + 'px' }"
@@ -390,8 +459,8 @@ watch(
         <li
           :ref="virtualCandidate && !virtualEnabled ? measureVirtualRow : undefined"
           class="vamis-tree__item"
-          :class="{ 'is-child': row.depth > 0, 'is-leaf': !canExpand(row.item) }"
-          :style="{ '--tree-depth': row.depth }"
+          :class="{ 'is-child': rowDepth(row.depth) > 0, 'is-leaf': !canExpand(row.item) }"
+          :style="{ '--tree-depth': rowDepth(row.depth) }"
         >
           <div
             v-if="isEditing(row.item)"
@@ -548,7 +617,7 @@ watch(
         <li
           v-if="isAddingChild(row.item)"
           class="vamis-tree__item is-child"
-          :style="{ '--tree-depth': row.depth + 1 }"
+          :style="{ '--tree-depth': rowDepth(row.depth) + 1 }"
         >
           <div class="vamis-tree__label">
             <span class="vamis-tree__arrow-placeholder" aria-hidden="true" />

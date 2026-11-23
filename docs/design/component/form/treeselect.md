@@ -1,12 +1,12 @@
 # TreeSelect 树选择 · `treeselect` 设计
 
-> 状态：**进行中 92%** · 复杂度：**XL 特重**
+> 状态：**已完成 100%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/treeselect) · Amis：`/zh-CN/components/form/treeselect`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；`source` / `autoComplete`、`menuTpl` / `iconField`、事件、完整动作、节点行为、标签溢出与虚拟列表已接。
+TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/清除 + 移动草稿确认**。`searchable` 输入属于触发器，Popover 只承载树；Amis 6.13 属性、事件、动作表已逐项核对，`source` / `autoComplete`、根节点、长度限制、空态、事件、完整动作、节点行为、标签溢出与虚拟列表已接。
 
 ## 1. 边界与优先级（先读）
 
@@ -52,6 +52,10 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 | nodeBehavior | `check` / `unfold` 独立或组合 | 已接 |
 | maxTagCount / overflowTagPopover | 标签上限、`+N` 与可交互溢出浮层 | 已接 |
 | virtualThreshold | 可见节点超过阈值后窗口化；默认 100，`0` 关闭 | 已接 |
+| minLength / maxLength | 按选中节点数限制与校验，使用 Amis Tree 专用文案 | 已接 |
+| hideRoot / rootLabel / rootValue | 根节点显示、文案与清空值 | 已接 |
+| optionsPlaceholder | 空树提示 | 已接 |
+| itemClick / staticItemClick | 节点点击、静态词条点击 | 已接 |
 
 ## 4. 架构
 
@@ -65,20 +69,20 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 6. 缺口
 
-无已知主路径能力缺口；剩余工作是全量属性 / 事件 / 动作 / 示例逐项审计后再进 100%。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、事件、完整动作、nodeBehavior、标签溢出、虚拟列表、深色浮层已对齐。`heightAuto` 在 Amis TreeSelect 6.13 未实际透传，不计 Vamis 缺口。
+无已知能力缺口。`itemActions`、节点路径模式、searchable 输入位置、source/autoComplete、menuTpl/iconField、根节点、长度限制、空态、事件、完整动作、nodeBehavior、标签溢出、虚拟列表、深色浮层已对齐。`heightAuto` / `itemHeight` 在 Amis TreeSelect 6.13 未实际透传，不计 Vamis 缺口。
 
 ## 7. 验收
 
 - 值/勾选/弹层/移动确认/标签/搜索/窄屏；未接不误标。
 
-### 验收清单（文档核对：9 / 12）
+### 验收清单（文档核对：12 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis 渲染器或注册文件已定位
 - [x] 复杂度、依赖、集成面已盘点
-- [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对
-- [ ] 边界用例逐项核对
+- [x] schema 属性 / 默认值逐项核对
+- [x] 事件 / 动作逐项核对
+- [x] 边界用例逐项核对
 - [x] 组件页活示例运行、无 console error
 - [x] `pnpm test`（组件相关）
 - [x] `pnpm typecheck` 0
@@ -88,7 +92,7 @@ TreeSelect 复用 `useTreeField`，额外提供**触发框 + 弹层树 + 标签/
 
 ## 8. 后续
 
-全量属性 / 事件 / 动作表逐项复核；补 TreeSelect 长树活示例，并核虚拟列表与懒加载 / 搜索 / 移动草稿的组合。
+维护期只跟 Amis 新版本增量；后续补 TreeSelect 长树活示例，并核虚拟列表与懒加载 / 搜索 / 移动草稿的组合。
 
 ---
 

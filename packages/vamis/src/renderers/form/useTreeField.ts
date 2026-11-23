@@ -2,6 +2,8 @@
 
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import {
+  createVamisEvent,
+  eventEvalData,
   filterOptionTree,
   filterTpl,
   findOption,
@@ -25,6 +27,7 @@ import {
   normalizeNodePath,
   optionsResetValue,
   optionsVirtualThreshold,
+  runOnEvent,
   toggleTreeSelection,
   treeItemPartial,
   updateOptionInTree,
@@ -93,12 +96,36 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   )
   const showRadio = computed(() => !!schema.value.showRadio)
   const onlyLeaf = computed(() => !!schema.value.onlyLeaf)
+  const minLength = computed(() => {
+    const value = Number(schema.value.minLength)
+    return Number.isFinite(value) && value > 0 ? value : 0
+  })
+  const maxLength = computed(() => {
+    const value = Number(schema.value.maxLength)
+    return Number.isFinite(value) && value > 0 ? value : 0
+  })
+  const hideRoot = computed(() => schema.value.hideRoot !== false)
+  const rootLabel = computed(() =>
+    schema.value.rootLabel != null ? String(schema.value.rootLabel) : '顶级',
+  )
+  const rootValue = computed(() =>
+    schema.value.rootValue === undefined ? '' : schema.value.rootValue,
+  )
   const autoCheckChildren = computed(() => schema.value.autoCheckChildren !== false)
   const cascade = computed(() => !!schema.value.cascade)
   const showOutline = computed(() => !!schema.value.showOutline)
   const showIcon = computed(() => schema.value.showIcon !== false)
   const searchable = computed(() => !!schema.value.searchable)
   const virtualThreshold = computed(() => optionsVirtualThreshold(schema.value))
+  const placeholder = computed(() => {
+    const raw =
+      String(schema.value.type || '') === 'tree-select'
+        ? schema.value.optionsPlaceholder
+        : schema.value.placeholder
+    return raw != null && raw !== ''
+      ? String(raw)
+      : env.translate('placeholder.noData')
+  })
   const hideNodePathLabel = computed(() => !!schema.value.hideNodePathLabel)
   const pathSeparator = computed(() =>
     schema.value.pathSeparator == null ? '/' : String(schema.value.pathSeparator),
@@ -150,6 +177,15 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   function writeSelected(values: unknown[]) {
     if (!schema.value.name) return
     fieldApi.setValue(schema.value.name, serializeSelected(values))
+  }
+
+  function rootClearValue() {
+    return joinValues.value ? rootValue.value : []
+  }
+
+  function writeRootValue() {
+    if (!schema.value.name) return
+    fieldApi.setValue(schema.value.name, rootClearValue())
   }
 
   const nodePathInput = computed(() =>
@@ -345,6 +381,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
 
   function applyToggle(item: OptionItem, current: unknown[]): unknown[] | null {
     if (disabled?.value || item.disabled) return null
+    if (checkDisabled(item, current)) return null
     return toggleTreeSelection(current, item, checkOpts())
   }
 
@@ -359,7 +396,12 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   }
 
   function checkDisabled(item: OptionItem, values: unknown[] = selected.value) {
-    return isTreeItemCheckDisabled(item, values, checkOpts())
+    if (isTreeItemCheckDisabled(item, values, checkOpts())) return true
+    const on = checked(item, values)
+    return (
+      (maxLength.value > 0 && !on && values.length >= maxLength.value) ||
+      (minLength.value > 0 && on && values.length <= minLength.value)
+    )
   }
 
   function partial(item: OptionItem, values: unknown[] = selected.value) {
@@ -396,6 +438,26 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
       form: formApi,
       scope: scope.value,
     })
+  }
+
+  async function emitItemClick(item: OptionItem) {
+    const payload = {
+      ...data.value,
+      item,
+      items: options.value,
+      options: options.value,
+    }
+    const event = createVamisEvent('itemClick', payload)
+    await runOnEvent(schema.value, 'itemClick', {
+      env,
+      data: eventEvalData(payload, event),
+      scoped,
+      overlay,
+      form: formApi,
+      scope: scope.value,
+      event,
+    })
+    return event
   }
 
   async function openAddDialog(parent: OptionItem | null) {
@@ -598,8 +660,15 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     selected,
     serializeSelected,
     writeSelected,
+    rootClearValue,
+    writeRootValue,
     reloadOptions: loadSourceOptions,
     multiple,
+    minLength,
+    maxLength,
+    hideRoot,
+    rootLabel,
+    rootValue,
     showRadio,
     deferField,
     valueField,
@@ -607,6 +676,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     showIcon,
     searchable,
     virtualThreshold,
+    placeholder,
     searchPlaceholder,
     searchSticky,
     searchImmediately,
@@ -632,6 +702,7 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     checked,
     checkDisabled,
     partial,
+    emitItemClick,
     startAdd,
     startEdit,
     removeItem,

@@ -28,13 +28,22 @@ function parseScalar(raw: string): unknown {
 export function parseValidations(schema: SchemaObject): ValidationRules {
   const rules: ValidationRules = {}
   if (schema.required === true) rules.isRequired = true
-  if (schema.minLength != null) rules.minLength = schema.minLength
-  if (schema.maxLength != null) rules.maxLength = schema.maxLength
+  const type = String(schema.type || '')
+  const treeSelection = type === 'input-tree' || type === 'tree-select'
+  if (schema.minLength != null) {
+    rules[treeSelection ? 'treeMinLength' : 'minLength'] = treeSelection
+      ? [schema.minLength, schema.delimiter || ',']
+      : schema.minLength
+  }
+  if (schema.maxLength != null) {
+    rules[treeSelection ? 'treeMaxLength' : 'maxLength'] = treeSelection
+      ? [schema.maxLength, schema.delimiter || ',']
+      : schema.maxLength
+  }
   if (schema.maximum != null) rules.maximum = schema.maximum
   if (schema.minimum != null) rules.minimum = schema.minimum
   if (schema.matchRegexp) rules.matchRegexp = schema.matchRegexp
 
-  const type = String(schema.type || '')
   if (type === 'input-email') rules.isEmail = true
   if (type === 'input-url') rules.isUrl = true
 
@@ -67,6 +76,11 @@ function valueToString(value: unknown): string {
   if (typeof value === 'string') return value
   if (value instanceof Date) return value.toISOString()
   return String(value)
+}
+
+function selectedTreeCount(value: unknown, delimiter: unknown): number {
+  if (Array.isArray(value)) return value.length
+  return String(value || '').split(String(delimiter || ',')).length
 }
 
 function asRegexp(raw: unknown): RegExp {
@@ -171,6 +185,8 @@ export const validateMessageKeys: Record<string, string> = {
   matchRegexp: 'validate.matchRegexp',
   minLength: 'validate.minLength',
   maxLength: 'validate.maxLength',
+  treeMinLength: '已选择数量低于设定的最小个数$1，请选择更多的选项。',
+  treeMaxLength: '已选择数量超出设定的最大个数$1，请取消选择超出的选项。',
   minLengthArray: 'validate.array.minLength',
   maxLengthArray: 'validate.array.maxLength',
   maximum: 'validate.maximum',
@@ -291,6 +307,10 @@ const validations: Record<string, ValidateFn> = {
     !isExisty(value) || valueToString(value).length <= Number(length),
   minLength: (_values, value, length) =>
     !isExisty(value) || isEmptyValue(value) || valueToString(value).length >= Number(length),
+  treeMinLength: (_values, value, length, delimiter) =>
+    selectedTreeCount(value, delimiter) >= Number(length),
+  treeMaxLength: (_values, value, length, delimiter) =>
+    selectedTreeCount(value, delimiter) <= Number(length),
   isUrlPath: (_values, value) =>
     !isExisty(value) || isEmptyValue(value) || /^[a-z0-9_-]+$/i.test(valueToString(value)),
   maximum: (_values, value, maximum) =>

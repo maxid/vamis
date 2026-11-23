@@ -5,8 +5,8 @@ outline: deep
 
 # TreeSelect 树形选择器
 
-::: info 实现进度 92% · 进行中
-下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接；`change` / `focus` / `blur`、全部基础/CUD 动作、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、虚拟列表已接。Amis TreeSelect 6.13 未实际透传 `heightAuto` / `itemHeight`，树行高按首行实测；检索缩表会重置虚拟滚动。对照桌面 / 移动 **14/16**（P0 0）。余全量属性 / 事件 / 动作 / 示例逐项审计
+::: info 实现进度 100% · 已完成
+属性 / 事件 / 动作表已按 Amis TreeSelect 6.13 源码与文档逐项核完：`change` / `focus` / `blur` / `itemClick` / `staticItemClick` / CUD 确认 / `deferLoadFinished`，全部基础/CUD 动作，`minLength` / `maxLength`、`hideRoot` / `rootLabel` / `rootValue`、`optionsPlaceholder`、节点路径、虚拟列表与移动草稿确认均已接。对照桌面 / 移动 **14/16**（P0 0，余 Amis 空渲染探针）
 :::
 
 `tree-select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -401,6 +401,10 @@ outline: deep
 | hideNodePathLabel | `boolean` | `false` | 是否隐藏选择框中已选择节点的路径 label 信息 |
 | onlyLeaf | `boolean` | `false` | 只允许选择叶子节点 |
 | searchable | `boolean` | `false` | 是否可检索，仅在 type 为 `tree-select` 的时候生效 |
+| optionsPlaceholder | `string` | `"暂无数据"` | 空树时的提示文案 |
+| virtualThreshold | `number` | `100` | 可见树节点超过该数量时启用窗口化渲染；`0` 关闭 |
+
+虚拟列表按首行实测高度切片，并优先使用滚动宿主的实际可视高度；Amis TreeSelect 6.13 源码未把 `itemHeight` 透传给 Tree，因此 Vamis 不按该字段锁死行高。
 
 ## 事件表
 
@@ -1077,4 +1081,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接；`change` / `focus` / `blur`、全部基础/CUD 动作、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、虚拟列表已接。Amis TreeSelect 6.13 未实际透传 `heightAuto` / `itemHeight`，树行高按首行实测；检索缩表会重置虚拟滚动。对照桌面 / 移动 **14/16**（P0 0）。余全量属性 / 事件 / 动作 / 示例逐项审计。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` / `hideRoot` / `rootLabel` / `rootValue` / `minLength` / `maxLength` / `optionsPlaceholder` 已接；`change` / `focus` / `blur` / `itemClick` / `staticItemClick` / `deferLoadFinished`、全部基础/CUD 动作、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、虚拟列表已接。Amis TreeSelect 6.13 未实际透传 `heightAuto` / `itemHeight`，树行高按首行实测；检索缩表会重置虚拟滚动。对照桌面 / 移动 **14/16**（P0 0）。

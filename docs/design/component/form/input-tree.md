@@ -1,6 +1,6 @@
 # InputTree 树形选择器 · `input-tree` 设计
 
-> 状态：**进行中 82%** · 复杂度：**XL 特重**
+> 状态：**进行中 85%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/input-tree) · Amis：`/zh-CN/components/form/input-tree`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -8,7 +8,7 @@
 
 InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只有 64 行，真正逻辑在 `useTreeField.ts`（452 行）+ `TreeBranch` / `TreeSearchBox`，并与 TreeSelect 共用。设计时按**组合式状态**审，不要只改 InputTree.vue。
 
-当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
+当前覆盖：多选/单选、父子勾选语义、搜索、懒加载、增加/编辑/删除、路径模式、自定义渲染、工具栏、虚拟列表、`itemClick` / `staticItemClick`、长度限制、根节点与空态。虚拟列表按首行实测高度、实际滚动视口与上下 spacer 渲染窗口。**change 事件与部分 CUD 事件仍未接**，文档事件表不能当已实现。
 
 ## 1. 边界与优先级（先读）
 

@@ -192,6 +192,12 @@ async function onPick(item: OptionItem) {
   if (!tree.multiple.value) open.value = false
 }
 
+async function onRootPick() {
+  if (!(await commitRaw(tree.rootClearValue()))) return
+  tree.query.value = ''
+  if (!tree.multiple.value) open.value = false
+}
+
 async function removeTag(item: { value: unknown }, event: Event) {
   event.stopPropagation()
   if (locked.value) return
@@ -448,6 +454,10 @@ function scheduleMeasure() {
           :show-radio="tree.showRadio.value"
           :query="tree.query.value"
           :virtual-threshold="tree.virtualThreshold.value"
+          :hide-root="tree.hideRoot.value"
+          :root-label="tree.rootLabel.value"
+          :root-checked="workingValues.length === 0"
+          :placeholder="tree.placeholder.value"
           :creatable="tree.creatable.value"
           :editable="tree.editable.value"
           :removable="tree.removable.value"
@@ -466,6 +476,8 @@ function scheduleMeasure() {
           :enable-default-icon="schema.enableDefaultIcon"
           :node-behavior="schema.nodeBehavior"
           @pick="onPick"
+          @item-click="tree.emitItemClick"
+          @root-pick="onRootPick"
           @expand="tree.toggleExpand"
           @add="tree.startAdd"
           @edit="tree.startEdit"
@@ -501,6 +513,10 @@ function scheduleMeasure() {
             :show-radio="tree.showRadio.value"
             :query="tree.query.value"
             :virtual-threshold="tree.virtualThreshold.value"
+            :hide-root="tree.hideRoot.value"
+            :root-label="tree.rootLabel.value"
+            :root-checked="workingValues.length === 0"
+            :placeholder="tree.placeholder.value"
             :creatable="tree.creatable.value"
             :editable="tree.editable.value"
             :removable="tree.removable.value"
@@ -519,6 +535,8 @@ function scheduleMeasure() {
             :enable-default-icon="schema.enableDefaultIcon"
             :node-behavior="schema.nodeBehavior"
             @pick="onPick"
+            @item-click="tree.emitItemClick"
+            @root-pick="onRootPick"
             @expand="tree.toggleExpand"
             @add="tree.startAdd"
             @edit="tree.startEdit"

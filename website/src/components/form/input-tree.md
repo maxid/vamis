@@ -5,7 +5,7 @@ outline: deep
 
 # InputTree 树形选择框
 
-::: info 实现进度 82% · 进行中
+::: info 实现进度 85% · 进行中
 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。树窗口超过 `virtualThreshold` 后按首行实测高度、实际视口与上下 spacer 切片，`0` 关闭。对照桌面 / 移动 **26/31**（P0 0）。仍缺拖拽
 :::
 
@@ -2140,4 +2140,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。树窗口超过 `virtualThreshold` 后按首行实测高度、实际视口与上下 spacer 切片，`0` 关闭。对照桌面 / 移动 **26/31**（P0 0）。仍缺拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表、`itemClick` / `staticItemClick`、`minLength` / `maxLength`、`hideRoot` / `rootLabel` / `rootValue` 与空态 placeholder 已接；路径模式会按值中的父链串行加载并回显，兄弟分支不请求。树窗口按首行实测高度、实际滚动视口与上下 spacer 渲染，超过 `virtualThreshold` 后只挂窗口行；`0` 关闭虚拟化。仍缺拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

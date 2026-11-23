@@ -12522,6 +12522,12 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   padding: 0;
   margin: 0;
 }
+.vamis-tree__placeholder {
+  min-height: var(--tree-content-height);
+  color: var(--text-muted);
+  font-size: var(--fontSizeBase);
+  line-height: var(--tree-content-height);
+}
 .vamis-tree__item {
   line-height: var(--tree-item-height);
   padding-left: calc(var(--tree-depth) * var(--tree-indent));

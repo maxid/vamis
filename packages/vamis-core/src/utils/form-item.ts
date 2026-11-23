@@ -172,15 +172,19 @@ function formItemStaticSelectorMultiple(schema: SchemaObject): boolean {
 /** 选择器静态展示用的词条（优先 option.label）。 */
 export function formItemStaticWords(schema: SchemaObject, value: unknown): string[] {
   const labelField = optionsLabelField(schema)
-  const valueField = optionsValueField(schema)
-  const options = normalizeOptions(schema.options, labelField, valueField)
-  const selected = getSelectedOptions(value, options, {
-    ...optionsValueConfig(schema),
-    multiple: formItemStaticSelectorMultiple(schema),
-  })
-  return selected
+  return formItemStaticSelectorItems(schema, value)
     .map((item) => String(item[labelField] ?? item.label ?? item.value ?? ''))
     .filter((item) => item !== '')
+}
+
+export function formItemStaticSelectorItems(schema: SchemaObject, value: unknown): PlainObject[] {
+  const labelField = optionsLabelField(schema)
+  const valueField = optionsValueField(schema)
+  const options = normalizeOptions(schema.options, labelField, valueField)
+  return getSelectedOptions(value, options, {
+    ...optionsValueConfig(schema),
+    multiple: formItemStaticSelectorMultiple(schema),
+  }) as PlainObject[]
 }
 
 /**
@@ -190,9 +194,20 @@ export function formItemStaticWords(schema: SchemaObject, value: unknown): strin
 export function formItemStaticSelectorNode(schema: SchemaObject, value: unknown): SchemaObject | null {
   const kind = formItemStaticSelectorKind(String(schema.type ?? ''))
   if (!kind) return null
-  const words = formItemStaticWords(schema, value)
-  if (!words.length) return null
-  const node: SchemaObject = { type: kind, words }
+  const items = formItemStaticSelectorItems(schema, value)
+  if (!items.length) return null
+  const labelField = optionsLabelField(schema)
+  const words = items
+    .map((item) => String(item[labelField] ?? item.label ?? item.value ?? ''))
+    .filter((item) => item !== '')
+  const node: SchemaObject = {
+    type: kind,
+    words,
+  }
+  if (schema.onEvent) {
+    node.staticItems = items
+    node.onEvent = schema.onEvent
+  }
   const extra = schema.staticSchema
   if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
     const rec = extra as SchemaObject

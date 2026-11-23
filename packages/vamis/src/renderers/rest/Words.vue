@@ -1,10 +1,28 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { filterTpl, type SchemaObject } from '@vamis/core'
+import {
+  createVamisEvent,
+  eventEvalData,
+  filterTpl,
+  runOnEvent,
+  useData,
+  useEnv,
+  useFormApi,
+  useOverlay,
+  useScope,
+  useScoped,
+  type SchemaObject,
+} from '@vamis/core'
 import { readValue } from './format'
 
 const props = defineProps<{ schema: SchemaObject; data: Record<string, any> }>()
 const open = ref(false)
+const data = useData()
+const env = useEnv()
+const scoped = useScoped()
+const overlay = useOverlay()
+const form = useFormApi()
+const scope = useScope()
 
 function asList(raw: unknown): string | string[] | null {
   if (raw == null || raw === '') return null
@@ -75,6 +93,23 @@ const collapseText = computed(() =>
 const delimiter = computed(() =>
   props.schema.delimiter != null ? String(props.schema.delimiter) : '， ',
 )
+
+async function onStaticItemClick(index: number) {
+  const raw = props.schema.staticItems
+  const item = Array.isArray(raw) ? raw[index] : undefined
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return
+  const payload = { ...data.value, item, index }
+  const event = createVamisEvent('staticItemClick', payload)
+  await runOnEvent(props.schema, 'staticItemClick', {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    overlay,
+    form,
+    scope: scope.value,
+    event,
+  })
+}
 </script>
 
 <template>
@@ -85,10 +120,15 @@ const delimiter = computed(() =>
         :key="item + i"
         class="vamis-tag"
         :title="item"
+        @click="onStaticItemClick(i)"
       >{{ item }}</span>
     </template>
     <template v-else-if="Array.isArray(shown)">
-      <span v-for="(item, i) in shownList" :key="item + i">
+      <span
+        v-for="(item, i) in shownList"
+        :key="item + i"
+        @click="onStaticItemClick(i)"
+      >
         {{ item }}{{ i === shownList.length - 1 ? '' : delimiter }}
       </span>
     </template>

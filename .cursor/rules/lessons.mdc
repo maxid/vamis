@@ -1001,6 +1001,12 @@ alwaysApply: true
 - 触及：`input-tree` `tree-select` Options
 - 规则：Amis `Tree.tsx` `flattenOptions` / `renderList` / `handleVirtualHeight`；`packages/vamis/src/renderers/form/TreeBranch.vue`；`packages/vamis/src/renderers/form/useTreeField.ts`
 
+### TreeSelect 的事件、根节点和长度限制按 Amis 运行时，不按文档猜
+- 踩过：文档写 `reset` 优先 `resetValue`，但 Amis 源码实际是 pristine 优先，`clear` 才使用 `resetValue`；只按文档改会破坏水标。`itemClick` 必须在展开/选择前派发，`staticItemClick` 不能只渲染 words 文本而丢掉原始 option。
+- 稳定做法：`itemClick` 由共享 TreeBranch 在节点行为前发出；静态选择器把 `staticItems` 和原始 `onEvent` 带进 words schema，由 Words 按索引派发。`minLength` / `maxLength` 按分隔后的选中项数量校验，达到上限禁用未选项，达到下限禁用已选项，并使用 Amis Tree 专用文案。`hideRoot: false` 渲染根行，点击写 `joinValues ? rootValue : []`；空树使用 TreeSelect 的 `optionsPlaceholder` / InputTree 的 `placeholder`。`reset` 继续 pristine 优先，`clear` 使用 `resetValue`。
+- 触及：`tree-select` `input-tree` `select` Options
+- 规则：Amis `TreeSelect.tsx` `resetValue` / `clearValue` / `handleNodeClick` / `validate`；`Tree.tsx` `handleItemClick` / `isItemDisabled`；`Words.tsx` `staticItemClick`；`packages/vamis/src/renderers/form/TreeBranch.vue`；`packages/vamis/src/renderers/rest/Words.vue`；`packages/vamis-core/src/validate.ts`
+
 ### 下拉里的树只能有一个滚动宿主
 - 踩过：Select 树模式外层 `vamis-select__popover` 已经 `overflow:auto`，通用 `.vamis-tree` 又带 `max-height + overflow:auto`；后者在 unlayered 样式里覆盖了 Select 分层规则，延时加载展开后右侧出现两条滚动条。
 - 稳定做法：对齐 Amis `TransferDropDown-content > Transfer-selection`。Select 树模式给外层加 `is-tree` 并固定 flex column、`overflow:hidden`；`.vamis-select__tree-pane` 是唯一 `overflow:auto` 宿主；其内部 `.vamis-tree` 设 `max-height:none; overflow:visible`。搜索框固定，树内容单独滚动；桌面和移动 sheet 共用同一条规则。

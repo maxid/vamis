@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 6；测试 **1329**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-23（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 7；测试 **1339**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -18,7 +18,7 @@
 3. **状态**
    - `未开始`：未注册，且没有等价能力（属性级能力也算）。
    - `进行中`：已注册或有部分能力，但未达到「实现标准」：占位 / 精简 / 缺 amis 已有能力或文档章节 / 被 P0 kernel（D1–D8）挡住。
-   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **6 项**（`container` / `hidden` / `toast` / `dialog` / `spinner` / `select`）；`page` 因 `pullRefresh` 未接降为进行中。
+   - `已完成`：满足「实现标准」：组件与文档均对标或超越 amis 对等内容。当前 **7 项**（`container` / `hidden` / `toast` / `dialog` / `spinner` / `select` / `tree-select`）；`page` 因 `pullRefresh` 未接降为进行中。
 4. **进度**是渲染器深度，不是 type 覆盖率（覆盖率 97.9% 见同步状态）。档位：
    | 进度 | 含义 |
    |------|------|
@@ -250,8 +250,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
-| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 82% | 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。树窗口超过 `virtualThreshold` 后按首行实测高度、实际视口与上下 spacer 切片，`0` 关闭。对照桌面 / 移动 **26/31**（P0 0）。仍缺拖拽 | P0 |
-| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 92% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接；`change` / `focus` / `blur`、全部基础/CUD 动作、`nodeBehavior`、`maxTagCount` / `overflowTagPopover`、虚拟列表已接。Amis TreeSelect 6.13 未实际透传 `heightAuto` / `itemHeight`，树行高按首行实测；检索缩表会重置虚拟滚动。对照桌面 / 移动 **14/16**（P0 0）。余全量属性 / 事件 / 动作 / 示例逐项审计 | P0 |
+| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 85% | 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator`、虚拟列表、`itemClick` / `staticItemClick`、`minLength` / `maxLength`、根节点与空态已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。树窗口超过 `virtualThreshold` 后按首行实测高度、实际视口与上下 spacer 切片，`0` 关闭。对照桌面 / 移动 **26/31**（P0 0）。仍缺拖拽及部分 change/CUD 事件 | P0 |
+| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 已完成 | 100% | Amis TreeSelect 6.13 属性 / 事件 / 动作表逐项核完。下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板；`searchable` 在 ResultBox 触发器内；`source` / `autoComplete`、`menuTpl` / `iconField`、节点路径、`itemActions`、虚拟列表、`hideRoot` / `rootLabel` / `rootValue`、`minLength` / `maxLength`、`optionsPlaceholder` 已接；事件含 `change` / `focus` / `blur` / `itemClick` / `staticItemClick` / `addConfirm` / `editConfirm` / `deleteConfirm` / `deferLoadFinished`；动作 `clear` / `reset` / `reload` / `setValue` / `add` / `edit` / `delete` 已接。`reset` 按 Amis 源码优先 pristine，`clear` 使用 `resetValue`；`heightAuto` / `itemHeight` 在 6.13 未实际透传，不计缺口。对照桌面 / 移动 **14/16**（P0 0，余 Amis 空渲染探针） | P0 |
 | `input-year` | InputYear 年输入 | `/components/form/input-year` | `/zh-CN/components/form/input-year` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-year-range` | InputYearRange 年份范围 | `/components/form/input-year-range` | `/zh-CN/components/form/input-year-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `json-schema` | JsonSchema | `/components/form/json-schema` | `/zh-CN/components/form/json-schema` | 进行中 | 30% | **精简**：只渲染 string/number/boolean 属性 | P0 |
@@ -563,7 +563,7 @@ flowchart LR
 | 139 | `chart-radios` | `radios`、`chart` | 4 | 0 | 4 | 4 | P2 | 进行中 | 35% |
 | 140 | `input-tag` | `select`、`tag` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 141 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
-| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 进行中 | 92% |
+| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 已完成 | 100% |
 | 143 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
 | 144 | `list-select` | `select`、`list` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 145 | `input-kvs` | `input-kv`、`action` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |
@@ -644,6 +644,7 @@ flowchart LR
 - TreeSelect CUD 动作（2026-11-23）：`add/edit/delete` 复用 `*Confirm`、CUD API 和树更新，支持 parentValue / originValue 定位。TreeSelect 85→87；测试 **1321**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。余虚拟列表、nodeBehavior、标签溢出与 heightAuto。
 - TreeSelect 节点行为与标签溢出（2026-11-23）：`nodeBehavior` check/unfold 与空行为、`maxTagCount` / `overflowTagPopover` 已接；heightAuto 在 Amis TreeSelect 未透传，不计缺口。TreeSelect 87→89；测试 **1324**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。余虚拟列表。
 - 树虚拟列表（2026-11-23）：共享 `TreeBranch` 按 Amis Tree 的 `virtualThreshold` 对可见行窗口化；首行实测行高、实际滚动视口优先、上下 spacer 补总高，检索缩表回顶部，后部窗口仍按完整树绝对索引写值。InputTree 80→82、TreeSelect 89→92；测试 **1329**、`typecheck` 0，对照桌面 / 移动 InputTree **26/31**、TreeSelect **14/16**（均 P0 0）。真实浏览器核过 160px 视口 / 8 行窗口 / 416px 总高与滚动换窗。
+- TreeSelect 100% 收口（2026-11-23）：补齐 `itemClick`、`staticItemClick`、`minLength` / `maxLength` 选中数量限制与 Amis 专用校验文案、`hideRoot` / `rootLabel` / `rootValue` 根节点、`optionsPlaceholder` 空态和 `deferLoadFinished` 回归；`reset` / `clear` 按 Amis 源码分别使用 pristine / resetValue。TreeSelect 92→100、InputTree 82→85；测试 **1339**、`typecheck` 0，对照桌面 / 移动 TreeSelect **14/16**、InputTree **26/31**（均 P0 0）。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 
