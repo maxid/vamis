@@ -50,6 +50,12 @@ Select 是 `Options` 控件族的参照实现：值、选项、搜索、远程 s
 4. 新增/编辑/删除与 `*Confirm` 事件
 5. 样式/深色/窄屏/对照
 
+### 1.4 与 TreeSelect 的定位边界
+
+- 两者 trigger / Overlay 共用同一规则：以根控件宽度同步 Popover `minWidth`，`VamisOverlay` gap 4，窗口 resize 后重算。
+- Select 的检索框属于下拉菜单，按 Select line / Transfer box 配方；TreeSelect 的 searchable 属于 ResultBox 触发器，Popover 只放树。不要为了视觉一致性互换两套搜索层。
+- TreeSelect 桌面 Popover 外层透明，内层 Tree 自己承担边框、padding、上移和最大高度；Select 仍由 Select Popover 承担菜单外壳。
+
 ## 2. 复杂度
 
 - 等级：**XL 特重**（Amis `Form/Select.tsx` 812 行；Vamis `Select.vue` 900+ 行 + `SelectTreePane.vue` + `useTreeState.ts` + `optionsControl.ts` 650+ 行 + core `options.ts` 805 行）

@@ -1855,6 +1855,93 @@ describe('Select option mutation events', () => {
     await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('a'))
   })
 
+  it.each([
+    {
+      type: 'input-tree',
+      extra: {},
+      trigger: '',
+      treeSelector: '.vamis-tree',
+    },
+    {
+      type: 'tree-select',
+      extra: {},
+      trigger: '.vamis-tree-select .vamis-select__input',
+      treeSelector: '.vamis-tree-select__popover .vamis-tree',
+    },
+    {
+      type: 'select',
+      extra: { selectMode: 'tree' },
+      trigger: '.vamis-select__input',
+      treeSelector: '.vamis-select__popover.is-tree .vamis-tree',
+    },
+  ])(
+    'passes node data to $type itemActions and keeps row selection stopped',
+    async ({ type, extra, trigger, treeSelector }) => {
+      const notify = vi.fn()
+      const { host, scoped } = mount(
+        {
+          type: 'page',
+          body: {
+            type: 'form',
+            name: 'treeActionsForm',
+            actions: [],
+            body: {
+              type,
+              name: 'tree',
+              label: '节点',
+              ...extra,
+              options: [
+                {
+                  label: '采购单',
+                  value: 'order',
+                  tag: '数据模型',
+                },
+              ],
+              itemActions: [
+                {
+                  type: 'button',
+                  label: '详情',
+                  level: 'link',
+                  size: 'xs',
+                  onEvent: {
+                    click: {
+                      actions: [
+                        {
+                          actionType: 'toast',
+                          args: { msg: '${label}:${tag}' },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        { notify },
+      )
+
+      await nextTick()
+      if (trigger) click(host.querySelector(trigger))
+      const tree = await vi.waitFor(() => {
+        const element = document.querySelector(treeSelector)
+        expect(element).toBeTruthy()
+        return element as HTMLElement
+      })
+      click(buttonWithText('详情', tree))
+      await vi.waitFor(() =>
+        expect(notify.mock.calls.map((call) => call[1])).toContain(
+          '采购单:数据模型',
+        ),
+      )
+
+      const form = scoped.getComponentByName('treeActionsForm') as {
+        getData?: () => Record<string, unknown>
+      }
+      expect(form?.getData?.()?.tree).toBeUndefined()
+    },
+  )
+
   it('keeps associated right selections in the mobile draft until confirm', async () => {
     const { host, scoped } = mount(
       {
@@ -4147,5 +4234,316 @@ describe('Tree expansion state', () => {
     await nextTick()
     expect(arrowItems('.vamis-tree-select__popover')[0]?.querySelector('.is-folded')).toBeTruthy()
     expect(arrowItems('.vamis-tree-select__popover')[1]?.querySelector('.is-folded')).toBeTruthy()
+  })
+})
+
+describe('Tree node path mode', () => {
+  const pathOptions = [
+    {
+      label: 'Root',
+      value: 'root',
+      id: 'root',
+      children: [
+        {
+          label: 'Branch',
+          value: 'branch',
+          id: 'branch',
+          children: [
+            { label: 'Leaf A', value: 'leaf-a', id: 'leaf-a', meta: 'alpha' },
+            { label: 'Leaf B', value: 'leaf-b', id: 'leaf-b', meta: 'beta' },
+          ],
+        },
+      ],
+    },
+  ]
+
+  it('writes the full node path and keeps the selected leaf fields', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'treePathForm',
+        actions: [],
+        data: { tree: 'root/branch/leaf-a' },
+        body: {
+          type: 'input-tree',
+          name: 'tree',
+          valueField: 'id',
+          enableNodePath: true,
+          pathSeparator: '/',
+          joinValues: false,
+          extractValue: false,
+          options: pathOptions,
+        },
+      },
+    })
+
+    await nextTick()
+    expect(
+      treeItem('Leaf A')
+        ?.querySelector('.vamis-tree__content')
+        ?.classList.contains('is-checked'),
+    ).toBe(true)
+
+    click(treeItem('Leaf B')?.querySelector('.vamis-tree__content') || null)
+    const form = scoped.getComponentByName('treePathForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() =>
+      expect(form?.getData?.()?.tree).toEqual({
+        label: 'Root/Branch/Leaf B',
+        value: 'leaf-b',
+        id: 'root/branch/leaf-b',
+        meta: 'beta',
+      }),
+    )
+    expect(host.querySelector('.vamis-tree')).toBeTruthy()
+  })
+
+  it('loads and expands only the deferred parents named by a node path', async () => {
+    const loadedValues: string[] = []
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      const value = new URL(String(api.url), 'http://localhost').searchParams.get('node') || ''
+      loadedValues.push(value)
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options:
+            value === 'root'
+              ? [
+                  { label: 'Branch', value: 'branch', defer: true },
+                  { label: 'Other', value: 'other', defer: true },
+                ]
+              : [
+                  { label: 'Leaf A', value: 'leaf-a' },
+                  { label: 'Leaf B', value: 'leaf-b' },
+                ],
+        },
+      }
+    })
+    mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'deferredTreePathForm',
+        actions: [],
+        data: { tree: 'root/branch/leaf-a,root/branch/leaf-b' },
+        body: {
+          type: 'input-tree',
+          name: 'tree',
+          enableNodePath: true,
+          pathSeparator: '/',
+          deferApi: '/api/tree-path?node=${value}',
+          options: [
+            { label: 'Root', value: 'root', defer: true },
+            { label: 'Sibling', value: 'sibling', defer: true },
+          ],
+        },
+      },
+    }, { fetcher })
+
+    await vi.waitFor(() => expect(loadedValues).toEqual(['root', 'branch']))
+    await vi.waitFor(() => {
+      expect(treeTexts()).toContain('Leaf A')
+      expect(treeTexts()).toContain('Leaf B')
+    })
+    expect(
+      treeItem('Other')
+        ?.querySelector('.vamis-tree__arrow-icon')
+        ?.classList.contains('is-folded'),
+    ).toBe(true)
+  })
+
+  it('shows the complete TreeSelect ancestor label for a path value', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      data: { tree: 'root/branch/leaf-a' },
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        enableNodePath: true,
+        pathSeparator: '/',
+        options: pathOptions,
+      },
+    })
+
+    await nextTick()
+    expect(
+      host.querySelector('.vamis-tree-select .vamis-select__single')?.textContent?.trim(),
+    ).toBe('Root / Branch / Leaf A')
+
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    expect(
+      treeItem('Leaf A')
+        ?.querySelector('.vamis-tree__content')
+        ?.classList.contains('is-checked'),
+    ).toBe(true)
+  })
+})
+
+describe('TreeSelect search and popover alignment', () => {
+  it('filters from an inline trigger input instead of a popover SearchBox', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        searchable: true,
+        options: [
+          {
+            label: 'Folder A',
+            value: 'folder-a',
+            children: [
+              { label: 'file A', value: 'file-a' },
+              { label: 'file B', value: 'file-b' },
+            ],
+          },
+          { label: 'file C', value: 'file-c' },
+        ],
+      },
+    })
+
+    await nextTick()
+    const input = host.querySelector(
+      '.vamis-tree-select .vamis-select__input input',
+    ) as HTMLInputElement | null
+    expect(input).toBeTruthy()
+    expect(input?.placeholder).toBe('请选择')
+
+    click(input)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .vamis-tree')).toBeTruthy(),
+    )
+    expect(
+      document.querySelector('.vamis-tree-select__popover .vamis-search-box'),
+    ).toBeNull()
+
+    input!.value = 'file A'
+    input!.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      expect(treeTexts()).toContain('Folder A')
+      expect(treeTexts()).toContain('file A')
+      expect(treeTexts()).not.toContain('file B')
+      expect(treeTexts()).not.toContain('file C')
+    })
+  })
+
+  it('keeps the TreeSelect popover width synced to its root on resize', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        options: [{ label: 'A', value: 'a' }],
+      },
+    })
+
+    let width = 240
+    const root = host.querySelector('.vamis-tree-select') as HTMLElement
+    Object.defineProperty(root, 'offsetWidth', {
+      configurable: true,
+      get: () => width,
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() => expect(document.querySelector('.vamis-tree-select__popover')).toBeTruthy())
+    expect(
+      (document.querySelector('.vamis-tree-select__popover') as HTMLElement).style.minWidth,
+    ).toBe('240px')
+
+    width = 360
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    expect(
+      (document.querySelector('.vamis-tree-select__popover') as HTMLElement).style.minWidth,
+    ).toBe('360px')
+  })
+})
+
+describe('TreeSelect remote source and menuTpl', () => {
+  it('loads source options and replaces them from autoComplete', async () => {
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      const url = String(api.url)
+      const term = new URL(url, 'http://localhost').searchParams.get('term') || ''
+      return {
+        status: 0,
+        msg: '',
+        data: {
+          options: term
+            ? [{ label: 'node-1', value: 'node-1' }]
+            : [
+                { label: 'node-0', value: 'node-0' },
+                { label: 'node-1', value: 'node-1' },
+              ],
+        },
+      }
+    })
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        autoComplete: '/api/mock2/tree/search?term=$term',
+        source: '/api/mock2/tree/search',
+      },
+    }, { fetcher })
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1))
+    const trigger = host.querySelector('.vamis-tree-select .vamis-select__input')
+    click(trigger)
+    await vi.waitFor(() => expect(treeTexts()).toEqual(['node-0', 'node-1']))
+
+    const input = host.querySelector(
+      '.vamis-tree-select .vamis-select__input input',
+    ) as HTMLInputElement
+    input.value = 'node-1'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2))
+    expect(String(fetcher.mock.calls[1]?.[0]?.url)).toContain('term=node-1')
+    await vi.waitFor(() => expect(treeTexts()).toEqual(['node-1']))
+  })
+
+  it('renders menuTpl inside TreeSelect nodes while keeping row selection', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'treeMenuForm',
+      actions: [],
+      body: {
+        type: 'tree-select',
+        name: 'tree',
+        menuTpl: '<div class="custom-tree-node"><span>${label}</span><b>${tag}</b></div>',
+        iconField: 'icon',
+        options: [
+          { label: '采购单', value: 'order', tag: '数据模型', icon: 'fa fa-database' },
+          { label: '采购人', value: 'name', tag: '字符串', icon: 'fa fa-check' },
+        ],
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-tree-select .vamis-select__input'))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-tree-select__popover .custom-tree-node')).toBeTruthy(),
+    )
+    expect(
+      document.querySelector('.vamis-tree-select__popover .custom-tree-node')?.textContent,
+    ).toContain('数据模型')
+    expect(document.querySelector('.vamis-tree-select__popover .fa-database')).toBeTruthy()
+
+    click(document.querySelector('.vamis-tree-select__popover .custom-tree-node'))
+    const form = scoped.getComponentByName('treeMenuForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.tree).toBe('order'))
   })
 })

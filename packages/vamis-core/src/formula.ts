@@ -88,17 +88,26 @@ function resolveDollarName(expr: string, data: PlainObject): unknown | undefined
   return data[key]
 }
 
+function interpolateDollarNames(tpl: string, data: PlainObject): string {
+  return tpl.replace(/\$([A-Za-z_]\w*)/g, (token, key: string) => {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) return token
+    const value = data[key]
+    return value == null ? '' : String(value)
+  })
+}
+
 export function filterTpl(tpl: unknown, data: PlainObject = {}, defaultFilter = 'raw'): string {
   if (tpl == null) return ''
   if (typeof tpl !== 'string') return String(tpl)
   const dollar = resolveDollarName(tpl, data)
   if (dollar !== undefined) return dollar == null ? '' : String(dollar)
-  if (!tpl.includes('${')) return tpl
+  const source = interpolateDollarNames(tpl, data)
+  if (!source.includes('${')) return source
   try {
-    const value = evaluate(tpl, formulaData(data), { evalMode: false, defaultFilter })
+    const value = evaluate(source, formulaData(data), { evalMode: false, defaultFilter })
     return value == null ? '' : String(value)
   } catch {
-    return tpl
+    return source
   }
 }
 
@@ -145,7 +154,7 @@ export function resolveValue(expr: unknown, data: PlainObject = {}): unknown {
       return evalFormula(expr.slice(2, -1), data)
     }
   }
-  if (expr.includes('${')) return filterTpl(expr, data)
+  if (expr.includes('${') || /\$[A-Za-z_]\w*/.test(expr)) return filterTpl(expr, data)
   if (Object.prototype.hasOwnProperty.call(data, expr)) return data[expr]
   return expr
 }

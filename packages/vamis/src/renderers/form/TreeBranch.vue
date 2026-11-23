@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 import { VamisIcon } from '@vamis/ui'
-import { flattenVisibleOptions, hasTreeAbility, highlightTextMatches, optionValuesEqual, type OptionItem } from '@vamis/core'
+import {
+  SchemaRenderer,
+  flattenVisibleOptions,
+  hasTreeAbility,
+  highlightTextMatches,
+  optionValuesEqual,
+  resolveIcon,
+  type ResolvedIcon,
+  type OptionItem,
+  type SchemaNode,
+} from '@vamis/core'
 import Spinner from '../Spinner.vue'
+import IconMark from '../IconMark.vue'
 
 const props = withDefaults(defineProps<{
   nodes: OptionItem[]
@@ -31,10 +42,16 @@ const props = withDefaults(defineProps<{
   editTip?: string
   removeTip?: string
   rootCreateTip?: string
+  itemActions?: SchemaNode | SchemaNode[]
+  menuTpl?: SchemaNode
+  iconField?: string
+  enableDefaultIcon?: boolean
   checkDisabled?: (item: OptionItem) => boolean
 }>(), {
   deferField: 'defer',
+  iconField: 'icon',
   showIcon: true,
+  enableDefaultIcon: true,
   partial: () => false,
   query: '',
   createTip: '添加子节点',
@@ -58,6 +75,13 @@ const emit = defineEmits<{
 const inputEl = ref<HTMLInputElement | HTMLInputElement[] | null>(null)
 const rows = computed(() => flattenVisibleOptions(props.nodes, props.expanded))
 const showCheck = computed(() => props.multiple || props.showRadio)
+const itemActionSchemas = computed<SchemaNode[]>(() =>
+  Array.isArray(props.itemActions)
+    ? props.itemActions
+    : props.itemActions
+      ? [props.itemActions]
+      : [],
+)
 const addingRoot = computed(() => props.isAdding && props.addingParent == null)
 const busy = computed(() => props.isAdding || !!props.editingItem)
 const deferSpinnerSchema = computed(() => ({
@@ -125,6 +149,23 @@ function onPick(item: OptionItem) {
 function onDraft(event: Event) {
   emit('update:draftLabel', (event.target as HTMLInputElement).value)
 }
+
+function actionData(item: OptionItem, index: number) {
+  return {
+    ...item,
+    index,
+    multiple: !!props.multiple,
+    checked: props.checked(item),
+    disabled: checkLocked(item),
+  }
+}
+
+function customNodeIcon(item: OptionItem): ResolvedIcon {
+  const value = props.iconField ? item[props.iconField] : undefined
+  return resolveIcon(value)
+}
+
+const emptyIcon = (icon: ResolvedIcon) => icon.kind === 'empty'
 
 watch(
   () => [props.isAdding, props.editingItem],
@@ -254,10 +295,23 @@ watch(
               @keydown.space.prevent="onPick(row.item)"
             >
               <span v-if="showIcon" class="vamis-tree__node-icon" aria-hidden="true">
-                <VamisIcon :name="canExpand(row.item) ? 'folder' : 'file'" />
+                <IconMark
+                  v-if="!emptyIcon(customNodeIcon(row.item))"
+                  :icon="customNodeIcon(row.item)"
+                />
+                <VamisIcon
+                  v-else-if="enableDefaultIcon"
+                  :name="canExpand(row.item) ? 'folder' : 'file'"
+                />
               </span>
               <span class="vamis-tree__text" :title="row.item.label">
-                <template v-if="query">
+                <div v-if="menuTpl" class="vamis-tree__menu-tpl">
+                  <SchemaRenderer
+                    :schema="menuTpl"
+                    :extra-data="actionData(row.item, index)"
+                  />
+                </div>
+                <template v-else-if="query">
                   <span
                     v-for="(part, partIndex) in highlightTextMatches(row.item.label, query)"
                     :key="partIndex"
@@ -267,7 +321,13 @@ watch(
                 <template v-else>{{ row.item.label }}</template>
               </span>
               <div
-                v-if="!disabled && (showAdd(row.item) || showEdit(row.item) || showRemove(row.item))"
+                v-if="
+                  !disabled &&
+                  (showAdd(row.item) ||
+                    showEdit(row.item) ||
+                    showRemove(row.item) ||
+                    itemActionSchemas.length)
+                "
                 class="vamis-tree__icons"
                 @click.stop
               >
@@ -295,6 +355,17 @@ watch(
                 >
                   <VamisIcon name="new-edit" />
                 </a>
+                <div
+                  v-if="itemActionSchemas.length"
+                  class="vamis-tree__item-actions"
+                >
+                  <SchemaRenderer
+                    v-for="(action, actionIndex) in itemActionSchemas"
+                    :key="actionIndex"
+                    :schema="action"
+                    :extra-data="actionData(row.item, index)"
+                  />
+                </div>
               </div>
             </div>
           </div>

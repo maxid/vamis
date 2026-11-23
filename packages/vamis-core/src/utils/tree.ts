@@ -52,15 +52,186 @@ export function findOptionPath(
   return []
 }
 
+function lastNodePathSegment(path: unknown, pathSeparator = '/'): unknown {
+  if (path == null) return undefined
+  const parts = String(path).split(pathSeparator)
+  return parts[parts.length - 1]
+}
+
+export interface NormalizedNodePath {
+  nodeValueArray: unknown[]
+  nodePathArray: unknown[]
+}
+
+/** 对齐 Amis `normalizeNodePath`：路径值参与匹配前只保留叶子节点。 */
+export function normalizeNodePath(
+  value: unknown,
+  enableNodePath: boolean,
+  labelField = 'label',
+  valueField = 'value',
+  pathSeparator = '/',
+  delimiter = ',',
+): NormalizedNodePath {
+  const nodeValueArray: unknown[] = []
+  const nodePathArray: unknown[] = []
+  if (value === undefined || !enableNodePath) {
+    return { nodeValueArray, nodePathArray }
+  }
+
+  if (Array.isArray(value)) {
+    for (const nodePath of value) {
+      if (
+        nodePath &&
+        typeof nodePath === 'object' &&
+        Object.prototype.hasOwnProperty.call(nodePath, valueField)
+      ) {
+        const path = nodePath as PlainObject
+        nodeValueArray.push({
+          ...path,
+          [labelField]: lastNodePathSegment(path[labelField], pathSeparator),
+          [valueField]: lastNodePathSegment(path[valueField], pathSeparator),
+        })
+        nodePathArray.push(path[valueField])
+      } else {
+        nodeValueArray.push(lastNodePathSegment(nodePath, pathSeparator))
+        nodePathArray.push(nodePath)
+      }
+    }
+    return { nodeValueArray, nodePathArray }
+  }
+
+  if (typeof value === 'string') {
+    for (const path of value.split(delimiter)) {
+      nodeValueArray.push(lastNodePathSegment(path, pathSeparator))
+      nodePathArray.push(path)
+    }
+    return { nodeValueArray, nodePathArray }
+  }
+
+  if (value && typeof value === 'object') {
+    const path = value as PlainObject
+    nodeValueArray.push({
+      ...path,
+      [labelField]: lastNodePathSegment(path[labelField], pathSeparator),
+      [valueField]: lastNodePathSegment(path[valueField], pathSeparator),
+    })
+    nodePathArray.push(path[valueField])
+  }
+  return { nodeValueArray, nodePathArray }
+}
+
+export interface TreeValueConfig {
+  enableNodePath?: boolean
+  multiple?: boolean
+  joinValues?: boolean
+  extractValue?: boolean
+  delimiter?: string
+  labelField?: string
+  valueField?: string
+  pathSeparator?: string
+  resetValue?: unknown
+}
+
+function treeNodeFieldValue(node: OptionItem, field: string, fallback: string): unknown {
+  return node[field] !== undefined ? node[field] : node[fallback]
+}
+
+function treePathNode(node: OptionItem, path: OptionItem[], config: Required<Pick<
+  TreeValueConfig,
+  'labelField' | 'valueField' | 'pathSeparator'
+>>): OptionItem {
+  return {
+    ...node,
+    [config.labelField]: path
+      .map((item) => treeNodeFieldValue(item, config.labelField, 'label'))
+      .join(config.pathSeparator),
+    [config.valueField]: path
+      .map((item) => treeNodeFieldValue(item, config.valueField, 'value'))
+      .join(config.pathSeparator),
+  } as OptionItem
+}
+
+/**
+ * 对齐 Amis `Tree.transform2NodePath`。路径模式按完整父链回写；非路径模式也保留
+ * `joinValues: false` 时 Amis 的完整 option 值。
+ */
+export function dumpTreeValue(
+  selected: unknown[],
+  options: OptionItem[],
+  config: TreeValueConfig = {},
+): unknown {
+  const multiple = !!config.multiple
+  const joinValues = config.joinValues !== false
+  const extractValue = config.extractValue === true
+  const delimiter = config.delimiter || ','
+  const labelField = config.labelField || 'label'
+  const valueField = config.valueField || 'value'
+  const pathSeparator = config.pathSeparator == null ? '/' : String(config.pathSeparator)
+  const enableNodePath = config.enableNodePath === true
+  if (!selected.length) {
+    return config.resetValue !== undefined ? config.resetValue : ''
+  }
+  const pathNodes = selected.map((value) => {
+    const path = findOptionPath(options, value, valueField)
+    const node = path[path.length - 1]
+    if (!node) return undefined
+    return enableNodePath
+      ? treePathNode(node, path, { labelField, valueField, pathSeparator })
+      : node
+  })
+  const values = pathNodes.map((node, index) =>
+    node ? treeNodeFieldValue(node, valueField, 'value') : selected[index],
+  )
+
+  if (!enableNodePath) {
+    if (!multiple) {
+      const node = pathNodes[0]
+      if (!node) return selected[0] ?? ''
+      return joinValues || extractValue ? treeNodeFieldValue(node, valueField, 'value') : node
+    }
+    if (joinValues) {
+      return values
+        .filter((value) => value != null)
+        .map((value) => String(value))
+        .join(delimiter)
+    }
+    return extractValue ? values : pathNodes.filter((node): node is OptionItem => !!node)
+  }
+
+  if (!multiple) {
+    const node = pathNodes[0]
+    const value = values[0]
+    if (joinValues || extractValue) return value ?? ''
+    return node || {}
+  }
+  if (joinValues) {
+    return values
+      .filter((value) => value != null)
+      .map((value) => String(value))
+      .join(delimiter)
+  }
+  return extractValue ? values : pathNodes.filter((node): node is OptionItem => !!node)
+}
+
 export function treeNodeLabel(
   options: OptionItem[],
   value: unknown,
-  opts: { hideNodePathLabel?: boolean; pathSeparator?: string; valueField?: string } = {},
+  opts: {
+    hideNodePathLabel?: boolean
+    labelSeparator?: string
+    pathSeparator?: string
+    valueField?: string
+  } = {},
 ): string {
   const path = findOptionPath(options, value, opts.valueField || 'value')
   if (!path.length) return value == null ? '' : String(value)
   if (opts.hideNodePathLabel) return path[path.length - 1]?.label ?? ''
-  const sep = opts.pathSeparator == null ? '/' : String(opts.pathSeparator)
+  const sep =
+    opts.labelSeparator != null
+      ? String(opts.labelSeparator)
+      : opts.pathSeparator == null
+        ? '/'
+        : String(opts.pathSeparator)
   return path.map((node) => node.label).join(sep)
 }
 

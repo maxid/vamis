@@ -5,13 +5,15 @@ outline: deep
 
 # TreeSelect 树形选择器
 
-::: warning 实现进度 78% · 进行中
-下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / SearchBox / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`hideNodePathLabel` 已接。仍缺 `enableNodePath`、虚拟列表、`itemActions`
+::: info 实现进度 82% · 进行中
+下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板；`searchable` 检索输入在触发器内，`source` / `autoComplete` 远程树搜索、`menuTpl` / `iconField` 自定义节点已接；`hideNodePathLabel` / `itemActions` / `enableNodePath` 已接。仍缺虚拟列表与完整事件动作
 :::
 
 `tree-select` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
 
 属于侧栏分类 **数据输入**。对照进度以仓库组件 P0 TODO 为准。作者态 YAML 与 JSON 同等有效。
+
+`searchable` 与 Amis TreeSelect 一致：输入框属于触发器（ResultBox），打开后在原输入框内过滤；Popover 内不再重复渲染 SearchBox。Trigger 与 Popover 的宽度、位置和 4px 间距跟 Select 共用同一浮层定位规则，但树形下拉的可视外壳按 Amis 由内层 Tree 承担。
 
 ## 基本使用
 
@@ -1077,4 +1079,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / SearchBox / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`hideNodePathLabel` 已接。仍缺 `enableNodePath`、虚拟列表、`itemActions`。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 在触发器内输入过滤，`source` 初始化选项，`autoComplete` 用 `term` 拉取并替换远程树，清空检索恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG 图标；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接。Trigger/Overlay 的宽度、位置与 4px 间距跟 Select 同一规则；Popover 外壳按 Amis TreeSelect 保持透明，由内层 Tree 绘制 `1px` 边框、`4px 10px` padding、`-1px` 上移和 `400px` 最大高度。触发器祖先标签跟 Amis 固定使用 `" / "`，值仍按 `pathSeparator` 序列化。仍缺虚拟列表和完整事件动作。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

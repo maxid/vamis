@@ -185,6 +185,7 @@ function toggleAll() {
       :multiple="multiple"
       :query="query"
       :check-disabled="checkDisabled"
+      :item-actions="schema.itemActions"
       @pick="toggle"
       @expand="tree.toggleExpand"
     />

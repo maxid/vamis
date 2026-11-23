@@ -5,8 +5,8 @@ outline: deep
 
 # Options 选择器表单项
 
-::: info 实现进度 88% · 进行中
-已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；其他树/穿梭器待复用。Select 桌面平铺选项已接虚拟列表（`virtualThreshold` / `itemHeight`）；分组菜单与其他消费方仍整表渲染。
+::: info 实现进度 92% · 进行中
+已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；`itemActions` 已由共享 TreeBranch 接到 InputTree / TreeSelect / Select tree；节点路径值由共享树工具拆叶与父链回写。Select 桌面平铺选项已接虚拟列表（`virtualThreshold` / `itemHeight`）；分组菜单与其他消费方仍整表渲染。
 :::
 
 **选择器表单项** 是指那些（例如下拉选择框）具有选择器特性的表单项。它派生自 [表单项](./formitem)，拥有表单项所有的特性。
@@ -1060,5 +1060,5 @@ body:
 
 - 作者态 YAML / JSON 并列。
 - 新增选项当前是下拉内简易表单，不是独立 Dialog；`addDialog` 尺寸等未接。
-- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`virtualThreshold` / `itemHeight` 已接 Select 桌面平铺选项，分组菜单与其他消费方待复用。
+- 编辑走 Dialog（默认标题「编辑选项」），删除图标悬停才显示。`deferApi` 当前已接 InputTree，其他树/穿梭器待复用；`itemActions` 已接 InputTree / TreeSelect / Select tree，操作节点拿到当前 option 数据且不会误选整行；`virtualThreshold` / `itemHeight` 已接 Select 桌面平铺选项，分组菜单与其他消费方待复用。
 - 树形 / 级联 / 穿梭器已能复用值形状与 `normalizeOptions`，完整 UI 仍在各自组件页。

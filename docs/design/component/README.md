@@ -103,7 +103,7 @@ Amis LOC 是 `@Renderer`/`@FormItem`/`OptionsControl` 入口文件行数（不�
 - [Form 表单](form/form.md) — `form` · XL 特重 · 75%
 - [FormItem 表单项通用](form/formitem.md) — `formitem` · XL 特重 · 90%
 - [Control 表单项包裹](form/control.md) — `control` · S 轻 · 40%
-- [Options 选择器表单项](form/options.md) — `options` · XL 特重 · 89%
+- [Options 选择器表单项](form/options.md) — `options` · XL 特重 · 92%
 - [InputArray 数组输入框](form/input-array.md) — `input-array` · M 中 · 50%
 - [ButtonToolbar 按钮工具栏](form/button-toolbar.md) — `button-toolbar` · M 中 · 60%
 - [ButtonGroupSelect 按钮点选](form/button-group-select.md) — `button-group-select` · M 中 · 55%
@@ -164,8 +164,8 @@ Amis LOC 是 `@Renderer`/`@FormItem`/`OptionsControl` 入口文件行数（不�
 - [TransferPicker 穿梭选择器](form/transfer-picker.md) — `transfer-picker` · L 重 · 45%
 - [TabsTransfer 组合穿梭器](form/tabs-transfer.md) — `tabs-transfer` · L 重 · 40%
 - [TabsTransferPicker](form/tabs-transfer-picker.md) — `tabs-transfer-picker` · L 重 · 35%
-- [InputTree 树形选择框](form/input-tree.md) — `input-tree` · XL 特重 · 78%
-- [TreeSelect 树形选择器](form/treeselect.md) — `tree-select` · XL 特重 · 78%
+- [InputTree 树形选择框](form/input-tree.md) — `input-tree` · XL 特重 · 80%
+- [TreeSelect 树形选择器](form/treeselect.md) — `tree-select` · XL 特重 · 82%
 - [InputYear 年输入](form/input-year.md) — `input-year` · XL 特重 · 45%
 - [InputYearRange 年份范围](form/input-year-range.md) — `input-year-range` · M 中 · 45%
 - [JsonSchema](form/json-schema.md) — `json-schema` · L 重 · 30%

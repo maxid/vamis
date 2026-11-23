@@ -5,8 +5,8 @@ outline: deep
 
 # InputTree 树形选择框
 
-::: warning 实现进度 78% · 进行中
-多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline` 已接。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽
+::: info 实现进度 80% · 进行中
+多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator` 已接。仍缺虚拟列表、拖拽
 :::
 
 `input-tree` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -2140,4 +2140,4 @@ true        false        false      [{label: 'A/B/C', value: 'a/b/c'},{label: 'A
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline` 已接。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator` 已接；路径模式会按值中的父链串行加载并回显，兄弟分支不请求。仍缺虚拟列表、拖拽。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。

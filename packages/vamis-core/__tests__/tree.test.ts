@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { normalizeOptions } from '../src/utils/options'
 import {
   collectOptionDescendants,
+  dumpTreeValue,
   findOptionPath,
   hasTreeAbility,
   isTreeItemCheckDisabled,
   isTreeItemChecked,
   isTreeNodeDefaultExpanded,
+  normalizeNodePath,
   toggleTreeSelection,
   treeItemPartial,
   treeNodeLabel,
@@ -47,6 +49,152 @@ describe('tree path labels', () => {
     expect(treeNodeLabel(tree, 2)).toBe('Folder A/file A')
     expect(treeNodeLabel(tree, 2, { hideNodePathLabel: true })).toBe('file A')
     expect(treeNodeLabel(tree, 2, { pathSeparator: ' / ' })).toBe('Folder A / file A')
+  })
+})
+
+describe('tree node path values', () => {
+  const pathTree = normalizeOptions([
+    {
+      label: 'A',
+      value: 'a',
+      children: [
+        {
+          label: 'B',
+          value: 'b',
+          children: [{ label: 'C', value: 'c' }],
+        },
+        { label: 'D', value: 'd' },
+      ],
+    },
+  ])
+
+  it.each([
+    {
+      name: 'single joined',
+      selected: ['c'],
+      config: { multiple: false, joinValues: true },
+      expected: 'a/b/c',
+    },
+    {
+      name: 'single extracted',
+      selected: ['c'],
+      config: { multiple: false, joinValues: false, extractValue: true },
+      expected: 'a/b/c',
+    },
+    {
+      name: 'single object',
+      selected: ['c'],
+      config: { multiple: false, joinValues: false, extractValue: false },
+      expected: { label: 'A/B/C', value: 'a/b/c' },
+    },
+    {
+      name: 'multiple joined',
+      selected: ['c', 'd'],
+      config: { multiple: true, joinValues: true },
+      expected: 'a/b/c,a/d',
+    },
+    {
+      name: 'multiple extracted',
+      selected: ['c', 'd'],
+      config: { multiple: true, joinValues: false, extractValue: true },
+      expected: ['a/b/c', 'a/d'],
+    },
+    {
+      name: 'multiple objects',
+      selected: ['c', 'd'],
+      config: { multiple: true, joinValues: false, extractValue: false },
+      expected: [
+        { label: 'A/B/C', value: 'a/b/c' },
+        { label: 'A/D', value: 'a/d' },
+      ],
+    },
+  ])('dumps the Amis $name matrix', ({ selected, config, expected }) => {
+    expect(
+      dumpTreeValue(selected, pathTree, {
+        ...config,
+        enableNodePath: true,
+        pathSeparator: '/',
+      }),
+    ).toEqual(expected)
+  })
+
+  it('normalizes string and object paths to leaf values', () => {
+    expect(
+      normalizeNodePath('a/b/c,a/d', true, 'label', 'value', '/', ','),
+    ).toEqual({
+      nodeValueArray: ['c', 'd'],
+      nodePathArray: ['a/b/c', 'a/d'],
+    })
+    expect(
+      normalizeNodePath(
+        { label: 'A/B/C', value: 'a/b/c', meta: 'kept' },
+        true,
+        'label',
+        'value',
+        '/',
+        ',',
+      ),
+    ).toEqual({
+      nodeValueArray: [{ label: 'C', value: 'c', meta: 'kept' }],
+      nodePathArray: ['a/b/c'],
+    })
+  })
+
+  it('uses pathSeparator and custom valueField for path output', () => {
+    const customTree = normalizeOptions(
+      [
+        {
+          label: 'Root',
+          id: 'r',
+          children: [{ label: 'Leaf', id: 'l', meta: 'leaf-meta' }],
+        },
+      ],
+      'label',
+      'id',
+    )
+    expect(
+      dumpTreeValue(['l'], customTree, {
+        enableNodePath: true,
+        labelField: 'label',
+        valueField: 'id',
+        pathSeparator: '::',
+        joinValues: false,
+        extractValue: false,
+      }),
+    ).toEqual({
+      label: 'Root::Leaf',
+      value: 'l',
+      id: 'r::l',
+      meta: 'leaf-meta',
+    })
+  })
+
+  it('keeps leaf values when node path mode is disabled', () => {
+    expect(
+      dumpTreeValue(['c'], pathTree, {
+        enableNodePath: false,
+        multiple: false,
+        joinValues: false,
+      }),
+    ).toEqual({ label: 'C', value: 'c' })
+  })
+
+  it('clears path mode to resetValue instead of an empty path option', () => {
+    expect(
+      dumpTreeValue([], pathTree, {
+        enableNodePath: true,
+        multiple: false,
+        joinValues: false,
+      }),
+    ).toBe('')
+    expect(
+      dumpTreeValue([], pathTree, {
+        enableNodePath: true,
+        multiple: true,
+        joinValues: false,
+        resetValue: null,
+      }),
+    ).toBeNull()
   })
 })
 

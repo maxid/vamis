@@ -11,7 +11,7 @@
 
 1. **上游没有新东西要搬**：amis 本地 master 仍停在 `43a33ee06`（2026-03-18）；type 集合与上次同步相同。
 2. **type 名称覆盖 185 / 189（97.9%）**：还剩 3 个真实 type 和 `navigation` 1 个别名。
-3. **语义进度（2026-11-21）**：侧栏 155 项已完成 **5**（`container`、`hidden`、`toast`、`dialog`、`spinner`）/ 进行中 150 / 未开始 0，平均 **62%**（≥80% **47**；155 行均值 62.8%，未改档）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域）；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
+3. **语义进度（2026-11-22）**：侧栏 155 项已完成 **6**（`container`、`hidden`、`toast`、`dialog`、`spinner`、`select`）/ 进行中 149 / 未开始 0，平均 **62%**（≥80% **49**）；`page` 因 `pullRefresh` 未接按新实现标准降为进行中。2026-11-16 打回虚高 80%+（「主路径 + 缺 themeCss」不得进 80）。D1–D5 P0 已落地；D6 P0 已接（余 combo 独立域）；D7 注册信息已接，余 RendererApi 注入；D8 诊断与渲染错误边界已接，可视化 Debug 面板仍缺。
 4. **主要缺口仍是深度不是数量**：CRUD/表单高级行为、API 高级项、真实预览、编辑器插件未对齐。按文档侧栏拆开的语义进度见 [组件 P0 TODO](./2026-10-20-vamis-component-todo.md)（已注册 ≠ 语义完成）。任务级进度与下一步见仓库根 [CONTEXT.md](../../../CONTEXT.md)。
 
 ## 1. 上游对齐
@@ -29,13 +29,13 @@
 
 | 检查 | 命令 | 结果 |
 |------|------|------|
-| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 891 + editor 8 + sdk 213 = **1297**，全绿（2026-11-22 复核） |
+| 单元测试 | `pnpm test` | 源码用例：formula 185 + core 902 + editor 8 + sdk 223 = **1318**，全绿（2026-11-22 复核） |
 | 构建 | `pnpm build` | SDK + playground 生产构建通过，242 个静态路由（2026-11-19）；VitePress `docs:build` 的 Combo 页既有阻断不在本轮范围 |
 | 类型检查 | `pnpm typecheck` | **0 错误**（2026-11-19 复核；CI 门禁） |
 | 工作区 | `git status` | Table 模式已提交为 `f278409`；Select 级联模式增量在 working tree |
-| 对照 | 报告 + 本机目录 | 目录 **2237**（文档 158 / 组件 1604 / 样式 471）。Select 桌面 / 移动 **26/31**、Spinner **7/7**、Dialog **22/23**，P0 0。本轮未重跑全量对照 |
+| 对照 | 报告 + 本机目录 | 目录 **2237**（文档 158 / 组件 1604 / 样式 471）。InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Spinner **7/7**、Dialog **22/23**，P0 0。本轮未重跑全量对照 |
 
-结论：本轮 `test` / `typecheck`、Select tree/table/chained/defer 专项与 Spinner 共享宿主复核通过，生成目录为 **2237**；Select 桌面 / 移动专项 **26/31、P0 0**，未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
+结论：本轮 `test` / `typecheck`、TreeSelect source/autoComplete、`$term` 插值、menuTpl/iconField 与 Popover 盒模型专项复核通过，生成目录为 **2237**；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**（均 P0 0），未重跑 Playwright 全量对照。`pnpm typecheck` 必须保持 0，PR / Pages 工作流按此门禁。
 
 ## 3. amis type 覆盖
 

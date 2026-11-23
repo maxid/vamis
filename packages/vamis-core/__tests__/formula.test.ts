@@ -17,6 +17,12 @@ describe('D2 template string main path', () => {
     expect(filterTpl('$title', {})).toBe('$title')
   })
 
+  it('resolves $name tokens embedded in API-like strings', () => {
+    expect(filterTpl('/api/mock2/tree/search?term=$term', { term: 'node-1' })).toBe(
+      '/api/mock2/tree/search?term=node-1',
+    )
+  })
+
   it('evaluates a ternary inside ${}', () => {
     expect(filterTpl("${xxx == 1 ? 'One' : 'Others'}", { xxx: 1 })).toBe('One')
     expect(filterTpl("${xxx == 1 ? 'One' : 'Others'}", { xxx: 0 })).toBe('Others')

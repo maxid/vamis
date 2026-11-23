@@ -44,6 +44,7 @@ export function useTreeState(context: TreeStateContext) {
   const scope = useScope()
   const expanded = ref(new Map<string, boolean>())
   const deferring = ref(new Set<string>())
+  const inFlight = new Map<string, Promise<OptionItem | undefined>>()
   const deferField = computed(() => optionsDeferField(context.schema.value))
 
   function nodePath(nodes: OptionItem[], item: OptionItem, valueField: string, prefix = ''): string | null {
@@ -140,25 +141,25 @@ export function useTreeState(context: TreeStateContext) {
     expanded.value = next
   }
 
-  async function deferLoad(item: OptionItem) {
+  async function loadDeferred(item: OptionItem): Promise<OptionItem | undefined> {
     const api = (item.deferApi || context.schema.value.deferApi || context.schema.value.source) as
       | SchemaApi
       | undefined
     const ctx = { ...data.value, ...item }
     if (!api || isOptionsVariableSource(api) || !isEffectiveApi(api, ctx)) {
       env.notify('error', '请在选项中设置 deferApi，或在表单项中设置 deferApi，用来加载子选项')
-      return
+      return undefined
     }
-    const pending = new Set(deferring.value)
     const key = nodeKey(item)
+    const pending = new Set(deferring.value)
     pending.add(key)
     deferring.value = pending
     try {
       const result = await requestApi(api, { env, data: ctx, reason: 'action' })
-      if (result.skipped) return
+      if (result.skipped) return undefined
       if (!result.ok) {
         env.notify('error', result.payload.msg || '选项加载失败')
-        return
+        return undefined
       }
       const next = resolveDeferredOption(
         context.nodes.value,
@@ -196,12 +197,52 @@ export function useTreeState(context: TreeStateContext) {
         scope: scope.value,
         event,
       })
+      return loaded
     } catch (error) {
       env.notify('error', error instanceof Error ? error.message : '选项加载失败')
+      return undefined
     } finally {
       const done = new Set(deferring.value)
-      done.delete(nodeKey(item))
+      done.delete(key)
       deferring.value = done
+    }
+  }
+
+  async function deferLoad(item: OptionItem): Promise<OptionItem | undefined> {
+    const key = nodeKey(item)
+    const pending = inFlight.get(key)
+    if (pending) return pending
+    const task = loadDeferred(item)
+    inFlight.set(key, task)
+    try {
+      return await task
+    } finally {
+      if (inFlight.get(key) === task) inFlight.delete(key)
+    }
+  }
+
+  function directChild(nodes: OptionItem[], value: unknown): OptionItem | undefined {
+    const valueField = String(context.schema.value.valueField || 'value')
+    return nodes.find((item) => optionValuesEqual(item.value, value, valueField))
+  }
+
+  /**
+   * 路径回显只沿值里出现的父链逐层加载。叶子不在这里加载，兄弟节点也不会被触碰。
+   */
+  async function expandPaths(paths: unknown[][]) {
+    for (const path of paths) {
+      let nodes = context.nodes.value
+      for (let level = 0; level < path.length - 1; level += 1) {
+        let item = directChild(nodes, path[level])
+        if (!item) break
+        expandItem(item)
+        if (optionNeedsDefer(item, deferField.value)) {
+          item = await deferLoad(item)
+          if (!item) break
+          expandItem(item)
+        }
+        nodes = item.children || []
+      }
     }
   }
 
@@ -213,6 +254,7 @@ export function useTreeState(context: TreeStateContext) {
     expandItem,
     toggleExpand,
     deferLoad,
+    expandPaths,
     seedExpanded,
     ensureExpanded,
   }

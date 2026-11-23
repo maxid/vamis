@@ -582,6 +582,7 @@ describe('select uses the shared contract', () => {
     expect(css).toContain('.vamis-select__chip-close')
     expect(css).toContain('.vamis-select__single.is-invalid')
     expect(css).toContain('.vamis-select__chip.is-invalid')
+    expect(css).toContain('.vamis-tree__item-actions')
     expect(css).toContain('--select-pad-y: 4px')
     expect(css).toContain('padding: var(--select-pad-y) var(--select-pad-x)')
     expect(css).toContain('.vamis-popup__cancel,\n  .vamis-popup__ok,\n  .vamis-date-sheet__cancel,\n  .vamis-date-sheet__ok')

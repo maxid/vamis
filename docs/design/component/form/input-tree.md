@@ -1,6 +1,6 @@
 # InputTree 树形选择器 · `input-tree` 设计
 
-> 状态：**进行中 78%** · 复杂度：**XL 特重**
+> 状态：**进行中 80%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/input-tree) · Amis：`/zh-CN/components/form/input-tree`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -19,7 +19,7 @@ InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只�
 3. **树选项**：`options` / `source` 归一为树；懒加载节点用 `deferField`；本地 CUD 修改 `localOptions` 后要重新 seedExpanded，不能丢展开器。
 4. **搜索**：本地搜索保留匹配分支；远程 `searchApi` 结果只放 `remoteFiltered`，清搜索后回到本地树；搜索不改变选中值。
 5. **懒加载**：`deferLoad` 用节点 `deferApi` 或 schema `deferApi/source`；成功后合并子节点、展开，派发 `deferLoadFinished`；失败保留原树。
-6. **值写回**：统一 `fieldApi.setValue(name, dumpJoined(...))`；无 name 不写；树 CUD 删除节点要同步剔除选中值。
+6. **值写回**：统一 `fieldApi.setValue(name, dumpTreeValue(...))`；无 name 不写；树 CUD 删除节点要同步剔除选中值。
 7. **包边界**：无 `<style>`、无直接 fetch；`requestApi` 统一；树样式在 `@vamis/ui` token。
 
 ### 1.2 边界用例
@@ -97,7 +97,7 @@ InputTree 是 `useTreeField` 组合式状态的一层薄壳：InputTree.vue 只�
 | [`useTreeField.ts`](../../../../packages/vamis/src/renderers/form/useTreeField.ts) | 值/树/搜索/懒加载/CUD/展开/勾选语义 |
 | [`TreeBranch.vue`](../../../../packages/vamis/src/renderers/form/TreeBranch.vue) | 递归节点、checkbox/radio、增删改内联 UI、缩进/展开线 |
 | [`TreeSelect.vue`](../../../../packages/vamis/src/renderers/form/TreeSelect.vue) | 复用 useTreeField 的弹层树 |
-| [`tree.ts`](../../../../packages/vamis-core/src/utils/tree.ts) | `toggleTreeSelection` / `isTreeItemChecked` / defer 合并等纯函数 |
+| [`tree.ts`](../../../../packages/vamis-core/src/utils/tree.ts) | `toggleTreeSelection` / `isTreeItemChecked` / `normalizeNodePath` / `dumpTreeValue` 等纯函数 |
 | [`styles.css`](../../../../packages/vamis-ui/src/styles.css) | tree 节点/缩进/展开线/搜索框 token |
 
 ### 4.2 状态
@@ -107,16 +107,19 @@ options/source ──normalize──> options/tree
         │                         │
         ├─ query / searchApi ───> filteredOptions
         ├─ expanded Map ────────> isExpanded
-        ├─ deferring Set ──────> isDeferring / deferLoad
+        ├─ deferring Set ──────> isDeferring / deferLoad（in-flight 去重）
+        ├─ nodePathArray ──────> expandPaths（只走父链）
         └─ selected ───────────> checked/partial/checkDisabled
 
-selected: parseJoined(fieldApi.getValue(name)) ↔ dumpJoined(values)
+selected: normalizeNodePath / parseOptionsValue(fieldApi.getValue(name))
+          ↔ dumpTreeValue(values, options)
 ```
 
 - `selected` 是唯一值入口；`toggle` / `applyToggle` 都走 `toggleTreeSelection`。
 - `localOptions` 覆盖 options（本地 CUD）；`remoteFiltered` 只覆盖展示，不改本地树。
-- `expanded` 以 OptionItem 对象为 key；`seedExpanded` 在 options/CUD 后重建。
-- `deferring` 防止重复请求；懒加载失败不写入。
+- `expanded` / `deferring` 以完整树路径为 key；`seedExpanded` 在 options/CUD 后重建。
+- `enableNodePath` 输入先拆成叶子值参与勾选，回写再按完整父链组成 string / path array / path option。
+- `expandPaths` 只按值中出现的父链逐层 `deferLoad`，共享父节点由 in-flight Map 去重；叶子与兄弟分支不请求。
 
 ### 4.3 勾选语义
 
@@ -139,17 +142,17 @@ selected: parseJoined(fieldApi.getValue(name)) ↔ dumpJoined(values)
 
 ## 6. 当前状态与缺口
 
-- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、路径模式、自定义渲染、工具栏、虚拟列表、TreeSelect 复用。
+- 已对齐：多选/单选、父子勾选（含 cascade/with/only/autoCancel）、搜索、懒加载、内联 CUD、`addControls`/`editControls` 弹层、`enableNodePath` / `pathSeparator` 值矩阵与父链回显、自定义渲染、`itemActions`、工具栏、TreeSelect 复用。
 - 未接/风险：
   - `change` 事件未派发；内联 CUD 的 add/edit/delete 事件不一致；
   - scoped 动作（expand/collapse/add/edit/delete/reload/clear/reset/setValue/search）未注册；
   - 树级全选/搜索全选的 `change` 语义未定；
   - 深色/窄屏/虚拟列表组合未专项核。
-- 对照：TODO 记录 input-tree 桌面/移动；本轮未重跑。
+- 对照：桌面 / 移动 **26/31**（P0 0）；真实浏览器核过「节点路径模式」两次串行 defer 与兄弟不加载。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（文档核对：8 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis useTreeField / TreeBranch / tree.ts 已定位
@@ -157,11 +160,11 @@ selected: parseJoined(fieldApi.getValue(name)) ↔ dumpJoined(values)
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对（当前明确不完整）
 - [ ] 边界用例逐项核对
-- [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（tree 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page input-tree` 桌面
-- [ ] `pnpm compare --page input-tree --mobile`
+- [x] 组件页活示例运行、无控制台 error
+- [x] `pnpm test`（tree 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page input-tree` 桌面
+- [x] `pnpm compare --page input-tree --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点

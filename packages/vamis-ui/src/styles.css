@@ -304,6 +304,14 @@
   /* Amis InputBox = `--Form-input-paddingY/X` size-3 / size-6。 */
   --select-search-input-pad-y: 4px;
   --select-search-input-pad-x: 10px;
+  --tree-select-popover-max-height: 400px;
+  --tree-select-popover-padding-y: var(--gap-xs);
+  --tree-select-popover-padding-x: var(--select-pad-x);
+  --tree-select-popover-offset-y: -1px;
+  --tree-select-trigger-input-h: calc(var(--fontSizeBase) + var(--gap-xs));
+  --tree-select-trigger-input-pad-y: 1px;
+  --tree-select-trigger-input-pad-x: 2px;
+  --tree-select-trigger-line-height: calc(var(--fontSizeBase) * 1.15);
   --select-mcheck-size: 16px;
   --select-check-size: 14px;
   --select-check-icon-size: 12px;
@@ -3365,6 +3373,9 @@
   .vamis-select.is-multiple .vamis-select__input {
     height: auto;
   }
+  .vamis-tree-select:not(.is-multiple) .vamis-select__input {
+    height: var(--control-h);
+  }
   .vamis-select__input:hover {
     border-color: var(--control-hover-border);
   }
@@ -3645,7 +3656,8 @@
   .vamis-select__search--sheet .vamis-select__search-icon {
     margin-left: 4px;
   }
-  .vamis-select__search-input {
+  .vamis-select__search-input,
+  .vamis-tree-select__search-input {
     flex: 1;
     min-width: 0;
     width: 100%;
@@ -3658,7 +3670,13 @@
     font: inherit;
     font-size: var(--fontSizeBase);
   }
-  .vamis-select__search-input::placeholder {
+  .vamis-tree-select__search-input {
+    height: var(--tree-select-trigger-input-h);
+    padding: var(--tree-select-trigger-input-pad-y) var(--tree-select-trigger-input-pad-x);
+    line-height: var(--tree-select-trigger-line-height);
+  }
+  .vamis-select__search-input::placeholder,
+  .vamis-tree-select__search-input::placeholder {
     color: var(--select-search-placeholder);
   }
   .vamis-select__search-clear {
@@ -12117,9 +12135,20 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 
 .vamis-tree-select__popover {
   padding: 0;
-}
-.vamis-tree-select__popover .vamis-tree {
   max-height: none;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: var(--popover-layer-shadow);
+}
+.vamis-tree-select__popover > .vamis-tree {
+  max-height: var(--tree-select-popover-max-height);
+  overflow: auto;
+  margin-top: var(--tree-select-popover-offset-y);
+  padding: var(--tree-select-popover-padding-y) var(--tree-select-popover-padding-x);
+  border: 1px solid var(--select-menu-border);
+  border-radius: var(--radius);
+  background: var(--select-menu-bg);
 }
 .vamis-tree {
   max-height: var(--tree-max-height);
@@ -12553,7 +12582,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   margin-right: var(--gap-sm);
   flex: 0 0 var(--icon-size);
 }
-.vamis-tree__node-icon > svg {
+.vamis-tree__node-icon > svg,
+.vamis-tree__node-icon > i,
+.vamis-tree__node-icon > img {
+  display: block;
   width: var(--icon-size);
   height: var(--icon-size);
 }
@@ -12584,6 +12616,10 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.vamis-tree__menu-tpl {
+  min-width: 0;
+  width: 100%;
 }
 .vamis-tree__label.is-disabled .vamis-tree__text,
 .vamis-tree__label.is-disabled .vamis-tree__arrow {
@@ -12637,6 +12673,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-tree__icon-btn:hover {
   color: var(--icon-hover-color);
+}
+.vamis-tree__item-actions {
+  display: flex;
+  align-items: center;
+  margin-left: var(--tree-icon-gap);
 }
 .vamis-tree__add-top {
   display: flex;
@@ -12849,7 +12890,6 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   overflow: visible;
 }
 .vamis-input-tree__control > .vamis-search-box,
-.vamis-tree-select__search .vamis-search-box,
 .vamis-popup .vamis-search-box {
   width: 100%;
   margin-top: var(--gap-sm);

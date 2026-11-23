@@ -5,7 +5,7 @@
 - [Form 表单](form.md) — `form` · XL 特重 · 75%
 - [FormItem 表单项通用](formitem.md) — `formitem` · XL 特重 · 90%
 - [Control 表单项包裹](control.md) — `control` · S 轻 · 40%
-- [Options 选择器表单项](options.md) — `options` · XL 特重 · 89%
+- [Options 选择器表单项](options.md) — `options` · XL 特重 · 92%
 - [InputArray 数组输入框](input-array.md) — `input-array` · M 中 · 50%
 - [ButtonToolbar 按钮工具栏](button-toolbar.md) — `button-toolbar` · M 中 · 60%
 - [ButtonGroupSelect 按钮点选](button-group-select.md) — `button-group-select` · M 中 · 55%
@@ -66,8 +66,8 @@
 - [TransferPicker 穿梭选择器](transfer-picker.md) — `transfer-picker` · L 重 · 45%
 - [TabsTransfer 组合穿梭器](tabs-transfer.md) — `tabs-transfer` · L 重 · 40%
 - [TabsTransferPicker](tabs-transfer-picker.md) — `tabs-transfer-picker` · L 重 · 35%
-- [InputTree 树形选择框](input-tree.md) — `input-tree` · XL 特重 · 78%
-- [TreeSelect 树形选择器](treeselect.md) — `tree-select` · XL 特重 · 78%
+- [InputTree 树形选择框](input-tree.md) — `input-tree` · XL 特重 · 80%
+- [TreeSelect 树形选择器](treeselect.md) — `tree-select` · XL 特重 · 82%
 - [InputYear 年输入](input-year.md) — `input-year` · XL 特重 · 45%
 - [InputYearRange 年份范围](input-year-range.md) — `input-year-range` · M 中 · 45%
 - [JsonSchema](json-schema.md) — `json-schema` · L 重 · 30%

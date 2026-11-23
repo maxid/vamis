@@ -1,9 +1,10 @@
 /** InputTree / TreeSelect 共用：展开、懒加载、检索、勾选、增删改。 */
 
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import {
   filterOptionTree,
   filterTpl,
+  findOption,
   insertOptionInTree,
   isEffectiveApi,
   isOptionsVariableSource,
@@ -17,7 +18,12 @@ import {
   persistOptionMutation,
   removeOptionFromTree,
   requestApi,
+  resolveOptionsSource,
   runOptionConfirm,
+  dumpTreeValue,
+  getOptionValue,
+  normalizeNodePath,
+  optionsResetValue,
   toggleTreeSelection,
   treeItemPartial,
   updateOptionInTree,
@@ -32,7 +38,7 @@ import {
   type SchemaApi,
   type SchemaObject,
 } from '@vamis/core'
-import { dumpJoined, normalizeOptions, optionValuesEqual, parseJoined } from '../../options'
+import { normalizeOptions, optionValuesEqual, parseOptionsValue } from '../../options'
 import { useFieldValue } from '../../formContext'
 import { useTreeState } from './useTreeState'
 
@@ -66,8 +72,24 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     query,
     currentValue,
   })
-  const { deferField, isExpanded, isDeferring, expandItem, toggleExpand, seedExpanded } = treeState
+  const {
+    deferField,
+    isExpanded,
+    isDeferring,
+    expandItem,
+    expandPaths,
+    toggleExpand,
+    seedExpanded,
+  } = treeState
   const multiple = computed(() => !!schema.value.multiple)
+  const enableNodePath = computed(() => schema.value.enableNodePath === true)
+  const joinValues = computed(() => schema.value.joinValues !== false)
+  const extractValue = computed(() => schema.value.extractValue === true)
+  const delimiter = computed(() =>
+    schema.value.delimiter == null || schema.value.delimiter === ''
+      ? ','
+      : String(schema.value.delimiter),
+  )
   const showRadio = computed(() => !!schema.value.showRadio)
   const onlyLeaf = computed(() => !!schema.value.onlyLeaf)
   const autoCheckChildren = computed(() => schema.value.autoCheckChildren !== false)
@@ -106,22 +128,135 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
   )
   const filteredOptions = computed(() => {
     if (remoteFiltered.value) return remoteFiltered.value
+    if (schema.value.autoComplete) return options.value
     return filterOptionTree(options.value, query.value)
   })
+  const nodePathInput = computed(() =>
+    normalizeNodePath(
+      currentValue(),
+      enableNodePath.value,
+      labelField.value,
+      valueField.value,
+      pathSeparator.value,
+      delimiter.value,
+    ),
+  )
   const selected = computed({
-    get: () =>
-      parseJoined(
-        schema.value.name ? fieldApi.getValue(schema.value.name) : '',
-        multiple.value,
-        schema.value.joinValues !== false,
-      ),
+    get: () => {
+      if (enableNodePath.value) {
+        return nodePathInput.value.nodeValueArray.map((value) =>
+          getOptionValue(value, valueField.value),
+        )
+      }
+      return parseOptionsValue(currentValue(), {
+        multiple: multiple.value,
+        joinValues: joinValues.value,
+        delimiter: delimiter.value,
+        valueField: valueField.value,
+      })
+    },
     set: (values: unknown[]) =>
       schema.value.name &&
-      fieldApi.setValue(schema.value.name, dumpJoined(values, multiple.value, schema.value.joinValues !== false)),
+      fieldApi.setValue(
+        schema.value.name,
+        dumpTreeValue(values, options.value, {
+          enableNodePath: enableNodePath.value,
+          multiple: multiple.value,
+          joinValues: joinValues.value,
+          extractValue: extractValue.value,
+          delimiter: delimiter.value,
+          labelField: labelField.value,
+          valueField: valueField.value,
+          pathSeparator: pathSeparator.value,
+          resetValue: optionsResetValue(schema.value),
+        }),
+      ),
   })
 
   function currentValue() {
     return schema.value.name ? fieldApi.getValue(schema.value.name) : schema.value.value
+  }
+
+  let autoCompleteTimer: ReturnType<typeof setTimeout> | undefined
+  let autoCompleteSeq = 0
+
+  function selectedRemoteOptions(next: OptionItem[]): OptionItem[] {
+    const merged = next.slice()
+    for (const value of selected.value) {
+      const current = findOption(options.value, value, valueField.value)
+      if (!current) continue
+      if (!findOption(merged, current.value, valueField.value)) merged.push(current)
+    }
+    return merged
+  }
+
+  function applyRemoteOptions(raw: unknown) {
+    const next = selectedRemoteOptions(
+      normalizeOptions(raw, labelField.value, valueField.value),
+    )
+    localOptions.value = next
+    remoteFiltered.value = null
+    seedExpanded(next)
+  }
+
+  async function loadSourceOptions() {
+    const source = schema.value.source
+    if (!source) return
+    if (isOptionsVariableSource(source)) {
+      applyRemoteOptions(resolveOptionsSource(source, data.value))
+      return
+    }
+    if (
+      !isEffectiveApi(
+        source as SchemaApi,
+        data.value,
+        schema.value.initFetch as boolean | undefined,
+        schema.value.initFetchOn as string | undefined,
+      )
+    ) {
+      return
+    }
+    try {
+      const result = await requestApi(source as SchemaApi, {
+        env,
+        data: data.value,
+        reason: 'init',
+      })
+      if (result.skipped || !result.ok) return
+      applyRemoteOptions(optionsFromPayload(result.data).list)
+    } catch (error) {
+      env.notify('error', error instanceof Error ? error.message : '选项加载失败')
+    }
+  }
+
+  function scheduleAutoComplete(term: string) {
+    if (autoCompleteTimer) clearTimeout(autoCompleteTimer)
+    autoCompleteTimer = setTimeout(() => {
+      autoCompleteTimer = undefined
+      void loadAutoComplete(term)
+    }, 250)
+  }
+
+  async function loadAutoComplete(term: string) {
+    if (!term && schema.value.source) {
+      await loadSourceOptions()
+      return
+    }
+    const api = schema.value.autoComplete as SchemaApi | undefined
+    const ctx = { ...data.value, term }
+    if (!api || !isEffectiveApi(api, ctx)) {
+      if (!term && schema.value.source) await loadSourceOptions()
+      return
+    }
+    const seq = ++autoCompleteSeq
+    try {
+      const result = await requestApi(api, { env, data: ctx, reason: 'init' })
+      if (seq !== autoCompleteSeq || result.skipped || !result.ok) return
+      applyRemoteOptions(optionsFromPayload(result.data).list)
+    } catch (error) {
+      if (seq !== autoCompleteSeq) return
+      env.notify('error', error instanceof Error ? error.message : '自动补全失败')
+    }
   }
 
   watch(
@@ -135,11 +270,37 @@ export function useTreeField(schema: Ref<SchemaObject>, disabled?: Ref<boolean |
     { deep: true, immediate: true },
   )
 
+  watch(
+    () => [nodePathInput.value.nodePathArray, options.value] as const,
+    async ([paths]) => {
+      if (!enableNodePath.value || !paths.length) return
+      await expandPaths(
+        paths
+          .filter((path) => path != null && path !== '')
+          .map((path) => String(path).split(pathSeparator.value)),
+      )
+    },
+    { immediate: true },
+  )
+
   watch(query, (keyword) => {
     if (!keyword) remoteFiltered.value = null
+    if (schema.value.autoComplete) {
+      scheduleAutoComplete(keyword)
+      return
+    }
     const api = schema.value.searchApi as SchemaApi | undefined
     if (!api || !keyword) return
     void searchRemote(keyword, api)
+  })
+
+  onMounted(() => {
+    if (schema.value.source) void loadSourceOptions()
+    else if (schema.value.autoComplete) scheduleAutoComplete(query.value)
+  })
+
+  onBeforeUnmount(() => {
+    if (autoCompleteTimer) clearTimeout(autoCompleteTimer)
   })
 
   async function searchRemote(keyword: string, api: SchemaApi) {

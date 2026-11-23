@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, toRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import {
   overlayContainerFrom,
   overlayIsMobile,
@@ -11,7 +11,6 @@ import {
 import { VamisCaret, VamisClear, VamisClose } from '@vamis/ui'
 import FormItem from '../FormItem.vue'
 import TreeBranch from './TreeBranch.vue'
-import TreeSearchBox from './TreeSearchBox.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
 import VamisPopUp from '../../overlay/VamisPopUp.vue'
 import { useTreeField } from './useTreeField'
@@ -22,7 +21,9 @@ const env = useEnv()
 const tree = useTreeField(toRef(props, 'schema'), toRef(props, 'disabled'))
 const open = ref(false)
 const draft = ref<unknown[]>([])
+const rootEl = ref<HTMLElement | null>(null)
 const triggerEl = ref<HTMLElement | null>(null)
+const searchInputEl = ref<HTMLInputElement | null>(null)
 const triggerWidth = ref(0)
 const isMobile = computed(() => overlayIsMobile(props.schema, env))
 const overlayContainer = computed(() =>
@@ -35,6 +36,7 @@ const selectedItems = computed(() =>
     value,
     label: treeNodeLabel(tree.options.value, value, {
       hideNodePathLabel: tree.hideNodePathLabel.value,
+      labelSeparator: ' / ',
       pathSeparator: tree.pathSeparator.value,
       valueField: tree.valueField.value,
     }),
@@ -43,12 +45,22 @@ const selectedItems = computed(() =>
 const placeholder = computed(() =>
   props.schema.placeholder != null ? String(props.schema.placeholder) : '请选择',
 )
+const allowTriggerInput = computed(
+  () =>
+    (tree.searchable.value || !!props.schema.autoComplete) &&
+    !isMobile.value &&
+    (tree.multiple.value || selectedItems.value.length === 0),
+)
 const popoverStyle = computed(() =>
   triggerWidth.value ? { minWidth: `${triggerWidth.value}px` } : undefined,
 )
 
 function measureTrigger() {
-  triggerWidth.value = triggerEl.value?.offsetWidth ?? 0
+  triggerWidth.value = rootEl.value?.offsetWidth ?? 0
+}
+
+function openMenu() {
+  if (!locked.value) open.value = true
 }
 
 function toggleOpen() {
@@ -59,10 +71,12 @@ function toggleOpen() {
 
 function closeMenu() {
   open.value = false
+  if (!tree.multiple.value || isMobile.value) tree.query.value = ''
 }
 
 function confirmMobile() {
   tree.selected.value = [...draft.value]
+  tree.query.value = ''
   open.value = false
 }
 
@@ -74,6 +88,7 @@ function onPick(item: OptionItem) {
     return
   }
   tree.selected.value = next
+  tree.query.value = ''
   if (!tree.multiple.value) open.value = false
 }
 
@@ -90,16 +105,47 @@ function clearAll(event: Event) {
   if (locked.value) return
   tree.selected.value = []
   draft.value = []
+  tree.query.value = ''
+}
+
+function onSearchInput(event: Event) {
+  tree.query.value = (event.target as HTMLInputElement).value
+  openMenu()
 }
 
 watch(open, (show) => {
-  if (show) void nextTick(measureTrigger)
+  if (!show) return
+  void nextTick(() => {
+    measureTrigger()
+    searchInputEl.value?.focus()
+  })
 })
+
+let resizeObserver: ResizeObserver | undefined
+
+onMounted(() => {
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(measureTrigger)
+    if (rootEl.value) resizeObserver.observe(rootEl.value)
+  }
+  if (typeof window !== 'undefined') window.addEventListener('resize', measureTrigger)
+  scheduleMeasure()
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  if (typeof window !== 'undefined') window.removeEventListener('resize', measureTrigger)
+})
+
+function scheduleMeasure() {
+  void nextTick(measureTrigger)
+}
 </script>
 
 <template>
   <FormItem :schema="schema">
     <div
+      ref="rootEl"
       class="vamis-select vamis-tree-select"
       :class="{
         'is-opened': open,
@@ -132,12 +178,23 @@ watch(open, (show) => {
               ><VamisClose /></button>
             </span>
           </template>
-          <span v-else-if="selectedItems[0]" class="vamis-select__single">{{ selectedItems[0].label }}</span>
-          <span v-else class="vamis-select__placeholder">{{ placeholder }}</span>
+          <span v-else-if="!allowTriggerInput && selectedItems[0]" class="vamis-select__single">{{ selectedItems[0].label }}</span>
+          <input
+            v-if="allowTriggerInput"
+            ref="searchInputEl"
+            class="vamis-tree-select__search-input"
+            type="text"
+            :value="tree.query.value"
+            :placeholder="selectedItems.length ? '' : placeholder"
+            autocomplete="off"
+            @click.stop="openMenu"
+            @input="onSearchInput"
+          >
+          <span v-else-if="!selectedItems[0]" class="vamis-select__placeholder">{{ placeholder }}</span>
         </div>
         <span class="vamis-select__suffix">
           <button
-            v-if="schema.clearable && selectedItems.length && !locked"
+            v-if="schema.clearable && (selectedItems.length || tree.query.value) && !locked"
             type="button"
             class="vamis-select__clear"
             aria-label="清除"
@@ -157,13 +214,6 @@ watch(open, (show) => {
         @cancel="closeMenu"
         @confirm="confirmMobile"
       >
-        <TreeSearchBox
-          v-if="tree.searchable.value"
-          v-model="tree.query.value"
-          :placeholder="tree.searchPlaceholder.value"
-          :disabled="locked"
-          :search-immediately="tree.searchImmediately.value"
-        />
         <TreeBranch
           :nodes="tree.filteredOptions.value"
           :checked="(item) => tree.checked(item, workingValues)"
@@ -191,6 +241,10 @@ watch(open, (show) => {
           :edit-tip="tree.editTip.value"
           :remove-tip="tree.removeTip.value"
           :root-create-tip="tree.rootCreateTip.value"
+          :item-actions="schema.itemActions"
+          :menu-tpl="schema.menuTpl"
+          :icon-field="schema.iconField"
+          :enable-default-icon="schema.enableDefaultIcon"
           @pick="onPick"
           @expand="tree.toggleExpand"
           @add="tree.startAdd"
@@ -211,14 +265,6 @@ watch(open, (show) => {
         @outside="closeMenu"
       >
         <div class="vamis-select__popover vamis-tree-select__popover" :style="popoverStyle">
-          <div v-if="tree.searchable.value" class="vamis-tree-select__search" @mousedown.stop>
-            <TreeSearchBox
-              v-model="tree.query.value"
-              :placeholder="tree.searchPlaceholder.value"
-              :disabled="locked"
-              :search-immediately="tree.searchImmediately.value"
-            />
-          </div>
           <TreeBranch
             :nodes="tree.filteredOptions.value"
             :checked="(item) => tree.checked(item, workingValues)"
@@ -246,6 +292,10 @@ watch(open, (show) => {
             :edit-tip="tree.editTip.value"
             :remove-tip="tree.removeTip.value"
             :root-create-tip="tree.rootCreateTip.value"
+            :item-actions="schema.itemActions"
+            :menu-tpl="schema.menuTpl"
+            :icon-field="schema.iconField"
+            :enable-default-icon="schema.enableDefaultIcon"
             @pick="onPick"
             @expand="tree.toggleExpand"
             @add="tree.startAdd"

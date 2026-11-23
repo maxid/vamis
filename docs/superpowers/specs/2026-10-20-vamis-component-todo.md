@@ -1,6 +1,6 @@
 # Vamis 组件 P0 TODO（amis 文档对齐）
 
-- 日期：2026-10-21（进度核对：2026-11-21；侧栏同步 / Options 虚拟列表 / Dialog / Select 树模式：2026-11-19–21）
+- 日期：2026-10-21（进度核对：2026-11-22；侧栏同步 / Options 虚拟列表 / Dialog / Select 树模式：2026-11-19–22）
 - 状态：对照清单（进度 + 依赖优先级；不改分类）
 - 优先级：阶段 **P0**；实施顺序按依赖链拓扑 + 解锁分 U + 综合分；**全表**按构建依赖补边后重算（见文末「依赖与优先级」）；「全量顺序」与「实现复杂度评估」的「侧栏」列同步站点左侧导航 P0 / P1 / P2
 - 设计口径：[运行时语义设计](./2026-10-20-vamis-runtime-semantics-design.md)
@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-22（汇总 **62%**、≥80% **47**、≥50% **111**；已完成 6；测试 **1297**、`typecheck` 0；Select 桌面 / 移动 **26/31**；Spinner 桌面 / 移动 **7/7**；Alert 桌面 / 移动 **5/5**；Dialog 桌面 / 移动 **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-22（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 6；测试 **1318**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -68,13 +68,13 @@
 |------|---------------|--------|--------|----------|-------------------|------------------|
 | 布局 | 1 / 15 | 14 | 0 | 73% | 15 | 4 |
 | 功能 | 0 / 12 | 12 | 0 | 72% | 11 | 6 |
-| 数据输入 | 2 / 72 | 70 | 0 | 58% | 44 | 17 |
+| 数据输入 | 2 / 72 | 70 | 0 | 58% | 44 | 19 |
 | 数据展示 | 0 / 44 | 44 | 0 | 62% | 32 | 14 |
 | 反馈 | 3 / 5 | 2 | 0 | 92% | 5 | 4 |
 | 其他 | 0 / 7 | 7 | 0 | 58% | 4 | 2 |
-| **合计** | **5 / 155** | **150** | **0** | **62%** | **111** | **47** |
+| **合计** | **6 / 155** | **149** | **0** | **62%** | **111** | **49** |
 
-侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`、`dialog`、`spinner`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
+侧栏已无未开始项。当前已完成 `container`、`toast`、`hidden`、`dialog`、`spinner`、`select`；`page` 因 `pullRefresh` 未接按标准降为进行中。2026-11-16 把「主路径 + 缺 themeCss」顶到 80%+ 的一批打回 40–70%（布局壳、包装器、对照大面积失败）。≥80 只留给双站核过、剩余缺口可数的项。
 
 执行顺序见文末「依赖与优先级」：先解锁主干 #1–#10（`icon`、`badge`、`tpl`、`tooltip-wrapper`、`remark`、FormItem、`toast`、`action`…），`form` #27、`dialog` #44、`crud` #64、`page` #65，零被依赖从 #66 起，`app` #154 最后。`spinner` 已齐；继续补 badge / tooltip-wrapper / remark，避免把剩余选择器依赖当成已解锁。
 
@@ -189,7 +189,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `form` | Form 表单 | `/components/form` | `/zh-CN/components/form` | 进行中 | 75% | 主路径已对齐：`initApi` / 提交 API / 校验 / 重置 / 调试、`initApiFinished` / `inited` / `change` / `validateSucc` / `validateError` / `submit` / `submitSucc` / `submitFail` / `formItemValidate*` 事件、`rules` 组合校验（`data.x` 表达式 + `name` 高亮）、`submitOnInit` / `submitOnChange`、`resetAfterSubmit`、`redirect`、`messages`、`trimValues`、`persistData` / `persistDataKeys` / `clearPersistDataAfterSubmit`、`preventEnterSubmit`、`autoFocus`、`static` 切换、`target` / `reload`、`debug`（顶部 `type: json`、`debugConfig`、轻量 JSON 树语法着色）、`canAccessSuperData`（默认 true，只映射同名表单项，父域其它字段不进本域）、`clearValueOnHidden` 同步清理 store / Scope 并记 `hide`、Definitions `$ref` 默认值收集、`horizontal` 比例 / `leftFixed` / `justify` / `labelAlign` / 表单项 `labelWidth`。文档按 Amis `form/index` 全章节改写。成功提示按非空 `msg` → `messages.saveSuccess` → `defaultMsg`，空 msg 保持静默，避免 feedback 外层 `initData` 多弹 toast。`submitText: ""` 去默认提交；body 已有 `submit`/`button`/`reset`/`toolbar` 也不注入底栏；`type: submit` 无 `primary` 是描边。`wrapWithPanel: false` 时 title/actions 失效。桌面 heading **35px**（12/400/1.5 + 8×12 / text-3）/ footerWrap > toolbar 8×12 右对齐，对齐 Amis Panel。水平必填星贴文案（内层 relative span）。对照桌面 **40/58**（`components-form-index-0` Amis rendered 探针偶发 false）、移动 **41/58**（P0 0）。缺 `interval` / `silentPolling` / `asyncApi` / `initAsyncApi`、`promptPageLeave`、`columnCount`、`inheritData`、`validate` / `validateFormItem` / `clearError` 动作、combo 独立域 | P0 |
 | （契约） | FormItem 表单项通用 | `/components/form/formitem` | `/zh-CN/components/form/formitem` | 进行中 | 90% | 路径值 `a.b`、`requiredOn`、`validateOnChange`、`submitOnChange`、`clearValueOnHidden`、labelRemark、`static`/`staticOn`/`staticSchema`（选择器 `limit` → `tags`/`words`；脱离 Form 也读当前数据链）、事件动作 `static`/`nonstatic`（status-store 按 id/name）、禁用/显隐、默认间距 24px、`mode: inline`（项并排、项内左右）、默认 `normal` 标签在上（窄屏 ≤767 改 28% 同行）、未写 label 仍占标签列、`button-toolbar` 包 FormItem、`validateApi`、提交 `errors`、`autoFill`（映射/`api`+`fillMapping`，无弹层）、form `debug`、label HTML、description HTML、`validations`/`validationErrors`（对象/字符串/`$1`/`isUrl.schemes`/默认 `validate.*` key）。属性表四列 +「支持静态展示的表单项」。缺 combo/table 路径级报错、`autoFill.showSuggestion` 族、`autoFill.silent`、`staticClassName` 三件 | P0 |
 | `control` | Control 表单项包裹 | `/components/form/control` | `/zh-CN/components/form/control` | 进行中 | 40% | 已注册；只做包裹 | P0 |
-| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 89% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill。Select 新增 / 编辑按 Amis 打开 Dialog；`addConfirm` / `editConfirm` / `deleteConfirm` 已接，先于本地变更与 CUD API；InputTree 已接相同确认顺序及 deferApi/deferField 懒加载、子树合并与 deferLoadFinished。虚拟列表已接 Select 桌面平铺选项（`virtualThreshold` 默认 100 / `itemHeight` 默认 32）；分组菜单、Picker/Transfer/树其他消费方仍整表渲染，远程缓存未接 | P0 |
+| （契约） | Options 选择器表单项 | `/components/form/options` | `/zh-CN/components/form/options` | 进行中 | 92% | 统一 Options 契约：规范化、source 数据域/远程、joinValues/extractValue/delimiter、multiple/checkAll/selectFirst、labelField/valueField、clearable/searchable/creatable、editable/editControls/editApi/editDialog、removable/deleteApi/deleteConfirmText、选项 autoFill、`itemActions`、树节点路径值。Select 新增 / 编辑按 Amis 打开 Dialog；`addConfirm` / `editConfirm` / `deleteConfirm` 已接，先于本地变更与 CUD API；InputTree 已接相同确认顺序及 deferApi/deferField 懒加载、子树合并与 deferLoadFinished。`itemActions` 由共享 TreeBranch 覆盖 InputTree / TreeSelect / Select tree，节点 option 作为 extraData 且操作点击不选行。`enableNodePath` / `pathSeparator` 由 core 路径值工具覆盖 InputTree / TreeSelect，输入拆叶子、输出按父链回写，defer 只加载路径父链。虚拟列表已接 Select 桌面平铺选项（`virtualThreshold` 默认 100 / `itemHeight` 默认 32）；分组菜单、Picker/Transfer/树其他消费方仍整表渲染，远程缓存未接 | P0 |
 | `input-array` | InputArray 数组输入框 | `/components/form/input-array` | `/zh-CN/components/form/input-array` | 进行中 | 50% | 能增删行；子域/校验未齐 | P0 |
 | `button-toolbar` | ButtonToolbar 按钮工具栏 | `/components/form/button-toolbar` | `/zh-CN/components/form/button-toolbar` | 进行中 | 60% | 能排按钮 | P0 |
 | `button-group-select` | ButtonGroupSelect 按钮点选 | `/components/form/button-group-select` | `/zh-CN/components/form/button-group-select` | 进行中 | 55% | 能选值；多选/自适应未齐 | P0 |
@@ -250,8 +250,8 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `transfer-picker` | TransferPicker 穿梭选择器 | `/components/form/transfer-picker` | `/zh-CN/components/form/transfer-picker` | 进行中 | 45% | 已注册 | P0 |
 | `tabs-transfer` | TabsTransfer 组合穿梭器 | `/components/form/tabs-transfer` | `/zh-CN/components/form/tabs-transfer` | 进行中 | 40% | 已注册，tabs 数据精简 | P0 |
 | `tabs-transfer-picker` | TabsTransferPicker | `/components/form/tabs-transfer-picker` | `/zh-CN/components/form/tabs-transfer-picker` | 进行中 | 35% | `tabs-transfer` 别名 | P0 |
-| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 78% | 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline` 已接。仍缺虚拟列表、`enableNodePath`、`itemActions`、拖拽 | P0 |
-| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 78% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / SearchBox / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`hideNodePathLabel` 已接。仍缺 `enableNodePath`、虚拟列表、`itemActions` | P0 |
+| `input-tree` | InputTree 树形选择框 | `/components/form/input-tree` | `/zh-CN/components/form/input-tree` | 进行中 | 80% | 多选 sm 复选框 / 半选、SearchBox、内联 CUD、`addControls` Dialog、`autoCheckChildren`/`cascade`/`withChildren`/`onlyChildren` 对齐 Amis handleCheck、`deferApi` / `onlyLeaf` / `showOutline`、`itemActions`、`enableNodePath` / `pathSeparator` 已接。路径模式按叶子参与勾选、按完整父链回写，defer 只串行加载值中出现的父节点并自动展开；兄弟分支不请求。对照桌面 / 移动 **26/31**（P0 0）。仍缺虚拟列表、拖拽 | P0 |
+| `tree-select` | TreeSelect 树形选择器 | `/components/form/treeselect` | `/zh-CN/components/form/treeselect` | 进行中 | 82% | 下拉走 `VamisOverlay`，移动端 `VamisPopUp`；复用 InputTree 面板（sm 复选框 / 内联 CUD / Dialog / `autoCheckChildren` 勾选语义）；`searchable` 按 Amis ResultBox 放在触发器内，Popover 不再重复 SearchBox；`source` 初始化树，`autoComplete` 用 `term` 远程替换，清空恢复 source；`menuTpl` 自定义节点内容，`iconField` 支持 Font Awesome / URL / SVG；Trigger/Overlay 宽度与 resize 跟 Select 同规则，gap 4px，内层 Tree 独立承担边框、`4px 10px` padding、`-1px` 上移和 `400px` 高度；`hideNodePathLabel` / `itemActions` / `enableNodePath` / `pathSeparator` 已接，祖先标签固定 `" / "`。对照桌面 / 移动 **14/16**（P0 0）。仍缺虚拟列表与完整事件动作 | P0 |
 | `input-year` | InputYear 年输入 | `/components/form/input-year` | `/zh-CN/components/form/input-year` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-year-range` | InputYearRange 年份范围 | `/components/form/input-year-range` | `/zh-CN/components/form/input-year-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `json-schema` | JsonSchema | `/components/form/json-schema` | `/zh-CN/components/form/json-schema` | 进行中 | 30% | **精简**：只渲染 string/number/boolean 属性 | P0 |
@@ -353,7 +353,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 - 优先级 `#1` 最先做，`#154` 最后做。分类表 `P` 列仍是项目阶段（全表 P0）。侧栏把速览四段收成 **P0 / P1 / P2**（解锁主干 / 主路径容器 / 零被依赖+`app`）；全量顺序的「侧栏」列与站点左侧导航同口径（`playground/src/docs/component-priority.ts` 的 `STAGE_RANK_MAX`）；**执行顺序看全量顺序**。
 - `FormItem` / `Options` 是契约节点；`toast` 是动作；`badge` / `popOver` 是属性型节点，均按组件计入。
 - `office-viewer` 的 Word/Excel 两行共用一个 type，只列一次；主表 155 行对应 154 个 type 节点。
-- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：Options（#10，89%）、`panel`（#18，65%）、`input-file`（#19，88%）、`input-number`（#20，88%）、`radio`（#21，88%）、`switch`（#22，88%）、`input-image`（#24，80%）、`textarea`（#25，85%）。
+- 跳过 Custom 与 office/pdf；「下一批」跳过已完成和进度 ≥90% 的主干余项。当前建议下一批：Options（#10，92%）、`panel`（#18，65%）、`input-file`（#19，88%）、`input-number`（#20，88%）、`radio`（#21，88%）、`switch`（#22，88%）、`input-image`（#24，80%）、`textarea`（#25，85%）。
 - 示例：`icon → badge → tpl → tooltip-wrapper → remark → FormItem`；`action → {icon, tpl, tooltip-wrapper, badge, toast}`；`form → panel / spinner / FormItem / Options + input-*`；`calendar → input-date`。
 - 重算：`node scripts/component-priority.mjs`（读本表依赖列，回写本节 + [分 type 依赖图](./2026-10-20-vamis-component-deps.md)）。拓扑图只画主干；分 type 图是开工前置闭包（全部祖先，不是只有直接依赖）；全表看「全量顺序」。
 
@@ -431,7 +431,7 @@ flowchart LR
 | 7 | `toast`（动作） | `icon`、`tpl` | 9 | 1 | 22 | 437 | P0 | 已完成 | 100% |
 | 8 | `action` | `icon`、`tpl`、`tooltip-wrapper`、`badge`、`toast` | 8 | 33 | 437 | 437 | P0 | 进行中 | 95% |
 | 9 | `container` | `tpl` | 9 | 23 | 308 | 308 | P0 | 已完成 | 100% |
-| 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | P0 | 进行中 | 89% |
+| 10 | Options（契约） | FormItem | 6 | 9 | 123 | 161 | P0 | 进行中 | 92% |
 | 11 | `input-text` | FormItem、Options、`action` | 5 | 12 | 161 | 161 | P1 | 进行中 | 92% |
 | 12 | `spinner` | `tpl` | 9 | 7 | 100 | 148 | P1 | 已完成 | 100% |
 | 13 | `select` | FormItem、Options、`spinner` | 5 | 11 | 148 | 148 | P1 | 已完成 | 100% |
@@ -480,7 +480,7 @@ flowchart LR
 | 56 | `input-quarter` | `input-date` | 5 | 1 | 18 | 18 | P1 | 进行中 | 45% |
 | 57 | `radios` | `radio`、Options | 5 | 1 | 18 | 18 | P1 | 进行中 | 55% |
 | 58 | `input-time` | `input-date` | 5 | 1 | 18 | 18 | P1 | 进行中 | 60% |
-| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | P1 | 进行中 | 78% |
+| 59 | `input-tree` | FormItem、`checkbox`、Options | 5 | 1 | 18 | 18 | P1 | 进行中 | 80% |
 | 60 | `input-year` | `input-date` | 5 | 1 | 18 | 18 | P1 | 进行中 | 45% |
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | P1 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | P1 | 进行中 | 30% |
@@ -563,7 +563,7 @@ flowchart LR
 | 139 | `chart-radios` | `radios`、`chart` | 4 | 0 | 4 | 4 | P2 | 进行中 | 35% |
 | 140 | `input-tag` | `select`、`tag` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 141 | `input-time-range` | `input-time`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
-| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 进行中 | 78% |
+| 142 | `tree-select` | `select`、`input-tree` | 4 | 0 | 4 | 4 | P2 | 进行中 | 82% |
 | 143 | `input-year-range` | `input-year`、`input-date-range` | 4 | 0 | 4 | 4 | P2 | 进行中 | 45% |
 | 144 | `list-select` | `select`、`list` | 4 | 0 | 4 | 4 | P2 | 进行中 | 50% |
 | 145 | `input-kvs` | `input-kv`、`action` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |
@@ -637,6 +637,9 @@ flowchart LR
 - Options 虚拟列表（2026-11-19）：`optionsControlConfig` 新增 `virtualThreshold`（默认 100）/ `itemHeight`（默认 32）；Select 桌面平铺选项按 266 视口切片、固定行高滚动，搜索回落整表并回顶部。Amis 实测同为 32 行高 / 266 视口 / 200 项滚动高 6400。Options 保持 88%（分组菜单、Picker/Transfer/树未复用，远程缓存未接），Select 保持 92%；对照 Options 页 **38/39**（既有 `selectFirst` 值差，非本刀），测试 **1153**、`typecheck` 0。
 - 状态同步（2026-11-19）：重跑覆盖、全量单测、typecheck 与构建；type **185/189**、测试 **1177**、`typecheck` 0、静态路由 **242**。155 行均值 **62.7%**，公布汇总仍 **62% / ≥80% 47 / ≥50% 111**，百分比不改。
 - Dialog（2026-11-20）：事件、feedback、close:name、Spinner overlay、盒模型、连续拖拽 / resize 回夹和文档示例对齐。进度 88%→100%；测试 **1194**、`typecheck` 0；桌面 / 移动各 **22/23**（P0 0，余 1 条 schema-tree 定位假阴性）。
+- 节点路径模式（2026-11-22）：InputTree / TreeSelect 79→80。core 对齐 Amis `normalizeNodePath` 与五档 `transform2NodePath` 值矩阵；路径输入按叶子勾选，输出按完整父链回写；defer 只串行加载路径父链，共享父节点 in-flight 去重，兄弟不请求。文档路径示例真实浏览器核过；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**（均 P0 0）；测试 **1313**、`typecheck` 0。汇总 **62% / ≥80% 49 / ≥50% 111**。
+- TreeSelect searchable / 浮层盒模型（2026-11-22）：Amis TreeSelect 的检索输入属于 ResultBox 触发器，不在 Popover。Vamis 把输入移回触发器并即时过滤；Popup / Popover 不再重复 SearchBox。根宽度 resize 与 Select 同规则，Overlay gap 4；外层 Popover 透明，内层 Tree 对齐 `1px` 边框、`4px 10px` padding、`-1px` 上移和 `400px` 最大高度。TreeSelect 保持 80%，对照 **14/16**（P0 0）；测试 **1315**、`typecheck` 0。
+- TreeSelect 搜索选项 / 自定义节点（2026-11-22）：`source` 初始化树，`autoComplete` 按 `term` 远程替换并恢复 source；URL 内 `$term` 按 Amis tokenize 插值。共享 TreeBranch 支持 `menuTpl` 与 `iconField`，自定义图标走 `resolveIcon`。TreeSelect 80→82，搜索选项与自定义选项渲染示例浏览器核过；测试 **1318**、`typecheck` 0，对照桌面 / 移动 **14/16**（P0 0）。
 - 结论：逐行状态与进度以本清单为准；旧汇总与生成页已按行值校正。
 
 
