@@ -1037,11 +1037,17 @@ alwaysApply: true
 - 触及：`tree-select` `input-tree` `select`
 - 规则：Amis `Tree.tsx` `checkedInValue` / `isItemChecked`；`packages/vamis/src/renderers/form/TreeBranch.vue`
 
-### Transfer 虚拟化是左右栏各自窗口，Picker 没有同名直接契约
-- 踩过：把 Transfer 当成普通 Options 平铺列表，左右任一滚动就重算整页；table 模式若让表头跟着窗口行一起滚，视觉和 Amis 不一致。Picker 主渲染器本身没有 `virtualThreshold` / `itemHeight`，直接套 Transfer 规则会制造伪契约。
-- 稳定做法：Transfer list/table 左右栏分别保存 `scrollTop` / 实测视口，默认 `virtualThreshold=100`、`itemHeight=38`，各自用上下 spacer 补总高；搜索缩表或模式切换回顶部。table 由 pane 承担唯一滚动，`thead` sticky，虚拟行点击仍用完整数组值。实测 Amis selection 约 258px，101 项只渲染约 10 行。Picker 先走自身 pickerSchema / CRUD 能力，不硬塞 Transfer 虚拟参数。
+### Transfer 虚拟化是左右栏各自窗口，tree 行高不跟 itemHeight
+- 踩过：把 Transfer 当成普通 Options 平铺列表，左右任一滚动就重算整页；table 模式若让表头跟着窗口行一起滚，视觉和 Amis 不一致。把 list/table 的 `itemHeight=38` 套到 tree，会让行高和水标 32px 对不上，虚拟 spacer 也会失真。Picker 主渲染器本身没有 `virtualThreshold` / `itemHeight`，直接套 Transfer 规则会制造伪契约。
+- 稳定做法：Transfer list/table/tree 左右栏分别保存 `scrollTop` / 实测视口，默认 `virtualThreshold=100`、list/table `itemHeight=38`，各自用上下 spacer 补总高；搜索缩表或模式切换回顶部。table 由 pane 承担唯一滚动，`thead` sticky，虚拟行点击仍用完整数组值。tree 对齐共享 Amis Tree：行高固定 32px，Amis Transfer 也不向 Tree 透传 `itemHeight`；同一切片函数必须按 mode 选行高。实测 Amis selection 约 258px，101 项只渲染约 10 行。Picker 先走自身 pickerSchema / CRUD 能力，不硬塞 Transfer 虚拟参数。
 - 触及：`transfer` `picker` Options
 - 规则：Amis `Transfer.tsx` / `GroupedSelection.tsx` / `TableSelection.tsx` / `_transfer.scss`；`packages/vamis/src/renderers/form/Transfer.vue`
+
+### Transfer 的 UI 操作先发 change，再统一写值
+- 踩过：Transfer 的 add / remove / clear / reset 各写一次字段，`preventDefault` 拦不住；事件 payload 也缺 `[name]` / selectedItems；用户全选与组件动作全选混在一起，容易错误地在动作上再发一次 `selectAll`。
+- 稳定做法：`selected` 只读，从 `currentValue()` 派生。所有 UI 值变更走 `commitSelected`，clear/reset/setValue 走 `commitRaw`；二者先 create/run `change`，未 prevented 才 `fieldApi.setValue`。用户点“全部”先发 `selectAll`（items 为全部 options）再发 change；组件 `selectAll` 动作对齐 Amis `Transfer.selectAll()`，只提交 change。`clearSearch({left,right})` 只清 query，不写值。
+- 触及：`transfer` `picker` `tabs-transfer`
+- 规则：Amis `Form/Transfer.tsx` `handleChange` / `onSelectAll` / `doAction`；`packages/vamis/src/renderers/form/Transfer.vue`
 
 ### InputTree 的事件/动作和展开字段按源码，不按文档目录名猜
 - 踩过：只做树 UI 不派发 `change`，setValue/clear/reset/search/expand/collapse 等 scoped 动作不可用；`collapsed` / `unfolded` 字段被默认展开覆盖；`heightAuto`、treeClassName、highlightTxt 只写在文档属性表。Amis 6.13 文档虽列 `toolbar`，InputTree 源码未消费；`draggable` 也未透传。

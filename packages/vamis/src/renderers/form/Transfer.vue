@@ -2,14 +2,22 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Button, VamisCaret } from '@vamis/ui'
 import {
+  createVamisEvent,
+  eventEvalData,
   isApiOutdated,
   isEffectiveApi,
   requestApi,
   resolveValue,
+  runOnEvent,
+  useData,
   useEnv,
+  useFormApi,
+  useOverlay,
+  useScope,
+  useScoped,
   type SchemaObject,
 } from '@vamis/core'
-import { useFieldValue, useForm } from '../../formContext'
+import { useFieldValue } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
   dumpJoined,
@@ -17,13 +25,19 @@ import {
   normalizeOptions,
   optionValuesEqual,
   parseJoined,
+  type OptionItem,
 } from '../../options'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
-const form = useForm()
 const fieldApi = useFieldValue()
 const env = useEnv()
+const data = useData()
+const scoped = useScoped()
+const scope = useScope()
+const overlay = useOverlay()
+const formApi = useFormApi()
 const remoteOptions = ref<unknown[] | null>(null)
+const pristine = ref<unknown>(undefined)
 const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
 const options = computed(() => flattenOptions(rawOptions.value))
 type TreeRow = { key: string; label: string; value?: unknown; depth: number; children: TreeRow[] }
@@ -72,13 +86,17 @@ function flattenTreeRows(nodes: TreeRow[]): TreeRow[] {
   return out
 }
 const treeShown = computed(() => flattenTreeRows(treeVisible(treeRows.value)))
-const selected = computed({
-  get: () => parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', true, props.schema.joinValues !== false),
-  set: (values: unknown[]) => props.schema.name && fieldApi.setValue(props.schema.name, dumpJoined(values, true, props.schema.joinValues !== false)),
-})
+const name = computed(() => String(props.schema.name || ''))
+const joinValues = computed(() => props.schema.joinValues !== false)
+const delimiter = computed(() => String(props.schema.delimiter ?? ','))
+function currentValue() {
+  return name.value ? fieldApi.getValue(name.value) : props.schema.value
+}
+const selected = computed(() => parseJoined(currentValue(), true, joinValues.value, delimiter.value))
 const mode = computed(() => String(props.schema.mode || 'list'))
 const searchable = computed(() => props.schema.searchable === true)
 const VIRTUAL_ITEM_HEIGHT = 38
+const TREE_ITEM_HEIGHT = 32
 const VIRTUAL_VIEWPORT_HEIGHT = 258
 const VIRTUAL_BUFFER = 3
 const virtualThreshold = computed(() => {
@@ -138,7 +156,7 @@ function virtualWindow<T extends { label?: unknown; value?: unknown }>(
       trail: 0,
     }
   }
-  const itemHeight = virtualItemHeight.value
+  const itemHeight = targetMode === 'tree' ? TREE_ITEM_HEIGHT : virtualItemHeight.value
   const start = Math.max(
     0,
     Math.floor(scrollTop / itemHeight) - VIRTUAL_BUFFER,
@@ -237,29 +255,102 @@ function measureVirtualViewports() {
 
 let listResizeObserver: ResizeObserver | undefined
 
+function selectedOptionItems(values: unknown[]) {
+  return values
+    .map((value) => options.value.find((item) => optionValuesEqual(item.value, value)))
+    .filter((item): item is OptionItem => !!item)
+}
+
+function serializeSelected(values: unknown[]) {
+  return dumpJoined(values, true, joinValues.value, delimiter.value)
+}
+
+function writeRaw(value: unknown) {
+  if (name.value) fieldApi.setValue(name.value, value)
+}
+
+async function emitTransferEvent(
+  eventName: 'change' | 'selectAll',
+  value: unknown,
+  values: unknown[],
+) {
+  const items = options.value
+  const selectedItems = selectedOptionItems(values)
+  const payload = {
+    ...data.value,
+    value,
+    item: selectedItems[0] ?? null,
+    items,
+    options: items,
+    selectedItems,
+    ...(name.value ? { [name.value]: value } : {}),
+  }
+  const event = createVamisEvent(eventName, payload)
+  await runOnEvent(props.schema, eventName, {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    overlay,
+    form: formApi,
+    scope: scope.value,
+    event,
+  })
+  return event
+}
+
+async function commitRaw(nextValue: unknown) {
+  const values = parseJoined(nextValue, true, joinValues.value, delimiter.value)
+  const event = await emitTransferEvent('change', nextValue, values)
+  if (event.prevented) return false
+  writeRaw(nextValue)
+  return true
+}
+
+async function commitSelected(values: unknown[]) {
+  return commitRaw(serializeSelected(values))
+}
+
 function add(value: unknown) {
-  selected.value = [...selected.value, value]
+  if (selected.value.some((item) => optionValuesEqual(item, value))) return
+  void commitSelected([...selected.value, value])
 }
+
 function remove(value: unknown) {
-  selected.value = selected.value.filter((item) => !optionValuesEqual(item, value))
+  void commitSelected(selected.value.filter((item) => !optionValuesEqual(item, value)))
 }
-function addAll() {
-  selected.value = options.value.map((item) => item.value)
-}
+
 function clear() {
-  selected.value = []
+  void commitSelected([])
 }
+
+async function addAll(emitSelectAll = true) {
+  const values = options.value.map((item) => item.value)
+  if (
+    values.length > 0 &&
+    values.every((value) => selected.value.some((item) => optionValuesEqual(item, value)))
+  ) {
+    return
+  }
+  if (emitSelectAll) await emitTransferEvent('selectAll', serializeSelected(values), values)
+  await commitSelected(values)
+}
+
+function clearSearch(target?: { left?: boolean; right?: boolean }) {
+  if (!target || target.left) leftQuery.value = ''
+  if (!target || target.right) rightQuery.value = ''
+}
+
 async function loadSource() {
   const source = props.schema.source
   if (!source) return
   if (typeof source === 'string' && source.trim().startsWith('$')) {
-    const resolved = resolveValue(source, props.schema.data || {})
+    const resolved = resolveValue(source, data.value)
     if (Array.isArray(resolved)) remoteOptions.value = resolved
     return
   }
-  if (!isEffectiveApi(source, props.schema.data || {})) return
+  if (!isEffectiveApi(source, data.value)) return
   try {
-    const result = await requestApi(source, { env, data: props.schema.data || {}, reason: 'init' })
+    const result = await requestApi(source, { env, data: data.value, reason: 'init' })
     if (result.skipped || !result.ok) return
     const payload = result.data || {}
     const list = Array.isArray(payload) ? payload : payload.options ?? payload.items ?? payload.records ?? payload
@@ -269,7 +360,53 @@ async function loadSource() {
   }
 }
 
+const scopedApi = {
+  id: String(props.schema.id || props.schema.name || ''),
+  name: String(props.schema.name || props.schema.id || ''),
+  type: 'transfer',
+  schema: props.schema,
+  reload: () => loadSource(),
+  getData: () => ({
+    value: currentValue(),
+    ...(name.value ? { [name.value]: currentValue() } : {}),
+  }),
+  setData(values: Record<string, unknown>) {
+    const next = Object.prototype.hasOwnProperty.call(values, 'value')
+      ? values.value
+      : name.value
+        ? values[name.value]
+        : undefined
+    if (next !== undefined) writeRaw(next)
+  },
+  async doAction(action: unknown) {
+    const rec =
+      action && typeof action === 'object' && !Array.isArray(action)
+        ? (action as {
+            actionType?: string
+            value?: unknown
+            args?: { value?: unknown; left?: boolean; right?: boolean }
+          })
+        : {}
+    const type = String(rec.actionType || '')
+    if (type === 'clear') await commitRaw('')
+    else if (type === 'reset') {
+      await commitRaw(
+        pristine.value !== undefined
+          ? pristine.value
+          : props.schema.resetValue !== undefined
+            ? props.schema.resetValue
+            : '',
+      )
+    } else if (type === 'clearSearch') clearSearch(rec.args)
+    else if (type === 'selectAll') await addAll(false)
+    else if (type === 'setValue') await commitRaw(rec.args?.value ?? rec.value)
+    else if (type === 'reload') await loadSource()
+  },
+}
+
 onMounted(() => {
+  pristine.value = currentValue()
+  scoped?.register(scopedApi)
   void loadSource()
   void nextTick(() => {
     measureVirtualViewports()
@@ -283,9 +420,12 @@ onMounted(() => {
     }
   })
 })
-onBeforeUnmount(() => listResizeObserver?.disconnect())
+onBeforeUnmount(() => {
+  scoped?.unregister(scopedApi)
+  listResizeObserver?.disconnect()
+})
 watch(
-  () => [props.schema.source, props.schema.data] as const,
+  () => [props.schema.source, data.value] as const,
   (curr, prev) => {
     if (!prev) return
     if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) void loadSource()
@@ -363,7 +503,7 @@ watch(
               class="vamis-transfer__item w-full rounded px-2 py-1 text-left"
               :style="{
                 paddingLeft: `${8 + node.depth * 12}px`,
-                height: leftTreeWindow.enabled ? `${virtualItemHeight}px` : undefined,
+                height: `${TREE_ITEM_HEIGHT}px`,
               }"
               :disabled="disabled"
               @click="treeOnClick(node)"
@@ -456,7 +596,7 @@ watch(
         </ul>
       </div>
       <div class="flex flex-col justify-center gap-1">
-        <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="addAll">全部 &gt;</Button>
+        <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="addAll()">全部 &gt;</Button>
         <Button type="button" size="sm" variant="outline" :disabled="disabled" @click="clear">&lt; 清空</Button>
       </div>
       <div class="space-y-1">

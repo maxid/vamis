@@ -198,4 +198,31 @@ describe('Transfer virtual list', () => {
     expect(pane.querySelectorAll('.vamis-transfer__item').length).toBeLessThan(101)
     expect(pane.querySelector('.vamis-transfer__virtual-pad')).toBeTruthy()
   })
+
+  it('uses the Amis tree row height instead of Transfer itemHeight', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transfer',
+        mode: 'tree',
+        virtualThreshold: 4,
+        itemHeight: 38,
+        options: Array.from({ length: 101 }, (_, index) => ({
+          label: `Node ${index + 1}`,
+          value: `value-${index + 1}`,
+        })),
+      },
+    })
+
+    await nextTick()
+    const pane = host.querySelector('.vamis-transfer__list') as HTMLElement
+    const item = pane.querySelector('.vamis-transfer__item') as HTMLElement
+    const pads = pane.querySelectorAll('.vamis-transfer__virtual-pad')
+    const bottomPad = pads[pads.length - 1] as HTMLElement
+
+    expect(item.style.height).toBe('32px')
+    expect(bottomPad.style.height).toBe('2848px')
+  })
 })
