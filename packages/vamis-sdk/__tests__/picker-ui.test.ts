@@ -73,6 +73,92 @@ describe('Picker value and pickerSchema bridge', () => {
     )
   })
 
+  it('reads overflowConfig.maxTagCount and itemClearable from the Amis schema', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b,c',
+        itemClearable: false,
+        overflowConfig: { maxTagCount: 2 },
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+          { label: 'C', value: 'c' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(2)
+    expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
+      '+1',
+    )
+    expect(host.querySelector('.vamis-picker__tag-remove')).toBeNull()
+  })
+
+  it('keeps the picker trigger fluid when size is configured', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        size: 'lg',
+        options: [{ label: 'A', value: 'a' }],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-control--lg')).toBeNull()
+    expect(host.querySelector('.vamis-control--fluid')).toBeTruthy()
+    expect(host.querySelector('.vamis-picker__control')).toBeTruthy()
+  })
+
+  it('renders the CRUD selected-items bar for a multiple picker', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerSelectionBarForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-selection')).toBeTruthy(),
+    )
+    const selection = document.querySelector(
+      '.vamis-crud-selection',
+    ) as HTMLElement
+    expect(selection.textContent).toContain('已选2条')
+    expect(selection.textContent).toContain('A')
+    expect(selection.textContent).toContain('B')
+    ;(selection.querySelector('.vamis-crud-selection-clear') as HTMLElement).click()
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-selection')).toBeNull(),
+    )
+    buttonWithText('确认')?.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerSelectionBarForm').hero).toBe(''),
+    )
+  })
+
   it('uses CRUD list and single selection in the default Picker modal', async () => {
     const { host, scoped } = mount({
       type: 'form',
@@ -223,6 +309,41 @@ describe('Picker value and pickerSchema bridge', () => {
     ).click()
     await vi.waitFor(() =>
       expect(formData(scoped, 'pickerEmbedForm').hero).toBe('b'),
+    )
+  })
+
+  it('uses the drawer host for modalMode drawer', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerDrawerForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        modalMode: 'drawer',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-picker__drawer')).toBeTruthy(),
+    )
+    expect(document.querySelector('.vamis-picker__dialog')).toBeNull()
+    ;(
+      document.querySelectorAll('.vamis-crud-list-item')[1] as HTMLElement
+    ).click()
+    buttonWithText('确认')?.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerDrawerForm').hero).toBe('b'),
+    )
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-picker__drawer')).toBeNull(),
     )
   })
 

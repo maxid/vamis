@@ -64,7 +64,13 @@ const itemLayoutClass = computed(() => {
   }
   return 'vamis-form-item--normal'
 })
-const sizeName = computed(() => (isControlSize(props.schema.size) ? props.schema.size : ''))
+const sizeName = computed(() =>
+  props.schema.type === 'picker'
+    ? ''
+    : isControlSize(props.schema.size)
+      ? props.schema.size
+      : '',
+)
 const horizontalConfig = computed(() =>
   horizontal.value ? formHorizontalOf(props.schema, form?.horizontal) : null,
 )

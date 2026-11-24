@@ -27,6 +27,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  VamisClose,
   VamisIcon,
 } from '@vamis/ui'
 import Cards from './Cards.vue'
@@ -66,7 +67,6 @@ const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
 const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
-const selectionTouched = ref(false)
 const seededValueKey = ref('')
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
@@ -85,6 +85,24 @@ const isCardsMode = computed(() => {
 const isListMode = computed(() => String(props.schema.mode || 'table').toLowerCase() === 'list')
 const listDisplayColumn = computed(
   () => columns.value.find((col) => col.type !== 'operation') || columns.value[0],
+)
+const showSelectionBar = computed(
+  () =>
+    multiple.value &&
+    props.schema.keepItemSelectionOnPageChange === true &&
+    store.selectedItems.length > 0,
+)
+const selectionMaxCount = computed(() => {
+  const count = Number(props.schema.maxTagCount)
+  return Number.isFinite(count) && count > 0 ? count : 0
+})
+const visibleSelectedItems = computed(() =>
+  selectionMaxCount.value > 0
+    ? store.selectedItems.slice(0, selectionMaxCount.value)
+    : store.selectedItems,
+)
+const hiddenSelectedCount = computed(() =>
+  Math.max(0, store.selectedItems.length - visibleSelectedItems.value.length),
 )
 /** Amis CRUD `headerToolbar` 默认 `['bulkActions']`。cards 把这条注入 Cards-toolbar，不要在 CRUD 根上另画一段 flex。 */
 const resolvedHeaderToolbar = computed(() => {
@@ -412,7 +430,6 @@ function isSelected(row: Record<string, any>) {
 }
 
 function toggleRow(row: Record<string, any>, checked: boolean) {
-  selectionTouched.value = true
   if (!multiple.value) {
     store.selectedItems = checked ? [row] : []
     notifyPickerSelection()
@@ -450,7 +467,6 @@ const someSelected = computed(
 )
 
 function toggleAll(checked: boolean) {
-  selectionTouched.value = true
   if (checked) {
     store.items.forEach((row) => {
       if (!isSelected(row)) store.selectedItems.push(row)
@@ -470,6 +486,31 @@ function notifyPickerSelection() {
   }
 }
 
+function selectedItemLabel(item: Record<string, any>) {
+  const labelField = String(props.schema.labelField || 'label')
+  const valueField = String(
+    props.schema.valueField || props.schema.primaryField || primaryField.value,
+  )
+  return String(
+    item?.[labelField] ??
+      item?.[valueField] ??
+      item?.[primaryField.value] ??
+      '',
+  )
+}
+
+function removeSelectedItem(item: Record<string, any>) {
+  store.selectedItems = store.selectedItems.filter(
+    (selected) => rowKey(selected) !== rowKey(item),
+  )
+  notifyPickerSelection()
+}
+
+function clearSelection() {
+  store.selectedItems = []
+  notifyPickerSelection()
+}
+
 function seedSelectionFromValue() {
   const raw = props.schema.value
   if (raw == null) return
@@ -481,7 +522,7 @@ function seedSelectionFromValue() {
     return
   }
   const valueChanged = key !== seededValueKey.value
-  if (selectionTouched.value && !valueChanged) return
+  if (!valueChanged) return
   const pool = [...allItems.value, ...store.items]
   const labelField = String(props.schema.labelField || 'label')
   store.selectedItems = values.map((value) => {
@@ -566,7 +607,6 @@ watch(
 watch(
   () => props.schema.value,
   () => {
-    selectionTouched.value = false
     seededValueKey.value = ''
     seedSelectionFromValue()
   },
@@ -594,6 +634,38 @@ onBeforeUnmount(() => {
           resetAfterSubmit: false,
         }"
       />
+    </div>
+    <div v-if="showSelectionBar" class="vamis-crud-selection">
+      <div class="vamis-crud-selection-label">
+        已选{{ store.selectedItems.length }}条：
+      </div>
+      <div
+        v-for="(item, index) in visibleSelectedItems"
+        :key="`selection-${index}`"
+        class="vamis-crud-selection-value"
+      >
+        <button
+          type="button"
+          class="vamis-crud-selection-value-icon"
+          :aria-label="`移除 ${selectedItemLabel(item)}`"
+          @click="removeSelectedItem(item)"
+        >
+          <VamisClose />
+        </button>
+        <span class="vamis-crud-selection-value-label">
+          {{ selectedItemLabel(item) }}
+        </span>
+      </div>
+      <span v-if="hiddenSelectedCount > 0" class="vamis-crud-selection-more">
+        +{{ hiddenSelectedCount }}
+      </span>
+      <a
+        href="#"
+        class="vamis-crud-selection-clear"
+        @click.prevent="clearSelection"
+      >
+        清空
+      </a>
     </div>
     <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length)" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">

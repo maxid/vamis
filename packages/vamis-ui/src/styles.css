@@ -335,6 +335,9 @@
   --select-chip-close-hover: var(--colors-neutral-fill-2);
   --select-chip-height: 22px;
   --select-chip-max-width: 200px;
+  --crud-selection-tag-bg: var(--colors-crud-selection-bg);
+  --crud-selection-tag-border: var(--colors-brand-7);
+  --crud-selection-tag-color: var(--colors-brand-5);
   /* Amis TextControl-valueLabel `px2rem(60px)`；小叉 `valueIcon` 10px。钉在 label 上，不要钉整颗 tag。 */
   --text-chip-label-max: 60px;
   --text-chip-close-size: 10px;
@@ -11475,6 +11478,72 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-picker__dialog-footer > button {
   min-width: 72px;
 }
+.vamis-picker__drawer {
+  gap: 0;
+  padding: 0;
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+}
+.vamis-picker__drawer-header {
+  position: relative;
+  height: 54px;
+  gap: 0;
+  padding: var(--gap-md) var(--gap-xl);
+  border-bottom: 1px solid var(--border);
+}
+.vamis-picker__drawer-title {
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMd);
+  line-height: var(--lineHeightBase);
+}
+.vamis-picker__drawer-close {
+  top: var(--gap-md);
+  right: var(--gap-md);
+  display: inline-flex;
+  width: 12px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--text-color);
+}
+.vamis-picker__drawer-close svg {
+  width: 16px;
+  height: 16px;
+}
+.vamis-picker__drawer-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--gap-xl);
+}
+.vamis-picker__drawer-body .vamis-crud-body {
+  margin-bottom: 0;
+}
+.vamis-picker__drawer-body .vamis-crud-list {
+  margin-right: var(--list-items-margin-right);
+  margin-bottom: var(--gap-sm);
+}
+.vamis-picker__drawer-footer {
+  min-height: 57px;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 0;
+  padding: var(--gap-base) 16px var(--gap-base) var(--gap-base);
+  border-top: 1px solid var(--border);
+}
+.vamis-picker__drawer-footer > button {
+  min-width: 54px;
+}
+@media (max-width: 767px) {
+  .vamis-picker__drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
 .vamis-picker__group {
   font-size: var(--fontSizeSm);
   font-weight: var(--fontWeightMd);
@@ -11542,6 +11611,73 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   font-weight: var(--fontWeightMd);
   line-height: var(--lineHeightBase);
   color: var(--text-color);
+}
+.vamis-crud-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-base);
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  line-height: 1;
+}
+.vamis-crud-selection-label {
+  display: inline-block;
+  margin-top: var(--gap-xs);
+  line-height: 14px;
+}
+.vamis-crud-selection-value,
+.vamis-crud-selection-more {
+  display: inline-flex;
+  height: 21px;
+  max-width: 150px;
+  flex-shrink: 0;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--crud-selection-tag-border);
+  border-radius: var(--radius);
+  background: var(--crud-selection-tag-bg);
+  color: var(--crud-selection-tag-color);
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightNormal);
+  line-height: 19px;
+  white-space: nowrap;
+}
+.vamis-crud-selection-value-icon {
+  display: inline-flex;
+  height: 19px;
+  align-items: center;
+  padding: 0 5px;
+  border: 0;
+  border-right: 1px solid var(--crud-selection-tag-border);
+  background: transparent;
+  color: inherit;
+  font-size: var(--fontSizeSm);
+  line-height: 19px;
+  cursor: pointer;
+}
+.vamis-crud-selection-value-icon svg {
+  width: 7px;
+  height: 7px;
+}
+.vamis-crud-selection-value-label {
+  overflow: hidden;
+  padding: 0 var(--gap-xs);
+  text-overflow: ellipsis;
+}
+.vamis-crud-selection-more {
+  padding: 0 var(--gap-xs);
+}
+.vamis-crud-selection-clear {
+  margin-top: var(--gap-xs);
+  margin-left: var(--gap-xs);
+  color: var(--link-color);
+  line-height: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.vamis-crud-selection-clear:hover {
+  color: var(--link-hover-color);
 }
 .vamis-crud-list {
   overflow: hidden;

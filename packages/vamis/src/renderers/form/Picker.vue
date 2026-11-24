@@ -8,15 +8,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
   VamisClose,
   VamisIcon,
 } from '@vamis/ui'
 import {
   SchemaRenderer,
   createVamisEvent,
+  drawerSizeClass,
   eventEvalData,
   isApiOutdated,
   isEffectiveApi,
+  overlayFrameStyle,
   requestApi,
   resolveValue,
   runOnEvent,
@@ -59,8 +66,26 @@ const pickerSchema = computed(() =>
     : null,
 )
 const embed = computed(() => props.schema.embed === true)
+const modalMode = computed(() =>
+  props.schema.modalMode === 'drawer' ? 'drawer' : 'dialog',
+)
+const pickerDrawerClass = computed(() => {
+  const size = String(props.schema.modalSize || 'md')
+  if (size === 'full') return 'w-full max-w-none'
+  return drawerSizeClass({ size })
+})
+const pickerDrawerStyle = computed(() => {
+  const size = String(props.schema.modalSize || 'md')
+  if (size === 'full') return { width: '100%', maxWidth: 'none' }
+  return overlayFrameStyle({ size }, 'drawer')
+})
 const maxTagCount = computed(() => {
-  const n = Number(props.schema.maxTagCount)
+  const overflow = props.schema.overflowConfig
+  const configured =
+    overflow && typeof overflow === 'object' && !Array.isArray(overflow)
+      ? (overflow as Record<string, unknown>).maxTagCount
+      : undefined
+  const n = Number(configured ?? props.schema.maxTagCount)
   return Number.isFinite(n) && n >= 0 ? n : 0
 })
 const joinValues = computed(() => props.schema.joinValues !== false)
@@ -105,6 +130,7 @@ const effectivePickerSchema = computed<SchemaObject>(() => {
     primaryField: valueField.value,
     value: embed.value ? selected.value : draft.value,
     __pickerOnSelect: embed.value ? handleEmbedSelection : undefined,
+    maxTagCount: maxTagCount.value > 0 ? maxTagCount.value : undefined,
     columns,
     source: source
       ? sourceIsVariable
@@ -374,6 +400,7 @@ watch(
           class="vamis-picker__tag"
         >
           <button
+            v-if="schema.itemClearable !== false"
             type="button"
             class="vamis-picker__tag-remove"
             :aria-label="`移除 ${label}`"
@@ -419,7 +446,11 @@ watch(
       :schema="effectivePickerSchema"
       :extra-data="{ ...viewData, items: rawOptions }"
     />
-    <Dialog v-if="!embed" :open="open" @update:open="open = $event">
+    <Dialog
+      v-if="!embed && modalMode === 'dialog'"
+      :open="open"
+      @update:open="open = $event"
+    >
       <DialogContent class="vamis-picker__dialog" :show-close-button="false">
         <DialogHeader class="vamis-picker__dialog-header">
           <DialogTitle>{{ schema.modalTitle || '请选择' }}</DialogTitle>
@@ -437,5 +468,37 @@ watch(
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    <Sheet
+      v-else-if="!embed"
+      :open="open"
+      @update:open="open = $event"
+    >
+      <SheetContent
+        class="vamis-picker__drawer"
+        :class="pickerDrawerClass"
+        :style="pickerDrawerStyle"
+        side="right"
+        :show-close-button="false"
+        @pointer-down-outside.prevent
+        @escape-key-down.prevent
+      >
+        <SheetHeader class="vamis-picker__drawer-header">
+          <SheetTitle class="vamis-picker__drawer-title">
+            {{ schema.modalTitle || '请选择' }}
+          </SheetTitle>
+          <DialogCloseButton class="vamis-picker__drawer-close" />
+        </SheetHeader>
+        <div class="vamis-picker__drawer-body">
+          <SchemaRenderer
+            :schema="effectivePickerSchema"
+            :extra-data="{ ...viewData, items: rawOptions }"
+          />
+        </div>
+        <SheetFooter class="vamis-picker__drawer-footer">
+          <Button type="button" variant="outline" @click="open = false">取消</Button>
+          <Button type="button" @click="confirm">确认</Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   </FormItem>
 </template>

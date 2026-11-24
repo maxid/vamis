@@ -1,6 +1,6 @@
 # Picker 列表选择器 · `picker` 设计
 
-> 状态：**进行中 90%** · 复杂度：**XL 特重**
+> 状态：**进行中 94%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/picker) · Amis：`/zh-CN/components/form/picker`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
@@ -68,6 +68,8 @@ Picker 是“表单字段 + CRUD 弹层 + pickerSchema 自定义内容”的组�
 | `perPage` | 弹层分页 | 组头占行；搜索回第一页 |
 | `clearable` | 清除 | 写空，不触发独立事件 |
 | `modalTitle` | 弹层标题 | 缺省用 label/请选择 |
+| `modalMode` | `dialog` / `drawer` | drawer 默认右侧 500px，窄屏 100% |
+| `modalSize` | 弹层尺寸 | dialog / drawer 共用尺寸枚举 |
 | `pickerSchema` | 自定义弹层 | 内层 table 读 selectedItems；form 读 valueField 字段 |
 | `placeholder` | 未选占位 | FormItem 也有一套，避免覆盖错 |
 
@@ -125,21 +127,24 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 - 默认类：`.vamis-picker__dialog`、`.vamis-crud-list`、`.vamis-crud-list-item` 等，位于 `@vamis/ui/styles.css`。
 - 弹框实测：内容 `500×240`（3 项 `283.5`）、行高 `42.5`、列表右缩 `15px`、ListItem 底边距 `8px`、标题 500 / 14 / 21、关闭钮 `16×22`、圆角 6px。
+- Trigger：Picker 不消费 FormItem 的 `size` 宽度档；`size: lg` 仍铺满 1230px 值列。不要再给 Picker 套 `--form-control-width-lg`。
+- Drawer 实测：桌面右侧 `500×800`、header 54、body 上下 24、footer 57 / padding 12 / gap 20、关闭钮 `12×16`；375px 下抽屉 375 全宽、header 374（左 1px 边框）。
 - 选中行使用 Amis `brand-10` 底 / `brand-4` 字色；普通 Picker 的 CRUD 不挂 bulkActions 时不得显示选中计数。
 - 渲染器无 `<style>`；深色只替换 token；窄屏弹层与 `+N` tooltip 仍需逐项核。
 - 作者 className 只落 `div.vamis-node`。
 
 ## 6. 当前状态与缺口
 
-- 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、默认 CRUD list 弹框、embed、maxTagCount、远程/变量 source、children 顶层组行、CRUD 本地分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
+- 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、默认 CRUD list 弹框、`modalMode: drawer` / `modalSize`、embed、`overflowConfig.maxTagCount`、`itemClearable`、远程/变量 source、children 顶层组行、CRUD 本地分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
 - 已接：`change` / `itemClick`、`resetValue` 清空、数据链 source、`+N` 隐藏标签 title。
-- 已收口：默认弹框由 CRUD `mode: list` 承载；已选回填、选中行、无 bulkActions 时不显示计数、已有值打开与无变更确认均有回归。
+- 已收口：默认弹框由 CRUD `mode: list` 承载；已选回填、选中行、无 bulkActions 时不显示计数、已有值打开与无变更确认均有回归。多选时 CRUD 顶部显示 `已选N条 / 标签 / 清空`。Drawer 桌面 500px、header 54、body 上下 24、footer 57；375px 全宽。
+- 文档：主 TOC 与 Amis 6.13 同序，属性表补 `autoFill` / `overflowConfig` / `itemClearable`，事件表补 `change` / `itemClick` / `staticItemClick`；补充示例不再占用主章节。
 - 对照：桌面 / 移动 2/2（P0 0），trigger 926×32 与 Amis 一致；真实弹框 500px / 盒模型与 Amis 计算值一致。
-- 缺：`modalMode: drawer`、`strictMode`、树选择；pickerSchema 内其它组件类型桥接未定义；分组组行键盘/可访问性未专项核。
+- 缺：`overflowConfig.displayPosition` / 收纳浮层、`staticItemClick` 派发、`strictMode`、树选择；pickerSchema 内其它组件类型桥接未定义；分组组行键盘/可访问性未专项核。
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：10 / 12）
+### 验收清单（文档核对：11 / 12）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Picker / options 工具已定位
@@ -147,7 +152,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] schema 属性 / 默认值逐项核对
 - [x] change / itemClick；当前无独立动作
 - [x] 默认弹框 / 已有值回填 / 选中行 / 取消确认边界
-- [ ] 组件页活示例运行、无控制台 error
+- [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（Picker 相关）
 - [x] `pnpm typecheck` 0
 - [x] `pnpm compare --page picker` 桌面
@@ -164,7 +169,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 8. 后续
 
-1. 补 `modalMode: drawer` 与 `strictMode`，按 Amis 弹层/值约束核对。
+1. 补 `strictMode`，按 Amis 单选/多选值约束核对。
 2. 树选择单独立项；先核 Amis Picker 是否通过 pickerSchema 复用 tree，而不是自造选择协议。
 3. pickerSchema 协议补“内层其它类型（list/cards）”或明确只支持 table/form。
 4. 标签删除、`+N` tooltip、分组行键盘与窄屏弹层做交互专项。

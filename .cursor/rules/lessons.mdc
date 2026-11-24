@@ -1294,15 +1294,27 @@ alwaysApply: true
 
 ### Picker 默认弹框由 CRUD list 承载，选中态和回填也归 CRUD
 - 踩过：看到 Picker 弹框标题、padding、radio 不对，就在 Picker 内自绘 Modal/List；但 Amis `Picker.buildSchema()` 把默认 `pickerSchema: {mode:'list'}` 最终强制成 `type: crud`，自绘 UI 后续会被整体替换。切到 CRUD 后又漏了已有值回填和普通 Picker 的“已选 N”。
-- 稳定做法：默认与自定义 schema 都强制 `type: crud`，普通弹框传 `mode:list` / `pickerMode` / `checkOnItemClick` / `keepItemSelectionOnPageChange` / `value:draft` / `primaryField:valueField`。CRUD 用 `value` seed 选中行，`selectionTouched` 防止翻页重载覆盖用户选择；只有存在 `bulkActions` 才画“已选 N”。列表源传 `rawOptions`，不要先 flatten，否则 Amis 的顶层组行会被拍成“组 / 子项”。`embed` 用内部选择回调立即走同一个 `commitPickerValues`，弹框则只改 draft 等确认。盒模型按 Amis 计算值：500 内容、42.5 行高、15 右缩、`brand-10/brand-4` 选中态。
+- 稳定做法：默认与自定义 schema 都强制 `type: crud`，普通弹框传 `mode:list` / `pickerMode` / `checkOnItemClick` / `keepItemSelectionOnPageChange` / `value:draft` / `primaryField:valueField`。CRUD 用 `value` seed 选中行，但 `seededValueKey` 只在值签名变化时重算；分页请求完成不能再次 seed，否则第 2 页找不到旧 id 时会把完整 option 覆盖成 descriptor，标签退化成 4/5。只有存在 `bulkActions` 才画普通 CRUD 计数；Picker 多选另画独立已选栏。列表源传 `rawOptions`，不要先 flatten，否则 Amis 的顶层组行会被拍成“组 / 子项”。`embed` 用内部选择回调立即走同一个 `commitPickerValues`，弹框则只改 draft 等确认。`modalMode:drawer` 用 Sheet，但尺寸必须走 `style`（`overlayFrameStyle({size:'md'})`）而不是依赖 Tailwind 动态类；桌面默认 500、375px 用 media query 铺满。`overflowConfig.maxTagCount` 是 Amis 主字段，顶层 `maxTagCount` 只做兼容。盒模型按 Amis 计算值：dialog 500 内容、42.5 行高、15 右缩、`brand-10/brand-4` 选中态；drawer header 54 / footer 57。
 - 触及：`picker` `crud`
 - 规则：Amis `Form/Picker.tsx` `buildSchema` / `renderBody`、`CRUD.tsx` List/pickerMode；`packages/vamis/src/renderers/form/Picker.vue`、`packages/vamis/src/renderers/CRUD.vue`
+
+### Picker 文档主 TOC 跟 Amis，补充示例放在差异前
+- 踩过：把多选、远程、分组、分页、自定义弹层都拆成 H2，页面 TOC 比 Amis 长一倍；Amis 已有的 OverflowConfig、三个事件小节反而缺失。
+- 稳定做法：主章节固定为 **基本用法 → 配置 pickerSchema → 内嵌模式 → 限制标签最大展示数量 → 属性表 / OverflowConfig → 事件表 / change / itemClick / staticItemClick → 和 Amis 文档的差异**。多选、source、分组、perPage 只作为事件后的粗体补充段落，不再进 TOC；Vamis 未接项在最后的差异节明确列出。
+- 触及：`picker` 文档
+- 规则：Amis `docs/zh-CN/components/form/picker.md`；`website/src/components/form/picker.md`
 
 ### CRUD pickerMode 先补选择协议，不先造第二套列表
 - 踩过：Picker 依赖 CRUD，但 CRUD 原先没有 row click picker 选择、single radio、`getData().selectedItems`；同时无 API 的本地 source 直接全量塞 store，`perPage` 不生效。
 - 稳定做法：`pickerMode` 自动 `selectable`；`multiple:false` 用 `.vamis-radio-dot` 并整行点击替换唯一选择，multiple 才用 Checkbox；crud scoped API 暴露 items/page/perPage/selectedItems/selectedIds。无 API 时 source 先存 allItems，再走 `paginateLocal`，翻页仍遵守 keepItemSelectionOnPageChange。`mode:list` 用 `.vamis-crud-list-item` 的 Amis ListItem 结构（选择单元格 32px + 内容），已有 `value` 按 `primaryField` 回填。
 - 触及：`crud` `picker`
 - 规则：Amis `CRUD.tsx` `pickerMode` / `getData`；`packages/vamis/src/renderers/CRUD.vue`
+
+### Picker 的 size 不控宽；多选已选栏归 CRUD
+- 踩过：Picker schema 抄了 Amis 示例的 `size: lg`，Vamis FormItem 把 `--form-control-width-lg` 套到控件外壳，trigger 只有 320px；Amis 的 `.cxd-PickerControl` 没有 sizeLg，仍铺满 1230px 值列。另一个缺口是把“已选 2 条 / 标签 / 清空”误当 Picker trigger，实际来自 `CRUD.renderSelection()`。
+- 稳定做法：`FormItem.sizeName` 对 `type: picker` 返回空，Picker 恒走 `vamis-control--fluid`；要自定义宽度用作者 className，不用 `size`。CRUD 在 `multiple + keepItemSelectionOnPageChange + selectedItems` 时渲染独立 `.vamis-crud-selection`，标签单项删除和清空都更新同一 CRUD store；Picker 只把 `maxTagCount` 传下去。已选标签按 Amis `tag-item`：21px 高、12/19、`#cce5ff` 底、brand-7 边、brand-5 字。
+- 触及：`picker` `crud` `formitem`
+- 规则：Amis `Form/Picker.tsx`、`CRUD.tsx renderSelection`、`_crud.scss` / `_mixins.scss tag-item`；`packages/vamis/src/renderers/FormItem.vue`、`CRUD.vue`、`packages/vamis-ui/src/styles.css`
 
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。

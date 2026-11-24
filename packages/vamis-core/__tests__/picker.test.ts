@@ -9,6 +9,6 @@ describe('picker', () => {
     const vue = read('../../vamis/src/renderers/form/Picker.vue')
     for (const t of ['embed', 'maxTagCount', 'hiddenCount', 'loadSource', 'remoteOptions', 'effectivePickerSchema', "type: 'crud'", 'pickerMode', 'pickerSchema', 'getComponentById', 'nestedData', '__pickerOnSelect', 'value: embed.value ? selected.value : draft.value']) expect(vue).toContain(t)
     const doc = read('../../../website/src/components/form/picker.md')
-    for (const h of ['## 基本用法','## 多选','## 内嵌模式','## 分组选项','## 自定义弹层（pickerSchema）','## 分页','## 远程选项','## 限制标签最大展示数量','## 属性表']) expect(doc).toContain(h)
+    for (const h of ['## 基本用法','## 配置 pickerSchema','## 内嵌模式','## 限制标签最大展示数量','## 属性表','### OverflowConfig','## 事件表','### change','### itemClick','### staticItemClick','## 和 Amis 文档的差异']) expect(doc).toContain(h)
   })
 })
