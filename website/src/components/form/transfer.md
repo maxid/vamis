@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 92% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`resultListModeFollowSelect`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `searchApi` 和移动端专用布局。
+::: warning 实现进度 95% · 进行中
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`searchApi`、`searchResultMode` / `searchResultColumns`、`resultSearchable`、`resultListModeFollowSelect`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仅缺移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -571,7 +571,7 @@ body:
 
 #### searchApi
 
-通过 `searchApi` 检索左侧选项；默认 GET，携带 `term`。当前 Vamis 尚未接运行时。
+通过 `searchApi` 检索左侧选项；默认 GET，携带 `term`，并使用与基础数据源相同的 `page` / `perPage` 分页参数。返回值按 `data.options` / `data.items` / 数组归一。清空搜索恢复基础 options。
 
 ```schema: scope="body"
 {
@@ -586,7 +586,7 @@ body:
         "name": "transfer",
         "searchable": true,
         "selectMode": "tree",
-        "searchApi": "/api/transfer/search?name=${term}",
+        "searchApi": "/api/mock2/options/transfer?term=${term}",
         "options": [
           {
             "label": "法师",
@@ -964,13 +964,13 @@ valueField: value
 | `leftDefaultValue` | | | `associated` 左栏默认值 |
 | `leftMode` | `string` | `list` | `associated` 左栏 `list` / `tree` |
 | `rightMode` | `string` | `list` | `associated` 右栏 `list` / `table` / `tree` / `chained` |
-| `searchResultMode` | `string` | | 搜索结果面板模式；当前 Vamis 未接 |
+| `searchResultMode` | `string` | | 搜索结果面板模式：`list` / `table` / `tree` / `chained` |
 | `columns` | `Object[]` | | `table` 列配置，已接共享 TableSelection |
-| `searchResultColumns` | `Object[]` | | 搜索结果列；当前 Vamis 未接 |
+| `searchResultColumns` | `Object[]` | | 搜索结果 table 列配置，优先于 `columns` |
 | `searchable` | `boolean` | `false` | 左侧搜索 |
 | `checkAll` | `boolean` | `true` | list / tree 左侧全选；chained / associated 在标题行显示全选 |
 | `resultSearchable` | `boolean` | `false` | 右侧结果按 label / value 本地过滤；结果树只搜已选叶子 |
-| `searchApi` | API | | 左侧远程搜索；当前 Vamis 未接 |
+| `searchApi` | API | | 左侧远程搜索；携带 `term` / 分页参数 |
 | `selectTitle` | `string` | `请选择` | 左侧标题 |
 | `resultTitle` | `string` | `当前选择` | 右侧结果标题 |
 | `leftTitle` / `rightTitle` | `string` | | Vamis 兼容别名 |
@@ -1299,4 +1299,5 @@ valueField: value
 - 已接：`resultListModeFollowSelect`；table 结果使用共享表格原语和 `columns`，tree 结果只保留已选分支，结果区关闭钮直接移除值。
 - 已接：`resultSearchable` 的 label / value 匹配、结果树叶子搜索、祖先保留与 clear；tree 含 defer 时 Amis 不允许结果搜索，Vamis 同步关闭。
 - 已接：分页示例使用 `[data-vamis-panel]` 作为 `popOverContainerSelector`；Vamis 不输出 Amis `.cxd-Panel--form`，不能照搬该选择器。
-- 运行时未接：`searchResultMode` / `searchResultColumns`、`searchApi`、移动端专用布局。
+- 已接：`searchApi` 的 term 请求、`data.options` / `data.items` / 数组归一、搜索分页与清空恢复；`searchResultMode` 支持 list / table / tree / chained，table 使用 `searchResultColumns`。
+- 运行时未接：移动端专用布局。

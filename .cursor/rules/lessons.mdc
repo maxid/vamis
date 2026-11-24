@@ -1274,6 +1274,12 @@ alwaysApply: true
 - 触及：`transfer` `resultListModeFollowSelect` `resultSearchable`
 - 规则：Amis `Transfer.tsx` `resultSelectMode` / `ResultTreeList` / `handleResultSearch`
 
+### Transfer searchApi 是左侧数据源切换，不是本地 filter
+- 踩过：把 `searchApi` 继续塞进本地 `filterOptionTree`，远程结果不会出现；搜索激活时右侧已选对象又被搜索结果覆盖，历史值标签丢失。
+- 稳定做法：term 250ms debounce 后请求 `searchApi`，请求数据含 term 与分页 page/perPage；响应按 options/items/数组归一。`remoteSearchResults` 只切左侧 active options 与统计，右侧 `knownOptions` 始终读基础 options / accumulated options。`searchResultMode` 覆盖左侧 pane，table 用 `searchResultColumns`；tree/chained 的新选择与搜索外已选值做并集，清空搜索恢复基础 options。
+- 触及：`transfer` `searchApi` `searchResultMode`
+- 规则：Amis `Transfer.tsx` `handleSearch` / `renderSearchResult`；`packages/vamis/src/renderers/form/Transfer.vue`
+
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
 - 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。

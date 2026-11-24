@@ -30,10 +30,10 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 | `showArrow` | 中间箭头 | 已接 |
 | `sortable` | 结果拖拽排序 | 已接结果列表；使用共享 `useSortableDrag`，搜索过滤期间暂不显示手柄 |
 | `resultListModeFollowSelect` | 结果区跟随模式 | table / tree（无 defer）已接，使用共享结果 pane |
-| `searchResultMode` / `searchResultColumns` | 搜索结果面板 | 未接 |
+| `searchResultMode` / `searchResultColumns` | 搜索结果面板 | 已接 list/table/tree/chained，table 列可覆盖 |
 | `columns` | table 模式列配置 | 已接 `SelectTablePane` 自定义列 |
 | `resultSearchable` / `resultSearchPlaceholder` | 右侧结果搜索 | 已接 label / value 过滤与 clear；结果树只搜已选叶子并保留祖先 |
-| `searchApi` | 左侧远程搜索 | 未接 |
+| `searchApi` | 左侧远程搜索 | 已接 term debounce、远程分页、清空恢复 |
 | `menuTpl` / `valueTpl` | 选项 / 结果自定义渲染 | 已接 list / tree / chained 左侧与右侧结果列表 |
 | `statistics` | 选择统计 | 已接，默认显示左右数量 |
 | `showInvalidMatch` | 未匹配值飘红 | 已接；未匹配值始终保留 |

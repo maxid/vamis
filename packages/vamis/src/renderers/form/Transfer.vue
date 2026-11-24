@@ -14,6 +14,7 @@ import {
   filterOptionTree,
   isApiOutdated,
   isEffectiveApi,
+  optionsFromPayload,
   requestApi,
   resolveValue,
   runOnEvent,
@@ -56,6 +57,8 @@ const remoteOptions = ref<unknown[] | null>(null)
 const pristine = ref<unknown>(undefined)
 const optionNodesOverride = ref<OptionItem[] | null>(null)
 const associatedNodesOverride = ref<OptionItem[] | null>(null)
+const remoteSearchResults = ref<OptionItem[] | null>(null)
+const remoteSearchLoading = ref(false)
 const accumulatedRawOptions = ref<unknown[]>([])
 const paginationPage = ref(1)
 const paginationPerPage = ref(
@@ -100,6 +103,19 @@ const associatedNodes = computed(
 const displayRawOptions = computed(() =>
   mode.value === 'associated' ? associatedNodes.value : rawOptions.value,
 )
+const remoteSearchActive = computed(() => remoteSearchResults.value !== null)
+const paneMode = computed(() => {
+  if (!remoteSearchActive.value) return mode.value
+  const next = String(props.schema.searchResultMode || mode.value)
+  return next === 'table' || next === 'tree' || next === 'chained'
+    ? next
+    : 'list'
+})
+const activeRawOptions = computed(() =>
+  remoteSearchActive.value
+    ? remoteSearchResults.value || []
+    : displayRawOptions.value,
+)
 function flattenSelectableOptions(nodes: OptionItem[]): OptionItem[] {
   const out: OptionItem[] = []
   for (const node of nodes) {
@@ -108,7 +124,8 @@ function flattenSelectableOptions(nodes: OptionItem[]): OptionItem[] {
   }
   return out
 }
-const options = computed(() => flattenSelectableOptions(displayRawOptions.value))
+const options = computed(() => flattenSelectableOptions(activeRawOptions.value))
+const baseOptions = computed(() => flattenSelectableOptions(displayRawOptions.value))
 type TreeRow = {
   key: string
   label: string
@@ -136,7 +153,7 @@ function buildTree(nodes: any[], depth = 0, prefix = ''): TreeRow[] {
   })
 }
 
-const treeRows = computed(() => buildTree(displayRawOptions.value as any[]))
+const treeRows = computed(() => buildTree(activeRawOptions.value as any[]))
 function treeExpandable(node: TreeRow) { return node.children.length > 0 }
 function treeIsExpanded(node: TreeRow) { return expandedTree.value.has(node.key) }
 function toggleTree(node: TreeRow) {
@@ -150,7 +167,7 @@ function treeOnClick(node: TreeRow) {
   else if (node.value != null) add(node.value)
 }
 function treeVisible(nodes: TreeRow[]): TreeRow[] {
-  const q = leftQuery.value.trim().toLowerCase()
+  const q = remoteSearchActive.value ? '' : leftQuery.value.trim().toLowerCase()
   const out: TreeRow[] = []
   for (const node of nodes) {
     const children = treeVisible(node.children)
@@ -164,7 +181,7 @@ function flattenTreeRows(nodes: TreeRow[]): TreeRow[] {
   const out: TreeRow[] = []
   for (const node of nodes) {
     out.push(node)
-    if (leftQuery.value.trim() || expandedTree.value.has(node.key)) {
+    if (remoteSearchActive.value || leftQuery.value.trim() || expandedTree.value.has(node.key)) {
       out.push(...flattenTreeRows(node.children))
     }
   }
@@ -251,6 +268,9 @@ const rightViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTreeViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftQuery = ref('')
+let remoteSearchTimer: ReturnType<typeof setTimeout> | undefined
+let remoteSearchSeq = 0
+const REMOTE_SEARCH_DELAY = 250
 const associatedLeftValue = ref<unknown>(undefined)
 const associatedLeftOptions = computed(() =>
   associatedEnvelope.value
@@ -280,18 +300,28 @@ const chainedPaneSchema = computed<SchemaObject>(() => ({
   ...paneSchema.value,
   checkAll: false,
 }))
+const searchTableSchema = computed<SchemaObject>(() => ({
+  ...paneSchema.value,
+  columns: Array.isArray(props.schema.searchResultColumns)
+    ? props.schema.searchResultColumns
+    : props.schema.columns,
+}))
 const filteredAssociatedLeftOptions = computed(() =>
   leftQuery.value
     ? filterOptionTree(associatedLeftOptions.value, leftQuery.value)
     : associatedLeftOptions.value,
 )
 const filteredChainedNodes = computed(() =>
-  leftQuery.value
-    ? filterOptionTree(displayRawOptions.value, leftQuery.value)
-    : displayRawOptions.value,
+  remoteSearchActive.value
+    ? activeRawOptions.value
+    : leftQuery.value
+      ? filterOptionTree(displayRawOptions.value, leftQuery.value)
+      : displayRawOptions.value,
 )
 const tableNodes = computed(() =>
-  options.value.filter((item) => matched(item, leftQuery.value)),
+  remoteSearchActive.value
+    ? options.value
+    : options.value.filter((item) => matched(item, leftQuery.value)),
 )
 function treeDepth(item: { label?: unknown }) {
   if (mode.value !== 'tree') return 0
@@ -315,7 +345,7 @@ const accumulatedOptions = computed(() =>
   normalizeOptions(accumulatedRawOptions.value, labelField.value, valueField.value),
 )
 const knownOptions = computed(() =>
-  paginationEnabled.value ? accumulatedOptions.value : options.value,
+  paginationEnabled.value ? accumulatedOptions.value : baseOptions.value,
 )
 const right = computed(() => selectedOptionItems(selected.value))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
@@ -681,6 +711,23 @@ function replacePaneSelection(values: unknown[]) {
   void commitSelected(values)
 }
 
+function mergeSearchPaneSelection(values: unknown[]) {
+  const activeValues = options.value.map((item) => item.value)
+  const outside = selected.value.filter(
+    (value) =>
+      !activeValues.some((target) =>
+        optionValuesEqual(value, target, valueField.value),
+      ),
+  )
+  const next: unknown[] = [...outside]
+  for (const value of values) {
+    if (!next.some((item) => optionValuesEqual(item, value, valueField.value))) {
+      next.push(value)
+    }
+  }
+  void commitSelected(next)
+}
+
 function addPaneItems(items?: OptionItem[]) {
   const candidates = items?.length ? flattenOptions(items) : options.value
   const next = [...selected.value]
@@ -713,6 +760,22 @@ async function addAll(emitSelectAll = true) {
 }
 
 async function toggleAll() {
+  if (remoteSearchActive.value) {
+    const activeValues = options.value.map((item) => item.value)
+    if (allSelected.value) {
+      await commitSelected(
+        selected.value.filter(
+          (value) =>
+            !activeValues.some((target) =>
+              optionValuesEqual(value, target, valueField.value),
+            ),
+        ),
+      )
+    } else {
+      mergeSearchPaneSelection(activeValues)
+    }
+    return
+  }
   if (allSelected.value) await commitSelected([])
   else await addAll(true)
 }
@@ -720,6 +783,103 @@ async function toggleAll() {
 function clearSearch(target?: { left?: boolean; right?: boolean }) {
   if (!target || target.left) leftQuery.value = ''
   if (!target || target.right) rightQuery.value = ''
+}
+
+function clearRemoteSearch() {
+  if (remoteSearchTimer) clearTimeout(remoteSearchTimer)
+  remoteSearchTimer = undefined
+  remoteSearchSeq += 1
+  const wasActive = remoteSearchActive.value
+  remoteSearchResults.value = null
+  remoteSearchLoading.value = false
+  if (wasActive && paginationEnabled.value) {
+    paginationPage.value = 1
+    void loadSource({
+      page: 1,
+      perPage: paginationPerPage.value,
+      append: false,
+    })
+  }
+}
+
+function scheduleRemoteSearch(term: string) {
+  if (!props.schema.searchApi) return
+  if (remoteSearchTimer) clearTimeout(remoteSearchTimer)
+  remoteSearchTimer = undefined
+  if (!term.trim()) {
+    clearRemoteSearch()
+    return
+  }
+  remoteSearchResults.value = []
+  remoteSearchTimer = setTimeout(() => {
+    void loadRemoteSearch(term, {
+      page: 1,
+      perPage: paginationPerPage.value,
+    })
+  }, REMOTE_SEARCH_DELAY)
+}
+
+async function loadRemoteSearch(
+  term: string,
+  page?: { page?: number; perPage?: number },
+) {
+  const api = props.schema.searchApi
+  if (!api) return
+  const targetPage = Math.max(1, Number(page?.page || paginationPage.value) || 1)
+  const targetPerPage = Math.max(
+    1,
+    Number(page?.perPage || paginationPerPage.value) || 10,
+  )
+  const requestData = {
+    ...data.value,
+    term,
+    ...(paginationEnabled.value
+      ? { page: targetPage, perPage: targetPerPage }
+      : {}),
+  }
+  if (!isEffectiveApi(api as any, requestData)) {
+    remoteSearchResults.value = []
+    return
+  }
+  const seq = ++remoteSearchSeq
+  remoteSearchLoading.value = true
+  try {
+    const result = await requestApi(api as any, {
+      env,
+      data: requestData,
+      reason: 'init',
+    })
+    if (seq !== remoteSearchSeq) return
+    if (result.skipped || !result.ok) {
+      remoteSearchResults.value = []
+      return
+    }
+    const payload = optionsFromPayload(result.data)
+    remoteSearchResults.value = normalizeOptions(
+      payload.list,
+      labelField.value,
+      valueField.value,
+    )
+    if (paginationEnabled.value) {
+      const raw = (result.data || {}) as Record<string, unknown>
+      paginationPage.value =
+        Math.max(1, Number(raw.page) || targetPage) || 1
+      paginationPerPage.value =
+        Math.max(1, Number(raw.perPage) || targetPerPage) || 10
+      paginationTotal.value = Math.max(
+        0,
+        Number(raw.count ?? raw.total) || 0,
+      )
+    }
+  } catch (error) {
+    if (seq !== remoteSearchSeq) return
+    remoteSearchResults.value = []
+    if (!(api as { silent?: boolean }).silent) {
+      env.notify('error', error instanceof Error ? error.message : '搜索失败')
+    }
+  } finally {
+    if (seq === remoteSearchSeq) remoteSearchLoading.value = false
+  }
 }
 
 function mergeAccumulatedOptions(list: unknown[]) {
@@ -821,6 +981,13 @@ async function onPaginationChange(page: number, perPage?: number) {
   const nextPerPage = Math.max(1, Number(perPage) || paginationPerPage.value || 10)
   paginationPage.value = nextPage
   paginationPerPage.value = nextPerPage
+  if (remoteSearchActive.value && props.schema.searchApi) {
+    await loadRemoteSearch(leftQuery.value, {
+      page: nextPage,
+      perPage: nextPerPage,
+    })
+    return
+  }
   await loadSource({
     page: nextPage,
     perPage: nextPerPage,
@@ -895,6 +1062,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   scoped?.unregister(scopedApi)
   listResizeObserver?.disconnect()
+  if (remoteSearchTimer) clearTimeout(remoteSearchTimer)
+  remoteSearchSeq += 1
 })
 watch(
   () => [props.schema.source, data.value] as const,
@@ -912,6 +1081,9 @@ watch(
   },
   { deep: true },
 )
+watch(leftQuery, (term) => {
+  scheduleRemoteSearch(term)
+})
 watch(
   () => [mode.value, leftShown.value.length, rightShown.value.length] as const,
   async ([nextMode, nextLeftLength, nextRightLength], [prevMode, prevLeftLength, prevRightLength]) => {
@@ -982,7 +1154,7 @@ watch(
             {{ env.translate('Select.checkAll') }}
           </button>
         </div>
-        <template v-if="mode === 'associated'">
+        <template v-if="paneMode === 'associated'">
           <label v-if="searchable" class="vamis-transfer__search-wrap">
             <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
             <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
@@ -1003,7 +1175,7 @@ watch(
             @update:nodes="replaceOptionNodes"
           />
         </template>
-        <template v-else-if="mode === 'chained'">
+        <template v-else-if="paneMode === 'chained'">
           <label v-if="searchable" class="vamis-transfer__search-wrap">
             <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
             <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
@@ -1025,7 +1197,7 @@ watch(
           <input v-model="leftQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="searchPlaceholder" />
           <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
         </label>
-        <div v-if="mode === 'tree'" class="vamis-transfer__tree-selection">
+        <div v-if="paneMode === 'tree'" class="vamis-transfer__tree-selection">
           <SelectTreePane
             ref="leftTreePaneRef"
             :schema="treePaneSchema"
@@ -1037,14 +1209,18 @@ watch(
             :query="leftQuery"
             :loading-config="schema.loadingConfig"
             @update:nodes="replaceOptionNodes"
-            @toggle="replacePaneSelection"
+            @toggle="
+              remoteSearchActive
+                ? mergeSearchPaneSelection($event)
+                : replacePaneSelection($event)
+            "
           />
           <VamisScrollbar :target="leftTreeEl" />
         </div>
-        <div v-else-if="mode === 'table'" class="vamis-transfer__table-selection">
+        <div v-else-if="paneMode === 'table'" class="vamis-transfer__table-selection">
           <SelectTablePane
             ref="leftTablePaneRef"
-            :schema="paneSchema"
+            :schema="remoteSearchActive ? searchTableSchema : paneSchema"
             :nodes="tableNodes"
             :selected-values="selected"
             :disabled="disabled"

@@ -237,10 +237,20 @@ export function handleMockExtras(input: Input): MockPayload | null {
     const perPage = Number(query.perPage || 10)
     const page = Number(query.page || 1)
     const start = Math.max(0, (page - 1) * perPage)
+    const term = String(query.term || '').trim().toLowerCase()
+    const matched = term
+      ? LOAD_ONCE.filter((item) =>
+          `${item.label} ${item.value}`.toLowerCase().includes(term),
+        )
+      : LOAD_ONCE
     return {
       status: 0,
       msg: 'ok',
-      data: { count: LOAD_ONCE.length, page, items: LOAD_ONCE.slice(start, start + perPage) },
+      data: {
+        count: matched.length,
+        page,
+        items: matched.slice(start, start + perPage),
+      },
     }
   }
 

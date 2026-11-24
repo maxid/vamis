@@ -10,10 +10,10 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-function mount(schema: unknown) {
+function mount(schema: unknown, env?: Parameters<typeof embed>[3]) {
   const host = document.createElement('div')
   document.body.appendChild(host)
-  const scoped = embed(host, schema)
+  const scoped = embed(host, schema, undefined, env)
   mounts.push(scoped)
   return { host, scoped }
 }
@@ -512,6 +512,264 @@ describe('Transfer selectMode', () => {
       expect(result.textContent).toContain('法师')
       expect(result.textContent).toContain('战士')
       expect(result.textContent).toContain('打野')
+    })
+  })
+
+  it('loads searchApi results with term and restores base options when cleared', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      data: {
+        options: [
+          { label: '搜索曹操', value: 'search-caocao' },
+          { label: '搜索李白', value: 'search-libai' },
+        ],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'form',
+        name: 'transferSearchApiForm',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transferSearchApi',
+          searchable: true,
+          searchApi: '/api/transfer/search?term=${term}',
+          options: [
+            { label: '诸葛亮', value: 'zhugeliang' },
+            { label: '曹操', value: 'caocao' },
+          ],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const search = host.querySelector(
+      '.vamis-transfer__select .vamis-transfer__search',
+    ) as HTMLInputElement
+    search.value = '曹操'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+
+    await vi.waitFor(() => {
+      expect(fetcher).toHaveBeenCalled()
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).toContain(
+        '搜索曹操',
+      )
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).not.toContain(
+        '诸葛亮',
+      )
+    })
+    click(
+      [...host.querySelectorAll('.vamis-transfer__item')].find(
+        (item) => item.textContent?.includes('搜索曹操'),
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferSearchApiForm').transferSearchApi).toBe(
+        'search-caocao',
+      ),
+    )
+
+    search.value = ''
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).toContain(
+        '诸葛亮',
+      )
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).not.toContain(
+        '搜索曹操',
+      )
+    })
+  })
+
+  it('uses searchResultMode and searchResultColumns for the remote search pane', async () => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      data: {
+        options: [
+          { label: '搜索曹操', value: 'search-caocao', position: '上单' },
+        ],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'form',
+        name: 'transferSearchPaneForm',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transferSearchPane',
+          searchable: true,
+          searchApi: '/api/transfer/search?term=${term}',
+          searchResultMode: 'table',
+          columns: [{ name: 'label', label: '英雄' }],
+          searchResultColumns: [
+            { name: 'label', label: '搜索结果列' },
+            { name: 'position', label: '位置' },
+          ],
+          options: [{ label: '诸葛亮', value: 'zhugeliang' }],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const search = host.querySelector(
+      '.vamis-transfer__select .vamis-transfer__search',
+    ) as HTMLInputElement
+    search.value = '曹操'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-select__table thead')?.textContent).toContain(
+        '搜索结果列',
+      ),
+    )
+    expect(host.querySelector('.vamis-select__table thead')?.textContent).toContain(
+      '位置',
+    )
+    expect(host.querySelector('.vamis-select__table thead')?.textContent).not.toContain(
+      '英雄',
+    )
+
+    await vi.waitFor(() =>
+      expect(
+        host.querySelector('.vamis-select__table tbody tr')?.textContent,
+      ).toContain('搜索曹操'),
+    )
+    click(host.querySelector('.vamis-select__table tbody tr'))
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferSearchPaneForm').transferSearchPane).toBe(
+        'search-caocao',
+      ),
+    )
+  })
+
+  it.each([
+    ['tree', '.vamis-tree__content'],
+    ['chained', '.vamis-select__chained-item'],
+  ])('uses %s pane for remote search results', async (searchResultMode, selector) => {
+    const fetcher = vi.fn(async () => ({
+      status: 0,
+      data: {
+        options: [
+          {
+            label: '搜索结果组',
+            children: [
+              { label: '搜索曹操', value: 'search-caocao' },
+            ],
+          },
+        ],
+      },
+    }))
+    const { host, scoped } = mount(
+      {
+        type: 'form',
+        name: `transferSearchPane-${searchResultMode}`,
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transferSearchPane',
+          searchable: true,
+          searchApi: '/api/mock2/options/transfer?term=${term}',
+          searchResultMode,
+          options: [{ label: '诸葛亮', value: 'zhugeliang' }],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const search = host.querySelector(
+      '.vamis-transfer__select .vamis-transfer__search',
+    ) as HTMLInputElement
+    search.value = '曹操'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+
+    await vi.waitFor(() =>
+      expect(
+        [...host.querySelectorAll(selector)].find(
+          (item) => item.textContent?.trim() === '搜索曹操',
+        ),
+      ).toBeTruthy(),
+    )
+    click(
+      [...host.querySelectorAll(selector)].find(
+        (item) => item.textContent?.trim() === '搜索曹操',
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(
+        formData(scoped, `transferSearchPane-${searchResultMode}`)
+          .transferSearchPane,
+      ).toBe('search-caocao'),
+    )
+  })
+
+  it('paginates searchApi results with term and page metadata', async () => {
+    const fetcher = vi.fn(async (_api, data) => {
+      const page = Number((data as Record<string, unknown>)?.page || 1)
+      return {
+        status: 0,
+        data: {
+          page,
+          count: 12,
+          options: [
+            {
+              label: `搜索第 ${page} 页`,
+              value: `search-page-${page}`,
+            },
+          ],
+        },
+      }
+    })
+    const { host } = mount(
+      {
+        type: 'form',
+        name: 'transferSearchPaginationForm',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transferSearchPagination',
+          searchable: true,
+          searchApi: '/api/mock2/options/transfer?term=${term}&page=${page}&perPage=${perPage}',
+          pagination: {
+            enable: true,
+            layout: ['pager', 'total'],
+            perPageAvailable: [10, 20],
+          },
+          options: [],
+        },
+      },
+      { fetcher },
+    )
+
+    await nextTick()
+    const search = host.querySelector(
+      '.vamis-transfer__select .vamis-transfer__search',
+    ) as HTMLInputElement
+    search.value = 'Laura'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).toContain(
+        '搜索第 1 页',
+      ),
+    )
+    expect(host.querySelector('[data-pagination="total"]')?.textContent).toContain(
+      '12',
+    )
+
+    click(host.querySelector('[data-pager="next"]'))
+    await vi.waitFor(() => {
+      expect(fetcher).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: expect.stringContaining('page=2'),
+        }),
+        expect.objectContaining({ term: 'Laura', page: 2 }),
+      )
+      expect(host.querySelector('.vamis-transfer__select')?.textContent).toContain(
+        '搜索第 2 页',
+      )
     })
   })
 })
