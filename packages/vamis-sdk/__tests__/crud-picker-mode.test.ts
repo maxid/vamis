@@ -287,4 +287,79 @@ describe('CRUD picker mode', () => {
     expect(host.querySelector('[data-pagination="pager"]')).toBeTruthy()
     expect(host.querySelector('[data-pagination="go"]')).toBeTruthy()
   })
+
+  it('expands nested CRUD rows one branch at a time and cascades picker selection', async () => {
+    const { host, scoped } = mount({
+      type: 'page',
+      data: {
+        pickerRows: [
+          {
+            id: 'root-a',
+            name: 'Root A',
+            children: [
+              { id: 'a-1', name: 'Child A1' },
+              { id: 'a-2', name: 'Child A2' },
+            ],
+          },
+          {
+            id: 'root-b',
+            name: 'Root B',
+            children: [{ id: 'b-1', name: 'Child B1' }],
+          },
+        ],
+      },
+      body: {
+        type: 'crud',
+        name: 'crudPickerTree',
+        pickerMode: true,
+        multiple: true,
+        source: '${pickerRows}',
+        columns: [{ name: 'name', label: '名称' }],
+      },
+    })
+
+    await nextTick()
+    const rowTexts = () =>
+      [...host.querySelectorAll('.vamis-crud-body table tbody tr')].map((row) =>
+        (row.textContent || '').replace(/\s+/g, ' ').trim(),
+      )
+    expect(rowTexts()).toHaveLength(2)
+    expect(rowTexts().join(' ')).not.toContain('Child A1')
+
+    const expandRootA = host.querySelector(
+      '.vamis-crud-body table tbody tr .vamis-table__expand-btn',
+    ) as HTMLElement
+    expect(expandRootA).toBeTruthy()
+    expandRootA.click()
+    await vi.waitFor(() => expect(rowTexts()).toHaveLength(4))
+    expect(rowTexts().join(' ')).toContain('Child A1')
+    expect(rowTexts().join(' ')).not.toContain('Child B1')
+
+    const childA1 = [...host.querySelectorAll('.vamis-crud-body table tbody tr')].find(
+      (row) => (row.textContent || '').includes('Child A1'),
+    ) as HTMLElement
+    childA1.click()
+    const crud = scoped.getComponentByName('crudPickerTree') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() =>
+      expect(
+        (crud.getData?.().selectedItems as Array<{ id: string }>).map(
+          (item) => item.id,
+        ),
+      ).toEqual(['a-1']),
+    )
+
+    const childA2 = [...host.querySelectorAll('.vamis-crud-body table tbody tr')].find(
+      (row) => (row.textContent || '').includes('Child A2'),
+    ) as HTMLElement
+    childA2.click()
+    await vi.waitFor(() =>
+      expect(
+        (crud.getData?.().selectedItems as Array<{ id: string }>).map(
+          (item) => item.id,
+        ).sort(),
+      ).toEqual(['a-1', 'a-2', 'root-a']),
+    )
+  })
 })

@@ -82,6 +82,45 @@ function listPayload(rows: SampleRow[], query: Record<string, string>): MockPayl
   }
 }
 
+function treePayload(query: Record<string, string>): MockPayload {
+  const rows = cloneRows(sampleRows)
+  const suffix = (row: SampleRow) => {
+    let hash = 0
+    for (const ch of `${row.id}:${row.browser}`) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0
+    return hash.toString(36).slice(-6)
+  }
+  const decorate = (row: SampleRow): Record<string, any> => ({
+    ...row,
+    engine: `${row.engine} - ${suffix(row)}`,
+  })
+  const children = [rows[1], rows[2], rows[3]].map(decorate)
+  const nested = [
+    { ...decorate(rows[0]), children },
+    { ...decorate(rows[4]), children: [decorate(rows[5])] },
+    decorate(rows[6]),
+    decorate(rows[7]),
+    decorate(rows[8]),
+    decorate(rows[9]),
+  ].filter((row) => {
+    const keywords = String(query.keywords || '').trim().toLowerCase()
+    return !keywords || JSON.stringify(row).toLowerCase().includes(keywords)
+  })
+  const page = Number(query.page || 1)
+  const perPage = Number(query.perPage || 10)
+  const start = Math.max(0, (page - 1) * perPage)
+  const items = perPage > 0 ? nested.slice(start, start + perPage) : nested
+  return {
+    status: 0,
+    msg: 'ok',
+    data: {
+      count: nested.length,
+      total: nested.length,
+      rows: items,
+      items,
+    },
+  }
+}
+
 function idsFrom(pathname: string, body: Record<string, any> = {}): string[] {
   if (body.ids != null && String(body.ids).trim()) {
     return String(body.ids)
@@ -194,12 +233,12 @@ export function handleMockApi(input: {
   } else if (pathname === '/api/amis-mock/sample' || pathname === '/api/sample') {
     pathname = '/api/mock2/sample'
   }
-  if (pathname === '/api/mock2/crud/tree') {
-    pathname = '/api/mock2/sample'
-  }
-
   const extra = handleMockExtras({ method, pathname, query, body })
   if (extra) return extra
+
+  if (pathname === '/api/mock2/crud/tree' && method === 'GET') {
+    return treePayload(query)
+  }
 
   if (pathname === '/api/mapping') {
     return { status: 0, data: { id: 1 } }

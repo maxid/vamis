@@ -556,6 +556,131 @@ describe('Picker value and pickerSchema bridge', () => {
     )
   })
 
+  it('expands nested embed options and commits a child selection', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerEmbedTreeForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        embed: true,
+        multiple: true,
+        pickerSchema: {
+          mode: 'table',
+          columns: [{ name: 'label', label: '选项' }],
+        },
+        options: [
+          {
+            label: '前端',
+            value: 'frontend',
+            children: [
+              { label: 'Vue', value: 'vue' },
+              { label: 'React', value: 'react' },
+            ],
+          },
+          {
+            label: '后端',
+            value: 'backend',
+            children: [{ label: 'Node', value: 'node' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-body table tbody tr')).toBeTruthy(),
+    )
+    const rootRows = [
+      ...document.querySelectorAll('.vamis-crud-body table tbody tr'),
+    ]
+    expect(rootRows.map((row) => row.textContent).join(' ')).not.toContain('Vue')
+
+    const expand = rootRows[0].querySelector(
+      '.vamis-table__expand-btn',
+    ) as HTMLElement
+    expect(expand).toBeTruthy()
+    expand.click()
+    const vueRow = await vi.waitFor(() => {
+      const row = [...document.querySelectorAll('.vamis-crud-body table tbody tr')].find(
+        (item) => (item.textContent || '').includes('Vue'),
+      ) as HTMLElement | undefined
+      expect(row).toBeTruthy()
+      return row as HTMLElement
+    })
+    vueRow.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerEmbedTreeForm').hero).toBe('vue'),
+    )
+  })
+
+  it('loads a nested tree source through the generated CRUD table', async () => {
+    const treeRows = [
+      {
+        id: 1,
+        engine: 'Root A',
+        children: [{ id: 2, engine: 'Child A1' }],
+      },
+      { id: 3, engine: 'Root B' },
+    ]
+    const { host, scoped } = mount(
+      {
+        type: 'form',
+        name: 'pickerRemoteTreeForm',
+        actions: [],
+        body: {
+          type: 'picker',
+          name: 'hero',
+          label: '英雄',
+          embed: true,
+          multiple: true,
+          source: '/api/picker-tree',
+          valueField: 'id',
+          labelField: 'engine',
+          joinValues: false,
+          pickerSchema: {
+            mode: 'table',
+            columns: [{ name: 'engine', label: '名称' }],
+          },
+        },
+      },
+      {
+        fetcher: async () => ({
+          status: 0,
+          data: { total: treeRows.length, rows: treeRows },
+        }),
+      },
+    )
+
+    await vi.waitFor(() =>
+      expect(document.querySelectorAll('.vamis-crud-body table tbody tr')).toHaveLength(
+        2,
+      ),
+    )
+    const root = document.querySelector(
+      '.vamis-crud-body table tbody tr',
+    ) as HTMLElement
+    expect(root.textContent).toContain('Root A')
+    ;(root.querySelector('.vamis-table__expand-btn') as HTMLElement).click()
+    const child = await vi.waitFor(() => {
+      const row = [...document.querySelectorAll('.vamis-crud-body table tbody tr')].find(
+        (item) => (item.textContent || '').includes('Child A1'),
+      ) as HTMLElement | undefined
+      expect(row).toBeTruthy()
+      return row as HTMLElement
+    })
+    child.click()
+    await vi.waitFor(() =>
+      expect(
+        (formData(scoped, 'pickerRemoteTreeForm').hero as Array<{ id: number }>).map(
+          (item) => item.id,
+        ).sort((a, b) => a - b),
+      ).toEqual([1, 2]),
+    )
+  })
+
   it('uses the drawer host for modalMode drawer', async () => {
     const { host, scoped } = mount({
       type: 'form',

@@ -1,6 +1,6 @@
 # CRUD 增删改查 · `crud` 设计
 
-> 状态：**进行中 71%** · 复杂度：**XL 特重**
+> 状态：**进行中 72%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/crud) · Amis：`/zh-CN/components/crud`
 > 盘点日期：2026-11-18。本文是**研发设计文档**；属性 / 事件 / 动作全表以在线文档为准。
 
@@ -29,12 +29,14 @@ CRUD 是“查询 + 列表 + 分页 + 行操作 + 批量操作 + 弹层表单”
 7. **包边界/样式**：渲染器无 `<style>`；CRUD/toolbar/统计/操作列走 `--crud-*` token；深色只换 token。
 8. **Picker 复用**：`pickerMode` 自动选择；默认 Picker 用 `mode: list`，单选 radio、多选 Checkbox；`value` + `primaryField` 回填已有选中项，普通 Picker 无 `bulkActions` 时不画“已选 N”。
 9. **已选栏**：多选且 `keepItemSelectionOnPageChange` 时，选中项通过独立 `Crud-selection` 区显示；标签可单项移除，末尾“清空”只清 CRUD 选择，确认后由 Picker 写回。
+10. **行树**：`mode: table` 的 `children` 行树复用 core `tableBuildRows / tableFlattenRows`；默认折叠，只展开当前分支；多选父节点级联子节点，`expandConfig` 控制默认展开。
 
 ### 1.2 边界用例
 
 - `api` 缺失、`source`/本地 items、返回空列表、返回错误结构
 - 远程分页 / `loadDataOnce` / `perPage` 切换 / 排序后分页
 - `syncLocation` 打开时首屏、前进后退、筛选与 page 的覆盖顺序
+- `children` 行树：默认折叠、单分支展开、父/子级联选择、跨页保留、`expandConfig`
 - 批量选择：跨页、`keepItemSelectionOnPageChange`、无 `primaryField`、空选择
 - `bulkActions` 默认启用、`selectable: true` 但无 bulk、`checkOnItemClick`
 - 行操作 dialog / drawer 的 `reload` 目标、关闭回写、嵌套 CRUD
@@ -153,6 +155,7 @@ store.items ──> list / 手写 table / Cards
 - Picker 多选栏：`pickerMode + multiple + keepItemSelectionOnPageChange` 时渲染 `已选N条：`、可删除标签和“清空”；普通 list 顶部已选计数仍只属于 bulkActions。
 - `strictMode`：主键身份比较统一走严格 `===`；默认非严格模式允许 `1` 与 `"1"` 等价。seed、单选替换、多选移除与全选共用该比较器。
 - `footerToolbar`：支持 `statistics` 关键字、`pagination` schema 与其它 SchemaRenderer 节点；自定义 pagination 会补当前 page / perPage / total / lastPage，并保留作者 `layout` 与 `showPageInput`。右栏 `max-width:100%`，Pagination 根 `white-space:normal`，窄弹框内按 Amis 自动分成 perPage / pager / go 行。
+- `children` 行树：手写 Table 壳不再把子行拍平；`mode: table` 按 core 行树算法渲染缩进、展开钮和 `expandConfig`，选择走同一 `selectedItems`，Picker 的 `pickerSchema.mode: table` 因而不需要另造树协议。
 - 对照记录：桌面 / 移动 **61/92**（2026-11-24，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。

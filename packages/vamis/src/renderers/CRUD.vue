@@ -14,10 +14,13 @@ import {
   requestApi,
   runOnEvent,
   setByPathCopy,
+  tableBuildRows,
+  tableFlattenRows,
   useEnv,
   useRendererHub,
   useScoped,
   type SchemaObject,
+  type TableRowNode,
 } from '@vamis/core'
 import {
   Button,
@@ -28,6 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  VamisCaret,
   VamisClose,
   VamisIcon,
 } from '@vamis/ui'
@@ -88,9 +92,119 @@ const isCardsMode = computed(() => {
   return mode === 'cards' || mode === 'card'
 })
 const isListMode = computed(() => String(props.schema.mode || 'table').toLowerCase() === 'list')
+const childrenColumnName = computed(() =>
+  String(props.schema.childrenColumnName || 'children'),
+)
+const crudRowTree = computed<TableRowNode[]>(() => {
+  const seen = new Set<string>()
+  return tableBuildRows(store.items, childrenColumnName.value, (row, path) => {
+    const primary = row[primaryField.value]
+    let id = primary == null ? path : String(primary)
+    if (seen.has(id)) id = `${id}@${path}`
+    seen.add(id)
+    return id
+  })
+})
+const allCrudRows = computed(() => tableFlattenRows(crudRowTree.value))
+const isNested = computed(() =>
+  allCrudRows.value.some((row) => row.children.length > 0),
+)
+const expandedCrudRows = ref(new Set<string>())
+const expandAllEnabled = computed(() => {
+  const config = props.schema.expandConfig
+  if (!config || typeof config !== 'object' || Array.isArray(config)) {
+    return true
+  }
+  const conf = config as Record<string, unknown>
+  return conf.expandAll !== false && conf.accordion !== true
+})
+const visibleCrudRows = computed(() =>
+  tableFlattenRows(crudRowTree.value, crudRowExpanded),
+)
+const allCrudExpanded = computed(() => {
+  const expandable = allCrudRows.value.filter(crudRowExpandable)
+  return (
+    expandable.length > 0 &&
+    expandable.every((row) => expandedCrudRows.value.has(row.id))
+  )
+})
 const listDisplayColumn = computed(
   () => columns.value.find((col) => col.type !== 'operation') || columns.value[0],
 )
+
+function crudRowExpanded(row: TableRowNode) {
+  return expandedCrudRows.value.has(row.id)
+}
+
+function crudRowExpandable(row: TableRowNode) {
+  return row.children.length > 0
+}
+
+function seedCrudExpansion(preserveUserState = false) {
+  const config = props.schema.expandConfig
+  const conf =
+    config && typeof config === 'object' && !Array.isArray(config)
+      ? (config as Record<string, unknown>)
+      : {}
+  if (preserveUserState && expandedCrudRows.value.size) {
+    const current = new Set(
+      [...expandedCrudRows.value].filter((id) =>
+        allCrudRows.value.some((row) => row.id === id),
+      ),
+    )
+    expandedCrudRows.value = current
+    return
+  }
+  const next = new Set<string>()
+  if (conf.expand === 'all' && conf.accordion !== true) {
+    for (const row of allCrudRows.value) {
+      if (crudRowExpandable(row)) next.add(row.id)
+    }
+  } else if (conf.expand === 'first') {
+    const first = crudRowTree.value.find(crudRowExpandable)
+    if (first) next.add(first.id)
+  }
+  expandedCrudRows.value = next
+}
+
+function toggleCrudRowExpanded(row: TableRowNode) {
+  if (!crudRowExpandable(row)) return
+  const next = new Set(expandedCrudRows.value)
+  if (next.has(row.id)) {
+    next.delete(row.id)
+  } else if (props.schema.expandConfig && typeof props.schema.expandConfig === 'object') {
+    const conf = props.schema.expandConfig as Record<string, unknown>
+    if (conf.accordion === true) {
+      for (const other of allCrudRows.value) {
+        if (other.depth === row.depth) next.delete(other.id)
+      }
+    }
+    next.add(row.id)
+  } else {
+    next.add(row.id)
+  }
+  expandedCrudRows.value = next
+}
+
+function toggleCrudExpandAll() {
+  if (!expandAllEnabled.value) return
+  const expandable = allCrudRows.value.filter(crudRowExpandable)
+  const allExpanded =
+    expandable.length > 0 &&
+    expandable.every((row) => expandedCrudRows.value.has(row.id))
+  expandedCrudRows.value = allExpanded
+    ? new Set()
+    : new Set(expandable.map((row) => row.id))
+}
+
+watch(
+  crudRowTree,
+  () => seedCrudExpansion(true),
+  { immediate: true },
+)
+watch(() => props.schema.expandConfig, () => seedCrudExpansion(), {
+  deep: true,
+})
 const showSelectionBar = computed(
   () =>
     multiple.value &&
@@ -537,16 +651,78 @@ function selectionOptionPool() {
   const embeddedOptions = Array.isArray(props.data.items)
     ? (props.data.items as Record<string, any>[])
     : []
-  return [...store.items, ...allItems.value, ...embeddedOptions]
+  const embeddedTree = tableFlattenRows(
+    tableBuildRows(embeddedOptions, childrenColumnName.value),
+  ).map((row) => row.data)
+  const currentTree = tableFlattenRows(
+    tableBuildRows(store.items, childrenColumnName.value),
+  ).map((row) => row.data)
+  const fullTree = tableFlattenRows(
+    tableBuildRows(allItems.value, childrenColumnName.value),
+  ).map((row) => row.data)
+  return [...currentTree, ...fullTree, ...embeddedTree]
 }
 
 function isSelected(row: Record<string, any>) {
   return store.selectedItems.some((item) => sameRowIdentity(item, row))
 }
 
+function selectedIdsForCurrentTree() {
+  const ids = new Set<string>()
+  for (const node of allCrudRows.value) {
+    if (isSelected(node.data)) ids.add(node.id)
+  }
+  return ids
+}
+
+function applyTreeSelection(ids: Set<string>) {
+  const currentTree = allCrudRows.value
+  const preserved = store.selectedItems.filter(
+    (item) => !currentTree.some((node) => sameRowIdentity(node.data, item)),
+  )
+  store.selectedItems = [
+    ...preserved,
+    ...currentTree.filter((node) => ids.has(node.id)).map((node) => node.data),
+  ]
+}
+
+function markTreeNode(
+  node: TableRowNode,
+  checked: boolean,
+  ids: Set<string>,
+) {
+  if (checked) ids.add(node.id)
+  else ids.delete(node.id)
+  for (const child of node.children) markTreeNode(child, checked, ids)
+}
+
+function refreshTreeAncestors(node: TableRowNode, ids: Set<string>) {
+  let parent = node.parent
+  while (parent) {
+    if (parent.children.every((child) => ids.has(child.id))) ids.add(parent.id)
+    else ids.delete(parent.id)
+    parent = parent.parent
+  }
+}
+
+function toggleTreeRow(node: TableRowNode, checked: boolean) {
+  const ids = selectedIdsForCurrentTree()
+  markTreeNode(node, checked, ids)
+  refreshTreeAncestors(node, ids)
+  applyTreeSelection(ids)
+}
+
 function toggleRow(row: Record<string, any>, checked: boolean) {
   if (!multiple.value) {
     store.selectedItems = checked ? [row] : []
+    notifyPickerSelection()
+    return
+  }
+  const node = allCrudRows.value.find((item) =>
+    sameRowIdentity(item.data, row),
+  )
+  if (node && !isListMode.value && !isCardsMode.value) {
+    toggleTreeRow(node, checked)
     notifyPickerSelection()
     return
   }
@@ -559,6 +735,21 @@ function toggleRow(row: Record<string, any>, checked: boolean) {
     (item) => !sameRowIdentity(item, row),
   )
   notifyPickerSelection()
+}
+
+function nodeSelected(node: TableRowNode) {
+  return isSelected(node.data)
+}
+
+function nodePartial(node: TableRowNode): boolean {
+  if (!multiple.value || !node.children.length) return false
+  const selectedChildren = node.children.filter((child) =>
+    isSelected(child.data),
+  ).length
+  return (
+    (selectedChildren > 0 && selectedChildren < node.children.length) ||
+    node.children.some((child) => nodePartial(child))
+  )
 }
 
 function onCrudRowClick(row: Record<string, any>, event: MouseEvent) {
@@ -577,13 +768,35 @@ function onCrudRowClick(row: Record<string, any>, event: MouseEvent) {
 }
 
 const allSelected = computed(
-  () => store.items.length > 0 && store.items.every((row) => isSelected(row)),
+  () => {
+    const rows =
+      isListMode.value || isCardsMode.value
+        ? store.items
+        : allCrudRows.value.map((node) => node.data)
+    return rows.length > 0 && rows.every((row) => isSelected(row))
+  },
 )
 const someSelected = computed(
-  () => store.items.some((row) => isSelected(row)) && !allSelected.value,
+  () => {
+    const rows =
+      isListMode.value || isCardsMode.value
+        ? store.items
+        : allCrudRows.value.map((node) => node.data)
+    return rows.some((row) => isSelected(row)) && !allSelected.value
+  },
 )
 
 function toggleAll(checked: boolean) {
+  if (!isListMode.value && !isCardsMode.value) {
+    const ids = selectedIdsForCurrentTree()
+    for (const node of allCrudRows.value) {
+      if (checked) ids.add(node.id)
+      else ids.delete(node.id)
+    }
+    applyTreeSelection(ids)
+    notifyPickerSelection()
+    return
+  }
   if (checked) {
     store.items.forEach((row) => {
       if (!isSelected(row)) store.selectedItems.push(row)
@@ -912,27 +1125,41 @@ onBeforeUnmount(() => {
             />
           </TableHead>
           <TableHead
-            v-for="col in columns"
+            v-for="(col, colIndex) in columns"
             :key="`${col.name || col.label || ''}`"
             :class="col.name && col.sortable !== false && col.type !== 'operation' ? 'cursor-pointer select-none' : ''"
             @click="toggleSort(col)"
           >
+            <a
+              v-if="isNested && colIndex === 0 && expandAllEnabled"
+              class="vamis-table__expand-btn"
+              :class="{ 'is-active': allCrudExpanded }"
+              role="button"
+              aria-label="展开全部"
+              @click.stop="toggleCrudExpandAll"
+            >
+              <VamisCaret variant="tree" />
+            </a>
             {{ col.label || col.name }}{{ sortMark(col) }}
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-if="!store.items.length">
+        <TableRow v-if="!crudRowTree.length">
           <TableCell :colspan="Math.max(columns.length, 1) + (selectable ? 1 : 0)" class="vamis-crud__empty py-10 text-center">
             暂无数据
           </TableCell>
         </TableRow>
         <TableRow
-          v-for="row in store.items"
-          :key="row.id ?? JSON.stringify(row)"
-          :data-state="isSelected(row) ? 'selected' : undefined"
-          :class="{ 'is-checked': isSelected(row) }"
-          @click="onCrudRowClick(row, $event)"
+          v-for="node in visibleCrudRows"
+          :key="node.id"
+          :data-state="nodeSelected(node) ? 'selected' : undefined"
+          :class="{
+            'is-checked': nodeSelected(node),
+            'is-expanded': crudRowExpanded(node),
+            'is-expandable': crudRowExpandable(node),
+          }"
+          @click="onCrudRowClick(node.data, $event)"
         >
           <TableCell v-if="selectable">
             <button
@@ -940,72 +1167,93 @@ onBeforeUnmount(() => {
               type="button"
               class="vamis-radio-dot"
               role="radio"
-              :aria-checked="isSelected(row)"
-              @click.stop="toggleRow(row, true)"
+              :aria-checked="nodeSelected(node)"
+              @click.stop="toggleRow(node.data, true)"
             />
             <Checkbox
               v-else
-              :model-value="isSelected(row)"
+              :model-value="nodePartial(node) ? 'indeterminate' : nodeSelected(node)"
               @click.stop
-              @update:model-value="toggleRow(row, $event === true)"
+              @update:model-value="toggleRow(node.data, $event === true)"
             />
           </TableCell>
-          <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
+          <TableCell
+            v-for="(col, colIndex) in columns"
+            :key="`${col.name || col.label || ''}`"
+            :class="{ 'vamis-table__primary-cell': isNested && colIndex === 0 }"
+          >
+            <template v-if="isNested && colIndex === 0">
+              <span
+                class="vamis-table__indent"
+                :style="{ paddingLeft: `calc(${node.depth - 1} * var(--table-tree-indent))` }"
+              />
+              <a
+                v-if="crudRowExpandable(node)"
+                class="vamis-table__expand-btn"
+                :class="{ 'is-active': crudRowExpanded(node) }"
+                role="button"
+                :aria-expanded="crudRowExpanded(node)"
+                @click.stop="toggleCrudRowExpanded(node)"
+              >
+                <VamisCaret variant="tree" />
+              </a>
+              <span v-else class="vamis-table__expand-space" />
+            </template>
             <template v-if="col.type === 'operation'">
               <div class="flex gap-1">
                 <SchemaRenderer
                   v-for="(btn, bi) in operationButtons(col)"
                   :key="bi"
                   :schema="operationButtonSchema(btn)"
-                  :extra-data="row"
+                  :extra-data="node.data"
                 />
               </div>
             </template>
             <RowValueHost
               v-else-if="col.type && col.type !== 'text' && col.type !== 'plain'"
               :isolate-names="isFormItemType(String(col.type))"
-              @change="onCellChange(row, $event)"
+              @change="onCellChange(node.data, $event)"
             >
-              <SchemaRenderer :schema="cellSchema(col)" :extra-data="row" />
+              <SchemaRenderer :schema="cellSchema(col)" :extra-data="node.data" />
             </RowValueHost>
             <template v-else-if="quickEditable(col)">
               <select
-                v-if="editingCell === cellEditKey(row, col) && quickEditType(col) === 'select'"
+                v-if="editingCell === cellEditKey(node.data, col) && quickEditType(col) === 'select'"
                 v-model="draftValue"
                 class="vamis-crud__edit-field h-7 w-full rounded border px-1"
                 autofocus
                 @click.stop
-                @change="commitCellEdit(row, col)"
-                @blur="commitCellEdit(row, col)"
+                @change="commitCellEdit(node.data, col)"
+                @blur="commitCellEdit(node.data, col)"
               >
                 <option v-for="opt in quickEditOptions(col)" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
               </select>
               <textarea
-                v-else-if="editingCell === cellEditKey(row, col) && quickEditType(col) === 'textarea'"
+                v-else-if="editingCell === cellEditKey(node.data, col) && quickEditType(col) === 'textarea'"
                 v-model="draftValue"
                 class="vamis-crud__edit-field min-h-16 w-full rounded border px-1"
                 autofocus
                 @click.stop
-                @blur="commitCellEdit(row, col)"
+                @blur="commitCellEdit(node.data, col)"
               />
               <input
-                v-else-if="editingCell === cellEditKey(row, col)"
+                v-else-if="editingCell === cellEditKey(node.data, col)"
                 v-model="draftValue"
                 :type="quickEditType(col) === 'input-number' ? 'number' : 'text'"
                 class="vamis-crud__edit-field h-7 w-full rounded border px-1"
                 autofocus
                 @click.stop
-                @blur="commitCellEdit(row, col)"
-                @keydown.enter.prevent="commitCellEdit(row, col)"
+                @blur="commitCellEdit(node.data, col)"
+                @keydown.enter.prevent="commitCellEdit(node.data, col)"
                 @keydown.esc.prevent="cancelCellEdit"
               >
               <span v-else class="inline-flex items-center gap-1">
-                {{ row[String(col.name || '')] ?? '' }}
-                <button type="button" class="vamis-crud__edit" aria-label="编辑" @click.stop="startCellEdit(row, col)"><VamisIcon name="pencil" /></button>
+                {{ node.data[String(col.name || '')] ?? '' }}
+                <button type="button" class="vamis-crud__edit" aria-label="编辑" @click.stop="startCellEdit(node.data, col)"><VamisIcon name="pencil" /></button>
               </span>
             </template>
-            <PopOverHost v-else :schema="col" :data="row">
-              <span>{{ col.name != null ? row[col.name] ?? '' : '' }}</span>
+            <PopOverHost v-else :schema="col" :data="node.data">
+              <span>{{ col.name != null ? node.data[col.name] ?? '' : '' }}</span>
             </PopOverHost>
           </TableCell>
         </TableRow>

@@ -1298,6 +1298,12 @@ alwaysApply: true
 - 触及：`picker` `crud`
 - 规则：Amis `Form/Picker.tsx` `buildSchema` / `renderBody`、`CRUD.tsx` List/pickerMode；`packages/vamis/src/renderers/form/Picker.vue`、`packages/vamis/src/renderers/CRUD.vue`
 
+### Picker 树选择走 CRUD table 的 children 行树
+- 踩过：把 Picker 的“树选择”当成 InputTree / TreeSelect 的私有模式，或让默认 CRUD list 直接递归 children，都会偏离 Amis。Amis `Picker.buildSchema()` 仍产出 `type: crud`，树源由 `pickerSchema.mode: table` 的 Table 行树承载；默认折叠，展开当前分支，多选父节点级联子节点。
+- 稳定做法：CRUD 用 `tableBuildRows` / `tableFlattenRows` 建行树，首列缩进和展开钮复用 `.vamis-table__expand-btn`；`expandConfig.expand` 支持 first/all，默认不展开。选择协议仍是 `selectedItems`：父/子级联只改变 CRUD store，Picker confirm 继续按 `valueField` 序列化，不再造 InputTree 契约。mock `/api/mock2/crud/tree` 必须返回 `rows + children`，不能用扁平 sample 替代。
+- 触及：`picker` `crud` `table` mock
+- 规则：Amis `Form/Picker.tsx buildSchema`、`CRUD.tsx renderBody`、`Table` 行树；`packages/vamis/src/renderers/CRUD.vue`、`playground/src/mock/handler.ts`
+
 ### Picker 文档主 TOC 跟 Amis，补充示例放在差异前
 - 踩过：把多选、远程、分组、分页、自定义弹层都拆成 H2，页面 TOC 比 Amis 长一倍；Amis 已有的 OverflowConfig、三个事件小节反而缺失。
 - 稳定做法：主章节固定为 **基本用法 → 配置 pickerSchema → 内嵌模式 → 限制标签最大展示数量 → 属性表 / OverflowConfig → 事件表 / change / itemClick / staticItemClick → 和 Amis 文档的差异**。多选、source、分组、perPage 只作为事件后的粗体补充段落，不再进 TOC；Vamis 未接项在最后的差异节明确列出。
@@ -1306,7 +1312,7 @@ alwaysApply: true
 
 ### 照搬 Amis live schema 时先过 Vamis 严格 JSON 与 mock
 - 踩过：Amis Markdown 的 schema 能接受尾逗号、未引号对象 key，Vamis 文档解析器按严格 JSON 会整块报错；`/api/mock2/crud/tree` 在 Amis mock 存在，Vamis 站直接 404，导致内嵌与 maxTagCount 看起来“未实现”。
-- 稳定做法：同步 `schema: scope="body"` 后先跑 `pnpm sdk:build` 收割，再在文档站滚动到每块确认无 `Expected ... in JSON` / `未实现的 mock`。严格化 tail comma、未引号 key；常用 Amis mock 路径不足时在 `playground/src/mock/handler.ts` 做别名（如 crud/tree → sample），不要退回普通 yaml 代码块。
+- 稳定做法：同步 `schema: scope="body"` 后先跑 `pnpm sdk:build` 收割，再在文档站滚动到每块确认无 `Expected ... in JSON` / `未实现的 mock`。严格化 tail comma、未引号 key；常用 Amis mock 路径不足时在 `playground/src/mock/handler.ts` 补对应语义的 mock（如 `crud/tree` 返回 `rows + children`），不要用扁平 sample 冒充树源，也不要退回普通 yaml 代码块。
 - 触及：`picker` 文档 / mock
 - 规则：`website/src/components/form/picker.md`；`playground/src/mock/handler.ts`；`pnpm sdk:build` + `pnpm compare --page picker`
 

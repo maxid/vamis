@@ -5,8 +5,8 @@ outline: deep
 
 # Picker 列表选择器
 
-::: warning 实现进度 98% · 进行中
-默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`staticItemClick`、`strictMode`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。余树选择。
+::: warning 实现进度 99% · 进行中
+默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`staticItemClick`、`strictMode`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。`pickerSchema.mode: table` 的 `children` 行树也已按 Table 展开与级联选择。
 :::
 
 列表选取，在功能和 Select 类似，但它能显示更复杂的信息。Picker 属于普通表单项，通用字段见 [FormItem](./formitem)。
@@ -1386,6 +1386,23 @@ options:
         value: node
 ```
 
+**补充：树选择。** `source` 返回行数据时，配置 `pickerSchema.mode: table`；CRUD 按 Table 的行树规则渲染 `children`，默认折叠，展开钮只展开当前分支，父/子多选按 Table 的级联规则回写：
+
+```yaml
+type: picker
+name: picker
+label: 树选择
+multiple: true
+valueField: id
+labelField: engine
+source: /api/mock2/crud/tree
+pickerSchema:
+  mode: table
+  columns:
+    - name: engine
+      label: Rendering engine
+```
+
 **补充：分页。** `perPage` 交给默认 CRUD 本地分页，跨页选中由 `keepItemSelectionOnPageChange` 保留。
 
 `picker` 没有专属动作。
@@ -1395,5 +1412,5 @@ options:
 - 章节顺序与 Amis 6.13 对齐：基本用法、配置 pickerSchema、内嵌模式、限制标签最大展示数量、属性表 / OverflowConfig、事件表 / change / itemClick / staticItemClick。
 - 默认 Picker 已按 Amis `buildSchema()` 生成 CRUD `mode: list`；500px dialog、`modalMode: drawer`、drawer 桌面 500px / 窄屏全宽、已有值回填、选中行与 `itemClearable` 已对齐。
 - `overflowConfig.maxTagCount`、`displayPosition`、`overflowTagPopover`、`overflowTagPopoverInCRUD` 已接。
-- `staticItemClick` 与 `strictMode` 已接；树选择尚未完成。
+- `staticItemClick` 与 `strictMode` 已接；树源通过 `pickerSchema.mode: table` 复用 CRUD/Table 行树，不另造 Picker 私有树协议。
 - Vamis 额外保留顶层 `maxTagCount`、`clearable`、`placeholder`、`perPage` 兼容字段；Amis 主字段仍以本文属性表为准。
