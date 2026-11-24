@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import Sortable from 'sortablejs'
 import {
   SchemaRenderer,
   asArray,
@@ -50,6 +49,7 @@ import { useFieldValue } from '../formContext'
 import IconMark from './IconMark.vue'
 import VamisOverlay from '../overlay/VamisOverlay.vue'
 import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
+import { consumeSortableDrag, useSortableDrag } from './useSortable'
 
 const props = defineProps<{ schema: SchemaObject }>()
 const data = useData()
@@ -241,7 +241,6 @@ const wrapEl = ref<HTMLElement | null>(null)
 const inkEl = ref<HTMLElement | null>(null)
 const inkReady = ref(false)
 let inkObserver: ResizeObserver | null = null
-let sortable: Sortable | null = null
 let measureRaf = 0
 let measuring = false
 let tabUidSeq = 0
@@ -424,15 +423,11 @@ function commitEdit() {
   editing.value = -1
 }
 
-function destroySortable() {
-  sortable?.destroy()
-  sortable = null
-}
-
-function initSortable() {
-  destroySortable()
-  if (props.schema.draggable !== true || !linksEl.value) return
-  sortable = new Sortable(linksEl.value, {
+useSortableDrag({
+  target: () => linksEl.value,
+  enabled: () => props.schema.draggable === true,
+  deps: () => [mode.value, shownTabs.value.length, overflowTabs.value.length],
+  options: () => ({
     animation: 250,
     draggable: '.vamis-tabs__link:not(.vamis-tabs__more-host)',
     ghostClass: 'vamis-tabs__link--dragging',
@@ -442,18 +437,7 @@ function initSortable() {
       const from = Number((event.item as HTMLElement).dataset.tabIndex)
       const items = [...event.to.querySelectorAll<HTMLElement>(':scope > [data-tab-index]')]
       const to = items.indexOf(event.item as HTMLElement)
-      const parent = event.to
-      if (event.oldIndex != null && event.newIndex != null && event.oldIndex !== event.newIndex) {
-        const children = parent.children
-        if (event.oldIndex < children.length - 1) {
-          parent.insertBefore(
-            event.item,
-            children[event.oldIndex > event.newIndex ? event.oldIndex + 1 : event.oldIndex],
-          )
-        } else {
-          parent.appendChild(event.item)
-        }
-      }
+      consumeSortableDrag(event)
       if (!Number.isInteger(from) || to < 0 || from === to) return
       const prev = localTabs.value
       const next = [...prev]
@@ -469,8 +453,8 @@ function initSortable() {
         scheduleMeasure()
       })
     },
-  })
-}
+  }),
+})
 
 function tipOf(tab: (typeof tabs.value)[number]) {
   if (!props.schema.showTip) return ''
@@ -553,7 +537,6 @@ onMounted(() => {
   window.addEventListener('hashchange', onHashChange)
   window.addEventListener('popstate', onHashChange)
   void nextTick(() => {
-    initSortable()
     placeInk(false)
     scheduleMeasure()
     scrollActiveIntoView()
@@ -586,11 +569,6 @@ watch(
   { flush: 'post' },
 )
 
-watch(
-  () => props.schema.draggable === true,
-  () => { void nextTick(() => initSortable()) },
-)
-
 watch(mode, () => {
   void nextTick(() => {
     scrollActiveIntoView()
@@ -607,7 +585,6 @@ onBeforeUnmount(() => {
   inkObserver = null
   if (measureRaf) cancelAnimationFrame(measureRaf)
   measureRaf = 0
-  destroySortable()
 })
 
 const rootClass = computed(() =>

@@ -1257,6 +1257,23 @@ alwaysApply: true
 - 稳定做法：selected values 逐项回查 options，找不到就生成 `{ label, value, __unmatched: true }` 并保留在右侧；`showInvalidMatch` 只控制错误色，不控制是否显示。`menuTpl` / `valueTpl` 用 `SchemaRenderer`，extraData 必须是完整原始 `OptionItem`；list 内部 TreeRow 需要单独挂 `option` 回指原对象。
 - 触及：`transfer`
 
+### SortableJS 组件共用 `useSortableDrag`，不要各自复制生命周期
+- 踩过：Cards / Tabs / Transfer 各写一份 `new Sortable`、destroy、watch 重绑和 DOM 回滚；修一个组件的 animation / handle / ghost 或卸载清理时，下一个拖拽组件仍会重复踩。Transfer 还曾退化成原生 drag/drop，丢掉 Amis `ResultList` 的 150ms 位移与 ghost。
+- 稳定做法：需要 SortableJS 的渲染器统一走 `packages/vamis/src/renderers/useSortable.ts` 的 `useSortableDrag`，由 Vue scope 的 `watchEffect` 自动按 target / enabled / deps 重建并在卸载时 destroy。onEnd 先用 `consumeSortableDrag` 还原 Sortable 的 DOM 外变更并拿到 `{from,to}`，再更新响应式列表。Amis 配置各自保留：Cards 150 / is-dragging，Tabs 250 / tabs link ghost，Transfer 150 / dragbar + result-row ghost。List / Table 的原生指针与层级拖拽语义不同，不硬塞进 SortableJS。
+- 触及：`cards` `tabs` `transfer`
+- 规则：`packages/vamis/src/renderers/useSortable.ts`；Amis `Cards.tsx` / `Tabs.tsx` / `ResultList.tsx`
+
+### Transfer 分页同时维护当前页与累积选项
+- 踩过：只把 `source` 返回项塞进当前 options，会没有分页栏；翻页后旧页 option 丢失，完整对象值只能渲染成 `[object Object]`。
+- 稳定做法：pagination 状态保存 `page/perPage/total`；API 读取 `data.page` 与 `data.total ?? count`，数据域变量本地 slice。当前页 `remoteOptions` 供左栏，跨页 `accumulatedRawOptions` 去重累积供右侧值解析。`joinValues:false + extractValue:false` 时 selected 值按完整 option 对象写回，展示前用 valueField 匹配累计 options，未命中对象用 labelField 还原。`PaginationPerPage` 的当前值必须通过 Select 的受控 `value` + `valueChange` 传入；表单里的 Select 会优先读 FormContext，单写内部 value-host 不会显示 `10条/页`。
+- 触及：`transfer`
+
+### Transfer available options 过滤无值组描述符
+- 踩过：associated 模式把 `ref` / `defer` 组描述符当成叶子，`5` 个真实选项被算成 `8`；全选直接 `map(item.value)`，右侧出现三个 `undefined`。
+- 稳定做法：对齐 Amis `availableOptions = flattenTree(options).filter(!disabled && valueField !== undefined)`。递归所有节点，但只把有业务值的节点计入统计 / 全选；`defer` 节点加载出真实 children 后才计子项。`selected`、`addAll` 和结果回显再过滤 `undefined` 作为防御，不能用 `options.length === leaves.length` 的假设。
+- 触及：`transfer` `associated` `defer`
+- 规则：Amis `Transfer.tsx` `availableOptions` / `selectAll`；`packages/vamis/src/renderers/form/Transfer.vue`
+
 ### text-muted 是 Amis 语义，不是 Tailwind 面底色
 - 踩过：Schema / `menuTpl` 里的 `text-muted` 被 Tailwind 从 `--color-muted` 生成成近白色，Amis 水标的 `text-muted` 实际是 `--text--muted-color`（neutral-text-6）。组件里看起来像“字消失”。
 - 稳定做法：在 `helpers-utility.css` 的 `@layer utilities` 显式覆写 `.text-muted { color: var(--text-muted); }` 和 `.text-loud { color: var(--text-color); }`。同名语义色必须在 utilities 层压过 Tailwind，不能只写在 components 层；改后用真实计算色核。

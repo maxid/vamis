@@ -20,7 +20,7 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 | `labelField` / `valueField` | 选项映射 | 已接 |
 | `selectMode` | list/table/tree/chained/associated | 已接 |
 | `mode` | 非 Amis 字段 | 仅 Vamis 兼容别名 |
-| `leftOptions` / `leftDefaultValue` | associated 左栏 | 已接 |
+| `leftOptions` / `leftDefaultValue` | associated 左栏 | 已接；无值 `ref/defer` 描述符不计入可选项 / 全选 |
 | `leftMode` / `rightMode` | associated 左右模式 | 已接 |
 | `selectTitle` / `resultTitle` | 左右标题 | 已接 |
 | `leftTitle` / `rightTitle` | 非 Amis 字段 | 仅 Vamis 兼容别名 |
@@ -28,7 +28,7 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 | `checkAll` | 左侧全选 | list / tree 已接；chained / associated 标题行已接 |
 | `virtualThreshold` / `itemHeight` | 虚拟窗口 | list/table 已接；tree 固定 32px，不消费 `itemHeight` |
 | `showArrow` | 中间箭头 | 已接 |
-| `sortable` | 结果拖拽排序 | 未接 |
+| `sortable` | 结果拖拽排序 | 已接结果列表；使用共享 `useSortableDrag`，搜索过滤期间暂不显示手柄 |
 | `resultListModeFollowSelect` | 结果区跟随模式 | 未接 |
 | `searchResultMode` / `searchResultColumns` | 搜索结果面板 | 未接 |
 | `columns` | table 模式列配置 | 已接 `SelectTablePane` 自定义列 |
@@ -38,7 +38,7 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 | `statistics` | 选择统计 | 已接，默认显示左右数量 |
 | `showInvalidMatch` | 未匹配值飘红 | 已接；未匹配值始终保留 |
 | `onlyChildren` / `initiallyOpen` / `autoCheckChildren` | 树模式行为 | 已接共享 `SelectTreePane` |
-| `pagination` | list/table 分页 | 未接 |
+| `pagination` | list/table 分页 | 已接 API / 数据域变量分页、跨页选项累积与受控 `perpage` |
 
 ## 验收要求
 

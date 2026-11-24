@@ -235,6 +235,90 @@ describe('Transfer selectMode', () => {
     )
   })
 
+  it('excludes valueless associated descriptors from counts and select-all', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferAssociatedValuelessForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferAssociatedValueless',
+        selectMode: 'associated',
+        leftMode: 'tree',
+        leftOptions: [
+          {
+            label: '法师',
+            children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+          {
+            label: '战士',
+            children: [
+              { label: '曹操', value: 'caocao' },
+              { label: '钟无艳', value: 'zhongwuyan' },
+            ],
+          },
+          {
+            label: '打野',
+            children: [
+              { label: '李白', value: 'libai' },
+              { label: '韩信', value: 'hanxin' },
+              { label: '云中君', value: 'yunzhongjun' },
+            ],
+          },
+        ],
+        options: [
+          {
+            ref: 'zhugeliang',
+            children: [{ label: 'A', value: 'a' }],
+          },
+          {
+            ref: 'caocao',
+            children: [
+              { label: 'B', value: 'b' },
+              { label: 'C', value: 'c' },
+            ],
+          },
+          {
+            ref: 'zhongwuyan',
+            children: [
+              { label: 'D', value: 'd' },
+              { label: 'E', value: 'e' },
+            ],
+          },
+          { ref: 'libai', defer: true, label: 'lazy-option-libai' },
+          { ref: 'hanxin', defer: true, label: 'lazy-option-hanxin' },
+          {
+            ref: 'yunzhongjun',
+            defer: true,
+            label: 'lazy-option-yunzhongjun',
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-transfer__title')?.textContent).toContain(
+      '（5/5）',
+    )
+    click(buttonWithText('全选'))
+
+    await vi.waitFor(() =>
+      expect(
+        formData(scoped, 'transferAssociatedValuelessForm')
+          .transferAssociatedValueless,
+      ).toBe('a,b,c,d,e'),
+    )
+    expect(
+      host.querySelectorAll('.vamis-transfer__result-item'),
+    ).toHaveLength(5)
+    expect(
+      host.querySelector('.vamis-transfer__result')?.textContent,
+    ).not.toContain('undefined')
+    expect(host.querySelector('.vamis-transfer__title')?.textContent).toContain(
+      '（0/5）',
+    )
+  })
+
   it('hides the paired select-all action when checkAll is false', async () => {
     const { host } = mount({
       type: 'form',

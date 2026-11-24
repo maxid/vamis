@@ -27,10 +27,12 @@ import {
 } from '@vamis/core'
 import { useFieldValue } from '../../formContext'
 import FormItem from '../FormItem.vue'
+import Pagination from '../Pagination.vue'
 import SelectAssociatedPane from './select/SelectAssociatedPane.vue'
 import SelectChainedPane from './select/SelectChainedPane.vue'
 import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
+import { consumeSortableDrag, useSortableDrag } from '../useSortable'
 import {
   dumpJoined,
   flattenOptions,
@@ -52,9 +54,31 @@ const remoteOptions = ref<unknown[] | null>(null)
 const pristine = ref<unknown>(undefined)
 const optionNodesOverride = ref<OptionItem[] | null>(null)
 const associatedNodesOverride = ref<OptionItem[] | null>(null)
+const accumulatedRawOptions = ref<unknown[]>([])
+const paginationPage = ref(1)
+const paginationPerPage = ref(
+  Number((props.schema.pagination as SchemaObject | undefined)?.perPage) || 10,
+)
+const paginationTotal = ref(0)
 const mode = computed(() => String(props.schema.selectMode || props.schema.mode || 'list'))
+const valueField = computed(() => String(props.schema.valueField || 'value'))
+const labelField = computed(() => String(props.schema.labelField || 'label'))
+const paginationConfig = computed<SchemaObject>(() =>
+  props.schema.pagination && typeof props.schema.pagination === 'object'
+    ? (props.schema.pagination as SchemaObject)
+    : {},
+)
+const paginationEnabled = computed(() => {
+  const enable = paginationConfig.value.enable
+  if (enable === undefined) return false
+  return Boolean(resolveValue(enable, data.value))
+})
 const rawOptions = computed(() =>
-  normalizeOptions(optionNodesOverride.value ?? remoteOptions.value ?? props.schema.options),
+  normalizeOptions(
+    optionNodesOverride.value ?? remoteOptions.value ?? props.schema.options,
+    labelField.value,
+    valueField.value,
+  ),
 )
 const associatedEnvelope = computed(() => {
   const first = rawOptions.value[0] as (OptionItem & {
@@ -74,15 +98,15 @@ const associatedNodes = computed(
 const displayRawOptions = computed(() =>
   mode.value === 'associated' ? associatedNodes.value : rawOptions.value,
 )
-function flattenLeafOptions(nodes: OptionItem[]): OptionItem[] {
+function flattenSelectableOptions(nodes: OptionItem[]): OptionItem[] {
   const out: OptionItem[] = []
   for (const node of nodes) {
-    if (node.children?.length) out.push(...flattenLeafOptions(node.children))
-    else out.push(node)
+    if (!node.disabled && node[valueField.value] !== undefined) out.push(node)
+    if (node.children?.length) out.push(...flattenSelectableOptions(node.children))
   }
   return out
 }
-const options = computed(() => flattenLeafOptions(displayRawOptions.value))
+const options = computed(() => flattenSelectableOptions(displayRawOptions.value))
 type TreeRow = {
   key: string
   label: string
@@ -164,15 +188,21 @@ function flattenListRows(nodes: TreeRow[], depth = 0): ListRow[] {
 }
 const name = computed(() => String(props.schema.name || ''))
 const joinValues = computed(() => props.schema.joinValues !== false)
+const extractValue = computed(() => props.schema.extractValue === true)
 const delimiter = computed(() => String(props.schema.delimiter ?? ','))
 const pairedMode = computed(() => mode.value === 'chained' || mode.value === 'associated')
 function currentValue() {
   return name.value ? fieldApi.getValue(name.value) : props.schema.value
 }
-const selected = computed(() => parseJoined(currentValue(), true, joinValues.value, delimiter.value))
+const selected = computed(() =>
+  parseJoined(currentValue(), true, joinValues.value, delimiter.value).filter(
+    (value) => value !== undefined,
+  ),
+)
 const searchable = computed(() => props.schema.searchable === true)
 const resultSearchable = computed(() => props.schema.resultSearchable === true)
 const showArrow = computed(() => props.schema.showArrow === true)
+const sortableResults = computed(() => props.schema.sortable === true)
 const VIRTUAL_ITEM_HEIGHT = 38
 const TREE_ITEM_HEIGHT = 32
 const VIRTUAL_VIEWPORT_HEIGHT = 258
@@ -255,6 +285,12 @@ function matched(item: { label?: unknown }, query: string) {
   return String(item.label ?? '').toLowerCase().includes(query.toLowerCase())
 }
 const left = computed(() => options.value.filter((item) => !selected.value.some((value) => optionValuesEqual(value, item.value))))
+const accumulatedOptions = computed(() =>
+  normalizeOptions(accumulatedRawOptions.value, labelField.value, valueField.value),
+)
+const knownOptions = computed(() =>
+  paginationEnabled.value ? accumulatedOptions.value : options.value,
+)
 const right = computed(() => selectedOptionItems(selected.value))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
 const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
@@ -286,6 +322,20 @@ const searchPlaceholder = computed(() =>
 )
 const resultSearchPlaceholder = computed(() =>
   String(props.schema.resultSearchPlaceholder || searchPlaceholder.value),
+)
+const pagerSchema = computed<SchemaObject>(() => ({
+  ...paginationConfig.value,
+  type: 'pagination',
+  activePage: paginationPage.value,
+  perPage: paginationPerPage.value,
+  total: paginationTotal.value,
+  mobileUI: env.mobileUI === true,
+}))
+const showPagination = computed(
+  () =>
+    paginationEnabled.value &&
+    (mode.value === 'list' || mode.value === 'table') &&
+    paginationTotal.value > 0,
 )
 
 function virtualWindow<T>(
@@ -402,18 +452,68 @@ function measureVirtualViewports() {
 }
 
 let listResizeObserver: ResizeObserver | undefined
+useSortableDrag({
+  target: () => rightListEl.value,
+  enabled: () =>
+    sortableResults.value &&
+    !props.disabled &&
+    !rightQuery.value &&
+    rightShown.value.length >= 2,
+  deps: () => [
+    mode.value,
+    rightQuery.value,
+    rightShown.value.length,
+  ],
+  options: () => ({
+    animation: 150,
+    handle: '.vamis-transfer__dragbar',
+    draggable: '.vamis-transfer__result-row',
+    ghostClass: 'vamis-transfer__result-row--dragging',
+    onEnd(event) {
+      const row = event.item as HTMLElement
+      const from = Number(row.dataset.resultIndex)
+      const list = event.to
+      const visibleRows = [...list.children].filter(
+        (item): item is HTMLElement =>
+          item instanceof HTMLElement &&
+          item.classList.contains('vamis-transfer__result-row'),
+      )
+      const visibleIndex = visibleRows.indexOf(row)
+      consumeSortableDrag(event)
+      if (!Number.isFinite(from) || visibleIndex < 0) return
+      moveResult(from, rightWindow.value.start + visibleIndex)
+    },
+  }),
+})
 
 function selectedOptionItems(values: unknown[]) {
-  return values.map((value) =>
-    options.value.find((item) => optionValuesEqual(item.value, value)) ?? {
+  return values.filter((value) => value !== undefined).map((value) => {
+    const hit = knownOptions.value.find((item) =>
+      optionValuesEqual(item.value, value, valueField.value),
+    )
+    if (hit) return hit
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return normalizeOptions([value], labelField.value, valueField.value)[0]
+    }
+    return {
       label: String(value ?? ''),
       value,
       __unmatched: true,
-    },
-  )
+    }
+  })
 }
 
 function serializeSelected(values: unknown[]) {
+  if (!joinValues.value && !extractValue.value) {
+    return values.map((value) => {
+      if (value && typeof value === 'object' && !Array.isArray(value)) return value
+      return (
+        knownOptions.value.find((item) =>
+          optionValuesEqual(item.value, value, valueField.value),
+        ) ?? value
+      )
+    })
+  }
   return dumpJoined(values, true, joinValues.value, delimiter.value)
 }
 
@@ -463,6 +563,7 @@ async function commitSelected(values: unknown[]) {
 }
 
 function add(value: unknown) {
+  if (value === undefined) return
   if (selected.value.some((item) => optionValuesEqual(item, value))) return
   void commitSelected([...selected.value, value])
 }
@@ -474,6 +575,15 @@ function toggleValue(value: unknown) {
 
 function remove(value: unknown) {
   void commitSelected(selected.value.filter((item) => !optionValuesEqual(item, value)))
+}
+
+function moveResult(from: number, to: number) {
+  if (from === to) return
+  const next = [...selected.value]
+  const [moved] = next.splice(from, 1)
+  if (moved === undefined) return
+  next.splice(to, 0, moved)
+  void commitSelected(next)
 }
 
 function clear() {
@@ -502,7 +612,9 @@ function replaceOptionNodes(nodes: OptionItem[]) {
 }
 
 async function addAll(emitSelectAll = true) {
-  const values = options.value.map((item) => item.value)
+  const values = options.value
+    .map((item) => item.value)
+    .filter((value) => value !== undefined)
   if (
     values.length > 0 &&
     values.every((value) => selected.value.some((item) => optionValuesEqual(item, value)))
@@ -523,13 +635,51 @@ function clearSearch(target?: { left?: boolean; right?: boolean }) {
   if (!target || target.right) rightQuery.value = ''
 }
 
-async function loadSource() {
+function mergeAccumulatedOptions(list: unknown[]) {
+  const next = [...accumulatedRawOptions.value]
+  for (const item of list) {
+    if (!next.some((existing) => optionValuesEqual(existing, item, valueField.value))) {
+      next.push(item)
+    }
+  }
+  accumulatedRawOptions.value = next
+}
+
+async function loadSource(config?: {
+  page?: number
+  perPage?: number
+  append?: boolean
+}) {
   const source = props.schema.source
-  if (!source) return
+  if (!source) {
+    if (!paginationEnabled.value) accumulatedRawOptions.value = []
+    return
+  }
+  const targetPage = paginationEnabled.value
+    ? Math.max(1, Number(config?.page || paginationPage.value) || 1)
+    : 1
+  const targetPerPage = Math.max(
+    1,
+    Number(config?.perPage || paginationPerPage.value) || 10,
+  )
+  const append = config?.append === true
   if (typeof source === 'string' && source.trim().startsWith('$')) {
     const resolved = resolveValue(source, data.value)
     if (Array.isArray(resolved)) {
-      remoteOptions.value = resolved
+      const pageOptions = paginationEnabled.value
+        ? resolved.slice((targetPage - 1) * targetPerPage, targetPage * targetPerPage)
+        : resolved
+      remoteOptions.value = pageOptions
+      if (paginationEnabled.value) {
+        paginationPage.value = targetPage
+        paginationPerPage.value = targetPerPage
+        paginationTotal.value = resolved.length
+        if (append) mergeAccumulatedOptions(pageOptions)
+        else accumulatedRawOptions.value = [...pageOptions]
+      } else {
+        paginationTotal.value = 0
+        accumulatedRawOptions.value = []
+      }
       optionNodesOverride.value = null
       associatedNodesOverride.value = null
       associatedLeftValue.value = undefined
@@ -538,12 +688,38 @@ async function loadSource() {
   }
   if (!isEffectiveApi(source, data.value)) return
   try {
-    const result = await requestApi(source, { env, data: data.value, reason: 'init' })
+    const requestData = paginationEnabled.value
+      ? {
+          ...data.value,
+          page: targetPage,
+          perPage: targetPerPage,
+        }
+      : data.value
+    const result = await requestApi(source, {
+      env,
+      data: requestData,
+      reason: config?.append ? 'reload' : 'init',
+    })
     if (result.skipped || !result.ok) return
-    const payload = result.data || {}
+    const payload = (result.data || {}) as Record<string, unknown>
     const list = Array.isArray(payload) ? payload : payload.options ?? payload.items ?? payload.records ?? payload
     if (Array.isArray(list)) {
       remoteOptions.value = list
+      if (paginationEnabled.value) {
+        paginationPage.value =
+          Math.max(1, Number(payload.page) || targetPage) || 1
+        paginationPerPage.value =
+          Math.max(1, Number(payload.perPage) || targetPerPage) || 10
+        paginationTotal.value = Math.max(
+          0,
+          Number(payload.total ?? payload.count) || 0,
+        )
+        if (append) mergeAccumulatedOptions(list)
+        else accumulatedRawOptions.value = [...list]
+      } else {
+        paginationTotal.value = 0
+        accumulatedRawOptions.value = []
+      }
       optionNodesOverride.value = null
       associatedNodesOverride.value = null
       associatedLeftValue.value = undefined
@@ -551,6 +727,18 @@ async function loadSource() {
   } catch {
     /* 保留空选项 */
   }
+}
+
+async function onPaginationChange(page: number, perPage?: number) {
+  const nextPage = Math.max(1, Number(page) || 1)
+  const nextPerPage = Math.max(1, Number(perPage) || paginationPerPage.value || 10)
+  paginationPage.value = nextPage
+  paginationPerPage.value = nextPerPage
+  await loadSource({
+    page: nextPage,
+    perPage: nextPerPage,
+    append: true,
+  })
 }
 
 const scopedApi = {
@@ -600,7 +788,11 @@ const scopedApi = {
 onMounted(() => {
   pristine.value = currentValue()
   scoped?.register(scopedApi)
-  void loadSource()
+  void loadSource({
+    page: 1,
+    perPage: paginationPerPage.value,
+    append: false,
+  })
   void nextTick(() => {
     measureVirtualViewports()
     if (typeof ResizeObserver !== 'undefined') {
@@ -621,7 +813,15 @@ watch(
   () => [props.schema.source, data.value] as const,
   (curr, prev) => {
     if (!prev) return
-    if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) void loadSource()
+    if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) {
+      paginationPage.value = 1
+      accumulatedRawOptions.value = []
+      void loadSource({
+        page: 1,
+        perPage: paginationPerPage.value,
+        append: false,
+      })
+    }
   },
   { deep: true },
 )
@@ -854,6 +1054,9 @@ watch(
           <VamisScrollbar :target="leftListEl" />
         </div>
         </template>
+        <div v-if="showPagination" class="vamis-transfer__footer">
+          <Pagination :schema="pagerSchema" @page-change="onPaginationChange" />
+        </div>
       </div>
       <span v-if="showArrow" class="vamis-transfer__arrow" aria-hidden="true">
         <VamisIcon name="right-arrow" />
@@ -941,7 +1144,12 @@ watch(
             :style="{ height: `${rightWindow.lead}px` }"
             aria-hidden="true"
           />
-          <li v-for="item in rightWindow.rows" :key="String(item.value)">
+          <li
+            v-for="(item, windowIndex) in rightWindow.rows"
+            :key="String(item.value)"
+            class="vamis-transfer__result-row"
+            :data-result-index="rightWindow.start + windowIndex"
+          >
             <div
               class="vamis-transfer__result-item"
               :class="{
@@ -952,6 +1160,17 @@ watch(
                 height: `${virtualItemHeight}px`,
               }"
             >
+              <span
+                v-if="
+                  sortableResults &&
+                  !disabled &&
+                  !rightQuery &&
+                  rightShown.length > 1
+                "
+                class="vamis-transfer__dragbar"
+              >
+                <VamisIcon name="drag-bar" />
+              </span>
               <span
                 class="vamis-transfer__text"
                 :class="{ 'is-template': !!schema.valueTpl }"

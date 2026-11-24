@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import {
   SchemaRenderer,
   cardsCardSchema,
@@ -27,11 +27,11 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { Button, VamisIcon } from '@vamis/ui'
-import Sortable from 'sortablejs'
 import { matchListRows } from './list-utils'
 import { useCrudHost } from './data/crudHost'
 import RowValueHost from './data/RowValueHost.vue'
 import { provideCardsSelect } from './cardsSelect'
+import { consumeSortableDrag, useSortableDrag } from './useSortable'
 
 const props = defineProps<{
   schema: SchemaObject
@@ -49,7 +49,6 @@ const snapshot = ref<Record<string, any>[] | null>(null)
 const dragging = ref(false)
 const moved = ref(0)
 const bodyEl = ref<HTMLElement | null>(null)
-let sortable: Sortable | null = null
 const rows = computed(() => {
   if (localRows.value) return localRows.value
   return cardsSource(props.schema, props.data || {}, props.items)
@@ -240,23 +239,18 @@ function applySetValue(
   }
 }
 
-function destroySortable() {
-  sortable?.destroy()
-  sortable = null
-}
-
-function initSortable() {
-  destroySortable()
-  const el = bodyEl.value
-  if (!el) return
-  sortable = new Sortable(el, {
+useSortableDrag({
+  target: () => bodyEl.value,
+  enabled: () => dragging.value,
+  deps: () => [rows.value.length],
+  options: () => ({
     animation: 150,
     handle: '.vamis-card-drag',
     ghostClass: 'is-dragging',
     onEnd(event) {
-      const from = event.oldIndex
-      const to = event.newIndex
-      if (from == null || to == null || from === to) return
+      const indexes = consumeSortableDrag(event)
+      if (!indexes) return
+      const { from, to } = indexes
       ensureLocal()
       const next = (localRows.value || []).slice()
       const [movedRow] = next.splice(from, 1)
@@ -265,8 +259,8 @@ function initSortable() {
       if (!snapshot.value) snapshot.value = rows.value.map((row) => ({ ...row }))
       moved.value += 1
     },
-  })
-}
+  }),
+})
 
 async function toggle(row: Record<string, any>, checked?: boolean) {
   const actual = sourceRow(row)
@@ -407,11 +401,6 @@ const cardsApi = {
 scoped?.register(cardsApi as never)
 onBeforeUnmount(() => {
   scoped?.unregister(cardsApi as never)
-  destroySortable()
-})
-watch([dragging, bodyEl, () => rows.value.length], () => {
-  if (dragging.value) void nextTick(initSortable)
-  else destroySortable()
 })
 </script>
 

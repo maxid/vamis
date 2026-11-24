@@ -1502,7 +1502,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     labelField: '选项文案字段，默认 label。',
     valueField: '选项值字段，默认 value。',
     showArrow: '是否在两栏之间显示箭头。',
-    sortable: '结果是否可拖拽排序。当前 Vamis 未接。',
+    sortable: '结果列表是否可通过拖拽手柄调整顺序。',
     selectMode: 'list / table / tree / chained / associated，Amis 主字段。',
     mode: 'Vamis 兼容别名；同时配置时 selectMode 优先。',
     resultListModeFollowSelect: '结果面板是否跟随选择模式。当前 Vamis 未接。',
@@ -1532,7 +1532,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     onlyChildren: '树形模式只提交叶子。',
     initiallyOpen: '树形模式是否默认展开。',
     autoCheckChildren: '树形勾选是否自动联动子节点。',
-    pagination: '分页配置；仅 list / table 生效。当前 Vamis 未接。',
+    pagination: '分页配置；仅 list / table 生效，支持 API 与数据域变量分页。',
     clearable: '可清空。',
   }, { formItem: true }),
   'transfer-picker': fields('TransferPicker', {

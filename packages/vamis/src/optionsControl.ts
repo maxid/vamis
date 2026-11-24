@@ -51,7 +51,16 @@ import {
 } from '@vamis/core'
 import { useFieldValue, useForm } from './formContext'
 
-export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<boolean | undefined>) {
+export interface OptionsControlValueBinding {
+  value: () => unknown
+  onChange?: (value: unknown) => void
+}
+
+export function useOptionsControl(
+  schema: Ref<SchemaObject>,
+  disabled?: Ref<boolean | undefined>,
+  binding?: OptionsControlValueBinding,
+) {
   const form = useForm()
   const fieldApi = useFieldValue()
   const env = useEnv()
@@ -94,7 +103,13 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
     return [...base, ...extra.value]
   })
 
-  const rawValue = computed(() => (name.value ? fieldApi.getValue(name.value) : schema.value.value))
+  const rawValue = computed(() =>
+    binding
+      ? binding.value()
+      : name.value
+        ? fieldApi.getValue(name.value)
+        : schema.value.value,
+  )
 
   const selected = computed(() => getSelectedOptions(rawValue.value, options.value, config.value))
 
@@ -123,8 +138,12 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   const hasValue = computed(() => !isOptionsEmpty(rawValue.value))
 
   function write(next: unknown, fill: boolean | 'fillIfNotSet' | 'always' = 'always') {
-    if (!name.value) return
-    fieldApi.setValue(name.value, next)
+    if (binding) {
+      binding.onChange?.(next)
+    } else {
+      if (!name.value) return
+      fieldApi.setValue(name.value, next)
+    }
     if (fill === false) return
     applyFill(next, fill === 'always' || fill === true ? true : fill)
   }
@@ -610,7 +629,11 @@ export function useOptionsControl(schema: Ref<SchemaObject>, disabled?: Ref<bool
   scoped?.register(api)
 
   onMounted(() => {
-    pristine.value = name.value ? fieldApi.getValue(name.value) : schema.value.value
+    pristine.value = binding
+      ? binding.value()
+      : name.value
+        ? fieldApi.getValue(name.value)
+        : schema.value.value
     if (schema.value.source) void loadOptionsFromSource()
     else applyDefaultSelection(options.value)
     if (autoComplete.value) void loadAutoComplete(keyword.value)

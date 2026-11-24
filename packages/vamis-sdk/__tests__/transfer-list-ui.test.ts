@@ -1,5 +1,6 @@
 import { nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import Sortable from 'sortablejs'
 import { embed } from '../src/embed'
 import 'vamis'
 
@@ -408,5 +409,114 @@ describe('Transfer list UI', () => {
       plainItems.find((item) => (item.textContent || '').trim() === 'missing')
         ?.classList.contains('is-invalid'),
     ).toBe(false)
+  })
+
+  it('uses the Amis Sortable ghost and handle contract for result reordering', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferSortableForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferSortable',
+        sortable: true,
+        value: 'a,b,c',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+          { label: 'C', value: 'c' },
+        ],
+      },
+    })
+
+    await nextTick()
+    const list = host.querySelector('.vamis-transfer__result .vamis-transfer__list')
+    expect(list).toBeTruthy()
+    await vi.waitFor(() =>
+      expect(Sortable.get(list as HTMLElement)).toBeTruthy(),
+    )
+    const sortable = Sortable.get(list as HTMLElement)
+    expect(sortable?.options.animation).toBe(150)
+    expect(sortable?.options.handle).toBe('.vamis-transfer__dragbar')
+    expect(sortable?.options.ghostClass).toBe(
+      'vamis-transfer__result-row--dragging',
+    )
+
+    const rows = [...host.querySelectorAll('.vamis-transfer__result-row')]
+    const moved = rows[2] as HTMLElement
+    list?.insertBefore(moved, rows[0])
+    sortable?.options.onEnd?.({
+      item: moved,
+      from: list,
+      to: list,
+      oldIndex: 2,
+      newIndex: 0,
+    } as never)
+
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferSortableForm').transferSortable).toBe(
+        'c,a,b',
+      ),
+    )
+    expect(
+      [...host.querySelectorAll('.vamis-transfer__result-item')].map((item) =>
+        (item.textContent || '').trim(),
+      ),
+    ).toEqual(['C', 'A', 'B'])
+  })
+
+  it('renders source pagination and preserves selected option objects across pages', async () => {
+    const options = Array.from({ length: 23 }, (_, index) => ({
+      label: `选项 ${index + 1}`,
+      value: String(index + 1),
+    }))
+    const { host } = mount({
+      type: 'form',
+      name: 'transferPaginationForm',
+      data: { paginatedOptions: options },
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferPagination',
+        joinValues: false,
+        extractValue: false,
+        source: '${paginatedOptions}',
+        value: [options[20]],
+        pagination: {
+          enable: true,
+          layout: ['pager', 'perpage', 'total'],
+          perPageAvailable: [10, 20],
+        },
+        options: [],
+      },
+    })
+
+    await vi.waitFor(() => {
+      expect(host.querySelector('[data-vamis-pagination]')).toBeTruthy()
+      expect(host.querySelector('[data-pagination="total"]')?.textContent).toContain(
+        '23',
+      )
+      expect(host.querySelector('[data-pagination="perpage"]')?.textContent).toContain(
+        '10条/页',
+      )
+      expect(host.querySelector('.vamis-transfer__result-item')?.textContent).toContain(
+        '选项 21',
+      )
+    })
+
+    expect(
+      [...host.querySelectorAll('.vamis-transfer__result-item')].map((item) =>
+        (item.textContent || '').trim(),
+      ),
+    ).not.toContain('[object Object]')
+
+    click(host.querySelector('[data-pager="next"]'))
+    await vi.waitFor(() =>
+      expect(
+        [...host.querySelectorAll('.vamis-transfer__item')].map((item) =>
+          (item.textContent || '').trim(),
+        ),
+      ).toContain('选项 11'),
+    )
   })
 })

@@ -26,7 +26,8 @@ describe('pagination docs', () => {
     expect(vue).toContain('<PaginationPerPage')
     expect(vue).not.toContain('<select')
     expect(adapter).toContain("from './form/Select.vue'")
-    expect(adapter).toContain('provideValueHost')
+    expect(adapter).toContain(':value="value"')
+    expect(adapter).toContain('@value-change')
   })
 
   it('uses prev, simple input and next for mobile pagination', () => {

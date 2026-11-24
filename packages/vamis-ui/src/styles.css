@@ -10997,6 +10997,12 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   min-height: 0;
   max-height: 100%;
 }
+.vamis-transfer__footer {
+  flex: 0 0 auto;
+  padding: var(--gap-sm) var(--gap-base);
+  border-top: 1px solid var(--border);
+  background: var(--card);
+}
 .vamis-scrollbar-host,
 .vamis-transfer__tree-selection > .vamis-select__tree-pane,
 .vamis-transfer__table-selection > .vamis-select__table-pane {
@@ -11169,6 +11175,26 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   flex: 0 0 14px;
   width: 14px;
   height: 14px;
+}
+.vamis-transfer__dragbar {
+  position: relative;
+  left: calc(var(--gap-xs) * -1);
+  display: inline-flex;
+  flex: 0 0 var(--gap-lg);
+  width: var(--gap-lg);
+  height: var(--icon-size);
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+  cursor: move;
+}
+.vamis-transfer__dragbar svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-transfer__result-row--dragging > * {
+  opacity: 0.2;
 }
 .vamis-transfer__text {
   min-width: 0;

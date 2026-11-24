@@ -40,7 +40,14 @@ import SelectChainedPane from './select/SelectChainedPane.vue'
 import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
 
-const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
+const props = defineProps<{
+  schema: SchemaObject
+  disabled?: boolean
+  value?: unknown
+}>()
+const emit = defineEmits<{
+  valueChange: [value: unknown]
+}>()
 const schemaRef = toRef(props, 'schema')
 const disabledRef = toRef(props, 'disabled')
 const data = useData()
@@ -62,7 +69,16 @@ let tagTipHideTimer: ReturnType<typeof setTimeout> | undefined
 let searchFocusTimer: ReturnType<typeof setTimeout> | undefined
 const SEARCH_FOCUS_DELAY = 500
 
-const ctl = useOptionsControl(schemaRef, disabledRef)
+const ctl = useOptionsControl(
+  schemaRef,
+  disabledRef,
+  props.value !== undefined
+    ? {
+        value: () => props.value,
+        onChange: (value) => emit('valueChange', value),
+      }
+    : undefined,
+)
 const env = useEnv()
 const viewportTick = ref(0)
 const locked = computed(() => !!props.disabled)
