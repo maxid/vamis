@@ -15,6 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  VamisClose,
 } from '@vamis/ui'
 
 const props = defineProps<{
@@ -23,6 +24,7 @@ const props = defineProps<{
   selectedValues: unknown[]
   disabled?: boolean
   query?: string
+  resultMode?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -252,12 +254,24 @@ watch(
               />
             </TableCell>
             <TableCell v-for="(column, columnIndex) in columns" :key="columnIndex">
-              <SchemaRenderer
-                v-if="cellUsesRenderer(column)"
-                :schema="column"
-                :extra-data="item"
-              />
-              <template v-else>{{ cellText(column, item) }}</template>
+              <div class="vamis-select__table-cell-result">
+                <SchemaRenderer
+                  v-if="cellUsesRenderer(column)"
+                  :schema="column"
+                  :extra-data="item"
+                />
+                <template v-else>{{ cellText(column, item) }}</template>
+                <button
+                  v-if="resultMode && columnIndex === columns.length - 1"
+                  type="button"
+                  class="vamis-select__table-result-remove"
+                  :aria-label="`移除 ${item.label}`"
+                  :disabled="disabled"
+                  @click.stop="pick(item)"
+                >
+                  <VamisClose />
+                </button>
+              </div>
             </TableCell>
           </TableRow>
           <TableRow

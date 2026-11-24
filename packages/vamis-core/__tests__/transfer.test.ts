@@ -26,6 +26,10 @@ describe('transfer', () => {
       '## 属性表',
       '## 和 Amis 文档的差异',
     ]) expect(doc).toContain(h)
+    expect(doc).not.toContain(
+      '"popOverContainerSelector": ".cxd-Panel--form"',
+    )
+    expect(doc).toContain('"popOverContainerSelector": "[data-vamis-panel]"')
   })
 
   it('exposes the Amis Transfer schema fields in editor completions', () => {

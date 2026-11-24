@@ -1268,6 +1268,18 @@ alwaysApply: true
 - 稳定做法：pagination 状态保存 `page/perPage/total`；API 读取 `data.page` 与 `data.total ?? count`，数据域变量本地 slice。当前页 `remoteOptions` 供左栏，跨页 `accumulatedRawOptions` 去重累积供右侧值解析。`joinValues:false + extractValue:false` 时 selected 值按完整 option 对象写回，展示前用 valueField 匹配累计 options，未命中对象用 labelField 还原。`PaginationPerPage` 的当前值必须通过 Select 的受控 `value` + `valueChange` 传入；表单里的 Select 会优先读 FormContext，单写内部 value-host 不会显示 `10条/页`。
 - 触及：`transfer`
 
+### Transfer 结果跟随与右侧结果搜索按已选结果树处理
+- 踩过：`resultListModeFollowSelect` 只把 table 换了个表壳，没有消费 `columns`；tree 结果仍走列表。`resultSearchable` 直接复用左侧 `filterOptionTree`，组名命中会展开全部子项，且输入框没有 clear。
+- 稳定做法：结果模式先判定 `table + follow`、`tree + follow + 无 defer`，否则回退 list。table 复用 `SelectTablePane` 与 columns、关闭钮；tree 用 `SelectResultTreePane` 从原始树裁出已选叶子与祖先，不显示 checkbox。结果搜索按 label / value 匹配叶子，保留祖先，树含 defer 时关闭；clear X 只清搜索、不清值。
+- 触及：`transfer` `resultListModeFollowSelect` `resultSearchable`
+- 规则：Amis `Transfer.tsx` `resultSelectMode` / `ResultTreeList` / `handleResultSearch`
+
+### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
+- 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
+- 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。
+- 触及：`transfer` `pagination` 文档示例
+- 规则：`website/src/components/form/transfer.md`；`packages/vamis/src/renderers/Panel.vue`
+
 ### Transfer available options 过滤无值组描述符
 - 踩过：associated 模式把 `ref` / `defer` 组描述符当成叶子，`5` 个真实选项被算成 `8`；全选直接 `map(item.value)`，右侧出现三个 `undefined`。
 - 稳定做法：对齐 Amis `availableOptions = flattenTree(options).filter(!disabled && valueField !== undefined)`。递归所有节点，但只把有业务值的节点计入统计 / 全选；`defer` 节点加载出真实 children 后才计子项。`selected`、`addAll` 和结果回显再过滤 `undefined` 作为防御，不能用 `options.length === leaves.length` 的假设。

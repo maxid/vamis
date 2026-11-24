@@ -345,4 +345,173 @@ describe('Transfer selectMode', () => {
       ),
     ).toBe(false)
   })
+
+  it('follows table columns in the result pane only when enabled', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferResultTableForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferResultTable',
+        selectMode: 'table',
+        resultListModeFollowSelect: true,
+        value: 'zhugeliang,caocao',
+        columns: [
+          { name: 'label', label: '英雄' },
+          { name: 'position', label: '位置' },
+        ],
+        options: [
+          { label: '诸葛亮', value: 'zhugeliang', position: '中单' },
+          { label: '曹操', value: 'caocao', position: '上单' },
+        ],
+      },
+    })
+
+    await nextTick()
+    const result = host.querySelector(
+      '[data-vamis-transfer-result-mode="table"]',
+    )
+    expect(result?.textContent).toContain('英雄')
+    expect(result?.textContent).toContain('位置')
+    expect(result?.textContent).toContain('中单')
+    expect(result?.textContent).not.toContain('值')
+    expect(result?.querySelector('.vamis-select__table')).toBeTruthy()
+    expect(
+      result?.querySelector('.vamis-select__table-result-remove'),
+    ).toBeTruthy()
+
+    const row = [...(result?.querySelectorAll('tbody tr') || [])].find(
+      (item) => item.textContent?.includes('曹操'),
+    )
+    click(row?.querySelector('button') || null)
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferResultTableForm').transferResultTable).toBe(
+        'zhugeliang',
+      ),
+    )
+  })
+
+  it('renders a removable result tree for tree mode without defer', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'transferResultTreeForm',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferResultTree',
+        selectMode: 'tree',
+        resultListModeFollowSelect: true,
+        value: 'caocao,zhongwuyan,libai',
+        options: [
+          {
+            label: '法师',
+            children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+          {
+            label: '战士',
+            children: [
+              { label: '曹操', value: 'caocao' },
+              { label: '钟无艳', value: 'zhongwuyan' },
+            ],
+          },
+          {
+            label: '打野',
+            children: [{ label: '李白', value: 'libai' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    const result = host.querySelector(
+      '[data-vamis-transfer-result-mode="tree"]',
+    )
+    expect(result?.textContent).toContain('战士')
+    expect(result?.textContent).toContain('曹操')
+    expect(result?.textContent).toContain('钟无艳')
+    expect(result?.textContent).toContain('打野')
+    expect(result?.textContent).toContain('李白')
+    expect(result?.textContent).not.toContain('法师')
+    expect(result?.textContent).not.toContain('诸葛亮')
+    expect(result?.querySelector('.vamis-checkbox__mark')).toBeNull()
+    expect(result?.querySelector('.vamis-tree__content.is-checked')).toBeNull()
+
+    const row = [...(result?.querySelectorAll('.vamis-tree__item') || [])].find(
+      (item) => item.textContent?.includes('钟无艳'),
+    )
+    click(
+      row?.querySelector('[aria-label="移除该节点"]') ||
+        row?.querySelector('a.vamis-tree__icon-btn') ||
+        null,
+    )
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'transferResultTreeForm').transferResultTree).toBe(
+        'caocao,libai',
+      ),
+    )
+  })
+
+  it('searches only selected result leaves, keeps ancestors and clears back to the full tree', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferResultSearch',
+        selectMode: 'tree',
+        resultListModeFollowSelect: true,
+        resultSearchable: true,
+        value: 'zhugeliang,caocao,zhongwuyan,libai',
+        options: [
+          {
+            label: '法师',
+            children: [{ label: '诸葛亮', value: 'zhugeliang' }],
+          },
+          {
+            label: '战士',
+            children: [
+              { label: '曹操', value: 'caocao' },
+              { label: '钟无艳', value: 'zhongwuyan' },
+            ],
+          },
+          {
+            label: '打野',
+            children: [{ label: '李白', value: 'libai' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    const result = host.querySelector(
+      '[data-vamis-transfer-result-mode="tree"]',
+    ) as HTMLElement
+    const resultPane = host.querySelector('.vamis-transfer__result') as HTMLElement
+    const input = resultPane.querySelector('input') as HTMLInputElement
+    expect(input).toBeTruthy()
+    input.value = '李白'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      expect(result.textContent).toContain('打野')
+      expect(result.textContent).toContain('李白')
+      expect(result.textContent).not.toContain('战士')
+      expect(result.textContent).not.toContain('法师')
+    })
+
+    input.value = '战士'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await vi.waitFor(() => {
+      expect(result.textContent).not.toContain('战士')
+      expect(result.textContent).not.toContain('曹操')
+      expect(result.textContent).not.toContain('钟无艳')
+    })
+
+    click(resultPane.querySelector('[data-vamis-transfer-result-search-clear]'))
+    await vi.waitFor(() => {
+      expect(result.textContent).toContain('法师')
+      expect(result.textContent).toContain('战士')
+      expect(result.textContent).toContain('打野')
+    })
+  })
 })

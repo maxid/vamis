@@ -11,10 +11,10 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-function mount(schema: unknown) {
+function mount(schema: unknown, env?: Parameters<typeof embed>[3]) {
   const host = document.createElement('div')
   document.body.appendChild(host)
-  const scoped = embed(host, schema)
+  const scoped = embed(host, schema, undefined, env)
   mounts.push(scoped)
   return { host, scoped }
 }
@@ -518,5 +518,129 @@ describe('Transfer list UI', () => {
         ),
       ).toContain('选项 11'),
     )
+  })
+
+  it('keeps a selection made on one page after changing the page', async () => {
+    const options = Array.from({ length: 23 }, (_, index) => ({
+      label: `选项 ${index + 1}`,
+      value: String(index + 1),
+    }))
+    const { host } = mount({
+      type: 'form',
+      name: 'transferPaginationSelectionForm',
+      data: { paginatedOptions: options },
+      actions: [],
+      body: {
+        type: 'transfer',
+        name: 'transferPaginationSelection',
+        source: '${paginatedOptions}',
+        pagination: {
+          enable: true,
+          layout: ['pager', 'perpage', 'total'],
+          perPageAvailable: [10, 20],
+        },
+        options: [],
+      },
+    })
+
+    await vi.waitFor(() =>
+      expect(host.querySelectorAll('.vamis-transfer__item')).toHaveLength(10),
+    )
+    click(
+      [...host.querySelectorAll('.vamis-transfer__item')].find(
+        (item) => item.textContent?.includes('选项 1'),
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(
+        host.querySelector('.vamis-transfer__result-item')?.textContent,
+      ).toContain('选项 1'),
+    )
+
+    click(host.querySelector('[data-pager="next"]'))
+    await vi.waitFor(() =>
+      expect(
+        [...host.querySelectorAll('.vamis-transfer__item')].map((item) =>
+          item.textContent?.trim(),
+        ),
+      ).toContain('选项 11'),
+    )
+    expect(
+      host.querySelector('.vamis-transfer__result-item')?.textContent,
+    ).toContain('选项 1')
+  })
+
+  it('keeps API pagination selections as option objects after a page request', async () => {
+    const options = Array.from({ length: 23 }, (_, index) => ({
+      label: `选项 ${index + 1}`,
+      value: String(index + 1),
+    }))
+    const fetcher = vi.fn(async (api: { url?: string }) => {
+      const url = new URL(String(api.url || ''), 'http://vamis.local')
+      const page = Number(url.searchParams.get('page') || 1)
+      const perPage = Number(url.searchParams.get('perPage') || 10)
+      return {
+        status: 0,
+        data: {
+          options: options.slice((page - 1) * perPage, page * perPage),
+          page,
+          perPage,
+          total: options.length,
+        },
+      }
+    })
+    const { host } = mount(
+      {
+        type: 'form',
+        name: 'transferApiPaginationForm',
+        actions: [],
+        body: {
+          type: 'transfer',
+          name: 'transferApiPagination',
+          joinValues: false,
+          extractValue: false,
+          source: '/api/mock2/options/transfer?page=${page}&perPage=${perPage}',
+          pagination: {
+            enable: true,
+            layout: ['pager', 'perpage', 'total'],
+            perPageAvailable: [10, 20],
+          },
+          options: [],
+        },
+      },
+      { fetcher },
+    )
+
+    await vi.waitFor(() =>
+      expect(host.querySelectorAll('.vamis-transfer__item')).toHaveLength(10),
+    )
+    click(
+      [...host.querySelectorAll('.vamis-transfer__item')].find(
+        (item) => item.textContent?.includes('选项 1'),
+      ) || null,
+    )
+    await vi.waitFor(() =>
+      expect(
+        host.querySelector('.vamis-transfer__result-item')?.textContent,
+      ).toContain('选项 1'),
+    )
+
+    click(host.querySelector('[data-pager="next"]'))
+    await vi.waitFor(() => {
+      expect(fetcher).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          url: expect.stringContaining('page=2'),
+        }),
+        expect.anything(),
+      )
+      expect(
+        [...host.querySelectorAll('.vamis-transfer__item')].map((item) =>
+          item.textContent?.trim(),
+        ),
+      ).toContain('选项 11')
+    })
+    expect(
+      host.querySelector('.vamis-transfer__result-item')?.textContent,
+    ).toContain('选项 1')
   })
 })

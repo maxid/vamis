@@ -11148,6 +11148,28 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   width: var(--icon-size);
   height: var(--icon-size);
 }
+.vamis-transfer__search-clear {
+  position: absolute;
+  right: var(--select-search-input-pad-x);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--icon-color);
+  cursor: pointer;
+}
+.vamis-transfer__search-clear:hover {
+  color: var(--icon-hover-color);
+}
+.vamis-transfer__search-clear svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
 .vamis-transfer__list {
   flex: 1 1 auto;
   min-height: 0;
@@ -11211,7 +11233,9 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   width: 100%;
   min-width: 0;
 }
-.vamis-transfer__remove {
+.vamis-transfer__remove,
+.vamis-transfer__table-remove,
+.vamis-select__table-result-remove {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -11225,13 +11249,23 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--icon-color);
   cursor: pointer;
 }
-.vamis-transfer__remove:hover {
+.vamis-transfer__remove:hover,
+.vamis-transfer__table-remove:hover,
+.vamis-select__table-result-remove:hover {
   color: var(--icon-hover-color);
 }
-.vamis-transfer__remove svg {
+.vamis-transfer__remove svg,
+.vamis-transfer__table-remove svg,
+.vamis-select__table-result-remove svg {
   display: block;
   width: var(--icon-size);
   height: var(--icon-size);
+}
+.vamis-select__table-cell-result {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: var(--gap-sm);
 }
 .vamis-transfer__table-pane {
   flex: 1 1 auto;

@@ -23,6 +23,7 @@ import {
   useOverlay,
   useScope,
   useScoped,
+  walkOptions,
   type SchemaObject,
 } from '@vamis/core'
 import { useFieldValue } from '../../formContext'
@@ -30,6 +31,7 @@ import FormItem from '../FormItem.vue'
 import Pagination from '../Pagination.vue'
 import SelectAssociatedPane from './select/SelectAssociatedPane.vue'
 import SelectChainedPane from './select/SelectChainedPane.vue'
+import SelectResultTreePane from './select/SelectResultTreePane.vue'
 import SelectTablePane from './select/SelectTablePane.vue'
 import SelectTreePane from './select/SelectTreePane.vue'
 import { consumeSortableDrag, useSortableDrag } from '../useSortable'
@@ -203,6 +205,23 @@ const searchable = computed(() => props.schema.searchable === true)
 const resultSearchable = computed(() => props.schema.resultSearchable === true)
 const showArrow = computed(() => props.schema.showArrow === true)
 const sortableResults = computed(() => props.schema.sortable === true)
+const deferField = computed(() => String(props.schema.deferField || 'defer'))
+const treeDeferLoad = computed(
+  () =>
+    mode.value === 'tree' &&
+    walkOptions(displayRawOptions.value).some(
+      (item) => !!item.deferApi || !!item[deferField.value],
+    ),
+)
+const resultMode = computed<'list' | 'table' | 'tree'>(() => {
+  if (props.schema.resultListModeFollowSelect !== true) return 'list'
+  if (mode.value === 'table') return 'table'
+  if (mode.value === 'tree' && !treeDeferLoad.value) return 'tree'
+  return 'list'
+})
+const resultSearchEnabled = computed(
+  () => resultSearchable.value && !treeDeferLoad.value,
+)
 const VIRTUAL_ITEM_HEIGHT = 38
 const TREE_ITEM_HEIGHT = 32
 const VIRTUAL_VIEWPORT_HEIGHT = 258
@@ -219,18 +238,17 @@ const leftListEl = ref<HTMLElement | null>(null)
 const rightListEl = ref<HTMLElement | null>(null)
 const leftTablePaneRef = ref<{ scrollEl?: HTMLElement | null } | null>(null)
 const leftTreePaneRef = ref<{ scrollEl?: HTMLElement | null } | null>(null)
+const rightTablePaneRef = ref<{ scrollEl?: HTMLElement | null } | null>(null)
 const leftTableEl = computed(() => leftTablePaneRef.value?.scrollEl ?? null)
-const rightTableEl = ref<HTMLElement | null>(null)
+const rightTableEl = computed(() => rightTablePaneRef.value?.scrollEl ?? null)
 const leftTreeEl = computed(() => leftTreePaneRef.value?.scrollEl ?? null)
 const leftScrollTop = ref(0)
 const rightScrollTop = ref(0)
 const leftTableScrollTop = ref(0)
-const rightTableScrollTop = ref(0)
 const leftTreeScrollTop = ref(0)
 const leftViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const rightViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
-const rightTableViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftTreeViewportHeight = ref(VIRTUAL_VIEWPORT_HEIGHT)
 const leftQuery = ref('')
 const associatedLeftValue = ref<unknown>(undefined)
@@ -284,6 +302,14 @@ function matched(item: { label?: unknown }, query: string) {
   if (!query) return true
   return String(item.label ?? '').toLowerCase().includes(query.toLowerCase())
 }
+function resultMatched(item: { label?: unknown; value?: unknown }, query: string) {
+  if (!query) return true
+  const q = query.toLowerCase()
+  return (
+    String(item.label ?? '').toLowerCase().includes(q) ||
+    String(item.value ?? '').toLowerCase().includes(q)
+  )
+}
 const left = computed(() => options.value.filter((item) => !selected.value.some((value) => optionValuesEqual(value, item.value))))
 const accumulatedOptions = computed(() =>
   normalizeOptions(accumulatedRawOptions.value, labelField.value, valueField.value),
@@ -293,7 +319,37 @@ const knownOptions = computed(() =>
 )
 const right = computed(() => selectedOptionItems(selected.value))
 const leftShown = computed(() => left.value.filter((item) => matched(item, leftQuery.value)))
-const rightShown = computed(() => right.value.filter((item) => matched(item, rightQuery.value)))
+const rightShown = computed(() =>
+  right.value.filter((item) =>
+    resultMatched(item, resultSearchEnabled.value ? rightQuery.value : ''),
+  ),
+)
+const resultColumns = computed<SchemaObject[]>(() => {
+  const columns = Array.isArray(props.schema.columns)
+    ? props.schema.columns.filter(
+        (column): column is SchemaObject =>
+          !!column && typeof column === 'object' && !Array.isArray(column),
+      )
+    : []
+  return columns.length
+    ? columns
+    : [
+        { name: 'label', label: '名称' },
+        { name: 'value', label: '值' },
+      ]
+})
+const resultTableSchema = computed<SchemaObject>(() => ({
+  ...paneSchema.value,
+  multiple: false,
+  checkAll: false,
+  columns: resultColumns.value,
+}))
+const resultTreeSource = computed(() => filterResultTree(displayRawOptions.value))
+const resultTreeShown = computed(() =>
+  resultSearchEnabled.value && rightQuery.value
+    ? filterResultSearchTree(resultTreeSource.value, rightQuery.value)
+    : resultTreeSource.value,
+)
 const availableListRows = computed(() => flattenListRows(treeVisible(treeRows.value)))
 const selectedCount = computed(() => selected.value.length)
 const availableCount = computed(() => left.value.length)
@@ -337,6 +393,42 @@ const showPagination = computed(
     (mode.value === 'list' || mode.value === 'table') &&
     paginationTotal.value > 0,
 )
+
+function filterResultTree(nodes: OptionItem[]): OptionItem[] {
+  const out: OptionItem[] = []
+  for (const node of nodes) {
+    const selectedNode = selected.value.some((value) =>
+      optionValuesEqual(value, node[valueField.value], valueField.value),
+    )
+    if (selectedNode) {
+      out.push({ ...node, children: undefined })
+      continue
+    }
+    const children = filterResultTree(node.children || [])
+    if (children.length) out.push({ ...node, children })
+  }
+  return out
+}
+
+function filterResultSearchTree(nodes: OptionItem[], query: string): OptionItem[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return nodes
+  const out: OptionItem[] = []
+  for (const node of nodes) {
+    if (node.children?.length) {
+      const children = filterResultSearchTree(node.children, query)
+      if (children.length) out.push({ ...node, children })
+      continue
+    }
+    if (
+      String(node.label ?? '').toLowerCase().includes(q) ||
+      String(node.value ?? '').toLowerCase().includes(q)
+    ) {
+      out.push(node)
+    }
+  }
+  return out
+}
 
 function virtualWindow<T>(
   rows: T[],
@@ -386,14 +478,6 @@ const leftTableWindow = computed(() =>
     'table',
   ),
 )
-const rightTableWindow = computed(() =>
-  virtualWindow(
-    rightShown.value,
-    rightTableScrollTop.value,
-    rightTableViewportHeight.value,
-    'table',
-  ),
-)
 const leftTreeWindow = computed(() =>
   virtualWindow(
     treeShown.value,
@@ -421,12 +505,6 @@ function onLeftTableScroll(event: Event) {
   if (el.clientHeight > 0) leftTableViewportHeight.value = el.clientHeight
 }
 
-function onRightTableScroll(event: Event) {
-  const el = event.currentTarget as HTMLElement
-  rightTableScrollTop.value = el.scrollTop
-  if (el.clientHeight > 0) rightTableViewportHeight.value = el.clientHeight
-}
-
 function onLeftTreeScroll(event: Event) {
   const el = event.currentTarget as HTMLElement
   leftTreeScrollTop.value = el.scrollTop
@@ -442,9 +520,6 @@ function measureVirtualViewports() {
   }
   if (leftTableEl.value?.clientHeight) {
     leftTableViewportHeight.value = leftTableEl.value.clientHeight
-  }
-  if (rightTableEl.value?.clientHeight) {
-    rightTableViewportHeight.value = rightTableEl.value.clientHeight
   }
   if (leftTreeEl.value?.clientHeight) {
     leftTreeViewportHeight.value = leftTreeEl.value.clientHeight
@@ -575,6 +650,18 @@ function toggleValue(value: unknown) {
 
 function remove(value: unknown) {
   void commitSelected(selected.value.filter((item) => !optionValuesEqual(item, value)))
+}
+
+function removeResultTreeNode(item: OptionItem) {
+  const removed = walkOptions([item])
+    .map((node) => node[valueField.value])
+    .filter((value) => value !== undefined)
+  if (!removed.length) return
+  void commitSelected(
+    selected.value.filter(
+      (value) => !removed.some((target) => optionValuesEqual(value, target)),
+    ),
+  )
 }
 
 function moveResult(from: number, to: number) {
@@ -832,7 +919,6 @@ watch(
     const left = leftListEl.value
     const right = rightListEl.value
     const leftTable = leftTableEl.value
-    const rightTable = rightTableEl.value
     const leftTree = leftTreeEl.value
     if (!leftWindow.value.enabled || nextMode !== prevMode || nextLeftLength < prevLeftLength) {
       leftScrollTop.value = 0
@@ -849,14 +935,6 @@ watch(
     ) {
       leftTableScrollTop.value = 0
       if (leftTable) leftTable.scrollTop = 0
-    }
-    if (
-      !rightTableWindow.value.enabled ||
-      nextMode !== prevMode ||
-      nextRightLength < prevRightLength
-    ) {
-      rightTableScrollTop.value = 0
-      if (rightTable) rightTable.scrollTop = 0
     }
     if (
       !leftTreeWindow.value.enabled ||
@@ -1078,64 +1156,62 @@ watch(
             清除
           </button>
         </div>
-        <label v-if="resultSearchable" class="vamis-transfer__search-wrap">
-          <input v-model="rightQuery" class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2" :placeholder="resultSearchPlaceholder" />
-          <span class="vamis-transfer__search-icon"><VamisIcon name="search" /></span>
-        </label>
-        <div
-          v-if="mode === 'table' && schema.resultListModeFollowSelect === true"
-          class="vamis-transfer__scroll-shell"
-        >
-          <div
-            ref="rightTableEl"
-            class="vamis-transfer__table-pane vamis-scrollbar-host"
-            :class="{ 'is-virtual': rightTableWindow.enabled }"
-            @scroll="onRightTableScroll"
+        <div v-if="resultSearchEnabled" class="vamis-transfer__search-wrap">
+          <input
+            v-model="rightQuery"
+            data-vamis-transfer-result-search
+            class="vamis-input vamis-transfer__search h-8 w-full rounded-md border px-2"
+            :placeholder="resultSearchPlaceholder"
+          />
+          <button
+            v-if="rightQuery"
+            type="button"
+            data-vamis-transfer-result-search-clear
+            class="vamis-transfer__search-clear"
+            aria-label="清空搜索结果"
+            @click="rightQuery = ''"
           >
-            <table class="vamis-transfer__table w-full border-collapse">
-              <thead><tr class="border-b"><th class="px-2 py-1 text-left">名称</th><th class="px-2 py-1 text-left">值</th></tr></thead>
-              <tbody>
-                <tr
-                  v-if="rightTableWindow.lead > 0"
-                  class="vamis-transfer__virtual-pad"
-                  :style="{ height: `${rightTableWindow.lead}px` }"
-                  aria-hidden="true"
-                >
-                  <td colspan="2" />
-                </tr>
-                <tr
-                  v-for="item in rightTableWindow.rows"
-                  :key="String(item.value)"
-                  class="vamis-transfer__row cursor-pointer"
-                  :class="{
-                    'is-invalid':
-                      schema.showInvalidMatch === true && item.__unmatched === true,
-                  }"
-                  :style="rightTableWindow.enabled ? { height: `${virtualItemHeight}px` } : undefined"
-                  @click="remove(item.value)"
-                >
-                  <td class="px-2 py-1" :style="{ paddingLeft: `${8 + treeDepth(item) * 12}px` }">{{ item.label }}</td>
-                  <td class="vamis-transfer__value px-2 py-1">{{ item.value }}</td>
-                </tr>
-                <tr
-                  v-if="rightTableWindow.trail > 0"
-                  class="vamis-transfer__virtual-pad"
-                  :style="{ height: `${rightTableWindow.trail}px` }"
-                  aria-hidden="true"
-                >
-                  <td colspan="2" />
-                </tr>
-                <tr v-if="!rightShown.length"><td colspan="2" class="vamis-transfer__empty px-2 py-4 text-center">未选择</td></tr>
-              </tbody>
-            </table>
-          </div>
+            <VamisClose />
+          </button>
+          <span v-else class="vamis-transfer__search-icon">
+            <VamisIcon name="search" />
+          </span>
+        </div>
+        <div
+          v-if="resultMode === 'table'"
+          class="vamis-transfer__table-selection"
+          data-vamis-transfer-result-mode="table"
+        >
+          <SelectTablePane
+            ref="rightTablePaneRef"
+            :schema="resultTableSchema"
+            :nodes="rightShown"
+            :selected-values="selected"
+            :disabled="disabled"
+            result-mode
+            @pick="remove($event.value)"
+          />
           <VamisScrollbar :target="rightTableEl" />
+        </div>
+        <div
+          v-else-if="resultMode === 'tree'"
+          class="vamis-transfer__tree-selection"
+        >
+          <SelectResultTreePane
+            :schema="treePaneSchema"
+            :nodes="resultTreeShown"
+            :selected-values="selected"
+            :query="resultSearchEnabled ? rightQuery : ''"
+            :disabled="disabled"
+            @remove="removeResultTreeNode"
+          />
         </div>
         <div v-else class="vamis-transfer__scroll-shell">
           <ul
             ref="rightListEl"
             class="vamis-transfer__list vamis-scrollbar-host"
             :class="{ 'is-virtual': rightWindow.enabled }"
+            data-vamis-transfer-result-mode="list"
             @scroll="onRightScroll"
           >
           <li

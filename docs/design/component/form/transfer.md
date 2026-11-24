@@ -1,13 +1,13 @@
 # Transfer 穿梭器 · `transfer` 设计
 
-> 状态：**进行中 89%** · 复杂度：**XL 特重**
+> 状态：**进行中 92%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/transfer) · Amis：`/zh-CN/components/form/transfer`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 > Schema 对齐：[Transfer Schema 对齐](../../../superpowers/specs/component/form/2026-11-23-vamis-transfer-schema-contract.md)
 
 ## 0. 一页结论
 
-Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已经覆盖 list/table/tree/chained/associated、搜索、远程 source、树展开、三模式虚拟窗口、结果拖拽排序、前后端分页、`change` / `selectAll` 事件和五项 scoped 动作；Cards / Tabs / Transfer 共用 `useSortableDrag` 生命周期。尚未覆盖结果模式跟随和移动端专用布局。
+Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已经覆盖 list/table/tree/chained/associated、搜索、远程 source、树展开、三模式虚拟窗口、结果拖拽排序、前后端分页、结果表格 / 结果树跟随、右侧结果搜索、`change` / `selectAll` 事件和五项 scoped 动作；Cards / Tabs / Transfer 共用 `useSortableDrag` 生命周期。尚未覆盖 `searchApi` 和移动端专用布局。
 
 ## 1. 边界与优先级（先读）
 
@@ -79,8 +79,8 @@ Transfer 是“左右两栏 + 多选值”的 Options 控件。当前实现已�
 #### 3.2.1 Schema 对齐状态
 
 - 已列入编辑器补全与文档：Amis `AMISTransferSchemaBase` 的全部字段，包括 `showArrow`、`sortable`、`resultListModeFollowSelect`、`searchResultMode`、`columns`、`searchResultColumns`、`resultSearchable`、`searchApi`、`selectTitle`、`resultTitle`、`menuTpl`、`valueTpl`、`resultSearchPlaceholder`、`statistics`、`showInvalidMatch`、`pagination` 等。
-- 运行时已接：`options/source`、值序列化、`selectMode` 五模式、`leftOptions/leftDefaultValue/leftMode/rightMode`、`selectTitle/resultTitle`、`searchable/searchPlaceholder`、`resultSearchable/resultSearchPlaceholder`、`menuTpl/valueTpl`、`showArrow`、`showInvalidMatch`、`sortable`、`pagination`、`statistics`、`virtualThreshold/itemHeight`、事件 / 动作。
-- 仅 schema 文档已对齐、运行时未接：`resultListModeFollowSelect`、`searchResultMode/searchResultColumns`、`searchApi`。这些字段会在属性表和编辑器补全中出现，但说明必须标记为未接，不能写成已支持。
+- 运行时已接：`options/source`、值序列化、`selectMode` 五模式、`leftOptions/leftDefaultValue/leftMode/rightMode`、`selectTitle/resultTitle`、`searchable/searchPlaceholder`、`resultSearchable/resultSearchPlaceholder`、`resultListModeFollowSelect`、`menuTpl/valueTpl`、`showArrow`、`showInvalidMatch`、`sortable`、`pagination`、`statistics`、`virtualThreshold/itemHeight`、事件 / 动作。
+- 仅 schema 文档已对齐、运行时未接：`searchResultMode/searchResultColumns`、`searchApi`。这些字段会在属性表和编辑器补全中出现，但说明必须标记为未接，不能写成已支持。
 
 ### 3.3 事件/动作
 
@@ -158,7 +158,9 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 - 已接：`showArrow` 在双栏之间渲染箭头；`menuTpl` 覆盖 list / tree / chained 左侧选项，`valueTpl` 覆盖右侧结果列表；未匹配已选值保留，`showInvalidMatch` 控制错误色。
 - 已接：结果列表 `sortable` 通过拖拽手柄调整已选值顺序；搜索过滤期间不显示手柄。
 - 已接：list / table `pagination` 复用 Pagination；API 分页读取 `page` / `total | count`，数据域变量分页本地切片；跨页选项累积供结果区回显，完整 option 对象值按 `labelField` / `valueField` 还原。`PaginationPerPage` 通过 Select 受控值显示当前 `perPage`，不能在表单里另写一个内部字段。
-- 未接：`resultListModeFollowSelect`、`searchApi`、移动端专用布局。
+- 已接：`resultListModeFollowSelect` 在 table 使用共享 `SelectTablePane` + `columns` + 行关闭钮；tree 无 defer 时使用 `SelectResultTreePane`，仅保留已选叶子与祖先，不显示 checkbox。
+- 已接：`resultSearchable` 按 label / value 过滤；树只搜索已选结果叶子，组名本身不展开全部子项，clear X 恢复完整结果树。tree 有 defer 时关闭结果搜索。
+- 未接：`searchApi`、移动端专用布局。
 - 对照：桌面 / 移动 **17/20**（P0 0，余 3 条均为 Amis 侧 `rendered:false` 探针）。
 
 ## 7. 验收计划与完成度
@@ -191,7 +193,7 @@ treeRows: 原始 children 建树；expandedTree 控制显隐
 
 ## 8. 后续
 
-1. `resultListModeFollowSelect` 单独立项，先按 Amis 源码确认哪些 mode 实际消费。
+1. `searchApi` 单独立项，先对齐请求携带 `term`、远程结果覆盖与取消竞态。
 2. 移动端专用布局与深色 / 375px 回归。
 3. Picker 的 pickerSchema / CRUD 链路单独审。
 

@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 89% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `resultListModeFollowSelect`、`searchApi` 和移动端专用布局。
+::: warning 实现进度 92% · 进行中
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`resultSearchable`、`resultListModeFollowSelect`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仍缺 `searchApi` 和移动端专用布局。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -505,7 +505,7 @@ body:
 
 #### 右侧结果搜索功能
 
-`resultSearchable: true` 开启右侧结果本地过滤；`resultSearchPlaceholder` 可单独配置提示。
+`resultSearchable: true` 开启右侧结果本地过滤；默认按 `value` / `label` 匹配，`resultSearchPlaceholder` 可单独配置提示。结果树只搜索已选叶子并保留其祖先，组名本身不会展开全部子项；输入框右侧 clear X 恢复完整结果树。
 
 ```schema: scope="body"
 {
@@ -637,7 +637,7 @@ body:
 
 ### 结果面板跟随模式
 
-`resultListModeFollowSelect` 开启结果面板跟随模式。当前 Vamis 尚未接运行时，示例保留 Amis schema。
+`resultListModeFollowSelect` 开启结果面板跟随模式。`table` 使用相同 `columns` 渲染结果表格；`tree` 在没有 defer 时使用结果树，只保留已选叶子及祖先。其它情况保持列表结果。
 
 #### 表格跟随模式
 
@@ -851,7 +851,7 @@ valueField: value
           "perpage",
           "total"
         ],
-        "popOverContainerSelector": ".cxd-Panel--form"
+        "popOverContainerSelector": "[data-vamis-panel]"
       },
       "value": [
         {
@@ -913,7 +913,7 @@ valueField: value
               "perpage",
               "total"
             ],
-            "popOverContainerSelector": ".cxd-Panel--form"
+            "popOverContainerSelector": "[data-vamis-panel]"
           },
           "value": [
             {
@@ -959,7 +959,7 @@ valueField: value
 | `sortable` | `boolean` | `false` | 结果列表是否可通过拖拽手柄调整顺序 |
 | `selectMode` | `string` | `list` | `list` / `table` / `tree` / `chained` / `associated` |
 | `mode` | `string` | `list` | Vamis 兼容别名；`selectMode` 优先 |
-| `resultListModeFollowSelect` | `boolean` | `false` | 结果区跟随选择模式；当前 Vamis 未接 |
+| `resultListModeFollowSelect` | `boolean` | `false` | 结果区跟随选择模式；table / 非 defer tree 已接 |
 | `leftOptions` | `Option[]` | | `associated` 左栏选项 |
 | `leftDefaultValue` | | | `associated` 左栏默认值 |
 | `leftMode` | `string` | `list` | `associated` 左栏 `list` / `tree` |
@@ -969,7 +969,7 @@ valueField: value
 | `searchResultColumns` | `Object[]` | | 搜索结果列；当前 Vamis 未接 |
 | `searchable` | `boolean` | `false` | 左侧搜索 |
 | `checkAll` | `boolean` | `true` | list / tree 左侧全选；chained / associated 在标题行显示全选 |
-| `resultSearchable` | `boolean` | `false` | 右侧结果本地过滤 |
+| `resultSearchable` | `boolean` | `false` | 右侧结果按 label / value 本地过滤；结果树只搜已选叶子 |
 | `searchApi` | API | | 左侧远程搜索；当前 Vamis 未接 |
 | `selectTitle` | `string` | `请选择` | 左侧标题 |
 | `resultTitle` | `string` | `当前选择` | 右侧结果标题 |
@@ -991,7 +991,7 @@ valueField: value
 | `pagination.layout` | `string[]` | `["pager"]` | 分页布局 |
 | `pagination.perPageAvailable` | `number[]` | `[10,20,50,100]` | 每页条数 |
 | `pagination.maxButtons` | `number` | `5` | 最多分页按钮 |
-| `pagination.popOverContainerSelector` | `string` | | 每页切换控件挂载点 |
+| `pagination.popOverContainerSelector` | `string` | | 每页切换控件挂载点；Vamis 示例用 `[data-vamis-panel]`，不要照搬 `cxd-*` 类名 |
 
 ## 事件表
 
@@ -1296,4 +1296,7 @@ valueField: value
 - 已接：`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`。`menuTpl` 覆盖 list / tree / chained 左侧选项，`valueTpl` 覆盖右侧结果列表；未匹配已选值会保留并按 `showInvalidMatch` 决定是否标红。
 - 已接：`sortable` 在结果列表只调整已选值顺序，不增减值；Cards / Tabs / Transfer 共用同一 Sortable 生命周期，搜索过滤时暂不显示拖拽手柄。
 - 已接：`pagination` 在 list / table 左栏显示分页栏；API 响应读取 `page` / `total | count`，数据域变量一次性分页；`perpage` 显示并切换当前每页条数，翻页选项会累积用于右侧已选值回显。`joinValues:false` + `extractValue:false` 时保留完整 option 对象，不再出现 `[object Object]`。
-- 运行时未接：`resultListModeFollowSelect`、`searchResultMode` / `searchResultColumns`、`searchApi`、移动端专用布局。
+- 已接：`resultListModeFollowSelect`；table 结果使用共享表格原语和 `columns`，tree 结果只保留已选分支，结果区关闭钮直接移除值。
+- 已接：`resultSearchable` 的 label / value 匹配、结果树叶子搜索、祖先保留与 clear；tree 含 defer 时 Amis 不允许结果搜索，Vamis 同步关闭。
+- 已接：分页示例使用 `[data-vamis-panel]` 作为 `popOverContainerSelector`；Vamis 不输出 Amis `.cxd-Panel--form`，不能照搬该选择器。
+- 运行时未接：`searchResultMode` / `searchResultColumns`、`searchApi`、移动端专用布局。
