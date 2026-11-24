@@ -11427,6 +11427,35 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-crud-op--danger:hover {
   color: var(--destructive);
 }
+/* Transfer mobile: Amis stacked panes and underline search */
+@media (max-width: 767px) {
+  .vamis-transfer {
+    min-height: 0;
+    gap: 0;
+  }
+  .vamis-transfer__select,
+  .vamis-transfer__result {
+    min-height: 0;
+  }
+  .vamis-transfer__search-wrap {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .vamis-transfer__search {
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+  }
+  .vamis-transfer__result .vamis-transfer__search-wrap {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  .vamis-transfer__result .vamis-transfer__list {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
 @media (max-width: 639px) {
   .vamis-transfer__arrow {
     display: none;

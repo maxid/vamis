@@ -1280,6 +1280,12 @@ alwaysApply: true
 - 触及：`transfer` `searchApi` `searchResultMode`
 - 规则：Amis `Transfer.tsx` `handleSearch` / `renderSearchResult`；`packages/vamis/src/renderers/form/Transfer.vue`
 
+### Transfer 移动端是 pane 自然堆叠 + 下划线搜索
+- 踩过：桌面 pane 的 `min-height: 300` 延续到窄屏，双栏各 300 再加 gap，375px 总高 608；Amis 实际约 402。搜索框还保留桌面四边框和圆角。
+- 稳定做法：`<=767px` 将 Transfer/pane 的固定最小高清 0、grid gap 清 0，让两栏按内容自然堆叠；搜索框取消四边框和圆角，仅保留 1px 底线。结果搜索再按 Amis 收垂直 margin 与列表上下 padding，实测结果 pane 159 vs Amis 158、输入框 x/w/高与底线一致。
+- 触及：`transfer` mobile
+- 规则：Amis `form/_transfer.scss` `is-mobile`；`packages/vamis-ui/src/styles.css`
+
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
 - 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。

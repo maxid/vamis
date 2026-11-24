@@ -47,3 +47,4 @@ Amis 的 Transfer schema 以 `selectMode`、`selectTitle`、`resultTitle` 为主
 3. `selectTitle` / `resultTitle` 优先于兼容别名。
 4. 每补一个运行时字段，都补行为测试并从“未接”矩阵移到“已接”。
 5. 不以 schema 补全齐全替代运行时实现，也不虚增组件进度。
+6. 375px 下双栏换行、pane 间距 0、搜索框底线样式按 Amis 回归。

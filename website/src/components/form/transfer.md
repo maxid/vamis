@@ -5,8 +5,8 @@ outline: deep
 
 # Transfer 穿梭器
 
-::: warning 实现进度 95% · 进行中
-主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`searchApi`、`searchResultMode` / `searchResultColumns`、`resultSearchable`、`resultListModeFollowSelect`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。属性表已列全 Amis schema，未接字段逐项标注；运行时仅缺移动端专用布局。
+::: tip 实现进度 100% · 已完成
+主路径：`options` / 远程 `source`、list / table / tree / chained / associated、左侧统计 / 全选、右侧已选项 / 清除 / 移除、`value` / `joinValues` / `delimiter`、`searchable` + `searchPlaceholder`、`searchApi`、`searchResultMode` / `searchResultColumns`、`resultSearchable`、`resultListModeFollowSelect`、`table.columns`、`selectTitle` / `resultTitle`、`showArrow`、`menuTpl` / `valueTpl`、`showInvalidMatch`、`sortable` 拖拽排序、前后端分页，list / table / tree 已接虚拟窗口；`change` / `selectAll` 和 `clear` / `reset` / `clearSearch` / `selectAll` / `setValue` 已接。375px 双栏堆叠与下划线搜索已对齐 Amis。
 :::
 
 穿梭选择器。属于普通表单项，通用属性见 [FormItem](./formitem)。Vamis 用 YAML 或 JSON 书写。
@@ -1300,4 +1300,5 @@ valueField: value
 - 已接：`resultSearchable` 的 label / value 匹配、结果树叶子搜索、祖先保留与 clear；tree 含 defer 时 Amis 不允许结果搜索，Vamis 同步关闭。
 - 已接：分页示例使用 `[data-vamis-panel]` 作为 `popOverContainerSelector`；Vamis 不输出 Amis `.cxd-Panel--form`，不能照搬该选择器。
 - 已接：`searchApi` 的 term 请求、`data.options` / `data.items` / 数组归一、搜索分页与清空恢复；`searchResultMode` 支持 list / table / tree / chained，table 使用 `searchResultColumns`。
-- 运行时未接：移动端专用布局。
+- 已接：375px 移动布局；左右 pane 自然高度堆叠、间距 0，搜索框无外框/圆角，仅保留下边框。
+- 运行时未接：无。

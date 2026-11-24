@@ -66,4 +66,24 @@ describe('transfer', () => {
       expect(properties, field).toHaveProperty(field)
     }
   })
+
+  it('uses the Amis stacked mobile pane and underline-search layout', () => {
+    const css = read('../../vamis-ui/src/styles.css')
+    const marker = '/* Transfer mobile: Amis stacked panes and underline search */'
+    expect(css).toContain(marker)
+    const mobile = css.slice(css.indexOf(marker))
+    expect(mobile).toContain('.vamis-transfer {')
+    expect(mobile).toContain('min-height: 0')
+    expect(mobile).toContain('gap: 0')
+    expect(mobile).toContain('.vamis-transfer__select,')
+    expect(mobile).toContain('.vamis-transfer__result {')
+    expect(mobile).toContain('border-bottom: 1px solid var(--border)')
+    expect(mobile).toContain('border-radius: 0')
+    expect(mobile).toContain('.vamis-transfer__result .vamis-transfer__search-wrap {')
+    expect(mobile).toContain('margin-top: 6px')
+    expect(mobile).toContain('margin-bottom: 6px')
+    expect(mobile).toContain('.vamis-transfer__result .vamis-transfer__list {')
+    expect(mobile).toContain('padding-top: 0')
+    expect(mobile).toContain('padding-bottom: 0')
+  })
 })
