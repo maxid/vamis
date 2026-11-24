@@ -11320,6 +11320,103 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   line-height: var(--lineHeightBase);
   color: var(--control-placeholder);
 }
+.vamis-picker__control {
+  display: flex;
+  width: 100%;
+  min-height: var(--control-h);
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text-color);
+  font-size: var(--fontSizeBase);
+  line-height: var(--lineHeightBase);
+  cursor: pointer;
+}
+.vamis-picker__control:hover {
+  border-color: var(--primary);
+}
+.vamis-picker__control.is-disabled {
+  background: var(--control-disabled-bg);
+  color: var(--control-disabled-color);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.vamis-picker__value-wrap {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: 4px var(--select-pad-x);
+}
+.vamis-picker__tag {
+  display: inline-flex;
+  height: var(--select-chip-height);
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+  border: 1px solid var(--colors-brand-9);
+  border-radius: var(--borderRadiusSm);
+  background: var(--colors-brand-10);
+  color: var(--primary);
+  font-size: var(--fontSizeSm);
+  line-height: 20px;
+}
+.vamis-picker__tag-remove,
+.vamis-picker__clear,
+.vamis-picker__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.vamis-picker__tag-remove {
+  width: 10px;
+  height: 10px;
+}
+.vamis-picker__tag-remove svg {
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+.vamis-picker__tag-label {
+  cursor: pointer;
+}
+.vamis-picker__more {
+  color: var(--text-secondary);
+  font-size: var(--fontSizeSm);
+}
+.vamis-picker__clear {
+  flex: 0 0 22px;
+  width: 22px;
+  color: var(--select-clear-color);
+}
+.vamis-picker__clear:hover {
+  color: var(--select-clear-hover-color);
+}
+.vamis-picker__clear svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+.vamis-picker__btn {
+  flex: 0 0 30px;
+  width: 30px;
+  color: var(--Pick-base-icon-color, var(--icon-color));
+}
+.vamis-picker__btn:hover {
+  color: var(--primary);
+}
+.vamis-picker__btn svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
 .vamis-picker__group {
   font-size: var(--fontSizeSm);
   font-weight: var(--fontWeightMd);

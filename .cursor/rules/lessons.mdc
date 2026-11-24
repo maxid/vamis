@@ -1286,6 +1286,18 @@ alwaysApply: true
 - 触及：`transfer` mobile
 - 规则：Amis `form/_transfer.scss` `is-mobile`；`packages/vamis-ui/src/styles.css`
 
+### Picker 是单 trigger + pickerSchema 对象值桥接
+- 踩过：默认 UI 露出独立“选择 / 清除”按钮；pickerSchema table 只桥接 scalar value，`extractValue:false` 时标签退化成 id；source 读 `schema.data` 而不是当前数据链；change/itemClick 不派发。
+- 稳定做法：非 embed 渲染一个完整 `.vamis-picker__control`，tag 内 ×、label 点击、右侧 `window-restore`，clearable 仅显式 true 才画额外 clear。pickerSchema 注入 `checkOnItemClick / pickerMode / keepItemSelectionOnPageChange`，确认时读取 selectedItems，完整对象补进 pickedOptions 并按 joinValues/extractValue 序列化。所有确认 / tag 删除 / 清空走同一 `commitPickerValues`，先派 change 再写字段；clear 用 resetValue。source 用 `useData()`。
+- 触及：`picker` `pickerSchema`
+- 规则：Amis `Form/Picker.tsx` `buildSchema` / `handleChange` / `render`；`packages/vamis/src/renderers/form/Picker.vue`
+
+### Picker 默认弹框必须等 CRUD，而不是继续自绘 list
+- 踩过：看到 Picker 弹框标题、padding、radio 不对，就准备在 Picker 内自绘一套 Modal/List；但 Amis `Picker.buildSchema()` 把默认 `pickerSchema: {mode:'list'}` 最终强制成 `type: crud`，自绘 UI 后续会被整体替换。
+- 稳定做法：Picker 先完成不依赖 CRUD 的 trigger、值序列化、pickerSchema 协议与事件；弹框盒模型、列表 toolbar/分页、single/multiple 选择控件由 CRUD 提供。实现顺序调整为 **Picker 独立契约 → CRUD → Picker 弹框复测**，不要在过渡 list 上继续做像素级返工。
+- 触及：`picker` `crud`
+- 规则：Amis `Form/Picker.tsx` `buildSchema`；TODO 依赖 `picker -> crud`
+
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
 - 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。

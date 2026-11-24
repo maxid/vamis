@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import {
-  Badge,
   Button,
   Checkbox,
   Dialog,
@@ -10,22 +9,29 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  VamisClose,
+  VamisIcon,
 } from '@vamis/ui'
 import {
   SchemaRenderer,
+  createVamisEvent,
+  eventEvalData,
   isApiOutdated,
   isEffectiveApi,
   requestApi,
   resolveValue,
+  runOnEvent,
   useData,
   useEnv,
+  useFormApi,
+  useOverlay,
+  useScope,
   useScoped,
   type SchemaObject,
 } from '@vamis/core'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import {
-  dumpJoined,
   flattenOptions,
   normalizeOptions,
   optionValuesEqual,
@@ -39,24 +45,62 @@ const fieldApi = useFieldValue()
 const env = useEnv()
 const viewData = useData()
 const scoped = useScoped()
+const overlay = useOverlay()
+const formApi = useFormApi()
+const scope = useScope()
 const remoteOptions = ref<unknown[] | null>(null)
+const pickedOptions = ref<OptionItem[]>([])
 const open = ref(false)
 const keyword = ref('')
 const pickerPage = ref(1)
 const draft = ref<unknown[]>([])
 
 const multiple = computed(() => !!props.schema.multiple)
-const pickerSchema = computed(() => (props.schema.pickerSchema && typeof props.schema.pickerSchema === 'object' ? (props.schema.pickerSchema as SchemaObject) : null))
+const pickerSchema = computed(() =>
+  props.schema.pickerSchema && typeof props.schema.pickerSchema === 'object'
+    ? (props.schema.pickerSchema as SchemaObject)
+    : null,
+)
+const resolvedPickerSchema = computed<SchemaObject | null>(() =>
+  pickerSchema.value
+    ? {
+        checkOnItemClick: true,
+        pickerMode: true,
+        keepItemSelectionOnPageChange: true,
+        ...pickerSchema.value,
+        labelField,
+        valueField,
+      }
+    : null,
+)
 const embed = computed(() => props.schema.embed === true)
 const maxTagCount = computed(() => {
   const n = Number(props.schema.maxTagCount)
   return Number.isFinite(n) && n >= 0 ? n : 0
 })
 const joinValues = computed(() => props.schema.joinValues !== false)
+const extractValue = computed(() => props.schema.extractValue === true)
 const labelField = computed(() => String(props.schema.labelField || 'label'))
 const valueField = computed(() => String(props.schema.valueField || 'value'))
 
-const rawOptions = computed(() => normalizeOptions(remoteOptions.value ?? props.schema.options))
+const rawOptions = computed(() => {
+  const base = normalizeOptions(
+    remoteOptions.value ?? props.schema.options,
+    labelField.value,
+    valueField.value,
+  )
+  const out = [...base]
+  for (const item of pickedOptions.value) {
+    if (
+      !out.some((existing) =>
+        optionValuesEqual(existing.value, item.value, valueField.value),
+      )
+    ) {
+      out.push(item)
+    }
+  }
+  return out
+})
 const options = computed(() =>
   flattenOptions(rawOptions.value).map((item) => ({
     ...item,
@@ -95,9 +139,85 @@ const selected = computed({
     parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', multiple.value, joinValues.value),
   set: (values: unknown[]) => {
     if (!props.schema.name) return
-    fieldApi.setValue(props.schema.name, dumpJoined(values, multiple.value, joinValues.value))
+    void commitPickerValues(values)
   },
 })
+
+function pickerValue(value: unknown) {
+  if (
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    valueField.value in value
+  ) {
+    return (value as Record<string, unknown>)[valueField.value]
+  }
+  return value
+}
+
+function pickerOption(value: unknown): OptionItem {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return normalizeOptions([value], labelField.value, valueField.value)[0]
+  }
+  return (
+    options.value.find((item) =>
+      optionValuesEqual(item.value, value, valueField.value),
+    ) ?? {
+      label: String(value ?? ''),
+      value,
+      [valueField.value]: value,
+    }
+  )
+}
+
+function serializePickerValue(values: unknown[]): unknown {
+  const items = values.map(pickerOption)
+  if (!multiple.value) {
+    if (!items.length) return ''
+    if (extractValue.value) return pickerValue(items[0]) ?? ''
+    if (!joinValues.value) return items[0]
+    return pickerValue(items[0]) ?? ''
+  }
+  if (extractValue.value) return items.map((item) => pickerValue(item))
+  if (!joinValues.value) return items
+  return items
+    .map((item) => pickerValue(item))
+    .join(String(props.schema.delimiter || ','))
+}
+
+async function dispatchPickerEvent(
+  name: 'change' | 'itemClick',
+  payload: Record<string, unknown>,
+  native?: Event,
+) {
+  const full = { ...viewData.value, ...payload }
+  const event = createVamisEvent(name, full, native)
+  await runOnEvent(props.schema, name, {
+    env,
+    data: eventEvalData(full, event),
+    scoped,
+    overlay,
+    form: formApi,
+    scope: scope.value,
+    event,
+  })
+  return event
+}
+
+async function commitPickerValues(values: unknown[]) {
+  if (!props.schema.name) return false
+  const items = values.map(pickerOption)
+  const value = serializePickerValue(values)
+  const event = await dispatchPickerEvent('change', {
+    value,
+    option: multiple.value ? items : items[0],
+    selectedItems: multiple.value ? items : items[0],
+    items,
+  })
+  if (event.prevented) return false
+  fieldApi.setValue(props.schema.name, value)
+  return true
+}
 
 const perPage = computed(() => {
   const n = Number(props.schema.perPage)
@@ -134,7 +254,21 @@ const pagedOptions = pagedRows
 const lastPage = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / perPage.value)))
 
 const selectedLabels = computed(() =>
-  selected.value.map((value) => options.value.find((item) => optionValuesEqual(item.value, value))?.label || String(value)),
+  selected.value.map((value) => {
+    const hit = options.value.find((item) =>
+      optionValuesEqual(item.value, value, valueField.value),
+    )
+    if (hit) return hit.label
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return String(
+        (value as Record<string, unknown>)[labelField.value] ??
+          (value as Record<string, unknown>).label ??
+          pickerValue(value) ??
+          '',
+      )
+    }
+    return String(value)
+  }),
 )
 
 function isChecked(option: OptionItem) {
@@ -160,6 +294,9 @@ function openPicker() {
 }
 
 const shownLabels = computed(() => (maxTagCount.value > 0 ? selectedLabels.value.slice(0, maxTagCount.value) : selectedLabels.value))
+const hiddenLabels = computed(() =>
+  maxTagCount.value > 0 ? selectedLabels.value.slice(maxTagCount.value) : [],
+)
 const hiddenCount = computed(() => Math.max(0, selectedLabels.value.length - shownLabels.value.length))
 
 function commitInline(option: OptionItem, checked: boolean) {
@@ -167,39 +304,87 @@ function commitInline(option: OptionItem, checked: boolean) {
   else selected.value = checked ? [...selected.value.filter((v) => !optionValuesEqual(v, option.value)), option.value] : selected.value.filter((v) => !optionValuesEqual(v, option.value))
 }
 
-function confirm() {
+function mergePickedOptions(items: unknown[]) {
+  const normalized = normalizeOptions(
+    items,
+    labelField.value,
+    valueField.value,
+  )
+  const next = [...pickedOptions.value]
+  for (const item of normalized) {
+    if (
+      !next.some((existing) =>
+        optionValuesEqual(existing.value, item.value, valueField.value),
+      )
+    ) {
+      next.push(item)
+    }
+  }
+  pickedOptions.value = next
+}
+
+async function confirm() {
   if (pickerSchema.value) {
     const key = String(pickerSchema.value.id || pickerSchema.value.name || '')
     const nested = key ? scoped?.getComponentById(key) : undefined
     const nestedData = nested?.getData?.() as Record<string, any> | undefined
     const items = nestedData?.selectedItems
     if (Array.isArray(items)) {
-      draft.value = items
-        .map((item: any) => (item && typeof item === 'object' ? item[valueField.value] ?? item.value : item))
-        .filter((item) => item != null)
+      const picked = items.filter((item) => item != null)
+      mergePickedOptions(picked)
+      draft.value =
+        !joinValues.value && !extractValue.value
+          ? picked
+          : picked.map((item) => pickerValue(item))
     } else if (nestedData && typeof nestedData === 'object') {
       const raw = nestedData[valueField.value]
       if (raw != null) draft.value = Array.isArray(raw) ? raw : [raw]
     }
   }
-  selected.value = [...draft.value]
-  open.value = false
+  const committed = await commitPickerValues([...draft.value])
+  if (committed) open.value = false
 }
 
 function clear() {
-  selected.value = []
+  const reset = props.schema.resetValue
+  selected.value =
+    reset === undefined
+      ? []
+      : parseJoined(
+          reset,
+          multiple.value,
+          joinValues.value,
+          String(props.schema.delimiter || ','),
+        )
+}
+
+function clickTag(index: number) {
+  const value = selected.value[index]
+  if (value === undefined) return
+  void dispatchPickerEvent('itemClick', {
+    item: pickerOption(value),
+  })
+}
+
+function removePickerTag(index: number) {
+  const next = selected.value.filter((_, itemIndex) => itemIndex !== index)
+  void commitPickerValues(next)
 }
 async function loadSource() {
   const source = props.schema.source
   if (!source) return
   if (typeof source === 'string' && source.trim().startsWith('$')) {
-    const resolved = resolveValue(source, props.schema.data || {})
+    const resolved = resolveValue(source, viewData.value)
     if (Array.isArray(resolved)) remoteOptions.value = resolved
     return
   }
-  if (!isEffectiveApi(source, props.schema.data || {})) return
+  if (!isEffectiveApi(source, viewData.value)) return
   try {
-    const result = await requestApi(source, { env, data: props.schema.data || {}, reason: 'init' })
+    const result = await requestApi(source, {
+      env,
+      data: viewData.value,
+      reason: 'init',
+    })
     if (result.skipped || !result.ok) return
     const payload = result.data || {}
     const list = Array.isArray(payload)
@@ -213,7 +398,7 @@ async function loadSource() {
 
 onMounted(() => void loadSource())
 watch(
-  () => [props.schema.source, props.schema.data] as const,
+  () => [props.schema.source, viewData.value] as const,
   (curr, prev) => {
     if (!prev) return
     if (isApiOutdated(prev[0], curr[0], prev[1] || {}, curr[1] || {})) void loadSource()
@@ -224,12 +409,61 @@ watch(
 
 <template>
   <FormItem :schema="schema">
-    <div class="vamis-picker flex flex-wrap items-center gap-2">
-      <Badge v-for="(label, i) in shownLabels" :key="i" variant="secondary">{{ label }}</Badge>
-      <Badge v-if="hiddenCount > 0" variant="outline">+{{ hiddenCount }}</Badge>
-      <span v-if="!selectedLabels.length" class="vamis-picker__placeholder">{{ schema.placeholder || '请选择' }}</span>
-      <Button v-if="!embed" type="button" size="sm" variant="outline" :disabled="disabled" @click="openPicker">选择</Button>
-      <Button v-if="selectedLabels.length && schema.clearable !== false" type="button" size="sm" variant="ghost" :disabled="disabled" @click="clear">清除</Button>
+    <div
+      v-if="!embed"
+      class="vamis-picker__control"
+      :class="{ 'is-disabled': disabled }"
+      @click="!disabled && openPicker()"
+    >
+      <div class="vamis-picker__value-wrap">
+        <span v-if="!selectedLabels.length" class="vamis-picker__placeholder">
+          {{ schema.placeholder || '请选择' }}
+        </span>
+        <span
+          v-for="(label, i) in shownLabels"
+          :key="i"
+          class="vamis-picker__tag"
+        >
+          <button
+            type="button"
+            class="vamis-picker__tag-remove"
+            :aria-label="`移除 ${label}`"
+            @click.stop="removePickerTag(i)"
+          >
+            <VamisClose />
+          </button>
+          <span class="vamis-picker__tag-label" @click.stop="clickTag(i)">
+            {{ label }}
+          </span>
+        </span>
+        <span
+          v-if="hiddenCount > 0"
+          class="vamis-picker__more"
+          :title="hiddenLabels.join('、')"
+        >
+          +{{ hiddenCount }}
+        </span>
+      </div>
+      <button
+        v-if="selectedLabels.length && schema.clearable === true"
+        type="button"
+        class="vamis-picker__clear"
+        :disabled="disabled"
+        aria-label="清除"
+        @click.stop="clear"
+      >
+        <VamisIcon name="input-clear" />
+      </button>
+      <button
+        type="button"
+        data-picker-open
+        class="vamis-picker__btn"
+        :disabled="disabled"
+        aria-label="打开选择器"
+        @click.stop="openPicker"
+      >
+        <VamisIcon name="window-restore" />
+      </button>
     </div>
     <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
       <template v-for="(row, i) in pagedRows" :key="i">
@@ -248,8 +482,8 @@ watch(
           <DialogTitle>{{ schema.modalTitle || schema.label || '请选择' }}</DialogTitle>
         </DialogHeader>
         <SchemaRenderer
-          v-if="pickerSchema"
-          :schema="pickerSchema"
+          v-if="resolvedPickerSchema"
+          :schema="resolvedPickerSchema"
           :extra-data="{ ...viewData, items: options }"
         />
         <Input v-else v-model="keyword" placeholder="筛选" class="mb-2" />

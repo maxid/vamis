@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-24（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1404**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-24（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1409**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker **2/2**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -112,7 +112,7 @@
 | `avatar` | badge | 未核 | |
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
-| `picker` | 弹层多选 | 未核 | 65%，有浮层但主路径未齐，可后置 |
+| `picker` | 弹层多选 | 独立部分已核 | 82%，默认弹框待 CRUD；缺 modalMode / drawer、strictMode、树选择 |
 | `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#182230`），无独立 tooltip |
 
 ### 已推进、无独立浮层（切深色看默认皮）
@@ -226,7 +226,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 88% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue。缺 themeCss | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
-| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 65% | 基本用法对标 Amis：`saveForm` + label `picker` + A/B/C。对照桌面 **1/1**（P0 0）。补远程 source / 分页 / pickerSchema 文档活示例；缺树选择 | P0 |
+| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 82% | 默认 trigger 对齐 Amis 单输入框：tag 内嵌 × / label 点击 itemClick / picker icon，trigger 实测 926×32，无外部动作按钮。`pickerSchema` 注入 checkOnItemClick / pickerMode / keepItemSelectionOnPageChange，内层 table selectedItems 完整对象写回并补 options；`joinValues:false` + `extractValue:false` 不退化为 id。`source` 读当前数据链，`change` 写值前派发并支持 preventDefault，clear 用 resetValue，`+N` 带隐藏标签 title。对照桌面 / 移动 **2/2**（P0 0）。依赖 CRUD：Amis 默认把 pickerSchema 构造成 CRUD，当前自绘弹框暂停，不继续仿 CRUD UI。缺 modalMode / drawer、strictMode、树选择 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |
@@ -464,7 +464,7 @@ flowchart LR
 | 40 | `button` | `action` | 7 | 1 | 20 | 32 | P1 | 进行中 | 96% |
 | 41 | `button-group` | `action`、`button` | 6 | 2 | 32 | 32 | P1 | 进行中 | 92% |
 | 42 | `transfer` | `list`、`checkbox`、Options | 5 | 2 | 31 | 31 | P1 | 进行中 | 70% |
-| 43 | `picker` | `select`、`list` | 4 | 2 | 30 | 30 | P1 | 进行中 | 65% |
+| 43 | `picker` | `crud`、`list` | 4 | 2 | 30 | 30 | P1 | 进行中 | 82% |
 | 44 | `dialog` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | P1 | 已完成 | 100% |
 | 45 | `drawer` | `action`、`form`、`container`、`tpl`、`spinner` | 3 | 2 | 29 | 29 | P1 | 进行中 | 88% |
 | 46 | `formula` | — | 12 | 1 | 25 | 25 | P1 | 进行中 | 65% |

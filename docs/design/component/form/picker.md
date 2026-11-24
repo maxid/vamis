@@ -1,6 +1,6 @@
 # Picker 列表选择器 · `picker` 设计
 
-> 状态：**进行中 84%** · 复杂度：**XL 特重**
+> 状态：**进行中 82% · 暂阻塞于 CRUD** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/picker) · Amis：`/zh-CN/components/form/picker`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
@@ -12,7 +12,7 @@ Picker 是“表单字段 + 弹层列表 + pickerSchema 自定义内容”的组
 
 ### 1.1 P0 不可破坏边界
 
-1. **值写回**：`selected` 计算属性经 `fieldApi.getValue/setValue`；`joinValues` / `multiple` / `delimiter` / `valueField` 决定写 string 还是 array；`labelField` 只影响展示。
+1. **值写回**：`selected` 计算属性经 `fieldApi.getValue/setValue`；`joinValues` / `extractValue` / `multiple` / `delimiter` / `valueField` 决定写 string、array 或 object；`labelField` 只影响展示。
 2. **draft 与确认**：弹层打开时 `draft = [...selected]`；列表勾选只改 draft；`confirm` 才写表单。取消/关闭不得写值。
 3. **内嵌模式**：`embed` 直接操作 `selected`（无弹层），但 `commitInline` 仍走同一序列化；不能另写一套值。
 4. **pickerSchema 桥接**：确认时按 `id/name` 找内层组件 API：`selectedItems`（table/crud）或 `valueField` 字段（form）；找不到就保持 draft，不报错、不清空。
@@ -73,7 +73,8 @@ Picker 是“表单字段 + 弹层列表 + pickerSchema 自定义内容”的组
 
 ### 3.3 事件 / 动作
 
-- 当前 **无独立组件事件**；确认/清空直接写表单字段。
+- `change`：写值前派发，payload 含 `value` / `option` / `selectedItems` / `items`，支持 `preventDefault()`。
+- `itemClick`：点击已选 tag label 时派发当前 option。
 - 当前 **无专属动作**；不要按 select 的 clear/reset 猜。
 - 值变化由 FormItem/字段监听；没有 `change` 事件就不要在文档里声称有。
 
@@ -124,9 +125,11 @@ confirm  → pickerSchema 桥接 → selected = draft → FormItem 写值
 
 ## 6. 当前状态与缺口
 
-- 已对齐：静态 options、multiple、`joinValues`/`delimiter`、弹层搜索/确认/取消、clearable、embed、maxTagCount、远程/变量 source、children 分组、perPage 弹层分页、pickerSchema（table selectedItems / form valueField）。
-- 对照：TODO 记录 picker 桌面/移动主路径；本轮未重跑。
-- 缺：树选择、完整事件动作表；pickerSchema 内其它组件类型桥接未定义；分组组头的键盘/可访问性未专项核。
+- 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、弹层搜索/确认/取消、embed、maxTagCount、远程/变量 source、children 分组、perPage 弹层分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
+- 已接：`change` / `itemClick`、`resetValue` 清空、数据链 source、`+N` 隐藏标签 title。
+- 对照：桌面 / 移动 2/2（P0 0），trigger 926×32 与 Amis 一致。
+- 实现顺序：Amis `buildSchema()` 最终生成 `type: crud`，因此默认弹框必须复用 CRUD；当前自绘 list 只保留为过渡，不继续仿 CRUD 盒模型。先补 CRUD，再恢复 Picker 弹框专项。
+- 缺：CRUD 依赖、`modalMode: drawer`、`strictMode`、树选择；pickerSchema 内其它组件类型桥接未定义；分组组头键盘/可访问性未专项核。
 
 ## 7. 验收计划与完成度
 
@@ -136,13 +139,13 @@ confirm  → pickerSchema 桥接 → selected = draft → FormItem 写值
 - [x] Vamis Picker / options 工具已定位
 - [x] 复杂度、依赖、集成面已盘点
 - [ ] schema 属性 / 默认值逐项核对
-- [ ] 事件 / 动作逐项核对（当前无独立事件/动作）
+- [x] change / itemClick；当前无独立动作
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无控制台 error
-- [ ] `pnpm test`（Picker 相关）
+- [x] `pnpm test`（Picker 相关）
 - [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page picker` 桌面
-- [ ] `pnpm compare --page picker --mobile`
+- [x] `pnpm compare --page picker` 桌面
+- [x] `pnpm compare --page picker --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点

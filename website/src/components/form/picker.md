@@ -5,8 +5,8 @@ outline: deep
 
 # Picker 列表选择器
 
-::: warning 实现进度 65% · 进行中
-静态 `options`、`multiple`、弹层搜索 / 确认 / 取消、`embed` 内嵌、`maxTagCount`、`clearable`、`joinValues` / `delimiter`、`labelField` / `valueField`。缺 `pickerSchema` 自定义弹层、远程 `source`、分页 / 分组 / 树选择。
+::: warning 实现进度 82% · 进行中
+默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`maxTagCount`、`clearable`、远程 / 数据链 `source`、分页 / 分组、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框依赖 CRUD，待 CRUD 补齐后再收口 `modalMode: drawer`、`strictMode`、树选择与弹框盒模型。
 :::
 
 列表选择器：弹层里选选项，确认后写回表单。属于普通表单项，通用属性见 [FormItem](./formitem)。
@@ -424,21 +424,25 @@ options:
 | `embed` | `boolean` | `false` | 内嵌列表 |
 | `maxTagCount` | `number` | | 最多展示标签数，其余 `+N` |
 | `perPage` | `number` | `10` | 弹层每页选项数 |
-| `clearable` | `boolean` | `true` | 可清除 |
+| `clearable` | `boolean` | `false` | 显示额外清除入口；tag 内仍可逐项移除 |
 | `placeholder` | `string` | `请选择` | 未选占位 |
 | `modalTitle` | `string` | | 弹层标题 |
-| `pickerSchema` | Schema | | 自定义弹层（内层 table 勾选可桥接） |
+| `pickerSchema` | Schema | | 自定义弹层；自动开启 pickerMode / checkOnItemClick，并向 table/crud selectedItems 或 form valueField 桥接 |
 | `source` | API / 变量 | | 远程或数据域选项 |
 
 ## 事件表
 
-弹层确认 / 清空会写回表单字段；`picker` 暂无独立组件事件。
+| 事件名称 | 参数 | 说明 |
+|---|---|---|
+| `change` | `value` / `option` / `selectedItems` / `items` | 写值前派发，可 `preventDefault()` |
+| `itemClick` | `item` | 点击已选 tag label 时触发 |
 
 ## 动作表
 
 `picker` 没有专属动作。
 
 ## 和 Amis 文档的差异
-- 与 Amis 一致：静态 options、multiple、joinValues/delimiter、弹层搜索/确定/取消、clearable。
-- 已加：`embed` 内嵌、`maxTagCount` 折叠标签。
-- 分组选项已接；未接树选择、完整事件动作表。
+- 与 Amis 一致：默认 trigger、tag ×、picker icon、multiple、joinValues/extractValue、弹层确认/取消、pickerSchema 对象值回填。
+- 已加：`embed` 内嵌、`maxTagCount` 折叠标签与隐藏项 title。
+- 已接：数据链 source、pickerSchema selectedItems 合并、`change` / `itemClick`、`resetValue` 清空。
+- 未接：`modalMode: drawer`、`strictMode`、树选择。
