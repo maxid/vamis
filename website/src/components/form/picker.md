@@ -5,8 +5,8 @@ outline: deep
 
 # Picker 列表选择器
 
-::: warning 实现进度 94% · 进行中
-默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount`、`itemClearable`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。余 `displayPosition` / 标签收纳浮层、`staticItemClick`、`strictMode` 与树选择。
+::: warning 实现进度 97% · 进行中
+默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount` / `displayPosition`、`itemClearable`、`staticItemClick`、`strictMode`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。余标签收纳浮层与树选择。
 :::
 
 列表选取，在功能和 Select 类似，但它能显示更复杂的信息。Picker 属于普通表单项，通用字段见 [FormItem](./formitem)。
@@ -427,7 +427,39 @@ options:
 
 ### staticItemClick
 
-> Amis 6.13.0 起支持。Vamis 当前尚未派发该事件，见下方差异说明。
+静态展示时选项被点击时触发。
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "picker",
+      "name": "picker",
+      "label": "picker",
+      "static": true,
+      "value": "a,b",
+      "multiple": true,
+      "options": [
+        { "label": "A", "value": "a" },
+        { "label": "B", "value": "b" },
+        { "label": "C", "value": "c" }
+      ],
+      "onEvent": {
+        "staticItemClick": {
+          "actions": [
+            {
+              "actionType": "toast",
+              "args": { "msg": "${event.data.item|json}" }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
 
 **补充：多选与值格式。** `multiple: true` 可多选；`joinValues` / `extractValue` / `delimiter` 控制写回 string、array 或完整 option。
 
@@ -483,6 +515,6 @@ options:
 
 - 章节顺序与 Amis 6.13 对齐：基本用法、配置 pickerSchema、内嵌模式、限制标签最大展示数量、属性表 / OverflowConfig、事件表 / change / itemClick / staticItemClick。
 - 默认 Picker 已按 Amis `buildSchema()` 生成 CRUD `mode: list`；500px dialog、`modalMode: drawer`、drawer 桌面 500px / 窄屏全宽、已有值回填、选中行与 `itemClearable` 已对齐。
-- `overflowConfig.maxTagCount` 已接；`displayPosition`、`overflowTagPopover`、`overflowTagPopoverInCRUD` 尚未接。
-- `staticItemClick` 尚未派发；`strictMode` 与树选择尚未完成。
+- `overflowConfig.maxTagCount` 与 `displayPosition` 已接；`overflowTagPopover`、`overflowTagPopoverInCRUD` 的浮层样式尚未接。
+- `staticItemClick` 与 `strictMode` 已接；树选择尚未完成。
 - Vamis 额外保留顶层 `maxTagCount`、`clearable`、`placeholder`、`perPage` 兼容字段；Amis 主字段仍以本文属性表为准。

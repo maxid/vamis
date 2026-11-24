@@ -1,6 +1,6 @@
 # Picker 列表选择器 · `picker` 设计
 
-> 状态：**进行中 94%** · 复杂度：**XL 特重**
+> 状态：**进行中 97%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/picker) · Amis：`/zh-CN/components/form/picker`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
@@ -135,12 +135,12 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 6. 当前状态与缺口
 
-- 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、默认 CRUD list 弹框、`modalMode: drawer` / `modalSize`、embed、`overflowConfig.maxTagCount`、`itemClearable`、远程/变量 source、children 顶层组行、CRUD 本地分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
+- 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、默认 CRUD list 弹框、`modalMode: drawer` / `modalSize`、embed、`overflowConfig.maxTagCount` / `displayPosition`、`itemClearable`、`staticItemClick`、`strictMode`、远程/变量 source、children 顶层组行、CRUD 本地分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
 - 已接：`change` / `itemClick`、`resetValue` 清空、数据链 source、`+N` 隐藏标签 title。
 - 已收口：默认弹框由 CRUD `mode: list` 承载；已选回填、选中行、无 bulkActions 时不显示计数、已有值打开与无变更确认均有回归。多选时 CRUD 顶部显示 `已选N条 / 标签 / 清空`。Drawer 桌面 500px、header 54、body 上下 24、footer 57；375px 全宽。
 - 文档：主 TOC 与 Amis 6.13 同序，属性表补 `autoFill` / `overflowConfig` / `itemClearable`，事件表补 `change` / `itemClick` / `staticItemClick`；补充示例不再占用主章节。
 - 对照：桌面 / 移动 2/2（P0 0），trigger 926×32 与 Amis 一致；真实弹框 500px / 盒模型与 Amis 计算值一致。
-- 缺：`overflowConfig.displayPosition` / 收纳浮层、`staticItemClick` 派发、`strictMode`、树选择；pickerSchema 内其它组件类型桥接未定义；分组组行键盘/可访问性未专项核。
+- 缺：`overflowTagPopover` / `overflowTagPopoverInCRUD` 浮层样式、树选择；pickerSchema 内其它组件类型桥接未定义；分组组行键盘/可访问性未专项核。
 
 ## 7. 验收计划与完成度
 
@@ -169,10 +169,9 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 8. 后续
 
-1. 补 `strictMode`，按 Amis 单选/多选值约束核对。
-2. 树选择单独立项；先核 Amis Picker 是否通过 pickerSchema 复用 tree，而不是自造选择协议。
+1. 树选择单独立项；先核 Amis Picker 是否通过 pickerSchema 复用 tree，而不是自造选择协议。
+2. 补 `overflowTagPopover` / `overflowTagPopoverInCRUD` 的收纳浮层样式与 keyboard 可达性。
 3. pickerSchema 协议补“内层其它类型（list/cards）”或明确只支持 table/form。
-4. 标签删除、`+N` tooltip、分组行键盘与窄屏弹层做交互专项。
 
 ---
 

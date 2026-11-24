@@ -35,7 +35,6 @@ import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import Spinner from './Spinner.vue'
 import RowValueHost from './data/RowValueHost.vue'
-import { optionValuesEqual } from '../options'
 import {
   asToolbarSchema,
   CrudHostKey,
@@ -69,6 +68,7 @@ const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
 const seededValueKey = ref('')
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
+const strictMode = computed(() => props.schema.strictMode === true)
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
 const pickerMode = computed(() => props.schema.pickerMode === true)
 const multiple = computed(() => props.schema.multiple !== false)
@@ -425,8 +425,30 @@ function rowKey(row: Record<string, any>) {
   return row[primaryField.value] ?? JSON.stringify(row)
 }
 
+function primaryValueEqual(left: unknown, right: unknown) {
+  if (strictMode.value) return left === right
+  return (
+    left === right ||
+    (left != null && right != null && String(left) === String(right))
+  )
+}
+
+function sameRowIdentity(
+  left: Record<string, any>,
+  right: Record<string, any>,
+) {
+  if (left === right) return true
+  const leftValue = left?.[primaryField.value]
+  const rightValue = right?.[primaryField.value]
+  return (
+    leftValue != null &&
+    rightValue != null &&
+    primaryValueEqual(leftValue, rightValue)
+  )
+}
+
 function isSelected(row: Record<string, any>) {
-  return store.selectedItems.some((item) => rowKey(item) === rowKey(row))
+  return store.selectedItems.some((item) => sameRowIdentity(item, row))
 }
 
 function toggleRow(row: Record<string, any>, checked: boolean) {
@@ -440,7 +462,9 @@ function toggleRow(row: Record<string, any>, checked: boolean) {
     notifyPickerSelection()
     return
   }
-  store.selectedItems = store.selectedItems.filter((item) => rowKey(item) !== rowKey(row))
+  store.selectedItems = store.selectedItems.filter(
+    (item) => !sameRowIdentity(item, row),
+  )
   notifyPickerSelection()
 }
 
@@ -474,8 +498,9 @@ function toggleAll(checked: boolean) {
     notifyPickerSelection()
     return
   }
-  const keys = new Set(store.items.map((row) => rowKey(row)))
-  store.selectedItems = store.selectedItems.filter((item) => !keys.has(rowKey(item)))
+  store.selectedItems = store.selectedItems.filter(
+    (item) => !store.items.some((row) => sameRowIdentity(item, row)),
+  )
   notifyPickerSelection()
 }
 
@@ -501,7 +526,7 @@ function selectedItemLabel(item: Record<string, any>) {
 
 function removeSelectedItem(item: Record<string, any>) {
   store.selectedItems = store.selectedItems.filter(
-    (selected) => rowKey(selected) !== rowKey(item),
+    (selected) => !sameRowIdentity(selected, item),
   )
   notifyPickerSelection()
 }
@@ -530,11 +555,7 @@ function seedSelectionFromValue() {
       return value as Record<string, any>
     }
     const row = pool.find((item) =>
-      optionValuesEqual(
-        item?.[primaryField.value],
-        value,
-        primaryField.value,
-      ),
+      primaryValueEqual(item?.[primaryField.value], value),
     )
     return (
       row ?? {

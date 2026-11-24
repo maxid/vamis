@@ -1316,6 +1316,12 @@ alwaysApply: true
 - 触及：`picker` `crud` `formitem`
 - 规则：Amis `Form/Picker.tsx`、`CRUD.tsx renderSelection`、`_crud.scss` / `_mixins.scss tag-item`；`packages/vamis/src/renderers/FormItem.vue`、`CRUD.vue`、`packages/vamis-ui/src/styles.css`
 
+### Picker 的 displayPosition、staticItemClick、strictMode 不要各自造链
+- 踩过：把 `displayPosition: ['select']` 也拿去关闭 trigger 折叠，或准备在 Picker 里另写静态点击；同时 CRUD 主键一直按字符串比较，`strictMode` 形同虚设。
+- 稳定做法：`overflowConfig.maxTagCount` 永远作用于 trigger；`displayPosition.includes('crud')` 只决定是否把 `maxTagCount` 传给 CRUD。`staticItemClick` 已由 `FormItem -> formItemStaticSelectorNode -> Words` 统一派发，Picker 只保留 `FORM_ITEM_STATIC_WORDS_TYPES` 和 onEvent 透传。CRUD 身份比较走 `primaryValueEqual`：`strictMode:true` 用 `===`，否则按字符串等价；seed、勾选、清空、全选共用这一个比较器。
+- 触及：`picker` `crud` `formitem`
+- 规则：Amis `Form/Picker.tsx getOverflowConfig/renderBody`、`CRUD.tsx strictMode`；`packages/vamis-core/src/utils/form-item.ts`、`packages/vamis/src/renderers/CRUD.vue`
+
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
 - 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。

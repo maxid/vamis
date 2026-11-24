@@ -63,6 +63,56 @@ describe('CRUD picker mode', () => {
     )
   })
 
+  it('uses strictMode for initial picker selection identity', async () => {
+    const loose = mount({
+      type: 'page',
+      body: {
+        type: 'crud',
+        name: 'crudPickerLooseIdentity',
+        pickerMode: true,
+        multiple: false,
+        keepItemSelectionOnPageChange: true,
+        value: '1',
+        primaryField: 'id',
+        source: '$items',
+        data: {
+          items: [{ id: 1, name: '数字 1' }],
+        },
+        columns: [{ name: 'name', label: '名称' }],
+      },
+    })
+
+    await nextTick()
+    expect(loose.host.querySelector('.vamis-radio-dot')?.getAttribute('aria-checked')).toBe(
+      'true',
+    )
+    loose.scoped.unmount()
+
+    const strict = mount({
+      type: 'page',
+      body: {
+        type: 'crud',
+        name: 'crudPickerStrictIdentity',
+        pickerMode: true,
+        multiple: false,
+        keepItemSelectionOnPageChange: true,
+        strictMode: true,
+        value: '1',
+        primaryField: 'id',
+        source: '$items',
+        data: {
+          items: [{ id: 1, name: '数字 1' }],
+        },
+        columns: [{ name: 'name', label: '名称' }],
+      },
+    })
+
+    await nextTick()
+    expect(
+      strict.host.querySelector('.vamis-radio-dot')?.getAttribute('aria-checked'),
+    ).toBe('false')
+  })
+
   it('paginates local picker rows and preserves selection across pages', async () => {
     const rows = Array.from({ length: 11 }, (_, index) => ({
       id: String(index + 1),

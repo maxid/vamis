@@ -151,6 +151,7 @@ store.items ──> list / 手写 table / Cards
 - 已对齐主路径：api + sample 列、查询、分页、行详情/删除、bulk、cards 模式、loadDataOnce、syncLocation、quickEdit（文本/数字/select/textarea）、表达式 matchFunc；operation 列与共享 Action 宿主对齐。
 - Picker 依赖切片：`pickerMode` 自动选择；`mode: list` 对齐 Amis `List + ListItem`（右缩 15px、行高 42.5、选中 `brand-10/brand-4`）；`multiple:false` 使用 radio 单选并支持整行点击；scoped `getData()` 暴露 selectedItems / selectedIds / items / page / perPage；`value + primaryField` 回填已有值；无 API 本地 source 进入本地分页并支持 keep selection；选中计数只在存在 bulkActions 时显示。
 - Picker 多选栏：`pickerMode + multiple + keepItemSelectionOnPageChange` 时渲染 `已选N条：`、可删除标签和“清空”；普通 list 顶部已选计数仍只属于 bulkActions。
+- `strictMode`：主键身份比较统一走严格 `===`；默认非严格模式允许 `1` 与 `"1"` 等价。seed、单选替换、多选移除与全选共用该比较器。
 - 对照记录：桌面 / 移动 **60/92**（2026-11-20，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。

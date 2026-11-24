@@ -88,6 +88,16 @@ const maxTagCount = computed(() => {
   const n = Number(configured ?? props.schema.maxTagCount)
   return Number.isFinite(n) && n >= 0 ? n : 0
 })
+const displayPosition = computed(() => {
+  const overflow = props.schema.overflowConfig
+  const configured =
+    overflow && typeof overflow === 'object' && !Array.isArray(overflow)
+      ? (overflow as Record<string, unknown>).displayPosition
+      : undefined
+  return Array.isArray(configured)
+    ? configured.map((item) => String(item))
+    : ['select', 'crud']
+})
 const joinValues = computed(() => props.schema.joinValues !== false)
 const extractValue = computed(() => props.schema.extractValue === true)
 const labelField = computed(() => String(props.schema.labelField || 'label'))
@@ -130,7 +140,11 @@ const effectivePickerSchema = computed<SchemaObject>(() => {
     primaryField: valueField.value,
     value: embed.value ? selected.value : draft.value,
     __pickerOnSelect: embed.value ? handleEmbedSelection : undefined,
-    maxTagCount: maxTagCount.value > 0 ? maxTagCount.value : undefined,
+    maxTagCount:
+      (embed.value || displayPosition.value.includes('crud')) &&
+      maxTagCount.value > 0
+        ? maxTagCount.value
+        : undefined,
     columns,
     source: source
       ? sourceIsVariable

@@ -101,6 +101,43 @@ describe('Picker value and pickerSchema bridge', () => {
     expect(host.querySelector('.vamis-picker__tag-remove')).toBeNull()
   })
 
+  it('keeps CRUD selection tags unfolded when displayPosition excludes crud', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b,c',
+        overflowConfig: {
+          maxTagCount: 1,
+          displayPosition: ['select'],
+        },
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+          { label: 'C', value: 'c' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(1)
+    expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
+      '+2',
+    )
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-selection')).toBeTruthy(),
+    )
+    expect(
+      document.querySelectorAll('.vamis-crud-selection-value'),
+    ).toHaveLength(3)
+    expect(document.querySelector('.vamis-crud-selection-more')).toBeNull()
+  })
+
   it('keeps the picker trigger fluid when size is configured', async () => {
     const { host } = mount({
       type: 'form',
@@ -156,6 +193,45 @@ describe('Picker value and pickerSchema bridge', () => {
     buttonWithText('确认')?.click()
     await vi.waitFor(() =>
       expect(formData(scoped, 'pickerSelectionBarForm').hero).toBe(''),
+    )
+  })
+
+  it('dispatches staticItemClick for a static picker', async () => {
+    const notify = vi.fn()
+    const { host } = mount(
+      {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'picker',
+          name: 'hero',
+          label: '英雄',
+          static: true,
+          multiple: true,
+          value: 'a,b',
+          options: [
+            { label: 'A', value: 'a' },
+            { label: 'B', value: 'b' },
+          ],
+          onEvent: {
+            staticItemClick: {
+              actions: [
+                {
+                  actionType: 'toast',
+                  args: { msg: '${event.data.item.value}' },
+                },
+              ],
+            },
+          },
+        },
+      },
+      { notify },
+    )
+
+    await nextTick()
+    ;(host.querySelector('.vamis-words span') as HTMLElement).click()
+    await vi.waitFor(() =>
+      expect(notify.mock.calls.map((call) => call[1])).toContain('a'),
     )
   })
 
