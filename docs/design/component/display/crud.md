@@ -1,6 +1,6 @@
 # CRUD 增删改查 · `crud` 设计
 
-> 状态：**进行中 72%** · 复杂度：**XL 特重**
+> 状态：**进行中 73%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/crud) · Amis：`/zh-CN/components/crud`
 > 盘点日期：2026-11-18。本文是**研发设计文档**；属性 / 事件 / 动作全表以在线文档为准。
 
@@ -11,7 +11,7 @@ CRUD 是“查询 + 列表 + 分页 + 行操作 + 批量操作 + 弹层表单”
 因此研发 CRUD 时先分清三种工作：
 
 1. **壳与数据管线**：api / query / pagination / loadDataOnce / syncLocation / 批量上下文；
-2. **列表能力**：排序、筛选、快速编辑、列显示、拖拽、嵌套——理想上复用 Table，现实中目前是轻量实现；
+2. **列表能力**：排序、筛选、快速编辑、列显隐、拖拽、嵌套——理想上复用 Table，现实中目前是轻量实现；
 3. **行/弹层/动作**：详情、编辑、删除、bulkActions、卡片模式。
 
 > **架构债**：CRUD 不应继续扩自己的手写 `<table>` 单元格；下一刀应先评估“CRUD 套 Table renderer”，否则列能力会继续分叉。本文按现状写边界，不按 Amis 的理想架构假装已完成。
@@ -156,9 +156,10 @@ store.items ──> list / 手写 table / Cards
 - `strictMode`：主键身份比较统一走严格 `===`；默认非严格模式允许 `1` 与 `"1"` 等价。seed、单选替换、多选移除与全选共用该比较器。
 - `footerToolbar`：支持 `statistics` 关键字、`pagination` schema 与其它 SchemaRenderer 节点；自定义 pagination 会补当前 page / perPage / total / lastPage，并保留作者 `layout` 与 `showPageInput`。右栏 `max-width:100%`，Pagination 根 `white-space:normal`，窄弹框内按 Amis 自动分成 perPage / pager / go 行。
 - `children` 行树：手写 Table 壳不再把子行拍平；`mode: table` 按 core 行树算法渲染缩进、展开钮和 `expandConfig`，选择走同一 `selectedItems`，Picker 的 `pickerSchema.mode: table` 因而不需要另造树协议。
-- 对照记录：桌面 / 移动 **61/92**（2026-11-24，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
+- `columns-toggler`：CRUD 提供注入式列显隐状态，`headerToolbar` 的 `columns-toggler` / `column-toggler` 可切换普通列；未写 `columnsTogglable` 时按 Amis Table 的 auto 规则在超过 5 列时注入，显式 `false` 关闭。列拖拽排序尚未接入。
+- 对照记录：桌面 / 移动 **63/92**（2026-11-24，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
-  - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。
+  - **列表能力分叉**：排序/筛选/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。
   - **事件/动作**：quickSave\*、saveOrder\*、部分 Table 动作未接。
   - **quickSaveApi**：快速编辑不会自动保存。
   - **JS 函数式 matchFunc** 不支持（只支持表达式）。
@@ -166,11 +167,12 @@ store.items ──> list / 手写 table / Cards
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：3 / 12）
+### 验收清单（文档核对：4 / 13）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis 文件 / CrudHost / 子件已定位
 - [x] 复杂度、依赖、集成面已盘点
+- [x] `columns-toggler` 显式节点 / `columnsTogglable` auto 与列显隐回写
 - [ ] schema 属性 / 默认值逐项核对
 - [ ] 事件 / 动作逐项核对（当前明确不完整）
 - [ ] 边界用例逐项核对

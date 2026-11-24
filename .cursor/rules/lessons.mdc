@@ -1220,6 +1220,12 @@ alwaysApply: true
 - 稳定做法：`editingCell` 用 `rowKey(row)-field`，编辑笔 stopPropagation，blur/Enter 写回并派发 `quickEdit`；当前仅文本控件；不要与 operation 列混用。
 - 触及：`crud`
 
+### CRUD 列显隐由注入的 ColumnToggler 共享一份状态
+- 踩过：在 CRUD 自己画表格时只渲染 `columns`，`columns-toggler` 节点能出现但切换后表头不变；另起一套 `visibleColumns` 会让 Table / ColumnToggler / 事件上下文分叉。
+- 稳定做法：用 `useColumnToggle(rawColumns)` 生成唯一列状态并 `provideColumnToggle`；CRUD 的表格、列表首列和工具栏都消费 `columnToggle.visibleColumns`。工具栏识别 `columns-toggler` / `column-toggler`，未写 `columnsTogglable` 时按 Amis Table auto 规则处理，显式 `false` 关闭。列拖拽排序另做，不要用隐藏列的 checkbox 冒充排序。
+- 触及：`crud` `column-toggler` `table`
+- 规则：Amis `CRUD.tsx renderBody / columnsTogglable`、`Table.tsx ColumnToggler`；`packages/vamis/src/renderers/CRUD.vue`、`packages/vamis/src/renderers/data/crudHost.ts`
+
 ### CRUD syncLocation 只同步 page/perPage，replaceState
 - 稳定做法：挂载前 syncFromLocation（读取 page/perPage 并校验 >=1），切页/改 perPage 后 syncToLocation 用 URL + history.replaceState，不 pushState；筛选参数暂不同步，文档写清。
 - 触及：`crud`

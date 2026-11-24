@@ -46,8 +46,10 @@ import {
   CrudHostKey,
   isBulkToolbar,
   parseListPayload,
+  provideColumnToggle,
   resolveTableSource,
   selectedIdsOf,
+  useColumnToggle,
 } from './data/crudHost'
 
 const props = defineProps<{
@@ -66,9 +68,20 @@ const store = hub.add({
 })
 const crudTarget = String(props.schema.name || props.schema.id || store.id)
 
-const columns = computed(() => (props.schema.columns || []) as SchemaObject[])
+const rawColumns = computed(() => (props.schema.columns || []) as SchemaObject[])
+const columnToggle = useColumnToggle(rawColumns, (visible) => {
+  const payload = { columns: visible }
+  const event = createVamisEvent('columnToggled', payload)
+  void runOnEvent(props.schema, 'columnToggled', {
+    env,
+    data: eventEvalData(payload, event),
+    scoped,
+    event,
+  })
+})
+provideColumnToggle(columnToggle)
+const columns = computed(() => columnToggle.visibleColumns.value)
 const filterSchema = computed(() => props.schema.filter as SchemaObject | undefined)
-const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
 const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
@@ -92,6 +105,27 @@ const isCardsMode = computed(() => {
   return mode === 'cards' || mode === 'card'
 })
 const isListMode = computed(() => String(props.schema.mode || 'table').toLowerCase() === 'list')
+const headerToolbar = computed(() => {
+  const configured = asArray(props.schema.headerToolbar)
+  const hasToggler = configured.some((node) => {
+    const type =
+      typeof node === 'string'
+        ? node
+        : node && typeof node === 'object'
+          ? String((node as SchemaObject).type || '')
+          : ''
+    return type === 'columns-toggler' || type === 'column-toggler'
+  })
+  const autoToggler =
+    !hasToggler &&
+    !isCardsMode.value &&
+    !isListMode.value &&
+    props.schema.columnsTogglable !== false &&
+    (props.schema.columnsTogglable === true || rawColumns.value.length > 5)
+  return autoToggler
+    ? [...configured, { type: 'columns-toggler', label: false, size: 'sm' }]
+    : configured
+})
 const childrenColumnName = computed(() =>
   String(props.schema.childrenColumnName || 'children'),
 )

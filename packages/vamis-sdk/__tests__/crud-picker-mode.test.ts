@@ -362,4 +362,73 @@ describe('CRUD picker mode', () => {
       ).toEqual(['a-1', 'a-2', 'root-a']),
     )
   })
+
+  it('renders columns-toggler in the CRUD header and updates visible columns', async () => {
+    const { host } = mount({
+      type: 'page',
+      data: {
+        rows: [{ id: '1', name: 'A', status: 'ok' }],
+      },
+      body: {
+        type: 'crud',
+        name: 'crudColumnToggler',
+        source: '${rows}',
+        headerToolbar: [
+          {
+            type: 'columns-toggler',
+            label: '列显示',
+          },
+        ],
+        columns: [
+          { name: 'name', label: '名称' },
+          { name: 'status', label: '状态' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('[data-column-toggler]')).toBeTruthy()
+    const button = host.querySelector(
+      '.vamis-column-toggler__btn',
+    ) as HTMLElement
+    button.click()
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-column-toggler__menu')).toBeTruthy(),
+    )
+    const statusItem = [...document.querySelectorAll('.vamis-column-toggler__item')].find(
+      (item) => (item.textContent || '').trim() === '状态',
+    ) as HTMLElement
+    expect(statusItem).toBeTruthy()
+    ;(statusItem.querySelector('label') as HTMLElement).click()
+    await vi.waitFor(() =>
+      expect(
+        [...host.querySelectorAll('table thead th')].map((th) =>
+          (th.textContent || '').trim(),
+        ),
+      ).toEqual(['名称']),
+    )
+  })
+
+  it('auto injects columns-toggler for more than five table columns', async () => {
+    const { host } = mount({
+      type: 'page',
+      data: { rows: [{ id: '1', a: 'A' }] },
+      body: {
+        type: 'crud',
+        name: 'crudAutoColumnToggler',
+        source: '${rows}',
+        columns: [
+          { name: 'a', label: 'A' },
+          { name: 'b', label: 'B' },
+          { name: 'c', label: 'C' },
+          { name: 'd', label: 'D' },
+          { name: 'e', label: 'E' },
+          { name: 'f', label: 'F' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('[data-column-toggler]')).toBeTruthy()
+  })
 })
