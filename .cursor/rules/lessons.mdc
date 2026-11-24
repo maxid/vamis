@@ -1292,15 +1292,15 @@ alwaysApply: true
 - 触及：`picker` `pickerSchema`
 - 规则：Amis `Form/Picker.tsx` `buildSchema` / `handleChange` / `render`；`packages/vamis/src/renderers/form/Picker.vue`
 
-### Picker 默认弹框必须等 CRUD，而不是继续自绘 list
-- 踩过：看到 Picker 弹框标题、padding、radio 不对，就准备在 Picker 内自绘一套 Modal/List；但 Amis `Picker.buildSchema()` 把默认 `pickerSchema: {mode:'list'}` 最终强制成 `type: crud`，自绘 UI 后续会被整体替换。
-- 稳定做法：Picker 先完成不依赖 CRUD 的 trigger、值序列化、pickerSchema 协议与事件；弹框盒模型、列表 toolbar/分页、single/multiple 选择控件由 CRUD 提供。实现顺序调整为 **Picker 独立契约 → CRUD → Picker 弹框复测**，不要在过渡 list 上继续做像素级返工。
+### Picker 默认弹框由 CRUD list 承载，选中态和回填也归 CRUD
+- 踩过：看到 Picker 弹框标题、padding、radio 不对，就在 Picker 内自绘 Modal/List；但 Amis `Picker.buildSchema()` 把默认 `pickerSchema: {mode:'list'}` 最终强制成 `type: crud`，自绘 UI 后续会被整体替换。切到 CRUD 后又漏了已有值回填和普通 Picker 的“已选 N”。
+- 稳定做法：默认与自定义 schema 都强制 `type: crud`，普通弹框传 `mode:list` / `pickerMode` / `checkOnItemClick` / `keepItemSelectionOnPageChange` / `value:draft` / `primaryField:valueField`。CRUD 用 `value` seed 选中行，`selectionTouched` 防止翻页重载覆盖用户选择；只有存在 `bulkActions` 才画“已选 N”。列表源传 `rawOptions`，不要先 flatten，否则 Amis 的顶层组行会被拍成“组 / 子项”。`embed` 用内部选择回调立即走同一个 `commitPickerValues`，弹框则只改 draft 等确认。盒模型按 Amis 计算值：500 内容、42.5 行高、15 右缩、`brand-10/brand-4` 选中态。
 - 触及：`picker` `crud`
-- 规则：Amis `Form/Picker.tsx` `buildSchema`；TODO 依赖 `picker -> crud`
+- 规则：Amis `Form/Picker.tsx` `buildSchema` / `renderBody`、`CRUD.tsx` List/pickerMode；`packages/vamis/src/renderers/form/Picker.vue`、`packages/vamis/src/renderers/CRUD.vue`
 
 ### CRUD pickerMode 先补选择协议，不先造第二套列表
 - 踩过：Picker 依赖 CRUD，但 CRUD 原先没有 row click picker 选择、single radio、`getData().selectedItems`；同时无 API 的本地 source 直接全量塞 store，`perPage` 不生效。
-- 稳定做法：`pickerMode` 自动 `selectable`；`multiple:false` 用 `.vamis-radio-dot` 并整行点击替换唯一选择，multiple 才用 Checkbox；crud scoped API 暴露 items/page/perPage/selectedItems/selectedIds。无 API 时 source 先存 allItems，再走 `paginateLocal`，翻页仍遵守 keepItemSelectionOnPageChange。先让 CRUD 成为稳定选择器，再让 Picker 默认弹框生成 CRUD。
+- 稳定做法：`pickerMode` 自动 `selectable`；`multiple:false` 用 `.vamis-radio-dot` 并整行点击替换唯一选择，multiple 才用 Checkbox；crud scoped API 暴露 items/page/perPage/selectedItems/selectedIds。无 API 时 source 先存 allItems，再走 `paginateLocal`，翻页仍遵守 keepItemSelectionOnPageChange。`mode:list` 用 `.vamis-crud-list-item` 的 Amis ListItem 结构（选择单元格 32px + 内容），已有 `value` 按 `primaryField` 回填。
 - 触及：`crud` `picker`
 - 规则：Amis `CRUD.tsx` `pickerMode` / `getData`；`packages/vamis/src/renderers/CRUD.vue`
 

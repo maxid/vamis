@@ -73,6 +73,159 @@ describe('Picker value and pickerSchema bridge', () => {
     )
   })
 
+  it('uses CRUD list and single selection in the default Picker modal', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerDefaultCrudForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-list')).toBeTruthy(),
+    )
+    expect(
+      document.querySelector('[data-slot="dialog-title"]')?.textContent?.trim(),
+    ).toBe('请选择')
+    expect(document.querySelector('.vamis-picker__dialog-body')).toBeTruthy()
+    expect(document.body.textContent).not.toContain('筛选')
+    expect(
+      document.querySelector(
+        '.vamis-crud-list-item .vamis-crud-list-check > .vamis-radio-dot',
+      ),
+    ).toBeTruthy()
+    expect(buttonWithText('确认')).toBeTruthy()
+    expect(buttonWithText('确定')).toBeUndefined()
+    const firstRow = document.querySelector(
+      '.vamis-crud-list-item',
+    ) as HTMLElement
+    firstRow.click()
+    await vi.waitFor(() =>
+      expect(firstRow.classList.contains('is-checked')).toBe(true),
+    )
+    expect(document.body.textContent).not.toContain('已选 1')
+    buttonWithText('确认')?.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerDefaultCrudForm').hero).toBe('a'),
+    )
+  })
+
+  it('seeds the default CRUD selection from the current Picker value', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerInitialValueForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        value: 'a',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-crud-list-item.is-checked'),
+      ).toBeTruthy(),
+    )
+    expect(
+      document
+        .querySelector('.vamis-crud-list-item .vamis-radio-dot')
+        ?.getAttribute('aria-checked'),
+    ).toBe('true')
+    buttonWithText('确认')?.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerInitialValueForm').hero).toBe('a'),
+    )
+  })
+
+  it('keeps grouped option rows in the default CRUD source', async () => {
+    const { host } = mount({
+      type: 'form',
+      name: 'pickerGroupedForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        options: [
+          {
+            label: '前端',
+            children: [
+              { label: 'Vue', value: 'vue' },
+              { label: 'React', value: 'react' },
+            ],
+          },
+          {
+            label: '后端',
+            children: [{ label: 'Node', value: 'node' }],
+          },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-list-item')).toBeTruthy(),
+    )
+    const labels = [
+      ...document.querySelectorAll('.vamis-crud-list-text'),
+    ].map((node) => node.textContent?.trim())
+    expect(labels).toEqual(['前端', '后端'])
+  })
+
+  it('commits a CRUD list selection immediately in embed mode', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerEmbedForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        embed: true,
+        value: 'a',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-list-item')).toBeTruthy(),
+    )
+    expect(
+      document.querySelector(
+        '.vamis-crud-list-item.is-checked .vamis-radio-dot',
+      )?.getAttribute('aria-checked'),
+    ).toBe('true')
+    ;(
+      document.querySelectorAll('.vamis-crud-list-item')[1] as HTMLElement
+    ).click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerEmbedForm').hero).toBe('b'),
+    )
+  })
+
   it('keeps full pickerSchema selected items and labels when extractValue is false', async () => {
     const { host, scoped } = mount({
       type: 'form',
@@ -95,7 +248,7 @@ describe('Picker value and pickerSchema bridge', () => {
         labelField: 'name',
         options: [],
         pickerSchema: {
-          type: 'table',
+          mode: 'table',
           name: 'pickerHeroTable',
           selectable: true,
           source: '${pickerRows}',
@@ -115,11 +268,9 @@ describe('Picker value and pickerSchema bridge', () => {
     expect(firstRow.textContent).toContain('曹操')
     firstRow.click()
     await vi.waitFor(() =>
-      expect((firstRow.querySelector('input') as HTMLInputElement)?.checked).toBe(
-        true,
-      ),
+      expect(firstRow.querySelector('[data-state="checked"]')).toBeTruthy(),
     )
-    buttonWithText('确定')?.click()
+    buttonWithText('确认')?.click()
 
     await vi.waitFor(() => {
       expect(formData(scoped, 'pickerSchemaForm').hero).toEqual([
@@ -192,10 +343,10 @@ describe('Picker value and pickerSchema bridge', () => {
     await nextTick()
     openPicker(host)
     await vi.waitFor(() =>
-      expect(document.querySelector('.vamis-picker__item')).toBeTruthy(),
+      expect(document.querySelector('.vamis-crud-list-item')).toBeTruthy(),
     )
-    ;(document.querySelector('.vamis-picker__item') as HTMLElement).click()
-    buttonWithText('确定')?.click()
+    ;(document.querySelector('.vamis-crud-list-item') as HTMLElement).click()
+    buttonWithText('确认')?.click()
     await vi.waitFor(() => {
       expect(formData(scoped, 'pickerChangeForm').hero).toBe('caocao')
       expect(document.body.textContent).toContain('picker-changed')

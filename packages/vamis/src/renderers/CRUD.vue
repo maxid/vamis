@@ -34,6 +34,7 @@ import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import Spinner from './Spinner.vue'
 import RowValueHost from './data/RowValueHost.vue'
+import { optionValuesEqual } from '../options'
 import {
   asToolbarSchema,
   CrudHostKey,
@@ -65,6 +66,8 @@ const headerToolbar = computed(() => asArray(props.schema.headerToolbar))
 const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
+const selectionTouched = ref(false)
+const seededValueKey = ref('')
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
 const pickerMode = computed(() => props.schema.pickerMode === true)
@@ -79,6 +82,10 @@ const isCardsMode = computed(() => {
   const mode = String(props.schema.mode || 'table').toLowerCase()
   return mode === 'cards' || mode === 'card'
 })
+const isListMode = computed(() => String(props.schema.mode || 'table').toLowerCase() === 'list')
+const listDisplayColumn = computed(
+  () => columns.value.find((col) => col.type !== 'operation') || columns.value[0],
+)
 /** Amis CRUD `headerToolbar` 默认 `['bulkActions']`。cards 把这条注入 Cards-toolbar，不要在 CRUD 根上另画一段 flex。 */
 const resolvedHeaderToolbar = computed(() => {
   if (props.schema.headerToolbar != null) return asArray(props.schema.headerToolbar)
@@ -295,6 +302,7 @@ function paginateLocal() {
   const start = (store.page - 1) * store.perPage
   store.items = list.slice(start, start + store.perPage)
   store.total = list.length
+  seedSelectionFromValue()
 }
 
 async function reload(extra: Record<string, any> = {}) {
@@ -349,6 +357,7 @@ async function reload(extra: Record<string, any> = {}) {
     const { items, total } = parseListPayload(result.data)
     store.items = items
     store.total = total
+    seedSelectionFromValue()
     if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []
   } catch (error) {
     env.notify('error', error instanceof Error ? error.message : '加载失败')
@@ -403,15 +412,19 @@ function isSelected(row: Record<string, any>) {
 }
 
 function toggleRow(row: Record<string, any>, checked: boolean) {
+  selectionTouched.value = true
   if (!multiple.value) {
     store.selectedItems = checked ? [row] : []
+    notifyPickerSelection()
     return
   }
   if (checked) {
     if (!isSelected(row)) store.selectedItems.push(row)
+    notifyPickerSelection()
     return
   }
   store.selectedItems = store.selectedItems.filter((item) => rowKey(item) !== rowKey(row))
+  notifyPickerSelection()
 }
 
 function onCrudRowClick(row: Record<string, any>, event: MouseEvent) {
@@ -437,14 +450,59 @@ const someSelected = computed(
 )
 
 function toggleAll(checked: boolean) {
+  selectionTouched.value = true
   if (checked) {
     store.items.forEach((row) => {
       if (!isSelected(row)) store.selectedItems.push(row)
     })
+    notifyPickerSelection()
     return
   }
   const keys = new Set(store.items.map((row) => rowKey(row)))
   store.selectedItems = store.selectedItems.filter((item) => !keys.has(rowKey(item)))
+  notifyPickerSelection()
+}
+
+function notifyPickerSelection() {
+  const handler = props.schema.__pickerOnSelect
+  if (typeof handler === 'function') {
+    handler([...store.selectedItems])
+  }
+}
+
+function seedSelectionFromValue() {
+  const raw = props.schema.value
+  if (raw == null) return
+  const values = Array.isArray(raw) ? raw : [raw]
+  let key = ''
+  try {
+    key = JSON.stringify(values)
+  } catch {
+    return
+  }
+  const valueChanged = key !== seededValueKey.value
+  if (selectionTouched.value && !valueChanged) return
+  const pool = [...allItems.value, ...store.items]
+  const labelField = String(props.schema.labelField || 'label')
+  store.selectedItems = values.map((value) => {
+    if (value && typeof value === 'object') {
+      return value as Record<string, any>
+    }
+    const row = pool.find((item) =>
+      optionValuesEqual(
+        item?.[primaryField.value],
+        value,
+        primaryField.value,
+      ),
+    )
+    return (
+      row ?? {
+        [primaryField.value]: value,
+        [labelField]: String(value),
+      }
+    )
+  })
+  seededValueKey.value = key
 }
 
 const bulkData = computed(() => ({
@@ -505,6 +563,15 @@ watch(
     if (isApiOutdated(prev[0], curr[0], prev[1], curr[1])) void reload()
   },
 )
+watch(
+  () => props.schema.value,
+  () => {
+    selectionTouched.value = false
+    seededValueKey.value = ''
+    seedSelectionFromValue()
+  },
+  { deep: true },
+)
 onBeforeUnmount(() => {
   scoped?.unregister(crudApi)
   hub.remove(store.id)
@@ -528,10 +595,10 @@ onBeforeUnmount(() => {
         }"
       />
     </div>
-    <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length || (selectable && store.selectedItems.length))" class="flex items-center justify-between gap-2">
+    <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length)" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
-        <span v-if="selectable" class="vamis-crud__selected tabular-nums">已选 {{ store.selectedItems.length }}</span>
+        <span v-if="bulkActions.length" class="vamis-crud__selected tabular-nums">已选 {{ store.selectedItems.length }}</span>
         <SchemaRenderer
           v-for="(btn, i) in bulkActions"
           :key="'bulk-' + i"
@@ -565,6 +632,37 @@ onBeforeUnmount(() => {
         </div>
       </template>
     </Cards>
+    <div v-else-if="isListMode" class="vamis-crud-list">
+      <div
+        v-for="row in store.items"
+        :key="row.id ?? JSON.stringify(row)"
+        class="vamis-crud-list-item"
+        :class="{ 'is-checked': isSelected(row) }"
+        :data-state="isSelected(row) ? 'selected' : undefined"
+        @click="onCrudRowClick(row, $event)"
+      >
+        <div v-if="selectable" class="vamis-crud-list-check">
+          <button
+            v-if="!multiple"
+            type="button"
+            class="vamis-radio-dot"
+            role="radio"
+            :aria-checked="isSelected(row)"
+            @click.stop="toggleRow(row, true)"
+          />
+          <Checkbox
+            v-else
+            :model-value="isSelected(row)"
+            @click.stop
+            @update:model-value="toggleRow(row, $event === true)"
+          />
+        </div>
+        <span class="vamis-crud-list-text">
+          {{ listDisplayColumn?.name != null ? row[listDisplayColumn.name] ?? '' : '' }}
+        </span>
+      </div>
+      <div v-if="!store.items.length" class="vamis-crud-list-empty">暂无数据</div>
+    </div>
     <Table v-else>
       <TableHeader>
         <TableRow>

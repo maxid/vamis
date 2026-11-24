@@ -5,8 +5,8 @@ outline: deep
 
 # Picker 列表选择器
 
-::: warning 实现进度 82% · 进行中
-默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`maxTagCount`、`clearable`、远程 / 数据链 `source`、分页 / 分组、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框依赖 CRUD，待 CRUD 补齐后再收口 `modalMode: drawer`、`strictMode`、树选择与弹框盒模型。
+::: warning 实现进度 90% · 进行中
+默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`maxTagCount`、`clearable`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐；已有值会在打开时回填选中行。余 `modalMode: drawer`、`strictMode` 与树选择。
 :::
 
 列表选择器：弹层里选选项，确认后写回表单。属于普通表单项，通用属性见 [FormItem](./formitem)。
@@ -106,7 +106,7 @@ source: "${dict}"
 
 ## 分组选项
 
-`options` 带 `children` 时按分组展示，组节点不可选，叶子参与选择：
+`options` 带 `children` 时，Amis 默认 CRUD list 保留顶层组行，不会自动展开子项；需要复杂层级时请使用 `pickerSchema`：
 
 ```yaml
 type: picker
@@ -415,7 +415,7 @@ options:
 
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `options` | `Option[]` | | 静态选项，支持 `children` 分组 |
+| `options` | `Option[]` | | 静态选项；`children` 组行按 Amis 默认 list 展示 |
 | `name` / `value` | | | 表单字段与初始值 |
 | `multiple` | `boolean` | `false` | 多选 |
 | `joinValues` | `boolean` | `true` | 多选时用分隔符拼接 |
@@ -442,7 +442,7 @@ options:
 `picker` 没有专属动作。
 
 ## 和 Amis 文档的差异
-- 与 Amis 一致：默认 trigger、tag ×、picker icon、multiple、joinValues/extractValue、弹层确认/取消、pickerSchema 对象值回填。
+- 与 Amis 一致：默认 trigger、tag ×、picker icon、multiple、joinValues/extractValue、默认 CRUD list 弹框、500px 内容宽、选中行、已有值回填、确认/取消、pickerSchema 对象值回填。
 - 已加：`embed` 内嵌、`maxTagCount` 折叠标签与隐藏项 title。
 - 已接：数据链 source、pickerSchema selectedItems 合并、`change` / `itemClick`、`resetValue` 清空。
 - 未接：`modalMode: drawer`、`strictMode`、树选择。

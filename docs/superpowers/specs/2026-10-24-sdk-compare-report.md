@@ -9,17 +9,17 @@
 
 | 范围 | 条数 | 怎么改 |
 |------|------|--------|
-| 全局 | 47 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
+| 全局 | 46 | html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。 |
 | 样式 helper | 0 | schema className 工具类，对标 Amis helper SCSS / 计算样式。 |
-| 组件 | 140 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
+| 组件 | 139 | 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。 |
 
-### 全局（47）
+### 全局（46）
 
 html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
 
 - `src-components-crud-0` fontSize: Amis `16px` / Vamis `14px`
 - `src-components-crud-1` fontSize: Amis `16px` / Vamis `14px`
-- `src-components-crud-6` fontSize: Amis `16px` / Vamis `12px`
+- `src-components-crud-6` fontSize: Amis `16px` / Vamis `14px`
 - `src-components-crud-7` fontSize: Amis `16px` / Vamis `14px`
 - `src-components-crud-10` fontSize: Amis `16px` / Vamis `14px`
 - `src-components-crud-10` fontFamily: Amis `Helvetica Neue` / Vamis `Menlo`
@@ -29,7 +29,7 @@ html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组�
 - `src-components-crud-37` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-crud-38` fontSize: Amis `14px` / Vamis `12px`
 - `src-components-crud-39` fontSize: Amis `14px` / Vamis `12px`
-- …其余 35 条见 last-report.json
+- …其余 34 条见 last-report.json
 
 整改：
 - html/body、SDK 根、主题 token。修一处会大面积变化，不要逐组件打补丁。
@@ -41,7 +41,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 - 无。
 
-### 组件（140）
+### 组件（139）
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
@@ -49,7 +49,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-components-crud-1` page/body/0:button.rendered: Amis `false` / Vamis `true`
 - `src-components-crud-1` page/body/0:button.dialog: Amis `false` / Vamis `true`
 - `src-components-crud-1` lineHeight: Amis `24px` / Vamis `21px`
-- `src-components-crud-6` lineHeight: Amis `30px` / Vamis `18px`
+- `src-components-crud-6` lineHeight: Amis `30px` / Vamis `21px`
 - `src-components-crud-8` page/body/0:crud.named: Amis `false` / Vamis `true`
 - `src-components-crud-9` page/body/0:crud.named: Amis `false` / Vamis `true`
 - `src-components-crud-10` page/body/0:crud.named: Amis `false` / Vamis `true`
@@ -57,7 +57,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 - `src-components-crud-10` fontWeight: Amis `400` / Vamis `700`
 - `src-components-crud-11` lineHeight: Amis `32px` / Vamis `21px`
 - `src-components-crud-12` page/body/0:form/body/0:group/body/1:input-text.value: Amis `amis` / Vamis ``
-- …其余 128 条见 last-report.json
+- …其余 127 条见 last-report.json
 
 整改：
 - 控件行高跟该 type 默认走，不要改 html 行高。对照 Amis 该 type 的计算样式。

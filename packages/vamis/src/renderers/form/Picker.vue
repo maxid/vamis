@@ -2,13 +2,12 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import {
   Button,
-  Checkbox,
   Dialog,
+  DialogCloseButton,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
   VamisClose,
   VamisIcon,
 } from '@vamis/ui'
@@ -51,26 +50,12 @@ const scope = useScope()
 const remoteOptions = ref<unknown[] | null>(null)
 const pickedOptions = ref<OptionItem[]>([])
 const open = ref(false)
-const keyword = ref('')
-const pickerPage = ref(1)
 const draft = ref<unknown[]>([])
 
 const multiple = computed(() => !!props.schema.multiple)
 const pickerSchema = computed(() =>
   props.schema.pickerSchema && typeof props.schema.pickerSchema === 'object'
     ? (props.schema.pickerSchema as SchemaObject)
-    : null,
-)
-const resolvedPickerSchema = computed<SchemaObject | null>(() =>
-  pickerSchema.value
-    ? {
-        checkOnItemClick: true,
-        pickerMode: true,
-        keepItemSelectionOnPageChange: true,
-        ...pickerSchema.value,
-        labelField,
-        valueField,
-      }
     : null,
 )
 const embed = computed(() => props.schema.embed === true)
@@ -82,6 +67,54 @@ const joinValues = computed(() => props.schema.joinValues !== false)
 const extractValue = computed(() => props.schema.extractValue === true)
 const labelField = computed(() => String(props.schema.labelField || 'label'))
 const valueField = computed(() => String(props.schema.valueField || 'value'))
+const selected = computed({
+  get: () =>
+    parseJoined(
+      props.schema.name ? fieldApi.getValue(props.schema.name) : '',
+      multiple.value,
+      joinValues.value,
+    ),
+  set: (values: unknown[]) => {
+    if (!props.schema.name) return
+    void commitPickerValues(values)
+  },
+})
+const effectivePickerSchema = computed<SchemaObject>(() => {
+  const custom = pickerSchema.value || {}
+  const source = props.schema.source
+  const sourceIsVariable =
+    typeof source === 'string' && source.trim().startsWith('$')
+  const columns = Array.isArray(custom.columns) && custom.columns.length
+    ? custom.columns
+    : [{ name: labelField.value, label: '选项' }]
+  return {
+    mode: 'list',
+    ...custom,
+    type: 'crud',
+    name: String(
+      custom.name ||
+        custom.id ||
+        `${String(props.schema.name || 'picker')}PickerCRUD`,
+    ),
+    pickerMode: true,
+    multiple: multiple.value,
+    checkOnItemClick: true,
+    keepItemSelectionOnPageChange: true,
+    labelField: labelField.value,
+    valueField: valueField.value,
+    primaryField: valueField.value,
+    value: embed.value ? selected.value : draft.value,
+    __pickerOnSelect: embed.value ? handleEmbedSelection : undefined,
+    columns,
+    source: source
+      ? sourceIsVariable
+        ? source
+        : custom.source
+      : custom.source ?? '$items',
+    api: source && !sourceIsVariable ? source : custom.api,
+    perPage: props.schema.perPage,
+  }
+})
 
 const rawOptions = computed(() => {
   const base = normalizeOptions(
@@ -108,40 +141,6 @@ const options = computed(() =>
     value: (item as any)[valueField.value] ?? item.value,
   })),
 )
-type PickerRow =
-  | { kind: 'group'; label: string; depth: number }
-  | { kind: 'option'; label: string; value: unknown; depth: number; option: OptionItem }
-const allRows = computed<PickerRow[]>(() => {
-  const out: PickerRow[] = []
-  const walk = (nodes: any[], depth: number) => {
-    for (const node of nodes || []) {
-      const children = Array.isArray(node.children) ? node.children : []
-      if (children.length) {
-        out.push({ kind: 'group', label: String(node[labelField.value] ?? node.label ?? ''), depth })
-        walk(children, depth + 1)
-      } else {
-        out.push({
-          kind: 'option',
-          label: String(node[labelField.value] ?? node.label ?? ''),
-          value: node[valueField.value] ?? node.value,
-          depth,
-          option: node,
-        })
-      }
-    }
-  }
-  walk(rawOptions.value as any[], 0)
-  return out
-})
-
-const selected = computed({
-  get: () =>
-    parseJoined(props.schema.name ? fieldApi.getValue(props.schema.name) : '', multiple.value, joinValues.value),
-  set: (values: unknown[]) => {
-    if (!props.schema.name) return
-    void commitPickerValues(values)
-  },
-})
 
 function pickerValue(value: unknown) {
   if (
@@ -219,39 +218,9 @@ async function commitPickerValues(values: unknown[]) {
   return true
 }
 
-const perPage = computed(() => {
-  const n = Number(props.schema.perPage)
-  return Number.isFinite(n) && n > 0 ? n : 10
-})
-const filteredRows = computed<PickerRow[]>(() => {
-  const q = keyword.value.trim().toLowerCase()
-  if (!q) return allRows.value
-  const out: PickerRow[] = []
-  let pendingGroup: PickerRow | null = null
-  let groupIncluded = false
-  for (const row of allRows.value) {
-    if (row.kind === 'group') {
-      pendingGroup = row
-      groupIncluded = false
-      continue
-    }
-    const matched = row.label.toLowerCase().includes(q) || String(row.value).toLowerCase().includes(q)
-    if (!matched) continue
-    if (pendingGroup && !groupIncluded) {
-      out.push(pendingGroup)
-      groupIncluded = true
-    }
-    out.push(row)
-  }
-  return out
-})
-const filtered = filteredRows
-const pagedRows = computed(() => {
-  const start = (pickerPage.value - 1) * perPage.value
-  return filteredRows.value.slice(start, start + perPage.value)
-})
-const pagedOptions = pagedRows
-const lastPage = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / perPage.value)))
+function handleEmbedSelection(items: unknown[]) {
+  void commitPickerValues(items)
+}
 
 const selectedLabels = computed(() =>
   selected.value.map((value) => {
@@ -271,25 +240,8 @@ const selectedLabels = computed(() =>
   }),
 )
 
-function isChecked(option: OptionItem) {
-  return draft.value.some((item) => optionValuesEqual(item, option.value))
-}
-
-function toggle(option: OptionItem, checked: boolean) {
-  if (!multiple.value) {
-    draft.value = checked ? [option.value] : []
-    return
-  }
-  const next = draft.value.filter((item) => !optionValuesEqual(item, option.value))
-  draft.value = checked ? [...next, option.value] : next
-}
-
-watch(keyword, () => { pickerPage.value = 1 })
-
 function openPicker() {
   draft.value = [...selected.value]
-  keyword.value = ''
-  pickerPage.value = 1
   open.value = true
 }
 
@@ -298,11 +250,6 @@ const hiddenLabels = computed(() =>
   maxTagCount.value > 0 ? selectedLabels.value.slice(maxTagCount.value) : [],
 )
 const hiddenCount = computed(() => Math.max(0, selectedLabels.value.length - shownLabels.value.length))
-
-function commitInline(option: OptionItem, checked: boolean) {
-  if (!multiple.value) selected.value = checked ? [option.value] : []
-  else selected.value = checked ? [...selected.value.filter((v) => !optionValuesEqual(v, option.value)), option.value] : selected.value.filter((v) => !optionValuesEqual(v, option.value))
-}
 
 function mergePickedOptions(items: unknown[]) {
   const normalized = normalizeOptions(
@@ -324,22 +271,24 @@ function mergePickedOptions(items: unknown[]) {
 }
 
 async function confirm() {
-  if (pickerSchema.value) {
-    const key = String(pickerSchema.value.id || pickerSchema.value.name || '')
-    const nested = key ? scoped?.getComponentById(key) : undefined
-    const nestedData = nested?.getData?.() as Record<string, any> | undefined
-    const items = nestedData?.selectedItems
-    if (Array.isArray(items)) {
-      const picked = items.filter((item) => item != null)
-      mergePickedOptions(picked)
-      draft.value =
-        !joinValues.value && !extractValue.value
-          ? picked
-          : picked.map((item) => pickerValue(item))
-    } else if (nestedData && typeof nestedData === 'object') {
-      const raw = nestedData[valueField.value]
-      if (raw != null) draft.value = Array.isArray(raw) ? raw : [raw]
-    }
+  const key = String(
+    effectivePickerSchema.value.id ||
+      effectivePickerSchema.value.name ||
+      '',
+  )
+  const nested = key ? scoped?.getComponentById(key) : undefined
+  const nestedData = nested?.getData?.() as Record<string, any> | undefined
+  const items = nestedData?.selectedItems
+  if (Array.isArray(items)) {
+    const picked = items.filter((item) => item != null)
+    mergePickedOptions(picked)
+    draft.value =
+      !joinValues.value && !extractValue.value
+        ? picked
+        : picked.map((item) => pickerValue(item))
+  } else if (nestedData && typeof nestedData === 'object') {
+    const raw = nestedData[valueField.value]
+    if (raw != null) draft.value = Array.isArray(raw) ? raw : [raw]
   }
   const committed = await commitPickerValues([...draft.value])
   if (committed) open.value = false
@@ -465,48 +414,26 @@ watch(
         <VamisIcon name="window-restore" />
       </button>
     </div>
-    <ul v-if="embed" class="max-h-64 w-full space-y-1 overflow-auto rounded-md border p-2">
-      <template v-for="(row, i) in pagedRows" :key="i">
-        <li v-if="row.kind === 'group'" class="vamis-picker__group px-2 pt-2 pb-1" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
-        <li v-else>
-          <label class="vamis-picker__item flex items-center gap-2 rounded px-2 py-1.5" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
-            <Checkbox :model-value="selected.some((v) => optionValuesEqual(v, row.value))" @update:model-value="commitInline(row.option, $event === true)" />
-            <span>{{ row.label }}</span>
-          </label>
-        </li>
-      </template>
-    </ul>
+    <SchemaRenderer
+      v-if="embed"
+      :schema="effectivePickerSchema"
+      :extra-data="{ ...viewData, items: rawOptions }"
+    />
     <Dialog v-if="!embed" :open="open" @update:open="open = $event">
-      <DialogContent class="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{{ schema.modalTitle || schema.label || '请选择' }}</DialogTitle>
+      <DialogContent class="vamis-picker__dialog" :show-close-button="false">
+        <DialogHeader class="vamis-picker__dialog-header">
+          <DialogTitle>{{ schema.modalTitle || '请选择' }}</DialogTitle>
+          <DialogCloseButton class="vamis-picker__dialog-close" />
         </DialogHeader>
-        <SchemaRenderer
-          v-if="resolvedPickerSchema"
-          :schema="resolvedPickerSchema"
-          :extra-data="{ ...viewData, items: options }"
-        />
-        <Input v-else v-model="keyword" placeholder="筛选" class="mb-2" />
-        <ul v-if="!pickerSchema" class="max-h-64 space-y-1 overflow-auto rounded-md border p-2">
-          <template v-for="(row, i) in pagedRows" :key="i">
-            <li v-if="row.kind === 'group'" class="vamis-picker__group px-2 pt-2 pb-1" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">{{ row.label }}</li>
-            <li v-else>
-              <label class="vamis-picker__item flex items-center gap-2 rounded px-2 py-1.5" :style="{ paddingLeft: `${8 + row.depth * 12}px` }">
-                <Checkbox :model-value="isChecked(row.option)" @update:model-value="toggle(row.option, $event === true)" />
-                <span>{{ row.label }}</span>
-              </label>
-            </li>
-          </template>
-          <li v-if="!filteredRows.length" class="vamis-picker__empty px-2 py-6 text-center">暂无选项</li>
-        </ul>
-        <div v-if="!pickerSchema && lastPage > 1" class="vamis-picker__pager mt-2 flex items-center justify-end gap-2">
-          <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage <= 1" @click="pickerPage -= 1">上一页</button>
-          <span>{{ pickerPage }} / {{ lastPage }}</span>
-          <button type="button" class="rounded border px-2 py-1 disabled:opacity-40" :disabled="pickerPage >= lastPage" @click="pickerPage += 1">下一页</button>
+        <div class="vamis-picker__dialog-body">
+          <SchemaRenderer
+            :schema="effectivePickerSchema"
+            :extra-data="{ ...viewData, items: rawOptions }"
+          />
         </div>
-        <DialogFooter>
+        <DialogFooter class="vamis-picker__dialog-footer">
           <Button type="button" variant="outline" @click="open = false">取消</Button>
-          <Button type="button" @click="confirm">确定</Button>
+          <Button type="button" @click="confirm">确认</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
