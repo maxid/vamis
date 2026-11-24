@@ -1298,6 +1298,12 @@ alwaysApply: true
 - 触及：`picker` `crud`
 - 规则：Amis `Form/Picker.tsx` `buildSchema`；TODO 依赖 `picker -> crud`
 
+### CRUD pickerMode 先补选择协议，不先造第二套列表
+- 踩过：Picker 依赖 CRUD，但 CRUD 原先没有 row click picker 选择、single radio、`getData().selectedItems`；同时无 API 的本地 source 直接全量塞 store，`perPage` 不生效。
+- 稳定做法：`pickerMode` 自动 `selectable`；`multiple:false` 用 `.vamis-radio-dot` 并整行点击替换唯一选择，multiple 才用 Checkbox；crud scoped API 暴露 items/page/perPage/selectedItems/selectedIds。无 API 时 source 先存 allItems，再走 `paginateLocal`，翻页仍遵守 keepItemSelectionOnPageChange。先让 CRUD 成为稳定选择器，再让 Picker 默认弹框生成 CRUD。
+- 触及：`crud` `picker`
+- 规则：Amis `CRUD.tsx` `pickerMode` / `getData`；`packages/vamis/src/renderers/CRUD.vue`
+
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。
 - 稳定做法：Vamis 示例用自身稳定 DOM，例如 form panel 写 `[data-vamis-panel]`；只有讨论 Amis 源码 / 差异时保留 `cxd-*` 作为水标引用，不写进可运行 Vamis schema。

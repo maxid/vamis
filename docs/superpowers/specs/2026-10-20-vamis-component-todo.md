@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-24（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1409**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker **2/2**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
+- 最近核对：2026-11-24（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1411**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker **2/2**；Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **60/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0）
 
 ## 怎么读
 
@@ -265,7 +265,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 
 | type | 文档 | vamis 文档 | amis 文档 | 状态 | 进度 | 原因 | P |
 |------|------|------|------|------|------|------|------|
-| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 65% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。operation 按钮逐项进入 `SchemaRenderer`，共用 `visibleOn` / `hiddenOn` / `disabledOn` 与 `runAction`，不再由手写 `runColumnAction` 绕过动作传播；AJAX 默认刷新内部 `crudTarget`。桌面 / 移动对照 **60/92**（P0 0）。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
+| `crud` | CRUD 增删改查 | `/components/crud` | `/zh-CN/components/crud` | 进行中 | 67% | 文档基本用法对标 Amis：`api` + sample 列（engine/browser/…）+ operation 详情/删除。operation 按钮逐项进入 `SchemaRenderer`，共用 `visibleOn` / `hiddenOn` / `disabledOn` 与 `runAction`，不再由手写 `runColumnAction` 绕过动作传播；AJAX 默认刷新内部 `crudTarget`。桌面 / 移动对照 **60/92**（P0 0）。`mode: cards` 的 headerToolbar 注入 Cards-toolbar（默认 bulkActions）。底栏 40px float+clearfix；切页表格区 `Spinner overlay`。toolbar 高走 `--crud-toolbar-h`（紧凑 30 / 舒适 36）。补 `loadDataOnce` / `syncLocation` / quickEdit / 表达式 matchFunc；新增 `pickerMode` single/multiple 整行选择、`getData().selectedItems` 与无 API 本地分页跨页选择；缺 Amis JS 函数匹配（D10）、table 模式 headerToolbar 关键字 | P0 |
 | `table` | Table 表格 | `/components/table` | `/zh-CN/components/table` | 进行中 | 88% | 2026-11-17 修：`isHead` 列表头底边改回灰 `--border`（表头样式示例行线）、指定行 setValue 始终 merge、田图标列显隐、超级表头 resizer、`rowClassNameExpr` 高亮、总结行 `|sum`、无外边框、固定列 sticky、首行/空态无顶边。对照桌面 **65/65**（P0 0）。未接 `reUseRow`、`export-excel`；逐章节的深色双站核对没做完 | P0 |
 | `table2` | Table2 表格 | `/components/table2` | `/zh-CN/components/table2` | 进行中 | 70% | 文档主路径已对齐：`source` 默认 `${items}`、`title` / `footer`、列 `title`/`name`/`type`、`rowSelection` 多选/单选/`rowClick`/`selectedRowKeys`/`disableOn`/选择菜单/`maxKeepItemSelectionLength`、`bordered`、`placeholder`、`size`、`columnsTogglable` auto。行高/padding/`size` small·large 走密度 token。多选行间 1px 100% 缩放已修（`separate` / td 底边 / `--table-checked-bg`）。缺展开行、树、固定列、表头分组、拖拽、总结栏、quickEdit | P0 |
 | `table-view` | Table View 表格视图 | `/components/table-view` | `/zh-CN/components/table-view` | 进行中 | 65% | 对照 7 例盒模型已齐：边框/内边距 token、colspan/rowspan（缺省不再写成 0）、caption 居中。缺编辑器拖格子 | P0 |
@@ -485,7 +485,7 @@ flowchart LR
 | 61 | `input-kv` | FormItem、`input-text`、`action` | 4 | 1 | 17 | 17 | P1 | 进行中 | 50% |
 | 62 | `json-schema` | FormItem、`input-text`、`input-number`、`checkbox`、`switch`、`select` | 4 | 1 | 17 | 17 | P1 | 进行中 | 30% |
 | 63 | `tabs-transfer` | `transfer`、`tabs` | 4 | 1 | 17 | 17 | P1 | 进行中 | 40% |
-| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | P1 | 进行中 | 65% |
+| 64 | `crud` | `form`、`table`、`pagination`、`action`、`dialog`、`drawer`、`service`、`mapping`、`tpl`、`cards`、`spinner` | 2 | 1 | 15 | 15 | P1 | 进行中 | 67% |
 | 65 | `page` | `container`、`panel`、`flex`、`grid`、`tabs`、`action`、`service`、`dialog`、`drawer`、`crud`、`form`、`tpl`、`spinner`、`remark` | 1 | 1 | 14 | 14 | P1 | 进行中 | 95% |
 | 66 | `divider` | — | 12 | 0 | 12 | 12 | P2 | 进行中 | 65% |
 | 67 | `custom` | — | 12 | 0 | 12 | 12 | P2 | 进行中 | 15% |

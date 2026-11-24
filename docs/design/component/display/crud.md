@@ -1,6 +1,6 @@
 # CRUD 增删改查 · `crud` 设计
 
-> 状态：**进行中 65%** · 复杂度：**XL 特重**
+> 状态：**进行中 67%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/crud) · Amis：`/zh-CN/components/crud`
 > 盘点日期：2026-11-18。本文是**研发设计文档**；属性 / 事件 / 动作全表以在线文档为准。
 
@@ -146,6 +146,7 @@ store.items ──> 手写 table / Cards
 ## 6. 当前状态与缺口
 
 - 已对齐主路径：api + sample 列、查询、分页、行详情/删除、bulk、cards 模式、loadDataOnce、syncLocation、quickEdit（文本/数字/select/textarea）、表达式 matchFunc；operation 列与共享 Action 宿主对齐。
+- Picker 依赖切片：`pickerMode` 自动选择；`multiple:false` 使用 radio 单选并支持整行点击；scoped `getData()` 暴露 selectedItems / selectedIds / items / page / perPage；无 API 本地 source 进入本地分页并支持 keep selection。
 - 对照记录：桌面 / 移动 **60/92**（2026-11-20，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。

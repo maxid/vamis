@@ -67,8 +67,13 @@ const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
+const pickerMode = computed(() => props.schema.pickerMode === true)
+const multiple = computed(() => props.schema.multiple !== false)
 const selectable = computed(
-  () => props.schema.selectable === true || bulkActions.value.length > 0,
+  () =>
+    pickerMode.value ||
+    props.schema.selectable === true ||
+    bulkActions.value.length > 0,
 )
 const isCardsMode = computed(() => {
   const mode = String(props.schema.mode || 'table').toLowerCase()
@@ -230,8 +235,8 @@ function onPagerChange(page: number, perPage?: number) {
 
 function seedLocalItems() {
   const items = resolveTableSource(props.schema, props.data)
-  store.items = items
-  store.total = items.length
+  allItems.value = items
+  paginateLocal()
 }
 
 function toolbarNode(node: unknown): SchemaObject {
@@ -293,7 +298,13 @@ function paginateLocal() {
 }
 
 async function reload(extra: Record<string, any> = {}) {
-  if (!props.schema.api) return
+  if (!props.schema.api) {
+    const queryPatch = sanitizeQuery(extra)
+    store.query = { ...store.query, ...queryPatch }
+    paginateLocal()
+    if (!props.schema.keepItemSelectionOnPageChange) store.selectedItems = []
+    return
+  }
   if (props.schema.loadDataOnce === true) {
     store.fetching = true
     await nextTick()
@@ -392,11 +403,30 @@ function isSelected(row: Record<string, any>) {
 }
 
 function toggleRow(row: Record<string, any>, checked: boolean) {
+  if (!multiple.value) {
+    store.selectedItems = checked ? [row] : []
+    return
+  }
   if (checked) {
     if (!isSelected(row)) store.selectedItems.push(row)
     return
   }
   store.selectedItems = store.selectedItems.filter((item) => rowKey(item) !== rowKey(row))
+}
+
+function onCrudRowClick(row: Record<string, any>, event: MouseEvent) {
+  const target = event.target
+  if (
+    target instanceof Element &&
+    target.closest(
+      'button, a, input, textarea, select, label, [data-slot="checkbox"], [role="radio"]',
+    )
+  ) {
+    return
+  }
+  if (pickerMode.value || props.schema.checkOnItemClick === true) {
+    toggleRow(row, !isSelected(row))
+  }
 }
 
 const allSelected = computed(
@@ -445,6 +475,15 @@ const crudApi = {
   name: crudTarget,
   id: props.schema.id ? String(props.schema.id) : undefined,
   reload,
+  getData: () => ({
+    items: store.items,
+    rows: store.items,
+    total: store.total,
+    page: store.page,
+    perPage: store.perPage,
+    selectedItems: store.selectedItems,
+    selectedIds: selectedIdsOf(store.selectedItems, primaryField.value),
+  }),
 }
 scoped?.register(crudApi)
 onMounted(() => {
@@ -529,7 +568,7 @@ onBeforeUnmount(() => {
     <Table v-else>
       <TableHeader>
         <TableRow>
-          <TableHead v-if="selectable" class="w-10">
+          <TableHead v-if="selectable && multiple" class="w-10">
             <Checkbox
               :model-value="allSelected ? true : someSelected ? 'indeterminate' : false"
               @update:model-value="toggleAll($event === true)"
@@ -556,10 +595,21 @@ onBeforeUnmount(() => {
           :key="row.id ?? JSON.stringify(row)"
           :data-state="isSelected(row) ? 'selected' : undefined"
           :class="{ 'is-checked': isSelected(row) }"
+          @click="onCrudRowClick(row, $event)"
         >
           <TableCell v-if="selectable">
+            <button
+              v-if="!multiple"
+              type="button"
+              class="vamis-radio-dot"
+              role="radio"
+              :aria-checked="isSelected(row)"
+              @click.stop="toggleRow(row, true)"
+            />
             <Checkbox
+              v-else
               :model-value="isSelected(row)"
+              @click.stop
               @update:model-value="toggleRow(row, $event === true)"
             />
           </TableCell>

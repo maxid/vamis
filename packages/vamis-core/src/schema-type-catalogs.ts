@@ -306,6 +306,7 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
   }),
   crud: fields('CRUD', {
     api: '列表接口。',
+    source: '本地或变量数据源。',
     title: '列表标题。',
     filter: '筛选表单。',
     columns: '列定义。',
@@ -313,6 +314,8 @@ export const TYPE_CATALOGS: Record<string, TypeCatalog> = {
     footerToolbar: '底栏工具。',
     bulkActions: '批量操作。',
     selectable: '可勾选行。',
+    multiple: '是否多选；false 在 pickerMode 使用 radio 单选。',
+    pickerMode: 'Picker 选择模式：自动开启行选择并暴露 selectedItems。',
     primaryField: '主键字段。',
     perPage: '每页条数。',
     alwaysShowPagination: '是否总显示分页。',
