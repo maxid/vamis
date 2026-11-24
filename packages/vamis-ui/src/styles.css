@@ -2919,6 +2919,14 @@
   }
   .vamis-crud-toolbar-item--right {
     float: right;
+    align-items: flex-start;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .vamis-crud-toolbar-item--right > [data-vamis-pagination] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
   .vamis-crud-statistics {
     line-height: var(--crud-toolbar-h, 30px);
@@ -9832,7 +9840,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   display: block;
   font-size: var(--fontSizeBase);
   line-height: 1.5;
-  white-space: nowrap;
+  white-space: normal;
   color: var(--text-loud);
 }
 [data-vamis-pagination][data-size='sm'] [data-pagination='pager'] > li > a,
@@ -11395,6 +11403,14 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-picker__more {
   color: var(--text-secondary);
   font-size: var(--fontSizeSm);
+  cursor: default;
+}
+.vamis-picker-overflow__grid,
+.vamis-crud-selection-overflow__grid {
+  display: flex;
+  max-width: 320px;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
 }
 .vamis-picker__clear {
   flex: 0 0 22px;
@@ -11667,6 +11683,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 }
 .vamis-crud-selection-more {
   padding: 0 var(--gap-xs);
+  cursor: default;
 }
 .vamis-crud-selection-clear {
   margin-top: var(--gap-xs);

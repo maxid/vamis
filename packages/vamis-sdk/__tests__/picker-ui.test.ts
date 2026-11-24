@@ -138,6 +138,174 @@ describe('Picker value and pickerSchema bridge', () => {
     expect(document.querySelector('.vamis-crud-selection-more')).toBeNull()
   })
 
+  it('shows hidden picker tags in overflowTagPopover', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b,c,d',
+        overflowConfig: {
+          maxTagCount: 2,
+          overflowTagPopover: {
+            tooltipClassName: 'picker-trigger-overflow',
+          },
+        },
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+          { label: 'C', value: 'c' },
+          { label: 'D', value: 'd' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(2)
+    const overflow = host.querySelector('.vamis-picker__more') as HTMLElement
+    overflow.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.picker-trigger-overflow')).toBeTruthy(),
+    )
+    expect(document.querySelector('.vamis-picker-overflow')?.textContent).toContain(
+      'C',
+    )
+    expect(document.querySelector('.vamis-picker-overflow')?.textContent).toContain(
+      'D',
+    )
+  })
+
+  it('shows hidden CRUD selection tags in overflowTagPopoverInCRUD', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b,c',
+        overflowConfig: {
+          maxTagCount: 1,
+          overflowTagPopoverInCRUD: {
+            tooltipClassName: 'picker-crud-overflow',
+          },
+        },
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+          { label: 'C', value: 'c' },
+        ],
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    const overflow = await vi.waitFor(() => {
+      const el = document.querySelector(
+        '.vamis-crud-selection-more',
+      ) as HTMLElement | null
+      expect(el).toBeTruthy()
+      return el as HTMLElement
+    })
+    overflow.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    await vi.waitFor(() =>
+      expect(document.querySelector('.picker-crud-overflow')).toBeTruthy(),
+    )
+    expect(document.querySelector('.vamis-crud-selection-overflow')?.textContent).toContain(
+      'B',
+    )
+    expect(document.querySelector('.vamis-crud-selection-overflow')?.textContent).toContain(
+      'C',
+    )
+  })
+
+  it('hydrates initial selected descriptors when a variable source arrives later', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerAsyncSourceForm',
+      data: {
+        selectedValue: [{ id: 1 }],
+        pickerRows: [],
+      },
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        valueField: 'id',
+        labelField: 'name',
+        value: '${selectedValue}',
+        source: '${pickerRows}',
+      },
+    })
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-crud-selection')).toBeTruthy(),
+    )
+    const form = scoped.getComponentByName('pickerAsyncSourceForm') as {
+      setData?: (values: Record<string, unknown>) => void
+    }
+    form.setData?.({
+      pickerRows: [{ id: 1, name: '选项 1' }],
+    })
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-crud-selection')?.textContent,
+      ).toContain('选项 1'),
+    )
+  })
+
+  it('hydrates hidden selected ids from the full Picker source option pool', async () => {
+    const rows = Array.from({ length: 5 }, (_, index) => ({
+      id: String(index + 1),
+      name: `选项 ${index + 1}`,
+    }))
+    const { host } = mount(
+      {
+        type: 'form',
+        actions: [],
+        body: {
+          type: 'picker',
+          name: 'hero',
+          label: '英雄',
+          multiple: true,
+          value: '1,2,3,4,5',
+          valueField: 'id',
+          labelField: 'name',
+          source: '/api/picker-source',
+        },
+      },
+      {
+        fetcher: async (_api, data) => {
+          const query = data as Record<string, unknown>
+          const perPage = Number(query.perPage)
+          return {
+            status: 0,
+            data: {
+              items: perPage > 0 ? rows.slice(0, 2) : rows,
+              total: rows.length,
+            },
+          }
+        },
+      },
+    )
+
+    await nextTick()
+    openPicker(host)
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-crud-selection')?.textContent,
+      ).toContain('选项 5'),
+    )
+  })
+
   it('keeps the picker trigger fluid when size is configured', async () => {
     const { host } = mount({
       type: 'form',

@@ -1304,9 +1304,22 @@ alwaysApply: true
 - 触及：`picker` 文档
 - 规则：Amis `docs/zh-CN/components/form/picker.md`；`website/src/components/form/picker.md`
 
+### 照搬 Amis live schema 时先过 Vamis 严格 JSON 与 mock
+- 踩过：Amis Markdown 的 schema 能接受尾逗号、未引号对象 key，Vamis 文档解析器按严格 JSON 会整块报错；`/api/mock2/crud/tree` 在 Amis mock 存在，Vamis 站直接 404，导致内嵌与 maxTagCount 看起来“未实现”。
+- 稳定做法：同步 `schema: scope="body"` 后先跑 `pnpm sdk:build` 收割，再在文档站滚动到每块确认无 `Expected ... in JSON` / `未实现的 mock`。严格化 tail comma、未引号 key；常用 Amis mock 路径不足时在 `playground/src/mock/handler.ts` 做别名（如 crud/tree → sample），不要退回普通 yaml 代码块。
+- 触及：`picker` 文档 / mock
+- 规则：`website/src/components/form/picker.md`；`playground/src/mock/handler.ts`；`pnpm sdk:build` + `pnpm compare --page picker`
+
+### Amis sample mock 不传 perPage 时返回全量
+- 踩过：Vamis `/api/mock2/sample` 默认固定 10 条，Picker source 用它构 full options，maxTagCount 20 时 14–20 只能显示 id；Amis mock 在没有 `perPage` 参数时 `items.concat()` 全量。
+- 稳定做法：sample GET 路由在 `query.perPage == null` 时传 `perPage: 0` 给 `listPayload`；CRUD 自己仍显式传 perPage，所以分页行为不变。Picker 的 rawOptions 再作为 embedded options 参与 selectedItems hydration。
+- 触及：`picker` mock / CRUD selectedItems
+- 规则：Amis `mock/cfc/mock/sample.js index()`；`playground/src/mock/handler.ts`、`packages/vamis/src/renderers/CRUD.vue`
+
 ### CRUD pickerMode 先补选择协议，不先造第二套列表
 - 踩过：Picker 依赖 CRUD，但 CRUD 原先没有 row click picker 选择、single radio、`getData().selectedItems`；同时无 API 的本地 source 直接全量塞 store，`perPage` 不生效。
 - 稳定做法：`pickerMode` 自动 `selectable`；`multiple:false` 用 `.vamis-radio-dot` 并整行点击替换唯一选择，multiple 才用 Checkbox；crud scoped API 暴露 items/page/perPage/selectedItems/selectedIds。无 API 时 source 先存 allItems，再走 `paginateLocal`，翻页仍遵守 keepItemSelectionOnPageChange。`mode:list` 用 `.vamis-crud-list-item` 的 Amis ListItem 结构（选择单元格 32px + 内容），已有 `value` 按 `primaryField` 回填。
+- `value` 首次只拿到 `{id}` 描述符时，后续 source / 分页数据到达但 value 签名未变，仍要在 same-key 分支用当前 pool `hydrateSelectedItems`，把描述符替换为完整 option；不要把“未变化”直接 return。pool 必须包含 CRUD 当前页、本地全量以及 Picker 透传的完整 rawOptions，否则隐藏在其他分页的已选 id 仍无 label。
 - 触及：`crud` `picker`
 - 规则：Amis `CRUD.tsx` `pickerMode` / `getData`；`packages/vamis/src/renderers/CRUD.vue`
 
@@ -1321,6 +1334,12 @@ alwaysApply: true
 - 稳定做法：`overflowConfig.maxTagCount` 永远作用于 trigger；`displayPosition.includes('crud')` 只决定是否把 `maxTagCount` 传给 CRUD。`staticItemClick` 已由 `FormItem -> formItemStaticSelectorNode -> Words` 统一派发，Picker 只保留 `FORM_ITEM_STATIC_WORDS_TYPES` 和 onEvent 透传。CRUD 身份比较走 `primaryValueEqual`：`strictMode:true` 用 `===`，否则按字符串等价；seed、勾选、清空、全选共用这一个比较器。
 - 触及：`picker` `crud` `formitem`
 - 规则：Amis `Form/Picker.tsx getOverflowConfig/renderBody`、`CRUD.tsx strictMode`；`packages/vamis-core/src/utils/form-item.ts`、`packages/vamis/src/renderers/CRUD.vue`
+
+### Picker 收纳浮层与 CRUD footerToolbar 复用共享层
+- 踩过：`+N` 只有原生 `title`，CRUD 已选栏与 trigger 都看不到隐藏项；CRUD 还无条件忽略 `footerToolbar`，导致 Picker 自定义 `perPage,pager,go` 示例不生效。
+- 稳定做法：Picker trigger 与 CRUD 已选栏都用 `VamisTooltipLayer`，分别消费 `overflowTagPopover` / `overflowTagPopoverInCRUD`；hover more 后渲染隐藏标签网格，80ms 延迟关闭以允许移入浮层。CRUD footer 遍历 `footerToolbar`：`statistics` 走统计、`type:pagination` 补当前分页状态并保留作者 layout，其余走 SchemaRenderer；默认仍生成 statistics + pagination。
+- 触及：`picker` `crud`
+- 规则：Amis `Form/Picker.tsx renderValues/renderBody`、`CRUD.tsx renderSelection/renderFooterToolbar`；`packages/vamis/src/overlay/VamisTooltipLayer.vue`
 
 ### Vamis 示例不要照搬 Amis `cxd-*` DOM 选择器
 - 踩过：Transfer 分页 schema 抄了 `popOverContainerSelector: ".cxd-Panel--form"`，Vamis 不输出 cxd 前缀，该 selector 永远查不到容器。

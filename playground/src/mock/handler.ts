@@ -194,6 +194,9 @@ export function handleMockApi(input: {
   } else if (pathname === '/api/amis-mock/sample' || pathname === '/api/sample') {
     pathname = '/api/mock2/sample'
   }
+  if (pathname === '/api/mock2/crud/tree') {
+    pathname = '/api/mock2/sample'
+  }
 
   const extra = handleMockExtras({ method, pathname, query, body })
   if (extra) return extra
@@ -578,7 +581,10 @@ export function handleMockApi(input: {
   }
 
   if (pathname === '/api/mock2/sample' && method === 'GET') {
-    return listPayload(filterSample(query), query)
+    return listPayload(filterSample(query), {
+      ...query,
+      perPage: query.perPage ?? '0',
+    })
   }
 
   if (pathname === '/api/mock2/sample' && (method === 'POST' || method === 'PUT')) {

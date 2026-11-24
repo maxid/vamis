@@ -252,4 +252,39 @@ describe('CRUD picker mode', () => {
       expect.objectContaining({ id: '1', name: '远程选项 1' }),
     ])
   })
+
+  it('renders custom footerToolbar statistics and pagination widgets', async () => {
+    const rows = Array.from({ length: 11 }, (_, index) => ({
+      id: String(index + 1),
+      name: `选项 ${index + 1}`,
+    }))
+    const { host } = mount({
+      type: 'page',
+      data: { pickerRows: rows },
+      body: {
+        type: 'crud',
+        name: 'crudCustomFooter',
+        pickerMode: true,
+        perPage: 10,
+        source: '${pickerRows}',
+        footerToolbar: [
+          'statistics',
+          {
+            type: 'pagination',
+            layout: 'perPage,pager,go',
+            showPageInput: true,
+          },
+        ],
+        columns: [{ name: 'name', label: '名称' }],
+      },
+    })
+
+    await nextTick()
+    expect(host.querySelector('.vamis-crud-statistics')?.textContent).toContain(
+      '共：11 项',
+    )
+    expect(host.querySelector('[data-pagination="perpage"]')).toBeTruthy()
+    expect(host.querySelector('[data-pagination="pager"]')).toBeTruthy()
+    expect(host.querySelector('[data-pagination="go"]')).toBeTruthy()
+  })
 })

@@ -164,6 +164,18 @@ describe('style ruler: styles.css', () => {
     )
   })
 
+  it('CRUD footer pagination wraps inside the right toolbar item', () => {
+    expect(css).toMatch(
+      /\.vamis-crud-toolbar-item--right\s*\{[^}]*max-width:\s*100%[^}]*min-width:\s*0/s,
+    )
+    expect(css).toMatch(
+      /\.vamis-crud-toolbar-item--right > \[data-vamis-pagination\]\s*\{[^}]*width:\s*100%/s,
+    )
+    expect(css).toMatch(
+      /\[data-vamis-pagination\]\s*\{[^}]*white-space:\s*normal/s,
+    )
+  })
+
   it('hex tokens stay a short, named list', () => {
     // 色阶之外的 Amis 字面量（存量，只许减）。新增色先找 --colors-* 色阶。
     const hexTokens = css.match(/^[ \t]*--[\w-]+:\s*#[0-9a-fA-F]{3,8};/gm) ?? []

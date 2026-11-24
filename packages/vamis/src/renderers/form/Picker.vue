@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   Button,
   Dialog,
@@ -23,6 +23,7 @@ import {
   eventEvalData,
   isApiOutdated,
   isEffectiveApi,
+  overlayContainerFrom,
   overlayFrameStyle,
   requestApi,
   resolveValue,
@@ -36,6 +37,7 @@ import {
   type SchemaObject,
 } from '@vamis/core'
 import { useFieldValue, useForm } from '../../formContext'
+import VamisTooltipLayer from '../../overlay/VamisTooltipLayer.vue'
 import FormItem from '../FormItem.vue'
 import {
   flattenOptions,
@@ -58,6 +60,9 @@ const remoteOptions = ref<unknown[] | null>(null)
 const pickedOptions = ref<OptionItem[]>([])
 const open = ref(false)
 const draft = ref<unknown[]>([])
+const moreEl = ref<HTMLElement | null>(null)
+const overflowTip = ref(false)
+let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
 
 const multiple = computed(() => !!props.schema.multiple)
 const pickerSchema = computed(() =>
@@ -97,6 +102,45 @@ const displayPosition = computed(() => {
   return Array.isArray(configured)
     ? configured.map((item) => String(item))
     : ['select', 'crud']
+})
+const overflowConfig = computed(() => {
+  const value = props.schema.overflowConfig
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
+})
+const overlayContainer = computed(() =>
+  overlayContainerFrom(
+    { popOverContainerSelector: props.schema.popOverContainerSelector },
+    env,
+  ),
+)
+const triggerOverflowTooltip = computed(() => {
+  const value = overflowConfig.value.overflowTagPopover
+  const extra =
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? { ...(value as Record<string, unknown>) }
+      : {}
+  delete extra.children
+  delete extra.content
+  const extraClass =
+    extra.tooltipClassName != null ? String(extra.tooltipClassName) : ''
+  return {
+    placement: 'top',
+    showArrow: false,
+    enterable: true,
+    offset: [0, -5],
+    ...extra,
+    tooltipClassName: ['vamis-picker-overflow', extraClass]
+      .filter(Boolean)
+      .join(' '),
+  }
+})
+const crudOverflowTagPopover = computed(() => {
+  const value = overflowConfig.value.overflowTagPopoverInCRUD
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : undefined
 })
 const joinValues = computed(() => props.schema.joinValues !== false)
 const extractValue = computed(() => props.schema.extractValue === true)
@@ -144,6 +188,11 @@ const effectivePickerSchema = computed<SchemaObject>(() => {
       (embed.value || displayPosition.value.includes('crud')) &&
       maxTagCount.value > 0
         ? maxTagCount.value
+        : undefined,
+    overflowTagPopover:
+      (embed.value || displayPosition.value.includes('crud')) &&
+      maxTagCount.value > 0
+        ? crudOverflowTagPopover.value
         : undefined,
     columns,
     source: source
@@ -285,6 +334,18 @@ function openPicker() {
   open.value = true
 }
 
+function showOverflow() {
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
+  overflowTip.value = true
+}
+
+function hideOverflow() {
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
+  overflowHideTimer = setTimeout(() => {
+    overflowTip.value = false
+  }, 80)
+}
+
 const shownLabels = computed(() => (maxTagCount.value > 0 ? selectedLabels.value.slice(0, maxTagCount.value) : selectedLabels.value))
 const hiddenLabels = computed(() =>
   maxTagCount.value > 0 ? selectedLabels.value.slice(maxTagCount.value) : [],
@@ -386,6 +447,9 @@ async function loadSource() {
 }
 
 onMounted(() => void loadSource())
+onBeforeUnmount(() => {
+  if (overflowHideTimer) clearTimeout(overflowHideTimer)
+})
 watch(
   () => [props.schema.source, viewData.value] as const,
   (curr, prev) => {
@@ -428,8 +492,10 @@ watch(
         </span>
         <span
           v-if="hiddenCount > 0"
+          ref="moreEl"
           class="vamis-picker__more"
-          :title="hiddenLabels.join('、')"
+          @mouseenter="showOverflow"
+          @mouseleave="hideOverflow"
         >
           +{{ hiddenCount }}
         </span>
@@ -455,6 +521,28 @@ watch(
         <VamisIcon name="window-restore" />
       </button>
     </div>
+    <VamisTooltipLayer
+      v-if="!embed"
+      :show="overflowTip && hiddenCount > 0"
+      :target="moreEl"
+      :container="overlayContainer"
+      :tooltip="triggerOverflowTooltip"
+      :data="viewData"
+      @enter="showOverflow"
+      @leave="hideOverflow"
+    >
+      <template #body>
+        <div class="vamis-picker-overflow__grid">
+          <span
+            v-for="(label, index) in hiddenLabels"
+            :key="`overflow-${index}`"
+            class="vamis-picker__tag"
+          >
+            {{ label }}
+          </span>
+        </div>
+      </template>
+    </VamisTooltipLayer>
     <SchemaRenderer
       v-if="embed"
       :schema="effectivePickerSchema"

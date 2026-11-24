@@ -5,8 +5,8 @@ outline: deep
 
 # Picker 列表选择器
 
-::: warning 实现进度 97% · 进行中
-默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount` / `displayPosition`、`itemClearable`、`staticItemClick`、`strictMode`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。余标签收纳浮层与树选择。
+::: warning 实现进度 98% · 进行中
+默认 trigger 对齐 Amis 单输入框，tag 内嵌关闭、label 可触发 `itemClick`；静态 `options`、`multiple`、`joinValues` / `extractValue`、`embed`、`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`staticItemClick`、`strictMode`、远程 / 数据链 `source`、`pickerSchema` selectedItems / valueField 桥接均已接。默认弹框已复用 CRUD `mode: list`，`modalMode: dialog | drawer` 与 `modalSize` 均已接；标题、单选、选中行、内容区、按钮与关闭钮按 Amis 盒模型对齐。余树选择。
 :::
 
 列表选取，在功能和 Select 类似，但它能显示更复杂的信息。Picker 属于普通表单项，通用字段见 [FormItem](./formitem)。
@@ -282,39 +282,918 @@ body:
 
 ## 内嵌模式
 
-可以配置 `"embed": true`，实现内嵌 Picker。内嵌列表仍复用同一份 CRUD schema，选择后立即写值：
+可以配置`"embed": true`，实现内嵌 picker
 
-```yaml
-type: picker
-name: picker
-label: 内嵌
-embed: true
-options:
-  - label: 选项 A
-    value: a
-  - label: 选项 B
-    value: b
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "body": [
+    {
+      "type": "picker",
+      "name": "type4",
+      "joinValues": true,
+      "valueField": "id",
+      "labelField": "engine",
+      "label": "Picker",
+      "embed": true,
+      "source": "/api/mock2/crud/tree?waitSeconds=1",
+      "size": "lg",
+      "value": "4,5",
+      "multiple": true,
+      "pickerSchema": {
+        "mode": "table",
+        "name": "thelist",
+        "quickSaveApi": "/api/mock2/sample/bulkUpdate",
+        "quickSaveItemApi": "/api/mock2/sample/$id",
+        "draggable": true,
+        "headerToolbar": {
+          "wrapWithPanel": false,
+          "type": "form",
+          "className": "text-right",
+          "target": "thelist",
+          "mode": "inline",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "keywords",
+              "addOn": {
+                "type": "submit",
+                "label": "搜索",
+                "level": "primary",
+                "icon": "fa fa-search pull-left"
+              }
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "sortable": true,
+            "searchable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "browser",
+            "label": "Browser",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "platform",
+            "label": "Platform(s)",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "version",
+            "label": "Engine version",
+            "quickEdit": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "grade",
+            "label": "CSS grade",
+            "quickEdit": {
+              "mode": "inline",
+              "type": "select",
+              "options": ["A", "B", "C", "D", "X"],
+              "saveImmediately": true
+            },
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "type": "operation",
+            "label": "操作",
+            "width": 100,
+            "buttons": [
+              {
+                "type": "button",
+                "icon": "fa fa-eye",
+                "actionType": "dialog",
+                "dialog": {
+                  "title": "查看",
+                  "body": {
+                    "type": "form",
+                    "body": [
+                      {
+                        "type": "static",
+                        "name": "engine",
+                        "label": "Engine"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "browser",
+                        "label": "Browser"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "platform",
+                        "label": "Platform(s)"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "grade",
+                        "label": "CSS grade"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<p>添加其他 <span>Html 片段</span> 需要支持变量替换（todo）.</p>"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-pencil",
+                "actionType": "dialog",
+                "dialog": {
+                  "position": "left",
+                  "size": "lg",
+                  "title": "编辑",
+                  "body": {
+                    "type": "form",
+                    "name": "sample-edit-form",
+                    "api": "/api/mock2/sample/$id",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "engine",
+                        "label": "Engine",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "browser",
+                        "label": "Browser",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "platform",
+                        "label": "Platform(s)",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "select",
+                        "name": "grade",
+                        "label": "CSS grade",
+                        "options": ["A", "B", "C", "D", "X"]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-times text-danger",
+                "actionType": "ajax",
+                "confirmText": "您确认要删除?",
+                "api": "delete:/api/mock2/sample/$id"
+              }
+            ],
+            "toggled": true
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+可以配置`visibleOn`属性控制 picker 显隐来支持更复杂的表单场景。如果 picker 的初始值需要绑定上层数据域变量，可以通过配置事件动作来更新上层数据域变量。
+
+```schema: scope="body"
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "form",
+      "api": "",
+      "id": "test",
+      "data": {
+        "selectedValue": [{ "id": 1 }, { "id": 53 }]
+      },
+      "body": [
+        {
+          "type": "button-group-select",
+          "name": "buttonGroupSelect",
+          "label": "按钮点选",
+          "inline": false,
+          "options": [
+            {
+              "label": "大模型训练",
+              "value": "train"
+            },
+            {
+              "label": "预测服务",
+              "value": "service"
+            }
+          ],
+          "value": "train"
+        },
+        {
+          "type": "picker",
+          "name": "type4",
+          "joinValues": true,
+          "valueField": "id",
+          "labelField": "engine",
+          "label": "",
+          "embed": true,
+          "source": "${trainList}",
+          "size": "lg",
+          "multiple": true,
+          "pickerSchema": {
+            "mode": "table",
+            "name": "thelist",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Rendering engine",
+                "sortable": true,
+                "searchable": true,
+                "type": "text",
+                "toggled": true
+              },
+              {
+                "name": "browser",
+                "label": "Browser",
+                "sortable": true,
+                "type": "text",
+                "toggled": true
+              },
+              {
+                "name": "platform",
+                "label": "Platform(s)",
+                "sortable": true,
+                "type": "text",
+                "toggled": true
+              }
+            ],
+            "onEvent": {
+              "selectedChange": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "已选择${event.data.selectedItems.length}条记录"
+                    }
+                  },
+                  {
+                      "actionType": "setValue",
+                      "args": {
+                        "value": {
+                          "selectedValue": "${event.data.selectedItems}"
+                        }
+                      },
+                      "componentId": "test"
+                    }
+                ]
+              }
+            },
+            "itemCheckableOn": "${id !== 1 && id !== 53}"
+          },
+          "validateApiFromAPIHub": false,
+          "visibleOn": "${buttonGroupSelect === 'train'}",
+          "sourceFromAPIHub": false,
+          "modalMode": "dialog",
+          "value": "${selectedValue}",
+          "valueField": "id",
+          "joinValues": false
+        },
+        {
+          "type": "picker",
+          "name": "type5",
+          "joinValues": false,
+          "labelField": "engine",
+          "label": "",
+          "embed": true,
+          "source": "${serviceList}",
+          "size": "lg",
+          "multiple": true,
+          "pickerSchema": {
+            "mode": "table",
+            "name": "thelist",
+            "columns": [
+              {
+                "name": "engine",
+                "label": "Rendering engine",
+                "sortable": true,
+                "searchable": true,
+                "type": "text",
+                "toggled": true
+              },
+              {
+                "name": "browser",
+                "label": "Browser",
+                "sortable": true,
+                "type": "text",
+                "toggled": true
+              },
+              {
+                "name": "platform",
+                "label": "Platform(s)",
+                "sortable": true,
+                "type": "text",
+                "toggled": true
+              }
+            ],
+            "onEvent": {
+              "selectedChange": {
+                "actions": [
+                  {
+                    "actionType": "toast",
+                    "args": {
+                      "msg": "已选择${event.data.selectedItems.length}条记录"
+                    }
+                  }
+                ]
+              }
+            },
+            "itemCheckableOn": "${id !== 2 && id !== 50}"
+          },
+          "validateApiFromAPIHub": false,
+          "style": {
+            "boxShadow": "var(--shadows-shadow-none)"
+          },
+          "value": "2,50",
+          "valueField": "id",
+          "visibleOn": "${buttonGroupSelect === 'service'}",
+          "joinValues": false
+        }
+      ],
+      "debug": true
+    }
+  ],
+  "asideResizor": false,
+  "style": {
+    "boxShadow": "var(--shadows-shadow-none)"
+  },
+  "pullRefresh": {
+    "disabled": true
+  },
+  "regions": [
+    "body"
+  ],
+  "initApi": {
+    "method": "get",
+    "url": "/api/mock2/sample",
+    "dataType": "json",
+    "initFetch": true,
+    "adaptor": "const data = payload.data.rows || payload.result.rows;\nconsole.log(' data', data)\nconst trainList = data.filter(item => item.grade === 'X');\nconst serviceList = data.filter(item => item.grade === 'C');\nreturn {\n  allList: data,\n  trainList,\n  serviceList,\n};"
+  }
+}
 ```
 
 ## 限制标签最大展示数量
 
-设置 `overflowConfig.maxTagCount` 后可以限制标签的最大展示数量，仅在多选模式开启后生效。超出数量的标签折叠成 `+N`：
+设置`overflowConfig`后可以限制标签的最大展示数量，该属性仅在多选模式开启后生效，包含以下几个配置项：
 
-```yaml
-type: picker
-name: picker
-label: 限制标签
-multiple: true
-    value: a,b,c
-    overflowConfig:
-      maxTagCount: 2
-options:
-  - label: 选项 A
-    value: a
-  - label: 选项 B
-    value: b
-  - label: 选项 C
-    value: c
+- `maxTagCount`：最大展示数量，范围是正整数时启用，可以设置一个大一点数字，因为会自动根据可容纳控件尽可能的多展示，但是不会超出设定值。
+- `displayPosition`：收纳标签生效的位置，类型为字符串数组，未开启内嵌模式默认为**选择器**, 开启后默认为**选择器**和**CRUD 顶部**，可选值为`'select'`(选择器)、`'crud'`(增删改查)。
+- `overflowTagPopover`配置收纳标签 Popover 相关[属性](../tooltip#属性表)。
+- `overflowTagPopoverInCRUD`可以配置**CRUD 顶部**收纳标签的 Popover 相关[属性](../tooltip#属性表)。
+
+> `3.4.0` 及以上版本
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "debug": true,
+  "body": [
+    {
+      "type": "picker",
+      "overflowConfig": {
+        "maxTagCount": 20
+      },
+      "name": "maxTagCount1",
+      "joinValues": true,
+      "valueField": "id",
+      "labelField": "engine",
+      "label": "多选",
+      "source": "/api/mock2/sample",
+      "size": "lg",
+      "value": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+      "multiple": true,
+      "pickerSchema": {
+        "mode": "table",
+        "name": "thelist",
+        "quickSaveApi": "/api/mock2/sample/bulkUpdate",
+        "quickSaveItemApi": "/api/mock2/sample/$id",
+        "draggable": true,
+        "headerToolbar": {
+          "wrapWithPanel": false,
+          "type": "form",
+          "className": "text-right",
+          "target": "thelist",
+          "mode": "inline",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "keywords",
+              "addOn": {
+                "type": "submit",
+                "label": "搜索",
+                "level": "primary",
+                "icon": "fa fa-search pull-left"
+              }
+            }
+          ]
+        },
+        "footerToolbar": [
+          "statistics",
+          {
+            "type": "pagination",
+            "showPageInput": true,
+            "layout": "perPage,pager,go"
+          }
+        ],
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "sortable": true,
+            "searchable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "browser",
+            "label": "Browser",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "platform",
+            "label": "Platform(s)",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "version",
+            "label": "Engine version",
+            "quickEdit": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "grade",
+            "label": "CSS grade",
+            "quickEdit": {
+              "mode": "inline",
+              "type": "select",
+              "options": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "X"
+              ],
+              "saveImmediately": true
+            },
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "type": "operation",
+            "label": "操作",
+            "width": 100,
+            "buttons": [
+              {
+                "type": "button",
+                "icon": "fa fa-eye",
+                "actionType": "dialog",
+                "dialog": {
+                  "title": "查看",
+                  "body": {
+                    "type": "form",
+                    "body": [
+                      {
+                        "type": "static",
+                        "name": "engine",
+                        "label": "Engine"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "browser",
+                        "label": "Browser"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "platform",
+                        "label": "Platform(s)"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "grade",
+                        "label": "CSS grade"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<p>添加其他 <span>Html 片段</span> 需要支持变量替换（todo）.</p>"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-pencil",
+                "actionType": "dialog",
+                "dialog": {
+                  "position": "left",
+                  "size": "lg",
+                  "title": "编辑",
+                  "body": {
+                    "type": "form",
+                    "name": "sample-edit-form",
+                    "api": "/api/mock2/sample/$id",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "engine",
+                        "label": "Engine",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "browser",
+                        "label": "Browser",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "platform",
+                        "label": "Platform(s)",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "select",
+                        "name": "grade",
+                        "label": "CSS grade",
+                        "options": [
+                          "A",
+                          "B",
+                          "C",
+                          "D",
+                          "X"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-times text-danger",
+                "actionType": "ajax",
+                "confirmText": "您确认要删除?",
+                "api": "delete:/api/mock2/sample/$id"
+              }
+            ],
+            "toggled": true
+          }
+        ]
+      }
+    }
+
+  ]
+}
+```
+
+内嵌模式下
+
+```schema: scope="body"
+{
+  "type": "form",
+  "api": "/api/mock2/form/saveForm",
+  "debug": true,
+  "body": [
+    {
+      "type": "picker",
+      "overflowConfig": {
+        "maxTagCount": 20,
+        "overflowTagPopoverInCRUD": {
+          "placement": "top"
+        }
+      },
+      "embed": true,
+      "name": "maxTagCount2",
+      "joinValues": true,
+      "valueField": "id",
+      "labelField": "engine",
+      "label": "多选",
+      "source": "/api/mock2/sample",
+      "size": "lg",
+      "value": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+      "multiple": true,
+      "pickerSchema": {
+        "mode": "table",
+        "name": "thelist",
+        "quickSaveApi": "/api/mock2/sample/bulkUpdate",
+        "quickSaveItemApi": "/api/mock2/sample/$id",
+        "draggable": true,
+        "headerToolbar": {
+          "wrapWithPanel": false,
+          "type": "form",
+          "className": "text-right",
+          "target": "thelist",
+          "mode": "inline",
+          "body": [
+            {
+              "type": "input-text",
+              "name": "keywords",
+              "addOn": {
+                "type": "submit",
+                "label": "搜索",
+                "level": "primary",
+                "icon": "fa fa-search pull-left"
+              }
+            }
+          ]
+        },
+        "footerToolbar": [
+          "statistics",
+          {
+            "type": "pagination",
+            "showPageInput": true,
+            "layout": "perPage,pager,go"
+          }
+        ],
+        "columns": [
+          {
+            "name": "engine",
+            "label": "Rendering engine",
+            "sortable": true,
+            "searchable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "browser",
+            "label": "Browser",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "platform",
+            "label": "Platform(s)",
+            "sortable": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "version",
+            "label": "Engine version",
+            "quickEdit": true,
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "name": "grade",
+            "label": "CSS grade",
+            "quickEdit": {
+              "mode": "inline",
+              "type": "select",
+              "options": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "X"
+              ],
+              "saveImmediately": true
+            },
+            "type": "text",
+            "toggled": true
+          },
+          {
+            "type": "operation",
+            "label": "操作",
+            "width": 100,
+            "buttons": [
+              {
+                "type": "button",
+                "icon": "fa fa-eye",
+                "actionType": "dialog",
+                "dialog": {
+                  "title": "查看",
+                  "body": {
+                    "type": "form",
+                    "body": [
+                      {
+                        "type": "static",
+                        "name": "engine",
+                        "label": "Engine"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "browser",
+                        "label": "Browser"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "platform",
+                        "label": "Platform(s)"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "static",
+                        "name": "grade",
+                        "label": "CSS grade"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "html",
+                        "html": "<p>添加其他 <span>Html 片段</span> 需要支持变量替换（todo）.</p>"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-pencil",
+                "actionType": "dialog",
+                "dialog": {
+                  "position": "left",
+                  "size": "lg",
+                  "title": "编辑",
+                  "body": {
+                    "type": "form",
+                    "name": "sample-edit-form",
+                    "api": "/api/mock2/sample/$id",
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "engine",
+                        "label": "Engine",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "browser",
+                        "label": "Browser",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "platform",
+                        "label": "Platform(s)",
+                        "required": true
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "input-text",
+                        "name": "version",
+                        "label": "Engine version"
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "select",
+                        "name": "grade",
+                        "label": "CSS grade",
+                        "options": [
+                          "A",
+                          "B",
+                          "C",
+                          "D",
+                          "X"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "button",
+                "icon": "fa fa-times text-danger",
+                "actionType": "ajax",
+                "confirmText": "您确认要删除?",
+                "api": "delete:/api/mock2/sample/$id"
+              }
+            ],
+            "toggled": true
+          }
+        ]
+      }
+    }
+
+  ]
+}
 ```
 
 ## 属性表
@@ -515,6 +1394,6 @@ options:
 
 - 章节顺序与 Amis 6.13 对齐：基本用法、配置 pickerSchema、内嵌模式、限制标签最大展示数量、属性表 / OverflowConfig、事件表 / change / itemClick / staticItemClick。
 - 默认 Picker 已按 Amis `buildSchema()` 生成 CRUD `mode: list`；500px dialog、`modalMode: drawer`、drawer 桌面 500px / 窄屏全宽、已有值回填、选中行与 `itemClearable` 已对齐。
-- `overflowConfig.maxTagCount` 与 `displayPosition` 已接；`overflowTagPopover`、`overflowTagPopoverInCRUD` 的浮层样式尚未接。
+- `overflowConfig.maxTagCount`、`displayPosition`、`overflowTagPopover`、`overflowTagPopoverInCRUD` 已接。
 - `staticItemClick` 与 `strictMode` 已接；树选择尚未完成。
 - Vamis 额外保留顶层 `maxTagCount`、`clearable`、`placeholder`、`perPage` 兼容字段；Amis 主字段仍以本文属性表为准。

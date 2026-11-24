@@ -1,6 +1,6 @@
 # CRUD 增删改查 · `crud` 设计
 
-> 状态：**进行中 69%** · 复杂度：**XL 特重**
+> 状态：**进行中 71%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/crud) · Amis：`/zh-CN/components/crud`
 > 盘点日期：2026-11-18。本文是**研发设计文档**；属性 / 事件 / 动作全表以在线文档为准。
 
@@ -152,7 +152,8 @@ store.items ──> list / 手写 table / Cards
 - Picker 依赖切片：`pickerMode` 自动选择；`mode: list` 对齐 Amis `List + ListItem`（右缩 15px、行高 42.5、选中 `brand-10/brand-4`）；`multiple:false` 使用 radio 单选并支持整行点击；scoped `getData()` 暴露 selectedItems / selectedIds / items / page / perPage；`value + primaryField` 回填已有值；无 API 本地 source 进入本地分页并支持 keep selection；选中计数只在存在 bulkActions 时显示。
 - Picker 多选栏：`pickerMode + multiple + keepItemSelectionOnPageChange` 时渲染 `已选N条：`、可删除标签和“清空”；普通 list 顶部已选计数仍只属于 bulkActions。
 - `strictMode`：主键身份比较统一走严格 `===`；默认非严格模式允许 `1` 与 `"1"` 等价。seed、单选替换、多选移除与全选共用该比较器。
-- 对照记录：桌面 / 移动 **60/92**（2026-11-20，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
+- `footerToolbar`：支持 `statistics` 关键字、`pagination` schema 与其它 SchemaRenderer 节点；自定义 pagination 会补当前 page / perPage / total / lastPage，并保留作者 `layout` 与 `showPageInput`。右栏 `max-width:100%`，Pagination 根 `white-space:normal`，窄弹框内按 Amis 自动分成 perPage / pager / go 行。
+- 对照记录：桌面 / 移动 **61/92**（2026-11-24，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/列显示/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。
   - **事件/动作**：quickSave\*、saveOrder\*、部分 Table 动作未接。

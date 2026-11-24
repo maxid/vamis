@@ -10,6 +10,7 @@ import {
   getByPath,
   isApiOutdated,
   isFormItemType,
+  overlayContainerFrom,
   requestApi,
   runOnEvent,
   setByPathCopy,
@@ -35,6 +36,7 @@ import Pagination from './Pagination.vue'
 import PopOverHost from './PopOverHost.vue'
 import Spinner from './Spinner.vue'
 import RowValueHost from './data/RowValueHost.vue'
+import VamisTooltipLayer from '../overlay/VamisTooltipLayer.vue'
 import {
   asToolbarSchema,
   CrudHostKey,
@@ -67,6 +69,9 @@ const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
 const seededValueKey = ref('')
+const selectionMoreEl = ref<HTMLElement | null>(null)
+const selectionOverflowTip = ref(false)
+let selectionOverflowHideTimer: ReturnType<typeof setTimeout> | undefined
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const strictMode = computed(() => props.schema.strictMode === true)
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
@@ -101,9 +106,41 @@ const visibleSelectedItems = computed(() =>
     ? store.selectedItems.slice(0, selectionMaxCount.value)
     : store.selectedItems,
 )
-const hiddenSelectedCount = computed(() =>
-  Math.max(0, store.selectedItems.length - visibleSelectedItems.value.length),
+const hiddenSelectedItems = computed(() =>
+  selectionMaxCount.value > 0
+    ? store.selectedItems.slice(selectionMaxCount.value)
+    : [],
 )
+const hiddenSelectedCount = computed(() =>
+  hiddenSelectedItems.value.length,
+)
+const selectionOverflowContainer = computed(() =>
+  overlayContainerFrom(
+    { popOverContainerSelector: props.schema.popOverContainerSelector },
+    env,
+  ),
+)
+const selectionOverflowTooltip = computed(() => {
+  const value = props.schema.overflowTagPopover
+  const extra =
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? { ...(value as Record<string, unknown>) }
+      : {}
+  delete extra.children
+  delete extra.content
+  const extraClass =
+    extra.tooltipClassName != null ? String(extra.tooltipClassName) : ''
+  return {
+    placement: 'bottom',
+    showArrow: false,
+    enterable: true,
+    offset: [0, 10],
+    ...extra,
+    tooltipClassName: ['vamis-crud-selection-overflow', extraClass]
+      .filter(Boolean)
+      .join(' '),
+  }
+})
 /** Amis CRUD `headerToolbar` 默认 `['bulkActions']`。cards 把这条注入 Cards-toolbar，不要在 CRUD 根上另画一段 flex。 */
 const resolvedHeaderToolbar = computed(() => {
   if (props.schema.headerToolbar != null) return asArray(props.schema.headerToolbar)
@@ -127,9 +164,6 @@ const cardsChild = computed(
 )
 const cardsData = computed(() => ({ items: store.items }))
 const lastPage = computed(() => Math.max(1, Math.ceil((store.total || 0) / (store.perPage || 10)) || 1))
-const showPager = computed(
-  () => !isCardsMode.value && (props.schema.alwaysShowPagination === true || lastPage.value > 1),
-)
 const statisticsText = computed(() => `${store.page}/${lastPage.value} 共：${store.total} 项`)
 const pagerSchema = computed(
   () =>
@@ -143,6 +177,18 @@ const pagerSchema = computed(
       maxButtons: 9,
       showPageInput: lastPage.value > 9,
     }) as SchemaObject,
+)
+const resolvedFooterToolbar = computed(() =>
+  props.schema.footerToolbar == null
+    ? ['statistics', pagerSchema.value]
+    : asArray(props.schema.footerToolbar),
+)
+const showPager = computed(
+  () =>
+    !isCardsMode.value &&
+    (props.schema.footerToolbar != null
+      ? resolvedFooterToolbar.value.length > 0
+      : props.schema.alwaysShowPagination === true || lastPage.value > 1),
 )
 /** 对齐 Amis Table：`Spinner overlay show={store.loading}` 盖表格区，不盖底栏。 */
 const spinnerSchema = computed(
@@ -277,6 +323,38 @@ function toolbarAlign(node: unknown): 'left' | 'right' {
   if (rec?.align === 'right' || rec?.align === 'left') return rec.align
   const type = typeof node === 'string' ? node : String(rec?.type || '')
   return type === 'pagination' ? 'right' : 'left'
+}
+
+function isStatisticsNode(node: unknown) {
+  return node === 'statistics' || node === 'statistics-node'
+}
+
+function isPaginationNode(node: unknown) {
+  return !!(
+    node &&
+    typeof node === 'object' &&
+    !Array.isArray(node) &&
+    String((node as Record<string, unknown>).type || '') === 'pagination'
+  )
+}
+
+function footerNodeSchema(node: unknown): SchemaObject {
+  const schema = toolbarNode(node)
+  if (!isPaginationNode(node)) return schema
+  return {
+    ...pagerSchema.value,
+    ...schema,
+    activePage: store.page,
+    lastPage: lastPage.value,
+    total: store.total,
+    perPage: store.perPage,
+  }
+}
+
+function footerNodeAlign(node: unknown): 'left' | 'right' {
+  if (isStatisticsNode(node)) return 'left'
+  if (isPaginationNode(node)) return 'right'
+  return toolbarAlign(node)
 }
 
 function bulkActionSchema(btn: SchemaObject): SchemaObject {
@@ -447,6 +525,21 @@ function sameRowIdentity(
   )
 }
 
+function hydrateSelectedItems(pool: Record<string, any>[]) {
+  if (!pool.length || !store.selectedItems.length) return
+  store.selectedItems = store.selectedItems.map((selected) => {
+    const row = pool.find((item) => sameRowIdentity(item, selected))
+    return row || selected
+  })
+}
+
+function selectionOptionPool() {
+  const embeddedOptions = Array.isArray(props.data.items)
+    ? (props.data.items as Record<string, any>[])
+    : []
+  return [...store.items, ...allItems.value, ...embeddedOptions]
+}
+
 function isSelected(row: Record<string, any>) {
   return store.selectedItems.some((item) => sameRowIdentity(item, row))
 }
@@ -536,6 +629,18 @@ function clearSelection() {
   notifyPickerSelection()
 }
 
+function showSelectionOverflow() {
+  if (selectionOverflowHideTimer) clearTimeout(selectionOverflowHideTimer)
+  selectionOverflowTip.value = true
+}
+
+function hideSelectionOverflow() {
+  if (selectionOverflowHideTimer) clearTimeout(selectionOverflowHideTimer)
+  selectionOverflowHideTimer = setTimeout(() => {
+    selectionOverflowTip.value = false
+  }, 80)
+}
+
 function seedSelectionFromValue() {
   const raw = props.schema.value
   if (raw == null) return
@@ -547,8 +652,11 @@ function seedSelectionFromValue() {
     return
   }
   const valueChanged = key !== seededValueKey.value
-  if (!valueChanged) return
-  const pool = [...allItems.value, ...store.items]
+  const pool = selectionOptionPool()
+  if (!valueChanged) {
+    hydrateSelectedItems(pool)
+    return
+  }
   const labelField = String(props.schema.labelField || 'label')
   store.selectedItems = values.map((value) => {
     if (value && typeof value === 'object') {
@@ -634,6 +742,7 @@ watch(
   { deep: true },
 )
 onBeforeUnmount(() => {
+  if (selectionOverflowHideTimer) clearTimeout(selectionOverflowHideTimer)
   scoped?.unregister(crudApi)
   hub.remove(store.id)
 })
@@ -677,7 +786,13 @@ onBeforeUnmount(() => {
           {{ selectedItemLabel(item) }}
         </span>
       </div>
-      <span v-if="hiddenSelectedCount > 0" class="vamis-crud-selection-more">
+      <span
+        v-if="hiddenSelectedCount > 0"
+        ref="selectionMoreEl"
+        class="vamis-crud-selection-more"
+        @mouseenter="showSelectionOverflow"
+        @mouseleave="hideSelectionOverflow"
+      >
         +{{ hiddenSelectedCount }}
       </span>
       <a
@@ -688,6 +803,37 @@ onBeforeUnmount(() => {
         清空
       </a>
     </div>
+    <VamisTooltipLayer
+      :show="selectionOverflowTip && hiddenSelectedCount > 0"
+      :target="selectionMoreEl"
+      :container="selectionOverflowContainer"
+      :tooltip="selectionOverflowTooltip"
+      :data="props.data"
+      @enter="showSelectionOverflow"
+      @leave="hideSelectionOverflow"
+    >
+      <template #body>
+        <div class="vamis-crud-selection-overflow__grid">
+          <div
+            v-for="(item, index) in hiddenSelectedItems"
+            :key="`selection-overflow-${index}`"
+            class="vamis-crud-selection-value"
+          >
+            <button
+              type="button"
+              class="vamis-crud-selection-value-icon"
+              :aria-label="`移除 ${selectedItemLabel(item)}`"
+              @click="removeSelectedItem(item)"
+            >
+              <VamisClose />
+            </button>
+            <span class="vamis-crud-selection-value-label">
+              {{ selectedItemLabel(item) }}
+            </span>
+          </div>
+        </div>
+      </template>
+    </VamisTooltipLayer>
     <div v-if="!isCardsMode && (headerToolbar.length || bulkActions.length)" class="flex items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-2">
         <SchemaRenderer v-for="(node, i) in headerToolbar" :key="i" :schema="toolbarNode(node)" />
@@ -869,11 +1015,19 @@ onBeforeUnmount(() => {
     </div>
     <div v-if="showPager" class="vamis-table-foot-toolbar">
       <div class="vamis-crud-toolbar">
-        <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--left">
-          <span class="vamis-crud-statistics">{{ statisticsText }}</span>
-        </div>
-        <div class="vamis-crud-toolbar-item vamis-crud-toolbar-item--right">
-          <Pagination :schema="pagerSchema" @page-change="onPagerChange" />
+        <div
+          v-for="(node, index) in resolvedFooterToolbar"
+          :key="`footer-${index}`"
+          class="vamis-crud-toolbar-item"
+          :class="`vamis-crud-toolbar-item--${footerNodeAlign(node)}`"
+        >
+          <span v-if="isStatisticsNode(node)" class="vamis-crud-statistics">{{ statisticsText }}</span>
+          <Pagination
+            v-else-if="isPaginationNode(node)"
+            :schema="footerNodeSchema(node)"
+            @page-change="onPagerChange"
+          />
+          <SchemaRenderer v-else :schema="footerNodeSchema(node)" />
         </div>
       </div>
     </div>
