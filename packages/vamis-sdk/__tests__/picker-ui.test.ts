@@ -219,10 +219,12 @@ describe('Picker value and pickerSchema bridge', () => {
 
     await nextTick()
     expect(
-      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+      host.querySelectorAll(
+        '.vamis-picker__value-wrap .vamis-picker__tag:not(.vamis-picker__more)',
+      ),
     ).toHaveLength(2)
     expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
-      '+1',
+      '+ 1 ...',
     )
     expect(host.querySelector('.vamis-picker__tag-remove')).toBeNull()
   })
@@ -251,10 +253,12 @@ describe('Picker value and pickerSchema bridge', () => {
 
     await nextTick()
     expect(
-      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+      host.querySelectorAll(
+        '.vamis-picker__value-wrap .vamis-picker__tag:not(.vamis-picker__more)',
+      ),
     ).toHaveLength(1)
     expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
-      '+2',
+      '+ 2 ...',
     )
     openPicker(host)
     await vi.waitFor(() =>
@@ -295,9 +299,13 @@ describe('Picker value and pickerSchema bridge', () => {
 
     await nextTick()
     expect(
-      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+      host.querySelectorAll(
+        '.vamis-picker__value-wrap .vamis-picker__tag:not(.vamis-picker__more)',
+      ),
     ).toHaveLength(2)
     const overflow = host.querySelector('.vamis-picker__more') as HTMLElement
+    expect(overflow.classList.contains('vamis-picker__tag')).toBe(true)
+    expect(overflow.textContent?.trim()).toBe('+ 2 ...')
     overflow.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
     await vi.waitFor(() =>
       expect(document.querySelector('.picker-trigger-overflow')).toBeTruthy(),
@@ -343,6 +351,7 @@ describe('Picker value and pickerSchema bridge', () => {
       expect(el).toBeTruthy()
       return el as HTMLElement
     })
+    expect(overflow.textContent?.trim()).toBe('+ 2 ...')
     overflow.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
     await vi.waitFor(() =>
       expect(document.querySelector('.picker-crud-overflow')).toBeTruthy(),

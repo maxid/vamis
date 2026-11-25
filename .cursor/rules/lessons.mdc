@@ -1355,7 +1355,7 @@ alwaysApply: true
 
 ### Picker 收纳浮层与 CRUD footerToolbar 复用共享层
 - 踩过：`+N` 只有原生 `title`，CRUD 已选栏与 trigger 都看不到隐藏项；`maxTagCount` 曾只按数量 `slice`，20 个标签仍会换行全部铺开，和 Amis `AutoFoldedList` 不一致；CRUD 还无条件忽略 `footerToolbar`，导致 Picker 自定义 `perPage,pager,go` 示例不生效。
-- 稳定做法：Picker trigger 与 CRUD 已选栏都用 `VamisTooltipLayer`，分别消费 `overflowTagPopover` / `overflowTagPopoverInCRUD`；hover more 后渲染隐藏标签网格，80ms 延迟关闭以允许移入浮层。`maxTagCount` 只是可见上限，实际数量必须复用 core `countVisibleTagsByWidth` 量真实 chip / `+N` / 尾部按钮宽度；overflow 模式下容器 `nowrap`，用隐藏 measure 行测量，不能只数配置。CRUD footer 遍历 `footerToolbar`：`statistics` 走统计、`type:pagination` 补当前分页状态并保留作者 layout，其余走 SchemaRenderer；默认仍生成 statistics + pagination。
+- 稳定做法：Picker trigger 与 CRUD 已选栏都用 `VamisTooltipLayer`，分别消费 `overflowTagPopover` / `overflowTagPopoverInCRUD`；hover more 后渲染隐藏标签网格，80ms 延迟关闭以允许移入浮层。`maxTagCount` 只是可见上限，实际数量必须复用 core `countVisibleTagsByWidth` 量真实 chip / `+N` / 尾部按钮宽度；overflow 模式下容器 `nowrap`，用隐藏 measure 行测量，不能只数配置。`+N` 摘要本身必须复用 tag chip（trigger 加 `vamis-picker__tag`，CRUD 用 `vamis-crud-selection-more`），文案对齐 Amis 的 `+ N ...`；裸文本会少掉边框 / 背景 / 内边距，并让宽度测量偏低。CRUD footer 遍历 `footerToolbar`：`statistics` 走统计、`type:pagination` 补当前分页状态并保留作者 layout，其余走 SchemaRenderer；默认仍生成 statistics + pagination。
 - 触及：`picker` `crud`
 - 规则：Amis `Form/Picker.tsx renderValues/renderBody`、`CRUD.tsx renderSelection/renderFooterToolbar`；`packages/vamis/src/overlay/VamisTooltipLayer.vue`
 

@@ -11424,9 +11424,9 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   cursor: pointer;
 }
 .vamis-picker__more {
-  color: var(--text-secondary);
-  font-size: var(--fontSizeSm);
-  cursor: default;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
 }
 .vamis-picker-overflow__grid,
 .vamis-crud-selection-overflow__grid {

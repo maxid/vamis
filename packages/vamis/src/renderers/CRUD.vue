@@ -1106,7 +1106,7 @@ onBeforeUnmount(() => {
         @mouseenter="showSelectionOverflow"
         @mouseleave="hideSelectionOverflow"
       >
-        +{{ hiddenSelectedCount }}
+        + {{ hiddenSelectedCount }} ...
       </span>
       <div
         v-if="foldSelection"
@@ -1130,7 +1130,7 @@ onBeforeUnmount(() => {
             {{ selectedItemLabel(item) }}
           </span>
         </div>
-        <span class="vamis-crud-selection-more" data-fold-more>+ 00</span>
+        <span class="vamis-crud-selection-more" data-fold-more>+ 00 ...</span>
       </div>
       <a
         ref="selectionClearEl"

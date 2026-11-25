@@ -612,11 +612,11 @@ watch(
         <span
           v-if="hiddenCount > 0"
           ref="moreEl"
-          class="vamis-picker__more"
+          class="vamis-picker__tag vamis-picker__more"
           @mouseenter="showOverflow"
           @mouseleave="hideOverflow"
         >
-          +{{ hiddenCount }}
+          + {{ hiddenCount }} ...
         </span>
       </div>
       <div
@@ -643,7 +643,7 @@ watch(
             <template v-else>{{ tag.plainLabel }}</template>
           </span>
         </span>
-        <span class="vamis-picker__more" data-fold-more>+ 00</span>
+        <span class="vamis-picker__tag vamis-picker__more" data-fold-more>+ 00 ...</span>
       </div>
       <button
         v-if="selectedTagItems.length && schema.clearable === true"
