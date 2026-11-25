@@ -36,6 +36,45 @@ function openPicker(host: HTMLElement) {
 }
 
 describe('Picker value and pickerSchema bridge', () => {
+  it('opens with Space and removes the last tag with Backspace', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerKeyboardForm',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        value: 'a,b',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' },
+        ],
+      },
+    })
+
+    await nextTick()
+    const control = host.querySelector(
+      '.vamis-picker__control',
+    ) as HTMLElement
+    expect(control.tabIndex).toBe(0)
+    const keydown = (key: string) => {
+      const event = new Event('keydown', { bubbles: true })
+      Object.defineProperty(event, 'key', { value: key })
+      control.dispatchEvent(event)
+    }
+    keydown('Backspace')
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerKeyboardForm').hero).toBe('a'),
+    )
+
+    keydown(' ')
+    await vi.waitFor(() =>
+      expect(document.querySelector('.vamis-picker__dialog')).toBeTruthy(),
+    )
+  })
+
   it('renders the Amis picker trigger with removable tags and no external action buttons', async () => {
     const { host, scoped } = mount({
       type: 'form',

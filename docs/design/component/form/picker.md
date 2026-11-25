@@ -19,6 +19,7 @@ Picker 是“表单字段 + CRUD 弹层 + pickerSchema 自定义内容”的组�
 5. **选项来源**：静态 `options` / 变量 `source` / API `source` 归一为 `rawOptions`；远程失败保留空选项，不覆盖已有选择。
 6. **分页/选择**：默认 `perPage` 交给 CRUD 本地分页；`keepItemSelectionOnPageChange` 保留跨页选中；自定义 CRUD 搜索/分页沿用 CRUD 契约，不在 Picker 另造一套。
 7. **包边界**：渲染器无 `<style>`、无直接 fetch（`requestApi` 除外）；默认皮肤走 `@vamis/ui` token。
+8. **触发器键盘**：control 可聚焦，`Space` 打开，`Backspace` 删除最后一个已选项；焦点样式仍走共享 focus token。
 
 ### 1.2 边界用例
 
@@ -145,7 +146,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：12 / 13）
+### 验收清单（文档核对：13 / 14）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Picker / options 工具已定位
@@ -154,6 +155,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] change / itemClick；当前无独立动作
 - [x] 默认弹框 / 已有值回填 / 选中行 / 取消确认边界
 - [x] `pickerSchema.mode: table` 的 `children` 行树展开与级联选择
+- [x] `Space` 打开 / `Backspace` 删除最后标签与 focus-visible
 - [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（Picker 相关）
 - [x] `pnpm typecheck` 0

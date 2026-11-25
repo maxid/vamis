@@ -420,6 +420,32 @@ function removePickerTag(index: number) {
   const next = selected.value.filter((_, itemIndex) => itemIndex !== index)
   void commitPickerValues(next)
 }
+
+function removeLastPickerTag() {
+  if (!props.disabled && selected.value.length) {
+    removePickerTag(selected.value.length - 1)
+  }
+}
+
+function handleTriggerKeydown(event: KeyboardEvent) {
+  if (props.disabled) return
+  if (
+    event.target instanceof Element &&
+    event.target.closest('button, a, input, textarea, select, label')
+  ) {
+    return
+  }
+  if (event.key === ' ') {
+    event.preventDefault()
+    event.stopPropagation()
+    openPicker()
+  } else if (event.key === 'Backspace' && selected.value.length) {
+    event.preventDefault()
+    event.stopPropagation()
+    removeLastPickerTag()
+  }
+}
+
 async function loadSource() {
   const source = props.schema.source
   if (!source) return
@@ -466,7 +492,12 @@ watch(
       v-if="!embed"
       class="vamis-picker__control"
       :class="{ 'is-disabled': disabled }"
+      role="combobox"
+      aria-haspopup="dialog"
+      :aria-expanded="open"
+      :tabindex="disabled ? -1 : 0"
       @click="!disabled && openPicker()"
+      @keydown="handleTriggerKeydown"
     >
       <div class="vamis-picker__value-wrap">
         <span v-if="!selectedLabels.length" class="vamis-picker__placeholder">

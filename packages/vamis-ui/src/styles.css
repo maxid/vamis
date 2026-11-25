@@ -11348,6 +11348,11 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
 .vamis-picker__control:hover {
   border-color: var(--primary);
 }
+.vamis-picker__control:focus-visible {
+  border-color: var(--ring);
+  outline: none;
+  box-shadow: var(--control-focus-glow);
+}
 .vamis-picker__control.is-disabled {
   background: var(--control-disabled-bg);
   color: var(--control-disabled-color);
