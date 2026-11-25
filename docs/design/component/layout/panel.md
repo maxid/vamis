@@ -1,6 +1,6 @@
 # Panel 面板 · `panel` 设计
 
-> 状态：**进行中 65%** · 复杂度：**L 重**
+> 状态：**进行中 72%** · 复杂度：**L 重**
 > 文档：[在线 API 手册](/components/panel) · Amis：`/zh-CN/components/panel`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
@@ -31,7 +31,7 @@ Panel 当前是**带标题/体/脚/操作的面板**（99 行）：title/header�
 
 ## 2. 复杂度
 
-- 等级：**L 重**（Amis 435 行；Vamis 99 行）；依赖 container/action/tpl。
+- 等级：**L 重**（Amis 435 行；Vamis 130 行）；依赖 container/action/tpl。
 - 风险：区域组合/折叠状态。
 
 ## 3. 契约
@@ -43,7 +43,9 @@ Panel 当前是**带标题/体/脚/操作的面板**（99 行）：title/header�
 | `collapsible` | 折叠 | 已接 |
 | `affixFooter` | 底栏固定 | 已接 |
 | 区域 className | 样式 | 已接 |
-| themeCss/移动 Panel--form | 目标 | 未接 |
+| 区域 control className | header/title/body/actions+footer | 已接 |
+| `subFormMode` / `subFormHorizontal` | 当前 Panel 子项覆盖 | 已接 |
+| themeCss/色档 | 目标 | 未接 |
 
 ## 4. 架构
 
@@ -53,11 +55,11 @@ Panel 当前是**带标题/体/脚/操作的面板**（99 行）：title/header�
 
 ## 5. 样式
 
-- panel heading/body/footer/actions token；无 `<style>`；窄屏/深色单独核。
+- panel heading/body/footer/actions token；无 `<style>`；移动端 Form 面板已走 Form chrome，色档/深色仍单独核。
 
 ## 6. 缺口
 
-themeCss、色档、移动端 Panel--form、深色逐项。
+themeCss、`Panel--primary/success/info/warning/danger` 等色档、深色逐项。
 
 ## 7. 验收
 
@@ -80,7 +82,7 @@ themeCss、色档、移动端 Panel--form、深色逐项。
 
 ## 8. 后续
 
-补 themeCss/移动 Panel；色档与深色单独核。
+补 themeCss/色档；深色单独核。
 
 ---
 

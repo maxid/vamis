@@ -5,8 +5,8 @@ outline: deep
 
 # Panel 面板
 
-::: warning 实现进度 65% · 进行中
-主路径可交互（未逐章节两站核完，不进 80%）：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName`。缺 `themeCss`、`Panel--primary` 等色档、移动端 `Panel--form`。
+::: warning 实现进度 72% · 进行中
+主路径可交互（未逐章节两站核完，不进 80%）：`title` / `header` / `body` / `footer` / `actions`、`affixFooter`、区域 `*ClassName` 与 Amis 控制区类名，`subFormMode` / `subFormHorizontal` 已只作用于当前 Panel 子项。移动端 Form 面板契约已接；缺 `themeCss` 与 `Panel--primary` 等色档。
 :::
 
 可以把相关信息以面板的形式展示到一块。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -99,12 +99,18 @@ actions:
 | footerClassName | `string` | | footer 区域 class |
 | actionsClassName | `string` | | actions 区域 class |
 | bodyClassName | `string` | | body 区域 class |
+| headerControlClassName | `string` | | 头部控制区附加 class |
+| headerTitleControlClassName | `string` | | 标题控制区附加 class |
+| bodyControlClassName | `string` | | 内容控制区附加 class |
+| actionsControlClassName | `string` | | actions / footer 控制区附加 class |
 | title | SchemaNode | | 标题。`false` 隐藏；有 `header` 时不渲染 |
 | header | SchemaNode | | 头部容器，优先于 `title` |
 | body | SchemaNode | | 内容容器 |
 | footer | SchemaNode | | 底部容器 |
 | affixFooter | `boolean` \| `'always'` | | 是否固定底部容器 |
 | actions | Array\<Action\> | | 按钮区域 |
+| subFormMode | `"normal"` \| `"inline"` \| `"horizontal"` | | Panel 子表单项默认展示方式 |
+| subFormHorizontal | `object` | | Panel 子表单项水平布局配置 |
 
 ## 和 Amis 文档的差异
 

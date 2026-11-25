@@ -52,7 +52,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 | itemActions | 已接 InputTree / TreeSelect / Select tree；节点作为 extraData，操作点击不选行 |
 | enableNodePath / pathSeparator | 已由共享树值工具接入 InputTree / TreeSelect；输入拆叶子、输出去重父链 |
 | 分组/树 | 部分（由控件决定） |
-| 虚拟列表 | Select 桌面平铺 / 分组菜单、InputTree、TreeSelect、Transfer list/table 已接；Picker 无直接虚拟属性，Transfer tree 待复用 |
+| 虚拟列表 | Select 桌面平铺 / 分组菜单、InputTree、TreeSelect、Transfer list/table/tree 已接；Picker 无直接虚拟属性 |
 
 ## 4. 架构
 
@@ -66,7 +66,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 
 ## 6. 缺口
 
-- Picker 无直接虚拟属性；Transfer tree 未接虚拟列表。
+- Picker 无直接虚拟属性；Amis 没有通用远程 option 响应缓存字段，不做伪契约。
 - 远程缓存未接；各控件 selectMode/树/分页差异仍由消费控件负责。
 - 深色由控件负责；虚拟列表滚动条与分组行高仍要按控件核。
 - 剩余 CUD 缺口是各消费控件是否完整暴露对应 UI；共享事件与 API 顺序已收口。
@@ -75,7 +75,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 ## 7. 验收
 
 - 序列化矩阵/远程/搜索/选择/全选/创建；至少覆盖 Select/Picker/Transfer 三消费方。
-- 虚拟列表：桌面平铺 / 分组菜单超过阈值切虚拟、滚动切片、搜索后回到顶部；Amis `Select--longlist` 实测视口 266 / 行高 32 / 200 项滚动高 6400。树控件按 Amis Tree 实测首行高度，TreeSelect 6.13 未透传 `itemHeight`；Transfer list/table 实测 selection 约 258 / 行高 38 / 101 项窗口约 10 行。Picker 无直接虚拟属性，Transfer tree 待验。
+- 虚拟列表：桌面平铺 / 分组菜单超过阈值切虚拟、滚动切片、搜索后回到顶部；Amis `Select--longlist` 实测视口 266 / 行高 32 / 200 项滚动高 6400。树控件按 Amis Tree 实测首行高度，TreeSelect 6.13 未透传 `itemHeight`；Transfer list/table 实测 selection 约 258 / 行高 38 / 101 项窗口约 10 行，tree 走共享树窗口。Picker 无直接虚拟属性。
 
 ### 验收清单（文档核对：5 / 12）
 

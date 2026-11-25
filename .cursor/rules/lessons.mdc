@@ -198,6 +198,12 @@ alwaysApply: true
 - 触及：`panel` `service`
 - 规则：`packages/vamis-core/src/formula.ts` `resolveDollarName`
 
+### Panel 的 control className 与 subFormMode 都是局部覆盖
+- 踩过：只接 `headerClassName` / `bodyClassName` / `actionsClassName`，漏掉 Amis 的 `*ControlClassName`；`actionsControlClassName` 只打 actions 没打 footer。另一个误区是把 `subFormMode` 写到全表单或直接改外层 FormContext，导致 Panel 外的字段也变布局。
+- 稳定做法：heading 叠加 `headerControlClassName`，标题叠加 `headerTitleControlClassName`，body 叠加 `bodyControlClassName`；`actionsControlClassName` 同时落 actions 与 footer。`subFormMode` / `subFormHorizontal` 通过 Panel 内局部 FormContext 覆盖，沿用同一 store / 方法，只改 mode / horizontal，不污染外层 Form。移动端 Panel--form 仍由 Form chrome 负责，不要给 Panel 渲染器再长一套窄屏卡。
+- 触及：`panel` `form` `formitem`
+- 规则：Amis `Panel.tsx` `renderBody` / control className；`packages/vamis/src/renderers/Panel.vue`
+
 ### 活示例不要为对照制造差异
 - 踩过：复制 JSON/YAML 孪生围栏、用甲/乙当唯一后缀，对照去重后仍像「少了示例」，目录虚高。Service 曾把 Amis 的 `api` + Panel 改成静态 `data` + tpl，文档站文案/盒模型和 Amis 对不上。
 - 稳定做法：每个语义只留一份 `schema` 围栏；文案和 schema 对标 Amis 主路径；切格式走「编辑 Schema」双 Tab。对照对齐 mock，不要为了对照把活示例改瘦。
