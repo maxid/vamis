@@ -2610,6 +2610,62 @@ describe('Select option mutation events', () => {
     ).toBe('请选择')
   })
 
+  it('virtualizes grouped headers and children as one flat row window', async () => {
+    const groups = Array.from({ length: 3 }, (_, groupIndex) => ({
+      label: `分组 ${groupIndex + 1}`,
+      children: Array.from({ length: 10 }, (_, itemIndex) => ({
+        label: `选项 ${groupIndex + 1}-${itemIndex + 1}`,
+        value: `g${groupIndex + 1}-${itemIndex + 1}`,
+      })),
+    }))
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'groupVirtualForm',
+      actions: [],
+      mode: 'horizontal',
+      body: {
+        type: 'select',
+        name: 'hero',
+        label: '英雄',
+        selectMode: 'group',
+        virtualThreshold: 4,
+        itemHeight: 32,
+        options: groups,
+      },
+    })
+
+    await nextTick()
+    click(host.querySelector('.vamis-select__input'))
+    const list = await vi.waitFor(() => {
+      const el = document.querySelector('.vamis-select__list.is-virtual')
+      expect(el).toBeTruthy()
+      return el as HTMLElement
+    })
+    const drawn = list.querySelectorAll(
+      '.vamis-select__group, .vamis-select__item--child',
+    )
+
+    expect(drawn.length).toBeLessThan(33)
+    expect(list.querySelector('.vamis-select__virtual-pad')).toBeTruthy()
+    expect(list.textContent).toContain('分组 1')
+
+    list.scrollTop = 32 * 18
+    list.dispatchEvent(new Event('scroll', { bubbles: true }))
+    const later = await vi.waitFor(() => {
+      const item = [...list.querySelectorAll('.vamis-select__item--child')].find(
+        (node) => node.textContent?.trim() === '选项 3-5',
+      )
+      expect(item).toBeTruthy()
+      return item as HTMLElement
+    })
+    click(later)
+
+    const form = scoped.getComponentByName('groupVirtualForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    await vi.waitFor(() => expect(form?.getData?.()?.hero).toBe('g3-5'))
+  })
+
   it('renders Select tree mode and writes a leaf selection', async () => {
     const { host, scoped } = mount({
       type: 'page',

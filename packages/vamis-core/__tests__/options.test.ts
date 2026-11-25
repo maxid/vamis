@@ -17,6 +17,7 @@ import {
   selectPopupHeight,
   splitOverflowTags,
   flattenOptions,
+  flattenOptionMenuRows,
   flattenVisibleOptions,
   getSelectedOptions,
   hydrateSelectedOptions,
@@ -282,6 +283,33 @@ describe('toggle / checkAll / selectFirst', () => {
 
     expect(hydrated[0]).toBe(complete)
     expect(hydrated[1]).toBe(pool[0])
+  })
+
+  it('flattens group headers and children into one menu row sequence', () => {
+    const rows = flattenOptionMenuRows([
+      { label: '独立项', value: 'solo' },
+      {
+        label: '分组 A',
+        children: [
+          { label: 'A-1', value: 'a1' },
+          { label: 'A-2', value: 'a2' },
+        ],
+      },
+    ])
+
+    expect(rows.map((row) => row.kind)).toEqual([
+      'option',
+      'group',
+      'option',
+      'option',
+    ])
+    expect(rows.map((row) => row.kind === 'group' ? row.label : row.option.label)).toEqual([
+      '独立项',
+      '分组 A',
+      'A-1',
+      'A-2',
+    ])
+    expect(rows.map((row) => row.index)).toEqual([0, 1, 2, 3])
   })
 
   it('maps overlay width and align like Amis PopOverContainer', () => {

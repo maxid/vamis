@@ -1158,9 +1158,9 @@ alwaysApply: true
 - 触及：`select` `multi-select` Options
 - 规则：`packages/vamis/src/optionsControl.ts`；`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`
 
-### Options 虚拟列表：固定行高 + 上下 spacer，分组菜单不虚拟化
-- 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。直接沿用 Table 的行虚拟会把分组头/子项缩进混进固定行高。
-- 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select）。桌面平铺选项超过阈值时，列表容器固定 266 视口、`overflow-y: auto`，按 `scrollTop` 切片；上下 spacer 补总高（`count × itemHeight`），行内联高度锁 `itemHeight`。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。分组菜单（`children` / `selectMode: group`）暂不虚拟化，避免组头高度与子项缩进破坏固定行高。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。
+### Options 虚拟列表：组头和子项压平成同一行序列
+- 踩过：Options 文档早有 `virtualThreshold` / `itemHeight`，但只挂在属性表；长列表整表渲染，200 项下拉把 DOM 全量铺开。分组菜单又曾以“组头高度不同”为理由跳过窗口化，结果组多时仍整表铺开；直接按原对象切片还会让组头占一项、子项又整组渲染，窗口索引和总高都失真。
+- 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select），group 模式未配置阈值时按 Amis `GroupedSelection` 默认 **1000**。先用 core `flattenOptionMenuRows` 把组头和每个子项压平成同一行序列，再固定 266 视口、按 `scrollTop` 切片；上下 spacer 用“行数 × itemHeight”补总高，组头和 option 行都锁同一行高。普通平铺和 group 共用这套窗口，点击仍使用完整 option；移动端复用行序列但不强制桌面窗口。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。
 - 触及：`select` Options
 - 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `TransferDropDown.tsx` / `_transfer.scss` / `virtual-list`
 

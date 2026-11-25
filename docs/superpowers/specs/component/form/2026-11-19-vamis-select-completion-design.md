@@ -46,7 +46,7 @@ Amis 6.13.0 的实际链路：
 
 ## 2. 意图
 
-Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签折叠、移动端 PopUp 和桌面虚拟列表。剩余缺口集中在两类：
+Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签折叠、移动端 PopUp 和桌面平铺 / 分组虚拟列表。剩余缺口集中在两类：
 
 1. Options 选项增删改的事件与 API 触发顺序。
 2. Amis 的非普通选择模式：表格、树、级联、关联选择。
@@ -215,6 +215,7 @@ Select 当前已经对齐普通下拉、分组、搜索、远程选项、标签�
 4. `selectMode: chained`。**已完成 2026-11-22**：列路径 / 叶子值 / 多选叶子全选 / 移动草稿 / 虚拟化 / `children: []` 分支 / `subTitle` / placeholder / option 类名 / label + tip / deferred 父列 Spinner 已全部接上。`defaultSelectedIndex` 属于 `TabsTransfer` option，Amis Select 未透传，不纳入本切片。
 5. `selectMode: associated` 主路径。**已完成 2026-11-21**：新增 `SelectAssociatedPane`，左右栏、`leftMode` / `rightMode`、`ref` 匹配、`leftDefaultValue`、移动草稿与搜索焦点已接；左右树 deferred 回写和人员 source + 右栏列表 deferred 已接。
 6. `searchResultMode` 全模式收口。**已完成 2026-11-22**：searchApi 结果面板按 `searchResultMode` 切换，清空搜索恢复主模式，表格结果支持独立列。
+7. 分组菜单虚拟化。**已完成 2026-11-25**：core `flattenOptionMenuRows` 把组头和子项压平成统一行序列，桌面 group 模式按 `virtualThreshold` / `itemHeight` 生成 266 视口窗口和上下 spacer；移动端复用同一序列但不强制窗口。后段行点击仍映射完整 option 写值。
 
 每个切片单独跑测试和 Select 对照，不把五个模式压成一个不可审查的提交。
 

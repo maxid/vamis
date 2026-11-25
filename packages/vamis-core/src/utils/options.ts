@@ -15,6 +15,21 @@ export interface OptionItem {
   [key: string]: unknown
 }
 
+export type OptionMenuRow =
+  | {
+      kind: 'group'
+      index: number
+      depth: number
+      label: string
+      option: OptionItem
+    }
+  | {
+      kind: 'option'
+      index: number
+      depth: number
+      option: OptionItem
+    }
+
 export interface OptionsValueConfig {
   multiple?: boolean
   joinValues?: boolean
@@ -677,6 +692,34 @@ export function splitOverflowTags<T>(items: T[], maxTagCount?: number): { visibl
   }
   const cap = maxTagCount as number
   return { visible: items.slice(0, cap), rest: items.slice(cap) }
+}
+
+/** Flatten group headers and selectable leaves into the virtual menu row sequence. */
+export function flattenOptionMenuRows(options: OptionItem[]): OptionMenuRow[] {
+  const rows: OptionMenuRow[] = []
+  const walk = (items: OptionItem[], depth = 0) => {
+    for (const item of items) {
+      if (item.children?.length) {
+        rows.push({
+          kind: 'group',
+          index: rows.length,
+          depth,
+          label: item.label,
+          option: item,
+        })
+        walk(item.children, depth + 1)
+      } else {
+        rows.push({
+          kind: 'option',
+          index: rows.length,
+          depth,
+          option: item,
+        })
+      }
+    }
+  }
+  walk(options)
+  return rows
 }
 
 /** 对齐 Amis `AutoFoldedList`：按容器宽度决定可见标签数，不够再收成 +N。 */
