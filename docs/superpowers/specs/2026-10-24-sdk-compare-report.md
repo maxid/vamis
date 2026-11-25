@@ -3,7 +3,7 @@
 - 日期：2026-11-25
 - 视口：移动 375×812（Amis <768 表单）
 - 状态：自动生成。`pnpm compare` 用同一份 schema 跑 `amis.embed` / `vamis.embed`，判定是 **Vamis 是否对齐 Amis 实测**。移动端加 `--mobile`。
-- 合计 **39** · 通过 **38** · 失败 **1**（P0 0）· Vamis 多出 extra **0**
+- 合计 **12** · 通过 **11** · 失败 **1**（P0 0）· Vamis 多出 extra **0**
 
 ## 问题分类
 
@@ -29,7 +29,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 
 某个 type 的默认外观。只改该渲染器 / cva，不要改全局 token。
 
-- `components-form-options-7` page/body/0:form/body/0:select.value: Amis `` / Vamis `a`
+- `components-form-input-number-3` page/body/0:form/body/0:input-number.value: Amis `$111,111%` / Vamis `111111`
 
 整改：
 - 运行时值应对齐 Amis：schema.value / 表单域 / 控件当前值，不要只看能不能画出。
@@ -39,7 +39,7 @@ schema className 工具类，对标 Amis helper SCSS / 计算样式。
 | 面 | 合计 | 失败 |
 |----|------|------|
 | 文档 | 0 | 0 |
-| 组件 | 39 | 1 |
+| 组件 | 12 | 1 |
 | 样式 | 0 | 0 |
 
 Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不删。
@@ -48,7 +48,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 | 组 | 合计 | 失败 |
 |----|------|------|
-| 组件 / 数据输入 | 39 | 1 |
+| 组件 / 数据输入 | 12 | 1 |
 
 ## P0 失败（驱动下一刀）
 
@@ -56,7 +56,7 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 
 ## 文档 smoke 失败（最多 20 条）
 
-- `components-form-options-7` Options 选择器表单项 #8 — page/body/0:form/body/0:select.value: Amis `` / Vamis `a`
+- `components-form-input-number-3` InputNumber 数字输入 #4 — page/body/0:form/body/0:input-number.value: Amis `$111,111%` / Vamis `111111`
 
 ## 重跑口径
 
@@ -64,5 +64,5 @@ Vamis 可以比 Amis 多（尤其是样式）。多出来的页标 extra，不�
 - **组件**修完：只重跑自身 `pnpm compare --page button`（或 `--id src-components-button-0`）。移动端再加 `--mobile`。
 - **样式 helper** 修完：只重跑该页 `pnpm compare --page margin`。
 
-- `pnpm compare --page "components-form-options-7" --mobile` — 只重跑「components-form-options-7」自身
+- `pnpm compare --page "components-form-input-number-3" --mobile` — 只重跑「components-form-input-number-3」自身
 

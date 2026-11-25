@@ -35,6 +35,7 @@ import { VamisCaret, VamisIcon } from '@vamis/ui'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
 import VamisOverlay from '../../overlay/VamisOverlay.vue'
+import VamisPopUp from '../../overlay/VamisPopUp.vue'
 
 const props = defineProps<{ schema: SchemaObject; disabled?: boolean }>()
 
@@ -526,7 +527,30 @@ const numberClass = computed(() => [
         <span>{{ units.find((item) => String(item.value) === unit)?.label ?? unit }}</span>
         <VamisCaret :open="unitOpen" />
       </button>
+      <VamisPopUp
+        v-if="hasUnits && mobile"
+        :show="unitOpen"
+        :height="320"
+        :show-confirm="false"
+        :container="overlayContainer"
+        panel-class-name="vamis-number__unit-popup"
+        @cancel="unitOpen = false"
+      >
+        <div class="vamis-select__popover vamis-select__popover--sheet vamis-number__unit-menu">
+          <button
+            v-for="item in units"
+            :key="String(item.value)"
+            type="button"
+            class="vamis-select__item"
+            :class="{ 'is-active': String(item.value) === unit }"
+            @click="pickUnit(String(item.value))"
+          >
+            <span class="vamis-select__item-label">{{ item.label }}</span>
+          </button>
+        </div>
+      </VamisPopUp>
       <VamisOverlay
+        v-else
         :show="unitOpen"
         :target="unitEl"
         :container="overlayContainer"

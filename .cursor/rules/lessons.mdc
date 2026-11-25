@@ -1226,7 +1226,7 @@ alwaysApply: true
 
 ### Number 控件不要用 native `type=number` / shadcn Input 冒充
 - 踩过：占位只挂 `type="number"`，没有步进柄、精度、千分位、单位、enhance。Amis 是 `NumberInput`（rc-input-number）+ `type=text` 展示层。对照探针读 `input.value` 展示串，不要把 `getValue` 改成 `$111,111%`。
-- 稳定做法：量进 `:root` / `.dark` 的 `--number-*`（高 32、handler 24、单位 56、pad **10**——Amis 计算值，不是 size-6=12）。输入用 `type=text` `inputmode=decimal`。前缀/千分位只在展示层，`getValue` 仍是数字。右侧步进长按对齐 rc-input-number `StepHandler`（先加一次，600ms 后每 200ms 再加）；`enhance` 两侧按钮只点一次，不要长按。focus glow 打在 `.vamis-number-control`（含单位），不要打在 `overflow:hidden` 的 `.vamis-number` 上。`displayMode: enhance` 对齐 Amis `.Number--enhance`：`inline-flex` / `width: auto`，内层约 90px，不要 `width:100%`。
+- 稳定做法：量进 `:root` / `.dark` 的 `--number-*`（高 32、handler 24、单位 56、pad **10**——Amis 计算值，不是 size-6=12）。输入用 `type=text` `inputmode=decimal`。前缀/千分位只在展示层，`getValue` 仍是数字。右侧步进长按对齐 rc-input-number `StepHandler`（先加一次，600ms 后每 200ms 再加）；`enhance` 两侧按钮只点一次，不要长按。focus glow 打在 `.vamis-number-control`（含单位），不要打在 `overflow:hidden` 的 `.vamis-number` 上。`displayMode: enhance` 对齐 Amis `.Number--enhance`：`inline-flex` / `width: auto`，内层约 90px，不要 `width:100%`。`unitOptions` 桌面走 `VamisOverlay`，移动端走 `VamisPopUp`；只切换渲染宿主，单位解析与 `getValue` 不要分叉。
 - 触及：`input-number`
 - 规则：`.cursor/rules/style.mdc`；Amis `_number.scss`
 

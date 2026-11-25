@@ -1,6 +1,6 @@
 # InputNumber 数字输入 · `input-number` 设计
 
-> 状态：**进行中 88%** · 复杂度：**L 重**
+> 状态：**进行中 89%** · 复杂度：**L 重**
 > 文档：[在线 API 手册](/components/form/input-number) · Amis：`/zh-CN/components/form/input-number`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -84,14 +84,14 @@ step → numberStepValue → clamp → setValue
 ## 5. 样式与边界
 
 - 单位/步进/前后缀/增强模式走 token；无 `<style>`。
-- 移动端单位弹层用 `VamisOverlay`；深色单位菜单、窄屏对齐单独核。
+- 桌面单位弹层用 `VamisOverlay`；移动端单位弹层用 `VamisPopUp`，深色单位菜单与窄屏继续单独核。
 - 作者 className 只落节点；themeCss 未接。
 
 ## 6. 当前状态与缺口
 
-- 已接：步进/精度/min-max、前缀/后缀/千分位、单位、enhance、大数、reset/clear、change/focus/blur、API。
+- 已接：步进/精度/min-max、前缀/后缀/千分位、单位、enhance、大数、reset/clear、change/focus/blur、API；单位选择桌面 Overlay / 移动 PopUp 已拆开。
 - 缺口：themeCss、深色/窄屏逐项、单位弹层焦点细节。
-- 对照：TODO 88%；本轮未重跑。
+- 对照：桌面 / 移动 **11/12**（余 1 条为 Amis 展示串探针差异）。
 
 ## 7. 验收计划与完成度
 
@@ -104,10 +104,10 @@ step → numberStepValue → clamp → setValue
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（InputNumber 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page input-number` 桌面
-- [ ] `pnpm compare --page input-number --mobile`
+- [x] `pnpm test`（InputNumber 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page input-number` 桌面
+- [x] `pnpm compare --page input-number --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点
@@ -121,7 +121,7 @@ step → numberStepValue → clamp → setValue
 ## 8. 后续
 
 1. themeCss/皮肤变量。
-2. 深色/单位弹层/窄屏专项。
+2. 深色 / 窄屏专项与单位弹层焦点细节。
 3. 大数与百分比组合补测试。
 
 ---
