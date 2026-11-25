@@ -1341,7 +1341,7 @@ body:
 }
 ```
 
-**补充：多选与值格式。** `multiple: true` 可多选；`joinValues` / `extractValue` / `delimiter` 控制写回 string、array 或完整 option。多选输入值是字符串时，无论 `joinValues` 是否为 true，都会按 `delimiter` 拆分回已选项。
+**补充：多选与值格式。** `multiple: true` 可多选；`joinValues` / `extractValue` / `delimiter` 控制写回 string、array 或完整 option。多选输入值是字符串时，无论 `joinValues` 是否为 true，都会按 `delimiter` 拆分回已选项。若 `source` / 当前分页没有某个已选 ID，标签保留原始 ID，不伪造 label；需要补全历史标签时，source 应返回完整选项，或后端按选中值提供回查接口。
 
 ```yaml
 type: picker

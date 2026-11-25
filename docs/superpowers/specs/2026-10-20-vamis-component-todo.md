@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-25（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1440**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
+- 最近核对：2026-11-25（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1441**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
 
 ## 怎么读
 

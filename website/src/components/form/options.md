@@ -431,7 +431,7 @@ body:
 
 多选 + `joinValues: false`，值为选中项的对象数组：
 
-`joinValues: false` 只控制写回结构；回显时如果传入的是字符串（例如 `"a,b"`），仍会按 `delimiter` 拆成多个已选项。
+`joinValues: false` 只控制写回结构；回显时如果传入的是字符串（例如 `"a,b"`），仍会按 `delimiter` 拆成多个已选项。某个值不在 options/source 中时保留原始值作为 label，不从其它字段猜业务文案。
 
 ```schema: scope="body"
 type: form

@@ -246,7 +246,29 @@ function pickerValue(value: unknown) {
 
 function pickerOption(value: unknown): OptionItem {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return normalizeOptions([value], labelField.value, valueField.value)[0]
+    const record = value as Record<string, unknown>
+    const key = record[valueField.value]
+    const hit = options.value.find((item) =>
+      optionValuesEqual(item.value, key, valueField.value),
+    )
+    if (hit) return hit
+    const option = normalizeOptions(
+      [value],
+      labelField.value,
+      valueField.value,
+    )[0]
+    const fallbackLabel =
+      option.label ||
+      record[labelField.value] ||
+      record.label ||
+      key ||
+      option.value ||
+      ''
+    return {
+      ...option,
+      label: String(fallbackLabel),
+      __unmatched: true,
+    }
   }
   return (
     options.value.find((item) =>
@@ -315,7 +337,11 @@ function handleEmbedSelection(items: unknown[]) {
 const selectedTagItems = computed(() =>
   selected.value.map((value) => {
     const option = pickerOption(value)
-    const plainLabel = String(option.label ?? '-')
+    const plainLabel = String(
+      option.label ||
+        pickerValue(option) ||
+        (value && typeof value !== 'object' ? value : '-'),
+    )
     const template =
       props.schema.labelTpl != null
         ? String(props.schema.labelTpl).trim()

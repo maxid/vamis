@@ -82,7 +82,6 @@ describe('Picker value and pickerSchema bridge', () => {
         labelField: 'name',
         options: [
           { id: '2', name: '曹操' },
-          { id: '50', name: '李白' },
         ],
       },
     })
@@ -92,7 +91,32 @@ describe('Picker value and pickerSchema bridge', () => {
       [...host.querySelectorAll('.vamis-picker__tag-label')].map((item) =>
         (item.textContent || '').trim(),
       ),
-    ).toEqual(['曹操', '李白'])
+    ).toEqual(['曹操', '50'])
+  })
+
+  it('keeps selected descriptors as raw ids when the source does not contain them', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        joinValues: false,
+        value: [{ id: 1 }, { id: 53 }],
+        valueField: 'id',
+        labelField: 'name',
+        options: [{ id: '1', name: '选项 1' }],
+      },
+    })
+
+    await nextTick()
+    expect(
+      [...host.querySelectorAll('.vamis-picker__tag-label')].map((item) =>
+        (item.textContent || '').trim(),
+      ),
+    ).toEqual(['选项 1', '53'])
   })
 
   it('opens with Space and removes the last tag with Backspace', async () => {

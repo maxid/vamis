@@ -111,7 +111,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 ```
 
 - 值序列化在 `selected` setter：`multiple` + `joinValues` 拼 delimiter，否则 array/单值。
-- `selectedLabels` 只用于展示；值失效/选项缺失时仍显示 raw value。
+- `selectedLabels` 只用于展示；对象描述符先按 `valueField` 回查 options，命中则用真实 label，缺失则保留原始 id/value，不伪造业务文案。
 - 默认和自定义 `pickerSchema` 都最终生成 `type: crud`；`mode: table` 用 `tableBuildRows / tableFlattenRows` 渲染 `children`，默认折叠，展开状态按稳定行 id 保存；确认前按内层组件 `id/name` 取 API，读取失败保持原 draft。
 - CRUD 通过 `value` / `primaryField` 回填已有选中值；普通 Picker 没有 bulkActions，不显示“已选 N”。
 - `embed` 通过内部选择回调立即调用 `commitPickerValues`；弹框只更新 CRUD 选择，点击确认后才写表单。
@@ -147,7 +147,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：15 / 16）
+### 验收清单（文档核对：16 / 17）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Picker / options 工具已定位
@@ -159,6 +159,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] `Space` 打开 / `Backspace` 删除最后标签与 focus-visible
 - [x] `labelTpl` 可见标签渲染与纯文本 aria / 删除提示
 - [x] `joinValues:false` 的多选字符串仍按 delimiter 拆分回显
+- [x] 对象描述符按 valueField 回查；缺失 ID 保留 raw id
 - [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（Picker 相关）
 - [x] `pnpm typecheck` 0
