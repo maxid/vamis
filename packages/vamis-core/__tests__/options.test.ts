@@ -110,8 +110,18 @@ describe('normalizeOptions', () => {
   it('does not invent a label when labelField is missing', () => {
     const list = normalizeOptions([{ text: 'A', value: 'a' }])
     expect(list[0].label).toBe('')
+    expect(list[0].__labelMissing).toBe(true)
     expect(list[0].value).toBe('a')
     expect(normalizeOptions([{ text: 'A', value: 'a' }], 'text')[0].label).toBe('A')
+  })
+
+  it('keeps an explicit empty label distinct from a missing label', () => {
+    const list = normalizeOptions([
+      { label: '', value: 'empty' },
+      { label: null, value: 'null' },
+    ])
+    expect(list[0].__labelMissing).toBeUndefined()
+    expect(list[1].__labelMissing).toBe(true)
   })
 })
 
@@ -198,6 +208,14 @@ describe('toggle / checkAll / selectFirst', () => {
     expect(twice).toEqual([])
     expect(toggleOption(options[0], [options[0]], { clearable: true })).toEqual([])
     expect(toggleOption(options[2], [options[0]], {})[0].value).toBe('c')
+  })
+
+  it('does not select options without a usable value', () => {
+    const missing = { label: 'Missing', value: undefined }
+    expect(toggleOption(missing, [], {})).toEqual([])
+    expect(toggleOption(missing, [options[0]], { multiple: true })).toEqual([options[0]])
+    expect(toggleOption({ label: 'Empty', value: '' }, [], {})[0].value).toBe('')
+    expect(toggleOption({ label: 'Null', value: null }, [], {})[0].value).toBeNull()
   })
 
   it('selects enabled options for checkAll and skips disabled', () => {
@@ -591,7 +609,7 @@ describe('select uses the shared contract', () => {
     expect(select).toContain('vamis-select__suffix')
     expect(select).toContain('showTagTip')
     expect(select).not.toContain('vamis-select__check--end')
-    expect(select).toContain('@mouseenter="showTagTip($event, item.label)"')
+    expect(select).toContain('@mouseenter="showTagTip($event, optionLabelText(item))"')
     expect(select).toContain('VamisTooltipLayer')
     expect(select).toContain('vamis-select-overflow__grid')
     expect(select).toContain('vamis-select__check')

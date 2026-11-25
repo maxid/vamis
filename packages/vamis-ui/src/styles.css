@@ -3419,6 +3419,7 @@
   .vamis-select.is-nowrap .vamis-select__value {
     flex-wrap: nowrap;
     overflow: hidden;
+    white-space: nowrap;
   }
   .vamis-select__value-measure {
     position: absolute;
@@ -3434,6 +3435,14 @@
   }
   .vamis-select__placeholder {
     color: var(--control-placeholder);
+    line-height: var(--select-chip-height);
+  }
+  .vamis-select__nowrap-values {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     line-height: var(--select-chip-height);
   }
   .vamis-select__single {
@@ -3793,6 +3802,18 @@
     text-align: left;
     cursor: pointer;
   }
+  .vamis-select__values-summary {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--select-option-line-height);
+    padding: 0 var(--select-option-padding-x);
+    box-sizing: border-box;
+    color: var(--text-muted);
+    font-size: var(--fontSizeBase);
+    font-weight: var(--fontWeightNormal);
+    line-height: var(--select-option-line-height);
+  }
   .vamis-select__item.is-active {
     color: var(--select-option-active-color);
     background: var(--select-option-active-bg);
@@ -3827,6 +3848,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--select-option-color);
+  }
+  .vamis-select__item-label .is-matched {
+    color: var(--info);
   }
   .vamis-select__mcheck {
     position: absolute;

@@ -5,8 +5,8 @@ outline: deep
 
 # InputFile 文件上传
 
-::: info 实现进度 88% · 进行中
-主路径已对齐：`receiver` POST form-data、默认 `autoUpload`、`accept` / `maxSize` / 多选 `joinValues`、`asBlob` / `asBase64`、拖拽、分片 start/chunk/finish、`change` / `success` / `fail` / `remove`、`clear`。缺 `themeCss`、提交时未等 pending 传完（FormItem validate hook）。
+::: info 实现进度 92% · 进行中
+主路径已对齐：`receiver` POST form-data、默认 `autoUpload`、`accept` / `maxSize` / 多选 `joinValues`、`asBlob` / `asBase64`、拖拽、分片 start/chunk/finish、`change` / `success` / `fail` / `remove`、`clear`。Form submit 会等待 pending 上传，上传失败时阻止提交；InputImage 复用同一门控。缺 `themeCss`、深色 / 窄屏专项。
 :::
 
 用来负责文件上传。文件上传成功后会返回文件地址，这个地址会作为表单项的值；整个表单提交时提交的是文件地址，上传已经在这个控件里完成。
@@ -455,5 +455,5 @@ body:
 - 盒模型按 Amis `_file.scss` 落到 `--file-*`，不搬 `.cxd-FileControl`。
 - `accept` 源码默认是空串（任意类型），与文档表里的 `text/plain` 不一致；本页按源码。
 - `themeCss` 未接。
-- 提交时若仍有 `pending` 文件，不会像 Amis 那样在 FormItem `validate` 里拦住并自动开传。
+- 提交时若仍有 `pending` 文件，会像 Amis 一样自动开始上传并等待队列完成；失败文件会阻止 Form 提交。外部独立 validate 动作目前仍只做同步规则校验。
 - 剪切板粘贴文件未接。

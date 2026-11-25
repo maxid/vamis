@@ -12,6 +12,8 @@ export interface OptionItem {
   disabled?: boolean
   children?: OptionItem[]
   defer?: boolean
+  /** 原始 option 没有可用 label 字段；渲染器用 Amis 的 `-` 占位。 */
+  __labelMissing?: boolean
   [key: string]: unknown
 }
 
@@ -402,6 +404,8 @@ function asOptionItem(item: unknown, labelField: string, valueField: string): Op
     return { label: String(item), value: item, [valueField]: item }
   }
   const node = item as PlainObject
+  const rawLabel = node[labelField]
+  const labelMissing = rawLabel == null
   const label = readLabel(node, labelField)
   const value = readValue(node, valueField)
   const children = Array.isArray(node.children)
@@ -412,6 +416,13 @@ function asOptionItem(item: unknown, labelField: string, valueField: string): Op
     label,
     value,
     [valueField]: value,
+  }
+  if (labelMissing) {
+    Object.defineProperty(option, '__labelMissing', {
+      value: true,
+      enumerable: false,
+      configurable: true,
+    })
   }
   if (node.disabled) option.disabled = true
   if (node.defer) option.defer = true
@@ -589,6 +600,7 @@ export function toggleOption(
   selected: OptionItem[],
   config: OptionsValueConfig = {},
 ): OptionItem[] {
+  if (!isOptionValueSelectable(option.value)) return selected
   const valueField = config.valueField || 'value'
   const idx = selected.findIndex((item) => matchOptionValue(option.value, item, valueField))
   if (config.multiple) {
@@ -599,8 +611,14 @@ export function toggleOption(
   return [option]
 }
 
+export function isOptionValueSelectable(value: unknown): boolean {
+  return value !== undefined
+}
+
 export function selectableOptions(options: OptionItem[]): OptionItem[] {
-  return walkOptions(options).filter((item) => !item.disabled && item.value != null && item.value !== '')
+  return walkOptions(options).filter(
+    (item) => !item.disabled && item.value != null && item.value !== '',
+  )
 }
 
 export function isAllSelected(selected: OptionItem[], options: OptionItem[], valueField = 'value'): boolean {

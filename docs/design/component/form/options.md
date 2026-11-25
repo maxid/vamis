@@ -1,6 +1,6 @@
 # Options 选择器契约 · `options`（契约）设计
 
-> 状态：**进行中 92%** · 复杂度：**XL 特重**
+> 状态：**进行中 95%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/options) · Amis：`/zh-CN/components/form/options`
 > 盘点日期：2026-11-18；虚拟列表核对：2026-11-25。本文是研发设计文档；options 是选择器基类契约，不是独立业务 type。
 
@@ -36,6 +36,8 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 - 2026-11-19：Select 桌面平铺选项接入虚拟列表（`virtualThreshold` 默认 100 / `itemHeight` 默认 32）；分组菜单与其他消费方仍整表渲染。
 - 2026-11-23：InputTree / TreeSelect 通过共享 `TreeBranch` 接入树窗口；行高首行实测、实际视口优先、上下 spacer 补总高，检索缩表回顶部。分组菜单、Picker / Transfer 仍待复用。
 - 2026-11-25：Select `selectMode: group` 把组头与子项压平成同一菜单行序列，按 `virtualThreshold` / `itemHeight` 开桌面虚拟窗口；滚动后段仍用完整 option 写值，移动端复用同一行序列但不强制窗口。
+- 2026-11-25：Select 选项缺少 `label` / `null` 时按 Amis `labelToString` 显示 `-`；显式空串保留为空文案，缺字段状态由归一化层保留，不能误判为空串。
+- 2026-11-25：`valueField` 配错或选项缺少可用 `value` 时不入选；共享 `toggleOption` / `useOptionsControl` 阻止写入 `undefined`，避免调试域凭空出现字段。
 - 2026-11-23：删除确认对齐 OptionsControl 默认 `deleteConfirm`；未配置也弹「确认要删除？」，显式 `false` / 空串才关闭，Select / InputTree / TreeSelect 共用。
 - 2026-11-23：Transfer list/table 左右栏接虚拟窗口；Picker 主渲染器没有直接 `virtualThreshold` / `itemHeight`，不把 Transfer 规则强加给 Picker。
 
@@ -46,6 +48,10 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 | 值序列化 | 已接 |
 | 本地/远程 options | 已接 |
 | 搜索/filterOption/searchApi | 已接 |
+| 缺失 label 兜底 | Select 选项 `label` 缺失或为 `null` 时按 Amis `labelToString` 显示 `-`；显式空串保持空文案 |
+| 不可选值 | 选项缺少 `value`（`undefined`）时不可入选；单选点击仍关闭下拉但不写值，`null` / 空串不等同于缺字段 |
+| searchable 命中高亮 | 普通 / 移动 Select 菜单已按 `highlightTextMatches` 分段，匹配字符走 `--info` |
+| valuesNoWrap | 多选未配 `maxTagCount` 时显示 `A + B` 纯文本；菜单增加“已选择(N)”行 |
 | selected/toggle/toggleAll | 已接 |
 | add/edit controls | 已接（部分控件） |
 | addConfirm / editConfirm / deleteConfirm | 已接；先于本地变更与 CUD API |
@@ -67,7 +73,6 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 ## 6. 缺口
 
 - Picker 无直接虚拟属性；Amis 没有通用远程 option 响应缓存字段，不做伪契约。
-- 远程缓存未接；各控件 selectMode/树/分页差异仍由消费控件负责。
 - 深色由控件负责；虚拟列表滚动条与分组行高仍要按控件核。
 - 剩余 CUD 缺口是各消费控件是否完整暴露对应 UI；共享事件与 API 顺序已收口。
 - `itemActions`、节点路径模式与树虚拟窗口都已由共享树状态接入；Transfer list/table 独立按两栏滚动窗口实现。后续 Picker 先核自身 pickerSchema / CRUD 链路，不把 Transfer 规则强加给 Picker。

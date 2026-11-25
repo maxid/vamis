@@ -9,6 +9,7 @@ import {
   filterTpl,
   flattenOptionMenuRows,
   getSelectedOptions,
+  highlightTextMatches,
   isAllSelected,
   isGroupOption,
   normalizeOptions,
@@ -125,11 +126,34 @@ function leafOptions(list: OptionItem[]): OptionItem[] {
   }
   return out
 }
+
+function selectOptionLabelText(label: unknown, missing = false): string {
+  if (missing || label == null) return '-'
+  const type = typeof label
+  if (type === 'string' || type === 'number' || type === 'boolean') {
+    return String(label)
+  }
+  if (label && typeof label === 'object' && !Array.isArray(label)) {
+    const record = label as Record<string, unknown>
+    for (const key of ['__title', 'label', Object.keys(record)[0]]) {
+      if (key && typeof record[key] === 'string') return record[key]
+    }
+  }
+  return 'invalid label'
+}
+
+function optionLabelText(option: OptionItem): string {
+  return selectOptionLabelText(
+    option.label,
+    option.__labelMissing === true,
+  )
+}
+
 const mobileLeaves = computed(() => leafOptions(ctl.filtered.value))
 const mobileWheelOptions = computed((): CalendarPickerOption[] =>
   mobileLeaves.value.map((item, i) => ({
     value: i,
-    text: String(item.label ?? item.value ?? ''),
+    text: optionLabelText(item),
   })),
 )
 function selectedPool() {
@@ -376,6 +400,18 @@ const foldTags = computed(() => {
   const maxTag = Number(props.schema.maxTagCount)
   return Number.isFinite(maxTag) && maxTag > 0
 })
+const showValuesNoWrap = computed(
+  () =>
+    ctl.config.value.multiple &&
+    ctl.config.value.valuesNoWrap &&
+    !foldTags.value,
+)
+const valuesNoWrapText = computed(() =>
+  ctl.selected.value.map((item) => optionLabelText(item)).join(' + '),
+)
+const valuesNoWrapSummary = computed(
+  () => `已选择(${ctl.selected.value.length})`,
+)
 const overlayPlacement = computed(() => selectOverlayPlacement(props.schema.overlay))
 const triggerSpinnerSchema = computed<SchemaObject>(() => ({
   type: 'spinner',
@@ -636,6 +672,13 @@ function menuData(opt: OptionItem, index: number, checked?: boolean) {
   return { ...opt, checked: checked ?? isSelected(opt.value), index }
 }
 
+function optionLabelParts(option: OptionItem, disabled = false) {
+  const text = optionLabelText(option)
+  return disabled
+    ? [{ text, matched: false }]
+    : highlightTextMatches(text, ctl.keyword.value)
+}
+
 async function onEdit(opt: OptionItem, event: Event) {
   event.preventDefault()
   event.stopPropagation()
@@ -730,7 +773,7 @@ watch(
         'is-disabled': locked,
         'is-multiple': ctl.config.value.multiple,
         'is-fold': foldTags,
-        'is-nowrap': ctl.config.value.valuesNoWrap,
+        'is-nowrap': showValuesNoWrap,
         'is-group': isGroupMenu,
         'is-tree': isTreeMenu,
         'is-table': isTableMenu,
@@ -748,33 +791,39 @@ watch(
         <div ref="valueEl" class="vamis-select__value">
           <template v-if="ctl.config.value.multiple && ctl.selected.value.length">
             <span
-              v-for="(item, index) in visibleTags"
-              :key="`${item.value}-${index}`"
-              class="vamis-select__chip"
-              :class="{
-                'is-invalid':
-                  schema.showInvalidMatch === true && item.__unmatched === true,
-              }"
-              @mouseenter="showTagTip($event, item.label)"
-              @mouseleave="hideTagTip"
-            >
-              <span class="vamis-select__chip-label">{{ item.label }}</span>
-              <button
-                v-if="!locked && !item.disabled"
-                type="button"
-                class="vamis-select__chip-close"
-                aria-label="移除"
-                @mousedown.prevent
-                @click="removeTag(item, $event)"
-              ><VamisClose /></button>
-            </span>
-            <span
-              v-if="restTags.length"
-              ref="overflowEl"
-              class="vamis-select__chip vamis-select__overflow"
-              @mouseenter="showOverflow"
-              @mouseleave="hideOverflow"
-            >+ {{ restTags.length }} ...</span>
+              v-if="showValuesNoWrap"
+              class="vamis-select__nowrap-values"
+            >{{ valuesNoWrapText }}</span>
+            <template v-else>
+              <span
+                v-for="(item, index) in visibleTags"
+                :key="`${item.value}-${index}`"
+                class="vamis-select__chip"
+                :class="{
+                  'is-invalid':
+                    schema.showInvalidMatch === true && item.__unmatched === true,
+                }"
+                @mouseenter="showTagTip($event, optionLabelText(item))"
+                @mouseleave="hideTagTip"
+              >
+                <span class="vamis-select__chip-label">{{ optionLabelText(item) }}</span>
+                <button
+                  v-if="!locked && !item.disabled"
+                  type="button"
+                  class="vamis-select__chip-close"
+                  aria-label="移除"
+                  @mousedown.prevent
+                  @click="removeTag(item, $event)"
+                ><VamisClose /></button>
+              </span>
+              <span
+                v-if="restTags.length"
+                ref="overflowEl"
+                class="vamis-select__chip vamis-select__overflow"
+                @mouseenter="showOverflow"
+                @mouseleave="hideOverflow"
+              >+ {{ restTags.length }} ...</span>
+            </template>
           </template>
           <span
             v-else-if="ctl.selected.value[0]"
@@ -784,7 +833,7 @@ watch(
                 schema.showInvalidMatch === true &&
                 ctl.selected.value[0].__unmatched === true,
             }"
-          >{{ ctl.selected.value[0].label }}</span>
+          >{{ optionLabelText(ctl.selected.value[0]) }}</span>
           <span v-else class="vamis-select__placeholder">{{ filterTpl(ctl.placeholder.value, data) }}</span>
         </div>
         <div
@@ -799,7 +848,7 @@ watch(
             class="vamis-select__chip"
             data-fold-chip
           >
-            <span class="vamis-select__chip-label">{{ item.label }}</span>
+            <span class="vamis-select__chip-label">{{ optionLabelText(item) }}</span>
             <button v-if="!locked && !item.disabled" type="button" class="vamis-select__chip-close"><VamisClose /></button>
           </span>
           <span class="vamis-select__chip vamis-select__overflow" data-fold-more>+ 00 ...</span>
@@ -849,7 +898,7 @@ watch(
                   schema.showInvalidMatch === true && item.__unmatched === true,
               }"
             >
-              <span class="vamis-select__chip-label">{{ item.label }}</span>
+              <span class="vamis-select__chip-label">{{ optionLabelText(item) }}</span>
               <button
                 v-if="!locked && !item.disabled"
                 type="button"
@@ -997,6 +1046,12 @@ watch(
                 {{ ctl.createLabel.value }}
               </button>
             </div>
+            <div
+              v-if="ctl.config.value.multiple && ctl.config.value.valuesNoWrap"
+              class="vamis-select__values-summary"
+            >
+              {{ valuesNoWrapSummary }}
+            </div>
             <button
               v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
               type="button"
@@ -1022,7 +1077,7 @@ watch(
                   class="vamis-select__group"
                 >
                   <div class="vamis-select__item-label vamis-select__group-label">
-                    {{ row.label }}
+                    {{ optionLabelText(row.option) }}
                   </div>
                 </div>
                 <div
@@ -1074,7 +1129,11 @@ watch(
                     :extra-data="menuData(row.option, row.index)"
                   />
                   <span v-else class="vamis-select__item-label">
-                    {{ row.option.label }}
+                    <span
+                      v-for="(part, partIndex) in optionLabelParts(row.option, row.option.disabled)"
+                      :key="partIndex"
+                      :class="{ 'is-matched': part.matched }"
+                    >{{ part.text }}</span>
                   </span>
                 </div>
               </template>
@@ -1197,6 +1256,12 @@ watch(
                 {{ ctl.createLabel.value }}
               </button>
             </div>
+            <div
+              v-if="ctl.config.value.multiple && ctl.config.value.valuesNoWrap"
+              class="vamis-select__values-summary"
+            >
+              {{ valuesNoWrapSummary }}
+            </div>
             <button
               v-if="ctl.config.value.checkAll && ctl.config.value.multiple"
               type="button"
@@ -1236,7 +1301,7 @@ watch(
                   :style="virtualEnabled ? { height: itemHeight + 'px' } : undefined"
                 >
                   <div class="vamis-select__item-label vamis-select__group-label">
-                    {{ row.label }}
+                    {{ optionLabelText(row.option) }}
                   </div>
                 </div>
                 <div
@@ -1253,7 +1318,7 @@ watch(
                     },
                   ]"
                   :style="virtualEnabled ? { height: itemHeight + 'px' } : undefined"
-                  :title="row.option.label"
+                  :title="optionLabelText(row.option)"
                   @mousedown.prevent
                   @click.stop="onPick(row.option)"
                 >
@@ -1274,7 +1339,11 @@ watch(
                     :extra-data="menuData(row.option, row.index)"
                   />
                   <span v-else class="vamis-select__item-label">
-                    {{ row.option.label }}
+                    <span
+                      v-for="(part, partIndex) in optionLabelParts(row.option, row.option.disabled)"
+                      :key="partIndex"
+                      :class="{ 'is-matched': part.matched }"
+                    >{{ part.text }}</span>
                   </span>
                   <span
                     v-if="row.depth === 0 && (ctl.config.value.editable || ctl.config.value.removable)"

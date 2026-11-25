@@ -5,7 +5,7 @@ outline: deep
 
 # Options 选择器表单项
 
-::: info 实现进度 92% · 进行中
+::: info 实现进度 95% · 进行中
 已抽出统一 Options 契约：选项规范化、`source` 数据域/远程、`joinValues` / `extractValue` / `delimiter`、`multiple` / `checkAll` / `selectFirst`、`labelField` / `valueField`、`clearable` / `searchable` / `creatable`、`editable` / `removable`、选项 `autoFill`。InputTree 已接 `deferApi` / `deferField` 懒加载与完成事件；`itemActions` 已由共享 TreeBranch 接到 InputTree / TreeSelect / Select tree；节点路径值由共享树工具拆叶与父链回写。Select 桌面平铺 / 分组菜单、InputTree、TreeSelect、Transfer list/table/tree 已接虚拟列表；Picker 无直接虚拟属性。
 :::
 
@@ -53,6 +53,8 @@ body:
 - `label`：显示文本
 - `value`：提交/映射用的值
 - `children`：嵌套子选项，只在 Tree / Nested-Select 等支持嵌套的组件里有用
+
+Select 的选项没有 `label`（或值为 `null` / `undefined`）时，触发器和下拉按 Amis 规则显示 `-`；显式写成空字符串 `''` 时仍保持空文案。
 
 改选项会改数据域里该表单项的值，默认是选中项的 `value`：
 
@@ -313,7 +315,7 @@ body:
 
 默认多选值是逗号拼接的 value，例如 `1,2,3`。要改格式请看下面的 delimiter / joinValues / extractValue。
 
-值太多折行可以用 `valuesNoWrap` 避免折行。
+值太多折行可以用 `valuesNoWrap` 避免折行。未设置 `maxTagCount` 时，触发器改为 `Option A + Option B + ...` 的纯文本单行展示，不再绘制可删除标签；打开菜单后顶部显示“已选择(N)”。
 
 ```schema: scope="body"
 type: form
@@ -528,7 +530,7 @@ body:
 
 ## 检索 searchable
 
-配 `searchable: true` 显示前端过滤，适合选项很多的列表。
+配 `searchable: true` 显示前端过滤，适合选项很多的列表。匹配到的字符会在选项文案中单独高亮。
 
 ```schema: scope="body"
 type: form
@@ -564,7 +566,7 @@ body:
 
 ## 选项标签字段 labelField
 
-默认用每项的 `label` 做展示。选项里只有 `text` 没有 `label` 时，下拉会看不到文案：
+默认用每项的 `label` 做展示。选项里只有 `text` 没有 `label` 时，下拉会用 `-` 占位：
 
 ```schema: scope="body"
 type: form
@@ -622,6 +624,8 @@ body:
       - label: C
         val: c
 ```
+
+选项缺少 `value`（即 `value` 为 `undefined`）时不可入选：单选点击后会关闭下拉，但不会选中，也不会把 `undefined` 写进表单数据；`null` 或空串不等同于缺字段。
 
 这时配 `valueField: val`：
 
@@ -1022,7 +1026,7 @@ body:
 | extractValue | `boolean` | `false` | `joinValues` 为 false 时是否只抽 value |
 | itemHeight | `number` | `32` | 虚拟渲染行高；文案换行时按实际高度调 |
 | virtualThreshold | `number` | `100` | 超过多少条开虚拟渲染；Select 的 `0` 表示有选项就开，树控件沿用 Amis Tree 的 `0` 关闭语义 |
-| valuesNoWrap | `boolean` | `false` | 多选值不折行 |
+| valuesNoWrap | `boolean` | `false` | 多选值用 ` + ` 连接为单行纯文本；`maxTagCount` 正数配置仍优先走标签折叠 |
 | clearValueOnSourceChange | `boolean` | | 数据域 source 变化后是否清空 |
 | selectFirst | `boolean` | `false` | 默认选第一项 |
 | checkAll | `boolean` | `false` | 多选全选 |

@@ -61,6 +61,42 @@ function treeItem(label: string) {
 }
 
 describe('Select option mutation events', () => {
+  it('does not seed an undefined field when valueField has no matching value column', async () => {
+    const { scoped } = mount({
+      type: 'page',
+      body: {
+        type: 'form',
+        name: 'valueFieldForm',
+        debug: true,
+        actions: [],
+        body: {
+          type: 'select',
+          name: 'choice',
+          label: '选项',
+          options: [
+            { label: 'A', val: 'a' },
+            { label: 'B', val: 'b' },
+          ],
+        },
+      },
+    })
+
+    await nextTick()
+    click(document.querySelector('.vamis-select__input'))
+    await vi.waitFor(() => expect(menuLabels()).toEqual(['A', 'B']))
+    click(optionItem('A'))
+    await nextTick()
+    await vi.waitFor(() =>
+      expect(
+        document.querySelector('.vamis-select.is-opened'),
+      ).toBeNull(),
+    )
+    const form = scoped.getComponentByName('valueFieldForm') as {
+      getData?: () => Record<string, unknown>
+    }
+    expect(form?.getData?.()).not.toHaveProperty('choice')
+  })
+
   it.each([
     {
       name: 'joins selected values with a custom delimiter',
@@ -138,6 +174,190 @@ describe('Select option mutation events', () => {
     }
     await vi.waitFor(() => expect(form?.getData?.()?.choice).toEqual(expected))
   })
+
+  it.each([
+    ['desktop', undefined],
+    ['mobile', { mobileUI: true }],
+  ] as const)(
+    'renders valuesNoWrap as joined text and adds the selected count on %s',
+    async (_label, env) => {
+      const { host } = mount(
+        {
+          type: 'page',
+          body: {
+            type: 'form',
+            actions: [],
+            body: {
+              type: 'select',
+              name: 'choice',
+              label: '多选',
+              multiple: true,
+              valuesNoWrap: true,
+              value: 'a,b,c,d',
+              options: [
+                { label: 'Option A', value: 'a' },
+                { label: 'Option B', value: 'b' },
+                { label: 'Option C', value: 'c' },
+                { label: 'Option D', value: 'd' },
+              ],
+            },
+          },
+        },
+        env,
+      )
+
+      await nextTick()
+      expect(host.querySelectorAll('.vamis-select__chip')).toHaveLength(0)
+      expect(host.querySelector('.vamis-select__nowrap-values')?.textContent).toBe(
+        'Option A + Option B + Option C + Option D',
+      )
+
+      click(host.querySelector('.vamis-select__input'))
+      await vi.waitFor(() =>
+        expect(document.querySelector('.vamis-select__values-summary')?.textContent).toBe(
+          '已选择(4)',
+        ),
+      )
+    },
+  )
+
+  it.each([
+    ['desktop', undefined],
+    ['mobile', { mobileUI: true }],
+  ] as const)(
+    'shows a dash when option labels are missing on %s',
+    async (_label, env) => {
+      const { host } = mount(
+        {
+          type: 'page',
+          body: {
+            type: 'form',
+            actions: [],
+            body: {
+              type: 'select',
+              name: 'choice',
+              label: '选项',
+              multiple: true,
+              value: 'a,b',
+              options: [
+                { text: 'Alpha', value: 'a' },
+                { text: 'Beta', value: 'b' },
+                { text: 'Gamma', value: 'c' },
+              ],
+            },
+          },
+        },
+        env,
+      )
+
+      await nextTick()
+      expect(
+        [...host.querySelectorAll('.vamis-select__chip-label')].map((item) =>
+          item.textContent?.trim(),
+        ),
+      ).toEqual(['-', '-'])
+
+      click(host.querySelector('.vamis-select__input'))
+      await vi.waitFor(() =>
+        expect(menuLabels()).toEqual(['-', '-', '-']),
+      )
+    },
+  )
+
+  it.each([
+    ['desktop', undefined, false],
+    ['mobile', { mobileUI: true }, true],
+  ] as const)(
+    'shows a dash for a selected single option without a label on %s',
+    async (_label, env, mobile) => {
+      const { host } = mount(
+        {
+          type: 'page',
+          body: {
+            type: 'form',
+            actions: [],
+            body: {
+              type: 'select',
+              name: 'choice',
+              label: '选项',
+              value: 'a',
+              options: [
+                { text: 'Alpha', value: 'a' },
+                { text: 'Beta', value: 'b' },
+              ],
+            },
+          },
+        },
+        env,
+      )
+
+      await nextTick()
+      expect(host.querySelector('.vamis-select__single')?.textContent).toBe('-')
+
+      click(host.querySelector('.vamis-select__input'))
+      if (mobile) {
+        await vi.waitFor(() =>
+          expect(
+            [...document.querySelectorAll('.vamis-cal-wheel-item')].map((item) =>
+              item.textContent?.trim(),
+            ),
+          ).toEqual(['-', '-']),
+        )
+      } else {
+        await vi.waitFor(() => expect(menuLabels()).toEqual(['-', '-']))
+      }
+    },
+  )
+
+  it.each([
+    { name: 'desktop', env: undefined, multiple: false },
+    { name: 'mobile', env: { mobileUI: true }, multiple: true },
+  ])(
+    'highlights the searchable query inside option labels on $name',
+    async ({ env, multiple }) => {
+      const { host } = mount(
+        {
+          type: 'page',
+          body: {
+            type: 'form',
+            actions: [],
+            body: {
+              type: 'select',
+              name: 'choice',
+              label: '选项',
+              searchable: true,
+              multiple,
+              options: [
+                { label: 'zhugeliang', value: 'zhugeliang' },
+                { label: 'zhongyuan', value: 'zhongyuan' },
+                { label: 'buzhihuowu', value: 'buzhihuowu' },
+              ],
+            },
+          },
+        },
+        env,
+      )
+
+      await nextTick()
+      click(host.querySelector('.vamis-select__input'))
+      const search = await vi.waitFor(() => {
+        const input = document.querySelector('.vamis-select__search-input')
+        expect(input).toBeTruthy()
+        return input as HTMLInputElement
+      })
+      search.value = 'z'
+      search.dispatchEvent(new Event('input', { bubbles: true }))
+
+      const option = await vi.waitFor(() => {
+        const item = optionItem('zhugeliang')
+        expect(item).toBeTruthy()
+        return item as HTMLElement
+      })
+      expect(
+        [...option.querySelectorAll('.is-matched')].map((part) => part.textContent),
+      ).toEqual(['z'])
+    },
+  )
 
   it.each([
     { showInvalidMatch: true, invalid: true },

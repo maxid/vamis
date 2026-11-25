@@ -5,7 +5,8 @@ outline: deep
 
 # InputImage 图片
 
-::: info 实现进度 80% · 进行中
+::: info 实现进度 82% · 进行中
+Form submit 会等待 pending 图片上传，失败时阻止提交；上传管线继续复用 InputFile。
 主路径已对齐：`receiver` 上传（POST form-data、返回 `data.value` / `data.url`）、`autoUpload` / 手动上传、`multiple` / `joinValues` / `extractValue` / `delimiter`、`accept` / `capture`、`maxSize` / `maxLength`、`limit` 尺寸校验、`frameImage` / `fixedSize`、`uploadBtnText`、`autoFill` / `initAutoFill`、`draggable` 排序、`change` / `remove` / `success` / `fail`、`clear`；缩略图 120 方块（`--input-image-*`）。缺 `crop` / `dropCrop` / `initCrop` / `cropFormat` / `cropQuality`、`allowInput`、图片预览画廊。
 :::
 

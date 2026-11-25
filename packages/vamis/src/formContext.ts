@@ -15,6 +15,11 @@ export interface FormContext {
   reset: () => void
   clear: () => void
   setError: (name: string, message: string) => void
+  registerPendingValidator?: (
+    key: PropertyKey,
+    validate: () => boolean | string | Promise<boolean | string>,
+  ) => void
+  unregisterPendingValidator?: (key: PropertyKey) => void
 }
 
 export const FormContextKey: InjectionKey<FormContext> = Symbol('vamis-form')

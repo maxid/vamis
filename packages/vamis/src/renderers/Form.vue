@@ -415,6 +415,22 @@ function trimDeep(value: unknown): unknown {
   return value
 }
 
+const pendingValidators = new Map<
+  PropertyKey,
+  () => boolean | string | Promise<boolean | string>
+>()
+
+function registerPendingValidator(
+  key: PropertyKey,
+  validate: () => boolean | string | Promise<boolean | string>,
+) {
+  pendingValidators.set(key, validate)
+}
+
+function unregisterPendingValidator(key: PropertyKey) {
+  pendingValidators.delete(key)
+}
+
 function validate(extraRequired: string[] = []): boolean {
   store.errors = {}
   let ok = true
@@ -528,6 +544,18 @@ async function submit(closeDialog = true): Promise<boolean> {
     setDialogStatus({ loading: false, error: validationFailedMessage() })
     env.notify('error', validationFailedMessage())
     return false
+  }
+  for (const validatePending of pendingValidators.values()) {
+    const pendingResult = await validatePending()
+    if (pendingResult !== true) {
+      const message =
+        typeof pendingResult === 'string'
+          ? pendingResult
+          : validationFailedMessage()
+      setDialogStatus({ loading: false, error: message })
+      env.notify('error', message)
+      return false
+    }
   }
   let remoteOk = true
   for (const item of formItems()) {
@@ -688,6 +716,8 @@ provideForm({
   reset,
   clear,
   setError,
+  registerPendingValidator,
+  unregisterPendingValidator,
 })
 provideFormApi(formApi)
 parentScoped?.register(formApi)

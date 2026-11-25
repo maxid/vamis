@@ -59,6 +59,8 @@ const emitValue = ref<unknown>(undefined)
 let currentId: string | null = null
 let tickQueued = false
 const pristine = ref<unknown>(undefined)
+const pendingValidationKey = Symbol('input-file')
+const pendingSubmitResolvers = new Set<(result: boolean | string) => void>()
 
 const name = computed(() => (props.schema.name ? String(props.schema.name) : ''))
 const imageMode = computed(() => String(props.schema.type || '') === 'input-image')
@@ -593,12 +595,22 @@ function queueTick() {
   })
 }
 
+function settlePendingSubmit(result: boolean | string) {
+  const resolvers = [...pendingSubmitResolvers]
+  pendingSubmitResolvers.clear()
+  for (const resolve of resolvers) resolve(result)
+}
+
 async function tick() {
   if (currentId || !uploading.value) return
   const pending = files.value.find((item) => item.state === 'pending')
   if (!pending) {
     uploading.value = false
     await commitChange()
+    const failed = files.value.find((item) => item.state === 'error')
+    settlePendingSubmit(
+      failed ? failed.error || '文件上传失败，请重试' : true,
+    )
     return
   }
   currentId = pending.id
@@ -648,6 +660,17 @@ async function startUpload(retry = false) {
   if (!files.value.some((item) => item.state === 'pending')) return
   uploading.value = true
   queueTick()
+}
+
+function validatePendingSubmit(): boolean | string | Promise<boolean | string> {
+  if (!hasPending.value && !uploading.value) {
+    const failed = files.value.find((item) => item.state === 'error')
+    return failed ? failed.error || '文件上传失败，请重试' : true
+  }
+  return new Promise<boolean | string>((resolve) => {
+    pendingSubmitResolvers.add(resolve)
+    if (!uploading.value) void startUpload()
+  })
 }
 
 function stopUpload() {
@@ -720,6 +743,8 @@ const apis = [
 ].filter(Boolean) as ReturnType<typeof makeApi>[]
 for (const api of apis) scoped?.register(api)
 onBeforeUnmount(() => {
+  form?.unregisterPendingValidator?.(pendingValidationKey)
+  settlePendingSubmit('文件上传未完成')
   for (const api of apis) scoped?.unregister(api)
   for (const url of previewUrls) URL.revokeObjectURL(url)
   previewUrls.clear()
@@ -734,6 +759,7 @@ watch(
 )
 
 onMounted(() => {
+  form?.registerPendingValidator?.(pendingValidationKey, validatePendingSubmit)
   pristine.value = currentFormValue()
   hydrate(pristine.value)
   if (initAutoFill.value) syncAutoFill()

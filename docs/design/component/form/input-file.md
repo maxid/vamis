@@ -1,12 +1,12 @@
 # InputFile 文件上传 · `input-file` 设计
 
-> 状态：**进行中 88%** · 复杂度：**L 重**
+> 状态：**进行中 92%** · 复杂度：**L 重**
 > 文档：[在线 API 手册](/components/form/input-file) · Amis：`/zh-CN/components/form/input-file`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性表以在线文档为准。
 
 ## 0. 一页结论
 
-InputFile 是**上传管线**（938 行）：receiver POST、autoUpload、多选、asBlob/asBase64、accept/maxSize/maxLength、拖拽、分片 start/chunk/finish、change/success/fail/remove、clear。主路径成熟；缺口 themeCss、提交时等待 pending 上传。
+InputFile 是**上传管线**（938 行）：receiver POST、autoUpload、多选、asBlob/asBase64、accept/maxSize/maxLength、拖拽、分片 start/chunk/finish、change/success/fail/remove、clear。主路径成熟；提交等待 pending 上传已接；缺口 themeCss、深色 / 窄屏专项。
 
 ## 1. 边界与优先级（先读）
 
@@ -14,7 +14,7 @@ InputFile 是**上传管线**（938 行）：receiver POST、autoUpload、多选
 2. **上传管线**：receiver POST form-data；autoUpload false 需手动；分片 start/chunk/finish；失败保留 item/错误。
 3. **值**：joinValues/multiple/asBlob/asBase64/extractValue；上传成功写 url/value。
 4. **拖拽**：drag 才接收；拖拽态/leave 清理。
-5. **提交**：pending 上传未完成时不要提交（当前未接，需明确）。
+5. **提交**：pending 上传未完成时自动开传并等待，失败阻止提交。
 6. **包边界**：无 `<style>`、无 fetch 直接调用（receiver 走 requestApi）；file token。
 
 ### 边界用例
@@ -43,7 +43,8 @@ InputFile 是**上传管线**（938 行）：receiver POST、autoUpload、多选
 | multiple/asBlob/asBase64 | 值 | 已接 |
 | 分片 start/chunk/finish | 大文件 | 已接 |
 | 拖拽/删除/重试 | 交互 | 已接 |
-| themeCss/pending 提交 | 缺口 | 未接/未核 |
+| pending 提交 | 自动开传、等待完成、失败阻止 | 已接 |
+| themeCss | 皮肤变量 | 未接 |
 
 ## 4. 架构
 
@@ -57,7 +58,7 @@ InputFile 是**上传管线**（938 行）：receiver POST、autoUpload、多选
 
 ## 6. 缺口
 
-themeCss、提交等待 pending、深色窄屏。
+themeCss、深色窄屏；外部独立 validate 动作仍只做同步规则校验。
 
 ## 7. 验收
 
@@ -80,7 +81,7 @@ themeCss、提交等待 pending、深色窄屏。
 
 ## 8. 后续
 
-补 pending 提交门控；themeCss/深色随主题。
+补 themeCss/深色；独立 validate 动作若需等待上传另做异步动作契约。
 
 ---
 

@@ -198,6 +198,12 @@ alwaysApply: true
 - 触及：`panel` `service`
 - 规则：`packages/vamis-core/src/formula.ts` `resolveDollarName`
 
+### pending 上传由 Form submit 的 pending validator 等待
+- 踩过：InputFile 只把 pending 文件画成“等待上传”，Form submit 仍立即请求提交接口，最终提交旧值；只禁用提交按钮也不等于 Amis validate 契约。
+- 稳定做法：FormContext 维护 pending validator 注册表，submit 在同步表单规则通过后逐个 await。InputFile / InputImage 在 pending 或 uploading 时注册 waiter，提交触发 `startUpload()`，队列结束按 error 状态 resolve `true` 或错误字符串；失败不再调用 Form API。上传成功先走现有 change 写值，再让 submit 读取新值。独立 `validate` 动作目前仍同步，若要覆盖它必须单独立异步动作契约，不能偷偷把现有同步 validate 返回值改成 Promise。
+- 触及：`input-file` `input-image` `form`
+- 规则：Amis `InputFile.validate`；`packages/vamis/src/renderers/Form.vue`、`formContext.ts`、`form/InputFile.vue`
+
 ### Panel 的 control className 与 subFormMode 都是局部覆盖
 - 踩过：只接 `headerClassName` / `bodyClassName` / `actionsClassName`，漏掉 Amis 的 `*ControlClassName`；`actionsControlClassName` 只打 actions 没打 footer。另一个误区是把 `subFormMode` 写到全表单或直接改外层 FormContext，导致 Panel 外的字段也变布局。
 - 稳定做法：heading 叠加 `headerControlClassName`，标题叠加 `headerTitleControlClassName`，body 叠加 `bodyControlClassName`；`actionsControlClassName` 同时落 actions 与 footer。`subFormMode` / `subFormHorizontal` 通过 Panel 内局部 FormContext 覆盖，沿用同一 store / 方法，只改 mode / horizontal，不污染外层 Form。移动端 Panel--form 仍由 Form chrome 负责，不要给 Panel 渲染器再长一套窄屏卡。
@@ -1169,6 +1175,24 @@ alwaysApply: true
 - 稳定做法：`virtualThreshold` 默认 100、`itemHeight` 默认 32（对齐 Amis Select），group 模式未配置阈值时按 Amis `GroupedSelection` 默认 **1000**。先用 core `flattenOptionMenuRows` 把组头和每个子项压平成同一行序列，再固定 266 视口、按 `scrollTop` 切片；上下 spacer 用“行数 × itemHeight”补总高，组头和 option 行都锁同一行高。普通平铺和 group 共用这套窗口，点击仍使用完整 option；移动端复用行序列但不强制桌面窗口。搜索/阈值变化回顶部并回落整表；选项数变少时 clamp `scrollTop`。外层 popover 在虚拟态取消 `max-height` / `overflow`，否则 search + 266 会被裁掉；普通 Select 菜单是 **300px**，TransferDropDown 的 `list/group/table/tree/chained/associated` 是 **选择内容区 350px**，搜索框高度另计，不要把 350 错写到外层 Popover。
 - 触及：`select` Options
 - 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `TransferDropDown.tsx` / `_transfer.scss` / `virtual-list`
+
+### valuesNoWrap 是纯文本分支，searchable 高亮来自命中分段
+- 踩过：把 `valuesNoWrap` 只实现成 CSS `nowrap`，多选仍画 chip、仍带删除按钮；searchable 只在某一个菜单分支处理高亮，分组或移动端又漏掉。Amis 实际在 `Select.renderValue()` 里先判断 `maxTagCount`，未启用时才走 `valuesNoWrap` 纯文本 `A + B`，菜单另加“已选择(N)”。
+- 稳定做法：只有 multiple + valuesNoWrap + 非 `maxTagCount` 折叠时走纯文本分支；纯文本不可单项删除，整体清空仍由 clearable 负责。搜索命中统一复用 `highlightTextMatches`，普通和分组、桌面和移动都只标匹配段，颜色走 `--info`；不要用整段 HTML 替换，也不要在 `menuTpl` 外再拼标签。
+- 触及：`select` Options
+- 规则：`packages/vamis/src/renderers/form/Select.vue`；Amis `Select.tsx` / `SelectMobile.tsx` `renderValue`
+
+### 缺失 label 走 Amis `labelToString`，不能和显式空串混为一谈
+- 踩过：Options 归一化把缺失字段写成空字符串，Select 直接渲染后触发器和选项菜单都是空白；把空字符串统一改成 `-` 又会把作者显式配置的空文案改掉。
+- 稳定做法：归一化时用不可枚举标记保留“字段缺失 / null”状态；渲染统一走 `labelToString`：缺失或 null 为 `-`，空串仍是空串，数字 / 布尔转字符串，普通对象按 `__title`、`label`、首个字符串字段取值，其余为 `invalid label`。触发器的单值、多选 chip、桌面菜单、分组头和移动滚轮都复用同一个 helper。
+- 触及：`select` Options
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/renderers/form/Select.vue`；Amis `labelToString.ts` / `Select.tsx` / `SelectMobile.tsx`
+
+### 没有可用 value 的选项不可入选，不能写入 `undefined`
+- 踩过：`valueField` 配错或选项缺 `value` 时，Vamis 仍把选项加入 selected，`commit` 写入 `undefined`，调试域从 `{}` 变成 `{ select: undefined }`；Amis 的该示例选项无法正常选中。
+- 稳定做法：共享 `isOptionValueSelectable` 只把缺失值 `undefined` 判为不可选；`toggleOption`、`useOptionsControl.toggle`、`commit` 全链路防住写值，覆盖普通点击、移动滚轮和直接提交。单选点击无效选项仍要关闭下拉，不能因 early return 让用户感觉点击没反应。`undefined` 不是清空值，不能让 Form.setValue 凭空创建字段；`null` / 空串不能一并误杀，清空应由 `resetValue` / clear 明确产生。
+- 触及：`select` Options `valueField`
+- 规则：`packages/vamis-core/src/utils/options.ts`；`packages/vamis/src/optionsControl.ts`；Amis `Select.tsx` `handleChange` / `getValue`
 
 ### creatable 新增入口固定头部是 Vamis 有意差异
 - 踩过：Amis `Select-addBtn` 和候选菜单同处滚动区，长列表滚到底后新增入口也离开视口；Vamis 若照 DOM 顺序放在 `.vamis-select__list` 后，则会固定在底部，仍不符合“顶部随时可新增”的产品诉求。

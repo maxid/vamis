@@ -14,6 +14,7 @@ import {
   getSelectedOptions,
   isApiOutdated,
   isEffectiveApi,
+  isOptionValueSelectable,
   isOptionsAutoComplete,
   isOptionsEmpty,
   isOptionsVariableSource,
@@ -187,7 +188,11 @@ export function useOptionsControl(
   }
 
   async function commit(selectedItems: OptionItem[]) {
-    const next = dumpOptionsValue(selectedItems, config.value)
+    const selectableItems = selectedItems.filter((item) =>
+      isOptionValueSelectable(item.value),
+    )
+    if (selectedItems.length && !selectableItems.length) return
+    const next = dumpOptionsValue(selectableItems, config.value)
     const event = await emitChange(next)
     if (event.prevented) return
     write(next, true)
@@ -205,6 +210,10 @@ export function useOptionsControl(
   async function toggle(option: OptionItem) {
     if (option.disabled || disabled?.value) return
     if (Array.isArray(option.children)) return
+    if (option.value === undefined) {
+      if (!config.value.multiple) open.value = false
+      return
+    }
     await enqueueMutation(async () => {
       const nextItems = toggleOption(option, selected.value, config.value)
       await commit(nextItems)
