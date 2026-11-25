@@ -64,6 +64,7 @@ Picker 是“表单字段 + CRUD 弹层 + pickerSchema 自定义内容”的组�
 | `source` | 远程/变量选项 | 变量 `${...}` 或 API；失败保留空 |
 | `multiple` / `joinValues` / `delimiter` | 值形态 | 与 Options 族共用序列化 |
 | `labelField` / `valueField` | 字段映射 | 桥接 table/form 时也按 valueField 取值 |
+| `labelTpl` | 已选项标签模板 | 按 option 求值并渲染 HTML；aria / 删除提示继续用纯文本 label |
 | `embed` | 内嵌 | 不弹层，直接改 selected |
 | `maxTagCount` | 标签折叠 | `+N`，不改变值 |
 | `perPage` | 弹层分页 | 组头占行；搜索回第一页 |
@@ -146,7 +147,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：13 / 14）
+### 验收清单（文档核对：14 / 15）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Picker / options 工具已定位
@@ -156,6 +157,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] 默认弹框 / 已有值回填 / 选中行 / 取消确认边界
 - [x] `pickerSchema.mode: table` 的 `children` 行树展开与级联选择
 - [x] `Space` 打开 / `Backspace` 删除最后标签与 focus-visible
+- [x] `labelTpl` 可见标签渲染与纯文本 aria / 删除提示
 - [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（Picker 相关）
 - [x] `pnpm typecheck` 0

@@ -36,6 +36,37 @@ function openPicker(host: HTMLElement) {
 }
 
 describe('Picker value and pickerSchema bridge', () => {
+  it('renders labelTpl in selected tags while keeping the plain remove label', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        value: 'a',
+        valueField: 'id',
+        labelField: 'name',
+        labelTpl: '<strong class="hero-label">${name} / ${id}</strong>',
+        options: [
+          { id: 'a', name: '曹操' },
+          { id: 'b', name: '李白' },
+        ],
+      },
+    })
+
+    await nextTick()
+    const tag = host.querySelector(
+      '.vamis-picker__tag-label',
+    ) as HTMLElement
+    expect(tag.querySelector('strong.hero-label')?.textContent).toBe(
+      '曹操 / a',
+    )
+    expect(
+      host.querySelector('.vamis-picker__tag-remove')?.getAttribute('aria-label'),
+    ).toBe('移除 曹操')
+  })
+
   it('opens with Space and removes the last tag with Backspace', async () => {
     const { host, scoped } = mount({
       type: 'form',

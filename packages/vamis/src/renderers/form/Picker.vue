@@ -21,6 +21,7 @@ import {
   createVamisEvent,
   drawerSizeClass,
   eventEvalData,
+  filterTpl,
   isApiOutdated,
   isEffectiveApi,
   overlayContainerFrom,
@@ -311,21 +312,21 @@ function handleEmbedSelection(items: unknown[]) {
   void commitPickerValues(items)
 }
 
-const selectedLabels = computed(() =>
+const selectedTagItems = computed(() =>
   selected.value.map((value) => {
-    const hit = options.value.find((item) =>
-      optionValuesEqual(item.value, value, valueField.value),
-    )
-    if (hit) return hit.label
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      return String(
-        (value as Record<string, unknown>)[labelField.value] ??
-          (value as Record<string, unknown>).label ??
-          pickerValue(value) ??
-          '',
-      )
+    const option = pickerOption(value)
+    const plainLabel = String(option.label ?? '-')
+    const template =
+      props.schema.labelTpl != null
+        ? String(props.schema.labelTpl).trim()
+        : ''
+    return {
+      option,
+      plainLabel,
+      labelHtml: template
+        ? String(filterTpl(template, option as Record<string, any>))
+        : '',
     }
-    return String(value)
   }),
 )
 
@@ -346,11 +347,19 @@ function hideOverflow() {
   }, 80)
 }
 
-const shownLabels = computed(() => (maxTagCount.value > 0 ? selectedLabels.value.slice(0, maxTagCount.value) : selectedLabels.value))
-const hiddenLabels = computed(() =>
-  maxTagCount.value > 0 ? selectedLabels.value.slice(maxTagCount.value) : [],
+const shownTags = computed(() =>
+  maxTagCount.value > 0
+    ? selectedTagItems.value.slice(0, maxTagCount.value)
+    : selectedTagItems.value,
 )
-const hiddenCount = computed(() => Math.max(0, selectedLabels.value.length - shownLabels.value.length))
+const hiddenTags = computed(() =>
+  maxTagCount.value > 0
+    ? selectedTagItems.value.slice(maxTagCount.value)
+    : [],
+)
+const hiddenCount = computed(() =>
+  Math.max(0, selectedTagItems.value.length - shownTags.value.length),
+)
 
 function mergePickedOptions(items: unknown[]) {
   const normalized = normalizeOptions(
@@ -500,11 +509,11 @@ watch(
       @keydown="handleTriggerKeydown"
     >
       <div class="vamis-picker__value-wrap">
-        <span v-if="!selectedLabels.length" class="vamis-picker__placeholder">
+        <span v-if="!selectedTagItems.length" class="vamis-picker__placeholder">
           {{ schema.placeholder || '请选择' }}
         </span>
         <span
-          v-for="(label, i) in shownLabels"
+          v-for="(tag, i) in shownTags"
           :key="i"
           class="vamis-picker__tag"
         >
@@ -512,13 +521,14 @@ watch(
             v-if="schema.itemClearable !== false"
             type="button"
             class="vamis-picker__tag-remove"
-            :aria-label="`移除 ${label}`"
+            :aria-label="`移除 ${tag.plainLabel}`"
             @click.stop="removePickerTag(i)"
           >
             <VamisClose />
           </button>
           <span class="vamis-picker__tag-label" @click.stop="clickTag(i)">
-            {{ label }}
+            <span v-if="tag.labelHtml" v-html="tag.labelHtml" />
+            <template v-else>{{ tag.plainLabel }}</template>
           </span>
         </span>
         <span
@@ -532,7 +542,7 @@ watch(
         </span>
       </div>
       <button
-        v-if="selectedLabels.length && schema.clearable === true"
+        v-if="selectedTagItems.length && schema.clearable === true"
         type="button"
         class="vamis-picker__clear"
         :disabled="disabled"
@@ -565,11 +575,12 @@ watch(
       <template #body>
         <div class="vamis-picker-overflow__grid">
           <span
-            v-for="(label, index) in hiddenLabels"
+            v-for="(tag, index) in hiddenTags"
             :key="`overflow-${index}`"
             class="vamis-picker__tag"
           >
-            {{ label }}
+            <span v-if="tag.labelHtml" v-html="tag.labelHtml" />
+            <template v-else>{{ tag.plainLabel }}</template>
           </span>
         </div>
       </template>
