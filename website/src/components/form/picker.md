@@ -698,6 +698,8 @@ body:
 - `overflowTagPopover`配置收纳标签 Popover 相关[属性](../tooltip#属性表)。
 - `overflowTagPopoverInCRUD`可以配置**CRUD 顶部**收纳标签的 Popover 相关[属性](../tooltip#属性表)。
 
+`maxTagCount` 只是可见数量上限；实际展示数还会按控件当前可用宽度计算，超出部分收成 `+N`。Picker 选择器与 CRUD 顶部已选栏共用同一规则。切换分页时，已经带完整标签的已选项保持原顺序和文案；只有缺标签的 `{ id }` 描述符会在数据到达后补全。
+
 > `3.4.0` 及以上版本
 
 ```schema: scope="body"
@@ -1412,6 +1414,6 @@ pickerSchema:
 
 - 章节顺序与 Amis 6.13 对齐：基本用法、配置 pickerSchema、内嵌模式、限制标签最大展示数量、属性表 / OverflowConfig、事件表 / change / itemClick / staticItemClick。
 - 默认 Picker 已按 Amis `buildSchema()` 生成 CRUD `mode: list`；500px dialog、`modalMode: drawer`、drawer 桌面 500px / 窄屏全宽、已有值回填、选中行与 `itemClearable` 已对齐。
-- `overflowConfig.maxTagCount`、`displayPosition`、`overflowTagPopover`、`overflowTagPopoverInCRUD` 已接。
+- `overflowConfig.maxTagCount`、`displayPosition`、`overflowTagPopover`、`overflowTagPopoverInCRUD` 已接；`maxTagCount` 按真实可用宽度折叠，Picker 与 CRUD 顶部一致，分页不覆盖完整已选标签。
 - `staticItemClick` 与 `strictMode` 已接；树源通过 `pickerSchema.mode: table` 复用 CRUD/Table 行树，不另造 Picker 私有树协议。
 - Vamis 额外保留顶层 `maxTagCount`、`clearable`、`placeholder`、`perPage` 兼容字段；Amis 主字段仍以本文属性表为准。

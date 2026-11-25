@@ -53,4 +53,43 @@ describe('mock API brand', () => {
     }
     expect(hits).toEqual([])
   })
+
+  it('keeps the Amis sample base rows and IDs', () => {
+    const seed = JSON.parse(
+      readFileSync(join(mockDir, 'sample-seed.json'), 'utf8'),
+    ) as {
+      source: string
+      rows: Array<Record<string, unknown>>
+    }
+    expect(seed.source).toContain('sample.db.js')
+    expect(seed.rows).toHaveLength(57)
+    expect(seed.rows[49]).toMatchObject({
+      engine: 'Misc',
+      grade: 'C',
+      browser: 'NetFront 3.1',
+    })
+    expect(seed.rows[52]).toMatchObject({
+      engine: 'Misc',
+      grade: 'X',
+      browser: 'Links',
+    })
+  })
+
+  it('builds 1710 sample rows with the Amis IDs 50 / 53', async () => {
+    const { createSampleRows } = await import('../../../playground/src/mock/sample')
+    const rows = createSampleRows()
+    expect(rows).toHaveLength(1710)
+    expect(rows[49]).toMatchObject({
+      id: 50,
+      engine: 'Misc',
+      grade: 'C',
+      browser: 'NetFront 3.1',
+    })
+    expect(rows[52]).toMatchObject({
+      id: 53,
+      engine: 'Misc',
+      grade: 'X',
+      browser: 'Links',
+    })
+  })
 })

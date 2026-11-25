@@ -3,11 +3,13 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } f
 import {
   SchemaRenderer,
   asArray,
+  countVisibleTagsByWidth,
   createStoreId,
   createVamisEvent,
   evalExpression,
   eventEvalData,
   getByPath,
+  hydrateSelectedOptions,
   isApiOutdated,
   isFormItemType,
   overlayContainerFrom,
@@ -86,9 +88,15 @@ const editingCell = ref('')
 const draftValue = ref('')
 const allItems = ref<Record<string, any>[]>([])
 const seededValueKey = ref('')
+const selectionBarEl = ref<HTMLElement | null>(null)
+const selectionLabelEl = ref<HTMLElement | null>(null)
+const selectionClearEl = ref<HTMLElement | null>(null)
+const selectionMeasureEl = ref<HTMLElement | null>(null)
 const selectionMoreEl = ref<HTMLElement | null>(null)
 const selectionOverflowTip = ref(false)
+const visibleSelectionByWidth = ref(Number.POSITIVE_INFINITY)
 let selectionOverflowHideTimer: ReturnType<typeof setTimeout> | undefined
+let selectionFoldObserver: ResizeObserver | undefined
 const primaryField = computed(() => String(props.schema.primaryField || 'id'))
 const strictMode = computed(() => props.schema.strictMode === true)
 const bulkActions = computed(() => asArray(props.schema.bulkActions) as SchemaObject[])
@@ -249,18 +257,55 @@ const selectionMaxCount = computed(() => {
   const count = Number(props.schema.maxTagCount)
   return Number.isFinite(count) && count > 0 ? count : 0
 })
-const visibleSelectedItems = computed(() =>
-  selectionMaxCount.value > 0
-    ? store.selectedItems.slice(0, selectionMaxCount.value)
-    : store.selectedItems,
-)
+const foldSelection = computed(() => selectionMaxCount.value > 0)
+
+function measureSelectionTags() {
+  const bar = selectionBarEl.value
+  const measure = selectionMeasureEl.value
+  if (!foldSelection.value || !bar || !measure) {
+    visibleSelectionByWidth.value = Number.POSITIVE_INFINITY
+    return
+  }
+  if (!bar.clientWidth) return
+  const labelWidth = selectionLabelEl.value?.offsetWidth || 0
+  const clearWidth = selectionClearEl.value?.offsetWidth || 0
+  const gap =
+    Number.parseFloat(getComputedStyle(bar).columnGap || '') || 4
+  const chips = Array.from(
+    measure.querySelectorAll('[data-fold-chip]'),
+  ) as HTMLElement[]
+  const more = measure.querySelector('[data-fold-more]') as HTMLElement | null
+  visibleSelectionByWidth.value = countVisibleTagsByWidth({
+    containerWidth: Math.max(0, bar.clientWidth - labelWidth - clearWidth - gap * 2),
+    itemWidths: chips.map((el) => el.offsetWidth),
+    moreWidth: more?.offsetWidth || 30,
+    maxVisibleCount: selectionMaxCount.value,
+  })
+}
+
+function scheduleSelectionMeasure() {
+  void nextTick(measureSelectionTags)
+}
+
+const visibleSelectedItems = computed(() => {
+  const cap = foldSelection.value
+    ? Math.min(selectionMaxCount.value, store.selectedItems.length)
+    : store.selectedItems.length
+  const visible = Number.isFinite(visibleSelectionByWidth.value)
+    ? Math.min(cap, Math.max(0, visibleSelectionByWidth.value))
+    : cap
+  return store.selectedItems.slice(0, visible)
+})
 const hiddenSelectedItems = computed(() =>
-  selectionMaxCount.value > 0
-    ? store.selectedItems.slice(selectionMaxCount.value)
-    : [],
+  store.selectedItems.slice(visibleSelectedItems.value.length),
 )
 const hiddenSelectedCount = computed(() =>
   hiddenSelectedItems.value.length,
+)
+watch(
+  () => [store.selectedItems, selectionMaxCount.value] as const,
+  scheduleSelectionMeasure,
+  { deep: true },
 )
 const selectionOverflowContainer = computed(() =>
   overlayContainerFrom(
@@ -675,10 +720,14 @@ function sameRowIdentity(
 
 function hydrateSelectedItems(pool: Record<string, any>[]) {
   if (!pool.length || !store.selectedItems.length) return
-  store.selectedItems = store.selectedItems.map((selected) => {
-    const row = pool.find((item) => sameRowIdentity(item, selected))
-    return row || selected
+  const next = hydrateSelectedOptions([...store.selectedItems], pool, {
+    labelField: String(props.schema.labelField || 'label'),
+    valueField: primaryField.value,
+    equals: (left, right) => sameRowIdentity(left, right),
   })
+  if (next.some((item, index) => item !== store.selectedItems[index])) {
+    store.selectedItems = next
+  }
 }
 
 function selectionOptionPool() {
@@ -966,9 +1015,19 @@ onMounted(() => {
   syncFromLocation()
   if (!props.schema.api) {
     seedLocalItems()
-    return
+  } else {
+    void reload()
   }
-  void reload()
+  if (typeof ResizeObserver !== 'undefined') {
+    selectionFoldObserver = new ResizeObserver(measureSelectionTags)
+    if (selectionBarEl.value) selectionFoldObserver.observe(selectionBarEl.value)
+  }
+  scheduleSelectionMeasure()
+})
+watch(selectionBarEl, (el, prev) => {
+  if (prev) selectionFoldObserver?.unobserve(prev)
+  if (el) selectionFoldObserver?.observe(el)
+  scheduleSelectionMeasure()
 })
 watch(
   () => [props.schema.api, props.data] as const,
@@ -991,6 +1050,7 @@ watch(
 )
 onBeforeUnmount(() => {
   if (selectionOverflowHideTimer) clearTimeout(selectionOverflowHideTimer)
+  selectionFoldObserver?.disconnect()
   scoped?.unregister(crudApi)
   hub.remove(store.id)
 })
@@ -1013,8 +1073,13 @@ onBeforeUnmount(() => {
         }"
       />
     </div>
-    <div v-if="showSelectionBar" class="vamis-crud-selection">
-      <div class="vamis-crud-selection-label">
+    <div
+      v-if="showSelectionBar"
+      ref="selectionBarEl"
+      class="vamis-crud-selection"
+      :class="{ 'is-overflow': foldSelection }"
+    >
+      <div ref="selectionLabelEl" class="vamis-crud-selection-label">
         已选{{ store.selectedItems.length }}条：
       </div>
       <div
@@ -1043,7 +1108,32 @@ onBeforeUnmount(() => {
       >
         +{{ hiddenSelectedCount }}
       </span>
+      <div
+        v-if="foldSelection"
+        ref="selectionMeasureEl"
+        class="vamis-crud-selection-measure"
+        aria-hidden="true"
+      >
+        <div
+          v-for="(item, index) in store.selectedItems"
+          :key="`selection-measure-${index}`"
+          class="vamis-crud-selection-value"
+          data-fold-chip
+        >
+          <button
+            type="button"
+            class="vamis-crud-selection-value-icon"
+          >
+            <VamisClose />
+          </button>
+          <span class="vamis-crud-selection-value-label">
+            {{ selectedItemLabel(item) }}
+          </span>
+        </div>
+        <span class="vamis-crud-selection-more" data-fold-more>+ 00</span>
+      </div>
       <a
+        ref="selectionClearEl"
         href="#"
         class="vamis-crud-selection-clear"
         @click.prevent="clearSelection"

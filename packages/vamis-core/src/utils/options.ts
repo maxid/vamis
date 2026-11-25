@@ -715,6 +715,40 @@ export function countVisibleTagsByWidth(opts: {
   return count
 }
 
+/**
+ * Hydrate only selected descriptors that do not carry a usable label yet.
+ * Amis preserves complete selected item objects across pagination; replacing
+ * them with the latest page rows changes labels and can alter folded tags.
+ */
+export function hydrateSelectedOptions<T extends PlainObject>(
+  selected: T[],
+  pool: T[],
+  opts: {
+    labelField?: string
+    valueField?: string
+    equals?: (left: T, right: T) => boolean
+  } = {},
+): T[] {
+  const labelField = opts.labelField || 'label'
+  const valueField = opts.valueField || 'value'
+  const equals =
+    opts.equals ||
+    ((left: T, right: T) =>
+      optionValuesEqual(left[valueField], right[valueField], valueField))
+
+  return selected.map((item) => {
+    const label = item[labelField]
+    const value = item[valueField]
+    const needsHydration =
+      item.__unmatched === true ||
+      label == null ||
+      label === '' ||
+      String(label) === String(value ?? '')
+    if (!needsHydration) return item
+    return pool.find((candidate) => equals(candidate, item)) || item
+  })
+}
+
 export type SelectOverlay = {
   width?: string | number
   align?: 'left' | 'center' | 'right'

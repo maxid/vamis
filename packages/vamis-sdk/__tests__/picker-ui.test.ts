@@ -184,7 +184,9 @@ describe('Picker value and pickerSchema bridge', () => {
         (button) => (button.textContent || '').trim() === '选择',
       ),
     ).toBe(false)
-    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(2)
+    expect(
+      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+    ).toHaveLength(2)
     expect(host.querySelector('.vamis-picker__tag-remove')).toBeTruthy()
     expect(host.querySelector('[data-picker-open]')).toBeTruthy()
     expect(host.querySelector('.vamis-picker__clear')).toBeNull()
@@ -216,7 +218,9 @@ describe('Picker value and pickerSchema bridge', () => {
     })
 
     await nextTick()
-    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(2)
+    expect(
+      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+    ).toHaveLength(2)
     expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
       '+1',
     )
@@ -246,7 +250,9 @@ describe('Picker value and pickerSchema bridge', () => {
     })
 
     await nextTick()
-    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(1)
+    expect(
+      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+    ).toHaveLength(1)
     expect(host.querySelector('.vamis-picker__more')?.textContent).toContain(
       '+2',
     )
@@ -255,7 +261,9 @@ describe('Picker value and pickerSchema bridge', () => {
       expect(document.querySelector('.vamis-crud-selection')).toBeTruthy(),
     )
     expect(
-      document.querySelectorAll('.vamis-crud-selection-value'),
+      document.querySelectorAll(
+        '.vamis-crud-selection > .vamis-crud-selection-value',
+      ),
     ).toHaveLength(3)
     expect(document.querySelector('.vamis-crud-selection-more')).toBeNull()
   })
@@ -286,7 +294,9 @@ describe('Picker value and pickerSchema bridge', () => {
     })
 
     await nextTick()
-    expect(host.querySelectorAll('.vamis-picker__tag')).toHaveLength(2)
+    expect(
+      host.querySelectorAll('.vamis-picker__value-wrap .vamis-picker__tag'),
+    ).toHaveLength(2)
     const overflow = host.querySelector('.vamis-picker__more') as HTMLElement
     overflow.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
     await vi.waitFor(() =>

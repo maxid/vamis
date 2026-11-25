@@ -138,6 +138,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 6. 当前状态与缺口
 
+- 标签收纳：`maxTagCount` 是上限，不是固定展示数。Picker trigger 与 CRUD 已选栏都用隐藏 measure 行 + core `countVisibleTagsByWidth`，按当前容器宽度、chip 宽度、`+N` 和尾部清空 / 打开按钮计算真实可见数量；overflow 态只占一行。完整 selected item 跨页保持原对象、顺序和 label，只有 `{id}` 描述符或 `__unmatched` 项才在 source / 分页数据到达后补全。
 - 已对齐：默认 trigger 单输入框 / tag 内嵌关闭 / picker icon；静态 options、multiple、`joinValues` / `extractValue`、默认 CRUD list 弹框、`modalMode: drawer` / `modalSize`、embed、`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`staticItemClick`、`strictMode`、远程/变量 source、children 顶层组行、CRUD 本地分页、pickerSchema（table selectedItems / form valueField）与 selected options 合并。
 - 已接：`change` / `itemClick`、`resetValue` 清空、数据链 source、`+N` 隐藏标签 title。
 - 已收口：默认弹框由 CRUD `mode: list` 承载；已选回填、选中行、无 bulkActions 时不显示计数、已有值打开与无变更确认均有回归。多选时 CRUD 顶部显示 `已选N条 / 标签 / 清空`；source 后到时使用 Picker 完整 rawOptions 把 `{id}` 描述符 hydration 为真实 label。Drawer 桌面 500px、header 54、body 上下 24、footer 57；375px 全宽。

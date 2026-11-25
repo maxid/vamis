@@ -11332,6 +11332,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--control-placeholder);
 }
 .vamis-picker__control {
+  position: relative;
   display: flex;
   width: 100%;
   min-height: var(--control-h);
@@ -11368,9 +11369,26 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   gap: var(--gap-xs);
   padding: 4px var(--select-pad-x);
 }
+.vamis-picker__control.is-fold .vamis-picker__value-wrap {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.vamis-picker__value-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
 .vamis-picker__tag {
   display: inline-flex;
   height: var(--select-chip-height);
+  flex-shrink: 0;
   align-items: center;
   gap: 2px;
   padding: 0 4px;
@@ -11634,6 +11652,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   color: var(--text-color);
 }
 .vamis-crud-selection {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap-xs);
@@ -11642,8 +11661,25 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   font-size: var(--fontSizeBase);
   line-height: 1;
 }
+.vamis-crud-selection.is-overflow {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.vamis-crud-selection-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
 .vamis-crud-selection-label {
   display: inline-block;
+  flex-shrink: 0;
   margin-top: var(--gap-xs);
   line-height: 14px;
 }
@@ -11691,6 +11727,7 @@ a.vamis-card-action > .vamis-icon-svg:first-child:not(:last-child) {
   cursor: default;
 }
 .vamis-crud-selection-clear {
+  flex-shrink: 0;
   margin-top: var(--gap-xs);
   margin-left: var(--gap-xs);
   color: var(--link-color);

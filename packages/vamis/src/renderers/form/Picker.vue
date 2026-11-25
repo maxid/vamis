@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   Button,
   Dialog,
@@ -18,6 +18,7 @@ import {
 } from '@vamis/ui'
 import {
   SchemaRenderer,
+  countVisibleTagsByWidth,
   createVamisEvent,
   drawerSizeClass,
   eventEvalData,
@@ -61,9 +62,14 @@ const remoteOptions = ref<unknown[] | null>(null)
 const pickedOptions = ref<OptionItem[]>([])
 const open = ref(false)
 const draft = ref<unknown[]>([])
+const controlEl = ref<HTMLElement | null>(null)
+const valueWrapEl = ref<HTMLElement | null>(null)
+const valueMeasureEl = ref<HTMLElement | null>(null)
+const visibleByWidth = ref(Number.POSITIVE_INFINITY)
 const moreEl = ref<HTMLElement | null>(null)
 const overflowTip = ref(false)
 let overflowHideTimer: ReturnType<typeof setTimeout> | undefined
+let foldObserver: ResizeObserver | undefined
 
 const multiple = computed(() => !!props.schema.multiple)
 const pickerSchema = computed(() =>
@@ -94,6 +100,7 @@ const maxTagCount = computed(() => {
   const n = Number(configured ?? props.schema.maxTagCount)
   return Number.isFinite(n) && n >= 0 ? n : 0
 })
+const foldTags = computed(() => multiple.value && maxTagCount.value > 0)
 const displayPosition = computed(() => {
   const overflow = props.schema.overflowConfig
   const configured =
@@ -356,6 +363,30 @@ const selectedTagItems = computed(() =>
   }),
 )
 
+function measureTags() {
+  const wrap = valueWrapEl.value
+  const measure = valueMeasureEl.value
+  if (!foldTags.value || !wrap || !measure) {
+    visibleByWidth.value = Number.POSITIVE_INFINITY
+    return
+  }
+  if (!wrap.clientWidth) return
+  const chips = Array.from(
+    measure.querySelectorAll('[data-fold-chip]'),
+  ) as HTMLElement[]
+  const more = measure.querySelector('[data-fold-more]') as HTMLElement | null
+  visibleByWidth.value = countVisibleTagsByWidth({
+    containerWidth: wrap.clientWidth,
+    itemWidths: chips.map((el) => el.offsetWidth),
+    moreWidth: more?.offsetWidth || 30,
+    maxVisibleCount: maxTagCount.value,
+  })
+}
+
+function scheduleMeasure() {
+  void nextTick(measureTags)
+}
+
 function openPicker() {
   draft.value = [...selected.value]
   open.value = true
@@ -373,18 +404,29 @@ function hideOverflow() {
   }, 80)
 }
 
-const shownTags = computed(() =>
-  maxTagCount.value > 0
-    ? selectedTagItems.value.slice(0, maxTagCount.value)
-    : selectedTagItems.value,
-)
+const shownTags = computed(() => {
+  const cap = foldTags.value
+    ? Math.min(maxTagCount.value, selectedTagItems.value.length)
+    : selectedTagItems.value.length
+  const visible = Number.isFinite(visibleByWidth.value)
+    ? Math.min(cap, Math.max(0, visibleByWidth.value))
+    : cap
+  return selectedTagItems.value.slice(0, visible)
+})
 const hiddenTags = computed(() =>
-  maxTagCount.value > 0
-    ? selectedTagItems.value.slice(maxTagCount.value)
-    : [],
+  selectedTagItems.value.slice(shownTags.value.length),
 )
 const hiddenCount = computed(() =>
   Math.max(0, selectedTagItems.value.length - shownTags.value.length),
+)
+
+watch(
+  () => [
+    selectedTagItems.value,
+    maxTagCount.value,
+    props.schema.itemClearable,
+  ] as const,
+  scheduleMeasure,
 )
 
 function mergePickedOptions(items: unknown[]) {
@@ -507,9 +549,18 @@ async function loadSource() {
   }
 }
 
-onMounted(() => void loadSource())
+onMounted(() => {
+  void loadSource()
+  if (typeof ResizeObserver !== 'undefined') {
+    foldObserver = new ResizeObserver(measureTags)
+    if (controlEl.value) foldObserver.observe(controlEl.value)
+    if (valueWrapEl.value) foldObserver.observe(valueWrapEl.value)
+  }
+  scheduleMeasure()
+})
 onBeforeUnmount(() => {
   if (overflowHideTimer) clearTimeout(overflowHideTimer)
+  foldObserver?.disconnect()
 })
 watch(
   () => [props.schema.source, viewData.value] as const,
@@ -525,8 +576,9 @@ watch(
   <FormItem :schema="schema">
     <div
       v-if="!embed"
+      ref="controlEl"
       class="vamis-picker__control"
-      :class="{ 'is-disabled': disabled }"
+      :class="{ 'is-disabled': disabled, 'is-fold': foldTags }"
       role="combobox"
       aria-haspopup="dialog"
       :aria-expanded="open"
@@ -534,7 +586,7 @@ watch(
       @click="!disabled && openPicker()"
       @keydown="handleTriggerKeydown"
     >
-      <div class="vamis-picker__value-wrap">
+      <div ref="valueWrapEl" class="vamis-picker__value-wrap">
         <span v-if="!selectedTagItems.length" class="vamis-picker__placeholder">
           {{ schema.placeholder || '请选择' }}
         </span>
@@ -566,6 +618,32 @@ watch(
         >
           +{{ hiddenCount }}
         </span>
+      </div>
+      <div
+        v-if="foldTags"
+        ref="valueMeasureEl"
+        class="vamis-picker__value-measure"
+        aria-hidden="true"
+      >
+        <span
+          v-for="(tag, i) in selectedTagItems"
+          :key="`measure-${i}`"
+          class="vamis-picker__tag"
+          data-fold-chip
+        >
+          <button
+            v-if="schema.itemClearable !== false"
+            type="button"
+            class="vamis-picker__tag-remove"
+          >
+            <VamisClose />
+          </button>
+          <span class="vamis-picker__tag-label">
+            <span v-if="tag.labelHtml" v-html="tag.labelHtml" />
+            <template v-else>{{ tag.plainLabel }}</template>
+          </span>
+        </span>
+        <span class="vamis-picker__more" data-fold-more>+ 00</span>
       </div>
       <button
         v-if="selectedTagItems.length && schema.clearable === true"

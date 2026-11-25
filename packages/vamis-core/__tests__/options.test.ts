@@ -19,6 +19,7 @@ import {
   flattenOptions,
   flattenVisibleOptions,
   getSelectedOptions,
+  hydrateSelectedOptions,
   isAllSelected,
   isOptionsEmpty,
   isOptionsVariableSource,
@@ -261,6 +262,26 @@ describe('toggle / checkAll / selectFirst', () => {
       moreWidth: 30,
       maxVisibleCount: 2,
     })).toBe(2)
+  })
+
+  it('hydrates incomplete selected items without replacing complete labels', () => {
+    const complete = {
+      id: 1,
+      engine: 'Original label',
+      browser: 'Internet Explorer 4.0',
+    }
+    const pool = [
+      { id: 2, engine: 'Fresh page label 2' },
+      { id: 1, engine: 'Fresh page label 1' },
+    ]
+    const hydrated = hydrateSelectedOptions(
+      [complete, { id: 2 }],
+      pool,
+      { labelField: 'engine', valueField: 'id' },
+    )
+
+    expect(hydrated[0]).toBe(complete)
+    expect(hydrated[1]).toBe(pool[0])
   })
 
   it('maps overlay width and align like Amis PopOverContainer', () => {
