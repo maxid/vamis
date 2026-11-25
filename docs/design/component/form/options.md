@@ -10,7 +10,7 @@ Options 是 Select/Picker/Checkboxes/Transfer 等共享的**值/选项/搜索/�
 
 ## 1. 边界与优先级（先读）
 
-1. **值**：name 写入/读取统一 useFieldValue；multiple/joinValues/extractValue/delimiter 序列化。
+1. **值**：name 写入/读取统一 useFieldValue；multiple/joinValues/extractValue/delimiter 序列化。`joinValues:false` 只改变写回结构，多选回显的字符串值仍按 delimiter 拆分。
 2. **选项**：本地 options / source 变量/API；labelField/valueField；children 递归。
 3. **搜索**：filterOption/searchApi/autoComplete；远程竞态/空结果。
 4. **选择**：selected/toggle/toggleAll/commit；只叶子可选；disabled。

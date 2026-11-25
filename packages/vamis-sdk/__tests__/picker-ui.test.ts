@@ -67,6 +67,34 @@ describe('Picker value and pickerSchema bridge', () => {
     ).toBe('移除 曹操')
   })
 
+  it('splits a multiple string value when joinValues is false', async () => {
+    const { host } = mount({
+      type: 'form',
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        multiple: true,
+        joinValues: false,
+        value: '2,50',
+        valueField: 'id',
+        labelField: 'name',
+        options: [
+          { id: '2', name: '曹操' },
+          { id: '50', name: '李白' },
+        ],
+      },
+    })
+
+    await nextTick()
+    expect(
+      [...host.querySelectorAll('.vamis-picker__tag-label')].map((item) =>
+        (item.textContent || '').trim(),
+      ),
+    ).toEqual(['曹操', '李白'])
+  })
+
   it('opens with Space and removes the last tag with Backspace', async () => {
     const { host, scoped } = mount({
       type: 'form',

@@ -12,7 +12,7 @@ Picker 是“表单字段 + CRUD 弹层 + pickerSchema 自定义内容”的组�
 
 ### 1.1 P0 不可破坏边界
 
-1. **值写回**：`selected` 计算属性经 `fieldApi.getValue/setValue`；`joinValues` / `extractValue` / `multiple` / `delimiter` / `valueField` 决定写 string、array 或 object；`labelField` 只影响展示。
+1. **值写回**：`selected` 计算属性经 `fieldApi.getValue/setValue`；`joinValues` / `extractValue` / `multiple` / `delimiter` / `valueField` 决定写 string、array 或 object；多选的字符串输入无论 `joinValues` 都按 delimiter 拆分用于回显；`labelField` 只影响展示。
 2. **draft 与确认**：弹层打开时 `draft = [...selected]`；列表勾选只改 draft；`confirm` 才写表单。取消/关闭不得写值。
 3. **内嵌模式**：`embed` 直接渲染同一份 CRUD 列表，不经弹层；选择结果仍走同一 `commitPickerValues` 序列化，不能另写一套值。
 4. **pickerSchema 桥接**：确认时按 `id/name` 找内层组件 API：`selectedItems`（table/crud）或 `valueField` 字段（form）；`mode: table` 的 `children` 由 CRUD 行树承载；找不到就保持 draft，不报错、不清空。
@@ -147,7 +147,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 ## 7. 验收计划与完成度
 
-### 验收清单（文档核对：14 / 15）
+### 验收清单（文档核对：15 / 16）
 
 - [x] Amis 入口 / 文档章节已定位
 - [x] Vamis Picker / options 工具已定位
@@ -158,6 +158,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] `pickerSchema.mode: table` 的 `children` 行树展开与级联选择
 - [x] `Space` 打开 / `Backspace` 删除最后标签与 focus-visible
 - [x] `labelTpl` 可见标签渲染与纯文本 aria / 删除提示
+- [x] `joinValues:false` 的多选字符串仍按 delimiter 拆分回显
 - [x] 组件页活示例运行、无控制台 error
 - [x] `pnpm test`（Picker 相关）
 - [x] `pnpm typecheck` 0

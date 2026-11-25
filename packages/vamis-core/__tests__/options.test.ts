@@ -148,12 +148,22 @@ describe('value join / extract', () => {
 
   it('keeps dumpJoined / parseJoined for existing callers', () => {
     expect(parseJoined('a,b', true)).toEqual(['a', 'b'])
+    expect(parseJoined('a,b', true, false)).toEqual(['a', 'b'])
     expect(dumpJoined(['a', 'b'], true)).toBe('a,b')
     expect(dumpJoined(['a'], false)).toBe('a')
     expect(parseOptionsValue('', { multiple: true })).toEqual([])
     expect(isOptionsEmpty('')).toBe(true)
     expect(isOptionsEmpty([])).toBe(true)
     expect(isOptionsEmpty('a')).toBe(false)
+  })
+
+  it('splits multiple string values even when joinValues is false', () => {
+    expect(
+      getSelectedOptions('a,b', options, {
+        multiple: true,
+        joinValues: false,
+      }).map((item) => item.label),
+    ).toEqual(['A', 'B'])
   })
 
   it('marks selected values that do not match loaded options', () => {

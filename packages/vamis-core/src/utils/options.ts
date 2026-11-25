@@ -502,7 +502,7 @@ export function parseJoined(
 ): unknown[] {
   if (value == null || value === '') return []
   if (Array.isArray(value)) return value
-  if (multiple && joinValues && typeof value === 'string') {
+  if (multiple && typeof value === 'string') {
     return value.split(delimiter).map((item) => item.trim()).filter((item) => item !== '')
   }
   return [value]

@@ -1341,7 +1341,7 @@ body:
 }
 ```
 
-**补充：多选与值格式。** `multiple: true` 可多选；`joinValues` / `extractValue` / `delimiter` 控制写回 string、array 或完整 option。
+**补充：多选与值格式。** `multiple: true` 可多选；`joinValues` / `extractValue` / `delimiter` 控制写回 string、array 或完整 option。多选输入值是字符串时，无论 `joinValues` 是否为 true，都会按 `delimiter` 拆分回已选项。
 
 ```yaml
 type: picker
