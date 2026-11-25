@@ -37,7 +37,7 @@ body:
 
 可以配置 pickerSchema，实现弹框 crud 选择模式，更多 crud 配置可查看 crud 文档，选择之后最终的值通过 `valueField` 来设置。
 
-`multiple: true` 时，已选项由内层 CRUD 顶部统一展示为 `已选N条：`、标签和“清空”，不是 Picker trigger 自己维护的第二套界面。
+`multiple: true` 时，已选项由内层 CRUD 顶部统一展示为 `已选N条：`、标签和“清空”，不是 Picker trigger 自己维护的第二套界面。CRUD 的 `mode: list`、`mode: table`、`mode: cards` 都通过同一 `selectedItems` 写回 Picker。
 
 ```schema: scope="body"
 {

@@ -70,7 +70,7 @@ Picker 是“表单字段 + CRUD 弹层 + pickerSchema 自定义内容”的组�
 | `modalTitle` | 弹层标题 | 缺省用 label/请选择 |
 | `modalMode` | `dialog` / `drawer` | drawer 默认右侧 500px，窄屏 100% |
 | `modalSize` | 弹层尺寸 | dialog / drawer 共用尺寸枚举 |
-| `pickerSchema` | 自定义弹层 | 内层 table 读 selectedItems；form 读 valueField 字段 |
+| `pickerSchema` | 自定义弹层 | CRUD `mode: list/table/cards` 读 selectedItems；form 字段读 valueField |
 | `placeholder` | 未选占位 | FormItem 也有一套，避免覆盖错 |
 
 ### 3.3 事件 / 动作
@@ -118,7 +118,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 
 | 内层 | 读取 | 说明 |
 |---|---|---|
-| table / crud | `getData().selectedItems` | 每项按 `valueField` 取 value |
+| table / list / cards / crud | `getData().selectedItems` | 每项按 `valueField` 取 value；cards 通过 CRUD host 回写 |
 | form | `getData()[valueField]` | 数组或单值 |
 | 其它 | 无 | 保持 draft，不猜测 |
 
@@ -141,7 +141,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - 已收口：默认弹框由 CRUD `mode: list` 承载；已选回填、选中行、无 bulkActions 时不显示计数、已有值打开与无变更确认均有回归。多选时 CRUD 顶部显示 `已选N条 / 标签 / 清空`；source 后到时使用 Picker 完整 rawOptions 把 `{id}` 描述符 hydration 为真实 label。Drawer 桌面 500px、header 54、body 上下 24、footer 57；375px 全宽。
 - 文档：主 TOC 与 Amis 6.13 同序，属性表补 `autoFill` / `overflowConfig` / `itemClearable`，事件表补 `change` / `itemClick` / `staticItemClick`；补充示例不再占用主章节。
 - 对照：桌面 / 移动 **8/9**（P0 0；余 1 为 Amis `${selectedValue}` 对比器读数差），trigger 926×32 与 Amis 一致；真实弹框 500px / 盒模型与 Amis 计算值一致。内嵌、visibleOn、maxTagCount 两节均是 live schema，source 后到会用完整 option pool 把 `{id}` 描述符 hydrate 成真实 label。
-- 缺：pickerSchema 内其它组件类型桥接未定义；分组组行键盘/可访问性未专项核；树表展开/选择尚未做窄屏与深色专项核。
+- 缺：分组组行键盘/可访问性未专项核；CRUD 的其它高级模式（如 table2）未接入 Picker。
 
 ## 7. 验收计划与完成度
 
@@ -159,7 +159,7 @@ confirm  → 桥接 selectedItems → commitPickerValues → FormItem 写值
 - [x] `pnpm typecheck` 0
 - [x] `pnpm compare --page picker` 桌面
 - [x] `pnpm compare --page picker --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] 树表 375px / 深色专项核
 
 ### 验收重点
 

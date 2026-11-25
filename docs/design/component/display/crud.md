@@ -157,6 +157,7 @@ store.items ──> list / 手写 table / Cards
 - `footerToolbar`：支持 `statistics` 关键字、`pagination` schema 与其它 SchemaRenderer 节点；自定义 pagination 会补当前 page / perPage / total / lastPage，并保留作者 `layout` 与 `showPageInput`。右栏 `max-width:100%`，Pagination 根 `white-space:normal`，窄弹框内按 Amis 自动分成 perPage / pager / go 行。
 - `children` 行树：手写 Table 壳不再把子行拍平；`mode: table` 按 core 行树算法渲染缩进、展开钮和 `expandConfig`，选择走同一 `selectedItems`，Picker 的 `pickerSchema.mode: table` 因而不需要另造树协议。
 - `columns-toggler`：CRUD 提供注入式列显隐状态，`headerToolbar` 的 `columns-toggler` / `column-toggler` 可切换普通列；未写 `columnsTogglable` 时按 Amis Table 的 auto 规则在超过 5 列时注入，显式 `false` 关闭。列拖拽排序尚未接入。
+- `mode: cards` 的 Picker 选择：Cards 复用 `useCrudHost().setSelectedItems`，CRUD setter 更新 `selectedItems` 后统一回调 Picker；embed 模式不再需要 Cards 私有序列化。
 - 对照记录：桌面 / 移动 **63/92**（2026-11-24，P0 0；其余既有失败见对照报告，本刀未扩大处理）。
 - 缺：
   - **列表能力分叉**：排序/筛选/拖拽/嵌套/行事件没有 Table 完整；长期应 CRUD 套 Table。

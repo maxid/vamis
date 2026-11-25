@@ -681,6 +681,44 @@ describe('Picker value and pickerSchema bridge', () => {
     )
   })
 
+  it('commits a cards pickerSchema selection through the CRUD host in embed mode', async () => {
+    const { host, scoped } = mount({
+      type: 'form',
+      name: 'pickerCardsForm',
+      data: {
+        pickerRows: [
+          { id: 'a', name: 'Card A' },
+          { id: 'b', name: 'Card B' },
+        ],
+      },
+      actions: [],
+      body: {
+        type: 'picker',
+        name: 'hero',
+        label: '英雄',
+        embed: true,
+        multiple: true,
+        valueField: 'id',
+        labelField: 'name',
+        source: '${pickerRows}',
+        pickerSchema: {
+          mode: 'cards',
+          card: { title: '${name}' },
+        },
+      },
+    })
+
+    const firstCard = await vi.waitFor(() => {
+      const card = host.querySelector('.vamis-card') as HTMLElement | null
+      expect(card).toBeTruthy()
+      return card as HTMLElement
+    })
+    firstCard.click()
+    await vi.waitFor(() =>
+      expect(formData(scoped, 'pickerCardsForm').hero).toBe('a'),
+    )
+  })
+
   it('uses the drawer host for modalMode drawer', async () => {
     const { host, scoped } = mount({
       type: 'form',

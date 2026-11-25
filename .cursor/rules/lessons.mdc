@@ -1310,6 +1310,12 @@ alwaysApply: true
 - 触及：`picker` `crud` `table` mock
 - 规则：Amis `Form/Picker.tsx buildSchema`、`CRUD.tsx renderBody`、`Table` 行树；`packages/vamis/src/renderers/CRUD.vue`、`playground/src/mock/handler.ts`
 
+### Cards 的 Picker 选择要经 CrudHost 回传，不走 Cards 私有 store
+- 踩过：`pickerSchema.mode: cards` 能显示卡片并更新 CRUD host 的 `selectedItems`，但 CRUD host 的 setter 没调用 `notifyPickerSelection`；弹框模式确认还能读到值，`embed` 模式却不会立即写回 Picker。
+- 稳定做法：Cards 继续 `useCrudHost().setSelectedItems`，CRUD 的唯一 setter 负责更新 store 后统一通知 Picker 回调；不要在 Cards 里再复制一份 Picker 值序列化。`table/list/cards` 的选择协议都保持 `getData().selectedItems`。
+- 触及：`picker` `crud` `cards`
+- 规则：Amis `Picker.handleChange` / `CRUD.handleSelect` / `Cards.onSelect`；`packages/vamis/src/renderers/CRUD.vue`
+
 ### Picker 文档主 TOC 跟 Amis，补充示例放在差异前
 - 踩过：把多选、远程、分组、分页、自定义弹层都拆成 H2，页面 TOC 比 Amis 长一倍；Amis 已有的 OverflowConfig、三个事件小节反而缺失。
 - 稳定做法：主章节固定为 **基本用法 → 配置 pickerSchema → 内嵌模式 → 限制标签最大展示数量 → 属性表 / OverflowConfig → 事件表 / change / itemClick / staticItemClick → 和 Amis 文档的差异**。多选、source、分组、perPage 只作为事件后的粗体补充段落，不再进 TOC；Vamis 未接项在最后的差异节明确列出。

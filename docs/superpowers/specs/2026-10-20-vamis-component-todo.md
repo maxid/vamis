@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-24（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1435**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
+- 最近核对：2026-11-25（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1436**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
 
 ## 怎么读
 
@@ -112,7 +112,7 @@
 | `avatar` | badge | 未核 | |
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
-| `picker` | 弹层多选 | 默认弹框 / drawer / 收纳浮层已核 | 99%，trigger 满宽、默认 CRUD list、modalMode、overflowConfig 全部主字段、已选栏、staticItemClick、strictMode、table `children` 行树已对齐；余非 table pickerSchema 与树表窄屏/深色专项核 |
+| `picker` | 弹层多选 | 默认弹框 / drawer / 收纳浮层 / 树表已核 | 99%，trigger 满宽、默认 CRUD list、modalMode、overflowConfig 全部主字段、已选栏、staticItemClick、strictMode、table/list/cards 桥接与 table `children` 行树已对齐；树表 375 / 深色已核 |
 | `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#182230`），无独立 tooltip |
 
 ### 已推进、无独立浮层（切深色看默认皮）
@@ -226,7 +226,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
 | `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 88% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue。缺 themeCss | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
-| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 99% | 默认 trigger 对齐 Amis 单输入框：tag 内嵌 × / label 点击 itemClick / picker icon，`size` 不锁宽，trigger 满值列。默认弹框按 Amis `Picker.buildSchema()` 生成 CRUD `mode: list`：500px 内容、42.5 行高、brand-10 / brand-4 选中行、15px 列表右缩；`value + primaryField` 回填已有选中，分页切换不覆盖完整 option，source 后到时会用完整 option pool 把 `{id}` 描述符 enrich 成 label；无 bulkActions 不显示普通计数，多选另显示 `Crud-selection`。`modalMode: drawer` 桌面 500px / header 54 / footer 57，375px 全宽；`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`strictMode`、`staticItemClick` 已接。`pickerSchema` 注入 checkOnItemClick / pickerMode / keepItemSelectionOnPageChange，完整 selectedItems 写回；`change` 写值前派发。`pickerSchema.mode: table` 的 `children` 行树按 CRUD/Table 默认折叠、单分支展开、多选级联；文档主 TOC、内嵌模式、visibleOn 与 maxTagCount 两节均已挂 live schema，mock `/api/mock2/crud/tree` 返回树行；sample 无 perPage 返回全量。对照桌面 / 移动 **8/9**（P0 0；余 1 为 Amis `${selectedValue}` 对比器读数差）。 | P0 |
+| `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 99% | 默认 trigger 对齐 Amis 单输入框：tag 内嵌 × / label 点击 itemClick / picker icon，`size` 不锁宽，trigger 满值列。默认弹框按 Amis `Picker.buildSchema()` 生成 CRUD `mode: list`：500px 内容、42.5 行高、brand-10 / brand-4 选中行、15px 列表右缩；`value + primaryField` 回填已有选中，分页切换不覆盖完整 option，source 后到时会用完整 option pool 把 `{id}` 描述符 enrich 成 label；无 bulkActions 不显示普通计数，多选另显示 `Crud-selection`。`modalMode: drawer` 桌面 500px / header 54 / footer 57，375px 全宽；`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`strictMode`、`staticItemClick` 已接。`pickerSchema` 注入 checkOnItemClick / pickerMode / keepItemSelectionOnPageChange，完整 selectedItems 写回；`change` 写值前派发。CRUD `mode: table/list/cards` 均可通过 same selectedItems 桥接；`table` 的 `children` 行树默认折叠、单分支展开、多选级联，树表 375 / 深色已核；文档主 TOC、内嵌模式、visibleOn 与 maxTagCount 两节均已挂 live schema，mock `/api/mock2/crud/tree` 返回树行；sample 无 perPage 返回全量。对照桌面 / 移动 **8/9**（P0 0；余 1 为 Amis `${selectedValue}` 对比器读数差）。 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
 | `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |

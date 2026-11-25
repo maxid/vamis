@@ -940,6 +940,7 @@ provide(CrudHostKey, {
   },
   setSelectedItems(items) {
     store.selectedItems = items
+    notifyPickerSelection()
   },
   getIds() {
     return selectedIdsOf(store.selectedItems, primaryField.value)
