@@ -1,6 +1,6 @@
 # InputTable 表格输入 · `input-table` 设计
 
-> 状态：**进行中 45%** · 复杂度：**XL 特重**
+> 状态：**进行中 46%** · 复杂度：**XL 特重**
 > 文档：[在线 API 手册](/components/form/input-table) · Amis：`/zh-CN/components/form/input-table`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -116,9 +116,9 @@ rows ──add/remove/persistCurrent──> fieldApi.setValue(name, next)
 
 ## 6. 当前状态与缺口
 
-- 已接：行内编辑、增删行、FormItem 壳、行作用域、基础列。
+- 已接：行内编辑、增删行、FormItem 壳、行作用域、基础列；单元格 `radio` 已按行注入 ComboRadio 回调并整列互斥。
 - 未接：子 api/needConfirm/分页/过滤排序/拖拽/树/校验汇总/事件/动作/行身份。
-- 对照：TODO 45% 记录“能行内编辑；子 api、增删校验未齐”；本轮未重跑。
+- 对照：TODO 46% 记录“能行内编辑 + radio 整列互斥；子 api、增删校验未齐”；本轮未重跑。
 
 ## 7. 验收计划与完成度
 

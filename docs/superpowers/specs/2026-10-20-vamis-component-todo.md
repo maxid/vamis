@@ -9,7 +9,7 @@
 - 文档侧栏：`../amis/examples/components/Components.tsx`（布局 / 功能 / 数据输入 / 数据展示 / 反馈 / 其他）
 - 文档正文：`../amis/docs/zh-CN/components`
 - 注册核对：`packages/vamis/src/register.ts` 与 `extras/*.ts` 的 `registerRenderer`
-- 最近核对：2026-11-25（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1465**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD 桌面 **63/92** / 移动 **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
+- 最近核对：2026-11-26（汇总 **62%**、≥80% **49**、≥50% **111**；已完成 9；测试 **1466**、`typecheck` 0；InputTree 桌面 / 移动 **26/31**、TreeSelect **14/16**、Options **38/39**、Select **26/31**、Transfer **17/20**、Picker 桌面 / 移动 **8/9**、Spinner **7/7**；Alert **5/5**；Dialog **22/23**、CRUD 桌面 **63/92** / 移动 **63/92**、Form 桌面 **40/58** / 移动 **41/58**、Json **8/9**，均 P0 0；Picker 余 1 条 `${selectedValue}` 对比器读数差）
 
 ## 怎么读
 
@@ -113,7 +113,7 @@
 | `nav` | overflow / itemBadge | 未核 | |
 | `wizard` | 步骤里的 form/dialog | 未核 | |
 | `picker` | 弹层多选 | 默认弹框 / drawer / 宽度折叠 / 树表已核 | 99%，trigger 满宽、按真实宽度折叠、完整已选对象跨页保留、默认 CRUD list、modalMode、overflowConfig 全部主字段、已选栏、staticItemClick、strictMode、table/list/cards 桥接与 table `children` 行树已对齐；树表 375 / 深色已核 |
-| `input-number` | 单位下拉 | 已核 | 2026-11-10。复用 `--select-menu-*`（深 `#182230`），无独立 tooltip |
+| `input-number` | 单位下拉 | 已核 | 2026-11-26。桌面 Overlay / 375px PopUp、深色菜单与单位按钮均核过；复用 `--select-menu-*` |
 
 ### 已推进、无独立浮层（切深色看默认皮）
 
@@ -224,12 +224,12 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `uuid` | UUID 随机 ID | `/components/form/uuid` | `/zh-CN/components/form/uuid` | 进行中 | 70% | 能生成；仍走扁平 name | P0 |
 | `matrix-checkboxes` | MatrixCheckboxes 矩阵勾选 | `/components/form/matrix-checkboxes` | `/zh-CN/components/form/matrix-checkboxes` | 进行中 | 40% | 已注册，行列数据精简 | P0 |
 | `nested-select` | NestedSelect 级联选择器 | `/components/form/nestedselect` | `/zh-CN/components/form/nestedselect` | 进行中 | 45% | 能级联；`cascader-select` 别名未注册 | P0 |
-| `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 89% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 `VamisPopUp`，两端 UI 回归已接。缺 themeCss 与深色 / 窄屏逐项 | P0 |
+| `input-number` | InputNumber 数字输入 | `/components/form/input-number` | `/zh-CN/components/form/input-number` | 进行中 | 89% | 主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 `VamisPopUp`，深色与 375px 已核，两端 UI 回归已接。缺 themeCss 与单位弹层焦点细节 | P0 |
 | `input-password` | InputPassword 密码 | `/components/form/input-password` | `/zh-CN/components/form/input-password` | 进行中 | 90% | `input-text` 别名；默认 `revealPassword` 显隐钮，`false` 关掉。缺 `themeCss` | P0 |
 | `picker` | Picker 列表选择器 | `/components/form/picker` | `/zh-CN/components/form/picker` | 进行中 | 99% | 默认 trigger 对齐 Amis 单输入框：tag 内嵌 × / label 点击 itemClick / picker icon，`size` 不锁宽，trigger 满值列。默认弹框按 Amis `Picker.buildSchema()` 生成 CRUD `mode: list`：500px 内容、42.5 行高、brand-10 / brand-4 选中行、15px 列表右缩；`value + primaryField` 回填已有选中，分页切换不覆盖完整 option，source 后到时会用完整 option pool 把 `{id}` 描述符 enrich 成 label；无 bulkActions 不显示普通计数，多选另显示 `Crud-selection`。`modalMode: drawer` 桌面 500px / header 54 / footer 57，375px 全宽；`overflowConfig.maxTagCount` / `displayPosition` / `overflowTagPopover` / `overflowTagPopoverInCRUD`、`itemClearable`、`strictMode`、`staticItemClick` 已接。`pickerSchema` 注入 checkOnItemClick / pickerMode / keepItemSelectionOnPageChange，完整 selectedItems 写回；`change` 写值前派发。CRUD `mode: table/list/cards` 均可通过 same selectedItems 桥接；`table` 的 `children` 行树默认折叠、单分支展开、多选级联，树表 375 / 深色已核；文档主 TOC、内嵌模式、visibleOn 与 maxTagCount 两节均已挂 live schema，mock `/api/mock2/crud/tree` 返回树行；sample 无 perPage 返回全量。对照桌面 / 移动 **8/9**（P0 0；余 1 为 Amis `${selectedValue}` 对比器读数差）。 | P0 |
 | `input-quarter` | InputQuarter 季度 | `/components/form/input-quarter` | `/zh-CN/components/form/input-quarter` | 进行中 | 45% | DatePart 精简 | P0 |
 | `input-quarter-range` | InputQuarterRange 季度范围 | `/components/form/input-quarter-range` | `/zh-CN/components/form/input-quarter-range` | 进行中 | 45% | DatePartRange 精简 | P0 |
-| `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 88% | 主路径已对齐：Combo 互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss；input-table 互斥未接 | P0 |
+| `radio` | Radio 单选框 | `/components/form/radio` | `/zh-CN/components/form/radio` | 进行中 | 89% | 主路径已对齐：Combo / input-table 整列互斥、trueValue/falseValue、option、change、clear/reset/setValue。圆点 18/内点 10。缺 themeCss | P0 |
 | `radios` | Radios 单选框 | `/components/form/radios` | `/zh-CN/components/radios` | 进行中 | 55% | 组单选 | P0 |
 | `chart-radios` | ChartRadios 图表单选框 | `/components/form/chart-radios` | `/zh-CN/components/form/chart-radios` | 进行中 | 35% | **精简**：无真实图表点选 | P0 |
 | `input-rating` | InputRating 评分 | `/components/form/input-rating` | `/zh-CN/components/form/input-rating` | 进行中 | 55% | 能打分；半星/自定义字符未齐 | P0 |
@@ -240,7 +240,7 @@ Form / FormItem / Options 是契约页，不是业务 type，但挡住所有表�
 | `input-sub-form` | InputSubForm 子表单 | `/components/form/input-sub-form` | `/zh-CN/components/form/input-sub-form` | 进行中 | 45% | 能嵌表单；弹层/多选未齐 | P0 |
 | `switch` | Switch 开关 | `/components/form/switch` | `/zh-CN/components/form/switch` | 进行中 | 88% | 主路径已对齐：`trueValue` / `falseValue`（宽松相等，默认 true/false）、`option` 右侧说明、`onText` / `offText`（字符串 / IconSchema / SchemaCollection）、`size` sm/md（44×20 / 28×16，滑块 16/12 + 2px 边、30 圆角，`--switch-*`）、`loading` / `loadingOn`（不可操作，转圈画在滑块位）、`change`、`clear` / `reset` / `setValue`（`componentId` 按 id 跨数据域，form 外按钮可点 form 内；`componentName` 沿父链）、静态态。文档按 Amis 章节改写（含 `id` + `componentId` 动作示例、`loadingOn` + ajax 异步链），属性 / 事件 / 动作表齐全。对照桌面 **14/14**、移动 **14/14**（P0 0）。缺 `themeCss` | P0 |
 | `static` | Static 静态展示 | `/components/form/static` | `/zh-CN/components/form/static` | 进行中 | 85% | 主路径已对齐：`value` / `name` 数据域映射、`text` / `tpl`、`static-xxx` 泛型（`static-json` / `static-date` / `static-datetime` / `static-mapping` / `static-progress` / `static-images` 等经 test 兜底）、`copyable`（默认 `${name \| raw}`，content/tooltip）、`popOver` 右侧、`borderMode` full/half/none、空值 `-`、整表单 `static` 仍展示。文档按 Amis 章节改写。对照桌面 **5/5**、移动 **5/5**（P0 0）。缺 `quickEdit`（快速编辑 / saveImmediately / mode） | P0 |
-| `input-table` | InputTable 表格 | `/components/form/input-table` | `/zh-CN/components/form/input-table` | 进行中 | 45% | 能行内编辑；子 api、增删校验未齐 | P0 |
+| `input-table` | InputTable 表格 | `/components/form/input-table` | `/zh-CN/components/form/input-table` | 进行中 | 46% | 能行内编辑，单元格 `radio` 支持整列互斥；子 api、增删校验未齐 | P0 |
 | `input-tag` | InputTag 标签选择器 | `/components/form/input-tag` | `/zh-CN/components/form/input-tag` | 进行中 | 50% | 能回车加标签 | P0 |
 | `input-text` | InputText 输入框 | `/components/form/input-text` | `/zh-CN/components/form/input-text` | 进行中 | 92% | 主路径已齐（addOn/清值/计数/边框/事件动作）；hover 走 `--primary`、half 保留圆角、addOn 1px 竖缝；focus 3px glow 包整组；选择器 CONTAINS 排序+高亮，贴输入框 `VamisOverlay`（窄屏也是）；`creatable: false` 选中 focus 仍显示 `TextControl-value`；多选 tag 小叉 `VamisClose`、label 60px 才省略；`revealPassword` 已接；`source` reload 时控件右侧 `Spinner icon=reload size=sm`。缺 `themeCss` | P0 |
 | `textarea` | Textarea 多行输入框 | `/components/form/textarea` | `/zh-CN/components/form/textarea` | 进行中 | 85% | 主路径已对齐：`minRows` / `maxRows` 自适应高度（默认 3/20）、`trimContents` 失焦裁剪、`readOnly`、`showCounter` / `maxLength` 计数器、`clearable` / `resetValue`（清除钮回填 resetValue；动作 clear 写空串）、`borderMode`、静态 `multiline-text`；`change` / `focus` / `blur`、`clear` / `reset` / `focus` / `setValue`；清空时高度 0.2s 过渡，清空后 **Ctrl/⌘+Z** 撤销（Vamis 增强）。文档按 Amis 章节改写。对照桌面 **8/8**、移动 **8/8**（P0 0）。缺 `themeCss` | P0 |
@@ -442,7 +442,7 @@ flowchart LR
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | P1 | 进行中 | 65% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
 | 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 89% |
-| 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
+| 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 89% |
 | 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
 | 23 | `hidden` | FormItem | 6 | 1 | 19 | 134 | P1 | 已完成 | 100% |
 | 24 | `input-image` | FormItem、`image` | 6 | 1 | 19 | 134 | P1 | 进行中 | 80% |
@@ -570,7 +570,7 @@ flowchart LR
 | 146 | `input-array` | `form`、`action`、`input-text`、`container` | 3 | 0 | 3 | 3 | P2 | 进行中 | 50% |
 | 147 | `combo` | `form`、`action`、`container` | 3 | 0 | 3 | 3 | P2 | 进行中 | 55% |
 | 148 | `input-sub-form` | `form`、`action`、`service`、`container` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |
-| 149 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |
+| 149 | `input-table` | `form`、`table`、`action`、`input-text`、`select`、`checkbox` | 3 | 0 | 3 | 3 | P2 | 进行中 | 46% |
 | 150 | `json-schema-editor` | `json-schema`、`form`、`action` | 3 | 0 | 3 | 3 | P2 | 进行中 | 30% |
 | 151 | `wizard` | `form`、`action`、`panel` | 3 | 0 | 3 | 3 | P2 | 进行中 | 50% |
 | 152 | `transfer-picker` | `transfer`、`picker` | 3 | 0 | 3 | 3 | P2 | 进行中 | 45% |

@@ -84,13 +84,14 @@ step → numberStepValue → clamp → setValue
 ## 5. 样式与边界
 
 - 单位/步进/前后缀/增强模式走 token；无 `<style>`。
-- 桌面单位弹层用 `VamisOverlay`；移动端单位弹层用 `VamisPopUp`，深色单位菜单与窄屏继续单独核。
+- 桌面单位弹层用 `VamisOverlay`；移动端单位弹层用 `VamisPopUp`，深色单位菜单与窄屏已核。
 - 作者 className 只落节点；themeCss 未接。
+- 2026-11-26 手核：深色控件底 `rgb(24,34,48)` / 字 `rgb(247,248,250)`，单位菜单同样走 `--select-menu-*`；375px 下控件高 32、单位宽 56、输入区透明无边框，PopUp 为 375×320 贴底显示。
 
 ## 6. 当前状态与缺口
 
 - 已接：步进/精度/min-max、前缀/后缀/千分位、单位、enhance、大数、reset/clear、change/focus/blur、API；单位选择桌面 Overlay / 移动 PopUp 已拆开。
-- 缺口：themeCss、深色/窄屏逐项、单位弹层焦点细节。
+- 缺口：themeCss、单位弹层焦点细节；深色单位菜单与 375px 窄屏已于 2026-11-26 手核。
 - 对照：桌面 / 移动 **11/12**（余 1 条为 Amis 展示串探针差异）。
 
 ## 7. 验收计划与完成度
@@ -108,7 +109,7 @@ step → numberStepValue → clamp → setValue
 - [x] `pnpm typecheck` 0
 - [x] `pnpm compare --page input-number` 桌面
 - [x] `pnpm compare --page input-number --mobile`
-- [ ] 深色 / 375px 窄屏
+- [x] 深色 / 375px 窄屏
 
 ### 验收重点
 
@@ -121,7 +122,7 @@ step → numberStepValue → clamp → setValue
 ## 8. 后续
 
 1. themeCss/皮肤变量。
-2. 深色 / 窄屏专项与单位弹层焦点细节。
+2. 单位弹层焦点细节与 themeCss。
 3. 大数与百分比组合补测试。
 
 ---

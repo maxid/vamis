@@ -1,6 +1,6 @@
 # Radio 单选框 · `radio` 设计
 
-> 状态：**进行中 88%** · 复杂度：**L 重**
+> 状态：**进行中 89%** · 复杂度：**L 重**
 > 文档：[在线 API 手册](/components/form/radio) · Amis：`/zh-CN/components/form/radio`
 > 盘点日期：2026-11-18。本文是研发设计文档；完整属性 / 事件 / 动作表以在线文档为准。
 
@@ -54,7 +54,7 @@ Radio 与 Checkbox 共用同一套值/锁定/option/API 逻辑，差异是**单�
 | `disabled` / `readOnly` / `readOnlyOn` / `static` | 锁定 | 已接 |
 | Combo 互斥 | combo radio | 已接 |
 | `themeCss` | 皮肤变量 | 未接 |
-| input-table 互斥 | 目标 | 未接 |
+| input-table 互斥 | 复用 combo radio 整列写回 | 已接 |
 
 ### 事件/动作
 
@@ -64,6 +64,7 @@ Radio 与 Checkbox 共用同一套值/锁定/option/API 逻辑，差异是**单�
 
 - [`form/Radio.vue`](../../../../packages/vamis/src/renderers/form/Radio.vue)：值/锁定/option/Combo 回调/API。
 - [`formContext.ts`](../../../../packages/vamis/src/formContext.ts)：`useComboRadio`。
+- [`form/InputTable.vue`](../../../../packages/vamis/src/renderers/form/InputTable.vue)：按行注入 `ComboRadio`，回调复用 `comboApplyRadio`。
 - [`checkbox.ts`](../../../../packages/vamis-core/src/utils/checkbox.ts)：值映射/clear/reset。
 - [`styles.css`](../../../../packages/vamis-ui/src/styles.css)：radio 圆点 token。
 
@@ -83,9 +84,9 @@ onToggle → combo.onChange? false ← stop
 
 ## 6. 当前状态与缺口
 
-- 已接：true/false、option、按钮、锁定/静态、Combo 互斥、change、clear/reset/setValue、API。
-- 缺口：themeCss、input-table 互斥、深色/无障碍细节。
-- 对照：TODO 88%；本轮未重跑。
+- 已接：true/false、option、按钮、锁定/静态、Combo 互斥、input-table 整列互斥、change、clear/reset/setValue、API。
+- 缺口：themeCss、深色/无障碍细节。
+- 对照：桌面 / 移动 **4/7**（P0 0，余 3 为 Amis 空值与 line-height 既有探针项）。
 
 ## 7. 验收计划与完成度
 
@@ -98,10 +99,10 @@ onToggle → combo.onChange? false ← stop
 - [ ] 事件 / 动作逐项核对
 - [ ] 边界用例逐项核对
 - [ ] 组件页活示例运行、无 console error
-- [ ] `pnpm test`（Radio 相关）
-- [ ] `pnpm typecheck` 0
-- [ ] `pnpm compare --page radio` 桌面
-- [ ] `pnpm compare --page radio --mobile`
+- [x] `pnpm test`（Radio 相关）
+- [x] `pnpm typecheck` 0
+- [x] `pnpm compare --page radio` 桌面
+- [x] `pnpm compare --page radio --mobile`
 - [ ] 深色 / 375px 窄屏
 
 ### 验收重点
@@ -115,7 +116,7 @@ onToggle → combo.onChange? false ← stop
 ## 8. 后续
 
 1. themeCss/皮肤变量。
-2. input-table 互斥 + 深色/键盘专项。
+2. 深色 / 键盘 / 无障碍专项。
 
 ---
 

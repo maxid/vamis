@@ -5,8 +5,8 @@ outline: deep
 
 # Radio 单选框
 
-::: info 实现进度 88% · 进行中
-主路径已对齐：Combo 互斥、`trueValue` / `falseValue`、`option`、`change`、`clear` / `reset` / `setValue`。圆点 18 / 内点 10（`--radio-*`）。缺 `themeCss`；`input-table` 互斥未接。
+::: info 实现进度 89% · 进行中
+主路径已对齐：Combo / `input-table` 整列互斥、`trueValue` / `falseValue`、`option`、`change`、`clear` / `reset` / `setValue`。圆点 18 / 内点 10（`--radio-*`）。缺 `themeCss`。
 :::
 
 实现组合中的单选功能，此组件只有在 `combo` 和 `input-table` 中有意义。不是选项组（那是 [`radios`](./radios)）。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -44,7 +44,7 @@ body:
 
 ## input-table 中使用
 
-`input-table` 里的互斥 **未接**。下面示例仍可渲染单元格里的单个 radio，但不会像 Combo 那样整列互斥。
+`input-table` 与 Combo 使用同一套整列互斥：点一行会写入该行的 `trueValue`，其它行写 `falseValue`。
 
 ```schema: scope="body"
 type: form

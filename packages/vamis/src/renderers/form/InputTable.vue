@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SchemaRenderer, asArray, type SchemaObject } from '@vamis/core'
+import {
+  SchemaRenderer,
+  asArray,
+  comboApplyRadio,
+  type SchemaObject,
+} from '@vamis/core'
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@vamis/ui'
 import { useFieldValue, useForm } from '../../formContext'
 import FormItem from '../FormItem.vue'
@@ -34,6 +39,25 @@ function persistCurrent() {
   persist(rows.value.map((row) => ({ ...row })))
 }
 
+function handleRadioChange(ctx: {
+  index: number
+  name: string
+  trueValue: unknown
+  falseValue: unknown
+}) {
+  if (props.disabled || !ctx.name) return
+  const next = comboApplyRadio(
+    rows.value,
+    ctx.index,
+    ctx.name,
+    ctx.trueValue,
+    ctx.falseValue,
+  )
+  if (!next) return
+  persist(next)
+  return false
+}
+
 function cellSchema(col: SchemaObject): SchemaObject {
   return { ...col, label: false }
 }
@@ -52,7 +76,12 @@ function cellSchema(col: SchemaObject): SchemaObject {
         <TableBody>
           <TableRow v-for="(row, i) in rows" :key="i">
             <TableCell v-for="col in columns" :key="`${col.name || col.label || ''}`">
-              <NestedFormScope :row="row" :persist="persistCurrent">
+              <NestedFormScope
+                :row="row"
+                :index="i"
+                :persist="persistCurrent"
+                :on-radio-change="handleRadioChange"
+              >
                 <SchemaRenderer :schema="cellSchema(col)" />
               </NestedFormScope>
             </TableCell>

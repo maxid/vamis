@@ -5,8 +5,8 @@ outline: deep
 
 # InputTable 表格
 
-::: warning 实现进度 45% · 进行中
-能行内编辑；子 api、增删校验未齐
+::: warning 实现进度 46% · 进行中
+能行内编辑，`radio` 列支持整列互斥；子 api、增删校验未齐
 :::
 
 `input-table` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。

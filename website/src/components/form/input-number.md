@@ -6,7 +6,7 @@ outline: deep
 # InputNumber 数字输入
 
 ::: info 实现进度 89% · 进行中
-主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 PopUp。缺 themeCss 与深色窄屏逐项
+主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 PopUp，深色与 375px 已核。缺 themeCss 与单位弹层焦点细节
 :::
 
 `input-number` 对齐 Amis 同名 schema。Vamis 用 YAML 或 JSON 书写，字段名不改写；UI 走 shadcn-vue / Tailwind：不搬 `cxd-` 前缀，cxd 的盒子、密度、交互尽量像素级落到 token 与 utility。
@@ -426,4 +426,4 @@ outline: deep
 
 - 作者态同时支持 YAML 与 JSON；YAML 字面量遵循 1.2 Core（`yes` / `On` / `012` 当字符串）。
 - 可包在 IR 信封 `apiVersion: lcdp.ir/v1` + `kind: UiPage` 里，`spec` 仍是这棵 widget 树。
-- 当前实现：主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 PopUp。缺 themeCss 与深色窄屏逐项。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
+- 当前实现：主路径已对齐：步进/精度/min-max、前后缀与千分位、单位、enhance、大数、resetValue / clearValueOnEmpty、change/blur/focus、clear/reset/setValue；单位选择桌面 Overlay / 移动 PopUp，深色与 375px 已核。缺 themeCss 与单位弹层焦点细节。属性 / 事件 / 动作表按 Amis 主路径列出，运行时尚未接上的字段预览可能无对应行为。
