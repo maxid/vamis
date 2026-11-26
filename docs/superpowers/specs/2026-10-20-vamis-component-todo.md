@@ -441,7 +441,7 @@ flowchart LR
 | 17 | `popOver` | `tpl` | 9 | 5 | 74 | 134 | P1 | 进行中 | 90% |
 | 18 | `panel` | `container`、`action`、`tpl` | 7 | 3 | 46 | 134 | P1 | 进行中 | 65% |
 | 19 | `input-file` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
-| 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
+| 20 | `input-number` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 89% |
 | 21 | `radio` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
 | 22 | `switch` | FormItem | 6 | 2 | 32 | 134 | P1 | 进行中 | 88% |
 | 23 | `hidden` | FormItem | 6 | 1 | 19 | 134 | P1 | 已完成 | 100% |
